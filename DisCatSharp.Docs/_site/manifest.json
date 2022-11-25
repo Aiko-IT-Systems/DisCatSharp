@@ -5,7 +5,7 @@
     "priority": 1.0
   },
   "homepages": [],
-  "source_base_path": "/opt/data/DisCatSharp/DisCatSharp.Docs",
+  "source_base_path": "/home/runner/work/DisCatSharp/DisCatSharp/DisCatSharp.Docs",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -10066,25 +10066,23 @@
   "incremental_info": [
     {
       "status": {
-        "can_incremental": false,
-        "details": "Disable incremental build by force rebuild option.",
+        "can_incremental": true,
         "incrementalPhase": "build",
         "total_file_count": 0,
-        "skipped_file_count": 0,
-        "full_build_reason_code": "ForceRebuild"
+        "skipped_file_count": 0
       },
       "processors": {
         "ConceptualDocumentProcessor": {
-          "can_incremental": false,
+          "can_incremental": true,
           "incrementalPhase": "build",
           "total_file_count": 71,
-          "skipped_file_count": 0
+          "skipped_file_count": 71
         },
         "ManagedReferenceDocumentProcessor": {
-          "can_incremental": false,
+          "can_incremental": true,
           "incrementalPhase": "build",
           "total_file_count": 697,
-          "skipped_file_count": 0
+          "skipped_file_count": 697
         },
         "ResourceDocumentProcessor": {
           "can_incremental": false,
