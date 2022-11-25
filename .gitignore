@@ -308,4 +308,15 @@ dcs-docs-preview.zip
 
 #Ignore thumbnails created by Windows
 Thumbs.db
-!DisCatSharp.Docs/obj/.cache/build
+!DisCatSharp.Docs/obj/.cache/build/
+!DisCatSharp.Docs/obj/.cache/build/*
+!DisCatSharp.Docs/obj/.cache/build/*.*
+!DisCatSharp.Docs/obj/.cache/build/**
+!DisCatSharp.Docs/obj/.cache/build/**/*.*
+!DisCatSharp.Docs/obj/.cache/build/**/**
+!**/obj/.cache/build/
+!**/obj/.cache/build/*
+!**/obj/.cache/build/*.*
+!**/obj/.cache/build/**
+!**/obj/.cache/build/**/*.*
+!**/obj/.cache/build/**/**
