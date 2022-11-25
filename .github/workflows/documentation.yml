@@ -75,7 +75,7 @@ jobs:
       with:
         name: dcs-docs.zip
     - name: Add .htaccess
-      run: wget https://gist.githubusercontent.com/Lulalaby/8a032d0ddebb9125691094edc67b6593/raw/8ba47fc2b8959aa43d66da95b5e56e0802a22dd6/.htaccess
+      run: rm -f .htaccess && wget https://gist.githubusercontent.com/Lulalaby/8a032d0ddebb9125691094edc67b6593/raw/8ba47fc2b8959aa43d66da95b5e56e0802a22dd6/.htaccess
     - name: Set access rights
       run: sudo chmod 777 -R .
     - name: Commit and push changes
