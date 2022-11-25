@@ -306,6 +306,8 @@ dcs-docs.tar.xz
 dcs-docs.zip
 dcs-docs-preview.zip
 docfx.zip
+DisCatSharp.Docs/_site/
+_site
 
 #Ignore thumbnails created by Windows
 Thumbs.db
