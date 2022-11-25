@@ -2415,7 +2415,6 @@ public sealed partial class DiscordClient
 	internal async Task OnMessageReactionAddAsync(ulong userId, ulong messageId, ulong channelId, ulong? guildId, TransportMember mbr, DiscordEmoji emoji, bool isBurst)
 	{
 		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
-		this.Logger.LogDebug("Type: {type}", channel.Type);
 		var guild = this.InternalGetCachedGuild(guildId);
 		emoji.Discord = this;
 
