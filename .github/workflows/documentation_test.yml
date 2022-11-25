@@ -15,25 +15,21 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
-        path: DisCatSharp
+        token:  ${{ secrets.NYUW_TOKEN_GH }}
     - name: Setup .NET
       uses: actions/setup-dotnet@v3.0.3
       with:
-        dotnet-version: 6.0.400
+        dotnet-version: 6.x
+    - name: Git fetch unshallow
+      run: git fetch --unshallow
     - name: Restore packages
-      working-directory: DisCatSharp
       run: dotnet restore
     - name: Build library
-      working-directory: DisCatSharp
       run: dotnet build -c Release
-    - name: Test library
-      working-directory: DisCatSharp
-      run: dotnet test -c Release
       continue-on-error: true
     - name: Build Docs
-      working-directory: DisCatSharp
       shell: pwsh
-      run: ./rebuild-docs.ps1 -DocsPath "./DisCatSharp.Docs" -Output ".." -PackageName "dcs-docs"
+      run: ./rebuild-docs.ps1 -DocsPath "./DisCatSharp.Docs" -Output "." -PackageName "dcs-docs"
     - name: Upload packed docs
       uses: actions/upload-artifact@v3
       with:

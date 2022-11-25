@@ -59,7 +59,7 @@ public class DiscordDmChannel : DiscordChannel
 	/// Gets the application id of the direct message's creator if it a bot.
 	/// </summary>
 	[JsonProperty("application_id", NullValueHandling = NullValueHandling.Ignore)]
-	public ulong ApplicationId { get; internal set; }
+	public ulong? ApplicationId { get; internal set; }
 
 	/// <summary>
 	/// Gets the URL of this channel's icon.
