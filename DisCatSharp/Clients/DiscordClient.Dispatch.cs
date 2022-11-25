@@ -468,11 +468,11 @@ public sealed partial class DiscordClient
 				if (rawMbr != null)
 					mbr = rawMbr.ToObject<TransportMember>();
 
-				await this.OnMessageReactionAddAsync((ulong)dat["user_id"], (ulong)dat["message_id"], (ulong)dat["channel_id"], (ulong?)dat["guild_id"], mbr, dat["emoji"].ToObject<DiscordEmoji>()).ConfigureAwait(false);
+				await this.OnMessageReactionAddAsync((ulong)dat["user_id"], (ulong)dat["message_id"], (ulong)dat["channel_id"], (ulong?)dat["guild_id"], mbr, dat["emoji"].ToObject<DiscordEmoji>(), (bool)dat["burst"]).ConfigureAwait(false);
 				break;
 
 			case "message_reaction_remove":
-				await this.OnMessageReactionRemoveAsync((ulong)dat["user_id"], (ulong)dat["message_id"], (ulong)dat["channel_id"], (ulong?)dat["guild_id"], dat["emoji"].ToObject<DiscordEmoji>()).ConfigureAwait(false);
+				await this.OnMessageReactionRemoveAsync((ulong)dat["user_id"], (ulong)dat["message_id"], (ulong)dat["channel_id"], (ulong?)dat["guild_id"], dat["emoji"].ToObject<DiscordEmoji>(), (bool)dat["burst"]).ConfigureAwait(false);
 				break;
 
 			case "message_reaction_remove_all":
@@ -2411,9 +2411,11 @@ public sealed partial class DiscordClient
 	/// <param name="guildId">The optional guild id.</param>
 	/// <param name="mbr">The transport member.</param>
 	/// <param name="emoji">The emoji.</param>
-	internal async Task OnMessageReactionAddAsync(ulong userId, ulong messageId, ulong channelId, ulong? guildId, TransportMember mbr, DiscordEmoji emoji)
+	/// <param name="isBurst">Whether a burst reaction was added.</param>
+	internal async Task OnMessageReactionAddAsync(ulong userId, ulong messageId, ulong channelId, ulong? guildId, TransportMember mbr, DiscordEmoji emoji, bool isBurst)
 	{
 		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
+		this.Logger.LogDebug("Type: {type}", channel.Type);
 		var guild = this.InternalGetCachedGuild(guildId);
 		emoji.Discord = this;
 
@@ -2454,7 +2456,10 @@ public sealed partial class DiscordClient
 			Message = msg,
 			User = usr,
 			Guild = guild,
-			Emoji = emoji
+			Emoji = emoji,
+			IsBurst = isBurst,
+			Channel = channel,
+			ChannelId = channelId
 		};
 		await this._messageReactionAdded.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
@@ -2467,9 +2472,12 @@ public sealed partial class DiscordClient
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="emoji">The emoji.</param>
-	internal async Task OnMessageReactionRemoveAsync(ulong userId, ulong messageId, ulong channelId, ulong? guildId, DiscordEmoji emoji)
+	/// <param name="isBurst">Whether a burst reaction was added.</param>
+	internal async Task OnMessageReactionRemoveAsync(ulong userId, ulong messageId, ulong channelId, ulong? guildId, DiscordEmoji emoji, bool isBurst)
 	{
-		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
+		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId) ?? new DiscordChannel() {
+			Type = ChannelType.Unknown, Id = channelId, GuildId = guildId, Discord = this
+		};
 
 		emoji.Discord = this;
 
@@ -2511,7 +2519,10 @@ public sealed partial class DiscordClient
 			Message = msg,
 			User = usr,
 			Guild = guild,
-			Emoji = emoji
+			Emoji = emoji,
+			IsBurst = isBurst,
+			Channel = channel,
+			ChannelId = channelId
 		};
 		await this._messageReactionRemoved.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
@@ -2525,7 +2536,13 @@ public sealed partial class DiscordClient
 	/// <param name="guildId">The optional guild id.</param>
 	internal async Task OnMessageReactionRemoveAllAsync(ulong messageId, ulong channelId, ulong? guildId)
 	{
-		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
+		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId) ?? new DiscordChannel()
+		{
+			Type = ChannelType.Unknown,
+			Id = channelId,
+			GuildId = guildId,
+			Discord = this
+		};
 
 		if (channel == null
 			|| this.Configuration.MessageCacheSize == 0

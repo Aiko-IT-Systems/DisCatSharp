@@ -43,8 +43,12 @@ public class MessageReactionAddEventArgs : DiscordEventArgs
 	/// This will be <c>null</c> for an uncached channel, which will usually happen for when this event triggers on
 	/// DM channels in which no prior messages were received or sent.
 	/// </remarks>
-	public DiscordChannel Channel
-		=> this.Message.Channel;
+	public DiscordChannel Channel { get; internal set; }
+
+	/// <summary>
+	/// The channel id.
+	/// </summary>s
+	public ulong ChannelId { get; internal set; }
 
 	/// <summary>
 	/// Gets the user who created the reaction.
@@ -61,6 +65,11 @@ public class MessageReactionAddEventArgs : DiscordEventArgs
 	/// Gets the emoji used for this reaction.
 	/// </summary>
 	public DiscordEmoji Emoji { get; internal set; }
+
+	/// <summary>
+	/// Whether the reaction was added as a burst reaction.
+	/// </summary>
+	public bool IsBurst { get; internal set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="MessageReactionAddEventArgs"/> class.
