@@ -168,6 +168,7 @@ PublishScripts/
 
 # NuGet Packages
 *.nupkg
+*.snupkg
 # The packages folder can be ignored because of Package Restore
 **/packages/*
 # except build/, which is used as an MSBuild target.
@@ -284,9 +285,6 @@ __pycache__/
 ### VisualStudio Patch ###
 build/
 
-### Built docs
-DisCatSharp.Docs/_site/
-
 # Docs build artifacts
 docfx/
 7zip/
@@ -307,18 +305,7 @@ dcs-docs-preview.tar.xz
 dcs-docs.tar.xz
 dcs-docs.zip
 dcs-docs-preview.zip
-_site/
 
 #Ignore thumbnails created by Windows
 Thumbs.db
-#Ignore files built by Visual Studio
-*.exe
-*.bak
-[Bb]in
-[Dd]ebug*/
-*.lib
-[Rr]elease*/
-[Tt]est[Rr]esult*
-#Nuget packages folder
-packages/
-!DisCatSharp.Docs/obj
+!DisCatSharp.Docs/obj/.cache/build
