@@ -289,8 +289,7 @@
 		"postProcessors":[
 			"ExtractSearchIndex",
 			"CustomMemberIndexer",
-			"DescriptionPostProcessor",
-			"LastModifiedPostProcessor"
+			"DescriptionPostProcessor"
 		],
 		"noLangKeyword":false,
 		"keepFileLink":false,
