@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Version 10.1.0 | DisCatSharp Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <meta name="title" content="Version 10.1.0 | DisCatSharp Docs ">
+      <meta name="og:title" content="Version 10.1.0 | DisCatSharp Docs ">
+      <meta name="generator" content="docfx 2.60.0.0">
+  
+    <meta name="og:type" content="website">
+    <meta name="og:image" content="https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png">
+    <meta name="og:image:alt" content="DisCatSharp Logo">
+    <meta name="og:image:type" content="image/png">
+    <meta name="og:site_name" content="DisCatSharp Documentation">
+    <link rel="apple-touch-icon" sizes="57x57" href="../../apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="../../ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <script defer="" src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/night-owl.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" integrity="sha384-EvBWSlnoFgZlXJvpzS+MAUEjvN7+gcCwH+qh7GRFOGgZO0PuwOFro7qPOJnLfe7l" crossorigin="anonymous">
+      <link rel="stylesheet" href="../../src/styles/config.css">
+      <link rel="stylesheet" href="../../src/styles/discord.css">
+      <link rel="stylesheet" href="../../src/styles/dcs.css">
+      <link rel="stylesheet" href="../../src/styles/main.css">
+      <link rel="stylesheet" href="../../src/styles/colors.css">
+      <link rel="stylesheet" href="../../src/styles/highlight/github-dark.min.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+  
+  <meta property="docfx:rel" content="../../">
+  <meta property="docfx:newtab" content="true">
+    </head>
+
+    <body>
+        <div class="top-navbar">
+            <a class="burger-icon" onclick="toggleMenu()">
+                <svg name="Hamburger" style="vertical-align: middle;" width="34" height="34" viewbox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M20 6H4V9H20V6ZM4 10.999H20V13.999H4V10.999ZM4 15.999H20V18.999H4V15.999Z"></path></svg>
+            </a>
+
+
+            <a class="navbar-brand" href="../../index.html">
+              <img id="logo" class="svg" src="../../logo.png" alt="DisCatSharp">
+            </a>
+        </div>
+
+        <div class="body-content">
+            <div id="blackout" class="blackout" onclick="toggleMenu()"></div>
+
+            <nav id="sidebar" role="navigation">
+                <div class="sidebar">
+
+                    <div>
+                      <div class="mobile-hide">
+
+                        <a class="navbar-brand" href="../../index.html">
+                          <img id="logo" class="svg" src="../../logo.png" alt="DisCatSharp">
+                        </a>
+                      </div>
+
+                      <div class="sidesearch">
+                        <form id="search" role="search" class="search">
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text" id="search-query" placeholder="Search" autocomplete="off">
+                        </form>
+                      </div>
+
+                      <div id="navbar">
+                      </div>
+                    </div>
+                    <div class="sidebar-item-separator"></div>
+
+                        <div id="sidetoggle">
+                          <div id="sidetoc"></div>
+                        </div>
+                </div>
+                <div class="footer">
+  <strong>Made with ♥ by AITSYS</strong>
+  
+                </div>
+            </nav>
+
+            <main class="main-panel">
+
+                <div id="search-results" style="display: none;">
+                  <h1 class="search-list">Search Results for <span></span></h1>
+                  <div class="sr-items">
+                    <p class="lsearch"><i class="bi bi-hourglass-split index-loading"></i></p>
+                  </div>
+                  <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+                </div>
+
+                <div role="main" class="hide-when-search">
+
+                        <div class="subnav navbar navbar-default">
+                          <div class="container hide-when-search" id="breadcrumb">
+                            <ul class="breadcrumb">
+                              <li></li>
+                            </ul>
+                          </div>
+                        </div>
+
+      <div id="sidetoggle">
+        <div id="sidetoc"></div>
+      </div>
+						<div class="article row grid-right">
+
+                    <article class="content wrap" id="_content" data-uid="changelogs_v10_10_1_0">
+<h1 id="upgrade-from-1000-to-1010" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="6" sourceendlinenumber="6">Upgrade from <strong>10.0.0</strong> to <strong>10.1.0</strong></h1>
+
+<h2 id="what-is-new-in-discatsharp" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="8" sourceendlinenumber="8">What is new in DisCatSharp?</h2>
+<ul sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="9" sourceendlinenumber="13">
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="9" sourceendlinenumber="9">Rework of <a class="xref" href="../../api/DisCatSharp.ApplicationCommands/index.html" data-raw-source="[ApplicationCommands](xref:api_discatsharp_applicationcommands_index)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="9" sourceendlinenumber="9">ApplicationCommands</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="10" sourceendlinenumber="10">Support for <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordGuild.html#DisCatSharp_Entities_DiscordGuild_DisableInvitesAsync_System_String_" data-raw-source="[DiscordGuild.DisableInvitesAsync](xref:DisCatSharp.Entities.DiscordGuild#DisCatSharp_Entities_DiscordGuild_DisableInvitesAsync_System_String_)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="10" sourceendlinenumber="10">DiscordGuild.DisableInvitesAsync</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="11" sourceendlinenumber="11">Full support for <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Enums.ChannelType.html" data-raw-source="[Forum](xref:DisCatSharp.Enums.ChannelType)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="11" sourceendlinenumber="11">Forum</a> <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordChannel.html" data-raw-source="[Channels](xref:DisCatSharp.Entities.DiscordChannel)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="11" sourceendlinenumber="11">Channels</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="12" sourceendlinenumber="12">Support for <a class="xref" href="../../api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkSearchType.html" data-raw-source="[Spotify](xref:DisCatSharp.Lavalink.LavalinkSearchType)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="12" sourceendlinenumber="12">Spotify</a> and <a class="xref" href="../../api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkSearchType.html" data-raw-source="[Apple Music](xref:DisCatSharp.Lavalink.LavalinkSearchType)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="12" sourceendlinenumber="12">Apple Music</a> in <a class="xref" href="../../api/DisCatSharp.Lavalink/index.html" data-raw-source="[DisCatSharp.Lavalink](xref:api_discatsharp_lavalink_index)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="12" sourceendlinenumber="12">DisCatSharp.Lavalink</a>. See <a class="xref" href="../../articles/modules/audio/lavalink/advanced.html" data-raw-source="[Lavalink Advanced Usage](xref:modules_audio_lavalink_advanced)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="12" sourceendlinenumber="12">Lavalink Advanced Usage</a> for more information.</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="13" sourceendlinenumber="13">Documentation has a bunch of new and reworked articles!</li>
+</ul>
+<hr>
+<h2 id="what-changed" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="16" sourceendlinenumber="16">What changed?</h2>
+<div class="WARNING" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="18" sourceendlinenumber="18"><h5>Warning</h5><p sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="19" sourceendlinenumber="20">This release contains breaking changes. Please read the changelog carefully.
+Some bug fixes aren&#39;t noted here.</p>
+</div>
+<h3 id="all-packages" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="22" sourceendlinenumber="22">All packages</h3>
+<p sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="23" sourceendlinenumber="23">NuGet packages now support <a href="https://docs.microsoft.com/en-us/dotnet/standard/library-guidance/sourcelink" data-raw-source="[Source Link](https://docs.microsoft.com/en-us/dotnet/standard/library-guidance/sourcelink)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="23" sourceendlinenumber="23">Source Link</a> &amp; <a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/code-generation" data-raw-source="[Deterministic Builds](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/code-generation)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="23" sourceendlinenumber="23">Deterministic Builds</a>.</p>
+<ul sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="24" sourceendlinenumber="26">
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="24" sourceendlinenumber="24">Updated the NuGet specs to be compatible with NuGet Gallery.</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="25" sourceendlinenumber="25">Changed PackageLicenseUrl to PackageLicenseFile and included the top-level <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md" data-raw-source="[LICENSE.md](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="25" sourceendlinenumber="25">LICENSE.md</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="26" sourceendlinenumber="26">Changed PackageIconUrl to PackageIcon and included <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Logos/logobig.png" data-raw-source="[DisCatSharp.Logos/logobig.png](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Logos/logobig.png)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="26" sourceendlinenumber="26">DisCatSharp.Logos/logobig.png</a></li>
+</ul>
+<div class="CAUTION" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="28" sourceendlinenumber="28"><h5>Caution</h5><p sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="29" sourceendlinenumber="29">We&#39;ve fixed various namespaces. Please make sure to update your code accordingly.</p>
+</div>
+<h3 id="discatsharp" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="32" sourceendlinenumber="32">DisCatSharp</h3>
+<ul sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="33" sourceendlinenumber="79">
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="33" sourceendlinenumber="44">Implemented Forum Channels<ul sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="34" sourceendlinenumber="44">
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="34" sourceendlinenumber="37">Added fields to <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordChannel.html" data-raw-source="[DiscordChannel](xref:DisCatSharp.Entities.DiscordChannel)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="34" sourceendlinenumber="34">DiscordChannel</a>:<ul sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="35" sourceendlinenumber="37">
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="35" sourceendlinenumber="35"><a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_PostCreateUserRateLimit" data-raw-source="[PostCreateUserRateLimit](xref:DisCatSharp.Entities.DiscordChannel#DisCatSharp_Entities_DiscordChannel_PostCreateUserRateLimit)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="35" sourceendlinenumber="35">PostCreateUserRateLimit</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="36" sourceendlinenumber="36"><a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_DefaultReactionEmoji" data-raw-source="[DefaultReactionEmoji](xref:DisCatSharp.Entities.DiscordChannel#DisCatSharp_Entities_DiscordChannel_DefaultReactionEmoji)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="36" sourceendlinenumber="36">DefaultReactionEmoji</a> with the type of <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.ForumReactionEmoji.html" data-raw-source="[ForumReactionEmoji](xref:DisCatSharp.Entities.ForumReactionEmoji)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="36" sourceendlinenumber="36">ForumReactionEmoji</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="37" sourceendlinenumber="37"><a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_AvailableTags" data-raw-source="[AvailableTags](xref:DisCatSharp.Entities.DiscordChannel#DisCatSharp_Entities_DiscordChannel_AvailableTags)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="37" sourceendlinenumber="37">AvailableTags</a></li>
+</ul>
+</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="38" sourceendlinenumber="40">Added fields to <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordThreadChannel.html" data-raw-source="[DiscordThreadChannel](xref:DisCatSharp.Entities.DiscordThreadChannel)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="38" sourceendlinenumber="38">DiscordThreadChannel</a>:<ul sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="39" sourceendlinenumber="40">
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="39" sourceendlinenumber="39"><a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordThreadChannel.html#DisCatSharp_Entities_DiscordThreadChannel_TotalMessagesSent" data-raw-source="[TotalMessagesSent](xref:DisCatSharp.Entities.DiscordThreadChannel#DisCatSharp_Entities_DiscordThreadChannel_TotalMessagesSent)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="39" sourceendlinenumber="39">TotalMessagesSent</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="40" sourceendlinenumber="40"><a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordThreadChannel.html#DisCatSharp_Entities_DiscordThreadChannel_AppliedTags" data-raw-source="[AppliedTags](xref:DisCatSharp.Entities.DiscordThreadChannel#DisCatSharp_Entities_DiscordThreadChannel_AppliedTags)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="40" sourceendlinenumber="40">AppliedTags</a></li>
+</ul>
+</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="41" sourceendlinenumber="41">Added entity <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.ForumPostTag.html" data-raw-source="[ForumPostTag](xref:DisCatSharp.Entities.ForumPostTag)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="41" sourceendlinenumber="41">ForumPostTag</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="42" sourceendlinenumber="42">Added function to create a forum through the guild entity <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordGuild.html#DisCatSharp_Entities_DiscordGuild_CreateForumChannelAsync_System_String_DisCatSharp_Entities_DiscordChannel_DisCatSharp_Entities_Optional_System_String__IEnumerable_DisCatSharp_Entities_DiscordOverwriteBuilder__System_Nullable_System_Boolean__DisCatSharp_Entities_Optional_DisCatSharp_Entities_ForumReactionEmoji__DisCatSharp_Entities_Optional_System_Nullable_System_Int32___DisCatSharp_Entities_Optional_System_Nullable_System_Int32___DisCatSharp_Enums_ThreadAutoArchiveDuration_DisCatSharp_Entities_Optional_DisCatSharp_Enums_ForumPostSortOrder__DisCatSharp_Entities_Optional_System_Nullable_DisCatSharp_Enums_ChannelFlags___System_String_" data-raw-source="[CreateForumChannelAsync](xref:DisCatSharp.Entities.DiscordGuild#DisCatSharp_Entities_DiscordGuild_CreateForumChannelAsync_System_String_DisCatSharp_Entities_DiscordChannel_DisCatSharp_Entities_Optional_System_String__IEnumerable_DisCatSharp_Entities_DiscordOverwriteBuilder__System_Nullable_System_Boolean__DisCatSharp_Entities_Optional_DisCatSharp_Entities_ForumReactionEmoji__DisCatSharp_Entities_Optional_System_Nullable_System_Int32___DisCatSharp_Entities_Optional_System_Nullable_System_Int32___DisCatSharp_Enums_ThreadAutoArchiveDuration_DisCatSharp_Entities_Optional_DisCatSharp_Enums_ForumPostSortOrder__DisCatSharp_Entities_Optional_System_Nullable_DisCatSharp_Enums_ChannelFlags___System_String_)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="42" sourceendlinenumber="42">CreateForumChannelAsync</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="43" sourceendlinenumber="43">Added functions to modify a forum channel <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_ModifyForumAsync_Action_DisCatSharp_Net_Models_ForumChannelEditModel__" data-raw-source="[ModifyForumAsync](xref:DisCatSharp.Entities.DiscordChannel#DisCatSharp_Entities_DiscordChannel_ModifyForumAsync_Action_DisCatSharp_Net_Models_ForumChannelEditModel__)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="43" sourceendlinenumber="43">ModifyForumAsync</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="44" sourceendlinenumber="44">Added forum post tag operations on threads</li>
+</ul>
+</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="45" sourceendlinenumber="47">Added disable invites for <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordGuild.html" data-raw-source="[DiscordGuild](xref:DisCatSharp.Entities.DiscordGuild)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="45" sourceendlinenumber="45">DiscordGuild</a><ul sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="46" sourceendlinenumber="47">
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="46" sourceendlinenumber="46">Added new function <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordGuild.html#DisCatSharp_Entities_DiscordGuild_EnableInvitesAsync_System_String_" data-raw-source="[EnableInvitesAsync](xref:DisCatSharp.Entities.DiscordGuild#DisCatSharp_Entities_DiscordGuild_EnableInvitesAsync_System_String_)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="46" sourceendlinenumber="46">EnableInvitesAsync</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="47" sourceendlinenumber="47">Added new function <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordGuild.html#DisCatSharp_Entities_DiscordGuild_DisableInvitesAsync_System_String_" data-raw-source="[DisableInvitesAsync](xref:DisCatSharp.Entities.DiscordGuild#DisCatSharp_Entities_DiscordGuild_DisableInvitesAsync_System_String_)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="47" sourceendlinenumber="47">DisableInvitesAsync</a></li>
+</ul>
+</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="48" sourceendlinenumber="48">The ordered channel methods and fields in <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordChannel.html" data-raw-source="[DiscordChannel](xref:DisCatSharp.Entities.DiscordChannel)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="48" sourceendlinenumber="48">DiscordChannel</a> now include Forum Channels</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="49" sourceendlinenumber="49">Added <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordMember.html#DisCatSharp_Entities_DiscordMember_DisconnectFromVoiceAsync" data-raw-source="[DiscordMember.DisconnectFromVoiceAsync](xref:DisCatSharp.Entities.DiscordMember#DisCatSharp_Entities_DiscordMember_DisconnectFromVoiceAsync)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="49" sourceendlinenumber="49">DiscordMember.DisconnectFromVoiceAsync</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="50" sourceendlinenumber="50">Added <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordUser.html#DisCatSharp_Entities_DiscordUser_AvatarDecorationUrl" data-raw-source="[Avatar Decorations](xref:DisCatSharp.Entities.DiscordUser#DisCatSharp_Entities_DiscordUser_AvatarDecorationUrl)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="50" sourceendlinenumber="50">Avatar Decorations</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="51" sourceendlinenumber="51">Added <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordUser.html#DisCatSharp_Entities_DiscordUser_ThemeColors" data-raw-source="[Theme Colors](xref:DisCatSharp.Entities.DiscordUser#DisCatSharp_Entities_DiscordUser_ThemeColors)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="51" sourceendlinenumber="51">Theme Colors</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="52" sourceendlinenumber="52">Added support for the <code>X-Discord-Locale</code> Header in the <a class="xref" href="../../api/DisCatSharp/DisCatSharp.DiscordConfiguration.html#DisCatSharp_DiscordConfiguration_Locale" data-raw-source="[DiscordConfiguration](xref:DisCatSharp.DiscordConfiguration#DisCatSharp_DiscordConfiguration_Locale)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="52" sourceendlinenumber="52">DiscordConfiguration</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="53" sourceendlinenumber="53">Added support for sending component-only messages</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="54" sourceendlinenumber="54">Implemented <code>ResumeGatewayUrl</code></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="55" sourceendlinenumber="57">Added <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.GuildFeatures.html" data-raw-source="[GuildFeatures](xref:DisCatSharp.Entities.GuildFeatures)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="55" sourceendlinenumber="55">GuildFeatures</a>:<ul sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="56" sourceendlinenumber="57">
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="56" sourceendlinenumber="56"><a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.GuildFeaturesEnum.html" data-raw-source="[GuildHomeTest](xref:DisCatSharp.Entities.GuildFeaturesEnum)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="56" sourceendlinenumber="56">GuildHomeTest</a> (Experimental)</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="57" sourceendlinenumber="57"><a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.GuildFeaturesEnum.html" data-raw-source="[InvitesDisabled](xref:DisCatSharp.Entities.GuildFeaturesEnum)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="57" sourceendlinenumber="57">InvitesDisabled</a></li>
+</ul>
+</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="58" sourceendlinenumber="58">Implemented DiscordWebhookBuilder.WithThreadName to create forum posts via a webhook</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="59" sourceendlinenumber="59">Added <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Enums.ApplicationFlags.html" data-raw-source="[ApplicationFlags.ApplicationCommandBadge](xref:DisCatSharp.Enums.ApplicationFlags)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="59" sourceendlinenumber="59">ApplicationFlags.ApplicationCommandBadge</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="60" sourceendlinenumber="60">Added a bypassCache option to <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_GetMessageAsync_System_UInt64_System_Boolean_" data-raw-source="[DiscordChannel.GetMessageAsync](xref:DisCatSharp.Entities.DiscordChannel#DisCatSharp_Entities_DiscordChannel_GetMessageAsync_System_UInt64_System_Boolean_)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="60" sourceendlinenumber="60">DiscordChannel.GetMessageAsync</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="61" sourceendlinenumber="61">Added the new field <code>AppPermissions</code> to the interaction entity and the context entities.</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="62" sourceendlinenumber="62">Added function <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordGuild.html#DisCatSharp_Entities_DiscordGuild_EnableMfaAsync_System_String_" data-raw-source="[DiscordGuild.EnableMfaAsync](xref:DisCatSharp.Entities.DiscordGuild#DisCatSharp_Entities_DiscordGuild_EnableMfaAsync_System_String_)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="62" sourceendlinenumber="62">DiscordGuild.EnableMfaAsync</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="63" sourceendlinenumber="63">Added function <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordGuild.html#DisCatSharp_Entities_DiscordGuild_DisableMfaAsync_System_String_" data-raw-source="[DiscordGuild.DisableMfaAsync](xref:DisCatSharp.Entities.DiscordGuild#DisCatSharp_Entities_DiscordGuild_DisableMfaAsync_System_String_)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="63" sourceendlinenumber="63">DiscordGuild.DisableMfaAsync</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="64" sourceendlinenumber="64">Reworked component result for modal submits <a class="xref" href="10_1_0.html#dc1" data-raw-source="[*DC1](xref:changelogs_v10_10_1_0#dc1)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="64" sourceendlinenumber="64">*DC1</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="65" sourceendlinenumber="71">Reworked <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordIntegration.html" data-raw-source="[DiscordIntegration](xref:DisCatSharp.Entities.DiscordIntegration)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="65" sourceendlinenumber="65">DiscordIntegration</a> to include the new fields<ul sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="66" sourceendlinenumber="71">
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="66" sourceendlinenumber="66">Added <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordIntegration.html#DisCatSharp_Entities_DiscordIntegration_SubscriberCount" data-raw-source="[SubscriberCount](xref:DisCatSharp.Entities.DiscordIntegration#DisCatSharp_Entities_DiscordIntegration_SubscriberCount)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="66" sourceendlinenumber="66">SubscriberCount</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="67" sourceendlinenumber="67">Added <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordIntegration.html#DisCatSharp_Entities_DiscordIntegration_Revoked" data-raw-source="[Revoked](xref:DisCatSharp.Entities.DiscordIntegration#DisCatSharp_Entities_DiscordIntegration_Revoked)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="67" sourceendlinenumber="67">Revoked</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="68" sourceendlinenumber="68">Added <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordIntegration.html#DisCatSharp_Entities_DiscordIntegration_Application" data-raw-source="[Application](xref:DisCatSharp.Entities.DiscordIntegration#DisCatSharp_Entities_DiscordIntegration_Application)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="68" sourceendlinenumber="68">Application</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="69" sourceendlinenumber="69">Added <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordIntegration.html#DisCatSharp_Entities_DiscordIntegration_Scopes" data-raw-source="[Scopes](xref:DisCatSharp.Entities.DiscordIntegration#DisCatSharp_Entities_DiscordIntegration_Scopes)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="69" sourceendlinenumber="69">Scopes</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="70" sourceendlinenumber="70">Removed int ExpireBehavior</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="71" sourceendlinenumber="71">Added <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordIntegration.html#DisCatSharp_Entities_DiscordIntegration_ExpireBehavior" data-raw-source="[ExpireBehavior](xref:DisCatSharp.Entities.DiscordIntegration#DisCatSharp_Entities_DiscordIntegration_ExpireBehavior)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="71" sourceendlinenumber="71">ExpireBehavior</a> as new enum <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Enums.IntegrationExpireBehavior.html" data-raw-source="[IntegrationExpireBehavior](xref:DisCatSharp.Enums.IntegrationExpireBehavior)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="71" sourceendlinenumber="71">IntegrationExpireBehavior</a></li>
+</ul>
+</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="72" sourceendlinenumber="75">Reworked <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordConnection.html" data-raw-source="[DiscordConnection](xref:DisCatSharp.Entities.DiscordConnection)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="72" sourceendlinenumber="72">DiscordConnection</a> to include the new fields<ul sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="73" sourceendlinenumber="75">
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="73" sourceendlinenumber="73">Removed int Visibility</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="74" sourceendlinenumber="74">Added <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordConnection.html#DisCatSharp_Entities_DiscordConnection_Visibility" data-raw-source="[Visibility](xref:DisCatSharp.Entities.DiscordConnection#DisCatSharp_Entities_DiscordConnection_Visibility)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="74" sourceendlinenumber="74">Visibility</a> as new enum <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Enums.ConnectionVisibilityType.html" data-raw-source="[ConnectionVisibilityType](xref:DisCatSharp.Enums.ConnectionVisibilityType)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="74" sourceendlinenumber="74">ConnectionVisibilityType</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="75" sourceendlinenumber="75">Added <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Entities.DiscordConnection.html#DisCatSharp_Entities_DiscordConnection_TwoWayLink" data-raw-source="[TwoWayLink](xref:DisCatSharp.Entities.DiscordConnection#DisCatSharp_Entities_DiscordConnection_TwoWayLink)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="75" sourceendlinenumber="75">TwoWayLink</a></li>
+</ul>
+</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="76" sourceendlinenumber="76"><a class="xref" href="../../api/DisCatSharp/DisCatSharp.DiscordClient.html#DisCatSharp_DiscordClient_ReconnectAsync_System_Boolean_" data-raw-source="[DiscordClient.ReconnectAsync](xref:DisCatSharp.DiscordClient#DisCatSharp_DiscordClient_ReconnectAsync_System_Boolean_)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="76" sourceendlinenumber="76">DiscordClient.ReconnectAsync</a> param startNewSession now defaults to <code>true</code></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="77" sourceendlinenumber="77">Moved guild related enums from the <a class="xref" href="../../api/DisCatSharp/DisCatSharp.html" data-raw-source="[DisCatSharp](xref:DisCatSharp)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="77" sourceendlinenumber="77">DisCatSharp</a> to the <a class="xref" href="../../api/DisCatSharp/DisCatSharp.Enums.html" data-raw-source="[DisCatSharp.Enums](xref:DisCatSharp.Enums)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="77" sourceendlinenumber="77">DisCatSharp.Enums</a> namespace</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="78" sourceendlinenumber="78">Fixed webhooks for threads</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="79" sourceendlinenumber="79">Dropped support for channel banners, it sadly never made its way into discord</li>
+</ul>
+<h3 id="discatsharpapplicationcommands" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="81" sourceendlinenumber="81">DisCatSharp.ApplicationCommands</h3>
+<ul sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="82" sourceendlinenumber="104">
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="82" sourceendlinenumber="82">Added support for slash commands in shards</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="83" sourceendlinenumber="83">Added Translation Generator &amp; Exporter (see <a class="xref" href="../../api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsConfiguration.html#DisCatSharp_ApplicationCommands_ApplicationCommandsConfiguration_GenerateTranslationFilesOnly" data-raw-source="[here](xref:DisCatSharp.ApplicationCommands.ApplicationCommandsConfiguration#DisCatSharp_ApplicationCommands_ApplicationCommandsConfiguration_GenerateTranslationFilesOnly)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="83" sourceendlinenumber="83">here</a>)</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="84" sourceendlinenumber="84">Added <a class="xref" href="../../api/DisCatSharp/DisCatSharp.DiscordClient.html#DisCatSharp_DiscordClient_RemoveGlobalApplicationCommandsAsync" data-raw-source="[DiscordClient.RemoveGlobalApplicationCommandsAsync](xref:DisCatSharp.DiscordClient#DisCatSharp_DiscordClient_RemoveGlobalApplicationCommandsAsync)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="84" sourceendlinenumber="84">DiscordClient.RemoveGlobalApplicationCommandsAsync</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="85" sourceendlinenumber="87">Implemented support for minimum_length and maximum_length for application command options<ul sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="86" sourceendlinenumber="87">
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="86" sourceendlinenumber="86">Added <a class="xref" href="../../api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.Attributes.MinimumLengthAttribute.html" data-raw-source="[MinimumLengthAttribute](xref:DisCatSharp.ApplicationCommands.Attributes.MinimumLengthAttribute)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="86" sourceendlinenumber="86">MinimumLengthAttribute</a>. Minimum <code>int</code> if set: 0. Valid for: <code>string</code></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="87" sourceendlinenumber="87">Added <a class="xref" href="../../api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.Attributes.MaximumLengthAttribute.html" data-raw-source="[MaximumLengthAttribute](xref:DisCatSharp.ApplicationCommands.Attributes.MaximumLengthAttribute)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="87" sourceendlinenumber="87">MaximumLengthAttribute</a>. Minimum <code>int</code> if set: 1. Valid for: <code>string</code></li>
+</ul>
+</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="88" sourceendlinenumber="92">Changed namespaces<ul sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="89" sourceendlinenumber="92">
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="89" sourceendlinenumber="89"><a class="xref" href="../../api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.html" data-raw-source="[DisCatSharp.ApplicationCommands](xref:DisCatSharp.ApplicationCommands)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="89" sourceendlinenumber="89">DisCatSharp.ApplicationCommands</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="90" sourceendlinenumber="90"><a class="xref" href="../../api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.Attributes.html" data-raw-source="[DisCatSharp.ApplicationCommands.Attributes](xref:DisCatSharp.ApplicationCommands.Attributes)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="90" sourceendlinenumber="90">DisCatSharp.ApplicationCommands.Attributes</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="91" sourceendlinenumber="91"><a class="xref" href="../../api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.Context.html" data-raw-source="[DisCatSharp.ApplicationCommands.Context](xref:DisCatSharp.ApplicationCommands.Context)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="91" sourceendlinenumber="91">DisCatSharp.ApplicationCommands.Context</a></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="92" sourceendlinenumber="92"><a class="xref" href="../../api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.Exceptions.html" data-raw-source="[DisCatSharp.ApplicationCommands.Exceptions](xref:DisCatSharp.ApplicationCommands.Exceptions)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="92" sourceendlinenumber="92">DisCatSharp.ApplicationCommands.Exceptions</a></li>
+</ul>
+</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="93" sourceendlinenumber="93">Renamed MinimumAttribute to <a class="xref" href="../../api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.Attributes.MinimumValueAttribute.html" data-raw-source="[MinimumValueAttribute](xref:DisCatSharp.ApplicationCommands.Attributes.MinimumValueAttribute)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="93" sourceendlinenumber="93">MinimumValueAttribute</a>. Valid for: <code>int</code>, <code>long</code> &amp; <code>double</code></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="94" sourceendlinenumber="94">Renamed MaximumAttribute &amp; <a class="xref" href="../../api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.Attributes.MaximumValueAttribute.html" data-raw-source="[MaximumValueAttribute](xref:DisCatSharp.ApplicationCommands.Attributes.MaximumValueAttribute)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="94" sourceendlinenumber="94">MaximumValueAttribute</a>. Valid for: <code>int</code>, <code>long</code> &amp; <code>double</code></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="95" sourceendlinenumber="95">Proper exception log when registering app commands fails</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="96" sourceendlinenumber="96">Reworked <a class="xref" href="../../articles/modules/application_commands/translations/using.html" data-raw-source="[translation](xref:modules_application_commands_translations_using)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="96" sourceendlinenumber="96">translation</a> for application commands</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="97" sourceendlinenumber="97">Reworked application command registration</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="98" sourceendlinenumber="98">Fixed <code>DmPermissions</code> check for Application Commands on registration</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="99" sourceendlinenumber="99">Fixed double interaction bug</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="100" sourceendlinenumber="100">Fixed <code>int</code> &gt; <code>long</code> cast exception</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="101" sourceendlinenumber="101">Fixed a bug where the default help command would not work if auto defer was enabled</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="102" sourceendlinenumber="102">Various bug fixes</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="103" sourceendlinenumber="103">Removed <code>ApplicationCommandsExtension.CleanGuildCommandsAsync()</code></li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="104" sourceendlinenumber="104">Removed <code>ApplicationCommandsExtension.CleanGlobalCommandsAsync()</code></li>
+</ul>
+<h3 id="discatsharplavalink" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="106" sourceendlinenumber="106">DisCatSharp.Lavalink</h3>
+<ul sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="107" sourceendlinenumber="107">
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="107" sourceendlinenumber="107">Added support for apple music &amp; spotify search</li>
+</ul>
+<hr>
+<h2 id="other-changes" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="110" sourceendlinenumber="110">Other changes</h2>
+<p sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="111" sourceendlinenumber="111">Please compare the commits on <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/compare/10.0.0...v10.1.0" data-raw-source="[GitHub](https://github.com/Aiko-IT-Systems/DisCatSharp/compare/10.0.0...v10.1.0)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="111" sourceendlinenumber="111">GitHub</a></p>
+<h2 id="information-to-other-discord-featureshttpsdiscordcomdevelopersdocschange-log" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="114" sourceendlinenumber="114">Information to other <a href="https://discord.com/developers/docs/change-log" data-raw-source="[Discord Features](https://discord.com/developers/docs/change-log)" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="114" sourceendlinenumber="114">Discord Features</a></h2>
+<ul sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="115" sourceendlinenumber="116">
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="115" sourceendlinenumber="115">We won&#39;t implement AutoMod for a while, as it takes a lot of time to implement and we don&#39;t have the time for it right now.</li>
+<li sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="116" sourceendlinenumber="116">DiscordMember Timeout Events are still buggy, we have it on our list of bugs to fix, but it&#39;s not a priority right now.</li>
+</ul>
+<h2 id="diff-changes" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="118" sourceendlinenumber="118">Diff Changes</h2>
+<h3 id="dc1" sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="120" sourceendlinenumber="120">DC1</h3>
+<p sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="121" sourceendlinenumber="121">DiscordInteractionData:</p>
+<p sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="123" sourceendlinenumber="123">Pulled up the component results from modal submits for easier access</p>
+<pre sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="124" sourceendlinenumber="129"><code class="lang-diff">- IEnumerable&lt;DiscordInteractionDataOption&gt; Options
++ IReadOnlyList&lt;DiscordInteractionDataOption&gt; Options
+- IEnumerable&lt;DiscordActionRowComponentResult&gt; Components
++ IReadOnlyList&lt;DiscordComponentResult&gt; Components
+</code></pre><p sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="131" sourceendlinenumber="131">DiscordActionRowComponentResult:</p>
+<pre sourcefile="changelogs/v10/10_1_0.md" sourcestartlinenumber="132" sourceendlinenumber="135"><code class="lang-diff">- List&lt;DiscordComponentResult&gt; Components
++ IReadOnlyList&lt;DiscordComponentResult&gt; Components
+</code></pre></article>
+                </div>
+
+                <div class="copyright-footer">
+                    <span>&#169; Aiko IT Systems. All rights reserved.</span>
+                </div>
+            </div></main>
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.vendor.js"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.js"></script>
+        <script type="text/javascript" src="../../src/scripts/url.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/highlight/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+        <script src="https://cdn.jsdelivr.net/npm/anchor-js/anchor.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/jquery.twbsPagination.js"></script>
+        <script type="text/javascript" src="../../src/scripts/dcs.js"></script>
+        <script type="text/javascript" src="../../src/scripts/lunr.js"></script>
+    </body>
+</html>
