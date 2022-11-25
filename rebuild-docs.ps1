@@ -246,7 +246,7 @@ function BuildDocs([string] $target_dir_path)
     if ($null -eq $Env:OS)
     {
         # Generate new API documentation
-        & mono "$Env:DOCFX_PATH/docfx.exe" docfx.json | Out-Host
+        & mono "$Env:DOCFX_PATH/docfx.exe" metadata docfx.json | Out-Host
 
         # Check if successful
         if ($LastExitCode -eq 0)
@@ -258,7 +258,7 @@ function BuildDocs([string] $target_dir_path)
     else
     {
         # Generate new API documentation
-        & docfx docfx.json | Out-Host
+        & docfx metadata docfx.json | Out-Host
 
         # Check if successful
         if ($LastExitCode -eq 0)
