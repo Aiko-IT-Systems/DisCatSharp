@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>
+
+Class LoggerEvents
+
+
+
+
+
+
+
+
+
+
+
+
+
+ | DisCatSharp Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <meta name="title" content="
+
+Class LoggerEvents
+
+
+
+
+
+
+
+
+
+
+
+
+
+ | DisCatSharp Docs ">
+      <meta name="og:title" content="
+
+Class LoggerEvents
+
+
+
+
+
+
+
+
+
+
+
+
+
+ | DisCatSharp Docs ">
+      <meta name="generator" content="docfx 2.60.0.0">
+  
+    <meta name="og:type" content="website">
+    <meta name="og:image" content="https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png">
+    <meta name="og:image:alt" content="DisCatSharp Logo">
+    <meta name="og:image:type" content="image/png">
+    <meta name="og:site_name" content="DisCatSharp Documentation">
+    <link rel="apple-touch-icon" sizes="57x57" href="../../apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="../../ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <script defer="" src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/night-owl.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" integrity="sha384-EvBWSlnoFgZlXJvpzS+MAUEjvN7+gcCwH+qh7GRFOGgZO0PuwOFro7qPOJnLfe7l" crossorigin="anonymous">
+      <link rel="stylesheet" href="../../src/styles/config.css">
+      <link rel="stylesheet" href="../../src/styles/discord.css">
+      <link rel="stylesheet" href="../../src/styles/dcs.css">
+      <link rel="stylesheet" href="../../src/styles/main.css">
+      <link rel="stylesheet" href="../../src/styles/colors.css">
+      <link rel="stylesheet" href="../../src/styles/highlight/github-dark.min.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+  
+  <meta property="docfx:rel" content="../../">
+  <meta property="docfx:newtab" content="true">
+    </head>
+
+    <body>
+        <div class="top-navbar">
+            <a class="burger-icon" onclick="toggleMenu()">
+                <svg name="Hamburger" style="vertical-align: middle;" width="34" height="34" viewbox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M20 6H4V9H20V6ZM4 10.999H20V13.999H4V10.999ZM4 15.999H20V18.999H4V15.999Z"></path></svg>
+            </a>
+
+
+            <a class="navbar-brand" href="../../index.html">
+              <img id="logo" class="svg" src="../../logo.png" alt="DisCatSharp">
+            </a>
+        </div>
+
+        <div class="body-content">
+            <div id="blackout" class="blackout" onclick="toggleMenu()"></div>
+
+            <nav id="sidebar" role="navigation">
+                <div class="sidebar">
+
+                    <div>
+                      <div class="mobile-hide">
+
+                        <a class="navbar-brand" href="../../index.html">
+                          <img id="logo" class="svg" src="../../logo.png" alt="DisCatSharp">
+                        </a>
+                      </div>
+
+                      <div class="sidesearch">
+                        <form id="search" role="search" class="search">
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text" id="search-query" placeholder="Search" autocomplete="off">
+                        </form>
+                      </div>
+
+                      <div id="navbar">
+                      </div>
+                    </div>
+                    <div class="sidebar-item-separator"></div>
+
+                        <div id="sidetoggle">
+                          <div id="sidetoc"></div>
+                        </div>
+                </div>
+                <div class="footer">
+  <strong>Made with ♥ by AITSYS</strong>
+  
+                </div>
+            </nav>
+
+            <main class="main-panel">
+
+                <div id="search-results" style="display: none;">
+                  <h1 class="search-list">Search Results for <span></span></h1>
+                  <div class="sr-items">
+                    <p class="lsearch"><i class="bi bi-hourglass-split index-loading"></i></p>
+                  </div>
+                  <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+                </div>
+
+                <div role="main" class="hide-when-search">
+
+                        <div class="subnav navbar navbar-default">
+                          <div class="container hide-when-search" id="breadcrumb">
+                            <ul class="breadcrumb">
+                              <li></li>
+                            </ul>
+                          </div>
+                        </div>
+
+      <div id="sidetoggle">
+        <div id="sidetoc"></div>
+      </div>
+						<div class="article row grid-right">
+
+                    <article class="content wrap" id="_content" data-uid="DisCatSharp.LoggerEvents">
+
+
+  <h1 id="DisCatSharp_LoggerEvents" data-uid="DisCatSharp.LoggerEvents" class="text-break">
+
+Class LoggerEvents
+
+
+
+
+
+
+
+
+
+
+
+
+
+</h1>
+  <div class="markdown level0 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Contains well-defined event IDs used by core of DisCatSharp.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">LoggerEvents</span></div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="DisCatSharp.html">DisCatSharp</a></h6>
+  <h6><strong>Assembly</strong>: DisCatSharp.dll</h6>
+  <h5 id="DisCatSharp_LoggerEvents_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class LoggerEvents : object</code></pre>
+  </div>
+  <h3 id="properties">Properties
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_AuditLog.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.AuditLog%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L120">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_AuditLog_" data-uid="DisCatSharp.LoggerEvents.AuditLog*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_AuditLog" data-uid="DisCatSharp.LoggerEvents.AuditLog">AuditLog</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events pertaining to audit log processing.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId AuditLog { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_ConnectionClose.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.ConnectionClose%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L90">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_ConnectionClose_" data-uid="DisCatSharp.LoggerEvents.ConnectionClose*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_ConnectionClose" data-uid="DisCatSharp.LoggerEvents.ConnectionClose">ConnectionClose</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events pertaining to clean connection closes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId ConnectionClose { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_ConnectionFailure.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.ConnectionFailure%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L45">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_ConnectionFailure_" data-uid="DisCatSharp.LoggerEvents.ConnectionFailure*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_ConnectionFailure" data-uid="DisCatSharp.LoggerEvents.ConnectionFailure">ConnectionFailure</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events typically emitted whenever WebSocket connections fail or are terminated.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId ConnectionFailure { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_EventHandlerException.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.EventHandlerException%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L55">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_EventHandlerException_" data-uid="DisCatSharp.LoggerEvents.EventHandlerException*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_EventHandlerException" data-uid="DisCatSharp.LoggerEvents.EventHandlerException">EventHandlerException</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events emitted when exceptions are thrown in handlers attached to async events.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId EventHandlerException { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_GatewayWsRx.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.GatewayWsRx%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L125">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_GatewayWsRx_" data-uid="DisCatSharp.LoggerEvents.GatewayWsRx*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_GatewayWsRx" data-uid="DisCatSharp.LoggerEvents.GatewayWsRx">GatewayWsRx</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events containing raw (but decompressed) payloads, received from Discord Gateway.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId GatewayWsRx { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_GatewayWsTx.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.GatewayWsTx%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L130">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_GatewayWsTx_" data-uid="DisCatSharp.LoggerEvents.GatewayWsTx*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_GatewayWsTx" data-uid="DisCatSharp.LoggerEvents.GatewayWsTx">GatewayWsTx</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events containing raw payloads, as they're being sent to Discord Gateway.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId GatewayWsTx { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_Heartbeat.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.Heartbeat%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L80">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_Heartbeat_" data-uid="DisCatSharp.LoggerEvents.Heartbeat*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_Heartbeat" data-uid="DisCatSharp.LoggerEvents.Heartbeat">Heartbeat</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events pertaining to connection lifecycle, specifically, heartbeats.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId Heartbeat { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_HeartbeatFailure.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.HeartbeatFailure%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L85">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_HeartbeatFailure_" data-uid="DisCatSharp.LoggerEvents.HeartbeatFailure*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_HeartbeatFailure" data-uid="DisCatSharp.LoggerEvents.HeartbeatFailure">HeartbeatFailure</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events pertaining to various heartbeat failures, typically fatal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId HeartbeatFailure { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_Intents.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.Intents%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L135">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_Intents_" data-uid="DisCatSharp.LoggerEvents.Intents*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_Intents" data-uid="DisCatSharp.LoggerEvents.Intents">Intents</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events pertaining to Gateway Intents. Typically diagnostic information.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId Intents { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_Misc.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.Misc%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L35">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_Misc_" data-uid="DisCatSharp.LoggerEvents.Misc*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_Misc" data-uid="DisCatSharp.LoggerEvents.Misc">Misc</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Miscellaneous events, that do not fit in any other category.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId Misc { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_RatelimitDiag.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.RatelimitDiag%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L110">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_RatelimitDiag_" data-uid="DisCatSharp.LoggerEvents.RatelimitDiag*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_RatelimitDiag" data-uid="DisCatSharp.LoggerEvents.RatelimitDiag">RatelimitDiag</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events pertaining to ratelimit diagnostics. Typically contain raw bucket info.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId RatelimitDiag { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_RatelimitHit.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.RatelimitHit%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L105">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_RatelimitHit_" data-uid="DisCatSharp.LoggerEvents.RatelimitHit*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_RatelimitHit" data-uid="DisCatSharp.LoggerEvents.RatelimitHit">RatelimitHit</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events pertaining to ratelimit exhaustion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId RatelimitHit { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_RatelimitPreemptive.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.RatelimitPreemptive%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L115">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_RatelimitPreemptive_" data-uid="DisCatSharp.LoggerEvents.RatelimitPreemptive*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_RatelimitPreemptive" data-uid="DisCatSharp.LoggerEvents.RatelimitPreemptive">RatelimitPreemptive</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events emitted when a ratelimit is exhausted and a request is preemptively blocked.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId RatelimitPreemptive { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_RestCleaner.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.RestCleaner%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L160">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_RestCleaner_" data-uid="DisCatSharp.LoggerEvents.RestCleaner*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_RestCleaner" data-uid="DisCatSharp.LoggerEvents.RestCleaner">RestCleaner</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Event is rest cleaner.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId RestCleaner { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_RestError.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.RestError%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L95">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_RestError_" data-uid="DisCatSharp.LoggerEvents.RestError*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_RestError" data-uid="DisCatSharp.LoggerEvents.RestError">RestError</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events emitted when REST processing fails for any reason.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId RestError { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_RestHashMover.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.RestHashMover%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L165">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_RestHashMover_" data-uid="DisCatSharp.LoggerEvents.RestHashMover*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_RestHashMover" data-uid="DisCatSharp.LoggerEvents.RestHashMover">RestHashMover</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Event is rest hash mover.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId RestHashMover { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_RestRx.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.RestRx%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L150">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_RestRx_" data-uid="DisCatSharp.LoggerEvents.RestRx*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_RestRx" data-uid="DisCatSharp.LoggerEvents.RestRx">RestRx</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events containing raw payloads, as they're received from Discord's REST API.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId RestRx { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_RestTx.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.RestTx%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L155">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_RestTx_" data-uid="DisCatSharp.LoggerEvents.RestTx*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_RestTx" data-uid="DisCatSharp.LoggerEvents.RestTx">RestTx</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events containing raw payloads, as they're sent to Discord's REST API.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId RestTx { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_SessionUpdate.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.SessionUpdate%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L50">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_SessionUpdate_" data-uid="DisCatSharp.LoggerEvents.SessionUpdate*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_SessionUpdate" data-uid="DisCatSharp.LoggerEvents.SessionUpdate">SessionUpdate</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events pertaining to Discord-issued session state updates.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId SessionUpdate { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_ShardClientError.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.ShardClientError%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L145">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_ShardClientError_" data-uid="DisCatSharp.LoggerEvents.ShardClientError*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_ShardClientError" data-uid="DisCatSharp.LoggerEvents.ShardClientError">ShardClientError</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events pertaining to the <a class="xref" href="DisCatSharp.DiscordShardedClient.html">DiscordShardedClient</a>'s shards not initializing correctly.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId ShardClientError { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_ShardRest.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.ShardRest%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L170">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_ShardRest_" data-uid="DisCatSharp.LoggerEvents.ShardRest*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_ShardRest" data-uid="DisCatSharp.LoggerEvents.ShardRest">ShardRest</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events pertaining to Discord API requests from the <a class="xref" href="DisCatSharp.DiscordShardedClient.html">DiscordShardedClient</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId ShardRest { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_ShardShutdown.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.ShardShutdown%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L140">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_ShardShutdown_" data-uid="DisCatSharp.LoggerEvents.ShardShutdown*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_ShardShutdown" data-uid="DisCatSharp.LoggerEvents.ShardShutdown">ShardShutdown</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events pertaining to autosharded client shard shutdown, clean or otherwise.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId ShardShutdown { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_ShardStartup.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.ShardStartup%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L100">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_ShardStartup_" data-uid="DisCatSharp.LoggerEvents.ShardStartup*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_ShardStartup" data-uid="DisCatSharp.LoggerEvents.ShardStartup">ShardStartup</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events pertaining to the <a class="xref" href="DisCatSharp.DiscordShardedClient.html">DiscordShardedClient</a> shard startup.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId ShardStartup { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_Startup.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.Startup%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L40">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_Startup_" data-uid="DisCatSharp.LoggerEvents.Startup*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_Startup" data-uid="DisCatSharp.LoggerEvents.Startup">Startup</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events pertaining to startup tasks.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId Startup { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_WebSocketReceive.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.WebSocketReceive%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L60">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_WebSocketReceive_" data-uid="DisCatSharp.LoggerEvents.WebSocketReceive*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_WebSocketReceive" data-uid="DisCatSharp.LoggerEvents.WebSocketReceive">WebSocketReceive</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events emitted for various high-level WebSocket receive events.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId WebSocketReceive { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_WebSocketReceiveFailure.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.WebSocketReceiveFailure%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L75">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_WebSocketReceiveFailure_" data-uid="DisCatSharp.LoggerEvents.WebSocketReceiveFailure*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_WebSocketReceiveFailure" data-uid="DisCatSharp.LoggerEvents.WebSocketReceiveFailure">WebSocketReceiveFailure</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events emitted for various WebSocket payload processing failures, typically when deserialization or decoding fails.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId WebSocketReceiveFailure { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_WebSocketReceiveRaw.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.WebSocketReceiveRaw%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L65">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_WebSocketReceiveRaw_" data-uid="DisCatSharp.LoggerEvents.WebSocketReceiveRaw*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_WebSocketReceiveRaw" data-uid="DisCatSharp.LoggerEvents.WebSocketReceiveRaw">WebSocketReceiveRaw</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events emitted for various low-level WebSocket receive events.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId WebSocketReceiveRaw { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_LoggerEvents_WebSocketSendRaw.md&amp;value=---%0Auid%3A%20DisCatSharp.LoggerEvents.WebSocketSendRaw%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Logging/LoggerEvents.cs/#L70">View Source</a>
+  </span>
+  <a id="DisCatSharp_LoggerEvents_WebSocketSendRaw_" data-uid="DisCatSharp.LoggerEvents.WebSocketSendRaw*"></a>
+  <h4 id="DisCatSharp_LoggerEvents_WebSocketSendRaw" data-uid="DisCatSharp.LoggerEvents.WebSocketSendRaw">WebSocketSendRaw</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.LoggerEvents.yml" sourcestartlinenumber="2">Events emitted for various low-level WebSocket send events.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EventId WebSocketSendRaw { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+</article>
+                </div>
+
+                <div class="copyright-footer">
+                    <span>&#169; Aiko IT Systems. All rights reserved.</span>
+                </div>
+            </div></main>
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.vendor.js"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.js"></script>
+        <script type="text/javascript" src="../../src/scripts/url.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/highlight/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+        <script src="https://cdn.jsdelivr.net/npm/anchor-js/anchor.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/jquery.twbsPagination.js"></script>
+        <script type="text/javascript" src="../../src/scripts/dcs.js"></script>
+        <script type="text/javascript" src="../../src/scripts/lunr.js"></script>
+    </body>
+</html>

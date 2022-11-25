@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Intents | DisCatSharp Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <meta name="title" content="Intents | DisCatSharp Docs ">
+      <meta name="og:title" content="Intents | DisCatSharp Docs ">
+      <meta name="generator" content="docfx 2.60.0.0">
+  
+    <meta name="og:type" content="website">
+    <meta name="og:image" content="https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png">
+    <meta name="og:image:alt" content="DisCatSharp Logo">
+    <meta name="og:image:type" content="image/png">
+    <meta name="og:site_name" content="DisCatSharp Documentation">
+    <link rel="apple-touch-icon" sizes="57x57" href="../../apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="../../ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <script defer="" src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/night-owl.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" integrity="sha384-EvBWSlnoFgZlXJvpzS+MAUEjvN7+gcCwH+qh7GRFOGgZO0PuwOFro7qPOJnLfe7l" crossorigin="anonymous">
+      <link rel="stylesheet" href="../../src/styles/config.css">
+      <link rel="stylesheet" href="../../src/styles/discord.css">
+      <link rel="stylesheet" href="../../src/styles/dcs.css">
+      <link rel="stylesheet" href="../../src/styles/main.css">
+      <link rel="stylesheet" href="../../src/styles/colors.css">
+      <link rel="stylesheet" href="../../src/styles/highlight/github-dark.min.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+  
+  <meta property="docfx:rel" content="../../">
+  <meta property="docfx:newtab" content="true">
+    </head>
+
+    <body>
+        <div class="top-navbar">
+            <a class="burger-icon" onclick="toggleMenu()">
+                <svg name="Hamburger" style="vertical-align: middle;" width="34" height="34" viewbox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M20 6H4V9H20V6ZM4 10.999H20V13.999H4V10.999ZM4 15.999H20V18.999H4V15.999Z"></path></svg>
+            </a>
+
+
+            <a class="navbar-brand" href="../../index.html">
+              <img id="logo" class="svg" src="../../logo.png" alt="DisCatSharp">
+            </a>
+        </div>
+
+        <div class="body-content">
+            <div id="blackout" class="blackout" onclick="toggleMenu()"></div>
+
+            <nav id="sidebar" role="navigation">
+                <div class="sidebar">
+
+                    <div>
+                      <div class="mobile-hide">
+
+                        <a class="navbar-brand" href="../../index.html">
+                          <img id="logo" class="svg" src="../../logo.png" alt="DisCatSharp">
+                        </a>
+                      </div>
+
+                      <div class="sidesearch">
+                        <form id="search" role="search" class="search">
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text" id="search-query" placeholder="Search" autocomplete="off">
+                        </form>
+                      </div>
+
+                      <div id="navbar">
+                      </div>
+                    </div>
+                    <div class="sidebar-item-separator"></div>
+
+                        <div id="sidetoggle">
+                          <div id="sidetoc"></div>
+                        </div>
+                </div>
+                <div class="footer">
+  <strong>Made with ♥ by AITSYS</strong>
+  
+                </div>
+            </nav>
+
+            <main class="main-panel">
+
+                <div id="search-results" style="display: none;">
+                  <h1 class="search-list">Search Results for <span></span></h1>
+                  <div class="sr-items">
+                    <p class="lsearch"><i class="bi bi-hourglass-split index-loading"></i></p>
+                  </div>
+                  <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+                </div>
+
+                <div role="main" class="hide-when-search">
+
+                        <div class="subnav navbar navbar-default">
+                          <div class="container hide-when-search" id="breadcrumb">
+                            <ul class="breadcrumb">
+                              <li></li>
+                            </ul>
+                          </div>
+                        </div>
+
+      <div id="sidetoggle">
+        <div id="sidetoc"></div>
+      </div>
+						<div class="article row grid-right">
+
+                    <article class="content wrap" id="_content" data-uid="beyond_basics_intents">
+<h2 id="intents" sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="6">Intents</h2>
+
+<p sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="7">Intents were added to Discord to help the service not have to push so many events to the bots that were not using them. If you are going to be needing to subscribe to any type of event, they are going to have to be defined <strong sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="7">BOTH</strong> within the
+<a href="https://discord.com/developers/applications" sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="8">Discord Application under the Bot Page</a> on Discords Site and also within the <a class="xref" href="../../api/DisCatSharp/DisCatSharp.DiscordConfiguration.html" data-raw-source="@DisCatSharp.DiscordConfiguration" sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="8">DiscordConfiguration</a>.</p>
+<h3 id="discord-application" sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="11">Discord Application</h3>
+<p sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="12">On the <a href="https://discord.com/developers/applications" sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="12">Discord Application under the Bot Page</a> you will have to specify if your bot requires Privileged Intents. We recommend having these all enabled at first to ensure the most stability when building your first bot, otherwise you may run into issues when retrieving entities from the library's cache.</p>
+<p sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="14"><img src="/images/Intents.png" sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="14" alt="Bot Page"></p>
+<div class="WARNING" sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="16">
+<h5>Warning</h5>
+<p sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="17">These privileged intents may not be available for you to toggle on immediately.</p>
+<p sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="19">Due to their nature of sensitive data, Discord requires you to go through a verification process once your bot is in a certain amount of servers.
+Please read this <a href="https://support.discord.com/hc/en-us/articles/360040720412-Bot-Verification-and-Data-Whitelisting" sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="20">blog post</a> for more information and how to apply.
+Please read <a href="https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Access-Deprecation-for-Verified-Bots" sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="21">this</a> and <a href="https://support.discord.com/hc/en-us/articles/4410940809111" sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="21">this</a> blog post for information about the upcoming message intent in April 2022.</p>
+</div>
+<h3 id="discord-configuration" sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="23">Discord Configuration</h3>
+<p sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="24">Within your <code sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="24">DiscordConfiguration</code> you will have to specify all the intents you will need. Here is a list of all the
+<a class="xref" href="../../api/DisCatSharp/DisCatSharp.DiscordIntents.html" sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="25">Intents</a> DisCatSharp Supports. By default, the configuration will use <code sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="25">DiscordIntents.AllUnprivileged</code> as the default value. Like above however, we recommend having all intents enabled at first, so you should specify <code sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="25">DiscordIntents.All</code> in your configuration which will include the privileged intents you enabled in your application:</p>
+<pre><code class="lang-csharp" sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="27">var config = new DiscordConfiguration()
+{
+    Intents = DiscordIntents.All
+};
+</code></pre>
+<p sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="34">When you become more advanced, you can try experimenting with turning off intents you do not need in order to save resources. In your <code sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="34">DiscordConfiguration</code> you can specify one or many.</p>
+<p sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="36">Here is an example of just specifying one:</p>
+<pre><code class="lang-csharp" sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="37">var config = new DiscordConfiguration()
+{
+    Intents = DiscordIntents.GuildBans
+};
+</code></pre>
+<p sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="44">Here is an example of specifying many:</p>
+<pre><code class="lang-csharp" sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="46">var config = new DiscordConfiguration()
+{
+    Intents = DiscordIntents.DirectMessageReactions
+    | DiscordIntents.DirectMessages
+    | DiscordIntents.GuildBans
+    | DiscordIntents.GuildEmojis
+    | DiscordIntents.GuildInvites
+    | DiscordIntents.GuildMembers
+    | DiscordIntents.GuildMessages
+    | DiscordIntents.Guilds
+    | DiscordIntents.GuildVoiceStates
+    | DiscordIntents.GuildWebhooks,
+};
+</code></pre>
+<p sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="62">Please Note, if you specify a privileged intent within your <code sourcefile="articles/beyond_basics/intents.md" sourcestartlinenumber="62">DiscordConfiguration</code> that you have not signed up for on the Discord Application page, an error will be thrown on the connection.</p>
+</article>
+                </div>
+
+                <div class="copyright-footer">
+                    <span>&#169; Aiko IT Systems. All rights reserved.</span>
+                </div>
+            </div></main>
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.vendor.js"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.js"></script>
+        <script type="text/javascript" src="../../src/scripts/url.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/highlight/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+        <script src="https://cdn.jsdelivr.net/npm/anchor-js/anchor.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/jquery.twbsPagination.js"></script>
+        <script type="text/javascript" src="../../src/scripts/dcs.js"></script>
+        <script type="text/javascript" src="../../src/scripts/lunr.js"></script>
+    </body>
+</html>

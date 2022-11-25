@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+    
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>CommandsNext Introduction | DisCatSharp Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <meta name="title" content="CommandsNext Introduction | DisCatSharp Docs ">
+      <meta name="og:title" content="CommandsNext Introduction | DisCatSharp Docs ">
+      <meta name="generator" content="docfx 2.60.1.0">
+      
+    <meta name="og:type" content="website">
+    <meta name="og:image" content="https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png">
+    <meta name="og:image:alt" content="DisCatSharp Logo">
+    <meta name="og:image:type" content="image/png">
+    <meta name="og:site_name" content="DisCatSharp Documentation">
+    <link rel="apple-touch-icon" sizes="57x57" href="../../../apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../../apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../../apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../../apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../../apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../../apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../../apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../../apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../../apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../../android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../../favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../../favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../../favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="../../../ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+      <link rel="shortcut icon" href="../../../favicon.ico">
+      <script defer="" src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/night-owl.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" integrity="sha384-EvBWSlnoFgZlXJvpzS+MAUEjvN7+gcCwH+qh7GRFOGgZO0PuwOFro7qPOJnLfe7l" crossorigin="anonymous">
+      <link rel="stylesheet" href="../../../src/styles/config.css">
+      <link rel="stylesheet" href="../../../src/styles/discord.css">
+      <link rel="stylesheet" href="../../../src/styles/dcs.css">
+      <link rel="stylesheet" href="../../../src/styles/main.css">
+      <link rel="stylesheet" href="../../../src/styles/colors.css">
+      <link rel="stylesheet" href="../../../src/styles/highlight/github-dark.min.css">
+      <meta property="docfx:navrel" content="../../../toc.html">
+      <meta property="docfx:tocrel" content="../../toc.html">
+      
+      <meta property="docfx:rel" content="../../../">
+      <meta property="docfx:newtab" content="true">
+    </head>
+
+    <body>
+        <div class="top-navbar">
+            <a class="burger-icon" onclick="toggleMenu()">
+                <svg name="Hamburger" style="vertical-align: middle;" width="34" height="34" viewbox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M20 6H4V9H20V6ZM4 10.999H20V13.999H4V10.999ZM4 15.999H20V18.999H4V15.999Z"></path></svg>
+            </a>
+
+            
+            <a class="navbar-brand" href="../../../index.html">
+              <img id="logo" class="svg" src="../../../logo.png" alt="DisCatSharp">
+            </a>
+        </div>
+
+        <div class="body-content">
+            <div id="blackout" class="blackout" onclick="toggleMenu()"></div>
+
+            <nav id="sidebar" role="navigation">
+                <div class="sidebar">
+                    
+                    <div>
+                      <div class="mobile-hide">
+                        
+                        <a class="navbar-brand" href="../../../index.html">
+                          <img id="logo" class="svg" src="../../../logo.png" alt="DisCatSharp">
+                        </a>
+                      </div>
+
+                      <div class="sidesearch">
+                        <form id="search" role="search" class="search">
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text" id="search-query" placeholder="Search" autocomplete="off">
+                        </form>
+                      </div>
+                    
+                      <div id="navbar">
+                      </div>
+                    </div>
+                    <div class="sidebar-item-separator"></div>
+                        
+                        <div id="sidetoggle">
+                          <div id="sidetoc"></div>
+                        </div>
+                </div>
+                <div class="footer">
+                  <strong>Made with ♥ by AITSYS</strong>
+                  
+                </div>
+            </nav>
+
+            <main class="main-panel">
+                
+                <div id="search-results" style="display: none;">
+                  <h1 class="search-list">Search Results for <span></span></h1>
+                  <div class="sr-items">
+                    <p class="lsearch"><i class="bi bi-hourglass-split index-loading"></i></p>
+                  </div>
+                  <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+                </div>
+
+                <div role="main" class="hide-when-search">
+                        
+                        <div class="subnav navbar navbar-default">
+                          <div class="container hide-when-search" id="breadcrumb">
+                            <ul class="breadcrumb">
+                              <li></li>
+                            </ul>
+                          </div>
+                        </div>
+						
+						<div id="sidetoggle">
+						  <div id="sidetoc"></div>
+						</div>
+						<div class="article row grid-right">
+
+                    <article class="content wrap" id="_content" data-uid="modules_commandsnext_intro">
+
+
+<div class="NOTE" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="6">
+<h5>Note</h5>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="7">This article assumes you've recently read the article on <em sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="7"><a class="xref" href="../../basics/first_bot.html" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="7">writing your first bot</a></em>.</p>
+</div>
+<h1 id="introduction-to-commandsnext" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="9">Introduction to CommandsNext</h1>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="10">This article will introduce you to some basic concepts of our native command framework: <em sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="10">CommandsNext</em>.<br>
+Be sure to install the <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="11">DisCatSharp.CommandsNext</code> package from NuGet before continuing.</p>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="13"><img src="/images/commands_intro_01.png" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="13" alt="CommandsNext NuGet Package"></p>
+<br>
+## Writing a Basic Command
+<h3 id="create-a-command-module" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="19">Create a Command Module</h3>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="20">A command module is simply a class which acts as a container for your command methods. Instead of registering individual commands,
+you'd register a single command module which contains multiple commands. There's no limit to the amount of modules you can have,
+and no limit to the amount of commands each module can contain. For example: you could have a module for moderation commands and
+a separate module for image commands. This will help you keep your commands organized and reduce the clutter in your project.</p>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="25">Our first demonstration will be simple, consisting of one command module with a simple command.<br>
+We'll start by creating a new folder named <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="26">Commands</code> which contains a new class named <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="26">MyFirstModule</code>.</p>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="28"><img src="/images/commands_intro_02.png" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="28" alt="Solution Explorer"></p>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="30">Give this new class <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="30">public</code> access and have it inherit from <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="30">BaseCommandModule</code>.</p>
+<pre><code class="lang-cs" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="31">public class MyFirstModule : BaseCommandModule
+{
+
+}
+</code></pre>
+<h3 id="create-a-command-method" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="39">Create a Command Method</h3>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="40">Within our new module, create a method named <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="40">GreetCommand</code> marked as <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="40">async</code> with a <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="40">Task</code> return type.
+The first parameter of your method <em sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="41">must</em> be of type <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="41">CommandContext</code>, as required by CommandsNext.</p>
+<pre><code class="lang-cs" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="42">public async Task GreetCommand(CommandContext ctx)
+{
+
+}
+</code></pre>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="49">In the body of our new method, we'll use <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="49">CommandContext#RespondAsync</code> to send a simple message.</p>
+<pre><code class="lang-cs" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="50">await ctx.RespondAsync(&quot;Greetings! Thank you for executing me!&quot;);
+</code></pre>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="54">Finally, mark your command method with the <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="54">Command</code> attribute so CommandsNext will know to treat our method as a command method.
+This attribute takes a single parameter: the name of the command.</p>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="57">We'll name our command <em sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="57">greet</em> to match the name of the method.</p>
+<pre><code class="lang-cs" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="58">[Command(&quot;greet&quot;)]
+public async Task GreetCommand(CommandContext ctx)
+{
+    await ctx.RespondAsync(&quot;Greetings! Thank you for executing me!&quot;);
+}
+</code></pre>
+<br>
+Your command module should now resemble this:
+```cs
+using System.Threading.Tasks;
+using DisCatSharp.CommandsNext;
+using DisCatSharp.CommandsNext.Attributes;
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="73">public class MyFirstModule : BaseCommandModule
+{
+[Command(&quot;greet&quot;)]
+public async Task GreetCommand(CommandContext ctx)
+{
+await ctx.RespondAsync(&quot;Greetings! Thank you for executing me!&quot;);
+}
+}</p>
+<pre><code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="81">
+### Cleanup and Configuration
+Before we can run our new command, we'll need modify our main method.&lt;br/&gt;
+Start by removing the event handler we created [previously](xref:basics_first_bot#spicing-up-your-bot).
+```cs
+var discord = new DiscordClient();
+
+discord.MessageCreated += async (s, e) =&gt;               // REMOVE
+{                                                       // ALL
+    if (e.Message.Content.ToLower().StartsWith(&quot;ping&quot;)) // OF
+        await e.Message.RespondAsync(&quot;pong!&quot;);          // THESE
+};                                                      // LINES
+
+await discord.ConnectAsync();
+</code></pre>
+<br>
+Next, call the `UseCommandsNext` extension method on your `DiscordClient` instance and pass it a new `CommandsNextConfiguration` instance.
+Assign the resulting `CommandsNextExtension` instance to a new variable named *commands*. This important step will enable CommandsNext for your Discord client.
+```cs
+var discord = new DiscordClient();
+var commands = discord.UseCommandsNext(new CommandsNextConfiguration());
+```
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="106">Create an object initializer for <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="106">CommandsNextConfiguration</code> and assign the <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="106">StringPrefixes</code> property a new <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="106">string</code> array containing your desired prefixes.
+Our example below will only define a single prefix: <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="107">!</code>.</p>
+<pre><code class="lang-cs" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="108">new CommandsNextConfiguration()
+{
+    StringPrefixes = new[] { &quot;!&quot; }
+}
+</code></pre>
+<br>
+Now we'll register our command module.
+Call the `RegisterCommands` method on our `CommandsNextExtension` instance and provide it with your command module.
+```cs
+var discord = new DiscordClient();
+var commands = discord.UseCommandsNext();
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="122">commands.RegisterCommands<myfirstmodule>();<p>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="124">await discord.ConnectAsync();</p>
+<pre><code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="125">Alternatively, you can pass in your assembly to register commands from all modules in your program.
+```cs
+commands.RegisterCommands(Assembly.GetExecutingAssembly());
+</code></pre>
+<br>
+Your main method should look similar to the following:
+```cs
+internal static async Task MainAsync()
+{
+    var discord = new DiscordClient(new DiscordConfiguration());
+    var commands = discord.UseCommandsNext(new CommandsNextConfiguration()
+    {
+        StringPrefixes = new[] { "!" }
+    });
+<pre><code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="142">commands.RegisterCommands&lt;MyFirstModule&gt;();
+
+await discord.ConnectAsync();
+await Task.Delay(-1);
+</code></pre>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="146">}</p>
+<pre><code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="147">
+
+### Running Your Command
+It's now the moment of truth; all your blood, sweat, and tears have lead to this moment.
+Hit `F5` on your keyboard to compile and run your bot, then execute your command in any channel that your bot account has access to.
+
+![Congratulations, You've Won!](/images/commands_intro_03.png)
+
+[That was easy](https://www.youtube.com/watch?v=GsQXadrmhws).
+
+
+&lt;br/&gt;
+## Taking User Input
+
+### Command Arguments
+Now that we have a basic command down, let's spice it up a bit by defining *arguments* to accept user input.
+
+Defining an argument is simple; just add additional parameters to your signature of your command method.
+CommandsNext will automatically parse user input and populate the parameters of your command method with those arguments.
+To demonstrate, we'll modify our *greet* command to greet a user with a given name.
+
+Head back to `MyFirstModule` and add a parameter of type `string` to the `GreetCommand` method.
+```cs
+[Command(&quot;greet&quot;)]
+public async Task GreetCommand(CommandContext ctx, string name)
+</code></pre>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="174">CommandsNext will now interpret this as a command named <em sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="174">greet</em> that takes one argument.</p>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="176">Next, replace our original response message with an <a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="176">interpolated string</a>
+which uses our new parameter.</p>
+<pre><code class="lang-cs" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="178">public async Task GreetCommand(CommandContext ctx, string name)
+{
+    await ctx.RespondAsync($&quot;Greetings, {name}! You're pretty neat!&quot;);
+}
+</code></pre>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="185">That's all there is to it. Smack <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="185">F5</code> and test it out in a channel your bot account has access to.</p>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="187"><img src="/images/commands_intro_04.png" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="187" alt="Greet Part 2: Electric Boogaloo"></p>
+<br>
+Now, you may have noticed that providing more than one word simply does not work.<br>
+For example, `!greet Luke Smith` will result in no response from your bot.
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="193">This fails because a valid <a href="#command-overloads" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="193">overload</a> could not be found for your command.</p>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="195">CommandsNext will split arguments by whitespace. This means <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="195">Luke Smith</code> is counted as two separate arguments; <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="195">Luke</code> and <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="195">Smith</code>.
+In addition to this, CommandsNext will attempt to find and execute an overload of your command that has the <em sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="196">same number</em> of provided arguments.
+Together, this means that any additional arguments will prevent CommandsNext from finding a valid overload to execute.</p>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="199">The simplest way to get around this would be to wrap your input with double quotes.<br>
+CommandsNext will parse this as one argument, allowing your command to be executed.</p>
+<pre><code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="201">!greet &quot;Luke Smith&quot;
+</code></pre>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="205">If you would prefer not to use quotes, you can use the <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="205">RemainingText</code> attribute on your parameter.<br>
+This attribute will instruct CommandsNext to parse all remaining arguments into that parameter.</p>
+<pre><code class="lang-cs" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="207">public async Task GreetCommand(CommandContext ctx, [RemainingText] string name)
+</code></pre>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="211">Alternatively, you can use the <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="211">params</code> keyword to have all remaining arguments parsed into an array.</p>
+<pre><code class="lang-cs" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="212">public async Task GreetCommand(CommandContext ctx, params string[] names)
+</code></pre>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="216">A more obvious solution is to add additional parameters to the method signature of your command method.<br></p>
+<pre><code class="lang-cs" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="217">public async Task GreetCommand(CommandContext ctx, string firstName, string lastName)
+</code></pre>
+<br>
+Each of these has their own caveats; it'll be up to you to choose the best solution for your commands.
+<h3 id="argument-converters" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="225">Argument Converters</h3>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="226">CommandsNext can convert arguments, which are natively <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="226">string</code>, to the type specified by a command method parameter.
+This functionality is powered by <em sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="227">argument converters</em>, and it'll help to eliminate the boilerplate code needed to parse and convert <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="227">string</code> arguments.</p>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="229">CommandsNext has built-in argument converters for the following types:</p>
+<table sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="231">
+<thead>
+<tr sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="231">
+<th style="text-align: center;" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="231">Category</th>
+<th style="text-align: left;" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="231">Types</th>
+</tr>
+</thead>
+<tbody>
+<tr sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="233">
+<td style="text-align: center;" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="233">Discord</td>
+<td style="text-align: left;" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="233"><code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="233">DiscordGuild</code>, <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="233">DiscordChannel</code>, <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="233">DiscordMember</code>, <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="233">DiscordUser</code>,<br><code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="233">DiscordRole</code>, <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="233">DiscordMessage</code>, <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="233">DiscordEmoji</code>, <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="233">DiscordColor</code></td>
+</tr>
+<tr sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="234">
+<td style="text-align: center;" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="234">Integral</td>
+<td style="text-align: left;" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="234"><code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="234">byte</code>, <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="234">short</code>, <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="234">int</code>, <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="234">long</code>, <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="234">sbyte</code>, <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="234">ushort</code>, <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="234">uint</code>, <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="234">ulong</code></td>
+</tr>
+<tr sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="235">
+<td style="text-align: center;" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="235">Floating-Point</td>
+<td style="text-align: left;" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="235"><code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="235">float</code>, <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="235">double</code>, <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="235">decimal</code></td>
+</tr>
+<tr sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="236">
+<td style="text-align: center;" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="236">Date</td>
+<td style="text-align: left;" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="236"><code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="236">DateTime</code>, <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="236">DateTimeOffset</code>, <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="236">TimeSpan</code></td>
+</tr>
+<tr sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="237">
+<td style="text-align: center;" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="237">Character</td>
+<td style="text-align: left;" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="237"><code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="237">string</code>, <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="237">char</code></td>
+</tr>
+<tr sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="238">
+<td style="text-align: center;" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="238">Boolean</td>
+<td style="text-align: left;" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="238"><code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="238">bool</code></td>
+</tr>
+</tbody>
+</table>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="240">You're also able to create and provide your own <a class="xref" href="argument_converters.html" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="240">custom argument converters</a>, if desired.</p>
+<br>
+Let's do a quick demonstration of the built-in converters.
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="246">Create a new command method above our <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="246">GreetCommand</code> method named <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="246">RandomCommand</code> and have it take two integer arguments.
+As the method name suggests, this command will be named <em sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="247">random</em>.</p>
+<pre><code class="lang-cs" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="248">[Command(&quot;random&quot;)]
+public async Task RandomCommand(CommandContext ctx, int min, int max)
+{
+
+}
+</code></pre>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="256">Make a variable with a new instance of <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="256">Random</code>.</p>
+<pre><code class="lang-cs" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="257">var random = new Random();
+</code></pre>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="261">Finally, we'll respond with a random number within the range provided by the user.</p>
+<pre><code class="lang-cs" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="262">await ctx.RespondAsync($&quot;Your number is: {random.Next(min, max)}&quot;);
+</code></pre>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="266">Run your bot once more with <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="266">F5</code> and give this a try in a text channel.</p>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="268"><img src="/images/commands_intro_05.png" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="268" alt="Discord Channel"></p>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="270">CommandsNext converted the two arguments from <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="270">string</code> into <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="270">int</code> and passed them to the parameters of our command,
+removing the need to manually parse and convert the arguments yourself.</p>
+<br>
+We'll do one more to drive the point home. Head back to our old `GreetCommand` method, remove our
+`name` parameter, and replace it with a new parameter of type `DiscordMember` named `member`.
+```cs
+public async Task GreetCommand(CommandContext ctx, DiscordMember member)
+```
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="280">Then modify the response to mention the provided member with the <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="280">Mention</code> property on <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="280">DiscordMember</code>.</p>
+<pre><code class="lang-cs" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="281">public async Task GreetCommand(CommandContext ctx, DiscordMember member)
+{
+    await ctx.RespondAsync($&quot;Greetings, {member.Mention}! Enjoy the mention!&quot;);
+}
+</code></pre>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="288">Go ahead and give that a test run.</p>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="290"><img src="/images/commands_intro_06.png" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="290" alt="According to all known laws of aviation,"></p>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="292"><img src="/images/commands_intro_07.png" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="292" alt="there is no way a bee should be able to fly."></p>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="294"><img src="/images/commands_intro_08.png" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="294" alt="Its wings are too small to get its fat little body off the ground."></p>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="296">The argument converter for <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="296">DiscordMember</code> is able to parse mentions, usernames, nicknames, and user IDs then look for a matching member within the guild the command was executed from.
+Ain't that neat?</p>
+<h2 id="command-overloads" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="300">Command Overloads</h2>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="301">Command method overloading allows you to create multiple argument configurations for a single command.</p>
+<pre><code class="lang-cs" sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="302">[Command(&quot;foo&quot;)]
+public Task FooCommand(CommandContext ctx, string bar, int baz) { }
+
+[Command(&quot;foo&quot;)]
+public Task FooCommand(CommandContext ctx, DiscordUser bar) { }
+</code></pre>
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="309">Executing <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="309">!foo green 5</code> will run the first method, and <code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="309">!foo @SecondUser</code> will run the second method.</p>
+<br>
+Additionally, all check attributes are shared between overloads.<br>
+```cs
+[Command("foo"), Aliases("bar", "baz")]
+[RequireGuild, RequireBotPermissions(Permissions.AttachFiles)]
+public Task FooCommand(CommandContext ctx, int bar, int baz, string qux = "agony") { }
+<p sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="318">[Command(&quot;foo&quot;)]
+public Task FooCommand(CommandContext ctx, DiscordChannel bar, TimeSpan baz) { }</p>
+<pre><code sourcefile="articles/modules/commandsnext/intro.md" sourcestartlinenumber="320">The additional attributes and checks applied to the first method will also be applied to the second method.
+
+
+## Further Reading
+Now that you've gotten an understanding of CommandsNext, it'd be a good idea check out the following:
+
+* [Command Attributes](xref:modules_commandsnext_command_attributes)
+* [Help Formatter](xref:modules_commandsnext_help_formatter)
+* [Dependency Injection](xref:modules_commandsnext_dependency_injection)
+
+</code></pre>
+</myfirstmodule></article>
+                </div>
+
+                <div class="copyright-footer">
+                    <span>&#169; Aiko IT Systems. All rights reserved.</span>
+                </div>
+            </div></main>
+        
+
+        
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../../src/scripts/docfx.vendor.js"></script>
+        <script type="text/javascript" src="../../../src/scripts/docfx.js"></script>
+        <script type="text/javascript" src="../../../src/scripts/url.min.js"></script>
+        <script type="text/javascript" src="../../../src/scripts/highlight/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+        <script src="https://cdn.jsdelivr.net/npm/anchor-js/anchor.min.js"></script>
+        <script type="text/javascript" src="../../../src/scripts/jquery.twbsPagination.js"></script>
+        <script type="text/javascript" src="../../../src/scripts/dcs.js"></script>
+        <script type="text/javascript" src="../../../src/scripts/lunr.js"></script>
+    </div></body>
+</html>

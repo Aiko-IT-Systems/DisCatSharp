@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Frequently Asked Questions | DisCatSharp Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <meta name="title" content="Frequently Asked Questions | DisCatSharp Docs ">
+      <meta name="og:title" content="Frequently Asked Questions | DisCatSharp Docs ">
+      <meta name="generator" content="docfx 2.60.0.0">
+  
+    <meta name="og:type" content="website">
+    <meta name="og:image" content="https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png">
+    <meta name="og:image:alt" content="DisCatSharp Logo">
+    <meta name="og:image:type" content="image/png">
+    <meta name="og:site_name" content="DisCatSharp Documentation">
+    <link rel="apple-touch-icon" sizes="57x57" href="apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+      <link rel="shortcut icon" href="favicon.ico">
+      <script defer="" src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/night-owl.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" integrity="sha384-EvBWSlnoFgZlXJvpzS+MAUEjvN7+gcCwH+qh7GRFOGgZO0PuwOFro7qPOJnLfe7l" crossorigin="anonymous">
+      <link rel="stylesheet" href="src/styles/config.css">
+      <link rel="stylesheet" href="src/styles/discord.css">
+      <link rel="stylesheet" href="src/styles/dcs.css">
+      <link rel="stylesheet" href="src/styles/main.css">
+      <link rel="stylesheet" href="src/styles/colors.css">
+      <link rel="stylesheet" href="src/styles/highlight/github-dark.min.css">
+      <meta property="docfx:navrel" content="toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+  
+  <meta property="docfx:rel" content="">
+  <meta property="docfx:newtab" content="true">
+    </head>
+
+    <body>
+        <div class="top-navbar">
+            <a class="burger-icon" onclick="toggleMenu()">
+                <svg name="Hamburger" style="vertical-align: middle;" width="34" height="34" viewbox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M20 6H4V9H20V6ZM4 10.999H20V13.999H4V10.999ZM4 15.999H20V18.999H4V15.999Z"></path></svg>
+            </a>
+
+
+            <a class="navbar-brand" href="index.html">
+              <img id="logo" class="svg" src="logo.png" alt="DisCatSharp">
+            </a>
+        </div>
+
+        <div class="body-content">
+            <div id="blackout" class="blackout" onclick="toggleMenu()"></div>
+
+            <nav id="sidebar" role="navigation">
+                <div class="sidebar">
+
+                    <div>
+                      <div class="mobile-hide">
+
+                        <a class="navbar-brand" href="index.html">
+                          <img id="logo" class="svg" src="logo.png" alt="DisCatSharp">
+                        </a>
+                      </div>
+
+                      <div class="sidesearch">
+                        <form id="search" role="search" class="search">
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text" id="search-query" placeholder="Search" autocomplete="off">
+                        </form>
+                      </div>
+
+                      <div id="navbar">
+                      </div>
+                    </div>
+                    <div class="sidebar-item-separator"></div>
+                </div>
+                <div class="footer">
+  <strong>Made with ♥ by AITSYS</strong>
+  
+                </div>
+            </nav>
+
+            <main class="main-panel">
+
+                <div id="search-results" style="display: none;">
+                  <h1 class="search-list">Search Results for <span></span></h1>
+                  <div class="sr-items">
+                    <p class="lsearch"><i class="bi bi-hourglass-split index-loading"></i></p>
+                  </div>
+                  <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+                </div>
+
+                <div role="main" class="hide-when-search">
+
+                        <div class="subnav navbar navbar-default">
+                          <div class="container hide-when-search" id="breadcrumb">
+                            <ul class="breadcrumb">
+                              <li></li>
+                            </ul>
+                          </div>
+                        </div>
+						<div class="article row grid">
+
+                    <article class="content wrap" id="_content" data-uid="faq">
+<h1 id="frequently-asked-questions" sourcefile="faq.md" sourcestartlinenumber="6">Frequently Asked Questions</h1>
+
+<h3 id="code-i-copied-from-an-article-isnt-compiling-or-working-as-expected-why" sourcefile="faq.md" sourcestartlinenumber="8">Code I copied from an article isn't compiling or working as expected. Why?</h3>
+<p sourcefile="faq.md" sourcestartlinenumber="9"><em sourcefile="faq.md" sourcestartlinenumber="9">Please use the code snippets as a reference; don't blindly copy-paste code!</em></p>
+<p sourcefile="faq.md" sourcestartlinenumber="11">The snippets of code in the articles are meant to serve as examples to help you understand how to use a part of the library.<br>
+Although most will compile and work at the time of writing, changes to the library over time can make some snippets obsolete.<br>
+Many issues can be resolved with Intellisense by searching for similarly named methods and verifying method parameters.</p>
+<h3 id="im-targeting-mono-and-have-exceptions-crashes-or-other-problems" sourcefile="faq.md" sourcestartlinenumber="15">I'm targeting Mono and have exceptions, crashes, or other problems.</h3>
+<p sourcefile="faq.md" sourcestartlinenumber="16">As mentioned in the <a class="xref" href="articles/preamble.html" sourcefile="faq.md" sourcestartlinenumber="16">preamble</a>, the Mono runtime is inherently unstable and has numerous flaws.<br>
+Because of this we do not support Mono in any way, nor will we support any other projects which use it.</p>
+<p sourcefile="faq.md" sourcestartlinenumber="19">Instead, we recommend using either the latest LTS release or most recent stable version of <a href="https://dotnet.microsoft.com/download" sourcefile="faq.md" sourcestartlinenumber="19">.NET Core</a>.</p>
+<h3 id="connecting-to-a-voice-channel-with-voicenext-will-either-hang-or-throw-an-exception" sourcefile="faq.md" sourcestartlinenumber="21">Connecting to a voice channel with VoiceNext will either hang or throw an exception.</h3>
+<p sourcefile="faq.md" sourcestartlinenumber="22">To troubleshoot, please ensure that:</p>
+<ul sourcefile="faq.md" sourcestartlinenumber="24">
+<li sourcefile="faq.md" sourcestartlinenumber="24">You are using the latest version of DisCatSharp.</li>
+<li sourcefile="faq.md" sourcestartlinenumber="25">You have properly enabled VoiceNext with your instance of <a class="xref" href="api/DisCatSharp/DisCatSharp.DiscordClient.html" data-raw-source="@DisCatSharp.DiscordClient" sourcefile="faq.md" sourcestartlinenumber="25">DiscordClient</a>.</li>
+<li sourcefile="faq.md" sourcestartlinenumber="26">You are <em sourcefile="faq.md" sourcestartlinenumber="26">not</em> using VoiceNext in an event handler.</li>
+<li sourcefile="faq.md" sourcestartlinenumber="27">You have <a class="xref" href="articles/modules/audio/voicenext/prerequisites.html" sourcefile="faq.md" sourcestartlinenumber="27">opus and libsodium</a> available in your target environment.</li>
+</ul>
+<h3 id="why-am-i-getting-heartbeat-skipped-message-in-my-console" sourcefile="faq.md" sourcestartlinenumber="30">Why am I getting <em sourcefile="faq.md" sourcestartlinenumber="30">heartbeat skipped</em> message in my console?</h3>
+<p sourcefile="faq.md" sourcestartlinenumber="31">There are two possible reasons:</p>
+<h4 id="connection-issue-between-your-bot-application-and-discord" sourcefile="faq.md" sourcestartlinenumber="32">Connection issue between your bot application and Discord.</h4>
+<p sourcefile="faq.md" sourcestartlinenumber="33">Check your internet connection and ensure that the machine your bot is hosted on has a stable internet connection.<br>
+If your local network has no issues, the problem could be with either Discord or Cloudflare. In which case, it's out of your control.</p>
+<h4 id="complex-long-running-code-in-an-event-handler" sourcefile="faq.md" sourcestartlinenumber="36">Complex, long-running code in an event handler.</h4>
+<p sourcefile="faq.md" sourcestartlinenumber="37">Any event handlers that have the potential to run for more than a few seconds could cause a deadlock, and cause several heartbeats to be skipped.
+Please take a look at our short article on <a class="xref" href="articles/beyond_basics/events.html" sourcefile="faq.md" sourcestartlinenumber="38">handling exceptions</a> to learn how to avoid this.</p>
+<h3 id="why-am-i-getting-a-4xx-error-and-how-can-i-fix-it" sourcefile="faq.md" sourcestartlinenumber="41">Why am I getting a 4XX error and how can I fix it?</h3>
+<table sourcefile="faq.md" sourcestartlinenumber="42">
+<thead>
+<tr sourcefile="faq.md" sourcestartlinenumber="42">
+<th style="text-align: center;" sourcefile="faq.md" sourcestartlinenumber="42">HTTP Error Code</th>
+<th style="text-align: left;" sourcefile="faq.md" sourcestartlinenumber="42">Cause</th>
+<th style="text-align: left;" sourcefile="faq.md" sourcestartlinenumber="42">Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr sourcefile="faq.md" sourcestartlinenumber="44">
+<td style="text-align: center;" sourcefile="faq.md" sourcestartlinenumber="44"><code sourcefile="faq.md" sourcestartlinenumber="44">401</code></td>
+<td style="text-align: left;" sourcefile="faq.md" sourcestartlinenumber="44">Invalid token.</td>
+<td style="text-align: left;" sourcefile="faq.md" sourcestartlinenumber="44">Verify your token and make sure no errors were made.<br>The client secret found on the 'general information' tab of your application page <em sourcefile="faq.md" sourcestartlinenumber="44">is not</em> your token.</td>
+</tr>
+<tr sourcefile="faq.md" sourcestartlinenumber="45">
+<td style="text-align: center;" sourcefile="faq.md" sourcestartlinenumber="45"><code sourcefile="faq.md" sourcestartlinenumber="45">403</code></td>
+<td style="text-align: left;" sourcefile="faq.md" sourcestartlinenumber="45">Not enough permissions.</td>
+<td style="text-align: left;" sourcefile="faq.md" sourcestartlinenumber="45">Verify permissions and ensure your bot account has a role higher than the target user.<br>Administrator permissions <em sourcefile="faq.md" sourcestartlinenumber="45">do not</em> bypass the role hierarchy.</td>
+</tr>
+<tr sourcefile="faq.md" sourcestartlinenumber="46">
+<td style="text-align: center;" sourcefile="faq.md" sourcestartlinenumber="46"><code sourcefile="faq.md" sourcestartlinenumber="46">404</code></td>
+<td style="text-align: left;" sourcefile="faq.md" sourcestartlinenumber="46">Requested object not found.</td>
+<td style="text-align: left;" sourcefile="faq.md" sourcestartlinenumber="46">This usually means the entity does not exist. You should reattempt then inform your user.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="i-cannot-modify-a-specific-user-or-role-why-is-this" sourcefile="faq.md" sourcestartlinenumber="48">I cannot modify a specific user or role. Why is this?</h3>
+<p sourcefile="faq.md" sourcestartlinenumber="49">In order to modify a user, the highest role of your bot account must be higher than the target user.<br>
+Changing the properties of a role requires that your bot account have a role higher than that role.</p>
+<h3 id="does-commandsnext-support-dependency-injection" sourcefile="faq.md" sourcestartlinenumber="52">Does CommandsNext support dependency injection?</h3>
+<p sourcefile="faq.md" sourcestartlinenumber="53">It does! Please take a look at our <a class="xref" href="articles/modules/commandsnext/dependency_injection.html" sourcefile="faq.md" sourcestartlinenumber="53">article</a> on the subject.</p>
+<h3 id="can-i-use-a-user-token" sourcefile="faq.md" sourcestartlinenumber="55">Can I use a user token?</h3>
+<p sourcefile="faq.md" sourcestartlinenumber="56">Automating a user account is against Discord's <a href="https://dis.gd/terms" sourcefile="faq.md" sourcestartlinenumber="56">Terms of Service</a> and is not supported by DisCatSharp.</p>
+<h3 id="how-can-i-set-a-custom-status" sourcefile="faq.md" sourcestartlinenumber="58">How can I set a custom status?</h3>
+<p sourcefile="faq.md" sourcestartlinenumber="59">If you mean a <em sourcefile="faq.md" sourcestartlinenumber="59">true</em> custom status like this:</p>
+<p sourcefile="faq.md" sourcestartlinenumber="61"><img src="/images/faq_01.png" sourcefile="faq.md" sourcestartlinenumber="61" alt="help"></p>
+<p sourcefile="faq.md" sourcestartlinenumber="63">No, you cannot. Discord does not allow bots to use custom statuses.</p>
+<br>
+However, if you meant an activity like this:
+<p sourcefile="faq.md" sourcestartlinenumber="68"><img src="/images/faq_02.png" sourcefile="faq.md" sourcestartlinenumber="68" alt="Bot Presence"></p>
+<p sourcefile="faq.md" sourcestartlinenumber="70">You can use either of the following</p>
+<ul sourcefile="faq.md" sourcestartlinenumber="72">
+<li sourcefile="faq.md" sourcestartlinenumber="72">The overload for <a class="xref" href="api/DisCatSharp/DisCatSharp.DiscordClient.html#DisCatSharp_DiscordClient_ConnectAsync_DisCatSharp_Entities_DiscordActivity_System_Nullable_DisCatSharp_Entities_UserStatus__System_Nullable_DateTimeOffset__" sourcefile="faq.md" sourcestartlinenumber="72">ConnectAsync</a>(<a class="xref" href="api/DisCatSharp/DisCatSharp.Entities.DiscordActivity.html" sourcefile="faq.md" sourcestartlinenumber="72">DiscordActivity</a>, System.Nullable{UserStatus}, System.Nullable{DateTimeOffset}) which accepts a <a class="xref" href="api/DisCatSharp/DisCatSharp.Entities.DiscordActivity.html" sourcefile="faq.md" sourcestartlinenumber="72">DiscordActivity</a>.</li>
+<li sourcefile="faq.md" sourcestartlinenumber="73"><a class="xref" href="api/DisCatSharp/DisCatSharp.DiscordClient.html#DisCatSharp_DiscordClient_UpdateStatusAsync_DisCatSharp_Entities_DiscordActivity_System_Nullable_DisCatSharp_Entities_UserStatus__System_Nullable_DateTimeOffset__" sourcefile="faq.md" sourcestartlinenumber="73">UpdateStatusAsync</a>(<a class="xref" href="api/DisCatSharp/DisCatSharp.Entities.DiscordActivity.html" sourcefile="faq.md" sourcestartlinenumber="73">DiscordActivity</a>, System.Nullable{UserStatus}, System.Nullable{DateTimeOffset}) OR <a class="xref" href="api/DisCatSharp/DisCatSharp.DiscordShardedClient.html#DisCatSharp_DiscordShardedClient_UpdateStatusAsync_DisCatSharp_Entities_DiscordActivity_System_Nullable_DisCatSharp_Entities_UserStatus__System_Nullable_DateTimeOffset__" sourcefile="faq.md" sourcestartlinenumber="73">UpdateStatusAsync</a>(DiscordActivity, System.Nullable{<a class="xref" href="api/DisCatSharp/DisCatSharp.Entities.UserStatus.html" sourcefile="faq.md" sourcestartlinenumber="73">UserStatus</a>}, System.Nullable{DateTimeOffset}) (for the sharded client) at any point after <code sourcefile="faq.md" sourcestartlinenumber="73">Ready</code> has been fired.</li>
+</ul>
+<h3 id="am-i-able-to-retrieve-a--by-name" sourcefile="faq.md" sourcestartlinenumber="75">Am I able to retrieve a <a class="xref" href="api/DisCatSharp/DisCatSharp.Entities.DiscordRole.html" data-raw-source="@DisCatSharp.Entities.DiscordRole" sourcefile="faq.md" sourcestartlinenumber="75">DiscordRole</a> by name?</h3>
+<p sourcefile="faq.md" sourcestartlinenumber="76">Yes. Use LINQ on the <code sourcefile="faq.md" sourcestartlinenumber="76">Roles</code> property of your instance of <a class="xref" href="api/DisCatSharp/DisCatSharp.Entities.DiscordGuild.html" sourcefile="faq.md" sourcestartlinenumber="76">DiscordGuild</a> and compare against the <code sourcefile="faq.md" sourcestartlinenumber="76">Name</code> of  each <a class="xref" href="api/DisCatSharp/DisCatSharp.Entities.DiscordRole.html" sourcefile="faq.md" sourcestartlinenumber="76">DiscordRole</a>.</p>
+<h3 id="why-are-you-using-newtonsoftjson-when-systemtextjson-is-available" sourcefile="faq.md" sourcestartlinenumber="78">Why are you using Newtonsoft.Json when System.Text.Json is available</h3>
+<p sourcefile="faq.md" sourcestartlinenumber="79">Yes <code sourcefile="faq.md" sourcestartlinenumber="79">System.Text.Json</code> is available to use but it still doesn't stand up to what we currently need which is why we still use Newtonsoft.Json.
+Maybe in time we can switch to your favorite Json Deserializer but for right now we will be using Newtonsoft.Json for the foreseeable future.</p>
+<h3 id="why-the-hell-are-my-events-not-firing" sourcefile="faq.md" sourcestartlinenumber="82">Why the hell are my events not firing?</h3>
+<p sourcefile="faq.md" sourcestartlinenumber="83">This is because in the Discord V8+ API, they require <a class="xref" href="api/DisCatSharp/DisCatSharp.DiscordIntents.html" data-raw-source="@DisCatSharp.DiscordIntents" sourcefile="faq.md" sourcestartlinenumber="83">DiscordIntents</a> to be enabled on <a class="xref" href="api/DisCatSharp/DisCatSharp.DiscordConfiguration.html" sourcefile="faq.md" sourcestartlinenumber="83">DiscordConfiguration</a> and the
+Discord Application Portal. We have an <a class="xref" href="articles/beyond_basics/intents.html" sourcefile="faq.md" sourcestartlinenumber="84">article</a> that covers all that has to be done to set this up.</p>
+</article>
+                </div>
+
+                <div class="copyright-footer">
+                    <span>&#169; Aiko IT Systems. All rights reserved.</span>
+                </div>
+            </div></main>
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="src/scripts/docfx.vendor.js"></script>
+        <script type="text/javascript" src="src/scripts/docfx.js"></script>
+        <script type="text/javascript" src="src/scripts/url.min.js"></script>
+        <script type="text/javascript" src="src/scripts/highlight/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+        <script src="https://cdn.jsdelivr.net/npm/anchor-js/anchor.min.js"></script>
+        <script type="text/javascript" src="src/scripts/jquery.twbsPagination.js"></script>
+        <script type="text/javascript" src="src/scripts/dcs.js"></script>
+        <script type="text/javascript" src="src/scripts/lunr.js"></script>
+    </body>
+</html>

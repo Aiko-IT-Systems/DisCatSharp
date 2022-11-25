@@ -1,0 +1,2117 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+    
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>
+    
+    Class Extensions
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+     | DisCatSharp Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <meta name="title" content="
+    
+    Class Extensions
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+     | DisCatSharp Docs ">
+      <meta name="og:title" content="
+    
+    Class Extensions
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+     | DisCatSharp Docs ">
+      <meta name="generator" content="docfx 2.60.1.0">
+      
+    <meta name="og:type" content="website">
+    <meta name="og:image" content="https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png">
+    <meta name="og:image:alt" content="DisCatSharp Logo">
+    <meta name="og:image:type" content="image/png">
+    <meta name="og:site_name" content="DisCatSharp Documentation">
+    <link rel="apple-touch-icon" sizes="57x57" href="../../apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="../../ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <script defer="" src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/night-owl.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" integrity="sha384-EvBWSlnoFgZlXJvpzS+MAUEjvN7+gcCwH+qh7GRFOGgZO0PuwOFro7qPOJnLfe7l" crossorigin="anonymous">
+      <link rel="stylesheet" href="../../src/styles/config.css">
+      <link rel="stylesheet" href="../../src/styles/discord.css">
+      <link rel="stylesheet" href="../../src/styles/dcs.css">
+      <link rel="stylesheet" href="../../src/styles/main.css">
+      <link rel="stylesheet" href="../../src/styles/colors.css">
+      <link rel="stylesheet" href="../../src/styles/highlight/github-dark.min.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+      
+      <meta property="docfx:rel" content="../../">
+      <meta property="docfx:newtab" content="true">
+    </head>
+
+    <body>
+        <div class="top-navbar">
+            <a class="burger-icon" onclick="toggleMenu()">
+                <svg name="Hamburger" style="vertical-align: middle;" width="34" height="34" viewbox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M20 6H4V9H20V6ZM4 10.999H20V13.999H4V10.999ZM4 15.999H20V18.999H4V15.999Z"></path></svg>
+            </a>
+
+            
+            <a class="navbar-brand" href="../../index.html">
+              <img id="logo" class="svg" src="../../logo.png" alt="DisCatSharp">
+            </a>
+        </div>
+
+        <div class="body-content">
+            <div id="blackout" class="blackout" onclick="toggleMenu()"></div>
+
+            <nav id="sidebar" role="navigation">
+                <div class="sidebar">
+                    
+                    <div>
+                      <div class="mobile-hide">
+                        
+                        <a class="navbar-brand" href="../../index.html">
+                          <img id="logo" class="svg" src="../../logo.png" alt="DisCatSharp">
+                        </a>
+                      </div>
+
+                      <div class="sidesearch">
+                        <form id="search" role="search" class="search">
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text" id="search-query" placeholder="Search" autocomplete="off">
+                        </form>
+                      </div>
+                    
+                      <div id="navbar">
+                      </div>
+                    </div>
+                    <div class="sidebar-item-separator"></div>
+                        
+                        <div id="sidetoggle">
+                          <div id="sidetoc"></div>
+                        </div>
+                </div>
+                <div class="footer">
+                  <strong>Made with ♥ by AITSYS</strong>
+                  
+                </div>
+            </nav>
+
+            <main class="main-panel">
+                
+                <div id="search-results" style="display: none;">
+                  <h1 class="search-list">Search Results for <span></span></h1>
+                  <div class="sr-items">
+                    <p class="lsearch"><i class="bi bi-hourglass-split index-loading"></i></p>
+                  </div>
+                  <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+                </div>
+
+                <div role="main" class="hide-when-search">
+                        
+                        <div class="subnav navbar navbar-default">
+                          <div class="container hide-when-search" id="breadcrumb">
+                            <ul class="breadcrumb">
+                              <li></li>
+                            </ul>
+                          </div>
+                        </div>
+						
+						<div id="sidetoggle">
+						  <div id="sidetoc"></div>
+						</div>
+						<div class="article row grid-right">
+
+                    <article class="content wrap" id="_content" data-uid="DisCatSharp.Common.Extensions">
+  
+  
+  <h1 id="DisCatSharp_Common_Extensions" data-uid="DisCatSharp.Common.Extensions" class="text-break">
+  
+  Class Extensions
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </h1>
+  <div class="markdown level0 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Assortment of various extension and utility methods, designed to make working with various types a little easier.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">Extensions</span></div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="DisCatSharp.Common.html">DisCatSharp.Common</a></h6>
+  <h6><strong>Assembly</strong>: DisCatSharp.Common.dll</h6>
+  <h5 id="DisCatSharp_Common_Extensions_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class Extensions : object</code></pre>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_CalculateKnuthHash_ArraySegment_System_Char__.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.CalculateKnuthHash(ArraySegment%7BSystem.Char%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L413">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_CalculateKnuthHash_" data-uid="DisCatSharp.Common.Extensions.CalculateKnuthHash*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_CalculateKnuthHash_ArraySegment_System_Char__" data-uid="DisCatSharp.Common.Extensions.CalculateKnuthHash(ArraySegment{System.Char})">CalculateKnuthHash(ArraySegment&lt;Char&gt;)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Computes a 64-bit Knuth hash from supplied characters.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ulong CalculateKnuthHash(this ArraySegment&lt;char&gt; chars)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">ArraySegment</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.char">Char</a>&gt;</td>
+        <td><span class="parametername">chars</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Characters to compute the hash value from.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Computer 64-bit Knuth hash.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_CalculateKnuthHash_Memory_System_Char__.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.CalculateKnuthHash(Memory%7BSystem.Char%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L404">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_CalculateKnuthHash_" data-uid="DisCatSharp.Common.Extensions.CalculateKnuthHash*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_CalculateKnuthHash_Memory_System_Char__" data-uid="DisCatSharp.Common.Extensions.CalculateKnuthHash(Memory{System.Char})">CalculateKnuthHash(Memory&lt;Char&gt;)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Computes a 64-bit Knuth hash from supplied characters.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ulong CalculateKnuthHash(this Memory&lt;char&gt; chars)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Memory</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.char">Char</a>&gt;</td>
+        <td><span class="parametername">chars</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Characters to compute the hash value from.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Computer 64-bit Knuth hash.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_CalculateKnuthHash_ReadOnlyMemory_System_Char__.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.CalculateKnuthHash(ReadOnlyMemory%7BSystem.Char%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L395">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_CalculateKnuthHash_" data-uid="DisCatSharp.Common.Extensions.CalculateKnuthHash*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_CalculateKnuthHash_ReadOnlyMemory_System_Char__" data-uid="DisCatSharp.Common.Extensions.CalculateKnuthHash(ReadOnlyMemory{System.Char})">CalculateKnuthHash(ReadOnlyMemory&lt;Char&gt;)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Computes a 64-bit Knuth hash from supplied characters.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ulong CalculateKnuthHash(this ReadOnlyMemory&lt;char&gt; chars)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">ReadOnlyMemory</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.char">Char</a>&gt;</td>
+        <td><span class="parametername">chars</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Characters to compute the hash value from.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Computer 64-bit Knuth hash.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_CalculateKnuthHash_ReadOnlySpan_System_Char__.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.CalculateKnuthHash(ReadOnlySpan%7BSystem.Char%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L377">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_CalculateKnuthHash_" data-uid="DisCatSharp.Common.Extensions.CalculateKnuthHash*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_CalculateKnuthHash_ReadOnlySpan_System_Char__" data-uid="DisCatSharp.Common.Extensions.CalculateKnuthHash(ReadOnlySpan{System.Char})">CalculateKnuthHash(ReadOnlySpan&lt;Char&gt;)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Computes a 64-bit Knuth hash from supplied characters.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ulong CalculateKnuthHash(this ReadOnlySpan&lt;char&gt; chars)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">ReadOnlySpan</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.char">Char</a>&gt;</td>
+        <td><span class="parametername">chars</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Characters to compute the hash value from.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Computer 64-bit Knuth hash.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_CalculateKnuthHash_Span_System_Char__.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.CalculateKnuthHash(Span%7BSystem.Char%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L386">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_CalculateKnuthHash_" data-uid="DisCatSharp.Common.Extensions.CalculateKnuthHash*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_CalculateKnuthHash_Span_System_Char__" data-uid="DisCatSharp.Common.Extensions.CalculateKnuthHash(Span{System.Char})">CalculateKnuthHash(Span&lt;Char&gt;)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Computes a 64-bit Knuth hash from supplied characters.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ulong CalculateKnuthHash(this Span&lt;char&gt; chars)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Span</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.char">Char</a>&gt;</td>
+        <td><span class="parametername">chars</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Characters to compute the hash value from.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Computer 64-bit Knuth hash.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_CalculateKnuthHash_System_Char___.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.CalculateKnuthHash(System.Char%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L422">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_CalculateKnuthHash_" data-uid="DisCatSharp.Common.Extensions.CalculateKnuthHash*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_CalculateKnuthHash_System_Char___" data-uid="DisCatSharp.Common.Extensions.CalculateKnuthHash(System.Char[])">CalculateKnuthHash(Char[])</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Computes a 64-bit Knuth hash from supplied characters.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ulong CalculateKnuthHash(this char[] chars)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.char">Char</a>[]</td>
+        <td><span class="parametername">chars</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Characters to compute the hash value from.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Computer 64-bit Knuth hash.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_CalculateKnuthHash_System_Char___System_Int32_System_Int32_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.CalculateKnuthHash(System.Char%5B%5D%2CSystem.Int32%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L433">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_CalculateKnuthHash_" data-uid="DisCatSharp.Common.Extensions.CalculateKnuthHash*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_CalculateKnuthHash_System_Char___System_Int32_System_Int32_" data-uid="DisCatSharp.Common.Extensions.CalculateKnuthHash(System.Char[],System.Int32,System.Int32)">CalculateKnuthHash(Char[], Int32, Int32)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Computes a 64-bit Knuth hash from supplied characters.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ulong CalculateKnuthHash(this char[] chars, int start, int count)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.char">Char</a>[]</td>
+        <td><span class="parametername">chars</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Characters to compute the hash value from.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">start</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Offset in the array to start calculating from.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">count</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number of characters to compute the hash from.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Computer 64-bit Knuth hash.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_CalculateKnuthHash_System_String_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.CalculateKnuthHash(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L442">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_CalculateKnuthHash_" data-uid="DisCatSharp.Common.Extensions.CalculateKnuthHash*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_CalculateKnuthHash_System_String_" data-uid="DisCatSharp.Common.Extensions.CalculateKnuthHash(System.String)">CalculateKnuthHash(String)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Computes a 64-bit Knuth hash from supplied characters.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ulong CalculateKnuthHash(this string chars)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">chars</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Characters to compute the hash value from.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Computer 64-bit Knuth hash.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_CalculateKnuthHash_System_String_System_Int32_System_Int32_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.CalculateKnuthHash(System.String%2CSystem.Int32%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L453">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_CalculateKnuthHash_" data-uid="DisCatSharp.Common.Extensions.CalculateKnuthHash*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_CalculateKnuthHash_System_String_System_Int32_System_Int32_" data-uid="DisCatSharp.Common.Extensions.CalculateKnuthHash(System.String,System.Int32,System.Int32)">CalculateKnuthHash(String, Int32, Int32)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Computes a 64-bit Knuth hash from supplied characters.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ulong CalculateKnuthHash(this string chars, int start, int count)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">chars</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Characters to compute the hash value from.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">start</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Offset in the array to start calculating from.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">count</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number of characters to compute the hash from.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Computer 64-bit Knuth hash.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_CalculateLength_System_Byte_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.CalculateLength(System.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L63">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_CalculateLength_" data-uid="DisCatSharp.Common.Extensions.CalculateLength*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_CalculateLength_System_Byte_" data-uid="DisCatSharp.Common.Extensions.CalculateLength(System.Byte)">CalculateLength(Byte)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Calculates the length of string representation of given number in base 10 (including sign, if present).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static int CalculateLength(this byte num)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">Byte</a></td>
+        <td><span class="parametername">num</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number to calculate the length of.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Calculated number length.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_CalculateLength_System_Int16_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.CalculateLength(System.Int16)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L72">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_CalculateLength_" data-uid="DisCatSharp.Common.Extensions.CalculateLength*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_CalculateLength_System_Int16_" data-uid="DisCatSharp.Common.Extensions.CalculateLength(System.Int16)">CalculateLength(Int16)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Calculates the length of string representation of given number in base 10 (including sign, if present).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static int CalculateLength(this short num)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int16">Int16</a></td>
+        <td><span class="parametername">num</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number to calculate the length of.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Calculated number length.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_CalculateLength_System_Int32_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.CalculateLength(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L90">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_CalculateLength_" data-uid="DisCatSharp.Common.Extensions.CalculateLength*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_CalculateLength_System_Int32_" data-uid="DisCatSharp.Common.Extensions.CalculateLength(System.Int32)">CalculateLength(Int32)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Calculates the length of string representation of given number in base 10 (including sign, if present).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static int CalculateLength(this int num)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">num</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number to calculate the length of.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Calculated number length.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_CalculateLength_System_Int64_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.CalculateLength(System.Int64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L108">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_CalculateLength_" data-uid="DisCatSharp.Common.Extensions.CalculateLength*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_CalculateLength_System_Int64_" data-uid="DisCatSharp.Common.Extensions.CalculateLength(System.Int64)">CalculateLength(Int64)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Calculates the length of string representation of given number in base 10 (including sign, if present).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static int CalculateLength(this long num)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">Int64</a></td>
+        <td><span class="parametername">num</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number to calculate the length of.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Calculated number length.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_CalculateLength_System_SByte_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.CalculateLength(System.SByte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L54">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_CalculateLength_" data-uid="DisCatSharp.Common.Extensions.CalculateLength*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_CalculateLength_System_SByte_" data-uid="DisCatSharp.Common.Extensions.CalculateLength(System.SByte)">CalculateLength(SByte)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Calculates the length of string representation of given number in base 10 (including sign, if present).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static int CalculateLength(this sbyte num)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.sbyte">SByte</a></td>
+        <td><span class="parametername">num</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number to calculate the length of.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Calculated number length.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_CalculateLength_System_UInt16_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.CalculateLength(System.UInt16)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L81">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_CalculateLength_" data-uid="DisCatSharp.Common.Extensions.CalculateLength*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_CalculateLength_System_UInt16_" data-uid="DisCatSharp.Common.Extensions.CalculateLength(System.UInt16)">CalculateLength(UInt16)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Calculates the length of string representation of given number in base 10 (including sign, if present).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static int CalculateLength(this ushort num)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">UInt16</a></td>
+        <td><span class="parametername">num</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number to calculate the length of.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Calculated number length.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_CalculateLength_System_UInt32_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.CalculateLength(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L99">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_CalculateLength_" data-uid="DisCatSharp.Common.Extensions.CalculateLength*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_CalculateLength_System_UInt32_" data-uid="DisCatSharp.Common.Extensions.CalculateLength(System.UInt32)">CalculateLength(UInt32)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Calculates the length of string representation of given number in base 10 (including sign, if present).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static int CalculateLength(this uint num)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">num</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number to calculate the length of.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Calculated number length.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_CalculateLength_System_UInt64_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.CalculateLength(System.UInt64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L117">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_CalculateLength_" data-uid="DisCatSharp.Common.Extensions.CalculateLength*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_CalculateLength_System_UInt64_" data-uid="DisCatSharp.Common.Extensions.CalculateLength(System.UInt64)">CalculateLength(UInt64)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Calculates the length of string representation of given number in base 10 (including sign, if present).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static int CalculateLength(this ulong num)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">num</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number to calculate the length of.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Calculated number length.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_Deconstruct__2_KeyValuePair___0___1____0____1__.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.Deconstruct%60%602(KeyValuePair%7B%60%600%2C%60%601%7D%2C%60%600%40%2C%60%601%40)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L43">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_Deconstruct_" data-uid="DisCatSharp.Common.Extensions.Deconstruct*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_Deconstruct__2_KeyValuePair___0___1____0____1__" data-uid="DisCatSharp.Common.Extensions.Deconstruct``2(KeyValuePair{``0,``1},``0@,``1@)">Deconstruct&lt;TKey, TValue&gt;(KeyValuePair&lt;TKey, TValue&gt;, out TKey, out TValue)</h4>
+  <div class="markdown level1 summary"><p>Deconstructs a <see cref="!:Dictionary&lt;TKey, TValue>"></see> key-value pair item (<see cref="!:KeyValuePair&lt;TKey, TValue>"></see>) into 2 separate variables.</p>
+<p>This allows for enumerating over dictionaries in foreach blocks by using a (k, v) tuple as the enumerator variable, instead of having to use a <see cref="!:KeyValuePair&lt;TKey, TValue>"></see> directly.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Deconstruct&lt;TKey, TValue&gt;(this KeyValuePair&lt;TKey, TValue&gt; kvp, out TKey key, out TValue value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">KeyValuePair</span>&lt;TKey, TValue&gt;</td>
+        <td><span class="parametername">kvp</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Key-value pair to deconstruct.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TKey</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Deconstructed key.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TValue</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Deconstructed value.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TKey</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Type of dictionary item key.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TValue</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Type of dictionary item value.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_EndsWithCharacter_System_String_System_Char_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.EndsWithCharacter(System.String%2CSystem.Char)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L356">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_EndsWithCharacter_" data-uid="DisCatSharp.Common.Extensions.EndsWithCharacter*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_EndsWithCharacter_System_String_System_Char_" data-uid="DisCatSharp.Common.Extensions.EndsWithCharacter(System.String,System.Char)">EndsWithCharacter(String, Char)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Tests whether given string ends with given character.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool EndsWithCharacter(this string s, char c)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">s</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">String to test.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.char">Char</a></td>
+        <td><span class="parametername">c</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Character to test for.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the supplied string ends with supplied character.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_IsBasicAlphanumeric_System_Char_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.IsBasicAlphanumeric(System.Char)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L328">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_IsBasicAlphanumeric_" data-uid="DisCatSharp.Common.Extensions.IsBasicAlphanumeric*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_IsBasicAlphanumeric_System_Char_" data-uid="DisCatSharp.Common.Extensions.IsBasicAlphanumeric(System.Char)">IsBasicAlphanumeric(Char)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Returns whether supplied character is in any of the following ranges: a-z, A-Z, 0-9.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsBasicAlphanumeric(this char c)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.char">Char</a></td>
+        <td><span class="parametername">c</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Character to test.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the character is in basic alphanumeric character range.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_IsBasicDigit_System_Char_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.IsBasicDigit(System.Char)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L337">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_IsBasicDigit_" data-uid="DisCatSharp.Common.Extensions.IsBasicDigit*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_IsBasicDigit_System_Char_" data-uid="DisCatSharp.Common.Extensions.IsBasicDigit(System.Char)">IsBasicDigit(Char)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Returns whether supplied character is in the 0-9 range.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsBasicDigit(this char c)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.char">Char</a></td>
+        <td><span class="parametername">c</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Character to test.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the character is in basic numeric digit character range.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_IsBasicLetter_System_Char_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.IsBasicLetter(System.Char)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L346">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_IsBasicLetter_" data-uid="DisCatSharp.Common.Extensions.IsBasicLetter*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_IsBasicLetter_System_Char_" data-uid="DisCatSharp.Common.Extensions.IsBasicLetter(System.Char)">IsBasicLetter(Char)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Returns whether supplied character is in the a-z or A-Z range.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsBasicLetter(this char c)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.char">Char</a></td>
+        <td><span class="parametername">c</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Character to test.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the character is in basic letter character range.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_IsInRange_System_Byte_System_Byte_System_Byte_System_Boolean_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.IsInRange(System.Byte%2CSystem.Byte%2CSystem.Byte%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L150">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_IsInRange_" data-uid="DisCatSharp.Common.Extensions.IsInRange*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_IsInRange_System_Byte_System_Byte_System_Byte_System_Boolean_" data-uid="DisCatSharp.Common.Extensions.IsInRange(System.Byte,System.Byte,System.Byte,System.Boolean)">IsInRange(Byte, Byte, Byte, Boolean)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsInRange(this byte num, byte min, byte max, bool inclusive = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">Byte</a></td>
+        <td><span class="parametername">num</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number to test.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">Byte</a></td>
+        <td><span class="parametername">min</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Lower bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">Byte</a></td>
+        <td><span class="parametername">max</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Upper bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">inclusive</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the check is to be inclusive.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the value is in range.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_IsInRange_System_Double_System_Double_System_Double_System_Boolean_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.IsInRange(System.Double%2CSystem.Double%2CSystem.Double%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L314">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_IsInRange_" data-uid="DisCatSharp.Common.Extensions.IsInRange*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_IsInRange_System_Double_System_Double_System_Double_System_Boolean_" data-uid="DisCatSharp.Common.Extensions.IsInRange(System.Double,System.Double,System.Double,System.Boolean)">IsInRange(Double, Double, Double, Boolean)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsInRange(this double num, double min, double max, bool inclusive = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">num</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number to test.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">min</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Lower bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">max</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Upper bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">inclusive</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the check is to be inclusive.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the value is in range.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_IsInRange_System_Int16_System_Int16_System_Int16_System_Boolean_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.IsInRange(System.Int16%2CSystem.Int16%2CSystem.Int16%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L171">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_IsInRange_" data-uid="DisCatSharp.Common.Extensions.IsInRange*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_IsInRange_System_Int16_System_Int16_System_Int16_System_Boolean_" data-uid="DisCatSharp.Common.Extensions.IsInRange(System.Int16,System.Int16,System.Int16,System.Boolean)">IsInRange(Int16, Int16, Int16, Boolean)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsInRange(this short num, short min, short max, bool inclusive = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int16">Int16</a></td>
+        <td><span class="parametername">num</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number to test.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int16">Int16</a></td>
+        <td><span class="parametername">min</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Lower bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int16">Int16</a></td>
+        <td><span class="parametername">max</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Upper bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">inclusive</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the check is to be inclusive.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the value is in range.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_IsInRange_System_Int32_System_Int32_System_Int32_System_Boolean_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.IsInRange(System.Int32%2CSystem.Int32%2CSystem.Int32%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L213">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_IsInRange_" data-uid="DisCatSharp.Common.Extensions.IsInRange*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_IsInRange_System_Int32_System_Int32_System_Int32_System_Boolean_" data-uid="DisCatSharp.Common.Extensions.IsInRange(System.Int32,System.Int32,System.Int32,System.Boolean)">IsInRange(Int32, Int32, Int32, Boolean)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsInRange(this int num, int min, int max, bool inclusive = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">num</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number to test.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">min</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Lower bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">max</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Upper bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">inclusive</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the check is to be inclusive.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the value is in range.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_IsInRange_System_Int64_System_Int64_System_Int64_System_Boolean_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.IsInRange(System.Int64%2CSystem.Int64%2CSystem.Int64%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L255">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_IsInRange_" data-uid="DisCatSharp.Common.Extensions.IsInRange*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_IsInRange_System_Int64_System_Int64_System_Int64_System_Boolean_" data-uid="DisCatSharp.Common.Extensions.IsInRange(System.Int64,System.Int64,System.Int64,System.Boolean)">IsInRange(Int64, Int64, Int64, Boolean)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsInRange(this long num, long min, long max, bool inclusive = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">Int64</a></td>
+        <td><span class="parametername">num</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number to test.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">Int64</a></td>
+        <td><span class="parametername">min</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Lower bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">Int64</a></td>
+        <td><span class="parametername">max</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Upper bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">inclusive</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the check is to be inclusive.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the value is in range.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_IsInRange_System_SByte_System_SByte_System_SByte_System_Boolean_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.IsInRange(System.SByte%2CSystem.SByte%2CSystem.SByte%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L129">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_IsInRange_" data-uid="DisCatSharp.Common.Extensions.IsInRange*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_IsInRange_System_SByte_System_SByte_System_SByte_System_Boolean_" data-uid="DisCatSharp.Common.Extensions.IsInRange(System.SByte,System.SByte,System.SByte,System.Boolean)">IsInRange(SByte, SByte, SByte, Boolean)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsInRange(this sbyte num, sbyte min, sbyte max, bool inclusive = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.sbyte">SByte</a></td>
+        <td><span class="parametername">num</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number to test.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.sbyte">SByte</a></td>
+        <td><span class="parametername">min</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Lower bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.sbyte">SByte</a></td>
+        <td><span class="parametername">max</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Upper bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">inclusive</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the check is to be inclusive.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the value is in range.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_IsInRange_System_Single_System_Single_System_Single_System_Boolean_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.IsInRange(System.Single%2CSystem.Single%2CSystem.Single%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L297">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_IsInRange_" data-uid="DisCatSharp.Common.Extensions.IsInRange*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_IsInRange_System_Single_System_Single_System_Single_System_Boolean_" data-uid="DisCatSharp.Common.Extensions.IsInRange(System.Single,System.Single,System.Single,System.Boolean)">IsInRange(Single, Single, Single, Boolean)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsInRange(this float num, float min, float max, bool inclusive = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">num</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number to test.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">min</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Lower bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">max</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Upper bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">inclusive</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the check is to be inclusive.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the value is in range.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_IsInRange_System_UInt16_System_UInt16_System_UInt16_System_Boolean_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.IsInRange(System.UInt16%2CSystem.UInt16%2CSystem.UInt16%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L192">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_IsInRange_" data-uid="DisCatSharp.Common.Extensions.IsInRange*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_IsInRange_System_UInt16_System_UInt16_System_UInt16_System_Boolean_" data-uid="DisCatSharp.Common.Extensions.IsInRange(System.UInt16,System.UInt16,System.UInt16,System.Boolean)">IsInRange(UInt16, UInt16, UInt16, Boolean)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsInRange(this ushort num, ushort min, ushort max, bool inclusive = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">UInt16</a></td>
+        <td><span class="parametername">num</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number to test.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">UInt16</a></td>
+        <td><span class="parametername">min</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Lower bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16">UInt16</a></td>
+        <td><span class="parametername">max</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Upper bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">inclusive</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the check is to be inclusive.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the value is in range.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_IsInRange_System_UInt32_System_UInt32_System_UInt32_System_Boolean_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.IsInRange(System.UInt32%2CSystem.UInt32%2CSystem.UInt32%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L234">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_IsInRange_" data-uid="DisCatSharp.Common.Extensions.IsInRange*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_IsInRange_System_UInt32_System_UInt32_System_UInt32_System_Boolean_" data-uid="DisCatSharp.Common.Extensions.IsInRange(System.UInt32,System.UInt32,System.UInt32,System.Boolean)">IsInRange(UInt32, UInt32, UInt32, Boolean)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsInRange(this uint num, uint min, uint max, bool inclusive = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">num</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number to test.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">min</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Lower bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">max</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Upper bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">inclusive</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the check is to be inclusive.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the value is in range.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_IsInRange_System_UInt64_System_UInt64_System_UInt64_System_Boolean_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.IsInRange(System.UInt64%2CSystem.UInt64%2CSystem.UInt64%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L276">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_IsInRange_" data-uid="DisCatSharp.Common.Extensions.IsInRange*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_IsInRange_System_UInt64_System_UInt64_System_UInt64_System_Boolean_" data-uid="DisCatSharp.Common.Extensions.IsInRange(System.UInt64,System.UInt64,System.UInt64,System.Boolean)">IsInRange(UInt64, UInt64, UInt64, Boolean)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsInRange(this ulong num, ulong min, ulong max, bool inclusive = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">num</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Number to test.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">min</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Lower bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">max</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Upper bound of the range.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">inclusive</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the check is to be inclusive.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the value is in range.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Common_Extensions_StartsWithCharacter_System_String_System_Char_.md&amp;value=---%0Auid%3A%20DisCatSharp.Common.Extensions.StartsWithCharacter(System.String%2CSystem.Char)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Common/Utilities/Extensions.cs/#L366">View Source</a>
+  </span>
+  <a id="DisCatSharp_Common_Extensions_StartsWithCharacter_" data-uid="DisCatSharp.Common.Extensions.StartsWithCharacter*"></a>
+  <h4 id="DisCatSharp_Common_Extensions_StartsWithCharacter_System_String_System_Char_" data-uid="DisCatSharp.Common.Extensions.StartsWithCharacter(System.String,System.Char)">StartsWithCharacter(String, Char)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Tests whether given string starts with given character.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool StartsWithCharacter(this string s, char c)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">s</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">String to test.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.char">Char</a></td>
+        <td><span class="parametername">c</span></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Character to test for.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p sourcefile="api/DisCatSharp.Common/DisCatSharp.Common.Extensions.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the supplied string starts with supplied character.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+
+</article>
+                </div>
+
+                <div class="copyright-footer">
+                    <span>&#169; Aiko IT Systems. All rights reserved.</span>
+                </div>
+            </div></main>
+        
+
+        
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.vendor.js"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.js"></script>
+        <script type="text/javascript" src="../../src/scripts/url.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/highlight/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+        <script src="https://cdn.jsdelivr.net/npm/anchor-js/anchor.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/jquery.twbsPagination.js"></script>
+        <script type="text/javascript" src="../../src/scripts/dcs.js"></script>
+        <script type="text/javascript" src="../../src/scripts/lunr.js"></script>
+    </div></body>
+</html>

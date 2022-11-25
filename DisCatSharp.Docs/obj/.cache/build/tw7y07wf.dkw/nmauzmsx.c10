@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>
+
+Class DiscordWebhook
+
+
+
+
+
+
+
+
+
+
+
+
+
+ | DisCatSharp Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <meta name="title" content="
+
+Class DiscordWebhook
+
+
+
+
+
+
+
+
+
+
+
+
+
+ | DisCatSharp Docs ">
+      <meta name="og:title" content="
+
+Class DiscordWebhook
+
+
+
+
+
+
+
+
+
+
+
+
+
+ | DisCatSharp Docs ">
+      <meta name="generator" content="docfx 2.60.0.0">
+  
+    <meta name="og:type" content="website">
+    <meta name="og:image" content="https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png">
+    <meta name="og:image:alt" content="DisCatSharp Logo">
+    <meta name="og:image:type" content="image/png">
+    <meta name="og:site_name" content="DisCatSharp Documentation">
+    <link rel="apple-touch-icon" sizes="57x57" href="../../apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="../../ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <script defer="" src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/night-owl.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" integrity="sha384-EvBWSlnoFgZlXJvpzS+MAUEjvN7+gcCwH+qh7GRFOGgZO0PuwOFro7qPOJnLfe7l" crossorigin="anonymous">
+      <link rel="stylesheet" href="../../src/styles/config.css">
+      <link rel="stylesheet" href="../../src/styles/discord.css">
+      <link rel="stylesheet" href="../../src/styles/dcs.css">
+      <link rel="stylesheet" href="../../src/styles/main.css">
+      <link rel="stylesheet" href="../../src/styles/colors.css">
+      <link rel="stylesheet" href="../../src/styles/highlight/github-dark.min.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+  
+  <meta property="docfx:rel" content="../../">
+  <meta property="docfx:newtab" content="true">
+    </head>
+
+    <body>
+        <div class="top-navbar">
+            <a class="burger-icon" onclick="toggleMenu()">
+                <svg name="Hamburger" style="vertical-align: middle;" width="34" height="34" viewbox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M20 6H4V9H20V6ZM4 10.999H20V13.999H4V10.999ZM4 15.999H20V18.999H4V15.999Z"></path></svg>
+            </a>
+
+
+            <a class="navbar-brand" href="../../index.html">
+              <img id="logo" class="svg" src="../../logo.png" alt="DisCatSharp">
+            </a>
+        </div>
+
+        <div class="body-content">
+            <div id="blackout" class="blackout" onclick="toggleMenu()"></div>
+
+            <nav id="sidebar" role="navigation">
+                <div class="sidebar">
+
+                    <div>
+                      <div class="mobile-hide">
+
+                        <a class="navbar-brand" href="../../index.html">
+                          <img id="logo" class="svg" src="../../logo.png" alt="DisCatSharp">
+                        </a>
+                      </div>
+
+                      <div class="sidesearch">
+                        <form id="search" role="search" class="search">
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text" id="search-query" placeholder="Search" autocomplete="off">
+                        </form>
+                      </div>
+
+                      <div id="navbar">
+                      </div>
+                    </div>
+                    <div class="sidebar-item-separator"></div>
+
+                        <div id="sidetoggle">
+                          <div id="sidetoc"></div>
+                        </div>
+                </div>
+                <div class="footer">
+  <strong>Made with ♥ by AITSYS</strong>
+  
+                </div>
+            </nav>
+
+            <main class="main-panel">
+
+                <div id="search-results" style="display: none;">
+                  <h1 class="search-list">Search Results for <span></span></h1>
+                  <div class="sr-items">
+                    <p class="lsearch"><i class="bi bi-hourglass-split index-loading"></i></p>
+                  </div>
+                  <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+                </div>
+
+                <div role="main" class="hide-when-search">
+
+                        <div class="subnav navbar navbar-default">
+                          <div class="container hide-when-search" id="breadcrumb">
+                            <ul class="breadcrumb">
+                              <li></li>
+                            </ul>
+                          </div>
+                        </div>
+
+      <div id="sidetoggle">
+        <div id="sidetoc"></div>
+      </div>
+						<div class="article row grid-right">
+
+                    <article class="content wrap" id="_content" data-uid="DisCatSharp.Entities.DiscordWebhook">
+
+
+  <h1 id="DisCatSharp_Entities_DiscordWebhook" data-uid="DisCatSharp.Entities.DiscordWebhook" class="text-break">
+
+Class DiscordWebhook
+
+
+
+
+
+
+
+
+
+
+
+
+
+</h1>
+  <div class="markdown level0 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Represents information about a Discord webhook.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><a class="xref" href="DisCatSharp.Entities.SnowflakeObject.html">SnowflakeObject</a></div>
+    <div class="level2"><span class="xref">DiscordWebhook</span></div>
+  </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">IEquatable</span>&lt;<a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.SnowflakeObject.html#DisCatSharp_Entities_SnowflakeObject_Id">SnowflakeObject.Id</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.SnowflakeObject.html#DisCatSharp_Entities_SnowflakeObject_CreationTimestamp">SnowflakeObject.CreationTimestamp</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="DisCatSharp.Entities.html">DisCatSharp.Entities</a></h6>
+  <h6><strong>Assembly</strong>: DisCatSharp.dll</h6>
+  <h5 id="DisCatSharp_Entities_DiscordWebhook_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class DiscordWebhook : SnowflakeObject</code></pre>
+  </div>
+  <h3 id="properties">Properties
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_AvatarUrl.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.AvatarUrl%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L96">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_AvatarUrl_" data-uid="DisCatSharp.Entities.DiscordWebhook.AvatarUrl*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_AvatarUrl" data-uid="DisCatSharp.Entities.DiscordWebhook.AvatarUrl">AvatarUrl</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets the default avatar url for this webhook.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string AvatarUrl { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_ChannelId.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.ChannelId%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L54">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_ChannelId_" data-uid="DisCatSharp.Entities.DiscordWebhook.ChannelId*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_ChannelId" data-uid="DisCatSharp.Entities.DiscordWebhook.ChannelId">ChannelId</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets the ID of the channel this webhook belongs to.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ulong ChannelId { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_GuildId.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.GuildId%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L48">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_GuildId_" data-uid="DisCatSharp.Entities.DiscordWebhook.GuildId*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_GuildId" data-uid="DisCatSharp.Entities.DiscordWebhook.GuildId">GuildId</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets the id of the guild this webhook belongs to.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ulong GuildId { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_Name.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.Name%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L66">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_Name_" data-uid="DisCatSharp.Entities.DiscordWebhook.Name*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_Name" data-uid="DisCatSharp.Entities.DiscordWebhook.Name">Name</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets the default name of this webhook.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Name { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_SourceChannel.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.SourceChannel%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L84">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_SourceChannel_" data-uid="DisCatSharp.Entities.DiscordWebhook.SourceChannel*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_SourceChannel" data-uid="DisCatSharp.Entities.DiscordWebhook.SourceChannel">SourceChannel</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets the partial source channel for this webhook (For Channel Follower Webhooks).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DiscordChannel SourceChannel { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.DiscordChannel.html">DiscordChannel</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_SourceGuild.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.SourceGuild%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L78">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_SourceGuild_" data-uid="DisCatSharp.Entities.DiscordWebhook.SourceGuild*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_SourceGuild" data-uid="DisCatSharp.Entities.DiscordWebhook.SourceGuild">SourceGuild</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets the partial source guild for this webhook (For Channel Follower Webhooks).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DiscordGuild SourceGuild { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.DiscordGuild.html">DiscordGuild</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_Token.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.Token%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L102">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_Token_" data-uid="DisCatSharp.Entities.DiscordWebhook.Token*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_Token" data-uid="DisCatSharp.Entities.DiscordWebhook.Token">Token</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets the secure token of this webhook.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Token { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_Url.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.Url%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L90">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_Url_" data-uid="DisCatSharp.Entities.DiscordWebhook.Url*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_Url" data-uid="DisCatSharp.Entities.DiscordWebhook.Url">Url</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets the url used for executing the webhook.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Url { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_User.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.User%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L60">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_User_" data-uid="DisCatSharp.Entities.DiscordWebhook.User*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_User" data-uid="DisCatSharp.Entities.DiscordWebhook.User">User</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets the user this webhook was created by.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DiscordUser User { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.DiscordUser.html">DiscordUser</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_DeleteAsync.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.DeleteAsync%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L193">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_DeleteAsync_" data-uid="DisCatSharp.Entities.DiscordWebhook.DeleteAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_DeleteAsync" data-uid="DisCatSharp.Entities.DiscordWebhook.DeleteAsync">DeleteAsync()</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Permanently deletes this webhook.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task DeleteAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.UnauthorizedException.html">UnauthorizedException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when the client does not have the <a class="xref" href="DisCatSharp.Enums.Permissions.html#DisCatSharp_Enums_Permissions_ManageWebhooks">ManageWebhooks</a> permission.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when the webhook does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_DeleteMessageAsync_System_UInt64_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.DeleteMessageAsync(System.UInt64)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L260">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_DeleteMessageAsync_" data-uid="DisCatSharp.Entities.DiscordWebhook.DeleteMessageAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_DeleteMessageAsync_System_UInt64_" data-uid="DisCatSharp.Entities.DiscordWebhook.DeleteMessageAsync(System.UInt64)">DeleteMessageAsync(UInt64)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Deletes a message that was created by the webhook.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task DeleteMessageAsync(ulong messageId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">messageId</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">The id of the message to delete</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when the webhook does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_DeleteMessageAsync_System_UInt64_System_UInt64_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.DeleteMessageAsync(System.UInt64%2CSystem.UInt64)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L271">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_DeleteMessageAsync_" data-uid="DisCatSharp.Entities.DiscordWebhook.DeleteMessageAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_DeleteMessageAsync_System_UInt64_System_UInt64_" data-uid="DisCatSharp.Entities.DiscordWebhook.DeleteMessageAsync(System.UInt64,System.UInt64)">DeleteMessageAsync(UInt64, UInt64)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Deletes a message that was created by the webhook.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task DeleteMessageAsync(ulong messageId, ulong threadId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">messageId</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">The id of the message to delete</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">threadId</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Target thread id (Optional). Defaults to null.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when the webhook does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_EditMessageAsync_System_UInt64_DisCatSharp_Entities_DiscordWebhookBuilder_System_String_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.EditMessageAsync(System.UInt64%2CDisCatSharp.Entities.DiscordWebhookBuilder%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L239">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_EditMessageAsync_" data-uid="DisCatSharp.Entities.DiscordWebhook.EditMessageAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_EditMessageAsync_System_UInt64_DisCatSharp_Entities_DiscordWebhookBuilder_System_String_" data-uid="DisCatSharp.Entities.DiscordWebhook.EditMessageAsync(System.UInt64,DisCatSharp.Entities.DiscordWebhookBuilder,System.String)">EditMessageAsync(UInt64, DiscordWebhookBuilder, String)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Edits a previously-sent webhook message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task&lt;DiscordMessage&gt; EditMessageAsync(ulong messageId, DiscordWebhookBuilder builder, string threadId = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">messageId</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">The id of the message to edit.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.DiscordWebhookBuilder.html">DiscordWebhookBuilder</a></td>
+        <td><span class="parametername">builder</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">The builder of the message to edit.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">threadId</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Target thread id (Optional). Defaults to null.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="DisCatSharp.Entities.DiscordMessage.html">DiscordMessage</a>&gt;</td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">The modified <a class="xref" href="DisCatSharp.Entities.DiscordMessage.html">DiscordMessage</a></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when the webhook does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_Equals_DisCatSharp_Entities_DiscordWebhook_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.Equals(DisCatSharp.Entities.DiscordWebhook)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L286">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_Equals_" data-uid="DisCatSharp.Entities.DiscordWebhook.Equals*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_Equals_DisCatSharp_Entities_DiscordWebhook_" data-uid="DisCatSharp.Entities.DiscordWebhook.Equals(DisCatSharp.Entities.DiscordWebhook)">Equals(DiscordWebhook)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Checks whether this <a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a> is equal to another <a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Equals(DiscordWebhook e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a></td>
+        <td><span class="parametername">e</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1"><a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a> to compare to.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the <a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a> is equal to this <a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_Equals_System_Object_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.Equals(System.Object)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L279">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_Equals_" data-uid="DisCatSharp.Entities.DiscordWebhook.Equals*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_Equals_System_Object_" data-uid="DisCatSharp.Entities.DiscordWebhook.Equals(System.Object)">Equals(Object)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Checks whether this <a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a> is equal to another object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool Equals(object obj)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><span class="parametername">obj</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Object to compare to.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the object is equal to this <a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_ExecuteAsync_DisCatSharp_Entities_DiscordWebhookBuilder_System_String_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.ExecuteAsync(DisCatSharp.Entities.DiscordWebhookBuilder%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L204">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_ExecuteAsync_" data-uid="DisCatSharp.Entities.DiscordWebhook.ExecuteAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_ExecuteAsync_DisCatSharp_Entities_DiscordWebhookBuilder_System_String_" data-uid="DisCatSharp.Entities.DiscordWebhook.ExecuteAsync(DisCatSharp.Entities.DiscordWebhookBuilder,System.String)">ExecuteAsync(DiscordWebhookBuilder, String)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Executes this webhook with the given <a class="xref" href="DisCatSharp.Entities.DiscordWebhookBuilder.html">DiscordWebhookBuilder</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;DiscordMessage&gt; ExecuteAsync(DiscordWebhookBuilder builder, string threadId = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.DiscordWebhookBuilder.html">DiscordWebhookBuilder</a></td>
+        <td><span class="parametername">builder</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Webhook builder filled with data to send.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">threadId</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Target thread id (Optional). Defaults to null.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="DisCatSharp.Entities.DiscordMessage.html">DiscordMessage</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when the webhook does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_ExecuteGithubAsync_System_String_System_String_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.ExecuteGithubAsync(System.String%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L226">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_ExecuteGithubAsync_" data-uid="DisCatSharp.Entities.DiscordWebhook.ExecuteGithubAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_ExecuteGithubAsync_System_String_System_String_" data-uid="DisCatSharp.Entities.DiscordWebhook.ExecuteGithubAsync(System.String,System.String)">ExecuteGithubAsync(String, String)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Executes this webhook in GitHub compatibility mode.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ExecuteGithubAsync(string json, string threadId = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">json</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">JSON containing GitHub-compatible payload for this webhook.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">threadId</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Target thread id (Optional). Defaults to null.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when the webhook does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_ExecuteSlackAsync_System_String_System_String_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.ExecuteSlackAsync(System.String%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L215">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_ExecuteSlackAsync_" data-uid="DisCatSharp.Entities.DiscordWebhook.ExecuteSlackAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_ExecuteSlackAsync_System_String_System_String_" data-uid="DisCatSharp.Entities.DiscordWebhook.ExecuteSlackAsync(System.String,System.String)">ExecuteSlackAsync(String, String)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Executes this webhook in Slack compatibility mode.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ExecuteSlackAsync(string json, string threadId = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">json</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">JSON containing Slack-compatible payload for this webhook.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">threadId</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Target thread id (Optional). Defaults to null.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when the webhook does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_GetHashCode.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.GetHashCode%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L292">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_GetHashCode_" data-uid="DisCatSharp.Entities.DiscordWebhook.GetHashCode*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_GetHashCode" data-uid="DisCatSharp.Entities.DiscordWebhook.GetHashCode">GetHashCode()</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets the hash code for this <a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">The hash code for this <a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_GetMessageAsync_System_UInt64_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.GetMessageAsync(System.UInt64)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L138">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_GetMessageAsync_" data-uid="DisCatSharp.Entities.DiscordWebhook.GetMessageAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_GetMessageAsync_System_UInt64_" data-uid="DisCatSharp.Entities.DiscordWebhook.GetMessageAsync(System.UInt64)">GetMessageAsync(UInt64)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets a previously-sent webhook message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;DiscordMessage&gt; GetMessageAsync(ulong messageId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">messageId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="DisCatSharp.Entities.DiscordMessage.html">DiscordMessage</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when the webhook does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_GetMessageAsync_System_UInt64_System_UInt64_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.GetMessageAsync(System.UInt64%2CSystem.UInt64)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L166">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_GetMessageAsync_" data-uid="DisCatSharp.Entities.DiscordWebhook.GetMessageAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_GetMessageAsync_System_UInt64_System_UInt64_" data-uid="DisCatSharp.Entities.DiscordWebhook.GetMessageAsync(System.UInt64,System.UInt64)">GetMessageAsync(UInt64, UInt64)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets a previously-sent webhook message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;DiscordMessage&gt; GetMessageAsync(ulong messageId, ulong threadId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">messageId</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">threadId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="DisCatSharp.Entities.DiscordMessage.html">DiscordMessage</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when the webhook does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_ModifyAsync_System_String_DisCatSharp_Entities_Optional_Stream__System_Nullable_System_UInt64__System_String_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.ModifyAsync(System.String%2CDisCatSharp.Entities.Optional%7BStream%7D%2CSystem.Nullable%7BSystem.UInt64%7D%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L123">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_ModifyAsync_" data-uid="DisCatSharp.Entities.DiscordWebhook.ModifyAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_ModifyAsync_System_String_DisCatSharp_Entities_Optional_Stream__System_Nullable_System_UInt64__System_String_" data-uid="DisCatSharp.Entities.DiscordWebhook.ModifyAsync(System.String,DisCatSharp.Entities.Optional{Stream},System.Nullable{System.UInt64},System.String)">ModifyAsync(String, Optional&lt;Stream&gt;, Nullable&lt;UInt64&gt;, String)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Modifies this webhook.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;DiscordWebhook&gt; ModifyAsync(string name = null, Optional&lt;Stream&gt; avatar = default(Optional&lt;Stream&gt;), ulong? channelId = null, string reason = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">name</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">New default name for this webhook.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.Optional-1.html">Optional</a>&lt;<span class="xref">Stream</span>&gt;</td>
+        <td><span class="parametername">avatar</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">New avatar for this webhook.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a>&gt;</td>
+        <td><span class="parametername">channelId</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">The new channel id to move the webhook to.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">reason</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Reason for audit logs.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a>&gt;</td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">The modified webhook.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.UnauthorizedException.html">UnauthorizedException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when the client does not have the <a class="xref" href="DisCatSharp.Enums.Permissions.html#DisCatSharp_Enums_Permissions_ManageWebhooks">ManageWebhooks</a> permission.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when the webhook does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_TryGetMessageAsync_System_UInt64_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.TryGetMessageAsync(System.UInt64)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L147">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_TryGetMessageAsync_" data-uid="DisCatSharp.Entities.DiscordWebhook.TryGetMessageAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_TryGetMessageAsync_System_UInt64_" data-uid="DisCatSharp.Entities.DiscordWebhook.TryGetMessageAsync(System.UInt64)">TryGetMessageAsync(UInt64)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Tries to get a previously-sent webhook message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task&lt;DiscordMessage&gt; TryGetMessageAsync(ulong messageId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">messageId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="DisCatSharp.Entities.DiscordMessage.html">DiscordMessage</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_TryGetMessageAsync_System_UInt64_System_UInt64_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.TryGetMessageAsync(System.UInt64%2CSystem.UInt64)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L174">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_TryGetMessageAsync_" data-uid="DisCatSharp.Entities.DiscordWebhook.TryGetMessageAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_TryGetMessageAsync_System_UInt64_System_UInt64_" data-uid="DisCatSharp.Entities.DiscordWebhook.TryGetMessageAsync(System.UInt64,System.UInt64)">TryGetMessageAsync(UInt64, UInt64)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Tries to get a previously-sent webhook message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task&lt;DiscordMessage&gt; TryGetMessageAsync(ulong messageId, ulong threadId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">messageId</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">threadId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="DisCatSharp.Entities.DiscordMessage.html">DiscordMessage</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="operators">Operators
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_op_Equality_DisCatSharp_Entities_DiscordWebhook_DisCatSharp_Entities_DiscordWebhook_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.op_Equality(DisCatSharp.Entities.DiscordWebhook%2CDisCatSharp.Entities.DiscordWebhook)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L300">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_op_Equality_" data-uid="DisCatSharp.Entities.DiscordWebhook.op_Equality*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_op_Equality_DisCatSharp_Entities_DiscordWebhook_DisCatSharp_Entities_DiscordWebhook_" data-uid="DisCatSharp.Entities.DiscordWebhook.op_Equality(DisCatSharp.Entities.DiscordWebhook,DisCatSharp.Entities.DiscordWebhook)">Equality(DiscordWebhook, DiscordWebhook)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets whether the two <a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a> objects are equal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator ==(DiscordWebhook e1, DiscordWebhook e2)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a></td>
+        <td><span class="parametername">e1</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">First webhook to compare.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a></td>
+        <td><span class="parametername">e2</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Second webhook to compare.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the two webhooks are equal.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordWebhook_op_Inequality_DisCatSharp_Entities_DiscordWebhook_DisCatSharp_Entities_DiscordWebhook_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordWebhook.op_Inequality(DisCatSharp.Entities.DiscordWebhook%2CDisCatSharp.Entities.DiscordWebhook)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Webhook/DiscordWebhook.cs/#L314">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordWebhook_op_Inequality_" data-uid="DisCatSharp.Entities.DiscordWebhook.op_Inequality*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordWebhook_op_Inequality_DisCatSharp_Entities_DiscordWebhook_DisCatSharp_Entities_DiscordWebhook_" data-uid="DisCatSharp.Entities.DiscordWebhook.op_Inequality(DisCatSharp.Entities.DiscordWebhook,DisCatSharp.Entities.DiscordWebhook)">Inequality(DiscordWebhook, DiscordWebhook)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets whether the two <a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a> objects are not equal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator !=(DiscordWebhook e1, DiscordWebhook e2)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a></td>
+        <td><span class="parametername">e1</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">First webhook to compare.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a></td>
+        <td><span class="parametername">e2</span></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Second webhook to compare.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p sourcefile="api/DisCatSharp/DisCatSharp.Entities.DiscordWebhook.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the two webhooks are not equal.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">IEquatable&lt;&gt;</span>
+  </div>
+
+</article>
+                </div>
+
+                <div class="copyright-footer">
+                    <span>&#169; Aiko IT Systems. All rights reserved.</span>
+                </div>
+            </div></main>
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.vendor.js"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.js"></script>
+        <script type="text/javascript" src="../../src/scripts/url.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/highlight/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+        <script src="https://cdn.jsdelivr.net/npm/anchor-js/anchor.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/jquery.twbsPagination.js"></script>
+        <script type="text/javascript" src="../../src/scripts/dcs.js"></script>
+        <script type="text/javascript" src="../../src/scripts/lunr.js"></script>
+    </body>
+</html>
