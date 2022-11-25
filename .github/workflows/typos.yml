@@ -1,8 +1,10 @@
-name: Typo check
+name: "Check Typos"
+
 on:
   push:
   pull_request:
   workflow_dispatch:
+
 jobs:
   run:
     name: Spell Check with Typos

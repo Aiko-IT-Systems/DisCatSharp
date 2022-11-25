@@ -1,14 +1,16 @@
-name: "Build"
+name: "Build Library"
+
 on:
   push:
   pull_request:
   workflow_dispatch:
+
 jobs:
   build:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        dotnet: [6.0.400]
+        dotnet: [6.x]
     runs-on: ${{ matrix.os }}
     name: Build library
     steps:

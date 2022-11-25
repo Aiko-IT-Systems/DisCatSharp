@@ -1,4 +1,5 @@
 name: "CodeQL"
+
 on:
   push:
     branches: [ main ]
@@ -7,10 +8,11 @@ on:
   schedule:
     - cron: '39 18 * * 3'
   workflow_dispatch:
+
 jobs:
   analyze:
     name: Analyze
-    runs-on: [ubuntu-latest]
+    runs-on: ubuntu-latest
     permissions:
       actions: read
       contents: read
