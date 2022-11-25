@@ -311,7 +311,7 @@ function PackDocs([string] $target_dir_path, [string] $output_dir_path, [string]
 	Compress-Archive -Path "$target_path/*" -DestinationPath "$output_path.zip" -Force -CompressionLevel Fastest
 	Write-Host "Adding .htaccess to $output_path.zip"
 	try {
-		Compress-Archive -Update "$target_path/../.htaccess" "$output_path.zip"
+		Compress-Archive -Path "$target_path/.htaccess" -Update -DestinationPath "$output_path.zip"
 	}
 	catch {
 		Write-Host "Could not add .htaccess to archive"
