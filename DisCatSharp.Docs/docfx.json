@@ -293,7 +293,7 @@
 		],
 		"noLangKeyword":false,
 		"keepFileLink":false,
-		"cleanupCacheHistory":true,
+		"cleanupCacheHistory":false,
 		"sitemap":{
 			"baseUrl":"https://docs.discatsharp.tech/",
 			"changefreq":"daily",
