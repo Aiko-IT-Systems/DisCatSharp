@@ -23,7 +23,7 @@ Monetizable = "Monetizable"
 ignore-vcs = true
 ignore-files = true
 ignore-dot = true
-extend-exclude = ["DisCatSharp.Docs/dcs/src/*","DisCatSharp.Docs/dcs/partials/*","DisCatSharp.Tools/*"]
+extend-exclude = ["DisCatSharp.Docs/dcs/src/*","DisCatSharp.Docs/dcs/partials/*","DisCatSharp.Tools/*","DisCatSharp.Docs/_site/*]
 
 [default]
 locale = "en-us"
