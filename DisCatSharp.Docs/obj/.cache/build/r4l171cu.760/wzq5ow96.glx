@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class LavalinkGuildConnection
+ | DisCatSharp Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <meta name="generator" content="docfx 2.60.0.0">
+  
+    <meta name="og:type" content="website">
+    <meta name="og:image" content="https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png">
+    <meta name="og:image:alt" content="DisCatSharp Logo">
+    <meta name="og:image:type" content="image/png">
+    <meta name="og:site_name" content="DisCatSharp Documentation">
+    <link rel="apple-touch-icon" sizes="57x57" href="../../apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="../../ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <script defer="" src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/night-owl.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" integrity="sha384-EvBWSlnoFgZlXJvpzS+MAUEjvN7+gcCwH+qh7GRFOGgZO0PuwOFro7qPOJnLfe7l" crossorigin="anonymous">
+      <link rel="stylesheet" href="../../src/styles/config.css">
+      <link rel="stylesheet" href="../../src/styles/discord.css">
+      <link rel="stylesheet" href="../../src/styles/dcs.css">
+      <link rel="stylesheet" href="../../src/styles/main.css">
+      <link rel="stylesheet" href="../../src/styles/colors.css">
+      <link rel="stylesheet" href="../../src/styles/highlight/github-dark.min.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+  
+  <meta property="docfx:rel" content="../../">
+  <meta property="docfx:newtab" content="true">
+    </head>
+
+    <body>
+        <div class="top-navbar">
+            <a class="burger-icon" onclick="toggleMenu()">
+                <svg name="Hamburger" style="vertical-align: middle;" width="34" height="34" viewbox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M20 6H4V9H20V6ZM4 10.999H20V13.999H4V10.999ZM4 15.999H20V18.999H4V15.999Z"></path></svg>
+            </a>
+
+
+            <a class="navbar-brand" href="../../index.html">
+              <img id="logo" class="svg" src="../../logo.png" alt="DisCatSharp">
+            </a>
+        </div>
+
+        <div class="body-content">
+            <div id="blackout" class="blackout" onclick="toggleMenu()"></div>
+
+            <nav id="sidebar" role="navigation">
+                <div class="sidebar">
+
+                    <div>
+                      <div class="mobile-hide">
+
+                        <a class="navbar-brand" href="../../index.html">
+                          <img id="logo" class="svg" src="../../logo.png" alt="DisCatSharp">
+                        </a>
+                      </div>
+
+                      <div class="sidesearch">
+                        <form id="search" role="search" class="search">
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text" id="search-query" placeholder="Search" autocomplete="off">
+                        </form>
+                      </div>
+
+                      <div id="navbar">
+                      </div>
+                    </div>
+                    <div class="sidebar-item-separator"></div>
+
+                        <div id="sidetoggle">
+                          <div id="sidetoc"></div>
+                        </div>
+                </div>
+                <div class="footer">
+  <strong>Made with ♥ by AITSYS</strong>
+  
+                </div>
+            </nav>
+
+            <main class="main-panel">
+
+                <div id="search-results" style="display: none;">
+                  <h1 class="search-list">Search Results for <span></span></h1>
+                  <div class="sr-items">
+                    <p class="lsearch"><i class="bi bi-hourglass-split index-loading"></i></p>
+                  </div>
+                  <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+                </div>
+
+                <div role="main" class="hide-when-search">
+
+                        <div class="subnav navbar navbar-default">
+                          <div class="container hide-when-search" id="breadcrumb">
+                            <ul class="breadcrumb">
+                              <li></li>
+                            </ul>
+                          </div>
+                        </div>
+
+      <div id="sidetoggle">
+        <div id="sidetoc"></div>
+      </div>
+						<div class="article row grid-right">
+
+                    <article class="content wrap" id="_content" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection">
+
+
+  <h1 id="DisCatSharp_Lavalink_LavalinkGuildConnection" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection" class="text-break">Class LavalinkGuildConnection
+</h1>
+  <div class="markdown level0 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Represents a Lavalink connection to a channel.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">LavalinkGuildConnection</span></div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="DisCatSharp.Lavalink.html">DisCatSharp.Lavalink</a></h6>
+  <h6><strong>Assembly</strong>: DisCatSharp.Lavalink.dll</h6>
+  <h5 id="DisCatSharp_Lavalink_LavalinkGuildConnection_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class LavalinkGuildConnection : object</code></pre>
+  </div>
+  <h3 id="properties">Properties
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_Channel.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.Channel%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L122">View Source</a>
+  </span>
+  <a id="DisCatSharp_Lavalink_LavalinkGuildConnection_Channel_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.Channel*"></a>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_Channel" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.Channel">Channel</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets the voice channel associated with this connection.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DiscordChannel Channel { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../DisCatSharp/DisCatSharp.Entities.DiscordChannel.html">DiscordChannel</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_CurrentState.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.CurrentState%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L117">View Source</a>
+  </span>
+  <a id="DisCatSharp_Lavalink_LavalinkGuildConnection_CurrentState_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.CurrentState*"></a>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_CurrentState" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.CurrentState">CurrentState</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets the current player state.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public LavalinkPlayerState CurrentState { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Lavalink.Entities.LavalinkPlayerState.html">LavalinkPlayerState</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_Guild.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.Guild%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L127">View Source</a>
+  </span>
+  <a id="DisCatSharp_Lavalink_LavalinkGuildConnection_Guild_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.Guild*"></a>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_Guild" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.Guild">Guild</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets the guild associated with this connection.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DiscordGuild Guild { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../DisCatSharp/DisCatSharp.Entities.DiscordGuild.html">DiscordGuild</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_IsConnected.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.IsConnected%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L111">View Source</a>
+  </span>
+  <a id="DisCatSharp_Lavalink_LavalinkGuildConnection_IsConnected_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.IsConnected*"></a>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_IsConnected" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.IsConnected">IsConnected</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets whether this channel is still connected.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsConnected { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_Node.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.Node%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L132">View Source</a>
+  </span>
+  <a id="DisCatSharp_Lavalink_LavalinkGuildConnection_Node_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.Node*"></a>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_Node" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.Node">Node</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets the Lavalink node associated with this connection.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public LavalinkNodeConnection Node { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Lavalink.LavalinkNodeConnection.html">LavalinkNodeConnection</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_AdjustEqualizerAsync_DisCatSharp_Lavalink_LavalinkBandAdjustment___.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.AdjustEqualizerAsync(DisCatSharp.Lavalink.LavalinkBandAdjustment%5B%5D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L346">View Source</a>
+  </span>
+  <a id="DisCatSharp_Lavalink_LavalinkGuildConnection_AdjustEqualizerAsync_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.AdjustEqualizerAsync*"></a>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_AdjustEqualizerAsync_DisCatSharp_Lavalink_LavalinkBandAdjustment___" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.AdjustEqualizerAsync(DisCatSharp.Lavalink.LavalinkBandAdjustment[])">AdjustEqualizerAsync(LavalinkBandAdjustment[])</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Adjusts the specified bands in the audio equalizer. This will alter the sound output, and might incur a lot of CPU usage.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task AdjustEqualizerAsync(params LavalinkBandAdjustment[] bands)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Lavalink.LavalinkBandAdjustment.html">LavalinkBandAdjustment</a>[]</td>
+        <td><span class="parametername">bands</span></td>
+        <td><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Bands adjustments to make. You must specify one adjustment per band at most.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_DisconnectAsync_System_Boolean_.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.DisconnectAsync(System.Boolean)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L179">View Source</a>
+  </span>
+  <a id="DisCatSharp_Lavalink_LavalinkGuildConnection_DisconnectAsync_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.DisconnectAsync*"></a>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_DisconnectAsync_System_Boolean_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.DisconnectAsync(System.Boolean)">DisconnectAsync(Boolean)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Disconnects the connection from the voice channel.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task DisconnectAsync(bool shouldDestroy = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">shouldDestroy</span></td>
+        <td><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Whether the connection should be destroyed on the Lavalink server when leaving.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_GetTracksAsync_FileInfo_.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.GetTracksAsync(FileInfo)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L248">View Source</a>
+  </span>
+  <a id="DisCatSharp_Lavalink_LavalinkGuildConnection_GetTracksAsync_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.GetTracksAsync*"></a>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_GetTracksAsync_FileInfo_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.GetTracksAsync(FileInfo)">GetTracksAsync(FileInfo)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Loads tracks from a local file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;LavalinkLoadResult&gt; GetTracksAsync(FileInfo file)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">FileInfo</span></td>
+        <td><span class="parametername">file</span></td>
+        <td><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="1" sourceendlinenumber="1">File to load tracks from.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="DisCatSharp.Lavalink.LavalinkLoadResult.html">LavalinkLoadResult</a>&gt;</td>
+        <td><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="1" sourceendlinenumber="1">A collection of tracks from the file.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_GetTracksAsync_System_String_DisCatSharp_Lavalink_LavalinkSearchType_.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.GetTracksAsync(System.String%2CDisCatSharp.Lavalink.LavalinkSearchType)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L232">View Source</a>
+  </span>
+  <a id="DisCatSharp_Lavalink_LavalinkGuildConnection_GetTracksAsync_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.GetTracksAsync*"></a>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_GetTracksAsync_System_String_DisCatSharp_Lavalink_LavalinkSearchType_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.GetTracksAsync(System.String,DisCatSharp.Lavalink.LavalinkSearchType)">GetTracksAsync(String, LavalinkSearchType)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Searches for specified terms.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;LavalinkLoadResult&gt; GetTracksAsync(string searchQuery, LavalinkSearchType type = LavalinkSearchType.Youtube)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">searchQuery</span></td>
+        <td><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="1" sourceendlinenumber="1">What to search for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Lavalink.LavalinkSearchType.html">LavalinkSearchType</a></td>
+        <td><span class="parametername">type</span></td>
+        <td><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="1" sourceendlinenumber="1">What platform will search for.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="DisCatSharp.Lavalink.LavalinkLoadResult.html">LavalinkLoadResult</a>&gt;</td>
+        <td><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="1" sourceendlinenumber="1">A collection of tracks matching the criteria.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_GetTracksAsync_Uri_.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.GetTracksAsync(Uri)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L240">View Source</a>
+  </span>
+  <a id="DisCatSharp_Lavalink_LavalinkGuildConnection_GetTracksAsync_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.GetTracksAsync*"></a>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_GetTracksAsync_Uri_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.GetTracksAsync(Uri)">GetTracksAsync(Uri)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Loads tracks from specified URL.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;LavalinkLoadResult&gt; GetTracksAsync(Uri uri)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Uri</span></td>
+        <td><span class="parametername">uri</span></td>
+        <td><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="1" sourceendlinenumber="1">URL to load tracks from.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="DisCatSharp.Lavalink.LavalinkLoadResult.html">LavalinkLoadResult</a>&gt;</td>
+        <td><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="1" sourceendlinenumber="1">A collection of tracks from the URL.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_PauseAsync.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.PauseAsync%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L296">View Source</a>
+  </span>
+  <a id="DisCatSharp_Lavalink_LavalinkGuildConnection_PauseAsync_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.PauseAsync*"></a>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_PauseAsync" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.PauseAsync">PauseAsync()</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Pauses the player.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task PauseAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_PlayAsync_DisCatSharp_Lavalink_LavalinkTrack_.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.PlayAsync(DisCatSharp.Lavalink.LavalinkTrack)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L255">View Source</a>
+  </span>
+  <a id="DisCatSharp_Lavalink_LavalinkGuildConnection_PlayAsync_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.PlayAsync*"></a>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_PlayAsync_DisCatSharp_Lavalink_LavalinkTrack_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.PlayAsync(DisCatSharp.Lavalink.LavalinkTrack)">PlayAsync(LavalinkTrack)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Queues the specified track for playback.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task PlayAsync(LavalinkTrack track)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Lavalink.LavalinkTrack.html">LavalinkTrack</a></td>
+        <td><span class="parametername">track</span></td>
+        <td><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Track to play.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_PlayPartialAsync_DisCatSharp_Lavalink_LavalinkTrack_TimeSpan_TimeSpan_.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.PlayPartialAsync(DisCatSharp.Lavalink.LavalinkTrack%2CTimeSpan%2CTimeSpan)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L270">View Source</a>
+  </span>
+  <a id="DisCatSharp_Lavalink_LavalinkGuildConnection_PlayPartialAsync_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.PlayPartialAsync*"></a>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_PlayPartialAsync_DisCatSharp_Lavalink_LavalinkTrack_TimeSpan_TimeSpan_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.PlayPartialAsync(DisCatSharp.Lavalink.LavalinkTrack,TimeSpan,TimeSpan)">PlayPartialAsync(LavalinkTrack, TimeSpan, TimeSpan)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Queues the specified track for playback. The track will be played from specified start timestamp to specified end timestamp.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task PlayPartialAsync(LavalinkTrack track, TimeSpan start, TimeSpan end)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Lavalink.LavalinkTrack.html">LavalinkTrack</a></td>
+        <td><span class="parametername">track</span></td>
+        <td><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Track to play.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TimeSpan</span></td>
+        <td><span class="parametername">start</span></td>
+        <td><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Timestamp to start playback at.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">TimeSpan</span></td>
+        <td><span class="parametername">end</span></td>
+        <td><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Timestamp to stop playback at.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_ResetEqualizerAsync.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.ResetEqualizerAsync%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L363">View Source</a>
+  </span>
+  <a id="DisCatSharp_Lavalink_LavalinkGuildConnection_ResetEqualizerAsync_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.ResetEqualizerAsync*"></a>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_ResetEqualizerAsync" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.ResetEqualizerAsync">ResetEqualizerAsync()</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Resets the audio equalizer to default values.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task ResetEqualizerAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_ResumeAsync.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.ResumeAsync%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L307">View Source</a>
+  </span>
+  <a id="DisCatSharp_Lavalink_LavalinkGuildConnection_ResumeAsync_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.ResumeAsync*"></a>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_ResumeAsync" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.ResumeAsync">ResumeAsync()</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Resumes playback.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task ResumeAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_SeekAsync_TimeSpan_.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.SeekAsync(TimeSpan)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L319">View Source</a>
+  </span>
+  <a id="DisCatSharp_Lavalink_LavalinkGuildConnection_SeekAsync_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.SeekAsync*"></a>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_SeekAsync_TimeSpan_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.SeekAsync(TimeSpan)">SeekAsync(TimeSpan)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Seeks the current track to specified position.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task SeekAsync(TimeSpan position)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TimeSpan</span></td>
+        <td><span class="parametername">position</span></td>
+        <td><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Position to seek to.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_SetVolumeAsync_System_Int32_.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.SetVolumeAsync(System.Int32)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L331">View Source</a>
+  </span>
+  <a id="DisCatSharp_Lavalink_LavalinkGuildConnection_SetVolumeAsync_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.SetVolumeAsync*"></a>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_SetVolumeAsync_System_Int32_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.SetVolumeAsync(System.Int32)">SetVolumeAsync(Int32)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Sets the playback volume. This might incur a lot of CPU usage.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task SetVolumeAsync(int volume)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">volume</span></td>
+        <td><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Volume to set. Needs to be greater or equal to 0, and less than or equal to 100. 100 means 100% and is the default value.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_StopAsync.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.StopAsync%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L285">View Source</a>
+  </span>
+  <a id="DisCatSharp_Lavalink_LavalinkGuildConnection_StopAsync_" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.StopAsync*"></a>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_StopAsync" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.StopAsync">StopAsync()</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Stops the player completely.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task StopAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="events">Events
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_DiscordWebSocketClosed.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.DiscordWebSocketClosed%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L101">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_DiscordWebSocketClosed" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.DiscordWebSocketClosed">DiscordWebSocketClosed</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Triggered whenever Discord Voice WebSocket connection is terminated.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event AsyncEventHandler&lt;LavalinkGuildConnection, WebSocketCloseEventArgs&gt; DiscordWebSocketClosed</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">AsyncEventHandler</span>&lt;<a class="xref" href="DisCatSharp.Lavalink.LavalinkGuildConnection.html">LavalinkGuildConnection</a>, <a class="xref" href="DisCatSharp.Lavalink.EventArgs.WebSocketCloseEventArgs.html">WebSocketCloseEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_PlaybackFinished.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.PlaybackFinished%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L71">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_PlaybackFinished" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.PlaybackFinished">PlaybackFinished</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Triggered whenever playback of a track finishes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event AsyncEventHandler&lt;LavalinkGuildConnection, TrackFinishEventArgs&gt; PlaybackFinished</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">AsyncEventHandler</span>&lt;<a class="xref" href="DisCatSharp.Lavalink.LavalinkGuildConnection.html">LavalinkGuildConnection</a>, <a class="xref" href="DisCatSharp.Lavalink.EventArgs.TrackFinishEventArgs.html">TrackFinishEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_PlaybackStarted.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.PlaybackStarted%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L61">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_PlaybackStarted" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.PlaybackStarted">PlaybackStarted</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="3">Triggered whenever playback of a track starts.
+<p>This is only available for version 3.3.1 and greater.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event AsyncEventHandler&lt;LavalinkGuildConnection, TrackStartEventArgs&gt; PlaybackStarted</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">AsyncEventHandler</span>&lt;<a class="xref" href="DisCatSharp.Lavalink.LavalinkGuildConnection.html">LavalinkGuildConnection</a>, <a class="xref" href="DisCatSharp.Lavalink.EventArgs.TrackStartEventArgs.html">TrackStartEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_PlayerUpdated.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.PlayerUpdated%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L50">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_PlayerUpdated" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.PlayerUpdated">PlayerUpdated</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Triggered whenever Lavalink updates player status.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event AsyncEventHandler&lt;LavalinkGuildConnection, PlayerUpdateEventArgs&gt; PlayerUpdated</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">AsyncEventHandler</span>&lt;<a class="xref" href="DisCatSharp.Lavalink.LavalinkGuildConnection.html">LavalinkGuildConnection</a>, <a class="xref" href="DisCatSharp.Lavalink.EventArgs.PlayerUpdateEventArgs.html">PlayerUpdateEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_TrackException.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.TrackException%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L91">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_TrackException" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.TrackException">TrackException</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Triggered whenever playback of a track encounters an error.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event AsyncEventHandler&lt;LavalinkGuildConnection, TrackExceptionEventArgs&gt; TrackException</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">AsyncEventHandler</span>&lt;<a class="xref" href="DisCatSharp.Lavalink.LavalinkGuildConnection.html">LavalinkGuildConnection</a>, <a class="xref" href="DisCatSharp.Lavalink.EventArgs.TrackExceptionEventArgs.html">TrackExceptionEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Lavalink_LavalinkGuildConnection_TrackStuck.md&amp;value=---%0Auid%3A%20DisCatSharp.Lavalink.LavalinkGuildConnection.TrackStuck%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Lavalink/LavalinkGuildConnection.cs/#L81">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Lavalink_LavalinkGuildConnection_TrackStuck" data-uid="DisCatSharp.Lavalink.LavalinkGuildConnection.TrackStuck">TrackStuck</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.Lavalink/DisCatSharp.Lavalink.LavalinkGuildConnection.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Triggered whenever playback of a track gets stuck.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event AsyncEventHandler&lt;LavalinkGuildConnection, TrackStuckEventArgs&gt; TrackStuck</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">AsyncEventHandler</span>&lt;<a class="xref" href="DisCatSharp.Lavalink.LavalinkGuildConnection.html">LavalinkGuildConnection</a>, <a class="xref" href="DisCatSharp.Lavalink.EventArgs.TrackStuckEventArgs.html">TrackStuckEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+</article>
+                </div>
+
+                <div class="copyright-footer">
+                    <span>&#169; Aiko IT Systems. All rights reserved.</span>
+                </div>
+            </div></main>
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.vendor.js"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.js"></script>
+        <script type="text/javascript" src="../../src/scripts/url.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/highlight/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+        <script src="https://cdn.jsdelivr.net/npm/anchor-js/anchor.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/jquery.twbsPagination.js"></script>
+        <script type="text/javascript" src="../../src/scripts/dcs.js"></script>
+        <script type="text/javascript" src="../../src/scripts/lunr.js"></script>
+    </body>
+</html>
