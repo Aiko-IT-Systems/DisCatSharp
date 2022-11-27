@@ -514,9 +514,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				{
 					List<GroupTranslator> groupTranslations = null;
 
-					if (!string.IsNullOrEmpty(ctx.Translations))
+					if (!string.IsNullOrEmpty(ctx.GroupTranslations))
 					{
-						groupTranslations = JsonConvert.DeserializeObject<List<GroupTranslator>>(ctx.Translations);
+						groupTranslations = JsonConvert.DeserializeObject<List<GroupTranslator>>(ctx.GroupTranslations);
 					}
 
 					var slashGroupsTuple = await NestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildId, groupTranslations);
@@ -590,9 +590,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				{
 					List<CommandTranslator> commandTranslations = null;
 
-					if (!string.IsNullOrEmpty(ctx.Translations))
+					if (!string.IsNullOrEmpty(ctx.SingleTranslations))
 					{
-						commandTranslations = JsonConvert.DeserializeObject<List<CommandTranslator>>(ctx.Translations);
+						commandTranslations = JsonConvert.DeserializeObject<List<CommandTranslator>>(ctx.SingleTranslations);
 					}
 
 					//Slash commands
