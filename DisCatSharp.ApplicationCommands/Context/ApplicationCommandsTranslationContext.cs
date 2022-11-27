@@ -40,9 +40,14 @@ public class ApplicationCommandsTranslationContext
 	public string Name { get; }
 
 	/// <summary>
-	/// Gets the translation json.
+	/// Gets the group translation json.
 	/// </summary>
-	internal string Translations { get; set; }
+	internal string GroupTranslations { get; set; }
+
+	/// <summary>
+	/// Gets the single translation json.
+	/// </summary>
+	internal string SingleTranslations { get; set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ApplicationCommandsTranslationContext"/> class.
@@ -55,6 +60,9 @@ public class ApplicationCommandsTranslationContext
 		this.Name = name;
 	}
 
-	public void AddTranslation(string translationJson)
-		=> this.Translations = translationJson;
+	public void AddGroupTranslation(string translationJson)
+		=> this.GroupTranslations = translationJson;
+
+	public void AddSingleTranslation(string translationJson)
+		=> this.SingleTranslations = translationJson;
 }
