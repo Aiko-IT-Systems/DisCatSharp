@@ -20,14 +20,14 @@ Client.GetApplicationCommands().RegisterGuildCommands<MyCommand>(121548463489464
 {
     string json = File.ReadAllText(TRANSLATION_PATH + "my_command.json");
 
-    translations.AddTranslation(json);
+    translations.AddGroupTranslation(json);
 });
 
 Client.GetApplicationCommands().RegisterGuildCommands<MySimpleCommands>(1215484634894646844, translations =>
 {
     string json = File.ReadAllText(TRANSLATION_PATH + "my_simple_command.json");
 
-    translations.AddTranslation(json);
+    translations.AddSingleTranslation(json);
 });
 ```
 
