@@ -3336,6 +3336,7 @@ public sealed partial class DiscordClient
 			this.UserCache.AddOrUpdate(usr.Id, usr, (old, @new) => @new);
 		}
 
+		usr.Locale = interaction.Locale;
 		interaction.User = usr;
 
 		var resolved = interaction.Data.Resolved;
