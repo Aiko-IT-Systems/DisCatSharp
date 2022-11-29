@@ -1292,6 +1292,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 					old.AvatarDecorationHash = usr.AvatarDecorationHash;
 					old.ThemeColorsInternal = usr.ThemeColorsInternal;
 					old.Pronouns = usr.Pronouns;
+					old.Locale = usr.Locale;
 					return old;
 				});
 
@@ -1332,6 +1333,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.AvatarDecorationHash = usr.AvatarDecorationHash;
 				old.ThemeColorsInternal = usr.ThemeColorsInternal;
 				old.Pronouns = usr.Pronouns;
+				old.Locale = usr.Locale;
 				return old;
 			});
 		}
