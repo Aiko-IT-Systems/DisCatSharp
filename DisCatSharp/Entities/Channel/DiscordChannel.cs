@@ -28,6 +28,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
@@ -954,22 +955,24 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 
 	#region Stage
 
+	[Obsolete, DiscordDeprecated("Stage privacy level is removed")]
+	public async Task<DiscordStageInstance> OpenStageAsync(string topic, bool sendStartNotification = false, StagePrivacyLevel privacyLevel = StagePrivacyLevel.GuildOnly, string reason = null)
+		=> await this.Discord.ApiClient.CreateStageInstanceAsync(this.Id, topic, sendStartNotification, null, reason);
+
 	/// <summary>
 	/// Opens a stage.
 	/// </summary>
 	/// <param name="topic">Topic of the stage.</param>
 	/// <param name="sendStartNotification">Whether @everyone should be notified.</param>
-	/// <param name="privacyLevel">Privacy level of the stage (Defaults to <see cref="StagePrivacyLevel.GuildOnly"/>.</param>
+	/// <param name="scheduledEventId">The associated scheduled event id.</param>
 	/// <param name="reason">Audit log reason.</param>
 	/// <returns>Stage instance</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS0612 // Type or member is obsolete
-	public async Task<DiscordStageInstance> OpenStageAsync(string topic, bool sendStartNotification = false, StagePrivacyLevel privacyLevel = StagePrivacyLevel.GuildOnly, string reason = null)
-#pragma warning restore CS0612 // Type or member is obsolete
-		=> await this.Discord.ApiClient.CreateStageInstanceAsync(this.Id, topic, sendStartNotification, privacyLevel, reason);
+	public async Task<DiscordStageInstance> OpenStageAsync(string topic, bool sendStartNotification = false, ulong? scheduledEventId = null, string reason = null)
+		=> await this.Discord.ApiClient.CreateStageInstanceAsync(this.Id, topic, sendStartNotification, scheduledEventId, reason);
 
 	/// <summary>
 	/// Modifies a stage topic.
@@ -981,10 +984,9 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS0612 // Type or member is obsolete
+	[DiscordDeprecated("Privacy level will be removed in next versions"), Obsolete]
 	public async Task ModifyStageAsync(Optional<string> topic, Optional<StagePrivacyLevel> privacyLevel, string reason = null)
-#pragma warning restore CS0612 // Type or member is obsolete
-		=> await this.Discord.ApiClient.ModifyStageInstanceAsync(this.Id, topic, privacyLevel, reason);
+		=> await this.Discord.ApiClient.ModifyStageInstanceAsync(this.Id, topic, reason);
 
 	/// <summary>
 	/// Closes a stage.

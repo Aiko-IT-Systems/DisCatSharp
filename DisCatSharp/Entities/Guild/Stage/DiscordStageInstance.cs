@@ -22,6 +22,7 @@
 
 using System;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -61,13 +62,13 @@ public class DiscordStageInstance : SnowflakeObject, IEquatable<DiscordStageInst
 	/// <summary>
 	/// Gets the topic of the Stage instance.
 	/// </summary>
-	[JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore), Obsolete("Will be static due to the discovery removal.")]
-	public StagePrivacyLevel PrivacyLevel { get; internal set; }
+	[JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated("Will be static due to the discovery removal."), Obsolete]
+	public StagePrivacyLevel PrivacyLevel { get; internal set; } = StagePrivacyLevel.GuildOnly;
 
 	/// <summary>
 	/// Gets whether or not stage discovery is disabled.
 	/// </summary>
-	[JsonProperty("discoverable_disabled", NullValueHandling = NullValueHandling.Ignore), Obsolete("Will be removed due to the discovery removal.", true)]
+	[JsonProperty("discoverable_disabled", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated("Will be removed due to the discovery removal."), Obsolete]
 	public bool DiscoverableDisabled { get; internal set; }
 
 	/// <summary>

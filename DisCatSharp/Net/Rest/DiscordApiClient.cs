@@ -2214,19 +2214,15 @@ public sealed class DiscordApiClient
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="topic">The topic.</param>
 	/// <param name="sendStartNotification">Whether everyone should be notified about the stage.</param>
-	/// <param name="privacyLevel">The privacy_level.</param>
+	/// <param name="scheduledEventId">The associated scheduled event id.</param>
 	/// <param name="reason">The reason.</param>
-#pragma warning disable CS0612 // Type or member is obsolete
-#pragma warning disable CS0612 // Type or member is obsolete
-	internal async Task<DiscordStageInstance> CreateStageInstanceAsync(ulong channelId, string topic, bool sendStartNotification, StagePrivacyLevel privacyLevel = StagePrivacyLevel.GuildOnly, string reason = null)
-#pragma warning restore CS0612 // Type or member is obsolete
-#pragma warning restore CS0612 // Type or member is obsolete
+	internal async Task<DiscordStageInstance> CreateStageInstanceAsync(ulong channelId, string topic, bool sendStartNotification, ulong? scheduledEventId = null, string reason = null)
 	{
 		var pld = new RestStageInstanceCreatePayload
 		{
 			ChannelId = channelId,
 			Topic = topic,
-			PrivacyLevel = privacyLevel,
+			ScheduledEventId = scheduledEventId,
 			SendStartNotification = sendStartNotification
 		};
 
@@ -2266,16 +2262,12 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="topic">The topic.</param>
-	/// <param name="privacyLevel">The privacy_level.</param>
 	/// <param name="reason">The reason.</param>
-#pragma warning disable CS0612 // Type or member is obsolete
-	internal Task ModifyStageInstanceAsync(ulong channelId, Optional<string> topic, Optional<StagePrivacyLevel> privacyLevel, string reason)
-#pragma warning restore CS0612 // Type or member is obsolete
+	internal Task ModifyStageInstanceAsync(ulong channelId, Optional<string> topic, string reason)
 	{
 		var pld = new RestStageInstanceModifyPayload
 		{
-			Topic = topic,
-			PrivacyLevel = privacyLevel
+			Topic = topic
 		};
 
 		var route = $"{Endpoints.STAGE_INSTANCES}/:channel_id";
