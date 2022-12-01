@@ -45,12 +45,10 @@ internal sealed class RestStageInstanceCreatePayload
 	public string Topic { get; set; }
 
 	/// <summary>
-	/// Gets or sets the privacy level.
+	/// Gets or sets the associated scheduled event id.
 	/// </summary>
-	[JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
-#pragma warning disable CS0612 // Type or member is obsolete
-	public StagePrivacyLevel PrivacyLevel { get; set; }
-#pragma warning restore CS0612 // Type or member is obsolete
+	[JsonProperty("guild_scheduled_event_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? ScheduledEventId { get; set; }
 
 	/// <summary>
 	/// Whether everyone should be notified about the start.
@@ -69,12 +67,4 @@ internal sealed class RestStageInstanceModifyPayload
 	/// </summary>
 	[JsonProperty("topic", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<string> Topic { get; set; }
-
-	/// <summary>
-	/// Gets or sets the privacy level.
-	/// </summary>
-	[JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
-#pragma warning disable CS0612 // Type or member is obsolete
-	public Optional<StagePrivacyLevel> PrivacyLevel { get; set; }
-#pragma warning restore CS0612 // Type or member is obsolete
 }
