@@ -8,14 +8,22 @@ jobs:
   tweet:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - name: "Get Release Tag"
         run: |
           RELEASE_TAG=$(curl https://api.github.com/repos/Aiko-IT-Systems/DisCatSharp/releases/latest | jq -r '.tag_name')
       - name: Tweet release
-        uses: ethomson/send-tweet-action@v1
+        uses: snow-actions/tweet@v1.3.0
         with:
-          consumer-key: ${{ secrets.DCS_CONSUMER_KEY }}
-          consumer-secret: ${{ secrets.DCS_CONSUMER_SECRET }}
-          access-token: ${{ secrets.DCS_ACCESS_TOKEN_KEY }}
-          access-token-secret: ${{ secrets.DCS_ACCESS_TOKEN_SECRET }}
-          status: "$RELEASE_TAG is here! Checkout the GitHub Page for changelog regarding the $RELEASE_TAG Release: github.com/Aiko-IT-Systems/DisCatSharp/releases/tag/$RELEASE_TAG"
+          status: |
+            DisCatSharp $RELEASE_TAG is here!
+            
+            Checkout our GitHub Page for the changelog regarding $RELEASE_TAG
+            Release: github.com/Aiko-IT-Systems/DisCatSharp/releases/tag/$RELEASE_TAG
+          media_paths: |
+            DisCatSharp.Logos/logobig.png
+        env:
+          CONSUMER_API_KEY: ${{ secrets.DCS_CONSUMER_KEY }}
+          CONSUMER_API_SECRET_KEY: ${{ secrets.DCS_CONSUMER_SECRET }}
+          ACCESS_TOKEN: ${{ secrets.DCS_ACCESS_TOKEN_KEY }}
+          ACCESS_TOKEN_SECRET: ${{ secrets.DCS_ACCESS_TOKEN_SECRET }}
