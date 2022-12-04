@@ -2,7 +2,7 @@
 
 ## A Discord Bot Library written in C# for .NET
 
-![DisCatSharp Logo](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Logos/android-chrome-192x192.png?raw=true)
+![DisCatSharp Logo](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Logos/dcs-logo-winter.gif?raw=true)
 
 ----
 [![Build](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/build.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/build.yml)
