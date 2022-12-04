@@ -899,6 +899,7 @@
   "DisCatSharp.Entities.DiscordChannel.op_Equality(DisCatSharp.Entities.DiscordChannel,DisCatSharp.Entities.DiscordChannel)": "DisCatSharp.Entities.DiscordChannel.yml",
   "DisCatSharp.Entities.DiscordChannel.op_Inequality(DisCatSharp.Entities.DiscordChannel,DisCatSharp.Entities.DiscordChannel)": "DisCatSharp.Entities.DiscordChannel.yml",
   "DisCatSharp.Entities.DiscordChannel.OpenStageAsync(System.String,System.Boolean,DisCatSharp.Enums.StagePrivacyLevel,System.String)": "DisCatSharp.Entities.DiscordChannel.yml",
+  "DisCatSharp.Entities.DiscordChannel.OpenStageAsync(System.String,System.Boolean,System.Nullable{System.UInt64},System.String)": "DisCatSharp.Entities.DiscordChannel.yml",
   "DisCatSharp.Entities.DiscordChannel.Parent": "DisCatSharp.Entities.DiscordChannel.yml",
   "DisCatSharp.Entities.DiscordChannel.ParentId": "DisCatSharp.Entities.DiscordChannel.yml",
   "DisCatSharp.Entities.DiscordChannel.PermissionOverwrites": "DisCatSharp.Entities.DiscordChannel.yml",
