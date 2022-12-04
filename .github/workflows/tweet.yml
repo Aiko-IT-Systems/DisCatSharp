@@ -20,8 +20,6 @@ jobs:
             
             Checkout our GitHub Page for the changelog regarding $RELEASE_TAG
             Release: github.com/Aiko-IT-Systems/DisCatSharp/releases/tag/$RELEASE_TAG
-          media_paths: |
-            DisCatSharp.Logos/logobig.png
         env:
           CONSUMER_API_KEY: ${{ secrets.DCS_CONSUMER_KEY }}
           CONSUMER_API_SECRET_KEY: ${{ secrets.DCS_CONSUMER_SECRET }}
