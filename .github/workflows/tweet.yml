@@ -13,7 +13,7 @@ jobs:
         run: |
           RELEASE_TAG=$(curl https://api.github.com/repos/Aiko-IT-Systems/DisCatSharp/releases/latest | jq -r '.tag_name')
       - name: Tweet release
-        uses: snow-actions/tweet@v1.3.0
+        uses: Lulalaby/tweet@v1.3.0
         with:
           status: |
             DisCatSharp $RELEASE_TAG is here!
