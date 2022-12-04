@@ -266,6 +266,7 @@
 			"_appName": "DisCatSharp",
 			"_appFooter": "<strong>Made with ♥ by AITSYS</strong>",
 			"_copyrightFooter": "© Aiko IT Systems. All rights reserved.",
+			"_appLogoPath": "dcs-logo-winter.gif",
 			"_enableSearch":true,
 			"_disableSideFilter": false,
 			"_enableNewTab":true,
