@@ -1,0 +1,21 @@
+name: "Tweet Releases"
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  tweet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Get Release Tag"
+        run: |
+          RELEASE_TAG=$(curl https://api.github.com/repos/Aiko-IT-Systems/DisCatSharp/releases/latest | jq -r '.tag_name')
+      - name: Tweet release
+        uses: mugi111/tweet-trigger-release@v1.1
+        with:
+          consumer_key: ${{ secrets.DCS_CONSUMER_KEY }}
+          consumer_secret: ${{ secrets.DCS_CONSUMER_SECRET }}
+          access_token_key: ${{ secrets.DCS_ACCESS_TOKEN_KEY }}
+          access_token_secret: ${{ secrets.DCS_ACCESS_TOKEN_SECRET }}
+          tweet_body: "$RELEASE_TAG is here! Checkout the GitHub Page for changelog regarding the $RELEASE_TAG Release: github.com/Aiko-IT-Systems/DisCatSharp/releases/tag/$RELEASE_TAG"
