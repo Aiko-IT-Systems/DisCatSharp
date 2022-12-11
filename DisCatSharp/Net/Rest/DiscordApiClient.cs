@@ -2965,11 +2965,13 @@ public sealed class DiscordApiClient
 	/// <param name="mute">The mute.</param>
 	/// <param name="deaf">The deaf.</param>
 	/// <param name="voiceChannelId">The voice_channel_id.</param>
+	/// <param name="verify">Whether to verify the member.</param>
+	/// <param name="flags">The member flags</param>
 	/// <param name="reason">The reason.</param>
 
 	internal Task ModifyGuildMemberAsync(ulong guildId, ulong userId, Optional<string> nick,
 		Optional<IEnumerable<ulong>> roleIds, Optional<bool> mute, Optional<bool> deaf,
-		Optional<ulong?> voiceChannelId, string reason)
+		Optional<ulong?> voiceChannelId, Optional<bool> verify, MemberFlags flags, string reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -2983,6 +2985,12 @@ public sealed class DiscordApiClient
 			Mute = mute,
 			VoiceChannelId = voiceChannelId
 		};
+
+		pld.Flags = verify.HasValue && verify.Value
+			? flags | MemberFlags.BypassesVerification
+			: verify.HasValue && !verify.Value
+			? flags & ~MemberFlags.BypassesVerification
+			: Optional.None;
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new {guild_id = guildId, user_id = userId }, out var path);

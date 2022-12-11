@@ -480,7 +480,13 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task SetMuteAsync(bool mute, string reason = null)
-		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, mute, default, default, reason);
+		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, mute, default, default, default, this.MemberFlags, reason);
+
+	public Task VerifyAsync(string reason = null)
+		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default, default, default, true, this.MemberFlags, reason);
+
+	public Task UnverifyAsync(string reason = null)
+		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default, default, default, false, this.MemberFlags, reason);
 
 	/// <summary>
 	/// Sets this member's voice deaf status.
@@ -492,7 +498,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task SetDeafAsync(bool deaf, string reason = null)
-		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default, deaf, default, reason);
+		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default, deaf, default, default, this.MemberFlags, reason);
 
 	/// <summary>
 	/// Modifies this member.
@@ -517,13 +523,13 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 			await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, Optional.None,
 				mdl.Roles.Map(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
-				mdl.VoiceChannel.Map(e => e?.Id), mdl.AuditLogReason).ConfigureAwait(false);
+				mdl.VoiceChannel.Map(e => e?.Id), default, this.MemberFlags, mdl.AuditLogReason).ConfigureAwait(false);
 		}
 		else
 		{
 			await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, mdl.Nickname,
 				mdl.Roles.Map(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
-				mdl.VoiceChannel.Map(e => e?.Id), mdl.AuditLogReason).ConfigureAwait(false);
+				mdl.VoiceChannel.Map(e => e?.Id), default, this.MemberFlags, mdl.AuditLogReason).ConfigureAwait(false);
 		}
 	}
 
@@ -615,7 +621,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task ReplaceRolesAsync(IEnumerable<DiscordRole> roles, string reason = null)
 		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, default,
-			Optional.Some(roles.Select(xr => xr.Id)), default, default, default, reason);
+			Optional.Some(roles.Select(xr => xr.Id)), default, default, default, default, this.MemberFlags, reason);
 
 	/// <summary>
 	/// Bans this member from their guild.

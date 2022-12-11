@@ -1310,7 +1310,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			throw new ArgumentException("Cannot place a member in a non-voice channel.");
 
 		await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, member.Id, default, default, default,
-			default, this.Id, null).ConfigureAwait(false);
+			default, this.Id, default, member.MemberFlags, null).ConfigureAwait(false);
 	}
 
 	/// <summary>

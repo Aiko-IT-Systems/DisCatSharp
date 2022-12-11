@@ -475,6 +475,9 @@ internal sealed class RestGuildMemberModifyPayload
 	/// </summary>
 	[JsonProperty("channel_id")]
 	public Optional<ulong?> VoiceChannelId { get; set; }
+
+	[JsonProperty("flags")]
+	public Optional<MemberFlags> Flags { get; set; }
 }
 
 /// <summary>

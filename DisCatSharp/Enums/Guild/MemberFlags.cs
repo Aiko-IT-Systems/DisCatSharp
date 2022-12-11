@@ -52,6 +52,8 @@ public enum MemberFlags : long
 	/// This member bypasses the membership screening verification.
 	/// </summary>
 	[DiscordInExperiment]
-	BypassesVerification = 1 << 2
+	BypassesVerification = 1 << 2,
+	[DiscordInExperiment]
+	Verified = BypassesVerification
 }
 
