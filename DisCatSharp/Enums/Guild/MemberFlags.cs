@@ -22,13 +22,15 @@
 
 using System;
 
+using DisCatSharp.Attributes;
+
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents additional details of a member account.
 /// </summary>
 [Flags]
-public enum MemberFlags
+public enum MemberFlags : long
 {
 	/// <summary>
 	/// This member has no flags.
@@ -39,5 +41,17 @@ public enum MemberFlags
 	/// This member has joined and left the guild before.
 	/// </summary>
 	DidRejoin = 1 << 0,
+
+	/// <summary>
+	/// This member completed the onboarding.
+	/// </summary>
+	[DiscordInExperiment]
+	CompletedOnboarding = 1 << 1,
+
+	/// <summary>
+	/// This member bypasses the membership screening verification.
+	/// </summary>
+	[DiscordInExperiment]
+	BypassesVerification = 1 << 2
 }
 
