@@ -4841,6 +4841,8 @@
   "DisCatSharp.Enums.InviteType.Guild": "DisCatSharp.Enums.InviteType.yml",
   "DisCatSharp.Enums.InviteType.User": "DisCatSharp.Enums.InviteType.yml",
   "DisCatSharp.Enums.MemberFlags": "DisCatSharp.Enums.MemberFlags.yml",
+  "DisCatSharp.Enums.MemberFlags.BypassesVerification": "DisCatSharp.Enums.MemberFlags.yml",
+  "DisCatSharp.Enums.MemberFlags.CompletedOnboarding": "DisCatSharp.Enums.MemberFlags.yml",
   "DisCatSharp.Enums.MemberFlags.DidRejoin": "DisCatSharp.Enums.MemberFlags.yml",
   "DisCatSharp.Enums.MemberFlags.None": "DisCatSharp.Enums.MemberFlags.yml",
   "DisCatSharp.Enums.MembershipScreeningFieldType": "DisCatSharp.Enums.MembershipScreeningFieldType.yml",
