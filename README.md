@@ -22,6 +22,9 @@
 ## Upcoming
 - We're building a translation generator tool for the template export function introduced in 10.1.0.
 
+## New
+- [Linked roles](https://discord.com/build/linked-roles) support!
+
 # About
 
 ## Why DisCatSharp?
