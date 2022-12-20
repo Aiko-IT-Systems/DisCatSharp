@@ -454,6 +454,90 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	}
 
 	/// <summary>
+	/// Creates a direct message channel to this user.
+	/// </summary>
+	/// <returns>Direct message channel to this user.</returns>
+	/// <exception cref="UnauthorizedException">Thrown when the user has the bot blocked, the member shares no guild with the bot, or if the member has Allow DM from server members off.</exception>
+	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordDmChannel> CreateDmChannelAsync()
+		=> this.Discord.ApiClient.CreateDmAsync(this.Id);
+
+	/// <summary>
+	/// Sends a direct message to this user. Creates a direct message channel if one does not exist already.
+	/// </summary>
+	/// <param name="content">Content of the message to send.</param>
+	/// <returns>The sent message.</returns>
+	/// <exception cref="UnauthorizedException">Thrown when the user has the bot blocked, the member shares no guild with the bot, or if the member has Allow DM from server members off.</exception>
+	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordMessage> SendMessageAsync(string content)
+	{
+		if (this.IsBot && this.Discord.CurrentUser.IsBot)
+			throw new ArgumentException("Bots cannot DM each other.");
+
+		var chn = await this.CreateDmChannelAsync().ConfigureAwait(false);
+		return await chn.SendMessageAsync(content).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Sends a direct message to this user. Creates a direct message channel if one does not exist already.
+	/// </summary>
+	/// <param name="embed">Embed to attach to the message.</param>
+	/// <returns>The sent message.</returns>
+	/// <exception cref="UnauthorizedException">Thrown when the user has the bot blocked, the member shares no guild with the bot, or if the member has Allow DM from server members off.</exception>
+	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed)
+	{
+		if (this.IsBot && this.Discord.CurrentUser.IsBot)
+			throw new ArgumentException("Bots cannot DM each other.");
+
+		var chn = await this.CreateDmChannelAsync().ConfigureAwait(false);
+		return await chn.SendMessageAsync(embed).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Sends a direct message to this user. Creates a direct message channel if one does not exist already.
+	/// </summary>
+	/// <param name="content">Content of the message to send.</param>
+	/// <param name="embed">Embed to attach to the message.</param>
+	/// <returns>The sent message.</returns>
+	/// <exception cref="UnauthorizedException">Thrown when the user has the bot blocked, the member shares no guild with the bot, or if the member has Allow DM from server members off.</exception>
+	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed)
+	{
+		if (this.IsBot && this.Discord.CurrentUser.IsBot)
+			throw new ArgumentException("Bots cannot DM each other.");
+
+		var chn = await this.CreateDmChannelAsync().ConfigureAwait(false);
+		return await chn.SendMessageAsync(content, embed).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Sends a direct message to this user. Creates a direct message channel if one does not exist already.
+	/// </summary>
+	/// <param name="message">Builder to with the message.</param>
+	/// <returns>The sent message.</returns>
+	/// <exception cref="UnauthorizedException">Thrown when the user has the bot blocked, the member shares no guild with the bot, or if the member has Allow DM from server members off.</exception>
+	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder message)
+	{
+		if (this.IsBot && this.Discord.CurrentUser.IsBot)
+			throw new ArgumentException("Bots cannot DM each other.");
+
+		var chn = await this.CreateDmChannelAsync().ConfigureAwait(false);
+		return await chn.SendMessageAsync(message).ConfigureAwait(false);
+	}
+
+	/// <summary>
 	/// Returns a string representation of this user.
 	/// </summary>
 	/// <returns>String representation of this user.</returns>
