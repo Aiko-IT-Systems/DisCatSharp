@@ -41,5 +41,11 @@ public enum TargetType
 	/// Represents a role subscription invite.
 	/// Not creatable by bots.
 	/// </summary>
-	RoleSubscriptionsPurchase = 3
+	RoleSubscriptionsPurchase = 3,
+
+	/// <summary>
+	/// Represents a promo page generated invite.
+	/// Not creatable, system generated.
+	/// </summary>
+	PromoPage = 4
 }
