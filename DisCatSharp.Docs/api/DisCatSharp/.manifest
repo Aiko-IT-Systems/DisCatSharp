@@ -5026,6 +5026,7 @@
   "DisCatSharp.Enums.SystemChannelFlagsExtension.HasSystemChannelFlag(DisCatSharp.Enums.SystemChannelFlags,DisCatSharp.Enums.SystemChannelFlags)": "DisCatSharp.Enums.SystemChannelFlagsExtension.yml",
   "DisCatSharp.Enums.TargetType": "DisCatSharp.Enums.TargetType.yml",
   "DisCatSharp.Enums.TargetType.EmbeddedApplication": "DisCatSharp.Enums.TargetType.yml",
+  "DisCatSharp.Enums.TargetType.PromoPage": "DisCatSharp.Enums.TargetType.yml",
   "DisCatSharp.Enums.TargetType.RoleSubscriptionsPurchase": "DisCatSharp.Enums.TargetType.yml",
   "DisCatSharp.Enums.TargetType.Streaming": "DisCatSharp.Enums.TargetType.yml",
   "DisCatSharp.Enums.TextComponentStyle": "DisCatSharp.Enums.TextComponentStyle.yml",
