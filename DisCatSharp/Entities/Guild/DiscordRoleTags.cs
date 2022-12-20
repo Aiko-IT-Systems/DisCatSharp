@@ -46,8 +46,18 @@ public class DiscordRoleTags
 	/// </summary>
 	[JsonIgnore]
 	public bool IsPremiumSubscriber
-		=> this.PremiumSubscriber.HasValue && this.PremiumSubscriber.Value is null;
+		=> this.PremiumSubscriber.HasValue && this.PremiumSubscriber.Value;
 
 	[JsonProperty("premium_subscriber", NullValueHandling = NullValueHandling.Include)]
-	internal Optional<bool?> PremiumSubscriber = false;
+	internal bool? PremiumSubscriber = false;
+
+	/// <summary>
+	/// Gets whether this is the guild's premium subscriber role.
+	/// </summary>
+	[JsonIgnore]
+	public bool IsLinkedRole
+		=> this.GuildConnection.HasValue && this.GuildConnection.Value;
+
+	[JsonProperty("guild_connections", NullValueHandling = NullValueHandling.Include)]
+	internal bool? GuildConnection = false;
 }

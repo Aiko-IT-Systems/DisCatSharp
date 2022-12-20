@@ -35,5 +35,11 @@ public enum TargetType
 	/// <summary>
 	/// Represents a activity invite.
 	/// </summary>
-	EmbeddedApplication = 2
+	EmbeddedApplication = 2,
+
+	/// <summary>
+	/// Represents a role subscription invite.
+	/// Not creatable by bots.
+	/// </summary>
+	RoleSubscriptionsPurchase = 3
 }
