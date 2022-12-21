@@ -100,14 +100,14 @@ internal sealed class ClientProperties
 	/// <summary>
 	/// Gets the client's referrer.
 	/// </summary>
-	[JsonProperty("$referrer")]
+	[JsonProperty("referrer")]
 	public string Referrer
 		=> "";
 
 	/// <summary>
 	/// Gets the client's referring domain.
 	/// </summary>
-	[JsonProperty("$referring_domain")]
+	[JsonProperty("referring_domain")]
 	public string ReferringDomain
 		=> "";
 }
