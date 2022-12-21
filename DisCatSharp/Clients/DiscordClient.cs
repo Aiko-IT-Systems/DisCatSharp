@@ -881,9 +881,30 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public Uri GetInAppOAuth(Permissions permissions = Permissions.None, OAuthScopes scopes = OAuthScopes.BOT_DEFAULT, string redir = null)
 	{
 		permissions &= PermissionMethods.FullPerms;
-		// hey look, it's not all annoying and blue :P
 		return new Uri(new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
 			.AddParameter("client_id", this.CurrentApplication.Id.ToString(CultureInfo.InvariantCulture))
+			.AddParameter("scope", OAuth.ResolveScopes(scopes))
+			.AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
+			.AddParameter("state", "")
+			.AddParameter("redirect_uri", redir ?? "")
+			.ToString());
+	}
+
+	/// <summary>
+	/// Generates an In-App OAuth Url.
+	/// </summary>
+	/// <param name="bot">The bot to generate the url for.</param>
+	/// <param name="scopes">Defaults to <see cref="DisCatSharp.Enums.OAuthScopes.BOT_DEFAULT"/>.</param>
+	/// <param name="redir">Redirect Uri.</param>
+	/// <param name="permissions">Defaults to <see cref="Permissions.None"/>.</param>
+	/// <returns>The OAuth Url</returns>
+	public Uri GenerateInAppOauthFor(DiscordUser bot, Permissions permissions = Permissions.None, OAuthScopes scopes = OAuthScopes.BOT_DEFAULT, string redir = null)
+	{
+		if (!bot.IsBot)
+			throw new ArgumentException("The user must be a bot.", nameof(bot));
+		permissions &= PermissionMethods.FullPerms;
+		return new Uri(new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
+			.AddParameter("client_id", bot.Id.ToString(CultureInfo.InvariantCulture))
 			.AddParameter("scope", OAuth.ResolveScopes(scopes))
 			.AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
 			.AddParameter("state", "")
