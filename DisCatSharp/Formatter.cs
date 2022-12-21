@@ -49,7 +49,7 @@ public static class Formatter
 	/// <param name="content">Contents of the block.</param>
 	/// <param name="language">Language to use for highlighting.</param>
 	/// <returns>Formatted block of code.</returns>
-	public static string BlockCode(string content, string language = "")
+	public static string BlockCode(this string content, string language = "")
 		=> $"```{language}\n{content}\n```";
 
 	/// <summary>
@@ -57,7 +57,7 @@ public static class Formatter
 	/// </summary>
 	/// <param name="content">Contents of the snippet.</param>
 	/// <returns>Formatted inline code snippet.</returns>
-	public static string InlineCode(string content)
+	public static string InlineCode(this string content)
 		=> $"`{content}`";
 
 	/// <summary>
@@ -66,7 +66,7 @@ public static class Formatter
 	/// <param name="time">The time from now.</param>
 	/// <param name="format">The format to render the timestamp in. Defaults to relative.</param>
 	/// <returns>A formatted timestamp.</returns>
-	public static string Timestamp(TimeSpan time, TimestampFormat format = TimestampFormat.RelativeTime)
+	public static string Timestamp(this TimeSpan time, TimestampFormat format = TimestampFormat.RelativeTime)
 		=> Timestamp(DateTimeOffset.UtcNow + time, format);
 
 	/// <summary>
@@ -75,7 +75,7 @@ public static class Formatter
 	/// <param name="time">Timestamp to format.</param>
 	/// <param name="format">The format to render the timestamp in. Defaults to relative.</param>
 	/// <returns>A formatted timestamp.</returns>
-	public static string Timestamp(DateTimeOffset time, TimestampFormat format = TimestampFormat.RelativeTime)
+	public static string Timestamp(this DateTimeOffset time, TimestampFormat format = TimestampFormat.RelativeTime)
 		=> $"<t:{time.ToUnixTimeSeconds()}:{(char)format}>";
 
 	/// <summary>
@@ -84,7 +84,7 @@ public static class Formatter
 	/// <param name="time">The time from now.</param>
 	/// <param name="format">The format to render the timestamp in. Defaults to relative.</param>
 	/// <returns>A formatted timestamp relative to now.</returns>
-	public static string Timestamp(DateTime time, TimestampFormat format = TimestampFormat.RelativeTime)
+	public static string Timestamp(this DateTime time, TimestampFormat format = TimestampFormat.RelativeTime)
 		=> Timestamp(time.ToUniversalTime() - DateTime.UtcNow, format);
 
 	/// <summary>
@@ -92,7 +92,7 @@ public static class Formatter
 	/// </summary>
 	/// <param name="content">Text to embolden.</param>
 	/// <returns>Formatted text.</returns>
-	public static string Bold(string content)
+	public static string Bold(this string content)
 		=> $"**{content}**";
 
 	/// <summary>
@@ -100,7 +100,7 @@ public static class Formatter
 	/// </summary>
 	/// <param name="content">Text to italicize.</param>
 	/// <returns>Formatted text.</returns>
-	public static string Italic(string content)
+	public static string Italic(this string content)
 		=> $"*{content}*";
 
 	/// <summary>
@@ -108,7 +108,7 @@ public static class Formatter
 	/// </summary>
 	/// <param name="content">Text to spoiler.</param>
 	/// <returns>Formatted text.</returns>
-	public static string Spoiler(string content)
+	public static string Spoiler(this string content)
 		=> $"||{content}||";
 
 	/// <summary>
@@ -116,7 +116,7 @@ public static class Formatter
 	/// </summary>
 	/// <param name="content">Text to underline.</param>
 	/// <returns>Formatted text.</returns>
-	public static string Underline(string content)
+	public static string Underline(this string content)
 		=> $"__{content}__";
 
 	/// <summary>
@@ -124,7 +124,7 @@ public static class Formatter
 	/// </summary>
 	/// <param name="content">Text to strikethrough.</param>
 	/// <returns>Formatted text.</returns>
-	public static string Strike(string content)
+	public static string Strike(this string content)
 		=> $"~~{content}~~";
 
 	/// <summary>
@@ -132,7 +132,7 @@ public static class Formatter
 	/// </summary>
 	/// <param name="url">Url to prevent from being previewed.</param>
 	/// <returns>Formatted url.</returns>
-	public static string EmbedlessUrl(Uri url)
+	public static string EmbedlessUrl(this Uri url)
 		=> $"<{url}>";
 
 	/// <summary>
@@ -142,7 +142,7 @@ public static class Formatter
 	/// <param name="url">Url that the link will lead to.</param>
 	/// <param name="altText">Alt text to display on hover.</param>
 	/// <returns>Formatted url.</returns>
-	public static string MaskedUrl(string text, Uri url, string altText = "")
+	public static string MaskedUrl(this string text, Uri url, string altText = "")
 		=> $"[{text}]({url}{(!string.IsNullOrWhiteSpace(altText) ? $" \"{altText}\"" : "")})";
 
 	/// <summary>
@@ -150,7 +150,7 @@ public static class Formatter
 	/// </summary>
 	/// <param name="text">Text to sanitize.</param>
 	/// <returns>Sanitized text.</returns>
-	public static string Sanitize(string text)
+	public static string Sanitize(this string text)
 		=> s_mdSanitizeRegex.Replace(text, m => $"\\{m.Groups[1].Value}");
 
 	/// <summary>
@@ -158,7 +158,7 @@ public static class Formatter
 	/// </summary>
 	/// <param name="text">Text to strip of formatting.</param>
 	/// <returns>Formatting-stripped text.</returns>
-	public static string Strip(string text)
+	public static string Strip(this string text)
 		=> s_mdStripRegex.Replace(text, m => string.Empty);
 
 	/// <summary>
@@ -167,7 +167,7 @@ public static class Formatter
 	/// <param name="user">User to create mention for.</param>
 	/// <param name="nickname">Whether the mention should resolve nicknames or not.</param>
 	/// <returns>Formatted mention.</returns>
-	public static string Mention(DiscordUser user, bool nickname = false)
+	public static string Mention(this DiscordUser user, bool nickname = false)
 		=> nickname
 		? $"<@!{user.Id.ToString(CultureInfo.InvariantCulture)}>"
 		: $"<@{user.Id.ToString(CultureInfo.InvariantCulture)}>";
@@ -177,7 +177,7 @@ public static class Formatter
 	/// </summary>
 	/// <param name="channel">Channel to mention.</param>
 	/// <returns>Formatted mention.</returns>
-	public static string Mention(DiscordChannel channel)
+	public static string Mention(this DiscordChannel channel)
 		=> $"<#{channel.Id.ToString(CultureInfo.InvariantCulture)}>";
 
 	/// <summary>
@@ -185,7 +185,7 @@ public static class Formatter
 	/// </summary>
 	/// <param name="role">Role to mention.</param>
 	/// <returns>Formatted mention.</returns>
-	public static string Mention(DiscordRole role)
+	public static string Mention(this DiscordRole role)
 		=> $"<@&{role.Id.ToString(CultureInfo.InvariantCulture)}>";
 
 	/// <summary>
@@ -193,7 +193,7 @@ public static class Formatter
 	/// </summary>
 	/// <param name="emoji">Emoji to display.</param>
 	/// <returns>Formatted emoji.</returns>
-	public static string Emoji(DiscordEmoji emoji)
+	public static string Emoji(this DiscordEmoji emoji)
 		=> $"<:{emoji.Name}:{emoji.Id.ToString(CultureInfo.InvariantCulture)}>";
 
 	/// <summary>
@@ -201,6 +201,6 @@ public static class Formatter
 	/// </summary>
 	/// <param name="filename">Name of attached image to display</param>
 	/// <returns></returns>
-	public static string AttachedImageUrl(string filename)
+	public static string AttachedImageUrl(this string filename)
 		=> $"attachment://{filename}";
 }
