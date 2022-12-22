@@ -217,6 +217,12 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	internal ulong? WidgetChannelId { get; set; }
 
 	/// <summary>
+	/// Gets the safety alerts channel id.
+	/// </summary>
+	[JsonProperty("safety_alerts_channel_id", NullValueHandling = NullValueHandling.Ignore)]
+	internal ulong? SafetyAlertsChannelId { get; set; }
+
+	/// <summary>
 	/// Gets the widget channel for this guild.
 	/// </summary>
 	[JsonIgnore]
@@ -803,6 +809,41 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		features = rfeatures;
 
 		return await this.Discord.ApiClient.ModifyGuildCommunitySettingsAsync(this.Id, features, rulesChannelId, publicUpdatesChannelId, preferredLocale, description, defaultMessageNotifications, explicitContentFilter, verificationLevel, reason).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Modifies the safety alerts settings async.
+	/// </summary>
+	/// <param name="enabled">If true, enables <see cref="GuildFeaturesEnum.HasCommunityEnabled"/>.</param>
+	/// <param name="safetyAlertsChannel">The safety alerts channel.</param>
+	/// <param name="reason">The audit log reason.</param>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordGuild> ModifySafetyAlertsSettingsAsync(bool enabled, DiscordChannel safetyAlertsChannel, string reason = null)
+	{
+		static Optional<ulong?> ChannelToId(DiscordChannel ch, string name)
+			=> ch == null ? null :
+				ch.Type != ChannelType.Text && ch.Type != ChannelType.News
+					? throw new ArgumentException($"{name} channel needs to be a text channel.")
+					: ch.Id;
+
+		var safetyAlertsChannelId = ChannelToId(safetyAlertsChannel, "Safety Alerts");
+
+		List<string> features = new();
+		var rfeatures = this.RawFeatures.ToList();
+		if (!this.RawFeatures.Contains("RAID_ALERTS_ENABLED") && enabled)
+		{
+			rfeatures.Add("RAID_ALERTS_ENABLED");
+		}
+		else if (this.RawFeatures.Contains("RAID_ALERTS_ENABLED") && !enabled)
+		{
+			rfeatures.Remove("RAID_ALERTS_ENABLED");
+		}
+		features = rfeatures;
+
+		return await this.Discord.ApiClient.ModifyGuildSafetyAlertsSettingsAsync(this.Id, features, safetyAlertsChannelId, reason).ConfigureAwait(false);
 	}
 
 	/// <summary>
