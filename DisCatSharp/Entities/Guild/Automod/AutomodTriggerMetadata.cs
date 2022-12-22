@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -75,5 +76,11 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonProperty("mention_total_limit", NullValueHandling = NullValueHandling.Ignore)]
 		public int? MentionTotalLimit { get; set; } = null;
+
+		/// <summary>
+		/// Whether to automatically detect mention raids.
+		/// </summary>
+		[JsonProperty("mention_raid_protection_enabled", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
+		public bool? MentionRaidProtectionEnabled { get; set; } = null;
 	}
 }
