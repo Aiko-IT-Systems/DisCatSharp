@@ -201,6 +201,12 @@ internal sealed class RestGuildModifyPayload
 	public Optional<ulong?> SystemChannelId { get; set; }
 
 	/// <summary>
+	/// Gets or sets the safety alerts channel id.
+	/// </summary>
+	[JsonProperty("safety_alerts_channel_id", NullValueHandling = NullValueHandling.Include)]
+	internal Optional<ulong?> SafetyAlertsChannelId { get; set; }
+
+	/// <summary>
 	/// Gets or sets the system channel flags.
 	/// </summary>
 	[JsonProperty("system_channel_flags", NullValueHandling = NullValueHandling.Ignore)]
@@ -254,6 +260,21 @@ internal sealed class RestGuildMfaLevelModifyPayload
 /// </summary>
 internal sealed class RestGuildFeatureModifyPayload
 {
+	/// <summary>
+	/// Gets or sets the features.
+	/// </summary>
+	[JsonProperty("features", NullValueHandling = NullValueHandling.Ignore)]
+	public List<string> Features { get; set; }
+}
+
+internal sealed class RestGuildSafetyModifyPayload
+{
+	/// <summary>
+	/// Gets or sets the safety alerts channel id.
+	/// </summary>
+	[JsonProperty("safety_alerts_channel_id", NullValueHandling = NullValueHandling.Include)]
+	internal Optional<ulong?> SafetyAlertsChannelId { get; set; }
+
 	/// <summary>
 	/// Gets or sets the features.
 	/// </summary>

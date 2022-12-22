@@ -533,6 +533,42 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	/// Modifies the guild safety settings.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="features">The guild features.</param>
+	/// <param name="safetyAlertsChannelId">The safety alerts channel id.</param>
+	/// <param name="reason">The reason.</param>
+	internal async Task<DiscordGuild> ModifyGuildSafetyAlertsSettingsAsync(ulong guildId, List<string> features, Optional<ulong?> safetyAlertsChannelId, string reason)
+	{
+		var pld = new RestGuildSafetyModifyPayload
+		{
+			SafetyAlertsChannelId = safetyAlertsChannelId,
+			Features = features
+		};
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.GUILDS}/:guild_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		var json = JObject.Parse(res.Response);
+		var rawMembers = (JArray)json["members"];
+		var guild = json.ToDiscordObject<DiscordGuild>();
+		foreach (var r in guild.RolesInternal.Values)
+			r.GuildId = guild.Id;
+
+		if (this.Discord is DiscordClient dc)
+			await dc.OnGuildUpdateEventAsync(guild, rawMembers).ConfigureAwait(false);
+		return guild;
+	}
+
+	/// <summary>
 	/// Modifies the guild features.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
