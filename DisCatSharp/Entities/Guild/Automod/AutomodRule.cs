@@ -129,6 +129,9 @@ namespace DisCatSharp.Entities
 					throw new ArgumentException($"Cannot use AllowList for a {this.TriggerType} rule. Only {AutomodTriggerType.KeywordPreset} is valid in this context.");
 				else if (mdl.TriggerMetadata.Value.MentionTotalLimit != null && this.TriggerType != AutomodTriggerType.MentionSpam)
 					throw new ArgumentException($"Cannot use MentionTotalLimit for a {this.TriggerType} rule. Only {AutomodTriggerType.MentionSpam} is valid in this context.");
+
+				if (mdl.TriggerMetadata.Value.MentionRaidProtectionEnabled != null && this.TriggerType != AutomodTriggerType.MentionSpam)
+					throw new ArgumentException($"Cannot use MentionRaidProtectionEnabled for a {this.TriggerType} rule. Only {AutomodTriggerType.MentionSpam} is valid in this context.");
 			}
 			return await this.Discord.ApiClient.ModifyAutomodRuleAsync(this.GuildId, this.Id, mdl.Name, mdl.EventType, mdl.TriggerMetadata, mdl.Actions, mdl.Enabled, mdl.ExemptRoles, mdl.ExemptChannels, mdl.AuditLogReason);
 		}
