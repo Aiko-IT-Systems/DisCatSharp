@@ -59,13 +59,16 @@ Or write us an mail at [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
 
 All requests are tracked at [aitsys.dev](https://aitsys.dev/project/view/1/).
 
-## Tutorials
+## Tutorials / Examples
 
 * [Howto](https://docs.discatsharp.tech/articles/basics/bot_account.html)
-* [Examples](https://examples.dcs.aitsys.dev)
+* [Examples](https://github.com/Aiko-IT-Systems/DisCatSharp.Examples)
+* [Template Bot(:warning:Outdated)](https://github.com/Aiko-IT-Systems/DisCatSharp.TemplateBot)
+* [Public Support Bot for DisCatSharp Server](https://github.com/Aiko-IT-Systems/DisCatSharp.Support)
 
-## Snippets
-[Snippets for Visual Studio](https://github.com/Aiko-IT-Systems/DisCatSharp.Snippets)
+## Visual Studio Tools
+* [DisCatSharp Analyzer Docs](https://docs.discatsharp.tech/vs/index)
+* [Snippets for Visual Studio](https://github.com/Aiko-IT-Systems/DisCatSharp.Snippets)
 
 ----
 
@@ -98,15 +101,16 @@ All requests are tracked at [aitsys.dev](https://aitsys.dev/project/view/1/).
 
 ### Templates
 
-| Package                      | Stable                                                                                                        | Nightly                                                                                                                          |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| DisCatSharp.ProjectTemplates | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.ProjectTemplates.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.ProjectTemplates.svg?label=&logo=nuget&color=%23ff1493&style=flat-square) |
+| Package                                                                                         | Stable                                                                                                        | Nightly                                                                                                                          |
+| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| [DisCatSharp.ProjectTemplates](https://github.com/Aiko-IT-Systems/DisCatSharp.ProjectTemplates) | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.ProjectTemplates.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.ProjectTemplates.svg?label=&logo=nuget&color=%23ff1493&style=flat-square) |
 
 ### Development / Commons
 
-| Package            | Stable                                                                                              | Nightly                                                                                                                |
-| ------------------ | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| DisCatSharp.Common | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
+| Package                      | Stable                                                                                                        | Nightly                                                                                                                          |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| DisCatSharp.Common           | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square)           | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)           |
+| DisCatSharp.Analyzer.Roselyn | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Analyzer.Roselyn.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Analyzer.Roselyn.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
 
 
 ----
