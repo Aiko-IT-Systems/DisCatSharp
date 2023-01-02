@@ -467,7 +467,7 @@ public sealed partial class DiscordClient
 
 				if (rawMbr != null)
 					mbr = rawMbr.ToObject<TransportMember>();
-
+				// TODO: Add burst stuff
 				await this.OnMessageReactionAddAsync((ulong)dat["user_id"], (ulong)dat["message_id"], (ulong)dat["channel_id"], (ulong?)dat["guild_id"], mbr, dat["emoji"].ToObject<DiscordEmoji>(), (bool)dat["burst"]).ConfigureAwait(false);
 				break;
 
