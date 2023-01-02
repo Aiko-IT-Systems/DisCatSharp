@@ -60,6 +60,8 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 					? "@me"
 					: this.Channel is DiscordThreadChannel
 					? this.INTERNAL_THREAD.GuildId.Value.ToString(CultureInfo.InvariantCulture)
+					: this.GuildId.HasValue
+					? this.GuildId.Value.ToString(CultureInfo.InvariantCulture)
 					: this.Channel.GuildId.Value.ToString(CultureInfo.InvariantCulture);
 
 			var cid = this.ChannelId.ToString(CultureInfo.InvariantCulture);
@@ -101,6 +103,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		this.Pinned = other.Pinned;
 		this.TimestampRaw = other.TimestampRaw;
 		this.WebhookId = other.WebhookId;
+		this.GuildId = other.GuildId;
 	}
 
 	/// <summary>
@@ -109,7 +112,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	[JsonIgnore]
 	public DiscordChannel Channel
 	{
-		get => (this.Discord as DiscordClient)?.InternalGetCachedChannel(this.ChannelId) ?? this._channel;
+		get => (this.Discord as DiscordClient)?.InternalGetCachedChannel(this.ChannelId, this.GuildId) ?? this._channel;
 		internal set => this._channel = value;
 	}
 
@@ -369,6 +372,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong? GuildId { get; internal set; }
+
+	/// <summary>
+	/// Gets the guild to which this channel belongs.
+	/// </summary>
+	[JsonIgnore]
+	public DiscordGuild Guild
+		=> this.GuildId.HasValue && this.Discord.Guilds.TryGetValue(this.GuildId.Value, out var guild) ? guild : null;
+
 
 	/// <summary>
 	/// Gets the message object for the referenced message

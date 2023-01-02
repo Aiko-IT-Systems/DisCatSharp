@@ -64,15 +64,21 @@ public sealed class RequirePermissionsAttribute : CheckBaseAttribute
 		if (ctx.Guild == null)
 			return this.IgnoreDms;
 
+		var channel = ctx.Channel;
+		if (ctx.Channel.GuildId == null)
+		{
+			channel = await ctx.Client.GetChannelAsync(ctx.Channel.Id, true);
+		}
+
 		var usr = ctx.Member;
 		if (usr == null)
 			return false;
-		var pusr = ctx.Channel.PermissionsFor(usr);
+		var pusr = channel.PermissionsFor(usr);
 
 		var bot = await ctx.Guild.GetMemberAsync(ctx.Client.CurrentUser.Id).ConfigureAwait(false);
 		if (bot == null)
 			return false;
-		var pbot = ctx.Channel.PermissionsFor(bot);
+		var pbot = channel.PermissionsFor(bot);
 
 		var usrok = ctx.Guild.OwnerId == usr.Id;
 		var botok = ctx.Guild.OwnerId == bot.Id;

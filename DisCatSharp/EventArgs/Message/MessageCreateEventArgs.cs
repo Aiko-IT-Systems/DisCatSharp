@@ -47,7 +47,7 @@ public class MessageCreateEventArgs : DiscordEventArgs
 	/// Gets the guild this message belongs to.
 	/// </summary>
 	public DiscordGuild Guild
-		=> this.Channel.Guild;
+		=> this.Message.Guild;
 
 	/// <summary>
 	/// Gets the guild id in case it couldn't convert.

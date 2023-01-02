@@ -71,7 +71,12 @@ public sealed class RequireBotPermissionsAttribute : CheckBaseAttribute
 		if (bot.Id == ctx.Guild.OwnerId)
 			return true;
 
-		var pbot = ctx.Channel.PermissionsFor(bot);
+		var channel = ctx.Channel;
+		if (ctx.Channel.GuildId == null)
+		{
+			channel = await ctx.Client.GetChannelAsync(ctx.Channel.Id, true);
+		}
+		var pbot = channel.PermissionsFor(bot);
 
 		return (pbot & Permissions.Administrator) != 0 || (pbot & this.Permissions) == this.Permissions;
 	}
