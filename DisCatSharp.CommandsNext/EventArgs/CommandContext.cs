@@ -55,7 +55,7 @@ public sealed class CommandContext
 	/// Gets the guild in which the execution was triggered. This property is null for commands sent over direct messages.
 	/// </summary>
 	public DiscordGuild Guild
-		=> this.Channel.Guild;
+		=> this.Message.GuildId.HasValue ? this.Message.Guild : null;
 
 	/// <summary>
 	/// Gets the user who triggered the execution.

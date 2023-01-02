@@ -1189,14 +1189,18 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="channelId">The target channel id.</param>
 	/// <returns>The requested channel.</returns>
-	internal DiscordChannel InternalGetCachedChannel(ulong channelId)
+	internal DiscordChannel InternalGetCachedChannel(ulong channelId, ulong? guildId = null)
 	{
 		if (this.Guilds == null)
 			return null;
 
 		foreach (var guild in this.Guilds.Values)
 			if (guild.Channels.TryGetValue(channelId, out var foundChannel))
+			{
+				if (guildId.HasValue)
+					foundChannel.GuildId = guildId;
 				return foundChannel;
+			}
 
 		return null;
 	}
