@@ -57,7 +57,7 @@ public class DiscordRoleTags
 	public ulong? SubscriptionListingId { get; internal set; }
 
 	/// <summary>
-	/// Whether this role is avialable for purchase.
+	/// Whether this role is available for purchase.
 	/// </summary>
 	[JsonProperty("available_for_purchase", NullValueHandling = NullValueHandling.Ignore)]
 	public bool? AvailableForPurchase { get; internal set; }
