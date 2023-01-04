@@ -42,14 +42,25 @@ public class DiscordRoleTags
 	public ulong? IntegrationId { get; internal set; }
 
 	/// <summary>
-	/// Gets whether this is the guild's premium subscriber role.
+	/// Gets whether this is the guild's booster role.
 	/// </summary>
 	[JsonIgnore]
 	public bool IsPremiumSubscriber
 		=> this.PremiumSubscriber.HasValue && this.PremiumSubscriber.Value;
-
 	[JsonProperty("premium_subscriber", NullValueHandling = NullValueHandling.Include)]
 	internal bool? PremiumSubscriber = false;
+
+	/// <summary>
+	/// The id of this role's subscription sku and listing.
+	/// </summary>
+	[JsonProperty("subscription_listing_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? SubscriptionListingId { get; internal set; }
+
+	/// <summary>
+	/// Whether this role is avialable for purchase.
+	/// </summary>
+	[JsonProperty("available_for_purchase", NullValueHandling = NullValueHandling.Ignore)]
+	public bool? AvailableForPurchase { get; internal set; }
 
 	/// <summary>
 	/// Gets whether this is the guild's premium subscriber role.
