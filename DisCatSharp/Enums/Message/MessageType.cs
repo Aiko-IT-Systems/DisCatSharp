@@ -155,5 +155,40 @@ public enum MessageType : int
 	/// <summary>
 	/// Message indicating that a member purchased a role subscription.
 	/// </summary>
-	RoleSubscriptionPurchase = 25
+	RoleSubscriptionPurchase = 25,
+
+	/// <summary>
+	/// Unknown.
+	/// </summary>
+	InteractionPremiumUpsell = 26,
+
+	/// <summary>
+	/// Message indicating that a started.
+	/// </summary>
+	StageStart = 27,
+
+	/// <summary>
+	/// Message indicating that a stage ended.
+	/// </summary>
+	StageEnd = 28,
+
+	/// <summary>
+	/// Message indicating that a user is now a stage speaker.
+	/// </summary>
+	StageSpeaker = 29,
+
+	/// <summary>
+	/// Message indicating that a user in a stage raised there hand (Request to speak).
+	/// </summary>
+	StageRaiseHand = 30,
+
+	/// <summary>
+	/// Message indicating that a stage topic was changed.
+	/// </summary>
+	StageTopic = 31,
+
+	/// <summary>
+	/// Message indicating that a member purchased a application premium subscription.
+	/// </summary>
+	GuildApplicationPremiumSubscription = 32
 }
