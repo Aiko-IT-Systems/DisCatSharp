@@ -163,7 +163,7 @@ public enum MessageType : int
 	InteractionPremiumUpsell = 26,
 
 	/// <summary>
-	/// Message indicating that a started.
+	/// Message indicating that a stage started.
 	/// </summary>
 	StageStart = 27,
 
