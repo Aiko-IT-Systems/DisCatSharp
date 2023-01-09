@@ -4528,8 +4528,20 @@ public sealed class DiscordApiClient
 	/// Gets the thread members.
 	/// </summary>
 	/// <param name="threadId">The thread id.</param>
-	internal async Task<IReadOnlyList<DiscordThreadChannelMember>> GetThreadMembersAsync(ulong threadId)
+	/// <param name="withMember">Wether to include a DiscordMember object.</param>
+	/// <param name="after">Get members after specified snowflake.</param>
+	/// <param name="limit">Limits the results.</param>
+	internal async Task<IReadOnlyList<DiscordThreadChannelMember>> GetThreadMembersAsync(ulong threadId, bool withMember = false, ulong? after = null, int? limit = null)
 	{
+		var urlParams = new Dictionary<string, string>();
+
+		urlParams["with_member"] = withMember.ToString(CultureInfo.InvariantCulture);
+
+		if (after != null && withMember)
+			urlParams["after"] = after.Value.ToString(CultureInfo.InvariantCulture);
+		if (limit != null && limit > 0 && withMember)
+			urlParams["limit"] = limit.Value.ToString(CultureInfo.InvariantCulture);
+
 		var route = $"{Endpoints.CHANNELS}/:thread_id{Endpoints.THREAD_MEMBERS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {thread_id = threadId }, out var path);
 

@@ -182,11 +182,15 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <summary>
 	/// Gets the members of a thread. Needs the <see cref="DiscordIntents.GuildMembers"/> intent.
 	/// </summary>
+	/// <param name="withMember">Whether to request the member object. (If set to true, will paginate the result)</param>
+	/// <param name="after">Request all members after the specified. (Currently only utilized if withMember is set to true)</param>
+	/// <param name="limit">The amount of members to fetch. (Currently only utilized if withMember is set to true)</param>
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<IReadOnlyList<DiscordThreadChannelMember>> GetMembersAsync()
+	public async Task<IReadOnlyList<DiscordThreadChannelMember>> GetMembersAsync(bool withMember = false, ulong? after = null, int? limit = null)
 		=> await this.Discord.ApiClient.GetThreadMembersAsync(this.Id);
+	// TODO: Starting in API v11, List Thread Members will always return paginated results, regardless of whether with_member is passed or not.
 
 	/// <summary>
 	/// Adds a member to this thread.
