@@ -4497,12 +4497,17 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="channelId">The channel id to get the member from.</param>
 	/// <param name="userId">The user id to get.</param>
-	internal async Task<DiscordThreadChannelMember> GetThreadMemberAsync(ulong channelId, ulong userId)
+	/// <param name="withMember">Whether to include a <see cref="DiscordMember"/> object.</param>
+	internal async Task<DiscordThreadChannelMember> GetThreadMemberAsync(ulong channelId, ulong userId, bool withMember = false)
 	{
+		var urlParams = new Dictionary<string, string>();
+
+		urlParams["with_member"] = withMember.ToString(CultureInfo.InvariantCulture);
+
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREAD_MEMBERS}/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {channel_id = channelId, user_id = userId }, out var path);
 
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
 		var threadMember = JsonConvert.DeserializeObject<DiscordThreadChannelMember>(res.Response);
@@ -4528,12 +4533,26 @@ public sealed class DiscordApiClient
 	/// Gets the thread members.
 	/// </summary>
 	/// <param name="threadId">The thread id.</param>
-	internal async Task<IReadOnlyList<DiscordThreadChannelMember>> GetThreadMembersAsync(ulong threadId)
+	/// <param name="withMember">Whether to include a <see cref="DiscordMember"/> object.</param>
+	/// <param name="after">Get members after specified snowflake.</param>
+	/// <param name="limit">Limits the results.</param>
+	internal async Task<IReadOnlyList<DiscordThreadChannelMember>> GetThreadMembersAsync(ulong threadId, bool withMember = false, ulong? after = null, int? limit = null)
 	{
+		// TODO: Starting in API v11, List Thread Members will always return paginated results, regardless of whether with_member is passed or not.
+
+		var urlParams = new Dictionary<string, string>();
+
+		urlParams["with_member"] = withMember.ToString(CultureInfo.InvariantCulture);
+
+		if (after != null && withMember)
+			urlParams["after"] = after.Value.ToString(CultureInfo.InvariantCulture);
+		if (limit != null && limit > 0 && withMember)
+			urlParams["limit"] = limit.Value.ToString(CultureInfo.InvariantCulture);
+
 		var route = $"{Endpoints.CHANNELS}/:thread_id{Endpoints.THREAD_MEMBERS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {thread_id = threadId }, out var path);
 
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
 		var threadMembersRaw = JsonConvert.DeserializeObject<List<DiscordThreadChannelMember>>(res.Response);
