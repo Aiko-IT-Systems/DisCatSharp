@@ -248,7 +248,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// Gets a member in this thread.
 	/// </summary>
 	/// <param name="member">The member to get.</param>
-	/// <param name="withMember">Whether to request the member object. (If set to true, will paginate the result)</param>
+	/// <param name="withMember">Whether to request the member object.</param>
 	/// <exception cref="NotFoundException">Thrown when the member is not part of the thread.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
