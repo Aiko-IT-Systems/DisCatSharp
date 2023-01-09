@@ -190,7 +190,6 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<IReadOnlyList<DiscordThreadChannelMember>> GetMembersAsync(bool withMember = false, ulong? after = null, int? limit = null)
 		=> await this.Discord.ApiClient.GetThreadMembersAsync(this.Id);
-	// TODO: Starting in API v11, List Thread Members will always return paginated results, regardless of whether with_member is passed or not.
 
 	/// <summary>
 	/// Adds a member to this thread.

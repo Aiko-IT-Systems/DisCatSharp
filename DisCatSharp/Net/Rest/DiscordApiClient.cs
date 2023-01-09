@@ -4533,6 +4533,8 @@ public sealed class DiscordApiClient
 	/// <param name="limit">Limits the results.</param>
 	internal async Task<IReadOnlyList<DiscordThreadChannelMember>> GetThreadMembersAsync(ulong threadId, bool withMember = false, ulong? after = null, int? limit = null)
 	{
+		// TODO: Starting in API v11, List Thread Members will always return paginated results, regardless of whether with_member is passed or not.
+
 		var urlParams = new Dictionary<string, string>();
 
 		urlParams["with_member"] = withMember.ToString(CultureInfo.InvariantCulture);
