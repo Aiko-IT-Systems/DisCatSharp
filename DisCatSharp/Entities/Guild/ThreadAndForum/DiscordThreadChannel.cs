@@ -182,10 +182,13 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <summary>
 	/// Gets the members of a thread. Needs the <see cref="DiscordIntents.GuildMembers"/> intent.
 	/// </summary>
+	/// <param name="withMember">Whether to request the member object. (If set to true, will paginate the result)</param>
+	/// <param name="after">Request all members after the specified. (Currently only utilized if withMember is set to true)</param>
+	/// <param name="limit">The amount of members to fetch. (Currently only utilized if withMember is set to true)</param>
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<IReadOnlyList<DiscordThreadChannelMember>> GetMembersAsync()
+	public async Task<IReadOnlyList<DiscordThreadChannelMember>> GetMembersAsync(bool withMember = false, ulong? after = null, int? limit = null)
 		=> await this.Discord.ApiClient.GetThreadMembersAsync(this.Id);
 
 	/// <summary>
@@ -212,26 +215,28 @@ public class DiscordThreadChannel : DiscordChannel
 	/// Gets a member in this thread.
 	/// </summary>
 	/// <param name="memberId">The id of the member to get.</param>
+	/// <param name="withMember">Whether to request the member object.</param>
 	/// <exception cref="NotFoundException">Thrown when the member is not part of the thread.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordThreadChannelMember> GetMemberAsync(ulong memberId)
-		=> this.Discord.ApiClient.GetThreadMemberAsync(this.Id, memberId);
+	public Task<DiscordThreadChannelMember> GetMemberAsync(ulong memberId, bool withMember = false)
+		=> this.Discord.ApiClient.GetThreadMemberAsync(this.Id, memberId, withMember);
 
 
 	/// <summary>
 	/// Tries to get a member in this thread.
 	/// </summary>
 	/// <param name="memberId">The id of the member to get.</param>
+	/// <param name="withMember">Whether to request the member object.</param>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-	public async Task<DiscordThreadChannelMember?> TryGetMemberAsync(ulong memberId)
+	public async Task<DiscordThreadChannelMember?> TryGetMemberAsync(ulong memberId, bool withMember = false)
 #pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	{
 		try
 		{
-			return await this.GetMemberAsync(memberId).ConfigureAwait(false);
+			return await this.GetMemberAsync(memberId, withMember).ConfigureAwait(false);
 		}
 		catch (NotFoundException)
 		{
@@ -243,25 +248,27 @@ public class DiscordThreadChannel : DiscordChannel
 	/// Gets a member in this thread.
 	/// </summary>
 	/// <param name="member">The member to get.</param>
+	/// <param name="withMember">Whether to request the member object.</param>
 	/// <exception cref="NotFoundException">Thrown when the member is not part of the thread.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordThreadChannelMember> GetMemberAsync(DiscordMember member)
-		=> this.Discord.ApiClient.GetThreadMemberAsync(this.Id, member.Id);
+	public Task<DiscordThreadChannelMember> GetMemberAsync(DiscordMember member, bool withMember = false)
+		=> this.Discord.ApiClient.GetThreadMemberAsync(this.Id, member.Id, withMember);
 
 	/// <summary>
 	/// Tries to get a member in this thread.
 	/// </summary>
 	/// <param name="member">The member to get.</param>
+	/// <param name="withMember">Whether to request the member object.</param>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-	public async Task<DiscordThreadChannelMember?> TryGetMemberAsync(DiscordMember member)
+	public async Task<DiscordThreadChannelMember?> TryGetMemberAsync(DiscordMember member, bool withMember = false)
 #pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	{
 		try
 		{
-			return await this.GetMemberAsync(member).ConfigureAwait(false);
+			return await this.GetMemberAsync(member, withMember).ConfigureAwait(false);
 		}
 		catch (NotFoundException)
 		{
