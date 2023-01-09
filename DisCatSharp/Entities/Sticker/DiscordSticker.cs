@@ -243,5 +243,10 @@ public enum StickerFormat : long
 	/// <summary>
 	/// Sticker is lottie
 	/// </summary>
-	Lottie = 3
+	Lottie = 3,
+
+	/// <summary>
+	/// Sticker is a gif
+	/// </summary>
+	GIF = 4
 }
