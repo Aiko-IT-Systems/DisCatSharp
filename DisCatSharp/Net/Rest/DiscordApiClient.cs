@@ -4528,7 +4528,7 @@ public sealed class DiscordApiClient
 	/// Gets the thread members.
 	/// </summary>
 	/// <param name="threadId">The thread id.</param>
-	/// <param name="withMember">Whether to include a DiscordMember object.</param>
+	/// <param name="withMember">Whether to include a <see cref="DiscordMember"/> object.</param>
 	/// <param name="after">Get members after specified snowflake.</param>
 	/// <param name="limit">Limits the results.</param>
 	internal async Task<IReadOnlyList<DiscordThreadChannelMember>> GetThreadMembersAsync(ulong threadId, bool withMember = false, ulong? after = null, int? limit = null)
