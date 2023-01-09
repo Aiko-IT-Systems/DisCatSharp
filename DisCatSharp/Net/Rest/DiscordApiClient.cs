@@ -4547,7 +4547,7 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.CHANNELS}/:thread_id{Endpoints.THREAD_MEMBERS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {thread_id = threadId }, out var path);
 
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
 		var threadMembersRaw = JsonConvert.DeserializeObject<List<DiscordThreadChannelMember>>(res.Response);
