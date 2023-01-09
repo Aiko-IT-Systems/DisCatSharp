@@ -227,7 +227,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// Tries to get a member in this thread.
 	/// </summary>
 	/// <param name="memberId">The id of the member to get.</param>
-	/// <param name="withMember">Whether to request the member object. (If set to true, will paginate the result)</param>
+	/// <param name="withMember">Whether to request the member object.</param>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
