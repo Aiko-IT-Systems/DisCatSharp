@@ -4497,12 +4497,17 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="channelId">The channel id to get the member from.</param>
 	/// <param name="userId">The user id to get.</param>
-	internal async Task<DiscordThreadChannelMember> GetThreadMemberAsync(ulong channelId, ulong userId)
+	/// <param name="withMember">Whether to include a <see cref="DiscordMember"/> object.</param>
+	internal async Task<DiscordThreadChannelMember> GetThreadMemberAsync(ulong channelId, ulong userId, bool withMember = false)
 	{
+		var urlParams = new Dictionary<string, string>();
+
+		urlParams["with_member"] = withMember.ToString(CultureInfo.InvariantCulture);
+
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREAD_MEMBERS}/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {channel_id = channelId, user_id = userId }, out var path);
 
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
 		var threadMember = JsonConvert.DeserializeObject<DiscordThreadChannelMember>(res.Response);
