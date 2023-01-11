@@ -5107,7 +5107,7 @@ public sealed class DiscordApiClient
 			{
 				Type = command.Type,
 				Name = command.Name,
-				Description = command.Description,
+				Description = command.Type == ApplicationCommandType.ChatInput ? command.Description : null,
 				Options = command.Options,
 				NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
@@ -5142,7 +5142,7 @@ public sealed class DiscordApiClient
 		{
 			Type = command.Type,
 			Name = command.Name,
-			Description = command.Description,
+			Description = command.Type == ApplicationCommandType.ChatInput ? command.Description : null,
 			Options = command.Options,
 			NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
 			DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
@@ -5280,7 +5280,7 @@ public sealed class DiscordApiClient
 			{
 				Type = command.Type,
 				Name = command.Name,
-				Description = command.Description,
+				Description = command.Type == ApplicationCommandType.ChatInput ? command.Description : null,
 				Options = command.Options,
 				NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
@@ -5315,7 +5315,7 @@ public sealed class DiscordApiClient
 		{
 			Type = command.Type,
 			Name = command.Name,
-			Description = command.Description,
+			Description = command.Type == ApplicationCommandType.ChatInput ? command.Description : null,
 			Options = command.Options,
 			NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
 			DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
