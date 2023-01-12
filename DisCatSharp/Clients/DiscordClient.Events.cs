@@ -260,6 +260,18 @@ public sealed partial class DiscordClient
 		remove => this._guildIntegrationsUpdated.Unregister(value);
 	}
 	private AsyncEvent<DiscordClient, GuildIntegrationsUpdateEventArgs> _guildIntegrationsUpdated;
+
+	/// <summary>
+	/// Fired when a guild audit log entry was created.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, AsyncEventArgs> GuildAuditLogEntryCreated
+	{
+		add => this._guildAuditLogEntryCreated.Register(value);
+		remove => this._guildAuditLogEntryCreated.Unregister(value);
+	}
+	private AsyncEvent<DiscordClient, AsyncEventArgs> _guildAuditLogEntryCreated;
+
+
 	#endregion
 
 	#region Automod

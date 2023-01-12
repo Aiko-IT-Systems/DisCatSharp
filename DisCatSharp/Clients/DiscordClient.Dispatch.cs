@@ -190,6 +190,10 @@ public sealed partial class DiscordClient
 				await this.OnGuildDeleteEventAsync(dat.ToDiscordObject<DiscordGuild>()).ConfigureAwait(false);
 				break;
 
+			case "guild_audit_log_entry_create":
+				await this.OnGuildAuditLogEntryCreateEventAsync(dat).ConfigureAwait(false);
+				break;
+
 			case "guild_sync":
 				gid = (ulong)dat["id"];
 				await this.OnGuildSyncEventAsync(this.GuildsInternal[gid], (bool)dat["large"], (JArray)dat["members"], dat["presences"].ToDiscordObject<IEnumerable<DiscordPresence>>()).ConfigureAwait(false);
@@ -1256,6 +1260,17 @@ public sealed partial class DiscordClient
 
 			await this._guildDeleted.InvokeAsync(this, new GuildDeleteEventArgs(this.ServiceProvider) { Guild = gld }).ConfigureAwait(false);
 		}
+	}
+
+	/// <summary>
+	/// Handles the guild audit log entry create event.
+	/// </summary>
+	/// <param name="dat">The data.</param>
+	internal async Task OnGuildAuditLogEntryCreateEventAsync(JObject dat)
+	{
+		this.Logger.LogDebug("New event: Audit log entry created");
+		this.Logger.LogTrace(dat.ToString(Newtonsoft.Json.Formatting.Indented));
+		await Task.Delay(1);
 	}
 
 	/// <summary>
