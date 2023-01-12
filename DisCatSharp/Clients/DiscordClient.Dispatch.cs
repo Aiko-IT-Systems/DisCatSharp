@@ -1269,7 +1269,7 @@ public sealed partial class DiscordClient
 	internal async Task OnGuildAuditLogEntryCreateEventAsync(JObject dat)
 	{
 		this.Logger.LogDebug("New event: Audit log entry created");
-		this.Logger.LogTrace(dat.ToString(Newtonsoft.Json.Formatting.Indented));
+		this.Logger.LogDebug(dat.ToString(Newtonsoft.Json.Formatting.Indented));
 		await Task.Delay(1);
 	}
 
