@@ -98,9 +98,11 @@ public enum DiscordIntents
 
 	/// <summary>
 	/// Whether to include guild ban events.
-	/// <para>These include <see cref="DiscordClient.GuildBanAdded"/> and <see cref="DiscordClient.GuildBanRemoved"/>.</para>
+	/// <para>These include <see cref="DiscordClient.GuildBanAdded"/>, <see cref="DiscordClient.GuildBanRemoved"/> and <see cref="DiscordClient.GuildAuditLogEntryCreated"/>.</para>
 	/// </summary>
-	GuildBans = 1 << 2,
+	GuildModeration = 1 << 2,
+	[Obsolete("Renamed to GuildModeration")]
+	GuildBans = GuildModeration,
 
 	/// <summary>
 	/// Whether to include guild emoji and sticker events.
