@@ -1267,12 +1267,29 @@ public sealed partial class DiscordClient
 	/// <summary>
 	/// Handles the guild audit log entry create event.
 	/// </summary>
-	/// <param name="dat">The data.</param>
-	internal async Task OnGuildAuditLogEntryCreateEventAsync(DiscordGuild guild, JObject dat)
+	/// <param name="guild">The guild where the audit log entry was created.</param>
+	/// <param name="auditLogCreateEntry">The auditlog event.</param>
+	internal async Task OnGuildAuditLogEntryCreateEventAsync(DiscordGuild guild, JObject auditLogCreateEntry)
 	{
 		this.Logger.LogDebug("New event: Audit log entry created");
-		this.Logger.LogDebug(dat.ToString(Newtonsoft.Json.Formatting.Indented));
-		await Task.Delay(1);
+		this.Logger.LogDebug(auditLogCreateEntry.ToString(Newtonsoft.Json.Formatting.Indented));
+
+		var auditLogAction = DiscordJson.ToDiscordObject<AuditLogAction>(auditLogCreateEntry);
+		List<AuditLog> workaroundAuditLogEntryList = new()
+		{
+			new AuditLog()
+			{
+				Entries = new List<AuditLogAction>()
+				{
+					auditLogAction
+				}
+			}
+		};
+
+		var dataList = await guild.ProcessAuditLog(workaroundAuditLogEntryList);
+		var data = dataList.First();
+
+		await this._guildAuditLogEntryCreated.InvokeAsync(this, new(this.ServiceProvider) { Guild = guild, AuditLogEntry = data });
 	}
 
 	/// <summary>

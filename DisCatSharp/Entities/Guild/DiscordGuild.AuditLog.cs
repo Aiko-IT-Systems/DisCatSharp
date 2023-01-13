@@ -28,6 +28,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
+using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
 
@@ -40,10 +41,8 @@ namespace DisCatSharp.Entities;
 public partial class DiscordGuild
 {
 	// TODO: Rework audit logs!
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+
+	/// <summary>
 	/// Gets audit log entries for this guild.
 	/// </summary>
 	/// <param name="limit">Maximum number of entries to fetch.</param>
@@ -53,8 +52,6 @@ public partial class DiscordGuild
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ViewAuditLog"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<IReadOnlyList<DiscordAuditLogEntry>> GetAuditLogsAsync(int? limit = null, DiscordMember byMember = null, AuditLogActionType? actionType = null)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 	{
 		var alrs = new List<AuditLog>();
 		int ac = 1, tc = 0, rmn = 100;
@@ -75,7 +72,18 @@ public partial class DiscordGuild
 			}
 		}
 
-		var amr = alrs.SelectMany(xa => xa.Users)
+		var auditLogResult = await this.ProcessAuditLog(alrs);
+		return auditLogResult;
+	}
+
+	/// <summary>
+	/// Proceesses audit log objects.
+	/// </summary>
+	/// <param name="auditLogApiResult">A list of raw audit log objects.</param>
+	/// <returns>The processed audit log list as readonly.</returns>
+	internal async Task<IReadOnlyList<DiscordAuditLogEntry>> ProcessAuditLog(List<AuditLog> auditLogApiResult)
+	{
+		var amr = auditLogApiResult.SelectMany(xa => xa.Users)
 			.GroupBy(xu => xu.Id)
 			.Select(xgu => xgu.First());
 
@@ -101,19 +109,19 @@ public partial class DiscordGuild
 			});
 		}
 
-		var atgse = alrs.SelectMany(xa => xa.ScheduledEvents)
+		var atgse = auditLogApiResult.SelectMany(xa => xa.ScheduledEvents)
 			.GroupBy(xse => xse.Id)
 			.Select(xgse => xgse.First());
 
-		var ath = alrs.SelectMany(xa => xa.Threads)
+		var ath = auditLogApiResult.SelectMany(xa => xa.Threads)
 			.GroupBy(xt => xt.Id)
 			.Select(xgt => xgt.First());
 
-		var aig = alrs.SelectMany(xa => xa.Integrations)
+		var aig = auditLogApiResult.SelectMany(xa => xa.Integrations)
 			.GroupBy(xi => xi.Id)
 			.Select(xgi => xgi.First());
 
-		var ahr = alrs.SelectMany(xa => xa.Webhooks)
+		var ahr = auditLogApiResult.SelectMany(xa => xa.Webhooks)
 			.GroupBy(xh => xh.Id)
 			.Select(xgh => xgh.First());
 
@@ -136,7 +144,7 @@ public partial class DiscordGuild
 			ahd = amh.ToDictionary(xh => xh.Id, xh => xh);
 		}
 
-		var acs = alrs.SelectMany(xa => xa.Entries).OrderByDescending(xa => xa.Id);
+		var acs = auditLogApiResult.SelectMany(xa => xa.Entries).OrderByDescending(xa => xa.Id);
 		var entries = new List<DiscordAuditLogEntry>();
 		foreach (var xac in acs)
 		{
@@ -887,15 +895,11 @@ public partial class DiscordGuild
 								break;
 							case "privacy_level":
 #pragma warning disable CS0612 // Type or member is obsolete
-#pragma warning disable CS0612 // Type or member is obsolete
-#pragma warning disable CS0612 // Type or member is obsolete
 								entrysta.PrivacyLevelChange = new PropertyChange<StagePrivacyLevel?>
 								{
 									Before = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5) ? (StagePrivacyLevel?)t5 : null,
 									After = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6) ? (StagePrivacyLevel?)t6 : null,
 								};
-#pragma warning restore CS0612 // Type or member is obsolete
-#pragma warning restore CS0612 // Type or member is obsolete
 #pragma warning restore CS0612 // Type or member is obsolete
 								break;
 
