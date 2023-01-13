@@ -251,7 +251,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._automodRuleUpdated = new AsyncEvent<DiscordClient, AutomodRuleUpdateEventArgs>("AUTO_MODERATION_RULE_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._automodRuleDeleted = new AsyncEvent<DiscordClient, AutomodRuleDeleteEventArgs>("AUTO_MODERATION_RULE_DELETED", EventExecutionLimit, this.EventErrorHandler);
 		this._automodActionExecuted = new AsyncEvent<DiscordClient, AutomodActionExecutedEventArgs>("AUTO_MODERATION_ACTION_EXECUTED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildAuditLogEntryCreated = new AsyncEvent<DiscordClient, AsyncEventArgs>("GUILD_AUDIT_LOG_ENTRY_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildAuditLogEntryCreated = new AsyncEvent<DiscordClient, GuildAuditLogEntryCreateEventArgs>("GUILD_AUDIT_LOG_ENTRY_CREATED", EventExecutionLimit, this.EventErrorHandler);
 
 		this.GuildsInternal.Clear();
 

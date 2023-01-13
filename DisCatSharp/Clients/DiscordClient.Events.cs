@@ -264,12 +264,12 @@ public sealed partial class DiscordClient
 	/// <summary>
 	/// Fired when a guild audit log entry was created.
 	/// </summary>
-	public event AsyncEventHandler<DiscordClient, AsyncEventArgs> GuildAuditLogEntryCreated
+	public event AsyncEventHandler<DiscordClient, GuildAuditLogEntryCreateEventArgs> GuildAuditLogEntryCreated
 	{
 		add => this._guildAuditLogEntryCreated.Register(value);
 		remove => this._guildAuditLogEntryCreated.Unregister(value);
 	}
-	private AsyncEvent<DiscordClient, AsyncEventArgs> _guildAuditLogEntryCreated;
+	private AsyncEvent<DiscordClient, GuildAuditLogEntryCreateEventArgs> _guildAuditLogEntryCreated;
 
 
 	#endregion

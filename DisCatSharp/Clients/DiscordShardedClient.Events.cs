@@ -302,12 +302,12 @@ public sealed partial class DiscordShardedClient
 	/// <summary>
 	/// Fired when a guild audit log entry was created.
 	/// </summary>
-	public event AsyncEventHandler<DiscordClient, AsyncEventArgs> GuildAuditLogEntryCreated
+	public event AsyncEventHandler<DiscordClient, GuildAuditLogEntryCreateEventArgs> GuildAuditLogEntryCreated
 	{
 		add => this._guildAuditLogEntryCreated.Register(value);
 		remove => this._guildAuditLogEntryCreated.Unregister(value);
 	}
-	private AsyncEvent<DiscordClient, AsyncEventArgs> _guildAuditLogEntryCreated;
+	private AsyncEvent<DiscordClient, GuildAuditLogEntryCreateEventArgs> _guildAuditLogEntryCreated;
 	#endregion
 
 	#region Guild Ban
@@ -1726,9 +1726,7 @@ public sealed partial class DiscordShardedClient
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
-	/// <returns></returns>
-	/// <exception cref="NotImplementedException"></exception>
-	private Task Client_GuildAuditLogEntryCreated(DiscordClient client, AsyncEventArgs e)
+	private Task Client_GuildAuditLogEntryCreated(DiscordClient client, GuildAuditLogEntryCreateEventArgs e)
 		=> this._guildAuditLogEntryCreated.InvokeAsync(client, e);
 
 	#endregion
