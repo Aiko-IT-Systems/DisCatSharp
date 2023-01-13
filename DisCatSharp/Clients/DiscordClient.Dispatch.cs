@@ -191,7 +191,9 @@ public sealed partial class DiscordClient
 				break;
 
 			case "guild_audit_log_entry_create":
-				await this.OnGuildAuditLogEntryCreateEventAsync(dat).ConfigureAwait(false);
+				gid = (ulong)dat["guild_id"];
+				dat.Remove("guild_id");
+				await this.OnGuildAuditLogEntryCreateEventAsync(this.GuildsInternal[gid], dat).ConfigureAwait(false);
 				break;
 
 			case "guild_sync":
@@ -220,7 +222,7 @@ public sealed partial class DiscordClient
 
 				await this.OnGuildIntegrationsUpdateEventAsync(this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
-
+				/*
 			case "guild_join_request_create":
 				break;
 
@@ -229,7 +231,7 @@ public sealed partial class DiscordClient
 
 			case "guild_join_request_delete":
 				break;
-
+				*/
 			#endregion
 
 			#region Guild Automod
@@ -1266,7 +1268,7 @@ public sealed partial class DiscordClient
 	/// Handles the guild audit log entry create event.
 	/// </summary>
 	/// <param name="dat">The data.</param>
-	internal async Task OnGuildAuditLogEntryCreateEventAsync(JObject dat)
+	internal async Task OnGuildAuditLogEntryCreateEventAsync(DiscordGuild guild, JObject dat)
 	{
 		this.Logger.LogDebug("New event: Audit log entry created");
 		this.Logger.LogDebug(dat.ToString(Newtonsoft.Json.Formatting.Indented));
