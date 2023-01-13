@@ -83,50 +83,65 @@ public partial class DiscordGuild
 	/// <returns>The processed audit log list as readonly.</returns>
 	internal async Task<IReadOnlyList<DiscordAuditLogEntry>> ProcessAuditLog(List<AuditLog> auditLogApiResult)
 	{
-		var amr = auditLogApiResult.SelectMany(xa => xa.Users)
-			.GroupBy(xu => xu.Id)
-			.Select(xgu => xgu.First());
+		List<AuditLogUser> amr = new();
+		if (auditLogApiResult.Any(ar => ar.Users != null && ar.Users.Any()))
+			amr = auditLogApiResult.SelectMany(xa => xa.Users)
+				.GroupBy(xu => xu.Id)
+				.Select(xgu => xgu.First()).ToList();
 
-		foreach (var xau in amr)
-		{
-			if (this.Discord.UserCache.ContainsKey(xau.Id))
-				continue;
-
-			var xtu = new TransportUser
+		if (amr.Any())
+			foreach (var xau in amr)
 			{
-				Id = xau.Id,
-				Username = xau.Username,
-				Discriminator = xau.Discriminator,
-				AvatarHash = xau.AvatarHash
-			};
-			var xu = new DiscordUser(xtu) { Discord = this.Discord };
-			xu = this.Discord.UserCache.AddOrUpdate(xu.Id, xu, (id, old) =>
-			{
-				old.Username = xu.Username;
-				old.Discriminator = xu.Discriminator;
-				old.AvatarHash = xu.AvatarHash;
-				return old;
-			});
-		}
+				if (this.Discord.UserCache.ContainsKey(xau.Id))
+					continue;
 
-		var atgse = auditLogApiResult.SelectMany(xa => xa.ScheduledEvents)
-			.GroupBy(xse => xse.Id)
-			.Select(xgse => xgse.First());
+				var xtu = new TransportUser
+				{
+					Id = xau.Id,
+					Username = xau.Username,
+					Discriminator = xau.Discriminator,
+					AvatarHash = xau.AvatarHash
+				};
+				var xu = new DiscordUser(xtu) { Discord = this.Discord };
+				xu = this.Discord.UserCache.AddOrUpdate(xu.Id, xu, (id, old) =>
+				{
+					old.Username = xu.Username;
+					old.Discriminator = xu.Discriminator;
+					old.AvatarHash = xu.AvatarHash;
+					return old;
+				});
+			}
 
-		var ath = auditLogApiResult.SelectMany(xa => xa.Threads)
-			.GroupBy(xt => xt.Id)
-			.Select(xgt => xgt.First());
+		List<AuditLogGuildScheduledEvent> atgse = new();
+		if (auditLogApiResult.Any(ar => ar.ScheduledEvents != null && ar.ScheduledEvents.Any()))
+			atgse = auditLogApiResult.SelectMany(xa => xa.ScheduledEvents)
+				.GroupBy(xse => xse.Id)
+				.Select(xgse => xgse.First()).ToList();
 
-		var aig = auditLogApiResult.SelectMany(xa => xa.Integrations)
-			.GroupBy(xi => xi.Id)
-			.Select(xgi => xgi.First());
+		List<AuditLogThread> ath = new();
+		if (auditLogApiResult.Any(ar => ar.Threads != null && ar.Threads.Any()))
+			ath = auditLogApiResult.SelectMany(xa => xa.Threads)
+				.GroupBy(xt => xt.Id)
+				.Select(xgt => xgt.First()).ToList();
 
-		var ahr = auditLogApiResult.SelectMany(xa => xa.Webhooks)
-			.GroupBy(xh => xh.Id)
-			.Select(xgh => xgh.First());
+		List<AuditLogIntegration> aig = new();
+		if (auditLogApiResult.Any(ar => ar.Integrations != null && ar.Integrations.Any()))
+			aig = auditLogApiResult.SelectMany(xa => xa.Integrations)
+				.GroupBy(xi => xi.Id)
+				.Select(xgi => xgi.First()).ToList();
 
-		var ams = amr.Select(xau => this.MembersInternal != null && this.MembersInternal.TryGetValue(xau.Id, out var member) ? member : new DiscordMember { Discord = this.Discord, Id = xau.Id, GuildId = this.Id });
-		var amd = ams.ToDictionary(xm => xm.Id, xm => xm);
+		List<AuditLogWebhook> ahr = new();
+		if (auditLogApiResult.Any(ar => ar.Webhooks != null && ar.Webhooks.Any()))
+			ahr = auditLogApiResult.SelectMany(xa => xa.Webhooks)
+				.GroupBy(xh => xh.Id)
+				.Select(xgh => xgh.First()).ToList();
+
+		List<DiscordMember> ams = new();
+		Dictionary<ulong, DiscordMember> amd = new();
+		if (amr.Any())
+			ams = amr.Select(xau => this.MembersInternal != null && this.MembersInternal.TryGetValue(xau.Id, out var member) ? member : new DiscordMember { Discord = this.Discord, Id = xau.Id, GuildId = this.Id }).ToList();
+		if (ams.Any())
+			amd = ams.ToDictionary(xm => xm.Id, xm => xm);
 
 #pragma warning disable CS0219
 		Dictionary<ulong, DiscordThreadChannel> dtc = null;
@@ -1327,7 +1342,7 @@ public partial class DiscordGuild
 			entry.ActionType = xac.ActionType;
 			entry.Id = xac.Id;
 			entry.Reason = xac.Reason;
-			entry.UserResponsible = amd[xac.UserId];
+			entry.UserResponsible = amd.Any() && amd.TryGetValue(xac.UserId, out var resp) ? resp : this.MembersInternal[xac.UserId];
 			entries.Add(entry);
 		}
 
