@@ -263,6 +263,7 @@ public sealed partial class DiscordClient
 
 	/// <summary>
 	/// Fired when a guild audit log entry was created.
+	/// Requires bot to have the <see cref="Permissions.ViewAuditLog" /> permission. 
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildAuditLogEntryCreateEventArgs> GuildAuditLogEntryCreated
 	{
