@@ -658,7 +658,7 @@ public sealed partial class DiscordClient
 
 			default:
 				await this.OnUnknownEventAsync(payload).ConfigureAwait(false);
-				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Unknown event: {0}\npayload: {1}", payload.EventName, payload.Data);
+				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Unknown event: {0}\npayload: {1}", payload.EventName, dat.ToString(Newtonsoft.Json.Formatting.Indented));
 				break;
 
 				#endregion
