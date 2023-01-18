@@ -23,6 +23,6 @@
     "lunr": "2.3.9",
     "twbs-pagination": "josecebe/twbs-pagination#v1.4.2",
     "mark.js": "^8.4.0",
-    "anchor-js": "^4.0.0"
+    "anchor-js": "^5.0.0"
   }
 }
