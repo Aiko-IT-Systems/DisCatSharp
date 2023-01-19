@@ -554,6 +554,8 @@
     name: EmbeddedActivityUpdateEventArgs
   - uid: DisCatSharp.EventArgs.GuildApplicationCommandCountEventArgs
     name: GuildApplicationCommandCountEventArgs
+  - uid: DisCatSharp.EventArgs.GuildAuditLogEntryCreateEventArgs
+    name: GuildAuditLogEntryCreateEventArgs
   - uid: DisCatSharp.EventArgs.GuildBanAddEventArgs
     name: GuildBanAddEventArgs
   - uid: DisCatSharp.EventArgs.GuildBanRemoveEventArgs
