@@ -62,6 +62,12 @@ public class DiscordDmChannel : DiscordChannel
 	public ulong? ApplicationId { get; internal set; }
 
 	/// <summary>
+	/// Gets whether the channel is managed by an application via the `gdm.join` OAuth2 scope.
+	/// </summary>
+	[JsonProperty("managed", NullValueHandling = NullValueHandling.Ignore)]
+	public bool? Managed { get; internal set; }
+	
+	/// <summary>
 	/// Gets the URL of this channel's icon.
 	/// </summary>
 	[JsonIgnore]
