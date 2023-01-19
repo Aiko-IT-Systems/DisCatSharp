@@ -28,6 +28,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
+using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
 
@@ -40,10 +41,8 @@ namespace DisCatSharp.Entities;
 public partial class DiscordGuild
 {
 	// TODO: Rework audit logs!
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+
+	/// <summary>
 	/// Gets audit log entries for this guild.
 	/// </summary>
 	/// <param name="limit">Maximum number of entries to fetch.</param>
@@ -53,8 +52,6 @@ public partial class DiscordGuild
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ViewAuditLog"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<IReadOnlyList<DiscordAuditLogEntry>> GetAuditLogsAsync(int? limit = null, DiscordMember byMember = null, AuditLogActionType? actionType = null)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 	{
 		var alrs = new List<AuditLog>();
 		int ac = 1, tc = 0, rmn = 100;
@@ -75,50 +72,76 @@ public partial class DiscordGuild
 			}
 		}
 
-		var amr = alrs.SelectMany(xa => xa.Users)
-			.GroupBy(xu => xu.Id)
-			.Select(xgu => xgu.First());
+		var auditLogResult = await this.ProcessAuditLog(alrs);
+		return auditLogResult;
+	}
 
-		foreach (var xau in amr)
-		{
-			if (this.Discord.UserCache.ContainsKey(xau.Id))
-				continue;
+	/// <summary>
+	/// Proceesses audit log objects.
+	/// </summary>
+	/// <param name="auditLogApiResult">A list of raw audit log objects.</param>
+	/// <returns>The processed audit log list as readonly.</returns>
+	internal async Task<IReadOnlyList<DiscordAuditLogEntry>> ProcessAuditLog(List<AuditLog> auditLogApiResult)
+	{
+		List<AuditLogUser> amr = new();
+		if (auditLogApiResult.Any(ar => ar.Users != null && ar.Users.Any()))
+			amr = auditLogApiResult.SelectMany(xa => xa.Users)
+				.GroupBy(xu => xu.Id)
+				.Select(xgu => xgu.First()).ToList();
 
-			var xtu = new TransportUser
+		if (amr.Any())
+			foreach (var xau in amr)
 			{
-				Id = xau.Id,
-				Username = xau.Username,
-				Discriminator = xau.Discriminator,
-				AvatarHash = xau.AvatarHash
-			};
-			var xu = new DiscordUser(xtu) { Discord = this.Discord };
-			xu = this.Discord.UserCache.AddOrUpdate(xu.Id, xu, (id, old) =>
-			{
-				old.Username = xu.Username;
-				old.Discriminator = xu.Discriminator;
-				old.AvatarHash = xu.AvatarHash;
-				return old;
-			});
-		}
+				if (this.Discord.UserCache.ContainsKey(xau.Id))
+					continue;
 
-		var atgse = alrs.SelectMany(xa => xa.ScheduledEvents)
-			.GroupBy(xse => xse.Id)
-			.Select(xgse => xgse.First());
+				var xtu = new TransportUser
+				{
+					Id = xau.Id,
+					Username = xau.Username,
+					Discriminator = xau.Discriminator,
+					AvatarHash = xau.AvatarHash
+				};
+				var xu = new DiscordUser(xtu) { Discord = this.Discord };
+				xu = this.Discord.UserCache.AddOrUpdate(xu.Id, xu, (id, old) =>
+				{
+					old.Username = xu.Username;
+					old.Discriminator = xu.Discriminator;
+					old.AvatarHash = xu.AvatarHash;
+					return old;
+				});
+			}
 
-		var ath = alrs.SelectMany(xa => xa.Threads)
-			.GroupBy(xt => xt.Id)
-			.Select(xgt => xgt.First());
+		List<AuditLogGuildScheduledEvent> atgse = new();
+		if (auditLogApiResult.Any(ar => ar.ScheduledEvents != null && ar.ScheduledEvents.Any()))
+			atgse = auditLogApiResult.SelectMany(xa => xa.ScheduledEvents)
+				.GroupBy(xse => xse.Id)
+				.Select(xgse => xgse.First()).ToList();
 
-		var aig = alrs.SelectMany(xa => xa.Integrations)
-			.GroupBy(xi => xi.Id)
-			.Select(xgi => xgi.First());
+		List<AuditLogThread> ath = new();
+		if (auditLogApiResult.Any(ar => ar.Threads != null && ar.Threads.Any()))
+			ath = auditLogApiResult.SelectMany(xa => xa.Threads)
+				.GroupBy(xt => xt.Id)
+				.Select(xgt => xgt.First()).ToList();
 
-		var ahr = alrs.SelectMany(xa => xa.Webhooks)
-			.GroupBy(xh => xh.Id)
-			.Select(xgh => xgh.First());
+		List<AuditLogIntegration> aig = new();
+		if (auditLogApiResult.Any(ar => ar.Integrations != null && ar.Integrations.Any()))
+			aig = auditLogApiResult.SelectMany(xa => xa.Integrations)
+				.GroupBy(xi => xi.Id)
+				.Select(xgi => xgi.First()).ToList();
 
-		var ams = amr.Select(xau => this.MembersInternal != null && this.MembersInternal.TryGetValue(xau.Id, out var member) ? member : new DiscordMember { Discord = this.Discord, Id = xau.Id, GuildId = this.Id });
-		var amd = ams.ToDictionary(xm => xm.Id, xm => xm);
+		List<AuditLogWebhook> ahr = new();
+		if (auditLogApiResult.Any(ar => ar.Webhooks != null && ar.Webhooks.Any()))
+			ahr = auditLogApiResult.SelectMany(xa => xa.Webhooks)
+				.GroupBy(xh => xh.Id)
+				.Select(xgh => xgh.First()).ToList();
+
+		List<DiscordMember> ams = new();
+		Dictionary<ulong, DiscordMember> amd = new();
+		if (amr.Any())
+			ams = amr.Select(xau => this.MembersInternal != null && this.MembersInternal.TryGetValue(xau.Id, out var member) ? member : new DiscordMember { Discord = this.Discord, Id = xau.Id, GuildId = this.Id }).ToList();
+		if (ams.Any())
+			amd = ams.ToDictionary(xm => xm.Id, xm => xm);
 
 #pragma warning disable CS0219
 		Dictionary<ulong, DiscordThreadChannel> dtc = null;
@@ -136,7 +159,7 @@ public partial class DiscordGuild
 			ahd = amh.ToDictionary(xh => xh.Id, xh => xh);
 		}
 
-		var acs = alrs.SelectMany(xa => xa.Entries).OrderByDescending(xa => xa.Id);
+		var acs = auditLogApiResult.SelectMany(xa => xa.Entries).OrderByDescending(xa => xa.Id);
 		var entries = new List<DiscordAuditLogEntry>();
 		foreach (var xac in acs)
 		{
@@ -887,15 +910,11 @@ public partial class DiscordGuild
 								break;
 							case "privacy_level":
 #pragma warning disable CS0612 // Type or member is obsolete
-#pragma warning disable CS0612 // Type or member is obsolete
-#pragma warning disable CS0612 // Type or member is obsolete
 								entrysta.PrivacyLevelChange = new PropertyChange<StagePrivacyLevel?>
 								{
 									Before = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5) ? (StagePrivacyLevel?)t5 : null,
 									After = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6) ? (StagePrivacyLevel?)t6 : null,
 								};
-#pragma warning restore CS0612 // Type or member is obsolete
-#pragma warning restore CS0612 // Type or member is obsolete
 #pragma warning restore CS0612 // Type or member is obsolete
 								break;
 
@@ -1323,7 +1342,7 @@ public partial class DiscordGuild
 			entry.ActionType = xac.ActionType;
 			entry.Id = xac.Id;
 			entry.Reason = xac.Reason;
-			entry.UserResponsible = amd[xac.UserId];
+			entry.UserResponsible = amd.Any() && amd.TryGetValue(xac.UserId, out var resp) ? resp : this.MembersInternal[xac.UserId];
 			entries.Add(entry);
 		}
 

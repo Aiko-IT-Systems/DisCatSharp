@@ -571,10 +571,11 @@ public sealed partial class DiscordShardedClient
 		this._guildMemberTimeoutAdded = new AsyncEvent<DiscordClient, GuildMemberTimeoutAddEventArgs>("GUILD_MEMBER_TIMEOUT_ADDED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildMemberTimeoutChanged = new AsyncEvent<DiscordClient, GuildMemberTimeoutUpdateEventArgs>("GUILD_MEMBER_TIMEOUT_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildMemberTimeoutRemoved = new AsyncEvent<DiscordClient, GuildMemberTimeoutRemoveEventArgs>("GUILD_MEMBER_TIMEOUT_REMOVED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
-		this._automodRuleCreated = new AsyncEvent<DiscordClient, AutomodRuleCreateEventArgs>("AUTO_MODERATION_RULE_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler); ;
-		this._automodRuleUpdated = new AsyncEvent<DiscordClient, AutomodRuleUpdateEventArgs>("AUTO_MODERATION_RULE_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler); ;
-		this._automodRuleDeleted = new AsyncEvent<DiscordClient, AutomodRuleDeleteEventArgs>("AUTO_MODERATION_RULE_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler); ;
-		this._automodActionExecuted = new AsyncEvent<DiscordClient, AutomodActionExecutedEventArgs>("AUTO_MODERATION_ACTION_EXECUTED", DiscordClient.EventExecutionLimit, this.EventErrorHandler); ;
+		this._automodRuleCreated = new AsyncEvent<DiscordClient, AutomodRuleCreateEventArgs>("AUTO_MODERATION_RULE_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._automodRuleUpdated = new AsyncEvent<DiscordClient, AutomodRuleUpdateEventArgs>("AUTO_MODERATION_RULE_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._automodRuleDeleted = new AsyncEvent<DiscordClient, AutomodRuleDeleteEventArgs>("AUTO_MODERATION_RULE_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._automodActionExecuted = new AsyncEvent<DiscordClient, AutomodActionExecutedEventArgs>("AUTO_MODERATION_ACTION_EXECUTED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._guildAuditLogEntryCreated = new AsyncEvent<DiscordClient, GuildAuditLogEntryCreateEventArgs>("GUILD_AUDIT_LOG_ENTRY_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 
 	}
 
@@ -667,6 +668,7 @@ public sealed partial class DiscordShardedClient
 		client.AutomodRuleUpdated += this.Client_AutomodRuleUpdated;
 		client.AutomodRuleDeleted += this.Client_AutomodRuleDeleted;
 		client.AutomodActionExecuted += this.Client_AutomodActionExecuted;
+		client.GuildAuditLogEntryCreated += this.Client_GuildAuditLogEntryCreated;
 	}
 
 	/// <summary>
@@ -758,6 +760,7 @@ public sealed partial class DiscordShardedClient
 		client.AutomodRuleUpdated -= this.Client_AutomodRuleUpdated;
 		client.AutomodRuleDeleted -= this.Client_AutomodRuleDeleted;
 		client.AutomodActionExecuted -= this.Client_AutomodActionExecuted;
+		client.GuildAuditLogEntryCreated -= this.Client_GuildAuditLogEntryCreated;
 	}
 
 	/// <summary>
