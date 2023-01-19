@@ -190,6 +190,12 @@ public sealed partial class DiscordClient
 				await this.OnGuildDeleteEventAsync(dat.ToDiscordObject<DiscordGuild>()).ConfigureAwait(false);
 				break;
 
+			case "guild_audit_log_entry_create":
+				gid = (ulong)dat["guild_id"];
+				dat.Remove("guild_id");
+				await this.OnGuildAuditLogEntryCreateEventAsync(this.GuildsInternal[gid], dat).ConfigureAwait(false);
+				break;
+
 			case "guild_sync":
 				gid = (ulong)dat["id"];
 				await this.OnGuildSyncEventAsync(this.GuildsInternal[gid], (bool)dat["large"], (JArray)dat["members"], dat["presences"].ToDiscordObject<IEnumerable<DiscordPresence>>()).ConfigureAwait(false);
@@ -216,7 +222,7 @@ public sealed partial class DiscordClient
 
 				await this.OnGuildIntegrationsUpdateEventAsync(this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
-
+				/*
 			case "guild_join_request_create":
 				break;
 
@@ -225,7 +231,7 @@ public sealed partial class DiscordClient
 
 			case "guild_join_request_delete":
 				break;
-
+				*/
 			#endregion
 
 			#region Guild Automod
@@ -652,7 +658,7 @@ public sealed partial class DiscordClient
 
 			default:
 				await this.OnUnknownEventAsync(payload).ConfigureAwait(false);
-				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Unknown event: {0}\npayload: {1}", payload.EventName, payload.Data);
+				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Unknown event: {0}\npayload: {1}", payload.EventName, dat.ToString(Newtonsoft.Json.Formatting.Indented));
 				break;
 
 				#endregion
@@ -1256,6 +1262,34 @@ public sealed partial class DiscordClient
 
 			await this._guildDeleted.InvokeAsync(this, new GuildDeleteEventArgs(this.ServiceProvider) { Guild = gld }).ConfigureAwait(false);
 		}
+	}
+
+	/// <summary>
+	/// Handles the guild audit log entry create event.
+	/// </summary>
+	/// <param name="guild">The guild where the audit log entry was created.</param>
+	/// <param name="auditLogCreateEntry">The auditlog event.</param>
+	internal async Task OnGuildAuditLogEntryCreateEventAsync(DiscordGuild guild, JObject auditLogCreateEntry)
+	{
+		this.Logger.LogDebug("New event: Audit log entry created");
+		this.Logger.LogDebug(auditLogCreateEntry.ToString(Newtonsoft.Json.Formatting.Indented));
+
+		var auditLogAction = DiscordJson.ToDiscordObject<AuditLogAction>(auditLogCreateEntry);
+		List<AuditLog> workaroundAuditLogEntryList = new()
+		{
+			new AuditLog()
+			{
+				Entries = new List<AuditLogAction>()
+				{
+					auditLogAction
+				}
+			}
+		};
+
+		var dataList = await guild.ProcessAuditLog(workaroundAuditLogEntryList);
+		var data = dataList.First();
+
+		await this._guildAuditLogEntryCreated.InvokeAsync(this, new(this.ServiceProvider) { Guild = guild, AuditLogEntry = data });
 	}
 
 	/// <summary>
