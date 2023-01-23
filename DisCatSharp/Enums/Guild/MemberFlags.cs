@@ -33,27 +33,33 @@ namespace DisCatSharp.Enums;
 public enum MemberFlags : long
 {
 	/// <summary>
-	/// This member has no flags.
+	/// Member has no flags.
 	/// </summary>
 	None = 0,
 
 	/// <summary>
-	/// This member has joined and left the guild before.
+	/// Member has left and rejoined the guild.
 	/// </summary>
 	DidRejoin = 1 << 0,
 
 	/// <summary>
-	/// This member completed the onboarding.
+	/// Member has completed onboarding.
 	/// </summary>
 	[DiscordInExperiment]
 	CompletedOnboarding = 1 << 1,
 
 	/// <summary>
-	/// This member bypasses the membership screening verification.
+	/// Member bypasses guild verification requirements.
 	/// </summary>
 	[DiscordInExperiment]
 	BypassesVerification = 1 << 2,
 	[DiscordInExperiment]
-	Verified = BypassesVerification
+	Verified = BypassesVerification,
+
+	/// <summary>
+	/// Member has started onboarding.
+	/// </summary>
+	[DiscordInExperiment]
+	STARTED_ONBOARDING = 1 << 3,
 }
 
