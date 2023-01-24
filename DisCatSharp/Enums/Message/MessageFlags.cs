@@ -92,5 +92,11 @@ public enum MessageFlags
 	/// <summary>
 	/// The message contains a link marked as potential dangerous or absusive.
 	/// </summary>
-	ShouldShowLinkNotDiscordWarning = 1 << 10
+	ShouldShowLinkNotDiscordWarning = 1 << 10,
+
+	/// <summary>
+	/// The message suppresses channel notifications.
+	/// Aka. new message indicator.
+	/// </summary>
+	SuppressNotifications = 1 << 12
 }
