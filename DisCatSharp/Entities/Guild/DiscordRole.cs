@@ -1,6 +1,6 @@
 // This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021-2022 AITSYS
+// Copyright (c) 2021-2023 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -140,12 +140,12 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 
 	#region Methods
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Modifies this role's position.
 	/// </summary>
 	/// <param name="position">New position</param>
@@ -173,12 +173,12 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 		return this.Discord.ApiClient.ModifyGuildRolePositionAsync(this.GuildId, roles, reason);
 	}
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Updates this role.
 	/// </summary>
 	/// <param name="name">New role name.</param>
@@ -198,11 +198,11 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, name, permissions, color?.Value, hoist, mentionable, null, null, reason);
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Updates this role.
 	/// </summary>
 	/// <param name="action">The action.</param>
@@ -241,12 +241,12 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 		return canContinue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Hoist, mdl.Mentionable, iconb64, emoji, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify role icon. Guild needs boost tier two.");
 	}
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Deletes this role.
 	/// </summary>
 	/// <param name="reason">Reason as to why this role has been deleted.</param>

@@ -1,6 +1,6 @@
 // This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021-2022 AITSYS
+// Copyright (c) 2021-2023 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -516,12 +516,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		this.MentionedUsersInternal = mentionedUsers.ToList();
 	}
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Edits the message.
 	/// </summary>
 	/// <param name="content">New content.</param>
@@ -536,12 +536,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, default, this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>(), default);
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Edits the message.
 	/// </summary>
 	/// <param name="embed">New embed.</param>
@@ -556,12 +556,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, embed.Map(v => new[] { v }).ValueOr(Array.Empty<DiscordEmbed>()), this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>(), default);
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Edits the message.
 	/// </summary>
 	/// <param name="content">New content.</param>
@@ -577,12 +577,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, embed.Map(v => new[] { v }).ValueOr(Array.Empty<DiscordEmbed>()), this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>(), default);
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Edits the message.
 	/// </summary>
 	/// <param name="content">New content.</param>
@@ -598,12 +598,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, embeds, this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>(), default);
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Edits the message.
 	/// </summary>
 	/// <param name="builder">The builder of the message to edit.</param>
@@ -621,12 +621,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0 ? Optional.Some(builder.Attachments.AsEnumerable()) : builder.KeepAttachmentsInternal.HasValue ? builder.KeepAttachmentsInternal.Value ? Optional.Some(this.Attachments.AsEnumerable()) : Array.Empty<DiscordAttachment>() : null);
 	}
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Edits the message embed suppression.
 	/// </summary>
 	/// <param name="suppress">Suppress embeds.</param>
@@ -648,12 +648,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	public Task<DiscordMessage> ClearAttachmentsAsync()
 		=> this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, default, this.GetMentions(), default, default, default, Array.Empty<DiscordAttachment>());
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Edits the message.
 	/// </summary>
 	/// <param name="action">The builder of the message to edit.</param>
@@ -673,12 +673,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0 ? Optional.Some(builder.Attachments.AsEnumerable()) : builder.KeepAttachmentsInternal.HasValue ? builder.KeepAttachmentsInternal.Value ? Optional.Some(this.Attachments.AsEnumerable()) : Array.Empty<DiscordAttachment>() : null);
 	}
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Deletes the message.
 	/// </summary>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
@@ -692,12 +692,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.DeleteMessageAsync(this.ChannelId, this.Id, reason);
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Creates a thread.
 	/// Depending on the <see cref="ChannelType"/> of the parent channel it's either a <see cref="ChannelType.PublicThread"/> or a <see cref="ChannelType.NewsThread"/>.
 	/// </summary>
@@ -719,12 +719,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Pins the message in its channel.
 	/// </summary>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
@@ -738,12 +738,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.PinMessageAsync(this.ChannelId, this.Id);
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Unpins the message in its channel.
 	/// </summary>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
@@ -757,12 +757,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.UnpinMessageAsync(this.ChannelId, this.Id);
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="content">Message content to respond with.</param>
@@ -778,12 +778,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, content, null, sticker: null, replyMessageId: this.Id, mentionReply: false, failOnInvalidReply: false);
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="embed">Embed to attach to the message.</param>
@@ -799,12 +799,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, null, embed != null ? new[] { embed } : null, sticker: null, replyMessageId: this.Id, mentionReply: false, failOnInvalidReply: false);
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="content">Message content to respond with.</param>
@@ -821,12 +821,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, content, embed != null ? new[] { embed } : null, sticker: null, replyMessageId: this.Id, mentionReply: false, failOnInvalidReply: false);
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="builder">The Discord message builder.</param>
@@ -842,12 +842,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id, mention: false, failOnInvalidReply: false));
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="action">The Discord message builder.</param>
@@ -867,12 +867,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		return this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id, mention: false, failOnInvalidReply: false));
 	}
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Creates a reaction to this message.
 	/// </summary>
 	/// <param name="emoji">The emoji you want to react with, either an emoji or name:id</param>
@@ -887,11 +887,11 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.CreateReactionAsync(this.ChannelId, this.Id, emoji.ToReactionString());
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Deletes your own reaction
 	/// </summary>
 	/// <param name="emoji">Emoji for the reaction you want to remove, either an emoji or name:id</param>
@@ -904,12 +904,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.DeleteOwnReactionAsync(this.ChannelId, this.Id, emoji.ToReactionString());
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Deletes another user's reaction.
 	/// </summary>
 	/// <param name="emoji">Emoji for the reaction you want to remove, either an emoji or name:id.</param>
@@ -926,11 +926,11 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.DeleteUserReactionAsync(this.ChannelId, this.Id, user.Id, emoji.ToReactionString(), reason);
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Gets users that reacted with this emoji.
 	/// </summary>
 	/// <param name="emoji">Emoji to react with.</param>
@@ -945,12 +945,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.GetReactionsInternalAsync(emoji, limit, after);
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Deletes all reactions for this message.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
@@ -965,12 +965,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.DeleteAllReactionsAsync(this.ChannelId, this.Id, reason);
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Deletes all reactions of a specific reaction for this message.
 	/// </summary>
 	/// <param name="emoji">The emoji to clear, either an emoji or name:id.</param>
