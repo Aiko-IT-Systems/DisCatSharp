@@ -60,6 +60,6 @@ public enum MemberFlags : long
 	/// Member has started onboarding.
 	/// </summary>
 	[DiscordInExperiment]
-	STARTED_ONBOARDING = 1 << 3,
+	StartedOnboarding = 1 << 3,
 }
 
