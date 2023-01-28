@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -284,6 +285,36 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	internal async Task CleanGlobalCommandsAsync()
 		=> await this.Client.BulkOverwriteGlobalApplicationCommandsAsync(Array.Empty<DiscordApplicationCommand>());
+
+	/// <summary>
+	/// Registers all commands from a given assembly. The command classes need to be public to be considered for registration.
+	/// </summary>
+	/// <param name="assembly">Assembly to register commands from.</param>
+	public void RegisterGuildCommands(Assembly assembly, ulong guildId)
+	{
+		var types = assembly.ExportedTypes.Where(xt =>
+		{
+			var xti = xt.GetTypeInfo();
+			return xti.IsModuleCandidateType() && !xti.IsNested;
+		});
+		foreach (var xt in types)
+			this.RegisterGuildCommands(xt, guildId, null);
+	}
+
+	/// <summary>
+	/// Registers all commands from a given assembly. The command classes need to be public to be considered for registration.
+	/// </summary>
+	/// <param name="assembly">Assembly to register commands from.</param>
+	public void RegisterGlobalCommands(Assembly assembly)
+	{
+		var types = assembly.ExportedTypes.Where(xt =>
+		{
+			var xti = xt.GetTypeInfo();
+			return xti.IsModuleCandidateType() && !xti.IsNested;
+		});
+		foreach (var xt in types)
+			this.RegisterGlobalCommands(xt, null);
+	}
 
 	/// <summary>
 	/// Registers a command class with optional translation setup for a guild.
