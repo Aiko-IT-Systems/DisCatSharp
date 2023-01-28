@@ -1,6 +1,6 @@
 // This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021-2022 AITSYS
+// Copyright (c) 2021-2023 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -50,13 +50,13 @@ public sealed class DiscordGuildEmoji : DiscordEmoji
 	internal DiscordGuildEmoji()
 	{ }
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Modifies this emoji.
 	/// </summary>
 	/// <param name="name">New name for this emoji.</param>
@@ -75,13 +75,13 @@ public sealed class DiscordGuildEmoji : DiscordEmoji
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Guild.ModifyEmojiAsync(this, name, roles, reason);
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Deletes this emoji.
 	/// </summary>
 	/// <param name="reason">Reason for audit log.</param>

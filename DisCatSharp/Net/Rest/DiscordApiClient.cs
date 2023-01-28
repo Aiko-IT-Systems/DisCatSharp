@@ -1,6 +1,6 @@
 // This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021-2022 AITSYS
+// Copyright (c) 2021-2023 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -38,8 +38,6 @@ using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
-using static System.Net.Mime.MediaTypeNames;
 
 namespace DisCatSharp.Net;
 
@@ -3019,14 +3017,13 @@ public sealed class DiscordApiClient
 			RoleIds = roleIds,
 			Deafen = deaf,
 			Mute = mute,
-			VoiceChannelId = voiceChannelId
-		};
-
-		pld.Flags = verify.HasValue && verify.Value
+			VoiceChannelId = voiceChannelId,
+			Flags = verify.HasValue && verify.Value
 			? flags | MemberFlags.BypassesVerification
 			: verify.HasValue && !verify.Value
 			? flags & ~MemberFlags.BypassesVerification
-			: Optional.None;
+			: Optional.None
+		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new {guild_id = guildId, user_id = userId }, out var path);
@@ -4500,9 +4497,10 @@ public sealed class DiscordApiClient
 	/// <param name="withMember">Whether to include a <see cref="DiscordMember"/> object.</param>
 	internal async Task<DiscordThreadChannelMember> GetThreadMemberAsync(ulong channelId, ulong userId, bool withMember = false)
 	{
-		var urlParams = new Dictionary<string, string>();
-
-		urlParams["with_member"] = withMember.ToString(CultureInfo.InvariantCulture);
+		var urlParams = new Dictionary<string, string>
+		{
+			["with_member"] = withMember.ToString(CultureInfo.InvariantCulture)
+		};
 
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREAD_MEMBERS}/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {channel_id = channelId, user_id = userId }, out var path);
@@ -4540,9 +4538,10 @@ public sealed class DiscordApiClient
 	{
 		// TODO: Starting in API v11, List Thread Members will always return paginated results, regardless of whether with_member is passed or not.
 
-		var urlParams = new Dictionary<string, string>();
-
-		urlParams["with_member"] = withMember.ToString(CultureInfo.InvariantCulture);
+		var urlParams = new Dictionary<string, string>
+		{
+			["with_member"] = withMember.ToString(CultureInfo.InvariantCulture)
+		};
 
 		if (after != null && withMember)
 			urlParams["after"] = after.Value.ToString(CultureInfo.InvariantCulture);

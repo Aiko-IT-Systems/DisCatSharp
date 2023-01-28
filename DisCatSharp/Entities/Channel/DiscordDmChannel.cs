@@ -1,6 +1,6 @@
 // This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021-2022 AITSYS
+// Copyright (c) 2021-2023 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -66,7 +66,7 @@ public class DiscordDmChannel : DiscordChannel
 	/// </summary>
 	[JsonProperty("managed", NullValueHandling = NullValueHandling.Ignore)]
 	public bool? Managed { get; internal set; }
-	
+
 	/// <summary>
 	/// Gets the URL of this channel's icon.
 	/// </summary>

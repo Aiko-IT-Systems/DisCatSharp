@@ -1,6 +1,6 @@
 // This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021-2022 AITSYS
+// Copyright (c) 2021-2023 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -191,12 +191,12 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 
 	#region Methods
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Modifies the current scheduled event.
 	/// </summary>
 	/// <param name="action">Action to perform on this thread</param>
@@ -229,12 +229,12 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 		await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, this.EntityType == ScheduledEventEntityType.External ? new DiscordScheduledEventEntityMetadata(mdl.Location.Value) : null, mdl.Name, mdl.ScheduledStartTime, scheduledEndTime, mdl.Description, mdl.EntityType, mdl.Status, coverb64, mdl.AuditLogReason);
 	}
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Starts the current scheduled event.
 	/// </summary>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
@@ -248,12 +248,12 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Status == ScheduledEventStatus.Scheduled ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Active, reason) : throw new InvalidOperationException("You can only start scheduled events");
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Cancels the current scheduled event.
 	/// </summary>
 	/// <param name="reason">The audit log reason.</param>
@@ -268,12 +268,12 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Status == ScheduledEventStatus.Scheduled ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Canceled, reason) : throw new InvalidOperationException("You can only cancel scheduled events");
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Ends the current scheduled event.
 	/// </summary>
 	/// <param name="reason">The audit log reason.</param>
@@ -288,12 +288,12 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Status == ScheduledEventStatus.Active ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Completed, reason) : throw new InvalidOperationException("You can only stop active events");
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Gets a list of users RSVP'd to the scheduled event.
 	/// </summary>
 	/// <param name="limit">The limit how many users to receive from the event. Defaults to 100. Max 100.</param>
@@ -311,12 +311,12 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> await this.Discord.ApiClient.GetGuildScheduledEventRspvUsersAsync(this.GuildId, this.Id, limit, before, after, withMember);
 
-	
+
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Deletes a scheduled event.
 	/// </summary>
 	/// <param name="reason">The audit log reason.</param>

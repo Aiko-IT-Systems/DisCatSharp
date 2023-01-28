@@ -1,6 +1,6 @@
 // This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021-2022 AITSYS
+// Copyright (c) 2021-2023 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -222,16 +222,16 @@ public sealed partial class DiscordClient
 
 				await this.OnGuildIntegrationsUpdateEventAsync(this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
-				/*
-			case "guild_join_request_create":
-				break;
+			/*
+		case "guild_join_request_create":
+			break;
 
-			case "guild_join_request_update":
-				break;
+		case "guild_join_request_update":
+			break;
 
-			case "guild_join_request_delete":
-				break;
-				*/
+		case "guild_join_request_delete":
+			break;
+			*/
 			#endregion
 
 			#region Guild Automod
@@ -2508,8 +2508,12 @@ public sealed partial class DiscordClient
 	/// <param name="isBurst">Whether a burst reaction was added.</param>
 	internal async Task OnMessageReactionRemoveAsync(ulong userId, ulong messageId, ulong channelId, ulong? guildId, DiscordEmoji emoji, bool isBurst)
 	{
-		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId) ?? new DiscordChannel() {
-			Type = ChannelType.Unknown, Id = channelId, GuildId = guildId, Discord = this
+		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId) ?? new DiscordChannel()
+		{
+			Type = ChannelType.Unknown,
+			Id = channelId,
+			GuildId = guildId,
+			Discord = this
 		};
 
 		emoji.Discord = this;
