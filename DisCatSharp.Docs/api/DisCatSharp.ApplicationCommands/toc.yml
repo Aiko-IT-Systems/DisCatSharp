@@ -8,6 +8,8 @@
     name: ApplicationCommandsExtension
   - uid: DisCatSharp.ApplicationCommands.ApplicationCommandsModule
     name: ApplicationCommandsModule
+  - uid: DisCatSharp.ApplicationCommands.ApplicationCommandsUtilities
+    name: ApplicationCommandsUtilities
   - uid: DisCatSharp.ApplicationCommands.ExtensionMethods
     name: ExtensionMethods
 - uid: DisCatSharp.ApplicationCommands.Attributes
