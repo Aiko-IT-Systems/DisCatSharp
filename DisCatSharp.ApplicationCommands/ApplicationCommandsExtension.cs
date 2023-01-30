@@ -148,6 +148,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	internal static LogLevel ApplicationCommandsLogLevel
 		=> DebugEnabled ? LogLevel.Debug : LogLevel.Trace;
 
+	internal static ILogger Logger { get; set; }
+
 	/// <summary>
 	/// Gets whether check through all guilds is enabled.
 	/// </summary>
@@ -206,6 +208,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			throw new InvalidOperationException("What did I tell you?");
 
 		this.Client = client;
+		Logger = client.Logger;
 
 		this._slashError = new AsyncEvent<ApplicationCommandsExtension, SlashCommandErrorEventArgs>("SLASHCOMMAND_ERRORED", TimeSpan.Zero, null);
 		this._slashExecuted = new AsyncEvent<ApplicationCommandsExtension, SlashCommandExecutedEventArgs>("SLASHCOMMAND_EXECUTED", TimeSpan.Zero, null);
@@ -291,7 +294,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <param name="assembly">Assembly to register commands from.</param>
 	public void RegisterGuildCommands(Assembly assembly, ulong guildId)
 	{
-		var types = assembly.ExportedTypes.Where(xt =>
+		var types = assembly.GetTypes().Where(xt =>
 		{
 			var xti = xt.GetTypeInfo();
 			return xti.IsModuleCandidateType() && !xti.IsNested;
@@ -306,7 +309,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <param name="assembly">Assembly to register commands from.</param>
 	public void RegisterGlobalCommands(Assembly assembly)
 	{
-		var types = assembly.ExportedTypes.Where(xt =>
+		var types = assembly.GetTypes().Where(xt =>
 		{
 			var xti = xt.GetTypeInfo();
 			return xti.IsModuleCandidateType() && !xti.IsNested;
