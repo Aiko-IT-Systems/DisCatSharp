@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Models;
@@ -166,8 +167,9 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task ArchiveAsync(bool locked = true, string reason = null)
-		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, locked, true, null, null, null, null, null, reason);
+	[DiscordDeprecated("The locked parameter will be removed soon and is not applied anymore.")]
+	public Task ArchiveAsync([DiscordDeprecated("The locked parameter will be removed soon and is not applied anymore.")] bool locked = true, string reason = null)
+		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, true, null, null, null, null, null, reason);
 
 	/// <summary>
 	/// Unarchives a thread.
@@ -177,7 +179,29 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task UnarchiveAsync(string reason = null)
-		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, false, null, null, null, null, null, reason);
+		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, false, null, null, null, null, null, null, reason);
+
+	/// <summary>
+	/// Locks a thread.
+	/// </summary>
+	/// <param name="reason">Reason for audit logs.</param>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task LockAsync(string reason = null)
+		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, true, null, null, null, null, null, null, reason);
+
+	/// <summary>
+	/// Unlocks a thread.
+	/// </summary>
+	/// <param name="reason">Reason for audit logs.</param>
+	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task UnlockAsync(string reason = null)
+		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, false, true, null, null, null, null, null, reason);
+
 
 	/// <summary>
 	/// Gets the members of a thread. Needs the <see cref="DiscordIntents.GuildMembers"/> intent.
