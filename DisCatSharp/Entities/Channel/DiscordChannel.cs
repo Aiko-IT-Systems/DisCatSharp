@@ -954,11 +954,6 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> this.Discord.ApiClient.CreateChannelInviteAsync(this.Id, maxAge, maxUses, targetType, targetApplicationId, targetUser, temporary, unique, reason);
 
 	#region Stage
-
-	[Obsolete, DiscordDeprecated("Stage privacy level is removed")]
-	public async Task<DiscordStageInstance> OpenStageAsync(string topic, bool sendStartNotification = false, StagePrivacyLevel privacyLevel = StagePrivacyLevel.GuildOnly, string reason = null)
-		=> await this.Discord.ApiClient.CreateStageInstanceAsync(this.Id, topic, sendStartNotification, null, reason);
-
 	/// <summary>
 	/// Opens a stage.
 	/// </summary>
@@ -978,14 +973,12 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Modifies a stage topic.
 	/// </summary>
 	/// <param name="topic">New topic of the stage.</param>
-	/// <param name="privacyLevel">New privacy level of the stage.</param>
 	/// <param name="reason">Audit log reason.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	[DiscordDeprecated("Privacy level will be removed in next versions"), Obsolete]
-	public async Task ModifyStageAsync(Optional<string> topic, Optional<StagePrivacyLevel> privacyLevel, string reason = null)
+	public async Task ModifyStageAsync(Optional<string> topic, string reason = null)
 		=> await this.Discord.ApiClient.ModifyStageInstanceAsync(this.Id, topic, reason);
 
 	/// <summary>

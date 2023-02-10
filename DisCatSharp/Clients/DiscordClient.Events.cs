@@ -23,6 +23,7 @@
 using System;
 
 using DisCatSharp.Common.Utilities;
+using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 
 using Microsoft.Extensions.Logging;
