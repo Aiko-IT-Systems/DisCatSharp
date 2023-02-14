@@ -99,7 +99,7 @@ jobs:
         ssh-private-key: ${{ secrets.AITSYS_SSH }}
     - name: Publish on server
       continue-on-error: true
-      run: ssh -o StrictHostKeyChecking=no -T root@80.153.182.68 -f 'cd /var/www/dcs.aitsys.dev/docs && git pull -f && service apache2 restart'
+      run: ssh -o StrictHostKeyChecking=no -T root@80.152.135.241 -f 'cd /var/www/dcs.aitsys.dev/docs && git pull -f && service apache2 restart'
   publish-backup:
     runs-on: ubuntu-latest
     name: Publish documentation on backup server
