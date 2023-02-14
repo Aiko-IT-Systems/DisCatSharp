@@ -1,0 +1,38 @@
+
+<div id="sidetoggle">
+  <div>
+    <div class="sidefilter">
+      <form class="toc-filter">
+        <i class="bi bi-funnel-fill filter-icon"></i>
+        <i id="toc_filter_clear" class="bi bi-x-lg clear-icon"></i>
+        <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." autocomplete="off" onkeypress="if(event.keyCode==13) {return false;}">
+      </form>
+    </div>
+    <div class="sidetoc">
+      <div class="toc" id="toc">
+
+          <ul class="nav level1">
+                <li>
+                    <span class="expand-stub"></span>
+                    <a href="DisCatSharp.Attributes.html" name="" title="DisCatSharp.Attributes">DisCatSharp.Attributes</a>
+
+                    <ul class="nav level2">
+                          <li>
+                              <a href="DisCatSharp.Attributes.DiscordDeprecatedAttribute.html" name="" title="DiscordDeprecatedAttribute">DiscordDeprecatedAttribute</a>
+                          </li>
+                          <li>
+                              <a href="DisCatSharp.Attributes.DiscordInExperimentAttribute.html" name="" title="DiscordInExperimentAttribute">DiscordInExperimentAttribute</a>
+                          </li>
+                          <li>
+                              <a href="DisCatSharp.Attributes.DiscordUnreleasedAttribute.html" name="" title="DiscordUnreleasedAttribute">DiscordUnreleasedAttribute</a>
+                          </li>
+                          <li>
+                              <a href="DisCatSharp.Attributes.ExperimentalAttribute.html" name="" title="ExperimentalAttribute">ExperimentalAttribute</a>
+                          </li>
+                    </ul>
+                </li>
+          </ul>
+      </div>
+    </div>
+  </div>
+</div>
