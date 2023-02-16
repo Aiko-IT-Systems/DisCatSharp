@@ -292,6 +292,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// Registers all commands from a given assembly. The command classes need to be public to be considered for registration.
 	/// </summary>
 	/// <param name="assembly">Assembly to register commands from.</param>
+	/// <param name="guildId">The guild id to register it on.</param>
 	public void RegisterGuildCommands(Assembly assembly, ulong guildId)
 	{
 		var types = assembly.GetTypes().Where(xt =>
