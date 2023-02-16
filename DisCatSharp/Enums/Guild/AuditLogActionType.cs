@@ -290,5 +290,10 @@ public enum AuditLogActionType
 	/// <summary>
 	/// Indicates that automod blocked a message.
 	/// </summary>
-	AutoModerationBlockMessage = 143
+	AutoModerationBlockMessage = 143,
+
+	/// <summary>
+	/// Indicates that automod flagged a message.
+	/// </summary>
+	AUtoModerationFlagMessage = 144
 }
