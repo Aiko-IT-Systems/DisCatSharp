@@ -43,5 +43,8 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonProperty("duration_seconds", NullValueHandling = NullValueHandling.Ignore)]
 		public int? Duration { get; internal set; }
+
+		[JsonProperty("custom_message", NullValueHandling = NullValueHandling.Ignore)]
+		public string? CustomMessage { get; set; }
 	}
 }
