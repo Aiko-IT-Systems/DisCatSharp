@@ -4663,6 +4663,7 @@
   "DisCatSharp.Enums.AuditLogActionType": "DisCatSharp.Enums.AuditLogActionType.yml",
   "DisCatSharp.Enums.AuditLogActionType.ApplicationCommandPermissionUpdate": "DisCatSharp.Enums.AuditLogActionType.yml",
   "DisCatSharp.Enums.AuditLogActionType.AutoModerationBlockMessage": "DisCatSharp.Enums.AuditLogActionType.yml",
+  "DisCatSharp.Enums.AuditLogActionType.AUtoModerationFlagMessage": "DisCatSharp.Enums.AuditLogActionType.yml",
   "DisCatSharp.Enums.AuditLogActionType.AutoModerationRuleCreate": "DisCatSharp.Enums.AuditLogActionType.yml",
   "DisCatSharp.Enums.AuditLogActionType.AutoModerationRuleDelete": "DisCatSharp.Enums.AuditLogActionType.yml",
   "DisCatSharp.Enums.AuditLogActionType.AutoModerationRuleUpdate": "DisCatSharp.Enums.AuditLogActionType.yml",
