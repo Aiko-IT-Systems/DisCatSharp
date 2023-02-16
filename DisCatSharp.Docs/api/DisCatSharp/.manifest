@@ -476,6 +476,7 @@
   "DisCatSharp.Entities.AutomodAction.Metadata": "DisCatSharp.Entities.AutomodAction.yml",
   "DisCatSharp.Entities.AutomodActionMetadata": "DisCatSharp.Entities.AutomodActionMetadata.yml",
   "DisCatSharp.Entities.AutomodActionMetadata.ChannelId": "DisCatSharp.Entities.AutomodActionMetadata.yml",
+  "DisCatSharp.Entities.AutomodActionMetadata.CustomMessage": "DisCatSharp.Entities.AutomodActionMetadata.yml",
   "DisCatSharp.Entities.AutomodActionMetadata.Duration": "DisCatSharp.Entities.AutomodActionMetadata.yml",
   "DisCatSharp.Entities.AutomodRule": "DisCatSharp.Entities.AutomodRule.yml",
   "DisCatSharp.Entities.AutomodRule.Actions": "DisCatSharp.Entities.AutomodRule.yml",
