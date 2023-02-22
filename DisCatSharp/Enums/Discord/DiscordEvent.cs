@@ -27,8 +27,7 @@ using System;
 namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Methods marked with this attribute will be registered as modal handling methods
-/// if the associated type / an associated instance is being registered.
+/// Methods marked with this attribute will be registered as modal handling methods.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
 public class ModalInteractionAttribute : InteractionAttribute
@@ -45,6 +44,28 @@ public class ModalInteractionAttribute : InteractionAttribute
 	public ModalInteractionAttribute(string custom_id)
 	{
 		this.CustomId = custom_id;
+	}
+}
+
+/// <summary>
+/// Methods marked with this attribute will be registered as modal handling methods.
+/// <para>Modal custom ids will be checked with <see cref="string.StartsWith(string)"/>.</para>
+/// </summary>
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+public class ModalInteractionWithPrefixAttribute : InteractionAttribute
+{
+	/// <summary>
+	/// The custom id to listen for.
+	/// </summary>
+	internal readonly string CustomIdPrefix;
+
+	/// <summary>
+	/// Registers a method as modal handler.
+	/// </summary>
+	/// <param name="custom_id_prefix">The custom id prefix of the modal to handle.</param>
+	public ModalInteractionWithPrefixAttribute(string custom_id_prefix)
+	{
+		this.CustomIdPrefix = custom_id_prefix;
 	}
 }
 
