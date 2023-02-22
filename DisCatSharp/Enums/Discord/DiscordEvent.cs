@@ -30,8 +30,8 @@ namespace DisCatSharp.Enums;
 /// Methods marked with this attribute will be registered as modal handling methods
 /// if the associated type / an associated instance is being registered.
 /// </summary>
-[AttributeUsage(AttributeTargets.Method)]
-public class ModalInteractionAttribute : Attribute
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+public class ModalInteractionAttribute : InteractionAttribute
 {
 	/// <summary>
 	/// The custom id to listen for.
@@ -47,6 +47,10 @@ public class ModalInteractionAttribute : Attribute
 		this.CustomId = custom_id;
 	}
 }
+
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+public class InteractionAttribute : Attribute
+{ }
 
 /// <summary>
 /// Methods marked with this attribute will be registered as event handling methods
