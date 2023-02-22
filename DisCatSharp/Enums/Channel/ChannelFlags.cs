@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.Enums;
@@ -52,5 +53,16 @@ public enum ChannelFlags : int
 	/// Indicates that the channel requires users to select at least one <see cref="ForumPostTag"/>.
 	/// Only applicable for <see cref="ChannelType.Forum"/>.
 	/// </summary>
-	RequireTags = 1<<4
+	RequireTags = 1<<4,
+
+	/// <summary>
+	/// Indicated that this channel is spam.
+	/// </summary>
+	IsSpam = 1<<5,
+
+	/// <summary>
+	/// Indicated that this channel is a guild resource channel.
+	/// </summary>
+	[DiscordInExperiment()]
+	IsGuildResourceChannel = 1<<7
 }
