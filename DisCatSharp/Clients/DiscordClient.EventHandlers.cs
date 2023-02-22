@@ -54,15 +54,19 @@ public sealed partial class DiscordClient
 	public void RegisterStaticEventHandler(Type t)
 		=> this.RegisterEventHandlerImpl(null, t);
 
-	/// <see cref="RegisterStaticEventHandler(Type)"/>
-	public void RegisterStaticEventHandler<T>() => this.RegisterStaticEventHandler(typeof(T));
+	/// <summary>
+	/// <see cref="RegisterStaticEventHandler(Type)"/>.
+	/// </summary>
+	/// <typeparam name="T">Type to register.</typeparam>
+	public void RegisterStaticEventHandler<T>()
+		=> this.RegisterStaticEventHandler(typeof(T));
 
 	/// <summary>
 	/// <para>If abstract, registers all static methods of the type.</para>
 	/// <para>If non-abstract, tries to instantiate it, optionally using the provided <see cref="DiscordConfiguration.ServiceProvider"/>
 	/// and registers all instance and static methods.</para>
 	/// </summary>
-	/// <param name="type"></param>
+	/// <param name="type">Type to register.</param>
 	public void RegisterEventHandler(Type type)
 	{
 		if (type.IsAbstract)
@@ -71,8 +75,7 @@ public sealed partial class DiscordClient
 		{
 			var anon = ActivatorUtilities.CreateInstance(this.Configuration.ServiceProvider, type);
 
-			this._typeToAnonymousHandlers[type]
-				= this._typeToAnonymousHandlers.TryGetValue(type, out var anonObjs) ? anonObjs : (anonObjs = new());
+			this._typeToAnonymousHandlers[type] = this._typeToAnonymousHandlers.TryGetValue(type, out var anonObjs) ? anonObjs : (anonObjs = new());
 
 			anonObjs.Add(anon);
 
@@ -80,8 +83,12 @@ public sealed partial class DiscordClient
 		}
 	}
 
-	/// <see cref="RegisterEventHandler(Type)"/>
-	public void RegisterEventHandler<T>() => this.RegisterEventHandler(typeof(T));
+	/// <summary>
+	/// <see cref="RegisterEventHandler(Type)"/>.
+	/// </summary>
+	/// <typeparam name="T">Type to register.</typeparam>
+	public void RegisterEventHandler<T>()
+		=> this.RegisterEventHandler(typeof(T));
 
 	/// <summary>
 	/// Registers all types associated with the provided assembly that have the <see cref="EventHandler"/> attribute.
@@ -96,36 +103,37 @@ public sealed partial class DiscordClient
 	/// <summary>
 	/// Perfectly mirrors <see cref="RegisterEventHandler(object, bool)"/>.
 	/// </summary>
-	/// <param name="handler"></param>
-	/// <param name="wasRegisteredWithStatic"></param>
+	/// <param name="handler">The event handler object.</param>
+	/// <param name="wasRegisteredWithStatic">Whether it considered static methods.</param>
 	public void UnregisterEventHandler(object handler, bool wasRegisteredWithStatic = false)
 		=> this.UnregisterEventHandlerImpl(handler, handler.GetType(), wasRegisteredWithStatic);
 
 	/// <summary>
 	/// Perfectly mirrors <see cref="RegisterStaticEventHandler(Type)"/>.
 	/// </summary>
-	/// <param name="t"></param>
-	public void UnregisterStaticEventHandler(Type t) => this.UnregisterEventHandlerImpl(null, t);
+	/// <param name="t">Type to unregister.</param>
+	public void UnregisterStaticEventHandler(Type t)
+		=> this.UnregisterEventHandlerImpl(null, t);
 
 	/// <summary>
 	/// Perfectly mirrors <see cref="RegisterStaticEventHandler{T}()"/>.
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	public void UnregisterStaticEventHandler<T>() => this.UnregisterEventHandler(typeof(T));
+	/// <typeparam name="T">Type to unregister.</typeparam>
+	public void UnregisterStaticEventHandler<T>()
+		=> this.UnregisterEventHandler(typeof(T));
 
 	/// <summary>
 	/// Perfectly mirrors <see cref="RegisterEventHandler(Type)"/>.
 	/// </summary>
-	/// <param name="t"></param>
+	/// <param name="t">Type to unregister.</param>
 	public void UnregisterEventHandler(Type t)
 	{
 		if (t.IsAbstract)
 			this.UnregisterStaticEventHandler(t);
 		else
 		{
-			if (!this._typeToAnonymousHandlers.TryGetValue(t, out var anonObjs)
-				|| anonObjs.Count == 0)
-				return; // Wasn't registered
+			if (!this._typeToAnonymousHandlers.TryGetValue(t, out var anonObjs) || anonObjs.Count == 0)
+				return;
 
 			var anon = anonObjs[0];
 			anonObjs.RemoveAt(0);
@@ -135,34 +143,41 @@ public sealed partial class DiscordClient
 
 			this.UnregisterEventHandlerImpl(anon, t);
 		}
-
-
 	}
 
 	/// <summary>
 	/// Perfectly mirrors <see cref="RegisterEventHandler{T}()"/>.
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
+	/// <typeparam name="T">The type to unregister</typeparam>
 	public void UnregisterEventHandler<T>() => this.UnregisterEventHandler(typeof(T));
 
 	/// <summary>
 	/// Perfectly mirrors <see cref="RegisterEventHandlers(Assembly)"/>.
 	/// </summary>
-	/// <param name="assembly"></param>
+	/// <param name="assembly">The assembly to unregister.</param>
 	public void UnregisterEventHandlers(Assembly assembly)
 	{
 		foreach (var t in GetEventHandlersFromAssembly(assembly))
 			this.UnregisterEventHandler(t);
 	}
 
+	/// <summary>
+	/// Gets the event handlers from the assembly.
+	/// </summary>
+	/// <param name="assembly">The assembly to get the event handlers from.</param>
 	private static IEnumerable<Type> GetEventHandlersFromAssembly(Assembly assembly)
-		=> assembly.GetTypes()
-			.Where(t => t.GetCustomAttribute<EventHandlerAttribute>() is not null);
+		=> assembly.GetTypes().Where(t => t.GetCustomAttribute<EventHandlerAttribute>() is not null);
 
-	private void UnregisterEventHandlerImpl(object? handler, Type type, bool registerStatic = true)
+	/// <summary>
+	/// Unregisters event handler implementations.
+	/// </summary>
+	/// <param name="handler">The event handler object.</param>
+	/// <param name="type">The type.</param>
+	/// <param name="wasRegisteredWithStatic">Whether it considereded static methods.</param>
+
+	private void UnregisterEventHandlerImpl(object? handler, Type type, bool wasRegisteredWithStatic = true)
 	{
-		if (!this._registrationToDelegate.TryGetValue((handler, type, registerStatic), out var delegateLists)
-			|| delegateLists.Count == 0)
+		if (!this._registrationToDelegate.TryGetValue((handler, type, wasRegisteredWithStatic), out var delegateLists) || delegateLists.Count == 0)
 			return;
 
 		foreach (var (evnt, dlgt) in delegateLists[0])
@@ -170,9 +185,15 @@ public sealed partial class DiscordClient
 
 		delegateLists.RemoveAt(0);
 		if (delegateLists.Count == 0)
-			this._registrationToDelegate.Remove((handler, type, registerStatic));
+			this._registrationToDelegate.Remove((handler, type, wasRegisteredWithStatic));
 	}
 
+	/// <summary>
+	/// Rregisters event handler implementations.
+	/// </summary>
+	/// <param name="handler">The event handler object.</param>
+	/// <param name="type">The type.</param>
+	/// <param name="registerStatic">Whether to consider static methods.</param>
 	private void RegisterEventHandlerImpl(object? handler, Type type, bool registerStatic = true)
 	{
 		var delegates = (
@@ -190,8 +211,7 @@ public sealed partial class DiscordClient
 			select (eventInfo, dlgt)
 			).ToArray();
 
-		this._registrationToDelegate[(handler, type, registerStatic)]
-			= this._registrationToDelegate.TryGetValue((handler, type, registerStatic), out var delList) ? delList : (delList = new());
+		this._registrationToDelegate[(handler, type, registerStatic)] = this._registrationToDelegate.TryGetValue((handler, type, registerStatic), out var delList) ? delList : (delList = new());
 
 		delList.Add(delegates);
 
