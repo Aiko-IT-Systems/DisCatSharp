@@ -27,16 +27,44 @@ using System;
 namespace DisCatSharp.Enums;
 
 /// <summary>
+/// Methods marked with this attribute will be registered as modal handling methods
+/// if the associated type / an associated instance is being registered.
+/// </summary>
+[AttributeUsage(AttributeTargets.Method)]
+public class ModalInteractionAttribute : Attribute
+{
+	/// <summary>
+	/// The custom id to listen for.
+	/// </summary>
+	internal readonly string CustomId;
+
+	/// <summary>
+	/// Registers a method as modal handler.
+	/// </summary>
+	/// <param name="custom_id">The custom id of the modal to handle.</param>
+	public ModalInteractionAttribute(string custom_id)
+	{
+		this.CustomId = custom_id;
+	}
+}
+
+/// <summary>
 /// Methods marked with this attribute will be registered as event handling methods
 /// if the associated type / an associated instance is being registered.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
 public class EventAttribute : Attribute
 {
+	/// <summary>
+	/// The event name to listen for.
+	/// </summary>
 	internal readonly string? EventName;
 
 	public EventAttribute() { }
 
+	/// <summary>
+	/// Registers a method as event handler.
+	/// </summary>
 	/// <param name="evtn"><para>The name of the event.</para>
 	/// <para>The attributed method's name will be used if null.</para></param>
 	public EventAttribute(DiscordEvent evtn)
