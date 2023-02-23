@@ -23,40 +23,43 @@
 using System;
 
 using DisCatSharp.Entities;
-using DisCatSharp.Enums;
 
-namespace DisCatSharp.EventArgs;
+namespace DisCatSharp.EventArgs.Interaction;
 
 /// <summary>
-/// The context menu interaction create event args.
+/// Represents arguments for <see cref="DiscordClient.InteractionCreated"/>.
+/// Used for button interactions.
 /// </summary>
-public sealed class ContextMenuInteractionCreateEventArgs : InteractionCreateEventArgs
+internal class ButtonInteractionEventArgs : DiscordEventArgs
 {
 	/// <summary>
-	/// The type of context menu that was used. This is never <see cref="ApplicationCommandType.ChatInput"/>.
+	/// Gets the interaction data that was invoked.
 	/// </summary>
-	public ApplicationCommandType Type { get; internal set; }
+	public DiscordInteraction Interaction { get; internal set; }
 
 	/// <summary>
-	/// The user that invoked this interaction. Can be cast to a member if this was on a guild.
+	/// Gets the user who executed the button.
 	/// </summary>
-	public DiscordUser User => this.Interaction.User;
+	public DiscordUser User
+		=> this.Interaction.User;
 
 	/// <summary>
-	/// The user this interaction targets, if applicable.
+	/// Gets the channel in which the button was executed.
 	/// </summary>
-	public DiscordUser TargetUser { get; internal set; }
+	public DiscordChannel Channel
+		=> this.Interaction.Channel;
 
 	/// <summary>
-	/// The message this interaction targets, if applicable.
+	/// Gets the custom id of the button.
 	/// </summary>
-	public DiscordMessage TargetMessage { get; internal set; }
+	public string CustomId
+		=> this.Interaction.Data.CustomId;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="ContextMenuInteractionCreateEventArgs"/> class.
+	/// Initializes a new instance of the <see cref="ButtonInteractionEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	public ContextMenuInteractionCreateEventArgs(IServiceProvider provider)
+	public ButtonInteractionEventArgs(IServiceProvider provider)
 		: base(provider)
 	{ }
 }
