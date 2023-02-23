@@ -63,6 +63,6 @@ public enum ChannelFlags : int
 	/// <summary>
 	/// Indicated that this channel is a guild resource channel.
 	/// </summary>
-	[DiscordInExperiment()]
+	[DiscordInExperiment]
 	IsGuildResourceChannel = 1<<7
 }
