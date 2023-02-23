@@ -26,7 +26,7 @@ using System.Linq;
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.EventArgs.Interaction;
+namespace DisCatSharp.EventArgs;
 
 /// <summary>
 /// Represents arguments for <see cref="DiscordClient.InteractionCreated"/>.
