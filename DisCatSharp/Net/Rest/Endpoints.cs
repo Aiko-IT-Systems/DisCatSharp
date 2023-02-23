@@ -503,4 +503,22 @@ public static class Endpoints
 	/// The metadata endpoint.
 	/// </summary>
 	public const string METADATA = "/metadata";
+
+	public const string NEW_MEMBER_WELCOME = "/new-member-welcome";
+	public const string NEW_MEMBER_ACTIONS = "/new-member-actions";
+	public const string NEW_MEMBER_ACTION = "/new-member-action";
+	public const string APPLICATION_DIRECTORY = "/application-directory";
+	public const string SHARED_CANVAS = "/shared-canvas";
+	public const string LINES = "/lines";
+	public const string EMOJI_HOSE = "/emoji-hose";
+	public const string PINCODE = "/pincode";
+	public const string SOUNDBOARD_DEFAULT_SOUNDS = "/soundboard-default-sounds";
+	public const string CHANGELOGS = "/changelogs";
+	public const string CHANGELOGS_DESKTOP_JSON = "/config_0.json";
+	public const string CHANGELOGS_MOBILE_JSON = "/config_1.json";
+	public const string OWNERSHIP_TRANSFER = "/ownership-transfer";
+	public const string ONBOARDING = "/onboarding";
+	public const string CREATOR_MONETIZATION = "/creator-monetization";
+	public const string AUTO_MODERATION = "/auto-moderation";
+	public const string CLEAR_MENTION_RAID = "/clear-mention-raid";
 }
