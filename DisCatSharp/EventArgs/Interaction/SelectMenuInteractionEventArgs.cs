@@ -14,49 +14,60 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using DisCatSharp.Entities;
-using DisCatSharp.Enums;
 
-namespace DisCatSharp.EventArgs;
+namespace DisCatSharp.EventArgs.Interaction;
 
 /// <summary>
-/// The context menu interaction create event args.
+/// Represents arguments for <see cref="DiscordClient.InteractionCreated"/>.
+/// Used for select menu interactions.
 /// </summary>
-public sealed class ContextMenuInteractionCreateEventArgs : InteractionCreateEventArgs
+internal class SelectMenuInteractionEventArgs : DiscordEventArgs
 {
 	/// <summary>
-	/// The type of context menu that was used. This is never <see cref="ApplicationCommandType.ChatInput"/>.
+	/// Gets the interaction data that was invoked.
 	/// </summary>
-	public ApplicationCommandType Type { get; internal set; }
+	public DiscordInteraction Interaction { get; internal set; }
 
 	/// <summary>
-	/// The user that invoked this interaction. Can be cast to a member if this was on a guild.
+	/// Gets the select menu values simplified as <see cref="List{T}"/>.
 	/// </summary>
-	public DiscordUser User => this.Interaction.User;
+	public List< string> SelecMenutValues
+		=> this.Interaction.Data.Values.ToList();
 
 	/// <summary>
-	/// The user this interaction targets, if applicable.
+	/// Gets the user who executed the select menu.
 	/// </summary>
-	public DiscordUser TargetUser { get; internal set; }
+	public DiscordUser User
+		=> this.Interaction.User;
 
 	/// <summary>
-	/// The message this interaction targets, if applicable.
+	/// Gets the channel in which the select menu was executed.
 	/// </summary>
-	public DiscordMessage TargetMessage { get; internal set; }
+	public DiscordChannel Channel
+		=> this.Interaction.Channel;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="ContextMenuInteractionCreateEventArgs"/> class.
+	/// Gets the custom id of the select menu.
+	/// </summary>
+	public string CustomId
+		=> this.Interaction.Data.CustomId;
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="SelectMenuInteractionEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	public ContextMenuInteractionCreateEventArgs(IServiceProvider provider)
+	public SelectMenuInteractionEventArgs(IServiceProvider provider)
 		: base(provider)
 	{ }
 }
