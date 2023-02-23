@@ -178,17 +178,17 @@ public enum UserFlags : long
 	PremiumDiscriminator = 1L << 37,
 
 	/// <summary>
-	/// The user has used the desktop client
+	/// The user has used the desktop client.
 	/// </summary>
 	UsedDesktopClient = 1L << 38,
 
 	/// <summary>
-	/// The user has used the web client
+	/// The user has used the web client.
 	/// </summary>
 	UsedWebClient = 1L << 39,
 
 	/// <summary>
-	/// The user has used the mobile client
+	/// The user has used the mobile client.
 	/// </summary>
 	UsedMobileClient = 1L << 40,
 
@@ -207,5 +207,15 @@ public enum UserFlags : long
 	/// The user can't start new dms and join servers.
 	/// The user has to appeal via https://dis.gd/appeal.
 	/// </summary>
-	Quarantined = 1L << 44
+	Quarantined = 1L << 44,
+
+	/// <summary>
+	/// User is a collaborator and has staff permissions.
+	/// </summary>
+	Collaborator = 1L << 50,
+
+	/// <summary>
+	/// User is a restricted collaborator and has staff permissions.
+	/// </summary>
+	RestrictedCollaborator = 1L << 50,
 }
