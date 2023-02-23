@@ -61,5 +61,17 @@ public enum MemberFlags : long
 	/// </summary>
 	[DiscordInExperiment]
 	StartedOnboarding = 1 << 3,
+
+	/// <summary>
+	/// Member has started home actions.
+	/// </summary>
+	[DiscordInExperiment]
+	StartedHomeActions = 1 << 5,
+
+	/// <summary>
+	/// Member has completed home actions.
+	/// </summary>
+	[DiscordInExperiment]
+	CompletedHomeActions = 1 << 6,
 }
 
