@@ -175,6 +175,12 @@ public class InteractionAttribute : Attribute
 }
 
 /// <summary>
+/// Classes marked with this attribute will be considered for event handler registration from an assembly.
+/// </summary>
+[AttributeUsage(AttributeTargets.Class, Inherited = false)]
+public class InteractionHandlerAttribute : Attribute { }
+
+/// <summary>
 /// Methods marked with this attribute will be registered as event handling methods
 /// if the associated type / an associated instance is being registered.
 /// </summary>

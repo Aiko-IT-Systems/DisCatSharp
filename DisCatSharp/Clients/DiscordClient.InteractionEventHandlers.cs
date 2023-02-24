@@ -28,6 +28,7 @@ using System.Linq;
 using System.Reflection;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp;
 
@@ -96,6 +97,7 @@ public sealed partial class DiscordClient
 	/// <param name="assembly">The assembly from which to get the types.</param>
 	public void RegisterInteractionHandlers(Assembly assembly)
 	{
+		this.Logger.LogError("Registering event handlers from assembly");
 		foreach (var t in GetInteractionHandlersFromAssembly(assembly))
 			this.RegisterInteractionHandler(t);
 	}
@@ -167,7 +169,7 @@ public sealed partial class DiscordClient
 	/// </summary>
 	/// <param name="assembly">The assembly to get the event handlers from.</param>
 	private static IEnumerable<Type> GetInteractionHandlersFromAssembly(Assembly assembly)
-		=> assembly.GetTypes().Where(t => t.GetCustomAttribute<InteractionAttribute>() is not null);
+		=> assembly.GetTypes().Where(t => t.GetCustomAttribute<InteractionHandlerAttribute>() is not null);
 
 	/// <summary>
 	/// Unregisters event handler implementations.
@@ -175,7 +177,6 @@ public sealed partial class DiscordClient
 	/// <param name="handler">The event handler object.</param>
 	/// <param name="type">The type.</param>
 	/// <param name="wasRegisteredWithStatic">Whether it considereded static methods.</param>
-
 	private void UnregisterInteractionHandlerImpl(object? handler, Type type, bool wasRegisteredWithStatic = true)
 	{
 		if (!this._registrationInteractionToDelegate.TryGetValue((handler, type, wasRegisteredWithStatic), out var delegateLists) || delegateLists.Count == 0)
@@ -197,7 +198,10 @@ public sealed partial class DiscordClient
 	/// <param name="registerStatic">Whether to consider static methods.</param>
 	private void RegisterInteractionHandlerImpl(object? handler, Type type, bool registerStatic = true)
 	{
-		var delegates = (
+		this.Logger.LogError("Trying to register event handlers");
+		try
+		{
+			var delegates = (
 			from method in type.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
 			let attribute = method.GetCustomAttribute<InteractionAttribute>()
 			where attribute is not null && ((registerStatic && method.IsStatic) || handler is not null)
@@ -222,5 +226,14 @@ public sealed partial class DiscordClient
 				evnt.AddEventHandler(this, dlgt);
 			else
 				evnt.AddEventHandler(this, dlgt);
+
+			this.Logger.LogError("Registered {count} interaction event handlers", delegates.Length);
+		}
+		catch (Exception ex)
+		{
+			this.Logger.LogError(ex.Message);
+			this.Logger.LogError(ex.StackTrace);
+			throw ex;
+		}
 	}
 }
