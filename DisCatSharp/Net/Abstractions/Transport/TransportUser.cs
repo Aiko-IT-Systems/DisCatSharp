@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -42,6 +43,12 @@ internal class TransportUser
 	/// </summary>
 	[JsonProperty("username", NullValueHandling = NullValueHandling.Ignore)]
 	public string Username { get; internal set; }
+
+	/// <summary>
+	/// Gets this user's display name.
+	/// </summary>
+	[JsonProperty("display_name", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
+	public string DisplayName { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets the discriminator.
