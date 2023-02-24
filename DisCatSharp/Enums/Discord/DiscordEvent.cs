@@ -42,6 +42,7 @@ public class ModalInteractionAttribute : InteractionAttribute
 	/// </summary>
 	/// <param name="custom_id">The custom id of the modal to handle.</param>
 	public ModalInteractionAttribute(string custom_id)
+		: base("InteractionCreated")
 	{
 		this.CustomId = custom_id;
 	}
@@ -64,6 +65,7 @@ public class ModalInteractionWithPrefixAttribute : InteractionAttribute
 	/// </summary>
 	/// <param name="custom_id_prefix">The custom id prefix of the modal to handle.</param>
 	public ModalInteractionWithPrefixAttribute(string custom_id_prefix)
+		: base("InteractionCreated", true)
 	{
 		this.CustomIdPrefix = custom_id_prefix;
 	}
@@ -85,6 +87,7 @@ public class ButtonInteractionAttribute : InteractionAttribute
 	/// </summary>
 	/// <param name="custom_id">The custom id of the button to handle.</param>
 	public ButtonInteractionAttribute(string custom_id)
+		: base("ComponentInteractionCreated")
 	{
 		this.CustomId = custom_id;
 	}
@@ -107,6 +110,7 @@ public class ButtonInteractionWithPrefixAttribute : InteractionAttribute
 	/// </summary>
 	/// <param name="custom_id_prefix">The custom id prefix of the button to handle.</param>
 	public ButtonInteractionWithPrefixAttribute(string custom_id_prefix)
+		: base("ComponentInteractionCreated", true)
 	{
 		this.CustomIdPrefix = custom_id_prefix;
 	}
@@ -128,6 +132,7 @@ public class SelectInteractionAttribute : InteractionAttribute
 	/// </summary>
 	/// <param name="custom_id">The custom id of the select menu to handle.</param>
 	public SelectInteractionAttribute(string custom_id)
+		: base("ComponentInteractionCreated")
 	{
 		this.CustomId = custom_id;
 	}
@@ -150,6 +155,7 @@ public class SelectMenuInteractionWithPrefixAttribute : InteractionAttribute
 	/// </summary>
 	/// <param name="custom_id_prefix">The custom id prefix of the select menu to handle.</param>
 	public SelectMenuInteractionWithPrefixAttribute(string custom_id_prefix)
+		: base("ComponentInteractionCreated", true)
 	{
 		this.CustomIdPrefix = custom_id_prefix;
 	}
@@ -157,7 +163,16 @@ public class SelectMenuInteractionWithPrefixAttribute : InteractionAttribute
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
 public class InteractionAttribute : Attribute
-{ }
+{
+	internal readonly string EventName;
+	internal readonly bool IsPrefixed;
+
+	public InteractionAttribute(string event_name, bool prefixed = false)
+	{
+		this.EventName = event_name;
+		this.IsPrefixed = prefixed;
+	}
+}
 
 /// <summary>
 /// Methods marked with this attribute will be registered as event handling methods
