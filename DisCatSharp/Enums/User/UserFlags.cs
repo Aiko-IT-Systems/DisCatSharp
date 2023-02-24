@@ -217,5 +217,5 @@ public enum UserFlags : long
 	/// <summary>
 	/// User is a restricted collaborator and has staff permissions.
 	/// </summary>
-	RestrictedCollaborator = 1L << 50,
+	RestrictedCollaborator = 1L << 51,
 }
