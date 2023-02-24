@@ -688,6 +688,7 @@ public sealed partial class DiscordClient
 		this.CurrentUser.Verified = rusr.Verified;
 		this.CurrentUser.IsBot = rusr.IsBot;
 		this.CurrentUser.Flags = rusr.Flags;
+		//this.CurrentUser.DisplayName = rusr.DisplayName;
 
 		this.GatewayVersion = ready.GatewayVersion;
 		this._sessionId = ready.SessionId;
@@ -735,6 +736,7 @@ public sealed partial class DiscordClient
 						old.Username = xu.Username;
 						old.Discriminator = xu.Discriminator;
 						old.AvatarHash = xu.AvatarHash;
+						old.DisplayName = xu.DisplayName;
 						return old;
 					});
 
@@ -1478,6 +1480,7 @@ public sealed partial class DiscordClient
 			old.Username = usr.Username;
 			old.Discriminator = usr.Discriminator;
 			old.AvatarHash = usr.AvatarHash;
+			old.DisplayName = usr.DisplayName;
 			return old;
 		});
 
@@ -1504,6 +1507,7 @@ public sealed partial class DiscordClient
 			old.Username = usr.Username;
 			old.Discriminator = usr.Discriminator;
 			old.AvatarHash = usr.AvatarHash;
+			old.DisplayName = usr.DisplayName;
 			return old;
 		});
 
@@ -1541,6 +1545,7 @@ public sealed partial class DiscordClient
 				old.Discriminator = scheduledEvent.Creator.Discriminator;
 				old.AvatarHash = scheduledEvent.Creator.AvatarHash;
 				old.Flags = scheduledEvent.Creator.Flags;
+				old.DisplayName = scheduledEvent.Creator.DisplayName;
 				return old;
 			});
 		}
@@ -1596,6 +1601,7 @@ public sealed partial class DiscordClient
 				old.Discriminator = scheduledEvent.Creator.Discriminator;
 				old.AvatarHash = scheduledEvent.Creator.AvatarHash;
 				old.Flags = scheduledEvent.Creator.Flags;
+				old.DisplayName = scheduledEvent.Creator.DisplayName;
 				return old;
 			});
 		}
@@ -1639,6 +1645,7 @@ public sealed partial class DiscordClient
 				old.Discriminator = scheduledEvent.Creator.Discriminator;
 				old.AvatarHash = scheduledEvent.Creator.AvatarHash;
 				old.Flags = scheduledEvent.Creator.Flags;
+				old.DisplayName = scheduledEvent.Creator.DisplayName;
 				return old;
 			});
 		}
@@ -1770,6 +1777,7 @@ public sealed partial class DiscordClient
 			old.Username = usr.Username;
 			old.Discriminator = usr.Discriminator;
 			old.AvatarHash = usr.AvatarHash;
+			old.DisplayName = usr.DisplayName;
 			return old;
 		});
 
@@ -1829,6 +1837,7 @@ public sealed partial class DiscordClient
 			old.Username = usr.Username;
 			old.Discriminator = usr.Discriminator;
 			old.AvatarHash = usr.AvatarHash;
+			old.DisplayName = usr.DisplayName;
 			return old;
 		});
 

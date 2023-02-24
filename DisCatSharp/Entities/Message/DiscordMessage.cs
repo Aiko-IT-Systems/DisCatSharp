@@ -496,6 +496,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 					old.Username = usr.Username;
 					old.Discriminator = usr.Discriminator;
 					old.AvatarHash = usr.AvatarHash;
+					old.DisplayName = usr.DisplayName;
 					return old;
 				});
 

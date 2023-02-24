@@ -26,6 +26,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
@@ -70,6 +71,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		this.OAuthFlags = transport.OAuthFlags;
 		this.Bio = transport.Bio;
 		this.Pronouns = transport.Pronouns;
+		this.DisplayName = transport.DisplayName;
 	}
 
 	/// <summary>
@@ -85,6 +87,12 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	[JsonIgnore]
 	public virtual string UsernameWithDiscriminator
 		=> $"{this.Username}#{this.Discriminator}";
+
+	/// <summary>
+	/// Gets this user's display name.
+	/// </summary>
+	[JsonProperty("display_name"), DiscordInExperiment]
+	public string DisplayName { get; internal set; }
 
 	/// <summary>
 	/// Gets the user's 4-digit discriminator.
