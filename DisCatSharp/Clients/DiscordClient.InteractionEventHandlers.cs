@@ -36,7 +36,7 @@ namespace DisCatSharp;
 /// </summary>
 public sealed partial class DiscordClient
 {
-	private readonly Dictionary<(object?, Type, bool), List<(EventInfo, Delegate)[]>> _registrationInteractionToDelegate = new();
+	private readonly Dictionary<(object?, Type, bool), List<(EventInfo, Delegate, bool)[]>> _registrationInteractionToDelegate = new();
 	private readonly Dictionary<Type, List<object>> _typeInteractionToAnonymousHandlers = new();
 
 	/// <summary>
@@ -181,7 +181,7 @@ public sealed partial class DiscordClient
 		if (!this._registrationInteractionToDelegate.TryGetValue((handler, type, wasRegisteredWithStatic), out var delegateLists) || delegateLists.Count == 0)
 			return;
 
-		foreach (var (evnt, dlgt) in delegateLists[0])
+		foreach (var (evnt, dlgt, prv) in delegateLists[0])
 			evnt.RemoveEventHandler(this, dlgt);
 
 		delegateLists.RemoveAt(0);
@@ -197,26 +197,30 @@ public sealed partial class DiscordClient
 	/// <param name="registerStatic">Whether to consider static methods.</param>
 	private void RegisterInteractionHandlerImpl(object? handler, Type type, bool registerStatic = true)
 	{
-		/*var delegates = (
+		var delegates = (
 			from method in type.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-			let attribute = method.GetCustomAttribute<EventAttribute>()
+			let attribute = method.GetCustomAttribute<InteractionAttribute>()
 			where attribute is not null && ((registerStatic && method.IsStatic) || handler is not null)
-			let eventName = attribute.EventName ?? method.Name
+			let eventName = attribute.EventName
 			let eventInfo = this.GetType().GetEvent(eventName)
 				?? throw new ArgumentException($"Tried to register handler to non-existent event \"{eventName}\"")
-			let eventHandlerType = eventInfo.InteractionHandlerType
+			let eventHandlerType = eventInfo.EventHandlerType
+			let prefixed = attribute.IsPrefixed
 			let dlgt = (method.IsStatic
 				? Delegate.CreateDelegate(eventHandlerType, method, false)
 				: Delegate.CreateDelegate(eventHandlerType, handler, method, false))
 				?? throw new ArgumentException($"Method \"{method}\" does not adhere to event specification \"{eventHandlerType}\"")
-			select (eventInfo, dlgt)
+			select (eventInfo, dlgt, prefixed)
 			).ToArray();
 
 		this._registrationInteractionToDelegate[(handler, type, registerStatic)] = this._registrationInteractionToDelegate.TryGetValue((handler, type, registerStatic), out var delList) ? delList : (delList = new());
 
 		delList.Add(delegates);
 
-		foreach (var (evnt, dlgt) in delegates)
-			evnt.AddEventHandler(this, dlgt);*/
+		foreach (var (evnt, dlgt, prv) in delegates)
+			if (!prv)
+				evnt.AddEventHandler(this, dlgt);
+			else
+				evnt.AddEventHandler(this, dlgt);
 	}
 }
