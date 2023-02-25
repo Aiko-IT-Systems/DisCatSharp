@@ -195,7 +195,7 @@ public enum UserFlags : long
 	/// <summary>
 	/// The user is currently temporarily or permanently disabled.
 	/// </summary>
-	Disabled = 1L << 42,
+	Disabled = 1L << 41,
 
 	/// <summary>
 	/// The user has a verified email.
