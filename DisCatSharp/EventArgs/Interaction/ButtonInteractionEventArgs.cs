@@ -27,7 +27,7 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.EventArgs;
 
 /// <summary>
-/// Represents arguments for <see cref="DiscordClient.InteractionCreated"/>.
+/// Represents arguments for <see cref="DiscordClient.ComponentInteractionCreated"/>.
 /// Used for button interactions.
 /// </summary>
 internal class ButtonInteractionEventArgs : DiscordEventArgs

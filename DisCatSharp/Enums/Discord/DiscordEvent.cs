@@ -42,7 +42,7 @@ public class ModalInteractionAttribute : InteractionAttribute
 	/// </summary>
 	/// <param name="custom_id">The custom id of the modal to handle.</param>
 	public ModalInteractionAttribute(string custom_id)
-		: base("InteractionCreated")
+		: base("ComponentInteractionCreated")
 	{
 		this.CustomId = custom_id;
 	}
@@ -65,7 +65,7 @@ public class ModalInteractionWithPrefixAttribute : InteractionAttribute
 	/// </summary>
 	/// <param name="custom_id_prefix">The custom id prefix of the modal to handle.</param>
 	public ModalInteractionWithPrefixAttribute(string custom_id_prefix)
-		: base("InteractionCreated", true)
+		: base("ComponentInteractionCreated", true)
 	{
 		this.CustomIdPrefix = custom_id_prefix;
 	}
