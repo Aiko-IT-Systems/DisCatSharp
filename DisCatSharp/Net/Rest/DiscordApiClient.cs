@@ -5733,6 +5733,33 @@ public sealed class DiscordApiClient
 	#endregion
 
 	#region Misc
+
+	/// <summary>
+	/// Gets the published store sku listings (premium application subscription).
+	/// </summary>
+	/// <param name="applicationId">The application id to fetch the listenings for.</param>
+	/// <returns>A list of published listings with <see cref="DiscordStoreSku"/>s.</returns>
+	internal async Task<IReadOnlyList<DiscordStoreSku>> GetPublishedListingsAsync(ulong applicationId)
+	{
+		var urlParams = new Dictionary<string, string>();
+		urlParams["application_id"] = applicationId.ToString();
+
+		var route = $"{Endpoints.STORE}{Endpoints.PUBLISHED_LISTINGS}{Endpoints.SKUS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		var store_skus =  JsonConvert.DeserializeObject<IEnumerable<DiscordStoreSku>>(res.Response);
+		foreach(var store_sku in store_skus)
+		{
+			store_sku.Discord = this.Discord;
+			store_sku.Sku.Discord = this.Discord;
+		}
+
+		return new ReadOnlyCollection<DiscordStoreSku>(new List<DiscordStoreSku>(store_skus));
+	}
+
 	/// <summary>
 	/// Gets the current application info.
 	/// </summary>

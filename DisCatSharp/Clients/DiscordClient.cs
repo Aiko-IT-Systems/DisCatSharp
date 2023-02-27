@@ -469,6 +469,25 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
+	/// Tries to get the published store sku listings (premium application subscription).
+	/// </summary>
+	/// <param name="applicationId">The application id to fetch the listenings for.</param>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <returns>A list of published listings with <see cref="DiscordStoreSku"/>s.</returns>
+	public async Task<IReadOnlyList<DiscordStoreSku>> TryGetPublishedListingsAsync(ulong applicationId)
+	{
+		try
+		{
+			return await this.ApiClient.GetPublishedListingsAsync(applicationId);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
+
+	/// <summary>
 	/// Gets the applications role connection metadata.
 	/// </summary>
 	/// <returns>A list of metadata records or <see langword="null"/>.</returns>
