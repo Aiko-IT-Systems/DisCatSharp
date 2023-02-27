@@ -47,7 +47,8 @@ public static class ApplicationCommandsUtilities
 	/// <param name="ti">The type info.</param>
 	internal static bool IsModuleCandidateType(this TypeInfo ti)
 	{
-		ApplicationCommandsExtension.Logger.LogDebug("Checking type {name}", ti.FullName);
+		if (ApplicationCommandsExtension.DebugEnabled)
+			ApplicationCommandsExtension.Logger.LogDebug("Checking type {name}", ti.FullName);
 		// check if compiler-generated
 		if (ti.GetCustomAttribute<CompilerGeneratedAttribute>(false) != null)
 			return false;
@@ -57,14 +58,16 @@ public static class ApplicationCommandsUtilities
 		var timodule = tmodule.GetTypeInfo();
 		if (!timodule.IsAssignableFrom(ti))
 		{
-			ApplicationCommandsExtension.Logger.LogDebug("Not assignable from type");
+			if (ApplicationCommandsExtension.DebugEnabled)
+				ApplicationCommandsExtension.Logger.LogDebug("Not assignable from type");
 			return false;
 		}
 
 		// check if anonymous
 		if (ti.IsGenericType && ti.Name.Contains("AnonymousType") && (ti.Name.StartsWith("<>") || ti.Name.StartsWith("VB$")) && (ti.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic)
 		{
-			ApplicationCommandsExtension.Logger.LogDebug("Anonymous");
+			if (ApplicationCommandsExtension.DebugEnabled)
+				ApplicationCommandsExtension.Logger.LogDebug("Anonymous");
 			return false;
 		}
 
@@ -76,11 +79,13 @@ public static class ApplicationCommandsUtilities
 		var tdelegate = typeof(Delegate).GetTypeInfo();
 		if (tdelegate.IsAssignableFrom(ti))
 		{
-			ApplicationCommandsExtension.Logger.LogDebug("Delegated");
+			if (ApplicationCommandsExtension.DebugEnabled)
+				ApplicationCommandsExtension.Logger.LogDebug("Delegated");
 			return false;
 		}
 
-		ApplicationCommandsExtension.Logger.LogDebug("Checking qualifying methods");
+		if (ApplicationCommandsExtension.DebugEnabled)
+			ApplicationCommandsExtension.Logger.LogDebug("Checking qualifying methods");
 		// qualifies if any method or type qualifies
 		return ti.DeclaredMethods.Any(xmi => xmi.IsCommandCandidate(out _)) || ti.DeclaredNestedTypes.Any(xti => xti.IsModuleCandidateType());
 	}
@@ -96,15 +101,18 @@ public static class ApplicationCommandsUtilities
 		// check if exists
 		if (method == null)
 		{
-			ApplicationCommandsExtension.Logger.LogDebug("Not existent");
+			if (ApplicationCommandsExtension.DebugEnabled)
+				ApplicationCommandsExtension.Logger.LogDebug("Not existent");
 			return false;
 		}
-		ApplicationCommandsExtension.Logger.LogDebug("Checking method {name}", method.Name);
+		if (ApplicationCommandsExtension.DebugEnabled)
+			ApplicationCommandsExtension.Logger.LogDebug("Checking method {name}", method.Name);
 
 		// check if static, non-public, abstract, a constructor, or a special name
 		if (method.IsAbstract || method.IsConstructor || method.IsSpecialName) // method.IsStatic
 		{
-			ApplicationCommandsExtension.Logger.LogDebug("abstract, constructor or special name");
+			if (ApplicationCommandsExtension.DebugEnabled)
+				ApplicationCommandsExtension.Logger.LogDebug("abstract, constructor or special name");
 			return false;
 		}
 
@@ -112,11 +120,13 @@ public static class ApplicationCommandsUtilities
 		parameters = method.GetParameters();
 		if (!parameters.Any() || (parameters.First().ParameterType != typeof(ContextMenuContext) && parameters.First().ParameterType != typeof(InteractionContext)) || method.ReturnType != typeof(Task))
 		{
-			ApplicationCommandsExtension.Logger.LogDebug("Missing first parameter with type ContextMenuContext or InteractionContext");
+			if (ApplicationCommandsExtension.DebugEnabled)
+				ApplicationCommandsExtension.Logger.LogDebug("Missing first parameter with type ContextMenuContext or InteractionContext");
 			return false;
 		}
 
-		ApplicationCommandsExtension.Logger.LogDebug("Qualifies");
+		if (ApplicationCommandsExtension.DebugEnabled)
+			ApplicationCommandsExtension.Logger.LogDebug("Qualifies");
 		// qualifies
 		return true;
 	}
