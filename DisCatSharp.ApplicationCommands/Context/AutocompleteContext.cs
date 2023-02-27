@@ -82,6 +82,11 @@ public class AutocompleteContext
 	public Permissions AppPermissions { get; internal set; }
 
 	/// <summary>
+	/// Gets the entitlement sku ids.
+	/// </summary>
+	public List<ulong> EntitlementSkuIds { get; internal set; }
+
+	/// <summary>
 	/// Gets the slash command module this interaction was created in.
 	/// </summary>
 	public ApplicationCommandsExtension ApplicationCommandsExtension { get; internal set; }

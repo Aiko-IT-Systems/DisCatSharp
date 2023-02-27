@@ -968,7 +968,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					Type = ApplicationCommandType.ChatInput,
 					Locale = e.Interaction.Locale,
 					GuildLocale = e.Interaction.GuildLocale,
-					AppPermissions = e.Interaction.AppPermissions
+					AppPermissions = e.Interaction.AppPermissions,
+					EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 				};
 
 				try
@@ -1071,7 +1072,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							FocusedOption = focusedOption,
 							Locale = e.Interaction.Locale,
 							GuildLocale = e.Interaction.GuildLocale,
-							AppPermissions = e.Interaction.AppPermissions
+							AppPermissions = e.Interaction.AppPermissions,
+							EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 						};
 
 						var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
@@ -1101,7 +1103,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							FocusedOption = focusedOption,
 							Locale = e.Interaction.Locale,
 							GuildLocale = e.Interaction.GuildLocale,
-							AppPermissions = e.Interaction.AppPermissions
+							AppPermissions = e.Interaction.AppPermissions,
+							EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 						};
 
 						var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
@@ -1132,7 +1135,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							FocusedOption = focusedOption,
 							Locale = e.Interaction.Locale,
 							GuildLocale = e.Interaction.GuildLocale,
-							AppPermissions = e.Interaction.AppPermissions
+							AppPermissions = e.Interaction.AppPermissions,
+							EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 						};
 
 						var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
@@ -1183,7 +1187,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				Type = e.Type,
 				Locale = e.Interaction.Locale,
 				GuildLocale = e.Interaction.GuildLocale,
-				AppPermissions = e.Interaction.AppPermissions
+				AppPermissions = e.Interaction.AppPermissions,
+				EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 			};
 
 			try
@@ -1618,10 +1623,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		foreach (var parameter in parameters)
 		{
 			//Gets the attribute
-			var optionAttribute = parameter.GetCustomAttribute<OptionAttribute>();
-			if (optionAttribute == null)
-				throw new ArgumentException($"One or more arguments of the command '{commandName}' are missing the Option attribute!");
-
+			var optionAttribute = parameter.GetCustomAttribute<OptionAttribute>() ?? throw new ArgumentException($"One or more arguments of the command '{commandName}' are missing the Option attribute!");
 			var minimumValue = parameter.GetCustomAttribute<MinimumValueAttribute>()?.Value ?? null;
 			var maximumValue = parameter.GetCustomAttribute<MaximumValueAttribute>()?.Value ?? null;
 			var minimumLength = parameter.GetCustomAttribute<MinimumLengthAttribute>()?.Value ?? null;

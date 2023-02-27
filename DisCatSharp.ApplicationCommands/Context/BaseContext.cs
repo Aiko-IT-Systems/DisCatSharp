@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
@@ -100,6 +101,12 @@ public class BaseContext
 	/// Gets the applications permissions.
 	/// </summary>
 	public Permissions AppPermissions { get; internal set; }
+
+	/// <summary>
+	/// Gets the entitlement sku ids.
+	/// <see cref="DiscordClient.TryGetPublishedListingsAsync(ulong)"/> for more information.
+	/// </summary>
+	public List<ulong> EntitlementSkuIds { get; internal set; }
 
 	/// <summary>
 	/// Gets the type of this interaction.

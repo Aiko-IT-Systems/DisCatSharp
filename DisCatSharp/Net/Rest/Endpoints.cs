@@ -521,4 +521,6 @@ public static class Endpoints
 	public const string CREATOR_MONETIZATION = "/creator-monetization";
 	public const string AUTO_MODERATION = "/auto-moderation";
 	public const string CLEAR_MENTION_RAID = "/clear-mention-raid";
+	public const string PUBLISHED_LISTINGS = "/published-listings";
+	public const string SKUS = "/skus";
 }
