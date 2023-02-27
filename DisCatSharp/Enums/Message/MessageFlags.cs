@@ -98,5 +98,10 @@ public enum MessageFlags
 	/// The message suppresses channel notifications.
 	/// Aka. new message indicator.
 	/// </summary>
-	SuppressNotifications = 1 << 12
+	SuppressNotifications = 1 << 12,
+
+	/// <summary>
+	/// The message is a voice message.
+	/// </summary>
+	IsVoiceMessage = 1 << 13
 }
