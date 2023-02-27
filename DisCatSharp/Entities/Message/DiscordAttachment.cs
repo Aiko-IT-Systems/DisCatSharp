@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using DisCatSharp.Enums;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
@@ -84,6 +86,20 @@ public class DiscordAttachment : SnowflakeObject
 	/// </summary>
 	[JsonProperty("ephemeral", NullValueHandling = NullValueHandling.Ignore)]
 	public bool? Ephemeral { get; internal set; }
+
+	/// <summary>
+	/// <para>The duration in seconds of the voice message.</para>
+	/// <para>Only presented when the message flags include <see cref="MessageFlags.IsVoiceMessage"/> and for the attached voice message.</para>
+	/// </summary>
+	[JsonProperty("duration_secs", NullValueHandling = NullValueHandling.Ignore)]
+	public double? DurationSecs { get; internal set; }
+
+	/// <summary>
+	/// <para>The wave form of the voice message.</para>
+	/// <para>Only presented when the message flags include <see cref="MessageFlags.IsVoiceMessage"/> and for the attached voice message.</para>
+	/// </summary>
+	[JsonProperty("waveform", NullValueHandling = NullValueHandling.Ignore)]
+	public string WaveForm { get; internal set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAttachment"/> class.
