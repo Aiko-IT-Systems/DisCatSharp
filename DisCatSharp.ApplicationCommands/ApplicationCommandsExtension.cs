@@ -991,7 +991,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					if (methods.Any())
 					{
 						var method = methods.First().Method;
-						this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
+						if (DebugEnabled)
+							this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
 						var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options);
 
 						await this.RunCommandAsync(context, method, args);
@@ -1001,7 +1002,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						var command = e.Interaction.Data.Options[0];
 						var method = groups.First().Methods.First(x => x.Key == command.Name).Value;
 
-						this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
+						if (DebugEnabled)
+							this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
 						var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options[0].Options);
 
 						await this.RunCommandAsync(context, method, args);
@@ -1013,7 +1015,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 						var method = group.Methods.First(x => x.Key == command.Options[0].Name).Value;
 
-						this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
+						if (DebugEnabled)
+							this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
 						var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options[0].Options[0].Options);
 
 						await this.RunCommandAsync(context, method, args);
