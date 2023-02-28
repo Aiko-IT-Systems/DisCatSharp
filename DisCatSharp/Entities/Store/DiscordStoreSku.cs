@@ -32,7 +32,7 @@ public class DiscordStoreSku : SnowflakeObject, IEquatable<DiscordStoreSku>
 	public string Summary { get; set; }
 
 	[JsonProperty("sku", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordStoreSku Sku { get; set; }
+	public DiscordSku Sku { get; set; }
 
 	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
 	public string Description { get; set; }
