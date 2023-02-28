@@ -349,7 +349,7 @@ public enum Permissions : long
 	/// <summary>
 	/// Allows to view creator monetization insights
 	/// </summary>
-	[PermissionString("Moderate Members")]
+	[PermissionString("View Creator Monetization Insights")]
 	ViewCreatorMonetizationInsights = 1L << 41
 }
 
