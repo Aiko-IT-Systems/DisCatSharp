@@ -288,6 +288,8 @@
     name: DiscordScheduledEventEntityMetadata
   - uid: DisCatSharp.Entities.DiscordScheduledEventUser
     name: DiscordScheduledEventUser
+  - uid: DisCatSharp.Entities.DiscordSku
+    name: DiscordSku
   - uid: DisCatSharp.Entities.DiscordSpotifyAsset
     name: DiscordSpotifyAsset
   - uid: DisCatSharp.Entities.DiscordStageInstance
@@ -296,6 +298,8 @@
     name: DiscordSticker
   - uid: DisCatSharp.Entities.DiscordStickerPack
     name: DiscordStickerPack
+  - uid: DisCatSharp.Entities.DiscordStoreSku
+    name: DiscordStoreSku
   - uid: DisCatSharp.Entities.DiscordStringSelectComponent
     name: DiscordStringSelectComponent
   - uid: DisCatSharp.Entities.DiscordStringSelectComponentOption
