@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class ExtensionMethods
+ | DisCatSharp Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <meta name="generator" content="docfx 2.60.0.0">
+  
+    <meta name="og:type" content="website">
+    <meta name="og:image" content="https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png">
+    <meta name="og:image:alt" content="DisCatSharp Logo">
+    <meta name="og:image:type" content="image/png">
+    <meta name="og:site_name" content="DisCatSharp Documentation">
+    <link rel="apple-touch-icon" sizes="57x57" href="../../apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="../../ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <script defer="" src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/night-owl.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" integrity="sha384-EvBWSlnoFgZlXJvpzS+MAUEjvN7+gcCwH+qh7GRFOGgZO0PuwOFro7qPOJnLfe7l" crossorigin="anonymous">
+      <link rel="stylesheet" href="../../src/styles/config.css">
+      <link rel="stylesheet" href="../../src/styles/discord.css">
+      <link rel="stylesheet" href="../../src/styles/dcs.css">
+      <link rel="stylesheet" href="../../src/styles/main.css">
+      <link rel="stylesheet" href="../../src/styles/colors.css">
+      <link rel="stylesheet" href="../../src/styles/highlight/github-dark.min.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+  
+  <meta property="docfx:rel" content="../../">
+  <meta property="docfx:newtab" content="true">
+    </head>
+
+    <body>
+        <div class="top-navbar">
+            <a class="burger-icon" onclick="toggleMenu()">
+                <svg name="Hamburger" style="vertical-align: middle;" width="34" height="34" viewbox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M20 6H4V9H20V6ZM4 10.999H20V13.999H4V10.999ZM4 15.999H20V18.999H4V15.999Z"></path></svg>
+            </a>
+
+
+            <a class="navbar-brand" href="../../index.html">
+              <img id="logo" class="svg" src="../../dcs-logo-winter.gif" alt="DisCatSharp">
+            </a>
+        </div>
+
+        <div class="body-content">
+            <div id="blackout" class="blackout" onclick="toggleMenu()"></div>
+
+            <nav id="sidebar" role="navigation">
+                <div class="sidebar">
+
+                    <div>
+                      <div class="mobile-hide">
+
+                        <a class="navbar-brand" href="../../index.html">
+                          <img id="logo" class="svg" src="../../dcs-logo-winter.gif" alt="DisCatSharp">
+                        </a>
+                      </div>
+
+                      <div class="sidesearch">
+                        <form id="search" role="search" class="search">
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text" id="search-query" placeholder="Search" autocomplete="off">
+                        </form>
+                      </div>
+
+                      <div id="navbar">
+                      </div>
+                    </div>
+                    <div class="sidebar-item-separator"></div>
+
+                        <div id="sidetoggle">
+                          <div id="sidetoc"></div>
+                        </div>
+                </div>
+                <div class="footer">
+  <strong>Made with ♥ by AITSYS</strong>
+  
+                </div>
+            </nav>
+
+            <main class="main-panel">
+
+                <div id="search-results" style="display: none;">
+                  <h1 class="search-list">Search Results for <span></span></h1>
+                  <div class="sr-items">
+                    <p class="lsearch"><i class="bi bi-hourglass-split index-loading"></i></p>
+                  </div>
+                  <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+                </div>
+
+                <div role="main" class="hide-when-search">
+
+                        <div class="subnav navbar navbar-default">
+                          <div class="container hide-when-search" id="breadcrumb">
+                            <ul class="breadcrumb">
+                              <li></li>
+                            </ul>
+                          </div>
+                        </div>
+
+      <div id="sidetoggle">
+        <div id="sidetoc"></div>
+      </div>
+						<div class="article row grid-right">
+
+                    <article class="content wrap" id="_content" data-uid="DisCatSharp.CommandsNext.ExtensionMethods">
+
+
+  <h1 id="DisCatSharp_CommandsNext_ExtensionMethods" data-uid="DisCatSharp.CommandsNext.ExtensionMethods" class="text-break">Class ExtensionMethods
+</h1>
+  <div class="markdown level0 summary"><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Defines various extensions specific to CommandsNext.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">ExtensionMethods</span></div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="DisCatSharp.CommandsNext.html">DisCatSharp.CommandsNext</a></h6>
+  <h6><strong>Assembly</strong>: DisCatSharp.CommandsNext.dll</h6>
+  <h5 id="DisCatSharp_CommandsNext_ExtensionMethods_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class ExtensionMethods : object</code></pre>
+  </div>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_CommandsNext_ExtensionMethods_GetCommandsNext_DisCatSharp_DiscordClient_.md&amp;value=---%0Auid%3A%20DisCatSharp.CommandsNext.ExtensionMethods.GetCommandsNext(DisCatSharp.DiscordClient)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.CommandsNext/ExtensionMethods.cs/#L94">View Source</a>
+  </span>
+  <a id="DisCatSharp_CommandsNext_ExtensionMethods_GetCommandsNext_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.GetCommandsNext*"></a>
+  <h4 id="DisCatSharp_CommandsNext_ExtensionMethods_GetCommandsNext_DisCatSharp_DiscordClient_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.GetCommandsNext(DisCatSharp.DiscordClient)">GetCommandsNext(DiscordClient)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets the active CommandsNext module for this client.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static CommandsNextExtension GetCommandsNext(this DiscordClient client)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../DisCatSharp/DisCatSharp.DiscordClient.html">DiscordClient</a></td>
+        <td><span class="parametername">client</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Client to get CommandsNext module from.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.CommandsNext.CommandsNextExtension.html">CommandsNextExtension</a></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">The module, or null if not activated.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_CommandsNext_ExtensionMethods_GetCommandsNextAsync_DisCatSharp_DiscordShardedClient_.md&amp;value=---%0Auid%3A%20DisCatSharp.CommandsNext.ExtensionMethods.GetCommandsNextAsync(DisCatSharp.DiscordShardedClient)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.CommandsNext/ExtensionMethods.cs/#L103">View Source</a>
+  </span>
+  <a id="DisCatSharp_CommandsNext_ExtensionMethods_GetCommandsNextAsync_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.GetCommandsNextAsync*"></a>
+  <h4 id="DisCatSharp_CommandsNext_ExtensionMethods_GetCommandsNextAsync_DisCatSharp_DiscordShardedClient_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.GetCommandsNextAsync(DisCatSharp.DiscordShardedClient)">GetCommandsNextAsync(DiscordShardedClient)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets the active CommandsNext modules for all shards in this client.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static async Task&lt;IReadOnlyDictionary&lt;int, CommandsNextExtension&gt;&gt; GetCommandsNextAsync(this DiscordShardedClient client)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../DisCatSharp/DisCatSharp.DiscordShardedClient.html">DiscordShardedClient</a></td>
+        <td><span class="parametername">client</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Client to get CommandsNext instances from.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">IReadOnlyDictionary</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a>, <a class="xref" href="DisCatSharp.CommandsNext.CommandsNextExtension.html">CommandsNextExtension</a>&gt;&gt;</td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">A dictionary of the modules, indexed by shard id.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_CommandsNext_ExtensionMethods_RegisterCommands_IReadOnlyDictionary_System_Int32_DisCatSharp_CommandsNext_CommandsNextExtension__Assembly_.md&amp;value=---%0Auid%3A%20DisCatSharp.CommandsNext.ExtensionMethods.RegisterCommands(IReadOnlyDictionary%7BSystem.Int32%2CDisCatSharp.CommandsNext.CommandsNextExtension%7D%2CAssembly)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.CommandsNext/ExtensionMethods.cs/#L121">View Source</a>
+  </span>
+  <a id="DisCatSharp_CommandsNext_ExtensionMethods_RegisterCommands_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.RegisterCommands*"></a>
+  <h4 id="DisCatSharp_CommandsNext_ExtensionMethods_RegisterCommands_IReadOnlyDictionary_System_Int32_DisCatSharp_CommandsNext_CommandsNextExtension__Assembly_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.RegisterCommands(IReadOnlyDictionary{System.Int32,DisCatSharp.CommandsNext.CommandsNextExtension},Assembly)">RegisterCommands(IReadOnlyDictionary&lt;Int32, CommandsNextExtension&gt;, Assembly)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Registers all commands from a given assembly. The command classes need to be public to be considered for registration.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void RegisterCommands(this IReadOnlyDictionary&lt;int, CommandsNextExtension&gt; extensions, Assembly assembly)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IReadOnlyDictionary</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a>, <a class="xref" href="DisCatSharp.CommandsNext.CommandsNextExtension.html">CommandsNextExtension</a>&gt;</td>
+        <td><span class="parametername">extensions</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Extensions to register commands on.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Assembly</span></td>
+        <td><span class="parametername">assembly</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Assembly to register commands from.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_CommandsNext_ExtensionMethods_RegisterCommands_IReadOnlyDictionary_System_Int32_DisCatSharp_CommandsNext_CommandsNextExtension__DisCatSharp_CommandsNext_Builders_CommandBuilder___.md&amp;value=---%0Auid%3A%20DisCatSharp.CommandsNext.ExtensionMethods.RegisterCommands(IReadOnlyDictionary%7BSystem.Int32%2CDisCatSharp.CommandsNext.CommandsNextExtension%7D%2CDisCatSharp.CommandsNext.Builders.CommandBuilder%5B%5D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.CommandsNext/ExtensionMethods.cs/#L151">View Source</a>
+  </span>
+  <a id="DisCatSharp_CommandsNext_ExtensionMethods_RegisterCommands_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.RegisterCommands*"></a>
+  <h4 id="DisCatSharp_CommandsNext_ExtensionMethods_RegisterCommands_IReadOnlyDictionary_System_Int32_DisCatSharp_CommandsNext_CommandsNextExtension__DisCatSharp_CommandsNext_Builders_CommandBuilder___" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.RegisterCommands(IReadOnlyDictionary{System.Int32,DisCatSharp.CommandsNext.CommandsNextExtension},DisCatSharp.CommandsNext.Builders.CommandBuilder[])">RegisterCommands(IReadOnlyDictionary&lt;Int32, CommandsNextExtension&gt;, CommandBuilder[])</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Builds and registers all supplied commands.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void RegisterCommands(this IReadOnlyDictionary&lt;int, CommandsNextExtension&gt; extensions, params CommandBuilder[] cmds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IReadOnlyDictionary</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a>, <a class="xref" href="DisCatSharp.CommandsNext.CommandsNextExtension.html">CommandsNextExtension</a>&gt;</td>
+        <td><span class="parametername">extensions</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Extensions to register commands on.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.CommandsNext.Builders.CommandBuilder.html">CommandBuilder</a>[]</td>
+        <td><span class="parametername">cmds</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Commands to build and register.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_CommandsNext_ExtensionMethods_RegisterCommands_IReadOnlyDictionary_System_Int32_DisCatSharp_CommandsNext_CommandsNextExtension__Type_.md&amp;value=---%0Auid%3A%20DisCatSharp.CommandsNext.ExtensionMethods.RegisterCommands(IReadOnlyDictionary%7BSystem.Int32%2CDisCatSharp.CommandsNext.CommandsNextExtension%7D%2CType)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.CommandsNext/ExtensionMethods.cs/#L141">View Source</a>
+  </span>
+  <a id="DisCatSharp_CommandsNext_ExtensionMethods_RegisterCommands_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.RegisterCommands*"></a>
+  <h4 id="DisCatSharp_CommandsNext_ExtensionMethods_RegisterCommands_IReadOnlyDictionary_System_Int32_DisCatSharp_CommandsNext_CommandsNextExtension__Type_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.RegisterCommands(IReadOnlyDictionary{System.Int32,DisCatSharp.CommandsNext.CommandsNextExtension},Type)">RegisterCommands(IReadOnlyDictionary&lt;Int32, CommandsNextExtension&gt;, Type)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Registers all commands from a given command class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void RegisterCommands(this IReadOnlyDictionary&lt;int, CommandsNextExtension&gt; extensions, Type t)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IReadOnlyDictionary</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a>, <a class="xref" href="DisCatSharp.CommandsNext.CommandsNextExtension.html">CommandsNextExtension</a>&gt;</td>
+        <td><span class="parametername">extensions</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Extensions to register commands on.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Type</span></td>
+        <td><span class="parametername">t</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Type of the class which holds commands to register.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_CommandsNext_ExtensionMethods_RegisterCommands__1_IReadOnlyDictionary_System_Int32_DisCatSharp_CommandsNext_CommandsNextExtension__.md&amp;value=---%0Auid%3A%20DisCatSharp.CommandsNext.ExtensionMethods.RegisterCommands%60%601(IReadOnlyDictionary%7BSystem.Int32%2CDisCatSharp.CommandsNext.CommandsNextExtension%7D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.CommandsNext/ExtensionMethods.cs/#L131">View Source</a>
+  </span>
+  <a id="DisCatSharp_CommandsNext_ExtensionMethods_RegisterCommands_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.RegisterCommands*"></a>
+  <h4 id="DisCatSharp_CommandsNext_ExtensionMethods_RegisterCommands__1_IReadOnlyDictionary_System_Int32_DisCatSharp_CommandsNext_CommandsNextExtension__" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.RegisterCommands``1(IReadOnlyDictionary{System.Int32,DisCatSharp.CommandsNext.CommandsNextExtension})">RegisterCommands&lt;T&gt;(IReadOnlyDictionary&lt;Int32, CommandsNextExtension&gt;)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Registers all commands from a given command class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void RegisterCommands&lt;T&gt;(this IReadOnlyDictionary&lt;int, CommandsNextExtension&gt; extensions)
+    where T : BaseCommandModule</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IReadOnlyDictionary</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a>, <a class="xref" href="DisCatSharp.CommandsNext.CommandsNextExtension.html">CommandsNextExtension</a>&gt;</td>
+        <td><span class="parametername">extensions</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Extensions to register commands on.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Class which holds commands to register.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_CommandsNext_ExtensionMethods_RegisterConverter__1_IReadOnlyDictionary_System_Int32_DisCatSharp_CommandsNext_CommandsNextExtension__DisCatSharp_CommandsNext_Converters_IArgumentConverter___0__.md&amp;value=---%0Auid%3A%20DisCatSharp.CommandsNext.ExtensionMethods.RegisterConverter%60%601(IReadOnlyDictionary%7BSystem.Int32%2CDisCatSharp.CommandsNext.CommandsNextExtension%7D%2CDisCatSharp.CommandsNext.Converters.IArgumentConverter%7B%60%600%7D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.CommandsNext/ExtensionMethods.cs/#L174">View Source</a>
+  </span>
+  <a id="DisCatSharp_CommandsNext_ExtensionMethods_RegisterConverter_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.RegisterConverter*"></a>
+  <h4 id="DisCatSharp_CommandsNext_ExtensionMethods_RegisterConverter__1_IReadOnlyDictionary_System_Int32_DisCatSharp_CommandsNext_CommandsNextExtension__DisCatSharp_CommandsNext_Converters_IArgumentConverter___0__" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.RegisterConverter``1(IReadOnlyDictionary{System.Int32,DisCatSharp.CommandsNext.CommandsNextExtension},DisCatSharp.CommandsNext.Converters.IArgumentConverter{``0})">RegisterConverter&lt;T&gt;(IReadOnlyDictionary&lt;Int32, CommandsNextExtension&gt;, IArgumentConverter&lt;T&gt;)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Registers an argument converter for specified type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void RegisterConverter&lt;T&gt;(this IReadOnlyDictionary&lt;int, CommandsNextExtension&gt; extensions, IArgumentConverter&lt;T&gt; converter)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IReadOnlyDictionary</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a>, <a class="xref" href="DisCatSharp.CommandsNext.CommandsNextExtension.html">CommandsNextExtension</a>&gt;</td>
+        <td><span class="parametername">extensions</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Extensions to register the converter on.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.CommandsNext.Converters.IArgumentConverter-1.html">IArgumentConverter</a>&lt;T&gt;</td>
+        <td><span class="parametername">converter</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Converter to register.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Type for which to register the converter.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_CommandsNext_ExtensionMethods_RegisterUserFriendlyTypeName__1_IReadOnlyDictionary_System_Int32_DisCatSharp_CommandsNext_CommandsNextExtension__System_String_.md&amp;value=---%0Auid%3A%20DisCatSharp.CommandsNext.ExtensionMethods.RegisterUserFriendlyTypeName%60%601(IReadOnlyDictionary%7BSystem.Int32%2CDisCatSharp.CommandsNext.CommandsNextExtension%7D%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.CommandsNext/ExtensionMethods.cs/#L197">View Source</a>
+  </span>
+  <a id="DisCatSharp_CommandsNext_ExtensionMethods_RegisterUserFriendlyTypeName_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.RegisterUserFriendlyTypeName*"></a>
+  <h4 id="DisCatSharp_CommandsNext_ExtensionMethods_RegisterUserFriendlyTypeName__1_IReadOnlyDictionary_System_Int32_DisCatSharp_CommandsNext_CommandsNextExtension__System_String_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.RegisterUserFriendlyTypeName``1(IReadOnlyDictionary{System.Int32,DisCatSharp.CommandsNext.CommandsNextExtension},System.String)">RegisterUserFriendlyTypeName&lt;T&gt;(IReadOnlyDictionary&lt;Int32, CommandsNextExtension&gt;, String)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Registers a user-friendly type name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void RegisterUserFriendlyTypeName&lt;T&gt;(this IReadOnlyDictionary&lt;int, CommandsNextExtension&gt; extensions, string value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IReadOnlyDictionary</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a>, <a class="xref" href="DisCatSharp.CommandsNext.CommandsNextExtension.html">CommandsNextExtension</a>&gt;</td>
+        <td><span class="parametername">extensions</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Extensions to register the name on.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">value</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Name to register.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Type to register the name for.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_CommandsNext_ExtensionMethods_SetHelpFormatter__1_IReadOnlyDictionary_System_Int32_DisCatSharp_CommandsNext_CommandsNextExtension__.md&amp;value=---%0Auid%3A%20DisCatSharp.CommandsNext.ExtensionMethods.SetHelpFormatter%60%601(IReadOnlyDictionary%7BSystem.Int32%2CDisCatSharp.CommandsNext.CommandsNextExtension%7D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.CommandsNext/ExtensionMethods.cs/#L208">View Source</a>
+  </span>
+  <a id="DisCatSharp_CommandsNext_ExtensionMethods_SetHelpFormatter_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.SetHelpFormatter*"></a>
+  <h4 id="DisCatSharp_CommandsNext_ExtensionMethods_SetHelpFormatter__1_IReadOnlyDictionary_System_Int32_DisCatSharp_CommandsNext_CommandsNextExtension__" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.SetHelpFormatter``1(IReadOnlyDictionary{System.Int32,DisCatSharp.CommandsNext.CommandsNextExtension})">SetHelpFormatter&lt;T&gt;(IReadOnlyDictionary&lt;Int32, CommandsNextExtension&gt;)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Sets the help formatter to use with the default help command.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void SetHelpFormatter&lt;T&gt;(this IReadOnlyDictionary&lt;int, CommandsNextExtension&gt; extensions)
+    where T : BaseHelpFormatter</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IReadOnlyDictionary</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a>, <a class="xref" href="DisCatSharp.CommandsNext.CommandsNextExtension.html">CommandsNextExtension</a>&gt;</td>
+        <td><span class="parametername">extensions</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Extensions to set the help formatter on.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Type of the formatter to use.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_CommandsNext_ExtensionMethods_UnregisterCommands_IReadOnlyDictionary_System_Int32_DisCatSharp_CommandsNext_CommandsNextExtension__DisCatSharp_CommandsNext_Command___.md&amp;value=---%0Auid%3A%20DisCatSharp.CommandsNext.ExtensionMethods.UnregisterCommands(IReadOnlyDictionary%7BSystem.Int32%2CDisCatSharp.CommandsNext.CommandsNextExtension%7D%2CDisCatSharp.CommandsNext.Command%5B%5D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.CommandsNext/ExtensionMethods.cs/#L162">View Source</a>
+  </span>
+  <a id="DisCatSharp_CommandsNext_ExtensionMethods_UnregisterCommands_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.UnregisterCommands*"></a>
+  <h4 id="DisCatSharp_CommandsNext_ExtensionMethods_UnregisterCommands_IReadOnlyDictionary_System_Int32_DisCatSharp_CommandsNext_CommandsNextExtension__DisCatSharp_CommandsNext_Command___" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.UnregisterCommands(IReadOnlyDictionary{System.Int32,DisCatSharp.CommandsNext.CommandsNextExtension},DisCatSharp.CommandsNext.Command[])">UnregisterCommands(IReadOnlyDictionary&lt;Int32, CommandsNextExtension&gt;, Command[])</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Unregisters specified commands from CommandsNext.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void UnregisterCommands(this IReadOnlyDictionary&lt;int, CommandsNextExtension&gt; extensions, params Command[] cmds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IReadOnlyDictionary</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a>, <a class="xref" href="DisCatSharp.CommandsNext.CommandsNextExtension.html">CommandsNextExtension</a>&gt;</td>
+        <td><span class="parametername">extensions</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Extensions to unregister commands on.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.CommandsNext.Command.html">Command</a>[]</td>
+        <td><span class="parametername">cmds</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Commands to unregister.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_CommandsNext_ExtensionMethods_UnregisterConverter__1_IReadOnlyDictionary_System_Int32_DisCatSharp_CommandsNext_CommandsNextExtension__.md&amp;value=---%0Auid%3A%20DisCatSharp.CommandsNext.ExtensionMethods.UnregisterConverter%60%601(IReadOnlyDictionary%7BSystem.Int32%2CDisCatSharp.CommandsNext.CommandsNextExtension%7D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.CommandsNext/ExtensionMethods.cs/#L185">View Source</a>
+  </span>
+  <a id="DisCatSharp_CommandsNext_ExtensionMethods_UnregisterConverter_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.UnregisterConverter*"></a>
+  <h4 id="DisCatSharp_CommandsNext_ExtensionMethods_UnregisterConverter__1_IReadOnlyDictionary_System_Int32_DisCatSharp_CommandsNext_CommandsNextExtension__" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.UnregisterConverter``1(IReadOnlyDictionary{System.Int32,DisCatSharp.CommandsNext.CommandsNextExtension})">UnregisterConverter&lt;T&gt;(IReadOnlyDictionary&lt;Int32, CommandsNextExtension&gt;)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Unregisters an argument converter for specified type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void UnregisterConverter&lt;T&gt;(this IReadOnlyDictionary&lt;int, CommandsNextExtension&gt; extensions)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IReadOnlyDictionary</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a>, <a class="xref" href="DisCatSharp.CommandsNext.CommandsNextExtension.html">CommandsNextExtension</a>&gt;</td>
+        <td><span class="parametername">extensions</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Extensions to unregister the converter on.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Type for which to unregister the converter.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_CommandsNext_ExtensionMethods_UseCommandsNext_DisCatSharp_DiscordClient_DisCatSharp_CommandsNext_CommandsNextConfiguration_.md&amp;value=---%0Auid%3A%20DisCatSharp.CommandsNext.ExtensionMethods.UseCommandsNext(DisCatSharp.DiscordClient%2CDisCatSharp.CommandsNext.CommandsNextConfiguration)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.CommandsNext/ExtensionMethods.cs/#L49">View Source</a>
+  </span>
+  <a id="DisCatSharp_CommandsNext_ExtensionMethods_UseCommandsNext_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.UseCommandsNext*"></a>
+  <h4 id="DisCatSharp_CommandsNext_ExtensionMethods_UseCommandsNext_DisCatSharp_DiscordClient_DisCatSharp_CommandsNext_CommandsNextConfiguration_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.UseCommandsNext(DisCatSharp.DiscordClient,DisCatSharp.CommandsNext.CommandsNextConfiguration)">UseCommandsNext(DiscordClient, CommandsNextConfiguration)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Enables CommandsNext module on this <a class="xref" href="../DisCatSharp/DisCatSharp.DiscordClient.html">DiscordClient</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static CommandsNextExtension UseCommandsNext(this DiscordClient client, CommandsNextConfiguration cfg)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../DisCatSharp/DisCatSharp.DiscordClient.html">DiscordClient</a></td>
+        <td><span class="parametername">client</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Client to enable CommandsNext for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.CommandsNext.CommandsNextConfiguration.html">CommandsNextConfiguration</a></td>
+        <td><span class="parametername">cfg</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">CommandsNext configuration to use.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.CommandsNext.CommandsNextExtension.html">CommandsNextExtension</a></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Created <a class="xref" href="DisCatSharp.CommandsNext.CommandsNextExtension.html">CommandsNextExtension</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_CommandsNext_ExtensionMethods_UseCommandsNextAsync_DisCatSharp_DiscordShardedClient_DisCatSharp_CommandsNext_CommandsNextConfiguration_.md&amp;value=---%0Auid%3A%20DisCatSharp.CommandsNext.ExtensionMethods.UseCommandsNextAsync(DisCatSharp.DiscordShardedClient%2CDisCatSharp.CommandsNext.CommandsNextConfiguration)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.CommandsNext/ExtensionMethods.cs/#L73">View Source</a>
+  </span>
+  <a id="DisCatSharp_CommandsNext_ExtensionMethods_UseCommandsNextAsync_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.UseCommandsNextAsync*"></a>
+  <h4 id="DisCatSharp_CommandsNext_ExtensionMethods_UseCommandsNextAsync_DisCatSharp_DiscordShardedClient_DisCatSharp_CommandsNext_CommandsNextConfiguration_" data-uid="DisCatSharp.CommandsNext.ExtensionMethods.UseCommandsNextAsync(DisCatSharp.DiscordShardedClient,DisCatSharp.CommandsNext.CommandsNextConfiguration)">UseCommandsNextAsync(DiscordShardedClient, CommandsNextConfiguration)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Enables CommandsNext module on all shards in this <a class="xref" href="../DisCatSharp/DisCatSharp.DiscordShardedClient.html">DiscordShardedClient</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static async Task&lt;IReadOnlyDictionary&lt;int, CommandsNextExtension&gt;&gt; UseCommandsNextAsync(this DiscordShardedClient client, CommandsNextConfiguration cfg)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../DisCatSharp/DisCatSharp.DiscordShardedClient.html">DiscordShardedClient</a></td>
+        <td><span class="parametername">client</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">Client to enable CommandsNext for.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.CommandsNext.CommandsNextConfiguration.html">CommandsNextConfiguration</a></td>
+        <td><span class="parametername">cfg</span></td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">CommandsNext configuration to use.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">IReadOnlyDictionary</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a>, <a class="xref" href="DisCatSharp.CommandsNext.CommandsNextExtension.html">CommandsNextExtension</a>&gt;&gt;</td>
+        <td><p sourcefile="api/DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.ExtensionMethods.yml" sourcestartlinenumber="1" sourceendlinenumber="1">A dictionary of created <a class="xref" href="DisCatSharp.CommandsNext.CommandsNextExtension.html">CommandsNextExtension</a>, indexed by shard id.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+
+</article>
+                </div>
+
+                <div class="copyright-footer">
+                    <span>&#169; Aiko IT Systems. All rights reserved.</span>
+                </div>
+            </div></main>
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.vendor.js"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.js"></script>
+        <script type="text/javascript" src="../../src/scripts/url.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/highlight/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+        <script src="https://cdn.jsdelivr.net/npm/anchor-js/anchor.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/jquery.twbsPagination.js"></script>
+        <script type="text/javascript" src="../../src/scripts/dcs.js"></script>
+        <script type="text/javascript" src="../../src/scripts/lunr.js"></script>
+    </body>
+</html>
