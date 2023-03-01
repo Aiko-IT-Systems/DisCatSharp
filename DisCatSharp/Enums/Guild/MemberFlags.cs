@@ -73,5 +73,17 @@ public enum MemberFlags : long
 	/// </summary>
 	[DiscordInExperiment]
 	CompletedHomeActions = 1 << 6,
+
+	/// <summary>
+	/// Members username or nickname contains words that are not allowed.
+	/// </summary>
+	[DiscordInExperiment]
+	AutomodQuarantinedUsernameOrGuildNickname = 1<<7,
+
+	/// <summary>
+	/// Members user or guild bio contains words that are not allowed.
+	/// </summary>
+	[DiscordInExperiment]
+	AutomodQuarantinedBio = 1<<8
 }
 
