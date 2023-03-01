@@ -173,14 +173,16 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Returns a uri to this users profile.
 	/// </summary>
 	[JsonIgnore]
-	public Uri ProfileUri => new($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.USERS}/{this.Id}");
+	public Uri ProfileUri
+		=> new($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.USERS}/{this.Id}");
 
 	/// <summary>
 	/// Returns a string representing the direct URL to this users profile.
 	/// </summary>
 	/// <returns>The URL of this users profile.</returns>
 	[JsonIgnore]
-	public string ProfileUrl => this.ProfileUri.AbsoluteUri;
+	public string ProfileUrl
+		=> this.ProfileUri.AbsoluteUri;
 
 	/// <summary>
 	/// Gets the user's avatar url.

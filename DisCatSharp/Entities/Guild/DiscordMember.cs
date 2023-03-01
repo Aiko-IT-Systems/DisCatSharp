@@ -153,8 +153,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// Gets this member's display name.
 	/// </summary>
 	[JsonIgnore]
-	public string DisplayName
-		=> this.Nickname ?? this.Username;
+	public string PreferredDisplayName
+		=> this.Nickname ?? this.DisplayName ?? this.Username;
 
 	/// <summary>
 	/// List of role ids
