@@ -1053,7 +1053,7 @@ public sealed class VoiceNextConnection : IDisposable
 		// IP Discovery
 		this._udpClient.Setup(this.UdpEndpoint);
 
-		var pck = new byte[70];
+		var pck = new byte[74];
 		PreparePacket(pck);
 		await this._udpClient.SendAsync(pck, pck.Length).ConfigureAwait(false);
 
@@ -1069,19 +1069,23 @@ public sealed class VoiceNextConnection : IDisposable
 		void PreparePacket(byte[] packet)
 		{
 			var ssrc = this._ssrc;
+			ushort type = 0x1;
+			ushort length = 70;
 			var packetSpan = packet.AsSpan();
-			MemoryMarshal.Write(packetSpan, ref ssrc);
-			Helpers.ZeroFill(packetSpan);
+			BinaryPrimitives.WriteUInt16BigEndian(packetSpan[..2], type);
+			BinaryPrimitives.WriteUInt16BigEndian(packetSpan.Slice(2, 2), length);
+			BinaryPrimitives.WriteUInt32BigEndian(packetSpan.Slice(4, 4), ssrc);
+			packetSpan[8..].Fill(0);
 		}
 
 		void ReadPacket(byte[] packet, out System.Net.IPAddress decodedIp, out ushort decodedPort)
 		{
 			var packetSpan = packet.AsSpan();
 
-			var ipString = Utilities.UTF8.GetString(packet, 4, 64 /* 70 - 6 */).TrimEnd('\0');
+			var ipString = Utilities.UTF8.GetString(packet, 8, 64 /* 74 - 10 */).TrimEnd('\0');
 			decodedIp = System.Net.IPAddress.Parse(ipString);
 
-			decodedPort = BinaryPrimitives.ReadUInt16LittleEndian(packetSpan[68 /* 70 - 2 */..]);
+			decodedPort = BinaryPrimitives.ReadUInt16BigEndian(packetSpan[72..] /* 74 - 2 */);
 		}
 
 		// Select voice encryption mode
