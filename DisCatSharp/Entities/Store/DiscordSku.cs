@@ -23,47 +23,88 @@
 using System;
 using System.Collections.Generic;
 
+using DisCatSharp.Enums;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
 
+/// <summary>
+/// Represents a <see cref="DiscordSku"/>.
+/// </summary>
 public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 {
+	/// <summary>
+	/// Gets the sku type.
+	/// </summary>
 	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
-	public int? Type { get; set; }
+	public SkuType? Type { get; internal set; }
 
+	/// <summary>
+	/// Gets the dependent (parent) sku id.
+	/// </summary>
 	[JsonProperty("dependent_sku_id", NullValueHandling = NullValueHandling.Ignore)]
-	public ulong? DependentSkuId { get; set; }
+	public ulong? DependentSkuId { get; internal set; }
 
+	/// <summary>
+	/// Gets the application id the sku belongs to.
+	/// </summary>
 	[JsonProperty("application_id", NullValueHandling = NullValueHandling.Ignore)]
-	public ulong ApplicationId { get; set; }
+	public ulong ApplicationId { get; internal set; }
 
+	/// <summary>
+	/// Gets the manifest labels.
+	/// </summary>
 	[JsonProperty("manifest_labels", NullValueHandling = NullValueHandling.Ignore)]
-	public List<ulong> ManifestLabels { get; } = new List<ulong>();
+	public List<ulong> ManifestLabels { get; internal set; } = new List<ulong>();
 
+	/// <summary>
+	/// Gets the access type.
+	/// </summary>
 	[JsonProperty("access_type", NullValueHandling = NullValueHandling.Ignore)]
-	public int AccessType { get; set; }
+	public int AccessType { get; internal set; }
 
+	/// <summary>
+	/// Gets the sku name.
+	/// </summary>
 	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
-	public string Name { get; set; }
+	public string Name { get; internal set; }
 
+	/// <summary>
+	/// Gets the skus features.
+	/// </summary>
 	[JsonProperty("features", NullValueHandling = NullValueHandling.Ignore)]
-	public List<int> Features { get; } = new List<int>();
+	public List<int> Features { get; internal set; } = new List<int>();
 
+	/// <summary>
+	/// Gets the skus release date.
+	/// </summary>
 	[JsonProperty("release_date", NullValueHandling = NullValueHandling.Ignore)]
-	public string ReleaseDate { get; set; }
+	public string ReleaseDate { get; internal set; }
 
+	/// <summary>
+	/// Gets whether the sku is premium.
+	/// </summary>
 	[JsonProperty("premium", NullValueHandling = NullValueHandling.Ignore)]
-	public bool Premium { get; set; }
+	public bool Premium { get; internal set; }
 
+	/// <summary>
+	/// Gets the sku slug.
+	/// </summary>
 	[JsonProperty("slug", NullValueHandling = NullValueHandling.Ignore)]
-	public string Slug { get; set; }
+	public string Slug { get; internal set; }
 
+	/// <summary>
+	/// Gets the sku flags.
+	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
-	public int Flags { get; set; }
+	public SkuFlags Flags { get; internal set; }
 
+	/// <summary>
+	/// Gets whether to show a age gate.
+	/// </summary>
 	[JsonProperty("show_age_gate", NullValueHandling = NullValueHandling.Ignore)]
-	public bool? ShowAgeGate { get; set; }
+	public bool? ShowAgeGate { get; internal set; }
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordSku"/> is equal to another object.
