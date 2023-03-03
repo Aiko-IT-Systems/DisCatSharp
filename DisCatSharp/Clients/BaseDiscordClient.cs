@@ -182,8 +182,6 @@ public abstract class BaseDiscordClient : IDisposable
 			IconHash = tapp.IconHash,
 			RpcOrigins = tapp.RpcOrigins != null ? new ReadOnlyCollection<string>(tapp.RpcOrigins) : null,
 			Flags = tapp.Flags,
-			RequiresCodeGrant = tapp.BotRequiresCodeGrant,
-			IsPublic = tapp.IsPublicBot,
 			IsHook = tapp.IsHook,
 			Type = tapp.Type,
 			PrivacyPolicyUrl = tapp.PrivacyPolicyUrl,
@@ -224,10 +222,31 @@ public abstract class BaseDiscordClient : IDisposable
 		app.PrimarySkuId = tapp.PrimarySkuId.ValueOrDefault();
 		app.VerifyKey = tapp.VerifyKey.ValueOrDefault();
 		app.CoverImageHash = tapp.CoverImageHash.ValueOrDefault();
+		app.Guild = tapp.Guild.ValueOrDefault();
+		app.ApproximateGuildCount = tapp.ApproximateGuildCount.ValueOrDefault();
+		app.RequiresCodeGrant = tapp.BotRequiresCodeGrant.ValueOrDefault();
+		app.IsPublic = tapp.IsPublicBot.ValueOrDefault();
+		app.RedirectUris = tapp.RedirectUris.ValueOrDefault();
+		app.InteractionsEndpointUrl = tapp.InteractionsEndpointUrl.ValueOrDefault();
 
 		return app;
 	}
 
+	/// <summary>
+	/// Updates the current API application.
+	/// </summary>
+	/// <param name="description">The new description.</param>
+	/// <param name="interactionsEndpointUrl">The new interactions endpoint url.</param>
+	/// <param name="roleConnectionsVerificationUrl">The new role connections verification url.</param>
+	/// <returns>The updated application.</returns>
+	public async Task<DiscordApplication> UpdateCurrentApplicationInfoAsync(Optional<string> description, Optional<string> interactionsEndpointUrl, Optional<string> roleConnectionsVerificationUrl)
+	{
+		await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl);
+		// We use GetCurrentApplicationAsync because modify returns internal data not meant for developers.
+		var app = await this.GetCurrentApplicationAsync();
+		this.CurrentApplication = app;
+		return app;
+	}
 
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 	/// <summary>

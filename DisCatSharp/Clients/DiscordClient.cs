@@ -444,7 +444,70 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordRpcApplication> GetRpcApplicationAsync(ulong applicationId)
-		=> await this.ApiClient.GetApplicationInfoAsync(applicationId);
+		=> await this.ApiClient.GetApplicationRpcInfoAsync(applicationId);
+
+	public async Task<DiscordApplication> GetCurrentApplicationOauth2InfoAsync()
+	{
+		var tapp = await this.ApiClient.GetCurrentApplicationOauth2InfoAsync();
+		var app = new DiscordApplication
+		{
+			Discord = this,
+			Id = tapp.Id,
+			Name = tapp.Name,
+			Description = tapp.Description,
+			Summary = tapp.Summary,
+			IconHash = tapp.IconHash,
+			RpcOrigins = tapp.RpcOrigins != null ? new ReadOnlyCollection<string>(tapp.RpcOrigins) : null,
+			Flags = tapp.Flags,
+			IsHook = tapp.IsHook,
+			Type = tapp.Type,
+			PrivacyPolicyUrl = tapp.PrivacyPolicyUrl,
+			TermsOfServiceUrl = tapp.TermsOfServiceUrl,
+			CustomInstallUrl = tapp.CustomInstallUrl,
+			InstallParams = tapp.InstallParams,
+			RoleConnectionsVerificationUrl = tapp.RoleConnectionsVerificationUrl,
+			Tags = (tapp.Tags ?? Enumerable.Empty<string>()).ToArray()
+		};
+
+		if (tapp.Team == null)
+		{
+			app.Owners = new List<DiscordUser>(new[] { new DiscordUser(tapp.Owner) });
+			app.Team = null;
+			app.TeamName = null;
+		}
+		else
+		{
+			app.Team = new DiscordTeam(tapp.Team);
+
+			var members = tapp.Team.Members
+				.Select(x => new DiscordTeamMember(x) { TeamId = app.Team.Id, TeamName = app.Team.Name, User = new DiscordUser(x.User) })
+				.ToArray();
+
+			var owners = members
+				.Where(x => x.MembershipStatus == DiscordTeamMembershipStatus.Accepted)
+				.Select(x => x.User)
+				.ToArray();
+
+			app.Owners = new List<DiscordUser>(owners);
+			app.Team.Owner = owners.FirstOrDefault(x => x.Id == tapp.Team.OwnerId);
+			app.Team.Members = new List<DiscordTeamMember>(members);
+			app.TeamName = app.Team.Name;
+		}
+
+		app.GuildId = tapp.GuildId.ValueOrDefault();
+		app.Slug = tapp.Slug.ValueOrDefault();
+		app.PrimarySkuId = tapp.PrimarySkuId.ValueOrDefault();
+		app.VerifyKey = tapp.VerifyKey.ValueOrDefault();
+		app.CoverImageHash = tapp.CoverImageHash.ValueOrDefault();
+		app.Guild = tapp.Guild.ValueOrDefault();
+		app.ApproximateGuildCount = tapp.ApproximateGuildCount.ValueOrDefault();
+		app.RequiresCodeGrant = tapp.BotRequiresCodeGrant.ValueOrDefault();
+		app.IsPublic = tapp.IsPublicBot.ValueOrDefault();
+		app.RedirectUris = tapp.RedirectUris.ValueOrDefault();
+		app.InteractionsEndpointUrl = tapp.InteractionsEndpointUrl.ValueOrDefault();
+
+		return app;
+	}
 
 	/// <summary>
 	/// Tries to get a user.

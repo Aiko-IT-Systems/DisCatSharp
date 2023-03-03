@@ -5778,29 +5778,64 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the current application info.
+	/// Gets the current application info via oauth2.
 	/// </summary>
-	internal Task<TransportApplication> GetCurrentApplicationInfoAsync()
-		=> this.GetApplicationInfoAsync("@me");
+	internal Task<TransportApplication> GetCurrentApplicationOauth2InfoAsync()
+		=> this.GetApplicationOauth2InfoAsync("@me");
 
 	/// <summary>
 	/// Gets the application rpc info.
 	/// </summary>
 	/// <param name="applicationId">The application_id.</param>
-	internal Task<DiscordRpcApplication> GetApplicationInfoAsync(ulong applicationId)
+	internal Task<DiscordRpcApplication> GetApplicationRpcInfoAsync(ulong applicationId)
 		=> this.GetApplicationRpcInfoAsync(applicationId.ToString(CultureInfo.InvariantCulture));
+
+	/// <summary>
+	/// Gets the application info via oauth2.
+	/// </summary>
+	/// <param name="applicationId">The application_id.</param>
+	private async Task<TransportApplication> GetApplicationOauth2InfoAsync(string applicationId)
+	{
+		var route = $"{Endpoints.OAUTH2}{Endpoints.APPLICATIONS}/:application_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { application_id = applicationId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		return JsonConvert.DeserializeObject<TransportApplication>(res.Response);
+	}
 
 	/// <summary>
 	/// Gets the application info.
 	/// </summary>
-	/// <param name="applicationId">The application_id.</param>
-	private async Task<TransportApplication> GetApplicationInfoAsync(string applicationId)
+	internal async Task<TransportApplication> GetCurrentApplicationInfoAsync()
 	{
-		var route = $"{Endpoints.OAUTH2}{Endpoints.APPLICATIONS}/:application_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {application_id = applicationId }, out var path);
+		var route = $"{Endpoints.APPLICATIONS}{Endpoints.ME}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		return JsonConvert.DeserializeObject<TransportApplication>(res.Response);
+	}
+
+	/// <summary>
+	/// Gets the application info.
+	/// </summary>
+	internal async Task<TransportApplication> ModifyCurrentApplicationInfoAsync(Optional<string> description, Optional<string> interactionsEndpointUrl, Optional<string> roleConnectionsVerificationUrl)
+	{
+		var pld = new RestApplicationModifyPayload()
+		{
+			Description = description,
+			InteractionsEndpointUrl = interactionsEndpointUrl,
+			RoleConnectionsVerificationUrl = roleConnectionsVerificationUrl
+		};
+
+		var route = $"{Endpoints.APPLICATIONS}{Endpoints.ME}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		return JsonConvert.DeserializeObject<TransportApplication>(res.Response);
 	}
@@ -5812,7 +5847,7 @@ public sealed class DiscordApiClient
 	private async Task<DiscordRpcApplication> GetApplicationRpcInfoAsync(string applicationId)
 	{
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.RPC}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {application_id = applicationId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { application_id = applicationId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);

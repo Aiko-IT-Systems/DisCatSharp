@@ -120,6 +120,11 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	public ulong? GuildId { get; internal set; }
 
 	/// <summary>
+	/// Gets the partial guild if set as support server.
+	/// </summary>
+	public DiscordGuild? Guild { get; internal set; }
+
+	/// <summary>
 	/// If this application is a game sold on Discord, this field will be the id of the "Game SKU" that is created, if exists
 	/// </summary>
 	public ulong? PrimarySkuId { get; internal set; }
@@ -166,6 +171,21 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// Mostly null.
 	/// </summary>
 	public string Type { get; internal set; }
+
+	/// <summary>
+	/// Gets the approximate guild count
+	/// </summary>
+	public int? ApproximateGuildCount { get; internal set; }
+
+	/// <summary>
+	/// Gets the interactions endpoint url.
+	/// </summary>
+	public string InteractionsEndpointUrl { get; set; }
+
+	/// <summary>
+	/// Gets the redirect uris.
+	/// </summary>
+	public List<string> RedirectUris { get; set; } = new();
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordApplication"/> class.

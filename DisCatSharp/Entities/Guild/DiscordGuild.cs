@@ -91,6 +91,19 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		=> !string.IsNullOrWhiteSpace(this.DiscoverySplashHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILD_DISCOVERY_SPLASHES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.DiscoverySplashHash}.png?size=1024" : null;
 
 	/// <summary>
+	/// Gets the guild home header's hash.
+	/// </summary>
+	[JsonProperty("home_header", NullValueHandling = NullValueHandling.Ignore)]
+	public string HomeHeaderHash { get; internal set; }
+
+	/// <summary>
+	/// Gets the guild home header's url.
+	/// </summary>
+	[JsonIgnore]
+	public string HomeHeaderUrl
+		=> !string.IsNullOrWhiteSpace(this.HomeHeaderHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILD_HOME_HEADERES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.HomeHeaderHash}.png?size=1024" : null;
+
+	/// <summary>
 	/// Gets the preferred locale of this guild.
 	/// <para>This is used for server discovery, interactions and notices from Discord. Defaults to en-US.</para>
 	/// </summary>
