@@ -26,14 +26,26 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
 
+/// <summary>
+/// Represents a <see cref="DiscordStoreSku"/>.
+/// </summary>
 public class DiscordStoreSku : SnowflakeObject, IEquatable<DiscordStoreSku>
 {
+	/// <summary>
+	/// Gets the store skus summary.
+	/// </summary>
 	[JsonProperty("summary", NullValueHandling = NullValueHandling.Ignore)]
 	public string Summary { get; set; }
 
+	/// <summary>
+	/// Gets the store skus sku.
+	/// </summary>
 	[JsonProperty("sku", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordSku Sku { get; set; }
 
+	/// <summary>
+	/// Gets the store skus description.
+	/// </summary>
 	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
 	public string Description { get; set; }
 
