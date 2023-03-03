@@ -38,7 +38,7 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	/// Gets the sku type.
 	/// </summary>
 	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
-	public SkuType? Type { get; internal set; }
+	public SkuType Type { get; internal set; }
 
 	/// <summary>
 	/// Gets the dependent (parent) sku id.
@@ -62,7 +62,7 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	/// Gets the access type.
 	/// </summary>
 	[JsonProperty("access_type", NullValueHandling = NullValueHandling.Ignore)]
-	public int AccessType { get; internal set; }
+	public SkuAccessType AccessType { get; internal set; }
 
 	/// <summary>
 	/// Gets the sku name.
