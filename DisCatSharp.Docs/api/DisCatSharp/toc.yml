@@ -497,6 +497,12 @@
     name: ScheduledEventPrivacyLevel
   - uid: DisCatSharp.Enums.ScheduledEventStatus
     name: ScheduledEventStatus
+  - uid: DisCatSharp.Enums.SkuAccessType
+    name: SkuAccessType
+  - uid: DisCatSharp.Enums.SkuFlags
+    name: SkuFlags
+  - uid: DisCatSharp.Enums.SkuType
+    name: SkuType
   - uid: DisCatSharp.Enums.StagePrivacyLevel
     name: StagePrivacyLevel
   - uid: DisCatSharp.Enums.SystemChannelFlags
