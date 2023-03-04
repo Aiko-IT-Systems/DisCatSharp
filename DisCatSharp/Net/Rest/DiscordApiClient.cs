@@ -5488,13 +5488,21 @@ public sealed class DiscordApiClient
 
 		if (type != InteractionResponseType.AutoCompleteResult)
 		{
+			var flags = MessageFlags.None;
+			if (builder.IsEphemeral)
+				flags |= MessageFlags.Ephemeral;
+			if (builder.EmbedsSuppressed)
+				flags |= MessageFlags.SuppressedEmbeds;
+			if (builder.NotificationsSuppressed)
+				flags |= MessageFlags.SuppressNotifications;
+
 			var data = builder != null ? new DiscordInteractionApplicationCommandCallbackData
 			{
 				Content = builder.Content ?? null,
 				Embeds = builder.Embeds ?? null,
 				IsTts = builder.IsTts,
 				Mentions = builder.Mentions ?? null,
-				Flags = builder.IsEphemeral ? MessageFlags.Ephemeral : null,
+				Flags = flags,
 				Components = builder.Components ?? null,
 				Choices = null
 			} : null;
@@ -5645,13 +5653,22 @@ public sealed class DiscordApiClient
 				if (embed.Timestamp != null)
 					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
+
+		var flags = MessageFlags.None;
+		if (builder.IsEphemeral)
+			flags |= MessageFlags.Ephemeral;
+		if (builder.EmbedsSuppressed)
+			flags |= MessageFlags.SuppressedEmbeds;
+		if (builder.NotificationsSuppressed)
+			flags |= MessageFlags.SuppressNotifications;
+
 		var values = new Dictionary<string, string>();
 		var pld = new RestFollowupMessageCreatePayload
 		{
 			Content = builder.Content,
 			IsTts = builder.IsTts,
 			Embeds = builder.Embeds,
-			Flags = builder.Flags,
+			Flags = flags,
 			Components = builder.Components
 		};
 

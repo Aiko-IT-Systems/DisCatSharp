@@ -45,6 +45,11 @@ public static class MessageFlagExtensions
 public enum MessageFlags
 {
 	/// <summary>
+	/// This message has no flags.
+	/// </summary>
+	None = 0,
+
+	/// <summary>
 	/// Whether this message is the original message that was published from a news channel to subscriber channels.
 	/// </summary>
 	Crossposted = 1 << 0,
