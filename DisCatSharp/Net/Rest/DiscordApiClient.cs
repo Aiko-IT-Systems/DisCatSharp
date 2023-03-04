@@ -5822,13 +5822,15 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Gets the application info.
 	/// </summary>
-	internal async Task<TransportApplication> ModifyCurrentApplicationInfoAsync(Optional<string> description, Optional<string> interactionsEndpointUrl, Optional<string> roleConnectionsVerificationUrl)
+	internal async Task<TransportApplication> ModifyCurrentApplicationInfoAsync(Optional<string> description, Optional<string> interactionsEndpointUrl, Optional<string> roleConnectionsVerificationUrl, Optional<List<string>?> tags, Optional<string?> iconb64)
 	{
 		var pld = new RestApplicationModifyPayload()
 		{
 			Description = description,
 			InteractionsEndpointUrl = interactionsEndpointUrl,
-			RoleConnectionsVerificationUrl = roleConnectionsVerificationUrl
+			RoleConnectionsVerificationUrl = roleConnectionsVerificationUrl,
+			Tags = tags,
+			IconBase64 = iconb64
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}{Endpoints.ME}";

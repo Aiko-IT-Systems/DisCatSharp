@@ -25,9 +25,11 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
@@ -238,10 +240,16 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <param name="description">The new description.</param>
 	/// <param name="interactionsEndpointUrl">The new interactions endpoint url.</param>
 	/// <param name="roleConnectionsVerificationUrl">The new role connections verification url.</param>
+	/// <param name="tags">The new tags.</param>
+	/// <param name="icon">The new application icon.</param>
 	/// <returns>The updated application.</returns>
-	public async Task<DiscordApplication> UpdateCurrentApplicationInfoAsync(Optional<string> description, Optional<string> interactionsEndpointUrl, Optional<string> roleConnectionsVerificationUrl)
+	public async Task<DiscordApplication> UpdateCurrentApplicationInfoAsync(Optional<string> description, Optional<string> interactionsEndpointUrl, Optional<string> roleConnectionsVerificationUrl, Optional<List<string>?> tags, Optional<Stream> icon)
 	{
-		await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl);
+		var iconb64 = ImageTool.Base64FromStream(icon);
+		if (tags != null && tags.HasValue && tags.Value != null)
+			if (tags.Value.Any(x => x.Length > 20))
+				throw new InvalidOperationException("Tags can not exceed 20 chars.");
+		_ = await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, tags, iconb64);
 		// We use GetCurrentApplicationAsync because modify returns internal data not meant for developers.
 		var app = await this.GetCurrentApplicationAsync();
 		this.CurrentApplication = app;

@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
+
 using DisCatSharp.Entities;
 
 using Newtonsoft.Json;
@@ -31,18 +33,30 @@ internal sealed class RestApplicationModifyPayload
 	/// <summary>
 	/// Gets or sets the description.
 	/// </summary>
-	[JsonProperty("description")]
+	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<string> Description { get; set; }
 
 	/// <summary>
 	/// Gets or sets the interactions endpoint url.
 	/// </summary>
-	[JsonProperty("interactions_endpoint_url")]
+	[JsonProperty("interactions_endpoint_url", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<string> InteractionsEndpointUrl { get; set; }
 
 	/// <summary>
 	/// Gets or sets the role connections verification url.
 	/// </summary>
-	[JsonProperty("role_connections_verification_url")]
+	[JsonProperty("role_connections_verification_url", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<string> RoleConnectionsVerificationUrl { get; set; }
+
+	/// <summary>
+	/// Gets or sets the tags.
+	/// </summary>
+	[JsonProperty("tags", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<List<string>?> Tags { get; set; }
+
+	/// <summary>
+	/// Gets or sets the icon base64.
+	/// </summary>
+	[JsonProperty("icon")]
+	public Optional<string> IconBase64 { get; set; }
 }
