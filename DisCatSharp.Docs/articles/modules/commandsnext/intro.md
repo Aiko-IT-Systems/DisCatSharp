@@ -108,7 +108,7 @@ Our example below will only define a single prefix: `!`.
 ```cs
 new CommandsNextConfiguration()
 {
-    StringPrefixes = new[] { "!" }
+    StringPrefixes = new List<string>() { "!" }
 }
 ```
 
@@ -136,7 +136,7 @@ internal static async Task MainAsync()
     var discord = new DiscordClient(new DiscordConfiguration());
     var commands = discord.UseCommandsNext(new CommandsNextConfiguration()
     {
-        StringPrefixes = new[] { "!" }
+        StringPrefixes = new List<string>() { "!" }
     });
 
     commands.RegisterCommands<MyFirstModule>();
