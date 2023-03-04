@@ -224,7 +224,7 @@ internal class RestFollowupMessageCreatePayload
 	/// Gets the flags.
 	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
-	public int? Flags { get; set; }
+	public MessageFlags? Flags { get; set; }
 
 	/// <summary>
 	/// Gets the components.

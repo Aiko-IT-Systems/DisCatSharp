@@ -43,10 +43,14 @@ public sealed class DiscordFollowupMessageBuilder
 	public bool IsEphemeral { get; set; }
 
 	/// <summary>
-	/// Indicates this message is ephemeral.
+	/// Whether to suppress embeds.
 	/// </summary>
-	internal int? Flags
-		=> this.IsEphemeral ? 64 : null;
+	public bool EmbedsSuppressed { get; set; }
+
+	/// <summary>
+	/// Whether to send as silent message.
+	/// </summary>
+	public bool NotificationsSuppressed { get; set; }
 
 	/// <summary>
 	/// Message to send on followup message.
@@ -275,10 +279,30 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <summary>
 	/// Sets the followup message to be ephemeral.
 	/// </summary>
-	/// <param name="ephemeral">Whether the followup should be ephemeral. Defaults to true.</param>
+	/// <param name="ephemeral">Whether the followup message should be ephemeral. Defaults to true.</param>
 	public DiscordFollowupMessageBuilder AsEphemeral(bool ephemeral = true)
 	{
 		this.IsEphemeral = ephemeral;
+		return this;
+	}
+
+	/// <summary>
+	/// Sets the followup message to suppress embeds.
+	/// </summary>
+	/// <param name="suppressEmbeds">Whether the followup message should suppress embeds. Defaults to true.</param>
+	public DiscordFollowupMessageBuilder SuppressEmbeds(bool suppressEmbeds = true)
+	{
+		this.EmbedsSuppressed = suppressEmbeds;
+		return this;
+	}
+
+	/// <summary>
+	/// Sets the followup message to be send as silent message.
+	/// </summary>
+	/// <param name="silent">Whether the followup message should be send as silent message. Defaults to true.</param>
+	public DiscordFollowupMessageBuilder AsSilentMessage(bool silent = true)
+	{
+		this.NotificationsSuppressed = silent;
 		return this;
 	}
 

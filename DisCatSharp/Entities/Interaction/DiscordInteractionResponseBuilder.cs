@@ -43,6 +43,16 @@ public sealed class DiscordInteractionResponseBuilder
 	public bool IsEphemeral { get; set; }
 
 	/// <summary>
+	/// Whether to suppress embeds.
+	/// </summary>
+	public bool EmbedsSuppressed { get; set; }
+
+	/// <summary>
+	/// Whether to send as silent message.
+	/// </summary>
+	public bool NotificationsSuppressed { get; set; }
+
+	/// <summary>
 	/// Content of the message to send.
 	/// </summary>
 	public string Content
@@ -172,6 +182,26 @@ public sealed class DiscordInteractionResponseBuilder
 	public DiscordInteractionResponseBuilder AsEphemeral(bool ephemeral = true)
 	{
 		this.IsEphemeral = ephemeral;
+		return this;
+	}
+
+	/// <summary>
+	/// Sets the interaction response to suppress embeds.
+	/// </summary>
+	/// <param name="suppressEmbeds">Whether the response should suppress embeds. Defaults to true.</param>
+	public DiscordInteractionResponseBuilder SuppressEmbeds(bool suppressEmbeds = true)
+	{
+		this.EmbedsSuppressed = suppressEmbeds;
+		return this;
+	}
+
+	/// <summary>
+	/// Sets the interaction response to be send as silent message.
+	/// </summary>
+	/// <param name="silent">Whether the response should be send as silent message. Defaults to true.</param>
+	public DiscordInteractionResponseBuilder AsSilentMessage(bool silent = true)
+	{
+		this.NotificationsSuppressed = silent;
 		return this;
 	}
 
