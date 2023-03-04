@@ -28,6 +28,7 @@ We'll start by creating a new folder named `Commands` which contains a new class
 ![Solution Explorer](/images/commands_intro_02.png)
 
 Give this new class `public` access and have it inherit from `BaseCommandModule`.
+
 ```cs
 public class MyFirstModule : BaseCommandModule
 {
@@ -39,6 +40,7 @@ public class MyFirstModule : BaseCommandModule
 ### Create a Command Method
 Within our new module, create a method named `GreetCommand` marked as `async` with a `Task` return type.
 The first parameter of your method *must* be of type `CommandContext`, as required by CommandsNext.
+
 ```cs
 public async Task GreetCommand(CommandContext ctx)
 {
@@ -55,6 +57,7 @@ Finally, mark your command method with the `Command` attribute so CommandsNext w
 This attribute takes a single parameter: the name of the command.
 
 We'll name our command *greet* to match the name of the method.
+
 ```cs
 [Command("greet")]
 public async Task GreetCommand(CommandContext ctx)
@@ -65,6 +68,7 @@ public async Task GreetCommand(CommandContext ctx)
 
 <br/>
 Your command module should now resemble this:
+
 ```cs
 using System.Threading.Tasks;
 using DisCatSharp.CommandsNext;
@@ -83,6 +87,7 @@ public class MyFirstModule : BaseCommandModule
 ### Cleanup and Configuration
 Before we can run our new command, we'll need modify our main method.<br/>
 Start by removing the event handler we created [previously](xref:basics_first_bot#spicing-up-your-bot).
+
 ```cs
 var discord = new DiscordClient();
 
@@ -98,6 +103,7 @@ await discord.ConnectAsync();
 <br/>
 Next, call the `UseCommandsNext` extension method on your `DiscordClient` instance and pass it a new `CommandsNextConfiguration` instance.
 Assign the resulting `CommandsNextExtension` instance to a new variable named *commands*. This important step will enable CommandsNext for your Discord client.
+
 ```cs
 var discord = new DiscordClient();
 var commands = discord.UseCommandsNext(new CommandsNextConfiguration());
@@ -105,6 +111,7 @@ var commands = discord.UseCommandsNext(new CommandsNextConfiguration());
 
 Create an object initializer for `CommandsNextConfiguration` and assign the `StringPrefixes` property a new `string` array containing your desired prefixes.
 Our example below will only define a single prefix: `!`.
+
 ```cs
 new CommandsNextConfiguration()
 {
@@ -115,6 +122,7 @@ new CommandsNextConfiguration()
 <br/>
 Now we'll register our command module.
 Call the `RegisterCommands` method on our `CommandsNextExtension` instance and provide it with your command module.
+
 ```cs
 var discord = new DiscordClient();
 var commands = discord.UseCommandsNext();
@@ -130,6 +138,7 @@ commands.RegisterCommands(Assembly.GetExecutingAssembly());
 
 <br/>
 Your main method should look similar to the following:
+
 ```cs
 internal static async Task MainAsync()
 {
@@ -167,14 +176,17 @@ CommandsNext will automatically parse user input and populate the parameters of 
 To demonstrate, we'll modify our *greet* command to greet a user with a given name.
 
 Head back to `MyFirstModule` and add a parameter of type `string` to the `GreetCommand` method.
+
 ```cs
 [Command("greet")]
 public async Task GreetCommand(CommandContext ctx, string name)
 ```
+
 CommandsNext will now interpret this as a command named *greet* that takes one argument.
 
 Next, replace our original response message with an [interpolated string](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated)
 which uses our new parameter.
+
 ```cs
 public async Task GreetCommand(CommandContext ctx, string name)
 {
@@ -198,22 +210,26 @@ Together, this means that any additional arguments will prevent CommandsNext fro
 
 The simplest way to get around this would be to wrap your input with double quotes.<br/>
 CommandsNext will parse this as one argument, allowing your command to be executed.
+
 ```
 !greet "Luke Smith"
 ```
 
 If you would prefer not to use quotes, you can use the `RemainingText` attribute on your parameter.<br/>
 This attribute will instruct CommandsNext to parse all remaining arguments into that parameter.
+
 ```cs
 public async Task GreetCommand(CommandContext ctx, [RemainingText] string name)
 ```
 
 Alternatively, you can use the `params` keyword to have all remaining arguments parsed into an array.
+
 ```cs
 public async Task GreetCommand(CommandContext ctx, params string[] names)
 ```
 
 A more obvious solution is to add additional parameters to the method signature of your command method.<br/>
+
 ```cs
 public async Task GreetCommand(CommandContext ctx, string firstName, string lastName)
 ```
@@ -245,6 +261,7 @@ Let's do a quick demonstration of the built-in converters.
 
 Create a new command method above our `GreetCommand` method named `RandomCommand` and have it take two integer arguments.
 As the method name suggests, this command will be named *random*.
+
 ```cs
 [Command("random")]
 public async Task RandomCommand(CommandContext ctx, int min, int max)
@@ -254,11 +271,13 @@ public async Task RandomCommand(CommandContext ctx, int min, int max)
 ```
 
 Make a variable with a new instance of `Random`.
+
 ```cs
 var random = new Random();
 ```
 
 Finally, we'll respond with a random number within the range provided by the user.
+
 ```cs
 await ctx.RespondAsync($"Your number is: {random.Next(min, max)}");
 ```
@@ -273,11 +292,13 @@ removing the need to manually parse and convert the arguments yourself.
 <br/>
 We'll do one more to drive the point home. Head back to our old `GreetCommand` method, remove our
 `name` parameter, and replace it with a new parameter of type `DiscordMember` named `member`.
+
 ```cs
 public async Task GreetCommand(CommandContext ctx, DiscordMember member)
 ```
 
 Then modify the response to mention the provided member with the `Mention` property on `DiscordMember`.
+
 ```cs
 public async Task GreetCommand(CommandContext ctx, DiscordMember member)
 {
@@ -299,6 +320,7 @@ Ain't that neat?
 
 ## Command Overloads
 Command method overloading allows you to create multiple argument configurations for a single command.
+
 ```cs
 [Command("foo")]
 public Task FooCommand(CommandContext ctx, string bar, int baz) { }
@@ -306,10 +328,12 @@ public Task FooCommand(CommandContext ctx, string bar, int baz) { }
 [Command("foo")]
 public Task FooCommand(CommandContext ctx, DiscordUser bar) { }
 ```
+
 Executing `!foo green 5` will run the first method, and `!foo @SecondUser` will run the second method.
 
 <br/>
 Additionally, all check attributes are shared between overloads.<br/>
+
 ```cs
 [Command("foo"), Aliases("bar", "baz")]
 [RequireGuild, RequireBotPermissions(Permissions.AttachFiles)]
@@ -318,6 +342,7 @@ public Task FooCommand(CommandContext ctx, int bar, int baz, string qux = "agony
 [Command("foo")]
 public Task FooCommand(CommandContext ctx, DiscordChannel bar, TimeSpan baz) { }
 ```
+
 The additional attributes and checks applied to the first method will also be applied to the second method.
 
 
