@@ -172,6 +172,12 @@ public class DiscordInvite
 	public DiscordScheduledEvent GuildScheduledEvent { get; internal set; }
 
 	/// <summary>
+	/// Gets the invites flags.
+	/// </summary>
+	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
+	public InviteFlags Flags { get; internal set; }
+
+	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordInvite"/> class.
 	/// </summary>
 	internal DiscordInvite()
