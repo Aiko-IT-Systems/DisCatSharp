@@ -20,35 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+namespace DisCatSharp.Enums;
 
-using DisCatSharp.Entities;
-using DisCatSharp.Enums;
-
-namespace DisCatSharp.EventArgs;
-
-/// <summary>
-/// Represents arguments for UserSpeaking event.
-/// </summary>
-public class UserSpeakingEventArgs : DiscordEventArgs
+public enum SpeakingFlags : long
 {
 	/// <summary>
-	/// Gets the users whose speaking state changed.
+	/// Normal transmission of voice audio.
 	/// </summary>
-	public DiscordUser User { get; internal set; }
+	Microphone = 1<<0,
 
 	/// <summary>
-	/// Gets the SSRC of the audio source.
+	/// Transmission of context audio for video, no speaking indicator.
 	/// </summary>
-	public uint Ssrc { get; internal set; }
+	Soundshare = 1<<1,
 
 	/// <summary>
-	/// Gets whether this user is speaking.
+	/// Priority speaker, lowering audio of other speakers.
 	/// </summary>
-	public SpeakingFlags Speaking { get; internal set; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="UserSpeakingEventArgs"/> class.
-	/// </summary>
-	internal UserSpeakingEventArgs(IServiceProvider provider) : base(provider) { }
+	Priority = 1<<2
 }

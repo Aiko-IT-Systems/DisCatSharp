@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using DisCatSharp.Enums;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.VoiceNext.Entities;
@@ -33,7 +35,7 @@ internal sealed class VoiceSpeakingPayload
 	/// Gets or sets a value indicating whether speaking.
 	/// </summary>
 	[JsonProperty("speaking")]
-	public bool Speaking { get; set; }
+	public SpeakingFlags Speaking { get; set; }
 
 	/// <summary>
 	/// Gets or sets the delay.
