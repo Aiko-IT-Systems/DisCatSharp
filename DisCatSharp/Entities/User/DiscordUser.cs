@@ -91,7 +91,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <summary>
 	/// Gets this user's display name.
 	/// </summary>
-	[JsonProperty("display_name"), DiscordInExperiment]
+	[JsonProperty("display_name", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
 	public string DisplayName { get; internal set; }
 
 	/// <summary>
