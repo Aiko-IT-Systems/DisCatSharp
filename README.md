@@ -7,7 +7,6 @@
 ----
 [![Build](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/build.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/build.yml)
 [![Documentation](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/documentation.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/documentation.yml)
-[![Typos](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/typos.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/typos.yml)
 [![CodeQL](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/codeql.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/codeql.yml)
 <!--![Wakatime](https://wakatime.com/badge/github/Aiko-IT-Systems/DisCatSharp.svg)-->
 
