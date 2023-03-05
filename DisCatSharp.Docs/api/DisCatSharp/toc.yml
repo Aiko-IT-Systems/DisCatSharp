@@ -447,6 +447,8 @@
     name: InteractionResponseType
   - uid: DisCatSharp.Enums.InteractionType
     name: InteractionType
+  - uid: DisCatSharp.Enums.InviteFlags
+    name: InviteFlags
   - uid: DisCatSharp.Enums.InviteType
     name: InviteType
   - uid: DisCatSharp.Enums.MemberFlags
