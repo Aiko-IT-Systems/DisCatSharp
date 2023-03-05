@@ -665,7 +665,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <returns>String representation of this member.</returns>
 	public override string ToString()
-		=> $"Member {this.Id}; {this.Username}#{this.Discriminator} ({this.DisplayName})";
+		=> $"Member {this.Id}; {this.Username}#{this.Discriminator}";
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordMember"/> is equal to another object.
