@@ -435,7 +435,7 @@ public sealed class DiscordApiClient
 		Optional<int> afkTimeout, Optional<string> iconb64, Optional<ulong> ownerId, Optional<string> splashb64,
 		Optional<ulong?> systemChannelId, Optional<SystemChannelFlags> systemChannelFlags,
 		Optional<ulong?> publicUpdatesChannelId, Optional<ulong?> rulesChannelId, Optional<string> description,
-		Optional<string> bannerb64, Optional<string> discoverySplashb64, Optional<string> preferredLocale, Optional<bool> premiumProgressBarEnabled, string reason)
+		Optional<string> bannerb64, Optional<string> discoverySplashb64, Optional<string> homeHeaderb64, Optional<string> preferredLocale, Optional<bool> premiumProgressBarEnabled, string reason)
 	{
 		var pld = new RestGuildModifyPayload
 		{
@@ -457,7 +457,8 @@ public sealed class DiscordApiClient
 			PublicUpdatesChannelId = publicUpdatesChannelId,
 			PreferredLocale = preferredLocale,
 			Description = description,
-			PremiumProgressBarEnabled = premiumProgressBarEnabled
+			PremiumProgressBarEnabled = premiumProgressBarEnabled,
+			HomeHeaderBase64 = homeHeaderb64
 		};
 
 		var headers = Utilities.GetBaseHeaders();

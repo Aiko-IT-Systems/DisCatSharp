@@ -509,19 +509,22 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Whether this guild has the community feature enabled.
 	/// </summary>
 	[JsonIgnore]
-	public bool IsCommunity => this.Features.HasFeature(GuildFeaturesEnum.HasCommunityEnabled);
+	public bool IsCommunity
+		=> this.Features.HasFeature(GuildFeaturesEnum.HasCommunityEnabled);
 
 	/// <summary>
 	/// Whether this guild has enabled the welcome screen.
 	/// </summary>
 	[JsonIgnore]
-	public bool HasWelcomeScreen => this.Features.HasFeature(GuildFeaturesEnum.HasWelcomeScreenEnabled);
+	public bool HasWelcomeScreen
+		=> this.Features.HasFeature(GuildFeaturesEnum.HasWelcomeScreenEnabled);
 
 	/// <summary>
 	/// Whether this guild has enabled membership screening.
 	/// </summary>
 	[JsonIgnore]
-	public bool HasMemberVerificationGate => this.Features.HasFeature(GuildFeaturesEnum.HasMembershipScreeningEnabled);
+	public bool HasMemberVerificationGate
+		=> this.Features.HasFeature(GuildFeaturesEnum.HasMembershipScreeningEnabled);
 
 	/// <summary>
 	/// Gets this guild's premium tier (Nitro boosting).
@@ -557,7 +560,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets a dictionary of all by position ordered channels associated with this guild. The dictionary's key is the channel ID.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyDictionary<ulong, DiscordChannel> OrderedChannels => new ReadOnlyDictionary<ulong, DiscordChannel>(this.InternalSortChannels());
+	public IReadOnlyDictionary<ulong, DiscordChannel> OrderedChannels
+		=> new ReadOnlyDictionary<ulong, DiscordChannel>(this.InternalSortChannels());
 
 	/// <summary>
 	/// Sorts the channels.
@@ -766,13 +770,14 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		var iconb64 = ImageTool.Base64FromStream(mdl.Icon);
 		var splashb64 = ImageTool.Base64FromStream(mdl.Splash);
 		var bannerb64 = ImageTool.Base64FromStream(mdl.Banner);
-		var discoverySplash64 = ImageTool.Base64FromStream(mdl.DiscoverySplash);
+		var discoverySplashb64 = ImageTool.Base64FromStream(mdl.DiscoverySplash);
+		var homeHeaderb64 = ImageTool.Base64FromStream(mdl.HomeHeader);
 
 		return await this.Discord.ApiClient.ModifyGuildAsync(this.Id, mdl.Name,
 			mdl.VerificationLevel, mdl.DefaultMessageNotifications, mdl.MfaLevel, mdl.ExplicitContentFilter,
 			afkChannelId, mdl.AfkTimeout, iconb64, mdl.Owner.Map(e => e.Id), splashb64,
 			systemChannelId, mdl.SystemChannelFlags, publicUpdatesChannelId, rulesChannelId,
-			mdl.Description, bannerb64, discoverySplash64, mdl.PreferredLocale, mdl.PremiumProgressBarEnabled, mdl.AuditLogReason).ConfigureAwait(false);
+			mdl.Description, bannerb64, discoverySplashb64, homeHeaderb64, mdl.PreferredLocale, mdl.PremiumProgressBarEnabled, mdl.AuditLogReason).ConfigureAwait(false);
 	}
 
 	/// <summary>

@@ -22,6 +22,7 @@
 
 using System.IO;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
@@ -121,6 +122,12 @@ public class GuildEditModel : BaseEditModel
 	/// The new discovery splash image of the guild
 	/// </summary>
 	public Optional<Stream> DiscoverySplash { get; set; }
+
+	/// <summary>
+	/// The new home header of the guild.
+	/// </summary>
+	[DiscordInExperiment]
+	public Optional<Stream> HomeHeader { get; set; }
 
 	/// <summary>
 	/// Whether the premium progress bar should be enabled
