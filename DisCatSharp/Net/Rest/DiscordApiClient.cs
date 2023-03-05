@@ -426,6 +426,7 @@ public sealed class DiscordApiClient
 	/// <param name="description">The description.</param>
 	/// <param name="bannerb64">The banner base64.</param>
 	/// <param name="discoverySplashb64">The discovery base64.</param>
+	/// <param name="homeHeaderb64">The home header base64.</param>
 	/// <param name="preferredLocale">The preferred locale.</param>
 	/// <param name="premiumProgressBarEnabled">Whether the premium progress bar should be enabled.</param>
 	/// <param name="reason">The reason.</param>
