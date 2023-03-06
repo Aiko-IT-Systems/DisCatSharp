@@ -4029,7 +4029,7 @@ public sealed class DiscordApiClient
 	{
 		builder.Validate(true);
 
-		var flags = MessageFlags.None;
+		MessageFlags? flags = builder._flagsChanged ? MessageFlags.None : null;
 		if (builder.EmbedsSuppressed)
 			flags |= MessageFlags.SuppressedEmbeds;
 		if (builder.NotificationsSuppressed)

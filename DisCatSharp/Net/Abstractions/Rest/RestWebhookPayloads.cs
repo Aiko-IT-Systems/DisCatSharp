@@ -164,5 +164,5 @@ internal sealed class RestWebhookMessageEditPayload
 	public IEnumerable<DiscordActionRowComponent> Components { get; set; }
 
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
-	public MessageFlags Flags { get; set; }
+	public MessageFlags? Flags { get; set; }
 }
