@@ -446,9 +446,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public async Task<DiscordRpcApplication> GetRpcApplicationAsync(ulong applicationId)
 		=> await this.ApiClient.GetApplicationRpcInfoAsync(applicationId);
 
-	public async Task<DiscordApplication> GetCurrentApplicationOauth2InfoAsync()
+	public async Task<DiscordApplication> GetCurrentApplicationInfoAsync()
 	{
-		var tapp = await this.ApiClient.GetCurrentApplicationOauth2InfoAsync();
+		var tapp = await this.ApiClient.GetCurrentApplicationInfoAsync();
 		var app = new DiscordApplication
 		{
 			Discord = this,
@@ -469,30 +469,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			Tags = (tapp.Tags ?? Enumerable.Empty<string>()).ToArray()
 		};
 
-		if (tapp.Team == null)
-		{
-			app.Owners = new List<DiscordUser>(new[] { new DiscordUser(tapp.Owner) });
-			app.Team = null;
-			app.TeamName = null;
-		}
-		else
-		{
-			app.Team = new DiscordTeam(tapp.Team);
-
-			var members = tapp.Team.Members
-				.Select(x => new DiscordTeamMember(x) { TeamId = app.Team.Id, TeamName = app.Team.Name, User = new DiscordUser(x.User) })
-				.ToArray();
-
-			var owners = members
-				.Where(x => x.MembershipStatus == DiscordTeamMembershipStatus.Accepted)
-				.Select(x => x.User)
-				.ToArray();
-
-			app.Owners = new List<DiscordUser>(owners);
-			app.Team.Owner = owners.FirstOrDefault(x => x.Id == tapp.Team.OwnerId);
-			app.Team.Members = new List<DiscordTeamMember>(members);
-			app.TeamName = app.Team.Name;
-		}
 
 		app.GuildId = tapp.GuildId.ValueOrDefault();
 		app.Slug = tapp.Slug.ValueOrDefault();
