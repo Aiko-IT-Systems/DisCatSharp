@@ -523,4 +523,5 @@ public static class Endpoints
 	public const string CLEAR_MENTION_RAID = "/clear-mention-raid";
 	public const string PUBLISHED_LISTINGS = "/published-listings";
 	public const string SKUS = "/skus";
+	public const string GUILD_HOME_HEADERES = "/home-headers";
 }

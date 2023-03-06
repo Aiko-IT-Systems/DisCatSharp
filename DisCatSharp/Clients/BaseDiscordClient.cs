@@ -25,6 +25,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -35,6 +36,8 @@ using DisCatSharp.Net;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
+using Newtonsoft.Json;
 
 namespace DisCatSharp;
 
@@ -171,7 +174,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// </summary>
 	public async Task<DiscordApplication> GetCurrentApplicationAsync()
 	{
-		var tapp = await this.ApiClient.GetCurrentApplicationInfoAsync().ConfigureAwait(false);
+		var tapp = await this.ApiClient.GetCurrentApplicationOauth2InfoAsync().ConfigureAwait(false);
 		var app = new DiscordApplication
 		{
 			Discord = this,
@@ -182,8 +185,6 @@ public abstract class BaseDiscordClient : IDisposable
 			IconHash = tapp.IconHash,
 			RpcOrigins = tapp.RpcOrigins != null ? new ReadOnlyCollection<string>(tapp.RpcOrigins) : null,
 			Flags = tapp.Flags,
-			RequiresCodeGrant = tapp.BotRequiresCodeGrant,
-			IsPublic = tapp.IsPublicBot,
 			IsHook = tapp.IsHook,
 			Type = tapp.Type,
 			PrivacyPolicyUrl = tapp.PrivacyPolicyUrl,
@@ -224,10 +225,37 @@ public abstract class BaseDiscordClient : IDisposable
 		app.PrimarySkuId = tapp.PrimarySkuId.ValueOrDefault();
 		app.VerifyKey = tapp.VerifyKey.ValueOrDefault();
 		app.CoverImageHash = tapp.CoverImageHash.ValueOrDefault();
+		app.Guild = tapp.Guild.ValueOrDefault();
+		app.ApproximateGuildCount = tapp.ApproximateGuildCount.ValueOrDefault();
+		app.RequiresCodeGrant = tapp.BotRequiresCodeGrant.ValueOrDefault();
+		app.IsPublic = tapp.IsPublicBot.ValueOrDefault();
+		app.RedirectUris = tapp.RedirectUris.ValueOrDefault();
+		app.InteractionsEndpointUrl = tapp.InteractionsEndpointUrl.ValueOrDefault();
 
 		return app;
 	}
 
+	/// <summary>
+	/// Updates the current API application.
+	/// </summary>
+	/// <param name="description">The new description.</param>
+	/// <param name="interactionsEndpointUrl">The new interactions endpoint url.</param>
+	/// <param name="roleConnectionsVerificationUrl">The new role connections verification url.</param>
+	/// <param name="tags">The new tags.</param>
+	/// <param name="icon">The new application icon.</param>
+	/// <returns>The updated application.</returns>
+	public async Task<DiscordApplication> UpdateCurrentApplicationInfoAsync(Optional<string> description, Optional<string> interactionsEndpointUrl, Optional<string> roleConnectionsVerificationUrl, Optional<List<string>?> tags, Optional<Stream> icon)
+	{
+		var iconb64 = ImageTool.Base64FromStream(icon);
+		if (tags != null && tags.HasValue && tags.Value != null)
+			if (tags.Value.Any(x => x.Length > 20))
+				throw new InvalidOperationException("Tags can not exceed 20 chars.");
+		_ = await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, tags, iconb64);
+		// We use GetCurrentApplicationAsync because modify returns internal data not meant for developers.
+		var app = await this.GetCurrentApplicationAsync();
+		this.CurrentApplication = app;
+		return app;
+	}
 
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 	/// <summary>

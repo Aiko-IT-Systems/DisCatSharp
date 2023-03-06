@@ -444,7 +444,46 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordRpcApplication> GetRpcApplicationAsync(ulong applicationId)
-		=> await this.ApiClient.GetApplicationInfoAsync(applicationId);
+		=> await this.ApiClient.GetApplicationRpcInfoAsync(applicationId);
+
+	public async Task<DiscordApplication> GetCurrentApplicationInfoAsync()
+	{
+		var tapp = await this.ApiClient.GetCurrentApplicationInfoAsync();
+		var app = new DiscordApplication
+		{
+			Discord = this,
+			Id = tapp.Id,
+			Name = tapp.Name,
+			Description = tapp.Description,
+			Summary = tapp.Summary,
+			IconHash = tapp.IconHash,
+			RpcOrigins = tapp.RpcOrigins != null ? new ReadOnlyCollection<string>(tapp.RpcOrigins) : null,
+			Flags = tapp.Flags,
+			IsHook = tapp.IsHook,
+			Type = tapp.Type,
+			PrivacyPolicyUrl = tapp.PrivacyPolicyUrl,
+			TermsOfServiceUrl = tapp.TermsOfServiceUrl,
+			CustomInstallUrl = tapp.CustomInstallUrl,
+			InstallParams = tapp.InstallParams,
+			RoleConnectionsVerificationUrl = tapp.RoleConnectionsVerificationUrl,
+			Tags = (tapp.Tags ?? Enumerable.Empty<string>()).ToArray()
+		};
+
+
+		app.GuildId = tapp.GuildId.ValueOrDefault();
+		app.Slug = tapp.Slug.ValueOrDefault();
+		app.PrimarySkuId = tapp.PrimarySkuId.ValueOrDefault();
+		app.VerifyKey = tapp.VerifyKey.ValueOrDefault();
+		app.CoverImageHash = tapp.CoverImageHash.ValueOrDefault();
+		app.Guild = tapp.Guild.ValueOrDefault();
+		app.ApproximateGuildCount = tapp.ApproximateGuildCount.ValueOrDefault();
+		app.RequiresCodeGrant = tapp.BotRequiresCodeGrant.ValueOrDefault();
+		app.IsPublic = tapp.IsPublicBot.ValueOrDefault();
+		app.RedirectUris = tapp.RedirectUris.ValueOrDefault();
+		app.InteractionsEndpointUrl = tapp.InteractionsEndpointUrl.ValueOrDefault();
+
+		return app;
+	}
 
 	/// <summary>
 	/// Tries to get a user.
