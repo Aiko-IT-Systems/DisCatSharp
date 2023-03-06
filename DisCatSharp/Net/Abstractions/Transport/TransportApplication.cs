@@ -68,7 +68,7 @@ internal sealed class TransportApplication
 	/// Whether the bot is public.
 	/// </summary>
 	[JsonProperty("bot_public", NullValueHandling = NullValueHandling.Include)]
-	public bool IsPublicBot { get; set; }
+	public Optional<bool?> IsPublicBot { get; set; }
 
 	/// <summary>
 	/// Gets or sets the flags.
@@ -92,7 +92,7 @@ internal sealed class TransportApplication
 	/// Gets or sets a value indicating whether the bot requires code grant.
 	/// </summary>
 	[JsonProperty("bot_require_code_grant", NullValueHandling = NullValueHandling.Include)]
-	public bool BotRequiresCodeGrant { get; set; }
+	public Optional<bool?> BotRequiresCodeGrant { get; set; }
 
 	/// <summary>
 	/// Gets or sets a value indicating whether the bot is a hook.
@@ -110,7 +110,7 @@ internal sealed class TransportApplication
 	/// Gets or sets the rpc origins.
 	/// </summary>
 	[JsonProperty("rpc_origins", NullValueHandling = NullValueHandling.Ignore)]
-	public IList<string> RpcOrigins { get; set; }
+	public List<string> RpcOrigins { get; set; }
 
 	/// <summary>
 	/// Gets or sets the owner.
@@ -135,6 +135,12 @@ internal sealed class TransportApplication
 	/// </summary>
 	[JsonProperty("guild_id")]
 	public Optional<ulong> GuildId { get; set; }
+
+	/// <summary>
+	/// Gets or sets the partial guild.
+	/// </summary>
+	[JsonProperty("guild", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<DiscordGuild> Guild { get; set; }
 
 	/// <summary>
 	/// Gets or sets the primary sku id.
@@ -177,6 +183,21 @@ internal sealed class TransportApplication
 	/// </summary>
 	[JsonProperty("tags", NullValueHandling = NullValueHandling.Include)]
 	public List<string> Tags { get; set; }
+
+	[JsonProperty("approximate_guild_count", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<int> ApproximateGuildCount { get; set; }
+
+	/// <summary>
+	/// Gets or sets the interactions endpoint url.
+	/// </summary>
+	[JsonProperty("interactions_endpoint_url", NullValueHandling = NullValueHandling.Include)]
+	public Optional<string> InteractionsEndpointUrl { get; set; }
+
+	/// <summary>
+	/// Gets or sets the rpc origins.
+	/// </summary>
+	[JsonProperty("redirect_uris", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<List<string>> RedirectUris { get; set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="TransportApplication"/> class.

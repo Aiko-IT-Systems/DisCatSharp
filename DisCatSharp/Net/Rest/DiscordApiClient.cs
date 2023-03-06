@@ -426,6 +426,7 @@ public sealed class DiscordApiClient
 	/// <param name="description">The description.</param>
 	/// <param name="bannerb64">The banner base64.</param>
 	/// <param name="discoverySplashb64">The discovery base64.</param>
+	/// <param name="homeHeaderb64">The home header base64.</param>
 	/// <param name="preferredLocale">The preferred locale.</param>
 	/// <param name="premiumProgressBarEnabled">Whether the premium progress bar should be enabled.</param>
 	/// <param name="reason">The reason.</param>
@@ -435,7 +436,7 @@ public sealed class DiscordApiClient
 		Optional<int> afkTimeout, Optional<string> iconb64, Optional<ulong> ownerId, Optional<string> splashb64,
 		Optional<ulong?> systemChannelId, Optional<SystemChannelFlags> systemChannelFlags,
 		Optional<ulong?> publicUpdatesChannelId, Optional<ulong?> rulesChannelId, Optional<string> description,
-		Optional<string> bannerb64, Optional<string> discoverySplashb64, Optional<string> preferredLocale, Optional<bool> premiumProgressBarEnabled, string reason)
+		Optional<string> bannerb64, Optional<string> discoverySplashb64, Optional<string> homeHeaderb64, Optional<string> preferredLocale, Optional<bool> premiumProgressBarEnabled, string reason)
 	{
 		var pld = new RestGuildModifyPayload
 		{
@@ -457,7 +458,8 @@ public sealed class DiscordApiClient
 			PublicUpdatesChannelId = publicUpdatesChannelId,
 			PreferredLocale = preferredLocale,
 			Description = description,
-			PremiumProgressBarEnabled = premiumProgressBarEnabled
+			PremiumProgressBarEnabled = premiumProgressBarEnabled,
+			HomeHeaderBase64 = homeHeaderb64
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -3679,7 +3681,6 @@ public sealed class DiscordApiClient
 	/// <param name="name">The name.</param>
 	/// <param name="base64Avatar">The base64_avatar.</param>
 	/// <param name="reason">The reason.</param>
-
 	internal async Task<DiscordWebhook> CreateWebhookAsync(ulong channelId, string name, Optional<string> base64Avatar, string reason)
 	{
 		var pld = new RestWebhookPayload
@@ -3710,7 +3711,6 @@ public sealed class DiscordApiClient
 	/// Gets the channel webhooks async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
-
 	internal async Task<IReadOnlyList<DiscordWebhook>> GetChannelWebhooksAsync(ulong channelId)
 	{
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.WEBHOOKS}";
@@ -3728,7 +3728,6 @@ public sealed class DiscordApiClient
 	/// Gets the guild webhooks async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
-
 	internal async Task<IReadOnlyList<DiscordWebhook>> GetGuildWebhooksAsync(ulong guildId)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.WEBHOOKS}";
@@ -3746,7 +3745,6 @@ public sealed class DiscordApiClient
 	/// Gets the webhook async.
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
-
 	internal async Task<DiscordWebhook> GetWebhookAsync(ulong webhookId)
 	{
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id";
@@ -3767,7 +3765,6 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
-
 	internal async Task<DiscordWebhook> GetWebhookWithTokenAsync(ulong webhookId, string webhookToken)
 	{
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
@@ -3793,7 +3790,6 @@ public sealed class DiscordApiClient
 	/// <param name="name">The name.</param>
 	/// <param name="base64Avatar">The base64_avatar.</param>
 	/// <param name="reason">The reason.</param>
-
 	internal async Task<DiscordWebhook> ModifyWebhookAsync(ulong webhookId, ulong channelId, string name, Optional<string> base64Avatar, string reason)
 	{
 		var pld = new RestWebhookPayload
@@ -3829,7 +3825,6 @@ public sealed class DiscordApiClient
 	/// <param name="base64Avatar">The base64_avatar.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="reason">The reason.</param>
-
 	internal async Task<DiscordWebhook> ModifyWebhookAsync(ulong webhookId, string name, string base64Avatar, string webhookToken, string reason)
 	{
 		var pld = new RestWebhookPayload
@@ -3860,7 +3855,6 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="reason">The reason.</param>
-
 	internal Task DeleteWebhookAsync(ulong webhookId, string reason)
 	{
 		var headers = new Dictionary<string, string>();
@@ -3880,7 +3874,6 @@ public sealed class DiscordApiClient
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="reason">The reason.</param>
-
 	internal Task DeleteWebhookAsync(ulong webhookId, string webhookToken, string reason)
 	{
 		var headers = new Dictionary<string, string>();
@@ -3901,7 +3894,6 @@ public sealed class DiscordApiClient
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="builder">The builder.</param>
 	/// <param name="threadId">The thread_id.</param>
-
 	internal async Task<DiscordMessage> ExecuteWebhookAsync(ulong webhookId, string webhookToken, DiscordWebhookBuilder builder, string threadId)
 	{
 		builder.Validate();
@@ -3912,6 +3904,13 @@ public sealed class DiscordApiClient
 					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
 		var values = new Dictionary<string, string>();
+
+		var flags = MessageFlags.None;
+		if (builder.EmbedsSuppressed)
+			flags |= MessageFlags.SuppressedEmbeds;
+		if (builder.NotificationsSuppressed)
+			flags |= MessageFlags.SuppressNotifications;
+
 		var pld = new RestWebhookExecutePayload
 		{
 			Content = builder.Content,
@@ -3920,7 +3919,8 @@ public sealed class DiscordApiClient
 			IsTts = builder.IsTts,
 			Embeds = builder.Embeds,
 			Components = builder.Components,
-			ThreadName = builder.ThreadName
+			ThreadName = builder.ThreadName,
+			Flags = flags
 		};
 
 		if (builder.Mentions != null)
@@ -3980,7 +3980,6 @@ public sealed class DiscordApiClient
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="jsonPayload">The json_payload.</param>
 	/// <param name="threadId">The thread_id.</param>
-
 	internal async Task<DiscordMessage> ExecuteWebhookSlackAsync(ulong webhookId, string webhookToken, string jsonPayload, string threadId)
 	{
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.SLACK}";
@@ -4003,7 +4002,6 @@ public sealed class DiscordApiClient
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="jsonPayload">The json_payload.</param>
 	/// <param name="threadId">The thread_id.</param>
-
 	internal async Task<DiscordMessage> ExecuteWebhookGithubAsync(ulong webhookId, string webhookToken, string jsonPayload, string threadId)
 	{
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.GITHUB}";
@@ -4027,10 +4025,15 @@ public sealed class DiscordApiClient
 	/// <param name="messageId">The message_id.</param>
 	/// <param name="builder">The builder.</param>
 	/// <param name="threadId">The thread_id.</param>
-
 	internal async Task<DiscordMessage> EditWebhookMessageAsync(ulong webhookId, string webhookToken, string messageId, DiscordWebhookBuilder builder, string threadId)
 	{
 		builder.Validate(true);
+
+		var flags = MessageFlags.None;
+		if (builder.EmbedsSuppressed)
+			flags |= MessageFlags.SuppressedEmbeds;
+		if (builder.NotificationsSuppressed)
+			flags |= MessageFlags.SuppressNotifications;
 
 		var pld = new RestWebhookMessageEditPayload
 		{
@@ -4038,6 +4041,7 @@ public sealed class DiscordApiClient
 			Embeds = builder.Embeds,
 			Mentions = builder.Mentions,
 			Components = builder.Components,
+			Flags = flags
 		};
 
 		if (builder.Files?.Count > 0)
@@ -4123,7 +4127,6 @@ public sealed class DiscordApiClient
 	/// <param name="messageId">The message_id.</param>
 	/// <param name="builder">The builder.</param>
 	/// <param name="threadId">The thread_id.</param>
-
 	internal Task<DiscordMessage> EditWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId, DiscordWebhookBuilder builder, ulong threadId) =>
 		this.EditWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), builder, threadId.ToString());
 
@@ -4134,7 +4137,6 @@ public sealed class DiscordApiClient
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="messageId">The message_id.</param>
 	/// <param name="threadId">The thread_id.</param>
-
 	internal async Task<DiscordMessage> GetWebhookMessageAsync(ulong webhookId, string webhookToken, string messageId, string threadId)
 	{
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
@@ -4157,7 +4159,6 @@ public sealed class DiscordApiClient
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="messageId">The message_id.</param>
-
 	internal Task<DiscordMessage> GetWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId) =>
 		this.GetWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), null);
 
@@ -4168,7 +4169,6 @@ public sealed class DiscordApiClient
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="messageId">The message_id.</param>
 	/// <param name="threadId">The thread_id.</param>
-
 	internal Task<DiscordMessage> GetWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId, ulong threadId) =>
 		this.GetWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), threadId.ToString());
 
@@ -4179,7 +4179,6 @@ public sealed class DiscordApiClient
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="messageId">The message_id.</param>
 	/// <param name="threadId">The thread_id.</param>
-
 	internal async Task DeleteWebhookMessageAsync(ulong webhookId, string webhookToken, string messageId, string threadId)
 	{
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
@@ -4198,7 +4197,6 @@ public sealed class DiscordApiClient
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="messageId">The message_id.</param>
-
 	internal Task DeleteWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId) =>
 		this.DeleteWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), null);
 
@@ -4209,7 +4207,6 @@ public sealed class DiscordApiClient
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="messageId">The message_id.</param>
 	/// <param name="threadId">The thread_id.</param>
-
 	internal Task DeleteWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId, ulong threadId) =>
 		this.DeleteWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), threadId.ToString());
 	#endregion
@@ -5778,29 +5775,70 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the current application info.
+	/// Gets the current application info via oauth2.
 	/// </summary>
-	internal Task<TransportApplication> GetCurrentApplicationInfoAsync()
-		=> this.GetApplicationInfoAsync("@me");
+	internal Task<TransportApplication> GetCurrentApplicationOauth2InfoAsync()
+		=> this.GetApplicationOauth2InfoAsync("@me");
 
 	/// <summary>
 	/// Gets the application rpc info.
 	/// </summary>
 	/// <param name="applicationId">The application_id.</param>
-	internal Task<DiscordRpcApplication> GetApplicationInfoAsync(ulong applicationId)
+	internal Task<DiscordRpcApplication> GetApplicationRpcInfoAsync(ulong applicationId)
 		=> this.GetApplicationRpcInfoAsync(applicationId.ToString(CultureInfo.InvariantCulture));
+
+	/// <summary>
+	/// Gets the application info via oauth2.
+	/// </summary>
+	/// <param name="applicationId">The application_id.</param>
+	private async Task<TransportApplication> GetApplicationOauth2InfoAsync(string applicationId)
+	{
+		var route = $"{Endpoints.OAUTH2}{Endpoints.APPLICATIONS}/:application_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { application_id = applicationId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		return JsonConvert.DeserializeObject<TransportApplication>(res.Response);
+	}
 
 	/// <summary>
 	/// Gets the application info.
 	/// </summary>
-	/// <param name="applicationId">The application_id.</param>
-	private async Task<TransportApplication> GetApplicationInfoAsync(string applicationId)
+	internal async Task<TransportApplication> GetCurrentApplicationInfoAsync()
 	{
-		var route = $"{Endpoints.OAUTH2}{Endpoints.APPLICATIONS}/:application_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {application_id = applicationId }, out var path);
+		var route = $"{Endpoints.APPLICATIONS}{Endpoints.ME}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		var tapp = JsonConvert.DeserializeObject<TransportApplication>(res.Response);
+
+		if (tapp.Guild.HasValue)
+			tapp.Guild.Value.Discord = this.Discord;
+		return tapp;
+	}
+
+	/// <summary>
+	/// Gets the application info.
+	/// </summary>
+	internal async Task<TransportApplication> ModifyCurrentApplicationInfoAsync(Optional<string> description, Optional<string> interactionsEndpointUrl, Optional<string> roleConnectionsVerificationUrl, Optional<List<string>?> tags, Optional<string?> iconb64)
+	{
+		var pld = new RestApplicationModifyPayload()
+		{
+			Description = description,
+			InteractionsEndpointUrl = interactionsEndpointUrl,
+			RoleConnectionsVerificationUrl = roleConnectionsVerificationUrl,
+			Tags = tags,
+			IconBase64 = iconb64
+		};
+
+		var route = $"{Endpoints.APPLICATIONS}{Endpoints.ME}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		return JsonConvert.DeserializeObject<TransportApplication>(res.Response);
 	}
@@ -5812,7 +5850,7 @@ public sealed class DiscordApiClient
 	private async Task<DiscordRpcApplication> GetApplicationRpcInfoAsync(string applicationId)
 	{
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.RPC}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {application_id = applicationId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { application_id = applicationId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);

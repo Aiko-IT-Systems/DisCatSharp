@@ -353,7 +353,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	public async Task<DiscordRpcApplication?> GetRpcInfoAsync()
 #pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-		=> this.IsBot ? await this.Discord.ApiClient.GetApplicationInfoAsync(this.Id) : await Task.FromResult<DiscordRpcApplication?>(null);
+		=> this.IsBot ? await this.Discord.ApiClient.GetApplicationRpcInfoAsync(this.Id) : await Task.FromResult<DiscordRpcApplication?>(null);
 #pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	/// <summary>
