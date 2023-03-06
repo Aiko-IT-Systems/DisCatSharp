@@ -70,7 +70,7 @@ public enum SkuFlags : long
 	ApplicationGuildSubscription = 1<<7,
 
 	/// <summary>
-	/// Whether the SKU is a application subscription. These are subscriptions made to applications for premium perks bound to a guild.
+	/// Whether the SKU is a application subscription. These are subscriptions made to applications for premium perks bound to a user.
 	/// </summary>
 	ApplicationUserSubscription = 1<<8
 }
