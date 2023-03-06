@@ -36,7 +36,7 @@ public enum SkuFlags : long
 	/// <summary>
 	/// Whether the SKU is free premium content.
 	/// </summary>
-	FreePremiumContent = 1<<1,
+	HasFreePremiumContent = 1<<1,
 
 	/// <summary>
 	/// Whether the SKU is available for purchase.
@@ -65,7 +65,12 @@ public enum SkuFlags : long
 	PremiumSubscription = 1<<6,
 
 	/// <summary>
-	/// Whether the SKU is a application subscription. These are subscriptions made to applications for premium perks
+	/// Whether the SKU is a application subscription. These are subscriptions made to applications for premium perks bound to a guild.
 	/// </summary>
-	ApplicationSubscription = 1<<7
+	ApplicationGuildSubscription = 1<<7,
+
+	/// <summary>
+	/// Whether the SKU is a application subscription. These are subscriptions made to applications for premium perks bound to a guild.
+	/// </summary>
+	ApplicationUserSubscription = 1<<8
 }
