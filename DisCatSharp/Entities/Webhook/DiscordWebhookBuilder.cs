@@ -61,6 +61,11 @@ public sealed class DiscordWebhookBuilder
 	public bool NotificationsSuppressed { get; set; }
 
 	/// <summary>
+	/// Whether flags were changed.
+	/// </summary>
+	internal bool _flagsChanged = false;
+
+	/// <summary>
 	/// Message to send on this webhook request.
 	/// </summary>
 	public string Content
@@ -129,6 +134,7 @@ public sealed class DiscordWebhookBuilder
 	/// <param name="suppressEmbeds">Whether the webhook should suppress embeds. Defaults to true.</param>
 	public DiscordWebhookBuilder SuppressEmbeds(bool suppressEmbeds = true)
 	{
+		this._flagsChanged = true;
 		this.EmbedsSuppressed = suppressEmbeds;
 		return this;
 	}
@@ -139,6 +145,7 @@ public sealed class DiscordWebhookBuilder
 	/// <param name="silent">Whether the webhook should be send as silent message. Defaults to true.</param>
 	public DiscordWebhookBuilder AsSilentMessage(bool silent = true)
 	{
+		this._flagsChanged = true;
 		this.NotificationsSuppressed = silent;
 		return this;
 	}
