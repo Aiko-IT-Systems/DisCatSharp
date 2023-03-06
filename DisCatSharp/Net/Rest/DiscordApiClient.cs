@@ -5818,7 +5818,11 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		return JsonConvert.DeserializeObject<TransportApplication>(res.Response);
+		var tapp = JsonConvert.DeserializeObject<TransportApplication>(res.Response);
+
+		if (tapp.Guild.HasValue)
+			tapp.Guild.Value.Discord = this.Discord;
+		return tapp;
 	}
 
 	/// <summary>

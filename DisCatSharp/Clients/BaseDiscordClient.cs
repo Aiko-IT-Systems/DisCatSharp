@@ -37,6 +37,8 @@ using DisCatSharp.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+using Newtonsoft.Json;
+
 namespace DisCatSharp;
 
 /// <summary>
@@ -172,7 +174,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// </summary>
 	public async Task<DiscordApplication> GetCurrentApplicationAsync()
 	{
-		var tapp = await this.ApiClient.GetCurrentApplicationInfoAsync().ConfigureAwait(false);
+		var tapp = await this.ApiClient.GetCurrentApplicationOauth2InfoAsync().ConfigureAwait(false);
 		var app = new DiscordApplication
 		{
 			Discord = this,
