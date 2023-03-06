@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
 
@@ -122,6 +123,9 @@ internal sealed class RestWebhookExecutePayload
 	/// </summary>
 	[JsonProperty("thread_name", NullValueHandling = NullValueHandling.Ignore)]
 	public string ThreadName { get; set; }
+
+	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
+	public MessageFlags Flags { get; set; }
 }
 
 /// <summary>
@@ -158,4 +162,7 @@ internal sealed class RestWebhookMessageEditPayload
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
 	public IEnumerable<DiscordActionRowComponent> Components { get; set; }
+
+	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
+	public MessageFlags Flags { get; set; }
 }
