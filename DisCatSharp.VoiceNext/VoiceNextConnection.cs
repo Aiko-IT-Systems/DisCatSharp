@@ -27,13 +27,13 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Udp;
@@ -162,6 +162,11 @@ public sealed class VoiceNextConnection : IDisposable
 	/// </summary>
 	private CancellationToken TOKEN
 		=> this._tokenSource.Token;
+
+	/// <summary>
+	/// Saves the last speaking flag
+	/// </summary>
+	private SpeakingFlags _speakingFlags;
 
 	/// <summary>
 	/// Gets or sets the server data.
@@ -323,8 +328,6 @@ public sealed class VoiceNextConnection : IDisposable
 	/// </summary>
 	private CancellationToken KEEPALIVE_TOKEN
 		=> this._keepaliveTokenSource.Token;
-
-	private volatile bool _isSpeaking;
 
 	/// <summary>
 	/// Gets the audio format used by the Opus encoder.
@@ -622,7 +625,7 @@ public sealed class VoiceNextConnection : IDisposable
 			if (!hasPacket)
 				continue;
 
-			await this.SendSpeakingAsync(true).ConfigureAwait(false);
+			await this.SendSpeakingAsync(this._speakingFlags != SpeakingFlags.NotSpeaking ? this._speakingFlags : SpeakingFlags.Microphone).ConfigureAwait(false);
 			await client.SendAsync(data, length).ConfigureAwait(false);
 			ArrayPool<byte>.Shared.Return(data);
 
@@ -638,7 +641,8 @@ public sealed class VoiceNextConnection : IDisposable
 			}
 			else if (this._queueCount == 0)
 			{
-				await this.SendSpeakingAsync(false).ConfigureAwait(false);
+				this._speakingFlags = SpeakingFlags.NotSpeaking;
+				await this.SendSpeakingAsync(this._speakingFlags).ConfigureAwait(false);
 				this._playingWait?.SetResult(true);
 			}
 		}
@@ -860,22 +864,22 @@ public sealed class VoiceNextConnection : IDisposable
 	/// <summary>
 	/// Sends a speaking status to the connected voice channel.
 	/// </summary>
-	/// <param name="speaking">Whether the current user is speaking or not.</param>
+	/// <param name="flags">Set the speaking flags.</param>
 	/// <returns>A task representing the sending operation.</returns>
-	public async Task SendSpeakingAsync(bool speaking = true)
+	public async Task SendSpeakingAsync(SpeakingFlags flags = SpeakingFlags.Microphone)
 	{
 		if (!this._isInitialized)
 			throw new InvalidOperationException("The connection is not initialized");
 
-		if (this._isSpeaking != speaking)
+		if (this._speakingFlags != flags)
 		{
-			this._isSpeaking = speaking;
+			this._speakingFlags = flags;
 			var pld = new VoiceDispatch
 			{
 				OpCode = 5,
 				Payload = new VoiceSpeakingPayload
 				{
-					Speaking = speaking,
+					Speaking = flags,
 					Delay = 0
 				}
 			};
