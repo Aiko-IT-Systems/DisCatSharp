@@ -53,6 +53,11 @@ public sealed class DiscordFollowupMessageBuilder
 	public bool NotificationsSuppressed { get; set; }
 
 	/// <summary>
+	/// Whether flags were changed.
+	/// </summary>
+	internal bool _flagsChanged = false;
+
+	/// <summary>
 	/// Message to send on followup message.
 	/// </summary>
 	public string Content
@@ -279,30 +284,30 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <summary>
 	/// Sets the followup message to be ephemeral.
 	/// </summary>
-	/// <param name="ephemeral">Whether the followup message should be ephemeral. Defaults to true.</param>
-	public DiscordFollowupMessageBuilder AsEphemeral(bool ephemeral = true)
+	public DiscordFollowupMessageBuilder AsEphemeral()
 	{
-		this.IsEphemeral = ephemeral;
+		this._flagsChanged = true;
+		this.IsEphemeral = true;
 		return this;
 	}
 
 	/// <summary>
 	/// Sets the followup message to suppress embeds.
 	/// </summary>
-	/// <param name="suppressEmbeds">Whether the followup message should suppress embeds. Defaults to true.</param>
-	public DiscordFollowupMessageBuilder SuppressEmbeds(bool suppressEmbeds = true)
+	public DiscordFollowupMessageBuilder SuppressEmbeds()
 	{
-		this.EmbedsSuppressed = suppressEmbeds;
+		this._flagsChanged = true;
+		this.EmbedsSuppressed = true;
 		return this;
 	}
 
 	/// <summary>
 	/// Sets the followup message to be send as silent message.
 	/// </summary>
-	/// <param name="silent">Whether the followup message should be send as silent message. Defaults to true.</param>
-	public DiscordFollowupMessageBuilder AsSilentMessage(bool silent = true)
+	public DiscordFollowupMessageBuilder AsSilentMessage()
 	{
-		this.NotificationsSuppressed = silent;
+		this._flagsChanged = true;
+		this.NotificationsSuppressed = true;
 		return this;
 	}
 

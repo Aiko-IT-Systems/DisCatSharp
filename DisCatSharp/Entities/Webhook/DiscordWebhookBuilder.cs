@@ -131,22 +131,20 @@ public sealed class DiscordWebhookBuilder
 	/// <summary>
 	/// Sets the webhook response to suppress embeds.
 	/// </summary>
-	/// <param name="suppressEmbeds">Whether the webhook should suppress embeds. Defaults to true.</param>
-	public DiscordWebhookBuilder SuppressEmbeds(bool suppressEmbeds = true)
+	public DiscordWebhookBuilder SuppressEmbeds()
 	{
 		this._flagsChanged = true;
-		this.EmbedsSuppressed = suppressEmbeds;
+		this.EmbedsSuppressed = true;
 		return this;
 	}
 
 	/// <summary>
 	/// Sets the webhook to be send as silent message.
 	/// </summary>
-	/// <param name="silent">Whether the webhook should be send as silent message. Defaults to true.</param>
-	public DiscordWebhookBuilder AsSilentMessage(bool silent = true)
+	public DiscordWebhookBuilder AsSilentMessage()
 	{
 		this._flagsChanged = true;
-		this.NotificationsSuppressed = silent;
+		this.NotificationsSuppressed = true;
 		return this;
 	}
 

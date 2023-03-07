@@ -5485,7 +5485,7 @@ public sealed class DiscordApiClient
 
 		if (type != InteractionResponseType.AutoCompleteResult)
 		{
-			var flags = MessageFlags.None;
+			MessageFlags? flags = builder._flagsChanged ? MessageFlags.None : null;
 			if (builder.IsEphemeral)
 				flags |= MessageFlags.Ephemeral;
 			if (builder.EmbedsSuppressed)
@@ -5651,7 +5651,7 @@ public sealed class DiscordApiClient
 					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
 
-		var flags = MessageFlags.None;
+		MessageFlags? flags = builder._flagsChanged ? MessageFlags.None : null;
 		if (builder.IsEphemeral)
 			flags |= MessageFlags.Ephemeral;
 		if (builder.EmbedsSuppressed)
