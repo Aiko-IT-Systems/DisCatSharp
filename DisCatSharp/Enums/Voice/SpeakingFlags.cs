@@ -22,8 +22,13 @@
 
 namespace DisCatSharp.Enums;
 
-public enum SpeakingFlags : long
+public enum SpeakingFlags : int
 {
+	/// <summary>
+	/// Not speaking.
+	/// </summary>
+	NotSpeaking = 0,
+
 	/// <summary>
 	/// Normal transmission of voice audio.
 	/// </summary>

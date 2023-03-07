@@ -625,7 +625,7 @@ public sealed class VoiceNextConnection : IDisposable
 			if (!hasPacket)
 				continue;
 
-			await this.SendSpeakingAsync(this._speakingFlags).ConfigureAwait(false);
+			await this.SendSpeakingAsync(this._speakingFlags != SpeakingFlags.NotSpeaking ? this._speakingFlags : SpeakingFlags.Microphone).ConfigureAwait(false);
 			await client.SendAsync(data, length).ConfigureAwait(false);
 			ArrayPool<byte>.Shared.Return(data);
 
@@ -641,7 +641,8 @@ public sealed class VoiceNextConnection : IDisposable
 			}
 			else if (this._queueCount == 0)
 			{
-				//await this.SendSpeakingAsync(false).ConfigureAwait(false);
+				this._speakingFlags = SpeakingFlags.NotSpeaking;
+				await this.SendSpeakingAsync(this._speakingFlags).ConfigureAwait(false);
 				this._playingWait?.SetResult(true);
 			}
 		}
@@ -882,6 +883,7 @@ public sealed class VoiceNextConnection : IDisposable
 		};
 
 		var plj = JsonConvert.SerializeObject(pld, Formatting.None);
+		this._discord.Logger.LogDebug("Voice payload: {payload}", pld);
 		await this.WsSendAsync(plj).ConfigureAwait(false);
 	}
 
