@@ -2,7 +2,7 @@
 
 ## A Discord Bot Library written in C# for .NET
 
-![DisCatSharp Logo](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Logos/dcs-logo-winter.gif?raw=true)
+<!--![DisCatSharp Logo](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Logos/dcs-logo-winter.gif?raw=true)-->
 
 ----
 [![Build](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/build.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/build.yml)
@@ -17,6 +17,11 @@
 
 ----
 # News
+
+## Breaking Changes
+> **Warning**
+> 
+> **AsEphemeral does nor take any aguremenrs anymore due to bug fix.**
 
 ## Upcoming
 - We're building a translation generator tool for the template export function introduced in 10.1.0.
