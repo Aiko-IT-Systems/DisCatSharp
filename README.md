@@ -19,9 +19,11 @@
 # News
 
 ## Breaking Changes
-> **Warning**
-> 
+> **Warning**:
 > **AsEphemeral does nor take any aguremenrs anymore due to bug fix.**
+
+> **Note**:
+> DisCatSharp.VoiceNext's function `SetSpeakingAsync` does not take a boolean anymore, instead `SpeakingFlags` are used.
 
 ## Upcoming
 - We're building a translation generator tool for the template export function introduced in 10.1.0.
