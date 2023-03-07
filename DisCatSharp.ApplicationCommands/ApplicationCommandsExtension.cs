@@ -227,7 +227,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	private async Task CatchInteractionsOnStartup(DiscordClient sender, InteractionCreateEventArgs e)
 	{
 		if (!this.StartupFinished)
-			await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().AsEphemeral(true).WithContent("Attention: This application is still starting up. Application commands are unavailable for now."));
+			await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().AsEphemeral().WithContent("Attention: This application is still starting up. Application commands are unavailable for now."));
 		else
 			await Task.Delay(1);
 	}
@@ -235,7 +235,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	private async Task CatchContextMenuInteractionsOnStartup(DiscordClient sender, ContextMenuInteractionCreateEventArgs e)
 	{
 		if (!this.StartupFinished)
-			await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().AsEphemeral(true).WithContent("Attention: This application is still starting up. Context menu commands are unavailable for now."));
+			await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().AsEphemeral().WithContent("Attention: This application is still starting up. Context menu commands are unavailable for now."));
 		else
 			await Task.Delay(1);
 	}
@@ -2043,7 +2043,7 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 							.WithContent($"There are no slash commands"));
 			else
 				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
-							.WithContent($"There are no slash commands").AsEphemeral(true));
+							.WithContent($"There are no slash commands").AsEphemeral());
 			return;
 		}
 		if (commandTwoName is not null && !commandTwoName.Equals("no_options_for_this_command"))
@@ -2074,7 +2074,7 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 							.AddEmbed(discordEmbed));
 			else
 				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
-					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
+					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral());
 		}
 		else if (commandOneName is not null && commandTwoName is null && !commandOneName.Equals("no_options_for_this_command"))
 		{
@@ -2102,7 +2102,7 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 				await ctx.EditResponseAsync(new DiscordWebhookBuilder().AddEmbed(discordEmbed));
 			else
 				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
-					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
+					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral());
 		}
 		else
 		{
@@ -2114,7 +2114,7 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 						.WithContent($"No command called {commandName} in guild {ctx.Guild.Name}"));
 				else
 					await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
-						.WithContent($"No command called {commandName} in guild {ctx.Guild.Name}").AsEphemeral(true));
+						.WithContent($"No command called {commandName} in guild {ctx.Guild.Name}").AsEphemeral());
 				return;
 			}
 			var discordEmbed = new DiscordEmbedBuilder
@@ -2137,7 +2137,7 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 				await ctx.EditResponseAsync(new DiscordWebhookBuilder().AddEmbed(discordEmbed));
 			else
 				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
-				new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
+				new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral());
 		}
 	}
 }

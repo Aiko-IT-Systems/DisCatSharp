@@ -800,8 +800,9 @@ public class InteractivityExtension : BaseExtension
 			var builder = new DiscordInteractionResponseBuilder()
 			.WithContent(pages.First().Content)
 			.AddEmbed(pages.First().Embed)
-			.AsEphemeral(ephemeral)
 			.AddComponents(bts.ButtonArray);
+			if (ephemeral)
+				builder = builder.AsEphemeral();
 			await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, builder).ConfigureAwait(false);
 			message = await interaction.GetOriginalResponseAsync().ConfigureAwait(false);
 		}
