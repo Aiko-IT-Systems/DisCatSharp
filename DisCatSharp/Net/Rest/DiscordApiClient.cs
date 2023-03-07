@@ -5485,22 +5485,25 @@ public sealed class DiscordApiClient
 
 		if (type != InteractionResponseType.AutoCompleteResult)
 		{
-			MessageFlags? flags = builder._flagsChanged ? MessageFlags.None : null;
-			if (builder.IsEphemeral)
-				flags |= MessageFlags.Ephemeral;
-			if (builder.EmbedsSuppressed)
-				flags |= MessageFlags.SuppressedEmbeds;
-			if (builder.NotificationsSuppressed)
-				flags |= MessageFlags.SuppressNotifications;
+			MessageFlags? flags = builder != null && builder._flagsChanged ? MessageFlags.None : null;
+			if (builder != null)
+			{
+				if (builder.IsEphemeral)
+					flags |= MessageFlags.Ephemeral;
+				if (builder.EmbedsSuppressed)
+					flags |= MessageFlags.SuppressedEmbeds;
+				if (builder.NotificationsSuppressed)
+					flags |= MessageFlags.SuppressNotifications;
+			}
 
 			var data = builder != null ? new DiscordInteractionApplicationCommandCallbackData
 			{
-				Content = builder.Content ?? null,
-				Embeds = builder.Embeds ?? null,
-				IsTts = builder.IsTts,
-				Mentions = builder.Mentions ?? null,
+				Content = builder?.Content ?? null,
+				Embeds = builder?.Embeds ?? null,
+				IsTts = builder?.IsTts,
+				Mentions = builder?.Mentions ?? null,
 				Flags = flags,
-				Components = builder.Components ?? null,
+				Components = builder?.Components ?? null,
 				Choices = null
 			} : null;
 
@@ -5568,14 +5571,10 @@ public sealed class DiscordApiClient
 			await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files);
 
 			foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
-			{
 				file.Stream.Position = file.ResetPositionTo.Value;
-			}
 		}
 		else
-		{
 			await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
-		}
 	}
 
 	/// <summary>
@@ -5651,13 +5650,16 @@ public sealed class DiscordApiClient
 					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
 
-		MessageFlags? flags = builder._flagsChanged ? MessageFlags.None : null;
-		if (builder.IsEphemeral)
-			flags |= MessageFlags.Ephemeral;
-		if (builder.EmbedsSuppressed)
-			flags |= MessageFlags.SuppressedEmbeds;
-		if (builder.NotificationsSuppressed)
-			flags |= MessageFlags.SuppressNotifications;
+		MessageFlags? flags = builder != null && builder._flagsChanged ? MessageFlags.None : null;
+		if (builder != null)
+		{
+			if (builder.IsEphemeral)
+				flags |= MessageFlags.Ephemeral;
+			if (builder.EmbedsSuppressed)
+				flags |= MessageFlags.SuppressedEmbeds;
+			if (builder.NotificationsSuppressed)
+				flags |= MessageFlags.SuppressNotifications;
+		}
 
 		var values = new Dictionary<string, string>();
 		var pld = new RestFollowupMessageCreatePayload
