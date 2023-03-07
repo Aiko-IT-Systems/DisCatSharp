@@ -871,20 +871,22 @@ public sealed class VoiceNextConnection : IDisposable
 		if (!this._isInitialized)
 			throw new InvalidOperationException("The connection is not initialized");
 
-		this._speakingFlags = flags;
-		var pld = new VoiceDispatch
+		if (this._speakingFlags != flags)
 		{
-			OpCode = 5,
-			Payload = new VoiceSpeakingPayload
+			this._speakingFlags = flags;
+			var pld = new VoiceDispatch
 			{
-				Speaking = flags,
-				Delay = 0
-			}
-		};
+				OpCode = 5,
+				Payload = new VoiceSpeakingPayload
+				{
+					Speaking = flags,
+					Delay = 0
+				}
+			};
 
-		var plj = JsonConvert.SerializeObject(pld, Formatting.None);
-		this._discord.Logger.LogDebug("Voice payload: {payload}", pld);
-		await this.WsSendAsync(plj).ConfigureAwait(false);
+			var plj = JsonConvert.SerializeObject(pld, Formatting.None);
+			await this.WsSendAsync(plj).ConfigureAwait(false);
+		}
 	}
 
 	/// <summary>
