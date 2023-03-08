@@ -20,16 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.VoiceNext.Interop
+namespace DisCatSharp.VoiceNext.Interop;
+
+internal enum OpusControl : int
 {
-	internal enum OpusControl : int
-	{
-		SetBitrate = 4002,
-		SetBandwidth = 4008,
-		SetInBandFec = 4012,
-		SetPacketLossPercent = 4014,
-		SetSignal = 4024,
-		ResetState = 4028,
-		GetLastPacketDuration = 4039
-	}
+	SetBitrate = 4002,
+	SetBandwidth = 4008,
+	SetInBandFec = 4012,
+	SetPacketLossPercent = 4014,
+	SetSignal = 4024,
+	ResetState = 4028,
+	GetLastPacketDuration = 4039
 }

@@ -24,18 +24,17 @@ using System;
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.EventArgs
+namespace DisCatSharp.EventArgs;
+
+/// <summary>
+/// Represents arguments for <see cref="DiscordClient.AutomodRuleDeleted"/> event.
+/// </summary>
+public class AutomodRuleDeleteEventArgs : DiscordEventArgs
 {
 	/// <summary>
-	/// Represents arguments for <see cref="DiscordClient.AutomodRuleDeleted"/> event.
+	/// Gets the rule that has been deleted.
 	/// </summary>
-	public class AutomodRuleDeleteEventArgs : DiscordEventArgs
-	{
-		/// <summary>
-		/// Gets the rule that has been deleted.
-		/// </summary>
-		public AutomodRule Rule { get; internal set; }
+	public AutomodRule Rule { get; internal set; }
 
-		public AutomodRuleDeleteEventArgs(IServiceProvider provider) : base(provider) { }
-	}
+	public AutomodRuleDeleteEventArgs(IServiceProvider provider) : base(provider) { }
 }

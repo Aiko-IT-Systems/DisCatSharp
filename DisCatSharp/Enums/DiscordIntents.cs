@@ -22,7 +22,7 @@
 
 using System;
 
-namespace DisCatSharp;
+namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents a discord intent extensions.
@@ -212,10 +212,10 @@ public enum DiscordIntents
 	/// <summary>
 	/// Includes all unprivileged intents.
 	/// <para>These are all intents excluding <see cref="GuildMembers"/> and <see cref="GuildPresences"/>.</para>
-	/// <para>The <see cref="DiscordIntents.GuildMessages"/> will be excluded as of April 2022.</para>
+	/// <para>The <see cref="GuildMessages"/> will be excluded as of April 2022.</para>
 	/// </summary>
 	AllUnprivileged = Guilds | GuildBans | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates | GuildMessages |
-		GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping | GuildScheduledEvents | AutoModerationConfiguration | DiscordIntents.AutoModerationExecution,
+		GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping | GuildScheduledEvents | AutoModerationConfiguration | AutoModerationExecution,
 
 	/// <summary>
 	/// Includes all intents.

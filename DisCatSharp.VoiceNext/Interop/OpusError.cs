@@ -20,17 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.VoiceNext.Interop
+namespace DisCatSharp.VoiceNext.Interop;
+
+internal enum OpusError
 {
-	internal enum OpusError
-	{
-		Ok = 0,
-		InvalidArgument = -1,
-		BufferTooSmall = -2,
-		InternalError = -3,
-		CorruptedStream = -4,
-		RequestNotImplemented = -5,
-		InvalidState = -6,
-		MemoryAllocationFailed = -7
-	}
+	Ok = 0,
+	InvalidArgument = -1,
+	BufferTooSmall = -2,
+	InternalError = -3,
+	CorruptedStream = -4,
+	RequestNotImplemented = -5,
+	InvalidState = -6,
+	MemoryAllocationFailed = -7
 }

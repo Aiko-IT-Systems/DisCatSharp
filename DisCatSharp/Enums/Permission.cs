@@ -22,6 +22,8 @@
 
 using System;
 
+using DisCatSharp.Attributes;
+
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -281,10 +283,12 @@ public enum Permissions : long
 	ManageWebhooks = 1L << 29,
 
 	/// <summary>
-	/// Allows managing guild emojis and stickers.
+	/// Allows managing guild emojis, stickers and soundboard sounds.
 	/// </summary>
 	[PermissionString("Manage emojis & stickers")]
-	ManageEmojisAndStickers = 1L << 30,
+	ManageExpressions = 1L << 30,
+	[DiscordDeprecated("Replaced with ManageExpressions due to soundboard addition."), DiscordInExperiment("This change is not fully rolled out.")]
+	ManageEmojisAndStickers = ManageExpressions,
 
 	/// <summary>
 	/// Allows the user to use slash commands.

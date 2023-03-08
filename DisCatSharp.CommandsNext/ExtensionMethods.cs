@@ -29,6 +29,7 @@ using System.Threading.Tasks;
 
 using DisCatSharp.CommandsNext.Builders;
 using DisCatSharp.CommandsNext.Converters;
+using DisCatSharp.Enums;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

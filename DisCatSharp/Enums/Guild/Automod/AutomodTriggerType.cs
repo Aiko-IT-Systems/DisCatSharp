@@ -20,40 +20,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Enums
+namespace DisCatSharp.Enums;
+
+/// <summary>
+/// Represents a rule's content type.
+/// </summary>
+public enum AutomodTriggerType : int
 {
 	/// <summary>
-	/// Represents a rule's content type.
+	/// Checks if content contains words from a user defined list of keywords.
+	/// Max. 3 per guild.
 	/// </summary>
-	public enum AutomodTriggerType : int
-	{
-		/// <summary>
-		/// Checks if content contains words from a user defined list of keywords.
-		/// Max. 3 per guild.
-		/// </summary>
-		Keyword = 1,
+	Keyword = 1,
 
-		/// <summary>
-		/// Checks if content contains a suspocopis link.
-		/// </summary>
-		SuspiciousLinkFilter = 2,
+	/// <summary>
+	/// Checks if content contains a suspocopis link.
+	/// </summary>
+	SuspiciousLinkFilter = 2,
 
-		/// <summary>
-		/// Checks if content represents generic spam.
-		/// Max. 1 per guild.
-		/// </summary>
-		Spam = 3,
+	/// <summary>
+	/// Checks if content represents generic spam.
+	/// Max. 1 per guild.
+	/// </summary>
+	Spam = 3,
 
-		/// <summary>
-		/// Checks if content contains words from internal pre-defined wordsets.
-		/// Max. 1 per guild.
-		/// </summary>
-		KeywordPreset = 4,
+	/// <summary>
+	/// Checks if content contains words from internal pre-defined wordsets.
+	/// Max. 1 per guild.
+	/// </summary>
+	KeywordPreset = 4,
 
-		/// <summary>
-		/// Checks if content contains more unique mentions than allowed.
-		/// Max. 1 per guild.
-		/// </summary>
-		MentionSpam = 5
-	}
+	/// <summary>
+	/// Checks if content contains more unique mentions than allowed.
+	/// Max. 1 per guild.
+	/// </summary>
+	MentionSpam = 5
 }

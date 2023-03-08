@@ -20,16 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.VoiceNext.Interop
+namespace DisCatSharp.VoiceNext.Interop;
+
+internal struct OpusPacketMetrics
 {
-	internal struct OpusPacketMetrics
-	{
-		public int ChannelCount { get; set; }
+	public int ChannelCount { get; set; }
 
-		public int FrameCount { get; set; }
+	public int FrameCount { get; set; }
 
-		public int SamplesPerFrame { get; set; }
+	public int SamplesPerFrame { get; set; }
 
-		public int FrameSize { get; set; }
-	}
+	public int FrameSize { get; set; }
 }
