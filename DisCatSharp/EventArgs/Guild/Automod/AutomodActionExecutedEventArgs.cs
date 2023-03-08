@@ -25,87 +25,86 @@ using System;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
-namespace DisCatSharp.EventArgs
+namespace DisCatSharp.EventArgs;
+
+/// <summary>
+/// Represents arguments for <see cref="DiscordClient.AutomodActionExecuted"/> event.
+/// </summary>
+public class AutomodActionExecutedEventArgs : DiscordEventArgs
 {
 	/// <summary>
-	/// Represents arguments for <see cref="DiscordClient.AutomodActionExecuted"/> event.
+	/// The guild associated with this event.
 	/// </summary>
-	public class AutomodActionExecutedEventArgs : DiscordEventArgs
-	{
-		/// <summary>
-		/// The guild associated with this event.
-		/// </summary>
-		public DiscordGuild Guild { get; internal set; }
+	public DiscordGuild Guild { get; internal set; }
 
-		/// <summary>
-		/// The action that was executed.
-		/// </summary>
-		public AutomodAction Action { get; internal set; }
+	/// <summary>
+	/// The action that was executed.
+	/// </summary>
+	public AutomodAction Action { get; internal set; }
 
-		/// <summary>
-		/// The id of the rule the action belongs to.
-		/// </summary>
-		public ulong RuleId { get; internal set; }
+	/// <summary>
+	/// The id of the rule the action belongs to.
+	/// </summary>
+	public ulong RuleId { get; internal set; }
 
-		/// <summary>
-		/// The type of trigger of the rule which was executed.
-		/// </summary>
-		public AutomodTriggerType TriggerType { get; internal set; }
+	/// <summary>
+	/// The type of trigger of the rule which was executed.
+	/// </summary>
+	public AutomodTriggerType TriggerType { get; internal set; }
 
-		/// <summary>
-		/// The member which caused this event.
-		/// </summary>
-		public DiscordMember Member
-			=> this.Guild.Members.TryGetValue(this.UserId, out var member) ? member : this.Guild.GetMemberAsync(this.UserId, true).Result;
+	/// <summary>
+	/// The member which caused this event.
+	/// </summary>
+	public DiscordMember Member
+		=> this.Guild.Members.TryGetValue(this.UserId, out var member) ? member : this.Guild.GetMemberAsync(this.UserId, true).Result;
 
-		/// <summary>
-		/// The user id which caused this event.
-		/// </summary>
-		public ulong UserId { get; internal set; }
+	/// <summary>
+	/// The user id which caused this event.
+	/// </summary>
+	public ulong UserId { get; internal set; }
 
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-		public DiscordChannel? Channel
+	public DiscordChannel? Channel
 #pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-			=> this.ChannelId.HasValue ? this.Guild.GetChannel(this.ChannelId.Value) : null;
+		=> this.ChannelId.HasValue ? this.Guild.GetChannel(this.ChannelId.Value) : null;
 
-		/// <summary>
-		/// Fall-back channel id this event happened in.
-		/// </summary>
-		public ulong? ChannelId { get; internal set; }
+	/// <summary>
+	/// Fall-back channel id this event happened in.
+	/// </summary>
+	public ulong? ChannelId { get; internal set; }
 
-		/// <summary>
-		/// The id of any user message the content belongs to.
-		/// This will not exist if the message was blocked or content was not part of message.
-		/// </summary>
-		public ulong? MessageId { get; internal set; }
+	/// <summary>
+	/// The id of any user message the content belongs to.
+	/// This will not exist if the message was blocked or content was not part of message.
+	/// </summary>
+	public ulong? MessageId { get; internal set; }
 
-		/// <summary>
-		/// The id of any system auto moderation messages posted as a result of this action.
-		/// This will not exist if the event doesn't correspond to an action with type SendAlertMessage.
-		/// </summary>
-		public ulong? AlertMessageId { get; internal set; }
+	/// <summary>
+	/// The id of any system auto moderation messages posted as a result of this action.
+	/// This will not exist if the event doesn't correspond to an action with type SendAlertMessage.
+	/// </summary>
+	public ulong? AlertMessageId { get; internal set; }
 
-		/// <summary>
-		/// The user-generated text content.
-		/// </summary>
+	/// <summary>
+	/// The user-generated text content.
+	/// </summary>
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-		public string? MessageContent { get; internal set; }
+	public string? MessageContent { get; internal set; }
 #pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
-		/// <summary>
-		/// The word or phrase configured in the rule that triggered this.
-		/// </summary>
+	/// <summary>
+	/// The word or phrase configured in the rule that triggered this.
+	/// </summary>
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-		public string? MatchedKeyword { get; internal set; }
+	public string? MatchedKeyword { get; internal set; }
 #pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
-		/// <summary>
-		/// The substring in the content which triggered the rule.
-		/// </summary>
+	/// <summary>
+	/// The substring in the content which triggered the rule.
+	/// </summary>
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-		public string? MatchedContent { get; internal set; }
+	public string? MatchedContent { get; internal set; }
 #pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
-		public AutomodActionExecutedEventArgs(IServiceProvider provider) : base(provider) { }
-	}
+	public AutomodActionExecutedEventArgs(IServiceProvider provider) : base(provider) { }
 }

@@ -22,7 +22,7 @@
 
 namespace DisCatSharp.Enums;
 
-public enum InviteFlags : long
+public enum InviteFlags : int
 {
 	/// <summary>
 	/// Invite has no flags

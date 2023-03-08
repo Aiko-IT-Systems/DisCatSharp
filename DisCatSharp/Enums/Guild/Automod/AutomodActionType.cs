@@ -20,24 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Enums
+namespace DisCatSharp.Enums;
+
+/// <summary>
+/// Represent's a rule's action type.
+/// </summary>
+public enum AutomodActionType : int
 {
-	public enum AutomodActionType : int
-	{
-		/// <summary>
-		/// Blocks the content of a message according to the rule.
-		/// </summary>
-		BlockMessage = 1,
+	/// <summary>
+	/// Blocks the content of a message according to the rule.
+	/// </summary>
+	BlockMessage = 1,
 
-		/// <summary>
-		/// Logs user to a specified channel.
-		/// </summary>
-		SendAlertMessage = 2,
+	/// <summary>
+	/// Logs user to a specified channel.
+	/// </summary>
+	SendAlertMessage = 2,
 
-		/// <summary>
-		/// Timeout user for a specified duration.
-		/// Only valid for Keyword and MentionSpam rules
-		/// </summary>
-		Timeout = 3
-	}
+	/// <summary>
+	/// Timeout user for a specified duration.
+	/// Only valid for Keyword and MentionSpam rules
+	/// </summary>
+	Timeout = 3
 }

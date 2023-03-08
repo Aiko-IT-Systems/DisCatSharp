@@ -24,23 +24,22 @@ using System.Collections.Generic;
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.Interactivity
+namespace DisCatSharp.Interactivity;
+
+public static class InteractivityHelpers
 {
-	public static class InteractivityHelpers
+	public static List<Page> Recalculate(this List<Page> pages)
 	{
-		public static List<Page> Recalculate(this List<Page> pages)
+		List<Page> recalulatedPages = new(pages.Count);
+		int pageCount = 1;
+		foreach (var page in pages)
 		{
-			List<Page> recalulatedPages = new(pages.Count);
-			int pageCount = 1;
-			foreach (var page in pages)
-			{
-				var tempPage = new Page();
-				var replaceEmbed = new DiscordEmbedBuilder(page.Embed).WithFooter($"Page {pageCount}/{pages.Count}");
-				tempPage.Embed = replaceEmbed.Build();
-				recalulatedPages.Add(tempPage);
-				pageCount++;
-			}
-			return recalulatedPages;
+			var tempPage = new Page();
+			var replaceEmbed = new DiscordEmbedBuilder(page.Embed).WithFooter($"Page {pageCount}/{pages.Count}");
+			tempPage.Embed = replaceEmbed.Build();
+			recalulatedPages.Add(tempPage);
+			pageCount++;
 		}
+		return recalulatedPages;
 	}
 }

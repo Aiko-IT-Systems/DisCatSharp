@@ -22,6 +22,9 @@
 
 namespace DisCatSharp.Enums;
 
+/// <summary>
+/// Represents the sku access type.
+/// </summary>
 public enum SkuAccessType : int
 {
 	Full = 1,

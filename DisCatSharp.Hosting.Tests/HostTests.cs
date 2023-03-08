@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 
+using DisCatSharp.Enums;
 using DisCatSharp.Interactivity;
 using DisCatSharp.Lavalink;
 

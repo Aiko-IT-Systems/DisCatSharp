@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project, based off DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
 // Copyright (c) 2021-2023 AITSYS
 //
@@ -22,6 +22,9 @@
 
 namespace DisCatSharp.Enums;
 
+/// <summary>
+/// Represents the application verification state (<see cref="UserFlags.VerifiedBot"/>).
+/// </summary>
 public enum ApplicationVerificationState : int
 {
 	Ineligible = 1,

@@ -20,16 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Enums
+namespace DisCatSharp.Enums;
+
+/// <summary>
+/// Represent's a rule's flags.
+/// </summary>
+public enum AutomodEventType : int
 {
 	/// <summary>
-	/// Represent's a rule's flags.
+	/// Indicates that this rule should be checked when a member sends or edits a message in the guild.
 	/// </summary>
-	public enum AutomodEventType : int
-	{
-		/// <summary>
-		/// Indicates that this rule should be checked when a member sends or edits a message in the guild.
-		/// </summary>
-		MessageSend = 1
-	}
+	MessageSend = 1
 }
