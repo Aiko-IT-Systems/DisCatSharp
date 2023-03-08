@@ -1203,7 +1203,7 @@ public sealed class VoiceNextConnection : IDisposable
 					var opus = this._opus.CreateDecoder();
 					var vtx = new AudioSender(spk.Ssrc, opus)
 					{
-						User = await this._discord.GetUserAsync(spd.UserId.Value).ConfigureAwait(false)
+						User = await this._discord.GetUserAsync(spd.UserId.Value, true).ConfigureAwait(false)
 					};
 
 					if (!this._transmittingSsrCs.TryAdd(spk.Ssrc, vtx))
@@ -1235,7 +1235,7 @@ public sealed class VoiceNextConnection : IDisposable
 			case 12: // CLIENT_CONNECTED
 				this._discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received CLIENT_CONNECTED (OP12)");
 				var ujpd = opp.ToObject<VoiceUserJoinPayload>();
-				var usrj = await this._discord.GetUserAsync(ujpd.UserId).ConfigureAwait(false);
+				var usrj = await this._discord.GetUserAsync(ujpd.UserId, true).ConfigureAwait(false);
 				{
 					var opus = this._opus.CreateDecoder();
 					var vtx = new AudioSender(ujpd.Ssrc, opus)
@@ -1260,7 +1260,7 @@ public sealed class VoiceNextConnection : IDisposable
 					this._opus.DestroyDecoder(txssrc13.Decoder);
 				}
 
-				var usrl = await this._discord.GetUserAsync(ulpd.UserId).ConfigureAwait(false);
+				var usrl = await this._discord.GetUserAsync(ulpd.UserId, true).ConfigureAwait(false);
 				await this._userLeft.InvokeAsync(this, new VoiceUserLeaveEventArgs(this._discord.ServiceProvider)
 				{
 					User = usrl,
