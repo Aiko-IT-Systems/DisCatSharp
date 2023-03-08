@@ -466,21 +466,19 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			CustomInstallUrl = tapp.CustomInstallUrl,
 			InstallParams = tapp.InstallParams,
 			RoleConnectionsVerificationUrl = tapp.RoleConnectionsVerificationUrl,
-			Tags = (tapp.Tags ?? Enumerable.Empty<string>()).ToArray()
+			Tags = (tapp.Tags ?? Enumerable.Empty<string>()).ToArray(),
+			GuildId = tapp.GuildId.ValueOrDefault(),
+			Slug = tapp.Slug.ValueOrDefault(),
+			PrimarySkuId = tapp.PrimarySkuId.ValueOrDefault(),
+			VerifyKey = tapp.VerifyKey.ValueOrDefault(),
+			CoverImageHash = tapp.CoverImageHash.ValueOrDefault(),
+			Guild = tapp.Guild.ValueOrDefault(),
+			ApproximateGuildCount = tapp.ApproximateGuildCount.ValueOrDefault(),
+			RequiresCodeGrant = tapp.BotRequiresCodeGrant.ValueOrDefault(),
+			IsPublic = tapp.IsPublicBot.ValueOrDefault(),
+			RedirectUris = tapp.RedirectUris.ValueOrDefault(),
+			InteractionsEndpointUrl = tapp.InteractionsEndpointUrl.ValueOrDefault()
 		};
-
-
-		app.GuildId = tapp.GuildId.ValueOrDefault();
-		app.Slug = tapp.Slug.ValueOrDefault();
-		app.PrimarySkuId = tapp.PrimarySkuId.ValueOrDefault();
-		app.VerifyKey = tapp.VerifyKey.ValueOrDefault();
-		app.CoverImageHash = tapp.CoverImageHash.ValueOrDefault();
-		app.Guild = tapp.Guild.ValueOrDefault();
-		app.ApproximateGuildCount = tapp.ApproximateGuildCount.ValueOrDefault();
-		app.RequiresCodeGrant = tapp.BotRequiresCodeGrant.ValueOrDefault();
-		app.IsPublic = tapp.IsPublicBot.ValueOrDefault();
-		app.RedirectUris = tapp.RedirectUris.ValueOrDefault();
-		app.InteractionsEndpointUrl = tapp.InteractionsEndpointUrl.ValueOrDefault();
 
 		return app;
 	}
