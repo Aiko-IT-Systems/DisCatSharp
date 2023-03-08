@@ -5757,8 +5757,10 @@ public sealed class DiscordApiClient
 	/// <returns>A list of published listings with <see cref="DiscordStoreSku"/>s.</returns>
 	internal async Task<IReadOnlyList<DiscordStoreSku>> GetPublishedListingsAsync(ulong applicationId)
 	{
-		var urlParams = new Dictionary<string, string>();
-		urlParams["application_id"] = applicationId.ToString();
+		var urlParams = new Dictionary<string, string>
+		{
+			["application_id"] = applicationId.ToString()
+		};
 
 		var route = $"{Endpoints.STORE}{Endpoints.PUBLISHED_LISTINGS}{Endpoints.SKUS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
@@ -5767,7 +5769,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var store_skus =  JsonConvert.DeserializeObject<IEnumerable<DiscordStoreSku>>(res.Response);
-		foreach(var store_sku in store_skus)
+		foreach (var store_sku in store_skus)
 		{
 			store_sku.Discord = this.Discord;
 			store_sku.Sku.Discord = this.Discord;
