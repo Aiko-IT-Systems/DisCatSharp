@@ -16,7 +16,7 @@
 
 ## Breaking Changes
 > **Warning**
-> **AsEphemeral does not take any agurements anymore due to bug fix.**
+> **AsEphemeral does not take any arguments anymore due to bug fix.**
 
 > **Note**
 > DisCatSharp.VoiceNext's function `SetSpeakingAsync` does not take a boolean anymore, instead `SpeakingFlags` are used.
