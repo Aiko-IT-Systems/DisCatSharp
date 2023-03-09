@@ -64,5 +64,11 @@ public enum ChannelFlags : int
 	/// Indicated that this channel is a guild resource channel.
 	/// </summary>
 	[DiscordInExperiment]
-	IsGuildResourceChannel = 1<<7
+	IsGuildResourceChannel = 1<<7,
+
+	/// <summary>
+	/// Unknown what this flag does.
+	/// </summary>
+	[DiscordUnreleased("We do not have information about this.")]
+	IsScheduledForDeletion = 1<<9
 }
