@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using DisCatSharp.Attributes;
+
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -36,6 +38,7 @@ public enum AutomodTriggerType : int
 	/// <summary>
 	/// Checks if content contains a suspocopis link.
 	/// </summary>
+	[DiscordDeprecated]
 	SuspiciousLinkFilter = 2,
 
 	/// <summary>
@@ -54,5 +57,11 @@ public enum AutomodTriggerType : int
 	/// Checks if content contains more unique mentions than allowed.
 	/// Max. 1 per guild.
 	/// </summary>
-	MentionSpam = 5
+	MentionSpam = 5,
+
+	/// <summary>
+	/// Flag messages that may break server rules using OpenAI technology.
+	/// </summary>
+	[DiscordInExperiment, DiscordUnreleased]
+	EnforceServerRules = 7
 }
