@@ -40,17 +40,44 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <summary>
 	/// Whether this followup message should be ephemeral.
 	/// </summary>
-	public bool IsEphemeral { get; set; }
+	public bool IsEphemeral
+	{
+		get => this.EPH;
+		set
+		{
+			this.EPH = value;
+			this._flagsChanged = true;
+		}
+	}
+	private bool EPH { get; set; }
 
 	/// <summary>
 	/// Whether to suppress embeds.
 	/// </summary>
-	public bool EmbedsSuppressed { get; set; }
+	public bool EmbedsSuppressed
+	{
+		get => this.EMB_SUP;
+		set
+		{
+			this.EMB_SUP = value;
+			this._flagsChanged = true;
+		}
+	}
+	private bool EMB_SUP { get; set; }
 
 	/// <summary>
 	/// Whether to send as silent message.
 	/// </summary>
-	public bool NotificationsSuppressed { get; set; }
+	public bool NotificationsSuppressed
+	{
+		get => this.NOTI_SUP;
+		set
+		{
+			this.NOTI_SUP = value;
+			this._flagsChanged = true;
+		}
+	}
+	private bool NOTI_SUP { get; set; }
 
 	/// <summary>
 	/// Whether flags were changed.
