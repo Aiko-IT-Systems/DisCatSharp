@@ -67,6 +67,12 @@ public enum ChannelFlags : int
 	IsGuildResourceChannel = 1<<7,
 
 	/// <summary>
+	/// Indicated that clyde has access to this thread.
+	/// </summary>
+	[DiscordInExperiment]
+	ClydeAi = 1<<8,
+
+	/// <summary>
 	/// Unknown what this flag does.
 	/// </summary>
 	[DiscordUnreleased("We do not have information about this.")]
