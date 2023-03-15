@@ -54,7 +54,12 @@ public enum ApplicationFlags : long
 	/// <summary>
 	/// Allows the application to access the local RPC server.
 	/// </summary>
-	RpcPrivateBeta = 1L << 6,
+	RpcPrivateBeta = 1L << 5,
+	
+	/// <summary>
+	/// Unknown.
+	/// </summary> 
+	ApplicationAutoModerationRuleCreateBadge = 1<<6,
 
 	/// <summary>
 	/// Allows the application to create activity assets.
