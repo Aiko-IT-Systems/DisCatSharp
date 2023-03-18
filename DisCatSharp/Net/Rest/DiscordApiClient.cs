@@ -290,7 +290,7 @@ public sealed class DiscordApiClient
 				old.Username = usr.Username;
 				old.Discord = usr.Discord;
 				old.AvatarHash = usr.AvatarHash;
-				old.DisplayName = usr.DisplayName;
+				old.GlobalName = usr.GlobalName;
 
 				return old;
 			});
@@ -679,7 +679,7 @@ public sealed class DiscordApiClient
 					old.Username = usr.Username;
 					old.Discriminator = usr.Discriminator;
 					old.AvatarHash = usr.AvatarHash;
-					old.DisplayName = usr.DisplayName;
+					old.GlobalName = usr.GlobalName;
 					return old;
 				});
 			}
@@ -1577,7 +1577,7 @@ public sealed class DiscordApiClient
 				old.Discriminator = scheduledEvent.Creator.Discriminator;
 				old.AvatarHash = scheduledEvent.Creator.AvatarHash;
 				old.Flags = scheduledEvent.Creator.Flags;
-				old.DisplayName = scheduledEvent.Creator.DisplayName;
+				old.GlobalName = scheduledEvent.Creator.GlobalName;
 				return old;
 			});
 		}
@@ -1622,7 +1622,7 @@ public sealed class DiscordApiClient
 				old.Discriminator = scheduledEvent.Creator.Discriminator;
 				old.AvatarHash = scheduledEvent.Creator.AvatarHash;
 				old.Flags = scheduledEvent.Creator.Flags;
-				old.DisplayName = scheduledEvent.Creator.DisplayName;
+				old.GlobalName = scheduledEvent.Creator.GlobalName;
 				return old;
 			});
 		}
@@ -1666,7 +1666,7 @@ public sealed class DiscordApiClient
 				old.Discriminator = scheduledEvent.Creator.Discriminator;
 				old.AvatarHash = scheduledEvent.Creator.AvatarHash;
 				old.Flags = scheduledEvent.Creator.Flags;
-				old.DisplayName = scheduledEvent.Creator.DisplayName;
+				old.GlobalName = scheduledEvent.Creator.GlobalName;
 				return old;
 			});
 		}
@@ -2896,7 +2896,7 @@ public sealed class DiscordApiClient
 			old.Username = usr.Username;
 			old.Discriminator = usr.Discriminator;
 			old.AvatarHash = usr.AvatarHash;
-			old.DisplayName = usr.DisplayName;
+			old.GlobalName = usr.GlobalName;
 			return old;
 		});
 
@@ -4299,7 +4299,7 @@ public sealed class DiscordApiClient
 				old.Username = usr.Username;
 				old.Discriminator = usr.Discriminator;
 				old.AvatarHash = usr.AvatarHash;
-				old.DisplayName = usr.DisplayName;
+				old.GlobalName = usr.GlobalName;
 				return old;
 			});
 
@@ -4946,7 +4946,7 @@ public sealed class DiscordApiClient
 					old.Username = usr.Username;
 					old.Discriminator = usr.Discriminator;
 					old.AvatarHash = usr.AvatarHash;
-					old.DisplayName = usr.DisplayName;
+					old.GlobalName = usr.GlobalName;
 					return old;
 				});
 				stkr.User = usr;
@@ -4980,7 +4980,7 @@ public sealed class DiscordApiClient
 				old.Username = usr.Username;
 				old.Discriminator = usr.Discriminator;
 				old.AvatarHash = usr.AvatarHash;
-				old.DisplayName = usr.DisplayName;
+				old.GlobalName = usr.GlobalName;
 				return old;
 			});
 			ret.User = usr;
