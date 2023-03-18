@@ -63,7 +63,7 @@
   "DisCatSharp.VoiceNext.VoiceNextConnection.IsPlaying": "DisCatSharp.VoiceNext.VoiceNextConnection.yml",
   "DisCatSharp.VoiceNext.VoiceNextConnection.Pause": "DisCatSharp.VoiceNext.VoiceNextConnection.yml",
   "DisCatSharp.VoiceNext.VoiceNextConnection.ResumeAsync": "DisCatSharp.VoiceNext.VoiceNextConnection.yml",
-  "DisCatSharp.VoiceNext.VoiceNextConnection.SendSpeakingAsync(System.Boolean)": "DisCatSharp.VoiceNext.VoiceNextConnection.yml",
+  "DisCatSharp.VoiceNext.VoiceNextConnection.SendSpeakingAsync(DisCatSharp.Enums.SpeakingFlags)": "DisCatSharp.VoiceNext.VoiceNextConnection.yml",
   "DisCatSharp.VoiceNext.VoiceNextConnection.TargetChannel": "DisCatSharp.VoiceNext.VoiceNextConnection.yml",
   "DisCatSharp.VoiceNext.VoiceNextConnection.UdpPing": "DisCatSharp.VoiceNext.VoiceNextConnection.yml",
   "DisCatSharp.VoiceNext.VoiceNextConnection.UserJoined": "DisCatSharp.VoiceNext.VoiceNextConnection.yml",

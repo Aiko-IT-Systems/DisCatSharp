@@ -12,20 +12,10 @@
     name: DiscordClient
   - uid: DisCatSharp.DiscordConfiguration
     name: DiscordConfiguration
-  - uid: DisCatSharp.DiscordEvent
-    name: DiscordEvent
-  - uid: DisCatSharp.DiscordIntentExtensions
-    name: DiscordIntentExtensions
-  - uid: DisCatSharp.DiscordIntents
-    name: DiscordIntents
   - uid: DisCatSharp.DiscordShardedClient
     name: DiscordShardedClient
   - uid: DisCatSharp.DiscordWebhookClient
     name: DiscordWebhookClient
-  - uid: DisCatSharp.EventAttribute
-    name: EventAttribute
-  - uid: DisCatSharp.EventHandlerAttribute
-    name: EventHandlerAttribute
   - uid: DisCatSharp.Formatter
     name: Formatter
   - uid: DisCatSharp.ImageFormat
@@ -39,10 +29,6 @@
   - uid: DisCatSharp.RingBuffer`1
     name: RingBuffer<T>
     name.vb: RingBuffer(Of T)
-  - uid: DisCatSharp.TokenType
-    name: TokenType
-  - uid: DisCatSharp.UserFlags
-    name: UserFlags
   - uid: DisCatSharp.Utilities
     name: Utilities
 - uid: DisCatSharp.Entities
@@ -391,10 +377,16 @@
     name: ApplicationCommandPermissionType
   - uid: DisCatSharp.Enums.ApplicationCommandType
     name: ApplicationCommandType
+  - uid: DisCatSharp.Enums.ApplicationDiscoverabilityState
+    name: ApplicationDiscoverabilityState
+  - uid: DisCatSharp.Enums.ApplicationDiscoveryFlags
+    name: ApplicationDiscoveryFlags
   - uid: DisCatSharp.Enums.ApplicationFlags
     name: ApplicationFlags
   - uid: DisCatSharp.Enums.ApplicationRoleConnectionMetadataType
     name: ApplicationRoleConnectionMetadataType
+  - uid: DisCatSharp.Enums.ApplicationVerificationState
+    name: ApplicationVerificationState
   - uid: DisCatSharp.Enums.AuditLogActionCategory
     name: AuditLogActionCategory
   - uid: DisCatSharp.Enums.AuditLogActionType
@@ -427,10 +419,20 @@
     name: DirectoryCategory
   - uid: DisCatSharp.Enums.DiscordDomain
     name: DiscordDomain
+  - uid: DisCatSharp.Enums.DiscordEvent
+    name: DiscordEvent
+  - uid: DisCatSharp.Enums.DiscordIntentExtensions
+    name: DiscordIntentExtensions
+  - uid: DisCatSharp.Enums.DiscordIntents
+    name: DiscordIntents
   - uid: DisCatSharp.Enums.DiscordShortlink
     name: DiscordShortlink
   - uid: DisCatSharp.Enums.DomainHelpAttribute
     name: DomainHelpAttribute
+  - uid: DisCatSharp.Enums.EventAttribute
+    name: EventAttribute
+  - uid: DisCatSharp.Enums.EventHandlerAttribute
+    name: EventHandlerAttribute
   - uid: DisCatSharp.Enums.ExplicitContentFilter
     name: ExplicitContentFilter
   - uid: DisCatSharp.Enums.ForumLayout
@@ -493,6 +495,8 @@
     name: PriceTierType
   - uid: DisCatSharp.Enums.RoleFlags
     name: RoleFlags
+  - uid: DisCatSharp.Enums.RpcApplicationState
+    name: RpcApplicationState
   - uid: DisCatSharp.Enums.ScheduledEventEntityType
     name: ScheduledEventEntityType
   - uid: DisCatSharp.Enums.ScheduledEventPrivacyLevel
@@ -505,8 +509,12 @@
     name: SkuFlags
   - uid: DisCatSharp.Enums.SkuType
     name: SkuType
+  - uid: DisCatSharp.Enums.SpeakingFlags
+    name: SpeakingFlags
   - uid: DisCatSharp.Enums.StagePrivacyLevel
     name: StagePrivacyLevel
+  - uid: DisCatSharp.Enums.StoreApplicationState
+    name: StoreApplicationState
   - uid: DisCatSharp.Enums.SystemChannelFlags
     name: SystemChannelFlags
   - uid: DisCatSharp.Enums.SystemChannelFlagsExtension
@@ -521,8 +529,12 @@
     name: ThreadMemberFlags
   - uid: DisCatSharp.Enums.TimestampFormat
     name: TimestampFormat
+  - uid: DisCatSharp.Enums.TokenType
+    name: TokenType
   - uid: DisCatSharp.Enums.UnusedDomain
     name: UnusedDomain
+  - uid: DisCatSharp.Enums.UserFlags
+    name: UserFlags
   - uid: DisCatSharp.Enums.VerificationLevel
     name: VerificationLevel
   - uid: DisCatSharp.Enums.VideoQualityMode
