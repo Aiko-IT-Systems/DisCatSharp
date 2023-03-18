@@ -71,7 +71,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		this.OAuthFlags = transport.OAuthFlags;
 		this.Bio = transport.Bio;
 		this.Pronouns = transport.Pronouns;
-		this.DisplayName = transport.DisplayName;
+		this.GlobalName = transport.GlobalName;
 	}
 
 	/// <summary>
@@ -89,10 +89,10 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		=> $"{this.Username}#{this.Discriminator}";
 
 	/// <summary>
-	/// Gets this user's display name.
+	/// Gets this user's global name.
 	/// </summary>
-	[JsonProperty("display_name", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
-	public string DisplayName { get; internal set; }
+	[JsonProperty("global_name", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
+	public string GlobalName { get; internal set; }
 
 	/// <summary>
 	/// Gets the user's 4-digit discriminator.

@@ -108,7 +108,7 @@ public partial class DiscordGuild
 					old.Username = xu.Username;
 					old.Discriminator = xu.Discriminator;
 					old.AvatarHash = xu.AvatarHash;
-					old.DisplayName = xu.DisplayName;
+					old.GlobalName = xu.GlobalName;
 					return old;
 				});
 			}
