@@ -32,5 +32,5 @@ public enum SkuType : int
 	Consumable = 3,
 	Bundle = 4,
 	Subscription = 5,
-	Group = 6
+	SubscriptionGroup = 6
 }
