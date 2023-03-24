@@ -351,21 +351,27 @@ public enum Permissions : long
 	ModerateMembers = 1L << 40,
 
 	/// <summary>
-	/// Allows to view creator monetization insights
+	/// Allows to view creator monetization insights.
 	/// </summary>
 	[PermissionString("View Creator Monetization Insights")]
 	ViewCreatorMonetizationInsights = 1L << 41,
 
 	/// <summary>
+	/// Allows to use soundsboard sounds in voice channels.
+	/// </summary>
+	[PermissionString("Use Soundboard"), DiscordInExperiment]
+	UseSoundboard = 1L << 42,
+
+	/// <summary>
 	/// Allows to create guild expressions.
 	/// </summary>
-	[PermissionString("Create Guild Expressions")]
+	[PermissionString("Create Guild Expressions"), DiscordUnreleased]
 	CreateGuildExpressions = 1L << 43,
 
 	/// <summary>
 	/// Allows to create guild events.
 	/// </summary>
-	[PermissionString("Create Events")]
+	[PermissionString("Create Events"), DiscordUnreleased]
 	CreateEvents = 1L << 44
 }
 
