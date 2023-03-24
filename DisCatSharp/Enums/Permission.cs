@@ -286,9 +286,9 @@ public enum Permissions : long
 	/// Allows managing guild emojis, stickers and soundboard sounds.
 	/// </summary>
 	[PermissionString("Manage emojis & stickers")]
-	ManageExpressions = 1L << 30,
+	ManageGuildExpressions = 1L << 30,
 	[DiscordDeprecated("Replaced with ManageExpressions due to soundboard addition."), DiscordInExperiment("This change is not fully rolled out.")]
-	ManageEmojisAndStickers = ManageExpressions,
+	ManageEmojisAndStickers = ManageGuildExpressions,
 
 	/// <summary>
 	/// Allows the user to use slash commands.
@@ -354,7 +354,19 @@ public enum Permissions : long
 	/// Allows to view creator monetization insights
 	/// </summary>
 	[PermissionString("View Creator Monetization Insights")]
-	ViewCreatorMonetizationInsights = 1L << 41
+	ViewCreatorMonetizationInsights = 1L << 41,
+
+	/// <summary>
+	/// Allows to create guild expressions.
+	/// </summary>
+	[PermissionString("Create Guild Expressions")]
+	CreateGuildExpressions = 1L << 43,
+
+	/// <summary>
+	/// Allows to create guild events.
+	/// </summary>
+	[PermissionString("Create Events")]
+	CreateEvents = 1L << 44
 }
 
 /// <summary>
