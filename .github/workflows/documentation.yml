@@ -94,7 +94,7 @@ jobs:
     needs: documentation
     steps:
     - name: Get SSH Agent
-      uses: webfactory/ssh-agent@v0.7.0
+      uses: webfactory/ssh-agent@v0.8.0
       with:
         ssh-private-key: ${{ secrets.AITSYS_SSH }}
     - name: Publish on server
@@ -106,7 +106,7 @@ jobs:
     needs: documentation
     steps:
     - name: Get SSH Agent
-      uses: webfactory/ssh-agent@v0.7.0
+      uses: webfactory/ssh-agent@v0.8.0
       with:
         ssh-private-key: ${{ secrets.AITSYS_SSH }}
     - name: Publish on server
