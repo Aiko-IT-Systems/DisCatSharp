@@ -34,8 +34,14 @@ namespace DisCatSharp.Entities
 		[JsonIgnore]
 		internal BaseDiscordClient Discord { get; set; }
 
+		/// <summary>
+		/// Gets additional json properties that are not known to the deserializing object.
+		/// </summary>
 		internal IDictionary<string, object> _unknownProperties = new Dictionary<string, object>();
 
+		/// <summary>
+		/// Lets JsonConvert set the unknown properties.
+		/// </summary>
 		[JsonExtensionData(ReadData = true, WriteData = false)]
 		internal IDictionary<string, object> AdditionalProperties
 		{
