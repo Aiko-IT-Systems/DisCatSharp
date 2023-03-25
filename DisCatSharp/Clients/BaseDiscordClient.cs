@@ -39,8 +39,6 @@ using DisCatSharp.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-using Sentry;
-
 namespace DisCatSharp;
 
 /// <summary>
