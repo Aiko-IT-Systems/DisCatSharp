@@ -3121,7 +3121,6 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="withCounts">If true, with_counts.</param>
-
 	internal async Task<DiscordGuild> GetGuildAsync(ulong guildId, bool? withCounts)
 	{
 		var urlParams = new Dictionary<string, string>();
@@ -3136,7 +3135,7 @@ public sealed class DiscordApiClient
 
 		var json = JObject.Parse(res.Response);
 		var rawMembers = (JArray)json["members"];
-		var guildRest = json.ToDiscordObject<DiscordGuild>();
+		var guildRest = DiscordJson.DeserializeObject<DiscordGuild>(res.Response, this.Discord);
 		foreach (var r in guildRest.RolesInternal.Values)
 			r.GuildId = guildRest.Id;
 
