@@ -524,4 +524,5 @@ public static class Endpoints
 	public const string PUBLISHED_LISTINGS = "/published-listings";
 	public const string SKUS = "/skus";
 	public const string GUILD_HOME_HEADERES = "/home-headers";
+	public const string ALERT_ACTION = "/alert-action";
 }
