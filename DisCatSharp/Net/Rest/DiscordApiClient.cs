@@ -1495,7 +1495,6 @@ public sealed class DiscordApiClient
 		return ret;
 	}
 
-
 	#endregion
 
 	#region Guild Scheduled Events
