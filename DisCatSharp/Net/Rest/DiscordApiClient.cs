@@ -781,9 +781,10 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var tm = JsonConvert.DeserializeObject<TransportMember>(res.Response);
-
-		return new DiscordMember(tm) { Discord = this.Discord, GuildId = guildId };
+		var tm = DiscordJson.DeserializeObject<DiscordMember>(res.Response, this.Discord);
+		tm.Discord = this.Discord;
+		tm.GuildId = guildId;
+		return tm;
 	}
 
 	/// <summary>
@@ -964,7 +965,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var auditLogDataRaw = JsonConvert.DeserializeObject<AuditLog>(res.Response);
+		var auditLogDataRaw = DiscordJson.DeserializeObject<AuditLog>(res.Response, this.Discord);
 
 		return auditLogDataRaw;
 	}
@@ -982,7 +983,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var invite = JsonConvert.DeserializeObject<DiscordInvite>(res.Response);
+		var invite = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
 
 		return invite;
 	}
@@ -1037,7 +1038,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordWidgetSettings>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordWidgetSettings>(res.Response, this.Discord);
 		ret.Guild = this.Discord.Guilds[guildId];
 
 		return ret;
@@ -1069,7 +1070,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordWidgetSettings>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordWidgetSettings>(res.Response, this.Discord);
 		ret.Guild = this.Discord.Guilds[guildId];
 
 		return ret;
@@ -1114,7 +1115,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordGuildTemplate>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordGuildTemplate>(res.Response, this.Discord);
 
 		return ret;
 	}
@@ -1133,7 +1134,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route).ConfigureAwait(false);
 
-		var templateRaw = JsonConvert.DeserializeObject<DiscordGuildTemplate>(res.Response);
+		var templateRaw = DiscordJson.DeserializeObject<DiscordGuildTemplate>(res.Response, this.Discord);
 
 		return templateRaw;
 	}
@@ -1160,7 +1161,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var templateRaw = JsonConvert.DeserializeObject<DiscordGuildTemplate>(res.Response);
+		var templateRaw = DiscordJson.DeserializeObject<DiscordGuildTemplate>(res.Response, this.Discord);
 
 		return templateRaw;
 	}
@@ -1179,7 +1180,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route).ConfigureAwait(false);
 
-		var templateRaw = JsonConvert.DeserializeObject<DiscordGuildTemplate>(res.Response);
+		var templateRaw = DiscordJson.DeserializeObject<DiscordGuildTemplate>(res.Response, this.Discord);
 
 		return templateRaw;
 	}
@@ -1197,7 +1198,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var screeningRaw = JsonConvert.DeserializeObject<DiscordGuildMembershipScreening>(res.Response);
+		var screeningRaw = DiscordJson.DeserializeObject<DiscordGuildMembershipScreening>(res.Response, this.Discord);
 
 		return screeningRaw;
 	}
@@ -1225,7 +1226,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var screeningRaw = JsonConvert.DeserializeObject<DiscordGuildMembershipScreening>(res.Response);
+		var screeningRaw = DiscordJson.DeserializeObject<DiscordGuildMembershipScreening>(res.Response, this.Discord);
 
 		return screeningRaw;
 	}
@@ -1243,7 +1244,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
-		var ret = JsonConvert.DeserializeObject<DiscordGuildWelcomeScreen>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordGuildWelcomeScreen>(res.Response, this.Discord);
 		return ret;
 	}
 
@@ -1270,7 +1271,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld));
 
-		var ret = JsonConvert.DeserializeObject<DiscordGuildWelcomeScreen>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordGuildWelcomeScreen>(res.Response, this.Discord);
 		return ret;
 	}
 
@@ -1354,7 +1355,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
-		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
+		var ret = DiscordJson.DeserializeObject<AutomodRule>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 		return ret;
 	}
@@ -1401,7 +1402,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
+		var ret = DiscordJson.DeserializeObject<AutomodRule>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
 		if (this.Discord is DiscordClient dc)
@@ -1454,7 +1455,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, payload: DiscordJson.SerializeObject(pld));
 
-		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
+		var ret = DiscordJson.DeserializeObject<AutomodRule>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
 		if (this.Discord is DiscordClient dc)
@@ -1484,7 +1485,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
+		var ret = DiscordJson.DeserializeObject<AutomodRule>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
 		if (this.Discord is DiscordClient dc)
@@ -1526,7 +1527,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld));
 
-		var scheduledEvent = JsonConvert.DeserializeObject<DiscordScheduledEvent>(res.Response);
+		var scheduledEvent = DiscordJson.DeserializeObject<DiscordScheduledEvent>(res.Response, this.Discord);
 		var guild = this.Discord.Guilds[guildId];
 
 		scheduledEvent.Discord = this.Discord;
@@ -1568,7 +1569,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
 
-		var scheduledEvent = JsonConvert.DeserializeObject<DiscordScheduledEvent>(res.Response);
+		var scheduledEvent = DiscordJson.DeserializeObject<DiscordScheduledEvent>(res.Response, this.Discord);
 		var guild = this.Discord.Guilds[guildId];
 
 		scheduledEvent.Discord = this.Discord;
@@ -1613,7 +1614,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
 
-		var scheduledEvent = JsonConvert.DeserializeObject<DiscordScheduledEvent>(res.Response);
+		var scheduledEvent = DiscordJson.DeserializeObject<DiscordScheduledEvent>(res.Response, this.Discord);
 		var guild = this.Discord.Guilds[guildId];
 
 		scheduledEvent.Discord = this.Discord;
@@ -1657,7 +1658,7 @@ public sealed class DiscordApiClient
 
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
-		var scheduledEvent = JsonConvert.DeserializeObject<DiscordScheduledEvent>(res.Response);
+		var scheduledEvent = DiscordJson.DeserializeObject<DiscordScheduledEvent>(res.Response, this.Discord);
 		var guild = this.Discord.Guilds[guildId];
 
 		scheduledEvent.Discord = this.Discord;
@@ -1854,7 +1855,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordChannel>(res.Response, this.Discord);
 		ret.Initialize(this.Discord);
 
 		return ret;
@@ -1920,7 +1921,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordChannel>(res.Response, this.Discord);
 		ret.Initialize(this.Discord);
 
 		return ret;
@@ -2029,7 +2030,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
-		var ret = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordChannel>(res.Response, this.Discord);
 		ret.Initialize(this.Discord);
 
 		return ret;
@@ -2048,7 +2049,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordChannel>(res.Response, this.Discord);
 		ret.Initialize(this.Discord);
 
 		return ret;
@@ -2281,7 +2282,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var stageInstance = JsonConvert.DeserializeObject<DiscordStageInstance>(res.Response);
+		var stageInstance = DiscordJson.DeserializeObject<DiscordStageInstance>(res.Response, this.Discord);
 
 		return stageInstance;
 	}
@@ -2298,7 +2299,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var stageInstance = JsonConvert.DeserializeObject<DiscordStageInstance>(res.Response);
+		var stageInstance = DiscordJson.DeserializeObject<DiscordStageInstance>(res.Response, this.Discord);
 
 		return stageInstance;
 	}
@@ -2586,7 +2587,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordInvite>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
 		return ret;
@@ -2765,7 +2766,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordDmChannel>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordDmChannel>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
 		return ret;
@@ -2789,7 +2790,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordDmChannel>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordDmChannel>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
 		return ret;
@@ -2892,7 +2893,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var tm = JsonConvert.DeserializeObject<TransportMember>(res.Response);
+		var tm = DiscordJson.DeserializeObject<TransportMember>(res.Response, this.Discord);
 
 		var usr = new DiscordUser(tm.User) { Discord = this.Discord };
 		usr = this.Discord.UserCache.AddOrUpdate(tm.User.Id, usr, (id, old) =>
@@ -2946,7 +2947,7 @@ public sealed class DiscordApiClient
 	/// <param name="username">The username.</param>
 	/// <param name="base64Avatar">The base64_avatar.</param>
 
-	internal async Task<TransportUser> ModifyCurrentUserAsync(string username, Optional<string> base64Avatar)
+	internal async Task<DiscordUser> ModifyCurrentUserAsync(string username, Optional<string> base64Avatar)
 	{
 		var pld = new RestUserUpdateCurrentPayload
 		{
@@ -2961,9 +2962,9 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var userRaw = JsonConvert.DeserializeObject<TransportUser>(res.Response);
-
-		return userRaw;
+		var user = DiscordJson.DeserializeObject<DiscordUser>(res.Response, this.Discord);
+		user.Discord = this.Discord;
+		return user;
 	}
 
 	/// <summary>
@@ -3197,7 +3198,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordRole>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordRole>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 		ret.GuildId = guildId;
 
@@ -3256,7 +3257,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordRole>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordRole>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 		ret.GuildId = guildId;
 
@@ -3291,7 +3292,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, $"{BuildQueryString(urlParams)}{sb}", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var pruned = JsonConvert.DeserializeObject<RestGuildPruneResultPayload>(res.Response);
+		var pruned = DiscordJson.DeserializeObject<RestGuildPruneResultPayload>(res.Response, this.Discord);
 
 		return pruned.Pruned.Value;
 	}
@@ -3330,7 +3331,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, $"{BuildQueryString(urlParams)}{sb}", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers).ConfigureAwait(false);
 
-		var pruned = JsonConvert.DeserializeObject<RestGuildPruneResultPayload>(res.Response);
+		var pruned = DiscordJson.DeserializeObject<RestGuildPruneResultPayload>(res.Response, this.Discord);
 
 		return pruned.Pruned;
 	}
@@ -3350,7 +3351,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var templatesRaw = JsonConvert.DeserializeObject<DiscordGuildTemplate>(res.Response);
+		var templatesRaw = DiscordJson.DeserializeObject<DiscordGuildTemplate>(res.Response, this.Discord);
 
 		return templatesRaw;
 	}
@@ -3386,7 +3387,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordGuildPreview>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordGuildPreview>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
 		return ret;
@@ -3413,7 +3414,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordIntegration>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordIntegration>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
 		return ret;
@@ -3443,7 +3444,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordIntegration>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordIntegration>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
 		return ret;
@@ -3541,7 +3542,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordInvite>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
 		return ret;
@@ -3565,7 +3566,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordInvite>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
 		return ret;
@@ -3582,7 +3583,7 @@ public sealed class DiscordApiClient
          *     var bucket = this.Rest.GetBucket(0, MajorParameterType.Unbucketed, url, HttpRequestMethod.POST);
          *     var res = await this.DoRequestAsync(this.Discord, bucket, url, HttpRequestMethod.POST).ConfigureAwait(false);
          *
-         *     var ret = JsonConvert.DeserializeObject<DiscordInvite>(res.Response);
+         *     var ret = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
          *     ret.Discord = this.Discord;
          *
          *     return ret;
@@ -3704,7 +3705,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordWebhook>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordWebhook>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 		ret.ApiClient = this;
 
@@ -3757,7 +3758,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordWebhook>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordWebhook>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 		ret.ApiClient = this;
 
@@ -3777,7 +3778,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordWebhook>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordWebhook>(res.Response, this.Discord);
 		ret.Token = webhookToken;
 		ret.Id = webhookId;
 		ret.Discord = this.Discord;
@@ -3814,7 +3815,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordWebhook>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordWebhook>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 		ret.ApiClient = this;
 
@@ -3847,7 +3848,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordWebhook>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordWebhook>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 		ret.ApiClient = this;
 
@@ -3963,7 +3964,7 @@ public sealed class DiscordApiClient
 		var url = qub.Build();
 
 		var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
-		var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordMessage>(res.Response, this.Discord);
 
 		foreach (var att in ret.Attachments)
 			att.Discord = this.Discord;
@@ -3994,7 +3995,7 @@ public sealed class DiscordApiClient
 			qub.AddParameter("thread_id", threadId);
 		var url = qub.Build();
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: jsonPayload).ConfigureAwait(false);
-		var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordMessage>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 		return ret;
 	}
@@ -4016,7 +4017,7 @@ public sealed class DiscordApiClient
 			qub.AddParameter("thread_id", threadId);
 		var url = qub.Build();
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: jsonPayload).ConfigureAwait(false);
-		var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordMessage>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 		return ret;
 	}
@@ -4084,7 +4085,7 @@ public sealed class DiscordApiClient
 			var url = qub.Build();
 			var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: builder.Files);
 
-			var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
+			var ret = DiscordJson.DeserializeObject<DiscordMessage>(res.Response, this.Discord);
 
 			ret.Discord = this.Discord;
 
@@ -4112,7 +4113,7 @@ public sealed class DiscordApiClient
 			var url = qub.Build();
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld));
 
-			var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
+			var ret = DiscordJson.DeserializeObject<DiscordMessage>(res.Response, this.Discord);
 
 			ret.Discord = this.Discord;
 
@@ -4152,7 +4153,7 @@ public sealed class DiscordApiClient
 		var url = qub.Build();
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
-		var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordMessage>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 		return ret;
 	}
@@ -4432,7 +4433,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld));
 
-		var threadChannel = JsonConvert.DeserializeObject<DiscordThreadChannel>(res.Response);
+		var threadChannel = DiscordJson.DeserializeObject<DiscordThreadChannel>(res.Response, this.Discord);
 
 		threadChannel.Discord = this.Discord;
 
@@ -4451,7 +4452,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordThreadChannel>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordThreadChannel>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
 		return ret;
@@ -4516,7 +4517,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
-		var threadMember = JsonConvert.DeserializeObject<DiscordThreadChannelMember>(res.Response);
+		var threadMember = DiscordJson.DeserializeObject<DiscordThreadChannelMember>(res.Response, this.Discord);
 
 		return threadMember;
 	}
@@ -4579,7 +4580,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
-		var threadReturn = JsonConvert.DeserializeObject<DiscordThreadResult>(res.Response);
+		var threadReturn = DiscordJson.DeserializeObject<DiscordThreadResult>(res.Response, this.Discord);
 		threadReturn.Threads.ForEach(x => x.Discord = this.Discord);
 
 		return threadReturn;
@@ -4605,7 +4606,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
-		var threadReturn = JsonConvert.DeserializeObject<DiscordThreadResult>(res.Response);
+		var threadReturn = DiscordJson.DeserializeObject<DiscordThreadResult>(res.Response, this.Discord);
 
 		return threadReturn;
 	}
@@ -4630,7 +4631,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
-		var threadReturn = JsonConvert.DeserializeObject<DiscordThreadResult>(res.Response);
+		var threadReturn = DiscordJson.DeserializeObject<DiscordThreadResult>(res.Response, this.Discord);
 
 		return threadReturn;
 	}
@@ -4655,7 +4656,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
-		var threadReturn = JsonConvert.DeserializeObject<DiscordThreadResult>(res.Response);
+		var threadReturn = DiscordJson.DeserializeObject<DiscordThreadResult>(res.Response, this.Discord);
 
 		return threadReturn;
 	}
@@ -5166,7 +5167,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
 
-		var ret = JsonConvert.DeserializeObject<DiscordApplicationCommand>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordApplicationCommand>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
 		return ret;
@@ -5185,7 +5186,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
-		var ret = JsonConvert.DeserializeObject<DiscordApplicationCommand>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordApplicationCommand>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
 		return ret;
@@ -5229,7 +5230,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld));
 
-		var ret = JsonConvert.DeserializeObject<DiscordApplicationCommand>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordApplicationCommand>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
 		return ret;
@@ -5339,7 +5340,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
 
-		var ret = JsonConvert.DeserializeObject<DiscordApplicationCommand>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordApplicationCommand>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
 		return ret;
@@ -5359,7 +5360,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
-		var ret = JsonConvert.DeserializeObject<DiscordApplicationCommand>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordApplicationCommand>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
 		return ret;
@@ -5404,7 +5405,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld));
 
-		var ret = JsonConvert.DeserializeObject<DiscordApplicationCommand>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordApplicationCommand>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
 		return ret;
@@ -5462,7 +5463,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
-		var ret = JsonConvert.DeserializeObject<DiscordGuildApplicationCommandPermission>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordGuildApplicationCommandPermission>(res.Response, this.Discord);
 
 		ret.Discord = this.Discord;
 
@@ -5707,7 +5708,7 @@ public sealed class DiscordApiClient
 
 		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
 		var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
-		var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
+		var ret = DiscordJson.DeserializeObject<DiscordMessage>(res.Response, this.Discord);
 
 		foreach (var att in ret.AttachmentsInternal)
 		{
@@ -5807,7 +5808,9 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		return JsonConvert.DeserializeObject<TransportApplication>(res.Response);
+		var app = DiscordJson.DeserializeObject<TransportApplication>(res.Response, this.Discord);
+
+		return app;
 	}
 
 	/// <summary>
@@ -5821,7 +5824,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var tapp = JsonConvert.DeserializeObject<TransportApplication>(res.Response);
+		var tapp = DiscordJson.DeserializeObject<TransportApplication>(res.Response, this.Discord);
 
 		if (tapp.Guild.HasValue)
 			tapp.Guild.Value.Discord = this.Discord;
@@ -5848,7 +5851,10 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		return JsonConvert.DeserializeObject<TransportApplication>(res.Response);
+		var app = DiscordJson.DeserializeObject<TransportApplication>(res.Response, this.Discord);
+		app.Discord = this.Discord;
+
+		return app;
 	}
 
 	/// <summary>
@@ -5863,7 +5869,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		return JsonConvert.DeserializeObject<DiscordRpcApplication>(res.Response);
+		return DiscordJson.DeserializeObject<DiscordRpcApplication>(res.Response, this.Discord);
 	}
 
 	/// <summary>

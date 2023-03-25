@@ -29,7 +29,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a guild template.
 /// </summary>
-public class DiscordGuildTemplate
+public class DiscordGuildTemplate : ApiObject
 {
 	/// <summary>
 	/// Gets the template code.
