@@ -287,8 +287,6 @@ public enum Permissions : long
 	/// </summary>
 	[PermissionString("Manage emojis & stickers")]
 	ManageGuildExpressions = 1L << 30,
-	[DiscordDeprecated("Replaced with ManageExpressions due to soundboard addition."), DiscordInExperiment("This change is not fully rolled out.")]
-	ManageEmojisAndStickers = ManageGuildExpressions,
 
 	/// <summary>
 	/// Allows the user to use slash commands.
