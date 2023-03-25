@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 
+using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -526,7 +527,7 @@ internal sealed class AuditLogAction
 /// <summary>
 /// Represents a audit log.
 /// </summary>
-internal sealed class AuditLog
+internal sealed class AuditLog : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the webhooks.

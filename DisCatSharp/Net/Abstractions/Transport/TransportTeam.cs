@@ -22,6 +22,8 @@
 
 using System.Collections.Generic;
 
+using DisCatSharp.Entities;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Net.Abstractions;
@@ -29,7 +31,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// The transport team.
 /// </summary>
-internal sealed class TransportTeam
+internal sealed class TransportTeam : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the id.

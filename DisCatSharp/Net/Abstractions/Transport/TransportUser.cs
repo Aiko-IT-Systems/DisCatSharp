@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using DisCatSharp.Attributes;
+using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -30,7 +31,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents a transport user.
 /// </summary>
-internal class TransportUser
+internal class TransportUser : ApiObject
 {
 	/// <summary>
 	/// Gets the id.

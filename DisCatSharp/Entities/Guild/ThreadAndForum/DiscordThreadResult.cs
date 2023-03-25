@@ -30,7 +30,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a discord thread result.
 /// </summary>
-public class DiscordThreadResult
+public class DiscordThreadResult : ApiObject
 {
 	/// <summary>
 	/// Gets the returned threads.

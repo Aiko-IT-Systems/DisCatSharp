@@ -14,39 +14,33 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Entities;
-
-/// <summary>
-/// Represents an object in Discord API.
-/// </summary>
-public abstract class SnowflakeObject : ApiObject
+namespace DisCatSharp.Entities
 {
-	/// <summary>
-	/// Gets the ID of this object.
-	/// </summary>
-	[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-	public ulong Id { get; internal set; }
+	public abstract class ApiObject
+	{
+		/// <summary>
+		/// Gets the client instance this object is tied to.
+		/// </summary>
+		[JsonIgnore]
+		internal BaseDiscordClient Discord { get; set; }
 
-	/// <summary>
-	/// Gets the date and time this object was created.
-	/// </summary>
-	[JsonIgnore]
-	public DateTimeOffset CreationTimestamp
-		=> this.Id.GetSnowflakeTime();
+		internal IDictionary<string, object> _unknownProperties = new Dictionary<string, object>();
 
-	/// <summary>
-	/// Initializes a new instance of the <see cref="SnowflakeObject"/> class.
-	/// </summary>
-	internal SnowflakeObject() { }
+		[JsonExtensionData(ReadData = true, WriteData = false)]
+		internal IDictionary<string, object> AdditionalProperties
+		{
+			get => this._unknownProperties;
+			set => this._unknownProperties = value;
+		}
+	}
 }
