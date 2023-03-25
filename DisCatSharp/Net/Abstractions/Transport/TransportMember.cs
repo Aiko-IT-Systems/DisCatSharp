@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 
+using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -32,7 +33,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents a transport member.
 /// </summary>
-internal class TransportMember
+internal class TransportMember : ApiObject
 {
 	/// <summary>
 	/// Gets the avatar hash.

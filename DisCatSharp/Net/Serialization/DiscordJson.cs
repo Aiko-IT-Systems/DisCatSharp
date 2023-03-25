@@ -51,7 +51,7 @@ public static class DiscordJson
 	public static string SerializeObject(object value)
 		=> SerializeObjectInternal(value, null, s_serializer);
 
-	public static T DeserializeObject<T>(string json, BaseDiscordClient discord) where T : SnowflakeObject
+	public static T DeserializeObject<T>(string json, BaseDiscordClient discord) where T : ApiObject
 		=> DeserializeObjectInternal<T>(json, discord);
 
 	/// <summary>Populates an object with the values from a JSON node.</summary>
@@ -89,9 +89,10 @@ public static class DiscordJson
 		return stringWriter.ToString();
 	}
 
-	private static T DeserializeObjectInternal<T>(string json, BaseDiscordClient discord) where T : SnowflakeObject
+	private static T DeserializeObjectInternal<T>(string json, BaseDiscordClient discord) where T : ApiObject
 	{
 		var obj = JsonConvert.DeserializeObject<T>(json);
+		obj.Discord = discord;
 
 		if (discord.Configuration.ReportMissingFields && obj.AdditionalProperties.Any())
 		{

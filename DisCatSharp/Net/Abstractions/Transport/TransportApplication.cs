@@ -32,7 +32,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// The transport application.
 /// </summary>
-internal sealed class TransportApplication
+internal sealed class TransportApplication : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the id.

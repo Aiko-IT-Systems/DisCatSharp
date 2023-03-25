@@ -27,11 +27,12 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a Discord guild's widget settings.
 /// </summary>
-public class DiscordWidgetSettings
+public class DiscordWidgetSettings : ApiObject
 {
 	/// <summary>
 	/// Gets the guild.
 	/// </summary>
+	[JsonIgnore]
 	internal DiscordGuild Guild { get; set; }
 
 	/// <summary>
@@ -43,6 +44,7 @@ public class DiscordWidgetSettings
 	/// <summary>
 	/// Gets the guild's widget channel.
 	/// </summary>
+	[JsonIgnore]
 	public DiscordChannel Channel
 		=> this.Guild?.GetChannel(this.ChannelId);
 

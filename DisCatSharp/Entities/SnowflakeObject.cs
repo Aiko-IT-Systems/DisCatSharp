@@ -30,7 +30,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents an object in Discord API.
 /// </summary>
-public abstract class SnowflakeObject
+public abstract class SnowflakeObject : ApiObject
 {
 	/// <summary>
 	/// Gets the ID of this object.
@@ -44,21 +44,6 @@ public abstract class SnowflakeObject
 	[JsonIgnore]
 	public DateTimeOffset CreationTimestamp
 		=> this.Id.GetSnowflakeTime();
-
-	/// <summary>
-	/// Gets the client instance this object is tied to.
-	/// </summary>
-	[JsonIgnore]
-	internal BaseDiscordClient Discord { get; set; }
-
-	internal IDictionary<string, object> _unknownProperties = new Dictionary<string, object>();
-
-	[JsonExtensionData(ReadData = true, WriteData = false)]
-	public IDictionary<string, object> AdditionalProperties
-	{
-		get => this._unknownProperties;
-		set => this._unknownProperties = value;
-	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="SnowflakeObject"/> class.

@@ -20,33 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Entities;
-
-/// <summary>
-/// Represents a guild's membership screening form.
-/// </summary>
-public class DiscordGuildMembershipScreening : ApiObject
+namespace DisCatSharp.Entities
 {
-	/// <summary>
-	/// Gets when the fields were last updated.
-	/// </summary>
-	[JsonProperty("version")]
-	public DateTimeOffset Version { get; internal set; }
+	public abstract class ApiObject
+	{
+		/// <summary>
+		/// Gets the client instance this object is tied to.
+		/// </summary>
+		[JsonIgnore]
+		internal BaseDiscordClient Discord { get; set; }
 
-	/// <summary>
-	/// Gets the steps in the screening form.
-	/// </summary>
-	[JsonProperty("form_fields")]
-	public IReadOnlyList<DiscordGuildMembershipScreeningField> Fields { get; internal set; }
+		internal IDictionary<string, object> _unknownProperties = new Dictionary<string, object>();
 
-	/// <summary>
-	/// Gets the server description shown in the screening form.
-	/// </summary>
-	[JsonProperty("description")]
-	public string Description { get; internal set; }
+		[JsonExtensionData(ReadData = true, WriteData = false)]
+		internal IDictionary<string, object> AdditionalProperties
+		{
+			get => this._unknownProperties;
+			set => this._unknownProperties = value;
+		}
+	}
 }

@@ -39,15 +39,12 @@ internal interface IReasonAction
 	/// Gets or sets the reason.
 	/// </summary>
 	string Reason { get; set; }
-
-	//[JsonProperty("reason", NullValueHandling = NullValueHandling.Ignore)]
-	//public string Reason { get; set; }
 }
 
 /// <summary>
 /// Represents a guild create payload.
 /// </summary>
-internal class RestGuildCreatePayload
+internal class RestGuildCreatePayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the name.
@@ -101,7 +98,7 @@ internal class RestGuildCreatePayload
 /// <summary>
 /// Represents a guild create from template payload.
 /// </summary>
-internal sealed class RestGuildCreateFromTemplatePayload
+internal sealed class RestGuildCreateFromTemplatePayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the name.
@@ -119,7 +116,7 @@ internal sealed class RestGuildCreateFromTemplatePayload
 /// <summary>
 /// Represents a guild modify payload.
 /// </summary>
-internal sealed class RestGuildModifyPayload
+internal sealed class RestGuildModifyPayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the name.
@@ -252,7 +249,7 @@ internal sealed class RestGuildModifyPayload
 /// <summary>
 /// Represents a guild mfa level modify payload.
 /// </summary>
-internal sealed class RestGuildMfaLevelModifyPayload
+internal sealed class RestGuildMfaLevelModifyPayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the mfa level.
@@ -264,7 +261,7 @@ internal sealed class RestGuildMfaLevelModifyPayload
 /// <summary>
 /// Represents a guild community modify payload.
 /// </summary>
-internal sealed class RestGuildFeatureModifyPayload
+internal sealed class RestGuildFeatureModifyPayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the features.
@@ -273,7 +270,7 @@ internal sealed class RestGuildFeatureModifyPayload
 	public List<string> Features { get; set; }
 }
 
-internal sealed class RestGuildSafetyModifyPayload
+internal sealed class RestGuildSafetyModifyPayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the safety alerts channel id.
@@ -291,7 +288,7 @@ internal sealed class RestGuildSafetyModifyPayload
 /// <summary>
 /// Represents a guild community modify payload.
 /// </summary>
-internal sealed class RestGuildCommunityModifyPayload
+internal sealed class RestGuildCommunityModifyPayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the verification level.
@@ -381,7 +378,7 @@ internal sealed class RestGuildMemberAddPayload : IOAuth2Payload
 /// <summary>
 /// Represents a guild channel reorder payload.
 /// </summary>
-internal sealed class RestGuildChannelReorderPayload
+internal sealed class RestGuildChannelReorderPayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the channel id.
@@ -399,7 +396,7 @@ internal sealed class RestGuildChannelReorderPayload
 /// <summary>
 /// Represents a guild channel new parent payload.
 /// </summary>
-internal sealed class RestGuildChannelNewParentPayload
+internal sealed class RestGuildChannelNewParentPayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the channel id.
@@ -429,7 +426,7 @@ internal sealed class RestGuildChannelNewParentPayload
 /// <summary>
 /// Represents a guild channel no parent payload.
 /// </summary>
-internal sealed class RestGuildChannelNoParentPayload
+internal sealed class RestGuildChannelNoParentPayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the channel id.
@@ -471,7 +468,7 @@ internal sealed class RestGuildRoleReorderPayload
 /// <summary>
 /// Represents a guild member modify payload.
 /// </summary>
-internal sealed class RestGuildMemberModifyPayload
+internal sealed class RestGuildMemberModifyPayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the nickname.
@@ -510,7 +507,7 @@ internal sealed class RestGuildMemberModifyPayload
 /// <summary>
 /// Represents a guild member timeout modify payload.
 /// </summary>
-internal sealed class RestGuildMemberTimeoutModifyPayload
+internal sealed class RestGuildMemberTimeoutModifyPayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the date until the member can communicate again.
@@ -522,7 +519,7 @@ internal sealed class RestGuildMemberTimeoutModifyPayload
 /// <summary>
 /// Represents a guild role payload.
 /// </summary>
-internal sealed class RestGuildRolePayload
+internal sealed class RestGuildRolePayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the name.
@@ -570,7 +567,7 @@ internal sealed class RestGuildRolePayload
 /// <summary>
 /// Represents a guild prune result payload.
 /// </summary>
-internal sealed class RestGuildPruneResultPayload
+internal sealed class RestGuildPruneResultPayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the pruned.
@@ -582,7 +579,7 @@ internal sealed class RestGuildPruneResultPayload
 /// <summary>
 /// Represents a guild integration attach payload.
 /// </summary>
-internal sealed class RestGuildIntegrationAttachPayload
+internal sealed class RestGuildIntegrationAttachPayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the type.
@@ -600,7 +597,7 @@ internal sealed class RestGuildIntegrationAttachPayload
 /// <summary>
 /// Represents a guild integration modify payload.
 /// </summary>
-internal sealed class RestGuildIntegrationModifyPayload
+internal sealed class RestGuildIntegrationModifyPayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the expire behavior.
@@ -624,7 +621,7 @@ internal sealed class RestGuildIntegrationModifyPayload
 /// <summary>
 /// Represents a guild emoji modify payload.
 /// </summary>
-internal class RestGuildEmojiModifyPayload
+internal class RestGuildEmojiModifyPayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the name.
@@ -654,7 +651,7 @@ internal class RestGuildEmojiCreatePayload : RestGuildEmojiModifyPayload
 /// <summary>
 /// Represents a guild widget settings payload.
 /// </summary>
-internal class RestGuildWidgetSettingsPayload
+internal class RestGuildWidgetSettingsPayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets a value indicating whether enabled.
@@ -672,7 +669,7 @@ internal class RestGuildWidgetSettingsPayload
 /// <summary>
 /// Represents a guild template create or modify payload.
 /// </summary>
-internal class RestGuildTemplateCreateOrModifyPayload
+internal class RestGuildTemplateCreateOrModifyPayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the name.
@@ -690,7 +687,7 @@ internal class RestGuildTemplateCreateOrModifyPayload
 /// <summary>
 /// Represents a guild membership screening form modify payload.
 /// </summary>
-internal class RestGuildMembershipScreeningFormModifyPayload
+internal class RestGuildMembershipScreeningFormModifyPayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the enabled.
@@ -714,7 +711,7 @@ internal class RestGuildMembershipScreeningFormModifyPayload
 /// <summary>
 /// Represents a guild welcome screen modify payload.
 /// </summary>
-internal class RestGuildWelcomeScreenModifyPayload
+internal class RestGuildWelcomeScreenModifyPayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the enabled.
@@ -738,7 +735,7 @@ internal class RestGuildWelcomeScreenModifyPayload
 /// <summary>
 /// Represents a guild update current user voice state payload.
 /// </summary>
-internal class RestGuildUpdateCurrentUserVoiceStatePayload
+internal class RestGuildUpdateCurrentUserVoiceStatePayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the channel id.
@@ -762,7 +759,7 @@ internal class RestGuildUpdateCurrentUserVoiceStatePayload
 /// <summary>
 /// Represents a guild update user voice state payload.
 /// </summary>
-internal class RestGuildUpdateUserVoiceStatePayload
+internal class RestGuildUpdateUserVoiceStatePayload : ApiObject
 {
 	/// <summary>
 	/// Gets or sets the channel id.
