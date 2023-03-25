@@ -76,7 +76,7 @@ public sealed class DiscordConfiguration
 	/// <para>Sets whether to rely on Discord for NTP (Network Time Protocol) synchronization with the "X-Ratelimit-Reset-After" header.</para>
 	/// <para>If the system clock is unsynced, setting this to true will ensure ratelimits are synced with Discord and reduce the risk of hitting one.</para>
 	/// <para>This should only be set to false if the system clock is synced with NTP.</para>
-	/// <para>Defaults to true.</para>
+	/// <para>Defaults to <see langword="true"/>.</para>
 	/// </summary>
 	public bool UseRelativeRatelimit { internal get; set; } = true;
 
@@ -94,7 +94,7 @@ public sealed class DiscordConfiguration
 
 	/// <summary>
 	/// <para>Sets whether to automatically reconnect in case a connection is lost.</para>
-	/// <para>Defaults to true.</para>
+	/// <para>Defaults to <see langword="true"/>.</para>
 	/// </summary>
 	public bool AutoReconnect { internal get; set; } = true;
 
@@ -119,13 +119,14 @@ public sealed class DiscordConfiguration
 
 	/// <summary>
 	/// <para>Sets the size of the global message cache.</para>
-	/// <para>Setting this to 0 will disable message caching entirely. Defaults to 1024.</para>
+	/// <para>Setting this to 0 will disable message caching entirely.</para>
+	/// <para>Defaults to 1024.</para>
 	/// </summary>
 	public int MessageCacheSize { internal get; set; } = 1024;
 
 	/// <summary>
 	/// <para>Sets the proxy to use for HTTP and WebSocket connections to Discord.</para>
-	/// <para>Defaults to null.</para>
+	/// <para>Defaults to <see langword="null"/>.</para>
 	/// </summary>
 	public IWebProxy Proxy { internal get; set; }
 
@@ -139,7 +140,7 @@ public sealed class DiscordConfiguration
 	/// <summary>
 	/// <para>Defines that the client should attempt to reconnect indefinitely.</para>
 	/// <para>This is typically a very bad idea to set to <c>true</c>, as it will swallow all connection errors.</para>
-	/// <para>Defaults to false.</para>
+	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
 	public bool ReconnectIndefinitely { internal get; set; }
 
@@ -149,7 +150,7 @@ public sealed class DiscordConfiguration
 	///     This will only take effect if there are no <see cref="DiscordIntents.GuildMembers"/> or <see cref="DiscordIntents.GuildPresences"/>
 	///     intents specified. Otherwise, this will always be overwritten to true.
 	/// </para>
-	/// <para>Defaults to true.</para>
+	/// <para>Defaults to <see langword="true"/>.</para>
 	/// </summary>
 	public bool AlwaysCacheMembers { internal get; set; } = true;
 
@@ -199,31 +200,31 @@ public sealed class DiscordConfiguration
 
 	/// <summary>
 	/// <para>Sets if the bot's status should show the mobile icon.</para>
-	/// <para>Defaults to false.</para>
+	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
 	public bool MobileStatus { internal get; set; }
 
 	/// <summary>
 	/// <para>Whether to use canary. <see cref="UsePtb"/> has to be false.</para>
-	/// <para>Defaults to false.</para>
+	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
 	public bool UseCanary { internal get; set; }
 
 	/// <summary>
 	/// <para>Whether to use ptb. <see cref="UseCanary"/> has to be false.</para>
-	/// <para>Defaults to false.</para>
+	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
 	public bool UsePtb { internal get; set; }
 
 	/// <summary>
 	/// <para>Refresh full guild channel cache.</para>
-	/// <para>Defaults to false.</para>
+	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
 	public bool AutoRefreshChannelCache { internal get; set; }
 
 	/// <summary>
 	/// <para>Do not use, this is meant for DisCatSharp Devs.</para>
-	/// <para>Defaults to null.</para>
+	/// <para>Defaults to <see langword="null"/>.</para>
 	/// </summary>
 	public string Override { internal get; set; }
 
@@ -231,6 +232,13 @@ public sealed class DiscordConfiguration
 	/// Sets your preferred API language. See <see cref="DiscordLocales" /> for valid locales.
 	/// </summary>
 	public string Locale { internal get; set; } = DiscordLocales.AMERICAN_ENGLISH;
+
+	/// <summary>
+	/// <para>Whether to report missing fields for discord object.</para>
+	/// <para>Useful for library development.</para>
+	/// <para>Defaults to <see langword="false"/>.</para>
+	/// </summary>
+	public bool ReportMissingFields { internal get; set; } = false;
 
 	/// <summary>
 	/// <para>Sets the service provider.</para>
@@ -287,5 +295,6 @@ public sealed class DiscordConfiguration
 		this.ServiceProvider = other.ServiceProvider;
 		this.Override = other.Override;
 		this.Locale = other.Locale;
+		this.ReportMissingFields = other.ReportMissingFields;
 	}
 }

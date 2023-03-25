@@ -2864,8 +2864,8 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var userRaw = JsonConvert.DeserializeObject<TransportUser>(res.Response);
-		var duser = new DiscordUser(userRaw) { Discord = this.Discord };
+		var duser = DiscordJson.DeserializeObject<DiscordUser>(res.Response, this.Discord);
+		duser.Discord = this.Discord;
 		if (this.Discord.Configuration.Intents.HasIntent(DiscordIntents.GuildPresences) && duser.Presence == null && this.Discord is DiscordClient dc)
 			dc.PresencesInternal[duser.Id] = new DiscordPresence
 			{
@@ -2875,7 +2875,6 @@ public sealed class DiscordApiClient
 				Status = UserStatus.Offline,
 				InternalUser = new UserWithIdOnly { Id = duser.Id }
 			};
-
 		return duser;
 	}
 
