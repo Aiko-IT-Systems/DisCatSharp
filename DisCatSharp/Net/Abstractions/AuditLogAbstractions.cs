@@ -527,7 +527,7 @@ internal sealed class AuditLogAction
 /// <summary>
 /// Represents a audit log.
 /// </summary>
-internal sealed class AuditLog : ApiObject
+internal sealed class AuditLog : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the webhooks.

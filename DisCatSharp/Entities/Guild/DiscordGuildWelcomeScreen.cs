@@ -29,7 +29,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a discord welcome screen object.
 /// </summary>
-public class DiscordGuildWelcomeScreen : ApiObject
+public class DiscordGuildWelcomeScreen : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the server description shown in the welcome screen.
