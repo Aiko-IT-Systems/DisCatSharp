@@ -23,9 +23,12 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using DisCatSharp.Entities;
+
+using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -47,6 +50,9 @@ public static class DiscordJson
 	/// <returns>A JSON string representation of the object.</returns>
 	public static string SerializeObject(object value)
 		=> SerializeObjectInternal(value, null, s_serializer);
+
+	public static T DeserializeObject<T>(string json, BaseDiscordClient discord) where T : SnowflakeObject
+		=> DeserializeObjectInternal<T>(json, discord);
 
 	/// <summary>Populates an object with the values from a JSON node.</summary>
 	/// <param name="value">The token to populate the object with.</param>
@@ -81,5 +87,19 @@ public static class DiscordJson
 			jsonSerializer.Serialize(jsonTextWriter, value, type);
 		}
 		return stringWriter.ToString();
+	}
+
+	private static T DeserializeObjectInternal<T>(string json, BaseDiscordClient discord) where T : SnowflakeObject
+	{
+		var obj = JsonConvert.DeserializeObject<T>(json);
+
+		if (discord.Configuration.ReportMissingFields && obj.AdditionalProperties.Any())
+		{
+			discord.Logger.LogInformation("Found missing properties in api response");
+			foreach (var ap in obj.AdditionalProperties)
+				discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, obj.GetType().Name);
+		}
+
+		return obj;
 	}
 }

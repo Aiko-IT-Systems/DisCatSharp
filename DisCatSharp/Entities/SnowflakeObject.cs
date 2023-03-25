@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
@@ -49,6 +50,15 @@ public abstract class SnowflakeObject
 	/// </summary>
 	[JsonIgnore]
 	internal BaseDiscordClient Discord { get; set; }
+
+	internal IDictionary<string, object> _unknownProperties = new Dictionary<string, object>();
+
+	[JsonExtensionData(ReadData = true, WriteData = false)]
+	public IDictionary<string, object> AdditionalProperties
+	{
+		get => this._unknownProperties;
+		set => this._unknownProperties = value;
+	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="SnowflakeObject"/> class.
