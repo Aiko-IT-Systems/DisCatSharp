@@ -1335,6 +1335,8 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
 		var ret = JsonConvert.DeserializeObject<List<AutomodRule>>(res.Response);
+		foreach (var r in ret)
+			r.Discord = this.Discord;
 		return ret.AsReadOnly();
 	}
 
@@ -1353,6 +1355,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
 		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
+		ret.Discord = this.Discord;
 		return ret;
 	}
 
@@ -1399,6 +1402,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
+		ret.Discord = this.Discord;
 
 		if (this.Discord is DiscordClient dc)
 		{
@@ -1451,6 +1455,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, payload: DiscordJson.SerializeObject(pld));
 
 		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
+		ret.Discord = this.Discord;
 
 		if (this.Discord is DiscordClient dc)
 		{
@@ -1480,6 +1485,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers).ConfigureAwait(false);
 
 		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
+		ret.Discord = this.Discord;
 
 		if (this.Discord is DiscordClient dc)
 		{
