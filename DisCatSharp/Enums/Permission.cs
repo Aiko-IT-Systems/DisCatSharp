@@ -285,7 +285,7 @@ public enum Permissions : long
 	/// <summary>
 	/// Allows managing guild emojis, stickers and soundboard sounds.
 	/// </summary>
-	[PermissionString("Manage emojis & stickers")]
+	[PermissionString("Manage emojis, stickers & soundboard sounds")]
 	ManageGuildExpressions = 1L << 30,
 
 	/// <summary>
@@ -355,7 +355,7 @@ public enum Permissions : long
 	ViewCreatorMonetizationInsights = 1L << 41,
 
 	/// <summary>
-	/// Allows to use soundsboard sounds in voice channels.
+	/// Allows to use soundboard sounds in voice channels.
 	/// </summary>
 	[PermissionString("Use Soundboard"), DiscordInExperiment]
 	UseSoundboard = 1L << 42,
