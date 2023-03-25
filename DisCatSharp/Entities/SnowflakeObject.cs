@@ -30,7 +30,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents an object in Discord API.
 /// </summary>
-public abstract class SnowflakeObject : ApiObject
+public abstract class SnowflakeObject : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the ID of this object.

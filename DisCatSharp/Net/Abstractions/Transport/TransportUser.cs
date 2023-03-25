@@ -31,7 +31,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents a transport user.
 /// </summary>
-internal class TransportUser : ApiObject
+internal class TransportUser : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the id.

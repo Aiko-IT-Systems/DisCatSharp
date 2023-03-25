@@ -31,7 +31,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// The transport team.
 /// </summary>
-internal sealed class TransportTeam : ApiObject
+internal sealed class TransportTeam : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the id.

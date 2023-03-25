@@ -27,7 +27,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a Discord guild's widget settings.
 /// </summary>
-public class DiscordWidgetSettings : ApiObject
+public class DiscordWidgetSettings : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the guild.

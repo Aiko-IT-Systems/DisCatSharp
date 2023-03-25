@@ -51,7 +51,7 @@ public static class DiscordJson
 	public static string SerializeObject(object value)
 		=> SerializeObjectInternal(value, null, s_serializer);
 
-	public static T DeserializeObject<T>(string json, BaseDiscordClient discord) where T : ApiObject
+	public static T DeserializeObject<T>(string json, BaseDiscordClient discord) where T : ObservableApiObject
 		=> DeserializeObjectInternal<T>(json, discord);
 
 	/// <summary>Populates an object with the values from a JSON node.</summary>
@@ -89,7 +89,7 @@ public static class DiscordJson
 		return stringWriter.ToString();
 	}
 
-	private static T DeserializeObjectInternal<T>(string json, BaseDiscordClient discord) where T : ApiObject
+	private static T DeserializeObjectInternal<T>(string json, BaseDiscordClient discord) where T : ObservableApiObject
 	{
 		var obj = JsonConvert.DeserializeObject<T>(json);
 		obj.Discord = discord;

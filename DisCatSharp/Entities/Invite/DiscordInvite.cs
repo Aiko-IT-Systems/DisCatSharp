@@ -33,7 +33,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a Discord invite.
 /// </summary>
-public class DiscordInvite : ApiObject
+public class DiscordInvite : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the invite's code.
