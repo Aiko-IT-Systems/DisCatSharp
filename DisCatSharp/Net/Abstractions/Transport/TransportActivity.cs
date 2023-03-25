@@ -34,7 +34,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents a game a user is playing.
 /// </summary>
-internal sealed class TransportActivity : ApiObject
+internal sealed class TransportActivity : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the id of user's activity.

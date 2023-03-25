@@ -33,7 +33,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents a transport member.
 /// </summary>
-internal class TransportMember : ApiObject
+internal class TransportMember : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the avatar hash.

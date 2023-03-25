@@ -29,7 +29,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents an object in Discord API.
 /// </summary>
-public abstract class NullableSnowflakeObject
+public abstract class NullableSnowflakeObject : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the ID of this object.
@@ -43,12 +43,6 @@ public abstract class NullableSnowflakeObject
 	[JsonIgnore]
 	public DateTimeOffset? CreationTimestamp
 		=> this.Id.GetSnowflakeTime();
-
-	/// <summary>
-	/// Gets the client instance this object is tied to.
-	/// </summary>
-	[JsonIgnore]
-	internal BaseDiscordClient Discord { get; set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="NullableSnowflakeObject"/> class.

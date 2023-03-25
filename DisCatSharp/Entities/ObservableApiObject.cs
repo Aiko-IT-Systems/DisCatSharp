@@ -26,7 +26,7 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
-	public abstract class ApiObject
+	public abstract class ObservableApiObject
 	{
 		/// <summary>
 		/// Gets the client instance this object is tied to.
