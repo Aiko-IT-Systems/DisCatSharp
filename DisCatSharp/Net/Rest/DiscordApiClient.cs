@@ -2767,7 +2767,6 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var ret = DiscordJson.DeserializeObject<DiscordDmChannel>(res.Response, this.Discord);
-		ret.Discord = this.Discord;
 
 		return ret;
 	}
@@ -2791,7 +2790,6 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var ret = DiscordJson.DeserializeObject<DiscordDmChannel>(res.Response, this.Discord);
-		ret.Discord = this.Discord;
 
 		return ret;
 	}
@@ -2815,7 +2813,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var response = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		return JsonConvert.DeserializeObject<DiscordFollowedChannel>(response.Response);
+		return DiscordJson.DeserializeObject<DiscordFollowedChannel>(response.Response, this.Discord);
 	}
 
 	/// <summary>
@@ -2831,7 +2829,7 @@ public sealed class DiscordApiClient
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var response = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route).ConfigureAwait(false);
-		return JsonConvert.DeserializeObject<DiscordMessage>(response.Response);
+		return DiscordJson.DeserializeObject<DiscordMessage>(response.Response, this.Discord);
 	}
 
 	#endregion
