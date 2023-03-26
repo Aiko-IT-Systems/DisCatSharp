@@ -27,7 +27,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a followed channel.
 /// </summary>
-public class DiscordFollowedChannel
+public class DiscordFollowedChannel : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the id of the channel following the announcement channel.
