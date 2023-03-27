@@ -44,3 +44,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Microsoft.DocAsCode")]
 [assembly: InternalsVisibleTo("Microsoft.DocAsCode.Metadata.ManagedReference")]
 [assembly: InternalsVisibleTo("DisCatSharp.Experimental")]
+[assembly: InternalsVisibleTo("ProjectMakoto")]
