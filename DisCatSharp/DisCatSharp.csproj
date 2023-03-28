@@ -34,6 +34,9 @@ Written with love and for everyone.
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Sentry" Version="3.29.1" />
+    <PackageReference Include="Sentry.Extensions.Logging" Version="3.29.1" />
+    <PackageReference Include="Sentry.Serilog" Version="3.29.1" />
     <PackageReference Include="System.Memory" Version="4.5.5" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.Net.WebSockets" Version="4.3.0" />
