@@ -73,8 +73,14 @@ public enum ChannelFlags : int
 	ClydeAi = 1<<8,
 
 	/// <summary>
-	/// Unknown what this flag does.
+	/// Unknown what this flag does. Releates to clyde thread?
 	/// </summary>
 	[DiscordUnreleased("We do not have information about this.")]
-	IsScheduledForDeletion = 1<<9
+	IsScheduledForDeletion = 1<<9,
+
+	/// <summary>
+	/// Indicates that this channel is a media channel.
+	/// </summary>
+	[DiscordUnreleased]
+	IsMediaChannel = 1<<10,
 }
