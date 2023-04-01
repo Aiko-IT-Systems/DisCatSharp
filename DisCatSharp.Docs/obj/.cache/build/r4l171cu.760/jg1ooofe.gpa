@@ -1,0 +1,3626 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class Endpoints
+ | DisCatSharp Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <meta name="generator" content="docfx 2.60.0.0">
+  
+    <meta name="og:type" content="website">
+    <meta name="og:image" content="https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png">
+    <meta name="og:image:alt" content="DisCatSharp Logo">
+    <meta name="og:image:type" content="image/png">
+    <meta name="og:site_name" content="DisCatSharp Documentation">
+    <link rel="apple-touch-icon" sizes="57x57" href="../../apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="../../ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <script defer="" src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/night-owl.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" integrity="sha384-EvBWSlnoFgZlXJvpzS+MAUEjvN7+gcCwH+qh7GRFOGgZO0PuwOFro7qPOJnLfe7l" crossorigin="anonymous">
+      <link rel="stylesheet" href="../../src/styles/config.css">
+      <link rel="stylesheet" href="../../src/styles/discord.css">
+      <link rel="stylesheet" href="../../src/styles/dcs.css">
+      <link rel="stylesheet" href="../../src/styles/main.css">
+      <link rel="stylesheet" href="../../src/styles/colors.css">
+      <link rel="stylesheet" href="../../src/styles/highlight/github-dark.min.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+  
+  <meta property="docfx:rel" content="../../">
+  <meta property="docfx:newtab" content="true">
+    </head>
+
+    <body>
+        <div class="top-navbar">
+            <a class="burger-icon" onclick="toggleMenu()">
+                <svg name="Hamburger" style="vertical-align: middle;" width="34" height="34" viewbox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M20 6H4V9H20V6ZM4 10.999H20V13.999H4V10.999ZM4 15.999H20V18.999H4V15.999Z"></path></svg>
+            </a>
+
+
+            <a class="navbar-brand" href="../../index.html">
+              <img id="logo" class="svg" src="../../dcs-logo-winter.gif" alt="DisCatSharp">
+            </a>
+        </div>
+
+        <div class="body-content">
+            <div id="blackout" class="blackout" onclick="toggleMenu()"></div>
+
+            <nav id="sidebar" role="navigation">
+                <div class="sidebar">
+
+                    <div>
+                      <div class="mobile-hide">
+
+                        <a class="navbar-brand" href="../../index.html">
+                          <img id="logo" class="svg" src="../../dcs-logo-winter.gif" alt="DisCatSharp">
+                        </a>
+                      </div>
+
+                      <div class="sidesearch">
+                        <form id="search" role="search" class="search">
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text" id="search-query" placeholder="Search" autocomplete="off">
+                        </form>
+                      </div>
+
+                      <div id="navbar">
+                      </div>
+                    </div>
+                    <div class="sidebar-item-separator"></div>
+
+                        <div id="sidetoggle">
+                          <div id="sidetoc"></div>
+                        </div>
+                </div>
+                <div class="footer">
+  <strong>Made with ♥ by AITSYS</strong>
+  
+                </div>
+            </nav>
+
+            <main class="main-panel">
+
+                <div id="search-results" style="display: none;">
+                  <h1 class="search-list">Search Results for <span></span></h1>
+                  <div class="sr-items">
+                    <p class="lsearch"><i class="bi bi-hourglass-split index-loading"></i></p>
+                  </div>
+                  <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+                </div>
+
+                <div role="main" class="hide-when-search">
+
+                        <div class="subnav navbar navbar-default">
+                          <div class="container hide-when-search" id="breadcrumb">
+                            <ul class="breadcrumb">
+                              <li></li>
+                            </ul>
+                          </div>
+                        </div>
+
+      <div id="sidetoggle">
+        <div id="sidetoc"></div>
+      </div>
+						<div class="article row grid-right">
+
+                    <article class="content wrap" id="_content" data-uid="DisCatSharp.Net.Endpoints">
+
+
+  <h1 id="DisCatSharp_Net_Endpoints" data-uid="DisCatSharp.Net.Endpoints" class="text-break">Class Endpoints
+</h1>
+  <div class="markdown level0 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">Endpoints</span></div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="DisCatSharp.Net.html">DisCatSharp.Net</a></h6>
+  <h6><strong>Assembly</strong>: DisCatSharp.dll</h6>
+  <h5 id="DisCatSharp_Net_Endpoints_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class Endpoints : object</code></pre>
+  </div>
+  <h3 id="fields">Fields
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_ACK.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.ACK%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L253">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_ACK" data-uid="DisCatSharp.Net.Endpoints.ACK">ACK</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="3">The acknowledge endpoint.
+Indicates that a message is read.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string ACK = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_ACTIVITIES.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.ACTIVITIES%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L480">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_ACTIVITIES" data-uid="DisCatSharp.Net.Endpoints.ACTIVITIES">ACTIVITIES</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The activities endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string ACTIVITIES = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_ALERT_ACTION.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.ALERT_ACTION%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L527">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_ALERT_ACTION" data-uid="DisCatSharp.Net.Endpoints.ALERT_ACTION">ALERT_ACTION</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string ALERT_ACTION = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_APP_ASSETS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.APP_ASSETS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L414">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_APP_ASSETS" data-uid="DisCatSharp.Net.Endpoints.APP_ASSETS">APP_ASSETS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The app assets endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string APP_ASSETS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_APP_ICONS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.APP_ICONS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L419">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_APP_ICONS" data-uid="DisCatSharp.Net.Endpoints.APP_ICONS">APP_ICONS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The app icons endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string APP_ICONS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_APPLICATION_DIRECTORY.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.APPLICATION_DIRECTORY%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L510">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_APPLICATION_DIRECTORY" data-uid="DisCatSharp.Net.Endpoints.APPLICATION_DIRECTORY">APPLICATION_DIRECTORY</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string APPLICATION_DIRECTORY = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_APPLICATIONS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.APPLICATIONS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L58">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_APPLICATIONS" data-uid="DisCatSharp.Net.Endpoints.APPLICATIONS">APPLICATIONS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The applications endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string APPLICATIONS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_ASSETS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.ASSETS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L263">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_ASSETS" data-uid="DisCatSharp.Net.Endpoints.ASSETS">ASSETS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The assets endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string ASSETS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_AUDIT_LOGS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.AUDIT_LOGS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L247">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_AUDIT_LOGS" data-uid="DisCatSharp.Net.Endpoints.AUDIT_LOGS">AUDIT_LOGS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The audit logs endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string AUDIT_LOGS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_AUTH.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.AUTH%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L129">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_AUTH" data-uid="DisCatSharp.Net.Endpoints.AUTH">AUTH</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The oauth2 auth endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string AUTH = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_AUTHORIZE.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.AUTHORIZE%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L53">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_AUTHORIZE" data-uid="DisCatSharp.Net.Endpoints.AUTHORIZE">AUTHORIZE</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The oauth2 authorize endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string AUTHORIZE = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_AUTO_MODERATION.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.AUTO_MODERATION%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L522">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_AUTO_MODERATION" data-uid="DisCatSharp.Net.Endpoints.AUTO_MODERATION">AUTO_MODERATION</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string AUTO_MODERATION = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_AVATARS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.AVATARS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L200">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_AVATARS" data-uid="DisCatSharp.Net.Endpoints.AVATARS">AVATARS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The avatars endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string AVATARS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_AVATARS_DECORATIONS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.AVATARS_DECORATIONS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L205">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_AVATARS_DECORATIONS" data-uid="DisCatSharp.Net.Endpoints.AVATARS_DECORATIONS">AVATARS_DECORATIONS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The avatar decorations endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string AVATARS_DECORATIONS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_BANNERS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.BANNERS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L434">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_BANNERS" data-uid="DisCatSharp.Net.Endpoints.BANNERS">BANNERS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The user banners endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string BANNERS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_BANS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.BANS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L210">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_BANS" data-uid="DisCatSharp.Net.Endpoints.BANS">BANS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The bans endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string BANS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_BASE_URI.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.BASE_URI%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L33">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_BASE_URI" data-uid="DisCatSharp.Net.Endpoints.BASE_URI">BASE_URI</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The base discord api uri.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string BASE_URI = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_BOT.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.BOT%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L237">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_BOT" data-uid="DisCatSharp.Net.Endpoints.BOT">BOT</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The bot endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string BOT = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_BULK_DELETE.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.BULK_DELETE%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L88">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_BULK_DELETE" data-uid="DisCatSharp.Net.Endpoints.BULK_DELETE">BULK_DELETE</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The bulk-delete endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string BULK_DELETE = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_CALLBACK.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.CALLBACK%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L333">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_CALLBACK" data-uid="DisCatSharp.Net.Endpoints.CALLBACK">CALLBACK</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The interaction/command callback endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string CALLBACK = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_CANARY_URI.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.CANARY_URI%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L38">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_CANARY_URI" data-uid="DisCatSharp.Net.Endpoints.CANARY_URI">CANARY_URI</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The base discord canary api uri.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string CANARY_URI = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_CHANGELOGS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.CHANGELOGS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L516">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_CHANGELOGS" data-uid="DisCatSharp.Net.Endpoints.CHANGELOGS">CHANGELOGS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string CHANGELOGS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_CHANGELOGS_DESKTOP_JSON.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.CHANGELOGS_DESKTOP_JSON%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L517">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_CHANGELOGS_DESKTOP_JSON" data-uid="DisCatSharp.Net.Endpoints.CHANGELOGS_DESKTOP_JSON">CHANGELOGS_DESKTOP_JSON</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string CHANGELOGS_DESKTOP_JSON = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_CHANGELOGS_MOBILE_JSON.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.CHANGELOGS_MOBILE_JSON%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L518">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_CHANGELOGS_MOBILE_JSON" data-uid="DisCatSharp.Net.Endpoints.CHANGELOGS_MOBILE_JSON">CHANGELOGS_MOBILE_JSON</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string CHANGELOGS_MOBILE_JSON = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_CHANNEL_ICONS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.CHANNEL_ICONS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L429">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_CHANNEL_ICONS" data-uid="DisCatSharp.Net.Endpoints.CHANNEL_ICONS">CHANNEL_ICONS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The channel icons endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string CHANNEL_ICONS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_CHANNELS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.CHANNELS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L139">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_CHANNELS" data-uid="DisCatSharp.Net.Endpoints.CHANNELS">CHANNELS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The channels endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string CHANNELS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_CLEAR_MENTION_RAID.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.CLEAR_MENTION_RAID%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L523">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_CLEAR_MENTION_RAID" data-uid="DisCatSharp.Net.Endpoints.CLEAR_MENTION_RAID">CLEAR_MENTION_RAID</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string CLEAR_MENTION_RAID = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_COMMANDS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.COMMANDS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L323">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_COMMANDS" data-uid="DisCatSharp.Net.Endpoints.COMMANDS">COMMANDS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The slash commands endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string COMMANDS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_CONFIG.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.CONFIG%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L485">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_CONFIG" data-uid="DisCatSharp.Net.Endpoints.CONFIG">CONFIG</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The config endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string CONFIG = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_CONNECTIONS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.CONNECTIONS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L114">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_CONNECTIONS" data-uid="DisCatSharp.Net.Endpoints.CONNECTIONS">CONNECTIONS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The connections endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string CONNECTIONS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_COUNTS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.COUNTS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L465">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_COUNTS" data-uid="DisCatSharp.Net.Endpoints.COUNTS">COUNTS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The counts endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string COUNTS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_CREATOR_MONETIZATION.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.CREATOR_MONETIZATION%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L521">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_CREATOR_MONETIZATION" data-uid="DisCatSharp.Net.Endpoints.CREATOR_MONETIZATION">CREATOR_MONETIZATION</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string CREATOR_MONETIZATION = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_CROSSPOST.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.CROSSPOST%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L293">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_CROSSPOST" data-uid="DisCatSharp.Net.Endpoints.CROSSPOST">CROSSPOST</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The crosspost endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string CROSSPOST = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_DIRECTORY_ENTRIES.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.DIRECTORY_ENTRIES%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L460">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_DIRECTORY_ENTRIES" data-uid="DisCatSharp.Net.Endpoints.DIRECTORY_ENTRIES">DIRECTORY_ENTRIES</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The directory entries endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string DIRECTORY_ENTRIES = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_EMBED.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.EMBED%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L268">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_EMBED" data-uid="DisCatSharp.Net.Endpoints.EMBED">EMBED</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The embed endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string EMBED = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_EMOJI_HOSE.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.EMOJI_HOSE%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L513">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_EMOJI_HOSE" data-uid="DisCatSharp.Net.Endpoints.EMOJI_HOSE">EMOJI_HOSE</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string EMOJI_HOSE = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_EMOJIS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.EMOJIS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L273">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_EMOJIS" data-uid="DisCatSharp.Net.Endpoints.EMOJIS">EMOJIS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The emojis endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string EMOJIS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_EPHEMERAL_ATTACHMENTS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.EPHEMERAL_ATTACHMENTS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L490">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_EPHEMERAL_ATTACHMENTS" data-uid="DisCatSharp.Net.Endpoints.EPHEMERAL_ATTACHMENTS">EPHEMERAL_ATTACHMENTS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The ephemeral attachments endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string EPHEMERAL_ATTACHMENTS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_FOLLOWERS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.FOLLOWERS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L288">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_FOLLOWERS" data-uid="DisCatSharp.Net.Endpoints.FOLLOWERS">FOLLOWERS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The followers endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string FOLLOWERS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_GATEWAY.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.GATEWAY%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L124">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_GATEWAY" data-uid="DisCatSharp.Net.Endpoints.GATEWAY">GATEWAY</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The gateway endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string GATEWAY = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_GITHUB.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.GITHUB%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L227">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_GITHUB" data-uid="DisCatSharp.Net.Endpoints.GITHUB">GITHUB</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="3">The github endpoint.
+Used for <a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string GITHUB = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_GROUP_LISTINGS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.GROUP_LISTINGS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L450">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_GROUP_LISTINGS" data-uid="DisCatSharp.Net.Endpoints.GROUP_LISTINGS">GROUP_LISTINGS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The group listings endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string GROUP_LISTINGS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_GUILD_DISCOVERY_SPLASHES.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.GUILD_DISCOVERY_SPLASHES%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L164">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_GUILD_DISCOVERY_SPLASHES" data-uid="DisCatSharp.Net.Endpoints.GUILD_DISCOVERY_SPLASHES">GUILD_DISCOVERY_SPLASHES</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The guild discovery splash endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string GUILD_DISCOVERY_SPLASHES = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_GUILD_EVENTS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.GUILD_EVENTS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L393">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_GUILD_EVENTS" data-uid="DisCatSharp.Net.Endpoints.GUILD_EVENTS">GUILD_EVENTS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The guild scheduled events cover image endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string GUILD_EVENTS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_GUILD_HOME_HEADERES.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.GUILD_HOME_HEADERES%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L526">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_GUILD_HOME_HEADERES" data-uid="DisCatSharp.Net.Endpoints.GUILD_HOME_HEADERES">GUILD_HOME_HEADERES</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string GUILD_HOME_HEADERES = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_GUILDS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.GUILDS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L159">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_GUILDS" data-uid="DisCatSharp.Net.Endpoints.GUILDS">GUILDS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The guilds endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string GUILDS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_ICONS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.ICONS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L119">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_ICONS" data-uid="DisCatSharp.Net.Endpoints.ICONS">ICONS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The icons endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string ICONS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_INTEGRATIONS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.INTEGRATIONS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L93">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_INTEGRATIONS" data-uid="DisCatSharp.Net.Endpoints.INTEGRATIONS">INTEGRATIONS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The integrations endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string INTEGRATIONS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_INTERACTIONS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.INTERACTIONS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L328">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_INTERACTIONS" data-uid="DisCatSharp.Net.Endpoints.INTERACTIONS">INTERACTIONS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The interactions endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string INTERACTIONS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_INVITES.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.INVITES%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L179">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_INVITES" data-uid="DisCatSharp.Net.Endpoints.INVITES">INVITES</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The invites endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string INVITES = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_LINES.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.LINES%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L512">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_LINES" data-uid="DisCatSharp.Net.Endpoints.LINES">LINES</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string LINES = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_LIST.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.LIST%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L470">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_LIST" data-uid="DisCatSharp.Net.Endpoints.LIST">LIST</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The list endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string LIST = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_LOGIN.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.LOGIN%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L134">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_LOGIN" data-uid="DisCatSharp.Net.Endpoints.LOGIN">LOGIN</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The oauth2 login endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string LOGIN = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_ME.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.ME%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L68">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_ME" data-uid="DisCatSharp.Net.Endpoints.ME">ME</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The self (@me) endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string ME = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_MEMBER_VERIFICATION.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.MEMBER_VERIFICATION%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L318">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_MEMBER_VERIFICATION" data-uid="DisCatSharp.Net.Endpoints.MEMBER_VERIFICATION">MEMBER_VERIFICATION</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The member verification gate endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string MEMBER_VERIFICATION = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_MEMBERS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.MEMBERS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L189">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_MEMBERS" data-uid="DisCatSharp.Net.Endpoints.MEMBERS">MEMBERS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The members endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string MEMBERS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_MESSAGES.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.MESSAGES%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L144">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_MESSAGES" data-uid="DisCatSharp.Net.Endpoints.MESSAGES">MESSAGES</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The messages endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string MESSAGES = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_METADATA.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.METADATA%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L505">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_METADATA" data-uid="DisCatSharp.Net.Endpoints.METADATA">METADATA</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The metadata endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string METADATA = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_MFA.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.MFA%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L232">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_MFA" data-uid="DisCatSharp.Net.Endpoints.MFA">MFA</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The guilds mfa endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string MFA = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_NEW_MEMBER_ACTION.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.NEW_MEMBER_ACTION%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L509">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_NEW_MEMBER_ACTION" data-uid="DisCatSharp.Net.Endpoints.NEW_MEMBER_ACTION">NEW_MEMBER_ACTION</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string NEW_MEMBER_ACTION = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_NEW_MEMBER_ACTIONS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.NEW_MEMBER_ACTIONS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L508">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_NEW_MEMBER_ACTIONS" data-uid="DisCatSharp.Net.Endpoints.NEW_MEMBER_ACTIONS">NEW_MEMBER_ACTIONS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string NEW_MEMBER_ACTIONS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_NEW_MEMBER_WELCOME.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.NEW_MEMBER_WELCOME%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L507">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_NEW_MEMBER_WELCOME" data-uid="DisCatSharp.Net.Endpoints.NEW_MEMBER_WELCOME">NEW_MEMBER_WELCOME</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string NEW_MEMBER_WELCOME = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_NICK.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.NICK%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L258">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_NICK" data-uid="DisCatSharp.Net.Endpoints.NICK">NICK</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The nickname endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string NICK = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_OAUTH2.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.OAUTH2%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L48">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_OAUTH2" data-uid="DisCatSharp.Net.Endpoints.OAUTH2">OAUTH2</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The oauth2 endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string OAUTH2 = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_ONBOARDING.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.ONBOARDING%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L520">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_ONBOARDING" data-uid="DisCatSharp.Net.Endpoints.ONBOARDING">ONBOARDING</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string ONBOARDING = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_ORIGINAL.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.ORIGINAL%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L73">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_ORIGINAL" data-uid="DisCatSharp.Net.Endpoints.ORIGINAL">ORIGINAL</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The @original endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string ORIGINAL = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_OWNERSHIP_TRANSFER.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.OWNERSHIP_TRANSFER%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L519">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_OWNERSHIP_TRANSFER" data-uid="DisCatSharp.Net.Endpoints.OWNERSHIP_TRANSFER">OWNERSHIP_TRANSFER</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string OWNERSHIP_TRANSFER = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_PERMISSIONS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.PERMISSIONS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L78">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_PERMISSIONS" data-uid="DisCatSharp.Net.Endpoints.PERMISSIONS">PERMISSIONS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The permissions endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string PERMISSIONS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_PINCODE.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.PINCODE%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L514">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_PINCODE" data-uid="DisCatSharp.Net.Endpoints.PINCODE">PINCODE</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string PINCODE = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_PINS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.PINS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L149">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_PINS" data-uid="DisCatSharp.Net.Endpoints.PINS">PINS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The pinned messages endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string PINS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_PREVIEW.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.PREVIEW%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L283">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_PREVIEW" data-uid="DisCatSharp.Net.Endpoints.PREVIEW">PREVIEW</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The guild preview endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string PREVIEW = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_PRUNE.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.PRUNE%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L104">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_PRUNE" data-uid="DisCatSharp.Net.Endpoints.PRUNE">PRUNE</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="3">The prune endpoint.
+Used for user removal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string PRUNE = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_PTB_URI.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.PTB_URI%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L43">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_PTB_URI" data-uid="DisCatSharp.Net.Endpoints.PTB_URI">PTB_URI</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The base discord ptb api uri.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string PTB_URI = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_PUBLISHED_LISTINGS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.PUBLISHED_LISTINGS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L524">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_PUBLISHED_LISTINGS" data-uid="DisCatSharp.Net.Endpoints.PUBLISHED_LISTINGS">PUBLISHED_LISTINGS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string PUBLISHED_LISTINGS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_REACTIONS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.REACTIONS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L63">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_REACTIONS" data-uid="DisCatSharp.Net.Endpoints.REACTIONS">REACTIONS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The message reactions endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string REACTIONS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_RECIPIENTS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.RECIPIENTS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L83">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_RECIPIENTS" data-uid="DisCatSharp.Net.Endpoints.RECIPIENTS">RECIPIENTS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The recipients endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string RECIPIENTS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_REGIONS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.REGIONS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L109">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_REGIONS" data-uid="DisCatSharp.Net.Endpoints.REGIONS">REGIONS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The regions endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string REGIONS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_ROLE_CONNECTIONS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.ROLE_CONNECTIONS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L500">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_ROLE_CONNECTIONS" data-uid="DisCatSharp.Net.Endpoints.ROLE_CONNECTIONS">ROLE_CONNECTIONS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The role connections endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string ROLE_CONNECTIONS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_ROLE_ICONS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.ROLE_ICONS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L475">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_ROLE_ICONS" data-uid="DisCatSharp.Net.Endpoints.ROLE_ICONS">ROLE_ICONS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The role icons endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string ROLE_ICONS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_ROLE_SUBSCRIPTIONS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.ROLE_SUBSCRIPTIONS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L445">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_ROLE_SUBSCRIPTIONS" data-uid="DisCatSharp.Net.Endpoints.ROLE_SUBSCRIPTIONS">ROLE_SUBSCRIPTIONS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The role subscription endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string ROLE_SUBSCRIPTIONS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_ROLES.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.ROLES%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L184">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_ROLES" data-uid="DisCatSharp.Net.Endpoints.ROLES">ROLES</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The roles endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string ROLES = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_RPC.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.RPC%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L495">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_RPC" data-uid="DisCatSharp.Net.Endpoints.RPC">RPC</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The rpc endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string RPC = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_SCHEDULED_EVENTS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.SCHEDULED_EVENTS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L388">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_SCHEDULED_EVENTS" data-uid="DisCatSharp.Net.Endpoints.SCHEDULED_EVENTS">SCHEDULED_EVENTS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The guild scheduled events endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string SCHEDULED_EVENTS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_SEARCH.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.SEARCH%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L174">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_SEARCH" data-uid="DisCatSharp.Net.Endpoints.SEARCH">SEARCH</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The search endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string SEARCH = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_SHARED_CANVAS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.SHARED_CANVAS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L511">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_SHARED_CANVAS" data-uid="DisCatSharp.Net.Endpoints.SHARED_CANVAS">SHARED_CANVAS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string SHARED_CANVAS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_SKUS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.SKUS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L525">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_SKUS" data-uid="DisCatSharp.Net.Endpoints.SKUS">SKUS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string SKUS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_SLACK.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.SLACK%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L221">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_SLACK" data-uid="DisCatSharp.Net.Endpoints.SLACK">SLACK</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="3">The slack endpoint.
+Used for <a class="xref" href="DisCatSharp.Entities.DiscordWebhook.html">DiscordWebhook</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string SLACK = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_SOUNDBOARD_DEFAULT_SOUNDS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.SOUNDBOARD_DEFAULT_SOUNDS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L515">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_SOUNDBOARD_DEFAULT_SOUNDS" data-uid="DisCatSharp.Net.Endpoints.SOUNDBOARD_DEFAULT_SOUNDS">SOUNDBOARD_DEFAULT_SOUNDS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The discord endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string SOUNDBOARD_DEFAULT_SOUNDS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_SPLASHES.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.SPLASHES%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L169">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_SPLASHES" data-uid="DisCatSharp.Net.Endpoints.SPLASHES">SPLASHES</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The guild splash endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string SPLASHES = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_STAGE_INSTANCES.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.STAGE_INSTANCES%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L348">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_STAGE_INSTANCES" data-uid="DisCatSharp.Net.Endpoints.STAGE_INSTANCES">STAGE_INSTANCES</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The stage instances endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string STAGE_INSTANCES = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_STICKER_APPLICATION.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.STICKER_APPLICATION%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L440">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_STICKER_APPLICATION" data-uid="DisCatSharp.Net.Endpoints.STICKER_APPLICATION">STICKER_APPLICATION</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="3">The sticker endpoint.
+This endpoint is the static nitro sticker application.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string STICKER_APPLICATION = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_STICKERPACKS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.STICKERPACKS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L404">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_STICKERPACKS" data-uid="DisCatSharp.Net.Endpoints.STICKERPACKS">STICKERPACKS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="3">The sticker packs endpoint.
+Global nitro sticker packs.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string STICKERPACKS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_STICKERS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.STICKERS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L398">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_STICKERS" data-uid="DisCatSharp.Net.Endpoints.STICKERS">STICKERS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The stickers endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string STICKERS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_STORE.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.STORE%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L409">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_STORE" data-uid="DisCatSharp.Net.Endpoints.STORE">STORE</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The store endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string STORE = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_SUBSCRIPTION_LISTINGS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.SUBSCRIPTION_LISTINGS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L455">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_SUBSCRIPTION_LISTINGS" data-uid="DisCatSharp.Net.Endpoints.SUBSCRIPTION_LISTINGS">SUBSCRIPTION_LISTINGS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The subscription listings endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string SUBSCRIPTION_LISTINGS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_SYNC.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.SYNC%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L98">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_SYNC" data-uid="DisCatSharp.Net.Endpoints.SYNC">SYNC</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The sync endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string SYNC = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_TAGS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.TAGS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L383">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_TAGS" data-uid="DisCatSharp.Net.Endpoints.TAGS">TAGS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The tags endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string TAGS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_TEAM_ICONS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.TEAM_ICONS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L424">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_TEAM_ICONS" data-uid="DisCatSharp.Net.Endpoints.TEAM_ICONS">TEAM_ICONS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The team icons endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string TEAM_ICONS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_TEMPLATES.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.TEMPLATES%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L313">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_TEMPLATES" data-uid="DisCatSharp.Net.Endpoints.TEMPLATES">TEMPLATES</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The templates endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string TEMPLATES = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_THREAD_ACTIVE.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.THREAD_ACTIVE%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L368">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_THREAD_ACTIVE" data-uid="DisCatSharp.Net.Endpoints.THREAD_ACTIVE">THREAD_ACTIVE</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The active threads endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string THREAD_ACTIVE = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_THREAD_ARCHIVED.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.THREAD_ARCHIVED%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L373">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_THREAD_ARCHIVED" data-uid="DisCatSharp.Net.Endpoints.THREAD_ARCHIVED">THREAD_ARCHIVED</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The archived threads endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string THREAD_ARCHIVED = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_THREAD_MEMBERS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.THREAD_MEMBERS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L378">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_THREAD_MEMBERS" data-uid="DisCatSharp.Net.Endpoints.THREAD_MEMBERS">THREAD_MEMBERS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The thread members endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string THREAD_MEMBERS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_THREAD_PRIVATE.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.THREAD_PRIVATE%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L363">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_THREAD_PRIVATE" data-uid="DisCatSharp.Net.Endpoints.THREAD_PRIVATE">THREAD_PRIVATE</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The private threads endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string THREAD_PRIVATE = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_THREAD_PUBLIC.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.THREAD_PUBLIC%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L358">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_THREAD_PUBLIC" data-uid="DisCatSharp.Net.Endpoints.THREAD_PUBLIC">THREAD_PUBLIC</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The public threads endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string THREAD_PUBLIC = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_THREADS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.THREADS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L353">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_THREADS" data-uid="DisCatSharp.Net.Endpoints.THREADS">THREADS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The threads endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string THREADS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_TYPING.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.TYPING%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L195">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_TYPING" data-uid="DisCatSharp.Net.Endpoints.TYPING">TYPING</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="3">The typing endpoint.
+Triggers a typing indicator inside a channel.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string TYPING = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_USERS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.USERS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L154">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_USERS" data-uid="DisCatSharp.Net.Endpoints.USERS">USERS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The users endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string USERS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_VANITY_URL.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.VANITY_URL%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L278">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_VANITY_URL" data-uid="DisCatSharp.Net.Endpoints.VANITY_URL">VANITY_URL</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The vanity url endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string VANITY_URL = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_VOICE.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.VOICE%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L242">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_VOICE" data-uid="DisCatSharp.Net.Endpoints.VOICE">VOICE</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The voice endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string VOICE = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_VOICE_STATES.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.VOICE_STATES%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L343">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_VOICE_STATES" data-uid="DisCatSharp.Net.Endpoints.VOICE_STATES">VOICE_STATES</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The voice states endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string VOICE_STATES = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_WEBHOOKS.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.WEBHOOKS%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L215">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_WEBHOOKS" data-uid="DisCatSharp.Net.Endpoints.WEBHOOKS">WEBHOOKS</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The webhook endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string WEBHOOKS = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_WELCOME_SCREEN.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.WELCOME_SCREEN%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L338">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_WELCOME_SCREEN" data-uid="DisCatSharp.Net.Endpoints.WELCOME_SCREEN">WELCOME_SCREEN</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The welcome screen endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string WELCOME_SCREEN = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_WIDGET.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.WIDGET%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L298">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_WIDGET" data-uid="DisCatSharp.Net.Endpoints.WIDGET">WIDGET</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The guild widget endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string WIDGET = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_WIDGET_JSON.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.WIDGET_JSON%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L303">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_WIDGET_JSON" data-uid="DisCatSharp.Net.Endpoints.WIDGET_JSON">WIDGET_JSON</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The guild widget json endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string WIDGET_JSON = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Net_Endpoints_WIDGET_PNG.md&amp;value=---%0Auid%3A%20DisCatSharp.Net.Endpoints.WIDGET_PNG%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Net/Rest/Endpoints.cs/#L308">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_Net_Endpoints_WIDGET_PNG" data-uid="DisCatSharp.Net.Endpoints.WIDGET_PNG">WIDGET_PNG</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp/DisCatSharp.Net.Endpoints.yml" sourcestartlinenumber="2" sourceendlinenumber="2">The guild widget png endpoint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const string WIDGET_PNG = null</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+</article>
+                </div>
+
+                <div class="copyright-footer">
+                    <span>&#169; Aiko IT Systems. All rights reserved.</span>
+                </div>
+            </div></main>
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.vendor.js"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.js"></script>
+        <script type="text/javascript" src="../../src/scripts/url.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/highlight/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+        <script src="https://cdn.jsdelivr.net/npm/anchor-js/anchor.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/jquery.twbsPagination.js"></script>
+        <script type="text/javascript" src="../../src/scripts/dcs.js"></script>
+        <script type="text/javascript" src="../../src/scripts/lunr.js"></script>
+    </body>
+</html>
