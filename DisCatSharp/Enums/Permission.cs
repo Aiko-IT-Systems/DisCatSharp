@@ -31,6 +31,7 @@ namespace DisCatSharp.Enums;
 /// </summary>
 public static class PermissionMethods
 {
+	// TODO: Update FullPerms value.
 	/// <summary>
 	/// Gets the full permissions enum (long).
 	/// </summary>
@@ -39,8 +40,8 @@ public static class PermissionMethods
 	/// <summary>
 	/// Calculates whether this permission set contains the given permission.
 	/// </summary>
-	/// <param name="p">The permissions to calculate from</param>
-	/// <param name="permission">permission you want to check</param>
+	/// <param name="p">The permissions to calculate from<./param>
+	/// <param name="permission">The permission you want to check.</param>
 	/// <returns></returns>
 	public static bool HasPermission(this Permissions p, Permissions permission)
 		=> p.HasFlag(Permissions.Administrator) || (p & permission) == permission;
@@ -49,7 +50,7 @@ public static class PermissionMethods
 	/// Grants permissions.
 	/// </summary>
 	/// <param name="p">The permissions to add to.</param>
-	/// <param name="grant">Permission to add.</param>
+	/// <param name="grant">The permission to add.</param>
 	/// <returns></returns>
 	public static Permissions Grant(this Permissions p, Permissions grant) => p | grant;
 
@@ -57,7 +58,7 @@ public static class PermissionMethods
 	/// Revokes permissions.
 	/// </summary>
 	/// <param name="p">The permissions to take from.</param>
-	/// <param name="revoke">Permission to take.</param>
+	/// <param name="revoke">The permission to take.</param>
 	/// <returns></returns>
 	public static Permissions Revoke(this Permissions p, Permissions revoke) => p & ~revoke;
 }
@@ -96,8 +97,9 @@ public enum Permissions : long
 	[PermissionString("No permissions")]
 	None = 0,
 
+	// TODO: Update All permission value.
 	/// <summary>
-	/// Indicates all permissions are granted
+	/// Indicates all permissions are granted.
 	/// </summary>
 	[PermissionString("All permissions")]
 	All = 0b0011_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111,
@@ -370,7 +372,13 @@ public enum Permissions : long
 	/// Allows to create guild events.
 	/// </summary>
 	[PermissionString("Create Events"), DiscordUnreleased]
-	CreateEvents = 1L << 44
+	CreateEvents = 1L << 44,
+	
+	/// <summary>
+	/// Allows the usage of custom soundboard sounds from other servers.
+	/// </summary>
+	[PermissionString("Use External Sounds", DiscordInExperiment)]
+	UseExternalSounds = 1L << 45
 }
 
 /// <summary>
