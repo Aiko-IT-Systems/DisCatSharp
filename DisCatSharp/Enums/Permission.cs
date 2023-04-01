@@ -377,7 +377,7 @@ public enum Permissions : long
 	/// <summary>
 	/// Allows the usage of custom soundboard sounds from other servers.
 	/// </summary>
-	[PermissionString("Use External Sounds", DiscordInExperiment)]
+	[PermissionString("Use External Sounds"), DiscordInExperiment]
 	UseExternalSounds = 1L << 45
 }
 
