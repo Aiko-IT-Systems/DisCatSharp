@@ -1333,7 +1333,10 @@ public partial class DiscordGuild
 				case AuditLogActionType.AutoModerationBlockMessage:
 					break;
 
-				case AuditLogActionType.AUtoModerationFlagMessage:
+				case AuditLogActionType.AutoModerationFlagMessage:
+					break;
+
+				case AuditLogActionType.AutoModerationTimeOutUser:
 					break;
 
 				default:
