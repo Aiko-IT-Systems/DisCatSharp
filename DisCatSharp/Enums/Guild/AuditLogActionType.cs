@@ -295,5 +295,10 @@ public enum AuditLogActionType
 	/// <summary>
 	/// Indicates that automod flagged a message.
 	/// </summary>
-	AUtoModerationFlagMessage = 144
+	AutoModerationFlagMessage = 144,
+
+	/// <summary>
+	/// Indicates that automod timed out a user.
+	/// </summary>
+	AutoModerationTimeOutUser = 145
 }
