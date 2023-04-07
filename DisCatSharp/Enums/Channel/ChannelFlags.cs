@@ -83,4 +83,10 @@ public enum ChannelFlags : int
 	/// </summary>
 	[DiscordUnreleased]
 	IsMediaChannel = 1<<10,
+
+	/// <summary>
+	/// Indicates that ai powered summaries are disabled for this channel.
+	/// </summary>
+	[DiscordInExperiment]
+	SummariesDisabled = 1<<11
 }
