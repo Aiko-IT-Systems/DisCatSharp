@@ -300,5 +300,10 @@ public enum AuditLogActionType
 	/// <summary>
 	/// Indicates that automod timed out a user.
 	/// </summary>
-	AutoModerationTimeOutUser = 145
+	AutoModerationTimeOutUser = 145,
+
+	/// <summary>
+	/// Indicates that automod quarantined a user.
+	/// </summary>
+	AutoModerationQuarantineUser = 146
 }
