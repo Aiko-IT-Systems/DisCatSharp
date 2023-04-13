@@ -88,5 +88,17 @@ public enum ChannelFlags : int
 	/// Indicates that ai powered summaries are disabled for this channel.
 	/// </summary>
 	[DiscordInExperiment]
-	SummariesDisabled = 1<<11
+	SummariesDisabled = 1<<11,
+	
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	[DiscordInExperiment]
+	ApplicationShelfConsent = 1<<12,
+	
+	/// <summary>
+	/// Indicates that this channel is part of a role subscription template preview.
+	/// </summary>
+	[DiscordInExperiment]
+	IsRoleSubscriptionTemplatePreviewChannel = 1<<13
 }
