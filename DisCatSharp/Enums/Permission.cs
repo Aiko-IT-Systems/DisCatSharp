@@ -378,7 +378,13 @@ public enum Permissions : long
 	/// Allows the usage of custom soundboard sounds from other servers.
 	/// </summary>
 	[PermissionString("Use External Sounds"), DiscordInExperiment]
-	UseExternalSounds = 1L << 45
+	UseExternalSounds = 1L << 45,
+	
+	/// <summary>
+	/// Allows members to send voice messages.
+	/// </summary>
+	[PermissionString("Send Voice Messages"), DiscordInExperiment]
+	SendVoiceMessages = 1L << 46
 }
 
 /// <summary>
