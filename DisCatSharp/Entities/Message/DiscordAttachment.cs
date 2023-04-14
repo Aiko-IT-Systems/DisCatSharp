@@ -88,14 +88,14 @@ public class DiscordAttachment : SnowflakeObject
 	public bool? Ephemeral { get; internal set; }
 
 	/// <summary>
-	/// <para>The duration in seconds of the voice message.</para>
+	/// <para>The duration in seconds of the audio file (currently only for voice messages).</para>
 	/// <para>Only presented when the message flags include <see cref="MessageFlags.IsVoiceMessage"/> and for the attached voice message.</para>
 	/// </summary>
 	[JsonProperty("duration_secs", NullValueHandling = NullValueHandling.Ignore)]
-	public double? DurationSecs { get; internal set; }
+	public float? DurationSecs { get; internal set; }
 
 	/// <summary>
-	/// <para>The wave form of the voice message.</para>
+	/// <para>The base64 encoded bytearray representing a sampled waveform (currently only for voice messages).</para>
 	/// <para>Only presented when the message flags include <see cref="MessageFlags.IsVoiceMessage"/> and for the attached voice message.</para>
 	/// </summary>
 	[JsonProperty("waveform", NullValueHandling = NullValueHandling.Ignore)]
