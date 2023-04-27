@@ -22,6 +22,7 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 using DisCatSharp.Entities;
@@ -41,7 +42,7 @@ public static class Formatter
 	/// <summary>
 	/// Gets the md strip regex.
 	/// </summary>
-	private static Regex s_mdStripRegex { get; } = new(@"([`\*_~\[\]\(\)""\|]|<@\!?\d+>|<#\d+>|<@\&\d+>|<:[a-zA-Z0-9_\-]:\d+>)", RegexOptions.ECMAScript);
+	private static Regex s_mdStripRegex { get; } = new(@"([`\*_~\[\]\(\)""\|]|<@\!?\d+>|<#\d+>|<@\&\d+>|<:[a-zA-Z0-9_\-]:\d+>|#{1,3} |> |>>> |\* )", RegexOptions.ECMAScript);
 
 	/// <summary>
 	/// Creates a block of code.
@@ -128,6 +129,55 @@ public static class Formatter
 		=> $"~~{content}~~";
 
 	/// <summary>
+	/// Creates a header.
+	/// </summary>
+	/// <param name="content">Text to convert to a header.</param>
+	/// <returns>Formatted text.</returns>
+	public static string Header1(this string content)
+		=> $"# {content}";
+
+	/// <summary>
+	/// Creates a small header.
+	/// </summary>
+	/// <param name="content">Text to convert to a header.</param>
+	/// <returns>Formatted text.</returns>
+	public static string Header2(this string content)
+		=> $"## {content}";
+
+	/// <summary>
+	/// Creates a smaller header.
+	/// </summary>
+	/// <param name="content">Text to convert to a header.</param>
+	/// <returns>Formatted text.</returns>
+	public static string Header3(this string content)
+		=> $"### {content}";
+
+	/// <summary>
+	/// Creates quoted text.
+	/// </summary>
+	/// <param name="content">Text to quote.</param>
+	/// <returns>Formatted text.</returns>
+	public static string SingleQuote(this string content)
+		=> $"> {content}";
+
+	/// <summary>
+	/// Creates a multiline quoted text. Add new lines by using \n.
+	/// </summary>
+	/// <param name="content">Text to quote.</param>
+	/// <returns>Formatted text.</returns>
+	public static string MultiQuote(this string content)
+		=> $">>> {content}";
+
+	/// <summary>
+	/// <para>Creates a simple list.</para>
+	/// <para>If you want a indented list, see https://support.discord.com/hc/en-us/articles/210298617.</para>
+	/// </summary>
+	/// <param name="content">Array of strings to transform into a list.</param>
+	/// <returns>Formatted text.</returns>
+	public static string SimpleList(this string[] content)
+		=> string.Join("\n", content.Select(x => $"* {x}"));
+
+	/// <summary>
 	/// Creates a URL that won't create a link preview.
 	/// </summary>
 	/// <param name="url">Url to prevent from being previewed.</param>
@@ -136,7 +186,7 @@ public static class Formatter
 		=> $"<{url}>";
 
 	/// <summary>
-	/// Creates a masked link. This link will display as specified text, and alternatively provided alt text. This can only be used in embeds.
+	/// Creates a masked link. This link will display as specified text, and alternatively provided alt text.
 	/// </summary>
 	/// <param name="text">Text to display the link as.</param>
 	/// <param name="url">Url that the link will lead to.</param>
