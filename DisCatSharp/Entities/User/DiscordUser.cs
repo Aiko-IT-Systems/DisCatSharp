@@ -84,9 +84,16 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Gets this user's username with the discriminator.
 	/// Example: Discord#0000
 	/// </summary>
-	[JsonIgnore]
+	[JsonIgnore, DiscordDeprecated]
 	public virtual string UsernameWithDiscriminator
 		=> $"{this.Username}#{this.Discriminator}";
+
+	/// <summary>
+	/// Gets the username with the global name.
+	/// </summary>
+	[JsonIgnore, DiscordInExperiment]
+	public virtual string UsernameWithGlobalName
+		=> $"{this.Username} ({this.GlobalName})";
 
 	/// <summary>
 	/// Gets this user's global name.
@@ -98,7 +105,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Gets the user's 4-digit discriminator.
 	/// </summary>
 	[JsonProperty("discriminator", NullValueHandling = NullValueHandling.Ignore)]
-	public virtual string Discriminator { get; internal set; }
+	public virtual string Discriminator { get; internal set; } = "0";
 
 	/// <summary>
 	/// Gets the discriminator integer.
