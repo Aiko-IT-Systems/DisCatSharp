@@ -1339,6 +1339,9 @@ public partial class DiscordGuild
 				case AuditLogActionType.AutoModerationTimeOutUser:
 					break;
 
+				case AuditLogActionType.AutoModerationQuarantineUser:
+					break;
+
 				default:
 					this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown audit log action type: {0} - this should be reported to library developers", (int)xac.ActionType);
 					break;
