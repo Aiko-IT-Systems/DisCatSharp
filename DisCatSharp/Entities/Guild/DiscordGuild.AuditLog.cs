@@ -314,7 +314,8 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in guild update: {0} - this should be reported to library developers", xc.Key);
+								if (this.Discord.Configuration.ReportMissingFields)
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in guild update: {0} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -448,7 +449,8 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in channel update: {0} - this should be reported to library developers", xc.Key);
+								if (this.Discord.Configuration.ReportMissingFields)
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in channel update: {0} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -510,7 +512,8 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in overwrite update: {0} - this should be reported to library developers", xc.Key);
+								if (this.Discord.Configuration.ReportMissingFields)
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in overwrite update: {0} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -591,7 +594,8 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in member update: {0} - this should be reported to library developers", xc.Key);
+								if (this.Discord.Configuration.ReportMissingFields)
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in member update: {0} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -670,7 +674,8 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in role update: {0} - this should be reported to library developers", xc.Key);
+								if (this.Discord.Configuration.ReportMissingFields)
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in role update: {0} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -784,7 +789,8 @@ public partial class DiscordGuild
 							// TODO: Add changes for target application
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in invite update: {0} - this should be reported to library developers", xc.Key);
+								if (this.Discord.Configuration.ReportMissingFields)
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in invite update: {0} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -855,7 +861,8 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in webhook update: {0} - this should be reported to library developers", xc.Key);
+								if (this.Discord.Configuration.ReportMissingFields)
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in webhook update: {0} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -883,7 +890,8 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in emote update: {0} - this should be reported to library developers", xc.Key);
+								if (this.Discord.Configuration.ReportMissingFields)
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in emote update: {0} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -920,7 +928,8 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in stage instance update: {0} - this should be reported to library developers", xc.Key);
+								if (this.Discord.Configuration.ReportMissingFields)
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in stage instance update: {0} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -1008,7 +1017,8 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in sticker update: {0} - this should be reported to library developers", xc.Key);
+								if (this.Discord.Configuration.ReportMissingFields)
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in sticker update: {0} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -1146,7 +1156,8 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in integration update: {0} - this should be reported to library developers", xc.Key);
+								if (this.Discord.Configuration.ReportMissingFields)
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in integration update: {0} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -1228,7 +1239,8 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in thread update: {0} - this should be reported to library developers", xc.Key);
+								if (this.Discord.Configuration.ReportMissingFields)
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in thread update: {0} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -1314,7 +1326,8 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in scheduled event update: {0} - this should be reported to library developers", xc.Key);
+								if (this.Discord.Configuration.ReportMissingFields)
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in scheduled event update: {0} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}

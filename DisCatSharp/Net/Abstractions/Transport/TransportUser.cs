@@ -54,14 +54,21 @@ internal class TransportUser
 	/// Gets or sets the discriminator.
 	/// </summary>
 	[JsonProperty("discriminator", NullValueHandling = NullValueHandling.Ignore)]
-	internal string Discriminator { get; set; }
+	internal string Discriminator { get; set; } = "0";
 
 	/// <summary>
 	/// Gets the username with discriminator.
 	/// </summary>
-	[JsonIgnore]
+	[JsonIgnore, DiscordDeprecated]
 	internal string UsernameWithDiscriminator
 		=> $"{this.Username}#{this.Discriminator}";
+
+	/// <summary>
+	/// Gets the username with the global name.
+	/// </summary>
+	[JsonIgnore, DiscordInExperiment]
+	internal string UsernameWithGlobalName
+		=> $"{this.Username} ({this.GlobalName})";
 
 	/// <summary>
 	/// Gets the avatar hash.

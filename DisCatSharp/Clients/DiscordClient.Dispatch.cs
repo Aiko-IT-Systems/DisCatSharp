@@ -1273,25 +1273,27 @@ public sealed partial class DiscordClient
 	/// <param name="auditLogCreateEntry">The auditlog event.</param>
 	internal async Task OnGuildAuditLogEntryCreateEventAsync(DiscordGuild guild, JObject auditLogCreateEntry)
 	{
-		this.Logger.LogDebug("New event: Audit log entry created");
-		this.Logger.LogDebug(auditLogCreateEntry.ToString(Newtonsoft.Json.Formatting.Indented));
-
-		var auditLogAction = DiscordJson.ToDiscordObject<AuditLogAction>(auditLogCreateEntry);
-		List<AuditLog> workaroundAuditLogEntryList = new()
+		try
 		{
-			new AuditLog()
+			var auditLogAction = DiscordJson.ToDiscordObject<AuditLogAction>(auditLogCreateEntry);
+			List<AuditLog> workaroundAuditLogEntryList = new()
 			{
-				Entries = new List<AuditLogAction>()
+				new AuditLog()
 				{
-					auditLogAction
+					Entries = new List<AuditLogAction>()
+					{
+						auditLogAction
+					}
 				}
-			}
-		};
+			};
 
-		var dataList = await guild.ProcessAuditLog(workaroundAuditLogEntryList);
-		var data = dataList.First();
+			var dataList = await guild.ProcessAuditLog(workaroundAuditLogEntryList);
+			var data = dataList.First();
 
-		await this._guildAuditLogEntryCreated.InvokeAsync(this, new(this.ServiceProvider) { Guild = guild, AuditLogEntry = data });
+			await this._guildAuditLogEntryCreated.InvokeAsync(this, new(this.ServiceProvider) { Guild = guild, AuditLogEntry = data });
+		}
+		catch (Exception)
+		{ }
 	}
 
 	/// <summary>
@@ -3409,7 +3411,7 @@ public sealed partial class DiscordClient
 					this.UserCache.AddOrUpdate(c.Value.User.Id, c.Value.User, (old, @new) => @new);
 				}
 			}
-
+			
 			if (resolved.Channels != null)
 			{
 				foreach (var c in resolved.Channels)
