@@ -14,7 +14,7 @@ jobs:
         run: |
           echo "release_tag=$(curl https://api.github.com/repos/Aiko-IT-Systems/DisCatSharp/releases/latest | jq -r '.tag_name')" >> $GITHUB_OUTPUT
       - name: Tweet release
-        uses: Lulalaby/tweet@v1.3.0
+        uses: Lulalaby/tweet@v2.0.0
         with:
           status: |
             DisCatSharp ${{ steps.tags.outputs.release_tag }} is here!
