@@ -97,9 +97,18 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 
 	/// <summary>
 	/// Gets this user's global name.
+	/// Only applicable if <see cref="IsMigrated"/> is <see langword="true"/>.
 	/// </summary>
 	[JsonProperty("global_name", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
 	public string GlobalName { get; internal set; }
+
+	/// <summary>
+	/// <para>Whether this user account is migrated to the new username system.</para>
+	/// <para>Learn more at <see href="https://dis.gd/usernames">dis.gd/usernames</see>.</para>
+	/// </summary>
+	[JsonIgnore]
+	public bool IsMigrated
+		=> this.Discriminator == "0" && this.Username == this.Username.ToLower();
 
 	/// <summary>
 	/// Gets the user's 4-digit discriminator.
@@ -212,7 +221,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	[JsonIgnore]
 	public string DefaultAvatarUrl
-		=> $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMBED}{Endpoints.AVATARS}/{(this.DiscriminatorInt % 5).ToString(CultureInfo.InvariantCulture)}.png?size=1024";
+		=> $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMBED}{Endpoints.AVATARS}/{((this.Id >> 22) % 5).ToString(CultureInfo.InvariantCulture)}.png?size=1024";
 
 	/// <summary>
 	/// Gets whether the user is a bot.
