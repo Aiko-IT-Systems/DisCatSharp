@@ -154,7 +154,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	[JsonIgnore]
 	public string DisplayName
-		=> this.Nickname ?? this.GlobalName ?? this.Username;
+		=> this.Nickname ?? (this.IsMigrated ? (this.GlobalName ?? this.Username) : this.Username);
 
 	/// <summary>
 	/// List of role ids
