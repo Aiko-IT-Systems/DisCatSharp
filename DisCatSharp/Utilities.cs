@@ -99,7 +99,7 @@ public static class Utilities
 	/// <param name="config">The config</param>
 	/// <returns>A string.</returns>
 	internal static string GetApiBaseUri(DiscordConfiguration config = null)
-		=> config == null ? Endpoints.BASE_URI + "9" : config.UseCanary ? Endpoints.CANARY_URI + config.ApiVersion : Endpoints.BASE_URI + config.ApiVersion;
+		=> config == null ? Endpoints.BASE_URI + "10" : config.UseCanary ? Endpoints.CANARY_URI + config.ApiVersion : config.UsePtb ? Endpoints.BASE_URI + config.ApiVersion : Endpoints.BASE_URI + config.ApiVersion;
 
 	/// <summary>
 	/// Gets the api uri for.
