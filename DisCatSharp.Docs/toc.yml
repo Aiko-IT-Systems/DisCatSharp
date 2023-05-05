@@ -4,6 +4,8 @@
   href: articles/preamble.md
 - name: Changelogs
   href: changelogs/index.md
+- name: Extensions
+  href: https://ext-docs.dcs.aitsys.dev/
 - name: FAQ
   href: faq.md
 - name: API Documentation
