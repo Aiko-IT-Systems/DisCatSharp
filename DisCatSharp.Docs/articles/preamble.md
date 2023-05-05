@@ -15,7 +15,7 @@ His videos go through all the basics, from setting up your development environme
 If you're not sure what to do first, Bob's tutorial series should be your starting point!
 
 ## Supported .NET Implementations
-DisCatSharp 10.X and higher target directly .NET 6.
+DisCatSharp 10.4 and higher target directly .NET 7.
 
 ## Getting Started
 If you're writing a Discord bot for the first time, you'll want to start with *[creating a bot account](xref:basics_bot_account)*.</br>
