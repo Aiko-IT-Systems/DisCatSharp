@@ -23,7 +23,7 @@ Play your favorite music in discord!
 
 Documentation: https://docs.discatsharp.tech/articles/modules/audio/lavalink/setup.html
 	</Description>
-	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Voice,Lavalink,Audio Player,Music,YouTube,Spotify,SoundCloud</PackageTags>
+	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Voice,Lavalink,Audio Player,Music,YouTube,Spotify,SoundCloud</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

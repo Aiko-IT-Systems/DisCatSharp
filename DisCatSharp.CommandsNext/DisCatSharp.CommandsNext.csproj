@@ -22,9 +22,9 @@ Allow your users to use text commands in your bot.
 Note: Requires the Message Content Intent enabled for your discord application.
 Documentation: https://docs.discatsharp.tech/articles/modules/commandsnext/intro.html
 	</Description>
-	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Text Commands</PackageTags>
+	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Text Commands</PackageTags>
   </PropertyGroup>
-	
+
   <ItemGroup>
     <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
     <ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />

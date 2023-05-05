@@ -159,8 +159,6 @@ public class WebSocketClient : IWebSocketClient
 	/// </summary>
 	/// <param name="code">The code</param>
 	/// <param name="message">The message</param>
-	/// <created>Lala Sabathil,06.07.2021</created>
-	/// <changed>Lala Sabathil,06.07.2021</changed>
 	public async Task DisconnectAsync(int code = 1000, string message = "")
 	{
 		// Ensure that messages cannot be sent

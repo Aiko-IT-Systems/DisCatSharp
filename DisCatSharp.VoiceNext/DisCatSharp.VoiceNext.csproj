@@ -22,7 +22,7 @@ Easy made audio player for discord bots.
 
 Documentation: https://docs.discatsharp.tech/articles/modules/audio/voicenext/prerequisites.html
 	</Description>
-	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Voice,Audio Player</PackageTags>
+	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Voice,Audio Player</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

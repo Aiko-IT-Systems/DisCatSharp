@@ -5,10 +5,9 @@
     <Import Project="../DisCatSharp.targets" />
     <Import Project="../Package.targets" />
     <Import Project="../NuGet.targets" />
+  <Import Project="../Library.targets" />
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <Nullable>enable</Nullable>
+  <PropertyGroup>
         <RootNamespace>DisCatSharp.Configuration</RootNamespace>
         <AssemblyName>DisCatSharp.Configuration</AssemblyName>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -17,7 +16,7 @@
     <PropertyGroup>
       <PackageId>DisCatSharp.Configuration</PackageId>
       <Description>Configuration for the DisCatSharp Hosting Extension.</Description>
-	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Hosting,Web,Configuration</PackageTags>
+	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Hosting,Web,Configuration</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

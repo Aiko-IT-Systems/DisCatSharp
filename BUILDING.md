@@ -33,7 +33,7 @@ When installing the below, make sure you install all the dependencies properly. 
 * **Git** - to clone the repository.
 * [**Visual Studio Code**](https://code.visualstudio.com/Download) - a recent version is required.
    * **C# for Visual Studio Code (powered by OmniSharp)** - required for syntax highlighting and basic Intellisense
-* [**.NET SDK 6.0**](https://www.microsoft.com/net/download) - required to build the project.
+* [**.NET SDK 7.0**](https://www.microsoft.com/net/download) - required to build the project.
 * [**Mono 5.x**](http://www.mono-project.com/download/#download-lin) - required to build the .NETFX 4.5, 4.6, and 4.7 targets, as well as to build the docs.
 * [**PowerShell Core**](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux?view=powershell-7.1) - required to execute the build scripts.
 * **p7zip-full** - required to package docs.
