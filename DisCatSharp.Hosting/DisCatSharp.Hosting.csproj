@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  
+
     <Import Project="../Version.targets" />
     <Import Project="../DisCatSharp.targets" />
     <Import Project="../Package.targets" />
     <Import Project="../NuGet.targets" />
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    </PropertyGroup>
+  <Import Project="../Library.targets" />
 
   <PropertyGroup>
     <PackageId>DisCatSharp.Hosting</PackageId>
     <Description>Hosting Extension for DisCatSharp.</Description>
-	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Hosting,Web</PackageTags>
+	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Hosting,Web</PackageTags>
   </PropertyGroup>
 
     <ItemGroup>

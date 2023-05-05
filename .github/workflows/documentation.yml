@@ -19,7 +19,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3.0.3
       with:
-        dotnet-version: 6.x
+        dotnet-version: 7.x
     - name: Git fetch unshallow
       run: git fetch --unshallow
     - name: Restore packages

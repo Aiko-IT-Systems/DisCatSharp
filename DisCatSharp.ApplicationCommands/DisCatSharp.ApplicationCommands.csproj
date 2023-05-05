@@ -21,7 +21,7 @@ Use it on top of your DisCatSharp powered bot and unleash the power of applicati
 
 Documentation: https://docs.discatsharp.tech/articles/modules/application_commands/intro.html
 	</Description>
-	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Application Commands,Context Menu Commands</PackageTags>
+	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Application Commands,Context Menu Commands</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
