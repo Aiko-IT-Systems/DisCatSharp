@@ -36,3 +36,43 @@ jobs:
         name: dcs-docs.zip
         path: dcs-docs.zip
         retention-days: 30
+  test_documentation:
+    runs-on: ubuntu-latest
+    name: Test documentation
+    needs: build
+    steps:
+    - name: Checkout docs repository
+      uses: actions/checkout@v3
+      with:
+        repository: Aiko-IT-Systems/DisCatSharp.Docs
+        token: ${{ secrets.NYUW_TOKEN_GH }}
+    - name: Purge old docs
+      shell: pwsh
+      run: Get-ChildItem -Exclude .git* | Remove-Item -Recurse -Force
+    - name: Download packed docs
+      uses: actions/download-artifact@v3
+      with:
+        name: dcs-docs.zip
+    - name: Extract new docs
+      run: unzip dcs-docs.zip -d .
+    - name: Deleze zip
+      run: rm dcs-docs.zip
+    - name: Delete packed docs
+      uses: geekyeggo/delete-artifact@v2
+      with:
+        name: dcs-docs.zip
+    - name: Add .htaccess
+      run: rm -f .htaccess && wget https://gist.githubusercontent.com/Lulalaby/8a032d0ddebb9125691094edc67b6593/raw/8ba47fc2b8959aa43d66da95b5e56e0802a22dd6/.htaccess
+    - name: Set access rights
+      run: sudo chmod 777 -R .
+    - name: Commit and push changes
+      uses: EndBug/add-and-commit@main
+      with:
+        default_author: user_info
+        author_name: NyuwBot
+        author_email: nyuw@aitsys.dev
+        committer_name: NyuwBot
+        committer_email: nyuw@aitsys.dev
+        commit: --signoff
+        new_branch: ${{ github.ref_name }}
+        message: 'Docs update for https://github.com/${{github.repository}}/commit/${{github.sha}}'
