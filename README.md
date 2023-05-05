@@ -8,8 +8,6 @@
 # DisCatSharp
 ## A Discord Bot Library written in C# for .NET
 
-<!--![DisCatSharp Logo](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Logos/dcs-logo-winter.gif?raw=true)-->
-
 ----
 
 # News
@@ -26,6 +24,8 @@
 
 ## New
 - [Linked roles](https://discord.com/build/linked-roles) support!
+
+- Support for the new username system (pomelo)
 
 ----
 
@@ -48,11 +48,10 @@ You can install the library from the following sources:
 
 ## Documentation
 
-The documentation of the nightly versions is available at [docs.discatsharp.tech](https://docs.discatsharp.tech).
+The documentation is available at [docs.dcs.aitsys.dev](https://docs.dcs.aitsys.dev).
 
 Alternative hosts for our docs are:
-- Backup Host [docs-alt.dcs.aitsys.dev](https://docs-alt.dcs.aitsys.dev)
-- Cloudflare [fallback-docs.dcs.aitsys.dev](https://fallback-docs.dcs.aitsys.dev) or [discatsharp-docs.pages.dev](https://discatsharp-docs.pages.dev)
+- Backup Host [backup-docs.dcs.aitsys.dev](https://backup-docs.dcs.aitsys.dev)
 
 
 ## Bugs or Feature requests?
@@ -61,17 +60,17 @@ Either join our official support guild at https://discord.gg/Uk7sggRBTm
 
 Or write us an email at [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
 
-All requests are tracked at [aitsys.dev](https://aitsys.dev/project/view/1/).
+<!-- All requests are tracked at [aitsys.dev](https://aitsys.dev/proje<ct/view/1/). We currently don't do that for reasons -->
 
 ## Tutorials / Examples
 
-* [Howto](https://docs.discatsharp.tech/articles/basics/bot_account.html)
+* [Howto](https://docs.dcs.aitsys.dev/articles/basics/bot_account.html)
 * [Examples](https://github.com/Aiko-IT-Systems/DisCatSharp.Examples)
 * [Template Bot(:warning:Outdated)](https://github.com/Aiko-IT-Systems/DisCatSharp.TemplateBot)
 * [Public Support Bot for DisCatSharp Server](https://github.com/Aiko-IT-Systems/DisCatSharp.Support)
 
 ## Visual Studio Tools
-* [DisCatSharp Analyzer Docs](https://docs.discatsharp.tech/vs/index)
+* [DisCatSharp Analyzer Docs](https://docs.dcs.aitsys.dev/vs/index)
 * [Snippets for Visual Studio](https://github.com/Aiko-IT-Systems/DisCatSharp.Snippets)
 
 ----
