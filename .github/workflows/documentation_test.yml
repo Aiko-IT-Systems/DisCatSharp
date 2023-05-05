@@ -17,12 +17,11 @@ jobs:
       with:
         token:  ${{ secrets.NYUW_TOKEN_GH }}
         ref: ${{ github.ref_name }}
+        fetch-depth: 0
     - name: Setup .NET
       uses: actions/setup-dotnet@v3.0.3
       with:
         dotnet-version: 7.x
-    - name: Git fetch unshallow
-      run: git fetch --unshallow
     - name: Restore packages
       run: dotnet restore
     - name: Build library
@@ -30,12 +29,12 @@ jobs:
       continue-on-error: true
     - name: Build Docs
       shell: pwsh
-      run: ./rebuild-docs.ps1 -DocsPath "./DisCatSharp.Docs" -Output "." -PackageName "dcs-docs"
+      run: ./rebuild-docs.ps1 -DocsPath "./DisCatSharp.Docs" -Output "." -PackageName "dcs-docs-preview"
     - name: Upload packed docs
       uses: actions/upload-artifact@v3
       with:
-        name: dcs-docs.zip
-        path: dcs-docs.zip
+        name: dcs-docs-preview.zip
+        path: dcs-docs-preview.zip
         retention-days: 30
   test_documentation:
     runs-on: ubuntu-latest
@@ -53,27 +52,19 @@ jobs:
     - name: Download packed docs
       uses: actions/download-artifact@v3
       with:
-        name: dcs-docs.zip
+        name: dcs-docs-preview.zip
     - name: Extract new docs
-      run: unzip dcs-docs.zip -d .
+      run: unzip dcs-docs-preview.zip -d .
     - name: Deleze zip
-      run: rm dcs-docs.zip
-    - name: Delete packed docs
-      uses: geekyeggo/delete-artifact@v2
-      with:
-        name: dcs-docs.zip
+      run: rm dcs-docs-preview.zip
     - name: Add .htaccess
       run: rm -f .htaccess && wget https://gist.githubusercontent.com/Lulalaby/8a032d0ddebb9125691094edc67b6593/raw/8ba47fc2b8959aa43d66da95b5e56e0802a22dd6/.htaccess
     - name: Set access rights
       run: sudo chmod 777 -R .
-    - name: Commit and push changes
-      uses: EndBug/add-and-commit@main
-      with:
-        default_author: user_info
-        author_name: NyuwBot
-        author_email: nyuw@aitsys.dev
-        committer_name: NyuwBot
-        committer_email: nyuw@aitsys.dev
-        commit: --signoff
-        new_branch: ${{ github.ref_name }}
-        message: 'Test-Docs update (https://github.com/${{github.repository}}/commit/${{github.sha}})'
+    - name: Commit changes
+      run: |
+        git config user.name NyuwBot
+        git config user.email nyuw@aitsys.dev
+        git add .
+        git commit -m "Test-Docs update (https://github.com/${{github.repository}}/commit/${{github.sha}})"
+        git push -f
