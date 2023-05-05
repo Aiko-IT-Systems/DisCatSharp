@@ -93,7 +93,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	[JsonIgnore, DiscordInExperiment]
 	public virtual string UsernameWithGlobalName
-		=> $"{this.Username} ({this.GlobalName})";
+		=> this.GlobalName != null ? $"{this.Username} ({this.GlobalName})" : this.Username;
 
 	/// <summary>
 	/// Gets this user's global name.
@@ -567,7 +567,8 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Returns a string representation of this user.
 	/// </summary>
 	/// <returns>String representation of this user.</returns>
-	public override string ToString() => $"User {this.Id}; {this.Username}#{this.Discriminator}";
+	public override string ToString()
+		=> this.IsMigrated ? $"User {this.Id}; {this.UsernameWithGlobalName}" : $"User {this.Id}; {this.UsernameWithDiscriminator}";
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordUser"/> is equal to another object.
