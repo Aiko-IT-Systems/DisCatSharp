@@ -1,6 +1,7 @@
 ---
 uid: natives
 title: Native Libraries
+author: DisCatSharp Team
 ---
 
 #### Downloads

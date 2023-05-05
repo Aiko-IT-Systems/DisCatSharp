@@ -1,6 +1,7 @@
 ---
 uid: api_discatsharp_hosting_dependencyinjection_index
 title: DisCatSharp.Hosting.DependencyInjection API Reference
+author: DisCatSharp Team
 ---
 
 # API Reference

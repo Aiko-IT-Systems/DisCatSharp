@@ -1,6 +1,7 @@
 ---
 uid: api_discatsharp_attributes_index
 title: DisCatSharp.Attributes API Reference
+author: DisCatSharp Team
 ---
 
 # API Reference
