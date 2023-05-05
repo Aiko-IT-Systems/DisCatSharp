@@ -1,6 +1,7 @@
 ---
 uid: preamble
 title: Article Preamble
+author: DisCatSharp Team
 ---
 
 ## Knowledge Prerequisites

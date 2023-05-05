@@ -1,6 +1,7 @@
 ---
 uid: api_discatsharp_applicationcommands_index
 title: DisCatSharp.ApplicationCommands API Reference
+author: DisCatSharp Team
 ---
 
 # API Reference

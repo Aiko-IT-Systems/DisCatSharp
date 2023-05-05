@@ -1,6 +1,7 @@
 ---
 uid: changelogs
 title: Changelogs
+author: DisCatSharp Team
 ---
 
 # Changelogs

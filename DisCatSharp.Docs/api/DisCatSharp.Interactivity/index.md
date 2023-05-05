@@ -1,6 +1,7 @@
 ---
 uid: api_discatsharp_interactivity_index
 title: DisCatSharp.Interactivity API Reference
+author: DisCatSharp Team
 ---
 
 # API Reference

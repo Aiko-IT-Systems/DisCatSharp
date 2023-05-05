@@ -1,6 +1,7 @@
 ---
 uid: faq
 title: Frequently Asked Questions
+author: DisCatSharp Team
 ---
 
 # Frequently Asked Questions

@@ -1,6 +1,7 @@
 ---
 uid: vs
 title: Visual Studio Tools
+author: DisCatSharp Team
 ---
 
 ## Visual Studio Tools

@@ -1,6 +1,7 @@
 ---
 uid: api_discatsharp_lavalink_index
 title: DisCatSharp.Lavalink API Reference
+author: DisCatSharp Team
 ---
 
 # API Reference
