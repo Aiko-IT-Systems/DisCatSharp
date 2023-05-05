@@ -75,4 +75,4 @@ jobs:
         committer_email: nyuw@aitsys.dev
         commit: --signoff
         new_branch: ${{ github.ref_name }}
-        message: 'Docs update for https://github.com/${{github.repository}}/commit/${{github.sha}}'
+        message: 'Test-Docs update (https://github.com/${{github.repository}}/commit/${{github.sha}})'
