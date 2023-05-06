@@ -14,6 +14,7 @@ on:
 
 jobs:
   release:
+    timeout-minutes: 30
     runs-on: windows-latest
     name: Build library and release
     steps:
