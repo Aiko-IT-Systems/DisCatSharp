@@ -84,12 +84,13 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Gets this user's username with the discriminator.
 	/// Example: Discord#0000
 	/// </summary>
-	[JsonIgnore, DiscordDeprecated]
+	[JsonIgnore, DiscordDeprecated("We will internally use the GlobalName if a user is already migrated. This will be removed in future. Consider switching to UsernameWithGlobalName then.")]
 	public virtual string UsernameWithDiscriminator
-		=> $"{this.Username}#{this.Discriminator}";
+		=> this.IsMigrated ? this.UsernameWithGlobalName : $"{this.Username}#{this.Discriminator}";
 
 	/// <summary>
 	/// Gets the username with the global name.
+	/// Example: @catra (Lala Sabathil)
 	/// </summary>
 	[JsonIgnore, DiscordInExperiment]
 	public virtual string UsernameWithGlobalName
