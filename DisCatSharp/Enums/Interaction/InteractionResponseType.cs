@@ -65,9 +65,9 @@ public enum InteractionResponseType
 	Modal = 9,
 
 	/// <summary>
-	/// Responds to the interaction with a message indicating that a premium subscription is required.
-	/// Can only be used if you have an associated application subscription sku.
+	/// <para>Responds to the interaction with a message indicating that a premium subscription is required.</para>
+	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
 	/// </summary>
-	[Experimental]
+	[DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
 	InteractionRequiresPremiumSubscription = 10
 }
