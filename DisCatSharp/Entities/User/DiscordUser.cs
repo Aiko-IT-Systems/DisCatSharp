@@ -119,7 +119,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <summary>
 	/// Gets the discriminator integer.
 	/// </summary>
-	[JsonIgnore]
+	[JsonIgnore, Deprecated]
 	internal int DiscriminatorInt
 		=> int.Parse(this.Discriminator, NumberStyles.Integer, CultureInfo.InvariantCulture);
 
