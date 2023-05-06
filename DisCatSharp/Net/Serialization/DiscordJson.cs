@@ -21,9 +21,11 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 using DisCatSharp.Entities;
@@ -32,6 +34,8 @@ using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
+using Sentry;
 
 namespace DisCatSharp.Net.Serialization;
 
@@ -96,9 +100,29 @@ public static class DiscordJson
 
 		if (discord.Configuration.ReportMissingFields && obj.AdditionalProperties.Any())
 		{
-			discord.Logger.LogInformation("Found missing properties in api response");
+			var sentryMessage = "Found missing properties in api response for " + obj.GetType().Name;
+			List<string> sentryFields = new();
+			discord.Logger.LogInformation(sentryMessage);
 			foreach (var ap in obj.AdditionalProperties)
+			{
+				sentryFields.Add(ap.Key);
 				discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, obj.GetType().Name);
+			}
+
+			if (discord.Configuration.EnableSentry)
+			{
+				var sentryJson = JsonConvert.SerializeObject(sentryFields);
+				sentryMessage += "\n\nNew fields: " + sentryJson;
+				SentryEvent sevnt = new()
+				{
+					Level = SentryLevel.Warning,
+					Logger = nameof(DiscordJson),
+					Message = sentryMessage
+				};
+				sevnt.SetExtra("Found Fields", sentryJson);
+				var sid = SentrySdk.CaptureEvent(sevnt);
+				discord.Logger.LogInformation("Reported to sentry with id {sid}", sid.ToString());
+			}
 		}
 
 		return obj;
