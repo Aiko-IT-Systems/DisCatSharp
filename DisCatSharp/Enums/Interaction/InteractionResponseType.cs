@@ -66,7 +66,8 @@ public enum InteractionResponseType
 
 	/// <summary>
 	/// Responds to the interaction with a message indicating that a premium subscription is required.
+	/// Can only be used if you have an associated application subscription sku.
 	/// </summary>
 	[Experimental]
-	ApplicationPremiumSubscription = 10
+	InteractionRequiresPremiumSubscription = 10
 }
