@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using DisCatSharp.Attributes;
+
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -60,5 +62,11 @@ public enum InteractionResponseType
 	/// <summary>
 	/// Responds to the interaction with a modal.
 	/// </summary>
-	Modal = 9
+	Modal = 9,
+
+	/// <summary>
+	/// Responds to the interaction with a message indicating that a premium subscription is required.
+	/// </summary>
+	[Experimental]
+	ApplicationPremiumSubscription = 10
 }
