@@ -108,13 +108,13 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	[JsonIgnore]
 	public bool IsMigrated
-		=> this.Discriminator == "0" && this.Username == this.Username.ToLower();
+		=> this.Discriminator == "0";
 
 	/// <summary>
 	/// Gets the user's 4-digit discriminator.
 	/// </summary>
-	[JsonProperty("discriminator", NullValueHandling = NullValueHandling.Ignore)]
-	public virtual string Discriminator { get; internal set; } = "0";
+	[JsonProperty("discriminator", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated]
+	public virtual string Discriminator { get; internal set; }
 
 	/// <summary>
 	/// Gets the discriminator integer.
