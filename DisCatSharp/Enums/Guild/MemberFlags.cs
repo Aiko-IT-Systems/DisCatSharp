@@ -63,6 +63,13 @@ public enum MemberFlags : long
 	StartedOnboarding = 1 << 3,
 
 	/// <summary>
+	/// Member is a guest.
+	/// Temporary members that are not in the guild.
+	/// </summary>
+	[DiscordInExperiment]
+	IsGuest = 1 << 4,
+
+	/// <summary>
 	/// Member has started home actions.
 	/// </summary>
 	[DiscordInExperiment]
