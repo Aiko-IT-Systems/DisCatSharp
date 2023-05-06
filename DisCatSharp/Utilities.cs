@@ -30,6 +30,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
@@ -73,7 +74,7 @@ public static class Utilities
 		{
 			var xsv = xv.ToString();
 			var xmv = ti.DeclaredMembers.FirstOrDefault(xm => xm.Name == xsv);
-			var xav = xmv.GetCustomAttribute<PermissionStringAttribute>();
+			var xav = xmv!.GetCustomAttribute<PermissionStringAttribute>()!;
 
 			PermissionStrings[xv] = xav.String;
 		}
@@ -87,7 +88,7 @@ public static class Utilities
 		else
 		{
 			var v = a.GetName().Version;
-			vs = v.ToString(3);
+			vs = v?.ToString(3);
 		}
 
 		VersionHeader = $"DiscordBot (https://github.com/Aiko-IT-Systems/DisCatSharp, v{vs})";
@@ -98,7 +99,7 @@ public static class Utilities
 	/// </summary>
 	/// <param name="config">The config</param>
 	/// <returns>A string.</returns>
-	internal static string GetApiBaseUri(DiscordConfiguration config = null)
+	internal static string GetApiBaseUri(DiscordConfiguration? config = null)
 		=> config == null ? Endpoints.BASE_URI + "10" : config.UseCanary ? Endpoints.CANARY_URI + config.ApiVersion : config.UsePtb ? Endpoints.BASE_URI + config.ApiVersion : Endpoints.BASE_URI + config.ApiVersion;
 
 	/// <summary>
@@ -134,15 +135,16 @@ public static class Utilities
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <returns>A string.</returns>
-	internal static string GetFormattedToken(BaseDiscordClient client) => GetFormattedToken(client.Configuration);
+	internal static string GetFormattedToken(BaseDiscordClient client)
+		=> GetFormattedToken(client.Configuration);
 
 	/// <summary>
 	/// Gets the formatted token.
 	/// </summary>
 	/// <param name="config">The config.</param>
 	/// <returns>A string.</returns>
-	internal static string GetFormattedToken(DiscordConfiguration config) =>
-		config.TokenType switch
+	internal static string GetFormattedToken(DiscordConfiguration config)
+		=> config.TokenType switch
 		{
 			TokenType.Bearer => $"Bearer {config.Token}",
 			TokenType.Bot => $"Bot {config.Token}",
@@ -292,6 +294,7 @@ public static class Utilities
 	/// <param name="guild">The guild.</param>
 	/// <param name="taad">The taad.</param>
 	/// <returns>A bool.</returns>
+	[DiscordDeprecated, Deprecated]
 	internal static bool CheckThreadAutoArchiveDurationFeature(DiscordGuild guild, ThreadAutoArchiveDuration taad)
 		=> true;
 
@@ -300,9 +303,9 @@ public static class Utilities
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <returns>A bool.</returns>
-#pragma warning disable CS0612 // Type or member is obsolete
-	internal static bool CheckThreadPrivateFeature(DiscordGuild guild) => guild.PremiumTier.HasFlag(PremiumTier.TierTwo) || guild.Features.HasFeature(GuildFeaturesEnum.CanCreatePrivateThreads);
-#pragma warning restore CS0612 // Type or member is obsolete
+	[DiscordDeprecated, Deprecated]
+	internal static bool CheckThreadPrivateFeature(DiscordGuild guild)
+		=> true;
 
 	/// <summary>
 	/// Have the message intents.
