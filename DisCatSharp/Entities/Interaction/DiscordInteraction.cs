@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -123,12 +124,12 @@ public sealed class DiscordInteraction : SnowflakeObject
 	public Permissions AppPermissions { get; internal set; }
 
 	/// <summary>
-	/// Gets the entitlement sku ids.
+	/// <para>Gets the entitlement sku ids.</para>
 	/// <para>This is related to premium subscriptions for bots.</para>
-	/// <note type="warning">DisCatSharp does not have full support for this.</note>
+	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
 	/// <see cref="DiscordClient.TryGetPublishedListingsAsync(ulong)"/> for more information.
 	/// </summary>
-	[JsonProperty("entitlement_sku_ids", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("entitlement_sku_ids", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
 	public List<ulong> EntitlementSkuIds { get; internal set; } = new();
 
 	/// <summary>
