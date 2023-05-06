@@ -89,4 +89,6 @@ jobs:
         message-success: |
           Documentation test build passed! :tada:
           Visit the cloudflare action run in https://github.com/Aiko-IT-Systems/DisCatSharp.Docs/commits/${{github.head_ref}} for details :3
+
+          ![gif](https://media.tenor.com/3PjRNS8paykAAAAC/pat-pat-head.gif)
         message-failure: "Documentation test build failed! :x:"
