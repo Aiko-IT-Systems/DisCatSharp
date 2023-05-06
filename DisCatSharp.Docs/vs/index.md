@@ -23,6 +23,7 @@ To use the DisCatSharp Analyzer, you need to install the [DisCatSharp.Analyzer.R
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
 [DCS0001](xref:vs_analyzer_dcs_0001) | Information | Warning | Experimental Attribute Analyzer
+[DCS0002](xref:vs_analyzer_dcs_0002) | Information | Warning | Deprecated Attribute Analyzer
 [DCS0101](xref:vs_analyzer_dcs_0101) | Information | Warning | DiscordInExperiment Attribute Analyzer
 [DCS0102](xref:vs_analyzer_dcs_0102) | Information | Warning | DiscordDeprecated Attribute Analyzer
 [DCS0103](xref:vs_analyzer_dcs_0103) | Information | Warning | DiscordUnreleased Attribute Analyzer
