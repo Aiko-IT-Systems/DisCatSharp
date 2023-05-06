@@ -3411,7 +3411,7 @@ public sealed partial class DiscordClient
 					this.UserCache.AddOrUpdate(c.Value.User.Id, c.Value.User, (old, @new) => @new);
 				}
 			}
-			
+
 			if (resolved.Channels != null)
 			{
 				foreach (var c in resolved.Channels)

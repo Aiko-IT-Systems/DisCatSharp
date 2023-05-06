@@ -55,7 +55,7 @@ public enum ApplicationFlags : long
 	/// Allows the application to access the local RPC server.
 	/// </summary>
 	RpcPrivateBeta = 1L << 5,
-	
+
 	/// <summary>
 	/// Unknown.
 	/// </summary> 

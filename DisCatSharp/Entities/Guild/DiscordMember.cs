@@ -27,7 +27,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
-using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
