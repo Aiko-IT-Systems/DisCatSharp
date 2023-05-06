@@ -100,14 +100,14 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Only applicable if <see cref="IsMigrated"/> is <see langword="true"/>.
 	/// </summary>
 	[JsonProperty("global_name", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
-	public string GlobalName { get; internal set; }
+	public virtual string GlobalName { get; internal set; }
 
 	/// <summary>
 	/// <para>Whether this user account is migrated to the new username system.</para>
 	/// <para>Learn more at <see href="https://dis.gd/usernames">dis.gd/usernames</see>.</para>
 	/// </summary>
 	[JsonIgnore]
-	public bool IsMigrated
+	public virtual bool IsMigrated
 		=> this.Discriminator == "0";
 
 	/// <summary>
@@ -239,7 +239,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Gets whether the user is an official Discord system user.
 	/// </summary>
 	[JsonProperty("system", NullValueHandling = NullValueHandling.Ignore)]
-	public bool? IsSystem { get; internal set; }
+	public virtual bool? IsSystem { get; internal set; }
 
 	/// <summary>
 	/// Gets whether the user is verified.

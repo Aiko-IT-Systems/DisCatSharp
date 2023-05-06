@@ -272,6 +272,160 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	internal DiscordUser User
 		=> this.Discord.UserCache[this.Id];
 
+	/// <summary>
+	/// Gets this member's username.
+	/// </summary>
+	[JsonIgnore]
+	public override string Username
+	{
+		get => this.User.Username;
+		internal set => this.User.Username = value;
+	}
+
+	/// <summary>
+	/// Gets the member's 4-digit discriminator.
+	/// </summary>
+	[JsonIgnore, DiscordDeprecated]
+	public override string Discriminator
+	{
+		get => this.User.Discriminator;
+		internal set => this.User.Discriminator = value;
+	}
+
+	/// <summary>
+	/// Gets the member's username with discriminator.
+	/// </summary>
+	[JsonIgnore]
+	public override string UsernameWithDiscriminator
+		=> this.User.UsernameWithDiscriminator;
+
+	/// <summary>
+	/// Gets the member's username with global name.
+	/// </summary>
+	[JsonIgnore, DiscordInExperiment]
+	public override string UsernameWithGlobalName
+		=> this.User.UsernameWithGlobalName;
+
+	/// <summary>
+	/// Gets the member's global name.
+	/// </summary>
+	[JsonIgnore, DiscordInExperiment]
+	public override string GlobalName
+	{
+		get => this.User.GlobalName;
+		internal set => this.User.GlobalName = value;
+	}
+
+	/// <summary>
+	/// Gets the member's avatar hash.
+	/// </summary>
+	[JsonIgnore]
+	public override string AvatarHash
+	{
+		get => this.User.AvatarHash;
+		internal set => this.User.AvatarHash = value;
+	}
+
+	/// <summary>
+	/// Gets the member's banner hash.
+	/// </summary>
+	[JsonIgnore]
+	public override string BannerHash
+	{
+		get => this.User.BannerHash;
+		internal set => this.User.BannerHash = value;
+	}
+
+	/// <summary>
+	/// Gets whether the member is a bot.
+	/// </summary>
+	[JsonIgnore]
+	public override bool IsBot
+	{
+		get => this.User.IsBot;
+		internal set => this.User.IsBot = value;
+	}
+
+	/// <summary>
+	/// <para>Whether this user account is migrated to the new username system.</para>
+	/// <para>Learn more at <see href="https://dis.gd/usernames">dis.gd/usernames</see>.</para>
+	/// </summary>
+	[JsonIgnore]
+	public override bool IsMigrated
+		=> this.User.IsMigrated;
+
+	/// <summary>
+	/// Gets whether the member is an official Discord system user.
+	/// </summary>
+	[JsonIgnore]
+	public override bool? IsSystem
+	{
+		get => this.User.IsSystem;
+		internal set => this.User.IsSystem = value;
+	}
+
+	/// <summary>
+	/// Gets the member's email address.
+	/// <para>This is only present in OAuth.</para>
+	/// </summary>
+	[JsonIgnore]
+	public override string Email
+	{
+		get => this.User.Email;
+		internal set => this.User.Email = value;
+	}
+
+	/// <summary>
+	/// Gets whether the member has multi-factor authentication enabled.
+	/// </summary>
+	[JsonIgnore]
+	public override bool? MfaEnabled
+	{
+		get => this.User.MfaEnabled;
+		internal set => this.User.MfaEnabled = value;
+	}
+
+	/// <summary>
+	/// Gets whether the member is verified.
+	/// <para>This is only present in OAuth.</para>
+	/// </summary>
+	[JsonIgnore]
+	public override bool? Verified
+	{
+		get => this.User.Verified;
+		internal set => this.User.Verified = value;
+	}
+
+	/// <summary>
+	/// Gets the member's chosen language
+	/// </summary>
+	[JsonIgnore]
+	public override string Locale
+	{
+		get => this.User.Locale;
+		internal set => this.User.Locale = value;
+	}
+
+	/// <summary>
+	/// Gets the user's flags.
+	/// </summary>
+	[JsonIgnore]
+	public override UserFlags? OAuthFlags
+	{
+		get => this.User.OAuthFlags;
+		internal set => this.User.OAuthFlags = value;
+	}
+
+	/// <summary>
+	/// Gets the member's flags for OAuth.
+	/// </summary>
+	[JsonIgnore]
+	public override UserFlags? Flags
+	{
+		get => this.User.Flags;
+		internal set => this.User.Flags = value;
+	}
+
 	#endregion
 
 	/// <summary>
