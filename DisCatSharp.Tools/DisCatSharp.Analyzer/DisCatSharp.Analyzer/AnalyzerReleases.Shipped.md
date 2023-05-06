@@ -1,28 +1,13 @@
 ; Shipped analyzer releases
 ; https://github.com/dotnet/roslyn-analyzers/blob/main/src/Microsoft.CodeAnalysis.Analyzers/ReleaseTrackingAnalyzers.Help.md
 
-## Release 4.2
-
-### New Rules
-
-Rule ID | Category | Severity | Notes
---------|----------|----------|--------------------
-DcsExp | Information | Warning | Informs if a method or attribute or similar is considered experimental
-
-
 ## Release 4.3
 
 ### New Rules
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|--------------------
-DCS0001 | Information | Warning | Experimental Attribute Analyzer
-
-### Removed Rules
-
-Rule ID | Category | Severity | Notes
---------|----------|----------|--------------------
-DcsExp | Information | Warning | Informs if a method or attribute or similar is considered experimental
+DCS0001 |  Usage   |  Warning | DCS0001_Experimental_Attribute_Analyzer, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0001)
 
 
 ## Release 4.4
@@ -31,7 +16,7 @@ DcsExp | Information | Warning | Informs if a method or attribute or similar is 
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|--------------------
-DCS0001 | Information | Warning | Experimental Attribute Analyzer
+DCS0001 |  Usage   |  Warning | DCS0001_Experimental_Attribute_Analyzer, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0001)
 
 
 ## Release 4.5
@@ -40,7 +25,7 @@ DCS0001 | Information | Warning | Experimental Attribute Analyzer
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|--------------------
-DCS0001 | Information | Warning | Experimental Attribute Analyzer
+DCS0001 |  Usage   |  Warning | DCS0001_Experimental_Attribute_Analyzer, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0001)
 
 
 ## Release 5.0
@@ -49,9 +34,9 @@ DCS0001 | Information | Warning | Experimental Attribute Analyzer
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|--------------------
-DCS0101 | Information | Warning | DiscordInExperiment Attribute Analyzer
-DCS0102 | Information | Warning | DiscordDeprecated Attribute Analyzer
-DCS0103 | Information | Warning | DiscordUnreleased Attribute Analyzer
+DCS0101 |  Usage   |  Warning | DCS0101_DiscordInExperiment_Attribute_Analyzer, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0101)
+DCS0102 |  Usage   |  Warning | DCS0102_DiscordDeprecated_Attribute_Analyzer, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0102)
+DCS0103 |  Usage   |  Warning | DCS0103_DiscordUnreleased_Attribute_Analyzer, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0103)
 
 
 ## Release 5.1
@@ -60,17 +45,20 @@ DCS0103 | Information | Warning | DiscordUnreleased Attribute Analyzer
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|--------------------
-DCS0101 | Information | Warning | DiscordInExperiment Attribute Analyzer
-DCS0102 | Information | Warning | DiscordDeprecated Attribute Analyzer
-DCS0103 | Information | Warning | DiscordUnreleased Attribute Analyzer
+DCS0101 |  Usage   |  Warning | DCS0101_DiscordInExperiment_Attribute_Analyzer, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0101)
+DCS0102 |  Usage   |  Warning | DCS0102_DiscordDeprecated_Attribute_Analyzer, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0102)
+DCS0103 |  Usage   |  Warning | DCS0103_DiscordUnreleased_Attribute_Analyzer, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0103)
 
 ## Release 5.3
 
 ### Changed Rules
+
 Rule ID | Category | Severity | Notes
 --------|----------|----------|--------------------
-DCS0001 | Information | Warning | Experimental Attribute Analyzer
-DCS0002 | Information | Warning | Deprecated Attribute Analyzer
-DCS0101 | Information | Warning | DiscordInExperiment Attribute Analyzer
-DCS0102 | Information | Warning | DiscordDeprecated Attribute Analyzer
-DCS0103 | Information | Warning | DiscordUnreleased Attribute Analyzer
+DCS0002 |  Usage   |  Warning | DCS0002_Deprecated_Attribute_Analyzer, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0002)
+
+## Release 5.4
+
+Rule ID | Category | Severity | Notes
+--------|----------|----------|--------------------
+DCS0103 |  Usage   |  Warning | DCS0103_DiscordUnreleased_Attribute_Analyzer, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0103)

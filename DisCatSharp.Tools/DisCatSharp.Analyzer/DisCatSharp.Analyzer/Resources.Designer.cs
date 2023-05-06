@@ -10,8 +10,8 @@
 
 namespace DisCatSharp.Analyzer {
     using System;
-
-
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -23,15 +23,15 @@ namespace DisCatSharp.Analyzer {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
-
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Resources() {
         }
-
+        
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
@@ -45,7 +45,7 @@ namespace DisCatSharp.Analyzer {
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
@@ -59,7 +59,16 @@ namespace DisCatSharp.Analyzer {
                 resourceCulture = value;
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DisCatSharp considers this as deprecated. Update your code..
+        /// </summary>
+        internal static string AnalyzerDescriptionDeprecated {
+            get {
+                return ResourceManager.GetString("AnalyzerDescriptionDeprecated", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Discord deprecated this..
         /// </summary>
@@ -68,7 +77,7 @@ namespace DisCatSharp.Analyzer {
                 return ResourceManager.GetString("AnalyzerDescriptionDiscordDeprecated", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Discord has released it as experiment. Do not use in production..
         /// </summary>
@@ -77,16 +86,16 @@ namespace DisCatSharp.Analyzer {
                 return ResourceManager.GetString("AnalyzerDescriptionDiscordInExperiment", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to Discord hasn&apos;t released this yet. Do not use in production.
+        ///   Looks up a localized string similar to Discord hasn&apos;t released this yet. Do not use in production..
         /// </summary>
         internal static string AnalyzerDescriptionDiscordUnreleased {
             get {
                 return ResourceManager.GetString("AnalyzerDescriptionDiscordUnreleased", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to DisCatSharp considers this as experimental. Do not use in production..
         /// </summary>
@@ -95,16 +104,16 @@ namespace DisCatSharp.Analyzer {
                 return ResourceManager.GetString("AnalyzerDescriptionExperimental", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to DisCatSharp considers this as deprecated. Do not use in production..
+        ///   Looks up a localized string similar to {0} &apos;{1}&apos; is deprecated: {2}.
         /// </summary>
-        internal static string AnalyzerDescriptionDeprecated {
+        internal static string AnalyzerMessageFormatDeprecated {
             get {
-                return ResourceManager.GetString("AnalyzerDescriptionDeprecated", resourceCulture);
+                return ResourceManager.GetString("AnalyzerMessageFormatDeprecated", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to {0} &apos;{1}&apos; is deprecated: {2}.
         /// </summary>
@@ -113,7 +122,7 @@ namespace DisCatSharp.Analyzer {
                 return ResourceManager.GetString("AnalyzerMessageFormatDiscordDeprecated", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to {0} &apos;{1}&apos; is in experiment: {2}.
         /// </summary>
@@ -122,16 +131,16 @@ namespace DisCatSharp.Analyzer {
                 return ResourceManager.GetString("AnalyzerMessageFormatDiscordInExperiment", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to {0} &apos;{1}&apos; isn&apos;t released yet: {2}.
+        ///   Looks up a localized string similar to {0} &apos;{1}&apos; is not released yet: {2}.
         /// </summary>
         internal static string AnalyzerMessageFormatDiscordUnreleased {
             get {
                 return ResourceManager.GetString("AnalyzerMessageFormatDiscordUnreleased", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to {0} &apos;{1}&apos; is experimental: {2}.
         /// </summary>
@@ -140,16 +149,16 @@ namespace DisCatSharp.Analyzer {
                 return ResourceManager.GetString("AnalyzerMessageFormatExperimental", resourceCulture);
             }
         }
-
+        
         /// <summary>
-        ///   Looks up a localized string similar to {0} &apos;{1}&apos; is experimental: {2}.
+        ///   Looks up a localized string similar to [DCS] Deprecated.
         /// </summary>
-        internal static string AnalyzerMessageFormatDeprecated {
+        internal static string AnalyzerTitleDeprecated {
             get {
-                return ResourceManager.GetString("AnalyzerMessageFormatDeprecated", resourceCulture);
+                return ResourceManager.GetString("AnalyzerTitleDeprecated", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to [Discord] Deprecated.
         /// </summary>
@@ -158,7 +167,7 @@ namespace DisCatSharp.Analyzer {
                 return ResourceManager.GetString("AnalyzerTitleDiscordDeprecated", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to [Discord] InExperiment.
         /// </summary>
@@ -167,7 +176,7 @@ namespace DisCatSharp.Analyzer {
                 return ResourceManager.GetString("AnalyzerTitleDiscordInExperiment", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to [Discord] Unreleased.
         /// </summary>
@@ -176,22 +185,13 @@ namespace DisCatSharp.Analyzer {
                 return ResourceManager.GetString("AnalyzerTitleDiscordUnreleased", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to [DCS] Experimental.
         /// </summary>
         internal static string AnalyzerTitleExperimental {
             get {
                 return ResourceManager.GetString("AnalyzerTitleExperimental", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to [DCS] Deprecated.
-        /// </summary>
-        internal static string AnalyzerTitleDeprecated {
-            get {
-                return ResourceManager.GetString("AnalyzerTitleDeprecated", resourceCulture);
             }
         }
     }
