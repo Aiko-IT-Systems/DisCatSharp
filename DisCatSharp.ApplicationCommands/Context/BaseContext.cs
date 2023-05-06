@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
@@ -103,9 +104,12 @@ public class BaseContext
 	public Permissions AppPermissions { get; internal set; }
 
 	/// <summary>
-	/// Gets the entitlement sku ids.
+	/// <para>Gets the entitlement sku ids.</para>
+	/// <para>This is related to premium subscriptions for bots.</para>
+	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
 	/// <see cref="DiscordClient.TryGetPublishedListingsAsync(ulong)"/> for more information.
 	/// </summary>
+	[DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
 	public List<ulong> EntitlementSkuIds { get; internal set; }
 
 	/// <summary>
