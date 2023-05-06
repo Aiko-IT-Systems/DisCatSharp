@@ -93,7 +93,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// Gets the members avatar hash.
 	/// </summary>
 	[JsonProperty("avatar", NullValueHandling = NullValueHandling.Ignore)]
-	public virtual string GuildAvatarHash { get; internal set; }
+	public string GuildAvatarHash { get; internal set; }
 
 	/// <summary>
 	/// Gets the members avatar URL.
@@ -106,7 +106,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// Gets the members banner hash.
 	/// </summary>
 	[JsonProperty("banner", NullValueHandling = NullValueHandling.Ignore)]
-	public virtual string GuildBannerHash { get; internal set; }
+	public string GuildBannerHash { get; internal set; }
 
 	/// <summary>
 	/// Gets the members banner URL.
