@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="New Rule Set" Description=" " ToolsVersion="17.0">
+<RuleSet Name="DisCatSharp Rule Set" Description=" " ToolsVersion="17.0">
   <Rules AnalyzerId="DisCatSharp.Analyzer" RuleNamespace="DisCatSharp.Analyzer">
     <Rule Id="DCS0001" Action="Warning" />
     <Rule Id="DCS0002" Action="Warning" />

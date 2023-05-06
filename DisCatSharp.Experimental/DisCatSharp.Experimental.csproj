@@ -27,7 +27,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="DisCatSharp.Attributes" Version="10.4.0-fixed-0001" />
+    <PackageReference Include="DisCatSharp.Attributes" Version="10.4.0" />
   </ItemGroup>
 
 	<ItemGroup>
