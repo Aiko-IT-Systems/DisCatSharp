@@ -474,10 +474,12 @@ public sealed partial class DiscordClient
 				if (rawMbr != null)
 					mbr = rawMbr.ToObject<TransportMember>();
 				// TODO: Add burst stuff
+				this.Logger.LogDebug("Reaction add: {object}", dat.ToString(Newtonsoft.Json.Formatting.Indented));
 				await this.OnMessageReactionAddAsync((ulong)dat["user_id"], (ulong)dat["message_id"], (ulong)dat["channel_id"], (ulong?)dat["guild_id"], mbr, dat["emoji"].ToObject<DiscordEmoji>(), (bool)dat["burst"]).ConfigureAwait(false);
 				break;
 
 			case "message_reaction_remove":
+				this.Logger.LogDebug("Reaction removed: {object}", dat.ToString(Newtonsoft.Json.Formatting.Indented));
 				await this.OnMessageReactionRemoveAsync((ulong)dat["user_id"], (ulong)dat["message_id"], (ulong)dat["channel_id"], (ulong?)dat["guild_id"], dat["emoji"].ToObject<DiscordEmoji>(), (bool)dat["burst"]).ConfigureAwait(false);
 				break;
 
@@ -486,6 +488,7 @@ public sealed partial class DiscordClient
 				break;
 
 			case "message_reaction_remove_emoji":
+				this.Logger.LogDebug(dat.ToString(Newtonsoft.Json.Formatting.Indented));
 				await this.OnMessageReactionRemoveEmojiAsync((ulong)dat["message_id"], (ulong)dat["channel_id"], (ulong)dat["guild_id"], dat["emoji"]).ConfigureAwait(false);
 				break;
 

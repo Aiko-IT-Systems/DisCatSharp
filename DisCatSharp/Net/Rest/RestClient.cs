@@ -24,6 +24,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -37,6 +38,8 @@ using System.Threading.Tasks;
 using DisCatSharp.Exceptions;
 
 using Microsoft.Extensions.Logging;
+
+using Sentry;
 
 namespace DisCatSharp.Net;
 
@@ -334,11 +337,13 @@ internal sealed class RestClient : IDisposable
 			this.UpdateBucket(request, response, ratelimitTcs);
 
 			Exception ex = null;
+			Exception senex = null;
 			switch (response.ResponseCode)
 			{
 				case 400:
 				case 405:
 					ex = new BadRequestException(request, response);
+					senex = new Exception(ex.Message + "\nJson Response: " + (ex as BadRequestException).JsonMessage ?? "null", ex);
 					break;
 
 				case 401:
@@ -403,11 +408,24 @@ internal sealed class RestClient : IDisposable
 				case 503:
 				case 504:
 					ex = new ServerErrorException(request, response);
+					senex = new Exception(ex.Message + "\nJson Response: " + (ex as ServerErrorException).JsonMessage ?? "null", ex);
 					break;
 			}
 
 			if (ex != null)
+			{
+				if (senex != null)
+				{
+					Dictionary<string, object> debugInfo = new()
+					{
+						{ "route", request.Route },
+						{ "time", DateTimeOffset.UtcNow }
+					};
+					senex.AddSentryContext("Request", debugInfo);
+					SentrySdk.CaptureException(senex);
+				}
 				request.SetFaulted(ex);
+			}
 			else
 				request.SetCompleted(response);
 		}

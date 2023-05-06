@@ -23,6 +23,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -36,6 +38,8 @@ using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
+using Sentry;
 
 namespace DisCatSharp;
 
@@ -99,6 +103,36 @@ public sealed partial class DiscordClient
 	/// </summary>
 	internal async Task InternalConnectAsync()
 	{
+		using (SentrySdk.Init(o => {
+			o.DetectStartupTime = StartupTimeDetectionMode.Fast;
+			o.DiagnosticLevel = SentryLevel.Debug;
+			o.Environment = "prod";
+			o.IsGlobalModeEnabled = true;
+			o.TracesSampleRate = 1.0;
+			o.ReportAssembliesMode = ReportAssembliesMode.InformationalVersion;
+			o.Dsn = "https://1da216e26a2741b99e8ccfccea1b7ac8@o1113828.ingest.sentry.io/4504901362515968";
+			o.AddInAppInclude("DisCatSharp");
+			o.AttachStacktrace = true;
+			o.StackTraceMode = StackTraceMode.Enhanced;
+			//o.BeforeSend = sentryEvent => !sentryEvent.Modules.Keys.Contains("DisCatSharp") ? null : sentryEvent;
+			var a = typeof(DiscordClient).GetTypeInfo().Assembly;
+			var vs = "";
+			var iv = a.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+			if (iv != null)
+				vs = iv.InformationalVersion;
+			else
+			{
+				var v = a.GetName().Version;
+				vs = v.ToString(3);
+			}
+			o.Release = $"{this.BotLibrary}@{vs}";
+			o.SendClientReports = true;
+		}))
+		{
+			if (this.Configuration.EnableSentry)
+				SentrySdk.StartSession();
+		
+
 		SocketLock socketLock = null;
 		try
 		{
@@ -108,7 +142,13 @@ public sealed partial class DiscordClient
 
 			socketLock = this.GetSocketLock();
 			await socketLock.LockAsync().ConfigureAwait(false);
-		}
+				SentrySdk.ConfigureScope(o => o.User = new User()
+				{
+					Id = this.CurrentApplication.Id.ToString(),
+					Username = this.CurrentUser.UsernameWithDiscriminator
+				});
+				//SentrySdk.CaptureMessage($"Testing {DateTime.UtcNow.Ticks}");
+			}
 		catch
 		{
 			socketLock?.UnlockAfter(TimeSpan.Zero);
@@ -163,6 +203,8 @@ public sealed partial class DiscordClient
 
 		await this.WebSocketClient.ConnectAsync(gwuri.Build()).ConfigureAwait(false);
 
+			
+
 		Task SocketOnConnect(IWebSocketClient sender, SocketEventArgs e)
 			=> this._socketOpened.InvokeAsync(this, e);
 
@@ -195,6 +237,8 @@ public sealed partial class DiscordClient
 			catch (Exception ex)
 			{
 				this.Logger.LogError(LoggerEvents.WebSocketReceiveFailure, ex, "Socket handler suppressed an exception");
+				if (this.Configuration.EnableSentry)
+					SentrySdk.CaptureException(ex);
 			}
 		}
 
@@ -230,6 +274,7 @@ public sealed partial class DiscordClient
 			else
 			{
 				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({0}, '{1}')", e.CloseCode, e.CloseMessage);
+			}
 			}
 		}
 	}
