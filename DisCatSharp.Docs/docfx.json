@@ -293,7 +293,7 @@
 		"postProcessors":[
 			"ExtractSearchIndex",
 			"CustomMemberIndexer",
-			"DescriptionPostProcessor"
+			"DescriptionGenerator"
 		],
 		"noLangKeyword":false,
 		"keepFileLink":false,
