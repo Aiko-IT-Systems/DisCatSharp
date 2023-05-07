@@ -34,7 +34,7 @@ jobs:
       timeout-minutes: 3
       continue-on-error: true
     - name: Build Docs
-      run: docfx DisCatSharp.Docs/docfx.json -t DisCatSharp.DocFx.Plugins
+      run: docfx DisCatSharp.Docs/docfx.json
     - name: Pack Docs
       shell: pwsh
       run: .\pack-docs.ps1 -DocsPath ".\DisCatSharp.Docs" -OutputPath ".\" -PackageName "dcs-docs-preview"
