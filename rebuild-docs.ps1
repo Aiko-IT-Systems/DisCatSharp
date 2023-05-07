@@ -69,8 +69,8 @@ function Install-DocFX([string] $target_dir_path)
     try
     {
         Write-Host "Getting latest DocFX release"
-        #$release_json = Invoke-WebRequest -uri "https://chocolatey.org/api/v2/package-versions/docfx" | ConvertFrom-JSON
-        #$release_json = $release_json | ForEach-Object { [System.Version]::Parse($_) } | Sort-Object -Descending
+        $release_json = Invoke-WebRequest -uri "https://chocolatey.org/api/v2/package-versions/docfx" | ConvertFrom-JSON
+        $release_json = $release_json | ForEach-Object { [System.Version]::Parse($_) } | Sort-Object -Descending
     }
     catch
     {
@@ -87,11 +87,11 @@ function Install-DocFX([string] $target_dir_path)
     while ($tries -lt 3)
     {
         # Prepare the assets
-        #$release = $release_json[$tries]        # Pick the next available release
-        #$release_version = $release.ToString()  # Convert to string
-		$release_version = "2.60.0"
-        $release_asset = "https://github.com/Aiko-IT-Systems/docfx/releases/download/v$release_version/docfx.zip"
-		#$release_asset = "https://github.com/dotnet/docfx/releases/download/v$release_version/docfx.zip"
+        $release = $release_json[$tries]        # Pick the next available release
+        $release_version = $release.ToString()  # Convert to string
+		#$release_version = "2.60.0"
+        #$release_asset = "https://github.com/Aiko-IT-Systems/docfx/releases/download/v$release_version/docfx.zip"
+		$release_asset = "https://github.com/dotnet/docfx/releases/download/v$release_version/docfx.zip"
 
         # increment try counter
         $tries = $tries + 1
