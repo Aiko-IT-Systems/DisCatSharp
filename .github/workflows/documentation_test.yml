@@ -3,7 +3,6 @@ on:
   pull_request:
     branches:
       - main
-      - prep/release/10.4.0
 
 env:
   DOTNET_NOLOGO: true
