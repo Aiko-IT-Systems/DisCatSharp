@@ -3,3 +3,4 @@
 ###############
 *.yml
 !toc.yml
+.manifest
