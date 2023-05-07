@@ -13,11 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		BUILDING.md = BUILDING.md
-		.github\CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
+		CODE_OF_CONDUCT.md = .github\CODE_OF_CONDUCT.md
 		CONTRIBUTING.md = CONTRIBUTING.md
 		LICENSE.md = LICENSE.md
 		README.md = README.md
-		.github\SECURITY.md = SECURITY.md
+		SECURITY.md = .github\SECURITY.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.CommandsNext", "DisCatSharp.CommandsNext\DisCatSharp.CommandsNext.csproj", "{C8ED55FB-E028-468D-955F-1534C20274EF}"
@@ -32,13 +32,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build Items", "Build Items", "{84464D70-687B-40A8-836D-C4F737698969}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
-		DisCatSharp.Targets\DisCatSharp.targets = Targets\DisCatSharp.targets
-		DisCatSharp.Targets\Library.targets = Targets\Library.targets
-		DisCatSharp.Targets\NuGet.targets = Targets\NuGet.targets
-		DisCatSharp.Targets\Package.targets = Targets\Package.targets
-		DisCatSharp.Tools\rebuild-lib.ps1 = Tools\rebuild-lib.ps1
-		DisCatSharp.Tools\pack-docs.ps1 = Tools\pack-docs.ps1
-		DisCatSharp.Targets\Version.targets = Targets\Version.targets
+		Targets\DisCatSharp.targets = DisCatSharp.Targets\DisCatSharp.targets
+		Targets\Library.targets = DisCatSharp.Targets\Library.targets
+		Targets\NuGet.targets = DisCatSharp.Targets\NuGet.targets
+		Targets\Package.targets = DisCatSharp.Targets\Package.targets
+		Tools\rebuild-lib.ps1 = DisCatSharp.Tools\rebuild-lib.ps1
+		Tools\pack-docs.ps1 = DisCatSharp.Tools\pack-docs.ps1
+		Targets\Version.targets = DisCatSharp.Targets\Version.targets
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{430C28D8-5F85-4D6E-AA68-211549435245}"

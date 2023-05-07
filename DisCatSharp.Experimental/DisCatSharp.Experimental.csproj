@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../Version.targets" />
-  <Import Project="../DisCatSharp.targets" />
-  <Import Project="../Package.targets" />
-  <Import Project="../NuGet.targets" />
-  <Import Project="../Library.targets" />
+  <Import Project="../DisCatSharp.Targets/Version.targets" />
+  <Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
+  <Import Project="../DisCatSharp.Targets/Package.targets" />
+  <Import Project="../DisCatSharp.Targets/NuGet.targets" />
+  <Import Project="../DisCatSharp.Targets/Library.targets" />
 
   <PropertyGroup>
 	<AssemblyName>DisCatSharp.Experimental</AssemblyName>
