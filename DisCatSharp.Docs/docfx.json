@@ -218,7 +218,8 @@
 					"api/**.md"
 				],
 				"exclude":[
-					"libdev/**"
+					"libdev/**",
+					"**/node_modules/**"
 				]
 			},
 			{
@@ -240,7 +241,8 @@
 					"**/bin/**",
 					"**/obj/**",
 					"_site/**",
-					"dcs/**"
+					"dcs/**",
+					"**/node_modules/**"
 				]
 			}
 		],
@@ -255,7 +257,8 @@
 					"**/bin/**",
 					"**/obj/**",
 					"_site/**",
-					"images/_**"
+					"images/_**",
+					"**/node_modules/**"
 				]
 			}
 		],

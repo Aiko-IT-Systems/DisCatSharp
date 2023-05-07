@@ -8,13 +8,19 @@ on:
   merge_group:
   workflow_dispatch:
 
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
+
 jobs:
   build:
     timeout-minutes: 30
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        dotnet: [7.x]
+        dotnet: [7.0.203]
     runs-on: ${{ matrix.os }}
     name: Build library
     steps:
