@@ -26,7 +26,7 @@ jobs:
     - name: Restore packages
       run: dotnet restore
     - name: Build library
-      run: dotnet build -c Release
+      run: dotnet build -c Release -v minimal --no-restore
       timeout-minutes: 3
       continue-on-error: true
     - name: Build Docs

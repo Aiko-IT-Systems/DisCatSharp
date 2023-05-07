@@ -27,6 +27,6 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build library
-      run: dotnet build -c Release
+      run: dotnet build -c Release -v normal --no-restore
     - name: Test library
-      run: dotnet test --verbosity normal -c Release
+      run: dotnet test -v normal -c Release --no-restore --no-build
