@@ -969,7 +969,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					Locale = e.Interaction.Locale,
 					GuildLocale = e.Interaction.GuildLocale,
 					AppPermissions = e.Interaction.AppPermissions,
-					EntitlementSkuIds = e.Interaction.EntitlementSkuIds
+					Entitlements = e.Interaction.Entitlements
 				};
 
 				try
@@ -1073,7 +1073,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							Locale = e.Interaction.Locale,
 							GuildLocale = e.Interaction.GuildLocale,
 							AppPermissions = e.Interaction.AppPermissions,
-							EntitlementSkuIds = e.Interaction.EntitlementSkuIds
+							EntitlementSkuIds = e.Interaction.Entitlements
 						};
 
 						var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
@@ -1104,7 +1104,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							Locale = e.Interaction.Locale,
 							GuildLocale = e.Interaction.GuildLocale,
 							AppPermissions = e.Interaction.AppPermissions,
-							EntitlementSkuIds = e.Interaction.EntitlementSkuIds
+							EntitlementSkuIds = e.Interaction.Entitlements
 						};
 
 						var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
@@ -1136,7 +1136,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							Locale = e.Interaction.Locale,
 							GuildLocale = e.Interaction.GuildLocale,
 							AppPermissions = e.Interaction.AppPermissions,
-							EntitlementSkuIds = e.Interaction.EntitlementSkuIds
+							EntitlementSkuIds = e.Interaction.Entitlements
 						};
 
 						var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
@@ -1188,7 +1188,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				Locale = e.Interaction.Locale,
 				GuildLocale = e.Interaction.GuildLocale,
 				AppPermissions = e.Interaction.AppPermissions,
-				EntitlementSkuIds = e.Interaction.EntitlementSkuIds
+				Entitlements = e.Interaction.Entitlements
 			};
 
 			try
