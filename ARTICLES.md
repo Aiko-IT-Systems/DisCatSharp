@@ -3,7 +3,8 @@
 uid: article_name
 title: Article Title
 description: Short article description
-author: Article Author
+author: DisCatSharp Team
+articleAuthor: Your Name
 ---
 
 Your article content

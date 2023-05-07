@@ -8,8 +8,6 @@ apiRules:
 - include:
     uidRegex: ^DisCatSharp
 - exclude:
-    uidRegex: ^Newtonsoft\.Json$
-- exclude:
     hasAttribute:
       uid: System.ComponentModel.EditorBrowsableAttribute
       ctorArguments:

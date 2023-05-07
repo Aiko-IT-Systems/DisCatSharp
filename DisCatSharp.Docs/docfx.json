@@ -268,13 +268,12 @@
 			"_appTitle": "DisCatSharp Docs",
 			"_appName": "DisCatSharp",
 			"_appFooter": "<strong>Made with ❤️ by AITSYS</strong>",
-			"_copyrightFooter": "© Aiko IT Systems. All rights reserved.",
 			"_appLogoPath": "logo.png",
 			"_enableSearch": true,
 			"_disableNextArticle": false,
 			"_disableSideFilter": false,
 			"_disableTocFilter": false,
-			"_disableNewTab":false,
+			"_disableNewTab": false,
 			"_disableContribution": false,
 			"_disableBreadcrumb": false,
 			"_gitUrlPattern":"git",
@@ -296,6 +295,12 @@
 		"exportViewModel": false,
 		"globalMetadataFiles":[],
 		"fileMetadataFiles":[],
+		"fileMetadata": {
+			"_ogType": {
+				"articles/**/*.md": "article",
+				"changelogs/**/*.md": "article"
+			}
+		},
 		"template":[
 			"default",
 			"modern",
@@ -303,8 +308,7 @@
 		],
 		"postProcessors":[
 			"ExtractSearchIndex",
-			"CustomMemberIndexer",
-			"DescriptionGenerator"
+			"CustomMemberIndexer"
 		],
 		"noLangKeyword":false,
 		"keepFileLink":false,
