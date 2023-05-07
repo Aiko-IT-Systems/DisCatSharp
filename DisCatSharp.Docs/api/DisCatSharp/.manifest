@@ -604,7 +604,6 @@
   "DisCatSharp.Entities.DiscordAuditLogEntry.UserResponsible": "DisCatSharp.Entities.DiscordAuditLogEntry.yml",
   "DisCatSharp.Entities.DiscordAuditLogGuildEntry": "DisCatSharp.Entities.DiscordAuditLogGuildEntry.yml",
   "DisCatSharp.Entities.DiscordAuditLogGuildEntry.AfkChannelChange": "DisCatSharp.Entities.DiscordAuditLogGuildEntry.yml",
-  "DisCatSharp.Entities.DiscordAuditLogGuildEntry.EmbedChannelChange": "DisCatSharp.Entities.DiscordAuditLogGuildEntry.yml",
   "DisCatSharp.Entities.DiscordAuditLogGuildEntry.ExplicitContentFilterChange": "DisCatSharp.Entities.DiscordAuditLogGuildEntry.yml",
   "DisCatSharp.Entities.DiscordAuditLogGuildEntry.IconChange": "DisCatSharp.Entities.DiscordAuditLogGuildEntry.yml",
   "DisCatSharp.Entities.DiscordAuditLogGuildEntry.MfaLevelChange": "DisCatSharp.Entities.DiscordAuditLogGuildEntry.yml",
