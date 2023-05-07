@@ -34,6 +34,8 @@ jobs:
       run: dotnet build -c Release -v minimal --no-restore
       timeout-minutes: 3
       continue-on-error: true
+    - name: Add Custom Plugins
+      run: cp -R DisCatSharp.Docs/dcs/plugins/* /home/runner/.dotnet/tools/.store/docfx/2.67.0/docfx/2.67.0/tools/net7.0/any/
     - name: Build Docs
       run: docfx DisCatSharp.Docs/docfx.json
     - name: Pack Docs
