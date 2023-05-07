@@ -31,8 +31,8 @@ jobs:
       with:
         dotnet-version: ${{ matrix.dotnet }}
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore DisCatSharp.sln
     - name: Build library
-      run: dotnet build -c Release -v normal --no-restore
+      run: dotnet build -c Release -v normal --no-restore DisCatSharp.sln
     - name: Test library
-      run: dotnet test -v normal -c Release --no-restore --no-build
+      run: dotnet test -v normal -c Release --no-restore --no-build DisCatSharp.sln
