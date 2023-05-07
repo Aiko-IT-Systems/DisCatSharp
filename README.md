@@ -111,7 +111,7 @@ Or write us an email at [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
 
 - [Deividas Kazakevicius](https://github.com/DeividasKaza)
 - [Will](https://github.com/villChurch)
-- SavageVictor
+- [SavageVictor](https://github.com/SavageVictor)
 - [Schattenclown](https://github.com/Schattenclown)
 
 ## Hacktober Participants
