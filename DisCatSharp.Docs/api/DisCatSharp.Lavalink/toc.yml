@@ -1,4 +1,5 @@
 ### YamlMime:TableOfContent
+items:
 - uid: DisCatSharp.Lavalink
   name: DisCatSharp.Lavalink
   items:
@@ -72,3 +73,4 @@
     name: TrackStuckEventArgs
   - uid: DisCatSharp.Lavalink.EventArgs.WebSocketCloseEventArgs
     name: WebSocketCloseEventArgs
+memberLayout: SamePage

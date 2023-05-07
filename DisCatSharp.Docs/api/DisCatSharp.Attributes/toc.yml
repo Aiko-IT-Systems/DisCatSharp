@@ -1,4 +1,5 @@
 ### YamlMime:TableOfContent
+items:
 - uid: DisCatSharp.Attributes
   name: DisCatSharp.Attributes
   items:
@@ -12,3 +13,4 @@
     name: DiscordUnreleasedAttribute
   - uid: DisCatSharp.Attributes.ExperimentalAttribute
     name: ExperimentalAttribute
+memberLayout: SamePage

@@ -1,4 +1,5 @@
 ### YamlMime:TableOfContent
+items:
 - uid: DisCatSharp
   name: DisCatSharp
   items:
@@ -28,7 +29,6 @@
     name: LoggerEvents
   - uid: DisCatSharp.RingBuffer`1
     name: RingBuffer<T>
-    name.vb: RingBuffer(Of T)
   - uid: DisCatSharp.Utilities
     name: Utilities
 - uid: DisCatSharp.Entities
@@ -348,10 +348,8 @@
     name: Optional
   - uid: DisCatSharp.Entities.Optional`1
     name: Optional<T>
-    name.vb: Optional(Of T)
   - uid: DisCatSharp.Entities.PropertyChange`1
     name: PropertyChange<T>
-    name.vb: PropertyChange(Of T)
   - uid: DisCatSharp.Entities.RepliedUserMention
     name: RepliedUserMention
   - uid: DisCatSharp.Entities.RoleMention
@@ -811,3 +809,4 @@
     name: WebSocketClient
   - uid: DisCatSharp.Net.WebSocket.WebSocketClientFactoryDelegate
     name: WebSocketClientFactoryDelegate
+memberLayout: SamePage

@@ -1,7 +1,5 @@
 - name: Preamble
   href: preamble.md
-- name: Changelogs
-  href: ../changelogs/index.md
 - name: The Basics
   items:
   - name: Creating a Bot Account
