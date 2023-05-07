@@ -24,29 +24,30 @@
 
 using System.Linq;
 
+using DisCatSharp.Enums;
+
 using Xunit;
 
-namespace DisCatSharp.EventHandlers.Tests
-{
-	public class EventsEnumIntegrityTests
-	{
-		[Fact]
-		void TestEnumToEvent()
-		{
-			foreach (var value in typeof(DiscordEvent).GetEnumValues())
-			{
-				Assert.NotNull(typeof(DiscordClient).GetEvent(value.ToString()!));
-			}
-		}
+namespace DisCatSharp.EventHandlers.Tests;
 
-		[Fact]
-		void TestEventToEnum()
+public class EventsEnumIntegrityTests
+{
+	[Fact]
+	void TestEnumToEvent()
+	{
+		foreach (var value in typeof(DiscordEvent).GetEnumValues())
 		{
-			var enumNames = typeof(DiscordEvent).GetEnumNames().ToHashSet();
-			foreach (var evtn in typeof(DiscordClient).GetEvents())
-			{
-				Assert.Contains(evtn.Name, enumNames);
-			}
+			Assert.NotNull(typeof(DiscordClient).GetEvent(value.ToString()!));
+		}
+	}
+
+	[Fact]
+	void TestEventToEnum()
+	{
+		var enumNames = typeof(DiscordEvent).GetEnumNames().ToHashSet();
+		foreach (var evtn in typeof(DiscordClient).GetEvents())
+		{
+			Assert.Contains(evtn.Name, enumNames);
 		}
 	}
 }

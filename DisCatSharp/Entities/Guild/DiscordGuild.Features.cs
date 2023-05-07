@@ -202,7 +202,7 @@ public enum GuildFeaturesEnum
 	/// <summary>
 	/// Guild has access to use commerce features (i.e. create store channels)
 	/// </summary>
-	[Obsolete("Store applications are EOL.")]
+	[DiscordDeprecated("Store applications are EOL.")]
 	CanCreateStoreChannels,
 
 	/// <summary>
@@ -292,21 +292,21 @@ public enum GuildFeaturesEnum
 	/// Guild has access to the three day archive time for threads.
 	/// Needs Premium Tier 1 (<see cref="PremiumTier.TierOne"/>).
 	/// </summary>
-	[DiscordDeprecated("Auto archive duration isn't locked to boosts anymore."), Obsolete]
+	[DiscordDeprecated("Auto archive duration isn't locked to boosts anymore.")]
 	CanSetThreadArchiveDurationThreeDays,
 
 	/// <summary>
 	/// Guild has access to the seven day archive time for threads.
 	/// Needs Premium Tier 2 (<see cref="PremiumTier.TierTwo"/>).
 	/// </summary>
-	[DiscordDeprecated("Auto archive duration isn't locked to boosts anymore."), Obsolete]
+	[DiscordDeprecated("Auto archive duration isn't locked to boosts anymore.")]
 	CanSetThreadArchiveDurationSevenDays,
 
 	/// <summary>
 	/// Guild has access to create private threads.
 	/// Needs Premium Tier 2 (<see cref="PremiumTier.TierTwo"/>).
 	/// </summary>
-	[DiscordDeprecated("Private threads aren't bound to the server boost level anymore and can be used by everyone."), Obsolete]
+	[DiscordDeprecated("Private threads aren't bound to the server boost level anymore and can be used by everyone.")]
 	CanCreatePrivateThreads,
 
 	/// <summary>
@@ -385,7 +385,7 @@ public enum GuildFeaturesEnum
 	/// Guild can set an animated banner.
 	/// Needs Premium Tier 3 (<see cref="PremiumTier.TierThree"/>).
 	/// </summary>
-	[DiscordDeprecated("Feature was removed"), Obsolete]
+	[DiscordDeprecated("Feature was removed")]
 	CanSetChannelBanner,
 
 	/// <summary>
@@ -586,70 +586,67 @@ public enum GuildFeaturesEnum
 	/// <summary>
 	/// Ability to create and use store channels.
 	/// </summary>
-	[DiscordDeprecated("This feature is depcreated"), Obsolete]
+	[DiscordDeprecated("This feature is depcreated")]
 	Commerce,
 
 	/// <summary>
 	/// Currently unknown.
 	/// </summary>
-	[DiscordDeprecated("This feature is depcreated"), Obsolete]
+	[DiscordDeprecated("This feature is depcreated")]
 	ExposedToBoostingTiersExperiment,
 
 	/// <summary>
 	/// Deprecated in favor of Community.
 	/// </summary>
-	[DiscordDeprecated("This feature is depcreated"), Obsolete]
+	[DiscordDeprecated("This feature is depcreated")]
 	PublicDisabled,
 
 	/// <summary>
 	/// Deprecated in favor of Community.
 	/// </summary>
-	[DiscordDeprecated("This feature is depcreated"), Obsolete]
+	[DiscordDeprecated("This feature is depcreated")]
 	Public,
 
 	/// <summary>
 	/// The guild can use the seven-day archive time for threads.
 	/// </summary>
-	[DiscordDeprecated("This feature is depcreated"), Obsolete]
+	[DiscordDeprecated("This feature is depcreated")]
 	SevenDayThreadArchive,
 
 	/// <summary>
 	/// The guild can use the three-day archive time for threads.
 	/// </summary>
-	[DiscordDeprecated("This feature is depcreated"), Obsolete]
+	[DiscordDeprecated("This feature is depcreated")]
 	ThreeDayThreadArchive,
 
 	/// <summary>
 	/// Previously used to control which servers were displayed under the "Featured" category in Discovery.
 	/// </summary>
-	[DiscordDeprecated("This feature is depcreated"), Obsolete]
+	[DiscordDeprecated("This feature is depcreated")]
 	Featurable,
 
 	/// <summary>
 	/// Shards connections to the guild to different nodes that relay information between each other.
 	/// </summary>
-	[DiscordDeprecated("This feature is depcreated"), Obsolete]
+	[DiscordDeprecated("This feature is depcreated")]
 	ForceRelay,
 
 	/// <summary>
 	/// Currently unknown.
 	/// </summary>
-	[DiscordDeprecated("This feature is depcreated"), Obsolete]
+	[DiscordDeprecated("This feature is depcreated")]
 	Lurkable,
 
 	/// <summary>
 	/// Created for the Fortnite server blackout event on Oct 13, 2019, when viewing the member list it would show "There's nothing to see here.".
 	/// </summary>
-	[DiscordDeprecated("This feature is depcreated"), Obsolete]
+	[DiscordDeprecated("This feature is depcreated")]
 	MemberListDisabled,
 
-	[DiscordInExperiment]
 	CanUseCreatorStorePage,
 
-	[DiscordInExperiment]
 	CanUseBurstReactions,
 
-	[DiscordInExperiment]
 	HadGuildOnBoardingEverEnabled,
 
 	[DiscordInExperiment]
@@ -664,9 +661,7 @@ public enum GuildFeaturesEnum
 	[DiscordUnreleased]
 	VoiceInThreadsEnabled,
 
-	[DiscordInExperiment("Feature related to automod.")]
 	RaidAlertsEnabled,
 
-	[DiscordInExperiment("Was recently added to determine whether guilds uses the newer permission system for application commands.")]
 	UsesApplicationCommandsPermissionsV2,
 }

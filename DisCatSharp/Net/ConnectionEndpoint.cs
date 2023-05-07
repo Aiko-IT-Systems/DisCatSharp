@@ -59,18 +59,18 @@ public struct ConnectionEndpoint
 	/// Gets the hash code of this endpoint.
 	/// </summary>
 	/// <returns>Hash code of this endpoint.</returns>
-	public override int GetHashCode() => 13 + (7 * this.Hostname.GetHashCode()) + (7 * this.Port);
+	public override readonly int GetHashCode() => 13 + (7 * this.Hostname.GetHashCode()) + (7 * this.Port);
 
 	/// <summary>
 	/// Gets the string representation of this connection endpoint.
 	/// </summary>
 	/// <returns>String representation of this endpoint.</returns>
-	public override string ToString() => $"{this.Hostname}:{this.Port}";
+	public override readonly string ToString() => $"{this.Hostname}:{this.Port}";
 
 	/// <summary>
 	/// Returns a http string.
 	/// </summary>
-	internal string ToHttpString()
+	internal readonly string ToHttpString()
 	{
 		var secure = this.Secured ? "s" : "";
 		return $"http{secure}://{this}";
@@ -79,7 +79,7 @@ public struct ConnectionEndpoint
 	/// <summary>
 	/// Returns a web socket string.
 	/// </summary>
-	internal string ToWebSocketString()
+	internal readonly string ToWebSocketString()
 	{
 		var secure = this.Secured ? "s" : "";
 		return $"ws{secure}://{this}/";

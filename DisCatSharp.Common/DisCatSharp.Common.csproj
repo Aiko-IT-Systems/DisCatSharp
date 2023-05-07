@@ -30,6 +30,14 @@ Common tools for DisCatSharp, like regexes and converters!
     <Optimize>False</Optimize>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;DV2001</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;DV2001</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="5.4.0">
       <PrivateAssets>all</PrivateAssets>
