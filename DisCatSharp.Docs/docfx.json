@@ -270,7 +270,7 @@
 			"_appFooter": "<strong>Made with ♥ by AITSYS</strong>",
 			"_copyrightFooter": "© Aiko IT Systems. All rights reserved.",
 			"_appLogoPath": "dcs-logo-winter.gif",
-			"_enableSearch":false,
+			"_enableSearch":true,
 			"_disableSideFilter": false,
 			"_enableNewTab":true,
 			"_disableContribution": false,
@@ -291,7 +291,9 @@
 			"modern"
 		],
 		"postProcessors":[
-			"ExtractSearchIndex"
+			"ExtractSearchIndex",
+			"CustomMemberIndexer",
+			"DescriptionPostProcessor"
 		],
 		"noLangKeyword":false,
 		"keepFileLink":false,
