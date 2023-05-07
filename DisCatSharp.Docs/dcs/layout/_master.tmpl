@@ -111,7 +111,7 @@
         }
     </script>
     <script type="text/javascript" src="{{_rel}}public/docfx.min.js"></script>
-    <script type="text/javascript" src="{{_rel}}public/main.js"></script>
+    <script type="module" src="{{_rel}}public/main.js"></script>
     {{/redirect_url}}
 </head>
 
@@ -131,7 +131,7 @@
     <header class="bg-body border-bottom">
         <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
             <div class="container-xxl flex-nowrap">
-                <a class="navbar-brand" href="{{_appLogoUrl}}{{^_appLogoUrl}}{{_rel}}{{/_appLogoUrl}}">
+                <a class="navbar-brand" href="{{_appLogoUrl}}{{^_appLogoUrl}}{{_rel}}index.html{{/_appLogoUrl}}">
                     <img id="logo" class="svg"
                         src="{{_rel}}{{{_appLogoPath}}}{{^_appLogoPath}}logo.svg{{/_appLogoPath}}" alt="{{_appName}}">
                     {{_appName}}

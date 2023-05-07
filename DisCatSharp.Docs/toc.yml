@@ -1,18 +1,16 @@
 - name: Home
   href: index.md
+- name: API
+  href: api/index.md
 - name: Articles
   href: articles/preamble.md
 - name: Changelogs
   href: changelogs/index.md
 - name: Extensions
   href: https://ext-docs.dcs.aitsys.dev/
-- name: FAQ
-  href: faq.md
-- name: API Documentation
-  href: api/index.md
 - name: Voice Natives
   href: natives/index.md
 - name: Visual Studio Tools
   href: vs/index.md
 - name: Discord API
-  href: https://discord.com/developers/docs/intro
+  href: https://discord.dev

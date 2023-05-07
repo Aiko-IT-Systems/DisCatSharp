@@ -1,5 +1,7 @@
 - name: Preamble
   href: preamble.md
+- name: FAQ
+  href: faq.md
 - name: The Basics
   items:
   - name: Creating a Bot Account
