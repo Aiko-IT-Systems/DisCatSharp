@@ -13,11 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		BUILDING.md = BUILDING.md
-		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
+		.github\CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 		CONTRIBUTING.md = CONTRIBUTING.md
 		LICENSE.md = LICENSE.md
 		README.md = README.md
-		SECURITY.md = SECURITY.md
+		.github\SECURITY.md = SECURITY.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.CommandsNext", "DisCatSharp.CommandsNext\DisCatSharp.CommandsNext.csproj", "{C8ED55FB-E028-468D-955F-1534C20274EF}"
@@ -31,34 +31,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F953F5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build Items", "Build Items", "{84464D70-687B-40A8-836D-C4F737698969}"
 	ProjectSection(SolutionItems) = preProject
-		appveyor.yml = appveyor.yml
-		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
-		.github\dependabot.yml = .github\dependabot.yml
 		Directory.Build.props = Directory.Build.props
-		DisCatSharp.targets = DisCatSharp.targets
-		docs-oneclick-rebuild.ps1 = docs-oneclick-rebuild.ps1
-		.github\workflows\docs.yml = .github\workflows\docs.yml
-		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
-		Library.targets = Library.targets
-		NuGet.targets = NuGet.targets
-		oneclick-rebuild.ps1 = oneclick-rebuild.ps1
-		Package.targets = Package.targets
-		rebuild-all.ps1 = rebuild-all.ps1
-		rebuild-docs.ps1 = rebuild-docs.ps1
-		rebuild-lib.ps1 = rebuild-lib.ps1
-		Version.targets = Version.targets
+		DisCatSharp.Targets\DisCatSharp.targets = Targets\DisCatSharp.targets
+		DisCatSharp.Targets\Library.targets = Targets\Library.targets
+		DisCatSharp.Targets\NuGet.targets = Targets\NuGet.targets
+		DisCatSharp.Targets\Package.targets = Targets\Package.targets
+		DisCatSharp.Tools\rebuild-lib.ps1 = Tools\rebuild-lib.ps1
+		DisCatSharp.Tools\pack-docs.ps1 = Tools\pack-docs.ps1
+		DisCatSharp.Targets\Version.targets = Targets\Version.targets
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{430C28D8-5F85-4D6E-AA68-211549435245}"
 	ProjectSection(SolutionItems) = preProject
-		.github\ISSUE_TEMPLATE\bug_report.md = .github\ISSUE_TEMPLATE\bug_report.md
 		.github\CODEOWNERS = .github\CODEOWNERS
-		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
-		.github\workflows\docs-preview.yml = .github\workflows\docs-preview.yml
-		.github\workflows\docs.yml = .github\workflows\docs.yml
-		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
-		.github\ISSUE_TEMPLATE\feature_request.md = .github\ISSUE_TEMPLATE\feature_request.md
-		.github\FUNDING.yml = .github\FUNDING.yml
+		.github\workflows\codeql.yml = .github\workflows\codeql.yml
+		.github\workflows\documentation_test.yml = .github\workflows\documentation_test.yml
+		.github\workflows\documentation.yml = .github\workflows\documentation.yml
+		.github\workflows\release.yml = .github\workflows\release.yml
+		.github\workflows\build.yml = .github\workflows\build.yml
 		.github\pull_request_template.md = .github\pull_request_template.md
 	EndProjectSection
 EndProject

@@ -35,7 +35,7 @@ jobs:
       run: docfx DisCatSharp.Docs/docfx.json
     - name: Pack Docs
       shell: pwsh
-      run: .\pack-docs.ps1 -DocsPath ".\DisCatSharp.Docs" -OutputPath ".\" -PackageName "dcs-docs"
+      run: ./DisCatSharp.Tools/pack-docs.ps1 -DocsPath "./DisCatSharp.Docs" -OutputPath "./" -PackageName "dcs-docs"
     - name: Upload packed docs
       uses: actions/upload-artifact@v3
       with:

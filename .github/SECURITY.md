@@ -4,10 +4,10 @@
 
 | Version | Supported          |
 | ------- | ------------------ |
-| > 9.8   | :white_check_mark: |
-|   9.7   | :white_check_mark: |
-| < 9.7   | :x:                |
+| > 10.4  | :white_check_mark: |
+| > 10.0  | :white_check_mark: |
+| < 10.0  | :x:                |
 
 ## Reporting a Vulnerability
 
-Write an mail to support@aitsys.dev or open an ticket at our guild.
+Write an mail to support@aitsys.dev or open an ticket in our discord server.
