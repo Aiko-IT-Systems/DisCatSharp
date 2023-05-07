@@ -28,9 +28,9 @@ jobs:
       run: dotnet tool update -g docfx --prerelease
       continue-on-error: true
     - name: Restore packages
-      run: dotnet restore
+      run: dotnet restore DisCatSharp.sln
     - name: Build library
-      run: dotnet build -c Release -v minimal --no-restore
+      run: dotnet build -c Release -v minimal --no-restore DisCatSharp.sln
       timeout-minutes: 3
       continue-on-error: true
     - name: Add Custom Plugins

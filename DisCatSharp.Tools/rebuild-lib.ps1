@@ -72,7 +72,7 @@ function Build-All([string] $target_dir_path, [string] $version_suffix, [string]
     
     # Clean previous build results
     Write-Host "Cleaning previous build"
-    & dotnet clean -v minimal -c "$bcfg" | Out-Host
+    & dotnet clean -v minimal -c "$bcfg" DisCatSharp.sln | Out-Host
     if ($LastExitCode -ne 0)
     {
         Write-Host "Cleanup failed"
@@ -81,7 +81,7 @@ function Build-All([string] $target_dir_path, [string] $version_suffix, [string]
     
     # Restore nuget packages
     Write-Host "Restoring NuGet packages"
-    & dotnet restore -v minimal | Out-Host
+    & dotnet restore -v minimal DisCatSharp.sln | Out-Host
     if ($LastExitCode -ne 0)
     {
         Write-Host "Restoring packages failed"
@@ -102,15 +102,15 @@ function Build-All([string] $target_dir_path, [string] $version_suffix, [string]
     Write-Host "Building everything"
     if (-not $version_suffix)
     {
-        & dotnet build -v minimal -c "$bcfg" | Out-Host
+        & dotnet build -v minimal -c "$bcfg" DisCatSharp.sln | Out-Host
     }
 	elseif (-not $build_number_string)
 	{
-		& dotnet build -v minimal -c "$bcfg" --version-suffix "$version_suffix" | Out-Host
+		& dotnet build -v minimal -c "$bcfg" --version-suffix "$version_suffix" DisCatSharp.sln | Out-Host
 	}
     else
     {
-        & dotnet build -v minimal -c "$bcfg" --version-suffix "$version_suffix" -p:BuildNumber="$build_number_string" | Out-Host
+        & dotnet build -v minimal -c "$bcfg" --version-suffix "$version_suffix" -p:BuildNumber="$build_number_string" DisCatSharp.sln | Out-Host
     }
     if ($LastExitCode -ne 0)
     {
@@ -122,15 +122,15 @@ function Build-All([string] $target_dir_path, [string] $version_suffix, [string]
     Write-Host "Creating NuGet packages"
     if (-not $version_suffix)
     {
-        & dotnet pack -v minimal -c "$bcfg" --no-build -o "$target_dir" --include-symbols | Out-Host
+        & dotnet pack -v minimal -c "$bcfg" --no-build -o "$target_dir" --include-symbols DisCatSharp.sln | Out-Host
     }
 	elseif (-not $build_number_string)
 	{
-        & dotnet pack -v minimal -c "$bcfg" --version-suffix "$version_suffix" --no-build -o "$target_dir" --include-symbols | Out-Host
+        & dotnet pack -v minimal -c "$bcfg" --version-suffix "$version_suffix" --no-build -o "$target_dir" --include-symbols DisCatSharp.sln | Out-Host
     }
     else
     {
-        & dotnet pack -v minimal -c "$bcfg" --version-suffix "$version_suffix" -p:BuildNumber="$build_number_string" --no-build -o "$target_dir" --include-symbols | Out-Host
+        & dotnet pack -v minimal -c "$bcfg" --version-suffix "$version_suffix" -p:BuildNumber="$build_number_string" --no-build -o "$target_dir" --include-symbols DisCatSharp.sln | Out-Host
     }
     if ($LastExitCode -ne 0)
     {
