@@ -107,10 +107,12 @@ Or write us an email at [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
 
 ----
 
-## Sponsors [![Sponsors](https://img.shields.io/github/sponsors/Aiko-IT-Systems?label=&style=flat-square&logo=github)](https://github.com/sponsors/Aiko-IT-Systems) / [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=&style=flat-square&logo=github)](https://github.com/sponsors/Lulalaby)
+## Sponsors
 
 - [Deividas Kazakevicius](https://github.com/DeividasKaza)
 - [Will](https://github.com/villChurch)
+- SavageVictor
+- [Schattenclown](https://github.com/Schattenclown)
 
 ## Hacktober Participants
 
@@ -128,6 +130,7 @@ Big thanks goes to the following people who helped us without being part of the 
 - [Geferon](https://github.com/geferon)
 - [Alice](https://github.com/QuantuChi)
 - [Will](https://github.com/villChurch)
+- [InFTord](https://github.com/InFTord)
 
 ## Special Thanks
 
