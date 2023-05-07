@@ -8,6 +8,7 @@ env:
   DOTNET_NOLOGO: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
 
 jobs:
   build:
@@ -22,7 +23,10 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3.0.3
       with:
-        dotnet-version: 7.x
+        dotnet-version: 7.0.203
+    - name: Install DocFX
+      run: dotnet tool update -g docfx --prerelease
+      continue-on-error: true
     - name: Restore packages
       run: dotnet restore
     - name: Build library
@@ -30,8 +34,10 @@ jobs:
       timeout-minutes: 3
       continue-on-error: true
     - name: Build Docs
+      run: docfx DisCatSharp.Docs/docfx.json
+    - name: Pack Docs
       shell: pwsh
-      run: ./ci_oneclick-rebuild-docs.ps1
+      run: .\pack-docs.ps1
     - name: Upload packed docs
       uses: actions/upload-artifact@v3
       with:
