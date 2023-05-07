@@ -1,4 +1,5 @@
 ### YamlMime:TableOfContent
+items:
 - uid: DisCatSharp.Hosting
   name: DisCatSharp.Hosting
   items:
@@ -12,3 +13,4 @@
     name: IDiscordHostedService
   - uid: DisCatSharp.Hosting.IDiscordHostedShardService
     name: IDiscordHostedShardService
+memberLayout: SamePage

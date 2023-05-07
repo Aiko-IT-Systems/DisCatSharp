@@ -1,4 +1,5 @@
 ### YamlMime:TableOfContent
+items:
 - uid: DisCatSharp.VoiceNext
   name: DisCatSharp.VoiceNext
   items:
@@ -38,3 +39,4 @@
     name: VoiceUserJoinEventArgs
   - uid: DisCatSharp.VoiceNext.EventArgs.VoiceUserLeaveEventArgs
     name: VoiceUserLeaveEventArgs
+memberLayout: SamePage

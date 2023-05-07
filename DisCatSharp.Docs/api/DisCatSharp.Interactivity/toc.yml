@@ -1,4 +1,5 @@
 ### YamlMime:TableOfContent
+items:
 - uid: DisCatSharp.Interactivity
   name: DisCatSharp.Interactivity
   items:
@@ -12,7 +13,6 @@
     name: InteractivityHelpers
   - uid: DisCatSharp.Interactivity.InteractivityResult`1
     name: InteractivityResult<T>
-    name.vb: InteractivityResult(Of T)
   - uid: DisCatSharp.Interactivity.Page
     name: Page
   - uid: DisCatSharp.Interactivity.PaginationEmojis
@@ -62,3 +62,4 @@
     name: InteractionExtensions
   - uid: DisCatSharp.Interactivity.Extensions.MessageExtensions
     name: MessageExtensions
+memberLayout: SamePage

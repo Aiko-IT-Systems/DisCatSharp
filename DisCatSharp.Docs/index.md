@@ -1,13 +1,12 @@
 ---
 uid: index
-title: DisCatSharp 10.4.0 Documentation
+title: DisCatSharp
 author: DisCatSharp Team
 ---
 
-<h1 class="main-title">DisCatSharp ![Stable](https://img.shields.io/nuget/v/DisCatSharp?color=%23ebb34b&label=Stable&style=flat-square&logo=nuget) ![Nightly](https://img.shields.io/nuget/vpre/DisCatSharp?color=%23ff1493&label=Nightly&style=flat-square&logo=nuget)</h1>
+# DisCatSharp ![Stable](https://img.shields.io/nuget/v/DisCatSharp?color=%23ebb34b&label=Stable&style=flat-square&logo=nuget) ![Nightly](https://img.shields.io/nuget/vpre/DisCatSharp?color=%23ff1493&label=Nightly&style=flat-square&logo=nuget)
 
-<h1 class="logo-center">![DisCatSharp Logo](/dcs-logo-winter.gif "DisCatSharp Documentation")</h1>
-## DisCatSharp 10.4.0 Documentation
+## DisCatSharp Documentation
 [DisCatSharp](https://github.com/Aiko-IT-Systems/DisCatSharp) (DCS) is an .NET wrapper for the [Discord API](https://discord.com/developers/docs/intro "Discord API") based off DSharpPlus.<br/>
 The library has been rewritten to fit quality and API standards. Furthermore this lib includes many new features of Discord and is pretty fast with keeping up with Discords API.
 
