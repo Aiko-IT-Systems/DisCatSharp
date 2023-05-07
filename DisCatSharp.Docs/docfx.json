@@ -270,7 +270,7 @@
 			"_appFooter": "<strong>Made with ♥ by AITSYS</strong>",
 			"_copyrightFooter": "© Aiko IT Systems. All rights reserved.",
 			"_appLogoPath": "dcs-logo-winter.gif",
-			"_enableSearch":true,
+			"_enableSearch":false,
 			"_disableSideFilter": false,
 			"_enableNewTab":true,
 			"_disableContribution": false,
@@ -288,19 +288,16 @@
 		"fileMetadataFiles":[],
 		"template":[
 			"default",
-			"modern",
-			"dcs"
+			"modern"
 		],
 		"postProcessors":[
-			"ExtractSearchIndex",
-			"CustomMemberIndexer",
-			"DescriptionPostProcessor"
+			"ExtractSearchIndex"
 		],
 		"noLangKeyword":false,
 		"keepFileLink":false,
 		"cleanupCacheHistory":false,
 		"sitemap":{
-			"baseUrl":"https://docs.discatsharp.tech/",
+			"baseUrl":"https://docs.dcs.aitsys.dev/",
 			"changefreq":"daily",
 			"priority":1.0
 		}

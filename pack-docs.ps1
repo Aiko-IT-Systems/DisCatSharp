@@ -34,34 +34,6 @@ function PackDocs([string] $target_dir_path, [string] $output_dir_path, [string]
 	Compress-Archive -Path "$target_path/*" -DestinationPath "$output_path.zip" -Force -CompressionLevel Fastest
     # Exit back
     Set-Location -path "$current_location"
-    # Check if packaging was a success
-    if ($LastExitCode -eq 0)
-    {
-        Return 0
-    }
-    else
-    {
-        Return $LastExitCode
-    }
 }
 
-$result = PackDocs "$DocsPath" "$OutputPath" "$PackageName"
-if ($result -ne 0)
-{
-	Write-Host "Packaging API documentation failed"
-}
-else
-{
-	Write-Host "Packaging API documentation succeeded"
-}
-
-if ($result -eq 0)
-{
-    Write-Host "All operations completed"
-    Exit 0
-}
-else
-{
-    $host.SetShouldExit($result)
-    Exit $result
-}
+PackDocs "$DocsPath" "$OutputPath" "$PackageName"
