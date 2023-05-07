@@ -32,7 +32,7 @@ The repository containing the source code for this library can be found [here](h
 
 - [Deividas Kazakevicius](https://github.com/DeividasKaza)
 - [Will](https://github.com/villChurch)
-- SavageVictor
+- [SavageVictor](https://github.com/SavageVictor)
 - [Schattenclown](https://github.com/Schattenclown)
 
 ### Hacktober Participants
