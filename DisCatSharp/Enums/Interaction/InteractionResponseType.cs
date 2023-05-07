@@ -69,5 +69,5 @@ public enum InteractionResponseType
 	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
 	/// </summary>
 	[DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
-	InteractionRequiresPremiumSubscription = 10
+	InteractionRequireEntitlement = 10
 }
