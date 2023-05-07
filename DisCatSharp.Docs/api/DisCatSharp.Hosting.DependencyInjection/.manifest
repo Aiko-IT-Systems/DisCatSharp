@@ -1,8 +1,8 @@
 {
   "DisCatSharp.Hosting.DependencyInjection": "DisCatSharp.Hosting.DependencyInjection.yml",
   "DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions": "DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions.yml",
-  "DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions.AddDiscordHostedService``1(IServiceCollection)": "DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions.yml",
-  "DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions.AddDiscordHostedService``2(IServiceCollection)": "DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions.yml",
-  "DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions.AddDiscordHostedShardService``1(IServiceCollection)": "DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions.yml",
-  "DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions.AddDiscordHostedShardService``2(IServiceCollection)": "DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions.yml"
+  "DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions.AddDiscordHostedService``1(Microsoft.Extensions.DependencyInjection.IServiceCollection)": "DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions.yml",
+  "DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions.AddDiscordHostedService``2(Microsoft.Extensions.DependencyInjection.IServiceCollection)": "DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions.yml",
+  "DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions.AddDiscordHostedShardService``1(Microsoft.Extensions.DependencyInjection.IServiceCollection)": "DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions.yml",
+  "DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions.AddDiscordHostedShardService``2(Microsoft.Extensions.DependencyInjection.IServiceCollection)": "DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions.yml"
 }

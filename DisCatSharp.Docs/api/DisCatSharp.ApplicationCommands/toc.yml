@@ -25,6 +25,8 @@
     name: ApplicationCommandRequireDirectMessageAttribute
   - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireDisCatSharpDeveloperAttribute
     name: ApplicationCommandRequireDisCatSharpDeveloperAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireEntitlementAttribute
+    name: ApplicationCommandRequireEntitlementAttribute
   - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireGuildAttribute
     name: ApplicationCommandRequireGuildAttribute
   - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireNsfwAttribute

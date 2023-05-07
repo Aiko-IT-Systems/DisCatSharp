@@ -31,7 +31,7 @@ jobs:
       continue-on-error: true
     - name: Build Docs
       shell: pwsh
-      run: ./rebuild-docs.ps1 -DocsPath "./DisCatSharp.Docs" -Output "." -PackageName "dcs-docs-preview"
+      run: ./ci_oneclick-rebuild-docs.ps1
     - name: Upload packed docs
       uses: actions/upload-artifact@v3
       with:

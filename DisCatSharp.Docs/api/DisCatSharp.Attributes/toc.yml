@@ -2,6 +2,8 @@
 - uid: DisCatSharp.Attributes
   name: DisCatSharp.Attributes
   items:
+  - uid: DisCatSharp.Attributes.DeprecatedAttribute
+    name: DeprecatedAttribute
   - uid: DisCatSharp.Attributes.DiscordDeprecatedAttribute
     name: DiscordDeprecatedAttribute
   - uid: DisCatSharp.Attributes.DiscordInExperimentAttribute

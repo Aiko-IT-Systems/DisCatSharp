@@ -41,9 +41,9 @@
   "DisCatSharp.VoiceNext.EventArgs.VoiceUserLeaveEventArgs.Ssrc": "DisCatSharp.VoiceNext.EventArgs.VoiceUserLeaveEventArgs.yml",
   "DisCatSharp.VoiceNext.EventArgs.VoiceUserLeaveEventArgs.User": "DisCatSharp.VoiceNext.EventArgs.VoiceUserLeaveEventArgs.yml",
   "DisCatSharp.VoiceNext.IVoiceFilter": "DisCatSharp.VoiceNext.IVoiceFilter.yml",
-  "DisCatSharp.VoiceNext.IVoiceFilter.Transform(Span{System.Int16},DisCatSharp.VoiceNext.AudioFormat,System.Int32)": "DisCatSharp.VoiceNext.IVoiceFilter.yml",
+  "DisCatSharp.VoiceNext.IVoiceFilter.Transform(System.Span{System.Int16},DisCatSharp.VoiceNext.AudioFormat,System.Int32)": "DisCatSharp.VoiceNext.IVoiceFilter.yml",
   "DisCatSharp.VoiceNext.StreamExtensions": "DisCatSharp.VoiceNext.StreamExtensions.yml",
-  "DisCatSharp.VoiceNext.StreamExtensions.CopyToAsync(Stream,DisCatSharp.VoiceNext.VoiceTransmitSink,System.Nullable{System.Int32},CancellationToken)": "DisCatSharp.VoiceNext.StreamExtensions.yml",
+  "DisCatSharp.VoiceNext.StreamExtensions.CopyToAsync(System.IO.Stream,DisCatSharp.VoiceNext.VoiceTransmitSink,System.Nullable{System.Int32},System.Threading.CancellationToken)": "DisCatSharp.VoiceNext.StreamExtensions.yml",
   "DisCatSharp.VoiceNext.VoiceApplication": "DisCatSharp.VoiceNext.VoiceApplication.yml",
   "DisCatSharp.VoiceNext.VoiceApplication.LowLatency": "DisCatSharp.VoiceNext.VoiceApplication.yml",
   "DisCatSharp.VoiceNext.VoiceApplication.Music": "DisCatSharp.VoiceNext.VoiceApplication.yml",
@@ -91,7 +91,7 @@
   "DisCatSharp.VoiceNext.VoiceNextExtension.Setup(DisCatSharp.DiscordClient)": "DisCatSharp.VoiceNext.VoiceNextExtension.yml",
   "DisCatSharp.VoiceNext.VoiceTransmitSink": "DisCatSharp.VoiceNext.VoiceTransmitSink.yml",
   "DisCatSharp.VoiceNext.VoiceTransmitSink.Dispose": "DisCatSharp.VoiceNext.VoiceTransmitSink.yml",
-  "DisCatSharp.VoiceNext.VoiceTransmitSink.FlushAsync(CancellationToken)": "DisCatSharp.VoiceNext.VoiceTransmitSink.yml",
+  "DisCatSharp.VoiceNext.VoiceTransmitSink.FlushAsync(System.Threading.CancellationToken)": "DisCatSharp.VoiceNext.VoiceTransmitSink.yml",
   "DisCatSharp.VoiceNext.VoiceTransmitSink.GetInstalledFilters": "DisCatSharp.VoiceNext.VoiceTransmitSink.yml",
   "DisCatSharp.VoiceNext.VoiceTransmitSink.InstallFilter(DisCatSharp.VoiceNext.IVoiceFilter,System.Int32)": "DisCatSharp.VoiceNext.VoiceTransmitSink.yml",
   "DisCatSharp.VoiceNext.VoiceTransmitSink.Pause": "DisCatSharp.VoiceNext.VoiceTransmitSink.yml",
@@ -100,6 +100,6 @@
   "DisCatSharp.VoiceNext.VoiceTransmitSink.SampleLength": "DisCatSharp.VoiceNext.VoiceTransmitSink.yml",
   "DisCatSharp.VoiceNext.VoiceTransmitSink.UninstallFilter(DisCatSharp.VoiceNext.IVoiceFilter)": "DisCatSharp.VoiceNext.VoiceTransmitSink.yml",
   "DisCatSharp.VoiceNext.VoiceTransmitSink.VolumeModifier": "DisCatSharp.VoiceNext.VoiceTransmitSink.yml",
-  "DisCatSharp.VoiceNext.VoiceTransmitSink.WriteAsync(ReadOnlyMemory{System.Byte},CancellationToken)": "DisCatSharp.VoiceNext.VoiceTransmitSink.yml",
-  "DisCatSharp.VoiceNext.VoiceTransmitSink.WriteAsync(System.Byte[],System.Int32,System.Int32,CancellationToken)": "DisCatSharp.VoiceNext.VoiceTransmitSink.yml"
+  "DisCatSharp.VoiceNext.VoiceTransmitSink.WriteAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)": "DisCatSharp.VoiceNext.VoiceTransmitSink.yml",
+  "DisCatSharp.VoiceNext.VoiceTransmitSink.WriteAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)": "DisCatSharp.VoiceNext.VoiceTransmitSink.yml"
 }
