@@ -1,5 +1,9 @@
 {
   "DisCatSharp.Attributes": "DisCatSharp.Attributes.yml",
+  "DisCatSharp.Attributes.DeprecatedAttribute": "DisCatSharp.Attributes.DeprecatedAttribute.yml",
+  "DisCatSharp.Attributes.DeprecatedAttribute.#ctor": "DisCatSharp.Attributes.DeprecatedAttribute.yml",
+  "DisCatSharp.Attributes.DeprecatedAttribute.#ctor(System.String)": "DisCatSharp.Attributes.DeprecatedAttribute.yml",
+  "DisCatSharp.Attributes.DeprecatedAttribute.Message": "DisCatSharp.Attributes.DeprecatedAttribute.yml",
   "DisCatSharp.Attributes.DiscordDeprecatedAttribute": "DisCatSharp.Attributes.DiscordDeprecatedAttribute.yml",
   "DisCatSharp.Attributes.DiscordDeprecatedAttribute.#ctor": "DisCatSharp.Attributes.DiscordDeprecatedAttribute.yml",
   "DisCatSharp.Attributes.DiscordDeprecatedAttribute.#ctor(System.String)": "DisCatSharp.Attributes.DiscordDeprecatedAttribute.yml",
