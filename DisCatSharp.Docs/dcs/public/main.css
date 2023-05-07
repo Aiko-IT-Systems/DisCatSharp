@@ -1,3 +1,7 @@
 footer {
 	text-align: center !important;
 }
+
+.featherlight-content {
+	background-color: var(--bs-body-bg) !important;
+}
