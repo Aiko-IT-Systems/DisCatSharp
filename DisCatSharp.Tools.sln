@@ -3,21 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33103.201
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DisCatSharp.Analyzer", "DisCatSharp.Analyzer", "{122968B7-2707-4FC2-819D-7E90B804A8E4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DisCatSharp.Analyzer", "DisCatSharp.Tools\DisCatSharp.Analyzer", "{122968B7-2707-4FC2-819D-7E90B804A8E4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Analyzer", "DisCatSharp.Analyzer\DisCatSharp.Analyzer\DisCatSharp.Analyzer.csproj", "{DA33A3DA-DD7F-4E16-B503-79581CCEA974}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Analyzer", "DisCatSharp.Tools\DisCatSharp.Analyzer\DisCatSharp.Analyzer\DisCatSharp.Analyzer.csproj", "{DA33A3DA-DD7F-4E16-B503-79581CCEA974}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Analyzer.Package", "DisCatSharp.Analyzer\DisCatSharp.Analyzer.Package\DisCatSharp.Analyzer.Package.csproj", "{B3122D6C-A0FE-42C3-9FCE-4A9789E66E1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Analyzer.Package", "DisCatSharp.Tools\DisCatSharp.Analyzer\DisCatSharp.Analyzer.Package\DisCatSharp.Analyzer.Package.csproj", "{B3122D6C-A0FE-42C3-9FCE-4A9789E66E1B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ref", "Ref", "{C88304B3-5BF3-4F25-A36A-42CC42BB2D3B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Experimental", "..\DisCatSharp.Experimental\DisCatSharp.Experimental.csproj", "{239A4661-461C-4956-8512-2A3537F6A2E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Experimental", "DisCatSharp.Experimental\DisCatSharp.Experimental.csproj", "{239A4661-461C-4956-8512-2A3537F6A2E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.Analyzer.VSIX", "DisCatSharp.Analytics.VSIX\DisCatSharp.Analyzer.VSIX.csproj", "{E2AAF92A-5655-446D-ACBE-3D4EC88249BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.Analyzer.VSIX", "DisCatSharp.Tools\DisCatSharp.Analytics.VSIX\DisCatSharp.Analyzer.VSIX.csproj", "{E2AAF92A-5655-446D-ACBE-3D4EC88249BE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F8C18D6C-510D-4D0A-A82E-4A86ED63D10E}"
 	ProjectSection(SolutionItems) = preProject
-		DisCatSharp.ruleset = DisCatSharp.ruleset
+		DisCatSharp.Tools\DisCatSharp.ruleset = DisCatSharp.Tools\DisCatSharp.ruleset
 	EndProjectSection
 EndProject
 Global
