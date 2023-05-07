@@ -285,6 +285,7 @@
 		"fileMetadataFiles":[],
 		"template":[
 			"default",
+			"modern",
 			"dcs"
 		],
 		"postProcessors":[
