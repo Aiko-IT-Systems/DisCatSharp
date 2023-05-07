@@ -279,7 +279,8 @@
 			"_gitContribute":{
 				"repo":"https://github.com/Aiko-IT-Systems/DisCatSharp",
 				"branch":"main"
-			}
+			},
+			"_googleTagId": "G-8JHG7YVNKK"
 		},
 		"disableGitFeatures":false,
 		"exportRawModel":false,
@@ -288,7 +289,8 @@
 		"fileMetadataFiles":[],
 		"template":[
 			"default",
-			"modern"
+			"modern",
+			"dcs"
 		],
 		"postProcessors":[
 			"ExtractSearchIndex",
