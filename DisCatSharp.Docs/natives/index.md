@@ -12,6 +12,6 @@ Operating System|Download
 
 #### Licenses
 Library|License
-| --------- | -------------------------------------------------------- |
-| Opus      |https://opus-codec.org/license/                           |
-| libsodium |https://github.com/jedisct1/libsodium/blob/master/LICENSE |
+| --------- | --------------------------------------------------------- |
+| Opus      | https://opus-codec.org/license/                           |
+| libsodium | https://github.com/jedisct1/libsodium/blob/master/LICENSE |
