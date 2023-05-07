@@ -1,3 +1,3 @@
 # Changelogs
 
-Please visit our [documentation](https://docs.discatsharp.tech/changelogs) for more information.
+Please visit our [documentation](https://docs.dcs.aitsys.dev/changelogs) for more information.

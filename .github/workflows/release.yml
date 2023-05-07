@@ -35,20 +35,20 @@ jobs:
       - name: Build library as full release
         if: ${{!inputs.release_as_prerelease}}
         shell: pwsh
-        run: .\rebuild-lib.ps1 -ArtifactLocation ../dcs-artifacts -Configuration Release
+        run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release
       - name: Build library as pre-release
         if: ${{inputs.release_as_prerelease}}
         shell: pwsh
-        run: .\rebuild-lib.ps1 -ArtifactLocation ../dcs-artifacts -Configuration Release -VersionSuffix ${{github.event.inputs.version_suffix}}
+        run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{github.event.inputs.version_suffix}}
       - name: Remove invalid packages
         shell: pwsh
         run: rm *.symbols.*
-        working-directory: ../dcs-artifacts
+        working-directory: ./dcs-artifacts
       - name: Publish to NuGet
         shell: pwsh
         run: dotnet nuget push --source https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} * --skip-duplicate
-        working-directory: ../dcs-artifacts
+        working-directory: ./dcs-artifacts
       - name: Publish to GitHub Packages
         shell: pwsh
         run: dotnet nuget push --source https://nuget.pkg.github.com/Aiko-IT-Systems/index.json -k ${{secrets.NYUW_TOKEN_GH}} *
-        working-directory: ../dcs-artifacts
+        working-directory: ./dcs-artifacts
