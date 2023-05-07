@@ -40,7 +40,7 @@ public static class PermissionMethods
 	/// <summary>
 	/// Calculates whether this permission set contains the given permission.
 	/// </summary>
-	/// <param name="p">The permissions to calculate from<./param>
+	/// <param name="p">The permissions to calculate from.</param>
 	/// <param name="permission">The permission you want to check.</param>
 	/// <returns></returns>
 	public static bool HasPermission(this Permissions p, Permissions permission)
