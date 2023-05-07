@@ -1,6 +1,8 @@
 ### YamlMime:TableOfContent
+items:
 - uid: DisCatSharp.Experimental
   name: DisCatSharp.Experimental
   items:
   - uid: DisCatSharp.Experimental.DisCatSharp
     name: DisCatSharp
+memberLayout: SamePage

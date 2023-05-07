@@ -1,4 +1,5 @@
 ### YamlMime:TableOfContent
+items:
 - uid: DisCatSharp.CommandsNext
   name: DisCatSharp.CommandsNext
   items:
@@ -159,7 +160,6 @@
     name: DiscordUserConverter
   - uid: DisCatSharp.CommandsNext.Converters.EnumConverter`1
     name: EnumConverter<T>
-    name.vb: EnumConverter(Of T)
   - uid: DisCatSharp.CommandsNext.Converters.Float128Converter
     name: Float128Converter
   - uid: DisCatSharp.CommandsNext.Converters.Float32Converter
@@ -170,7 +170,6 @@
     name: IArgumentConverter
   - uid: DisCatSharp.CommandsNext.Converters.IArgumentConverter`1
     name: IArgumentConverter<T>
-    name.vb: IArgumentConverter(Of T)
   - uid: DisCatSharp.CommandsNext.Converters.Int16Converter
     name: Int16Converter
   - uid: DisCatSharp.CommandsNext.Converters.Int32Converter
@@ -181,7 +180,6 @@
     name: Int8Converter
   - uid: DisCatSharp.CommandsNext.Converters.NullableConverter`1
     name: NullableConverter<T>
-    name.vb: NullableConverter(Of T)
   - uid: DisCatSharp.CommandsNext.Converters.StringConverter
     name: StringConverter
   - uid: DisCatSharp.CommandsNext.Converters.TimeSpanConverter
@@ -220,3 +218,4 @@
     name: DuplicateOverloadException
   - uid: DisCatSharp.CommandsNext.Exceptions.InvalidOverloadException
     name: InvalidOverloadException
+memberLayout: SamePage
