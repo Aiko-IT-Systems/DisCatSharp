@@ -1,6 +1,7 @@
 - name: Visual Studio Tools
   href: index.md
 - name: Analyzer
+  expanded: true
   items:
   - name: DisCatSharp Analyzer
     items:
