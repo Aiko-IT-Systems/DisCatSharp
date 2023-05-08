@@ -1,5 +1,5 @@
 ---
-uid: index
+uid: home
 title: DisCatSharp
 author: DisCatSharp Team
 ---

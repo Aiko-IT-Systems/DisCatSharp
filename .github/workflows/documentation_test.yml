@@ -79,7 +79,7 @@ jobs:
     - name: Deleze zip
       run: rm dcs-docs-preview.zip
     - name: Add .htaccess
-      run: rm -f .htaccess && wget https://gist.githubusercontent.com/Lulalaby/8a032d0ddebb9125691094edc67b6593/raw/8ba47fc2b8959aa43d66da95b5e56e0802a22dd6/.htaccess
+      run: rm -f .htaccess && wget https://gist.githubusercontent.com/Lulalaby/8a032d0ddebb9125691094edc67b6593/raw/0c4bf0423cfe334fdd5092b014d2481759dd052a/.htaccess
     - name: Set access rights
       run: sudo chmod 777 -R .
     - name: Commit changes

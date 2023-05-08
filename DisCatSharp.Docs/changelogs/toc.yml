@@ -1,6 +1,7 @@
 - name: Intro
   href: index.md
 - name: Version 10.X
+  expanded: true
   items:
   - name: Version 10.4.0
     href: v10/10_4_0.md
