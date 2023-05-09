@@ -7,8 +7,8 @@ author: DisCatSharp Team
 # DisCatSharp ![Stable](https://img.shields.io/nuget/v/DisCatSharp?color=%23ebb34b&label=Stable&style=flat-square&logo=nuget) ![Nightly](https://img.shields.io/nuget/vpre/DisCatSharp?color=%23ff1493&label=Nightly&style=flat-square&logo=nuget)
 
 
-## DisCatSharp Documentation
-[DisCatSharp](https://github.com/Aiko-IT-Systems/DisCatSharp) (DCS) is an .NET wrapper for the [Discord API](https://discord.com/developers/docs/intro "Discord API") based off DSharpPlus.<br/>
+## What is DisCatSharp
+[DisCatSharp](https://github.com/Aiko-IT-Systems/DisCatSharp) (DCS) is an .NET wrapper for the [Discord API](https://discord.dev "Discord API Docs"), originally based off DSharpPlus.<br/>
 The library has been rewritten to fit quality and API standards. Furthermore this lib includes many new features of Discord and is pretty fast with keeping up with Discords API.
 
 ## Why DisCatSharp?
@@ -22,7 +22,7 @@ Then this is the right place for you!
 
 ## Getting Started
 New users probably want to take a look into the [articles](xref:preamble) for quick start guides, tutorials, and examples of use.<br/>
-Once you've gotten through the articles, head over to the [API Documentation](/api/index.html) for all classes and methods provided by this library.
+Once you've gotten through the articles, head over to the [API Documentation](xref:api_index) for all classes and methods provided by this library.
 
 ## Source and Contributors
 DisCatSharp is licensed under MIT License, as detailed in the [license](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md) found in the repository.<br/>
