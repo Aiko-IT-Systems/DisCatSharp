@@ -369,6 +369,8 @@ items:
 - uid: DisCatSharp.Enums
   name: DisCatSharp.Enums
   items:
+  - uid: DisCatSharp.Enums.ApiChannel
+    name: ApiChannel
   - uid: DisCatSharp.Enums.ApplicationCommandOptionType
     name: ApplicationCommandOptionType
   - uid: DisCatSharp.Enums.ApplicationCommandPermissionType
