@@ -43,6 +43,11 @@ public static class Endpoints
 	public const string PTB_URI = "https://ptb.discord.com/api/v";
 
 	/// <summary>
+	/// The base discord ptb api uri.
+	/// </summary>
+	public const string STAGING_URI = "https://staging.discord.co/api/v";
+
+	/// <summary>
 	/// The oauth2 endpoint.
 	/// </summary>
 	public const string OAUTH2 = "/oauth2";
