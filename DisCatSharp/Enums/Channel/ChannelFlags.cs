@@ -34,7 +34,9 @@ public enum ChannelFlags : int
 	/// Indicates that this channel is removed from the guilds home feed / from highlights.
 	/// Applicable for <see cref="ChannelType"/> Text, Forum and News.
 	/// </summary>
+	[DiscordDeprecated]
 	RemovedFromHome = 1 << 0,
+	[DiscordDeprecated]
 	RemovedFromHighlights = RemovedFromHome,
 
 	/// <summary>
@@ -47,6 +49,7 @@ public enum ChannelFlags : int
 	/// Indicates that this channel is removed from the active now within the guilds home feed.
 	/// Applicable for <see cref="ChannelType"/> Text, News, Thread, Forum, Stage and Voice.
 	/// </summary>
+	[DiscordDeprecated]
 	RemovedFromActiveNow = 1 << 2,
 
 	/// <summary>
@@ -100,5 +103,11 @@ public enum ChannelFlags : int
 	/// Indicates that this channel is part of a role subscription template preview.
 	/// </summary>
 	[DiscordInExperiment]
-	IsRoleSubscriptionTemplatePreviewChannel = 1<<13
+	IsRoleSubscriptionTemplatePreviewChannel = 1<<13,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	[DiscordInExperiment]
+	IsBroadcasting = 1<<14
 }
