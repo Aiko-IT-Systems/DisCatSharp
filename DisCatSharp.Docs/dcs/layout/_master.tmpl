@@ -4,6 +4,7 @@
 {{!include(favicon.ico)}}
 {{!include(.htaccess)}}
 {{!include(logo.png)}}
+{{!include(logo.svg)}}
 {{!include(logo_black.png)}}
 {{!include(android-icon-36x36.png)}}
 {{!include(android-icon-48x48.png)}}
@@ -58,7 +59,7 @@
     <meta name="og:image" content="{{_ogImage}}">
     <meta name="og:image:alt" content="{{#title}}{{title}} {{/title}}Logo">
     <meta name="og:image:type" content="image/png">
-    {{/_ogImage}}    
+    {{/_ogImage}}
     {{#_appName}}<meta name="og:site_name" content="{{_appName}}">{{/_appName}}
     {{#_lang}}<meta property="og:locale" content="{{_lang}}">{{/_lang}}
     {{#_fbPageId}}<meta property="fb:pages" content="{{_fbPageId}}">{{/_fbPageId}}
@@ -134,11 +135,7 @@
     <header class="bg-body border-bottom">
         <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
             <div class="container-xxl flex-nowrap">
-                <a class="navbar-brand" href="{{_appLogoUrl}}{{^_appLogoUrl}}{{_rel}}index.html{{/_appLogoUrl}}">
-                    <img id="logo" class="svg"
-                        src="{{_rel}}{{{_appLogoPath}}}{{^_appLogoPath}}logo.svg{{/_appLogoPath}}" alt="{{_appName}}">
-                    {{_appName}}
-                </a>
+                <a class="navbar-brand" href="{{_appLogoUrl}}{{^_appLogoUrl}}{{_rel}}index.html{{/_appLogoUrl}}"><img id="logo" class="svg" src="{{_rel}}{{{_appLogoPath}}}{{^_appLogoPath}}logo.svg{{/_appLogoPath}}" alt="{{_appName}}">&nbsp;&nbsp;{{_appName}}</a>
                 <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false"
                     aria-label="Toggle navigation">

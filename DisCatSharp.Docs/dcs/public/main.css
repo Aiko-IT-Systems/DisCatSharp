@@ -5,3 +5,8 @@ footer {
 .featherlight-content {
 	background-color: var(--bs-body-bg) !important;
 }
+
+#logo {
+	width: 40px !important;
+	height: 40px !important;
+}
