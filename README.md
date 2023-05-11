@@ -119,6 +119,7 @@ Or write us an email at [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
 ----
 
 ## Sponsors [![Sponsors](https://img.shields.io/github/sponsors/Aiko-IT-Systems?label=&style=flat-square&logo=github)](https://github.com/sponsors/Aiko-IT-Systems) / [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=&style=flat-square&logo=github)](https://github.com/sponsors/Lulalaby)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FAiko-IT-Systems%2FDisCatSharp.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FAiko-IT-Systems%2FDisCatSharp?ref=badge_shield)
 
 - [Deividas Kazakevicius](https://github.com/DeividasKaza)
 - [Will](https://github.com/villChurch)
@@ -143,3 +144,7 @@ Big thanks goes to the following people who helped us without being part of the 
 ## Special Thanks
 
 The special thanks goes to Nagisa. Make sure to check out her [Instagram](https://www.instagram.com/nagisaarts_/) ♥️♥️
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FAiko-IT-Systems%2FDisCatSharp.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FAiko-IT-Systems%2FDisCatSharp?ref=badge_large)
