@@ -1,6 +1,7 @@
 ---
 uid: beyond_basics_workarounds
 title: Workarounds
+author: DisCatSharp Team
 ---
 
 # Workarounds

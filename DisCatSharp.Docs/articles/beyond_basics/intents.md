@@ -1,14 +1,15 @@
 ---
 uid: beyond_basics_intents
 title: Intents
+author: DisCatSharp Team
 ---
 
-## Intents
+# Intents
 Intents were added to Discord to help the service not have to push so many events to the bots that were not using them. If you are going to be needing to subscribe to any type of event, they are going to have to be defined **BOTH** within the
 [Discord Application under the Bot Page](https://discord.com/developers/applications) on Discords Site and also within the @DisCatSharp.DiscordConfiguration.
 
 
-### Discord Application
+## Discord Application
 On the [Discord Application under the Bot Page](https://discord.com/developers/applications) you will have to specify if your bot requires Privileged Intents. We recommend having these all enabled at first to ensure the most stability when building your first bot, otherwise you may run into issues when retrieving entities from the library's cache.
 
 ![Bot Page](/images/Intents.png)
@@ -20,7 +21,7 @@ On the [Discord Application under the Bot Page](https://discord.com/developers/a
  > Please read this [blog post](https://support.discord.com/hc/en-us/articles/360040720412) for more information and how to apply.
  > Please read [this](https://support-dev.discord.com/hc/en-us/articles/4404772028055) and [this](https://support.discord.com/hc/en-us/articles/4410940809111) blog post for information about the upcoming message intent in April 2022.
 
-### Discord Configuration
+## Discord Configuration
 Within your `DiscordConfiguration` you will have to specify all the intents you will need. Here is a list of all the
 [Intents](xref:DisCatSharp.Enums.DiscordIntents) DisCatSharp Supports. By default, the configuration will use `DiscordIntents.AllUnprivileged` as the default value. Like above however, we recommend having all intents enabled at first, so you should specify `DiscordIntents.All` in your configuration which will include the privileged intents you enabled in your application:
 
