@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -105,6 +106,12 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 	[JsonProperty("dm_permission", NullValueHandling = NullValueHandling.Ignore)]
 	public bool? DmPermission { get; internal set; }
 
+	/*/// <summary>
+	/// Gets where the application command can be used.
+	/// </summary>
+	[JsonProperty("contexts", NullValueHandling = NullValueHandling.Ignore), DiscordUnreleased]
+	internal ApplicationCommandContexts Contexts { get; set; }*/
+
 	/// <summary>
 	/// Gets whether the command is marked as NSFW.
 	/// </summary>
@@ -116,7 +123,6 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 	/// </summary>
 	[JsonProperty("version")]
 	public ulong Version { get; internal set; }
-
 
 	/// <summary>
 	/// Gets the name localizations.
@@ -136,14 +142,15 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 	/// <param name="defaultMemberPermissions">The default member permissions.</param>
 	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is NSFW.</param>
+	// /// <param name="contexts">Where the command can be used.</param>
 	public DiscordApplicationCommand(
 		string name, string description,
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		IEnumerable<DiscordApplicationCommandOption>? options = null,
 #pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		ApplicationCommandType type = ApplicationCommandType.ChatInput,
-		DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null,
-		Permissions? defaultMemberPermissions = null, bool? dmPermission = null, bool isNsfw = false)
+		DiscordApplicationCommandLocalization? nameLocalizations = null, DiscordApplicationCommandLocalization? descriptionLocalizations = null,
+		Permissions? defaultMemberPermissions = null, bool? dmPermission = null, bool isNsfw = false)//, ApplicationCommandContexts contexts = null)
 	{
 		if (type is ApplicationCommandType.ChatInput)
 		{
@@ -179,6 +186,7 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 		this.DefaultMemberPermissions = defaultMemberPermissions;
 		this.DmPermission = dmPermission;
 		this.IsNsfw = isNsfw;
+		//this.Contexts = contexts;
 	}
 
 	/// <summary>
