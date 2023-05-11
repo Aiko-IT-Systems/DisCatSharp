@@ -4,13 +4,13 @@ title: Native Libraries
 author: DisCatSharp Team
 ---
 
-#### Downloads
+# Downloads
 Operating System|Download
 | -------------- | -------------------------------------------------- |
 | 64-bit Windows | [Click Here](/natives/vnext_natives_win32_x64.zip) |
 | 32-bit Windows | [Click Here](/natives/vnext_natives_win32_x86.zip) |
 
-#### Licenses
+# Licenses
 Library|License
 | --------- | --------------------------------------------------------- |
 | Opus      | https://opus-codec.org/license/                           |

@@ -1,13 +1,14 @@
 ---
 uid: beyond_basics_logging_di
 title: Dependency Injection Logging
+author: DisCatSharp Team
 ---
 
-## Default Logger
+# Default Logger
 
 By default, when using DI, you will be using Microsoft's implementation of `ILogger` and `ILoggerFactory`. This requires no additional setup.
 
-## Third Party Logger
+# Third Party Logger
 
 If you wish to use a different logging service/implementation you simply install the appropriate nuget package, or create your own which have implementations for `ILoggerFactory` and `ILogger`.
 

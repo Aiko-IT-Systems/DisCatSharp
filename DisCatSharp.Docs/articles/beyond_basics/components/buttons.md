@@ -1,9 +1,11 @@
 ---
 uid: advanced_topics_buttons
 title: Buttons
+author: DisCatSharp Team
 ---
 
 # Introduction
+
 Buttons are a feature in Discord based on the interaction framework appended to the bottom of a message which come in several colors.
 You will want to familarize yourself with the [message builder](xref:beyond_basics_messagebuilder) as it and similar builder objects will be used throughout this article.
 
@@ -47,7 +49,8 @@ The emoji of a button is a [partial emoji object](https://discord.dev/interactio
 
 The disabled field of a button is rather self explanatory. If this is set to true, the user will see a greyed out button which they cannot interact with.
 
-# Adding buttons
+## Adding buttons
+
 > [!NOTE]
 > This article will use underscores in button ids for consistency and styling, but spaces are also usable.
 
@@ -121,7 +124,7 @@ var myButton = new DiscordButtonComponent
 And you're done! Simply add that to a builder, and when you send, you'll get a message that has a button with a little Pikachu enjoying a lolipop. Adorable. ![PikaLolipop](/images/advanced_topics_buttons_02.png)
 
 
-# Responding to button presses
+## Responding to button presses
 
 When any button is pressed, it will fire the [ComponentInteractionCreated](xref:DisCatSharp.DiscordClient#DisCatSharp_DiscordClient_ComponentInteractionCreated) event.
 
@@ -153,6 +156,7 @@ This will update the message, and without the infamous <sub>(edited)</sub> next 
 
 
 # Interactivity
+
 Along with the typical `WaitForMessageAsync` and `WaitForReactionAsync` methods provided by interactivity, there are also button implementations as well.
 
 More information about how interactivity works can be found in [the interactivity article](xref:modules_interactivity)

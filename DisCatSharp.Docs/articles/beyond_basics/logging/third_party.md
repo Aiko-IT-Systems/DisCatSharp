@@ -1,6 +1,7 @@
 ---
 uid: beyond_basics_logging_third_party
 title: Third Party Logging
+author: DisCatSharp Team
 ---
 
 # Using a Third Party Logger
@@ -11,7 +12,7 @@ Thankfully, DisCatSharp allows you to use any logging library which has an imple
 This will simply be a brief demo, so we won't go into the configuration of Serilog.
 You'll want to head on over to their [wiki page](https://github.com/serilog/serilog/wiki/Configuration-Basics) to learn about that!
 
-We'll need to install both the `Serilog` and `Serilog.Extensions.Logging` packages from NuGet, along with at least one of the many available 
+We'll need to install both the `Serilog` and `Serilog.Extensions.Logging` packages from NuGet, along with at least one of the many available
 [sinks](https://github.com/serilog/serilog/wiki/Provided-Sinks). Our example here will only use the `Serilog.Sinks.Console` sink.
 
 <br/>
@@ -19,7 +20,7 @@ Start off by creating a new `LoggerConfiguration` instance, slap `.WriteTo.Conso
 ```cs
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
-    .CreateLogger();	
+    .CreateLogger();
 ```
 This will make a new Serilog logger instance which will write to the console sink.
 
