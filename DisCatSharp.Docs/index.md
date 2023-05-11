@@ -4,7 +4,7 @@ title: DisCatSharp
 author: DisCatSharp Team
 ---
 
-# DisCatSharp ![Stable](https://img.shields.io/nuget/v/DisCatSharp?color=1F8B4C&label=Stable&style=flat-square) ![Nightly](https://img.shields.io/nuget/vpre/DisCatSharp?color=AD1457&label=Nightly&style=flat-square)
+# DisCatSharp ![Stable](https://img.shields.io/nuget/v/DisCatSharp?color=1F8B4C&label=Stable&style=flat-square&logo=Nuget) ![Nightly](https://img.shields.io/nuget/vpre/DisCatSharp?color=AD1457&label=Nightly&style=flat-square&logo=Nuget)
 
 
 ## What is DisCatSharp
