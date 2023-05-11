@@ -13,8 +13,8 @@ README.md @Aiko-IT-Systems/aitsys-leader
 
 /.github/ @Lulalaby @NyuwBot @Aiko-IT-Systems/aitsys-leader
 
-/DisCatSharp.Configuration/ @JBraunsmaJr
-/DisCatSharp.Configuration.Tests/ @JBraunsmaJr
-/DisCatSharp.Hosting/ @JBraunsmaJr
-/DisCatSharp.Hosting.DependencyInjection/ @JBraunsmaJr
-/DisCatSharp.Tests/ @JBraunsmaJr
+#/DisCatSharp.Configuration/ @JBraunsmaJr
+#/DisCatSharp.Configuration.Tests/ @JBraunsmaJr
+#/DisCatSharp.Hosting/ @JBraunsmaJr
+#/DisCatSharp.Hosting.DependencyInjection/ @JBraunsmaJr
+#/DisCatSharp.Tests/ @JBraunsmaJr
