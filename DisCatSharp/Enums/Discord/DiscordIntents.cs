@@ -184,7 +184,7 @@ public enum DiscordIntents
 
 	/// <summary>
 	/// Whether to include the content of guild messages.
-	/// See https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Privileged-Intent-for-Verified-Bots for more information.
+	/// See https://support-dev.discord.com/hc/en-us/articles/4404772028055 for more information.
 	/// </summary>
 	MessageContent = 1 << 15,
 
@@ -194,6 +194,8 @@ public enum DiscordIntents
 	/// <para><see cref="DiscordClient.GuildScheduledEventUserAdded"/> and <see cref="DiscordClient.GuildScheduledEventUserRemoved"/>.</para>
 	/// </summary>
 	GuildScheduledEvents = 1 << 16,
+
+	// TODO: What is intent 1<<17 - 1<<19?
 
 	/// <summary>
 	/// Whether to include automod configuration events.
@@ -209,8 +211,7 @@ public enum DiscordIntents
 
 	/// <summary>
 	/// Includes all unprivileged intents.
-	/// <para>These are all intents excluding <see cref="GuildMembers"/> and <see cref="GuildPresences"/>.</para>
-	/// <para>The <see cref="GuildMessages"/> will be excluded as of April 2022.</para>
+	/// <para>These are all intents excluding <see cref="GuildMembers"/>, <see cref="GuildPresences"/> and <see cref="MessageContent"/>.</para>
 	/// </summary>
 	AllUnprivileged = Guilds | GuildModeration | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates | GuildMessages |
 		GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping | GuildScheduledEvents | AutoModerationConfiguration | AutoModerationExecution,
@@ -218,14 +219,13 @@ public enum DiscordIntents
 	/// <summary>
 	/// Includes all intents.
 	/// <para>The <see cref="GuildMembers"/>, <see cref="GuildPresences"/> and <see cref="MessageContent"/> intents are privileged, and must be enabled on the bot's developer page.</para>
-	/// <para>The <see cref="MessageContent"/> exist only in v10.</para>
 	/// </summary>
 	All = AllUnprivileged | GuildMembers | GuildPresences | MessageContent,
 
 	/// <summary>
 	/// Includes all intents.
 	/// <para>The <see cref="GuildMembers"/> and <see cref="GuildPresences"/> intents are privileged, and must be enabled on the bot's developer page.</para>
-	/// <para>The <see cref="MessageContent"/> exist only in v10 and is removed here.</para>
+	/// <para>The <see cref="MessageContent"/> exist only in v10 and is not included here.</para>
 	/// </summary>
 	AllV9Less = AllUnprivileged | GuildMembers | GuildPresences
 }
