@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 namespace DisCatSharp.CommandsNext.Attributes;
 
 /// <summary>
-/// Defines that usage of this command is restricted to boosters.
+/// Defines that usage of this command is restricted to DisCatSharp Developers.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 public sealed class RequireDisCatSharpDeveloperAttribute : CheckBaseAttribute
