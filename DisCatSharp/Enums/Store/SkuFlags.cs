@@ -20,11 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+
 namespace DisCatSharp.Enums;
+
+/// <summary>
+/// Represents a sku flag extensions.
+/// </summary>
+public static class SkuFlagExtensions
+{
+	/// <summary>
+	/// Calculates whether these sku flags contain a specific flag.
+	/// </summary>
+	/// <param name="baseFlags">The existing flags.</param>
+	/// <param name="flag">The flags to search for.</param>
+	/// <returns></returns>
+	public static bool HasSkuFlag(this SkuFlags baseFlags, SkuFlags flag) => (baseFlags & flag) == flag;
+}
 
 /// <summary>
 /// Represents sku flags.
 /// </summary>
+[Flags]
 public enum SkuFlags : long
 {
 
