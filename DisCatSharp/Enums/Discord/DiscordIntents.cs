@@ -101,8 +101,6 @@ public enum DiscordIntents
 	/// <para>These include <see cref="DiscordClient.GuildBanAdded"/>, <see cref="DiscordClient.GuildBanRemoved"/> and <see cref="DiscordClient.GuildAuditLogEntryCreated"/>.</para>
 	/// </summary>
 	GuildModeration = 1 << 2,
-	[Obsolete("Renamed to GuildModeration")]
-	GuildBans = GuildModeration,
 
 	/// <summary>
 	/// Whether to include guild emoji and sticker events.
@@ -214,7 +212,7 @@ public enum DiscordIntents
 	/// <para>These are all intents excluding <see cref="GuildMembers"/> and <see cref="GuildPresences"/>.</para>
 	/// <para>The <see cref="GuildMessages"/> will be excluded as of April 2022.</para>
 	/// </summary>
-	AllUnprivileged = Guilds | GuildBans | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates | GuildMessages |
+	AllUnprivileged = Guilds | GuildModeration | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates | GuildMessages |
 		GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping | GuildScheduledEvents | AutoModerationConfiguration | AutoModerationExecution,
 
 	/// <summary>
