@@ -99,7 +99,7 @@ public sealed class ImageTool : IDisposable
 		this.SourceStream.Seek(0, SeekOrigin.Begin);
 
 		this._ifcache = 0;
-		this._b64Cache = null;
+		this._b64Cache = null!;
 	}
 
 	/// <summary>
@@ -191,7 +191,7 @@ public sealed class ImageTool : IDisposable
 		if (stream.HasValue)
 		{
 			var val = stream.Value;
-			return val != null ? Base64FromStream(val) : null;
+			return val != null ? Base64FromStream(val) : null!;
 		}
 
 		return Optional.None;
