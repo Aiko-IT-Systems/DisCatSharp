@@ -20,14 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+
 using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.Enums;
 
 /// <summary>
+/// Represents a channel flag extensions.
+/// </summary>
+public static class ChannelFlagExtensions
+{
+	/// <summary>
+	/// Calculates whether these channeö flags contain a specific flag.
+	/// </summary>
+	/// <param name="baseFlags">The existing flags.</param>
+	/// <param name="flag">The flags to search for.</param>
+	/// <returns></returns>
+	public static bool HasChannelFlag(this ChannelFlags baseFlags, ChannelFlags flag) => (baseFlags & flag) == flag;
+}
+
+/// <summary>
 /// Represents a channel's flags.
 /// </summary>
+[Flags]
 public enum ChannelFlags : int
 {
 	/// <summary>

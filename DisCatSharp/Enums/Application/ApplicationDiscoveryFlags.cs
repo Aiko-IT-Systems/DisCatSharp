@@ -20,8 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+
 namespace DisCatSharp.Enums;
 
+/// <summary>
+/// Represents a application discovery flag extensions.
+/// </summary>
+public static class ApplicationDiscoveryFlagExtensions
+{
+	/// <summary>
+	/// Calculates whether these application discovery flags contain a specific flag.
+	/// </summary>
+	/// <param name="baseFlags">The existing flags.</param>
+	/// <param name="flag">The flags to search for.</param>
+	/// <returns></returns>
+	public static bool HasApplicationDiscoveryFlag(this ApplicationDiscoveryFlags baseFlags, ApplicationDiscoveryFlags flag) => (baseFlags & flag) == flag;
+}
+
+[Flags]
 public enum ApplicationDiscoveryFlags : long
 {
 	/// <summary>
