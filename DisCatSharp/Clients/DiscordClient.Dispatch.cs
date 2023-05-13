@@ -656,7 +656,9 @@ public sealed partial class DiscordClient
 				await this.OnWebhooksUpdateAsync(this.GuildsInternal[gid].GetChannel(cid), this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
 
-			case "guild_join_request_update": // Deprecated
+			case "guild_join_request_update":
+			case "guild_join_request_create":
+			case "guild_join_request_delete": // Deprecated
 				break;
 
 			default:
