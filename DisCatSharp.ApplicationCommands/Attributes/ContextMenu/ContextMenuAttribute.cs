@@ -50,7 +50,7 @@ public sealed class ContextMenuAttribute : Attribute
 	/// <summary>
 	/// Gets whether the command can be used in direct messages.
 	/// </summary>
-	internal bool? DmPermission { get; set; }
+	public bool? DmPermission { get; set; }
 
 	/// <summary>
 	/// Gets whether this command is marked as NSFW
@@ -92,6 +92,40 @@ public sealed class ContextMenuAttribute : Attribute
 		this.Name = name;
 		this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
 		this.DmPermission = null;
+		this.IsNsfw = isNsfw;
+	}
+
+
+	/// <summary>
+	/// Marks this method as a slash command
+	/// </summary>
+	/// <param name="type">The type of the context menu.</param>
+	/// <param name="name">The name of the context menu.</param>
+	/// <param name="dmPermission">The dm permission.</param>
+	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
+	public ContextMenuAttribute(ApplicationCommandType type, string name, bool dmPermission, bool isNsfw = false)
+	{
+		this.Type = type;
+		this.Name = name;
+		this.DefaultMemberPermissions = null;
+		this.DmPermission = dmPermission;
+		this.IsNsfw = isNsfw;
+	}
+
+	/// <summary>
+	/// Marks this method as a slash command
+	/// </summary>
+	/// <param name="type">The type of the context menu.</param>
+	/// <param name="name">The name of the context menu.</param>
+	/// <param name="defaultMemberPermissions">The default member permissions.</param>
+	/// <param name="dmPermission">The dm permission.</param>
+	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
+	public ContextMenuAttribute(ApplicationCommandType type, string name, long defaultMemberPermissions, bool dmPermission, bool isNsfw = false)
+	{
+		this.Type = type;
+		this.Name = name;
+		this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
+		this.DmPermission = dmPermission;
 		this.IsNsfw = isNsfw;
 	}
 }
