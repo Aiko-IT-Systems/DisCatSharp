@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021-2023 AITSYS
 //
@@ -28,13 +28,13 @@ using DisCatSharp.ApplicationCommands.Context;
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
-/// Defines that this application command is restricted to the owner of the bot.
+/// Defines that this application command is restricted to DisCatSharp Developers.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 public sealed class ApplicationCommandRequireDisCatSharpDeveloperAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
-	/// Defines that this application command is restricted to the owner of the bot.
+	/// Defines that this application command is restricted to DisCatSharp Developers.
 	/// </summary>
 	public ApplicationCommandRequireDisCatSharpDeveloperAttribute()
 	{ }

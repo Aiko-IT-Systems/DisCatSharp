@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../Version.targets" />
-  <Import Project="../DisCatSharp.targets" />
-  <Import Project="../Package.targets" />
-  <Import Project="../NuGet.targets" />
-  <Import Project="../Library.targets" />
+  <Import Project="../DisCatSharp.Targets/Version.targets" />
+  <Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
+  <Import Project="../DisCatSharp.Targets/Package.targets" />
+  <Import Project="../DisCatSharp.Targets/NuGet.targets" />
+  <Import Project="../DisCatSharp.Targets/Library.targets" />
 
   <PropertyGroup>
     <AssemblyName>DisCatSharp.VoiceNext</AssemblyName>
@@ -22,15 +22,15 @@ Easy made audio player for discord bots.
 
 Documentation: https://docs.discatsharp.tech/articles/modules/audio/voicenext/prerequisites.html
 	</Description>
-	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Voice,Audio Player</PackageTags>
+	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Voice,Audio Player</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="5.2.0">
+    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="5.4.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="DisCatSharp.Attributes" Version="10.3.1-fixed-001" />
+    <PackageReference Include="DisCatSharp.Attributes" Version="10.4.0" />
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageReference Include="System.Threading.Channels" Version="7.0.0" />

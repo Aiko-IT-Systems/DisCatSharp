@@ -1,6 +1,7 @@
 ---
 uid: api_discatsharp_configuration_index
 title: DisCatSharp.Configuration API Reference
+author: DisCatSharp Team
 ---
 
 # API Reference

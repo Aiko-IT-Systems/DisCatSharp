@@ -38,7 +38,7 @@ public readonly struct RepliedUserMention : IMention
 {
 	//This is pointless because new RepliedUserMention() will work, but it is here for consistency with the other mentionables.
 	/// <summary>
-	/// Mention the user being replied to.  Alias to <see cref="RepliedUserMention()"/> constructor.
+	/// Mention the user being replied to. Alias to <seealso cref="RepliedUserMention"/> constructor.
 	/// </summary>
 	public static readonly RepliedUserMention All = new();
 }
@@ -50,7 +50,7 @@ public readonly struct EveryoneMention : IMention
 {
 	//This is pointless because new EveryoneMention() will work, but it is here for consistency with the other mentionables.
 	/// <summary>
-	/// Allow the mentioning of @everyone and @here. Alias to <see cref="EveryoneMention()"/> constructor.
+	/// Allow the mentioning of @everyone and @here. Alias to <see cref="EveryoneMention"/> constructor.
 	/// </summary>
 	public static readonly EveryoneMention All = new();
 }
@@ -61,7 +61,7 @@ public readonly struct EveryoneMention : IMention
 public readonly struct UserMention : IMention
 {
 	/// <summary>
-	/// Allow mentioning of all users. Alias to <see cref="UserMention()"/> constructor.
+	/// Allow mentioning of all users. Alias to <see cref="UserMention"/> constructor.
 	/// </summary>
 	public static readonly UserMention All = new();
 
@@ -91,7 +91,7 @@ public readonly struct UserMention : IMention
 public readonly struct RoleMention : IMention
 {
 	/// <summary>
-	/// Allow the mentioning of all roles.  Alias to <see cref="RoleMention()"/> constructor.
+	/// Allow the mentioning of all roles.  Alias to <see cref="RoleMention"/> constructor.
 	/// </summary>
 	public static readonly RoleMention All = new();
 

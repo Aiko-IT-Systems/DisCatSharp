@@ -1,228 +1,241 @@
 {
-	"metadata":[
+	"metadata": [
 		{
-			"src":[
+			"src": [
 				{
-					"src":"../DisCatSharp/",
-					"files":[
+					"src": "../DisCatSharp/",
+					"files": [
 						"**.csproj"
 					],
-					"exclude":[
+					"exclude": [
 						"**/obj/**",
 						"**/bin/**"
 					]
 				}
 			],
-			"dest":"api/DisCatSharp",
-			"filter":"filter_config.yml",
-			"disableDefaultFilter":false
+			"dest": "api/DisCatSharp",
+			"filter": "filter_config.yml",
+			"disableDefaultFilter": false,
+			"memberLayout": "samePage"
 		},
 		{
-			"src":[
+			"src": [
 				{
-					"src":"../DisCatSharp.Interactivity/",
-					"files":[
+					"src": "../DisCatSharp.Interactivity/",
+					"files": [
 						"**.csproj"
 					],
-					"exclude":[
+					"exclude": [
 						"**/obj/**",
 						"**/bin/**"
 					]
 				}
 			],
-			"dest":"api/DisCatSharp.Interactivity",
-			"filter":"filter_config.yml",
-			"disableDefaultFilter":false
+			"dest": "api/DisCatSharp.Interactivity",
+			"filter": "filter_config.yml",
+			"disableDefaultFilter": false,
+			"memberLayout": "samePage"
 		},
 		{
-			"src":[
+			"src": [
 				{
-					"src":"../DisCatSharp.Common/",
-					"files":[
+					"src": "../DisCatSharp.Common/",
+					"files": [
 						"**.csproj"
 					],
-					"exclude":[
+					"exclude": [
 						"**/obj/**",
 						"**/bin/**"
 					]
 				}
 			],
-			"dest":"api/DisCatSharp.Common",
-			"filter":"filter_config.yml",
-			"disableDefaultFilter":false
+			"dest": "api/DisCatSharp.Common",
+			"filter": "filter_config.yml",
+			"disableDefaultFilter": false,
+			"memberLayout": "samePage"
 		},
 		{
-			"src":[
+			"src": [
 				{
-					"src":"../DisCatSharp.Hosting/",
-					"files":[
+					"src": "../DisCatSharp.Hosting/",
+					"files": [
 						"**.csproj"
 					],
-					"exclude":[
+					"exclude": [
 						"**/obj/**",
 						"**/bin/**"
 					]
 				}
 			],
-			"dest":"api/DisCatSharp.Hosting",
-			"filter":"filter_config.yml",
-			"disableDefaultFilter":false
+			"dest": "api/DisCatSharp.Hosting",
+			"filter": "filter_config.yml",
+			"disableDefaultFilter": false,
+			"memberLayout": "samePage"
 		},
 		{
-			"src":[
+			"src": [
 				{
-					"src":"../DisCatSharp.Configuration/",
-					"files":[
+					"src": "../DisCatSharp.Configuration/",
+					"files": [
 						"**.csproj"
 					],
-					"exclude":[
+					"exclude": [
 						"**/obj/**",
 						"**/bin/**"
 					]
 				}
 			],
-			"dest":"api/DisCatSharp.Configuration",
-			"filter":"filter_config.yml",
-			"disableDefaultFilter":false
+			"dest": "api/DisCatSharp.Configuration",
+			"filter": "filter_config.yml",
+			"disableDefaultFilter": false,
+			"memberLayout": "samePage"
 		},
 		{
-			"src":[
+			"src": [
 				{
-					"src":"../DisCatSharp.ApplicationCommands/",
-					"files":[
+					"src": "../DisCatSharp.ApplicationCommands/",
+					"files": [
 						"**.csproj"
 					],
-					"exclude":[
+					"exclude": [
 						"**/obj/**",
 						"**/bin/**"
 					]
 				}
 			],
-			"dest":"api/DisCatSharp.ApplicationCommands",
-			"filter":"filter_config.yml",
-			"disableDefaultFilter":false
+			"dest": "api/DisCatSharp.ApplicationCommands",
+			"filter": "filter_config.yml",
+			"disableDefaultFilter": false,
+			"memberLayout": "samePage"
 		},
 		{
-			"src":[
+			"src": [
 				{
-					"src":"../DisCatSharp.CommandsNext/",
-					"files":[
+					"src": "../DisCatSharp.CommandsNext/",
+					"files": [
 						"**.csproj"
 					],
-					"exclude":[
+					"exclude": [
 						"**/obj/**",
 						"**/bin/**"
 					]
 				}
 			],
-			"dest":"api/DisCatSharp.CommandsNext",
-			"filter":"filter_config.yml",
-			"disableDefaultFilter":false
+			"dest": "api/DisCatSharp.CommandsNext",
+			"filter": "filter_config.yml",
+			"disableDefaultFilter": false,
+			"memberLayout": "samePage"
 		},
 		{
-			"src":[
+			"src": [
 				{
-					"src":"../DisCatSharp.Hosting.DependencyInjection/",
-					"files":[
+					"src": "../DisCatSharp.Hosting.DependencyInjection/",
+					"files": [
 						"**.csproj"
 					],
-					"exclude":[
+					"exclude": [
 						"**/obj/**",
 						"**/bin/**"
 					]
 				}
 			],
-			"dest":"api/DisCatSharp.Hosting.DependencyInjection",
-			"filter":"filter_config.yml",
-			"disableDefaultFilter":false
+			"dest": "api/DisCatSharp.Hosting.DependencyInjection",
+			"filter": "filter_config.yml",
+			"disableDefaultFilter": false,
+			"memberLayout": "samePage"
 		},
 		{
-			"src":[
+			"src": [
 				{
-					"src":"../DisCatSharp.Lavalink/",
-					"files":[
+					"src": "../DisCatSharp.Lavalink/",
+					"files": [
 						"**.csproj"
 					],
-					"exclude":[
+					"exclude": [
 						"**/obj/**",
 						"**/bin/**"
 					]
 				}
 			],
-			"dest":"api/DisCatSharp.Lavalink",
-			"filter":"filter_config.yml",
-			"disableDefaultFilter":false
+			"dest": "api/DisCatSharp.Lavalink",
+			"filter": "filter_config.yml",
+			"disableDefaultFilter": false,
+			"memberLayout": "samePage"
 		},
 		{
-			"src":[
+			"src": [
 				{
-					"src":"../DisCatSharp.VoiceNext/",
-					"files":[
+					"src": "../DisCatSharp.VoiceNext/",
+					"files": [
 						"**.csproj"
 					],
-					"exclude":[
+					"exclude": [
 						"**/obj/**",
 						"**/bin/**"
 					]
 				}
 			],
-			"dest":"api/DisCatSharp.VoiceNext",
-			"filter":"filter_config.yml",
-			"disableDefaultFilter":false
+			"dest": "api/DisCatSharp.VoiceNext",
+			"filter": "filter_config.yml",
+			"disableDefaultFilter": false,
+			"memberLayout": "samePage"
 		},
 		{
-			"src":[
+			"src": [
 				{
-					"src":"../DisCatSharp.Attributes/",
-					"files":[
+					"src": "../DisCatSharp.Attributes/",
+					"files": [
 						"**.csproj"
 					],
-					"exclude":[
+					"exclude": [
 						"**/obj/**",
 						"**/bin/**"
 					]
 				}
 			],
-			"dest":"api/DisCatSharp.Attributes",
-			"filter":"filter_config.yml",
-			"disableDefaultFilter":false
+			"dest": "api/DisCatSharp.Attributes",
+			"filter": "filter_config.yml",
+			"disableDefaultFilter": false,
+			"memberLayout": "samePage"
 		},
 		{
-			"src":[
+			"src": [
 				{
-					"src":"../DisCatSharp.Experimental/",
-					"files":[
+					"src": "../DisCatSharp.Experimental/",
+					"files": [
 						"**.csproj"
 					],
-					"exclude":[
+					"exclude": [
 						"**/obj/**",
 						"**/bin/**"
 					]
 				}
 			],
-			"dest":"api/DisCatSharp.Experimental",
-			"filter":"filter_config.yml",
-			"disableDefaultFilter":false
+			"dest": "api/DisCatSharp.Experimental",
+			"filter": "filter_config.yml",
+			"disableDefaultFilter": false,
+			"memberLayout": "samePage"
 		}
 	],
-	"build":{
-		"xrefService":[
+	"build": {
+		"xrefService": [
 			"https://xref.docs.microsoft.com/query?uid={uid}"
 		],
-		"content":[
+		"content": [
 			{
-				"files":[
+				"files": [
 					"api/**/**.yml",
 					"api/**/**.md",
 					"api/**.yml",
 					"api/**.md"
 				],
-				"exclude":[
-					"libdev/**"
+				"exclude": [
+					"libdev/**",
+					"**/node_modules/**"
 				]
 			},
 			{
-				"files":[
+				"files": [
 					"**.md",
 					"toc.yml",
 					"faq/**.yml",
@@ -236,69 +249,85 @@
 					"vs/**.yml",
 					"vs/**.md"
 				],
-				"exclude":[
+				"exclude": [
 					"**/bin/**",
 					"**/obj/**",
 					"_site/**",
-					"dcs/**"
+					"dcs/**",
+					"**/node_modules/**"
 				]
 			}
 		],
-		"resource":[
+		"resource": [
 			{
-				"files":[
+				"files": [
 					"images/**",
 					"natives/**.zip",
 					"./.htaccess"
 				],
-				"exclude":[
+				"exclude": [
 					"**/bin/**",
 					"**/obj/**",
 					"_site/**",
-					"images/_**"
+					"images/_**",
+					"**/node_modules/**"
 				]
 			}
 		],
-		"overwrite":[],
-		"dest":"_site",
-		"globalMetadata":{
+		"overwrite": [],
+		"dest": "_site",
+		"globalMetadata": {
 			"_appTitle": "DisCatSharp Docs",
 			"_appName": "DisCatSharp",
-			"_appFooter": "<strong>Made with ♥ by AITSYS</strong>",
-			"_copyrightFooter": "© Aiko IT Systems. All rights reserved.",
-			"_appLogoPath": "dcs-logo-winter.gif",
-			"_enableSearch":true,
+			"_appFooter": "<strong>Made with ❤️ by AITSYS</strong>",
+			"_appLogoPath": "logo.svg",
+			"_enableSearch": true,
+			"_disableNextArticle": false,
 			"_disableSideFilter": false,
-			"_enableNewTab":true,
+			"_disableTocFilter": false,
+			"_disableNewTab": false,
 			"_disableContribution": false,
 			"_disableBreadcrumb": false,
-			"_gitUrlPattern":"git",
-			"_gitContribute":{
-				"repo":"https://github.com/Aiko-IT-Systems/DisCatSharp",
-				"branch":"main"
+			"_gitUrlPattern": "git",
+			"_gitContribute": {
+				"repo": "https://github.com/Aiko-IT-Systems/DisCatSharp",
+				"branch": "main"
+			},
+			"_googleTagId": "G-8JHG7YVNKK",
+			"_lang": "en-US",
+			"_ogType": "website",
+			"_ogImage": "https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png",
+			"_fbPageId": "112155734832129",
+			"_twitterSite": "@DisCatSharp",
+			"_twitterImage": "https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png",
+			"_layout": "conceptual"
+		},
+		"disableGitFeatures": false,
+		"exportRawModel": false,
+		"exportViewModel": false,
+		"globalMetadataFiles": [],
+		"fileMetadataFiles": [],
+		"fileMetadata": {
+			"_ogType": {
+				"articles/**/*.md": "article",
+				"changelogs/**/*.md": "article"
 			}
 		},
-		"disableGitFeatures":false,
-		"exportRawModel":false,
-		"exportViewModel": false,
-		"globalMetadataFiles":[],
-		"fileMetadataFiles":[],
-		"template":[
+		"template": [
 			"default",
+			"modern",
 			"dcs"
 		],
-		"postProcessors":[
-			"ExtractSearchIndex",
-			"CustomMemberIndexer",
-			"DescriptionPostProcessor"
+		"postProcessors": [
+			"ExtractSearchIndex"
 		],
-		"noLangKeyword":false,
-		"keepFileLink":false,
-		"cleanupCacheHistory":false,
-		"sitemap":{
-			"baseUrl":"https://docs.discatsharp.tech/",
-			"changefreq":"daily",
-			"priority":1.0
+		"noLangKeyword": false,
+		"keepFileLink": false,
+		"cleanupCacheHistory": false,
+		"sitemap": {
+			"baseUrl": "https://docs.dcs.aitsys.dev/",
+			"changefreq": "daily",
+			"priority": 1.0
 		}
 	}
 }

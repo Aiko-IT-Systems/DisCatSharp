@@ -1,9 +1,11 @@
 ---
 uid: advanced_topics_select_menus
 title: Select Menus
+author: DisCatSharp Team
 ---
 
 # Introduction
+
 The select menus, like the [buttons](xref:advanced_topics_buttons), are message components.
 You will want to familarize yourself with the [message builder](xref:beyond_basics_messagebuilder) as it and similar builder objects will be used throughout this article.
 
@@ -61,7 +63,7 @@ Description and emoji of options are optional. The label, value and description 
 The emoji of a option is a [partial emoji object](https://discord.dev/interactions/message-components#component-object), which means that **any valid emoji is usable**, even if your bot does not have access to it's origin server.
 
 
-# Adding Select Menu
+## Adding Select Menu
 
 Adding a select menu is no different than adding a button.
 We have already created the select menu above, now we will just create a new message builder add the select menu to it.
@@ -90,7 +92,7 @@ builder.AddComponents(secondSelectMenu);
 And you're done! The select menu will now be sent when the user closes the select menu with 1 to 3 options selected.
 
 
-# Responding to select menus
+## Responding to select menus
 
 When any select menu is pressed, it will fire the [ComponentInteractionCreated](xref:DisCatSharp.DiscordClient#DisCatSharp_DiscordClient_ComponentInteractionCreated) event.
 

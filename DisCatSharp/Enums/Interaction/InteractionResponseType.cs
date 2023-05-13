@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using DisCatSharp.Attributes;
+
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -60,5 +62,12 @@ public enum InteractionResponseType
 	/// <summary>
 	/// Responds to the interaction with a modal.
 	/// </summary>
-	Modal = 9
+	Modal = 9,
+
+	/// <summary>
+	/// <para>Responds to the interaction with a message indicating that a premium subscription is required.</para>
+	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
+	/// </summary>
+	[DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
+	InteractionRequireEntitlement = 10
 }

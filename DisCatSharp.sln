@@ -13,11 +13,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		BUILDING.md = BUILDING.md
-		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 		CONTRIBUTING.md = CONTRIBUTING.md
+		Directory.Build.props = Directory.Build.props
 		LICENSE.md = LICENSE.md
 		README.md = README.md
-		SECURITY.md = SECURITY.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.CommandsNext", "DisCatSharp.CommandsNext\DisCatSharp.CommandsNext.csproj", "{C8ED55FB-E028-468D-955F-1534C20274EF}"
@@ -30,36 +29,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F953F5
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build Items", "Build Items", "{84464D70-687B-40A8-836D-C4F737698969}"
-	ProjectSection(SolutionItems) = preProject
-		appveyor.yml = appveyor.yml
-		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
-		.github\dependabot.yml = .github\dependabot.yml
-		Directory.Build.props = Directory.Build.props
-		DisCatSharp.targets = DisCatSharp.targets
-		docs-oneclick-rebuild.ps1 = docs-oneclick-rebuild.ps1
-		.github\workflows\docs.yml = .github\workflows\docs.yml
-		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
-		Library.targets = Library.targets
-		NuGet.targets = NuGet.targets
-		oneclick-rebuild.ps1 = oneclick-rebuild.ps1
-		Package.targets = Package.targets
-		rebuild-all.ps1 = rebuild-all.ps1
-		rebuild-docs.ps1 = rebuild-docs.ps1
-		rebuild-lib.ps1 = rebuild-lib.ps1
-		Version.targets = Version.targets
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{430C28D8-5F85-4D6E-AA68-211549435245}"
 	ProjectSection(SolutionItems) = preProject
-		.github\ISSUE_TEMPLATE\bug_report.md = .github\ISSUE_TEMPLATE\bug_report.md
 		.github\CODEOWNERS = .github\CODEOWNERS
-		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
-		.github\workflows\docs-preview.yml = .github\workflows\docs-preview.yml
-		.github\workflows\docs.yml = .github\workflows\docs.yml
-		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
-		.github\ISSUE_TEMPLATE\feature_request.md = .github\ISSUE_TEMPLATE\feature_request.md
-		.github\FUNDING.yml = .github\FUNDING.yml
+		.github\CODE_OF_CONDUCT.md = .github\CODE_OF_CONDUCT.md
+		.github\labeler.yml = .github\labeler.yml
 		.github\pull_request_template.md = .github\pull_request_template.md
+		.github\SECURITY.md = .github\SECURITY.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Lavalink", "DisCatSharp.Lavalink\DisCatSharp.Lavalink.csproj", "{A8B8FB09-C6AF-4F28-89B8-B53EE0DCE6E5}"
@@ -81,6 +58,37 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Hosting.DependencyInjection", "DisCatSharp.Hosting.DependencyInjection\DisCatSharp.Hosting.DependencyInjection.csproj", "{2D67D1DD-E5B2-40C7-80E2-54D63730E7F0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Experimental", "DisCatSharp.Experimental\DisCatSharp.Experimental.csproj", "{CF03EADC-E178-45B3-BD72-B6F70B625C8F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{D911BF2D-523E-4504-935D-AEDA353305D8}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yml = .github\workflows\build.yml
+		.github\workflows\codeql.yml = .github\workflows\codeql.yml
+		.github\workflows\documentation.yml = .github\workflows\documentation.yml
+		.github\workflows\documentation_test.yml = .github\workflows\documentation_test.yml
+		.github\workflows\labeler.yml = .github\workflows\labeler.yml
+		.github\workflows\release.yml = .github\workflows\release.yml
+		.github\workflows\tweet.yml = .github\workflows\tweet.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Targets", "Targets", "{4A7E065C-5EAF-4AD0-8002-306FCEEC946C}"
+	ProjectSection(SolutionItems) = preProject
+		DisCatSharp.Targets\DisCatSharp.targets = DisCatSharp.Targets\DisCatSharp.targets
+		DisCatSharp.Targets\Library.targets = DisCatSharp.Targets\Library.targets
+		DisCatSharp.Targets\NuGet.targets = DisCatSharp.Targets\NuGet.targets
+		DisCatSharp.Targets\Package.targets = DisCatSharp.Targets\Package.targets
+		DisCatSharp.Targets\Version.targets = DisCatSharp.Targets\Version.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{11D25C98-6D11-412C-8016-BE070315326F}"
+	ProjectSection(SolutionItems) = preProject
+		DisCatSharp.Tools\DisCatSharp.ruleset = DisCatSharp.Tools\DisCatSharp.ruleset
+		DisCatSharp.Tools\pack-docs.ps1 = DisCatSharp.Tools\pack-docs.ps1
+		DisCatSharp.Tools\rebuild-lib.ps1 = DisCatSharp.Tools\rebuild-lib.ps1
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.EventHandlers.Tests", "DisCatSharp.EventHandlers.Tests\DisCatSharp.EventHandlers.Tests.csproj", "{BE646FCD-8A56-46DC-978D-AC1E0A892A9F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{267EFBFF-ECD2-4686-A5DE-5B642F8A7CCB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -144,9 +152,21 @@ Global
 		{CF03EADC-E178-45B3-BD72-B6F70B625C8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF03EADC-E178-45B3-BD72-B6F70B625C8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF03EADC-E178-45B3-BD72-B6F70B625C8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE646FCD-8A56-46DC-978D-AC1E0A892A9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE646FCD-8A56-46DC-978D-AC1E0A892A9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE646FCD-8A56-46DC-978D-AC1E0A892A9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE646FCD-8A56-46DC-978D-AC1E0A892A9F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E15E88B4-63AD-42DE-B685-D31697C62194} = {267EFBFF-ECD2-4686-A5DE-5B642F8A7CCB}
+		{D02B598A-F0C9-4A8C-B8DE-7C0BAC8C9B94} = {267EFBFF-ECD2-4686-A5DE-5B642F8A7CCB}
+		{D911BF2D-523E-4504-935D-AEDA353305D8} = {430C28D8-5F85-4D6E-AA68-211549435245}
+		{4A7E065C-5EAF-4AD0-8002-306FCEEC946C} = {84464D70-687B-40A8-836D-C4F737698969}
+		{11D25C98-6D11-412C-8016-BE070315326F} = {84464D70-687B-40A8-836D-C4F737698969}
+		{BE646FCD-8A56-46DC-978D-AC1E0A892A9F} = {267EFBFF-ECD2-4686-A5DE-5B642F8A7CCB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {23F3A981-51B8-4285-A38C-3267F1D25FE7}

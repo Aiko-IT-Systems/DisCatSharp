@@ -9,13 +9,13 @@
 
   <PropertyGroup>
     <PackageId>DisCatSharp.Analyzer.Roselyn</PackageId>
-	<Version>5.2.0</Version>
-    <PackageVersion>5.2.0</PackageVersion>
+	<Version>5.4.0</Version>
+    <PackageVersion>5.4.0</PackageVersion>
     <Authors>AITSYS</Authors>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>DisCatSharp Analyzer</Description>
     <PackageReleaseNotes>Various DisCatSharp Analyzers.</PackageReleaseNotes>
-    <Copyright>Copyright 2022 AITSYS</Copyright>
+    <Copyright>Copyright 2022-2023 AITSYS</Copyright>
     <PackageTags>Analyzer, analyzers</PackageTags>
     <DevelopmentDependency>true</DevelopmentDependency>
     <NoPackageAnalysis>true</NoPackageAnalysis>
@@ -42,6 +42,10 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+    <None Include="..\..\..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
 	<None Include="README.md">
 	  <Pack>True</Pack>
 	  <PackagePath>\</PackagePath>
@@ -50,10 +54,21 @@
   <PropertyGroup>
 	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+	<IncludeSymbols>False</IncludeSymbols>
+	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>7</WarningLevel>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <WarningLevel>7</WarningLevel>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
   <ItemGroup>
 	<ProjectReference Include="..\DisCatSharp.Analyzer\DisCatSharp.Analyzer.csproj" />
-	<PackageReference Include="DisCatSharp.Attributes" Version="10.3.1-fixed-001" PrivateAssets="all" GeneratePathProperty="true" />
+	<PackageReference Include="DisCatSharp.Attributes" Version="10.4.0" PrivateAssets="all" GeneratePathProperty="true" />
 	<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.5.0" PrivateAssets="all" />
 	<PackageReference Update="NETStandard.Library" PrivateAssets="all" />
   </ItemGroup>

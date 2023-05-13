@@ -1,9 +1,11 @@
 ---
 uid: basics_first_bot
 title: Your First Bot
+author: DisCatSharp Team
 ---
 
 # Your First Bot
+
  >[!NOTE]
  > This article assumes the following:
  > * You have [created a bot account](xref:basics_bot_account "Creating a Bot Account") and have a bot token.
@@ -11,6 +13,7 @@ title: Your First Bot
 
 
 ## Create a Project
+
 Open up Visual Studio and click on `Create a new project` towards the bottom right.
 
 ![Visual Studio Start Screen](/images/basics_first_bot_01.png)
@@ -29,7 +32,7 @@ Enter your desired project name, then click on the `Create` button.
 ![Name Project Screen](/images/basics_first_bot_03.png)
 
 <br/>
-Now select `.NET 6.0 (Long-term support)` from the dropdown menu, tick the `Do not use top-level statements` checkbox and click on the `Next` button.
+Now select `.NET 7.0` from the dropdown menu, tick the `Do not use top-level statements` checkbox and click on the `Next` button.
 
 ![Framework Project Screen](/images/basics_first_bot_04.png)
 
@@ -39,6 +42,7 @@ Voilà! Your project has been created!
 
 
 ## Install Package
+
 Now that you have a project created, you'll want to get DisCatSharp installed.
 Locate the *solution explorer* on the right side, then right click on `Dependencies` and select `Manage NuGet Packages` from the context menu.
 
@@ -65,6 +69,7 @@ Package|Description
 `DisCatSharp.ApplicationCommands`|Add-on which makes dealing with application commands easier.
 `DisCatSharp.VoiceNext`|Add-on which enables connectivity to Discord voice channels.
 `DisCatSharp.VoiceNext.Natives`|Voice next natives.
+`DisCatSharp.Analyzers.Roselyn`|Our custom analyzer, providing extended IntelliSense functions. As example warns you about deprecated discord features.
 
 <br/>
 We'll only need the `DisCatSharp` package for the basic bot we'll be writing in this article.<br/>
@@ -76,6 +81,7 @@ You're now ready to write some code!
 
 
 ## First Lines of Code
+
 DisCatSharp implements [Task-based Asynchronous Pattern](https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/consuming-the-task-based-asynchronous-pattern).
 Because of this, the majority of DisCatSharp methods must be executed in a method marked as `async` so they can be properly `await`ed.
 
@@ -153,6 +159,7 @@ If you hit `F5` on your keyboard to compile and run your program, you'll be gree
 
 
 ## Spicing Up Your Bot
+
 Right now our bot doesn't do a whole lot. Let's bring it to life by having it respond to a message!
 
 Hook the `MessageCreated` event fired by `DiscordClient` with a
@@ -179,6 +186,7 @@ discord.MessageCreated += async (s, e) =>
 
 
 ## The Finished Product
+
 Your entire program should now look like this:
 
 ```cs
@@ -227,6 +235,7 @@ Congrats, your bot now does something!
 
 
 ## Further Reading
+
 Now that you have a basic bot up and running, you should take a look at the following:
 
 * [Events](xref:beyond_basics_events)

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../Version.targets" />
-  <Import Project="../DisCatSharp.targets" />
-  <Import Project="../Package.targets" />
+  <Import Project="../DisCatSharp.Targets/Version.targets" />
+  <Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
+  <Import Project="../DisCatSharp.Targets/Package.targets" />
+  <Import Project="../DisCatSharp.Targets/Library.targets" />
 
   <PropertyGroup>
-	<TargetFramework>net6.0</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
@@ -21,7 +21,7 @@ Natives for DisCatSharp Voice Next Extension
 
 Manual Download: https://docs.discatsharp.tech/natives/index.html
 	</Description>
-	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Voice,Audio Player</PackageTags>
+	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Voice,Audio Player</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,11 +32,11 @@ Manual Download: https://docs.discatsharp.tech/natives/index.html
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="5.2.0">
+    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="5.4.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="DisCatSharp.Attributes" Version="10.3.1-fixed-001" />
+    <PackageReference Include="DisCatSharp.Attributes" Version="10.4.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageReference Include="System.Reflection" Version="4.3.0" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />

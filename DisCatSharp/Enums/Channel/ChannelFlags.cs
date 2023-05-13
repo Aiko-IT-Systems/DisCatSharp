@@ -20,21 +20,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+
 using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.Enums;
 
 /// <summary>
+/// Represents a channel flag extensions.
+/// </summary>
+public static class ChannelFlagExtensions
+{
+	/// <summary>
+	/// Calculates whether these channeö flags contain a specific flag.
+	/// </summary>
+	/// <param name="baseFlags">The existing flags.</param>
+	/// <param name="flag">The flags to search for.</param>
+	/// <returns></returns>
+	public static bool HasChannelFlag(this ChannelFlags baseFlags, ChannelFlags flag) => (baseFlags & flag) == flag;
+}
+
+/// <summary>
 /// Represents a channel's flags.
 /// </summary>
+[Flags]
 public enum ChannelFlags : int
 {
 	/// <summary>
 	/// Indicates that this channel is removed from the guilds home feed / from highlights.
 	/// Applicable for <see cref="ChannelType"/> Text, Forum and News.
 	/// </summary>
+	[DiscordDeprecated]
 	RemovedFromHome = 1 << 0,
+	[DiscordDeprecated]
 	RemovedFromHighlights = RemovedFromHome,
 
 	/// <summary>
@@ -47,6 +66,7 @@ public enum ChannelFlags : int
 	/// Indicates that this channel is removed from the active now within the guilds home feed.
 	/// Applicable for <see cref="ChannelType"/> Text, News, Thread, Forum, Stage and Voice.
 	/// </summary>
+	[DiscordDeprecated]
 	RemovedFromActiveNow = 1 << 2,
 
 	/// <summary>
@@ -89,16 +109,22 @@ public enum ChannelFlags : int
 	/// </summary>
 	[DiscordInExperiment]
 	SummariesDisabled = 1<<11,
-	
+
 	/// <summary>
 	/// Currently unknown.
 	/// </summary>
 	[DiscordInExperiment]
 	ApplicationShelfConsent = 1<<12,
-	
+
 	/// <summary>
 	/// Indicates that this channel is part of a role subscription template preview.
 	/// </summary>
 	[DiscordInExperiment]
-	IsRoleSubscriptionTemplatePreviewChannel = 1<<13
+	IsRoleSubscriptionTemplatePreviewChannel = 1<<13,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	[DiscordInExperiment]
+	IsBroadcasting = 1<<14
 }

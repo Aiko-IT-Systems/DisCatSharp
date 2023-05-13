@@ -230,17 +230,25 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	internal ulong? WidgetChannelId { get; set; }
 
 	/// <summary>
+	/// Gets the widget channel for this guild.
+	/// </summary>
+	[JsonIgnore]
+	public DiscordChannel WidgetChannel => this.WidgetChannelId.HasValue
+		? this.GetChannel(this.WidgetChannelId.Value)
+		: null;
+
+	/// <summary>
 	/// Gets the safety alerts channel id.
 	/// </summary>
 	[JsonProperty("safety_alerts_channel_id", NullValueHandling = NullValueHandling.Ignore)]
 	internal ulong? SafetyAlertsChannelId { get; set; }
 
 	/// <summary>
-	/// Gets the widget channel for this guild.
+	/// Gets the safety alert channel for this guild.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordChannel WidgetChannel => this.WidgetChannelId.HasValue
-		? this.GetChannel(this.WidgetChannelId.Value)
+	public DiscordChannel SafetyAltersChannel => this.SafetyAlertsChannelId.HasValue
+		? this.GetChannel(this.SafetyAlertsChannelId.Value)
 		: null;
 
 	/// <summary>

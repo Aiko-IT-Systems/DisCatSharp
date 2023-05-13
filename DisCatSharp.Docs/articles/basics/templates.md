@@ -1,9 +1,11 @@
 ---
 uid: basics_templates
 title: Project Templates
+author: DisCatSharp Team
 ---
 
 # Prerequisites
+
 Install the following packages:
  - DisCatSharp.ProjectTemplates
 
@@ -47,14 +49,17 @@ At this point in time the template is ready to run!
 # Templates
 
 ## Bot Template
+
 This is a class library in which you place bot related code. It contains its own json file where you can
 configure your bot accordingly!
 
 An extension class provides easy to call methods for adding the Bot's services/configuration into the dependency injection (DI) pipeline.
 
 ## Web Template
+
 This is a very minimal project. By itself it only has a default endpoint which displays "Hello World".
 
 ## Solution Template
+
 Combines the bot and web templates. Includes the appropriate references/calls to get your bot up and running with minimal
 effort.

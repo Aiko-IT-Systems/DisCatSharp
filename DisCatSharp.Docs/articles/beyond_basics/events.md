@@ -1,27 +1,32 @@
 ---
 uid: beyond_basics_events
 title: DisCatSharp Events
+author: DisCatSharp Team
 ---
 
-# Consuming Events
-DisCatSharp makes use of *asynchronous events* which will execute each handler asynchronously in sequential order. 
+# Events In DisCatSharp
+
+## Consuming Events
+
+DisCatSharp makes use of *asynchronous events* which will execute each handler asynchronously in sequential order.
 This event system will require event handlers have a `Task` return type and take two parameters.
 
 The first parameter will contain an instance of the object which fired the event.<br/>
 The second parameter will contain an arguments object for the specific event you're handling.
 
 Below is a snippet demonstrating this with a lambda expression.
+
 ```cs
 private async Task MainAsync()
 {
     var discord = new DiscordClient();
-	
+
     discord.MessageCreated += async (s, e) =>
     {
-        if (e.Message.Content.ToLower().Contains("spiderman")) 
+        if (e.Message.Content.ToLower().Contains("spiderman"))
             await e.Message.RespondAsync("I want pictures of Spiderman!");
     };
-	
+
 	discord.GuildMemberAdded += (s, e) =>
     {
         // Non asynchronous code here.
@@ -31,11 +36,12 @@ private async Task MainAsync()
 ```
 
 Alternatively, you can create a new method to consume an event.
+
 ```cs
 private async Task MainAsync()
 {
     var discord = new DiscordClient();
-	
+
     discord.MessageCreated += MessageCreatedHandler;
 	discord.GuildMemberAdded += MemberAddedHandler;
 }
@@ -53,14 +59,16 @@ private Task MemberAddedHandler(DiscordClient s, GuildMemberAddEventArgs e)
 }
 ```
 
-# Using automatic event registration
+## Using automatic event registration
+
 Instead of having to manually register each event, the attributes `Event` and `EventHandler` can be utilized to semi-automatically register events in a multitude of ways.
 
 By attributing all classes that constitute event handlers with `EventHandler` and all methods within those classes that are intended to handle events with `Event` you can register all of those events with a single call to `DiscordClient.RegisterEventHandlers(Assembly)`
 
 ```cs
 [EventHandler]
-public class MyEventHandler {
+public class MyEventHandler
+{
     [Event]
     private async Task MessageCreated(DiscordClient s, MessageCreateEventArgs e) { /* ... */ }
 
@@ -70,7 +78,8 @@ public class MyEventHandler {
 ```
 
 ```cs
-private async Task MainAsync() {
+private async Task MainAsync()
+{
     var discord = new DiscordClient();
     discord.RegisterEventHandlers(Assembly.GetExecutingAssembly());
 }
@@ -82,7 +91,8 @@ If an event handler class is not `abstract` (which also means not `static`) it w
 public class SomeClass { }
 
 [EventHandler]
-public class MyOtherEventHandler {
+public class MyOtherEventHandler
+{
     private SomeClass some;
 
     public MyOtherEventHandler(SomeClass some) { this.some = some; }
@@ -100,12 +110,15 @@ When registering an object as a handler, by default the type's static methods wi
 This allows for registering multiple instances of the same type without registering their static event handling methods multiple times.
 To register the static methods exclusively, use `DiscordClient.RegisterStaticEventHandler` with the type in question.
 
-# Dependency Injection
+## Dependency Injection
+
 Often, you need a way to get data in and out of your event handlers.
 Although you *could* use `static` fields to accomplish this, the preferred solution would be *dependency injection*.
 
 First, you need to register the services that you can use in the event handlers in the future.
+
 You can do this in DiscordConfiguration:
+
 ```cs
 var config = new DiscordConfiguration()
 {
@@ -120,6 +133,7 @@ var config = new DiscordConfiguration()
 In this case, we have registered two services: `YourService` as Scoped and` YourSecondService` as Singleton.
 
 Now you can use them in your event handlers.
+
 ```cs
 private async Task MessageCreatedHandler(DiscordClient s, MessageCreateEventArgs e)
 {
@@ -129,17 +143,19 @@ private async Task MessageCreatedHandler(DiscordClient s, MessageCreateEventArgs
 ```
 
 ### Services
+
 Lifespan|Instantiated
 :---:|:---
 Singleton|One time when added to the collection.
 Scoped|Once for each event handler.
 Transient|Every request to the ServiceProvider.
 
-# Avoiding Deadlocks
-Despite the fact that your event handlers are executed asynchronously, they are also executed one at a time on the gateway thread for consistency. 
-This means that each handler must complete its execution before others can be dispatched. 
+## Avoiding Deadlocks
 
-Because of this, executing code in your event handlers that runs for an extended period of time may inadvertently 
+Despite the fact that your event handlers are executed asynchronously, they are also executed one at a time on the gateway thread for consistency.
+This means that each handler must complete its execution before others can be dispatched.
+
+Because of this, executing code in your event handlers that runs for an extended period of time may inadvertently
 create brief unresponsiveness or, even worse, cause a [deadlock](https://en.wikipedia.org/wiki/Deadlock).
 To prevent such issues, any event handler that has the potential to take more than 2 seconds to execute should have its logic offloaded to a `Task.Run`.
 
@@ -152,12 +168,13 @@ discord.MessageCreated += (s, e) =>
         var response = await QuerySlowWebServiceAsync(e.Message.Content);
 
         if (response.Status == HttpStatusCode.OK)
-		{
-			await e.Guild?.BanMemberAsync((DiscordMember)e.Author);
+        {
+            await e.Guild?.BanMemberAsync((DiscordMember)e.Author);
         }
     });
 
 	return Task.CompletedTask;
 };
 ```
+
 Doing this will allow the handler to complete its execution quicker, which will in turn allow other handlers to be executed and prevent the gateway thread from being blocked.

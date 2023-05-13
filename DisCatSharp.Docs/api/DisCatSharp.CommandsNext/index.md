@@ -1,6 +1,7 @@
 ---
 uid: api_discatsharp_commandsnext_index
 title: DisCatSharp.CommandsNext API Reference
+author: DisCatSharp Team
 ---
 
 # API Reference

@@ -1,6 +1,7 @@
 ---
 uid: api_discatsharp_experimental_index
 title: DisCatSharp.Experimental API Reference
+author: DisCatSharp Team
 ---
 
 # API Reference

@@ -2,16 +2,25 @@ name: "Build Library"
 
 on:
   push:
+    branches:
+      - main
   pull_request:
   merge_group:
   workflow_dispatch:
 
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
+
 jobs:
   build:
+    timeout-minutes: 30
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        dotnet: [6.x]
+        dotnet: [7.0.203]
     runs-on: ${{ matrix.os }}
     name: Build library
     steps:
@@ -22,8 +31,8 @@ jobs:
       with:
         dotnet-version: ${{ matrix.dotnet }}
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore DisCatSharp.sln
     - name: Build library
-      run: dotnet build -c Release
+      run: dotnet build -c Release -v normal --no-restore DisCatSharp.sln
     - name: Test library
-      run: dotnet test --verbosity normal -c Release
+      run: dotnet test -v normal -c Release --no-restore --no-build DisCatSharp.sln

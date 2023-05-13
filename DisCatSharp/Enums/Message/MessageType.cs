@@ -190,5 +190,20 @@ public enum MessageType : int
 	/// <summary>
 	/// Message indicating that a member purchased a application premium subscription.
 	/// </summary>
-	GuildApplicationPremiumSubscription = 32
+	GuildApplicationPremiumSubscription = 32,
+
+	/// <summary>
+	/// Message indicating that a private channel integration was added.
+	/// </summary>
+	PrivateChannelIntegrationAdded = 33,
+
+	/// <summary>
+	/// Message indicating that a private channel integration was removed.
+	/// </summary>
+	PrivateChannelIntegrationRemoved = 34,
+
+	/// <summary>
+	/// This message is a premium referral.
+	/// </summary>
+	PremiumReferral = 35
 }

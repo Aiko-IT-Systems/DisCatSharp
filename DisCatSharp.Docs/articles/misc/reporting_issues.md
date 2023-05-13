@@ -1,6 +1,7 @@
 ---
 uid: misc_reporting_issues
 title: Reporting Issues
+author: DisCatSharp Team
 ---
 
 # I broke something, and I need it fixed!
