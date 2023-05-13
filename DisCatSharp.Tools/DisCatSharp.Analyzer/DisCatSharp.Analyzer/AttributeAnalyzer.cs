@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
+// This file is part of the DisCatSharp project.
 //
-// Copyright (c) 2021-2022 AITSYS
+// Copyright (c) 2021-2023 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,53 +20,56 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using System.Collections.Immutable;
+using System.Linq;
+
 using DisCatSharp.Attributes;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-using System;
-using System.Collections.Immutable;
-using System.Linq;
-
 namespace DisCatSharp.Analyzer
 {
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class AttributeAnalyzer : DiagnosticAnalyzer
 	{
-		public const string DiagnosticIdPrefix = "DCS";
-		public const string Category = "Information";
+		public const string DIAGNOSTIC_ID_PREFIX = "DCS";
+		public const string CATEGORY = "Usage";
 
-		private static readonly LocalizableString TitleExperimental = new LocalizableResourceString(nameof(Resources.AnalyzerTitleExperimental), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString MessageFormatExperimental = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatExperimental), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString DescriptionExperimental = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionExperimental), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString TitleDiscordInExperiment = new LocalizableResourceString(nameof(Resources.AnalyzerTitleDiscordInExperiment), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString MessageFormatDiscordInExperiment = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatDiscordInExperiment), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString DescriptionDiscordInExperiment = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionDiscordInExperiment), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString TitleDiscordDeprecated = new LocalizableResourceString(nameof(Resources.AnalyzerTitleDiscordDeprecated), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString MessageFormatDiscordDeprecated = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatDiscordDeprecated), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString DescriptionDiscordDeprecated = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionDiscordDeprecated), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString TitleDiscordUnreleased = new LocalizableResourceString(nameof(Resources.AnalyzerTitleDiscordUnreleased), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString MessageFormatDiscordUnreleased = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatDiscordUnreleased), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString DescriptionDiscordUnreleased = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionDiscordUnreleased), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString s_titleExperimental = new LocalizableResourceString(nameof(Resources.AnalyzerTitleExperimental), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString s_messageFormatExperimental = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatExperimental), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString s_descriptionExperimental = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionExperimental), Resources.ResourceManager, typeof(Resources));
 
-		private static readonly DiagnosticDescriptor ExperimentalRule = new DiagnosticDescriptor(DiagnosticIdPrefix + "0001", TitleExperimental, MessageFormatExperimental, Category, DiagnosticSeverity.Warning, true, DescriptionExperimental, "https://docs.discatsharp.tech/vs/analyzer/dcs/0001.html");
-		private static readonly DiagnosticDescriptor DiscordInExperimentRule = new DiagnosticDescriptor(DiagnosticIdPrefix + "0101", TitleDiscordInExperiment, MessageFormatDiscordInExperiment, Category, DiagnosticSeverity.Warning, true, DescriptionDiscordInExperiment, "https://docs.discatsharp.tech/vs/analyzer/dcs/0101.html");
-		private static readonly DiagnosticDescriptor DiscordDeprecatedRule = new DiagnosticDescriptor(DiagnosticIdPrefix + "0102", TitleDiscordDeprecated, MessageFormatDiscordDeprecated, Category, DiagnosticSeverity.Warning, true, DescriptionDiscordDeprecated, "https://docs.discatsharp.tech/vs/analyzer/dcs/0102.html");
-		private static readonly DiagnosticDescriptor DiscordUnreleasedRule = new DiagnosticDescriptor(DiagnosticIdPrefix + "0103", TitleDiscordUnreleased, MessageFormatDiscordUnreleased, Category, DiagnosticSeverity.Warning, true, DescriptionDiscordUnreleased, "https://docs.discatsharp.tech/vs/analyzer/dcs/0103.html");
+		private static readonly LocalizableString s_titleDeprecated = new LocalizableResourceString(nameof(Resources.AnalyzerTitleDeprecated), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString s_messageFormatDeprecated = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatDeprecated), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString s_descriptionDeprecated = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionDeprecated), Resources.ResourceManager, typeof(Resources));
+
+		private static readonly LocalizableString s_titleDiscordInExperiment = new LocalizableResourceString(nameof(Resources.AnalyzerTitleDiscordInExperiment), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString s_messageFormatDiscordInExperiment = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatDiscordInExperiment), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString s_descriptionDiscordInExperiment = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionDiscordInExperiment), Resources.ResourceManager, typeof(Resources));
+
+		private static readonly LocalizableString s_titleDiscordDeprecated = new LocalizableResourceString(nameof(Resources.AnalyzerTitleDiscordDeprecated), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString s_messageFormatDiscordDeprecated = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatDiscordDeprecated), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString s_descriptionDiscordDeprecated = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionDiscordDeprecated), Resources.ResourceManager, typeof(Resources));
+
+		private static readonly LocalizableString s_titleDiscordUnreleased = new LocalizableResourceString(nameof(Resources.AnalyzerTitleDiscordUnreleased), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString s_messageFormatDiscordUnreleased = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatDiscordUnreleased), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString s_descriptionDiscordUnreleased = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionDiscordUnreleased), Resources.ResourceManager, typeof(Resources));
+
+		private static readonly DiagnosticDescriptor s_experimentalRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0001", s_titleExperimental, s_messageFormatExperimental, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionExperimental, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0001");
+		private static readonly DiagnosticDescriptor s_deprecatedRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0002", s_titleDeprecated, s_messageFormatDeprecated, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDeprecated, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0002");
+		private static readonly DiagnosticDescriptor s_discordInExperimentRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0101", s_titleDiscordInExperiment, s_messageFormatDiscordInExperiment, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDiscordInExperiment, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0101");
+		private static readonly DiagnosticDescriptor s_discordDeprecatedRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0102", s_titleDiscordDeprecated, s_messageFormatDiscordDeprecated, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDiscordDeprecated, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0102");
+		private static readonly DiagnosticDescriptor s_discordUnreleasedRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0103", s_titleDiscordUnreleased, s_messageFormatDiscordUnreleased, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDiscordUnreleased, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0103");
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-		{
-			get
-			{
-				return ImmutableArray.Create<DiagnosticDescriptor>(ExperimentalRule, DiscordInExperimentRule, DiscordDeprecatedRule, DiscordUnreleasedRule);
-			}
-		}
+			=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule);
 
 		public override void Initialize(AnalysisContext context)
 		{
-			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
 			context.EnableConcurrentExecution();
 
 			context.RegisterSymbolAction(ExperimentalAnalyzer, SymbolKind.Parameter);
@@ -99,29 +102,35 @@ namespace DisCatSharp.Analyzer
 				kind = "Constructor";
 			}
 			var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(ExperimentalAttribute)));
+			var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DeprecatedAttribute)));
 			var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordInExperimentAttribute)));
 			var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordDeprecatedAttribute)));
 			var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordUnreleasedAttribute)));
-			
+
 			if (experimentalAttributeData != null)
 			{
 				var message = GetMessage(experimentalAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(ExperimentalRule, invocation.GetLocation(), kind, name, message));
+				context.ReportDiagnostic(Diagnostic.Create(s_experimentalRule, invocation.GetLocation(), kind, name, message));
+			}
+			if (deprecatedAttributeData != null)
+			{
+				var message = GetMessage(deprecatedAttributeData);
+				context.ReportDiagnostic(Diagnostic.Create(s_deprecatedRule, invocation.GetLocation(), kind, name, message));
 			}
 			if (discordInExperimentAttributeData != null)
 			{
 				var message = GetMessage(discordInExperimentAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(DiscordInExperimentRule, invocation.GetLocation(), kind, name, message));
+				context.ReportDiagnostic(Diagnostic.Create(s_discordInExperimentRule, invocation.GetLocation(), kind, name, message));
 			}
 			if (discordDeprecatedAttributeData != null)
 			{
 				var message = GetMessage(discordDeprecatedAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(DiscordDeprecatedRule, invocation.GetLocation(), kind, name, message));
+				context.ReportDiagnostic(Diagnostic.Create(s_discordDeprecatedRule, invocation.GetLocation(), kind, name, message));
 			}
 			if (discordUnreleasedAttributeData != null)
 			{
 				var message = GetMessage(discordUnreleasedAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(DiscordUnreleasedRule, invocation.GetLocation(), kind, name, message));
+				context.ReportDiagnostic(Diagnostic.Create(s_discordUnreleasedRule, invocation.GetLocation(), kind, name, message));
 			}
 			return;
 		}
@@ -130,8 +139,8 @@ namespace DisCatSharp.Analyzer
 		{
 			Console.WriteLine("Handling " + context.Symbol.Kind.ToString());
 			var syntaxTrees = from x in context.Symbol.Locations
-						  where x.IsInSource
-						  select x.SourceTree;
+							  where x.IsInSource
+							  select x.SourceTree;
 			var declaration = context.Symbol;
 			if (null == declaration)
 			{
@@ -139,7 +148,7 @@ namespace DisCatSharp.Analyzer
 				return;
 			}
 			var attributes = declaration.GetAttributes();
-		
+
 			var name = declaration.Name;
 			var kind = declaration.Kind.ToString();
 			if (name == ".ctor")
@@ -151,30 +160,38 @@ namespace DisCatSharp.Analyzer
 			{
 				kind = "Class";
 			}
-			var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation.GetSemanticModel(syntaxTrees.First()), attr, typeof(ExperimentalAttribute)));
-			var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation.GetSemanticModel(syntaxTrees.First()), attr, typeof(DiscordInExperimentAttribute)));
-			var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation.GetSemanticModel(syntaxTrees.First()), attr, typeof(DiscordDeprecatedAttribute)));
-			var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation.GetSemanticModel(syntaxTrees.First()), attr, typeof(DiscordUnreleasedAttribute)));
+			var model = context.Compilation.GetSemanticModel(syntaxTrees.First(), true);
+
+			var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(ExperimentalAttribute)));
+			var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DeprecatedAttribute)));
+			var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordInExperimentAttribute)));
+			var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordDeprecatedAttribute)));
+			var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordUnreleasedAttribute)));
 
 			if (experimentalAttributeData != null)
 			{
 				var message = GetMessage(experimentalAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(ExperimentalRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
+				context.ReportDiagnostic(Diagnostic.Create(s_experimentalRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
+			}
+			if (deprecatedAttributeData != null)
+			{
+				var message = GetMessage(deprecatedAttributeData);
+				context.ReportDiagnostic(Diagnostic.Create(s_deprecatedRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
 			}
 			if (discordInExperimentAttributeData != null)
 			{
 				var message = GetMessage(discordInExperimentAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(DiscordInExperimentRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
+				context.ReportDiagnostic(Diagnostic.Create(s_discordInExperimentRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
 			}
 			if (discordDeprecatedAttributeData != null)
 			{
 				var message = GetMessage(discordDeprecatedAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(DiscordDeprecatedRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
+				context.ReportDiagnostic(Diagnostic.Create(s_discordDeprecatedRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
 			}
 			if (discordUnreleasedAttributeData != null)
 			{
 				var message = GetMessage(discordUnreleasedAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(DiscordUnreleasedRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
+				context.ReportDiagnostic(Diagnostic.Create(s_discordUnreleasedRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
 			}
 			return;
 		}
@@ -188,12 +205,6 @@ namespace DisCatSharp.Analyzer
 		}
 
 		static string GetMessage(AttributeData attribute)
-		{
-			if (attribute.ConstructorArguments.Length < 1)
-			{
-				return "Do not use in production.";
-			}
-			return attribute.ConstructorArguments[0].Value as string;
-		}
+			=> attribute.ConstructorArguments.Length < 1 ? "Do not use in production." : attribute.ConstructorArguments[0].Value as string;
 	}
 }

@@ -95,7 +95,7 @@ public class DiscordAttachment : SnowflakeObject
 	public float? DurationSecs { get; internal set; }
 
 	/// <summary>
-	/// <para>The base64 encoded bytearray representing a sampled waveform (currently only for voice messages).</para>
+	/// <para>The base64 encoded byte-array representing a sampled waveform (currently only for voice messages).</para>
 	/// <para>Only presented when the message flags include <see cref="MessageFlags.IsVoiceMessage"/> and for the attached voice message.</para>
 	/// </summary>
 	[JsonProperty("waveform", NullValueHandling = NullValueHandling.Ignore)]

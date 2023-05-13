@@ -124,7 +124,7 @@
     <value>Discord has released it as experiment. Do not use in production.</value>
   </data>
   <data name="AnalyzerDescriptionDiscordUnreleased" xml:space="preserve">
-    <value>Discord hasn't released this yet. Do not use in production</value>
+    <value>Discord hasn't released this yet. Do not use in production.</value>
   </data>
   <data name="AnalyzerDescriptionExperimental" xml:space="preserve">
     <value>DisCatSharp considers this as experimental. Do not use in production.</value>
@@ -136,7 +136,7 @@
     <value>{0} '{1}' is in experiment: {2}</value>
   </data>
   <data name="AnalyzerMessageFormatDiscordUnreleased" xml:space="preserve">
-    <value>{0} '{1}' isn't released yet: {2}</value>
+    <value>{0} '{1}' is not released yet: {2}</value>
   </data>
   <data name="AnalyzerMessageFormatExperimental" xml:space="preserve">
     <value>{0} '{1}' is experimental: {2}</value>
@@ -152,5 +152,14 @@
   </data>
   <data name="AnalyzerTitleExperimental" xml:space="preserve">
     <value>[DCS] Experimental</value>
+  </data>
+  <data name="AnalyzerTitleDeprecated" xml:space="preserve">
+    <value>[DCS] Deprecated</value>
+  </data>
+  <data name="AnalyzerMessageFormatDeprecated" xml:space="preserve">
+    <value>{0} '{1}' is deprecated: {2}</value>
+  </data>
+  <data name="AnalyzerDescriptionDeprecated" xml:space="preserve">
+    <value>DisCatSharp considers this as deprecated. Update your code.</value>
   </data>
 </root>

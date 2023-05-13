@@ -1,7 +1,10 @@
 ### YamlMime:TableOfContent
+items:
 - uid: DisCatSharp.Attributes
   name: DisCatSharp.Attributes
   items:
+  - uid: DisCatSharp.Attributes.DeprecatedAttribute
+    name: DeprecatedAttribute
   - uid: DisCatSharp.Attributes.DiscordDeprecatedAttribute
     name: DiscordDeprecatedAttribute
   - uid: DisCatSharp.Attributes.DiscordInExperimentAttribute
@@ -10,3 +13,4 @@
     name: DiscordUnreleasedAttribute
   - uid: DisCatSharp.Attributes.ExperimentalAttribute
     name: ExperimentalAttribute
+memberLayout: SamePage

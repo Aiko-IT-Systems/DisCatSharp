@@ -1,9 +1,14 @@
 ---
 uid: misc_voice_activities
 title: Voice Activities
+author: DisCatSharp Team
 ---
 
-## Voice Activities
+# Voice Activities
+
+> [!WARNING]
+ > This list is not maintained.
+ > Please refer to https://github.com/Delitefully/DiscordLists/blob/master/activities.md instead.
 
 Discord offers a variety of Voice activities. Here is a list of the applications that are currently usable in production.
 

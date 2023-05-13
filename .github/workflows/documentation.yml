@@ -6,9 +6,11 @@ env:
   DOTNET_NOLOGO: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
 
 jobs:
   build:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     name: Build documentation
     steps:
@@ -19,17 +21,23 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3.0.3
       with:
-        dotnet-version: 6.x
+        dotnet-version: 7.0.203
     - name: Git fetch unshallow
       run: git fetch --unshallow
+    - name: Install DocFX
+      run: dotnet tool update -g docfx --prerelease
     - name: Restore packages
-      run: dotnet restore
+      run: dotnet restore DisCatSharp.sln
     - name: Build library
-      run: dotnet build -c Release
+      run: dotnet build -c Release --no-restore -v minimal DisCatSharp.sln
       continue-on-error: true
+    - name: Add Custom Plugins
+      run: cp -R DisCatSharp.Docs/dcs/plugins/* /home/runner/.dotnet/tools/.store/docfx/2.67.0/docfx/2.67.0/tools/net7.0/any/
     - name: Build Docs
+      run: docfx DisCatSharp.Docs/docfx.json
+    - name: Pack Docs
       shell: pwsh
-      run: ./rebuild-docs.ps1 -DocsPath "./DisCatSharp.Docs" -Output "." -PackageName "dcs-docs"
+      run: ./DisCatSharp.Tools/pack-docs.ps1 -DocsPath "./DisCatSharp.Docs" -OutputPath "./" -PackageName "dcs-docs"
     - name: Upload packed docs
       uses: actions/upload-artifact@v3
       with:
@@ -75,7 +83,9 @@ jobs:
       with:
         name: dcs-docs.zip
     - name: Add .htaccess
-      run: rm -f .htaccess && wget https://gist.githubusercontent.com/Lulalaby/8a032d0ddebb9125691094edc67b6593/raw/8ba47fc2b8959aa43d66da95b5e56e0802a22dd6/.htaccess
+      run: rm -f .htaccess && wget https://gist.githubusercontent.com/Lulalaby/8a032d0ddebb9125691094edc67b6593/raw/0c4bf0423cfe334fdd5092b014d2481759dd052a/.htaccess
+    #- name: Add _redirects
+    #  run: rm -f _redirects && wget https://gist.githubusercontent.com/Lulalaby/0c784680a855fd161411002e3859b4fd/raw/9708d1acfce3f647cbb8da19c2022a20198979fa/_redirects
     - name: Set access rights
       run: sudo chmod 777 -R .
     - name: Commit and push changes
@@ -87,7 +97,7 @@ jobs:
         committer_name: NyuwBot
         committer_email: nyuw@aitsys.dev
         commit: --signoff
-        message: 'Docs update for https://github.com/${{github.repository}}/commit/${{github.sha}}'
+        message: 'Docs update (https://github.com/${{github.repository}}/commit/${{github.sha}})'
   publish-backup:
     runs-on: ubuntu-latest
     name: Publish documentation on backup server

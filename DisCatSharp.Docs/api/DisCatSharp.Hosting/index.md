@@ -1,6 +1,7 @@
 ---
 uid: api_discatsharp_hosting_index
 title: DisCatSharp.Hosting API Reference
+author: DisCatSharp Team
 ---
 
 # API Reference

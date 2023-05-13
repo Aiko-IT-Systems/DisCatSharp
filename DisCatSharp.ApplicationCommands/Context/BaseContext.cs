@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021-2023 AITSYS
 //
@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
@@ -103,10 +104,13 @@ public class BaseContext
 	public Permissions AppPermissions { get; internal set; }
 
 	/// <summary>
-	/// Gets the entitlement sku ids.
+	/// <para>Gets the entitlements.</para>
+	/// <para>This is related to premium subscriptions for bots.</para>
+	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
 	/// <see cref="DiscordClient.TryGetPublishedListingsAsync(ulong)"/> for more information.
 	/// </summary>
-	public List<ulong> EntitlementSkuIds { get; internal set; }
+	[DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
+	public List<ulong> Entitlements { get; internal set; }
 
 	/// <summary>
 	/// Gets the type of this interaction.

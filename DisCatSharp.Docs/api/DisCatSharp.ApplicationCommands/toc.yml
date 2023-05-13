@@ -1,4 +1,5 @@
 ### YamlMime:TableOfContent
+items:
 - uid: DisCatSharp.ApplicationCommands
   name: DisCatSharp.ApplicationCommands
   items:
@@ -25,6 +26,8 @@
     name: ApplicationCommandRequireDirectMessageAttribute
   - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireDisCatSharpDeveloperAttribute
     name: ApplicationCommandRequireDisCatSharpDeveloperAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireEntitlementAttribute
+    name: ApplicationCommandRequireEntitlementAttribute
   - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireGuildAttribute
     name: ApplicationCommandRequireGuildAttribute
   - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireNsfwAttribute
@@ -101,7 +104,6 @@
     name: IBucket
   - uid: DisCatSharp.ApplicationCommands.Entities.ICooldown`2
     name: ICooldown<TContextType, TBucketType>
-    name.vb: ICooldown(Of TContextType, TBucketType)
 - uid: DisCatSharp.ApplicationCommands.Enums
   name: DisCatSharp.ApplicationCommands.Enums
   items:
@@ -135,3 +137,4 @@
     name: ContextMenuExecutionChecksFailedException
   - uid: DisCatSharp.ApplicationCommands.Exceptions.SlashExecutionChecksFailedException
     name: SlashExecutionChecksFailedException
+memberLayout: SamePage

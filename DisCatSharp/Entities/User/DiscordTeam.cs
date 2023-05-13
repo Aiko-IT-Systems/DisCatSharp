@@ -49,7 +49,7 @@ public sealed class DiscordTeam : SnowflakeObject, IEquatable<DiscordTeam>
 	/// Gets the team's icon.
 	/// </summary>
 	public string Icon
-		=> !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.TEAM_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null;
+		=> !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.TEAM_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null!;
 
 	/// <summary>
 	/// Gets the owner of the team.
@@ -176,7 +176,7 @@ public sealed class DiscordTeamMember : IEquatable<DiscordTeamMember>
 	/// </summary>
 	/// <returns>String representation of this team member.</returns>
 	public override string ToString()
-		=> $"Team member: {this.User.Username}#{this.User.Discriminator} ({this.User.Id}), part of team {this.TeamName} ({this.TeamId})";
+		=> $"Team member: {(this.User.IsMigrated ? this.User.UsernameWithGlobalName : this.User.UsernameWithDiscriminator)} ({this.User.Id}), part of team {this.TeamName} ({this.TeamId})";
 
 	public static bool operator ==(DiscordTeamMember left, DiscordTeamMember right)
 		=> left?.TeamId == right?.TeamId && left?.User?.Id == right?.User?.Id;

@@ -23,6 +23,7 @@
 using System;
 using System.Net;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.Net.Udp;
@@ -208,13 +209,37 @@ public sealed class DiscordConfiguration
 	/// <para>Whether to use canary. <see cref="UsePtb"/> has to be false.</para>
 	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
-	public bool UseCanary { internal get; set; }
+	[Deprecated("Use ApiChannel instead.")]
+	public bool UseCanary
+	{
+		internal get => this.ApiChannel == ApiChannel.Canary;
+		set
+		{
+			if (value)
+				this.ApiChannel = ApiChannel.Canary;
+		}
+	}
 
 	/// <summary>
 	/// <para>Whether to use ptb. <see cref="UseCanary"/> has to be false.</para>
 	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
-	public bool UsePtb { internal get; set; }
+	[Deprecated("Use ApiChannel instead.")]
+	public bool UsePtb
+	{
+		internal get => this.ApiChannel == ApiChannel.PTB;
+		set
+		{
+			if (value)
+				this.ApiChannel = ApiChannel.PTB;
+		}
+	}
+
+	/// <summary>
+	/// <para>Which api channel to use.</para>
+	/// <para>Defaults to <see cref="ApiChannel.Stable"/>.</para>
+	/// </summary>
+	public ApiChannel ApiChannel { internal get; set; } = ApiChannel.Stable;
 
 	/// <summary>
 	/// <para>Refresh full guild channel cache.</para>

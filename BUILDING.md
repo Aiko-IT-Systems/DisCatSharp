@@ -11,16 +11,9 @@ On Windows, we only officially support Visual Studio 2019 16.10 or newer. Visual
 
 * **Windows 10** - while we support running the library on Windows 7 and above, we only support building on Windows 10 and better.
 * [**Git for Windows**](https://git-scm.com/download/win) - required to clone the repository.
-* [**Visual Studio 2021**](https://www.visualstudio.com/downloads/) - community edition or better. We do not support Visual Studio 2017 and older. Note that to build the library, you need Visual Studio 2019 version 16.10 or newer.
-   * **Workloads**:
-      * **.NET Framework Desktop** - required to build .NETFX (4.5, 4.6, and 4.7 targets)
-      * **.NET Core Cross-Platform Development** - required to build .NET Standard targets (1.1, 1.3, and 2.0) and the project overall.
-   * **Individual Components**:
-      * **.NET Framework 4.5 SDK** - required for .NETFX 4.5 target
-      * **.NET Framework 4.6 SDK** - required for .NETFX 4.6 target
-      * **.NET Framework 4.7 SDK** - required for .NETFX 4.7 target
-* [**.NET Core SDK 3.1**](https://www.microsoft.com/net/download) - required to build the project.
+* [**Visual Studio 2022**](https://www.visualstudio.com/downloads/) - community edition or better. We do not support Visual Studio 2021 and older.
 * **Windows PowerShell** - required to run the build scripts. You need to make sure your script execution policy allows execution of unsigned scripts.
+* [**.NET SDK 7.0**](https://www.microsoft.com/net/download) - required to build the project.
 
 ### GNU/Linux
 On GNU/Linux, we support building via Visual Studio Code and .NET Core SDK. Other IDEs might work, but are not supported or guaranteed to work properly.
@@ -33,10 +26,9 @@ When installing the below, make sure you install all the dependencies properly. 
 * **Git** - to clone the repository.
 * [**Visual Studio Code**](https://code.visualstudio.com/Download) - a recent version is required.
    * **C# for Visual Studio Code (powered by OmniSharp)** - required for syntax highlighting and basic Intellisense
-* [**.NET SDK 6.0**](https://www.microsoft.com/net/download) - required to build the project.
+* [**.NET SDK 7.0**](https://www.microsoft.com/net/download) - required to build the project.
 * [**Mono 5.x**](http://www.mono-project.com/download/#download-lin) - required to build the .NETFX 4.5, 4.6, and 4.7 targets, as well as to build the docs.
-* [**PowerShell Core**](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux?view=powershell-7.1) - required to execute the build scripts.
-* **p7zip-full** - required to package docs.
+* [**PowerShell Core**](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux?view=powershell-7.3) - required to execute the build scripts.
 
 ## Instructions
 Once you install all the necessary prerequisites, you can proceed to building. These instructions assume you have already cloned the repository.
@@ -56,7 +48,7 @@ Building through Visual Studio yields just binaries you can use in your projects
 Building this way outputs NuGet packages, and a documentation package. Ensure you have an internet connection available, as the script will install programs necessary to build the documentation.
 
 1. Open PowerShell and navigate to the directory which you cloned DisCatSharp to.
-2. Execute `.\s_oneclick-rebuild-all.ps1 -configuration Release` and wait for the script to finish execution.
+2. Execute `.\DisCatSharp.Tools\rebuild-lib.ps1 -ArtifactLocation .\dcs-artifacts -Configuration Release` and wait for the script to finish execution.
 3. Once it's done, the artifacts will be available in *dcs-artifacts* directory, next to the directory to which the repository is cloned.
 
 ### GNU/Linux
@@ -70,5 +62,5 @@ When all necessary prerequisites are installed, you can proceed to building. The
 
 #### Through PowerShell
 1. Open PowerShell (`pwsh`) and navigate to the directory which you cloned DisCatSharp to.
-2. Execute `.\s_oneclick-rebuild-all.ps1 -configuration Release` and wait for the script to finish execution.
+2. Execute `./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release` and wait for the script to finish execution.
 3. Once it's done, the artifacts will be available in *dcs-artifacts* directory, next to the directory to which the repository is cloned.

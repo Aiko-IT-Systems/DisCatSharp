@@ -1,8 +1,9 @@
 - name: Preamble
   href: preamble.md
-- name: Changelogs
-  href: ../changelogs/index.md
+- name: FAQ
+  href: faq.md
 - name: The Basics
+  expanded: true
   items:
   - name: Creating a Bot Account
     href: basics/bot_account.md
@@ -13,6 +14,7 @@
   - name: Project Templates
     href: basics/templates.md
 - name: Beyond Basics
+  expanded: true
   items:
   - name: Events
     href: beyond_basics/events.md
@@ -40,6 +42,7 @@
   - name: Workarounds
     href: beyond_basics/workarounds.md
 - name: Modules
+  expanded: true
   items:
   - name: Application Commands
     items:
@@ -98,6 +101,7 @@
   - name: Interactivity
     href: modules/interactivity.md
 - name: Miscellaneous
+  expanded: true
   items:
   - name: Nightly Builds
     href: misc/nightly_builds.md

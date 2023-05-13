@@ -81,32 +81,32 @@ public sealed class DiscordAuditLogGuildEntry : DiscordAuditLogEntry
 	public DiscordGuild Target { get; internal set; }
 
 	/// <summary>
-	/// <see cref="DiscordGuild.Name"/>
+	/// Gets the name change.
 	/// </summary>
 	public PropertyChange<string> NameChange { get; internal set; }
 
 	/// <summary>
-	/// <see cref="DiscordGuild.Owner"/>
+	/// Gets the owner change.
 	/// </summary>
 	public PropertyChange<DiscordMember> OwnerChange { get; internal set; }
 
 	/// <summary>
-	/// <see cref="DiscordGuild.IconUrl"/>
+	/// Gets the icon change.
 	/// </summary>
 	public PropertyChange<string> IconChange { get; internal set; }
 
 	/// <summary>
-	/// <see cref="DiscordGuild.VerificationLevel"/>
+	/// Gets the verification level change.
 	/// </summary>
 	public PropertyChange<VerificationLevel> VerificationLevelChange { get; internal set; }
 
 	/// <summary>
-	/// <see cref="DiscordGuild.AfkChannel"/>
+	/// Gets the afk channel change.
 	/// </summary>
 	public PropertyChange<DiscordChannel> AfkChannelChange { get; internal set; }
 
 	/// <summary>
-	/// <see cref="DiscordGuild.SystemChannelFlags"/>
+	/// Gets the system channel flags change.
 	/// </summary>
 	public PropertyChange<SystemChannelFlags> SystemChannelFlagsChange { get; internal set; }
 
@@ -114,9 +114,6 @@ public sealed class DiscordAuditLogGuildEntry : DiscordAuditLogEntry
 	/// <see cref="DiscordGuild.WidgetChannel"/>
 	/// </summary>
 	public PropertyChange<DiscordChannel> WidgetChannelChange { get; internal set; }
-
-	[Obsolete("Use properly named WidgetChannelChange")]
-	public PropertyChange<DiscordChannel> EmbedChannelChange => this.WidgetChannelChange;
 
 	/// <summary>
 	/// <see cref="DiscordGuild.RulesChannel"/>
@@ -200,7 +197,7 @@ public sealed class DiscordAuditLogChannelEntry : DiscordAuditLogEntry
 	public PropertyChange<bool?> NsfwChange { get; internal set; }
 
 	/// <summary>
-	/// <see cref="DiscordChannel.RtcRegionId"/>
+	/// Gets the rtc region id change.
 	/// </summary>
 	public PropertyChange<string> RtcRegionIdChange { get; internal set; }
 
@@ -220,7 +217,7 @@ public sealed class DiscordAuditLogChannelEntry : DiscordAuditLogEntry
 	public PropertyChange<string> TopicChange { get; internal set; }
 
 	/// <summary>
-	/// <see cref="DiscordChannel.UserLimit"/>
+	/// Gets the user limit change.
 	/// </summary>
 	public PropertyChange<int?> UserLimitChange { get; internal set; }
 
@@ -235,12 +232,12 @@ public sealed class DiscordAuditLogChannelEntry : DiscordAuditLogEntry
 	public PropertyChange<ChannelFlags> ChannelFlagsChange { get; internal set; }
 
 	/// <summary>
-	/// <see cref="DiscordChannel.DefaultAutoArchiveDuration"/>
+	/// Gets the default auto archive duration change.
 	/// </summary>
 	public PropertyChange<ThreadAutoArchiveDuration?> DefaultAutoArchiveDurationChange { get; internal set; }
 
 	/// <summary>
-	/// <see cref="DiscordChannel.InternalAvailableTags"/>
+	/// Gets the default available tags change.
 	/// </summary>
 	public PropertyChange<List<ForumPostTag>> AvailableTagsChange { get; internal set; }
 
@@ -431,7 +428,7 @@ public sealed class DiscordAuditLogRoleUpdateEntry : DiscordAuditLogEntry
 	public PropertyChange<bool?> HoistChange { get; internal set; }
 
 	/// <summary>
-	/// <see cref="DiscordRole.IconHash"/>
+	/// Gets the role icon hash change.
 	/// </summary>
 	public PropertyChange<string> IconHashChange { get; internal set; }
 
@@ -775,7 +772,7 @@ public sealed class DiscordAuditLogGuildScheduledEventEntry : DiscordAuditLogEnt
 	public PropertyChange<ulong?> ChannelIdChange { get; internal set; }
 
 	/// <summary>
-	/// <see cref="DiscordScheduledEvent.Name"/>
+	/// Gets the name change.
 	/// </summary>
 	public PropertyChange<string> NameChange { get; internal set; }
 
@@ -809,11 +806,6 @@ public sealed class DiscordAuditLogGuildScheduledEventEntry : DiscordAuditLogEnt
 	/// Gets the entity type change.
 	/// </summary>
 	public PropertyChange<ScheduledEventEntityType?> EntityTypeChange { get; internal set; }
-
-	/*/// <summary>
-        /// Gets the sku ids change.
-        /// </summary>
-        public PropertyChange<IReadOnlyList<ulong>> SkuIdsChange { get; internal set; }*/
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogGuildScheduledEventEntry"/> class.

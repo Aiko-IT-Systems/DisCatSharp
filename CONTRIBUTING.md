@@ -5,7 +5,9 @@ We're really happy to accept contributions. However we also ask that you follow 
 When opening a PR, please make sure your branch targets the latest release branch, in this case it would be `main`. Also make sure your branch is even with the target branch, to avoid unnecessary surprises.
 
 # Versioning
-We follow [SemVer](https://semver.org/) versioning when it comes to pushing stable releases. Ideally, this means you should only be creating PRs for `patch` and `minor` changes. If you wish to introduce a `major` (breaking) change, please discuss it beforehand so we can determine how to integrate it into our next major version. If this involves removing a public facing property/method, mark it with the `Obsolete` attribute instead on the latest release branch.
+We follow [SemVer](https://semver.org/) versioning when it comes to pushing stable releases. Ideally, this means you should only be creating PRs for `patch` and `minor` changes. If you wish to introduce a `major` (breaking) change, please discuss it beforehand so we can determine how to integrate it into our next major version. If this involves removing a public facing property/method, mark it with the `Deprecated` attribute instead on the latest release branch.
+
+Warning: We use a slightly different method for SemVer. {API_VERSION}.{major}.{minor}-{patch}
 
 # Proper titles
 When opening issues, make sure the title reflects the purpose of the issue or the pull request. Prefer past tense, and
@@ -107,13 +109,6 @@ the PR overview page.
 PRs that do not build will not be accepted.
 
 Furthermore we require that methods you implement on Discord entities have a reflection in the Discord API.
-
-In the event your code change is a style change, XML doc change, or otherwise does not change how the code works, tag
-the commit with `[skip appveyor]`.
-
-# Non-code changes
-In the event you change something outside of code (i.e. a meta-change or documentation), you must tag your commit with
-`[skip appveyor]`.
 
 # Developer Certificate of Origin (DCO)
 ```

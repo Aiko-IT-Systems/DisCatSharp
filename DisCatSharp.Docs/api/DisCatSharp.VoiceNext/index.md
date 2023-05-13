@@ -1,6 +1,7 @@
 ---
 uid: api_discatsharp_voicenext_index
 title: DisCatSharp.VoiceNext API Reference
+author: DisCatSharp Team
 ---
 
 # API Reference

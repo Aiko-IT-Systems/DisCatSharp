@@ -1,7 +1,7 @@
 [![Build](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/build.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/build.yml) [![Documentation](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/documentation.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/documentation.yml) [![CodeQL](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/codeql.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/codeql.yml) [![GitHub last commit](https://img.shields.io/github/last-commit/Aiko-IT-Systems/DisCatSharp?label=Last%20Commit&style=flat-square&logo=github)](https://aitsys.dev/source/DisCatSharp/history/) [![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Aiko-IT-Systems/DisCatSharp?label=Commit%20Activity&style=flat-square&logo=github)](https://github.com/Aiko-IT-Systems/DisCatSharp/commits/main)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/Aiko-IT-Systems/DisCatSharp?label=PRs&style=flat-square&logo=github&logo=gitub)](https://github.com/Aiko-IT-Systems/DisCatSharp/pulls) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Aiko-IT-Systems/DisCatSharp?label=Size&style=flat-square&logo=github)
 
-![Stable](https://img.shields.io/nuget/v/DisCatSharp?color=%23ebb34b&label=Stable&style=flat-square&logo=nuget) ![Nightly](https://img.shields.io/nuget/vpre/DisCatSharp?color=%23ff1493&label=Nightly&style=flat-square&logo=nuget)
+![Stable](https://img.shields.io/nuget/v/DisCatSharp?color=1F8B4C&label=Stable&style=flat-square&logo=Nuget) ![Nightly](https://img.shields.io/nuget/vpre/DisCatSharp?color=AD1457&label=Nightly&style=flat-square&logo=Nuget)
 
 ----
 
@@ -12,20 +12,15 @@
 
 # News
 
-## Breaking Changes
-> **Warning**
-> **AsEphemeral does not take any arguments anymore due to bug fix.**
-
-> **Note**
-> DisCatSharp.VoiceNext's function `SetSpeakingAsync` does not take a boolean anymore, instead `SpeakingFlags` are used.
-
-## Upcoming
-- We're building a translation generator tool for the template export function introduced in 10.1.0.
-
 ## New
-- [Linked roles](https://discord.com/build/linked-roles) support!
 
-- Support for the new username system (pomelo)
+- Support for the new [Username System](https://dis.gd/usernames) (pomelo)
+- Support for [Linked Roles](https://discord.com/build/linked-roles)
+- Support for [Application Subscription](https://discord.com/build/apply-now)
+- Support for [Voice Messages](https://support.discord.com/hc/en-us/articles/13091096725527)
+- Partial support for role subscriptions
+- Partial support for burst reactions
+- Partial support for onboarding
 
 ----
 
@@ -118,10 +113,12 @@ Or write us an email at [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
 
 ----
 
-## Sponsors [![Sponsors](https://img.shields.io/github/sponsors/Aiko-IT-Systems?label=&style=flat-square&logo=github)](https://github.com/sponsors/Aiko-IT-Systems) / [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=&style=flat-square&logo=github)](https://github.com/sponsors/Lulalaby)
+## Sponsors
 
 - [Deividas Kazakevicius](https://github.com/DeividasKaza)
 - [Will](https://github.com/villChurch)
+- [SavageVictor](https://github.com/SavageVictor)
+- [Schattenclown](https://github.com/Schattenclown)
 
 ## Hacktober Participants
 
@@ -139,6 +136,7 @@ Big thanks goes to the following people who helped us without being part of the 
 - [Geferon](https://github.com/geferon)
 - [Alice](https://github.com/QuantuChi)
 - [Will](https://github.com/villChurch)
+- [InFTord](https://github.com/InFTord)
 
 ## Special Thanks
 

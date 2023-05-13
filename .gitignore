@@ -323,3 +323,6 @@ Thumbs.db
 !**/obj/.cache/build/**
 !**/obj/.cache/build/**/*.*
 !**/obj/.cache/build/**/**
+.manifest
+dcs-artifacts/
+_exported_templates/

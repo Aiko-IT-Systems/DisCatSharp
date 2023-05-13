@@ -27,6 +27,20 @@ using DisCatSharp.Attributes;
 namespace DisCatSharp.Enums;
 
 /// <summary>
+/// Represents a member flag extensions.
+/// </summary>
+public static class MemberFlagExtensions
+{
+	/// <summary>
+	/// Calculates whether these member flags contain a specific flag.
+	/// </summary>
+	/// <param name="baseFlags">The existing flags.</param>
+	/// <param name="flag">The flags to search for.</param>
+	/// <returns></returns>
+	public static bool HasMemberFlag(this MemberFlags baseFlags, MemberFlags flag) => (baseFlags & flag) == flag;
+}
+
+/// <summary>
 /// Represents additional details of a member account.
 /// </summary>
 [Flags]
@@ -61,6 +75,13 @@ public enum MemberFlags : long
 	/// </summary>
 	[DiscordInExperiment]
 	StartedOnboarding = 1 << 3,
+
+	/// <summary>
+	/// Member is a guest.
+	/// Temporary members that are not in the guild.
+	/// </summary>
+	[DiscordInExperiment]
+	IsGuest = 1 << 4,
 
 	/// <summary>
 	/// Member has started home actions.

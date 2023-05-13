@@ -37,7 +37,6 @@ public class VoiceReceiveEventArgs : DiscordEventArgs
 	/// </summary>
 	public uint Ssrc { get; internal set; }
 
-#pragma warning disable CS8632
 
 	/// <summary>
 	/// Gets the user that sent the audio data.
