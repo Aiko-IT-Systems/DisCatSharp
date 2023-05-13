@@ -19,8 +19,13 @@ footer {
 	height: 40px !important;
 }
 
+#ctheme {
+	display: none !important;
+}
+
 [data-bs-theme=dark] {
-	--bs-body-bg: #2C2F33 !important;
+	--bs-content-bg: #313338 !important;
+	--bs-body-bg: #2B2D31 !important;
 	--bs-heading-color: #5865F2 !important;
 	--bs-link-color-rgb: rgb(235, 69, 158) !important;
 	--bs-link-color: #EB459E !important;
@@ -43,12 +48,19 @@ footer {
 	--bs-code-color: #92EC71 !important;
 	--bs-code-bg: #000000 !important;
 	--bs-nav-link-color: #C89696 !important;
+}
 
+.toc-offcanvas, .affix {
+	background-color: var(--bs-body-bg) !important;
+}
+
+.content {
+	background-color: var(--bs-body-bg) !important;
 }
 
 .bg-body {
 	--bs-bg-opacity: 1;
-	background-color: #020202 !important;
+	background-color: var(--bs-body-bg) !important;
 }
 
 .bg-body .nav-link {
