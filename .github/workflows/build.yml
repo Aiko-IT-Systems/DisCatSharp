@@ -16,7 +16,7 @@ env:
 
 jobs:
   build:
-    timeout-minutes: 30
+    timeout-minutes: 6
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
@@ -30,9 +30,7 @@ jobs:
       uses: actions/setup-dotnet@v3.0.3
       with:
         dotnet-version: ${{ matrix.dotnet }}
-    - name: Restore dependencies
-      run: dotnet restore DisCatSharp.sln
     - name: Build library
-      run: dotnet build -c Release -v normal --no-restore DisCatSharp.sln
+      run: dotnet build -c Release -v normal DisCatSharp.sln
     - name: Test library
       run: dotnet test -v normal -c Release --no-restore --no-build DisCatSharp.sln
