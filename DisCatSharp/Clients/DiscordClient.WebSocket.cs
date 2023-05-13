@@ -113,8 +113,8 @@ public sealed partial class DiscordClient
 			o.Dsn = "https://1da216e26a2741b99e8ccfccea1b7ac8@o1113828.ingest.sentry.io/4504901362515968";
 			o.AddInAppInclude("DisCatSharp");
 			o.AttachStacktrace = true;
+			o.AutoSessionTracking = this.Configuration.EnableSentry;
 			o.StackTraceMode = StackTraceMode.Enhanced;
-			//o.BeforeSend = sentryEvent => !sentryEvent.Modules.Keys.Contains("DisCatSharp") ? null : sentryEvent;
 			var a = typeof(DiscordClient).GetTypeInfo().Assembly;
 			var vs = "";
 			var iv = a.GetCustomAttribute<AssemblyInformationalVersionAttribute>();

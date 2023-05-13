@@ -43,7 +43,7 @@ namespace DisCatSharp.Entities
 		/// Lets JsonConvert set the unknown properties.
 		/// </summary>
 		[JsonExtensionData(ReadData = true, WriteData = false)]
-		internal IDictionary<string, object> AdditionalProperties
+		public IDictionary<string, object> AdditionalProperties
 		{
 			get => this._unknownProperties;
 			set => this._unknownProperties = value;
