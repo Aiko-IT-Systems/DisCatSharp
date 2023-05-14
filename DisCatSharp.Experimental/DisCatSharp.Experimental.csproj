@@ -19,7 +19,7 @@
 
 	  Experimental changes for DisCatSharp.
 	</Description>
-	<PackageTags>DisCatSharp,Experimental,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7</PackageTags>
+	<PackageTags>DisCatSharp,Experimental,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Net7</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
