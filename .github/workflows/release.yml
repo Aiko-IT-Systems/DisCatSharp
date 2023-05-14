@@ -20,7 +20,7 @@ env:
 
 jobs:
   release:
-    timeout-minutes: 30
+    timeout-minutes: 15
     runs-on: windows-latest
     name: Build library and release
     steps:
@@ -29,7 +29,9 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3.0.3
         with:
-          dotnet-version: 7.0.203
+          dotnet-version: |
+            7.0.203
+            6.x
       - name: Restore dependencies
         run: dotnet restore DisCatSharp.sln
       - name: Build library as full release

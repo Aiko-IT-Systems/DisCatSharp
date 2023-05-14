@@ -16,11 +16,10 @@ env:
 
 jobs:
   build:
-    timeout-minutes: 6
+    timeout-minutes: 15
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        dotnet: [7.0.203]
     runs-on: ${{ matrix.os }}
     name: Build library
     steps:
@@ -29,7 +28,9 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3.0.3
       with:
-        dotnet-version: ${{ matrix.dotnet }}
+        dotnet-version: |
+          7.0.203
+          6.x
     - name: Build library
       run: dotnet build -c Release -v normal DisCatSharp.sln
     - name: Test library

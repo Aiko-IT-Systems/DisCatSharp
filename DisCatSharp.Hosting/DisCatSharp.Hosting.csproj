@@ -10,7 +10,7 @@
   <PropertyGroup>
     <PackageId>DisCatSharp.Hosting</PackageId>
     <Description>Hosting Extension for DisCatSharp.</Description>
-	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Hosting,Web</PackageTags>
+	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Net7,Hosting,Web</PackageTags>
   </PropertyGroup>
 
     <ItemGroup>
