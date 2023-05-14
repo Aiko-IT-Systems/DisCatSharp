@@ -21,7 +21,7 @@ DisCatSharp Lavalink Extension
 Extend your bot with the power of lavalink.
 Play your favorite music in discord!
 
-Documentation: https://docs.discatsharp.tech/articles/modules/audio/lavalink/setup.html
+Documentation: https://docs.dcs.aitsys.dev/articles/modules/audio/lavalink/setup.html
 	</Description>
 	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Net7,Voice,Lavalink,Audio Player,Music,YouTube,Spotify,SoundCloud</PackageTags>
   </PropertyGroup>

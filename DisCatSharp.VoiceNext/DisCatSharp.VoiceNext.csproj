@@ -20,7 +20,7 @@ DisCatSharp Voice Next Extension
 
 Easy made audio player for discord bots.
 
-Documentation: https://docs.discatsharp.tech/articles/modules/audio/voicenext/prerequisites.html
+Documentation: https://docs.dcs.aitsys.dev/articles/modules/audio/voicenext/prerequisites.html
 	</Description>
 	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Net7,Voice,Audio Player</PackageTags>
   </PropertyGroup>
