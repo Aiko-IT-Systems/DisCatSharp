@@ -127,10 +127,7 @@ public static class DiscordClientExtensions
 		if (channel.Discord is not DiscordClient discord || discord == null)
 			throw new NullReferenceException();
 
-		var vnext = discord.GetVoiceNext();
-		if (vnext == null)
-			throw new InvalidOperationException("VoiceNext is not initialized for this Discord client.");
-
+		var vnext = discord.GetVoiceNext() ?? throw new InvalidOperationException("VoiceNext is not initialized for this Discord client.");
 		var vnc = vnext.GetConnection(channel.Guild);
 		return vnc != null
 			? throw new InvalidOperationException("VoiceNext is already connected in this guild.")

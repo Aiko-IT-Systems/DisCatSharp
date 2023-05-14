@@ -1296,9 +1296,8 @@ public sealed partial class DiscordClient
 			};
 
 			var dataList = await guild.ProcessAuditLog(workaroundAuditLogEntryList);
-			var data = dataList.First();
 
-			await this._guildAuditLogEntryCreated.InvokeAsync(this, new(this.ServiceProvider) { Guild = guild, AuditLogEntry = data });
+			await this._guildAuditLogEntryCreated.InvokeAsync(this, new(this.ServiceProvider) { Guild = guild, AuditLogEntry = dataList[0] });
 		}
 		catch (Exception)
 		{ }
@@ -1436,24 +1435,12 @@ public sealed partial class DiscordClient
 		var ruleId = (ulong)rawPayload["rule_id"];
 		var triggerType = rawPayload["rule_trigger_type"].ToObject<AutomodTriggerType>();
 		var userId = (ulong)rawPayload["user_id"];
-		var channelId = rawPayload.ContainsKey("channel_id") ? (ulong?)rawPayload["channel_id"] : null;
-		var messageId = rawPayload.ContainsKey("message_id") ? (ulong?)rawPayload["message_id"] : null;
-		var alertMessageId = rawPayload.ContainsKey("alert_system_message_id") ? (ulong?)rawPayload["alert_system_message_id"] : null;
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-		string? content = rawPayload.ContainsKey("content") ?(string?)rawPayload["content"] : null;
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-		string? matchedKeyword = rawPayload.ContainsKey("matched_keyword") ? (string?)rawPayload["matched_keyword"] : null;
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-		string? matchedContent = rawPayload.ContainsKey("matched_content") ? (string?)rawPayload["matched_content"] : null;
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+		var channelId = rawPayload.TryGetValue("channel_id", out var value) ? (ulong?)value : null;
+		var messageId = rawPayload.TryGetValue("message_id", out var value1) ? (ulong?)value1 : null;
+		var alertMessageId = rawPayload.TryGetValue("alert_system_message_id", out var value2) ? (ulong?)value2 : null;
+		var content = rawPayload.TryGetValue("content", out var value3) ?(string?)value3 : null;
+		var matchedKeyword = rawPayload.TryGetValue("matched_keyword", out var value4) ? (string?)value4 : null;
+		var matchedContent = rawPayload.TryGetValue("matched_content", out var value5) ? (string?)value5 : null;
 
 		var ea = new AutomodActionExecutedEventArgs(this.ServiceProvider)
 		{
@@ -3293,17 +3280,11 @@ public sealed partial class DiscordClient
 	/// <returns>Count of application commands.</returns>
 	internal async Task OnGuildApplicationCommandCountsUpdateAsync(int chatInputCommandCount, int userContextMenuCommandCount, int messageContextMenuCount, ulong guildId)
 	{
-		var guild = this.InternalGetCachedGuild(guildId);
-
-		if (guild == null)
-		{
-			guild = new DiscordGuild
+		var guild = this.InternalGetCachedGuild(guildId) ?? new DiscordGuild
 			{
 				Id = guildId,
 				Discord = this
 			};
-		}
-
 		var ea = new GuildApplicationCommandCountEventArgs(this.ServiceProvider)
 		{
 			SlashCommands = chatInputCommandCount,
