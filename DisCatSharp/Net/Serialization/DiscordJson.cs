@@ -102,7 +102,7 @@ public static class DiscordJson
 		{
 			var sentryMessage = "Found missing properties in api response for " + obj.GetType().Name;
 			List<string> sentryFields = new();
-			discord.Logger.LogInformation(sentryMessage);
+			discord.Logger.LogInformation("{sentry}", sentryMessage);
 			foreach (var ap in obj.AdditionalProperties)
 			{
 				sentryFields.Add(ap.Key);
