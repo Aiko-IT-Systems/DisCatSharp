@@ -19,7 +19,7 @@ DisCatSharp Interactivity Extension
 
 Unleash the full power of discord commands.
 
-Documentation: https://docs.discatsharp.tech/articles/modules/interactivity.html
+Documentation: https://docs.dcs.aitsys.dev/articles/modules/interactivity.html
 	</Description>
 	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Net7,Pagination,Reactions,Buttons,Interactive Commands,Interactivity,Message Components</PackageTags>
   </PropertyGroup>
