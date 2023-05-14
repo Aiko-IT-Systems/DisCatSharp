@@ -18,6 +18,10 @@ DisCatSharp can be extended with a set of analyzers that can help you write bett
 
 To use the DisCatSharp Analyzer, you need to install the [DisCatSharp.Analyzer.Roselyn](https://www.nuget.org/packages/DisCatSharp.Analyzer.Roselyn) NuGet package.
 
+#### Visual Studio Code
+
+Enable `omnisharp.enableRoslynAnalyzers` in your settings.
+
 #### Included Rules
 
 Rule ID | Category | Severity | Notes
