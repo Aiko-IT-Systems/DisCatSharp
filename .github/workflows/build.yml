@@ -16,7 +16,7 @@ env:
 
 jobs:
   build:
-    timeout-minutes: 6
+    timeout-minutes: 15
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
