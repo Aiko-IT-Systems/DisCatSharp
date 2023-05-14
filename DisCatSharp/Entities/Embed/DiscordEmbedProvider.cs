@@ -29,7 +29,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents an embed provider.
 /// </summary>
-public sealed class DiscordEmbedProvider
+public sealed class DiscordEmbedProvider : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the name of the provider.

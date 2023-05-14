@@ -29,7 +29,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a field inside a discord embed.
 /// </summary>
-public sealed class DiscordEmbedField
+public sealed class DiscordEmbedField : ObservableApiObject
 {
 	private string _name;
 

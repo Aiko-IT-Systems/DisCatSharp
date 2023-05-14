@@ -32,7 +32,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a field in a guild's membership screening form
 /// </summary>
-public class DiscordGuildMembershipScreeningField
+public class DiscordGuildMembershipScreeningField : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the type of the field.
