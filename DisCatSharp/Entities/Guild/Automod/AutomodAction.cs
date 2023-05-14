@@ -29,7 +29,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents an action which will execute when a rule is triggered.
 /// </summary>
-public class AutomodAction
+public class AutomodAction : ObservableApiObject
 {
 	/// <summary>
 	/// The type of action.

@@ -31,7 +31,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Gets a Discord connection to a 3rd party service.
 /// </summary>
-public class DiscordConnection
+public class DiscordConnection : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the id of the connection account

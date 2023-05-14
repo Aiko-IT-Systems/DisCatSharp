@@ -31,7 +31,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a <see cref="DiscordActionRowComponentResult"/> resolved from a <see cref="DisCatSharp.Enums.ApplicationCommandType.ModalSubmit"/>.
 /// </summary>
-public sealed class DiscordActionRowComponentResult
+public sealed class DiscordActionRowComponentResult : ObservableApiObject
 {
 	/// <summary>
 	/// The type of component this represents.

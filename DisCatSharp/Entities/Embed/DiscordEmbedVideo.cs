@@ -29,7 +29,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a video inside an embed.
 /// </summary>
-public sealed class DiscordEmbedVideo
+public sealed class DiscordEmbedVideo : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the source url of the video.

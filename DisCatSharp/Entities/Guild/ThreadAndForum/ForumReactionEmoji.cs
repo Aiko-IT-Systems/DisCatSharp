@@ -24,7 +24,7 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
 
-public class ForumReactionEmoji
+public class ForumReactionEmoji : ObservableApiObject
 {
 	/// <summary>
 	/// Creates a new forum reaction emoji.

@@ -31,13 +31,13 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a user presence.
 /// </summary>
-public sealed class DiscordPresence
+public sealed class DiscordPresence : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the discord client.
 	/// </summary>
 	[JsonIgnore]
-	internal DiscordClient Discord { get; set; }
+	public new DiscordClient Discord { get; set; }
 
 	/// <summary>
 	/// Gets the internal user.

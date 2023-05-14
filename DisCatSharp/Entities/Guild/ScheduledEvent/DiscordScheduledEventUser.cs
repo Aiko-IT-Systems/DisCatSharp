@@ -29,7 +29,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// The discord scheduled event user.
 /// </summary>
-public class DiscordScheduledEventUser : IEquatable<DiscordScheduledEventUser>
+public class DiscordScheduledEventUser : ObservableApiObject, IEquatable<DiscordScheduledEventUser>
 {
 	/// <summary>
 	/// Gets the client instance this object is tied to.

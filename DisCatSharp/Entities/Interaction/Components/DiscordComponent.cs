@@ -31,7 +31,7 @@ namespace DisCatSharp.Entities;
 /// A component to attach to a message.
 /// </summary>
 [JsonConverter(typeof(DiscordComponentJsonConverter))]
-public class DiscordComponent
+public class DiscordComponent : ObservableApiObject
 {
 	/// <summary>
 	/// The type of component this represents.

@@ -31,7 +31,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a interactions application command callback data.
 /// </summary>
-internal class DiscordInteractionApplicationCommandCallbackData
+internal class DiscordInteractionApplicationCommandCallbackData : ObservableApiObject
 {
 	/// <summary>
 	/// Whether this message is text to speech.

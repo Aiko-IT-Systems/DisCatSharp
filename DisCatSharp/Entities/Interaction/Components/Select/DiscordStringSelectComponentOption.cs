@@ -29,7 +29,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents options for <see cref="DiscordBaseSelectComponent"/>.
 /// </summary>
-public sealed class DiscordStringSelectComponentOption
+public sealed class DiscordStringSelectComponentOption : ObservableApiObject
 {
 	/// <summary>
 	/// The label to add. This is required.

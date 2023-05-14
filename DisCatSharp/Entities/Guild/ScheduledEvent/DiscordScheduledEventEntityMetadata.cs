@@ -27,15 +27,13 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents an scheduled event.
 /// </summary>
-public class DiscordScheduledEventEntityMetadata
+public class DiscordScheduledEventEntityMetadata : ObservableApiObject
 {
 
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 	/// <summary>
 	/// External location if event type is <see cref="ScheduledEventEntityType.External"/>.
 	/// </summary>
 	[JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 	public string Location { get; internal set; }
 
 	/// <summary>

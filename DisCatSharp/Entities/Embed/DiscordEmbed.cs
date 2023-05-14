@@ -30,7 +30,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a discord embed.
 /// </summary>
-public sealed class DiscordEmbed
+public sealed class DiscordEmbed : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the embed's title.

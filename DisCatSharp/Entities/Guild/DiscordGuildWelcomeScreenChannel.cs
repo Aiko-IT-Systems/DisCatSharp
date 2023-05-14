@@ -27,7 +27,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a channel in a welcome screen
 /// </summary>
-public class DiscordGuildWelcomeScreenChannel
+public class DiscordGuildWelcomeScreenChannel : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the id of the channel.

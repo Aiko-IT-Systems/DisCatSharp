@@ -29,7 +29,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a footer in an embed.
 /// </summary>
-public sealed class DiscordEmbedFooter
+public sealed class DiscordEmbedFooter : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the footer's text.

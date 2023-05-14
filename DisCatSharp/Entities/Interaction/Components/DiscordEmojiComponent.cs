@@ -29,7 +29,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents an emoji to add to a component.
 /// </summary>
-public sealed class DiscordComponentEmoji
+public sealed class DiscordComponentEmoji : ObservableApiObject
 {
 	/// <summary>
 	/// The Id of the emoji to use.

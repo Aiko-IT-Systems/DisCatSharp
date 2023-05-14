@@ -28,7 +28,7 @@ namespace DisCatSharp.Entities;
 /// Additional data used when an action is executed.
 /// Different fields are relevant based on the action type.
 /// </summary>
-public class AutomodActionMetadata
+public class AutomodActionMetadata : ObservableApiObject
 {
 	/// <summary>
 	/// The channel to which user content should be logged.

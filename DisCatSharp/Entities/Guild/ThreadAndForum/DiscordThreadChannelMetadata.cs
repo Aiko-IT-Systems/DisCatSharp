@@ -32,7 +32,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a discord thread metadata object.
 /// </summary>
-public class DiscordThreadChannelMetadata
+public class DiscordThreadChannelMetadata : ObservableApiObject
 {
 	/// <summary>
 	/// Gets whether the thread is archived or not.
