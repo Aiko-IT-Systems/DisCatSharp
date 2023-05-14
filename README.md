@@ -121,10 +121,11 @@ Or write us an email at [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
 
 ## Sponsors
 
-- [Deividas Kazakevicius](https://github.com/DeividasKaza)
+- [Dei](https://github.com/DeividasKaza)
 - [Will](https://github.com/villChurch)
 - [SavageVictor](https://github.com/SavageVictor)
 - [Schattenclown](https://github.com/Schattenclown)
+- [FabiChan99](https://github.com/FabiChan99)
 
 ## Hacktober Participants
 
