@@ -147,3 +147,7 @@ Big thanks goes to the following people who helped us without being part of the 
 ## Special Thanks
 
 The special thanks goes to Nagisa. Make sure to check out her [Instagram](https://www.instagram.com/nagisaarts_/) ♥️♥️
+
+## Open Source License Status
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FAiko-IT-Systems%2FDisCatSharp.svg?type=large)](https://app.fossa.com/reports/d18d903c-f217-4d82-a7ec-e113fb147275?ref=badge_large)
