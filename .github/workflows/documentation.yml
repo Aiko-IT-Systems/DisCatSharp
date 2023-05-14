@@ -10,7 +10,7 @@ env:
 
 jobs:
   build:
-    timeout-minutes: 30
+    timeout-minutes: 25
     runs-on: ubuntu-latest
     name: Build documentation
     steps:
@@ -29,7 +29,8 @@ jobs:
     - name: Restore packages
       run: dotnet restore DisCatSharp.sln
     - name: Build library
-      run: dotnet build -c Release --no-restore -v minimal DisCatSharp.sln
+      run: dotnet build -c Release --no-restore -v minimal -f net7.0 DisCatSharp.sln
+      timeout-minutes: 7
       continue-on-error: true
     - name: Add Custom Plugins
       run: cp -R DisCatSharp.Docs/dcs/plugins/* /home/runner/.dotnet/tools/.store/docfx/2.67.0/docfx/2.67.0/tools/net7.0/any/

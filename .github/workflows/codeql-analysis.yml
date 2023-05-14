@@ -30,6 +30,6 @@ jobs:
         languages: ${{ matrix.language }}
     - name: Build
       run: |
-        dotnet build -c Release -v minimal -f net7.0 --no-self-contained DisCatSharp.sln
+        dotnet build -c Release -v minimal --no-self-contained DisCatSharp.sln
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
