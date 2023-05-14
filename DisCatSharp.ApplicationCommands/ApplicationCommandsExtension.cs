@@ -219,7 +219,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		this._globalApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs>("GLOBAL_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 		this._guildApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GuildApplicationCommandsRegisteredEventArgs>("GUILD_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 
-		this.Client.GuildDownloadCompleted += async (c, e) => await this.UpdateAsync();
+		this.Client.GuildDownloadCompleted += (c, e) =>
+		{
+			_ = Task.Run(async () => await this.UpdateAsync());
+			return Task.CompletedTask;
+		};
 		this.Client.InteractionCreated += this.CatchInteractionsOnStartup;
 		this.Client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
 	}
