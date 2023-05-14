@@ -20,7 +20,7 @@ env:
 
 jobs:
   release:
-    timeout-minutes: 30
+    timeout-minutes: 15
     runs-on: windows-latest
     name: Build library and release
     steps:
