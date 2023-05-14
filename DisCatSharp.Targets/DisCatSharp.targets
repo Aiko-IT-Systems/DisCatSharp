@@ -4,7 +4,7 @@
     <Authors>AITSYS, DisCatSharp, DisCatSharp Contributors</Authors>
     <Company>AITSYS</Company>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <PackageProjectUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</PackageProjectUrl>
+    <PackageProjectUrl>https://docs.dcs.aitsys.dev</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageIcon>logobig.png</PackageIcon>
