@@ -180,9 +180,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// Gets the buttons async.
 		/// </summary>
 		/// <returns><see cref="NotSupportedException"/></returns>
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-		public async Task<IEnumerable<DiscordButtonComponent>> GetButtonsAsync()
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+		public Task<IEnumerable<DiscordButtonComponent>> GetButtonsAsync()
 			=> throw new NotSupportedException("This request does not support buttons.");
 
 		/// <summary>

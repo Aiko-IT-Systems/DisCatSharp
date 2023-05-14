@@ -324,8 +324,8 @@ public sealed class LavalinkNodeConnection
 	/// <returns>Channel connection, which allows for playback control.</returns>
 	public async Task<LavalinkGuildConnection> ConnectAsync(DiscordChannel channel)
 	{
-		if (this.ConnectedGuildsInternal.ContainsKey(channel.Guild.Id))
-			return this.ConnectedGuildsInternal[channel.Guild.Id];
+		if (this.ConnectedGuildsInternal.TryGetValue(channel.Guild.Id, out var connectedGuild))
+			return connectedGuild;
 
 		if (channel.Guild == null || (channel.Type != ChannelType.Voice && channel.Type != ChannelType.Stage))
 			throw new ArgumentException("Invalid channel specified.", nameof(channel));
