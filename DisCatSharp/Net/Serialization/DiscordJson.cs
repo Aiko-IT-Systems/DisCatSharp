@@ -27,6 +27,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
 
@@ -53,7 +54,7 @@ public static class DiscordJson
 	/// <param name="value">The object to serialize.</param>
 	/// <returns>A JSON string representation of the object.</returns>
 	public static string SerializeObject(object value)
-		=> SerializeObjectInternal(value, null, s_serializer);
+		=> SerializeObjectInternal(value, null!, s_serializer);
 
 	public static T DeserializeObject<T>(string json, BaseDiscordClient discord) where T : ObservableApiObject
 		=> DeserializeObjectInternal<T>(json, discord);
@@ -74,7 +75,7 @@ public static class DiscordJson
 	/// <typeparam name="T">Type to convert to</typeparam>
 	/// <returns>The converted token</returns>
 	public static T ToDiscordObject<T>(this JToken token)
-		=> token.ToObject<T>(s_serializer);
+		=> token.ToObject<T>(s_serializer)!;
 
 	/// <summary>
 	/// Serializes the object.
@@ -84,7 +85,7 @@ public static class DiscordJson
 	/// <param name="jsonSerializer">The json serializer.</param>
 	private static string SerializeObjectInternal(object value, Type type, JsonSerializer jsonSerializer)
 	{
-		var stringWriter = new StringWriter(new StringBuilder(256), CultureInfo.InvariantCulture);
+		var stringWriter = new StringWriter(new(256), CultureInfo.InvariantCulture);
 		using (var jsonTextWriter = new JsonTextWriter(stringWriter))
 		{
 			jsonTextWriter.Formatting = jsonSerializer.Formatting;
@@ -95,35 +96,32 @@ public static class DiscordJson
 
 	private static T DeserializeObjectInternal<T>(string json, BaseDiscordClient discord) where T : ObservableApiObject
 	{
-		var obj = JsonConvert.DeserializeObject<T>(json);
+		var obj = JsonConvert.DeserializeObject<T>(json)!;
 		obj.Discord = discord;
 
-		if (discord.Configuration.ReportMissingFields && obj.AdditionalProperties.Any())
+		if (!discord.Configuration.ReportMissingFields || !obj.AdditionalProperties.Any()) return obj;
+		var sentryMessage = "Found missing properties in api response for " + obj.GetType().Name;
+		List<string> sentryFields = new();
+		discord.Logger.LogInformation("{sentry}", sentryMessage);
+		foreach (var ap in obj.AdditionalProperties)
 		{
-			var sentryMessage = "Found missing properties in api response for " + obj.GetType().Name;
-			List<string> sentryFields = new();
-			discord.Logger.LogInformation("{sentry}", sentryMessage);
-			foreach (var ap in obj.AdditionalProperties)
-			{
-				sentryFields.Add(ap.Key);
-				discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, obj.GetType().Name);
-			}
-
-			if (discord.Configuration.EnableSentry)
-			{
-				var sentryJson = JsonConvert.SerializeObject(sentryFields);
-				sentryMessage += "\n\nNew fields: " + sentryJson;
-				SentryEvent sevnt = new()
-				{
-					Level = SentryLevel.Warning,
-					Logger = nameof(DiscordJson),
-					Message = sentryMessage
-				};
-				sevnt.SetExtra("Found Fields", sentryJson);
-				var sid = SentrySdk.CaptureEvent(sevnt);
-				discord.Logger.LogInformation("Reported to sentry with id {sid}", sid.ToString());
-			}
+			sentryFields.Add(ap.Key);
+			discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, obj.GetType().Name);
 		}
+
+		if (!discord.Configuration.EnableSentry) return obj;
+		var sentryJson = JsonConvert.SerializeObject(sentryFields);
+		sentryMessage += "\n\nNew fields: " + sentryJson;
+		SentryEvent sentryEvent = new()
+		{
+			Level = SentryLevel.Warning,
+			Logger = nameof(DiscordJson),
+			Message = sentryMessage
+		};
+		sentryEvent.SetExtra("Found Fields", sentryJson);
+		var sid = SentrySdk.CaptureEvent(sentryEvent);
+		_ = Task.Run(SentrySdk.FlushAsync);
+		discord.Logger.LogInformation("Reported to sentry with id {sid}", sid.ToString());
 
 		return obj;
 	}

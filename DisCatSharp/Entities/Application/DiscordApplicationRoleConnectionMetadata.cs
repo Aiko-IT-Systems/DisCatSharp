@@ -32,7 +32,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a role connection metadata object that is registered to an application.
 /// </summary>
-public sealed class DiscordApplicationRoleConnectionMetadata : IEquatable<DiscordApplicationRoleConnectionMetadata>
+public sealed class DiscordApplicationRoleConnectionMetadata : ObservableApiObject, IEquatable<DiscordApplicationRoleConnectionMetadata>
 {
 	/// <summary>
 	/// Gets the type of this role connection metadata object.

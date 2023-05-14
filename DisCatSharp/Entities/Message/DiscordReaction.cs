@@ -27,7 +27,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a reaction to a message.
 /// </summary>
-public class DiscordReaction
+public class DiscordReaction : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the total number of users who reacted with this emoji.

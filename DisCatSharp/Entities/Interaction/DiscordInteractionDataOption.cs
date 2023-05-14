@@ -31,7 +31,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents parameters for interaction commands.
 /// </summary>
-public sealed class DiscordInteractionDataOption
+public sealed class DiscordInteractionDataOption : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the name of this interaction parameter.

@@ -27,7 +27,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a Discord integration account.
 /// </summary>
-public class DiscordIntegrationAccount
+public class DiscordIntegrationAccount : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the ID of the account.

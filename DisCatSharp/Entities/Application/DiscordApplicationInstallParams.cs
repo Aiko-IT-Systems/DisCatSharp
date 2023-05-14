@@ -31,7 +31,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// The application install params.
 /// </summary>
-public sealed class DiscordApplicationInstallParams
+public sealed class DiscordApplicationInstallParams : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the scopes.

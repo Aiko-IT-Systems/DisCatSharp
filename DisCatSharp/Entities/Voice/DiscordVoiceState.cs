@@ -32,12 +32,12 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a Discord voice state.
 /// </summary>
-public class DiscordVoiceState
+public class DiscordVoiceState : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the discord client.
 	/// </summary>
-	internal DiscordClient Discord { get; set; }
+	internal new DiscordClient Discord { get; set; }
 
 	/// <summary>
 	/// Gets ID of the guild this voice state is associated with.
