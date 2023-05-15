@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
+
 using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
@@ -50,9 +52,6 @@ internal class TransportUser : ObservableApiObject
 	/// </summary>
 	[JsonProperty("global_name", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
 	public string GlobalName { get; internal set; }
-
-	[JsonProperty("display_name"), DiscordDeprecated]
-	internal string? DeprecatedDisplayName { get; set; }
 
 	/// <summary>
 	/// Gets or sets the discriminator.
@@ -102,9 +101,7 @@ internal class TransportUser : ObservableApiObject
 	/// Gets the users theme colors.
 	/// </summary>
 	[JsonProperty("theme_colors", NullValueHandling = NullValueHandling.Ignore)]
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public int[]? ThemeColors { get; internal set; }
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	/// <summary>
 	/// Gets a value indicating whether is bot.
@@ -170,7 +167,9 @@ internal class TransportUser : ObservableApiObject
 	/// <summary>
 	/// Initializes a new instance of the <see cref="TransportUser"/> class.
 	/// </summary>
-	internal TransportUser() { }
+	internal TransportUser()
+		: base(new List<string>() { "display_name", "linked_users", "banner_color" })
+	{ }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="TransportUser"/> class from an existing <see cref="TransportUser"/>.

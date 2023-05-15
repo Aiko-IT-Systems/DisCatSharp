@@ -37,6 +37,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets additional json properties that are not known to the deserializing object.
 		/// </summary>
+		[JsonIgnore]
 		internal IDictionary<string, object> _unknownProperties = new Dictionary<string, object>();
 
 		/// <summary>
@@ -47,6 +48,16 @@ namespace DisCatSharp.Entities
 		{
 			get => this._unknownProperties;
 			set => this._unknownProperties = value;
+		}
+
+		[JsonIgnore]
+		internal List<string> _ignoredJsonKeys { get; set; } = new();
+
+		public ObservableApiObject(List<string>? ignored = null)
+		{
+			if (ignored != null)
+				foreach(var ignoredKey in ignored)
+					this._ignoredJsonKeys.Add(ignoredKey);
 		}
 	}
 }

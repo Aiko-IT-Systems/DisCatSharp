@@ -48,5 +48,7 @@ public abstract class SnowflakeObject : ObservableApiObject
 	/// <summary>
 	/// Initializes a new instance of the <see cref="SnowflakeObject"/> class.
 	/// </summary>
-	internal SnowflakeObject() { }
+	internal SnowflakeObject(List<string>? ignored = null)
+		: base(ignored)
+	{ }
 }
