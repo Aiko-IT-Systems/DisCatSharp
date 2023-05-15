@@ -39,6 +39,8 @@ using DisCatSharp.Net;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+using Sentry;
+
 namespace DisCatSharp;
 
 /// <summary>
@@ -50,6 +52,8 @@ public abstract class BaseDiscordClient : IDisposable
 	/// Gets the api client.
 	/// </summary>
 	internal protected DiscordApiClient ApiClient { get; }
+
+	internal SentryClient Sentry { get; set; }
 
 	/// <summary>
 	/// Gets the configuration.
@@ -139,7 +143,7 @@ public abstract class BaseDiscordClient : IDisposable
 			this.Configuration.LoggerFactory = new DefaultLoggerFactory();
 			this.Configuration.LoggerFactory.AddProvider(new DefaultLoggerProvider(this));
 			if (this.Configuration.EnableSentry)
-				this.Configuration.LoggerFactory.AddSentry(x => x.DiagnosticLevel = Sentry.SentryLevel.Error);
+				this.Configuration.LoggerFactory.AddSentry(x => x.DiagnosticLevel = SentryLevel.Error);
 		}
 		this.Logger ??= this.Configuration.LoggerFactory.CreateLogger<BaseDiscordClient>();
 

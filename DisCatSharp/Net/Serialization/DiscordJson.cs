@@ -134,8 +134,8 @@ public static class DiscordJson
 			Message = sentryMessage
 		};
 		sentryEvent.SetExtra("Found Fields", sentryJson);
-		var sid = SentrySdk.CaptureEvent(sentryEvent);
-		_ = Task.Run(SentrySdk.FlushAsync);
+		var sid = discord.Sentry.CaptureEvent(sentryEvent);
+		_ = Task.Run(discord.Sentry.FlushAsync);
 		discord.Logger.LogInformation("Reported to sentry with id {sid}", sid.ToString());
 
 		return obj;
@@ -170,8 +170,6 @@ public static class DiscordJson
 			}
 		}
 
-		discord.Logger.LogDebug(json);
-
 		if (!discord.Configuration.EnableSentry || sentryFields.Count == 0) return obj;
 		var sentryJson = JsonConvert.SerializeObject(sentryFields);
 		sentryMessage += "\n\nNew fields: " + sentryJson;
@@ -182,8 +180,8 @@ public static class DiscordJson
 			Message = sentryMessage
 		};
 		sentryEvent.SetExtra("Found Fields", sentryJson);
-		var sid = SentrySdk.CaptureEvent(sentryEvent);
-		_ = Task.Run(SentrySdk.FlushAsync);
+		var sid = discord.Sentry.CaptureEvent(sentryEvent);
+		_ = Task.Run(discord.Sentry.FlushAsync);
 		discord.Logger.LogInformation("Reported to sentry with id {sid}", sid.ToString());
 
 		return obj;
