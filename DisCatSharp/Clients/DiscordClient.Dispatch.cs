@@ -146,8 +146,8 @@ public sealed partial class DiscordClient
 			#region Gateway Status
 
 			case "ready":
-				var glds = (JArray)dat["guilds"];
-				await this.OnReadyEventAsync(dat.ToObject<ReadyPayload>(), glds).ConfigureAwait(false);
+				var glds = (JArray)dat["guilds"]!;
+				await this.OnReadyEventAsync(dat!.ToObject<ReadyPayload>()!, glds).ConfigureAwait(false);
 				break;
 
 			case "resumed":
@@ -192,7 +192,7 @@ public sealed partial class DiscordClient
 				break;
 
 			case "guild_delete":
-				await this.OnGuildDeleteEventAsync(dat.ToDiscordObject<DiscordGuild>()).ConfigureAwait(false);
+				await this.OnGuildDeleteEventAsync(DiscordJson.DeserializeObject<DiscordGuild>(payloadString, this)).ConfigureAwait(false);
 				break;
 
 			case "guild_audit_log_entry_create":
@@ -213,13 +213,13 @@ public sealed partial class DiscordClient
 				break;
 
 			case "guild_stickers_update":
-				gid = (ulong)dat["guild_id"];
-				var strs = dat["stickers"].ToDiscordObject<IEnumerable<DiscordSticker>>();
+				gid = (ulong)dat["guild_id"]!;
+				var strs = dat["stickers"]!.ToDiscordObject<IEnumerable<DiscordSticker>>();
 				await this.OnStickersUpdatedAsync(strs, gid).ConfigureAwait(false);
 				break;
 
 			case "guild_integrations_update":
-				gid = (ulong)dat["guild_id"];
+				gid = (ulong)dat["guild_id"]!;
 
 				// discord fires this event inconsistently if the current user leaves a guild.
 				if (!this.GuildsInternal.ContainsKey(gid))
@@ -240,8 +240,7 @@ public sealed partial class DiscordClient
 				await this.OnAutomodRuleDeleted(dat.ToDiscordObject<AutomodRule>());
 				break;
 			case "auto_moderation_action_execution":
-				gid = (ulong)dat["guild_id"];
-
+				gid = (ulong)dat["guild_id"]!;
 				await this.OnAutomodActionExecuted(this.GuildsInternal[gid], dat);
 				break;
 			#endregion
@@ -249,14 +248,14 @@ public sealed partial class DiscordClient
 			#region Guild Ban
 
 			case "guild_ban_add":
-				usr = dat["user"].ToObject<TransportUser>();
-				gid = (ulong)dat["guild_id"];
+				usr = DiscordJson.DeserializeObject<TransportUser>(dat["user"]!.ToString(), this);
+				gid = (ulong)dat["guild_id"]!;
 				await this.OnGuildBanAddEventAsync(usr, this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
 
 			case "guild_ban_remove":
-				usr = dat["user"].ToObject<TransportUser>();
-				gid = (ulong)dat["guild_id"];
+				usr = DiscordJson.DeserializeObject<TransportUser>(dat["user"]!.ToString(), this);
+				gid = (ulong)dat["guild_id"]!;
 				await this.OnGuildBanRemoveEventAsync(usr, this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
 
@@ -265,33 +264,33 @@ public sealed partial class DiscordClient
 			#region Guild Event
 
 			case "guild_scheduled_event_create":
-				gse = dat.ToObject<DiscordScheduledEvent>();
-				gid = (ulong)dat["guild_id"];
+				gse = DiscordJson.DeserializeObject<DiscordScheduledEvent>(payloadString, this);
+				gid = (ulong)dat["guild_id"]!;
 				await this.OnGuildScheduledEventCreateEventAsync(gse, this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
 
 			case "guild_scheduled_event_update":
-				gse = dat.ToObject<DiscordScheduledEvent>();
-				gid = (ulong)dat["guild_id"];
+				gse = DiscordJson.DeserializeObject<DiscordScheduledEvent>(payloadString, this);
+				gid = (ulong)dat["guild_id"]!;
 				await this.OnGuildScheduledEventUpdateEventAsync(gse, this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
 
 			case "guild_scheduled_event_delete":
-				gse = dat.ToObject<DiscordScheduledEvent>();
-				gid = (ulong)dat["guild_id"];
+				gse = DiscordJson.DeserializeObject<DiscordScheduledEvent>(payloadString, this);
+				gid = (ulong)dat["guild_id"]!;
 				await this.OnGuildScheduledEventDeleteEventAsync(gse, this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
 
 			case "guild_scheduled_event_user_add":
-				gid = (ulong)dat["guild_id"];
-				uid = (ulong)dat["user_id"];
-				await this.OnGuildScheduledEventUserAddedEventAsync((ulong)dat["guild_scheduled_event_id"], uid, this.GuildsInternal[gid]).ConfigureAwait(false);
+				gid = (ulong)dat["guild_id"]!;
+				uid = (ulong)dat["user_id"]!;
+				await this.OnGuildScheduledEventUserAddedEventAsync((ulong)dat["guild_scheduled_event_id"]!, uid, this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
 
 			case "guild_scheduled_event_user_remove":
-				gid = (ulong)dat["guild_id"];
-				uid = (ulong)dat["user_id"];
-				await this.OnGuildScheduledEventUserRemovedEventAsync((ulong)dat["guild_scheduled_event_id"], uid, this.GuildsInternal[gid]).ConfigureAwait(false);
+				gid = (ulong)dat["guild_id"]!;
+				uid = (ulong)dat["user_id"]!;
+				await this.OnGuildScheduledEventUserRemovedEventAsync((ulong)dat["guild_scheduled_event_id"]!, uid, this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
 
 			#endregion
@@ -299,8 +298,8 @@ public sealed partial class DiscordClient
 			#region Guild Integration
 
 			case "integration_create":
-				gid = (ulong)dat["guild_id"];
-				itg = dat.ToObject<DiscordIntegration>();
+				gid = (ulong)dat["guild_id"]!;
+				itg = DiscordJson.DeserializeObject<DiscordIntegration>(payloadString, this);
 
 				// discord fires this event inconsistently if the current user leaves a guild.
 				if (!this.GuildsInternal.ContainsKey(gid))
@@ -310,8 +309,8 @@ public sealed partial class DiscordClient
 				break;
 
 			case "integration_update":
-				gid = (ulong)dat["guild_id"];
-				itg = dat.ToObject<DiscordIntegration>();
+				gid = (ulong)dat["guild_id"]!;
+				itg = DiscordJson.DeserializeObject<DiscordIntegration>(payloadString, this);
 
 				// discord fires this event inconsistently if the current user leaves a guild.
 				if (!this.GuildsInternal.ContainsKey(gid))
@@ -321,7 +320,7 @@ public sealed partial class DiscordClient
 				break;
 
 			case "integration_delete":
-				gid = (ulong)dat["guild_id"];
+				gid = (ulong)dat["guild_id"]!;
 
 				// discord fires this event inconsistently if the current user leaves a guild.
 				if (!this.GuildsInternal.ContainsKey(gid))
@@ -584,9 +583,7 @@ public sealed partial class DiscordClient
 					usr = mbr.User;
 				}
 				else
-				{
 					usr = DiscordJson.DeserializeObject<TransportUser>(dat["user"]!.ToString(), this);
-				}
 
 				cid = (ulong)dat["channel_id"]!;
 				// Console.WriteLine(dat.ToString()); // Get raw interaction payload.
@@ -618,13 +615,13 @@ public sealed partial class DiscordClient
 				break;
 
 			case "application_command_permissions_update":
-				var aid = (ulong)dat["application_id"];
+				var aid = (ulong)dat["application_id"]!;
 				if (aid != this.CurrentApplication.Id)
 					return;
 
 				var pms = DiscordJson.DeserializeIEnumerableObject<IEnumerable<DiscordApplicationCommandPermission>>(dat["permissions"]!.ToString(), this);
-				gid = (ulong)dat["guild_id"];
-				await this.OnApplicationCommandPermissionsUpdateAsync(pms, (ulong)dat["id"], gid, aid).ConfigureAwait(false);
+				gid = (ulong)dat["guild_id"]!;
+				await this.OnApplicationCommandPermissionsUpdateAsync(pms, (ulong)dat["id"]!, gid, aid).ConfigureAwait(false);
 				break;
 
 			#endregion
@@ -657,7 +654,7 @@ public sealed partial class DiscordClient
 
 			default:
 				await this.OnUnknownEventAsync(payload).ConfigureAwait(false);
-				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Unknown event: {name}\npayload: {payload}", payload.EventName, dat.ToString(Newtonsoft.Json.Formatting.Indented));
+				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Unknown event: {name}\npayload: {payload}", payload.EventName, dat.ToString(Formatting.Indented));
 				break;
 
 			#endregion
