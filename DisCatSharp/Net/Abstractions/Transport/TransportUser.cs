@@ -51,6 +51,9 @@ internal class TransportUser : ObservableApiObject
 	[JsonProperty("global_name", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
 	public string GlobalName { get; internal set; }
 
+	[JsonProperty("display_name"), DiscordDeprecated]
+	internal string? DeprecatedDisplayName { get; set; }
+
 	/// <summary>
 	/// Gets or sets the discriminator.
 	/// </summary>
