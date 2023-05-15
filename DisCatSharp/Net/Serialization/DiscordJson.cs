@@ -59,6 +59,9 @@ public static class DiscordJson
 	public static T DeserializeObject<T>(string json, BaseDiscordClient discord) where T : ObservableApiObject
 		=> DeserializeObjectInternal<T>(json, discord);
 
+	public static T DeserializeIEnumerableObject<T>(string json, BaseDiscordClient discord) where T : IEnumerable<ObservableApiObject>
+		=> DeserializeIEnumerableObjectInternal<T>(json, discord);
+
 	/// <summary>Populates an object with the values from a JSON node.</summary>
 	/// <param name="value">The token to populate the object with.</param>
 	/// <param name="target">The object to populate.</param>
@@ -107,6 +110,42 @@ public static class DiscordJson
 		{
 			sentryFields.Add(ap.Key);
 			discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, obj.GetType().Name);
+		}
+
+		discord.Logger.LogDebug(json);
+
+		if (!discord.Configuration.EnableSentry) return obj;
+		var sentryJson = JsonConvert.SerializeObject(sentryFields);
+		sentryMessage += "\n\nNew fields: " + sentryJson;
+		SentryEvent sentryEvent = new()
+		{
+			Level = SentryLevel.Warning,
+			Logger = nameof(DiscordJson),
+			Message = sentryMessage
+		};
+		sentryEvent.SetExtra("Found Fields", sentryJson);
+		var sid = SentrySdk.CaptureEvent(sentryEvent);
+		_ = Task.Run(SentrySdk.FlushAsync);
+		discord.Logger.LogInformation("Reported to sentry with id {sid}", sid.ToString());
+
+		return obj;
+	}
+
+	private static T DeserializeIEnumerableObjectInternal<T>(string json, BaseDiscordClient discord) where T : IEnumerable<ObservableApiObject>
+	{
+		var obj = JsonConvert.DeserializeObject<T>(json)!;
+		foreach (var ob in obj)
+			ob.Discord = discord;
+
+		if (!discord.Configuration.ReportMissingFields || !obj.Any(x => x.AdditionalProperties.Any())) return obj;
+		var first = obj.First();
+		var sentryMessage = "Found missing properties in api response for " + first.GetType().Name;
+		List<string> sentryFields = new();
+		discord.Logger.LogInformation("{sentry}", sentryMessage);
+		foreach (var ap in first.AdditionalProperties)
+		{
+			sentryFields.Add(ap.Key);
+			discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, first.GetType().Name);
 		}
 
 		discord.Logger.LogDebug(json);

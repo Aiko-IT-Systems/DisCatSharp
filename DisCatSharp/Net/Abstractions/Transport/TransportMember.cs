@@ -125,4 +125,10 @@ internal class TransportMember : ObservableApiObject
 	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
 	public MemberFlags MemberFlags { get; internal set; }
+
+	/// <summary>
+	/// Gets ID of the guild to which this member belongs.
+	/// </summary>
+	[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong GuildId { get; internal set; }
 }

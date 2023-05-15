@@ -28,6 +28,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
+using DisCatSharp.Net.Abstractions;
 
 using Newtonsoft.Json;
 
@@ -137,6 +138,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	public ulong ChannelId { get; internal set; }
 
 	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	[JsonProperty("position", NullValueHandling = NullValueHandling.Ignore)]
+	public int? Position { get; internal set; }
+
+	/// <summary>
 	/// Gets the components this message was sent with.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
@@ -147,6 +154,9 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	[JsonProperty("author", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordUser Author { get; internal set; }
+
+	[JsonProperty("member", NullValueHandling = NullValueHandling.Ignore)]
+	private TransportMember TRANSPORT_MEMBER { get; set; }
 
 	/// <summary>
 	/// Gets the message's content.
