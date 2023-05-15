@@ -222,16 +222,6 @@ public sealed partial class DiscordClient
 
 				await this.OnGuildIntegrationsUpdateEventAsync(this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
-			/*
-		case "guild_join_request_create":
-			break;
-
-		case "guild_join_request_update":
-			break;
-
-		case "guild_join_request_delete":
-			break;
-			*/
 			#endregion
 
 			#region Guild Automod
