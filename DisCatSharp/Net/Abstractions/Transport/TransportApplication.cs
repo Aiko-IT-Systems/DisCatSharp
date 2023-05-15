@@ -64,6 +64,9 @@ internal sealed class TransportApplication : ObservableApiObject
 	[JsonProperty("summary", NullValueHandling = NullValueHandling.Include)]
 	public string Summary { get; set; }
 
+	[JsonProperty("bot", NullValueHandling = NullValueHandling.Ignore)]
+	public TransportUser Bot { get; set; }
+
 	/// <summary>
 	/// Whether the bot is public.
 	/// </summary>

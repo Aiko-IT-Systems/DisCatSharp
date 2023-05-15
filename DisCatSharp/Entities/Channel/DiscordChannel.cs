@@ -49,6 +49,12 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public ulong? GuildId { get; internal set; }
 
 	/// <summary>
+	/// Gets the version number for this channel.
+	/// </summary>
+	[JsonProperty("version", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong Version { get; internal set; }
+
+	/// <summary>
 	/// Gets ID of the category that contains this channel.
 	/// </summary>
 	[JsonProperty("parent_id", NullValueHandling = NullValueHandling.Include)]
