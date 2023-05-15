@@ -31,7 +31,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents data for websocket ready event payload.
 /// </summary>
-internal class ReadyPayload
+internal class ReadyPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the gateway version the client is connected to.
@@ -61,7 +61,7 @@ internal class ReadyPayload
 	/// The gateway url for resuming connections
 	/// </summary>
 	[JsonProperty("resume_gateway_url")]
-	public string ResumeGatewayUrl { get; set; }
+	public string ResumeGatewayUrl { get; internal set; }
 
 	/// <summary>
 	/// Gets debug data sent by Discord. This contains a list of servers to which the client is connected.

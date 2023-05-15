@@ -160,25 +160,22 @@ public sealed partial class DiscordClient
 
 			case "channel_create":
 				chn = DiscordJson.DeserializeObject<DiscordChannel>(payloadString, this);
-				this.Logger.LogDebug("chn c");
 				await this.OnChannelCreateEventAsync(chn).ConfigureAwait(false);
 				break;
 
 			case "channel_update":
 				chn = DiscordJson.DeserializeObject<DiscordChannel>(payloadString, this);
-				this.Logger.LogDebug("chn u");
 				await this.OnChannelUpdateEventAsync(chn).ConfigureAwait(false);
 				break;
 
 			case "channel_delete":
 				chn = DiscordJson.DeserializeObject<DiscordChannel>(payloadString, this);
-				this.Logger.LogDebug("chn d");
 				await this.OnChannelDeleteEventAsync(chn.IsPrivate ? chn as DiscordDmChannel : chn).ConfigureAwait(false);
 				break;
 
 			case "channel_pins_update":
-				cid = (ulong)dat["channel_id"];
-				var ts = (string)dat["last_pin_timestamp"];
+				cid = (ulong)dat["channel_id"]!;
+				var ts = (string)dat["last_pin_timestamp"]!;
 				await this.OnChannelPinsUpdateAsync((ulong?)dat["guild_id"], cid, ts != null ? DateTimeOffset.Parse(ts, CultureInfo.InvariantCulture) : default(DateTimeOffset?)).ConfigureAwait(false);
 				break;
 
@@ -187,11 +184,11 @@ public sealed partial class DiscordClient
 			#region Guild
 
 			case "guild_create":
-				await this.OnGuildCreateEventAsync(dat.ToDiscordObject<DiscordGuild>(), (JArray)dat["members"], dat["presences"].ToDiscordObject<IEnumerable<DiscordPresence>>()).ConfigureAwait(false);
+				await this.OnGuildCreateEventAsync(dat.ToDiscordObject<DiscordGuild>(), (JArray)dat["members"]!, dat["presences"]!.ToDiscordObject<IEnumerable<DiscordPresence>>()).ConfigureAwait(false);
 				break;
 
 			case "guild_update":
-				await this.OnGuildUpdateEventAsync(dat.ToDiscordObject<DiscordGuild>(), (JArray)dat["members"]).ConfigureAwait(false);
+				await this.OnGuildUpdateEventAsync(dat.ToDiscordObject<DiscordGuild>(), (JArray)dat["members"]!).ConfigureAwait(false);
 				break;
 
 			case "guild_delete":
@@ -199,19 +196,19 @@ public sealed partial class DiscordClient
 				break;
 
 			case "guild_audit_log_entry_create":
-				gid = (ulong)dat["guild_id"];
+				gid = (ulong)dat["guild_id"]!;
 				dat.Remove("guild_id");
 				await this.OnGuildAuditLogEntryCreateEventAsync(this.GuildsInternal[gid], dat).ConfigureAwait(false);
 				break;
 
 			case "guild_sync":
-				gid = (ulong)dat["id"];
-				await this.OnGuildSyncEventAsync(this.GuildsInternal[gid], (bool)dat["large"], (JArray)dat["members"], dat["presences"].ToDiscordObject<IEnumerable<DiscordPresence>>()).ConfigureAwait(false);
+				gid = (ulong)dat["id"]!;
+				await this.OnGuildSyncEventAsync(this.GuildsInternal[gid], (bool)dat["large"]!, (JArray)dat["members"]!, dat["presences"]!.ToDiscordObject<IEnumerable<DiscordPresence>>()).ConfigureAwait(false);
 				break;
 
 			case "guild_emojis_update":
-				gid = (ulong)dat["guild_id"];
-				var ems = dat["emojis"].ToObject<IEnumerable<DiscordEmoji>>();
+				gid = (ulong)dat["guild_id"]!;
+				var ems = dat["emojis"]!.ToObject<IEnumerable<DiscordEmoji>>()!;
 				await this.OnGuildEmojisUpdateEventAsync(this.GuildsInternal[gid], ems).ConfigureAwait(false);
 				break;
 
