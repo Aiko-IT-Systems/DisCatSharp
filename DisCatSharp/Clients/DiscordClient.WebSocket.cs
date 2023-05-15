@@ -103,6 +103,17 @@ public sealed partial class DiscordClient
 	/// </summary>
 	internal async Task InternalConnectAsync()
 	{
+		var a = typeof(DiscordClient).GetTypeInfo().Assembly;
+		var vs = "";
+		var iv = a.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+		if (iv != null)
+			vs = iv.InformationalVersion;
+		else
+		{
+			var v = a.GetName().Version;
+			vs = v.ToString(3);
+		}
+
 		using (SentrySdk.Init(o => {
 			o.DetectStartupTime = StartupTimeDetectionMode.Fast;
 			o.DiagnosticLevel = SentryLevel.Debug;
@@ -115,22 +126,30 @@ public sealed partial class DiscordClient
 			o.AttachStacktrace = true;
 			o.AutoSessionTracking = this.Configuration.EnableSentry;
 			o.StackTraceMode = StackTraceMode.Enhanced;
-			var a = typeof(DiscordClient).GetTypeInfo().Assembly;
-			var vs = "";
-			var iv = a.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-			if (iv != null)
-				vs = iv.InformationalVersion;
-			else
-			{
-				var v = a.GetName().Version;
-				vs = v.ToString(3);
-			}
 			o.Release = $"{this.BotLibrary}@{vs}";
 			o.SendClientReports = true;
 		}))
 		{
 			if (this.Configuration.EnableSentry)
+			{
+				this.Sentry = new SentryClient(new SentryOptions()
+				{
+					DetectStartupTime = StartupTimeDetectionMode.Fast,
+					DiagnosticLevel = SentryLevel.Debug,
+					Environment = "prod",
+					IsGlobalModeEnabled = true,
+					TracesSampleRate = 1.0,
+					ReportAssembliesMode = ReportAssembliesMode.InformationalVersion,
+					Dsn = "https://1da216e26a2741b99e8ccfccea1b7ac8@o1113828.ingest.sentry.io/4504901362515968",
+					AttachStacktrace = true,
+					AutoSessionTracking = this.Configuration.EnableSentry,
+					StackTraceMode = StackTraceMode.Enhanced,
+					SendClientReports = true,
+					Release = $"{this.BotLibrary}@{vs}"
+			});
+				SentrySdk.BindClient(this.Sentry);
 				SentrySdk.StartSession();
+			}
 		
 
 		SocketLock socketLock = null;
