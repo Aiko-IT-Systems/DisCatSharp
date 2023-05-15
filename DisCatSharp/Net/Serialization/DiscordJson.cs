@@ -109,6 +109,8 @@ public static class DiscordJson
 			discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, obj.GetType().Name);
 		}
 
+		discord.Logger.LogDebug(json);
+
 		if (!discord.Configuration.EnableSentry) return obj;
 		var sentryJson = JsonConvert.SerializeObject(sentryFields);
 		sentryMessage += "\n\nNew fields: " + sentryJson;

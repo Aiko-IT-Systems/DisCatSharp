@@ -39,6 +39,7 @@ using DisCatSharp.Net.Serialization;
 
 using Microsoft.Extensions.Logging;
 
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp;
@@ -120,6 +121,8 @@ public sealed partial class DiscordClient
 		}).ConfigureAwait(false);
 
 		#region Default objects
+
+		var payloadString = dat.ToString();
 		DiscordChannel chn;
 		ulong gid;
 		ulong cid;
@@ -155,17 +158,21 @@ public sealed partial class DiscordClient
 			#region Channel
 
 			case "channel_create":
-				chn = dat.ToObject<DiscordChannel>();
+				chn = DiscordJson.DeserializeObject<DiscordChannel>(payloadString, this);
+				this.Logger.LogDebug("chn c");
 				await this.OnChannelCreateEventAsync(chn).ConfigureAwait(false);
 				break;
 
 			case "channel_update":
-				await this.OnChannelUpdateEventAsync(dat.ToObject<DiscordChannel>()).ConfigureAwait(false);
+				chn = DiscordJson.DeserializeObject<DiscordChannel>(payloadString, this);
+				this.Logger.LogDebug("chn u");
+				await this.OnChannelUpdateEventAsync(chn).ConfigureAwait(false);
 				break;
 
 			case "channel_delete":
-				chn = dat.ToObject<DiscordChannel>();
-				await this.OnChannelDeleteEventAsync(chn.IsPrivate ? dat.ToObject<DiscordDmChannel>() : chn).ConfigureAwait(false);
+				chn = DiscordJson.DeserializeObject<DiscordChannel>(payloadString, this);
+				this.Logger.LogDebug("chn d");
+				await this.OnChannelDeleteEventAsync(chn.IsPrivate ? chn as DiscordDmChannel : chn).ConfigureAwait(false);
 				break;
 
 			case "channel_pins_update":
@@ -582,17 +589,17 @@ public sealed partial class DiscordClient
 
 				if (rawMbr != null)
 				{
-					mbr = dat["member"].ToObject<TransportMember>();
+					mbr = DiscordJson.DeserializeObject<TransportMember>(dat["member"].ToString(), this);
 					usr = mbr.User;
 				}
 				else
 				{
-					usr = dat["user"].ToObject<TransportUser>();
+					usr = DiscordJson.DeserializeObject<TransportUser>(dat["user"].ToString(), this);
 				}
 
 				cid = (ulong)dat["channel_id"];
 				// Console.WriteLine(dat.ToString()); // Get raw interaction payload.
-				await this.OnInteractionCreateAsync((ulong?)dat["guild_id"], cid, usr, mbr, dat.ToDiscordObject<DiscordInteraction>(), dat.ToString()).ConfigureAwait(false);
+				await this.OnInteractionCreateAsync((ulong?)dat["guild_id"], cid, usr, mbr, DiscordJson.DeserializeObject<DiscordInteraction>(payloadString, this), payloadString).ConfigureAwait(false);
 				break;
 
 			case "application_command_create":
@@ -3345,8 +3352,8 @@ public sealed partial class DiscordClient
 	/// <param name="rawInteraction">Debug.</param>
 	internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction, string rawInteraction)
 	{
-		this.Logger.LogTrace("Interaction from {guild} on shard {shard}", guildId.HasValue ? guildId.Value : "dm", this.ShardId);
-		this.Logger.LogTrace("Interaction: {interaction}", rawInteraction);
+		this.Logger.LogDebug("Interaction from {guild} on shard {shard}", guildId.HasValue ? guildId.Value : "dm", this.ShardId);
+		this.Logger.LogDebug("Interaction: {interaction}", rawInteraction);
 		var usr = new DiscordUser(user) { Discord = this };
 
 		interaction.ChannelId = channelId;
