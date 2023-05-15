@@ -99,7 +99,10 @@ public static class DiscordJson
 
 	private static T DeserializeObjectInternal<T>(string json, BaseDiscordClient discord) where T : ObservableApiObject
 	{
-		var obj = JsonConvert.DeserializeObject<T>(json)!;
+		var obj = JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings()
+		{
+			ContractResolver = new OptionalJsonContractResolver()
+		})!;
 		obj.Discord = discord;
 
 		if (!discord.Configuration.ReportMissingFields || !obj.AdditionalProperties.Any()) return obj;
@@ -140,7 +143,10 @@ public static class DiscordJson
 
 	private static T DeserializeIEnumerableObjectInternal<T>(string json, BaseDiscordClient discord) where T : IEnumerable<ObservableApiObject>
 	{
-		var obj = JsonConvert.DeserializeObject<T>(json)!;
+		var obj = JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings()
+		{
+			ContractResolver = new OptionalJsonContractResolver()
+		})!;
 		foreach (var ob in obj)
 			ob.Discord = discord;
 
