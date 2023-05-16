@@ -105,11 +105,23 @@ public class DiscordIntegration : SnowflakeObject
 	[JsonProperty("revoked", NullValueHandling = NullValueHandling.Ignore)]
 	public bool? Revoked { get; internal set; }
 
+	/// <summary>
+	/// Gets the application this integration is bound to.
+	/// </summary>
 	[JsonProperty("application", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordApplication Application { get; internal set; }
 
+	/// <summary>
+	/// Gets the integration's scopes.
+	/// </summary>
 	[JsonProperty("scopes", NullValueHandling = NullValueHandling.Ignore)]
 	public string[] Scopes { get; internal set; }
+
+	/// <summary>
+	/// Gets whether emoticons are enabled.
+	/// </summary>
+	[JsonProperty("enable_emoticons", NullValueHandling = NullValueHandling.Ignore)]
+	public bool? EnableEmoticons { get; internal set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordIntegration"/> class.
