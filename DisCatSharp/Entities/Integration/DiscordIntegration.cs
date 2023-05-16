@@ -64,6 +64,12 @@ public class DiscordIntegration : SnowflakeObject
 	public ulong RoleId { get; internal set; }
 
 	/// <summary>
+	/// Gets ID of the guild this integration is attached to.
+	/// </summary>
+	[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong GuildId { get; internal set; }
+
+	/// <summary>
 	/// Gets the expiration behaviour.
 	/// </summary>
 	[JsonProperty("expire_behavior", NullValueHandling = NullValueHandling.Ignore)]
