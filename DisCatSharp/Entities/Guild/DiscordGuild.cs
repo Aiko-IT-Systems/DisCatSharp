@@ -980,6 +980,19 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <summary>
 	/// Bans a specified user by ID. This doesn't require the user to be in this guild.
 	/// </summary>
+	/// <param name="user">The user to ban.</param>
+	/// <param name="deleteMessageDays">How many days to remove messages from.</param>
+	/// <param name="reason">Reason for audit logs.</param>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task BanMemberAsync(DiscordUser user, int deleteMessageDays = 0, string reason = null)
+		=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, user.Id, deleteMessageDays, reason);
+
+	/// <summary>
+	/// Bans a specified user by ID. This doesn't require the user to be in this guild.
+	/// </summary>
 	/// <param name="userId">ID of the user to ban.</param>
 	/// <param name="deleteMessageDays">How many days to remove messages from.</param>
 	/// <param name="reason">Reason for audit logs.</param>
