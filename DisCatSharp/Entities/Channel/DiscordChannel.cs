@@ -314,6 +314,16 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Initializes a new instance of the <see cref="DiscordChannel"/> class.
 	/// </summary>
 	internal DiscordChannel()
+		: base(new List<string>() { "hashes", "guild_hashes"})
+	{
+		this._permissionOverwritesLazy = new Lazy<IReadOnlyList<DiscordOverwrite>>(() => new ReadOnlyCollection<DiscordOverwrite>(this.PermissionOverwritesInternal));
+	}
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="DiscordChannel"/> class.
+	/// </summary>
+	internal DiscordChannel(List<string>? ignored = null)
+		: base(ignored)
 	{
 		this._permissionOverwritesLazy = new Lazy<IReadOnlyList<DiscordOverwrite>>(() => new ReadOnlyCollection<DiscordOverwrite>(this.PermissionOverwritesInternal));
 	}
