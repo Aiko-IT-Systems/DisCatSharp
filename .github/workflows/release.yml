@@ -17,6 +17,9 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
 jobs:
   release:
@@ -57,10 +60,6 @@ jobs:
       - name: "Create Sentry dev release"
         if: ${{!inputs.release_as_prerelease}}
         uses: getsentry/action-release@v1.3.1
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
           environment: prod
           ignore_missing: true
@@ -68,10 +67,6 @@ jobs:
       - name: "Create Sentry prod release"
         if: ${{inputs.release_as_prerelease}}
         uses: getsentry/action-release@v1.3.1
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
           environment: dev
           ignore_missing: true
