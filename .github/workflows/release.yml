@@ -24,7 +24,7 @@ env:
 jobs:
   release:
     timeout-minutes: 15
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     name: Build library and release
     steps:
       - name: Checkout repository
