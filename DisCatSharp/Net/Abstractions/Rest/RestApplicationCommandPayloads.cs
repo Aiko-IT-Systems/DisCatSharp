@@ -32,7 +32,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents a application command create payload.
 /// </summary>
-internal class RestApplicationCommandCreatePayload
+internal class RestApplicationCommandCreatePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the type.
@@ -98,7 +98,7 @@ internal class RestApplicationCommandCreatePayload
 /// <summary>
 /// Represents a application command edit payload.
 /// </summary>
-internal class RestApplicationCommandEditPayload
+internal class RestApplicationCommandEditPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the name.
@@ -152,7 +152,7 @@ internal class RestApplicationCommandEditPayload
 /// <summary>
 /// Represents a interaction response payload.
 /// </summary>
-internal class RestInteractionResponsePayload
+internal class RestInteractionResponsePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the type.
@@ -176,7 +176,7 @@ internal class RestInteractionResponsePayload
 /// <summary>
 /// Represents a interaction response payload.
 /// </summary>
-internal class RestInteractionModalResponsePayload
+internal class RestInteractionModalResponsePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the type.
@@ -194,7 +194,7 @@ internal class RestInteractionModalResponsePayload
 /// <summary>
 /// Represents a followup message create payload.
 /// </summary>
-internal class RestFollowupMessageCreatePayload
+internal class RestFollowupMessageCreatePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the content.
@@ -242,7 +242,7 @@ internal class RestFollowupMessageCreatePayload
 /// <summary>
 /// Represents a role connection metadata payload.
 /// </summary>
-internal class RestApplicationRoleConnectionMetadataPayload
+internal class RestApplicationRoleConnectionMetadataPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the metadata type.

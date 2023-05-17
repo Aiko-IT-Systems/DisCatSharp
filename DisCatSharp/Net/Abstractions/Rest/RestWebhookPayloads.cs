@@ -32,7 +32,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents a webhook payload.
 /// </summary>
-internal sealed class RestWebhookPayload
+internal sealed class RestWebhookPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the name.
@@ -68,7 +68,7 @@ internal sealed class RestWebhookPayload
 /// <summary>
 /// Represents a webhook execute payload.
 /// </summary>
-internal sealed class RestWebhookExecutePayload
+internal sealed class RestWebhookExecutePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the content.
@@ -131,7 +131,7 @@ internal sealed class RestWebhookExecutePayload
 /// <summary>
 /// Represents a webhook message edit payload.
 /// </summary>
-internal sealed class RestWebhookMessageEditPayload
+internal sealed class RestWebhookMessageEditPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the content.

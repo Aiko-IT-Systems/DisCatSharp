@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using DisCatSharp.Entities;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Net.Abstractions;
@@ -27,7 +29,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents a followed channel add payload.
 /// </summary>
-internal sealed class FollowedChannelAddPayload
+internal sealed class FollowedChannelAddPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the webhook channel id.
