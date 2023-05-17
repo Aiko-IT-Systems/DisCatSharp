@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
@@ -177,6 +178,7 @@ public class DiscordInvite : ObservableApiObject
 	/// Initializes a new instance of the <see cref="DiscordInvite"/> class.
 	/// </summary>
 	internal DiscordInvite()
+		: base(new List<string>() { "guild_id", "channel_id" })
 	{ }
 
 	/// <summary>
