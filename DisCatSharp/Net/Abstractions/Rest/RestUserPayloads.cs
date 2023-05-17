@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 
+using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -31,7 +32,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents a user dm create payload.
 /// </summary>
-internal sealed class RestUserDmCreatePayload
+internal sealed class RestUserDmCreatePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the recipient.
@@ -43,7 +44,7 @@ internal sealed class RestUserDmCreatePayload
 /// <summary>
 /// Represents a user group dm create payload.
 /// </summary>
-internal sealed class RestUserGroupDmCreatePayload
+internal sealed class RestUserGroupDmCreatePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the access tokens.
@@ -61,7 +62,7 @@ internal sealed class RestUserGroupDmCreatePayload
 /// <summary>
 /// Represents a user update current payload.
 /// </summary>
-internal sealed class RestUserUpdateCurrentPayload
+internal sealed class RestUserUpdateCurrentPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the username.
@@ -91,7 +92,7 @@ internal sealed class RestUserUpdateCurrentPayload
 /// <summary>
 /// Represents a user guild.
 /// </summary>
-internal sealed class RestUserGuild
+internal sealed class RestUserGuild : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the id.
@@ -133,7 +134,7 @@ internal sealed class RestUserGuild
 /// <summary>
 /// Represents a user guild list payload.
 /// </summary>
-internal sealed class RestUserGuildListPayload
+internal sealed class RestUserGuildListPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the limit.

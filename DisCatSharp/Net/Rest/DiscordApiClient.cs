@@ -261,6 +261,41 @@ public sealed class DiscordApiClient
 	#region Guild
 
 	/// <summary>
+	/// Gets the guild async.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="withCounts">If true, with_counts.</param>
+	internal async Task<DiscordGuild> GetGuildAsync(ulong guildId, bool? withCounts)
+	{
+		var urlParams = new Dictionary<string, string>();
+		if (withCounts.HasValue)
+			urlParams["with_counts"] = withCounts?.ToString();
+
+		var route = $"{Endpoints.GUILDS}/:guild_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route, urlParams).ConfigureAwait(false);
+
+		var json = JObject.Parse(res.Response);
+		var rawMembers = (JArray)json["members"];
+		var guildRest = DiscordJson.DeserializeObject<DiscordGuild>(res.Response, this.Discord);
+		foreach (var r in guildRest.RolesInternal.Values)
+			r.GuildId = guildRest.Id;
+
+		if (this.Discord is DiscordClient dc)
+		{
+			await dc.OnGuildUpdateEventAsync(guildRest, rawMembers).ConfigureAwait(false);
+			return dc.GuildsInternal[guildRest.Id];
+		}
+		else
+		{
+			guildRest.Discord = this.Discord;
+			return guildRest;
+		}
+	}
+
+	/// <summary>
 	/// Searches the members async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
@@ -1497,6 +1532,7 @@ public sealed class DiscordApiClient
 	}
 
 	#endregion
+	// End todo
 
 	#region Guild Scheduled Events
 
@@ -1803,6 +1839,7 @@ public sealed class DiscordApiClient
 	}
 	#endregion
 
+	// begin todo
 	#region Channel
 	/// <summary>
 	/// Creates a guild channel.
@@ -2834,11 +2871,11 @@ public sealed class DiscordApiClient
 
 	#endregion
 
+	// End todo
 	#region Member
 	/// <summary>
 	/// Gets the current user async.
 	/// </summary>
-
 	internal Task<DiscordUser> GetCurrentUserAsync()
 		=> this.GetUserAsync("@me");
 
@@ -2846,7 +2883,6 @@ public sealed class DiscordApiClient
 	/// Gets the user async.
 	/// </summary>
 	/// <param name="userId">The user_id.</param>
-
 	internal Task<DiscordUser> GetUserAsync(ulong userId)
 		=> this.GetUserAsync(userId.ToString(CultureInfo.InvariantCulture));
 
@@ -2854,7 +2890,6 @@ public sealed class DiscordApiClient
 	/// Gets the user async.
 	/// </summary>
 	/// <param name="userId">The user_id.</param>
-
 	internal async Task<DiscordUser> GetUserAsync(string userId)
 	{
 		var route = $"{Endpoints.USERS}/:user_id";
@@ -2864,7 +2899,6 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var duser = DiscordJson.DeserializeObject<DiscordUser>(res.Response, this.Discord);
-		duser.Discord = this.Discord;
 		if (this.Discord.Configuration.Intents.HasIntent(DiscordIntents.GuildPresences) && duser.Presence == null && this.Discord is DiscordClient dc)
 			dc.PresencesInternal[duser.Id] = new DiscordPresence
 			{
@@ -2882,7 +2916,6 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="userId">The user_id.</param>
-
 	internal async Task<DiscordMember> GetGuildMemberAsync(ulong guildId, ulong userId)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
@@ -2961,7 +2994,6 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var user = DiscordJson.DeserializeObject<DiscordUser>(res.Response, this.Discord);
-		user.Discord = this.Discord;
 		return user;
 	}
 
@@ -2990,13 +3022,13 @@ public sealed class DiscordApiClient
 
 		if (this.Discord is DiscordClient)
 		{
-			var guildsRaw = JsonConvert.DeserializeObject<IEnumerable<RestUserGuild>>(res.Response);
+			var guildsRaw = DiscordJson.DeserializeIEnumerableObject<IEnumerable<RestUserGuild>>(res.Response, this.Discord);
 			var glds = guildsRaw.Select(xug => (this.Discord as DiscordClient)?.GuildsInternal[xug.Id]);
 			return new ReadOnlyCollection<DiscordGuild>(new List<DiscordGuild>(glds));
 		}
 		else
 		{
-			return new ReadOnlyCollection<DiscordGuild>(JsonConvert.DeserializeObject<List<DiscordGuild>>(res.Response));
+			return DiscordJson.DeserializeIEnumerableObject<List<DiscordGuild>>(res.Response, this.Discord);
 		}
 	}
 
@@ -3013,7 +3045,6 @@ public sealed class DiscordApiClient
 	/// <param name="verify">Whether to verify the member.</param>
 	/// <param name="flags">The member flags</param>
 	/// <param name="reason">The reason.</param>
-
 	internal Task ModifyGuildMemberAsync(ulong guildId, ulong userId, Optional<string> nick,
 		Optional<IEnumerable<ulong>> roleIds, Optional<bool> mute, Optional<bool> deaf,
 		Optional<ulong?> voiceChannelId, Optional<bool> verify, MemberFlags flags, string reason)
@@ -3050,7 +3081,6 @@ public sealed class DiscordApiClient
 	/// <param name="userId">The user_id.</param>
 	/// <param name="until">Datetime offset.</param>
 	/// <param name="reason">The reason.</param>
-
 	internal Task ModifyTimeoutAsync(ulong guildId, ulong userId, DateTimeOffset? until, string reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
@@ -3075,7 +3105,6 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="nick">The nick.</param>
 	/// <param name="reason">The reason.</param>
-
 	internal Task ModifyCurrentMemberNicknameAsync(ulong guildId, string nick, string reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
@@ -3109,44 +3138,9 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var rolesRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordRole>>(res.Response).Select(xr => { xr.Discord = this.Discord; xr.GuildId = guildId; return xr; });
+		var roles = DiscordJson.DeserializeIEnumerableObject<IEnumerable<DiscordRole>>(res.Response, this.Discord).Select(xr => { xr.GuildId = guildId; return xr; }).ToList();
 
-		return new ReadOnlyCollection<DiscordRole>(new List<DiscordRole>(rolesRaw));
-	}
-
-	/// <summary>
-	/// Gets the guild async.
-	/// </summary>
-	/// <param name="guildId">The guild id.</param>
-	/// <param name="withCounts">If true, with_counts.</param>
-	internal async Task<DiscordGuild> GetGuildAsync(ulong guildId, bool? withCounts)
-	{
-		var urlParams = new Dictionary<string, string>();
-		if (withCounts.HasValue)
-			urlParams["with_counts"] = withCounts?.ToString();
-
-		var route = $"{Endpoints.GUILDS}/:guild_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId }, out var path);
-
-		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route, urlParams).ConfigureAwait(false);
-
-		var json = JObject.Parse(res.Response);
-		var rawMembers = (JArray)json["members"];
-		var guildRest = DiscordJson.DeserializeObject<DiscordGuild>(res.Response, this.Discord);
-		foreach (var r in guildRest.RolesInternal.Values)
-			r.GuildId = guildRest.Id;
-
-		if (this.Discord is DiscordClient dc)
-		{
-			await dc.OnGuildUpdateEventAsync(guildRest, rawMembers).ConfigureAwait(false);
-			return dc.GuildsInternal[guildRest.Id];
-		}
-		else
-		{
-			guildRest.Discord = this.Discord;
-			return guildRest;
-		}
+		return roles;
 	}
 
 	/// <summary>
@@ -3196,7 +3190,6 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var ret = DiscordJson.DeserializeObject<DiscordRole>(res.Response, this.Discord);
-		ret.Discord = this.Discord;
 		ret.GuildId = guildId;
 
 		return ret;
@@ -3208,7 +3201,6 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="roleId">The role_id.</param>
 	/// <param name="reason">The reason.</param>
-
 	internal Task DeleteRoleAsync(ulong guildId, ulong roleId, string reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
@@ -3232,7 +3224,6 @@ public sealed class DiscordApiClient
 	/// <param name="hoist">If true, hoist.</param>
 	/// <param name="mentionable">If true, mentionable.</param>
 	/// <param name="reason">The reason.</param>
-
 	internal async Task<DiscordRole> CreateGuildRoleAsync(ulong guildId, string name, Permissions? permissions, int? color, bool? hoist, bool? mentionable, string reason)
 	{
 		var pld = new RestGuildRolePayload
@@ -3255,7 +3246,6 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var ret = DiscordJson.DeserializeObject<DiscordRole>(res.Response, this.Discord);
-		ret.Discord = this.Discord;
 		ret.GuildId = guildId;
 
 		return ret;
@@ -3333,7 +3323,7 @@ public sealed class DiscordApiClient
 		return pruned.Pruned;
 	}
 	#endregion
-	// End todo
+
 	#region GuildVarious
 	/// <summary>
 	/// Gets the template async.

@@ -28,7 +28,7 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.Net.Abstractions;
 
-internal sealed class RestApplicationModifyPayload
+internal sealed class RestApplicationModifyPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the description.

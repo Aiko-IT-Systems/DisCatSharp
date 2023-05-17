@@ -29,7 +29,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents data for websocket status update payload.
 /// </summary>
-internal sealed class StatusUpdate
+internal sealed class StatusUpdate : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the unix millisecond timestamp of when the user went idle.
@@ -70,5 +70,6 @@ internal sealed class StatusUpdate
 	[JsonProperty("game", NullValueHandling = NullValueHandling.Ignore)]
 	public TransportActivity Activity { get; set; }
 
+	[JsonIgnore]
 	internal DiscordActivity ActivityInternal;
 }
