@@ -107,7 +107,9 @@ public sealed class DiscordPresence : ObservableApiObject
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordPresence"/> class.
 	/// </summary>
+	// TODO: Add broadcast field
 	internal DiscordPresence()
+		: base(new List<string>() { "broadcast" })
 	{ }
 
 	/// <summary>
@@ -115,6 +117,7 @@ public sealed class DiscordPresence : ObservableApiObject
 	/// </summary>
 	/// <param name="other">The other.</param>
 	internal DiscordPresence(DiscordPresence other)
+		: base(new List<string>() { "broadcast" })
 	{
 		this.Discord = other.Discord;
 		this.Activity = other.Activity;
@@ -129,7 +132,7 @@ public sealed class DiscordPresence : ObservableApiObject
 /// <summary>
 /// Represents a user with only its id.
 /// </summary>
-public sealed class UserWithIdOnly
+public sealed class UserWithIdOnly : ObservableApiObject
 {
 	[JsonProperty("id")]
 	public ulong Id { get; internal set; }
@@ -138,7 +141,7 @@ public sealed class UserWithIdOnly
 /// <summary>
 /// Represents a client status.
 /// </summary>
-public sealed class DiscordClientStatus
+public sealed class DiscordClientStatus : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the user's status set for an active desktop (Windows, Linux, Mac) application session.
