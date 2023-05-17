@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -123,6 +124,21 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	public DiscordEmoji UnicodeEmoji
 		=> this.UnicodeEmojiString != null ? DiscordEmoji.FromName(this.Discord, $":{this.UnicodeEmojiString}:", false) : null;
 
+	/// <summary>
+	/// Gets the guild this role belongs to.
+	/// </summary>
+	public DiscordGuild Guild
+	{
+		get
+		{
+			this._guild ??= this.Discord.Guilds[this.GuildId];
+			return this._guild;
+		}
+	}
+
+	[JsonIgnore]
+	internal DiscordGuild _guild { get; set; }
+
 	[JsonIgnore]
 	internal ulong GuildId = 0;
 
@@ -138,6 +154,12 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	public string Mention
 		=> Formatter.Mention(this);
 
+	/// <summary>
+	/// Gets a list of members that have this role. Requires ServerMembers Intent.
+	/// </summary>
+	public IReadOnlyList<KeyValuePair<ulong, DiscordMember>> Members
+		=> this.Guild.Members.Where(x => x.Value.RoleIds.Any(x => x == this.Id)).ToList();
+
 	#region Methods
 
 	/// <summary>
@@ -152,7 +174,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task ModifyPositionAsync(int position, string reason = null)
 	{
-		var roles = this.Discord.Guilds[this.GuildId].Roles.Values.OrderByDescending(xr => xr.Position)
+		var roles = this.Guild.Roles.Values.OrderByDescending(xr => xr.Position)
 			.Select(x => new RestGuildRoleReorderPayload
 			{
 				RoleId = x.Id,
@@ -195,7 +217,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 
 		var canContinue = true;
 		if ((mdl.Icon.HasValue && mdl.Icon.Value != null) || (mdl.UnicodeEmoji.HasValue && mdl.UnicodeEmoji.Value != null))
-			canContinue = this.Discord.Guilds[this.GuildId].Features.HasFeature(GuildFeaturesEnum.CanSetRoleIcons);
+			canContinue = this.Guild.Features.HasFeature(GuildFeaturesEnum.CanSetRoleIcons);
 
 		var iconb64 = Optional.FromNullable<string>(null);
 		if (mdl.Icon.HasValue && mdl.Icon.Value != null)
