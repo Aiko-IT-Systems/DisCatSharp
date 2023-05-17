@@ -29,7 +29,7 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.Net.Abstractions;
 
-internal class RestAutomodRuleModifyPayload
+internal class RestAutomodRuleModifyPayload : ObservableApiObject
 {
 	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<string> Name { get; set; }

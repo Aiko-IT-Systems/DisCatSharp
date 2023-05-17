@@ -29,7 +29,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents a stage instance create payload.
 /// </summary>
-internal sealed class RestStageInstanceCreatePayload
+internal sealed class RestStageInstanceCreatePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the channel id.
@@ -59,7 +59,7 @@ internal sealed class RestStageInstanceCreatePayload
 /// <summary>
 /// Represents a stage instance modify payload.
 /// </summary>
-internal sealed class RestStageInstanceModifyPayload
+internal sealed class RestStageInstanceModifyPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the topic.

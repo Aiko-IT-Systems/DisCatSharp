@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using DisCatSharp.Entities;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Net.Abstractions;
@@ -27,7 +29,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents data for websocket voice state update payload.
 /// </summary>
-internal sealed class VoiceStateUpdate
+internal sealed class VoiceStateUpdate : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the guild for which the user is updating their voice state.
