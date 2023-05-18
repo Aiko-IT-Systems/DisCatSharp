@@ -410,11 +410,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordUser> GetUserAsync(ulong userId, bool fetch = false)
 	{
-		if (!fetch)
-		{
-			return this.TryGetCachedUserInternal(userId, out var usr) ? usr : new DiscordUser { Id = userId, Discord = this };
-		}
-		else
+		if (fetch || !this.TryGetCachedUserInternal(userId, out var cachedUsr))
 		{
 			var usr = await this.ApiClient.GetUserAsync(userId).ConfigureAwait(false);
 			usr = this.UserCache.AddOrUpdate(userId, usr, (id, old) =>
@@ -433,6 +429,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 			return usr;
 		}
+
+		return cachedUsr;
 	}
 
 	/// <summary>
