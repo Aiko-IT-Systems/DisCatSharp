@@ -277,28 +277,28 @@ public sealed class DiscordConfiguration
 	/// <para>This helps us to track missing data and library bugs better.</para>
 	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
-	public bool EnableSentry { get; internal set; } = false;
+	public bool EnableSentry { internal get; set; } = false;
 
 	/// <summary>
 	/// <para>Whether to attach the bots username and id to sentry reports.</para>
 	/// <para>This helps us to pinpoint problems.</para>
 	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
-	public bool AttachUserInfo { get; internal set; } = false;
+	public bool AttachUserInfo { internal get; set; } = false;
 
 	/// <summary>
 	/// <para>Your email address we can reach out when your bot encounters library bugs.</para>
 	/// <para>Will only be transmitted if <see cref="AttachUserInfo"/> is <see langword="true"/>.</para>
 	/// <para>Defaults to <see langword="null"/>.</para>
 	/// </summary>
-	public string? FeedbackEmail { get; internal set; } = null;
+	public string? FeedbackEmail { internal get; set; } = null;
 
 	/// <summary>
 	/// <para>Your discord user id we can reach out when your bot encounters library bugs.</para>
 	/// <para>Will only be transmitted if <see cref="AttachUserInfo"/> is <see langword="true"/>.</para>
 	/// <para>Defaults to <see langword="null"/>.</para>
 	/// </summary>
-	public ulong? DeveloperUserId { get; internal set; } = null;
+	public ulong? DeveloperUserId { internal get; set; } = null;
 
 	/// <summary>
 	/// Creates a new configuration with default values.
