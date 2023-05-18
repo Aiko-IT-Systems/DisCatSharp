@@ -62,14 +62,14 @@ jobs:
         run: |
           echo "version=10.4.1" >> $GITHUB_OUTPUT
           echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-      - name: "Create Sentry dev release"
+      - name: "Create Sentry prod release"
         if: ${{!inputs.release_as_prerelease}}
         uses: getsentry/action-release@v1.3.1
         with:
           environment: prod
           ignore_missing: true
           version: DisCatSharp@${{ steps.vars.outputs.version }}+${{ steps.vars.outputs.sha }}
-      - name: "Create Sentry prod release"
+      - name: "Create Sentry dev release"
         if: ${{inputs.release_as_prerelease}}
         uses: getsentry/action-release@v1.3.1
         with:
