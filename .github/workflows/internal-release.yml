@@ -16,7 +16,7 @@ jobs:
   release:
     timeout-minutes: 15
     runs-on: ubuntu-latest
-    name: Build library and release
+    name: Build library and release internally
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -30,8 +30,7 @@ jobs:
         run: dotnet restore DisCatSharp.sln
       - name: Set outputs
         id: vars
-        run: |
-          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+        run: echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
       - name: Build library as pre-release
         shell: pwsh
         run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{ steps.vars.outputs.sha }}
