@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
@@ -132,6 +133,17 @@ public static class DiscordJson
 			Message = sentryMessage
 		};
 		sentryEvent.SetExtra("Found Fields", sentryJson);
+		if (discord.Configuration.AttachUserInfo && discord.CurrentUser != null)
+			sentryEvent.User = new()
+			{
+				Id = discord.CurrentUser.Id.ToString(),
+				Username = discord.CurrentUser.UsernameWithDiscriminator,
+				Other = new Dictionary<string, string> ()
+				{
+					{ "developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
+					{ "email", discord.Configuration.FeedbackEmail ?? "not_given" }
+				}
+			};
 		var sid = discord.Sentry.CaptureEvent(sentryEvent);
 		_ = Task.Run(discord.Sentry.FlushAsync);
 		discord.Logger.LogInformation("Reported to sentry with id {sid}", sid.ToString());
@@ -178,6 +190,17 @@ public static class DiscordJson
 			Message = sentryMessage
 		};
 		sentryEvent.SetExtra("Found Fields", sentryJson);
+		if (discord.Configuration.AttachUserInfo && discord.CurrentUser != null)
+			sentryEvent.User = new()
+			{
+				Id = discord.CurrentUser.Id.ToString(),
+				Username = discord.CurrentUser.UsernameWithDiscriminator,
+				Other = new Dictionary<string, string>()
+				{
+					{ "developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
+					{ "email", discord.Configuration.FeedbackEmail ?? "not_given" }
+				}
+			};
 		var sid = discord.Sentry.CaptureEvent(sentryEvent);
 		_ = Task.Run(discord.Sentry.FlushAsync);
 		discord.Logger.LogInformation("Reported to sentry with id {sid}", sid.ToString());

@@ -414,15 +414,18 @@ internal sealed class RestClient : IDisposable
 
 			if (ex != null)
 			{
-				if (senex != null)
+				if (this._discord.Configuration.EnableSentry)
 				{
-					Dictionary<string, object> debugInfo = new()
+					if (senex != null)
 					{
-						{ "route", request.Route },
-						{ "time", DateTimeOffset.UtcNow }
-					};
-					senex.AddSentryContext("Request", debugInfo);
-					SentrySdk.CaptureException(senex);
+						Dictionary<string, object> debugInfo = new()
+						{
+							{ "route", request.Route },
+							{ "time", DateTimeOffset.UtcNow }
+						};
+						senex.AddSentryContext("Request", debugInfo);
+						this._discord.Sentry.CaptureException(senex);
+					}
 				}
 				request.SetFaulted(ex);
 			}

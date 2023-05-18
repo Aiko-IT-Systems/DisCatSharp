@@ -290,6 +290,18 @@ public abstract class BaseDiscordClient : IDisposable
 			foreach (var xvr in vrs)
 				this.InternalVoiceRegions.TryAdd(xvr.Id, xvr);
 		}
+
+		if (this.Configuration.EnableSentry && this.Configuration.AttachUserInfo)
+			SentrySdk.ConfigureScope(x => x.User = new User()
+			{
+				Id = this.CurrentUser.Id.ToString(),
+				Username = this.CurrentUser.UsernameWithDiscriminator,
+				Other = new Dictionary<string, string>()
+				{
+					{ "developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
+					{ "email", this.Configuration.FeedbackEmail ?? "not_given" }
+				}
+			});
 	}
 
 	/// <summary>
