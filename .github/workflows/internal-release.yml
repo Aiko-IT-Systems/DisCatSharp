@@ -36,10 +36,9 @@ jobs:
         shell: pwsh
         run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{ steps.vars.outputs.sha }}
       - name: Remove invalid packages
-        shell: pwsh
         run: rm *.symbols.*
+        working-directory: ./dcs-artifacts
       - name: Remove symbol packages
-        shell: pwsh
         run: rm *.snupkg
         working-directory: ./dcs-artifacts
       - name: Publish to AITSYS NuGet
