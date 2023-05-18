@@ -95,6 +95,11 @@ public enum ChannelType : int
 	Forum = 15,
 
 	/// <summary>
+	/// Indicates that this is a media channel.
+	/// </summary>
+	GuildMedia = 16,
+
+	/// <summary>
 	/// Indicates unknown channel type.
 	/// </summary>
 	Unknown = int.MaxValue
