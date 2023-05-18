@@ -114,29 +114,33 @@ public sealed partial class DiscordClient
 			vs = v.ToString(3);
 		}
 
-		using (SentrySdk.Init(o => {
-			o.DetectStartupTime = StartupTimeDetectionMode.Fast;
-			o.DiagnosticLevel = SentryLevel.Debug;
-			o.Environment = "prod";
-			o.IsGlobalModeEnabled = true;
-			o.TracesSampleRate = 1.0;
-			o.ReportAssembliesMode = ReportAssembliesMode.InformationalVersion;
-			o.Dsn = "https://1da216e26a2741b99e8ccfccea1b7ac8@o1113828.ingest.sentry.io/4504901362515968";
-			o.AddInAppInclude("DisCatSharp");
-			o.AttachStacktrace = true;
-			o.AutoSessionTracking = this.Configuration.EnableSentry;
-			o.StackTraceMode = StackTraceMode.Enhanced;
-			o.Release = $"{this.BotLibrary}@{vs}";
-			o.SendClientReports = true;
-		}))
+		if (this.Configuration.EnableSentry)
 		{
-			if (this.Configuration.EnableSentry)
+			using (SentrySdk.Init(o =>
+			{
+				o.DetectStartupTime = StartupTimeDetectionMode.Fast;
+				o.DiagnosticLevel = SentryLevel.Debug;
+				o.Environment = "dev";
+				o.IsGlobalModeEnabled = true;
+				o.TracesSampleRate = 1.0;
+				o.ReportAssembliesMode = ReportAssembliesMode.InformationalVersion;
+				o.Dsn = "https://1da216e26a2741b99e8ccfccea1b7ac8@o1113828.ingest.sentry.io/4504901362515968";
+				o.AddInAppInclude("DisCatSharp");
+				o.AttachStacktrace = true;
+				o.AutoSessionTracking = this.Configuration.EnableSentry;
+				o.StackTraceMode = StackTraceMode.Enhanced;
+				o.Release = $"{this.BotLibrary}@{vs}";
+				o.SendClientReports = true;
+				o.IsEnvironmentUser = false;
+				o.UseAsyncFileIO = true;
+				o.EnableScopeSync = true;
+			}))
 			{
 				this.Sentry = new SentryClient(new SentryOptions()
 				{
 					DetectStartupTime = StartupTimeDetectionMode.Fast,
 					DiagnosticLevel = SentryLevel.Debug,
-					Environment = "prod",
+					Environment = "dev",
 					IsGlobalModeEnabled = true,
 					TracesSampleRate = 1.0,
 					ReportAssembliesMode = ReportAssembliesMode.InformationalVersion,
@@ -145,11 +149,15 @@ public sealed partial class DiscordClient
 					AutoSessionTracking = this.Configuration.EnableSentry,
 					StackTraceMode = StackTraceMode.Enhanced,
 					SendClientReports = true,
-					Release = $"{this.BotLibrary}@{vs}"
-			});
+					Release = $"{this.BotLibrary}@{vs}",
+					IsEnvironmentUser = false,
+					UseAsyncFileIO = true,
+					EnableScopeSync = true
+				});
 				SentrySdk.BindClient(this.Sentry);
 				SentrySdk.StartSession();
 			}
+		}
 		
 
 		SocketLock socketLock = null;
@@ -161,13 +169,7 @@ public sealed partial class DiscordClient
 
 			socketLock = this.GetSocketLock();
 			await socketLock.LockAsync().ConfigureAwait(false);
-				SentrySdk.ConfigureScope(o => o.User = new User()
-				{
-					Id = this.CurrentApplication.Id.ToString(),
-					Username = this.CurrentUser.UsernameWithDiscriminator
-				});
-				//SentrySdk.CaptureMessage($"Testing {DateTime.UtcNow.Ticks}");
-			}
+		}
 		catch
 		{
 			socketLock?.UnlockAfter(TimeSpan.Zero);
@@ -257,7 +259,7 @@ public sealed partial class DiscordClient
 			{
 				this.Logger.LogError(LoggerEvents.WebSocketReceiveFailure, ex, "Socket handler suppressed an exception");
 				if (this.Configuration.EnableSentry)
-					SentrySdk.CaptureException(ex);
+					this.Sentry.CaptureException(ex);
 			}
 		}
 
@@ -293,7 +295,6 @@ public sealed partial class DiscordClient
 			else
 			{
 				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({0}, '{1}')", e.CloseCode, e.CloseMessage);
-			}
 			}
 		}
 	}

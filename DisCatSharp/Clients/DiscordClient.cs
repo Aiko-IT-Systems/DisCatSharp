@@ -45,6 +45,8 @@ using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json.Linq;
 
+using Sentry;
+
 namespace DisCatSharp;
 
 /// <summary>
@@ -1647,6 +1649,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		this.GuildsInternal = null;
 		this._heartbeatTask = null;
+
+		if (this.Configuration.EnableSentry)
+			SentrySdk.EndSession();
 	}
 
 	#endregion

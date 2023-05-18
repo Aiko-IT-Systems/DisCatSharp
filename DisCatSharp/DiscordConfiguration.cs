@@ -103,7 +103,7 @@ public sealed class DiscordConfiguration
 	/// <para>Sets the ID of the shard to connect to.</para>
 	/// <para>If not sharding, or sharding automatically, this value should be left with the default value of 0.</para>
 	/// </summary>
-	public int ShardId { internal get; set; }
+	public int ShardId { internal get; set; } = 0;
 
 	/// <summary>
 	/// <para>Sets the total number of shards the bot is on. If not sharding, this value should be left with a default value of 1.</para>
@@ -129,7 +129,7 @@ public sealed class DiscordConfiguration
 	/// <para>Sets the proxy to use for HTTP and WebSocket connections to Discord.</para>
 	/// <para>Defaults to <see langword="null"/>.</para>
 	/// </summary>
-	public IWebProxy Proxy { internal get; set; }
+	public IWebProxy Proxy { internal get; set; } = null!;
 
 	/// <summary>
 	/// <para>Sets the timeout for HTTP requests.</para>
@@ -143,7 +143,7 @@ public sealed class DiscordConfiguration
 	/// <para>This is typically a very bad idea to set to <c>true</c>, as it will swallow all connection errors.</para>
 	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
-	public bool ReconnectIndefinitely { internal get; set; }
+	public bool ReconnectIndefinitely { internal get; set; } = false;
 
 	/// <summary>
 	/// Sets whether the client should attempt to cache members if exclusively using unprivileged intents.
@@ -203,7 +203,7 @@ public sealed class DiscordConfiguration
 	/// <para>Sets if the bot's status should show the mobile icon.</para>
 	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
-	public bool MobileStatus { internal get; set; }
+	public bool MobileStatus { internal get; set; } = false;
 
 	/// <summary>
 	/// <para>Whether to use canary. <see cref="UsePtb"/> has to be false.</para>
@@ -245,13 +245,13 @@ public sealed class DiscordConfiguration
 	/// <para>Refresh full guild channel cache.</para>
 	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
-	public bool AutoRefreshChannelCache { internal get; set; }
+	public bool AutoRefreshChannelCache { internal get; set; } = false;
 
 	/// <summary>
 	/// <para>Do not use, this is meant for DisCatSharp Devs.</para>
 	/// <para>Defaults to <see langword="null"/>.</para>
 	/// </summary>
-	public string Override { internal get; set; }
+	public string Override { internal get; set; } = null!;
 
 	/// <summary>
 	/// Sets your preferred API language. See <see cref="DiscordLocales" /> for valid locales.
@@ -271,7 +271,34 @@ public sealed class DiscordConfiguration
 	/// <para>Defaults to an empty service provider.</para>
 	/// </summary>
 	public IServiceProvider ServiceProvider { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
+
+	/// <summary>
+	/// <para>Whether to report missing fields for discord object.</para>
+	/// <para>This helps us to track missing data and library bugs better.</para>
+	/// <para>Defaults to <see langword="false"/>.</para>
+	/// </summary>
 	public bool EnableSentry { get; internal set; } = false;
+
+	/// <summary>
+	/// <para>Whether to attach the bots username and id to sentry reports.</para>
+	/// <para>This helps us to pinpoint problems.</para>
+	/// <para>Defaults to <see langword="false"/>.</para>
+	/// </summary>
+	public bool AttachUserInfo { get; internal set; } = false;
+
+	/// <summary>
+	/// <para>Your email address we can reach out when your bot encounters library bugs.</para>
+	/// <para>Will only be transmitted if <see cref="AttachUserInfo"/> is <see langword="true"/>.</para>
+	/// <para>Defaults to <see langword="null"/>.</para>
+	/// </summary>
+	public string? FeedbackEmail { get; internal set; } = null;
+
+	/// <summary>
+	/// <para>Your discord user id we can reach out when your bot encounters library bugs.</para>
+	/// <para>Will only be transmitted if <see cref="AttachUserInfo"/> is <see langword="true"/>.</para>
+	/// <para>Defaults to <see langword="null"/>.</para>
+	/// </summary>
+	public ulong? DeveloperUserId { get; internal set; } = null;
 
 	/// <summary>
 	/// Creates a new configuration with default values.
@@ -323,5 +350,8 @@ public sealed class DiscordConfiguration
 		this.Locale = other.Locale;
 		this.ReportMissingFields = other.ReportMissingFields;
 		this.EnableSentry = other.EnableSentry;
+		this.AttachUserInfo = other.AttachUserInfo;
+		this.FeedbackEmail = other.FeedbackEmail;
+		this.DeveloperUserId = other.DeveloperUserId;
 	}
 }
