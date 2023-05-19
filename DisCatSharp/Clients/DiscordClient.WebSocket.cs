@@ -22,8 +22,8 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -134,6 +134,22 @@ public sealed partial class DiscordClient
 				o.IsEnvironmentUser = false;
 				o.UseAsyncFileIO = true;
 				o.EnableScopeSync = true;
+				o.BeforeSend = e =>
+				{
+					if (!e.HasUser())
+						if (this.Configuration.AttachUserInfo && this.CurrentUser != null)
+							e.User = new()
+							{
+								Id = this.CurrentUser.Id.ToString(),
+								Username = this.CurrentUser.UsernameWithDiscriminator,
+								Other = new Dictionary<string, string> ()
+								{
+									{ "developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
+									{ "email", this.Configuration.FeedbackEmail ?? "not_given" }
+								}
+							};
+					return e;
+				};
 			}))
 			{
 				this.Sentry = new SentryClient(new SentryOptions()
@@ -152,13 +168,29 @@ public sealed partial class DiscordClient
 					Release = $"{this.BotLibrary}@{vs}",
 					IsEnvironmentUser = false,
 					UseAsyncFileIO = true,
-					EnableScopeSync = true
+					EnableScopeSync = true,
+					BeforeSend = e =>
+					{
+						if (!e.HasUser())
+							if (this.Configuration.AttachUserInfo && this.CurrentUser != null)
+								e.User = new()
+								{
+									Id = this.CurrentUser.Id.ToString(),
+									Username = this.CurrentUser.UsernameWithDiscriminator,
+									Other = new Dictionary<string, string> ()
+									{
+										{ "developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
+										{ "email", this.Configuration.FeedbackEmail ?? "not_given" }
+									}
+								};
+						return e;
+					}
 				});
 				SentrySdk.BindClient(this.Sentry);
 				SentrySdk.StartSession();
 			}
 		}
-		
+
 
 		SocketLock socketLock = null;
 		try
@@ -224,7 +256,7 @@ public sealed partial class DiscordClient
 
 		await this.WebSocketClient.ConnectAsync(gwuri.Build()).ConfigureAwait(false);
 
-			
+
 
 		Task SocketOnConnect(IWebSocketClient sender, SocketEventArgs e)
 			=> this._socketOpened.InvokeAsync(this, e);
