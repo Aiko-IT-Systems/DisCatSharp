@@ -40,9 +40,9 @@ jobs:
       - name: Remove symbol packages
         run: rm *.snupkg
         working-directory: ./dcs-artifacts
-      - name: Publish to AITSYS NuGet
+      - name: Add AITSYS Internal NuGet source
         run: dotnet nuget add source --name aitsys https://registry.aitsys-infra.tools/nuget/aitsys/index.json --username bytesafe --password ${{ secrets.BYTESAFE }} --store-password-in-clear-text
         working-directory: ./dcs-artifacts
-      - name: Publish to GitHub Packages
+      - name: Publish to AITSYS Internal Registry
         run: dotnet nuget push --source aitsys -k ${{ secrets.BYTESAFE }} *
         working-directory: ./dcs-artifacts
