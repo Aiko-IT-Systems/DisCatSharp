@@ -299,6 +299,7 @@ public sealed class DiscordConfiguration
 	/// <para>Defaults to <see langword="null"/>.</para>
 	/// </summary>
 	public ulong? DeveloperUserId { internal get; set; } = null;
+	internal bool HasShardLogger { get; set; } = false;
 
 	/// <summary>
 	/// Creates a new configuration with default values.
@@ -353,5 +354,6 @@ public sealed class DiscordConfiguration
 		this.AttachUserInfo = other.AttachUserInfo;
 		this.FeedbackEmail = other.FeedbackEmail;
 		this.DeveloperUserId = other.DeveloperUserId;
+		this.HasShardLogger = other.HasShardLogger;
 	}
 }

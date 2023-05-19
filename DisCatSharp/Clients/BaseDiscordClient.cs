@@ -31,6 +31,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
@@ -38,6 +39,8 @@ using DisCatSharp.Net;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.Options;
 
 using Sentry;
 
@@ -53,7 +56,16 @@ public abstract class BaseDiscordClient : IDisposable
 	/// </summary>
 	internal protected DiscordApiClient ApiClient { get; }
 
+	/// <summary>
+	/// Gets the sentry client.
+	/// </summary>
 	internal SentryClient Sentry { get; set; }
+
+	/// <summary>
+	/// Gets the sentry dsn.
+	/// </summary>
+	internal static string SentryDsn
+		=> "https://1da216e26a2741b99e8ccfccea1b7ac8@o1113828.ingest.sentry.io/4504901362515968";
 
 	/// <summary>
 	/// Gets the configuration.
@@ -73,11 +85,8 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <summary>
 	/// Gets the bot library name.
 	/// </summary>
-	public string BotLibrary { get; }
-
-	[Obsolete("Use GetLibraryDeveloperTeamAsync")]
-	public DisCatSharpTeam LibraryDeveloperTeamAsync
-		=> this.GetLibraryDevelopmentTeamAsync().Result;
+	public string BotLibrary
+		=> "DisCatSharp";
 
 	/// <summary>
 	/// Gets the current user.
@@ -134,18 +143,119 @@ public abstract class BaseDiscordClient : IDisposable
 
 		if (this.ServiceProvider != null)
 		{
-			this.Configuration.LoggerFactory ??= config.ServiceProvider.GetService<ILoggerFactory>();
-			this.Logger = config.ServiceProvider.GetService<ILogger<BaseDiscordClient>>();
+			this.Configuration.LoggerFactory ??= config.ServiceProvider.GetService<ILoggerFactory>()!;
+			this.Logger = config.ServiceProvider.GetService<ILogger<BaseDiscordClient>>()!;
 		}
 
-		if (this.Configuration.LoggerFactory == null)
+		if (this.Configuration.LoggerFactory == null && !this.Configuration.EnableSentry)
 		{
 			this.Configuration.LoggerFactory = new DefaultLoggerFactory();
 			this.Configuration.LoggerFactory.AddProvider(new DefaultLoggerProvider(this));
-			if (this.Configuration.EnableSentry)
-				this.Configuration.LoggerFactory.AddSentry(x => x.DiagnosticLevel = SentryLevel.Error);
 		}
-		this.Logger ??= this.Configuration.LoggerFactory.CreateLogger<BaseDiscordClient>();
+		else if (this.Configuration.LoggerFactory == null && this.Configuration.EnableSentry)
+		{
+			var configureNamedOptions = new ConfigureNamedOptions<ConsoleLoggerOptions>(string.Empty, x =>
+			{
+				x.Format = ConsoleLoggerFormat.Default;
+				x.TimestampFormat = this.Configuration.LogTimestampFormat;
+				x.LogToStandardErrorThreshold = this.Configuration.MinimumLogLevel;
+
+			});
+			var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[] { configureNamedOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
+			var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleLoggerOptions>>(), new OptionsCache<ConsoleLoggerOptions>());
+
+			var l = new ConsoleLoggerProvider(optionsMonitor);
+			this.Configuration.LoggerFactory = new LoggerFactory();
+			this.Configuration.LoggerFactory.AddProvider(l);
+		}
+
+		var ass = typeof(DiscordClient).GetTypeInfo().Assembly;
+		var vrs = "";
+		var ivr = ass.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+		if (ivr != null)
+			vrs = ivr.InformationalVersion;
+		else
+		{
+			var v = ass.GetName().Version;
+			vrs = v?.ToString(3);
+		}
+
+		if (!this.Configuration.HasShardLogger)
+			if (this.Configuration.LoggerFactory != null && this.Configuration.EnableSentry)
+			{
+				this.Configuration.LoggerFactory.AddSentry(o =>
+				{
+					o.InitializeSdk = true;
+					o.Dsn = SentryDsn;
+					o.DetectStartupTime = StartupTimeDetectionMode.Fast;
+					o.DiagnosticLevel = SentryLevel.Debug;
+					o.Environment = "dev";
+					o.IsGlobalModeEnabled = true;
+					o.TracesSampleRate = 1.0;
+					o.ReportAssembliesMode = ReportAssembliesMode.InformationalVersion;
+					o.AddInAppInclude("DisCatSharp");
+					o.AttachStacktrace = true;
+					o.StackTraceMode = StackTraceMode.Enhanced;
+					o.Release = $"{this.BotLibrary}@{vrs}";
+					o.SendClientReports = true;
+					o.IsEnvironmentUser = false;
+					o.UseAsyncFileIO = true;
+					o.EnableScopeSync = true;
+					o.BeforeSend = e =>
+					{
+						if (!e.HasUser())
+							if (this.Configuration.AttachUserInfo && this.CurrentUser! != null!)
+								e.User = new()
+								{
+									Id = this.CurrentUser.Id.ToString(),
+									Username = this.CurrentUser.UsernameWithDiscriminator,
+									Other = new Dictionary<string, string>()
+								{
+									{ "developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
+									{ "email", this.Configuration.FeedbackEmail ?? "not_given" }
+								}
+								};
+						return e;
+					};
+				});
+			}
+
+		if (this.Configuration.EnableSentry)
+			this.Sentry = new SentryClient(new SentryOptions()
+			{
+				DetectStartupTime = StartupTimeDetectionMode.Fast,
+				DiagnosticLevel = SentryLevel.Debug,
+				Environment = "dev",
+				IsGlobalModeEnabled = true,
+				TracesSampleRate = 1.0,
+				ReportAssembliesMode = ReportAssembliesMode.InformationalVersion,
+				Dsn = SentryDsn,
+				AttachStacktrace = true,
+				StackTraceMode = StackTraceMode.Enhanced,
+				SendClientReports = true,
+				Release = $"{this.BotLibrary}@{vrs}",
+				IsEnvironmentUser = false,
+				UseAsyncFileIO = true,
+				EnableScopeSync = true,
+				BeforeSend = e =>
+				{
+					if (!e.HasUser())
+						if (this.Configuration.AttachUserInfo && this.CurrentUser! != null!)
+							e.User = new()
+							{
+								Id = this.CurrentUser.Id.ToString(),
+								Username = this.CurrentUser.UsernameWithDiscriminator,
+								Other = new Dictionary<string, string>()
+									{
+										{ "developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
+										{ "email", this.Configuration.FeedbackEmail ?? "not_given" }
+									}
+							};
+					return e;
+				}
+			});
+
+		this.Logger ??= this.Configuration.LoggerFactory!.CreateLogger<BaseDiscordClient>();
 
 		this.ApiClient = new DiscordApiClient(this);
 		this.UserCache = new ConcurrentDictionary<ulong, DiscordUser>();
@@ -171,8 +281,6 @@ public abstract class BaseDiscordClient : IDisposable
 			if (v.Revision > 0)
 				this.VersionString = $"{vs}, CI build {v.Revision}";
 		}
-
-		this.BotLibrary = "DisCatSharp";
 	}
 
 	/// <summary>
@@ -335,7 +443,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <para>Note: This call contacts servers managed by the DCS team, no information is collected.</para>
 	/// <returns>The team, or null with errors being logged on failure.</returns>
 	/// </summary>
-	[Obsolete("Don't use this right now, inactive")]
+	[Deprecated("Don't use this right now, inactive")]
 	public async Task<DisCatSharpTeam> GetLibraryDevelopmentTeamAsync()
 		=> await DisCatSharpTeam.Get(this.RestClient, this.Logger, this.ApiClient).ConfigureAwait(false);
 
