@@ -203,6 +203,8 @@ public abstract class BaseDiscordClient : IDisposable
 					o.EnableScopeSync = true;
 					o.BeforeSend = e =>
 					{
+						if (e.Exception?.Message?.ToLower()?.Contains("connection") ?? false)
+							return null;
 						if (!e.HasUser())
 							if (this.Configuration.AttachUserInfo && this.CurrentUser! != null!)
 								e.User = new()

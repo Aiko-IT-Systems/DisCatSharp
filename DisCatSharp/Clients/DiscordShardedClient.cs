@@ -196,6 +196,8 @@ public sealed partial class DiscordShardedClient
 				o.EnableScopeSync = true;
 				o.BeforeSend = e =>
 				{
+					if (e.Exception?.Message?.ToLower()?.Contains("connection") ?? false)
+						return null;
 					if (!e.HasUser())
 						if (this._configuration.AttachUserInfo && this.CurrentUser! != null!)
 							e.User = new()
