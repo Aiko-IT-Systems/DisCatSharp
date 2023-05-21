@@ -1618,6 +1618,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="userId">ID of the member to get.</param>
 	/// <param name="fetch">Whether to fetch the member from the api prior to cache.</param>
 	/// <returns>The requested member.</returns>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist in this guild.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMember> GetMemberAsync(ulong userId, bool fetch = false)
 	{
