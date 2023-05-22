@@ -259,6 +259,11 @@ public sealed class DiscordConfiguration
 	public string Locale { internal get; set; } = DiscordLocales.AMERICAN_ENGLISH;
 
 	/// <summary>
+	/// Sets your timezone.
+	/// </summary>
+	public string Timezone { internal get; set; } = "Europe/Berlin";
+
+	/// <summary>
 	/// <para>Whether to report missing fields for discord object.</para>
 	/// <para>Useful for library development.</para>
 	/// <para>Defaults to <see langword="false"/>.</para>
@@ -349,6 +354,7 @@ public sealed class DiscordConfiguration
 		this.ServiceProvider = other.ServiceProvider;
 		this.Override = other.Override;
 		this.Locale = other.Locale;
+		this.Timezone = other.Timezone;
 		this.ReportMissingFields = other.ReportMissingFields;
 		this.EnableSentry = other.EnableSentry;
 		this.AttachUserInfo = other.AttachUserInfo;
