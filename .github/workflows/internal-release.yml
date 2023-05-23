@@ -34,6 +34,8 @@ jobs:
       - name: Build library as pre-release
         shell: pwsh
         run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{ steps.vars.outputs.sha }}
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Remove invalid packages
         run: rm *.symbols.*
         working-directory: ./dcs-artifacts
