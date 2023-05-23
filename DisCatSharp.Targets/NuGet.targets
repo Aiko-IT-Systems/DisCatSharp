@@ -10,12 +10,18 @@
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
 		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    	<DefineConstants>$(DefineConstants);CI_BUILD</DefineConstants>
+    	<Deterministic>true</Deterministic>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(CI)' == 'True'">
 		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    	<DefineConstants>$(DefineConstants);CI_BUILD</DefineConstants>
+    	<Deterministic>true</Deterministic>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
 		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    	<DefineConstants>$(DefineConstants);CI_BUILD</DefineConstants>
+    	<Deterministic>true</Deterministic>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' != 'true' And '$(TF_BUILD)' != 'true' And '$(CI)' != 'True'">
 		<ContinuousIntegrationBuild>false</ContinuousIntegrationBuild>
@@ -23,10 +29,11 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
 	</ItemGroup>
-	<PropertyGroup Condition="'$(Configuration)' == 'Release' And '$(GITHUB_ACTIONS)' == 'true'">
+	<PropertyGroup Condition="'$(Configuration)' == 'Release' And '$(GITHUB_ACTIONS)' == 'true'" And '$(SENTRY_AUTH_TOKEN)' != ''>
 		<SentryOrg>aitsys</SentryOrg>
 		<SentryProject>discatsharp</SentryProject>
 		<SentryUploadSymbols>true</SentryUploadSymbols>
 		<SentryUploadSources>true</SentryUploadSources>
+		<UseSentryCLI>true</UseSentryCLI>
 	</PropertyGroup>
 </Project>
