@@ -29,7 +29,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
 	</ItemGroup>
-	<PropertyGroup Condition="'$(Configuration)' == 'Release' And '$(GITHUB_ACTIONS)' == 'true'" And '$(SENTRY_AUTH_TOKEN)' != ''>
+	<PropertyGroup Condition="'$(Configuration)' == 'Release' And '$(GITHUB_ACTIONS)' == 'true' And '$(SENTRY_AUTH_TOKEN)' != ''">
 		<SentryOrg>aitsys</SentryOrg>
 		<SentryProject>discatsharp</SentryProject>
 		<SentryUploadSymbols>true</SentryUploadSymbols>
