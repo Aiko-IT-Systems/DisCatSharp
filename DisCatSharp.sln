@@ -73,6 +73,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Targets", "Targets", "{4A7E065C-5EAF-4AD0-8002-306FCEEC946C}"
 	ProjectSection(SolutionItems) = preProject
 		DisCatSharp.Targets\DisCatSharp.targets = DisCatSharp.Targets\DisCatSharp.targets
+		DisCatSharp.Targets\InternalsVisibleTo.targets = DisCatSharp.Targets\InternalsVisibleTo.targets
 		DisCatSharp.Targets\Library.targets = DisCatSharp.Targets\Library.targets
 		DisCatSharp.Targets\NuGet.targets = DisCatSharp.Targets\NuGet.targets
 		DisCatSharp.Targets\Package.targets = DisCatSharp.Targets\Package.targets
