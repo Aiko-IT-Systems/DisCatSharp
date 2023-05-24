@@ -6,6 +6,7 @@
   <Import Project="../DisCatSharp.Targets/Package.targets" />
   <Import Project="../DisCatSharp.Targets/NuGet.targets" />
   <Import Project="../DisCatSharp.Targets/Library.targets" />
+  <Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
 
   <PropertyGroup>
 	<AssemblyName>DisCatSharp.Experimental</AssemblyName>

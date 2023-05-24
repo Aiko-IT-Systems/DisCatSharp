@@ -6,6 +6,7 @@
   <Import Project="../DisCatSharp.Targets/Package.targets" />
   <Import Project="../DisCatSharp.Targets/NuGet.targets" />
   <Import Project="../DisCatSharp.Targets/Library.targets" />
+  <Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
 
   <PropertyGroup>
     <AssemblyName>DisCatSharp.ApplicationCommands</AssemblyName>
@@ -39,5 +40,4 @@ Documentation: https://docs.dcs.aitsys.dev/articles/modules/application_commands
     <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
     <ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
   </ItemGroup>
-
 </Project>
