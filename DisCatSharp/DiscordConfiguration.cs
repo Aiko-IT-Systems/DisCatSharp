@@ -318,7 +318,7 @@ public sealed class DiscordConfiguration
 	/// <para>Do not touch this unless you're developing the library.</para>
 	/// </summary>
 	/// <exception cref="InvalidOperationException">Thrown when the base type of all exceptions is not <see cref="DisCatSharpException"/>.</exception>
-	public List<Type> TrackExceptions
+	internal List<Type> TrackExceptions
 	{
 		get => this._exceptions;
 		set {
@@ -355,7 +355,7 @@ public sealed class DiscordConfiguration
 	/// <summary>
 	/// Whether to disable the exception filter.
 	/// </summary>
-	public bool DisableExceptionFilter { get; internal set; } = false;
+	internal bool DisableExceptionFilter { get; set; } = false;
 
 	/// <summary>
 	/// Creates a new configuration with default values.
