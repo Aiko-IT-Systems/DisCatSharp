@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="../DisCatSharp.Targets/Library.targets" />
+  <Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
   <PropertyGroup>
 	<NoWarn>DV2001</NoWarn>
 
