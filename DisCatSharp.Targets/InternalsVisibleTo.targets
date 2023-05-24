@@ -28,5 +28,7 @@
 	<InternalsVisibleTo Include="Microsoft.DocAsCode" />
 	<InternalsVisibleTo Include="Microsoft.DocAsCode.Metadata.ManagedReference" />
 	<InternalsVisibleTo Include="ProjectMakoto" />
+	<InternalsVisibleTo Include="SidePlus_AuthBot" />
+	<InternalsVisibleTo Include="SidePlus_Helper" />
   </ItemGroup>
 </Project>
