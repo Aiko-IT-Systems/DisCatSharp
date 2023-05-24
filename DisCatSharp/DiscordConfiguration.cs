@@ -205,7 +205,7 @@ public sealed class DiscordConfiguration
 	/// <para>To create your own logger, implement the <see cref="Microsoft.Extensions.Logging.ILoggerFactory"/> instance.</para>
 	/// <para>Defaults to built-in implementation.</para>
 	/// </summary>
-	public ILoggerFactory LoggerFactory { internal get; set; }
+	public ILoggerFactory LoggerFactory { internal get; set; } = null!;
 
 	/// <summary>
 	/// <para>Sets if the bot's status should show the mobile icon.</para>
@@ -314,14 +314,17 @@ public sealed class DiscordConfiguration
 	public ulong? DeveloperUserId { internal get; set; } = null;
 
 	/// <summary>
-	/// Sets which exceptions to track with sentry.
+	/// <para>Sets which exceptions to track with sentry.</para>
+	/// <para>Do not touch this unless you're developing the library.</para>
 	/// </summary>
 	/// <exception cref="InvalidOperationException">Thrown when the base type of all exceptions is not <see cref="DisCatSharpException"/>.</exception>
 	public List<Type> TrackExceptions
 	{
-		internal get => this._exceptions;
+		get => this._exceptions;
 		set {
-			if (value == null)
+			if (!this.EnableLibraryDeveloperMode)
+				throw new AccessViolationException("Cannot set this as non-library-dev");
+			else if (value == null)
 				this._exceptions.Clear();
 			else this._exceptions = value.All(val => val.BaseType == typeof(DisCatSharpException))
 				? value
@@ -337,6 +340,22 @@ public sealed class DiscordConfiguration
 		typeof(ServerErrorException),
 		typeof(BadRequestException)
 	};
+
+	/// <summary>
+	/// <para>Whether to enable the library developer mode.</para>
+	/// <para>Defaults <see langword="false"/>.</para>
+	/// </summary>
+	internal bool EnableLibraryDeveloperMode { get; set; } = false;
+
+	/// <summary>
+	/// Whether to turn sentry's debug mode on.
+	/// </summary>
+	internal bool SentryDebug { get; set; } = false;
+
+	/// <summary>
+	/// Whether to disable the exception filter.
+	/// </summary>
+	public bool DisableExceptionFilter { get; internal set; } = false;
 
 	/// <summary>
 	/// Creates a new configuration with default values.
@@ -393,5 +412,9 @@ public sealed class DiscordConfiguration
 		this.FeedbackEmail = other.FeedbackEmail;
 		this.DeveloperUserId = other.DeveloperUserId;
 		this.HasShardLogger = other.HasShardLogger;
+		this._exceptions = other._exceptions;
+		this.EnableLibraryDeveloperMode = other.EnableLibraryDeveloperMode;
+		this.SentryDebug = other.SentryDebug;
+		this.DisableExceptionFilter = other.DisableExceptionFilter;
 	}
 }

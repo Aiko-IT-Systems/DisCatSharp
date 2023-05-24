@@ -3341,8 +3341,11 @@ public sealed partial class DiscordClient
 	/// <param name="rawInteraction">Debug.</param>
 	internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction, string rawInteraction)
 	{
-		//this.Logger.LogDebug("Interaction from {guild} on shard {shard}", guildId.HasValue ? guildId.Value : "dm", this.ShardId);
-		//this.Logger.LogDebug("Interaction: {interaction}", rawInteraction);
+		if (this.Configuration.EnableLibraryDeveloperMode)
+		{
+			//this.Logger.LogDebug("Interaction from {guild} on shard {shard}", guildId.HasValue ? guildId.Value : "dm", this.ShardId);
+			//this.Logger.LogDebug("Interaction: {interaction}", rawInteraction);
+		}
 		var usr = new DiscordUser(user) { Discord = this };
 
 		interaction.ChannelId = channelId;

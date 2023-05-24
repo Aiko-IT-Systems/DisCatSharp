@@ -5026,8 +5026,6 @@ public sealed class DiscordApiClient
 			});
 		}
 
-		this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
-
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new {application_id = applicationId }, out var path);
 
@@ -5194,7 +5192,6 @@ public sealed class DiscordApiClient
 				Nsfw = command.IsNsfw
 			});
 		}
-		this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new {application_id = applicationId, guild_id = guildId }, out var path);
