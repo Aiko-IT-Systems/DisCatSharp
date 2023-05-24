@@ -114,11 +114,15 @@ public static class DiscordJson
 			{
 				if (vals == 1)
 				{
-					discord.Logger.LogInformation("{sentry}", sentryMessage);
-					discord.Logger.LogDebug(json);
+					if (discord.Configuration.EnableLibraryDeveloperMode)
+					{
+						discord.Logger.LogInformation("{sentry}", sentryMessage);
+						discord.Logger.LogDebug(json);
+					}
 				}
 				sentryFields.Add(ap.Key);
-				discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, obj.GetType().Name);
+				if (discord.Configuration.EnableLibraryDeveloperMode)
+					discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, obj.GetType().Name);
 			}
 		}
 
@@ -146,7 +150,8 @@ public static class DiscordJson
 			};
 		var sid = discord.Sentry.CaptureEvent(sentryEvent);
 		_ = Task.Run(discord.Sentry.FlushAsync);
-		discord.Logger.LogInformation("Reported to sentry with id {sid}", sid.ToString());
+		if (discord.Configuration.EnableLibraryDeveloperMode)
+			discord.Logger.LogInformation("Reported to sentry with id {sid}", sid.ToString());
 
 		return obj;
 	}
@@ -172,11 +177,15 @@ public static class DiscordJson
 			{
 				if (vals == 1)
 				{
-					discord.Logger.LogInformation("{sentry}", sentryMessage);
-					discord.Logger.LogDebug(json);
+					if (discord.Configuration.EnableLibraryDeveloperMode)
+					{
+						discord.Logger.LogInformation("{sentry}", sentryMessage);
+						discord.Logger.LogDebug(json);
+					}
 				}
 				sentryFields.Add(ap.Key);
-				discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, first.GetType().Name);
+				if (discord.Configuration.EnableLibraryDeveloperMode)
+					discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, first.GetType().Name);
 			}
 		}
 
@@ -204,7 +213,8 @@ public static class DiscordJson
 			};
 		var sid = discord.Sentry.CaptureEvent(sentryEvent);
 		_ = Task.Run(discord.Sentry.FlushAsync);
-		discord.Logger.LogInformation("Reported to sentry with id {sid}", sid.ToString());
+		if (discord.Configuration.EnableLibraryDeveloperMode)
+			discord.Logger.LogInformation("Reported to sentry with id {sid}", sid.ToString());
 
 		return obj;
 	}

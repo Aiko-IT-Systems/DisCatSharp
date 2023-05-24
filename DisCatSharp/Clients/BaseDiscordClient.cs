@@ -201,16 +201,21 @@ public abstract class BaseDiscordClient : IDisposable
 					o.IsEnvironmentUser = false;
 					o.UseAsyncFileIO = true;
 					o.EnableScopeSync = true;
-					o.AddExceptionFilter(new DisCatSharpExceptionFilter(this.Configuration));
+					if (!this.Configuration.DisableExceptionFilter)
+						o.AddExceptionFilter(new DisCatSharpExceptionFilter(this.Configuration));
+					o.Debug = this.Configuration.SentryDebug;
 					o.BeforeSend = e =>
 					{
-						if (e.Exception != null)
+						if (!this.Configuration.DisableExceptionFilter)
 						{
-							if (!this.Configuration.TrackExceptions.Contains(e.Exception.GetType()))
+							if (e.Exception != null)
+							{
+								if (!this.Configuration.TrackExceptions.Contains(e.Exception.GetType()))
+									return null;
+							}
+							else if (e.Extra.Count == 0 || !e.Extra.ContainsKey("Found Fields"))
 								return null;
 						}
-						else if (e.Extra.Count == 0 || !e.Extra.ContainsKey("Found Fields"))
-							return null;
 
 						if (!e.HasUser())
 							if (this.Configuration.AttachUserInfo && this.CurrentUser! != null!)
@@ -246,15 +251,19 @@ public abstract class BaseDiscordClient : IDisposable
 				IsEnvironmentUser = false,
 				UseAsyncFileIO = true,
 				EnableScopeSync = true,
+				Debug = this.Configuration.SentryDebug,
 				BeforeSend = e =>
 				{
-					if (e.Exception != null)
+					if (!this.Configuration.DisableExceptionFilter)
 					{
-						if (!this.Configuration.TrackExceptions.Contains(e.Exception.GetType()))
+						if (e.Exception != null)
+						{
+							if (!this.Configuration.TrackExceptions.Contains(e.Exception.GetType()))
+								return null;
+						}
+						else if (e.Extra.Count == 0 || !e.Extra.ContainsKey("Found Fields"))
 							return null;
 					}
-					else if (e.Extra.Count == 0 || !e.Extra.ContainsKey("Found Fields"))
-						return null;
 
 					if (!e.HasUser())
 						if (this.Configuration.AttachUserInfo && this.CurrentUser! != null!)
