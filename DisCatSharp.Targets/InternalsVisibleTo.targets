@@ -27,8 +27,6 @@
 	<InternalsVisibleTo Include="MikuSharp" />
 	<InternalsVisibleTo Include="Microsoft.DocAsCode" />
 	<InternalsVisibleTo Include="Microsoft.DocAsCode.Metadata.ManagedReference" />
-	<InternalsVisibleTo Include="Microsoft.DocAsCode.*" />
 	<InternalsVisibleTo Include="ProjectMakoto" />
-	<InternalsVisibleTo Include="DisCatSharp.Extensions.*" />
   </ItemGroup>
 </Project>
