@@ -31,7 +31,7 @@ namespace DisCatSharp.Exceptions;
 /// <summary>
 /// Represents an exception thrown when a requested resource is not found.
 /// </summary>
-public class NotFoundException : Exception
+public class NotFoundException : DisCatSharpException
 {
 	/// <summary>
 	/// Gets the request that caused the exception.
@@ -53,7 +53,8 @@ public class NotFoundException : Exception
 	/// </summary>
 	/// <param name="request">The request.</param>
 	/// <param name="response">The response.</param>
-	internal NotFoundException(BaseRestRequest request, RestResponse response) : base("Not found: " + response.ResponseCode)
+	internal NotFoundException(BaseRestRequest request, RestResponse response)
+		: base("Not found: " + response.ResponseCode)
 	{
 		this.WebRequest = request;
 		this.WebResponse = response;

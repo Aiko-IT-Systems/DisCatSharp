@@ -21,11 +21,14 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 
 using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
+using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Udp;
 using DisCatSharp.Net.WebSocket;
 
@@ -154,6 +157,11 @@ public sealed class DiscordConfiguration
 	/// <para>Defaults to <see langword="true"/>.</para>
 	/// </summary>
 	public bool AlwaysCacheMembers { internal get; set; } = true;
+
+	/// <summary>
+	/// Sets whether a shard logger is attached.
+	/// </summary>
+	internal bool HasShardLogger { get; set; } = false;
 
 	/// <summary>
 	/// <para>Sets the gateway intents for this client.</para>
@@ -304,7 +312,31 @@ public sealed class DiscordConfiguration
 	/// <para>Defaults to <see langword="null"/>.</para>
 	/// </summary>
 	public ulong? DeveloperUserId { internal get; set; } = null;
-	internal bool HasShardLogger { get; set; } = false;
+
+	/// <summary>
+	/// Sets which exceptions to track with sentry.
+	/// </summary>
+	/// <exception cref="InvalidOperationException">Thrown when the base type of all exceptions is not <see cref="DisCatSharpException"/>.</exception>
+	public List<Type> TrackExceptions
+	{
+		internal get => this._exceptions;
+		set {
+			if (value == null)
+				this._exceptions.Clear();
+			else this._exceptions = value.All(val => val.BaseType == typeof(DisCatSharpException))
+				? value
+				: throw new InvalidOperationException("Can only track exceptions who inherit from " + nameof(DisCatSharpException) + " and must be constructed with typeof(Type)");
+		}
+	}
+
+	/// <summary>
+	/// The exception we track with sentry.
+	/// </summary>
+	private List<Type> _exceptions = new()
+	{
+		typeof(ServerErrorException),
+		typeof(BadRequestException)
+	};
 
 	/// <summary>
 	/// Creates a new configuration with default values.

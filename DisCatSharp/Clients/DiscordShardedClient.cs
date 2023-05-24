@@ -36,6 +36,7 @@ using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
+using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
 
 using Microsoft.Extensions.Logging;
@@ -183,7 +184,7 @@ public sealed partial class DiscordShardedClient
 				o.DetectStartupTime = StartupTimeDetectionMode.Fast;
 				o.DiagnosticLevel = SentryLevel.Debug;
 				o.Environment = "dev";
-				o.IsGlobalModeEnabled = true;
+				o.IsGlobalModeEnabled = false;
 				o.TracesSampleRate = 1.0;
 				o.ReportAssembliesMode = ReportAssembliesMode.InformationalVersion;
 				o.AddInAppInclude("DisCatSharp");
@@ -191,13 +192,21 @@ public sealed partial class DiscordShardedClient
 				o.StackTraceMode = StackTraceMode.Enhanced;
 				o.Release = $"{this.BotLibrary}@{vs}";
 				o.SendClientReports = true;
+				o.AddExceptionFilter(new DisCatSharpExceptionFilter(this._configuration));
 				o.IsEnvironmentUser = false;
 				o.UseAsyncFileIO = true;
+				o.Debug = true;
 				o.EnableScopeSync = true;
 				o.BeforeSend = e =>
 				{
-					if (e.Exception?.Message?.ToLower()?.Contains("connection") ?? false)
+					if (e.Exception != null)
+					{
+						if (!this._configuration.TrackExceptions.Contains(e.Exception.GetType()))
+							return null;
+					}
+					else if (e.Extra.Count == 0 || !e.Extra.ContainsKey("Found Fields"))
 						return null;
+
 					if (!e.HasUser())
 						if (this._configuration.AttachUserInfo && this.CurrentUser! != null!)
 							e.User = new()

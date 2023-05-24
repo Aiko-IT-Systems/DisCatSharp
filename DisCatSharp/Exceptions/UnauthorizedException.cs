@@ -31,7 +31,7 @@ namespace DisCatSharp.Exceptions;
 /// <summary>
 /// Represents an exception thrown when requester doesn't have necessary permissions to complete the request.
 /// </summary>
-public class UnauthorizedException : Exception
+public class UnauthorizedException : DisCatSharpException
 {
 	/// <summary>
 	/// Gets the request that caused the exception.
@@ -53,7 +53,8 @@ public class UnauthorizedException : Exception
 	/// </summary>
 	/// <param name="request">The request.</param>
 	/// <param name="response">The response.</param>
-	internal UnauthorizedException(BaseRestRequest request, RestResponse response) : base("Unauthorized: " + response.ResponseCode)
+	internal UnauthorizedException(BaseRestRequest request, RestResponse response)
+		: base("Unauthorized: " + response.ResponseCode)
 	{
 		this.WebRequest = request;
 		this.WebResponse = response;
