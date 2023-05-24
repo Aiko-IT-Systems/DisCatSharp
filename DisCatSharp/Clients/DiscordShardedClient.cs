@@ -192,20 +192,24 @@ public sealed partial class DiscordShardedClient
 				o.StackTraceMode = StackTraceMode.Enhanced;
 				o.Release = $"{this.BotLibrary}@{vs}";
 				o.SendClientReports = true;
-				o.AddExceptionFilter(new DisCatSharpExceptionFilter(this._configuration));
+				if (!this._configuration.DisableExceptionFilter)
+					o.AddExceptionFilter(new DisCatSharpExceptionFilter(this._configuration));
 				o.IsEnvironmentUser = false;
 				o.UseAsyncFileIO = true;
-				o.Debug = true;
+				o.Debug = this._configuration.SentryDebug;
 				o.EnableScopeSync = true;
 				o.BeforeSend = e =>
 				{
-					if (e.Exception != null)
+					if (!this._configuration.DisableExceptionFilter)
 					{
-						if (!this._configuration.TrackExceptions.Contains(e.Exception.GetType()))
+						if (e.Exception != null)
+						{
+							if (!this._configuration.TrackExceptions.Contains(e.Exception.GetType()))
+								return null;
+						}
+						else if (e.Extra.Count == 0 || !e.Extra.ContainsKey("Found Fields"))
 							return null;
 					}
-					else if (e.Extra.Count == 0 || !e.Extra.ContainsKey("Found Fields"))
-						return null;
 
 					if (!e.HasUser())
 						if (this._configuration.AttachUserInfo && this.CurrentUser! != null!)
