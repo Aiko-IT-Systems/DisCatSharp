@@ -31,7 +31,7 @@ namespace DisCatSharp.Exceptions;
 /// <summary>
 /// Represents an exception thrown when Discord returns an Internal Server Error.
 /// </summary>
-public class ServerErrorException : Exception
+public class ServerErrorException : DisCatSharpException
 {
 	/// <summary>
 	/// Gets the request that caused the exception.
@@ -53,7 +53,8 @@ public class ServerErrorException : Exception
 	/// </summary>
 	/// <param name="request">The request.</param>
 	/// <param name="response">The response.</param>
-	internal ServerErrorException(BaseRestRequest request, RestResponse response) : base("Internal Server Error: " + response.ResponseCode)
+	internal ServerErrorException(BaseRestRequest request, RestResponse response)
+		: base("Internal Server Error: " + response.ResponseCode)
 	{
 		this.WebRequest = request;
 		this.WebResponse = response;
