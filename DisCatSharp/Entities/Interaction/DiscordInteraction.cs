@@ -235,4 +235,8 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <param name="messageId">The id of the follow up message.</param>
 	public Task DeleteFollowupMessageAsync(ulong messageId)
 		=> this.Discord.ApiClient.DeleteFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
+
+	internal DiscordInteraction()
+		: base(new List<string>() { "member", "guild_id", "entitlement_sku_ids", "channel_id", "channel" })
+	{ }
 }

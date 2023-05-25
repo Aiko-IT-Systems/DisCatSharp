@@ -574,4 +574,7 @@ internal sealed class AuditLog : ObservableApiObject
         [JsonProperty("application_commands")]
         public IReadOnlyList<AuditLogApplicationCommand> ApplicationCommands { get; set; }
         */
+	internal AuditLog()
+		: base(new List<string> { "application_commands", "auto_moderation_rules"})
+	{ }
 }
