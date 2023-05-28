@@ -208,6 +208,13 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	public DateTime? CommunicationDisabledUntil { get; internal set; }
 
 	/// <summary>
+	/// Whether the user has their communication disabled.
+	/// </summary>
+	[JsonIgnore]
+	public bool IsCommunicationDisabled
+		=> this.CommunicationDisabledUntil != null && this.CommunicationDisabledUntil.Value.ToUniversalTime() > DateTime.UtcNow;
+
+	/// <summary>
 	/// If the user is deafened
 	/// </summary>
 	[JsonProperty("is_deafened", NullValueHandling = NullValueHandling.Ignore)]
