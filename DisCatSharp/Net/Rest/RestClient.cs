@@ -114,7 +114,8 @@ internal sealed class RestClient : IDisposable
 		this._discord = client;
 		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Utilities.GetFormattedToken(client));
 		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-locale", client.Configuration.Locale);
-		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone", client.Configuration.Timezone);
+		if (!string.IsNullOrWhiteSpace(client.Configuration.Timezone))
+			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone", client.Configuration.Timezone);
 		if (client.Configuration.Override != null)
 			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", client.Configuration.Override);
 	}
@@ -149,7 +150,8 @@ internal sealed class RestClient : IDisposable
 		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
 		if (this._discord != null && this._discord.Configuration != null) {
 			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-locale", this._discord.Configuration.Locale);
-			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone", this._discord.Configuration.Timezone);
+			if (!string.IsNullOrWhiteSpace(this._discord.Configuration.Timezone))
+				this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone", this._discord.Configuration.Timezone);
 			if (this._discord.Configuration.Override != null)
 				this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this._discord.Configuration.Override);
 		}

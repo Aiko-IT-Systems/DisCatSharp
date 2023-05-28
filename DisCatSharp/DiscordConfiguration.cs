@@ -269,7 +269,7 @@ public sealed class DiscordConfiguration
 	/// <summary>
 	/// Sets your timezone.
 	/// </summary>
-	public string Timezone { internal get; set; } = "Europe/Berlin";
+	public string? Timezone { internal get; set; } = null;
 
 	/// <summary>
 	/// <para>Whether to report missing fields for discord object.</para>
