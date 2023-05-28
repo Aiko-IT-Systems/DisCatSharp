@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -53,6 +54,12 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// </summary>
 	[JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong ChannelId { get; internal set; }
+
+	/// <summary>
+	/// Gets the ID of the application this webhook belongs to, if applicable.
+	/// </summary>
+	[JsonProperty("application_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? ApplicationId { get; internal set; }
 
 	/// <summary>
 	/// Gets the user this webhook was created by.
@@ -106,6 +113,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// Initializes a new instance of the <see cref="DiscordWebhook"/> class.
 	/// </summary>
 	internal DiscordWebhook()
+		: base(new List<string>() { "type" })
 	{ }
 
 	/// <summary>
@@ -191,7 +199,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task DeleteAsync()
-		=> this.Discord.ApiClient.DeleteWebhookAsync(this.Id, this.Token);
+		=> (this.Discord?.ApiClient ?? this.ApiClient).DeleteWebhookAsync(this.Id, this.Token);
 
 	/// <summary>
 	/// Executes this webhook with the given <see cref="DiscordWebhookBuilder"/>.
