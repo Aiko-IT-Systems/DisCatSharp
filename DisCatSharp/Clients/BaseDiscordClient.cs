@@ -64,8 +64,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <summary>
 	/// Gets the sentry dsn.
 	/// </summary>
-	internal static string SentryDsn
-		=> "https://1da216e26a2741b99e8ccfccea1b7ac8@o1113828.ingest.sentry.io/4504901362515968";
+	internal static string SentryDsn { get; set; } = "https://1da216e26a2741b99e8ccfccea1b7ac8@o1113828.ingest.sentry.io/4504901362515968";
 
 	/// <summary>
 	/// Gets the configuration.
@@ -140,7 +139,8 @@ public abstract class BaseDiscordClient : IDisposable
 	{
 		this.Configuration = new DiscordConfiguration(config);
 		this.ServiceProvider = config.ServiceProvider;
-
+		if (this.Configuration.CustomSentryDsn != null)
+			SentryDsn = this.Configuration.CustomSentryDsn;
 		if (this.ServiceProvider != null)
 		{
 			this.Configuration.LoggerFactory ??= config.ServiceProvider.GetService<ILoggerFactory>()!;

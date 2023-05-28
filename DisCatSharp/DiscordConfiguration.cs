@@ -358,6 +358,11 @@ public sealed class DiscordConfiguration
 	internal bool DisableExceptionFilter { get; set; } = false;
 
 	/// <summary>
+	/// Custom Sentry Dsn.
+	/// </summary>
+	internal string? CustomSentryDsn { get; set; } = null;
+
+	/// <summary>
 	/// Creates a new configuration with default values.
 	/// </summary>
 	public DiscordConfiguration()
@@ -416,5 +421,6 @@ public sealed class DiscordConfiguration
 		this.EnableLibraryDeveloperMode = other.EnableLibraryDeveloperMode;
 		this.SentryDebug = other.SentryDebug;
 		this.DisableExceptionFilter = other.DisableExceptionFilter;
+		this.CustomSentryDsn = other.CustomSentryDsn;
 	}
 }
