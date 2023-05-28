@@ -399,7 +399,8 @@ public sealed partial class DiscordShardedClient
 		http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
 		http.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Utilities.GetFormattedToken(this._configuration));
 		http.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-locale", this._configuration.Locale);
-		http.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone", this._configuration.Timezone);
+		if (!string.IsNullOrWhiteSpace(this._configuration.Timezone))
+			http.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone", this._configuration.Timezone);
 		if (this._configuration.Override != null)
 			http.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this._configuration.Override);
 
