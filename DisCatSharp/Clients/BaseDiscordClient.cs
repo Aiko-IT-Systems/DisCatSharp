@@ -291,7 +291,8 @@ public abstract class BaseDiscordClient : IDisposable
 		this.RestClient = new();
 		this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
 		this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-locale", this.Configuration.Locale);
-		this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone", this.Configuration.Timezone);
+		if (!string.IsNullOrWhiteSpace(this.Configuration.Timezone))
+			this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone", this.Configuration.Timezone);
 		if (this.Configuration.Override != null)
 			this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this.Configuration.Override);
 
