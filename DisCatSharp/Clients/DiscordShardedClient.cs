@@ -145,6 +145,9 @@ public sealed partial class DiscordShardedClient
 		this._configuration = config;
 		this.ShardClients = new ReadOnlyConcurrentDictionary<int, DiscordClient>(this._shards);
 
+		if (this._configuration.CustomSentryDsn != null)
+			BaseDiscordClient.SentryDsn = this._configuration.CustomSentryDsn;
+
 		if (this._configuration.LoggerFactory == null && !this._configuration.EnableSentry)
 		{
 			this._configuration.LoggerFactory = new DefaultLoggerFactory();
