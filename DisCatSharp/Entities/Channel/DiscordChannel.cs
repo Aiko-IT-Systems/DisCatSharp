@@ -432,7 +432,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 
 		var ovrs = new List<DiscordOverwriteBuilder>();
 		foreach (var ovr in this.PermissionOverwritesInternal)
-			ovrs.Add(await new DiscordOverwriteBuilder().FromAsync(ovr).ConfigureAwait(false));
+			ovrs.Add(new DiscordOverwriteBuilder(ovr));
 
 		var bitrate = this.Bitrate;
 		var userLimit = this.UserLimit;
