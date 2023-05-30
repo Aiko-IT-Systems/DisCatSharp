@@ -220,7 +220,7 @@ public sealed partial class DiscordClient
 			await this._socketClosed.InvokeAsync(this, e).ConfigureAwait(false);
 
 
-
+			// TODO: We might need to include more 400X codes
 			if (this.Configuration.AutoReconnect && (e.CloseCode < 4001 || e.CloseCode >= 5000))
 			{
 				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({0}, '{1}'), reconnecting", e.CloseCode, e.CloseMessage);
