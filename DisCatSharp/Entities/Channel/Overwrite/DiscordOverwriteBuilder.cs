@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -62,6 +61,15 @@ public sealed class DiscordOverwriteBuilder
 	/// Gets or sets the target for this overwrite.
 	/// </summary>
 	public ulong Target { get; set; }
+
+	/// <summary>
+	/// Creates a new <see cref="DiscordOverwriteBuilder"/> for a <see cref="SnowflakeObject"/>.
+	/// </summary>
+	public DiscordOverwriteBuilder(ulong id, OverwriteType type = OverwriteType.Member)
+	{
+		this.Target = id;
+		this.Type = type;
+	}
 
 	/// <summary>
 	/// Creates a new <see cref="DiscordOverwriteBuilder"/> for a <see cref="DiscordMember"/>.
