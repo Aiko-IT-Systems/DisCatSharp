@@ -47,7 +47,7 @@ public sealed class DiscordOverwriteBuilder
 	/// <summary>
 	/// Sets all unset permissions for this overwrite.
 	/// </summary>
-	public Permissions Unset
+	internal Permissions Unset
 	{
 		set => this.Remove(value);
 	}
