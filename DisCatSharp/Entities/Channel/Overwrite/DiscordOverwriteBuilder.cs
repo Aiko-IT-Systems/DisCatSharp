@@ -202,14 +202,16 @@ public static class DiscordOverwriteBuilderExtensions
 	/// <returns>A new <see cref="List{DiscordOverwriteBuilder}"/> containing the merged role.</returns>
 	public static List<DiscordOverwriteBuilder> Merge(this IEnumerable<DiscordOverwriteBuilder> builderList, OverwriteType type, ulong target, Permissions allowed, Permissions denied, Permissions unset = Permissions.None)
 	{
-		if (!builderList.Any(x => x.Target == target && x.Type == type))
-			builderList = builderList.Append(new DiscordOverwriteBuilder() { Type = type, Target = target });
+		var newList = builderList.ToList();
 
-		var discordOverwriteBuilder = builderList.First(x => x.Target == target && x.Type == type);
+		if (!newList.Any(x => x.Target == target && x.Type == type))
+			newList.Add(new DiscordOverwriteBuilder() { Type = type, Target = target });
+
+		var discordOverwriteBuilder = newList.First(x => x.Target == target && x.Type == type);
 		discordOverwriteBuilder.Allow(allowed);
 		discordOverwriteBuilder.Deny(denied);
 		discordOverwriteBuilder.Remove(unset);
-		return builderList.Where(x => x.Target != target && x.Type != type).Append(discordOverwriteBuilder).ToList();
+		return newList;
 	}
 
 	/// <summary>
