@@ -179,13 +179,13 @@ internal sealed class RestChannelModifyPayload : ObservableApiObject
 	/// Gets or sets the bitrate.
 	/// </summary>
 	[JsonProperty("bitrate", NullValueHandling = NullValueHandling.Ignore)]
-	public int? Bitrate { get; set; }
+	public Optional<int?> Bitrate { get; set; }
 
 	/// <summary>
 	/// Gets or sets the user limit.
 	/// </summary>
 	[JsonProperty("user_limit", NullValueHandling = NullValueHandling.Ignore)]
-	public int? UserLimit { get; set; }
+	public Optional<int?> UserLimit { get; set; }
 
 	/// <summary>
 	/// Gets or sets the per user rate limit.
