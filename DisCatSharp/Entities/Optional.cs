@@ -65,25 +65,6 @@ public static class Optional
 		=> value == null
 			? None
 			: value;
-
-	/// <summary>
-	/// Creates a new <see cref="Optional{T}"/> with specified value and valid state.
-	/// </summary>
-	/// <param name="value">Value to populate the optional with.</param>
-	/// <typeparam name="T">Type of the value.</typeparam>
-	/// <returns>Created optional.</returns>
-	[Obsolete("Renamed to Some.")]
-	public static Optional<T> FromValue<T>(T value)
-		=> value;
-
-	/// <summary>
-	/// Creates a new empty <see cref="Optional{T}"/> with no value and invalid state.
-	/// </summary>
-	/// <typeparam name="T">The type that the created instance is wrapping around.</typeparam>
-	/// <returns>Created optional.</returns>
-	[Obsolete("Use None.")]
-	public static Optional<T> FromNoValue<T>()
-		=> default;
 }
 
 /// <summary>
@@ -137,24 +118,10 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 	/// <summary>
 	/// Gets the raw value.
 	/// </summary>
-	object IOptional.RawValue => this._val;
+	object IOptional.RawValue
+		=> this._val!;
 
 	private readonly T _val;
-
-	/// <summary>
-	/// Creates a new <see cref="Optional{T}"/> with specified value.
-	/// </summary>
-	/// <param name="value">Value of this option.</param>
-	[Obsolete("Use Optional.Some")]
-	public Optional(T value)
-	{
-		this._val = value;
-		this.HasValue = true;
-	}
-
-	[Obsolete("Renamed to Map")]
-	public Optional<TOut> IfPresent<TOut>(Func<T, TOut> mapper)
-		=> this.Map(mapper);
 
 	/// <summary>
 	/// Performs a mapping operation on the current <see cref="Optional{T}"/>, turning it into an Optional holding a
@@ -182,7 +149,7 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 	public Optional<TOut> MapOrNull<TOut>(Func<T, TOut> mapper)
 		=> this.HasValue
 			? this._val == null
-				? default
+				? default!
 				: mapper(this._val)
 			: Optional.None;
 
@@ -202,7 +169,7 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 	/// </summary>
 	/// <returns>Either the value of the <see cref="Optional{T}"/> if present or the type's default value.</returns>
 	public T ValueOrDefault()
-		=> this.ValueOr(default);
+		=> this.ValueOr(default!);
 
 	/// <summary>
 	/// Gets the <see cref="Optional"/>'s value, or throws the provided exception if it's empty.
@@ -218,7 +185,8 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 	/// </summary>
 	/// <param name="str">The string provided to the exception.</param>
 	/// <returns>The value of the <see cref="Optional"/>, if present.</returns>
-	public T Expect(string str) => this.Expect(new InvalidOperationException(str));
+	public T Expect(string str)
+		=> this.Expect(new InvalidOperationException(str));
 
 	/// <summary>
 	/// Checks if this has a value and tests the predicate if it does.
@@ -232,7 +200,8 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 	/// Returns a string representation of this optional value.
 	/// </summary>
 	/// <returns>String representation of this optional value.</returns>
-	public override string ToString() => $"Optional<{typeof(T)}> ({this.Map(x => x.ToString()).ValueOr("<no value>")})";
+	public override string ToString()
+		=> $"Optional<{typeof(T)}> ({this.Map(x => x!.ToString()).ValueOr("<no value>")})";
 
 	/// <summary>
 	/// Checks whether this <see cref="Optional{T}"/> (or its value) are equal to another object.
@@ -252,7 +221,8 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 	/// </summary>
 	/// <param name="e"><see cref="Optional{T}"/> to compare to.</param>
 	/// <returns>Whether the <see cref="Optional{T}"/> is equal to this <see cref="Optional{T}"/>.</returns>
-	public bool Equals(Optional<T> e) => (!this.HasValue && !e.HasValue) || (this.HasValue == e.HasValue && this.Value.Equals(e.Value));
+	public bool Equals(Optional<T> e)
+		=> (!this.HasValue && !e.HasValue) || (this.HasValue == e.HasValue && this.Value!.Equals(e.Value));
 
 	/// <summary>
 	/// Checks whether the value of this <see cref="Optional{T}"/> is equal to specified object.
@@ -267,12 +237,10 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 	/// </summary>
 	/// <returns>The hash code for this <see cref="Optional{T}"/>.</returns>
 	public override int GetHashCode()
-		=> this.Map(x => x.GetHashCode()).ValueOrDefault();
+		=> this.Map(x => x!.GetHashCode()).ValueOrDefault();
 
 	public static implicit operator Optional<T>(T val)
-#pragma warning disable 0618
-		=> new(val);
-#pragma warning restore 0618
+		=> Optional.Some(val);
 
 	public static explicit operator T(Optional<T> opt)
 		=> opt.Value;
@@ -318,7 +286,7 @@ internal sealed class OptionalJsonContractResolver : DefaultContractResolver
 		// we cache the PropertyInfo object here (it's captured in closure). we don't have direct
 		// access to the property value so we have to reflect into it from the parent instance
 		// we use UnderlyingName instead of PropertyName in case the C# name is different from the Json name.
-		var declaringMember = property.DeclaringType.GetTypeInfo().DeclaredMembers
+		var declaringMember = property.DeclaringType!.GetTypeInfo().DeclaredMembers
 			.FirstOrDefault(e => e.Name == property.UnderlyingName);
 
 		switch (declaringMember)
@@ -327,14 +295,14 @@ internal sealed class OptionalJsonContractResolver : DefaultContractResolver
 				property.ShouldSerialize = instance => // instance here is the declaring (parent) type
 				{
 					var optionalValue = declaringProp.GetValue(instance);
-					return (optionalValue as IOptional).HasValue;
+					return (optionalValue as IOptional)!.HasValue;
 				};
 				return property;
 			case FieldInfo declaringField:
 				property.ShouldSerialize = instance => // instance here is the declaring (parent) type
 				{
 					var optionalValue = declaringField.GetValue(instance);
-					return (optionalValue as IOptional).HasValue;
+					return (optionalValue as IOptional)!.HasValue;
 				};
 				return property;
 			default:
@@ -358,7 +326,7 @@ internal sealed class OptionalJsonConverter : JsonConverter
 	public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
 	{
 		// we don't check for HasValue here since it's checked in OptionalJsonContractResolver
-		var val = (value as IOptional).RawValue;
+		var val = (value as IOptional)!.RawValue;
 		// JToken.FromObject will throw if `null` so we manually write a null value.
 		if (val == null)
 		{
@@ -389,12 +357,13 @@ internal sealed class OptionalJsonConverter : JsonConverter
 		var constructor = objectType.GetTypeInfo().DeclaredConstructors
 			.FirstOrDefault(e => e.GetParameters()[0].ParameterType == genericType);
 
-		return constructor.Invoke(new[] { serializer.Deserialize(reader, genericType) });
+		return constructor!.Invoke(new[] { serializer.Deserialize(reader, genericType) });
 	}
 
 	/// <summary>
 	/// Whether it can convert.
 	/// </summary>
 	/// <param name="objectType">The object type.</param>
-	public override bool CanConvert(Type objectType) => objectType.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IOptional));
+	public override bool CanConvert(Type objectType)
+		=> objectType.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IOptional));
 }
