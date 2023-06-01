@@ -185,7 +185,7 @@ internal sealed class RestChannelModifyPayload : ObservableApiObject
 	/// Gets or sets the user limit.
 	/// </summary>
 	[JsonProperty("user_limit", NullValueHandling = NullValueHandling.Ignore)]
-	public Optional<int?> UserLimit { get; set; }
+	public int? UserLimit { get; set; }
 
 	/// <summary>
 	/// Gets or sets the per user rate limit.
