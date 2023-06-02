@@ -319,7 +319,8 @@
 			"dcs"
 		],
 		"postProcessors": [
-			"ExtractSearchIndex"
+			"ExtractSearchIndex",
+			"CustomMemberIndexer"
 		],
 		"noLangKeyword": false,
 		"keepFileLink": false,
