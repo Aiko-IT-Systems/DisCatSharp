@@ -962,6 +962,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					Client = client,
 					ApplicationCommandsExtension = this,
 					CommandName = e.Interaction.Data.Name,
+					SubCommandName = (e.Interaction.Data.Options[0].Type == ApplicationCommandOptionType.SubCommand ? e.Interaction.Data.Options[0].Name : null),
 					InteractionId = e.Interaction.Id,
 					Token = e.Interaction.Token,
 					Services = Configuration?.ServiceProvider,
