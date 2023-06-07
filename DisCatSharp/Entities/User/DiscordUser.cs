@@ -222,7 +222,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	[JsonIgnore]
 	public string DefaultAvatarUrl
-		=> $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMBED}{Endpoints.AVATARS}/{((this.Id >> 22) % 5).ToString(CultureInfo.InvariantCulture)}.png?size=1024";
+		=> $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMBED}{Endpoints.AVATARS}/{(this.IsMigrated ? (this.Id >> 22) % 6 : Convert.ToUInt64(this.DiscriminatorInt) % 5).ToString(CultureInfo.InvariantCulture)}.png?size=1024";
 
 	/// <summary>
 	/// Gets whether the user is a bot.
