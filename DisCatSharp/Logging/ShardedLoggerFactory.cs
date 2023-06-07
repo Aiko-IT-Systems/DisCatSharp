@@ -24,8 +24,6 @@ using System;
 
 using Microsoft.Extensions.Logging;
 
-using Sentry;
-
 namespace DisCatSharp;
 
 /// <summary>

@@ -111,7 +111,7 @@ public class DiscordOverwrite : SnowflakeObject
 	/// </summary>
 	/// <returns>The created <see cref="DiscordOverwriteBuilder"/>.</returns>
 	public DiscordOverwriteBuilder ConvertToBuilder()
-		=> new DiscordOverwriteBuilder(this);
+		=> new(this);
 
 	#endregion
 
@@ -135,5 +135,5 @@ public class DiscordOverwrite : SnowflakeObject
 	/// Automatically converts this <see cref="DiscordOverwrite"/> to a <see cref="DiscordOverwriteBuilder"/>.
 	/// </summary>
 	public static implicit operator DiscordOverwriteBuilder(DiscordOverwrite b)
-		=> new DiscordOverwriteBuilder(b);
+		=> new(b);
 }

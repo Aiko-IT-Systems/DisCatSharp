@@ -1,0 +1,8 @@
+### YamlMime:TableOfContent
+items:
+- uid: DisCatSharp.LavalinkV4
+  name: DisCatSharp.LavalinkV4
+  items:
+  - uid: DisCatSharp.LavalinkV4.DisCatSharp
+    name: DisCatSharp
+memberLayout: SamePage

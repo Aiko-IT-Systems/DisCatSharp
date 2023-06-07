@@ -24,6 +24,7 @@ Welcome to the DisCatSharp Global API reference.
 
 ## Experimental packages
 - [DisCatSharp.Experimental](xref:api_discatsharp_experimental_index)
+- [DisCatSharp.LavalinkV4](xref:api_discatsharp_lavalinkv4_index)
 
 ## Other packages
 - [DisCatSharp.Common](xref:api_discatsharp_common_index)

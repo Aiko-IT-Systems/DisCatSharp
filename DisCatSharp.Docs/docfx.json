@@ -215,6 +215,24 @@
 			"filter": "filter_config.yml",
 			"disableDefaultFilter": false,
 			"memberLayout": "samePage"
+		},
+		{
+			"src": [
+				{
+					"src": "../DisCatSharp.LavalinkV4/",
+					"files": [
+						"**.csproj"
+					],
+					"exclude": [
+						"**/obj/**",
+						"**/bin/**"
+					]
+				}
+			],
+			"dest": "api/DisCatSharp.LavalinkV4",
+			"filter": "filter_config.yml",
+			"disableDefaultFilter": false,
+			"memberLayout": "samePage"
 		}
 	],
 	"build": {
