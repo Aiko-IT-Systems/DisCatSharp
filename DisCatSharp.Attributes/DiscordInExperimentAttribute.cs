@@ -22,25 +22,24 @@
 
 using System;
 
-namespace DisCatSharp.Attributes
+namespace DisCatSharp.Attributes;
+
+/// <summary>
+/// Marks something as in experiment by discord.
+/// </summary>
+[AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = true)]
+public sealed class DiscordInExperimentAttribute : Attribute
 {
 	/// <summary>
-	/// Marks something as in experiment by discord.
+	/// The additional information message.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = true)]
-	public sealed class DiscordInExperimentAttribute : Attribute
+	public string Message { get; set; }
+
+	public DiscordInExperimentAttribute(string message)
 	{
-		/// <summary>
-		/// The additional information message.
-		/// </summary>
-		public string Message { get; set; }
-
-		public DiscordInExperimentAttribute(string message)
-		{
-			this.Message = message;
-		}
-
-		public DiscordInExperimentAttribute()
-		{ }
+		this.Message = message;
 	}
+
+	public DiscordInExperimentAttribute()
+	{ }
 }

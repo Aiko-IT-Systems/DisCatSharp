@@ -321,7 +321,8 @@ public sealed class DiscordConfiguration
 	internal List<Type> TrackExceptions
 	{
 		get => this._exceptions;
-		set {
+		set
+		{
 			if (!this.EnableLibraryDeveloperMode)
 				throw new AccessViolationException("Cannot set this as non-library-dev");
 			else if (value == null)

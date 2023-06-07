@@ -796,13 +796,13 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					//Checks against the ids and adds them to the command method lists
 					foreach (var command in commands)
 					{
-						if (commandMethods.GetFirstValueWhere(x => x.Name == command.Name, out var com))
+						if (commandMethods.TryGetFirstValueWhere(x => x.Name == command.Name, out var com))
 							com.CommandId = command.Id;
-						else if (groupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var groupCom))
+						else if (groupCommands.TryGetFirstValueWhere(x => x.Name == command.Name, out var groupCom))
 							groupCom.CommandId = command.Id;
-						else if (subGroupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var subCom))
+						else if (subGroupCommands.TryGetFirstValueWhere(x => x.Name == command.Name, out var subCom))
 							subCom.CommandId = command.Id;
-						else if (contextMenuCommands.GetFirstValueWhere(x => x.Name == command.Name, out var cmCom))
+						else if (contextMenuCommands.TryGetFirstValueWhere(x => x.Name == command.Name, out var cmCom))
 							cmCom.CommandId = command.Id;
 					}
 

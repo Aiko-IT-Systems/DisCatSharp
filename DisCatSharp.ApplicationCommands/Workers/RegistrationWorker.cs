@@ -346,7 +346,7 @@ internal class RegistrationWorker
 	{
 
 		if (ApplicationCommandsExtension.GuildDiscordCommands == null || !ApplicationCommandsExtension.GuildDiscordCommands.Any()
-			|| !ApplicationCommandsExtension.GuildDiscordCommands.GetFirstValueByKey(guildId, out var discord)
+			|| !ApplicationCommandsExtension.GuildDiscordCommands.TryGetFirstValueByKey(guildId, out var discord)
 		)
 			return null;
 
@@ -377,7 +377,7 @@ internal class RegistrationWorker
 	{
 
 		if (ApplicationCommandsExtension.GuildDiscordCommands == null || !ApplicationCommandsExtension.GuildDiscordCommands.Any()
-			|| updateList == null || !ApplicationCommandsExtension.GuildDiscordCommands.GetFirstValueByKey(guildId, out var discord)
+			|| updateList == null || !ApplicationCommandsExtension.GuildDiscordCommands.TryGetFirstValueByKey(guildId, out var discord)
 		)
 			return updateList;
 
@@ -408,7 +408,7 @@ internal class RegistrationWorker
 
 		if (ApplicationCommandsExtension.GuildDiscordCommands == null || !ApplicationCommandsExtension.GuildDiscordCommands.Any()
 			|| ApplicationCommandsExtension.GuildDiscordCommands.All(l => l.Key != guildId) || updateList == null
-			|| !ApplicationCommandsExtension.GuildDiscordCommands.GetFirstValueByKey(guildId, out var discord)
+			|| !ApplicationCommandsExtension.GuildDiscordCommands.TryGetFirstValueByKey(guildId, out var discord)
 		)
 			return (null, null);
 
@@ -419,7 +419,7 @@ internal class RegistrationWorker
 			return (null, null);
 
 		foreach (var cmd in updateList)
-			if (discord.GetFirstValueWhere(d => d.Name == cmd.Name, out var command))
+			if (discord.TryGetFirstValueWhere(d => d.Name == cmd.Name, out var command))
 				if (command.IsEqualTo(cmd, client, true))
 				{
 					if (ApplicationCommandsExtension.DebugEnabled)
@@ -519,7 +519,7 @@ internal class RegistrationWorker
 		Dictionary<ulong, DiscordApplicationCommand> updateCommands = new();
 		List<DiscordApplicationCommand> unchangedCommands = new();
 		foreach (var cmd in updateList)
-			if (discord.GetFirstValueWhere(d => d.Name == cmd.Name, out var command))
+			if (discord.TryGetFirstValueWhere(d => d.Name == cmd.Name, out var command))
 				if (command.IsEqualTo(cmd, client, false))
 				{
 					if (ApplicationCommandsExtension.DebugEnabled)

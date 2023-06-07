@@ -144,7 +144,7 @@ public static class DiscordJson
 			{
 				Id = discord.CurrentUser.Id.ToString(),
 				Username = discord.CurrentUser.UsernameWithDiscriminator,
-				Other = new Dictionary<string, string> ()
+				Other = new Dictionary<string, string>()
 				{
 					{ "developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
 					{ "email", discord.Configuration.FeedbackEmail ?? "not_given" }

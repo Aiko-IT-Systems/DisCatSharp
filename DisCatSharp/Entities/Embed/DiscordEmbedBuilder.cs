@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-using DisCatSharp.Attributes;
 using DisCatSharp.Net;
 
 namespace DisCatSharp.Entities;

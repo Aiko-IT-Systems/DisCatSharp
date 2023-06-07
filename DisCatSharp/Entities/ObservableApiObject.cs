@@ -24,40 +24,39 @@ using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Entities
+namespace DisCatSharp.Entities;
+
+public abstract class ObservableApiObject
 {
-	public abstract class ObservableApiObject
+	/// <summary>
+	/// Gets the client instance this object is tied to.
+	/// </summary>
+	[JsonIgnore]
+	internal BaseDiscordClient Discord { get; set; }
+
+	/// <summary>
+	/// Gets additional json properties that are not known to the deserializing object.
+	/// </summary>
+	[JsonIgnore]
+	internal IDictionary<string, object> _unknownProperties = new Dictionary<string, object>();
+
+	/// <summary>
+	/// Lets JsonConvert set the unknown properties.
+	/// </summary>
+	[JsonExtensionData(ReadData = true, WriteData = false)]
+	public IDictionary<string, object> AdditionalProperties
 	{
-		/// <summary>
-		/// Gets the client instance this object is tied to.
-		/// </summary>
-		[JsonIgnore]
-		internal BaseDiscordClient Discord { get; set; }
+		get => this._unknownProperties;
+		set => this._unknownProperties = value;
+	}
 
-		/// <summary>
-		/// Gets additional json properties that are not known to the deserializing object.
-		/// </summary>
-		[JsonIgnore]
-		internal IDictionary<string, object> _unknownProperties = new Dictionary<string, object>();
+	[JsonIgnore]
+	internal List<string> _ignoredJsonKeys { get; set; } = new();
 
-		/// <summary>
-		/// Lets JsonConvert set the unknown properties.
-		/// </summary>
-		[JsonExtensionData(ReadData = true, WriteData = false)]
-		public IDictionary<string, object> AdditionalProperties
-		{
-			get => this._unknownProperties;
-			set => this._unknownProperties = value;
-		}
-
-		[JsonIgnore]
-		internal List<string> _ignoredJsonKeys { get; set; } = new();
-
-		public ObservableApiObject(List<string>? ignored = null)
-		{
-			if (ignored != null)
-				foreach(var ignoredKey in ignored)
-					this._ignoredJsonKeys.Add(ignoredKey);
-		}
+	public ObservableApiObject(List<string>? ignored = null)
+	{
+		if (ignored != null)
+			foreach (var ignoredKey in ignored)
+				this._ignoredJsonKeys.Add(ignoredKey);
 	}
 }

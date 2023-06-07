@@ -36,6 +36,8 @@ tab_width = 4
 
 # C# files
 [*.cs]
+csharp_style_namespace_declarations = file_scoped:error
+dotnet_diagnostic.IDE0161.severity = error
 
 # Organize usings
 dotnet_separate_import_directive_groups = true

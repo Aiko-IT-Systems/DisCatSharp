@@ -657,7 +657,7 @@ public sealed partial class DiscordClient
 				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Unknown event: {name}\npayload: {payload}", payload.EventName, dat.ToString(Formatting.Indented));
 				break;
 
-			#endregion
+				#endregion
 		}
 	}
 
@@ -3271,10 +3271,10 @@ public sealed partial class DiscordClient
 	internal async Task OnGuildApplicationCommandCountsUpdateAsync(int chatInputCommandCount, int userContextMenuCommandCount, int messageContextMenuCount, ulong guildId)
 	{
 		var guild = this.InternalGetCachedGuild(guildId) ?? new DiscordGuild
-			{
-				Id = guildId,
-				Discord = this
-			};
+		{
+			Id = guildId,
+			Discord = this
+		};
 		var ea = new GuildApplicationCommandCountEventArgs(this.ServiceProvider)
 		{
 			SlashCommands = chatInputCommandCount,

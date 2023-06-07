@@ -24,7 +24,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -148,7 +147,8 @@ internal sealed class RestClient : IDisposable
 		};
 
 		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
-		if (this._discord != null && this._discord.Configuration != null) {
+		if (this._discord != null && this._discord.Configuration != null)
+		{
 			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-locale", this._discord.Configuration.Locale);
 			if (!string.IsNullOrWhiteSpace(this._discord.Configuration.Timezone))
 				this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone", this._discord.Configuration.Timezone);

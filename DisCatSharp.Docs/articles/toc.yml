@@ -90,6 +90,10 @@
         href: modules/audio/lavalink/music_commands.md
       - name: Advanced
         href: modules/audio/lavalink/advanced.md
+    - name: Lavalink V4
+      items:
+      - name: Introduction
+        href: modules/audio/lavalinkv4/intro.md
     - name: VoiceNext
       items:
       - name: Prerequisites

@@ -70,5 +70,5 @@ public static class CommonRegEx
 	/// </list>
 	/// </summary>
 	public static Regex AdvancedYoutubeRegex
-		=> new(@"http(s)?:\/\/(www\.)?youtu(\.be|be\.com)\/(watch\?v=|playlist)?(?<id>\w{1,})?((\?|\&)list=(?<list>\w{1,}))(&index=(?<index>\d{1,}))?", RegexOptions.ECMAScript | RegexOptions.Compiled);
+		=> new(@"http(s)?:\/\/(www\.)?youtu(\.be|be\.com)\/(watch\?v=|playlist)?(?<id>\w{1,})?((\?|\&)list=(?<list>[\w-_]{1,}))(&index=(?<index>\d{1,}))?", RegexOptions.ECMAScript | RegexOptions.Compiled);
 }
