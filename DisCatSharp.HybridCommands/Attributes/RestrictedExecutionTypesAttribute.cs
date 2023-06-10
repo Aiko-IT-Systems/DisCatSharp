@@ -41,7 +41,7 @@ public class RestrictedExecutionTypesAttribute : Attribute
 	/// Restricts a hybrid command to be only executable by certain execution types.
 	/// </summary>
 	/// <param name="allowedTypes">The types of execution that are allowed.</param>
-	public RestrictedExecutionTypesAttribute(HybridExecutionType[] allowedTypes)
+	public RestrictedExecutionTypesAttribute(params HybridExecutionType[] allowedTypes)
 	{
 		this.Types = allowedTypes;
 	}
