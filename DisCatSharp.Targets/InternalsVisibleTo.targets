@@ -4,6 +4,7 @@
 	<InternalsVisibleTo Include="DisCatSharp" />
 	<InternalsVisibleTo Include="DisCatSharp.ApplicationCommands" />
 	<InternalsVisibleTo Include="DisCatSharp.CommandsNext" />
+	<InternalsVisibleTo Include="DisCatSharp.HybridCommands" />
 	<InternalsVisibleTo Include="DisCatSharp.Common" />
 	<InternalsVisibleTo Include="DisCatSharp.Configuration" />
 	<InternalsVisibleTo Include="DisCatSharp.Configuration.Tests" />
