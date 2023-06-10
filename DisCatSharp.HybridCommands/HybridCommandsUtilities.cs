@@ -1,6 +1,6 @@
 // This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021-2023 AITSYS
+// Copyright (c) 2023 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,15 +22,21 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
+using DisCatSharp.HybridCommands.Attributes;
 using DisCatSharp.HybridCommands.Context;
+using DisCatSharp.HybridCommands.Entities;
 
 using Microsoft.Extensions.Logging;
+
+using Newtonsoft.Json;
 
 namespace DisCatSharp.HybridCommands;
 internal static class HybridCommandsUtilities
@@ -65,11 +71,9 @@ internal static class HybridCommandsUtilities
 			return false;
 		}
 
-		// check if abstract, static, or not a class
 		if (!typeInfo.IsClass || typeInfo.IsAbstract)
 			return false;
 
-		// check if delegate type
 		var tdelegate = typeof(Delegate).GetTypeInfo();
 		if (tdelegate.IsAssignableFrom(typeInfo))
 		{
@@ -109,6 +113,13 @@ internal static class HybridCommandsUtilities
 			return false;
 		}
 
+		if (!method.GetCustomAttributes().Any(x => x.GetType() == typeof(HybridCommandAttribute)))
+		{
+			if (HybridCommandsExtension.DebugEnabled)
+				HybridCommandsExtension.Logger?.LogDebug("Does not have HybridCommandAttribute");
+			return false;
+		}
+
 		parameters = method.GetParameters();
 		if (!parameters.Any() || parameters.First().ParameterType != typeof(HybridCommandContext) || method.ReturnType != typeof(Task))
 		{
@@ -122,4 +133,34 @@ internal static class HybridCommandsUtilities
 
 		return true;
 	}
+
+	internal static async Task<Assembly[]> CompileCommands(this Type type)
+	{
+		HybridCommandsExtension.ExecutionDirectory ??= new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+
+		var CacheDirectory = $"{HybridCommandsExtension.ExecutionDirectory}/CachedHybridCommands";
+		var CacheConfig = $"{CacheDirectory}/cache.json";
+
+		if (!Directory.Exists(CacheDirectory))
+			Directory.CreateDirectory(CacheDirectory);
+
+		var typeHash = JsonConvert.SerializeObject(type.GetTypeInfo(), new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }).ComputeSHA256Hash();
+
+		var cacheConfig = File.Exists(CacheConfig) ? JsonConvert.DeserializeObject<CacheConfig>(File.ReadAllText(CacheConfig)) ?? new() : new();
+
+		if (cacheConfig.LastKnownTypeHashes.Contains(typeHash) && new DirectoryInfo(CacheDirectory).GetFiles().Any(x => $"{x.Name.Replace(".dll", "")}-app" == typeHash))
+		{
+
+		}
+
+		return Array.Empty<Assembly>();
+	}
+
+	/// <summary>
+	/// Compute the SHA256-Hash for the given string
+	/// </summary>
+	/// <param name="str"></param>
+	/// <returns></returns>
+	internal static string ComputeSHA256Hash(this string str)
+		=> BitConverter.ToString(SHA256.HashData(Encoding.ASCII.GetBytes(str))).Replace("-", "").ToLowerInvariant();
 }

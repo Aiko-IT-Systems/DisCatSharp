@@ -1,6 +1,6 @@
 // This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021-2023 AITSYS
+// Copyright (c) 2023 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,8 @@ using DisCatSharp.CommandsNext;
 using System.Reflection;
 using System.Linq;
 using DisCatSharp.ApplicationCommands.Context;
+using System.Threading.Tasks;
+using System.IO;
 
 namespace DisCatSharp.HybridCommands;
 public sealed class HybridCommandsExtension : BaseExtension
@@ -35,6 +37,8 @@ public sealed class HybridCommandsExtension : BaseExtension
 	internal static HybridCommandsConfiguration? Configuration;
 
 	internal static ILogger? Logger { get; set; }
+
+	internal static string? ExecutionDirectory { get; set; }
 
 	public static bool DebugEnabled 
 		=> Configuration?.DebugEnabled ?? false;
@@ -73,7 +77,8 @@ public sealed class HybridCommandsExtension : BaseExtension
 	/// </summary>
 	/// <param name="assembly">Assembly to register commands from.</param>
 	/// <param name="guildId">The guild id to register it on.</param>
-	public void RegisterGuildCommands(Assembly assembly, ulong guildId)
+	/// <param name="translationSetup">A callback to setup app command translations with.</param>
+	public async Task RegisterGuildCommands(Assembly assembly, ulong guildId, Action<ApplicationCommandsTranslationContext>? translationSetup = null)
 	{
 		var types = assembly.GetTypes().Where(xt =>
 		{
@@ -81,58 +86,75 @@ public sealed class HybridCommandsExtension : BaseExtension
 			return xti.IsModuleCandidateType() && !xti.IsNested;
 		});
 		foreach (var xt in types)
-			this.RegisterGuildCommands(xt, guildId, null);
+			await this.RegisterGuildCommands(xt, guildId, translationSetup);
 	}
 
 	/// <summary>
 	/// Registers all commands from a given assembly. The command classes need to be public to be considered for registration.
 	/// </summary>
 	/// <param name="assembly">Assembly to register commands from.</param>
-	/// <param name="translationSetup">A callback to setup translations with.</param>
-	public void RegisterGlobalCommands(Assembly assembly, Action<ApplicationCommandsTranslationContext>? translationSetup = null)
-		=> throw new NotImplementedException();
-
-	/// <summary>
-	/// Registers a command class with optional translation setup for a guild.
-	/// </summary>
-	/// <typeparam name="T">The command class to register.</typeparam>
-	/// <param name="guildId">The guild id to register it on.</param>
-	/// <param name="translationSetup">A callback to setup translations with.</param>
-	public void RegisterGuildCommands<T>(ulong guildId, Action<ApplicationCommandsTranslationContext>? translationSetup = null) where T : HybridCommandsModule
-		=> throw new NotImplementedException();
-
-	/// <summary>
-	/// Registers a command class with optional translation setup for a guild.
-	/// </summary>
-	/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
-	/// <param name="guildId">The guild id to register it on.</param>
-	/// <param name="translationSetup">A callback to setup translations with.</param>
-	public void RegisterGuildCommands(Type type, ulong guildId, Action<ApplicationCommandsTranslationContext>? translationSetup = null)
+	/// <param name="translationSetup">A callback to setup app command translations with.</param>
+	public async Task RegisterGlobalCommands(Assembly assembly, Action<ApplicationCommandsTranslationContext>? translationSetup = null)
 	{
-		if (!typeof(HybridCommandsModule).IsAssignableFrom(type))
-			throw new ArgumentException("Command classes have to inherit from HybridCommandsModule", nameof(type));
-		throw new NotImplementedException();
+		var types = assembly.GetTypes().Where(xt =>
+		{
+			var xti = xt.GetTypeInfo();
+			return xti.IsModuleCandidateType() && !xti.IsNested;
+		});
+		foreach (var xt in types)
+			await this.RegisterGlobalCommands(xt, translationSetup);
 	}
 
 	/// <summary>
-	/// Registers a command class with optional translation setup globally.
-	/// </summary>
-	/// <typeparam name="T">The command class to register.</typeparam>
-	/// <param name="translationSetup">A callback to setup translations with.</param>
-	public void RegisterGlobalCommands<T>(Action<ApplicationCommandsTranslationContext>? translationSetup = null) where T : HybridCommandsModule
-		=> throw new NotImplementedException();
-
-	/// <summary>
-	/// Registers a command class with optional translation setup globally.
+	/// Registers a hybrid command class with optional translation setup globally.
 	/// </summary>
 	/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
-	/// <param name="translationSetup">A callback to setup translations with.</param>
-	public void RegisterGlobalCommands(Type type, Action<ApplicationCommandsTranslationContext>? translationSetup = null)
+	/// <param name="translationSetup">A callback to setup app command translations with.</param>
+	public async Task RegisterGlobalCommands(Type type, Action<ApplicationCommandsTranslationContext>? translationSetup = null)
 	{
-		if (!typeof(HybridCommandsModule).IsAssignableFrom(type))
-			throw new ArgumentException("Command classes have to inherit from HybridCommandsModule", nameof(type));
+		if (!type.IsModuleCandidateType())
+			throw new ArgumentException("Command Class is not a valid module candidate.");
+
+		foreach (var assembly in await type.CompileCommands())
+		{
+			var commandsNextModule = assembly.DefinedTypes.FirstOrDefault(x => typeof(BaseCommandModule).IsAssignableTo(x), null);
+			if (commandsNextModule is not null)
+			{
+				this.Client.GetCommandsNext().RegisterCommands(commandsNextModule);
+			}
+
+			var applicationCommandsModule = assembly.DefinedTypes.FirstOrDefault(x => typeof(ApplicationCommandsModule).IsAssignableTo(x), null);
+			if (applicationCommandsModule is not null)
+			{
+#pragma warning disable CS8604 // Possible null reference argument.
+				this.Client.GetApplicationCommands().RegisterGlobalCommands(applicationCommandsModule, translationSetup);
+#pragma warning restore CS8604 // Possible null reference argument.
+			}
+		}
+	}
+
+	/// <summary>
+	/// Registers a hybrid command class with optional translation setup for a guild.
+	/// </summary>
+	/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
+	/// <param name="guildId">The guild id to register it on.</param>
+	/// <param name="translationSetup">A callback to setup app command translations with.</param>
+	public async Task RegisterGuildCommands(Type type, ulong guildId, Action<ApplicationCommandsTranslationContext>? translationSetup = null)
+	{
+		if (!type.IsModuleCandidateType())
+			throw new ArgumentException("Command Class is not a valid module candidate.");
 		throw new NotImplementedException();
 	}
+
+	/// <inheritdoc cref="RegisterGlobalCommands(Type, Action{ApplicationCommandsTranslationContext}?)"/>
+	/// <typeparam name="T">The command class to register.</typeparam>
+	public async Task RegisterGlobalCommands<T>(Action<ApplicationCommandsTranslationContext>? translationSetup = null) where T : HybridCommandsModule
+		=> await this.RegisterGlobalCommands(typeof(T), translationSetup);
+
+	/// <inheritdoc cref="RegisterGuildCommands(Type, ulong, Action{ApplicationCommandsTranslationContext}?)"/>
+	/// <typeparam name="T">The command class to register.</typeparam>
+	public async Task RegisterGuildCommands<T>(ulong guildId, Action<ApplicationCommandsTranslationContext>? translationSetup = null) where T : HybridCommandsModule
+		=> await this.RegisterGuildCommands(typeof(T), guildId, translationSetup);
 
 	internal HybridCommandsExtension(HybridCommandsConfiguration? configuration = null)
 	{

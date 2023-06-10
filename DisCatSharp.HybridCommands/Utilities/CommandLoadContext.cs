@@ -20,11 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.HybridCommands.Enums;
-public enum HybridExecutionType
+using System;
+using System.Reflection;
+using System.Runtime.Loader;
+
+using DisCatSharp.HybridCommands.Exceptions;
+
+namespace DisCatSharp.HybridCommands.Utilities;
+internal class CommandLoadContext : AssemblyLoadContext
 {
-	Unknown = 0,
-	PrefixCommand = 1,
-	SlashCommand = 2,
-	ContextMenuCommand = 3,
+	private readonly string _filePath;
+	private readonly AssemblyDependencyResolver _resolver;
+
+	public CommandLoadContext(string path)
+	{
+		this._filePath = path;
+		this._resolver = new AssemblyDependencyResolver(path);
+	}
+
+	protected override Assembly Load(AssemblyName assemblyName)
+	{
+		var assemblyPath = this._resolver.ResolveAssemblyToPath(assemblyName);
+		return assemblyPath != null ? this.LoadFromAssemblyPath(assemblyPath) : throw new AssemblyLoadException(this._filePath, "Failed to load assembly.");
+	}
+
+	protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)
+	{
+		var libraryPath = this._resolver.ResolveUnmanagedDllToPath(unmanagedDllName);
+		return libraryPath != null ? this.LoadUnmanagedDllFromPath(libraryPath) : IntPtr.Zero;
+	}
 }

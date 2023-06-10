@@ -20,11 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.HybridCommands.Enums;
-public enum HybridExecutionType
+using System.Collections.Generic;
+
+namespace DisCatSharp.HybridCommands.Entities;
+public sealed class CacheConfig
 {
-	Unknown = 0,
-	PrefixCommand = 1,
-	SlashCommand = 2,
-	ContextMenuCommand = 3,
+	public string? LastKnownHybridCommandHash { get; set; }
+
+	public List<string> LastKnownTypeHashes { get; set; } = new();
 }

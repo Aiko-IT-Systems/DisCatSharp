@@ -40,8 +40,4 @@
     <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entities\" />
-  </ItemGroup>
-
 </Project>

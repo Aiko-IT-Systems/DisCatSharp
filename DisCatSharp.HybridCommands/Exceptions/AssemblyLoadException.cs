@@ -20,11 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.HybridCommands.Enums;
-public enum HybridExecutionType
+using System;
+
+namespace DisCatSharp.HybridCommands.Exceptions;
+public class AssemblyLoadException : Exception
 {
-	Unknown = 0,
-	PrefixCommand = 1,
-	SlashCommand = 2,
-	ContextMenuCommand = 3,
+	public string FilePath { get; set; }
+
+	internal AssemblyLoadException(string filePath, string? message, Exception? innerException = null) : base(message, innerException)
+	{
+		this.FilePath = filePath;
+	}
 }
