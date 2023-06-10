@@ -53,7 +53,6 @@ public sealed class HybridCommandsExtension : BaseExtension
 #pragma warning disable CS8601 // Possible null reference assignment.
 		client.UseApplicationCommands(new ApplicationCommandsConfiguration
 		{
-			EnableDefaultHelp = Configuration.EnableDefaultHelp,
 			EnableLocalization = Configuration.EnableLocalization,
 			ServiceProvider = Configuration.ServiceProvider ?? null,
 		});
@@ -61,8 +60,6 @@ public sealed class HybridCommandsExtension : BaseExtension
 
 		client.UseCommandsNext(new CommandsNextConfiguration
 		{
-			CaseSensitive = Configuration.CaseSensitive,
-			EnableDefaultHelp = Configuration.EnableDefaultHelp,
 			EnableMentionPrefix = Configuration.EnableMentionPrefix,
 			PrefixResolver = Configuration.PrefixResolver ?? null,
 			ServiceProvider = Configuration.ServiceProvider ?? null,
@@ -137,10 +134,6 @@ public sealed class HybridCommandsExtension : BaseExtension
 		throw new NotImplementedException();
 	}
 
-	/// <summary>
-	/// Initializes a new instance of <see cref="HybridCommandsExtension"/>.
-	/// </summary>
-	/// <param name="configuration">The configuration.</param>
 	internal HybridCommandsExtension(HybridCommandsConfiguration? configuration = null)
 	{
 		configuration ??= new HybridCommandsConfiguration();

@@ -59,13 +59,6 @@ public sealed class HybridCommandsConfiguration
 	public bool EnableMentionPrefix { internal get; set; } = true;
 
 	/// <summary>
-	/// <para>Sets whether strings should be matched in a case-sensitive manner.</para>
-	/// <para>This switch affects the behaviour of default prefix resolver, command searching, and argument conversion.</para>
-	/// <para>Defaults to false.</para>
-	/// </summary>
-	public bool CaseSensitive { internal get; set; } = false;
-
-	/// <summary>
 	/// <para>Sets whether to enable default help command.</para>
 	/// <para>Disabling this will allow you to make your own help command.</para>
 	/// <para>Defaults to true.</para>
@@ -81,15 +74,22 @@ public sealed class HybridCommandsConfiguration
 
 	/// <summary>
 	/// This option enables the localization feature.
-	/// <para>Defaults to <see langword="false"/>.</para>
+	/// <para>Defaults to false.</para>
 	/// </summary>
 	public bool EnableLocalization { internal get; set; } = false;
 
 	/// <summary>
 	/// Whether to entirely disable usage of cached command assemblies.
 	/// <para>This will cause commands to be recompiled on every startup. This will take significant amount of time if a lot of commands are registered.</para>
+	/// <para>Defaults to false.</para>
 	/// </summary>
 	public bool DisableCompilationCache { internal get; set; } = false;
+
+	/// <summary>
+	/// Whether the generated classes should be output to a sub-directory. Used for debugging-purposes.
+	/// <para>Defaults to false.</para>
+	/// </summary>
+	public bool OutputGeneratedClasses { internal get; set; } = false;
 
 	/// <summary>
 	/// Creates a new instance of <see cref="HybridCommandsConfiguration"/>.
@@ -112,7 +112,6 @@ public sealed class HybridCommandsConfiguration
 	/// <param name="other">Configuration the properties of which are to be copied.</param>
 	public HybridCommandsConfiguration(HybridCommandsConfiguration other)
 	{
-		this.CaseSensitive = other.CaseSensitive;
 		this.EnableDefaultHelp = other.EnableDefaultHelp;
 		this.EnableLocalization = other.EnableLocalization;
 		this.EnableMentionPrefix = other.EnableMentionPrefix;
