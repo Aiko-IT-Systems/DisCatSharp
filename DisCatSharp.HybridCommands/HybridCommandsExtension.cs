@@ -143,7 +143,23 @@ public sealed class HybridCommandsExtension : BaseExtension
 	{
 		if (!type.IsModuleCandidateType())
 			throw new ArgumentException("Command Class is not a valid module candidate.");
-		throw new NotImplementedException();
+
+		foreach (var assembly in await type.CompileCommands(guildId))
+		{
+			var commandsNextModule = assembly.DefinedTypes.FirstOrDefault(x => typeof(BaseCommandModule).IsAssignableTo(x), null);
+			if (commandsNextModule is not null)
+			{
+				this.Client.GetCommandsNext().RegisterCommands(commandsNextModule);
+			}
+
+			var applicationCommandsModule = assembly.DefinedTypes.FirstOrDefault(x => typeof(ApplicationCommandsModule).IsAssignableTo(x), null);
+			if (applicationCommandsModule is not null)
+			{
+#pragma warning disable CS8604 // Possible null reference argument.
+				this.Client.GetApplicationCommands().RegisterGuildCommands(applicationCommandsModule, guildId, translationSetup);
+#pragma warning restore CS8604 // Possible null reference argument.
+			}
+		}
 	}
 
 	/// <inheritdoc cref="RegisterGlobalCommands(Type, Action{ApplicationCommandsTranslationContext}?)"/>
