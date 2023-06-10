@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../DisCatSharp.Targets/Version.targets" />
+  <Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
+  <Import Project="../DisCatSharp.Targets/Package.targets" />
+  <Import Project="../DisCatSharp.Targets/NuGet.targets" />
+  <Import Project="../DisCatSharp.Targets/Library.targets" />
+  <Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
+
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+	<PackageId>DisCatSharp.HybridCommands</PackageId>
+	<Description>
+	  DisCatSharp Hybrid Commands Extension
+
+	  Use it on top of your DisCatSharp powered bot and unleash the power of both application commands and prefix commands in discord.
+
+	  Documentation: TODO
+	</Description>
+	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Net7,Application Commands,Prefix Commands,Hybrid Commands</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="5.4.0">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+	<PackageReference Include="DisCatSharp.Attributes" Version="10.4.0" />
+	<PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
+	<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+	<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DisCatSharp.ApplicationCommands\DisCatSharp.ApplicationCommands.csproj" />
+    <ProjectReference Include="..\DisCatSharp.CommandsNext\DisCatSharp.CommandsNext.csproj" />
+    <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Entities\" />
+  </ItemGroup>
+
+</Project>
