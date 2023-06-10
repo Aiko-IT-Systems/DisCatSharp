@@ -31,6 +31,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands;
+using DisCatSharp.ApplicationCommands.Attributes;
+using DisCatSharp.ApplicationCommands.Context;
 using DisCatSharp.CommandsNext;
 using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.HybridCommands.Attributes;
@@ -38,6 +40,9 @@ using DisCatSharp.HybridCommands.Context;
 using DisCatSharp.HybridCommands.Entities;
 using DisCatSharp.HybridCommands.Utilities;
 
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Emit;
 using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json;
@@ -56,7 +61,7 @@ internal static class HybridCommandsUtilities
 	/// Whether this module is a candidate type.
 	/// </summary>
 	/// <param name="typeInfo">The type info.</param>
-	internal static bool IsModuleCandidateType(this TypeInfo typeInfo)
+	internal static bool IsModuleCandidateType(this System.Reflection.TypeInfo typeInfo)
 	{
 		if (typeInfo.GetCustomAttribute<CompilerGeneratedAttribute>(false) != null)
 			return false;
@@ -148,26 +153,26 @@ internal static class HybridCommandsUtilities
 		if (HybridCommandsExtension.DebugEnabled)
 			HybridCommandsExtension.Logger?.LogDebug("ExecutionDirectory: {Dir}", HybridCommandsExtension.ExecutionDirectory);
 
-		var CacheDirectory = $"{HybridCommandsExtension.ExecutionDirectory}/CachedHybridCommands";
-		var CacheConfig = $"{CacheDirectory}/cache.json";
+		var CacheDirectoryPath = $"{HybridCommandsExtension.ExecutionDirectory}/CachedHybridCommands";
+		var CacheConfigPath = $"{CacheDirectoryPath}/cache.json";
 
 		if (HybridCommandsExtension.DebugEnabled)
-			HybridCommandsExtension.Logger?.LogDebug("CacheDirectory: {Dir}", CacheDirectory);
+			HybridCommandsExtension.Logger?.LogDebug("CacheDirectory: {Dir}", CacheDirectoryPath);
 
 		if (HybridCommandsExtension.DebugEnabled)
-			HybridCommandsExtension.Logger?.LogDebug("CacheDirectory: {Dir}", CacheConfig);
+			HybridCommandsExtension.Logger?.LogDebug("CacheDirectory: {Dir}", CacheConfigPath);
 
-		if (!Directory.Exists(CacheDirectory))
-			Directory.CreateDirectory(CacheDirectory);
+		if (!Directory.Exists(CacheDirectoryPath))
+			Directory.CreateDirectory(CacheDirectoryPath);
 
 		var typeHash = JsonConvert.SerializeObject(type.GetTypeInfo(), new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }).ComputeSHA256Hash();
 
 		if (HybridCommandsExtension.DebugEnabled)
 			HybridCommandsExtension.Logger?.LogDebug("TypeHash: {Hash}", typeHash);
 
-		var cacheConfig = File.Exists(CacheConfig) ? JsonConvert.DeserializeObject<CacheConfig>(File.ReadAllText(CacheConfig)) ?? new() : new();
+		var cacheConfig = File.Exists(CacheConfigPath) ? JsonConvert.DeserializeObject<CacheConfig>(File.ReadAllText(CacheConfigPath)) ?? new() : new();
 
-		var fileInfos = new DirectoryInfo(CacheDirectory).GetFiles();
+		var fileInfos = new DirectoryInfo(CacheDirectoryPath).GetFiles();
 
 		Dictionary<Assembly, string> loadedAssemblies = new();
 
@@ -188,7 +193,7 @@ internal static class HybridCommandsUtilities
 					var loadContext = new CommandLoadContext(file.FullName);
 					var assembly = loadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(file.FullName)));
 
-					if (assembly.GetTypes().Any(x => typeof(ApplicationCommandsModule).IsAssignableTo(x)))
+					if (assembly.GetTypes().Any(x => typeof(BaseCommandModule).IsAssignableTo(x)))
 						loadedAssemblies.Add(assembly, $"{typeHash}-prefix");
 				}
 			}
@@ -198,7 +203,81 @@ internal static class HybridCommandsUtilities
 
 		string[] GenerateAppCommandMethods()
 		{
+			List<string> generatedMethods = new();
 
+			foreach (var method in type.GetMethods())
+			{
+				if (!method.IsCommandCandidate(out var parameters))
+					continue;
+
+				var cmdInfo = method.GetCustomAttribute<HybridCommandAttribute>();
+				var restrictedTypes = method.GetCustomAttributes().Any(x => x is RestrictedExecutionTypesAttribute) ? method.GetCustomAttributes<RestrictedExecutionTypesAttribute>() : null;
+
+				if (!restrictedTypes?.First().Types.Any(y => y == Enums.HybridExecutionType.SlashCommand) ?? false)
+				{
+					if (HybridCommandsExtension.DebugEnabled)
+						HybridCommandsExtension.Logger?.LogDebug("Command is limited to execution with: {types}", string.Join("\n", restrictedTypes?.First().Types.Select(x => Enum.GetName(x)).ToArray() ?? Array.Empty<string>()));
+					continue;
+				}
+
+				if (parameters is null ||
+					parameters.Length == 0 ||
+					parameters[0].ParameterType != typeof(HybridCommandContext) ||
+					(parameters.Length > 1 && parameters.Where(x => x.ParameterType != typeof(HybridCommandContext)).All(x => x.GetCustomAttributes().Any(y => y is Attributes.OptionAttribute))))
+				{
+					if (HybridCommandsExtension.DebugEnabled)
+						HybridCommandsExtension.Logger?.LogDebug("Method has no HybridCommandContext or is missing OptionAttributes");
+
+					continue;
+				}
+
+				if (cmdInfo is null)
+				{
+					if (HybridCommandsExtension.DebugEnabled)
+						HybridCommandsExtension.Logger?.LogDebug("Method has no HybridCommandAttribute");
+
+					continue;
+				}
+
+				var MethodName = $"a{Guid.NewGuid().ToString().ToLower().Replace("-", "")}";
+
+				var filteredParams = parameters.Where(x => x.ParameterType != typeof(HybridCommandContext));
+				string MakeParameters()
+				{
+					List<string> generatedParams = new();
+
+					foreach (var param in filteredParams)
+					{
+						var option = param.GetCustomAttribute<Attributes.OptionAttribute>() ?? throw new InvalidOperationException("Method Parameter is missing OptionAttribute.");
+						var useRemainingString = param.GetCustomAttributes().Any(x => x is RemainingTextAttribute);
+						generatedParams.Add($"[{typeof(ApplicationCommands.Attributes.OptionAttribute).FullName}(\"{option.Name.SanitzeForString()}\", \"{option.Description.SanitzeForString()}\")]" +
+							$"{param.ParameterType.FullName} {param.Name}");
+					}
+
+					return string.Join(", ", generatedParams);
+				}
+
+				generatedMethods.Add($$"""
+						public static {{typeof(MethodInfo)}} {{MethodName}}_CommandMethod { get; set; }
+
+						public static {{MethodName}}_Populate()
+							=> {{MethodName}}_CommandMethod = {{typeof(Assembly).FullName}}.GetCallingAssembly().GetType($"{{type.FullName}}").GetMethods().First(x => x.Name == "{{method.Name}}");
+
+						[{{typeof(SlashCommandAttribute).FullName}}("{{cmdInfo.Name.SanitzeForString()}}", "{{cmdInfo.Description.SanitzeForString()}}")]
+						public {{typeof(Task).FullName}} {{MethodName}}_Execute({{typeof(InteractionContext).FullName}} ctx{{MakeParameters()}})
+						{
+							{{(guildId is not null ? $"if (ctx.Guild?.Id ?? 0 != {guildId}) return;" : "")}}
+							
+							{{MethodName}}_CommandMethod.Invoke({{typeof(Activator).FullName}}.CreateInstance({{MethodName}}_CommandMethod.DeclaringType), new object[]
+							{
+								new {{typeof(HybridCommandContext).FullName}}(ctx){{(filteredParams.Any() ? $", {string.Join(", ", filteredParams.Select(x => x.Name))}" : "")}}
+							});
+							return {{typeof(Task).FullName}}.Completed;
+						}
+					""");
+			}
+
+			return generatedMethods.ToArray();
 		}
 
 		var AppClass =
@@ -235,7 +314,7 @@ internal static class HybridCommandsUtilities
 				if (parameters is null ||
 					parameters.Length == 0 ||
 					parameters[0].ParameterType != typeof(HybridCommandContext) ||
-					(parameters.Length > 1 && parameters.Where(x => x.ParameterType != typeof(HybridCommandContext)).All(x => x.GetCustomAttributes().Any(y => y is OptionAttribute))))
+					(parameters.Length > 1 && parameters.Where(x => x.ParameterType != typeof(HybridCommandContext)).All(x => x.GetCustomAttributes().Any(y => y is Attributes.OptionAttribute))))
 				{
 					if (HybridCommandsExtension.DebugEnabled)
 						HybridCommandsExtension.Logger?.LogDebug("Method has no HybridCommandContext or is missing OptionAttributes");
@@ -260,7 +339,7 @@ internal static class HybridCommandsUtilities
 
 					foreach (var param in filteredParams)
 					{
-						var option = param.GetCustomAttribute<OptionAttribute>() ?? throw new InvalidOperationException("Method Parameter is missing OptionAttribute.");
+						var option = param.GetCustomAttribute<Attributes.OptionAttribute>() ?? throw new InvalidOperationException("Method Parameter is missing OptionAttribute.");
 						var useRemainingString = param.GetCustomAttributes().Any(x => x is RemainingTextAttribute);
 						generatedParams.Add($"[{typeof(DescriptionAttribute).FullName}(\"{option.Description.SanitzeForString()}\")]" +
 							$"{(useRemainingString ? $"[{typeof(RemainingTextAttribute).FullName}]" : "")} {param.ParameterType.FullName} {param.Name}");
@@ -307,8 +386,95 @@ internal static class HybridCommandsUtilities
 
 		if (HybridCommandsExtension.Configuration.OutputGeneratedClasses)
 		{
-			File.WriteAllText($"{CacheDirectory}/{typeHash}-app.cs", AppClass);
-			File.WriteAllText($"{CacheDirectory}/{typeHash}-prefix.cs", PrefixClass);
+			File.WriteAllText($"{CacheDirectoryPath}/{typeHash}-app.cs", AppClass);
+			File.WriteAllText($"{CacheDirectoryPath}/{typeHash}-prefix.cs", PrefixClass);
+		}
+
+		var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary).WithOptimizationLevel(OptimizationLevel.Release);
+		var references = AppDomain.CurrentDomain.GetAssemblies().Where(x => !x.IsDynamic && !string.IsNullOrWhiteSpace(x.Location)).Select(x => MetadataReference.CreateFromFile(x.Location));
+
+		try
+		{
+			if (!loadedAssemblies.Values.Any(x => x == $"{typeHash}-app"))
+			{
+				using var stream = new MemoryStream();
+				HybridCommandsExtension.Logger?.LogDebug("Compiling Application Commands Class '{class}'..", typeHash);
+
+				var result = CSharpCompilation.Create($"{typeHash}-app")
+										.AddSyntaxTrees(SyntaxFactory.ParseSyntaxTree(AppClass))
+										.AddReferences(references)
+										.WithOptions(options).Emit(stream);
+				if (!result.Success)
+				{
+					Exception exception = new();
+					exception.Data.Add("diagnostics", result.Diagnostics);
+					throw exception;
+				}
+
+				var assemblyBytes = stream.ToArray();
+				var assembly = Assembly.Load(assemblyBytes);
+				loadedAssemblies.Add(assembly, $"{typeHash}-app");
+
+				var path = $"{CacheDirectoryPath}/{assembly.GetName().Name}.dll";
+				using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.ReadWrite))
+				{
+					stream.Seek(0, SeekOrigin.Begin);
+					await stream.CopyToAsync(fileStream);
+					await fileStream.FlushAsync();
+
+					if (!cacheConfig.LastKnownTypeHashes.Contains(typeHash))
+						cacheConfig.LastKnownTypeHashes.Add(typeHash);
+				}
+
+				HybridCommandsExtension.Logger?.LogDebug("Compiled Application Commands Class '{class}'..", typeHash);
+			}
+
+		}
+		catch (Exception ex)
+		{
+			HybridCommandsExtension.Logger?.LogDebug(ex, "Failed to compile Application Commands Class '{class}'.", typeHash);
+		}
+
+		try
+		{
+			if (!loadedAssemblies.Values.Any(x => x == $"{typeHash}-prefix"))
+			{
+				using var stream = new MemoryStream();
+				HybridCommandsExtension.Logger?.LogDebug("Compiling Prefix Commands Class '{class}'..", typeHash);
+
+				var result = CSharpCompilation.Create($"{typeHash}-prefix")
+										.AddSyntaxTrees(SyntaxFactory.ParseSyntaxTree(PrefixClass))
+										.AddReferences(references)
+										.WithOptions(options).Emit(stream);
+				if (!result.Success)
+				{
+					Exception exception = new();
+					exception.Data.Add("diagnostics", result.Diagnostics);
+					throw exception;
+				}
+
+				var assemblyBytes = stream.ToArray();
+				var assembly = Assembly.Load(assemblyBytes);
+				loadedAssemblies.Add(assembly, $"{typeHash}-prefix");
+
+				var path = $"{CacheDirectoryPath}/{assembly.GetName().Name}.dll";
+				using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.ReadWrite))
+				{
+					stream.Seek(0, SeekOrigin.Begin);
+					await stream.CopyToAsync(fileStream);
+					await fileStream.FlushAsync();
+
+					if (!cacheConfig.LastKnownTypeHashes.Contains(typeHash))
+						cacheConfig.LastKnownTypeHashes.Add(typeHash);
+				}
+
+				HybridCommandsExtension.Logger?.LogDebug("Compiled Prefix Commands Class '{class}'..", typeHash);
+			}
+
+		}
+		catch (Exception ex)
+		{
+			HybridCommandsExtension.Logger?.LogDebug(ex, "Failed to compile Prefix Commands Class '{class}'.", typeHash);
 		}
 
 		return Array.Empty<Assembly>();
