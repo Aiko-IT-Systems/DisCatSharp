@@ -590,14 +590,7 @@ public sealed class LavalinkSession
 							break;
 						case EventOpType.WebsocketClosedEvent:
 							var websocketClosedEvent = LavalinkJson.DeserializeObject<WebSocketClosedEvent>(json!)!;
-							this.Discord.Logger.LogDebug("LL WSC: {json}", LavalinkJson.SerializeObject(websocketClosedEvent, Formatting.Indented));
-							_ = Task.Run(async () =>
-							{
-								await this._websocketClosed.InvokeAsync(this, new(this.Discord, websocketClosedEvent));
-								// TODO: Handle move, disconnect & crash?
-								/*if (player != null && websocketClosedEvent.Code == 4014)
-									await player.DisconnectAsync();*/
-							});
+							await this._websocketClosed.InvokeAsync(this, new(this.Discord, websocketClosedEvent));
 							break;
 						default:
 							var ex = new InvalidDataException("Lavalink send an unknown up");
