@@ -142,7 +142,7 @@ public sealed class LavalinkGuildPlayer
 	/// <summary>
 	/// Gets the discord client.
 	/// </summary>
-	internal DiscordClient Discord
+	public DiscordClient Discord
 		=> this.Session.Discord;
 
 	/// <summary>
