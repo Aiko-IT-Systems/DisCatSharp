@@ -154,7 +154,7 @@ public sealed class LavalinkGuildPlayer
 	/// <summary>
 	/// Gets the lavalink player.
 	/// </summary>
-	internal LavalinkPlayer Player { get; set; }
+	public LavalinkPlayer Player { get; internal set; }
 
 	/// <summary>
 	/// Gets the current track position.
