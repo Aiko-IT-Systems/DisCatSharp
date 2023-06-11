@@ -549,7 +549,7 @@ public sealed class LavalinkSession
 					break;
 				case OpType.Event:
 					this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsRx, null, "Received Lavalink Event OP: {data}", json);
-					EventOp eventOp = LavalinkJson.DeserializeObject<EventOp>(json!)!;
+					var eventOp = LavalinkJson.DeserializeObject<EventOp>(json!)!;
 
 					LavalinkGuildPlayer? player = null;
 
@@ -579,12 +579,12 @@ public sealed class LavalinkSession
 							break;
 						case EventOpType.WebsocketClosedEvent:
 							var websocketClosedEvent = LavalinkJson.DeserializeObject<WebSocketClosedEvent>(json!)!;
-							if (websocketClosedEvent.ByRemote)
+							/*if (websocketClosedEvent.ByRemote)
 								_ = Task.Run(async () => await this.Lavalink_WebSocket_Disconnected(this._webSocket, new(this.Discord.ServiceProvider)
 								{
 									CloseCode = websocketClosedEvent.Code,
 									CloseMessage = websocketClosedEvent.Reason
-								}));
+								}));*/
 							break;
 						default:
 							var ex = new InvalidDataException("Lavalink send an unknown up");
@@ -625,7 +625,7 @@ public sealed class LavalinkSession
 			await this._lavalinkSessionDisconnected.InvokeAsync(this, new(this, false));
 
 			if (this.Config.SocketAutoReconnect)
-				await this.EstablishConnectionAsync();
+				_ = Task.Run(async () => await this.EstablishConnectionAsync());
 		}
 		else if (args.CloseCode != 1001 && args.CloseCode != -1)
 		{
