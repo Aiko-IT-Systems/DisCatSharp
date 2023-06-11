@@ -44,6 +44,7 @@ using DisCatSharp.Net.WebSocket;
 
 using Microsoft.Extensions.Logging;
 
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp.LavalinkV4;
@@ -104,6 +105,16 @@ public sealed class LavalinkSession
 		remove => this.GuildPlayerDestroyedEvent.Unregister(value);
 	}
 	internal readonly AsyncEvent<LavalinkSession, GuildPlayerDestroyedEventArgs> GuildPlayerDestroyedEvent;
+
+	/// <summary>
+	/// Triggered when the websocket to discord gets closed.
+	/// </summary>
+	public event AsyncEventHandler<LavalinkSession, LavalinkWebsocketClosedEventArgs> WebsocketClosed
+	{
+		add => this._websocketClosed.Register(value);
+		remove => this._websocketClosed.Unregister(value);
+	}
+	private readonly AsyncEvent<LavalinkSession, LavalinkWebsocketClosedEventArgs> _websocketClosed;
 
 	/// <summary>
 	/// Gets the remote endpoint of this Lavalink node connection.
@@ -227,7 +238,7 @@ public sealed class LavalinkSession
 		this._lavalinkSessionConnected = new("LAVALINK_SESSION_CONNECTED", TimeSpan.Zero, this.Discord.EventErrorHandler);
 		this.GuildPlayerDestroyedEvent = new("LAVALINK_PLAYER_DESTROYED", TimeSpan.Zero, this.Discord.EventErrorHandler);
 		this._statsReceived = new("LAVALINK_STATS_RECEIVED", TimeSpan.Zero, this.Discord.EventErrorHandler);
-		//this._websocketClosed = new("LAVALINK_WEBSOCKET_CLOSED", TimeSpan.Zero, this.Discord.EventErrorHandler);
+		this._websocketClosed = new("LAVALINK_WEBSOCKET_CLOSED", TimeSpan.Zero, this.Discord.EventErrorHandler);
 
 		this._voiceServerUpdates = new();
 		this._voiceStateUpdates = new();
@@ -579,12 +590,14 @@ public sealed class LavalinkSession
 							break;
 						case EventOpType.WebsocketClosedEvent:
 							var websocketClosedEvent = LavalinkJson.DeserializeObject<WebSocketClosedEvent>(json!)!;
-							/*if (websocketClosedEvent.ByRemote)
-								_ = Task.Run(async () => await this.Lavalink_WebSocket_Disconnected(this._webSocket, new(this.Discord.ServiceProvider)
-								{
-									CloseCode = websocketClosedEvent.Code,
-									CloseMessage = websocketClosedEvent.Reason
-								}));*/
+							this.Discord.Logger.LogDebug("LL WSC: {json}", LavalinkJson.SerializeObject(websocketClosedEvent, Formatting.Indented));
+							_ = Task.Run(async () =>
+							{
+								await this._websocketClosed.InvokeAsync(this, new(this.Discord, websocketClosedEvent));
+								// TODO: Handle move, disconnect & crash?
+								/*if (player != null && websocketClosedEvent.Code == 4014)
+									await player.DisconnectAsync();*/
+							});
 							break;
 						default:
 							var ex = new InvalidDataException("Lavalink send an unknown up");
@@ -625,7 +638,7 @@ public sealed class LavalinkSession
 			await this._lavalinkSessionDisconnected.InvokeAsync(this, new(this, false));
 
 			if (this.Config.SocketAutoReconnect)
-				_ = Task.Run(async () => await this.EstablishConnectionAsync());
+				_ = Task.Run(this.EstablishConnectionAsync);
 		}
 		else if (args.CloseCode != 1001 && args.CloseCode != -1)
 		{
@@ -688,19 +701,24 @@ public sealed class LavalinkSession
 			{
 				await Task.Delay(this.Config.WebSocketCloseTimeout);
 				await this.Rest.DestroyPlayerAsync(this.Config.SessionId!, dGuildPlayer.GuildId);
-				_ = Task.Run(async () => await this.GuildPlayerDestroyedEvent.InvokeAsync(this, new(dGuildPlayer)));
-				_ = this.ConnectedPlayersInternal.TryRemove(gld.Id, out _);
+				_ = Task.Run(async () =>
+				{
+					if (this.ConnectedPlayersInternal.TryRemove(gld.Id, out _))
+						await this.GuildPlayerDestroyedEvent.InvokeAsync(this, new(dGuildPlayer));
+				});
 			});
 		}
 		else if (!string.IsNullOrWhiteSpace(args.SessionId) && this.ConnectedPlayersInternal.TryGetValue(gld.Id, out var guildPlayer))
 			_ = Task.Run(async () =>
 			{
-				await guildPlayer.UpdateVoiceStateAsync(new()
+				var state = new LavalinkVoiceState()
 				{
 					Endpoint = guildPlayer.Player.VoiceState.Endpoint,
 					Token = guildPlayer.Player.VoiceState.Token,
-					SessionId = args.SessionId
-				});
+					SessionId = args.After.SessionId
+				};
+				guildPlayer.UpdateVoiceState(state);
+				await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, guildPlayer.GuildId, state);
 				this.ConnectedPlayersInternal[gld.Id].ChannelId = args.After?.ChannelId ?? guildPlayer.ChannelId;
 			});
 
@@ -723,13 +741,17 @@ public sealed class LavalinkSession
 
 		if (this.ConnectedPlayersInternal.TryGetValue(args.Guild.Id, out var guildPlayer))
 		{
-			var state = new LavalinkVoiceState()
+			_ = Task.Run(async () =>
 			{
-				Endpoint = args.Endpoint,
-				Token = args.VoiceToken,
-				SessionId = guildPlayer.Player.VoiceState.SessionId
-			};
-			_ = Task.Run(async () => await guildPlayer.UpdateVoiceStateAsync(state));
+				var state = new LavalinkVoiceState()
+				{
+					Endpoint = args.Endpoint,
+					Token = args.VoiceToken,
+					SessionId = guildPlayer.Player.VoiceState.SessionId
+				};
+				await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, guildPlayer.GuildId, state);
+				guildPlayer.UpdateVoiceState(state);
+			});
 		}
 
 		if (this._voiceServerUpdates.TryRemove(gld.Id, out var xe))

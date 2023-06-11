@@ -20,30 +20,52 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Newtonsoft.Json;
+using System;
 
-namespace DisCatSharp.LavalinkV4.Entities.Websocket;
+using DisCatSharp.Entities;
+using DisCatSharp.EventArgs;
+using DisCatSharp.LavalinkV4.Entities.Websocket;
+
+namespace DisCatSharp.LavalinkV4.EventArgs;
 
 /// <summary>
-/// Represents a websocket close event.
+/// Represents event arguments for lavalink websocket closed events.
 /// </summary>
-internal sealed class WebSocketClosedEvent : EventOp
+public sealed class LavalinkWebsocketClosedEventArgs : SocketCloseEventArgs
 {
 	/// <summary>
-	/// Gets the Discord close event code.
+	/// Gets the discord client.
 	/// </summary>
-	[JsonProperty("code")]
-	internal int Code { get; set; }
+	public DiscordClient Discord { get; }
 
 	/// <summary>
-	/// Gets the close reason.
+	/// Gets the guild id.
 	/// </summary>
-	[JsonProperty("reason")]
-	internal string Reason { get; set; }
+	public ulong GuildId { get; }
 
 	/// <summary>
-	/// Gets whether the connection was closed by Discord.
+	/// Gets the guild.
 	/// </summary>
-	[JsonProperty("byRemote")]
-	internal bool ByRemote { get; set; }
+	public DiscordGuild Guild
+		=> this.Discord.GuildsInternal.TryGetValue(this.GuildId, out var guild) ? guild : null!;
+
+	/// <summary>
+	/// Whether the websocket was closed by discord.
+	/// </summary>
+	public bool ByRemote { get; }
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="LavalinkWebsocketClosedEventArgs"/> class.
+	/// </summary>
+	/// <param name="client">The discord client.</param>
+	/// <param name="eventArgs">The event args.</param>
+	internal LavalinkWebsocketClosedEventArgs(DiscordClient client, WebSocketClosedEvent eventArgs)
+		: base(client.ServiceProvider)
+	{
+		this.Discord = client;
+		this.GuildId = Convert.ToUInt64(eventArgs.GuildId);
+		this.ByRemote = eventArgs.ByRemote;
+		this.CloseCode = eventArgs.Code;
+		this.CloseMessage = eventArgs.Reason;
+	}
 }
