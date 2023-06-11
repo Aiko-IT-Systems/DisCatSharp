@@ -582,7 +582,7 @@ public sealed class LavalinkGuildPlayer
 
 		if (args.After.ChannelId != null && args.After.ChannelId == this.ChannelId)
 		{
-			this.CurrentUsersInternal.Add(args.User.Id, args.User);
+			this.CurrentUsersInternal.TryAdd(args.User.Id, args.User);
 			return Task.CompletedTask;
 		}
 
