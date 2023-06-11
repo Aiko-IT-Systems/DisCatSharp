@@ -531,8 +531,8 @@ public sealed class LavalinkGuildPlayer
 	/// Updates the voice state.
 	/// </summary>
 	/// <param name="voiceState">The voice state to update with.</param>
-	internal async Task UpdateVoiceStateAsync(LavalinkVoiceState voiceState)
-		=> await this.Session.Rest.UpdatePlayerVoiceStateAsync(this.Session.Config.SessionId!, this.GuildId, voiceState);
+	internal void UpdateVoiceState(LavalinkVoiceState voiceState)
+		=> this.Player.VoiceState = voiceState;
 
 
 	/// <summary>
