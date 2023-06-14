@@ -3754,7 +3754,7 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {webhook_id = webhookId }, out var path);
 
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, this.Discord?.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var ret = JsonConvert.DeserializeObject<DiscordWebhook>(res.Response);
@@ -3774,7 +3774,7 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {webhook_id = webhookId, webhook_token = webhookToken }, out var path);
 
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, this.Discord?.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var ret = JsonConvert.DeserializeObject<DiscordWebhook>(res.Response);
@@ -3956,7 +3956,7 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {webhook_id = webhookId, webhook_token = webhookToken }, out var path);
 
-		var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true");
+		var qub = Utilities.GetApiUriBuilderFor(path, this.Discord?.Configuration).AddParameter("wait", "true");
 		if (threadId != null)
 			qub.AddParameter("thread_id", threadId);
 
@@ -3965,8 +3965,9 @@ public sealed class DiscordApiClient
 		var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
 		var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
 
-		foreach (var att in ret.Attachments)
-			att.Discord = this.Discord;
+		if (this.Discord != null!)
+			foreach (var att in ret.Attachments)
+				att.Discord = this.Discord;
 
 		foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
 		{
