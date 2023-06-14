@@ -54,10 +54,10 @@ public static class DiscordJson
 	public static string SerializeObject(object value)
 		=> SerializeObjectInternal(value, null!, s_serializer);
 
-	public static T DeserializeObject<T>(string json, BaseDiscordClient discord) where T : ObservableApiObject
+	public static T DeserializeObject<T>(string json, BaseDiscordClient? discord) where T : ObservableApiObject
 		=> DeserializeObjectInternal<T>(json, discord);
 
-	public static T DeserializeIEnumerableObject<T>(string json, BaseDiscordClient discord) where T : IEnumerable<ObservableApiObject>
+	public static T DeserializeIEnumerableObject<T>(string json, BaseDiscordClient? discord) where T : IEnumerable<ObservableApiObject>
 		=> DeserializeIEnumerableObjectInternal<T>(json, discord);
 
 	/// <summary>Populates an object with the values from a JSON node.</summary>
@@ -86,7 +86,7 @@ public static class DiscordJson
 	/// <param name="jsonSerializer">The json serializer.</param>
 	private static string SerializeObjectInternal(object value, Type type, JsonSerializer jsonSerializer)
 	{
-		var stringWriter = new StringWriter(new(256), CultureInfo.InvariantCulture);
+		var stringWriter = new StringWriter(new StringBuilder(256), CultureInfo.InvariantCulture);
 		using (var jsonTextWriter = new JsonTextWriter(stringWriter))
 		{
 			jsonTextWriter.Formatting = jsonSerializer.Formatting;
@@ -95,12 +95,14 @@ public static class DiscordJson
 		return stringWriter.ToString();
 	}
 
-	private static T DeserializeObjectInternal<T>(string json, BaseDiscordClient discord) where T : ObservableApiObject
+	private static T DeserializeObjectInternal<T>(string json, BaseDiscordClient? discord) where T : ObservableApiObject
 	{
 		var obj = JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings()
 		{
 			ContractResolver = new OptionalJsonContractResolver()
 		})!;
+		if (discord == null)
+			return obj;
 		obj.Discord = discord;
 
 		if (!discord.Configuration.ReportMissingFields || !obj.AdditionalProperties.Any()) return obj;
@@ -156,12 +158,14 @@ public static class DiscordJson
 		return obj;
 	}
 
-	private static T DeserializeIEnumerableObjectInternal<T>(string json, BaseDiscordClient discord) where T : IEnumerable<ObservableApiObject>
+	private static T DeserializeIEnumerableObjectInternal<T>(string json, BaseDiscordClient? discord) where T : IEnumerable<ObservableApiObject>
 	{
 		var obj = JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings()
 		{
 			ContractResolver = new OptionalJsonContractResolver()
 		})!;
+		if (discord == null)
+			return obj;
 		foreach (var ob in obj)
 			ob.Discord = discord;
 
