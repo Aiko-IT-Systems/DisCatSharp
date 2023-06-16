@@ -15,7 +15,8 @@
 	<InternalsVisibleTo Include="DisCatSharp.Lavalink" />
 	<InternalsVisibleTo Include="DisCatSharp.Phabricator" />
 	<InternalsVisibleTo Include="DisCatSharp.Support" />
-	<InternalsVisibleTo Include="DisCatSharp.Test" />
+	<InternalsVisibleTo Include="DisCatSharp.Tests" />
+	<InternalsVisibleTo Include="DisCatSharp.SafetyTests.Internal" />
 	<InternalsVisibleTo Include="DisCatSharp.VoiceNext" />
 	<InternalsVisibleTo Include="DisCatSharp.VoiceNext.Natives" />
 	<InternalsVisibleTo Include="DisCatSharp.DevTools" />
