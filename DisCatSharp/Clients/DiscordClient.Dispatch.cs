@@ -1836,6 +1836,7 @@ public sealed partial class DiscordClient
 		var pendingOld = mbr.IsPending;
 		var rolesOld = new ReadOnlyCollection<DiscordRole>(new List<DiscordRole>(mbr.Roles));
 		var cduOld = mbr.CommunicationDisabledUntil;
+		var udauOld = mbr.UnusualDmActivityUntil;
 		mbr.MemberFlags = member.MemberFlags;
 		mbr.AvatarHashInternal = member.AvatarHash;
 		mbr.GuildAvatarHash = member.GuildAvatarHash;
@@ -1843,6 +1844,7 @@ public sealed partial class DiscordClient
 		mbr.GuildPronouns = member.GuildPronouns;
 		mbr.IsPending = pending;
 		mbr.CommunicationDisabledUntil = member.CommunicationDisabledUntil;
+		mbr.UnusualDmActivityUntil = member.UnusualDmActivityUntil;
 		mbr.RoleIdsInternal.Clear();
 		mbr.RoleIdsInternal.AddRange(roles);
 		guild.MembersInternal.AddOrUpdate(member.User.Id, mbr, (id, oldMbr) => oldMbr);
@@ -1891,13 +1893,15 @@ public sealed partial class DiscordClient
 			TimeoutAfter = mbr.CommunicationDisabledUntil,
 			AvatarHashAfter = mbr.AvatarHash,
 			GuildAvatarHashAfter = mbr.GuildAvatarHash,
+			UnusualDmActivityAfter = mbr.UnusualDmActivityUntil,
 
 			NicknameBefore = nickOld,
 			RolesBefore = rolesOld,
 			PendingBefore = pendingOld,
 			TimeoutBefore = cduOld,
 			AvatarHashBefore = avOld,
-			GuildAvatarHashBefore = gAvOld
+			GuildAvatarHashBefore = gAvOld,
+			UnusualDmActivityBefore = udauOld
 		};
 		await this._guildMemberUpdated.InvokeAsync(this, eargs).ConfigureAwait(false);
 	}

@@ -83,6 +83,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		this.GuildBio = mbr.GuildBio;
 		this.GuildPronouns = mbr.GuildPronouns;
 		this.CommunicationDisabledUntil = mbr.CommunicationDisabledUntil;
+		this.UnusualDmActivityUntil = mbr.UnusualDmActivityUntil;
 		this.AvatarHashInternal = mbr.AvatarHash;
 		this.RoleIdsInternal = mbr.Roles ?? new List<ulong>();
 		this._roleIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
@@ -206,6 +207,12 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	[JsonProperty("communication_disabled_until", NullValueHandling = NullValueHandling.Include)]
 	public DateTime? CommunicationDisabledUntil { get; internal set; }
+	
+	/// <summary>
+	/// Datetime until unusual dm activity time happened.
+	/// </summary>
+	[JsonProperty("unusual_dm_activity_until", NullValueHandling = NullValueHandling.Include)]
+	public DateTime? UnusualDmActivityUntil { get; internal set; }
 
 	/// <summary>
 	/// Whether the user has their communication disabled.
@@ -213,6 +220,14 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	[JsonIgnore]
 	public bool IsCommunicationDisabled
 		=> this.CommunicationDisabledUntil != null && this.CommunicationDisabledUntil.Value.ToUniversalTime() > DateTime.UtcNow;
+
+	/// <summary>
+	/// Whether the user has their communication disabled.
+	/// </summary>
+	[JsonIgnore]
+	public bool HasUnusualDmActivity
+		=> this.UnusualDmActivityUntil != null && this.UnusualDmActivityUntil.Value.ToUniversalTime() > DateTime.UtcNow;
+
 
 	/// <summary>
 	/// If the user is deafened

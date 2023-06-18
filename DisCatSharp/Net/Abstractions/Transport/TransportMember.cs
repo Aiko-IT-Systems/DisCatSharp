@@ -121,6 +121,12 @@ internal class TransportMember : ObservableApiObject
 	public DateTime? CommunicationDisabledUntil { get; internal set; }
 
 	/// <summary>
+	/// Gets the unusual dm activity time.
+	/// </summary>
+	[JsonProperty("unusual_dm_activity_until", NullValueHandling = NullValueHandling.Include)]
+	public DateTime? UnusualDmActivityUntil { get; internal set; }
+
+	/// <summary>
 	/// Gets the members flags.
 	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
