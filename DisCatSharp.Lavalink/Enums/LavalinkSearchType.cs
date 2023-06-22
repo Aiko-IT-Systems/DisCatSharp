@@ -20,28 +20,74 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+namespace DisCatSharp.Lavalink.Enums;
 
-using FluentAssertions;
-
-using Xunit;
-
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// The lavalink search type.
+/// </summary>
+public enum LavalinkSearchType
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// Search on SoundCloud
+	/// </summary>
+	SoundCloud,
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
-	}
+	/// <summary>
+	/// Search on Youtube.
+	/// </summary>
+	Youtube,
+
+	/// <summary>
+	/// Provide Lavalink with a plain URL.
+	/// </summary>
+	Plain,
+
+	/*
+	// This does not support search. Keeping it for reference tho.
+	/// <summary>
+	/// Search on Band Camp.
+	/// </summary>
+	BandCamp,
+
+	/// <summary>
+	/// Search on Twitch.
+	/// </summary>
+	Twitch,
+
+	/// <summary>
+	/// Search on Vimeo.
+	/// </summary>
+	Vimeo,*/
+
+	// Requires: https://github.com/topiSenpai/LavaSrc
+
+	/// <summary>
+	/// Search on Apple Music.
+	/// </summary>
+	AppleMusic,
+
+	/// <summary>
+	/// Search on Deezer.
+	/// </summary>
+	Deezer,
+
+	/// <summary>
+	/// Search on Deezer with ISRC.
+	/// </summary>
+	DeezerISrc,
+
+	/// <summary>
+	/// Search on Yandex Music.
+	/// </summary>
+	YandexMusic,
+
+	/// <summary>
+	/// Search on Spotify.
+	/// </summary>
+	Spotify,
+
+	/// <summary>
+	/// Search on Spotify with recommendation seed.
+	/// </summary>
+	SpotifyRec
 }

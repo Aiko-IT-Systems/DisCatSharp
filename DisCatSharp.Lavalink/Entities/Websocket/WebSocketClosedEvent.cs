@@ -20,28 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using Newtonsoft.Json;
 
-using FluentAssertions;
+namespace DisCatSharp.Lavalink.Entities.Websocket;
 
-using Xunit;
-
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// Represents a websocket close event.
+/// </summary>
+internal sealed class WebSocketClosedEvent : EventOp
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// Gets the Discord close event code.
+	/// </summary>
+	[JsonProperty("code")]
+	internal int Code { get; set; }
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
-	}
+	/// <summary>
+	/// Gets the close reason.
+	/// </summary>
+	[JsonProperty("reason")]
+	internal string Reason { get; set; }
+
+	/// <summary>
+	/// Gets whether the connection was closed by Discord.
+	/// </summary>
+	[JsonProperty("byRemote")]
+	internal bool ByRemote { get; set; }
 }

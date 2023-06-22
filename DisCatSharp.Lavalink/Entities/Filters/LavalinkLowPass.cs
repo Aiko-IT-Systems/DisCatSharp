@@ -20,28 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using DisCatSharp.Entities;
 
-using FluentAssertions;
+using Newtonsoft.Json;
 
-using Xunit;
+namespace DisCatSharp.Lavalink.Entities.Filters;
 
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// Higher frequencies get suppressed, while lower frequencies pass through this filter, thus the name low pass.
+/// </summary>
+public sealed class LavalinkLowPass
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// The smoothing factor (<c>>1.0</c>, Any smoothing values equal to or less than 1.0 will disable the filter)
+	/// </summary>
+	[JsonProperty("smoothing")]
+	public Optional<float> Smoothing { get; set; }
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
+	/// <inheritdoc cref="LavalinkLowPass"/>
+	/// <param name="smoothing">The smoothing factor</param>
+	public LavalinkLowPass(Optional<float> smoothing)
+	{
+		this.Smoothing = smoothing;
 	}
 }

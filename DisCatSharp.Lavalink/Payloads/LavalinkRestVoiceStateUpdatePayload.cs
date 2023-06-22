@@ -20,28 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using DisCatSharp.Lavalink.Entities;
 
-using FluentAssertions;
+using Newtonsoft.Json;
 
-using Xunit;
+namespace DisCatSharp.Lavalink.Payloads;
 
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// The lavalink rest voice state update payload.
+/// </summary>
+internal sealed class LavalinkRestVoiceStateUpdatePayload
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// Gets or sets the guild id.
+	/// </summary>
+	[JsonProperty("guildId")]
+	internal string GuildId { get; set; }
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
+	/// <summary>
+	/// Gets or sets the voice state.
+	/// </summary>
+	[JsonProperty("voice")]
+	internal LavalinkVoiceState VoiceState { get; set; }
+
+	/// <summary>
+	/// Constructs a new <see cref="LavalinkRestVoiceStateUpdatePayload"/>.
+	/// </summary>
+	/// <param name="voiceState">The voice state.</param>
+	/// <param name="guildId">The guild id.</param>
+	internal LavalinkRestVoiceStateUpdatePayload(LavalinkVoiceState voiceState, string guildId)
+	{
+		this.VoiceState = voiceState;
+		this.GuildId = guildId;
 	}
 }

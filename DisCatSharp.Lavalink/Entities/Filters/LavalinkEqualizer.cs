@@ -20,28 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using DisCatSharp.Lavalink.Enums.Filters;
 
-using FluentAssertions;
+using Newtonsoft.Json;
 
-using Xunit;
+namespace DisCatSharp.Lavalink.Entities.Filters;
 
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// There are 15 bands (0-14) that can be changed. "gain" is the multiplier for the given band. The default value is 0. Valid values range from -0.25 to 1.0, where -0.25 means the given band is completely muted, and 0.25 means it is doubled. Modifying the gain could also change the volume of the output.
+/// </summary>
+public sealed class LavalinkEqualizer
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// The band.
+	/// </summary>
+	[JsonProperty("band")]
+	public LavalinkFilterBand Band { get; set; }
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
+	/// <summary>
+	/// The gain (<c>-0.25</c> to <c>1.0</c>)
+	/// </summary>
+	[JsonProperty("band")]
+	public float Gain { get; set; }
+
+	/// <inheritdoc cref="LavalinkEqualizer"/>
+	/// <param name="band">The band</param>
+	/// <param name="gain">The gain (<c>-0.25</c> to <c>1.0</c>)</param>
+	public LavalinkEqualizer(LavalinkFilterBand band, float gain)
+	{
+		this.Band = band;
+		this.Gain = gain;
 	}
 }

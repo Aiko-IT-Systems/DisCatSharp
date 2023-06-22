@@ -20,28 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using Newtonsoft.Json;
 
-using FluentAssertions;
+namespace DisCatSharp.Lavalink.Entities.Websocket;
 
-using Xunit;
-
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// Represents a track start event.
+/// </summary>
+internal sealed class TrackStartEvent : EventOp
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
-
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
-	}
+	/// <summary>
+	/// Gets the lavalink track.
+	/// </summary>
+	[JsonProperty("track")]
+	internal LavalinkTrack Track { get; set; }
 }

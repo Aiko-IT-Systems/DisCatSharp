@@ -20,28 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using Newtonsoft.Json;
 
-using FluentAssertions;
+namespace DisCatSharp.Lavalink.Entities.Websocket;
 
-using Xunit;
-
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// Represents a player update op.
+/// </summary>
+internal sealed class PlayerUpdateOp : LavalinkOp
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// Gets the related guild id.
+	/// </summary>
+	[JsonProperty("guildId")]
+	internal ulong GuildId { get; set; }
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
-	}
+	/// <summary>
+	/// Gets the updated player state.
+	/// </summary>
+	[JsonProperty("state")]
+	internal LavalinkPlayerState State { get; set; }
 }

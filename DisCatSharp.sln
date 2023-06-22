@@ -91,7 +91,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{267EFBFF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.SafetyTests", "DisCatSharp.Tests\SafetyTests\DisCatSharp.SafetyTests.csproj", "{9F012C5C-6A47-4E5D-8819-5D2DD0743E65}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.LavalinkV4", "DisCatSharp.LavalinkV4\DisCatSharp.LavalinkV4.csproj", "{1ADC1D06-3DB8-4741-B740-13161B40CBA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Lavalink", "DisCatSharp.Lavalink\DisCatSharp.Lavalink.csproj", "{1ADC1D06-3DB8-4741-B740-13161B40CBA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

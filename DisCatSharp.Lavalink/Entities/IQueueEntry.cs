@@ -20,28 +20,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using System.Threading.Tasks;
 
-using FluentAssertions;
+namespace DisCatSharp.Lavalink.Entities;
 
-using Xunit;
-
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// Represents an interface for using the built-in DisCatSharp Lavalink queue.
+/// </summary>
+public interface IQueueEntry
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// The lavalink track to play.
+	/// </summary>
+	LavalinkTrack Track { get; internal set; }
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
+	/// <summary>
+	/// Adds a track.
+	/// </summary>
+	/// <param name="track">The track to add.</param>
+	/// <returns>The queue entry.</returns>
+	public IQueueEntry AddTrack(LavalinkTrack track)
+	{
+		this.Track = track;
+		return this;
 	}
+
+	/// <summary>
+	/// Actions to execute before this queue entry gets played.
+	/// Return <see langword="false"/> if entry shouldn't be played.
+	/// </summary>
+	abstract Task<bool> BeforePlayingAsync(LavalinkGuildPlayer player);
+
+	/// <summary>
+	/// Actions to execute after this queue entry was played.
+	/// </summary>
+	abstract Task AfterPlayingAsync(LavalinkGuildPlayer player);
 }

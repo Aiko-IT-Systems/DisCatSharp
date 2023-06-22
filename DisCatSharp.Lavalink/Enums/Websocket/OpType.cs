@@ -20,28 +20,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using System.Runtime.Serialization;
 
-using FluentAssertions;
+using DisCatSharp.Lavalink.Entities;
 
-using Xunit;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
-namespace DisCatSharp.SafetyTests;
+namespace DisCatSharp.Lavalink.Enums.Websocket;
 
-public class HttpTests
+/// <summary>
+/// Represents various lavalink op types.
+/// </summary>
+[JsonConverter(typeof(StringEnumConverter))]
+internal enum OpType
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// Indicates that the lavalink session is ready. Fires <see cref="LavalinkSession.LavalinkSessionConnected"/>.
+	/// </summary>
+	[EnumMember(Value = "ready")]
+	Ready,
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
-	}
+	/// <summary>
+	/// Indicates that a <see cref="LavalinkPlayer"/> got updated. Fires <see cref="LavalinkSession.StatsReceived"/>.
+	/// </summary>
+	[EnumMember(Value = "playerUpdate")]
+	PlayerUpdate,
+
+	/// <summary>
+	/// Indicates that the session stats got updated. Fires <see cref="LavalinkSession.StatsReceived"/>.
+	/// </summary>
+	[EnumMember(Value = "stats")]
+	Stats,
+
+	/// <summary>
+	/// Indicates that the op contains further information about an event.
+	/// </summary>
+	[EnumMember(Value = "event")]
+	Event
 }

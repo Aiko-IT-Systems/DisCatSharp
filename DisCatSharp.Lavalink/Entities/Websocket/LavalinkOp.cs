@@ -20,28 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using DisCatSharp.Lavalink.Enums.Websocket;
 
-using FluentAssertions;
+using Newtonsoft.Json;
 
-using Xunit;
+namespace DisCatSharp.Lavalink.Entities.Websocket;
 
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// Represents a lavalink op.
+/// </summary>
+internal class LavalinkOp
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
-
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
-	}
+	/// <summary>
+	/// Gets the op type.
+	/// </summary>
+	[JsonProperty("op")]
+	internal OpType Op { get; set; }
 }

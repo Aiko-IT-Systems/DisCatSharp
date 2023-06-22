@@ -20,28 +20,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using Newtonsoft.Json;
 
-using FluentAssertions;
+namespace DisCatSharp.Lavalink.Entities.Websocket;
 
-using Xunit;
-
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// Represents lavalink server statistics received via websocket.
+/// </summary>
+internal sealed class StatsOp : LavalinkOp
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// Gets the total count of players.
+	/// </summary>
+	[JsonProperty("players")]
+	internal int Players { get; set; }
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
-	}
+	/// <summary>
+	/// Gets the count of playing (active) players.
+	/// </summary>
+	[JsonProperty("playingPlayers")]
+	internal int PlayingPlayers { get; set; }
+
+	/// <summary>
+	/// Gets or sets the uptime.
+	/// </summary>
+	[JsonProperty("uptime")]
+	internal readonly long UptimeInt;
+
+	/// <summary>
+	/// Gets or sets the memory stats.
+	/// </summary>
+	[JsonProperty("memory")]
+	internal MemoryStats Memory { get; set; }
+
+	/// <summary>
+	/// Gets or sets the cpu stats.
+	/// </summary>
+	[JsonProperty("cpu")]
+	internal CpuStats Cpu { get; set; }
+
+	/// <summary>
+	/// Gets or sets the frame stats.
+	/// </summary>
+	[JsonProperty("frameStats")]
+	internal FrameStats Frames { get; set; }
 }

@@ -20,28 +20,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using DisCatSharp.Entities;
 
-using FluentAssertions;
+using Newtonsoft.Json;
 
-using Xunit;
+namespace DisCatSharp.Lavalink.Entities.Filters;
 
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// Changes the speed, pitch, and rate.
+/// </summary>
+public sealed class LavalinkTimescale
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// The playback speed. (<c>>0.0</c> where <c>1.0</c> is default)
+	/// </summary>
+	[JsonProperty("speed")]
+	public Optional<float> Speed { get; set; }
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
+	/// <summary>
+	/// The pitch. (<c>>0.0</c> where <c>1.0</c> is default)
+	/// </summary>
+	[JsonProperty("pitch")]
+	public Optional<float> Pitch { get; set; }
+
+	/// <summary>
+	/// The rate. (<c>>0.0</c> where <c>1.0</c> is default)
+	/// </summary>
+	[JsonProperty("rate")]
+	public Optional<float> Rate { get; set; }
+
+	/// <inheritdoc cref="LavalinkTimescale"/>
+	/// <param name="speed">The playback speed. (<c>>0.0</c> where <c>1.0</c> is default)</param>
+	/// <param name="pitch">The pitch. (<c>>0.0</c> where <c>1.0</c> is default)</param>
+	/// <param name="rate">The rate. (<c>>0.0</c> where <c>1.0</c> is default)</param>
+	public LavalinkTimescale(Optional<float> speed, Optional<float> pitch, Optional<float> rate)
+	{
+		this.Speed = speed;
+		this.Pitch = pitch;
+		this.Rate = rate;
 	}
 }

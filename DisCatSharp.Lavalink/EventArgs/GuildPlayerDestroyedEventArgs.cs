@@ -20,28 +20,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using DisCatSharp.Entities;
+using DisCatSharp.EventArgs;
 
-using FluentAssertions;
+namespace DisCatSharp.Lavalink.EventArgs;
 
-using Xunit;
-
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// Represents event arguments for guild player destroy events.
+/// </summary>
+public sealed class GuildPlayerDestroyedEventArgs : DiscordEventArgs
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// Gets the discord client.
+	/// </summary>
+	public DiscordClient Discord { get; }
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
+	/// <summary>
+	/// Gets the destroyed guild player.
+	/// </summary>
+	public LavalinkGuildPlayer Player { get; }
+
+	/// <summary>
+	/// Gets the guild.
+	/// </summary>
+	public DiscordGuild Guild
+		=> this.Discord.GuildsInternal.TryGetValue(this.Player.GuildId, out var guild) ? guild : null!;
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="GuildPlayerDestroyedEventArgs"/> class.
+	/// </summary>
+	/// <param name="player">The player.</param>
+	internal GuildPlayerDestroyedEventArgs(LavalinkGuildPlayer player)
+		: base(player.Discord.ServiceProvider)
+	{
+		this.Discord = player.Discord;
+		this.Player = player;
 	}
 }

@@ -20,28 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using DisCatSharp.EventArgs;
+using DisCatSharp.Lavalink.Entities;
 
-using FluentAssertions;
+namespace DisCatSharp.Lavalink.EventArgs;
 
-using Xunit;
-
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// Represents event arguments for lavalink player state updates.
+/// </summary>
+public sealed class LavalinkPlayerStateUpdateEventArgs : DiscordEventArgs
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// Gets the discord client.
+	/// </summary>
+	public DiscordClient Discord { get; }
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
+	/// <summary>
+	/// Gets the player state.
+	/// </summary>
+	public LavalinkPlayerState State { get; }
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="GuildPlayerDestroyedEventArgs"/> class.
+	/// </summary>
+	/// <param name="client">The discord client.</param>
+	/// <param name="state">The state.</param>
+	internal LavalinkPlayerStateUpdateEventArgs(DiscordClient client, LavalinkPlayerState state)
+		: base(client.ServiceProvider)
+	{
+		this.Discord = client;
+		this.State = state;
 	}
 }

@@ -22,26 +22,48 @@
 
 using System;
 
-using FluentAssertions;
+using Newtonsoft.Json;
 
-using Xunit;
+namespace DisCatSharp.Lavalink.Entities;
 
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// Represents a lavalink player state.
+/// </summary>
+public sealed class LavalinkPlayerState
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// Gets the current datetime offset.
+	/// </summary>
+	[JsonIgnore]
+	public DateTimeOffset Time => Utilities.GetDateTimeOffsetFromMilliseconds(this._time);
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
-	}
+	/// <summary>
+	/// Gets the unix timestamp in milliseconds.
+	/// </summary>
+	[JsonProperty("time")]
+	private readonly long _time;
+
+	/// <summary>
+	/// Gets the position of the track as <see cref="TimeSpan"/>.
+	/// </summary>
+	[JsonIgnore]
+	public TimeSpan Position => TimeSpan.FromMilliseconds(this._position);
+
+	/// <summary>
+	/// Gets the position of the track in milliseconds.
+	/// </summary>
+	[JsonProperty("position")]
+	private readonly long _position;
+
+	/// <summary>
+	/// Gets whether Lavalink is connected to the voice gateway.
+	/// </summary>
+	[JsonProperty("connected")]
+	public bool IsConnected { get; internal set; }
+
+	/// <summary>
+	/// Gets the ping of the node to the Discord voice server in milliseconds (<c>-1</c> if not connected).
+	/// </summary>
+	[JsonProperty("ping")]
+	public int Ping { get; internal set; }
 }

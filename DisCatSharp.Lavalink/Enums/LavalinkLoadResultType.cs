@@ -20,28 +20,46 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using System.Runtime.Serialization;
 
-using FluentAssertions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
-using Xunit;
+namespace DisCatSharp.Lavalink.Enums;
 
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// Represents Lavalink track loading results.
+/// </summary>
+[JsonConverter(typeof(StringEnumConverter))]
+public enum LavalinkLoadResultType
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// Specifies that track was loaded successfully.
+	/// </summary>
+	[EnumMember(Value = "track")]
+	Track,
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
-	}
+	/// <summary>
+	/// Specifies that playlist was loaded successfully.
+	/// </summary>
+	[EnumMember(Value = "playlist")]
+	Playlist,
+
+	/// <summary>
+	/// Specifies that the result set contains search results.
+	/// </summary>
+	[EnumMember(Value = "search")]
+	Search,
+
+	/// <summary>
+	/// Specifies that the search yielded no results.
+	/// </summary>
+	[EnumMember(Value = "empty")]
+	Empty,
+
+	/// <summary>
+	/// Specifies that the track failed to load.
+	/// </summary>
+	[EnumMember(Value = "error")]
+	Error
 }

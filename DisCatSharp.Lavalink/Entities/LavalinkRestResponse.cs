@@ -20,28 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using System.Net;
+using System.Net.Http.Headers;
 
-using FluentAssertions;
+namespace DisCatSharp.Lavalink.Entities;
 
-using Xunit;
-
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// Represents a response sent by the remote HTTP party.
+/// </summary>
+internal sealed class LavalinkRestResponse
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// Gets the response code sent by the remote party.
+	/// </summary>
+	public HttpStatusCode ResponseCode { get; internal set; }
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
-	}
+	/// <summary>
+	/// Gets the headers of the response send by the remote party.
+	/// </summary>
+	public HttpResponseHeaders Headers { get; internal set; } = null!;
+
+	/// <summary>
+	/// Gets the contents of the response sent by the remote party.
+	/// </summary>
+	public string? Response { get; internal set; }
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="LavalinkRestResponse"/> class.
+	/// </summary>
+	internal LavalinkRestResponse()
+	{ }
 }

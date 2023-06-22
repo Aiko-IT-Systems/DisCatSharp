@@ -20,28 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using Newtonsoft.Json;
 
-using FluentAssertions;
+namespace DisCatSharp.Lavalink.Payloads;
 
-using Xunit;
-
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// The voice dispatch.
+/// </summary>
+internal sealed class DiscordDispatchPayload
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// Gets or sets the op code.
+	/// </summary>
+	[JsonProperty("op")]
+	public int OpCode { get; set; }
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
-	}
+	/// <summary>
+	/// Gets or sets the payload.
+	/// </summary>
+	[JsonProperty("d")]
+	public object Payload { get; set; }
+
+	/// <summary>
+	/// Gets or sets the sequence.
+	/// </summary>
+	[JsonProperty("s", NullValueHandling = NullValueHandling.Ignore)]
+	public int? Sequence { get; set; }
+
+	/// <summary>
+	/// Gets or sets the event name.
+	/// </summary>
+	[JsonProperty("t", NullValueHandling = NullValueHandling.Ignore)]
+	public string EventName { get; set; }
 }

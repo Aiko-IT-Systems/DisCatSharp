@@ -20,28 +20,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using Newtonsoft.Json;
 
-using FluentAssertions;
+namespace DisCatSharp.Lavalink.Payloads;
 
-using Xunit;
-
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// The discord voice state update payload.
+/// </summary>
+internal sealed class VoiceStateUpdatePayload
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// Gets or sets the guild id.
+	/// </summary>
+	[JsonProperty("guild_id")]
+	internal ulong GuildId { get; set; }
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
-	}
+	/// <summary>
+	/// Gets or sets the channel id.
+	/// </summary>
+	[JsonProperty("channel_id")]
+	internal ulong? ChannelId { get; set; }
+
+	/// <summary>
+	/// Gets or sets the user id.
+	/// </summary>
+	[JsonProperty("user_id", NullValueHandling = NullValueHandling.Ignore)]
+	internal ulong? UserId { get; set; }
+
+	/// <summary>
+	/// Gets or sets the session id.
+	/// </summary>
+	[JsonProperty("session_id", NullValueHandling = NullValueHandling.Ignore)]
+	internal string SessionId { get; set; }
+
+	/// <summary>
+	/// Gets or sets a value indicating whether deafened.
+	/// </summary>
+	[JsonProperty("self_deaf")]
+	internal bool Deafened { get; set; }
+
+	/// <summary>
+	/// Gets or sets a value indicating whether muted.
+	/// </summary>
+	[JsonProperty("self_mute")]
+	internal bool Muted { get; set; }
 }

@@ -20,28 +20,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using System.Collections.Generic;
 
-using FluentAssertions;
+using Newtonsoft.Json;
 
-using Xunit;
+namespace DisCatSharp.Lavalink.Entities;
 
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// Represents a lavalink playlist result.
+/// </summary>
+public sealed class LavalinkPlaylist
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// Gets the lavalink playlist info.
+	/// </summary>
+	[JsonProperty("info")]
+	public LavalinkPlaylistInfo Info { get; internal set; }
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
-	}
+	/// <summary>
+	/// Gets the lavalink plugin info.
+	/// </summary>
+	[JsonProperty("pluginInfo")]
+	public LavalinkPluginInfo PluginInfo { get; internal set; }
+
+	/// <summary>
+	/// Gets the loaded tracks.
+	/// </summary>
+	[JsonProperty("tracks")]
+	public List<LavalinkTrack> Tracks { get; internal set; }
 }

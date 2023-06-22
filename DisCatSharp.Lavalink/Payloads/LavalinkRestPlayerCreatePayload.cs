@@ -20,28 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using Newtonsoft.Json;
 
-using FluentAssertions;
+namespace DisCatSharp.Lavalink.Payloads;
 
-using Xunit;
-
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// The lavalink rest player create payload.
+/// </summary>
+internal sealed class LavalinkRestPlayerCreatePayload
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// Gets or sets the guild id.
+	/// </summary>
+	[JsonProperty("guildId")]
+	internal string GuildId { get; set; }
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
+	/// <summary>
+	/// Gets or sets the volume.
+	/// </summary>
+	[JsonProperty("volume")]
+	internal int Volume { get; set; }
+
+	/// <summary>
+	/// Constructs a new <see cref="LavalinkRestPlayerCreatePayload"/>.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="volume">The volume.</param>
+	internal LavalinkRestPlayerCreatePayload(string guildId, int volume)
+	{
+		this.GuildId = guildId;
+		this.Volume = volume;
 	}
 }

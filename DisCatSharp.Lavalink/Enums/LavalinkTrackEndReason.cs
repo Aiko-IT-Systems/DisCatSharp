@@ -20,28 +20,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using System.Runtime.Serialization;
 
-using FluentAssertions;
+using DisCatSharp.Lavalink.Entities;
 
-using Xunit;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
-namespace DisCatSharp.SafetyTests;
+namespace DisCatSharp.Lavalink.Enums;
 
-public class HttpTests
+/// <summary>
+/// Represents reasons why a <see cref="LavalinkTrack"/> ended.
+/// </summary>
+[JsonConverter(typeof(StringEnumConverter))]
+public enum LavalinkTrackEndReason
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// The track was finished.
+	/// </summary>
+	[EnumMember(Value = "finished")]
+	Finished,
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
-	}
+	/// <summary>
+	/// The track was failed to load.
+	/// </summary>
+	[EnumMember(Value = "loadFailed")]
+	LoadFailed,
+
+	/// <summary>
+	/// The track was stopped.
+	/// </summary>
+	[EnumMember(Value = "stopped")]
+	Stopped,
+
+	/// <summary>
+	/// The track was replaced.
+	/// </summary>
+	[EnumMember(Value = "replaced")]
+	Replaced,
+
+	/// <summary>
+	/// The track was cleaned up.
+	/// </summary>
+	[EnumMember(Value = "cleanup")]
+	Cleanup
 }

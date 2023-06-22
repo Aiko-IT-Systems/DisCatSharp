@@ -20,28 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using DisCatSharp.Entities;
 
-using FluentAssertions;
+using Newtonsoft.Json;
 
-using Xunit;
+namespace DisCatSharp.Lavalink.Entities.Filters;
 
-namespace DisCatSharp.SafetyTests;
-
-public class HttpTests
+/// <summary>
+/// Uses amplification to create a shuddering effect, where the volume quickly oscillates.
+/// </summary>
+public sealed class LavalinkTremolo
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
-	public void BuiltInRestClientEnsureNoAuthorization()
-	{
-		DiscordClient client = new(new() { Token = "super_secret_bot_token" });
-		var action = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action.Should()
-			.Throw<InvalidOperationException>()
-			.WithMessage("The given header was not found.");
+	/// <summary>
+	/// The frequency. (<c>>0.0</c>)
+	/// </summary>
+	[JsonProperty("frequency")]
+	public Optional<float> Frequency { get; set; }
 
-		client.RestClient.DefaultRequestHeaders.Add("Authorization", "not_so_secret_manual_token");
-		var action2 = () => client.RestClient.DefaultRequestHeaders.GetValues("Authorization").ToString();
-		action2.Should()
-			.NotThrow<InvalidOperationException>();
+	/// <summary>
+	/// The tromelo depth. (<c>>0.0</c>)
+	/// </summary>
+	[JsonProperty("depth")]
+	public Optional<float> Depth { get; set; }
+
+	/// <inheritdoc cref="LavalinkTremolo"/>
+	/// <param name="frequency">The frequency. (<c>>0.0</c>)</param>
+	/// <param name="depth">The tromelo depth. (<c>>0.0</c>)</param>
+	public LavalinkTremolo(Optional<float> frequency, Optional<float> depth)
+	{
+		this.Frequency = frequency;
+		this.Depth = depth;
 	}
 }
