@@ -25,7 +25,7 @@ using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Lavalink;
+namespace DisCatSharp.LavalinkV1.Entities;
 
 /// <summary>
 /// Represents Lavalink equalizer band adjustment. This is used to alter the sound output by using Lavalink's equalizer.

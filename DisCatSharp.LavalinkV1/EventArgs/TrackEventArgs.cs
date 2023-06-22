@@ -22,7 +22,7 @@
 
 using DisCatSharp.EventArgs;
 
-namespace DisCatSharp.Lavalink.EventArgs;
+namespace DisCatSharp.LavalinkV1.EventArgs;
 
 /// <summary>
 /// The event type.

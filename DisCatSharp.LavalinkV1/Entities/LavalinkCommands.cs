@@ -26,7 +26,7 @@ using System.Linq;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Lavalink.Entities;
+namespace DisCatSharp.LavalinkV1.Entities;
 
 /// <summary>
 /// The lavalink configure resume.

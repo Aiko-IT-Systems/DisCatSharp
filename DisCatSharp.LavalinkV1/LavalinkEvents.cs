@@ -22,7 +22,7 @@
 
 using Microsoft.Extensions.Logging;
 
-namespace DisCatSharp.Lavalink;
+namespace DisCatSharp.LavalinkV1;
 
 /// <summary>
 /// Contains well-defined event IDs used by the Lavalink extension.

@@ -20,43 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using Newtonsoft.Json;
 
-using DisCatSharp.EventArgs;
-
-namespace DisCatSharp.Lavalink.EventArgs;
+namespace DisCatSharp.LavalinkV1.Entities;
 
 /// <summary>
-/// Represents arguments for <see cref="LavalinkGuildConnection.DiscordWebSocketClosed"/> event.
+/// The voice dispatch.
 /// </summary>
-public sealed class WebSocketCloseEventArgs : DiscordEventArgs
+internal sealed class VoiceDispatch
 {
 	/// <summary>
-	/// Gets the WebSocket close code.
+	/// Gets or sets the op code.
 	/// </summary>
-	public int Code { get; }
+	[JsonProperty("op")]
+	public int OpCode { get; set; }
 
 	/// <summary>
-	/// Gets the WebSocket close reason.
+	/// Gets or sets the payload.
 	/// </summary>
-	public string Reason { get; }
+	[JsonProperty("d")]
+	public object Payload { get; set; }
 
 	/// <summary>
-	/// Gets whether the termination was initiated by the remote party (i.e. Discord).
+	/// Gets or sets the sequence.
 	/// </summary>
-	public bool Remote { get; }
+	[JsonProperty("s", NullValueHandling = NullValueHandling.Ignore)]
+	public int? Sequence { get; set; }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="WebSocketCloseEventArgs"/> class.
+	/// Gets or sets the event name.
 	/// </summary>
-	/// <param name="code">The code.</param>
-	/// <param name="reason">The reason.</param>
-	/// <param name="remote">If true, remote.</param>
-	/// <param name="provider">Service provider.</param>
-	internal WebSocketCloseEventArgs(int code, string reason, bool remote, IServiceProvider provider) : base(provider)
-	{
-		this.Code = code;
-		this.Reason = reason;
-		this.Remote = remote;
-	}
+	[JsonProperty("t", NullValueHandling = NullValueHandling.Ignore)]
+	public string EventName { get; set; }
 }

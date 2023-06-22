@@ -28,10 +28,10 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
-using DisCatSharp.Lavalink.EventArgs;
+using DisCatSharp.LavalinkV1.EventArgs;
 using DisCatSharp.Net;
 
-namespace DisCatSharp.Lavalink;
+namespace DisCatSharp.LavalinkV1;
 
 /// <summary>
 /// The lavalink extension.
@@ -139,7 +139,7 @@ public sealed class LavalinkExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Gets a Lavalink guild connection from a <see cref="DisCatSharp.Entities.DiscordGuild"/>.
+	/// Gets a Lavalink guild connection from a <see cref="DiscordGuild"/>.
 	/// </summary>
 	/// <param name="guild">The guild the connection is on.</param>
 	/// <returns>The found guild connection, or null if one could not be found.</returns>
@@ -169,27 +169,27 @@ public sealed class LavalinkExtension : BaseExtension
 			var bPenaltyCount = b.Statistics.ActivePlayers;
 
 			//cpu load
-			aPenaltyCount += (int)Math.Pow(1.05d, (100 * (a.Statistics.CpuSystemLoad / a.Statistics.CpuCoreCount) * 10) - 10);
-			bPenaltyCount += (int)Math.Pow(1.05d, (100 * (b.Statistics.CpuSystemLoad / a.Statistics.CpuCoreCount) * 10) - 10);
+			aPenaltyCount += (int)Math.Pow(1.05d, 100 * (a.Statistics.CpuSystemLoad / a.Statistics.CpuCoreCount) * 10 - 10);
+			bPenaltyCount += (int)Math.Pow(1.05d, 100 * (b.Statistics.CpuSystemLoad / a.Statistics.CpuCoreCount) * 10 - 10);
 
 			//frame load
 			if (a.Statistics.AverageDeficitFramesPerMinute > 0)
 			{
 				//deficit frame load
-				aPenaltyCount += (int)((Math.Pow(1.03d, 500f * (a.Statistics.AverageDeficitFramesPerMinute / 3000f)) * 600) - 600);
+				aPenaltyCount += (int)(Math.Pow(1.03d, 500f * (a.Statistics.AverageDeficitFramesPerMinute / 3000f)) * 600 - 600);
 
 				//null frame load
-				aPenaltyCount += (int)((Math.Pow(1.03d, 500f * (a.Statistics.AverageNulledFramesPerMinute / 3000f)) * 300) - 300);
+				aPenaltyCount += (int)(Math.Pow(1.03d, 500f * (a.Statistics.AverageNulledFramesPerMinute / 3000f)) * 300 - 300);
 			}
 
 			//frame load
 			if (b.Statistics.AverageDeficitFramesPerMinute > 0)
 			{
 				//deficit frame load
-				bPenaltyCount += (int)((Math.Pow(1.03d, 500f * (b.Statistics.AverageDeficitFramesPerMinute / 3000f)) * 600) - 600);
+				bPenaltyCount += (int)(Math.Pow(1.03d, 500f * (b.Statistics.AverageDeficitFramesPerMinute / 3000f)) * 600 - 600);
 
 				//null frame load
-				bPenaltyCount += (int)((Math.Pow(1.03d, 500f * (b.Statistics.AverageNulledFramesPerMinute / 3000f)) * 300) - 300);
+				bPenaltyCount += (int)(Math.Pow(1.03d, 500f * (b.Statistics.AverageNulledFramesPerMinute / 3000f)) * 300 - 300);
 			}
 
 			return aPenaltyCount - bPenaltyCount;

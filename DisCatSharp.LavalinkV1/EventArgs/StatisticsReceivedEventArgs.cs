@@ -20,33 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using DisCatSharp.EventArgs;
+using System;
 
-namespace DisCatSharp.Lavalink.EventArgs;
+using DisCatSharp.EventArgs;
+using DisCatSharp.LavalinkV1.Entities;
+
+namespace DisCatSharp.LavalinkV1.EventArgs;
 
 /// <summary>
-/// Represents event arguments for Lavalink node disconnection.
+/// Represents arguments for Lavalink statistics received.
 /// </summary>
-public sealed class NodeDisconnectedEventArgs : DiscordEventArgs
+public sealed class StatisticsReceivedEventArgs : DiscordEventArgs
 {
 	/// <summary>
-	/// Gets the node that was disconnected.
+	/// Gets the Lavalink statistics received.
 	/// </summary>
-	public LavalinkNodeConnection LavalinkNode { get; }
+	public LavalinkStatistics Statistics { get; }
+
 
 	/// <summary>
-	/// Gets whether disconnect was clean.
+	/// Initializes a new instance of the <see cref="StatisticsReceivedEventArgs"/> class.
 	/// </summary>
-	public bool IsCleanClose { get; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="NodeDisconnectedEventArgs"/> class.
-	/// </summary>
-	/// <param name="node">The node.</param>
-	/// <param name="isClean">If true, is clean.</param>
-	internal NodeDisconnectedEventArgs(LavalinkNodeConnection node, bool isClean) : base(node.Discord.ServiceProvider)
+	/// <param name="provider">Service provider.</param>
+	/// <param name="stats">The stats.</param>
+	internal StatisticsReceivedEventArgs(IServiceProvider provider, LavalinkStatistics stats) : base(provider)
 	{
-		this.LavalinkNode = node;
-		this.IsCleanClose = isClean;
+		this.Statistics = stats;
 	}
 }

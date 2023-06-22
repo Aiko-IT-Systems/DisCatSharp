@@ -26,7 +26,7 @@ using DisCatSharp.EventArgs;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Lavalink.Entities;
+namespace DisCatSharp.LavalinkV1.Entities;
 
 /// <summary>
 /// The lavalink voice server update.

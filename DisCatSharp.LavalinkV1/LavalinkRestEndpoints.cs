@@ -20,36 +20,47 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Newtonsoft.Json;
-
-namespace DisCatSharp.Lavalink.Entities;
+namespace DisCatSharp.LavalinkV1;
 
 /// <summary>
-/// The voice dispatch.
+/// Represents the lavalink endpoints.
 /// </summary>
-internal sealed class VoiceDispatch
+internal static class Endpoints
 {
 	/// <summary>
-	/// Gets or sets the op code.
+	/// The version endpoint.
 	/// </summary>
-	[JsonProperty("op")]
-	public int OpCode { get; set; }
+	internal const string VERSION = "/version";
 
+	//Track loading
 	/// <summary>
-	/// Gets or sets the payload.
+	/// The load tracks endpoint.
 	/// </summary>
-	[JsonProperty("d")]
-	public object Payload { get; set; }
+	internal const string LOAD_TRACKS = "/loadtracks";
+	/// <summary>
+	/// The decode track endpoint.
+	/// </summary>
+	internal const string DECODE_TRACK = "/decodetrack";
+	/// <summary>
+	/// The decode tracks endpoint.
+	/// </summary>
+	internal const string DECODE_TRACKS = "/decodetracks";
 
+	//Route Planner
 	/// <summary>
-	/// Gets or sets the sequence.
+	/// The route planner endpoint.
 	/// </summary>
-	[JsonProperty("s", NullValueHandling = NullValueHandling.Ignore)]
-	public int? Sequence { get; set; }
-
+	internal const string ROUTE_PLANNER = "/routeplanner";
 	/// <summary>
-	/// Gets or sets the event name.
+	/// The status endpoint.
 	/// </summary>
-	[JsonProperty("t", NullValueHandling = NullValueHandling.Ignore)]
-	public string EventName { get; set; }
+	internal const string STATUS = "/status";
+	/// <summary>
+	/// The free address endpoint.
+	/// </summary>
+	internal const string FREE_ADDRESS = "/free/address";
+	/// <summary>
+	/// The free all endpoint.
+	/// </summary>
+	internal const string FREE_ALL = "/free/all";
 }

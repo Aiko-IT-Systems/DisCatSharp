@@ -9,13 +9,13 @@
   <Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
 
   <PropertyGroup>
-    <AssemblyName>DisCatSharp.Lavalink</AssemblyName>
-    <RootNamespace>DisCatSharp.Lavalink</RootNamespace>
+    <AssemblyName>DisCatSharp.LavalinkV1</AssemblyName>
+    <RootNamespace>DisCatSharp.LavalinkV1</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>DisCatSharp.Lavalink</PackageId>
+    <PackageId>DisCatSharp.LavalinkV1</PackageId>
 	<Description>
 DisCatSharp Lavalink Extension
 

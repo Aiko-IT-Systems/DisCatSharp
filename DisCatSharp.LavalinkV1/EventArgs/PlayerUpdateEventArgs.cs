@@ -20,35 +20,50 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Lavalink;
+using System;
+
+using DisCatSharp.EventArgs;
+
+namespace DisCatSharp.LavalinkV1.EventArgs;
 
 /// <summary>
-/// The lavalink search type.
+/// Represents arguments for player update event.
 /// </summary>
-public enum LavalinkSearchType
+public sealed class PlayerUpdateEventArgs : DiscordEventArgs
 {
 	/// <summary>
-	/// Search on SoundCloud
+	/// Gets the timestamp at which this event was emitted.
 	/// </summary>
-	SoundCloud,
+	public DateTimeOffset Timestamp { get; }
 
 	/// <summary>
-	/// Search on Youtube.
+	/// Gets the position in the playback stream.
 	/// </summary>
-	Youtube,
+	public TimeSpan Position { get; }
 
 	/// <summary>
-	/// Provide Lavalink with a plain URL.
+	/// Gets the player that emitted this event.
 	/// </summary>
-	Plain,
+	public LavalinkGuildConnection Player { get; }
 
 	/// <summary>
-	/// Search on Spotify.
+	/// Gets whether the player is connected to the voice gateway.
 	/// </summary>
-	Spotify,
+	public bool IsConnected { get; }
 
 	/// <summary>
-	/// Search on Apple Music
+	/// Initializes a new instance of the <see cref="PlayerUpdateEventArgs"/> class.
 	/// </summary>
-	AppleMusic
+	/// <param name="lvl">The lvl.</param>
+	/// <param name="timestamp">The timestamp.</param>
+	/// <param name="position">The position.</param>
+	/// <param name="connected">Whether the player is connected.</param>
+	internal PlayerUpdateEventArgs(LavalinkGuildConnection lvl, DateTimeOffset timestamp, TimeSpan position, bool connected)
+		: base(lvl.Node.Discord.ServiceProvider)
+	{
+		this.Player = lvl;
+		this.Timestamp = timestamp;
+		this.Position = position;
+		this.IsConnected = connected;
+	}
 }

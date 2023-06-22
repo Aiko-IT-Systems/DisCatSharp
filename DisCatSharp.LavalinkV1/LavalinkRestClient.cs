@@ -29,7 +29,8 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 
-using DisCatSharp.Lavalink.Entities;
+using DisCatSharp.LavalinkV1.Entities;
+using DisCatSharp.LavalinkV1.Enums;
 using DisCatSharp.Net;
 
 using Microsoft.Extensions.Logging;
@@ -37,7 +38,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace DisCatSharp.Lavalink;
+namespace DisCatSharp.LavalinkV1;
 
 /// <summary>
 /// Represents a class for Lavalink REST calls.
@@ -192,7 +193,7 @@ public sealed class LavalinkRestClient
 	/// <summary>
 	/// Retrieves statistics from the route planner.
 	/// </summary>
-	/// <returns>The status (<see cref="DisCatSharp.Lavalink.Entities.LavalinkRouteStatus"/>) details.</returns>
+	/// <returns>The status (<see cref="LavalinkRouteStatus"/>) details.</returns>
 	public Task<LavalinkRouteStatus> GetRoutePlannerStatusAsync()
 	{
 		var routeStatusUri = new Uri($"{this.RestEndpoint.ToHttpString()}{Endpoints.ROUTE_PLANNER}{Endpoints.STATUS}");

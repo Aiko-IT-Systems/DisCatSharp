@@ -23,28 +23,40 @@
 using System;
 
 using DisCatSharp.EventArgs;
-using DisCatSharp.Lavalink.Entities;
 
-namespace DisCatSharp.Lavalink.EventArgs;
+namespace DisCatSharp.LavalinkV1.EventArgs;
 
 /// <summary>
-/// Represents arguments for Lavalink statistics received.
+/// Represents arguments for <see cref="LavalinkGuildConnection.DiscordWebSocketClosed"/> event.
 /// </summary>
-public sealed class StatisticsReceivedEventArgs : DiscordEventArgs
+public sealed class WebSocketCloseEventArgs : DiscordEventArgs
 {
 	/// <summary>
-	/// Gets the Lavalink statistics received.
+	/// Gets the WebSocket close code.
 	/// </summary>
-	public LavalinkStatistics Statistics { get; }
-
+	public int Code { get; }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="StatisticsReceivedEventArgs"/> class.
+	/// Gets the WebSocket close reason.
 	/// </summary>
+	public string Reason { get; }
+
+	/// <summary>
+	/// Gets whether the termination was initiated by the remote party (i.e. Discord).
+	/// </summary>
+	public bool Remote { get; }
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="WebSocketCloseEventArgs"/> class.
+	/// </summary>
+	/// <param name="code">The code.</param>
+	/// <param name="reason">The reason.</param>
+	/// <param name="remote">If true, remote.</param>
 	/// <param name="provider">Service provider.</param>
-	/// <param name="stats">The stats.</param>
-	internal StatisticsReceivedEventArgs(IServiceProvider provider, LavalinkStatistics stats) : base(provider)
+	internal WebSocketCloseEventArgs(int code, string reason, bool remote, IServiceProvider provider) : base(provider)
 	{
-		this.Statistics = stats;
+		this.Code = code;
+		this.Reason = reason;
+		this.Remote = remote;
 	}
 }

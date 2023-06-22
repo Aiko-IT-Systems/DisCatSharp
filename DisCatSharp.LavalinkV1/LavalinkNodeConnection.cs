@@ -28,12 +28,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using DisCatSharp;
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Lavalink.Entities;
 using DisCatSharp.Lavalink.EventArgs;
+using DisCatSharp.LavalinkV1.Entities;
+using DisCatSharp.LavalinkV1.EventArgs;
 using DisCatSharp.Net;
 using DisCatSharp.Net.WebSocket;
 
@@ -42,7 +45,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace DisCatSharp.Lavalink;
+namespace DisCatSharp.LavalinkV1;
 
 internal delegate void NodeDisconnectedEventHandler(LavalinkNodeConnection node);
 
@@ -262,7 +265,6 @@ public sealed class LavalinkNodeConnection
 			this._webSocket.AddDefaultHeader("Resume-Key", this.Configuration.ResumeKey);
 
 		do
-		{
 			try
 			{
 				if (this._backoff != 0)
@@ -271,9 +273,7 @@ public sealed class LavalinkNodeConnection
 					this._backoff = Math.Min(this._backoff * 2, MAXIMUM_BACKOFF);
 				}
 				else
-				{
 					this._backoff = MINIMUM_BACKOFF;
-				}
 
 				await this._webSocket.ConnectAsync(new Uri(this.Configuration.SocketEndpoint.ToWebSocketString())).ConfigureAwait(false);
 				break;
@@ -290,11 +290,8 @@ public sealed class LavalinkNodeConnection
 					throw;
 				}
 				else
-				{
 					this.Discord.Logger.LogCritical(LavalinkEvents.LavalinkConnectionError, ex, $"Failed to connect to Lavalink, retrying in {this._backoff} ms.");
-				}
 			}
-		}
 		while (this.Configuration.SocketAutoReconnect);
 
 		Volatile.Write(ref this._isDisposed, false);
@@ -327,7 +324,7 @@ public sealed class LavalinkNodeConnection
 		if (this.ConnectedGuildsInternal.TryGetValue(channel.Guild.Id, out var connectedGuild))
 			return connectedGuild;
 
-		if (channel.Guild == null || (channel.Type != ChannelType.Voice && channel.Type != ChannelType.Stage))
+		if (channel.Guild == null || channel.Type != ChannelType.Voice && channel.Type != ChannelType.Stage)
 			throw new ArgumentException("Invalid channel specified.", nameof(channel));
 
 		var vstut = new TaskCompletionSource<VoiceStateUpdateEventArgs>();
@@ -570,7 +567,6 @@ public sealed class LavalinkNodeConnection
 				lvlgc.VoiceStateUpdate = e;
 
 			if (e.After.Channel == null && this.IsConnected && this.ConnectedGuildsInternal.ContainsKey(gld.Id))
-			{
 				_ = Task.Run(async () =>
 				{
 					var delayTask = Task.Delay(this.Configuration.WebSocketCloseTimeout);
@@ -580,7 +576,6 @@ public sealed class LavalinkNodeConnection
 					await lvlgc.DisconnectInternalAsync(false, true).ConfigureAwait(false);
 					_ = this.ConnectedGuildsInternal.TryRemove(gld.Id, out _);
 				});
-			}
 
 			if (!string.IsNullOrWhiteSpace(e.SessionId) && e.Channel != null && this._voiceStateUpdates.TryRemove(gld.Id, out var xe))
 				xe.SetResult(e);

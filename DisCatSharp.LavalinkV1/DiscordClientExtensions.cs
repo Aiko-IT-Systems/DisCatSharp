@@ -31,7 +31,7 @@ using DisCatSharp.Enums;
 
 using Microsoft.Extensions.Logging;
 
-namespace DisCatSharp.Lavalink;
+namespace DisCatSharp.LavalinkV1;
 
 /// <summary>
 /// The discord client extensions.
@@ -96,9 +96,7 @@ public static class DiscordClientExtensions
 		var extensions = new Dictionary<int, LavalinkExtension>();
 
 		foreach (var shard in client.ShardClients.Values)
-		{
 			extensions.Add(shard.ShardId, shard.GetExtension<LavalinkExtension>());
-		}
 
 		return new ReadOnlyDictionary<int, LavalinkExtension>(extensions);
 	}

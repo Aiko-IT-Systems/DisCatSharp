@@ -20,47 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Lavalink;
+namespace DisCatSharp.LavalinkV1.Enums;
 
 /// <summary>
-/// Represents the lavalink endpoints.
+/// The lavalink search type.
 /// </summary>
-internal static class Endpoints
+public enum LavalinkSearchType
 {
 	/// <summary>
-	/// The version endpoint.
+	/// Search on SoundCloud
 	/// </summary>
-	internal const string VERSION = "/version";
+	SoundCloud,
 
-	//Track loading
 	/// <summary>
-	/// The load tracks endpoint.
+	/// Search on Youtube.
 	/// </summary>
-	internal const string LOAD_TRACKS = "/loadtracks";
-	/// <summary>
-	/// The decode track endpoint.
-	/// </summary>
-	internal const string DECODE_TRACK = "/decodetrack";
-	/// <summary>
-	/// The decode tracks endpoint.
-	/// </summary>
-	internal const string DECODE_TRACKS = "/decodetracks";
+	Youtube,
 
-	//Route Planner
 	/// <summary>
-	/// The route planner endpoint.
+	/// Provide Lavalink with a plain URL.
 	/// </summary>
-	internal const string ROUTE_PLANNER = "/routeplanner";
+	Plain,
+
 	/// <summary>
-	/// The status endpoint.
+	/// Search on Spotify.
 	/// </summary>
-	internal const string STATUS = "/status";
+	Spotify,
+
 	/// <summary>
-	/// The free address endpoint.
+	/// Search on Apple Music
 	/// </summary>
-	internal const string FREE_ADDRESS = "/free/address";
-	/// <summary>
-	/// The free all endpoint.
-	/// </summary>
-	internal const string FREE_ALL = "/free/all";
+	AppleMusic
 }

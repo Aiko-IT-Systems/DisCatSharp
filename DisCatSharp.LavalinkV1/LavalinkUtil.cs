@@ -24,9 +24,9 @@ using System;
 using System.IO;
 using System.Text;
 
-using DisCatSharp.Lavalink.EventArgs;
+using DisCatSharp.LavalinkV1.EventArgs;
 
-namespace DisCatSharp.Lavalink;
+namespace DisCatSharp.LavalinkV1;
 
 /// <summary>
 /// Various utilities for Lavalink.

@@ -20,50 +20,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using Newtonsoft.Json;
 
-using DisCatSharp.EventArgs;
-
-namespace DisCatSharp.Lavalink.EventArgs;
+namespace DisCatSharp.LavalinkV1.Entities;
 
 /// <summary>
-/// Represents arguments for player update event.
+/// The lavalink payload.
 /// </summary>
-public sealed class PlayerUpdateEventArgs : DiscordEventArgs
+internal abstract class LavalinkPayload
 {
 	/// <summary>
-	/// Gets the timestamp at which this event was emitted.
+	/// Gets the operation.
 	/// </summary>
-	public DateTimeOffset Timestamp { get; }
+	[JsonProperty("op")]
+	public string Operation { get; }
 
 	/// <summary>
-	/// Gets the position in the playback stream.
+	/// Gets the guild id.
 	/// </summary>
-	public TimeSpan Position { get; }
+	[JsonProperty("guildId", NullValueHandling = NullValueHandling.Ignore)]
+	public string GuildId { get; }
 
 	/// <summary>
-	/// Gets the player that emitted this event.
+	/// Initializes a new instance of the <see cref="LavalinkPayload"/> class.
 	/// </summary>
-	public LavalinkGuildConnection Player { get; }
-
-	/// <summary>
-	/// Gets whether the player is connected to the voice gateway.
-	/// </summary>
-	public bool IsConnected { get; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="PlayerUpdateEventArgs"/> class.
-	/// </summary>
-	/// <param name="lvl">The lvl.</param>
-	/// <param name="timestamp">The timestamp.</param>
-	/// <param name="position">The position.</param>
-	/// <param name="connected">Whether the player is connected.</param>
-	internal PlayerUpdateEventArgs(LavalinkGuildConnection lvl, DateTimeOffset timestamp, TimeSpan position, bool connected)
-		: base(lvl.Node.Discord.ServiceProvider)
+	/// <param name="opcode">The opcode.</param>
+	internal LavalinkPayload(string opcode)
 	{
-		this.Player = lvl;
-		this.Timestamp = timestamp;
-		this.Position = position;
-		this.IsConnected = connected;
+		this.Operation = opcode;
+	}
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="LavalinkPayload"/> class.
+	/// </summary>
+	/// <param name="opcode">The opcode.</param>
+	/// <param name="guildId">The guild id.</param>
+	internal LavalinkPayload(string opcode, string guildId)
+	{
+		this.Operation = opcode;
+		this.GuildId = guildId;
 	}
 }

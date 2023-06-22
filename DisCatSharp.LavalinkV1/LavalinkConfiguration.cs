@@ -25,7 +25,7 @@ using DisCatSharp.Net;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DisCatSharp.Lavalink;
+namespace DisCatSharp.LavalinkV1;
 
 /// <summary>
 /// Lavalink connection configuration.

@@ -31,11 +31,13 @@ using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Lavalink.Entities;
-using DisCatSharp.Lavalink.EventArgs;
+using DisCatSharp.LavalinkV1.Entities;
+using DisCatSharp.LavalinkV1.Enums;
+using DisCatSharp.LavalinkV1.EventArgs;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Lavalink;
+namespace DisCatSharp.LavalinkV1;
 
 internal delegate void ChannelDisconnectedEventHandler(LavalinkGuildConnection node);
 

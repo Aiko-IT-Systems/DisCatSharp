@@ -20,30 +20,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Lavalink;
+using Newtonsoft.Json;
+
+namespace DisCatSharp.LavalinkV1.Entities;
 
 /// <summary>
-/// The lavalink route planner type.
+/// The voice state update payload.
 /// </summary>
-public enum LavalinkRoutePlannerType
+internal sealed class VoiceStateUpdatePayload
 {
 	/// <summary>
-	/// Route planner that switches the IP on ban.
+	/// Gets or sets the guild id.
 	/// </summary>
-	RotatingIpRoutePlanner = 1,
+	[JsonProperty("guild_id")]
+	public ulong GuildId { get; set; }
 
 	/// <summary>
-	/// Route planner that selects random IP addresses from the given block.
+	/// Gets or sets the channel id.
 	/// </summary>
-	BalancingIpRoutePlanner = 2,
+	[JsonProperty("channel_id")]
+	public ulong? ChannelId { get; set; }
 
 	/// <summary>
-	/// Route planner that switches the IP on every clock update.
+	/// Gets or sets the user id.
 	/// </summary>
-	NanoIpRoutePlanner = 3,
+	[JsonProperty("user_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? UserId { get; set; }
 
 	/// <summary>
-	/// Route planner that switches the IP on every clock update and rotates to next IP block on a ban as a fallback.
+	/// Gets or sets the session id.
 	/// </summary>
-	RotatingNanoIpRoutePlanner = 4
+	[JsonProperty("session_id", NullValueHandling = NullValueHandling.Ignore)]
+	public string SessionId { get; set; }
+
+	/// <summary>
+	/// Gets or sets a value indicating whether deafened.
+	/// </summary>
+	[JsonProperty("self_deaf")]
+	public bool Deafened { get; set; }
+
+	/// <summary>
+	/// Gets or sets a value indicating whether muted.
+	/// </summary>
+	[JsonProperty("self_mute")]
+	public bool Muted { get; set; }
 }

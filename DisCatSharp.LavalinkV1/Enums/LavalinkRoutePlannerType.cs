@@ -20,44 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Newtonsoft.Json;
-
-namespace DisCatSharp.Lavalink.Entities;
+namespace DisCatSharp.LavalinkV1.Enums;
 
 /// <summary>
-/// The lavalink payload.
+/// The lavalink route planner type.
 /// </summary>
-internal abstract class LavalinkPayload
+public enum LavalinkRoutePlannerType
 {
 	/// <summary>
-	/// Gets the operation.
+	/// Route planner that switches the IP on ban.
 	/// </summary>
-	[JsonProperty("op")]
-	public string Operation { get; }
+	RotatingIpRoutePlanner = 1,
 
 	/// <summary>
-	/// Gets the guild id.
+	/// Route planner that selects random IP addresses from the given block.
 	/// </summary>
-	[JsonProperty("guildId", NullValueHandling = NullValueHandling.Ignore)]
-	public string GuildId { get; }
+	BalancingIpRoutePlanner = 2,
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="LavalinkPayload"/> class.
+	/// Route planner that switches the IP on every clock update.
 	/// </summary>
-	/// <param name="opcode">The opcode.</param>
-	internal LavalinkPayload(string opcode)
-	{
-		this.Operation = opcode;
-	}
+	NanoIpRoutePlanner = 3,
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="LavalinkPayload"/> class.
+	/// Route planner that switches the IP on every clock update and rotates to next IP block on a ban as a fallback.
 	/// </summary>
-	/// <param name="opcode">The opcode.</param>
-	/// <param name="guildId">The guild id.</param>
-	internal LavalinkPayload(string opcode, string guildId)
-	{
-		this.Operation = opcode;
-		this.GuildId = guildId;
-	}
+	RotatingNanoIpRoutePlanner = 4
 }

@@ -20,48 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Newtonsoft.Json;
+using DisCatSharp.EventArgs;
 
-namespace DisCatSharp.Lavalink.Entities;
+namespace DisCatSharp.LavalinkV1.EventArgs;
 
 /// <summary>
-/// The voice state update payload.
+/// Represents event arguments for Lavalink node disconnection.
 /// </summary>
-internal sealed class VoiceStateUpdatePayload
+public sealed class NodeDisconnectedEventArgs : DiscordEventArgs
 {
 	/// <summary>
-	/// Gets or sets the guild id.
+	/// Gets the node that was disconnected.
 	/// </summary>
-	[JsonProperty("guild_id")]
-	public ulong GuildId { get; set; }
+	public LavalinkNodeConnection LavalinkNode { get; }
 
 	/// <summary>
-	/// Gets or sets the channel id.
+	/// Gets whether disconnect was clean.
 	/// </summary>
-	[JsonProperty("channel_id")]
-	public ulong? ChannelId { get; set; }
+	public bool IsCleanClose { get; }
 
 	/// <summary>
-	/// Gets or sets the user id.
+	/// Initializes a new instance of the <see cref="NodeDisconnectedEventArgs"/> class.
 	/// </summary>
-	[JsonProperty("user_id", NullValueHandling = NullValueHandling.Ignore)]
-	public ulong? UserId { get; set; }
-
-	/// <summary>
-	/// Gets or sets the session id.
-	/// </summary>
-	[JsonProperty("session_id", NullValueHandling = NullValueHandling.Ignore)]
-	public string SessionId { get; set; }
-
-	/// <summary>
-	/// Gets or sets a value indicating whether deafened.
-	/// </summary>
-	[JsonProperty("self_deaf")]
-	public bool Deafened { get; set; }
-
-	/// <summary>
-	/// Gets or sets a value indicating whether muted.
-	/// </summary>
-	[JsonProperty("self_mute")]
-	public bool Muted { get; set; }
+	/// <param name="node">The node.</param>
+	/// <param name="isClean">If true, is clean.</param>
+	internal NodeDisconnectedEventArgs(LavalinkNodeConnection node, bool isClean) : base(node.Discord.ServiceProvider)
+	{
+		this.LavalinkNode = node;
+		this.IsCleanClose = isClean;
+	}
 }
