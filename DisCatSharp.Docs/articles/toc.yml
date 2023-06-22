@@ -80,16 +80,6 @@
         href: modules/commandsnext/command_handler.md
   - name: Audio
     items:
-    - name: Lavalink
-      items:
-      - name: Setup
-        href: modules/audio/lavalink/setup.md
-      - name: Configuration
-        href: modules/audio/lavalink/configuration.md
-      - name: Music Commands
-        href: modules/audio/lavalink/music_commands.md
-      - name: Advanced
-        href: modules/audio/lavalink/advanced.md
     - name: Lavalink V4
       items:
       - name: Introduction
