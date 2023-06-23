@@ -83,7 +83,15 @@
     - name: Lavalink V4
       items:
       - name: Introduction
-        href: modules/audio/lavalinkv4/intro.md
+        uid: modules_audio_lavalink_v4_intro
+      - name: Setup
+        uid: modules_audio_lavalink_v4_setup
+      - name: Configuration
+        uid: modules_audio_lavalink_v4_configuration
+      - name: Music Commands
+        uid: modules_audio_lavalink_v4_music_commands
+      - name: Adcvanced
+        uid: modules_audio_lavalink_v4_advanced
     - name: VoiceNext
       items:
       - name: Prerequisites

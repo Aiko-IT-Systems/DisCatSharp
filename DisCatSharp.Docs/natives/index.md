@@ -6,9 +6,10 @@ author: DisCatSharp Team
 
 # Downloads
 Operating System|Download
-| -------------- | -------------------------------------------------- |
-| 64-bit Windows | [Click Here](/natives/vnext_natives_win32_x64.zip) |
-| 32-bit Windows | [Click Here](/natives/vnext_natives_win32_x86.zip) |
+| ------------------ | -------------------------------------------------- |
+| 64-bit Windows     | [Click Here](/natives/vnext_natives_win32_x64.zip) |
+| 32-bit Windows     | [Click Here](/natives/vnext_natives_win32_x86.zip) |
+| Lavalink V4 Server | [Click Here](/natives/Lavalink.jar) |
 
 # Licenses
 Library|License
