@@ -1,5 +1,5 @@
 ---
-uid: api_discatsharp_lavalinkv4_index
+uid: api_discatsharp_lavalink_v4_index
 title: DisCatSharp.LavalinkV4 API Reference
 author: DisCatSharp Team
 ---

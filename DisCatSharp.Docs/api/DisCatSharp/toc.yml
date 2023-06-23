@@ -252,6 +252,8 @@ items:
     name: DiscordOverwrite
   - uid: DisCatSharp.Entities.DiscordOverwriteBuilder
     name: DiscordOverwriteBuilder
+  - uid: DisCatSharp.Entities.DiscordOverwriteBuilderExtensions
+    name: DiscordOverwriteBuilderExtensions
   - uid: DisCatSharp.Entities.DiscordPresence
     name: DiscordPresence
   - uid: DisCatSharp.Entities.DiscordProtocol
@@ -344,6 +346,8 @@ items:
     name: None
   - uid: DisCatSharp.Entities.NullableSnowflakeObject
     name: NullableSnowflakeObject
+  - uid: DisCatSharp.Entities.ObservableApiObject
+    name: ObservableApiObject
   - uid: DisCatSharp.Entities.Optional
     name: Optional
   - uid: DisCatSharp.Entities.Optional`1
@@ -735,6 +739,10 @@ items:
   items:
   - uid: DisCatSharp.Exceptions.BadRequestException
     name: BadRequestException
+  - uid: DisCatSharp.Exceptions.DisCatSharpException
+    name: DisCatSharpException
+  - uid: DisCatSharp.Exceptions.DisCatSharpExceptionFilter
+    name: DisCatSharpExceptionFilter
   - uid: DisCatSharp.Exceptions.NotFoundException
     name: NotFoundException
   - uid: DisCatSharp.Exceptions.RateLimitException
