@@ -104,30 +104,7 @@
 	<meta name="theme-color" content="#ffffff">
 	<link rel="icon" href="{{_rel}}{{{_appFaviconPath}}}{{^_appFaviconPath}}favicon.ico{{/_appFaviconPath}}">
 	<link rel="shortcut icon" href="{{_rel}}{{{_appFaviconPath}}}{{^_appFaviconPath}}favicon.ico{{/_appFaviconPath}}">
-	<link rel="stylesheet" href="{{_rel}}public/docfx.min.css">
-	<link rel="stylesheet" href="{{_rel}}public/main.css">
-	<link href="//cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.css" type="text/css"
-		rel="stylesheet" />
-	<meta name="docfx:navrel" content="{{_navRel}}">
-	<meta name="docfx:tocrel" content="{{_tocRel}}">
-	{{#_noindex}}
-	<meta name="searchOption" content="noindex">{{/_noindex}}
-	{{#_enableSearch}}
-	<meta name="docfx:rel" content="{{_rel}}">{{/_enableSearch}}
-	{{#_disableNewTab}}
-	<meta name="docfx:disablenewtab" content="true">{{/_disableNewTab}}
-	{{#_disableTocFilter}}
-	<meta name="docfx:disabletocfilter" content="true">{{/_disableTocFilter}}
-	{{#docurl}}
-	<meta name="docfx:docurl" content="{{docurl}}">{{/docurl}}
-	<script src="//code.jquery.com/jquery-latest.js"></script>
-	<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
-		data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
-	<script type="module" src="{{_rel}}public/main.js"></script>
-	<script src="//cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.js" type="text/javascript"
-		charset="utf-8"></script>
-	<script type="text/javascript" src="{{_rel}}public/plugin-featherlight.js"></script>
-	{{#_enableReact}}
+	{{#hasDiscordComponents}}
 	<script>
       window.$discordMessage = {
         profiles: {
@@ -175,7 +152,30 @@
       };
 	</script>
 	<script type="module" src="https://unpkg.com/@skyra/discord-components-core"></script>
-	{{/_enableReact}}
+	{{/hasDiscordComponents}}
+	<link rel="stylesheet" href="{{_rel}}public/docfx.min.css">
+	<link rel="stylesheet" href="{{_rel}}public/main.css">
+	<link href="//cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.css" type="text/css"
+		rel="stylesheet" />
+	<meta name="docfx:navrel" content="{{_navRel}}">
+	<meta name="docfx:tocrel" content="{{_tocRel}}">
+	{{#_noindex}}
+	<meta name="searchOption" content="noindex">{{/_noindex}}
+	{{#_enableSearch}}
+	<meta name="docfx:rel" content="{{_rel}}">{{/_enableSearch}}
+	{{#_disableNewTab}}
+	<meta name="docfx:disablenewtab" content="true">{{/_disableNewTab}}
+	{{#_disableTocFilter}}
+	<meta name="docfx:disabletocfilter" content="true">{{/_disableTocFilter}}
+	{{#docurl}}
+	<meta name="docfx:docurl" content="{{docurl}}">{{/docurl}}
+	<script src="//code.jquery.com/jquery-latest.js"></script>
+	<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+		data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
+	<script type="module" src="{{_rel}}public/main.js"></script>
+	<script src="//cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script type="text/javascript" src="{{_rel}}public/plugin-featherlight.js"></script>
 	{{/redirect_url}}
 </head>
   {{^redirect_url}}
@@ -187,7 +187,7 @@
 
   <script>
     const theme = 'dark' //localStorage.getItem('theme') || 'auto'
-    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+    document.documentElement.setAttribute('data-bs-theme', 'dark') //document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
   </script>
 
 {{#_googleAnalyticsTagId}}

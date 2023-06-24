@@ -25,6 +25,15 @@ footer {
 
 .discord-messages {
 	background-color: #020202 !important;
+	color: #fff;
+	display: block;
+	font-size: 16px;
+	line-height: 170%;
+	border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.discord-messages, .discord-invite-counts, .discord-invite, .discord-invite-info, .discord-system-message, .discord-message, .discord-invite, .discord-attachments, .discord-replied-message {
+	font-family: var(--bs-font-sans-gg) !important;
 }
 
 a.discord-invite-join.external[href]::after {

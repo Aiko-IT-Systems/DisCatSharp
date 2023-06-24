@@ -2,7 +2,7 @@
 uid: home
 title: DisCatSharp
 author: DisCatSharp Team
-_enableReact: true
+hasDiscordComponents: true
 ---
 
 # DisCatSharp ![Stable](https://img.shields.io/nuget/v/DisCatSharp?color=1F8B4C&label=Stable&style=flat-square&logo=Nuget) ![Nightly](https://img.shields.io/nuget/vpre/DisCatSharp?color=AD1457&label=Nightly&style=flat-square&logo=Nuget)
