@@ -23,9 +23,17 @@ footer {
 	display: none !important;
 }
 
+.discord-messages {
+	background-color: #020202 !important;
+}
+
+a.discord-invite-join.external[href]::after {
+	content: '' !important;
+}
+
 [data-bs-theme=dark] {
-	--bs-content-bg: #313338 !important;
-	--bs-body-bg: #2B2D31 !important;
+	--bs-content-bg: #020202 !important;
+	--bs-body-bg: #0C0C0D !important;
 	--bs-heading-color: #5865F2 !important;
 	--bs-link-color-rgb: rgb(235, 69, 158) !important;
 	--bs-link-color: #EB459E !important;
