@@ -25,7 +25,7 @@
 		],
 		"yaml.schemaStore.enable": true,
 		"yaml.schemas": {
-			"https://raw.githubusercontent.com/Aiko-IT-Systems/DisCatSharp/main/DisCatSharp.Docs/docfx.toc.schema.json": "toc.yml"
+			"./DisCatSharp.Docs/docfx.toc.schema.json": "toc.yml"
 		}
 	}
 }
