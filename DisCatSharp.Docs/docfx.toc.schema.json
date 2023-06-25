@@ -1,0 +1,92 @@
+{
+	"title": "DocFx TOC file",
+	"$schema": "https://raw.githubusercontent.com/Aiko-IT-Systems/DisCatSharp/main/DisCatSharp.Docs/docfx.toc.schema.json",
+	"version": "1.0.0",
+	"description": "The schema for a DocFx TOC object.",
+	"id": "https://raw.githubusercontent.com/Aiko-IT-Systems/DisCatSharp/main/DisCatSharp.Docs/docfx.toc.schema.json",
+	"type": "object",
+	"additionalProperties": false,
+	"required": ["items"],
+	"properties": {
+		"items": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/tocNode"
+			}
+		},
+		"metadata": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"universal_ref_toc": {
+					"type": "string"
+				},
+				"universal_conceptual_toc": {
+					"type": "string"
+				},
+				"nodes_to_expand": {
+					"type": "string"
+				},
+				"pdf_url_template": {
+					"type": "string"
+				},
+				"pdf_absolute_path": {
+					"type": "string"
+				},
+				"pdf_name": {
+					"type": "string"
+				}
+			}
+		}
+	},
+	"definitions": {
+		"tocNode": {
+			"properties": {
+				"displayName": {
+					"type": "string",
+					"tags": ["localizable"]
+				},
+				"expanded": {
+					"type": "boolean"
+				},
+				"href": {
+					"type": "string"
+				},
+				"homepage": {
+					"type": "string"
+				},
+				"items": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/tocNode"
+					}
+				},
+				"name": {
+					"type": "string",
+					"tags": ["localizable"]
+				},
+				"preserveContext": {
+					"type": "boolean"
+				},
+				"tocHref": {
+					"type": "string"
+				},
+				"topicHref": {
+					"type": "string"
+				},
+				"topicUid": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
+				},
+				"uid": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false,
+			"required": ["name"],
+			"type": "object"
+		}
+	}
+}
