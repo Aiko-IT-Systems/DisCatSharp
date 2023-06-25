@@ -1,6 +1,7 @@
 ---
 uid: modules_audio_lavalink_v4_advanced
-title: Lavalink Advanced
+title: Lavalink V4 Advanced
+author: DisCatSharp Team
 ---
 
 # Advanced Lavalink Usage

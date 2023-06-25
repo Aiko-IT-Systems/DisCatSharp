@@ -1,6 +1,7 @@
 ---
 uid: modules_audio_lavalink_v4_configuration
-title: Lavalink Configuration
+title: Lavalink V4 Configuration
+author: DisCatSharp Team
 ---
 
 # Setting up DisCatSharp.Lavalink

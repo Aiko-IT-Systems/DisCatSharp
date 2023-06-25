@@ -1,6 +1,7 @@
 ---
 uid: modules_audio_lavalink_v4_intro
 title: Lavalink V4 Introduction
+author: DisCatSharp Team
 ---
 
 # Lavalink V4

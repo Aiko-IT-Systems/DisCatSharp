@@ -1,6 +1,7 @@
 ---
 uid: modules_audio_lavalink_v4_music_commands
-title: Lavalink Music Commands
+title: Lavalink V4 Music Commands
+author: DisCatSharp Team
 ---
 
 # Adding Music Commands
