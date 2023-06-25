@@ -13,6 +13,19 @@
 		"licenser.customHeader": "This file is part of the DisCatSharp project, a fork of DSharpPlus.\\n\\nCopyright (c) 2021 AITSYS\\n\\nPermission is hereby granted, free of charge, to any person obtaining a copy\\nof this software and associated documentation files (the \"Software\"), to deal\\nin the Software without restriction, including without limitation the rights\\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\\ncopies of the Software, and to permit persons to whom the Software is\\nfurnished to do so, subject to the following conditions:\\n\\nThe above copyright notice and this permission notice shall be included in all\\ncopies or substantial portions of the Software.\\n\\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\\nSOFTWARE.",
 		"licenser.license": "MIT",
 		"licenser.projectName": "DisCatSharp",
-		"licenser.useSingleLineStyle": false
+		"licenser.useSingleLineStyle": false,
+		"json.schemaDownload.enable": true,
+		"json.schemas": [
+			{
+				"fileMatch": [
+					"DisCatSharp.Docs/docfx.json"
+				],
+				"url": "https://json.schemastore.org/docfx.json"
+			}
+		],
+		"yaml.schemaStore.enable": true,
+		"yaml.schemas": {
+			"https://raw.githubusercontent.com/Aiko-IT-Systems/DisCatSharp/main/DisCatSharp.Docs/docfx.toc.schema.json": "toc.yml"
+		}
 	}
 }
