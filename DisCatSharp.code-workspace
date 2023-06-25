@@ -18,7 +18,7 @@
 		"json.schemas": [
 			{
 				"fileMatch": [
-					"DisCatSharp.Docs/docfx.json"
+					"docfx.json"
 				],
 				"url": "https://json.schemastore.org/docfx.json"
 			}
