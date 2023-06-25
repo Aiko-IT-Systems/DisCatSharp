@@ -360,7 +360,3 @@ Now we can use these commands to listen to music!
         Left <discord-mention type="voice">Music</discord-mention>!
     </discord-message>
 </discord-messages>
-
-Of course, there are other commands Lavalink has to offer. Check out [the docs](https://docs.dcs.aitsys.dev/api/DisCatSharp.Lavalink.LavalinkGuildConnection.html#methods) to view the commands you can use while playing tracks.
-
-
