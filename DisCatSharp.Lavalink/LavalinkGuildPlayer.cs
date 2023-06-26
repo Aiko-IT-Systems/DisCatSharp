@@ -327,6 +327,19 @@ public sealed class LavalinkGuildPlayer
 	}
 
 	/// <summary>
+	/// Plays a track partially with a start and end-time.
+	/// </summary>
+	/// <param name="track">The track to play.</param>
+	/// <param name="startTime">The start time.</param>
+	/// <param name="endTime">The end time.</param>
+	/// <returns>The updated guild player.</returns>
+	public async Task<LavalinkGuildPlayer> PlayPartialAsync(LavalinkTrack track, TimeSpan startTime, TimeSpan endTime)
+	{
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: track.Info.Identifier, position: (int)startTime.TotalMilliseconds, endTime: (int)endTime.TotalMilliseconds);
+		return this;
+	}
+
+	/// <summary>
 	/// Plays a song by its encoded track string with a start and end-time.
 	/// </summary>
 	/// <param name="encodedTrack">The encoded track to play.</param>
@@ -347,6 +360,17 @@ public sealed class LavalinkGuildPlayer
 	public async Task<LavalinkGuildPlayer> PlayAsync(string identifier)
 	{
 		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: identifier);
+		return this;
+	}
+
+	/// <summary>
+	/// Plays a track.
+	/// </summary>
+	/// <param name="track">The track to play.</param>
+	/// <returns>The updated guild player.</returns>
+	public async Task<LavalinkGuildPlayer> PlayAsync(LavalinkTrack track)
+	{
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: track.Info.Identifier);
 		return this;
 	}
 
@@ -415,26 +439,6 @@ public sealed class LavalinkGuildPlayer
 		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, null);
 		return this;
 	}
-
-	/*
-	/// <summary>
-	///
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="filter"></param>
-	/// <returns></returns>
-	/// <exception cref="NotImplementedException"></exception>
-	public async Task<LavalinkGuildPlayer> AddFilterAsync<T>(T filter)
-		=> throw new NotImplementedException();
-
-	/// <summary>
-	///
-	/// </summary>
-	/// <returns></returns>
-	/// <exception cref="NotImplementedException"></exception>
-	public async Task<LavalinkGuildPlayer> RemoveFilterAsync()
-		=> throw new NotImplementedException();
-	*/
 
 	/// <summary>
 	/// Directly plays a song by url.
