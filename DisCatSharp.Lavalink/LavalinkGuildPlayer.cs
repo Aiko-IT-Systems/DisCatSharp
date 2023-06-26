@@ -265,6 +265,31 @@ public sealed class LavalinkGuildPlayer
 		=> await this.Session.LoadTracksAsync(identifier);
 
 	/// <summary>
+	/// Loads tracks by <paramref name="identifier"/>.
+	/// Returns a dynamic object you have to parse with (Type)Result.
+	/// </summary>
+	/// <param name="searchType">The search type to use. Some types need additional setup.</param>
+	/// <param name="identifier">The identifier to load.</param>
+	/// <returns>A track loading result.</returns>
+	public async Task<LavalinkTrackLoadingResult> LoadTracksAsync(LavalinkSearchType searchType, string identifier)
+	{
+		var type = searchType switch
+		{
+			LavalinkSearchType.Youtube => "ytsearch:",
+			LavalinkSearchType.SoundCloud => "scsearch:",
+			LavalinkSearchType.AppleMusic => "amsearch:",
+			LavalinkSearchType.Deezer => "dzsearch:",
+			LavalinkSearchType.DeezerISrc => "dzisrc:",
+			LavalinkSearchType.YandexMusic => "ymsearch:",
+			LavalinkSearchType.Spotify => "spsearch:",
+			LavalinkSearchType.SpotifyRec => "sprec:",
+			LavalinkSearchType.Plain => string.Empty,
+			_ => throw new ArgumentOutOfRangeException(nameof(searchType), searchType, "Invalid search type.")
+		};
+		return await this.LoadTracksAsync($"{type}{identifier}");
+	}
+
+	/// <summary>
 	/// Updates the <see cref="LavalinkPlayer"/>.
 	/// </summary>
 	/// <param name="action">The action to perform on the player.</param>
@@ -337,7 +362,7 @@ public sealed class LavalinkGuildPlayer
 	}
 
 	/// <summary>
-	/// 
+	///
 	/// </summary>
 	/// <param name="position"></param>
 	/// <returns>The updated guild player.</returns>
@@ -393,7 +418,7 @@ public sealed class LavalinkGuildPlayer
 
 	/*
 	/// <summary>
-	/// 
+	///
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <param name="filter"></param>
@@ -403,7 +428,7 @@ public sealed class LavalinkGuildPlayer
 		=> throw new NotImplementedException();
 
 	/// <summary>
-	/// 
+	///
 	/// </summary>
 	/// <returns></returns>
 	/// <exception cref="NotImplementedException"></exception>
