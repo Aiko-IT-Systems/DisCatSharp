@@ -90,4 +90,12 @@ public sealed class LavalinkTrackLoadingResult
 			LavalinkLoadResultType.Error => LavalinkJson.DeserializeObject<LavalinkException>(this.RawResult!)!,
 			_ => throw new InvalidDataException("Unknown load type.")
 		};
+
+	/// <summary>
+	/// Gets the result as a specific type.
+	/// </summary>
+	/// <typeparam name="T">Type to convert to.</typeparam>
+	/// <returns>Result as the specified type.</returns>
+	public T GetResultAs<T>()
+		=> (T)this.Result;
 }
