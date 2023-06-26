@@ -63,6 +63,9 @@ using DisCatSharp.Entities;
 using DisCatSharp.ApplicationCommands;
 using DisCatSharp.ApplicationCommands.Context;
 using DisCatSharp.ApplicationCommands.Attributes;
+using DisCatSharp.Lavalink;
+using DisCatSharp.Lavalink.Entities;
+using DisCatSharp.Lavalink.Enums;
 
 namespace FirstLavalinkBot;
 
