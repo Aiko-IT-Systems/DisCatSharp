@@ -157,6 +157,12 @@ public sealed class LavalinkGuildPlayer
 	public LavalinkPlayer Player { get; internal set; }
 
 	/// <summary>
+	/// Gets the current track.
+	/// </summary>
+	public LavalinkTrack? CurrentTrack
+		=> this.Player.Track;
+
+	/// <summary>
 	/// Gets the current track position.
 	/// </summary>
 	public TimeSpan TrackPosition
