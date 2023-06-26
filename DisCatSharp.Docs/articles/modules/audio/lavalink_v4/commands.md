@@ -1,5 +1,5 @@
 ---
-uid: modules_audio_lavalink_v4_music_commands
+uid: modules_audio_lavalink_v4_commands
 title: Lavalink V4 Music Commands
 author: DisCatSharp Team
 hasDiscordComponents: true
@@ -159,26 +159,19 @@ if (loadResult.LoadType == LavalinkLoadResultType.Empty || loadResult.LoadType =
 }
 ```
 
-Lavalink will return a dynamic result object. This object will contain the track data, as well as the type of result. We can use the `LoadResultType` to determine what type of result we got. We need to specify the objects type.
+Lavalink will return a dynamic result object. This object will contain the track data, as well as the type of result.
+
+We can use the `LoadResultType` to determine what type of result we got. If we now the result type we need to specify the objects type.
+
+A shorthand method exists as `GetResultAs<T>`:
 
 ```cs
-LavalinkTrack track;
-
-if (loadResult.LoadType == LavalinkLoadResultType.Track)
-{
-	var trackResult = (LavalinkTrack)loadResult;
-	track = trackResult;
-}
-else if (loadResult.LoadType == LavalinkLoadResultType.Playlist)
-{
-	var playlistResult = (LavalinkPlaylist)loadResult;
-	track = playlistResult.Tracks.First();
-}
-else if (loadResult.LoadType == LavalinkLoadResultType.Search)
-{
-	var searchResult = (List<LavalinkTrack>)loadResult;
-	track = searchResult.Tracks.First();
-}
+LavalinkTrack track = loadResult.LoadType switch {
+    LavalinkLoadResultType.Track => loadResult.GetResultAs<LavalinkTrack>(),
+    LavalinkLoadResultType.Playlist => loadResult.GetResultAs<LavalinkPlaylist>().Tracks.First(),
+    LavalinkLoadResultType.Search => loadResult.GetResultAs<List<LavalinkTrack>>().Tracks.First(),
+    _ => throw new InvalidOperationException("Unexpected load result type.")
+};
 ```
 
 And finally, we can play the track:
@@ -218,23 +211,12 @@ public async Task PlayAsync(InteractionContext ctx, [Option("query", "The query 
 		return;
 	}
 
-	LavalinkTrack track;
-
-	if (loadResult.LoadType == LavalinkLoadResultType.Track)
-	{
-		var trackResult = (LavalinkTrack)loadResult;
-		track = trackResult;
-	}
-	else if (loadResult.LoadType == LavalinkLoadResultType.Playlist)
-	{
-		var playlistResult = (LavalinkPlaylist)loadResult;
-		track = playlistResult.Tracks.First();
-	}
-	else if (loadResult.LoadType == LavalinkLoadResultType.Search)
-	{
-		var searchResult = (List<LavalinkTrack>)loadResult;
-		track = searchResult.Tracks.First();
-	}
+	LavalinkTrack track = loadResult.LoadType switch {
+        LavalinkLoadResultType.Track => loadResult.GetResultAs<LavalinkTrack>(),
+        LavalinkLoadResultType.Playlist => loadResult.GetResultAs<LavalinkPlaylist>().Tracks.First(),
+        LavalinkLoadResultType.Search => loadResult.GetResultAs<List<LavalinkTrack>>().Tracks.First(),
+        _ => throw new InvalidOperationException("Unexpected load result type.")
+    };
 
 	await guildPlayer.PlayAsync(track);
 

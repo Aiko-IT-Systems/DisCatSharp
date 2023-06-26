@@ -90,7 +90,7 @@ items:
                       - name: Configuration
                         uid: modules_audio_lavalink_v4_configuration
                       - name: Music Commands
-                        uid: modules_audio_lavalink_v4_music_commands
+                        uid: modules_audio_lavalink_v4_commands
                       - name: Advanced
                         uid: modules_audio_lavalink_v4_advanced
                 - name: VoiceNext
