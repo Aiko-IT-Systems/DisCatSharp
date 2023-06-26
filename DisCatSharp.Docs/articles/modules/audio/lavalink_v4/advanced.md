@@ -32,6 +32,7 @@ plugins:
       - "amsearch:%QUERY%" # Apple Music search provider
       - "dzisrc:%ISRC%" # Deezer ISRC provider
       - "dzsearch:%QUERY%" # Deezer search provider
+      - "ymsearch:%QUERY%" # Yandex Music search provider
     sources:
     sources:
       spotify: true # Enable Spotify source

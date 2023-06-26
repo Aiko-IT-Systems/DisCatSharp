@@ -7,62 +7,52 @@ hasDiscordComponents: true
 
 # Adding Music Commands
 
-This article assumes that you know how to use CommandsNext. If you do not, you should learn [here](xref:modules_commandsnext_intro) before continuing with this guide.
+This article assumes that you know how to use ApplicationCommands. If you do not, you should learn [here](xref:modules_application_commands_intro) before continuing with this guide.
 
 ## Prerequisites
 
-Before we start we will need to make sure CommandsNext is configured. For this we can make a simple configuration and command class:
+Before we start we will need to make sure ApplicationCommands is configured. For this we can make a simple configuration and command class:
 
 ```cs
-using DisCatSharp.CommandsNext;
+using DisCatSharp.ApplicationCommands;
 
 namespace FirstLavalinkBot;
 
-public class MyFirstLavalinkCommands : BaseCommandModule
+public class MyFirstLavalinkCommands : ApplicationCommandsModule
 { }
 ```
 
-And be sure to register it in your program file:
+Next up you gotta register the ApplicationCommands module:
 
 ```cs
-CommandsNext = Discord.UseCommandsNext(new CommandsNextConfiguration
+ApplicationCommands = Discord.UseApplicationCommands();
+
+ApplicationCommands.RegisterGlobalCommands<MyLavalinkCommands>();
+```
+
+## Adding base commands
+
+Your bot, and Lavalink, will need to connect to a voice channel to play music.
+
+Let's create the base for these commands:
+
+```cs
+[SlashCommand("join", "Join a voice channel")]
+public async Task JoinAsync(InteractionContext ctx, [Option("channel", "Channel to join")] DiscordChannel channel)
 {
-    StringPrefixes = new string[] { "!" }
-});
+	await ctx.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
+}
 
-CommandsNext.RegisterCommands<MyLavalinkCommands>();
+[SlashCommand("leave", "Leave the voice channel")]
+public async Task LeaveAsync(InteractionContext ctx)
+{
+	await ctx.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
+}
 ```
 
-## Adding join and leave commands
+To get the Lavalink node we will need to use the `GetLavalink()` extension method on the DiscordClient. This will return a [LavalinkExtension](xref:DisCatSharp.Lavalink.LavalinkExtension) object, which contains a collection of connected sessions. Since we only have one node, we can use linq's `.First()` method on the extensions connected nodes to get what we need.
 
-Your bot, and Lavalink, will need to connect to a voice channel to play music. Let's create the base for these commands:
-
-```cs
-[Command("join", "Join a voice channel")]
-public async Task JoinAsync(CommandContext ctx, DiscordChannel channel)
-{ }
-
-[Command("leave", "Leave the voice channel")]
-public async Task LeaveAsync(CommandContext ctx, DiscordChannel channel)
-{ }
-```
-
-In order to connect to a voice channel, we'll need to do a few things.
-
-1. Get our node connection. You can either use linq or `GetIdealNodeConnection()`
-2. Check if the channel is a voice channel, and tell the user if not.
-3. Connect the node to the channel.
-
-
-And for the leave command:
-
-1. Get the node connection, using the same process.
-2. Check if the channel is a voice channel, and tell the user if not.
-3. Get our existing connection.
-4. Check if the connection exists, and tell the user if not.
-5. Disconnect from the channel.
-
-`GetIdealNodeConnection()` will return the least affected node through load balancing, which is useful for larger bots. It can also filter nodes based on an optional voice region to use the closest nodes available. Since we only have one connection we can use linq's `.First()` method on the extensions connected nodes to get what we need.
+If we have the session, we can use the `ConnectAsync()` method to connect to the voice channel. This method will return a [LavalinkGuildPlayer](xref:DisCatSharp.Lavalink.LavalinkGuildPlayer) object, which we can use to play music. We will also need to check if the channel is a voice channel. If the guild player is already connected, the function will return the existing player.
 
 So far, your command class should look something like this:
 
@@ -70,255 +60,292 @@ So far, your command class should look something like this:
 using System.Threading.Tasks;
 using DisCatSharp;
 using DisCatSharp.Entities;
-using DisCatSharp.CommandsNext;
-using DisCatSharp.CommandsNext.Attributes;
+using DisCatSharp.ApplicationCommands;
+using DisCatSharp.ApplicationCommands.Context;
+using DisCatSharp.ApplicationCommands.Attributes;
 
 namespace FirstLavalinkBot;
 
 public class MyFirstLavalinkCommands : BaseCommandModule
 {
-	[Command("join", "Join a voice channel")]
-	public async Task JoinAsync(CommandContext ctx, DiscordChannel channel)
+	[SlashCommand("join", "Join a voice channel")]
+	public async Task JoinAsync(InteractionContext ctx, [Option("channel", "Channel to join")] DiscordChannel channel)
 	{
-		var lava = ctx.Client.GetLavalink();
-		if (!lava.ConnectedNodes.Any())
+		await ctx.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
+		var lavalink = ctx.Client.GetLavalink();
+		if (!lava.ConnectedSessions.Any())
 		{
-			await ctx.RespondAsync("The Lavalink connection is not established");
+			await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("The Lavalink connection is not established"));
 			return;
 		}
 
-		var node = lava.ConnectedNodes.Values.First();
+		var session = lava.ConnectedSessions.Values.First();
 
-		if (channel.Type != ChannelType.Voice)
+		if (channel.Type != ChannelType.Voice || channel.Type != ChannelType.Stage)
 		{
-			await ctx.RespondAsync("Not a valid voice channel.");
+			await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("Not a valid voice channel."));
 			return;
 		}
 
-		await node.ConnectAsync(channel);
-		await ctx.RespondAsync($"Joined {channel.Mention}!");
+		await session.ConnectAsync(channel);
+		await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent($"Joined {channel.Mention}!"));
 	}
 
-	[Command("leave", "Leave the voice channel")]
-	public async Task LeaveAsync(CommandContext ctx, DiscordChannel channel)
+	[SlashCommand("leave", "Leave the voice channel")]
+	public async Task LeaveAsync(InteractionContext ctx)
 	{
-		var lava = ctx.Client.GetLavalink();
-		if (!lava.ConnectedNodes.Any())
+		await ctx.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
+		var lavalink = ctx.Client.GetLavalink();
+		var guildPlayer = lavalink.GetGuildPlayer(ctx.Guild);
+		if (guildPlayer == null)
 		{
-			await ctx.RespondAsync("The Lavalink connection is not established");
+			await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("Lavalink not connected."));
 			return;
 		}
 
-		var node = lava.ConnectedNodes.Values.First();
-
-		if (channel.Type != ChannelType.Voice)
-		{
-			await ctx.RespondAsync("Not a valid voice channel.");
-			return;
-		}
-
-		var conn = node.GetGuildConnection(channel.Guild);
-
-		if (conn == null)
-		{
-			await ctx.RespondAsync("Lavalink is not connected.");
-			return;
-		}
-
-		await conn.DisconnectAsync();
-		await ctx.RespondAsync($"Left {channel.Mention}!");
+		await guildPlayer.DisconnectAsync();
+		await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent($"Left {channel.Mention}!"));
 	}
 }
 ```
 
-## Adding player commands
+## Adding playback commands
 
-Now that we can join a voice channel, we can make our bot play music! Let's now create the base for a play command:
-
-```cs
-[Command("play", "Play a track")]
-public async Task PlayAsync(CommandContext ctx, [RemainingText] string search)
-{ }
-```
-One of Lavalink's best features is its ability to search for tracks from a variety of media sources, such as YouTube, SoundCloud, Twitch, and more. This is what makes bots like Rythm, Fredboat, and Groovy popular. The search is used in a REST request to get the track data, which is then sent through the WebSocket connection to play the track in the voice channel. That is what we will be doing in this command.
-
-Lavalink can also play tracks directly from a media url, in which case the play command can look like this:
+Now that we have the base commands, we can add the playback commands. For this we will need to get the Lavalink session, the guild connection, and the track details. We will also need to check if Lavalink is connected.
 
 ```cs
-[Command("play", "Play a track")]
-public async Task PlayAsync(CommandContext ctx, Uri url)
-{ }
+[SlashCommand("play", "Play a track")]
+public async Task PlayAsync(InteractionContext ctx, [Option("query", "The query to search for")] string query)
+{
+	await ctx.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
+}
 ```
+One of Lavalink's best features is its ability to search for tracks from a variety of media sources, such as YouTube, SoundCloud, Twitch, and more. This is what makes bots like Rythm, Fredboat, and Groovy popular
+
+Lavalink can also play tracks directly from a media url. This is useful for playing tracks from other sources, such as Bandcamp, Vimeo, and more.
 
 Like before, we will need to get our node and guild connection and have the appropriate checks. Since it wouldn't make sense to have the channel as a parameter, we will instead get it from the member's voice state:
 
 ```cs
-//Important to check the voice state itself first,
-//as it may throw a NullReferenceException if they don't have a voice state.
+// Important to check the voice state itself first, as it may throw a NullReferenceException if they don't have a voice state.
 if (ctx.Member.VoiceState == null || ctx.Member.VoiceState.Channel == null)
 {
-    await ctx.RespondAsync("You are not in a voice channel.");
-    return;
+	await ctx.RespondAsync("You are not in a voice channel.");
+	return;
 }
 
-var lava = ctx.Client.GetLavalink();
-var node = lava.ConnectedNodes.Values.First();
-var conn = node.GetGuildConnection(ctx.Member.VoiceState.Guild);
+var lavalink = ctx.Client.GetLavalink();
+var guildPlayer = lavalink.GetGuildPlayer(ctx.Guild);
 
-if (conn == null)
+if (guildPlayer == null)
 {
-    await ctx.RespondAsync("Lavalink is not connected.");
-    return;
+	await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("Lavalink is not connected."));
+	return;
 }
 ```
 
-Next, we will get the track details by calling `node.Rest.GetTracksAsync()`. There are a variety of overloads for this:
-
-1. `GetTracksAsync(LavalinkSearchType.Youtube, search)` will search YouTube for your search string.
-2. `GetTracksAsync(LavalinkSearchType.SoundCloud, search)` will search SoundCloud for your search string.
-3. `GetTracksAsync(Uri)` will use the direct url to obtain the track. This is mainly used for the other media sources.
-
-For this guide we will be searching YouTube. Let's pass in our search string and store the result in a variable:
-
 ```cs
-//We don't need to specify the search type here
-//since it is YouTube by default.
-var loadResult = await node.Rest.GetTracksAsync(search);
+var loadResult = await guildPlayer.LoadTracksAsync(LavalinkSearchType.Youtube, query);
 ```
 
 The load result will contain an enum called `LoadResultType`, which will inform us if Lavalink was able to retrieve the track data. We can use this as a check:
 
 ```cs
-//If something went wrong on Lavalink's end or it just couldn't find anything.
-if (loadResult.LoadResultType == LavalinkLoadResultType.LoadFailed
-	|| loadResult.LoadResultType == LavalinkLoadResultType.NoMatches)
+// If something went wrong on Lavalink's end or it just couldn't find anything.
+if (loadResult.LoadType == LavalinkLoadResultType.Empty || loadResult.LoadType == LavalinkLoadResultType.Error)
 {
-    await ctx.RespondAsync($"Track search failed for {search}.");
-    return;
+	await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent($"Track search failed for {query}."));
+	return;
 }
 ```
 
-Lavalink will return the track data from your search in a collection called `loadResult.Tracks`, similar to using the search bar in YouTube or SoundCloud directly. The first track is typically the most accurate one, so that is what we will use:
+Lavalink will return a dynamic result object. This object will contain the track data, as well as the type of result. We can use the `LoadResultType` to determine what type of result we got. We need to specify the objects type.
 
 ```cs
-var track = loadResult.Tracks.First();
+LavalinkTrack track;
+
+if (loadResult.LoadType == LavalinkLoadResultType.Track)
+{
+	var trackResult = (LavalinkTrack)loadResult;
+	track = trackResult;
+}
+else if (loadResult.LoadType == LavalinkLoadResultType.Playlist)
+{
+	var playlistResult = (LavalinkPlaylist)loadResult;
+	track = playlistResult.Tracks.First();
+}
+else if (loadResult.LoadType == LavalinkLoadResultType.Search)
+{
+	var searchResult = (List<LavalinkTrack>)loadResult;
+	track = searchResult.Tracks.First();
+}
 ```
 
 And finally, we can play the track:
 
 ```cs
-await conn.PlayAsync(track);
+await guildPlayer.PlayAsync(track);
 
 await ctx.RespondAsync($"Now playing {track.Title}!");
 ```
 
 Your play command should look like this:
 ```cs
-[Command("play", "Play a track")]
-public async Task PlayAsync(CommandContext ctx, [RemainingText] string search)
+[SlashCommand("play", "Play a track")]
+public async Task PlayAsync(InteractionContext ctx, [Option("query", "The query to search for")] string query)
 {
-    if (ctx.Member.VoiceState == null || ctx.Member.VoiceState.Channel == null)
-    {
-        await ctx.RespondAsync("You are not in a voice channel.");
-        return;
-    }
+	await ctx.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
+	if (ctx.Member.VoiceState == null || ctx.Member.VoiceState.Channel == null)
+	{
+		await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("You are not in a voice channel."));
+		return;
+	}
 
-    var lava = ctx.Client.GetLavalink();
-    var node = lava.ConnectedNodes.Values.First();
-    var conn = node.GetGuildConnection(ctx.Member.VoiceState.Guild);
+	var lavalink = ctx.Client.GetLavalink();
+	var guildPlayer = lavalink.GetGuildPlayer(ctx.Guild);
 
-    if (conn == null)
-    {
-        await ctx.RespondAsync("Lavalink is not connected.");
-        return;
-    }
+	if (guildPlayer == null)
+	{
+		await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("Lavalink is not connected."));
+		return;
+	}
 
-    var loadResult = await node.Rest.GetTracksAsync(search);
+	var loadResult = await guildPlayer.LoadTracksAsync(LavalinkSearchType.Youtube, query);
 
-    if (loadResult.LoadResultType == LavalinkLoadResultType.LoadFailed
-        || loadResult.LoadResultType == LavalinkLoadResultType.NoMatches)
-    {
-        await ctx.RespondAsync($"Track search failed for {search}.");
-        return;
-    }
+	if (loadResult.LoadType == LavalinkLoadResultType.Empty || loadResult.LoadType == LavalinkLoadResultType.Error)
+	{
+		await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent($"Track search failed for {query}."));
+		return;
+	}
 
-    var track = loadResult.Tracks.First();
+	LavalinkTrack track;
 
-    await conn.PlayAsync(track);
+	if (loadResult.LoadType == LavalinkLoadResultType.Track)
+	{
+		var trackResult = (LavalinkTrack)loadResult;
+		track = trackResult;
+	}
+	else if (loadResult.LoadType == LavalinkLoadResultType.Playlist)
+	{
+		var playlistResult = (LavalinkPlaylist)loadResult;
+		track = playlistResult.Tracks.First();
+	}
+	else if (loadResult.LoadType == LavalinkLoadResultType.Search)
+	{
+		var searchResult = (List<LavalinkTrack>)loadResult;
+		track = searchResult.Tracks.First();
+	}
 
-    await ctx.RespondAsync($"Now playing {track.Title}!");
+	await guildPlayer.PlayAsync(track);
+
+	await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent($"Now playing {query}!"));
 }
 ```
 
-Being able to pause the player is also useful. For this we can use most of the base from the play command:
+Being able to pause and resume the player is also useful. For this we can use most of the base from the play command:
 
 ```cs
-[Command("pause", "Pause a track")]
-public async Task PauseAsync(CommandContext ctx)
+[SlashCommand("pause", "Pause a track")]
+public async Task PauseAsync(InteractionContext ctx)
 {
-    if (ctx.Member.VoiceState == null || ctx.Member.VoiceState.Channel == null)
-    {
-        await ctx.RespondAsync("You are not in a voice channel.");
-        return;
-    }
+	await ctx.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
+	if (ctx.Member.VoiceState == null || ctx.Member.VoiceState.Channel == null)
+	{
+		await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("You are not in a voice channel."));
+		return;
+	}
 
-    var lava = ctx.Client.GetLavalink();
-    var node = lava.ConnectedNodes.Values.First();
-    var conn = node.GetGuildConnection(ctx.Member.VoiceState.Guild);
+	var lavalink = ctx.Client.GetLavalink();
+	var guildPlayer = lavalink.GetGuildPlayer(ctx.Guild);
 
-    if (conn == null)
-    {
-        await ctx.RespondAsync("Lavalink is not connected.");
-        return;
-    }
+	if (guildPlayer == null)
+	{
+		await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("Lavalink is not connected."));
+		return;
+	}
 }
 ```
 
-For this command we will also want to check the player state to determine if we should send a pause command. We can do so by checking `conn.CurrentState.CurrentTrack`:
+For this command we will also want to check the player state to determine if we should send a pause command. We can do so by checking `guildPlayer.CurrentTrack`:
 
 ```cs
-if (conn.CurrentState.CurrentTrack == null)
+if (guildPlayer.CurrentTrack == null)
 {
-    await ctx.RespondAsync("There are no tracks loaded.");
-    return;
+	await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("There are no tracks loaded."));
+	return;
 }
 ```
 
 And finally, we can call pause:
 
 ```cs
-await conn.PauseAsync();
+await guildPlayer.PauseAsync();
 ```
 
-The finished command should look like so:
+The equivalent for resume:
+
 ```cs
-[Command("pause", "Pause a track")]
-public async Task PauseAsync(CommandContext ctx)
+await guildPlayer.ResumeAsync();
+```
+
+The finished commands should look like so:
+```cs
+[SlashCommand("pause", "Pause a track")]
+public async Task PauseAsync(InteractionContext ctx)
 {
-    if (ctx.Member.VoiceState == null || ctx.Member.VoiceState.Channel == null)
-    {
-        await ctx.RespondAsync("You are not in a voice channel.");
-        return;
-    }
+	await ctx.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
+	if (ctx.Member.VoiceState == null || ctx.Member.VoiceState.Channel == null)
+	{
+		await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("You are not in a voice channel."));
+		return;
+	}
 
-    var lava = ctx.Client.GetLavalink();
-    var node = lava.ConnectedNodes.Values.First();
-    var conn = node.GetGuildConnection(ctx.Member.VoiceState.Guild);
+	var lavalink = ctx.Client.GetLavalink();
+	var guildPlayer = lavalink.GetGuildPlayer(ctx.Guild);
 
-    if (conn == null)
-    {
-        await ctx.RespondAsync("Lavalink is not connected.");
-        return;
-    }
+	if (guildPlayer == null)
+	{
+		await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("Lavalink is not connected."));
+		return;
+	}
 
-    if (conn.CurrentState.CurrentTrack == null)
-    {
-         await ctx.RespondAsync("There are no tracks loaded.");
-         return;
-    }
+	if (guildPlayer.CurrentTrack == null)
+	{
+		await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("There are no tracks loaded."));
+		return;
+	}
 
-    await conn.PauseAsync();
-    await ctx.RespondAsync("Paused the playback!");
+	await guildPlayer.PauseAsync();
+	await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("Playback paused!"));
+}
+
+[SlashCommand("resume", "Resume a track")]
+public async Task ResumeAsync(InteractionContext ctx)
+{
+	await ctx.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
+	if (ctx.Member.VoiceState == null || ctx.Member.VoiceState.Channel == null)
+	{
+		await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("You are not in a voice channel."));
+		return;
+	}
+
+	var lavalink = ctx.Client.GetLavalink();
+	var guildPlayer = lavalink.GetGuildPlayer(ctx.Guild);
+
+	if (guildPlayer == null)
+	{
+		await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("Lavalink is not connected."));
+		return;
+	}
+
+	if (guildPlayer.CurrentTrack == null)
+	{
+		await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("There are no tracks loaded."));
+		return;
+	}
+
+	await guildPlayer.ResumeAsync();
+	await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("Playback resumed!"));
 }
 ```
 
@@ -327,36 +354,35 @@ Now we can use these commands to listen to music!
 ## Visual Example
 
 <discord-messages>
-    <discord-message profile="user">!join <discord-mention type="voice">Music</discord-mention></discord-message>
-    <discord-message profile="dcs" highlight>
-        <discord-reply slot="reply" profile="user" mentions>!join <discord-mention type="voice">Music</discord-mention></discord-reply>
-        Joined <discord-mention type="voice">Music</discord-mention>!
-    </discord-message>
-    <discord-message profile="user">!play <a target="_blank" class="discord-link external" href="https://youtu.be/38-cJT320aw">https://youtu.be/38-cJT320aw</a>
-<discord-embed
-	slot="embeds"
-	provider="YouTube"
-	author-name="Raon"
-	author-url="https://www.youtube.com/channel/UCQn1FqrR2OCjSe6Nl4GlVHw"
-	color="#FF0000"
-	embed-title="Raon 라온 | ‘クネクネ (Wiggle Wiggle)’ M/V"
-	video="https://cdn.aitsys.dev/file/data/q2tzqoz7ua7sfyeulapq/PHID-FILE-3det2pn34p5chh4enez4/38-cJT320aw.mp4"
-    url="https://www.youtube.com/watch?v=38-cJT320aw"
-    image="https://cdn.aitsys.dev/file/data/kcrwt6baxsmr32rjnrdg/PHID-FILE-2w72lbyg6lrbstqo3geh/38-cJT320aw.jpg"
-></discord-embed>
-    </discord-message>
-    <discord-message profile="dcs" highlight>
-        <discord-reply slot="reply" profile="user" mentions>!play <a target="_blank" class="discord-link external" href="https://youtu.be/38-cJT320aw">https://youtu.be/38-cJT320aw</a></discord-reply>
-        Now playing Raon 라온 | ‘クネクネ (Wiggle Wiggle)’ M/V!
-    </discord-message>
-    <discord-message profile="user">!pause</discord-message>
-    <discord-message profile="dcs" highlight>
-        <discord-reply slot="reply" profile="user" mentions>!pause</discord-reply>
-        Paused the playback!
-    </discord-message>
-    <discord-message profile="user">!leave</discord-message>
-    <discord-message profile="dcs" highlight>
-        <discord-reply slot="reply" profile="user" mentions>!leave</discord-reply>
-        Left <discord-mention type="voice">Music</discord-mention>!
-    </discord-message>
+	<discord-message profile="dcs">
+		<discord-command slot="reply" profile="user" command="/join"></discord-command>
+		Joined <discord-mention type="voice">Music</discord-mention>!
+	</discord-message>
+	<discord-message profile="dcs">
+		<discord-command slot="reply" profile="user" command="/play"></discord-command>
+		Now playing <a target="_blank" class="discord-link external" href="https://youtu.be/38-cJT320aw">https://youtu.be/38-cJT320aw</a>!
+		<discord-embed
+			slot="embeds"
+			provider="YouTube"
+			author-name="Raon"
+			author-url="https://www.youtube.com/channel/UCQn1FqrR2OCjSe6Nl4GlVHw"
+			color="#FF0000"
+			embed-title="Raon 라온 | ‘クネクネ (Wiggle Wiggle)’ M/V"
+			video="https://cdn.aitsys.dev/file/data/q2tzqoz7ua7sfyeulapq/PHID-FILE-3det2pn34p5chh4enez4/38-cJT320aw.mp4"
+			url="https://www.youtube.com/watch?v=38-cJT320aw"
+			image="https://cdn.aitsys.dev/file/data/kcrwt6baxsmr32rjnrdg/PHID-FILE-2w72lbyg6lrbstqo3geh/38-cJT320aw.jpg"
+		></discord-embed>
+	</discord-message>
+	<discord-message profile="dcs">
+		<discord-command slot="reply" profile="user" command="/pause"></discord-command>
+		Playback paused!
+	</discord-message>
+	<discord-message profile="dcs">
+		<discord-command slot="reply" profile="user" command="/resume"></discord-command>
+		Playback resumed!
+	</discord-message>
+	<discord-message profile="dcs">
+		<discord-command slot="reply" profile="user" command="/leave"></discord-command>
+		Left <discord-mention type="voice">Music</discord-mention>!
+	</discord-message>
 </discord-messages>
