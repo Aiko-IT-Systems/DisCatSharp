@@ -2452,19 +2452,18 @@ public sealed partial class DiscordClient
 
 		var usr = this.UpdateUser(new() { Id = userId, Discord = this }, guildId, guild, mbr);
 
-		if (channel == null
-			|| this.Configuration.MessageCacheSize == 0
-			|| this.MessageCache == null
-			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+		DiscordMessage? msg = null;
+
+		if (channel is not null)
+			msg = await channel.GetMessageAsync(messageId);
+
+		msg ??= new()
 		{
-			msg = new()
-			{
-				Id = messageId,
-				ChannelId = channelId,
-				Discord = this,
-				ReactionsInternal = new()
-			};
-		}
+			Id = messageId,
+			ChannelId = channelId,
+			Discord = this,
+			ReactionsInternal = new()
+		};
 
 		var react = msg.ReactionsInternal.FirstOrDefault(xr => xr.Emoji == emoji);
 		if (react == null)
@@ -2524,18 +2523,17 @@ public sealed partial class DiscordClient
 				? member
 				: new(usr) { Discord = this, GuildId = channel.GuildId.Value };
 
-		if (channel == null
-			|| this.Configuration.MessageCacheSize == 0
-			|| this.MessageCache == null
-			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+		DiscordMessage? msg = null;
+
+		if (channel is not null)
+			msg = await channel.GetMessageAsync(messageId);
+
+		msg ??= new()
 		{
-			msg = new()
-			{
-				Id = messageId,
-				ChannelId = channelId,
-				Discord = this
-			};
-		}
+			Id = messageId,
+			ChannelId = channelId,
+			Discord = this
+		};
 
 		var react = msg.ReactionsInternal?.FirstOrDefault(xr => xr.Emoji == emoji);
 		if (react != null)
