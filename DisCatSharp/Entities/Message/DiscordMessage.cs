@@ -415,8 +415,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <para>Gets the thread that was started from this message.</para>
 	/// <para><note type="warning">If you're looking to get the actual thread channel this message was send in, call <see cref="Channel"/> and convert it to a <see cref="DiscordThreadChannel"/>.</note></para>
 	/// </summary>
+	[JsonIgnore]
+	public DiscordThreadChannel Thread
+		=> this._startedThread != null! ? this._startedThread! : this.GuildId.HasValue && this.Guild.ThreadsInternal.TryGetValue(this.Id, out var thread) ? thread! : null!;
+
 	[JsonProperty("thread", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordThreadChannel Thread { get; internal set; }
+	private readonly DiscordThreadChannel _startedThread;
 
 	/// <summary>
 	/// Build the message reference.
