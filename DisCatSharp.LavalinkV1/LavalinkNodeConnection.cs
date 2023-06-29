@@ -35,8 +35,8 @@ using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Lavalink.Entities;
 using DisCatSharp.Lavalink.EventArgs;
-using DisCatSharp.LavalinkV1.Entities;
-using DisCatSharp.LavalinkV1.EventArgs;
+using DisCatSharp.Lavalink.Entities;
+using DisCatSharp.Lavalink.EventArgs;
 using DisCatSharp.Net;
 using DisCatSharp.Net.WebSocket;
 
@@ -45,7 +45,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace DisCatSharp.LavalinkV1;
+namespace DisCatSharp.Lavalink;
 
 internal delegate void NodeDisconnectedEventHandler(LavalinkNodeConnection node);
 

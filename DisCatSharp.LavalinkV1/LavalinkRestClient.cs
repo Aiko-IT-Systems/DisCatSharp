@@ -29,8 +29,8 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 
-using DisCatSharp.LavalinkV1.Entities;
-using DisCatSharp.LavalinkV1.Enums;
+using DisCatSharp.Lavalink.Entities;
+using DisCatSharp.Lavalink.Enums;
 using DisCatSharp.Net;
 
 using Microsoft.Extensions.Logging;
@@ -38,7 +38,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace DisCatSharp.LavalinkV1;
+namespace DisCatSharp.Lavalink;
 
 /// <summary>
 /// Represents a class for Lavalink REST calls.

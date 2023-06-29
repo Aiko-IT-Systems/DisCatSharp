@@ -22,7 +22,7 @@
 
 using DisCatSharp.EventArgs;
 
-namespace DisCatSharp.LavalinkV1.EventArgs;
+namespace DisCatSharp.Lavalink.EventArgs;
 
 /// <summary>
 /// Represents event arguments for Lavalink node disconnection.

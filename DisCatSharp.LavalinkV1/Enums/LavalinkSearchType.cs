@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.LavalinkV1.Enums;
+namespace DisCatSharp.Lavalink.Enums;
 
 /// <summary>
 /// The lavalink search type.
