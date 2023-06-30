@@ -119,7 +119,7 @@ else if (search.StartsWith("amsearch:"))
 }
 
 // This function gives us a result from Lavalink.
-LavalinkLoadResult result = await nodeConnection.Rest.GetTracksAsync(search, type);
+LavalinkLoadResult result = await guildPlayer.LoadTracksAsync(type, query);
 
 // Internally Lavalink searches the Spotify api, and then searches YouTube for the result.
 // We can now use the result and play the song.

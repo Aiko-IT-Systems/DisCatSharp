@@ -1,6 +1,6 @@
 ---
 uid: modules_audio_lavalink_v4_commands
-title: Lavalink V4 Music Commands
+title: Lavalink V4 Commands
 author: DisCatSharp Team
 hasDiscordComponents: true
 ---
@@ -26,8 +26,11 @@ Next up you gotta register the ApplicationCommands module:
 
 ```cs
 ApplicationCommands = Discord.UseApplicationCommands();
-
-ApplicationCommands.RegisterGlobalCommands<MyLavalinkCommands>();
+// Either as a global command
+ApplicationCommands.RegisterGlobalCommands<MyFirstLavalinkCommands>();
+// Or as a guild command
+ulong myGuildId = 858089281214087179;
+ApplicationCommands.RegisterGuildCommands<MyFirstLavalinkCommands>(myGuildId);
 ```
 
 ## Adding base commands
