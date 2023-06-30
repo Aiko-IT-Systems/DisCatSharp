@@ -8,8 +8,11 @@ author: DisCatSharp Team
 
 ## Create an Application
 
+>[!NOTE]
+ > You can also use discords official [getting started](https://discord.com/developers/docs/getting-started#building-your-first-discord-app) tutorial till step 2.
+
 Before you're able to create a [bot account](https://discord.com/developers/docs/topics/oauth2#bots) to interact with the Discord API, you'll need to create a new OAuth2 application.
-Go to the [Discord Developer Portal](https://discord.com/developers/applications) and click `New Application` at the top right of the page.
+[Create](https://discord.com/developers/applications?new_application=true) a new application in the [Discord Developer Portal](https://discord.com/developers/).
 
 ![Discord Developer Portal](/images/getting_started_bot_account_01.png)
 
@@ -31,21 +34,6 @@ That was easy, wasn't it?
 
 Before you move on, you may want to upload an icon for your application and provide a short description of what your bot will do.
 As with the name of your application, the application icon and description will be displayed to users when adding your bot.
-
-
-## Add a Bot Account
-
-Now that you have an application created, you'll be able to add a brand new bot account to it.
-
-Head on over to the bot page of your application by clicking on `Bot` in the left panel.<br/>
-From there, click on the `Add Bot` button at the top right of the page.
-
-![Bot Page](/images/getting_started_bot_account_04.png)
-
-Then confirm the creation of the bot account.
-
-![Creation Confirmation](/images/getting_started_bot_account_05.png)
-
 
 # Using Your Bot Account
 
