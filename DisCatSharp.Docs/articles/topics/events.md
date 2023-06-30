@@ -1,5 +1,5 @@
 ---
-uid: beyond_basics_events
+uid: topics_events
 title: DisCatSharp Events
 author: DisCatSharp Team
 ---

@@ -3,45 +3,45 @@ items:
       href: preamble.md
     - name: FAQ
       href: faq.md
-    - name: The Basics
+    - name: Getting Started
       expanded: true
       items:
           - name: Creating a Bot Account
-            href: basics/bot_account.md
+            href: getting_started/bot_account.md
           - name: Writing Your First Bot
-            href: basics/first_bot.md
+            href: getting_started/first_bot.md
           - name: Bot as Hosted Service
-            href: basics/web_app.md
+            href: getting_started/web_app.md
           - name: Project Templates
-            href: basics/templates.md
-    - name: Beyond Basics
+            href: getting_started/templates.md
+    - name: Topics
       expanded: true
       items:
           - name: Events
-            href: beyond_basics/events.md
+            href: topics/events.md
           - name: Logging
-            href: beyond_basics/logging/default.md
+            href: topics/logging/default.md
             items:
                 - name: The Default Logger
-                  href: beyond_basics/logging/default.md
+                  href: topics/logging/default.md
                 - name: Third Party Loggers
-                  href: beyond_basics/logging/third_party.md
+                  href: topics/logging/third_party.md
                 - name: Dependency Injection Loggers
-                  href: beyond_basics/logging/di.md
+                  href: topics/logging/di.md
           - name: Intents
-            href: beyond_basics/intents.md
+            href: topics/intents.md
           - name: Sharding
-            href: beyond_basics/sharding.md
+            href: topics/sharding.md
           - name: Message Builder
-            href: beyond_basics/messagebuilder.md
+            href: topics/messagebuilder.md
           - name: Components
             items:
                 - name: Buttons
-                  href: beyond_basics/components/buttons.md
+                  href: topics/components/buttons.md
                 - name: Select Menu
-                  href: beyond_basics/components/select_menus.md
+                  href: topics/components/select_menus.md
           - name: Workarounds
-            href: beyond_basics/workarounds.md
+            href: topics/workarounds.md
     - name: Modules
       expanded: true
       items:

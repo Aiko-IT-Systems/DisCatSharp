@@ -4,7 +4,7 @@ title: CommandsNext Introduction
 ---
 
  >[!NOTE]
- > This article assumes you've recently read the article on *[writing your first bot](xref:basics_first_bot)*.
+ > This article assumes you've recently read the article on *[writing your first bot](xref:getting_started_first_bot)*.
 
 # Introduction to CommandsNext
 This article will introduce you to some basic concepts of our native command framework: *CommandsNext*.<br/>
@@ -86,7 +86,7 @@ public class MyFirstModule : BaseCommandModule
 
 ### Cleanup and Configuration
 Before we can run our new command, we'll need modify our main method.<br/>
-Start by removing the event handler we created [previously](xref:basics_first_bot#spicing-up-your-bot).
+Start by removing the event handler we created [previously](xref:getting_started_first_bot#spicing-up-your-bot).
 
 ```cs
 var discord = new DiscordClient();

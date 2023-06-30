@@ -1,5 +1,5 @@
 ---
-uid: beyond_basics_logging_default
+uid: topics_logging_default
 title: The Default Logger
 author: DisCatSharp Team
 ---
@@ -8,7 +8,7 @@ author: DisCatSharp Team
 
 DisCatSharp ships with a default logging implementation which is **enabled automatically** with **no setup required**.
 
-![Info Level Logging](/images/beyond_basics_logging_default_01.png)
+![Info Level Logging](/images/topics_logging_default_01.png)
 
 This is a basic implementation that only sends log messages to the console.
 
@@ -24,7 +24,7 @@ new DiscordConfiguration()
 ```
 The example above will display level log messages that are higher than or equal to `Debug`.
 
-![Debug Level Logging](/images/beyond_basics_logging_default_02.png)
+![Debug Level Logging](/images/topics_logging_default_02.png)
 
 ## Timestamp Format
 
@@ -36,7 +36,7 @@ new DiscordConfiguration()
 };
 ```
 
-![The Real Timestamp Format](/images/beyond_basics_logging_default_03.png)
+![The Real Timestamp Format](/images/topics_logging_default_03.png)
 
 For a list of all available format specifiers, check out the MSDN page for [custom date and time format strings](https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings#day-d-format-specifier).
 

@@ -1,5 +1,5 @@
 ---
-uid: advanced_topics_buttons
+uid: topics_components_buttons
 title: Buttons
 author: DisCatSharp Team
 ---
@@ -7,7 +7,7 @@ author: DisCatSharp Team
 # Introduction
 
 Buttons are a feature in Discord based on the interaction framework appended to the bottom of a message which come in several colors.
-You will want to familarize yourself with the [message builder](xref:beyond_basics_messagebuilder) as it and similar builder objects will be used throughout this article.
+You will want to familarize yourself with the [message builder](xref:topics_messagebuilder) as it and similar builder objects will be used throughout this article.
 
 With buttons, you can have up to five buttons in a row, and up to five (5) rows of buttons, for a maximum for 25 buttons per message.
 Furthermore, buttons come in two types: regular, and link. Link buttons contain a Url field, and are always grey.
@@ -107,7 +107,7 @@ builder.AddComponents(new DiscordComponent[]
 ```
 Practically identical, but now with `true` as an extra parameter. This is the `Disabled` property.
 
-Produces a message like such: ![Buttons](/images/advanced_topics_buttons_01.png)
+Produces a message like such: ![Buttons](/images/topics_components_buttons_01.png)
 
 Well, that's all neat, but lets say you want to add an emoji. Being able to use any emoji is pretty neat, after all. That's also very simple!
 
@@ -121,7 +121,7 @@ var myButton = new DiscordButtonComponent
     new DiscordComponentEmoji(595381687026843651)
 );
 ```
-And you're done! Simply add that to a builder, and when you send, you'll get a message that has a button with a little Pikachu enjoying a lolipop. Adorable. ![PikaLolipop](/images/advanced_topics_buttons_02.png)
+And you're done! Simply add that to a builder, and when you send, you'll get a message that has a button with a little Pikachu enjoying a lolipop. Adorable. ![PikaLolipop](/images/topics_components_buttons_02.png)
 
 
 ## Responding to button presses

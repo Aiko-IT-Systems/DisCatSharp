@@ -51,7 +51,7 @@ If your local network has no issues, the problem could be with either Discord or
 ### Complex, long-running code in an event handler.
 
 Any event handlers that have the potential to run for more than a few seconds could cause a deadlock, and cause several heartbeats to be skipped.
-Please take a look at our short article on [handling exceptions](xref:beyond_basics_events) to learn how to avoid this.
+Please take a look at our short article on [handling exceptions](xref:topics_events) to learn how to avoid this.
 
 ## Why am I getting a 4XX error and how can I fix it?
 
@@ -104,4 +104,4 @@ Maybe in time we can switch to your favorite Json Deserializer but for right now
 ## Why the hell are my events not firing?
 
 This is because in the Discord V8+ API, they require @DisCatSharp.DiscordIntents to be enabled on [DiscordConfiguration](xref:DisCatSharp.DiscordConfiguration) and the
-Discord Application Portal. We have an [article](xref:beyond_basics_intents) that covers all that has to be done to set this up.
+Discord Application Portal. We have an [article](xref:topics_intents) that covers all that has to be done to set this up.

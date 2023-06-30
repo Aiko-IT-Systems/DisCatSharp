@@ -1,5 +1,5 @@
 ---
-uid: basics_web_app
+uid: getting_started_web_app
 title: Bot as Hosted Service
 author: DisCatSharp Team
 ---
@@ -137,7 +137,7 @@ Add the following to `appsettings.json`
 ## Dependency Injection
 
 The ServiceProvider where you register the `DiscordHostedService` is automatically copied to the DiscordClient.
-Therefore, if you want to use any services in your [event handlers](xref:beyond_basics_events), you can simply register them before the `DiscordHostedService`:
+Therefore, if you want to use any services in your [event handlers](xref:topics_events), you can simply register them before the `DiscordHostedService`:
 ```cs
 public void ConfigureServices(IServiceCollection services)
 {

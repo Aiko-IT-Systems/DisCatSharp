@@ -1,5 +1,5 @@
 ---
-uid: basics_templates
+uid: getting_started_templates
 title: Project Templates
 author: DisCatSharp Team
 ---

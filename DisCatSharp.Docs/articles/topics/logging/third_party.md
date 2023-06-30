@@ -1,5 +1,5 @@
 ---
-uid: beyond_basics_logging_third_party
+uid: topics_logging_third_party
 title: Third Party Logging
 author: DisCatSharp Team
 ---
@@ -61,4 +61,4 @@ public async Task MainAsync()
 
 And that's it! If you now run your bot, you'll see DisCatSharp log messages formatted and displayed by Serilog.
 
-![Console](/images/beyond_basics_logging_third_party_01.png)
+![Console](/images/topics_logging_third_party_01.png)

@@ -1,5 +1,5 @@
 ---
-uid: beyond_basics_workarounds
+uid: topics_workarounds
 title: Workarounds
 author: DisCatSharp Team
 ---

@@ -1,5 +1,5 @@
 ---
-uid: basics_first_bot
+uid: getting_started_first_bot
 title: Your First Bot
 author: DisCatSharp Team
 ---
@@ -8,7 +8,7 @@ author: DisCatSharp Team
 
  >[!NOTE]
  > This article assumes the following:
- > * You have [created a bot account](xref:basics_bot_account "Creating a Bot Account") and have a bot token.
+ > * You have [created a bot account](xref:getting_started_bot_account "Creating a Bot Account") and have a bot token.
  > * You have [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) installed on your computer.
 
 
@@ -16,12 +16,12 @@ author: DisCatSharp Team
 
 Open up Visual Studio and click on `Create a new project` towards the bottom right.
 
-![Visual Studio Start Screen](/images/basics_first_bot_01.png)
+![Visual Studio Start Screen](/images/getting_started_first_bot_01.png)
 
 <br/>
 Select `Console App` then click on the `Next` button.
 
-![New Project Screen](/images/basics_first_bot_02.png)
+![New Project Screen](/images/getting_started_first_bot_02.png)
 
 <br/>
 Next, you'll give your project a name. For this example, we'll name it `MyFirstBot`.<br/>
@@ -29,16 +29,16 @@ If you'd like, you can also change the directory that your project will be creat
 
 Enter your desired project name, then click on the `Create` button.
 
-![Name Project Screen](/images/basics_first_bot_03.png)
+![Name Project Screen](/images/getting_started_first_bot_03.png)
 
 <br/>
 Now select `.NET 7.0` from the dropdown menu, tick the `Do not use top-level statements` checkbox and click on the `Next` button.
 
-![Framework Project Screen](/images/basics_first_bot_04.png)
+![Framework Project Screen](/images/getting_started_first_bot_04.png)
 
 <br/>
 Voilà! Your project has been created!
-![Visual Studio IDE](/images/basics_first_bot_05.png)
+![Visual Studio IDE](/images/getting_started_first_bot_05.png)
 
 
 ## Install Package
@@ -46,19 +46,19 @@ Voilà! Your project has been created!
 Now that you have a project created, you'll want to get DisCatSharp installed.
 Locate the *solution explorer* on the right side, then right click on `Dependencies` and select `Manage NuGet Packages` from the context menu.
 
-![Dependencies Context Menu](/images/basics_first_bot_06.png)
+![Dependencies Context Menu](/images/getting_started_first_bot_06.png)
 
 <br/>
 You'll then be greeted by the NuGet package manager.
 
 Select the `Browse` tab towards the top left, then type `DisCatSharp` into the search text box with the Pre-release checkbox checked **ON**.
 
-![NuGet Package Search](/images/basics_first_bot_07.png)
+![NuGet Package Search](/images/getting_started_first_bot_07.png)
 
 <br/>
 The first results should be the DisCatSharp packages.
 
-<!--![Search Results](/images/basics_first_bot_07.png)-->
+<!--![Search Results](/images/getting_started_first_bot_07.png)-->
 Package|Description
 :---: |:---:
 `DisCatSharp`|Main package; Discord API client.
@@ -75,7 +75,7 @@ Package|Description
 We'll only need the `DisCatSharp` package for the basic bot we'll be writing in this article.<br/>
 Select it from the list then click the `Install` button to the right.
 
-![Install DisCatSharp](/images/basics_first_bot_08.png)
+![Install DisCatSharp](/images/getting_started_first_bot_08.png)
 
 You're now ready to write some code!
 
@@ -90,7 +90,7 @@ marking our `Main` method as `async` has the potential to cause problems. As a r
 
 Head back to your *Program.cs* tab and empty the `Main` method by deleting line 9.
 
-![Code Editor](/images/basics_first_bot_09.png)
+![Code Editor](/images/getting_started_first_bot_09.png)
 
 Now, create a new `static` method named `MainAsync` beneath your `Main` method. Have it return type `Task` and mark it as `async`.
 After that, add `MainAsync().GetAwaiter().GetResult();` to your `Main` method.
@@ -112,11 +112,11 @@ However, if you copy-pasted the snippet above, VS will complain about being unab
 
 Hover over `Task` with your mouse and click on `Show potential fixes` from the tooltip.
 
-![Error Tooltip](/images/basics_first_bot_10.png)
+![Error Tooltip](/images/getting_started_first_bot_10.png)
 
 Then apply the recommended solution.
 
-![Solution Menu](/images/basics_first_bot_11.png)
+![Solution Menu](/images/getting_started_first_bot_11.png)
 
 <br/>
 We'll now create a new `DiscordClient` instance in our brand new asynchronous method.
@@ -126,7 +126,7 @@ Create an object initializer for `DiscordConfiguration` and populate the `Token`
 Next add the `Intents` Property and Populated it with the @DisCatSharp.DiscordIntents.AllUnprivileged and DiscordIntents.MessageContent values.
 The message content intent must be enabled in the developer portal as well.
 These Intents
-are required for certain Events to be fired.  Please visit this [article](xref:beyond_basics_intents) for more information.
+are required for certain Events to be fired.  Please visit this [article](xref:topics_intents) for more information.
 
 ```cs
 var discord = new DiscordClient(new DiscordConfiguration()
@@ -155,7 +155,7 @@ If you've copied the snippet, be sure to apply the recommended suggestion to ins
 
 If you hit `F5` on your keyboard to compile and run your program, you'll be greeted by a happy little console with a single log message from DisCatSharp. Woo hoo!
 
-![Program Console](/images/basics_first_bot_12.png)
+![Program Console](/images/getting_started_first_bot_12.png)
 
 
 ## Spicing Up Your Bot
@@ -231,13 +231,13 @@ Your bot should respond with *pong!* for each *ping* you send.
 
 Congrats, your bot now does something!
 
-![Bot Response](/images/basics_first_bot_13.png)
+![Bot Response](/images/getting_started_first_bot_13.png)
 
 
 ## Further Reading
 
 Now that you have a basic bot up and running, you should take a look at the following:
 
-* [Events](xref:beyond_basics_events)
+* [Events](xref:topics_events)
 * [CommandsNext](xref:modules_commandsnext_intro)
 * [ApplicationCommands](xref:modules_application_commands_intro)

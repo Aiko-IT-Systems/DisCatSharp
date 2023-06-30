@@ -4,7 +4,7 @@ title: Application Commands Introduction
 ---
 
 >[!NOTE]
-> This article assumes you've recently read the article on *[writing your first bot](xref:basics_first_bot)*.
+> This article assumes you've recently read the article on *[writing your first bot](xref:getting_started_first_bot)*.
 
 # Introduction to Application Commands
 Discord provides built-in commands called: *Application Commands*.<br/>

@@ -1,5 +1,5 @@
 ---
-uid: beyond_basics_intents
+uid: topics_intents
 title: Intents
 author: DisCatSharp Team
 ---

@@ -1,5 +1,5 @@
 ---
-uid: beyond_basics_logging_di
+uid: topics_logging_di
 title: Dependency Injection Logging
 author: DisCatSharp Team
 ---

@@ -1,5 +1,5 @@
 ---
-uid: beyond_basics_sharding
+uid: topics_sharding
 title: Sharding
 author: DisCatSharp Team
 ---

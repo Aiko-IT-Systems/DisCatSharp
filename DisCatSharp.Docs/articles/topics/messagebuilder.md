@@ -1,5 +1,5 @@
 ---
-uid: beyond_basics_messagebuilder
+uid: topics_messagebuilder
 title: Message Builder
 author: DisCatSharp Team
 ---

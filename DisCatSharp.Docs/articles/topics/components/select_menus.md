@@ -1,13 +1,13 @@
 ---
-uid: advanced_topics_select_menus
+uid: topics_components_select_menus
 title: Select Menus
 author: DisCatSharp Team
 ---
 
 # Introduction
 
-The select menus, like the [buttons](xref:advanced_topics_buttons), are message components.
-You will want to familarize yourself with the [message builder](xref:beyond_basics_messagebuilder) as it and similar builder objects will be used throughout this article.
+The select menus, like the [buttons](xref:topics_components_buttons), are message components.
+You will want to familarize yourself with the [message builder](xref:topics_messagebuilder) as it and similar builder objects will be used throughout this article.
 
 A row can only have one select menu. An row containing a select menu cannot also contain buttons.
 Since a message can have up to 5 rows, you can add up to 5 select menus to a message.
