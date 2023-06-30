@@ -18,6 +18,10 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+	  <None Include="..\RELEASENOTES.md">
+		  <Pack>True</Pack>
+		  <PackagePath></PackagePath>
+	  </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\DisCatSharp.Logos\logobig.png">

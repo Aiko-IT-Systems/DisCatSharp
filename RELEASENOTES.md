@@ -1,45 +1,45 @@
-# DisCatSharp Release Notes
+DisCatSharp Release Notes
 
 - None
 
-# DisCatSharp.ApplicationCommands Release Notes
+DisCatSharp.ApplicationCommands Release Notes
 
 - None
 
-# DisCatSharp.CommandsNext Release Notes
+DisCatSharp.CommandsNext Release Notes
 
 - None
 
-# DisCatSharp.Interactivity Release Notes
+DisCatSharp.Interactivity Release Notes
 
 - None
 
-# DisCatSharp.Common Release Notes
+DisCatSharp.Common Release Notes
 
 - None
 
-# DisCatSharp.Lavalink Release Notes
+DisCatSharp.Lavalink Release Notes
 
-Breaking changes:
-- Lavalink got a complete rework for V4.
-- See the [documentation](https://dcs-test.aitsys-infra.tools/articles/modules/audio/lavalink_v4/intro) for more information.
+    Breaking changes:
+    - Lavalink got a complete rework for V4.
+    - See the nightly documentation for more information: https://feat-lib-dev-rework.discatsharp-docs.pages.dev/articles/modules/audio/lavalink_v4/intro
 
-# DisCatSharp.VoiceNext Release Notes
-
-- None
-
-# DisCatSharp.Experimental Release Notes
+DisCatSharp.VoiceNext Release Notes
 
 - None
 
-# DisCatSharp.Configuration Release Notes
+DisCatSharp.Experimental Release Notes
 
 - None
 
-# DisCatSharp.Hosting Release Notes
+DisCatSharp.Configuration Release Notes
 
 - None
 
-# DisCatSharp.Hosting.DependencyInjection Release Notes
+DisCatSharp.Hosting Release Notes
+
+- None
+
+DisCatSharp.Hosting.DependencyInjection Release Notes
 
 - None
