@@ -16,17 +16,17 @@ Suppose we have a certain class with commands that must be executed ONLY in the 
 public class MyGuildCommands : ApplicationCommandsModule
 {
     [SlashCommand("mute", "Mute user.")]
-    public static async Task Mute(InteractionContext context)
+    public static async Task Mute(InteractionContext ctx)
     {
 
     }
     [SlashCommand("kick", "Kick user.")]
-    public static async Task Kick(InteractionContext context)
+    public static async Task Kick(InteractionContext ctx)
     {
 
     }
     [SlashCommand("ban", "Ban user.")]
-    public static async Task Ban(InteractionContext context)
+    public static async Task Ban(InteractionContext ctx)
     {
 
     }
@@ -45,17 +45,17 @@ public class MyGuildCommands : ApplicationCommandsModule
     }
 
     [SlashCommand("mute", "Mute user.")]
-    public static async Task Mute(InteractionContext context)
+    public static async Task Mute(InteractionContext ctx)
     {
 
     }
     [SlashCommand("kick", "Kick user.")]
-    public static async Task Kick(InteractionContext context)
+    public static async Task Kick(InteractionContext ctx)
     {
 
     }
     [SlashCommand("ban", "Ban user.")]
-    public static async Task Ban(InteractionContext context)
+    public static async Task Ban(InteractionContext ctx)
     {
 
     }
