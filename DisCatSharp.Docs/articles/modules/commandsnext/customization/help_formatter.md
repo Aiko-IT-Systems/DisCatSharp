@@ -1,15 +1,18 @@
 ---
-uid: modules_commandsnext_help_formatter
+uid: modules_commandsnext_customization_help_formatter
 title: Help Formatter
+author: DisCatSharp Team
+hasDiscordComponents: true
 ---
 
 ## Custom Help Formatter
+
 The built-in help command provided by CommandsNext is generated with a *help formatter*.
 This simple mechanism is given a command and its subcommands then returns a formatted help message.
 If you're not happy with the default help formatter, you're able to write your own and customize the output to your liking.
 
-<br/>
 Simply inherit from `BaseHelpFormatter` and provide an implementation for each of the required methods.
+
 ```cs
 public class CustomHelpFormatter : BaseHelpFormatter
 {
@@ -54,8 +57,8 @@ public class CustomHelpFormatter : BaseHelpFormatter
 }
 ```
 
-<br/>
 Alternatively, if you're only wanting to make a few small tweaks to the default help, you can write a simple help formatter which inherits from `DefaultHelpFormatter` and modify the inherited `EmbedBuilder` property.
+
 ```cs
 public class CustomHelpFormatter : DefaultHelpFormatter
 {
@@ -69,15 +72,15 @@ public class CustomHelpFormatter : DefaultHelpFormatter
 }
 ```
 
-<br/>
 Your final step is to register your help formatter with CommandsNext.
+
 ```cs
 var discord = new DiscordClient();
 var commands = discord.UseCommandsNext();
 
 commands.SetHelpFormatter<CustomHelpFormatter>();
 ```
+
 That's all there is to it.
 
-<br/>
 ![Fresh New Look](/images/commands_help_formatter_01.png)

@@ -1,6 +1,8 @@
 ---
 uid: modules_commandsnext_dependency_injection
 title: Dependency Injection
+author: DisCatSharp Team
+hasDiscordComponents: true
 ---
 
 ## Dependency Injection

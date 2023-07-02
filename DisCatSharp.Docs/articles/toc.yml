@@ -74,11 +74,11 @@ items:
                 - name: Customization
                   items:
                       - name: Help Formatter
-                        href: modules/commandsnext/help_formatter.md
+                        href: modules/commandsnext/customization/help_formatter.md
                       - name: Argument Converters
-                        href: modules/commandsnext/argument_converters.md
+                        href: modules/commandsnext/customization/argument_converters.md
                       - name: Command Handler
-                        href: modules/commandsnext/command_handler.md
+                        href: modules/commandsnext/customization/command_handler.md
           - name: Audio
             items:
                 - name: Lavalink V4

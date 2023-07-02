@@ -19,7 +19,6 @@ On the [Discord Application under the Bot Page](https://discord.com/developers/a
  >
  > Due to their nature of sensitive data, Discord requires you to go through a verification process once your bot is in a certain amount of servers.
  > Please read this [blog post](https://support.discord.com/hc/en-us/articles/360040720412) for more information and how to apply.
- > Please read [this](https://support-dev.discord.com/hc/en-us/articles/4404772028055) and [this](https://support.discord.com/hc/en-us/articles/4410940809111) blog post for information about the upcoming message intent in April 2022.
 
 ## Discord Configuration
 Within your `DiscordConfiguration` you will have to specify all the intents you will need. Here is a list of all the
