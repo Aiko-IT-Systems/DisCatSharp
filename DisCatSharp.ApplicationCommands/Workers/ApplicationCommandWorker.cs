@@ -134,7 +134,14 @@ internal class CommandWorker
 					var choices = option.Choices != null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count) : null;
 					if (option.Choices != null)
 						foreach (var choice in option.Choices)
-							choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, commandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
+							try
+							{
+								choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, commandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
+							}
+							catch (Exception ex)
+							{
+								throw new AggregateException($"Failed to parse option {choice.Name} in {commandAttribute.Name}", ex);
+							}
 
 					localizedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
 						choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
