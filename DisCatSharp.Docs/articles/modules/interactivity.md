@@ -92,13 +92,11 @@ public async Task ReactionCommand(CommandContext ctx, DiscordMember member)
 }
 ```
 
-![Thank You!](/images/interactivity_03.png)
-
 <discord-messages>
     <discord-message profile="dcs" highlight>
          Hey <discord-mention highlight profile="user">Discord User</discord-mention>, react with 👌!
          <discord-reactions slot="reactions">
-            <discord-reaction name="👌" emoji="/images/ok_hand.svg" count="1" interactive="true" reacted></discord-reaction>
+            <discord-reaction name="👌" emoji="/images/ok_hand.svg" count="1" reacted></discord-reaction>
         </discord-reactions>
     </discord-message>
     <discord-message profile="dcs">
@@ -116,17 +114,27 @@ public async Task CollectionCommand(CommandContext ctx)
     var message = await ctx.RespondAsync("React here!");
     var reactions = await message.CollectReactionsAsync();
 
-    var strBuilder = new StringBuilder();
+    var stringBuilder = new StringBuilder();
     foreach (var reaction in reactions)
-    {
-        strBuilder.AppendLine($"{reaction.Emoji}: {reaction.Total}");
-    }
+        stringBuilder.AppendLine($"{reaction.Emoji}: {reaction.Total}");
 
-    await ctx.RespondAsync(strBuilder.ToString());
+    await ctx.RespondAsync(stringBuilder.ToString());
 }
 ```
 
-![Reaction Count](/images/interactivity_04.png)
+<discord-messages>
+    <discord-message profile="dcs">
+        React here!
+        <discord-reactions slot="reactions">
+            <discord-reaction name="uwu" emoji="https://cdn.discordapp.com/emojis/859022252372787241.png" count="3" reacted></discord-reaction>
+            <discord-reaction name="👌" emoji="/images/ok_hand.svg" count="1"></discord-reaction>
+        </discord-reactions>
+    </discord-message>
+    <discord-message profile="dcs">
+        👌: 1<br/>
+        <discord-custom-emoji name="uwu" url="https://cdn.discordapp.com/emojis/859022252372787241.png"></discord-custom-emoji>: 3
+    </discord-message>
+</discord-messages>
 
 <br/>
 The final one we'll take a look at is the `GetNextMessageAsync` extension method for `DiscordMessage`.<br/>
@@ -142,8 +150,13 @@ public async Task ActionCommand(CommandContext ctx)
         return m.Content.ToLower() == "confirm";
     });
 
-    if (!result.TimedOut) await ctx.RespondAsync("Action confirmed.");
+    if (!result.TimedOut)
+        await ctx.RespondAsync("OwO, thanks for confirming <3");
 }
 ```
 
-![Confirmed](/images/interactivity_05.png)
+<discord-messages>
+    <discord-message profile="dcs">Respond with <discord-inline-code>confirm</discord-inline-code> to continue.</discord-message>
+    <discord-message profile="user">confirm</discord-message>
+    <discord-message profile="dcs">OwO, thanks for confirming <3</discord-message>
+</discord-messages>
