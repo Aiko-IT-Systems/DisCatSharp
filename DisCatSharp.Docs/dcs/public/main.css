@@ -311,3 +311,11 @@ a.discord-link {
 a.discord-link.external[href]::after {
 	content: '' !important;
 }
+
+a.discord-button[href] {
+	color: #fff !important;
+}
+
+a.discord-button[href]::after  {
+	content: '' !important;
+}

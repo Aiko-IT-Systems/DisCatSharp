@@ -1,6 +1,7 @@
 ---
 uid: modules_interactivity
 title: Interactivity Introduction
+hasDiscordComponents: true
 ---
 
 # Introduction to Interactivity
@@ -57,7 +58,22 @@ public async Task PaginationCommand(CommandContext ctx)
 }
 ```
 
-![Pagination Pages](/images/interactivity_02.png)
+<discord-messages>
+    <discord-message profile="dcs">
+        <discord-embed slot="embeds">
+            <discord-embed-description slot="description">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero</discord-embed-description>
+        </discord-embed>
+        <discord-attachments slot="components">
+            <discord-action-row>
+                <discord-button type="secondary">⏮️</discord-button>
+                <discord-button type="secondary">◀️</discord-button>
+                <discord-button type="secondary">⏹️</discord-button>
+                <discord-button type="secondary">▶️</discord-button>
+                <discord-button type="secondary">⏭️</discord-button>
+            </discord-action-row>
+        </discord-attachments>
+    </discord-message>
+</discord-messages>
 
 <br/>
 Next we'll look at the `WaitForReactionAsync` extension method for `DiscordMessage`.<br/>
@@ -68,19 +84,32 @@ An overload of this method also enables you to wait for a *specific* reaction, a
 public async Task ReactionCommand(CommandContext ctx, DiscordMember member)
 {
     var emoji = DiscordEmoji.FromName(ctx.Client, ":ok_hand:");
-    var message = await ctx.RespondAsync($"{member.Mention}, react with {emoji}.");
+    var message = await ctx.RespondAsync($"Hey {member.Mention}, react with {emoji}!");
 
     var result = await message.WaitForReactionAsync(member, emoji);
 
-    if (!result.TimedOut) await ctx.RespondAsync("Thank you!");
+    if (!result.TimedOut) await ctx.RespondAsync("Thanks :3");
 }
 ```
 
 ![Thank You!](/images/interactivity_03.png)
 
+<discord-messages>
+    <discord-message profile="dcs" highlight>
+         Hey <discord-mention highlight profile="user">Discord User</discord-mention>, react with 👌!
+         <discord-reactions slot="reactions">
+            <discord-reaction name="👌" emoji="/images/ok_hand.svg" count="1" interactive="true" reacted></discord-reaction>
+        </discord-reactions>
+    </discord-message>
+    <discord-message profile="dcs">
+         Thanks :3
+    </discord-message>
+</discord-messages>
+
 <br/>
 Another reaction extension method for `DiscordMessage` is `CollectReactionsAsync`.<br/>
 As the name implies, this method collects all reactions on a message until the timeout is reached.
+
 ```cs
 public async Task CollectionCommand(CommandContext ctx)
 {

@@ -2,35 +2,42 @@
 uid: topics_messagebuilder
 title: Message Builder
 author: DisCatSharp Team
+hasDiscordComponents: true
 ---
 
 # Message Builder
 
 ## Background
 
-Before the message builder was put into place, we had one large method for sending messages along with 3 additional methods for sending files. This
-was becoming a major code smell and it was hard to maintain and add more parameters onto it. Now we support just sending a simple message, an embed, a simple
-message with an embed, or a message builder.
+Before the message builder was put into place, we had one large method for sending messages along with 3 additional methods for sending files. This was becoming a major code smell and it was hard to maintain and add more parameters onto it. Now we support just sending a simple message, an embed, a simple message with an embed, or a message builder.
 
 ## Using the Message Builder
 
 The API Documentation for the message builder can be found [there](xref:DisCatSharp.Entities.DiscordMessageBuilder),
 but here we'll go over some of the concepts of using the message builder:
 
-### Adding a File:
+### Adding a File
 
 For sending files, you'll have to use the MessageBuilder to construct your message, see example below:
 
 ```cs
- using (var fs = new FileStream("ADumbFile.txt", FileMode.Open, FileAccess.Read))
+ using (var fs = new FileStream("snippet.cs", FileMode.Open, FileAccess.Read))
  {
     var msg = await new DiscordMessageBuilder()
-        .WithContent("Here is a really dumb file that I am testing with.")
-        .WithFiles(new Dictionary<string, Stream>() { { "ADumbFile1.txt", fs } })
+        .WithContent("Here's a code snippet for you!")
+        .WithFiles(new Dictionary<string, Stream>() { { "snippet.cs", fs } })
         .SendAsync(ctx.Channel);
 }
 ```
 
+<!-- To fix
+<discord-messages>
+    <discord-message profile="dcs">
+        <discord-attachment slot="attachments" type="file" alt="snippet.cs" size="5"></discord-attachment>
+        Here's a code snippet for you!
+    </discord-message>
+</discord-messages>
+-->
 ### Adding Mentions
 
 For sending mentions, you'll have to use the MessageBuilder to construct your message, see example below:
@@ -42,13 +49,19 @@ var msg = await new DiscordMessageBuilder()
     .SendAsync(ctx.Channel);
 ```
 
+<discord-messages>
+    <discord-message profile="dcs" highlight>
+        ✔ UserMention(user): Hey, <discord-mention highlight profile="user">Discord User</discord-mention>! Listen!
+    </discord-message>
+</discord-messages>
+
 ### Sending TTS Messages
 
 For sending a TTS message, you'll have to use the MessageBuilder to construct your message, see example below:
 
 ```cs
 var msg = await new DiscordMessageBuilder()
-    .WithContent($"This is a dumb message")
+    .WithContent($"This is a test message")
     .HasTTS(true)
     .SendAsync(ctx.Channel);
 ```
@@ -62,9 +75,29 @@ var msg = await new DiscordMessageBuilder()
     .WithReply(ctx.Message.Id)
     .SendAsync(ctx.Channel);
 ```
+
+<discord-messages>
+    <discord-message profile="user">Who you talking to?</discord-message>
+    <discord-message profile="dcs">
+        <discord-reply slot="reply" profile="user" mentions>Who you talking to?</discord-reply>
+        I'm talking to <discord-bold>you</discord-bold>!
+    </discord-message>
+</discord-messages>
+
+<br/>
 By default, replies do not mention. To make a reply mention, simply pass true as the second parameter:
+
 ```cs
-// ...
-    .WithReply(ctx.Message.Id, true);
-// ...
+var msg = await new DiscordMessageBuilder()
+    .WithContent($"I'm talking to *you*!")
+    .WithReply(ctx.Message.Id, true)
+    .SendAsync(ctx.Channel);
 ```
+
+<discord-messages>
+    <discord-message profile="user">Who you talking to?</discord-message>
+    <discord-message profile="dcs" highlight>
+        <discord-reply slot="reply" profile="user" mentions>Who you talking to?</discord-reply>
+        I'm talking to <discord-bold>you</discord-bold>!
+    </discord-message>
+</discord-messages>

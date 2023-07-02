@@ -129,13 +129,13 @@ Along with the typical `WaitForMessageAsync` and `WaitForReactionAsync` methods 
 More information about how interactivity works can be found in [the interactivity article](xref:modules_interactivity)
 
 Since select menus create interactions, there are also two additional properties in the configuration:
-- ResponseBehavior
-- ResponseMessage
+- @DisCatSharp.Interactivity.InteractivityConfiguration.ResponseBehavior
+- @DisCatSharp.Interactivity.InteractivityConfiguration.ResponseMessage
 
-ResponseBehavior is what interactivity will do when handling something that isn't a valid select menu, in the context of waiting for a specific select menu. It defaults to `Ignore`, which will cause the interaction fail.
+@DisCatSharp.Interactivity.InteractivityConfiguration.ResponseBehavior is what interactivity will do when handling something that isn't a valid valid select menu, in the context of waiting for a specific select menu. It defaults to @DisCatSharp.Interactivity.Enums.InteractionResponseBehavior.Ignore, which will cause the interaction fail.
 
-Alternatively, setting it to `Ack` will acknowledge the select menu, and continue waiting.
+Alternatively, setting it to @DisCatSharp.Interactivity.Enums.InteractionResponseBehavior.Ack will acknowledge the select menu, and continue waiting.
 
-Respond will reply with an ephemeral message with the aforementioned response message.
+@DisCatSharp.Interactivity.Enums.InteractionResponseBehavior.Respond will reply with an ephemeral message with the aforementioned response message.
 
-ResponseBehavior only applies to the overload accepting a string id of the select menu to wait for.
+@DisCatSharp.Interactivity.InteractivityConfiguration.ResponseBehavior only applies to the overload accepting a string id of the select menu to wait for.

@@ -2,6 +2,7 @@
 uid: topics_components_buttons
 title: Buttons
 author: DisCatSharp Team
+hasDiscordComponents: true
 ---
 
 # Introduction
@@ -84,11 +85,11 @@ var builder = new DiscordMessageBuilder()
     .WithContent("This message has buttons! Pretty neat innit?")
     .AddComponents(new DiscordComponent[]
     {
-        new DiscordButtonComponent(ButtonStyle.Primary, "1_top", "Blurple!"),
-        new DiscordButtonComponent(ButtonStyle.Secondary, "2_top", "Grey!"),
-        new DiscordButtonComponent(ButtonStyle.Success, "3_top", "Green!"),
-        new DiscordButtonComponent(ButtonStyle.Danger, "4_top", "Red!"),
-        new DiscordLinkButtonComponent("https://some-super-cool.site", "Link!")
+        new DiscordButtonComponent(ButtonStyle.Primary, "1_top", "Primary"),
+        new DiscordButtonComponent(ButtonStyle.Secondary, "2_top", "Secondary"),
+        new DiscordButtonComponent(ButtonStyle.Success, "3_top", "Success"),
+        new DiscordButtonComponent(ButtonStyle.Danger, "4_top", "Danger"),
+        new DiscordLinkButtonComponent("https://some-super-cool.site", "Link")
     });
 ```
 As promised, not too complicated. Links however are `DiscordLinkButtonComponent`, which takes a URL as it's first parameter, and the label. Link buttons can also have an emoji, like regular buttons.
@@ -98,16 +99,38 @@ Lets also add a second row of buttons, but disable them, so the user can't push 
 ```cs
 builder.AddComponents(new DiscordComponent[]
 {
-    new DiscordButtonComponent(ButtonStyle.Primary, "1_top_d", "Blurple!", true),
-    new DiscordButtonComponent(ButtonStyle.Secondary, "2_top_d", "Grey!", true),
-    new DiscordButtonComponent(ButtonStyle.Success, "3_top_d", "Green!", true),
-    new DiscordButtonComponent(ButtonStyle.Danger, "4_top_d", "Red!", true),
-    new DiscordLinkButtonComponent("https://some-super-cool.site", "Link!", true)
+    new DiscordButtonComponent(ButtonStyle.Primary, "1_top_d", "Primary", true),
+    new DiscordButtonComponent(ButtonStyle.Secondary, "2_top_d", "Secondary", true),
+    new DiscordButtonComponent(ButtonStyle.Success, "3_top_d", "Success", true),
+    new DiscordButtonComponent(ButtonStyle.Danger, "4_top_d", "Danger", true),
+    new DiscordLinkButtonComponent("https://some-super-cool.site", "Link", true)
 });
 ```
 Practically identical, but now with `true` as an extra parameter. This is the `Disabled` property.
 
-Produces a message like such: ![Buttons](/images/topics_components_buttons_01.png)
+Produces a message like such:
+
+<discord-messages>
+    <discord-message profile="dcs">
+    Omg buttons! Poggers :3
+        <discord-attachments slot="components">
+            <discord-action-row>
+                <discord-button type="primary">Primary</discord-button>
+                <discord-button type="secondary">Secondary</discord-button>
+                <discord-button type="success">Success</discord-button>
+                <discord-button type="destructive">Danger</discord-button>
+                <discord-button url="https://discord.gg/discatsharp">Link</discord-button>
+            </discord-action-row>
+            <discord-action-row>
+                <discord-button type="primary" disabled>Primary</discord-button>
+                <discord-button type="secondary" disabled>Secondary</discord-button>
+                <discord-button type="success" disabled>Success</discord-button>
+                <discord-button type="destructive" disabled>Danger</discord-button>
+                <discord-button url="https://discord.gg/discatsharp" disabled>Link</discord-button>
+            </discord-action-row>
+        </discord-attachments>
+    </discord-message>
+</discord-messages>
 
 Well, that's all neat, but lets say you want to add an emoji. Being able to use any emoji is pretty neat, after all. That's also very simple!
 
@@ -116,12 +139,24 @@ var myButton = new DiscordButtonComponent
 (
     ButtonStyle.Primary,
     "emoji_button",
-    null,
+    "OwO",
     false,
-    new DiscordComponentEmoji(595381687026843651)
+    new DiscordComponentEmoji(922569846569455646)
 );
 ```
-And you're done! Simply add that to a builder, and when you send, you'll get a message that has a button with a little Pikachu enjoying a lolipop. Adorable. ![PikaLolipop](/images/topics_components_buttons_02.png)
+And you're done! Simply add that to a builder, and when you send, you'll get a message that has a button with our cute logo!
+
+
+
+<discord-messages>
+    <discord-message profile="dcs">
+    What's this? Emojis in buttons??
+        <discord-attachments slot="components">
+            <discord-action-row>
+                <discord-button type="primary" emoji="https://cdn.discordapp.com/emojis/922569846569455646.webp?size=96&quality=lossless" emoji-name="dcs">OwO</discord-button>
+            </discord-action-row>
+    </discord-message>
+</discord-messages>
 
 
 ## Responding to button presses
@@ -162,13 +197,13 @@ Along with the typical `WaitForMessageAsync` and `WaitForReactionAsync` methods 
 More information about how interactivity works can be found in [the interactivity article](xref:modules_interactivity)
 
 Since buttons create interactions, there are also two additional properties in the configuration:
-- ResponseBehavior
-- ResponseMessage
+- @DisCatSharp.Interactivity.InteractivityConfiguration.ResponseBehavior
+- @DisCatSharp.Interactivity.InteractivityConfiguration.ResponseMessage
 
-ResponseBehavior is what interactivity will do when handling something that isn't a valid valid button, in the context of waiting for a specific button. It defaults to `Ignore`, which will cause the interaction fail.
+@DisCatSharp.Interactivity.InteractivityConfiguration.ResponseBehavior is what interactivity will do when handling something that isn't a valid valid button, in the context of waiting for a specific button. It defaults to @DisCatSharp.Interactivity.Enums.InteractionResponseBehavior.Ignore, which will cause the interaction fail.
 
-Alternatively, setting it to `Ack` will acknowledge the button, and continue waiting.
+Alternatively, setting it to @DisCatSharp.Interactivity.Enums.InteractionResponseBehavior.Ack will acknowledge the button, and continue waiting.
 
-Respond will reply with an ephemeral message with the aforementioned response message.
+@DisCatSharp.Interactivity.Enums.InteractionResponseBehavior.Respond will reply with an ephemeral message with the aforementioned response message.
 
-ResponseBehavior only applies to the overload accepting a string id of the button to wait for.
+@DisCatSharp.Interactivity.InteractivityConfiguration.ResponseBehavior only applies to the overload accepting a string id of the button to wait for.

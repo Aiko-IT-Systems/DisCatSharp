@@ -2,6 +2,7 @@
 uid: getting_started_first_bot
 title: Your First Bot
 author: DisCatSharp Team
+hasDiscordComponents: true
 ---
 
 # Your First Bot
@@ -231,7 +232,13 @@ Your bot should respond with *pong!* for each *ping* you send.
 
 Congrats, your bot now does something!
 
-![Bot Response](/images/getting_started_first_bot_13.png)
+<discord-messages>
+    <discord-message profile="user">ping</discord-message>
+    <discord-message profile="dcs" highlight>
+        <discord-reply slot="reply" profile="user" mentions>ping</discord-reply>
+        pong!
+    </discord-message>
+</discord-messages>
 
 
 ## Further Reading
