@@ -57,9 +57,16 @@ Once the argument converter is written and registered, we'll be able to use it:
 [Command("boolean")]
 public async Task BooleanCommand(CommandContext ctx, bool boolean)
 {
-    await ctx.RespondAsync($"Converted to {boolean}");
+    await ctx.RespondAsync($"Converted to {boolean} :3");
 }
 ```
 
-![true](/images/commands_argument_converters_01.png)
+<discord-messages>
+    <discord-message profile="user">
+        !boolean yes
+    </discord-message>
+    <discord-message profile="dcs">
+        Converted to True :3
+    </discord-message>
+</discord-messages>
 

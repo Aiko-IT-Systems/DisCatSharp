@@ -16,15 +16,16 @@ hasDiscordComponents: true
     <discord-message profile="user_dm">What is that, do you have an invite?</discord-message>
     <discord-message profile="dcs_user_dm">
         Sure!<br/><br/><a target="_blank" class="discord-link external" href="https://discord.gg/discatsharp">https://discord.gg/discatsharp</a>
-		<discord-attachments slot="attachments"><discord-invite name="DisCatSharp" icon="https://cdn.discordapp.com/icons/858089281214087179/c40cc6390001072cd06c0dfcf853e295.png" url="https://discord.gg/TpEJZr42gY" online="69" members="420" verified="false"></discord-invite></discord-attachments>
+		<discord-attachments slot="attachments"><discord-invite name="DisCatSharp" icon="https://cdn.discordapp.com/icons/858089281214087179/c40cc6390001072cd06c0dfcf853e295.png" url="https://discord.gg/TpEJZr42gY" online="69" members="420" verified="true"></discord-invite></discord-attachments>
     </discord-message>
 </discord-messages>
 <br/>
 <discord-messages>
+    <discord-header guild="DisCatSharp" channel="general" icon="https://cdn.discordapp.com/icons/858089281214087179/c40cc6390001072cd06c0dfcf853e295.png">This is the main channel of DisCatSharp</discord-header>
     <discord-system-message type="join">
         Welcome, <i style="color: #00c0ff;">Discord User</i>. We hope you brought pizza.
          <discord-reactions slot="reactions">
-            <discord-reaction interactive="true" name="xcatclap" emoji="https://cdn.discordapp.com/emojis/1059823127271575612.gif" count="7"></discord-reaction>
+            <discord-reaction interactive="true" name="xcatclap" emoji="https://cdn.discordapp.com/emojis/1059823127271575612.gif" count="68"></discord-reaction>
         </discord-reactions>
     </discord-system-message>
     <discord-message profile="user">Hey guys, I'm new here!</discord-message>

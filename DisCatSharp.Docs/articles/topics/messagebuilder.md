@@ -21,23 +21,24 @@ but here we'll go over some of the concepts of using the message builder:
 For sending files, you'll have to use the MessageBuilder to construct your message, see example below:
 
 ```cs
- using (var fs = new FileStream("snippet.cs", FileMode.Open, FileAccess.Read))
+ using (var fs = new FileStream("global_name.cs", FileMode.Open, FileAccess.Read))
  {
     var msg = await new DiscordMessageBuilder()
         .WithContent("Here's a code snippet for you!")
-        .WithFiles(new Dictionary<string, Stream>() { { "snippet.cs", fs } })
+        .WithFiles(new Dictionary<string, Stream>() { { "global_name.cs", fs } })
         .SendAsync(ctx.Channel);
 }
 ```
 
-<!-- To fix
 <discord-messages>
     <discord-message profile="dcs">
-        <discord-attachment slot="attachments" type="file" alt="snippet.cs" size="5"></discord-attachment>
         Here's a code snippet for you!
+        <discord-attachments slot="attachments">
+            <discord-attachment type="file" alt="global_name.cs" size="1.2 MB"  url="/snippets/global_name.cs"></discord-attachment>
+        </discord-attachments>
     </discord-message>
 </discord-messages>
--->
+
 ### Adding Mentions
 
 For sending mentions, you'll have to use the MessageBuilder to construct your message, see example below:

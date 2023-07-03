@@ -47,7 +47,7 @@ public async Task GreetCommand(CommandContext ctx) { }
 In the body of our new method, we'll use `CommandContext#RespondAsync` to send a simple message.
 
 ```cs
-await ctx.RespondAsync("Greetings! Thank you for executing me!");
+await ctx.RespondAsync("Greetings! UwU");
 ```
 
 Finally, mark your command method with the `Command` attribute so CommandsNext will know to treat our method as a command method.
@@ -59,7 +59,7 @@ We'll name our command *greet* to match the name of the method.
 [Command("greet")]
 public async Task GreetCommand(CommandContext ctx)
 {
-    await ctx.RespondAsync("Greetings! Thank you for executing me!");
+    await ctx.RespondAsync("Greetings! UwU");
 }
 ```
 
@@ -75,7 +75,7 @@ public class MyFirstModule : BaseCommandModule
     [Command("greet")]
     public async Task GreetCommand(CommandContext ctx)
     {
-        await ctx.RespondAsync("Greetings! Thank you for executing me!");
+        await ctx.RespondAsync("Greetings! UwU");
     }
 }
 ```
@@ -156,9 +156,14 @@ internal static async Task MainAsync()
 It's now the moment of truth; all your blood, sweat, and tears have lead to this moment.
 Hit `F5` on your keyboard to compile and run your bot, then execute your command in any channel that your bot account has access to.
 
-![Congratulations, You've Won!](/images/commands_intro_03.png)
-
-[That was easy](https://www.youtube.com/watch?v=GsQXadrmhws).
+<discord-messages>
+    <discord-message profile="user">
+        !greet
+    </discord-message>
+    <discord-message profile="dcs">
+        Greetings! UwU
+    </discord-message>
+</discord-messages>
 
 
 ## Taking User Input
@@ -186,13 +191,20 @@ which uses our new parameter.
 ```cs
 public async Task GreetCommand(CommandContext ctx, string name)
 {
-    await ctx.RespondAsync($"Greetings, {name}! You're pretty neat!");
+    await ctx.RespondAsync($"Greetings, {name}! You're cute OwO!");
 }
 ```
 
 That's all there is to it. Smack `F5` and test it out in a channel your bot account has access to.
 
-![Greet Part 2: Electric Boogaloo](/images/commands_intro_04.png)
+<discord-messages>
+    <discord-message profile="user">
+        !greet Drac
+    </discord-message>
+    <discord-message profile="dcs">
+        Greetings, Drac! You're cute OwO!
+    </discord-message>
+</discord-messages>
 
 Now, you may have noticed that providing more than one word simply does not work.
 For example, `!greet Luke Smith` will result in no response from your bot.
@@ -207,7 +219,7 @@ The simplest way to get around this would be to wrap your input with double quot
 CommandsNext will parse this as one argument, allowing your command to be executed.
 
 ```
-!greet "Luke Smith"
+!greet "Lala Sabathil"
 ```
 
 If you would prefer not to use quotes, you can use the `RemainingText` attribute on your parameter.
@@ -275,7 +287,14 @@ await ctx.RespondAsync($"Your number is: {random.Next(min, max)}");
 
 Run your bot once more with `F5` and give this a try in a text channel.
 
-![Discord Channel](/images/commands_intro_05.png)
+<discord-messages>
+    <discord-message profile="user">
+        !random 1 100
+    </discord-message>
+    <discord-message profile="dcs">
+        Your number is: 69
+    </discord-message>
+</discord-messages>
 
 CommandsNext converted the two arguments from `string` into `int` and passed them to the parameters of our command,
 removing the need to manually parse and convert the arguments yourself.
@@ -292,17 +311,38 @@ Then modify the response to mention the provided member with the `Mention` prope
 ```cs
 public async Task GreetCommand(CommandContext ctx, DiscordMember member)
 {
-    await ctx.RespondAsync($"Greetings, {member.Mention}! Enjoy the mention!");
+    await ctx.RespondAsync($"Heywo, {member.Mention}! Enjoy the mention!");
 }
 ```
 
 Go ahead and give that a test run.
 
-![According to all known laws of aviation,](/images/commands_intro_06.png)
+<discord-messages>
+    <discord-message profile="user">
+        !greet <discord-mention>Discord User</discord-mention>
+    </discord-message>
+    <discord-message profile="dcs">
+        Heywo, <discord-mention highlight>Discord User</discord-mention>! Enjoy the mention!
+    </discord-message>
+</discord-messages>
 
-![there is no way a bee should be able to fly.](/images/commands_intro_07.png)
+<discord-messages>
+    <discord-message profile="user">
+        !greet Discord User
+    </discord-message>
+    <discord-message profile="dcs">
+        Heywo, <discord-mention highlight>Discord User</discord-mention>! Enjoy the mention!
+    </discord-message>
+</discord-messages>
 
-![Its wings are too small to get its fat little body off the ground.](/images/commands_intro_08.png)
+<discord-messages>
+    <discord-message profile="user">
+        !greet 666339628613107725
+    </discord-message>
+    <discord-message profile="dcs">
+        Heywo, <discord-mention highlight>Discord User</discord-mention>! Enjoy the mention!
+    </discord-message>
+</discord-messages>
 
 The argument converter for `DiscordMember` is able to parse mentions, usernames, nicknames, and user IDs then look for a matching member within the guild the command was executed from.
 Ain't that neat?

@@ -352,6 +352,7 @@ Now we can use these commands to listen to music!
 		<discord-embed
 			slot="embeds"
 			provider="YouTube"
+            provider-url="https://www.youtube.com"
 			author-name="Raon"
 			author-url="https://www.youtube.com/channel/UCQn1FqrR2OCjSe6Nl4GlVHw"
 			color="#FF0000"

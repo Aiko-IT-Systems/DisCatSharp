@@ -5,6 +5,7 @@ hasDiscordComponents: true
 ---
 
 # Introduction to Interactivity
+
 Interactivity will enable you to write commands which the user can interact with through reactions and messages.
 The goal of this article is to introduce you to the general flow of this extension.
 
@@ -13,6 +14,7 @@ Make sure to install the `DisCatSharp.Interactivity` package from NuGet before c
 ![Interactivity NuGet](/images/interactivity_01.png)
 
 ## Enabling Interactivity
+
 Interactivity can be registered using the `DiscordClient#UseInteractivity()` extension method.<br/>
 Optionally, you can also provide an instance of `InteractivityConfiguration` to modify default behaviors.
 
@@ -35,17 +37,18 @@ There are two ways available to use interactivity:
 
 We'll have a quick look at a few common interactivity methods along with an example of use for each.
 
-<br/>
 The first (and arguably most useful) extension method is `SendPaginatedMessageAsync` for `DiscordChannel`.
 
 This method displays a collection of *'pages'* which are selected one-at-a-time by the user through reaction buttons.
 Each button click will move the page view in one direction or the other until the timeout is reached.
 
 You'll need to create a collection of pages before you can invoke this method.
-This can be done easily using the `GeneratePagesInEmbed` and `GeneratePagesInContent` instance methods from `InteractivityExtension`.<br/>
+This can be done easily using the `GeneratePagesInEmbed` and `GeneratePagesInContent` instance methods from `InteractivityExtension`.
+
 Alternatively, for pre-generated content, you can create and add individual instances of `Page` to a collection.
 
 This example will use the `GeneratePagesInEmbed` method to generate the pages.
+
 ```cs
 public async Task PaginationCommand(CommandContext ctx)
 {
@@ -75,11 +78,11 @@ public async Task PaginationCommand(CommandContext ctx)
     </discord-message>
 </discord-messages>
 
-<br/>
-Next we'll look at the `WaitForReactionAsync` extension method for `DiscordMessage`.<br/>
+Next we'll look at the `WaitForReactionAsync` extension method for `DiscordMessage`.
 This method waits for a reaction from a specific user and returns the emoji that was used.
 
 An overload of this method also enables you to wait for a *specific* reaction, as shown in the example below.
+
 ```cs
 public async Task ReactionCommand(CommandContext ctx, DiscordMember member)
 {
@@ -104,8 +107,7 @@ public async Task ReactionCommand(CommandContext ctx, DiscordMember member)
     </discord-message>
 </discord-messages>
 
-<br/>
-Another reaction extension method for `DiscordMessage` is `CollectReactionsAsync`.<br/>
+Another reaction extension method for `DiscordMessage` is `CollectReactionsAsync`.
 As the name implies, this method collects all reactions on a message until the timeout is reached.
 
 ```cs
@@ -136,11 +138,11 @@ public async Task CollectionCommand(CommandContext ctx)
     </discord-message>
 </discord-messages>
 
-<br/>
-The final one we'll take a look at is the `GetNextMessageAsync` extension method for `DiscordMessage`.<br/>
+The final one we'll take a look at is the `GetNextMessageAsync` extension method for `DiscordMessage`.
 
-This method will return the next message sent from the author of the original message.<br/>
+This method will return the next message sent from the author of the original message.
 Our example here will use its alternate overload which accepts an additional predicate.
+
 ```cs
 public async Task ActionCommand(CommandContext ctx)
 {

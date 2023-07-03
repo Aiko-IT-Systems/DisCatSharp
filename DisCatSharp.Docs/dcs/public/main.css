@@ -319,3 +319,22 @@ a.discord-button[href] {
 a.discord-button[href]::after  {
 	content: '' !important;
 }
+
+*, ::before, ::after {
+	 box-sizing: content-box !important;
+}
+
+.discord-invite .discord-invite-badge {
+	width: 16px !important;
+	height: 23px !important;
+}
+
+.discord-header-text {
+	flex-grow: 1;
+	left: 8px !important;
+	position: relative !important;
+}
+
+.discord-header {
+	display: contents !important;
+}

@@ -101,4 +101,11 @@ public async Task GenericCommand(CommandContext ctx, string generic)
 }
 ```
 
-![Generic Image](/images/commands_command_attributes_01.png)
+<discord-messages>
+    <discord-message profile="user">
+        !generic
+    </discord-message>
+    <discord-message profile="dcs">
+        Only usable during the year 2030!
+    </discord-message>
+</discord-messages>
