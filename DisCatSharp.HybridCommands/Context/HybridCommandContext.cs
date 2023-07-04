@@ -36,7 +36,10 @@ using DisCatSharp.HybridCommands.Enums;
 namespace DisCatSharp.HybridCommands.Context;
 public class HybridCommandContext
 {
-	internal HybridCommandContext(CommandContext ctx)
+	/// <summary>
+	/// Do not use, required by RunTime-compiled classes.
+	/// </summary>
+	public HybridCommandContext(CommandContext ctx)
 	{
 		this.ExcutionType = HybridExecutionType.PrefixCommand;
 
@@ -60,7 +63,10 @@ public class HybridCommandContext
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 	}
 
-	internal HybridCommandContext(InteractionContext ctx)
+	/// <summary>
+	/// Do not use, required by RunTime-compiled classes.
+	/// </summary>
+	public HybridCommandContext(InteractionContext ctx)
 	{
 		this.ExcutionType = HybridExecutionType.SlashCommand;
 
@@ -80,7 +86,10 @@ public class HybridCommandContext
 		this.ParentCommandName = ctx.CommandName;
 	}
 
-	internal HybridCommandContext(ContextMenuContext ctx)
+	/// <summary>
+	/// Do not use, required by RunTime-compiled classes.
+	/// </summary>
+	public HybridCommandContext(ContextMenuContext ctx)
 	{
 		this.ExcutionType = HybridExecutionType.ContextMenuCommand;
 

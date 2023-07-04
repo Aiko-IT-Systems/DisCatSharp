@@ -22,12 +22,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands;
@@ -143,7 +145,7 @@ internal static class HybridCommandsUtilities
 		return true;
 	}
 
-	internal static async Task<Assembly[]> CompileCommands(this Type type, ulong? guildId = null)
+	internal static async Task<Assembly[]> CompileAndLoadCommands(this Type type, ulong? guildId = null)
 	{
 		if (HybridCommandsExtension.Configuration is null)
 			throw new InvalidOperationException("Configuration is null");
@@ -176,6 +178,46 @@ internal static class HybridCommandsUtilities
 
 		Dictionary<Assembly, string> loadedAssemblies = new();
 
+		void PopulateFields()
+		{
+			foreach (var assembly in loadedAssemblies.Keys)
+			{
+				if (HybridCommandsExtension.DebugEnabled)
+					HybridCommandsExtension.Logger?.LogDebug("Populating assembly {assembly}", assembly.FullName);
+
+				foreach (var parentType in assembly.GetTypes())
+				{
+					if (HybridCommandsExtension.DebugEnabled)
+						HybridCommandsExtension.Logger?.LogDebug("Populating type {type}", parentType.FullName);
+
+					foreach (var method in parentType.GetMethods())
+					{
+						if (method.Name.EndsWith("_Populate"))
+						{
+							if (HybridCommandsExtension.DebugEnabled)
+								HybridCommandsExtension.Logger?.LogDebug("Populating via {method} in {type}", method.Name, parentType.Name);
+
+							method.Invoke(null, Array.Empty<object>());
+						}
+					}
+
+					foreach (var subType in parentType.GetNestedTypes())
+					{
+						foreach (var method in subType.GetMethods())
+						{
+							if (method.Name.EndsWith("_Populate"))
+							{
+								if (HybridCommandsExtension.DebugEnabled)
+									HybridCommandsExtension.Logger?.LogDebug("Populating via {method} in {type}", method.Name, subType.Name);
+
+								method.Invoke(null, Array.Empty<object>());
+							}
+						}
+					}
+				}
+			}
+		}
+
 		if (!HybridCommandsExtension.Configuration.DisableCompilationCache && cacheConfig.LastKnownTypeHashes.Contains(typeHash))
 			foreach (var file in fileInfos)
 			{
@@ -184,7 +226,7 @@ internal static class HybridCommandsUtilities
 					var loadContext = new CommandLoadContext(file.FullName);
 					var assembly = loadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(file.FullName)));
 
-					if (assembly.GetTypes().Any(x => typeof(ApplicationCommandsModule).IsAssignableTo(x)))
+					if (assembly.GetTypes().Any(x => typeof(ApplicationCommandsModule).IsAssignableFrom(x)))
 						loadedAssemblies.Add(assembly, $"{typeHash}-app");
 				}
 
@@ -193,13 +235,49 @@ internal static class HybridCommandsUtilities
 					var loadContext = new CommandLoadContext(file.FullName);
 					var assembly = loadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(file.FullName)));
 
-					if (assembly.GetTypes().Any(x => typeof(BaseCommandModule).IsAssignableTo(x)))
+					if (assembly.GetTypes().Any(x => typeof(BaseCommandModule).IsAssignableFrom(x)))
 						loadedAssemblies.Add(assembly, $"{typeHash}-prefix");
 				}
 			}
 
-		if (loadedAssemblies.Values.Any(x => x == $"{typeHash}-prefix") && loadedAssemblies.Values.Any(x => x == $"{typeHash}-prefix"))
+		if (loadedAssemblies.Values.Any(x => x == $"{typeHash}-prefix") && loadedAssemblies.Values.Any(x => x == $"{typeHash}-app"))
+		{
+			PopulateFields();
 			return loadedAssemblies.Keys.ToArray();
+		}
+
+		void RenderError(ImmutableArray<Diagnostic> diagnostics, string generatedClass)
+		{
+			if (!HybridCommandsExtension.DebugEnabled)
+				return;
+
+			Thread.Sleep(1000);
+
+			for (var i = 0; i < generatedClass.Length; i++)
+			{
+				var foundDiagnostic = diagnostics.FirstOrDefault(x => x!.Location.SourceSpan.Start <= i && x.Location.SourceSpan.End >= i, null);
+
+				if (foundDiagnostic is not null)
+					switch (foundDiagnostic.Severity)
+					{
+						case DiagnosticSeverity.Info:
+							Console.ForegroundColor = ConsoleColor.Cyan;
+							break;
+						case DiagnosticSeverity.Warning:
+							Console.ForegroundColor = ConsoleColor.Yellow;
+							break;
+						case DiagnosticSeverity.Error:
+							Console.ForegroundColor = ConsoleColor.Red;
+							break;
+					}
+				else
+					Console.ResetColor();
+
+				Console.Write(generatedClass[i]);
+			}
+
+			Console.WriteLine();
+		}
 
 		string[] GenerateAppCommandMethods()
 		{
@@ -258,21 +336,26 @@ internal static class HybridCommandsUtilities
 				}
 
 				generatedMethods.Add($$"""
-						public static {{typeof(MethodInfo)}} {{MethodName}}_CommandMethod { get; set; }
+						public static {{typeof(MethodInfo).FullName}} {{MethodName}}_CommandMethod { get; set; }
 
-						public static {{MethodName}}_Populate()
-							=> {{MethodName}}_CommandMethod = {{typeof(Assembly).FullName}}.GetCallingAssembly().GetType($"{{type.FullName}}").GetMethods().First(x => x.Name == "{{method.Name}}");
+						public static void {{MethodName}}_Populate()
+						{
+							var callingAssembly = {{typeof(AppDomain).FullName}}.CurrentDomain.GetAssemblies().SingleOrDefault(assembly => assembly.GetName().Name == "{{type.Assembly.GetName().Name}}");
+							var type = callingAssembly.GetType("{{type.FullName}}");
+							var methods = type.GetMethods();
+							{{MethodName}}_CommandMethod = methods.First(x => x.Name == "{{method.Name}}");
+						}
 
 						[{{typeof(SlashCommandAttribute).FullName}}("{{cmdInfo.Name.SanitzeForString()}}", "{{cmdInfo.Description.SanitzeForString()}}")]
 						public {{typeof(Task).FullName}} {{MethodName}}_Execute({{typeof(InteractionContext).FullName}} ctx{{MakeParameters()}})
 						{
-							{{(guildId is not null ? $"if (ctx.Guild?.Id ?? 0 != {guildId}) return;" : "")}}
+							{{(guildId is not null ? $"if ((ctx.Guild?.Id ?? 0) != {guildId}) return {typeof(Task).FullName}.CompletedTask;" : "")}}
 							
 							{{MethodName}}_CommandMethod.Invoke({{typeof(Activator).FullName}}.CreateInstance({{MethodName}}_CommandMethod.DeclaringType), new object[]
 							{
 								new {{typeof(HybridCommandContext).FullName}}(ctx){{(filteredParams.Any() ? $", {string.Join(", ", filteredParams.Select(x => x.Name))}" : "")}}
 							});
-							return {{typeof(Task).FullName}}.Completed;
+							return {{typeof(Task).FullName}}.CompletedTask;
 						}
 					""");
 			}
@@ -283,6 +366,8 @@ internal static class HybridCommandsUtilities
 		var AppClass =
 		  $$"""
 			// This class has been auto-generated by DisCatSharp.HybridCommands.
+
+			using System.Linq;
 
 			namespace DisCatSharp.RunTimeCompiled;
 
@@ -349,22 +434,27 @@ internal static class HybridCommandsUtilities
 				}
 				
 				generatedMethods.Add($$"""
-						public static {{typeof(MethodInfo)}} {{MethodName}}_CommandMethod { get; set; }
+						public static {{typeof(MethodInfo).FullName}} {{MethodName}}_CommandMethod { get; set; }
 
-						public static {{MethodName}}_Populate()
-							=> {{MethodName}}_CommandMethod = {{typeof(Assembly).FullName}}.GetCallingAssembly().GetType($"{{type.FullName}}").GetMethods().First(x => x.Name == "{{method.Name}}");
+						public static void {{MethodName}}_Populate()
+						{
+							var callingAssembly = {{typeof(AppDomain).FullName}}.CurrentDomain.GetAssemblies().SingleOrDefault(assembly => assembly.GetName().Name == "{{type.Assembly.GetName().Name}}");
+							var type = callingAssembly.GetType("{{type.FullName}}");
+							var methods = type.GetMethods();
+							{{MethodName}}_CommandMethod = methods.First(x => x.Name == "{{method.Name}}");
+						}
 
 						[{{typeof(CommandAttribute).FullName}}("{{cmdInfo.Name.SanitzeForString()}}"),
 						{{typeof(DescriptionAttribute).FullName}}("{{cmdInfo.Description.SanitzeForString()}}")]
 						public {{typeof(Task).FullName}} {{MethodName}}_Execute({{typeof(CommandContext).FullName}} ctx{{MakeParameters()}})
 						{
-							{{(guildId is not null ? $"if (ctx.Guild?.Id ?? 0 != {guildId}) return;" : "")}}
+							{{(guildId is not null ? $"if ((ctx.Guild?.Id ?? 0) != {guildId}) return {typeof(Task).FullName}.CompletedTask;" : "")}}
 							
 							{{MethodName}}_CommandMethod.Invoke({{typeof(Activator).FullName}}.CreateInstance({{MethodName}}_CommandMethod.DeclaringType), new object[]
 							{
 								new {{typeof(HybridCommandContext).FullName}}(ctx){{(filteredParams.Any() ? $", {string.Join(", ", filteredParams.Select(x => x.Name))}" : "")}}
 							});
-							return {{typeof(Task).FullName}}.Completed;
+							return {{typeof(Task).FullName}}.CompletedTask;
 						}
 					""");
 			}
@@ -375,6 +465,8 @@ internal static class HybridCommandsUtilities
 		var PrefixClass =
 		  $$"""
 			// This class has been auto-generated by DisCatSharp.HybridCommands.
+
+			using System.Linq;
 
 			namespace DisCatSharp.RunTimeCompiled;
 
@@ -390,7 +482,7 @@ internal static class HybridCommandsUtilities
 			File.WriteAllText($"{CacheDirectoryPath}/{typeHash}-prefix.cs", PrefixClass);
 		}
 
-		var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary).WithOptimizationLevel(OptimizationLevel.Release);
+		var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary).WithOptimizationLevel(OptimizationLevel.Debug);
 		var references = AppDomain.CurrentDomain.GetAssemblies().Where(x => !x.IsDynamic && !string.IsNullOrWhiteSpace(x.Location)).Select(x => MetadataReference.CreateFromFile(x.Location));
 
 		try
@@ -406,6 +498,8 @@ internal static class HybridCommandsUtilities
 										.WithOptions(options).Emit(stream);
 				if (!result.Success)
 				{
+					RenderError(result.Diagnostics, AppClass);
+
 					Exception exception = new();
 					exception.Data.Add("diagnostics", result.Diagnostics);
 					throw exception;
@@ -432,7 +526,7 @@ internal static class HybridCommandsUtilities
 		}
 		catch (Exception ex)
 		{
-			HybridCommandsExtension.Logger?.LogDebug(ex, "Failed to compile Application Commands Class '{class}'.", type.Name);
+			HybridCommandsExtension.Logger?.LogError(ex, "Failed to compile Application Commands Class '{class}'.", type.Name);
 		}
 
 		try
@@ -448,6 +542,8 @@ internal static class HybridCommandsUtilities
 										.WithOptions(options).Emit(stream);
 				if (!result.Success)
 				{
+					RenderError(result.Diagnostics, PrefixClass);
+
 					Exception exception = new();
 					exception.Data.Add("diagnostics", result.Diagnostics);
 					throw exception;
@@ -474,10 +570,12 @@ internal static class HybridCommandsUtilities
 		}
 		catch (Exception ex)
 		{
-			HybridCommandsExtension.Logger?.LogDebug(ex, "Failed to compile Prefix Commands Class '{class}'.", type.Name);
+			HybridCommandsExtension.Logger?.LogError(ex, "Failed to compile Prefix Commands Class '{class}'.", type.Name);
 		}
 
-		return Array.Empty<Assembly>();
+		File.WriteAllText(CacheConfigPath, JsonConvert.SerializeObject(cacheConfig, Formatting.Indented));
+		PopulateFields();
+		return loadedAssemblies.Keys.ToArray();
 	}
 
 	/// <summary>

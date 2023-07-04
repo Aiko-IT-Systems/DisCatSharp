@@ -96,4 +96,15 @@ public class HybridCommandAttribute : Attribute
 		this.DmPermission = dmPermission;
 		this.IsNsfw = isNsfw;
 	}
+
+	/// <summary>
+	/// Marks this method as hybrid command.
+	/// </summary>
+	/// <param name="name">The name of this hybrid command.</param>
+	/// <param name="description">The description of this hybrid command.</param>
+	public HybridCommandAttribute(string name, string description)
+	{
+		this.Name = name;
+		this.Description = description;
+	}
 }

@@ -118,5 +118,8 @@ public sealed class HybridCommandsConfiguration
 		this.PrefixResolver = other.PrefixResolver;
 		this.ServiceProvider = other.ServiceProvider;
 		this.StringPrefixes = other.StringPrefixes;
+		this.DisableCompilationCache = other.DisableCompilationCache;
+		this.OutputGeneratedClasses = other.OutputGeneratedClasses;
+		this.DebugEnabled = other.DebugEnabled;
 	}
 }

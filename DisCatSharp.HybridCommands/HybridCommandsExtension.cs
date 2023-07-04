@@ -29,8 +29,13 @@ using System.Reflection;
 using System.Linq;
 using DisCatSharp.ApplicationCommands.Context;
 using System.Threading.Tasks;
-using System.IO;
 using DisCatSharp.HybridCommands.Context;
+using DisCatSharp.HybridCommands.Attributes;
+using System.Collections.Generic;
+using DisCatSharp.Enums;
+using DisCatSharp.Entities;
+using System.Diagnostics;
+using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.HybridCommands;
 public sealed class HybridCommandsExtension : BaseExtension
@@ -41,10 +46,12 @@ public sealed class HybridCommandsExtension : BaseExtension
 
 	internal static string? ExecutionDirectory { get; set; }
 
+	internal List<HybridCommandAttribute> registeredCommands { get; set; } = new();
+
 	public static bool DebugEnabled 
 		=> Configuration?.DebugEnabled ?? false;
 
-	internal protected override void Setup(DiscordClient client)
+	internal protected override async void Setup(DiscordClient client)
 	{
 		if (this.Client != null)
 			throw new InvalidOperationException("What did I tell you?");
@@ -60,6 +67,8 @@ public sealed class HybridCommandsExtension : BaseExtension
 		{
 			EnableLocalization = Configuration.EnableLocalization,
 			ServiceProvider = Configuration.ServiceProvider ?? null,
+			EnableDefaultHelp = false,
+			AutoDefer = true
 		});
 
 
@@ -69,8 +78,12 @@ public sealed class HybridCommandsExtension : BaseExtension
 			PrefixResolver = Configuration.PrefixResolver ?? null,
 			ServiceProvider = Configuration.ServiceProvider ?? null,
 			StringPrefixes = Configuration.StringPrefixes ?? null,
+			EnableDefaultHelp = false
 		});
 #pragma warning restore CS8601 // Possible null reference assignment.
+
+		if (HybridCommandsExtension.Configuration.EnableDefaultHelp)
+			await this.RegisterGlobalCommands<DefaultHybridHelp>();
 	}
 
 	/// <summary>
@@ -116,19 +129,19 @@ public sealed class HybridCommandsExtension : BaseExtension
 		if (!type.IsModuleCandidateType())
 			throw new ArgumentException("Command Class is not a valid module candidate.");
 
-		foreach (var assembly in await type.CompileCommands())
+		foreach (var assembly in await type.CompileAndLoadCommands())
 		{
 			var commandsNextModule = assembly.DefinedTypes.FirstOrDefault(x => typeof(BaseCommandModule).IsAssignableTo(x), null);
 			if (commandsNextModule is not null)
 			{
-				// this.Client.GetCommandsNext().RegisterCommands(commandsNextModule);
+				this.Client.GetCommandsNext().RegisterCommands(commandsNextModule);
 			}
 
 			var applicationCommandsModule = assembly.DefinedTypes.FirstOrDefault(x => typeof(ApplicationCommandsModule).IsAssignableTo(x), null);
 			if (applicationCommandsModule is not null)
 			{
 #pragma warning disable CS8604 // Possible null reference argument.
-				// this.Client.GetApplicationCommands().RegisterGlobalCommands(applicationCommandsModule, translationSetup);
+				this.Client.GetApplicationCommands().RegisterGlobalCommands(applicationCommandsModule, translationSetup);
 #pragma warning restore CS8604 // Possible null reference argument.
 			}
 		}
@@ -145,19 +158,19 @@ public sealed class HybridCommandsExtension : BaseExtension
 		if (!type.IsModuleCandidateType())
 			throw new ArgumentException("Command Class is not a valid module candidate.");
 
-		foreach (var assembly in await type.CompileCommands(guildId))
+		foreach (var assembly in await type.CompileAndLoadCommands(guildId))
 		{
-			var commandsNextModule = assembly.DefinedTypes.FirstOrDefault(x => typeof(BaseCommandModule).IsAssignableTo(x), null);
+			var commandsNextModule = assembly.DefinedTypes.FirstOrDefault(x => typeof(BaseCommandModule).IsAssignableFrom(x), null);
 			if (commandsNextModule is not null)
 			{
-				// this.Client.GetCommandsNext().RegisterCommands(commandsNextModule);
+				this.Client.GetCommandsNext().RegisterCommands(commandsNextModule);
 			}
 
-			var applicationCommandsModule = assembly.DefinedTypes.FirstOrDefault(x => typeof(ApplicationCommandsModule).IsAssignableTo(x), null);
+			var applicationCommandsModule = assembly.DefinedTypes.FirstOrDefault(x => typeof(ApplicationCommandsModule).IsAssignableFrom(x), null);
 			if (applicationCommandsModule is not null)
 			{
 #pragma warning disable CS8604 // Possible null reference argument.
-				// this.Client.GetApplicationCommands().RegisterGuildCommands(applicationCommandsModule, guildId, translationSetup);
+				this.Client.GetApplicationCommands().RegisterGuildCommands(applicationCommandsModule, guildId, translationSetup);
 #pragma warning restore CS8604 // Possible null reference argument.
 			}
 		}
@@ -184,8 +197,77 @@ public sealed class HybridCommandsExtension : BaseExtension
 
 public class DefaultHybridHelp : HybridCommandsModule
 {
+	[HybridCommand("help", "Displays all commands, their usage and description", true, false)]
 	public async Task HelpAsync(HybridCommandContext ctx)
 	{
+		var hybridModule = ctx.Client.GetHybridCommands();
+		var commandDescriptions = new List<string>();
 
+		foreach (var command in hybridModule.registeredCommands)
+			commandDescriptions.Add($"`{command.Name}` - _{command.Description}_{(command.IsNsfw ? " (**NSFW**)" : "")}");
+
+		var splitDescriptions = new List<string>();
+
+		var currentBuild = "";
+		foreach (var description in commandDescriptions)
+		{
+			var add = $"{description}\n";
+
+			if (add.Length + currentBuild.Length > 2048)
+			{
+				splitDescriptions.Add(currentBuild);
+				currentBuild = "";
+			}
+
+			currentBuild += add;
+		}
+
+		if (currentBuild.Length > 0)
+		{
+			splitDescriptions.Add(currentBuild);
+			currentBuild = "";
+		}
+
+		var embeds = splitDescriptions.Select(x => new DiscordEmbedBuilder
+		{
+			Description = x,
+			Title = "Command list",
+			Timestamp = DateTime.UtcNow
+		}).ToList();
+
+		var PrevPage = new DiscordButtonComponent(ButtonStyle.Primary, Guid.NewGuid().ToString(), "Previous page", false, new DiscordComponentEmoji(DiscordEmoji.FromUnicode("◀")));
+		var NextPage = new DiscordButtonComponent(ButtonStyle.Primary, Guid.NewGuid().ToString(), "Next page", false, new DiscordComponentEmoji(DiscordEmoji.FromUnicode("▶")));
+
+		Task EditMessage()
+			=> ctx.RespondOrEditAsync(new DiscordMessageBuilder()
+			.WithEmbed(embeds![0])
+			.AddComponents(PrevPage!.Disable(), NextPage!));
+
+		await EditMessage();
+
+		uint currentIndex = 0;
+		var sw = Stopwatch.StartNew();
+		ctx.Client.ComponentInteractionCreated += RunInteraction;
+
+		async Task RunInteraction(DiscordClient sender, ComponentInteractionCreateEventArgs e)
+		{
+			if (e.Id == PrevPage.CustomId)
+				currentIndex--;
+			else if (e.Id == NextPage.CustomId)
+				currentIndex++;
+
+			PrevPage!.SetState(currentIndex <= 0);
+			NextPage.SetState(currentIndex >= embeds.Count);
+
+			await EditMessage();
+		}
+
+		while (sw.Elapsed < TimeSpan.FromSeconds(60))
+		{
+			await Task.Delay(1000);
+		}
+
+		ctx.Client.ComponentInteractionCreated -= RunInteraction;
+		await ctx.RespondOrEditAsync(embeds[(int)currentIndex].WithFooter("Interaction timed out"));
 	}
 }
