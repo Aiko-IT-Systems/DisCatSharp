@@ -28,10 +28,10 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
-using DisCatSharp.LavalinkV1.EventArgs;
+using DisCatSharp.Lavalink.EventArgs;
 using DisCatSharp.Net;
 
-namespace DisCatSharp.LavalinkV1;
+namespace DisCatSharp.Lavalink;
 
 /// <summary>
 /// The lavalink extension.

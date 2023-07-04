@@ -51,17 +51,17 @@ public class MyCommand : ApplicationCommandsModule
     public class MyCommandGroup : ApplicationCommandsModule
     {
         [SlashCommand("first", "This is description of the command.")]
-        public async Task MySlashCommand(InteractionContext context)
+        public async Task MySlashCommand(InteractionContext ctx)
         {
-            await context.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
+            await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
             {
                 Content = "This is first subcommand."
             });
         }
         [SlashCommand("second", "This is description of the command.")]
-        public async Task MySecondCommand(InteractionContext context, [Option("value", "Some string value.")] string value)
+        public async Task MySecondCommand(InteractionContext ctx, [Option("value", "Some string value.")] string value)
         {
-            await context.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
+            await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
             {
                 Content = "This is second subcommand. The value was " + value
             });
@@ -138,13 +138,13 @@ Now imagine, that your class look like this example:
 public class MySimpleCommands : ApplicationCommandsModule
 {
     [SlashCommand("my_command", "This is description of the command.")]
-    public async Task MySlashCommand(InteractionContext context)
+    public async Task MySlashCommand(InteractionContext ctx)
     {
 
     }
 
     [ContextMenu(ApplicationCommandType.User, "My Command")]
-    public async Task MyContextMenuCommand(ContextMenuContext context)
+    public async Task MyContextMenuCommand(ContextMenuContext ctx)
     {
 
     }

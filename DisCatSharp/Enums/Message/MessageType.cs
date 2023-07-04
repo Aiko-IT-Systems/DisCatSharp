@@ -205,5 +205,25 @@ public enum MessageType : int
 	/// <summary>
 	/// This message is a premium referral.
 	/// </summary>
-	PremiumReferral = 35
+	PremiumReferral = 35,
+
+	/// <summary>
+	/// Message indicating that the guild incident alert mode was enabled.
+	/// </summary>
+	GuildIncidentAlertModeEnabled = 36,
+
+	/// <summary>
+	/// Message indicating that the guild incident alert mode was disabled.
+	/// </summary>
+	GuildIncidentAlertModeDisabled = 37,
+
+	/// <summary>
+	/// Message indicating that a raid was reported.
+	/// </summary>
+	GuildIncidentReportRaid = 38,
+
+	/// <summary>
+	/// Message indicating a false alarm was reported.
+	/// </summary>
+	GuildIncidentReportFalseAlarm = 39
 }

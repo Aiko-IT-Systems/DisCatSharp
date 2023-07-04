@@ -82,6 +82,6 @@ public struct ConnectionEndpoint
 	internal readonly string ToWebSocketString()
 	{
 		var secure = this.Secured ? "s" : "";
-		return $"ws{secure}://{this}/";
+		return $"ws{secure}://{this}";
 	}
 }

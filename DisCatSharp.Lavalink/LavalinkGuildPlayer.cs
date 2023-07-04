@@ -157,6 +157,12 @@ public sealed class LavalinkGuildPlayer
 	public LavalinkPlayer Player { get; internal set; }
 
 	/// <summary>
+	/// Gets the current track.
+	/// </summary>
+	public LavalinkTrack? CurrentTrack
+		=> this.Player.Track;
+
+	/// <summary>
 	/// Gets the current track position.
 	/// </summary>
 	public TimeSpan TrackPosition
@@ -265,6 +271,31 @@ public sealed class LavalinkGuildPlayer
 		=> await this.Session.LoadTracksAsync(identifier);
 
 	/// <summary>
+	/// Loads tracks by <paramref name="identifier"/>.
+	/// Returns a dynamic object you have to parse with (Type)Result.
+	/// </summary>
+	/// <param name="searchType">The search type to use. Some types need additional setup.</param>
+	/// <param name="identifier">The identifier to load.</param>
+	/// <returns>A track loading result.</returns>
+	public async Task<LavalinkTrackLoadingResult> LoadTracksAsync(LavalinkSearchType searchType, string identifier)
+	{
+		var type = searchType switch
+		{
+			LavalinkSearchType.Youtube => "ytsearch:",
+			LavalinkSearchType.SoundCloud => "scsearch:",
+			LavalinkSearchType.AppleMusic => "amsearch:",
+			LavalinkSearchType.Deezer => "dzsearch:",
+			LavalinkSearchType.DeezerISrc => "dzisrc:",
+			LavalinkSearchType.YandexMusic => "ymsearch:",
+			LavalinkSearchType.Spotify => "spsearch:",
+			LavalinkSearchType.SpotifyRec => "sprec:",
+			LavalinkSearchType.Plain => string.Empty,
+			_ => throw new ArgumentOutOfRangeException(nameof(searchType), searchType, "Invalid search type.")
+		};
+		return await this.LoadTracksAsync($"{type}{identifier}");
+	}
+
+	/// <summary>
 	/// Updates the <see cref="LavalinkPlayer"/>.
 	/// </summary>
 	/// <param name="action">The action to perform on the player.</param>
@@ -302,6 +333,19 @@ public sealed class LavalinkGuildPlayer
 	}
 
 	/// <summary>
+	/// Plays a track partially with a start and end-time.
+	/// </summary>
+	/// <param name="track">The track to play.</param>
+	/// <param name="startTime">The start time.</param>
+	/// <param name="endTime">The end time.</param>
+	/// <returns>The updated guild player.</returns>
+	public async Task<LavalinkGuildPlayer> PlayPartialAsync(LavalinkTrack track, TimeSpan startTime, TimeSpan endTime)
+	{
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: track.Info.Identifier, position: (int)startTime.TotalMilliseconds, endTime: (int)endTime.TotalMilliseconds);
+		return this;
+	}
+
+	/// <summary>
 	/// Plays a song by its encoded track string with a start and end-time.
 	/// </summary>
 	/// <param name="encodedTrack">The encoded track to play.</param>
@@ -326,6 +370,17 @@ public sealed class LavalinkGuildPlayer
 	}
 
 	/// <summary>
+	/// Plays a track.
+	/// </summary>
+	/// <param name="track">The track to play.</param>
+	/// <returns>The updated guild player.</returns>
+	public async Task<LavalinkGuildPlayer> PlayAsync(LavalinkTrack track)
+	{
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: track.Info.Identifier);
+		return this;
+	}
+
+	/// <summary>
 	/// Plays a song by its encoded track string.
 	/// </summary>
 	/// <param name="encodedTrack">The encoded track to play.</param>
@@ -337,7 +392,7 @@ public sealed class LavalinkGuildPlayer
 	}
 
 	/// <summary>
-	/// 
+	///
 	/// </summary>
 	/// <param name="position"></param>
 	/// <returns>The updated guild player.</returns>
@@ -390,26 +445,6 @@ public sealed class LavalinkGuildPlayer
 		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, null);
 		return this;
 	}
-
-	/*
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="filter"></param>
-	/// <returns></returns>
-	/// <exception cref="NotImplementedException"></exception>
-	public async Task<LavalinkGuildPlayer> AddFilterAsync<T>(T filter)
-		=> throw new NotImplementedException();
-
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <returns></returns>
-	/// <exception cref="NotImplementedException"></exception>
-	public async Task<LavalinkGuildPlayer> RemoveFilterAsync()
-		=> throw new NotImplementedException();
-	*/
 
 	/// <summary>
 	/// Directly plays a song by url.

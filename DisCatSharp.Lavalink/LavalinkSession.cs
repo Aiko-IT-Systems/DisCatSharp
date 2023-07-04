@@ -317,7 +317,7 @@ public sealed class LavalinkSession
 	/// </summary>
 	/// <param name="channel">The channel to join.</param>
 	/// <param name="deafened">Whether to join the channel deafened.</param>
-	/// <returns>The created <see cref="LavalinkGuildPlayerDestroyed"/>.</returns>
+	/// <returns>The created <see cref="LavalinkGuildPlayer"/>.</returns>
 	/// <exception cref="ArgumentException"></exception>
 	public async Task<LavalinkGuildPlayer> ConnectAsync(DiscordChannel channel, bool deafened = true)
 	{

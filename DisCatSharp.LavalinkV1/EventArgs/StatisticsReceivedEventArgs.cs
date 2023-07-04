@@ -23,9 +23,9 @@
 using System;
 
 using DisCatSharp.EventArgs;
-using DisCatSharp.LavalinkV1.Entities;
+using DisCatSharp.Lavalink.Entities;
 
-namespace DisCatSharp.LavalinkV1.EventArgs;
+namespace DisCatSharp.Lavalink.EventArgs;
 
 /// <summary>
 /// Represents arguments for Lavalink statistics received.

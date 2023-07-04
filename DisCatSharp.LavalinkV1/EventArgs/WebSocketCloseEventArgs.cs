@@ -24,7 +24,7 @@ using System;
 
 using DisCatSharp.EventArgs;
 
-namespace DisCatSharp.LavalinkV1.EventArgs;
+namespace DisCatSharp.Lavalink.EventArgs;
 
 /// <summary>
 /// Represents arguments for <see cref="LavalinkGuildConnection.DiscordWebSocketClosed"/> event.

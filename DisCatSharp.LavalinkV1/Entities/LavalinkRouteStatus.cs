@@ -22,11 +22,11 @@
 
 using System.Collections.Generic;
 
-using DisCatSharp.LavalinkV1.Enums;
+using DisCatSharp.Lavalink.Enums;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.LavalinkV1.Entities;
+namespace DisCatSharp.Lavalink.Entities;
 
 /// <summary>
 /// The lavalink route status.

@@ -14,7 +14,7 @@ Welcome to the DisCatSharp Global API reference.
 - [DisCatSharp.Interactivity](xref:api_discatsharp_interactivity_index)
 
 ## Voice packages
-- [DisCatSharp.Lavalink](xref:api_discatsharp_lavalink_index)
+- [DisCatSharp.Lavalink](xref:api_discatsharp_lavalink_v4_index)
 - [DisCatSharp.VoiceNext](xref:api_discatsharp_voicenext_index)
 
 ## Hosting packages
@@ -24,7 +24,6 @@ Welcome to the DisCatSharp Global API reference.
 
 ## Experimental packages
 - [DisCatSharp.Experimental](xref:api_discatsharp_experimental_index)
-- [DisCatSharp.LavalinkV4](xref:api_discatsharp_lavalinkv4_index)
 
 ## Other packages
 - [DisCatSharp.Common](xref:api_discatsharp_common_index)

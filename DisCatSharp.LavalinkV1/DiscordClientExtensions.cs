@@ -31,7 +31,7 @@ using DisCatSharp.Enums;
 
 using Microsoft.Extensions.Logging;
 
-namespace DisCatSharp.LavalinkV1;
+namespace DisCatSharp.Lavalink;
 
 /// <summary>
 /// The discord client extensions.
