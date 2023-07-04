@@ -30,6 +30,7 @@ using System.Linq;
 using DisCatSharp.ApplicationCommands.Context;
 using System.Threading.Tasks;
 using System.IO;
+using DisCatSharp.HybridCommands.Context;
 
 namespace DisCatSharp.HybridCommands;
 public sealed class HybridCommandsExtension : BaseExtension
@@ -120,14 +121,14 @@ public sealed class HybridCommandsExtension : BaseExtension
 			var commandsNextModule = assembly.DefinedTypes.FirstOrDefault(x => typeof(BaseCommandModule).IsAssignableTo(x), null);
 			if (commandsNextModule is not null)
 			{
-				this.Client.GetCommandsNext().RegisterCommands(commandsNextModule);
+				// this.Client.GetCommandsNext().RegisterCommands(commandsNextModule);
 			}
 
 			var applicationCommandsModule = assembly.DefinedTypes.FirstOrDefault(x => typeof(ApplicationCommandsModule).IsAssignableTo(x), null);
 			if (applicationCommandsModule is not null)
 			{
 #pragma warning disable CS8604 // Possible null reference argument.
-				this.Client.GetApplicationCommands().RegisterGlobalCommands(applicationCommandsModule, translationSetup);
+				// this.Client.GetApplicationCommands().RegisterGlobalCommands(applicationCommandsModule, translationSetup);
 #pragma warning restore CS8604 // Possible null reference argument.
 			}
 		}
@@ -149,14 +150,14 @@ public sealed class HybridCommandsExtension : BaseExtension
 			var commandsNextModule = assembly.DefinedTypes.FirstOrDefault(x => typeof(BaseCommandModule).IsAssignableTo(x), null);
 			if (commandsNextModule is not null)
 			{
-				this.Client.GetCommandsNext().RegisterCommands(commandsNextModule);
+				// this.Client.GetCommandsNext().RegisterCommands(commandsNextModule);
 			}
 
 			var applicationCommandsModule = assembly.DefinedTypes.FirstOrDefault(x => typeof(ApplicationCommandsModule).IsAssignableTo(x), null);
 			if (applicationCommandsModule is not null)
 			{
 #pragma warning disable CS8604 // Possible null reference argument.
-				this.Client.GetApplicationCommands().RegisterGuildCommands(applicationCommandsModule, guildId, translationSetup);
+				// this.Client.GetApplicationCommands().RegisterGuildCommands(applicationCommandsModule, guildId, translationSetup);
 #pragma warning restore CS8604 // Possible null reference argument.
 			}
 		}
@@ -179,4 +180,12 @@ public sealed class HybridCommandsExtension : BaseExtension
 	}
 
 	private HybridCommandsExtension() { }
+}
+
+public class DefaultHybridHelp : HybridCommandsModule
+{
+	public async Task HelpAsync(HybridCommandContext ctx)
+	{
+
+	}
 }

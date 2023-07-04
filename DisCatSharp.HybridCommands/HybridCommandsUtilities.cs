@@ -398,7 +398,7 @@ internal static class HybridCommandsUtilities
 			if (!loadedAssemblies.Values.Any(x => x == $"{typeHash}-app"))
 			{
 				using var stream = new MemoryStream();
-				HybridCommandsExtension.Logger?.LogDebug("Compiling Application Commands Class '{class}'..", typeHash);
+				HybridCommandsExtension.Logger?.LogDebug("Compiling Application Commands Class '{class}'..", type.Name);
 
 				var result = CSharpCompilation.Create($"{typeHash}-app")
 										.AddSyntaxTrees(SyntaxFactory.ParseSyntaxTree(AppClass))
@@ -426,13 +426,13 @@ internal static class HybridCommandsUtilities
 						cacheConfig.LastKnownTypeHashes.Add(typeHash);
 				}
 
-				HybridCommandsExtension.Logger?.LogDebug("Compiled Application Commands Class '{class}'..", typeHash);
+				HybridCommandsExtension.Logger?.LogDebug("Compiled Application Commands Class '{class}'..", type.Name);
 			}
 
 		}
 		catch (Exception ex)
 		{
-			HybridCommandsExtension.Logger?.LogDebug(ex, "Failed to compile Application Commands Class '{class}'.", typeHash);
+			HybridCommandsExtension.Logger?.LogDebug(ex, "Failed to compile Application Commands Class '{class}'.", type.Name);
 		}
 
 		try
@@ -440,7 +440,7 @@ internal static class HybridCommandsUtilities
 			if (!loadedAssemblies.Values.Any(x => x == $"{typeHash}-prefix"))
 			{
 				using var stream = new MemoryStream();
-				HybridCommandsExtension.Logger?.LogDebug("Compiling Prefix Commands Class '{class}'..", typeHash);
+				HybridCommandsExtension.Logger?.LogDebug("Compiling Prefix Commands Class '{class}'..", type.Name);
 
 				var result = CSharpCompilation.Create($"{typeHash}-prefix")
 										.AddSyntaxTrees(SyntaxFactory.ParseSyntaxTree(PrefixClass))
@@ -468,13 +468,13 @@ internal static class HybridCommandsUtilities
 						cacheConfig.LastKnownTypeHashes.Add(typeHash);
 				}
 
-				HybridCommandsExtension.Logger?.LogDebug("Compiled Prefix Commands Class '{class}'..", typeHash);
+				HybridCommandsExtension.Logger?.LogDebug("Compiled Prefix Commands Class '{class}'..", type.Name);
 			}
 
 		}
 		catch (Exception ex)
 		{
-			HybridCommandsExtension.Logger?.LogDebug(ex, "Failed to compile Prefix Commands Class '{class}'.", typeHash);
+			HybridCommandsExtension.Logger?.LogDebug(ex, "Failed to compile Prefix Commands Class '{class}'.", type.Name);
 		}
 
 		return Array.Empty<Assembly>();
