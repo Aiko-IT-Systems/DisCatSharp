@@ -436,6 +436,31 @@ public sealed class LavalinkSession
 		=> await this.Rest.LoadTracksAsync(identifier);
 
 	/// <summary>
+	/// Loads tracks by <paramref name="identifier"/>.
+	/// Returns a dynamic object you have to parse with (Type)Result.
+	/// </summary>
+	/// <param name="searchType">The search type to use. Some types need additional setup.</param>
+	/// <param name="identifier">The identifier to load.</param>
+	/// <returns>A track loading result.</returns>
+	public async Task<LavalinkTrackLoadingResult> LoadTracksAsync(LavalinkSearchType searchType, string identifier)
+	{
+		var type = searchType switch
+		{
+			LavalinkSearchType.Youtube => "ytsearch:",
+			LavalinkSearchType.SoundCloud => "scsearch:",
+			LavalinkSearchType.AppleMusic => "amsearch:",
+			LavalinkSearchType.Deezer => "dzsearch:",
+			LavalinkSearchType.DeezerISrc => "dzisrc:",
+			LavalinkSearchType.YandexMusic => "ymsearch:",
+			LavalinkSearchType.Spotify => "spsearch:",
+			LavalinkSearchType.SpotifyRec => "sprec:",
+			LavalinkSearchType.Plain => string.Empty,
+			_ => throw new ArgumentOutOfRangeException(nameof(searchType), searchType, "Invalid search type.")
+		};
+		return await this.LoadTracksAsync($"{type}{identifier}");
+	}
+
+	/// <summary>
 	/// Establishes a connection to the lavalink server.
 	/// </summary>
 	/// <exception cref="InvalidOperationException">Thrown when the <see cref="DiscordClient"/> is not fully initialized.</exception>

@@ -278,22 +278,7 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="identifier">The identifier to load.</param>
 	/// <returns>A track loading result.</returns>
 	public async Task<LavalinkTrackLoadingResult> LoadTracksAsync(LavalinkSearchType searchType, string identifier)
-	{
-		var type = searchType switch
-		{
-			LavalinkSearchType.Youtube => "ytsearch:",
-			LavalinkSearchType.SoundCloud => "scsearch:",
-			LavalinkSearchType.AppleMusic => "amsearch:",
-			LavalinkSearchType.Deezer => "dzsearch:",
-			LavalinkSearchType.DeezerISrc => "dzisrc:",
-			LavalinkSearchType.YandexMusic => "ymsearch:",
-			LavalinkSearchType.Spotify => "spsearch:",
-			LavalinkSearchType.SpotifyRec => "sprec:",
-			LavalinkSearchType.Plain => string.Empty,
-			_ => throw new ArgumentOutOfRangeException(nameof(searchType), searchType, "Invalid search type.")
-		};
-		return await this.LoadTracksAsync($"{type}{identifier}");
-	}
+		=> await this.Session.LoadTracksAsync(searchType, identifier);
 
 	/// <summary>
 	/// Updates the <see cref="LavalinkPlayer"/>.
