@@ -31,7 +31,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a <see cref="DiscordComponentResult"/> resolved within an <see cref="DiscordActionRowComponentResult"/>.
 /// </summary>
-public sealed class DiscordComponentResult
+public sealed class DiscordComponentResult : ObservableApiObject
 {
 	/// <summary>
 	/// The type of component this represents.

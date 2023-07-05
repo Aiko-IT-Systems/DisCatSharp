@@ -1,113 +1,116 @@
-- name: Preamble
-  href: preamble.md
-- name: FAQ
-  href: faq.md
-- name: The Basics
-  expanded: true
-  items:
-  - name: Creating a Bot Account
-    href: basics/bot_account.md
-  - name: Writing Your First Bot
-    href: basics/first_bot.md
-  - name: Bot as Hosted Service
-    href: basics/web_app.md
-  - name: Project Templates
-    href: basics/templates.md
-- name: Beyond Basics
-  expanded: true
-  items:
-  - name: Events
-    href: beyond_basics/events.md
-  - name: Logging
-    href: beyond_basics/logging/default.md
-    items:
-    - name: The Default Logger
-      href: beyond_basics/logging/default.md
-    - name: Third Party Loggers
-      href: beyond_basics/logging/third_party.md
-    - name: Dependency Injection Loggers
-      href: beyond_basics/logging/di.md
-  - name: Intents
-    href: beyond_basics/intents.md
-  - name: Sharding
-    href: beyond_basics/sharding.md
-  - name: Message Builder
-    href: beyond_basics/messagebuilder.md
-  - name: Components
-    items:
-    - name: Buttons
-      href: beyond_basics/components/buttons.md
-    - name: Select Menu
-      href: beyond_basics/components/select_menus.md
-  - name: Workarounds
-    href: beyond_basics/workarounds.md
-- name: Modules
-  expanded: true
-  items:
-  - name: Application Commands
-    items:
-    - name: Introduction
-      href: modules/application_commands/intro.md
-    - name: Options
-      href: modules/application_commands/options.md
-    - name: Events
-      href: modules/application_commands/events.md
-    - name: Translations
+items:
+    - name: Preamble
+      href: preamble.md
+    - name: FAQ
+      href: faq.md
+    - name: Getting Started
+      expanded: true
       items:
-      - name: Using Translations
-        href: modules/application_commands/translations/using.md
-      - name: Translation Reference
-        href: modules/application_commands/translations/reference.md
-    - name: Modals
-      href: modules/application_commands/modals.md
-    - name: Paginated Modals
-      href: modules/application_commands/paginated_modals.md
-  - name: CommandsNext
-    items:
-    - name: Introduction
-      href: modules/commandsnext/intro.md
-    - name: Command Attributes
-      href: modules/commandsnext/command_attributes.md
-    - name: Dependency Injection
-      href: modules/commandsnext/dependency_injection.md
-    - name: Customization
+          - name: Creating a Bot Account
+            href: getting_started/bot_account.md
+          - name: Writing Your First Bot
+            href: getting_started/first_bot.md
+          - name: Bot as Hosted Service
+            href: getting_started/web_app.md
+          - name: Project Templates
+            href: getting_started/templates.md
+    - name: Topics
+      expanded: true
       items:
-      - name: Help Formatter
-        href: modules/commandsnext/help_formatter.md
-      - name: Argument Converters
-        href: modules/commandsnext/argument_converters.md
-      - name: Command Handler
-        href: modules/commandsnext/command_handler.md
-  - name: Audio
-    items:
-    - name: Lavalink
+          - name: Events
+            href: topics/events.md
+          - name: Logging
+            href: topics/logging/default.md
+            items:
+                - name: The Default Logger
+                  href: topics/logging/default.md
+                - name: Third Party Loggers
+                  href: topics/logging/third_party.md
+                - name: Dependency Injection Loggers
+                  href: topics/logging/di.md
+          - name: Intents
+            href: topics/intents.md
+          - name: Sharding
+            href: topics/sharding.md
+          - name: Message Builder
+            href: topics/messagebuilder.md
+          - name: Components
+            items:
+                - name: Buttons
+                  href: topics/components/buttons.md
+                - name: Select Menu
+                  href: topics/components/select_menus.md
+          - name: Workarounds
+            href: topics/workarounds.md
+    - name: Modules
+      expanded: true
       items:
-      - name: Setup
-        href: modules/audio/lavalink/setup.md
-      - name: Configuration
-        href: modules/audio/lavalink/configuration.md
-      - name: Music Commands
-        href: modules/audio/lavalink/music_commands.md
-      - name: Advanced
-        href: modules/audio/lavalink/advanced.md
-    - name: VoiceNext
+          - name: Application Commands
+            items:
+                - name: Introduction
+                  href: modules/application_commands/intro.md
+                - name: Options
+                  href: modules/application_commands/options.md
+                - name: Events
+                  href: modules/application_commands/events.md
+                - name: Translations
+                  items:
+                      - name: Using Translations
+                        href: modules/application_commands/translations/using.md
+                      - name: Translation Reference
+                        href: modules/application_commands/translations/reference.md
+                - name: Modals
+                  href: modules/application_commands/modals.md
+                - name: Paginated Modals
+                  href: modules/application_commands/paginated_modals.md
+          - name: CommandsNext
+            items:
+                - name: Introduction
+                  href: modules/commandsnext/intro.md
+                - name: Command Attributes
+                  href: modules/commandsnext/command_attributes.md
+                - name: Dependency Injection
+                  href: modules/commandsnext/dependency_injection.md
+                - name: Customization
+                  items:
+                      - name: Help Formatter
+                        href: modules/commandsnext/customization/help_formatter.md
+                      - name: Argument Converters
+                        href: modules/commandsnext/customization/argument_converters.md
+                      - name: Command Handler
+                        href: modules/commandsnext/customization/command_handler.md
+          - name: Audio
+            items:
+                - name: Lavalink V4
+                  items:
+                      - name: Introduction
+                        uid: modules_audio_lavalink_v4_intro
+                      - name: Setup
+                        uid: modules_audio_lavalink_v4_setup
+                      - name: Configuration
+                        uid: modules_audio_lavalink_v4_configuration
+                      - name: Commands
+                        uid: modules_audio_lavalink_v4_commands
+                      - name: Advanced
+                        uid: modules_audio_lavalink_v4_advanced
+                - name: VoiceNext
+                  items:
+                      - name: Prerequisites
+                        href: modules/audio/voicenext/prerequisites.md
+                      - name: Transmitting
+                        href: modules/audio/voicenext/transmit.md
+                      - name: Receiving
+                        href: modules/audio/voicenext/receive.md
+          - name: Interactivity
+            href: modules/interactivity.md
+    - name: Miscellaneous
+      expanded: true
       items:
-      - name: Prerequisites
-        href: modules/audio/voicenext/prerequisites.md
-      - name: Transmitting
-        href: modules/audio/voicenext/transmit.md
-      - name: Receiving
-        href: modules/audio/voicenext/receive.md
-  - name: Interactivity
-    href: modules/interactivity.md
-- name: Miscellaneous
-  expanded: true
-  items:
-  - name: Nightly Builds
-    href: misc/nightly_builds.md
-  - name: Reporting Issues
-    href: misc/reporting_issues.md
-  - name: Hosting
-    href: misc/hosting.md
-  - name: Voice Activities
-    href: misc/voice_activities.md
+          - name: Nightly Builds
+            href: misc/nightly_builds.md
+          - name: Reporting Issues
+            href: misc/reporting_issues.md
+          - name: Hosting
+            href: misc/hosting.md
+          - name: Voice Activities
+            href: misc/voice_activities.md

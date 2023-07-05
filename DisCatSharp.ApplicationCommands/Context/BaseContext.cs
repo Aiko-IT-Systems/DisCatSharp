@@ -89,6 +89,17 @@ public class BaseContext
 	public string CommandName { get; internal set; }
 
 	/// <summary>
+	/// Gets the name of the sub command.
+	/// </summary>
+	public string? SubCommandName { get; internal set; }
+
+	/// <summary>
+	/// Gets the full command string, including the subcommand.
+	/// </summary>
+	public string FullCommandName
+		=> $"{this.CommandName}{(string.IsNullOrWhiteSpace(this.SubCommandName) ? "" : $" {this.SubCommandName}")}";
+
+	/// <summary>
 	/// Gets the invoking user locale.
 	/// </summary>
 	public string Locale { get; internal set; }

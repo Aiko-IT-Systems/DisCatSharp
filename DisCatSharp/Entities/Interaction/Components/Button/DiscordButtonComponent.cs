@@ -62,25 +62,30 @@ public sealed class DiscordButtonComponent : DiscordComponent
 	/// </summary>
 	/// <returns>The current component.</returns>
 	public DiscordButtonComponent Enable()
-	{
-		this.Disabled = false;
-		return this;
-	}
+		=> this.SetState(false);
 
 	/// <summary>
 	/// Disables this component.
 	/// </summary>
 	/// <returns>The current component.</returns>
 	public DiscordButtonComponent Disable()
+		=> this.SetState(true);
+
+	/// <summary>
+	/// Enables or disables this component.
+	/// </summary>
+	/// <param name="disabled">Whether this component should be disabled.</param>
+	/// <returns>The current component.</returns>
+	public DiscordButtonComponent SetState(bool disabled)
 	{
-		this.Disabled = true;
+		this.Disabled = disabled;
 		return this;
 	}
 
 	/// <summary>
 	/// Constructs a new <see cref="DiscordButtonComponent"/>.
 	/// </summary>
-	public DiscordButtonComponent()
+	internal DiscordButtonComponent()
 	{
 		this.Type = ComponentType.Button;
 	}

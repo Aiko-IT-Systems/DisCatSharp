@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 
+using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -32,7 +33,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents a transport member.
 /// </summary>
-internal class TransportMember
+internal class TransportMember : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the avatar hash.
@@ -120,8 +121,20 @@ internal class TransportMember
 	public DateTime? CommunicationDisabledUntil { get; internal set; }
 
 	/// <summary>
+	/// Gets the unusual dm activity time.
+	/// </summary>
+	[JsonProperty("unusual_dm_activity_until", NullValueHandling = NullValueHandling.Include)]
+	public DateTime? UnusualDmActivityUntil { get; internal set; }
+
+	/// <summary>
 	/// Gets the members flags.
 	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
 	public MemberFlags MemberFlags { get; internal set; }
+
+	/// <summary>
+	/// Gets ID of the guild to which this member belongs.
+	/// </summary>
+	[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong GuildId { get; internal set; }
 }

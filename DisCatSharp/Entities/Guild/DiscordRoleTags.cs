@@ -27,7 +27,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a discord role tags.
 /// </summary>
-public class DiscordRoleTags
+public class DiscordRoleTags : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the id of the bot this role belongs to.

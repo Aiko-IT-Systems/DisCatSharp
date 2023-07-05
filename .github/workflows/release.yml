@@ -17,11 +17,14 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
 jobs:
   release:
     timeout-minutes: 15
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     name: Build library and release
     steps:
       - name: Checkout repository
@@ -38,10 +41,14 @@ jobs:
         if: ${{!inputs.release_as_prerelease}}
         shell: pwsh
         run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Build library as pre-release
         if: ${{inputs.release_as_prerelease}}
         shell: pwsh
         run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{github.event.inputs.version_suffix}}
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - name: Remove invalid packages
         shell: pwsh
         run: rm *.symbols.*
@@ -54,3 +61,22 @@ jobs:
         shell: pwsh
         run: dotnet nuget push --source https://nuget.pkg.github.com/Aiko-IT-Systems/index.json -k ${{secrets.NYUW_TOKEN_GH}} *
         working-directory: ./dcs-artifacts
+      - name: Set outputs
+        id: vars
+        run: |
+          echo "version=10.4.1" >> $GITHUB_OUTPUT
+          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+      - name: "Create Sentry prod release"
+        if: ${{!inputs.release_as_prerelease}}
+        uses: getsentry/action-release@v1.3.1
+        with:
+          environment: prod
+          ignore_missing: true
+          version: DisCatSharp@${{ steps.vars.outputs.version }}+${{ steps.vars.outputs.sha }}
+      - name: "Create Sentry dev release"
+        if: ${{inputs.release_as_prerelease}}
+        uses: getsentry/action-release@v1.3.1
+        with:
+          environment: dev
+          ignore_missing: true
+          version: DisCatSharp@${{ steps.vars.outputs.version }}-${{ github.event.inputs.version_suffix }}+${{ steps.vars.outputs.sha }}

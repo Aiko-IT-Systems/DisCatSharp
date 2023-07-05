@@ -20,7 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 
 using DisCatSharp.Enums;
 
@@ -44,6 +45,14 @@ public sealed class DiscordOverwriteBuilder
 	public Permissions Denied { get; set; }
 
 	/// <summary>
+	/// Sets all unset permissions for this overwrite.
+	/// </summary>
+	internal Permissions Unset
+	{
+		set => this.Remove(value);
+	}
+
+	/// <summary>
 	/// Gets or sets the type of this overwrite's target.
 	/// </summary>
 	public OverwriteType Type { get; set; }
@@ -51,28 +60,48 @@ public sealed class DiscordOverwriteBuilder
 	/// <summary>
 	/// Gets or sets the target for this overwrite.
 	/// </summary>
-	public SnowflakeObject Target { get; set; }
+	public ulong Target { get; set; }
 
 	/// <summary>
-	/// Creates a new Discord permission overwrite builder for a member. This class can be used to construct permission overwrites for guild channels, used when creating channels.
+	/// Creates a new <see cref="DiscordOverwriteBuilder"/> for a <see cref="SnowflakeObject"/>.
+	/// </summary>
+	public DiscordOverwriteBuilder(ulong id, OverwriteType type = OverwriteType.Member)
+	{
+		this.Target = id;
+		this.Type = type;
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="DiscordOverwriteBuilder"/> for a <see cref="DiscordMember"/>.
 	/// </summary>
 	public DiscordOverwriteBuilder(DiscordMember member)
 	{
-		this.Target = member;
+		this.Target = member.Id;
 		this.Type = OverwriteType.Member;
 	}
 
 	/// <summary>
-	/// Creates a new Discord permission overwrite builder for a role. This class can be used to construct permission overwrites for guild channels, used when creating channels.
+	/// Creates a new <see cref="DiscordOverwriteBuilder"/> for a <see cref="DiscordRole"/>.
 	/// </summary>
 	public DiscordOverwriteBuilder(DiscordRole role)
 	{
-		this.Target = role;
+		this.Target = role.Id;
 		this.Type = OverwriteType.Role;
 	}
 
 	/// <summary>
-	/// Creates a new Discord permission overwrite builder. This class can be used to construct permission overwrites for guild channels, used when creating channels.
+	/// Creates a new <see cref="DiscordOverwriteBuilder"/> from <see cref="DiscordOverwrite"/>.
+	/// </summary>
+	public DiscordOverwriteBuilder(DiscordOverwrite old)
+	{
+		this.Allowed = old.Allowed;
+		this.Denied = old.Denied;
+		this.Type = old.Type;
+		this.Target = old.Id;
+	}
+
+	/// <summary>
+	/// Creates a new and empty <see cref="DiscordOverwriteBuilder"/>.
 	/// </summary>
 	public DiscordOverwriteBuilder()
 	{ }
@@ -100,56 +129,126 @@ public sealed class DiscordOverwriteBuilder
 	}
 
 	/// <summary>
+	/// Unsets a permission for this overwrite.
+	/// </summary>
+	/// <param name="permission">Permission or permission set to unset for this overwrite.</param>
+	/// <returns>This builder.</returns>
+	public DiscordOverwriteBuilder Remove(Permissions permission)
+	{
+		this.Allowed = this.Allowed.Revoke(permission);
+		this.Denied = this.Denied.Revoke(permission);
+		return this;
+	}
+
+	/// <summary>
 	/// Sets the member to which this overwrite applies.
 	/// </summary>
 	/// <param name="member">Member to which apply this overwrite's permissions.</param>
 	/// <returns>This builder.</returns>
-	public DiscordOverwriteBuilder For(DiscordMember member)
+	public DiscordOverwriteBuilder SetTarget(DiscordMember member)
 	{
-		this.Target = member;
+		this.Target = member.Id;
 		this.Type = OverwriteType.Member;
 		return this;
 	}
+
+	/// <inheritdoc cref="SetTarget(DiscordMember)"/>
+	public DiscordOverwriteBuilder For(DiscordMember member)
+		=> this.SetTarget(member);
 
 	/// <summary>
 	/// Sets the role to which this overwrite applies.
 	/// </summary>
 	/// <param name="role">Role to which apply this overwrite's permissions.</param>
 	/// <returns>This builder.</returns>
-	public DiscordOverwriteBuilder For(DiscordRole role)
+	public DiscordOverwriteBuilder SetTarget(DiscordRole role)
 	{
-		this.Target = role;
+		this.Target = role.Id;
 		this.Type = OverwriteType.Role;
 		return this;
 	}
 
-	/// <summary>
-	/// Populates this builder with data from another overwrite object.
-	/// </summary>
-	/// <param name="other">Overwrite from which data will be used.</param>
-	/// <returns>This builder.</returns>
-	public async Task<DiscordOverwriteBuilder> FromAsync(DiscordOverwrite other)
-	{
-		this.Allowed = other.Allowed;
-		this.Denied = other.Denied;
-		this.Type = other.Type;
-		this.Target = this.Type == OverwriteType.Member ? await other.GetMemberAsync().ConfigureAwait(false) : await other.GetRoleAsync().ConfigureAwait(false);
-
-		return this;
-	}
+	/// <inheritdoc cref="SetTarget(DiscordRole)"/>
+	public DiscordOverwriteBuilder For(DiscordRole role)
+		=> this.SetTarget(role);
 
 	/// <summary>
 	/// Builds this DiscordOverwrite.
 	/// </summary>
 	/// <returns>Use this object for creation of new overwrites.</returns>
-	internal DiscordRestOverwrite Build() =>
-		new()
+	internal DiscordRestOverwrite Build()
+	{
+		return new()
 		{
 			Allow = this.Allowed,
 			Deny = this.Denied,
-			Id = this.Target.Id,
+			Id = this.Target,
 			Type = this.Type,
 		};
+	}
+}
+
+public static class DiscordOverwriteBuilderExtensions
+{
+	/// <summary>
+	/// Merges new permissions for a target with target's existing permissions.
+	/// </summary>
+	/// <param name="builderList">The PermissionOverwrites to apply this to.</param>
+	/// <param name="type">What type of overwrite you want to target.</param>
+	/// <param name="target">The target's id.</param>
+	/// <param name="allowed">The permissions to allow.</param>
+	/// <param name="denied">The permissions deny.</param>
+	/// <param name="unset">The permissions to unset.</param>
+	/// <returns>A new <see cref="List{DiscordOverwriteBuilder}"/> containing the merged role.</returns>
+	public static List<DiscordOverwriteBuilder> Merge(this IEnumerable<DiscordOverwriteBuilder> builderList, OverwriteType type, ulong target, Permissions allowed, Permissions denied, Permissions unset = Permissions.None)
+	{
+		var newList = builderList.ToList();
+
+		if (!newList.Any(x => x.Target == target && x.Type == type))
+			newList.Add(new DiscordOverwriteBuilder() { Type = type, Target = target });
+
+		var discordOverwriteBuilder = newList.First(x => x.Target == target && x.Type == type);
+		discordOverwriteBuilder.Allow(allowed);
+		discordOverwriteBuilder.Deny(denied);
+		discordOverwriteBuilder.Remove(unset);
+		return newList;
+	}
+
+	/// <summary>
+	/// Merges new permissions for member with member's existing permissions.
+	/// </summary>
+	/// <param name="builderList">The PermissionOverwrites to apply this to.</param>
+	/// <param name="member">The member of which to modify their permissions.</param>
+	/// <param name="allowed">The permissions to allow.</param>
+	/// <param name="denied">The permissions to deny.</param>
+	/// <param name="unset">The permissions to unset.</param>
+	/// <returns>A new <see cref="List{DiscordOverwriteBuilder}"/> containing the merged member.</returns>
+	public static List<DiscordOverwriteBuilder> Merge(this IEnumerable<DiscordOverwriteBuilder> builderList, DiscordMember member, Permissions allowed, Permissions denied, Permissions unset = Permissions.None)
+		=> builderList.Merge(OverwriteType.Member, member.Id, allowed, denied, unset);
+
+	/// <summary>
+	/// Merges new permissions for role with role's existing permissions.
+	/// </summary>
+	/// <param name="builderList">The PermissionOverwrites to apply this to.</param>
+	/// <param name="role">The role of which to modify their permissions.</param>
+	/// <param name="allowed">The permissions to allow.</param>
+	/// <param name="denied">The permissions deny.</param>
+	/// <param name="unset">The permissions to unset.</param>
+	/// <returns>A new <see cref="List{DiscordOverwriteBuilder}"/> containing the merged role.</returns>
+	public static List<DiscordOverwriteBuilder> Merge(this IEnumerable<DiscordOverwriteBuilder> builderList, DiscordRole role, Permissions allowed, Permissions denied, Permissions unset = Permissions.None)
+		=> builderList.Merge(OverwriteType.Role, role.Id, allowed, denied, unset);
+
+	/// <inheritdoc cref="Merge(IEnumerable{DiscordOverwriteBuilder}, DiscordMember, Permissions, Permissions, Permissions)"/>
+	public static List<DiscordOverwriteBuilder> Merge(this IEnumerable<DiscordOverwrite> builderList, DiscordMember member, Permissions allowed, Permissions denied, Permissions unset = Permissions.None)
+		=> builderList.Select(x => new DiscordOverwriteBuilder(x)).Merge(OverwriteType.Member, member.Id, allowed, denied, unset);
+
+	/// <inheritdoc cref="Merge(IEnumerable{DiscordOverwriteBuilder}, DiscordRole, Permissions, Permissions, Permissions)"/>
+	public static List<DiscordOverwriteBuilder> Merge(this IEnumerable<DiscordOverwrite> builderList, DiscordRole role, Permissions allowed, Permissions denied, Permissions unset = Permissions.None)
+		=> builderList.Select(x => new DiscordOverwriteBuilder(x)).Merge(OverwriteType.Role, role.Id, allowed, denied, unset);
+
+	/// <inheritdoc cref="Merge(IEnumerable{DiscordOverwriteBuilder}, OverwriteType, ulong, Permissions, Permissions, Permissions)"/>
+	public static List<DiscordOverwriteBuilder> Merge(this IEnumerable<DiscordOverwrite> builderList, OverwriteType type, ulong target, Permissions allowed, Permissions denied, Permissions unset = Permissions.None)
+		=> builderList.Select(x => new DiscordOverwriteBuilder(x)).Merge(type, target, allowed, denied, unset);
 }
 
 internal struct DiscordRestOverwrite

@@ -1,6 +1,8 @@
 ---
 uid: modules_commandsnext_command_attributes
 title: Command Attributes
+author: DisCatSharp Team
+hasDiscordComponents: true
 ---
 
 ## Built-In Attributes
@@ -36,6 +38,7 @@ If the above attributes don't meet your needs, CommandsNext also gives you the o
 Simply create a new class which inherits from `CheckBaseAttribute` and implement the required method.
 
 Our example below will only allow a command to be ran during a specified year.
+
 ```cs
 public class RequireYearAttribute : CheckBaseAttribute
 {
@@ -53,9 +56,9 @@ public class RequireYearAttribute : CheckBaseAttribute
 }
 ```
 
-<br/>
-You'll also need to apply the `AttributeUsage` attribute to your attribute.<br/>
+You'll also need to apply the `AttributeUsage` attribute to your attribute.
 For our example attribute, we'll set it to only be usable once on methods.
+
 ```cs
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 public class RequireYearAttribute : CheckBaseAttribute
@@ -88,8 +91,8 @@ private async Task CmdErroredHandler(CommandsNextExtension _, CommandErrorEventA
 }
 ```
 
-<br/>
 Once you've got all of that completed, you'll be able to use it on a command!
+
 ```cs
 [Command("generic"), RequireYear(2030)]
 public async Task GenericCommand(CommandContext ctx, string generic)
@@ -98,4 +101,11 @@ public async Task GenericCommand(CommandContext ctx, string generic)
 }
 ```
 
-![Generic Image](/images/commands_command_attributes_01.png)
+<discord-messages>
+    <discord-message profile="user">
+        !generic
+    </discord-message>
+    <discord-message profile="dcs">
+        Only usable during the year 2030!
+    </discord-message>
+</discord-messages>

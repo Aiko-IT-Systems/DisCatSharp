@@ -45,6 +45,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Initializes a new instance of the <see cref="DiscordUser"/> class.
 	/// </summary>
 	internal DiscordUser()
+		: base(new List<string>() { "display_name", "linked_users", "banner_color" })
 	{ }
 
 	/// <summary>
@@ -90,7 +91,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 
 	/// <summary>
 	/// Gets the username with the global name.
-	/// Example: @catra (Lala Sabathil)
+	/// Example: @lulalaby (Lala Sabathil)
 	/// </summary>
 	[JsonIgnore, DiscordInExperiment]
 	public virtual string UsernameWithGlobalName
@@ -114,13 +115,13 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <summary>
 	/// Gets the user's 4-digit discriminator.
 	/// </summary>
-	[JsonProperty("discriminator", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated]
+	[JsonProperty("discriminator", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated("Users are being migrated currently. Bots still have discrims")]
 	public virtual string Discriminator { get; internal set; }
 
 	/// <summary>
 	/// Gets the discriminator integer.
 	/// </summary>
-	[JsonIgnore, Deprecated]
+	[JsonIgnore, Deprecated("Users are being migrated currently. Bots still have discrims")]
 	internal int DiscriminatorInt
 		=> int.Parse(this.Discriminator, NumberStyles.Integer, CultureInfo.InvariantCulture);
 

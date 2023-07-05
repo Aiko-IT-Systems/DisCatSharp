@@ -32,7 +32,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents a channel create payload.
 /// </summary>
-internal sealed class RestChannelCreatePayload
+internal sealed class RestChannelCreatePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the name.
@@ -131,7 +131,7 @@ internal sealed class RestChannelCreatePayload
 /// <summary>
 /// Represents a channel modify payload.
 /// </summary>
-internal sealed class RestChannelModifyPayload
+internal sealed class RestChannelModifyPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the name.
@@ -179,7 +179,7 @@ internal sealed class RestChannelModifyPayload
 	/// Gets or sets the bitrate.
 	/// </summary>
 	[JsonProperty("bitrate", NullValueHandling = NullValueHandling.Ignore)]
-	public int? Bitrate { get; set; }
+	public Optional<int?> Bitrate { get; set; }
 
 	/// <summary>
 	/// Gets or sets the user limit.
@@ -250,7 +250,7 @@ internal sealed class RestChannelModifyPayload
 /// <summary>
 /// Represents a channel message edit payload.
 /// </summary>
-internal class RestChannelMessageEditPayload
+internal class RestChannelMessageEditPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the content.
@@ -341,7 +341,7 @@ internal sealed class RestChannelMessageCreatePayload : RestChannelMessageEditPa
 /// <summary>
 /// Represents a channel message create multipart payload.
 /// </summary>
-internal sealed class RestChannelMessageCreateMultipartPayload
+internal sealed class RestChannelMessageCreateMultipartPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the content.
@@ -377,7 +377,7 @@ internal sealed class RestChannelMessageCreateMultipartPayload
 /// <summary>
 /// Represents a channel message bulk delete payload.
 /// </summary>
-internal sealed class RestChannelMessageBulkDeletePayload
+internal sealed class RestChannelMessageBulkDeletePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the messages.
@@ -389,7 +389,7 @@ internal sealed class RestChannelMessageBulkDeletePayload
 /// <summary>
 /// Represents a channel invite create payload.
 /// </summary>
-internal sealed class RestChannelInviteCreatePayload
+internal sealed class RestChannelInviteCreatePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the max age.
@@ -437,7 +437,7 @@ internal sealed class RestChannelInviteCreatePayload
 /// <summary>
 /// Represents a channel permission edit payload.
 /// </summary>
-internal sealed class RestChannelPermissionEditPayload
+internal sealed class RestChannelPermissionEditPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the allow.
@@ -479,7 +479,7 @@ internal sealed class RestChannelGroupDmRecipientAddPayload : IOAuth2Payload
 /// <summary>
 /// The acknowledge payload.
 /// </summary>
-internal sealed class AcknowledgePayload
+internal sealed class AcknowledgePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the token.
@@ -491,7 +491,7 @@ internal sealed class AcknowledgePayload
 /// <summary>
 /// Represents a thread channel create payload.
 /// </summary>
-internal sealed class RestThreadChannelCreatePayload
+internal sealed class RestThreadChannelCreatePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the name.
@@ -530,7 +530,7 @@ internal sealed class RestThreadChannelCreatePayload
 /// <summary>
 /// Represents a thread channel modify payload.
 /// </summary>
-internal sealed class RestThreadChannelModifyPayload
+internal sealed class RestThreadChannelModifyPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the name.

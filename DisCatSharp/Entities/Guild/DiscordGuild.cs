@@ -1618,6 +1618,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="userId">ID of the member to get.</param>
 	/// <param name="fetch">Whether to fetch the member from the api prior to cache.</param>
 	/// <returns>The requested member.</returns>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist in this guild.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMember> GetMemberAsync(ulong userId, bool fetch = false)
 	{
@@ -1650,6 +1651,9 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 		var recd = 1000;
 		var last = 0ul;
+
+		var intents = this.Discord.Configuration.Intents;
+		var hasIntent = intents.HasIntent(DiscordIntents.GuildMembers);
 		while (recd > 0)
 		{
 			var tms = await this.Discord.ApiClient.ListGuildMembersAsync(this.Id, 1000, last == 0 ? null : last).ConfigureAwait(false);
@@ -1667,8 +1671,10 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 					return old;
 				});
-
-				recmbr.Add(new DiscordMember(xtm) { Discord = this.Discord, GuildId = this.Id });
+				var mbr = new DiscordMember(xtm) { Discord = this.Discord, GuildId = this.Id };
+				recmbr.Add(mbr);
+				if (hasIntent)
+					this.MembersInternal[usr.Id] = mbr;
 			}
 
 			var tm = tms.LastOrDefault();

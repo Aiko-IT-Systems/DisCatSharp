@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -90,9 +89,7 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 	/// Gets the potential parameters for this command.
 	/// </summary>
 	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public List<DiscordApplicationCommandOption>? Options { get; internal set; } = null;
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	/// <summary>
 	/// Gets the commands needed permissions.
@@ -151,6 +148,7 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 		ApplicationCommandType type = ApplicationCommandType.ChatInput,
 		DiscordApplicationCommandLocalization? nameLocalizations = null, DiscordApplicationCommandLocalization? descriptionLocalizations = null,
 		Permissions? defaultMemberPermissions = null, bool? dmPermission = null, bool isNsfw = false)//, ApplicationCommandContexts contexts = null)
+		: base(new List<string>() { "guild_id", "contexts" })
 	{
 		if (type is ApplicationCommandType.ChatInput)
 		{

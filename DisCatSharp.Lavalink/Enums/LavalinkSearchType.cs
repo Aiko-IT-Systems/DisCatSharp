@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
+// This file is part of the DisCatSharp project.
 //
-// Copyright (c) 2021-2023 AITSYS
+// Copyright (c) 2023 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Lavalink;
+namespace DisCatSharp.Lavalink.Enums;
 
 /// <summary>
 /// The lavalink search type.
@@ -42,13 +42,52 @@ public enum LavalinkSearchType
 	/// </summary>
 	Plain,
 
+	/*
+	// This does not support search. Keeping it for reference tho.
+	/// <summary>
+	/// Search on Band Camp.
+	/// </summary>
+	BandCamp,
+
+	/// <summary>
+	/// Search on Twitch.
+	/// </summary>
+	Twitch,
+
+	/// <summary>
+	/// Search on Vimeo.
+	/// </summary>
+	Vimeo,*/
+
+	// Requires: https://github.com/topiSenpai/LavaSrc
+
+	/// <summary>
+	/// Search on Apple Music.
+	/// </summary>
+	AppleMusic,
+
+	/// <summary>
+	/// Search on Deezer.
+	/// </summary>
+	Deezer,
+
+	/// <summary>
+	/// Search on Deezer with ISRC.
+	/// </summary>
+	DeezerISrc,
+
+	/// <summary>
+	/// Search on Yandex Music.
+	/// </summary>
+	YandexMusic,
+
 	/// <summary>
 	/// Search on Spotify.
 	/// </summary>
 	Spotify,
 
 	/// <summary>
-	/// Search on Apple Music
+	/// Search on Spotify with recommendation seed.
 	/// </summary>
-	AppleMusic
+	SpotifyRec
 }

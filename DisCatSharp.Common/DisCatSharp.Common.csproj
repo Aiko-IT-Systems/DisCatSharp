@@ -5,6 +5,7 @@
   <Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
   <Import Project="../DisCatSharp.Targets/NuGet.targets" />
   <Import Project="../DisCatSharp.Targets/Library.targets" />
+  <Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
 
   <PropertyGroup>
     <AssemblyName>DisCatSharp.Common</AssemblyName>

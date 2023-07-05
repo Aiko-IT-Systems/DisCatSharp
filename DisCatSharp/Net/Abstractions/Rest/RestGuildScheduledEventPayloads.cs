@@ -32,7 +32,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// The rest guild scheduled event create payload.
 /// </summary>
-internal class RestGuildScheduledEventCreatePayload
+internal class RestGuildScheduledEventCreatePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the channel id.
@@ -92,7 +92,7 @@ internal class RestGuildScheduledEventCreatePayload
 /// <summary>
 /// The rest guild scheduled event modify payload.
 /// </summary>
-internal class RestGuildScheduledEventModifyPayload
+internal class RestGuildScheduledEventModifyPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the channel id.

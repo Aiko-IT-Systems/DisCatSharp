@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 
+using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -526,7 +527,7 @@ internal sealed class AuditLogAction
 /// <summary>
 /// Represents a audit log.
 /// </summary>
-internal sealed class AuditLog
+internal sealed class AuditLog : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the webhooks.
@@ -573,4 +574,7 @@ internal sealed class AuditLog
         [JsonProperty("application_commands")]
         public IReadOnlyList<AuditLogApplicationCommand> ApplicationCommands { get; set; }
         */
+	internal AuditLog()
+		: base(new List<string> { "application_commands", "auto_moderation_rules" })
+	{ }
 }

@@ -31,21 +31,24 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Handles mentionables.
 /// </summary>
-internal class DiscordMentions
+internal class DiscordMentions : ObservableApiObject
 {
 	/// <summary>
 	/// Parse users.
 	/// </summary>
+	[JsonIgnore]
 	private const string PARSE_USERS = "users";
 
 	/// <summary>
 	/// Parse roles.
 	/// </summary>
+	[JsonIgnore]
 	private const string PARSE_ROLES = "roles";
 
 	/// <summary>
 	/// Parse everyone.
 	/// </summary>
+	[JsonIgnore]
 	private const string PARSE_EVERYONE = "everyone";
 
 	/// <summary>

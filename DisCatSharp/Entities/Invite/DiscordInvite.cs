@@ -21,9 +21,11 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
+using DisCatSharp.Exceptions;
 
 using Newtonsoft.Json;
 
@@ -32,13 +34,8 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a Discord invite.
 /// </summary>
-public class DiscordInvite
+public class DiscordInvite : ObservableApiObject
 {
-	/// <summary>
-	/// Gets the base client.
-	/// </summary>
-	internal BaseDiscordClient Discord { get; set; }
-
 	/// <summary>
 	/// Gets the invite's code.
 	/// </summary>
@@ -181,13 +178,9 @@ public class DiscordInvite
 	/// Initializes a new instance of the <see cref="DiscordInvite"/> class.
 	/// </summary>
 	internal DiscordInvite()
+		: base(new List<string>() { "guild_id", "channel_id" })
 	{ }
 
-
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 	/// <summary>
 	/// Deletes the invite.
 	/// </summary>
@@ -198,10 +191,6 @@ public class DiscordInvite
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordInvite> DeleteAsync(string reason = null)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.DeleteInviteAsync(this.Code, reason);
 
 	/// <summary>

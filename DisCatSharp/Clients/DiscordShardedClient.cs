@@ -36,11 +36,16 @@ using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
+using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
 
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.Options;
 
 using Newtonsoft.Json.Linq;
+
+using Sentry;
 
 namespace DisCatSharp;
 
@@ -70,6 +75,12 @@ public sealed partial class DiscordShardedClient
 	/// Gets the current user.
 	/// </summary>
 	public DiscordUser CurrentUser { get; private set; }
+
+	/// <summary>
+	/// Gets the bot library name.
+	/// </summary>
+	public string BotLibrary
+		=> "DisCatSharp";
 
 	/// <summary>
 	/// Gets the current application.
@@ -134,12 +145,94 @@ public sealed partial class DiscordShardedClient
 		this._configuration = config;
 		this.ShardClients = new ReadOnlyConcurrentDictionary<int, DiscordClient>(this._shards);
 
-		if (this._configuration.LoggerFactory == null)
+		if (this._configuration.CustomSentryDsn != null)
+			BaseDiscordClient.SentryDsn = this._configuration.CustomSentryDsn;
+
+		if (this._configuration.LoggerFactory == null && !this._configuration.EnableSentry)
 		{
 			this._configuration.LoggerFactory = new DefaultLoggerFactory();
 			this._configuration.LoggerFactory.AddProvider(new DefaultLoggerProvider(this._configuration.MinimumLogLevel, this._configuration.LogTimestampFormat));
 		}
-		this.Logger = this._configuration.LoggerFactory.CreateLogger<BaseDiscordClient>();
+		else if (this._configuration.LoggerFactory == null && this._configuration.EnableSentry)
+		{
+			var configureNamedOptions = new ConfigureNamedOptions<ConsoleLoggerOptions>(string.Empty, x =>
+			{
+				x.Format = ConsoleLoggerFormat.Default;
+				x.TimestampFormat = this._configuration.LogTimestampFormat;
+				x.LogToStandardErrorThreshold = this._configuration.MinimumLogLevel;
+
+			}); var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[] { configureNamedOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
+			var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleLoggerOptions>>(), new OptionsCache<ConsoleLoggerOptions>());
+
+			var l = new ConsoleLoggerProvider(optionsMonitor);
+			this._configuration.LoggerFactory = new LoggerFactory();
+			this._configuration.LoggerFactory.AddProvider(l);
+		}
+
+		if (this._configuration.LoggerFactory != null && this._configuration.EnableSentry)
+			this._configuration.LoggerFactory.AddSentry(o =>
+			{
+				var a = typeof(DiscordClient).GetTypeInfo().Assembly;
+				var vs = "";
+				var iv = a.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+				if (iv != null)
+					vs = iv.InformationalVersion;
+				else
+				{
+					var v = a.GetName().Version;
+					vs = v?.ToString(3);
+				}
+				o.InitializeSdk = true;
+				o.Dsn = BaseDiscordClient.SentryDsn;
+				o.DetectStartupTime = StartupTimeDetectionMode.Fast;
+				o.DiagnosticLevel = SentryLevel.Debug;
+				o.Environment = "dev";
+				o.IsGlobalModeEnabled = false;
+				o.TracesSampleRate = 1.0;
+				o.ReportAssembliesMode = ReportAssembliesMode.InformationalVersion;
+				o.AddInAppInclude("DisCatSharp");
+				o.AttachStacktrace = true;
+				o.StackTraceMode = StackTraceMode.Enhanced;
+				o.Release = $"{this.BotLibrary}@{vs}";
+				o.SendClientReports = true;
+				if (!this._configuration.DisableExceptionFilter)
+					o.AddExceptionFilter(new DisCatSharpExceptionFilter(this._configuration));
+				o.IsEnvironmentUser = false;
+				o.UseAsyncFileIO = true;
+				o.Debug = this._configuration.SentryDebug;
+				o.EnableScopeSync = true;
+				o.BeforeSend = e =>
+				{
+					if (!this._configuration.DisableExceptionFilter)
+					{
+						if (e.Exception != null)
+						{
+							if (!this._configuration.TrackExceptions.Contains(e.Exception.GetType()))
+								return null;
+						}
+						else if (e.Extra.Count == 0 || !e.Extra.ContainsKey("Found Fields"))
+							return null;
+					}
+
+					if (!e.HasUser())
+						if (this._configuration.AttachUserInfo && this.CurrentUser! != null!)
+							e.User = new()
+							{
+								Id = this.CurrentUser.Id.ToString(),
+								Username = this.CurrentUser.UsernameWithDiscriminator,
+								Other = new Dictionary<string, string>()
+								{
+									{ "developer", this._configuration.DeveloperUserId?.ToString() ?? "not_given" },
+									{ "email", this._configuration.FeedbackEmail ?? "not_given" }
+								}
+							};
+					return e;
+				};
+			});
+
+		this._configuration.HasShardLogger = true;
+
+		this.Logger ??= this._configuration.LoggerFactory!.CreateLogger<BaseDiscordClient>();
 	}
 
 	#endregion
@@ -305,11 +398,11 @@ public sealed partial class DiscordShardedClient
 
 		http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
 		http.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Utilities.GetFormattedToken(this._configuration));
-		http.DefaultRequestHeaders.TryAddWithoutValidation("X-Discord-Locale", this._configuration.Locale);
-		if (this._configuration != null && this._configuration.Override != null)
-		{
+		http.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-locale", this._configuration.Locale);
+		if (!string.IsNullOrWhiteSpace(this._configuration.Timezone))
+			http.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone", this._configuration.Timezone);
+		if (this._configuration.Override != null)
 			http.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this._configuration.Override);
-		}
 
 		this.Logger.LogDebug(LoggerEvents.ShardRest, $"Obtaining gateway information from GET {Endpoints.GATEWAY}{Endpoints.BOT}...");
 		var resp = await http.GetAsync(url).ConfigureAwait(false);

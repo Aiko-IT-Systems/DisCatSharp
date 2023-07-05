@@ -81,6 +81,16 @@ public class GuildMemberUpdateEventArgs : DiscordEventArgs
 	public DateTimeOffset? TimeoutAfter { get; internal set; }
 
 	/// <summary>
+	/// Gets whether the member has unusual dm activity before the update.
+	/// </summary>
+	public DateTimeOffset? UnusualDmActivityBefore { get; internal set; }
+
+	/// <summary>
+	/// Gets whether the member has unusual dm activity after the update.
+	/// </summary>
+	public DateTimeOffset? UnusualDmActivityAfter { get; internal set; }
+
+	/// <summary>
 	/// Gets the member that was updated.
 	/// </summary>
 	public DiscordMember Member { get; internal set; }

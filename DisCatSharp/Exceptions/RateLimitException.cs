@@ -31,7 +31,7 @@ namespace DisCatSharp.Exceptions;
 /// <summary>
 /// Represents an exception thrown when too many requests are sent.
 /// </summary>
-public class RateLimitException : Exception
+public class RateLimitException : DisCatSharpException
 {
 	/// <summary>
 	/// Gets the request that caused the exception.
@@ -53,7 +53,8 @@ public class RateLimitException : Exception
 	/// </summary>
 	/// <param name="request">The request.</param>
 	/// <param name="response">The response.</param>
-	internal RateLimitException(BaseRestRequest request, RestResponse response) : base("Rate limited: " + response.ResponseCode)
+	internal RateLimitException(BaseRestRequest request, RestResponse response)
+		: base("Rate limited: " + response.ResponseCode)
 	{
 		this.WebRequest = request;
 		this.WebResponse = response;

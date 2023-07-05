@@ -30,7 +30,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a guild's membership screening form.
 /// </summary>
-public class DiscordGuildMembershipScreening
+public class DiscordGuildMembershipScreening : ObservableApiObject
 {
 	/// <summary>
 	/// Gets when the fields were last updated.

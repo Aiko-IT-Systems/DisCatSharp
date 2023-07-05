@@ -29,7 +29,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a Rich Presence activity.
 /// </summary>
-public class DiscordMessageActivity
+public class DiscordMessageActivity : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the activity type.

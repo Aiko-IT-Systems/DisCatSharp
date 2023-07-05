@@ -2,23 +2,57 @@
 uid: home
 title: DisCatSharp
 author: DisCatSharp Team
+hasDiscordComponents: true
 ---
 
 # DisCatSharp ![Stable](https://img.shields.io/nuget/v/DisCatSharp?color=1F8B4C&label=Stable&style=flat-square&logo=Nuget) ![Nightly](https://img.shields.io/nuget/vpre/DisCatSharp?color=AD1457&label=Nightly&style=flat-square&logo=Nuget)
+<br/>
 
-
-## What is DisCatSharp
-[DisCatSharp](https://github.com/Aiko-IT-Systems/DisCatSharp) (DCS) is an .NET wrapper for the [Discord API](https://discord.dev "Discord API Docs"), originally based off DSharpPlus.<br/>
-The library has been rewritten to fit quality and API standards. Furthermore this lib includes many new features of Discord and is pretty fast with keeping up with Discords API.
-
-## Why DisCatSharp?
-
-If you:
-- want a library where you get kind and efficient help
-- would like to have and use the most recent features of the Discord API
-- are ready to build great things
-
-Then this is the right place for you!
+## Introduction
+<br/>
+<discord-messages>
+   <discord-message profile="user_dm">Hey, I'm searching for a C# library to code discord bots.</discord-message>
+    <discord-message profile="dcs_user_dm">How about DisCatSharp?</discord-message>
+    <discord-message profile="user_dm">What is that, do you have an invite?</discord-message>
+    <discord-message profile="dcs_user_dm">
+        Sure!<br/><br/><a target="_blank" class="discord-link external" href="https://discord.gg/discatsharp">https://discord.gg/discatsharp</a>
+		<discord-attachments slot="attachments"><discord-invite name="DisCatSharp" icon="https://cdn.discordapp.com/icons/858089281214087179/c40cc6390001072cd06c0dfcf853e295.png" url="https://discord.gg/TpEJZr42gY" online="69" members="420" verified="true"></discord-invite></discord-attachments>
+    </discord-message>
+</discord-messages>
+<br/>
+<discord-messages>
+    <discord-header guild="DisCatSharp" channel="general" icon="https://cdn.discordapp.com/icons/858089281214087179/c40cc6390001072cd06c0dfcf853e295.png">This is the main channel of DisCatSharp</discord-header>
+    <discord-system-message type="join">
+        Welcome, <i style="color: #00c0ff;">Discord User</i>. We hope you brought pizza.
+         <discord-reactions slot="reactions">
+            <discord-reaction interactive="true" name="xcatclap" emoji="https://cdn.discordapp.com/emojis/1059823127271575612.gif" count="68"></discord-reaction>
+        </discord-reactions>
+    </discord-system-message>
+    <discord-message profile="user">Hey guys, I'm new here!</discord-message>
+    <discord-message profile="dcs_user" highlight>
+        <discord-reply slot="reply" profile="user" mentions>Hey guys, I'm new here!</discord-reply>Welcome to DisCatSharp! Nice that you made it here <discord-custom-emoji name="xcatlove" url="https://cdn.discordapp.com/emojis/1059820726426800158.png"></discord-custom-emoji>
+    </discord-message>
+    <discord-message profile="dcs_owner" highlight>
+        <discord-reply slot="reply" profile="user" mentions>Hey guys, I'm new here!</discord-reply>Welcome! If you need help just ask <discord-custom-emoji name="AGC_AnimeDance" url="https://cdn.discordapp.com/emojis/1106244669974790154.gif"></discord-custom-emoji>
+    </discord-message>
+    <discord-message profile="user">What is DisCatSharp?</discord-message>
+    <discord-message profile="dcs" highlight>
+        <discord-reply slot="reply" profile="user" mentions>What is DisCatSharp?</discord-reply>
+        <discord-bold>DisCatSharp</discord-bold> or short <discord-bold>DCS</discord-bold> is an .NET wrapper for the <discord-bold>Discord API</discord-bold>, originally based off DSharpPlus.<br /><br />
+        The library has been rewritten to fit quality and API standards.<br /><br />
+    Furthermore this lib includes many new features of Discord and is pretty fast with keeping up with Discords API.
+    </discord-message>
+    <discord-message profile="user">Why should I use DisCatSharp?</discord-message>
+    <discord-message profile="dcs" highlight>
+        <discord-reply slot="reply" profile="user" mentions>Why should I use DisCatSharp?</discord-reply>
+        If you:<br />
+        - want a library where you get kind and efficient help<br />
+        - would like to have and use the most recent features of the Discord API<br />
+        - are ready to build great things<br /><br />
+    Then this is the right library for you!
+    </discord-message>
+</discord-messages>
+<br/>
 
 ## Getting Started
 New users probably want to take a look into the [articles](xref:preamble) for quick start guides, tutorials, and examples of use.<br/>

@@ -27,7 +27,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents information about a Discord voice server region.
 /// </summary>
-public class DiscordVoiceRegion
+public class DiscordVoiceRegion : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the unique ID for the region.

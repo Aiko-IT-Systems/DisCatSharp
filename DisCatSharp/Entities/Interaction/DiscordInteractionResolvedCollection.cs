@@ -29,7 +29,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a collection of Discord snowflake objects resolved from interaction arguments.
 /// </summary>
-public sealed class DiscordInteractionResolvedCollection
+public sealed class DiscordInteractionResolvedCollection : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the resolved user objects, if any.

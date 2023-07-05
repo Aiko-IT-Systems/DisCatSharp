@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
+// This file is part of the DisCatSharp project.
 //
-// Copyright (c) 2021-2023 AITSYS
+// Copyright (c) 2023 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,70 +34,114 @@ using DisCatSharp.Net;
 namespace DisCatSharp.Lavalink;
 
 /// <summary>
-/// The lavalink extension.
+/// Represents the lavalink extension.
 /// </summary>
 public sealed class LavalinkExtension : BaseExtension
 {
 	/// <summary>
-	/// Triggered whenever a node disconnects.
+	/// Triggered whenever a session disconnects.
 	/// </summary>
-	public event AsyncEventHandler<LavalinkNodeConnection, NodeDisconnectedEventArgs> NodeDisconnected
+	public event AsyncEventHandler<LavalinkExtension, LavalinkSessionDisconnectedEventArgs> SessionDisconnected
 	{
-		add => this._nodeDisconnected.Register(value);
-		remove => this._nodeDisconnected.Unregister(value);
+		add => this._sessionDisconnected.Register(value);
+		remove => this._sessionDisconnected.Unregister(value);
 	}
-	private AsyncEvent<LavalinkNodeConnection, NodeDisconnectedEventArgs> _nodeDisconnected;
+	private AsyncEvent<LavalinkExtension, LavalinkSessionDisconnectedEventArgs> _sessionDisconnected;
 
 	/// <summary>
-	/// Gets a dictionary of connected Lavalink nodes for the extension.
+	/// Triggered whenever a session connects.
 	/// </summary>
-	public IReadOnlyDictionary<ConnectionEndpoint, LavalinkNodeConnection> ConnectedNodes { get; }
-	private readonly ConcurrentDictionary<ConnectionEndpoint, LavalinkNodeConnection> _connectedNodes = new();
+	public event AsyncEventHandler<LavalinkExtension, LavalinkSessionConnectedEventArgs> SessionConnected
+	{
+		add => this._sessionConnected.Register(value);
+		remove => this._sessionConnected.Unregister(value);
+	}
+	private AsyncEvent<LavalinkExtension, LavalinkSessionConnectedEventArgs> _sessionConnected;
+
+	/// <summary>
+	/// Gets a dictionary of connected Lavalink sessions for the extension.
+	/// </summary>
+	public IReadOnlyDictionary<ConnectionEndpoint, LavalinkSession> ConnectedSessions { get; }
+
+	/// <summary>
+	/// The internal dictionary of connected Lavalink sessions.
+	/// </summary>
+	private readonly ConcurrentDictionary<ConnectionEndpoint, LavalinkSession> _connectedSessions = new();
+
+	/// <summary>
+	/// Gets the rest client used to communicate with the lavalink server.
+	/// </summary>
+	private LavalinkRestClient REST { get; set; } = null!;
+
+	/// <summary>
+	/// Gets the lavalink configuration.
+	/// </summary>
+	private LavalinkConfiguration CONFIGURATION { get; set; } = null!;
 
 	/// <summary>
 	/// Creates a new instance of this Lavalink extension.
 	/// </summary>
 	internal LavalinkExtension()
 	{
-		this.ConnectedNodes = new ReadOnlyConcurrentDictionary<ConnectionEndpoint, LavalinkNodeConnection>(this._connectedNodes);
+		this.ConnectedSessions = new ReadOnlyConcurrentDictionary<ConnectionEndpoint, LavalinkSession>(this._connectedSessions);
 	}
 
 	/// <summary>
 	/// DO NOT USE THIS MANUALLY.
 	/// </summary>
 	/// <param name="client">DO NOT USE THIS MANUALLY.</param>
-	/// <exception cref="InvalidOperationException"/>
+	/// <exception cref="InvalidOperationException">Thrown when a developer tries to manually initialize it.</exception>
 	protected internal override void Setup(DiscordClient client)
 	{
 		if (this.Client != null)
 			throw new InvalidOperationException("What did I tell you?");
 
 		this.Client = client;
-
-		this._nodeDisconnected = new AsyncEvent<LavalinkNodeConnection, NodeDisconnectedEventArgs>("LAVALINK_NODE_DISCONNECTED", TimeSpan.Zero, this.Client.EventErrorHandler);
+		this._sessionDisconnected = new("LAVALINK_SESSION_DISCONNECTED", TimeSpan.Zero, this.Client.EventErrorHandler);
+		this._sessionConnected = new("LAVALINK_SESSION_CONNECTED", TimeSpan.Zero, this.Client.EventErrorHandler);
 	}
 
+
 	/// <summary>
-	/// Connect to a Lavalink node.
+	/// Connect to a Lavalink session.
 	/// </summary>
 	/// <param name="config">Lavalink client configuration.</param>
 	/// <returns>The established Lavalink connection.</returns>
-	public async Task<LavalinkNodeConnection> ConnectAsync(LavalinkConfiguration config)
+	public async Task<LavalinkSession> ConnectAsync(LavalinkConfiguration config)
 	{
-		if (this._connectedNodes.ContainsKey(config.SocketEndpoint))
-			return this._connectedNodes[config.SocketEndpoint];
+		if (this._connectedSessions.TryGetValue(config.SocketEndpoint, out var session))
+			return session;
 
-		var con = new LavalinkNodeConnection(this.Client, this, config);
-		con.NodeDisconnected += this.Con_NodeDisconnected;
-		con.Disconnected += this.Con_Disconnected;
-		this._connectedNodes[con.NodeEndpoint] = con;
+		this.CONFIGURATION ??= config;
+
 		try
 		{
-			await con.StartAsync().ConfigureAwait(false);
+			this.REST ??= new(this.CONFIGURATION, this.Client);
+
+			var versionInfo = await this.REST.GetVersionAsync();
+			if (!versionInfo.Headers.Contains("Lavalink-Api-Version"))
+				throw new("Lavalink v4 is required");
+			if (versionInfo.Headers.TryGetValues("Lavalink-Api-Version", out var headerValues))
+				if (headerValues.First() != "4")
+					throw new("Lavalink v4 is required");
+		}
+		catch (Exception)
+		{
+			throw new("Something went wrong when determining the lavalink server version :/");
+		}
+
+		var con = new LavalinkSession(this.Client, this, config);
+		con.SessionDisconnected += this.LavalinkSessionDisconnect;
+		con.LavalinkSessionConnected += this.LavalinkSessionConnected;
+		con.LavalinkSessionDisconnected += this.LavalinkSessionDisconnected;
+		this._connectedSessions[con.NodeEndpoint] = con;
+		try
+		{
+			await con.EstablishConnectionAsync();
 		}
 		catch
 		{
-			this.Con_NodeDisconnected(con);
+			this.LavalinkSessionDisconnect(con);
 			throw;
 		}
 
@@ -105,111 +149,110 @@ public sealed class LavalinkExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Gets the Lavalink node connection for the specified endpoint.
+	/// Gets the Lavalink session connection for the specified endpoint.
 	/// </summary>
-	/// <param name="endpoint">Endpoint at which the node resides.</param>
-	/// <returns>Lavalink node connection.</returns>
-	public LavalinkNodeConnection GetNodeConnection(ConnectionEndpoint endpoint)
-		=> this._connectedNodes.ContainsKey(endpoint) ? this._connectedNodes[endpoint] : null;
+	/// <param name="endpoint">Endpoint at which the session resides.</param>
+	/// <returns>Lavalink session connection.</returns>
+	public LavalinkSession GetSession(ConnectionEndpoint endpoint)
+		=> this._connectedSessions.TryGetValue(endpoint, out var ep) ? ep : null!;
 
 	/// <summary>
-	/// Gets a Lavalink node connection based on load balancing and an optional voice region.
+	/// Gets a Lavalink session connection based on load balancing and an optional voice region.
 	/// </summary>
-	/// <param name="region">The region to compare with the node's <see cref="LavalinkConfiguration.Region"/>, if any.</param>
-	/// <returns>The least load affected node connection, or null if no nodes are present.</returns>
-	public LavalinkNodeConnection GetIdealNodeConnection(DiscordVoiceRegion region = null)
+	/// <param name="region">The region to compare with the session's <see cref="LavalinkConfiguration.Region"/>, if any.</param>
+	/// <returns>The least load affected session connection, or null if no sessions are present.</returns>
+	public LavalinkSession GetIdealSession(DiscordVoiceRegion region = null!)
 	{
-		if (this._connectedNodes.Count <= 1)
-			return this._connectedNodes.Values.FirstOrDefault();
+		if (this._connectedSessions.Count <= 1)
+			return this._connectedSessions.Values.FirstOrDefault()!;
 
-		var nodes = this._connectedNodes.Values.ToArray();
+		var nodes = this._connectedSessions.Values.ToArray();
 
-		if (region != null)
-		{
-			var regionPredicate = new Func<LavalinkNodeConnection, bool>(x => x.Region == region);
+		if (region == null!)
+			return this.FilterByLoad(nodes);
 
-			if (nodes.Any(regionPredicate))
-				nodes = nodes.Where(regionPredicate).ToArray();
+		var regionPredicate = new Func<LavalinkSession, bool>(x => x.Region == region);
 
-			if (nodes.Length <= 1)
-				return nodes.FirstOrDefault();
-		}
+		if (nodes.Any(regionPredicate))
+			nodes = nodes.Where(regionPredicate).ToArray();
 
-		return this.FilterByLoad(nodes);
+		return nodes.Length <= 1 ? nodes.FirstOrDefault()! : this.FilterByLoad(nodes);
 	}
 
 	/// <summary>
-	/// Gets a Lavalink guild connection from a <see cref="DisCatSharp.Entities.DiscordGuild"/>.
+	/// Gets a Lavalink guild player from a <see cref="DiscordGuild"/>.
 	/// </summary>
-	/// <param name="guild">The guild the connection is on.</param>
-	/// <returns>The found guild connection, or null if one could not be found.</returns>
-	public LavalinkGuildConnection GetGuildConnection(DiscordGuild guild)
+	/// <param name="guild">The guild the player is on.</param>
+	/// <returns>The found guild player, or null if one could not be found.</returns>
+	public LavalinkGuildPlayer GetGuildPlayer(DiscordGuild guild)
 	{
-		var nodes = this._connectedNodes.Values;
-		var node = nodes.FirstOrDefault(x => x.ConnectedGuildsInternal.ContainsKey(guild.Id));
-		return node?.GetGuildConnection(guild);
+		var nodes = this._connectedSessions.Values;
+		var node = nodes.FirstOrDefault(x => x.ConnectedPlayersInternal.ContainsKey(guild.Id));
+		return node?.GetGuildPlayer(guild)!;
 	}
 
 	/// <summary>
 	/// Filters the by load.
 	/// </summary>
-	/// <param name="nodes">The nodes.</param>
-	private LavalinkNodeConnection FilterByLoad(LavalinkNodeConnection[] nodes)
+	/// <param name="sessions">The sessions.</param>
+	private LavalinkSession FilterByLoad(LavalinkSession[] sessions)
 	{
-		Array.Sort(nodes, (a, b) =>
+		Array.Sort(sessions, (a, b) =>
 		{
-			if (!a.Statistics.Updated || !b.Statistics.Updated)
-				return 0;
-
-			//https://github.com/FredBoat/Lavalink-Client/blob/48bc27784f57be5b95d2ff2eff6665451b9366f5/src/main/java/lavalink/client/io/LavalinkLoadBalancer.java#L122
-			//https://github.com/briantanner/eris-lavalink/blob/master/src/PlayerManager.js#L329
-
 			//player count
-			var aPenaltyCount = a.Statistics.ActivePlayers;
-			var bPenaltyCount = b.Statistics.ActivePlayers;
+			var aPenaltyCount = a.Statistics.PlayingPlayers;
+			var bPenaltyCount = b.Statistics.PlayingPlayers;
 
 			//cpu load
-			aPenaltyCount += (int)Math.Pow(1.05d, (100 * (a.Statistics.CpuSystemLoad / a.Statistics.CpuCoreCount) * 10) - 10);
-			bPenaltyCount += (int)Math.Pow(1.05d, (100 * (b.Statistics.CpuSystemLoad / a.Statistics.CpuCoreCount) * 10) - 10);
+			aPenaltyCount += (int)Math.Pow(1.05d, 100 * (a.Statistics.Cpu.SystemLoad / a.Statistics.Cpu.Cores) * 10 - 10);
+			bPenaltyCount += (int)Math.Pow(1.05d, 100 * (b.Statistics.Cpu.SystemLoad / a.Statistics.Cpu.Cores) * 10 - 10);
 
 			//frame load
-			if (a.Statistics.AverageDeficitFramesPerMinute > 0)
+			if (a.Statistics.Frames!.Deficit > 0)
 			{
 				//deficit frame load
-				aPenaltyCount += (int)((Math.Pow(1.03d, 500f * (a.Statistics.AverageDeficitFramesPerMinute / 3000f)) * 600) - 600);
+				aPenaltyCount += (int)(Math.Pow(1.03d, 500f * (a.Statistics.Frames.Deficit / 3000f)) * 600 - 600);
 
 				//null frame load
-				aPenaltyCount += (int)((Math.Pow(1.03d, 500f * (a.Statistics.AverageNulledFramesPerMinute / 3000f)) * 300) - 300);
+				aPenaltyCount += (int)(Math.Pow(1.03d, 500f * (a.Statistics.Frames.Deficit / 3000f)) * 300 - 300);
 			}
 
 			//frame load
-			if (b.Statistics.AverageDeficitFramesPerMinute > 0)
+			if (b.Statistics.Frames!.Deficit > 0)
 			{
 				//deficit frame load
-				bPenaltyCount += (int)((Math.Pow(1.03d, 500f * (b.Statistics.AverageDeficitFramesPerMinute / 3000f)) * 600) - 600);
+				bPenaltyCount += (int)(Math.Pow(1.03d, 500f * (b.Statistics.Frames.Deficit / 3000f)) * 600 - 600);
 
 				//null frame load
-				bPenaltyCount += (int)((Math.Pow(1.03d, 500f * (b.Statistics.AverageNulledFramesPerMinute / 3000f)) * 300) - 300);
+				bPenaltyCount += (int)(Math.Pow(1.03d, 500f * (b.Statistics.Frames.Deficit / 3000f)) * 300 - 300);
 			}
 
 			return aPenaltyCount - bPenaltyCount;
 		});
 
-		return nodes[0];
+		return sessions[0];
 	}
 
 	/// <summary>
-	/// Removes a node.
+	/// Fired when a session disconnected and removes it from <see cref="ConnectedSessions"/>.
 	/// </summary>
-	/// <param name="node">The node to be removed.</param>
-	private void Con_NodeDisconnected(LavalinkNodeConnection node)
-		=> this._connectedNodes.TryRemove(node.NodeEndpoint, out _);
+	/// <param name="session">The disconnected session.</param>
+	private void LavalinkSessionDisconnect(LavalinkSession session)
+		=> this._connectedSessions.TryRemove(session.NodeEndpoint, out _);
 
 	/// <summary>
-	/// Disconnects a node.
+	/// Fired when a session disconnected.
 	/// </summary>
-	/// <param name="node">The affected node.</param>
-	/// <param name="e">The node disconnected event args.</param>
-	private Task Con_Disconnected(LavalinkNodeConnection node, NodeDisconnectedEventArgs e)
-		=> this._nodeDisconnected.InvokeAsync(node, e);
+	/// <param name="session">The disconnected session.</param>
+	/// <param name="args">The event args.</param>
+	private Task LavalinkSessionDisconnected(LavalinkSession session, LavalinkSessionDisconnectedEventArgs args)
+		=> this._sessionDisconnected.InvokeAsync(this, args);
+
+	/// <summary>
+	/// Fired when a session connected.
+	/// </summary>
+	/// <param name="session">The connected session.</param>
+	/// <param name="args">The event args.</param>
+	private Task LavalinkSessionConnected(LavalinkSession session, LavalinkSessionConnectedEventArgs args)
+		=> this._sessionConnected.InvokeAsync(this, args);
 }

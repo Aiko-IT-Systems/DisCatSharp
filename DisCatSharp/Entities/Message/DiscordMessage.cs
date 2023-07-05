@@ -28,6 +28,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
+using DisCatSharp.Net.Abstractions;
 
 using Newtonsoft.Json;
 
@@ -54,20 +55,28 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		this._stickersLazy = new Lazy<IReadOnlyList<DiscordSticker>>(() => new ReadOnlyCollection<DiscordSticker>(this.StickersInternal));
 		this._jumpLink = new Lazy<Uri>(() =>
 		{
-			string gid = null;
-			if (this.Channel != null)
+			string? gid = null;
+			if (this.Channel != null!)
 				gid = this.Channel is DiscordDmChannel
 					? "@me"
 					: this.Channel is DiscordThreadChannel
-					? this.INTERNAL_THREAD.GuildId.Value.ToString(CultureInfo.InvariantCulture)
+					? this.INTERNAL_THREAD?.GuildId?.ToString(CultureInfo.InvariantCulture)
 					: this.GuildId.HasValue
 					? this.GuildId.Value.ToString(CultureInfo.InvariantCulture)
-					: this.Channel.GuildId.Value.ToString(CultureInfo.InvariantCulture);
+					: this.Channel.GuildId?.ToString(CultureInfo.InvariantCulture);
 
 			var cid = this.ChannelId.ToString(CultureInfo.InvariantCulture);
 			var mid = this.Id.ToString(CultureInfo.InvariantCulture);
 
-			return new Uri($"https://{(this.Discord.Configuration.UseCanary ? "canary.discord.com" : this.Discord.Configuration.UsePtb ? "ptb.discord.com" : "discord.com")}/channels/{gid}/{cid}/{mid}");
+			var baseUrl = this.Discord.Configuration.ApiChannel switch
+			{
+				ApiChannel.Stable => "discord.com",
+				ApiChannel.PTB => "ptb.discord.com",
+				ApiChannel.Canary => "canary.discord.com",
+				ApiChannel.Staging => "staging.discord.co",
+				_ => throw new ArgumentException("Invalid api channel")
+			};
+			return new($"https://{baseUrl}/channels/{gid}/{cid}/{mid}");
 		});
 	}
 
@@ -137,6 +146,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	public ulong ChannelId { get; internal set; }
 
 	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	[JsonProperty("position", NullValueHandling = NullValueHandling.Ignore)]
+	public int? Position { get; internal set; }
+
+	/// <summary>
 	/// Gets the components this message was sent with.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
@@ -147,6 +162,9 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	[JsonProperty("author", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordUser Author { get; internal set; }
+
+	[JsonProperty("member", NullValueHandling = NullValueHandling.Ignore)]
+	private TransportMember TRANSPORT_MEMBER { get; set; }
 
 	/// <summary>
 	/// Gets the message's content.
@@ -329,7 +347,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	internal InternalDiscordMessageReference? InternalReference { get; set; }
 
 	/// <summary>
-	/// Gets the original message reference from the crossposted message.
+	/// Gets the original message reference from the cross-posted message.
 	/// </summary>
 	[JsonIgnore]
 	public DiscordMessageReference Reference
@@ -394,10 +412,15 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	public DiscordMessageInteraction Interaction { get; internal set; }
 
 	/// <summary>
-	/// Gets the thread that was started from this message.
+	/// <para>Gets the thread that was started from this message.</para>
+	/// <para><note type="warning">If you're looking to get the actual thread channel this message was send in, call <see cref="Channel"/> and convert it to a <see cref="DiscordThreadChannel"/>.</note></para>
 	/// </summary>
+	[JsonIgnore]
+	public DiscordThreadChannel Thread
+		=> this._startedThread != null! ? this._startedThread! : this.GuildId.HasValue && this.Guild.ThreadsInternal.TryGetValue(this.Id, out var thread) ? thread! : null!;
+
 	[JsonProperty("thread", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordThreadChannel Thread { get; internal set; }
+	private readonly DiscordThreadChannel _startedThread;
 
 	/// <summary>
 	/// Build the message reference.

@@ -31,7 +31,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Gets the author of a discord embed.
 /// </summary>
-public sealed class DiscordEmbedAuthor
+public sealed class DiscordEmbedAuthor : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the name of the author.
