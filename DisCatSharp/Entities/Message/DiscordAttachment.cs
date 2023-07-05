@@ -101,6 +101,9 @@ public class DiscordAttachment : SnowflakeObject
 	[JsonProperty("waveform", NullValueHandling = NullValueHandling.Ignore)]
 	public string WaveForm { get; internal set; }
 
+	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
+	public AttachmentFlags Flags { get; internal set; } = AttachmentFlags.None;
+
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAttachment"/> class.
 	/// </summary>
