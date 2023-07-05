@@ -29,7 +29,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a Discord ban
 /// </summary>
-public class DiscordBan
+public class DiscordBan : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the reason for the ban

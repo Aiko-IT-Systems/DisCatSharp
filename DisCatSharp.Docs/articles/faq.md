@@ -14,20 +14,21 @@ A snowflake explanation can be seen in the following image:
 
 ![snowflake](/images/snowflake.png)
 
+## What is a gateway
+
+Discord uses a websocket connection to send and receive data. This is called the gateway. The gateway is used to send and receive events, and to send and receive messages.
+
+![gateway](/images/gateway.png)
+
 ## Code I copied from an article isn't compiling or working as expected. Why?
 
 *Please use the code snippets as a reference; don't blindly copy-paste code!*
 
-The snippets of code in the articles are meant to serve as examples to help you understand how to use a part of the library.<br/>
-Although most will compile and work at the time of writing, changes to the library over time can make some snippets obsolete.<br/>
+The snippets of code in the articles are meant to serve as examples to help you understand how to use a part of the library.
+
+Although most will compile and work at the time of writing, changes to the library over time can make some snippets obsolete.
+
 Many issues can be resolved with Intellisense by searching for similarly named methods and verifying method parameters.
-
-## I'm targeting Mono and have exceptions, crashes, or other problems.
-
-As mentioned in the [preamble](xref:preamble), the Mono runtime is inherently unstable and has numerous flaws.<br/>
-Because of this we do not support Mono in any way, nor will we support any other projects which use it.
-
-Instead, we recommend using either the latest LTS release or most recent stable version of [.NET Core](https://dotnet.microsoft.com/download).
 
 ## Connecting to a voice channel with VoiceNext will either hang or throw an exception.
 
@@ -51,7 +52,7 @@ If your local network has no issues, the problem could be with either Discord or
 ### Complex, long-running code in an event handler.
 
 Any event handlers that have the potential to run for more than a few seconds could cause a deadlock, and cause several heartbeats to be skipped.
-Please take a look at our short article on [handling exceptions](xref:beyond_basics_events) to learn how to avoid this.
+Please take a look at our short article on [handling exceptions](xref:topics_events) to learn how to avoid this.
 
 ## Why am I getting a 4XX error and how can I fix it?
 
@@ -69,6 +70,8 @@ Changing the properties of a role requires that your bot account have a role hig
 ## Does CommandsNext support dependency injection?
 
 It does! Please take a look at our [article](xref:modules_commandsnext_dependency_injection) on the subject.
+
+Basically every module of DisCatSharp supports dependency injection.
 
 ## Can I use a user token?
 
@@ -89,19 +92,14 @@ However, if you meant an activity like this:
 
 You can use either of the following
 
-* The overload for [ConnectAsync](xref:DisCatSharp.DiscordClient#DisCatSharp_DiscordClient_ConnectAsync_DisCatSharp_Entities_DiscordActivity_System_Nullable_DisCatSharp_Entities_UserStatus__System_Nullable_System_DateTimeOffset__)([DiscordActivity](xref:DisCatSharp.Entities.DiscordActivity), System.Nullable{UserStatus}, System.Nullable{DateTimeOffset}) which accepts a [DiscordActivity](xref:DisCatSharp.Entities.DiscordActivity).
-* [UpdateStatusAsync](xref:DisCatSharp.DiscordClient#DisCatSharp_DiscordClient_UpdateStatusAsync_DisCatSharp_Entities_DiscordActivity_System_Nullable_DisCatSharp_Entities_UserStatus__System_Nullable_System_DateTimeOffset__)([DiscordActivity](xref:DisCatSharp.Entities.DiscordActivity), System.Nullable{UserStatus}, System.Nullable{DateTimeOffset}) OR [UpdateStatusAsync](xref:DisCatSharp.DiscordShardedClient#DisCatSharp_DiscordShardedClient_UpdateStatusAsync_DisCatSharp_Entities_DiscordActivity_System_Nullable_DisCatSharp_Entities_UserStatus__System_Nullable_System_DateTimeOffset__)(DiscordActivity, System.Nullable{[UserStatus](xref:DisCatSharp.Entities.UserStatus)}, System.Nullable{DateTimeOffset}) (for the sharded client) at any point after `Ready` has been fired.
+* The overload for [ConnectAsync](xref:DisCatSharp.DiscordClient#DisCatSharp_DiscordClient_ConnectAsync_DisCatSharp_Entities_DiscordActivity_System_Nullable_DisCatSharp_Entities_UserStatus__System_Nullable_System_DateTimeOffset__)(@DisCatSharp.Entities.DiscordActivity, @DisCatSharp.Entities.UserStatus?, [](xref:System.DateTimeOffset)?) which accepts a [DiscordActivity](xref:DisCatSharp.Entities.DiscordActivity).
+* [UpdateStatusAsync](xref:DisCatSharp.DiscordClient#DisCatSharp_DiscordClient_UpdateStatusAsync_DisCatSharp_Entities_DiscordActivity_System_Nullable_DisCatSharp_Entities_UserStatus__System_Nullable_System_DateTimeOffset__)(@DisCatSharp.Entities.DiscordActivity, @DisCatSharp.Entities.UserStatus?, [](xref:System.DateTimeOffset)?) OR [UpdateStatusAsync](xref:DisCatSharp.DiscordShardedClient#DisCatSharp_DiscordShardedClient_UpdateStatusAsync_DisCatSharp_Entities_DiscordActivity_System_Nullable_DisCatSharp_Entities_UserStatus__System_Nullable_System_DateTimeOffset__)(@DisCatSharp.Entities.DiscordActivity, @DisCatSharp.Entities.UserStatus?, [](xref:System.DateTimeOffset)?) (for the sharded client) at any point after `Ready` has been fired.
 
 ## Am I able to retrieve a @DisCatSharp.Entities.DiscordRole by name?
 
 Yes. Use LINQ on the `Roles` property of your instance of [DiscordGuild](xref:DisCatSharp.Entities.DiscordGuild) and compare against the `Name` of  each [DiscordRole](xref:DisCatSharp.Entities.DiscordRole).
 
-## Why are you using Newtonsoft.Json when System.Text.Json is available
+## Why are my events not firing?
 
-Yes `System.Text.Json` is available to use but it still doesn't stand up to what we currently need which is why we still use Newtonsoft.Json.
-Maybe in time we can switch to your favorite Json Deserializer but for right now we will be using Newtonsoft.Json for the foreseeable future.
-
-## Why the hell are my events not firing?
-
-This is because in the Discord V8+ API, they require @DisCatSharp.DiscordIntents to be enabled on [DiscordConfiguration](xref:DisCatSharp.DiscordConfiguration) and the
-Discord Application Portal. We have an [article](xref:beyond_basics_intents) that covers all that has to be done to set this up.
+This is because in the Discord V8+ API, they require @DisCatSharp.Enums.DiscordIntents to be enabled on [DiscordConfiguration](xref:DisCatSharp.DiscordConfiguration) and the
+Discord Application Portal. We have an [article](xref:topics_intents) that covers all that has to be done to set this up.

@@ -43,5 +43,5 @@ public sealed class ApplicationCommandRequireDisCatSharpDeveloperAttribute : App
 	/// Runs checks.
 	/// </summary>
 	public override Task<bool> ExecuteChecksAsync(BaseContext ctx)
-		=> Task.FromResult(true);
+		=> Task.FromResult(false);
 }

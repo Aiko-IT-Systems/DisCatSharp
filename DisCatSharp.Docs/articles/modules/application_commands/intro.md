@@ -4,9 +4,9 @@ title: Application Commands Introduction
 ---
 
 >[!NOTE]
-> This article assumes you've recently read the article on *[writing your first bot](xref:basics_first_bot)*.
+> This article assumes you've recently read the article on *[writing your first bot](xref:getting_started_first_bot)*.
 
-# Introduction to App Commands
+# Introduction to Application Commands
 Discord provides built-in commands called: *Application Commands*.<br/>
 Be sure to install the `DisCatSharp.ApplicationCommands` package from NuGet before continuing.
 
@@ -30,7 +30,7 @@ Simple slash command:
 public class MyCommand : ApplicationCommandsModule
 {
     [SlashCommand("my_command", "This is description of the command.")]
-    public async Task MySlashCommand(InteractionContext context)
+    public async Task MySlashCommand(InteractionContext ctx)
     {
 
     }
@@ -42,7 +42,7 @@ Simple context menu command:
 public class MySecondCommand : ApplicationCommandsModule
 {
     [ContextMenu(ApplicationCommandType.User, "My Command")]
-    public async Task MyContextMenuCommand(ContextMenuContext context)
+    public async Task MyContextMenuCommand(ContextMenuContext ctx)
     {
 
     }
@@ -51,7 +51,7 @@ public class MySecondCommand : ApplicationCommandsModule
 
 Now let's add some actions to the commands, for example, send a reply:
 ```cs
-await context.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
+await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
 {
     Content = "Hello :3"
 });
@@ -59,7 +59,7 @@ await context.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSour
 
 If the command will be executed for more than 3 seconds, we must response at the beginning of execution and edit it at the end.
 ```cs
-await context.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource, new DiscordInteractionResponseBuilder());
+await ctx.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource, new DiscordInteractionResponseBuilder());
 
 await Task.Delay(5000); // Simulating a long command execution.
 
@@ -110,17 +110,17 @@ public class MyCommand : ApplicationCommandsModule
     public class MyCommandGroup : ApplicationCommandsModule
     {
         [SlashCommand("first", "This is description of the command.")]
-        public async Task MySlashCommand(InteractionContext context)
+        public async Task MySlashCommand(InteractionContext ctx)
         {
-            await context.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
+            await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
             {
                 Content = "This is first subcommand."
             });
         }
         [SlashCommand("second", "This is description of the command.")]
-        public async Task MySecondCommand(InteractionContext context)
+        public async Task MySecondCommand(InteractionContext ctx)
         {
-            await context.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
+            await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
             {
                 Content = "This is second subcommand."
             });

@@ -29,7 +29,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents the forum tag payload.
 /// </summary>
-public class RestForumPostTagPayloads
+public class RestForumPostTagPayloads : ObservableApiObject
 {
 	/// <summary>
 	/// Sets the tags's new name.

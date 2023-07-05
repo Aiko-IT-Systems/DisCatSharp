@@ -38,6 +38,8 @@ using DisCatSharp.Exceptions;
 
 using Microsoft.Extensions.Logging;
 
+using Sentry;
+
 namespace DisCatSharp.Net;
 
 /// <summary>
@@ -110,10 +112,11 @@ internal sealed class RestClient : IDisposable
 	{
 		this._discord = client;
 		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Utilities.GetFormattedToken(client));
+		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-locale", client.Configuration.Locale);
+		if (!string.IsNullOrWhiteSpace(client.Configuration.Timezone))
+			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone", client.Configuration.Timezone);
 		if (client.Configuration.Override != null)
-		{
 			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", client.Configuration.Override);
-		}
 	}
 
 	/// <summary>
@@ -144,10 +147,14 @@ internal sealed class RestClient : IDisposable
 		};
 
 		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
-		if (this._discord != null && this._discord.Configuration != null && this._discord.Configuration.Override != null)
-			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this._discord.Configuration.Override);
-
-		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Discord-Locale", this._discord?.Configuration?.Locale ?? "en-US");
+		if (this._discord != null && this._discord.Configuration != null)
+		{
+			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-locale", this._discord.Configuration.Locale);
+			if (!string.IsNullOrWhiteSpace(this._discord.Configuration.Timezone))
+				this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone", this._discord.Configuration.Timezone);
+			if (this._discord.Configuration.Override != null)
+				this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this._discord.Configuration.Override);
+		}
 
 		this._routesToHashes = new ConcurrentDictionary<string, string>();
 		this._hashesToBuckets = new ConcurrentDictionary<string, RateLimitBucket>();
@@ -183,9 +190,9 @@ internal sealed class RestClient : IDisposable
 				: val is IFormattable xf ? xf.ToString(null, CultureInfo.InvariantCulture) : val.ToString();
 		}
 
-		var guildId = rparams.ContainsKey("guild_id") ? rparams["guild_id"] : "";
-		var channelId = rparams.ContainsKey("channel_id") ? rparams["channel_id"] : "";
-		var webhookId = rparams.ContainsKey("webhook_id") ? rparams["webhook_id"] : "";
+		var guildId = rparams.TryGetValue("guild_id", out var rparam) ? rparam : "";
+		var channelId = rparams.TryGetValue("channel_id", out var rparam1) ? rparam1 : "";
+		var webhookId = rparams.TryGetValue("webhook_id", out var rparam2) ? rparam2 : "";
 
 		// Create a generic route (minus major params) key
 		// ex: POST:/channels/channel_id/messages
@@ -334,11 +341,13 @@ internal sealed class RestClient : IDisposable
 			this.UpdateBucket(request, response, ratelimitTcs);
 
 			Exception ex = null;
+			Exception senex = null;
 			switch (response.ResponseCode)
 			{
 				case 400:
 				case 405:
 					ex = new BadRequestException(request, response);
+					senex = new Exception(ex.Message + "\nJson Response: " + (ex as BadRequestException).JsonMessage ?? "null", ex);
 					break;
 
 				case 401:
@@ -403,11 +412,27 @@ internal sealed class RestClient : IDisposable
 				case 503:
 				case 504:
 					ex = new ServerErrorException(request, response);
+					senex = new Exception(ex.Message + "\nJson Response: " + (ex as ServerErrorException).JsonMessage ?? "null", ex);
 					break;
 			}
 
 			if (ex != null)
+			{
+				if (this._discord.Configuration.EnableSentry)
+				{
+					if (senex != null)
+					{
+						Dictionary<string, object> debugInfo = new()
+						{
+							{ "route", request.Route },
+							{ "time", DateTimeOffset.UtcNow }
+						};
+						senex.AddSentryContext("Request", debugInfo);
+						this._discord.Sentry.CaptureException(senex);
+					}
+				}
 				request.SetFaulted(ex);
+			}
 			else
 				request.SetCompleted(response);
 		}

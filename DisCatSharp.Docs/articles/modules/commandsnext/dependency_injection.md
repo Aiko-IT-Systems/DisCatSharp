@@ -1,6 +1,8 @@
 ---
 uid: modules_commandsnext_dependency_injection
 title: Dependency Injection
+author: DisCatSharp Team
+hasDiscordComponents: true
 ---
 
 ## Dependency Injection
@@ -63,7 +65,14 @@ public async Task RandomCommand(CommandContext ctx, int min, int max)
 
 Then we can give it a try!
 
-![Command Execution](/images/commands_intro_05.png)
+<discord-messages>
+    <discord-message profile="user">
+        !random 1 500
+    </discord-message>
+    <discord-message profile="dcs">
+        Your number is: 420
+    </discord-message>
+</discord-messages>
 
 <br/>
 CommandsNext has automatically injected our singleton `Random` instance into the `Rng` property when our command module was instantiated.

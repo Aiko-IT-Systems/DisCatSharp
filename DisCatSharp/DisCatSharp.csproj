@@ -6,6 +6,7 @@
   <Import Project="../DisCatSharp.Targets/Package.targets" />
   <Import Project="../DisCatSharp.Targets/NuGet.targets" />
   <Import Project="../DisCatSharp.Targets/Library.targets" />
+  <Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
 
   <PropertyGroup>
     <AssemblyName>DisCatSharp</AssemblyName>
@@ -33,7 +34,10 @@ Written with love and for everyone.
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Sentry" Version="3.33.0" />
+    <PackageReference Include="Sentry.Extensions.Logging" Version="3.33.0" />
     <PackageReference Include="System.Memory" Version="4.5.5" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.Net.WebSockets" Version="4.3.0" />
@@ -46,24 +50,8 @@ Written with love and for everyone.
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Entities\Interaction\Components\Attachment\" />
     <Folder Include="Entities\Interaction\Components\DateTime\" />
     <Folder Include="Entities\Interaction\Components\Radio\" />
   </ItemGroup>
-
 </Project>

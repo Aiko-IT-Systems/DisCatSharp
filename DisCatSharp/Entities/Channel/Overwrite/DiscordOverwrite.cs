@@ -106,6 +106,13 @@ public class DiscordOverwrite : SnowflakeObject
 			? throw new ArgumentException(nameof(this.Type), "This overwrite is for a member, not a role.")
 			: (await this.Discord.ApiClient.GetChannelAsync(this.ChannelId).ConfigureAwait(false)).Guild.GetRole(this.Id);
 
+	/// <summary>
+	/// Converts this <see cref="DiscordOverwrite"/> into a <see cref="DiscordOverwriteBuilder"/>.
+	/// </summary>
+	/// <returns>The created <see cref="DiscordOverwriteBuilder"/>.</returns>
+	public DiscordOverwriteBuilder ConvertToBuilder()
+		=> new(this);
+
 	#endregion
 
 	/// <summary>
@@ -123,4 +130,10 @@ public class DiscordOverwrite : SnowflakeObject
 		(this.Allowed & permission) != 0
 			? PermissionLevel.Allowed
 			: (this.Denied & permission) != 0 ? PermissionLevel.Denied : PermissionLevel.Unset;
+
+	/// <summary>
+	/// Automatically converts this <see cref="DiscordOverwrite"/> to a <see cref="DiscordOverwriteBuilder"/>.
+	/// </summary>
+	public static implicit operator DiscordOverwriteBuilder(DiscordOverwrite b)
+		=> new(b);
 }

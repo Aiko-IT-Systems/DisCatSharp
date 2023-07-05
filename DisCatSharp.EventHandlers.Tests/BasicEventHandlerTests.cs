@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
+// This file is part of the DisCatSharp project.
 //
-// Copyright (c) 2021-2022 AITSYS
+// Copyright (c) 2021-2023 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -69,7 +69,7 @@ public class BasicEventHandlerTests
 		[Event]
 		public int MessageCreated(object? obj, dynamic dynamic) => 1;
 	}
-	
+
 	private abstract class BadHandlerB
 	{
 		[Event]
@@ -132,7 +132,8 @@ public class BasicEventHandlerTests
 		Assert.Throws<ArgumentException>(() => this._client.RegisterEventHandler<BadHandlerB>());
 	}
 
-	private bool IsEventRegistered(string name) {
+	private bool IsEventRegistered(string name)
+	{
 		// This is super hacky, but I think it should be good enough.
 		if (name.Length == 0) { throw new ArgumentException("name mustn't be empty"); }
 		name = "_" + char.ToLower(name[0]) + name.Substring(1);

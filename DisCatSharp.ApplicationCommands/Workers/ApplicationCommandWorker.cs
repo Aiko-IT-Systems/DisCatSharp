@@ -111,45 +111,66 @@ internal class CommandWorker
 
 		foreach (var method in methods)
 		{
-			var commandAttribute = method.GetCustomAttribute<SlashCommandAttribute>();
-
-			var parameters = method.GetParameters();
-			if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(InteractionContext)))
-				throw new ArgumentException($"The first argument of the command '{commandAttribute.Name}' has to be an InteractionContext!");
-			var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), commandAttribute.Name, guildId);
-
-			commandMethods.Add(new CommandMethod { Method = method, Name = commandAttribute.Name });
-
-			DiscordApplicationCommandLocalization nameLocalizations = null;
-			DiscordApplicationCommandLocalization descriptionLocalizations = null;
-			List<DiscordApplicationCommandOption> localizedOptions = null;
-
-			var commandTranslation = translator?.Single(c => c.Name == commandAttribute.Name && c.Type == ApplicationCommandType.ChatInput);
-
-			if (commandTranslation != null && commandTranslation.Options != null)
+			try
 			{
-				localizedOptions = new List<DiscordApplicationCommandOption>(options.Count);
-				foreach (var option in options)
-				{
-					var choices = option.Choices != null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count) : null;
-					if (option.Choices != null)
-						foreach (var choice in option.Choices)
-							choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, commandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
+				var commandAttribute = method.GetCustomAttribute<SlashCommandAttribute>();
 
-					localizedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
-						choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
-						commandTranslation.Options.Single(o => o.Name == option.Name).NameTranslations, commandTranslation.Options.Single(o => o.Name == option.Name).DescriptionTranslations,
-						option.MinimumLength, option.MaximumLength
-					));
+				var parameters = method.GetParameters();
+				if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(InteractionContext)))
+					throw new ArgumentException($"The first argument of the command '{commandAttribute.Name}' has to be an InteractionContext!");
+				var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), commandAttribute.Name, guildId);
+
+				commandMethods.Add(new CommandMethod { Method = method, Name = commandAttribute.Name });
+
+				DiscordApplicationCommandLocalization nameLocalizations = null;
+				DiscordApplicationCommandLocalization descriptionLocalizations = null;
+				List<DiscordApplicationCommandOption> localizedOptions = null;
+
+				var commandTranslation = translator?.Single(c => c.Name == commandAttribute.Name && c.Type == ApplicationCommandType.ChatInput);
+
+				if (commandTranslation != null && commandTranslation.Options != null)
+				{
+					localizedOptions = new List<DiscordApplicationCommandOption>(options.Count);
+					foreach (var option in options)
+					{
+						try
+						{
+							var choices = option.Choices != null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count) : null;
+							if (option.Choices != null)
+								foreach (var choice in option.Choices)
+									try
+									{
+										choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, commandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
+									}
+									catch (Exception ex)
+									{
+										throw new AggregateException($"Failed to register choice '{choice.Name}' in command '{commandAttribute.Name}'", ex);
+									}
+
+							localizedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
+								choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
+								commandTranslation.Options.Single(o => o.Name == option.Name).NameTranslations, commandTranslation.Options.Single(o => o.Name == option.Name).DescriptionTranslations,
+								option.MinimumLength, option.MaximumLength
+							));
+						}
+						catch (Exception ex)
+						{
+							throw new AggregateException($"Failed to register option '{option.Name}' in command '{commandAttribute.Name}'", ex);
+						}
+					}
+
+					nameLocalizations = commandTranslation.NameTranslations;
+					descriptionLocalizations = commandTranslation.DescriptionTranslations;
 				}
 
-				nameLocalizations = commandTranslation.NameTranslations;
-				descriptionLocalizations = commandTranslation.DescriptionTranslations;
+				var payload = new DiscordApplicationCommand(commandAttribute.Name, commandAttribute.Description, (localizedOptions != null && localizedOptions.Any() ? localizedOptions : null) ?? (options != null && options.Any() ? options : null), ApplicationCommandType.ChatInput, nameLocalizations, descriptionLocalizations, commandAttribute.DefaultMemberPermissions, commandAttribute.DmPermission ?? true, isNsfw: commandAttribute.IsNsfw);
+				commands.Add(payload);
+				commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
 			}
-
-			var payload = new DiscordApplicationCommand(commandAttribute.Name, commandAttribute.Description, (localizedOptions != null && localizedOptions.Any() ? localizedOptions : null) ?? (options != null && options.Any() ? options : null), ApplicationCommandType.ChatInput, nameLocalizations, descriptionLocalizations, commandAttribute.DefaultMemberPermissions, commandAttribute.DmPermission ?? true, isNsfw: commandAttribute.IsNsfw);
-			commands.Add(payload);
-			commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
+			catch (Exception ex)
+			{
+				throw new AggregateException($"Failed to register command with method name '{method.Name}'", ex);
+			}
 		}
 
 		return (commands, commandTypeSources, commandMethods, translator != null);

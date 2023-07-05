@@ -32,7 +32,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// The transport application.
 /// </summary>
-internal sealed class TransportApplication
+internal sealed class TransportApplication : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the id.
@@ -63,6 +63,9 @@ internal sealed class TransportApplication
 	/// </summary>
 	[JsonProperty("summary", NullValueHandling = NullValueHandling.Include)]
 	public string Summary { get; set; }
+
+	[JsonProperty("bot", NullValueHandling = NullValueHandling.Ignore)]
+	public TransportUser Bot { get; set; }
 
 	/// <summary>
 	/// Whether the bot is public.

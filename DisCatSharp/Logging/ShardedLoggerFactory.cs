@@ -57,7 +57,7 @@ internal class ShardedLoggerFactory : ILoggerFactory
 	/// <param name="categoryName">The category name.</param>
 	public ILogger CreateLogger(string categoryName) =>
 		categoryName != typeof(BaseDiscordClient).FullName
-			? throw new ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName}.", nameof(categoryName))
+			? throw new ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName}, not for {categoryName}", nameof(categoryName))
 			: this._logger;
 
 	/// <summary>

@@ -49,6 +49,12 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public ulong? GuildId { get; internal set; }
 
 	/// <summary>
+	/// Gets the version number for this channel.
+	/// </summary>
+	[JsonProperty("version", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong Version { get; internal set; }
+
+	/// <summary>
 	/// Gets ID of the category that contains this channel.
 	/// </summary>
 	[JsonProperty("parent_id", NullValueHandling = NullValueHandling.Include)]
@@ -308,6 +314,16 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Initializes a new instance of the <see cref="DiscordChannel"/> class.
 	/// </summary>
 	internal DiscordChannel()
+		: base(new List<string>() { "hashes", "guild_hashes" })
+	{
+		this._permissionOverwritesLazy = new Lazy<IReadOnlyList<DiscordOverwrite>>(() => new ReadOnlyCollection<DiscordOverwrite>(this.PermissionOverwritesInternal));
+	}
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="DiscordChannel"/> class.
+	/// </summary>
+	internal DiscordChannel(List<string>? ignored = null)
+		: base(ignored)
 	{
 		this._permissionOverwritesLazy = new Lazy<IReadOnlyList<DiscordOverwrite>>(() => new ReadOnlyCollection<DiscordOverwrite>(this.PermissionOverwritesInternal));
 	}
@@ -416,7 +432,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 
 		var ovrs = new List<DiscordOverwriteBuilder>();
 		foreach (var ovr in this.PermissionOverwritesInternal)
-			ovrs.Add(await new DiscordOverwriteBuilder().FromAsync(ovr).ConfigureAwait(false));
+			ovrs.Add(new DiscordOverwriteBuilder(ovr));
 
 		var bitrate = this.Bitrate;
 		var userLimit = this.UserLimit;
@@ -496,7 +512,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 
 		var mdl = new ChannelEditModel();
 		action(mdl);
-
+		// TODO: Boost tier not required anymore for auto archive durations
 		if (mdl.DefaultAutoArchiveDuration.HasValue)
 			if (!Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.DefaultAutoArchiveDuration.Value))
 				throw new NotSupportedException($"Cannot modify DefaultAutoArchiveDuration. Guild needs boost tier {(mdl.DefaultAutoArchiveDuration.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");

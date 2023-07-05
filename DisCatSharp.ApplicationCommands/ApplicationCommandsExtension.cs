@@ -219,7 +219,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		this._globalApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs>("GLOBAL_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 		this._guildApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GuildApplicationCommandsRegisteredEventArgs>("GUILD_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 
-		this.Client.GuildDownloadCompleted += async (c, e) => await this.UpdateAsync();
+		this.Client.GuildDownloadCompleted += (c, e) =>
+		{
+			_ = Task.Run(async () => await this.UpdateAsync());
+			return Task.CompletedTask;
+		};
 		this.Client.InteractionCreated += this.CatchInteractionsOnStartup;
 		this.Client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
 	}
@@ -792,13 +796,13 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					//Checks against the ids and adds them to the command method lists
 					foreach (var command in commands)
 					{
-						if (commandMethods.GetFirstValueWhere(x => x.Name == command.Name, out var com))
+						if (commandMethods.TryGetFirstValueWhere(x => x.Name == command.Name, out var com))
 							com.CommandId = command.Id;
-						else if (groupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var groupCom))
+						else if (groupCommands.TryGetFirstValueWhere(x => x.Name == command.Name, out var groupCom))
 							groupCom.CommandId = command.Id;
-						else if (subGroupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var subCom))
+						else if (subGroupCommands.TryGetFirstValueWhere(x => x.Name == command.Name, out var subCom))
 							subCom.CommandId = command.Id;
-						else if (contextMenuCommands.GetFirstValueWhere(x => x.Name == command.Name, out var cmCom))
+						else if (contextMenuCommands.TryGetFirstValueWhere(x => x.Name == command.Name, out var cmCom))
 							cmCom.CommandId = command.Id;
 					}
 
@@ -958,6 +962,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					Client = client,
 					ApplicationCommandsExtension = this,
 					CommandName = e.Interaction.Data.Name,
+					SubCommandName = (e.Interaction.Data.Options?[0]?.Type == ApplicationCommandOptionType.SubCommand ? e.Interaction.Data.Options[0].Name : null),
 					InteractionId = e.Interaction.Id,
 					Token = e.Interaction.Token,
 					Services = Configuration?.ServiceProvider,

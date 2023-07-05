@@ -52,7 +52,7 @@ internal class DefaultLoggerFactory : ILoggerFactory
 		this._isDisposed
 			? throw new InvalidOperationException("This logger factory is already disposed.")
 			: categoryName != typeof(BaseDiscordClient).FullName && categoryName != typeof(DiscordWebhookClient).FullName
-				? throw new ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName} or {typeof(DiscordWebhookClient).FullName}.", nameof(categoryName))
+				? throw new ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName} or {typeof(DiscordWebhookClient).FullName}, not {categoryName}.", nameof(categoryName))
 				: new CompositeDefaultLogger(this._providers);
 
 	/// <summary>

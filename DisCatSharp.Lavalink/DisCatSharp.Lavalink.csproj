@@ -6,38 +6,41 @@
   <Import Project="../DisCatSharp.Targets/Package.targets" />
   <Import Project="../DisCatSharp.Targets/NuGet.targets" />
   <Import Project="../DisCatSharp.Targets/Library.targets" />
+  <Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
 
   <PropertyGroup>
-    <AssemblyName>DisCatSharp.Lavalink</AssemblyName>
-    <RootNamespace>DisCatSharp.Lavalink</RootNamespace>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	<AssemblyName>DisCatSharp.Lavalink</AssemblyName>
+	<RootNamespace>DisCatSharp.Lavalink</RootNamespace>
+	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>DisCatSharp.Lavalink</PackageId>
+	<PackageId>DisCatSharp.Lavalink</PackageId>
 	<Description>
-DisCatSharp Lavalink Extension
+	  DisCatSharp Lavalink V4 Extension
 
-Extend your bot with the power of lavalink.
-Play your favorite music in discord!
+	  Extend your bot with the full power of lavalink.
+	  Play your favorite music in discord!
 
-Documentation: https://docs.dcs.aitsys.dev/articles/modules/audio/lavalink/setup.html
+		Requires Lavalink Server v4
+
+	  Documentation: https://docs.dcs.aitsys.dev/articles/modules/audio/lavalink_v4/intro.html
 	</Description>
-	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Net7,Voice,Lavalink,Audio Player,Music,YouTube,Spotify,SoundCloud</PackageTags>
+	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Net7,Voice,Lavalink,Lavalink V4,Audio Player,Music,YouTube,Spotify,SoundCloud,Twitch,Vimeo,BandCamp,Apple Music,Yandex Music,Spotify,Spotify Recommendations,Deezer,Deezer ISRC,Local Music,Direct Url Music</PackageTags>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+	<ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="5.4.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="DisCatSharp.Attributes" Version="10.4.0" />
-    <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+	<PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="5.4.0">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+	<PackageReference Include="DisCatSharp.Attributes" Version="10.4.0" />
+	<PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
+	<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
   </ItemGroup>
 
 </Project>

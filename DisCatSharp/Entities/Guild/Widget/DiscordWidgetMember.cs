@@ -27,7 +27,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a member within a Discord guild's widget.
 /// </summary>
-public class DiscordWidgetMember
+public class DiscordWidgetMember : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the member's identifier within the widget.

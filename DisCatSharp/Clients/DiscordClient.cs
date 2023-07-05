@@ -30,6 +30,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
@@ -43,6 +44,8 @@ using DisCatSharp.Net.Serialization;
 using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json.Linq;
+
+using Sentry;
 
 namespace DisCatSharp;
 
@@ -1191,16 +1194,18 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// Gets all command permissions for a guild.
 	/// </summary>
 	/// <param name="guildId">The target guild.</param>
-	public Task<IReadOnlyList<DiscordGuildApplicationCommandPermission>> GetGuildApplicationCommandPermissionsAsync(ulong guildId) =>
-		this.ApiClient.GetGuildApplicationCommandPermissionsAsync(this.CurrentApplication.Id, guildId);
+	[DiscordDeprecated("This was removed 2022")]
+	public Task<IReadOnlyList<DiscordGuildApplicationCommandPermission>> GetGuildApplicationCommandPermissionsAsync(ulong guildId)
+		=> null;
 
 	/// <summary>
 	/// Gets the permissions for a guild command.
 	/// </summary>
 	/// <param name="guildId">The target guild.</param>
 	/// <param name="commandId">The target command id.</param>
-	public Task<DiscordGuildApplicationCommandPermission> GetApplicationCommandPermissionAsync(ulong guildId, ulong commandId) =>
-		this.ApiClient.GetGuildApplicationCommandPermissionAsync(this.CurrentApplication.Id, guildId, commandId);
+	[DiscordDeprecated("This was removed 2022")]
+	public Task<DiscordGuildApplicationCommandPermission> GetApplicationCommandPermissionAsync(ulong guildId, ulong commandId)
+		=> null;
 
 	#endregion
 
@@ -1644,6 +1649,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		this.GuildsInternal = null;
 		this._heartbeatTask = null;
+
+		if (this.Configuration.EnableSentry)
+			SentrySdk.EndSession();
 	}
 
 	#endregion

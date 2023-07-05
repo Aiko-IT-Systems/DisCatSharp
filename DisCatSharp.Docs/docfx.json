@@ -147,24 +147,6 @@
 		{
 			"src": [
 				{
-					"src": "../DisCatSharp.Lavalink/",
-					"files": [
-						"**.csproj"
-					],
-					"exclude": [
-						"**/obj/**",
-						"**/bin/**"
-					]
-				}
-			],
-			"dest": "api/DisCatSharp.Lavalink",
-			"filter": "filter_config.yml",
-			"disableDefaultFilter": false,
-			"memberLayout": "samePage"
-		},
-		{
-			"src": [
-				{
 					"src": "../DisCatSharp.VoiceNext/",
 					"files": [
 						"**.csproj"
@@ -212,6 +194,24 @@
 				}
 			],
 			"dest": "api/DisCatSharp.Experimental",
+			"filter": "filter_config.yml",
+			"disableDefaultFilter": false,
+			"memberLayout": "samePage"
+		},
+		{
+			"src": [
+				{
+					"src": "../DisCatSharp.Lavalink/",
+					"files": [
+						"**.csproj"
+					],
+					"exclude": [
+						"**/obj/**",
+						"**/bin/**"
+					]
+				}
+			],
+			"dest": "api/DisCatSharp.Lavalink",
 			"filter": "filter_config.yml",
 			"disableDefaultFilter": false,
 			"memberLayout": "samePage"
@@ -263,7 +263,9 @@
 				"files": [
 					"images/**",
 					"natives/**.zip",
-					"./.htaccess"
+					"natives/**.jar",
+					"./.htaccess",
+					"snippets/**"
 				],
 				"exclude": [
 					"**/bin/**",

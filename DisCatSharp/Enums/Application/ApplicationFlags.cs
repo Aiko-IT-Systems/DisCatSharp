@@ -58,7 +58,7 @@ public enum ApplicationFlags : long
 
 	/// <summary>
 	/// Unknown.
-	/// </summary> 
+	/// </summary>
 	ApplicationAutoModerationRuleCreateBadge = 1<<6,
 
 	/// <summary>
@@ -139,5 +139,10 @@ public enum ApplicationFlags : long
 	/// <summary>
 	/// Indicates if an app is considered active. This means that it has had any global command executed in the past 30 days.
 	/// </summary>
-	Active = 1L << 24
+	Active = 1L << 24,
+
+	/// <summary>
+	/// Allows the app to use IFrame modals.
+	/// </summary>
+	IframeModal = 1L << 26
 }

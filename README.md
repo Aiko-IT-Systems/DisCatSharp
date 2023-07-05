@@ -65,7 +65,7 @@ Or write us an email at [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
 
 ## Tutorials / Examples
 
-* [Howto](https://docs.dcs.aitsys.dev/articles/basics/bot_account.html)
+* [Howto](https://docs.dcs.aitsys.dev/articles/getting_started/bot_account.html)
 * [Examples](https://github.com/Aiko-IT-Systems/DisCatSharp.Examples)
 * [Template Bot(:warning:Outdated)](https://github.com/Aiko-IT-Systems/DisCatSharp.TemplateBot)
 * [Public Support Bot for DisCatSharp Server](https://github.com/Aiko-IT-Systems/DisCatSharp.Support)

@@ -23,6 +23,8 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
+using DisCatSharp.Entities;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Net.Abstractions;
@@ -30,14 +32,8 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents data for identify payload's client properties.
 /// </summary>
-internal sealed class ClientProperties
+internal sealed class ClientProperties : ObservableApiObject
 {
-	/// <summary>
-	/// Gets or sets the discord client.
-	/// </summary>
-	[JsonIgnore]
-	public BaseDiscordClient Discord { get; set; }
-
 	/// <summary>
 	/// Gets the client's operating system.
 	/// </summary>

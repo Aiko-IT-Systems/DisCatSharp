@@ -33,7 +33,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents the rule's meta data.
 /// </summary>
-public class AutomodTriggerMetadata
+public class AutomodTriggerMetadata : ObservableApiObject
 {
 	/// <summary>
 	/// <para>The substrings which will be searched for in content. Maximum of 1000.</para>

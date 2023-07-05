@@ -29,7 +29,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents an image in an embed.
 /// </summary>
-public sealed class DiscordEmbedImage
+public sealed class DiscordEmbedImage : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the source url of the image.

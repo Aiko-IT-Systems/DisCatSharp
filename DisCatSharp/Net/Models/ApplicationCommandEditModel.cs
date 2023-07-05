@@ -31,7 +31,7 @@ namespace DisCatSharp.Net.Models;
 /// <summary>
 /// Represents a application command edit model.
 /// </summary>
-public class ApplicationCommandEditModel
+public class ApplicationCommandEditModel : ObservableApiObject
 {
 	/// <summary>
 	/// Sets the command's new name.

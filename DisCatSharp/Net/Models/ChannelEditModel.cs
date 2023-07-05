@@ -67,13 +67,13 @@ public class ChannelEditModel : BaseEditModel
 	/// <summary>
 	/// Sets the voice channel's new bitrate.
 	/// </summary>
-	public int? Bitrate { internal get; set; }
+	public Optional<int?> Bitrate { internal get; set; }
 
 	/// <summary>
 	/// <para>Sets the voice channel's new user limit.</para>
 	/// <para>Setting this to 0 will disable the user limit.</para>
 	/// </summary>
-	public int? UserLimit { internal get; set; }
+	public Optional<int?> UserLimit { internal get; set; }
 
 	/// <summary>
 	/// <para>Sets the channel's new slow mode timeout.</para>

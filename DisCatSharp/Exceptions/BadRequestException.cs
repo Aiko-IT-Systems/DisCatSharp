@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-
 using DisCatSharp.Net;
 
 using Newtonsoft.Json.Linq;
@@ -31,7 +29,7 @@ namespace DisCatSharp.Exceptions;
 /// <summary>
 /// Represents an exception thrown when a malformed request is sent.
 /// </summary>
-public class BadRequestException : Exception
+public class BadRequestException : DisCatSharpException
 {
 	/// <summary>
 	/// Gets the request that caused the exception.
@@ -63,7 +61,8 @@ public class BadRequestException : Exception
 	/// </summary>
 	/// <param name="request">The request.</param>
 	/// <param name="response">The response.</param>
-	internal BadRequestException(BaseRestRequest request, RestResponse response) : base("Bad request: " + response.ResponseCode)
+	internal BadRequestException(BaseRestRequest request, RestResponse response)
+		: base("Bad request: " + response.ResponseCode)
 	{
 		this.WebRequest = request;
 		this.WebResponse = response;
