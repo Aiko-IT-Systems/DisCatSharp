@@ -17,10 +17,8 @@ Make sure the location of the newest JRE's bin folder is added to your system va
 
 >[!NOTE]
 > Lavalink V4 is required but currently not in stable release.
->
-> We are providing a direct download from the pre-release ci.
 
-Download the Lavalink V4 server from [here](/natives/Lavalink.jar).
+Download the Lavalink V4 server from the [beta release](https://github.com/lavalink-devs/Lavalink/releases/tag/4.0.0-beta.1).
 
 To use the Lavalink server, you need to configure it first.
 
