@@ -2,7 +2,7 @@
 # Rebuild-lib
 #
 # Rebuilds the entire DisCatSharp project, and places artifacts in specified directory.
-# 
+#
 # Author:       Emzi0767
 # Version:      2018-08-30 14:41
 #
@@ -49,7 +49,7 @@ function Prepare-Environment([string] $target_dir_path)
 {
     # Prepare the environment
     Copy-Item ./.nuget/NuGet.config ./
-    
+
     # Check if the target directory exists
     # If it does, remove it
     if (Test-Path "$target_dir_path")
@@ -57,7 +57,7 @@ function Prepare-Environment([string] $target_dir_path)
         Write-Host "Target directory exists, deleting"
         Remove-Item -recurse -force "$target_dir_path"
     }
-    
+
     # Create target directory
     $dir = New-Item -type directory "$target_dir_path"
 }
@@ -69,7 +69,7 @@ function Build-All([string] $target_dir_path, [string] $version_suffix, [string]
     $dir = Get-Item "$target_dir_path"
     $target_dir = $dir.FullName
     Write-Host "Will place packages in $target_dir"
-    
+
     # Clean previous build results
     Write-Host "Cleaning previous build"
     & dotnet clean -v minimal -c "$bcfg" DisCatSharp.sln | Out-Host
@@ -78,7 +78,7 @@ function Build-All([string] $target_dir_path, [string] $version_suffix, [string]
         Write-Host "Cleanup failed"
         Return $LastExitCode
     }
-    
+
     # Restore nuget packages
     Write-Host "Restoring NuGet packages"
     & dotnet restore -v minimal DisCatSharp.sln | Out-Host
@@ -97,47 +97,47 @@ function Build-All([string] $target_dir_path, [string] $version_suffix, [string]
     {
         $build_number_string = [int]::Parse($build_number).ToString("00000")
     }
-    
+
     # Build in specified configuration
     Write-Host "Building everything"
     if (-not $version_suffix)
     {
-        & dotnet build -v minimal -c "$bcfg" DisCatSharp.sln | Out-Host
+        & dotnet build --no-restore -v minimal -c "$bcfg" DisCatSharp.sln | Out-Host
     }
 	elseif (-not $build_number_string)
 	{
-		& dotnet build -v minimal -c "$bcfg" --version-suffix "$version_suffix" DisCatSharp.sln | Out-Host
+		& dotnet build --no-restore -v minimal -c "$bcfg" --version-suffix "$version_suffix" DisCatSharp.sln | Out-Host
 	}
     else
     {
-        & dotnet build -v minimal -c "$bcfg" --version-suffix "$version_suffix" -p:BuildNumber="$build_number_string" DisCatSharp.sln | Out-Host
+        & dotnet build --no-restore -v minimal -c "$bcfg" --version-suffix "$version_suffix" -p:BuildNumber="$build_number_string" DisCatSharp.sln | Out-Host
     }
     if ($LastExitCode -ne 0)
     {
         Write-Host "Build failed"
         Return $LastExitCode
     }
-        
+
     # Package for NuGet
     Write-Host "Creating NuGet packages"
     if (-not $version_suffix)
     {
-        & dotnet pack -v minimal -c "$bcfg" --no-build -o "$target_dir" --include-symbols DisCatSharp.sln | Out-Host
+        & dotnet pack -v minimal -c "$bcfg" --no-restore --no-build -o "$target_dir" --include-symbols DisCatSharp.sln | Out-Host
     }
 	elseif (-not $build_number_string)
 	{
-        & dotnet pack -v minimal -c "$bcfg" --version-suffix "$version_suffix" --no-build -o "$target_dir" --include-symbols DisCatSharp.sln | Out-Host
+        & dotnet pack -v minimal -c "$bcfg" --no-restore --version-suffix "$version_suffix" --no-build -o "$target_dir" --include-symbols DisCatSharp.sln | Out-Host
     }
     else
     {
-        & dotnet pack -v minimal -c "$bcfg" --version-suffix "$version_suffix" -p:BuildNumber="$build_number_string" --no-build -o "$target_dir" --include-symbols DisCatSharp.sln | Out-Host
+        & dotnet pack -v minimal -c "$bcfg" --no-restore --version-suffix "$version_suffix" -p:BuildNumber="$build_number_string" --no-build -o "$target_dir" --include-symbols DisCatSharp.sln | Out-Host
     }
     if ($LastExitCode -ne 0)
     {
         Write-Host "Packaging failed"
         Return $LastExitCode
     }
-    
+
     Return 0
 }
 
