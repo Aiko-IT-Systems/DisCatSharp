@@ -153,22 +153,22 @@ public sealed class LavalinkExtension : BaseExtension
 	/// </summary>
 	/// <param name="endpoint">Endpoint at which the session resides.</param>
 	/// <returns>Lavalink session connection.</returns>
-	public LavalinkSession GetSession(ConnectionEndpoint endpoint)
-		=> this._connectedSessions.TryGetValue(endpoint, out var ep) ? ep : null!;
+	public LavalinkSession? GetSession(ConnectionEndpoint endpoint)
+		=> this._connectedSessions.TryGetValue(endpoint, out var ep) ? ep : null;
 
 	/// <summary>
 	/// Gets a Lavalink session connection based on load balancing and an optional voice region.
 	/// </summary>
 	/// <param name="region">The region to compare with the session's <see cref="LavalinkConfiguration.Region"/>, if any.</param>
 	/// <returns>The least load affected session connection, or null if no sessions are present.</returns>
-	public LavalinkSession GetIdealSession(DiscordVoiceRegion region = null!)
+	public LavalinkSession? GetIdealSession(DiscordVoiceRegion? region = null)
 	{
 		if (this._connectedSessions.Count <= 1)
 			return this._connectedSessions.Values.FirstOrDefault()!;
 
 		var nodes = this._connectedSessions.Values.ToArray();
 
-		if (region == null!)
+		if (region is null)
 			return this.FilterByLoad(nodes);
 
 		var regionPredicate = new Func<LavalinkSession, bool>(x => x.Region == region);
@@ -184,11 +184,11 @@ public sealed class LavalinkExtension : BaseExtension
 	/// </summary>
 	/// <param name="guild">The guild the player is on.</param>
 	/// <returns>The found guild player, or null if one could not be found.</returns>
-	public LavalinkGuildPlayer GetGuildPlayer(DiscordGuild guild)
+	public LavalinkGuildPlayer? GetGuildPlayer(DiscordGuild guild)
 	{
 		var nodes = this._connectedSessions.Values;
 		var node = nodes.FirstOrDefault(x => x.ConnectedPlayersInternal.ContainsKey(guild.Id));
-		return node?.GetGuildPlayer(guild)!;
+		return node?.GetGuildPlayer(guild);
 	}
 
 	/// <summary>

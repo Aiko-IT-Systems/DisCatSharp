@@ -76,6 +76,13 @@ public sealed class LavalinkStats
 	public FrameStats? Frames { get; internal set; }
 
 	/// <summary>
+	///  Constructs an empty <see cref="LavalinkStats"/> object.
+	/// </summary>
+	[JsonConstructor]
+	internal LavalinkStats()
+	{ }
+
+	/// <summary>
 	/// Constructs a new <see cref="LavalinkStats"/> object from a <see cref="StatsOp"/> received via websocket.
 	/// <para>This includes <see cref="Frames"/>.</para>
 	/// </summary>
