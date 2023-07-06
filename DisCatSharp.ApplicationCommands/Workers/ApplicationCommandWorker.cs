@@ -214,8 +214,6 @@ internal class NestedCommandWorker
 			var groupAttribute = subclassInfo.GetCustomAttribute<SlashCommandGroupAttribute>();
 			var submethods = subclassInfo.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null).ToList();
 			var subclasses = subclassInfo.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null).ToList();
-			if (subclasses.Any() && submethods.Any())
-				throw new ArgumentException($"Slash command group '{groupAttribute.Name}' has both subcommands and subgroups!");
 
 			DiscordApplicationCommandLocalization nameLocalizations = null;
 			DiscordApplicationCommandLocalization descriptionLocalizations = null;
