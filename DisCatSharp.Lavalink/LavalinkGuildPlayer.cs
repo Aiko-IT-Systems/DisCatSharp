@@ -178,12 +178,12 @@ public sealed class LavalinkGuildPlayer
 	/// Gets the queue entries.
 	/// </summary>
 	public IReadOnlyList<IQueueEntry> QueueEntries
-		=> this._queueEntriesInternal;
+		=> this._queueEntriesInternal.Values.ToList();
 
 	/// <summary>
 	/// Gets the internal queue entries.
 	/// </summary>
-	private readonly List<IQueueEntry> _queueEntriesInternal = new();
+	private SortedList<string, IQueueEntry> _queueEntriesInternal = new();
 
 	/// <summary>
 	/// Gets a list of current user in the <see cref="Channel"/>.
@@ -470,7 +470,7 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="entry">The entry to add.</param>
 	/// <param name="track">The track to attach.</param>
 	public void AddToQueue<T>(T entry, LavalinkTrack track) where T : IQueueEntry
-		=> this._queueEntriesInternal.Add(entry.AddTrack(track));
+		=> this._queueEntriesInternal.Add(track.Info.Identifier, entry.AddTrack(track));
 
 	/// <summary>
 	/// Removes a queue entry.
@@ -478,7 +478,7 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="entry">The entry to remove.</param>
 	/// <returns><see langword="true"/> if the entry was found and removed.</returns>
 	public bool RemoveFromQueue(IQueueEntry entry)
-		=> this._queueEntriesInternal.Remove(entry);
+		=> this._queueEntriesInternal.Remove(entry.Track.Info.Identifier);
 
 	/// <summary>
 	/// Removes a queue entry by the track identifier.
@@ -486,7 +486,7 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="identifier">The identifier to look up.</param>
 	/// <returns><see langword="true"/> if the entry was found and removed.</returns>
 	public bool RemoveFromQueueByIdentifierAsync(string identifier)
-		=> this._queueEntriesInternal.Any() && this._queueEntriesInternal!.TryGetFirstValueWhere(x => x!.Track.Info.Identifier == identifier, out var entry) && this.RemoveFromQueue(entry!);
+		=> this._queueEntriesInternal.Any() && this._queueEntriesInternal!.TryGetValue(identifier, out var entry) && this.RemoveFromQueue(entry!);
 
 	/// <summary>
 	/// Plays the queue while entries are presented.
@@ -500,16 +500,16 @@ public sealed class LavalinkGuildPlayer
 			this._queueTsc = new();
 			var currentQueueEntry = this._queueEntriesInternal.First();
 
-			if (await currentQueueEntry.BeforePlayingAsync(this))
+			if (await currentQueueEntry.Value.BeforePlayingAsync(this))
 			{
-				await this.PlayAsync(currentQueueEntry.Track);
+				await this.PlayAsync(currentQueueEntry.Value.Track);
 
 				await this._queueTsc.Task;
 
-				await currentQueueEntry.AfterPlayingAsync(this);
+				await currentQueueEntry.Value.AfterPlayingAsync(this);
 			}
 
-			this.RemoveFromQueue(currentQueueEntry);
+			this._queueEntriesInternal.RemoveAt(0);
 			this._queueTsc = null!;
 		}
 	}
