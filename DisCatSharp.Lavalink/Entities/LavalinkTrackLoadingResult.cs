@@ -26,6 +26,7 @@ using System.IO;
 using DisCatSharp.Lavalink.Enums;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace DisCatSharp.Lavalink.Entities;
 
@@ -44,7 +45,7 @@ public sealed class LavalinkTrackLoadingResult
 	/// Gets the raw result string.
 	/// </summary>
 	[JsonProperty("data")]
-	internal string? RawResult { get; set; }
+	internal string RawResult { get; set; }
 
 	/// <summary>
 	/// Gets the load result.
@@ -88,7 +89,7 @@ public sealed class LavalinkTrackLoadingResult
 			LavalinkLoadResultType.Search => LavalinkJson.DeserializeObject<List<LavalinkTrack>>(this.RawResult!)!,
 			LavalinkLoadResultType.Empty => null!,
 			LavalinkLoadResultType.Error => LavalinkJson.DeserializeObject<LavalinkException>(this.RawResult!)!,
-			_ => throw new InvalidDataException("Unknown load type.")
+			_ => this.RawResult!
 		};
 
 	/// <summary>

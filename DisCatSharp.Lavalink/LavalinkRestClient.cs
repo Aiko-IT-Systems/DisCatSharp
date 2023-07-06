@@ -39,6 +39,9 @@ using DisCatSharp.Lavalink.Payloads;
 
 using Microsoft.Extensions.Logging;
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 namespace DisCatSharp.Lavalink;
 
 /// <summary>
@@ -367,7 +370,12 @@ internal sealed class LavalinkRestClient
 		var route = $"{Endpoints.V4}{Endpoints.LOAD_TRACKS}";
 		var path = GetPath(route, new { });
 		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}");
-		return LavalinkJson.DeserializeObject<LavalinkTrackLoadingResult>(res.Response!)!;
+		var obj = JObject.Parse(res.Response!);
+		return new LavalinkTrackLoadingResult()
+		{
+			LoadType = obj.GetValue("loadType")!.ToObject<LavalinkLoadResultType>(),
+			RawResult = LavalinkJson.SerializeObject(obj.GetValue("data"))
+		};
 	}
 
 	/// <summary>
