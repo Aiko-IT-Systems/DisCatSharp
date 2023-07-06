@@ -502,6 +502,7 @@ public sealed class LavalinkGuildPlayer
 
 			if (await currentQueueEntry.BeforePlayingAsync(this))
 			{
+				await this.PlayAsync(currentQueueEntry.Track);
 
 				await this._queueTsc.Task;
 
