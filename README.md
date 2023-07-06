@@ -26,7 +26,7 @@
 
 ## Breaking
 
-DisCatSharp is now compiled for .NET 7
+- Lavalink V4 implementation. Read more [here](https://docs.dcs.aitsys.dev/articles/modules/audio/lavalink_v4/intro)
 
 ----
 
