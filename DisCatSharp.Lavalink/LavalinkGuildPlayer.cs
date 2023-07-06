@@ -467,7 +467,7 @@ public sealed class LavalinkGuildPlayer
 	/// Adds a <see cref="LavalinkTrack"/> to the queue.
 	/// </summary>
 	/// <typeparam name="T">Queue entry object type.</typeparam>
-	/// <param name="entry">The entry to add.</param>
+	/// <param name="entry">The entry to add. Please construct a new() entry for every track.</param>
 	/// <param name="track">The track to attach.</param>
 	public void AddToQueue<T>(T entry, LavalinkTrack track) where T : IQueueEntry
 		=> this._queueEntriesInternal.Add(track.Info.Identifier, entry.AddTrack(track));
