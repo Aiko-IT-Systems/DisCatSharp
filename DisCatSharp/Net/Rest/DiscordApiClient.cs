@@ -24,20 +24,25 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.Net.Abstractions;
+using DisCatSharp.Net.Abstractions.Rest;
 using DisCatSharp.Net.Serialization;
 
 using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DisCatSharp.Net;
 
@@ -2222,6 +2227,19 @@ public sealed class DiscordApiClient
 
 		if (builder.Files.Count == 0)
 		{
+			if (builder.Attachments.Any())
+			{
+				ulong fileId = 0;
+				List<DiscordAttachment> attachments = new(builder.Attachments.Count);
+				foreach (var att in builder.Attachments)
+				{
+					att.Id = fileId;
+					attachments.Add(att);
+					fileId++;
+				}
+				pld.Attachments = attachments;
+			}
+			
 			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}";
 			var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {channel_id = channelId }, out var path);
 
@@ -2242,7 +2260,7 @@ public sealed class DiscordApiClient
 					Id = fileId,
 					Discord = this.Discord,
 					Description = file.Description,
-					FileName = file.FileName
+					Filename = file.Filename
 				};
 				attachments.Add(att);
 				fileId++;
@@ -2479,7 +2497,7 @@ public sealed class DiscordApiClient
 					Id = fileId,
 					Discord = this.Discord,
 					Description = file.Description,
-					FileName = file.FileName
+					Filename = file.Filename
 				};
 				attachmentsNew.Add(att);
 				fileId++;
@@ -3908,7 +3926,7 @@ public sealed class DiscordApiClient
 					Id = fileId,
 					Discord = this.Discord,
 					Description = file.Description,
-					FileName = file.FileName,
+					Filename = file.Filename,
 					FileSize = null
 				};
 				attachments.Add(att);
@@ -4021,7 +4039,7 @@ public sealed class DiscordApiClient
 					Id = fileId,
 					Discord = this.Discord,
 					Description = file.Description,
-					FileName = file.FileName,
+					Filename = file.Filename,
 					FileSize = null
 				};
 				attachments.Add(att);
@@ -5375,7 +5393,7 @@ public sealed class DiscordApiClient
 						Id = fileId,
 						Discord = this.Discord,
 						Description = file.Description,
-						FileName = file.FileName,
+						Filename = file.Filename,
 						FileSize = null
 					};
 					attachments.Add(att);
@@ -5532,7 +5550,7 @@ public sealed class DiscordApiClient
 					Id = fileId,
 					Discord = this.Discord,
 					Description = file.Description,
-					FileName = file.FileName,
+					Filename = file.Filename,
 					FileSize = null
 				};
 				attachments.Add(att);
@@ -5755,6 +5773,34 @@ public sealed class DiscordApiClient
 		var info = JObject.Parse(res.Response).ToObject<GatewayInfo>();
 		info.SessionBucket.ResetAfter = DateTimeOffset.UtcNow + TimeSpan.FromMilliseconds(info.SessionBucket.ResetAfterInternal);
 		return info;
+	}
+
+	internal async Task<GcpAttachmentsResponse> RequestFileUploadAsync(ulong channelId, GcpAttachment attachment)
+	{
+		var pld = new RestGcpAttachmentsPayload
+		{
+			GcpAttachments = new()
+			{
+				attachment
+			}
+		};
+
+		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.ATTACHMENTS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id = channelId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		return DiscordJson.DeserializeObject<GcpAttachmentsResponse>(res.Response, this.Discord);
+	}
+
+	internal void UploadGcpFile(GcpAttachmentUploadInformation target, Stream file)
+	{
+		HttpRequestMessage request = new(HttpMethod.Put, target.UploadUrl)
+		{
+			Content = new StreamContent(file)
+		};
+		this.Rest.HttpClient.Send(request);
 	}
 	#endregion
 }

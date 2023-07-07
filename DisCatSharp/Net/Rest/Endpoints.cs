@@ -495,6 +495,11 @@ public static class Endpoints
 	public const string EPHEMERAL_ATTACHMENTS = "/ephemeral-attachments";
 
 	/// <summary>
+	/// The attachments endpoint.
+	/// </summary>
+	public const string ATTACHMENTS = "/attachments";
+
+	/// <summary>
 	/// The rpc endpoint.
 	/// </summary>
 	public const string RPC = "/rpc";

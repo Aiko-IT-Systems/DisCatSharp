@@ -26,6 +26,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+using static System.Net.WebRequestMethods;
+
 namespace DisCatSharp.Entities;
 
 /// <summary>
@@ -292,7 +294,7 @@ public sealed class DiscordMessageBuilder
 		if (this.Files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-		if (this.FilesInternal.Any(x => x.FileName == fileName))
+		if (this.FilesInternal.Any(x => x.Filename == fileName))
 			throw new ArgumentException("A File with that filename already exists");
 
 		if (resetStreamPosition)
@@ -315,7 +317,7 @@ public sealed class DiscordMessageBuilder
 		if (this.Files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-		if (this.FilesInternal.Any(x => x.FileName == stream.Name))
+		if (this.FilesInternal.Any(x => x.Filename == stream.Name))
 			throw new ArgumentException("A File with that filename already exists");
 
 		if (resetStreamPosition)
@@ -339,7 +341,7 @@ public sealed class DiscordMessageBuilder
 
 		foreach (var file in files)
 		{
-			if (this.FilesInternal.Any(x => x.FileName == file.Key))
+			if (this.FilesInternal.Any(x => x.Filename == file.Key))
 				throw new ArgumentException("A File with that filename already exists");
 
 			if (resetStreamPosition)
@@ -347,6 +349,18 @@ public sealed class DiscordMessageBuilder
 			else
 				this.FilesInternal.Add(new DiscordMessageFile(file.Key, file.Value, null));
 		}
+
+		return this;
+	}
+
+	public DiscordMessageBuilder AddGcpAttachment(GcpAttachmentUploadInformation gcpAttachment)
+	{
+		this.AttachmentsInternal.Add(new()
+		{
+			Filename = gcpAttachment.Filename,
+			UploadedFilename = gcpAttachment.UploadFilename,
+			Description = gcpAttachment.Description
+		});
 
 		return this;
 	}
