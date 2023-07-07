@@ -29,7 +29,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents a sticker modify payload.
 /// </summary>
-internal class RestStickerModifyPayload : ObservableApiObject
+internal sealed class RestStickerModifyPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the name.

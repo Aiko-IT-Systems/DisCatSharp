@@ -1359,6 +1359,17 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		await this.Discord.ApiClient.UpdateCurrentUserVoiceStateAsync(this.GuildId.Value, this.Id, suppress, requestToSpeakTimestamp).ConfigureAwait(false);
 	}
 
+	public async Task<GcpAttachmentUploadInformation> UploadFileAsync(string name, Stream stream, string? description = null)
+	{
+		GcpAttachment attachment = new(name, stream);
+		var response = await this.Discord.ApiClient.RequestFileUploadAsync(this.Id, attachment);
+		var target = response.Attachments.First();
+		_ = Task.Run(() => this.Discord.ApiClient.UploadGcpFile(target, stream));
+		target.Filename = name;
+		target.Description = description;
+		return target;
+	}
+
 	/// <summary>
 	/// Calculates permissions for a given member.
 	/// </summary>

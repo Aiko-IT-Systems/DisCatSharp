@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -29,19 +30,26 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents an attachment for a message.
 /// </summary>
-public class DiscordAttachment : SnowflakeObject
+public class DiscordAttachment : NullableSnowflakeObject
 {
 	/// <summary>
 	/// Gets the name of the file.
 	/// </summary>
 	[JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
-	public string FileName { get; internal set; }
+	public string Filename { get; internal set; }
+
+	/// <summary>
+	/// Gets the name of the file. Please use <see cref="Filename"/> in future.
+	/// </summary>
+	[Deprecated("Naming was incorrect, will be removed in future in favor of Filename")]
+	public string FileName
+		=> this.Filename;
 
 	/// <summary>
 	/// Gets the description of the file.
 	/// </summary>
 	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
-	public string Description { get; set; }
+	public string? Description { get; set; }
 
 	/// <summary>
 	/// Gets the media, or MIME, type of the file.
@@ -80,6 +88,12 @@ public class DiscordAttachment : SnowflakeObject
 	public int? Width { get; internal set; }
 
 	/// <summary>
+	/// Gets the uploaded filename if the attachment was uploaded via GCP.
+	/// </summary>
+	[JsonProperty("uploaded_filename", NullValueHandling = NullValueHandling.Ignore)]
+	internal string? UploadedFilename { get; set; }
+
+	/// <summary>
 	/// Gets whether this attachment is ephemeral.
 	/// Ephemeral attachments will automatically be removed after a set period of time.
 	/// Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists.
@@ -101,6 +115,9 @@ public class DiscordAttachment : SnowflakeObject
 	[JsonProperty("waveform", NullValueHandling = NullValueHandling.Ignore)]
 	public string WaveForm { get; internal set; }
 
+	/// <summary>
+	/// Gets the attachment flags.
+	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
 	public AttachmentFlags Flags { get; internal set; } = AttachmentFlags.None;
 

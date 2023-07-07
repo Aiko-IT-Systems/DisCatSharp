@@ -32,7 +32,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents a application command create payload.
 /// </summary>
-internal class RestApplicationCommandCreatePayload : ObservableApiObject
+internal sealed class RestApplicationCommandCreatePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the type.
@@ -98,7 +98,7 @@ internal class RestApplicationCommandCreatePayload : ObservableApiObject
 /// <summary>
 /// Represents a application command edit payload.
 /// </summary>
-internal class RestApplicationCommandEditPayload : ObservableApiObject
+internal sealed class RestApplicationCommandEditPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the name.
@@ -152,7 +152,7 @@ internal class RestApplicationCommandEditPayload : ObservableApiObject
 /// <summary>
 /// Represents a interaction response payload.
 /// </summary>
-internal class RestInteractionResponsePayload : ObservableApiObject
+internal sealed class RestInteractionResponsePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the type.
@@ -176,7 +176,7 @@ internal class RestInteractionResponsePayload : ObservableApiObject
 /// <summary>
 /// Represents a interaction response payload.
 /// </summary>
-internal class RestInteractionModalResponsePayload : ObservableApiObject
+internal sealed class RestInteractionModalResponsePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the type.
@@ -194,7 +194,7 @@ internal class RestInteractionModalResponsePayload : ObservableApiObject
 /// <summary>
 /// Represents a followup message create payload.
 /// </summary>
-internal class RestFollowupMessageCreatePayload : ObservableApiObject
+internal sealed class RestFollowupMessageCreatePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the content.
@@ -242,7 +242,7 @@ internal class RestFollowupMessageCreatePayload : ObservableApiObject
 /// <summary>
 /// Represents a role connection metadata payload.
 /// </summary>
-internal class RestApplicationRoleConnectionMetadataPayload : ObservableApiObject
+internal sealed class RestApplicationRoleConnectionMetadataPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the metadata type.

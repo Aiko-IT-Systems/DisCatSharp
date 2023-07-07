@@ -44,7 +44,7 @@ internal interface IReasonAction
 /// <summary>
 /// Represents a guild create payload.
 /// </summary>
-internal class RestGuildCreatePayload : ObservableApiObject
+internal sealed class RestGuildCreatePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the name.
