@@ -491,7 +491,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="user">The user, if found.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to true.</param>
 	/// <returns>True if found, otherwise false.</returns>
-	public bool TryGetUserAsync(ulong userId, out DiscordUser user, bool fetch = true)
+	public bool TryGetUser(ulong userId, out DiscordUser user, bool fetch = true)
 	{
 		try
 		{
@@ -511,7 +511,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="applicationId">The application id to fetch the listings for.</param>
 	/// <param name="skuList">A list of published listings with <see cref="DiscordStoreSku"/>s, if found.</param>
 	/// <returns>True if found, otherwise false.</returns>
-	public bool TryGetPublishedListingsAsync(ulong applicationId, out IReadOnlyList<DiscordStoreSku> skuList)
+	public bool TryGetPublishedListings(ulong applicationId, out IReadOnlyList<DiscordStoreSku> skuList)
 	{
 		try
 		{
@@ -578,7 +578,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="channel">The queried channel, if found.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to true.</param>
 	/// <returns>True if channel found, otherwise false.</returns>
-	public bool TryGetChannelAsync(ulong id, out DiscordChannel channel, bool fetch = true)
+	public bool TryGetChannel(ulong id, out DiscordChannel channel, bool fetch = true)
 	{
 		try
 		{
@@ -611,7 +611,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="thread">The thread, if found.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to true.</param>
 	/// <returns>True if found, otherwise false.</returns>
-	public bool TryGetThreadAsync(ulong id, out DiscordThreadChannel thread, bool fetch = true)
+	public bool TryGetThread(ulong id, out DiscordThreadChannel thread, bool fetch = true)
 	{
 		try
 		{
@@ -763,7 +763,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="withCounts">Whether to include approximate presence and member counts in the returned guild.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to true.</param>
 	/// <returns>True if the guild was found, otherwise false.</returns>
-	public bool TryGetGuildAsync(ulong id, out DiscordGuild guild, bool? withCounts = null, bool fetch = true)
+	public bool TryGetGuild(ulong id, out DiscordGuild guild, bool? withCounts = null, bool fetch = true)
 	{
 		try
 		{
@@ -794,7 +794,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="id">The guild ID.</param>
 	/// <param name="preview">The preview, if found.</param>
 	/// <returns>True if the preview was found, otherwise false.</returns>
-	public bool TryGetGuildPreviewAsync(ulong id, out DiscordGuildPreview preview)
+	public bool TryGetGuildPreview(ulong id, out DiscordGuildPreview preview)
 	{
 		try
 		{
@@ -824,7 +824,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="id">The Guild Id.</param>
 	/// <param name="widget">The widget, if found.</param>
 	/// <returns>True if the widget was found, otherwise false.</returns>
-	public bool TryGetGuildWidgetAsync(ulong id, out DiscordWidget widget)
+	public bool TryGetGuildWidget(ulong id, out DiscordWidget widget)
 	{
 		try
 		{
@@ -861,7 +861,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="withExpiration">Whether to include the expiration date in the returned invite.</param>
 	/// <param name="scheduledEventId">The scheduled event id.</param>
 	/// <returns>True if the invite was found, otherwise false.</returns>
-	public bool TryGetInviteByCodeAsync(string code, out DiscordInvite invite, bool? withCounts = null, bool? withExpiration = null, ulong? scheduledEventId = null)
+	public bool TryGetInviteByCode(string code, out DiscordInvite invite, bool? withCounts = null, bool? withExpiration = null, ulong? scheduledEventId = null)
 	{
 		try
 		{
@@ -900,7 +900,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <returns>True if found, otherwise false.</returns>
 	/// <param name="id">The id of the sticker.</param>
 	/// <param name="sticker">The sticker, if found.</param>
-	public bool TryGetStickerAsync(ulong id, out DiscordSticker sticker)
+	public bool TryGetSticker(ulong id, out DiscordSticker sticker)
 	{
 		try
 		{
@@ -981,7 +981,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="id">The target webhook id.</param>
 	/// <param name="webhook">The webhook, if found.</param>
 	/// <returns>True if found, otherwise false.</returns>
-	public bool TryGetWebhookAsync(ulong id, out DiscordWebhook webhook)
+	public bool TryGetWebhook(ulong id, out DiscordWebhook webhook)
 	{
 		try
 		{
@@ -1014,7 +1014,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="token">The target webhook token.</param>
 	/// <param name="webhook">The webhook, if found.</param>
 	/// <returns>True if found, otherwise false.</returns>
-	public bool TryGetWebhookWithTokenAsync(ulong id, string token, out DiscordWebhook webhook)
+	public bool TryGetWebhookWithToken(ulong id, string token, out DiscordWebhook webhook)
 	{
 		try
 		{
