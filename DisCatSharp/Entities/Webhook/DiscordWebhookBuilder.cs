@@ -283,7 +283,7 @@ public sealed class DiscordWebhookBuilder
 		if (this.Files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-		if (this._files.Any(x => x.FileName == filename))
+		if (this._files.Any(x => x.Filename == filename))
 			throw new ArgumentException("A File with that filename already exists");
 
 		if (resetStreamPosition)
@@ -306,7 +306,7 @@ public sealed class DiscordWebhookBuilder
 		if (this.Files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-		if (this._files.Any(x => x.FileName == stream.Name))
+		if (this._files.Any(x => x.Filename == stream.Name))
 			throw new ArgumentException("A File with that filename already exists");
 
 		if (resetStreamPosition)
@@ -329,7 +329,7 @@ public sealed class DiscordWebhookBuilder
 
 		foreach (var file in files)
 		{
-			if (this._files.Any(x => x.FileName == file.Key))
+			if (this._files.Any(x => x.Filename == file.Key))
 				throw new ArgumentException("A File with that filename already exists");
 
 			if (resetStreamPosition)

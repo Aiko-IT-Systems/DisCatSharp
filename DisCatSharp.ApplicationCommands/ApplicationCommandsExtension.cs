@@ -570,35 +570,31 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							{
 								if (cmd.Type == ApplicationCommandType.ChatInput)
 								{
-									if (cmd.Options.First().Type == ApplicationCommandOptionType.SubCommandGroup)
+									var cgs = new List<CommandGroup>();
+									foreach (var scg in cmd.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommandGroup))
 									{
-										var cgs = new List<CommandGroup>();
-										foreach (var scg in cmd.Options)
+										var cs = new List<Command>();
+										foreach (var sc in scg.Options)
 										{
-											var cs = new List<Command>();
-											foreach (var sc in scg.Options)
-											{
-												if (sc.Options == null || !sc.Options.Any())
-													cs.Add(new Command(sc.Name, sc.Description, null, null));
-												else
-													cs.Add(new Command(sc.Name, sc.Description, sc.Options.ToList(), null));
-											}
-											cgs.Add(new CommandGroup(scg.Name, scg.Description, cs, null));
-										}
-										cgwsgs.Add(new CommandGroupWithSubGroups(cmd.Name, cmd.Description, cgs, ApplicationCommandType.ChatInput));
-									}
-									else if (cmd.Options.First().Type == ApplicationCommandOptionType.SubCommand)
-									{
-										var cs2 = new List<Command>();
-										foreach (var sc2 in cmd.Options)
-										{
-											if (sc2.Options == null || !sc2.Options.Any())
-												cs2.Add(new Command(sc2.Name, sc2.Description, null, null));
+											if (sc.Options == null || !sc.Options.Any())
+												cs.Add(new Command(sc.Name, sc.Description, null, null));
 											else
-												cs2.Add(new Command(sc2.Name, sc2.Description, sc2.Options.ToList(), null));
+												cs.Add(new Command(sc.Name, sc.Description, sc.Options.ToList(), null));
 										}
-										cgs2.Add(new CommandGroup(cmd.Name, cmd.Description, cs2, ApplicationCommandType.ChatInput));
+										cgs.Add(new CommandGroup(scg.Name, scg.Description, cs, null));
 									}
+									cgwsgs.Add(new CommandGroupWithSubGroups(cmd.Name, cmd.Description, cgs, ApplicationCommandType.ChatInput));
+
+									var cs2 = new List<Command>();
+									foreach (var sc2 in cmd.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommand))
+									{
+										if (sc2.Options == null || !sc2.Options.Any())
+											cs2.Add(new Command(sc2.Name, sc2.Description, null, null));
+										else
+											cs2.Add(new Command(sc2.Name, sc2.Description, sc2.Options.ToList(), null));
+									}
+									cgs2.Add(new CommandGroup(cmd.Name, cmd.Description, cs2, ApplicationCommandType.ChatInput));
+
 								}
 							}
 							if (cgwsgs.Any())
@@ -798,11 +794,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					{
 						if (commandMethods.TryGetFirstValueWhere(x => x.Name == command.Name, out var com))
 							com.CommandId = command.Id;
-						else if (groupCommands.TryGetFirstValueWhere(x => x.Name == command.Name, out var groupCom))
+						if (groupCommands.TryGetFirstValueWhere(x => x.Name == command.Name, out var groupCom))
 							groupCom.CommandId = command.Id;
-						else if (subGroupCommands.TryGetFirstValueWhere(x => x.Name == command.Name, out var subCom))
+						if (subGroupCommands.TryGetFirstValueWhere(x => x.Name == command.Name, out var subCom))
 							subCom.CommandId = command.Id;
-						else if (contextMenuCommands.TryGetFirstValueWhere(x => x.Name == command.Name, out var cmCom))
+						if (contextMenuCommands.TryGetFirstValueWhere(x => x.Name == command.Name, out var cmCom))
 							cmCom.CommandId = command.Id;
 					}
 
@@ -869,7 +865,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	{
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Checking counts...\n\nExpected Count: {exp}\nCurrent Count: {cur}", s_expectedCount, s_registrationCount);
 
-		if ((s_registrationCount == s_expectedCount) || man)
+		if (s_registrationCount == s_expectedCount || man)
 		{
 			await this._applicationCommandsModuleStartupFinished.InvokeAsync(this, new ApplicationCommandsModuleStartupFinishedEventArgs(Configuration?.ServiceProvider)
 			{
@@ -950,211 +946,246 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			HandledInteractions.Add(e.Interaction.Id);
 		_ = Task.Run(async () =>
 		{
-			if (e.Interaction.Type == InteractionType.ApplicationCommand)
-			{
-				//Creates the context
-				var context = new InteractionContext
-				{
-					Interaction = e.Interaction,
-					Channel = e.Interaction.Channel,
-					Guild = e.Interaction.Guild,
-					User = e.Interaction.User,
-					Client = client,
-					ApplicationCommandsExtension = this,
-					CommandName = e.Interaction.Data.Name,
-					SubCommandName = (e.Interaction.Data.Options?[0]?.Type == ApplicationCommandOptionType.SubCommand ? e.Interaction.Data.Options[0].Name : null),
-					InteractionId = e.Interaction.Id,
-					Token = e.Interaction.Token,
-					Services = Configuration?.ServiceProvider,
-					ResolvedUserMentions = e.Interaction.Data.Resolved?.Users?.Values.ToList(),
-					ResolvedRoleMentions = e.Interaction.Data.Resolved?.Roles?.Values.ToList(),
-					ResolvedChannelMentions = e.Interaction.Data.Resolved?.Channels?.Values.ToList(),
-					ResolvedAttachments = e.Interaction.Data.Resolved?.Attachments?.Values.ToList(),
-					Type = ApplicationCommandType.ChatInput,
-					Locale = e.Interaction.Locale,
-					GuildLocale = e.Interaction.GuildLocale,
-					AppPermissions = e.Interaction.AppPermissions,
-					Entitlements = e.Interaction.Entitlements
-				};
+			var type = this.GetInteractionType(e.Interaction.Data);
 
-				try
+			switch (e.Interaction.Type)
+			{
+				case InteractionType.ApplicationCommand:
 				{
-					if (s_errored)
+					//Creates the context
+					var context = new InteractionContext
 					{
-						await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("Application commands failed to register properly on startup."));
-						throw new InvalidOperationException("Application commands failed to register properly on startup.");
+						Interaction = e.Interaction,
+						Channel = e.Interaction.Channel,
+						Guild = e.Interaction.Guild,
+						User = e.Interaction.User,
+						Client = client,
+						ApplicationCommandsExtension = this,
+						CommandName = e.Interaction.Data.Name,
+						InteractionId = e.Interaction.Id,
+						Token = e.Interaction.Token,
+						Services = Configuration?.ServiceProvider,
+						ResolvedUserMentions = e.Interaction.Data.Resolved?.Users?.Values.ToList(),
+						ResolvedRoleMentions = e.Interaction.Data.Resolved?.Roles?.Values.ToList(),
+						ResolvedChannelMentions = e.Interaction.Data.Resolved?.Channels?.Values.ToList(),
+						ResolvedAttachments = e.Interaction.Data.Resolved?.Attachments?.Values.ToList(),
+						Type = ApplicationCommandType.ChatInput,
+						Locale = e.Interaction.Locale,
+						GuildLocale = e.Interaction.GuildLocale,
+						AppPermissions = e.Interaction.AppPermissions,
+						Entitlements = e.Interaction.Entitlements
+					};
+
+					try
+					{
+						if (s_errored)
+						{
+							await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("Application commands failed to register properly on startup.").AsEphemeral());
+							throw new InvalidOperationException("Application commands failed to register properly on startup.");
+						}
+
+						var methods = s_commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
+						var groups = s_groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
+						var subgroups = s_subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
+						if (!methods.Any() && !groups.Any() && !subgroups.Any())
+						{
+							await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("A application command was executed, but no command was registered for it."));
+							throw new InvalidOperationException("A application command was executed, but no command was registered for it.");
+						}
+
+						switch (type)
+						{
+							case ApplicationCommandFinalType.Command when methods.Any():
+							{
+								var method = methods.First().Method;
+								context.SubCommandName = null;
+								context.SubSubCommandName = null;
+								if (DebugEnabled)
+									this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
+								var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options);
+
+								await this.RunCommandAsync(context, method, args);
+								break;
+							}
+							case ApplicationCommandFinalType.SubCommand when groups.Any():
+							{
+								var command = e.Interaction.Data.Options[0];
+								var method = groups.First().Methods.First(x => x.Key == command.Name).Value;
+								context.SubCommandName = command.Name;
+								context.SubSubCommandName = null;
+								if (DebugEnabled)
+									this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
+								var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options[0].Options);
+
+								await this.RunCommandAsync(context, method, args);
+								break;
+							}
+							case ApplicationCommandFinalType.SubCommandGroup when subgroups.Any():
+							{
+								var command = e.Interaction.Data.Options[0];
+								var group = subgroups.First().SubCommands.First(x => x.Name == command.Name);
+
+								var method = group.Methods.First(x => x.Key == command.Options[0].Name).Value;
+								context.SubCommandName = command.Name;
+								context.SubSubCommandName = command.Options[0].Name;
+
+								if (DebugEnabled)
+									this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
+								var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options[0].Options[0].Options);
+
+								await this.RunCommandAsync(context, method, args);
+								break;
+							}
+						}
+
+						await this._slashExecuted.InvokeAsync(this, new SlashCommandExecutedEventArgs(this.Client.ServiceProvider) { Context = context });
+					}
+					catch (Exception ex)
+					{
+						await this._slashError.InvokeAsync(this, new SlashCommandErrorEventArgs(this.Client.ServiceProvider) { Context = context, Exception = ex });
+						this.Client.Logger.LogError(ex, "Error in slash interaction");
 					}
 
+					break;
+				}
+				case InteractionType.AutoComplete when s_errored:
+					await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("Application commands failed to register properly on startup."));
+					throw new InvalidOperationException("Application commands failed to register properly on startup.");
+				case InteractionType.AutoComplete:
+				{
 					var methods = s_commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
 					var groups = s_groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
 					var subgroups = s_subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
 					if (!methods.Any() && !groups.Any() && !subgroups.Any())
 					{
-						await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("A application command was executed, but no command was registered for it."));
-						throw new InvalidOperationException("A application command was executed, but no command was registered for it.");
+						await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("An autocomplete interaction was created, but no command was registered for it"));
+						throw new InvalidOperationException("An autocomplete interaction was created, but no command was registered for it");
 					}
 
-					if (methods.Any())
+					try
 					{
-						var method = methods.First().Method;
-						if (DebugEnabled)
-							this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
-						var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options);
-
-						await this.RunCommandAsync(context, method, args);
-					}
-					else if (groups.Any())
-					{
-						var command = e.Interaction.Data.Options[0];
-						var method = groups.First().Methods.First(x => x.Key == command.Name).Value;
-
-						if (DebugEnabled)
-							this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
-						var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options[0].Options);
-
-						await this.RunCommandAsync(context, method, args);
-					}
-					else if (subgroups.Any())
-					{
-						var command = e.Interaction.Data.Options[0];
-						var group = subgroups.First().SubCommands.First(x => x.Name == command.Name);
-
-						var method = group.Methods.First(x => x.Key == command.Options[0].Name).Value;
-
-						if (DebugEnabled)
-							this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
-						var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options[0].Options[0].Options);
-
-						await this.RunCommandAsync(context, method, args);
-					}
-
-					await this._slashExecuted.InvokeAsync(this, new SlashCommandExecutedEventArgs(this.Client.ServiceProvider) { Context = context });
-				}
-				catch (Exception ex)
-				{
-					await this._slashError.InvokeAsync(this, new SlashCommandErrorEventArgs(this.Client.ServiceProvider) { Context = context, Exception = ex });
-				}
-			}
-			else if (e.Interaction.Type == InteractionType.AutoComplete)
-			{
-				if (s_errored)
-				{
-					await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("Application commands failed to register properly on startup."));
-					throw new InvalidOperationException("Application commands failed to register properly on startup.");
-				}
-
-				var methods = s_commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
-				var groups = s_groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
-				var subgroups = s_subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
-				if (!methods.Any() && !groups.Any() && !subgroups.Any())
-				{
-					await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("An autocomplete interaction was created, but no command was registered for it"));
-					throw new InvalidOperationException("An autocomplete interaction was created, but no command was registered for it");
-				}
-
-				try
-				{
-					if (methods.Any())
-					{
-						var focusedOption = e.Interaction.Data.Options.First(o => o.Focused);
-						var method = methods.First().Method;
-
-						var option = method.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
-						var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
-						var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
-						var providerInstance = Activator.CreateInstance(provider);
-
-						var context = new AutocompleteContext
+						if (type is ApplicationCommandFinalType.Command && methods.Any())
 						{
-							Interaction = e.Interaction,
-							Client = client,
-							Services = Configuration?.ServiceProvider,
-							ApplicationCommandsExtension = this,
-							Guild = e.Interaction.Guild,
-							Channel = e.Interaction.Channel,
-							User = e.Interaction.User,
-							Options = e.Interaction.Data.Options.ToList(),
-							FocusedOption = focusedOption,
-							Locale = e.Interaction.Locale,
-							GuildLocale = e.Interaction.GuildLocale,
-							AppPermissions = e.Interaction.AppPermissions,
-							EntitlementSkuIds = e.Interaction.Entitlements
-						};
+							var focusedOption = e.Interaction.Data.Options.First(o => o.Focused);
+							var method = methods.First().Method;
 
-						var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
-						await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices));
-					}
-					else if (groups.Any())
-					{
-						var command = e.Interaction.Data.Options[0];
-						var group = groups.First().Methods.First(x => x.Key == command.Name).Value;
+							var option = method.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
+							var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
+							var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
+							var providerInstance = Activator.CreateInstance(provider);
 
-						var focusedOption = command.Options.First(o => o.Focused);
-						var option = group.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
-						var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
-						var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
-						var providerInstance = Activator.CreateInstance(provider);
+							var context = new AutocompleteContext
+							{
+								Interaction = e.Interaction,
+								Client = client,
+								Services = Configuration?.ServiceProvider,
+								ApplicationCommandsExtension = this,
+								Guild = e.Interaction.Guild,
+								Channel = e.Interaction.Channel,
+								User = e.Interaction.User,
+								Options = e.Interaction.Data.Options.ToList(),
+								FocusedOption = focusedOption,
+								Locale = e.Interaction.Locale,
+								GuildLocale = e.Interaction.GuildLocale,
+								AppPermissions = e.Interaction.AppPermissions,
+								EntitlementSkuIds = e.Interaction.Entitlements
+							};
 
-						var context = new AutocompleteContext
+							var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
+							await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices));
+						}
+
+						if (type is ApplicationCommandFinalType.SubCommand && groups.Any())
 						{
-							Client = client,
-							Interaction = e.Interaction,
-							Services = Configuration?.ServiceProvider,
-							ApplicationCommandsExtension = this,
-							Guild = e.Interaction.Guild,
-							Channel = e.Interaction.Channel,
-							User = e.Interaction.User,
-							Options = command.Options.ToList(),
-							FocusedOption = focusedOption,
-							Locale = e.Interaction.Locale,
-							GuildLocale = e.Interaction.GuildLocale,
-							AppPermissions = e.Interaction.AppPermissions,
-							EntitlementSkuIds = e.Interaction.Entitlements
-						};
+							var command = e.Interaction.Data.Options[0];
+							var group = groups.First().Methods.First(x => x.Key == command.Name).Value;
 
-						var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
-						await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices));
-					}
-					else if (subgroups.Any())
-					{
-						var command = e.Interaction.Data.Options[0];
-						var group = subgroups.First().SubCommands.First(x => x.Name == command.Name).Methods.First(x => x.Key == command.Options[0].Name).Value;
+							var focusedOption = command.Options.First(o => o.Focused);
+							var option = group.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
+							var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
+							var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
+							var providerInstance = Activator.CreateInstance(provider);
 
-						var focusedOption = command.Options[0].Options.First(o => o.Focused);
+							var context = new AutocompleteContext
+							{
+								Client = client,
+								Interaction = e.Interaction,
+								Services = Configuration?.ServiceProvider,
+								ApplicationCommandsExtension = this,
+								Guild = e.Interaction.Guild,
+								Channel = e.Interaction.Channel,
+								User = e.Interaction.User,
+								Options = command.Options.ToList(),
+								FocusedOption = focusedOption,
+								Locale = e.Interaction.Locale,
+								GuildLocale = e.Interaction.GuildLocale,
+								AppPermissions = e.Interaction.AppPermissions,
+								EntitlementSkuIds = e.Interaction.Entitlements
+							};
 
-						var option = group.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
-						var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
-						var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
-						var providerInstance = Activator.CreateInstance(provider);
+							var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
+							await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices));
+						}
 
-						var context = new AutocompleteContext
+						if (type is ApplicationCommandFinalType.SubCommandGroup && subgroups.Any())
 						{
-							Client = client,
-							Interaction = e.Interaction,
-							Services = Configuration?.ServiceProvider,
-							ApplicationCommandsExtension = this,
-							Guild = e.Interaction.Guild,
-							Channel = e.Interaction.Channel,
-							User = e.Interaction.User,
-							Options = command.Options[0].Options.ToList(),
-							FocusedOption = focusedOption,
-							Locale = e.Interaction.Locale,
-							GuildLocale = e.Interaction.GuildLocale,
-							AppPermissions = e.Interaction.AppPermissions,
-							EntitlementSkuIds = e.Interaction.Entitlements
-						};
+							var command = e.Interaction.Data.Options[0];
+							var group = subgroups.First().SubCommands.First(x => x.Name == command.Name).Methods.First(x => x.Key == command.Options[0].Name).Value;
 
-						var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
-						await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices));
+							var focusedOption = command.Options[0].Options.First(o => o.Focused);
+
+							var option = group.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
+							var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
+							var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
+							var providerInstance = Activator.CreateInstance(provider);
+
+							var context = new AutocompleteContext
+							{
+								Client = client,
+								Interaction = e.Interaction,
+								Services = Configuration?.ServiceProvider,
+								ApplicationCommandsExtension = this,
+								Guild = e.Interaction.Guild,
+								Channel = e.Interaction.Channel,
+								User = e.Interaction.User,
+								Options = command.Options[0].Options.ToList(),
+								FocusedOption = focusedOption,
+								Locale = e.Interaction.Locale,
+								GuildLocale = e.Interaction.GuildLocale,
+								AppPermissions = e.Interaction.AppPermissions,
+								EntitlementSkuIds = e.Interaction.Entitlements
+							};
+
+							var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
+							await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices));
+						}
 					}
-				}
-				catch (Exception ex)
-				{
-					this.Client.Logger.LogError(ex, "Error in autocomplete interaction");
+					catch (Exception ex)
+					{
+						this.Client.Logger.LogError(ex, "Error in autocomplete interaction");
+					}
+
+					break;
 				}
 			}
 		});
 		return Task.CompletedTask;
+	}
+
+	private ApplicationCommandFinalType GetInteractionType(DiscordInteractionData data)
+	{
+		var type = ApplicationCommandFinalType.NotDetermined;
+		if (data.Options == null!)
+			return ApplicationCommandFinalType.Command;
+		if (data.Options.All(x =>
+			    x.Type is not ApplicationCommandOptionType.SubCommand
+				    and not ApplicationCommandOptionType.SubCommandGroup))
+			return ApplicationCommandFinalType.Command;
+		if (data.Options.Any(x => x.Type is ApplicationCommandOptionType.SubCommandGroup))
+			type = ApplicationCommandFinalType.SubCommandGroup;
+		else if (data.Options.Any(x => x.Type is ApplicationCommandOptionType.SubCommand))
+			type = ApplicationCommandFinalType.SubCommand;
+		return type;
 	}
 
 	/// <summary>

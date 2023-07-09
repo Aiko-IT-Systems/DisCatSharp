@@ -324,7 +324,7 @@ public sealed class LavalinkSession
 		if (this.ConnectedPlayersInternal.TryGetValue(channel.Guild.Id, out var connectedGuild))
 			return connectedGuild;
 
-		if (channel.Guild == null! || channel.Type != ChannelType.Voice && channel.Type != ChannelType.Stage)
+		if (channel.Guild == null! || (channel.Type != ChannelType.Voice && channel.Type != ChannelType.Stage))
 			throw new ArgumentException("Invalid channel specified.", nameof(channel));
 
 		var vstut = new TaskCompletionSource<VoiceStateUpdateEventArgs>();
@@ -436,6 +436,31 @@ public sealed class LavalinkSession
 		=> await this.Rest.LoadTracksAsync(identifier);
 
 	/// <summary>
+	/// Loads tracks by <paramref name="identifier"/>.
+	/// Returns a dynamic object you have to parse with (Type)Result.
+	/// </summary>
+	/// <param name="searchType">The search type to use. Some types need additional setup.</param>
+	/// <param name="identifier">The identifier to load.</param>
+	/// <returns>A track loading result.</returns>
+	public async Task<LavalinkTrackLoadingResult> LoadTracksAsync(LavalinkSearchType searchType, string identifier)
+	{
+		var type = searchType switch
+		{
+			LavalinkSearchType.Youtube => "ytsearch:",
+			LavalinkSearchType.SoundCloud => "scsearch:",
+			LavalinkSearchType.AppleMusic => "amsearch:",
+			LavalinkSearchType.Deezer => "dzsearch:",
+			LavalinkSearchType.DeezerISrc => "dzisrc:",
+			LavalinkSearchType.YandexMusic => "ymsearch:",
+			LavalinkSearchType.Spotify => "spsearch:",
+			LavalinkSearchType.SpotifyRec => "sprec:",
+			LavalinkSearchType.Plain => string.Empty,
+			_ => throw new ArgumentOutOfRangeException(nameof(searchType), searchType, "Invalid search type.")
+		};
+		return await this.LoadTracksAsync($"{type}{identifier}");
+	}
+
+	/// <summary>
 	/// Establishes a connection to the lavalink server.
 	/// </summary>
 	/// <exception cref="InvalidOperationException">Thrown when the <see cref="DiscordClient"/> is not fully initialized.</exception>
@@ -523,87 +548,107 @@ public sealed class LavalinkSession
 
 		_ = Task.Run(async () =>
 		{
-			var json = et.Message;
-			var jsonData = JObject.Parse(json);
-			var op = jsonData["op"]!.ToObject<OpType>();
-
-			switch (op)
+			try
 			{
-				case OpType.Ready:
-				{
-					this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsRx, null, "Received Lavalink Ready OP: {data}", json);
-					var ready = LavalinkJson.DeserializeObject<ReadyOp>(json)!;
-					if (this._sessionIdReceived != null!)
-						this._sessionIdReceived.SetResult(ready.SessionId);
-					else
-						this.Config.SessionId = ready.SessionId;
-					if (ready.Resumed)
-						this.Discord.Logger.LogInformation(LavalinkEvents.LavalinkSessionConnected, null, "Lavalink session {sessionId} resumed", ready.SessionId);
-					break;
-				}
-				case OpType.PlayerUpdate:
-				{
-					this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsRx, null, "Received Lavalink Player Update OP: {data}", json);
-					var playerUpdate = LavalinkJson.DeserializeObject<PlayerUpdateOp>(json)!;
-					if (this.ConnectedPlayersInternal.TryGetValue(playerUpdate.GuildId, out var value))
-					{
-						value.Player.PlayerState = playerUpdate.State;
-						await value.StateUpdatedEvent.InvokeAsync(value, new(this.Discord, playerUpdate.State));
-					}
-					break;
-				}
-				case OpType.Stats:
-					this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsRx, null, "Received Lavalink Stats OP: {data}", json);
-					var stats = LavalinkJson.DeserializeObject<StatsOp>(json!)!;
-					this.Statistics = new(stats);
-					await this._statsReceived.InvokeAsync(this, new(this.Discord, this.Statistics));
-					break;
-				case OpType.Event:
-					this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsRx, null, "Received Lavalink Event OP: {data}", json);
-					var eventOp = LavalinkJson.DeserializeObject<EventOp>(json!)!;
+				var json = et.Message;
+				var jsonData = JObject.Parse(json);
+				var op = jsonData["op"]!.ToObject<OpType>();
 
-					LavalinkGuildPlayer? player = null;
-
-					if (!string.IsNullOrEmpty(eventOp.GuildId) && this.ConnectedPlayersInternal.TryGetValue(Convert.ToUInt64(eventOp.GuildId), out var eventPlayer))
-						player = eventPlayer;
-					switch (eventOp.Type)
-					{
-						case EventOpType.TrackStartEvent:
-							var startEvent = LavalinkJson.DeserializeObject<TrackStartEvent>(json!)!;
-							if (player != null)
-								await player.TrackStartedEvent.InvokeAsync(player, new(this.Discord, startEvent));
-							break;
-						case EventOpType.TrackEndEvent:
-							var endEvent = LavalinkJson.DeserializeObject<TrackEndEvent>(json!)!;
-							if (player != null)
-								await player.TrackEndedEvent.InvokeAsync(player, new(this.Discord, endEvent));
-							break;
-						case EventOpType.TrackStuckEvent:
-							var stuckEvent = LavalinkJson.DeserializeObject<TrackStuckEvent>(json!)!;
-							if (player != null)
-								await player.TrackStuckEvent.InvokeAsync(player, new(this.Discord, stuckEvent));
-							break;
-						case EventOpType.TrackExceptionEvent:
-							var exceptionEvent = LavalinkJson.DeserializeObject<TrackExceptionEvent>(json!)!;
-							if (player != null)
-								await player.TrackExceptionEvent.InvokeAsync(player, new(this.Discord, exceptionEvent));
-							break;
-						case EventOpType.WebsocketClosedEvent:
-							var websocketClosedEvent = LavalinkJson.DeserializeObject<WebSocketClosedEvent>(json!)!;
-							await this._websocketClosed.InvokeAsync(this, new(this.Discord, websocketClosedEvent));
-							break;
-						default:
-							var ex = new InvalidDataException("Lavalink send an unknown up");
-							this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsException, ex, "Wtf QwQ? Received unknown Lavalink Event OP type: {type}", eventOp.Type);
-							throw ex;
-					}
-					break;
-				default:
+				switch (op)
 				{
-					var ex = new InvalidDataException("Lavalink send an unknown up");
-					this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsException, ex, "Tf O.o? Received unknown Lavalink OP: {data}", json);
-					throw ex;
+					case OpType.Ready:
+					{
+						this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsRx, null,
+							"Received Lavalink Ready OP: {data}", json);
+						var ready = LavalinkJson.DeserializeObject<ReadyOp>(json)!;
+						if (this._sessionIdReceived != null!)
+							this._sessionIdReceived.SetResult(ready.SessionId);
+						else
+							this.Config.SessionId = ready.SessionId;
+						if (ready.Resumed)
+							this.Discord.Logger.LogInformation(LavalinkEvents.LavalinkSessionConnected, null,
+								"Lavalink session {sessionId} resumed", ready.SessionId);
+						break;
+					}
+					case OpType.PlayerUpdate:
+					{
+						this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsRx, null,
+							"Received Lavalink Player Update OP: {data}", json);
+						var playerUpdate = LavalinkJson.DeserializeObject<PlayerUpdateOp>(json)!;
+						if (this.ConnectedPlayersInternal.TryGetValue(playerUpdate.GuildId, out var value))
+						{
+							value.Player.PlayerState = playerUpdate.State;
+							await value.StateUpdatedEvent.InvokeAsync(value, new(this.Discord, playerUpdate.State));
+						}
+
+						break;
+					}
+					case OpType.Stats:
+						this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsRx, null,
+							"Received Lavalink Stats OP: {data}", json);
+						var stats = LavalinkJson.DeserializeObject<StatsOp>(json!)!;
+						this.Statistics = new(stats);
+						await this._statsReceived.InvokeAsync(this, new(this.Discord, this.Statistics));
+						break;
+					case OpType.Event:
+						this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsRx, null,
+							"Received Lavalink Event OP: {data}", json);
+						var eventOp = LavalinkJson.DeserializeObject<EventOp>(json!)!;
+
+						LavalinkGuildPlayer? player = null;
+
+						if (!string.IsNullOrEmpty(eventOp.GuildId) &&
+						    this.ConnectedPlayersInternal.TryGetValue(Convert.ToUInt64(eventOp.GuildId),
+							    out var eventPlayer))
+							player = eventPlayer;
+						switch (eventOp.Type)
+						{
+							case EventOpType.TrackStartEvent:
+								var startEvent = LavalinkJson.DeserializeObject<TrackStartEvent>(json!)!;
+								if (player != null)
+									await player.TrackStartedEvent.InvokeAsync(player, new(this.Discord, startEvent));
+								break;
+							case EventOpType.TrackEndEvent:
+								var endEvent = LavalinkJson.DeserializeObject<TrackEndEvent>(json!)!;
+								if (player != null)
+									await player.TrackEndedEvent.InvokeAsync(player, new(this.Discord, endEvent));
+								break;
+							case EventOpType.TrackStuckEvent:
+								var stuckEvent = LavalinkJson.DeserializeObject<TrackStuckEvent>(json!)!;
+								if (player != null)
+									await player.TrackStuckEvent.InvokeAsync(player, new(this.Discord, stuckEvent));
+								break;
+							case EventOpType.TrackExceptionEvent:
+								var exceptionEvent = LavalinkJson.DeserializeObject<TrackExceptionEvent>(json!)!;
+								if (player != null)
+									await player.TrackExceptionEvent.InvokeAsync(player,
+										new(this.Discord, exceptionEvent));
+								break;
+							case EventOpType.WebsocketClosedEvent:
+								var websocketClosedEvent = LavalinkJson.DeserializeObject<WebSocketClosedEvent>(json!)!;
+								await this._websocketClosed.InvokeAsync(this, new(this.Discord, websocketClosedEvent));
+								break;
+							default:
+								var ex = new InvalidDataException("Lavalink send an unknown up");
+								this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsException, ex,
+									"Wtf QwQ? Received unknown Lavalink Event OP type: {type}", eventOp.Type);
+								throw ex;
+						}
+
+						break;
+					default:
+					{
+						var ex = new InvalidDataException("Lavalink send an unknown up");
+						this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsException, ex,
+							"Tf O.o? Received unknown Lavalink OP: {data}", json);
+						throw ex;
+					}
 				}
+			}
+			catch (Exception ex)
+			{
+				this.Discord.Logger.LogDebug(ex.Message);
+				this.Discord.Logger.LogDebug(ex.StackTrace);
 			}
 		});
 		args.Handled = true;

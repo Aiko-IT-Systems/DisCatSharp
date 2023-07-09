@@ -7,13 +7,13 @@ author: DisCatSharp Team
 # Lavalink Setup
 
 ## Configuring Java
-In order to run Lavalink, you must have Java 17 or greater installed. For more details check the [requirements](https://github.com/lavalink-devs/Lavalink/tree/v4#requirements) before downloading.
+
+In order to run Lavalink, you must have Java 17 or greater installed. For more details check the [requirements](https://github.com/lavalink-devs/Lavalink/tree/dev#requirements) before downloading.
 The latest v17 releases can be found [here](https://www.oracle.com/java/technologies/downloads/#java17).
 
 Make sure the location of the newest JRE's bin folder is added to your system variable's path. This will make the `java` command run from the latest runtime. You can verify that you have the right version by entering `java -version` in your command prompt or terminal.
 
 ## Downloading Lavalink
-<!--Next, head over to the [releases](https://github.com/freyacodes/Lavalink/releases) tab on the Lavalink GitHub page and download the Jar file from the latest version. Alternatively, stable builds with the latest changes can be found on their [CI Server](https://ci.fredboat.com/viewLog.html?buildId=lastSuccessful&buildTypeId=Lavalink_Build&tab=artifacts&guest=1).-->
 
 >[!NOTE]
 > Lavalink V4 is required but currently not in stable release.
@@ -22,7 +22,7 @@ Download the Lavalink V4 server from the [beta release](https://github.com/laval
 
 To use the Lavalink server, you need to configure it first.
 
-Create a new YAML file called `application.yml`, and use the [example file](https://github.com/lavalink-devs/Lavalink/blob/v4/LavalinkServer/application.yml.example), or copy this snippet:
+Create a new YAML file called `application.yml`, and use the [example file](https://github.com/lavalink-devs/Lavalink/blob/dev/LavalinkServer/application.yml.example), or copy this snippet:
 
 ```yaml
 server: # REST and WS server

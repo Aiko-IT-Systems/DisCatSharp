@@ -68,7 +68,7 @@ internal sealed class MultipartWebRequest : BaseRestRequest
 	{
 		this.Values = values;
 		this.OverwriteFileIdStart = overwriteFileIdStart;
-		this.Files = files.ToDictionary(x => x.FileName, x => x.Stream);
+		this.Files = files.ToDictionary(x => x.Filename, x => x.Stream);
 	}
 }
 

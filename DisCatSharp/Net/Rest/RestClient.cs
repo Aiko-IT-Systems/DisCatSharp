@@ -597,7 +597,7 @@ internal sealed class RestClient : IDisposable
 			if (mpsrequest.File.ContentType != null)
 				sc.Headers.ContentType = new MediaTypeHeaderValue(mpsrequest.File.ContentType);
 
-			var fileName = mpsrequest.File.FileName;
+			var fileName = mpsrequest.File.Filename;
 
 			if (mpsrequest.File.FileType != null)
 				fileName += '.' + mpsrequest.File.FileType;
