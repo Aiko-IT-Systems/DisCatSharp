@@ -488,40 +488,40 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// Tries to get a user.
 	/// </summary>
 	/// <param name="userId">Id of the user.</param>
+	/// <param name="user">The user, if found.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to true.</param>
-	/// <returns>The requested user or null if not found.</returns>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-	public async Task<DiscordUser?> TryGetUserAsync(ulong userId, bool fetch = true)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+	/// <returns>True if found, otherwise false.</returns>
+	public bool TryGetUser(ulong userId, out DiscordUser user, bool fetch = true)
 	{
 		try
 		{
-			return await this.GetUserAsync(userId, fetch).ConfigureAwait(false);
+			user = this.GetUserAsync(userId, fetch).ConfigureAwait(false).GetAwaiter().GetResult();
+			return true;
 		}
-		catch (NotFoundException)
+		catch (Exception)
 		{
-			return null;
+			user = null;
+			return false;
 		}
 	}
 
 	/// <summary>
 	/// Tries to get the published store sku listings (premium application subscription).
 	/// </summary>
-	/// <param name="applicationId">The application id to fetch the listenings for.</param>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	/// <returns>A list of published listings with <see cref="DiscordStoreSku"/>s.</returns>
-	public async Task<IReadOnlyList<DiscordStoreSku>> TryGetPublishedListingsAsync(ulong applicationId)
+	/// <param name="applicationId">The application id to fetch the listings for.</param>
+	/// <param name="skuList">A list of published listings with <see cref="DiscordStoreSku"/>s, if found.</param>
+	/// <returns>True if found, otherwise false.</returns>
+	public bool TryGetPublishedListings(ulong applicationId, out IReadOnlyList<DiscordStoreSku> skuList)
 	{
 		try
 		{
-			return await this.ApiClient.GetPublishedListingsAsync(applicationId);
+			skuList = this.ApiClient.GetPublishedListingsAsync(applicationId).ConfigureAwait(false).GetAwaiter().GetResult();
+			return true;
 		}
-		catch (NotFoundException)
+		catch (Exception)
 		{
-			return null;
+			skuList = null;
+			return false;
 		}
 	}
 
@@ -575,21 +575,20 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// Tries to get a channel.
 	/// </summary>
 	/// <param name="id">The id of the channel to get.</param>
+	/// <param name="channel">The queried channel, if found.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to true.</param>
-	/// <returns>The requested channel or null if not found.</returns>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-	public async Task<DiscordChannel?> TryGetChannelAsync(ulong id, bool fetch = true)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+	/// <returns>True if channel found, otherwise false.</returns>
+	public bool TryGetChannel(ulong id, out DiscordChannel channel, bool fetch = true)
 	{
 		try
 		{
-			return await this.GetChannelAsync(id, fetch).ConfigureAwait(false);
+			channel = this.GetChannelAsync(id, fetch).ConfigureAwait(false).GetAwaiter().GetResult();
+			return true;
 		}
-		catch (NotFoundException)
+		catch (Exception)
 		{
-			return null;
+			channel = null;
+			return false;
 		}
 	}
 
@@ -609,21 +608,20 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// Tries to get a thread.
 	/// </summary>
 	/// <param name="id">The id of the thread to get.</param>
+	/// <param name="thread">The thread, if found.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to true.</param>
-	/// <returns>The requested thread or null if not found.</returns>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-	public async Task<DiscordThreadChannel?> TryGetThreadAsync(ulong id, bool fetch = true)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+	/// <returns>True if found, otherwise false.</returns>
+	public bool TryGetThread(ulong id, out DiscordThreadChannel thread, bool fetch = true)
 	{
 		try
 		{
-			return await this.GetThreadAsync(id, fetch).ConfigureAwait(false);
+			thread = this.GetThreadAsync(id, fetch).ConfigureAwait(false).GetAwaiter().GetResult();
+			return true;
 		}
-		catch (NotFoundException)
+		catch (Exception)
 		{
-			return null;
+			thread = null;
+			return false;
 		}
 	}
 
@@ -761,22 +759,21 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <para>Setting <paramref name="withCounts"/> to true will make a REST request.</para>
 	/// </summary>
 	/// <param name="id">The guild ID to search for.</param>
+	/// <param name="guild">The guild, if found.</param>
 	/// <param name="withCounts">Whether to include approximate presence and member counts in the returned guild.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to true.</param>
-	/// <returns>The requested Guild or null if not found.</returns>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-	public async Task<DiscordGuild?> TryGetGuildAsync(ulong id, bool? withCounts = null, bool fetch = true)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+	/// <returns>True if the guild was found, otherwise false.</returns>
+	public bool TryGetGuild(ulong id, out DiscordGuild guild, bool? withCounts = null, bool fetch = true)
 	{
 		try
 		{
-			return await this.GetGuildAsync(id, withCounts, fetch).ConfigureAwait(false);
+			guild = this.GetGuildAsync(id, withCounts, fetch).ConfigureAwait(false).GetAwaiter().GetResult();
+			return true;
 		}
-		catch (NotFoundException)
+		catch (Exception)
 		{
-			return null;
+			guild = null;
+			return false;
 		}
 	}
 
@@ -795,20 +792,19 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// Tries to get a guild preview.
 	/// </summary>
 	/// <param name="id">The guild ID.</param>
-	/// <returns>A preview of the requested guild or null if not found.</returns>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-	public async Task<DiscordGuildPreview?> TryGetGuildPreviewAsync(ulong id)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+	/// <param name="preview">The preview, if found.</param>
+	/// <returns>True if the preview was found, otherwise false.</returns>
+	public bool TryGetGuildPreview(ulong id, out DiscordGuildPreview preview)
 	{
 		try
 		{
-			return await this.ApiClient.GetGuildPreviewAsync(id).ConfigureAwait(false);
+			preview = this.ApiClient.GetGuildPreviewAsync(id).ConfigureAwait(false).GetAwaiter().GetResult();
+			return true;
 		}
-		catch (NotFoundException)
+		catch (Exception)
 		{
-			return null;
+			preview = null;
+			return false;
 		}
 	}
 
@@ -826,20 +822,19 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// Tries to get a guild widget.
 	/// </summary>
 	/// <param name="id">The Guild Id.</param>
-	/// <returns>The requested guild widget or null if not found.</returns>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-	public async Task<DiscordWidget?> TryGetGuildWidgetAsync(ulong id)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+	/// <param name="widget">The widget, if found.</param>
+	/// <returns>True if the widget was found, otherwise false.</returns>
+	public bool TryGetGuildWidget(ulong id, out DiscordWidget widget)
 	{
 		try
 		{
-			return await this.ApiClient.GetGuildWidgetAsync(id);
+			widget = this.ApiClient.GetGuildWidgetAsync(id).ConfigureAwait(false).GetAwaiter().GetResult();
+			return true;
 		}
-		catch (NotFoundException)
+		catch (Exception)
 		{
-			return null;
+			widget = null;
+			return false;
 		}
 	}
 
@@ -861,23 +856,22 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// Tries to get an invite.
 	/// </summary>
 	/// <param name="code">The invite code.</param>
+	/// <param name="invite">The invite, if found.</param>
 	/// <param name="withCounts">Whether to include presence and total member counts in the returned invite.</param>
 	/// <param name="withExpiration">Whether to include the expiration date in the returned invite.</param>
 	/// <param name="scheduledEventId">The scheduled event id.</param>
-	/// <returns>The requested invite or null if not found.</returns>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-	public async Task<DiscordInvite?> TryGetInviteByCodeAsync(string code, bool? withCounts = null, bool? withExpiration = null, ulong? scheduledEventId = null)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+	/// <returns>True if the invite was found, otherwise false.</returns>
+	public bool TryGetInviteByCode(string code, out DiscordInvite invite, bool? withCounts = null, bool? withExpiration = null, ulong? scheduledEventId = null)
 	{
 		try
 		{
-			return await this.GetInviteByCodeAsync(code, withCounts, withExpiration, scheduledEventId).ConfigureAwait(false);
+			invite = this.GetInviteByCodeAsync(code, withCounts, withExpiration, scheduledEventId).ConfigureAwait(false).GetAwaiter().GetResult();
+			return true;
 		}
-		catch (NotFoundException)
+		catch (Exception)
 		{
-			return null;
+			invite = null;
+			return false;
 		}
 	}
 
@@ -903,21 +897,20 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	/// Tries to get a sticker.
 	/// </summary>
-	/// <returns>The requested sticker or null if not found.</returns>
+	/// <returns>True if found, otherwise false.</returns>
 	/// <param name="id">The id of the sticker.</param>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-	public async Task<DiscordSticker?> TryGetStickerAsync(ulong id)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+	/// <param name="sticker">The sticker, if found.</param>
+	public bool TryGetSticker(ulong id, out DiscordSticker sticker)
 	{
 		try
 		{
-			return await this.GetStickerAsync(id).ConfigureAwait(false);
+			sticker = this.GetStickerAsync(id).ConfigureAwait(false).GetAwaiter().GetResult();
+			return true;
 		}
-		catch (NotFoundException)
+		catch (Exception)
 		{
-			return null;
+			sticker = null;
+			return false;
 		}
 	}
 
@@ -986,20 +979,19 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// Tries to get a webhook.
 	/// </summary>
 	/// <param name="id">The target webhook id.</param>
-	/// <returns>The requested webhook or null if not found.</returns>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-	public async Task<DiscordWebhook?> TryGetWebhookAsync(ulong id)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+	/// <param name="webhook">The webhook, if found.</param>
+	/// <returns>True if found, otherwise false.</returns>
+	public bool TryGetWebhook(ulong id, out DiscordWebhook webhook)
 	{
 		try
 		{
-			return await this.GetWebhookAsync(id).ConfigureAwait(false);
+			webhook = this.GetWebhookAsync(id).ConfigureAwait(false).GetAwaiter().GetResult();
+			return true;
 		}
-		catch (NotFoundException)
+		catch (Exception)
 		{
-			return null;
+			webhook = null;
+			return false;
 		}
 	}
 
@@ -1020,20 +1012,19 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="id">The target webhook id.</param>
 	/// <param name="token">The target webhook token.</param>
-	/// <returns>The requested webhook or null if not found.</returns>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-	public async Task<DiscordWebhook?> TryGetWebhookWithTokenAsync(ulong id, string token)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+	/// <param name="webhook">The webhook, if found.</param>
+	/// <returns>True if found, otherwise false.</returns>
+	public bool TryGetWebhookWithToken(ulong id, string token, out DiscordWebhook webhook)
 	{
 		try
 		{
-			return await this.GetWebhookWithTokenAsync(id, token).ConfigureAwait(false);
+			webhook = this.GetWebhookWithTokenAsync(id, token).ConfigureAwait(false).GetAwaiter().GetResult();
+			return true;
 		}
-		catch (NotFoundException)
+		catch (Exception)
 		{
-			return null;
+			webhook = null;
+			return false;
 		}
 	}
 
