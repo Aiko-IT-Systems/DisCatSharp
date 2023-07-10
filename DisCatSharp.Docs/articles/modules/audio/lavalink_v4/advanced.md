@@ -17,8 +17,8 @@ General config:
 ```yml
 lavalink:
   plugins:
-    - dependency: "com.github.TopiSenpai.LavaSrc:lavasrc-plugin:c9aac26"
-      repository: "https://maven.topi.wtf/snapshots"
+    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.0.0-beta.2"
+      repository: "https://maven.topi.wtf/releases"
 [..]
 plugins:
   lavasrc:
