@@ -335,7 +335,9 @@ public abstract class BaseDiscordClient : IDisposable
 			TermsOfServiceUrl = tapp.TermsOfServiceUrl,
 			CustomInstallUrl = tapp.CustomInstallUrl,
 			InstallParams = tapp.InstallParams,
-			RoleConnectionsVerificationUrl = tapp.RoleConnectionsVerificationUrl,
+			RoleConnectionsVerificationUrl = tapp.RoleConnectionsVerificationUrl.ValueOrDefault(),
+			InteractionsEndpointUrl = tapp.InteractionsEndpointUrl.ValueOrDefault(),
+			CoverImageHash = tapp.CoverImageHash.ValueOrDefault(),
 			Tags = (tapp.Tags ?? Enumerable.Empty<string>()).ToArray()
 		};
 
@@ -385,16 +387,25 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <param name="description">The new description.</param>
 	/// <param name="interactionsEndpointUrl">The new interactions endpoint url.</param>
 	/// <param name="roleConnectionsVerificationUrl">The new role connections verification url.</param>
+	/// <param name="customInstallUrl">The new custom install url.</param>
 	/// <param name="tags">The new tags.</param>
 	/// <param name="icon">The new application icon.</param>
+	/// <param name="coverImage">The new application cover image.</param>
+	/// <param name="flags">The new application flags. Can be only limited gateway intents.</param>
+	/// <param name="installParams">The new install params.</param>
 	/// <returns>The updated application.</returns>
-	public async Task<DiscordApplication> UpdateCurrentApplicationInfoAsync(Optional<string> description, Optional<string> interactionsEndpointUrl, Optional<string> roleConnectionsVerificationUrl, Optional<List<string>?> tags, Optional<Stream> icon)
+	public async Task<DiscordApplication> UpdateCurrentApplicationInfoAsync(
+		Optional<string?> description,
+		Optional<string?> interactionsEndpointUrl, Optional<string?> roleConnectionsVerificationUrl, Optional<string?> customInstallUrl,
+		Optional<List<string>?> tags, Optional<Stream?> icon, Optional<Stream?> coverImage,
+		Optional<ApplicationFlags> flags, Optional<DiscordApplicationInstallParams?> installParams)
 	{
 		var iconb64 = ImageTool.Base64FromStream(icon);
+		var coverImageb64 = ImageTool.Base64FromStream(coverImage);
 		if (tags != null && tags.HasValue && tags.Value != null)
 			if (tags.Value.Any(x => x.Length > 20))
 				throw new InvalidOperationException("Tags can not exceed 20 chars.");
-		_ = await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, tags, iconb64);
+		_ = await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, installParams).ConfigureAwait(false);
 		// We use GetCurrentApplicationAsync because modify returns internal data not meant for developers.
 		var app = await this.GetCurrentApplicationAsync();
 		this.CurrentApplication = app;

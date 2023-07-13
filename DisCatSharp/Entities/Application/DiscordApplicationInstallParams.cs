@@ -37,7 +37,7 @@ public sealed class DiscordApplicationInstallParams : ObservableApiObject
 	/// Gets the scopes.
 	/// </summary>
 	[JsonProperty("scopes", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<string> Scopes { get; internal set; }
+	public List<string>? Scopes { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets the permissions.
@@ -49,4 +49,10 @@ public sealed class DiscordApplicationInstallParams : ObservableApiObject
 	/// Initializes a new instance of the <see cref="DiscordApplicationInstallParams"/> class.
 	/// </summary>
 	internal DiscordApplicationInstallParams() { }
+
+	public DiscordApplicationInstallParams(List<string>? scopes = null, Permissions? permissions = null)
+	{
+		this.Scopes = scopes;
+		this.Permissions = permissions;
+	}
 }

@@ -2237,7 +2237,7 @@ public sealed class DiscordApiClient
 				}
 				pld.Attachments = attachments;
 			}
-			
+
 			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}";
 			var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {channel_id = channelId }, out var path);
 
@@ -5690,15 +5690,24 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Gets the application info.
 	/// </summary>
-	internal async Task<TransportApplication> ModifyCurrentApplicationInfoAsync(Optional<string> description, Optional<string> interactionsEndpointUrl, Optional<string> roleConnectionsVerificationUrl, Optional<List<string>?> tags, Optional<string?> iconb64)
+	internal async Task<TransportApplication> ModifyCurrentApplicationInfoAsync(
+		Optional<string> description,
+		Optional<string> interactionsEndpointUrl, Optional<string> roleConnectionsVerificationUrl, Optional<string?> customInstallUrl,
+		Optional<List<string>?> tags, Optional<string?> iconb64, Optional<string?> coverImageb64,
+		Optional<ApplicationFlags> flags, Optional<DiscordApplicationInstallParams?> installParams)
 	{
 		var pld = new RestApplicationModifyPayload()
 		{
 			Description = description,
 			InteractionsEndpointUrl = interactionsEndpointUrl,
 			RoleConnectionsVerificationUrl = roleConnectionsVerificationUrl,
+			CustomInstallUrl = customInstallUrl,
 			Tags = tags,
-			IconBase64 = iconb64
+			IconBase64 = iconb64,
+			ConverImageBase64 = coverImageb64,
+			Flags = flags,
+			InstallParams = installParams
+
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}{Endpoints.ME}";

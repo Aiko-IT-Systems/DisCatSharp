@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
 
@@ -40,6 +41,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <summary>
 	/// Gets the application's summary.
 	/// </summary>
+	[DiscordDeprecated("Empty string, will be removed in API v11")]
 	public string Summary { get; internal set; }
 
 	/// <summary>
