@@ -1079,7 +1079,7 @@ public sealed class VoiceNextConnection : IDisposable
 			BinaryPrimitives.WriteUInt16BigEndian(packetSpan[..2], type);
 			BinaryPrimitives.WriteUInt16BigEndian(packetSpan.Slice(2, 2), length);
 			BinaryPrimitives.WriteUInt32BigEndian(packetSpan.Slice(4, 4), ssrc);
-			packetSpan[8..].Fill(0);
+			packetSpan[8..].Clear();
 		}
 
 		void ReadPacket(byte[] packet, out System.Net.IPAddress decodedIp, out ushort decodedPort)

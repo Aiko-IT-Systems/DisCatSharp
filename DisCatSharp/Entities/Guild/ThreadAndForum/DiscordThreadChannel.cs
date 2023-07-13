@@ -255,9 +255,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <param name="withMember">Whether to request the member object.</param>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public async Task<DiscordThreadChannelMember?> TryGetMemberAsync(ulong memberId, bool withMember = false)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	{
 		try
 		{
@@ -287,9 +285,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <param name="withMember">Whether to request the member object.</param>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public async Task<DiscordThreadChannelMember?> TryGetMemberAsync(DiscordMember member, bool withMember = false)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	{
 		try
 		{

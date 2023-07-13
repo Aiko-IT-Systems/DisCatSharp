@@ -259,7 +259,6 @@ internal class RateLimitBucket : IEquatable<RateLimitBucket>
 			return;
 
 		while (Interlocked.CompareExchange(ref this.LimitResetting, 1, 0) != 0)
-#pragma warning restore 420
 			await Task.Yield();
 
 		if (this.NextReset != 0)

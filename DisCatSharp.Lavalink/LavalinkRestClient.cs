@@ -62,7 +62,7 @@ internal sealed class LavalinkRestClient
 	/// <summary>
 	/// Gets the route argument regex.
 	/// </summary>
-	private static Regex s_routeArgumentRegex { get; } = new(@":([a-z_]+)");
+	private static Regex s_routeArgumentRegex { get; } = new(@":([a-z_]+)", RegexOptions.Compiled);
 
 	/// <summary>
 	/// Gets whether trace is enabled.
@@ -133,7 +133,6 @@ internal sealed class LavalinkRestClient
 		foreach (var xp in routeParamsProperties)
 		{
 			var val = xp.GetValue(routeParams);
-#pragma warning disable CS8601
 			extractedRouteParams[xp.Name] = val is string xs
 				? xs
 				: val is DateTime dt
@@ -141,7 +140,6 @@ internal sealed class LavalinkRestClient
 					: val is DateTimeOffset dto
 						? dto.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture)
 						: val is IFormattable xf ? xf.ToString(null, CultureInfo.InvariantCulture) : val.ToString();
-#pragma warning restore CS8601
 		}
 		return s_routeArgumentRegex.Replace(route, xm => extractedRouteParams[xm.Groups[1].Value]);
 	}

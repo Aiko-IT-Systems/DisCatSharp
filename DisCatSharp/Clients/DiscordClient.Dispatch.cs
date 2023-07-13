@@ -3341,6 +3341,7 @@ public sealed partial class DiscordClient
 	/// <param name="member">The transport member.</param>
 	/// <param name="interaction">The interaction.</param>
 	/// <param name="rawInteraction">Debug.</param>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
 	internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction, string rawInteraction)
 	{
 		if (this.Configuration.EnableLibraryDeveloperMode)

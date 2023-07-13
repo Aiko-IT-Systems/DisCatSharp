@@ -482,9 +482,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public async Task<DiscordMessage?> TryGetMessageAsync(ulong id, bool fetch = true)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	{
 		try
 		{
@@ -1092,10 +1090,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the guild hasn't enabled threads atm.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-	public async Task<DiscordThreadChannel> CreatePostAsync(string name, DiscordMessageBuilder builder, int? rateLimitPerUser = null, IEnumerable<ForumPostTag>? tags = null, string reason = null)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-		=> this.Type != ChannelType.Forum ? throw new NotSupportedException("Parent channel must be forum.") : await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, null, null, rateLimitPerUser, tags, builder, true, reason);
+	public async Task<DiscordThreadChannel> CreatePostAsync(string name, DiscordMessageBuilder builder, int? rateLimitPerUser = null, IEnumerable<ForumPostTag>? tags = null, string reason = null) => this.Type != ChannelType.Forum ? throw new NotSupportedException("Parent channel must be forum.") : await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, null, null, rateLimitPerUser, tags, builder, true, reason);
 
 	/// <summary>
 	/// Gets joined archived private threads. Can contain more threads.
@@ -1154,9 +1149,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Tries to get a forum channel tag.
 	/// </summary>
 	/// <param name="id">The id of the tag to get or null if not found.</param>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public ForumPostTag? TryGetForumPostTag(ulong id)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	{
 		var tag = this.InternalAvailableTags.FirstOrDefault(x => x.Id == id);
 		if (tag is not null)

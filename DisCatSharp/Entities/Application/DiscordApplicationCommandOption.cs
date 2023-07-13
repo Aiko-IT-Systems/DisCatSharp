@@ -90,25 +90,19 @@ public sealed class DiscordApplicationCommandOption
 	/// Not applicable for auto-complete options.
 	/// </summary>
 	[JsonProperty("choices", NullValueHandling = NullValueHandling.Ignore)]
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public List<DiscordApplicationCommandOptionChoice>? Choices { get; internal set; } = null;
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	/// <summary>
 	/// Gets the optional subcommand parameters for this parameter.
 	/// </summary>
 	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public List<DiscordApplicationCommandOption>? Options { get; internal set; } = null;
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	/// <summary>
 	/// Gets the optional allowed channel types.
 	/// </summary>
 	[JsonProperty("channel_types", NullValueHandling = NullValueHandling.Ignore)]
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public List<ChannelType>? ChannelTypes { get; internal set; } = null;
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	/// <summary>
 	/// Gets whether this option provides autocompletion.
@@ -157,13 +151,7 @@ public sealed class DiscordApplicationCommandOption
 	/// <param name="descriptionLocalizations">The localizations of the parameter description.</param>
 	/// <param name="minimumLength">The minimum allowed length of the string. (Min 0)</param>
 	/// <param name="maximumLength">The maximum allowed length of the string. (Min 1)</param>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public DiscordApplicationCommandOption(string name, string description, ApplicationCommandOptionType type, bool required = false, IEnumerable<DiscordApplicationCommandOptionChoice>? choices = null, IEnumerable<DiscordApplicationCommandOption>? options = null, IEnumerable<ChannelType>? channelTypes = null, bool autocomplete = false, object minimumValue = null, object maximumValue = null, DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null, int? minimumLength = null, int? maximumLength = null)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	{
 		if (!Utilities.IsValidSlashCommandName(name))
 			throw new ArgumentException("Invalid application command option name specified. It must be below 32 characters and not contain any whitespace.", nameof(name));

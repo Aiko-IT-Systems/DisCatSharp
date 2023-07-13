@@ -101,10 +101,7 @@ internal static class ConfigurationExtensions
 				{
 					// Must load the assembly into our workspace so we can do stuff with it later
 					results.Add(Assembly.Load(referencedAssembly));
-
-#pragma warning disable 8604
 					queue.Remove(referencedAssembly.Name);
-#pragma warning restore 8604
 				}
 				catch (Exception ex)
 				{
@@ -146,8 +143,6 @@ internal static class ConfigurationExtensions
 			? configuration.GetSection(configuration.ConfigPath(rootName, "Using")).Get<string[]>()
 			: Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(
 					configuration[configuration.ConfigPath(rootName, "Using")]);
-
-#pragma warning disable 8604
 		foreach (var assembly in FindAssemblies(assemblyNames.Select(x => x.StartsWith(Constants.LibName) ? x : $"{Constants.LibName}.{x}")))
 		{
 			ExtensionConfigResult result = new();
@@ -155,8 +150,8 @@ internal static class ConfigurationExtensions
 			foreach (var type in assembly.ExportedTypes
 				.Where(x => x.Name.EndsWith(Constants.ConfigSuffix) && !x.IsAbstract && !x.IsInterface))
 			{
-				string sectionName = type.Name;
-				string prefix = type.Name.Replace(Constants.ConfigSuffix, "");
+				var sectionName = type.Name;
+				var prefix = type.Name.Replace(Constants.ConfigSuffix, "");
 
 				result.ConfigType = type;
 
@@ -191,7 +186,6 @@ internal static class ConfigurationExtensions
 				}
 			}
 		}
-#pragma warning restore 8604
 
 		return results;
 	}

@@ -136,7 +136,7 @@ public class BasicEventHandlerTests
 	{
 		// This is super hacky, but I think it should be good enough.
 		if (name.Length == 0) { throw new ArgumentException("name mustn't be empty"); }
-		name = "_" + char.ToLower(name[0]) + name.Substring(1);
+		name = "_" + char.ToLower(name[0]) + name[1..];
 		var asyncEvent = typeof(DiscordClient).GetField(name, BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(this._client);
 		dynamic handlers = asyncEvent?.GetType().GetField("_handlers", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(asyncEvent)
 			?? throw new ArgumentException($"Unknown event \"{name}\"");

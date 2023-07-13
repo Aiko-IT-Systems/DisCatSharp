@@ -38,7 +38,6 @@ public abstract class DiscordShardedHostedService : BaseHostedService, IDiscordH
 {
 	public DiscordShardedClient ShardedClient { get; protected set; }
 
-#pragma warning disable 8618
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordShardedHostedService"/> class.
 	/// </summary>
@@ -56,7 +55,6 @@ public abstract class DiscordShardedHostedService : BaseHostedService, IDiscordH
 	{
 
 	}
-#pragma warning restore 8618
 
 	protected override Task ConfigureAsync()
 	{

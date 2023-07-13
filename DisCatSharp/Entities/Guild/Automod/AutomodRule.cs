@@ -90,18 +90,14 @@ public class AutomodRule : SnowflakeObject
 	/// Maximum of 20.
 	/// </summary>
 	[JsonProperty("exempt_roles", NullValueHandling = NullValueHandling.Ignore)]
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public IReadOnlyList<ulong>? ExemptRoles { get; internal set; }
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	/// <summary>
 	/// The channel ids that should not be affected by the rule.
 	/// Maximum of 50.
 	/// </summary>
 	[JsonProperty("exempt_channels", NullValueHandling = NullValueHandling.Ignore)]
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public IReadOnlyList<ulong>? ExemptChannels { get; internal set; }
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	[JsonIgnore]
 	public DiscordGuild Guild
