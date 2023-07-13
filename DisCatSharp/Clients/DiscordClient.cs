@@ -1240,6 +1240,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// Gets the internal cached channel.
 	/// </summary>
 	/// <param name="channelId">The target channel id.</param>
+	/// <param name="guildId">The target guild id.</param>
 	/// <returns>The requested channel.</returns>
 	internal DiscordChannel InternalGetCachedChannel(ulong channelId, ulong? guildId = null)
 	{

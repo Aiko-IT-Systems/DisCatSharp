@@ -123,7 +123,7 @@ public class BaseContext
 	/// <para>Gets the entitlements.</para>
 	/// <para>This is related to premium subscriptions for bots.</para>
 	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
-	/// <see cref="DiscordClient.TryGetPublishedListingsAsync(ulong)"/> for more information.
+	/// <see cref="DiscordClient.TryGetPublishedListings(ulong, out IReadOnlyList{DiscordStoreSku})"/> for more information.
 	/// </summary>
 	[DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
 	public List<ulong> Entitlements { get; internal set; }

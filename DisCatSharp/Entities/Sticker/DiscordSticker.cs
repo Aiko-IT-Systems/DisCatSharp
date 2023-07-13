@@ -173,7 +173,7 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// <param name="reason">Audit log reason</param>
 	/// <returns>A sticker object</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
 	public Task<DiscordSticker> ModifyAsync(Optional<string> name, Optional<string> description, Optional<string> tags, string reason = null) =>
@@ -199,7 +199,7 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// </summary>
 	/// <param name="reason">Audit log reason</param>
 	/// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
 	public Task DeleteAsync(string reason = null)

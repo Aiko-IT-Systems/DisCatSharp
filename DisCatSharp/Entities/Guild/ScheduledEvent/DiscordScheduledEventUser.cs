@@ -35,7 +35,7 @@ public class DiscordScheduledEventUser : ObservableApiObject, IEquatable<Discord
 	/// Gets the client instance this object is tied to.
 	/// </summary>
 	[JsonIgnore]
-	internal BaseDiscordClient Discord { get; set; }
+	internal new BaseDiscordClient Discord { get; set; }
 
 	/// <summary>
 	/// Gets the user.

@@ -31,7 +31,7 @@ using Newtonsoft.Json.Converters;
 namespace DisCatSharp.Lavalink.Entities;
 
 /// <summary>
-/// Represents a loading result when looking up tracks with <see cref="LavalinkSession.LoadTracksAsync"/> or <see cref="LavalinkGuildPlayer.LoadTracksAsync"/>.
+/// Represents a loading result when looking up tracks with <see cref="LavalinkSession.LoadTracksAsync(LavalinkSearchType, string)"/> or <see cref="LavalinkGuildPlayer.LoadTracksAsync(string)"/>.
 /// </summary>
 public sealed class LavalinkTrackLoadingResult
 {

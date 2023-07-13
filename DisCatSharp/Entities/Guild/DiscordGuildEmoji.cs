@@ -23,6 +23,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using DisCatSharp.Enums;
+using DisCatSharp.Exceptions;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
@@ -57,7 +60,7 @@ public sealed class DiscordGuildEmoji : DiscordEmoji
 	/// <param name="roles">Roles for which this emoji will be available. This works only if your application is whitelisted as integration.</param>
 	/// <param name="reason">Reason for audit log.</param>
 	/// <returns>The modified emoji.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -68,7 +71,7 @@ public sealed class DiscordGuildEmoji : DiscordEmoji
 	/// Deletes this emoji.
 	/// </summary>
 	/// <param name="reason">Reason for audit log.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>

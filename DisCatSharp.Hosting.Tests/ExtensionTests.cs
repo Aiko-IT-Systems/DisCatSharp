@@ -68,6 +68,7 @@ public class HostExtensionTests
 			{ "DisCatSharp:Discord:Intents", "AllUnprivileged" }
 		};
 
+#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 	public IConfiguration DiscordInteractivityConfiguration() => new ConfigurationBuilder()
 		.AddInMemoryCollection(new Dictionary<string, string>(this.DefaultDiscord())
 		{
@@ -78,6 +79,7 @@ public class HostExtensionTests
 	public IConfiguration DiscordOnlyConfiguration() => new ConfigurationBuilder()
 		.AddInMemoryCollection(this.DefaultDiscord())
 		.Build();
+#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 
 	public IConfiguration DiscordInteractivityAndLavaLinkConfiguration() => new ConfigurationBuilder()
 		.AddJsonFile("interactivity-lavalink.json")
@@ -110,11 +112,11 @@ public class HostExtensionTests
 
 		Assert.Equal(typeof(InteractivityConfiguration), first.Value.ConfigType);
 		Assert.Equal(typeof(InteractivityExtension), first.Value.ImplementationType);
-		Assert.True("InteractivityExtension".Equals(first.Key, StringComparison.OrdinalIgnoreCase));
+		Assert.Equal("InteractivityExtension", first.Key, ignoreCase: true);
 
 		Assert.Equal(typeof(LavalinkConfiguration), last.Value.ConfigType);
 		Assert.Equal(typeof(LavalinkExtension), last.Value.ImplementationType);
-		Assert.True("LavalinkExtension".Equals(last.Key, StringComparison.OrdinalIgnoreCase));
+		Assert.Equal("LavalinkExtension", last.Key, ignoreCase: true);
 	}
 }
 

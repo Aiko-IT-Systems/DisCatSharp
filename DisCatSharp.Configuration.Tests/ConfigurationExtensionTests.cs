@@ -115,6 +115,7 @@ public class ConfigurationExtensionTests
 		.AddJsonFile("haphazard-discord.json")
 		.Build();
 
+#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 	private IConfiguration SampleConfig() => new ConfigurationBuilder()
 		.AddInMemoryCollection(new Dictionary<string, string>
 		{
@@ -158,6 +159,7 @@ public class ConfigurationExtensionTests
 			{ "SampleClass:ListTest", "[\"10\",\"20\",\"30\"]" }
 		})
 		.Build();
+#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 
 	[Fact]
 	public void TestExtractDiscordConfig_Intents()

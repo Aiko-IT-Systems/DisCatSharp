@@ -198,7 +198,7 @@ public class DiscordConnection : ObservableApiObject
 	/// Gets the client instance this object is tied to.
 	/// </summary>
 	[JsonIgnore]
-	internal BaseDiscordClient Discord { get; set; }
+	internal new BaseDiscordClient Discord { get; set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordConnection"/> class.

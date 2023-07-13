@@ -315,7 +315,7 @@ public sealed partial class DiscordShardedClient
 
 	/// <summary>
 	/// Fired when a guild ban gets added
-	/// For this Event you need the <see cref="DiscordIntents.GuildBans"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	/// For this Event you need the <see cref="DiscordIntents.GuildModeration"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildBanAddEventArgs> GuildBanAdded
 	{
@@ -326,7 +326,7 @@ public sealed partial class DiscordShardedClient
 
 	/// <summary>
 	/// Fired when a guild ban gets removed
-	/// For this Event you need the <see cref="DiscordIntents.GuildBans"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	/// For this Event you need the <see cref="DiscordIntents.GuildModeration"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildBanRemoveEventArgs> GuildBanRemoved
 	{
@@ -341,7 +341,7 @@ public sealed partial class DiscordShardedClient
 
 	/// <summary>
 	/// Fired when a guild member timeout gets added.
-	/// For this Event you need the <see cref="DiscordIntents.GuildBans"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	/// For this Event you need the <see cref="DiscordIntents.GuildModeration"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildMemberTimeoutAddEventArgs> GuildMemberTimeoutAdded
 	{
