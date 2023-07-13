@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2023 AITSYS
 //
@@ -22,4 +22,9 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("GeneratedRegex", "SYSLIB1045:Convert to 'GeneratedRegexAttribute'.", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.LavalinkV4.LavalinkRestClient.s_routeArgumentRegex")]
+[assembly: SuppressMessage("Usage", "DCS0102:[Discord] Deprecated", Justification = "<Pending>")]
+[assembly: SuppressMessage("Usage", "DCS0101:[Discord] InExperiment", Justification = "<Pending>")]
+[assembly: SuppressMessage("Usage", "DCS0103:[Discord] InExperiment", Justification = "<Pending>")]
+[assembly: SuppressMessage("Usage", "DCS0001:[Discord] InExperiment", Justification = "<Pending>")]
+[assembly: SuppressMessage("Usage", "DCS0002:[Discord] InExperiment", Justification = "<Pending>")]
+[assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]

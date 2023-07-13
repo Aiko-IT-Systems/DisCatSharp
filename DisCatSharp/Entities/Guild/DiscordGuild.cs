@@ -1799,7 +1799,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="roles">Roles for which the emoji will be available. This works only if your application is whitelisted as integration.</param>
 	/// <param name="reason">Reason for audit log.</param>
 	/// <returns>The newly-created emoji.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordGuildEmoji> CreateEmojiAsync(string name, Stream image, IEnumerable<DiscordRole> roles = null, string reason = null)
 	{
@@ -1826,7 +1826,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="roles">Roles for which the emoji will be available. This works only if your application is whitelisted as integration.</param>
 	/// <param name="reason">Reason for audit log.</param>
 	/// <returns>The modified emoji.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordGuildEmoji> ModifyEmojiAsync(DiscordGuildEmoji emoji, string name, IEnumerable<DiscordRole> roles = null, string reason = null)
 	{
@@ -1850,7 +1850,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	/// <param name="emoji">Emoji to delete.</param>
 	/// <param name="reason">Reason for audit log.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task DeleteEmojiAsync(DiscordGuildEmoji emoji, string reason = null) =>
 		emoji == null
@@ -1886,7 +1886,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets a sticker
 	/// </summary>
 	/// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
 	public Task<DiscordSticker> GetStickerAsync(ulong stickerId)
@@ -1901,7 +1901,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="format">The file format the sticker is written in.</param>
 	/// <param name="file">The sticker.</param>
 	/// <param name="reason">Audit log reason</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordSticker> CreateStickerAsync(string name, string description, DiscordEmoji emoji, Stream file, StickerFormat format, string reason = null)
 	{
@@ -1942,7 +1942,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="reason">Audit log reason</param>
 	/// <returns>A sticker object</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
 	public async Task<DiscordSticker> ModifyStickerAsync(ulong sticker, Optional<string> name, Optional<string> description, Optional<DiscordEmoji> emoji, string reason = null)
@@ -1979,7 +1979,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="reason">Audit log reason</param>
 	/// <returns>A sticker object</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
 	public Task<DiscordSticker> ModifyStickerAsync(DiscordSticker sticker, Optional<string> name, Optional<string> description, Optional<DiscordEmoji> emoji, string reason = null)
@@ -1991,7 +1991,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="sticker">Id of sticker to delete</param>
 	/// <param name="reason">Audit log reason</param>
 	/// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
 	public Task DeleteStickerAsync(ulong sticker, string reason = null) =>
@@ -2007,7 +2007,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="sticker">Sticker to delete</param>
 	/// <param name="reason">Audit log reason</param>
 	/// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
 	public Task DeleteStickerAsync(DiscordSticker sticker, string reason = null)

@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021-2023 AITSYS
 //
@@ -35,3 +35,9 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Usage", "CA2254:Template should be a static expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Hosting.BaseHostedService.InitializeExtensions(DisCatSharp.DiscordClient)~System.Threading.Tasks.Task")]
 [assembly: SuppressMessage("Usage", "CA2254:Template should be a static expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Hosting.DiscordHostedService.ConfigureAsync~System.Threading.Tasks.Task")]
 [assembly: SuppressMessage("Usage", "CA2254:Template should be a static expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Hosting.DiscordShardedHostedService.ConfigureAsync~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("Usage", "DCS0102:[Discord] Deprecated", Justification = "<Pending>")]
+[assembly: SuppressMessage("Usage", "DCS0101:[Discord] InExperiment", Justification = "<Pending>")]
+[assembly: SuppressMessage("Usage", "DCS0103:[Discord] InExperiment", Justification = "<Pending>")]
+[assembly: SuppressMessage("Usage", "DCS0001:[Discord] InExperiment", Justification = "<Pending>")]
+[assembly: SuppressMessage("Usage", "DCS0002:[Discord] InExperiment", Justification = "<Pending>")]
+[assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]

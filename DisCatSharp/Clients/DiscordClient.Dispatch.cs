@@ -2609,7 +2609,7 @@ public sealed partial class DiscordClient
 	/// <param name="messageId">The message id.</param>
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="guildId">The guild id.</param>
-	/// <param name="dat">The raw discord emoji.</param>
+	/// <param name="partialEmoji">The raw discord emoji.</param>
 	internal async Task OnMessageReactionRemoveEmojiAsync(ulong messageId, ulong channelId, ulong guildId, DiscordEmoji partialEmoji)
 	{
 		var guild = this.InternalGetCachedGuild(guildId);

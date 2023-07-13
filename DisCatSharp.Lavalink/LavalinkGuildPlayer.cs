@@ -183,6 +183,7 @@ public sealed class LavalinkGuildPlayer
 	/// <summary>
 	/// Gets the internal queue entries.
 	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>")]
 	private SortedList<string, IQueueEntry> _queueEntriesInternal = new();
 
 	/// <summary>
