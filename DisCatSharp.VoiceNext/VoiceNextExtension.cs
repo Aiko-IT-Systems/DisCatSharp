@@ -160,7 +160,7 @@ public sealed class VoiceNextExtension : BaseExtension
 	/// </summary>
 	/// <param name="guild">Guild to get VoiceNext connection for.</param>
 	/// <returns>VoiceNext connection for the specified guild.</returns>
-	public VoiceNextConnection GetConnection(DiscordGuild guild) => this._activeConnections.ContainsKey(guild.Id) ? this._activeConnections[guild.Id] : null;
+	public VoiceNextConnection GetConnection(DiscordGuild guild) => this._activeConnections.TryGetValue(guild.Id, out var value) ? value : null;
 
 	/// <summary>
 	/// Vnc_S the voice disconnected.

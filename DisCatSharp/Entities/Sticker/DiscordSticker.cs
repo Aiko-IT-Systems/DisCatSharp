@@ -118,7 +118,6 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// Gets the tags of the sticker.
 	/// </summary>
 	[JsonProperty("tags", NullValueHandling = NullValueHandling.Ignore)]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
 	internal string InternalTags { get; set; }
 
 	/// <summary>
@@ -162,8 +161,6 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 
 
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 	/// <summary>
 	/// Modifies the sticker
 	/// </summary>
@@ -187,12 +184,8 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 						? throw new ArgumentException("Sticker tags needs to be a unicode emoji.")
 						: this.Discord.ApiClient.ModifyGuildStickerAsync(this.GuildId.Value, this.Id, name, description, tags, reason);
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 
 
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 	/// <summary>
 	/// Deletes the sticker
@@ -203,8 +196,6 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
 	public Task DeleteAsync(string reason = null)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.GuildId.HasValue ? this.Discord.ApiClient.DeleteGuildStickerAsync(this.GuildId.Value, this.Id, reason) : throw new ArgumentException("The requested sticker is no guild sticker.");
 }

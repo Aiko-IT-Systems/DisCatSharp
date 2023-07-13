@@ -119,7 +119,7 @@ public static class DiscordJson
 					if (discord.Configuration.EnableLibraryDeveloperMode)
 					{
 						discord.Logger.LogInformation("{sentry}", sentryMessage);
-						discord.Logger.LogDebug(json);
+						discord.Logger.LogDebug("{json}", json);
 					}
 				}
 				sentryFields.Add(ap.Key);
@@ -184,7 +184,7 @@ public static class DiscordJson
 					if (discord.Configuration.EnableLibraryDeveloperMode)
 					{
 						discord.Logger.LogInformation("{sentry}", sentryMessage);
-						discord.Logger.LogDebug(json);
+						discord.Logger.LogDebug("{json}", json);
 					}
 				}
 				sentryFields.Add(ap.Key);

@@ -63,10 +63,7 @@ public class AutomodActionExecutedEventArgs : DiscordEventArgs
 	/// </summary>
 	public ulong UserId { get; internal set; }
 
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-	public DiscordChannel? Channel
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-		=> this.ChannelId.HasValue ? this.Guild.GetChannel(this.ChannelId.Value) : null;
+	public DiscordChannel? Channel => this.ChannelId.HasValue ? this.Guild.GetChannel(this.ChannelId.Value) : null;
 
 	/// <summary>
 	/// Fall-back channel id this event happened in.
@@ -88,23 +85,17 @@ public class AutomodActionExecutedEventArgs : DiscordEventArgs
 	/// <summary>
 	/// The user-generated text content.
 	/// </summary>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public string? MessageContent { get; internal set; }
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	/// <summary>
 	/// The word or phrase configured in the rule that triggered this.
 	/// </summary>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public string? MatchedKeyword { get; internal set; }
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	/// <summary>
 	/// The substring in the content which triggered the rule.
 	/// </summary>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public string? MatchedContent { get; internal set; }
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	public AutomodActionExecutedEventArgs(IServiceProvider provider) : base(provider) { }
 }

@@ -174,7 +174,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// Gets the service provider this module was configured with.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
 	public IServiceProvider Services
 		=> Configuration.ServiceProvider;
 

@@ -41,7 +41,9 @@ public sealed class LavalinkPlayerState
 	/// Gets the unix timestamp in milliseconds.
 	/// </summary>
 	[JsonProperty("time")]
+#pragma warning disable CS0649 // Field 'LavalinkPlayerState._time' is never assigned to, and will always have its default value 0
 	private readonly long _time;
+#pragma warning restore CS0649 // Field 'LavalinkPlayerState._time' is never assigned to, and will always have its default value 0
 
 	/// <summary>
 	/// Gets the position of the track as <see cref="TimeSpan"/>.
@@ -53,7 +55,9 @@ public sealed class LavalinkPlayerState
 	/// Gets the position of the track in milliseconds.
 	/// </summary>
 	[JsonProperty("position")]
+#pragma warning disable CS0649 // Field 'LavalinkPlayerState._position' is never assigned to, and will always have its default value 0
 	private readonly long _position;
+#pragma warning restore CS0649 // Field 'LavalinkPlayerState._position' is never assigned to, and will always have its default value 0
 
 	/// <summary>
 	/// Gets whether Lavalink is connected to the voice gateway.

@@ -242,9 +242,7 @@ internal sealed class RestChannelModifyPayload : ObservableApiObject
 	/// Gets or sets the available tags.
 	/// </summary>
 	[JsonProperty("available_tags", NullValueHandling = NullValueHandling.Ignore)]
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public Optional<List<ForumPostTag>?> AvailableTags { internal get; set; }
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 }
 
 /// <summary>

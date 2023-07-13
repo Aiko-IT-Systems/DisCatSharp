@@ -918,13 +918,11 @@ public partial class DiscordGuild
 								};
 								break;
 							case "privacy_level":
-#pragma warning disable CS0612 // Type or member is obsolete
 								entrysta.PrivacyLevelChange = new PropertyChange<StagePrivacyLevel?>
 								{
 									Before = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5) ? (StagePrivacyLevel?)t5 : null,
 									After = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6) ? (StagePrivacyLevel?)t6 : null,
 								};
-#pragma warning restore CS0612 // Type or member is obsolete
 								break;
 
 							default:

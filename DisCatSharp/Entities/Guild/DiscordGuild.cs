@@ -1060,9 +1060,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	/// <param name="userId">The Id of the user to get the ban for.</param>
 	/// <returns>The requested ban object or null if not found.</returns>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public async Task<DiscordBan?> TryGetBanAsync(ulong userId)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	{
 		try
 		{
@@ -1089,9 +1087,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	/// <param name="user">The user to get the ban for.</param>
 	/// <returns>The requested ban object or null if not found.</returns>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public async Task<DiscordBan?> TryGetBanAsync(DiscordUser user)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	{
 		try
 		{
@@ -1203,9 +1199,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <returns>A scheduled event or null if not found.</returns>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public async Task<DiscordScheduledEvent?> TryGetScheduledEventAsync(ulong scheduledEventId, bool? withUserCount = null)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	{
 		try
 		{
@@ -1237,9 +1231,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <returns>A scheduled event or null if not found.</returns>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public async Task<DiscordScheduledEvent?> TryGetScheduledEventAsync(DiscordScheduledEvent scheduledEvent, bool? withUserCount = null)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	{
 		try
 		{

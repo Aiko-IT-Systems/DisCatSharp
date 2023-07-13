@@ -647,8 +647,8 @@ public sealed class LavalinkSession
 			}
 			catch (Exception ex)
 			{
-				this.Discord.Logger.LogDebug(ex.Message);
-				this.Discord.Logger.LogDebug(ex.StackTrace);
+				this.Discord.Logger.LogDebug("{message}", ex.Message);
+				this.Discord.Logger.LogDebug("{stacktrace}", ex.StackTrace);
 			}
 		});
 		args.Handled = true;

@@ -61,9 +61,7 @@ public class ForumChannelEditModel : BaseEditModel
 	/// <summary>
 	/// Sets the available tags.
 	/// </summary>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public Optional<List<ForumPostTag>?> AvailableTags { internal get; set; }
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	/// <summary>
 	/// Sets the default reaction emoji.

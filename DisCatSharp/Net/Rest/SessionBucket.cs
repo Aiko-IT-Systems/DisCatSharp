@@ -60,7 +60,6 @@ public class SessionBucket
 	/// Gets the reset after value.
 	/// </summary>
 	[JsonProperty("reset_after")]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
 	internal int ResetAfterInternal { get; set; }
 
 	/// <summary>

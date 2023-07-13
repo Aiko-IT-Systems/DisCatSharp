@@ -239,7 +239,7 @@ public static class Utilities
 	/// <returns>A list of ulong.</returns>
 	internal static IEnumerable<ulong> GetUserMentions(DiscordMessage message)
 	{
-		var regex = new Regex(@"<@!?(\d+)>", RegexOptions.ECMAScript);
+		var regex = new Regex(@"<@!?(\d+)>", RegexOptions.ECMAScript | RegexOptions.Compiled);
 		var matches = regex.Matches(message.Content);
 		return from Match match in matches
 			   select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
@@ -302,6 +302,7 @@ public static class Utilities
 	/// <param name="taad">The taad.</param>
 	/// <returns>A bool.</returns>
 	[DiscordDeprecated, Deprecated]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
 	internal static bool CheckThreadAutoArchiveDurationFeature(DiscordGuild guild, ThreadAutoArchiveDuration taad)
 		=> true;
 
@@ -311,6 +312,7 @@ public static class Utilities
 	/// <param name="guild">The guild.</param>
 	/// <returns>A bool.</returns>
 	[DiscordDeprecated, Deprecated]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
 	internal static bool CheckThreadPrivateFeature(DiscordGuild guild)
 		=> true;
 

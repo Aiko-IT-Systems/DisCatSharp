@@ -47,7 +47,9 @@ public sealed class LavalinkInfo
 	/// Gets the timestamp when this version was built.
 	/// </summary>
 	[JsonProperty("commitTime")]
+#pragma warning disable CS0649 // Field 'LavalinkInfo._buildTime' is never assigned to, and will always have its default value 0
 	private readonly long _buildTime;
+#pragma warning restore CS0649 // Field 'LavalinkInfo._buildTime' is never assigned to, and will always have its default value 0
 
 	/// <summary>
 	/// Gets the git information.
@@ -113,7 +115,9 @@ public sealed class Git
 	/// Gets the millisecond unix timestamp for when the commit was created.
 	/// </summary>
 	[JsonProperty("commitTime")]
+#pragma warning disable CS0649 // Field 'Git._commitTime' is never assigned to, and will always have its default value 0
 	private readonly long _commitTime;
+#pragma warning restore CS0649 // Field 'Git._commitTime' is never assigned to, and will always have its default value 0
 }
 
 /// <summary>
