@@ -27,6 +27,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -439,7 +440,7 @@ public sealed class VoiceNextConnection : IDisposable
 		{
 			Scheme = "wss",
 			Host = this.WebSocketEndpoint.Hostname,
-			Query = "encoding=json&v=4"
+			Query = "encoding=json&v=10"
 		};
 
 		return this._voiceWs.ConnectAsync(gwuri.Uri);
@@ -660,6 +661,7 @@ public sealed class VoiceNextConnection : IDisposable
 	/// <returns>A bool.</returns>
 	private bool ProcessPacket(ReadOnlySpan<byte> data, ref Memory<byte> opus, ref Memory<byte> pcm, IList<ReadOnlyMemory<byte>> pcmPackets, out AudioSender voiceSender, out AudioFormat outputFormat)
 	{
+		this._discord.Logger.LogDebug("Processing packet..");
 		voiceSender = null;
 		outputFormat = default;
 
@@ -670,6 +672,7 @@ public sealed class VoiceNextConnection : IDisposable
 
 		if (!this._transmittingSsrCs.TryGetValue(ssrc, out var vtx))
 		{
+			this._discord.Logger.LogDebug("Don't know user yet, creating dummy for {ssrc}", ssrc);
 			var decoder = this._opus.CreateDecoder();
 
 			vtx = new AudioSender(ssrc, decoder)
@@ -678,29 +681,30 @@ public sealed class VoiceNextConnection : IDisposable
 				User = null
 			};
 		}
-
-		voiceSender = vtx;
 		var sequence = vtx.GetTrueSequenceAfterWrapping(shortSequence);
-		ushort gap = 0;
-		if (vtx.LastTrueSequence is ulong lastTrueSequence)
-		{
-			if (sequence <= lastTrueSequence) // out-of-order packet; discard
-				return false;
 
-			gap = (ushort)(sequence - 1 - lastTrueSequence);
-			if (gap >= 5)
-				this._discord.Logger.LogWarning(VoiceNextEvents.VoiceReceiveFailure, "5 or more voice packets were dropped when receiving");
-		}
-
-		Span<byte> nonce = stackalloc byte[Sodium.NonceSize];
-		this._sodium.GetNonce(data, nonce, this._selectedEncryptionMode);
-		this._rtp.GetDataFromPacket(data, out var encryptedOpus, this._selectedEncryptionMode);
-
-		var opusSize = Sodium.CalculateSourceSize(encryptedOpus);
-		opus = opus[..opusSize];
-		var opusSpan = opus.Span;
 		try
 		{
+			voiceSender = vtx;
+			ushort gap = 0;
+			if (vtx.LastTrueSequence is ulong lastTrueSequence)
+			{
+				if (sequence <= lastTrueSequence) // out-of-order packet; discard
+					return false;
+
+				gap = (ushort)(sequence - 1 - lastTrueSequence);
+				if (gap >= 5)
+					this._discord.Logger.LogWarning(VoiceNextEvents.VoiceReceiveFailure, "5 or more voice packets were dropped when receiving");
+			}
+
+			Span<byte> nonce = stackalloc byte[Sodium.NonceSize];
+			this._sodium.GetNonce(data, nonce, this._selectedEncryptionMode);
+			this._rtp.GetDataFromPacket(data, out var encryptedOpus, this._selectedEncryptionMode);
+
+			var opusSize = Sodium.CalculateSourceSize(encryptedOpus);
+			opus = opus[..opusSize];
+			var opusSpan = opus.Span;
+		
 			this._sodium.Decrypt(encryptedOpus, opusSpan, nonce);
 
 			// Strip extensions, if any
@@ -742,6 +746,7 @@ public sealed class VoiceNextConnection : IDisposable
 
 			if (gap == 1)
 			{
+				this._discord.Logger.LogDebug("Gap 1");
 				var lastSampleCount = this._opus.GetLastPacketSampleCount(vtx.Decoder);
 				var fecpcm = new byte[this.AudioFormat.SampleCountToSampleSize(lastSampleCount)];
 				var fecpcmMem = fecpcm.AsSpan();
@@ -750,6 +755,7 @@ public sealed class VoiceNextConnection : IDisposable
 			}
 			else if (gap > 1)
 			{
+				this._discord.Logger.LogDebug("Gap {gap}", gap);
 				var lastSampleCount = this._opus.GetLastPacketSampleCount(vtx.Decoder);
 				for (var i = 0; i < gap; i++)
 				{
@@ -763,6 +769,12 @@ public sealed class VoiceNextConnection : IDisposable
 			var pcmSpan = pcm.Span;
 			this._opus.Decode(vtx.Decoder, opusSpan, ref pcmSpan, false, out outputFormat);
 			pcm = pcm[..pcmSpan.Length];
+			this._discord.Logger.LogDebug("Done with processing packet...");
+		}
+		catch (Exception ex)
+		{
+			this._discord.Logger.LogDebug("Exception in ProcessPacket: {ex}", ex.Message);
+			this._discord.Logger.LogDebug("Stack: {ex}", ex.StackTrace);
 		}
 		finally
 		{
@@ -784,6 +796,7 @@ public sealed class VoiceNextConnection : IDisposable
 
 		try
 		{
+			this._discord.Logger.LogDebug("Received voice data preparing..");
 			var pcm = new byte[this.AudioFormat.CalculateMaximumFrameSize()];
 			var pcmMem = pcm.AsMemory();
 			var opus = new byte[pcm.Length];
@@ -792,6 +805,7 @@ public sealed class VoiceNextConnection : IDisposable
 			if (!this.ProcessPacket(data, ref opusMem, ref pcmMem, pcmFillers, out var vtx, out var audioFormat))
 				return;
 
+			this._discord.Logger.LogDebug("Received voice data processing..");
 			foreach (var pcmFiller in pcmFillers)
 				await this._voiceReceived.InvokeAsync(this, new VoiceReceiveEventArgs(this._discord.ServiceProvider)
 				{
@@ -1162,19 +1176,19 @@ public sealed class VoiceNextConnection : IDisposable
 		switch (opc)
 		{
 			case 2: // READY
-				this._discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received READY (OP2)");
+				this._discord.Logger.LogDebug(VoiceNextEvents.VoiceDispatch, "Received READY (OP2)");
 				var vrp = opp.ToObject<VoiceReadyPayload>();
 				this._ssrc = vrp.Ssrc;
 				this.UdpEndpoint = new ConnectionEndpoint(vrp.Address, vrp.Port);
 				// this is not the valid interval
 				// oh, discord
 				//this.HeartbeatInterval = vrp.HeartbeatInterval;
-				this._heartbeatTask = Task.Run(this.HeartbeatAsync);
+				this._heartbeatTask = Task.Run(this.HeartbeatAsync, this.TOKEN);
 				await this.Stage1(vrp).ConfigureAwait(false);
 				break;
 
 			case 4: // SESSION_DESCRIPTION
-				this._discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received SESSION_DESCRIPTION (OP4)");
+				this._discord.Logger.LogDebug(VoiceNextEvents.VoiceDispatch, "Received SESSION_DESCRIPTION (OP4)");
 				var vsd = opp.ToObject<VoiceSessionDescriptionPayload>();
 				this._key = vsd.SecretKey;
 				this._sodium = new Sodium(this._key.AsMemory());
@@ -1184,7 +1198,7 @@ public sealed class VoiceNextConnection : IDisposable
 			case 5: // SPEAKING
 					// Don't spam OP5
 					// No longer spam, Discord supposedly doesn't send many of these
-				this._discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received SPEAKING (OP5)");
+				this._discord.Logger.LogDebug(VoiceNextEvents.VoiceDispatch, "Received SPEAKING (OP5): {oop}", opp.ToString(Formatting.Indented));
 				var spd = opp.ToObject<VoiceSpeakingPayload>();
 				var foundUserInCache = this._discord.TryGetCachedUserInternal(spd.UserId.Value, out var resolvedUser);
 				var spk = new UserSpeakingEventArgs(this._discord.ServiceProvider)
@@ -1223,17 +1237,17 @@ public sealed class VoiceNextConnection : IDisposable
 
 			case 8: // HELLO
 					// this sends a heartbeat interval that we need to use for heartbeating
-				this._discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received HELLO (OP8)");
+				this._discord.Logger.LogDebug(VoiceNextEvents.VoiceDispatch, "Received HELLO (OP8)");
 				this._heartbeatInterval = opp["heartbeat_interval"].ToObject<int>();
 				break;
 
 			case 9: // RESUMED
-				this._discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received RESUMED (OP9)");
+				this._discord.Logger.LogDebug(VoiceNextEvents.VoiceDispatch, "Received RESUMED (OP9)");
 				this._heartbeatTask = Task.Run(this.HeartbeatAsync);
 				break;
 
 			case 12: // CLIENT_CONNECTED
-				this._discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received CLIENT_CONNECTED (OP12)");
+				this._discord.Logger.LogDebug(VoiceNextEvents.VoiceDispatch, "Received CLIENT_CONNECTED (OP12)");
 				var ujpd = opp.ToObject<VoiceUserJoinPayload>();
 				var usrj = await this._discord.GetUserAsync(ujpd.UserId, true).ConfigureAwait(false);
 				{
@@ -1251,7 +1265,7 @@ public sealed class VoiceNextConnection : IDisposable
 				break;
 
 			case 13: // CLIENT_DISCONNECTED
-				this._discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received CLIENT_DISCONNECTED (OP13)");
+				this._discord.Logger.LogDebug(VoiceNextEvents.VoiceDispatch, "Received CLIENT_DISCONNECTED (OP13)");
 				var ulpd = opp.ToObject<VoiceUserLeavePayload>();
 				var txssrc = this._transmittingSsrCs.FirstOrDefault(x => x.Value.Id == ulpd.UserId);
 				if (this._transmittingSsrCs.ContainsKey(txssrc.Key))
@@ -1269,7 +1283,7 @@ public sealed class VoiceNextConnection : IDisposable
 				break;
 
 			default:
-				this._discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received unknown voice opcode (OP{0})", opc);
+				this._discord.Logger.LogDebug(VoiceNextEvents.VoiceDispatch, "Received unknown voice opcode (OP {0}): {data}", opc, opp.ToString(Formatting.Indented));
 				break;
 		}
 	}
