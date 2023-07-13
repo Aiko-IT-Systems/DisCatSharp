@@ -28,6 +28,12 @@ jobs:
       uses: github/codeql-action/init@v2
       with:
         languages: ${{ matrix.language }}
+    - name: Set up dotnet
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: |
+          7.0.306
+          6.0.412
     - name: Build
       run: |
         dotnet build -c Release -v minimal --no-self-contained DisCatSharp.sln
