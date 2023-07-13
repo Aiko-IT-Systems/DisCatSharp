@@ -113,6 +113,7 @@ public sealed class DiscordOverwriteBuilder
 	/// <returns>This builder.</returns>
 	public DiscordOverwriteBuilder Allow(Permissions permission)
 	{
+		this.Remove(permission);
 		this.Allowed |= permission;
 		return this;
 	}
@@ -124,6 +125,7 @@ public sealed class DiscordOverwriteBuilder
 	/// <returns>This builder.</returns>
 	public DiscordOverwriteBuilder Deny(Permissions permission)
 	{
+		this.Remove(permission);
 		this.Denied |= permission;
 		return this;
 	}
