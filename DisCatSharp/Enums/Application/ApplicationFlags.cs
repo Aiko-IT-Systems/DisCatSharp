@@ -31,6 +31,11 @@ namespace DisCatSharp.Enums;
 public enum ApplicationFlags : long
 {
 	/// <summary>
+	/// The application has no flags.
+	/// </summary>
+	None = 0,
+
+	/// <summary>
 	/// The application is embedded and can be used by users.
 	/// This was introduced to avoid users using in-dev apps.
 	/// </summary>

@@ -466,7 +466,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			TermsOfServiceUrl = tapp.TermsOfServiceUrl,
 			CustomInstallUrl = tapp.CustomInstallUrl,
 			InstallParams = tapp.InstallParams,
-			RoleConnectionsVerificationUrl = tapp.RoleConnectionsVerificationUrl,
+			RoleConnectionsVerificationUrl = tapp.RoleConnectionsVerificationUrl.ValueOrDefault(),
 			Tags = (tapp.Tags ?? Enumerable.Empty<string>()).ToArray(),
 			GuildId = tapp.GuildId.ValueOrDefault(),
 			Slug = tapp.Slug.ValueOrDefault(),

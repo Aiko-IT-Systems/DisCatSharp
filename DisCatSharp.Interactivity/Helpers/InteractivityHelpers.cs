@@ -31,7 +31,7 @@ public static class InteractivityHelpers
 	public static List<Page> Recalculate(this List<Page> pages)
 	{
 		List<Page> recalulatedPages = new(pages.Count);
-		int pageCount = 1;
+		var pageCount = 1;
 		foreach (var page in pages)
 		{
 			var tempPage = new Page();

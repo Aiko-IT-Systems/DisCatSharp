@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
@@ -61,7 +62,7 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// <summary>
 	/// Gets or sets the summary.
 	/// </summary>
-	[JsonProperty("summary", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("summary", NullValueHandling = NullValueHandling.Include), DiscordDeprecated("Empty string, will be removed in API v11")]
 	public string Summary { get; set; }
 
 	[JsonProperty("bot", NullValueHandling = NullValueHandling.Ignore)]
@@ -179,13 +180,13 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// Gets or sets the role connection verification entry point.
 	/// </summary>
 	[JsonProperty("role_connections_verification_url")]
-	public string RoleConnectionsVerificationUrl { get; set; }
+	public Optional<string> RoleConnectionsVerificationUrl { get; set; }
 
 	/// <summary>
 	/// Gets or sets the tags.
 	/// </summary>
 	[JsonProperty("tags", NullValueHandling = NullValueHandling.Include)]
-	public List<string> Tags { get; set; }
+	public List<string>? Tags { get; set; }
 
 	[JsonProperty("approximate_guild_count", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<int> ApproximateGuildCount { get; set; }
