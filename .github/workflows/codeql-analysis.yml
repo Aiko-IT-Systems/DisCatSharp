@@ -33,7 +33,7 @@ jobs:
       with:
         dotnet-version: |
           7.0.306
-          6.0.412
+          6.x
     - name: Build
       run: |
         dotnet build -c Release -v minimal --no-self-contained DisCatSharp.sln
