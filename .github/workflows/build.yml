@@ -32,6 +32,6 @@ jobs:
           7.0.203
           6.x
     - name: Build library
-      run: dotnet build -c Release -v normal DisCatSharp.sln
+      run: dotnet build -c Release -v minimal DisCatSharp.sln
     - name: Test library
-      run: dotnet test -v normal -c Release --no-restore --no-build DisCatSharp.sln
+      run: dotnet test -v minimal -c Release --no-restore --no-build DisCatSharp.sln
