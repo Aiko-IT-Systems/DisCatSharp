@@ -6012,7 +6012,6 @@ public sealed class DiscordApiClient
 			ConverImageBase64 = coverImageb64,
 			Flags = flags,
 			InstallParams = installParams
-
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}{Endpoints.ME}";
