@@ -18,6 +18,7 @@
 	<InternalsVisibleTo Include="DisCatSharp.Support" />
 	<InternalsVisibleTo Include="DisCatSharp.Tests" />
 	<InternalsVisibleTo Include="DisCatSharp.SafetyTests.Internal" />
+	<InternalsVisibleTo Include="DisCatSharp.Voice" />
 	<InternalsVisibleTo Include="DisCatSharp.VoiceNext" />
 	<InternalsVisibleTo Include="DisCatSharp.VoiceNext.Natives" />
 	<InternalsVisibleTo Include="DisCatSharp.DevTools" />
