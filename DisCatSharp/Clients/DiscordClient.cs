@@ -31,10 +31,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
-using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
-using DisCatSharp.EventArgs;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
@@ -169,97 +167,98 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	internal void InternalSetup()
 	{
-		this._clientErrored = new AsyncEvent<DiscordClient, ClientErrorEventArgs>("CLIENT_ERRORED", EventExecutionLimit, this.Goof);
-		this._socketErrored = new AsyncEvent<DiscordClient, SocketErrorEventArgs>("SOCKET_ERRORED", EventExecutionLimit, this.Goof);
-		this._socketOpened = new AsyncEvent<DiscordClient, SocketEventArgs>("SOCKET_OPENED", EventExecutionLimit, this.EventErrorHandler);
-		this._socketClosed = new AsyncEvent<DiscordClient, SocketCloseEventArgs>("SOCKET_CLOSED", EventExecutionLimit, this.EventErrorHandler);
-		this._ready = new AsyncEvent<DiscordClient, ReadyEventArgs>("READY", EventExecutionLimit, this.EventErrorHandler);
-		this._resumed = new AsyncEvent<DiscordClient, ReadyEventArgs>("RESUMED", EventExecutionLimit, this.EventErrorHandler);
-		this._channelCreated = new AsyncEvent<DiscordClient, ChannelCreateEventArgs>("CHANNEL_CREATED", EventExecutionLimit, this.EventErrorHandler);
-		this._channelUpdated = new AsyncEvent<DiscordClient, ChannelUpdateEventArgs>("CHANNEL_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._channelDeleted = new AsyncEvent<DiscordClient, ChannelDeleteEventArgs>("CHANNEL_DELETED", EventExecutionLimit, this.EventErrorHandler);
-		this._dmChannelDeleted = new AsyncEvent<DiscordClient, DmChannelDeleteEventArgs>("DM_CHANNEL_DELETED", EventExecutionLimit, this.EventErrorHandler);
-		this._channelPinsUpdated = new AsyncEvent<DiscordClient, ChannelPinsUpdateEventArgs>("CHANNEL_PINS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildCreated = new AsyncEvent<DiscordClient, GuildCreateEventArgs>("GUILD_CREATED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildAvailable = new AsyncEvent<DiscordClient, GuildCreateEventArgs>("GUILD_AVAILABLE", EventExecutionLimit, this.EventErrorHandler);
-		this._guildUpdated = new AsyncEvent<DiscordClient, GuildUpdateEventArgs>("GUILD_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildDeleted = new AsyncEvent<DiscordClient, GuildDeleteEventArgs>("GUILD_DELETED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildUnavailable = new AsyncEvent<DiscordClient, GuildDeleteEventArgs>("GUILD_UNAVAILABLE", EventExecutionLimit, this.EventErrorHandler);
-		this._guildDownloadCompletedEv = new AsyncEvent<DiscordClient, GuildDownloadCompletedEventArgs>("GUILD_DOWNLOAD_COMPLETED", EventExecutionLimit, this.EventErrorHandler);
-		this._inviteCreated = new AsyncEvent<DiscordClient, InviteCreateEventArgs>("INVITE_CREATED", EventExecutionLimit, this.EventErrorHandler);
-		this._inviteDeleted = new AsyncEvent<DiscordClient, InviteDeleteEventArgs>("INVITE_DELETED", EventExecutionLimit, this.EventErrorHandler);
-		this._messageCreated = new AsyncEvent<DiscordClient, MessageCreateEventArgs>("MESSAGE_CREATED", EventExecutionLimit, this.EventErrorHandler);
-		this._presenceUpdated = new AsyncEvent<DiscordClient, PresenceUpdateEventArgs>("PRESENCE_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildBanAdded = new AsyncEvent<DiscordClient, GuildBanAddEventArgs>("GUILD_BAN_ADD", EventExecutionLimit, this.EventErrorHandler);
-		this._guildBanRemoved = new AsyncEvent<DiscordClient, GuildBanRemoveEventArgs>("GUILD_BAN_REMOVED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildEmojisUpdated = new AsyncEvent<DiscordClient, GuildEmojisUpdateEventArgs>("GUILD_EMOJI_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildStickersUpdated = new AsyncEvent<DiscordClient, GuildStickersUpdateEventArgs>("GUILD_STICKER_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildIntegrationsUpdated = new AsyncEvent<DiscordClient, GuildIntegrationsUpdateEventArgs>("GUILD_INTEGRATIONS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildMemberAdded = new AsyncEvent<DiscordClient, GuildMemberAddEventArgs>("GUILD_MEMBER_ADD", EventExecutionLimit, this.EventErrorHandler);
-		this._guildMemberRemoved = new AsyncEvent<DiscordClient, GuildMemberRemoveEventArgs>("GUILD_MEMBER_REMOVED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildMemberUpdated = new AsyncEvent<DiscordClient, GuildMemberUpdateEventArgs>("GUILD_MEMBER_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildRoleCreated = new AsyncEvent<DiscordClient, GuildRoleCreateEventArgs>("GUILD_ROLE_CREATED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildRoleUpdated = new AsyncEvent<DiscordClient, GuildRoleUpdateEventArgs>("GUILD_ROLE_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildRoleDeleted = new AsyncEvent<DiscordClient, GuildRoleDeleteEventArgs>("GUILD_ROLE_DELETED", EventExecutionLimit, this.EventErrorHandler);
-		this._messageAcknowledged = new AsyncEvent<DiscordClient, MessageAcknowledgeEventArgs>("MESSAGE_ACKNOWLEDGED", EventExecutionLimit, this.EventErrorHandler);
-		this._messageUpdated = new AsyncEvent<DiscordClient, MessageUpdateEventArgs>("MESSAGE_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._messageDeleted = new AsyncEvent<DiscordClient, MessageDeleteEventArgs>("MESSAGE_DELETED", EventExecutionLimit, this.EventErrorHandler);
-		this._messagesBulkDeleted = new AsyncEvent<DiscordClient, MessageBulkDeleteEventArgs>("MESSAGE_BULK_DELETED", EventExecutionLimit, this.EventErrorHandler);
-		this._interactionCreated = new AsyncEvent<DiscordClient, InteractionCreateEventArgs>("INTERACTION_CREATED", EventExecutionLimit, this.EventErrorHandler);
-		this._componentInteractionCreated = new AsyncEvent<DiscordClient, ComponentInteractionCreateEventArgs>("COMPONENT_INTERACTED", EventExecutionLimit, this.EventErrorHandler);
-		this._contextMenuInteractionCreated = new AsyncEvent<DiscordClient, ContextMenuInteractionCreateEventArgs>("CONTEXT_MENU_INTERACTED", EventExecutionLimit, this.EventErrorHandler);
-		this._typingStarted = new AsyncEvent<DiscordClient, TypingStartEventArgs>("TYPING_STARTED", EventExecutionLimit, this.EventErrorHandler);
-		this._userSettingsUpdated = new AsyncEvent<DiscordClient, UserSettingsUpdateEventArgs>("USER_SETTINGS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._userUpdated = new AsyncEvent<DiscordClient, UserUpdateEventArgs>("USER_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._voiceStateUpdated = new AsyncEvent<DiscordClient, VoiceStateUpdateEventArgs>("VOICE_STATE_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._voiceServerUpdated = new AsyncEvent<DiscordClient, VoiceServerUpdateEventArgs>("VOICE_SERVER_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildMembersChunked = new AsyncEvent<DiscordClient, GuildMembersChunkEventArgs>("GUILD_MEMBERS_CHUNKED", EventExecutionLimit, this.EventErrorHandler);
-		this._unknownEvent = new AsyncEvent<DiscordClient, UnknownEventArgs>("UNKNOWN_EVENT", EventExecutionLimit, this.EventErrorHandler);
-		this._messageReactionAdded = new AsyncEvent<DiscordClient, MessageReactionAddEventArgs>("MESSAGE_REACTION_ADDED", EventExecutionLimit, this.EventErrorHandler);
-		this._messageReactionRemoved = new AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs>("MESSAGE_REACTION_REMOVED", EventExecutionLimit, this.EventErrorHandler);
-		this._messageReactionsCleared = new AsyncEvent<DiscordClient, MessageReactionsClearEventArgs>("MESSAGE_REACTIONS_CLEARED", EventExecutionLimit, this.EventErrorHandler);
-		this._messageReactionRemovedEmoji = new AsyncEvent<DiscordClient, MessageReactionRemoveEmojiEventArgs>("MESSAGE_REACTION_REMOVED_EMOJI", EventExecutionLimit, this.EventErrorHandler);
-		this._webhooksUpdated = new AsyncEvent<DiscordClient, WebhooksUpdateEventArgs>("WEBHOOKS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._heartbeated = new AsyncEvent<DiscordClient, HeartbeatEventArgs>("HEARTBEATED", EventExecutionLimit, this.EventErrorHandler);
-		this._applicationCommandCreated = new AsyncEvent<DiscordClient, ApplicationCommandEventArgs>("APPLICATION_COMMAND_CREATED", EventExecutionLimit, this.EventErrorHandler);
-		this._applicationCommandUpdated = new AsyncEvent<DiscordClient, ApplicationCommandEventArgs>("APPLICATION_COMMAND_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._applicationCommandDeleted = new AsyncEvent<DiscordClient, ApplicationCommandEventArgs>("APPLICATION_COMMAND_DELETED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildApplicationCommandCountUpdated = new AsyncEvent<DiscordClient, GuildApplicationCommandCountEventArgs>("GUILD_APPLICATION_COMMAND_COUNTS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._applicationCommandPermissionsUpdated = new AsyncEvent<DiscordClient, ApplicationCommandPermissionsUpdateEventArgs>("APPLICATION_COMMAND_PERMISSIONS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildIntegrationCreated = new AsyncEvent<DiscordClient, GuildIntegrationCreateEventArgs>("INTEGRATION_CREATED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildIntegrationUpdated = new AsyncEvent<DiscordClient, GuildIntegrationUpdateEventArgs>("INTEGRATION_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildIntegrationDeleted = new AsyncEvent<DiscordClient, GuildIntegrationDeleteEventArgs>("INTEGRATION_DELETED", EventExecutionLimit, this.EventErrorHandler);
-		this._stageInstanceCreated = new AsyncEvent<DiscordClient, StageInstanceCreateEventArgs>("STAGE_INSTANCE_CREATED", EventExecutionLimit, this.EventErrorHandler);
-		this._stageInstanceUpdated = new AsyncEvent<DiscordClient, StageInstanceUpdateEventArgs>("STAGE_INSTANCE_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._stageInstanceDeleted = new AsyncEvent<DiscordClient, StageInstanceDeleteEventArgs>("STAGE_INSTANCE_DELETED", EventExecutionLimit, this.EventErrorHandler);
-		this._threadCreated = new AsyncEvent<DiscordClient, ThreadCreateEventArgs>("THREAD_CREATED", EventExecutionLimit, this.EventErrorHandler);
-		this._threadUpdated = new AsyncEvent<DiscordClient, ThreadUpdateEventArgs>("THREAD_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._threadDeleted = new AsyncEvent<DiscordClient, ThreadDeleteEventArgs>("THREAD_DELETED", EventExecutionLimit, this.EventErrorHandler);
-		this._threadListSynced = new AsyncEvent<DiscordClient, ThreadListSyncEventArgs>("THREAD_LIST_SYNCED", EventExecutionLimit, this.EventErrorHandler);
-		this._threadMemberUpdated = new AsyncEvent<DiscordClient, ThreadMemberUpdateEventArgs>("THREAD_MEMBER_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._threadMembersUpdated = new AsyncEvent<DiscordClient, ThreadMembersUpdateEventArgs>("THREAD_MEMBERS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._zombied = new AsyncEvent<DiscordClient, ZombiedEventArgs>("ZOMBIED", EventExecutionLimit, this.EventErrorHandler);
-		this._payloadReceived = new AsyncEvent<DiscordClient, PayloadReceivedEventArgs>("PAYLOAD_RECEIVED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildScheduledEventCreated = new AsyncEvent<DiscordClient, GuildScheduledEventCreateEventArgs>("GUILD_SCHEDULED_EVENT_CREATED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildScheduledEventUpdated = new AsyncEvent<DiscordClient, GuildScheduledEventUpdateEventArgs>("GUILD_SCHEDULED_EVENT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildScheduledEventDeleted = new AsyncEvent<DiscordClient, GuildScheduledEventDeleteEventArgs>("GUILD_SCHEDULED_EVENT_DELETED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildScheduledEventUserAdded = new AsyncEvent<DiscordClient, GuildScheduledEventUserAddEventArgs>("GUILD_SCHEDULED_EVENT_USER_ADDED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildScheduledEventUserRemoved = new AsyncEvent<DiscordClient, GuildScheduledEventUserRemoveEventArgs>("GUILD_SCHEDULED_EVENT_USER_REMOVED", EventExecutionLimit, this.EventErrorHandler);
-		this._embeddedActivityUpdated = new AsyncEvent<DiscordClient, EmbeddedActivityUpdateEventArgs>("EMBEDDED_ACTIVITY_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildMemberTimeoutAdded = new AsyncEvent<DiscordClient, GuildMemberTimeoutAddEventArgs>("GUILD_MEMBER_TIMEOUT_ADDED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildMemberTimeoutChanged = new AsyncEvent<DiscordClient, GuildMemberTimeoutUpdateEventArgs>("GUILD_MEMBER_TIMEOUT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildMemberTimeoutRemoved = new AsyncEvent<DiscordClient, GuildMemberTimeoutRemoveEventArgs>("GUILD_MEMBER_TIMEOUT_REMOVED", EventExecutionLimit, this.EventErrorHandler);
-		this._rateLimitHit = new AsyncEvent<DiscordClient, RateLimitExceptionEventArgs>("RATELIMIT_HIT", EventExecutionLimit, this.EventErrorHandler);
-		this._automodRuleCreated = new AsyncEvent<DiscordClient, AutomodRuleCreateEventArgs>("AUTO_MODERATION_RULE_CREATED", EventExecutionLimit, this.EventErrorHandler);
-		this._automodRuleUpdated = new AsyncEvent<DiscordClient, AutomodRuleUpdateEventArgs>("AUTO_MODERATION_RULE_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-		this._automodRuleDeleted = new AsyncEvent<DiscordClient, AutomodRuleDeleteEventArgs>("AUTO_MODERATION_RULE_DELETED", EventExecutionLimit, this.EventErrorHandler);
-		this._automodActionExecuted = new AsyncEvent<DiscordClient, AutomodActionExecutedEventArgs>("AUTO_MODERATION_ACTION_EXECUTED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildAuditLogEntryCreated = new AsyncEvent<DiscordClient, GuildAuditLogEntryCreateEventArgs>("GUILD_AUDIT_LOG_ENTRY_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._clientErrored = new("CLIENT_ERRORED", EventExecutionLimit, this.Goof);
+		this._socketErrored = new("SOCKET_ERRORED", EventExecutionLimit, this.Goof);
+		this._socketOpened = new("SOCKET_OPENED", EventExecutionLimit, this.EventErrorHandler);
+		this._socketClosed = new("SOCKET_CLOSED", EventExecutionLimit, this.EventErrorHandler);
+		this._ready = new("READY", EventExecutionLimit, this.EventErrorHandler);
+		this._resumed = new("RESUMED", EventExecutionLimit, this.EventErrorHandler);
+		this._channelCreated = new("CHANNEL_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._channelUpdated = new("CHANNEL_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._channelDeleted = new("CHANNEL_DELETED", EventExecutionLimit, this.EventErrorHandler);
+		this._dmChannelDeleted = new("DM_CHANNEL_DELETED", EventExecutionLimit, this.EventErrorHandler);
+		this._channelPinsUpdated = new("CHANNEL_PINS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildCreated = new("GUILD_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildAvailable = new("GUILD_AVAILABLE", EventExecutionLimit, this.EventErrorHandler);
+		this._guildUpdated = new("GUILD_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildDeleted = new("GUILD_DELETED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildUnavailable = new("GUILD_UNAVAILABLE", EventExecutionLimit, this.EventErrorHandler);
+		this._guildDownloadCompletedEv = new("GUILD_DOWNLOAD_COMPLETED", EventExecutionLimit, this.EventErrorHandler);
+		this._inviteCreated = new("INVITE_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._inviteDeleted = new("INVITE_DELETED", EventExecutionLimit, this.EventErrorHandler);
+		this._messageCreated = new("MESSAGE_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._presenceUpdated = new("PRESENCE_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildBanAdded = new("GUILD_BAN_ADD", EventExecutionLimit, this.EventErrorHandler);
+		this._guildBanRemoved = new("GUILD_BAN_REMOVED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildEmojisUpdated = new("GUILD_EMOJI_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildStickersUpdated = new("GUILD_STICKER_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildIntegrationsUpdated = new("GUILD_INTEGRATIONS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildMemberAdded = new("GUILD_MEMBER_ADD", EventExecutionLimit, this.EventErrorHandler);
+		this._guildMemberRemoved = new("GUILD_MEMBER_REMOVED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildMemberUpdated = new("GUILD_MEMBER_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildRoleCreated = new("GUILD_ROLE_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildRoleUpdated = new("GUILD_ROLE_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildRoleDeleted = new("GUILD_ROLE_DELETED", EventExecutionLimit, this.EventErrorHandler);
+		this._messageAcknowledged = new("MESSAGE_ACKNOWLEDGED", EventExecutionLimit, this.EventErrorHandler);
+		this._messageUpdated = new("MESSAGE_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._messageDeleted = new("MESSAGE_DELETED", EventExecutionLimit, this.EventErrorHandler);
+		this._messagesBulkDeleted = new("MESSAGE_BULK_DELETED", EventExecutionLimit, this.EventErrorHandler);
+		this._interactionCreated = new("INTERACTION_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._componentInteractionCreated = new("COMPONENT_INTERACTED", EventExecutionLimit, this.EventErrorHandler);
+		this._contextMenuInteractionCreated = new("CONTEXT_MENU_INTERACTED", EventExecutionLimit, this.EventErrorHandler);
+		this._typingStarted = new("TYPING_STARTED", EventExecutionLimit, this.EventErrorHandler);
+		this._userSettingsUpdated = new("USER_SETTINGS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._userUpdated = new("USER_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._voiceStateUpdated = new("VOICE_STATE_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._voiceServerUpdated = new("VOICE_SERVER_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildMembersChunked = new("GUILD_MEMBERS_CHUNKED", EventExecutionLimit, this.EventErrorHandler);
+		this._unknownEvent = new("UNKNOWN_EVENT", EventExecutionLimit, this.EventErrorHandler);
+		this._messageReactionAdded = new("MESSAGE_REACTION_ADDED", EventExecutionLimit, this.EventErrorHandler);
+		this._messageReactionRemoved = new("MESSAGE_REACTION_REMOVED", EventExecutionLimit, this.EventErrorHandler);
+		this._messageReactionsCleared = new("MESSAGE_REACTIONS_CLEARED", EventExecutionLimit, this.EventErrorHandler);
+		this._messageReactionRemovedEmoji = new("MESSAGE_REACTION_REMOVED_EMOJI", EventExecutionLimit, this.EventErrorHandler);
+		this._webhooksUpdated = new("WEBHOOKS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._heartbeated = new("HEARTBEATED", EventExecutionLimit, this.EventErrorHandler);
+		this._applicationCommandCreated = new("APPLICATION_COMMAND_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._applicationCommandUpdated = new("APPLICATION_COMMAND_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._applicationCommandDeleted = new("APPLICATION_COMMAND_DELETED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildApplicationCommandCountUpdated = new("GUILD_APPLICATION_COMMAND_COUNTS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._applicationCommandPermissionsUpdated = new("APPLICATION_COMMAND_PERMISSIONS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildIntegrationCreated = new("INTEGRATION_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildIntegrationUpdated = new("INTEGRATION_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildIntegrationDeleted = new("INTEGRATION_DELETED", EventExecutionLimit, this.EventErrorHandler);
+		this._stageInstanceCreated = new("STAGE_INSTANCE_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._stageInstanceUpdated = new("STAGE_INSTANCE_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._stageInstanceDeleted = new("STAGE_INSTANCE_DELETED", EventExecutionLimit, this.EventErrorHandler);
+		this._threadCreated = new("THREAD_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._threadUpdated = new("THREAD_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._threadDeleted = new("THREAD_DELETED", EventExecutionLimit, this.EventErrorHandler);
+		this._threadListSynced = new("THREAD_LIST_SYNCED", EventExecutionLimit, this.EventErrorHandler);
+		this._threadMemberUpdated = new("THREAD_MEMBER_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._threadMembersUpdated = new("THREAD_MEMBERS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._zombied = new("ZOMBIED", EventExecutionLimit, this.EventErrorHandler);
+		this._payloadReceived = new("PAYLOAD_RECEIVED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildScheduledEventCreated = new("GUILD_SCHEDULED_EVENT_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildScheduledEventUpdated = new("GUILD_SCHEDULED_EVENT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildScheduledEventDeleted = new("GUILD_SCHEDULED_EVENT_DELETED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildScheduledEventUserAdded = new("GUILD_SCHEDULED_EVENT_USER_ADDED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildScheduledEventUserRemoved = new("GUILD_SCHEDULED_EVENT_USER_REMOVED", EventExecutionLimit, this.EventErrorHandler);
+		this._embeddedActivityUpdated = new("EMBEDDED_ACTIVITY_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildMemberTimeoutAdded = new("GUILD_MEMBER_TIMEOUT_ADDED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildMemberTimeoutChanged = new("GUILD_MEMBER_TIMEOUT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildMemberTimeoutRemoved = new("GUILD_MEMBER_TIMEOUT_REMOVED", EventExecutionLimit, this.EventErrorHandler);
+		this._rateLimitHit = new("RATELIMIT_HIT", EventExecutionLimit, this.EventErrorHandler);
+		this._automodRuleCreated = new("AUTO_MODERATION_RULE_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._automodRuleUpdated = new("AUTO_MODERATION_RULE_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._automodRuleDeleted = new("AUTO_MODERATION_RULE_DELETED", EventExecutionLimit, this.EventErrorHandler);
+		this._automodActionExecuted = new("AUTO_MODERATION_ACTION_EXECUTED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildAuditLogEntryCreated = new("GUILD_AUDIT_LOG_ENTRY_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._channelTopicUpdated = new("CHANNEL_TOPIC_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 
 		this.GuildsInternal.Clear();
 
-		this._presencesLazy = new Lazy<IReadOnlyDictionary<ulong, DiscordPresence>>(() => new ReadOnlyDictionary<ulong, DiscordPresence>(this.PresencesInternal));
-		this._embeddedActivitiesLazy = new Lazy<IReadOnlyDictionary<string, DiscordActivity>>(() => new ReadOnlyDictionary<string, DiscordActivity>(this.EmbeddedActivitiesInternal));
+		this._presencesLazy = new(() => new ReadOnlyDictionary<ulong, DiscordPresence>(this.PresencesInternal));
+		this._embeddedActivitiesLazy = new(() => new ReadOnlyDictionary<string, DiscordActivity>(this.EmbeddedActivitiesInternal));
 	}
 
 	#endregion
@@ -314,9 +313,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		else
 		{
 			var sinceUnix = idlesince != null ? (long?)Utilities.GetUnixTime(idlesince.Value) : null;
-			this._status = new StatusUpdate()
+			this._status = new()
 			{
-				Activity = new TransportActivity(activity),
+				Activity = new(activity),
 				Status = status ?? UserStatus.Online,
 				IdleSince = sinceUnix,
 				IsAfk = idlesince != null,
@@ -342,7 +341,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			catch (UnauthorizedException e)
 			{
 				FailConnection(this._connectionLock);
-				throw new Exception("Authentication failed. Check your token and try again.", e);
+				throw new("Authentication failed. Check your token and try again.", e);
 			}
 			catch (PlatformNotSupportedException)
 			{
@@ -372,7 +371,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		if (!s && cex != null)
 		{
 			this._connectionLock.Set();
-			throw new Exception("Could not connect to Discord.", cex);
+			throw new("Could not connect to Discord.", cex);
 		}
 
 		// non-closure, hence args
@@ -933,7 +932,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public Uri GetInAppOAuth(Permissions permissions = Permissions.None, OAuthScopes scopes = OAuthScopes.BOT_DEFAULT, string redir = null)
 	{
 		permissions &= PermissionMethods.FullPerms;
-		return new Uri(new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
+		return new(new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
 			.AddParameter("client_id", this.CurrentApplication.Id.ToString(CultureInfo.InvariantCulture))
 			.AddParameter("scope", OAuth.ResolveScopes(scopes))
 			.AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
@@ -955,7 +954,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		if (!bot.IsBot)
 			throw new ArgumentException("The user must be a bot.", nameof(bot));
 		permissions &= PermissionMethods.FullPerms;
-		return new Uri(new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
+		return new(new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
 			.AddParameter("client_id", bot.Id.ToString(CultureInfo.InvariantCulture))
 			.AddParameter("scope", OAuth.ResolveScopes(scopes))
 			.AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
@@ -1358,7 +1357,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		{
 			if (mbr.User != null)
 			{
-				usr = new DiscordUser(mbr.User) { Discord = this };
+				usr = new(mbr.User) { Discord = this };
 
 				_ = this.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
 				{
@@ -1521,7 +1520,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 					return old;
 				});
 
-				guild.MembersInternal[xtm.User.Id] = new DiscordMember(xtm) { Discord = this, GuildId = guild.Id };
+				guild.MembersInternal[xtm.User.Id] = new(xtm) { Discord = this, GuildId = guild.Id };
 			}
 		}
 
@@ -1587,7 +1586,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		this.UpdateMessage(message, author, guild, member);
 
-		message.ReactionsInternal ??= new List<DiscordReaction>();
+		message.ReactionsInternal ??= new();
 		foreach (var xr in message.ReactionsInternal)
 			xr.Emoji.Discord = this;
 

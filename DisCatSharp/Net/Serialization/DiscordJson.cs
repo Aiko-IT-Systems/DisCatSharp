@@ -43,7 +43,7 @@ namespace DisCatSharp.Net.Serialization;
 /// </summary>
 public static class DiscordJson
 {
-	private static readonly JsonSerializer s_serializer = JsonSerializer.CreateDefault(new JsonSerializerSettings
+	private static readonly JsonSerializer s_serializer = JsonSerializer.CreateDefault(new()
 	{
 		ContractResolver = new OptionalJsonContractResolver()
 	});

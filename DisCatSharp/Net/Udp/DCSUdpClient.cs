@@ -71,8 +71,8 @@ internal class DcsUdpClient : BaseUdpClient
 	/// </summary>
 	public DcsUdpClient()
 	{
-		this._packetQueue = new BlockingCollection<byte[]>();
-		this._tokenSource = new CancellationTokenSource();
+		this._packetQueue = new();
+		this._tokenSource = new();
 	}
 
 	/// <summary>
@@ -82,7 +82,7 @@ internal class DcsUdpClient : BaseUdpClient
 	public override void Setup(ConnectionEndpoint endpoint)
 	{
 		this._endPoint = endpoint;
-		this._client = new UdpClient();
+		this._client = new();
 		this._receiverTask = Task.Run(this.ReceiverLoopAsync, this.TOKEN);
 	}
 

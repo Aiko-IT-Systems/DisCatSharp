@@ -48,7 +48,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	internal DiscordMember()
 	{
-		this._roleIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
+		this._roleIdsLazy = new(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
 	}
 
 	/// <summary>
@@ -61,8 +61,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 		this.Id = user.Id;
 
-		this.RoleIdsInternal = new List<ulong>();
-		this._roleIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
+		this.RoleIdsInternal = new();
+		this._roleIdsLazy = new(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
 	}
 
 	/// <summary>
@@ -86,7 +86,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		this.UnusualDmActivityUntil = mbr.UnusualDmActivityUntil;
 		this.AvatarHashInternal = mbr.AvatarHash;
 		this.RoleIdsInternal = mbr.Roles ?? new List<ulong>();
-		this._roleIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
+		this._roleIdsLazy = new(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
 		this.MemberFlags = mbr.MemberFlags;
 	}
 
@@ -186,7 +186,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		get
 		{
 			var role = this.Roles.OrderByDescending(xr => xr.Position).FirstOrDefault(xr => xr.Color.Value != 0);
-			return role != null ? role.Color : new DiscordColor();
+			return role != null ? role.Color : new();
 		}
 	}
 

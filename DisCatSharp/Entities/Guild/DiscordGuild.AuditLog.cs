@@ -140,7 +140,7 @@ public partial class DiscordGuild
 		List<DiscordMember> ams = new();
 		Dictionary<ulong, DiscordMember> amd = new();
 		if (amr.Any())
-			ams = amr.Select(xau => this.MembersInternal != null && this.MembersInternal.TryGetValue(xau.Id, out var member) ? member : new DiscordMember { Discord = this.Discord, Id = xau.Id, GuildId = this.Id }).ToList();
+			ams = amr.Select(xau => this.MembersInternal != null && this.MembersInternal.TryGetValue(xau.Id, out var member) ? member : new() { Discord = this.Discord, Id = xau.Id, GuildId = this.Id }).ToList();
 		if (ams.Any())
 			amd = ams.ToDictionary(xm => xm.Id, xm => xm);
 
@@ -156,7 +156,7 @@ public partial class DiscordGuild
 			var whr = await this.GetWebhooksAsync().ConfigureAwait(false);
 			var whs = whr.ToDictionary(xh => xh.Id, xh => xh);
 
-			var amh = ahr.Select(xah => whs.TryGetValue(xah.Id, out var webhook) ? webhook : new DiscordWebhook { Discord = this.Discord, Name = xah.Name, Id = xah.Id, AvatarHash = xah.AvatarHash, ChannelId = xah.ChannelId, GuildId = xah.GuildId, Token = xah.Token });
+			var amh = ahr.Select(xah => whs.TryGetValue(xah.Id, out var webhook) ? webhook : new() { Discord = this.Discord, Name = xah.Name, Id = xah.Id, AvatarHash = xah.AvatarHash, ChannelId = xah.ChannelId, GuildId = xah.GuildId, Token = xah.Token });
 			ahd = amh.ToDictionary(xh => xh.Id, xh => xh);
 		}
 
@@ -188,7 +188,7 @@ public partial class DiscordGuild
 							ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
 							ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
 
-							return new PropertyChange<DiscordChannel>
+							return new()
 							{
 								Before = this.GetChannel(t1) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id },
 								After = this.GetChannel(t2) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id }
@@ -198,7 +198,7 @@ public partial class DiscordGuild
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "name":
-								entrygld.NameChange = new PropertyChange<string>
+								entrygld.NameChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
@@ -206,7 +206,7 @@ public partial class DiscordGuild
 								break;
 
 							case "owner_id":
-								entrygld.OwnerChange = new PropertyChange<DiscordMember>
+								entrygld.OwnerChange = new()
 								{
 									Before = this.MembersInternal != null && this.MembersInternal.TryGetValue(xc.OldValueUlong, out var oldMember) ? oldMember : await this.GetMemberAsync(xc.OldValueUlong).ConfigureAwait(false),
 									After = this.MembersInternal != null && this.MembersInternal.TryGetValue(xc.NewValueUlong, out var newMember) ? newMember : await this.GetMemberAsync(xc.NewValueUlong).ConfigureAwait(false)
@@ -214,7 +214,7 @@ public partial class DiscordGuild
 								break;
 
 							case "icon_hash":
-								entrygld.IconChange = new PropertyChange<string>
+								entrygld.IconChange = new()
 								{
 									Before = xc.OldValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id}/{xc.OldValueString}.webp" : null,
 									After = xc.OldValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id}/{xc.NewValueString}.webp" : null
@@ -222,7 +222,7 @@ public partial class DiscordGuild
 								break;
 
 							case "verification_level":
-								entrygld.VerificationLevelChange = new PropertyChange<VerificationLevel>
+								entrygld.VerificationLevelChange = new()
 								{
 									Before = (VerificationLevel)(long)xc.OldValue,
 									After = (VerificationLevel)(long)xc.NewValue
@@ -234,7 +234,7 @@ public partial class DiscordGuild
 								break;
 
 							case "system_channel_flags":
-								entrygld.SystemChannelFlagsChange = new PropertyChange<SystemChannelFlags>()
+								entrygld.SystemChannelFlagsChange = new()
 								{
 									Before = (SystemChannelFlags)(long)xc.OldValue,
 									After = (SystemChannelFlags)(long)xc.NewValue
@@ -254,7 +254,7 @@ public partial class DiscordGuild
 								break;
 
 							case "splash_hash":
-								entrygld.SplashChange = new PropertyChange<string>
+								entrygld.SplashChange = new()
 								{
 									Before = xc.OldValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id}/{xc.OldValueString}.webp?size=2048" : null,
 									After = xc.NewValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id}/{xc.NewValueString}.webp?size=2048" : null
@@ -262,7 +262,7 @@ public partial class DiscordGuild
 								break;
 
 							case "default_message_notifications":
-								entrygld.NotificationSettingsChange = new PropertyChange<DefaultMessageNotifications>
+								entrygld.NotificationSettingsChange = new()
 								{
 									Before = (DefaultMessageNotifications)(long)xc.OldValue,
 									After = (DefaultMessageNotifications)(long)xc.NewValue
@@ -274,7 +274,7 @@ public partial class DiscordGuild
 								break;
 
 							case "explicit_content_filter":
-								entrygld.ExplicitContentFilterChange = new PropertyChange<ExplicitContentFilter>
+								entrygld.ExplicitContentFilterChange = new()
 								{
 									Before = (ExplicitContentFilter)(long)xc.OldValue,
 									After = (ExplicitContentFilter)(long)xc.NewValue
@@ -282,7 +282,7 @@ public partial class DiscordGuild
 								break;
 
 							case "mfa_level":
-								entrygld.MfaLevelChange = new PropertyChange<MfaLevel>
+								entrygld.MfaLevelChange = new()
 								{
 									Before = (MfaLevel)(long)xc.OldValue,
 									After = (MfaLevel)(long)xc.NewValue
@@ -290,7 +290,7 @@ public partial class DiscordGuild
 								break;
 
 							case "region":
-								entrygld.RegionChange = new PropertyChange<string>
+								entrygld.RegionChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
@@ -298,7 +298,7 @@ public partial class DiscordGuild
 								break;
 
 							case "vanity_url_code":
-								entrygld.VanityUrlCodeChange = new PropertyChange<string>
+								entrygld.VanityUrlCodeChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
@@ -306,7 +306,7 @@ public partial class DiscordGuild
 								break;
 
 							case "premium_progress_bar_enabled":
-								entrygld.PremiumProgressBarChange = new PropertyChange<bool>
+								entrygld.PremiumProgressBarChange = new()
 								{
 									Before = (bool)xc.OldValue,
 									After = (bool)xc.NewValue
@@ -335,7 +335,7 @@ public partial class DiscordGuild
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "name":
-								entrychn.NameChange = new PropertyChange<string>
+								entrychn.NameChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
@@ -346,7 +346,7 @@ public partial class DiscordGuild
 								p1 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
 								p2 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
 
-								entrychn.TypeChange = new PropertyChange<ChannelType?>
+								entrychn.TypeChange = new()
 								{
 									Before = p1 ? (ChannelType?)t1 : null,
 									After = p2 ? (ChannelType?)t2 : null
@@ -354,7 +354,7 @@ public partial class DiscordGuild
 								break;
 
 							case "flags":
-								entrychn.ChannelFlagsChange = new PropertyChange<ChannelFlags>()
+								entrychn.ChannelFlagsChange = new()
 								{
 									Before = (ChannelFlags)(long)(xc.OldValue ?? 0L),
 									After = (ChannelFlags)(long)(xc.NewValue ?? 0L)
@@ -370,7 +370,7 @@ public partial class DiscordGuild
 									?.Select(xjo => xjo.ToObject<DiscordOverwrite>())
 									?.Select(xo => { xo.Discord = this.Discord; return xo; });
 
-								entrychn.OverwriteChange = new PropertyChange<IReadOnlyList<DiscordOverwrite>>
+								entrychn.OverwriteChange = new()
 								{
 									Before = olds != null ? new ReadOnlyCollection<DiscordOverwrite>(new List<DiscordOverwrite>(olds)) : null,
 									After = news != null ? new ReadOnlyCollection<DiscordOverwrite>(new List<DiscordOverwrite>(news)) : null
@@ -378,7 +378,7 @@ public partial class DiscordGuild
 								break;
 
 							case "topic":
-								entrychn.TopicChange = new PropertyChange<string>
+								entrychn.TopicChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
@@ -386,7 +386,7 @@ public partial class DiscordGuild
 								break;
 
 							case "nsfw":
-								entrychn.NsfwChange = new PropertyChange<bool?>
+								entrychn.NsfwChange = new()
 								{
 									Before = (bool?)xc.OldValue,
 									After = (bool?)xc.NewValue
@@ -394,7 +394,7 @@ public partial class DiscordGuild
 								break;
 
 							case "rtc_region":
-								entrychn.RtcRegionIdChange = new PropertyChange<string>
+								entrychn.RtcRegionIdChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
@@ -402,7 +402,7 @@ public partial class DiscordGuild
 								break;
 
 							case "bitrate":
-								entrychn.BitrateChange = new PropertyChange<int?>
+								entrychn.BitrateChange = new()
 								{
 									Before = (int?)(long?)xc.OldValue,
 									After = (int?)(long?)xc.NewValue
@@ -410,7 +410,7 @@ public partial class DiscordGuild
 								break;
 
 							case "user_limit":
-								entrychn.UserLimitChange = new PropertyChange<int?>
+								entrychn.UserLimitChange = new()
 								{
 									Before = (int?)(long?)xc.OldValue,
 									After = (int?)(long?)xc.NewValue
@@ -418,7 +418,7 @@ public partial class DiscordGuild
 								break;
 
 							case "rate_limit_per_user":
-								entrychn.PerUserRateLimitChange = new PropertyChange<int?>
+								entrychn.PerUserRateLimitChange = new()
 								{
 									Before = (int?)(long?)xc.OldValue,
 									After = (int?)(long?)xc.NewValue
@@ -426,7 +426,7 @@ public partial class DiscordGuild
 								break;
 
 							case "default_auto_archive_duration":
-								entrychn.DefaultAutoArchiveDurationChange = new PropertyChange<ThreadAutoArchiveDuration?>
+								entrychn.DefaultAutoArchiveDurationChange = new()
 								{
 									Before = (ThreadAutoArchiveDuration?)(long?)xc.OldValue,
 									After = (ThreadAutoArchiveDuration?)(long?)xc.NewValue
@@ -441,7 +441,7 @@ public partial class DiscordGuild
 									?.Select(xjo => xjo.ToObject<ForumPostTag>())
 									?.Select(xo => { xo.Discord = this.Discord; return xo; });
 
-								entrychn.AvailableTagsChange = new PropertyChange<List<ForumPostTag>>
+								entrychn.AvailableTagsChange = new()
 								{
 									Before = old_tags != null ? new List<ForumPostTag>(new List<ForumPostTag>(old_tags)) : null,
 									After = new_tags != null ? new List<ForumPostTag>(new List<ForumPostTag>(new_tags)) : null
@@ -474,7 +474,7 @@ public partial class DiscordGuild
 								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
 								p2 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
 
-								entryovr.DenyChange = new PropertyChange<Permissions?>
+								entryovr.DenyChange = new()
 								{
 									Before = p1 ? (Permissions?)t1 : null,
 									After = p2 ? (Permissions?)t2 : null
@@ -485,7 +485,7 @@ public partial class DiscordGuild
 								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
 								p2 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
 
-								entryovr.AllowChange = new PropertyChange<Permissions?>
+								entryovr.AllowChange = new()
 								{
 									Before = p1 ? (Permissions?)t1 : null,
 									After = p2 ? (Permissions?)t2 : null
@@ -493,7 +493,7 @@ public partial class DiscordGuild
 								break;
 
 							case "type":
-								entryovr.TypeChange = new PropertyChange<OverwriteType?>
+								entryovr.TypeChange = new()
 								{
 									Before = xc.OldValue != null ? (OverwriteType)(long)xc.OldValue : null,
 									After = xc.NewValue != null ? (OverwriteType)(long)xc.NewValue : null
@@ -504,7 +504,7 @@ public partial class DiscordGuild
 								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
 								p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
 
-								entryovr.TargetIdChange = new PropertyChange<ulong?>
+								entryovr.TargetIdChange = new()
 								{
 									Before = p1 ? t1 : null,
 									After = p2 ? t2 : null
@@ -522,7 +522,7 @@ public partial class DiscordGuild
 				case AuditLogActionType.Kick:
 					entry = new DiscordAuditLogKickEntry
 					{
-						Target = amd.TryGetValue(xac.TargetId.Value, out var kickMember) ? kickMember : new DiscordMember { Id = xac.TargetId.Value, Discord = this.Discord, GuildId = this.Id }
+						Target = amd.TryGetValue(xac.TargetId.Value, out var kickMember) ? kickMember : new() { Id = xac.TargetId.Value, Discord = this.Discord, GuildId = this.Id }
 					};
 					break;
 
@@ -538,7 +538,7 @@ public partial class DiscordGuild
 				case AuditLogActionType.Unban:
 					entry = new DiscordAuditLogBanEntry
 					{
-						Target = amd.TryGetValue(xac.TargetId.Value, out var unbanMember) ? unbanMember : new DiscordMember { Id = xac.TargetId.Value, Discord = this.Discord, GuildId = this.Id }
+						Target = amd.TryGetValue(xac.TargetId.Value, out var unbanMember) ? unbanMember : new() { Id = xac.TargetId.Value, Discord = this.Discord, GuildId = this.Id }
 					};
 					break;
 
@@ -546,7 +546,7 @@ public partial class DiscordGuild
 				case AuditLogActionType.MemberRoleUpdate:
 					entry = new DiscordAuditLogMemberUpdateEntry
 					{
-						Target = amd.TryGetValue(xac.TargetId.Value, out var roleUpdMember) ? roleUpdMember : new DiscordMember { Id = xac.TargetId.Value, Discord = this.Discord, GuildId = this.Id }
+						Target = amd.TryGetValue(xac.TargetId.Value, out var roleUpdMember) ? roleUpdMember : new() { Id = xac.TargetId.Value, Discord = this.Discord, GuildId = this.Id }
 					};
 
 					var entrymbu = entry as DiscordAuditLogMemberUpdateEntry;
@@ -555,7 +555,7 @@ public partial class DiscordGuild
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "nick":
-								entrymbu.NicknameChange = new PropertyChange<string>
+								entrymbu.NicknameChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
@@ -563,7 +563,7 @@ public partial class DiscordGuild
 								break;
 
 							case "deaf":
-								entrymbu.DeafenChange = new PropertyChange<bool?>
+								entrymbu.DeafenChange = new()
 								{
 									Before = (bool?)xc.OldValue,
 									After = (bool?)xc.NewValue
@@ -571,14 +571,14 @@ public partial class DiscordGuild
 								break;
 
 							case "mute":
-								entrymbu.MuteChange = new PropertyChange<bool?>
+								entrymbu.MuteChange = new()
 								{
 									Before = (bool?)xc.OldValue,
 									After = (bool?)xc.NewValue
 								};
 								break;
 							case "communication_disabled_until":
-								entrymbu.CommunicationDisabledUntilChange = new PropertyChange<DateTime?>
+								entrymbu.CommunicationDisabledUntilChange = new()
 								{
 									Before = (DateTime?)xc.OldValue,
 									After = (DateTime?)xc.NewValue
@@ -615,7 +615,7 @@ public partial class DiscordGuild
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "name":
-								entryrol.NameChange = new PropertyChange<string>
+								entryrol.NameChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
@@ -626,7 +626,7 @@ public partial class DiscordGuild
 								p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t3);
 								p2 = int.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t4);
 
-								entryrol.ColorChange = new PropertyChange<int?>
+								entryrol.ColorChange = new()
 								{
 									Before = p1 ? t3 : null,
 									After = p2 ? t4 : null
@@ -634,7 +634,7 @@ public partial class DiscordGuild
 								break;
 
 							case "permissions":
-								entryrol.PermissionChange = new PropertyChange<Permissions?>
+								entryrol.PermissionChange = new()
 								{
 									Before = xc.OldValue != null ? (Permissions?)long.Parse((string)xc.OldValue) : null,
 									After = xc.NewValue != null ? (Permissions?)long.Parse((string)xc.NewValue) : null
@@ -642,7 +642,7 @@ public partial class DiscordGuild
 								break;
 
 							case "position":
-								entryrol.PositionChange = new PropertyChange<int?>
+								entryrol.PositionChange = new()
 								{
 									Before = xc.OldValue != null ? (int?)(long)xc.OldValue : null,
 									After = xc.NewValue != null ? (int?)(long)xc.NewValue : null,
@@ -650,7 +650,7 @@ public partial class DiscordGuild
 								break;
 
 							case "mentionable":
-								entryrol.MentionableChange = new PropertyChange<bool?>
+								entryrol.MentionableChange = new()
 								{
 									Before = xc.OldValue != null ? (bool?)xc.OldValue : null,
 									After = xc.NewValue != null ? (bool?)xc.NewValue : null
@@ -658,7 +658,7 @@ public partial class DiscordGuild
 								break;
 
 							case "hoist":
-								entryrol.HoistChange = new PropertyChange<bool?>
+								entryrol.HoistChange = new()
 								{
 									Before = (bool?)xc.OldValue,
 									After = (bool?)xc.NewValue
@@ -666,7 +666,7 @@ public partial class DiscordGuild
 								break;
 
 							case "icon_hash":
-								entryrol.IconHashChange = new PropertyChange<string>
+								entryrol.IconHashChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
@@ -689,7 +689,7 @@ public partial class DiscordGuild
 					var inv = new DiscordInvite
 					{
 						Discord = this.Discord,
-						Guild = new DiscordInviteGuild
+						Guild = new()
 						{
 							Discord = this.Discord,
 							Id = this.Id,
@@ -707,7 +707,7 @@ public partial class DiscordGuild
 								p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t3);
 								p2 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t4);
 
-								entryinv.MaxAgeChange = new PropertyChange<int?>
+								entryinv.MaxAgeChange = new()
 								{
 									Before = p1 ? t3 : null,
 									After = p2 ? t4 : null
@@ -717,7 +717,7 @@ public partial class DiscordGuild
 							case "code":
 								inv.Code = xc.OldValueString ?? xc.NewValueString;
 
-								entryinv.CodeChange = new PropertyChange<string>
+								entryinv.CodeChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
@@ -725,7 +725,7 @@ public partial class DiscordGuild
 								break;
 
 							case "temporary":
-								entryinv.TemporaryChange = new PropertyChange<bool?>
+								entryinv.TemporaryChange = new()
 								{
 									Before = xc.OldValue != null ? (bool?)xc.OldValue : null,
 									After = xc.NewValue != null ? (bool?)xc.NewValue : null
@@ -736,10 +736,10 @@ public partial class DiscordGuild
 								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
 								p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
 
-								entryinv.InviterChange = new PropertyChange<DiscordMember>
+								entryinv.InviterChange = new()
 								{
-									Before = amd.TryGetValue(t1, out var propBeforeMember) ? propBeforeMember : new DiscordMember { Id = t1, Discord = this.Discord, GuildId = this.Id },
-									After = amd.TryGetValue(t2, out var propAfterMember) ? propAfterMember : new DiscordMember { Id = t1, Discord = this.Discord, GuildId = this.Id },
+									Before = amd.TryGetValue(t1, out var propBeforeMember) ? propBeforeMember : new() { Id = t1, Discord = this.Discord, GuildId = this.Id },
+									After = amd.TryGetValue(t2, out var propAfterMember) ? propAfterMember : new() { Id = t1, Discord = this.Discord, GuildId = this.Id },
 								};
 								break;
 
@@ -747,7 +747,7 @@ public partial class DiscordGuild
 								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
 								p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
 
-								entryinv.ChannelChange = new PropertyChange<DiscordChannel>
+								entryinv.ChannelChange = new()
 								{
 									Before = p1 ? this.GetChannel(t1) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id } : null,
 									After = p2 ? this.GetChannel(t2) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id } : null
@@ -755,7 +755,7 @@ public partial class DiscordGuild
 
 								var ch = entryinv.ChannelChange.Before ?? entryinv.ChannelChange.After;
 								var cht = ch?.Type;
-								inv.Channel = new DiscordInviteChannel
+								inv.Channel = new()
 								{
 									Discord = this.Discord,
 									Id = p1 ? t1 : t2,
@@ -768,7 +768,7 @@ public partial class DiscordGuild
 								p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t3);
 								p2 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t4);
 
-								entryinv.UsesChange = new PropertyChange<int?>
+								entryinv.UsesChange = new()
 								{
 									Before = p1 ? t3 : null,
 									After = p2 ? t4 : null
@@ -779,7 +779,7 @@ public partial class DiscordGuild
 								p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t3);
 								p2 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t4);
 
-								entryinv.MaxUsesChange = new PropertyChange<int?>
+								entryinv.MaxUsesChange = new()
 								{
 									Before = p1 ? t3 : null,
 									After = p2 ? t4 : null
@@ -803,7 +803,7 @@ public partial class DiscordGuild
 				case AuditLogActionType.WebhookUpdate:
 					entry = new DiscordAuditLogWebhookEntry
 					{
-						Target = ahd.TryGetValue(xac.TargetId.Value, out var webhook) ? webhook : new DiscordWebhook { Id = xac.TargetId.Value, Discord = this.Discord }
+						Target = ahd.TryGetValue(xac.TargetId.Value, out var webhook) ? webhook : new() { Id = xac.TargetId.Value, Discord = this.Discord }
 					};
 
 					var entrywhk = entry as DiscordAuditLogWebhookEntry;
@@ -815,7 +815,7 @@ public partial class DiscordGuild
 								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
 								p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
 
-								entrywhk.IdChange = new PropertyChange<ulong?>
+								entrywhk.IdChange = new()
 								{
 									Before = p1 ? t1 : null,
 									After = p2 ? t2 : null
@@ -823,7 +823,7 @@ public partial class DiscordGuild
 								break;
 
 							case "name":
-								entrywhk.NameChange = new PropertyChange<string>
+								entrywhk.NameChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
@@ -834,7 +834,7 @@ public partial class DiscordGuild
 								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
 								p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
 
-								entrywhk.ChannelChange = new PropertyChange<DiscordChannel>
+								entrywhk.ChannelChange = new()
 								{
 									Before = p1 ? this.GetChannel(t1) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id } : null,
 									After = p2 ? this.GetChannel(t2) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id } : null
@@ -845,7 +845,7 @@ public partial class DiscordGuild
 								p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t3);
 								p2 = int.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t4);
 
-								entrywhk.TypeChange = new PropertyChange<int?>
+								entrywhk.TypeChange = new()
 								{
 									Before = p1 ? t3 : null,
 									After = p2 ? t4 : null
@@ -853,7 +853,7 @@ public partial class DiscordGuild
 								break;
 
 							case "avatar_hash":
-								entrywhk.AvatarHashChange = new PropertyChange<string>
+								entrywhk.AvatarHashChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
@@ -873,7 +873,7 @@ public partial class DiscordGuild
 				case AuditLogActionType.EmojiUpdate:
 					entry = new DiscordAuditLogEmojiEntry
 					{
-						Target = this.EmojisInternal.TryGetValue(xac.TargetId.Value, out var target) ? target : new DiscordEmoji { Id = xac.TargetId.Value, Discord = this.Discord }
+						Target = this.EmojisInternal.TryGetValue(xac.TargetId.Value, out var target) ? target : new() { Id = xac.TargetId.Value, Discord = this.Discord }
 					};
 
 					var entryemo = entry as DiscordAuditLogEmojiEntry;
@@ -882,7 +882,7 @@ public partial class DiscordGuild
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "name":
-								entryemo.NameChange = new PropertyChange<string>
+								entryemo.NameChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
@@ -902,7 +902,7 @@ public partial class DiscordGuild
 				case AuditLogActionType.StageInstanceUpdate:
 					entry = new DiscordAuditLogStageEntry
 					{
-						Target = this.StageInstancesInternal.TryGetValue(xac.TargetId.Value, out var stage) ? stage : new DiscordStageInstance { Id = xac.TargetId.Value, Discord = this.Discord }
+						Target = this.StageInstancesInternal.TryGetValue(xac.TargetId.Value, out var stage) ? stage : new() { Id = xac.TargetId.Value, Discord = this.Discord }
 					};
 
 					var entrysta = entry as DiscordAuditLogStageEntry;
@@ -911,14 +911,14 @@ public partial class DiscordGuild
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "topic":
-								entrysta.TopicChange = new PropertyChange<string>
+								entrysta.TopicChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
 								};
 								break;
 							case "privacy_level":
-								entrysta.PrivacyLevelChange = new PropertyChange<StagePrivacyLevel?>
+								entrysta.PrivacyLevelChange = new()
 								{
 									Before = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5) ? (StagePrivacyLevel?)t5 : null,
 									After = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6) ? (StagePrivacyLevel?)t6 : null,
@@ -938,7 +938,7 @@ public partial class DiscordGuild
 				case AuditLogActionType.StickerUpdate:
 					entry = new DiscordAuditLogStickerEntry
 					{
-						Target = this.StickersInternal.TryGetValue(xac.TargetId.Value, out var sticker) ? sticker : new DiscordSticker { Id = xac.TargetId.Value, Discord = this.Discord }
+						Target = this.StickersInternal.TryGetValue(xac.TargetId.Value, out var sticker) ? sticker : new() { Id = xac.TargetId.Value, Discord = this.Discord }
 					};
 
 					var entrysti = entry as DiscordAuditLogStickerEntry;
@@ -947,49 +947,49 @@ public partial class DiscordGuild
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "name":
-								entrysti.NameChange = new PropertyChange<string>
+								entrysti.NameChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
 								};
 								break;
 							case "description":
-								entrysti.DescriptionChange = new PropertyChange<string>
+								entrysti.DescriptionChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
 								};
 								break;
 							case "tags":
-								entrysti.TagsChange = new PropertyChange<string>
+								entrysti.TagsChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
 								};
 								break;
 							case "guild_id":
-								entrysti.GuildIdChange = new PropertyChange<ulong?>
+								entrysti.GuildIdChange = new()
 								{
 									Before = ulong.TryParse(xc.OldValueString, out var ogid) ? ogid : null,
 									After = ulong.TryParse(xc.NewValueString, out var ngid) ? ngid : null
 								};
 								break;
 							case "available":
-								entrysti.AvailabilityChange = new PropertyChange<bool?>
+								entrysti.AvailabilityChange = new()
 								{
 									Before = (bool?)xc.OldValue,
 									After = (bool?)xc.NewValue,
 								};
 								break;
 							case "asset":
-								entrysti.AssetChange = new PropertyChange<string>
+								entrysti.AssetChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
 								};
 								break;
 							case "id":
-								entrysti.IdChange = new PropertyChange<ulong?>
+								entrysti.IdChange = new()
 								{
 									Before = ulong.TryParse(xc.OldValueString, out var oid) ? oid : null,
 									After = ulong.TryParse(xc.NewValueString, out var nid) ? nid : null
@@ -998,7 +998,7 @@ public partial class DiscordGuild
 							case "type":
 								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
 								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
-								entrysti.TypeChange = new PropertyChange<StickerType?>
+								entrysti.TypeChange = new()
 								{
 									Before = p1 ? (StickerType?)t5 : null,
 									After = p2 ? (StickerType?)t6 : null
@@ -1007,7 +1007,7 @@ public partial class DiscordGuild
 							case "format_type":
 								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
 								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
-								entrysti.FormatChange = new PropertyChange<StickerFormat?>
+								entrysti.FormatChange = new()
 								{
 									Before = p1 ? (StickerFormat?)t5 : null,
 									After = p2 ? (StickerFormat?)t6 : null
@@ -1043,7 +1043,7 @@ public partial class DiscordGuild
 							&& dc.MessageCache != null
 							&& dc.MessageCache.TryGet(xm => xm.Id == xac.TargetId.Value && xm.ChannelId == entrymsg.Channel.Id, out var msg)
 							? msg
-							: new DiscordMessage { Discord = this.Discord, Id = xac.TargetId.Value };
+							: new() { Discord = this.Discord, Id = xac.TargetId.Value };
 					}
 					break;
 				}
@@ -1125,28 +1125,28 @@ public partial class DiscordGuild
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "type":
-								integentry.Type = new PropertyChange<string>()
+								integentry.Type = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
 								};
 								break;
 							case "enable_emoticons":
-								integentry.EnableEmoticons = new PropertyChange<bool?>
+								integentry.EnableEmoticons = new()
 								{
 									Before = (bool?)xc.OldValue,
 									After = (bool?)xc.NewValue
 								};
 								break;
 							case "expire_behavior":
-								integentry.ExpireBehavior = new PropertyChange<int?>
+								integentry.ExpireBehavior = new()
 								{
 									Before = (int?)xc.OldValue,
 									After = (int?)xc.NewValue
 								};
 								break;
 							case "expire_grace_period":
-								integentry.ExpireBehavior = new PropertyChange<int?>
+								integentry.ExpireBehavior = new()
 								{
 									Before = (int?)xc.OldValue,
 									After = (int?)xc.NewValue
@@ -1166,7 +1166,7 @@ public partial class DiscordGuild
 				case AuditLogActionType.ThreadUpdate:
 					entry = new DiscordAuditLogThreadEntry
 					{
-						Target = this.ThreadsInternal.TryGetValue(xac.TargetId.Value, out var thread) ? thread : new DiscordThreadChannel { Id = xac.TargetId.Value, Discord = this.Discord }
+						Target = this.ThreadsInternal.TryGetValue(xac.TargetId.Value, out var thread) ? thread : new() { Id = xac.TargetId.Value, Discord = this.Discord }
 					};
 
 					var entrythr = entry as DiscordAuditLogThreadEntry;
@@ -1175,7 +1175,7 @@ public partial class DiscordGuild
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "name":
-								entrythr.NameChange = new PropertyChange<string>
+								entrythr.NameChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
@@ -1186,7 +1186,7 @@ public partial class DiscordGuild
 								p1 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
 								p2 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
 
-								entrythr.TypeChange = new PropertyChange<ChannelType?>
+								entrythr.TypeChange = new()
 								{
 									Before = p1 ? (ChannelType?)t1 : null,
 									After = p2 ? (ChannelType?)t2 : null
@@ -1194,7 +1194,7 @@ public partial class DiscordGuild
 								break;
 
 							case "archived":
-								entrythr.ArchivedChange = new PropertyChange<bool?>
+								entrythr.ArchivedChange = new()
 								{
 									Before = xc.OldValue != null ? (bool?)xc.OldValue : null,
 									After = xc.NewValue != null ? (bool?)xc.NewValue : null
@@ -1202,7 +1202,7 @@ public partial class DiscordGuild
 								break;
 
 							case "locked":
-								entrythr.LockedChange = new PropertyChange<bool?>
+								entrythr.LockedChange = new()
 								{
 									Before = xc.OldValue != null ? (bool?)xc.OldValue : null,
 									After = xc.NewValue != null ? (bool?)xc.NewValue : null
@@ -1210,7 +1210,7 @@ public partial class DiscordGuild
 								break;
 
 							case "invitable":
-								entrythr.InvitableChange = new PropertyChange<bool?>
+								entrythr.InvitableChange = new()
 								{
 									Before = xc.OldValue != null ? (bool?)xc.OldValue : null,
 									After = xc.NewValue != null ? (bool?)xc.NewValue : null
@@ -1221,7 +1221,7 @@ public partial class DiscordGuild
 								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
 								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
 
-								entrythr.AutoArchiveDurationChange = new PropertyChange<ThreadAutoArchiveDuration?>
+								entrythr.AutoArchiveDurationChange = new()
 								{
 									Before = p1 ? (ThreadAutoArchiveDuration?)t5 : null,
 									After = p2 ? (ThreadAutoArchiveDuration?)t6 : null
@@ -1229,7 +1229,7 @@ public partial class DiscordGuild
 								break;
 
 							case "rate_limit_per_user":
-								entrythr.PerUserRateLimitChange = new PropertyChange<int?>
+								entrythr.PerUserRateLimitChange = new()
 								{
 									Before = (int?)(long?)xc.OldValue,
 									After = (int?)(long?)xc.NewValue
@@ -1250,7 +1250,7 @@ public partial class DiscordGuild
 				case AuditLogActionType.GuildScheduledEventUpdate:
 					entry = new DiscordAuditLogGuildScheduledEventEntry
 					{
-						Target = this.ScheduledEventsInternal.TryGetValue(xac.TargetId.Value, out var scheduledEvent) ? scheduledEvent : new DiscordScheduledEvent { Id = xac.TargetId.Value, Discord = this.Discord }
+						Target = this.ScheduledEventsInternal.TryGetValue(xac.TargetId.Value, out var scheduledEvent) ? scheduledEvent : new() { Id = xac.TargetId.Value, Discord = this.Discord }
 					};
 
 					var entryse = entry as DiscordAuditLogGuildScheduledEventEntry;
@@ -1259,7 +1259,7 @@ public partial class DiscordGuild
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "channel_id":
-								entryse.ChannelIdChange = new PropertyChange<ulong?>
+								entryse.ChannelIdChange = new()
 								{
 									Before = ulong.TryParse(xc.OldValueString, out var ogid) ? ogid : null,
 									After = ulong.TryParse(xc.NewValueString, out var ngid) ? ngid : null
@@ -1267,7 +1267,7 @@ public partial class DiscordGuild
 								break;
 
 							case "name":
-								entryse.NameChange = new PropertyChange<string>
+								entryse.NameChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
@@ -1275,7 +1275,7 @@ public partial class DiscordGuild
 								break;
 
 							case "description":
-								entryse.DescriptionChange = new PropertyChange<string>
+								entryse.DescriptionChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
@@ -1283,7 +1283,7 @@ public partial class DiscordGuild
 								break;
 
 							case "location":
-								entryse.LocationChange = new PropertyChange<string>
+								entryse.LocationChange = new()
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
@@ -1294,7 +1294,7 @@ public partial class DiscordGuild
 								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
 								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
 
-								entryse.PrivacyLevelChange = new PropertyChange<ScheduledEventPrivacyLevel?>
+								entryse.PrivacyLevelChange = new()
 								{
 									Before = p1 ? (ScheduledEventPrivacyLevel?)t5 : null,
 									After = p2 ? (ScheduledEventPrivacyLevel?)t6 : null
@@ -1305,7 +1305,7 @@ public partial class DiscordGuild
 								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
 								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
 
-								entryse.EntityTypeChange = new PropertyChange<ScheduledEventEntityType?>
+								entryse.EntityTypeChange = new()
 								{
 									Before = p1 ? (ScheduledEventEntityType?)t5 : null,
 									After = p2 ? (ScheduledEventEntityType?)t6 : null
@@ -1316,7 +1316,7 @@ public partial class DiscordGuild
 								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
 								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
 
-								entryse.StatusChange = new PropertyChange<ScheduledEventStatus?>
+								entryse.StatusChange = new()
 								{
 									Before = p1 ? (ScheduledEventStatus?)t5 : null,
 									After = p2 ? (ScheduledEventStatus?)t6 : null

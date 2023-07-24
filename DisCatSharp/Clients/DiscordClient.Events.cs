@@ -161,6 +161,17 @@ public sealed partial class DiscordClient
 	}
 	private AsyncEvent<DiscordClient, ChannelPinsUpdateEventArgs> _channelPinsUpdated;
 
+	/// <summary>
+	/// Fired whenever a channel's topic is updated.
+	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, ChannelTopicUpdateEventArgs> ChannelTopicUpdated
+	{
+		add => this._channelTopicUpdated.Register(value);
+		remove => this._channelTopicUpdated.Unregister(value);
+	}
+	private AsyncEvent<DiscordClient, ChannelTopicUpdateEventArgs> _channelTopicUpdated;
+
 	#endregion
 
 	#region Guild
@@ -1033,7 +1044,7 @@ public sealed partial class DiscordClient
 		}
 
 		this.Logger.LogError(LoggerEvents.EventHandlerException, ex, "Event handler exception for event {0} thrown from {1} (defined in {2})", asyncEvent.Name, handler.Method, handler.Method.DeclaringType);
-		this._clientErrored.InvokeAsync(this, new ClientErrorEventArgs(this.ServiceProvider) { EventName = asyncEvent.Name, Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
+		this._clientErrored.InvokeAsync(this, new(this.ServiceProvider) { EventName = asyncEvent.Name, Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
 	}
 
 	/// <summary>

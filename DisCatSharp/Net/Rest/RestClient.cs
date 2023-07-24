@@ -27,7 +27,6 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -140,9 +139,9 @@ internal sealed class RestClient : IDisposable
 			Proxy = proxy
 		};
 
-		this.HttpClient = new HttpClient(httphandler)
+		this.HttpClient = new(httphandler)
 		{
-			BaseAddress = new Uri(Utilities.GetApiBaseUri(this._discord?.Configuration)),
+			BaseAddress = new(Utilities.GetApiBaseUri(this._discord?.Configuration)),
 			Timeout = timeout
 		};
 
@@ -156,11 +155,11 @@ internal sealed class RestClient : IDisposable
 				this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this._discord.Configuration.Override);
 		}
 
-		this._routesToHashes = new ConcurrentDictionary<string, string>();
-		this._hashesToBuckets = new ConcurrentDictionary<string, RateLimitBucket>();
-		this._requestQueue = new ConcurrentDictionary<string, int>();
+		this._routesToHashes = new();
+		this._hashesToBuckets = new();
+		this._requestQueue = new();
 
-		this._globalRateLimitEvent = new AsyncManualResetEvent(true);
+		this._globalRateLimitEvent = new(true);
 		this._useResetAfter = useRelativeRatelimit;
 	}
 
@@ -230,7 +229,7 @@ internal sealed class RestClient : IDisposable
 		if (!this._cleanerRunning)
 		{
 			this._cleanerRunning = true;
-			this._bucketCleanerTokenSource = new CancellationTokenSource();
+			this._bucketCleanerTokenSource = new();
 			this._cleanerTask = Task.Run(this.CleanupBucketsAsync, this._bucketCleanerTokenSource.Token);
 			this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task started.");
 		}
@@ -347,7 +346,7 @@ internal sealed class RestClient : IDisposable
 				case 400:
 				case 405:
 					ex = new BadRequestException(request, response);
-					senex = new Exception(ex.Message + "\nJson Response: " + (ex as BadRequestException).JsonMessage ?? "null", ex);
+					senex = new(ex.Message + "\nJson Response: " + (ex as BadRequestException).JsonMessage ?? "null", ex);
 					break;
 
 				case 401:
@@ -391,7 +390,7 @@ internal sealed class RestClient : IDisposable
 						{
 							if (this._discord is DiscordClient)
 							{
-								await (this._discord as DiscordClient)._rateLimitHit.InvokeAsync(this._discord as DiscordClient, new EventArgs.RateLimitExceptionEventArgs(this._discord.ServiceProvider)
+								await (this._discord as DiscordClient)._rateLimitHit.InvokeAsync(this._discord as DiscordClient, new(this._discord.ServiceProvider)
 								{
 									Exception = ex as RateLimitException,
 									ApiEndpoint = request.Url.AbsoluteUri
@@ -412,7 +411,7 @@ internal sealed class RestClient : IDisposable
 				case 503:
 				case 504:
 					ex = new ServerErrorException(request, response);
-					senex = new Exception(ex.Message + "\nJson Response: " + (ex as ServerErrorException).JsonMessage ?? "null", ex);
+					senex = new(ex.Message + "\nJson Response: " + (ex as ServerErrorException).JsonMessage ?? "null", ex);
 					break;
 			}
 
@@ -541,7 +540,7 @@ internal sealed class RestClient : IDisposable
 	/// <returns>A http request message.</returns>
 	private HttpRequestMessage BuildRequest(BaseRestRequest request)
 	{
-		var req = new HttpRequestMessage(new HttpMethod(request.Method.ToString()), request.Url);
+		var req = new HttpRequestMessage(new(request.Method.ToString()), request.Url);
 		if (request.Headers != null && request.Headers.Any())
 			foreach (var kvp in request.Headers)
 				req.Headers.Add(kvp.Key, kvp.Value);
@@ -551,7 +550,7 @@ internal sealed class RestClient : IDisposable
 			this._logger.LogTrace(LoggerEvents.RestTx, nmprequest.Payload);
 
 			req.Content = new StringContent(nmprequest.Payload);
-			req.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+			req.Content.Headers.ContentType = new("application/json");
 		}
 
 		if (request is MultipartWebRequest mprequest)
@@ -595,7 +594,7 @@ internal sealed class RestClient : IDisposable
 			var sc = new StreamContent(mpsrequest.File.Stream);
 
 			if (mpsrequest.File.ContentType != null)
-				sc.Headers.ContentType = new MediaTypeHeaderValue(mpsrequest.File.ContentType);
+				sc.Headers.ContentType = new(mpsrequest.File.ContentType);
 
 			var fileName = mpsrequest.File.Filename;
 
@@ -822,7 +821,7 @@ internal sealed class RestClient : IDisposable
 
 			foreach (var kvp in this._hashesToBuckets)
 			{
-				bucketIdStrBuilder ??= new StringBuilder();
+				bucketIdStrBuilder ??= new();
 
 				var key = kvp.Key;
 				var value = kvp.Value;

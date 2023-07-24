@@ -137,7 +137,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <param name="config">Configuration for this client.</param>
 	protected BaseDiscordClient(DiscordConfiguration config)
 	{
-		this.Configuration = new DiscordConfiguration(config);
+		this.Configuration = new(config);
 		this.ServiceProvider = config.ServiceProvider;
 		if (this.Configuration.CustomSentryDsn != null)
 			SentryDsn = this.Configuration.CustomSentryDsn;
@@ -235,7 +235,7 @@ public abstract class BaseDiscordClient : IDisposable
 			}
 
 		if (this.Configuration.EnableSentry)
-			this.Sentry = new SentryClient(new SentryOptions()
+			this.Sentry = new(new()
 			{
 				DetectStartupTime = StartupTimeDetectionMode.Fast,
 				DiagnosticLevel = SentryLevel.Debug,
@@ -283,10 +283,10 @@ public abstract class BaseDiscordClient : IDisposable
 
 		this.Logger ??= this.Configuration.LoggerFactory!.CreateLogger<BaseDiscordClient>();
 
-		this.ApiClient = new DiscordApiClient(this);
-		this.UserCache = new ConcurrentDictionary<ulong, DiscordUser>();
-		this.InternalVoiceRegions = new ConcurrentDictionary<string, DiscordVoiceRegion>();
-		this.VoiceRegionsLazy = new Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>>(() => new ReadOnlyDictionary<string, DiscordVoiceRegion>(this.InternalVoiceRegions));
+		this.ApiClient = new(this);
+		this.UserCache = new();
+		this.InternalVoiceRegions = new();
+		this.VoiceRegionsLazy = new(() => new ReadOnlyDictionary<string, DiscordVoiceRegion>(this.InternalVoiceRegions));
 
 		this.RestClient = new();
 		this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
@@ -343,16 +343,16 @@ public abstract class BaseDiscordClient : IDisposable
 
 		if (tapp.Team == null)
 		{
-			app.Owners = new List<DiscordUser>(new[] { new DiscordUser(tapp.Owner) });
+			app.Owners = new(new[] { new DiscordUser(tapp.Owner) });
 			app.Team = null;
 			app.TeamName = null;
 		}
 		else
 		{
-			app.Team = new DiscordTeam(tapp.Team);
+			app.Team = new(tapp.Team);
 
 			var members = tapp.Team.Members
-				.Select(x => new DiscordTeamMember(x) { TeamId = app.Team.Id, TeamName = app.Team.Name, User = new DiscordUser(x.User) })
+				.Select(x => new DiscordTeamMember(x) { TeamId = app.Team.Id, TeamName = app.Team.Name, User = new(x.User) })
 				.ToArray();
 
 			var owners = members
@@ -360,7 +360,7 @@ public abstract class BaseDiscordClient : IDisposable
 				.Select(x => x.User)
 				.ToArray();
 
-			app.Owners = new List<DiscordUser>(owners);
+			app.Owners = new(owners);
 			app.Team.Owner = owners.FirstOrDefault(x => x.Id == tapp.Team.OwnerId);
 			app.Team.Members = new List<DiscordTeamMember>(members);
 			app.TeamName = app.Team.Name;
@@ -441,7 +441,7 @@ public abstract class BaseDiscordClient : IDisposable
 		}
 
 		if (this.Configuration.EnableSentry && this.Configuration.AttachUserInfo)
-			SentrySdk.ConfigureScope(x => x.User = new User()
+			SentrySdk.ConfigureScope(x => x.User = new()
 			{
 				Id = this.CurrentUser.Id.ToString(),
 				Username = this.CurrentUser.UsernameWithDiscriminator,
@@ -508,7 +508,7 @@ public abstract class BaseDiscordClient : IDisposable
 		if (this.UserCache.TryGetValue(userId, out user))
 			return true;
 
-		user = new DiscordUser { Id = userId, Discord = this };
+		user = new() { Id = userId, Discord = this };
 		return false;
 	}
 

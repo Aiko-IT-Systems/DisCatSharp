@@ -138,7 +138,7 @@ public sealed class DiscordEmbedBuilder
 		this.Timestamp = original.Timestamp;
 
 		if (original.Thumbnail != null)
-			this.Thumbnail = new EmbedThumbnail
+			this.Thumbnail = new()
 			{
 				Url = original.Thumbnail.Url?.ToString(),
 				Height = original.Thumbnail.Height,
@@ -146,7 +146,7 @@ public sealed class DiscordEmbedBuilder
 			};
 
 		if (original.Author != null)
-			this.Author = new EmbedAuthor
+			this.Author = new()
 			{
 				IconUrl = original.Author.IconUrl?.ToString(),
 				Name = original.Author.Name,
@@ -154,7 +154,7 @@ public sealed class DiscordEmbedBuilder
 			};
 
 		if (original.Footer != null)
-			this.Footer = new EmbedFooter
+			this.Footer = new()
 			{
 				IconUrl = original.Footer.IconUrl?.ToString(),
 				Text = original.Footer.Text
@@ -273,7 +273,7 @@ public sealed class DiscordEmbedBuilder
 	/// <returns>This embed builder.</returns>
 	public DiscordEmbedBuilder WithImageUrl(Uri url)
 	{
-		this._imageUri = new DiscordUri(url);
+		this._imageUri = new(url);
 		return this;
 	}
 
@@ -286,7 +286,7 @@ public sealed class DiscordEmbedBuilder
 	/// <returns>This embed builder.</returns>
 	public DiscordEmbedBuilder WithThumbnail(string url, int height = 0, int width = 0)
 	{
-		this.Thumbnail = new EmbedThumbnail
+		this.Thumbnail = new()
 		{
 			Url = url,
 			Height = height,
@@ -305,9 +305,9 @@ public sealed class DiscordEmbedBuilder
 	/// <returns>This embed builder.</returns>
 	public DiscordEmbedBuilder WithThumbnail(Uri url, int height = 0, int width = 0)
 	{
-		this.Thumbnail = new EmbedThumbnail
+		this.Thumbnail = new()
 		{
-			Uri = new DiscordUri(url),
+			Uri = new(url),
 			Height = height,
 			Width = width
 		};
@@ -471,14 +471,14 @@ public sealed class DiscordEmbedBuilder
 		};
 
 		if (this.Footer != null)
-			embed.Footer = new DiscordEmbedFooter
+			embed.Footer = new()
 			{
 				Text = this.Footer.Text,
 				IconUrl = this.Footer.IconUri
 			};
 
 		if (this.Author != null)
-			embed.Author = new DiscordEmbedAuthor
+			embed.Author = new()
 			{
 				Name = this.Author.Name,
 				Url = this.Author.Uri,
@@ -486,9 +486,9 @@ public sealed class DiscordEmbedBuilder
 			};
 
 		if (this._imageUri != null)
-			embed.Image = new DiscordEmbedImage { Url = this._imageUri };
+			embed.Image = new() { Url = this._imageUri };
 		if (this.Thumbnail != null)
-			embed.Thumbnail = new DiscordEmbedThumbnail
+			embed.Thumbnail = new()
 			{
 				Url = this.Thumbnail.Uri,
 				Height = this.Thumbnail.Height,

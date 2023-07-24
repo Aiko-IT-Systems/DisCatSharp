@@ -237,6 +237,6 @@ public sealed class DiscordInteraction : SnowflakeObject
 		=> this.Discord.ApiClient.DeleteFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
 
 	internal DiscordInteraction()
-		: base(new List<string>() { "member", "guild_id", "entitlement_sku_ids", "channel_id", "channel" })
+		: base(new() { "member", "guild_id", "entitlement_sku_ids", "channel_id", "channel" })
 	{ }
 }

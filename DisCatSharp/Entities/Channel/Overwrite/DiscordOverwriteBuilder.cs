@@ -207,7 +207,7 @@ public static class DiscordOverwriteBuilderExtensions
 		var newList = builderList.ToList();
 
 		if (!newList.Any(x => x.Target == target && x.Type == type))
-			newList.Add(new DiscordOverwriteBuilder() { Type = type, Target = target });
+			newList.Add(new() { Type = type, Target = target });
 
 		var discordOverwriteBuilder = newList.First(x => x.Target == target && x.Type == type);
 		discordOverwriteBuilder.Allow(allowed);

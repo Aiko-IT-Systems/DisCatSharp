@@ -243,8 +243,8 @@ public sealed class DiscordActivity
 		this.SessionId = other.SessionId;
 		this.SyncId = other.SyncId;
 		this.Platform = other.Platform;
-		this.RichPresence = new DiscordRichPresence(other.RichPresence);
-		this.CustomStatus = new DiscordCustomStatus(other.CustomStatus);
+		this.RichPresence = new(other.RichPresence);
+		this.CustomStatus = new(other.CustomStatus);
 	}
 
 	/// <summary>

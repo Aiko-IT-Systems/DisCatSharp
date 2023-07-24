@@ -52,7 +52,7 @@ internal class AsyncManualResetEvent
 	/// <param name="initialState">If true, initial state.</param>
 	public AsyncManualResetEvent(bool initialState)
 	{
-		this._tsc = new TaskCompletionSource<bool>();
+		this._tsc = new();
 
 		if (initialState) this._tsc.TrySetResult(true);
 	}
@@ -76,7 +76,7 @@ internal class AsyncManualResetEvent
 		{
 			var tsc = this._tsc;
 
-			if (!tsc.Task.IsCompleted || Interlocked.CompareExchange(ref this._tsc, new TaskCompletionSource<bool>(), tsc) == tsc)
+			if (!tsc.Task.IsCompleted || Interlocked.CompareExchange(ref this._tsc, new(), tsc) == tsc)
 				return;
 		}
 	}

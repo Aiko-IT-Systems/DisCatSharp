@@ -95,7 +95,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// </summary>
 	internal DiscordEmoji()
 	{
-		this._rolesLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this.RolesInternal));
+		this._rolesLazy = new(() => new ReadOnlyCollection<ulong>(this.RolesInternal));
 	}
 
 	/// <summary>
@@ -230,7 +230,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 		if (!s_unicodeEmojis.TryGetValue(discordName, out unicodeEntity))
 			return false;
 
-		emoji = new DiscordEmoji { Name = unicodeEntity, Discord = client };
+		emoji = new() { Name = unicodeEntity, Discord = client };
 		return true;
 	}
 
@@ -303,7 +303,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 			throw new ArgumentNullException(nameof(name), "Name cannot be empty or null.");
 
 		if (s_unicodeEmojis.TryGetValue(name, out var unicodeEntity))
-			return new DiscordEmoji { Discord = client, Name = unicodeEntity };
+			return new() { Discord = client, Name = unicodeEntity };
 
 		if (includeGuilds)
 		{
@@ -351,7 +351,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 
 		if (s_unicodeEmojis.TryGetValue(name, out var unicodeEntity))
 		{
-			emoji = new DiscordEmoji { Discord = client, Name = unicodeEntity };
+			emoji = new() { Discord = client, Name = unicodeEntity };
 			return true;
 		}
 

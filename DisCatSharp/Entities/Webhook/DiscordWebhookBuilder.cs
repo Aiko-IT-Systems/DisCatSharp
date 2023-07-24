@@ -287,9 +287,9 @@ public sealed class DiscordWebhookBuilder
 			throw new ArgumentException("A File with that filename already exists");
 
 		if (resetStreamPosition)
-			this._files.Add(new DiscordMessageFile(filename, data, data.Position, description: description));
+			this._files.Add(new(filename, data, data.Position, description: description));
 		else
-			this._files.Add(new DiscordMessageFile(filename, data, null, description: description));
+			this._files.Add(new(filename, data, null, description: description));
 
 		return this;
 	}
@@ -310,9 +310,9 @@ public sealed class DiscordWebhookBuilder
 			throw new ArgumentException("A File with that filename already exists");
 
 		if (resetStreamPosition)
-			this._files.Add(new DiscordMessageFile(stream.Name, stream, stream.Position, description: description));
+			this._files.Add(new(stream.Name, stream, stream.Position, description: description));
 		else
-			this._files.Add(new DiscordMessageFile(stream.Name, stream, null, description: description));
+			this._files.Add(new(stream.Name, stream, null, description: description));
 
 		return this;
 	}
@@ -333,9 +333,9 @@ public sealed class DiscordWebhookBuilder
 				throw new ArgumentException("A File with that filename already exists");
 
 			if (resetStreamPosition)
-				this._files.Add(new DiscordMessageFile(file.Key, file.Value, file.Value.Position));
+				this._files.Add(new(file.Key, file.Value, file.Value.Position));
 			else
-				this._files.Add(new DiscordMessageFile(file.Key, file.Value, null));
+				this._files.Add(new(file.Key, file.Value, null));
 		}
 
 

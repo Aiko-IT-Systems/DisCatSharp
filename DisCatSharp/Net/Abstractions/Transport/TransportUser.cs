@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-
 using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
@@ -168,7 +166,7 @@ internal class TransportUser : ObservableApiObject
 	/// Initializes a new instance of the <see cref="TransportUser"/> class.
 	/// </summary>
 	internal TransportUser()
-		: base(new List<string>() { "display_name", "linked_users", "banner_color" })
+		: base(new() { "display_name", "linked_users", "banner_color" })
 	{ }
 
 	/// <summary>

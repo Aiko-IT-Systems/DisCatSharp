@@ -330,9 +330,9 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Initializes a new instance of the <see cref="DiscordChannel"/> class.
 	/// </summary>
 	internal DiscordChannel()
-		: base(new List<string>() { "hashes", "guild_hashes" })
+		: base(new() { "hashes", "guild_hashes" })
 	{
-		this._permissionOverwritesLazy = new Lazy<IReadOnlyList<DiscordOverwrite>>(() => new ReadOnlyCollection<DiscordOverwrite>(this.PermissionOverwritesInternal));
+		this._permissionOverwritesLazy = new(() => new ReadOnlyCollection<DiscordOverwrite>(this.PermissionOverwritesInternal));
 	}
 
 	/// <summary>
@@ -341,7 +341,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	internal DiscordChannel(List<string>? ignored = null)
 		: base(ignored)
 	{
-		this._permissionOverwritesLazy = new Lazy<IReadOnlyList<DiscordOverwrite>>(() => new ReadOnlyCollection<DiscordOverwrite>(this.PermissionOverwritesInternal));
+		this._permissionOverwritesLazy = new(() => new ReadOnlyCollection<DiscordOverwrite>(this.PermissionOverwritesInternal));
 	}
 
 	#region Methods
@@ -448,7 +448,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 
 		var ovrs = new List<DiscordOverwriteBuilder>();
 		foreach (var ovr in this.PermissionOverwritesInternal)
-			ovrs.Add(new DiscordOverwriteBuilder(ovr));
+			ovrs.Add(new(ovr));
 
 		var bitrate = this.Bitrate;
 		var userLimit = this.UserLimit;
@@ -1191,7 +1191,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> this.Type != ChannelType.Forum ? throw new NotSupportedException("Channel needs to be type of Forum") :
 		this.AvailableTags.Count == 20 ?
 		throw new NotSupportedException("Cannot have more than 20 tags in a forum channel.") :
-		await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, Optional.None, Optional.None, null, Optional.None, this.InternalAvailableTags.Append(new ForumPostTag()
+		await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, Optional.None, Optional.None, null, Optional.None, this.InternalAvailableTags.Append(new()
 		{
 			Name = name,
 			EmojiId = emoji != null && emoji.Id != 0 ? emoji.Id : null,

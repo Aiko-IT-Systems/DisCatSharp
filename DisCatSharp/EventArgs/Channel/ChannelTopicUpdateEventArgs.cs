@@ -20,48 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-using System.Linq;
+using System;
 
-using DisCatSharp.Enums;
+using DisCatSharp.Entities;
 
-using Newtonsoft.Json;
-
-namespace DisCatSharp.Entities;
+namespace DisCatSharp.EventArgs;
 
 /// <summary>
-/// Represents a row of components. Action rows can have up to five components.
+/// Represents arguments for <see cref="DiscordClient.ChannelTopicUpdated"/> event.
 /// </summary>
-public sealed class DiscordActionRowComponent : DiscordComponent
+public class ChannelTopicUpdateEventArgs : DiscordEventArgs
 {
 	/// <summary>
-	/// The components contained within the action row.
+	/// Gets the guild in which the update occurred.
 	/// </summary>
-	[JsonIgnore]
-	public IReadOnlyCollection<DiscordComponent> Components
-	{
-		get => this._components ?? new List<DiscordComponent>();
-		set => this._components = new(value);
-	}
-
-	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	private List<DiscordComponent> _components;
+	public DiscordGuild Guild { get; internal set; }
 
 	/// <summary>
-	/// Constructs a new <see cref="DiscordActionRowComponent"/>.
+	/// Gets the channel in which the update occurred.
 	/// </summary>
-	/// <param name="components">List of components</param>
-	public DiscordActionRowComponent(IEnumerable<DiscordComponent> components)
-		: this()
-	{
-		this.Components = components.ToList().AsReadOnly();
-	}
+	public DiscordChannel Channel { get; internal set; }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordActionRowComponent"/> class.
+	/// Gets the new topic.
 	/// </summary>
-	internal DiscordActionRowComponent()
-	{
-		this.Type = ComponentType.ActionRow;
-	}
+	public string? Topic { get; internal set; }
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="ChannelTopicUpdateEventArgs"/> class.
+	/// </summary>
+	internal ChannelTopicUpdateEventArgs(IServiceProvider provider) : base(provider) { }
 }

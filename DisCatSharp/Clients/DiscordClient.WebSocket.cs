@@ -119,13 +119,13 @@ public sealed partial class DiscordClient
 
 		if (!this.Presences.ContainsKey(this.CurrentUser.Id))
 		{
-			this.PresencesInternal[this.CurrentUser.Id] = new DiscordPresence
+			this.PresencesInternal[this.CurrentUser.Id] = new()
 			{
 				Discord = this,
-				RawActivity = new TransportActivity(),
-				Activity = new DiscordActivity(),
+				RawActivity = new(),
+				Activity = new(),
 				Status = UserStatus.Online,
-				InternalUser = new UserWithIdOnly()
+				InternalUser = new()
 				{
 					Id = this.CurrentUser.Id
 				}
@@ -134,8 +134,8 @@ public sealed partial class DiscordClient
 		else
 		{
 			var pr = this.PresencesInternal[this.CurrentUser.Id];
-			pr.RawActivity = new TransportActivity();
-			pr.Activity = new DiscordActivity();
+			pr.RawActivity = new();
+			pr.Activity = new();
 			pr.Status = UserStatus.Online;
 		}
 
@@ -146,7 +146,7 @@ public sealed partial class DiscordClient
 			? new PayloadDecompressor(this.Configuration.GatewayCompressionLevel)
 			: null;
 
-		this._cancelTokenSource = new CancellationTokenSource();
+		this._cancelTokenSource = new();
 		this._cancelToken = this._cancelTokenSource.Token;
 
 		this.WebSocketClient.Connected += SocketOnConnect;
@@ -180,7 +180,7 @@ public sealed partial class DiscordClient
 			else if (e is SocketBinaryMessageEventArgs ebin)
 			{
 				using var ms = new MemoryStream();
-				if (!this._payloadDecompressor.TryDecompress(new ArraySegment<byte>(ebin.Message), ms))
+				if (!this._payloadDecompressor.TryDecompress(new(ebin.Message), ms))
 				{
 					this.Logger.LogError(LoggerEvents.WebSocketReceiveFailure, "Payload decompression failed");
 					return;
@@ -415,14 +415,14 @@ public sealed partial class DiscordClient
 	internal async Task InternalUpdateStatusAsync(DiscordActivity activity, UserStatus? userStatus, DateTimeOffset? idleSince)
 	{
 		if (activity != null && activity.Name != null && activity.Name.Length > 128)
-			throw new Exception("Game name can't be longer than 128 characters!");
+			throw new("Game name can't be longer than 128 characters!");
 
 		var sinceUnix = idleSince != null ? (long?)Utilities.GetUnixTime(idleSince.Value) : null;
 		var act = activity ?? new DiscordActivity();
 
 		var status = new StatusUpdate
 		{
-			Activity = new TransportActivity(act),
+			Activity = new(act),
 			IdleSince = sinceUnix,
 			IsAfk = idleSince != null,
 			Status = userStatus ?? UserStatus.Online
@@ -442,12 +442,12 @@ public sealed partial class DiscordClient
 
 		if (!this.PresencesInternal.ContainsKey(this.CurrentUser.Id))
 		{
-			this.PresencesInternal[this.CurrentUser.Id] = new DiscordPresence
+			this.PresencesInternal[this.CurrentUser.Id] = new()
 			{
 				Discord = this,
 				Activity = act,
 				Status = userStatus ?? UserStatus.Online,
-				InternalUser = new UserWithIdOnly { Id = this.CurrentUser.Id }
+				InternalUser = new() { Id = this.CurrentUser.Id }
 			};
 		}
 		else
@@ -518,7 +518,7 @@ public sealed partial class DiscordClient
 			Token = Utilities.GetFormattedToken(this),
 			Compress = this.Configuration.GatewayCompressionLevel == GatewayCompressionLevel.Payload,
 			LargeThreshold = this.Configuration.LargeThreshold,
-			ShardInfo = new ShardInfo
+			ShardInfo = new()
 			{
 				ShardId = this.Configuration.ShardId,
 				ShardCount = this.Configuration.ShardCount
@@ -555,7 +555,7 @@ public sealed partial class DiscordClient
 			Data = resume
 		};
 		var resumestr = JsonConvert.SerializeObject(resumePayload);
-		this.GatewayUri = new Uri(this._resumeGatewayUrl);
+		this.GatewayUri = new(this._resumeGatewayUrl);
 		this.Logger.LogDebug(LoggerEvents.ConnectionClose, "Request to resume via {gw}", this.GatewayUri.AbsoluteUri);
 		await this.WsSendAsync(resumestr).ConfigureAwait(false);
 	}
@@ -567,7 +567,7 @@ public sealed partial class DiscordClient
 	{
 		var info = await this.GetGatewayInfoAsync().ConfigureAwait(false);
 		this.GatewayInfo = info;
-		this.GatewayUri = new Uri(info.Url);
+		this.GatewayUri = new(info.Url);
 	}
 
 	/// <summary>
@@ -589,7 +589,7 @@ public sealed partial class DiscordClient
 	/// </summary>
 	/// <returns>The added socket lock.</returns>
 	private SocketLock GetSocketLock()
-		=> s_socketLocks.GetOrAdd(this.CurrentApplication.Id, appId => new SocketLock(appId, this.GatewayInfo.SessionBucket.MaxConcurrency));
+		=> s_socketLocks.GetOrAdd(this.CurrentApplication.Id, appId => new(appId, this.GatewayInfo.SessionBucket.MaxConcurrency));
 
 	#endregion
 }

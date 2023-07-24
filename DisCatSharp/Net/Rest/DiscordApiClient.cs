@@ -42,8 +42,6 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-using static System.Net.Mime.MediaTypeNames;
-
 namespace DisCatSharp.Net;
 
 /// <summary>
@@ -73,7 +71,7 @@ public sealed class DiscordApiClient
 	internal DiscordApiClient(BaseDiscordClient client)
 	{
 		this.Discord = client;
-		this.Rest = new RestClient(client);
+		this.Rest = new(client);
 	}
 
 	/// <summary>
@@ -85,7 +83,7 @@ public sealed class DiscordApiClient
 	/// <param name="logger">The logger.</param>
 	internal DiscordApiClient(IWebProxy proxy, TimeSpan timeout, bool useRelativeRateLimit, ILogger logger) // This is for meta-clients, such as the webhook client
 	{
-		this.Rest = new RestClient(proxy, timeout, useRelativeRateLimit, logger);
+		this.Rest = new(proxy, timeout, useRelativeRateLimit, logger);
 	}
 
 	/// <summary>
@@ -160,19 +158,19 @@ public sealed class DiscordApiClient
 		//If this is a webhook, it shouldn't be in the user cache.
 		if (author.IsBot && int.Parse(author.Discriminator) == 0)
 		{
-			ret.Author = new DiscordUser(author) { Discord = this.Discord };
+			ret.Author = new(author) { Discord = this.Discord };
 		}
 		else
 		{
 			if (!this.Discord.UserCache.TryGetValue(author.Id, out var usr))
 			{
-				this.Discord.UserCache[author.Id] = usr = new DiscordUser(author) { Discord = this.Discord };
+				this.Discord.UserCache[author.Id] = usr = new(author) { Discord = this.Discord };
 			}
 
 			if (guild != null)
 			{
 				if (!guild.Members.TryGetValue(author.Id, out var mbr))
-					mbr = new DiscordMember(usr) { Discord = this.Discord, GuildId = guild.Id };
+					mbr = new(usr) { Discord = this.Discord, GuildId = guild.Id };
 				ret.Author = mbr;
 			}
 			else
@@ -183,7 +181,7 @@ public sealed class DiscordApiClient
 
 		ret.PopulateMentions();
 
-		ret.ReactionsInternal ??= new List<DiscordReaction>();
+		ret.ReactionsInternal ??= new();
 		foreach (var xr in ret.ReactionsInternal)
 			xr.Emoji.Discord = this.Discord;
 	}
@@ -335,7 +333,7 @@ public sealed class DiscordApiClient
 				return old;
 			});
 
-			mbrs.Add(new DiscordMember(xtm) { Discord = this.Discord, GuildId = guildId });
+			mbrs.Add(new(xtm) { Discord = this.Discord, GuildId = guildId });
 		}
 
 		return mbrs;
@@ -734,7 +732,7 @@ public sealed class DiscordApiClient
 		{
 			if (!this.Discord.TryGetCachedUserInternal(xb.RawUser.Id, out var usr))
 			{
-				usr = new DiscordUser(xb.RawUser) { Discord = this.Discord };
+				usr = new(xb.RawUser) { Discord = this.Discord };
 				usr = this.Discord.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
 				{
 					old.Username = usr.Username;
@@ -1953,7 +1951,7 @@ public sealed class DiscordApiClient
 		List<DiscordRestOverwrite> restoverwrites = null;
 		if (permissionOverwrites != null)
 		{
-			restoverwrites = new List<DiscordRestOverwrite>();
+			restoverwrites = new();
 			foreach (var ow in permissionOverwrites)
 				restoverwrites.Add(ow.Build());
 		}
@@ -2016,7 +2014,7 @@ public sealed class DiscordApiClient
 		List<DiscordRestOverwrite> restoverwrites = null;
 		if (permissionOverwrites != null)
 		{
-			restoverwrites = new List<DiscordRestOverwrite>();
+			restoverwrites = new();
 			foreach (var ow in permissionOverwrites)
 				restoverwrites.Add(ow.Build());
 		}
@@ -2060,7 +2058,7 @@ public sealed class DiscordApiClient
 		List<DiscordRestOverwrite> restoverwrites = null;
 		if (permissionOverwrites != null)
 		{
-			restoverwrites = new List<DiscordRestOverwrite>();
+			restoverwrites = new();
 			foreach (var ow in permissionOverwrites)
 				restoverwrites.Add(ow.Build());
 		}
@@ -2200,7 +2198,7 @@ public sealed class DiscordApiClient
 			pld.MessageReference = new InternalDiscordMessageReference { MessageId = replyMessageId, FailIfNotExists = failOnInvalidReply };
 
 		if (replyMessageId != null)
-			pld.Mentions = new DiscordMentions(Mentions.All, true, mentionReply);
+			pld.Mentions = new(Mentions.All, true, mentionReply);
 
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {channel_id = channelId }, out var path);
@@ -2242,7 +2240,7 @@ public sealed class DiscordApiClient
 		if (builder.ReplyId != null)
 			pld.MessageReference = new InternalDiscordMessageReference { MessageId = builder.ReplyId, FailIfNotExists = builder.FailOnInvalidReply };
 
-		pld.Mentions = new DiscordMentions(builder.Mentions ?? Mentions.All, builder.Mentions?.Any() ?? false, builder.MentionOnReply);
+		pld.Mentions = new(builder.Mentions ?? Mentions.All, builder.Mentions?.Any() ?? false, builder.MentionOnReply);
 
 		if (builder.Files.Count == 0)
 		{
@@ -2937,13 +2935,13 @@ public sealed class DiscordApiClient
 
 		var duser = DiscordJson.DeserializeObject<DiscordUser>(res.Response, this.Discord);
 		if (this.Discord.Configuration.Intents.HasIntent(DiscordIntents.GuildPresences) && duser.Presence == null && this.Discord is DiscordClient dc)
-			dc.PresencesInternal[duser.Id] = new DiscordPresence
+			dc.PresencesInternal[duser.Id] = new()
 			{
 				Discord = dc,
-				RawActivity = new TransportActivity(),
-				Activity = new DiscordActivity(),
+				RawActivity = new(),
+				Activity = new(),
 				Status = UserStatus.Offline,
-				InternalUser = new UserWithIdOnly { Id = duser.Id }
+				InternalUser = new() { Id = duser.Id }
 			};
 		return duser;
 	}
@@ -2974,15 +2972,15 @@ public sealed class DiscordApiClient
 		});
 
 		if (this.Discord.Configuration.Intents.HasIntent(DiscordIntents.GuildPresences) && usr.Presence == null && this.Discord is DiscordClient dc)
-			dc.PresencesInternal[usr.Id] = new DiscordPresence
+			dc.PresencesInternal[usr.Id] = new()
 			{
 				Discord = dc,
-				RawActivity = new TransportActivity(),
-				Activity = new DiscordActivity(),
+				RawActivity = new(),
+				Activity = new(),
 				Status = UserStatus.Offline
 			};
 
-		return new DiscordMember(tm)
+		return new(tm)
 		{
 			Discord = this.Discord,
 			GuildId = guildId
@@ -3648,7 +3646,7 @@ public sealed class DiscordApiClient
 		var pld = new List<RestApplicationRoleConnectionMetadataPayload>();
 		foreach (var metadataObject in metadataObjects)
 		{
-			pld.Add(new RestApplicationRoleConnectionMetadataPayload
+			pld.Add(new()
 			{
 				Type = metadataObject.Type,
 				Key = metadataObject.Key,
@@ -3932,7 +3930,7 @@ public sealed class DiscordApiClient
 		};
 
 		if (builder.Mentions != null)
-			pld.Mentions = new DiscordMentions(builder.Mentions, builder.Mentions.Any());
+			pld.Mentions = new(builder.Mentions, builder.Mentions.Any());
 
 		if (builder.Files?.Count > 0)
 		{
@@ -4371,7 +4369,7 @@ public sealed class DiscordApiClient
 		if (isForum)
 		{
 
-			pld.Message = new RestChannelMessageCreatePayload
+			pld.Message = new()
 			{
 				Content = builder.Content,
 				Attachments = builder.Attachments,
@@ -5049,7 +5047,7 @@ public sealed class DiscordApiClient
 		var pld = new List<RestApplicationCommandCreatePayload>();
 		foreach (var command in commands)
 		{
-			pld.Add(new RestApplicationCommandCreatePayload
+			pld.Add(new()
 			{
 				Type = command.Type,
 				Name = command.Name,
@@ -5214,7 +5212,7 @@ public sealed class DiscordApiClient
 		var pld = new List<RestApplicationCommandCreatePayload>();
 		foreach (var command in commands)
 		{
-			pld.Add(new RestApplicationCommandCreatePayload
+			pld.Add(new()
 			{
 				Type = command.Type,
 				Name = command.Name,
@@ -5390,7 +5388,7 @@ public sealed class DiscordApiClient
 			} : null;
 
 
-			pld = new RestInteractionResponsePayload
+			pld = new()
 			{
 				Type = type,
 				Data = data
@@ -5420,10 +5418,10 @@ public sealed class DiscordApiClient
 		}
 		else
 		{
-			pld = new RestInteractionResponsePayload
+			pld = new()
 			{
 				Type = type,
-				Data = new DiscordInteractionApplicationCommandCallbackData
+				Data = new()
 				{
 					Content = null,
 					Embeds = null,
@@ -5474,7 +5472,7 @@ public sealed class DiscordApiClient
 		var pld = new RestInteractionModalResponsePayload
 		{
 			Type = type,
-			Data = new DiscordInteractionApplicationCommandModalCallbackData
+			Data = new()
 			{
 				Title = builder.Title,
 				CustomId = builder.CustomId,
@@ -5575,7 +5573,7 @@ public sealed class DiscordApiClient
 		}
 
 		if (builder.Mentions != null)
-			pld.Mentions = new DiscordMentions(builder.Mentions, builder.Mentions.Any());
+			pld.Mentions = new(builder.Mentions, builder.Mentions.Any());
 
 		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts == true || builder.Mentions != null || builder.Files?.Count > 0 || builder.Components?.Count > 0)
 			values["payload_json"] = DiscordJson.SerializeObject(pld);

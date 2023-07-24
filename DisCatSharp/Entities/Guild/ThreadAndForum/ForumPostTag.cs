@@ -109,7 +109,7 @@ public class ForumPostTag : NullableSnowflakeObject, IEquatable<ForumPostTag>
 	{
 		var mdl = new ForumPostTagEditModel();
 		action(mdl);
-		var res = await this.Discord.ApiClient.ModifyForumChannelAsync(this.ChannelId, null, null, null, null, null, null, this.Channel.InternalAvailableTags.Where(x => x.Id != this.Id).ToList().Append(new ForumPostTag()
+		var res = await this.Discord.ApiClient.ModifyForumChannelAsync(this.ChannelId, null, null, null, null, null, null, this.Channel.InternalAvailableTags.Where(x => x.Id != this.Id).ToList().Append(new()
 		{
 			Id = this.Id,
 			Discord = this.Discord,
