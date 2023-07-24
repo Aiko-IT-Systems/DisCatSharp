@@ -50,6 +50,7 @@ public class DiscordThreadResult : ObservableApiObject
 	/// <summary>
 	/// Whether there are more results.
 	/// </summary>
+	[JsonProperty("has_more")]
 	public bool HasMore { get; internal set; }
 
 	/// <summary>

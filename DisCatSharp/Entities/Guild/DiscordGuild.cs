@@ -207,7 +207,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets the channel where system messages (such as boost and welcome messages) are sent.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordChannel SystemChannel => this.SystemChannelId.HasValue
+	public DiscordChannel SystemChannel
+		=> this.SystemChannelId.HasValue
 		? this.GetChannel(this.SystemChannelId.Value)
 		: null;
 
@@ -233,7 +234,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets the widget channel for this guild.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordChannel WidgetChannel => this.WidgetChannelId.HasValue
+	public DiscordChannel WidgetChannel
+		=> this.WidgetChannelId.HasValue
 		? this.GetChannel(this.WidgetChannelId.Value)
 		: null;
 
@@ -247,7 +249,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets the safety alert channel for this guild.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordChannel SafetyAltersChannel => this.SafetyAlertsChannelId.HasValue
+	public DiscordChannel SafetyAltersChannel
+		=> this.SafetyAlertsChannelId.HasValue
 		? this.GetChannel(this.SafetyAlertsChannelId.Value)
 		: null;
 
@@ -262,7 +265,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <para>This is only available if the guild is considered "discoverable".</para>
 	/// </summary>
 	[JsonIgnore]
-	public DiscordChannel RulesChannel => this.RulesChannelId.HasValue
+	public DiscordChannel RulesChannel
+		=> this.RulesChannelId.HasValue
 		? this.GetChannel(this.RulesChannelId.Value)
 		: null;
 
@@ -277,7 +281,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <para>This is only available if the guild is considered "discoverable".</para>
 	/// </summary>
 	[JsonIgnore]
-	public DiscordChannel PublicUpdatesChannel => this.PublicUpdatesChannelId.HasValue
+	public DiscordChannel PublicUpdatesChannel
+		=> this.PublicUpdatesChannelId.HasValue
 		? this.GetChannel(this.PublicUpdatesChannelId.Value)
 		: null;
 
@@ -291,7 +296,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets a collection of this guild's roles.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyDictionary<ulong, DiscordRole> Roles => new ReadOnlyConcurrentDictionary<ulong, DiscordRole>(this.RolesInternal);
+	public IReadOnlyDictionary<ulong, DiscordRole> Roles
+		=> new ReadOnlyConcurrentDictionary<ulong, DiscordRole>(this.RolesInternal);
 
 	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
 	[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
@@ -301,7 +307,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets a collection of this guild's stickers.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyDictionary<ulong, DiscordSticker> Stickers => new ReadOnlyConcurrentDictionary<ulong, DiscordSticker>(this.StickersInternal);
+	public IReadOnlyDictionary<ulong, DiscordSticker> Stickers
+		=> new ReadOnlyConcurrentDictionary<ulong, DiscordSticker>(this.StickersInternal);
 
 	[JsonProperty("stickers", NullValueHandling = NullValueHandling.Ignore)]
 	[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
@@ -311,7 +318,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets a collection of this guild's emojis.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyDictionary<ulong, DiscordEmoji> Emojis => new ReadOnlyConcurrentDictionary<ulong, DiscordEmoji>(this.EmojisInternal);
+	public IReadOnlyDictionary<ulong, DiscordEmoji> Emojis
+		=> new ReadOnlyConcurrentDictionary<ulong, DiscordEmoji>(this.EmojisInternal);
 
 	[JsonProperty("emojis", NullValueHandling = NullValueHandling.Ignore)]
 	[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
@@ -563,6 +571,36 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	[JsonProperty("hub_type", NullValueHandling = NullValueHandling.Ignore)]
 	public HubType HubType { get; internal set; }
+
+	/// <summary>
+	/// Gets the latest onboarding question id.
+	/// </summary>
+	[JsonProperty("latest_onboarding_question_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? LatestOnboardingQuestionId { get; internal set; }
+
+	/// <summary>
+	/// Gets the guild incidents data.
+	/// </summary>
+	[JsonProperty("incidents_data", NullValueHandling = NullValueHandling.Ignore)]
+	public object? IncidentsData { get; internal set; }
+
+	/// <summary>
+	/// Gets the guild inventory settings.
+	/// </summary>
+	[JsonProperty("inventory_settings", NullValueHandling = NullValueHandling.Ignore)]
+	public object? InventorySettings { get; internal set; }
+
+	[JsonProperty("embed_enabled")]
+	public bool EmbedEnabled { get; internal set; }
+
+	[JsonProperty("embed_channel_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? EmbedChannelId { get; internal set; }
+
+	[JsonIgnore]
+	public DiscordChannel? EmbedChannel
+		=> this.EmbedChannelId.HasValue
+			? this.GetChannel(this.EmbedChannelId.Value)
+			: null;
 
 	/// <summary>
 	/// Gets a dictionary of all by position ordered channels associated with this guild. The dictionary's key is the channel ID.

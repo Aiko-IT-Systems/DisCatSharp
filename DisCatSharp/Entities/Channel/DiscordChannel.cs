@@ -99,6 +99,22 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public ChannelFlags Flags { get; internal set; }
 
 	/// <summary>
+	/// Gets the icon emoji for this channel.
+	/// Only visible and configurable on mobile with the new layout.
+	/// </summary>
+	[JsonProperty("icon_emoji")]
+	public DiscordEmoji IconEmoji { get; internal set; }
+
+	/// <summary>
+	/// Gets the theme color for this channel.
+	/// Only visible and configurable on mobile with the new layout.
+	/// </summary>
+	[JsonProperty("theme_color")]
+	public DiscordColor ThemeColor { get; internal set; }
+
+	// TODO: Voice channel statuses aka topic.
+
+	/// <summary>
 	/// Gets the maximum available position to move the channel to.
 	/// This can contain outdated information.
 	/// </summary>
