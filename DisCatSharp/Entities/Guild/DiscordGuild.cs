@@ -29,6 +29,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
@@ -581,14 +582,14 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <summary>
 	/// Gets the guild incidents data.
 	/// </summary>
-	[JsonProperty("incidents_data", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("incidents_data", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
 	public object? IncidentsData { get; internal set; }
 
 	/// <summary>
 	/// Gets the guild inventory settings.
 	/// </summary>
-	[JsonProperty("inventory_settings", NullValueHandling = NullValueHandling.Ignore)]
-	public object? InventorySettings { get; internal set; }
+	[JsonProperty("inventory_settings", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
+	public DiscordGuildInventorySettings? InventorySettings { get; internal set; }
 
 	[JsonProperty("embed_enabled")]
 	public bool EmbedEnabled { get; internal set; }
@@ -771,7 +772,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="UnauthorizedException">Thrown when the current user is not the guilds owner.</exception>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task EnableMfaAsync(string reason = null)
+	public Task EnableMfaAsync(string? reason = null)
 		=> this.IsOwner ? this.Discord.ApiClient.EnableGuildMfaAsync(this.Id, reason) : throw new Exception("The current user does not own the guild.");
 
 	/// <summary>
@@ -782,7 +783,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 
-	public Task DisableMfaAsync(string reason = null)
+	public Task DisableMfaAsync(string? reason = null)
 		=> this.IsOwner ? this.Discord.ApiClient.DisableGuildMfaAsync(this.Id, reason) : throw new Exception("The current user does not own the guild.");
 
 	/// <summary>
@@ -841,7 +842,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordGuild> ModifyCommunitySettingsAsync(bool enabled, DiscordChannel rulesChannel, DiscordChannel publicUpdatesChannel, string preferredLocale = "en-US", string description = null, DefaultMessageNotifications defaultMessageNotifications = DefaultMessageNotifications.MentionsOnly, string reason = null)
+	public async Task<DiscordGuild> ModifyCommunitySettingsAsync(bool enabled, DiscordChannel rulesChannel, DiscordChannel publicUpdatesChannel, string preferredLocale = "en-US", string description = null, DefaultMessageNotifications defaultMessageNotifications = DefaultMessageNotifications.MentionsOnly, string? reason = null)
 	{
 		var verificationLevel = this.VerificationLevel;
 		if (this.VerificationLevel != VerificationLevel.Highest)
@@ -875,6 +876,10 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		return await this.Discord.ApiClient.ModifyGuildCommunitySettingsAsync(this.Id, features, rulesChannelId, publicUpdatesChannelId, preferredLocale, description, defaultMessageNotifications, explicitContentFilter, verificationLevel, reason).ConfigureAwait(false);
 	}
 
+	[DiscordInExperiment]
+	public async Task<DiscordGuild> ModifyInventorySettingsAsync(bool enabled, string? reason = null)
+		=> await this.Discord.ApiClient.ModifyGuildInventorySettingsAsync(this.Id, enabled, reason);
+
 	/// <summary>
 	/// Modifies the safety alerts settings async.
 	/// </summary>
@@ -885,7 +890,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordGuild> ModifySafetyAlertsSettingsAsync(bool enabled, DiscordChannel safetyAlertsChannel, string reason = null)
+	public async Task<DiscordGuild> ModifySafetyAlertsSettingsAsync(bool enabled, DiscordChannel safetyAlertsChannel, string? reason = null)
 	{
 		static Optional<ulong?> ChannelToId(DiscordChannel ch, string name)
 			=> ch == null ? null :
@@ -918,7 +923,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordGuild> EnableInvitesAsync(string reason = null)
+	public async Task<DiscordGuild> EnableInvitesAsync(string? reason = null)
 	{
 		List<string> features = new();
 		var rfeatures = this.RawFeatures.ToList();
@@ -938,7 +943,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordGuild> DisableInvitesAsync(string reason = null)
+	public async Task<DiscordGuild> DisableInvitesAsync(string? reason = null)
 	{
 		List<string> features = new();
 		var rfeatures = this.RawFeatures.ToList();
@@ -959,7 +964,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task TimeoutAsync(ulong memberId, DateTimeOffset until, string reason = null)
+	public Task TimeoutAsync(ulong memberId, DateTimeOffset until, string? reason = null)
 		=> until.Subtract(DateTimeOffset.UtcNow).Days > 28
 			? throw new ArgumentException("Timeout can not be longer than 28 days")
 			: this.Discord.ApiClient.ModifyTimeoutAsync(this.Id, memberId, until, reason);
@@ -974,7 +979,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task TimeoutAsync(ulong memberId, TimeSpan until, string reason = null)
+	public Task TimeoutAsync(ulong memberId, TimeSpan until, string? reason = null)
 		=> this.TimeoutAsync(memberId, DateTimeOffset.UtcNow + until, reason);
 
 	/// <summary>
@@ -987,7 +992,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task TimeoutAsync(ulong memberId, DateTime until, string reason = null)
+	public Task TimeoutAsync(ulong memberId, DateTime until, string? reason = null)
 		=> this.TimeoutAsync(memberId, until.ToUniversalTime() - DateTime.UtcNow, reason);
 
 	/// <summary>
@@ -999,7 +1004,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task RemoveTimeoutAsync(ulong memberId, string reason = null)
+	public Task RemoveTimeoutAsync(ulong memberId, string? reason = null)
 		=> this.Discord.ApiClient.ModifyTimeoutAsync(this.Id, memberId, null, reason);
 
 	/// <summary>
@@ -1012,7 +1017,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task BanMemberAsync(DiscordMember member, int deleteMessageDays = 0, string reason = null)
+	public Task BanMemberAsync(DiscordMember member, int deleteMessageDays = 0, string? reason = null)
 		=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, member.Id, deleteMessageDays, reason);
 
 	/// <summary>
@@ -1025,7 +1030,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task BanMemberAsync(DiscordUser user, int deleteMessageDays = 0, string reason = null)
+	public Task BanMemberAsync(DiscordUser user, int deleteMessageDays = 0, string? reason = null)
 		=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, user.Id, deleteMessageDays, reason);
 
 	/// <summary>
@@ -1050,7 +1055,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task UnbanMemberAsync(DiscordUser user, string reason = null)
+	public Task UnbanMemberAsync(DiscordUser user, string? reason = null)
 		=> this.Discord.ApiClient.RemoveGuildBanAsync(this.Id, user.Id, reason);
 
 	/// <summary>
@@ -1062,7 +1067,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task UnbanMemberAsync(ulong userId, string reason = null)
+	public Task UnbanMemberAsync(ulong userId, string? reason = null)
 		=> this.Discord.ApiClient.RemoveGuildBanAsync(this.Id, userId, reason);
 
 	/// <summary>
@@ -2267,5 +2272,4 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <returns>Whether the two guilds are not equal.</returns>
 	public static bool operator !=(DiscordGuild e1, DiscordGuild e2)
 		=> !(e1 == e2);
-
 }

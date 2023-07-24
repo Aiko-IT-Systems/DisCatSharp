@@ -476,7 +476,7 @@ public sealed class DiscordApiClient
 		Optional<int> afkTimeout, Optional<string> iconb64, Optional<ulong> ownerId, Optional<string> splashb64,
 		Optional<ulong?> systemChannelId, Optional<SystemChannelFlags> systemChannelFlags,
 		Optional<ulong?> publicUpdatesChannelId, Optional<ulong?> rulesChannelId, Optional<string> description,
-		Optional<string> bannerb64, Optional<string> discoverySplashb64, Optional<string> homeHeaderb64, Optional<string> preferredLocale, Optional<bool> premiumProgressBarEnabled, string reason)
+		Optional<string> bannerb64, Optional<string> discoverySplashb64, Optional<string> homeHeaderb64, Optional<string> preferredLocale, Optional<bool> premiumProgressBarEnabled, string? reason)
 	{
 		var pld = new RestGuildModifyPayload
 		{
@@ -538,7 +538,7 @@ public sealed class DiscordApiClient
 	/// <param name="explicitContentFilter">The explicit content filter.</param>
 	/// <param name="verificationLevel">The verification level.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordGuild> ModifyGuildCommunitySettingsAsync(ulong guildId, List<string> features, Optional<ulong?> rulesChannelId, Optional<ulong?> publicUpdatesChannelId, string preferredLocale, string description, DefaultMessageNotifications defaultMessageNotifications, ExplicitContentFilter explicitContentFilter, VerificationLevel verificationLevel, string reason)
+	internal async Task<DiscordGuild> ModifyGuildCommunitySettingsAsync(ulong guildId, List<string> features, Optional<ulong?> rulesChannelId, Optional<ulong?> publicUpdatesChannelId, string preferredLocale, string description, DefaultMessageNotifications defaultMessageNotifications, ExplicitContentFilter explicitContentFilter, VerificationLevel verificationLevel, string? reason)
 	{
 		var pld = new RestGuildCommunityModifyPayload
 		{
@@ -573,6 +573,27 @@ public sealed class DiscordApiClient
 		return guild;
 	}
 
+	internal async Task<DiscordGuild> ModifyGuildInventorySettingsAsync(ulong guildId, bool isEmojiPackCollectible, string? reason)
+	{
+		var pld = new RestGuildInventoryModifyPayload
+		{
+			IsEmojiPackCollectible = isEmojiPackCollectible
+		};
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.INVENTORY}{Endpoints.SETTINGS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		this.Discord.Guilds[guildId].InventorySettings = new() { IsEmojiPackCollectible = isEmojiPackCollectible };
+		return this.Discord.Guilds[guildId];
+	}
+
 	/// <summary>
 	/// Modifies the guild safety settings.
 	/// </summary>
@@ -580,7 +601,7 @@ public sealed class DiscordApiClient
 	/// <param name="features">The guild features.</param>
 	/// <param name="safetyAlertsChannelId">The safety alerts channel id.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordGuild> ModifyGuildSafetyAlertsSettingsAsync(ulong guildId, List<string> features, Optional<ulong?> safetyAlertsChannelId, string reason)
+	internal async Task<DiscordGuild> ModifyGuildSafetyAlertsSettingsAsync(ulong guildId, List<string> features, Optional<ulong?> safetyAlertsChannelId, string? reason)
 	{
 		var pld = new RestGuildSafetyModifyPayload
 		{
@@ -616,7 +637,7 @@ public sealed class DiscordApiClient
 	/// <param name="features">The guild features.</param>
 	/// <param name="reason">The reason.</param>
 	/// <returns></returns>
-	internal async Task<DiscordGuild> ModifyGuildFeaturesAsync(ulong guildId, List<string> features, string reason)
+	internal async Task<DiscordGuild> ModifyGuildFeaturesAsync(ulong guildId, List<string> features, string? reason)
 	{
 		var pld = new RestGuildFeatureModifyPayload
 		{
@@ -649,7 +670,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task EnableGuildMfaAsync(ulong guildId, string reason)
+	internal async Task EnableGuildMfaAsync(ulong guildId, string? reason)
 	{
 		var pld = new RestGuildMfaLevelModifyPayload
 		{
@@ -672,7 +693,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task DisableGuildMfaAsync(ulong guildId, string reason)
+	internal async Task DisableGuildMfaAsync(ulong guildId, string? reason)
 	{
 		var pld = new RestGuildMfaLevelModifyPayload
 		{
@@ -739,7 +760,7 @@ public sealed class DiscordApiClient
 	/// <param name="userId">The user_id.</param>
 	/// <param name="deleteMessageDays">The delete_message_days.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task CreateGuildBanAsync(ulong guildId, ulong userId, int deleteMessageDays, string reason)
+	internal Task CreateGuildBanAsync(ulong guildId, ulong userId, int deleteMessageDays, string? reason)
 	{
 		if (deleteMessageDays < 0 || deleteMessageDays > 7)
 			throw new ArgumentException("Delete message days must be a number between 0 and 7.", nameof(deleteMessageDays));
@@ -766,7 +787,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="userId">The user_id.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task RemoveGuildBanAsync(ulong guildId, ulong userId, string reason)
+	internal Task RemoveGuildBanAsync(ulong guildId, ulong userId, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
