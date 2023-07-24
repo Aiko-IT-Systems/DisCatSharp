@@ -338,6 +338,17 @@ internal sealed class RestGuildCommunityModifyPayload : ObservableApiObject
 	[JsonProperty("features", NullValueHandling = NullValueHandling.Ignore)]
 	public List<string> Features { get; set; }
 }
+/// <summary>
+/// Represents guild inventory settings.
+/// </summary>
+internal sealed class RestGuildInventoryModifyPayload : ObservableApiObject
+{
+	/// <summary>
+	/// Gets or sets whether anyone is allowed to use and collect this guild's emojis.
+	/// </summary>
+	[JsonProperty("is_emoji_pack_collectible")]
+	public bool IsEmojiPackCollectible { get; set; }
+}
 
 /// <summary>
 /// Represents a guild member add payload.
