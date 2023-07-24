@@ -65,7 +65,7 @@ public static class Utilities
 	/// </summary>
 	static Utilities()
 	{
-		PermissionStrings = new Dictionary<Permissions, string>();
+		PermissionStrings = new();
 		var t = typeof(Permissions);
 		var ti = t.GetTypeInfo();
 		var vals = Enum.GetValues(t).Cast<Permissions>();

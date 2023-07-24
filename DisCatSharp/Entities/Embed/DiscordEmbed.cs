@@ -121,6 +121,6 @@ public sealed class DiscordEmbed : ObservableApiObject
 	/// </summary>
 	internal DiscordEmbed()
 	{
-		this._colorLazy = new Lazy<Optional<DiscordColor>>(() => this.ColorInternal.Map<DiscordColor>(c => c));
+		this._colorLazy = new(() => this.ColorInternal.Map<DiscordColor>(c => c));
 	}
 }

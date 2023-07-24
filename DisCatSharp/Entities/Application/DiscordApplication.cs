@@ -431,11 +431,11 @@ public sealed class DiscordSpotifyAsset : DiscordAsset
 	/// </summary>
 	public DiscordSpotifyAsset()
 	{
-		this._url = new Lazy<Uri>(() =>
+		this._url = new(() =>
 		{
 			var ids = this.Id.Split(':');
 			var id = ids[1];
-			return new Uri($"https://i.scdn.co/image/{id}");
+			return new($"https://i.scdn.co/image/{id}");
 		});
 	}
 }

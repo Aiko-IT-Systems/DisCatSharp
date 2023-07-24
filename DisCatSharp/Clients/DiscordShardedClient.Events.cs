@@ -157,6 +157,17 @@ public sealed partial class DiscordShardedClient
 	}
 	private AsyncEvent<DiscordClient, ChannelPinsUpdateEventArgs> _channelPinsUpdated;
 
+	/// <summary>
+	/// Fired whenever a channel's topic is updated.
+	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, ChannelTopicUpdateEventArgs> ChannelTopicUpdated
+	{
+		add => this._channelTopicUpdated.Register(value);
+		remove => this._channelTopicUpdated.Unregister(value);
+	}
+	private AsyncEvent<DiscordClient, ChannelTopicUpdateEventArgs> _channelTopicUpdated;
+
 	#endregion
 
 	#region Guild
@@ -1016,7 +1027,7 @@ public sealed partial class DiscordShardedClient
 		}
 
 		this.Logger.LogError(LoggerEvents.EventHandlerException, ex, "Event handler exception for event {0} thrown from {1} (defined in {2})", asyncEvent.Name, handler.Method, handler.Method.DeclaringType);
-		this._clientErrored.InvokeAsync(sender, new ClientErrorEventArgs(this.ShardClients[0].ServiceProvider) { EventName = asyncEvent.Name, Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
+		this._clientErrored.InvokeAsync(sender, new(this.ShardClients[0].ServiceProvider) { EventName = asyncEvent.Name, Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
 	}
 
 
@@ -1729,6 +1740,14 @@ public sealed partial class DiscordShardedClient
 	/// <param name="e">The event args.</param>
 	private Task Client_GuildAuditLogEntryCreated(DiscordClient client, GuildAuditLogEntryCreateEventArgs e)
 		=> this._guildAuditLogEntryCreated.InvokeAsync(client, e);
+
+	/// <summary>
+	/// Handles the channel topic updated event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_ChannelTopicUpdated(DiscordClient client, ChannelTopicUpdateEventArgs e)
+		=> this._channelTopicUpdated.InvokeAsync(client, e);
 
 	#endregion
 }

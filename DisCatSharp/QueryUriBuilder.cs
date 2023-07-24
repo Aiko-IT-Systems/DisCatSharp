@@ -51,7 +51,7 @@ internal class QueryUriBuilder
 		if (uri == null)
 			throw new ArgumentNullException(nameof(uri));
 
-		this.SourceUri = new Uri(uri);
+		this.SourceUri = new(uri);
 	}
 
 	/// <summary>
@@ -73,7 +73,7 @@ internal class QueryUriBuilder
 	/// <param name="value">The value to be added.</param>
 	public QueryUriBuilder AddParameter(string key, string value)
 	{
-		this._queryParams.Add(new KeyValuePair<string, string>(key, value));
+		this._queryParams.Add(new(key, value));
 		return this;
 	}
 

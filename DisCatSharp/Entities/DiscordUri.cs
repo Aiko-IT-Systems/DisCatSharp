@@ -129,7 +129,7 @@ public class DiscordUri
 				? throw new JsonReaderException("DiscordUri value invalid format! This is a bug in DisCatSharp. " +
 											  $"Include the type in your bug report: [[{reader.TokenType}]]")
 				: IsStandard(s)
-				? new DiscordUri(new Uri(s))
+				? new(new Uri(s))
 				: new DiscordUri(s);
 		}
 

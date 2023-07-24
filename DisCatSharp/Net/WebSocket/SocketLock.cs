@@ -73,7 +73,7 @@ internal sealed class SocketLock : IDisposable
 		this.ApplicationId = appId;
 		this._timeoutCancelSource = null;
 		this._maxConcurrency = maxConcurrency;
-		this._lockSemaphore = new SemaphoreSlim(maxConcurrency);
+		this._lockSemaphore = new(maxConcurrency);
 	}
 
 	/// <summary>
@@ -83,7 +83,7 @@ internal sealed class SocketLock : IDisposable
 	{
 		await this._lockSemaphore.WaitAsync().ConfigureAwait(false);
 
-		this._timeoutCancelSource = new CancellationTokenSource();
+		this._timeoutCancelSource = new();
 		this._unlockTask = Task.Delay(TimeSpan.FromSeconds(30), this.TIMEOUT_CANCEL);
 		_ = this._unlockTask.ContinueWith(this.InternalUnlock, TaskContinuationOptions.NotOnCanceled);
 	}

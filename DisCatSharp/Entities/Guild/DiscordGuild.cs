@@ -640,12 +640,12 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 		Dictionary<ulong, List<DiscordChannel>> orderedChannels = new()
 		{
-			{ 0, new List<DiscordChannel>() }
+			{ 0, new() }
 		};
 
 		foreach (var channel in rawChannels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
 		{
-			orderedChannels.Add(channel.Id, new List<DiscordChannel>());
+			orderedChannels.Add(channel.Id, new());
 		}
 
 		foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Text || c.Type == ChannelType.News || c.Type == ChannelType.Forum)).OrderBy(c => c.Position))
@@ -682,12 +682,12 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 		Dictionary<ulong, List<DiscordChannel>> orderedChannels = new()
 		{
-			{ 0, new List<DiscordChannel>() }
+			{ 0, new() }
 		};
 
 		foreach (var channel in rawChannels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
 		{
-			orderedChannels.Add(channel.Id, new List<DiscordChannel>());
+			orderedChannels.Add(channel.Id, new());
 		}
 
 		foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Text || c.Type == ChannelType.News || c.Type == ChannelType.Forum)).OrderBy(c => c.Position))
@@ -722,8 +722,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	internal DiscordGuild()
 	{
-		this._currentMemberLazy = new Lazy<DiscordMember>(() => this.MembersInternal != null && this.MembersInternal.TryGetValue(this.Discord.CurrentUser.Id, out var member) ? member : null);
-		this.Invites = new ConcurrentDictionary<string, DiscordInvite>();
+		this._currentMemberLazy = new(() => this.MembersInternal != null && this.MembersInternal.TryGetValue(this.Discord.CurrentUser.Id, out var member) ? member : null);
+		this.Invites = new();
 		this.Threads = new ReadOnlyConcurrentDictionary<ulong, DiscordThreadChannel>(this.ThreadsInternal);
 		this.StageInstances = new ReadOnlyConcurrentDictionary<ulong, DiscordStageInstance>(this.StageInstancesInternal);
 		this.ScheduledEvents = new ReadOnlyConcurrentDictionary<ulong, DiscordScheduledEvent>(this.ScheduledEventsInternal);
@@ -773,7 +773,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task EnableMfaAsync(string? reason = null)
-		=> this.IsOwner ? this.Discord.ApiClient.EnableGuildMfaAsync(this.Id, reason) : throw new Exception("The current user does not own the guild.");
+		=> this.IsOwner ? this.Discord.ApiClient.EnableGuildMfaAsync(this.Id, reason) : throw new("The current user does not own the guild.");
 
 	/// <summary>
 	/// Disables the mfa requirement for this guild.
@@ -784,7 +784,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 
 	public Task DisableMfaAsync(string? reason = null)
-		=> this.IsOwner ? this.Discord.ApiClient.DisableGuildMfaAsync(this.Id, reason) : throw new Exception("The current user does not own the guild.");
+		=> this.IsOwner ? this.Discord.ApiClient.DisableGuildMfaAsync(this.Id, reason) : throw new("The current user does not own the guild.");
 
 	/// <summary>
 	/// Modifies this guild.
@@ -1218,7 +1218,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public async Task<DiscordScheduledEvent> CreateExternalScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset scheduledEndTime, string location, string description = null, Optional<Stream> coverImage = default, string reason = null)
 	{
 		var coverb64 = ImageTool.Base64FromStream(coverImage);
-		return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, new DiscordScheduledEventEntityMetadata(location), name, scheduledStartTime, scheduledEndTime, description, ScheduledEventEntityType.External, coverb64, reason);
+		return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, new(location), name, scheduledStartTime, scheduledEndTime, description, ScheduledEventEntityType.External, coverb64, reason);
 	}
 
 
@@ -1964,7 +1964,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 			? throw new ArgumentOutOfRangeException(nameof(name), "Sticker name needs to be between 2 and 30 characters long.")
 			: description.Length < 1 || description.Length > 100
 			? throw new ArgumentOutOfRangeException(nameof(description), "Sticker description needs to be between 1 and 100 characters long.")
-			: this.Discord.ApiClient.CreateGuildStickerAsync(this.Id, name, description, emoji.GetDiscordName().Replace(":", ""), new DiscordMessageFile("sticker", file, null, fileExt, contentType), reason);
+			: this.Discord.ApiClient.CreateGuildStickerAsync(this.Id, name, description, emoji.GetDiscordName().Replace(":", ""), new("sticker", file, null, fileExt, contentType), reason);
 	}
 
 	/// <summary>

@@ -151,7 +151,7 @@ public class DiscordVoiceState : ObservableApiObject
 	/// </summary>
 	[JsonIgnore]
 	public DiscordMember Member
-		=> this.Guild.Members.TryGetValue(this.TransportMember.User.Id, out var member) ? member : new DiscordMember(this.TransportMember) { Discord = this.Discord };
+		=> this.Guild.Members.TryGetValue(this.TransportMember.User.Id, out var member) ? member : new(this.TransportMember) { Discord = this.Discord };
 
 	/// <summary>
 	/// Gets the transport member.

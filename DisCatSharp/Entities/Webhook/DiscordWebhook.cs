@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -113,7 +112,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// Initializes a new instance of the <see cref="DiscordWebhook"/> class.
 	/// </summary>
 	internal DiscordWebhook()
-		: base(new List<string>() { "type" })
+		: base(new() { "type" })
 	{ }
 
 	/// <summary>

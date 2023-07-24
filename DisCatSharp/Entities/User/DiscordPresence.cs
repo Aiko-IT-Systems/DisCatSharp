@@ -109,7 +109,7 @@ public sealed class DiscordPresence : ObservableApiObject
 	/// </summary>
 	// TODO: Add broadcast field
 	internal DiscordPresence()
-		: base(new List<string>() { "broadcast" })
+		: base(new() { "broadcast" })
 	{ }
 
 	/// <summary>
@@ -117,7 +117,7 @@ public sealed class DiscordPresence : ObservableApiObject
 	/// </summary>
 	/// <param name="other">The other.</param>
 	internal DiscordPresence(DiscordPresence other)
-		: base(new List<string>() { "broadcast" })
+		: base(new() { "broadcast" })
 	{
 		this.Discord = other.Discord;
 		this.Activity = other.Activity;

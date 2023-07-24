@@ -26,8 +26,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-using static System.Net.WebRequestMethods;
-
 namespace DisCatSharp.Entities;
 
 /// <summary>
@@ -261,7 +259,7 @@ public sealed class DiscordMessageBuilder
 		if (this.Mentions != null)
 			this.Mentions.Add(allowedMention);
 		else
-			this.Mentions = new List<IMention> { allowedMention };
+			this.Mentions = new() { allowedMention };
 
 		return this;
 	}
@@ -298,9 +296,9 @@ public sealed class DiscordMessageBuilder
 			throw new ArgumentException("A File with that filename already exists");
 
 		if (resetStreamPosition)
-			this.FilesInternal.Add(new DiscordMessageFile(fileName, stream, stream.Position, description: description));
+			this.FilesInternal.Add(new(fileName, stream, stream.Position, description: description));
 		else
-			this.FilesInternal.Add(new DiscordMessageFile(fileName, stream, null, description: description));
+			this.FilesInternal.Add(new(fileName, stream, null, description: description));
 
 		return this;
 	}
@@ -321,9 +319,9 @@ public sealed class DiscordMessageBuilder
 			throw new ArgumentException("A File with that filename already exists");
 
 		if (resetStreamPosition)
-			this.FilesInternal.Add(new DiscordMessageFile(stream.Name, stream, stream.Position, description: description));
+			this.FilesInternal.Add(new(stream.Name, stream, stream.Position, description: description));
 		else
-			this.FilesInternal.Add(new DiscordMessageFile(stream.Name, stream, null, description: description));
+			this.FilesInternal.Add(new(stream.Name, stream, null, description: description));
 
 		return this;
 	}
@@ -345,9 +343,9 @@ public sealed class DiscordMessageBuilder
 				throw new ArgumentException("A File with that filename already exists");
 
 			if (resetStreamPosition)
-				this.FilesInternal.Add(new DiscordMessageFile(file.Key, file.Value, file.Value.Position));
+				this.FilesInternal.Add(new(file.Key, file.Value, file.Value.Position));
 			else
-				this.FilesInternal.Add(new DiscordMessageFile(file.Key, file.Value, null));
+				this.FilesInternal.Add(new(file.Key, file.Value, null));
 		}
 
 		return this;
@@ -401,7 +399,7 @@ public sealed class DiscordMessageBuilder
 
 		if (mention)
 		{
-			this.Mentions ??= new List<IMention>();
+			this.Mentions ??= new();
 			this.Mentions.Add(new RepliedUserMention());
 		}
 

@@ -146,7 +146,7 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 		ApplicationCommandType type = ApplicationCommandType.ChatInput,
 		DiscordApplicationCommandLocalization? nameLocalizations = null, DiscordApplicationCommandLocalization? descriptionLocalizations = null,
 		Permissions? defaultMemberPermissions = null, bool? dmPermission = null, bool isNsfw = false)//, ApplicationCommandContexts contexts = null)
-		: base(new List<string>() { "guild_id", "contexts" })
+		: base(new() { "guild_id", "contexts" })
 	{
 		if (type is ApplicationCommandType.ChatInput)
 		{

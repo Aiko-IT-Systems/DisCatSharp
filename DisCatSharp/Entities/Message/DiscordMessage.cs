@@ -44,16 +44,16 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	internal DiscordMessage()
 	{
-		this._attachmentsLazy = new Lazy<IReadOnlyList<DiscordAttachment>>(() => new ReadOnlyCollection<DiscordAttachment>(this.AttachmentsInternal));
-		this._embedsLazy = new Lazy<IReadOnlyList<DiscordEmbed>>(() => new ReadOnlyCollection<DiscordEmbed>(this.EmbedsInternal));
-		this._mentionedChannelsLazy = new Lazy<IReadOnlyList<DiscordChannel>>(() => this.MentionedChannelsInternal != null
+		this._attachmentsLazy = new(() => new ReadOnlyCollection<DiscordAttachment>(this.AttachmentsInternal));
+		this._embedsLazy = new(() => new ReadOnlyCollection<DiscordEmbed>(this.EmbedsInternal));
+		this._mentionedChannelsLazy = new(() => this.MentionedChannelsInternal != null
 				? new ReadOnlyCollection<DiscordChannel>(this.MentionedChannelsInternal)
 				: Array.Empty<DiscordChannel>());
-		this._mentionedRolesLazy = new Lazy<IReadOnlyList<DiscordRole>>(() => this.MentionedRolesInternal != null ? new ReadOnlyCollection<DiscordRole>(this.MentionedRolesInternal) : Array.Empty<DiscordRole>());
-		this.MentionedUsersLazy = new Lazy<IReadOnlyList<DiscordUser>>(() => new ReadOnlyCollection<DiscordUser>(this.MentionedUsersInternal));
-		this._reactionsLazy = new Lazy<IReadOnlyList<DiscordReaction>>(() => new ReadOnlyCollection<DiscordReaction>(this.ReactionsInternal));
-		this._stickersLazy = new Lazy<IReadOnlyList<DiscordSticker>>(() => new ReadOnlyCollection<DiscordSticker>(this.StickersInternal));
-		this._jumpLink = new Lazy<Uri>(() =>
+		this._mentionedRolesLazy = new(() => this.MentionedRolesInternal != null ? new ReadOnlyCollection<DiscordRole>(this.MentionedRolesInternal) : Array.Empty<DiscordRole>());
+		this.MentionedUsersLazy = new(() => new ReadOnlyCollection<DiscordUser>(this.MentionedUsersInternal));
+		this._reactionsLazy = new(() => new ReadOnlyCollection<DiscordReaction>(this.ReactionsInternal));
+		this._stickersLazy = new(() => new ReadOnlyCollection<DiscordSticker>(this.StickersInternal));
+		this._jumpLink = new(() =>
 		{
 			string? gid = null;
 			if (this.Channel != null!)
@@ -90,17 +90,17 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		this.Discord = other.Discord;
 
 		this.AttachmentsInternal = other.AttachmentsInternal; // the attachments cannot change, thus no need to copy and reallocate.
-		this.EmbedsInternal = new List<DiscordEmbed>(other.EmbedsInternal);
+		this.EmbedsInternal = new(other.EmbedsInternal);
 
 		if (other.MentionedChannelsInternal != null)
-			this.MentionedChannelsInternal = new List<DiscordChannel>(other.MentionedChannelsInternal);
+			this.MentionedChannelsInternal = new(other.MentionedChannelsInternal);
 		if (other.MentionedRolesInternal != null)
-			this.MentionedRolesInternal = new List<DiscordRole>(other.MentionedRolesInternal);
+			this.MentionedRolesInternal = new(other.MentionedRolesInternal);
 		if (other.MentionedRoleIds != null)
-			this.MentionedRoleIds = new List<ulong>(other.MentionedRoleIds);
-		this.MentionedUsersInternal = new List<DiscordUser>(other.MentionedUsersInternal);
-		this.ReactionsInternal = new List<DiscordReaction>(other.ReactionsInternal);
-		this.StickersInternal = new List<DiscordSticker>(other.StickersInternal);
+			this.MentionedRoleIds = new(other.MentionedRoleIds);
+		this.MentionedUsersInternal = new(other.MentionedUsersInternal);
+		this.ReactionsInternal = new(other.ReactionsInternal);
+		this.StickersInternal = new(other.StickersInternal);
 
 		this.Author = other.Author;
 		this.ChannelId = other.ChannelId;
@@ -440,7 +440,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		if (guildId.HasValue)
 			reference.Guild = client.GuildsInternal.TryGetValue(guildId.Value, out var g)
 				? g
-				: new DiscordGuild
+				: new()
 				{
 					Id = guildId.Value,
 					Discord = client
@@ -450,7 +450,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 
 		if (channel == null)
 		{
-			reference.Channel = new DiscordChannel
+			reference.Channel = new()
 			{
 				Id = channelId.Value,
 				Discord = client
@@ -467,7 +467,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 
 		else
 		{
-			reference.Message = new DiscordMessage
+			reference.Message = new()
 			{
 				ChannelId = this.ChannelId,
 				Discord = client
@@ -507,9 +507,9 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	internal void PopulateMentions()
 	{
 		var guild = this.Channel?.Guild;
-		this.MentionedUsersInternal ??= new List<DiscordUser>();
-		this.MentionedRolesInternal ??= new List<DiscordRole>();
-		this.MentionedChannelsInternal ??= new List<DiscordChannel>();
+		this.MentionedUsersInternal ??= new();
+		this.MentionedRolesInternal ??= new();
+		this.MentionedChannelsInternal ??= new();
 
 		var mentionedUsers = new HashSet<DiscordUser>(new DiscordUserComparer());
 		if (guild != null)

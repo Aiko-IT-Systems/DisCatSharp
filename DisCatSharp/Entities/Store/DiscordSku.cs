@@ -56,7 +56,7 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	/// Gets the manifest labels.
 	/// </summary>
 	[JsonProperty("manifest_labels", NullValueHandling = NullValueHandling.Ignore)]
-	public List<ulong> ManifestLabels { get; internal set; } = new List<ulong>();
+	public List<ulong> ManifestLabels { get; internal set; } = new();
 
 	/// <summary>
 	/// Gets the access type.
@@ -74,7 +74,7 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	/// Gets the skus features.
 	/// </summary>
 	[JsonProperty("features", NullValueHandling = NullValueHandling.Ignore)]
-	public List<int> Features { get; internal set; } = new List<int>();
+	public List<int> Features { get; internal set; } = new();
 
 	/// <summary>
 	/// Gets the skus release date.

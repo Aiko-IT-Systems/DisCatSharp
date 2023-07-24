@@ -86,7 +86,7 @@ public abstract class BaseRestRequest
 	{
 		this.Discord = client;
 		this.RateLimitBucket = bucket;
-		this.RequestTaskSource = new TaskCompletionSource<RestResponse>();
+		this.RequestTaskSource = new();
 		this.Url = url;
 		this.Method = method;
 		this.Route = route;

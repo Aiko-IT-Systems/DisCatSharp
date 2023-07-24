@@ -177,7 +177,7 @@ public sealed class DisCatSharpTeam : SnowflakeObject
 				}
 				else
 				{
-					team.Add(new DisCatSharpTeamMember
+					team.Add(new()
 					{
 						Id = user.Id,
 						Username = user.Username,

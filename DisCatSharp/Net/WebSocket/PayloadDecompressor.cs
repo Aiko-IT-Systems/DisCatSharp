@@ -69,9 +69,9 @@ internal sealed class PayloadDecompressor : IDisposable
 			throw new InvalidOperationException("Decompressor requires a valid compression mode.");
 
 		this.CompressionLevel = compressionLevel;
-		this._compressedStream = new MemoryStream();
+		this._compressedStream = new();
 		if (this.CompressionLevel == GatewayCompressionLevel.Stream)
-			this._decompressorStream = new DeflateStream(this._compressedStream, CompressionMode.Decompress);
+			this._decompressorStream = new(this._compressedStream, CompressionMode.Decompress);
 	}
 
 	/// <summary>
@@ -83,7 +83,7 @@ internal sealed class PayloadDecompressor : IDisposable
 	{
 		var zlib = this.CompressionLevel == GatewayCompressionLevel.Stream
 			? this._decompressorStream
-			: new DeflateStream(this._compressedStream, CompressionMode.Decompress, true);
+			: new(this._compressedStream, CompressionMode.Decompress, true);
 
 		if (compressed.Array[0] == ZLIB_PREFIX)
 			this._compressedStream.Write(compressed.Array, compressed.Offset + 2, compressed.Count - 2);

@@ -263,6 +263,6 @@ public class DomainHelpAttribute : Attribute
 		this.Domain = domain;
 		var url = $"https://{domain}";
 		this.Url = url;
-		this.Uri = new Uri(url);
+		this.Uri = new(url);
 	}
 }
