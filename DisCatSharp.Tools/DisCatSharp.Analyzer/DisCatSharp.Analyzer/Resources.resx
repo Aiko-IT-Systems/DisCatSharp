@@ -162,4 +162,13 @@
   <data name="AnalyzerDescriptionDeprecated" xml:space="preserve">
     <value>DisCatSharp considers this as deprecated. Update your code.</value>
   </data>
+  <data name="AnalyzerDescriptionRequiresFeature" xml:space="preserve">
+    <value>This needs special features to be enabled / set.</value>
+  </data>
+  <data name="AnalyzerMessageFormatRequiresFeature" xml:space="preserve">
+    <value>{0} '{1}' needs features: {2}</value>
+  </data>
+  <data name="AnalyzerTitleRequiresFeature" xml:space="preserve">
+    <value>[Discord] Requires Features</value>
+  </data>
 </root>

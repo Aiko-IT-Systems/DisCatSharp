@@ -21,8 +21,10 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection;
 
 using DisCatSharp.Attributes;
 
@@ -58,14 +60,19 @@ namespace DisCatSharp.Analyzer
 		private static readonly LocalizableString s_messageFormatDiscordUnreleased = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatDiscordUnreleased), Resources.ResourceManager, typeof(Resources));
 		private static readonly LocalizableString s_descriptionDiscordUnreleased = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionDiscordUnreleased), Resources.ResourceManager, typeof(Resources));
 
+		private static readonly LocalizableString s_titleRequiresFeature = new LocalizableResourceString(nameof(Resources.AnalyzerTitleRequiresFeature), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString s_messageFormatRequiresFeature = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatRequiresFeature), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString s_descriptionRequiresFeature = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionRequiresFeature), Resources.ResourceManager, typeof(Resources));
+
 		private static readonly DiagnosticDescriptor s_experimentalRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0001", s_titleExperimental, s_messageFormatExperimental, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionExperimental, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0001");
 		private static readonly DiagnosticDescriptor s_deprecatedRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0002", s_titleDeprecated, s_messageFormatDeprecated, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDeprecated, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0002");
 		private static readonly DiagnosticDescriptor s_discordInExperimentRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0101", s_titleDiscordInExperiment, s_messageFormatDiscordInExperiment, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDiscordInExperiment, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0101");
 		private static readonly DiagnosticDescriptor s_discordDeprecatedRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0102", s_titleDiscordDeprecated, s_messageFormatDiscordDeprecated, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDiscordDeprecated, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0102");
 		private static readonly DiagnosticDescriptor s_discordUnreleasedRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0103", s_titleDiscordUnreleased, s_messageFormatDiscordUnreleased, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDiscordUnreleased, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0103");
+		private static readonly DiagnosticDescriptor s_requiresFeatureRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0200", s_titleRequiresFeature, s_messageFormatRequiresFeature, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionRequiresFeature, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0200");
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-			=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule);
+			=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_requiresFeatureRule);
 
 		public override void Initialize(AnalysisContext context)
 		{
@@ -106,6 +113,7 @@ namespace DisCatSharp.Analyzer
 			var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordInExperimentAttribute)));
 			var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordDeprecatedAttribute)));
 			var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordUnreleasedAttribute)));
+			var requiresFeatureAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(RequiresFeatureAttribute)));
 
 			if (experimentalAttributeData != null)
 			{
@@ -131,6 +139,11 @@ namespace DisCatSharp.Analyzer
 			{
 				var message = GetMessage(discordUnreleasedAttributeData);
 				context.ReportDiagnostic(Diagnostic.Create(s_discordUnreleasedRule, invocation.GetLocation(), kind, name, message));
+			}
+			if (requiresFeatureAttributeData != null)
+			{
+				var message = GetFeatureMessage(requiresFeatureAttributeData);
+				context.ReportDiagnostic(Diagnostic.Create(s_requiresFeatureRule, invocation.GetLocation(), kind, name, message));
 			}
 			return;
 		}
@@ -167,6 +180,7 @@ namespace DisCatSharp.Analyzer
 			var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordInExperimentAttribute)));
 			var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordDeprecatedAttribute)));
 			var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordUnreleasedAttribute)));
+			var requiresFeatureAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(RequiresFeatureAttribute)));
 
 			if (experimentalAttributeData != null)
 			{
@@ -193,6 +207,11 @@ namespace DisCatSharp.Analyzer
 				var message = GetMessage(discordUnreleasedAttributeData);
 				context.ReportDiagnostic(Diagnostic.Create(s_discordUnreleasedRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
 			}
+			if (requiresFeatureAttributeData != null)
+			{
+				var message = GetFeatureMessage(requiresFeatureAttributeData);
+				context.ReportDiagnostic(Diagnostic.Create(s_requiresFeatureRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
+			}
 			return;
 		}
 
@@ -206,5 +225,45 @@ namespace DisCatSharp.Analyzer
 
 		static string GetMessage(AttributeData attribute)
 			=> attribute.ConstructorArguments.Length < 1 ? "Do not use in production." : attribute.ConstructorArguments[0].Value as string;
+
+		static string GetFeatureMessage(AttributeData attribute)
+		{
+			var featureReqEnum = (Features)attribute.ConstructorArguments[0].Value;
+			var description = attribute.ConstructorArguments.Length > 1
+				? attribute.ConstructorArguments[1].Value as string
+				: "No additional information.";
+			return $"{featureReqEnum.ToFeaturesString()} | {description}";
+		}
+	}
+
+	internal static class Helpers
+	{
+		internal static Dictionary<Features, string> FeaturesStrings { get; set; }
+
+		static Helpers()
+		{
+			FeaturesStrings = new Dictionary<Features, string>();
+			var t = typeof(Features);
+			var ti = t.GetTypeInfo();
+			var vals = Enum.GetValues(t).Cast<Features>();
+
+			foreach (var xv in vals)
+			{
+				var xsv = xv.ToString();
+				var xmv = ti.DeclaredMembers.FirstOrDefault(xm => xm.Name == xsv);
+				var xav = xmv.GetCustomAttribute<FeatureDescriptionAttribute>();
+
+				FeaturesStrings[xv] = xav.Description;
+			}
+		}
+
+		public static string ToFeaturesString(this Features features)
+		{
+			var strs = FeaturesStrings
+				.Where(xkvp =>(features & xkvp.Key) == xkvp.Key)
+				.Select(xkvp => xkvp.Value);
+
+			return string.Join(", ", strs.OrderBy(xs => xs));
+		}
 	}
 }

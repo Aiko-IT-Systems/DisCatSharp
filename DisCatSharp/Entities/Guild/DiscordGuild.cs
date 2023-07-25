@@ -87,7 +87,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <summary>
 	/// Gets the guild discovery splash's url.
 	/// </summary>
-	[JsonIgnore]
+	[JsonIgnore, RequiresFeature(Attributes.Features.Discoverable)]
 	public string DiscoverySplashUrl
 		=> !string.IsNullOrWhiteSpace(this.DiscoverySplashHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILD_DISCOVERY_SPLASHES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.DiscoverySplashHash}.png?size=1024" : null;
 
@@ -100,7 +100,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <summary>
 	/// Gets the guild home header's url.
 	/// </summary>
-	[JsonIgnore]
+	[JsonIgnore, RequiresFeature(Attributes.Features.Onboarding, "Requires to have guide enabled.")]
 	public string HomeHeaderUrl
 		=> !string.IsNullOrWhiteSpace(this.HomeHeaderHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILD_HOME_HEADERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.HomeHeaderHash}.jpg?size=1280" : null;
 
@@ -249,7 +249,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <summary>
 	/// Gets the safety alert channel for this guild.
 	/// </summary>
-	[JsonIgnore]
+	[JsonIgnore, RequiresFeature(Attributes.Features.Community)]
 	public DiscordChannel SafetyAltersChannel
 		=> this.SafetyAlertsChannelId.HasValue
 		? this.GetChannel(this.SafetyAlertsChannelId.Value)
@@ -265,7 +265,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets the rules channel for this guild.
 	/// <para>This is only available if the guild is considered "discoverable".</para>
 	/// </summary>
-	[JsonIgnore]
+	[JsonIgnore, RequiresFeature(Attributes.Features.Community)]
 	public DiscordChannel RulesChannel
 		=> this.RulesChannelId.HasValue
 		? this.GetChannel(this.RulesChannelId.Value)
@@ -281,7 +281,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets the public updates channel (where admins and moderators receive messages from Discord) for this guild.
 	/// <para>This is only available if the guild is considered "discoverable".</para>
 	/// </summary>
-	[JsonIgnore]
+	[JsonIgnore, RequiresFeature(Attributes.Features.Community)]
 	public DiscordChannel PublicUpdatesChannel
 		=> this.PublicUpdatesChannelId.HasValue
 		? this.GetChannel(this.PublicUpdatesChannelId.Value)
@@ -506,7 +506,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <summary>
 	/// Gets the guild description, when applicable.
 	/// </summary>
-	[JsonProperty("description")]
+	[JsonProperty("description"), RequiresFeature(Attributes.Features.Community)]
 	public string Description { get; internal set; }
 
 	/// <summary>
@@ -736,6 +736,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	/// <exception cref="NotFoundException">Thrown when onboarding does not exist for a reason.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	[RequiresFeature(Attributes.Features.Onboarding)]
 	public Task<DiscordOnboarding> GetOnboardingAsync()
 		=> this.Discord.ApiClient.GetGuildOnboardingAsync(this.Id);
 
@@ -750,6 +751,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild" /> permission.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	[RequiresFeature(Attributes.Features.Community)]
 	public Task<DiscordOnboarding> ModifyOnboardingAsync(Optional<List<DiscordOnboardingPrompt>> prompts = default,
 		Optional<List<ulong>> defaultChannelIds = default, Optional<bool> enabled = default, Optional<OnboardingMode> mode = default,
 		string? reason = null)
@@ -761,6 +763,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	/// <exception cref="NotFoundException">Thrown when server guide does not exist for a reason.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	[RequiresFeature(Attributes.Features.Onboarding, "Additionally needs to have server guide enabled.")]
 	public Task<DiscordServerGuide> GetServerGuideAsync()
 		=> this.Discord.ApiClient.GetGuildServerGuideAsync(this.Id);
 
@@ -775,6 +778,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild" /> permission.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	[RequiresFeature(Attributes.Features.Onboarding)]
 	public Task<DiscordServerGuide> ModifyServerGuideAsync(Optional<bool> enabled = default, Optional<WelcomeMessage> welcomeMessage = default, Optional<List<NewMemberAction>> newMemberActions = default, Optional<List<ResourceChannel>> resourceChannels = default, string? reason = null)
 		=> this.Discord.ApiClient.ModifyGuildServerGuideAsync(this.Id, enabled, welcomeMessage, newMemberActions, resourceChannels, reason);
 
@@ -923,7 +927,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		return await this.Discord.ApiClient.ModifyGuildCommunitySettingsAsync(this.Id, features, rulesChannelId, publicUpdatesChannelId, preferredLocale, description, defaultMessageNotifications, explicitContentFilter, verificationLevel, reason).ConfigureAwait(false);
 	}
 
-	[DiscordInExperiment]
+	[DiscordInExperiment, RequiresFeature(Attributes.Features.Community)]
 	public async Task<DiscordGuild> ModifyInventorySettingsAsync(bool enabled, string? reason = null)
 		=> await this.Discord.ApiClient.ModifyGuildInventorySettingsAsync(this.Id, enabled, reason);
 
@@ -937,6 +941,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	[RequiresFeature(Attributes.Features.Community)]
 	public async Task<DiscordGuild> ModifySafetyAlertsSettingsAsync(bool enabled, DiscordChannel safetyAlertsChannel, string? reason = null)
 	{
 		static Optional<ulong?> ChannelToId(DiscordChannel ch, string name)
@@ -1193,6 +1198,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets all auto mod rules for a guild.
 	/// </summary>
 	/// <returns>A collection of all rules in the guild.</returns>
+	[RequiresFeature(Attributes.Features.Community)]
 	public Task<ReadOnlyCollection<AutomodRule>> GetAutomodRulesAsync()
 		=> this.Discord.ApiClient.GetAutomodRulesAsync(this.Id);
 
@@ -1201,6 +1207,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	/// <param name="ruleId">The rule id to get.</param>
 	/// <returns>The auto mod rule.</returns>
+	[RequiresFeature(Attributes.Features.Community)]
 	public Task<AutomodRule> GetAutomodRuleAsync(ulong ruleId)
 		=> this.Discord.ApiClient.GetAutomodRuleAsync(this.Id, ruleId);
 
@@ -1220,6 +1227,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	[RequiresFeature(Attributes.Features.Community)]
 	public async Task<AutomodRule> CreateAutomodRuleAsync(string name, AutomodEventType eventType, AutomodTriggerType triggerType, IEnumerable<AutomodAction> actions,
 		AutomodTriggerMetadata triggerMetadata = null, bool enabled = false, IEnumerable<ulong> exemptRoles = null, IEnumerable<ulong> exemptChannels = null, string reason = null)
 		=> await this.Discord.ApiClient.CreateAutomodRuleAsync(this.Id, name, eventType, triggerType, actions, triggerMetadata, enabled, exemptRoles, exemptChannels, reason);
@@ -1415,6 +1423,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="NotSupportedException">Thrown when the guilds has not enabled community.</exception>
+	[RequiresFeature(Attributes.Features.Community)]
 	public Task<DiscordChannel> CreateStageChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null)
 		=> this.Features.HasFeature(GuildFeaturesEnum.HasCommunityEnabled) ? this.CreateChannelAsync(name, ChannelType.Stage, null, Optional.None, null, null, overwrites, null, Optional.None, null, null, Optional.None, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a stage channel.");
 
@@ -1432,6 +1441,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="NotSupportedException">Thrown when the guilds has not enabled community.</exception>
+	[RequiresFeature(Attributes.Features.Community)]
 	public Task<DiscordChannel> CreateNewsChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null, ThreadAutoArchiveDuration defaultAutoArchiveDuration = ThreadAutoArchiveDuration.OneDay, Optional<ChannelFlags?> flags = default)
 		=> this.Features.HasFeature(GuildFeaturesEnum.HasCommunityEnabled) ? this.CreateChannelAsync(name, ChannelType.News, null, Optional.None, null, null, overwrites, null, Optional.None, null, defaultAutoArchiveDuration, flags, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a news channel.");
 

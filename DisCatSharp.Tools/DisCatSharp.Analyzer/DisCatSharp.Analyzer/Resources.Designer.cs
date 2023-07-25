@@ -106,6 +106,15 @@ namespace DisCatSharp.Analyzer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This needs special features to be enabled / set..
+        /// </summary>
+        internal static string AnalyzerDescriptionRequiresFeature {
+            get {
+                return ResourceManager.GetString("AnalyzerDescriptionRequiresFeature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} &apos;{1}&apos; is deprecated: {2}.
         /// </summary>
         internal static string AnalyzerMessageFormatDeprecated {
@@ -151,6 +160,15 @@ namespace DisCatSharp.Analyzer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} &apos;{1}&apos; needs features: {2}.
+        /// </summary>
+        internal static string AnalyzerMessageFormatRequiresFeature {
+            get {
+                return ResourceManager.GetString("AnalyzerMessageFormatRequiresFeature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to [DCS] Deprecated.
         /// </summary>
         internal static string AnalyzerTitleDeprecated {
@@ -192,6 +210,15 @@ namespace DisCatSharp.Analyzer {
         internal static string AnalyzerTitleExperimental {
             get {
                 return ResourceManager.GetString("AnalyzerTitleExperimental", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [Discord] Requires Features.
+        /// </summary>
+        internal static string AnalyzerTitleRequiresFeature {
+            get {
+                return ResourceManager.GetString("AnalyzerTitleRequiresFeature", resourceCulture);
             }
         }
     }
