@@ -102,7 +102,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	[JsonIgnore]
 	public string HomeHeaderUrl
-		=> !string.IsNullOrWhiteSpace(this.HomeHeaderHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILD_HOME_HEADERES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.HomeHeaderHash}.jpg?size=1280" : null;
+		=> !string.IsNullOrWhiteSpace(this.HomeHeaderHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILD_HOME_HEADERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.HomeHeaderHash}.jpg?size=1280" : null;
 
 	/// <summary>
 	/// Gets the preferred locale of this guild.
@@ -730,6 +730,53 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	}
 
 	#region Guild Methods
+
+	/// <summary>
+	/// Gets this guilds onboarding configuration.
+	/// </summary>
+	/// <exception cref="NotFoundException">Thrown when onboarding does not exist for a reason.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordOnboarding> GetOnboardingAsync()
+		=> this.Discord.ApiClient.GetGuildOnboardingAsync(this.Id);
+
+	/// <summary>
+	/// Modifies this guilds onboarding configuration.
+	/// </summary>
+	/// <param name="prompts">The onboarding prompts</param>
+	/// <param name="defaultChannelIds">The default channel ids.</param>
+	/// <param name="enabled">Whether onboarding is enabled.</param>
+	/// <param name="mode">The onboarding mode.</param>
+	/// <param name="reason">The reason.</param>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild" /> permission.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordOnboarding> ModifyOnboardingAsync(Optional<List<DiscordOnboardingPrompt>> prompts = default,
+		Optional<List<ulong>> defaultChannelIds = default, Optional<bool> enabled = default, Optional<OnboardingMode> mode = default,
+		string? reason = null)
+		=> this.Discord.ApiClient.ModifyGuildOnboardingAsync(this.Id, prompts, defaultChannelIds, enabled, mode,
+			reason);
+
+	/// <summary>
+	/// Gets this guilds server guide configuration.
+	/// </summary>
+	/// <exception cref="NotFoundException">Thrown when server guide does not exist for a reason.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordServerGuide> GetServerGuideAsync()
+		=> this.Discord.ApiClient.GetGuildServerGuideAsync(this.Id);
+
+	/// <summary>
+	/// Modifies this guilds server guide configuration.
+	/// </summary>
+	/// <param name="enabled">Whether the server guide is enabled.</param>
+	/// <param name="welcomeMessage">The server guide welcome message.</param>
+	/// <param name="newMemberActions">The new member actions.</param>
+	/// <param name="resourceChannels">The resource channels.</param>
+	/// <param name="reason">The reason.</param>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild" /> permission.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordServerGuide> ModifyServerGuideAsync(Optional<bool> enabled = default, Optional<WelcomeMessage> welcomeMessage = default, Optional<List<NewMemberAction>> newMemberActions = default, Optional<List<ResourceChannel>> resourceChannels = default, string? reason = null)
+		=> this.Discord.ApiClient.ModifyGuildServerGuideAsync(this.Id, enabled, welcomeMessage, newMemberActions, resourceChannels, reason);
 
 	/// <summary>
 	/// Searches the current guild for members who's display name start with the specified name.

@@ -70,7 +70,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <summary>
 	/// Gets the channel that invoked this interaction.
 	/// </summary>
-	[JsonIgnore]
+	[JsonIgnore] // TODO: Is now also partial "channel"
 	public DiscordChannel Channel
 		 => (this.Discord as DiscordClient).InternalGetCachedChannel(this.ChannelId) ?? (DiscordChannel)(this.Discord as DiscordClient).InternalGetCachedThread(this.ChannelId) ?? (this.Guild == null ? new DiscordDmChannel { Id = this.ChannelId, Type = ChannelType.Private, Discord = this.Discord } : new DiscordChannel() { Id = this.ChannelId, Discord = this.Discord });
 
