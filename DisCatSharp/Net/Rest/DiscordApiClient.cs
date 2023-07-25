@@ -592,6 +592,19 @@ public sealed class DiscordApiClient
 		return this.Discord.Guilds[guildId];
 	}
 
+	internal async Task<DiscordOnboarding> GetGuildOnboardingAsync(ulong guildId)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.ONBOARDING}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		var onboarding = DiscordJson.DeserializeObject<DiscordOnboarding>(res.Response, this.Discord);
+
+		return onboarding;
+	}
+
 	/// <summary>
 	/// Modifies the guild safety settings.
 	/// </summary>

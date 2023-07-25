@@ -731,6 +731,9 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 	#region Guild Methods
 
+	public Task<DiscordOnboarding> GetOnboardingAsync()
+		=> this.Discord.ApiClient.GetGuildOnboardingAsync(this.Id);
+
 	/// <summary>
 	/// Searches the current guild for members who's display name start with the specified name.
 	/// </summary>
