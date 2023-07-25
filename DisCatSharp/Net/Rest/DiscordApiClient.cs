@@ -650,6 +650,23 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	/// Gets the guilds server guide.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	internal async Task<DiscordServerGuide> GetGuildServerGuideAsync(ulong guildId)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.NEW_MEMBER_WELCOME}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		var guide = DiscordJson.DeserializeObject<DiscordServerGuide>(res.Response, this.Discord);
+
+		return guide;
+	}
+
+	/// <summary>
 	/// Modifies the guild safety settings.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>

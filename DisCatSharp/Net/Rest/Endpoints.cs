@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using DisCatSharp.Attributes;
+
 namespace DisCatSharp.Net;
 
 /// <summary>
@@ -515,7 +517,9 @@ public static class Endpoints
 	public const string METADATA = "/metadata";
 
 	public const string NEW_MEMBER_WELCOME = "/new-member-welcome";
+	[DiscordDeprecated]
 	public const string NEW_MEMBER_ACTIONS = "/new-member-actions";
+	[DiscordDeprecated]
 	public const string NEW_MEMBER_ACTION = "/new-member-action";
 	public const string APPLICATION_DIRECTORY = "/application-directory";
 	public const string SHARED_CANVAS = "/shared-canvas";
@@ -533,7 +537,7 @@ public static class Endpoints
 	public const string CLEAR_MENTION_RAID = "/clear-mention-raid";
 	public const string PUBLISHED_LISTINGS = "/published-listings";
 	public const string SKUS = "/skus";
-	public const string GUILD_HOME_HEADERES = "/home-headers";
+	public const string GUILD_HOME_HEADERS = "/home-headers";
 	public const string ALERT_ACTION = "/alert-action";
 	public const string CONSENT = "/consent";
 	public const string SETTINGS = "/settings";

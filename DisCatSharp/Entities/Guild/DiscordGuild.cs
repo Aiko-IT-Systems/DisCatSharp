@@ -102,7 +102,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	[JsonIgnore]
 	public string HomeHeaderUrl
-		=> !string.IsNullOrWhiteSpace(this.HomeHeaderHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILD_HOME_HEADERES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.HomeHeaderHash}.jpg?size=1280" : null;
+		=> !string.IsNullOrWhiteSpace(this.HomeHeaderHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILD_HOME_HEADERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.HomeHeaderHash}.jpg?size=1280" : null;
 
 	/// <summary>
 	/// Gets the preferred locale of this guild.
@@ -755,6 +755,14 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		string? reason = null)
 		=> this.Discord.ApiClient.ModifyGuildOnboardingAsync(this.Id, prompts, defaultChannelIds, enabled, mode,
 			reason);
+
+	/// <summary>
+	/// Gets this guilds server guide configuration.
+	/// </summary>
+	/// <exception cref="NotFoundException">Thrown when server guide does not exist for a reason.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordServerGuide> GetServerGuideAsync()
+		=> this.Discord.ApiClient.GetGuildServerGuideAsync(this.Id);
 
 	/// <summary>
 	/// Searches the current guild for members who's display name start with the specified name.

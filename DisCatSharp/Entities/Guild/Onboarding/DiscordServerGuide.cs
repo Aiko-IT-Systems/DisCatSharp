@@ -31,6 +31,10 @@ public sealed class DiscordServerGuide : ObservableApiObject
 	[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong GuildId { get; internal set; }
 
+	[JsonIgnore]
+	public DiscordGuild Guild
+		=> this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null!;
+
 	[JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
 	public bool Enabled { get; internal set; }
 
