@@ -38,8 +38,21 @@ public sealed class DiscordOnboardingPromptOption : SnowflakeObject
 	public DiscordEmoji? Emoji { get; internal set; }
 
 	[JsonProperty("role_ids", NullValueHandling = NullValueHandling.Ignore)]
-	public List<ulong> RoleIds { get; internal set; } = new();
+	public List<ulong>? RoleIds { get; internal set; }
 
 	[JsonProperty("channel_ids", NullValueHandling = NullValueHandling.Ignore)]
-	public List<ulong> ChannelIds { get; internal set; } = new();
+	public List<ulong>? ChannelIds { get; internal set; }
+
+	public DiscordOnboardingPromptOption(string title, string? description = null,
+		DiscordEmoji? emoji = null, List<ulong>? roleIds = null, List<ulong>? channelIds = null)
+	{
+		this.Title = title;
+		this.Description = description;
+		this.Emoji = emoji;
+		this.RoleIds = roleIds;
+		this.ChannelIds = channelIds;
+	}
+
+	internal DiscordOnboardingPromptOption()
+	{ }
 }

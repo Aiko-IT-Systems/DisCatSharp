@@ -731,8 +731,30 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 	#region Guild Methods
 
+	/// <summary>
+	/// Gets this guilds onboarding configuration.
+	/// </summary>
+	/// <exception cref="NotFoundException">Thrown when onboarding does not exist for a reason.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordOnboarding> GetOnboardingAsync()
 		=> this.Discord.ApiClient.GetGuildOnboardingAsync(this.Id);
+
+	/// <summary>
+	/// Modifies this guilds onboarding configuration.
+	/// </summary>
+	/// <param name="prompts">The onboarding prompts</param>
+	/// <param name="defaultChannelIds">The default channel ids.</param>
+	/// <param name="enabled">Whether onboarding is enabled.</param>
+	/// <param name="mode">The onboarding mode.</param>
+	/// <param name="reason">The reason.</param>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild" /> permission.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordOnboarding> ModifyOnboardingAsync(List<DiscordOnboardingPrompt> prompts,
+		List<ulong> defaultChannelIds, bool enabled = true, OnboardingMode mode = OnboardingMode.OnboardingDefault,
+		string? reason = null)
+		=> this.Discord.ApiClient.ModifyGuildOnboardingAsync(this.Id, prompts, defaultChannelIds, enabled, mode,
+			reason);
 
 	/// <summary>
 	/// Searches the current guild for members who's display name start with the specified name.

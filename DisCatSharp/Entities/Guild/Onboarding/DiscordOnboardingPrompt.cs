@@ -47,4 +47,19 @@ public sealed class DiscordOnboardingPrompt : SnowflakeObject
 
 	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
 	public PromptType? Type { get; internal set; }
+
+	public DiscordOnboardingPrompt(string title, List<DiscordOnboardingPromptOption> options,
+		bool singleSelect = false, bool required = true,
+		bool inOnboarding = true, PromptType type = PromptType.MultipleChoice)
+	{
+		this.Title = title;
+		this.Options = options;
+		this.SingleSelect = singleSelect;
+		this.Required = required;
+		this.InOnboarding = inOnboarding;
+		this.Type = type;
+	}
+
+	internal DiscordOnboardingPrompt()
+	{ }
 }
