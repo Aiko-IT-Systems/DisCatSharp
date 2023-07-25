@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../DisCatSharp.Targets/Version.targets" />
   <Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
   <Import Project="../DisCatSharp.Targets/Package.targets" />
   <Import Project="../DisCatSharp.Targets/NuGet.targets" />
@@ -9,7 +8,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<OutputType>Library</OutputType>
+		<OutputType>Library</OutputType>
+	  <Version>10.4.2</Version>
   </PropertyGroup>
 
   <PropertyGroup>
