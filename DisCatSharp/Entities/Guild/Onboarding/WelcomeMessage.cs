@@ -48,6 +48,7 @@ public sealed class WelcomeMessage : ObservableApiObject
 
 	/// <summary>
 	/// Gets the welcome message.
+	/// <para> <c>[@username]</c> is used to mention the new member.</para>
 	/// </summary>
 	[JsonProperty("message", NullValueHandling = NullValueHandling.Ignore)]
 	public string Message { get; internal set; }
@@ -56,7 +57,7 @@ public sealed class WelcomeMessage : ObservableApiObject
 	/// Constructs a new welcome message for the server guide.
 	/// </summary>
 	/// <param name="authorId">The author id.</param>
-	/// <param name="message">The message.</param>
+	/// <param name="message">The message. Use <c>[@username]</c> to mention the new member. Required.</param>
 	public WelcomeMessage(ulong authorId, string message)
 	{
 		this.AuthorIds = new() { authorId };
