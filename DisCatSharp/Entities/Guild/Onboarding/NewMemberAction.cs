@@ -1,0 +1,86 @@
+// This file is part of the DisCatSharp project, based off DSharpPlus.
+//
+// Copyright (c) 2021-2023 AITSYS
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+using DisCatSharp.Enums;
+
+using Newtonsoft.Json;
+
+namespace DisCatSharp.Entities;
+
+/// <summary>
+/// Represents a new-member action.
+/// </summary>
+public sealed class NewMemberAction : ObservableApiObject
+{
+	/// <summary>
+	/// Gets the new-member action channel id.
+	/// </summary>
+	[JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong ChannelId { get; internal set; }
+
+	/// <summary>
+	/// Gets the new-member action type.
+	/// </summary>
+	[JsonProperty("action_type", NullValueHandling = NullValueHandling.Ignore)]
+	public NewMemberActionType ActionType { get; internal set; }
+
+	/// <summary>
+	/// Gets the new-member action title.
+	/// </summary>
+	[JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
+	public string Title { get; internal set; }
+
+	/// <summary>
+	/// Gets the new-member action description.
+	/// </summary>
+	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
+	public string Description { get; internal set; }
+
+	/// <summary>
+	/// Gets the new-member action emoji.
+	/// </summary>
+	[JsonProperty("emoji", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordEmoji Emoji { get; internal set; }
+
+	/// <summary>
+	/// Constructs a new new-member action.
+	/// </summary>
+	/// <param name="channelId">The action's target channel id.</param>
+	/// <param name="actionType">The action's type.</param>
+	/// <param name="title">Te action's title.</param>
+	/// <param name="description">The action's description.</param>
+	/// <param name="emoji">The action's emoji.</param>
+	public NewMemberAction(ulong channelId, NewMemberActionType actionType, string title, string description, DiscordEmoji emoji)
+	{
+		this.ChannelId = channelId;
+		this.ActionType = actionType;
+		this.Title = title;
+		this.Description = description;
+		this.Emoji = emoji;
+	}
+
+	/// <summary>
+	/// Constructs a new new-member action.
+	/// </summary>
+	internal NewMemberAction()
+	{ }
+}

@@ -571,6 +571,12 @@ public sealed class DiscordApiClient
 		return guild;
 	}
 
+	/// <summary>
+	/// Modifies the guilds inventory settings.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="isEmojiPackCollectible">Whether emoji packs are collectible.</param>
+	/// <param name="reason">The reason.</param>
 	internal async Task<DiscordGuild> ModifyGuildInventorySettingsAsync(ulong guildId, bool isEmojiPackCollectible, string? reason)
 	{
 		var pld = new RestGuildInventoryModifyPayload
@@ -590,6 +596,108 @@ public sealed class DiscordApiClient
 
 		this.Discord.Guilds[guildId].InventorySettings = new() { IsEmojiPackCollectible = isEmojiPackCollectible };
 		return this.Discord.Guilds[guildId];
+	}
+
+	/// <summary>
+	/// Gets the guilds onboarding.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	internal async Task<DiscordOnboarding> GetGuildOnboardingAsync(ulong guildId)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.ONBOARDING}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		var onboarding = DiscordJson.DeserializeObject<DiscordOnboarding>(res.Response, this.Discord);
+
+		return onboarding;
+	}
+
+	/// <summary>
+	/// Modifies the guilds onboarding.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="prompts">The onboarding prompts</param>
+	/// <param name="defaultChannelIds">The default channel ids.</param>
+	/// <param name="enabled">Whether onboarding is enabled.</param>
+	/// <param name="mode">The onboarding mode.</param>
+	/// <param name="reason">The reason.</param>
+	internal async Task<DiscordOnboarding> ModifyGuildOnboardingAsync(ulong guildId, Optional<List<DiscordOnboardingPrompt>> prompts, Optional<List<ulong>> defaultChannelIds, Optional<bool> enabled, Optional<OnboardingMode> mode, string? reason = null)
+	{
+		var pld = new RestGuildOnboardingModifyPayload()
+		{
+			Prompts = prompts,
+			DefaultChannelIds = defaultChannelIds,
+			Enabled = enabled,
+			Mode = mode
+		};
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.ONBOARDING}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		var onboarding = DiscordJson.DeserializeObject<DiscordOnboarding>(res.Response, this.Discord);
+
+		return onboarding;
+	}
+
+	/// <summary>
+	/// Gets the guilds server guide.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	internal async Task<DiscordServerGuide> GetGuildServerGuideAsync(ulong guildId)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.NEW_MEMBER_WELCOME}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		var guide = DiscordJson.DeserializeObject<DiscordServerGuide>(res.Response, this.Discord);
+
+		return guide;
+	}
+
+	/// <summary>
+	/// Modifies the guilds server guide.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="enabled">Whether the server guide is enabled.</param>
+	/// <param name="welcomeMessage">The server guide welcome message.</param>
+	/// <param name="newMemberActions">The new member actions.</param>
+	/// <param name="resourceChannels">The resource channels.</param>
+	/// <param name="reason">The reason.</param>
+	internal async Task<DiscordServerGuide> ModifyGuildServerGuideAsync(ulong guildId, Optional<bool> enabled, Optional<WelcomeMessage> welcomeMessage, Optional<List<NewMemberAction>> newMemberActions, Optional<List<ResourceChannel>> resourceChannels, string? reason = null)
+	{
+		var pld = new RestGuildServerGuideModifyPayload()
+		{
+			Enabled = enabled,
+			WelcomeMessage = welcomeMessage,
+			NewMemberActions = newMemberActions,
+			ResourceChannels = resourceChannels
+		};
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.NEW_MEMBER_WELCOME}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		var guide = DiscordJson.DeserializeObject<DiscordServerGuide>(res.Response, this.Discord);
+
+		return guide;
 	}
 
 	/// <summary>
@@ -715,7 +823,7 @@ public sealed class DiscordApiClient
 	internal async Task<IReadOnlyList<DiscordBan>> GetGuildBansAsync(ulong guildId, int? limit, ulong? before, ulong? after)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.BANS}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id = guildId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId }, out var path);
 
 		var urlParams = new Dictionary<string, string>();
 		if (limit != null)
@@ -773,7 +881,7 @@ public sealed class DiscordApiClient
 			headers.Add(REASON_HEADER_NAME, reason);
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.BANS}/:user_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new {guild_id = guildId, user_id = userId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { guild_id = guildId, user_id = userId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, BuildQueryString(urlParams), this.Discord.Configuration);
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers);
@@ -792,7 +900,7 @@ public sealed class DiscordApiClient
 			headers.Add(REASON_HEADER_NAME, reason);
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.BANS}/:user_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new {guild_id = guildId, user_id = userId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id = guildId, user_id = userId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
@@ -802,11 +910,10 @@ public sealed class DiscordApiClient
 	/// Leaves the guild async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
-
 	internal Task LeaveGuildAsync(ulong guildId)
 	{
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.GUILDS}/:guild_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new {guild_id = guildId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
@@ -822,7 +929,6 @@ public sealed class DiscordApiClient
 	/// <param name="roles">The roles.</param>
 	/// <param name="muted">If true, muted.</param>
 	/// <param name="deafened">If true, deafened.</param>
-
 	internal async Task<DiscordMember> AddGuildMemberAsync(ulong guildId, ulong userId, string accessToken, string nick, IEnumerable<DiscordRole> roles, bool muted, bool deafened)
 	{
 		var pld = new RestGuildMemberAddPayload
@@ -835,7 +941,7 @@ public sealed class DiscordApiClient
 		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new {guild_id = guildId, user_id = userId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { guild_id = guildId, user_id = userId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
@@ -852,7 +958,6 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="limit">The limit.</param>
 	/// <param name="after">The after.</param>
-
 	internal async Task<IReadOnlyList<TransportMember>> ListGuildMembersAsync(ulong guildId, int? limit, ulong? after)
 	{
 		var urlParams = new Dictionary<string, string>();
@@ -862,7 +967,7 @@ public sealed class DiscordApiClient
 			urlParams["after"] = after.Value.ToString(CultureInfo.InvariantCulture);
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id = guildId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -886,7 +991,7 @@ public sealed class DiscordApiClient
 			headers.Add(REASON_HEADER_NAME, reason);
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id{Endpoints.ROLES}/:role_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new {guild_id = guildId, user_id = userId, role_id = roleId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { guild_id = guildId, user_id = userId, role_id = roleId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers);
