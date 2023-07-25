@@ -111,6 +111,8 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	/// <param name="values">Dictionary containing items to populate this dictionary with.</param>
 	public CharSpanLookupReadOnlyDictionary(IEnumerable<KeyValuePair<string, TValue>> values)
 	{
+		if (values == null!)
+			throw new ArgumentNullException(nameof(values));
 		this._internalBuckets = PrepareItems(values, out var count);
 		this.Count = count;
 	}
@@ -380,7 +382,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 		public bool MoveNext()
 		{
 			var kdv = this._currentValue;
-			if (kdv == null)
+			if (kdv == null!)
 			{
 				if (!this._internalEnumerator.MoveNext())
 					return false;
@@ -403,6 +405,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 		public void Reset()
 		{
 			this._internalEnumerator.Reset();
+			this._internalEnumerator.Dispose();
 			this.Current = default;
 			this._currentValue = null;
 		}
@@ -410,6 +413,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 		/// <summary>
 		/// Disposes the.
 		/// </summary>
-		public void Dispose() => this.Reset();
+		public void Dispose()
+			=> this.Reset();
 	}
 }
