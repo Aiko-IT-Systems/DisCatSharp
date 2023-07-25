@@ -571,6 +571,12 @@ public sealed class DiscordApiClient
 		return guild;
 	}
 
+	/// <summary>
+	/// Modifies the guilds inventory settings.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="isEmojiPackCollectible">Whether emoji packs are collectible.</param>
+	/// <param name="reason">The reason.</param>
 	internal async Task<DiscordGuild> ModifyGuildInventorySettingsAsync(ulong guildId, bool isEmojiPackCollectible, string? reason)
 	{
 		var pld = new RestGuildInventoryModifyPayload
@@ -592,6 +598,10 @@ public sealed class DiscordApiClient
 		return this.Discord.Guilds[guildId];
 	}
 
+	/// <summary>
+	/// Gets the guilds onboarding.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
 	internal async Task<DiscordOnboarding> GetGuildOnboardingAsync(ulong guildId)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.ONBOARDING}";
@@ -605,6 +615,15 @@ public sealed class DiscordApiClient
 		return onboarding;
 	}
 
+	/// <summary>
+	/// Modifies the guilds onboarding.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="prompts">The onboarding prompts</param>
+	/// <param name="defaultChannelIds">The default channel ids.</param>
+	/// <param name="enabled">Whether onboarding is enabled.</param>
+	/// <param name="mode">The onboarding mode.</param>
+	/// <param name="reason">The reason.</param>
 	internal async Task<DiscordOnboarding> ModifyGuildOnboardingAsync(ulong guildId, List<DiscordOnboardingPrompt> prompts, List<ulong> defaultChannelIds, bool enabled = true, OnboardingMode mode = OnboardingMode.OnboardingDefault, string? reason = null)
 	{
 		var pld = new RestGuildOnboardingModifyPayload()
