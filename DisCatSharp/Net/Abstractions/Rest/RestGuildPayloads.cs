@@ -338,6 +338,7 @@ internal sealed class RestGuildCommunityModifyPayload : ObservableApiObject
 	[JsonProperty("features", NullValueHandling = NullValueHandling.Ignore)]
 	public List<string> Features { get; set; }
 }
+
 /// <summary>
 /// Represents guild inventory settings.
 /// </summary>
@@ -348,6 +349,36 @@ internal sealed class RestGuildInventoryModifyPayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("is_emoji_pack_collectible")]
 	public bool IsEmojiPackCollectible { get; set; }
+}
+
+/// <summary>
+/// Represents guild onboarding settings.
+/// </summary>
+internal sealed class RestGuildOnboardingModifyPayload : ObservableApiObject
+{
+	/// <summary>
+	/// Gets or sets the prompts shown during onboarding and in customize community.
+	/// </summary>
+	[JsonProperty("prompts", NullValueHandling = NullValueHandling.Ignore)]
+	public List<DiscordOnboardingPrompt> Prompts { get; set; }
+
+	/// <summary>
+	/// Gets or sets the channel ids that members get opted into automatically.
+	/// </summary>
+	[JsonProperty("default_channel_ids", NullValueHandling = NullValueHandling.Ignore)]
+	public List<ulong> DefaultChannelIds { get; set; }
+
+	/// <summary>
+	/// Gets or sets whether onboarding is enabled in the guild.
+	/// </summary>
+	[JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
+	public bool Enabled { get; set; }
+
+	/// <summary>
+	/// Gets or sets the mode of onboarding.
+	/// </summary>
+	[JsonProperty("mode", NullValueHandling = NullValueHandling.Ignore)]
+	public OnboardingMode Mode { get; set; }
 }
 
 /// <summary>

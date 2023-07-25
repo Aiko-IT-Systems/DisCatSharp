@@ -605,6 +605,31 @@ public sealed class DiscordApiClient
 		return onboarding;
 	}
 
+	internal async Task<DiscordOnboarding> ModifyGuildOnboardingAsync(ulong guildId, List<DiscordOnboardingPrompt> prompts, List<ulong> defaultChannelIds, bool enabled = true, OnboardingMode mode = OnboardingMode.OnboardingDefault, string? reason = null)
+	{
+		var pld = new RestGuildOnboardingModifyPayload()
+		{
+			Prompts = prompts,
+			DefaultChannelIds = defaultChannelIds,
+			Enabled = enabled,
+			Mode = mode
+		};
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.ONBOARDING}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new {guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		var onboarding = DiscordJson.DeserializeObject<DiscordOnboarding>(res.Response, this.Discord);
+
+		return onboarding;
+	}
+
 	/// <summary>
 	/// Modifies the guild safety settings.
 	/// </summary>
