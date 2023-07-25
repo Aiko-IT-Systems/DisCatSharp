@@ -605,7 +605,7 @@ public sealed class DiscordApiClient
 	internal async Task<DiscordOnboarding> GetGuildOnboardingAsync(ulong guildId)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.ONBOARDING}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id = guildId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -639,7 +639,7 @@ public sealed class DiscordApiClient
 			headers.Add(REASON_HEADER_NAME, reason);
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.ONBOARDING}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new {guild_id = guildId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
@@ -656,7 +656,7 @@ public sealed class DiscordApiClient
 	internal async Task<DiscordServerGuide> GetGuildServerGuideAsync(ulong guildId)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.NEW_MEMBER_WELCOME}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id = guildId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -789,7 +789,7 @@ public sealed class DiscordApiClient
 	internal async Task<IReadOnlyList<DiscordBan>> GetGuildBansAsync(ulong guildId, int? limit, ulong? before, ulong? after)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.BANS}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id = guildId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId }, out var path);
 
 		var urlParams = new Dictionary<string, string>();
 		if (limit != null)
@@ -847,7 +847,7 @@ public sealed class DiscordApiClient
 			headers.Add(REASON_HEADER_NAME, reason);
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.BANS}/:user_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new {guild_id = guildId, user_id = userId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { guild_id = guildId, user_id = userId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, BuildQueryString(urlParams), this.Discord.Configuration);
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers);
@@ -866,7 +866,7 @@ public sealed class DiscordApiClient
 			headers.Add(REASON_HEADER_NAME, reason);
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.BANS}/:user_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new {guild_id = guildId, user_id = userId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id = guildId, user_id = userId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
@@ -880,7 +880,7 @@ public sealed class DiscordApiClient
 	internal Task LeaveGuildAsync(ulong guildId)
 	{
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.GUILDS}/:guild_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new {guild_id = guildId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
@@ -909,7 +909,7 @@ public sealed class DiscordApiClient
 		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new {guild_id = guildId, user_id = userId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { guild_id = guildId, user_id = userId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
@@ -936,7 +936,7 @@ public sealed class DiscordApiClient
 			urlParams["after"] = after.Value.ToString(CultureInfo.InvariantCulture);
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id = guildId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -960,7 +960,7 @@ public sealed class DiscordApiClient
 			headers.Add(REASON_HEADER_NAME, reason);
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id{Endpoints.ROLES}/:role_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new {guild_id = guildId, user_id = userId, role_id = roleId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { guild_id = guildId, user_id = userId, role_id = roleId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers);
