@@ -22,7 +22,7 @@
 - Support for [Voice Messages](https://support.discord.com/hc/en-us/articles/13091096725527)
 - Partial support for role subscriptions
 - Partial support for burst reactions
-- Partial support for onboarding
+- Full support for onboarding
 
 ## Breaking
 
