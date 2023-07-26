@@ -1,6 +1,7 @@
 DisCatSharp Release Notes
 
-- None
+	Notable Changes
+ 	- Full support for onboarding
 
 DisCatSharp.ApplicationCommands Release Notes
 
@@ -26,7 +27,7 @@ DisCatSharp.Lavalink Release Notes
 
 DisCatSharp.VoiceNext Release Notes
 
-- None
+	Will be deprecated soon and replaced by DisCatSharp.Voice
 
 DisCatSharp.Experimental Release Notes
 
