@@ -57,22 +57,22 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// A list of methods for top level commands.
 	/// </summary>
-	private static List<CommandMethod> s_commandMethods { get; set; } = new();
+	internal static List<CommandMethod> s_commandMethods { get; set; } = new();
 
 	/// <summary>
 	/// List of groups.
 	/// </summary>
-	private static List<GroupCommand> s_groupCommands { get; set; } = new();
+	internal static List<GroupCommand> s_groupCommands { get; set; } = new();
 
 	/// <summary>
 	/// List of groups with subgroups.
 	/// </summary>
-	private static List<SubGroupCommand> s_subGroupCommands { get; set; } = new();
+	internal static List<SubGroupCommand> s_subGroupCommands { get; set; } = new();
 
 	/// <summary>
 	/// List of context menus.
 	/// </summary>
-	private static List<ContextMenuCommand> s_contextMenuCommands { get; set; } = new();
+	internal static List<ContextMenuCommand> s_contextMenuCommands { get; set; } = new();
 
 	/// <summary>
 	/// List of global commands on discords backend.
@@ -107,8 +107,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// Gets a list of registered commands. The key is the guild id (null if global).
 	/// </summary>
-	public IReadOnlyList<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> RegisteredCommands
-		=> s_registeredCommands;
+	public IReadOnlyList<KeyValuePair<ulong?, IReadOnlyList<RegisteredDiscordApplicationCommand>>> RegisteredCommands
+		=> s_registeredCommands.Select(guild =>
+			new KeyValuePair<ulong?, IReadOnlyList<RegisteredDiscordApplicationCommand>>(guild.Key, guild.Value
+					.Select(parent => new RegisteredDiscordApplicationCommand(parent)).ToList())).ToList();
 	private static List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> s_registeredCommands = new();
 
 	/// <summary>
