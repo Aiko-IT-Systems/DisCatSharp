@@ -240,6 +240,8 @@ public sealed class LavalinkGuildPlayer
 	{
 		if (this.QUEUE_SYSTEM_ENABLED && this._queueTsc != null)
 			this._queueTsc.SetResult(true);
+		if (this.CurrentTrack?.Info.Identifier == args.Track.Info.Identifier)
+			this.Player.Track = null;
 		args.Handled = false;
 		return Task.CompletedTask;
 	}
