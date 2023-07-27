@@ -71,7 +71,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 			var baseUrl = this.Discord.Configuration.ApiChannel switch
 			{
 				ApiChannel.Stable => "discord.com",
-				ApiChannel.PTB => "ptb.discord.com",
+				ApiChannel.Ptb => "ptb.discord.com",
 				ApiChannel.Canary => "canary.discord.com",
 				ApiChannel.Staging => "staging.discord.co",
 				_ => throw new ArgumentException("Invalid api channel")

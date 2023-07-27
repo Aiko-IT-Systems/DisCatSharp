@@ -35,7 +35,7 @@ public enum ApiChannel
 	/// <summary>
 	/// Ptb.
 	/// </summary>
-	PTB = 1,
+	Ptb = 1,
 
 	/// <summary>
 	/// Canary.

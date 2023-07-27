@@ -2001,7 +2001,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		{
 			StickerFormat.Png => "png",
 			StickerFormat.Apng => "png",
-			StickerFormat.GIF => "gif",
+			StickerFormat.Gif => "gif",
 			StickerFormat.Lottie => "json",
 			_ => throw new InvalidOperationException("This format is not supported.")
 		};
@@ -2010,7 +2010,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		{
 			StickerFormat.Png => "image/png",
 			StickerFormat.Apng => "image/png",
-			StickerFormat.GIF => "image/gif",
+			StickerFormat.Gif => "image/gif",
 			StickerFormat.Lottie => "application/json",
 			_ => throw new InvalidOperationException("This format is not supported.")
 		};

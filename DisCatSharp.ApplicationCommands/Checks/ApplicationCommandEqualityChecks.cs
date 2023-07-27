@@ -40,8 +40,8 @@ internal static class ApplicationCommandEqualityChecks
 	/// <param name="ac1">Source command.</param>
 	/// <param name="targetApplicationCommand">Command to check against.</param>
 	/// <param name="client">The discord client.</param>
-	/// <param name="IsGuild">Whether the equal check is performed for a guild command.</param>
-	internal static bool IsEqualTo(this DiscordApplicationCommand ac1, DiscordApplicationCommand targetApplicationCommand, DiscordClient client, bool IsGuild)
+	/// <param name="isGuild">Whether the equal check is performed for a guild command.</param>
+	internal static bool IsEqualTo(this DiscordApplicationCommand ac1, DiscordApplicationCommand targetApplicationCommand, DiscordClient client, bool isGuild)
 	{
 		if (targetApplicationCommand is null || ac1 is null)
 			return false;
@@ -56,7 +56,7 @@ internal static class ApplicationCommandEqualityChecks
 		if (sourceApplicationCommand.DefaultMemberPermissions == Permissions.None && targetApplicationCommand.DefaultMemberPermissions == null)
 			sourceApplicationCommand.DefaultMemberPermissions = null;
 
-		if (IsGuild)
+		if (isGuild)
 		{
 			sourceApplicationCommand.DmPermission = null;
 			targetApplicationCommand.DmPermission = null;
@@ -64,7 +64,7 @@ internal static class ApplicationCommandEqualityChecks
 
 		client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, "[AC Change Check] Command {name}\n\n[{jsonOne},{jsontwo}]\n\n", ac1.Name, JsonConvert.SerializeObject(sourceApplicationCommand), JsonConvert.SerializeObject(targetApplicationCommand));
 
-		return ac1.Type == targetApplicationCommand.Type && sourceApplicationCommand.SoftEqual(targetApplicationCommand, ac1.Type, ApplicationCommandsExtension.Configuration?.EnableLocalization ?? false, IsGuild);
+		return ac1.Type == targetApplicationCommand.Type && sourceApplicationCommand.SoftEqual(targetApplicationCommand, ac1.Type, ApplicationCommandsExtension.Configuration?.EnableLocalization ?? false, isGuild);
 	}
 
 	/// <summary>

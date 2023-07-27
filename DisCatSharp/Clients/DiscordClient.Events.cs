@@ -1052,12 +1052,12 @@ public sealed partial class DiscordClient
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, RateLimitExceptionEventArgs> RateLimitHit
 	{
-		add => this._rateLimitHit.Register(value);
-		remove => this._rateLimitHit.Unregister(value);
+		add => this.RateLimitHitInternal.Register(value);
+		remove => this.RateLimitHitInternal.Unregister(value);
 	}
-	internal AsyncEvent<DiscordClient, RateLimitExceptionEventArgs> _rateLimitHit;
+	internal AsyncEvent<DiscordClient, RateLimitExceptionEventArgs> RateLimitHitInternal;
 
-	/// <summary>
+	/// <summary>	
 	/// Fired on heartbeat attempt cancellation due to too many failed heartbeats.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ZombiedEventArgs> Zombied

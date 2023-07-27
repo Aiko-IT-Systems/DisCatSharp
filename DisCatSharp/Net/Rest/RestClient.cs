@@ -390,7 +390,7 @@ internal sealed class RestClient : IDisposable
 						{
 							if (this._discord is DiscordClient)
 							{
-								await (this._discord as DiscordClient)._rateLimitHit.InvokeAsync(this._discord as DiscordClient, new(this._discord.ServiceProvider)
+								await (this._discord as DiscordClient).RateLimitHitInternal.InvokeAsync(this._discord as DiscordClient, new(this._discord.ServiceProvider)
 								{
 									Exception = ex as RateLimitException,
 									ApiEndpoint = request.Url.AbsoluteUri

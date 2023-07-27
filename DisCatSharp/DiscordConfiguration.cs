@@ -235,11 +235,11 @@ public sealed class DiscordConfiguration
 	[Deprecated("Use ApiChannel instead.")]
 	public bool UsePtb
 	{
-		internal get => this.ApiChannel == ApiChannel.PTB;
+		internal get => this.ApiChannel == ApiChannel.Ptb;
 		set
 		{
 			if (value)
-				this.ApiChannel = ApiChannel.PTB;
+				this.ApiChannel = ApiChannel.Ptb;
 		}
 	}
 

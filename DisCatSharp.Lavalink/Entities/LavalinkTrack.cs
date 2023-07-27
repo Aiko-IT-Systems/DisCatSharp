@@ -61,7 +61,7 @@ public sealed class LavalinkPluginInfo
 	/// Gets additional json properties that are not known to the deserializing object.
 	/// </summary>
 	[JsonIgnore]
-	internal IDictionary<string, object> _unknownProperties = new Dictionary<string, object>();
+	internal IDictionary<string, object> UnknownProperties = new Dictionary<string, object>();
 
 	/// <summary>
 	/// Lets JsonConvert set the unknown properties.
@@ -69,8 +69,8 @@ public sealed class LavalinkPluginInfo
 	[JsonExtensionData(ReadData = true, WriteData = false)]
 	public IDictionary<string, object> AdditionalProperties
 	{
-		get => this._unknownProperties;
-		set => this._unknownProperties = value;
+		get => this.UnknownProperties;
+		set => this.UnknownProperties = value;
 	}
 }
 

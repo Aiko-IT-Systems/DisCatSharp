@@ -46,7 +46,7 @@ public sealed class DiscordInteractionResponseBuilder
 		set
 		{
 			this.EPH = value;
-			this._flagsChanged = true;
+			this.FlagsChanged = true;
 		}
 	}
 	private bool EPH { get; set; }
@@ -60,7 +60,7 @@ public sealed class DiscordInteractionResponseBuilder
 		set
 		{
 			this.EMB_SUP = value;
-			this._flagsChanged = true;
+			this.FlagsChanged = true;
 		}
 	}
 	private bool EMB_SUP { get; set; }
@@ -74,7 +74,7 @@ public sealed class DiscordInteractionResponseBuilder
 		set
 		{
 			this.NOTI_SUP = value;
-			this._flagsChanged = true;
+			this.FlagsChanged = true;
 		}
 	}
 	private bool NOTI_SUP { get; set; }
@@ -82,7 +82,7 @@ public sealed class DiscordInteractionResponseBuilder
 	/// <summary>
 	/// Whether flags were changed.
 	/// </summary>
-	internal bool _flagsChanged = false;
+	internal bool FlagsChanged = false;
 
 	/// <summary>
 	/// Content of the message to send.
@@ -212,7 +212,7 @@ public sealed class DiscordInteractionResponseBuilder
 	/// </summary>
 	public DiscordInteractionResponseBuilder AsEphemeral()
 	{
-		this._flagsChanged = true;
+		this.FlagsChanged = true;
 		this.IsEphemeral = true;
 		return this;
 	}
@@ -222,7 +222,7 @@ public sealed class DiscordInteractionResponseBuilder
 	/// </summary>
 	public DiscordInteractionResponseBuilder SuppressEmbeds()
 	{
-		this._flagsChanged = true;
+		this.FlagsChanged = true;
 		this.EmbedsSuppressed = true;
 		return this;
 	}
@@ -232,7 +232,7 @@ public sealed class DiscordInteractionResponseBuilder
 	/// </summary>
 	public DiscordInteractionResponseBuilder AsSilentMessage()
 	{
-		this._flagsChanged = true;
+		this.FlagsChanged = true;
 		this.NotificationsSuppressed = true;
 		return this;
 	}

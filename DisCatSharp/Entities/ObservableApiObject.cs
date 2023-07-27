@@ -38,7 +38,7 @@ public abstract class ObservableApiObject
 	/// Gets additional json properties that are not known to the deserializing object.
 	/// </summary>
 	[JsonIgnore]
-	internal IDictionary<string, object> _unknownProperties = new Dictionary<string, object>();
+	internal IDictionary<string, object> UnknownProperties = new Dictionary<string, object>();
 
 	/// <summary>
 	/// Lets JsonConvert set the unknown properties.
@@ -46,17 +46,17 @@ public abstract class ObservableApiObject
 	[JsonExtensionData(ReadData = true, WriteData = false)]
 	public IDictionary<string, object> AdditionalProperties
 	{
-		get => this._unknownProperties;
-		set => this._unknownProperties = value;
+		get => this.UnknownProperties;
+		set => this.UnknownProperties = value;
 	}
 
 	[JsonIgnore]
-	internal List<string> _ignoredJsonKeys { get; set; } = new();
+	internal List<string> IgnoredJsonKeys { get; set; } = new();
 
-	public ObservableApiObject(List<string>? ignored = null)
+	protected ObservableApiObject(List<string>? ignored = null)
 	{
 		if (ignored != null)
 			foreach (var ignoredKey in ignored)
-				this._ignoredJsonKeys.Add(ignoredKey);
+				this.IgnoredJsonKeys.Add(ignoredKey);
 	}
 }
