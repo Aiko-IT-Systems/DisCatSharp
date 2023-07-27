@@ -22,7 +22,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0090:Use 'new(...)'", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Common.Utilities.AsyncEvent`2._lock")]
+/*[assembly: SuppressMessage("Style", "IDE0090:Use 'new(...)'", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Common.Utilities.AsyncEvent`2._lock")]
 [assembly: SuppressMessage("Style", "IDE0022:Use expression body for methods", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.CharSpanLookupDictionary`1.Enumerator.Dispose")]
 [assembly: SuppressMessage("Style", "IDE0083:Use pattern matching", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.CharSpanLookupDictionary`1.System#Collections#IDictionary#Add(System.Object,System.Object)")]
 [assembly: SuppressMessage("Style", "IDE0083:Use pattern matching", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.CharSpanLookupDictionary`1.System#Collections#IDictionary#Contains(System.Object)~System.Boolean")]
@@ -62,11 +62,11 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.SecureRandom.GetUInt64(System.UInt64,System.UInt64)~System.UInt64")]
 [assembly: SuppressMessage("Style", "IDE0048:Add parentheses for clarity", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.SecureRandom.GetUInt8(System.Byte,System.Byte)~System.Byte")]
 [assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.SecureRandom.GetUInt8(System.Byte,System.Byte)~System.Byte")]
-[assembly: SuppressMessage("Style", "IDE0045:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.Utilities.AsyncExecutor.Execute(System.Threading.Tasks.Task)")]
+[assembly: SuppressMessage("Style", "IDE0045:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.Utilities.AsyncExecutor.Execute(System.Threading.Tasks.Task)")]*/
 [assembly: SuppressMessage("Style", "IDE0062:Make local function 'static'", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.Utilities.AsyncExecutor.Execute(System.Threading.Tasks.Task)")]
-[assembly: SuppressMessage("Style", "IDE0045:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.Utilities.AsyncExecutor.Execute``1(System.Threading.Tasks.Task{``0})~``0")]
+//[assembly: SuppressMessage("Style", "IDE0045:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.Utilities.AsyncExecutor.Execute``1(System.Threading.Tasks.Task{``0})~``0")]
 [assembly: SuppressMessage("Style", "IDE0062:Make local function 'static'", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.Utilities.AsyncExecutor.Execute``1(System.Threading.Tasks.Task{``0})~``0")]
-[assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.Utilities.ReflectionUtilities.ToDictionary``1(``0)~System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object}")]
+//[assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.Utilities.ReflectionUtilities.ToDictionary``1(``0)~System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object}")]
 [assembly: SuppressMessage("Usage", "DCS0102:[Discord] Deprecated", Justification = "<Pending>")]
 [assembly: SuppressMessage("Usage", "DCS0101:[Discord] InExperiment", Justification = "<Pending>")]
 [assembly: SuppressMessage("Usage", "DCS0103:[Discord] InExperiment", Justification = "<Pending>")]
