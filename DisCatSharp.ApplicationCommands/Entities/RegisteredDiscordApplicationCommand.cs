@@ -62,41 +62,50 @@ public sealed class RegisteredDiscordApplicationCommand : DiscordApplicationComm
 		this.Type = parent.Type;
 		this.UnknownProperties = parent.UnknownProperties;
 		this.Version = parent.Version;
+
+		
+
+		if (ApplicationCommandsExtension.s_commandMethods.Any(x => x.CommandId == this.Id))
+		{
+			this.CommandMethod = ApplicationCommandsExtension.s_commandMethods.First(x => x.CommandId == this.Id).Method;
+			this.ContainingType = this.CommandMethod.DeclaringType;
+			this.CustomAttributes = this.CommandMethod.GetCustomAttributes().Where(x => !x.GetType().Namespace.StartsWith("DisCatSharp")).ToList();
+		}
+		else if (ApplicationCommandsExtension.s_contextMenuCommands.Any(x => x.CommandId == this.Id))
+		{
+			this.CommandMethod = ApplicationCommandsExtension.s_contextMenuCommands.First(x => x.CommandId == this.Id).Method;
+			this.ContainingType = this.CommandMethod.DeclaringType;
+			this.CustomAttributes = this.CommandMethod.GetCustomAttributes().Where(x => !x.GetType().Namespace.StartsWith("DisCatSharp")).ToList();
+		}
+		else if (ApplicationCommandsExtension.s_groupCommands.Any(x => x.CommandId == this.Id))
+		{
+			this.CommandType = ApplicationCommandsExtension.s_groupCommands.First(x => x.CommandId == this.Id).Methods.First().Value.DeclaringType;
+			this.ContainingType = this.CommandType.DeclaringType;
+			this.CustomAttributes = this.CommandType.GetCustomAttributes().Where(x => !x.GetType().Namespace.StartsWith("DisCatSharp")).ToList();
+		}
 	}
 
 	/// <summary>
 	/// The method that will be executed when somebody runs this command.
+	/// <see langword="null"/> if command is a group command.
 	/// </summary>
-	public MethodInfo CommandMethod
-	{
-		get
-		{
-			var methodInfo = ApplicationCommandsExtension.s_commandMethods.FirstOrDefault(x => x.CommandId == this.Id, null)?.Method;
-			methodInfo ??= ApplicationCommandsExtension.s_contextMenuCommands.FirstOrDefault(x => x.CommandId == this.Id, null)?.Method;
-			methodInfo ??= ApplicationCommandsExtension.s_groupCommands.FirstOrDefault(x => x.CommandId == this.Id, null)?.Methods.First().Value;
+	public MethodInfo? CommandMethod { get; internal set; }
 
-			return methodInfo;
-		}
-	}
+
+	/// <summary>
+	/// The type that contains the sub commands of this command.
+	/// <see langword="null"/> if command is not a group command.
+	/// </summary>
+	public Type? CommandType { get; internal set; }
 
 
 	/// <summary>
 	/// The type this command is contained in.
 	/// </summary>
-	public Type ContainingType
-		=> this.CommandMethod.DeclaringType;
+	public Type? ContainingType { get; internal set; }
 
 	/// <summary>
 	/// Gets all Non-DisCatSharp attributes this command has.
 	/// </summary>
-	public IReadOnlyList<Attribute> CustomAttributes
-	{
-		get
-		{
-			this._customAttributes ??= this.CommandMethod.GetCustomAttributes().Where(x => !x.GetType().Namespace.StartsWith("DisCatSharp")).ToList();
-			return this._customAttributes.AsReadOnly();
-		}
-	}
-
-	private List<Attribute> _customAttributes = null;
+	public IReadOnlyList<Attribute>? CustomAttributes { get; internal set; }
 }
