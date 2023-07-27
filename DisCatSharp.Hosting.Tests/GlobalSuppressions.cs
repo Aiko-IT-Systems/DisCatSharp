@@ -46,3 +46,7 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Usage", "DCS0001:[Discord] InExperiment", Justification = "<Pending>")]
 [assembly: SuppressMessage("Usage", "DCS0002:[Discord] InExperiment", Justification = "<Pending>")]
 [assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
+[assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Hosting.Tests.HostExtensionTests.DiscordInteractivityAndLavaLinkConfiguration~Microsoft.Extensions.Configuration.IConfiguration")]
+[assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Hosting.Tests.HostExtensionTests.DiscordInteractivityConfiguration~Microsoft.Extensions.Configuration.IConfiguration")]
+[assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Hosting.Tests.HostTests.Create(System.Collections.Generic.Dictionary{System.String,System.String})~Microsoft.Extensions.Hosting.IHostBuilder")]
+[assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Hosting.Tests.HostTests.Create(System.String)~Microsoft.Extensions.Hosting.IHostBuilder")]

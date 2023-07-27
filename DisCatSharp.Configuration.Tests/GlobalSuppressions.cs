@@ -88,3 +88,7 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Usage", "DCS0001:[Discord] InExperiment", Justification = "<Pending>")]
 [assembly: SuppressMessage("Usage", "DCS0002:[Discord] InExperiment", Justification = "<Pending>")]
 [assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
+[assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Configuration.Tests.ConfigurationExtensionTests.TestHasSectionNoSuffix")]
+[assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Configuration.Tests.ConfigurationExtensionTests.SampleConfig~Microsoft.Extensions.Configuration.IConfiguration")]
+[assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Configuration.Tests.ConfigurationExtensionTests.TestHasSectionWithSuffix")]
+[assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Configuration.Tests.ConfigurationExtensionTests.TestExtractDiscordConfig_Intents")]
