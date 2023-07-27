@@ -167,11 +167,11 @@ internal sealed class LavalinkRestClient
 		}
 		request.Method = method;
 		request.RequestUri = new(this.HttpClient.BaseAddress!, path);
-		var response = await this.HttpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead);
+		var response = await this.HttpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead).ConfigureAwait(false);
 
 		if (!response.IsSuccessStatusCode)
 		{
-			var data = await response.Content.ReadAsStringAsync();
+			var data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 			var ex = LavalinkJson.DeserializeObject<LavalinkRestException>(data)!;
 			ex.Headers = response.Headers;
 			ex.Json = data;
@@ -182,7 +182,7 @@ internal sealed class LavalinkRestClient
 		var res = new LavalinkRestResponse()
 		{
 			ResponseCode = response.StatusCode,
-			Response = response.StatusCode != HttpStatusCode.NoContent ? await response.Content.ReadAsStringAsync() : null,
+			Response = response.StatusCode != HttpStatusCode.NoContent ? await response.Content.ReadAsStringAsync().ConfigureAwait(false) : null,
 			Headers = response.Headers
 		};
 
@@ -198,7 +198,7 @@ internal sealed class LavalinkRestClient
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.VERSION}";
 		var path = GetPath(route, new { });
-		return await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}");
+		return await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -210,7 +210,7 @@ internal sealed class LavalinkRestClient
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.INFO}";
 		var path = GetPath(route, new { });
-		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}");
+		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkInfo>(res.Response!)!;
 	}
 
@@ -223,7 +223,7 @@ internal sealed class LavalinkRestClient
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.STATS}";
 		var path = GetPath(route, new { });
-		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}");
+		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkStats>(res.Response!)!;
 	}
 
@@ -238,7 +238,7 @@ internal sealed class LavalinkRestClient
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.SESSIONS}/:session_id";
 		var path = GetPath(route, new { session_id = sessionId });
-		var res = await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(config));
+		var res = await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(config)).ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkSessionConfiguration>(res.Response!)!;
 	}
 
@@ -252,7 +252,7 @@ internal sealed class LavalinkRestClient
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.SESSIONS}/:session_id{Endpoints.PLAYERS}";
 		var path = GetPath(route, new { session_id = sessionId });
-		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}");
+		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<List<LavalinkPlayer>>(res.Response!)!;
 	}
 
@@ -269,7 +269,7 @@ internal sealed class LavalinkRestClient
 		var pld = new LavalinkRestPlayerCreatePayload(guildId.ToString(), defaultVolume);
 		var route = $"{Endpoints.V4}{Endpoints.SESSIONS}/:session_id{Endpoints.PLAYERS}/:guild_id";
 		var path = GetPath(route, new { session_id = sessionId, guild_id = guildId });
-		await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(pld));
+		await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(pld)).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -283,7 +283,7 @@ internal sealed class LavalinkRestClient
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.SESSIONS}/:session_id{Endpoints.PLAYERS}/:guild_id";
 		var path = GetPath(route, new { session_id = sessionId, guild_id = guildId });
-		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}");
+		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkPlayer>(res.Response!)!;
 	}
 
@@ -320,7 +320,7 @@ internal sealed class LavalinkRestClient
 		};
 		var route = $"{Endpoints.V4}{Endpoints.SESSIONS}/:session_id{Endpoints.PLAYERS}/:guild_id";
 		var path = GetPath(route, new { session_id = sessionId, guild_id = guildId });
-		var res = await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(pld));
+		var res = await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(pld)).ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkPlayer>(res.Response!)!;
 	}
 
@@ -339,7 +339,7 @@ internal sealed class LavalinkRestClient
 
 		var route = $"{Endpoints.V4}{Endpoints.SESSIONS}/:session_id{Endpoints.PLAYERS}/:guild_id";
 		var path = GetPath(route, new { session_id = sessionId, guild_id = guildId });
-		await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(pld));
+		await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(pld)).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -353,7 +353,7 @@ internal sealed class LavalinkRestClient
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.SESSIONS}/:session_id{Endpoints.PLAYERS}/:guild_id";
 		var path = GetPath(route, new { session_id = sessionId, guild_id = guildId });
-		await this.DoRequestAsync(HttpMethod.Delete, $"{path}{BuildQueryString(queryDict)}");
+		await this.DoRequestAsync(HttpMethod.Delete, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -367,7 +367,7 @@ internal sealed class LavalinkRestClient
 		queryDict.Add("identifier", identifier);
 		var route = $"{Endpoints.V4}{Endpoints.LOAD_TRACKS}";
 		var path = GetPath(route, new { });
-		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}");
+		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
 		var obj = JObject.Parse(res.Response!);
 		return new LavalinkTrackLoadingResult()
 		{
@@ -387,7 +387,7 @@ internal sealed class LavalinkRestClient
 		queryDict.Add("encodedTrack", base64Track);
 		var route = $"{Endpoints.V4}{Endpoints.DECODE_TRACK}";
 		var path = GetPath(route, new { });
-		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}");
+		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkTrack>(res.Response!)!;
 	}
 
@@ -401,7 +401,7 @@ internal sealed class LavalinkRestClient
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.DECODE_TRACKS}";
 		var path = GetPath(route, new { });
-		var res = await this.DoRequestAsync(HttpMethod.Post, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(base64Tracks));
+		var res = await this.DoRequestAsync(HttpMethod.Post, $"{path}{BuildQueryString(queryDict)}", payload: LavalinkJson.SerializeObject(base64Tracks)).ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<List<LavalinkTrack>>(res.Response!)!;
 	}
 }

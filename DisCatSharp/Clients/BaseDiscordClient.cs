@@ -407,7 +407,7 @@ public abstract class BaseDiscordClient : IDisposable
 				throw new InvalidOperationException("Tags can not exceed 20 chars.");
 		_ = await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, installParams).ConfigureAwait(false);
 		// We use GetCurrentApplicationAsync because modify returns internal data not meant for developers.
-		var app = await this.GetCurrentApplicationAsync();
+		var app = await this.GetCurrentApplicationAsync().ConfigureAwait(false);
 		this.CurrentApplication = app;
 		return app;
 	}

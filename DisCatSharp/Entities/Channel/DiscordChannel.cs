@@ -621,7 +621,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 
 		var isUp = position > this.Position;
 
-		var channels = await this.InternalRefreshChannelsAsync();
+		var channels = await this.InternalRefreshChannelsAsync().ConfigureAwait(false);
 
 		var chns = this.ParentId != null
 			? this.Type == ChannelType.Text || this.Type == ChannelType.News
@@ -662,7 +662,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	private async Task<IReadOnlyList<DiscordChannel>> InternalRefreshChannelsAsync()
 	{
-		await this.RefreshPositionsAsync();
+		await this.RefreshPositionsAsync().ConfigureAwait(false);
 		return this.Guild.Channels.Values.ToList().AsReadOnly();
 	}
 
@@ -690,7 +690,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	public async Task RefreshPositionsAsync()
 	{
-		var channels = await this.Discord.ApiClient.GetGuildChannelsAsync(this.Guild.Id);
+		var channels = await this.Discord.ApiClient.GetGuildChannelsAsync(this.Guild.Id).ConfigureAwait(false);
 		this.Guild.ChannelsInternal.Clear();
 		foreach (var channel in channels.ToList())
 		{
@@ -999,7 +999,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordStageInstance> OpenStageAsync(string topic, bool sendStartNotification = false, ulong? scheduledEventId = null, string reason = null)
-		=> await this.Discord.ApiClient.CreateStageInstanceAsync(this.Id, topic, sendStartNotification, scheduledEventId, reason);
+		=> await this.Discord.ApiClient.CreateStageInstanceAsync(this.Id, topic, sendStartNotification, scheduledEventId, reason).ConfigureAwait(false);
 
 	/// <summary>
 	/// Modifies a stage topic.
@@ -1011,7 +1011,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task ModifyStageAsync(Optional<string> topic, string reason = null)
-		=> await this.Discord.ApiClient.ModifyStageInstanceAsync(this.Id, topic, reason);
+		=> await this.Discord.ApiClient.ModifyStageInstanceAsync(this.Id, topic, reason).ConfigureAwait(false);
 
 	/// <summary>
 	/// Closes a stage.
@@ -1022,7 +1022,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task CloseStageAsync(string reason = null)
-		=> await this.Discord.ApiClient.DeleteStageInstanceAsync(this.Id, reason);
+		=> await this.Discord.ApiClient.DeleteStageInstanceAsync(this.Id, reason).ConfigureAwait(false);
 
 	/// <summary>
 	/// Gets a stage.
@@ -1033,7 +1033,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordStageInstance> GetStageAsync()
-		=> await this.Discord.ApiClient.GetStageInstanceAsync(this.Id);
+		=> await this.Discord.ApiClient.GetStageInstanceAsync(this.Id).ConfigureAwait(false);
 
 	#endregion
 
@@ -1058,7 +1058,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 
 		var type = this.Type == ChannelType.Voice ? ScheduledEventEntityType.Voice : ScheduledEventEntityType.StageInstance;
 
-		return await this.Guild.CreateScheduledEventAsync(name, scheduledStartTime, null, this, null, description, type, coverImage, reason);
+		return await this.Guild.CreateScheduledEventAsync(name, scheduledStartTime, null, this, null, description, type, coverImage, reason).ConfigureAwait(false);
 	}
 
 	#endregion
@@ -1089,11 +1089,11 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 				: type == ChannelType.PrivateThread
 					? Utilities.CheckThreadPrivateFeature(this.Guild)
 						? Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, autoArchiveDuration)
-							? await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, autoArchiveDuration, type, rateLimitPerUser, isForum: false, reason: reason)
+							? await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, autoArchiveDuration, type, rateLimitPerUser, isForum: false, reason: reason).ConfigureAwait(false)
 							: throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(autoArchiveDuration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.")
 						: throw new NotSupportedException($"Cannot create a private thread. Guild needs to be boost tier two.")
 					: Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, autoArchiveDuration)
-						? await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, autoArchiveDuration, this.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, rateLimitPerUser, isForum: false, reason: reason)
+						? await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, autoArchiveDuration, this.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, rateLimitPerUser, isForum: false, reason: reason).ConfigureAwait(false)
 						: throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(autoArchiveDuration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 
 	/// <summary>
@@ -1109,7 +1109,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the guild hasn't enabled threads atm.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordThreadChannel> CreatePostAsync(string name, DiscordMessageBuilder builder, int? rateLimitPerUser = null, IEnumerable<ForumPostTag>? tags = null, string reason = null) => this.Type != ChannelType.Forum ? throw new NotSupportedException("Parent channel must be forum.") : await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, null, null, rateLimitPerUser, tags, builder, true, reason);
+	public async Task<DiscordThreadChannel> CreatePostAsync(string name, DiscordMessageBuilder builder, int? rateLimitPerUser = null, IEnumerable<ForumPostTag>? tags = null, string reason = null) => this.Type != ChannelType.Forum ? throw new NotSupportedException("Parent channel must be forum.") : await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, null, null, rateLimitPerUser, tags, builder, true, reason).ConfigureAwait(false);
 
 	/// <summary>
 	/// Gets joined archived private threads. Can contain more threads.
@@ -1122,7 +1122,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordThreadResult> GetJoinedPrivateArchivedThreadsAsync(ulong? before, int? limit)
-		=> await this.Discord.ApiClient.GetJoinedPrivateArchivedThreadsAsync(this.Id, before, limit);
+		=> await this.Discord.ApiClient.GetJoinedPrivateArchivedThreadsAsync(this.Id, before, limit).ConfigureAwait(false);
 
 	/// <summary>
 	/// Gets archived public threads. Can contain more threads.
@@ -1135,7 +1135,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordThreadResult> GetPublicArchivedThreadsAsync(ulong? before, int? limit)
-		=> await this.Discord.ApiClient.GetPublicArchivedThreadsAsync(this.Id, before, limit);
+		=> await this.Discord.ApiClient.GetPublicArchivedThreadsAsync(this.Id, before, limit).ConfigureAwait(false);
 
 	/// <summary>
 	/// Gets archived private threads. Can contain more threads.
@@ -1148,7 +1148,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordThreadResult> GetPrivateArchivedThreadsAsync(ulong? before, int? limit)
-		=> await this.Discord.ApiClient.GetPrivateArchivedThreadsAsync(this.Id, before, limit);
+		=> await this.Discord.ApiClient.GetPrivateArchivedThreadsAsync(this.Id, before, limit).ConfigureAwait(false);
 
 	/// <summary>
 	/// Gets a forum channel tag.
@@ -1201,7 +1201,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			UnicodeEmojiString = emoji?.Id == null || emoji?.Id == 0 ? emoji?.Name ?? null : null,
 			Moderated = moderated,
 			Id = null
-		}).ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason);
+		}).ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason).ConfigureAwait(false);
 
 	/// <summary>
 	/// Deletes a forum channel tag.
@@ -1213,7 +1213,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordChannel> DeleteForumPostTag(ulong id, string reason = null)
-		=> this.Type != ChannelType.Forum ? throw new NotSupportedException("Channel needs to be type of Forum") : await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, Optional.None, Optional.None, null, Optional.None, this.InternalAvailableTags?.Where(x => x.Id != id)?.ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason);
+		=> this.Type != ChannelType.Forum ? throw new NotSupportedException("Channel needs to be type of Forum") : await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, Optional.None, Optional.None, null, Optional.None, this.InternalAvailableTags?.Where(x => x.Id != id)?.ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason).ConfigureAwait(false);
 
 	#endregion
 
@@ -1374,7 +1374,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public async Task<GcpAttachmentUploadInformation> UploadFileAsync(string name, Stream stream, string? description = null)
 	{
 		GcpAttachment attachment = new(name, stream);
-		var response = await this.Discord.ApiClient.RequestFileUploadAsync(this.Id, attachment);
+		var response = await this.Discord.ApiClient.RequestFileUploadAsync(this.Id, attachment).ConfigureAwait(false);
 		var target = response.Attachments.First();
 		_ = Task.Run(() => this.Discord.ApiClient.UploadGcpFile(target, stream));
 		target.Filename = name;

@@ -74,7 +74,7 @@ public sealed class RequireBotPermissionsAttribute : CheckBaseAttribute
 		var channel = ctx.Channel;
 		if (ctx.Channel.GuildId == null)
 		{
-			channel = await ctx.Client.GetChannelAsync(ctx.Channel.Id, true);
+			channel = await ctx.Client.GetChannelAsync(ctx.Channel.Id, true).ConfigureAwait(false);
 		}
 		var pbot = channel.PermissionsFor(bot);
 

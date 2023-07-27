@@ -275,7 +275,7 @@ public class DiscordInviteConverter : IArgumentConverter<DiscordInvite>
 			return Optional.FromNullable(result);
 		}
 
-		var inv = await ctx.Client.GetInviteByCodeAsync(value);
+		var inv = await ctx.Client.GetInviteByCodeAsync(value).ConfigureAwait(false);
 		return Optional.FromNullable(inv);
 	}
 }

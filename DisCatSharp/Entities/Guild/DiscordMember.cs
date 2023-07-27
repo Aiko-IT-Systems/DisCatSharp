@@ -517,7 +517,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// Disconnects the member from their current voice channel.
 	/// </summary>
 	public async Task DisconnectFromVoiceAsync()
-		=> await this.ModifyAsync(x => x.VoiceChannel = null);
+		=> await this.ModifyAsync(x => x.VoiceChannel = null).ConfigureAwait(false);
 
 	/// <summary>
 	/// Adds a timeout to a member.

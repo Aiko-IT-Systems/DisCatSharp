@@ -678,7 +678,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <returns>A ordered list of categories with its channels</returns>
 	public async Task<Dictionary<ulong, List<DiscordChannel>>> GetOrderedChannelsAsync()
 	{
-		var rawChannels = await this.Discord.ApiClient.GetGuildChannelsAsync(this.Id);
+		var rawChannels = await this.Discord.ApiClient.GetGuildChannelsAsync(this.Id).ConfigureAwait(false);
 
 		Dictionary<ulong, List<DiscordChannel>> orderedChannels = new()
 		{
@@ -929,7 +929,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 	[DiscordInExperiment, RequiresFeature(Attributes.Features.Community)]
 	public async Task<DiscordGuild> ModifyInventorySettingsAsync(bool enabled, string? reason = null)
-		=> await this.Discord.ApiClient.ModifyGuildInventorySettingsAsync(this.Id, enabled, reason);
+		=> await this.Discord.ApiClient.ModifyGuildInventorySettingsAsync(this.Id, enabled, reason).ConfigureAwait(false);
 
 	/// <summary>
 	/// Modifies the safety alerts settings async.
@@ -983,7 +983,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 			rfeatures.Remove("INVITES_DISABLED");
 		features = rfeatures;
 
-		return await this.Discord.ApiClient.ModifyGuildFeaturesAsync(this.Id, features, reason);
+		return await this.Discord.ApiClient.ModifyGuildFeaturesAsync(this.Id, features, reason).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1003,7 +1003,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 			rfeatures.Add("INVITES_DISABLED");
 		features = rfeatures;
 
-		return await this.Discord.ApiClient.ModifyGuildFeaturesAsync(this.Id, features, reason);
+		return await this.Discord.ApiClient.ModifyGuildFeaturesAsync(this.Id, features, reason).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1230,7 +1230,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	[RequiresFeature(Attributes.Features.Community)]
 	public async Task<AutomodRule> CreateAutomodRuleAsync(string name, AutomodEventType eventType, AutomodTriggerType triggerType, IEnumerable<AutomodAction> actions,
 		AutomodTriggerMetadata triggerMetadata = null, bool enabled = false, IEnumerable<ulong> exemptRoles = null, IEnumerable<ulong> exemptChannels = null, string reason = null)
-		=> await this.Discord.ApiClient.CreateAutomodRuleAsync(this.Id, name, eventType, triggerType, actions, triggerMetadata, enabled, exemptRoles, exemptChannels, reason);
+		=> await this.Discord.ApiClient.CreateAutomodRuleAsync(this.Id, name, eventType, triggerType, actions, triggerMetadata, enabled, exemptRoles, exemptChannels, reason).ConfigureAwait(false);
 
 	#region Scheduled Events
 
@@ -1253,7 +1253,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset? scheduledEndTime = null, DiscordChannel channel = null, DiscordScheduledEventEntityMetadata metadata = null, string description = null, ScheduledEventEntityType type = ScheduledEventEntityType.StageInstance, Optional<Stream> coverImage = default, string reason = null)
 	{
 		var coverb64 = ImageTool.Base64FromStream(coverImage);
-		return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, type == ScheduledEventEntityType.External ? null : channel?.Id, type == ScheduledEventEntityType.External ? metadata : null, name, scheduledStartTime, scheduledEndTime.HasValue && type == ScheduledEventEntityType.External ? scheduledEndTime.Value : null, description, type, coverb64, reason);
+		return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, type == ScheduledEventEntityType.External ? null : channel?.Id, type == ScheduledEventEntityType.External ? metadata : null, name, scheduledStartTime, scheduledEndTime.HasValue && type == ScheduledEventEntityType.External ? scheduledEndTime.Value : null, description, type, coverb64, reason).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1273,7 +1273,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public async Task<DiscordScheduledEvent> CreateExternalScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset scheduledEndTime, string location, string description = null, Optional<Stream> coverImage = default, string reason = null)
 	{
 		var coverb64 = ImageTool.Base64FromStream(coverImage);
-		return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, new(location), name, scheduledStartTime, scheduledEndTime, description, ScheduledEventEntityType.External, coverb64, reason);
+		return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, new(location), name, scheduledStartTime, scheduledEndTime, description, ScheduledEventEntityType.External, coverb64, reason).ConfigureAwait(false);
 	}
 
 
@@ -1287,7 +1287,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordScheduledEvent> GetScheduledEventAsync(ulong scheduledEventId, bool? withUserCount = null)
-		=> this.ScheduledEventsInternal.TryGetValue(scheduledEventId, out var ev) ? ev : await this.Discord.ApiClient.GetGuildScheduledEventAsync(this.Id, scheduledEventId, withUserCount);
+		=> this.ScheduledEventsInternal.TryGetValue(scheduledEventId, out var ev) ? ev : await this.Discord.ApiClient.GetGuildScheduledEventAsync(this.Id, scheduledEventId, withUserCount).ConfigureAwait(false);
 
 	/// <summary>
 	/// Tries to get a specific scheduled events.
@@ -1319,7 +1319,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordScheduledEvent> GetScheduledEventAsync(DiscordScheduledEvent scheduledEvent, bool? withUserCount = null)
-		=> await this.GetScheduledEventAsync(scheduledEvent.Id, withUserCount);
+		=> await this.GetScheduledEventAsync(scheduledEvent.Id, withUserCount).ConfigureAwait(false);
 
 	/// <summary>
 	/// Tries to get a specific scheduled events.
@@ -1350,7 +1350,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<IReadOnlyDictionary<ulong, DiscordScheduledEvent>> GetScheduledEventsAsync(bool? withUserCount = null)
-		=> await this.Discord.ApiClient.ListGuildScheduledEventsAsync(this.Id, withUserCount);
+		=> await this.Discord.ApiClient.ListGuildScheduledEventsAsync(this.Id, withUserCount).ConfigureAwait(false);
 	#endregion
 
 	/// <summary>
@@ -1958,7 +1958,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<IReadOnlyList<DiscordSticker>> GetStickersAsync()
 	{
-		var stickers = await this.Discord.ApiClient.GetGuildStickersAsync(this.Id);
+		var stickers = await this.Discord.ApiClient.GetGuildStickersAsync(this.Id).ConfigureAwait(false);
 
 		foreach (var xstr in stickers)
 		{
@@ -2215,7 +2215,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	{
 		var mdl = new MembershipScreeningEditModel();
 		action(mdl);
-		return await this.Discord.ApiClient.ModifyGuildMembershipScreeningFormAsync(this.Id, mdl.Enabled, mdl.Fields, mdl.Description);
+		return await this.Discord.ApiClient.ModifyGuildMembershipScreeningFormAsync(this.Id, mdl.Enabled, mdl.Fields, mdl.Description).ConfigureAwait(false);
 	}
 
 	/// <summary>

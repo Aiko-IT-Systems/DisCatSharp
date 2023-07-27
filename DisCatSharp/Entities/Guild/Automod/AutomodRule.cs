@@ -129,7 +129,7 @@ public class AutomodRule : SnowflakeObject
 			if (mdl.TriggerMetadata.Value.MentionRaidProtectionEnabled != null && this.TriggerType != AutomodTriggerType.MentionSpam)
 				throw new ArgumentException($"Cannot use MentionRaidProtectionEnabled for a {this.TriggerType} rule. Only {AutomodTriggerType.MentionSpam} is valid in this context.");
 		}
-		return await this.Discord.ApiClient.ModifyAutomodRuleAsync(this.GuildId, this.Id, mdl.Name, mdl.EventType, mdl.TriggerMetadata, mdl.Actions, mdl.Enabled, mdl.ExemptRoles, mdl.ExemptChannels, mdl.AuditLogReason);
+		return await this.Discord.ApiClient.ModifyAutomodRuleAsync(this.GuildId, this.Id, mdl.Name, mdl.EventType, mdl.TriggerMetadata, mdl.Actions, mdl.Enabled, mdl.ExemptRoles, mdl.ExemptChannels, mdl.AuditLogReason).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -141,5 +141,5 @@ public class AutomodRule : SnowflakeObject
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task DeleteAsync(string reason = null)
-		=> await this.Discord.ApiClient.DeleteAutomodRuleAsync(this.GuildId, this.Id, reason);
+		=> await this.Discord.ApiClient.DeleteAutomodRuleAsync(this.GuildId, this.Id, reason).ConfigureAwait(false);
 }

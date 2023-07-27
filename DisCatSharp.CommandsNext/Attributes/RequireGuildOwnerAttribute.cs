@@ -38,10 +38,10 @@ public sealed class RequireGuildOwnerAttribute : CheckBaseAttribute
 	/// <param name="help">If true, help - returns true.</param>
 	public override async Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
 	{
-		var guild = await Task.FromResult(ctx.Guild != null);
+		var guild = await Task.FromResult(ctx.Guild != null).ConfigureAwait(false);
 		if (guild)
 		{
-			var owner = await Task.FromResult(ctx.Member == ctx.Guild.Owner);
+			var owner = await Task.FromResult(ctx.Member == ctx.Guild.Owner).ConfigureAwait(false);
 
 			return owner;
 		}

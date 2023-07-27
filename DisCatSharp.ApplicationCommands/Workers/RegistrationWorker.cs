@@ -57,7 +57,7 @@ internal class RegistrationWorker
 
 			foreach (var cmd in globalCommandsCreateList)
 			{
-				var discordBackendCommand = await client.CreateGlobalApplicationCommandAsync(cmd);
+				var discordBackendCommand = await client.CreateGlobalApplicationCommandAsync(cmd).ConfigureAwait(false);
 				commands.Add(discordBackendCommand);
 			}
 
@@ -75,7 +75,7 @@ internal class RegistrationWorker
 					action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 					action.DmPermission = command.DmPermission ?? true;
 					action.IsNsfw = command.IsNsfw;
-				});
+				}).ConfigureAwait(false);
 
 				commands.Add(discordBackendCommand);
 			}
@@ -88,7 +88,7 @@ internal class RegistrationWorker
 
 			foreach (var cmd in globalCommandsCreateList)
 			{
-				var discordBackendCommand = await client.CreateGlobalApplicationCommandAsync(cmd);
+				var discordBackendCommand = await client.CreateGlobalApplicationCommandAsync(cmd).ConfigureAwait(false);
 				commands.Add(discordBackendCommand);
 			}
 
@@ -107,7 +107,7 @@ internal class RegistrationWorker
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 						action.DmPermission = command.DmPermission ?? true;
 						action.IsNsfw = command.IsNsfw;
-					});
+					}).ConfigureAwait(false);
 
 					commands.Add(discordBackendCommand);
 				}
@@ -133,7 +133,7 @@ internal class RegistrationWorker
 					action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 					action.DmPermission = command.DmPermission ?? true;
 					action.IsNsfw = command.IsNsfw;
-				});
+				}).ConfigureAwait(false);
 
 				commands.Add(discordBackendCommand);
 			}
@@ -151,14 +151,14 @@ internal class RegistrationWorker
 				cmd.Id = overwrite.Key;
 				overwriteList.Add(cmd);
 			}
-			var discordBackendCommands = await client.BulkOverwriteGlobalApplicationCommandsAsync(overwriteList);
+			var discordBackendCommands = await client.BulkOverwriteGlobalApplicationCommandsAsync(overwriteList).ConfigureAwait(false);
 			commands.AddRange(discordBackendCommands);
 		}
 		else if (globalCommandsCreateList.NotEmptyAndNotNull() && changedCommands.EmptyOrNull() && unchangedCommands.EmptyOrNull())
 		{
 			client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, $"[AC GLOBAL] Creating all application commands.");
 
-			var cmds = await client.BulkOverwriteGlobalApplicationCommandsAsync(globalCommandsCreateList);
+			var cmds = await client.BulkOverwriteGlobalApplicationCommandsAsync(globalCommandsCreateList).ConfigureAwait(false);
 			commands.AddRange(cmds);
 		}
 		else if (globalCommandsCreateList.EmptyOrNull() && changedCommands.EmptyOrNull() && unchangedCommands.NotEmptyAndNotNull())
@@ -175,7 +175,7 @@ internal class RegistrationWorker
 			foreach (var cmdId in globalCommandsDeleteList)
 				try
 				{
-					await client.DeleteGlobalApplicationCommandAsync(cmdId);
+					await client.DeleteGlobalApplicationCommandAsync(cmdId).ConfigureAwait(false);
 				}
 				catch (NotFoundException)
 				{
@@ -205,7 +205,7 @@ internal class RegistrationWorker
 
 			foreach (var cmd in guildCommandsCreateList)
 			{
-				var discordBackendCommand = await client.CreateGuildApplicationCommandAsync(guildId, cmd);
+				var discordBackendCommand = await client.CreateGuildApplicationCommandAsync(guildId, cmd).ConfigureAwait(false);
 				commands.Add(discordBackendCommand);
 			}
 
@@ -223,7 +223,7 @@ internal class RegistrationWorker
 					action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 					action.DmPermission = command.DmPermission ?? true;
 					action.IsNsfw = command.IsNsfw;
-				});
+				}).ConfigureAwait(false);
 
 				commands.Add(discordBackendCommand);
 			}
@@ -236,7 +236,7 @@ internal class RegistrationWorker
 
 			foreach (var cmd in guildCommandsCreateList)
 			{
-				var discordBackendCommand = await client.CreateGuildApplicationCommandAsync(guildId, cmd);
+				var discordBackendCommand = await client.CreateGuildApplicationCommandAsync(guildId, cmd).ConfigureAwait(false);
 				commands.Add(discordBackendCommand);
 			}
 
@@ -255,7 +255,7 @@ internal class RegistrationWorker
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 						action.DmPermission = command.DmPermission ?? true;
 						action.IsNsfw = command.IsNsfw;
-					});
+					}).ConfigureAwait(false);
 
 					commands.Add(discordBackendCommand);
 				}
@@ -283,7 +283,7 @@ internal class RegistrationWorker
 					if (command.DmPermission.HasValue)
 						action.DmPermission = command.DmPermission.Value;
 					action.IsNsfw = command.IsNsfw;
-				});
+				}).ConfigureAwait(false);
 
 				commands.Add(discordBackendCommand);
 			}
@@ -301,14 +301,14 @@ internal class RegistrationWorker
 				cmd.Id = overwrite.Key;
 				overwriteList.Add(cmd);
 			}
-			var discordBackendCommands = await client.BulkOverwriteGuildApplicationCommandsAsync(guildId, overwriteList);
+			var discordBackendCommands = await client.BulkOverwriteGuildApplicationCommandsAsync(guildId, overwriteList).ConfigureAwait(false);
 			commands.AddRange(discordBackendCommands);
 		}
 		else if (guildCommandsCreateList.NotEmptyAndNotNull() && changedCommands.EmptyOrNull() && unchangedCommands.EmptyOrNull())
 		{
 			client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, @"[AC GUILD] Creating all application commands. Guild ID: {guild}", guildId);
 
-			var cmds = await client.BulkOverwriteGuildApplicationCommandsAsync(guildId, guildCommandsCreateList);
+			var cmds = await client.BulkOverwriteGuildApplicationCommandsAsync(guildId, guildCommandsCreateList).ConfigureAwait(false);
 			commands.AddRange(cmds);
 		}
 		else if (guildCommandsCreateList.EmptyOrNull() && changedCommands.EmptyOrNull() && unchangedCommands.NotEmptyAndNotNull())
@@ -324,7 +324,7 @@ internal class RegistrationWorker
 				client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, @"[AC GUILD] Deleting missing application commands. Guild ID: {guild}", guildId);
 				try
 				{
-					await client.DeleteGuildApplicationCommandAsync(guildId, cmdId);
+					await client.DeleteGuildApplicationCommandAsync(guildId, cmdId).ConfigureAwait(false);
 				}
 				catch (NotFoundException)
 				{

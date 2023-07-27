@@ -118,7 +118,7 @@ internal class CommandWorker
 				var parameters = method.GetParameters();
 				if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(InteractionContext)))
 					throw new ArgumentException($"The first argument of the command '{commandAttribute.Name}' has to be an InteractionContext!");
-				var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), commandAttribute.Name, guildId);
+				var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), commandAttribute.Name, guildId).ConfigureAwait(false);
 
 				commandMethods.Add(new CommandMethod { Method = method, Name = commandAttribute.Name });
 
@@ -243,7 +243,7 @@ internal class NestedCommandWorker
 				if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.First().ParameterType, typeof(InteractionContext)))
 					throw new ArgumentException($"The first argument of the command '{commandAttribute.Name}' has to be an InteractionContext!");
 
-				var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), commandAttribute.Name, guildId);
+				var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), commandAttribute.Name, guildId).ConfigureAwait(false);
 
 				DiscordApplicationCommandLocalization subNameLocalizations = null;
 				DiscordApplicationCommandLocalization subDescriptionLocalizations = null;
@@ -328,7 +328,7 @@ internal class NestedCommandWorker
 					if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.First().ParameterType, typeof(InteractionContext)))
 						throw new ArgumentException($"The first argument of the command '{subgroupAttribute.Name}' has to be an InteractionContext!");
 
-					suboptions = suboptions.Concat(await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), subgroupAttribute.Name, guildId)).ToList();
+					suboptions = suboptions.Concat(await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), subgroupAttribute.Name, guildId).ConfigureAwait(false)).ToList();
 
 					DiscordApplicationCommandLocalization subSubNameLocalizations = null;
 					DiscordApplicationCommandLocalization subSubDescriptionLocalizations = null;

@@ -350,7 +350,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	/// <returns>The user with fresh data from the API.</returns>
 	public async Task<DiscordUser> GetFromApiAsync()
-		=> await this.Discord.ApiClient.GetUserAsync(this.Id);
+		=> await this.Discord.ApiClient.GetUserAsync(this.Id).ConfigureAwait(false);
 
 	/// <summary>
 	/// Gets additional information about an application if the user is an bot.
@@ -359,7 +359,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <exception cref="NotFoundException">Thrown when the application does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordRpcApplication?> GetRpcInfoAsync() => this.IsBot ? await this.Discord.ApiClient.GetApplicationRpcInfoAsync(this.Id) : await Task.FromResult<DiscordRpcApplication?>(null);
+	public async Task<DiscordRpcApplication?> GetRpcInfoAsync() => this.IsBot ? await this.Discord.ApiClient.GetApplicationRpcInfoAsync(this.Id).ConfigureAwait(false) : await Task.FromResult<DiscordRpcApplication?>(null).ConfigureAwait(false);
 
 	/// <summary>
 	/// Whether this user is in a <see cref="DiscordGuild"/>
@@ -378,7 +378,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	{
 		try
 		{
-			var member = await guild.GetMemberAsync(this.Id);
+			var member = await guild.GetMemberAsync(this.Id).ConfigureAwait(false);
 			return member is not null;
 
 		}
@@ -394,7 +394,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <param name="guild"><see cref="DiscordGuild"/></param>
 	/// <returns><see cref="bool"/></returns>
 	public async Task<bool> IsNotInGuild(DiscordGuild guild)
-		=> !await this.IsInGuild(guild);
+		=> !await this.IsInGuild(guild).ConfigureAwait(false);
 
 	/// <summary>
 	/// Returns the DiscordMember in the specified <see cref="DiscordGuild"/>
@@ -405,7 +405,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMember> ConvertToMember(DiscordGuild guild)
-		=> await guild.GetMemberAsync(this.Id);
+		=> await guild.GetMemberAsync(this.Id).ConfigureAwait(false);
 
 	/// <summary>
 	/// Unbans this user from a guild.
