@@ -58,7 +58,7 @@ public sealed class RequireOwnerOrIdAttribute : CheckBaseAttribute
 		var app = ctx.Client.CurrentApplication;
 		var me = ctx.Client.CurrentUser;
 
-		var owner = app != null ? await Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)) : await Task.FromResult(ctx.User.Id == me.Id);
+		var owner = app != null ? await Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)).ConfigureAwait(false) : await Task.FromResult(ctx.User.Id == me.Id).ConfigureAwait(false);
 
 		var allowed = this.UserIds.Contains(ctx.User.Id);
 

@@ -157,7 +157,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task RemoveTagAsync(ForumPostTag tag, string reason = null)
-		=> await this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, null, null, null, null, new List<ForumPostTag>(this.AppliedTags).Where(x => x != tag).ToList(), null, reason);
+		=> await this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, null, null, null, null, new List<ForumPostTag>(this.AppliedTags).Where(x => x != tag).ToList(), null, reason).ConfigureAwait(false);
 
 	/// <summary>
 	/// Archives a thread.
@@ -214,7 +214,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<IReadOnlyList<DiscordThreadChannelMember>> GetMembersAsync(bool withMember = false, ulong? after = null, int? limit = null)
-		=> await this.Discord.ApiClient.GetThreadMembersAsync(this.Id);
+		=> await this.Discord.ApiClient.GetThreadMembersAsync(this.Id).ConfigureAwait(false);
 
 	/// <summary>
 	/// Adds a member to this thread.
@@ -327,11 +327,11 @@ public class DiscordThreadChannel : DiscordChannel
 	public async Task AddRoleAsync(ulong roleId)
 	{
 		var role = this.Guild.GetRole(roleId);
-		var members = await this.Guild.GetAllMembersAsync();
+		var members = await this.Guild.GetAllMembersAsync().ConfigureAwait(false);
 		var roleMembers = members.Where(m => m.Roles.Contains(role));
 		foreach (var member in roleMembers)
 		{
-			await this.Discord.ApiClient.AddThreadMemberAsync(this.Id, member.Id);
+			await this.Discord.ApiClient.AddThreadMemberAsync(this.Id, member.Id).ConfigureAwait(false);
 		}
 	}
 
@@ -355,11 +355,11 @@ public class DiscordThreadChannel : DiscordChannel
 	public async Task RemoveRoleAsync(ulong roleId)
 	{
 		var role = this.Guild.GetRole(roleId);
-		var members = await this.Guild.GetAllMembersAsync();
+		var members = await this.Guild.GetAllMembersAsync().ConfigureAwait(false);
 		var roleMembers = members.Where(m => m.Roles.Contains(role));
 		foreach (var member in roleMembers)
 		{
-			await this.Discord.ApiClient.RemoveThreadMemberAsync(this.Id, member.Id);
+			await this.Discord.ApiClient.RemoveThreadMemberAsync(this.Id, member.Id).ConfigureAwait(false);
 		}
 	}
 

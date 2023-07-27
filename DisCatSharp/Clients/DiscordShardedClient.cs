@@ -520,7 +520,7 @@ public sealed partial class DiscordShardedClient
 
 		this.HookEventHandlers(client);
 
-		await client.ConnectAsync();
+		await client.ConnectAsync().ConfigureAwait(false);
 		this.Logger.LogInformation(LoggerEvents.ShardStartup, "Booted shard {0}.", i);
 
 		this.GatewayInfo ??= client.GatewayInfo;

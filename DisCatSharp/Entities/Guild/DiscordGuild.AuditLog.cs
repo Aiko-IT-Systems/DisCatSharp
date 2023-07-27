@@ -72,7 +72,7 @@ public partial class DiscordGuild
 			}
 		}
 
-		var auditLogResult = await this.ProcessAuditLog(alrs);
+		var auditLogResult = await this.ProcessAuditLog(alrs).ConfigureAwait(false);
 		return auditLogResult;
 	}
 

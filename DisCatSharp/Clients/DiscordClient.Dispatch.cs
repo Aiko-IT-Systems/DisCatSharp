@@ -237,17 +237,17 @@ public sealed partial class DiscordClient
 
 			#region Guild Automod
 			case "auto_moderation_rule_create":
-				await this.OnAutomodRuleCreated(dat.ToDiscordObject<AutomodRule>());
+				await this.OnAutomodRuleCreated(dat.ToDiscordObject<AutomodRule>()).ConfigureAwait(false);
 				break;
 			case "auto_moderation_rule_update":
-				await this.OnAutomodRuleUpdated(dat.ToDiscordObject<AutomodRule>());
+				await this.OnAutomodRuleUpdated(dat.ToDiscordObject<AutomodRule>()).ConfigureAwait(false);
 				break;
 			case "auto_moderation_rule_delete":
-				await this.OnAutomodRuleDeleted(dat.ToDiscordObject<AutomodRule>());
+				await this.OnAutomodRuleDeleted(dat.ToDiscordObject<AutomodRule>()).ConfigureAwait(false);
 				break;
 			case "auto_moderation_action_execution":
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnAutomodActionExecuted(this.GuildsInternal[gid], dat);
+				await this.OnAutomodActionExecuted(this.GuildsInternal[gid], dat).ConfigureAwait(false);
 				break;
 			#endregion
 
@@ -910,7 +910,7 @@ public sealed partial class DiscordClient
 
 			if (this.Configuration.AutoRefreshChannelCache && gld != null)
 			{
-				await this.RefreshChannelsAsync(channel.Guild.Id);
+				await this.RefreshChannelsAsync(channel.Guild.Id).ConfigureAwait(false);
 			}
 		}
 		else if (gld != null)
@@ -919,7 +919,7 @@ public sealed partial class DiscordClient
 
 			if (this.Configuration.AutoRefreshChannelCache)
 			{
-				await this.RefreshChannelsAsync(channel.Guild.Id);
+				await this.RefreshChannelsAsync(channel.Guild.Id).ConfigureAwait(false);
 			}
 		}
 
@@ -952,7 +952,7 @@ public sealed partial class DiscordClient
 
 			if (this.Configuration.AutoRefreshChannelCache)
 			{
-				await this.RefreshChannelsAsync(channel.Guild.Id);
+				await this.RefreshChannelsAsync(channel.Guild.Id).ConfigureAwait(false);
 			}
 
 			await this._channelDeleted.InvokeAsync(this, new(this.ServiceProvider) { Channel = channel, Guild = gld }).ConfigureAwait(false);
@@ -966,7 +966,7 @@ public sealed partial class DiscordClient
 	internal async Task RefreshChannelsAsync(ulong guildId)
 	{
 		var guild = this.InternalGetCachedGuild(guildId);
-		var channels = await this.ApiClient.GetGuildChannelsAsync(guildId);
+		var channels = await this.ApiClient.GetGuildChannelsAsync(guildId).ConfigureAwait(false);
 		guild.ChannelsInternal.Clear();
 		foreach (var channel in channels.ToList())
 		{
@@ -1309,9 +1309,9 @@ public sealed partial class DiscordClient
 				}
 			};
 
-			var dataList = await guild.ProcessAuditLog(workaroundAuditLogEntryList);
+			var dataList = await guild.ProcessAuditLog(workaroundAuditLogEntryList).ConfigureAwait(false);
 
-			await this._guildAuditLogEntryCreated.InvokeAsync(this, new(this.ServiceProvider) { Guild = guild, AuditLogEntry = dataList[0] });
+			await this._guildAuditLogEntryCreated.InvokeAsync(this, new(this.ServiceProvider) { Guild = guild, AuditLogEntry = dataList[0] }).ConfigureAwait(false);
 		}
 		catch (Exception)
 		{ }
@@ -1947,7 +1947,7 @@ public sealed partial class DiscordClient
 		DiscordAuditLogMemberUpdateEntry filtered = null;
 		try
 		{
-			auditlog = await data.Guild.GetAuditLogsAsync(10, null, AuditLogActionType.MemberUpdate);
+			auditlog = await data.Guild.GetAuditLogsAsync(10, null, AuditLogActionType.MemberUpdate).ConfigureAwait(false);
 			var preFiltered = auditlog.Select(x => x as DiscordAuditLogMemberUpdateEntry).Where(x => x.Target.Id == data.Member.Id);
 			filtered = preFiltered.First();
 		}
@@ -1955,7 +1955,7 @@ public sealed partial class DiscordClient
 		catch (Exception)
 		{
 			this.Logger.LogTrace("Failing timeout event.");
-			await timer.DisposeAsync();
+			await timer.DisposeAsync().ConfigureAwait(false);
 			this._tempTimers.Remove(tid);
 			return;
 		}
@@ -2034,7 +2034,7 @@ public sealed partial class DiscordClient
 
 		// Ending timer because it worked.
 		this.Logger.LogTrace("Removing timeout event.");
-		await timer.DisposeAsync();
+		await timer.DisposeAsync().ConfigureAwait(false);
 		this._tempTimers.Remove(tid);
 	}
 
@@ -2481,7 +2481,7 @@ public sealed partial class DiscordClient
 		DiscordMessage? msg = null;
 
 		if (channel is not null)
-			msg = await channel.GetMessageAsync(messageId);
+			msg = await channel.GetMessageAsync(messageId).ConfigureAwait(false);
 
 		msg ??= new()
 		{
@@ -2552,7 +2552,7 @@ public sealed partial class DiscordClient
 		DiscordMessage? msg = null;
 
 		if (channel is not null)
-			msg = await channel.GetMessageAsync(messageId);
+			msg = await channel.GetMessageAsync(messageId).ConfigureAwait(false);
 
 		msg ??= new()
 		{
@@ -2871,7 +2871,7 @@ public sealed partial class DiscordClient
 		var thread = this.InternalGetCachedThread(member.Id);
 		if (thread == null)
 		{
-			var tempThread = await this.ApiClient.GetThreadAsync(member.Id);
+			var tempThread = await this.ApiClient.GetThreadAsync(member.Id).ConfigureAwait(false);
 			thread = this.GuildsInternal[member.GuildId].ThreadsInternal.AddOrUpdate(member.Id, tempThread, (old, newThread) => newThread);
 		}
 
@@ -2895,7 +2895,7 @@ public sealed partial class DiscordClient
 		var thread = this.InternalGetCachedThread(threadId);
 		if (thread == null)
 		{
-			var tempThread = await this.ApiClient.GetThreadAsync(threadId);
+			var tempThread = await this.ApiClient.GetThreadAsync(threadId).ConfigureAwait(false);
 			thread = guild.ThreadsInternal.AddOrUpdate(threadId, tempThread, (old, newThread) => newThread);
 		}
 
@@ -2957,7 +2957,7 @@ public sealed partial class DiscordClient
 	/// <param name="jUsers">The users in the activity.</param>
 	/// <param name="appId">The application id.</param>
 	internal async Task OnEmbeddedActivityUpdateAsync(JObject trActivity, DiscordGuild guild, ulong channelId, JArray jUsers, ulong appId)
-		=> await Task.Delay(20);
+		=> await Task.Delay(20).ConfigureAwait(false);
 
 	/*{
             try
@@ -3327,11 +3327,11 @@ public sealed partial class DiscordClient
 		DiscordApplicationCommand cmd;
 		try
 		{
-			cmd = await this.GetGuildApplicationCommandAsync(guildId, channelId);
+			cmd = await this.GetGuildApplicationCommandAsync(guildId, channelId).ConfigureAwait(false);
 		}
 		catch (NotFoundException)
 		{
-			cmd = await this.GetGlobalApplicationCommandAsync(channelId);
+			cmd = await this.GetGlobalApplicationCommandAsync(channelId).ConfigureAwait(false);
 		}
 
 		if (guild == null)
@@ -3503,7 +3503,7 @@ public sealed partial class DiscordClient
 					TargetMessage = targetMessage,
 					Type = interaction.Data.Type
 				};
-				await this._contextMenuInteractionCreated.InvokeAsync(this, ea);
+				await this._contextMenuInteractionCreated.InvokeAsync(this, ea).ConfigureAwait(false);
 			}
 			else
 			{
@@ -3512,7 +3512,7 @@ public sealed partial class DiscordClient
 					Interaction = interaction
 				};
 
-				await this._interactionCreated.InvokeAsync(this, ea);
+				await this._interactionCreated.InvokeAsync(this, ea).ConfigureAwait(false);
 			}
 		}
 	}

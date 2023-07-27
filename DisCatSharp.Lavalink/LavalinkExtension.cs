@@ -118,7 +118,7 @@ public sealed class LavalinkExtension : BaseExtension
 		{
 			this.REST ??= new(this.CONFIGURATION, this.Client);
 
-			var versionInfo = await this.REST.GetVersionAsync();
+			var versionInfo = await this.REST.GetVersionAsync().ConfigureAwait(false);
 			if (!versionInfo.Headers.Contains("Lavalink-Api-Version"))
 				throw new("Lavalink v4 is required");
 			if (versionInfo.Headers.TryGetValues("Lavalink-Api-Version", out var headerValues))
@@ -137,7 +137,7 @@ public sealed class LavalinkExtension : BaseExtension
 		this._connectedSessions[con.NodeEndpoint] = con;
 		try
 		{
-			await con.EstablishConnectionAsync();
+			await con.EstablishConnectionAsync().ConfigureAwait(false);
 		}
 		catch
 		{

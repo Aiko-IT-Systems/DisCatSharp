@@ -55,9 +55,9 @@ public sealed class ApplicationCommandRequireEntitlementAttribute : ApplicationC
 	{
 		if (!ctx.Interaction.Entitlements.Contains(this.EntitlementId))
 		{
-			await ctx.CreateResponseAsync(InteractionResponseType.InteractionRequireEntitlement);
-			return await Task.FromResult(false);
+			await ctx.CreateResponseAsync(InteractionResponseType.InteractionRequireEntitlement).ConfigureAwait(false);
+			return await Task.FromResult(false).ConfigureAwait(false);
 		}
-		return await Task.FromResult(true);
+		return await Task.FromResult(true).ConfigureAwait(false);
 	}
 }

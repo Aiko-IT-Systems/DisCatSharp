@@ -138,8 +138,8 @@ public sealed class DisCatSharpTeam : SnowflakeObject
 	{
 		try
 		{
-			var dcs = await http.GetStringAsync(new Uri("https://dcs.aitsys.dev/api/devs/"));
-			var dcsGuild = await http.GetStringAsync(new Uri("https://dcs.aitsys.dev/api/guild/"));
+			var dcs = await http.GetStringAsync(new Uri("https://dcs.aitsys.dev/api/devs/")).ConfigureAwait(false);
+			var dcsGuild = await http.GetStringAsync(new Uri("https://dcs.aitsys.dev/api/guild/")).ConfigureAwait(false);
 
 			var app = JsonConvert.DeserializeObject<TransportApplication>(dcs);
 			var guild = JsonConvert.DeserializeObject<DiscordGuild>(dcsGuild);
@@ -157,13 +157,13 @@ public sealed class DisCatSharpTeam : SnowflakeObject
 				LogoHash = guild.IconHash,
 				GuildId = guild.Id,
 				Guild = guild,
-				SupportInvite = await apiClient.GetInviteAsync("GGYSywkxwN", true, true, null)
+				SupportInvite = await apiClient.GetInviteAsync("GGYSywkxwN", true, true, null).ConfigureAwait(false)
 			};
 			List<DisCatSharpTeamMember> team = new();
 			DisCatSharpTeamMember owner = new();
 			foreach (var mb in app.Team.Members.OrderBy(m => m.User.Username))
 			{
-				var tuser = await apiClient.GetUserAsync(mb.User.Id);
+				var tuser = await apiClient.GetUserAsync(mb.User.Id).ConfigureAwait(false);
 				var user = mb.User;
 				if (mb.User.Id == 856780995629154305)
 				{

@@ -444,11 +444,11 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordRpcApplication> GetRpcApplicationAsync(ulong applicationId)
-		=> await this.ApiClient.GetApplicationRpcInfoAsync(applicationId);
+		=> await this.ApiClient.GetApplicationRpcInfoAsync(applicationId).ConfigureAwait(false);
 
 	public async Task<DiscordApplication> GetCurrentApplicationInfoAsync()
 	{
-		var tapp = await this.ApiClient.GetCurrentApplicationInfoAsync();
+		var tapp = await this.ApiClient.GetCurrentApplicationInfoAsync().ConfigureAwait(false);
 		var app = new DiscordApplication
 		{
 			Discord = this,
@@ -529,34 +529,34 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <returns>A list of metadata records or <see langword="null"/>.</returns>
 	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> GetRoleConnectionMetadata()
-		 => await this.ApiClient.GetRoleConnectionMetadataRecords(this.CurrentApplication.Id);
+		 => await this.ApiClient.GetRoleConnectionMetadataRecords(this.CurrentApplication.Id).ConfigureAwait(false);
 
 	/// <summary>
 	/// Updates the applications role connection metadata.
 	/// </summary>
 	/// <param name="metadata">A list of metadata objects. Max 5.</param>
 	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> UpdateRoleConnectionMetadata(IEnumerable<DiscordApplicationRoleConnectionMetadata> metadata)
-		 => await this.ApiClient.UpdateRoleConnectionMetadataRecords(this.CurrentApplication.Id, metadata);
+		 => await this.ApiClient.UpdateRoleConnectionMetadataRecords(this.CurrentApplication.Id, metadata).ConfigureAwait(false);
 
 	/// <summary>
 	/// Removes all global application commands.
 	/// </summary>
 	public async Task RemoveGlobalApplicationCommandsAsync()
-		=> await this.ApiClient.BulkOverwriteGlobalApplicationCommandsAsync(this.CurrentApplication.Id, Array.Empty<DiscordApplicationCommand>());
+		=> await this.ApiClient.BulkOverwriteGlobalApplicationCommandsAsync(this.CurrentApplication.Id, Array.Empty<DiscordApplicationCommand>()).ConfigureAwait(false);
 
 	/// <summary>
 	/// Removes all global application commands for a specific guild id.
 	/// </summary>
 	/// <param name="guildId">The target guild id.</param>
 	public async Task RemoveGuildApplicationCommandsAsync(ulong guildId)
-		=> await this.ApiClient.BulkOverwriteGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, Array.Empty<DiscordApplicationCommand>());
+		=> await this.ApiClient.BulkOverwriteGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, Array.Empty<DiscordApplicationCommand>()).ConfigureAwait(false);
 
 	/// <summary>
 	/// Removes all global application commands for a specific guild.
 	/// </summary>
 	/// <param name="guild">The target guild.</param>
 	public async Task RemoveGuildApplicationCommandsAsync(DiscordGuild guild)
-		=> await this.RemoveGuildApplicationCommandsAsync(guild.Id);
+		=> await this.RemoveGuildApplicationCommandsAsync(guild.Id).ConfigureAwait(false);
 
 	/// <summary>
 	/// Gets a channel.

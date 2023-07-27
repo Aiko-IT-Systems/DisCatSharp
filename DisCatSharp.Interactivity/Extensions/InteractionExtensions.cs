@@ -84,9 +84,9 @@ public static class InteractionExtensions
 
 			if (previousInteraction.Type is InteractionType.Ping or InteractionType.ModalSubmit)
 			{
-				await previousInteraction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, b.OpenMessage.AddComponents(b.OpenButton));
-				var originalResponse = await previousInteraction.GetOriginalResponseAsync();
-				var modalOpen = await interactivity.WaitForButtonAsync(originalResponse, new List<DiscordButtonComponent> { b.OpenButton }, timeOutOverride);
+				await previousInteraction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, b.OpenMessage.AddComponents(b.OpenButton)).ConfigureAwait(false);
+				var originalResponse = await previousInteraction.GetOriginalResponseAsync().ConfigureAwait(false);
+				var modalOpen = await interactivity.WaitForButtonAsync(originalResponse, new List<DiscordButtonComponent> { b.OpenButton }, timeOutOverride).ConfigureAwait(false);
 
 				if (modalOpen.TimedOut)
 				{
@@ -94,16 +94,16 @@ public static class InteractionExtensions
 					return new PaginatedModalResponse { TimedOut = true };
 				}
 
-				await modalOpen.Result.Interaction.CreateInteractionModalResponseAsync(modal);
+				await modalOpen.Result.Interaction.CreateInteractionModalResponseAsync(modal).ConfigureAwait(false);
 			}
 			else
 			{
-				await previousInteraction.CreateInteractionModalResponseAsync(modal);
+				await previousInteraction.CreateInteractionModalResponseAsync(modal).ConfigureAwait(false);
 			}
 
 			_ = previousInteraction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent(b.OpenMessage.Content).AddComponents(b.OpenButton.Disable()));
 
-			var modalResult = await interactivity.WaitForModalAsync(modal.CustomId, timeOutOverride);
+			var modalResult = await interactivity.WaitForModalAsync(modal.CustomId, timeOutOverride).ConfigureAwait(false);
 
 			if (modalResult.TimedOut)
 				return new PaginatedModalResponse { TimedOut = true };
@@ -114,7 +114,7 @@ public static class InteractionExtensions
 			previousInteraction = modalResult.Result.Interaction;
 		}
 
-		await previousInteraction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource, new DiscordInteractionResponseBuilder().AsEphemeral());
+		await previousInteraction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource, new DiscordInteractionResponseBuilder().AsEphemeral()).ConfigureAwait(false);
 
 		return new PaginatedModalResponse { TimedOut = false, Responses = caughtResponses, Interaction = previousInteraction };
 	}

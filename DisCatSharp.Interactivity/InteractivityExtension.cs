@@ -973,6 +973,6 @@ public class InteractivityExtension : BaseExtension
 			_ => throw new ArgumentException("Unknown enum value.")
 		};
 
-		await at;
+		await at.ConfigureAwait(false);
 	}
 }
