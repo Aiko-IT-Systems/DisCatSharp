@@ -63,7 +63,7 @@ public sealed class DiscordWebhookBuilder
 	/// <summary>
 	/// Whether flags were changed.
 	/// </summary>
-	internal bool _flagsChanged = false;
+	internal bool FlagsChanged = false;
 
 	/// <summary>
 	/// Message to send on this webhook request.
@@ -133,7 +133,7 @@ public sealed class DiscordWebhookBuilder
 	/// </summary>
 	public DiscordWebhookBuilder SuppressEmbeds()
 	{
-		this._flagsChanged = true;
+		this.FlagsChanged = true;
 		this.EmbedsSuppressed = true;
 		return this;
 	}
@@ -143,7 +143,7 @@ public sealed class DiscordWebhookBuilder
 	/// </summary>
 	public DiscordWebhookBuilder AsSilentMessage()
 	{
-		this._flagsChanged = true;
+		this.FlagsChanged = true;
 		this.NotificationsSuppressed = true;
 		return this;
 	}

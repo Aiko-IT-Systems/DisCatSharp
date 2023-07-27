@@ -4135,7 +4135,7 @@ public sealed class DiscordApiClient
 	{
 		builder.Validate(true);
 
-		MessageFlags? flags = builder._flagsChanged ? MessageFlags.None : null;
+		MessageFlags? flags = builder.FlagsChanged ? MessageFlags.None : null;
 		if (builder.EmbedsSuppressed)
 			flags |= MessageFlags.SuppressedEmbeds;
 		if (builder.NotificationsSuppressed)
@@ -5470,7 +5470,7 @@ public sealed class DiscordApiClient
 
 		if (type != InteractionResponseType.AutoCompleteResult)
 		{
-			MessageFlags? flags = builder != null && builder._flagsChanged ? MessageFlags.None : null;
+			MessageFlags? flags = builder != null && builder.FlagsChanged ? MessageFlags.None : null;
 			if (builder != null)
 			{
 				if (builder.IsEphemeral)
@@ -5635,7 +5635,7 @@ public sealed class DiscordApiClient
 					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
 
-		MessageFlags? flags = builder != null && builder._flagsChanged ? MessageFlags.None : null;
+		MessageFlags? flags = builder != null && builder.FlagsChanged ? MessageFlags.None : null;
 		if (builder != null)
 		{
 			if (builder.IsEphemeral)
@@ -5753,14 +5753,14 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var store_skus =  JsonConvert.DeserializeObject<IEnumerable<DiscordStoreSku>>(res.Response);
-		foreach (var store_sku in store_skus)
+		var storeSkus =  JsonConvert.DeserializeObject<IEnumerable<DiscordStoreSku>>(res.Response);
+		foreach (var storeSku in storeSkus)
 		{
-			store_sku.Discord = this.Discord;
-			store_sku.Sku.Discord = this.Discord;
+			storeSku.Discord = this.Discord;
+			storeSku.Sku.Discord = this.Discord;
 		}
 
-		return new ReadOnlyCollection<DiscordStoreSku>(new List<DiscordStoreSku>(store_skus));
+		return new ReadOnlyCollection<DiscordStoreSku>(new List<DiscordStoreSku>(storeSkus));
 	}
 
 	/// <summary>

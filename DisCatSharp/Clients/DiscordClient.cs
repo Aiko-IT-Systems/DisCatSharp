@@ -247,7 +247,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._guildMemberTimeoutAdded = new("GUILD_MEMBER_TIMEOUT_ADDED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildMemberTimeoutChanged = new("GUILD_MEMBER_TIMEOUT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildMemberTimeoutRemoved = new("GUILD_MEMBER_TIMEOUT_REMOVED", EventExecutionLimit, this.EventErrorHandler);
-		this._rateLimitHit = new("RATELIMIT_HIT", EventExecutionLimit, this.EventErrorHandler);
+		this.RateLimitHitInternal = new("RATELIMIT_HIT", EventExecutionLimit, this.EventErrorHandler);
 		this._automodRuleCreated = new("AUTO_MODERATION_RULE_CREATED", EventExecutionLimit, this.EventErrorHandler);
 		this._automodRuleUpdated = new("AUTO_MODERATION_RULE_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._automodRuleDeleted = new("AUTO_MODERATION_RULE_DELETED", EventExecutionLimit, this.EventErrorHandler);

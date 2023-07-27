@@ -239,5 +239,5 @@ public enum StickerFormat : long
 	/// <summary>
 	/// Sticker is a gif
 	/// </summary>
-	GIF = 4
+	Gif = 4
 }

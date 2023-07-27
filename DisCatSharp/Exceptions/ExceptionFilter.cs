@@ -28,13 +28,13 @@ namespace DisCatSharp.Exceptions;
 
 public class DisCatSharpExceptionFilter : IExceptionFilter
 {
-	internal DiscordConfiguration config { get; set; }
+	internal DiscordConfiguration Config { get; set; }
 
 	public bool Filter(Exception ex)
-		=> !this.config.TrackExceptions.Contains(ex.GetType());
+		=> !this.Config.TrackExceptions.Contains(ex.GetType());
 
 	internal DisCatSharpExceptionFilter(DiscordConfiguration configuration)
 	{
-		this.config = configuration;
+		this.Config = configuration;
 	}
 }

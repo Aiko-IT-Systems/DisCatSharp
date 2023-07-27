@@ -112,7 +112,7 @@ public static class DiscordJson
 		foreach (var ap in obj.AdditionalProperties)
 		{
 			vals++;
-			if (obj._ignoredJsonKeys.Count == 0 || !obj._ignoredJsonKeys.Any(x => x == ap.Key))
+			if (obj.IgnoredJsonKeys.Count == 0 || !obj.IgnoredJsonKeys.Any(x => x == ap.Key))
 			{
 				if (vals == 1)
 				{
@@ -177,7 +177,7 @@ public static class DiscordJson
 		foreach (var ap in first.AdditionalProperties)
 		{
 			vals++;
-			if (first._ignoredJsonKeys.Count == 0 || !first._ignoredJsonKeys.Any(x => x == ap.Key))
+			if (first.IgnoredJsonKeys.Count == 0 || !first.IgnoredJsonKeys.Any(x => x == ap.Key))
 			{
 				if (vals == 1)
 				{

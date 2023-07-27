@@ -104,7 +104,7 @@ public static class Utilities
 		{
 			ApiChannel.Stable => Endpoints.BASE_URI,
 			ApiChannel.Canary => Endpoints.CANARY_URI,
-			ApiChannel.PTB => Endpoints.PTB_URI,
+			ApiChannel.Ptb => Endpoints.PTB_URI,
 			ApiChannel.Staging => Endpoints.STAGING_URI,
 			_ => Endpoints.BASE_URI
 		} + (config?.ApiVersion ?? "10");

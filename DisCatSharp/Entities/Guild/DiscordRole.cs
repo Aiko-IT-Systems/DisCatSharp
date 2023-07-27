@@ -122,23 +122,25 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <summary>
 	/// Gets the unicode emoji.
 	/// </summary>
+	[JsonIgnore]
 	public DiscordEmoji UnicodeEmoji
 		=> this.UnicodeEmojiString != null ? DiscordEmoji.FromName(this.Discord, $":{this.UnicodeEmojiString}:", false) : null;
 
 	/// <summary>
 	/// Gets the guild this role belongs to.
 	/// </summary>
+	[JsonIgnore]
 	public DiscordGuild Guild
 	{
 		get
 		{
-			this._guild ??= this.Discord.Guilds[this.GuildId];
-			return this._guild;
+			this.GuildInternal ??= this.Discord.Guilds[this.GuildId];
+			return this.GuildInternal;
 		}
 	}
 
 	[JsonIgnore]
-	internal DiscordGuild _guild { get; set; }
+	internal DiscordGuild GuildInternal { get; set; }
 
 	[JsonIgnore]
 	internal ulong GuildId = 0;
@@ -152,12 +154,14 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <summary>
 	/// Gets a mention string for this role. If the role is mentionable, this string will mention all the users that belong to this role.
 	/// </summary>
+	[JsonIgnore]
 	public string Mention
 		=> Formatter.Mention(this);
 
 	/// <summary>
 	/// Gets a list of members that have this role. Requires ServerMembers Intent.
 	/// </summary>
+	[JsonIgnore]
 	public IReadOnlyList<KeyValuePair<ulong, DiscordMember>> Members
 		=> this.Guild.Members.Where(x => x.Value.RoleIds.Any(x => x == this.Id)).ToList();
 

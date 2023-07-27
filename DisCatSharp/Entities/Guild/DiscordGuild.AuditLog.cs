@@ -433,18 +433,18 @@ public partial class DiscordGuild
 								};
 								break;
 							case "available_tags":
-								var old_tags = xc.OldValues?.OfType<JObject>()
+								var oldTags = xc.OldValues?.OfType<JObject>()
 									?.Select(xjo => xjo.ToObject<ForumPostTag>())
 									?.Select(xo => { xo.Discord = this.Discord; return xo; });
 
-								var new_tags = xc.NewValues?.OfType<JObject>()
+								var newTags = xc.NewValues?.OfType<JObject>()
 									?.Select(xjo => xjo.ToObject<ForumPostTag>())
 									?.Select(xo => { xo.Discord = this.Discord; return xo; });
 
 								entrychn.AvailableTagsChange = new()
 								{
-									Before = old_tags != null ? new List<ForumPostTag>(new List<ForumPostTag>(old_tags)) : null,
-									After = new_tags != null ? new List<ForumPostTag>(new List<ForumPostTag>(new_tags)) : null
+									Before = oldTags != null ? new List<ForumPostTag>(new List<ForumPostTag>(oldTags)) : null,
+									After = newTags != null ? new List<ForumPostTag>(new List<ForumPostTag>(newTags)) : null
 								};
 								break;
 
