@@ -3849,7 +3849,7 @@ public sealed class DiscordApiClient
 	/// <param name="name">The name.</param>
 	/// <param name="base64Avatar">The base64_avatar.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordWebhook> ModifyWebhookAsync(ulong webhookId, ulong channelId, string name, Optional<string> base64Avatar, string? reason)
+	internal async Task<DiscordWebhook> ModifyWebhookAsync(ulong webhookId, ulong channelId, string? name, Optional<string?> base64Avatar, string? reason)
 	{
 		var pld = new RestWebhookPayload
 		{
@@ -3951,7 +3951,7 @@ public sealed class DiscordApiClient
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="builder">The builder.</param>
 	/// <param name="threadId">The thread_id.</param>
-	internal async Task<DiscordMessage> ExecuteWebhookAsync(ulong webhookId, string webhookToken, DiscordWebhookBuilder builder, string threadId)
+	internal async Task<DiscordMessage> ExecuteWebhookAsync(ulong webhookId, string webhookToken, DiscordWebhookBuilder builder, string? threadId)
 	{
 		builder.Validate();
 
@@ -4034,7 +4034,7 @@ public sealed class DiscordApiClient
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="jsonPayload">The json_payload.</param>
 	/// <param name="threadId">The thread_id.</param>
-	internal async Task<DiscordMessage> ExecuteWebhookSlackAsync(ulong webhookId, string webhookToken, string jsonPayload, string threadId)
+	internal async Task<DiscordMessage> ExecuteWebhookSlackAsync(ulong webhookId, string webhookToken, string jsonPayload, string? threadId)
 	{
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.SLACK}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {webhook_id = webhookId, webhook_token = webhookToken }, out var path);
@@ -4055,7 +4055,7 @@ public sealed class DiscordApiClient
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="jsonPayload">The json_payload.</param>
 	/// <param name="threadId">The thread_id.</param>
-	internal async Task<DiscordMessage> ExecuteWebhookGithubAsync(ulong webhookId, string webhookToken, string jsonPayload, string threadId)
+	internal async Task<DiscordMessage> ExecuteWebhookGithubAsync(ulong webhookId, string webhookToken, string jsonPayload, string? threadId)
 	{
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.GITHUB}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {webhook_id = webhookId, webhook_token = webhookToken }, out var path);
@@ -4077,7 +4077,7 @@ public sealed class DiscordApiClient
 	/// <param name="messageId">The message_id.</param>
 	/// <param name="builder">The builder.</param>
 	/// <param name="threadId">The thread_id.</param>
-	internal async Task<DiscordMessage> EditWebhookMessageAsync(ulong webhookId, string webhookToken, string messageId, DiscordWebhookBuilder builder, string threadId)
+	internal async Task<DiscordMessage> EditWebhookMessageAsync(ulong webhookId, string webhookToken, string messageId, DiscordWebhookBuilder builder, string? threadId)
 	{
 		builder.Validate(true);
 
@@ -4173,7 +4173,7 @@ public sealed class DiscordApiClient
 	/// <param name="messageId">The message_id.</param>
 	/// <param name="builder">The builder.</param>
 	/// <param name="threadId">The thread_id.</param>
-	internal Task<DiscordMessage> EditWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId, DiscordWebhookBuilder builder, ulong threadId) =>
+	internal Task<DiscordMessage> EditWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId, DiscordWebhookBuilder builder, ulong? threadId) =>
 		this.EditWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), builder, threadId.ToString());
 
 	/// <summary>
@@ -4183,7 +4183,7 @@ public sealed class DiscordApiClient
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="messageId">The message_id.</param>
 	/// <param name="threadId">The thread_id.</param>
-	internal async Task<DiscordMessage> GetWebhookMessageAsync(ulong webhookId, string webhookToken, string messageId, string threadId)
+	internal async Task<DiscordMessage> GetWebhookMessageAsync(ulong webhookId, string webhookToken, string messageId, string? threadId)
 	{
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {webhook_id = webhookId, webhook_token = webhookToken, message_id = messageId }, out var path);
@@ -4214,7 +4214,7 @@ public sealed class DiscordApiClient
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="messageId">The message_id.</param>
 	/// <param name="threadId">The thread_id.</param>
-	internal Task<DiscordMessage> GetWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId, ulong threadId) =>
+	internal Task<DiscordMessage> GetWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId, ulong? threadId) =>
 		this.GetWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), threadId.ToString());
 
 	/// <summary>
@@ -4224,7 +4224,7 @@ public sealed class DiscordApiClient
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="messageId">The message_id.</param>
 	/// <param name="threadId">The thread_id.</param>
-	internal async Task DeleteWebhookMessageAsync(ulong webhookId, string webhookToken, string messageId, string threadId)
+	internal async Task DeleteWebhookMessageAsync(ulong webhookId, string webhookToken, string messageId, string? threadId)
 	{
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new {webhook_id = webhookId, webhook_token = webhookToken, message_id = messageId }, out var path);
@@ -4252,7 +4252,7 @@ public sealed class DiscordApiClient
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="messageId">The message_id.</param>
 	/// <param name="threadId">The thread_id.</param>
-	internal Task DeleteWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId, ulong threadId) =>
+	internal Task DeleteWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId, ulong? threadId) =>
 		this.DeleteWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), threadId.ToString());
 	#endregion
 

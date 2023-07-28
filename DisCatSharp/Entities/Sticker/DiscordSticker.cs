@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
+using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
 
 using Newtonsoft.Json;
@@ -52,7 +53,7 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// Gets the Description of the sticker.
 	/// </summary>
 	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
-	public string Description { get; internal set; }
+	public string? Description { get; internal set; }
 
 	/// <summary>
 	/// Gets the type of sticker.
@@ -64,12 +65,12 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// For guild stickers, gets the user that made the sticker.
 	/// </summary>
 	[JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordUser User { get; internal set; }
+	public DiscordUser? User { get; internal set; }
 
 	/// <summary>
 	/// Gets the guild associated with this sticker, if any.
 	/// </summary>
-	public DiscordGuild Guild => (this.Discord as DiscordClient).InternalGetCachedGuild(this.GuildId);
+	public DiscordGuild? Guild => (this.Discord as DiscordClient)?.InternalGetCachedGuild(this.GuildId);
 
 	/// <summary>
 	/// Gets the guild id the sticker belongs too.
@@ -93,8 +94,8 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// Gets the list of tags for the sticker.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyList<string> Tags
-		=> this.InternalTags != null ? this.InternalTags.Split(',') : Array.Empty<string>();
+	public IReadOnlyList<string>? Tags
+		=> this.InternalTags?.Split(',');
 
 	/// <summary>
 	/// Gets the asset hash of the sticker.
@@ -118,13 +119,14 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// Gets the tags of the sticker.
 	/// </summary>
 	[JsonProperty("tags", NullValueHandling = NullValueHandling.Ignore)]
-	internal string InternalTags { get; set; }
+	internal string? InternalTags { get; set; }
 
 	/// <summary>
 	/// Gets the url of the sticker.
 	/// </summary>
 	[JsonIgnore]
-	public string Url => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.STICKERS}/{this.Id}.{(this.FormatType == StickerFormat.Lottie ? "json" : "png")}";
+	public string Url
+		=> $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.STICKERS}/{this.Id}.{(this.FormatType == StickerFormat.Lottie ? "json" : "png")}";
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordSticker"/> class.
@@ -145,7 +147,7 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// <param name="obj">Object to compare to.</param>
 	/// <returns>Whether the object is equal to this <see cref="DiscordSticker"/>.</returns>
 	public override bool Equals(object obj)
-		=> this.Equals(obj as ForumPostTag);
+		=> this.Equals(obj as DiscordSticker);
 
 	/// <summary>
 	/// Whether to stickers are equal.
@@ -157,10 +159,9 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// <summary>
 	/// Gets the sticker in readable format.
 	/// </summary>
-	public override string ToString() => $"Sticker {this.Id}; {this.Name}; {this.FormatType}";
-
-
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+	public override string ToString()
+		=> $"Sticker {this.Id}; {this.Name}; {this.FormatType}";
+	
 	/// <summary>
 	/// Modifies the sticker
 	/// </summary>
@@ -173,8 +174,8 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
-	public Task<DiscordSticker> ModifyAsync(Optional<string> name, Optional<string> description, Optional<string> tags, string reason = null) =>
-		!this.GuildId.HasValue
+	public Task<DiscordSticker> ModifyAsync(Optional<string> name, Optional<string?> description, Optional<string?> tags, string? reason = null)
+		=> !this.GuildId.HasValue
 			? throw new ArgumentException("This sticker does not belong to a guild.")
 			: name.HasValue && name.Value.Length is < 2 or > 30
 				? throw new ArgumentException("Sticker name needs to be between 2 and 30 characters long.")
@@ -183,10 +184,7 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 					: tags.HasValue && !DiscordEmoji.TryFromUnicode(this.Discord, tags.Value, out var emoji)
 						? throw new ArgumentException("Sticker tags needs to be a unicode emoji.")
 						: this.Discord.ApiClient.ModifyGuildStickerAsync(this.GuildId.Value, this.Id, name, description, tags, reason);
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 
-
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 	/// <summary>
 	/// Deletes the sticker
 	/// </summary>
@@ -195,15 +193,14 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
-	public Task DeleteAsync(string reason = null)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
+	public Task DeleteAsync(string? reason = null)
 		=> this.GuildId.HasValue ? this.Discord.ApiClient.DeleteGuildStickerAsync(this.GuildId.Value, this.Id, reason) : throw new ArgumentException("The requested sticker is no guild sticker.");
 }
 
 /// <summary>
 /// The sticker type
 /// </summary>
-public enum StickerType : long
+public enum StickerType : int
 {
 	/// <summary>
 	/// Standard nitro sticker
@@ -219,7 +216,7 @@ public enum StickerType : long
 /// <summary>
 /// The sticker type
 /// </summary>
-public enum StickerFormat : long
+public enum StickerFormat : int
 {
 	/// <summary>
 	/// Sticker is a png

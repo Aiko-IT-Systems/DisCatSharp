@@ -49,8 +49,8 @@ public class DiscordVoiceState : ObservableApiObject
 	/// Gets the guild associated with this voice state.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordGuild Guild
-		=> this.GuildId != null ? this.Discord.Guilds[this.GuildId.Value] : this.Channel?.Guild;
+	public DiscordGuild? Guild
+		=> this.GuildId != null && this.Discord.Guilds != null ? this.Discord.Guilds[this.GuildId.Value] : this.Channel?.Guild;
 
 	/// <summary>
 	/// Gets ID of the channel this user is connected to.
@@ -62,7 +62,7 @@ public class DiscordVoiceState : ObservableApiObject
 	/// Gets the channel this user is connected to.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordChannel Channel
+	public DiscordChannel? Channel
 		=> this.ChannelId != null && this.ChannelId.Value != 0 ? this.Discord.InternalGetCachedChannel(this.ChannelId.Value) : null;
 
 	/// <summary>
@@ -150,8 +150,8 @@ public class DiscordVoiceState : ObservableApiObject
 	/// Gets the member this voice state belongs to.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordMember Member
-		=> this.Guild.Members.TryGetValue(this.TransportMember.User.Id, out var member) ? member : new(this.TransportMember) { Discord = this.Discord };
+	public DiscordMember? Member
+		=> this.Guild?.Members.TryGetValue(this.TransportMember.User!.Id, out var member) ?? false ? member : new(this.TransportMember) { Discord = this.Discord };
 
 	/// <summary>
 	/// Gets the transport member.
@@ -211,5 +211,6 @@ public class DiscordVoiceState : ObservableApiObject
 	/// <summary>
 	/// Gets a readable voice state string.
 	/// </summary>
-	public override string ToString() => $"{this.UserId.ToString(CultureInfo.InvariantCulture)} in {(this.GuildId ?? this.Channel.GuildId.Value).ToString(CultureInfo.InvariantCulture)}";
+	public override string ToString()
+		=> $"{this.UserId.ToString(CultureInfo.InvariantCulture)} in {(this.GuildId ?? this.Channel!.GuildId!.Value).ToString(CultureInfo.InvariantCulture)}";
 }

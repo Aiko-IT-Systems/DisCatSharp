@@ -80,34 +80,35 @@ internal sealed class UserStatusConverter : JsonConverter
 	/// <param name="serializer">The serializer.</param>
 	public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
 	{
-		if (value is UserStatus status)
-			switch (status) // reader.Value can be a string, DateTime or DateTimeOffset (yes, it's weird)
-			{
-				case UserStatus.Online:
-					writer.WriteValue("online");
-					return;
+		if (value is not UserStatus status)
+			return;
+		switch (status) // reader.Value can be a string, DateTime or DateTimeOffset (yes, it's weird)
+		{
+			case UserStatus.Online:
+				writer.WriteValue("online");
+				return;
 
-				case UserStatus.Idle:
-					writer.WriteValue("idle");
-					return;
+			case UserStatus.Idle:
+				writer.WriteValue("idle");
+				return;
 
-				case UserStatus.DoNotDisturb:
-					writer.WriteValue("dnd");
-					return;
+			case UserStatus.DoNotDisturb:
+				writer.WriteValue("dnd");
+				return;
 
-				case UserStatus.Invisible:
-					writer.WriteValue("invisible");
-					return;
+			case UserStatus.Invisible:
+				writer.WriteValue("invisible");
+				return;
 
-				case UserStatus.Streaming:
-					writer.WriteValue("streaming");
-					return;
+			case UserStatus.Streaming:
+				writer.WriteValue("streaming");
+				return;
 
-				case UserStatus.Offline:
-				default:
-					writer.WriteValue("offline");
-					return;
-			}
+			case UserStatus.Offline:
+			default:
+				writer.WriteValue("offline");
+				return;
+		}
 	}
 
 	/// <summary>
@@ -120,7 +121,7 @@ internal sealed class UserStatusConverter : JsonConverter
 	public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) =>
 		// Active sessions are indicated with an "online", "idle", or "dnd" string per platform. If a user is
 		// offline or invisible, the corresponding field is not present.
-		reader.Value?.ToString().ToLowerInvariant() switch // reader.Value can be a string, DateTime or DateTimeOffset (yes, it's weird)
+		reader.Value?.ToString()?.ToLowerInvariant() switch // reader.Value can be a string, DateTime or DateTimeOffset (yes, it's weird)
 		{
 			"online" => UserStatus.Online,
 			"idle" => UserStatus.Idle,
@@ -135,7 +136,8 @@ internal sealed class UserStatusConverter : JsonConverter
 	/// </summary>
 	/// <param name="objectType">The object type.</param>
 	/// <returns>A bool.</returns>
-	public override bool CanConvert(Type objectType) => objectType == typeof(UserStatus);
+	public override bool CanConvert(Type objectType)
+		=> objectType == typeof(UserStatus);
 }
 
 /// <summary>
@@ -156,22 +158,22 @@ public sealed class DiscordActivity
 	/// <summary>
 	/// Gets or sets the stream URL, if applicable.
 	/// </summary>
-	public string StreamUrl { get; set; }
+	public string? StreamUrl { get; set; }
 
 	/// <summary>
 	/// Gets or sets platform in this rich presence.
 	/// </summary>
-	public string Platform { get; set; }
+	public string? Platform { get; set; }
 
 	/// <summary>
 	/// Gets or sets sync id in this rich presence.
 	/// </summary>
-	public string SyncId { get; set; }
+	public string? SyncId { get; set; }
 
 	/// <summary>
 	/// Gets or sets session_id in this rich presence.
 	/// </summary>
-	public string SessionId { get; set; }
+	public string? SessionId { get; set; }
 
 	/// <summary>
 	/// Gets or sets the activity type.
@@ -181,12 +183,12 @@ public sealed class DiscordActivity
 	/// <summary>
 	/// Gets the rich presence details, if present.
 	/// </summary>
-	public DiscordRichPresence RichPresence { get; internal set; }
+	public DiscordRichPresence? RichPresence { get; internal set; }
 
 	/// <summary>
 	/// Gets the custom status of this activity, if present.
 	/// </summary>
-	public DiscordCustomStatus CustomStatus { get; internal set; }
+	public DiscordCustomStatus? CustomStatus { get; internal set; }
 
 	/// <summary>
 	/// Creates a new, empty instance of a <see cref="DiscordActivity"/>.
@@ -249,7 +251,7 @@ public sealed class DiscordActivity
 	/// Updates a activity with an transport activity.
 	/// </summary>
 	/// <param name="rawActivity">The raw activity.</param>
-	internal void UpdateWith(TransportActivity rawActivity)
+	internal void UpdateWith(TransportActivity? rawActivity)
 	{
 		this.Name = rawActivity?.Name;
 		this.ActivityType = rawActivity != null ? rawActivity.ActivityType : ActivityType.Playing;
@@ -287,7 +289,7 @@ public sealed class DiscordCustomStatus
 	/// <summary>
 	/// Gets the emoji of this custom status, if any.
 	/// </summary>
-	public DiscordEmoji Emoji { get; internal set; }
+	public DiscordEmoji? Emoji { get; internal set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordCustomStatus"/> class.
@@ -325,17 +327,17 @@ public sealed class DiscordRichPresence
 	/// <summary>
 	/// Gets the details of this presence.
 	/// </summary>
-	public string Details { get; internal set; }
+	public string? Details { get; internal set; }
 
 	/// <summary>
 	/// Gets the game state.
 	/// </summary>
-	public string State { get; internal set; }
+	public string? State { get; internal set; }
 
 	/// <summary>
 	/// Gets the application for which the rich presence is for.
 	/// </summary>
-	public DiscordApplication Application { get; internal set; }
+	public DiscordApplication? Application { get; internal set; }
 
 	/// <summary>
 	/// Gets the instance status.
@@ -345,22 +347,22 @@ public sealed class DiscordRichPresence
 	/// <summary>
 	/// Gets the large image for the rich presence.
 	/// </summary>
-	public DiscordAsset LargeImage { get; internal set; }
+	public DiscordAsset? LargeImage { get; internal set; }
 
 	/// <summary>
 	/// Gets the hover text for large image.
 	/// </summary>
-	public string LargeImageText { get; internal set; }
+	public string? LargeImageText { get; internal set; }
 
 	/// <summary>
 	/// Gets the small image for the rich presence.
 	/// </summary>
-	public DiscordAsset SmallImage { get; internal set; }
+	public DiscordAsset? SmallImage { get; internal set; }
 
 	/// <summary>
 	/// Gets the hover text for small image.
 	/// </summary>
-	public string SmallImageText { get; internal set; }
+	public string? SmallImageText { get; internal set; }
 
 	/// <summary>
 	/// Gets the current party size.
@@ -380,7 +382,7 @@ public sealed class DiscordRichPresence
 	/// <summary>
 	/// Gets the buttons.
 	/// </summary>
-	public IReadOnlyList<string> Buttons { get; internal set; }
+	public IReadOnlyList<string>? Buttons { get; internal set; }
 
 	/// <summary>
 	/// Gets the game start timestamp.
@@ -395,17 +397,17 @@ public sealed class DiscordRichPresence
 	/// <summary>
 	/// Gets the secret value enabling users to join your game.
 	/// </summary>
-	public string JoinSecret { get; internal set; }
+	public string? JoinSecret { get; internal set; }
 
 	/// <summary>
 	/// Gets the secret value enabling users to receive notifications whenever your game state changes.
 	/// </summary>
-	public string MatchSecret { get; internal set; }
+	public string? MatchSecret { get; internal set; }
 
 	/// <summary>
 	/// Gets the secret value enabling users to spectate your game.
 	/// </summary>
-	public string SpectateSecret { get; internal set; }
+	public string? SpectateSecret { get; internal set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordRichPresence"/> class.
@@ -450,7 +452,7 @@ public sealed class DiscordRichPresence
 	/// Updates a game activity with an transport activity.
 	/// </summary>
 	/// <param name="rawGame">The raw game.</param>
-	internal void UpdateWith(TransportActivity rawGame)
+	internal void UpdateWith(TransportActivity? rawGame)
 	{
 		this.Details = rawGame?.Details;
 		this.State = rawGame?.State;
@@ -479,13 +481,12 @@ public sealed class DiscordRichPresence
 		}
 
 		var sid = rawGame?.Assets?.SmallImage;
-		if (sid != null)
-		{
-			if (sid.StartsWith("spotify:"))
-				this.SmallImage = new DiscordSpotifyAsset { Id = sid };
-			else if (ulong.TryParse(sid, NumberStyles.Number, CultureInfo.InvariantCulture, out var usid))
-				this.SmallImage = new DiscordApplicationAsset { Id = sid, Application = this.Application, Type = ApplicationAssetType.LargeImage };
-		}
+		if (sid == null)
+			return;
+		if (sid.StartsWith("spotify:"))
+			this.SmallImage = new DiscordSpotifyAsset { Id = sid };
+		else if (ulong.TryParse(sid, NumberStyles.Number, CultureInfo.InvariantCulture, out var usid))
+			this.SmallImage = new DiscordApplicationAsset { Id = sid, Application = this.Application, Type = ApplicationAssetType.LargeImage };
 	}
 }
 

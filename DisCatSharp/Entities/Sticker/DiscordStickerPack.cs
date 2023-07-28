@@ -39,7 +39,8 @@ public sealed class DiscordStickerPack : SnowflakeObject
 	/// Gets the stickers contained in this pack.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyList<DiscordSticker> Stickers => this.StickersInternal;
+	public IReadOnlyList<DiscordSticker> Stickers
+		=> this.StickersInternal;
 
 	[JsonProperty("stickers")]
 	internal List<DiscordSticker> StickersInternal = new();
@@ -65,7 +66,8 @@ public sealed class DiscordStickerPack : SnowflakeObject
 	/// <summary>
 	/// Gets the pack's cover sticker.
 	/// </summary>
-	public Task<DiscordSticker> CoverSticker => this.Discord.ApiClient.GetStickerAsync(this.CoverStickerId);
+	public Task<DiscordSticker> CoverSticker
+		=> this.Discord.ApiClient.GetStickerAsync(this.CoverStickerId);
 
 	/// <summary>
 	/// Gets the Id of this pack's banner.
@@ -76,7 +78,8 @@ public sealed class DiscordStickerPack : SnowflakeObject
 	/// <summary>
 	/// Gets the pack's banner url.
 	/// </summary>
-	public string BannerUrl => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ASSETS}{Endpoints.STICKER_APPLICATION}{Endpoints.STORE}/{this.BannerAssetId}.png?size=4096";
+	public string BannerUrl
+		=> $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ASSETS}{Endpoints.STICKER_APPLICATION}{Endpoints.STORE}/{this.BannerAssetId}.png?size=4096";
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordStickerPack"/> class.

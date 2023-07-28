@@ -53,6 +53,10 @@ public class DiscordConnection : ObservableApiObject
 	///			<description>Obsolete (Non-assignable)</description>
 	///		</listheader>
 	///		<item>
+	///			<term>website</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
 	///			<term>contacts</term>
 	///			<description>false</description>
 	///		</item>
@@ -167,7 +171,7 @@ public class DiscordConnection : ObservableApiObject
 	/// Gets whether the connection will show a activity.
 	/// </summary>
 	[JsonProperty("show_activity", NullValueHandling = NullValueHandling.Ignore)]
-	public bool ShowActivity { get; internal set; }
+	public bool? ShowActivity { get; internal set; }
 
 	/// <summary>
 	/// Whether the connection will sync friends.
@@ -177,10 +181,9 @@ public class DiscordConnection : ObservableApiObject
 
 	/// <summary>
 	/// Whether this connection supports console voice transfer.
-	/// Currently in beta rollout for XBox. Playstation soon.
 	/// </summary>
 	[JsonProperty("two_way_link", NullValueHandling = NullValueHandling.Ignore)]
-	public bool TwoWayLink { get; internal set; }
+	public bool? TwoWayLink { get; internal set; }
 
 	/// <summary>
 	/// Gets the visibility of the connection.
@@ -192,7 +195,7 @@ public class DiscordConnection : ObservableApiObject
 	/// Gets the metadata visibility of the connection.
 	/// </summary>
 	[JsonProperty("metadata_visibility", NullValueHandling = NullValueHandling.Ignore)]
-	public ConnectionMetadataVisibilityType MetadataVisibility { get; internal set; }
+	public ConnectionMetadataVisibilityType? MetadataVisibility { get; internal set; }
 
 	/// <summary>
 	/// Gets the client instance this object is tied to.

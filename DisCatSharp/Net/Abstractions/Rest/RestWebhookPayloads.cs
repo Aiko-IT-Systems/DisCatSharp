@@ -38,13 +38,13 @@ internal sealed class RestWebhookPayload : ObservableApiObject
 	/// Gets or sets the name.
 	/// </summary>
 	[JsonProperty("name")]
-	public string Name { get; set; }
+	public string? Name { get; set; }
 
 	/// <summary>
 	/// Gets or sets the avatar base64.
 	/// </summary>
 	[JsonProperty("avatar", NullValueHandling = NullValueHandling.Include)]
-	public string AvatarBase64 { get; set; }
+	public Optional<string?> AvatarBase64 { get; set; }
 
 	/// <summary>
 	/// Gets or sets the channel id.

@@ -84,7 +84,7 @@ public sealed class DiscordWebhookBuilder
 	/// Name of the new thread.
 	/// Only works if the webhook is send in a <see cref="ChannelType.Forum"/>.
 	/// </summary>
-	public string ThreadName { get; set; }
+	public string? ThreadName { get; set; }
 
 
 	/// <summary>
@@ -387,32 +387,10 @@ public sealed class DiscordWebhookBuilder
 	/// Executes a webhook.
 	/// </summary>
 	/// <param name="webhook">The webhook that should be executed.</param>
-	/// <returns>The message sent</returns>
-	public async Task<DiscordMessage> SendAsync(DiscordWebhook webhook) => await webhook.ExecuteAsync(this).ConfigureAwait(false);
-
-	/// <summary>
-	/// Executes a webhook.
-	/// </summary>
-	/// <param name="webhook">The webhook that should be executed.</param>
 	/// <param name="threadId">Target thread id.</param>
 	/// <returns>The message sent</returns>
-	public async Task<DiscordMessage> SendAsync(DiscordWebhook webhook, ulong threadId) => await webhook.ExecuteAsync(this, threadId.ToString()).ConfigureAwait(false);
-
-	/// <summary>
-	/// Sends the modified webhook message.
-	/// </summary>
-	/// <param name="webhook">The webhook that should be executed.</param>
-	/// <param name="message">The message to modify.</param>
-	/// <returns>The modified message</returns>
-	public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, DiscordMessage message) => await this.ModifyAsync(webhook, message.Id).ConfigureAwait(false);
-
-	/// <summary>
-	/// Sends the modified webhook message.
-	/// </summary>
-	/// <param name="webhook">The webhook that should be executed.</param>
-	/// <param name="messageId">The id of the message to modify.</param>
-	/// <returns>The modified message</returns>
-	public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, ulong messageId) => await webhook.EditMessageAsync(messageId, this).ConfigureAwait(false);
+	public async Task<DiscordMessage> SendAsync(DiscordWebhook webhook, ulong? threadId = null)
+		=> await webhook.ExecuteAsync(this, threadId.ToString()).ConfigureAwait(false);
 
 	/// <summary>
 	/// Sends the modified webhook message.
@@ -421,7 +399,8 @@ public sealed class DiscordWebhookBuilder
 	/// <param name="message">The message to modify.</param>
 	/// <param name="thread">Target thread.</param>
 	/// <returns>The modified message</returns>
-	public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, DiscordMessage message, DiscordThreadChannel thread) => await this.ModifyAsync(webhook, message.Id, thread.Id).ConfigureAwait(false);
+	public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, DiscordMessage message, DiscordThreadChannel? thread = null)
+		=> await this.ModifyAsync(webhook, message.Id, thread?.Id).ConfigureAwait(false);
 
 	/// <summary>
 	/// Sends the modified webhook message.
@@ -430,7 +409,8 @@ public sealed class DiscordWebhookBuilder
 	/// <param name="messageId">The id of the message to modify.</param>
 	/// <param name="threadId">Target thread id.</param>
 	/// <returns>The modified message</returns>
-	public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, ulong messageId, ulong threadId) => await webhook.EditMessageAsync(messageId, this, threadId.ToString()).ConfigureAwait(false);
+	public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, ulong messageId, ulong? threadId = null)
+		=> await webhook.EditMessageAsync(messageId, this, threadId.ToString()).ConfigureAwait(false);
 
 	/// <summary>
 	/// Clears all message components on this builder.
