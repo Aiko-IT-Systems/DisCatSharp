@@ -27,7 +27,6 @@ using System.Threading.Tasks;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
-using DisCatSharp.Net;
 using DisCatSharp.VoiceNext.Entities;
 
 using Newtonsoft.Json;

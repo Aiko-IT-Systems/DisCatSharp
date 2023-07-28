@@ -479,7 +479,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public async Task<DiscordMessage> GetMessageAsync(ulong id, bool fetch = false) =>
 		this.Discord.Configuration.MessageCacheSize > 0
 		&& !fetch
-		&& this.Discord is DiscordClient { MessageCache: not null } dc 
+		&& this.Discord is DiscordClient { MessageCache: not null } dc
 		&& dc.MessageCache.TryGet(xm => xm.Id == id && xm.ChannelId == this.Id, out var msg)
 			? msg
 			: await this.Discord.ApiClient.GetMessageAsync(this.Id, id).ConfigureAwait(false);

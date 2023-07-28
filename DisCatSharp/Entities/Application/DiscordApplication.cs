@@ -212,7 +212,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 		var log = Math.Log(size, 2);
 		if (log < 4 || log > 11 || log % 1 != 0)
 			throw new ArgumentOutOfRangeException(nameof(size));
-		
+
 		var sfmt = fmt switch
 		{
 			ImageFormat.Gif => "gif",

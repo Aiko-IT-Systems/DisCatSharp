@@ -186,7 +186,7 @@ public sealed class ContinuousMemoryBuffer<T> : IMemoryBuffer<T> where T : unman
 	/// <inheritdoc />
 	public T[] ToArray() =>
 		this._isDisposed
-			?           throw new ObjectDisposedException("This buffer is disposed.")
+			? throw new ObjectDisposedException("This buffer is disposed.")
 			: MemoryMarshal.Cast<byte, T>(this._buff[..this._pos].Span).ToArray();
 
 	/// <inheritdoc />

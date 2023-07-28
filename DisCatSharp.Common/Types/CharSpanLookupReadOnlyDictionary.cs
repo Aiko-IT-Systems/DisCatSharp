@@ -68,7 +68,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	/// <returns>Value matching the supplied key, if applicable.</returns>
 	public TValue this[ReadOnlySpan<char> key] =>
 		!this.TryRetrieveInternal(key, out var value)
-			?              throw new KeyNotFoundException($"The given key was not present in the dictionary.")
+			? throw new KeyNotFoundException($"The given key was not present in the dictionary.")
 			: value;
 
 	/// <summary>

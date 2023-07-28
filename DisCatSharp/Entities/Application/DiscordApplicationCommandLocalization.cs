@@ -51,7 +51,7 @@ public sealed class DiscordApplicationCommandLocalization
 			this.Localizations.Add(locale, value);
 		else
 			throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
-			                                $"Valid locales: {string.Join(", ", this.ValidLocales)}");
+											$"Valid locales: {string.Join(", ", this.ValidLocales)}");
 	}
 
 	/// <summary>
@@ -76,7 +76,7 @@ public sealed class DiscordApplicationCommandLocalization
 			foreach (var locale in localizations.Keys)
 				if (!this.Validate(locale))
 					throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
-					                                $"Valid locales: {string.Join(", ", this.ValidLocales)}");
+													$"Valid locales: {string.Join(", ", this.ValidLocales)}");
 
 		this.Localizations = localizations;
 	}

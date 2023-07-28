@@ -1168,7 +1168,9 @@ public sealed class DiscordApiClient
 			ret.Channels = ret.Guild == null
 				? rawChannels.Select(r => new DiscordChannel
 				{
-					Id = (ulong)r["id"], Name = r["name"].ToString(), Position = (int)r["position"]
+					Id = (ulong)r["id"],
+					Name = r["name"].ToString(),
+					Position = (int)r["position"]
 				}).ToList()
 				: rawChannels.Select(r =>
 				{

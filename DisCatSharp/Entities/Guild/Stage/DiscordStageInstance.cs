@@ -22,9 +22,6 @@
 
 using System;
 
-using DisCatSharp.Attributes;
-using DisCatSharp.Enums;
-
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;

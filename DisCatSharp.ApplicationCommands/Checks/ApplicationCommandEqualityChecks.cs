@@ -132,13 +132,13 @@ internal static class ApplicationCommandEqualityChecks
 			var eqCheck1 = true;
 			var eqCheck2 = true;
 			if (source.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommandGroup) &&
-			    target.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommandGroup))
+				target.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommandGroup))
 			{
 				List<DiscordApplicationCommandOption> minimalSourceOptions = new();
 				List<DiscordApplicationCommandOption> minimalTargetOptions = new();
 
 				foreach (var option in
-				         source.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommandGroup))
+						 source.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommandGroup))
 				{
 					List<DiscordApplicationCommandOption> minimalSubSourceOptions = new();
 					if (option.Options != null)
@@ -185,7 +185,7 @@ internal static class ApplicationCommandEqualityChecks
 				}
 
 				foreach (var option in
-				         target.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommandGroup))
+						 target.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommandGroup))
 				{
 					List<DiscordApplicationCommandOption> minimalSubTargetOptions = new();
 
@@ -229,12 +229,12 @@ internal static class ApplicationCommandEqualityChecks
 
 				var sOpt = JsonConvert.SerializeObject(minimalSourceOptions, Formatting.None);
 				var tOpt = JsonConvert.SerializeObject(minimalTargetOptions, Formatting.None);
-				
+
 				eqCheck1 = rootCheck && sOpt == tOpt;
 			}
 
 			if (source.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommand) &&
-			    target.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommand))
+				target.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommand))
 			{
 				List<DiscordApplicationCommandOption> minimalSourceOptions = new();
 				List<DiscordApplicationCommandOption> minimalTargetOptions = new();
@@ -295,7 +295,7 @@ internal static class ApplicationCommandEqualityChecks
 
 				var sOpt = JsonConvert.SerializeObject(minimalSourceOptions, Formatting.None);
 				var tOpt = JsonConvert.SerializeObject(minimalTargetOptions, Formatting.None);
-				
+
 				eqCheck2 = rootCheck && sOpt == tOpt;
 			}
 
@@ -325,7 +325,7 @@ internal static class ApplicationCommandEqualityChecks
 				));
 			var sOpt = JsonConvert.SerializeObject(minimalSourceOptions, Formatting.None);
 			var tOpt = JsonConvert.SerializeObject(minimalTargetOptions, Formatting.None);
-			
+
 			return rootCheck && sOpt == tOpt;
 		}
 	}

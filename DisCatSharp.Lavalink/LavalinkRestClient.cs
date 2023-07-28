@@ -39,7 +39,6 @@ using DisCatSharp.Lavalink.Payloads;
 
 using Microsoft.Extensions.Logging;
 
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp.Lavalink;

@@ -1027,8 +1027,8 @@ public partial class DiscordGuild
 					}
 
 					if (entrymsg.Channel != null)
-						entrymsg.Target = this.Discord is DiscordClient { MessageCache: not null } dc 
-						                  && dc.MessageCache.TryGet(xm => xm.Id == xac.TargetId.Value && xm.ChannelId == entrymsg.Channel.Id, out var msg)
+						entrymsg.Target = this.Discord is DiscordClient { MessageCache: not null } dc
+										  && dc.MessageCache.TryGet(xm => xm.Id == xac.TargetId.Value && xm.ChannelId == entrymsg.Channel.Id, out var msg)
 							? msg
 							: new() { Discord = this.Discord, Id = xac.TargetId.Value };
 					break;

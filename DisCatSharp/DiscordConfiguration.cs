@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
-using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;

@@ -161,7 +161,7 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// </summary>
 	public override string ToString()
 		=> $"Sticker {this.Id}; {this.Name}; {this.FormatType}";
-	
+
 	/// <summary>
 	/// Modifies the sticker
 	/// </summary>

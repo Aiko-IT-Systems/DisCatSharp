@@ -127,7 +127,7 @@ public enum ChannelFlags : long
 	/// </summary>
 	[DiscordInExperiment]
 	IsBroadcasting = 1L << 14,
-	
+
 	/// <summary>
 	/// Hides the media download options for <see cref="ChannelType.GuildMedia"/> channels.
 	/// </summary>

@@ -21,12 +21,10 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using System.IO;
 
 using DisCatSharp.Lavalink.Enums;
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace DisCatSharp.Lavalink.Entities;
 

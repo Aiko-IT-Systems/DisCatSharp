@@ -889,7 +889,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 		var rulesChannelId = ChannelToId(rulesChannel, "Rules");
 		var publicUpdatesChannelId = ChannelToId(publicUpdatesChannel, "Public updates");
-		
+
 		var features = this.RawFeatures.ToList();
 		if (!this.RawFeatures.Contains("COMMUNITY") && enabled)
 			features.Add("COMMUNITY");
@@ -922,7 +922,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 					: ch.Id;
 
 		var safetyAlertsChannelId = ChannelToId(safetyAlertsChannel, "Safety Alerts");
-		
+
 		var features = this.RawFeatures.ToList();
 		if (!this.RawFeatures.Contains("RAID_ALERTS_ENABLED") && enabled)
 			features.Add("RAID_ALERTS_ENABLED");

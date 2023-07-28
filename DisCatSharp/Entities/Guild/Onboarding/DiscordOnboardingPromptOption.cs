@@ -54,7 +54,7 @@ public sealed class DiscordOnboardingPromptOption : SnowflakeObject
 	/// </summary>
 	[JsonProperty("role_ids", NullValueHandling = NullValueHandling.Ignore)]
 	public List<ulong>? RoleIds { get; internal set; }
-	
+
 	/// <summary>
 	/// Gets the option's channel ids.
 	/// </summary>

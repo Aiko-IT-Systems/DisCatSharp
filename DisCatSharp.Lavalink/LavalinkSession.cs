@@ -598,8 +598,8 @@ public sealed class LavalinkSession
 						LavalinkGuildPlayer? player = null;
 
 						if (!string.IsNullOrEmpty(eventOp.GuildId) &&
-						    this.ConnectedPlayersInternal.TryGetValue(Convert.ToUInt64(eventOp.GuildId),
-							    out var eventPlayer))
+							this.ConnectedPlayersInternal.TryGetValue(Convert.ToUInt64(eventOp.GuildId),
+								out var eventPlayer))
 							player = eventPlayer;
 						switch (eventOp.Type)
 						{

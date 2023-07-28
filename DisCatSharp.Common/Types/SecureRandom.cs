@@ -130,7 +130,7 @@ public sealed class SecureRandom : Random, IDisposable
 	/// <returns>Generated random value.</returns>
 	public byte GetUInt8(byte min = 0, byte max = byte.MaxValue) =>
 		max <= min
-			?         throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max))
+			? throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max))
 			: (byte)((this.Generate<byte>() % (max - min)) + min);
 
 	/// <summary>
@@ -159,7 +159,7 @@ public sealed class SecureRandom : Random, IDisposable
 	/// <returns>Generated random value.</returns>
 	public ushort GetUInt16(ushort min = 0, ushort max = ushort.MaxValue) =>
 		max <= min
-			?         throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max))
+			? throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max))
 			: (ushort)((this.Generate<ushort>() % (max - min)) + min);
 
 	/// <summary>
@@ -188,7 +188,7 @@ public sealed class SecureRandom : Random, IDisposable
 	/// <returns>Generated random value.</returns>
 	public uint GetUInt32(uint min = 0, uint max = uint.MaxValue) =>
 		max <= min
-			?         throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max))
+			? throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max))
 			: (this.Generate<uint>() % (max - min)) + min;
 
 	/// <summary>
@@ -217,7 +217,7 @@ public sealed class SecureRandom : Random, IDisposable
 	/// <returns>Generated random value.</returns>
 	public ulong GetUInt64(ulong min = 0, ulong max = ulong.MaxValue) =>
 		max <= min
-			?         throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max))
+			? throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max))
 			: (this.Generate<ulong>() % (max - min)) + min;
 
 	/// <summary>
