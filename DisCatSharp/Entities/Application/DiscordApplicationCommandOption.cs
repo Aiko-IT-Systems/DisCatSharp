@@ -33,7 +33,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a parameter for a <see cref="DiscordApplicationCommand"/>.
 /// </summary>
-public sealed class DiscordApplicationCommandOption
+public class DiscordApplicationCommandOption
 {
 	/// <summary>
 	/// Gets the type of this command parameter.
@@ -180,4 +180,9 @@ public sealed class DiscordApplicationCommandOption
 		this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
 		this.RawDescriptionLocalizations = descriptionLocalizations?.GetKeyValuePairs();
 	}
+
+	/// <summary>
+	/// Creates a new empty DiscordApplicationCommandOption.
+	/// </summary>
+	internal DiscordApplicationCommandOption() { }
 }

@@ -33,7 +33,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a command that is registered to an application.
 /// </summary>
-public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordApplicationCommand>
+public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordApplicationCommand>
 {
 	/// <summary>
 	/// Gets the type of this application command.
@@ -184,6 +184,11 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 		this.IsNsfw = isNsfw;
 		//this.Contexts = contexts;
 	}
+
+	/// <summary>
+	/// Creates a new empty Discord Application Command.
+	/// </summary>
+	internal DiscordApplicationCommand() { }
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordApplicationCommand"/> object is equal to another object.
