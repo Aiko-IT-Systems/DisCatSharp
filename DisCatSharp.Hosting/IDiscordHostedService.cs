@@ -38,5 +38,8 @@ public interface IDiscordHostedService : Microsoft.Extensions.Hosting.IHostedSer
 /// </summary>
 public interface IDiscordHostedShardService : Microsoft.Extensions.Hosting.IHostedService
 {
+	/// <summary>
+	/// Reference to the sharded client.
+	/// </summary>
 	DiscordShardedClient ShardedClient { get; }
 }

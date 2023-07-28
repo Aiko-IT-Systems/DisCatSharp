@@ -76,7 +76,7 @@ internal readonly struct ConfigSection
 	/// </summary>
 	/// <param name="propName">Config path to value</param>
 	/// <returns>Value found at <paramref name="propName"/></returns>
-	public string GetValue(string propName)
+	public string? GetValue(string propName)
 		=> this.Config[this.GetPath(propName)];
 
 	/// <summary>

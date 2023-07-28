@@ -53,9 +53,7 @@ public abstract class DiscordHostedService : BaseHostedService, IDiscordHostedSe
 		IHostApplicationLifetime applicationLifetime,
 		string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB)
 		: base(config, logger, serviceProvider, applicationLifetime, configBotSection)
-	{
-
-	}
+	{ }
 
 	protected override Task ConfigureAsync()
 	{

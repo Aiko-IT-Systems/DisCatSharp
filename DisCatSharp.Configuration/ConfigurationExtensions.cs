@@ -56,7 +56,8 @@ internal static class ConfigurationExtensions
 	/// <param name="config">(not used - only for adding context based functionality)</param>
 	/// <param name="values">The strings to piece together</param>
 	/// <returns>Strings joined together via ':'</returns>
-	public static string ConfigPath(this IConfiguration config, params string[] values) => string.Join(":", values);
+	public static string ConfigPath(this IConfiguration config, params string[] values)
+		=> string.Join(":", values);
 
 	/// <summary>
 	/// Skims over the configuration section and only overrides values that are explicitly defined within the config
