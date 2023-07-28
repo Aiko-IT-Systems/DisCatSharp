@@ -174,7 +174,7 @@ internal static class ConfigurationExtensions
 		// create default instance
 		var instance = factory();
 
-		HydrateInstance(ref instance, new ConfigSection(ref config, sectionName, rootSectionName));
+		HydrateInstance(ref instance, new(ref config, sectionName, rootSectionName));
 
 		return instance;
 	}
@@ -195,7 +195,7 @@ internal static class ConfigurationExtensions
 		// Default values should hopefully be provided from the constructor
 		var configInstance = ActivatorUtilities.CreateInstance(serviceProvider, typeof(TConfig));
 
-		HydrateInstance(ref configInstance, new ConfigSection(ref config, sectionName, rootSectionName));
+		HydrateInstance(ref configInstance, new(ref config, sectionName, rootSectionName));
 
 		return (TConfig)configInstance;
 	}
@@ -215,7 +215,7 @@ internal static class ConfigurationExtensions
 		// Default values should hopefully be provided from the constructor
 		object configInstance = new TConfig();
 
-		HydrateInstance(ref configInstance, new ConfigSection(ref config, sectionName, rootSectionName));
+		HydrateInstance(ref configInstance, new(ref config, sectionName, rootSectionName));
 
 		return (TConfig)configInstance;
 	}
@@ -306,7 +306,7 @@ internal static class ConfigurationExtensions
 				: null;
 
 		return string.IsNullOrEmpty(section)
-			? new DiscordClient(new DiscordConfiguration(serviceProvider))
+			? new(new(serviceProvider))
 			: new DiscordClient(config.ExtractConfig<DiscordConfiguration>(serviceProvider, section, botSectionName));
 	}
 }

@@ -121,7 +121,7 @@ public sealed class CommandContext
 	/// </summary>
 	internal CommandContext()
 	{
-		this._lazyMember = new Lazy<DiscordMember>(() => this.Guild != null && this.Guild.Members.TryGetValue(this.User.Id, out var member) ? member : this.Guild?.GetMemberAsync(this.User.Id).ConfigureAwait(false).GetAwaiter().GetResult());
+		this._lazyMember = new(() => this.Guild != null && this.Guild.Members.TryGetValue(this.User.Id, out var member) ? member : this.Guild?.GetMemberAsync(this.User.Id).ConfigureAwait(false).GetAwaiter().GetResult());
 	}
 
 	/// <summary>

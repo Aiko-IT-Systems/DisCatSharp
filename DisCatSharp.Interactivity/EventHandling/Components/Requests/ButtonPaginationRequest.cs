@@ -64,7 +64,7 @@ internal class ButtonPaginationRequest : IPaginationRequest
 	{
 		this._user = user;
 		this._token = token;
-		this._buttons = new PaginationButtons(buttons);
+		this._buttons = new(buttons);
 		this._message = message;
 		this._wrapBehavior = behavior;
 		this._behaviorBehavior = buttonBehavior;

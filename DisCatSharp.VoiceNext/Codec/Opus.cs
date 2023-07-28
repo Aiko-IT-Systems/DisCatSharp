@@ -74,7 +74,7 @@ internal sealed class Opus : IDisposable
 		Interop.OpusSetEncoderOption(this._encoder, OpusControl.SetInBandFec, 1);
 		Interop.OpusSetEncoderOption(this._encoder, OpusControl.SetBitrate, 131072);
 
-		this._managedDecoders = new List<OpusDecoder>();
+		this._managedDecoders = new();
 	}
 
 	/// <summary>
@@ -111,7 +111,7 @@ internal sealed class Opus : IDisposable
 		//    throw new ArgumentException("PCM target buffer size needs to be equal to maximum buffer size for specified audio format.", nameof(target));
 
 		Interop.OpusGetPacketMetrics(opus, this.AudioFormat.SampleRate, out var channels, out var frames, out var samplesPerFrame, out var frameSize);
-		outputFormat = this.AudioFormat.ChannelCount != channels ? new AudioFormat(this.AudioFormat.SampleRate, channels, this.AudioFormat.VoiceApplication) : this.AudioFormat;
+		outputFormat = this.AudioFormat.ChannelCount != channels ? new(this.AudioFormat.SampleRate, channels, this.AudioFormat.VoiceApplication) : this.AudioFormat;
 
 		if (decoder.AudioFormat.ChannelCount != channels)
 			decoder.Initialize(outputFormat);

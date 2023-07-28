@@ -70,12 +70,12 @@ public sealed class VoiceNextExtension : BaseExtension
 	/// <param name="config">The config.</param>
 	internal VoiceNextExtension(VoiceNextConfiguration config)
 	{
-		this._configuration = new VoiceNextConfiguration(config);
+		this._configuration = new(config);
 		this.IsIncomingEnabled = config.EnableIncoming;
 
-		this._activeConnections = new ConcurrentDictionary<ulong, VoiceNextConnection>();
-		this._voiceStateUpdates = new ConcurrentDictionary<ulong, TaskCompletionSource<VoiceStateUpdateEventArgs>>();
-		this._voiceServerUpdates = new ConcurrentDictionary<ulong, TaskCompletionSource<VoiceServerUpdateEventArgs>>();
+		this._activeConnections = new();
+		this._voiceStateUpdates = new();
+		this._voiceServerUpdates = new();
 	}
 
 	/// <summary>
@@ -230,7 +230,7 @@ public sealed class VoiceNextExtension : BaseExtension
 
 		if (this._activeConnections.TryGetValue(e.Guild.Id, out var vnc))
 		{
-			vnc.ServerData = new VoiceServerUpdatePayload
+			vnc.ServerData = new()
 			{
 				Endpoint = e.Endpoint,
 				GuildId = e.Guild.Id,
@@ -250,7 +250,7 @@ public sealed class VoiceNextExtension : BaseExtension
 			{
 				eph = eps;
 			}
-			vnc.WebSocketEndpoint = new ConnectionEndpoint { Hostname = eph, Port = epp };
+			vnc.WebSocketEndpoint = new() { Hostname = eph, Port = epp };
 
 			vnc.Resume = false;
 			await vnc.ReconnectAsync().ConfigureAwait(false);

@@ -58,7 +58,7 @@ internal class ComponentEventWaiter : IDisposable
 		this._client.ComponentInteractionCreated += this.Handle;
 		this._config = config;
 
-		this._message = new DiscordFollowupMessageBuilder { Content = config.ResponseMessage ?? "This message was not meant for you.", IsEphemeral = true };
+		this._message = new() { Content = config.ResponseMessage ?? "This message was not meant for you.", IsEphemeral = true };
 	}
 
 	/// <summary>

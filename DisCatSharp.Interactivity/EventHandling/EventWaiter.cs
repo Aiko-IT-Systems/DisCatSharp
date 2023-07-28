@@ -58,10 +58,10 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 		this._client = client;
 		var tinfo = this._client.GetType().GetTypeInfo();
 		var handler = tinfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, T>));
-		this._matchRequests = new ConcurrentHashSet<MatchRequest<T>>();
-		this._collectRequests = new ConcurrentHashSet<CollectRequest<T>>();
+		this._matchRequests = new();
+		this._collectRequests = new();
 		this._event = (AsyncEvent<DiscordClient, T>)handler.GetValue(this._client);
-		this._handler = new AsyncEventHandler<DiscordClient, T>(this.HandleEvent);
+		this._handler = new(this.HandleEvent);
 		this._event.Register(this._handler);
 	}
 
@@ -108,7 +108,7 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 		}
 		finally
 		{
-			result = new ReadOnlyCollection<T>(new HashSet<T>(request.Collected).ToList());
+			result = new(new HashSet<T>(request.Collected).ToList());
 			request.Dispose();
 			this._collectRequests.TryRemove(request);
 		}

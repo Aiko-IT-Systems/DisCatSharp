@@ -65,7 +65,7 @@ public sealed class CooldownAttribute : CheckBaseAttribute
 		this.MaxUses = maxUses;
 		this.Reset = TimeSpan.FromSeconds(resetAfter);
 		this.BucketType = bucketType;
-		this._buckets = new ConcurrentDictionary<string, CommandCooldownBucket>();
+		this._buckets = new();
 	}
 
 	/// <summary>
@@ -132,7 +132,7 @@ public sealed class CooldownAttribute : CheckBaseAttribute
 		var bid = this.GetBucketId(ctx, out var usr, out var chn, out var gld);
 		if (!this._buckets.TryGetValue(bid, out var bucket))
 		{
-			bucket = new CommandCooldownBucket(this.MaxUses, this.Reset, usr, chn, gld);
+			bucket = new(this.MaxUses, this.Reset, usr, chn, gld);
 			this._buckets.AddOrUpdate(bid, bucket, (k, v) => bucket);
 		}
 
@@ -237,7 +237,7 @@ public sealed class CommandCooldownBucket : IEquatable<CommandCooldownBucket>
 		this.ChannelId = channelId;
 		this.GuildId = guildId;
 		this.BucketId = MakeId(userId, channelId, guildId);
-		this._usageSemaphore = new SemaphoreSlim(1, 1);
+		this._usageSemaphore = new(1, 1);
 	}
 
 	/// <summary>

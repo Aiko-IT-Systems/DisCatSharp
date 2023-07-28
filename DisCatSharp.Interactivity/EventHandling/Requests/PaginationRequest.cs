@@ -58,8 +58,8 @@ namespace DisCatSharp.Interactivity.EventHandling
 		internal PaginationRequest(DiscordMessage message, DiscordUser user, PaginationBehaviour behaviour, PaginationDeletion deletion,
 			PaginationEmojis emojis, TimeSpan timeout, IEnumerable<Page> pages)
 		{
-			this._tcs = new TaskCompletionSource<bool>();
-			this._ct = new CancellationTokenSource(timeout);
+			this._tcs = new();
+			this._ct = new(timeout);
 			this._ct.Token.Register(() => this._tcs.TrySetResult(true));
 			this._timeout = timeout;
 
@@ -70,7 +70,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			this._behaviour = behaviour;
 			this._emojis = emojis;
 
-			this._pages = new List<Page>();
+			this._pages = new();
 			foreach (var p in pages)
 			{
 				this._pages.Add(p);

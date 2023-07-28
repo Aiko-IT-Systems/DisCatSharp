@@ -57,7 +57,7 @@ public sealed class CommandGroupBuilder : CommandBuilder
 	public CommandGroupBuilder(ICommandModule module)
 		: base(module)
 	{
-		this._childrenList = new List<CommandBuilder>();
+		this._childrenList = new();
 		this.Children = new ReadOnlyCollection<CommandBuilder>(this._childrenList);
 	}
 

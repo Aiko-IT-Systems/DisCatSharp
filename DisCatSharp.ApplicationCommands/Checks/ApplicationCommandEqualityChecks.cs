@@ -152,7 +152,7 @@ internal static class ApplicationCommandEqualityChecks
 								minimalSubSubSourceOptions = new();
 
 								foreach (var subSubOption in subOption.Options)
-									minimalSubSubSourceOptions.Add(new DiscordApplicationCommandOption(
+									minimalSubSubSourceOptions.Add(new(
 										subSubOption.Name, subSubOption.Description, subSubOption.Type,
 										subSubOption.Required,
 										subSubOption.Choices, null, subSubOption.ChannelTypes?.OrderBy(x => x),
@@ -163,7 +163,7 @@ internal static class ApplicationCommandEqualityChecks
 										subSubOption.MinimumLength, subSubOption.MaximumLength
 									));
 
-								minimalSubSourceOptions.Add(new DiscordApplicationCommandOption(
+								minimalSubSourceOptions.Add(new(
 									subOption.Name, subOption.Description, subOption.Type,
 									options: minimalSubSubSourceOptions,
 									nameLocalizations: localizationEnabled ? subOption.NameLocalizations : null,
@@ -176,7 +176,7 @@ internal static class ApplicationCommandEqualityChecks
 
 					}
 
-					minimalSourceOptions.Add(new DiscordApplicationCommandOption(
+					minimalSourceOptions.Add(new(
 						option.Name, option.Description, option.Type,
 						options: minimalSubSourceOptions,
 						nameLocalizations: localizationEnabled ? option.NameLocalizations : null,
@@ -198,7 +198,7 @@ internal static class ApplicationCommandEqualityChecks
 							minimalSubSubTargetOptions = new();
 
 							foreach (var subSubOption in subOption.Options)
-								minimalSubSubTargetOptions.Add(new DiscordApplicationCommandOption(
+								minimalSubSubTargetOptions.Add(new(
 									subSubOption.Name, subSubOption.Description, subSubOption.Type,
 									subSubOption.Required,
 									subSubOption.Choices, null, subSubOption.ChannelTypes?.OrderBy(x => x), subSubOption.AutoComplete,
@@ -208,7 +208,7 @@ internal static class ApplicationCommandEqualityChecks
 									subSubOption.MinimumLength, subSubOption.MaximumLength
 								));
 
-							minimalSubTargetOptions.Add(new DiscordApplicationCommandOption(
+							minimalSubTargetOptions.Add(new(
 								subOption.Name, subOption.Description, subOption.Type,
 								options: minimalSubSubTargetOptions,
 								nameLocalizations: localizationEnabled ? subOption.NameLocalizations : null,
@@ -219,7 +219,7 @@ internal static class ApplicationCommandEqualityChecks
 						}
 					}
 
-					minimalTargetOptions.Add(new DiscordApplicationCommandOption(
+					minimalTargetOptions.Add(new(
 						option.Name, option.Description, option.Type,
 						options: minimalSubTargetOptions,
 						nameLocalizations: localizationEnabled ? option.NameLocalizations : null,
@@ -248,7 +248,7 @@ internal static class ApplicationCommandEqualityChecks
 						minimalSubSourceOptions = new();
 
 						foreach (var subOption in option.Options)
-							minimalSubSourceOptions.Add(new DiscordApplicationCommandOption(
+							minimalSubSourceOptions.Add(new(
 								subOption.Name, subOption.Description, subOption.Type, subOption.Required,
 								subOption.Choices, null, subOption.ChannelTypes?.OrderBy(x => x), subOption.AutoComplete,
 								subOption.MinimumValue, subOption.MaximumValue,
@@ -258,7 +258,7 @@ internal static class ApplicationCommandEqualityChecks
 							));
 					}
 
-					minimalSourceOptions.Add(new DiscordApplicationCommandOption(
+					minimalSourceOptions.Add(new(
 						option.Name, option.Description, option.Type,
 						options: minimalSubSourceOptions,
 						nameLocalizations: localizationEnabled ? option.NameLocalizations : null,
@@ -275,7 +275,7 @@ internal static class ApplicationCommandEqualityChecks
 						minimalSubTargetOptions = new();
 
 						foreach (var subOption in option.Options)
-							minimalSubTargetOptions.Add(new DiscordApplicationCommandOption(
+							minimalSubTargetOptions.Add(new(
 								subOption.Name, subOption.Description, subOption.Type, subOption.Required,
 								subOption.Choices, null, subOption.ChannelTypes?.OrderBy(x => x), subOption.AutoComplete,
 								subOption.MinimumValue, subOption.MaximumValue,
@@ -285,7 +285,7 @@ internal static class ApplicationCommandEqualityChecks
 							));
 					}
 
-					minimalTargetOptions.Add(new DiscordApplicationCommandOption(
+					minimalTargetOptions.Add(new(
 						option.Name, option.Description, option.Type,
 						options: minimalSubTargetOptions,
 						nameLocalizations: localizationEnabled ? option.NameLocalizations : null,
@@ -307,7 +307,7 @@ internal static class ApplicationCommandEqualityChecks
 			List<DiscordApplicationCommandOption> minimalTargetOptions = new();
 
 			foreach (var option in source.Options)
-				minimalSourceOptions.Add(new DiscordApplicationCommandOption(
+				minimalSourceOptions.Add(new(
 					option.Name, option.Description, option.Type, option.Required,
 					option.Choices, null, option.ChannelTypes?.OrderBy(x => x), option.AutoComplete, option.MinimumValue, option.MaximumValue,
 					localizationEnabled ? option.NameLocalizations : null,
@@ -316,7 +316,7 @@ internal static class ApplicationCommandEqualityChecks
 				));
 
 			foreach (var option in target.Options)
-				minimalTargetOptions.Add(new DiscordApplicationCommandOption(
+				minimalTargetOptions.Add(new(
 					option.Name, option.Description, option.Type, option.Required,
 					option.Choices, null, option.ChannelTypes?.OrderBy(x => x), option.AutoComplete, option.MinimumValue, option.MaximumValue,
 					localizationEnabled ? option.NameLocalizations : null,

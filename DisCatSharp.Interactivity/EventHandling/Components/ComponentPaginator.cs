@@ -115,7 +115,7 @@ internal class ComponentPaginator : IPaginator
 		if (await req.GetUserAsync().ConfigureAwait(false) != e.User)
 		{
 			if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
-				await e.Interaction.CreateFollowupMessageAsync(new DiscordFollowupMessageBuilder { Content = this._config.ResponseMessage, IsEphemeral = true }).ConfigureAwait(false);
+				await e.Interaction.CreateFollowupMessageAsync(new() { Content = this._config.ResponseMessage, IsEphemeral = true }).ConfigureAwait(false);
 
 			return;
 		}

@@ -256,13 +256,13 @@ public static class CommandsNextUtilities
 			}
 
 			if (argValue == null && !arg.IsOptional && !arg.IsCatchAll)
-				return new ArgumentBindingResult(new ArgumentException("Not enough arguments supplied to the command."));
+				return new(new ArgumentException("Not enough arguments supplied to the command."));
 			else if (argValue == null)
 				rawArgumentList.Add(null);
 		}
 
 		if (!ignoreSurplus && foundAt < argString.Length)
-			return new ArgumentBindingResult(new ArgumentException("Too many arguments were supplied to this command."));
+			return new(new ArgumentException("Too many arguments were supplied to this command."));
 
 		for (var i = 0; i < overload.Arguments.Count; i++)
 		{
@@ -279,7 +279,7 @@ public static class CommandsNextUtilities
 					}
 					catch (Exception ex)
 					{
-						return new ArgumentBindingResult(ex);
+						return new(ex);
 					}
 					i++;
 				}
@@ -295,12 +295,12 @@ public static class CommandsNextUtilities
 				}
 				catch (Exception ex)
 				{
-					return new ArgumentBindingResult(ex);
+					return new(ex);
 				}
 			}
 		}
 
-		return new ArgumentBindingResult(args, rawArgumentList);
+		return new(args, rawArgumentList);
 	}
 
 	/// <summary>

@@ -70,7 +70,7 @@ internal class InteractionPaginationRequest : IPaginationRequest
 	{
 		this._user = user;
 		this._token = token;
-		this._buttons = new PaginationButtons(buttons);
+		this._buttons = new(buttons);
 		this._message = message;
 		this._wrapBehavior = behavior;
 		this._behaviorBehavior = behaviorBehavior;
@@ -93,7 +93,7 @@ internal class InteractionPaginationRequest : IPaginationRequest
 	{
 		this._interactionCts?.Dispose();
 		this._lastInteraction = interaction;
-		this._interactionCts = new CancellationTokenSource(TimeSpan.FromSeconds((60 * 15) - 5));
+		this._interactionCts = new(TimeSpan.FromSeconds((60 * 15) - 5));
 		this._interactionCts.Token.Register(() => this._tcs.TrySetResult(false));
 	}
 

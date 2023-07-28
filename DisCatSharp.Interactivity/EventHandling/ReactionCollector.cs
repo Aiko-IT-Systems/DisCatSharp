@@ -66,25 +66,25 @@ internal class ReactionCollector : IDisposable
 		this._client = client;
 		var tinfo = this._client.GetType().GetTypeInfo();
 
-		this._requests = new ConcurrentHashSet<ReactionCollectRequest>();
+		this._requests = new();
 
 		// Grabbing all three events from client
 		var handler = tinfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, MessageReactionAddEventArgs>));
 
 		this._reactionAddEvent = (AsyncEvent<DiscordClient, MessageReactionAddEventArgs>)handler.GetValue(this._client);
-		this._reactionAddHandler = new AsyncEventHandler<DiscordClient, MessageReactionAddEventArgs>(this.HandleReactionAdd);
+		this._reactionAddHandler = new(this.HandleReactionAdd);
 		this._reactionAddEvent.Register(this._reactionAddHandler);
 
 		handler = tinfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs>));
 
 		this._reactionRemoveEvent = (AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs>)handler.GetValue(this._client);
-		this._reactionRemoveHandler = new AsyncEventHandler<DiscordClient, MessageReactionRemoveEventArgs>(this.HandleReactionRemove);
+		this._reactionRemoveHandler = new(this.HandleReactionRemove);
 		this._reactionRemoveEvent.Register(this._reactionRemoveHandler);
 
 		handler = tinfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, MessageReactionsClearEventArgs>));
 
 		this._reactionClearEvent = (AsyncEvent<DiscordClient, MessageReactionsClearEventArgs>)handler.GetValue(this._client);
-		this._reactionClearHandler = new AsyncEventHandler<DiscordClient, MessageReactionsClearEventArgs>(this.HandleReactionClear);
+		this._reactionClearHandler = new(this.HandleReactionClear);
 		this._reactionClearEvent.Register(this._reactionClearHandler);
 	}
 
@@ -108,7 +108,7 @@ internal class ReactionCollector : IDisposable
 		}
 		finally
 		{
-			result = new ReadOnlyCollection<Reaction>(new HashSet<Reaction>(request.Collected).ToList());
+			result = new(new HashSet<Reaction>(request.Collected).ToList());
 			request.Dispose();
 			this._requests.TryRemove(request);
 		}
@@ -137,10 +137,10 @@ internal class ReactionCollector : IDisposable
 				}
 				else
 				{
-					req.Collected.Add(new Reaction()
+					req.Collected.Add(new()
 					{
 						Emoji = eventArgs.Emoji,
-						Users = new ConcurrentHashSet<DiscordUser>() { eventArgs.User }
+						Users = new() { eventArgs.User }
 					});
 				}
 			}
@@ -241,10 +241,10 @@ public class ReactionCollectRequest : IDisposable
 	public ReactionCollectRequest(DiscordMessage msg, TimeSpan timeout)
 	{
 		this.Message = msg;
-		this.Collected = new ConcurrentHashSet<Reaction>();
+		this.Collected = new();
 		this.Timeout = timeout;
-		this.Tcs = new TaskCompletionSource<Reaction>();
-		this.Ct = new CancellationTokenSource(this.Timeout);
+		this.Tcs = new();
+		this.Ct = new(this.Timeout);
 		this.Ct.Token.Register(() => this.Tcs.TrySetResult(null));
 	}
 

@@ -134,30 +134,26 @@ public sealed class CharSpanLookupDictionary<TValue> :
 			unsafe
 			{
 				fixed (char* chars = &key.GetPinnableReference())
-					this.TryInsertInternal(new string(chars, 0, key.Length), value, true);
+					this.TryInsertInternal(new(chars, 0, key.Length), value, true);
 			}
 		}
 	}
 
 	object IDictionary.this[object key]
 	{
-		get
-		{
-			if (!(key is string tkey))
-				throw new ArgumentException("Key needs to be an instance of a string.");
-
-			if (!this.TryRetrieveInternal(tkey.AsSpan(), out var value))
-				throw new KeyNotFoundException($"The given key '{tkey}' was not present in the dictionary.");
-
-			return value;
-		}
+		get =>
+			key is not string tkey
+				? throw new ArgumentException("Key needs to be an instance of a string.")
+				: !this.TryRetrieveInternal(tkey.AsSpan(), out var value)
+					? throw new KeyNotFoundException($"The given key '{tkey}' was not present in the dictionary.")
+					: value;
 
 		set
 		{
-			if (!(key is string tkey))
+			if (key is not string tkey)
 				throw new ArgumentException("Key needs to be an instance of a string.");
 
-			if (!(value is TValue tvalue))
+			if (value is not TValue tvalue)
 			{
 				tvalue = default;
 				if (tvalue != null)
@@ -178,7 +174,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// </summary>
 	public CharSpanLookupDictionary()
 	{
-		this._internalBuckets = new Dictionary<ulong, KeyedValue>();
+		this._internalBuckets = new();
 	}
 
 	/// <summary>
@@ -187,7 +183,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <param name="initialCapacity">Initial capacity of the dictionary.</param>
 	public CharSpanLookupDictionary(int initialCapacity)
 	{
-		this._internalBuckets = new Dictionary<ulong, KeyedValue>(initialCapacity);
+		this._internalBuckets = new(initialCapacity);
 	}
 
 	/// <summary>
@@ -244,7 +240,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		unsafe
 		{
 			fixed (char* chars = &key.GetPinnableReference())
-				if (!this.TryInsertInternal(new string(chars, 0, key.Length), value, false))
+				if (!this.TryInsertInternal(new(chars, 0, key.Length), value, false))
 					throw new ArgumentException("Given key is already present in the dictionary.", nameof(key));
 		}
 	}
@@ -269,7 +265,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		unsafe
 		{
 			fixed (char* chars = &key.GetPinnableReference())
-				return this.TryInsertInternal(new string(chars, 0, key.Length), value, false);
+				return this.TryInsertInternal(new(chars, 0, key.Length), value, false);
 		}
 	}
 
@@ -280,12 +276,9 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <param name="value">Retrieved value.</param>
 	/// <returns>Whether the operation was successful.</returns>
 	public bool TryGetValue(string key, out TValue value)
-	{
-		if (key == null)
-			throw new ArgumentNullException(nameof(key));
-
-		return this.TryRetrieveInternal(key.AsSpan(), out value);
-	}
+		=> key == null
+			? throw new ArgumentNullException(nameof(key))
+			: this.TryRetrieveInternal(key.AsSpan(), out value);
 
 	/// <summary>
 	/// Attempts to retrieve a value corresponding to the supplied key from this dictionary.
@@ -303,12 +296,9 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <param name="value">Removed value.</param>
 	/// <returns>Whether the operation was successful.</returns>
 	public bool TryRemove(string key, out TValue value)
-	{
-		if (key == null)
-			throw new ArgumentNullException(nameof(key));
-
-		return this.TryRemoveInternal(key.AsSpan(), out value);
-	}
+		=> key == null
+			? throw new ArgumentNullException(nameof(key))
+			: this.TryRemoveInternal(key.AsSpan(), out value);
 
 	/// <summary>
 	/// Attempts to remove a value corresponding to the supplied key from this dictionary.
@@ -366,10 +356,10 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <param name="value">The value.</param>
 	void IDictionary.Add(object key, object value)
 	{
-		if (!(key is string tkey))
+		if (key is not string tkey)
 			throw new ArgumentException("Key needs to be an instance of a string.");
 
-		if (!(value is TValue tvalue))
+		if (value is not TValue tvalue)
 		{
 			tvalue = default;
 			if (tvalue != null)
@@ -385,7 +375,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <param name="key">The key.</param>
 	void IDictionary.Remove(object key)
 	{
-		if (!(key is string tkey))
+		if (key is not string tkey)
 			throw new ArgumentException("Key needs to be an instance of a string.");
 
 		this.TryRemove(tkey, out _);
@@ -397,12 +387,9 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <param name="key">The key.</param>
 	/// <returns>A bool.</returns>
 	bool IDictionary.Contains(object key)
-	{
-		if (!(key is string tkey))
-			throw new ArgumentException("Key needs to be an instance of a string.");
-
-		return this.ContainsKey(tkey);
-	}
+		=> key is not string tkey
+			? throw new ArgumentException("Key needs to be an instance of a string.")
+			: this.ContainsKey(tkey);
 
 	/// <summary>
 	/// Gets the enumerator.
@@ -450,7 +437,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 			var kdv = v;
 			while (kdv != null)
 			{
-				array[i++] = new KeyValuePair<string, TValue>(kdv.Key, kdv.Value);
+				array[i++] = new(kdv.Key, kdv.Value);
 				kdv = kdv.Next;
 			}
 		}
@@ -506,7 +493,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		var hash = key.CalculateKnuthHash();
 		if (!this._internalBuckets.ContainsKey(hash))
 		{
-			this._internalBuckets.Add(hash, new KeyedValue(key, hash, value));
+			this._internalBuckets.Add(hash, new(key, hash, value));
 			this.Count++;
 			return true;
 		}
@@ -528,7 +515,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 			kdv = kdv.Next;
 		}
 
-		kdvLast.Next = new KeyedValue(key, hash, value);
+		kdvLast.Next = new(key, hash, value);
 		this.Count++;
 		return true;
 	}
@@ -784,13 +771,13 @@ public sealed class CharSpanLookupDictionary<TValue> :
 					return false;
 
 				kdv = this._internalEnumerator.Current.Value;
-				this.Current = new KeyValuePair<string, TValue>(kdv.Key, kdv.Value);
+				this.Current = new(kdv.Key, kdv.Value);
 
 				this._currentValue = kdv.Next;
 				return true;
 			}
 
-			this.Current = new KeyValuePair<string, TValue>(kdv.Key, kdv.Value);
+			this.Current = new(kdv.Key, kdv.Value);
 			this._currentValue = kdv.Next;
 			return true;
 		}

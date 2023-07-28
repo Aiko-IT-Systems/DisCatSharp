@@ -81,7 +81,7 @@ public class CommandGroup : Command
 
 				var fchecks = await cmd.RunChecksAsync(xctx, false).ConfigureAwait(false);
 				return fchecks.Any()
-					? new CommandResult
+					? new()
 					{
 						IsSuccessful = false,
 						Exception = new ChecksFailedException(cmd, xctx, fchecks),
@@ -92,7 +92,7 @@ public class CommandGroup : Command
 		}
 
 		return !this.IsExecutableWithoutSubcommands
-			? new CommandResult
+			? new()
 			{
 				IsSuccessful = false,
 				Exception = new InvalidOperationException("No matching subcommands were found, and this group is not executable."),

@@ -107,8 +107,8 @@ public sealed class VoiceTransmitSink : IDisposable
 		this._pcmBuffer = new byte[vnc.AudioFormat.CalculateSampleSize(pcmBufferDuration)];
 		this._pcmMemory = this._pcmBuffer.AsMemory();
 		this._pcmBufferLength = 0;
-		this._writeSemaphore = new SemaphoreSlim(1, 1);
-		this._filters = new List<IVoiceFilter>();
+		this._writeSemaphore = new(1, 1);
+		this._filters = new();
 	}
 
 	/// <summary>
@@ -118,7 +118,7 @@ public sealed class VoiceTransmitSink : IDisposable
 	/// <param name="offset">Start of the data in the buffer.</param>
 	/// <param name="count">Number of bytes from the buffer.</param>
 	/// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-	public async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken = default) => await this.WriteAsync(new ReadOnlyMemory<byte>(buffer, offset, count), cancellationToken).ConfigureAwait(false);
+	public async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken = default) => await this.WriteAsync(new(buffer, offset, count), cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
 	/// Writes PCM data to the sink. The data is prepared for transmission, and enqueued.
@@ -157,7 +157,7 @@ public sealed class VoiceTransmitSink : IDisposable
 					var packetMemory = packet.AsMemory()[..this._pcmMemory.Length];
 					this._pcmMemory.CopyTo(packetMemory);
 
-					await this._connection.EnqueuePacketAsync(new RawVoicePacket(packetMemory, this.SampleDuration, false, packet), cancellationToken).ConfigureAwait(false);
+					await this._connection.EnqueuePacketAsync(new(packetMemory, this.SampleDuration, false, packet), cancellationToken).ConfigureAwait(false);
 				}
 			}
 		}
@@ -182,7 +182,7 @@ public sealed class VoiceTransmitSink : IDisposable
 		var packetMemory = packet.AsMemory()[..pcm.Length];
 		pcm.CopyTo(packetMemory);
 
-		await this._connection.EnqueuePacketAsync(new RawVoicePacket(packetMemory, this.SampleDuration, false, packet), cancellationToken).ConfigureAwait(false);
+		await this._connection.EnqueuePacketAsync(new(packetMemory, this.SampleDuration, false, packet), cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>

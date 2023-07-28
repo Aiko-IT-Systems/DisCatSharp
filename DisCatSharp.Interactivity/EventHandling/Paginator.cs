@@ -49,7 +49,7 @@ internal class Paginator : IPaginator
 	public Paginator(DiscordClient client)
 	{
 		this._client = client;
-		this._requests = new ConcurrentHashSet<IPaginationRequest>();
+		this._requests = new();
 
 		this._client.MessageReactionAdded += this.HandleReactionAdd;
 		this._client.MessageReactionRemoved += this.HandleReactionRemove;

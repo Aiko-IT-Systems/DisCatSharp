@@ -120,7 +120,7 @@ public class Command
 				var ret = (Task)ovl.Callable.DynamicInvoke(args.Converted);
 				await ret.ConfigureAwait(false);
 				executed = true;
-				res = new CommandResult
+				res = new()
 				{
 					IsSuccessful = true,
 					Context = ctx
@@ -136,7 +136,7 @@ public class Command
 		}
 		catch (Exception ex)
 		{
-			res = new CommandResult
+			res = new()
 			{
 				IsSuccessful = false,
 				Exception = ex,

@@ -50,7 +50,7 @@ internal class Poller
 	public Poller(DiscordClient client)
 	{
 		this._client = client;
-		this._requests = new ConcurrentHashSet<PollRequest>();
+		this._requests = new();
 
 		this._client.MessageReactionAdded += this.HandleReactionAdd;
 		this._client.MessageReactionRemoved += this.HandleReactionRemove;
@@ -76,7 +76,7 @@ internal class Poller
 		}
 		finally
 		{
-			result = new ReadOnlyCollection<PollEmoji>(new HashSet<PollEmoji>(request.Collected).ToList());
+			result = new(new HashSet<PollEmoji>(request.Collected).ToList());
 			request.Dispose();
 			this._requests.TryRemove(request);
 		}

@@ -42,7 +42,7 @@ public static class DiscordClientExtensions
 	/// <param name="client">Discord client to create VoiceNext instance for.</param>
 	/// <returns>VoiceNext client instance.</returns>
 	public static VoiceNextExtension UseVoiceNext(this DiscordClient client)
-		=> UseVoiceNext(client, new VoiceNextConfiguration());
+		=> UseVoiceNext(client, new());
 
 	/// <summary>
 	/// Creates a new VoiceNext client with specified settings.

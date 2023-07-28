@@ -67,7 +67,7 @@ public sealed class ContextMenuCooldownAttribute : ApplicationCommandCheckBaseAt
 		this.MaxUses = maxUses;
 		this.Reset = TimeSpan.FromSeconds(resetAfter);
 		this.BucketType = bucketType;
-		this.Buckets = new ConcurrentDictionary<string, ContextMenuCooldownBucket>();
+		this.Buckets = new();
 	}
 
 	/// <summary>
@@ -130,7 +130,7 @@ public sealed class ContextMenuCooldownAttribute : ApplicationCommandCheckBaseAt
 		var bid = this.GetBucketId(ctx, out var usr, out var chn, out var gld);
 		if (!this.Buckets.TryGetValue(bid, out var bucket))
 		{
-			bucket = new ContextMenuCooldownBucket(this.MaxUses, this.Reset, usr, chn, gld);
+			bucket = new(this.MaxUses, this.Reset, usr, chn, gld);
 			this.Buckets.AddOrUpdate(bid, bucket, (k, v) => bucket);
 		}
 

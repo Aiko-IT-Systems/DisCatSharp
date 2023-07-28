@@ -128,7 +128,7 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 		// Collect exceptions
 		List<Exception> exceptions = null;
 		if ((exceptionMode & AsyncEventExceptionMode.ThrowAll) != 0)
-			exceptions = new List<Exception>(handlers.Length * 2 /* timeout + regular */);
+			exceptions = new(handlers.Length * 2 /* timeout + regular */);
 
 		// If we have a timeout configured, start the timeout task
 		var timeout = this.MaximumExecutionTime > TimeSpan.Zero ? Task.Delay(this.MaximumExecutionTime) : null;

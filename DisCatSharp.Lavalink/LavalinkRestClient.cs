@@ -369,7 +369,7 @@ internal sealed class LavalinkRestClient
 		var path = GetPath(route, new { });
 		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
 		var obj = JObject.Parse(res.Response!);
-		return new LavalinkTrackLoadingResult()
+		return new()
 		{
 			LoadType = obj.GetValue("loadType")!.ToObject<LavalinkLoadResultType>(),
 			RawResult = LavalinkJson.SerializeObject(obj.GetValue("data"))

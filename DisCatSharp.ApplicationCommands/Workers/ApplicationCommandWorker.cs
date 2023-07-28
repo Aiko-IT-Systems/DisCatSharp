@@ -79,10 +79,10 @@ internal class CommandWorker
 			if (parameters.Length > 1)
 				throw new ArgumentException($"The context menu command '{contextAttribute.Name}' cannot have parameters!");
 
-			contextMenuCommands.Add(new ContextMenuCommand { Method = contextMethod, Name = contextAttribute.Name });
+			contextMenuCommands.Add(new() { Method = contextMethod, Name = contextAttribute.Name });
 
 			commands.Add(command);
-			commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
+			commandTypeSources.Add(new(type, type));
 		}
 
 		return Task.FromResult((commands, commandTypeSources, contextMenuCommands, translator != null));
@@ -120,7 +120,7 @@ internal class CommandWorker
 					throw new ArgumentException($"The first argument of the command '{commandAttribute.Name}' has to be an InteractionContext!");
 				var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), commandAttribute.Name, guildId).ConfigureAwait(false);
 
-				commandMethods.Add(new CommandMethod { Method = method, Name = commandAttribute.Name });
+				commandMethods.Add(new() { Method = method, Name = commandAttribute.Name });
 
 				DiscordApplicationCommandLocalization nameLocalizations = null;
 				DiscordApplicationCommandLocalization descriptionLocalizations = null;
@@ -130,7 +130,7 @@ internal class CommandWorker
 
 				if (commandTranslation != null && commandTranslation.Options != null)
 				{
-					localizedOptions = new List<DiscordApplicationCommandOption>(options.Count);
+					localizedOptions = new(options.Count);
 					foreach (var option in options)
 					{
 						try
@@ -140,14 +140,14 @@ internal class CommandWorker
 								foreach (var choice in option.Choices)
 									try
 									{
-										choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, commandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
+										choices.Add(new(choice.Name, choice.Value, commandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
 									}
 									catch (Exception ex)
 									{
 										throw new AggregateException($"Failed to register choice '{choice.Name}' in command '{commandAttribute.Name}'", ex);
 									}
 
-							localizedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
+							localizedOptions.Add(new(option.Name, option.Description, option.Type, option.Required,
 								choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
 								commandTranslation.Options.Single(o => o.Name == option.Name).NameTranslations, commandTranslation.Options.Single(o => o.Name == option.Name).DescriptionTranslations,
 								option.MinimumLength, option.MaximumLength
@@ -165,7 +165,7 @@ internal class CommandWorker
 
 				var payload = new DiscordApplicationCommand(commandAttribute.Name, commandAttribute.Description, (localizedOptions != null && localizedOptions.Any() ? localizedOptions : null) ?? (options != null && options.Any() ? options : null), ApplicationCommandType.ChatInput, nameLocalizations, descriptionLocalizations, commandAttribute.DefaultMemberPermissions, commandAttribute.DmPermission ?? true, isNsfw: commandAttribute.IsNsfw);
 				commands.Add(payload);
-				commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
+				commandTypeSources.Add(new(type, type));
 			}
 			catch (Exception ex)
 			{
@@ -230,7 +230,7 @@ internal class NestedCommandWorker
 
 			//Initializes the command
 			var payload = new DiscordApplicationCommand(groupAttribute.Name, groupAttribute.Description, nameLocalizations: nameLocalizations, descriptionLocalizations: descriptionLocalizations, defaultMemberPermissions: groupAttribute.DefaultMemberPermissions, dmPermission: groupAttribute.DmPermission ?? true, isNsfw: groupAttribute.IsNsfw);
-			commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
+			commandTypeSources.Add(new(type, type));
 
 			var commandMethods = new List<KeyValuePair<string, MethodInfo>>();
 			//Handles commands in the group
@@ -257,15 +257,15 @@ internal class NestedCommandWorker
 					var subCommandTranslation = commandTranslation.Commands.Single(sc => sc.Name == commandAttribute.Name);
 					if (subCommandTranslation.Options != null)
 					{
-						localizedOptions = new List<DiscordApplicationCommandOption>(options.Count);
+						localizedOptions = new(options.Count);
 						foreach (var option in options)
 						{
 							var choices = option.Choices != null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count) : null;
 							if (option.Choices != null)
 								foreach (var choice in option.Choices)
-									choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, subCommandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
+									choices.Add(new(choice.Name, choice.Value, subCommandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
 
-							localizedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
+							localizedOptions.Add(new(option.Name, option.Description, option.Type, option.Required,
 								choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
 								subCommandTranslation.Options.Single(o => o.Name == option.Name).NameTranslations, subCommandTranslation.Options.Single(o => o.Name == option.Name).DescriptionTranslations,
 								option.MinimumLength, option.MaximumLength
@@ -280,12 +280,12 @@ internal class NestedCommandWorker
 
 				//Creates the subcommand and adds it to the main command
 				var subpayload = new DiscordApplicationCommandOption(commandAttribute.Name, commandAttribute.Description, ApplicationCommandOptionType.SubCommand, false, null, localizedOptions ?? options, nameLocalizations: subNameLocalizations, descriptionLocalizations: subDescriptionLocalizations);
-				payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations, defaultMemberPermissions: payload.DefaultMemberPermissions, dmPermission: payload.DmPermission ?? true, isNsfw: payload.IsNsfw);
-				commandTypeSources.Add(new KeyValuePair<Type, Type>(subclassInfo, type));
+				payload = new(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations, defaultMemberPermissions: payload.DefaultMemberPermissions, dmPermission: payload.DmPermission ?? true, isNsfw: payload.IsNsfw);
+				commandTypeSources.Add(new(subclassInfo, type));
 
 				//Adds it to the method lists
-				commandMethods.Add(new KeyValuePair<string, MethodInfo>(commandAttribute.Name, submethod));
-				groupCommands.Add(new GroupCommand { Name = groupAttribute.Name, Methods = commandMethods });
+				commandMethods.Add(new(commandAttribute.Name, submethod));
+				groupCommands.Add(new() { Name = groupAttribute.Name, Methods = commandMethods });
 			}
 
 			var command = new SubGroupCommand { Name = groupAttribute.Name };
@@ -342,15 +342,15 @@ internal class NestedCommandWorker
 
 					if (subSubCommandTranslation != null && subSubCommandTranslation.Options != null)
 					{
-						localizedOptions = new List<DiscordApplicationCommandOption>(suboptions.Count);
+						localizedOptions = new(suboptions.Count);
 						foreach (var option in suboptions)
 						{
 							var choices = option.Choices != null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count) : null;
 							if (option.Choices != null)
 								foreach (var choice in option.Choices)
-									choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, subSubCommandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
+									choices.Add(new(choice.Name, choice.Value, subSubCommandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
 
-							localizedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
+							localizedOptions.Add(new(option.Name, option.Description, option.Type, option.Required,
 								choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
 								subSubCommandTranslation.Options.Single(o => o.Name == option.Name).NameTranslations, subSubCommandTranslation.Options.Single(o => o.Name == option.Name).DescriptionTranslations,
 								option.MinimumLength, option.MaximumLength
@@ -363,15 +363,15 @@ internal class NestedCommandWorker
 
 					var subsubpayload = new DiscordApplicationCommandOption(commatt.Name, commatt.Description, ApplicationCommandOptionType.SubCommand, false, null, (localizedOptions != null && localizedOptions.Any() ? localizedOptions : null) ?? (suboptions != null && suboptions.Any() ? suboptions : null), nameLocalizations: subSubNameLocalizations, descriptionLocalizations: subSubDescriptionLocalizations);
 					options.Add(subsubpayload);
-					commandMethods.Add(new KeyValuePair<string, MethodInfo>(commatt.Name, subsubmethod));
-					currentMethods.Add(new KeyValuePair<string, MethodInfo>(commatt.Name, subsubmethod));
+					commandMethods.Add(new(commatt.Name, subsubmethod));
+					currentMethods.Add(new(commatt.Name, subsubmethod));
 				}
 
 				//Adds the group to the command and method lists
 				var subpayload = new DiscordApplicationCommandOption(subgroupAttribute.Name, subgroupAttribute.Description, ApplicationCommandOptionType.SubCommandGroup, false, null, options, nameLocalizations: subNameLocalizations, descriptionLocalizations: subDescriptionLocalizations);
-				command.SubCommands.Add(new GroupCommand { Name = subgroupAttribute.Name, Methods = currentMethods });
-				payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations, defaultMemberPermissions: payload.DefaultMemberPermissions, dmPermission: payload.DmPermission ?? true, isNsfw: payload.IsNsfw);
-				commandTypeSources.Add(new KeyValuePair<Type, Type>(subclass, type));
+				command.SubCommands.Add(new() { Name = subgroupAttribute.Name, Methods = currentMethods });
+				payload = new(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations, defaultMemberPermissions: payload.DefaultMemberPermissions, dmPermission: payload.DmPermission ?? true, isNsfw: payload.IsNsfw);
+				commandTypeSources.Add(new(subclass, type));
 
 				//Accounts for lifespans for the sub group
 				if (subclass.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null && subclass.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)

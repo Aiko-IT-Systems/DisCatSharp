@@ -61,7 +61,7 @@ public abstract class DiscordShardedHostedService : BaseHostedService, IDiscordH
 		try
 		{
 			var config = this.Configuration.ExtractConfig<DiscordConfiguration>(this.ServiceProvider, "Discord", this.BotSection);
-			this.ShardedClient = new DiscordShardedClient(config);
+			this.ShardedClient = new(config);
 		}
 		catch (Exception ex)
 		{

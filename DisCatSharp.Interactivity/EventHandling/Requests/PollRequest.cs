@@ -52,17 +52,17 @@ public class PollRequest
 	/// <param name="emojis"></param>
 	public PollRequest(DiscordMessage message, TimeSpan timeout, IEnumerable<DiscordEmoji> emojis)
 	{
-		this.Tcs = new TaskCompletionSource<bool>();
-		this.Ct = new CancellationTokenSource(timeout);
+		this.Tcs = new();
+		this.Ct = new(timeout);
 		this.Ct.Token.Register(() => this.Tcs.TrySetResult(true));
 		this.Timeout = timeout;
 		this.Emojis = emojis.ToList();
-		this.Collected = new ConcurrentHashSet<PollEmoji>();
+		this.Collected = new();
 		this.Message = message;
 
 		foreach (var e in emojis)
 		{
-			this.Collected.Add(new PollEmoji(e));
+			this.Collected.Add(new(e));
 		}
 	}
 
@@ -74,7 +74,7 @@ public class PollRequest
 		this.Collected.Clear();
 		foreach (var e in this.Emojis)
 		{
-			this.Collected.Add(new PollEmoji(e));
+			this.Collected.Add(new(e));
 		}
 	}
 
@@ -143,7 +143,7 @@ public class PollEmoji
 	internal PollEmoji(DiscordEmoji emoji)
 	{
 		this.Emoji = emoji;
-		this.Voted = new ConcurrentHashSet<DiscordUser>();
+		this.Voted = new();
 	}
 
 	public DiscordEmoji Emoji;

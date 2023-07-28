@@ -27,6 +27,7 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public class DiscordUnicodeEmoji
 {
+#pragma warning disable IDE1006
 	public const string _1 = "\U0001f44e";
 	public const string _100 = "\U0001f4af";
 	public const string _1234 = "\U0001f522";
@@ -36,6 +37,7 @@ public class DiscordUnicodeEmoji
 	public const string _1SkinTone4 = "\U0001f44e\U0001f3fe";
 	public const string _1SkinTone5 = "\U0001f44e\U0001f3ff";
 	public const string _8ball = "\U0001f3b1";
+#pragma warning restore IDE1006
 	public const string A = "\U0001f170";
 	public const string AB = "\U0001f18e";
 	public const string ABC = "\U0001f524";

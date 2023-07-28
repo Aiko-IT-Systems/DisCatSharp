@@ -91,7 +91,7 @@ public static class InteractionExtensions
 				if (modalOpen.TimedOut)
 				{
 					_ = previousInteraction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent(b.OpenMessage.Content).AddComponents(b.OpenButton.Disable()));
-					return new PaginatedModalResponse { TimedOut = true };
+					return new() { TimedOut = true };
 				}
 
 				await modalOpen.Result.Interaction.CreateInteractionModalResponseAsync(modal).ConfigureAwait(false);
@@ -106,7 +106,7 @@ public static class InteractionExtensions
 			var modalResult = await interactivity.WaitForModalAsync(modal.CustomId, timeOutOverride).ConfigureAwait(false);
 
 			if (modalResult.TimedOut)
-				return new PaginatedModalResponse { TimedOut = true };
+				return new() { TimedOut = true };
 
 			foreach (var submissions in modalResult.Result.Interaction.Data.Components)
 				caughtResponses.Add(submissions.CustomId, submissions.Value);
@@ -116,6 +116,6 @@ public static class InteractionExtensions
 
 		await previousInteraction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource, new DiscordInteractionResponseBuilder().AsEphemeral()).ConfigureAwait(false);
 
-		return new PaginatedModalResponse { TimedOut = false, Responses = caughtResponses, Interaction = previousInteraction };
+		return new() { TimedOut = false, Responses = caughtResponses, Interaction = previousInteraction };
 	}
 }

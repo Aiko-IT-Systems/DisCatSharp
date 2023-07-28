@@ -276,7 +276,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 			var hash = k.CalculateKnuthHash();
 			if (!dict.ContainsKey(hash))
 			{
-				dict.Add(hash, new KeyedValue(k, hash, v));
+				dict.Add(hash, new(k, hash, v));
 				count++;
 				continue;
 			}
@@ -292,7 +292,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 				kdv = kdv.Next;
 			}
 
-			kdvLast.Next = new KeyedValue(k, hash, v);
+			kdvLast.Next = new(k, hash, v);
 			count++;
 		}
 
@@ -388,13 +388,13 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 					return false;
 
 				kdv = this._internalEnumerator.Current.Value;
-				this.Current = new KeyValuePair<string, TValue>(kdv.Key, kdv.Value);
+				this.Current = new(kdv.Key, kdv.Value);
 
 				this._currentValue = kdv.Next;
 				return true;
 			}
 
-			this.Current = new KeyValuePair<string, TValue>(kdv.Key, kdv.Value);
+			this.Current = new(kdv.Key, kdv.Value);
 			this._currentValue = kdv.Next;
 			return true;
 		}

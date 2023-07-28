@@ -44,7 +44,7 @@ public class AsyncExecutor
 	public void Execute(Task task)
 	{
 		// create state object
-		var taskState = new StateRef<object>(new AutoResetEvent(false));
+		var taskState = new StateRef<object>(new(false));
 
 		// queue a task and wait for it to finish executing
 		task.ContinueWith(TaskCompletionHandler, taskState);
@@ -87,7 +87,7 @@ public class AsyncExecutor
 	public T Execute<T>(Task<T> task)
 	{
 		// create state object
-		var taskState = new StateRef<T>(new AutoResetEvent(false));
+		var taskState = new StateRef<T>(new(false));
 
 		// queue a task and wait for it to finish executing
 		task.ContinueWith(TaskCompletionHandler, taskState);
@@ -102,7 +102,7 @@ public class AsyncExecutor
 			return taskState.Result;
 
 		// throw exception if no result
-		throw new Exception("Task returned no result.");
+		throw new("Task returned no result.");
 
 		// completion method
 		void TaskCompletionHandler(Task<T> t, object state)

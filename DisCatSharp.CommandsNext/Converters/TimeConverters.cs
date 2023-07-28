@@ -135,7 +135,7 @@ public class TimeSpanConverter : IArgumentConverter<TimeSpan>
 					break;
 			}
 		}
-		result = new TimeSpan(d, h, m, s);
+		result = new(d, h, m, s);
 		return Task.FromResult(Optional.Some(result));
 	}
 }

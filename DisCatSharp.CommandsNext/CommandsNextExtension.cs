@@ -82,13 +82,13 @@ public class CommandsNextExtension : BaseExtension
 	/// <param name="cfg">The cfg.</param>
 	internal CommandsNextExtension(CommandsNextConfiguration cfg)
 	{
-		this._config = new CommandsNextConfiguration(cfg);
-		this._topLevelCommands = new Dictionary<string, Command>();
-		this._registeredCommandsLazy = new Lazy<IReadOnlyDictionary<string, Command>>(() => new ReadOnlyDictionary<string, Command>(this._topLevelCommands));
-		this._helpFormatter = new HelpFormatterFactory();
+		this._config = new(cfg);
+		this._topLevelCommands = new();
+		this._registeredCommandsLazy = new(() => new ReadOnlyDictionary<string, Command>(this._topLevelCommands));
+		this._helpFormatter = new();
 		this._helpFormatter.SetFormatterType<DefaultHelpFormatter>();
 
-		this.ArgumentConverters = new Dictionary<Type, IArgumentConverter>
+		this.ArgumentConverters = new()
 		{
 			[typeof(string)] = new StringConverter(),
 			[typeof(bool)] = new BoolConverter(),
@@ -120,7 +120,7 @@ public class CommandsNextExtension : BaseExtension
 			[typeof(DiscordScheduledEvent)] = new DiscordScheduledEventConverter(),
 		};
 
-		this._userFriendlyTypeNames = new Dictionary<Type, string>()
+		this._userFriendlyTypeNames = new()
 		{
 			[typeof(string)] = "string",
 			[typeof(bool)] = "boolean",
@@ -193,8 +193,8 @@ public class CommandsNextExtension : BaseExtension
 
 		this.Client = client;
 
-		this._executed = new AsyncEvent<CommandsNextExtension, CommandExecutionEventArgs>("COMMAND_EXECUTED", TimeSpan.Zero, this.Client.EventErrorHandler);
-		this._error = new AsyncEvent<CommandsNextExtension, CommandErrorEventArgs>("COMMAND_ERRORED", TimeSpan.Zero, this.Client.EventErrorHandler);
+		this._executed = new("COMMAND_EXECUTED", TimeSpan.Zero, this.Client.EventErrorHandler);
+		this._error = new("COMMAND_ERRORED", TimeSpan.Zero, this.Client.EventErrorHandler);
 
 		if (this._config.UseDefaultCommandHandler)
 			this.Client.MessageCreated += this.HandleCommandsAsync;
@@ -261,7 +261,7 @@ public class CommandsNextExtension : BaseExtension
 		var ctx = this.CreateContext(e.Message, pfx, cmd, args);
 		if (cmd == null)
 		{
-			await this._error.InvokeAsync(this, new CommandErrorEventArgs(this.Client.ServiceProvider) { Context = ctx, Exception = new CommandNotFoundException(fname) }).ConfigureAwait(false);
+			await this._error.InvokeAsync(this, new(this.Client.ServiceProvider) { Context = ctx, Exception = new CommandNotFoundException(fname) }).ConfigureAwait(false);
 			return;
 		}
 
@@ -358,7 +358,7 @@ public class CommandsNextExtension : BaseExtension
 		if (cmd != null && (cmd.Module is TransientCommandModule || cmd.Module == null))
 		{
 			var scope = ctx.Services.CreateScope();
-			ctx.ServiceScopeContext = new CommandContext.ServiceContext(ctx.Services, scope);
+			ctx.ServiceScopeContext = new(ctx.Services, scope);
 			ctx.Services = scope.ServiceProvider;
 		}
 
@@ -380,13 +380,13 @@ public class CommandsNextExtension : BaseExtension
 			var res = await cmd.ExecuteAsync(ctx).ConfigureAwait(false);
 
 			if (res.IsSuccessful)
-				await this._executed.InvokeAsync(this, new CommandExecutionEventArgs(this.Client.ServiceProvider) { Context = res.Context }).ConfigureAwait(false);
+				await this._executed.InvokeAsync(this, new(this.Client.ServiceProvider) { Context = res.Context }).ConfigureAwait(false);
 			else
-				await this._error.InvokeAsync(this, new CommandErrorEventArgs(this.Client.ServiceProvider) { Context = res.Context, Exception = res.Exception }).ConfigureAwait(false);
+				await this._error.InvokeAsync(this, new(this.Client.ServiceProvider) { Context = res.Context, Exception = res.Exception }).ConfigureAwait(false);
 		}
 		catch (Exception ex)
 		{
-			await this._error.InvokeAsync(this, new CommandErrorEventArgs(this.Client.ServiceProvider) { Context = ctx, Exception = ex }).ConfigureAwait(false);
+			await this._error.InvokeAsync(this, new(this.Client.ServiceProvider) { Context = ctx, Exception = ex }).ConfigureAwait(false);
 		}
 		finally
 		{
@@ -528,7 +528,7 @@ public class CommandsNextExtension : BaseExtension
 							groupBuilder.WithExecutionCheck(chk);
 
 					foreach (var mi in ti.DeclaredMethods.Where(x => x.IsCommandCandidate(out _) && x.GetCustomAttribute<GroupCommandAttribute>() != null))
-						groupBuilder.WithOverload(new CommandOverloadBuilder(mi));
+						groupBuilder.WithOverload(new(mi));
 					break;
 
 				case AliasesAttribute a:
@@ -600,7 +600,7 @@ public class CommandsNextExtension : BaseExtension
 					groupBuilder.WithChild(commandBuilder);
 			}
 
-			commandBuilder.WithOverload(new CommandOverloadBuilder(m));
+			commandBuilder.WithOverload(new(m));
 
 			if (!isModule && moduleChecks.Any())
 				foreach (var chk in moduleChecks)
@@ -841,10 +841,10 @@ public class CommandsNextExtension : BaseExtension
 			Pinned = false,
 			MentionEveryone = messageContents.Contains("@everyone"),
 			IsTts = false,
-			AttachmentsInternal = new List<DiscordAttachment>(),
-			EmbedsInternal = new List<DiscordEmbed>(),
+			AttachmentsInternal = new(),
+			EmbedsInternal = new(),
 			TimestampRaw = now.ToString("yyyy-MM-ddTHH:mm:sszzz"),
-			ReactionsInternal = new List<DiscordReaction>()
+			ReactionsInternal = new()
 		};
 
 		var mentionedUsers = new List<DiscordUser>();
@@ -884,7 +884,7 @@ public class CommandsNextExtension : BaseExtension
 		if (cmd != null && (cmd.Module is TransientCommandModule || cmd.Module == null))
 		{
 			var scope = ctx.Services.CreateScope();
-			ctx.ServiceScopeContext = new CommandContext.ServiceContext(ctx.Services, scope);
+			ctx.ServiceScopeContext = new(ctx.Services, scope);
 			ctx.Services = scope.ServiceProvider;
 		}
 
