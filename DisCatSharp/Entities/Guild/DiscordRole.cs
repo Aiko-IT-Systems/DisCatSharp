@@ -57,7 +57,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// Gets the description of this role.
 	/// </summary>
 	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
-	public string Description { get; internal set; }
+	public string? Description { get; internal set; }
 
 	/// <summary>
 	/// Gets the color of this role.
@@ -109,26 +109,26 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// Gets the role icon's hash.
 	/// </summary>
 	[JsonProperty("icon", NullValueHandling = NullValueHandling.Ignore)]
-	public string IconHash { get; internal set; }
+	public string? IconHash { get; internal set; }
 
 	/// <summary>
 	/// Gets the role icon's url.
 	/// </summary>
 	[JsonIgnore]
-	public string IconUrl
+	public string? IconUrl
 		=> !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ROLE_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=64" : null;
 
 	/// <summary>
 	/// Gets the role unicode_emoji.
 	/// </summary>
 	[JsonProperty("unicode_emoji", NullValueHandling = NullValueHandling.Ignore)]
-	internal string UnicodeEmojiString;
+	internal string? UnicodeEmojiString;
 
 	/// <summary>
 	/// Gets the unicode emoji.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordEmoji UnicodeEmoji
+	public DiscordEmoji? UnicodeEmoji
 		=> this.UnicodeEmojiString != null ? DiscordEmoji.FromName(this.Discord, $":{this.UnicodeEmojiString}:", false) : null;
 
 	/// <summary>
@@ -140,12 +140,12 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 		get
 		{
 			this.GuildInternal ??= this.Discord.Guilds[this.GuildId];
-			return this.GuildInternal;
+			return this.GuildInternal!;
 		}
 	}
 
 	[JsonIgnore]
-	internal DiscordGuild GuildInternal { get; set; }
+	internal DiscordGuild? GuildInternal { get; set; }
 
 	[JsonIgnore]
 	internal ulong GuildId = 0;
@@ -161,14 +161,14 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// </summary>
 	[JsonIgnore]
 	public string Mention
-		=> Formatter.Mention(this);
+		=> this.Mention();
 
 	/// <summary>
 	/// Gets a list of members that have this role. Requires ServerMembers Intent.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<KeyValuePair<ulong, DiscordMember>> Members
-		=> this.Guild.Members.Where(x => x.Value.RoleIds.Any(x => x == this.Id)).ToList();
+		=> this.Guild.Members.Where(x => x.Value.RoleIds.Any(y => y == this.Id)).ToList();
 
 	#region Methods
 
@@ -182,7 +182,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <exception cref="NotFoundException">Thrown when the role does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task ModifyPositionAsync(int position, string reason = null)
+	public Task ModifyPositionAsync(int position, string? reason = null)
 	{
 		var roles = this.Guild.Roles.Values.OrderByDescending(xr => xr.Position)
 			.Select(x => new RestGuildRoleReorderPayload
@@ -209,7 +209,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <exception cref="NotFoundException">Thrown when the role does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task ModifyAsync(string name = null, Permissions? permissions = null, DiscordColor? color = null, bool? hoist = null, bool? mentionable = null, string reason = null)
+	public Task ModifyAsync(string? name = null, Permissions? permissions = null, DiscordColor? color = null, bool? hoist = null, bool? mentionable = null, string? reason = null)
 		=> this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, name, permissions, color?.Value, hoist, mentionable, null, null, reason);
 
 	/// <summary>
@@ -257,7 +257,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <exception cref="NotFoundException">Thrown when the role does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteAsync(string reason = null)
+	public Task DeleteAsync(string? reason = null)
 		=> this.Discord.ApiClient.DeleteRoleAsync(this.GuildId, this.Id, reason);
 
 	#endregion

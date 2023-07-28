@@ -137,7 +137,7 @@ internal sealed class RestChannelModifyPayload : ObservableApiObject
 	/// Gets or sets the name.
 	/// </summary>
 	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
-	public string Name { get; set; }
+	public string? Name { get; set; }
 
 	/// <summary>
 	/// Gets or sets the type.

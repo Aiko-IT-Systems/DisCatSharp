@@ -422,7 +422,9 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this._startedThread != null ? this._startedThread! : this.Guild != null && this.Guild.ThreadsInternal.TryGetValue(this.Id, out var thread) ? thread : null;
 
 	[JsonProperty("thread", NullValueHandling = NullValueHandling.Ignore)]
+#pragma warning disable CS0649 // Field 'DiscordMessage._startedThread' is never assigned to, and will always have its default value null
 	private readonly DiscordThreadChannel? _startedThread;
+#pragma warning restore CS0649 // Field 'DiscordMessage._startedThread' is never assigned to, and will always have its default value null
 
 	/// <summary>
 	/// Build the message reference.
