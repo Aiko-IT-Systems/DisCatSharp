@@ -120,7 +120,7 @@ public class InteractivityExtension : BaseExtension
 		var res = await this._poller.DoPollAsync(new(m, timeout ?? this.Config.Timeout, emojis)).ConfigureAwait(false);
 
 		var pollBehaviour = behaviour ?? this.Config.PollBehaviour;
-		var thisMember = await m.Channel.Guild.GetMemberAsync(this.Client.CurrentUser.Id).ConfigureAwait(false);
+		var thisMember = await m.Channel.Guild!.GetMemberAsync(this.Client.CurrentUser!.Id).ConfigureAwait(false);
 
 		if (pollBehaviour == PollBehaviour.DeleteEmojis && m.Channel.PermissionsFor(thisMember).HasPermission(Permissions.ManageMessages))
 			await m.DeleteAllReactionsAsync().ConfigureAwait(false);
@@ -312,7 +312,7 @@ public class InteractivityExtension : BaseExtension
 		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
 			throw new ArgumentException("Message does not contain any button components.");
 
-		if (!message.Components.SelectMany(c => c.Components).OfType<DiscordButtonComponent>().Any(c => c.CustomId == id))
+		if (message.Components.SelectMany(c => c.Components).OfType<DiscordButtonComponent>().All(c => c.CustomId != id))
 			throw new ArgumentException($"Message does not contain button with Id of '{id}'.");
 		var result = await this
 			._componentEventWaiter
@@ -350,7 +350,7 @@ public class InteractivityExtension : BaseExtension
 
 		var result = await this
 			._componentEventWaiter
-			.WaitForMatchAsync(new(message, c => c.Interaction.Data.ComponentType is ComponentType.Button && predicate(c), token))
+			.WaitForMatchAsync(new(message, c => c.Interaction.Data.ComponentType is ComponentType.Button && predicate(c), token))!
 			.ConfigureAwait(false);
 
 		return new(result is null, result);
@@ -384,12 +384,12 @@ public class InteractivityExtension : BaseExtension
 		if (!message.Components.Any())
 			throw new ArgumentException("Provided message does not contain any components.");
 
-		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type == selectType))
+		if (message.Components.SelectMany(c => c.Components).All(c => c.Type != selectType))
 			throw new ArgumentException("Message does not contain any select components.");
 
 		var result = await this
 			._componentEventWaiter
-			.WaitForMatchAsync(new(message, c => c.Interaction.Data.ComponentType == selectType && predicate(c), token))
+			.WaitForMatchAsync(new(message, c => c.Interaction.Data.ComponentType == selectType && predicate(c), token))!
 			.ConfigureAwait(false);
 
 		return new(result is null, result);
@@ -423,7 +423,7 @@ public class InteractivityExtension : BaseExtension
 		if (!message.Components.Any())
 			throw new ArgumentException("Provided message does not contain any components.");
 
-		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type == selectType))
+		if (message.Components.SelectMany(c => c.Components).All(c => c.Type != selectType))
 			throw new ArgumentException("Message does not contain any select components.");
 
 		if (message.Components.SelectMany(c => c.Components).OfType<DiscordBaseSelectComponent>().All(c => c.CustomId != id))
@@ -431,7 +431,7 @@ public class InteractivityExtension : BaseExtension
 
 		var result = await this
 			._componentEventWaiter
-			.WaitForMatchAsync(new(message, (c) => c.Interaction.Data.ComponentType == selectType && c.Id == id, token))
+			.WaitForMatchAsync(new(message, (c) => c.Interaction.Data.ComponentType == selectType && c.Id == id, token))!
 			.ConfigureAwait(false);
 
 		return new(result is null, result);
@@ -466,7 +466,7 @@ public class InteractivityExtension : BaseExtension
 		if (!message.Components.Any())
 			throw new ArgumentException("Provided message does not contain any components.");
 
-		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type == selectType))
+		if (message.Components.SelectMany(c => c.Components).All(c => c.Type != selectType))
 			throw new ArgumentException("Message does not contain any select components.");
 
 		if (message.Components.SelectMany(c => c.Components).OfType<DiscordBaseSelectComponent>().All(c => c.CustomId != id))
@@ -474,7 +474,8 @@ public class InteractivityExtension : BaseExtension
 
 		var result = await this
 			._componentEventWaiter
-			.WaitForMatchAsync(new(message, (c) => c.Id == id && c.User == user, token)).ConfigureAwait(false);
+			.WaitForMatchAsync(new(message, (c) => c.Id == id && c.User == user, token))!
+			.ConfigureAwait(false);
 
 		return new(result is null, result);
 	}

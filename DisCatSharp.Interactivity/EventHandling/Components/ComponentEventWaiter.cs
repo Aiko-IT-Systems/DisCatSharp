@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using ConcurrentCollections;
@@ -66,7 +67,7 @@ internal class ComponentEventWaiter : IDisposable
 	/// </summary>
 	/// <param name="request">The request to wait for.</param>
 	/// <returns>The returned args, or null if it timed out.</returns>
-	public async Task<ComponentInteractionCreateEventArgs> WaitForMatchAsync(ComponentMatchRequest request)
+	public async Task<ComponentInteractionCreateEventArgs>? WaitForMatchAsync(ComponentMatchRequest request)
 	{
 		this._matchRequests.Add(request);
 
@@ -126,18 +127,15 @@ internal class ComponentEventWaiter : IDisposable
 		}
 
 
-		foreach (var creq in this._collectRequests)
+		foreach (var creq in this._collectRequests.Where(creq => creq.Message == args.Message && creq.IsMatch(args)))
 		{
-			if (creq.Message == args.Message && creq.IsMatch(args))
-			{
-				await args.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate).ConfigureAwait(false);
+			await args.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate).ConfigureAwait(false);
 
-				if (creq.IsMatch(args))
-					creq.Collected.Add(args);
+			if (creq.IsMatch(args))
+				creq.Collected.Add(args);
 
-				else if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
-					await args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
-			}
+			else if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
+				await args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
 		}
 	}
 	/// <summary>
