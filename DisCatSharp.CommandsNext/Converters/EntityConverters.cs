@@ -102,7 +102,7 @@ public class DiscordMemberConverter : IArgumentConverter<DiscordMember>
 
 		var searchResult = await ctx.Guild.SearchMembersAsync(value).ConfigureAwait(false);
 		if (searchResult.Any())
-			return Optional.Some(searchResult.First());
+			return Optional.Some(searchResult[0]);
 
 		var cs = ctx.Config.CaseSensitive;
 		if (!cs)

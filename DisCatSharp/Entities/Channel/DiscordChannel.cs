@@ -904,12 +904,16 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			if (!isAfter)
 			{
 				msgs.AddRange(fetch);
+#pragma warning disable CA1826
 				last = fetch.LastOrDefault()?.Id;
+#pragma warning restore CA1826
 			}
 			else
 			{
 				msgs.InsertRange(0, fetch);
+#pragma warning disable CA1826
 				last = fetch.FirstOrDefault()?.Id;
+#pragma warning restore CA1826
 			}
 		}
 		while (remaining > 0 && lastCount > 0);

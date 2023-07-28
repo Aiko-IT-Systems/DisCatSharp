@@ -1769,7 +1769,9 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 					this.MembersInternal[usr.Id] = mbr;
 			}
 
+#pragma warning disable CA1826
 			var tm = tms.LastOrDefault();
+#pragma warning restore CA1826
 			last = tm?.User.Id ?? 0;
 		}
 

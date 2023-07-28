@@ -892,11 +892,13 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <param name="after">Get the reasctions after snowflake.</param>
 	private async Task<IReadOnlyList<DiscordUser>> GetReactionsInternalAsync(DiscordEmoji emoji, int limit = 25, ulong? after = null)
 	{
-		if (limit < 0)
-			throw new ArgumentException("Cannot get a negative number of reactions' users.");
-
-		if (limit == 0)
-			return Array.Empty<DiscordUser>();
+		switch (limit)
+		{
+			case < 0:
+				throw new ArgumentException("Cannot get a negative number of reactions' users.");
+			case 0:
+				return Array.Empty<DiscordUser>();
+		}
 
 		var users = new List<DiscordUser>(limit);
 		var remaining = limit;
@@ -912,7 +914,9 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 			remaining -= lastCount;
 
 			users.AddRange(fetch);
+#pragma warning disable CA1826
 			last = fetch.LastOrDefault()?.Id;
+#pragma warning restore CA1826
 		} while (remaining > 0 && lastCount > 0);
 
 		return new ReadOnlyCollection<DiscordUser>(users);
@@ -923,7 +927,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	/// <returns>String representation of this message.</returns>
 	public override string ToString()
-		=> $"Message {this.Id}; Attachment count: {this.AttachmentsInternal.Count}; Embed count: {this.EmbedsInternal.Count}; Contents: {this.Content}";
+		=> $"Message {this.Id}; Attachment count: {this.AttachmentsInternal.Count}; Embed count: {this.EmbedsInternal.Count}; Sticker count: {this.StickersInternal.Count};Contents: {this.Content}";
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordMessage"/> is equal to another object.
