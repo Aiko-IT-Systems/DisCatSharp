@@ -64,7 +64,7 @@ public sealed class ComplexDecomposer : IDecomposer
 		|| s_objectEnumerable.IsAssignableFrom(t);
 
 	/// <inheritdoc />
-	public bool TryDecompose(object obj, Type tobj, out object decomposed, out Type tdecomposed)
+	public bool TryDecompose(object obj, Type tobj, out object? decomposed, out Type tdecomposed)
 	{
 		decomposed = null;
 		tdecomposed = s_doubleArray;
@@ -77,7 +77,7 @@ public sealed class ComplexDecomposer : IDecomposer
 	}
 
 	/// <inheritdoc />
-	public bool TryRecompose(object obj, Type tobj, Type trecomposed, out object recomposed)
+	public bool TryRecompose(object obj, Type tobj, Type trecomposed, out object? recomposed)
 	{
 		recomposed = null;
 

@@ -129,12 +129,11 @@ public static class Extensions
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool IsInRange(this sbyte num, sbyte min, sbyte max, bool inclusive = true)
 	{
-		if (min > max)
-		{
-			min ^= max;
-			max ^= min;
-			min ^= max;
-		}
+		if (min <= max)
+			return inclusive ? num >= min && num <= max : num > min && num < max;
+		min ^= max;
+		max ^= min;
+		min ^= max;
 
 		return inclusive ? num >= min && num <= max : num > min && num < max;
 	}
@@ -150,12 +149,11 @@ public static class Extensions
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool IsInRange(this byte num, byte min, byte max, bool inclusive = true)
 	{
-		if (min > max)
-		{
-			min ^= max;
-			max ^= min;
-			min ^= max;
-		}
+		if (min <= max)
+			return inclusive ? num >= min && num <= max : num > min && num < max;
+		min ^= max;
+		max ^= min;
+		min ^= max;
 
 		return inclusive ? num >= min && num <= max : num > min && num < max;
 	}
@@ -171,12 +169,11 @@ public static class Extensions
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool IsInRange(this short num, short min, short max, bool inclusive = true)
 	{
-		if (min > max)
-		{
-			min ^= max;
-			max ^= min;
-			min ^= max;
-		}
+		if (min <= max)
+			return inclusive ? num >= min && num <= max : num > min && num < max;
+		min ^= max;
+		max ^= min;
+		min ^= max;
 
 		return inclusive ? num >= min && num <= max : num > min && num < max;
 	}
@@ -192,12 +189,11 @@ public static class Extensions
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool IsInRange(this ushort num, ushort min, ushort max, bool inclusive = true)
 	{
-		if (min > max)
-		{
-			min ^= max;
-			max ^= min;
-			min ^= max;
-		}
+		if (min <= max)
+			return inclusive ? num >= min && num <= max : num > min && num < max;
+		min ^= max;
+		max ^= min;
+		min ^= max;
 
 		return inclusive ? num >= min && num <= max : num > min && num < max;
 	}
@@ -213,12 +209,11 @@ public static class Extensions
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool IsInRange(this int num, int min, int max, bool inclusive = true)
 	{
-		if (min > max)
-		{
-			min ^= max;
-			max ^= min;
-			min ^= max;
-		}
+		if (min <= max)
+			return inclusive ? num >= min && num <= max : num > min && num < max;
+		min ^= max;
+		max ^= min;
+		min ^= max;
 
 		return inclusive ? num >= min && num <= max : num > min && num < max;
 	}
@@ -234,12 +229,11 @@ public static class Extensions
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool IsInRange(this uint num, uint min, uint max, bool inclusive = true)
 	{
-		if (min > max)
-		{
-			min ^= max;
-			max ^= min;
-			min ^= max;
-		}
+		if (min <= max)
+			return inclusive ? num >= min && num <= max : num > min && num < max;
+		min ^= max;
+		max ^= min;
+		min ^= max;
 
 		return inclusive ? num >= min && num <= max : num > min && num < max;
 	}
@@ -255,12 +249,11 @@ public static class Extensions
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool IsInRange(this long num, long min, long max, bool inclusive = true)
 	{
-		if (min > max)
-		{
-			min ^= max;
-			max ^= min;
-			min ^= max;
-		}
+		if (min <= max)
+			return inclusive ? num >= min && num <= max : num > min && num < max;
+		min ^= max;
+		max ^= min;
+		min ^= max;
 
 		return inclusive ? num >= min && num <= max : num > min && num < max;
 	}
@@ -276,12 +269,11 @@ public static class Extensions
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool IsInRange(this ulong num, ulong min, ulong max, bool inclusive = true)
 	{
-		if (min > max)
-		{
-			min ^= max;
-			max ^= min;
-			min ^= max;
-		}
+		if (min <= max)
+			return inclusive ? num >= min && num <= max : num > min && num < max;
+		min ^= max;
+		max ^= min;
+		min ^= max;
 
 		return inclusive ? num >= min && num <= max : num > min && num < max;
 	}

@@ -63,7 +63,7 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 
 	private readonly object _lock = new();
 	private ImmutableArray<AsyncEventHandler<TSender, TArgs>> _handlers;
-	private readonly AsyncEventExceptionHandler<TSender, TArgs> _exceptionHandler;
+	private readonly AsyncEventExceptionHandler<TSender, TArgs>? _exceptionHandler;
 
 	/// <summary>
 	/// Creates a new asynchronous event with specified name and exception handler.
@@ -109,7 +109,8 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 	/// <summary>
 	/// Unregisters all existing handlers from this event.
 	/// </summary>
-	public void UnregisterAll() => this._handlers = ImmutableArray<AsyncEventHandler<TSender, TArgs>>.Empty;
+	public void UnregisterAll()
+		=> this._handlers = ImmutableArray<AsyncEventHandler<TSender, TArgs>>.Empty;
 
 	/// <summary>
 	/// <para>Raises this event by invoking all of its registered handlers, in order of registration.</para>
@@ -126,7 +127,7 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 			return;
 
 		// Collect exceptions
-		List<Exception> exceptions = null;
+		List<Exception>? exceptions = null;
 		if ((exceptionMode & AsyncEventExceptionMode.ThrowAll) != 0)
 			exceptions = new(handlers.Length * 2 /* timeout + regular */);
 
@@ -154,7 +155,7 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 							this.HandleException(timeoutEx, handler, sender, e);
 
 						if ((exceptionMode & AsyncEventExceptionMode.ThrowNonFatal) == AsyncEventExceptionMode.ThrowNonFatal)
-							exceptions.Add(timeoutEx);
+							exceptions?.Add(timeoutEx);
 
 						await handlerTask.ConfigureAwait(false);
 					}
@@ -176,7 +177,7 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 					this.HandleException(ex, handler, sender, e);
 
 				if ((exceptionMode & AsyncEventExceptionMode.ThrowFatal) == AsyncEventExceptionMode.ThrowFatal)
-					exceptions.Add(ex);
+					exceptions?.Add(ex);
 			}
 		}
 
@@ -192,8 +193,5 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 	/// <param name="sender">The sender.</param>
 	/// <param name="args">The args.</param>
 	private void HandleException(Exception ex, AsyncEventHandler<TSender, TArgs> handler, TSender sender, TArgs args)
-	{
-		if (this._exceptionHandler != null)
-			this._exceptionHandler(this, ex, handler, sender, args);
-	}
+		=> this._exceptionHandler?.Invoke(this, ex, handler, sender, args);
 }

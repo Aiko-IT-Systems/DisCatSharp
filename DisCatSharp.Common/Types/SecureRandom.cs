@@ -58,13 +58,15 @@ public sealed class SecureRandom : Random, IDisposable
 	/// Fills a supplied buffer with random bytes.
 	/// </summary>
 	/// <param name="buffer">Buffer to fill with random bytes.</param>
-	public void GetBytes(byte[] buffer) => this._rng.GetBytes(buffer);
+	public void GetBytes(byte[] buffer)
+		=> this._rng.GetBytes(buffer);
 
 	/// <summary>
 	/// Fills a supplied buffer with random nonzero bytes.
 	/// </summary>
 	/// <param name="buffer">Buffer to fill with random nonzero bytes.</param>
-	public void GetNonZeroBytes(byte[] buffer) => this._rng.GetNonZeroBytes(buffer);
+	public void GetNonZeroBytes(byte[] buffer)
+		=> this._rng.GetNonZeroBytes(buffer);
 
 	/// <summary>
 	/// Fills a supplied memory region with random bytes.

@@ -48,7 +48,7 @@ public sealed class AsyncManualResetEvent
 			this._resetTcs.TrySetResult(initialState);
 	}
 
-	// Spawn a threadpool thread instead of making a task
+	// Spawn a thread pool thread instead of making a task
 	// Maybe overkill, but I am less unsure of this than awaits and
 	// potentially cross-scheduler interactions
 	/// <summary>
@@ -73,7 +73,7 @@ public sealed class AsyncManualResetEvent
 		while (true)
 		{
 			var tcs = this._resetTcs;
-			if (!tcs.Task.IsCompleted || Interlocked.CompareExchange(ref this._resetTcs, new(), tcs) == tcs)
+			if (!tcs!.Task.IsCompleted || Interlocked.CompareExchange(ref this._resetTcs, new(), tcs) == tcs)
 				return;
 		}
 	}

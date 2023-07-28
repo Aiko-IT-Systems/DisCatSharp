@@ -37,12 +37,14 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	/// <summary>
 	/// Gets the collection of all keys present in this dictionary.
 	/// </summary>
-	public IEnumerable<string> Keys => this.GetKeysInternal();
+	public IEnumerable<string> Keys
+		=> this.GetKeysInternal();
 
 	/// <summary>
 	/// Gets the collection of all values present in this dictionary.
 	/// </summary>
-	public IEnumerable<TValue> Values => this.GetValuesInternal();
+	public IEnumerable<TValue> Values
+		=> this.GetValuesInternal();
 
 	/// <summary>
 	/// Gets the total number of items in this dictionary.
@@ -292,10 +294,12 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 		/// Gets the key hash.
 		/// </summary>
 		public ulong KeyHash { get; }
+
 		/// <summary>
 		/// Gets the key.
 		/// </summary>
 		public string Key { get; }
+
 		/// <summary>
 		/// Gets or sets the value.
 		/// </summary>
@@ -329,10 +333,12 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 		/// Gets the current.
 		/// </summary>
 		public KeyValuePair<string, TValue> Current { get; private set; }
+
 		/// <summary>
 		/// Gets the current.
 		/// </summary>
-		object IEnumerator.Current => this.Current;
+		object IEnumerator.Current
+			=> this.Current;
 
 		/// <summary>
 		/// Gets the internal dictionary.

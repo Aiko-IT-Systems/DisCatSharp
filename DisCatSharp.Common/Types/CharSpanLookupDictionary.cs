@@ -39,28 +39,38 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <summary>
 	/// Gets the collection of all keys present in this dictionary.
 	/// </summary>
-	public IEnumerable<string> Keys => this.GetKeysInternal();
+	public IEnumerable<string> Keys
+		=> this.GetKeysInternal();
+
 	/// <summary>
 	/// Gets the keys.
 	/// </summary>
-	ICollection<string> IDictionary<string, TValue>.Keys => this.GetKeysInternal();
+	ICollection<string> IDictionary<string, TValue>.Keys
+		=> this.GetKeysInternal();
+
 	/// <summary>
 	/// Gets the keys.
 	/// </summary>
-	ICollection IDictionary.Keys => this.GetKeysInternal();
+	ICollection IDictionary.Keys
+		=> this.GetKeysInternal();
 
 	/// <summary>
 	/// Gets the collection of all values present in this dictionary.
 	/// </summary>
-	public IEnumerable<TValue> Values => this.GetValuesInternal();
+	public IEnumerable<TValue> Values
+		=> this.GetValuesInternal();
+
 	/// <summary>
 	/// Gets the values.
 	/// </summary>
-	ICollection<TValue> IDictionary<string, TValue>.Values => this.GetValuesInternal();
+	ICollection<TValue> IDictionary<string, TValue>.Values
+		=> this.GetValuesInternal();
+
 	/// <summary>
 	/// Gets the values.
 	/// </summary>
-	ICollection IDictionary.Values => this.GetValuesInternal();
+	ICollection IDictionary.Values
+		=> this.GetValuesInternal();
 
 	/// <summary>
 	/// Gets the total number of items in this dictionary.
@@ -674,10 +684,12 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		/// Gets the key hash.
 		/// </summary>
 		public ulong KeyHash { get; }
+
 		/// <summary>
 		/// Gets the key.
 		/// </summary>
 		public string Key { get; }
+
 		/// <summary>
 		/// Gets or sets the value.
 		/// </summary>
@@ -713,22 +725,30 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		/// Gets the current.
 		/// </summary>
 		public KeyValuePair<string, TValue> Current { get; private set; }
+
 		/// <summary>
 		/// Gets the current.
 		/// </summary>
-		object IEnumerator.Current => this.Current;
+		object IEnumerator.Current
+			=> this.Current;
+
 		/// <summary>
 		/// Gets the key.
 		/// </summary>
-		object IDictionaryEnumerator.Key => this.Current.Key;
+		object IDictionaryEnumerator.Key
+			=> this.Current.Key;
+
 		/// <summary>
 		/// Gets the value.
 		/// </summary>
-		object IDictionaryEnumerator.Value => this.Current.Value;
+		object IDictionaryEnumerator.Value
+			=> this.Current.Value;
+
 		/// <summary>
 		/// Gets the entry.
 		/// </summary>
-		DictionaryEntry IDictionaryEnumerator.Entry => new(this.Current.Key, this.Current.Value);
+		DictionaryEntry IDictionaryEnumerator.Entry
+			=> new(this.Current.Key, this.Current.Value);
 
 		/// <summary>
 		/// Gets the internal dictionary.
@@ -796,6 +816,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		/// <summary>
 		/// Disposes the.
 		/// </summary>
-		public void Dispose() => this.Reset();
+		public void Dispose()
+			=> this.Reset();
 	}
 }
