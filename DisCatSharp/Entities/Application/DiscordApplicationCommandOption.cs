@@ -51,14 +51,14 @@ public class DiscordApplicationCommandOption
 	/// Sets the name localizations.
 	/// </summary>
 	[JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
-	internal Dictionary<string, string> RawNameLocalizations { get; set; }
+	internal Dictionary<string, string>? RawNameLocalizations { get; set; }
 
 	/// <summary>
 	/// Gets the name localizations.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordApplicationCommandLocalization NameLocalizations
-		=> new(this.RawNameLocalizations);
+	public DiscordApplicationCommandLocalization? NameLocalizations
+		=> this.RawNameLocalizations != null ? new (this.RawNameLocalizations) : null;
 
 	/// <summary>
 	/// Gets the description of this command parameter.
@@ -70,14 +70,14 @@ public class DiscordApplicationCommandOption
 	/// Sets the description localizations.
 	/// </summary>
 	[JsonProperty("description_localizations", NullValueHandling = NullValueHandling.Ignore)]
-	internal Dictionary<string, string> RawDescriptionLocalizations { get; set; }
+	internal Dictionary<string, string>? RawDescriptionLocalizations { get; set; }
 
 	/// <summary>
 	/// Gets the description localizations.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordApplicationCommandLocalization DescriptionLocalizations
-		=> new(this.RawDescriptionLocalizations);
+	public DiscordApplicationCommandLocalization? DescriptionLocalizations
+		=> this.RawDescriptionLocalizations != null ? new (this.RawDescriptionLocalizations) : null;
 
 	/// <summary>
 	/// Gets whether this command parameter is required.
@@ -151,7 +151,7 @@ public class DiscordApplicationCommandOption
 	/// <param name="descriptionLocalizations">The localizations of the parameter description.</param>
 	/// <param name="minimumLength">The minimum allowed length of the string. (Min 0)</param>
 	/// <param name="maximumLength">The maximum allowed length of the string. (Min 1)</param>
-	public DiscordApplicationCommandOption(string name, string description, ApplicationCommandOptionType type, bool required = false, IEnumerable<DiscordApplicationCommandOptionChoice>? choices = null, IEnumerable<DiscordApplicationCommandOption>? options = null, IEnumerable<ChannelType>? channelTypes = null, bool autocomplete = false, object minimumValue = null, object maximumValue = null, DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null, int? minimumLength = null, int? maximumLength = null)
+	public DiscordApplicationCommandOption(string name, string description, ApplicationCommandOptionType type, bool required = false, IEnumerable<DiscordApplicationCommandOptionChoice>? choices = null, IEnumerable<DiscordApplicationCommandOption>? options = null, IEnumerable<ChannelType>? channelTypes = null, bool autocomplete = false, object? minimumValue = null, object? maximumValue = null, DiscordApplicationCommandLocalization? nameLocalizations = null, DiscordApplicationCommandLocalization? descriptionLocalizations = null, int? minimumLength = null, int? maximumLength = null)
 	{
 		if (!Utilities.IsValidSlashCommandName(name))
 			throw new ArgumentException("Invalid application command option name specified. It must be below 32 characters and not contain any whitespace.", nameof(name));

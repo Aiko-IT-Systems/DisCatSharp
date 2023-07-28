@@ -77,12 +77,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// List of global commands on discords backend.
 	/// </summary>
-	internal static List<DiscordApplicationCommand> GlobalDiscordCommands { get; set; }
+	internal static List<DiscordApplicationCommand>? GlobalDiscordCommands { get; set; }
 
 	/// <summary>
 	/// List of guild commands on discords backend.
 	/// </summary>
-	internal static Dictionary<ulong, List<DiscordApplicationCommand>> GuildDiscordCommands { get; set; }
+	internal static Dictionary<ulong, List<DiscordApplicationCommand>>? GuildDiscordCommands { get; set; }
 
 	/// <summary>
 	/// Singleton modules.
@@ -111,21 +111,21 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		=> s_registeredCommands.Select(guild =>
 			new KeyValuePair<ulong?, IReadOnlyList<RegisteredDiscordApplicationCommand>>(guild.Key, guild.Value
 					.Select(parent => new RegisteredDiscordApplicationCommand(parent)).ToList())).ToList();
-	private static List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> s_registeredCommands = new();
+	private static readonly List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> s_registeredCommands = new();
 
 	/// <summary>
 	/// Gets a list of registered global commands.
 	/// </summary>
 	public IReadOnlyList<DiscordApplicationCommand> GlobalCommands
 		=> GlobalCommandsInternal;
-	internal static List<DiscordApplicationCommand> GlobalCommandsInternal = new();
+	internal static readonly List<DiscordApplicationCommand> GlobalCommandsInternal = new();
 
 	/// <summary>
 	/// Gets a list of registered guild commands mapped by guild id.
 	/// </summary>
 	public IReadOnlyDictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommands
 		=> GuildCommandsInternal;
-	internal static Dictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommandsInternal = new();
+	internal static readonly Dictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommandsInternal = new();
 
 	/// <summary>
 	/// Gets the registration count.
@@ -163,7 +163,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	internal static bool ManOr { get; set; }
 
 	/// <summary>
-	/// Gets whether interactions should be automatically deffered.
+	/// Gets whether interactions should be automatically deferred.
 	/// </summary>
 	internal static bool AutoDeferEnabled { get; set; }
 
@@ -182,7 +182,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// Gets a list of handled interactions. Fix for double interaction execution bug.
 	/// </summary>
-	internal static List<ulong> HandledInteractions = new();
+	internal static readonly List<ulong> HandledInteractions = new();
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
@@ -863,7 +863,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					await fs.DisposeAsync().ConfigureAwait(false);
 					ms.Close();
 					await ms.DisposeAsync().ConfigureAwait(false);
-					this.Client.Logger.LogInformation("Exported base translation to {exppath}", fileName);
+					this.Client.Logger.LogInformation("Exported base translation to {exportPath}", fileName);
 				}
 
 				if (groupTranslation != null && groupTranslation.Any())
@@ -881,7 +881,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					await fs.DisposeAsync().ConfigureAwait(false);
 					ms.Close();
 					await ms.DisposeAsync().ConfigureAwait(false);
-					this.Client.Logger.LogInformation("Exported base translation to {exppath}", fileName);
+					this.Client.Logger.LogInformation("Exported base translation to {exportPath}", fileName);
 				}
 			}
 			catch (Exception ex)

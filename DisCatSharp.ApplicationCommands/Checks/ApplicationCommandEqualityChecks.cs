@@ -41,7 +41,7 @@ internal static class ApplicationCommandEqualityChecks
 	/// <param name="targetApplicationCommand">Command to check against.</param>
 	/// <param name="client">The discord client.</param>
 	/// <param name="isGuild">Whether the equal check is performed for a guild command.</param>
-	internal static bool IsEqualTo(this DiscordApplicationCommand ac1, DiscordApplicationCommand targetApplicationCommand, DiscordClient client, bool isGuild)
+	internal static bool IsEqualTo(this DiscordApplicationCommand? ac1, DiscordApplicationCommand? targetApplicationCommand, DiscordClient client, bool isGuild)
 	{
 		if (targetApplicationCommand is null || ac1 is null)
 			return false;
@@ -80,11 +80,26 @@ internal static class ApplicationCommandEqualityChecks
 	{
 		bool? sDmPerm = source.DmPermission ?? true;
 		bool? tDmPerm = target.DmPermission ?? true;
-		if (guild)
-		{
-			sDmPerm = null;
-			tDmPerm = null;
-		}
+		if (!guild)
+			return localizationEnabled
+				? type switch
+				{
+					ApplicationCommandType.ChatInput => DeepEqual(source, target, true, sDmPerm, tDmPerm),
+					_ => source.Name == target.Name
+					     && source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
+					     && source.DefaultMemberPermissions == target.DefaultMemberPermissions
+					     && sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw
+				}
+				: type switch
+				{
+					ApplicationCommandType.ChatInput => DeepEqual(source, target, false, sDmPerm, tDmPerm),
+					_ => source.Name == target.Name
+					     && source.Type == target.Type
+					     && source.DefaultMemberPermissions == target.DefaultMemberPermissions
+					     && sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw
+				};
+		sDmPerm = null;
+		tDmPerm = null;
 		return localizationEnabled
 			? type switch
 			{
@@ -135,45 +150,19 @@ internal static class ApplicationCommandEqualityChecks
 				target.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommandGroup))
 			{
 				List<DiscordApplicationCommandOption> minimalSourceOptions = new();
-				List<DiscordApplicationCommandOption> minimalTargetOptions = new();
 
 				foreach (var option in
-						 source.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommandGroup))
+				         source.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommandGroup))
 				{
 					List<DiscordApplicationCommandOption> minimalSubSourceOptions = new();
 					if (option.Options != null)
 					{
-						foreach (var subOption in option.Options)
-						{
-							List<DiscordApplicationCommandOption> minimalSubSubSourceOptions = null;
-
-							if (subOption.Options != null)
-							{
-								minimalSubSubSourceOptions = new();
-
-								foreach (var subSubOption in subOption.Options)
-									minimalSubSubSourceOptions.Add(new(
-										subSubOption.Name, subSubOption.Description, subSubOption.Type,
-										subSubOption.Required,
-										subSubOption.Choices, null, subSubOption.ChannelTypes?.OrderBy(x => x),
-										subSubOption.AutoComplete,
-										subSubOption.MinimumValue, subSubOption.MaximumValue,
-										localizationEnabled ? subSubOption.NameLocalizations : null,
-										localizationEnabled ? subSubOption.DescriptionLocalizations : null,
-										subSubOption.MinimumLength, subSubOption.MaximumLength
-									));
-
-								minimalSubSourceOptions.Add(new(
-									subOption.Name, subOption.Description, subOption.Type,
-									options: minimalSubSubSourceOptions,
-									nameLocalizations: localizationEnabled ? subOption.NameLocalizations : null,
-									descriptionLocalizations: localizationEnabled
-										? subOption.DescriptionLocalizations
-										: null
-								));
-							}
-						}
-
+						minimalSubSourceOptions.AddRange(from subOption in option.Options
+							where subOption.Options != null
+							let minimalSubSubSourceOptions = subOption.Options.Select(subSubOption => new DiscordApplicationCommandOption(subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required, subSubOption.Choices, null, subSubOption.ChannelTypes?.OrderBy(x => x), subSubOption.AutoComplete, subSubOption.MinimumValue, subSubOption.MaximumValue, localizationEnabled ? subSubOption.NameLocalizations : null, localizationEnabled ? subSubOption.DescriptionLocalizations : null, subSubOption.MinimumLength, subSubOption.MaximumLength)).ToList()
+							select new DiscordApplicationCommandOption(subOption.Name, subOption.Description, subOption.Type, options: minimalSubSubSourceOptions, nameLocalizations: localizationEnabled ? subOption.NameLocalizations : null, descriptionLocalizations: localizationEnabled
+								? subOption.DescriptionLocalizations
+								: null));
 					}
 
 					minimalSourceOptions.Add(new(
@@ -184,48 +173,14 @@ internal static class ApplicationCommandEqualityChecks
 					));
 				}
 
-				foreach (var option in
-						 target.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommandGroup))
-				{
-					List<DiscordApplicationCommandOption> minimalSubTargetOptions = new();
-
-					foreach (var subOption in option.Options)
-					{
-						List<DiscordApplicationCommandOption> minimalSubSubTargetOptions = null;
-
-						if (subOption.Options != null && subOption.Options.Any())
-						{
-							minimalSubSubTargetOptions = new();
-
-							foreach (var subSubOption in subOption.Options)
-								minimalSubSubTargetOptions.Add(new(
-									subSubOption.Name, subSubOption.Description, subSubOption.Type,
-									subSubOption.Required,
-									subSubOption.Choices, null, subSubOption.ChannelTypes?.OrderBy(x => x), subSubOption.AutoComplete,
-									subSubOption.MinimumValue, subSubOption.MaximumValue,
-									localizationEnabled ? subSubOption.NameLocalizations : null,
-									localizationEnabled ? subSubOption.DescriptionLocalizations : null,
-									subSubOption.MinimumLength, subSubOption.MaximumLength
-								));
-
-							minimalSubTargetOptions.Add(new(
-								subOption.Name, subOption.Description, subOption.Type,
-								options: minimalSubSubTargetOptions,
-								nameLocalizations: localizationEnabled ? subOption.NameLocalizations : null,
-								descriptionLocalizations: localizationEnabled
-									? subOption.DescriptionLocalizations
-									: null
-							));
-						}
-					}
-
-					minimalTargetOptions.Add(new(
-						option.Name, option.Description, option.Type,
-						options: minimalSubTargetOptions,
-						nameLocalizations: localizationEnabled ? option.NameLocalizations : null,
-						descriptionLocalizations: localizationEnabled ? option.DescriptionLocalizations : null
-					));
-				}
+				var minimalTargetOptions = (from option in target.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommandGroup)
+					let minimalSubTargetOptions = (from subOption in option.Options
+						where subOption.Options != null && subOption.Options.Any()
+						let minimalSubSubTargetOptions = subOption.Options.Select(subSubOption => new DiscordApplicationCommandOption(subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required, subSubOption.Choices, null, subSubOption.ChannelTypes?.OrderBy(x => x), subSubOption.AutoComplete, subSubOption.MinimumValue, subSubOption.MaximumValue, localizationEnabled ? subSubOption.NameLocalizations : null, localizationEnabled ? subSubOption.DescriptionLocalizations : null, subSubOption.MinimumLength, subSubOption.MaximumLength)).ToList()
+						select new DiscordApplicationCommandOption(subOption.Name, subOption.Description, subOption.Type, options: minimalSubSubTargetOptions, nameLocalizations: localizationEnabled ? subOption.NameLocalizations : null, descriptionLocalizations: localizationEnabled
+							? subOption.DescriptionLocalizations
+							: null)).ToList()
+					select new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, options: minimalSubTargetOptions, nameLocalizations: localizationEnabled ? option.NameLocalizations : null, descriptionLocalizations: localizationEnabled ? option.DescriptionLocalizations : null)).ToList();
 
 				var sOpt = JsonConvert.SerializeObject(minimalSourceOptions, Formatting.None);
 				var tOpt = JsonConvert.SerializeObject(minimalTargetOptions, Formatting.None);
@@ -233,8 +188,8 @@ internal static class ApplicationCommandEqualityChecks
 				eqCheck1 = rootCheck && sOpt == tOpt;
 			}
 
-			if (source.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommand) &&
-				target.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommand))
+			if (source.Options.All(o => o.Type != ApplicationCommandOptionType.SubCommand) || target.Options.All(o => o.Type != ApplicationCommandOptionType.SubCommand))
+				return eqCheck1 && eqCheck2;
 			{
 				List<DiscordApplicationCommandOption> minimalSourceOptions = new();
 				List<DiscordApplicationCommandOption> minimalTargetOptions = new();
@@ -244,19 +199,7 @@ internal static class ApplicationCommandEqualityChecks
 					List<DiscordApplicationCommandOption> minimalSubSourceOptions = null;
 
 					if (option.Options != null)
-					{
-						minimalSubSourceOptions = new();
-
-						foreach (var subOption in option.Options)
-							minimalSubSourceOptions.Add(new(
-								subOption.Name, subOption.Description, subOption.Type, subOption.Required,
-								subOption.Choices, null, subOption.ChannelTypes?.OrderBy(x => x), subOption.AutoComplete,
-								subOption.MinimumValue, subOption.MaximumValue,
-								localizationEnabled ? subOption.NameLocalizations : null,
-								localizationEnabled ? subOption.DescriptionLocalizations : null,
-								subOption.MinimumLength, subOption.MaximumLength
-							));
-					}
+						minimalSubSourceOptions = option.Options.Select(subOption => new DiscordApplicationCommandOption(subOption.Name, subOption.Description, subOption.Type, subOption.Required, subOption.Choices, null, subOption.ChannelTypes?.OrderBy(x => x), subOption.AutoComplete, subOption.MinimumValue, subOption.MaximumValue, localizationEnabled ? subOption.NameLocalizations : null, localizationEnabled ? subOption.DescriptionLocalizations : null, subOption.MinimumLength, subOption.MaximumLength)).ToList();
 
 					minimalSourceOptions.Add(new(
 						option.Name, option.Description, option.Type,
@@ -271,19 +214,7 @@ internal static class ApplicationCommandEqualityChecks
 					List<DiscordApplicationCommandOption> minimalSubTargetOptions = null;
 
 					if (option.Options != null && option.Options.Any())
-					{
-						minimalSubTargetOptions = new();
-
-						foreach (var subOption in option.Options)
-							minimalSubTargetOptions.Add(new(
-								subOption.Name, subOption.Description, subOption.Type, subOption.Required,
-								subOption.Choices, null, subOption.ChannelTypes?.OrderBy(x => x), subOption.AutoComplete,
-								subOption.MinimumValue, subOption.MaximumValue,
-								localizationEnabled ? subOption.NameLocalizations : null,
-								localizationEnabled ? subOption.DescriptionLocalizations : null,
-								subOption.MinimumLength, subOption.MaximumLength
-							));
-					}
+						minimalSubTargetOptions = option.Options.Select(subOption => new DiscordApplicationCommandOption(subOption.Name, subOption.Description, subOption.Type, subOption.Required, subOption.Choices, null, subOption.ChannelTypes?.OrderBy(x => x), subOption.AutoComplete, subOption.MinimumValue, subOption.MaximumValue, localizationEnabled ? subOption.NameLocalizations : null, localizationEnabled ? subOption.DescriptionLocalizations : null, subOption.MinimumLength, subOption.MaximumLength)).ToList();
 
 					minimalTargetOptions.Add(new(
 						option.Name, option.Description, option.Type,
@@ -301,28 +232,12 @@ internal static class ApplicationCommandEqualityChecks
 
 			return eqCheck1 && eqCheck2;
 		}
+		// ReSharper disable once RedundantIfElseBlock
 		else
 		{
-			List<DiscordApplicationCommandOption> minimalSourceOptions = new();
-			List<DiscordApplicationCommandOption> minimalTargetOptions = new();
+			var minimalSourceOptions = source.Options.Select(option => new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required, option.Choices, null, option.ChannelTypes?.OrderBy(x => x), option.AutoComplete, option.MinimumValue, option.MaximumValue, localizationEnabled ? option.NameLocalizations : null, localizationEnabled ? option.DescriptionLocalizations : null, option.MinimumLength, option.MaximumLength)).ToList();
 
-			foreach (var option in source.Options)
-				minimalSourceOptions.Add(new(
-					option.Name, option.Description, option.Type, option.Required,
-					option.Choices, null, option.ChannelTypes?.OrderBy(x => x), option.AutoComplete, option.MinimumValue, option.MaximumValue,
-					localizationEnabled ? option.NameLocalizations : null,
-					localizationEnabled ? option.DescriptionLocalizations : null,
-					option.MinimumLength, option.MaximumLength
-				));
-
-			foreach (var option in target.Options)
-				minimalTargetOptions.Add(new(
-					option.Name, option.Description, option.Type, option.Required,
-					option.Choices, null, option.ChannelTypes?.OrderBy(x => x), option.AutoComplete, option.MinimumValue, option.MaximumValue,
-					localizationEnabled ? option.NameLocalizations : null,
-					localizationEnabled ? option.DescriptionLocalizations : null,
-					option.MinimumLength, option.MaximumLength
-				));
+			var minimalTargetOptions = target.Options.Select(option => new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required, option.Choices, null, option.ChannelTypes?.OrderBy(x => x), option.AutoComplete, option.MinimumValue, option.MaximumValue, localizationEnabled ? option.NameLocalizations : null, localizationEnabled ? option.DescriptionLocalizations : null, option.MinimumLength, option.MaximumLength)).ToList();
 			var sOpt = JsonConvert.SerializeObject(minimalSourceOptions, Formatting.None);
 			var tOpt = JsonConvert.SerializeObject(minimalTargetOptions, Formatting.None);
 
