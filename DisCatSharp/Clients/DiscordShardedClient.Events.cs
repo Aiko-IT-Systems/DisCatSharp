@@ -1022,11 +1022,11 @@ public sealed partial class DiscordShardedClient
 	{
 		if (ex is AsyncEventTimeoutException)
 		{
-			this.Logger.LogWarning(LoggerEvents.EventHandlerException, $"An event handler for {asyncEvent.Name} took too long to execute. Defined as \"{handler.Method.ToString().Replace(handler.Method.ReturnType.ToString(), "").TrimStart()}\" located in \"{handler.Method.DeclaringType}\".");
+			this.Logger.LogWarning(LoggerEvents.EventHandlerException, "An event handler for {name} took too long to execute. Defined as \"{method}\" located in \"{declaringType}\".", asyncEvent.Name, handler.Method.ToString()?.Replace(handler.Method.ReturnType.ToString(), "").TrimStart(), handler.Method.DeclaringType);
 			return;
 		}
 
-		this.Logger.LogError(LoggerEvents.EventHandlerException, ex, "Event handler exception for event {0} thrown from {1} (defined in {2})", asyncEvent.Name, handler.Method, handler.Method.DeclaringType);
+		this.Logger.LogError(LoggerEvents.EventHandlerException, ex, "Event handler exception for event {name} thrown from {method} (defined in {type})", asyncEvent.Name, handler.Method, handler.Method.DeclaringType);
 		this._clientErrored.InvokeAsync(sender, new(this.ShardClients[0].ServiceProvider) { EventName = asyncEvent.Name, Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
 	}
 

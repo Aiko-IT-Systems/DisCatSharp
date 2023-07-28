@@ -15,7 +15,7 @@
             "ReconnectIndefinitely": false,
             "AlwaysCacheMembers": true,
             "MobileStatus": false,
-            "UseCanary": false,
+            "ApiChannel": "Stable",
             "AutoRefreshChannelCache": false,
             "Intents": "AllUnprivileged"
         }

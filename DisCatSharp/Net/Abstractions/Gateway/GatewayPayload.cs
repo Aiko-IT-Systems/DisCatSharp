@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using DisCatSharp.Entities;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Net.Abstractions;
@@ -27,7 +29,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 /// Represents a websocket payload exchanged between Discord and the client.
 /// </summary>
-internal sealed class GatewayPayload
+internal sealed class GatewayPayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets or sets the OP code of the payload.
@@ -51,5 +53,5 @@ internal sealed class GatewayPayload
 	/// Gets or sets the event name of the payload. Only present for OP 0.
 	/// </summary>
 	[JsonProperty("t", NullValueHandling = NullValueHandling.Ignore)]
-	public string EventName { get; set; }
+	public string? EventName { get; set; }
 }

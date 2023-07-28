@@ -39,56 +39,56 @@ internal class TransportMember : ObservableApiObject
 	/// Gets the avatar hash.
 	/// </summary>
 	[JsonIgnore]
-	public string AvatarHash { get; internal set; }
+	public string? AvatarHash { get; internal set; }
 
 	/// <summary>
 	/// Gets the guild avatar hash.
 	/// </summary>
 	[JsonProperty("avatar", NullValueHandling = NullValueHandling.Ignore)]
-	public string GuildAvatarHash { get; internal set; }
+	public string? GuildAvatarHash { get; internal set; }
 
 	/// <summary>
 	/// Gets the guild banner hash.
 	/// </summary>
 	[JsonProperty("banner", NullValueHandling = NullValueHandling.Ignore)]
-	public string GuildBannerHash { get; internal set; }
+	public string? GuildBannerHash { get; internal set; }
 
 	/// <summary>
 	/// Gets the guild bio.
 	/// This is not available to bots tho.
 	/// </summary>
 	[JsonProperty("bio", NullValueHandling = NullValueHandling.Ignore)]
-	public string GuildBio { get; internal set; }
+	public string? GuildBio { get; internal set; }
 
 	/// <summary>
-	/// Gets the members's pronouns.
+	/// Gets the members pronouns.
 	/// </summary>
 	[JsonProperty("pronouns", NullValueHandling = NullValueHandling.Ignore)]
-	public string GuildPronouns { get; internal set; }
+	public string? GuildPronouns { get; internal set; }
 
 	/// <summary>
 	/// Gets the user.
 	/// </summary>
 	[JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]
-	public TransportUser User { get; internal set; }
+	public TransportUser? User { get; internal set; }
 
 	/// <summary>
 	/// Gets the nickname.
 	/// </summary>
 	[JsonProperty("nick", NullValueHandling = NullValueHandling.Ignore)]
-	public string Nickname { get; internal set; }
+	public string? Nickname { get; internal set; }
 
 	/// <summary>
 	/// Gets the roles.
 	/// </summary>
 	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
-	public List<ulong> Roles { get; internal set; }
+	public List<ulong>? Roles { get; internal set; }
 
 	/// <summary>
 	/// Gets the joined at.
 	/// </summary>
 	[JsonProperty("joined_at", NullValueHandling = NullValueHandling.Ignore)]
-	public DateTime JoinedAt { get; internal set; }
+	public DateTime? JoinedAt { get; internal set; }
 
 	/// <summary>
 	/// Whether this member is deafened.

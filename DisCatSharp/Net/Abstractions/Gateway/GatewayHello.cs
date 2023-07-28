@@ -40,6 +40,6 @@ internal sealed class GatewayHello
 	/// <summary>
 	/// Gets debug data sent by Discord. This contains a list of servers to which the client is connected.
 	/// </summary>
-	[JsonProperty("_trace")]
-	public IReadOnlyList<string> Trace { get; private set; }
+	[JsonProperty("_trace", NullValueHandling = NullValueHandling.Ignore)]
+	public IReadOnlyList<string>? Trace { get; private set; }
 }

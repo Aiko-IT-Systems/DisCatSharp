@@ -210,7 +210,7 @@ public class ConfigurationExtensionTests
 		Assert.True(config.AlwaysCacheMembers);
 		Assert.Equal(DiscordIntents.AllUnprivileged, config.Intents);
 		Assert.False(config.MobileStatus);
-		Assert.False(config.UseCanary);
+		Assert.True(config.ApiChannel == ApiChannel.Stable);
 		Assert.False(config.AutoRefreshChannelCache);
 	}
 

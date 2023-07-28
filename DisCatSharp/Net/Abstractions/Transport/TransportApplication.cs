@@ -51,19 +51,19 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// Gets or sets the icon hash.
 	/// </summary>
 	[JsonProperty("icon", NullValueHandling = NullValueHandling.Include)]
-	public string IconHash { get; set; }
+	public string? IconHash { get; set; }
 
 	/// <summary>
 	/// Gets or sets the description.
 	/// </summary>
 	[JsonProperty("description", NullValueHandling = NullValueHandling.Include)]
-	public string Description { get; set; }
+	public string? Description { get; set; }
 
 	/// <summary>
 	/// Gets or sets the summary.
 	/// </summary>
 	[JsonProperty("summary", NullValueHandling = NullValueHandling.Include), DiscordDeprecated("Empty string, will be removed in API v11")]
-	public string Summary { get; set; }
+	public string? Summary { get; set; }
 
 	[JsonProperty("bot", NullValueHandling = NullValueHandling.Ignore)]
 	public TransportUser Bot { get; set; }
@@ -84,13 +84,13 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// Gets or sets the terms of service url.
 	/// </summary>
 	[JsonProperty("terms_of_service_url", NullValueHandling = NullValueHandling.Include)]
-	public string TermsOfServiceUrl { get; set; }
+	public string? TermsOfServiceUrl { get; set; }
 
 	/// <summary>
 	/// Gets or sets the privacy policy url.
 	/// </summary>
 	[JsonProperty("privacy_policy_url", NullValueHandling = NullValueHandling.Include)]
-	public string PrivacyPolicyUrl { get; set; }
+	public string? PrivacyPolicyUrl { get; set; }
 
 	/// <summary>
 	/// Gets or sets a value indicating whether the bot requires code grant.
@@ -105,16 +105,16 @@ internal sealed class TransportApplication : ObservableApiObject
 	public bool IsHook { get; set; }
 
 	/// <summary>
-	/// Gets or sets a value indicating whether the bot requires code grant.
+	/// Gets or sets the application type.
 	/// </summary>
 	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
-	public string Type { get; set; }
+	public string? Type { get; set; }
 
 	/// <summary>
 	/// Gets or sets the rpc origins.
 	/// </summary>
 	[JsonProperty("rpc_origins", NullValueHandling = NullValueHandling.Ignore)]
-	public List<string> RpcOrigins { get; set; }
+	public List<string>? RpcOrigins { get; set; }
 
 	/// <summary>
 	/// Gets or sets the owner.
@@ -126,7 +126,7 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// Gets or sets the team.
 	/// </summary>
 	[JsonProperty("team", NullValueHandling = NullValueHandling.Include)]
-	public TransportTeam Team { get; set; }
+	public TransportTeam? Team { get; set; }
 
 	/// <summary>
 	/// Gets or sets the verify key.
@@ -168,13 +168,13 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// Gets or sets the custom install url.
 	/// </summary>
 	[JsonProperty("custom_install_url")]
-	public string CustomInstallUrl { get; set; }
+	public string? CustomInstallUrl { get; set; }
 
 	/// <summary>
 	/// Gets or sets the install params.
 	/// </summary>
 	[JsonProperty("install_params", NullValueHandling = NullValueHandling.Include)]
-	public DiscordApplicationInstallParams InstallParams { get; set; }
+	public DiscordApplicationInstallParams? InstallParams { get; set; }
 
 	/// <summary>
 	/// Gets or sets the role connection verification entry point.

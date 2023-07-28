@@ -42,23 +42,23 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// Gets the application's summary.
 	/// </summary>
 	[DiscordDeprecated("Empty string, will be removed in API v11")]
-	public string Summary { get; internal set; }
+	public string? Summary { get; internal set; }
 
 	/// <summary>
 	/// Gets the application's icon.
 	/// </summary>
-	public override string Icon
+	public override string? Icon
 		=> !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null;
 
 	/// <summary>
 	/// Gets the application's icon hash.
 	/// </summary>
-	public string IconHash { get; internal set; }
+	public string? IconHash { get; internal set; }
 
 	/// <summary>
 	/// Gets the application's allowed RPC origins.
 	/// </summary>
-	public IReadOnlyList<string> RpcOrigins { get; internal set; }
+	public IReadOnlyList<string>? RpcOrigins { get; internal set; }
 
 	/// <summary>
 	/// Gets the application's flags.
@@ -68,7 +68,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <summary>
 	/// Gets the application's owners.
 	/// </summary>
-	public List<DiscordUser> Owners { get; internal set; }
+	public List<DiscordUser> Owners { get; internal set; } = new();
 
 	/// <summary>
 	/// Gets whether this application's bot user requires code grant.
@@ -83,22 +83,22 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <summary>
 	/// Gets the terms of service url of the application.
 	/// </summary>
-	public string TermsOfServiceUrl { get; internal set; }
+	public string? TermsOfServiceUrl { get; internal set; }
 
 	/// <summary>
 	/// Gets the privacy policy url of the application.
 	/// </summary>
-	public string PrivacyPolicyUrl { get; internal set; }
+	public string? PrivacyPolicyUrl { get; internal set; }
 
 	/// <summary>
 	/// Gets the team name of the application.
 	/// </summary>
-	public string TeamName { get; internal set; }
+	public string? TeamName { get; internal set; }
 
 	/// <summary>
 	/// Gets the hash of the application's cover image.
 	/// </summary>
-	public string CoverImageHash { get; internal set; }
+	public string? CoverImageHash { get; internal set; }
 
 	/// <summary>
 	/// Gets this application's cover image URL.
@@ -109,7 +109,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <summary>
 	/// Gets the team which owns this application.
 	/// </summary>
-	public DiscordTeam Team { get; internal set; }
+	public DiscordTeam? Team { get; internal set; }
 
 	/// <summary>
 	/// Gets the hex encoded key for verification in interactions and the GameSDK's GetTicket
@@ -134,34 +134,34 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <summary>
 	/// If this application is a game sold on Discord, this field will be the URL slug that links to the store page
 	/// </summary>
-	public string Slug { get; internal set; }
+	public string? Slug { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets a list of <see cref="DiscordApplicationAsset"/>.
 	/// </summary>
-	private IReadOnlyList<DiscordApplicationAsset> _assets;
+	private IReadOnlyList<DiscordApplicationAsset>? _assets;
 
 	/// <summary>
 	/// A custom url for the Add To Server button.
 	/// </summary>
-	public string CustomInstallUrl { get; internal set; }
+	public string? CustomInstallUrl { get; internal set; }
 
 	/// <summary>
 	/// Install parameters for adding the application to a guild.
 	/// </summary>
-	public DiscordApplicationInstallParams InstallParams { get; internal set; }
+	public DiscordApplicationInstallParams? InstallParams { get; internal set; }
 
 	/// <summary>
 	/// The application's role connection verification entry point,
 	/// which when configured will render the app as a verification method in the guild role verification configuration.
 	/// </summary>
-	public string RoleConnectionsVerificationUrl { get; internal set; }
+	public string? RoleConnectionsVerificationUrl { get; internal set; }
 
 	/// <summary>
 	/// The application tags.
 	/// Not used atm.
 	/// </summary>
-	public IReadOnlyList<string> Tags { get; internal set; }
+	public IReadOnlyList<string>? Tags { get; internal set; }
 
 	/// <summary>
 	/// Whether the application is hooked.
@@ -172,7 +172,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// Gets the application type.
 	/// Mostly null.
 	/// </summary>
-	public string Type { get; internal set; }
+	public string? Type { get; internal set; }
 
 	/// <summary>
 	/// Gets the approximate guild count
@@ -182,12 +182,12 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <summary>
 	/// Gets the interactions endpoint url.
 	/// </summary>
-	public string InteractionsEndpointUrl { get; set; }
+	public string? InteractionsEndpointUrl { get; set; }
 
 	/// <summary>
 	/// Gets the redirect uris.
 	/// </summary>
-	public List<string> RedirectUris { get; set; } = new();
+	public List<string>? RedirectUris { get; set; } = new();
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordApplication"/> class.
@@ -201,7 +201,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <param name="fmt">Format of the image to get.</param>
 	/// <param name="size">Maximum size of the cover image. Must be a power of two, minimum 16, maximum 2048.</param>
 	/// <returns>URL of the application's cover image.</returns>
-	public string GetAvatarUrl(ImageFormat fmt, ushort size = 1024)
+	public string? GetAvatarUrl(ImageFormat fmt, ushort size = 1024)
 	{
 		if (fmt == ImageFormat.Unknown)
 			throw new ArgumentException("You must specify valid image format.", nameof(fmt));
@@ -212,9 +212,8 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 		var log = Math.Log(size, 2);
 		if (log < 4 || log > 11 || log % 1 != 0)
 			throw new ArgumentOutOfRangeException(nameof(size));
-
-		var sfmt = "";
-		sfmt = fmt switch
+		
+		var sfmt = fmt switch
 		{
 			ImageFormat.Gif => "gif",
 			ImageFormat.Jpeg => "jpg",

@@ -254,7 +254,7 @@ internal class RestChannelMessageEditPayload : ObservableApiObject
 	/// Gets or sets the content.
 	/// </summary>
 	[JsonProperty("content", NullValueHandling = NullValueHandling.Include)]
-	public string Content { get; set; }
+	public string? Content { get; set; }
 
 	/// <summary>
 	/// Gets or sets a value indicating whether has content.
@@ -266,19 +266,19 @@ internal class RestChannelMessageEditPayload : ObservableApiObject
 	/// Gets or sets the embeds.
 	/// </summary>
 	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordEmbed> Embeds { get; set; }
+	public IEnumerable<DiscordEmbed>? Embeds { get; set; }
 
 	/// <summary>
 	/// Gets or sets the mentions.
 	/// </summary>
 	[JsonProperty("allowed_mentions", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordMentions Mentions { get; set; }
+	public DiscordMentions? Mentions { get; set; }
 
 	/// <summary>
 	/// Gets or sets the attachments.
 	/// </summary>
 	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordAttachment> Attachments { get; set; }
+	public IEnumerable<DiscordAttachment>? Attachments { get; set; }
 
 	/// <summary>
 	/// Gets or sets the flags.
@@ -290,7 +290,7 @@ internal class RestChannelMessageEditPayload : ObservableApiObject
 	/// Gets or sets the components.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyCollection<DiscordActionRowComponent> Components { get; set; }
+	public IReadOnlyCollection<DiscordActionRowComponent>? Components { get; set; }
 
 	/// <summary>
 	/// Gets or sets a value indicating whether has embed.
@@ -326,7 +326,7 @@ internal sealed class RestChannelMessageCreatePayload : RestChannelMessageEditPa
 	/// Gets or sets the stickers ids.
 	/// </summary>
 	[JsonProperty("sticker_ids", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<ulong> StickersIds { get; set; }
+	public IEnumerable<ulong>? StickersIds { get; set; }
 
 	/// <summary>
 	/// Gets or sets the message reference.
@@ -345,7 +345,7 @@ internal sealed class RestChannelMessageCreateMultipartPayload : ObservableApiOb
 	/// Gets or sets the content.
 	/// </summary>
 	[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
-	public string Content { get; set; }
+	public string? Content { get; set; }
 
 	/// <summary>
 	/// Gets or sets a value indicating whether t t is s.
@@ -357,13 +357,13 @@ internal sealed class RestChannelMessageCreateMultipartPayload : ObservableApiOb
 	/// Gets or sets the embeds.
 	/// </summary>
 	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordEmbed> Embeds { get; set; }
+	public IEnumerable<DiscordEmbed>? Embeds { get; set; }
 
 	/// <summary>
 	/// Gets or sets the mentions.
 	/// </summary>
 	[JsonProperty("allowed_mentions", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordMentions Mentions { get; set; }
+	public DiscordMentions? Mentions { get; set; }
 
 	/// <summary>
 	/// Gets or sets the message reference.

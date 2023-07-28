@@ -64,7 +64,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Gets the category that contains this channel.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordChannel Parent
+	public DiscordChannel? Parent
 		=> this.ParentId.HasValue ? this.Guild.GetChannel(this.ParentId.Value) : null;
 
 	/// <summary>
@@ -84,7 +84,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Applicable if forum channel.
 	/// </summary>
 	[JsonProperty("template", NullValueHandling = NullValueHandling.Ignore)]
-	public string Template { get; internal set; }
+	public string? Template { get; internal set; }
 
 	/// <summary>
 	/// Gets the position of this channel.
@@ -173,7 +173,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Gets the guild to which this channel belongs.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordGuild Guild
+	public DiscordGuild? Guild
 		=> this.GuildId.HasValue && this.Discord.Guilds.TryGetValue(this.GuildId.Value, out var guild) ? guild : null;
 
 	/// <summary>
@@ -192,7 +192,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Gets the channel's topic. This is applicable to text channels only.
 	/// </summary>
 	[JsonProperty("topic", NullValueHandling = NullValueHandling.Ignore)]
-	public string Topic { get; internal set; }
+	public string? Topic { get; internal set; }
 
 	/// <summary>
 	/// Gets the ID of the last message sent in this channel. This is applicable to text channels only.
@@ -267,7 +267,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Gets when the last pinned message was pinned as raw string.
 	/// </summary>
 	[JsonProperty("last_pin_timestamp", NullValueHandling = NullValueHandling.Ignore)]
-	internal string LastPinTimestampRaw { get; set; }
+	internal string? LastPinTimestampRaw { get; set; }
 
 	/// <summary>
 	/// Gets this channel's default duration for newly created threads, in minutes, to automatically archive the thread after recent activity.
@@ -287,7 +287,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordChannel> Children =>
-		!this.IsCategory
+		!this.IsCategory || this.Guild is null
 			? throw new ArgumentException("Only channel categories contain children.")
 			: this.Guild.ChannelsInternal.Values.Where(e => e.ParentId == this.Id).ToList();
 
@@ -318,7 +318,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Gets this channel's region override (if voice channel).
 	/// </summary>
 	[JsonIgnore]
-	public DiscordVoiceRegion RtcRegion
+	public DiscordVoiceRegion? RtcRegion
 		=> this.RtcRegionId != null ? this.Discord.VoiceRegions[this.RtcRegionId] : null;
 
 
@@ -487,8 +487,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public async Task<DiscordMessage> GetMessageAsync(ulong id, bool fetch = false) =>
 		this.Discord.Configuration.MessageCacheSize > 0
 		&& !fetch
-		&& this.Discord is DiscordClient dc
-		&& dc.MessageCache != null
+		&& this.Discord is DiscordClient { MessageCache: not null } dc 
 		&& dc.MessageCache.TryGet(xm => xm.Id == id && xm.ChannelId == this.Id, out var msg)
 			? msg
 			: await this.Discord.ApiClient.GetMessageAsync(this.Id, id).ConfigureAwait(false);
@@ -529,10 +528,6 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 
 		var mdl = new ChannelEditModel();
 		action(mdl);
-		// TODO: Boost tier not required anymore for auto archive durations
-		if (mdl.DefaultAutoArchiveDuration.HasValue)
-			if (!Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.DefaultAutoArchiveDuration.Value))
-				throw new NotSupportedException($"Cannot modify DefaultAutoArchiveDuration. Guild needs boost tier {(mdl.DefaultAutoArchiveDuration.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 
 		return this.Discord.ApiClient.ModifyChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Nsfw,
 			mdl.Parent.Map(p => p?.Id), mdl.Bitrate, mdl.UserLimit, mdl.PerUserRateLimit, mdl.RtcRegion.Map(r => r?.Id),
@@ -555,10 +550,6 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 
 		var mdl = new ForumChannelEditModel();
 		action(mdl);
-
-		if (mdl.DefaultAutoArchiveDuration.HasValue && mdl.DefaultAutoArchiveDuration.Value.HasValue)
-			if (!Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.DefaultAutoArchiveDuration.Value.Value))
-				throw new NotSupportedException($"Cannot modify DefaultAutoArchiveDuration. Guild needs boost tier {(mdl.DefaultAutoArchiveDuration.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 
 		return mdl.AvailableTags.HasValue && mdl.AvailableTags.Value.Count > 20
 			? throw new NotSupportedException("Cannot have more than 20 tags in a forum channel.")
@@ -1085,20 +1076,19 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified. This happens, when the guild hasn't reached a certain boost <see cref="PremiumTier"/>. Or if <see cref="GuildFeaturesEnum.CanCreatePrivateThreads"/> is not enabled for guild. This happens, if the guild does not have <see cref="PremiumTier.TierTwo"/></exception>
-	public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration autoArchiveDuration = ThreadAutoArchiveDuration.OneHour, ChannelType type = ChannelType.PublicThread, int? rateLimitPerUser = null, string reason = null) =>
+	public async Task<DiscordThreadChannel> CreateThreadAsync(string name,
+		ThreadAutoArchiveDuration autoArchiveDuration = ThreadAutoArchiveDuration.OneHour,
+		ChannelType type = ChannelType.PublicThread, int? rateLimitPerUser = null, string? reason = null) =>
 		type != ChannelType.NewsThread && type != ChannelType.PublicThread && type != ChannelType.PrivateThread
 			? throw new NotSupportedException("Wrong thread type given.")
 			: !this.IsThreadHolder()
 				? throw new NotSupportedException("Parent channel can't have threads.")
 				: type == ChannelType.PrivateThread
-					? Utilities.CheckThreadPrivateFeature(this.Guild)
-						? Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, autoArchiveDuration)
-							? await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, autoArchiveDuration, type, rateLimitPerUser, isForum: false, reason: reason).ConfigureAwait(false)
-							: throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(autoArchiveDuration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.")
-						: throw new NotSupportedException($"Cannot create a private thread. Guild needs to be boost tier two.")
-					: Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, autoArchiveDuration)
-						? await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, autoArchiveDuration, this.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, rateLimitPerUser, isForum: false, reason: reason).ConfigureAwait(false)
-						: throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(autoArchiveDuration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
+					? await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, autoArchiveDuration, type,
+						rateLimitPerUser, isForum: false, reason: reason).ConfigureAwait(false)
+					: await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, autoArchiveDuration,
+						this.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread,
+						rateLimitPerUser, isForum: false, reason: reason).ConfigureAwait(false);
 
 	/// <summary>
 	/// Creates a forum post.

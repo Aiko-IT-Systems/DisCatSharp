@@ -103,7 +103,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// Gets the tags this role has.
 	/// </summary>
 	[JsonProperty("tags", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordRoleTags Tags { get; internal set; }
+	public DiscordRoleTags? Tags { get; internal set; }
 
 	/// <summary>
 	/// Gets the role icon's hash.
@@ -226,11 +226,11 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 		action(mdl);
 
 		var canContinue = true;
-		if ((mdl.Icon.HasValue && mdl.Icon.Value != null) || (mdl.UnicodeEmoji.HasValue && mdl.UnicodeEmoji.Value != null))
+		if (mdl.Icon is { HasValue: true, Value: not null } || (mdl.UnicodeEmoji.HasValue && mdl.UnicodeEmoji.Value != null))
 			canContinue = this.Guild.Features.HasFeature(GuildFeaturesEnum.CanSetRoleIcons);
 
 		var iconb64 = Optional.FromNullable<string>(null);
-		if (mdl.Icon.HasValue && mdl.Icon.Value != null)
+		if (mdl.Icon is { HasValue: true, Value: not null })
 			iconb64 = ImageTool.Base64FromStream(mdl.Icon);
 		else if (mdl.Icon.HasValue)
 			iconb64 = Optional.Some<string>(null);

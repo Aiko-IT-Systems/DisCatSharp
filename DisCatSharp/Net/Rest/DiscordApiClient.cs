@@ -361,12 +361,12 @@ public sealed class DiscordApiClient
 	/// Creates the guild async.
 	/// </summary>
 	/// <param name="name">The name.</param>
-	/// <param name="regionId">The region_id.</param>
-	/// <param name="iconb64">The iconb64.</param>
-	/// <param name="verificationLevel">The verification_level.</param>
-	/// <param name="defaultMessageNotifications">The default_message_notifications.</param>
-	/// <param name="systemChannelFlags">The system_channel_flags.</param>
-	internal async Task<DiscordGuild> CreateGuildAsync(string name, string regionId, Optional<string> iconb64, VerificationLevel? verificationLevel,
+	/// <param name="regionId">The region id.</param>
+	/// <param name="iconBase64">The icon.</param>
+	/// <param name="verificationLevel">The verification level.</param>
+	/// <param name="defaultMessageNotifications">The default message notifications.</param>
+	/// <param name="systemChannelFlags">The system channel flags.</param>
+	internal async Task<DiscordGuild> CreateGuildAsync(string name, string? regionId, Optional<string?> iconBase64, VerificationLevel? verificationLevel,
 		DefaultMessageNotifications? defaultMessageNotifications, SystemChannelFlags? systemChannelFlags)
 	{
 		var pld = new RestGuildCreatePayload
@@ -375,7 +375,7 @@ public sealed class DiscordApiClient
 			RegionId = regionId,
 			DefaultMessageNotifications = defaultMessageNotifications,
 			VerificationLevel = verificationLevel,
-			IconBase64 = iconb64,
+			IconBase64 = iconBase64,
 			SystemChannelFlags = systemChannelFlags
 
 		};
@@ -387,7 +387,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var json = JObject.Parse(res.Response);
-		var rawMembers = (JArray)json["members"];
+		var rawMembers = (JArray)json["members"]!;
 		var guild = json.ToDiscordObject<DiscordGuild>();
 
 		if (this.Discord is DiscordClient dc)
@@ -961,7 +961,7 @@ public sealed class DiscordApiClient
 	internal async Task<IReadOnlyList<TransportMember>> ListGuildMembersAsync(ulong guildId, int? limit, ulong? after)
 	{
 		var urlParams = new Dictionary<string, string>();
-		if (limit != null && limit > 0)
+		if (limit is > 0)
 			urlParams["limit"] = limit.Value.ToString(CultureInfo.InvariantCulture);
 		if (after != null)
 			urlParams["after"] = after.Value.ToString(CultureInfo.InvariantCulture);
@@ -1921,7 +1921,7 @@ public sealed class DiscordApiClient
 	internal async Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetGuildScheduledEventRspvUsersAsync(ulong guildId, ulong scheduledEventId, int? limit, ulong? before, ulong? after, bool? withMember)
 	{
 		var urlParams = new Dictionary<string, string>();
-		if (limit != null && limit > 0)
+		if (limit is > 0)
 			urlParams["limit"] = limit.Value.ToString(CultureInfo.InvariantCulture);
 		if (before != null)
 			urlParams["before"] = before.Value.ToString(CultureInfo.InvariantCulture);
@@ -2270,16 +2270,16 @@ public sealed class DiscordApiClient
 	/// <param name="mentionReply">If true, mention reply.</param>
 	/// <param name="failOnInvalidReply">If true, fail on invalid reply.</param>
 	/// <param name="components">The components.</param>
-	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string content, IEnumerable<DiscordEmbed> embeds, DiscordSticker sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply, ReadOnlyCollection<DiscordActionRowComponent>? components = null)
+	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string? content, IEnumerable<DiscordEmbed>? embeds, DiscordSticker? sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply, ReadOnlyCollection<DiscordActionRowComponent>? components = null)
 	{
-		if (content != null && content.Length > 2000)
+		if (content is { Length: > 2000 })
 			throw new ArgumentException("Message content length cannot exceed 2000 characters.");
 
 		if (!embeds?.Any() ?? true)
 		{
 			if (content == null && sticker == null && components == null)
 				throw new ArgumentException("You must specify message content, a sticker, components or an embed.");
-			if (content.Length == 0)
+			if (content?.Length == 0)
 				throw new ArgumentException("Message content must not be empty.");
 		}
 
@@ -2588,9 +2588,9 @@ public sealed class DiscordApiClient
 	/// <param name="files">The files.</param>
 	/// <param name="attachments">The attachments to keep.</param>
 
-	internal async Task<DiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, Optional<IEnumerable<IMention>> mentions, IReadOnlyList<DiscordActionRowComponent> components, Optional<bool> suppressEmbed, IReadOnlyCollection<DiscordMessageFile> files, Optional<IEnumerable<DiscordAttachment>> attachments)
+	internal async Task<DiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, Optional<IEnumerable<IMention>> mentions, IReadOnlyList<DiscordActionRowComponent>? components, Optional<bool> suppressEmbed, IReadOnlyCollection<DiscordMessageFile>? files, Optional<IEnumerable<DiscordAttachment>> attachments)
 	{
-		if (embeds.HasValue && embeds.Value != null)
+		if (embeds is { HasValue: true, Value: not null })
 			foreach (var embed in embeds.Value)
 				if (embed.Timestamp != null)
 					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
@@ -2644,7 +2644,8 @@ public sealed class DiscordApiClient
 
 			foreach (var file in files.Where(x => x.ResetPositionTo.HasValue))
 			{
-				file.Stream.Position = file.ResetPositionTo.Value;
+				if (file.ResetPositionTo != null)
+					file.Stream.Position = file.ResetPositionTo.Value;
 			}
 
 			return ret;
@@ -2672,7 +2673,7 @@ public sealed class DiscordApiClient
 	/// <param name="messageId">The message_id.</param>
 	/// <param name="reason">The reason.</param>
 
-	internal Task DeleteMessageAsync(ulong channelId, ulong messageId, string reason)
+	internal Task DeleteMessageAsync(ulong channelId, ulong messageId, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -3118,7 +3119,7 @@ public sealed class DiscordApiClient
 	/// <param name="username">The username.</param>
 	/// <param name="base64Avatar">The base64_avatar.</param>
 
-	internal async Task<DiscordUser> ModifyCurrentUserAsync(string username, Optional<string> base64Avatar)
+	internal async Task<DiscordUser> ModifyCurrentUserAsync(string? username, Optional<string> base64Avatar)
 	{
 		var pld = new RestUserUpdateCurrentPayload
 		{
@@ -3200,9 +3201,9 @@ public sealed class DiscordApiClient
 			Deafen = deaf,
 			Mute = mute,
 			VoiceChannelId = voiceChannelId,
-			Flags = verify.HasValue && verify.Value
+			Flags = verify is { HasValue: true, Value: true }
 			? flags | MemberFlags.BypassesVerification
-			: verify.HasValue && !verify.Value
+			: verify is { HasValue: true, Value: false }
 			? flags & ~MemberFlags.BypassesVerification
 			: Optional.None
 		};
@@ -4167,7 +4168,7 @@ public sealed class DiscordApiClient
 				attachments.Add(att);
 				fileId++;
 			}
-			if (builder.Attachments != null && builder.Attachments?.Count > 0)
+			if (builder.Attachments is { Count: > 0 })
 				attachments.AddRange(builder.Attachments);
 
 			pld.Attachments = attachments;
@@ -4640,7 +4641,7 @@ public sealed class DiscordApiClient
 
 		if (after != null && withMember)
 			urlParams["after"] = after.Value.ToString(CultureInfo.InvariantCulture);
-		if (limit != null && limit > 0 && withMember)
+		if (limit is > 0 && withMember)
 			urlParams["limit"] = limit.Value.ToString(CultureInfo.InvariantCulture);
 
 		var route = $"{Endpoints.CHANNELS}/:thread_id{Endpoints.THREAD_MEMBERS}";
@@ -4683,7 +4684,7 @@ public sealed class DiscordApiClient
 		var urlParams = new Dictionary<string, string>();
 		if (before != null)
 			urlParams["before"] = before.Value.ToString(CultureInfo.InvariantCulture);
-		if (limit != null && limit > 0)
+		if (limit is > 0)
 			urlParams["limit"] = limit.Value.ToString(CultureInfo.InvariantCulture);
 
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.USERS}{Endpoints.ME}{Endpoints.THREADS}{Endpoints.THREAD_ARCHIVED}{Endpoints.THREAD_PRIVATE}";
@@ -4708,7 +4709,7 @@ public sealed class DiscordApiClient
 		var urlParams = new Dictionary<string, string>();
 		if (before != null)
 			urlParams["before"] = before.Value.ToString(CultureInfo.InvariantCulture);
-		if (limit != null && limit > 0)
+		if (limit is > 0)
 			urlParams["limit"] = limit.Value.ToString(CultureInfo.InvariantCulture);
 
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREADS}{Endpoints.THREAD_ARCHIVED}{Endpoints.THREAD_PUBLIC}";
@@ -4733,7 +4734,7 @@ public sealed class DiscordApiClient
 		var urlParams = new Dictionary<string, string>();
 		if (before != null)
 			urlParams["before"] = before.Value.ToString(CultureInfo.InvariantCulture);
-		if (limit != null && limit > 0)
+		if (limit is > 0)
 			urlParams["limit"] = limit.Value.ToString(CultureInfo.InvariantCulture);
 
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREADS}{Endpoints.THREAD_ARCHIVED}{Endpoints.THREAD_PRIVATE}";
@@ -4775,7 +4776,7 @@ public sealed class DiscordApiClient
 
 		if (parentType == ChannelType.Forum)
 		{
-			if (appliedTags.HasValue && appliedTags.Value != null)
+			if (appliedTags is { HasValue: true, Value: not null })
 			{
 				List<ulong> tags = new(appliedTags.Value.Count());
 
@@ -4784,7 +4785,7 @@ public sealed class DiscordApiClient
 
 				pld.AppliedTags = tags;
 			}
-			if (pinned.HasValue && pinned.Value.HasValue)
+			if (pinned is { HasValue: true, Value: not null })
 				pld.Flags = pinned.Value.Value ? ChannelFlags.Pinned : Optional.None;
 		}
 
@@ -5470,7 +5471,7 @@ public sealed class DiscordApiClient
 
 		if (type != InteractionResponseType.AutoCompleteResult)
 		{
-			MessageFlags? flags = builder != null && builder.FlagsChanged ? MessageFlags.None : null;
+			MessageFlags? flags = builder is { FlagsChanged: true } ? MessageFlags.None : null;
 			if (builder != null)
 			{
 				if (builder.IsEphemeral)
@@ -5500,7 +5501,7 @@ public sealed class DiscordApiClient
 			};
 
 
-			if (builder != null && builder.Files != null && builder.Files.Count > 0)
+			if (builder is { Files.Count: > 0 })
 			{
 				ulong fileId = 0;
 				List<DiscordAttachment> attachments = new();
@@ -5635,7 +5636,7 @@ public sealed class DiscordApiClient
 					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
 
-		MessageFlags? flags = builder != null && builder.FlagsChanged ? MessageFlags.None : null;
+		MessageFlags? flags = builder is { FlagsChanged: true } ? MessageFlags.None : null;
 		if (builder != null)
 		{
 			if (builder.IsEphemeral)
@@ -5657,7 +5658,7 @@ public sealed class DiscordApiClient
 		};
 
 
-		if (builder.Files != null && builder.Files.Count > 0)
+		if (builder.Files is { Count: > 0 })
 		{
 			ulong fileId = 0;
 			List<DiscordAttachment> attachments = new();

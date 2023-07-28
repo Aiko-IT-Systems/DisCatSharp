@@ -56,28 +56,28 @@ public sealed class DiscordPresence : ObservableApiObject
 	/// Gets the user's current activity.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordActivity Activity { get; internal set; }
+	public DiscordActivity? Activity { get; internal set; }
 
 	/// <summary>
 	/// Gets the raw activity.
 	/// </summary>
-	internal TransportActivity RawActivity { get; set; }
+	internal TransportActivity? RawActivity { get; set; }
 
 	/// <summary>
 	/// Gets the user's current activities.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyList<DiscordActivity> Activities
+	public IReadOnlyList<DiscordActivity>? Activities
 		=> this.InternalActivities;
 
 	[JsonIgnore]
-	internal DiscordActivity[] InternalActivities;
+	internal DiscordActivity[]? InternalActivities;
 
 	/// <summary>
 	/// Gets the raw activities.
 	/// </summary>
 	[JsonProperty("activities", NullValueHandling = NullValueHandling.Ignore)]
-	internal TransportActivity[] RawActivities { get; set; }
+	internal TransportActivity[]? RawActivities { get; set; }
 
 	/// <summary>
 	/// Gets this user's status.
@@ -95,7 +95,7 @@ public sealed class DiscordPresence : ObservableApiObject
 	/// Gets the guild for which this presence was set.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordGuild Guild
+	public DiscordGuild? Guild
 		=> this.GuildId != 0 ? this.Discord.GuildsInternal[this.GuildId] : null;
 
 	/// <summary>

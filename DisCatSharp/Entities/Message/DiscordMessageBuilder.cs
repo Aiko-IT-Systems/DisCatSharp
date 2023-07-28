@@ -41,7 +41,7 @@ public sealed class DiscordMessageBuilder
 		get => this._content;
 		set
 		{
-			if (value != null && value.Length > 2000)
+			if (value is { Length: > 2000 })
 				throw new ArgumentException("Content cannot exceed 2000 characters.", nameof(value));
 			this._content = value;
 		}

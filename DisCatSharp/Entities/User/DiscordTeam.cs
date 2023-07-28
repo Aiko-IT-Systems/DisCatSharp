@@ -43,18 +43,18 @@ public sealed class DiscordTeam : SnowflakeObject, IEquatable<DiscordTeam>
 	/// <summary>
 	/// Gets the team's icon hash.
 	/// </summary>
-	public string IconHash { get; internal set; }
+	public string? IconHash { get; internal set; }
 
 	/// <summary>
 	/// Gets the team's icon.
 	/// </summary>
-	public string Icon
+	public string? Icon
 		=> !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.TEAM_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null!;
 
 	/// <summary>
 	/// Gets the owner of the team.
 	/// </summary>
-	public DiscordUser Owner { get; internal set; }
+	public DiscordUser? Owner { get; internal set; }
 
 	/// <summary>
 	/// Gets the members of this team.

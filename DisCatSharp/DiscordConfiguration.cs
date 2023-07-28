@@ -178,13 +178,7 @@ public sealed class DiscordConfiguration
 	public WebSocketClientFactoryDelegate WebSocketClientFactory
 	{
 		internal get => this._webSocketClientFactory;
-		set
-		{
-			if (value == null)
-				throw new InvalidOperationException("You need to supply a valid WebSocket client factory method.");
-
-			this._webSocketClientFactory = value;
-		}
+		set => this._webSocketClientFactory = value ?? throw new InvalidOperationException("You need to supply a valid WebSocket client factory method.");
 	}
 	private WebSocketClientFactoryDelegate _webSocketClientFactory = WebSocketClient.CreateNew;
 
@@ -205,43 +199,13 @@ public sealed class DiscordConfiguration
 	/// <para>To create your own logger, implement the <see cref="Microsoft.Extensions.Logging.ILoggerFactory"/> instance.</para>
 	/// <para>Defaults to built-in implementation.</para>
 	/// </summary>
-	public ILoggerFactory LoggerFactory { internal get; set; } = null!;
+	public ILoggerFactory? LoggerFactory { internal get; set; }
 
 	/// <summary>
-	/// <para>Sets if the bot's status should show the mobile icon.</para>
+	/// <para>Sets if the bots status should show the mobile icon.</para>
 	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
 	public bool MobileStatus { internal get; set; } = false;
-
-	/// <summary>
-	/// <para>Whether to use canary. <see cref="UsePtb"/> has to be false.</para>
-	/// <para>Defaults to <see langword="false"/>.</para>
-	/// </summary>
-	[Deprecated("Use ApiChannel instead.")]
-	public bool UseCanary
-	{
-		internal get => this.ApiChannel == ApiChannel.Canary;
-		set
-		{
-			if (value)
-				this.ApiChannel = ApiChannel.Canary;
-		}
-	}
-
-	/// <summary>
-	/// <para>Whether to use ptb. <see cref="UseCanary"/> has to be false.</para>
-	/// <para>Defaults to <see langword="false"/>.</para>
-	/// </summary>
-	[Deprecated("Use ApiChannel instead.")]
-	public bool UsePtb
-	{
-		internal get => this.ApiChannel == ApiChannel.Ptb;
-		set
-		{
-			if (value)
-				this.ApiChannel = ApiChannel.Ptb;
-		}
-	}
 
 	/// <summary>
 	/// <para>Which api channel to use.</para>
@@ -256,10 +220,10 @@ public sealed class DiscordConfiguration
 	public bool AutoRefreshChannelCache { internal get; set; } = false;
 
 	/// <summary>
-	/// <para>Do not use, this is meant for DisCatSharp Devs.</para>
+	/// <para>Do not use, this is meant for DisCatSharp devs.</para>
 	/// <para>Defaults to <see langword="null"/>.</para>
 	/// </summary>
-	public string Override { internal get; set; } = null!;
+	public string? Override { internal get; set; } = null;
 
 	/// <summary>
 	/// Sets your preferred API language. See <see cref="DiscordLocales" /> for valid locales.
@@ -318,15 +282,15 @@ public sealed class DiscordConfiguration
 	/// <para>Do not touch this unless you're developing the library.</para>
 	/// </summary>
 	/// <exception cref="InvalidOperationException">Thrown when the base type of all exceptions is not <see cref="DisCatSharpException"/>.</exception>
-	internal List<Type> TrackExceptions
+	internal List<Type>? TrackExceptions
 	{
 		get => this._exceptions;
 		set
 		{
 			if (!this.EnableLibraryDeveloperMode)
 				throw new AccessViolationException("Cannot set this as non-library-dev");
-			else if (value == null)
-				this._exceptions.Clear();
+			if (value == null)
+				this._exceptions?.Clear();
 			else this._exceptions = value.All(val => val.BaseType == typeof(DisCatSharpException))
 				? value
 				: throw new InvalidOperationException("Can only track exceptions who inherit from " + nameof(DisCatSharpException) + " and must be constructed with typeof(Type)");
@@ -336,7 +300,7 @@ public sealed class DiscordConfiguration
 	/// <summary>
 	/// The exception we track with sentry.
 	/// </summary>
-	private List<Type> _exceptions = new()
+	private List<Type>? _exceptions = new()
 	{
 		typeof(ServerErrorException),
 		typeof(BadRequestException)
@@ -404,8 +368,6 @@ public sealed class DiscordConfiguration
 		this.Intents = other.Intents;
 		this.LoggerFactory = other.LoggerFactory;
 		this.MobileStatus = other.MobileStatus;
-		this.UseCanary = other.UseCanary;
-		this.UsePtb = other.UsePtb;
 		this.AutoRefreshChannelCache = other.AutoRefreshChannelCache;
 		this.ApiVersion = other.ApiVersion;
 		this.ServiceProvider = other.ServiceProvider;

@@ -102,7 +102,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Only applicable if <see cref="IsMigrated"/> is <see langword="true"/>.
 	/// </summary>
 	[JsonProperty("global_name", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
-	public virtual string GlobalName { get; internal set; }
+	public virtual string? GlobalName { get; internal set; }
 
 	/// <summary>
 	/// <para>Whether this user account is migrated to the new username system.</para>
@@ -154,7 +154,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Gets the user's banner url
 	/// </summary>
 	[JsonIgnore]
-	public string BannerUrl
+	public string? BannerUrl
 		=> string.IsNullOrWhiteSpace(this.BannerHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}?size=4096";
 
 	/// <summary>
@@ -168,19 +168,19 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// This is not available to bots tho.
 	/// </summary>
 	[JsonProperty("bio", NullValueHandling = NullValueHandling.Ignore)]
-	public virtual string Bio { get; internal set; }
+	public virtual string? Bio { get; internal set; }
 
 	/// <summary>
 	/// Gets the user's avatar hash.
 	/// </summary>
 	[JsonProperty("avatar", NullValueHandling = NullValueHandling.Ignore)]
-	public virtual string AvatarHash { get; internal set; }
+	public virtual string? AvatarHash { get; internal set; }
 
 	/// <summary>
 	/// Gets the user's avatar decoration hash.
 	/// </summary>
 	[JsonProperty("avatar_decoration", NullValueHandling = NullValueHandling.Ignore)]
-	public virtual string AvatarDecorationHash { get; internal set; }
+	public virtual string? AvatarDecorationHash { get; internal set; }
 
 	/// <summary>
 	/// Returns a uri to this users profile.
@@ -201,7 +201,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Gets the user's avatar url.
 	/// </summary>
 	[JsonIgnore]
-	public string AvatarUrl
+	public string? AvatarUrl
 		=> string.IsNullOrWhiteSpace(this.AvatarHash) ? this.DefaultAvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarHash}.{(this.AvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
 	/// <summary>

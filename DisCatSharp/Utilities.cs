@@ -30,7 +30,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
@@ -296,27 +295,6 @@ public static class Utilities
 	}
 
 	/// <summary>
-	/// Checks the thread auto archive duration feature.
-	/// </summary>
-	/// <param name="guild">The guild.</param>
-	/// <param name="taad">The taad.</param>
-	/// <returns>A bool.</returns>
-	[DiscordDeprecated, Deprecated]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
-	internal static bool CheckThreadAutoArchiveDurationFeature(DiscordGuild guild, ThreadAutoArchiveDuration taad)
-		=> true;
-
-	/// <summary>
-	/// Checks the thread private feature.
-	/// </summary>
-	/// <param name="guild">The guild.</param>
-	/// <returns>A bool.</returns>
-	[DiscordDeprecated, Deprecated]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
-	internal static bool CheckThreadPrivateFeature(DiscordGuild guild)
-		=> true;
-
-	/// <summary>
 	/// Have the message intents.
 	/// </summary>
 	/// <param name="intents">The intents.</param>
@@ -424,7 +402,7 @@ public static class Utilities
 	/// <returns>Computed timestamp.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static DateTimeOffset? GetSnowflakeTime(this ulong? snowflake)
-		=> snowflake != null && snowflake.HasValue ? DiscordClient.DiscordEpoch.AddMilliseconds(snowflake.Value >> 22) : null;
+		=> snowflake is not null ? DiscordClient.DiscordEpoch.AddMilliseconds(snowflake.Value >> 22) : null;
 
 
 	/// <summary>
@@ -453,13 +431,7 @@ public static class Utilities
 	/// <param name="characters">Characters to check for.</param>
 	/// <returns>Whether the string contained these characters.</returns>
 	public static bool Contains(this string str, params char[] characters)
-	{
-		foreach (var xc in str)
-			if (characters.Contains(xc))
-				return true;
-
-		return false;
-	}
+		=> str.Any(characters.Contains);
 
 	/// <summary>
 	/// Logs the task fault.
@@ -469,7 +441,7 @@ public static class Utilities
 	/// <param name="level">The level.</param>
 	/// <param name="eventId">The event id.</param>
 	/// <param name="message">The message.</param>
-	internal static void LogTaskFault(this Task task, ILogger logger, LogLevel level, EventId eventId, string message)
+	internal static void LogTaskFault(this Task? task, ILogger? logger, LogLevel level, EventId eventId, string message)
 	{
 		if (task == null)
 			throw new ArgumentNullException(nameof(task));
@@ -477,7 +449,7 @@ public static class Utilities
 		if (logger == null)
 			return;
 
-		task.ContinueWith(t => logger.Log(level, eventId, t.Exception, message), TaskContinuationOptions.OnlyOnFaulted);
+		task.ContinueWith(t => logger.Log(level, eventId, t.Exception, "{msg}", message), TaskContinuationOptions.OnlyOnFaulted);
 	}
 
 	/// <summary>

@@ -48,15 +48,15 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// Gets the guild to which this scheduled event belongs.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordGuild Guild
+	public DiscordGuild? Guild
 		=> this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null;
 
 	/// <summary>
 	/// Gets the associated channel.
 	/// </summary>
 	[JsonIgnore]
-	public Task<DiscordChannel> Channel
-		=> this.ChannelId.HasValue ? this.Discord.ApiClient.GetChannelAsync(this.ChannelId.Value) : null;
+	public DiscordChannel? Channel
+		=> this.ChannelId.HasValue ? this.Discord.ApiClient.GetChannelAsync(this.ChannelId.Value).Result : null;
 
 	/// <summary>
 	/// Gets id of the associated channel id.
@@ -73,14 +73,14 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <summary>
 	/// Gets the user that created the scheduled event.
 	/// </summary>
-	[JsonProperty("creator")]
-	public DiscordUser Creator { get; internal set; }
+	[JsonProperty("creator", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordUser? Creator { get; internal set; }
 
 	/// <summary>
 	/// Gets the member that created the scheduled event.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordMember CreatorMember
+	public DiscordMember? CreatorMember
 		=> this.Guild.MembersInternal.TryGetValue(this.CreatorId, out var owner)
 			? owner
 			: this.Discord.ApiClient.GetGuildMemberAsync(this.GuildId, this.CreatorId).Result;
@@ -107,7 +107,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// Gets this event's cover in url form.
 	/// </summary>
 	[JsonIgnore]
-	public string CoverImageUrl
+	public string? CoverImageUrl
 		=> !string.IsNullOrWhiteSpace(this.CoverImageHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.GUILD_EVENTS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.CoverImageHash}.png" : null;
 
 	/// <summary>

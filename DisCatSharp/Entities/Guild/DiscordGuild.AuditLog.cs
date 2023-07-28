@@ -652,8 +652,8 @@ public partial class DiscordGuild
 							case "mentionable":
 								entryrol.MentionableChange = new()
 								{
-									Before = xc.OldValue != null ? (bool?)xc.OldValue : null,
-									After = xc.NewValue != null ? (bool?)xc.NewValue : null
+									Before = (bool?)xc.OldValue,
+									After = (bool?)xc.NewValue
 								};
 								break;
 
@@ -727,8 +727,8 @@ public partial class DiscordGuild
 							case "temporary":
 								entryinv.TemporaryChange = new()
 								{
-									Before = xc.OldValue != null ? (bool?)xc.OldValue : null,
-									After = xc.NewValue != null ? (bool?)xc.NewValue : null
+									Before = (bool?)xc.OldValue,
+									After = (bool?)xc.NewValue
 								};
 								break;
 
@@ -760,7 +760,7 @@ public partial class DiscordGuild
 									Discord = this.Discord,
 									Id = p1 ? t1 : t2,
 									Name = ch?.Name,
-									Type = cht != null ? cht.Value : ChannelType.Unknown
+									Type = cht ?? ChannelType.Unknown
 								};
 								break;
 
@@ -1039,9 +1039,8 @@ public partial class DiscordGuild
 
 					if (entrymsg.Channel != null)
 					{
-						entrymsg.Target = this.Discord is DiscordClient dc
-							&& dc.MessageCache != null
-							&& dc.MessageCache.TryGet(xm => xm.Id == xac.TargetId.Value && xm.ChannelId == entrymsg.Channel.Id, out var msg)
+						entrymsg.Target = this.Discord is DiscordClient { MessageCache: not null } dc 
+						                  && dc.MessageCache.TryGet(xm => xm.Id == xac.TargetId.Value && xm.ChannelId == entrymsg.Channel.Id, out var msg)
 							? msg
 							: new() { Discord = this.Discord, Id = xac.TargetId.Value };
 					}
@@ -1196,24 +1195,24 @@ public partial class DiscordGuild
 							case "archived":
 								entrythr.ArchivedChange = new()
 								{
-									Before = xc.OldValue != null ? (bool?)xc.OldValue : null,
-									After = xc.NewValue != null ? (bool?)xc.NewValue : null
+									Before = (bool?)xc.OldValue,
+									After = (bool?)xc.NewValue
 								};
 								break;
 
 							case "locked":
 								entrythr.LockedChange = new()
 								{
-									Before = xc.OldValue != null ? (bool?)xc.OldValue : null,
-									After = xc.NewValue != null ? (bool?)xc.NewValue : null
+									Before = (bool?)xc.OldValue,
+									After = (bool?)xc.NewValue
 								};
 								break;
 
 							case "invitable":
 								entrythr.InvitableChange = new()
 								{
-									Before = xc.OldValue != null ? (bool?)xc.OldValue : null,
-									After = xc.NewValue != null ? (bool?)xc.NewValue : null
+									Before = (bool?)xc.OldValue,
+									After = (bool?)xc.NewValue
 								};
 								break;
 

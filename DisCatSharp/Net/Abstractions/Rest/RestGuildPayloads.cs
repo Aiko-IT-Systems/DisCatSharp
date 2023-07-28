@@ -56,13 +56,13 @@ internal sealed class RestGuildCreatePayload : ObservableApiObject
 	/// Gets or sets the region id.
 	/// </summary>
 	[JsonProperty("region", NullValueHandling = NullValueHandling.Ignore)]
-	public string RegionId { get; set; }
+	public string? RegionId { get; set; }
 
 	/// <summary>
 	/// Gets or sets the icon base64.
 	/// </summary>
 	[JsonProperty("icon", NullValueHandling = NullValueHandling.Include)]
-	public Optional<string> IconBase64 { get; set; }
+	public Optional<string?> IconBase64 { get; set; }
 
 	/// <summary>
 	/// Gets or sets the verification level.

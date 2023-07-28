@@ -186,15 +186,13 @@ public sealed class ImageTool : IDisposable
 	/// </summary>
 	/// <param name="stream">The optional stream.</param>
 	/// <returns>The optional base 64 string.</returns>
-	public static Optional<string> Base64FromStream(Optional<Stream> stream)
+	public static Optional<string?> Base64FromStream(Optional<Stream> stream)
 	{
-		if (stream.HasValue)
-		{
-			var val = stream.Value;
-			return val != null ? Base64FromStream(val) : null!;
-		}
+		if (!stream.HasValue)
+			return Optional.None;
+		var val = stream.Value;
+		return val != null ? Base64FromStream(val) : null;
 
-		return Optional.None;
 	}
 }
 

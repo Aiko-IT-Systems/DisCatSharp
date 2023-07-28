@@ -95,26 +95,26 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// Gets the members avatar hash.
 	/// </summary>
 	[JsonProperty("avatar", NullValueHandling = NullValueHandling.Ignore)]
-	public string GuildAvatarHash { get; internal set; }
+	public string? GuildAvatarHash { get; internal set; }
 
 	/// <summary>
 	/// Gets the members avatar URL.
 	/// </summary>
 	[JsonIgnore]
-	public string GuildAvatarUrl
+	public string? GuildAvatarUrl
 		=> string.IsNullOrWhiteSpace(this.GuildAvatarHash) ? this.User.AvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.AVATARS}/{this.GuildAvatarHash}.{(this.GuildAvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
 	/// <summary>
 	/// Gets the members banner hash.
 	/// </summary>
 	[JsonProperty("banner", NullValueHandling = NullValueHandling.Ignore)]
-	public string GuildBannerHash { get; internal set; }
+	public string? GuildBannerHash { get; internal set; }
 
 	/// <summary>
 	/// Gets the members banner URL.
 	/// </summary>
 	[JsonIgnore]
-	public string GuildBannerUrl
+	public string? GuildBannerUrl
 		=> string.IsNullOrWhiteSpace(this.GuildBannerHash) ? this.User.BannerUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.BANNERS}/{this.GuildBannerHash}.{(this.GuildBannerHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
 	/// <summary>
@@ -128,20 +128,20 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// Gets this member's nickname.
 	/// </summary>
 	[JsonProperty("nick", NullValueHandling = NullValueHandling.Ignore)]
-	public string Nickname { get; internal set; }
+	public string? Nickname { get; internal set; }
 
 	/// <summary>
 	/// Gets the members guild bio.
 	/// This is not available to bots tho.
 	/// </summary>
 	[JsonProperty("bio", NullValueHandling = NullValueHandling.Ignore)]
-	public string GuildBio { get; internal set; }
+	public string? GuildBio { get; internal set; }
 
 	/// <summary>
-	/// Gets the members's pronouns.
+	/// Gets the members pronouns.
 	/// </summary>
 	[JsonProperty("pronouns", NullValueHandling = NullValueHandling.Ignore)]
-	public string GuildPronouns { get; internal set; }
+	public string? GuildPronouns { get; internal set; }
 
 	/// <summary>
 	/// Gets the members flags.
@@ -195,7 +195,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// Date the user joined the guild
 	/// </summary>
 	[JsonProperty("joined_at", NullValueHandling = NullValueHandling.Ignore)]
-	public DateTimeOffset JoinedAt { get; internal set; }
+	public DateTimeOffset? JoinedAt { get; internal set; }
 
 	/// <summary>
 	/// Date the user started boosting this server
@@ -252,7 +252,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// Gets this member's voice state.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordVoiceState VoiceState
+	public DiscordVoiceState? VoiceState
 		=> this.Discord.Guilds[this.GuildId].VoiceStates.TryGetValue(this.Id, out var voiceState) ? voiceState : null;
 
 	[JsonIgnore]
@@ -339,7 +339,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// Gets the member's global name.
 	/// </summary>
 	[JsonIgnore, DiscordInExperiment]
-	public override string GlobalName
+	public override string? GlobalName
 	{
 		get => this.User.GlobalName;
 		internal set => this.User.GlobalName = value;

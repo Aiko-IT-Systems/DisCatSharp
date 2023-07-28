@@ -55,8 +55,8 @@ internal sealed class RestUserGroupDmCreatePayload : ObservableApiObject
 	/// <summary>
 	/// Gets or sets the nicknames.
 	/// </summary>
-	[JsonProperty("nicks")]
-	public IDictionary<ulong, string> Nicknames { get; set; }
+	[JsonProperty("nicks", NullValueHandling = NullValueHandling.Ignore)]
+	public IDictionary<ulong, string>? Nicknames { get; set; }
 }
 
 /// <summary>
@@ -68,13 +68,13 @@ internal sealed class RestUserUpdateCurrentPayload : ObservableApiObject
 	/// Gets or sets the username.
 	/// </summary>
 	[JsonProperty("username", NullValueHandling = NullValueHandling.Ignore)]
-	public string Username { get; set; }
+	public string? Username { get; set; }
 
 	/// <summary>
 	/// Gets or sets the avatar base64.
 	/// </summary>
 	[JsonProperty("avatar", NullValueHandling = NullValueHandling.Include)]
-	public string AvatarBase64 { get; set; }
+	public string? AvatarBase64 { get; set; }
 
 	/// <summary>
 	/// Gets or sets a value indicating whether avatar set.
@@ -110,7 +110,7 @@ internal sealed class RestUserGuild : ObservableApiObject
 	/// Gets the icon hash.
 	/// </summary>
 	[JsonProperty("icon", NullValueHandling = NullValueHandling.Ignore)]
-	public string IconHash { get; set; }
+	public string? IconHash { get; set; }
 
 	/// <summary>
 	/// Gets a value indicating whether is owner.
@@ -128,7 +128,7 @@ internal sealed class RestUserGuild : ObservableApiObject
 	/// Gets the guild features.
 	/// </summary>
 	[JsonProperty("features", NullValueHandling = NullValueHandling.Ignore)]
-	public List<string> Features { get; set; }
+	public List<string>? Features { get; set; }
 }
 
 /// <summary>

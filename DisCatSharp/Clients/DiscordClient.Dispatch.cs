@@ -51,8 +51,8 @@ public sealed partial class DiscordClient
 {
 	#region Private Fields
 
-	private string _resumeGatewayUrl;
-	private string _sessionId;
+	private string? _resumeGatewayUrl;
+	private string? _sessionId;
 	private bool _guildDownloadCompleted;
 
 	private readonly Dictionary<string, KeyValuePair<TimeoutHandler, Timer>> _tempTimers = new();
@@ -418,7 +418,7 @@ public sealed partial class DiscordClient
 				if (rawMbr != null)
 					mbr = DiscordJson.DeserializeObject<TransportMember>(rawMbr.ToString(), this);
 
-				if (rawRefMsg != null && rawRefMsg.HasValues)
+				if (rawRefMsg is { HasValues: true })
 				{
 					if (rawRefMsg.SelectToken("author") != null)
 						refUsr = DiscordJson.DeserializeObject<TransportUser>(rawRefMsg.SelectToken("author")!.ToString(), this);
@@ -435,7 +435,7 @@ public sealed partial class DiscordClient
 				if (rawMbr != null)
 					mbr = DiscordJson.DeserializeObject<TransportMember>(rawMbr.ToString(), this);
 
-				if (rawRefMsg != null && rawRefMsg.HasValues)
+				if (rawRefMsg is { HasValues: true })
 				{
 					if (rawRefMsg.SelectToken("author") != null)
 						refUsr = DiscordJson.DeserializeObject<TransportUser>(rawRefMsg.SelectToken("author")!.ToString(), this);
@@ -1025,7 +1025,7 @@ public sealed partial class DiscordClient
 	/// <param name="guild">The guild.</param>
 	/// <param name="rawMembers">The raw members.</param>
 	/// <param name="presences">The presences.</param>
-	internal async Task OnGuildCreateEventAsync(DiscordGuild guild, JArray rawMembers, IEnumerable<DiscordPresence> presences)
+	internal async Task OnGuildCreateEventAsync(DiscordGuild guild, JArray rawMembers, IEnumerable<DiscordPresence>? presences)
 	{
 		if (presences != null)
 		{
@@ -1033,9 +1033,9 @@ public sealed partial class DiscordClient
 			{
 				xp.Discord = this;
 				xp.GuildId = guild.Id;
-				xp.Activity = new(xp.RawActivity);
 				if (xp.RawActivities != null)
 				{
+					xp.Activity = new(xp.RawActivity);
 					xp.InternalActivities = xp.RawActivities
 						.Select(x => new DiscordActivity(x)).ToArray();
 				}
@@ -1292,12 +1292,12 @@ public sealed partial class DiscordClient
 	/// Handles the guild audit log entry create event.
 	/// </summary>
 	/// <param name="guild">The guild where the audit log entry was created.</param>
-	/// <param name="auditLogCreateEntry">The auditlog event.</param>
+	/// <param name="auditLogCreateEntry">The audit log event.</param>
 	internal async Task OnGuildAuditLogEntryCreateEventAsync(DiscordGuild guild, JObject auditLogCreateEntry)
 	{
 		try
 		{
-			var auditLogAction = DiscordJson.ToDiscordObject<AuditLogAction>(auditLogCreateEntry);
+			var auditLogAction = auditLogCreateEntry.ToDiscordObject<AuditLogAction>();
 			List<AuditLog> workaroundAuditLogEntryList = new()
 			{
 				new()
@@ -2153,7 +2153,7 @@ public sealed partial class DiscordClient
 			Permissions = newRole.Permissions,
 			Position = newRole.Position,
 			IconHash = newRole.IconHash,
-			Tags = newRole.Tags ?? null,
+			Tags = newRole.Tags,
 			UnicodeEmojiString = newRole.UnicodeEmojiString
 		};
 
@@ -2166,7 +2166,7 @@ public sealed partial class DiscordClient
 		newRole.Permissions = role.Permissions;
 		newRole.Position = role.Position;
 		newRole.IconHash = role.IconHash;
-		newRole.Tags = role.Tags ?? null;
+		newRole.Tags = role.Tags;
 		newRole.UnicodeEmojiString = role.UnicodeEmojiString;
 
 		var ea = new GuildRoleUpdateEventArgs(this.ServiceProvider)
@@ -2186,7 +2186,7 @@ public sealed partial class DiscordClient
 	internal async Task OnGuildRoleDeleteEventAsync(ulong roleId, DiscordGuild guild)
 	{
 		if (!guild.RolesInternal.TryRemove(roleId, out var role))
-			this.Logger.LogWarning($"Attempted to delete a nonexistent role ({roleId}) from guild ({guild}).");
+			this.Logger.LogWarning("Attempted to delete a nonexistent role ({role}) from guild ({guild}).", roleId, guild);
 
 		var ea = new GuildRoleDeleteEventArgs(this.ServiceProvider)
 		{
@@ -2793,7 +2793,7 @@ public sealed partial class DiscordClient
 			threadNew.ParentId = thread.ParentId;
 			threadNew.OwnerId = thread.OwnerId;
 			threadNew.Name = thread.Name;
-			threadNew.LastMessageId = thread.LastMessageId.HasValue ? thread.LastMessageId : threadOld.LastMessageId;
+			threadNew.LastMessageId = thread.LastMessageId ?? threadOld.LastMessageId;
 			threadNew.MessageCount = thread.MessageCount;
 			threadNew.MemberCount = thread.MemberCount;
 			threadNew.GuildId = thread.GuildId;

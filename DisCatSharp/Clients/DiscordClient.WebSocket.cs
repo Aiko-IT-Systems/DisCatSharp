@@ -30,6 +30,7 @@ using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Net.Abstractions;
+using DisCatSharp.Net.Serialization;
 using DisCatSharp.Net.WebSocket;
 
 using Microsoft.Extensions.Logging;
@@ -57,8 +58,8 @@ public sealed partial class DiscordClient
 	private int _skippedHeartbeats;
 	private long _lastSequence;
 
-	internal IWebSocketClient WebSocketClient;
-	private PayloadDecompressor _payloadDecompressor;
+	internal IWebSocketClient? WebSocketClient;
+	private PayloadDecompressor? _payloadDecompressor;
 
 	private CancellationTokenSource _cancelTokenSource;
 	private CancellationToken _cancelToken;
@@ -172,28 +173,31 @@ public sealed partial class DiscordClient
 
 		async Task SocketOnMessage(IWebSocketClient sender, SocketMessageEventArgs e)
 		{
-			string msg = null;
-			if (e is SocketTextMessageEventArgs etext)
+			string msg = null!;
+			switch (e)
 			{
-				msg = etext.Message;
-			}
-			else if (e is SocketBinaryMessageEventArgs ebin)
-			{
-				using var ms = new MemoryStream();
-				if (!this._payloadDecompressor.TryDecompress(new(ebin.Message), ms))
+				case SocketTextMessageEventArgs socketTextMessage:
+					msg = socketTextMessage.Message;
+					break;
+				case SocketBinaryMessageEventArgs socketBinaryMessage:
 				{
-					this.Logger.LogError(LoggerEvents.WebSocketReceiveFailure, "Payload decompression failed");
-					return;
-				}
+					using var ms = new MemoryStream();
+					if (!this._payloadDecompressor.TryDecompress(new(socketBinaryMessage.Message), ms))
+					{
+						this.Logger.LogError(LoggerEvents.WebSocketReceiveFailure, "Payload decompression failed");
+						return;
+					}
 
-				ms.Position = 0;
-				using var sr = new StreamReader(ms, Utilities.UTF8);
-				msg = await sr.ReadToEndAsync().ConfigureAwait(false);
+					ms.Position = 0;
+					using var sr = new StreamReader(ms, Utilities.UTF8);
+					msg = await sr.ReadToEndAsync().ConfigureAwait(false);
+					break;
+				}
 			}
 
 			try
 			{
-				this.Logger.LogTrace(LoggerEvents.GatewayWsRx, msg);
+				this.Logger.LogTrace(LoggerEvents.GatewayWsRx, "{message}", msg);
 				await this.HandleSocketMessageAsync(msg).ConfigureAwait(false);
 			}
 			catch (Exception ex)
@@ -216,14 +220,14 @@ public sealed partial class DiscordClient
 			if (!this._disposed)
 				this._cancelTokenSource.Cancel();
 
-			this.Logger.LogDebug(LoggerEvents.ConnectionClose, "Connection closed ({0}, '{1}')", e.CloseCode, e.CloseMessage);
+			this.Logger.LogDebug(LoggerEvents.ConnectionClose, "Connection closed ({code}, '{message}')", e.CloseCode, e.CloseMessage);
 			await this._socketClosed.InvokeAsync(this, e).ConfigureAwait(false);
 
 
 			// TODO: We might need to include more 400X codes
 			if (this.Configuration.AutoReconnect && (e.CloseCode < 4001 || e.CloseCode >= 5000))
 			{
-				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({0}, '{1}'), reconnecting", e.CloseCode, e.CloseMessage);
+				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({code}, '{message}'), reconnecting", e.CloseCode, e.CloseMessage);
 
 				if (this._status == null)
 					await this.ConnectAsync().ConfigureAwait(false);
@@ -235,7 +239,7 @@ public sealed partial class DiscordClient
 			}
 			else
 			{
-				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({0}, '{1}')", e.CloseCode, e.CloseMessage);
+				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({code}, '{message}')", e.CloseCode, e.CloseMessage);
 			}
 		}
 	}
@@ -248,14 +252,17 @@ public sealed partial class DiscordClient
 	/// Handles the socket message.
 	/// </summary>
 	/// <param name="data">The data.</param>
-	internal async Task HandleSocketMessageAsync(string data)
+	internal async Task HandleSocketMessageAsync(string? data)
 	{
-		var payload = JsonConvert.DeserializeObject<GatewayPayload>(data);
+		if (data == null)
+			return;
+
+		var payload = DiscordJson.DeserializeObject<GatewayPayload>(data, this);
 		this._lastSequence = payload.Sequence ?? this._lastSequence;
 		switch (payload.OpCode)
 		{
 			case GatewayOpCode.Dispatch:
-				await Task.Run(async () => await this.HandleDispatchAsync(payload).ConfigureAwait(false));
+				await Task.Run(async () => await this.HandleDispatchAsync(payload).ConfigureAwait(false), this._cancelToken).ConfigureAwait(false);
 				break;
 
 			case GatewayOpCode.Heartbeat:
@@ -271,15 +278,28 @@ public sealed partial class DiscordClient
 				break;
 
 			case GatewayOpCode.Hello:
-				await this.OnHelloAsync((payload.Data as JObject).ToObject<GatewayHello>()).ConfigureAwait(false);
+				await this.OnHelloAsync((payload.Data as JObject)!.ToObject<GatewayHello>()).ConfigureAwait(false);
 				break;
 
 			case GatewayOpCode.HeartbeatAck:
 				await this.OnHeartbeatAckAsync().ConfigureAwait(false);
 				break;
-
+			case GatewayOpCode.Identify:
+				break;
+			case GatewayOpCode.StatusUpdate:
+				break;
+			case GatewayOpCode.VoiceStateUpdate:
+				break;
+			case GatewayOpCode.VoiceServerPing:
+				break;
+			case GatewayOpCode.Resume:
+				break;
+			case GatewayOpCode.RequestGuildMembers:
+				break;
+			case GatewayOpCode.GuildSync:
+				break;
 			default:
-				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Unknown Discord opcode: {0}\nPayload: {1}", payload.OpCode, payload.Data);
+				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Unknown Discord opcode: {op}\nPayload: {payload}", payload.OpCode, payload.Data);
 				break;
 		}
 	}
@@ -321,7 +341,7 @@ public sealed partial class DiscordClient
 		if (data)
 		{
 			this.Logger.LogTrace(LoggerEvents.WebSocketReceive, "Received INVALID_SESSION (OP9, true)");
-			await Task.Delay(6000).ConfigureAwait(false);
+			await Task.Delay(6000, this._cancelToken).ConfigureAwait(false);
 			await this.SendResumeAsync().ConfigureAwait(false);
 		}
 		else
@@ -370,7 +390,7 @@ public sealed partial class DiscordClient
 
 		var ping = (int)(DateTime.Now - this._lastHeartbeat).TotalMilliseconds;
 
-		this.Logger.LogTrace(LoggerEvents.WebSocketReceive, "Received HEARTBEAT_ACK (OP11, {0}ms)", ping);
+		this.Logger.LogTrace(LoggerEvents.WebSocketReceive, "Received HEARTBEAT_ACK (OP11, {ping}ms)", ping);
 
 		Volatile.Write(ref this._ping, ping);
 
@@ -412,9 +432,9 @@ public sealed partial class DiscordClient
 	/// <param name="activity">The activity.</param>
 	/// <param name="userStatus">The optional user status.</param>
 	/// <param name="idleSince">Since when is the client performing the specified activity.</param>
-	internal async Task InternalUpdateStatusAsync(DiscordActivity activity, UserStatus? userStatus, DateTimeOffset? idleSince)
+	internal async Task InternalUpdateStatusAsync(DiscordActivity? activity, UserStatus? userStatus, DateTimeOffset? idleSince)
 	{
-		if (activity != null && activity.Name != null && activity.Name.Length > 128)
+		if (activity is { Name.Length: > 128 })
 			throw new("Game name can't be longer than 128 characters!");
 
 		var sinceUnix = idleSince != null ? (long?)Utilities.GetUnixTime(idleSince.Value) : null;
@@ -436,9 +456,9 @@ public sealed partial class DiscordClient
 			Data = status
 		};
 
-		var statusstr = JsonConvert.SerializeObject(statusUpdate);
+		var statusString = JsonConvert.SerializeObject(statusUpdate);
 
-		await this.WsSendAsync(statusstr).ConfigureAwait(false);
+		await this.WsSendAsync(statusString).ConfigureAwait(false);
 
 		if (!this.PresencesInternal.ContainsKey(this.CurrentUser.Id))
 		{
@@ -461,35 +481,39 @@ public sealed partial class DiscordClient
 	/// <summary>
 	/// Sends the heartbeat.
 	/// </summary>
-	/// <param name="seq">The sequenze.</param>
+	/// <param name="seq">The sequence.</param>
 	internal async Task SendHeartbeatAsync(long seq)
 	{
 		var moreThan5 = Volatile.Read(ref this._skippedHeartbeats) > 5;
 		var guildsComp = Volatile.Read(ref this._guildDownloadCompleted);
-		if (guildsComp && moreThan5)
+		switch (guildsComp)
 		{
-			this.Logger.LogCritical(LoggerEvents.HeartbeatFailure, "Server failed to acknowledge more than 5 heartbeats - connection is zombie");
-
-			var args = new ZombiedEventArgs(this.ServiceProvider)
+			case true when moreThan5:
 			{
-				Failures = Volatile.Read(ref this._skippedHeartbeats),
-				GuildDownloadCompleted = true
-			};
-			await this._zombied.InvokeAsync(this, args).ConfigureAwait(false);
+				this.Logger.LogCritical(LoggerEvents.HeartbeatFailure, "Server failed to acknowledge more than 5 heartbeats - connection is zombie");
 
-			await this.InternalReconnectAsync(code: 4001, message: "Too many heartbeats missed").ConfigureAwait(false);
-			return;
-		}
-		else if (!guildsComp && moreThan5)
-		{
-			var args = new ZombiedEventArgs(this.ServiceProvider)
+				var args = new ZombiedEventArgs(this.ServiceProvider)
+				{
+					Failures = Volatile.Read(ref this._skippedHeartbeats),
+					GuildDownloadCompleted = true
+				};
+				await this._zombied.InvokeAsync(this, args).ConfigureAwait(false);
+
+				await this.InternalReconnectAsync(code: 4001, message: "Too many heartbeats missed").ConfigureAwait(false);
+				return;
+			}
+			case false when moreThan5:
 			{
-				Failures = Volatile.Read(ref this._skippedHeartbeats),
-				GuildDownloadCompleted = false
-			};
-			await this._zombied.InvokeAsync(this, args).ConfigureAwait(false);
+				var args = new ZombiedEventArgs(this.ServiceProvider)
+				{
+					Failures = Volatile.Read(ref this._skippedHeartbeats),
+					GuildDownloadCompleted = false
+				};
+				await this._zombied.InvokeAsync(this, args).ConfigureAwait(false);
 
-			this.Logger.LogWarning(LoggerEvents.HeartbeatFailure, "Server failed to acknowledge more than 5 heartbeats, but the guild download is still running - check your connection speed");
+				this.Logger.LogWarning(LoggerEvents.HeartbeatFailure, "Server failed to acknowledge more than 5 heartbeats, but the guild download is still running - check your connection speed");
+				break;
+			}
 		}
 
 		Volatile.Write(ref this._lastSequence, seq);
@@ -543,6 +567,11 @@ public sealed partial class DiscordClient
 	/// </summary>
 	internal async Task SendResumeAsync()
 	{
+		if (this._sessionId is null)
+			throw new NullReferenceException("Session ID was null, cannot resume!");
+		if (this._resumeGatewayUrl is null)
+			throw new NullReferenceException("Resume gateway url was null, cannot resume!");
+
 		var resume = new GatewayResume
 		{
 			Token = Utilities.GetFormattedToken(this),
@@ -554,10 +583,10 @@ public sealed partial class DiscordClient
 			OpCode = GatewayOpCode.Resume,
 			Data = resume
 		};
-		var resumestr = JsonConvert.SerializeObject(resumePayload);
+		var resumeString = JsonConvert.SerializeObject(resumePayload);
 		this.GatewayUri = new(this._resumeGatewayUrl);
 		this.Logger.LogDebug(LoggerEvents.ConnectionClose, "Request to resume via {gw}", this.GatewayUri.AbsoluteUri);
-		await this.WsSendAsync(resumestr).ConfigureAwait(false);
+		await this.WsSendAsync(resumeString).ConfigureAwait(false);
 	}
 	/// <summary>
 	/// Internals the update gateway async.
