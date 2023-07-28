@@ -58,20 +58,13 @@ public class AsyncExecutor
 		void TaskCompletionHandler(Task t, object state)
 		{
 			// retrieve state data
-			var stateRef = state as StateRef<object>;
+			var stateRef = (state as StateRef<object>)!;
 
 			// retrieve any exceptions or cancellation status
 			if (t.IsFaulted)
-			{
-				if (t.Exception.InnerExceptions.Count == 1) // unwrap if 1
-					stateRef.Exception = t.Exception.InnerException;
-				else
-					stateRef.Exception = t.Exception;
-			}
+				stateRef.Exception = t.Exception?.InnerExceptions.Count == 1 ? t.Exception.InnerException : t.Exception;
 			else if (t.IsCanceled)
-			{
 				stateRef.Exception = new TaskCanceledException(t);
-			}
 
 			// signal that the execution is done
 			stateRef.Lock.Set();
@@ -108,20 +101,13 @@ public class AsyncExecutor
 		void TaskCompletionHandler(Task<T> t, object state)
 		{
 			// retrieve state data
-			var stateRef = state as StateRef<T>;
+			var stateRef = (state as StateRef<T>)!;
 
 			// retrieve any exceptions or cancellation status
 			if (t.IsFaulted)
-			{
-				if (t.Exception.InnerExceptions.Count == 1) // unwrap if 1
-					stateRef.Exception = t.Exception.InnerException;
-				else
-					stateRef.Exception = t.Exception;
-			}
+				stateRef.Exception = t.Exception?.InnerExceptions.Count == 1 ? t.Exception.InnerException : t.Exception; // unwrap if 1
 			else if (t.IsCanceled)
-			{
 				stateRef.Exception = new TaskCanceledException(t);
-			}
 
 			// return the result from the task, if any
 			if (t.IsCompleted && !t.IsFaulted)
@@ -148,7 +134,7 @@ public class AsyncExecutor
 		/// <summary>
 		/// Gets the exception that occurred during task's execution, if any.
 		/// </summary>
-		public Exception Exception { get; set; }
+		public Exception? Exception { get; set; }
 
 		/// <summary>
 		/// Gets the result returned by the task.

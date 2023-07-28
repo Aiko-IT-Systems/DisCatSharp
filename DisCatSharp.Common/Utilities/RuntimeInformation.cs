@@ -25,6 +25,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+// ReSharper disable PossibleNullReferenceException
 
 namespace DisCatSharp.Common.Utilities;
 
@@ -45,7 +46,7 @@ public static class RuntimeInformation
 	{
 		var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 		var mscorlib = loadedAssemblies.Select(x => new { Assembly = x, AssemblyName = x.GetName() })
-			.FirstOrDefault(x => x.AssemblyName.Name == "mscorlib" || x.AssemblyName.Name == "System.Private.CoreLib");
+			.FirstOrDefault(x => x.AssemblyName.Name is "mscorlib" or "System.Private.CoreLib");
 
 		var location = mscorlib.Assembly.Location;
 		var assemblyFile = new FileInfo(location);

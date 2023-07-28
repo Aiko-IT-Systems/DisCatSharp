@@ -54,35 +54,22 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	/// </summary>
 	/// <param name="key">Key to get or set the value for.</param>
 	/// <returns>Value matching the supplied key, if applicable.</returns>
-	public TValue this[string key]
-	{
-		get
-		{
-			if (key == null)
-				throw new ArgumentNullException(nameof(key));
-
-			if (!this.TryRetrieveInternal(key.AsSpan(), out var value))
-				throw new KeyNotFoundException($"The given key '{key}' was not present in the dictionary.");
-
-			return value;
-		}
-	}
+	public TValue this[string key] =>
+		key == null
+			? throw new ArgumentNullException(nameof(key))
+			: !this.TryRetrieveInternal(key.AsSpan(), out var value)
+				? throw new KeyNotFoundException($"The given key '{key}' was not present in the dictionary.")
+				: value;
 
 	/// <summary>
 	/// Gets a value corresponding to given key in this dictionary.
 	/// </summary>
 	/// <param name="key">Key to get or set the value for.</param>
 	/// <returns>Value matching the supplied key, if applicable.</returns>
-	public TValue this[ReadOnlySpan<char> key]
-	{
-		get
-		{
-			if (!this.TryRetrieveInternal(key, out var value))
-				throw new KeyNotFoundException($"The given key was not present in the dictionary.");
-
-			return value;
-		}
-	}
+	public TValue this[ReadOnlySpan<char> key] =>
+		!this.TryRetrieveInternal(key, out var value)
+			?              throw new KeyNotFoundException($"The given key was not present in the dictionary.")
+			: value;
 
 	/// <summary>
 	/// Gets the internal buckets.
@@ -124,12 +111,9 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	/// <param name="value">Retrieved value.</param>
 	/// <returns>Whether the operation was successful.</returns>
 	public bool TryGetValue(string key, out TValue value)
-	{
-		if (key == null)
-			throw new ArgumentNullException(nameof(key));
-
-		return this.TryRetrieveInternal(key.AsSpan(), out value);
-	}
+		=> key == null
+			? throw new ArgumentNullException(nameof(key))
+			: this.TryRetrieveInternal(key.AsSpan(), out value);
 
 	/// <summary>
 	/// Attempts to retrieve a value corresponding to the supplied key from this dictionary.
@@ -184,13 +168,13 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 		if (!this._internalBuckets.TryGetValue(hash, out var kdv))
 			return false;
 
+		// ReSharper disable once LoopVariableIsNeverChangedInsideLoop
 		while (kdv != null)
 		{
-			if (key.SequenceEqual(kdv.Key.AsSpan()))
-			{
-				value = kdv.Value;
-				return true;
-			}
+			if (!key.SequenceEqual(kdv.Key.AsSpan()))
+				continue;
+			value = kdv.Value;
+			return true;
 		}
 
 		return false;
@@ -320,7 +304,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 		/// <summary>
 		/// Gets or sets the next.
 		/// </summary>
-		public KeyedValue Next { get; set; }
+		public KeyedValue? Next { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="KeyedValue"/> class.
@@ -363,7 +347,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 		/// <summary>
 		/// Gets or sets the current value.
 		/// </summary>
-		private KeyedValue _currentValue;
+		private KeyedValue? _currentValue;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Enumerator"/> class.
@@ -382,7 +366,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 		public bool MoveNext()
 		{
 			var kdv = this._currentValue;
-			if (kdv == null!)
+			if (kdv == null)
 			{
 				if (!this._internalEnumerator.MoveNext())
 					return false;

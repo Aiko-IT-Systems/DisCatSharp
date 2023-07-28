@@ -35,13 +35,16 @@ namespace DisCatSharp.Common.Types;
 public sealed class ContinuousMemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 {
 	/// <inheritdoc />
-	public ulong Capacity => (ulong)this._buff.Length;
+	public ulong Capacity
+		=> (ulong)this._buff.Length;
 
 	/// <inheritdoc />
-	public ulong Length => (ulong)this._pos;
+	public ulong Length
+		=> (ulong)this._pos;
 
 	/// <inheritdoc />
-	public ulong Count => (ulong)(this._pos / this._itemSize);
+	public ulong Count
+		=> (ulong)(this._pos / this._itemSize);
 
 	private readonly MemoryPool<byte> _pool;
 	private IMemoryOwner<byte> _buffOwner;
@@ -57,7 +60,7 @@ public sealed class ContinuousMemoryBuffer<T> : IMemoryBuffer<T> where T : unman
 	/// <param name="initialSize">Initial size of the buffer in bytes. Defaults to 64KiB.</param>
 	/// <param name="memPool">Memory pool to use for renting buffers. Defaults to <see cref="MemoryPool{T}.Shared"/>.</param>
 	/// <param name="clearOnDispose">Determines whether the underlying buffers should be cleared on exit. If dealing with sensitive data, it might be a good idea to set this option to true.</param>
-	public ContinuousMemoryBuffer(int initialSize = 65536, MemoryPool<byte> memPool = default, bool clearOnDispose = false)
+	public ContinuousMemoryBuffer(int initialSize = 65536, MemoryPool<byte>? memPool = default, bool clearOnDispose = false)
 	{
 		this._itemSize = Unsafe.SizeOf<T>();
 		this._pool = memPool ?? MemoryPool<byte>.Shared;
@@ -181,13 +184,10 @@ public sealed class ContinuousMemoryBuffer<T> : IMemoryBuffer<T> where T : unman
 		=> this.Read(data.AsSpan(), source, out itemsWritten);
 
 	/// <inheritdoc />
-	public T[] ToArray()
-	{
-		if (this._isDisposed)
-			throw new ObjectDisposedException("This buffer is disposed.");
-
-		return MemoryMarshal.Cast<byte, T>(this._buff[..this._pos].Span).ToArray();
-	}
+	public T[] ToArray() =>
+		this._isDisposed
+			?           throw new ObjectDisposedException("This buffer is disposed.")
+			: MemoryMarshal.Cast<byte, T>(this._buff[..this._pos].Span).ToArray();
 
 	/// <inheritdoc />
 	public void CopyTo(Stream destination)

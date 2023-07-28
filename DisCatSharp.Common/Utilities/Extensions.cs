@@ -295,13 +295,8 @@ public static class Extensions
 	/// <param name="inclusive">Whether the check is to be inclusive.</param>
 	/// <returns>Whether the value is in range.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static bool IsInRange(this float num, float min, float max, bool inclusive = true)
-	{
-		if (min > max)
-			return false;
-
-		return inclusive ? num >= min && num <= max : num > min && num < max;
-	}
+	public static bool IsInRange(this float num, float min, float max, bool inclusive = true) =>
+		min <= max && (inclusive ? num >= min && num <= max : num > min && num < max);
 
 	/// <summary>
 	/// Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.
@@ -312,13 +307,8 @@ public static class Extensions
 	/// <param name="inclusive">Whether the check is to be inclusive.</param>
 	/// <returns>Whether the value is in range.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static bool IsInRange(this double num, double min, double max, bool inclusive = true)
-	{
-		if (min > max)
-			return false;
-
-		return inclusive ? num >= min && num <= max : num > min && num < max;
-	}
+	public static bool IsInRange(this double num, double min, double max, bool inclusive = true) =>
+		min <= max && (inclusive ? num >= min && num <= max : num > min && num < max);
 
 	/// <summary>
 	/// Returns whether supplied character is in any of the following ranges: a-z, A-Z, 0-9.
@@ -327,7 +317,7 @@ public static class Extensions
 	/// <returns>Whether the character is in basic alphanumeric character range.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool IsBasicAlphanumeric(this char c)
-		=> (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
+		=> c is (>= 'a' and <= 'z') or (>= 'A' and <= 'Z') or (>= '0' and <= '9');
 
 	/// <summary>
 	/// Returns whether supplied character is in the 0-9 range.
@@ -336,7 +326,7 @@ public static class Extensions
 	/// <returns>Whether the character is in basic numeric digit character range.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool IsBasicDigit(this char c)
-		=> c >= '0' && c <= '9';
+		=> c is >= '0' and <= '9';
 
 	/// <summary>
 	/// Returns whether supplied character is in the a-z or A-Z range.
@@ -345,7 +335,7 @@ public static class Extensions
 	/// <returns>Whether the character is in basic letter character range.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool IsBasicLetter(this char c)
-		=> (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+		=> c is (>= 'a' and <= 'z') or (>= 'A' and <= 'Z');
 
 	/// <summary>
 	/// Tests whether given string ends with given character.
@@ -504,11 +494,10 @@ public static class Extensions
 	{
 		for (var i = 0; i < list.Count; i++)
 		{
-			if (predicate(list[i]))
-			{
-				list.RemoveAt(i);
-				return true;
-			}
+			if (!predicate(list[i]))
+				continue;
+			list.RemoveAt(i);
+			return true;
 		}
 
 		return false;
@@ -523,8 +512,6 @@ public static class Extensions
 	internal static void Populate<T>(this T[] arr, T value)
 	{
 		for (var i = 0; i < arr.Length; i++)
-		{
 			arr[i] = value;
-		}
 	}
 }

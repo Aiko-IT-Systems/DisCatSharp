@@ -63,12 +63,9 @@ public static class ReflectionUtilities
 	/// <typeparam name="T">Type of object to convert.</typeparam>
 	/// <param name="obj">Object to convert.</param>
 	/// <returns>Converted dictionary.</returns>
-	public static IReadOnlyDictionary<string, object> ToDictionary<T>(this T obj)
-	{
-		if (obj == null)
-			throw new NullReferenceException();
-
-		return new CharSpanLookupReadOnlyDictionary<object>(typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-			.Select(x => new KeyValuePair<string, object>(x.Name, x.GetValue(obj))));
-	}
+	public static IReadOnlyDictionary<string, object> ToDictionary<T>(this T obj) =>
+		obj == null
+			?            throw new NullReferenceException()
+			: (IReadOnlyDictionary<string, object>)new CharSpanLookupReadOnlyDictionary<object>(typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+				.Select(x => new KeyValuePair<string, object>(x.Name, x.GetValue(obj))));
 }

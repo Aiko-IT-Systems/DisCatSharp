@@ -41,7 +41,7 @@ public sealed class RequireUserPermissionsAttribute : CheckBaseAttribute
 	/// <summary>
 	/// Gets or sets this check's behaviour in DMs. True means the check will always pass in DMs, whereas false means that it will always fail.
 	/// </summary>
-	public bool IgnoreDms { get; } = true;
+	public bool IgnoreDms { get; }
 
 	/// <summary>
 	/// Defines that usage of this command is restricted to members with specified permissions.
@@ -74,9 +74,10 @@ public sealed class RequireUserPermissionsAttribute : CheckBaseAttribute
 
 		var pusr = ctx.Channel.PermissionsFor(usr);
 
-		if ((pusr & Permissions.Administrator) != 0)
-			return Task.FromResult(true);
-
-		return (pusr & this.Permissions) == this.Permissions ? Task.FromResult(true) : Task.FromResult(false);
+		return (pusr & Permissions.Administrator) != 0
+			? Task.FromResult(true)
+			: (pusr & this.Permissions) == this.Permissions
+				? Task.FromResult(true)
+				: Task.FromResult(false);
 	}
 }

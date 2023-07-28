@@ -54,7 +54,7 @@ public sealed class TimeSpanFormatAttribute : SerializationAttribute
 	/// <summary>
 	/// Gets the custom datetime format string to use.
 	/// </summary>
-	public string Format { get; }
+	public string? Format { get; }
 
 	/// <summary>
 	/// Gets the predefined datetime format kind.
@@ -67,7 +67,7 @@ public sealed class TimeSpanFormatAttribute : SerializationAttribute
 	/// <param name="kind">Predefined format kind to use.</param>
 	public TimeSpanFormatAttribute(TimeSpanFormatKind kind)
 	{
-		if (kind < 0 || kind > TimeSpanFormatKind.InvariantLocaleShort)
+		if (kind is < 0 or > TimeSpanFormatKind.InvariantLocaleShort)
 			throw new ArgumentOutOfRangeException(nameof(kind), "Specified format kind is not legal or supported.");
 
 		this.Kind = kind;

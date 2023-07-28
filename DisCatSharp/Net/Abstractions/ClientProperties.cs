@@ -44,25 +44,21 @@ internal sealed class ClientProperties : ObservableApiObject
 		{
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 				return "windows";
-			else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 				return "linux";
-			else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
 				return "osx";
 
 			var plat = RuntimeInformation.OSDescription.ToLowerInvariant();
-			if (plat.Contains("freebsd"))
-				return "freebsd";
-			else if (plat.Contains("openbsd"))
-				return "openbsd";
-			else if (plat.Contains("netbsd"))
-				return "netbsd";
-			else if (plat.Contains("dragonfly"))
-				return "dragonflybsd";
-			else if (plat.Contains("miros bsd") || plat.Contains("mirbsd"))
-				return "miros bsd";
-			else if (plat.Contains("desktopbsd"))
-				return "desktopbsd";
-			else return plat.Contains("darwin") ? "osx" : plat.Contains("unix") ? "unix" : "toaster (unknown)";
+			return plat.Contains("freebsd") ? "freebsd" :
+				plat.Contains("openbsd") ? "openbsd" :
+				plat.Contains("netbsd") ? "netbsd" :
+				plat.Contains("dragonfly") ? "dragonflybsd" :
+				plat.Contains("miros bsd") || plat.Contains("mirbsd") ? "miros bsd" :
+				plat.Contains("desktopbsd") ? "desktopbsd" :
+				plat.Contains("darwin") ? "osx" :
+				plat.Contains("unix") ? "unix" :
+				"toaster (unknown)";
 		}
 	}
 
@@ -77,12 +73,9 @@ internal sealed class ClientProperties : ObservableApiObject
 			if (this.Discord.Configuration.MobileStatus)
 				return "Discord Android";
 
-			else
-			{
-				var a = typeof(DiscordClient).GetTypeInfo().Assembly;
-				var an = a.GetName();
-				return $"DisCatSharp {an.Version.ToString(4)}";
-			}
+			var a = typeof(DiscordClient).GetTypeInfo().Assembly;
+			var an = a.GetName();
+			return $"DisCatSharp {an.Version.ToString(4)}";
 		}
 	}
 

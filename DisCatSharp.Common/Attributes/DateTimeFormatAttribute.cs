@@ -54,7 +54,7 @@ public sealed class DateTimeFormatAttribute : SerializationAttribute
 	/// <summary>
 	/// Gets the custom datetime format string to use.
 	/// </summary>
-	public string Format { get; }
+	public string? Format { get; }
 
 	/// <summary>
 	/// Gets the predefined datetime format kind.
@@ -67,7 +67,7 @@ public sealed class DateTimeFormatAttribute : SerializationAttribute
 	/// <param name="kind">Predefined format kind to use.</param>
 	public DateTimeFormatAttribute(DateTimeFormatKind kind)
 	{
-		if (kind < 0 || kind > DateTimeFormatKind.InvariantLocaleShort)
+		if (kind is < 0 or > DateTimeFormatKind.InvariantLocaleShort)
 			throw new ArgumentOutOfRangeException(nameof(kind), "Specified format kind is not legal or supported.");
 
 		this.Kind = kind;

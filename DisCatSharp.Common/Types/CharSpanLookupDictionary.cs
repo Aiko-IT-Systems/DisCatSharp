@@ -94,16 +94,12 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <returns>Value matching the supplied key, if applicable.</returns>
 	public TValue this[string key]
 	{
-		get
-		{
-			if (key == null)
-				throw new ArgumentNullException(nameof(key));
-
-			if (!this.TryRetrieveInternal(key.AsSpan(), out var value))
-				throw new KeyNotFoundException($"The given key '{key}' was not present in the dictionary.");
-
-			return value;
-		}
+		get =>
+			key == null
+				? throw new ArgumentNullException(nameof(key))
+				: !this.TryRetrieveInternal(key.AsSpan(), out var value)
+					? throw new KeyNotFoundException($"The given key '{key}' was not present in the dictionary.")
+					: value;
 
 		set
 		{
@@ -121,13 +117,10 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <returns>Value matching the supplied key, if applicable.</returns>
 	public TValue this[ReadOnlySpan<char> key]
 	{
-		get
-		{
-			if (!this.TryRetrieveInternal(key, out var value))
-				throw new KeyNotFoundException($"The given key was not present in the dictionary.");
-
-			return value;
-		}
+		get =>
+			!this.TryRetrieveInternal(key, out var value)
+				? throw new KeyNotFoundException($"The given key was not present in the dictionary.")
+				: value;
 
 		set
 		{
@@ -534,13 +527,13 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		if (!this._internalBuckets.TryGetValue(hash, out var kdv))
 			return false;
 
+		// ReSharper disable once LoopVariableIsNeverChangedInsideLoop
 		while (kdv != null)
 		{
-			if (key.SequenceEqual(kdv.Key.AsSpan()))
-			{
-				value = kdv.Value;
-				return true;
-			}
+			if (!key.SequenceEqual(kdv.Key.AsSpan()))
+				continue;
+			value = kdv.Value;
+			return true;
 		}
 
 		return false;
@@ -560,29 +553,33 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		if (!this._internalBuckets.TryGetValue(hash, out var kdv))
 			return false;
 
-		if (kdv.Next == null && key.SequenceEqual(kdv.Key.AsSpan()))
+		switch (kdv.Next)
 		{
-			// Only bucket under this hash and key matches, pop the entire bucket
+			case null when key.SequenceEqual(kdv.Key.AsSpan()):
+				// Only bucket under this hash and key matches, pop the entire bucket
 
-			value = kdv.Value;
-			this._internalBuckets.Remove(hash);
-			this.Count--;
-			return true;
-		}
-		else if (kdv.Next == null)
-		{
-			// Only bucket under this hash and key does not match, cannot remove
+				value = kdv.Value;
+				this._internalBuckets.Remove(hash);
+				this.Count--;
+				return true;
+			case null:
+				// Only bucket under this hash and key does not match, cannot remove
 
-			return false;
-		}
-		else if (key.SequenceEqual(kdv.Key.AsSpan()))
-		{
-			// First key in the bucket matches, pop it and set its child as current bucket
+				return false;
+			default:
+			{
+				if (key.SequenceEqual(kdv.Key.AsSpan()))
+				{
+					// First key in the bucket matches, pop it and set its child as current bucket
 
-			value = kdv.Value;
-			this._internalBuckets[hash] = kdv.Next;
-			this.Count--;
-			return true;
+					value = kdv.Value;
+					this._internalBuckets[hash] = kdv.Next;
+					this.Count--;
+					return true;
+				}
+
+				break;
+			}
 		}
 
 		var kdvLast = kdv;
@@ -689,7 +686,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		/// <summary>
 		/// Gets or sets the next.
 		/// </summary>
-		public KeyedValue Next { get; set; }
+		public KeyedValue? Next { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="KeyedValue"/> class.
@@ -736,6 +733,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		/// <summary>
 		/// Gets the internal dictionary.
 		/// </summary>
+		// ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
 		private readonly CharSpanLookupDictionary<TValue> _internalDictionary;
 
 		/// <summary>
@@ -746,7 +744,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		/// <summary>
 		/// Gets or sets the current value.
 		/// </summary>
-		private KeyedValue _currentValue;
+		private KeyedValue? _currentValue;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Enumerator"/> class.
@@ -754,6 +752,9 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		/// <param name="spDict">The sp dict.</param>
 		public Enumerator(CharSpanLookupDictionary<TValue> spDict)
 		{
+#pragma warning disable CS0168 // Variable is declared but never used
+			CharSpanLookupDictionary<TValue> internalDictionary;
+#pragma warning restore CS0168 // Variable is declared but never used
 			this._internalDictionary = spDict;
 			this._internalEnumerator = this._internalDictionary._internalBuckets.GetEnumerator();
 		}
