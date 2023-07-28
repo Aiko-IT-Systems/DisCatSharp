@@ -45,25 +45,27 @@ public class DiscordInvite : ObservableApiObject
 	/// Gets the invite's url.
 	/// </summary>
 	[JsonIgnore]
-	public string Url => DiscordDomain.GetDomain(CoreDomain.DiscordShortlink).Url + "/" + this.Code;
+	public string Url
+		=> DiscordDomain.GetDomain(CoreDomain.DiscordShortlink).Url + "/" + this.Code;
 
 	/// <summary>
 	/// Gets the invite's url as Uri.
 	/// </summary>
 	[JsonIgnore]
-	public Uri Uri => new(this.Url);
+	public Uri Uri
+		=> new(this.Url);
 
 	/// <summary>
 	/// Gets the guild this invite is for.
 	/// </summary>
 	[JsonProperty("guild", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordInviteGuild Guild { get; internal set; }
+	public DiscordInviteGuild? Guild { get; internal set; }
 
 	/// <summary>
 	/// Gets the channel this invite is for.
 	/// </summary>
 	[JsonProperty("channel", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordInviteChannel Channel { get; internal set; }
+	public DiscordInviteChannel? Channel { get; internal set; }
 
 	/// <summary>
 	/// Gets the target type for the voice channel this invite is for.
@@ -78,16 +80,16 @@ public class DiscordInvite : ObservableApiObject
 	public InviteType Type { get; internal set; }
 
 	/// <summary>
-	/// Gets the user that is currently livestreaming.
+	/// Gets the target user.
 	/// </summary>
 	[JsonProperty("target_user", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordUser TargetUser { get; internal set; }
+	public DiscordUser? TargetUser { get; internal set; }
 
 	/// <summary>
 	/// Gets the embedded partial application to open for this voice channel.
 	/// </summary>
 	[JsonProperty("target_application", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordApplication TargetApplication { get; internal set; }
+	public DiscordApplication? TargetApplication { get; internal set; }
 
 	/// <summary>
 	/// Gets the approximate guild online member count for the invite.
@@ -159,13 +161,13 @@ public class DiscordInvite : ObservableApiObject
 	/// Gets the stage instance this invite is for.
 	/// </summary>
 	[JsonProperty("stage_instance", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordInviteStage Stage { get; internal set; }
+	public DiscordInviteStage? Stage { get; internal set; }
 
 	/// <summary>
 	/// Gets the guild scheduled event data for the invite.
 	/// </summary>
 	[JsonProperty("guild_scheduled_event", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordScheduledEvent GuildScheduledEvent { get; internal set; }
+	public DiscordScheduledEvent? GuildScheduledEvent { get; internal set; }
 
 	/// <summary>
 	/// Gets the invites flags.
@@ -189,7 +191,7 @@ public class DiscordInvite : ObservableApiObject
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordInvite> DeleteAsync(string reason = null)
+	public Task<DiscordInvite> DeleteAsync(string? reason = null)
 		=> this.Discord.ApiClient.DeleteInviteAsync(this.Code, reason);
 
 	/// <summary>

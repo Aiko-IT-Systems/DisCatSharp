@@ -41,13 +41,13 @@ public class DiscordDmChannel : DiscordChannel
 	/// Gets the recipients of this direct message.
 	/// </summary>
 	[JsonProperty("recipients", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<DiscordUser> Recipients { get; internal set; }
+	public IReadOnlyList<DiscordUser>? Recipients { get; internal set; }
 
 	/// <summary>
 	/// Gets the hash of this channel's icon.
 	/// </summary>
 	[JsonProperty("icon", NullValueHandling = NullValueHandling.Ignore)]
-	public string IconHash { get; internal set; }
+	public string? IconHash { get; internal set; }
 
 	/// <summary>
 	/// Gets the id of this direct message's creator.
@@ -71,7 +71,7 @@ public class DiscordDmChannel : DiscordChannel
 	/// Gets the URL of this channel's icon.
 	/// </summary>
 	[JsonIgnore]
-	public string IconUrl
+	public string? IconUrl
 		=> !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.CHANNEL_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png" : null;
 
 	/// <summary>
@@ -94,6 +94,6 @@ public class DiscordDmChannel : DiscordChannel
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task RemoveDmRecipientAsync(ulong userId, string accessToken)
+	public Task RemoveDmRecipientAsync(ulong userId, string? accessToken = null)
 		=> this.Discord.ApiClient.RemoveGroupDmRecipientAsync(this.Id, userId);
 }

@@ -115,13 +115,13 @@ public class DiscordIntegration : SnowflakeObject
 	/// Gets the application this integration is bound to.
 	/// </summary>
 	[JsonProperty("application", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordApplication Application { get; internal set; }
+	public DiscordApplication? Application { get; internal set; }
 
 	/// <summary>
 	/// Gets the integration's scopes.
 	/// </summary>
 	[JsonProperty("scopes", NullValueHandling = NullValueHandling.Ignore)]
-	public string[] Scopes { get; internal set; }
+	public string[]? Scopes { get; internal set; }
 
 	/// <summary>
 	/// Gets whether emoticons are enabled.
