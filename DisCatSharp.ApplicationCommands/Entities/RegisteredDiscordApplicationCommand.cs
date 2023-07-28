@@ -28,6 +28,8 @@ using System.Reflection;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
+using Microsoft.Extensions.Logging;
+
 namespace DisCatSharp.ApplicationCommands.Entities;
 
 /// <summary>
@@ -63,25 +65,32 @@ public sealed class RegisteredDiscordApplicationCommand : DiscordApplicationComm
 		this.UnknownProperties = parent.UnknownProperties;
 		this.Version = parent.Version;
 
-		
 
-		if (ApplicationCommandsExtension.s_commandMethods.Any(x => x.CommandId == this.Id))
+
+		try
 		{
-			this.CommandMethod = ApplicationCommandsExtension.s_commandMethods.First(x => x.CommandId == this.Id).Method;
-			this.ContainingType = this.CommandMethod.DeclaringType;
-			this.CustomAttributes = this.CommandMethod.GetCustomAttributes().Where(x => !x.GetType().Namespace.StartsWith("DisCatSharp")).ToList();
+			if (ApplicationCommandsExtension.s_commandMethods.Any(x => x.CommandId == this.Id))
+			{
+				this.CommandMethod = ApplicationCommandsExtension.s_commandMethods.First(x => x.CommandId == this.Id).Method;
+				this.ContainingType = this.CommandMethod.DeclaringType;
+				this.CustomAttributes = this.CommandMethod.GetCustomAttributes().Where(x => !x.GetType().Namespace.StartsWith("DisCatSharp")).ToList();
+			}
+			else if (ApplicationCommandsExtension.s_contextMenuCommands.Any(x => x.CommandId == this.Id))
+			{
+				this.CommandMethod = ApplicationCommandsExtension.s_contextMenuCommands.First(x => x.CommandId == this.Id).Method;
+				this.ContainingType = this.CommandMethod.DeclaringType;
+				this.CustomAttributes = this.CommandMethod.GetCustomAttributes().Where(x => !x.GetType().Namespace.StartsWith("DisCatSharp")).ToList();
+			}
+			else if (ApplicationCommandsExtension.s_groupCommands.Any(x => x.CommandId == this.Id))
+			{
+				this.CommandType = ApplicationCommandsExtension.s_groupCommands.First(x => x.CommandId == this.Id).Methods.First().Value.DeclaringType;
+				this.ContainingType = this.CommandType.DeclaringType;
+				this.CustomAttributes = this.CommandType.GetCustomAttributes().Where(x => !x.GetType().Namespace.StartsWith("DisCatSharp")).ToList();
+			}
 		}
-		else if (ApplicationCommandsExtension.s_contextMenuCommands.Any(x => x.CommandId == this.Id))
+		catch (Exception)
 		{
-			this.CommandMethod = ApplicationCommandsExtension.s_contextMenuCommands.First(x => x.CommandId == this.Id).Method;
-			this.ContainingType = this.CommandMethod.DeclaringType;
-			this.CustomAttributes = this.CommandMethod.GetCustomAttributes().Where(x => !x.GetType().Namespace.StartsWith("DisCatSharp")).ToList();
-		}
-		else if (ApplicationCommandsExtension.s_groupCommands.Any(x => x.CommandId == this.Id))
-		{
-			this.CommandType = ApplicationCommandsExtension.s_groupCommands.First(x => x.CommandId == this.Id).Methods.First().Value.DeclaringType;
-			this.ContainingType = this.CommandType.DeclaringType;
-			this.CustomAttributes = this.CommandType.GetCustomAttributes().Where(x => !x.GetType().Namespace.StartsWith("DisCatSharp")).ToList();
+			ApplicationCommandsExtension.Logger.LogError("Failed to generate reflection properties for '{cmd}'", parent.Name);
 		}
 	}
 
