@@ -433,10 +433,8 @@ public sealed partial class DiscordShardedClient
 		{
 			var code = (int)msg.StatusCode;
 
-			if (code == 401 || code == 403)
-			{
+			if (code is 401 or 403)
 				throw new($"Authentication failed, check your token and try again: {code} {msg.ReasonPhrase}");
-			}
 			else if (code == 429)
 			{
 				this.Logger.LogError(LoggerEvents.ShardClientError, $"Ratelimit hit, requeuing request to {reqUrl}");
@@ -451,13 +449,9 @@ public sealed partial class DiscordShardedClient
 				return true;
 			}
 			else if (code >= 500)
-			{
 				throw new($"Internal Server Error: {code} {msg.ReasonPhrase}");
-			}
 			else
-			{
 				throw new($"An unsuccessful HTTP status code was encountered: {code} {msg.ReasonPhrase}");
-			}
 		}
 	}
 
@@ -558,7 +552,6 @@ public sealed partial class DiscordShardedClient
 		this.CurrentApplication = null;
 
 		for (var i = 0; i < this._shards.Count; i++)
-		{
 			if (this._shards.TryGetValue(i, out var client))
 			{
 				this.UnhookEventHandlers(client);
@@ -568,7 +561,6 @@ public sealed partial class DiscordShardedClient
 				if (enableLogger)
 					this.Logger.LogInformation(LoggerEvents.ShardShutdown, "Disconnected shard {0}.", i);
 			}
-		}
 
 		this._shards.Clear();
 
@@ -866,12 +858,8 @@ public sealed partial class DiscordShardedClient
 	private int GetShardIdFromGuilds(ulong id)
 	{
 		foreach (var s in this._shards.Values)
-		{
 			if (s.GuildsInternal.TryGetValue(id, out _))
-			{
 				return s.ShardId;
-			}
-		}
 
 		return -1;
 	}

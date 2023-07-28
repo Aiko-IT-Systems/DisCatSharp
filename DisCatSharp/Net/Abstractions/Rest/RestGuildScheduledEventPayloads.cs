@@ -44,7 +44,7 @@ internal sealed class RestGuildScheduledEventCreatePayload : ObservableApiObject
 	/// Gets or sets the entity metadata.
 	/// </summary>
 	[JsonProperty("entity_metadata", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordScheduledEventEntityMetadata EntityMetadata { get; set; }
+	public DiscordScheduledEventEntityMetadata? EntityMetadata { get; set; }
 
 	/// <summary>
 	/// Gets or sets the name.
@@ -56,7 +56,7 @@ internal sealed class RestGuildScheduledEventCreatePayload : ObservableApiObject
 	/// Gets or sets the description.
 	/// </summary>
 	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
-	public string Description { get; set; }
+	public string? Description { get; set; }
 
 	/// <summary>
 	/// Gets or sets the privacy level of the scheduled event.
@@ -86,7 +86,7 @@ internal sealed class RestGuildScheduledEventCreatePayload : ObservableApiObject
 	/// Gets or sets the image as base64.
 	/// </summary>
 	[JsonProperty("image", NullValueHandling = NullValueHandling.Include)]
-	public Optional<string> CoverBase64 { get; set; }
+	public Optional<string?> CoverBase64 { get; set; }
 }
 
 /// <summary>
@@ -116,7 +116,7 @@ internal sealed class RestGuildScheduledEventModifyPayload : ObservableApiObject
 	/// Gets or sets the description.
 	/// </summary>
 	[JsonProperty("description")]
-	public Optional<string> Description { get; set; }
+	public Optional<string?> Description { get; set; }
 
 	/// <summary>
 	/// Gets or sets the time to schedule the scheduled event.
@@ -140,7 +140,7 @@ internal sealed class RestGuildScheduledEventModifyPayload : ObservableApiObject
 	/// Gets or sets the cover image as base64.
 	/// </summary>
 	[JsonProperty("image")]
-	public Optional<string> CoverBase64 { get; set; }
+	public Optional<string?> CoverBase64 { get; set; }
 
 	/// <summary>
 	/// Gets or sets the status of the scheduled event.

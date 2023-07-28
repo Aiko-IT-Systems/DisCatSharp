@@ -513,11 +513,9 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 				mdl.VoiceChannel.Map(e => e?.Id), default, this.MemberFlags, mdl.AuditLogReason).ConfigureAwait(false);
 		}
 		else
-		{
 			await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, mdl.Nickname,
 				mdl.Roles.Map(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
 				mdl.VoiceChannel.Map(e => e?.Id), default, this.MemberFlags, mdl.AuditLogReason).ConfigureAwait(false);
-		}
 	}
 
 	/// <summary>

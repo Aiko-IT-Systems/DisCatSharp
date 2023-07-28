@@ -65,7 +65,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	[JsonIgnore]
 	public DiscordChannel? Parent
-		=> this.ParentId.HasValue ? this.Guild.GetChannel(this.ParentId.Value) : null;
+		=> this.ParentId.HasValue ? this.Guild?.GetChannel(this.ParentId.Value) : null;
 
 	/// <summary>
 	/// Gets the name of this channel.
@@ -123,12 +123,12 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	public int GetMaxPosition()
 	{
-		var channels = this.Guild.Channels.Values;
+		var channels = this.Guild!.Channels.Values;
 		return this.ParentId != null
-			? this.Type == ChannelType.Text || this.Type == ChannelType.News
-				? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Text || xc.Type == ChannelType.News)).OrderBy(xc => xc.Position).Last().Position
-				: this.Type == ChannelType.Voice || this.Type == ChannelType.Stage
-					? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Voice || xc.Type == ChannelType.Stage)).OrderBy(xc => xc.Position).Last().Position
+			? this.Type is ChannelType.Text or ChannelType.News
+				? channels.Where(xc => xc.ParentId == this.ParentId && xc.Type is ChannelType.Text or ChannelType.News).OrderBy(xc => xc.Position).Last().Position
+				: this.Type is ChannelType.Voice or ChannelType.Stage
+					? channels.Where(xc => xc.ParentId == this.ParentId && xc.Type is ChannelType.Voice or ChannelType.Stage).OrderBy(xc => xc.Position).Last().Position
 					: channels.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type).OrderBy(xc => xc.Position).Last().Position
 			: channels.Where(xc => xc.ParentId == null && xc.Type == this.Type).OrderBy(xc => xc.Position).Last().Position;
 	}
@@ -138,12 +138,12 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	public int GetMinPosition()
 	{
-		var channels = this.Guild.Channels.Values;
+		var channels = this.Guild!.Channels.Values;
 		return this.ParentId != null
-			? this.Type == ChannelType.Text || this.Type == ChannelType.News
-				? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Text || xc.Type == ChannelType.News)).OrderBy(xc => xc.Position).First().Position
-				: this.Type == ChannelType.Voice || this.Type == ChannelType.Stage
-					? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Voice || xc.Type == ChannelType.Stage)).OrderBy(xc => xc.Position).First().Position
+			? this.Type is ChannelType.Text or ChannelType.News
+				? channels.Where(xc => xc.ParentId == this.ParentId && xc.Type is ChannelType.Text or ChannelType.News).OrderBy(xc => xc.Position).First().Position
+				: this.Type is ChannelType.Voice or ChannelType.Stage
+					? channels.Where(xc => xc.ParentId == this.ParentId && xc.Type is ChannelType.Voice or ChannelType.Stage).OrderBy(xc => xc.Position).First().Position
 					: channels.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type).OrderBy(xc => xc.Position).First().Position
 			: channels.Where(xc => xc.ParentId == null && xc.Type == this.Type).OrderBy(xc => xc.Position).First().Position;
 	}
@@ -463,14 +463,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			userLimit = null;
 		}
 
-		if (this.Type == ChannelType.Stage)
-		{
-			userLimit = null;
-		}
-		if (!this.IsWritable())
-		{
-			perUserRateLimit = Optional.None;
-		}
+		if (this.Type == ChannelType.Stage) userLimit = null;
+		if (!this.IsWritable()) perUserRateLimit = Optional.None;
 
 		return await this.Guild.CreateChannelAsync(this.Name, this.Type, this.Parent, this.Topic, bitrate, userLimit, ovrs, this.IsNsfw, perUserRateLimit, this.QualityMode, this.DefaultAutoArchiveDuration, this.Flags, reason).ConfigureAwait(false);
 	}
@@ -615,15 +609,15 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		var channels = await this.InternalRefreshChannelsAsync().ConfigureAwait(false);
 
 		var chns = this.ParentId != null
-			? this.Type == ChannelType.Text || this.Type == ChannelType.News
-				? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Text || xc.Type == ChannelType.News))
-				: this.Type == ChannelType.Voice || this.Type == ChannelType.Stage
-					? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Voice || xc.Type == ChannelType.Stage))
+			? this.Type is ChannelType.Text or ChannelType.News
+				? channels.Where(xc => xc.ParentId == this.ParentId && xc.Type is ChannelType.Text or ChannelType.News)
+				: this.Type is ChannelType.Voice or ChannelType.Stage
+					? channels.Where(xc => xc.ParentId == this.ParentId && xc.Type is ChannelType.Voice or ChannelType.Stage)
 					: channels.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type)
-			: this.Type == ChannelType.Text || this.Type == ChannelType.News
-				? channels.Where(xc => xc.ParentId == null && (xc.Type == ChannelType.Text || xc.Type == ChannelType.News))
-				: this.Type == ChannelType.Voice || this.Type == ChannelType.Stage
-					? channels.Where(xc => xc.ParentId == null && (xc.Type == ChannelType.Voice || xc.Type == ChannelType.Stage))
+			: this.Type is ChannelType.Text or ChannelType.News
+				? channels.Where(xc => xc.ParentId == null && xc.Type is ChannelType.Text or ChannelType.News)
+				: this.Type is ChannelType.Voice or ChannelType.Stage
+					? channels.Where(xc => xc.ParentId == null && xc.Type is ChannelType.Voice or ChannelType.Stage)
 					: channels.Where(xc => xc.ParentId == null && xc.Type == this.Type);
 
 		var ochns = chns.OrderBy(xc => xc.Position).ToArray();
@@ -666,14 +660,12 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			xo.ChannelId = this.Id;
 		}
 		if (this.InternalAvailableTags != null)
-		{
 			foreach (var xo in this.InternalAvailableTags)
 			{
 				xo.Discord = this.Discord;
 				xo.ChannelId = this.Id;
 				xo.Channel = this;
 			}
-		}
 	}
 
 	/// <summary>
@@ -715,8 +707,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		if (mode != "+" && mode != "-" && mode != "down" && mode != "up")
 			throw new ArgumentException("Error with the selected mode: Valid is '+' or 'down' to move a channel down and '-' or 'up' to move a channel up");
 
-		var positive = mode == "+" || mode == "positive" || mode == "down";
-		var negative = mode == "-" || mode == "negative" || mode == "up";
+		var positive = mode is "+" or "positive" or "down";
+		var negative = mode is "-" or "negative" or "up";
 		return positive
 			? position < this.GetMaxPosition()
 				? this.ModifyPositionInCategoryAsync(this.Position + position, reason)
@@ -799,9 +791,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 					pmd.ParentId = null;
 				}
 				else
-				{
 					pmd.Position = x.Position < this.Position ? x.Position + 1 : x.Position;
-				}
 
 				return pmd;
 			});
@@ -1192,7 +1182,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		{
 			Name = name,
 			EmojiId = emoji != null && emoji.Id != 0 ? emoji.Id : null,
-			UnicodeEmojiString = emoji?.Id == null || emoji?.Id == 0 ? emoji?.Name ?? null : null,
+			UnicodeEmojiString = emoji?.Id is null or 0 ? emoji?.Name ?? null : null,
 			Moderated = moderated,
 			Id = null
 		}).ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason).ConfigureAwait(false);

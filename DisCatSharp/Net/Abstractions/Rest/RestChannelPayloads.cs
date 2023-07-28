@@ -80,7 +80,7 @@ internal sealed class RestChannelCreatePayload : ObservableApiObject
 	/// Gets or sets the permission overwrites.
 	/// </summary>
 	[JsonProperty("permission_overwrites", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordRestOverwrite> PermissionOverwrites { get; set; }
+	public IEnumerable<DiscordRestOverwrite>? PermissionOverwrites { get; set; }
 
 	/// <summary>
 	/// Gets or sets a value indicating whether nsfw.
@@ -218,7 +218,7 @@ internal sealed class RestChannelModifyPayload : ObservableApiObject
 	/// Gets or sets the permission overwrites.
 	/// </summary>
 	[JsonProperty("permission_overwrites", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordRestOverwrite> PermissionOverwrites { get; set; }
+	public IEnumerable<DiscordRestOverwrite>? PermissionOverwrites { get; set; }
 
 	/// <summary>
 	/// Gets the default reaction emoji for forum posts.

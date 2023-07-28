@@ -361,17 +361,13 @@ internal sealed class OptionalJsonConverter : JsonConverter
 		var val = (value as IOptional).RawValue;
 		// JToken.FromObject will throw if `null` so we manually write a null value.
 		if (val == null)
-		{
 			// you can read serializer.NullValueHandling here, but unfortunately you can **not** skip serialization
 			// here, or else you will get a nasty JsonWriterException, so we just ignore its value and manually
 			// write the null.
 			writer.WriteToken(JsonToken.Null);
-		}
 		else
-		{
 			// convert the value to a JSON object and write it to the property value.
 			JToken.FromObject(val).WriteTo(writer);
-		}
 	}
 
 	/// <summary>

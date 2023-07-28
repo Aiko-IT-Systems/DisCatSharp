@@ -389,13 +389,11 @@ internal sealed class RestClient : IDisposable
 						else
 						{
 							if (this._discord is DiscordClient)
-							{
 								await (this._discord as DiscordClient).RateLimitHitInternal.InvokeAsync(this._discord as DiscordClient, new(this._discord.ServiceProvider)
 								{
 									Exception = ex as RateLimitException,
 									ApiEndpoint = request.Url.AbsoluteUri
 								});
-							}
 							this._logger.LogError(LoggerEvents.RatelimitHit, "Ratelimit hit, requeuing request to {url}", request.Url.AbsoluteUri);
 							await wait.ConfigureAwait(false);
 							this.ExecuteRequestAsync(request, bucket, ratelimitTcs)
@@ -418,7 +416,6 @@ internal sealed class RestClient : IDisposable
 			if (ex != null)
 			{
 				if (this._discord.Configuration.EnableSentry)
-				{
 					if (senex != null)
 					{
 						Dictionary<string, object> debugInfo = new()
@@ -429,7 +426,7 @@ internal sealed class RestClient : IDisposable
 						senex.AddSentryContext("Request", debugInfo);
 						this._discord.Sentry.CaptureException(senex);
 					}
-				}
+
 				request.SetFaulted(ex);
 			}
 			else
@@ -457,15 +454,9 @@ internal sealed class RestClient : IDisposable
 			// If it's 0 or less, we can remove the bucket from the active request queue,
 			// along with any of its past routes.
 			if (count <= 0)
-			{
 				foreach (var r in bucket.RouteHashes)
-				{
 					if (this._requestQueue.ContainsKey(r))
-					{
 						_ = this._requestQueue.TryRemove(r, out _);
-					}
-				}
-			}
 		}
 	}
 
@@ -508,7 +499,6 @@ internal sealed class RestClient : IDisposable
 		while (!bucket.LimitValid)
 		{
 			if (bucket.LimitTesting == 0)
-			{
 				if (Interlocked.CompareExchange(ref bucket.LimitTesting, 1, 0) == 0)
 				{
 					// if we got here when the first request was just finishing, we must not create the waiter task as it would signal ExecuteRequestAsync to bypass rate limiting
@@ -520,7 +510,7 @@ internal sealed class RestClient : IDisposable
 					bucket.LimitTestFinished = ratelimitsTcs.Task;
 					return ratelimitsTcs;
 				}
-			}
+
 			// it can take a couple of cycles for the task to be allocated, so wait until it happens or we are no longer probing for the limits
 			Task waitTask = null;
 			while (bucket.LimitTesting != 0 && (waitTask = bucket.LimitTestFinished) == null)
@@ -570,14 +560,12 @@ internal sealed class RestClient : IDisposable
 			var fileId = mprequest.OverwriteFileIdStart ?? 0;
 
 			if (mprequest.Files != null && mprequest.Files.Any())
-			{
 				foreach (var f in mprequest.Files)
 				{
 					var name = $"files[{fileId.ToString(CultureInfo.InvariantCulture)}]";
 					content.Add(new StreamContent(f.Value), name, f.Key);
 					fileId++;
 				}
-			}
 
 			req.Content = content;
 		}
@@ -638,10 +626,8 @@ internal sealed class RestClient : IDisposable
 
 		// check if global b1nzy
 		if (hs.TryGetValue("X-RateLimit-Global", out var isGlobal) && isGlobal.ToLowerInvariant() == "true")
-		{
 			// global
 			global = true;
-		}
 	}
 
 	/// <summary>
@@ -663,10 +649,7 @@ internal sealed class RestClient : IDisposable
 
 		var hs = response.Headers;
 
-		if (hs.TryGetValue("X-RateLimit-Scope", out var scope))
-		{
-			bucket.Scope = scope;
-		}
+		if (hs.TryGetValue("X-RateLimit-Scope", out var scope)) bucket.Scope = scope;
 
 
 		if (hs.TryGetValue("X-RateLimit-Global", out var isGlobal) && isGlobal.ToLowerInvariant() == "true")

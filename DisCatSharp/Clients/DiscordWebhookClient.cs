@@ -229,7 +229,6 @@ public class DiscordWebhookClient
 		var messages = new Dictionary<DiscordWebhook, DiscordMessage>();
 
 		foreach (var hook in this.Hooks)
-		{
 			try
 			{
 				if (this.Username != null)
@@ -242,7 +241,6 @@ public class DiscordWebhookClient
 			{
 				deadHooks.Add(hook);
 			}
-		}
 
 		// Removing dead webhooks from collection
 		foreach (var xwh in deadHooks)

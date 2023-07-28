@@ -93,17 +93,13 @@ internal class DiscordMentions : ObservableApiObject
 			return;
 		}
 
-		if (mention)
-		{
-			this.RepliedUser = repliedUser;
-		}
+		if (mention) this.RepliedUser = repliedUser;
 
 		var roles = new HashSet<ulong>();
 		var users = new HashSet<ulong>();
 		var parse = new HashSet<string>();
 
 		foreach (var m in mentions)
-		{
 			switch (m)
 			{
 				default:
@@ -131,7 +127,6 @@ internal class DiscordMentions : ObservableApiObject
 					this.RepliedUser = repliedUser;
 					break;
 			}
-		}
 
 		if (!parse.Contains(PARSE_USERS) && users.Count > 0)
 			this.Users = users.ToArray();

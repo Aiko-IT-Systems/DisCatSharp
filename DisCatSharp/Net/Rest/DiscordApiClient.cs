@@ -157,15 +157,10 @@ public sealed class DiscordApiClient
 
 		//If this is a webhook, it shouldn't be in the user cache.
 		if (author.IsBot && int.Parse(author.Discriminator) == 0)
-		{
 			ret.Author = new(author) { Discord = this.Discord };
-		}
 		else
 		{
-			if (!this.Discord.UserCache.TryGetValue(author.Id, out var usr))
-			{
-				this.Discord.UserCache[author.Id] = usr = new(author) { Discord = this.Discord };
-			}
+			if (!this.Discord.UserCache.TryGetValue(author.Id, out var usr)) this.Discord.UserCache[author.Id] = usr = new(author) { Discord = this.Discord };
 
 			if (guild != null)
 			{
@@ -174,9 +169,7 @@ public sealed class DiscordApiClient
 				ret.Author = mbr;
 			}
 			else
-			{
 				ret.Author = usr;
-			}
 		}
 
 		ret.PopulateMentions();
@@ -868,7 +861,7 @@ public sealed class DiscordApiClient
 	/// <param name="reason">The reason.</param>
 	internal Task CreateGuildBanAsync(ulong guildId, ulong userId, int deleteMessageDays, string? reason)
 	{
-		if (deleteMessageDays < 0 || deleteMessageDays > 7)
+		if (deleteMessageDays is < 0 or > 7)
 			throw new ArgumentException("Delete message days must be a number between 0 and 7.", nameof(deleteMessageDays));
 
 		var urlParams = new Dictionary<string, string>
@@ -1156,7 +1149,6 @@ public sealed class DiscordApiClient
 	/// Gets the guild widget async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
-
 	internal async Task<DiscordWidget> GetGuildWidgetAsync(ulong guildId)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.WIDGET_JSON}";
@@ -1172,19 +1164,18 @@ public sealed class DiscordApiClient
 		ret.Discord = this.Discord;
 		ret.Guild = this.Discord.Guilds.ContainsKey(guildId) ? this.Discord.Guilds[guildId] : null;
 
-		ret.Channels = ret.Guild == null
-			? rawChannels.Select(r => new DiscordChannel
-			{
-				Id = (ulong)r["id"],
-				Name = r["name"].ToString(),
-				Position = (int)r["position"]
-			}).ToList()
-			: rawChannels.Select(r =>
-			{
-				var c = ret.Guild.GetChannel((ulong)r["id"]);
-				c.Position = (int)r["position"];
-				return c;
-			}).ToList();
+		if (rawChannels != null)
+			ret.Channels = ret.Guild == null
+				? rawChannels.Select(r => new DiscordChannel
+				{
+					Id = (ulong)r["id"], Name = r["name"].ToString(), Position = (int)r["position"]
+				}).ToList()
+				: rawChannels.Select(r =>
+				{
+					var c = ret.Guild.GetChannel((ulong)r["id"]);
+					c.Position = (int)r["position"];
+					return c;
+				}).ToList();
 
 		return ret;
 	}
@@ -1193,7 +1184,6 @@ public sealed class DiscordApiClient
 	/// Gets the guild widget settings async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
-
 	internal async Task<DiscordWidgetSettings> GetGuildWidgetSettingsAsync(ulong guildId)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.WIDGET}";
@@ -1215,8 +1205,7 @@ public sealed class DiscordApiClient
 	/// <param name="isEnabled">If true, is enabled.</param>
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="reason">The reason.</param>
-
-	internal async Task<DiscordWidgetSettings> ModifyGuildWidgetSettingsAsync(ulong guildId, bool? isEnabled, ulong? channelId, string reason)
+	internal async Task<DiscordWidgetSettings> ModifyGuildWidgetSettingsAsync(ulong guildId, bool? isEnabled, ulong? channelId, string? reason)
 	{
 		var pld = new RestGuildWidgetSettingsPayload
 		{
@@ -1244,7 +1233,6 @@ public sealed class DiscordApiClient
 	/// Gets the guild templates async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
-
 	internal async Task<IReadOnlyList<DiscordGuildTemplate>> GetGuildTemplatesAsync(ulong guildId)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.TEMPLATES}";
@@ -1264,8 +1252,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="name">The name.</param>
 	/// <param name="description">The description.</param>
-
-	internal async Task<DiscordGuildTemplate> CreateGuildTemplateAsync(ulong guildId, string name, string description)
+	internal async Task<DiscordGuildTemplate> CreateGuildTemplateAsync(ulong guildId, string name, string? description)
 	{
 		var pld = new RestGuildTemplateCreateOrModifyPayload
 		{
@@ -1289,7 +1276,6 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="templateCode">The template_code.</param>
-
 	internal async Task<DiscordGuildTemplate> SyncGuildTemplateAsync(ulong guildId, string templateCode)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.TEMPLATES}/:template_code";
@@ -1310,8 +1296,7 @@ public sealed class DiscordApiClient
 	/// <param name="templateCode">The template_code.</param>
 	/// <param name="name">The name.</param>
 	/// <param name="description">The description.</param>
-
-	internal async Task<DiscordGuildTemplate> ModifyGuildTemplateAsync(ulong guildId, string templateCode, string name, string description)
+	internal async Task<DiscordGuildTemplate> ModifyGuildTemplateAsync(ulong guildId, string templateCode, string? name, Optional<string?> description)
 	{
 		var pld = new RestGuildTemplateCreateOrModifyPayload
 		{
@@ -1539,7 +1524,7 @@ public sealed class DiscordApiClient
 	/// <param name="reason">The reason for this addition.</param>
 	/// <returns>The new auto mod rule.</returns>
 	internal async Task<AutomodRule> CreateAutomodRuleAsync(ulong guildId, string name, AutomodEventType eventType, AutomodTriggerType triggerType, IEnumerable<AutomodAction> actions,
-		AutomodTriggerMetadata triggerMetadata = null, bool enabled = false, IEnumerable<ulong> exemptRoles = null, IEnumerable<ulong> exemptChannels = null, string reason = null)
+		AutomodTriggerMetadata? triggerMetadata = null, bool enabled = false, IEnumerable<ulong>? exemptRoles = null, IEnumerable<ulong>? exemptChannels = null, string? reason = null)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id = guildId }, out var path);
@@ -1551,7 +1536,7 @@ public sealed class DiscordApiClient
 			TriggerType = triggerType,
 			Actions = actions.ToArray(),
 			Enabled = enabled,
-			TriggerMetadata = triggerMetadata ?? null
+			TriggerMetadata = triggerMetadata
 		};
 
 		if (exemptChannels != null)
@@ -1569,10 +1554,7 @@ public sealed class DiscordApiClient
 		var ret = DiscordJson.DeserializeObject<AutomodRule>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
-		if (this.Discord is DiscordClient dc)
-		{
-			await dc.OnAutomodRuleCreated(ret).ConfigureAwait(false);
-		}
+		if (this.Discord is DiscordClient dc) await dc.OnAutomodRuleCreated(ret).ConfigureAwait(false);
 
 		return ret;
 	}
@@ -1622,10 +1604,7 @@ public sealed class DiscordApiClient
 		var ret = DiscordJson.DeserializeObject<AutomodRule>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
-		if (this.Discord is DiscordClient dc)
-		{
-			await dc.OnAutomodRuleUpdated(ret).ConfigureAwait(false);
-		}
+		if (this.Discord is DiscordClient dc) await dc.OnAutomodRuleUpdated(ret).ConfigureAwait(false);
 
 		return ret;
 	}
@@ -1652,10 +1631,7 @@ public sealed class DiscordApiClient
 		var ret = DiscordJson.DeserializeObject<AutomodRule>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
-		if (this.Discord is DiscordClient dc)
-		{
-			await dc.OnAutomodRuleDeleted(ret).ConfigureAwait(false);
-		}
+		if (this.Discord is DiscordClient dc) await dc.OnAutomodRuleDeleted(ret).ConfigureAwait(false);
 
 		return ret;
 	}
@@ -1668,7 +1644,7 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Creates a scheduled event.
 	/// </summary>
-	internal async Task<DiscordScheduledEvent> CreateGuildScheduledEventAsync(ulong guildId, ulong? channelId, DiscordScheduledEventEntityMetadata metadata, string name, DateTimeOffset scheduledStartTime, DateTimeOffset? scheduledEndTime, string description, ScheduledEventEntityType type, Optional<string> coverb64, string reason = null)
+	internal async Task<DiscordScheduledEvent> CreateGuildScheduledEventAsync(ulong guildId, ulong? channelId, DiscordScheduledEventEntityMetadata? metadata, string name, DateTimeOffset scheduledStartTime, DateTimeOffset? scheduledEndTime, string? description, ScheduledEventEntityType type, Optional<string?> coverBase64, string? reason = null)
 	{
 		var pld = new RestGuildScheduledEventCreatePayload
 		{
@@ -1679,7 +1655,7 @@ public sealed class DiscordApiClient
 			ScheduledEndTime = scheduledEndTime,
 			Description = description,
 			EntityType = type,
-			CoverBase64 = coverb64
+			CoverBase64 = coverBase64
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -1709,7 +1685,7 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Modifies a scheduled event.
 	/// </summary>
-	internal async Task<DiscordScheduledEvent> ModifyGuildScheduledEventAsync(ulong guildId, ulong scheduledEventId, Optional<ulong?> channelId, Optional<DiscordScheduledEventEntityMetadata> metadata, Optional<string> name, Optional<DateTimeOffset> scheduledStartTime, Optional<DateTimeOffset> scheduledEndTime, Optional<string> description, Optional<ScheduledEventEntityType> type, Optional<ScheduledEventStatus> status, Optional<string> coverb64, string reason = null)
+	internal async Task<DiscordScheduledEvent> ModifyGuildScheduledEventAsync(ulong guildId, ulong scheduledEventId, Optional<ulong?> channelId, Optional<DiscordScheduledEventEntityMetadata?> metadata, Optional<string> name, Optional<DateTimeOffset> scheduledStartTime, Optional<DateTimeOffset> scheduledEndTime, Optional<string?> description, Optional<ScheduledEventEntityType> type, Optional<ScheduledEventStatus> status, Optional<string?> coverBase64, string? reason = null)
 	{
 		var pld = new RestGuildScheduledEventModifyPayload
 		{
@@ -1721,7 +1697,7 @@ public sealed class DiscordApiClient
 			Description = description,
 			EntityType = type,
 			Status = status,
-			CoverBase64 = coverb64
+			CoverBase64 = coverBase64
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -1985,15 +1961,13 @@ public sealed class DiscordApiClient
 	/// <param name="perUserRateLimit">The per user rate limit.</param>
 	/// <param name="qualityMode">The quality mode.</param>
 	/// <param name="defaultAutoArchiveDuration">The default auto archive duration.</param>
+	/// <param name="flags">The flags.</param>
 	/// <param name="reason">The reason.</param>
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
-	internal async Task<DiscordChannel> CreateGuildChannelAsync(ulong guildId, string name, ChannelType type, ulong? parent, Optional<string> topic, int? bitrate, int? userLimit, IEnumerable<DiscordOverwriteBuilder> overwrites, bool? nsfw, Optional<int?> perUserRateLimit, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? defaultAutoArchiveDuration, Optional<ChannelFlags?> flags, string reason)
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+	internal async Task<DiscordChannel> CreateGuildChannelAsync(ulong guildId, string name, ChannelType type, ulong? parent, Optional<string> topic, int? bitrate, int? userLimit, IEnumerable<DiscordOverwriteBuilder>? overwrites, bool? nsfw, Optional<int?> perUserRateLimit, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? defaultAutoArchiveDuration, Optional<ChannelFlags?> flags, string? reason)
 	{
 		var restOverwrites = new List<DiscordRestOverwrite>();
 		if (overwrites != null)
-			foreach (var ow in overwrites)
-				restOverwrites.Add(ow.Build());
+			restOverwrites.AddRange(overwrites.Select(ow => ow.Build()));
 
 		var pld = new RestChannelCreatePayload
 		{
@@ -2016,7 +1990,7 @@ public sealed class DiscordApiClient
 			headers.Add(REASON_HEADER_NAME, reason);
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.CHANNELS}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {guild_id = guildId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
@@ -2040,26 +2014,19 @@ public sealed class DiscordApiClient
 	/// <param name="nsfw">If true, nsfw.</param>
 	/// <param name="perUserRateLimit">The per user rate limit.</param>
 	/// <param name="postCreateUserRateLimit">The per user post create rate limit.</param>
-	/// <param name="defaultAutoArchiveDuration">The default auto archive duration.</param>
+	/// <param name="defaultAutoArchiveDuration">The default auto archive duration.</param>#
+	/// <param name="defaultSortOrder">The default sort order.</param>
+	/// <param name="flags">The flags.</param>
 	/// <param name="reason">The reason.</param>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
 	internal async Task<DiscordChannel> CreateForumChannelAsync(ulong guildId, string name, ulong? parent,
-		Optional<string> topic, Optional<string> template,
+		Optional<string?> topic, Optional<string?> template,
 		bool? nsfw, Optional<ForumReactionEmoji> defaultReactionEmoji,
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 		Optional<int?> perUserRateLimit, Optional<int?> postCreateUserRateLimit, Optional<ForumPostSortOrder> defaultSortOrder,
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
-		ThreadAutoArchiveDuration? defaultAutoArchiveDuration, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, Optional<ChannelFlags?> flags, string reason)
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+		ThreadAutoArchiveDuration? defaultAutoArchiveDuration, IEnumerable<DiscordOverwriteBuilder>? permissionOverwrites, Optional<ChannelFlags?> flags, string? reason)
 	{
-		List<DiscordRestOverwrite> restoverwrites = null;
+		List<DiscordRestOverwrite>? restOverwrites = null;
 		if (permissionOverwrites != null)
-		{
-			restoverwrites = new();
-			foreach (var ow in permissionOverwrites)
-				restoverwrites.Add(ow.Build());
-		}
+			restOverwrites = permissionOverwrites.Select(ow => ow.Build()).ToList();
 
 		var pld = new RestChannelCreatePayload
 		{
@@ -2072,7 +2039,7 @@ public sealed class DiscordApiClient
 			PostCreateUserRateLimit = postCreateUserRateLimit,
 			DefaultAutoArchiveDuration = defaultAutoArchiveDuration,
 			DefaultReactionEmoji = defaultReactionEmoji,
-			PermissionOverwrites = restoverwrites,
+			PermissionOverwrites = restOverwrites,
 			DefaultSortOrder = defaultSortOrder,
 			Flags = flags,
 			Type = ChannelType.Forum
@@ -2111,18 +2078,13 @@ public sealed class DiscordApiClient
 	/// <param name="autoArchiveDuration">The default auto archive duration.</param>
 	/// <param name="type">The type.</param>
 	/// <param name="permissionOverwrites">The permission overwrites.</param>
+	/// <param name="flags">The flags.</param>
 	/// <param name="reason">The reason.</param>
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
-	internal Task ModifyChannelAsync(ulong channelId, string name, int? position, Optional<string> topic, bool? nsfw, Optional<ulong?> parent, Optional<int?> bitrate, Optional<int?> userLimit, Optional<int?> perUserRateLimit, Optional<string> rtcRegion, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? autoArchiveDuration, Optional<ChannelType> type, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, Optional<ChannelFlags?> flags, string reason)
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+	internal Task ModifyChannelAsync(ulong channelId, string name, int? position, Optional<string> topic, bool? nsfw, Optional<ulong?> parent, Optional<int?> bitrate, Optional<int?> userLimit, Optional<int?> perUserRateLimit, Optional<string> rtcRegion, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? autoArchiveDuration, Optional<ChannelType> type, IEnumerable<DiscordOverwriteBuilder>? permissionOverwrites, Optional<ChannelFlags?> flags, string? reason)
 	{
-		List<DiscordRestOverwrite> restoverwrites = null;
+		List<DiscordRestOverwrite>? restOverwrites = null;
 		if (permissionOverwrites != null)
-		{
-			restoverwrites = new();
-			foreach (var ow in permissionOverwrites)
-				restoverwrites.Add(ow.Build());
-		}
+			restOverwrites = permissionOverwrites.Select(ow => ow.Build()).ToList();
 
 		var pld = new RestChannelModifyPayload
 		{
@@ -2139,7 +2101,7 @@ public sealed class DiscordApiClient
 			DefaultAutoArchiveDuration = autoArchiveDuration,
 			Type = type,
 			Flags = flags,
-			PermissionOverwrites = restoverwrites
+			PermissionOverwrites = restOverwrites
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -2153,20 +2115,15 @@ public sealed class DiscordApiClient
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
 	}
 
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
 	internal async Task<DiscordChannel> ModifyForumChannelAsync(ulong channelId, string name, int? position,
 		Optional<string> topic, Optional<string> template, bool? nsfw,
 		Optional<ulong?> parent, Optional<List<ForumPostTag>?> availableTags, Optional<ForumReactionEmoji> defaultReactionEmoji,
 		Optional<int?> perUserRateLimit, Optional<int?> postCreateUserRateLimit, Optional<ForumPostSortOrder?> defaultSortOrder,
-		Optional<ThreadAutoArchiveDuration?> defaultAutoArchiveDuration, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, Optional<ChannelFlags?> flags, string reason)
+		Optional<ThreadAutoArchiveDuration?> defaultAutoArchiveDuration, IEnumerable<DiscordOverwriteBuilder>? permissionOverwrites, Optional<ChannelFlags?> flags, string? reason)
 	{
-		List<DiscordRestOverwrite> restoverwrites = null;
+		List<DiscordRestOverwrite> restOverwrites = null;
 		if (permissionOverwrites != null)
-		{
-			restoverwrites = new();
-			foreach (var ow in permissionOverwrites)
-				restoverwrites.Add(ow.Build());
-		}
+			restOverwrites = permissionOverwrites.Select(ow => ow.Build()).ToList();
 
 		var pld = new RestChannelModifyPayload
 		{
@@ -2180,7 +2137,7 @@ public sealed class DiscordApiClient
 			PostCreateUserRateLimit = postCreateUserRateLimit,
 			DefaultAutoArchiveDuration = defaultAutoArchiveDuration,
 			DefaultReactionEmoji = defaultReactionEmoji,
-			PermissionOverwrites = restoverwrites,
+			PermissionOverwrites = restOverwrites,
 			DefaultSortOrder = defaultSortOrder,
 			Flags = flags,
 			AvailableTags = availableTags
@@ -2206,7 +2163,6 @@ public sealed class DiscordApiClient
 	/// Gets the channel async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
-
 	internal async Task<DiscordChannel> GetChannelAsync(ulong channelId)
 	{
 		var route = $"{Endpoints.CHANNELS}/:channel_id";
@@ -2226,8 +2182,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="reason">The reason.</param>
-
-	internal Task DeleteChannelAsync(ulong channelId, string reason)
+	internal Task DeleteChannelAsync(ulong channelId, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -2245,7 +2200,6 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
-
 	internal async Task<DiscordMessage> GetMessageAsync(ulong channelId, ulong messageId)
 	{
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
@@ -2402,10 +2356,7 @@ public sealed class DiscordApiClient
 
 			var ret = this.PrepareMessage(JObject.Parse(res.Response));
 
-			foreach (var file in builder.FilesInternal.Where(x => x.ResetPositionTo.HasValue))
-			{
-				file.Stream.Position = file.ResetPositionTo.Value;
-			}
+			foreach (var file in builder.FilesInternal.Where(x => x.ResetPositionTo.HasValue)) file.Stream.Position = file.ResetPositionTo.Value;
 
 			return ret;
 		}
@@ -2643,10 +2594,8 @@ public sealed class DiscordApiClient
 			var ret = this.PrepareMessage(JObject.Parse(res.Response));
 
 			foreach (var file in files.Where(x => x.ResetPositionTo.HasValue))
-			{
 				if (file.ResetPositionTo != null)
 					file.Stream.Position = file.ResetPositionTo.Value;
-			}
 
 			return ret;
 		}
@@ -3100,14 +3049,14 @@ public sealed class DiscordApiClient
 	/// <param name="userId">The user_id.</param>
 	/// <param name="reason">The reason.</param>
 
-	internal Task RemoveGuildMemberAsync(ulong guildId, ulong userId, string reason)
+	internal Task RemoveGuildMemberAsync(ulong guildId, ulong userId, string? reason)
 	{
 		var urlParams = new Dictionary<string, string>();
 		if (reason != null)
 			urlParams["reason"] = reason;
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new {guild_id = guildId, user_id = userId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id = guildId, user_id = userId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, BuildQueryString(urlParams), this.Discord.Configuration);
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
@@ -3168,9 +3117,7 @@ public sealed class DiscordApiClient
 			return new ReadOnlyCollection<DiscordGuild>(new List<DiscordGuild>(glds));
 		}
 		else
-		{
 			return DiscordJson.DeserializeIEnumerableObject<List<DiscordGuild>>(res.Response, this.Discord);
-		}
 	}
 
 	/// <summary>
@@ -3188,7 +3135,7 @@ public sealed class DiscordApiClient
 	/// <param name="reason">The reason.</param>
 	internal Task ModifyGuildMemberAsync(ulong guildId, ulong userId, Optional<string> nick,
 		Optional<IEnumerable<ulong>> roleIds, Optional<bool> mute, Optional<bool> deaf,
-		Optional<ulong?> voiceChannelId, Optional<bool> verify, MemberFlags flags, string reason)
+		Optional<ulong?> voiceChannelId, Optional<bool> verify, MemberFlags flags, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -3209,7 +3156,7 @@ public sealed class DiscordApiClient
 		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new {guild_id = guildId, user_id = userId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id = guildId, user_id = userId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, payload: DiscordJson.SerializeObject(pld));
@@ -3222,7 +3169,7 @@ public sealed class DiscordApiClient
 	/// <param name="userId">The user_id.</param>
 	/// <param name="until">Datetime offset.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task ModifyTimeoutAsync(ulong guildId, ulong userId, DateTimeOffset? until, string reason)
+	internal Task ModifyTimeoutAsync(ulong guildId, ulong userId, DateTimeOffset? until, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -3234,7 +3181,7 @@ public sealed class DiscordApiClient
 		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new {guild_id = guildId, user_id = userId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id = guildId, user_id = userId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, payload: DiscordJson.SerializeObject(pld));
@@ -3246,7 +3193,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="nick">The nick.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task ModifyCurrentMemberNicknameAsync(ulong guildId, string nick, string reason)
+	internal Task ModifyCurrentMemberNicknameAsync(ulong guildId, string nick, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -3258,7 +3205,7 @@ public sealed class DiscordApiClient
 		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}{Endpoints.ME}{Endpoints.NICK}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new {guild_id = guildId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, payload: DiscordJson.SerializeObject(pld));
@@ -3294,10 +3241,10 @@ public sealed class DiscordApiClient
 	/// <param name="color">The color.</param>
 	/// <param name="hoist">If true, hoist.</param>
 	/// <param name="mentionable">If true, mentionable.</param>
-	/// <param name="iconb64">The icon.</param>
+	/// <param name="iconBase64">The icon.</param>
 	/// <param name="emoji">The unicode emoji icon.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordRole> ModifyGuildRoleAsync(ulong guildId, ulong roleId, string name, Permissions? permissions, int? color, bool? hoist, bool? mentionable, Optional<string> iconb64, Optional<string> emoji, string reason)
+	internal async Task<DiscordRole> ModifyGuildRoleAsync(ulong guildId, ulong roleId, string? name, Permissions? permissions, int? color, bool? hoist, bool? mentionable, Optional<string?> iconBase64, Optional<string?> emoji, string? reason)
 	{
 		var pld = new RestGuildRolePayload
 		{
@@ -3308,17 +3255,17 @@ public sealed class DiscordApiClient
 			Mentionable = mentionable,
 		};
 
-		if (emoji.HasValue && !iconb64.HasValue)
+		if (emoji.HasValue && !iconBase64.HasValue)
 			pld.UnicodeEmoji = emoji;
 
-		if (emoji.HasValue && iconb64.HasValue)
+		if (emoji.HasValue && iconBase64.HasValue)
 		{
 			pld.IconBase64 = null;
 			pld.UnicodeEmoji = emoji;
 		}
 
-		if (iconb64.HasValue)
-			pld.IconBase64 = iconb64;
+		if (iconBase64.HasValue)
+			pld.IconBase64 = iconBase64;
 
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -3342,7 +3289,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="roleId">The role_id.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task DeleteRoleAsync(ulong guildId, ulong roleId, string reason)
+	internal Task DeleteRoleAsync(ulong guildId, ulong roleId, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -3365,7 +3312,7 @@ public sealed class DiscordApiClient
 	/// <param name="hoist">If true, hoist.</param>
 	/// <param name="mentionable">If true, mentionable.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordRole> CreateGuildRoleAsync(ulong guildId, string name, Permissions? permissions, int? color, bool? hoist, bool? mentionable, string reason)
+	internal async Task<DiscordRole> CreateGuildRoleAsync(ulong guildId, string name, Permissions? permissions, int? color, bool? hoist, bool? mentionable, string? reason)
 	{
 		var pld = new RestGuildRolePayload
 		{
@@ -3401,9 +3348,9 @@ public sealed class DiscordApiClient
 	/// <param name="days">The days.</param>
 	/// <param name="includeRoles">The include_roles.</param>
 
-	internal async Task<int> GetGuildPruneCountAsync(ulong guildId, int days, IEnumerable<ulong> includeRoles)
+	internal async Task<int?> GetGuildPruneCountAsync(ulong guildId, int days, IEnumerable<ulong>? includeRoles)
 	{
-		if (days < 0 || days > 30)
+		if (days is < 0 or > 30)
 			throw new ArgumentException("Prune inactivity days must be a number between 0 and 30.", nameof(days));
 
 		var urlParams = new Dictionary<string, string>
@@ -3416,13 +3363,13 @@ public sealed class DiscordApiClient
 				 ?? new StringBuilder();
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.PRUNE}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id = guildId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId }, out var path);
 		var url = Utilities.GetApiUriFor(path, $"{BuildQueryString(urlParams)}{sb}", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var pruned = DiscordJson.DeserializeObject<RestGuildPruneResultPayload>(res.Response, this.Discord);
 
-		return pruned.Pruned.Value;
+		return pruned.Pruned;
 	}
 
 	/// <summary>
@@ -3434,9 +3381,9 @@ public sealed class DiscordApiClient
 	/// <param name="includeRoles">The include_roles.</param>
 	/// <param name="reason">The reason.</param>
 
-	internal async Task<int?> BeginGuildPruneAsync(ulong guildId, int days, bool computePruneCount, IEnumerable<ulong> includeRoles, string reason)
+	internal async Task<int?> BeginGuildPruneAsync(ulong guildId, int days, bool computePruneCount, IEnumerable<ulong>? includeRoles, string? reason)
 	{
-		if (days < 0 || days > 30)
+		if (days is < 0 or > 30)
 			throw new ArgumentException("Prune inactivity days must be a number between 0 and 30.", nameof(days));
 
 		var urlParams = new Dictionary<string, string>
@@ -3454,7 +3401,7 @@ public sealed class DiscordApiClient
 			headers.Add(REASON_HEADER_NAME, reason);
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.PRUNE}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {guild_id = guildId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, $"{BuildQueryString(urlParams)}{sb}", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers).ConfigureAwait(false);
@@ -3751,7 +3698,6 @@ public sealed class DiscordApiClient
 	{
 		var pld = new List<RestApplicationRoleConnectionMetadataPayload>();
 		foreach (var metadataObject in metadataObjects)
-		{
 			pld.Add(new()
 			{
 				Type = metadataObject.Type,
@@ -3761,7 +3707,6 @@ public sealed class DiscordApiClient
 				NameLocalizations = metadataObject.NameLocalizations?.GetKeyValuePairs(),
 				DescriptionLocalizations = metadataObject.DescriptionLocalizations?.GetKeyValuePairs()
 			});
-		}
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.ROLE_CONNECTIONS}{Endpoints.METADATA}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { application_id = id }, out var path);
@@ -4501,10 +4446,7 @@ public sealed class DiscordApiClient
 			}
 		}
 		else
-		{
 			pld.Type = type;
-		}
-
 
 
 		var headers = Utilities.GetBaseHeaders();
@@ -4876,16 +4818,15 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="name">The name.</param>
-	/// <param name="imageb64">The imageb64.</param>
+	/// <param name="imageBase64">The image.</param>
 	/// <param name="roles">The roles.</param>
 	/// <param name="reason">The reason.</param>
-
-	internal async Task<DiscordGuildEmoji> CreateGuildEmojiAsync(ulong guildId, string name, string imageb64, IEnumerable<ulong> roles, string reason)
+	internal async Task<DiscordGuildEmoji> CreateGuildEmojiAsync(ulong guildId, string name, string imageBase64, IEnumerable<ulong>? roles, string? reason)
 	{
 		var pld = new RestGuildEmojiCreatePayload
 		{
 			Name = name,
-			ImageB64 = imageb64,
+			ImageB64 = imageBase64,
 			Roles = roles?.ToArray()
 		};
 
@@ -4908,7 +4849,7 @@ public sealed class DiscordApiClient
 		var xtu = emojiRaw["user"]?.ToObject<TransportUser>();
 		emoji.User = xtu != null
 			? gld != null && gld.Members.TryGetValue(xtu.Id, out var member) ? member : new DiscordUser(xtu)
-			: this.Discord.CurrentUser;
+			: this.Discord.CurrentUser!;
 
 		return emoji;
 	}
@@ -4916,13 +4857,12 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Modifies the guild emoji async.
 	/// </summary>
-	/// <param name="guildId">The guild_id.</param>
-	/// <param name="emojiId">The emoji_id.</param>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="emojiId">The emoji id.</param>
 	/// <param name="name">The name.</param>
 	/// <param name="roles">The roles.</param>
 	/// <param name="reason">The reason.</param>
-
-	internal async Task<DiscordGuildEmoji> ModifyGuildEmojiAsync(ulong guildId, ulong emojiId, string name, IEnumerable<ulong> roles, string reason)
+	internal async Task<DiscordGuildEmoji> ModifyGuildEmojiAsync(ulong guildId, ulong emojiId, string? name, IEnumerable<ulong>? roles, string? reason)
 	{
 		var pld = new RestGuildEmojiModifyPayload
 		{
@@ -4956,11 +4896,10 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Deletes the guild emoji async.
 	/// </summary>
-	/// <param name="guildId">The guild_id.</param>
-	/// <param name="emojiId">The emoji_id.</param>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="emojiId">The emoji id.</param>
 	/// <param name="reason">The reason.</param>
-
-	internal Task DeleteGuildEmojiAsync(ulong guildId, ulong emojiId, string reason)
+	internal Task DeleteGuildEmojiAsync(ulong guildId, ulong emojiId, string? reason)
 	{
 		var headers = new Dictionary<string, string>();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -5050,10 +4989,10 @@ public sealed class DiscordApiClient
 	/// <param name="tags">The tags.</param>
 	/// <param name="file">The file.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordSticker> CreateGuildStickerAsync(ulong guildId, string name, string description, string tags, DiscordMessageFile file, string reason)
+	internal async Task<DiscordSticker> CreateGuildStickerAsync(ulong guildId, string name, string description, string tags, DiscordMessageFile file, string? reason)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {guild_id = guildId}, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id = guildId}, out var path);
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 
 		var headers = Utilities.GetBaseHeaders();
@@ -5075,10 +5014,10 @@ public sealed class DiscordApiClient
 	/// <param name="description">The description.</param>
 	/// <param name="tags">The tags.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordSticker> ModifyGuildStickerAsync(ulong guildId, ulong stickerId, Optional<string> name, Optional<string> description, Optional<string> tags, string reason)
+	internal async Task<DiscordSticker> ModifyGuildStickerAsync(ulong guildId, ulong stickerId, Optional<string> name, Optional<string?> description, Optional<string?> tags, string? reason)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}/:sticker_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new {guild_id = guildId, sticker_id = stickerId}, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id = guildId, sticker_id = stickerId}, out var path);
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -5107,10 +5046,10 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="stickerId">The sticker id.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task DeleteGuildStickerAsync(ulong guildId, ulong stickerId, string reason)
+	internal async Task DeleteGuildStickerAsync(ulong guildId, ulong stickerId, string? reason)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}/:sticker_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new {guild_id = guildId, sticker_id = stickerId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id = guildId, sticker_id = stickerId }, out var path);
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -5152,7 +5091,6 @@ public sealed class DiscordApiClient
 	{
 		var pld = new List<RestApplicationCommandCreatePayload>();
 		foreach (var command in commands)
-		{
 			pld.Add(new()
 			{
 				Type = command.Type,
@@ -5165,7 +5103,6 @@ public sealed class DiscordApiClient
 				DmPermission = command.DmPermission,
 				Nsfw = command.IsNsfw
 			});
-		}
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new {application_id = applicationId }, out var path);
@@ -5317,7 +5254,6 @@ public sealed class DiscordApiClient
 	{
 		var pld = new List<RestApplicationCommandCreatePayload>();
 		foreach (var command in commands)
-		{
 			pld.Add(new()
 			{
 				Type = command.Type,
@@ -5330,7 +5266,6 @@ public sealed class DiscordApiClient
 				DmPermission = command.DmPermission,
 				Nsfw = command.IsNsfw
 			});
-		}
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new {application_id = applicationId, guild_id = guildId }, out var path);
@@ -5523,7 +5458,6 @@ public sealed class DiscordApiClient
 			}
 		}
 		else
-		{
 			pld = new()
 			{
 				Type = type,
@@ -5540,7 +5474,6 @@ public sealed class DiscordApiClient
 				},
 				Attachments = null
 			};
-		}
 
 		var values = new Dictionary<string, string>();
 
@@ -5691,15 +5624,9 @@ public sealed class DiscordApiClient
 		var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
 		var ret = DiscordJson.DeserializeObject<DiscordMessage>(res.Response, this.Discord);
 
-		foreach (var att in ret.AttachmentsInternal)
-		{
-			att.Discord = this.Discord;
-		}
+		foreach (var att in ret.AttachmentsInternal) att.Discord = this.Discord;
 
-		foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
-		{
-			file.Stream.Position = file.ResetPositionTo.Value;
-		}
+		foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue)) file.Stream.Position = file.ResetPositionTo.Value;
 
 		ret.Discord = this.Discord;
 		return ret;

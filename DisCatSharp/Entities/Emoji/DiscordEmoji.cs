@@ -255,10 +255,8 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 			throw new ArgumentNullException(nameof(client), "Client cannot be null.");
 
 		foreach (var guild in client.Guilds.Values)
-		{
 			if (guild.Emojis.TryGetValue(id, out var found))
 				return found;
-		}
 
 		throw new KeyNotFoundException("Given emote was not found.");
 	}
@@ -276,10 +274,8 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 			throw new ArgumentNullException(nameof(client), "Client cannot be null.");
 
 		foreach (var guild in client.Guilds.Values)
-		{
 			if (guild.Emojis.TryGetValue(id, out emoji))
 				return true;
-		}
 
 		emoji = null;
 		return false;

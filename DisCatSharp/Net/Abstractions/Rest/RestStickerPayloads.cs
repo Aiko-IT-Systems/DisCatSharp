@@ -41,11 +41,11 @@ internal sealed class RestStickerModifyPayload : ObservableApiObject
 	/// Gets or sets the description.
 	/// </summary>
 	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
-	public Optional<string> Description { get; set; }
+	public Optional<string?> Description { get; set; }
 
 	/// <summary>
 	/// Gets or sets the tags.
 	/// </summary>
 	[JsonProperty("tags", NullValueHandling = NullValueHandling.Ignore)]
-	public Optional<string> Tags { get; set; }
+	public Optional<string?> Tags { get; set; }
 }

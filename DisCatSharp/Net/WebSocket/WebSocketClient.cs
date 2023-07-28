@@ -167,7 +167,7 @@ public class WebSocketClient : IWebSocketClient
 		try
 		{
 			this._isClientClose = true;
-			if (this._ws != null && (this._ws.State == WebSocketState.Open || this._ws.State == WebSocketState.CloseReceived))
+			if (this._ws != null && this._ws.State is WebSocketState.Open or WebSocketState.CloseReceived)
 				await this._ws.CloseOutputAsync((WebSocketCloseStatus)code, message, CancellationToken.None).ConfigureAwait(false);
 
 			if (this._receiverTask != null)
@@ -313,19 +313,15 @@ public class WebSocketClient : IWebSocketClient
 				}
 
 				if (result.MessageType == WebSocketMessageType.Binary)
-				{
 					await this._messageReceived.InvokeAsync(this, new SocketBinaryMessageEventArgs(resultBytes)).ConfigureAwait(false);
-				}
 				else if (result.MessageType == WebSocketMessageType.Text)
-				{
 					await this._messageReceived.InvokeAsync(this, new SocketTextMessageEventArgs(Utilities.UTF8.GetString(resultBytes))).ConfigureAwait(false);
-				}
 				else // close
 				{
 					if (!this._isClientClose)
 					{
 						var code = result.CloseStatus.Value;
-						code = code == WebSocketCloseStatus.NormalClosure || code == WebSocketCloseStatus.EndpointUnavailable
+						code = code is WebSocketCloseStatus.NormalClosure or WebSocketCloseStatus.EndpointUnavailable
 							? (WebSocketCloseStatus)4000
 							: code;
 

@@ -176,7 +176,6 @@ public sealed class DisCatSharpTeam : SnowflakeObject
 					team.Add(owner);
 				}
 				else
-				{
 					team.Add(new()
 					{
 						Id = user.Id,
@@ -186,7 +185,6 @@ public sealed class DisCatSharpTeam : SnowflakeObject
 						BannerHash = tuser.BannerHash,
 						BannerColorInternal = tuser.BannerColorInternal
 					});
-				}
 			}
 
 			dcst.Owner = owner;

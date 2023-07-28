@@ -56,52 +56,52 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets the guild icon's hash.
 	/// </summary>
 	[JsonProperty("icon", NullValueHandling = NullValueHandling.Ignore)]
-	public string IconHash { get; internal set; }
+	public string? IconHash { get; internal set; }
 
 	/// <summary>
 	/// Gets the guild icon's url.
 	/// </summary>
 	[JsonIgnore]
-	public string IconUrl
+	public string? IconUrl
 		=> !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.{(this.IconHash.StartsWith("a_") ? "gif" : "png")}?size=1024" : null;
 
 	/// <summary>
 	/// Gets the guild splash's hash.
 	/// </summary>
 	[JsonProperty("splash", NullValueHandling = NullValueHandling.Ignore)]
-	public string SplashHash { get; internal set; }
+	public string? SplashHash { get; internal set; }
 
 	/// <summary>
 	/// Gets the guild splash's url.
 	/// </summary>
 	[JsonIgnore]
-	public string SplashUrl
+	public string? SplashUrl
 	 => !string.IsNullOrWhiteSpace(this.SplashHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.SplashHash}.png?size=1024" : null;
 
 	/// <summary>
 	/// Gets the guild discovery splash's hash.
 	/// </summary>
 	[JsonProperty("discovery_splash", NullValueHandling = NullValueHandling.Ignore)]
-	public string DiscoverySplashHash { get; internal set; }
+	public string? DiscoverySplashHash { get; internal set; }
 
 	/// <summary>
 	/// Gets the guild discovery splash's url.
 	/// </summary>
 	[JsonIgnore, RequiresFeature(Attributes.Features.Discoverable)]
-	public string DiscoverySplashUrl
+	public string? DiscoverySplashUrl
 		=> !string.IsNullOrWhiteSpace(this.DiscoverySplashHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILD_DISCOVERY_SPLASHES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.DiscoverySplashHash}.png?size=1024" : null;
 
 	/// <summary>
 	/// Gets the guild home header's hash.
 	/// </summary>
 	[JsonProperty("home_header", NullValueHandling = NullValueHandling.Ignore)]
-	public string HomeHeaderHash { get; internal set; }
+	public string? HomeHeaderHash { get; internal set; }
 
 	/// <summary>
 	/// Gets the guild home header's url.
 	/// </summary>
 	[JsonIgnore, RequiresFeature(Attributes.Features.Onboarding, "Requires to have guide enabled.")]
-	public string HomeHeaderUrl
+	public string? HomeHeaderUrl
 		=> !string.IsNullOrWhiteSpace(this.HomeHeaderHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILD_HOME_HEADERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.HomeHeaderHash}.jpg?size=1280" : null;
 
 	/// <summary>
@@ -149,14 +149,14 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets the guild's AFK voice channel ID.
 	/// </summary>
 	[JsonProperty("afk_channel_id", NullValueHandling = NullValueHandling.Ignore)]
-	internal ulong AfkChannelId { get; set; }
+	internal ulong? AfkChannelId { get; set; }
 
 	/// <summary>
 	/// Gets the guild's AFK voice channel.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordChannel AfkChannel
-		=> this.GetChannel(this.AfkChannelId);
+	public DiscordChannel? AfkChannel
+		=> this.AfkChannelId.HasValue ? this.GetChannel(this.AfkChannelId.Value) : null;
 
 	/// <summary>
 	/// List of <see cref="DisCatSharp.Entities.DiscordApplicationCommand"/>.
@@ -172,7 +172,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets the guild's AFK timeout.
 	/// </summary>
 	[JsonProperty("afk_timeout", NullValueHandling = NullValueHandling.Ignore)]
-	public int AfkTimeout { get; internal set; }
+	public int? AfkTimeout { get; internal set; }
 
 	/// <summary>
 	/// Gets the guild's verification level.
@@ -208,7 +208,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets the channel where system messages (such as boost and welcome messages) are sent.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordChannel SystemChannel
+	public DiscordChannel? SystemChannel
 		=> this.SystemChannelId.HasValue
 		? this.GetChannel(this.SystemChannelId.Value)
 		: null;
@@ -235,7 +235,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets the widget channel for this guild.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordChannel WidgetChannel
+	public DiscordChannel? WidgetChannel
 		=> this.WidgetChannelId.HasValue
 		? this.GetChannel(this.WidgetChannelId.Value)
 		: null;
@@ -250,7 +250,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets the safety alert channel for this guild.
 	/// </summary>
 	[JsonIgnore, RequiresFeature(Attributes.Features.Community)]
-	public DiscordChannel SafetyAltersChannel
+	public DiscordChannel? SafetyAltersChannel
 		=> this.SafetyAlertsChannelId.HasValue
 		? this.GetChannel(this.SafetyAlertsChannelId.Value)
 		: null;
@@ -266,7 +266,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <para>This is only available if the guild is considered "discoverable".</para>
 	/// </summary>
 	[JsonIgnore, RequiresFeature(Attributes.Features.Community)]
-	public DiscordChannel RulesChannel
+	public DiscordChannel? RulesChannel
 		=> this.RulesChannelId.HasValue
 		? this.GetChannel(this.RulesChannelId.Value)
 		: null;
@@ -282,7 +282,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <para>This is only available if the guild is considered "discoverable".</para>
 	/// </summary>
 	[JsonIgnore, RequiresFeature(Attributes.Features.Community)]
-	public DiscordChannel PublicUpdatesChannel
+	public DiscordChannel? PublicUpdatesChannel
 		=> this.PublicUpdatesChannelId.HasValue
 		? this.GetChannel(this.PublicUpdatesChannelId.Value)
 		: null;
@@ -409,7 +409,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// the voice state corresponds to.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyDictionary<ulong, DiscordVoiceState> VoiceStates => new ReadOnlyConcurrentDictionary<ulong, DiscordVoiceState>(this.VoiceStatesInternal);
+	public IReadOnlyDictionary<ulong, DiscordVoiceState> VoiceStates
+		=> new ReadOnlyConcurrentDictionary<ulong, DiscordVoiceState>(this.VoiceStatesInternal);
 
 	[JsonProperty("voice_states", NullValueHandling = NullValueHandling.Ignore)]
 	[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
@@ -419,7 +420,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets a dictionary of all the members that belong to this guild. The dictionary's key is the member ID.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyDictionary<ulong, DiscordMember> Members => new ReadOnlyConcurrentDictionary<ulong, DiscordMember>(this.MembersInternal);
+	public IReadOnlyDictionary<ulong, DiscordMember> Members
+		=> new ReadOnlyConcurrentDictionary<ulong, DiscordMember>(this.MembersInternal);
 
 	[JsonProperty("members", NullValueHandling = NullValueHandling.Ignore)]
 	[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
@@ -429,7 +431,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets a dictionary of all the channels associated with this guild. The dictionary's key is the channel ID.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyDictionary<ulong, DiscordChannel> Channels => new ReadOnlyConcurrentDictionary<ulong, DiscordChannel>(this.ChannelsInternal);
+	public IReadOnlyDictionary<ulong, DiscordChannel> Channels
+		=> new ReadOnlyConcurrentDictionary<ulong, DiscordChannel>(this.ChannelsInternal);
 
 	[JsonProperty("channels", NullValueHandling = NullValueHandling.Ignore)]
 	[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
@@ -493,7 +496,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	[JsonProperty("owner", NullValueHandling = NullValueHandling.Ignore)]
 	public bool IsOwner
 	{
-		get => this.IsOwnerInternal || this.OwnerId == this.Discord.CurrentUser.Id;
+		get => this.IsOwnerInternal || this.OwnerId == this.Discord.CurrentUser!.Id;
 		internal set => this.IsOwnerInternal = value;
 	}
 
@@ -501,25 +504,25 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets the vanity URL code for this guild, when applicable.
 	/// </summary>
 	[JsonProperty("vanity_url_code")]
-	public string VanityUrlCode { get; internal set; }
+	public string? VanityUrlCode { get; internal set; }
 
 	/// <summary>
 	/// Gets the guild description, when applicable.
 	/// </summary>
 	[JsonProperty("description"), RequiresFeature(Attributes.Features.Community)]
-	public string Description { get; internal set; }
+	public string? Description { get; internal set; }
 
 	/// <summary>
 	/// Gets this guild's banner hash, when applicable.
 	/// </summary>
 	[JsonProperty("banner")]
-	public string BannerHash { get; internal set; }
+	public string? BannerHash { get; internal set; }
 
 	/// <summary>
 	/// Gets this guild's banner in url form.
 	/// </summary>
 	[JsonIgnore]
-	public string BannerUrl
+	public string? BannerUrl
 		=> !string.IsNullOrWhiteSpace(this.BannerHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}" : null;
 
 	/// <summary>
@@ -643,28 +646,17 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 			{ 0, new() }
 		};
 
-		foreach (var channel in rawChannels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
-		{
-			orderedChannels.Add(channel.Id, new());
-		}
+		foreach (var channel in rawChannels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position)) orderedChannels.Add(channel.Id, new());
 
-		foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Text || c.Type == ChannelType.News || c.Type == ChannelType.Forum)).OrderBy(c => c.Position))
-		{
-			orderedChannels[channel.ParentId.Value!].Add(channel);
-		}
-		foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
-		{
-			orderedChannels[channel.ParentId.Value!].Add(channel);
-		}
+		foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && c.Type is ChannelType.Text or ChannelType.News or ChannelType.Forum).OrderBy(c => c.Position))
+			if (channel.ParentId != null)
+				orderedChannels[channel.ParentId.Value!].Add(channel);
+		foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && c.Type is ChannelType.Voice or ChannelType.Stage).OrderBy(c => c.Position))
+			if (channel.ParentId != null)
+				orderedChannels[channel.ParentId.Value!].Add(channel);
 
-		foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Text || c.Type == ChannelType.News || c.Type == ChannelType.Forum)).OrderBy(c => c.Position))
-		{
-			orderedChannels[0].Add(channel);
-		}
-		foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
-		{
-			orderedChannels[0].Add(channel);
-		}
+		foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && c.Type is ChannelType.Text or ChannelType.News or ChannelType.Forum).OrderBy(c => c.Position)) orderedChannels[0].Add(channel);
+		foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && c.Type is ChannelType.Voice or ChannelType.Stage).OrderBy(c => c.Position)) orderedChannels[0].Add(channel);
 
 		return orderedChannels;
 	}
@@ -685,28 +677,17 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 			{ 0, new() }
 		};
 
-		foreach (var channel in rawChannels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
-		{
-			orderedChannels.Add(channel.Id, new());
-		}
+		foreach (var channel in rawChannels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position)) orderedChannels.Add(channel.Id, new());
 
-		foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Text || c.Type == ChannelType.News || c.Type == ChannelType.Forum)).OrderBy(c => c.Position))
-		{
-			orderedChannels[channel.ParentId.Value!].Add(channel);
-		}
-		foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
-		{
-			orderedChannels[channel.ParentId.Value!].Add(channel);
-		}
+		foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && c.Type is ChannelType.Text or ChannelType.News or ChannelType.Forum).OrderBy(c => c.Position))
+			if (channel.ParentId != null)
+				orderedChannels[channel.ParentId.Value!].Add(channel);
+		foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && c.Type is ChannelType.Voice or ChannelType.Stage).OrderBy(c => c.Position))
+			if (channel.ParentId != null)
+				orderedChannels[channel.ParentId.Value!].Add(channel);
 
-		foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Text || c.Type == ChannelType.News || c.Type == ChannelType.Forum)).OrderBy(c => c.Position))
-		{
-			orderedChannels[0].Add(channel);
-		}
-		foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
-		{
-			orderedChannels[0].Add(channel);
-		}
+		foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && c.Type is ChannelType.Text or ChannelType.News or ChannelType.Forum).OrderBy(c => c.Position)) orderedChannels[0].Add(channel);
+		foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && c.Type is ChannelType.Voice or ChannelType.Stage).OrderBy(c => c.Position)) orderedChannels[0].Add(channel);
 
 		return orderedChannels;
 	}
@@ -865,17 +846,17 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		var publicUpdatesChannelId = ChannelToId(mdl.PublicUpdatesChannel, "Public updates");
 		var systemChannelId = ChannelToId(mdl.SystemChannel, "System");
 
-		var iconb64 = ImageTool.Base64FromStream(mdl.Icon);
-		var splashb64 = ImageTool.Base64FromStream(mdl.Splash);
-		var bannerb64 = ImageTool.Base64FromStream(mdl.Banner);
-		var discoverySplashb64 = ImageTool.Base64FromStream(mdl.DiscoverySplash);
-		var homeHeaderb64 = ImageTool.Base64FromStream(mdl.HomeHeader);
+		var iconBase64 = ImageTool.Base64FromStream(mdl.Icon);
+		var splashBase64 = ImageTool.Base64FromStream(mdl.Splash);
+		var bannerBase64 = ImageTool.Base64FromStream(mdl.Banner);
+		var discoverySplashBase64 = ImageTool.Base64FromStream(mdl.DiscoverySplash);
+		var homeHeaderBase64 = ImageTool.Base64FromStream(mdl.HomeHeader);
 
 		return await this.Discord.ApiClient.ModifyGuildAsync(this.Id, mdl.Name,
 			mdl.VerificationLevel, mdl.DefaultMessageNotifications, mdl.MfaLevel, mdl.ExplicitContentFilter,
-			afkChannelId, mdl.AfkTimeout, iconb64, mdl.Owner.Map(e => e.Id), splashb64,
+			afkChannelId, mdl.AfkTimeout, iconBase64, mdl.Owner.Map(e => e.Id), splashBase64,
 			systemChannelId, mdl.SystemChannelFlags, publicUpdatesChannelId, rulesChannelId,
-			mdl.Description, bannerb64, discoverySplashb64, homeHeaderb64, mdl.PreferredLocale, mdl.PremiumProgressBarEnabled, mdl.AuditLogReason).ConfigureAwait(false);
+			mdl.Description, bannerBase64, discoverySplashBase64, homeHeaderBase64, mdl.PreferredLocale, mdl.PremiumProgressBarEnabled, mdl.AuditLogReason).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -893,17 +874,14 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordGuild> ModifyCommunitySettingsAsync(bool enabled, DiscordChannel rulesChannel, DiscordChannel publicUpdatesChannel, string preferredLocale = "en-US", string description = null, DefaultMessageNotifications defaultMessageNotifications = DefaultMessageNotifications.MentionsOnly, string? reason = null)
+	public async Task<DiscordGuild> ModifyCommunitySettingsAsync(bool enabled, DiscordChannel? rulesChannel = null, DiscordChannel? publicUpdatesChannel = null, string preferredLocale = "en-US", string? description = null, DefaultMessageNotifications defaultMessageNotifications = DefaultMessageNotifications.MentionsOnly, string? reason = null)
 	{
 		var verificationLevel = this.VerificationLevel;
-		if (this.VerificationLevel != VerificationLevel.Highest)
-		{
-			verificationLevel = VerificationLevel.High;
-		}
+		if (this.VerificationLevel != VerificationLevel.Highest) verificationLevel = VerificationLevel.High;
 
 		var explicitContentFilter = ExplicitContentFilter.AllMembers;
 
-		static Optional<ulong?> ChannelToId(DiscordChannel ch, string name)
+		static Optional<ulong?> ChannelToId(DiscordChannel? ch, string name)
 			=> ch == null ? null :
 				ch.Type != ChannelType.Text && ch.Type != ChannelType.News
 					? throw new ArgumentException($"{name} channel needs to be a text channel.")
@@ -911,18 +889,11 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 		var rulesChannelId = ChannelToId(rulesChannel, "Rules");
 		var publicUpdatesChannelId = ChannelToId(publicUpdatesChannel, "Public updates");
-
-		List<string> features = new();
-		var rfeatures = this.RawFeatures.ToList();
+		
+		var features = this.RawFeatures.ToList();
 		if (!this.RawFeatures.Contains("COMMUNITY") && enabled)
-		{
-			rfeatures.Add("COMMUNITY");
-		}
-		else if (this.RawFeatures.Contains("COMMUNITY") && !enabled)
-		{
-			rfeatures.Remove("COMMUNITY");
-		}
-		features = rfeatures;
+			features.Add("COMMUNITY");
+		else if (this.RawFeatures.Contains("COMMUNITY") && !enabled) features.Remove("COMMUNITY");
 
 		return await this.Discord.ApiClient.ModifyGuildCommunitySettingsAsync(this.Id, features, rulesChannelId, publicUpdatesChannelId, preferredLocale, description, defaultMessageNotifications, explicitContentFilter, verificationLevel, reason).ConfigureAwait(false);
 	}
@@ -942,27 +913,20 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	[RequiresFeature(Attributes.Features.Community)]
-	public async Task<DiscordGuild> ModifySafetyAlertsSettingsAsync(bool enabled, DiscordChannel safetyAlertsChannel, string? reason = null)
+	public async Task<DiscordGuild> ModifySafetyAlertsSettingsAsync(bool enabled, DiscordChannel? safetyAlertsChannel, string? reason = null)
 	{
-		static Optional<ulong?> ChannelToId(DiscordChannel ch, string name)
+		static Optional<ulong?> ChannelToId(DiscordChannel? ch, string name)
 			=> ch == null ? null :
 				ch.Type != ChannelType.Text && ch.Type != ChannelType.News
 					? throw new ArgumentException($"{name} channel needs to be a text channel.")
 					: ch.Id;
 
 		var safetyAlertsChannelId = ChannelToId(safetyAlertsChannel, "Safety Alerts");
-
-		List<string> features = new();
-		var rfeatures = this.RawFeatures.ToList();
+		
+		var features = this.RawFeatures.ToList();
 		if (!this.RawFeatures.Contains("RAID_ALERTS_ENABLED") && enabled)
-		{
-			rfeatures.Add("RAID_ALERTS_ENABLED");
-		}
-		else if (this.RawFeatures.Contains("RAID_ALERTS_ENABLED") && !enabled)
-		{
-			rfeatures.Remove("RAID_ALERTS_ENABLED");
-		}
-		features = rfeatures;
+			features.Add("RAID_ALERTS_ENABLED");
+		else if (this.RawFeatures.Contains("RAID_ALERTS_ENABLED") && !enabled) features.Remove("RAID_ALERTS_ENABLED");
 
 		return await this.Discord.ApiClient.ModifyGuildSafetyAlertsSettingsAsync(this.Id, features, safetyAlertsChannelId, reason).ConfigureAwait(false);
 	}
@@ -977,11 +941,9 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordGuild> EnableInvitesAsync(string? reason = null)
 	{
-		List<string> features = new();
-		var rfeatures = this.RawFeatures.ToList();
+		var features = this.RawFeatures.ToList();
 		if (this.Features.HasFeature(GuildFeaturesEnum.InvitesDisabled))
-			rfeatures.Remove("INVITES_DISABLED");
-		features = rfeatures;
+			features.Remove("INVITES_DISABLED");
 
 		return await this.Discord.ApiClient.ModifyGuildFeaturesAsync(this.Id, features, reason).ConfigureAwait(false);
 	}
@@ -1095,7 +1057,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task BanMemberAsync(ulong userId, int deleteMessageDays = 0, string reason = null)
+	public Task BanMemberAsync(ulong userId, int deleteMessageDays = 0, string? reason = null)
 		=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, userId, deleteMessageDays, reason);
 
 	/// <summary>
@@ -1229,7 +1191,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	[RequiresFeature(Attributes.Features.Community)]
 	public async Task<AutomodRule> CreateAutomodRuleAsync(string name, AutomodEventType eventType, AutomodTriggerType triggerType, IEnumerable<AutomodAction> actions,
-		AutomodTriggerMetadata triggerMetadata = null, bool enabled = false, IEnumerable<ulong> exemptRoles = null, IEnumerable<ulong> exemptChannels = null, string reason = null)
+		AutomodTriggerMetadata? triggerMetadata = null, bool enabled = false, IEnumerable<ulong>? exemptRoles = null, IEnumerable<ulong>? exemptChannels = null, string? reason = null)
 		=> await this.Discord.ApiClient.CreateAutomodRuleAsync(this.Id, name, eventType, triggerType, actions, triggerMetadata, enabled, exemptRoles, exemptChannels, reason).ConfigureAwait(false);
 
 	#region Scheduled Events
@@ -1250,10 +1212,10 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset? scheduledEndTime = null, DiscordChannel channel = null, DiscordScheduledEventEntityMetadata metadata = null, string description = null, ScheduledEventEntityType type = ScheduledEventEntityType.StageInstance, Optional<Stream> coverImage = default, string reason = null)
+	public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset? scheduledEndTime = null, DiscordChannel? channel = null, DiscordScheduledEventEntityMetadata? metadata = null, string? description = null, ScheduledEventEntityType type = ScheduledEventEntityType.StageInstance, Optional<Stream> coverImage = default, string? reason = null)
 	{
-		var coverb64 = ImageTool.Base64FromStream(coverImage);
-		return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, type == ScheduledEventEntityType.External ? null : channel?.Id, type == ScheduledEventEntityType.External ? metadata : null, name, scheduledStartTime, scheduledEndTime.HasValue && type == ScheduledEventEntityType.External ? scheduledEndTime.Value : null, description, type, coverb64, reason).ConfigureAwait(false);
+		var coverBase64 = ImageTool.Base64FromStream(coverImage);
+		return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, type == ScheduledEventEntityType.External ? null : channel?.Id, type == ScheduledEventEntityType.External ? metadata : null, name, scheduledStartTime, scheduledEndTime.HasValue && type == ScheduledEventEntityType.External ? scheduledEndTime.Value : null, description, type, coverBase64, reason).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1270,10 +1232,10 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordScheduledEvent> CreateExternalScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset scheduledEndTime, string location, string description = null, Optional<Stream> coverImage = default, string reason = null)
+	public async Task<DiscordScheduledEvent> CreateExternalScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset scheduledEndTime, string location, string? description = null, Optional<Stream?> coverImage = default, string? reason = null)
 	{
-		var coverb64 = ImageTool.Base64FromStream(coverImage);
-		return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, new(location), name, scheduledStartTime, scheduledEndTime, description, ScheduledEventEntityType.External, coverb64, reason).ConfigureAwait(false);
+		var coverBase64 = ImageTool.Base64FromStream(coverImage);
+		return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, new(location), name, scheduledStartTime, scheduledEndTime, description, ScheduledEventEntityType.External, coverBase64, reason).ConfigureAwait(false);
 	}
 
 
@@ -1370,7 +1332,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordChannel> CreateTextChannelAsync(string name, DiscordChannel parent = null, Optional<string> topic = default, IEnumerable<DiscordOverwriteBuilder> overwrites = null, bool? nsfw = null, Optional<int?> perUserRateLimit = default, ThreadAutoArchiveDuration defaultAutoArchiveDuration = ThreadAutoArchiveDuration.OneDay, Optional<ChannelFlags?> flags = default, string reason = null)
+	public Task<DiscordChannel> CreateTextChannelAsync(string name, DiscordChannel? parent = null, Optional<string> topic = default, IEnumerable<DiscordOverwriteBuilder> overwrites = null, bool? nsfw = null, Optional<int?> perUserRateLimit = default, ThreadAutoArchiveDuration defaultAutoArchiveDuration = ThreadAutoArchiveDuration.OneDay, Optional<ChannelFlags?> flags = default, string? reason = null)
 		=> this.CreateChannelAsync(name, ChannelType.Text, parent, topic, null, null, overwrites, nsfw, perUserRateLimit, null, defaultAutoArchiveDuration, flags, reason);
 
 	/// <summary>
@@ -1485,9 +1447,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordChannel> CreateChannelAsync(string name, ChannelType type, DiscordChannel parent = null, Optional<string> topic = default, int? bitrate = null, int? userLimit = null, IEnumerable<DiscordOverwriteBuilder> overwrites = null, bool? nsfw = null, Optional<int?> perUserRateLimit = default, VideoQualityMode? qualityMode = null, ThreadAutoArchiveDuration? defaultAutoArchiveDuration = null, Optional<ChannelFlags?> flags = default, string reason = null) =>
-		// technically you can create news/store channels but not always
-		type != ChannelType.Text && type != ChannelType.Voice && type != ChannelType.Category && type != ChannelType.News && type != ChannelType.Store && type != ChannelType.Stage
+	public Task<DiscordChannel> CreateChannelAsync(string name, ChannelType type, DiscordChannel? parent = null, Optional<string> topic = default, int? bitrate = null, int? userLimit = null, IEnumerable<DiscordOverwriteBuilder>? overwrites = null, bool? nsfw = null, Optional<int?> perUserRateLimit = default, VideoQualityMode? qualityMode = null, ThreadAutoArchiveDuration? defaultAutoArchiveDuration = null, Optional<ChannelFlags?> flags = default, string? reason = null)
+		=> type != ChannelType.Text && type != ChannelType.Voice && type != ChannelType.Category && type != ChannelType.News && type != ChannelType.Store && type != ChannelType.Stage
 			? throw new ArgumentException("Channel type must be text, voice, stage, or category.", nameof(type))
 			: type == ChannelType.Category && parent != null
 				? throw new ArgumentException("Cannot specify parent of a channel category.", nameof(parent))
@@ -1524,19 +1485,16 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<int> GetPruneCountAsync(int days = 7, IEnumerable<DiscordRole> includedRoles = null)
+	public Task<int?> GetPruneCountAsync(int days = 7, IEnumerable<DiscordRole>? includedRoles = null)
 	{
-		if (includedRoles != null)
-		{
-			includedRoles = includedRoles.Where(r => r != null);
-			var rawRoleIds = includedRoles
-				.Where(x => this.RolesInternal.ContainsKey(x.Id))
-				.Select(x => x.Id);
+		if (includedRoles == null)
+			return this.Discord.ApiClient.GetGuildPruneCountAsync(this.Id, days, null);
+		includedRoles = includedRoles.Where(r => r != null);
+		var rawRoleIds = includedRoles
+			.Where(x => this.RolesInternal.ContainsKey(x.Id))
+			.Select(x => x.Id);
 
-			return this.Discord.ApiClient.GetGuildPruneCountAsync(this.Id, days, rawRoleIds);
-		}
-
-		return this.Discord.ApiClient.GetGuildPruneCountAsync(this.Id, days, null);
+		return this.Discord.ApiClient.GetGuildPruneCountAsync(this.Id, days, rawRoleIds);
 	}
 
 	/// <summary>
@@ -1551,19 +1509,17 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<int?> PruneAsync(int days = 7, bool computePruneCount = true, IEnumerable<DiscordRole> includedRoles = null, string reason = null)
+	public Task<int?> PruneAsync(int days = 7, bool computePruneCount = true, IEnumerable<DiscordRole>? includedRoles = null, string? reason = null)
 	{
-		if (includedRoles != null)
-		{
-			includedRoles = includedRoles.Where(r => r != null);
-			var rawRoleIds = includedRoles
-				.Where(x => this.RolesInternal.ContainsKey(x.Id))
-				.Select(x => x.Id);
+		if (includedRoles == null)
+			return this.Discord.ApiClient.BeginGuildPruneAsync(this.Id, days, computePruneCount, null, reason);
+		includedRoles = includedRoles.Where(r => r != null);
+		var rawRoleIds = includedRoles
+			.Where(x => this.RolesInternal.ContainsKey(x.Id))
+			.Select(x => x.Id);
 
-			return this.Discord.ApiClient.BeginGuildPruneAsync(this.Id, days, computePruneCount, rawRoleIds, reason);
-		}
+		return this.Discord.ApiClient.BeginGuildPruneAsync(this.Id, days, computePruneCount, rawRoleIds, reason);
 
-		return this.Discord.ApiClient.BeginGuildPruneAsync(this.Id, days, computePruneCount, null, reason);
 	}
 
 	/// <summary>
@@ -1645,7 +1601,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	/// <param name="code">The invite code</param>
 	/// <returns>An invite, or null if not in cache.</returns>
-	public DiscordInvite GetInvite(string code)
+	public DiscordInvite? GetInvite(string code)
 		=> this.Invites.TryGetValue(code, out var invite) ? invite : null;
 
 	/// <summary>
@@ -1659,11 +1615,10 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 		var intents = this.Discord.Configuration.Intents;
 
-		if (!intents.HasIntent(DiscordIntents.GuildInvites))
-		{
-			foreach (var r in res)
-				this.Invites[r.Code] = r;
-		}
+		if (intents.HasIntent(DiscordIntents.GuildInvites))
+			return res;
+		foreach (var r in res)
+			this.Invites[r.Code] = r;
 
 		return res;
 	}
@@ -1714,20 +1669,17 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMember> GetMemberAsync(ulong userId, bool fetch = false)
 	{
-		if (!fetch && this.MembersInternal != null && this.MembersInternal.TryGetValue(userId, out var mbr))
+		if (!fetch && this.MembersInternal != null! && this.MembersInternal.TryGetValue(userId, out var mbr))
 			return mbr;
 
 		mbr = await this.Discord.ApiClient.GetGuildMemberAsync(this.Id, userId).ConfigureAwait(false);
 
 		var intents = this.Discord.Configuration.Intents;
 
-		if (intents.HasIntent(DiscordIntents.GuildMembers))
-		{
-			if (this.MembersInternal != null)
-			{
-				this.MembersInternal[userId] = mbr;
-			}
-		}
+		if (!intents.HasIntent(DiscordIntents.GuildMembers))
+			return mbr;
+		if (this.MembersInternal != null!)
+			this.MembersInternal[userId] = mbr;
 
 		return mbr;
 	}
@@ -1739,7 +1691,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<IReadOnlyCollection<DiscordMember>> GetAllMembersAsync()
 	{
-		var recmbr = new HashSet<DiscordMember>();
+		var receivedMembers = new HashSet<DiscordMember>();
 
 		var recd = 1000;
 		var last = 0ul;
@@ -1753,18 +1705,21 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 			foreach (var xtm in tms)
 			{
+				if (xtm.User == null)
+					continue;
 				var usr = new DiscordUser(xtm.User) { Discord = this.Discord };
 
+				var cacheUser = usr;
 				usr = this.Discord.UserCache.AddOrUpdate(xtm.User.Id, usr, (id, old) =>
 				{
-					old.Username = usr.Username;
-					old.Discord = usr.Discord;
-					old.AvatarHash = usr.AvatarHash;
+					old.Username = cacheUser.Username;
+					old.Discord = cacheUser.Discord;
+					old.AvatarHash = cacheUser.AvatarHash;
 
 					return old;
 				});
 				var mbr = new DiscordMember(xtm) { Discord = this.Discord, GuildId = this.Id };
-				recmbr.Add(mbr);
+				receivedMembers.Add(mbr);
 				if (hasIntent)
 					this.MembersInternal[usr.Id] = mbr;
 			}
@@ -1772,10 +1727,10 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 #pragma warning disable CA1826
 			var tm = tms.LastOrDefault();
 #pragma warning restore CA1826
-			last = tm?.User.Id ?? 0;
+			last = tm?.User?.Id ?? 0;
 		}
 
-		return new ReadOnlySet<DiscordMember>(recmbr);
+		return new ReadOnlySet<DiscordMember>(receivedMembers);
 	}
 
 	/// <summary>
@@ -1788,7 +1743,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="presences">Whether to include the <see cref="DisCatSharp.EventArgs.GuildMembersChunkEventArgs.Presences"/> associated with the fetched members.</param>
 	/// <param name="userIds">Whether to limit the request to the specified user ids. Either this or <paramref name="query"/> must not be null.</param>
 	/// <param name="nonce">The unique string to identify the response.</param>
-	public async Task RequestMembersAsync(string query = "", int limit = 0, bool? presences = null, IEnumerable<ulong> userIds = null, string nonce = null)
+	public async Task RequestMembersAsync(string? query = null, int limit = 0, bool? presences = null, IEnumerable<ulong>? userIds = null, string? nonce = null)
 	{
 		if (this.Discord is not DiscordClient client)
 			throw new InvalidOperationException("This operation is only valid for regular Discord clients.");
@@ -1799,7 +1754,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		if (query != null && userIds != null)
 			query = null;
 
-		var grgm = new GatewayRequestGuildMembers(this)
+		var gatewayRequestGuildMembers = new GatewayRequestGuildMembers(this)
 		{
 			Query = query,
 			Limit = limit >= 0 ? limit : 0,
@@ -1811,7 +1766,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		var payload = new GatewayPayload
 		{
 			OpCode = GatewayOpCode.RequestGuildMembers,
-			Data = grgm
+			Data = gatewayRequestGuildMembers
 		};
 
 		var payloadStr = JsonConvert.SerializeObject(payload, Formatting.None);
@@ -1838,7 +1793,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <returns>The newly-created role.</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordRole> CreateRoleAsync(string name = null, Permissions? permissions = null, DiscordColor? color = null, bool? hoist = null, bool? mentionable = null, string reason = null)
+	public Task<DiscordRole> CreateRoleAsync(string name, Permissions? permissions = null, DiscordColor? color = null, bool? hoist = null, bool? mentionable = null, string? reason = null)
 		=> this.Discord.ApiClient.CreateGuildRoleAsync(this.Id, name, permissions, color?.Value, hoist, mentionable, reason);
 
 	/// <summary>
@@ -1847,7 +1802,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="id">ID of the role to get.</param>
 	/// <returns>Requested role.</returns>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public DiscordRole GetRole(ulong id)
+	public DiscordRole? GetRole(ulong id)
 		=> this.RolesInternal.TryGetValue(id, out var role) ? role : null;
 
 	/// <summary>
@@ -1856,7 +1811,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="id">ID of the channel to get.</param>
 	/// <returns>Requested channel.</returns>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public DiscordChannel GetChannel(ulong id)
+	public DiscordChannel? GetChannel(ulong id)
 		=> this.ChannelsInternal != null && this.ChannelsInternal.TryGetValue(id, out var channel) ? channel : null;
 
 	/// <summary>
@@ -1865,7 +1820,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="id">ID of the thread to get.</param>
 	/// <returns>Requested thread.</returns>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public DiscordThreadChannel GetThread(ulong id)
+	public DiscordThreadChannel? GetThread(ulong id)
 		=> this.ThreadsInternal != null && this.ThreadsInternal.TryGetValue(id, out var thread) ? thread : null;
 
 	/// <summary>
@@ -1895,13 +1850,13 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <returns>The newly-created emoji.</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordGuildEmoji> CreateEmojiAsync(string name, Stream image, IEnumerable<DiscordRole> roles = null, string reason = null)
+	public Task<DiscordGuildEmoji> CreateEmojiAsync(string name, Stream image, IEnumerable<DiscordRole>? roles = null, string? reason = null)
 	{
 		if (string.IsNullOrWhiteSpace(name))
 			throw new ArgumentNullException(nameof(name));
 
 		name = name.Trim();
-		if (name.Length < 2 || name.Length > 50)
+		if (name.Length is < 2 or > 50)
 			throw new ArgumentException("Emoji name needs to be between 2 and 50 characters long.");
 
 		if (image == null)
@@ -1922,7 +1877,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <returns>The modified emoji.</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordGuildEmoji> ModifyEmojiAsync(DiscordGuildEmoji emoji, string name, IEnumerable<DiscordRole> roles = null, string reason = null)
+	public Task<DiscordGuildEmoji> ModifyEmojiAsync(DiscordGuildEmoji emoji, string name, IEnumerable<DiscordRole>? roles = null, string? reason = null)
 	{
 		if (emoji == null)
 			throw new ArgumentNullException(nameof(emoji));
@@ -1934,7 +1889,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 			throw new ArgumentNullException(nameof(name));
 
 		name = name.Trim();
-		return name.Length < 2 || name.Length > 50
+		return name.Length is < 2 or > 50
 			? throw new ArgumentException("Emoji name needs to be between 2 and 50 characters long.")
 			: this.Discord.ApiClient.ModifyGuildEmojiAsync(this.Id, emoji.Id, name, roles?.Select(xr => xr.Id), reason);
 	}
@@ -1946,7 +1901,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="reason">Reason for audit log.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteEmojiAsync(DiscordGuildEmoji emoji, string reason = null) =>
+	public Task DeleteEmojiAsync(DiscordGuildEmoji emoji, string? reason = null) =>
 		emoji == null
 			? throw new ArgumentNullException(nameof(emoji))
 			: emoji.Guild.Id != this.Id
@@ -1963,7 +1918,6 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		var stickers = await this.Discord.ApiClient.GetGuildStickersAsync(this.Id).ConfigureAwait(false);
 
 		foreach (var xstr in stickers)
-		{
 			this.StickersInternal.AddOrUpdate(xstr.Id, xstr, (id, old) =>
 			{
 				old.Name = xstr.Name;
@@ -1971,7 +1925,6 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 				old.InternalTags = xstr.InternalTags;
 				return old;
 			});
-		}
 
 		return stickers;
 	}
@@ -1997,7 +1950,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="reason">Audit log reason</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordSticker> CreateStickerAsync(string name, string description, DiscordEmoji emoji, Stream file, StickerFormat format, string reason = null)
+	public Task<DiscordSticker> CreateStickerAsync(string name, string? description, DiscordEmoji emoji, Stream file, StickerFormat format, string? reason = null)
 	{
 		var fileExt = format switch
 		{
@@ -2019,9 +1972,9 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 		return emoji.Id is not 0
 			? throw new InvalidOperationException("Only unicode emoji can be used for stickers.")
-			: name.Length < 2 || name.Length > 30
+			: name.Length is < 2 or > 30
 			? throw new ArgumentOutOfRangeException(nameof(name), "Sticker name needs to be between 2 and 30 characters long.")
-			: description.Length < 1 || description.Length > 100
+			: description.Length is < 1 or > 100
 			? throw new ArgumentOutOfRangeException(nameof(description), "Sticker description needs to be between 1 and 100 characters long.")
 			: this.Discord.ApiClient.CreateGuildStickerAsync(this.Id, name, description, emoji.GetDiscordName().Replace(":", ""), new("sticker", file, null, fileExt, contentType), reason);
 	}
@@ -2039,13 +1992,13 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
-	public async Task<DiscordSticker> ModifyStickerAsync(ulong sticker, Optional<string> name, Optional<string> description, Optional<DiscordEmoji> emoji, string reason = null)
+	public async Task<DiscordSticker> ModifyStickerAsync(ulong sticker, Optional<string> name, Optional<string?> description, Optional<DiscordEmoji> emoji, string? reason = null)
 	{
 		if (!this.StickersInternal.TryGetValue(sticker, out var stickerobj) || stickerobj.Guild.Id != this.Id)
 			throw new ArgumentException("This sticker does not belong to this guild.");
-		if (name.HasValue && (name.Value.Length < 2 || name.Value.Length > 30))
+		if (name.HasValue && name.Value.Length is < 2 or > 30)
 			throw new ArgumentException("Sticker name needs to be between 2 and 30 characters long.");
-		if (description.HasValue && (description.Value.Length < 1 || description.Value.Length > 100))
+		if (description.HasValue && description.Value.Length is < 1 or > 100)
 			throw new ArgumentException("Sticker description needs to be between 1 and 100 characters long.");
 		if (emoji.HasValue && emoji.Value.Id > 0)
 			throw new ArgumentException("Only unicode emojis can be used with stickers.");
@@ -2076,7 +2029,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
-	public Task<DiscordSticker> ModifyStickerAsync(DiscordSticker sticker, Optional<string> name, Optional<string> description, Optional<DiscordEmoji> emoji, string reason = null)
+	public Task<DiscordSticker> ModifyStickerAsync(DiscordSticker sticker, Optional<string> name, Optional<string?> description, Optional<DiscordEmoji> emoji, string? reason = null)
 		=> this.ModifyStickerAsync(sticker.Id, name, description, emoji, reason);
 
 	/// <summary>
@@ -2088,7 +2041,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
-	public Task DeleteStickerAsync(ulong sticker, string reason = null) =>
+	public Task DeleteStickerAsync(ulong sticker, string? reason = null) =>
 		!this.StickersInternal.TryGetValue(sticker, out var stickerobj)
 			? throw new ArgumentNullException(nameof(sticker))
 			: stickerobj.Guild.Id != this.Id
@@ -2104,7 +2057,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
-	public Task DeleteStickerAsync(DiscordSticker sticker, string reason = null)
+	public Task DeleteStickerAsync(DiscordSticker sticker, string? reason = null)
 		=> this.DeleteStickerAsync(sticker.Id, reason);
 
 	/// <summary>
@@ -2113,7 +2066,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	/// <returns>This member's default guild.</returns>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public DiscordChannel GetDefaultChannel() =>
+	public DiscordChannel? GetDefaultChannel() =>
 		this.ChannelsInternal?.Values.Where(xc => xc.Type == ChannelType.Text)
 			.OrderBy(xc => xc.Position)
 			.FirstOrDefault(xc => (xc.PermissionsFor(this.CurrentMember) & DisCatSharp.Enums.Permissions.AccessChannels) == DisCatSharp.Enums.Permissions.AccessChannels);
@@ -2139,7 +2092,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="channel">Widget channel</param>
 	/// <param name="reason">Reason the widget settings were modified</param>
 	/// <returns>The newly modified widget settings</returns>
-	public Task<DiscordWidgetSettings> ModifyWidgetSettingsAsync(bool? isEnabled = null, DiscordChannel channel = null, string reason = null)
+	public Task<DiscordWidgetSettings> ModifyWidgetSettingsAsync(bool? isEnabled = null, DiscordChannel? channel = null, string? reason = null)
 		=> this.Discord.ApiClient.ModifyGuildWidgetSettingsAsync(this.Id, isEnabled, channel?.Id, reason);
 
 	/// <summary>
@@ -2160,7 +2113,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="BadRequestException">Throws when a template already exists for the guild or a null parameter is provided for the name.</exception>
 	/// <exception cref="UnauthorizedException">Throws when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordGuildTemplate> CreateTemplateAsync(string name, string description = null)
+	public Task<DiscordGuildTemplate> CreateTemplateAsync(string name, string? description = null)
 		=> this.Discord.ApiClient.CreateGuildTemplateAsync(this.Id, name, description);
 
 	/// <summary>
@@ -2184,7 +2137,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Throws when the template for the code cannot be found</exception>
 	/// <exception cref="UnauthorizedException">Throws when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordGuildTemplate> ModifyTemplateAsync(string code, string name = null, string description = null)
+	public Task<DiscordGuildTemplate> ModifyTemplateAsync(string code, string? name = null, Optional<string?> description = default)
 		=> this.Discord.ApiClient.ModifyGuildTemplateAsync(this.Id, code, name, description);
 
 	/// <summary>
@@ -2225,7 +2178,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	/// <returns>A list of application commands in this guild.</returns>
 	public Task<IReadOnlyList<DiscordApplicationCommand>> GetApplicationCommandsAsync() =>
-		this.Discord.ApiClient.GetGuildApplicationCommandsAsync(this.Discord.CurrentApplication.Id, this.Id);
+		this.Discord.ApiClient.GetGuildApplicationCommandsAsync(this.Discord.CurrentApplication!.Id, this.Id);
 
 	/// <summary>
 	/// Overwrites the existing application commands in this guild. New commands are automatically created and missing commands are automatically delete
@@ -2233,7 +2186,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="commands">The list of commands to overwrite with.</param>
 	/// <returns>The list of guild commands</returns>
 	public Task<IReadOnlyList<DiscordApplicationCommand>> BulkOverwriteApplicationCommandsAsync(IEnumerable<DiscordApplicationCommand> commands) =>
-		this.Discord.ApiClient.BulkOverwriteGuildApplicationCommandsAsync(this.Discord.CurrentApplication.Id, this.Id, commands);
+		this.Discord.ApiClient.BulkOverwriteGuildApplicationCommandsAsync(this.Discord.CurrentApplication!.Id, this.Id, commands);
 
 	/// <summary>
 	/// Creates or overwrites a application command in this guild.
@@ -2241,7 +2194,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="command">The command to create.</param>
 	/// <returns>The created command.</returns>
 	public Task<DiscordApplicationCommand> CreateApplicationCommandAsync(DiscordApplicationCommand command) =>
-		this.Discord.ApiClient.CreateGuildApplicationCommandAsync(this.Discord.CurrentApplication.Id, this.Id, command);
+		this.Discord.ApiClient.CreateGuildApplicationCommandAsync(this.Discord.CurrentApplication!.Id, this.Id, command);
 
 	/// <summary>
 	/// Edits a application command in this guild.
@@ -2253,7 +2206,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	{
 		var mdl = new ApplicationCommandEditModel();
 		action(mdl);
-		return await this.Discord.ApiClient.EditGuildApplicationCommandAsync(this.Discord.CurrentApplication.Id, this.Id, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission, mdl.IsNsfw).ConfigureAwait(false);
+		return await this.Discord.ApiClient.EditGuildApplicationCommandAsync(this.Discord.CurrentApplication!.Id, this.Id, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission, mdl.IsNsfw).ConfigureAwait(false);
 	}
 
 	/// <summary>

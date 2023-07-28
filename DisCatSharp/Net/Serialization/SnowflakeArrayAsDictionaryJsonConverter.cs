@@ -52,9 +52,7 @@ internal class SnowflakeArrayAsDictionaryJsonConverter : JsonConverter
 	public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
 	{
 		if (value == null)
-		{
 			writer.WriteNull();
-		}
 		else
 		{
 			var type = value.GetType().GetTypeInfo();
@@ -81,14 +79,12 @@ internal class SnowflakeArrayAsDictionaryJsonConverter : JsonConverter
 
 		var entries = (IEnumerable) serializer.Deserialize(reader, objectType.GenericTypeArguments[1].MakeArrayType());
 		foreach (var entry in entries)
-		{
 			properties.SetValue(dict, entry, new object[]
 			{
 				(entry as SnowflakeObject)?.Id
 				?? (entry as DiscordVoiceState)?.UserId
 				?? throw new InvalidOperationException($"Type {entry?.GetType()} is not deserializable")
 			});
-		}
 
 		return dict;
 	}

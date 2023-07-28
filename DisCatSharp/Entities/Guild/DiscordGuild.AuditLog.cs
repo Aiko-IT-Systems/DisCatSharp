@@ -331,7 +331,6 @@ public partial class DiscordGuild
 
 					var entrychn = entry as DiscordAuditLogChannelEntry;
 					foreach (var xc in xac.Changes)
-					{
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "name":
@@ -453,7 +452,7 @@ public partial class DiscordGuild
 									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in channel update: {Key} - this should be reported to library developers", xc.Key);
 								break;
 						}
-					}
+
 					break;
 
 				case AuditLogActionType.OverwriteCreate:
@@ -467,7 +466,6 @@ public partial class DiscordGuild
 
 					var entryovr = entry as DiscordAuditLogOverwriteEntry;
 					foreach (var xc in xac.Changes)
-					{
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "deny":
@@ -516,7 +514,7 @@ public partial class DiscordGuild
 									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in overwrite update: {Key} - this should be reported to library developers", xc.Key);
 								break;
 						}
-					}
+
 					break;
 
 				case AuditLogActionType.Kick:
@@ -551,7 +549,6 @@ public partial class DiscordGuild
 
 					var entrymbu = entry as DiscordAuditLogMemberUpdateEntry;
 					foreach (var xc in xac.Changes)
-					{
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "nick":
@@ -598,7 +595,7 @@ public partial class DiscordGuild
 									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in member update: {Key} - this should be reported to library developers", xc.Key);
 								break;
 						}
-					}
+
 					break;
 
 				case AuditLogActionType.RoleCreate:
@@ -611,7 +608,6 @@ public partial class DiscordGuild
 
 					var entryrol = entry as DiscordAuditLogRoleUpdateEntry;
 					foreach (var xc in xac.Changes)
-					{
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "name":
@@ -678,7 +674,7 @@ public partial class DiscordGuild
 									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in role update: {Key} - this should be reported to library developers", xc.Key);
 								break;
 						}
-					}
+
 					break;
 
 				case AuditLogActionType.InviteCreate:
@@ -700,7 +696,6 @@ public partial class DiscordGuild
 
 					var entryinv = entry as DiscordAuditLogInviteEntry;
 					foreach (var xc in xac.Changes)
-					{
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "max_age":
@@ -787,13 +782,11 @@ public partial class DiscordGuild
 								break;
 
 							// TODO: Add changes for target application
-
 							default:
 								if (this.Discord.Configuration.ReportMissingFields)
 									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in invite update: {Key} - this should be reported to library developers", xc.Key);
 								break;
 						}
-					}
 
 					entryinv.Target = inv;
 					break;
@@ -808,7 +801,6 @@ public partial class DiscordGuild
 
 					var entrywhk = entry as DiscordAuditLogWebhookEntry;
 					foreach (var xc in xac.Changes)
-					{
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "application_id": // ???
@@ -865,7 +857,7 @@ public partial class DiscordGuild
 									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in webhook update: {Key} - this should be reported to library developers", xc.Key);
 								break;
 						}
-					}
+
 					break;
 
 				case AuditLogActionType.EmojiCreate:
@@ -878,7 +870,6 @@ public partial class DiscordGuild
 
 					var entryemo = entry as DiscordAuditLogEmojiEntry;
 					foreach (var xc in xac.Changes)
-					{
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "name":
@@ -894,7 +885,7 @@ public partial class DiscordGuild
 									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in emote update: {Key} - this should be reported to library developers", xc.Key);
 								break;
 						}
-					}
+
 					break;
 
 				case AuditLogActionType.StageInstanceCreate:
@@ -907,7 +898,6 @@ public partial class DiscordGuild
 
 					var entrysta = entry as DiscordAuditLogStageEntry;
 					foreach (var xc in xac.Changes)
-					{
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "topic":
@@ -930,7 +920,7 @@ public partial class DiscordGuild
 									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in stage instance update: {Key} - this should be reported to library developers", xc.Key);
 								break;
 						}
-					}
+
 					break;
 
 				case AuditLogActionType.StickerCreate:
@@ -943,7 +933,6 @@ public partial class DiscordGuild
 
 					var entrysti = entry as DiscordAuditLogStickerEntry;
 					foreach (var xc in xac.Changes)
-					{
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "name":
@@ -1019,7 +1008,7 @@ public partial class DiscordGuild
 									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in sticker update: {Key} - this should be reported to library developers", xc.Key);
 								break;
 						}
-					}
+
 					break;
 
 
@@ -1038,12 +1027,10 @@ public partial class DiscordGuild
 					}
 
 					if (entrymsg.Channel != null)
-					{
 						entrymsg.Target = this.Discord is DiscordClient { MessageCache: not null } dc 
 						                  && dc.MessageCache.TryGet(xm => xm.Id == xac.TargetId.Value && xm.ChannelId == entrymsg.Channel.Id, out var msg)
 							? msg
 							: new() { Discord = this.Discord, Id = xac.TargetId.Value };
-					}
 					break;
 				}
 
@@ -1054,10 +1041,7 @@ public partial class DiscordGuild
 
 					var entrypin = entry as DiscordAuditLogMessagePinEntry;
 
-					if (this.Discord is not DiscordClient dc)
-					{
-						break;
-					}
+					if (this.Discord is not DiscordClient dc) break;
 
 					if (xac.Options != null)
 					{
@@ -1081,10 +1065,7 @@ public partial class DiscordGuild
 				{
 					entry = new DiscordAuditLogBotAddEntry();
 
-					if (!(this.Discord is DiscordClient dc && xac.TargetId.HasValue))
-					{
-						break;
-					}
+					if (!(this.Discord is DiscordClient dc && xac.TargetId.HasValue)) break;
 
 					dc.UserCache.TryGetValue(xac.TargetId.Value, out var bot);
 					(entry as DiscordAuditLogBotAddEntry).TargetBot = bot ?? new DiscordUser { Id = xac.TargetId.Value, Discord = this.Discord };
@@ -1095,10 +1076,7 @@ public partial class DiscordGuild
 				case AuditLogActionType.MemberMove:
 					entry = new DiscordAuditLogMemberMoveEntry();
 
-					if (xac.Options == null)
-					{
-						break;
-					}
+					if (xac.Options == null) break;
 
 					var moveentry = entry as DiscordAuditLogMemberMoveEntry;
 
@@ -1120,7 +1098,6 @@ public partial class DiscordGuild
 
 					var integentry = entry as DiscordAuditLogIntegrationEntry;
 					foreach (var xc in xac.Changes)
-					{
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "type":
@@ -1157,7 +1134,7 @@ public partial class DiscordGuild
 									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in integration update: {Key} - this should be reported to library developers", xc.Key);
 								break;
 						}
-					}
+
 					break;
 
 				case AuditLogActionType.ThreadCreate:
@@ -1170,7 +1147,6 @@ public partial class DiscordGuild
 
 					var entrythr = entry as DiscordAuditLogThreadEntry;
 					foreach (var xc in xac.Changes)
-					{
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "name":
@@ -1240,7 +1216,7 @@ public partial class DiscordGuild
 									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in thread update: {Key} - this should be reported to library developers", xc.Key);
 								break;
 						}
-					}
+
 					break;
 
 
@@ -1254,7 +1230,6 @@ public partial class DiscordGuild
 
 					var entryse = entry as DiscordAuditLogGuildScheduledEventEntry;
 					foreach (var xc in xac.Changes)
-					{
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "channel_id":
@@ -1327,7 +1302,7 @@ public partial class DiscordGuild
 									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in scheduled event update: {Key} - this should be reported to library developers", xc.Key);
 								break;
 						}
-					}
+
 					break;
 
 				// TODO: Handle ApplicationCommandPermissionUpdate

@@ -185,7 +185,6 @@ public abstract class BaseDiscordClient : IDisposable
 
 		if (!this.Configuration.HasShardLogger)
 			if (this.Configuration.LoggerFactory != null && this.Configuration.EnableSentry)
-			{
 				this.Configuration.LoggerFactory.AddSentry(o =>
 				{
 					o.InitializeSdk = true;
@@ -236,7 +235,6 @@ public abstract class BaseDiscordClient : IDisposable
 						return e;
 					};
 				});
-			}
 
 		if (this.Configuration.EnableSentry)
 			this.Sentry = new(new()
@@ -305,9 +303,7 @@ public abstract class BaseDiscordClient : IDisposable
 
 		var iv = a.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
 		if (iv != null)
-		{
 			this.VersionString = iv.InformationalVersion;
-		}
 		else
 		{
 			var v = a.GetName().Version;

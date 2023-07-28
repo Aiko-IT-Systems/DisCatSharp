@@ -118,7 +118,7 @@ public sealed class ImageTool : IDisposable
 				return this._ifcache = ImageFormat.Png;
 
 			bgn64 &= GIF_MASK;
-			if (bgn64 == GIF_MAGIC_1 || bgn64 == GIF_MAGIC_2)
+			if (bgn64 is GIF_MAGIC_1 or GIF_MAGIC_2)
 				return this._ifcache = ImageFormat.Gif;
 
 			var bgn32 = (uint)(bgn64 & MASK32);

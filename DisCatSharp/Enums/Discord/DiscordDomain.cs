@@ -212,7 +212,7 @@ public static class DiscordDomain
 		if (domainEnum is not CoreDomain && domainEnum is not OtherDomain && domainEnum is not UnusedDomain)
 			throw new NotSupportedException($"Invalid type. Found: {domainEnum.GetType()} Expected: CoreDomain or OtherDomain or UnusedDomain");
 
-		if (domainEnum is CoreDomain domain && (domain == CoreDomain.DiscordAdmin || domain == CoreDomain.DiscordTools))
+		if (domainEnum is CoreDomain domain && domain is CoreDomain.DiscordAdmin or CoreDomain.DiscordTools)
 			throw new UnauthorizedAccessException("You don't have access to this domains");
 
 		var memberInfo = domainEnum.GetType().GetMember(domainEnum.ToString()).FirstOrDefault();

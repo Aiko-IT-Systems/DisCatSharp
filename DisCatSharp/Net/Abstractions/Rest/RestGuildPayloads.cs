@@ -626,14 +626,14 @@ internal sealed class RestGuildRolePayload : ObservableApiObject
 	/// <summary>
 	/// Gets or sets the icon base64.
 	/// </summary>
-	[JsonProperty("icon")]
-	public Optional<string> IconBase64 { get; set; }
+	[JsonProperty("icon", NullValueHandling = NullValueHandling.Include)]
+	public Optional<string?> IconBase64 { get; set; }
 
 	/// <summary>
 	/// Gets or sets the icon base64.
 	/// </summary>
-	[JsonProperty("unicode_emoji")]
-	public Optional<string> UnicodeEmoji { get; set; }
+	[JsonProperty("unicode_emoji", NullValueHandling = NullValueHandling.Include)]
+	public Optional<string?> UnicodeEmoji { get; set; }
 }
 
 /// <summary>
@@ -699,13 +699,13 @@ internal class RestGuildEmojiModifyPayload : ObservableApiObject
 	/// Gets or sets the name.
 	/// </summary>
 	[JsonProperty("name")]
-	public string Name { get; set; }
+	public string? Name { get; set; }
 
 	/// <summary>
 	/// Gets or sets the roles.
 	/// </summary>
 	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
-	public ulong[] Roles { get; set; }
+	public ulong[]? Roles { get; set; }
 }
 
 /// <summary>
@@ -746,14 +746,14 @@ internal class RestGuildTemplateCreateOrModifyPayload : ObservableApiObject
 	/// <summary>
 	/// Gets or sets the name.
 	/// </summary>
-	[JsonProperty("name", NullValueHandling = NullValueHandling.Include)]
-	public string Name { get; set; }
+	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+	public string? Name { get; set; }
 
 	/// <summary>
 	/// Gets or sets the description.
 	/// </summary>
 	[JsonProperty("description", NullValueHandling = NullValueHandling.Include)]
-	public string Description { get; set; }
+	public Optional<string?> Description { get; set; }
 }
 
 /// <summary>

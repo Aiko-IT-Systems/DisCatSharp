@@ -35,7 +35,7 @@ public class DiscordWidget : SnowflakeObject
 	/// Gets the guild.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordGuild Guild { get; internal set; }
+	public DiscordGuild? Guild { get; internal set; }
 
 	/// <summary>
 	/// Gets the guild's name.
@@ -47,7 +47,7 @@ public class DiscordWidget : SnowflakeObject
 	/// Gets the guild's invite URL.
 	/// </summary>
 	[JsonProperty("instant_invite", NullValueHandling = NullValueHandling.Ignore)]
-	public string InstantInviteUrl { get; internal set; }
+	public string? InstantInviteUrl { get; internal set; }
 
 	/// <summary>
 	/// Gets the number of online members.
@@ -59,11 +59,11 @@ public class DiscordWidget : SnowflakeObject
 	/// Gets a list of online members.
 	/// </summary>
 	[JsonProperty("members", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<DiscordWidgetMember> Members { get; internal set; }
+	public IReadOnlyList<DiscordWidgetMember>? Members { get; internal set; }
 
 	/// <summary>
 	/// Gets a list of widget channels.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyList<DiscordChannel> Channels { get; internal set; }
+	public IReadOnlyList<DiscordChannel>? Channels { get; internal set; }
 }

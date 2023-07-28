@@ -119,7 +119,6 @@ public sealed partial class DiscordClient
 		}
 
 		if (!this.Presences.ContainsKey(this.CurrentUser.Id))
-		{
 			this.PresencesInternal[this.CurrentUser.Id] = new()
 			{
 				Discord = this,
@@ -131,7 +130,6 @@ public sealed partial class DiscordClient
 					Id = this.CurrentUser.Id
 				}
 			};
-		}
 		else
 		{
 			var pr = this.PresencesInternal[this.CurrentUser.Id];
@@ -225,7 +223,7 @@ public sealed partial class DiscordClient
 
 
 			// TODO: We might need to include more 400X codes
-			if (this.Configuration.AutoReconnect && (e.CloseCode < 4001 || e.CloseCode >= 5000))
+			if (this.Configuration.AutoReconnect && e.CloseCode is < 4001 or >= 5000)
 			{
 				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({code}, '{message}'), reconnecting", e.CloseCode, e.CloseMessage);
 
@@ -238,9 +236,7 @@ public sealed partial class DiscordClient
 					await this.ConnectAsync(this._status.ActivityInternal, this._status.Status).ConfigureAwait(false);
 			}
 			else
-			{
 				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({code}, '{message}')", e.CloseCode, e.CloseMessage);
-			}
 		}
 	}
 
@@ -461,7 +457,6 @@ public sealed partial class DiscordClient
 		await this.WsSendAsync(statusString).ConfigureAwait(false);
 
 		if (!this.PresencesInternal.ContainsKey(this.CurrentUser.Id))
-		{
 			this.PresencesInternal[this.CurrentUser.Id] = new()
 			{
 				Discord = this,
@@ -469,7 +464,6 @@ public sealed partial class DiscordClient
 				Status = userStatus ?? UserStatus.Online,
 				InternalUser = new() { Id = this.CurrentUser.Id }
 			};
-		}
 		else
 		{
 			var pr = this.PresencesInternal[this.CurrentUser.Id];

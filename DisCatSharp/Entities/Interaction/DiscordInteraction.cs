@@ -165,15 +165,9 @@ public sealed class DiscordInteraction : SnowflakeObject
 		if (builder.KeepAttachmentsInternal.HasValue && builder.KeepAttachmentsInternal.Value)
 		{
 			var attachments = this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token).Result.Attachments;
-			if (attachments?.Count > 0)
-			{
-				builder.AttachmentsInternal.AddRange(attachments);
-			}
+			if (attachments?.Count > 0) builder.AttachmentsInternal.AddRange(attachments);
 		}
-		else if (builder.KeepAttachmentsInternal.HasValue)
-		{
-			builder.AttachmentsInternal.Clear();
-		}
+		else if (builder.KeepAttachmentsInternal.HasValue) builder.AttachmentsInternal.Clear();
 
 		return await this.Discord.ApiClient.EditOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, builder).ConfigureAwait(false);
 	}
@@ -216,15 +210,9 @@ public sealed class DiscordInteraction : SnowflakeObject
 		if (builder.KeepAttachmentsInternal.HasValue && builder.KeepAttachmentsInternal.Value)
 		{
 			var attachments = this.Discord.ApiClient.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId).Result.Attachments;
-			if (attachments?.Count > 0)
-			{
-				builder.AttachmentsInternal.AddRange(attachments);
-			}
+			if (attachments?.Count > 0) builder.AttachmentsInternal.AddRange(attachments);
 		}
-		else if (builder.KeepAttachmentsInternal.HasValue)
-		{
-			builder.AttachmentsInternal.Clear();
-		}
+		else if (builder.KeepAttachmentsInternal.HasValue) builder.AttachmentsInternal.Clear();
 
 		return await this.Discord.ApiClient.EditFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId, builder).ConfigureAwait(false);
 	}

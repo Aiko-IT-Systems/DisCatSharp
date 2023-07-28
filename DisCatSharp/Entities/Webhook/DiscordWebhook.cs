@@ -245,13 +245,8 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	{
 		builder.Validate(true);
 		if (builder.KeepAttachmentsInternal.HasValue && builder.KeepAttachmentsInternal.Value)
-		{
 			builder.AttachmentsInternal.AddRange(this.ApiClient.GetWebhookMessageAsync(this.Id, this.Token, messageId.ToString(), threadId).Result.Attachments);
-		}
-		else if (builder.KeepAttachmentsInternal.HasValue)
-		{
-			builder.AttachmentsInternal.Clear();
-		}
+		else if (builder.KeepAttachmentsInternal.HasValue) builder.AttachmentsInternal.Clear();
 		return await (this.Discord?.ApiClient ?? this.ApiClient).EditWebhookMessageAsync(this.Id, this.Token, messageId.ToString(), builder, threadId).ConfigureAwait(false);
 	}
 

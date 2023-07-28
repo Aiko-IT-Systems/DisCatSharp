@@ -132,21 +132,18 @@ public class RingBuffer<T> : ICollection<T>
 	public bool TryGet(Func<T, bool> predicate, out T item)
 	{
 		for (var i = this.CurrentIndex; i < this.InternalBuffer.Length; i++)
-		{
 			if (this.InternalBuffer[i] != null && predicate(this.InternalBuffer[i]))
 			{
 				item = this.InternalBuffer[i];
 				return true;
 			}
-		}
+
 		for (var i = 0; i < this.CurrentIndex; i++)
-		{
 			if (this.InternalBuffer[i] != null && predicate(this.InternalBuffer[i]))
 			{
 				item = this.InternalBuffer[i];
 				return true;
 			}
-		}
 
 		item = default;
 		return false;
@@ -208,13 +205,11 @@ public class RingBuffer<T> : ICollection<T>
 	public bool Remove(Func<T, bool> predicate)
 	{
 		for (var i = 0; i < this.InternalBuffer.Length; i++)
-		{
 			if (this.InternalBuffer[i] != null && predicate(this.InternalBuffer[i]))
 			{
 				this.InternalBuffer[i] = default;
 				return true;
 			}
-		}
 
 		return false;
 	}

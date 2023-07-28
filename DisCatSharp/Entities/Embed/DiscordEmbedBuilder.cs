@@ -499,13 +499,11 @@ public sealed class DiscordEmbedBuilder
 
 		var charCount = 0;
 		if (embed.Fields.Any())
-		{
 			foreach (var field in embed.Fields)
 			{
 				charCount += field.Name.Length;
 				charCount += field.Value.Length;
 			}
-		}
 
 		if (embed.Author != null && !string.IsNullOrEmpty(embed.Author.Name))
 			charCount += embed.Author.Name.Length;

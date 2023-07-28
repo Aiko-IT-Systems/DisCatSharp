@@ -329,7 +329,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		}
 
 		while (i-- > 0 || this.Configuration.ReconnectIndefinitely)
-		{
 			try
 			{
 				await this.InternalConnectAsync().ConfigureAwait(false);
@@ -364,7 +363,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				if (i > 0)
 					w *= 2;
 			}
-		}
 
 		if (!s && cex != null)
 		{
@@ -1297,7 +1295,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	private DiscordScheduledEvent UpdateScheduledEvent(DiscordScheduledEvent scheduledEvent, DiscordGuild guild)
 	{
 		if (scheduledEvent != null!)
-		{
 			_ = guild.ScheduledEventsInternal.AddOrUpdate(scheduledEvent.Id, scheduledEvent, (id, old) =>
 			{
 				old.Discord = this;
@@ -1314,7 +1311,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.ScheduledEndTimeRaw = scheduledEvent.ScheduledEndTimeRaw;
 				return old;
 			});
-		}
 
 		return scheduledEvent;
 	}
@@ -1363,20 +1359,13 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			if (guild?.MembersInternal.TryGetValue(usr.Id, out member) == false)
 			{
 				if (intents.HasIntent(DiscordIntents.GuildMembers) || this.Configuration.AlwaysCacheMembers) // member can be updated by events, so cache it
-				{
 					guild.MembersInternal.TryAdd(usr.Id, (DiscordMember)usr);
-				}
 			}
 			else if (intents.HasIntent(DiscordIntents.GuildPresences) || this.Configuration.AlwaysCacheMembers) // we can attempt to update it if it's already in cache.
-			{
 				if (!intents.HasIntent(DiscordIntents.GuildMembers)) // no need to update if we already have the member events
-				{
 					_ = guild.MembersInternal.TryUpdate(usr.Id, (DiscordMember)usr, member);
-				}
-			}
 		}
 		else if (!string.IsNullOrEmpty(usr.Username)) // check if not a skeleton user
-		{
 			_ = this.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
 			{
 				old.Username = usr.Username;
@@ -1391,7 +1380,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.GlobalName = usr.GlobalName;
 				return old;
 			});
-		}
 
 		return usr;
 	}
@@ -1436,7 +1424,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		var guild = this.GuildsInternal[newGuild.Id];
 
 		if (newGuild.ChannelsInternal is { IsEmpty: false })
-		{
 			foreach (var channel in newGuild.ChannelsInternal.Values)
 			{
 				if (guild.ChannelsInternal.TryGetValue(channel.Id, out _)) continue;
@@ -1445,27 +1432,22 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 				guild.ChannelsInternal[channel.Id] = channel;
 			}
-		}
 
 		if (newGuild.ThreadsInternal is { IsEmpty: false })
-		{
 			foreach (var thread in newGuild.ThreadsInternal.Values)
 			{
 				if (guild.ThreadsInternal.TryGetValue(thread.Id, out _)) continue;
 
 				guild.ThreadsInternal[thread.Id] = thread;
 			}
-		}
 
 		if (newGuild.ScheduledEventsInternal is { IsEmpty: false })
-		{
 			foreach (var @event in newGuild.ScheduledEventsInternal.Values)
 			{
 				if (guild.ScheduledEventsInternal.TryGetValue(@event.Id, out _)) continue;
 
 				guild.ScheduledEventsInternal[@event.Id] = @event;
 			}
-		}
 
 		foreach (var newEmoji in newGuild.EmojisInternal.Values)
 			_ = guild.EmojisInternal.GetOrAdd(newEmoji.Id, _ => newEmoji);

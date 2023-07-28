@@ -513,7 +513,6 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 
 		var mentionedUsers = new HashSet<DiscordUser>(new DiscordUserComparer());
 		if (guild != null)
-		{
 			foreach (var usr in this.MentionedUsersInternal)
 			{
 				usr.Discord = this.Discord;
@@ -528,9 +527,8 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 
 				mentionedUsers.Add(guild.MembersInternal.TryGetValue(usr.Id, out var member) ? member : usr);
 			}
-		}
+
 		if (!string.IsNullOrWhiteSpace(this.Content))
-		{
 			//mentionedUsers.UnionWith(Utilities.GetUserMentions(this).Select(this.Discord.GetCachedOrEmptyUserInternal));
 			if (guild != null)
 			{
@@ -538,7 +536,6 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 				this.MentionedRolesInternal = this.MentionedRolesInternal.Union(this.MentionedRoleIds.Select(xid => guild.GetRole(xid))).ToList();
 				this.MentionedChannelsInternal = this.MentionedChannelsInternal.Union(Utilities.GetChannelMentions(this).Select(xid => guild.GetChannel(xid))).ToList();
 			}
-		}
 
 		this.MentionedUsersInternal = mentionedUsers.ToList();
 	}

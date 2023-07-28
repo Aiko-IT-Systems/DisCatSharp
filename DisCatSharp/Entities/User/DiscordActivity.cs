@@ -81,7 +81,6 @@ internal sealed class UserStatusConverter : JsonConverter
 	public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
 	{
 		if (value is UserStatus status)
-		{
 			switch (status) // reader.Value can be a string, DateTime or DateTimeOffset (yes, it's weird)
 			{
 				case UserStatus.Online:
@@ -109,7 +108,6 @@ internal sealed class UserStatusConverter : JsonConverter
 					writer.WriteValue("offline");
 					return;
 			}
-		}
 	}
 
 	/// <summary>

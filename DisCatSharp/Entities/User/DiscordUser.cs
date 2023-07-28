@@ -277,21 +277,21 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Gets the user's pronouns.
 	/// </summary>
 	[JsonProperty("pronouns", NullValueHandling = NullValueHandling.Ignore)]
-	public virtual string Pronouns { get; internal set; }
+	public virtual string? Pronouns { get; internal set; }
 
 	/// <summary>
 	/// Gets the user's mention string.
 	/// </summary>
 	[JsonIgnore]
 	public string Mention
-		=> Formatter.Mention(this, this is DiscordMember);
+		=> this.Mention(this is DiscordMember);
 
 	/// <summary>
 	/// Gets whether this user is the Client which created this object.
 	/// </summary>
 	[JsonIgnore]
 	public bool IsCurrent
-		=> this.Id == this.Discord.CurrentUser.Id;
+		=> this.Id == this.Discord.CurrentUser!.Id;
 
 	#region Extension of DiscordUser
 
@@ -359,7 +359,8 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <exception cref="NotFoundException">Thrown when the application does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordRpcApplication?> GetRpcInfoAsync() => this.IsBot ? await this.Discord.ApiClient.GetApplicationRpcInfoAsync(this.Id).ConfigureAwait(false) : await Task.FromResult<DiscordRpcApplication?>(null).ConfigureAwait(false);
+	public async Task<DiscordRpcApplication?> GetRpcInfoAsync()
+		=> this.IsBot ? await this.Discord.ApiClient.GetApplicationRpcInfoAsync(this.Id).ConfigureAwait(false) : await Task.FromResult<DiscordRpcApplication?>(null).ConfigureAwait(false);
 
 	/// <summary>
 	/// Whether this user is in a <see cref="DiscordGuild"/>
@@ -416,14 +417,14 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task UnbanAsync(DiscordGuild guild, string reason = null)
+	public Task UnbanAsync(DiscordGuild guild, string? reason = null)
 		=> guild.UnbanMemberAsync(this, reason);
 
 	/// <summary>
 	/// Gets this user's presence.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordPresence Presence
+	public DiscordPresence? Presence
 		=> this.Discord is DiscordClient dc && dc.Presences.TryGetValue(this.Id, out var presence) ? presence : null;
 
 	/// <summary>
@@ -437,7 +438,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		if (fmt == ImageFormat.Unknown)
 			throw new ArgumentException("You must specify valid image format.", nameof(fmt));
 
-		if (size < 16 || size > 2048)
+		if (size is < 16 or > 2048)
 			throw new ArgumentOutOfRangeException(nameof(size));
 
 		var log = Math.Log(size, 2);
@@ -460,11 +461,9 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 			var id = this.Id.ToString(CultureInfo.InvariantCulture);
 			return $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{id}/{this.AvatarHash}.{sfmt}?size={ssize}";
 		}
-		else
-		{
-			var type = (this.DiscriminatorInt % 5).ToString(CultureInfo.InvariantCulture);
-			return $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMBED}{Endpoints.AVATARS}/{type}.{sfmt}?size={ssize}";
-		}
+
+		var type = (this.DiscriminatorInt % 5).ToString(CultureInfo.InvariantCulture);
+		return $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMBED}{Endpoints.AVATARS}/{type}.{sfmt}?size={ssize}";
 	}
 
 	/// <summary>

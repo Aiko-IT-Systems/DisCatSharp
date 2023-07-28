@@ -115,13 +115,12 @@ public static class DiscordJson
 			if (obj.IgnoredJsonKeys.Count == 0 || !obj.IgnoredJsonKeys.Any(x => x == ap.Key))
 			{
 				if (vals == 1)
-				{
 					if (discord.Configuration.EnableLibraryDeveloperMode)
 					{
 						discord.Logger.LogInformation("{sentry}", sentryMessage);
 						discord.Logger.LogDebug("{json}", json);
 					}
-				}
+
 				sentryFields.Add(ap.Key);
 				if (discord.Configuration.EnableLibraryDeveloperMode)
 					discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, obj.GetType().Name);
@@ -180,13 +179,12 @@ public static class DiscordJson
 			if (first.IgnoredJsonKeys.Count == 0 || !first.IgnoredJsonKeys.Any(x => x == ap.Key))
 			{
 				if (vals == 1)
-				{
 					if (discord.Configuration.EnableLibraryDeveloperMode)
 					{
 						discord.Logger.LogInformation("{sentry}", sentryMessage);
 						discord.Logger.LogDebug("{json}", json);
 					}
-				}
+
 				sentryFields.Add(ap.Key);
 				if (discord.Configuration.EnableLibraryDeveloperMode)
 					discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, first.GetType().Name);
