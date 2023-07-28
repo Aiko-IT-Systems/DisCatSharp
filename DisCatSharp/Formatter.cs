@@ -89,6 +89,33 @@ public static class Formatter
 		=> Timestamp(time.ToUniversalTime() - DateTime.UtcNow, format);
 
 	/// <summary>
+	/// Creates a rendered timestamp.
+	/// </summary>
+	/// <param name="time">The time from now.</param>
+	/// <param name="format">The format to render the timestamp in. Defaults to relative.</param>
+	/// <returns>A formatted timestamp.</returns>
+	public static string? Timestamp(this TimeSpan? time, TimestampFormat format = TimestampFormat.RelativeTime)
+		=> time.HasValue ? Timestamp(DateTimeOffset.UtcNow + time.Value, format) : null;
+
+	/// <summary>
+	/// Creates a rendered timestamp.
+	/// </summary>
+	/// <param name="time">Timestamp to format.</param>
+	/// <param name="format">The format to render the timestamp in. Defaults to relative.</param>
+	/// <returns>A formatted timestamp.</returns>
+	public static string? Timestamp(this DateTimeOffset? time, TimestampFormat format = TimestampFormat.RelativeTime)
+		=> time.HasValue ? $"<t:{time.Value.ToUnixTimeSeconds()}:{(char)format}>" : null;
+
+	/// <summary>
+	/// Creates a rendered timestamp.
+	/// </summary>
+	/// <param name="time">The time from now.</param>
+	/// <param name="format">The format to render the timestamp in. Defaults to relative.</param>
+	/// <returns>A formatted timestamp relative to now.</returns>
+	public static string? Timestamp(this DateTime? time, TimestampFormat format = TimestampFormat.RelativeTime)
+		=> time.HasValue ? Timestamp(time.Value.ToUniversalTime() - DateTime.UtcNow, format) : null;
+
+	/// <summary>
 	/// Creates bold text.
 	/// </summary>
 	/// <param name="content">Text to embolden.</param>
