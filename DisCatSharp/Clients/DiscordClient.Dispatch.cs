@@ -351,7 +351,7 @@ public sealed partial class DiscordClient
 				{
 					// discord fires this event inconsistently if the current user leaves a guild.
 					if (usr.Id != this.CurrentUser.Id)
-						this.Logger.LogError(LoggerEvents.WebSocketReceive, "Could not find {0} in guild cache", gid);
+						this.Logger.LogError(LoggerEvents.WebSocketReceive, "Could not find {guildId} in guild cache", gid);
 					return;
 				}
 

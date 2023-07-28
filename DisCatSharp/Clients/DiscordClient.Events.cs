@@ -1086,7 +1086,7 @@ public sealed partial class DiscordClient
 	/// <param name="sender">The sender.</param>
 	/// <param name="eventArgs">The event args.</param>
 	private void Goof<TSender, TArgs>(AsyncEvent<TSender, TArgs> asyncEvent, Exception ex, AsyncEventHandler<TSender, TArgs> handler, TSender sender, TArgs eventArgs)
-		where TArgs : AsyncEventArgs => this.Logger.LogCritical(LoggerEvents.EventHandlerException, ex, "Exception event handler {0} (defined in {1}) threw an exception", handler.Method, handler.Method.DeclaringType);
+		where TArgs : AsyncEventArgs => this.Logger.LogCritical(LoggerEvents.EventHandlerException, ex, "Exception event handler {method} (defined in {type}) threw an exception", handler.Method, handler.Method.DeclaringType);
 
 	#endregion
 }

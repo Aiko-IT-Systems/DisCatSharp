@@ -84,7 +84,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <summary>
 	/// Gets the bot library name.
 	/// </summary>
-	protected static string BotLibrary
+	public static string BotLibrary
 		=> "DisCatSharp";
 
 	/// <summary>

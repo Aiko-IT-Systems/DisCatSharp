@@ -216,10 +216,10 @@ public sealed class DiscordApiClient
 	/// <param name="tags">The sticker tag.</param>
 	/// <param name="description">The sticker description.</param>
 	/// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
-	private Task<RestResponse> DoStickerMultipartAsync(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null,
-		DiscordMessageFile file = null, string name = "", string tags = "", string description = "", double? ratelimitWaitOverride = null)
+	private Task<RestResponse> DoStickerMultipartAsync(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, DiscordMessageFile file,
+		string name, string tags, string? description = null, IReadOnlyDictionary<string, string>? headers = null, double? ratelimitWaitOverride = null)
 	{
-		var req = new MultipartStickerWebRequest(client, bucket, url, method, route, headers, file, name, tags, description, ratelimitWaitOverride);
+		var req = new MultipartStickerWebRequest(client, bucket, url, method, route, file, name, tags, description,headers,  ratelimitWaitOverride);
 
 		if (this.Discord != null)
 			this.Rest.ExecuteRequestAsync(req).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
@@ -4991,7 +4991,7 @@ public sealed class DiscordApiClient
 	/// <param name="tags">The tags.</param>
 	/// <param name="file">The file.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordSticker> CreateGuildStickerAsync(ulong guildId, string name, string description, string tags, DiscordMessageFile file, string? reason)
+	internal async Task<DiscordSticker> CreateGuildStickerAsync(ulong guildId, string name, string? description, string tags, DiscordMessageFile file, string? reason)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id = guildId}, out var path);
@@ -5001,7 +5001,7 @@ public sealed class DiscordApiClient
 		if (!string.IsNullOrWhiteSpace(reason))
 			headers.Add(REASON_HEADER_NAME, reason);
 
-		var res = await this.DoStickerMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, file, name, tags, description).ConfigureAwait(false);
+		var res = await this.DoStickerMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, file, name, tags, description, headers).ConfigureAwait(false);
 
 		var ret = DiscordJson.DeserializeObject<DiscordSticker>(res.Response, this.Discord);
 		return ret;

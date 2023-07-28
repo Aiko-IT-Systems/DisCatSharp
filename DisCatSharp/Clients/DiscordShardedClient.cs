@@ -67,23 +67,23 @@ public sealed partial class DiscordShardedClient
 	/// <summary>
 	/// Gets the gateway info for the client's session.
 	/// </summary>
-	public GatewayInfo GatewayInfo { get; private set; }
+	public GatewayInfo? GatewayInfo { get; private set; }
 
 	/// <summary>
 	/// Gets the current user.
 	/// </summary>
-	public DiscordUser CurrentUser { get; private set; }
+	public DiscordUser? CurrentUser { get; private set; }
 
 	/// <summary>
 	/// Gets the bot library name.
 	/// </summary>
-	public string BotLibrary
+	public static string BotLibrary
 		=> "DisCatSharp";
 
 	/// <summary>
 	/// Gets the current application.
 	/// </summary>
-	public DiscordApplication CurrentApplication { get; private set; }
+	public DiscordApplication? CurrentApplication { get; private set; }
 
 	/// <summary>
 	/// Gets the list of available voice regions. Note that this property will not contain VIP voice regions.
@@ -103,7 +103,7 @@ public sealed partial class DiscordShardedClient
 	/// <summary>
 	/// Gets the list of available voice regions. This property is meant as a way to modify <see cref="VoiceRegions"/>.
 	/// </summary>
-	private ConcurrentDictionary<string, DiscordVoiceRegion> _internalVoiceRegions;
+	private ConcurrentDictionary<string, DiscordVoiceRegion>? _internalVoiceRegions;
 
 	/// <summary>
 	/// Gets a list of shards.
@@ -113,7 +113,7 @@ public sealed partial class DiscordShardedClient
 	/// <summary>
 	/// Gets a lazy list of voice regions.
 	/// </summary>
-	private Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>> _voiceRegionsLazy;
+	private Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>>? _voiceRegionsLazy;
 
 	/// <summary>
 	/// Whether the shard client is started.
@@ -191,7 +191,7 @@ public sealed partial class DiscordShardedClient
 				o.AddInAppInclude("DisCatSharp");
 				o.AttachStacktrace = true;
 				o.StackTraceMode = StackTraceMode.Enhanced;
-				o.Release = $"{this.BotLibrary}@{vs}";
+				o.Release = $"{BotLibrary}@{vs}";
 				o.SendClientReports = true;
 				if (!this._configuration.DisableExceptionFilter)
 					o.AddExceptionFilter(new DisCatSharpExceptionFilter(this._configuration));
@@ -205,25 +205,26 @@ public sealed partial class DiscordShardedClient
 					{
 						if (e.Exception != null)
 						{
-							if (!this._configuration.TrackExceptions.Contains(e.Exception.GetType()))
+							if (!this._configuration.TrackExceptions?.Contains(e.Exception.GetType()) ?? false)
 								return null;
 						}
 						else if (e.Extra.Count == 0 || !e.Extra.ContainsKey("Found Fields"))
 							return null;
 					}
 
-					if (!e.HasUser())
-						if (this._configuration.AttachUserInfo && this.CurrentUser! != null!)
-							e.User = new()
+					if (e.HasUser())
+						return e;
+					if (this._configuration.AttachUserInfo && this.CurrentUser! != null!)
+						e.User = new()
+						{
+							Id = this.CurrentUser.Id.ToString(),
+							Username = this.CurrentUser.UsernameWithDiscriminator,
+							Other = new Dictionary<string, string>()
 							{
-								Id = this.CurrentUser.Id.ToString(),
-								Username = this.CurrentUser.UsernameWithDiscriminator,
-								Other = new Dictionary<string, string>()
-								{
-									{ "developer", this._configuration.DeveloperUserId?.ToString() ?? "not_given" },
-									{ "email", this._configuration.FeedbackEmail ?? "not_given" }
-								}
-							};
+								{ "developer", this._configuration.DeveloperUserId?.ToString() ?? "not_given" },
+								{ "email", this._configuration.FeedbackEmail ?? "not_given" }
+							}
+						};
 					return e;
 				};
 			});
@@ -253,11 +254,11 @@ public sealed partial class DiscordShardedClient
 		{
 			if (this._configuration.TokenType != TokenType.Bot)
 				this.Logger.LogWarning(LoggerEvents.Misc, "You are logging in with a token that is not a bot token. This is not officially supported by Discord, and can result in your account being terminated if you aren't careful.");
-			this.Logger.LogInformation(LoggerEvents.Startup, "Lib {0}, version {1}", this._botLibrary, this._versionString.Value);
+			this.Logger.LogInformation(LoggerEvents.Startup, "Lib {library}, version {version}", this._botLibrary, this._versionString.Value);
 
 			var shardc = await this.InitializeShardsAsync().ConfigureAwait(false);
 			var connectTasks = new List<Task>();
-			this.Logger.LogInformation(LoggerEvents.ShardStartup, "Booting {0} shards.", shardc);
+			this.Logger.LogInformation(LoggerEvents.ShardStartup, "Booting {shardCount} shards.", shardc);
 
 			for (var i = 0; i < shardc; i++)
 			{
@@ -286,7 +287,7 @@ public sealed partial class DiscordShardedClient
 
 			var message = $"Shard initialization failed, check inner exceptions for details: ";
 
-			this.Logger.LogCritical(LoggerEvents.ShardClientError, $"{message}\n{ex}");
+			this.Logger.LogCritical(LoggerEvents.ShardClientError, "{message}\n{exception}", message, ex);
 			throw new AggregateException(message, ex);
 		}
 	}
@@ -307,7 +308,7 @@ public sealed partial class DiscordShardedClient
 	/// </summary>
 	/// <param name="guildId">The guild ID for the shard.</param>
 	/// <returns>The found <see cref="DiscordClient"/> shard. Otherwise null if the shard was not found for the guild id.</returns>
-	public DiscordClient GetShard(ulong guildId)
+	public DiscordClient? GetShard(ulong guildId)
 	{
 		var index = this._manuallySharding ? this.GetShardIdFromGuilds(guildId) : Utilities.GetShardId(guildId, this.ShardClients.Count);
 
@@ -323,7 +324,7 @@ public sealed partial class DiscordShardedClient
 	/// </summary>
 	/// <param name="guild">The guild for the shard.</param>
 	/// <returns>The found <see cref="DiscordClient"/> shard. Otherwise null if the shard was not found for the guild.</returns>
-	public DiscordClient GetShard(DiscordGuild guild)
+	public DiscordClient? GetShard(DiscordGuild guild)
 		=> this.GetShard(guild.Id);
 
 	/// <summary>
@@ -333,11 +334,9 @@ public sealed partial class DiscordShardedClient
 	/// <param name="userStatus">The optional status to set. Defaults to null.</param>
 	/// <param name="idleSince">Since when is the client performing the specified activity. Defaults to null.</param>
 	/// <returns>Asynchronous operation.</returns>
-	public async Task UpdateStatusAsync(DiscordActivity activity = null, UserStatus? userStatus = null, DateTimeOffset? idleSince = null)
+	public async Task UpdateStatusAsync(DiscordActivity? activity = null, UserStatus? userStatus = null, DateTimeOffset? idleSince = null)
 	{
-		var tasks = new List<Task>();
-		foreach (var client in this._shards.Values)
-			tasks.Add(client.UpdateStatusAsync(activity, userStatus, idleSince));
+		var tasks = this._shards.Values.Select(client => client.UpdateStatusAsync(activity, userStatus, idleSince)).ToList();
 
 		await Task.WhenAll(tasks).ConfigureAwait(false);
 	}
@@ -347,7 +346,7 @@ public sealed partial class DiscordShardedClient
 	/// </summary>
 	[Obsolete("Don't use this right now, inactive")]
 	public async Task<DisCatSharpTeam> GetLibraryDevelopmentTeamAsync()
-		=> await this.GetShard(0).GetLibraryDevelopmentTeamAsync().ConfigureAwait(false);
+		=> await this.GetShard(0)!.GetLibraryDevelopmentTeamAsync().ConfigureAwait(false);
 
 	#endregion
 
@@ -429,29 +428,32 @@ public sealed partial class DiscordShardedClient
 
 		return info;
 
-		async Task<bool> HandleHttpError(string reqUrl, HttpResponseMessage msg)
+		async Task<bool> HandleHttpError(string requestUrl, HttpResponseMessage msg)
 		{
 			var code = (int)msg.StatusCode;
 
-			if (code is 401 or 403)
-				throw new($"Authentication failed, check your token and try again: {code} {msg.ReasonPhrase}");
-			else if (code == 429)
+			switch (code)
 			{
-				this.Logger.LogError(LoggerEvents.ShardClientError, $"Ratelimit hit, requeuing request to {reqUrl}");
+				case 401 or 403:
+					throw new($"Authentication failed, check your token and try again: {code} {msg.ReasonPhrase}");
+				case 429:
+				{
+					this.Logger.LogError(LoggerEvents.ShardClientError, "Ratelimit hit, requeuing request to {url}", requestUrl);
 
-				var hs = msg.Headers.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
-				var waitInterval = 0;
+					var hs = msg.Headers.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
+					var waitInterval = 0;
 
-				if (hs.TryGetValue("Retry-After", out var retryAfterRaw))
-					waitInterval = int.Parse(retryAfterRaw, CultureInfo.InvariantCulture);
+					if (hs.TryGetValue("Retry-After", out var retryAfterRaw))
+						waitInterval = int.Parse(retryAfterRaw, CultureInfo.InvariantCulture);
 
-				await Task.Delay(waitInterval).ConfigureAwait(false);
-				return true;
+					await Task.Delay(waitInterval).ConfigureAwait(false);
+					return true;
+				}
+				case >= 500:
+					throw new($"Internal Server Error: {code} {msg.ReasonPhrase}");
+				default:
+					throw new($"An unsuccessful HTTP status code was encountered: {code} {msg.ReasonPhrase}");
 			}
-			else if (code >= 500)
-				throw new($"Internal Server Error: {code} {msg.ReasonPhrase}");
-			else
-				throw new($"An unsuccessful HTTP status code was encountered: {code} {msg.ReasonPhrase}");
 		}
 	}
 
@@ -487,11 +489,11 @@ public sealed partial class DiscordShardedClient
 	/// <summary>
 	/// Connects a shard.
 	/// </summary>
-	/// <param name="i">The shard id.</param>
-	private async Task ConnectShardAsync(int i)
+	/// <param name="shardId">The shard id.</param>
+	private async Task ConnectShardAsync(int shardId)
 	{
-		if (!this._shards.TryGetValue(i, out var client))
-			throw new($"Could not initialize shard {i}.");
+		if (!this._shards.TryGetValue(shardId, out var client))
+			throw new($"Could not initialize shard {shardId}.");
 
 		client.IsShard = true;
 		if (this.GatewayInfo != null)
@@ -515,7 +517,7 @@ public sealed partial class DiscordShardedClient
 		this.HookEventHandlers(client);
 
 		await client.ConnectAsync().ConfigureAwait(false);
-		this.Logger.LogInformation(LoggerEvents.ShardStartup, "Booted shard {0}.", i);
+		this.Logger.LogInformation(LoggerEvents.ShardStartup, "Booted shard {shardId}.", shardId);
 
 		this.GatewayInfo ??= client.GatewayInfo;
 
@@ -542,7 +544,7 @@ public sealed partial class DiscordShardedClient
 			throw new InvalidOperationException("This client has not been started.");
 
 		if (enableLogger)
-			this.Logger.LogInformation(LoggerEvents.ShardShutdown, "Disposing {0} shards.", this._shards.Count);
+			this.Logger.LogInformation(LoggerEvents.ShardShutdown, "Disposing {count} shards.", this._shards.Count);
 
 		this._isStarted = false;
 		this._voiceRegionsLazy = null;
@@ -551,15 +553,15 @@ public sealed partial class DiscordShardedClient
 		this.CurrentUser = null;
 		this.CurrentApplication = null;
 
-		for (var i = 0; i < this._shards.Count; i++)
-			if (this._shards.TryGetValue(i, out var client))
+		for (var shardId = 0; shardId < this._shards.Count; shardId++)
+			if (this._shards.TryGetValue(shardId, out var client))
 			{
 				this.UnhookEventHandlers(client);
 
 				client.Dispose();
 
 				if (enableLogger)
-					this.Logger.LogInformation(LoggerEvents.ShardShutdown, "Disconnected shard {0}.", i);
+					this.Logger.LogInformation(LoggerEvents.ShardShutdown, "Disconnected shard {shardId}.", shardId);
 			}
 
 		this._shards.Clear();
@@ -858,7 +860,7 @@ public sealed partial class DiscordShardedClient
 	private int GetShardIdFromGuilds(ulong id)
 	{
 		foreach (var s in this._shards.Values)
-			if (s.GuildsInternal.TryGetValue(id, out _))
+			if (s.GuildsInternal != null && s.GuildsInternal.TryGetValue(id, out _))
 				return s.ShardId;
 
 		return -1;

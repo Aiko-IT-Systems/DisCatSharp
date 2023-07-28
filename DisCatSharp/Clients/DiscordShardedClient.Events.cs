@@ -1060,7 +1060,7 @@ public sealed partial class DiscordShardedClient
 	/// <param name="sender">The sender.</param>
 	/// <param name="eventArgs">The event args.</param>
 	private void Goof<TArgs>(AsyncEvent<DiscordClient, TArgs> asyncEvent, Exception ex, AsyncEventHandler<DiscordClient, TArgs> handler, DiscordClient sender, TArgs eventArgs)
-		where TArgs : AsyncEventArgs => this.Logger.LogCritical(LoggerEvents.EventHandlerException, ex, "Exception event handler {0} (defined in {1}) threw an exception", handler.Method, handler.Method.DeclaringType);
+		where TArgs : AsyncEventArgs => this.Logger.LogCritical(LoggerEvents.EventHandlerException, ex, "Exception event handler {method} (defined in {type}) threw an exception", handler.Method, handler.Method.DeclaringType);
 
 	#endregion
 

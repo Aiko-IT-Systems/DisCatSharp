@@ -1974,7 +1974,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 			? throw new InvalidOperationException("Only unicode emoji can be used for stickers.")
 			: name.Length is < 2 or > 30
 			? throw new ArgumentOutOfRangeException(nameof(name), "Sticker name needs to be between 2 and 30 characters long.")
-			: description.Length is < 1 or > 100
+			: description?.Length is < 1 or > 100
 			? throw new ArgumentOutOfRangeException(nameof(description), "Sticker description needs to be between 1 and 100 characters long.")
 			: this.Discord.ApiClient.CreateGuildStickerAsync(this.Id, name, description, emoji.GetDiscordName().Replace(":", ""), new("sticker", file, null, fileExt, contentType), reason);
 	}

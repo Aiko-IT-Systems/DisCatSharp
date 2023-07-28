@@ -134,8 +134,10 @@ public sealed class DisCatSharpTeam : SnowflakeObject
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DisCatSharpTeam"/> class.
 	/// </summary>
-	internal static async Task<DisCatSharpTeam> Get(HttpClient http, ILogger logger, DiscordApiClient apiClient)
+	internal static async Task<DisCatSharpTeam?> Get(HttpClient http, ILogger logger, DiscordApiClient apiClient)
 	{
+		return null;
+#pragma warning disable CS0162 // Unreachable code detected
 		try
 		{
 			var dcs = await http.GetStringAsync(new Uri("https://dcs.aitsys.dev/api/devs/")).ConfigureAwait(false);
@@ -194,10 +196,11 @@ public sealed class DisCatSharpTeam : SnowflakeObject
 		}
 		catch (Exception ex)
 		{
-			logger.LogDebug(ex.Message);
-			logger.LogDebug(ex.StackTrace);
+			logger.LogDebug("{msg}", ex.Message);
+			logger.LogDebug("{stack}", ex.StackTrace);
 			return null;
 		}
+#pragma warning restore CS0162 // Unreachable code detected
 	}
 
 	private DisCatSharpTeam() { }

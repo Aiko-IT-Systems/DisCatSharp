@@ -59,7 +59,7 @@ internal sealed class RestClient : IDisposable
 	/// <summary>
 	/// Gets the discord client.
 	/// </summary>
-	private readonly BaseDiscordClient _discord;
+	private readonly BaseDiscordClient? _discord;
 
 	/// <summary>
 	/// Gets a value indicating whether debug is enabled.
@@ -116,6 +116,7 @@ internal sealed class RestClient : IDisposable
 			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone", client.Configuration.Timezone);
 		if (client.Configuration.Override != null)
 			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", client.Configuration.Override);
+		this.HttpClient.BaseAddress = new(Utilities.GetApiBaseUri(client.Configuration));
 	}
 
 	/// <summary>
@@ -126,12 +127,12 @@ internal sealed class RestClient : IDisposable
 	/// <param name="timeout">The timeout.</param>
 	/// <param name="useRelativeRatelimit">Whether to use relative ratelimit.</param>
 	/// <param name="logger">The logger.</param>
-	internal RestClient(IWebProxy proxy, TimeSpan timeout, bool useRelativeRatelimit,
+	internal RestClient(IWebProxy? proxy, TimeSpan timeout, bool useRelativeRatelimit,
 		ILogger logger)
 	{
 		this._logger = logger;
 
-		var httphandler = new HttpClientHandler
+		var httpClientHandler = new HttpClientHandler
 		{
 			UseCookies = false,
 			AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip,
@@ -139,21 +140,13 @@ internal sealed class RestClient : IDisposable
 			Proxy = proxy
 		};
 
-		this.HttpClient = new(httphandler)
+		this.HttpClient = new(httpClientHandler)
 		{
-			BaseAddress = new(Utilities.GetApiBaseUri(this._discord?.Configuration)),
+			BaseAddress = new(Utilities.GetApiBaseUri()),
 			Timeout = timeout
 		};
 
 		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
-		if (this._discord != null && this._discord.Configuration != null)
-		{
-			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-locale", this._discord.Configuration.Locale);
-			if (!string.IsNullOrWhiteSpace(this._discord.Configuration.Timezone))
-				this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone", this._discord.Configuration.Timezone);
-			if (this._discord.Configuration.Override != null)
-				this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this._discord.Configuration.Override);
-		}
 
 		this._routesToHashes = new();
 		this._hashesToBuckets = new();
@@ -173,25 +166,27 @@ internal sealed class RestClient : IDisposable
 	/// <returns>A ratelimit bucket.</returns>
 	public RateLimitBucket GetBucket(RestRequestMethod method, string route, object routeParams, out string url)
 	{
-		var rparamsProps = routeParams.GetType()
+		var declaredProperties = routeParams.GetType()
 			.GetTypeInfo()
 			.DeclaredProperties;
-		var rparams = new Dictionary<string, string>();
-		foreach (var xp in rparamsProps)
+		var routeParameters = new Dictionary<string, string>();
+		foreach (var propertyInfo in declaredProperties)
 		{
-			var val = xp.GetValue(routeParams);
-			rparams[xp.Name] = val is string xs
-				? xs
-				: val is DateTime dt
-				? dt.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture)
-				: val is DateTimeOffset dto
-				? dto.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture)
-				: val is IFormattable xf ? xf.ToString(null, CultureInfo.InvariantCulture) : val.ToString();
+			var val = propertyInfo.GetValue(routeParams);
+			if (val == null)
+				continue;
+			routeParameters[propertyInfo.Name] = val as string ?? (val switch
+			{
+				DateTime dt => dt.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture),
+				DateTimeOffset dto => dto.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture),
+				IFormattable xf => xf.ToString(null, CultureInfo.InvariantCulture),
+				_ => val.ToString()
+			});
 		}
 
-		var guildId = rparams.TryGetValue("guild_id", out var rparam) ? rparam : "";
-		var channelId = rparams.TryGetValue("channel_id", out var rparam1) ? rparam1 : "";
-		var webhookId = rparams.TryGetValue("webhook_id", out var rparam2) ? rparam2 : "";
+		var guildId = routeParameters.TryGetValue("guild_id", out var routeParameter) ? routeParameter : "";
+		var channelId = routeParameters.TryGetValue("channel_id", out var routeParameter1) ? routeParameter1 : "";
+		var webhookId = routeParameters.TryGetValue("webhook_id", out var routeParameter2) ? routeParameter2 : "";
 
 		// Create a generic route (minus major params) key
 		// ex: POST:/channels/channel_id/messages
@@ -234,16 +229,9 @@ internal sealed class RestClient : IDisposable
 			this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task started.");
 		}
 
-		url = s_routeArgumentRegex.Replace(route, xm => rparams[xm.Groups[1].Value]);
+		url = s_routeArgumentRegex.Replace(route, xm => routeParameters[xm.Groups[1].Value]);
 		return bucket;
 	}
-
-	/// <summary>
-	/// Executes the request.
-	/// </summary>
-	/// <param name="request">The request to be executed.</param>
-	public Task ExecuteRequestAsync(BaseRestRequest request)
-		=> request == null ? throw new ArgumentNullException(nameof(request)) : this.ExecuteRequestAsync(request, null, null);
 
 	/// <summary>
 	/// Executes the request.
@@ -252,7 +240,7 @@ internal sealed class RestClient : IDisposable
 	/// <param name="request">The request to be executed.</param>
 	/// <param name="bucket">The bucket.</param>
 	/// <param name="ratelimitTcs">The ratelimit task completion source.</param>
-	private async Task ExecuteRequestAsync(BaseRestRequest request, RateLimitBucket bucket, TaskCompletionSource<bool> ratelimitTcs)
+	internal async Task ExecuteRequestAsync(BaseRestRequest request, RateLimitBucket? bucket = null, TaskCompletionSource<bool>? ratelimitTcs = null)
 	{
 		if (this._disposed)
 			return;
@@ -280,7 +268,7 @@ internal sealed class RestClient : IDisposable
 					var delay = bucket.Reset - now;
 					var resetDate = bucket.Reset;
 
-					if (this._useResetAfter)
+					if (this._useResetAfter && bucket.ResetAfter.HasValue)
 					{
 						delay = bucket.ResetAfter.Value;
 						resetDate = bucket.ResetAfterOffset;
@@ -295,7 +283,7 @@ internal sealed class RestClient : IDisposable
 					if (delay < TimeSpan.Zero)
 						delay = TimeSpan.FromMilliseconds(100);
 
-					this._logger.LogWarning(LoggerEvents.RatelimitPreemptive, "Preemptive ratelimit triggered - waiting until {0:yyyy-MM-dd HH:mm:ss zzz} ({1:c}).", resetDate, delay);
+					this._logger.LogWarning(LoggerEvents.RatelimitPreemptive, "Preemptive ratelimit triggered - waiting until {resetDate:yyyy-MM-dd HH:mm:ss zzz} ({delay:c}).", resetDate, delay);
 					Task.Delay(delay)
 						.ContinueWith(_ => this.ExecuteRequestAsync(request, null, null))
 						.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
@@ -309,8 +297,11 @@ internal sealed class RestClient : IDisposable
 
 			var req = this.BuildRequest(request);
 
-			if (this.Debug)
-				this._logger.LogTrace(LoggerEvents.Misc, await req.Content.ReadAsStringAsync());
+			if (this.Debug && req.Content is not null)
+			{
+				var content = await req.Content.ReadAsStringAsync().ConfigureAwait(false);
+				this._logger.LogTrace(LoggerEvents.Misc, "{content}", content);
+			}
 
 			var response = new RestResponse();
 			try
@@ -329,10 +320,10 @@ internal sealed class RestClient : IDisposable
 				response.Response = txt;
 				response.ResponseCode = (int)res.StatusCode;
 			}
-			catch (HttpRequestException httpex)
+			catch (HttpRequestException httpRequestException)
 			{
-				this._logger.LogError(LoggerEvents.RestError, httpex, "Request to {0} triggered an HttpException", request.Url.AbsoluteUri);
-				request.SetFaulted(httpex);
+				this._logger.LogError(LoggerEvents.RestError, httpRequestException, "Request to {url} triggered an HttpException", request.Url.AbsoluteUri);
+				request.SetFaulted(httpRequestException);
 				this.FailInitialRateLimitTest(request, ratelimitTcs);
 				return;
 			}
@@ -340,13 +331,13 @@ internal sealed class RestClient : IDisposable
 			this.UpdateBucket(request, response, ratelimitTcs);
 
 			Exception ex = null;
-			Exception senex = null;
+			Exception sentryException = null;
 			switch (response.ResponseCode)
 			{
 				case 400:
 				case 405:
 					ex = new BadRequestException(request, response);
-					senex = new(ex.Message + "\nJson Response: " + (ex as BadRequestException).JsonMessage ?? "null", ex);
+					sentryException = new(ex.Message + "\nJson Response: " + ((BadRequestException)ex).JsonMessage ?? "null", ex);
 					break;
 
 				case 401:
@@ -388,12 +379,12 @@ internal sealed class RestClient : IDisposable
 						}
 						else
 						{
-							if (this._discord is DiscordClient)
-								await (this._discord as DiscordClient).RateLimitHitInternal.InvokeAsync(this._discord as DiscordClient, new(this._discord.ServiceProvider)
+							if (this._discord is DiscordClient client)
+								await client.RateLimitHitInternal.InvokeAsync(client, new(client.ServiceProvider)
 								{
-									Exception = ex as RateLimitException,
+									Exception = (RateLimitException)ex,
 									ApiEndpoint = request.Url.AbsoluteUri
-								});
+								}).ConfigureAwait(false);
 							this._logger.LogError(LoggerEvents.RatelimitHit, "Ratelimit hit, requeuing request to {url}", request.Url.AbsoluteUri);
 							await wait.ConfigureAwait(false);
 							this.ExecuteRequestAsync(request, bucket, ratelimitTcs)
@@ -409,22 +400,22 @@ internal sealed class RestClient : IDisposable
 				case 503:
 				case 504:
 					ex = new ServerErrorException(request, response);
-					senex = new(ex.Message + "\nJson Response: " + (ex as ServerErrorException).JsonMessage ?? "null", ex);
+					sentryException = new(ex.Message + "\nJson Response: " + ((ServerErrorException)ex).JsonMessage ?? "null", ex);
 					break;
 			}
 
 			if (ex != null)
 			{
 				if (this._discord.Configuration.EnableSentry)
-					if (senex != null)
+					if (sentryException != null)
 					{
 						Dictionary<string, object> debugInfo = new()
 						{
 							{ "route", request.Route },
 							{ "time", DateTimeOffset.UtcNow }
 						};
-						senex.AddSentryContext("Request", debugInfo);
-						this._discord.Sentry.CaptureException(senex);
+						sentryException.AddSentryContext("Request", debugInfo);
+						this._discord.Sentry.CaptureException(sentryException);
 					}
 
 				request.SetFaulted(ex);
@@ -434,7 +425,7 @@ internal sealed class RestClient : IDisposable
 		}
 		catch (Exception ex)
 		{
-			this._logger.LogError(LoggerEvents.RestError, ex, "Request to {0} triggered an exception", request.Url.AbsoluteUri);
+			this._logger.LogError(LoggerEvents.RestError, ex, "Request to {url} triggered an exception", request.Url.AbsoluteUri);
 
 			// if something went wrong and we couldn't get rate limits for the first request here, allow the next request to run
 			if (bucket != null && ratelimitTcs != null && bucket.LimitTesting != 0)
@@ -448,7 +439,7 @@ internal sealed class RestClient : IDisposable
 			res?.Dispose();
 
 			// Get and decrement active requests in this bucket by 1.
-			_ = this._requestQueue.TryGetValue(bucket.BucketId, out var count);
+			_ = this._requestQueue.TryGetValue(bucket.BucketId!, out var count);
 			this._requestQueue[bucket.BucketId] = Interlocked.Decrement(ref count);
 
 			// If it's 0 or less, we can remove the bucket from the active request queue,
@@ -466,7 +457,7 @@ internal sealed class RestClient : IDisposable
 	/// <param name="request">The request.</param>
 	/// <param name="ratelimitTcs">The ratelimit task completion source.</param>
 	/// <param name="resetToInitial">Whether to reset to initial values.</param>
-	private void FailInitialRateLimitTest(BaseRestRequest request, TaskCompletionSource<bool> ratelimitTcs, bool resetToInitial = false)
+	private void FailInitialRateLimitTest(BaseRestRequest request, TaskCompletionSource<bool>? ratelimitTcs, bool resetToInitial = false)
 	{
 		if (ratelimitTcs == null && !resetToInitial)
 			return;
@@ -494,7 +485,7 @@ internal sealed class RestClient : IDisposable
 	/// Waits for the initial rate limit.
 	/// </summary>
 	/// <param name="bucket">The bucket.</param>
-	private async Task<TaskCompletionSource<bool>> WaitForInitialRateLimit(RateLimitBucket bucket)
+	private async Task<TaskCompletionSource<bool>?> WaitForInitialRateLimit(RateLimitBucket bucket)
 	{
 		while (!bucket.LimitValid)
 		{
@@ -535,70 +526,74 @@ internal sealed class RestClient : IDisposable
 			foreach (var kvp in request.Headers)
 				req.Headers.Add(kvp.Key, kvp.Value);
 
-		if (request is RestRequest nmprequest && !string.IsNullOrWhiteSpace(nmprequest.Payload))
+		switch (request)
 		{
-			this._logger.LogTrace(LoggerEvents.RestTx, nmprequest.Payload);
+			case RestRequest restRequest when !string.IsNullOrWhiteSpace(restRequest.Payload):
+				this._logger.LogTrace(LoggerEvents.RestTx, restRequest.Payload);
 
-			req.Content = new StringContent(nmprequest.Payload);
-			req.Content.Headers.ContentType = new("application/json");
-		}
-
-		if (request is MultipartWebRequest mprequest)
-		{
-			this._logger.LogTrace(LoggerEvents.RestTx, "<multipart request>");
-
-			var boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x");
-
-			req.Headers.Add("Connection", "keep-alive");
-			req.Headers.Add("Keep-Alive", "600");
-
-			var content = new MultipartFormDataContent(boundary);
-			if (mprequest.Values != null && mprequest.Values.Any())
-				foreach (var kvp in mprequest.Values)
-					content.Add(new StringContent(kvp.Value), kvp.Key);
-
-			var fileId = mprequest.OverwriteFileIdStart ?? 0;
-
-			if (mprequest.Files != null && mprequest.Files.Any())
-				foreach (var f in mprequest.Files)
-				{
-					var name = $"files[{fileId.ToString(CultureInfo.InvariantCulture)}]";
-					content.Add(new StreamContent(f.Value), name, f.Key);
-					fileId++;
-				}
-
-			req.Content = content;
-		}
-
-		if (request is MultipartStickerWebRequest mpsrequest)
-		{
-			this._logger.LogTrace(LoggerEvents.RestTx, "<multipart request>");
-
-			var boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x");
-
-			req.Headers.Add("Connection", "keep-alive");
-			req.Headers.Add("Keep-Alive", "600");
-
-			var sc = new StreamContent(mpsrequest.File.Stream);
-
-			if (mpsrequest.File.ContentType != null)
-				sc.Headers.ContentType = new(mpsrequest.File.ContentType);
-
-			var fileName = mpsrequest.File.Filename;
-
-			if (mpsrequest.File.FileType != null)
-				fileName += '.' + mpsrequest.File.FileType;
-
-			var content = new MultipartFormDataContent(boundary)
+				req.Content = new StringContent(restRequest.Payload);
+				req.Content.Headers.ContentType = new("application/json");
+				break;
+			case MultipartWebRequest multipartWebRequest:
 			{
-				{ new StringContent(mpsrequest.Name), "name" },
-				{ new StringContent(mpsrequest.Tags), "tags" },
-				{ new StringContent(mpsrequest.Description), "description" },
-				{ sc, "file", fileName }
-			};
+				this._logger.LogTrace(LoggerEvents.RestTx, "<multipart request>");
 
-			req.Content = content;
+				var boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x");
+
+				req.Headers.Add("Connection", "keep-alive");
+				req.Headers.Add("Keep-Alive", "600");
+
+				var content = new MultipartFormDataContent(boundary);
+				if (multipartWebRequest.Values != null && multipartWebRequest.Values.Any())
+					foreach (var kvp in multipartWebRequest.Values)
+						content.Add(new StringContent(kvp.Value), kvp.Key);
+
+				var fileId = multipartWebRequest.OverwriteFileIdStart ?? 0;
+
+				if (multipartWebRequest.Files != null && multipartWebRequest.Files.Any())
+					foreach (var f in multipartWebRequest.Files)
+					{
+						var name = $"files[{fileId.ToString(CultureInfo.InvariantCulture)}]";
+						content.Add(new StreamContent(f.Value), name, f.Key);
+						fileId++;
+					}
+
+				req.Content = content;
+				break;
+			}
+			case MultipartStickerWebRequest multipartStickerWebRequest:
+			{
+				this._logger.LogTrace(LoggerEvents.RestTx, "<multipart request>");
+
+				var boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x");
+
+				req.Headers.Add("Connection", "keep-alive");
+				req.Headers.Add("Keep-Alive", "600");
+
+				var sc = new StreamContent(multipartStickerWebRequest.File.Stream);
+
+				if (multipartStickerWebRequest.File.ContentType != null)
+					sc.Headers.ContentType = new(multipartStickerWebRequest.File.ContentType);
+
+				var fileName = multipartStickerWebRequest.File.Filename;
+
+				if (multipartStickerWebRequest.File.FileType != null)
+					fileName += '.' + multipartStickerWebRequest.File.FileType;
+
+				var content = new MultipartFormDataContent(boundary)
+				{
+					{ new StringContent(multipartStickerWebRequest.Name), "name" },
+					{ new StringContent(multipartStickerWebRequest.Tags), "tags" },
+				};
+				if (multipartStickerWebRequest.Description is not null)
+					content.Add(new StringContent(multipartStickerWebRequest.Description), "description");
+				content.Add(sc, "file", fileName);
+
+				req.Content = content;
+				break;
+			}
 		}
+
 		return req;
 	}
 
@@ -608,7 +603,7 @@ internal sealed class RestClient : IDisposable
 	/// <param name="response">The response.</param>
 	/// <param name="waitTask">The wait task.</param>
 	/// <param name="global">If true, global.</param>
-	private void Handle429(RestResponse response, out Task waitTask, out bool global)
+	private void Handle429(RestResponse response, out Task? waitTask, out bool global)
 	{
 		waitTask = null;
 		global = false;
@@ -636,7 +631,7 @@ internal sealed class RestClient : IDisposable
 	/// <param name="request">The request.</param>
 	/// <param name="response">The response.</param>
 	/// <param name="ratelimitTcs">The ratelimit task completion source.</param>
-	private void UpdateBucket(BaseRestRequest request, RestResponse response, TaskCompletionSource<bool> ratelimitTcs)
+	private void UpdateBucket(BaseRestRequest request, RestResponse response, TaskCompletionSource<bool>? ratelimitTcs)
 	{
 		var bucket = request.RateLimitBucket;
 
@@ -654,11 +649,10 @@ internal sealed class RestClient : IDisposable
 
 		if (hs.TryGetValue("X-RateLimit-Global", out var isGlobal) && isGlobal.ToLowerInvariant() == "true")
 		{
-			if (response.ResponseCode != 429)
-			{
-				bucket.IsGlobal = true;
-				this.FailInitialRateLimitTest(request, ratelimitTcs);
-			}
+			if (response.ResponseCode == 429)
+				return;
+			bucket.IsGlobal = true;
+			this.FailInitialRateLimitTest(request, ratelimitTcs);
 
 			return;
 		}
@@ -667,7 +661,7 @@ internal sealed class RestClient : IDisposable
 		var r2 = hs.TryGetValue("X-RateLimit-Remaining", out var usesLeft);
 		var r3 = hs.TryGetValue("X-RateLimit-Reset", out var reset);
 		var r4 = hs.TryGetValue("X-Ratelimit-Reset-After", out var resetAfter);
-		var r5 = hs.TryGetValue("X-Ratelimit-Bucket", out var hash);
+		hs.TryGetValue("X-Ratelimit-Bucket", out var hash);
 
 		if (!r1 || !r2 || !r3 || !r4)
 		{
@@ -734,7 +728,7 @@ internal sealed class RestClient : IDisposable
 	/// <param name="request">The request.</param>
 	/// <param name="bucket">The bucket.</param>
 	/// <param name="newHash">The new hash.</param>
-	private void UpdateHashCaches(BaseRestRequest request, RateLimitBucket bucket, string newHash = null)
+	private void UpdateHashCaches(BaseRestRequest request, RateLimitBucket bucket, string? newHash = null)
 	{
 		var hashKey = RateLimitBucket.GenerateHashKey(request.Method, request.Route);
 
@@ -752,20 +746,21 @@ internal sealed class RestClient : IDisposable
 		// Only update the hash once, due to a bug on Discord's end.
 		// This will cause issues if the bucket hashes are dynamically changed from the API while running,
 		// in which case, Dispose will need to be called to clear the caches.
-		if (bucket.IsUnlimited && newHash != oldHash)
+		if (!bucket.IsUnlimited || newHash == oldHash)
+			return;
 		{
-			this._logger.LogDebug(LoggerEvents.RestHashMover, "Updating hash in {0}: \"{1}\" -> \"{2}\"", hashKey, oldHash, newHash);
+			this._logger.LogDebug(LoggerEvents.RestHashMover, "Updating hash in {key}: \"{old}\" -> \"{new}\"", hashKey, oldHash, newHash);
 			var bucketId = RateLimitBucket.GenerateBucketId(newHash, bucket.GuildId, bucket.ChannelId, bucket.WebhookId);
 
-			_ = this._routesToHashes.AddOrUpdate(hashKey, newHash, (key, oldHash) =>
+			_ = this._routesToHashes.AddOrUpdate(hashKey, newHash, (key, previousHash) =>
 			{
 				bucket.Hash = newHash;
 
-				var oldBucketId = RateLimitBucket.GenerateBucketId(oldHash, bucket.GuildId, bucket.ChannelId, bucket.WebhookId);
+				var oldBucketId = RateLimitBucket.GenerateBucketId(previousHash, bucket.GuildId, bucket.ChannelId, bucket.WebhookId);
 
 				// Remove the old unlimited bucket.
 				_ = this._hashesToBuckets.TryRemove(oldBucketId, out _);
-				_ = this._hashesToBuckets.AddOrUpdate(bucketId, bucket, (key, oldBucket) => bucket);
+				_ = this._hashesToBuckets.AddOrUpdate(bucketId, bucket, (_, _) => bucket);
 
 				return newHash;
 			});
@@ -795,22 +790,19 @@ internal sealed class RestClient : IDisposable
 			{
 				var bucket = this._hashesToBuckets.Values.FirstOrDefault(x => x.RouteHashes.Contains(key));
 
-				if (bucket == null || (bucket != null && bucket.LastAttemptAt.AddSeconds(5) < DateTimeOffset.UtcNow))
+				if (bucket == null || bucket.LastAttemptAt.AddSeconds(5) < DateTimeOffset.UtcNow)
 					_ = this._requestQueue.TryRemove(key, out _);
 			}
 
 			var removedBuckets = 0;
 			StringBuilder bucketIdStrBuilder = default;
 
-			foreach (var kvp in this._hashesToBuckets)
+			foreach (var (hashKey, value) in this._hashesToBuckets)
 			{
 				bucketIdStrBuilder ??= new();
 
-				var key = kvp.Key;
-				var value = kvp.Value;
-
 				// Don't remove the bucket if it's currently being handled by the rest client, unless it's an unlimited bucket.
-				if (this._requestQueue.ContainsKey(value.BucketId) && !value.IsUnlimited)
+				if (this._requestQueue.ContainsKey(value.BucketId!) && !value.IsUnlimited)
 					continue;
 
 				var resetOffset = this._useResetAfter ? value.ResetAfterOffset : value.Reset;
@@ -819,13 +811,13 @@ internal sealed class RestClient : IDisposable
 				if (!value.IsUnlimited && (resetOffset > DateTimeOffset.UtcNow || DateTimeOffset.UtcNow - resetOffset < this._bucketCleanupDelay))
 					continue;
 
-				_ = this._hashesToBuckets.TryRemove(key, out _);
+				_ = this._hashesToBuckets.TryRemove(hashKey, out _);
 				removedBuckets++;
 				bucketIdStrBuilder.Append(value.BucketId + ", ");
 			}
 
 			if (removedBuckets > 0)
-				this._logger.LogDebug(LoggerEvents.RestCleaner, "Removed {0} unused bucket{1}: [{2}]", removedBuckets, removedBuckets > 1 ? "s" : string.Empty, bucketIdStrBuilder.ToString().TrimEnd(',', ' '));
+				this._logger.LogDebug(LoggerEvents.RestCleaner, "Removed {count} unused bucket{multiple}: [{bucketIds}]", removedBuckets, removedBuckets > 1 ? "s" : string.Empty, bucketIdStrBuilder?.ToString().TrimEnd(',', ' '));
 
 			if (this._hashesToBuckets.IsEmpty)
 				break;

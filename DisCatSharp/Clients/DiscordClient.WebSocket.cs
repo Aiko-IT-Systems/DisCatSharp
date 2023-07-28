@@ -456,7 +456,7 @@ public sealed partial class DiscordClient
 
 		await this.WsSendAsync(statusString).ConfigureAwait(false);
 
-		if (!this.PresencesInternal.ContainsKey(this.CurrentUser.Id))
+		if (!this.PresencesInternal.ContainsKey(this.CurrentUser!.Id))
 			this.PresencesInternal[this.CurrentUser.Id] = new()
 			{
 				Discord = this,
@@ -553,7 +553,7 @@ public sealed partial class DiscordClient
 		var payloadstr = JsonConvert.SerializeObject(payload);
 		await this.WsSendAsync(payloadstr).ConfigureAwait(false);
 
-		this.Logger.LogDebug(LoggerEvents.Intents, "Registered gateway intents ({0})", this.Configuration.Intents);
+		this.Logger.LogDebug(LoggerEvents.Intents, "Registered gateway intents ({intents})", this.Configuration.Intents);
 	}
 
 	/// <summary>
@@ -599,8 +599,8 @@ public sealed partial class DiscordClient
 	/// <param name="payload">The payload to send.</param>
 	internal async Task WsSendAsync(string payload)
 	{
-		this.Logger.LogTrace(LoggerEvents.GatewayWsTx, payload);
-		await this.WebSocketClient.SendMessageAsync(payload).ConfigureAwait(false);
+		this.Logger.LogTrace(LoggerEvents.GatewayWsTx, "{pld}", payload);
+		await this.WebSocketClient!.SendMessageAsync(payload).ConfigureAwait(false);
 	}
 
 	#endregion

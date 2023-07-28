@@ -40,7 +40,7 @@ public class DiscordMessageFile
 	/// <param name="fileType">The file type.</param>
 	/// <param name="contentType">The content type.</param>
 	/// <param name="description">The description.</param>
-	internal DiscordMessageFile(string filename, Stream stream, long? resetPositionTo, string fileType = null, string contentType = null, string description = null)
+	internal DiscordMessageFile(string filename, Stream stream, long? resetPositionTo, string? fileType = null, string? contentType = null, string? description = null)
 	{
 		this.Filename = filename;
 		this.FileType = fileType;
@@ -65,7 +65,7 @@ public class DiscordMessageFile
 	/// <summary>
 	/// Gets the description of the File.
 	/// </summary>
-	public string Description { get; internal set; }
+	public string? Description { get; internal set; }
 
 	/// <summary>
 	/// Gets the stream of the File.
@@ -75,12 +75,12 @@ public class DiscordMessageFile
 	/// <summary>
 	/// Gets or sets the file type.
 	/// </summary>
-	internal string FileType { get; set; }
+	internal string? FileType { get; set; }
 
 	/// <summary>
 	/// Gets or sets the content type.
 	/// </summary>
-	internal string ContentType { get; set; }
+	internal string? ContentType { get; set; }
 
 	/// <summary>
 	/// Gets the position the File should be reset to.

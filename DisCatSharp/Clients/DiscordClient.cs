@@ -88,7 +88,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	/// Gets the total number of shards the bot is connected to.
 	/// </summary>
-	public int ShardCount => this.GatewayInfo?.ShardCount ?? this.Configuration.ShardCount;
+	public int ShardCount
+		=> this.GatewayInfo?.ShardCount ?? this.Configuration.ShardCount;
 
 	/// <summary>
 	/// Gets the currently connected shard ID.

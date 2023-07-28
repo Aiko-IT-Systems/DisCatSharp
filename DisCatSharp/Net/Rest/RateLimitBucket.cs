@@ -50,7 +50,7 @@ internal class RateLimitBucket : IEquatable<RateLimitBucket>
 	/// <summary>
 	/// Gets the Id of the ratelimit bucket.
 	/// </summary>
-	public volatile string BucketId;
+	public volatile string? BucketId;
 
 	/// <summary>
 	/// Gets or sets the ratelimit hash of this bucket.
@@ -140,7 +140,7 @@ internal class RateLimitBucket : IEquatable<RateLimitBucket>
 	/// <summary>
 	/// Task to wait for the rate limit test to finish
 	/// </summary>
-	internal volatile Task LimitTestFinished;
+	internal volatile Task? LimitTestFinished;
 
 	/// <summary>
 	/// If the rate limits have been determined
@@ -241,7 +241,7 @@ internal class RateLimitBucket : IEquatable<RateLimitBucket>
 	/// </summary>
 	/// <returns>The hash code for this <see cref="RateLimitBucket"/>.</returns>
 	public override int GetHashCode()
-		=> this.BucketId.GetHashCode();
+		=> this.BucketId?.GetHashCode() ?? 0;
 
 	/// <summary>
 	/// Sets remaining number of requests to the maximum when the ratelimit is reset
