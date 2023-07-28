@@ -63,7 +63,7 @@ public sealed class DiscordInteractionDataOption : ObservableApiObject
 	/// <para>This can be cast to a <see langword="long"/>, <see langword="bool"></see>, <see langword="string"></see>, <see langword="double"></see> or <see langword="ulong"/> depending on the <see cref="System.Type"/></para>
 	/// </summary>
 	[JsonIgnore]
-	public object Value =>
+	public object? Value =>
 		this.Type == ApplicationCommandOptionType.Integer && int.TryParse(this.RawValue, out var raw)
 			? raw
 			: this.Type == ApplicationCommandOptionType.Integer
@@ -85,5 +85,5 @@ public sealed class DiscordInteractionDataOption : ObservableApiObject
 	/// Gets the additional parameters if this parameter is a subcommand.
 	/// </summary>
 	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<DiscordInteractionDataOption> Options { get; internal set; }
+	public IReadOnlyList<DiscordInteractionDataOption>? Options { get; internal set; }
 }

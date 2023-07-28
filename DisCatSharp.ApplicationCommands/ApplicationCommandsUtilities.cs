@@ -44,19 +44,19 @@ public static class ApplicationCommandsUtilities
 	/// <summary>
 	/// Whether this module is a candidate type.
 	/// </summary>
-	/// <param name="ti">The type info.</param>
-	internal static bool IsModuleCandidateType(this TypeInfo ti)
+	/// <param name="targetTypeInfo">The type info.</param>
+	internal static bool IsModuleCandidateType(this TypeInfo targetTypeInfo)
 	{
 		if (ApplicationCommandsExtension.DebugEnabled)
-			ApplicationCommandsExtension.Logger.LogDebug("Checking type {name}", ti.FullName);
+			ApplicationCommandsExtension.Logger.LogDebug("Checking type {name}", targetTypeInfo.FullName);
 		// check if compiler-generated
-		if (ti.GetCustomAttribute<CompilerGeneratedAttribute>(false) != null)
+		if (targetTypeInfo.GetCustomAttribute<CompilerGeneratedAttribute>(false) != null)
 			return false;
 
 		// check if derives from the required base class
-		var tmodule = typeof(ApplicationCommandsModule);
-		var timodule = tmodule.GetTypeInfo();
-		if (!timodule.IsAssignableFrom(ti))
+		var type = typeof(ApplicationCommandsModule);
+		var typeInfo = type.GetTypeInfo();
+		if (!typeInfo.IsAssignableFrom(targetTypeInfo))
 		{
 			if (ApplicationCommandsExtension.DebugEnabled)
 				ApplicationCommandsExtension.Logger.LogDebug("Not assignable from type");
@@ -64,7 +64,7 @@ public static class ApplicationCommandsUtilities
 		}
 
 		// check if anonymous
-		if (ti.IsGenericType && ti.Name.Contains("AnonymousType") && (ti.Name.StartsWith("<>") || ti.Name.StartsWith("VB$")) && (ti.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic)
+		if (targetTypeInfo.IsGenericType && targetTypeInfo.Name.Contains("AnonymousType") && (targetTypeInfo.Name.StartsWith("<>") || targetTypeInfo.Name.StartsWith("VB$")) && (targetTypeInfo.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic)
 		{
 			if (ApplicationCommandsExtension.DebugEnabled)
 				ApplicationCommandsExtension.Logger.LogDebug("Anonymous");
@@ -72,12 +72,12 @@ public static class ApplicationCommandsUtilities
 		}
 
 		// check if abstract, static, or not a class
-		if (!ti.IsClass || ti.IsAbstract)
+		if (!targetTypeInfo.IsClass || targetTypeInfo.IsAbstract)
 			return false;
 
 		// check if delegate type
-		var tdelegate = typeof(Delegate).GetTypeInfo();
-		if (tdelegate.IsAssignableFrom(ti))
+		var typeDelegate = typeof(Delegate).GetTypeInfo();
+		if (typeDelegate.IsAssignableFrom(targetTypeInfo))
 		{
 			if (ApplicationCommandsExtension.DebugEnabled)
 				ApplicationCommandsExtension.Logger.LogDebug("Delegated");
@@ -87,7 +87,7 @@ public static class ApplicationCommandsUtilities
 		if (ApplicationCommandsExtension.DebugEnabled)
 			ApplicationCommandsExtension.Logger.LogDebug("Checking qualifying methods");
 		// qualifies if any method or type qualifies
-		return ti.DeclaredMethods.Any(xmi => xmi.IsCommandCandidate(out _)) || ti.DeclaredNestedTypes.Any(xti => xti.IsModuleCandidateType());
+		return targetTypeInfo.DeclaredMethods.Any(xmi => xmi.IsCommandCandidate(out _)) || targetTypeInfo.DeclaredNestedTypes.Any(xti => xti.IsModuleCandidateType());
 	}
 
 	/// <summary>
@@ -95,7 +95,7 @@ public static class ApplicationCommandsUtilities
 	/// </summary>
 	/// <param name="method">The method.</param>
 	/// <param name="parameters">The parameters.</param>
-	internal static bool IsCommandCandidate(this MethodInfo method, out ParameterInfo[] parameters)
+	internal static bool IsCommandCandidate(this MethodInfo? method, out ParameterInfo[]? parameters)
 	{
 		parameters = null;
 		// check if exists

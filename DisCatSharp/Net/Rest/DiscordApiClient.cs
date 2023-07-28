@@ -2066,14 +2066,14 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Modifies the channel async.
 	/// </summary>
-	/// <param name="channelId">The channel_id.</param>
+	/// <param name="channelId">The channel id.</param>
 	/// <param name="name">The name.</param>
 	/// <param name="position">The position.</param>
 	/// <param name="topic">The topic.</param>
 	/// <param name="nsfw">If true, nsfw.</param>
 	/// <param name="parent">The parent.</param>
 	/// <param name="bitrate">The bitrate.</param>
-	/// <param name="userLimit">The user_limit.</param>
+	/// <param name="userLimit">The user limit.</param>
 	/// <param name="perUserRateLimit">The per user rate limit.</param>
 	/// <param name="rtcRegion">The rtc region.</param>
 	/// <param name="qualityMode">The quality mode.</param>
@@ -2117,6 +2117,26 @@ public sealed class DiscordApiClient
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
 	}
 
+	/// <summary>
+	/// Modifies a forum channel.
+	/// </summary>
+	/// <param name="channelId">The channel id.</param>
+	/// <param name="name">The name.</param>
+	/// <param name="position">The position.</param>
+	/// <param name="topic">The topic.</param>
+	/// <param name="template">The template.</param>
+	/// <param name="nsfw">If true, nsfw.</param>
+	/// <param name="parent">The parent.</param>
+	/// <param name="availableTags">The available tags</param>
+	/// <param name="defaultReactionEmoji">The default reaction emoji.</param>
+	/// <param name="perUserRateLimit">The per user rate limit.</param>
+	/// <param name="postCreateUserRateLimit">The post create user rate limit.</param>
+	/// <param name="defaultSortOrder">The default sort oder.</param>
+	/// <param name="defaultAutoArchiveDuration">The default auto archive duration.</param>
+	/// <param name="permissionOverwrites">The permission overwrites.</param>
+	/// <param name="flags">The flags.</param>
+	/// <param name="reason">The reason.</param>
+	/// <returns></returns>
 	internal async Task<DiscordChannel> ModifyForumChannelAsync(ulong channelId, string? name, int? position,
 		Optional<string> topic, Optional<string> template, bool? nsfw,
 		Optional<ulong?> parent, Optional<List<ForumPostTag>?> availableTags, Optional<ForumReactionEmoji?> defaultReactionEmoji,

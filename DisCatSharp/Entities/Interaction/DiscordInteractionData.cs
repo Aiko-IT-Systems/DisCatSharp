@@ -45,23 +45,23 @@ public sealed class DiscordInteractionData : SnowflakeObject
 	/// Gets the parameters and values of the invoked interaction.
 	/// </summary>
 	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<DiscordInteractionDataOption> Options { get; internal set; }
+	public IReadOnlyList<DiscordInteractionDataOption>? Options { get; internal set; }
 
 	/// <summary>
 	/// Gets the component rows (Applicable to modal submits).
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordActionRowComponentResult> ComponentsInternal { get; set; }
+	internal List<DiscordActionRowComponentResult>? ComponentsInternal { get; set; }
 
 	[JsonIgnore]
-	public IReadOnlyList<DiscordComponentResult> Components
-		=> this.ComponentsInternal.Select(x => x.Components[0]).ToList();
+	public IReadOnlyList<DiscordComponentResult>? Components
+		=> this.ComponentsInternal?.Select(x => x.Components[0]).ToList();
 
 	/// <summary>
 	/// Gets the Discord snowflake objects resolved from this interaction's arguments.
 	/// </summary>
 	[JsonProperty("resolved", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordInteractionResolvedCollection Resolved { get; internal set; }
+	public DiscordInteractionResolvedCollection? Resolved { get; internal set; }
 
 	/// <summary>
 	/// The Id of the component that invoked this interaction, if applicable.

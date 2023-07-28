@@ -130,7 +130,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <see cref="DiscordClient.TryGetPublishedListings(ulong, out IReadOnlyList{DiscordStoreSku})"/> for more information.
 	/// </summary>
 	[JsonProperty("entitlements", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
-	public List<ulong> Entitlements { get; internal set; } = new();
+	public List<ulong>? Entitlements { get; internal set; }
 
 	/// <summary>
 	/// Creates a response to this interaction.

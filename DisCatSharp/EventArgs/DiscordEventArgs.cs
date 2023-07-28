@@ -46,7 +46,7 @@ public abstract class DiscordEventArgs : AsyncEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordEventArgs"/> class.
 	/// </summary>
-	protected DiscordEventArgs(IServiceProvider provider)
+	protected DiscordEventArgs(IServiceProvider? provider)
 	{
 		if (provider != null)
 			this.ServiceProvider = provider.CreateScope().ServiceProvider;

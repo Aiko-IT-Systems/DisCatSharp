@@ -37,7 +37,7 @@ public class ApplicationCommandsConfiguration
 	/// <para>This allows passing data around without resorting to static members.</para>
 	/// <para>Defaults to <see langword="null"/>.</para>
 	/// </summary>
-	public IServiceProvider ServiceProvider { internal get; set; }
+	public IServiceProvider? ServiceProvider { internal get; set; }
 
 	/// <summary>
 	/// <para>This option enables the default help command.</para>

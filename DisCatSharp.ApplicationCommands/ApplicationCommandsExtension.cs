@@ -97,7 +97,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// Configuration for Discord.
 	/// </summary>
-	internal static ApplicationCommandsConfiguration Configuration;
+	internal static ApplicationCommandsConfiguration? Configuration;
 
 	/// <summary>
 	/// Set to true if anything fails when registering.
@@ -176,8 +176,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// Gets the service provider this module was configured with.
 	/// </summary>
-	public IServiceProvider Services
-		=> Configuration.ServiceProvider;
+	public IServiceProvider? Services
+		=> Configuration?.ServiceProvider;
 
 	/// <summary>
 	/// Gets a list of handled interactions. Fix for double interaction execution bug.
@@ -188,7 +188,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
 	/// </summary>
 	/// <param name="configuration">The configuration.</param>
-	internal ApplicationCommandsExtension(ApplicationCommandsConfiguration configuration = null)
+	internal ApplicationCommandsExtension(ApplicationCommandsConfiguration? configuration = null)
 	{
 		configuration ??= new();
 		Configuration = configuration;
@@ -208,6 +208,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		if (this.Client != null)
 			throw new InvalidOperationException("What did I tell you?");
 
+		// ReSharper disable once HeuristicUnreachableCode
 		this.Client = client;
 		Logger = client.Logger;
 
@@ -282,8 +283,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	internal async Task CleanGuildCommandsAsync()
 	{
-		foreach (var guild in this.Client.Guilds.Values)
-			await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guild.Id, Array.Empty<DiscordApplicationCommand>()).ConfigureAwait(false);
+		if (this.Client.Guilds != null)
+			foreach (var guild in this.Client.Guilds.Values)
+				await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guild.Id, Array.Empty<DiscordApplicationCommand>()).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -330,7 +332,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <typeparam name="T">The command class to register.</typeparam>
 	/// <param name="guildId">The guild id to register it on.</param>
 	/// <param name="translationSetup">A callback to setup translations with.</param>
-	public void RegisterGuildCommands<T>(ulong guildId, Action<ApplicationCommandsTranslationContext> translationSetup = null) where T : ApplicationCommandsModule
+	public void RegisterGuildCommands<T>(ulong guildId, Action<ApplicationCommandsTranslationContext>? translationSetup = null) where T : ApplicationCommandsModule
 		=> this._updateList.Add(new(guildId, new(typeof(T), translationSetup)));
 
 	/// <summary>
@@ -339,7 +341,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
 	/// <param name="guildId">The guild id to register it on.</param>
 	/// <param name="translationSetup">A callback to setup translations with.</param>
-	public void RegisterGuildCommands(Type type, ulong guildId, Action<ApplicationCommandsTranslationContext> translationSetup = null)
+	public void RegisterGuildCommands(Type type, ulong guildId, Action<ApplicationCommandsTranslationContext>? translationSetup = null)
 	{
 		if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
 			throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
@@ -351,7 +353,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	/// <typeparam name="T">The command class to register.</typeparam>
 	/// <param name="translationSetup">A callback to setup translations with.</param>
-	public void RegisterGlobalCommands<T>(Action<ApplicationCommandsTranslationContext> translationSetup = null) where T : ApplicationCommandsModule
+	public void RegisterGlobalCommands<T>(Action<ApplicationCommandsTranslationContext>? translationSetup = null) where T : ApplicationCommandsModule
 		=> this._updateList.Add(new(null, new(typeof(T), translationSetup)));
 
 	/// <summary>
@@ -359,7 +361,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
 	/// <param name="translationSetup">A callback to setup translations with.</param>
-	public void RegisterGlobalCommands(Type type, Action<ApplicationCommandsTranslationContext> translationSetup = null)
+	public void RegisterGlobalCommands(Type type, Action<ApplicationCommandsTranslationContext>? translationSetup = null)
 	{
 		if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
 			throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
@@ -427,65 +429,74 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Expected Count: {count}", s_expectedCount);
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Shard {shard} has {guilds} guilds.", this.Client.ShardId, this.Client.Guilds?.Count);
 		List<ulong> failedGuilds = new();
-		List<DiscordApplicationCommand> globalCommands = null;
-		globalCommands = (await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false).ConfigureAwait(false)).ToList() ?? null;
-		var updateList = this._updateList;
-		var guilds = CheckAllGuilds ? this.Client.Guilds?.Keys.ToList() : updateList.Where(x => x.Key != null)?.Select(x => x.Key.Value).Distinct().ToList();
-		var wrongShards = guilds.Where(x => !this.Client.Guilds.ContainsKey(x)).ToList();
-		if (wrongShards.Any())
+		var globalCommands = (await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false).ConfigureAwait(false)).ToList() ?? null;
+		var guilds = CheckAllGuilds ? this.Client.Guilds?.Keys.ToList() : this._updateList.Where(x => x.Key != null)?.Select(x => x.Key.Value).Distinct().ToList();
+		var wrongShards = guilds?.Where(x => !this.Client.Guilds!.ContainsKey(x)).ToList();
+		if (wrongShards != null && wrongShards.Any())
 		{
 			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Some guilds are not on the same shard as the client. Removing them from the update list.");
 			foreach (var guild in wrongShards)
 			{
-				updateList.RemoveAll(x => x.Key == guild);
+				this._updateList.RemoveAll(x => x.Key == guild);
 				guilds.Remove(guild);
 			}
 		}
 
-		var commandsPending = updateList.Select(x => x.Key).Distinct().ToList();
+		var commandsPending = this._updateList.Select(x => x.Key).Distinct().ToList();
 		s_expectedCount = commandsPending.Count;
 
-		foreach (var guild in guilds)
-		{
-			List<DiscordApplicationCommand> commands = null;
-			var unauthorized = false;
-			try
+		if (guilds != null)
+			foreach (var guild in guilds)
 			{
-				commands = (await this.Client.GetGuildApplicationCommandsAsync(guild, Configuration?.EnableLocalization ?? false).ConfigureAwait(false)).ToList() ?? null;
+				List<DiscordApplicationCommand> commands = null;
+				var unauthorized = false;
+				try
+				{
+					commands = (await this.Client
+						.GetGuildApplicationCommandsAsync(guild, Configuration?.EnableLocalization ?? false)
+						.ConfigureAwait(false)).ToList() ?? null;
+				}
+				catch (UnauthorizedException)
+				{
+					unauthorized = true;
+				}
+				finally
+				{
+					switch (unauthorized)
+					{
+						case false when commands != null && commands.Any():
+							GuildDiscordCommands.Add(guild, commands.ToList());
+							break;
+						case true:
+							failedGuilds.Add(guild);
+							break;
+					}
+				}
 			}
-			catch (UnauthorizedException)
-			{
-				unauthorized = true;
-			}
-			finally
-			{
-				if (!unauthorized && commands != null && commands.Any())
-					GuildDiscordCommands.Add(guild, commands.ToList());
-				else if (unauthorized)
-					failedGuilds.Add(guild);
-			}
-		}
 
 		//Default should be to add the help and slash commands can be added without setting any configuration
 		//so this should still add the default help
 		if (Configuration is null || (Configuration is not null && Configuration.EnableDefaultHelp))
 		{
-			updateList.Add(new(null, new(typeof(DefaultHelpModule))));
-			commandsPending = updateList.Select(x => x.Key).Distinct().ToList();
+			this._updateList.Add(new(null, new(typeof(DefaultHelpModule))));
+			commandsPending = this._updateList.Select(x => x.Key).Distinct().ToList();
 		}
 
+		// ReSharper disable once ConditionIsAlwaysTrueOrFalse
 		if (globalCommands != null && globalCommands.Any())
 			GlobalDiscordCommands.AddRange(globalCommands);
 
 		foreach (var key in commandsPending)
-		{
-			this.Client.Logger.Log(ApplicationCommandsLogLevel, key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands.");
+		{	
 			if (key.HasValue)
 			{
+				this.Client.Logger.Log(ApplicationCommandsLogLevel, "Registering commands in guild, {value}", key.Value);
 				this.Client.Logger.Log(ApplicationCommandsLogLevel, "Found guild {guild} in shard {shard}!", key.Value, this.Client.ShardId);
 				this.Client.Logger.Log(ApplicationCommandsLogLevel, "Registering");
 			}
-			await this.RegisterCommands(updateList.Where(x => x.Key == key).Select(x => x.Value).ToList(), key).ConfigureAwait(false);
+			else
+				this.Client.Logger.Log(ApplicationCommandsLogLevel, "Registering global commands.");
+			await this.RegisterCommands(this._updateList.Where(x => x.Key == key).Select(x => x.Value).ToList(), key).ConfigureAwait(false);
 		}
 
 		this._missingScopeGuildIds = new(failedGuilds);
@@ -494,7 +505,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		{
 			GuildsWithoutScope = failedGuilds
 		}).ConfigureAwait(false);
-		this.Client.GuildDownloadCompleted -= async (c, e) => await this.UpdateAsync().ConfigureAwait(false);
+		// ReSharper disable once EventUnsubscriptionViaAnonymousDelegate
+		this.Client.GuildDownloadCompleted -= async (_, _) => await this.UpdateAsync().ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -557,7 +569,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						updateList.AddRange(slashGroupsTuple.applicationCommands);
 						if (Configuration.GenerateTranslationFilesOnly)
 						{
-							var cgwsgs = new List<CommandGroupWithSubGroups>();
+							var commandGroupWithSubGroupsList = new List<CommandGroupWithSubGroups>();
 							var cgs2 = new List<CommandGroup>();
 							foreach (var cmd in slashGroupsTuple.applicationCommands)
 								if (cmd.Type == ApplicationCommandType.ChatInput)
@@ -573,7 +585,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 												cs.Add(new(sc.Name, sc.Description, sc.Options.ToList(), null));
 										cgs.Add(new(scg.Name, scg.Description, cs, null));
 									}
-									cgwsgs.Add(new(cmd.Name, cmd.Description, cgs, ApplicationCommandType.ChatInput));
+									commandGroupWithSubGroupsList.Add(new(cmd.Name, cmd.Description, cgs, ApplicationCommandType.ChatInput));
 
 									var cs2 = new List<Command>();
 									foreach (var sc2 in cmd.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommand))
@@ -585,12 +597,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 								}
 
-							if (cgwsgs.Any())
-								foreach (var cgwsg in cgwsgs)
-									groupTranslation.Add(JsonConvert.DeserializeObject<GroupTranslator>(JsonConvert.SerializeObject(cgwsg)));
+							if (commandGroupWithSubGroupsList.Any())
+								groupTranslation.AddRange(commandGroupWithSubGroupsList.Select(cgwsg => JsonConvert.DeserializeObject<GroupTranslator>(JsonConvert.SerializeObject(cgwsg))));
 							if (cgs2.Any())
-								foreach (var cg2 in cgs2)
-									groupTranslation.Add(JsonConvert.DeserializeObject<GroupTranslator>(JsonConvert.SerializeObject(cg2)));
+								groupTranslation.AddRange(cgs2.Select(cg2 => JsonConvert.DeserializeObject<GroupTranslator>(JsonConvert.SerializeObject(cg2))));
 						}
 					}
 
@@ -625,17 +635,13 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						if (Configuration.GenerateTranslationFilesOnly)
 						{
 							var cs = new List<Command>();
-							foreach (var cmd in slashCommands.applicationCommands)
-								if (cmd.Type == ApplicationCommandType.ChatInput && (cmd.Options == null || !cmd.Options.Any(x => x.Type == ApplicationCommandOptionType.SubCommand || x.Type == ApplicationCommandOptionType.SubCommandGroup)))
-								{
-									if (cmd.Options == null || !cmd.Options.Any())
-										cs.Add(new(cmd.Name, cmd.Description, null, ApplicationCommandType.ChatInput));
-									else
-										cs.Add(new(cmd.Name, cmd.Description, cmd.Options.ToList(), ApplicationCommandType.ChatInput));
-								}
+							foreach (var cmd in slashCommands.applicationCommands.Where(cmd => cmd.Type == ApplicationCommandType.ChatInput && (cmd.Options == null || !cmd.Options.Any(x => x.Type is ApplicationCommandOptionType.SubCommand or ApplicationCommandOptionType.SubCommandGroup))))
+								if (cmd.Options == null || !cmd.Options.Any())
+									cs.Add(new(cmd.Name, cmd.Description, null, ApplicationCommandType.ChatInput));
+								else
+									cs.Add(new(cmd.Name, cmd.Description, cmd.Options.ToList(), ApplicationCommandType.ChatInput));
 							if (cs.Any())
-								foreach (var c in cs)
-									translation.Add(JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(c)));
+								translation.AddRange(cs.Select(c => JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(c))));
 						}
 					}
 
@@ -655,13 +661,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						updateList.AddRange(contextCommands.applicationCommands);
 						if (Configuration.GenerateTranslationFilesOnly)
 						{
-							var cs = new List<Command>();
-							foreach (var cmd in contextCommands.applicationCommands)
-								if (cmd.Type == ApplicationCommandType.Message || cmd.Type == ApplicationCommandType.User)
-									cs.Add(new(cmd.Name, null, null, cmd.Type));
+							var cs = (from cmd in contextCommands.applicationCommands where cmd.Type == ApplicationCommandType.Message || cmd.Type == ApplicationCommandType.User select new Command(cmd.Name, null, null, cmd.Type)).ToList();
 							if (cs.Any())
-								foreach (var c in cs)
-									translation.Add(JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(c)));
+								translation.AddRange(cs.Select(c => JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(c))));
 						}
 					}
 
@@ -682,14 +684,14 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			}
 			catch (Exception ex)
 			{
-				if (ex is BadRequestException brex)
-					this.Client.Logger.LogCritical(brex, @"There was an error registering application commands: {res}", brex.WebResponse.Response);
+				if (ex is BadRequestException badRequestException)
+					this.Client.Logger.LogCritical(badRequestException, "There was an error registering application commands: {res}", badRequestException.WebResponse.Response);
 				else
 				{
-					if (ex.InnerException is BadRequestException brex1)
-						this.Client.Logger.LogCritical(brex1, @"There was an error registering application commands: {res}", brex1.WebResponse.Response);
+					if (ex.InnerException is BadRequestException requestException)
+						this.Client.Logger.LogCritical(requestException, "There was an error registering application commands: {res}", requestException.WebResponse.Response);
 					else
-						this.Client.Logger.LogCritical(ex, @"There was an error parsing the application commands");
+						this.Client.Logger.LogCritical(ex, "There was an error parsing the application commands");
 				}
 				s_errored = true;
 			}
@@ -782,12 +784,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					s_groupCommands.AddRange(groupCommands.DistinctBy(x => x.Name));
 					s_subGroupCommands.AddRange(subGroupCommands.DistinctBy(x => x.Name));
 					s_contextMenuCommands.AddRange(contextMenuCommands.DistinctBy(x => x.Name));
-
+					
 					s_registeredCommands.Add(new(guildId, commands.ToList()));
 
-					foreach (var command in commandMethods)
+					foreach (var app in commandMethods.Select(command => types.First(t => t.Type == command.Method.DeclaringType)))
 					{
-						var app = types.First(t => t.Type == command.Method.DeclaringType);
+						// tf we wanted to do with app??
 					}
 
 					this.Client.Logger.Log(ApplicationCommandsLogLevel, "Expected Count: {exp}\nCurrent Count: {cur}", s_expectedCount, s_registrationCount);
@@ -815,84 +817,83 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				}
 				catch (Exception ex)
 				{
-					if (ex is BadRequestException brex)
-						this.Client.Logger.LogCritical(brex, @"There was an error registering application commands: {res}", brex.WebResponse.Response);
+					if (ex is BadRequestException badRequestException)
+						this.Client.Logger.LogCritical(badRequestException, "There was an error registering application commands: {res}", badRequestException.WebResponse.Response);
 					else
 					{
-						if (ex.InnerException is BadRequestException brex1)
-							this.Client.Logger.LogCritical(brex1, @"There was an error registering application commands: {res}", brex1.WebResponse.Response);
+						if (ex.InnerException is BadRequestException requestException)
+							this.Client.Logger.LogCritical(requestException, "There was an error registering application commands: {res}", requestException.WebResponse.Response);
 						else
-							this.Client.Logger.LogCritical(ex, @"There was an general error registering application commands");
+							this.Client.Logger.LogCritical(ex, "There was an general error registering application commands");
 					}
 					s_errored = true;
 				}
 		}
 	}
 
-	private async void CheckRegistrationStartup(bool man = false, List<CommandTranslator> translation = null, List<GroupTranslator> groupTranslation = null)
+	private async void CheckRegistrationStartup(bool man = false, IReadOnlyCollection<CommandTranslator>? translation = null, IReadOnlyCollection<GroupTranslator>? groupTranslation = null)
 	{
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Checking counts...\n\nExpected Count: {exp}\nCurrent Count: {cur}", s_expectedCount, s_registrationCount);
 
-		if (s_registrationCount == s_expectedCount || man)
+		if (s_registrationCount != s_expectedCount && !man)
+			return;
+		await this._applicationCommandsModuleStartupFinished.InvokeAsync(this, new(Configuration?.ServiceProvider)
 		{
-			await this._applicationCommandsModuleStartupFinished.InvokeAsync(this, new(Configuration?.ServiceProvider)
+			Handled = true,
+			RegisteredGlobalCommands = GlobalCommandsInternal,
+			RegisteredGuildCommands = GuildCommandsInternal,
+			GuildsWithoutScope = this._missingScopeGuildIds
+		}).ConfigureAwait(false);
+		if (Configuration?.GenerateTranslationFilesOnly ?? false)
+		{
+			try
 			{
-				Handled = true,
-				RegisteredGlobalCommands = GlobalCommandsInternal,
-				RegisteredGuildCommands = GuildCommandsInternal,
-				GuildsWithoutScope = this._missingScopeGuildIds
-			}).ConfigureAwait(false);
-			if (Configuration.GenerateTranslationFilesOnly)
-			{
-				try
+				if (translation != null && translation.Any())
 				{
-					if (translation != null && translation.Any())
-					{
-						var fileName = $"translation_generator_export-shard{this.Client.ShardId}-SINGLE-{s_registrationCount}_of_{s_expectedCount}.json";
-						var fs = File.Create(fileName);
-						var ms = new MemoryStream();
-						var writer = new StreamWriter(ms);
-						await writer.WriteAsync(JsonConvert.SerializeObject(translation.DistinctBy(x => x.Name), Formatting.Indented)).ConfigureAwait(false);
-						await writer.FlushAsync().ConfigureAwait(false);
-						ms.Position = 0;
-						await ms.CopyToAsync(fs).ConfigureAwait(false);
-						await fs.FlushAsync().ConfigureAwait(false);
-						fs.Close();
-						await fs.DisposeAsync().ConfigureAwait(false);
-						ms.Close();
-						await ms.DisposeAsync().ConfigureAwait(false);
-						this.Client.Logger.LogInformation("Exported base translation to {exppath}", fileName);
-					}
+					var fileName = $"translation_generator_export-shard{this.Client.ShardId}-SINGLE-{s_registrationCount}_of_{s_expectedCount}.json";
+					var fs = File.Create(fileName);
+					var ms = new MemoryStream();
+					var writer = new StreamWriter(ms);
+					await writer.WriteAsync(JsonConvert.SerializeObject(translation.DistinctBy(x => x.Name), Formatting.Indented)).ConfigureAwait(false);
+					await writer.FlushAsync().ConfigureAwait(false);
+					ms.Position = 0;
+					await ms.CopyToAsync(fs).ConfigureAwait(false);
+					await fs.FlushAsync().ConfigureAwait(false);
+					fs.Close();
+					await fs.DisposeAsync().ConfigureAwait(false);
+					ms.Close();
+					await ms.DisposeAsync().ConfigureAwait(false);
+					this.Client.Logger.LogInformation("Exported base translation to {exppath}", fileName);
+				}
 
-					if (groupTranslation != null && groupTranslation.Any())
-					{
-						var fileName = $"translation_generator_export-shard{this.Client.ShardId}-GROUP-{s_registrationCount}_of_{s_expectedCount}.json";
-						var fs = File.Create(fileName);
-						var ms = new MemoryStream();
-						var writer = new StreamWriter(ms);
-						await writer.WriteAsync(JsonConvert.SerializeObject(groupTranslation.DistinctBy(x => x.Name), Formatting.Indented)).ConfigureAwait(false);
-						await writer.FlushAsync().ConfigureAwait(false);
-						ms.Position = 0;
-						await ms.CopyToAsync(fs).ConfigureAwait(false);
-						await fs.FlushAsync().ConfigureAwait(false);
-						fs.Close();
-						await fs.DisposeAsync().ConfigureAwait(false);
-						ms.Close();
-						await ms.DisposeAsync().ConfigureAwait(false);
-						this.Client.Logger.LogInformation("Exported base translation to {exppath}", fileName);
-					}
-				}
-				catch (Exception ex)
+				if (groupTranslation != null && groupTranslation.Any())
 				{
-					this.Client.Logger.LogError(@"{msg}", ex.Message);
-					this.Client.Logger.LogError(@"{stack}", ex.StackTrace);
+					var fileName = $"translation_generator_export-shard{this.Client.ShardId}-GROUP-{s_registrationCount}_of_{s_expectedCount}.json";
+					var fs = File.Create(fileName);
+					var ms = new MemoryStream();
+					var writer = new StreamWriter(ms);
+					await writer.WriteAsync(JsonConvert.SerializeObject(groupTranslation.DistinctBy(x => x.Name), Formatting.Indented)).ConfigureAwait(false);
+					await writer.FlushAsync().ConfigureAwait(false);
+					ms.Position = 0;
+					await ms.CopyToAsync(fs).ConfigureAwait(false);
+					await fs.FlushAsync().ConfigureAwait(false);
+					fs.Close();
+					await fs.DisposeAsync().ConfigureAwait(false);
+					ms.Close();
+					await ms.DisposeAsync().ConfigureAwait(false);
+					this.Client.Logger.LogInformation("Exported base translation to {exppath}", fileName);
 				}
-				this.FinishedRegistration();
-				await this.Client.DisconnectAsync().ConfigureAwait(false);
 			}
-			else
-				this.FinishedRegistration();
+			catch (Exception ex)
+			{
+				this.Client.Logger.LogError(@"{msg}", ex.Message);
+				this.Client.Logger.LogError(@"{stack}", ex.StackTrace);
+			}
+			this.FinishedRegistration();
+			await this.Client.DisconnectAsync().ConfigureAwait(false);
 		}
+		else
+			this.FinishedRegistration();
 	}
 
 	/// <summary>
@@ -930,7 +931,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						CommandName = e.Interaction.Data.Name,
 						InteractionId = e.Interaction.Id,
 						Token = e.Interaction.Token,
-						Services = Configuration?.ServiceProvider,
 						ResolvedUserMentions = e.Interaction.Data.Resolved?.Users?.Values.ToList(),
 						ResolvedRoleMentions = e.Interaction.Data.Resolved?.Roles?.Values.ToList(),
 						ResolvedChannelMentions = e.Interaction.Data.Resolved?.Channels?.Values.ToList(),
@@ -941,6 +941,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						AppPermissions = e.Interaction.AppPermissions,
 						Entitlements = e.Interaction.Entitlements
 					};
+					if (Configuration?.ServiceProvider != null)
+						context.Services = Configuration?.ServiceProvider;
 
 					try
 					{
@@ -1002,6 +1004,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								await this.RunCommandAsync(context, method, args).ConfigureAwait(false);
 								break;
 							}
+							case ApplicationCommandFinalType.NotDetermined:
+								break;
+							default:
+								throw new ArgumentOutOfRangeException();
 						}
 
 						await this._slashExecuted.InvokeAsync(this, new(this.Client.ServiceProvider) { Context = context }).ConfigureAwait(false);
@@ -1030,100 +1036,111 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 					try
 					{
-						if (type is ApplicationCommandFinalType.Command && methods.Any())
+						switch (type)
 						{
-							var focusedOption = e.Interaction.Data.Options.First(o => o.Focused);
-							var method = methods.First().Method;
-
-							var option = method.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
-							var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
-							var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
-							var providerInstance = Activator.CreateInstance(provider);
-
-							var context = new AutocompleteContext
+							case ApplicationCommandFinalType.Command when methods.Any():
 							{
-								Interaction = e.Interaction,
-								Client = client,
-								Services = Configuration?.ServiceProvider,
-								ApplicationCommandsExtension = this,
-								Guild = e.Interaction.Guild,
-								Channel = e.Interaction.Channel,
-								User = e.Interaction.User,
-								Options = e.Interaction.Data.Options.ToList(),
-								FocusedOption = focusedOption,
-								Locale = e.Interaction.Locale,
-								GuildLocale = e.Interaction.GuildLocale,
-								AppPermissions = e.Interaction.AppPermissions,
-								EntitlementSkuIds = e.Interaction.Entitlements
-							};
+								var focusedOption = e.Interaction.Data.Options!.First(o => o.Focused);
+								var method = methods.First().Method;
 
-							var choices = await ((Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context })).ConfigureAwait(false);
-							await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices)).ConfigureAwait(false);
-						}
+								var option = method.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
+								var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
+								var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
+								var providerInstance = Activator.CreateInstance(provider);
 
-						if (type is ApplicationCommandFinalType.SubCommand && groups.Any())
-						{
-							var command = e.Interaction.Data.Options[0];
-							var group = groups.First().Methods.First(x => x.Key == command.Name).Value;
+								var context = new AutocompleteContext
+								{
+									Interaction = e.Interaction,
+									Client = client,
+									ApplicationCommandsExtension = this,
+									Guild = e.Interaction.Guild,
+									Channel = e.Interaction.Channel,
+									User = e.Interaction.User,
+									Options = e.Interaction.Data.Options.ToList(),
+									FocusedOption = focusedOption,
+									Locale = e.Interaction.Locale,
+									GuildLocale = e.Interaction.GuildLocale,
+									AppPermissions = e.Interaction.AppPermissions,
+									EntitlementSkuIds = e.Interaction.Entitlements
+								};
+								if (Configuration?.ServiceProvider != null)
+									context.Services = Configuration?.ServiceProvider;
 
-							var focusedOption = command.Options.First(o => o.Focused);
-							var option = group.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
-							var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
-							var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
-							var providerInstance = Activator.CreateInstance(provider);
-
-							var context = new AutocompleteContext
+								var choices = await ((Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context })).ConfigureAwait(false);
+								await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices)).ConfigureAwait(false);
+								break;
+							}
+							case ApplicationCommandFinalType.SubCommand when groups.Any():
 							{
-								Client = client,
-								Interaction = e.Interaction,
-								Services = Configuration?.ServiceProvider,
-								ApplicationCommandsExtension = this,
-								Guild = e.Interaction.Guild,
-								Channel = e.Interaction.Channel,
-								User = e.Interaction.User,
-								Options = command.Options.ToList(),
-								FocusedOption = focusedOption,
-								Locale = e.Interaction.Locale,
-								GuildLocale = e.Interaction.GuildLocale,
-								AppPermissions = e.Interaction.AppPermissions,
-								EntitlementSkuIds = e.Interaction.Entitlements
-							};
+								var command = e.Interaction.Data.Options![0];
+								var group = groups.First().Methods.First(x => x.Key == command.Name).Value;
 
-							var choices = await ((Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context })).ConfigureAwait(false);
-							await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices)).ConfigureAwait(false);
-						}
+								var focusedOption = command.Options.First(o => o.Focused);
+								var option = group.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
+								var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
+								var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
+								var providerInstance = Activator.CreateInstance(provider);
 
-						if (type is ApplicationCommandFinalType.SubCommandGroup && subgroups.Any())
-						{
-							var command = e.Interaction.Data.Options[0];
-							var group = subgroups.First().SubCommands.First(x => x.Name == command.Name).Methods.First(x => x.Key == command.Options[0].Name).Value;
+								var context = new AutocompleteContext
+								{
+									Client = client,
+									Interaction = e.Interaction,
+									ApplicationCommandsExtension = this,
+									Guild = e.Interaction.Guild,
+									Channel = e.Interaction.Channel,
+									User = e.Interaction.User,
+									Options = command.Options.ToList(),
+									FocusedOption = focusedOption,
+									Locale = e.Interaction.Locale,
+									GuildLocale = e.Interaction.GuildLocale,
+									AppPermissions = e.Interaction.AppPermissions,
+									EntitlementSkuIds = e.Interaction.Entitlements
+								};
+								if (Configuration?.ServiceProvider != null)
+									context.Services = Configuration?.ServiceProvider;
 
-							var focusedOption = command.Options[0].Options.First(o => o.Focused);
-
-							var option = group.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
-							var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
-							var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
-							var providerInstance = Activator.CreateInstance(provider);
-
-							var context = new AutocompleteContext
+								var choices = await ((Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context })).ConfigureAwait(false);
+								await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices)).ConfigureAwait(false);
+								break;
+							}
+							case ApplicationCommandFinalType.SubCommandGroup when subgroups.Any():
 							{
-								Client = client,
-								Interaction = e.Interaction,
-								Services = Configuration?.ServiceProvider,
-								ApplicationCommandsExtension = this,
-								Guild = e.Interaction.Guild,
-								Channel = e.Interaction.Channel,
-								User = e.Interaction.User,
-								Options = command.Options[0].Options.ToList(),
-								FocusedOption = focusedOption,
-								Locale = e.Interaction.Locale,
-								GuildLocale = e.Interaction.GuildLocale,
-								AppPermissions = e.Interaction.AppPermissions,
-								EntitlementSkuIds = e.Interaction.Entitlements
-							};
+								var command = e.Interaction.Data.Options![0];
+								var group = subgroups.First().SubCommands.First(x => x.Name == command.Name).Methods.First(x => x.Key == command.Options[0].Name).Value;
 
-							var choices = await ((Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context })).ConfigureAwait(false);
-							await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices)).ConfigureAwait(false);
+								var focusedOption = command.Options[0].Options.First(o => o.Focused);
+
+								var option = group.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
+								var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
+								var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
+								var providerInstance = Activator.CreateInstance(provider);
+
+								var context = new AutocompleteContext
+								{
+									Client = client,
+									Interaction = e.Interaction,
+									ApplicationCommandsExtension = this,
+									Guild = e.Interaction.Guild,
+									Channel = e.Interaction.Channel,
+									User = e.Interaction.User,
+									Options = command.Options[0].Options.ToList(),
+									FocusedOption = focusedOption,
+									Locale = e.Interaction.Locale,
+									GuildLocale = e.Interaction.GuildLocale,
+									AppPermissions = e.Interaction.AppPermissions,
+									EntitlementSkuIds = e.Interaction.Entitlements
+								};
+								if (Configuration?.ServiceProvider != null)
+									context.Services = Configuration?.ServiceProvider;
+
+								var choices = await ((Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context })).ConfigureAwait(false);
+								await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices)).ConfigureAwait(false);
+								break;
+							}
+							case ApplicationCommandFinalType.NotDetermined:
+								break;
+							default:
+								throw new ArgumentOutOfRangeException();
 						}
 					}
 					catch (Exception ex)
@@ -1133,6 +1150,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 					break;
 				}
+				case InteractionType.Ping:
+					break;
+				case InteractionType.Component:
+					break;
+				case InteractionType.ModalSubmit:
+					break;
 			}
 		});
 		return Task.CompletedTask;
@@ -1177,7 +1200,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				Interaction = e.Interaction,
 				Channel = e.Interaction.Channel,
 				Client = client,
-				Services = Configuration?.ServiceProvider,
 				CommandName = e.Interaction.Data.Name,
 				ApplicationCommandsExtension = this,
 				Guild = e.Interaction.Guild,
@@ -1192,6 +1214,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				AppPermissions = e.Interaction.AppPermissions,
 				Entitlements = e.Interaction.Entitlements
 			};
+			if (Configuration?.ServiceProvider != null)
+				context.Services = Configuration?.ServiceProvider;
 
 			try
 			{
@@ -1232,66 +1256,71 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0066:Convert switch statement to expression", Justification = "<Pending>")]
 	internal async Task RunCommandAsync(BaseContext context, MethodInfo method, IEnumerable<object> args)
 	{
-		object classInstance;
-
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Executing {cmd}", method.Name);
 		//Accounts for lifespans
 		var moduleLifespan = (method.DeclaringType.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null ? method.DeclaringType.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>()?.Lifespan : ApplicationCommandModuleLifespan.Transient) ?? ApplicationCommandModuleLifespan.Transient;
-		switch (moduleLifespan)
+		var classInstance = moduleLifespan switch
 		{
-			case ApplicationCommandModuleLifespan.Scoped:
+			ApplicationCommandModuleLifespan.Scoped =>
 				//Accounts for static methods and adds DI
-				classInstance = method.IsStatic ? ActivatorUtilities.CreateInstance(Configuration?.ServiceProvider.CreateScope().ServiceProvider, method.DeclaringType) : CreateInstance(method.DeclaringType, Configuration?.ServiceProvider.CreateScope().ServiceProvider);
-				break;
-
-			case ApplicationCommandModuleLifespan.Transient:
+				method.IsStatic
+				? ActivatorUtilities.CreateInstance(Configuration?.ServiceProvider?.CreateScope().ServiceProvider,
+					method.DeclaringType)
+				: CreateInstance(method.DeclaringType,
+					Configuration?.ServiceProvider?.CreateScope().ServiceProvider),
+			ApplicationCommandModuleLifespan.Transient =>
 				//Accounts for static methods and adds DI
-				classInstance = method.IsStatic ? ActivatorUtilities.CreateInstance(Configuration?.ServiceProvider, method.DeclaringType) : CreateInstance(method.DeclaringType, Configuration?.ServiceProvider);
-				break;
-
+				method.IsStatic
+				? ActivatorUtilities.CreateInstance(Configuration?.ServiceProvider, method.DeclaringType)
+				: CreateInstance(method.DeclaringType, Configuration?.ServiceProvider),
 			//If singleton, gets it from the singleton list
-			case ApplicationCommandModuleLifespan.Singleton:
-				classInstance = s_singletonModules.First(x => ReferenceEquals(x.GetType(), method.DeclaringType));
-				break;
-
-			default:
-				throw new($"An unknown {nameof(ApplicationCommandModuleLifespanAttribute)} scope was specified on command {context.CommandName}");
-		}
+			ApplicationCommandModuleLifespan.Singleton => s_singletonModules.First(x =>
+				ReferenceEquals(x.GetType(), method.DeclaringType)),
+			_ => throw new(
+				$"An unknown {nameof(ApplicationCommandModuleLifespanAttribute)} scope was specified on command {context.CommandName}")
+		};
 
 		ApplicationCommandsModule module = null;
 		if (classInstance is ApplicationCommandsModule mod)
 			module = mod;
 
-		// Slash commands
-		if (context is InteractionContext slashContext)
+		switch (context)
 		{
-			await this.RunPreexecutionChecksAsync(method, slashContext).ConfigureAwait(false);
-
-			var shouldExecute = await (module?.BeforeSlashExecutionAsync(slashContext) ?? Task.FromResult(true)).ConfigureAwait(false);
-
-			if (shouldExecute)
+			// Slash commands
+			case InteractionContext slashContext:
 			{
-				if (AutoDeferEnabled)
-					await context.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource).ConfigureAwait(false);
-				await ((Task)method.Invoke(classInstance, args.ToArray())).ConfigureAwait(false);
+				await this.RunPreexecutionChecksAsync(method, slashContext).ConfigureAwait(false);
 
-				await (module?.AfterSlashExecutionAsync(slashContext) ?? Task.CompletedTask).ConfigureAwait(false);
+				var shouldExecute = await (module?.BeforeSlashExecutionAsync(slashContext) ?? Task.FromResult(true)).ConfigureAwait(false);
+
+				if (shouldExecute)
+				{
+					if (AutoDeferEnabled)
+						await context.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource).ConfigureAwait(false);
+					await ((Task)method.Invoke(classInstance, args.ToArray())).ConfigureAwait(false);
+
+					await (module?.AfterSlashExecutionAsync(slashContext) ?? Task.CompletedTask).ConfigureAwait(false);
+				}
+
+				break;
 			}
-		}
-		// Context menus
-		if (context is ContextMenuContext contextMenuContext)
-		{
-			await this.RunPreexecutionChecksAsync(method, contextMenuContext).ConfigureAwait(false);
-
-			var shouldExecute = await (module?.BeforeContextMenuExecutionAsync(contextMenuContext) ?? Task.FromResult(true)).ConfigureAwait(false);
-
-			if (shouldExecute)
+			// Context menus
+			case ContextMenuContext contextMenuContext:
 			{
-				if (AutoDeferEnabled)
-					await context.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource).ConfigureAwait(false);
-				await ((Task)method.Invoke(classInstance, args.ToArray())).ConfigureAwait(false);
+				await this.RunPreexecutionChecksAsync(method, contextMenuContext).ConfigureAwait(false);
 
-				await (module?.AfterContextMenuExecutionAsync(contextMenuContext) ?? Task.CompletedTask).ConfigureAwait(false);
+				var shouldExecute = await (module?.BeforeContextMenuExecutionAsync(contextMenuContext) ?? Task.FromResult(true)).ConfigureAwait(false);
+
+				if (shouldExecute)
+				{
+					if (AutoDeferEnabled)
+						await context.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource).ConfigureAwait(false);
+					await ((Task)method.Invoke(classInstance, args.ToArray())).ConfigureAwait(false);
+
+					await (module?.AfterContextMenuExecutionAsync(contextMenuContext) ?? Task.CompletedTask).ConfigureAwait(false);
+				}
+
+				break;
 			}
 		}
 	}
@@ -1353,7 +1382,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			field.SetValue(moduleInstance, service);
 		}
 
-		return moduleInstance;
+		return moduleInstance!;
 	}
 
 	/// <summary>
@@ -1398,7 +1427,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				else if (parameter.ParameterType == typeof(DiscordAttachment))
 				{
 					//Checks through resolved
-					if (e.Interaction.Data.Resolved.Attachments != null &&
+					if (e.Interaction.Data.Resolved?.Attachments != null &&
 						e.Interaction.Data.Resolved.Attachments.TryGetValue((ulong)option.Value, out var attachment))
 						args.Add(attachment);
 					else
@@ -1407,10 +1436,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				else if (parameter.ParameterType == typeof(DiscordUser))
 				{
 					//Checks through resolved
-					if (e.Interaction.Data.Resolved.Members != null &&
+					if (e.Interaction.Data.Resolved?.Members != null &&
 						e.Interaction.Data.Resolved.Members.TryGetValue((ulong)option.Value, out var member))
 						args.Add(member);
-					else if (e.Interaction.Data.Resolved.Users != null &&
+					else if (e.Interaction.Data.Resolved?.Users != null &&
 							 e.Interaction.Data.Resolved.Users.TryGetValue((ulong)option.Value, out var user))
 						args.Add(user);
 					else
@@ -1419,7 +1448,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				else if (parameter.ParameterType == typeof(DiscordChannel))
 				{
 					//Checks through resolved
-					if (e.Interaction.Data.Resolved.Channels != null &&
+					if (e.Interaction.Data.Resolved?.Channels != null &&
 						e.Interaction.Data.Resolved.Channels.TryGetValue((ulong)option.Value, out var channel))
 						args.Add(channel);
 					else
@@ -1428,7 +1457,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				else if (parameter.ParameterType == typeof(DiscordRole))
 				{
 					//Checks through resolved
-					if (e.Interaction.Data.Resolved.Roles != null &&
+					if (e.Interaction.Data.Resolved?.Roles != null &&
 						e.Interaction.Data.Resolved.Roles.TryGetValue((ulong)option.Value, out var role))
 						args.Add(role);
 					else
@@ -1437,19 +1466,19 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				else if (parameter.ParameterType == typeof(SnowflakeObject))
 				{
 					//Checks through resolved
-					if (e.Interaction.Data.Resolved.Channels != null && e.Interaction.Data.Resolved.Channels.TryGetValue((ulong)option.Value, out var channel))
+					if (e.Interaction.Data.Resolved?.Channels != null && e.Interaction.Data.Resolved.Channels.TryGetValue((ulong)option.Value, out var channel))
 						args.Add(channel);
-					if (e.Interaction.Data.Resolved.Roles != null && e.Interaction.Data.Resolved.Roles.TryGetValue((ulong)option.Value, out var role))
+					else if (e.Interaction.Data.Resolved?.Roles != null && e.Interaction.Data.Resolved.Roles.TryGetValue((ulong)option.Value, out var role))
 						args.Add(role);
-					else if (e.Interaction.Data.Resolved.Members != null && e.Interaction.Data.Resolved.Members.TryGetValue((ulong)option.Value, out var member))
+					else if (e.Interaction.Data.Resolved?.Members != null && e.Interaction.Data.Resolved.Members.TryGetValue((ulong)option.Value, out var member))
 						args.Add(member);
-					else if (e.Interaction.Data.Resolved.Users != null && e.Interaction.Data.Resolved.Users.TryGetValue((ulong)option.Value, out var user))
+					else if (e.Interaction.Data.Resolved?.Users != null && e.Interaction.Data.Resolved.Users.TryGetValue((ulong)option.Value, out var user))
 						args.Add(user);
 					else
 						throw new ArgumentException("Error resolving mentionable option.");
 				}
 				else
-					throw new ArgumentException($"Error resolving interaction.");
+					throw new ArgumentException("Error resolving interaction.");
 			}
 
 		return args;
@@ -1460,54 +1489,59 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	/// <param name="method">The method info.</param>
 	/// <param name="context">The base context.</param>
-	private async Task RunPreexecutionChecksAsync(MethodInfo method, BaseContext context)
+	private async Task RunPreexecutionChecksAsync(MemberInfo method, BaseContext context)
 	{
-		if (context is InteractionContext ctx)
+		switch (context)
 		{
-			//Gets all attributes from parent classes as well and stuff
-			var attributes = new List<ApplicationCommandCheckBaseAttribute>();
-			attributes.AddRange(method.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>(true));
-			attributes.AddRange(method.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
-			if (method.DeclaringType.DeclaringType != null)
+			case InteractionContext ctx:
 			{
-				attributes.AddRange(method.DeclaringType.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
-				if (method.DeclaringType.DeclaringType.DeclaringType != null) attributes.AddRange(method.DeclaringType.DeclaringType.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
-			}
+				//Gets all attributes from parent classes as well and stuff
+				var attributes = new List<ApplicationCommandCheckBaseAttribute>();
+				attributes.AddRange(method.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>(true));
+				attributes.AddRange(method.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
+				if (method.DeclaringType.DeclaringType != null)
+				{
+					attributes.AddRange(method.DeclaringType.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
+					if (method.DeclaringType.DeclaringType.DeclaringType != null) attributes.AddRange(method.DeclaringType.DeclaringType.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
+				}
 
-			var dict = new Dictionary<ApplicationCommandCheckBaseAttribute, bool>();
-			foreach (var att in attributes)
+				var dict = new Dictionary<ApplicationCommandCheckBaseAttribute, bool>();
+				foreach (var att in attributes)
+				{
+					//Runs the check and adds the result to a list
+					var result = await att.ExecuteChecksAsync(ctx).ConfigureAwait(false);
+					dict.Add(att, result);
+				}
+
+				//Checks if any failed, and throws an exception
+				if (dict.Any(x => x.Value == false))
+					throw new SlashExecutionChecksFailedException { FailedChecks = dict.Where(x => x.Value == false).Select(x => x.Key).ToList() };
+				break;
+			}
+			case ContextMenuContext contextMenuContext:
 			{
-				//Runs the check and adds the result to a list
-				var result = await att.ExecuteChecksAsync(ctx).ConfigureAwait(false);
-				dict.Add(att, result);
-			}
+				var attributes = new List<ApplicationCommandCheckBaseAttribute>();
+				attributes.AddRange(method.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>(true));
+				attributes.AddRange(method.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
+				if (method.DeclaringType.DeclaringType != null)
+				{
+					attributes.AddRange(method.DeclaringType.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
+					if (method.DeclaringType.DeclaringType.DeclaringType != null) attributes.AddRange(method.DeclaringType.DeclaringType.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
+				}
 
-			//Checks if any failed, and throws an exception
-			if (dict.Any(x => x.Value == false))
-				throw new SlashExecutionChecksFailedException { FailedChecks = dict.Where(x => x.Value == false).Select(x => x.Key).ToList() };
-		}
-		if (context is ContextMenuContext cMctx)
-		{
-			var attributes = new List<ApplicationCommandCheckBaseAttribute>();
-			attributes.AddRange(method.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>(true));
-			attributes.AddRange(method.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
-			if (method.DeclaringType.DeclaringType != null)
-			{
-				attributes.AddRange(method.DeclaringType.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
-				if (method.DeclaringType.DeclaringType.DeclaringType != null) attributes.AddRange(method.DeclaringType.DeclaringType.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
-			}
+				var dict = new Dictionary<ApplicationCommandCheckBaseAttribute, bool>();
+				foreach (var att in attributes)
+				{
+					//Runs the check and adds the result to a list
+					var result = await att.ExecuteChecksAsync(contextMenuContext).ConfigureAwait(false);
+					dict.Add(att, result);
+				}
 
-			var dict = new Dictionary<ApplicationCommandCheckBaseAttribute, bool>();
-			foreach (var att in attributes)
-			{
-				//Runs the check and adds the result to a list
-				var result = await att.ExecuteChecksAsync(cMctx).ConfigureAwait(false);
-				dict.Add(att, result);
+				//Checks if any failed, and throws an exception
+				if (dict.Any(x => x.Value == false))
+					throw new ContextMenuExecutionChecksFailedException { FailedChecks = dict.Where(x => x.Value == false).Select(x => x.Key).ToList() };
+				break;
 			}
-
-			//Checks if any failed, and throws an exception
-			if (dict.Any(x => x.Value == false))
-				throw new ContextMenuExecutionChecksFailedException { FailedChecks = dict.Where(x => x.Value == false).Select(x => x.Key).ToList() };
 		}
 	}
 
@@ -1542,7 +1576,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				//Gets the choices from the method
 				var result = await ((Task<IEnumerable<DiscordApplicationCommandOptionChoice>>)method.Invoke(instance, null)).ConfigureAwait(false);
 
-				if (result.Any()) choices.AddRange(result);
+				if (result.Any())
+					choices.AddRange(result);
 			}
 		}
 
@@ -1554,11 +1589,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	/// <param name="enumParam">The enum parameter.</param>
 	private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromEnumParameter(Type enumParam)
-	{
-		var choices = new List<DiscordApplicationCommandOptionChoice>();
-		foreach (Enum enumValue in Enum.GetValues(enumParam)) choices.Add(new(enumValue.GetName(), enumValue.ToString()));
-		return choices;
-	}
+		=> (from Enum enumValue in Enum.GetValues(enumParam) select new DiscordApplicationCommandOptionChoice(enumValue.GetName(), enumValue.ToString())).ToList();
 
 	/// <summary>
 	/// Gets the parameter type.
@@ -1594,8 +1625,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// Gets the choice attributes from parameter.
 	/// </summary>
 	/// <param name="choiceAttributes">The choice attributes.</param>
-	private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromParameter(IEnumerable<ChoiceAttribute> choiceAttributes) =>
-		!choiceAttributes.Any()
+	private static List<DiscordApplicationCommandOptionChoice>? GetChoiceAttributesFromParameter(IEnumerable<ChoiceAttribute> choiceAttributes)
+		=> !choiceAttributes.Any()
 			? null
 			: choiceAttributes.Select(att => new DiscordApplicationCommandOptionChoice(att.Name, att.Value)).ToList();
 
@@ -1619,24 +1650,29 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			var channelTypes = parameter.GetCustomAttribute<ChannelTypesAttribute>()?.ChannelTypes ?? null;
 
 			var autocompleteAttribute = parameter.GetCustomAttribute<AutocompleteAttribute>();
-			if (optionAttribute.Autocomplete && autocompleteAttribute == null)
-				throw new ArgumentException($"The command '{commandName}' has autocomplete enabled but is missing an autocomplete attribute!");
-			if (!optionAttribute.Autocomplete && autocompleteAttribute != null)
-				throw new ArgumentException($"The command '{commandName}' has an autocomplete provider but the option to have autocomplete set to false!");
+			switch (optionAttribute.Autocomplete)
+			{
+				case true when autocompleteAttribute == null:
+					throw new ArgumentException($"The command '{commandName}' has autocomplete enabled but is missing an autocomplete attribute!");
+				case false when autocompleteAttribute != null:
+					throw new ArgumentException($"The command '{commandName}' has an autocomplete provider but the option to have autocomplete set to false!");
+			}
 
 			//Sets the type
 			var type = parameter.ParameterType;
 			var parameterType = GetParameterType(type);
 
-			if (parameterType == ApplicationCommandOptionType.String)
+			switch (parameterType)
 			{
-				minimumValue = null;
-				maximumValue = null;
-			}
-			else if (parameterType == ApplicationCommandOptionType.Integer || parameterType == ApplicationCommandOptionType.Number)
-			{
-				minimumLength = null;
-				maximumLength = null;
+				case ApplicationCommandOptionType.String:
+					minimumValue = null;
+					maximumValue = null;
+					break;
+				case ApplicationCommandOptionType.Integer:
+				case ApplicationCommandOptionType.Number:
+					minimumLength = null;
+					maximumLength = null;
+					break;
 			}
 
 			if (parameterType != ApplicationCommandOptionType.Channel)
@@ -1646,10 +1682,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			//From attributes
 			var choices = GetChoiceAttributesFromParameter(parameter.GetCustomAttributes<ChoiceAttribute>());
 			//From enums
-			if (parameter.ParameterType.IsEnum) choices = GetChoiceAttributesFromEnumParameter(parameter.ParameterType);
+			if (parameter.ParameterType.IsEnum)
+				choices = GetChoiceAttributesFromEnumParameter(parameter.ParameterType);
 			//From choice provider
 			var choiceProviders = parameter.GetCustomAttributes<ChoiceProviderAttribute>();
-			if (choiceProviders.Any()) choices = await GetChoiceAttributesFromProvider(choiceProviders, guildId).ConfigureAwait(false);
+			if (choiceProviders.Any())
+				choices = await GetChoiceAttributesFromProvider(choiceProviders, guildId).ConfigureAwait(false);
 
 			options.Add(new(optionAttribute.Name, optionAttribute.Description, parameterType, !parameter.IsOptional, choices, null, channelTypes, optionAttribute.Autocomplete, minimumValue, maximumValue, minimumLength: minimumLength, maximumLength: maximumLength));
 		}
@@ -1738,14 +1776,14 @@ internal class ApplicationCommandsModuleConfiguration
 	/// <summary>
 	/// The translation setup.
 	/// </summary>
-	public Action<ApplicationCommandsTranslationContext> Translations { get; }
+	public Action<ApplicationCommandsTranslationContext>? Translations { get; }
 
 	/// <summary>
 	/// Creates a new command configuration.
 	/// </summary>
 	/// <param name="type">The type of the command module.</param>
 	/// <param name="translations">The translation setup callback.</param>
-	public ApplicationCommandsModuleConfiguration(Type type, Action<ApplicationCommandsTranslationContext> translations = null)
+	public ApplicationCommandsModuleConfiguration(Type type, Action<ApplicationCommandsTranslationContext>? translations = null)
 	{
 		this.Type = type;
 		this.Translations = translations;
@@ -1786,12 +1824,12 @@ internal class CommandMethod
 	/// <summary>
 	/// Gets or sets the name.
 	/// </summary>
-	public string Name { get; set; }
+	public string Name { get; init; }
 
 	/// <summary>
 	/// Gets or sets the method.
 	/// </summary>
-	public MethodInfo Method { get; set; }
+	public MethodInfo Method { get; init; }
 }
 
 /// <summary>
@@ -1807,12 +1845,12 @@ internal class GroupCommand
 	/// <summary>
 	/// Gets or sets the name.
 	/// </summary>
-	public string Name { get; set; }
+	public string Name { get; init; }
 
 	/// <summary>
 	/// Gets or sets the methods.
 	/// </summary>
-	public List<KeyValuePair<string, MethodInfo>> Methods { get; set; } = null;
+	public List<KeyValuePair<string, MethodInfo>>? Methods { get; init; }
 }
 
 /// <summary>
@@ -1828,7 +1866,7 @@ internal class SubGroupCommand
 	/// <summary>
 	/// Gets or sets the name.
 	/// </summary>
-	public string Name { get; set; }
+	public string Name { get; init; }
 
 	/// <summary>
 	/// Gets or sets the sub commands.
@@ -1849,12 +1887,12 @@ internal class ContextMenuCommand
 	/// <summary>
 	/// Gets or sets the name.
 	/// </summary>
-	public string Name { get; set; }
+	public string Name { get; init; }
 
 	/// <summary>
 	/// Gets or sets the method.
 	/// </summary>
-	public MethodInfo Method { get; set; }
+	public MethodInfo Method { get; init; }
 }
 
 #region Default Help

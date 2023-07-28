@@ -126,7 +126,7 @@ public class BaseContext
 	/// <see cref="DiscordClient.TryGetPublishedListings(ulong, out IReadOnlyList{DiscordStoreSku})"/> for more information.
 	/// </summary>
 	[DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
-	public List<ulong> Entitlements { get; internal set; }
+	public List<ulong>? Entitlements { get; internal set; }
 
 	/// <summary>
 	/// Gets the type of this interaction.

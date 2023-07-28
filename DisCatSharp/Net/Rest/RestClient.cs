@@ -314,7 +314,7 @@ internal sealed class RestClient : IDisposable
 				var bts = await res.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 				var txt = Utilities.UTF8.GetString(bts, 0, bts.Length);
 
-				this._logger.LogTrace(LoggerEvents.RestRx, txt);
+				this._logger.LogTrace(LoggerEvents.RestRx, "{msg}", txt);
 
 				response.Headers = res.Headers.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
 				response.Response = txt;
@@ -529,7 +529,7 @@ internal sealed class RestClient : IDisposable
 		switch (request)
 		{
 			case RestRequest restRequest when !string.IsNullOrWhiteSpace(restRequest.Payload):
-				this._logger.LogTrace(LoggerEvents.RestTx, restRequest.Payload);
+				this._logger.LogTrace(LoggerEvents.RestTx, "{payload}", restRequest.Payload);
 
 				req.Content = new StringContent(restRequest.Payload);
 				req.Content.Headers.ContentType = new("application/json");
