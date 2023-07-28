@@ -48,13 +48,13 @@ public class DiscordScheduledEventUser : ObservableApiObject, IEquatable<Discord
 	/// Only applicable when requested with `with_member`.
 	/// </summary>
 	[JsonProperty("member", NullValueHandling = NullValueHandling.Ignore)]
-	internal DiscordMember Member { get; set; }
+	internal DiscordMember? Member { get; set; }
 
 	/// <summary>
 	/// Gets the scheduled event.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordScheduledEvent ScheduledEvent
+	public DiscordScheduledEvent? ScheduledEvent
 		=> this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) && guild.ScheduledEvents.TryGetValue(this.EventId, out var scheduledEvent) ? scheduledEvent : null;
 
 	/// <summary>

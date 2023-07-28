@@ -33,20 +33,20 @@ public class DiscordWidgetSettings : ObservableApiObject
 	/// Gets the guild.
 	/// </summary>
 	[JsonIgnore]
-	internal DiscordGuild Guild { get; set; }
+	internal DiscordGuild? Guild { get; set; }
 
 	/// <summary>
 	/// Gets the guild's widget channel id.
 	/// </summary>
 	[JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
-	public ulong ChannelId { get; internal set; }
+	public ulong? ChannelId { get; internal set; }
 
 	/// <summary>
 	/// Gets the guild's widget channel.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordChannel Channel
-		=> this.Guild?.GetChannel(this.ChannelId);
+	public DiscordChannel? Channel
+		=> this.ChannelId.HasValue ? this.Guild?.GetChannel(this.ChannelId.Value) : null;
 
 	/// <summary>
 	/// Whether if the guild's widget is enabled.

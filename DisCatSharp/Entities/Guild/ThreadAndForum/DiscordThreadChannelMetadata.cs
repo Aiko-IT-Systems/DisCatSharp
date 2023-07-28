@@ -64,7 +64,7 @@ public class DiscordThreadChannelMetadata : ObservableApiObject
 	/// Gets the timestamp when it was archived as raw string.
 	/// </summary>
 	[JsonProperty("archive_timestamp", NullValueHandling = NullValueHandling.Ignore)]
-	internal string ArchiveTimestampRaw { get; set; }
+	internal string? ArchiveTimestampRaw { get; set; }
 
 	/// <summary>
 	/// Gets whether the thread is locked.
@@ -92,7 +92,7 @@ public class DiscordThreadChannelMetadata : ObservableApiObject
 	/// Only populated for threads created after 2022-01-09.
 	/// </summary>
 	[JsonProperty("create_timestamp", NullValueHandling = NullValueHandling.Ignore)]
-	internal string CreateTimestampRaw { get; set; }
+	internal string? CreateTimestampRaw { get; set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordThreadChannelMetadata"/> class.

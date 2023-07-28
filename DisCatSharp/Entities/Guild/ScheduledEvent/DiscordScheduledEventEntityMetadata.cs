@@ -31,7 +31,6 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public class DiscordScheduledEventEntityMetadata : ObservableApiObject
 {
-
 	/// <summary>
 	/// External location if event type is <see cref="ScheduledEventEntityType.External"/>.
 	/// </summary>

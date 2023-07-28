@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using DisCatSharp.Attributes;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
@@ -42,26 +44,32 @@ public class DiscordWidgetMember : ObservableApiObject
 	public string Username { get; internal set; }
 
 	/// <summary>
+	/// Gets the member's username.
+	/// </summary>
+	[JsonProperty("global_name", NullValueHandling = NullValueHandling.Ignore)]
+	public string? GlobalName { get; internal set; }
+
+	/// <summary>
 	/// Gets the member's discriminator.
 	/// </summary>
-	[JsonProperty("discriminator", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("discriminator", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated("Pomelo")]
 	public string Discriminator { get; internal set; }
 
 	/// <summary>
 	/// Gets the member's avatar.
 	/// </summary>
 	[JsonProperty("avatar", NullValueHandling = NullValueHandling.Ignore)]
-	public string Avatar { get; internal set; }
+	public string? Avatar { get; internal set; }
 
 	/// <summary>
 	/// Gets the member's online status.
 	/// </summary>
 	[JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
-	public string Status { get; internal set; }
+	public string? Status { get; internal set; }
 
 	/// <summary>
 	/// Gets the member's avatar url.
 	/// </summary>
 	[JsonProperty("avatar_url", NullValueHandling = NullValueHandling.Ignore)]
-	public string AvatarUrl { get; internal set; }
+	public string? AvatarUrl { get; internal set; }
 }

@@ -44,7 +44,7 @@ public class DiscordStageInstance : SnowflakeObject, IEquatable<DiscordStageInst
 	/// Gets the guild to which this channel belongs.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordGuild Guild
+	public DiscordGuild? Guild
 		=> this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null;
 
 	/// <summary>
@@ -57,19 +57,11 @@ public class DiscordStageInstance : SnowflakeObject, IEquatable<DiscordStageInst
 	/// Gets the topic of the Stage instance.
 	/// </summary>
 	[JsonProperty("topic", NullValueHandling = NullValueHandling.Ignore)]
-	public string Topic { get; internal set; }
+	public string? Topic { get; internal set; }
 
-	/// <summary>
-	/// Gets the topic of the Stage instance.
-	/// </summary>
-	[JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated("Will be static due to the discovery removal.")]
-	public StagePrivacyLevel PrivacyLevel { get; internal set; } = StagePrivacyLevel.GuildOnly;
-
-	/// <summary>
-	/// Gets whether or not stage discovery is disabled.
-	/// </summary>
-	[JsonProperty("discoverable_disabled", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated("Will be removed due to the discovery removal.")]
-	public bool DiscoverableDisabled { get; internal set; }
+	internal DiscordStageInstance()
+		: base(new() { "privacy_level", "discoverable_disabled" })
+	{ }
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordStageInstance"/> is equal to another object.
