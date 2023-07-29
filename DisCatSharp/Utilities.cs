@@ -67,9 +67,9 @@ public static class Utilities
 		PermissionStrings = new();
 		var t = typeof(Permissions);
 		var ti = t.GetTypeInfo();
-		var vals = Enum.GetValues(t).Cast<Permissions>();
+		var values = Enum.GetValues(t).Cast<Permissions>();
 
-		foreach (var xv in vals)
+		foreach (var xv in values)
 		{
 			var xsv = xv.ToString();
 			var xmv = ti.DeclaredMembers.FirstOrDefault(xm => xm.Name == xsv);

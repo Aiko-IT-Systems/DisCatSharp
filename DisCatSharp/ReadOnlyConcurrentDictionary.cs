@@ -71,7 +71,8 @@ internal readonly struct ReadOnlyConcurrentDictionary<TKey, TValue> : IReadOnlyD
 	/// </summary>
 	/// <param name="key">The key.</param>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public bool ContainsKey(TKey key) => this._underlyingDict.ContainsKey(key);
+	public bool ContainsKey(TKey key)
+		=> this._underlyingDict.ContainsKey(key!);
 
 	/// <summary>
 	/// Tries the get value.
@@ -79,17 +80,21 @@ internal readonly struct ReadOnlyConcurrentDictionary<TKey, TValue> : IReadOnlyD
 	/// <param name="key">The key.</param>
 	/// <param name="value">The value.</param>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public bool TryGetValue(TKey key, out TValue value) => this._underlyingDict.TryGetValue(key, out value);
+	public bool TryGetValue(TKey key, out TValue value)
+		=> this._underlyingDict.TryGetValue(key, out value);
 
-	public TValue this[TKey key] => this._underlyingDict[key];
+	public TValue this[TKey key]
+		=> this._underlyingDict[key!];
 
 	/// <summary>
 	/// Gets the keys.
 	/// </summary>
-	public IEnumerable<TKey> Keys => this._underlyingDict.Keys;
+	public IEnumerable<TKey> Keys
+		=> this._underlyingDict.Keys;
 
 	/// <summary>
 	/// Gets the values.
 	/// </summary>
-	public IEnumerable<TValue> Values => this._underlyingDict.Values;
+	public IEnumerable<TValue> Values
+		=> this._underlyingDict.Values;
 }

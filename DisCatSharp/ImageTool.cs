@@ -37,26 +37,32 @@ public sealed class ImageTool : IDisposable
 	/// The png magic .
 	/// </summary>
 	private const ulong PNG_MAGIC = 0x0A1A_0A0D_474E_5089;
+
 	/// <summary>
 	/// The jpeg magic 1.
 	/// </summary>
 	private const ushort JPEG_MAGIC_1 = 0xD8FF;
+
 	/// <summary>
 	/// The jpeg magic 2.
 	/// </summary>
 	private const ushort JPEG_MAGIC_2 = 0xD9FF;
+
 	/// <summary>
 	/// The gif magic 1
 	/// </summary>
 	private const ulong GIF_MAGIC_1 = 0x0000_6139_3846_4947;
+
 	/// <summary>
 	/// The gif magic 2.
 	/// </summary>
 	private const ulong GIF_MAGIC_2 = 0x0000_6137_3846_4947;
+
 	/// <summary>
 	/// The webp magic 1.
 	/// </summary>
 	private const uint WEBP_MAGIC_1 = 0x4646_4952;
+
 	/// <summary>
 	/// The webp magic 2.
 	/// </summary>
@@ -66,10 +72,12 @@ public sealed class ImageTool : IDisposable
 	/// The gif mask.
 	/// </summary>
 	private const ulong GIF_MASK = 0x0000_FFFF_FFFF_FFFF;
+
 	/// <summary>
 	/// The mask 32.
 	/// </summary>
 	private const ulong MASK32 = 0x0000_0000_FFFF_FFFF;
+
 	/// <summary>
 	/// The mask 16.
 	/// </summary>
@@ -81,7 +89,7 @@ public sealed class ImageTool : IDisposable
 	public Stream SourceStream { get; }
 
 	private ImageFormat _ifcache;
-	private string _b64Cache;
+	private string? _b64Cache;
 
 	/// <summary>
 	/// Creates a new image tool from given stream.
@@ -99,7 +107,7 @@ public sealed class ImageTool : IDisposable
 		this.SourceStream.Seek(0, SeekOrigin.Begin);
 
 		this._ifcache = 0;
-		this._b64Cache = null!;
+		this._b64Cache = null;
 	}
 
 	/// <summary>
@@ -111,30 +119,27 @@ public sealed class ImageTool : IDisposable
 		if (this._ifcache != ImageFormat.Unknown)
 			return this._ifcache;
 
-		using (var br = new BinaryReader(this.SourceStream, Utilities.UTF8, true))
-		{
-			var bgn64 = br.ReadUInt64();
-			if (bgn64 == PNG_MAGIC)
-				return this._ifcache = ImageFormat.Png;
+		using var br = new BinaryReader(this.SourceStream, Utilities.UTF8, true);
+		var bgn64 = br.ReadUInt64();
+		if (bgn64 == PNG_MAGIC)
+			return this._ifcache = ImageFormat.Png;
 
-			bgn64 &= GIF_MASK;
-			if (bgn64 is GIF_MAGIC_1 or GIF_MAGIC_2)
-				return this._ifcache = ImageFormat.Gif;
+		bgn64 &= GIF_MASK;
+		if (bgn64 is GIF_MAGIC_1 or GIF_MAGIC_2)
+			return this._ifcache = ImageFormat.Gif;
 
-			var bgn32 = (uint)(bgn64 & MASK32);
-			if (bgn32 == WEBP_MAGIC_1 && br.ReadUInt32() == WEBP_MAGIC_2)
-				return this._ifcache = ImageFormat.WebP;
+		var bgn32 = (uint)(bgn64 & MASK32);
+		if (bgn32 == WEBP_MAGIC_1 && br.ReadUInt32() == WEBP_MAGIC_2)
+			return this._ifcache = ImageFormat.WebP;
 
-			var bgn16 = (ushort)(bgn32 & MASK16);
-			if (bgn16 == JPEG_MAGIC_1)
-			{
-				this.SourceStream.Seek(-2, SeekOrigin.End);
-				if (br.ReadUInt16() == JPEG_MAGIC_2)
-					return this._ifcache = ImageFormat.Jpeg;
-			}
-		}
+		var bgn16 = (ushort)(bgn32 & MASK16);
+		if (bgn16 != JPEG_MAGIC_1)
+			throw new InvalidDataException("The data within the stream was not valid image data.");
 
-		throw new InvalidDataException("The data within the stream was not valid image data.");
+		this.SourceStream.Seek(-2, SeekOrigin.End);
+		return br.ReadUInt16() == JPEG_MAGIC_2
+			? this._ifcache = ImageFormat.Jpeg
+			: throw new InvalidDataException("The data within the stream was not valid image data.");
 	}
 
 	/// <summary>
@@ -177,8 +182,8 @@ public sealed class ImageTool : IDisposable
 	/// <returns>The base 64 string.</returns>
 	public static string Base64FromStream(Stream stream)
 	{
-		using var imgtool = new ImageTool(stream);
-		return imgtool.GetBase64();
+		using var imageTool = new ImageTool(stream);
+		return imageTool.GetBase64();
 	}
 
 	/// <summary>

@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -148,9 +149,9 @@ public static class Formatter
 		=> $"__{content}__";
 
 	/// <summary>
-	/// Creates strikethrough text.
+	/// Creates strike-through text.
 	/// </summary>
-	/// <param name="content">Text to strikethrough.</param>
+	/// <param name="content">Text to strike-through.</param>
 	/// <returns>Formatted text.</returns>
 	public static string Strike(this string content)
 		=> $"~~{content}~~";
@@ -201,7 +202,7 @@ public static class Formatter
 	/// </summary>
 	/// <param name="content">Array of strings to transform into a list.</param>
 	/// <returns>Formatted text.</returns>
-	public static string SimpleList(this string[] content)
+	public static string SimpleList(this IEnumerable<string> content)
 		=> string.Join("\n", content.Select(x => $"* {x}"));
 
 	/// <summary>

@@ -30,6 +30,8 @@ public abstract class BaseExtension
 	/// <summary>
 	/// Gets the instance of <see cref="DiscordClient"/> this extension is attached to.
 	/// </summary>
+	// ReSharper disable once MemberCanBeProtected.Global
+	// ReSharper disable once NotNullOrRequiredMemberIsNotInitialized
 	public DiscordClient Client { get; protected set; }
 
 	/// <summary>

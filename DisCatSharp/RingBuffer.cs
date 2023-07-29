@@ -116,11 +116,10 @@ public class RingBuffer<T> : ICollection<T>
 	{
 		this.InternalBuffer[this.CurrentIndex++] = item;
 
-		if (this.CurrentIndex == this.Capacity)
-		{
-			this.CurrentIndex = 0;
-			this._reachedEnd = true;
-		}
+		if (this.CurrentIndex != this.Capacity)
+			return;
+		this.CurrentIndex = 0;
+		this._reachedEnd = true;
 	}
 
 	/// <summary>
@@ -164,14 +163,16 @@ public class RingBuffer<T> : ICollection<T>
 	/// <param name="item">Item to check for.</param>
 	/// <returns>Whether the buffer contains the item.</returns>
 	/// <exception cref="NotImplementedException" />
-	public bool Contains(T item) => throw new NotImplementedException("This method is not implemented. Use .Contains(predicate) instead.");
+	public bool Contains(T item)
+		=> throw new NotImplementedException("This method is not implemented. Use .Contains(predicate) instead.");
 
 	/// <summary>
 	/// Checks whether given item is present in the buffer using given predicate to find it.
 	/// </summary>
 	/// <param name="predicate">Predicate used to check for the item.</param>
 	/// <returns>Whether the buffer contains the item.</returns>
-	public bool Contains(Func<T, bool> predicate) => this.InternalBuffer.Any(predicate);
+	public bool Contains(Func<T, bool> predicate)
+		=> this.InternalBuffer.Any(predicate);
 
 	/// <summary>
 	/// Copies this ring buffer to target array, attempting to maintain the order of items within.
@@ -229,5 +230,6 @@ public class RingBuffer<T> : ICollection<T>
 	/// Returns an enumerator for this ring buffer.
 	/// </summary>
 	/// <returns>Enumerator for this ring buffer.</returns>
-	IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+	IEnumerator IEnumerable.GetEnumerator()
+		=> this.GetEnumerator();
 }

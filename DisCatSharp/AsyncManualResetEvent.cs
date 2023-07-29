@@ -35,9 +35,10 @@ internal class AsyncManualResetEvent
 	/// <summary>
 	/// Gets a value indicating whether this is set.
 	/// </summary>
-	public bool IsSet => this._tsc != null && this._tsc.Task.IsCompleted;
+	public bool IsSet
+		=> this._tsc != null && this._tsc.Task.IsCompleted;
 
-	private TaskCompletionSource<bool> _tsc;
+	private TaskCompletionSource<bool>? _tsc;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="AsyncManualResetEvent"/> class.
@@ -54,18 +55,21 @@ internal class AsyncManualResetEvent
 	{
 		this._tsc = new();
 
-		if (initialState) this._tsc.TrySetResult(true);
+		if (initialState)
+			this._tsc.TrySetResult(true);
 	}
 
 	/// <summary>
 	/// Waits the async waiter.
 	/// </summary>
-	public Task WaitAsync() => this._tsc.Task;
+	public Task WaitAsync()
+		=> this._tsc!.Task;
 
 	/// <summary>
 	/// Sets the async task.
 	/// </summary>
-	public Task SetAsync() => Task.Run(() => this._tsc.TrySetResult(true));
+	public Task SetAsync()
+		=> Task.Run(() => this._tsc!.TrySetResult(true));
 
 	/// <summary>
 	/// Resets the async waiter.
@@ -76,7 +80,7 @@ internal class AsyncManualResetEvent
 		{
 			var tsc = this._tsc;
 
-			if (!tsc.Task.IsCompleted || Interlocked.CompareExchange(ref this._tsc, new(), tsc) == tsc)
+			if (!tsc!.Task.IsCompleted || Interlocked.CompareExchange(ref this._tsc, new(), tsc) == tsc)
 				return;
 		}
 	}
