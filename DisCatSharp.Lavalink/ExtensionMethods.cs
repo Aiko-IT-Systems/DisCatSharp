@@ -83,7 +83,7 @@ public static class ExtensionMethods
 	/// </summary>
 	/// <param name="client">Discord client to get Lavalink instance for.</param>
 	/// <returns>Lavalink client instance.</returns>
-	public static LavalinkExtension GetLavalink(this DiscordClient client)
+	public static LavalinkExtension? GetLavalink(this DiscordClient client)
 		=> client.GetExtension<LavalinkExtension>();
 
 	/// <summary>
@@ -91,7 +91,7 @@ public static class ExtensionMethods
 	/// </summary>
 	/// <param name="client">The shard client to retrieve <see cref="LavalinkExtension"/> instances from.</param>
 	/// <returns>A dictionary containing <see cref="LavalinkExtension"/> instances for each shard.</returns>
-	public static async Task<IReadOnlyDictionary<int, LavalinkExtension>> GetLavalinkAsync(this DiscordShardedClient client)
+	public static async Task<IReadOnlyDictionary<int, LavalinkExtension?>> GetLavalinkAsync(this DiscordShardedClient client)
 	{
 		await client.InitializeShardsAsync().ConfigureAwait(false);
 		var extensions = new Dictionary<int, LavalinkExtension>();

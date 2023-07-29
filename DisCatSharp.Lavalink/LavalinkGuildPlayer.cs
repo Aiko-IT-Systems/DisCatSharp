@@ -135,8 +135,8 @@ public sealed class LavalinkGuildPlayer
 	/// <summary>
 	/// Gets the guild this player is attached to.
 	/// </summary>
-	public DiscordGuild Guild
-		=> this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null!;
+	public DiscordGuild? Guild
+		=> this.Discord.Guilds?.TryGetValue(this.GuildId, out var guild) ?? false ? guild : null;
 
 	/// <summary>
 	/// Gets the discord client.
@@ -147,8 +147,8 @@ public sealed class LavalinkGuildPlayer
 	/// <summary>
 	/// Gets the current channel this player is in.
 	/// </summary>
-	public DiscordChannel Channel
-		=> this.Guild.ChannelsInternal[this.ChannelId];
+	public DiscordChannel? Channel
+		=> this.Guild?.ChannelsInternal[this.ChannelId];
 
 	/// <summary>
 	/// Gets the lavalink player.
@@ -183,7 +183,7 @@ public sealed class LavalinkGuildPlayer
 	/// Gets the internal queue entries.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>")]
-	private SortedList<string, IQueueEntry> _queueEntriesInternal = new();
+	private readonly SortedList<string, IQueueEntry> _queueEntriesInternal = new();
 
 	/// <summary>
 	/// Gets a list of current user in the <see cref="Channel"/>.
@@ -224,7 +224,7 @@ public sealed class LavalinkGuildPlayer
 		this.StateUpdatedEvent = new("LAVALINK_PLAYER_STATE_UPDATED", TimeSpan.Zero, this.Discord.EventErrorHandler);
 		this.Discord.VoiceStateUpdated += async (sender, args) => await this._voiceStateUpdated.InvokeAsync(sender, args).ConfigureAwait(false);
 		this.VoiceStateUpdated += this.OnVoiceStateUpdated;
-		this.CurrentUsersInternal.Add(this.Discord.CurrentUser.Id, this.Discord.CurrentUser);
+		this.CurrentUsersInternal.Add(this.Discord.CurrentUser!.Id, this.Discord.CurrentUser);
 		this.TrackEnded += this.OnTrackEnded;
 	}
 
@@ -597,7 +597,7 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="args">The event args.</param>
 	private Task OnVoiceStateUpdated(DiscordClient sender, VoiceStateUpdateEventArgs args)
 	{
-		if (args.User.Id == this.Discord.CurrentUser.Id)
+		if (args.User.Id == this.Discord.CurrentUser!.Id)
 			return Task.CompletedTask;
 
 		if (args.Channel?.Id != this.ChannelId)
@@ -609,12 +609,10 @@ public sealed class LavalinkGuildPlayer
 			return Task.CompletedTask;
 		}
 
-		if (args.Before.ChannelId != null && args.Before.ChannelId!.Value == this.ChannelId && (args.After.ChannelId != null || args.After.ChannelId!.Value != this.ChannelId))
-		{
-			this.CurrentUsersInternal.Remove(args.User.Id);
+		if (args.Before.ChannelId == null || args.Before.ChannelId!.Value != this.ChannelId || (args.After.ChannelId == null && args.After.ChannelId!.Value == this.ChannelId))
 			return Task.CompletedTask;
-		}
-
+		this.CurrentUsersInternal.Remove(args.User.Id);
 		return Task.CompletedTask;
+
 	}
 }

@@ -103,9 +103,9 @@ internal sealed class LavalinkRestClient
 	/// </summary>
 	/// <param name="values">The values.</param>
 	/// <param name="post">Whether this query will be transmitted via POST.</param>
-	private static string BuildQueryString(IDictionary<string, string> values, bool post = false)
+	private static string BuildQueryString(IDictionary<string, string>? values, bool post = false)
 	{
-		if (values == null! || values.Count == 0)
+		if (values == null || values.Count == 0)
 			return string.Empty;
 
 		var valuesCollection = values.Select(xkvp =>
@@ -121,10 +121,11 @@ internal sealed class LavalinkRestClient
 	/// <param name="route">The route.</param>
 	/// <param name="routeParams">The route params.</param>
 	/// <returns>The generated route.</returns>
-	private static string GetPath(string route, object routeParams)
+	private static string GetPath(string route, object? routeParams)
 	{
-		if (routeParams == null!)
+		if (routeParams == null)
 			return route;
+
 		var routeParamsProperties = routeParams.GetType()
 			.GetTypeInfo()
 			.DeclaredProperties;

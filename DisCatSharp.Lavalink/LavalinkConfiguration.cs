@@ -95,7 +95,7 @@ public sealed class LavalinkConfiguration
 	/// Sets the voice region ID for the Lavalink connection.
 	/// <para>This should be used if nodes should be filtered by region with <see cref="LavalinkExtension.GetIdealSession(DiscordVoiceRegion)"/>.</para>
 	/// </summary>
-	public DiscordVoiceRegion Region { internal get; set; }
+	public DiscordVoiceRegion? Region { internal get; set; }
 
 	/// <summary>
 	/// Sets whether the built in queue system should be used.

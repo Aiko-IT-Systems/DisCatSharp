@@ -96,6 +96,7 @@ public sealed class LavalinkExtension : BaseExtension
 		if (this.Client != null)
 			throw new InvalidOperationException("What did I tell you?");
 
+		// ReSharper disable once HeuristicUnreachableCode
 		this.Client = client;
 		this._sessionDisconnected = new("LAVALINK_SESSION_DISCONNECTED", TimeSpan.Zero, this.Client.EventErrorHandler);
 		this._sessionConnected = new("LAVALINK_SESSION_CONNECTED", TimeSpan.Zero, this.Client.EventErrorHandler);
@@ -218,14 +219,13 @@ public sealed class LavalinkExtension : BaseExtension
 			}
 
 			//frame load
-			if (b.Statistics.Frames!.Deficit > 0)
-			{
-				//deficit frame load
-				bPenaltyCount += (int)((Math.Pow(1.03d, 500f * (b.Statistics.Frames.Deficit / 3000f)) * 600) - 600);
+			if (b.Statistics.Frames!.Deficit <= 0)
+				return aPenaltyCount - bPenaltyCount;
+			//deficit frame load
+			bPenaltyCount += (int)((Math.Pow(1.03d, 500f * (b.Statistics.Frames.Deficit / 3000f)) * 600) - 600);
 
-				//null frame load
-				bPenaltyCount += (int)((Math.Pow(1.03d, 500f * (b.Statistics.Frames.Deficit / 3000f)) * 300) - 300);
-			}
+			//null frame load
+			bPenaltyCount += (int)((Math.Pow(1.03d, 500f * (b.Statistics.Frames.Deficit / 3000f)) * 300) - 300);
 
 			return aPenaltyCount - bPenaltyCount;
 		});

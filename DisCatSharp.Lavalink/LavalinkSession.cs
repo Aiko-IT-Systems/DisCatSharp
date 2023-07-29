@@ -141,6 +141,7 @@ public sealed class LavalinkSession
 	/// Gets the minimum backoff.
 	/// </summary>
 	private const int MINIMUM_BACKOFF = 7500;
+
 	/// <summary>
 	/// Gets the maximum backoff.
 	/// </summary>
@@ -152,7 +153,7 @@ public sealed class LavalinkSession
 	public IReadOnlyDictionary<ulong, LavalinkGuildPlayer> ConnectedPlayers
 		=> this.ConnectedPlayersInternal;
 
-	internal ConcurrentDictionary<ulong, LavalinkGuildPlayer> ConnectedPlayersInternal = new();
+	internal readonly ConcurrentDictionary<ulong, LavalinkGuildPlayer> ConnectedPlayersInternal = new();
 
 	/// <summary>
 	/// Gets the REST client for this Lavalink connection.
@@ -216,7 +217,7 @@ public sealed class LavalinkSession
 	/// <summary>
 	/// <see cref="TaskCompletionSource"/> for the <see cref="LavalinkConfiguration.SessionId"/>.
 	/// </summary>
-	private TaskCompletionSource<string> _sessionIdReceived = null!;
+	private TaskCompletionSource<string>? _sessionIdReceived = null;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="LavalinkSession"/> class.
@@ -230,7 +231,7 @@ public sealed class LavalinkSession
 		this.Extension = extension;
 		this.Config = new(config);
 
-		if (config.Region != null! && this.Discord.VoiceRegions.Values.Contains(config.Region))
+		if (config.Region != null && this.Discord.VoiceRegions.Values.Contains(config.Region))
 			this.Region = config.Region;
 
 		this._lavalinkSocketError = new("LAVALINK_SOCKET_ERROR", TimeSpan.Zero, this.Discord.EventErrorHandler);
@@ -321,7 +322,7 @@ public sealed class LavalinkSession
 	/// <exception cref="ArgumentException"></exception>
 	public async Task<LavalinkGuildPlayer> ConnectAsync(DiscordChannel channel, bool deafened = true)
 	{
-		if (this.ConnectedPlayersInternal.TryGetValue(channel.Guild.Id, out var connectedGuild))
+		if (this.ConnectedPlayersInternal.TryGetValue(channel.Guild!.Id, out var connectedGuild))
 			return connectedGuild;
 
 		if (channel.Guild == null! || (channel.Type != ChannelType.Voice && channel.Type != ChannelType.Stage))
@@ -561,7 +562,7 @@ public sealed class LavalinkSession
 						this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsRx, null,
 							"Received Lavalink Ready OP: {data}", json);
 						var ready = LavalinkJson.DeserializeObject<ReadyOp>(json)!;
-						if (this._sessionIdReceived != null!)
+						if (this._sessionIdReceived != null)
 							this._sessionIdReceived.SetResult(ready.SessionId);
 						else
 							this.Config.SessionId = ready.SessionId;
@@ -730,7 +731,7 @@ public sealed class LavalinkSession
 		if (args.User == null!)
 			return Task.CompletedTask;
 
-		if (args.User.Id != this.Discord.CurrentUser.Id)
+		if (args.User.Id != this.Discord.CurrentUser!.Id)
 			return Task.CompletedTask;
 
 		if (args.After.Channel == null! && this.IsConnected && this.ConnectedPlayersInternal.TryGetValue(gld.Id, out var dGuildPlayer))
