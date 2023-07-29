@@ -90,7 +90,8 @@ internal class ComponentPaginator : IPaginator
 	/// <summary>
 	/// Disposes the paginator.
 	/// </summary>
-	public void Dispose() => this._client.ComponentInteractionCreated -= this.Handle;
+	public void Dispose()
+		=> this._client.ComponentInteractionCreated -= this.Handle;
 
 
 	/// <summary>
@@ -138,15 +139,14 @@ internal class ComponentPaginator : IPaginator
 		var id = args.Id;
 		var tcs = await request.GetTaskCompletionSourceAsync().ConfigureAwait(false);
 
-#pragma warning disable CS8846 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
 		var paginationTask = id switch
-#pragma warning restore CS8846 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
 		{
 			_ when id == buttons.SkipLeft.CustomId => request.SkipLeftAsync(),
 			_ when id == buttons.SkipRight.CustomId => request.SkipRightAsync(),
-			_ when id == buttons.Stop.CustomId => Task.FromResult(tcs.TrySetResult(true)),
+			_ when id == buttons.Stop.CustomId => Task.FromResult(tcs?.TrySetResult(true)),
 			_ when id == buttons.Left.CustomId => request.PreviousPageAsync(),
 			_ when id == buttons.Right.CustomId => request.NextPageAsync(),
+			_ => throw new ArgumentOutOfRangeException()
 		};
 
 		await paginationTask.ConfigureAwait(false);
@@ -162,9 +162,13 @@ internal class ComponentPaginator : IPaginator
 		if (request is InteractionPaginationRequest ipr)
 		{
 			var builder = new DiscordWebhookBuilder()
-				.WithContent(page.Content)
-				.AddEmbed(page.Embed)
 				.AddComponents(bts);
+			if (page.Content is null && page.Embed is null)
+				throw new NullReferenceException("You need to either specify Content or Embed or both");
+			if (page.Content is not null)
+				builder = builder.WithContent(page.Content);
+			if (page.Embed is not null)
+				builder = builder.AddEmbed(page.Embed);
 
 			await args.Interaction.EditOriginalResponseAsync(builder).ConfigureAwait(false);
 			return;
@@ -173,9 +177,13 @@ internal class ComponentPaginator : IPaginator
 		this._builder.Clear();
 
 		this._builder
-			.WithContent(page.Content)
-			.AddEmbed(page.Embed)
 			.AddComponents(bts);
+		if (page.Content is null && page.Embed is null)
+			throw new NullReferenceException("You need to either specify Content or Embed or both");
+		if (page.Content is not null)
+			this._builder.WithContent(page.Content);
+		if (page.Embed is not null)
+			this._builder.AddEmbed(page.Embed);
 
 		await this._builder.ModifyAsync(msg).ConfigureAwait(false);
 

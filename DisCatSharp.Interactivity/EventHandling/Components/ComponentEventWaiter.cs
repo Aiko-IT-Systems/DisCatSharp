@@ -67,7 +67,7 @@ internal class ComponentEventWaiter : IDisposable
 	/// </summary>
 	/// <param name="request">The request to wait for.</param>
 	/// <returns>The returned args, or null if it timed out.</returns>
-	public async Task<ComponentInteractionCreateEventArgs>? WaitForMatchAsync(ComponentMatchRequest request)
+	public async Task<ComponentInteractionCreateEventArgs?> WaitForMatchAsync(ComponentMatchRequest request)
 	{
 		this._matchRequests.Add(request);
 
@@ -117,14 +117,12 @@ internal class ComponentEventWaiter : IDisposable
 	/// <param name="args">The args.</param>
 	private async Task Handle(DiscordClient _, ComponentInteractionCreateEventArgs args)
 	{
-		foreach (var mreq in this._matchRequests)
-		{
-			if (mreq.Message == args.Message && mreq.IsMatch(args))
-				mreq.Tcs.TrySetResult(args);
+		foreach (var matchRequest in this._matchRequests)
+			if (matchRequest.Message == args.Message && matchRequest.IsMatch(args))
+				matchRequest.Tcs.TrySetResult(args);
 
 			else if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
 				await args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
-		}
 
 
 		foreach (var creq in this._collectRequests.Where(creq => creq.Message == args.Message && creq.IsMatch(args)))

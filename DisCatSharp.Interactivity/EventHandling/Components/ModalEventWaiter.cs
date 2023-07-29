@@ -63,7 +63,7 @@ internal class ModalEventWaiter : IDisposable
 	/// </summary>
 	/// <param name="request">The request to wait for.</param>
 	/// <returns>The returned args, or null if it timed out.</returns>
-	public async Task<ComponentInteractionCreateEventArgs> WaitForModalMatchAsync(ModalMatchRequest request)
+	public async Task<ComponentInteractionCreateEventArgs?> WaitForModalMatchAsync(ModalMatchRequest request)
 	{
 		this._modalMatchRequests.Add(request);
 
@@ -89,14 +89,12 @@ internal class ModalEventWaiter : IDisposable
 	/// <param name="args">The args.</param>
 	private async Task Handle(DiscordClient _, ComponentInteractionCreateEventArgs args)
 	{
-		foreach (var mreq in this._modalMatchRequests)
-		{
-			if (mreq.CustomId == args.Interaction.Data.CustomId && mreq.IsMatch(args))
-				mreq.Tcs.TrySetResult(args);
+		foreach (var modalMatchRequest in this._modalMatchRequests)
+			if (modalMatchRequest.CustomId == args.Interaction.Data.CustomId && modalMatchRequest.IsMatch(args))
+				modalMatchRequest.Tcs.TrySetResult(args);
 
 			else if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
 				await args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
-		}
 	}
 
 	/// <summary>

@@ -36,7 +36,7 @@ public sealed class DiscordMessageBuilder
 	/// <summary>
 	/// Gets or Sets the Message to be sent.
 	/// </summary>
-	public string Content
+	public string? Content
 	{
 		get => this._content;
 		set
@@ -46,12 +46,12 @@ public sealed class DiscordMessageBuilder
 			this._content = value;
 		}
 	}
-	private string _content;
+	private string? _content;
 
 	/// <summary>
 	/// Gets or sets the embed for the builder. This will always set the builder to have one embed.
 	/// </summary>
-	public DiscordEmbed Embed
+	public DiscordEmbed? Embed
 	{
 		get => this._embeds.Count > 0 ? this._embeds[0] : null;
 		set
@@ -64,7 +64,7 @@ public sealed class DiscordMessageBuilder
 	/// <summary>
 	/// Gets the Sticker to be send.
 	/// </summary>
-	public DiscordSticker Sticker { get; set; }
+	public DiscordSticker? Sticker { get; set; }
 
 	/// <summary>
 	/// Gets the Embeds to be sent.
@@ -85,7 +85,7 @@ public sealed class DiscordMessageBuilder
 	/// <summary>
 	/// Gets the Allowed Mentions for the message to be sent.
 	/// </summary>
-	public List<IMention> Mentions { get; private set; }
+	public List<IMention>? Mentions { get; private set; }
 
 	/// <summary>
 	/// Gets the Files to be sent in the Message.

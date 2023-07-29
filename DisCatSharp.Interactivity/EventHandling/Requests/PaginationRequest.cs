@@ -35,7 +35,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 	/// </summary>
 	internal class PaginationRequest : IPaginationRequest
 	{
-		private TaskCompletionSource<bool> _tcs;
+		private TaskCompletionSource<bool>? _tcs;
 		private readonly CancellationTokenSource _ct;
 		private readonly TimeSpan _timeout;
 		private readonly List<Page> _pages;
@@ -71,16 +71,14 @@ namespace DisCatSharp.Interactivity.EventHandling
 			this._emojis = emojis;
 
 			this._pages = new();
-			foreach (var p in pages)
-			{
-				this._pages.Add(p);
-			}
+			foreach (var p in pages) this._pages.Add(p);
 		}
 
 		/// <summary>
 		/// Gets the page count.
 		/// </summary>
-		public int PageCount => this._pages.Count;
+		public int PageCount
+			=> this._pages.Count;
 
 		/// <summary>
 		/// Gets the pagination deletion.
@@ -88,7 +86,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		public PaginationDeletion PaginationDeletion { get; }
 
 		/// <summary>
-		/// Gets the page async.
+		/// Gets the page.
 		/// </summary>
 		/// <returns>A Task.</returns>
 		public async Task<Page> GetPageAsync()
@@ -99,7 +97,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		}
 
 		/// <summary>
-		/// Skips the left async.
+		/// Skips the to the left.
 		/// </summary>
 		/// <returns>A Task.</returns>
 		public async Task SkipLeftAsync()
@@ -110,7 +108,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		}
 
 		/// <summary>
-		/// Skips the right async.
+		/// Skips to the right.
 		/// </summary>
 		/// <returns>A Task.</returns>
 		public async Task SkipRightAsync()
@@ -121,7 +119,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		}
 
 		/// <summary>
-		/// Nexts the page async.
+		/// Goes to the next page.
 		/// </summary>
 		/// <returns>A Task.</returns>
 		public async Task NextPageAsync()
@@ -131,11 +129,8 @@ namespace DisCatSharp.Interactivity.EventHandling
 			switch (this._behaviour)
 			{
 				case PaginationBehaviour.Ignore:
-					if (this._index == this._pages.Count - 1)
-						break;
-					else
+					if (this._index != this._pages.Count - 1)
 						this._index++;
-
 					break;
 
 				case PaginationBehaviour.WrapAround:
@@ -145,11 +140,13 @@ namespace DisCatSharp.Interactivity.EventHandling
 						this._index++;
 
 					break;
+				default:
+					throw new ArgumentOutOfRangeException();
 			}
 		}
 
 		/// <summary>
-		/// Previous the page async.
+		/// Goes to the previous page.
 		/// </summary>
 		/// <returns>A Task.</returns>
 		public async Task PreviousPageAsync()
@@ -159,9 +156,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			switch (this._behaviour)
 			{
 				case PaginationBehaviour.Ignore:
-					if (this._index == 0)
-						break;
-					else
+					if (this._index != 0)
 						this._index--;
 
 					break;
@@ -173,18 +168,20 @@ namespace DisCatSharp.Interactivity.EventHandling
 						this._index--;
 
 					break;
+				default:
+					throw new ArgumentOutOfRangeException();
 			}
 		}
 
 		/// <summary>
-		/// Gets the buttons async.
+		/// Gets the buttons.
 		/// </summary>
 		/// <returns><see cref="NotSupportedException"/></returns>
 		public Task<IEnumerable<DiscordButtonComponent>> GetButtonsAsync()
 			=> throw new NotSupportedException("This request does not support buttons.");
 
 		/// <summary>
-		/// Gets the emojis async.
+		/// Gets the emojis.
 		/// </summary>
 		/// <returns>A Task.</returns>
 		public async Task<PaginationEmojis> GetEmojisAsync()
@@ -195,7 +192,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		}
 
 		/// <summary>
-		/// Gets the message async.
+		/// Gets the message.
 		/// </summary>
 		/// <returns>A Task.</returns>
 		public async Task<DiscordMessage> GetMessageAsync()
@@ -206,7 +203,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		}
 
 		/// <summary>
-		/// Gets the user async.
+		/// Gets the user.
 		/// </summary>
 		/// <returns>A Task.</returns>
 		public async Task<DiscordUser> GetUserAsync()
@@ -217,7 +214,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		}
 
 		/// <summary>
-		/// Dos the cleanup async.
+		/// Does the cleanup.
 		/// </summary>
 		/// <returns>A Task.</returns>
 		public async Task DoCleanupAsync()
@@ -234,14 +231,16 @@ namespace DisCatSharp.Interactivity.EventHandling
 
 				case PaginationDeletion.KeepEmojis:
 					break;
+				default:
+					throw new ArgumentOutOfRangeException();
 			}
 		}
 
 		/// <summary>
-		/// Gets the task completion source async.
+		/// Gets the task completion source.
 		/// </summary>
 		/// <returns>A Task.</returns>
-		public async Task<TaskCompletionSource<bool>> GetTaskCompletionSourceAsync()
+		public async Task<TaskCompletionSource<bool>?> GetTaskCompletionSourceAsync()
 		{
 			await Task.Yield();
 
@@ -271,11 +270,11 @@ namespace DisCatSharp.Interactivity
 	/// </summary>
 	public class PaginationEmojis
 	{
-		public DiscordEmoji SkipLeft;
-		public DiscordEmoji SkipRight;
-		public DiscordEmoji Left;
-		public DiscordEmoji Right;
-		public DiscordEmoji Stop;
+		public readonly DiscordEmoji? SkipLeft;
+		public readonly DiscordEmoji? SkipRight;
+		public readonly DiscordEmoji? Left;
+		public readonly DiscordEmoji? Right;
+		public readonly DiscordEmoji? Stop;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PaginationEmojis"/> class.
@@ -298,18 +297,19 @@ namespace DisCatSharp.Interactivity
 		/// <summary>
 		/// Gets or sets the content.
 		/// </summary>
-		public string Content { get; set; }
+		public string? Content { get; set; }
+
 		/// <summary>
 		/// Gets or sets the embed.
 		/// </summary>
-		public DiscordEmbed Embed { get; set; }
+		public DiscordEmbed? Embed { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Page"/> class.
 		/// </summary>
 		/// <param name="content">The content.</param>
 		/// <param name="embed">The embed.</param>
-		public Page(string content = "", DiscordEmbedBuilder embed = null)
+		public Page(string? content = null, DiscordEmbedBuilder? embed = null)
 		{
 			this.Content = content;
 			this.Embed = embed?.Build();

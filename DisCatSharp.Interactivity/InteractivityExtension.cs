@@ -641,7 +641,7 @@ public class InteractivityExtension : BaseExtension
 	/// </summary>
 	/// <param name="predicate">The predicate.</param>
 	/// <param name="timeoutOverride">Override timeout period.</param>
-	public async Task<ReadOnlyCollection<T>> CollectEventArgsAsync<T>(Func<T, bool> predicate, TimeSpan? timeoutOverride = null) where T : AsyncEventArgs
+	public async Task<ReadOnlyCollection<T>?> CollectEventArgsAsync<T>(Func<T, bool> predicate, TimeSpan? timeoutOverride = null) where T : AsyncEventArgs
 	{
 		var timeout = timeoutOverride ?? this.Config.Timeout;
 
@@ -661,7 +661,7 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="deletion">Deletion behaviour.</param>
 	/// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
 	public async Task SendPaginatedMessageAsync(
-		DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons,
+		DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationButtons? buttons = default,
 		PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default, CancellationToken token = default)
 	{
 		var bhv = behaviour ?? this.Config.PaginationBehaviour;
@@ -678,6 +678,7 @@ public class InteractivityExtension : BaseExtension
 		var builder = new DiscordMessageBuilder()
 			.WithContent(pages.First().Content)
 			.WithEmbed(pages.First().Embed)
+			// ReSharper disable once CoVariantArrayConversion
 			.AddComponents(bts.ButtonArray);
 
 		var message = await builder.SendAsync(channel).ConfigureAwait(false);
@@ -716,19 +717,6 @@ public class InteractivityExtension : BaseExtension
 		=> this.SendPaginatedMessageAsync(channel, user, pages, default, behaviour, deletion, token);
 
 	/// <summary>
-	/// Sends the paginated message.
-	/// </summary>
-	/// <param name="channel">The channel.</param>
-	/// <param name="user">The user.</param>
-	/// <param name="pages">The pages.</param>
-	/// <param name="timeoutOverride">Override timeout period.</param>
-	/// <param name="behaviour">The behaviour.</param>
-	/// <param name="deletion">The deletion.</param>
-	/// <returns>A Task.</returns>
-	public Task SendPaginatedMessageAsync(DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, TimeSpan? timeoutOverride, PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default)
-		=> this.SendPaginatedMessageAsync(channel, user, pages, timeoutOverride, behaviour, deletion);
-
-	/// <summary>
 	/// Sends a paginated message.
 	/// For this Event you need the <see cref="DiscordIntents.GuildMessageReactions"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
 	/// </summary>
@@ -739,7 +727,7 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="behaviour">Pagination behaviour (when hitting max and min indices).</param>
 	/// <param name="deletion">Deletion behaviour.</param>
 	/// <param name="timeoutOverride">Override timeout period.</param>
-	public async Task SendPaginatedMessageAsync(DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationEmojis emojis,
+	public async Task SendPaginatedMessageAsync(DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationEmojis? emojis = default,
 		PaginationBehaviour? behaviour = default, PaginationDeletion? deletion = default, TimeSpan? timeoutOverride = null)
 	{
 		var builder = new DiscordMessageBuilder()
@@ -793,6 +781,7 @@ public class InteractivityExtension : BaseExtension
 			var builder = new DiscordWebhookBuilder()
 			.WithContent(pages.First().Content)
 			.AddEmbed(pages.First().Embed)
+			// ReSharper disable once CoVariantArrayConversion
 			.AddComponents(bts.ButtonArray);
 			message = await interaction.EditOriginalResponseAsync(builder).ConfigureAwait(false);
 		}
@@ -801,6 +790,7 @@ public class InteractivityExtension : BaseExtension
 			var builder = new DiscordInteractionResponseBuilder()
 			.WithContent(pages.First().Content)
 			.AddEmbed(pages.First().Embed)
+			// ReSharper disable once CoVariantArrayConversion
 			.AddComponents(bts.ButtonArray);
 			if (ephemeral)
 				builder = builder.AsEphemeral();
@@ -820,7 +810,8 @@ public class InteractivityExtension : BaseExtension
 	/// </summary>
 	/// <param name="request"></param>
 	/// <returns></returns>
-	public async Task WaitForCustomPaginationAsync(IPaginationRequest request) => await this._paginator.DoPaginationAsync(request).ConfigureAwait(false);
+	public async Task WaitForCustomPaginationAsync(IPaginationRequest request)
+		=> await this._paginator.DoPaginationAsync(request).ConfigureAwait(false);
 
 	/// <summary>
 	/// Waits for custom button-based pagination request to finish.
@@ -828,7 +819,8 @@ public class InteractivityExtension : BaseExtension
 	/// This does <i><b>not</b></i> invoke <see cref="DisCatSharp.Interactivity.EventHandling.IPaginationRequest.DoCleanupAsync"/>.
 	/// </summary>
 	/// <param name="request">The request to wait for.</param>
-	public async Task WaitForCustomComponentPaginationAsync(IPaginationRequest request) => await this._compPaginator.DoPaginationAsync(request).ConfigureAwait(false);
+	public async Task WaitForCustomComponentPaginationAsync(IPaginationRequest request)
+		=> await this._compPaginator.DoPaginationAsync(request).ConfigureAwait(false);
 
 	/// <summary>
 	/// Generates pages from a string, and puts them in message content.
@@ -851,19 +843,18 @@ public class InteractivityExtension : BaseExtension
 				split = this.SplitString(input, 500).ToList();
 				break;
 			case SplitType.Line:
-				var subsplit = input.Split('\n');
+				var subSplit = input.Split('\n');
 
 				split = new();
 				var s = "";
 
-				for (var i = 0; i < subsplit.Length; i++)
+				for (var i = 0; i < subSplit.Length; i++)
 				{
-					s += subsplit[i];
-					if (i >= 15 && i % 15 == 0)
-					{
-						split.Add(s);
-						s = "";
-					}
+					s += subSplit[i];
+					if (i < 15 || i % 15 != 0)
+						continue;
+					split.Add(s);
+					s = "";
 				}
 				if (split.All(x => x != s))
 					split.Add(s);
@@ -904,21 +895,20 @@ public class InteractivityExtension : BaseExtension
 				split = this.SplitString(input, 500).ToList();
 				break;
 			case SplitType.Line:
-				var subsplit = input.Split('\n');
+				var subSplit = input.Split('\n');
 
 				split = new();
 				var s = "";
 
-				for (var i = 0; i < subsplit.Length; i++)
+				for (var i = 0; i < subSplit.Length; i++)
 				{
-					s += $"{subsplit[i]}\n";
-					if (i % 15 == 0 && i != 0)
-					{
-						split.Add(s);
-						s = "";
-					}
+					s += $"{subSplit[i]}\n";
+					if (i % 15 != 0 || i == 0)
+						continue;
+					split.Add(s);
+					s = "";
 				}
-				if (!split.Any(x => x == s))
+				if (split.All(x => x != s))
 					split.Add(s);
 				break;
 		}
@@ -938,7 +928,7 @@ public class InteractivityExtension : BaseExtension
 	/// </summary>
 	/// <param name="str">The string.</param>
 	/// <param name="chunkSize">The chunk size.</param>
-	private List<string> SplitString(string str, int chunkSize)
+	private IEnumerable<string> SplitString(string str, int chunkSize)
 	{
 		var res = new List<string>();
 		var len = str.Length;
@@ -958,7 +948,8 @@ public class InteractivityExtension : BaseExtension
 	/// Gets the cancellation token.
 	/// </summary>
 	/// <param name="timeout">The timeout.</param>
-	private CancellationToken GetCancellationToken(TimeSpan? timeout = null) => new CancellationTokenSource(timeout ?? this.Config.Timeout).Token;
+	private CancellationToken GetCancellationToken(TimeSpan? timeout = null)
+		=> new CancellationTokenSource(timeout ?? this.Config.Timeout).Token;
 
 	/// <summary>
 	/// Handles an invalid interaction.

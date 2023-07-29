@@ -37,11 +37,11 @@ namespace DisCatSharp.Interactivity.EventHandling;
 /// <typeparam name="T"></typeparam>
 internal class CollectRequest<T> : IDisposable where T : AsyncEventArgs
 {
-	internal TaskCompletionSource<bool> Tcs;
-	internal CancellationTokenSource Ct;
-	internal Func<T, bool> Predicate;
+	internal TaskCompletionSource<bool>? Tcs;
+	internal readonly CancellationTokenSource Ct;
+	internal Func<T, bool>? Predicate;
 	internal TimeSpan Timeout;
-	internal ConcurrentHashSet<T> Collected;
+	internal ConcurrentHashSet<T>? Collected;
 
 	/// <summary>
 	/// Creates a new CollectRequest object.

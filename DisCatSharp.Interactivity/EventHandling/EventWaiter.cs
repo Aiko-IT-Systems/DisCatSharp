@@ -100,7 +100,7 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 		this._collectRequests?.Add(request);
 		try
 		{
-			await request.Tcs.Task.ConfigureAwait(false);
+			await request.Tcs!.Task.ConfigureAwait(false);
 		}
 		catch (Exception ex)
 		{
@@ -108,7 +108,7 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 		}
 		finally
 		{
-			result = new(new HashSet<T>(request.Collected).ToList());
+			result = new(new HashSet<T>(request.Collected!).ToList());
 			request.Dispose();
 			this._collectRequests?.TryRemove(request);
 		}
@@ -124,11 +124,11 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 	{
 		if (this._disposed)
 			return Task.CompletedTask;
-		foreach (var req in this._matchRequests!.Where(req => req.Predicate(eventArgs)))
-			req.Tcs.TrySetResult(eventArgs);
+		foreach (var req in this._matchRequests!.Where(req => req.Predicate!(eventArgs)))
+			req.Tcs!.TrySetResult(eventArgs);
 
-		foreach (var req in this._collectRequests!.Where(req => req.Predicate(eventArgs)))
-			req.Collected.Add(eventArgs);
+		foreach (var req in this._collectRequests!.Where(req => req.Predicate!(eventArgs)))
+			req.Collected?.Add(eventArgs);
 
 		return Task.CompletedTask;
 	}

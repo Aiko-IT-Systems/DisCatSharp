@@ -38,11 +38,11 @@ namespace DisCatSharp.Interactivity.EventHandling;
 public class PollRequest
 {
 	internal TaskCompletionSource<bool> Tcs;
-	internal CancellationTokenSource Ct;
+	internal readonly CancellationTokenSource Ct;
 	internal TimeSpan Timeout;
-	internal ConcurrentHashSet<PollEmoji> Collected;
-	internal DiscordMessage Message;
-	internal List<DiscordEmoji> Emojis;
+	internal readonly ConcurrentHashSet<PollEmoji> Collected;
+	internal readonly DiscordMessage Message;
+	internal readonly List<DiscordEmoji> Emojis;
 
 	/// <summary>
 	///
@@ -60,10 +60,7 @@ public class PollRequest
 		this.Collected = new();
 		this.Message = message;
 
-		foreach (var e in emojis)
-		{
-			this.Collected.Add(new(e));
-		}
+		foreach (var e in emojis) this.Collected.Add(new(e));
 	}
 
 	/// <summary>
@@ -72,10 +69,7 @@ public class PollRequest
 	internal void ClearCollected()
 	{
 		this.Collected.Clear();
-		foreach (var e in this.Emojis)
-		{
-			this.Collected.Add(new(e));
-		}
+		foreach (var e in this.Emojis) this.Collected.Add(new(e));
 	}
 
 	/// <summary>
@@ -86,7 +80,6 @@ public class PollRequest
 	internal void RemoveReaction(DiscordEmoji emoji, DiscordUser member)
 	{
 		if (this.Collected.Any(x => x.Emoji == emoji))
-		{
 			if (this.Collected.Any(x => x.Voted.Contains(member)))
 			{
 				var e = this.Collected.First(x => x.Emoji == emoji);
@@ -94,7 +87,6 @@ public class PollRequest
 				e.Voted.TryRemove(member);
 				this.Collected.Add(e);
 			}
-		}
 	}
 
 	/// <summary>
@@ -105,7 +97,6 @@ public class PollRequest
 	internal void AddReaction(DiscordEmoji emoji, DiscordUser member)
 	{
 		if (this.Collected.Any(x => x.Emoji == emoji))
-		{
 			if (!this.Collected.Any(x => x.Voted.Contains(member)))
 			{
 				var e = this.Collected.First(x => x.Emoji == emoji);
@@ -113,7 +104,6 @@ public class PollRequest
 				e.Voted.Add(member);
 				this.Collected.Add(e);
 			}
-		}
 	}
 
 	~PollRequest()
@@ -146,8 +136,8 @@ public class PollEmoji
 		this.Voted = new();
 	}
 
-	public DiscordEmoji Emoji;
-	public ConcurrentHashSet<DiscordUser> Voted;
+	public readonly DiscordEmoji Emoji;
+	public readonly ConcurrentHashSet<DiscordUser> Voted;
 	/// <summary>
 	/// Gets the total.
 	/// </summary>

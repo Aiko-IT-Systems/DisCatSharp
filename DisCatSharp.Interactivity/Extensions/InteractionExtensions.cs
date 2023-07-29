@@ -61,7 +61,7 @@ public static class InteractionExtensions
 	/// <param name="interaction">The interaction to create a response to.</param>
 	/// <param name="modals">The modal pages.</param>
 	/// <param name="timeOutOverride">A custom timeout. (Default: 15 minutes)</param>
-	/// <returns>A read-only dictionary with the customid of the components as the key.</returns>
+	/// <returns>A read-only dictionary with the custom id of the components as the key.</returns>
 	/// <exception cref="ArgumentException">Is thrown when no modals are defined.</exception>
 	/// <exception cref="InvalidOperationException">Is thrown when interactivity is not enabled for the client/shard.</exception>
 	public static async Task<PaginatedModalResponse> CreatePaginatedModalResponseAsync(this DiscordInteraction interaction, IReadOnlyList<ModalPage> modals, TimeSpan? timeOutOverride = null)
@@ -97,9 +97,7 @@ public static class InteractionExtensions
 				await modalOpen.Result.Interaction.CreateInteractionModalResponseAsync(modal).ConfigureAwait(false);
 			}
 			else
-			{
 				await previousInteraction.CreateInteractionModalResponseAsync(modal).ConfigureAwait(false);
-			}
 
 			_ = previousInteraction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent(b.OpenMessage.Content).AddComponents(b.OpenButton.Disable()));
 
@@ -108,8 +106,9 @@ public static class InteractionExtensions
 			if (modalResult.TimedOut)
 				return new() { TimedOut = true };
 
-			foreach (var submissions in modalResult.Result.Interaction.Data.Components)
-				caughtResponses.Add(submissions.CustomId, submissions.Value);
+			if (modalResult.Result.Interaction.Data.Components is not null)
+				foreach (var submissions in modalResult.Result.Interaction.Data.Components)
+					caughtResponses.Add(submissions.CustomId, submissions.Value);
 
 			previousInteraction = modalResult.Result.Interaction;
 		}

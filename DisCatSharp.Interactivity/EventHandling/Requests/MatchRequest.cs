@@ -35,9 +35,9 @@ namespace DisCatSharp.Interactivity.EventHandling;
 /// <typeparam name="T"></typeparam>
 internal class MatchRequest<T> : IDisposable where T : AsyncEventArgs
 {
-	internal TaskCompletionSource<T> Tcs;
-	internal CancellationTokenSource Ct;
-	internal Func<T, bool> Predicate;
+	internal TaskCompletionSource<T>? Tcs;
+	internal readonly CancellationTokenSource Ct;
+	internal Func<T, bool>? Predicate;
 	internal TimeSpan Timeout;
 
 	/// <summary>

@@ -40,8 +40,8 @@ namespace DisCatSharp.Interactivity.EventHandling;
 /// </summary>
 internal class Poller
 {
-	DiscordClient _client;
-	ConcurrentHashSet<PollRequest> _requests;
+	DiscordClient? _client;
+	ConcurrentHashSet<PollRequest>? _requests;
 
 	/// <summary>
 	/// Creates a new EventWaiter object.
@@ -65,20 +65,20 @@ internal class Poller
 	public async Task<ReadOnlyCollection<PollEmoji>> DoPollAsync(PollRequest request)
 	{
 		ReadOnlyCollection<PollEmoji> result = null;
-		this._requests.Add(request);
+		this._requests?.Add(request);
 		try
 		{
 			await request.Tcs.Task.ConfigureAwait(false);
 		}
 		catch (Exception ex)
 		{
-			this._client.Logger.LogError(InteractivityEvents.InteractivityPollError, ex, "Exception occurred while polling");
+			this._client!.Logger.LogError(InteractivityEvents.InteractivityPollError, ex, "Exception occurred while polling");
 		}
 		finally
 		{
 			result = new(new HashSet<PollEmoji>(request.Collected).ToList());
 			request.Dispose();
-			this._requests.TryRemove(request);
+			this._requests?.TryRemove(request);
 		}
 		return result;
 	}
@@ -91,29 +91,24 @@ internal class Poller
 	/// <returns>A Task.</returns>
 	private Task HandleReactionAdd(DiscordClient client, MessageReactionAddEventArgs eventArgs)
 	{
-		if (this._requests.Count == 0)
+		if (this._requests?.Count == 0)
 			return Task.CompletedTask;
 
 		_ = Task.Run(async () =>
 		{
-			foreach (var req in this._requests)
-			{
-				// match message
-				if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
-				{
+			if (this._requests is not null)
+				foreach (var req in this._requests.Where(req => req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id))
 					if (req.Emojis.Contains(eventArgs.Emoji) && !req.Collected.Any(x => x.Voted.Contains(eventArgs.User)))
 					{
-						if (eventArgs.User.Id != this._client.CurrentUser.Id)
+						if (eventArgs.User.Id != this._client!.CurrentUser!.Id)
 							req.AddReaction(eventArgs.Emoji, eventArgs.User);
 					}
 					else
 					{
-						var member = await eventArgs.Channel.Guild.GetMemberAsync(client.CurrentUser.Id).ConfigureAwait(false);
+						var member = await eventArgs.Channel.Guild!.GetMemberAsync(client.CurrentUser!.Id).ConfigureAwait(false);
 						if (eventArgs.Channel.PermissionsFor(member).HasPermission(Permissions.ManageMessages))
 							await eventArgs.Message.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User).ConfigureAwait(false);
 					}
-				}
-			}
 		});
 		return Task.CompletedTask;
 	}
@@ -126,15 +121,10 @@ internal class Poller
 	/// <returns>A Task.</returns>
 	private Task HandleReactionRemove(DiscordClient client, MessageReactionRemoveEventArgs eventArgs)
 	{
-		foreach (var req in this._requests)
-		{
-			// match message
-			if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
-			{
-				if (eventArgs.User.Id != this._client.CurrentUser.Id)
-					req.RemoveReaction(eventArgs.Emoji, eventArgs.User);
-			}
-		}
+		if (this._requests is null)
+			return Task.CompletedTask;
+		foreach (var req in this._requests.Where(req => req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id).Where(req => eventArgs.User.Id != this._client!.CurrentUser!.Id))
+			req.RemoveReaction(eventArgs.Emoji, eventArgs.User);
 		return Task.CompletedTask;
 	}
 
@@ -146,14 +136,11 @@ internal class Poller
 	/// <returns>A Task.</returns>
 	private Task HandleReactionClear(DiscordClient client, MessageReactionsClearEventArgs eventArgs)
 	{
-		foreach (var req in this._requests)
-		{
-			// match message
-			if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
-			{
-				req.ClearCollected();
-			}
-		}
+		if (this._requests is null)
+			return Task.CompletedTask;
+		foreach (var req in this._requests.Where(req => req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id))
+			req.ClearCollected();
+
 		return Task.CompletedTask;
 	}
 
@@ -167,11 +154,14 @@ internal class Poller
 	/// </summary>
 	public void Dispose()
 	{
-		this._client.MessageReactionAdded -= this.HandleReactionAdd;
-		this._client.MessageReactionRemoved -= this.HandleReactionRemove;
-		this._client.MessageReactionsCleared -= this.HandleReactionClear;
+		if (this._client is not null)
+		{
+			this._client.MessageReactionAdded -= this.HandleReactionAdd;
+			this._client.MessageReactionRemoved -= this.HandleReactionRemove;
+			this._client.MessageReactionsCleared -= this.HandleReactionClear;
+		}
 		this._client = null;
-		this._requests.Clear();
+		this._requests?.Clear();
 		this._requests = null;
 	}
 }

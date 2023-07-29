@@ -76,7 +76,7 @@ public static class ClientExtensions
 	/// </summary>
 	/// <param name="client">The client to retrieve an <see cref="InteractivityExtension"/> instance from.</param>
 	/// <returns>An existing <see cref="InteractivityExtension"/> instance, or <see langword="null"/> if interactivity is not enabled for the <see cref="DiscordClient"/> instance.</returns>
-	public static InteractivityExtension GetInteractivity(this DiscordClient client)
+	public static InteractivityExtension? GetInteractivity(this DiscordClient client)
 		=> client.GetExtension<InteractivityExtension>();
 
 	/// <summary>
@@ -84,15 +84,10 @@ public static class ClientExtensions
 	/// </summary>
 	/// <param name="client">The shard client to retrieve interactivity instances from.</param>
 	/// <returns>A dictionary containing <see cref="InteractivityExtension"/> instances for each shard.</returns>
-	public static async Task<ReadOnlyDictionary<int, InteractivityExtension>> GetInteractivityAsync(this DiscordShardedClient client)
+	public static async Task<ReadOnlyDictionary<int, InteractivityExtension?>> GetInteractivityAsync(this DiscordShardedClient client)
 	{
 		await client.InitializeShardsAsync().ConfigureAwait(false);
-		var extensions = new Dictionary<int, InteractivityExtension>();
-
-		foreach (var shard in client.ShardClients.Select(xkvp => xkvp.Value))
-		{
-			extensions.Add(shard.ShardId, shard.GetExtension<InteractivityExtension>());
-		}
+		var extensions = client.ShardClients.Select(xkvp => xkvp.Value).ToDictionary(shard => shard.ShardId, shard => shard.GetExtension<InteractivityExtension>());
 
 		return new(extensions);
 	}
