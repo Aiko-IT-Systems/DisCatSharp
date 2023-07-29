@@ -198,7 +198,7 @@ public abstract class BaseDiscordClient : IDisposable
 					o.AddInAppInclude("DisCatSharp");
 					o.AttachStacktrace = true;
 					o.StackTraceMode = StackTraceMode.Enhanced;
-					o.Release = $"{BotLibrary}@{vrs}";
+					o.Release = $"{this.BotLibrary}@{vrs}";
 					o.SendClientReports = true;
 					o.IsEnvironmentUser = false;
 					o.UseAsyncFileIO = true;
@@ -249,7 +249,7 @@ public abstract class BaseDiscordClient : IDisposable
 				AttachStacktrace = true,
 				StackTraceMode = StackTraceMode.Enhanced,
 				SendClientReports = true,
-				Release = $"{BotLibrary}@{vrs}",
+				Release = $"{this.BotLibrary}@{vrs}",
 				IsEnvironmentUser = false,
 				UseAsyncFileIO = true,
 				EnableScopeSync = true,

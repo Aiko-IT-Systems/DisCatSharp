@@ -191,7 +191,7 @@ public sealed partial class DiscordShardedClient
 				o.AddInAppInclude("DisCatSharp");
 				o.AttachStacktrace = true;
 				o.StackTraceMode = StackTraceMode.Enhanced;
-				o.Release = $"{BotLibrary}@{vs}";
+				o.Release = $"{this.BotLibrary}@{vs}";
 				o.SendClientReports = true;
 				if (!this._configuration.DisableExceptionFilter)
 					o.AddExceptionFilter(new DisCatSharpExceptionFilter(this._configuration));
