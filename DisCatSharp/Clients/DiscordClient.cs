@@ -59,7 +59,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	internal RingBuffer<DiscordMessage>? MessageCache { get; }
 
-	private List<BaseExtension> _extensions = new();
+	private List<BaseExtension>? _extensions = new();
 	private StatusUpdate? _status;
 
 	/// <summary>

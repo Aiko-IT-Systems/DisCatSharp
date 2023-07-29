@@ -84,6 +84,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <summary>
 	/// Gets the bot library name.
 	/// </summary>
+	// ReSharper disable once MemberCanBeProtected.Global
 	public string BotLibrary
 		=> "DisCatSharp";
 
