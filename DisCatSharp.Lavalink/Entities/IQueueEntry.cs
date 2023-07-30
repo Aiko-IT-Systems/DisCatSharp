@@ -32,7 +32,7 @@ public interface IQueueEntry
 	/// <summary>
 	/// The lavalink track to play.
 	/// </summary>
-	LavalinkTrack Track { get; internal set; }
+	LavalinkTrack Track { get; set; }
 
 	/// <summary>
 	/// Adds a track.
