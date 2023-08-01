@@ -133,6 +133,12 @@ internal class TransportMember : ObservableApiObject
 	public MemberFlags MemberFlags { get; internal set; }
 
 	/// <summary>
+	/// Gets the members permissions.
+	/// </summary>
+	[JsonProperty("permissions", NullValueHandling = NullValueHandling.Ignore)]
+	public Permissions? Permissions { get; internal set; }
+
+	/// <summary>
 	/// Gets ID of the guild to which this member belongs.
 	/// </summary>
 	[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]

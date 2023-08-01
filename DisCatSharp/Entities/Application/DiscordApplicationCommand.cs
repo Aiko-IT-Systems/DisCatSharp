@@ -188,7 +188,9 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// <summary>
 	/// Creates a new empty Discord Application Command.
 	/// </summary>
-	internal DiscordApplicationCommand() { }
+	internal DiscordApplicationCommand()
+		: base(new() { "name_localizations", "description_localizations" }) // Why tf is that so inconsistent?!
+	{ }
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordApplicationCommand"/> object is equal to another object.

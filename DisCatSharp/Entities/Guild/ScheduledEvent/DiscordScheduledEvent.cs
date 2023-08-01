@@ -187,6 +187,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// Initializes a new instance of the <see cref="DiscordScheduledEvent"/> class.
 	/// </summary>
 	internal DiscordScheduledEvent()
+		: base(new() { "sku_ids" })
 	{ }
 
 	#region Methods

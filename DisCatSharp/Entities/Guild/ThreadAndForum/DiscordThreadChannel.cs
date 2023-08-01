@@ -47,6 +47,13 @@ public class DiscordThreadChannel : DiscordChannel
 	[JsonProperty("owner_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong OwnerId { get; internal set; }
 
+	/// <summary>
+	/// Gets whether this thread is newly created.
+	/// <para>Why? We don't know.</para>
+	/// </summary>
+	[JsonProperty("newly_created", NullValueHandling = NullValueHandling.Ignore)]
+	public bool NewlyCreated { get; internal set; }
+
 	[JsonProperty("total_message_sent", DefaultValueHandling = DefaultValueHandling.Ignore)]
 	public int TotalMessagesSent { get; internal set; }
 
