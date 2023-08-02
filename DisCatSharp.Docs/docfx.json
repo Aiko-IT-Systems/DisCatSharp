@@ -302,7 +302,8 @@
 			"_fbPageId": "112155734832129",
 			"_twitterSite": "@DisCatSharp",
 			"_twitterImage": "https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png",
-			"_layout": "conceptual"
+			"_layout": "conceptual",
+			"_urlNormalizationActive": true
 		},
 		"disableGitFeatures": false,
 		"exportRawModel": false,

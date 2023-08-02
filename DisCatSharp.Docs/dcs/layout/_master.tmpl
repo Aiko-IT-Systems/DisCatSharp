@@ -106,50 +106,50 @@
 	<link rel="shortcut icon" href="{{_rel}}{{{_appFaviconPath}}}{{^_appFaviconPath}}favicon.ico{{/_appFaviconPath}}">
 	{{#hasDiscordComponents}}
 	<script>
-      window.$discordMessage = {
-        profiles: {
-          dcs: {
-            author: "DisCatSharp",
-            avatar: "https://cdn.discordapp.com/avatars/887519008604180541/cc3b7410330027b0682900b6c612b735.png?size=256",
-            roleColor: "#eb0404",
-            roleName: "System Bots",
-			roleIcon: "https://cdn.discordapp.com/role-icons/858098536759820379/bda0df094fa6f95b01c4846518034835.png?size=256",
-            bot: true,
-            verified: true
-          },
-		  user: {
-            author: "Discord User",
-            avatar: "https://cdn.discordapp.com/embed/avatars/5.png",
-            roleColor: "#00c0ff",
-            roleName: "Users"
-          },
-		  dcs_user: {
-            author: "Drac",
-            avatar: "https://cdn.discordapp.com/avatars/666339628613107725/a97c269a653ecc2ff143f7bddb36a782.png?size=256",
-			roleColor: "#a221e6",
-			roleName: "VIP",
-			roleIcon: "https://cdn.discordapp.com/role-icons/858099411434209280/ce6432b51488efd0fa09fadb12cbfb47.png?size=256"
-          },
-		  dcs_owner: {
-            author: "Lala Sabathil",
-            avatar: "https://cdn.discordapp.com/avatars/856780995629154305/cca4f0fdd07fa17a31f99139f8f45e87.png?size=256",
-			roleColor: "#fc0fc0",
-			roleName: "AITSYS Leader",
-			roleIcon: "https://cdn.discordapp.com/role-icons/1070126281422819380/b829ba0483ed2723034292651731f357.png?size=256"
-          },
-		  user_dm: {
-            author: "Discord User",
-            avatar: "https://cdn.discordapp.com/embed/avatars/5.png"
-          },
-		  dcs_user_dm: {
-            author: "Drac",
-            avatar: "https://cdn.discordapp.com/avatars/666339628613107725/a97c269a653ecc2ff143f7bddb36a782.png?size=256"
-		  }
-        },
-		defaultMode: "cozy",
-		defaultTheme: "dark", // replace with amoled soon
-		defaultBackground: "discord"
-      };
+		window.$discordMessage = {
+			profiles: {
+				dcs: {
+					author: "DisCatSharp",
+					avatar: "https://cdn.discordapp.com/avatars/887519008604180541/cc3b7410330027b0682900b6c612b735.png?size=256",
+					roleColor: "#eb0404",
+					roleName: "System Bots",
+					roleIcon: "https://cdn.discordapp.com/role-icons/858098536759820379/bda0df094fa6f95b01c4846518034835.png?size=256",
+					bot: true,
+					verified: true
+				},
+				user: {
+					author: "Discord User",
+					avatar: "https://cdn.discordapp.com/embed/avatars/5.png",
+					roleColor: "#00c0ff",
+					roleName: "Users"
+				},
+				dcs_user: {
+					author: "Drac",
+					avatar: "https://cdn.discordapp.com/avatars/666339628613107725/a97c269a653ecc2ff143f7bddb36a782.png?size=256",
+					roleColor: "#a221e6",
+					roleName: "VIP",
+					roleIcon: "https://cdn.discordapp.com/role-icons/858099411434209280/ce6432b51488efd0fa09fadb12cbfb47.png?size=256"
+				},
+				dcs_owner: {
+					author: "Lala Sabathil",
+					avatar: "https://cdn.discordapp.com/avatars/856780995629154305/cca4f0fdd07fa17a31f99139f8f45e87.png?size=256",
+					roleColor: "#fc0fc0",
+					roleName: "AITSYS Leader",
+					roleIcon: "https://cdn.discordapp.com/role-icons/1070126281422819380/b829ba0483ed2723034292651731f357.png?size=256"
+				},
+				user_dm: {
+					author: "Discord User",
+					avatar: "https://cdn.discordapp.com/embed/avatars/5.png"
+				},
+				dcs_user_dm: {
+					author: "Drac",
+					avatar: "https://cdn.discordapp.com/avatars/666339628613107725/a97c269a653ecc2ff143f7bddb36a782.png?size=256"
+				}
+			},
+			defaultMode: "cozy",
+			defaultTheme: "dark", // replace with amoled soon
+			defaultBackground: "discord"
+		};
 	</script>
 	<script type="module" src="https://unpkg.com/@aitsys/discord-components-core"></script>
 	{{/hasDiscordComponents}}
@@ -168,26 +168,29 @@
 	{{#_disableTocFilter}}
 	<meta name="docfx:disabletocfilter" content="true">{{/_disableTocFilter}}
 	{{#docurl}}
+	{{#_urlNormalizationActive}}
+	<meta name="docfx:urlnormalizationactive" content="true">{{/_urlNormalizationActive}}
 	<meta name="docfx:docurl" content="{{docurl}}">{{/docurl}}
 	<script src="//code.jquery.com/jquery-latest.js"></script>
 	<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
 		data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
 	<script type="module" src="{{_rel}}public/main.js"></script>
-	<script src="//cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="//cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.js" type="text/javascript"
+		charset="utf-8"></script>
 	<script type="text/javascript" src="{{_rel}}public/plugin-featherlight.js"></script>
 	{{/redirect_url}}
 </head>
-  {{^redirect_url}}
-  <script type="module">
-    import options from './{{_rel}}public/main.js'
-    import { init } from './{{_rel}}public/docfx.min.js'
-    init(options)
-  </script>
+{{^redirect_url}}
+<script type="module">
+	import options from './{{_rel}}public/main.js'
+	import { init } from './{{_rel}}public/docfx.min.js'
+	init(options)
+</script>
 
-  <script>
-    const theme = 'dark' //localStorage.getItem('theme') || 'auto'
-    document.documentElement.setAttribute('data-bs-theme', 'dark') //document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
-  </script>
+<script>
+	const theme = 'dark' //localStorage.getItem('theme') || 'auto'
+	document.documentElement.setAttribute('data-bs-theme', 'dark') //document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+</script>
 
 {{#_googleAnalyticsTagId}}
 <script async src="https://www.googletagmanager.com/gtag/js?id={{_googleAnalyticsTagId}}"></script>
