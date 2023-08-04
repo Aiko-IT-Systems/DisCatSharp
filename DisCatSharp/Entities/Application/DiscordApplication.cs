@@ -379,7 +379,7 @@ public sealed class DiscordApplicationAsset : DiscordAsset, IEquatable<DiscordAp
 	/// <param name="e"><see cref="DiscordApplicationAsset"/> to compare to.</param>
 	/// <returns>Whether the <see cref="DiscordApplicationAsset"/> is equal to this <see cref="DiscordApplicationAsset"/>.</returns>
 	public bool Equals(DiscordApplicationAsset e)
-		=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
+		=> e is not null && this.GetHashCode() == e.GetHashCode() && this.Application.GetHashCode() == e.Application.GetHashCode();
 
 	/// <summary>
 	/// Gets the hash code for this <see cref="DiscordApplication"/>.
@@ -399,7 +399,7 @@ public sealed class DiscordApplicationAsset : DiscordAsset, IEquatable<DiscordAp
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.GetHashCode() == e2.GetHashCode());
 	}
 
 	/// <summary>

@@ -133,7 +133,8 @@ public static class DiscordJson
 
 		obj.Discord = discord;
 
-		if (!discord.Configuration.ReportMissingFields || !obj.AdditionalProperties.Any()) return obj;
+		if (!discord.Configuration.ReportMissingFields || !obj.AdditionalProperties.Any())
+			return obj;
 		var sentryMessage = "Found missing properties in api response for " + obj.GetType().Name;
 		List<string> sentryFields = new();
 		var values = 0;
@@ -205,7 +206,8 @@ public static class DiscordJson
 		foreach (var ob in obj)
 			ob.Discord = discord;
 
-		if (!discord.Configuration.ReportMissingFields || !obj.Any(x => x.AdditionalProperties.Any())) return obj;
+		if (!discord.Configuration.ReportMissingFields || !obj.Any(x => x.AdditionalProperties.Any()))
+			return obj;
 		var first = obj.First();
 		var sentryMessage = "Found missing properties in api response for " + first.GetType().Name;
 		List<string> sentryFields = new();

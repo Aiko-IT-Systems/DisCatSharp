@@ -61,7 +61,7 @@ public abstract class NullableSnowflakeObject : ObservableApiObject, IEquatable<
 
 	/// <inheritdoc />
 	public bool Equals(NullableSnowflakeObject? other)
-		=> ReferenceEquals(this, other) || (other is not null && this.Id == other.Id);
+		=> other is not null && this.GetHashCode() == other.GetHashCode();
 
 	/// <inheritdoc />
 	public override int GetHashCode()
@@ -74,7 +74,7 @@ public abstract class NullableSnowflakeObject : ObservableApiObject, IEquatable<
 	/// <param name="right">The second <see cref="NullableSnowflakeObject"/>.</param>
 	/// <returns><see langword="true"/> if the instances are equal; otherwise, <see langword="false"/>.</returns>
 	public static bool operator ==(NullableSnowflakeObject? left, NullableSnowflakeObject? right)
-		=> ReferenceEquals(left, right) || (left is not null && left.Equals(right));
+		=> left is not null && left.Equals(right);
 
 	/// <summary>
 	/// Determines whether two <see cref="NullableSnowflakeObject"/> instances are not equal.
@@ -85,7 +85,10 @@ public abstract class NullableSnowflakeObject : ObservableApiObject, IEquatable<
 	public static bool operator !=(NullableSnowflakeObject? left, NullableSnowflakeObject? right)
 		=> !(left == right);
 
-	/// <inheritdoc />
+	/// <summary>
+	/// Returns a <see langword="string"/> which represents the nullable snowflake object. 
+	/// </summary>
+	/// <returns>A <see langword="string"/> which represents the current nullable snowflake object.</returns>
 	public override string ToString()
 		=> $"{this.GetType().Name} (ID: {this.Id})";
 

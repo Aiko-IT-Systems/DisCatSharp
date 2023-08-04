@@ -60,8 +60,8 @@ public abstract class SnowflakeObject : ObservableApiObject, IEquatable<Snowflak
 		=> this.Equals(obj as SnowflakeObject);
 
 	/// <inheritdoc />
-	public bool Equals(SnowflakeObject? other)
-		=> ReferenceEquals(this, other) || (other is not null && this.Id == other.Id);
+	public virtual bool Equals(SnowflakeObject? other)
+		=> other is not null && this.GetHashCode() == other.GetHashCode();
 
 	/// <inheritdoc />
 	public override int GetHashCode()
@@ -74,7 +74,7 @@ public abstract class SnowflakeObject : ObservableApiObject, IEquatable<Snowflak
 	/// <param name="right">The second <see cref="SnowflakeObject"/>.</param>
 	/// <returns><see langword="true"/> if the instances are equal; otherwise, <see langword="false"/>.</returns>
 	public static bool operator ==(SnowflakeObject? left, SnowflakeObject? right)
-		=> ReferenceEquals(left, right) || (left is not null && left.Equals(right));
+		=> left is not null && left.Equals(right);
 
 	/// <summary>
 	/// Determines whether two <see cref="SnowflakeObject"/> instances are not equal.
@@ -85,7 +85,10 @@ public abstract class SnowflakeObject : ObservableApiObject, IEquatable<Snowflak
 	public static bool operator !=(SnowflakeObject? left, SnowflakeObject? right)
 		=> !(left == right);
 
-	/// <inheritdoc />
+	/// <summary>
+	/// Returns a <see langword="string"/> which represents the snowflake object. 
+	/// </summary>
+	/// <returns>A <see langword="string"/> which represents the current snowflake object.</returns>
 	public override string ToString()
 		=> $"{this.GetType().Name} (ID: {this.Id})";
 
@@ -105,7 +108,8 @@ public abstract class SnowflakeObject : ObservableApiObject, IEquatable<Snowflak
 	/// </summary>
 	/// <typeparam name="T">The type of the object to deserialize.</typeparam>
 	/// <param name="json">The JSON string to deserialize from.</param>
+	/// <param name="discord">The Discord client instance associated with the deserialization.</param>
 	/// <returns>An instance of type <typeparamref name="T"/>.</returns>
-	public virtual T FromJson<T>(string json) where T : SnowflakeObject
-		=> DiscordJson.DeserializeObject<T>(json, this.Discord);
+	public static T FromJson<T>(string json, BaseDiscordClient? discord = null) where T : SnowflakeObject
+		=> DiscordJson.DeserializeObject<T>(json, discord);
 }

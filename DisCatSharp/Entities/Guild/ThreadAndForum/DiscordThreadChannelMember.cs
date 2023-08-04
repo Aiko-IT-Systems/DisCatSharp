@@ -98,10 +98,10 @@ public class DiscordThreadChannelMember : SnowflakeObject, IEquatable<DiscordThr
 		=> this.Equals(obj as DiscordThreadChannelMember);
 
 	/// <summary>
-	/// Checks whether this <see cref="DiscordThreadChannel"/> is equal to another <see cref="DiscordThreadChannelMember"/>.
+	/// Checks whether this <see cref="DiscordThreadChannelMember"/> is equal to another <see cref="DiscordThreadChannelMember"/>.
 	/// </summary>
-	/// <param name="e"><see cref="DiscordThreadChannel"/> to compare to.</param>
-	/// <returns>Whether the <see cref="DiscordThreadChannel"/> is equal to this <see cref="DiscordThreadChannelMember"/>.</returns>
+	/// <param name="e"><see cref="DiscordThreadChannelMember"/> to compare to.</param>
+	/// <returns>Whether the <see cref="DiscordThreadChannelMember"/> is equal to this <see cref="DiscordThreadChannelMember"/>.</returns>
 	public bool Equals(DiscordThreadChannelMember e)
 		=> e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.UserId == e.UserId));
 
