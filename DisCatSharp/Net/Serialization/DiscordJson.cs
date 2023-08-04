@@ -39,7 +39,7 @@ using Sentry;
 namespace DisCatSharp.Net.Serialization;
 
 /// <summary>
-/// Represents discord json.
+/// Represents JSON serialization and deserialization for Discord entities.
 /// </summary>
 public static class DiscordJson
 {
@@ -48,19 +48,37 @@ public static class DiscordJson
 		ContractResolver = new OptionalJsonContractResolver()
 	});
 
-	/// <summary>Serializes the specified object to a JSON string.</summary>
+	/// <summary>
+	/// Serializes the specified object to a JSON string.
+	/// </summary>
 	/// <param name="value">The object to serialize.</param>
 	/// <returns>A JSON string representation of the object.</returns>
 	public static string SerializeObject(object value)
 		=> SerializeObjectInternal(value, null!, s_serializer);
 
+	/// <summary>
+	/// Deserializes a JSON string into an object of type <typeparamref name="T"/>.
+	/// </summary>
+	/// <typeparam name="T">The type of the object to deserialize.</typeparam>
+	/// <param name="json">The JSON string to deserialize from.</param>
+	/// <param name="discord">The Discord client instance associated with the deserialization.</param>
+	/// <returns>An instance of type <typeparamref name="T"/>.</returns>
 	public static T DeserializeObject<T>(string json, BaseDiscordClient? discord) where T : ObservableApiObject
 		=> DeserializeObjectInternal<T>(json, discord);
 
+	/// <summary>
+	/// Deserializes a JSON string into an object of type <typeparamref name="T"/> which implements <see cref="IEnumerable{T}"/>.
+	/// </summary>
+	/// <typeparam name="T">The type of the object to deserialize.</typeparam>
+	/// <param name="json">The JSON string to deserialize from.</param>
+	/// <param name="discord">The Discord client instance associated with the deserialization.</param>
+	/// <returns>An instance of type <typeparamref name="T"/>.</returns>
 	public static T DeserializeIEnumerableObject<T>(string json, BaseDiscordClient? discord) where T : IEnumerable<ObservableApiObject>
 		=> DeserializeIEnumerableObjectInternal<T>(json, discord);
 
-	/// <summary>Populates an object with the values from a JSON node.</summary>
+	/// <summary>
+	/// Populates an object with the values from a JSON node.
+	/// </summary>
 	/// <param name="value">The token to populate the object with.</param>
 	/// <param name="target">The object to populate.</param>
 	public static void PopulateObject(JToken value, object target)
@@ -70,20 +88,21 @@ public static class DiscordJson
 	}
 
 	/// <summary>
-	/// Converts this token into an object, passing any properties through extra <see cref="Newtonsoft.Json.JsonConverter"/>s if needed.
+	/// Converts a JSON token into an object of type <typeparamref name="T"/>, passing any properties through extra <see cref="Newtonsoft.Json.JsonConverter"/>s if needed.
 	/// </summary>
-	/// <param name="token">The token to convert</param>
-	/// <typeparam name="T">Type to convert to</typeparam>
-	/// <returns>The converted token</returns>
+	/// <typeparam name="T">The type to convert to.</typeparam>
+	/// <param name="token">The token to convert.</param>
+	/// <returns>The converted object.</returns>
 	public static T ToDiscordObject<T>(this JToken token)
 		=> token.ToObject<T>(s_serializer)!;
 
 	/// <summary>
-	/// Serializes the object.
+	/// Serializes an object to a JSON string.
 	/// </summary>
-	/// <param name="value">The value.</param>
-	/// <param name="type">The type.</param>
-	/// <param name="jsonSerializer">The json serializer.</param>
+	/// <param name="value">The object to be serialized.</param>
+	/// <param name="type">The type of the object.</param>
+	/// <param name="jsonSerializer">The JSON serializer to use.</param>
+	/// <returns>A JSON string representation of the object.</returns>
 	private static string SerializeObjectInternal(object value, Type type, JsonSerializer jsonSerializer)
 	{
 		var stringWriter = new StringWriter(new(256), CultureInfo.InvariantCulture);
@@ -95,39 +114,48 @@ public static class DiscordJson
 		return stringWriter.ToString();
 	}
 
+	/// <summary>
+	/// Deserializes a JSON string into an object of type <typeparamref name="T"/>.
+	/// </summary>
+	/// <typeparam name="T">The type of the object to deserialize.</typeparam>
+	/// <param name="json">The JSON string to deserialize from.</param>
+	/// <param name="discord">The associated Discord client instance.</param>
+	/// <returns>An instance of type <typeparamref name="T"/>.</returns>
 	private static T DeserializeObjectInternal<T>(string json, BaseDiscordClient? discord) where T : ObservableApiObject
 	{
 		var obj = JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings()
 		{
 			ContractResolver = new OptionalJsonContractResolver()
 		})!;
+
 		if (discord == null)
 			return obj;
+
 		obj.Discord = discord;
 
 		if (!discord.Configuration.ReportMissingFields || !obj.AdditionalProperties.Any()) return obj;
 		var sentryMessage = "Found missing properties in api response for " + obj.GetType().Name;
 		List<string> sentryFields = new();
-		var vals = 0;
+		var values = 0;
 		foreach (var ap in obj.AdditionalProperties)
 		{
-			vals++;
-			if (obj.IgnoredJsonKeys.Count == 0 || !obj.IgnoredJsonKeys.Any(x => x == ap.Key))
-			{
-				if (vals == 1)
-					if (discord.Configuration.EnableLibraryDeveloperMode)
-					{
-						discord.Logger.LogInformation("{sentry}", sentryMessage);
-						discord.Logger.LogDebug("{json}", json);
-					}
-
-				sentryFields.Add(ap.Key);
+			values++;
+			if (obj.IgnoredJsonKeys.Count != 0 && obj.IgnoredJsonKeys.Any(x => x == ap.Key))
+				continue;
+			if (values == 1)
 				if (discord.Configuration.EnableLibraryDeveloperMode)
-					discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, obj.GetType().Name);
-			}
+				{
+					discord.Logger.LogInformation("{sentry}", sentryMessage);
+					discord.Logger.LogDebug("{json}", json);
+				}
+
+			sentryFields.Add(ap.Key);
+			if (discord.Configuration.EnableLibraryDeveloperMode)
+				discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, obj.GetType().Name);
 		}
 
-		if (!discord.Configuration.EnableSentry || sentryFields.Count == 0) return obj;
+		if (!discord.Configuration.EnableSentry || sentryFields.Count == 0)
+			return obj;
 		var sentryJson = JsonConvert.SerializeObject(sentryFields);
 		sentryMessage += "\n\nNew fields: " + sentryJson;
 		SentryEvent sentryEvent = new()
@@ -157,14 +185,23 @@ public static class DiscordJson
 		return obj;
 	}
 
+	/// <summary>
+	/// Deserializes a JSON string into an object of type <typeparamref name="T"/> which implements <see cref="IEnumerable{T}"/>.
+	/// </summary>
+	/// <typeparam name="T">The type of the object to deserialize.</typeparam>
+	/// <param name="json">The JSON string to deserialize from.</param>
+	/// <param name="discord">The associated Discord client instance.</param>
+	/// <returns>An instance of type <typeparamref name="T"/>.</returns>
 	private static T DeserializeIEnumerableObjectInternal<T>(string json, BaseDiscordClient? discord) where T : IEnumerable<ObservableApiObject>
 	{
 		var obj = JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings()
 		{
 			ContractResolver = new OptionalJsonContractResolver()
 		})!;
+
 		if (discord == null)
 			return obj;
+
 		foreach (var ob in obj)
 			ob.Discord = discord;
 
@@ -172,26 +209,26 @@ public static class DiscordJson
 		var first = obj.First();
 		var sentryMessage = "Found missing properties in api response for " + first.GetType().Name;
 		List<string> sentryFields = new();
-		var vals = 0;
+		var values = 0;
 		foreach (var ap in first.AdditionalProperties)
 		{
-			vals++;
-			if (first.IgnoredJsonKeys.Count == 0 || !first.IgnoredJsonKeys.Any(x => x == ap.Key))
-			{
-				if (vals == 1)
-					if (discord.Configuration.EnableLibraryDeveloperMode)
-					{
-						discord.Logger.LogInformation("{sentry}", sentryMessage);
-						discord.Logger.LogDebug("{json}", json);
-					}
-
-				sentryFields.Add(ap.Key);
+			values++;
+			if (first.IgnoredJsonKeys.Count != 0 && first.IgnoredJsonKeys.Any(x => x == ap.Key))
+				continue;
+			if (values == 1)
 				if (discord.Configuration.EnableLibraryDeveloperMode)
-					discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, first.GetType().Name);
-			}
+				{
+					discord.Logger.LogInformation("{sentry}", sentryMessage);
+					discord.Logger.LogDebug("{json}", json);
+				}
+
+			sentryFields.Add(ap.Key);
+			if (discord.Configuration.EnableLibraryDeveloperMode)
+				discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, first.GetType().Name);
 		}
 
-		if (!discord.Configuration.EnableSentry || sentryFields.Count == 0) return obj;
+		if (!discord.Configuration.EnableSentry || sentryFields.Count == 0)
+			return obj;
 		var sentryJson = JsonConvert.SerializeObject(sentryFields);
 		sentryMessage += "\n\nNew fields: " + sentryJson;
 		SentryEvent sentryEvent = new()
