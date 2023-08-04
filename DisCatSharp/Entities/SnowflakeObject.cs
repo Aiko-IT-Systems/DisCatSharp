@@ -97,8 +97,8 @@ public abstract class SnowflakeObject : ObservableApiObject, IEquatable<Snowflak
 	/// Serializes the <see cref="SnowflakeObject"/> to a JSON string.
 	/// </summary>
 	/// <returns>A JSON string representation of the object.</returns>
-	public virtual string ToJson() =>
-		DiscordJson.SerializeObject(this);
+	public virtual string ToJson()
+		=> DiscordJson.SerializeObject(this);
 
 	/// <summary>
 	/// Deserializes a JSON string to a <typeparamref name="T"/> instance of <see cref="SnowflakeObject"/>.
@@ -106,6 +106,6 @@ public abstract class SnowflakeObject : ObservableApiObject, IEquatable<Snowflak
 	/// <typeparam name="T">The type of the object to deserialize.</typeparam>
 	/// <param name="json">The JSON string to deserialize from.</param>
 	/// <returns>An instance of type <typeparamref name="T"/>.</returns>
-	public virtual T FromJson<T>(string json) where T : SnowflakeObject =>
-		DiscordJson.DeserializeObject<T>(json, this.Discord);
+	public virtual T FromJson<T>(string json) where T : SnowflakeObject
+		=> DiscordJson.DeserializeObject<T>(json, this.Discord);
 }
