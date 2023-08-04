@@ -113,7 +113,7 @@ public class DiscordThreadChannelMember : SnowflakeObject, IEquatable<DiscordThr
 		=> HashCode.Combine(this.Id.GetHashCode(), this.UserId.GetHashCode());
 
 	/// <summary>
-	/// Gets whether the two <see cref="DiscordThreadChannel"/> objects are equal.
+	/// Gets whether the two <see cref="DiscordThreadChannelMember"/> objects are equal.
 	/// </summary>
 	/// <param name="e1">First channel to compare.</param>
 	/// <param name="e2">Second channel to compare.</param>
