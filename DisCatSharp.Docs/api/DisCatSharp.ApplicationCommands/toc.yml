@@ -104,6 +104,8 @@ items:
     name: IBucket
   - uid: DisCatSharp.ApplicationCommands.Entities.ICooldown`2
     name: ICooldown<TContextType, TBucketType>
+  - uid: DisCatSharp.ApplicationCommands.Entities.RegisteredDiscordApplicationCommand
+    name: RegisteredDiscordApplicationCommand
 - uid: DisCatSharp.ApplicationCommands.Enums
   name: DisCatSharp.ApplicationCommands.Enums
   items:

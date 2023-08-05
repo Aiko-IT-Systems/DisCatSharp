@@ -322,7 +322,8 @@
 			"dcs"
 		],
 		"postProcessors": [
-			"ExtractSearchIndex"
+			"ExtractSearchIndex",
+			"LastModified"
 		],
 		"noLangKeyword": false,
 		"keepFileLink": false,
