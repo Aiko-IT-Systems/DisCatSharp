@@ -11,7 +11,7 @@ env:
 
 jobs:
   build:
-    timeout-minutes: 20
+    timeout-minutes: 25
     runs-on: ubuntu-latest
     name: Build documentation
     steps:
@@ -32,10 +32,8 @@ jobs:
       run: dotnet build -c Release -v minimal -f net7.0 --no-restore DisCatSharp.sln
       timeout-minutes: 7
       continue-on-error: true
-    #- name: Add Custom Plugins
-    #  run: cp -R DisCatSharp.Docs/dcs/plugins/* /home/runner/.dotnet/tools/.store/docfx/2.67.0/docfx/2.67.0/tools/net7.0/any/
     - name: Build Docs
-      run: docfx DisCatSharp.Docs/docfx.json
+      run: docfx DisCatSharp.Docs/docfx.json --logLevel Verbose
     - name: Pack Docs
       shell: pwsh
       run: ./DisCatSharp.Tools/pack-docs.ps1 -DocsPath "./DisCatSharp.Docs" -OutputPath "./" -PackageName "dcs-docs-preview"
