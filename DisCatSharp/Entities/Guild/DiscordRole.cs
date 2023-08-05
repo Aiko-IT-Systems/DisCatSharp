@@ -46,7 +46,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// </summary>
 	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 	public string Name { get; internal set; }
-	
+
 	/// <summary>
 	/// Gets the version number for this role.
 	/// </summary>

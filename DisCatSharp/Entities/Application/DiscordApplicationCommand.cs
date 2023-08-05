@@ -83,7 +83,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// </summary>
 	[JsonIgnore]
 	public DiscordApplicationCommandLocalization? DescriptionLocalizations
-		=> this.RawDescriptionLocalizations != null ? new (this.RawDescriptionLocalizations) : null;
+		=> this.RawDescriptionLocalizations != null ? new(this.RawDescriptionLocalizations) : null;
 
 	/// <summary>
 	/// Gets the potential parameters for this command.

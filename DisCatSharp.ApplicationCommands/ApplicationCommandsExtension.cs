@@ -487,7 +487,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			GlobalDiscordCommands.AddRange(globalCommands);
 
 		foreach (var key in commandsPending)
-		{	
+		{
 			if (key.HasValue)
 			{
 				this.Client.Logger.Log(ApplicationCommandsLogLevel, "Registering commands in guild, {value}", key.Value);
@@ -784,7 +784,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					GroupCommands.AddRange(groupCommands.DistinctBy(x => x.Name));
 					SubGroupCommands.AddRange(subGroupCommands.DistinctBy(x => x.Name));
 					ContextMenuCommands.AddRange(contextMenuCommands.DistinctBy(x => x.Name));
-					
+
 					s_registeredCommands.Add(new(guildId, commands.ToList()));
 
 					foreach (var app in commandMethods.Select(command => types.First(t => t.Type == command.Method.DeclaringType)))
