@@ -38,7 +38,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a Discord text message.
 /// </summary>
-public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
+public class DiscordMessage : SnowflakeObject
 {
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordMessage"/> class.
@@ -90,8 +90,10 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	{
 		this.Discord = other.Discord;
 
-		this.AttachmentsInternal = other.AttachmentsInternal; // the attachments cannot change, thus no need to copy and reallocate.
-		this.EmbedsInternal = new(other.EmbedsInternal);
+		if (other.AttachmentsInternal != null)
+			this.AttachmentsInternal = other.AttachmentsInternal;
+		if (other.EmbedsInternal != null)
+			this.EmbedsInternal = new(other.EmbedsInternal);
 
 		if (other.MentionedChannelsInternal != null)
 			this.MentionedChannelsInternal = new(other.MentionedChannelsInternal);
@@ -99,9 +101,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 			this.MentionedRolesInternal = new(other.MentionedRolesInternal);
 		if (other.MentionedRoleIds != null)
 			this.MentionedRoleIds = new(other.MentionedRoleIds);
-		this.MentionedUsersInternal = new(other.MentionedUsersInternal);
-		this.ReactionsInternal = new(other.ReactionsInternal);
-		this.StickersInternal = new(other.StickersInternal);
+		if (other.MentionedUsersInternal != null)
+			this.MentionedUsersInternal = new(other.MentionedUsersInternal);
+		if (other.ReactionsInternal != null)
+			this.ReactionsInternal = new(other.ReactionsInternal);
+		if (other.StickersInternal != null)
+			this.StickersInternal = new(other.StickersInternal);
 
 		this.Author = other.Author;
 		this.ChannelId = other.ChannelId;
@@ -878,10 +883,10 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <summary>
 	/// Checks whether this <see cref="DiscordMessage"/> is equal to another <see cref="DiscordMessage"/>.
 	/// </summary>
-	/// <param name="e"><see cref="DiscordMessage"/> to compare to.</param>
+	/// <param name="other"><see cref="DiscordMessage"/> to compare to.</param>
 	/// <returns>Whether the <see cref="DiscordMessage"/> is equal to this <see cref="DiscordMessage"/>.</returns>
-	public bool Equals(DiscordMessage e)
-		=> e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.ChannelId == e.ChannelId));
+	public bool Equals(DiscordMessage? other)
+		=> other is not null && this.GetHashCode() == other.GetHashCode() && this.ChannelId == other.ChannelId;
 
 	/// <summary>
 	/// Gets the hash code for this <see cref="DiscordMessage"/>.
@@ -900,25 +905,18 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <summary>
 	/// Gets whether the two <see cref="DiscordMessage"/> objects are equal.
 	/// </summary>
-	/// <param name="e1">First message to compare.</param>
-	/// <param name="e2">Second message to compare.</param>
+	/// <param name="left">First message to compare.</param>
+	/// <param name="right">Second message to compare.</param>
 	/// <returns>Whether the two messages are equal.</returns>
-	public static bool operator ==(DiscordMessage e1, DiscordMessage e2)
-	{
-		var o1 = e1 as object;
-		var o2 = e2 as object;
-
-		return (o1 != null || o2 == null)
-			&& (o1 == null || o2 != null)
-			&& ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1.ChannelId == e2.ChannelId));
-	}
+	public static bool operator ==(DiscordMessage? left, DiscordMessage? right)
+		=> left is not null && left.Equals(right);
 
 	/// <summary>
 	/// Gets whether the two <see cref="DiscordMessage"/> objects are not equal.
 	/// </summary>
-	/// <param name="e1">First message to compare.</param>
-	/// <param name="e2">Second message to compare.</param>
+	/// <param name="left">First message to compare.</param>
+	/// <param name="right">Second message to compare.</param>
 	/// <returns>Whether the two messages are not equal.</returns>
-	public static bool operator !=(DiscordMessage e1, DiscordMessage e2)
-		=> !(e1 == e2);
+	public static bool operator !=(DiscordMessage? left, DiscordMessage? right)
+		=> !(left == right);
 }

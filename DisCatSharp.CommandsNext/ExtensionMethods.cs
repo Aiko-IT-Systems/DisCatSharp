@@ -92,7 +92,7 @@ public static class ExtensionMethods
 	/// </summary>
 	/// <param name="client">Client to get CommandsNext module from.</param>
 	/// <returns>The module, or null if not activated.</returns>
-	public static CommandsNextExtension GetCommandsNext(this DiscordClient client)
+	public static CommandsNextExtension? GetCommandsNext(this DiscordClient client)
 		=> client.GetExtension<CommandsNextExtension>();
 
 
@@ -101,17 +101,17 @@ public static class ExtensionMethods
 	/// </summary>
 	/// <param name="client">Client to get CommandsNext instances from.</param>
 	/// <returns>A dictionary of the modules, indexed by shard id.</returns>
-	public static async Task<IReadOnlyDictionary<int, CommandsNextExtension>> GetCommandsNextAsync(this DiscordShardedClient client)
+	public static async Task<IReadOnlyDictionary<int, CommandsNextExtension?>> GetCommandsNextAsync(this DiscordShardedClient client)
 	{
 		await client.InitializeShardsAsync().ConfigureAwait(false);
-		var extensions = new Dictionary<int, CommandsNextExtension>();
+		var extensions = new Dictionary<int, CommandsNextExtension?>();
 
 		foreach (var shard in client.ShardClients.Select(xkvp => xkvp.Value))
 		{
 			extensions.Add(shard.ShardId, shard.GetExtension<CommandsNextExtension>());
 		}
 
-		return new ReadOnlyDictionary<int, CommandsNextExtension>(extensions);
+		return new ReadOnlyDictionary<int, CommandsNextExtension?>(extensions);
 	}
 
 	/// <summary>
