@@ -44,6 +44,7 @@ public sealed class ContextMenuInteractionCreateEventArgs : InteractionCreateEve
 
 	/// <summary>
 	/// The user this interaction targets, if applicable.
+	/// <para>Can be casted to <see cref="DiscordMember"/>.</para>
 	/// </summary>
 	public DiscordUser TargetUser { get; internal set; }
 
