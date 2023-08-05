@@ -108,6 +108,7 @@ internal class Paginator : IPaginator
 
 					if (msg.Id != eventArgs.Message.Id)
 						continue;
+
 					if (eventArgs.User.Id == usr.Id)
 					{
 						if (req.PageCount > 1 &&
@@ -159,12 +160,13 @@ internal class Paginator : IPaginator
 						continue;
 					if (eventArgs.User.Id != usr.Id)
 						continue;
+
 					if (req.PageCount > 1 &&
-						(eventArgs.Emoji == emojis.Left ||
-						 eventArgs.Emoji == emojis.SkipLeft ||
-						 eventArgs.Emoji == emojis.Right ||
-						 eventArgs.Emoji == emojis.SkipRight ||
-						 eventArgs.Emoji == emojis.Stop))
+					    (eventArgs.Emoji == emojis.Left ||
+					     eventArgs.Emoji == emojis.SkipLeft ||
+					     eventArgs.Emoji == emojis.Right ||
+					     eventArgs.Emoji == emojis.SkipRight ||
+					     eventArgs.Emoji == emojis.Stop))
 						await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
 					else if (eventArgs.Emoji == emojis.Stop &&
 							 req is PaginationRequest { PaginationDeletion: PaginationDeletion.DeleteMessage })
@@ -262,6 +264,7 @@ internal class Paginator : IPaginator
 		var builder = new DiscordMessageBuilder();
 		if (page.Content is null && page.Embed is null)
 			throw new NullReferenceException("You need to either specify Content or Embed or both");
+
 		if (page.Content is not null)
 			builder = builder.WithContent(page.Content);
 		if (page.Embed is not null)

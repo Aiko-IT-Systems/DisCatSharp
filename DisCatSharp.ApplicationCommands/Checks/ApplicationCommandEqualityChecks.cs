@@ -98,6 +98,7 @@ internal static class ApplicationCommandEqualityChecks
 						 && source.DefaultMemberPermissions == target.DefaultMemberPermissions
 						 && sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw
 				};
+
 		sDmPerm = null;
 		tDmPerm = null;
 		return localizationEnabled
@@ -190,6 +191,7 @@ internal static class ApplicationCommandEqualityChecks
 
 			if (source.Options.All(o => o.Type != ApplicationCommandOptionType.SubCommand) || target.Options.All(o => o.Type != ApplicationCommandOptionType.SubCommand))
 				return eqCheck1 && eqCheck2;
+
 			{
 				List<DiscordApplicationCommandOption> minimalSourceOptions = new();
 				List<DiscordApplicationCommandOption> minimalTargetOptions = new();

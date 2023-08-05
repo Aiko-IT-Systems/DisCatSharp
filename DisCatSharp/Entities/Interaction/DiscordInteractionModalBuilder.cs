@@ -41,6 +41,7 @@ public sealed class DiscordInteractionModalBuilder
 		{
 			if (value is { Length: > 128 })
 				throw new ArgumentException("Title length cannot exceed 128 characters.", nameof(value));
+
 			this._title = value;
 		}
 	}

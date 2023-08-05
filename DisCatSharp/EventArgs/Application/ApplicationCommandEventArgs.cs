@@ -39,7 +39,7 @@ public sealed class ApplicationCommandEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Gets the optional guild of the command.
 	/// </summary>
-	public DiscordGuild Guild { get; internal set; }
+	public DiscordGuild? Guild { get; internal set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ApplicationCommandEventArgs"/> class.

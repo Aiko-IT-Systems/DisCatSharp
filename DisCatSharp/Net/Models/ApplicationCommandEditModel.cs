@@ -43,6 +43,7 @@ public class ApplicationCommandEditModel : ObservableApiObject
 		{
 			if (value.Value.Length > 32)
 				throw new ArgumentException("Application command name cannot exceed 32 characters.", nameof(value));
+
 			this._name = value;
 		}
 	}
@@ -58,6 +59,7 @@ public class ApplicationCommandEditModel : ObservableApiObject
 		{
 			if (value.Value.Length > 100)
 				throw new ArgumentException("Application command description cannot exceed 100 characters.", nameof(value));
+
 			this._description = value;
 		}
 	}

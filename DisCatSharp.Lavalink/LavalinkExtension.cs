@@ -122,6 +122,7 @@ public sealed class LavalinkExtension : BaseExtension
 			var versionInfo = await this.REST.GetVersionAsync().ConfigureAwait(false);
 			if (!versionInfo.Headers.Contains("Lavalink-Api-Version"))
 				throw new("Lavalink v4 is required");
+
 			if (versionInfo.Headers.TryGetValues("Lavalink-Api-Version", out var headerValues))
 				if (headerValues.First() != "4")
 					throw new("Lavalink v4 is required");

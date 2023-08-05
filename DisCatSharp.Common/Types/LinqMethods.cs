@@ -66,6 +66,7 @@ public static class LinqMethods
 	{
 		if (dict != null)
 			return dict.TryGetValue(key, out value);
+
 		value = default;
 		return false;
 	}

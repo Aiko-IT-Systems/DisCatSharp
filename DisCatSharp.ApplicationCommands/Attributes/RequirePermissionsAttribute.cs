@@ -66,11 +66,13 @@ public sealed class ApplicationCommandRequirePermissionsAttribute : ApplicationC
 		var usr = ctx.Member;
 		if (usr == null)
 			return false;
+
 		var pusr = ctx.Channel.PermissionsFor(usr);
 
 		var bot = await ctx.Guild.GetMemberAsync(ctx.Client.CurrentUser.Id).ConfigureAwait(false);
 		if (bot == null)
 			return false;
+
 		var pbot = ctx.Channel.PermissionsFor(bot);
 
 		var usrok = ctx.Guild.OwnerId == usr.Id;

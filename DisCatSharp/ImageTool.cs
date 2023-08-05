@@ -195,6 +195,7 @@ public sealed class ImageTool : IDisposable
 	{
 		if (!stream.HasValue)
 			return Optional.None;
+
 		var val = stream.Value;
 		return val != null ? Base64FromStream(val) : null;
 

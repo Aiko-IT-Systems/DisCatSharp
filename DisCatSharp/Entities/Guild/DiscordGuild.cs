@@ -1489,6 +1489,7 @@ public partial class DiscordGuild : SnowflakeObject
 	{
 		if (includedRoles == null)
 			return this.Discord.ApiClient.GetGuildPruneCountAsync(this.Id, days, null);
+
 		includedRoles = includedRoles.Where(r => r != null);
 		var rawRoleIds = includedRoles
 			.Where(x => this.RolesInternal.ContainsKey(x.Id))
@@ -1513,6 +1514,7 @@ public partial class DiscordGuild : SnowflakeObject
 	{
 		if (includedRoles == null)
 			return this.Discord.ApiClient.BeginGuildPruneAsync(this.Id, days, computePruneCount, null, reason);
+
 		includedRoles = includedRoles.Where(r => r != null);
 		var rawRoleIds = includedRoles
 			.Where(x => this.RolesInternal.ContainsKey(x.Id))
@@ -1617,6 +1619,7 @@ public partial class DiscordGuild : SnowflakeObject
 
 		if (intents.HasIntent(DiscordIntents.GuildInvites))
 			return res;
+
 		foreach (var r in res)
 			this.Invites[r.Code] = r;
 
@@ -1678,6 +1681,7 @@ public partial class DiscordGuild : SnowflakeObject
 
 		if (!intents.HasIntent(DiscordIntents.GuildMembers))
 			return mbr;
+
 		if (this.MembersInternal != null!)
 			this.MembersInternal[userId] = mbr;
 
@@ -1707,6 +1711,7 @@ public partial class DiscordGuild : SnowflakeObject
 			{
 				if (xtm.User == null)
 					continue;
+
 				var usr = new DiscordUser(xtm.User) { Discord = this.Discord };
 
 				var cacheUser = usr;

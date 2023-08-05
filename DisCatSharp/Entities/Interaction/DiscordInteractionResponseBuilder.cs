@@ -94,6 +94,7 @@ public sealed class DiscordInteractionResponseBuilder
 		{
 			if (value is { Length: > 2000 })
 				throw new ArgumentException("Content length cannot exceed 2000 characters.", nameof(value));
+
 			this._content = value;
 		}
 	}

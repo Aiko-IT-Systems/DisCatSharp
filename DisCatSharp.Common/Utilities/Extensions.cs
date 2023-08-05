@@ -131,6 +131,7 @@ public static class Extensions
 	{
 		if (min <= max)
 			return inclusive ? num >= min && num <= max : num > min && num < max;
+
 		min ^= max;
 		max ^= min;
 		min ^= max;
@@ -151,6 +152,7 @@ public static class Extensions
 	{
 		if (min <= max)
 			return inclusive ? num >= min && num <= max : num > min && num < max;
+
 		min ^= max;
 		max ^= min;
 		min ^= max;
@@ -171,6 +173,7 @@ public static class Extensions
 	{
 		if (min <= max)
 			return inclusive ? num >= min && num <= max : num > min && num < max;
+
 		min ^= max;
 		max ^= min;
 		min ^= max;
@@ -191,6 +194,7 @@ public static class Extensions
 	{
 		if (min <= max)
 			return inclusive ? num >= min && num <= max : num > min && num < max;
+
 		min ^= max;
 		max ^= min;
 		min ^= max;
@@ -211,6 +215,7 @@ public static class Extensions
 	{
 		if (min <= max)
 			return inclusive ? num >= min && num <= max : num > min && num < max;
+
 		min ^= max;
 		max ^= min;
 		min ^= max;
@@ -231,6 +236,7 @@ public static class Extensions
 	{
 		if (min <= max)
 			return inclusive ? num >= min && num <= max : num > min && num < max;
+
 		min ^= max;
 		max ^= min;
 		min ^= max;
@@ -251,6 +257,7 @@ public static class Extensions
 	{
 		if (min <= max)
 			return inclusive ? num >= min && num <= max : num > min && num < max;
+
 		min ^= max;
 		max ^= min;
 		min ^= max;
@@ -271,6 +278,7 @@ public static class Extensions
 	{
 		if (min <= max)
 			return inclusive ? num >= min && num <= max : num > min && num < max;
+
 		min ^= max;
 		max ^= min;
 		min ^= max;
@@ -488,6 +496,7 @@ public static class Extensions
 		{
 			if (!predicate(list[i]))
 				continue;
+
 			list.RemoveAt(i);
 			return true;
 		}

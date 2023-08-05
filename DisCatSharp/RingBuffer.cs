@@ -118,6 +118,7 @@ public class RingBuffer<T> : ICollection<T>
 
 		if (this.CurrentIndex != this.Capacity)
 			return;
+
 		this.CurrentIndex = 0;
 		this._reachedEnd = true;
 	}

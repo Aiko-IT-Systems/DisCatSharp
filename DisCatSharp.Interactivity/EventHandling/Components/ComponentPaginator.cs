@@ -165,6 +165,7 @@ internal class ComponentPaginator : IPaginator
 				.AddComponents(bts);
 			if (page.Content is null && page.Embed is null)
 				throw new NullReferenceException("You need to either specify Content or Embed or both");
+
 			if (page.Content is not null)
 				builder = builder.WithContent(page.Content);
 			if (page.Embed is not null)
@@ -180,6 +181,7 @@ internal class ComponentPaginator : IPaginator
 			.AddComponents(bts);
 		if (page.Content is null && page.Embed is null)
 			throw new NullReferenceException("You need to either specify Content or Embed or both");
+
 		if (page.Content is not null)
 			this._builder.WithContent(page.Content);
 		if (page.Embed is not null)

@@ -62,6 +62,7 @@ internal class DefaultLoggerFactory : ILoggerFactory
 	{
 		if (this._isDisposed)
 			return;
+
 		this._isDisposed = true;
 
 		foreach (var provider in this._providers)

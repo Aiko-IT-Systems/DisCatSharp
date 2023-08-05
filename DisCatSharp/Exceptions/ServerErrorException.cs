@@ -63,6 +63,7 @@ public class ServerErrorException : DisCatSharpException
 		{
 			if (response.Response == null)
 				return;
+
 			var j = JObject.Parse(response.Response);
 
 			if (j["message"] != null)

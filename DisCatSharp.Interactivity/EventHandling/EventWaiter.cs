@@ -124,6 +124,7 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 	{
 		if (this._disposed)
 			return Task.CompletedTask;
+
 		foreach (var req in this._matchRequests!.Where(req => req.Predicate!(eventArgs)))
 			req.Tcs!.TrySetResult(eventArgs);
 

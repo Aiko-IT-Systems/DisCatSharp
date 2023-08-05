@@ -175,6 +175,7 @@ internal sealed class RestClient : IDisposable
 			var val = propertyInfo.GetValue(routeParams);
 			if (val == null)
 				continue;
+
 			routeParameters[propertyInfo.Name] = val as string ?? (val switch
 			{
 				DateTime dt => dt.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture),
@@ -610,6 +611,7 @@ internal sealed class RestClient : IDisposable
 
 		if (response.Headers == null)
 			return;
+
 		var hs = response.Headers;
 
 		// handle the wait
@@ -651,6 +653,7 @@ internal sealed class RestClient : IDisposable
 		{
 			if (response.ResponseCode == 429)
 				return;
+
 			bucket.IsGlobal = true;
 			this.FailInitialRateLimitTest(request, ratelimitTcs);
 
@@ -748,6 +751,7 @@ internal sealed class RestClient : IDisposable
 		// in which case, Dispose will need to be called to clear the caches.
 		if (!bucket.IsUnlimited || newHash == oldHash)
 			return;
+
 		{
 			this._logger.LogDebug(LoggerEvents.RestHashMover, "Updating hash in {key}: \"{old}\" -> \"{new}\"", hashKey, oldHash, newHash);
 			var bucketId = RateLimitBucket.GenerateBucketId(newHash, bucket.GuildId, bucket.ChannelId, bucket.WebhookId);

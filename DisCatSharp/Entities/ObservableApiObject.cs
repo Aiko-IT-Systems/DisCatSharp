@@ -57,6 +57,7 @@ public abstract class ObservableApiObject
 	{
 		if (ignored == null)
 			return;
+
 		foreach (var ignoredKey in ignored)
 			this.IgnoredJsonKeys.Add(ignoredKey);
 	}

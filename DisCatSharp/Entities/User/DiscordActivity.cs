@@ -82,6 +82,7 @@ internal sealed class UserStatusConverter : JsonConverter
 	{
 		if (value is not UserStatus status)
 			return;
+
 		switch (status) // reader.Value can be a string, DateTime or DateTimeOffset (yes, it's weird)
 		{
 			case UserStatus.Online:
@@ -483,6 +484,7 @@ public sealed class DiscordRichPresence
 		var sid = rawGame?.Assets?.SmallImage;
 		if (sid == null)
 			return;
+
 		if (sid.StartsWith("spotify:"))
 			this.SmallImage = new DiscordSpotifyAsset { Id = sid };
 		else if (ulong.TryParse(sid, NumberStyles.Number, CultureInfo.InvariantCulture, out var usid))

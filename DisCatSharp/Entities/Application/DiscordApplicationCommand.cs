@@ -169,6 +169,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 				throw new ArgumentException("Context menus do not support descriptions.");
 			if (options?.Any() ?? false)
 				throw new ArgumentException("Context menus do not support options.");
+
 			description = string.Empty;
 
 			this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();

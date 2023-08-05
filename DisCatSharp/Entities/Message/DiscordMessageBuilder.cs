@@ -43,6 +43,7 @@ public sealed class DiscordMessageBuilder
 		{
 			if (value is { Length: > 2000 })
 				throw new ArgumentException("Content cannot exceed 2000 characters.", nameof(value));
+
 			this._content = value;
 		}
 	}
@@ -234,6 +235,7 @@ public sealed class DiscordMessageBuilder
 	{
 		if (embed == null)
 			return this; //Providing null embeds will produce a 400 response from Discord.//
+
 		this._embeds.Add(embed);
 		return this;
 	}

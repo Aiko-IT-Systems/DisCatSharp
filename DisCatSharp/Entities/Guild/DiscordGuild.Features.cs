@@ -171,6 +171,7 @@ public class GuildFeatures
 	{
 		if (string.IsNullOrWhiteSpace(text))
 			return "";
+
 		var newText = new StringBuilder(text.Length * 2);
 		newText.Append(text[0]);
 		for (var i = 1; i < text.Length; i++)

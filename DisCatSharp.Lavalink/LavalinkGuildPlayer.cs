@@ -399,6 +399,7 @@ public sealed class LavalinkGuildPlayer
 	{
 		if (volume is < 0 or > 1000)
 			throw new ArgumentException("Volume can only be between 0 and 1000", nameof(volume));
+
 		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, volume: volume).ConfigureAwait(false);
 		return this;
 	}
@@ -445,6 +446,7 @@ public sealed class LavalinkGuildPlayer
 		{
 			if (url.Contains("playlist"))
 				throw new NotSupportedException("Lavalink is unable to play a playlist directly.");
+
 			var match = CommonRegEx.AdvancedYoutubeRegex.Match(url);
 			if (match.Groups["list"] != null! && !string.IsNullOrEmpty(match.Groups["list"].Value))
 			{
@@ -497,6 +499,7 @@ public sealed class LavalinkGuildPlayer
 	{
 		if (!this.QUEUE_SYSTEM_ENABLED)
 			return;
+
 		while (this._queueEntriesInternal.Count > 0)
 		{
 			this._queueTsc = new();
@@ -528,6 +531,7 @@ public sealed class LavalinkGuildPlayer
 	{
 		if (channel.Type != ChannelType.Stage && channel.Type != ChannelType.Voice)
 			throw new ArgumentException("Cannot switch to a non-voice channel", nameof(channel));
+
 		this.ChannelId = channel.Id;
 		var vsd = new DiscordDispatchPayload
 		{
@@ -611,6 +615,7 @@ public sealed class LavalinkGuildPlayer
 
 		if (args.Before.ChannelId == null || args.Before.ChannelId!.Value != this.ChannelId || (args.After.ChannelId == null && args.After.ChannelId!.Value == this.ChannelId))
 			return Task.CompletedTask;
+
 		this.CurrentUsersInternal.Remove(args.User.Id);
 		return Task.CompletedTask;
 

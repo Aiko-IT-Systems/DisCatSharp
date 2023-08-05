@@ -161,6 +161,7 @@ internal class ReactionCollector : IDisposable
 				continue;
 			if (!req.Collected!.Any(x => x.Emoji == eventArgs.Emoji && x.Users.Any(y => y.Id == eventArgs.User.Id)))
 				continue;
+
 			var reaction = req.Collected.First(x => x.Emoji == eventArgs.Emoji && x.Users.Any(y => y.Id == eventArgs.User.Id));
 			req.Collected.TryRemove(reaction);
 			reaction.Users.TryRemove(eventArgs.User);

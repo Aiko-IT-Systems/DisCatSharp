@@ -94,6 +94,7 @@ public abstract class BaseRestRequest
 
 		if (headers == null)
 			return;
+
 		headers = headers.Select(x => new KeyValuePair<string, string>(x.Key, Uri.EscapeDataString(x.Value)))
 			.ToDictionary(x => x.Key, x => x.Value);
 		this.Headers = headers;

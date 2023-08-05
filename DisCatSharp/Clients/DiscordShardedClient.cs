@@ -214,6 +214,7 @@ public sealed partial class DiscordShardedClient
 
 					if (e.HasUser())
 						return e;
+
 					if (this._configuration.AttachUserInfo && this.CurrentUser! != null!)
 						e.User = new()
 						{
