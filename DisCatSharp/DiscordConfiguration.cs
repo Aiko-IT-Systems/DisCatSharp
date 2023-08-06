@@ -178,14 +178,12 @@ public sealed class DiscordConfiguration
 	public WebSocketClientFactoryDelegate WebSocketClientFactory
 	{
 		internal get => this._webSocketClientFactory;
-		set
-		{
-			if (value == null)
-				throw new InvalidOperationException("You need to supply a valid WebSocket client factory method.");
-
-			this._webSocketClientFactory = value;
-		}
+		set => this._webSocketClientFactory = value ?? throw new InvalidOperationException("You need to supply a valid WebSocket client factory method.");
 	}
+
+	/// <summary>
+	/// Sets the factory method and creates a new instances of the <see cref="WebSocketClient"/>.
+	/// </summary>
 	private WebSocketClientFactoryDelegate _webSocketClientFactory = WebSocketClient.CreateNew;
 
 	/// <summary>
@@ -198,6 +196,10 @@ public sealed class DiscordConfiguration
 		internal get => this._udpClientFactory;
 		set => this._udpClientFactory = value ?? throw new InvalidOperationException("You need to supply a valid UDP client factory method.");
 	}
+
+	/// <summary>
+	/// Sets the factory method and creates a new instances of the <see cref="DcsUdpClient"/>.
+	/// </summary>
 	private UdpClientFactoryDelegate _udpClientFactory = DcsUdpClient.CreateNew;
 
 	/// <summary>
@@ -370,9 +372,9 @@ public sealed class DiscordConfiguration
 	{ }
 
 	/// <summary>
-	/// Utilized via Dependency Injection Pipeline
+	/// Utilized via dependency injection pipeline.
 	/// </summary>
-	/// <param name="provider"></param>
+	/// <param name="provider">The service provider.</param>
 	[ActivatorUtilitiesConstructor]
 	public DiscordConfiguration(IServiceProvider provider)
 	{
