@@ -109,13 +109,13 @@ public sealed class DiscordConfiguration
 	/// <para>Sets the ID of the shard to connect to.</para>
 	/// <para>If not sharding, or sharding automatically, this value should be left with the default value of 0.</para>
 	/// </summary>
-	public int ShardId { internal get; init; } = 0;
+	public int ShardId { internal get; set; } = 0;
 
 	/// <summary>
 	/// <para>Sets the total number of shards the bot is on. If not sharding, this value should be left with a default value of 1.</para>
 	/// <para>If sharding automatically, this value will indicate how many shards to boot. If left default for automatic sharding, the client will determine the shard count automatically.</para>
 	/// </summary>
-	public int ShardCount { internal get; init; } = 1;
+	public int ShardCount { internal get; set; } = 1;
 
 	/// <summary>
 	/// <para>Sets the level of compression for WebSocket traffic.</para>
@@ -181,13 +181,13 @@ public sealed class DiscordConfiguration
 	public WebSocketClientFactoryDelegate WebSocketClientFactory
 	{
 		internal get => this._webSocketClientFactory;
-		init => this._webSocketClientFactory = value ?? throw new InvalidOperationException("You need to supply a valid WebSocket client factory method.");
+		set => this._webSocketClientFactory = value ?? throw new InvalidOperationException("You need to supply a valid WebSocket client factory method.");
 	}
 
 	/// <summary>
 	/// Sets the factory method and creates a new instances of the <see cref="WebSocketClient"/>.
 	/// </summary>
-	private readonly WebSocketClientFactoryDelegate _webSocketClientFactory = WebSocketClient.CreateNew;
+	private WebSocketClientFactoryDelegate _webSocketClientFactory = WebSocketClient.CreateNew;
 
 	/// <summary>
 	/// <para>Sets the factory method used to create instances of UDP clients.</para>
@@ -197,13 +197,13 @@ public sealed class DiscordConfiguration
 	public UdpClientFactoryDelegate UdpClientFactory
 	{
 		internal get => this._udpClientFactory;
-		init => this._udpClientFactory = value ?? throw new InvalidOperationException("You need to supply a valid UDP client factory method.");
+		set => this._udpClientFactory = value ?? throw new InvalidOperationException("You need to supply a valid UDP client factory method.");
 	}
 
 	/// <summary>
 	/// Sets the factory method and creates a new instances of the <see cref="DcsUdpClient"/>.
 	/// </summary>
-	private readonly UdpClientFactoryDelegate _udpClientFactory = DcsUdpClient.CreateNew;
+	private UdpClientFactoryDelegate _udpClientFactory = DcsUdpClient.CreateNew;
 
 	/// <summary>
 	/// <para>Sets the logger implementation to use.</para>
@@ -258,7 +258,7 @@ public sealed class DiscordConfiguration
 	/// <para>This allows passing data around without resorting to static members.</para>
 	/// <para>Defaults to an empty service provider.</para>
 	/// </summary>
-	public IServiceProvider ServiceProvider { internal get; init; } = new ServiceCollection().BuildServiceProvider(true);
+	public IServiceProvider ServiceProvider { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
 
 	/// <summary>
 	/// <para>Whether to report missing fields for discord object.</para>
@@ -347,9 +347,9 @@ public sealed class DiscordConfiguration
 	{ }
 
 	/// <summary>
-	/// Utilized via Dependency Injection Pipeline
+	/// Utilized via dependency injection pipeline.
 	/// </summary>
-	/// <param name="provider"></param>
+	/// <param name="provider">The service provider.</param>
 	[ActivatorUtilitiesConstructor]
 	public DiscordConfiguration(IServiceProvider provider)
 	{

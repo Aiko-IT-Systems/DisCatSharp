@@ -37,7 +37,7 @@ public class ApplicationCommandsConfiguration
 	/// <para>This allows passing data around without resorting to static members.</para>
 	/// <para>Defaults to <see langword="null"/>.</para>
 	/// </summary>
-	public IServiceProvider? ServiceProvider { internal get; set; }
+	public IServiceProvider ServiceProvider { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
 
 	/// <summary>
 	/// <para>This option enables the default help command.</para>
@@ -94,11 +94,17 @@ public class ApplicationCommandsConfiguration
 	public bool GenerateTranslationFilesOnly { internal get; set; } = false;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="ApplicationCommandsConfiguration"/> class.
+	/// Creates a new configuration with default values.
+	/// </summary>
+	public ApplicationCommandsConfiguration()
+	{ }
+
+	/// <summary>
+	/// Utilized via dependency injection pipeline.
 	/// </summary>
 	/// <param name="provider">The service provider.</param>
 	[ActivatorUtilitiesConstructor]
-	public ApplicationCommandsConfiguration(IServiceProvider provider = null)
+	public ApplicationCommandsConfiguration(IServiceProvider provider)
 	{
 		this.ServiceProvider = provider;
 	}
