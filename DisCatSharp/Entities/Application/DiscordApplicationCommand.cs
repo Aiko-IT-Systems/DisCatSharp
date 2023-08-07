@@ -122,7 +122,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	public ulong Version { get; internal set; }
 
 	/// <summary>
-	/// Gets the name localizations.
+	/// Gets the mention for this command.
 	/// </summary>
 	[JsonIgnore]
 	public string Mention => this.Type == ApplicationCommandType.ChatInput ? $"</{this.Name}:{this.Id}>" : this.Name;
