@@ -357,7 +357,7 @@ Now we can use these commands to listen to music!
 			author-url="https://www.youtube.com/channel/UCQn1FqrR2OCjSe6Nl4GlVHw"
 			color="#FF0000"
 			embed-title="Raon 라온 | ‘クネクネ (Wiggle Wiggle)’ M/V"
-			video="https://cdn.aitsys.dev/file/data/q2tzqoz7ua7sfyeulapq/PHID-FILE-3det2pn34p5chh4enez4/38-cJT320aw.mp4"
+			video="38-cJT320aw"
 			url="https://www.youtube.com/watch?v=38-cJT320aw"
 			image="https://cdn.aitsys.dev/file/data/kcrwt6baxsmr32rjnrdg/PHID-FILE-2w72lbyg6lrbstqo3geh/38-cJT320aw.jpg"
 		></discord-embed>
