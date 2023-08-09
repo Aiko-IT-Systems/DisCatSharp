@@ -91,6 +91,19 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 				: $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMOJIS}/{this.Id.ToString(CultureInfo.InvariantCulture)}.png";
 
 	/// <summary>
+	/// Gets the unicode version of this emoji.
+	/// </summary>
+	/// <exception cref="InvalidOperationException">Thrown if emoji is not a unicode emoji.</exception>
+	public string UnicodeEmoji =>
+		this.Id != 0
+			? throw new InvalidOperationException("Emoji is not a unicode emoji")
+			: s_unicodeEmojis.TryGetValue(this.Name, out var value)
+				? value
+				: s_discordNameLookup.ContainsKey(this.Name)
+					? this.Name
+					: throw new InvalidOperationException("Emoji is not a unicode emoji");
+
+	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordEmoji"/> class.
 	/// </summary>
 	internal DiscordEmoji()
