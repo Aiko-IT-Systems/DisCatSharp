@@ -86,7 +86,7 @@ public class DiscordThreadChannelMember : SnowflakeObject, IEquatable<DiscordThr
 	public DiscordGuild Guild
 		=> this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null;
 
-	[JsonIgnore]
+	[JsonIgnore] // guild_id exists
 	internal ulong GuildId;
 
 	/// <summary>
@@ -139,5 +139,6 @@ public class DiscordThreadChannelMember : SnowflakeObject, IEquatable<DiscordThr
 	/// Initializes a new instance of the <see cref="DiscordThreadChannelMember"/> class.
 	/// </summary>
 	internal DiscordThreadChannelMember()
+		: base(new() { "muted", "mute_config", "guild_id" })
 	{ }
 }

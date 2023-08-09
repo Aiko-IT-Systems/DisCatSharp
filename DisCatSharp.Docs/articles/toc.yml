@@ -4,7 +4,6 @@ items:
     - name: FAQ
       href: faq.md
     - name: Getting Started
-      expanded: true
       items:
           - name: Creating a Bot Account
             href: getting_started/bot_account.md
@@ -15,12 +14,10 @@ items:
           - name: Project Templates
             href: getting_started/templates.md
     - name: Topics
-      expanded: true
       items:
           - name: Events
             href: topics/events.md
           - name: Logging
-            href: topics/logging/default.md
             items:
                 - name: The Default Logger
                   href: topics/logging/default.md
@@ -43,7 +40,6 @@ items:
           - name: Workarounds
             href: topics/workarounds.md
     - name: Modules
-      expanded: true
       items:
           - name: Application Commands
             items:
@@ -104,7 +100,6 @@ items:
           - name: Interactivity
             href: modules/interactivity.md
     - name: Miscellaneous
-      expanded: true
       items:
           - name: Nightly Builds
             href: misc/nightly_builds.md

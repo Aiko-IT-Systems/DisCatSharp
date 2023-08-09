@@ -88,6 +88,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		this.RoleIdsInternal = mbr.Roles ?? new List<ulong>();
 		this._roleIdsLazy = new(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
 		this.MemberFlags = mbr.MemberFlags;
+		this.InteractionPermissions = mbr.Permissions;
 	}
 
 	/// <summary>
@@ -281,9 +282,15 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <summary>
 	/// Gets the permissions for the current member.
 	/// </summary>
+	[JsonProperty("permissions", NullValueHandling = NullValueHandling.Ignore)]
+	public Permissions? InteractionPermissions { get; internal set; }
+
+	/// <summary>
+	/// Gets the permissions for the current member.
+	/// </summary>
 	[JsonIgnore]
 	public Permissions Permissions
-		=> this.GetPermissions();
+		=> this.InteractionPermissions ?? this.GetPermissions();
 
 	#region Overridden user properties
 

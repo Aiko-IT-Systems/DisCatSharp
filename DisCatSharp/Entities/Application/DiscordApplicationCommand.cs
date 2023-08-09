@@ -122,7 +122,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	public ulong Version { get; internal set; }
 
 	/// <summary>
-	/// Gets the name localizations.
+	/// Gets the mention for this command.
 	/// </summary>
 	[JsonIgnore]
 	public string Mention => this.Type == ApplicationCommandType.ChatInput ? $"</{this.Name}:{this.Id}>" : this.Name;
@@ -188,7 +188,9 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// <summary>
 	/// Creates a new empty Discord Application Command.
 	/// </summary>
-	internal DiscordApplicationCommand() { }
+	internal DiscordApplicationCommand()
+		: base(new() { "name_localizations", "description_localizations" }) // Why tf is that so inconsistent?!
+	{ }
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordApplicationCommand"/> object is equal to another object.

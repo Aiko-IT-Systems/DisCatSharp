@@ -7,6 +7,7 @@ on:
     branches: [ main ]
   schedule:
     - cron: '39 18 * * 3'
+  merge_group:
   workflow_dispatch:
 
 jobs:
