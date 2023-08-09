@@ -23,6 +23,8 @@
 using System;
 using System.Collections.Generic;
 
+using DisCatSharp.Attributes;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
@@ -42,6 +44,7 @@ public sealed class DiscordEmbed : ObservableApiObject
 	/// Gets the embed's type.
 	/// </summary>
 	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+	[DiscordDeprecated]
 	public string Type { get; internal set; }
 
 	/// <summary>
