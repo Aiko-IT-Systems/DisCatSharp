@@ -69,6 +69,7 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// <summary>
 	/// Gets the guild associated with this sticker, if any.
 	/// </summary>
+	[JsonIgnore]
 	public DiscordGuild Guild => (this.Discord as DiscordClient).InternalGetCachedGuild(this.GuildId);
 
 	/// <summary>
