@@ -148,12 +148,17 @@ public sealed class DiscordActivity
 	/// <summary>
 	/// Gets or sets the id of user's activity.
 	/// </summary>
-	public string Id { get; set; }
+	public string? Id { get; set; }
 
 	/// <summary>
 	/// Gets or sets the name of user's activity.
 	/// </summary>
-	public string Name { get; set; }
+	public string? Name { get; set; }
+
+	/// <summary>
+	/// Gets or sets the state of user's activity.
+	/// </summary>
+	public string? State { get; set; }
 
 	/// <summary>
 	/// Gets or sets the stream URL, if applicable.
@@ -218,7 +223,14 @@ public sealed class DiscordActivity
 		if (type == ActivityType.Custom)
 			throw new InvalidOperationException("Bots cannot use a custom status.");
 
-		this.Name = name;
+		if (type == ActivityType.Custom)
+		{
+			this.Id = "custom";
+			this.Name = "Custom Status";
+			this.State = name;
+		}
+		else
+			this.Name = name;
 		this.ActivityType = type;
 	}
 
@@ -237,7 +249,9 @@ public sealed class DiscordActivity
 	/// <param name="other">The other.</param>
 	internal DiscordActivity(DiscordActivity other)
 	{
+		this.Id = other.Id;
 		this.Name = other.Name;
+		this.State = other.State;
 		this.ActivityType = other.ActivityType;
 		this.StreamUrl = other.StreamUrl;
 		this.SessionId = other.SessionId;
@@ -253,12 +267,14 @@ public sealed class DiscordActivity
 	/// <param name="rawActivity">The raw activity.</param>
 	internal void UpdateWith(TransportActivity rawActivity)
 	{
+		this.Id = rawActivity?.Id;
 		this.Name = rawActivity?.Name;
-		this.ActivityType = rawActivity != null ? rawActivity.ActivityType : ActivityType.Playing;
+		this.ActivityType = rawActivity?.ActivityType ?? ActivityType.Playing;
 		this.StreamUrl = rawActivity?.StreamUrl;
 		this.SessionId = rawActivity?.SessionId;
 		this.SyncId = rawActivity?.SyncId;
 		this.Platform = rawActivity?.Platform;
+		this.State = rawActivity?.State;
 
 		if (rawActivity?.IsRichPresence() == true && this.RichPresence != null)
 			this.RichPresence.UpdateWith(rawActivity);
@@ -269,7 +285,8 @@ public sealed class DiscordActivity
 		else this.CustomStatus = rawActivity?.IsCustomStatus() == true
 			? new DiscordCustomStatus
 			{
-				Name = rawActivity.State,
+				Name = rawActivity.Name!,
+				State = rawActivity.State,
 				Emoji = rawActivity.Emoji
 			}
 			: null;
@@ -285,6 +302,11 @@ public sealed class DiscordCustomStatus
 	/// Gets the name of this custom status.
 	/// </summary>
 	public string Name { get; internal set; }
+
+	/// <summary>
+	/// Gets the state of this custom status.
+	/// </summary>
+	public string? State { get; internal set; }
 
 	/// <summary>
 	/// Gets the emoji of this custom status, if any.
@@ -304,6 +326,7 @@ public sealed class DiscordCustomStatus
 	internal DiscordCustomStatus(DiscordCustomStatus other)
 	{
 		this.Name = other.Name;
+		this.State = other.State;
 		this.Emoji = other.Emoji;
 	}
 
@@ -312,9 +335,10 @@ public sealed class DiscordCustomStatus
 	/// </summary>
 	/// <param name="state">The state.</param>
 	/// <param name="emoji">The emoji.</param>
-	internal void UpdateWith(string state, DiscordEmoji emoji)
+	internal void UpdateWith(string? state, DiscordEmoji? emoji)
 	{
-		this.Name = state;
+		this.Name = "Custom Status";
+		this.State = state;
 		this.Emoji = emoji;
 	}
 }
