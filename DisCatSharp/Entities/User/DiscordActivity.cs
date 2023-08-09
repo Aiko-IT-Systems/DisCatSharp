@@ -221,9 +221,6 @@ public sealed class DiscordActivity
 	public DiscordActivity(string name, ActivityType type)
 	{
 		if (type == ActivityType.Custom)
-			throw new InvalidOperationException("Bots cannot use a custom status.");
-
-		if (type == ActivityType.Custom)
 		{
 			this.Id = "custom";
 			this.Name = "Custom Status";
@@ -231,6 +228,7 @@ public sealed class DiscordActivity
 		}
 		else
 			this.Name = name;
+
 		this.ActivityType = type;
 	}
 
