@@ -2318,8 +2318,8 @@ public sealed partial class DiscordClient
 
 		DiscordMessage oldmsg = null;
 		if (this.Configuration.MessageCacheSize == 0
-			|| this.MessageCache == null
-			|| !this.MessageCache.TryGet(xm => xm.Id == eventMessage.Id && xm.ChannelId == eventMessage.ChannelId, out message))
+		    || this.MessageCache == null
+		    || !this.MessageCache.TryGet(xm => xm.Id == eventMessage.Id && xm.ChannelId == eventMessage.ChannelId, out message))
 		{
 			message = eventMessage;
 			this.PopulateMessageReactionsAndCache(message, author, member);
