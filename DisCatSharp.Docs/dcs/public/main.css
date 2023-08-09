@@ -344,6 +344,13 @@ a.discord-button[href]::after {
 	content: '' !important;
 }
 
+.discord-embed a.discord-provider {
+  color: #6f9c8e !important;
+}
+.discord-embed a.discord-provider::after {
+  content: '' !important;
+}
+
 *,
 ::before,
 ::after {
