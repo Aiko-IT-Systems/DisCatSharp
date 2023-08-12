@@ -94,6 +94,7 @@ public static class ExtensionMethods
 	{
 		if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
 			throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
+
 		foreach (var extension in extensions.Values)
 			extension.RegisterGlobalCommands(type, translationSetup);
 	}
@@ -123,6 +124,7 @@ public static class ExtensionMethods
 	{
 		if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
 			throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
+
 		foreach (var extension in extensions.Values)
 			extension.RegisterGuildCommands(type, guildId, translationSetup);
 	}
@@ -156,16 +158,17 @@ public static class ExtensionMethods
 	{
 		if (e is not Enum)
 			return null;
+
 		var type = e.GetType();
 		var values = Enum.GetValues(type);
 
 		return (from int val in values
-			where val == e.ToInt32(CultureInfo.InvariantCulture)
-			let memInfo = type.GetMember(type.GetEnumName(val))
-			select memInfo[0]
-				.GetCustomAttributes(typeof(ChoiceNameAttribute), false)
-				.FirstOrDefault() is ChoiceNameAttribute nameAttribute
-				? nameAttribute.Name
-				: type.GetEnumName(val)).FirstOrDefault();
+				where val == e.ToInt32(CultureInfo.InvariantCulture)
+				let memInfo = type.GetMember(type.GetEnumName(val))
+				select memInfo[0]
+					.GetCustomAttributes(typeof(ChoiceNameAttribute), false)
+					.FirstOrDefault() is ChoiceNameAttribute nameAttribute
+					? nameAttribute.Name
+					: type.GetEnumName(val)).FirstOrDefault();
 	}
 }

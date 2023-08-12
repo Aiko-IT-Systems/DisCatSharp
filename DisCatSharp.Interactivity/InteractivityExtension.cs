@@ -314,6 +314,7 @@ public class InteractivityExtension : BaseExtension
 
 		if (message.Components.SelectMany(c => c.Components).OfType<DiscordButtonComponent>().All(c => c.CustomId != id))
 			throw new ArgumentException($"Message does not contain button with Id of '{id}'.");
+
 		var result = await this
 			._componentEventWaiter
 			.WaitForMatchAsync(new(message, (c) => c.Interaction.Data.ComponentType is ComponentType.Button && c.Id == id, token))
@@ -853,6 +854,7 @@ public class InteractivityExtension : BaseExtension
 					s += subSplit[i];
 					if (i < 15 || i % 15 != 0)
 						continue;
+
 					split.Add(s);
 					s = "";
 				}
@@ -905,6 +907,7 @@ public class InteractivityExtension : BaseExtension
 					s += $"{subSplit[i]}\n";
 					if (i % 15 != 0 || i == 0)
 						continue;
+
 					split.Add(s);
 					s = "";
 				}

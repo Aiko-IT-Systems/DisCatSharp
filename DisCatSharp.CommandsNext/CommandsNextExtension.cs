@@ -1018,6 +1018,7 @@ public class CommandsNextExtension : BaseExtension
 
 		var ti = t.GetTypeInfo();
 		if (!ti.IsGenericTypeDefinition || t.GetGenericTypeDefinition() != typeof(Nullable<>)) return t.Name;
+
 		var tn = ti.GenericTypeArguments[0];
 		return this._userFriendlyTypeNames.TryGetValue(tn, out var name) ? name : tn.Name;
 

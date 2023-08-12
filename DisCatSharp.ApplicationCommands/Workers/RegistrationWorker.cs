@@ -166,6 +166,7 @@ internal static class RegistrationWorker
 
 		if (!globalCommandsDeleteList.NotEmptyAndNotNull())
 			return commands.NotEmptyAndNotNull() ? commands : null;
+
 		client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, $"[AC GLOBAL] Deleting missing application commands.");
 
 		foreach (var cmdId in globalCommandsDeleteList)
@@ -311,6 +312,7 @@ internal static class RegistrationWorker
 
 		if (!guildCommandsDeleteList.NotEmptyAndNotNull())
 			return commands.NotEmptyAndNotNull() ? commands : null;
+
 		foreach (var cmdId in guildCommandsDeleteList!)
 		{
 			client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, @"[AC GUILD] Deleting missing application commands. Guild ID: {guild}", guildId);

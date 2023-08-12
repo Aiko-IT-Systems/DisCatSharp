@@ -55,6 +55,10 @@ public sealed class DiscordConfiguration
 			this._token = value.Trim();
 		}
 	}
+
+	/// <summary>
+	/// Gets the token used to identify the client.
+	/// </summary>
 	private string _token = "";
 
 	/// <summary>
@@ -179,6 +183,10 @@ public sealed class DiscordConfiguration
 		internal get => this._webSocketClientFactory;
 		set => this._webSocketClientFactory = value ?? throw new InvalidOperationException("You need to supply a valid WebSocket client factory method.");
 	}
+
+	/// <summary>
+	/// Sets the factory method and creates a new instances of the <see cref="WebSocketClient"/>.
+	/// </summary>
 	private WebSocketClientFactoryDelegate _webSocketClientFactory = WebSocketClient.CreateNew;
 
 	/// <summary>
@@ -191,6 +199,10 @@ public sealed class DiscordConfiguration
 		internal get => this._udpClientFactory;
 		set => this._udpClientFactory = value ?? throw new InvalidOperationException("You need to supply a valid UDP client factory method.");
 	}
+
+	/// <summary>
+	/// Sets the factory method and creates a new instances of the <see cref="DcsUdpClient"/>.
+	/// </summary>
 	private UdpClientFactoryDelegate _udpClientFactory = DcsUdpClient.CreateNew;
 
 	/// <summary>
@@ -288,11 +300,13 @@ public sealed class DiscordConfiguration
 		{
 			if (!this.EnableLibraryDeveloperMode)
 				throw new AccessViolationException("Cannot set this as non-library-dev");
+
 			if (value == null)
 				this._exceptions?.Clear();
-			else this._exceptions = value.All(val => val.BaseType == typeof(DisCatSharpException))
-				? value
-				: throw new InvalidOperationException("Can only track exceptions who inherit from " + nameof(DisCatSharpException) + " and must be constructed with typeof(Type)");
+			else
+				this._exceptions = value.All(val => val.BaseType == typeof(DisCatSharpException))
+					? value
+					: throw new InvalidOperationException("Can only track exceptions who inherit from " + nameof(DisCatSharpException) + " and must be constructed with typeof(Type)");
 		}
 	}
 
@@ -333,9 +347,9 @@ public sealed class DiscordConfiguration
 	{ }
 
 	/// <summary>
-	/// Utilized via Dependency Injection Pipeline
+	/// Utilized via dependency injection pipeline.
 	/// </summary>
-	/// <param name="provider"></param>
+	/// <param name="provider">The service provider.</param>
 	[ActivatorUtilitiesConstructor]
 	public DiscordConfiguration(IServiceProvider provider)
 	{

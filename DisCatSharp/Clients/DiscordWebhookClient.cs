@@ -121,6 +121,7 @@ public class DiscordWebhookClient
 	{
 		if (string.IsNullOrWhiteSpace(token))
 			throw new ArgumentNullException(nameof(token));
+
 		token = token.Trim();
 
 		if (this.Hooks.Any(x => x.Id == id))

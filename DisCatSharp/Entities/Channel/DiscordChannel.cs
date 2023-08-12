@@ -662,6 +662,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 
 		if (this.InternalAvailableTags == null)
 			return;
+
 		{
 			foreach (var xo in this.InternalAvailableTags)
 			{
@@ -679,6 +680,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	{
 		if (this.Guild == null)
 			throw new ArgumentException("Cannot get order of non-guild channels.");
+
 		var channels = await this.Discord.ApiClient.GetGuildChannelsAsync(this.Guild.Id).ConfigureAwait(false);
 		this.Guild.ChannelsInternal.Clear();
 		foreach (var channel in channels.ToList())
@@ -762,6 +764,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 				};
 				if (x.Id != this.Id)
 					return pmd;
+
 				pmd.Position = position;
 				pmd.ParentId = newParent?.Id;
 				pmd.LockPermissions = lockPermissions;
@@ -1154,6 +1157,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	{
 		if (this.InternalAvailableTags is null)
 			return null;
+
 		var tag = this.InternalAvailableTags.First(x => x.Id == id);
 		tag.Discord = this.Discord;
 		tag.ChannelId = this.Id;
@@ -1170,6 +1174,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		var tag = this.InternalAvailableTags?.FirstOrDefault(x => x.Id == id);
 		if (tag is null)
 			return null;
+
 		tag.Discord = this.Discord;
 		tag.ChannelId = this.Id;
 		return tag;

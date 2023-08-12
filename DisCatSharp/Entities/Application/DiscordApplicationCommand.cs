@@ -83,7 +83,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// </summary>
 	[JsonIgnore]
 	public DiscordApplicationCommandLocalization? DescriptionLocalizations
-		=> this.RawDescriptionLocalizations != null ? new (this.RawDescriptionLocalizations) : null;
+		=> this.RawDescriptionLocalizations != null ? new(this.RawDescriptionLocalizations) : null;
 
 	/// <summary>
 	/// Gets the potential parameters for this command.
@@ -122,7 +122,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	public ulong Version { get; internal set; }
 
 	/// <summary>
-	/// Gets the name localizations.
+	/// Gets the mention for this command.
 	/// </summary>
 	[JsonIgnore]
 	public string Mention
@@ -169,6 +169,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 				throw new ArgumentException("Context menus do not support descriptions.");
 			if (options?.Any() ?? false)
 				throw new ArgumentException("Context menus do not support options.");
+
 			description = string.Empty;
 
 			this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();

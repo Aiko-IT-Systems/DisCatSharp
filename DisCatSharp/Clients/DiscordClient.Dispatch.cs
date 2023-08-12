@@ -2318,8 +2318,8 @@ public sealed partial class DiscordClient
 
 		DiscordMessage oldmsg = null;
 		if (this.Configuration.MessageCacheSize == 0
-			|| this.MessageCache == null
-			|| !this.MessageCache.TryGet(xm => xm.Id == eventMessage.Id && xm.ChannelId == eventMessage.ChannelId, out message))
+		    || this.MessageCache == null
+		    || !this.MessageCache.TryGet(xm => xm.Id == eventMessage.Id && xm.ChannelId == eventMessage.ChannelId, out message))
 		{
 			message = eventMessage;
 			this.PopulateMessageReactionsAndCache(message, author, member);
@@ -3091,7 +3091,6 @@ public sealed partial class DiscordClient
 	/// Handles the voice state update event.
 	/// </summary>
 	/// <param name="raw">The raw voice state update object.</param>
-
 	internal async Task OnVoiceStateUpdateEventAsync(JObject raw)
 	{
 		var gid = (ulong)raw["guild_id"];
@@ -3135,7 +3134,6 @@ public sealed partial class DiscordClient
 	/// <param name="endpoint">The new endpoint.</param>
 	/// <param name="token">The new token.</param>
 	/// <param name="guild">The guild.</param>
-
 	internal async Task OnVoiceServerUpdateEventAsync(string endpoint, string token, DiscordGuild guild)
 	{
 		var ea = new VoiceServerUpdateEventArgs(this.ServiceProvider)
@@ -3156,7 +3154,6 @@ public sealed partial class DiscordClient
 	/// </summary>
 	/// <param name="cmd">The application command.</param>
 	/// <param name="guildId">The optional guild id.</param>
-
 	internal async Task OnApplicationCommandCreateAsync(DiscordApplicationCommand cmd, ulong? guildId)
 	{
 		cmd.Discord = this;
@@ -3184,7 +3181,6 @@ public sealed partial class DiscordClient
 	/// </summary>
 	/// <param name="cmd">The application command.</param>
 	/// <param name="guildId">The optional guild id.</param>
-
 	internal async Task OnApplicationCommandUpdateAsync(DiscordApplicationCommand cmd, ulong? guildId)
 	{
 		cmd.Discord = this;
@@ -3212,7 +3208,6 @@ public sealed partial class DiscordClient
 	/// </summary>
 	/// <param name="cmd">The application command.</param>
 	/// <param name="guildId">The optional guild id.</param>
-
 	internal async Task OnApplicationCommandDeleteAsync(DiscordApplicationCommand cmd, ulong? guildId)
 	{
 		cmd.Discord = this;
@@ -3270,7 +3265,7 @@ public sealed partial class DiscordClient
 	/// <param name="applicationId">The application id.</param>
 	internal async Task OnApplicationCommandPermissionsUpdateAsync(IEnumerable<DiscordApplicationCommandPermission> perms, ulong channelId, ulong guildId, ulong applicationId)
 	{
-		if (applicationId != this.CurrentApplication.Id)
+		if (applicationId != this.CurrentApplication?.Id)
 			return;
 
 		var guild = this.InternalGetCachedGuild(guildId);
@@ -3317,13 +3312,14 @@ public sealed partial class DiscordClient
 	/// <param name="interaction">The interaction.</param>
 	/// <param name="rawInteraction">Debug.</param>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
-	internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction, string rawInteraction)
+	internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember? member, DiscordInteraction interaction, string rawInteraction)
 	{
 		if (this.Configuration.EnableLibraryDeveloperMode)
 		{
 			//this.Logger.LogDebug("Interaction from {guild} on shard {shard}", guildId.HasValue ? guildId.Value : "dm", this.ShardId);
 			//this.Logger.LogDebug("Interaction: {interaction}", rawInteraction);
 		}
+
 		var usr = new DiscordUser(user) { Discord = this };
 
 		interaction.ChannelId = channelId;
@@ -3333,7 +3329,7 @@ public sealed partial class DiscordClient
 
 		if (member != null)
 		{
-			usr = new DiscordMember(member) { GuildId = guildId.Value, Discord = this };
+			usr = new DiscordMember(member) { GuildId = guildId!.Value, Discord = this };
 			this.UpdateUser(usr, guildId, interaction.Guild, member);
 		}
 		else
@@ -3357,7 +3353,7 @@ public sealed partial class DiscordClient
 				{
 					c.Value.Discord = this;
 					c.Value.Id = c.Key;
-					c.Value.GuildId = guildId.Value;
+					c.Value.GuildId = guildId!.Value;
 					c.Value.User.Discord = this;
 					this.UserCache.AddOrUpdate(c.Value.User.Id, c.Value.User, (old, @new) => @new);
 				}
@@ -3367,17 +3363,17 @@ public sealed partial class DiscordClient
 				{
 					c.Value.Discord = this;
 
-					if (guildId.HasValue)
+					if (!guildId.HasValue)
+						continue;
+
+					c.Value.GuildId = guildId.Value;
+					try
 					{
-						c.Value.GuildId = guildId.Value;
-						try
-						{
-							if (this.Guilds.TryGetValue(guildId.Value, out var guild))
-								if (guild.ChannelsInternal.TryGetValue(c.Key, out var channel) && channel.PermissionOverwritesInternal != null && channel.PermissionOverwritesInternal.Any())
-									c.Value.PermissionOverwritesInternal = channel.PermissionOverwritesInternal;
-						}
-						catch (Exception) { }
+						if (this.Guilds.TryGetValue(guildId.Value, out var guild))
+							if (guild.ChannelsInternal.TryGetValue(c.Key, out var channel) && channel.PermissionOverwritesInternal != null && channel.PermissionOverwritesInternal.Any())
+								c.Value.PermissionOverwritesInternal = channel.PermissionOverwritesInternal;
 					}
+					catch (Exception) { }
 				}
 
 			if (resolved.Roles != null)
@@ -3412,6 +3408,7 @@ public sealed partial class DiscordClient
 				interaction.Message.Discord = this;
 				interaction.Message.ChannelId = interaction.ChannelId;
 			}
+
 			var cea = new ComponentInteractionCreateEventArgs(this.ServiceProvider)
 			{
 				Message = interaction.Message,
@@ -3467,7 +3464,7 @@ public sealed partial class DiscordClient
 	/// <param name="guildId">The optional guild id.</param>
 	/// <param name="started">The time when the user started typing.</param>
 	/// <param name="mbr">The transport member.</param>
-	internal async Task OnTypingStartEventAsync(ulong userId, ulong channelId, DiscordChannel channel, ulong? guildId, DateTimeOffset started, TransportMember mbr)
+	internal async Task OnTypingStartEventAsync(ulong userId, ulong channelId, DiscordChannel? channel, ulong? guildId, DateTimeOffset started, TransportMember mbr)
 	{
 		if (channel == null)
 			channel = new()

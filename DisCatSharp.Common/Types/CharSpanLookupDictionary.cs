@@ -542,6 +542,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		{
 			if (!key.SequenceEqual(kdv.Key.AsSpan()))
 				continue;
+
 			value = kdv.Value;
 			return true;
 		}

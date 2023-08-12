@@ -26,7 +26,6 @@ using System.Linq;
 using System.Reflection;
 
 using DisCatSharp.Entities;
-using DisCatSharp.Enums;
 
 using Microsoft.Extensions.Logging;
 

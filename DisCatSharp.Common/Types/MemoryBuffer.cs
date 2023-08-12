@@ -170,6 +170,7 @@ public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 
 			if (this._lastSegmentLength != mem.Length)
 				continue;
+
 			this._segNo++;
 			this._lastSegmentLength = 0;
 		}

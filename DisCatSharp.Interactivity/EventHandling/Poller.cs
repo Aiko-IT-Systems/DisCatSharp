@@ -123,6 +123,7 @@ internal class Poller
 	{
 		if (this._requests is null)
 			return Task.CompletedTask;
+
 		foreach (var req in this._requests.Where(req => req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id).Where(req => eventArgs.User.Id != this._client!.CurrentUser!.Id))
 			req.RemoveReaction(eventArgs.Emoji, eventArgs.User);
 		return Task.CompletedTask;
@@ -138,6 +139,7 @@ internal class Poller
 	{
 		if (this._requests is null)
 			return Task.CompletedTask;
+
 		foreach (var req in this._requests.Where(req => req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id))
 			req.ClearCollected();
 

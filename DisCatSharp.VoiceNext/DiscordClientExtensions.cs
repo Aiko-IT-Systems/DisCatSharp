@@ -87,7 +87,7 @@ public static class DiscordClientExtensions
 	/// </summary>
 	/// <param name="client">Discord client to get VoiceNext instance for.</param>
 	/// <returns>VoiceNext client instance.</returns>
-	public static VoiceNextExtension GetVoiceNext(this DiscordClient client)
+	public static VoiceNextExtension? GetVoiceNext(this DiscordClient client)
 		=> client.GetExtension<VoiceNextExtension>();
 
 	/// <summary>
@@ -95,17 +95,12 @@ public static class DiscordClientExtensions
 	/// </summary>
 	/// <param name="client">The shard client to retrieve <see cref="VoiceNextExtension"/> instances from.</param>
 	/// <returns>A dictionary containing <see cref="VoiceNextExtension"/> instances for each shard.</returns>
-	public static async Task<IReadOnlyDictionary<int, VoiceNextExtension>> GetVoiceNextAsync(this DiscordShardedClient client)
+	public static async Task<IReadOnlyDictionary<int, VoiceNextExtension?>> GetVoiceNextAsync(this DiscordShardedClient client)
 	{
 		await client.InitializeShardsAsync().ConfigureAwait(false);
-		var extensions = new Dictionary<int, VoiceNextExtension>();
+		var extensions = client.ShardClients.Values.ToDictionary(shard => shard.ShardId, shard => shard.GetExtension<VoiceNextExtension?>());
 
-		foreach (var shard in client.ShardClients.Values)
-		{
-			extensions.Add(shard.ShardId, shard.GetExtension<VoiceNextExtension>());
-		}
-
-		return new ReadOnlyDictionary<int, VoiceNextExtension>(extensions);
+		return new ReadOnlyDictionary<int, VoiceNextExtension?>(extensions);
 	}
 
 	/// <summary>

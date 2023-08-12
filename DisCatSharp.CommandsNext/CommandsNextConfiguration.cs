@@ -108,7 +108,7 @@ public sealed class CommandsNextConfiguration
 	/// <para>Objects in this provider are used when instantiating command modules. This allows passing data around without resorting to static members.</para>
 	/// <para>Defaults to an empty service provider.</para>
 	/// </summary>
-	public IServiceProvider ServiceProvider { internal get; set; }
+	public IServiceProvider ServiceProvider { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
 
 	/// <summary>
 	/// <para>Gets whether any extra arguments passed to commands should be ignored or not. If this is set to false, extra arguments will throw, otherwise they will be ignored.</para>
@@ -124,12 +124,13 @@ public sealed class CommandsNextConfiguration
 	public bool UseDefaultCommandHandler { internal get; set; } = true;
 
 	/// <summary>
-	/// Creates a new instance of <see cref="CommandsNextConfiguration"/>.
+	/// Creates a new configuration with default values.
 	/// </summary>
-	public CommandsNextConfiguration() { }
+	public CommandsNextConfiguration()
+	{ }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="CommandsNextConfiguration"/> class.
+	/// Utilized via dependency injection pipeline.
 	/// </summary>
 	/// <param name="provider">The service provider.</param>
 	[ActivatorUtilitiesConstructor]

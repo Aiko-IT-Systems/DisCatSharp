@@ -299,6 +299,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		// Check if connection lock is already set, and set it if it isn't
 		if (!this._connectionLock.Wait(0))
 			throw new InvalidOperationException("This client is already connected.");
+
 		this._connectionLock.Set();
 
 		var w = 7500;
@@ -410,6 +411,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	{
 		if (!fetch && this.TryGetCachedUserInternal(userId, out var cachedUsr))
 			return cachedUsr;
+
 		var usr = await this.ApiClient.GetUserAsync(userId).ConfigureAwait(false);
 		var cacheUser = usr;
 		usr = this.UserCache.AddOrUpdate(userId, usr, (id, old) =>
@@ -948,6 +950,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	{
 		if (!bot.IsBot)
 			throw new ArgumentException("The user must be a bot.", nameof(bot));
+
 		permissions &= PermissionMethods.FullPerms;
 		return new(new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
 			.AddParameter("client_id", bot.Id.ToString(CultureInfo.InvariantCulture))
@@ -1356,6 +1359,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 			if (intents.HasAllPrivilegedIntents() && !guild.IsLarge)
 				return usr; // we have the necessary privileged intents, no need to worry about caching here unless guild is large.
+
 			if (guild?.MembersInternal.TryGetValue(usr.Id, out member) == false)
 			{
 				if (intents.HasIntent(DiscordIntents.GuildMembers) || this.Configuration.AlwaysCacheMembers) // member can be updated by events, so cache it
@@ -1396,6 +1400,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		if (rawEvents == null)
 			return;
+
 		guild.ScheduledEventsInternal.Clear();
 
 		foreach (var xj in rawEvents)

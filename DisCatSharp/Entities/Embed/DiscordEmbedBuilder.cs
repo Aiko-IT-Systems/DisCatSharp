@@ -44,6 +44,7 @@ public sealed class DiscordEmbedBuilder
 		{
 			if (value is { Length: > 256 })
 				throw new ArgumentException("Title length cannot exceed 256 characters.", nameof(value));
+
 			this._title = value;
 		}
 	}
@@ -59,6 +60,7 @@ public sealed class DiscordEmbedBuilder
 		{
 			if (value is { Length: > 4096 })
 				throw new ArgumentException("Description length cannot exceed 4096 characters.", nameof(value));
+
 			this._description = value;
 		}
 	}
@@ -326,6 +328,7 @@ public sealed class DiscordEmbedBuilder
 	{
 		if (!string.IsNullOrEmpty(name) && name.Length > 256)
 			throw new NotSupportedException("Embed author name can not exceed 256 chars. See https://discord.com/developers/docs/resources/channel#embed-limits.");
+
 		this.Author = string.IsNullOrEmpty(name) && string.IsNullOrEmpty(url) && string.IsNullOrEmpty(iconUrl)
 			? null
 			: new EmbedAuthor
@@ -544,6 +547,7 @@ public sealed class DiscordEmbedBuilder
 			{
 				if (value is { Length: > 256 })
 					throw new ArgumentException("Author name length cannot exceed 256 characters.", nameof(value));
+
 				this._name = value;
 			}
 		}
@@ -585,6 +589,7 @@ public sealed class DiscordEmbedBuilder
 			{
 				if (value is { Length: > 2048 })
 					throw new ArgumentException("Footer text length cannot exceed 2048 characters.", nameof(value));
+
 				this._text = value;
 			}
 		}

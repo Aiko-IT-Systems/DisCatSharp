@@ -8,6 +8,7 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
+  GH_TOKEN: ${{ github.token }}
 
 jobs:
   build:
@@ -19,6 +20,9 @@ jobs:
       uses: actions/checkout@v3
       with:
         token:  ${{ secrets.NYUW_TOKEN_GH }}
+    - name: Checkout PR if nessesary
+      if: github.event_name == 'pull_request'
+      run: gh pr checkout ${{ github.event.pull_request.number }}
     - name: Setup .NET
       uses: actions/setup-dotnet@v3.2.0
       with:
@@ -77,8 +81,6 @@ jobs:
       run: rm dcs-docs-preview.zip
     - name: Add .htaccess
       run: rm -f .htaccess && wget https://gist.githubusercontent.com/Lulalaby/8a032d0ddebb9125691094edc67b6593/raw/0c4bf0423cfe334fdd5092b014d2481759dd052a/.htaccess
-    #- name: Add _redirects
-    #  run: rm -f _redirects && wget https://gist.githubusercontent.com/Lulalaby/0c784680a855fd161411002e3859b4fd/raw/9708d1acfce3f647cbb8da19c2022a20198979fa/_redirects
     - name: Set access rights
       run: sudo chmod 777 -R .
     - name: Commit changes

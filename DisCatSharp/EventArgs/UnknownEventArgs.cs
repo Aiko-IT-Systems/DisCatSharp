@@ -32,12 +32,12 @@ public class UnknownEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Gets the event's name.
 	/// </summary>
-	public string EventName { get; internal set; }
+	public string? EventName { get; internal set; }
 
 	/// <summary>
 	/// Gets the event's data.
 	/// </summary>
-	public string Json { get; internal set; }
+	public string? Json { get; internal set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="UnknownEventArgs"/> class.

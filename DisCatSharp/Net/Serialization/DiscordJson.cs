@@ -135,6 +135,7 @@ public static class DiscordJson
 
 		if (!discord.Configuration.ReportMissingFields || !obj.AdditionalProperties.Any())
 			return obj;
+
 		var sentryMessage = "Found missing properties in api response for " + obj.GetType().Name;
 		List<string> sentryFields = new();
 		var values = 0;
@@ -143,6 +144,7 @@ public static class DiscordJson
 			values++;
 			if (obj.IgnoredJsonKeys.Count != 0 && obj.IgnoredJsonKeys.Any(x => x == ap.Key))
 				continue;
+
 			if (values == 1)
 				if (discord.Configuration.EnableLibraryDeveloperMode)
 				{
@@ -157,6 +159,7 @@ public static class DiscordJson
 
 		if (!discord.Configuration.EnableSentry || sentryFields.Count == 0)
 			return obj;
+
 		var sentryJson = JsonConvert.SerializeObject(sentryFields);
 		sentryMessage += "\n\nNew fields: " + sentryJson;
 		SentryEvent sentryEvent = new()
@@ -208,6 +211,7 @@ public static class DiscordJson
 
 		if (!discord.Configuration.ReportMissingFields || !obj.Any(x => x.AdditionalProperties.Any()))
 			return obj;
+
 		var first = obj.First();
 		var sentryMessage = "Found missing properties in api response for " + first.GetType().Name;
 		List<string> sentryFields = new();
@@ -217,6 +221,7 @@ public static class DiscordJson
 			values++;
 			if (first.IgnoredJsonKeys.Count != 0 && first.IgnoredJsonKeys.Any(x => x == ap.Key))
 				continue;
+
 			if (values == 1)
 				if (discord.Configuration.EnableLibraryDeveloperMode)
 				{
@@ -231,6 +236,7 @@ public static class DiscordJson
 
 		if (!discord.Configuration.EnableSentry || sentryFields.Count == 0)
 			return obj;
+
 		var sentryJson = JsonConvert.SerializeObject(sentryFields);
 		sentryMessage += "\n\nNew fields: " + sentryJson;
 		SentryEvent sentryEvent = new()

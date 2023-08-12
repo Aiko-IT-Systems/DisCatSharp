@@ -100,7 +100,7 @@ public abstract class SnowflakeObject : ObservableApiObject, IEquatable<Snowflak
 	/// Serializes the <see cref="SnowflakeObject"/> to a JSON string.
 	/// </summary>
 	/// <returns>A JSON string representation of the object.</returns>
-	public virtual string ToJson()
+	public string ToJson()
 		=> DiscordJson.SerializeObject(this);
 
 	/// <summary>

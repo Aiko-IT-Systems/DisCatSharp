@@ -345,6 +345,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	{
 		if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
 			throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
+
 		this._updateList.Add(new(guildId, new(type, translationSetup)));
 	}
 
@@ -365,6 +366,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	{
 		if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
 			throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
+
 		this._updateList.Add(new(null, new(type, translationSetup)));
 	}
 
@@ -487,7 +489,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			GlobalDiscordCommands.AddRange(globalCommands);
 
 		foreach (var key in commandsPending)
-		{	
+		{
 			if (key.HasValue)
 			{
 				this.Client.Logger.Log(ApplicationCommandsLogLevel, "Registering commands in guild, {value}", key.Value);
@@ -784,7 +786,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					GroupCommands.AddRange(groupCommands.DistinctBy(x => x.Name));
 					SubGroupCommands.AddRange(subGroupCommands.DistinctBy(x => x.Name));
 					ContextMenuCommands.AddRange(contextMenuCommands.DistinctBy(x => x.Name));
-					
+
 					s_registeredCommands.Add(new(guildId, commands.ToList()));
 
 					foreach (var app in commandMethods.Select(command => types.First(t => t.Type == command.Method.DeclaringType)))
@@ -837,6 +839,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 		if (s_registrationCount != s_expectedCount && !man)
 			return;
+
 		await this._applicationCommandsModuleStartupFinished.InvokeAsync(this, new(Configuration?.ServiceProvider)
 		{
 			Handled = true,
@@ -1170,6 +1173,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				x.Type is not ApplicationCommandOptionType.SubCommand
 					and not ApplicationCommandOptionType.SubCommandGroup))
 			return ApplicationCommandFinalType.Command;
+
 		if (data.Options.Any(x => x.Type is ApplicationCommandOptionType.SubCommandGroup))
 			type = ApplicationCommandFinalType.SubCommandGroup;
 		else if (data.Options.Any(x => x.Type is ApplicationCommandOptionType.SubCommand))
@@ -1516,6 +1520,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				//Checks if any failed, and throws an exception
 				if (dict.Any(x => x.Value == false))
 					throw new SlashExecutionChecksFailedException { FailedChecks = dict.Where(x => x.Value == false).Select(x => x.Key).ToList() };
+
 				break;
 			}
 			case ContextMenuContext contextMenuContext:
@@ -1540,6 +1545,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				//Checks if any failed, and throws an exception
 				if (dict.Any(x => x.Value == false))
 					throw new ContextMenuExecutionChecksFailedException { FailedChecks = dict.Where(x => x.Value == false).Select(x => x.Key).ToList() };
+
 				break;
 			}
 		}

@@ -58,7 +58,7 @@ public class DiscordApplicationCommandOption
 	/// </summary>
 	[JsonIgnore]
 	public DiscordApplicationCommandLocalization? NameLocalizations
-		=> this.RawNameLocalizations != null ? new (this.RawNameLocalizations) : null;
+		=> this.RawNameLocalizations != null ? new(this.RawNameLocalizations) : null;
 
 	/// <summary>
 	/// Gets the description of this command parameter.
@@ -77,7 +77,7 @@ public class DiscordApplicationCommandOption
 	/// </summary>
 	[JsonIgnore]
 	public DiscordApplicationCommandLocalization? DescriptionLocalizations
-		=> this.RawDescriptionLocalizations != null ? new (this.RawDescriptionLocalizations) : null;
+		=> this.RawDescriptionLocalizations != null ? new(this.RawDescriptionLocalizations) : null;
 
 	/// <summary>
 	/// Gets whether this command parameter is required.
@@ -161,6 +161,7 @@ public class DiscordApplicationCommandOption
 			throw new ArgumentException("Application command option description cannot exceed 100 characters.", nameof(description));
 		if (autocomplete && (choices?.Any() ?? false))
 			throw new InvalidOperationException("Auto-complete slash command options cannot provide choices.");
+
 		if (type is ApplicationCommandOptionType.SubCommand or ApplicationCommandOptionType.SubCommandGroup)
 			if (string.IsNullOrWhiteSpace(description))
 				throw new ArgumentException("Slash commands need a description.", nameof(description));

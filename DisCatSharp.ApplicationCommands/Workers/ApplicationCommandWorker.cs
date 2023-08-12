@@ -118,6 +118,7 @@ internal static class CommandWorker
 				var parameters = method.GetParameters();
 				if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(InteractionContext)))
 					throw new ArgumentException($"The first argument of the command '{commandAttribute.Name}' has to be an InteractionContext!");
+
 				var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), commandAttribute.Name, guildId).ConfigureAwait(false);
 
 				commandMethods.Add(new() { Method = method, Name = commandAttribute.Name });

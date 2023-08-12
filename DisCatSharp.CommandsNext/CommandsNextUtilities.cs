@@ -107,6 +107,7 @@ public static class CommandsNextUtilities
 		for (; i < str.Length; i++)
 			if (!char.IsWhiteSpace(str[i]))
 				break;
+
 		startPos = i;
 
 		var endPosition = -1;

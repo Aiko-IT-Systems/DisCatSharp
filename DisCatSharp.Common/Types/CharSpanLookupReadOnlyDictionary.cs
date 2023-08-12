@@ -102,6 +102,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	{
 		if (values == null!)
 			throw new ArgumentNullException(nameof(values));
+
 		this._internalBuckets = PrepareItems(values, out var count);
 		this.Count = count;
 	}
@@ -175,6 +176,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 		{
 			if (!key.SequenceEqual(kdv.Key.AsSpan()))
 				continue;
+
 			value = kdv.Value;
 			return true;
 		}

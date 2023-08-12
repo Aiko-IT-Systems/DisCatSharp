@@ -85,6 +85,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// Gets the bot library name.
 	/// </summary>
 	// ReSharper disable once MemberCanBeProtected.Global
+	// ReSharper disable once MemberCanBeMadeStatic.Global
 	public string BotLibrary
 		=> "DisCatSharp";
 
@@ -127,9 +128,13 @@ public abstract class BaseDiscordClient : IDisposable
 		=> this.VoiceRegionsLazy.Value;
 
 	/// <summary>
-	/// Gets the list of available voice regions. This property is meant as a way to modify <see cref="VoiceRegions"/>.
+	/// Gets the dictionary of available voice regions. This property is meant as a way to modify <see cref="VoiceRegions"/>.
 	/// </summary>
 	protected internal ConcurrentDictionary<string, DiscordVoiceRegion> InternalVoiceRegions { get; set; }
+
+	/// <summary>
+	/// Gets the lazy dictionary of available voice regions.
+	/// </summary>
 	internal Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>> VoiceRegionsLazy;
 
 	/// <summary>
@@ -161,7 +166,6 @@ public abstract class BaseDiscordClient : IDisposable
 					x.Format = ConsoleLoggerFormat.Default;
 					x.TimestampFormat = this.Configuration.LogTimestampFormat;
 					x.LogToStandardErrorThreshold = this.Configuration.MinimumLogLevel;
-
 				});
 				var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[] { configureNamedOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
 				var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleLoggerOptions>>(), new OptionsCache<ConsoleLoggerOptions>());
@@ -213,7 +217,7 @@ public abstract class BaseDiscordClient : IDisposable
 						{
 							if (e.Exception != null)
 							{
-								if (!this.Configuration.TrackExceptions.Contains(e.Exception.GetType()))
+								if (!this.Configuration.TrackExceptions?.Contains(e.Exception.GetType()) ?? true)
 									return null;
 							}
 							else if (e.Extra.Count == 0 || !e.Extra.ContainsKey("Found Fields"))
@@ -222,6 +226,7 @@ public abstract class BaseDiscordClient : IDisposable
 
 						if (e.HasUser())
 							return e;
+
 						if (this.Configuration.AttachUserInfo && this.CurrentUser! != null!)
 							e.User = new()
 							{
@@ -261,7 +266,7 @@ public abstract class BaseDiscordClient : IDisposable
 					{
 						if (e.Exception != null)
 						{
-							if (!this.Configuration.TrackExceptions.Contains(e.Exception.GetType()))
+							if (!this.Configuration.TrackExceptions?.Contains(e.Exception.GetType()) ?? true)
 								return null;
 						}
 						else if (e.Extra.Count == 0 || !e.Extra.ContainsKey("Found Fields"))
@@ -270,6 +275,7 @@ public abstract class BaseDiscordClient : IDisposable
 
 					if (e.HasUser())
 						return e;
+
 					if (this.Configuration.AttachUserInfo && this.CurrentUser! != null!)
 						e.User = new()
 						{
@@ -407,6 +413,7 @@ public abstract class BaseDiscordClient : IDisposable
 		if (tags != null && tags is { HasValue: true, Value: not null })
 			if (tags.Value.Any(x => x.Length > 20))
 				throw new InvalidOperationException("Tags can not exceed 20 chars.");
+
 		_ = await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconBase64, coverImageBase64, flags, installParams).ConfigureAwait(false);
 		// We use GetCurrentApplicationAsync because modify returns internal data not meant for developers.
 		var app = await this.GetCurrentApplicationAsync().ConfigureAwait(false);
@@ -475,7 +482,6 @@ public abstract class BaseDiscordClient : IDisposable
 
 		var res = await this.ApiClient.GetGatewayInfoAsync().ConfigureAwait(false);
 		return res;
-
 	}
 
 	/// <summary>
@@ -485,8 +491,8 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <returns>The team, or null with errors being logged on failure.</returns>
 	/// </summary>
 	[Deprecated("Don't use this right now, inactive")]
-	public async Task<DisCatSharpTeam> GetLibraryDevelopmentTeamAsync()
-		=> await DisCatSharpTeam.Get(this.RestClient, this.Logger, this.ApiClient).ConfigureAwait(false);
+	public Task<DisCatSharpTeam> GetLibraryDevelopmentTeamAsync()
+		=> DisCatSharpTeam.Get(this.RestClient, this.Logger, this.ApiClient);
 
 	/// <summary>
 	/// Gets a cached user.
