@@ -17,6 +17,7 @@ We'll need to install both the `Serilog` and `Serilog.Extensions.Logging` packag
 
 <br/>
 Start off by creating a new `LoggerConfiguration` instance, slap `.WriteTo.Console().CreateLogger()` onto the end of it, then directly assign that to the static `Logger` property on the `Log` class.
+
 ```cs
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -26,11 +27,13 @@ This will make a new Serilog logger instance which will write to the console sin
 
 <br/>
 Next, create a new variable and assign it a new `LoggerFactory` instance which calls `AddSerilog()`.
+
 ```cs
 var logFactory = new LoggerFactory().AddSerilog();
 ```
 
 Then assign that variable to the `LoggerFactory` property of your of `DiscordConfiguration`.
+
 ```cs
 new DiscordConfiguration()
 {
@@ -40,6 +43,7 @@ new DiscordConfiguration()
 
 <br/>
 Altogether, you'll have something similar to this:
+
 ```cs
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -56,7 +60,6 @@ public async Task MainAsync()
         LoggerFactory = logFactory
     });
 }
-
 ```
 
 And that's it! If you now run your bot, you'll see DisCatSharp log messages formatted and displayed by Serilog.
