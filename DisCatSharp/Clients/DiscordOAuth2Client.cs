@@ -140,7 +140,6 @@ public class DiscordOAuth2Client
 		this.ApiClient.Rest.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", this.VersionHeader);
 	}
 
-
 	/// <summary>
 	/// Gets the OAuth2 url.
 	/// </summary>
@@ -220,12 +219,15 @@ public class DiscordOAuth2Client
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
 	public Task<DiscordApplicationRoleConnection> GetCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken)
-		=> throw new NotImplementedException();
+		=> this.ApiClient.GetCurrentUserApplicationRoleConnectionAsync(accessToken.AccessToken);
 
 	/// <summary>
 	/// Updates the current user's application role connection.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
-	public Task UpdateCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken, string? platformName, string? platformUsername, ApplicationRoleConnectionMetadata metadata)
-		=> throw new NotImplementedException();
+	/// <param name="platformName">The platform name.</param>
+	/// <param name="platformUsername">The platform username.</param>
+	/// <param name="metadata">The metadata.</param>
+	public Task UpdateCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken, string platformName, string platformUsername, ApplicationRoleConnectionMetadata metadata)
+		=> this.ApiClient.ModifyCurrentUserApplicationRoleConnectionAsync(accessToken.AccessToken, platformName, platformUsername, metadata);
 }
