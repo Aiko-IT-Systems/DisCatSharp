@@ -55,11 +55,6 @@ public class DiscordOAuth2Client
 	internal readonly string LogTimestampFormat;
 
 	/// <summary>
-	/// Gets the string representing the version of bot lib.
-	/// </summary>
-	public readonly string VersionString;
-
-	/// <summary>
 	/// Gets the string representing the version header of the bot lib.
 	/// </summary>
 	public readonly string VersionHeader;
@@ -123,9 +118,9 @@ public class DiscordOAuth2Client
 		this.ApiClient.Rest.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("client_secret", this.ClientSecret);
 
 		var a = typeof(DiscordOAuth2Client).GetTypeInfo().Assembly;
-
-		var vs = "";
 		var iv = a.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+
+		string vs;
 		if (iv != null)
 			vs = iv.InformationalVersion;
 		else
@@ -148,9 +143,9 @@ public class DiscordOAuth2Client
 	/// <summary>
 	/// Exchanges a refresh token for a new access token.
 	/// </summary>
-	/// <param name="code">The exchange code.</param>
-	public Task<DiscordAccessTokenResponse> RefreshAccessTokenAsync(string accessToken)
-		=> this.ApiClient.RefreshOAuth2AccessTokenAsync(this.ClientId, this.ClientSecret, accessToken, this.RedirectUri.ToString());
+	/// <param name="refreshToken">The refresh code.</param>
+	public Task<DiscordAccessTokenResponse> RefreshAccessTokenAsync(string refreshToken)
+		=> this.ApiClient.RefreshOAuth2AccessTokenAsync(this.ClientId, this.ClientSecret, refreshToken, this.RedirectUri.ToString());
 
 
 	/// <summary>
