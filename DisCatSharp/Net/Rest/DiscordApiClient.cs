@@ -6130,8 +6130,62 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path);
 		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers).ConfigureAwait(false);
 
-		var oauth2Info = DiscordJson.DeserializeObject<DiscordAuthorizationInformation>(res.Response, this.Discord);
+		var oauth2Info = DiscordJson.DeserializeObject<DiscordAuthorizationInformation>(res.Response, null);
 		return oauth2Info;
+	}
+
+	/// <summary>
+	/// Gets the current user's role connection.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	internal async Task<DiscordApplicationRoleConnection> GetCurrentUserApplicationRoleConnectionAsync(string accessToken)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.USERS}/@me{Endpoints.APPLICATIONS}/:application_id/{Endpoints.ROLE_CONNECTIONS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route,
+			new { application_id = this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) }, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Authorization", "Bearer " + accessToken);
+
+		var url = Utilities.GetApiUriFor(path);
+		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
+			.ConfigureAwait(false);
+		return DiscordJson.DeserializeObject<DiscordApplicationRoleConnection>(res.Response, null);
+	}
+
+	/// <summary>
+		/// Updates the current user's role connection.
+		/// </summary>
+		/// <param name="accessToken">The access token.</param>
+		/// <param name="platformName">The platform name.</param>
+		/// <param name="platformUsername">The platform username.</param>
+		/// <param name="metadata">The metadata.</param>
+		internal Task ModifyCurrentUserApplicationRoleConnectionAsync(string accessToken, Optional<string> platformName, Optional<string> platformUsername, Optional<ApplicationRoleConnectionMetadata> metadata)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		RestOAuth2ApplicationRoleConnectionPayload pld = new()
+		{
+			PlatformName = platformName,
+			PlatformUsername = platformUsername,
+			Metadata = metadata.HasValue ? metadata.Value.GetKeyValuePairs() : Optional<Dictionary<string, string>>.None
+		};
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.USERS}/@me{Endpoints.APPLICATIONS}/:application_id/{Endpoints.ROLE_CONNECTIONS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { application_id = this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) }, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Authorization", "Bearer " + accessToken);
+
+		var url = Utilities.GetApiUriFor(path);
+		this.DoRequestAsync(null, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		return Task.CompletedTask;
 	}
 
 	/// <summary>
@@ -6161,7 +6215,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path);
 		var res = await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData).ConfigureAwait(false);
 
-		var accessTokenInformation = DiscordJson.DeserializeObject<DiscordAccessToken>(res.Response, this.Discord);
+		var accessTokenInformation = DiscordJson.DeserializeObject<DiscordAccessToken>(res.Response, null);
 		return accessTokenInformation;
 	}
 
@@ -6192,7 +6246,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path);
 		var res = await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData).ConfigureAwait(false);
 
-		var accessTokenInformation = DiscordJson.DeserializeObject<DiscordAccessToken>(res.Response, this.Discord);
+		var accessTokenInformation = DiscordJson.DeserializeObject<DiscordAccessToken>(res.Response, null);
 		return accessTokenInformation;
 	}
 
