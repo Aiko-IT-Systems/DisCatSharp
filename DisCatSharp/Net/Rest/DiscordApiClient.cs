@@ -29,11 +29,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
-using DisCatSharp.Common;
 using DisCatSharp.Entities;
+using DisCatSharp.Entities.OAuth2;
 using DisCatSharp.Enums;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Abstractions.Rest;
@@ -6135,7 +6134,13 @@ public sealed class DiscordApiClient
 		return oauth2Info;
 	}
 
-	internal async Task<DiscordAccessToken> ExchangeOAuth2AccessTokenAsync(ulong clientId, string clientSecret, string code, string redirectUri)
+	/// <summary>
+	/// Exchanges a code for an access token.
+	/// </summary>
+	/// <param name="code">The code.</param>
+	/// <returns></returns>
+	/// <exception cref="InvalidOperationException"></exception>
+	internal async Task<DiscordAccessToken> ExchangeOAuth2AccessTokenAsync(string code)
 	{
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
@@ -6146,11 +6151,11 @@ public sealed class DiscordApiClient
 
 		var formData = new Dictionary<string, string>
 		{
-			{ "client_id", clientId.ToString() },
-			{ "client_secret", clientSecret },
+			{ "client_id", this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) },
+			{ "client_secret", this.OAuth2Client.ClientSecret },
 			{ "grant_type", "authorization_code" },
 			{ "code", code },
-			{ "redirect_uri", redirectUri }
+			{ "redirect_uri", this.OAuth2Client.RedirectUri.AbsoluteUri }
 		};
 
 		var url = Utilities.GetApiUriFor(path);
@@ -6160,7 +6165,13 @@ public sealed class DiscordApiClient
 		return accessTokenInformation;
 	}
 
-	internal async Task<DiscordAccessToken> RefreshOAuth2AccessTokenAsync(ulong clientId, string clientSecret, string refreshToken, string redirectUri)
+	/// <summary>
+	/// Exchanges a refresh token for a new access token
+	/// </summary>
+	/// <param name="refreshToken">The refresh token.</param>
+	/// <returns></returns>
+	/// <exception cref="InvalidOperationException"></exception>
+	internal async Task<DiscordAccessToken> RefreshOAuth2AccessTokenAsync(string refreshToken)
 	{
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
@@ -6171,11 +6182,11 @@ public sealed class DiscordApiClient
 
 		var formData = new Dictionary<string, string>
 		{
-			{ "client_id", clientId.ToString() },
-			{ "client_secret", clientSecret },
+			{ "client_id", this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) },
+			{ "client_secret", this.OAuth2Client.ClientSecret },
 			{ "grant_type", "refresh_token" },
 			{ "refresh_token", refreshToken },
-			{ "redirect_uri", redirectUri }
+			{ "redirect_uri", this.OAuth2Client.RedirectUri.AbsoluteUri }
 		};
 
 		var url = Utilities.GetApiUriFor(path);

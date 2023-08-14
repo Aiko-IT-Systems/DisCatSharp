@@ -22,17 +22,23 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Entities.OAuth2;
+using DisCatSharp.Enums;
 using DisCatSharp.Net;
 
 using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp;
 
+/// <summary>
+/// Represents a <see cref="DiscordOAuth2Client"/>.
+/// </summary>
 public class DiscordOAuth2Client
 {
 	/// <summary>
@@ -69,17 +75,17 @@ public class DiscordOAuth2Client
 	/// <summary>
 	/// Gets the client id.
 	/// </summary>
-	internal ulong ClientId { get; set; }
+	public readonly ulong ClientId;
 
 	/// <summary>
 	/// Gets the client secret.
 	/// </summary>
-	internal string ClientSecret { get; set; }
+	public readonly string ClientSecret;
 
 	/// <summary>
 	/// Gets the redirect uri.
 	/// </summary>
-	internal Uri RedirectUri { get; set; }
+	public readonly Uri RedirectUri;
 
 	/// <summary>
 	/// Creates a new oauth client.
@@ -134,52 +140,85 @@ public class DiscordOAuth2Client
 		this.ApiClient.Rest.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", this.VersionHeader);
 	}
 
+
 	/// <summary>
-	/// Exchanges a token for an access token.
+	/// Gets the OAuth2 url.
+	/// </summary>
+	/// <param name="scopes">The space seperated scopes to request.</param>
+	/// <param name="state">The state to use for security reasons. Use <see cref="GenerateState"/>.</param>.
+	/// <param name="suppressPrompt">Whether to suppress the prompt. Works only if previously authorized with same scopes.</param>
+	/// <returns>The OAuth2 url</returns>
+	public Uri GetOAuth2Url(string scopes, string state, bool suppressPrompt = false) =>
+		new(new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
+			.AddParameter("client_id", this.ClientId.ToString(CultureInfo.InvariantCulture))
+			.AddParameter("scope", scopes)
+			.AddParameter("state", state)
+			.AddParameter("redirect_uri", this.RedirectUri.AbsoluteUri)
+			.AddParameter("response_type", "code")
+			.AddParameter("prompt", suppressPrompt ? "none" : "consent")
+			.ToString());
+
+	/// <summary>
+	/// Generates a state for oauth2 authorization.
+	/// </summary>
+	/// <returns></returns>
+	public string GenerateState()
+		=> $"{DateTimeOffset.Now.GetHashCode()}::{this.ClientId.GetHashCode()}::{Guid.NewGuid()}";
+
+	/// <summary>
+	/// Exchanges a code for an access token.
 	/// </summary>
 	/// <param name="code">The exchange code.</param>
 	public Task<DiscordAccessToken> ExchangeAccessTokenAsync(string code)
-		=> this.ApiClient.ExchangeOAuth2AccessTokenAsync(this.ClientId, this.ClientSecret, code, this.RedirectUri.ToString());
+		=> this.ApiClient.ExchangeOAuth2AccessTokenAsync(code);
 
 	/// <summary>
 	/// Exchanges a refresh token for a new access token.
 	/// </summary>
 	/// <param name="accessToken">The current access token.</param>
 	public Task<DiscordAccessToken> RefreshAccessTokenAsync(DiscordAccessToken accessToken)
-		=> this.ApiClient.RefreshOAuth2AccessTokenAsync(this.ClientId, this.ClientSecret, accessToken.RefreshToken, this.RedirectUri.ToString());
+		=> this.ApiClient.RefreshOAuth2AccessTokenAsync(accessToken.RefreshToken);
 
 	/// <summary>
-	/// Gets the current oauth2 authorization information.
+	/// Gets the current user.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	public Task<IReadOnlyList<DiscordUser>> GetCurrentUserAsync(DiscordAccessToken accessToken)
+		=> throw new NotImplementedException();
+
+	/// <summary>
+	/// Gets the current user's connections.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
 	public Task<IReadOnlyList<DiscordConnection>> GetCurrentUserConnectionsAsync(DiscordAccessToken accessToken)
 		=> throw new NotImplementedException();
 
 	/// <summary>
-	/// Gets the current oauth2 authorization information.
+	/// Gets the current user's guilds.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
 	public Task<IReadOnlyDictionary<ulong, DiscordGuild>> GetCurrentUserGuildsAsync(DiscordAccessToken accessToken)
 		=> throw new NotImplementedException();
 
 	/// <summary>
-	/// Gets the current oauth2 authorization information.
+	/// Gets the current user's guild member for given <paramref name="guildId"/>.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
+	/// <param name="guildId">The guild id to get the member for.</param>
 	public Task<DiscordMember> GetCurrentUserGuildMemberAsync(DiscordAccessToken accessToken, ulong guildId)
 		=> throw new NotImplementedException();
 
 	/// <summary>
-	/// Gets the current users application role connection metadata.
+	/// Gets the current user's application role connection.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
-	public Task<DiscordApplicationRoleConnectionMetadata> GetCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken)
+	public Task<DiscordApplicationRoleConnection> GetCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken)
 		=> throw new NotImplementedException();
 
 	/// <summary>
-	/// Updates the current users application role connection metadata.
+	/// Updates the current user's application role connection.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
-	public Task UpdateCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken)
+	public Task UpdateCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken, string? platformName, string? platformUsername, ApplicationRoleConnectionMetadata metadata)
 		=> throw new NotImplementedException();
 }
