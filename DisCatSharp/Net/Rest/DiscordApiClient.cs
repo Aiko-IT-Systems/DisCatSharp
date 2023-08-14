@@ -6135,6 +6135,30 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	/// Gets the current user.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	internal async Task<DiscordUser> GetCurrentUserAsync(string accessToken)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.USERS}/@me";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route,
+			new { application_id = this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) }, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Authorization", "Bearer " + accessToken);
+
+		var url = Utilities.GetApiUriFor(path);
+		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
+			.ConfigureAwait(false);
+		var tuser = DiscordJson.DeserializeObject<TransportUser>(res.Response, null);
+		return new DiscordUser(tuser);
+	}
+
+	/// <summary>
 	/// Gets the current user's role connection.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>

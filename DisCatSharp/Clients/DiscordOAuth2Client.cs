@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -189,22 +190,22 @@ public class DiscordOAuth2Client
 	/// Gets the current user.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
-	public Task<IReadOnlyList<DiscordUser>> GetCurrentUserAsync(DiscordAccessToken accessToken)
-		=> throw new NotImplementedException();
+	public Task<DiscordUser> GetCurrentUserAsync(DiscordAccessToken accessToken)
+		=> accessToken.Scope.Split(' ').Any(x => x == "identify") ? this.ApiClient.GetCurrentUserAsync(accessToken.AccessToken) : throw new AccessViolationException("Access token does not include identify scope");
 
 	/// <summary>
 	/// Gets the current user's connections.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
 	public Task<IReadOnlyList<DiscordConnection>> GetCurrentUserConnectionsAsync(DiscordAccessToken accessToken)
-		=> throw new NotImplementedException();
+		=> accessToken.Scope.Split(' ').Any(x => x == "connections") ? throw new NotImplementedException() : throw new AccessViolationException("Access token does not include connections scope");
 
 	/// <summary>
 	/// Gets the current user's guilds.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
 	public Task<IReadOnlyDictionary<ulong, DiscordGuild>> GetCurrentUserGuildsAsync(DiscordAccessToken accessToken)
-		=> throw new NotImplementedException();
+		=> accessToken.Scope.Split(' ').Any(x => x == "guilds") ? throw new NotImplementedException() : throw new AccessViolationException("Access token does not include guilds scope");
 
 	/// <summary>
 	/// Gets the current user's guild member for given <paramref name="guildId"/>.
@@ -212,14 +213,14 @@ public class DiscordOAuth2Client
 	/// <param name="accessToken">The access token.</param>
 	/// <param name="guildId">The guild id to get the member for.</param>
 	public Task<DiscordMember> GetCurrentUserGuildMemberAsync(DiscordAccessToken accessToken, ulong guildId)
-		=> throw new NotImplementedException();
+		=> accessToken.Scope.Split(' ').Any(x => x == "guilds.members.read") ? throw new NotImplementedException() : throw new AccessViolationException("Access token does not include guilds.members.read scope");
 
 	/// <summary>
 	/// Gets the current user's application role connection.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
 	public Task<DiscordApplicationRoleConnection> GetCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken)
-		=> this.ApiClient.GetCurrentUserApplicationRoleConnectionAsync(accessToken.AccessToken);
+		=> accessToken.Scope.Split(' ').Any(x => x == "role_connections.write") ? this.ApiClient.GetCurrentUserApplicationRoleConnectionAsync(accessToken.AccessToken) : throw new AccessViolationException("Access token does not include role_connections.write scope");
 
 	/// <summary>
 	/// Updates the current user's application role connection.
@@ -229,5 +230,5 @@ public class DiscordOAuth2Client
 	/// <param name="platformUsername">The platform username.</param>
 	/// <param name="metadata">The metadata.</param>
 	public Task UpdateCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken, string platformName, string platformUsername, ApplicationRoleConnectionMetadata metadata)
-		=> this.ApiClient.ModifyCurrentUserApplicationRoleConnectionAsync(accessToken.AccessToken, platformName, platformUsername, metadata);
+		=> accessToken.Scope.Split(' ').Any(x => x == "role_connections.write") ? this.ApiClient.ModifyCurrentUserApplicationRoleConnectionAsync(accessToken.AccessToken, platformName, platformUsername, metadata) : throw new AccessViolationException("Access token does not include role_connections.write scope");
 }
