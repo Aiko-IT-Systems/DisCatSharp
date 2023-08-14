@@ -22,8 +22,6 @@
 
 using System;
 
-using DisCatSharp.OAuth2;
-
 using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp;
