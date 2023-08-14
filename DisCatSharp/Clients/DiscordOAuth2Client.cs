@@ -163,7 +163,7 @@ public class DiscordOAuth2Client
 	/// </summary>
 	/// <returns></returns>
 	public string GenerateState()
-		=> $"{DateTimeOffset.Now.GetHashCode()}::{this.ClientId.GetHashCode()}::{Guid.NewGuid()}";
+		=> $"{DateTimeOffset.UtcNow.UtcTicks}::{this.ClientId.GetHashCode()}::{Guid.NewGuid()}";
 
 	/// <summary>
 	/// Exchanges a code for an access token.
