@@ -180,6 +180,13 @@ public class DiscordOAuth2Client
 		=> this.ApiClient.RefreshOAuth2AccessTokenAsync(accessToken.RefreshToken);
 
 	/// <summary>
+	/// Gets the current authorization information.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	public Task<DiscordAuthorizationInformation> GetCurrentAuthorizationInformationAsync(DiscordAccessToken accessToken)
+		=> this.ApiClient.GetCurrentOAuth2AuthorizationInformationAsync(accessToken.AccessToken);
+
+	/// <summary>
 	/// Gets the current user.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>

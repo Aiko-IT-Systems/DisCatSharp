@@ -45,10 +45,19 @@ public sealed class DiscordAuthorizationInformation : ObservableApiObject
 	public List<string> Scopes { get; internal set; } = new();
 
 	/// <summary>
-	/// Gets when the access token expires.
+	/// Gets when the access token expires as raw string.
 	/// </summary>
 	[JsonProperty("expires")]
-public DateTimeOffset Expires { get; internal set; }
+	internal string ExpiresRaw { get; set; }
+
+	/// <summary>
+	/// Gets when the access token expires.
+	/// </summary>
+	[JsonIgnore]
+	internal DateTimeOffset Expires
+		=> DateTimeOffset.TryParse(this.ExpiresRaw, out var expires)
+			? expires
+			: throw new InvalidCastException("Something went wrong");
 
 	/// <summary>
 	/// Gets the user who has authorized, if the user has authorized with the <c>identify</c> scope.
