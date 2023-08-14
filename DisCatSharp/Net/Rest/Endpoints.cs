@@ -55,6 +55,11 @@ public static class Endpoints
 	public const string OAUTH2 = "/oauth2";
 
 	/// <summary>
+	/// The oauth2 token endpoint.
+	/// </summary>
+	public const string TOKEN = "/token";
+
+	/// <summary>
 	/// The oauth2 authorize endpoint.
 	/// </summary>
 	public const string AUTHORIZE = "/authorize";
