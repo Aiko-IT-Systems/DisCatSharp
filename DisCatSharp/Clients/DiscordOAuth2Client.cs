@@ -40,7 +40,7 @@ namespace DisCatSharp;
 /// <summary>
 /// Represents a <see cref="DiscordOAuth2Client"/>.
 /// </summary>
-public class DiscordOAuth2Client
+public sealed class DiscordOAuth2Client
 {
 	/// <summary>
 	/// Gets the logger for this client.
@@ -142,13 +142,13 @@ public class DiscordOAuth2Client
 	}
 
 	/// <summary>
-	/// Gets the OAuth2 url.
+	/// Generates an OAuth2 url.
 	/// </summary>
 	/// <param name="scopes">The space seperated scopes to request.</param>
 	/// <param name="state">The state to use for security reasons. Use <see cref="GenerateState"/>.</param>.
 	/// <param name="suppressPrompt">Whether to suppress the prompt. Works only if previously authorized with same scopes.</param>
 	/// <returns>The OAuth2 url</returns>
-	public Uri GetOAuth2Url(string scopes, string state, bool suppressPrompt = false) =>
+	public Uri GenerateOAuth2Url(string scopes, string state, bool suppressPrompt = false) =>
 		new(new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
 			.AddParameter("client_id", this.ClientId.ToString(CultureInfo.InvariantCulture))
 			.AddParameter("scope", scopes)
