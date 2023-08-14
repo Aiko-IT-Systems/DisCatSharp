@@ -6135,7 +6135,7 @@ public sealed class DiscordApiClient
 		return oauth2Info;
 	}
 
-	internal async Task<DiscordAccessTokenResponse> ExchangeOAuth2AccessTokenAsync(ulong clientId, string clientSecret, string code, string redirectUri)
+	internal async Task<DiscordAccessToken> ExchangeOAuth2AccessTokenAsync(ulong clientId, string clientSecret, string code, string redirectUri)
 	{
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
@@ -6156,11 +6156,11 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path);
 		var res = await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData).ConfigureAwait(false);
 
-		var accessTokenInformation = DiscordJson.DeserializeObject<DiscordAccessTokenResponse>(res.Response, this.Discord);
+		var accessTokenInformation = DiscordJson.DeserializeObject<DiscordAccessToken>(res.Response, this.Discord);
 		return accessTokenInformation;
 	}
 
-	internal async Task<DiscordAccessTokenResponse> RefreshOAuth2AccessTokenAsync(ulong clientId, string clientSecret, string refreshToken, string redirectUri)
+	internal async Task<DiscordAccessToken> RefreshOAuth2AccessTokenAsync(ulong clientId, string clientSecret, string refreshToken, string redirectUri)
 	{
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
@@ -6181,7 +6181,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path);
 		var res = await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData).ConfigureAwait(false);
 
-		var accessTokenInformation = DiscordJson.DeserializeObject<DiscordAccessTokenResponse>(res.Response, this.Discord);
+		var accessTokenInformation = DiscordJson.DeserializeObject<DiscordAccessToken>(res.Response, this.Discord);
 		return accessTokenInformation;
 	}
 

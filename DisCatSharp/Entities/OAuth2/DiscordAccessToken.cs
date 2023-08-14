@@ -25,9 +25,9 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents a <see cref="DiscordAccessTokenResponse"/>.
+/// Represents a <see cref="DiscordAccessToken"/>.
 /// </summary>
-public sealed class DiscordAccessTokenResponse : ObservableApiObject
+public sealed class DiscordAccessToken : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the access token.

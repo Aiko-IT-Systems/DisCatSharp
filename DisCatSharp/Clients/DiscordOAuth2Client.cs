@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -137,21 +138,48 @@ public class DiscordOAuth2Client
 	/// Exchanges a token for an access token.
 	/// </summary>
 	/// <param name="code">The exchange code.</param>
-	public Task<DiscordAccessTokenResponse> ExchangeAccessTokenAsync(string code)
+	public Task<DiscordAccessToken> ExchangeAccessTokenAsync(string code)
 		=> this.ApiClient.ExchangeOAuth2AccessTokenAsync(this.ClientId, this.ClientSecret, code, this.RedirectUri.ToString());
 
 	/// <summary>
 	/// Exchanges a refresh token for a new access token.
 	/// </summary>
-	/// <param name="refreshToken">The refresh code.</param>
-	public Task<DiscordAccessTokenResponse> RefreshAccessTokenAsync(string refreshToken)
-		=> this.ApiClient.RefreshOAuth2AccessTokenAsync(this.ClientId, this.ClientSecret, refreshToken, this.RedirectUri.ToString());
-
+	/// <param name="accessToken">The current access token.</param>
+	public Task<DiscordAccessToken> RefreshAccessTokenAsync(DiscordAccessToken accessToken)
+		=> this.ApiClient.RefreshOAuth2AccessTokenAsync(this.ClientId, this.ClientSecret, accessToken.RefreshToken, this.RedirectUri.ToString());
 
 	/// <summary>
 	/// Gets the current oauth2 authorization information.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
-	public Task<DiscordAuthorizationInformation> GetCurrentAuthorizationInformationAsync(string accessToken)
-		=> this.ApiClient.GetCurrentOAuth2AuthorizationInformationAsync(accessToken);
+	public Task<IReadOnlyList<DiscordConnection>> GetCurrentUserConnectionsAsync(DiscordAccessToken accessToken)
+		=> throw new NotImplementedException();
+
+	/// <summary>
+	/// Gets the current oauth2 authorization information.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	public Task<IReadOnlyDictionary<ulong, DiscordGuild>> GetCurrentUserGuildsAsync(DiscordAccessToken accessToken)
+		=> throw new NotImplementedException();
+
+	/// <summary>
+	/// Gets the current oauth2 authorization information.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	public Task<DiscordMember> GetCurrentUserGuildMemberAsync(DiscordAccessToken accessToken, ulong guildId)
+		=> throw new NotImplementedException();
+
+	/// <summary>
+	/// Gets the current users application role connection metadata.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	public Task<DiscordApplicationRoleConnectionMetadata> GetCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken)
+		=> throw new NotImplementedException();
+
+	/// <summary>
+	/// Updates the current users application role connection metadata.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	public Task UpdateCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken)
+		=> throw new NotImplementedException();
 }
