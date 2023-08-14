@@ -25,7 +25,7 @@ using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Entities;
+namespace DisCatSharp.Entities.OAuth2;
 
 /// <summary>
 /// Represents a <see cref="DiscordAuthorizationInformation"/>.

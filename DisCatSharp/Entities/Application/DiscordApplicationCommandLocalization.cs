@@ -54,7 +54,7 @@ public sealed class DiscordApplicationCommandLocalization
 		else
 		{
 			throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
-				$"Valid locales: {string.Join(", ", this.ValidLocales)}");
+			                                $"Valid locales: {string.Join(", ", this.ValidLocales)}");
 		}
 	}
 
@@ -82,7 +82,7 @@ public sealed class DiscordApplicationCommandLocalization
 			{
 				if (!this.Validate(locale))
 					throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
-						$"Valid locales: {string.Join(", ", this.ValidLocales)}");
+					                                $"Valid locales: {string.Join(", ", this.ValidLocales)}");
 			}
 		}
 
@@ -94,7 +94,7 @@ public sealed class DiscordApplicationCommandLocalization
 	/// </summary>
 	/// <returns></returns>
 	public Dictionary<string, string> GetKeyValuePairs()
-			=> this.Localizations;
+		=> this.Localizations;
 
 	/// <summary>
 	/// Whether the [locale](xref:modules_application_commands_translations_reference#valid-locales) to be added is valid for Discord.
