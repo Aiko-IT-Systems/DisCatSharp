@@ -60,6 +60,11 @@ public static class Endpoints
 	public const string TOKEN = "/token";
 
 	/// <summary>
+	/// The oauth2 revoke endpoint.
+	/// </summary>
+	public const string REVOKE = "/revoke";
+
+	/// <summary>
 	/// The oauth2 authorize endpoint.
 	/// </summary>
 	public const string AUTHORIZE = "/authorize";

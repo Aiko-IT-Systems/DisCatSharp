@@ -6284,8 +6284,6 @@ public sealed class DiscordApiClient
 	/// Exchanges a code for an access token.
 	/// </summary>
 	/// <param name="code">The code.</param>
-	/// <returns></returns>
-	/// <exception cref="InvalidOperationException"></exception>
 	internal async Task<DiscordAccessToken> ExchangeOAuth2AccessTokenAsync(string code)
 	{
 		if (this.Discord != null!)
@@ -6315,8 +6313,6 @@ public sealed class DiscordApiClient
 	/// Exchanges a refresh token for a new access token
 	/// </summary>
 	/// <param name="refreshToken">The refresh token.</param>
-	/// <returns></returns>
-	/// <exception cref="InvalidOperationException"></exception>
 	internal async Task<DiscordAccessToken> RefreshOAuth2AccessTokenAsync(string refreshToken)
 	{
 		if (this.Discord != null!)
@@ -6340,6 +6336,56 @@ public sealed class DiscordApiClient
 
 		var accessTokenInformation = DiscordJson.DeserializeObject<DiscordAccessToken>(res.Response, null);
 		return accessTokenInformation;
+	}
+
+	/// <summary>
+	/// Revokes an access token.
+	/// </summary>
+	/// <param name="accessToken">The current access token.</param>
+	internal void RevokeOAuth2AccessTokenAsync(string accessToken)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}{Endpoints.REVOKE}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { }, out var path);
+
+		var formData = new Dictionary<string, string>
+		{
+			{ "client_id", this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) },
+			{ "client_secret", this.OAuth2Client.ClientSecret },
+			{ "token_type_hint", "access_token" },
+			{ "token", accessToken }
+		};
+
+		var url = Utilities.GetApiUriFor(path);
+		this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Revokes a refresh token.
+	/// </summary>
+	/// <param name="refreshToken">The current refresh token.</param>
+	internal void RevokeOAuth2RefreshTokenAsync(string refreshToken)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}{Endpoints.REVOKE}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { }, out var path);
+
+		var formData = new Dictionary<string, string>
+		{
+			{ "client_id", this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) },
+			{ "client_secret", this.OAuth2Client.ClientSecret },
+			{ "token_type_hint", "refresh_token" },
+			{ "token", refreshToken }
+		};
+
+		var url = Utilities.GetApiUriFor(path);
+		this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData).ConfigureAwait(false);
 	}
 
 	#endregion
