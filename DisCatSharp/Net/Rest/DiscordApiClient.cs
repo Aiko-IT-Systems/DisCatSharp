@@ -84,6 +84,10 @@ public sealed class DiscordApiClient
 	/// Initializes a new instance of the <see cref="DiscordApiClient"/> class.
 	/// </summary>
 	/// <param name="client">The client.</param>
+	/// <param name="proxy">The proxy.</param>
+	/// <param name="timeout">The timeout.</param>
+	/// <param name="useRelativeRateLimit">If true, use relative rate limit.</param>
+	/// <param name="logger">The logger.</param>
 	internal DiscordApiClient(DiscordOAuth2Client client, IWebProxy proxy, TimeSpan timeout, bool useRelativeRateLimit, ILogger logger)
 	{
 		this.OAuth2Client = client;
