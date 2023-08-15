@@ -201,6 +201,11 @@ public static class Endpoints
 	public const string MEMBERS = "/members";
 
 	/// <summary>
+	/// The member endpoint.
+	/// </summary>
+	public const string MEMBER = "/member";
+
+	/// <summary>
 	/// The typing endpoint.
 	/// Triggers a typing indicator inside a channel.
 	/// </summary>
