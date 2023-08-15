@@ -601,7 +601,7 @@ internal sealed class RestClient : IDisposable
 						}
 						else
 						{
-							if (this._discord is DiscordClient)
+							if (this._discord is not null && this._discord is DiscordClient)
 							{
 								await (this._discord as DiscordClient).RateLimitHitInternal.InvokeAsync(this._discord as DiscordClient, new(this._discord.ServiceProvider)
 								{
@@ -630,7 +630,7 @@ internal sealed class RestClient : IDisposable
 
 			if (ex != null)
 			{
-				if (this._discord.Configuration.EnableSentry)
+				if (this._discord?.Configuration.EnableSentry ?? false)
 				{
 					if (senex != null)
 					{
@@ -778,7 +778,10 @@ internal sealed class RestClient : IDisposable
 		var req = new HttpRequestMessage(new(request.Method.ToString()), request.Url);
 		if (request.Headers != null && request.Headers.Any())
 			foreach (var kvp in request.Headers)
-				req.Headers.Add(kvp.Key, kvp.Value);
+				if (kvp.Key == "Bearer")
+					req.Headers.Authorization = new("Bearer", kvp.Value);
+				else
+					req.Headers.Add(kvp.Key, kvp.Value);
 
 		if (request is RestRequest nmprequest && !string.IsNullOrWhiteSpace(nmprequest.Payload))
 		{

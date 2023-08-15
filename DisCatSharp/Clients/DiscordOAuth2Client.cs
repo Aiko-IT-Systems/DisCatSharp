@@ -259,14 +259,14 @@ public sealed class DiscordOAuth2Client
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
 	public Task<IReadOnlyList<DiscordConnection>> GetCurrentUserConnectionsAsync(DiscordAccessToken accessToken)
-		=> accessToken.Scope.Split(' ').Any(x => x == "connections") ? throw new NotImplementedException() : throw new AccessViolationException("Access token does not include connections scope");
+		=> accessToken.Scope.Split(' ').Any(x => x == "connections") ? this.ApiClient.GetCurrentUserConnectionsAsync(accessToken.AccessToken) : throw new AccessViolationException("Access token does not include connections scope");
 
 	/// <summary>
 	/// Gets the current user's guilds.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
-	public Task<IReadOnlyDictionary<ulong, DiscordGuild>> GetCurrentUserGuildsAsync(DiscordAccessToken accessToken)
-		=> accessToken.Scope.Split(' ').Any(x => x == "guilds") ? throw new NotImplementedException() : throw new AccessViolationException("Access token does not include guilds scope");
+	public Task<IReadOnlyList<DiscordGuild>> GetCurrentUserGuildsAsync(DiscordAccessToken accessToken)
+		=> accessToken.Scope.Split(' ').Any(x => x == "guilds") ? this.ApiClient.GetCurrentUserGuildsAsync(accessToken.AccessToken) : throw new AccessViolationException("Access token does not include guilds scope");
 
 	/// <summary>
 	/// Gets the current user's guild member for given <paramref name="guildId"/>.
@@ -274,7 +274,7 @@ public sealed class DiscordOAuth2Client
 	/// <param name="accessToken">The access token.</param>
 	/// <param name="guildId">The guild id to get the member for.</param>
 	public Task<DiscordMember> GetCurrentUserGuildMemberAsync(DiscordAccessToken accessToken, ulong guildId)
-		=> accessToken.Scope.Split(' ').Any(x => x == "guilds.members.read") ? throw new NotImplementedException() : throw new AccessViolationException("Access token does not include guilds.members.read scope");
+		=> accessToken.Scope.Split(' ').Any(x => x == "guilds.members.read") ? this.ApiClient.GetCurrentUserGuildMemberAsync(accessToken.AccessToken, guildId) : throw new AccessViolationException("Access token does not include guilds.members.read scope");
 
 	/// <summary>
 	/// Gets the current user's application role connection.
