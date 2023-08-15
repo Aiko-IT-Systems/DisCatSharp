@@ -384,7 +384,13 @@ public enum Permissions : long
 	/// Allows members to send voice messages.
 	/// </summary>
 	[PermissionString("Send Voice Messages"), DiscordInExperiment]
-	SendVoiceMessages = 1L << 46
+	SendVoiceMessages = 1L << 46,
+
+	/// <summary>
+	/// Allows members to interact with the Clyde AI bot.
+	/// </summary>
+	[PermissionString("Use Clyde AI"), DiscordInExperiment]
+ 	UseClydeAi = 1L<<47
 }
 
 /// <summary>

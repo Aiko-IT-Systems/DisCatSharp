@@ -2,6 +2,7 @@ DisCatSharp Release Notes
 
 	Notable Changes
  	- Full support for onboarding
+ 	- Custom status support
 
 DisCatSharp.ApplicationCommands Release Notes
 

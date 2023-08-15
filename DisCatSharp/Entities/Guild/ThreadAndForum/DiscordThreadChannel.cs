@@ -187,7 +187,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task UnarchiveAsync(string reason = null)
-		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, false, null, null, null, null, null, null, reason);
+		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, false, null, null, null, null, null, reason);
 
 	/// <summary>
 	/// Locks a thread.

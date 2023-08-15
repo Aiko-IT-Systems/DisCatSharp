@@ -78,6 +78,7 @@ public sealed class DiscordStickerPack : SnowflakeObject
 	/// <summary>
 	/// Gets the pack's banner url.
 	/// </summary>
+	[JsonIgnore]
 	public string BannerUrl
 		=> $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ASSETS}{Endpoints.STICKER_APPLICATION}{Endpoints.STORE}/{this.BannerAssetId}.png?size=4096";
 
