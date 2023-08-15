@@ -6351,16 +6351,20 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}{Endpoints.REVOKE}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { }, out var path);
 
+		var authorizationString = Encoding.UTF8.GetBytes($"{this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture)}:{this.OAuth2Client.ClientSecret}");
+		var base64encodedAuthorizationString = Convert.ToBase64String(authorizationString);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Basic", base64encodedAuthorizationString);
+
 		var formData = new Dictionary<string, string>
 		{
-			{ "client_id", this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) },
-			{ "client_secret", this.OAuth2Client.ClientSecret },
 			{ "token_type_hint", "access_token" },
 			{ "token", accessToken }
 		};
 
 		var url = Utilities.GetApiUriFor(path);
-		this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData).ConfigureAwait(false);
+		this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData, headers).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -6376,16 +6380,20 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}{Endpoints.REVOKE}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { }, out var path);
 
+		var authorizationString = Encoding.UTF8.GetBytes($"{this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture)}:{this.OAuth2Client.ClientSecret}");
+		var base64encodedAuthorizationString = Convert.ToBase64String(authorizationString);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Basic", base64encodedAuthorizationString);
+
 		var formData = new Dictionary<string, string>
 		{
-			{ "client_id", this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) },
-			{ "client_secret", this.OAuth2Client.ClientSecret },
 			{ "token_type_hint", "refresh_token" },
 			{ "token", refreshToken }
 		};
 
 		var url = Utilities.GetApiUriFor(path);
-		this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData).ConfigureAwait(false);
+		this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData, headers).ConfigureAwait(false);
 	}
 
 	#endregion
