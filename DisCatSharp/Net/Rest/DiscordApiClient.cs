@@ -6343,10 +6343,10 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Revokes an access token.
+	/// Revokes an oauth2 token.
 	/// </summary>
-	/// <param name="accessToken">The current access token.</param>
-	internal void RevokeOAuth2AccessTokenAsync(string accessToken)
+	/// <param name="token">The token to revoke.</param>
+	internal void RevokeOAuth2TokenAsync(string token)
 	{
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
@@ -6363,37 +6363,7 @@ public sealed class DiscordApiClient
 
 		var formData = new Dictionary<string, string>
 		{
-			{ "token_type_hint", "access_token" },
-			{ "token", accessToken }
-		};
-
-		var url = Utilities.GetApiUriFor(path);
-		this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData, headers).ConfigureAwait(false);
-	}
-
-	/// <summary>
-	/// Revokes a refresh token.
-	/// </summary>
-	/// <param name="refreshToken">The current refresh token.</param>
-	internal void RevokeOAuth2RefreshTokenAsync(string refreshToken)
-	{
-		if (this.Discord != null!)
-			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
-
-		// ReSharper disable once HeuristicUnreachableCode
-		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}{Endpoints.REVOKE}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { }, out var path);
-
-		var authorizationString = Encoding.UTF8.GetBytes($"{this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture)}:{this.OAuth2Client.ClientSecret}");
-		var base64encodedAuthorizationString = Convert.ToBase64String(authorizationString);
-
-		var headers = Utilities.GetBaseHeaders();
-		headers.Add("Basic", base64encodedAuthorizationString);
-
-		var formData = new Dictionary<string, string>
-		{
-			{ "token_type_hint", "refresh_token" },
-			{ "token", refreshToken }
+			{ "token", token }
 		};
 
 		var url = Utilities.GetApiUriFor(path);

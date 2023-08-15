@@ -209,18 +209,18 @@ public sealed class DiscordOAuth2Client
 		=> this.ApiClient.RefreshOAuth2AccessTokenAsync(accessToken.RefreshToken);
 
 	/// <summary>
-	/// Revokes an access token.
+	/// Revokes an OAuth2 token via its access token.
 	/// </summary>
 	/// <param name="accessToken">The current discord access token.</param>
-	public void RevokeAccessTokenAsync(DiscordAccessToken accessToken)
-		=> this.ApiClient.RevokeOAuth2AccessTokenAsync(accessToken.AccessToken);
+	public void RevokeByAccessTokenAsync(DiscordAccessToken accessToken)
+		=> this.ApiClient.RevokeOAuth2TokenAsync(accessToken.AccessToken);
 
 	/// <summary>
-	/// Revokes a refresh token.
+	/// Revokes an OAuth2 token via its refresh token.
 	/// </summary>
 	/// <param name="accessToken">The current discord access token.</param>
-	public void RevokeRefreshTokenAsync(DiscordAccessToken accessToken)
-		=> this.ApiClient.RevokeOAuth2RefreshTokenAsync(accessToken.RefreshToken);
+	public void RevokeByRefreshTokenAsync(DiscordAccessToken accessToken)
+		=> this.ApiClient.RevokeOAuth2TokenAsync(accessToken.RefreshToken);
 
 	/// <summary>
 	/// Gets the current authorization information.
