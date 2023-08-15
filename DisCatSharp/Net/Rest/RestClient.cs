@@ -757,7 +757,12 @@ internal sealed class RestClient : IDisposable
 		var req = new HttpRequestMessage(new(request.Method.ToString()), request.Url);
 		if (request.Headers != null && request.Headers.Any())
 			foreach (var kvp in request.Headers)
-				req.Headers.Add(kvp.Key, kvp.Value);
+				if (kvp.Key == "Bearer")
+					req.Headers.Authorization = new("Bearer", kvp.Value);
+				else if (kvp.Key == "Basic")
+					req.Headers.Authorization = new("Basic", kvp.Value);
+				else
+					req.Headers.Add(kvp.Key, kvp.Value);
 
 		if (request is not RestFormRequest formRequest)
 			throw new InvalidOperationException();
@@ -780,6 +785,8 @@ internal sealed class RestClient : IDisposable
 			foreach (var kvp in request.Headers)
 				if (kvp.Key == "Bearer")
 					req.Headers.Authorization = new("Bearer", kvp.Value);
+				else if (kvp.Key == "Basic")
+					req.Headers.Authorization = new("Basic", kvp.Value);
 				else
 					req.Headers.Add(kvp.Key, kvp.Value);
 
