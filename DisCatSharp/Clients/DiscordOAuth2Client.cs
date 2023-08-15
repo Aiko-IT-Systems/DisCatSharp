@@ -90,7 +90,7 @@ public sealed class DiscordOAuth2Client
 	public readonly Uri RedirectUri;
 
 	/// <summary>
-	/// Creates a new oauth client.
+	/// Creates a new OAuth2 client.
 	/// </summary>
 	/// <param name="clientId">The client id.</param>
 	/// <param name="clientSecret">The client secret.</param>
@@ -159,40 +159,8 @@ public sealed class DiscordOAuth2Client
 			.AddParameter("prompt", suppressPrompt ? "none" : "consent")
 			.ToString());
 
-	/*
-	 * https://discord.com/api/oauth2/token/revoke
-	 * 2.1.  Revocation Request
-
-	   The client constructs the request by including the following
-	   parameters using the "application/x-www-form-urlencoded" format in
-	   the HTTP request entity-body:
-
-	   token   REQUIRED.  The token that the client wants to get revoked.
-
-	   token_type_hint  OPTIONAL.  A hint about the type of the token
-	           submitted for revocation.  Clients MAY pass this parameter in
-	           order to help the authorization server to optimize the token
-	           lookup.  If the server is unable to locate the token using
-	           the given hint, it MUST extend its search across all of its
-	           supported token types.  An authorization server MAY ignore
-	           this parameter, particularly if it is able to detect the
-	           token type automatically.  This specification defines two
-	           such values:
-
-	           * access_token: An access token as defined in [RFC6749],
-	             Section 1.4
-
-	           * refresh_token: A refresh token as defined in [RFC6749],
-	             Section 1.5
-
-	           Specific implementations, profiles, and extensions of this
-	           specification MAY define other values for this parameter
-	           using the registry defined in Section 4.1.2.
-
-	 */
-
 	/// <summary>
-	/// Generates a state for oauth2 authorization.
+	/// Generates a state for OAuth2 authorization.
 	/// </summary>
 	/// <returns></returns>
 	public string GenerateState()
@@ -227,51 +195,65 @@ public sealed class DiscordOAuth2Client
 	}
 
 	/// <summary>
-	/// Exchanges a code for an access token.
+	/// Exchanges a code for an discord access token.
 	/// </summary>
 	/// <param name="code">The exchange code.</param>
 	public Task<DiscordAccessToken> ExchangeAccessTokenAsync(string code)
 		=> this.ApiClient.ExchangeOAuth2AccessTokenAsync(code);
 
 	/// <summary>
-	/// Exchanges a refresh token for a new access token.
+	/// Exchanges a refresh token for a new discord access token.
 	/// </summary>
-	/// <param name="accessToken">The current access token.</param>
+	/// <param name="accessToken">The current discord access token.</param>
 	public Task<DiscordAccessToken> RefreshAccessTokenAsync(DiscordAccessToken accessToken)
 		=> this.ApiClient.RefreshOAuth2AccessTokenAsync(accessToken.RefreshToken);
 
 	/// <summary>
+	/// Revokes an access token.
+	/// </summary>
+	/// <param name="accessToken">The current discord access token.</param>
+	public void RevokeAccessTokenAsync(DiscordAccessToken accessToken)
+		=> this.ApiClient.RevokeOAuth2AccessTokenAsync(accessToken.AccessToken);
+
+	/// <summary>
+	/// Revokes a refresh token.
+	/// </summary>
+	/// <param name="accessToken">The current discord access token.</param>
+	public void RevokeRefreshTokenAsync(DiscordAccessToken accessToken)
+		=> this.ApiClient.RevokeOAuth2RefreshTokenAsync(accessToken.RefreshToken);
+
+	/// <summary>
 	/// Gets the current authorization information.
 	/// </summary>
-	/// <param name="accessToken">The access token.</param>
+	/// <param name="accessToken">The discord access token.</param>
 	public Task<DiscordAuthorizationInformation> GetCurrentAuthorizationInformationAsync(DiscordAccessToken accessToken)
 		=> this.ApiClient.GetCurrentOAuth2AuthorizationInformationAsync(accessToken.AccessToken);
 
 	/// <summary>
 	/// Gets the current user.
 	/// </summary>
-	/// <param name="accessToken">The access token.</param>
+	/// <param name="accessToken">The discord access token.</param>
 	public Task<DiscordUser> GetCurrentUserAsync(DiscordAccessToken accessToken)
 		=> accessToken.Scope.Split(' ').Any(x => x == "identify") ? this.ApiClient.GetCurrentUserAsync(accessToken.AccessToken) : throw new AccessViolationException("Access token does not include identify scope");
 
 	/// <summary>
 	/// Gets the current user's connections.
 	/// </summary>
-	/// <param name="accessToken">The access token.</param>
+	/// <param name="accessToken">The discord access token.</param>
 	public Task<IReadOnlyList<DiscordConnection>> GetCurrentUserConnectionsAsync(DiscordAccessToken accessToken)
 		=> accessToken.Scope.Split(' ').Any(x => x == "connections") ? this.ApiClient.GetCurrentUserConnectionsAsync(accessToken.AccessToken) : throw new AccessViolationException("Access token does not include connections scope");
 
 	/// <summary>
 	/// Gets the current user's guilds.
 	/// </summary>
-	/// <param name="accessToken">The access token.</param>
+	/// <param name="accessToken">The discord access token.</param>
 	public Task<IReadOnlyList<DiscordGuild>> GetCurrentUserGuildsAsync(DiscordAccessToken accessToken)
 		=> accessToken.Scope.Split(' ').Any(x => x == "guilds") ? this.ApiClient.GetCurrentUserGuildsAsync(accessToken.AccessToken) : throw new AccessViolationException("Access token does not include guilds scope");
 
 	/// <summary>
 	/// Gets the current user's guild member for given <paramref name="guildId"/>.
 	/// </summary>
-	/// <param name="accessToken">The access token.</param>
+	/// <param name="accessToken">The discord access token.</param>
 	/// <param name="guildId">The guild id to get the member for.</param>
 	public Task<DiscordMember> GetCurrentUserGuildMemberAsync(DiscordAccessToken accessToken, ulong guildId)
 		=> accessToken.Scope.Split(' ').Any(x => x == "guilds.members.read") ? this.ApiClient.GetCurrentUserGuildMemberAsync(accessToken.AccessToken, guildId) : throw new AccessViolationException("Access token does not include guilds.members.read scope");
@@ -279,14 +261,14 @@ public sealed class DiscordOAuth2Client
 	/// <summary>
 	/// Gets the current user's application role connection.
 	/// </summary>
-	/// <param name="accessToken">The access token.</param>
+	/// <param name="accessToken">The discord access token.</param>
 	public Task<DiscordApplicationRoleConnection> GetCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken)
 		=> accessToken.Scope.Split(' ').Any(x => x == "role_connections.write") ? this.ApiClient.GetCurrentUserApplicationRoleConnectionAsync(accessToken.AccessToken) : throw new AccessViolationException("Access token does not include role_connections.write scope");
 
 	/// <summary>
 	/// Updates the current user's application role connection.
 	/// </summary>
-	/// <param name="accessToken">The access token.</param>
+	/// <param name="accessToken">The discord access token.</param>
 	/// <param name="platformName">The platform name.</param>
 	/// <param name="platformUsername">The platform username.</param>
 	/// <param name="metadata">The metadata.</param>
