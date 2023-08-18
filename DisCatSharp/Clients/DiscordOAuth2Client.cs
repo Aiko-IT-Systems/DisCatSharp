@@ -29,11 +29,14 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
+using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.Entities.OAuth2;
 using DisCatSharp.Enums;
+using DisCatSharp.EventArgs;
 using DisCatSharp.Net;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp;
@@ -41,7 +44,7 @@ namespace DisCatSharp;
 /// <summary>
 /// Represents a <see cref="DiscordOAuth2Client"/>.
 /// </summary>
-public sealed class DiscordOAuth2Client
+public sealed class DiscordOAuth2Client : IDisposable
 {
 	/// <summary>
 	/// Gets the logger for this client.
@@ -90,18 +93,29 @@ public sealed class DiscordOAuth2Client
 	public readonly Uri RedirectUri;
 
 	/// <summary>
+	/// Gets the service provider this OAuth2 client was configured with.
+	/// </summary>
+	public IServiceProvider ServiceProvider { get; }
+
+	/// <summary>
+	/// Gets the event execution limit.
+	/// </summary>
+	internal static TimeSpan EventExecutionLimit { get; } = TimeSpan.FromMinutes(1);
+
+	/// <summary>
 	/// Creates a new OAuth2 client.
 	/// </summary>
 	/// <param name="clientId">The client id.</param>
 	/// <param name="clientSecret">The client secret.</param>
 	/// <param name="redirectUri">The redirect uri.</param>
+	/// <param name="provider">The service provider.</param>
 	/// <param name="proxy">The proxy to use for HTTP connections. Defaults to null.</param>
 	/// <param name="timeout">The optional timeout to use for HTTP requests. Set to <see cref="System.Threading.Timeout.InfiniteTimeSpan"/> to disable timeouts. Defaults to null.</param>
 	/// <param name="useRelativeRateLimit">Whether to use the system clock for computing rate limit resets. See <see cref="DiscordConfiguration.UseRelativeRatelimit"/> for more details. Defaults to true.</param>
 	/// <param name="loggerFactory">The optional logging factory to use for this client. Defaults to null.</param>
 	/// <param name="minimumLogLevel">The minimum logging level for messages. Defaults to information.</param>
 	/// <param name="logTimestampFormat">The timestamp format to use for the logger.</param>
-	public DiscordOAuth2Client(ulong clientId, string clientSecret, string redirectUri, IWebProxy proxy = null!, TimeSpan? timeout = null, bool useRelativeRateLimit = true,
+	public DiscordOAuth2Client(ulong clientId, string clientSecret, string redirectUri, IServiceProvider provider = null!, IWebProxy proxy = null!, TimeSpan? timeout = null, bool useRelativeRateLimit = true,
 		ILoggerFactory loggerFactory = null!, LogLevel minimumLogLevel = LogLevel.Information, string logTimestampFormat = "yyyy-MM-dd HH:mm:ss zzz")
 	{
 		this.MinimumLogLevel = minimumLogLevel;
@@ -114,6 +128,7 @@ public sealed class DiscordOAuth2Client
 		}
 
 		this.Logger = loggerFactory.CreateLogger<DiscordOAuth2Client>();
+		this.ServiceProvider = provider ?? new ServiceCollection().BuildServiceProvider(true);
 		this.ClientId = clientId;
 		this.ClientSecret = clientSecret;
 		this.RedirectUri = new(redirectUri);
@@ -140,6 +155,8 @@ public sealed class DiscordOAuth2Client
 
 		this.VersionHeader = $"DiscordBot (https://github.com/Aiko-IT-Systems/DisCatSharp, v{vs})";
 		this.ApiClient.Rest.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", this.VersionHeader);
+
+		this._oauth2ClientErrored = new("CLIENT_ERRORED", EventExecutionLimit, this.Goof);
 	}
 
 	/// <summary>
@@ -184,14 +201,25 @@ public sealed class DiscordOAuth2Client
 	}
 
 	/// <summary>
-	/// Gets the OAuth2 code to use with <see cref="ExchangeAccessTokenAsync"/> from the <paramref name="responseUrl"/>.
+	/// Gets the OAuth2 code to use with <see cref="ExchangeAccessTokenAsync"/> from the <paramref name="url"/>.
 	/// </summary>
-	/// <param name="responseUrl">The response url.</param>
-	public string GetCodeFromUri(Uri responseUrl)
+	/// <param name="url">The url.</param>
+	public string GetCodeFromUri(Uri url)
 	{
-		var responseQueryDictionary = System.Web.HttpUtility.ParseQueryString(responseUrl.Query, Encoding.UTF8);
-		var responseState = responseQueryDictionary.GetValues("code")?.First();
-		return responseState ?? throw new NullReferenceException("Could not find code in url.");
+		var responseQueryDictionary = System.Web.HttpUtility.ParseQueryString(url.Query, Encoding.UTF8);
+		var code = responseQueryDictionary.GetValues("code")?.First();
+		return code ?? throw new NullReferenceException("Could not find code in url.");
+	}
+
+	/// <summary>
+	/// Gets the OAuth2 code to use with <see cref="ExchangeAccessTokenAsync"/> from the <paramref name="url"/>.
+	/// </summary>
+	/// <param name="url">The url.</param>
+	public string GetStateFromUri(Uri url)
+	{
+		var responseQueryDictionary = System.Web.HttpUtility.ParseQueryString(url.Query, Encoding.UTF8);
+		var state = responseQueryDictionary.GetValues("state")?.First();
+		return state ?? throw new NullReferenceException("Could not find code in url.");
 	}
 
 	/// <summary>
@@ -212,15 +240,15 @@ public sealed class DiscordOAuth2Client
 	/// Revokes an OAuth2 token via its access token.
 	/// </summary>
 	/// <param name="accessToken">The current discord access token.</param>
-	public void RevokeByAccessTokenAsync(DiscordAccessToken accessToken)
-		=> this.ApiClient.RevokeOAuth2TokenAsync(accessToken.AccessToken);
+	public Task RevokeByAccessTokenAsync(DiscordAccessToken accessToken)
+		=> this.ApiClient.RevokeOAuth2TokenAsync(accessToken.AccessToken, "access_token");
 
 	/// <summary>
 	/// Revokes an OAuth2 token via its refresh token.
 	/// </summary>
 	/// <param name="accessToken">The current discord access token.</param>
-	public void RevokeByRefreshTokenAsync(DiscordAccessToken accessToken)
-		=> this.ApiClient.RevokeOAuth2TokenAsync(accessToken.RefreshToken);
+	public Task RevokeByRefreshTokenAsync(DiscordAccessToken accessToken)
+		=> this.ApiClient.RevokeOAuth2TokenAsync(accessToken.RefreshToken, "refresh_token");
 
 	/// <summary>
 	/// Gets the current authorization information.
@@ -274,4 +302,58 @@ public sealed class DiscordOAuth2Client
 	/// <param name="metadata">The metadata.</param>
 	public Task UpdateCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken, string platformName, string platformUsername, ApplicationRoleConnectionMetadata metadata)
 		=> accessToken.Scope.Split(' ').Any(x => x == "role_connections.write") ? this.ApiClient.ModifyCurrentUserApplicationRoleConnectionAsync(accessToken.AccessToken, platformName, platformUsername, metadata) : throw new AccessViolationException("Access token does not include role_connections.write scope");
+
+
+	/// <summary>
+	/// Fired whenever an error occurs within an event handler.
+	/// </summary>
+	public event AsyncEventHandler<DiscordOAuth2Client, ClientErrorEventArgs> OAuth2ClientErrored
+	{
+		add => this._oauth2ClientErrored.Register(value);
+		remove => this._oauth2ClientErrored.Unregister(value);
+	}
+
+	internal AsyncEvent<DiscordOAuth2Client, ClientErrorEventArgs> _oauth2ClientErrored;
+
+	/// <summary>
+	/// Handles event errors.
+	/// </summary>
+	/// <param name="asyncEvent">The event.</param>
+	/// <param name="ex">The exception.</param>
+	/// <param name="handler">The event handler.</param>
+	/// <param name="sender">The sender.</param>
+	/// <param name="eventArgs">The event args.</param>
+	internal void EventErrorHandler<TSender, TArgs>(AsyncEvent<TSender, TArgs> asyncEvent, Exception ex, AsyncEventHandler<TSender, TArgs> handler, TSender sender, TArgs eventArgs)
+		where TArgs : AsyncEventArgs
+	{
+		if (ex is AsyncEventTimeoutException)
+		{
+			this.Logger.LogWarning(LoggerEvents.EventHandlerException, $"An event handler for {asyncEvent.Name} took too long to execute. Defined as \"{handler.Method.ToString().Replace(handler.Method.ReturnType.ToString(), "").TrimStart()}\" located in \"{handler.Method.DeclaringType}\".");
+			return;
+		}
+
+		this.Logger.LogError(LoggerEvents.EventHandlerException, ex, "Event handler exception for event {Name} thrown from {Method} (defined in {Type})", asyncEvent.Name, handler.Method, handler.Method.DeclaringType);
+		this._oauth2ClientErrored.InvokeAsync(this, new(this.ServiceProvider) { EventName = asyncEvent.Name, Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
+	}
+
+	/// <summary>
+	/// Handles event handler exceptions.
+	/// </summary>
+	/// <param name="asyncEvent">The event.</param>
+	/// <param name="ex">The exception.</param>
+	/// <param name="handler">The event handler.</param>
+	/// <param name="sender">The sender.</param>
+	/// <param name="eventArgs">The event args.</param>
+	private void Goof<TSender, TArgs>(AsyncEvent<TSender, TArgs> asyncEvent, Exception ex, AsyncEventHandler<TSender, TArgs> handler, TSender sender, TArgs eventArgs)
+		where TArgs : AsyncEventArgs => this.Logger.LogCritical(LoggerEvents.EventHandlerException, ex, "Exception event handler {0} (defined in {1}) threw an exception", handler.Method, handler.Method.DeclaringType);
+
+	/// <inheritdoc />
+	~DiscordOAuth2Client()
+	{
+		this.Dispose();
+	}
+
+	/// <inheritdoc />
+	public void Dispose()
+		=> GC.SuppressFinalize(this);
 }
