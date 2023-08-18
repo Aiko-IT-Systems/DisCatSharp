@@ -6346,7 +6346,8 @@ public sealed class DiscordApiClient
 	/// Revokes an oauth2 token.
 	/// </summary>
 	/// <param name="token">The token to revoke.</param>
-	internal void RevokeOAuth2TokenAsync(string token)
+	/// <param name="type">The type of token to revoke.</param>
+	internal Task RevokeOAuth2TokenAsync(string token, string type)
 	{
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
@@ -6356,18 +6357,20 @@ public sealed class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { }, out var path);
 
 		var authorizationString = Encoding.UTF8.GetBytes($"{this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture)}:{this.OAuth2Client.ClientSecret}");
-		var base64encodedAuthorizationString = Convert.ToBase64String(authorizationString);
+		var base64EncodedAuthorizationString = Convert.ToBase64String(authorizationString);
 
 		var headers = Utilities.GetBaseHeaders();
-		headers.Add("Basic", base64encodedAuthorizationString);
+		headers.Add("Basic", base64EncodedAuthorizationString);
 
 		var formData = new Dictionary<string, string>
 		{
-			{ "token", token }
+			{ "token", token },
+			{ "token_type_hint", type }
 		};
 
 		var url = Utilities.GetApiUriFor(path);
 		this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData, headers).ConfigureAwait(false);
+		return Task.CompletedTask;
 	}
 
 	#endregion
