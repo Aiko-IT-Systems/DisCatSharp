@@ -25,7 +25,7 @@ namespace DisCatSharp.Enums;
 /// <summary>
 /// Represents an iFrame's size.
 /// </summary>
-public enum IFrameModalSize : int
+public enum IframeModalSize : int
 {
 	/// <summary>
 	/// Sends a small iFrame.

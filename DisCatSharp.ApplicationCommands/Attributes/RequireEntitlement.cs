@@ -32,7 +32,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes;
 /// Defines that usage of this application command is restricted to users with a specified entitlement.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-public sealed class ApplicationCommandRequireEntitlementAttribute : ApplicationCommandCheckBaseAttribute
+public sealed class ApplicationCommandRequirePremiumAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
 	/// Gets the entitlement id required by this attribute.
@@ -43,7 +43,7 @@ public sealed class ApplicationCommandRequireEntitlementAttribute : ApplicationC
 	/// Defines that usage of this command is restricted to users with a specified entitlement.
 	/// </summary>
 	/// <param name="entitlementId">Entitlement id required to execute this command.</param>
-	public ApplicationCommandRequireEntitlementAttribute(ulong entitlementId)
+	public ApplicationCommandRequirePremiumAttribute(ulong entitlementId)
 	{
 		this.EntitlementId = entitlementId;
 	}
@@ -53,11 +53,12 @@ public sealed class ApplicationCommandRequireEntitlementAttribute : ApplicationC
 	/// </summary>
 	public override async Task<bool> ExecuteChecksAsync(BaseContext ctx)
 	{
-		if (!ctx.Interaction.Entitlements.Contains(this.EntitlementId))
+		if (!ctx.Interaction.EntitlementSkuIds.Contains(this.EntitlementId))
 		{
-			await ctx.CreateResponseAsync(InteractionResponseType.InteractionRequireEntitlement).ConfigureAwait(false);
+			await ctx.CreateResponseAsync(InteractionResponseType.PremiumRequired).ConfigureAwait(false);
 			return await Task.FromResult(false).ConfigureAwait(false);
 		}
+
 		return await Task.FromResult(true).ConfigureAwait(false);
 	}
 }

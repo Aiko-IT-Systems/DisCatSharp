@@ -127,10 +127,17 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <para>Gets the entitlements.</para>
 	/// <para>This is related to premium subscriptions for bots.</para>
 	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
-	/// <see cref="DiscordClient.TryGetPublishedListings(ulong, out IReadOnlyList{DiscordStoreSku})"/> for more information.
 	/// </summary>
 	[JsonProperty("entitlements", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
-	public List<ulong> Entitlements { get; internal set; } = new();
+	public List<DiscordEntitlement> Entitlements { get; internal set; } = new();
+
+	/// <summary>
+	/// <para>Gets the entitlement sku ids.</para>
+	/// <para>This is related to premium subscriptions for bots.</para>
+	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
+	/// </summary>
+	[JsonProperty("entitlement_sku_ids", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
+	public List<ulong> EntitlementSkuIds { get; internal set; } = new();
 
 	/// <summary>
 	/// Creates a response to this interaction.
@@ -154,8 +161,8 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <param name="title">The title of the iframe.</param>
 	/// <param name="modalSize">The size of the iframe.</param>
 	/// <param name="iFramePath">The path of the iframe.</param>
-	public Task CreateInteractionIFrameResponseAsync(string customId, string title, IFrameModalSize modalSize = IFrameModalSize.Normal, string? iFramePath = null)
-		=> this.Type != InteractionType.Ping ? this.Discord.ApiClient.CreateInteractionIFrameResponseAsync(this.Id, this.Token, InteractionResponseType.IFrame, customId, title, modalSize, iFramePath) : throw new NotSupportedException("You can't respond to a PING with an iframe.");
+	public Task CreateInteractionIframeResponseAsync(string customId, string title, IframeModalSize modalSize = IframeModalSize.Normal, string? iFramePath = null)
+		=> this.Type != InteractionType.Ping ? this.Discord.ApiClient.CreateInteractionIframeResponseAsync(this.Id, this.Token, InteractionResponseType.Iframe, customId, title, modalSize, iFramePath) : throw new NotSupportedException("You can't respond to a PING with an iframe.");
 
 	/// <summary>
 	/// Gets the original interaction response.
@@ -247,6 +254,6 @@ public sealed class DiscordInteraction : SnowflakeObject
 		=> this.Discord.ApiClient.DeleteFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
 
 	internal DiscordInteraction()
-		: base(new() { "member", "guild_id", "entitlement_sku_ids", "channel_id", "channel", "guild" })
+		: base(new() { "member", "guild_id", "channel_id", "channel", "guild" })
 	{ }
 }

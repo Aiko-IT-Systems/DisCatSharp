@@ -55,6 +55,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	#region Internal Fields/Properties
 
 	internal bool IsShard = false;
+
 	/// <summary>
 	/// Gets the message cache.
 	/// </summary>
@@ -515,6 +516,25 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		try
 		{
 			skuList = this.ApiClient.GetPublishedListingsAsync(applicationId).ConfigureAwait(false).GetAwaiter().GetResult();
+			return true;
+		}
+		catch (Exception)
+		{
+			skuList = null;
+			return false;
+		}
+	}
+
+	/// <summary>
+	/// Tries to get the applications skus.
+	/// </summary>
+	/// <param name="skuList">A list of published listings with <see cref="DiscordStoreSku"/>s, if found.</param>
+	/// <returns>True if found, otherwise false.</returns>
+	public bool TryGetPublishedListings(out IReadOnlyList<DiscordSku>? skuList)
+	{
+		try
+		{
+			skuList = this.ApiClient.GetSkusAsync(this.CurrentApplication.Id).ConfigureAwait(false).GetAwaiter().GetResult();
 			return true;
 		}
 		catch (Exception)

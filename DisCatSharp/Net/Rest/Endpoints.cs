@@ -416,6 +416,11 @@ public static class Endpoints
 	public const string STORE = "/store";
 
 	/// <summary>
+	/// The entitlements endpoint.
+	/// </summary>
+	public const string ENTITLEMENTS = "/entitlements";
+
+	/// <summary>
 	/// The app assets endpoint.
 	/// </summary>
 	public const string APP_ASSETS = "/app-assets";
