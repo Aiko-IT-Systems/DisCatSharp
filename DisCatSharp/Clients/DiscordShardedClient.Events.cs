@@ -158,15 +158,15 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ChannelPinsUpdateEventArgs> _channelPinsUpdated;
 
 	/// <summary>
-	/// Fired whenever a channel's topic is updated.
+	/// Fired whenever a voice channel's status is updated.
 	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
 	/// </summary>
-	public event AsyncEventHandler<DiscordClient, ChannelTopicUpdateEventArgs> ChannelTopicUpdated
+	public event AsyncEventHandler<DiscordClient, VoiceChannelStatusUpdateEventArgs> VoiceChannelStatusUpdated
 	{
-		add => this._channelTopicUpdated.Register(value);
-		remove => this._channelTopicUpdated.Unregister(value);
+		add => this._voiceVoiceChannelStatusUpdated.Register(value);
+		remove => this._voiceVoiceChannelStatusUpdated.Unregister(value);
 	}
-	private AsyncEvent<DiscordClient, ChannelTopicUpdateEventArgs> _channelTopicUpdated;
+	private AsyncEvent<DiscordClient, VoiceChannelStatusUpdateEventArgs> _voiceVoiceChannelStatusUpdated;
 
 	#endregion
 
@@ -1746,8 +1746,8 @@ public sealed partial class DiscordShardedClient
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
-	private Task Client_ChannelTopicUpdated(DiscordClient client, ChannelTopicUpdateEventArgs e)
-		=> this._channelTopicUpdated.InvokeAsync(client, e);
+	private Task Client_voiceVoiceChannelStatusUpdated(DiscordClient client, VoiceChannelStatusUpdateEventArgs e)
+		=> this._voiceVoiceChannelStatusUpdated.InvokeAsync(client, e);
 
 	#endregion
 }

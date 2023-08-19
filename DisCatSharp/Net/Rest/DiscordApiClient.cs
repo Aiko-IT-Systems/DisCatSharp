@@ -377,7 +377,6 @@ public sealed class DiscordApiClient
 			VerificationLevel = verificationLevel,
 			IconBase64 = iconb64,
 			SystemChannelFlags = systemChannelFlags
-
 		};
 
 		var route = $"{Endpoints.GUILDS}";

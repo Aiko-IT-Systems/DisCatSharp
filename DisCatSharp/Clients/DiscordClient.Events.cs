@@ -162,15 +162,15 @@ public sealed partial class DiscordClient
 	private AsyncEvent<DiscordClient, ChannelPinsUpdateEventArgs> _channelPinsUpdated;
 
 	/// <summary>
-	/// Fired whenever a channel's topic is updated.
+	/// Fired whenever a voice channel's status is updated.
 	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
 	/// </summary>
-	public event AsyncEventHandler<DiscordClient, ChannelTopicUpdateEventArgs> ChannelTopicUpdated
+	public event AsyncEventHandler<DiscordClient, VoiceChannelStatusUpdateEventArgs> VoiceChannelStatusUpdated
 	{
-		add => this._channelTopicUpdated.Register(value);
-		remove => this._channelTopicUpdated.Unregister(value);
+		add => this._voiceVoiceChannelStatusUpdated.Register(value);
+		remove => this._voiceVoiceChannelStatusUpdated.Unregister(value);
 	}
-	private AsyncEvent<DiscordClient, ChannelTopicUpdateEventArgs> _channelTopicUpdated;
+	private AsyncEvent<DiscordClient, VoiceChannelStatusUpdateEventArgs> _voiceVoiceChannelStatusUpdated;
 
 	#endregion
 
@@ -275,7 +275,7 @@ public sealed partial class DiscordClient
 
 	/// <summary>
 	/// Fired when a guild audit log entry was created.
-	/// Requires bot to have the <see cref="Permissions.ViewAuditLog" /> permission. 
+	/// Requires bot to have the <see cref="Permissions.ViewAuditLog" /> permission.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildAuditLogEntryCreateEventArgs> GuildAuditLogEntryCreated
 	{
@@ -1057,7 +1057,7 @@ public sealed partial class DiscordClient
 	}
 	internal AsyncEvent<DiscordClient, RateLimitExceptionEventArgs> RateLimitHitInternal;
 
-	/// <summary>	
+	/// <summary>
 	/// Fired on heartbeat attempt cancellation due to too many failed heartbeats.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ZombiedEventArgs> Zombied
