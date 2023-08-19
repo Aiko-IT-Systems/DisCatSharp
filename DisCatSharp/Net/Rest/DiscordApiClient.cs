@@ -377,7 +377,6 @@ public sealed class DiscordApiClient
 			VerificationLevel = verificationLevel,
 			IconBase64 = iconb64,
 			SystemChannelFlags = systemChannelFlags
-
 		};
 
 		var route = $"{Endpoints.GUILDS}";
@@ -2430,6 +2429,25 @@ public sealed class DiscordApiClient
 			ret.Initialize(this.Discord);
 
 		return new ReadOnlyCollection<DiscordChannel>(new List<DiscordChannel>(channelsRaw));
+	}
+
+	/// <summary>
+	/// Modifies a voice channels status.
+	/// </summary>
+	/// <param name="channelId">The voice channel id.</param>
+	/// <param name="status">The status.</param>
+	internal Task ModifyVoiceChannelStatusAsync(ulong channelId, string? status)
+	{
+		var pld = new RestVoiceChannelStatusModifyPayload
+		{
+			Status = status
+		};
+
+		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.VOICE_STATUS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { channel_id = channelId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld));
 	}
 
 	/// <summary>
