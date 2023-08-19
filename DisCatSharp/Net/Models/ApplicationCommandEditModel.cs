@@ -84,6 +84,11 @@ public class ApplicationCommandEditModel : ObservableApiObject
 	public Optional<Permissions?> DefaultMemberPermissions { internal get; set; }
 
 	/// <summary>
+	/// Sets the command's allowed contexts.
+	/// </summary>
+	public Optional<ApplicationCommandContexts?> AllowedContexts { internal get; set; }
+
+	/// <summary>
 	/// Sets whether the command can be used in direct messages.
 	/// </summary>
 	public Optional<bool> DmPermission { internal get; set; }
