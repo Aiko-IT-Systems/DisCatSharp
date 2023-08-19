@@ -516,6 +516,11 @@ public static class Endpoints
 	/// </summary>
 	public const string METADATA = "/metadata";
 
+	/// <summary>
+	/// The voice status endpoint.
+	/// </summary>
+	public const string VOICE_STATUS = "/voice-status";
+
 	public const string NEW_MEMBER_WELCOME = "/new-member-welcome";
 	[DiscordDeprecated]
 	public const string NEW_MEMBER_ACTIONS = "/new-member-actions";

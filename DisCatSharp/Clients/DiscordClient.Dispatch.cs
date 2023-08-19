@@ -179,10 +179,10 @@ public sealed partial class DiscordClient
 				await this.OnChannelPinsUpdateAsync((ulong?)dat["guild_id"], cid, ts != null ? DateTimeOffset.Parse(ts, CultureInfo.InvariantCulture) : default(DateTimeOffset?)).ConfigureAwait(false);
 				break;
 
-			case "channel_topic_update":
+			case "voice_channel_status_update":
 				cid = (ulong)dat["id"]!;
-				var topic = (string?)dat["topic"]!;
-				await this.OnChannelTopicUpdateAsync((ulong)dat["guild_id"], cid, topic).ConfigureAwait(false);
+				var status = (string?)dat["status"]!;
+				await this.OnVoiceChannelStatusUpdateAsync((ulong)dat["guild_id"], cid, status).ConfigureAwait(false);
 				break;
 
 			#endregion
@@ -996,23 +996,23 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the channel topic update event.
+	/// Handles the voice channel status update event.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="channelId">The channel id.</param>
-	/// <param name="topic">The optional topic.</param>
-	internal async Task OnChannelTopicUpdateAsync(ulong guildId, ulong channelId, string? topic)
+	/// <param name="status">The optional status.</param>
+	internal async Task OnVoiceChannelStatusUpdateAsync(ulong guildId, ulong channelId, string? status)
 	{
 		var guild = this.InternalGetCachedGuild(guildId);
 		var channel = this.InternalGetCachedChannel(channelId);
 
-		var ea = new ChannelTopicUpdateEventArgs(this.ServiceProvider)
+		var ea = new VoiceChannelStatusUpdateEventArgs(this.ServiceProvider)
 		{
 			Guild = guild,
 			Channel = channel,
-			Topic = topic
+			Status = status
 		};
-		await this._channelTopicUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this._voiceVoiceChannelStatusUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
 	#endregion

@@ -612,8 +612,8 @@ items:
     name: ChannelDeleteEventArgs
   - uid: DisCatSharp.EventArgs.ChannelPinsUpdateEventArgs
     name: ChannelPinsUpdateEventArgs
-  - uid: DisCatSharp.EventArgs.ChannelTopicUpdateEventArgs
-    name: ChannelTopicUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.ChannelStatusUpdateEventArgs
+    name: VoiceChannelStatusUpdateEventArgs
   - uid: DisCatSharp.EventArgs.ChannelUpdateEventArgs
     name: ChannelUpdateEventArgs
   - uid: DisCatSharp.EventArgs.ClientErrorEventArgs

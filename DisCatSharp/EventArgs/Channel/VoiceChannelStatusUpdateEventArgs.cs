@@ -27,9 +27,9 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.EventArgs;
 
 /// <summary>
-/// Represents arguments for <see cref="DiscordClient.ChannelTopicUpdated"/> event.
+/// Represents arguments for <see cref="DiscordClient.VoiceChannelStatusUpdated"/> event.
 /// </summary>
-public class ChannelTopicUpdateEventArgs : DiscordEventArgs
+public class VoiceChannelStatusUpdateEventArgs : DiscordEventArgs
 {
 	/// <summary>
 	/// Gets the guild in which the update occurred.
@@ -42,12 +42,12 @@ public class ChannelTopicUpdateEventArgs : DiscordEventArgs
 	public DiscordChannel Channel { get; internal set; }
 
 	/// <summary>
-	/// Gets the new topic.
+	/// Gets the new status.
 	/// </summary>
-	public string? Topic { get; internal set; }
+	public string? Status { get; internal set; }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="ChannelTopicUpdateEventArgs"/> class.
+	/// Initializes a new instance of the <see cref="VoiceChannelStatusUpdateEventArgs"/> class.
 	/// </summary>
-	internal ChannelTopicUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal VoiceChannelStatusUpdateEventArgs(IServiceProvider provider) : base(provider) { }
 }
