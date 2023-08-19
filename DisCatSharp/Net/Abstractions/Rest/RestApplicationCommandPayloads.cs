@@ -93,6 +93,12 @@ internal sealed class RestApplicationCommandCreatePayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("nsfw", NullValueHandling = NullValueHandling.Ignore)]
 	public bool Nsfw { get; set; }
+
+	/// <summary>
+	/// Gets where the command is allowed at.
+	/// </summary>
+	[JsonProperty("contexts", NullValueHandling = NullValueHandling.Include)]
+	public ApplicationCommandContexts? AllowedContexts { get; set; }
 }
 
 /// <summary>
@@ -147,10 +153,16 @@ internal sealed class RestApplicationCommandEditPayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("nsfw", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<bool> Nsfw { get; set; }
+
+	/// <summary>
+	/// Gets where the command is allowed at.
+	/// </summary>
+	[JsonProperty("contexts", NullValueHandling = NullValueHandling.Include)]
+	public Optional<ApplicationCommandContexts?> AllowedContexts { get; set; }
 }
 
 /// <summary>
-/// Represents a interaction response payload.
+/// Represents an interaction response payload.
 /// </summary>
 internal sealed class RestInteractionResponsePayload : ObservableApiObject
 {
@@ -174,7 +186,7 @@ internal sealed class RestInteractionResponsePayload : ObservableApiObject
 }
 
 /// <summary>
-/// Represents a interaction response payload.
+/// Represents an interaction response modal payload.
 /// </summary>
 internal sealed class RestInteractionModalResponsePayload : ObservableApiObject
 {
@@ -189,6 +201,24 @@ internal sealed class RestInteractionModalResponsePayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordInteractionApplicationCommandModalCallbackData Data { get; set; }
+}
+
+/// <summary>
+/// Represents an interaction response iFrame payload.
+/// </summary>
+internal sealed class RestInteractionIFrameResponsePayload : ObservableApiObject
+{
+	/// <summary>
+	/// Gets the type.
+	/// </summary>
+	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+	public InteractionResponseType Type { get; set; }
+
+	/// <summary>
+	/// Gets the data.
+	/// </summary>
+	[JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordInteractionApplicationCommandIFrameCallbackData Data { get; set; }
 }
 
 /// <summary>

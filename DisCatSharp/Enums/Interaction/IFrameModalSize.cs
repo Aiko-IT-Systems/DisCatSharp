@@ -20,29 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-
 namespace DisCatSharp.Enums;
 
-// TODO: Add to application commands. Field is "contexts" on DiscordApplicationCommand.
 /// <summary>
-/// Represents where application commands can be used.
+/// Represents an iFrame's size.
 /// </summary>
-[Flags]
-public enum ApplicationCommandContexts : int
+public enum IFrameModalSize : int
 {
 	/// <summary>
-	/// Command can be used in guilds.
+	/// Sends a small iFrame.
 	/// </summary>
-	Guild = 0,
+	Small = 1,
 
 	/// <summary>
-	/// Command can be used in direct messages.
+	/// Sends a normal iFrame.
 	/// </summary>
-	Dm = 1,
+	Normal = 2,
 
 	/// <summary>
-	/// Command can be used in group direct messages.
+	/// Sends a big iFrame.
 	/// </summary>
-	Gdm = 2
+	Big  = 3
 }
