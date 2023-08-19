@@ -75,6 +75,7 @@ internal class RegistrationWorker
 					action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 					action.DmPermission = command.DmPermission ?? true;
 					action.IsNsfw = command.IsNsfw;
+					action.AllowedContexts = command.AllowedContexts;
 				}).ConfigureAwait(false);
 
 				commands.Add(discordBackendCommand);
@@ -107,6 +108,7 @@ internal class RegistrationWorker
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 						action.DmPermission = command.DmPermission ?? true;
 						action.IsNsfw = command.IsNsfw;
+					action.AllowedContexts = command.AllowedContexts;
 					}).ConfigureAwait(false);
 
 					commands.Add(discordBackendCommand);
@@ -133,6 +135,7 @@ internal class RegistrationWorker
 					action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 					action.DmPermission = command.DmPermission ?? true;
 					action.IsNsfw = command.IsNsfw;
+					action.AllowedContexts = command.AllowedContexts;
 				}).ConfigureAwait(false);
 
 				commands.Add(discordBackendCommand);
@@ -223,6 +226,7 @@ internal class RegistrationWorker
 					action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 					action.DmPermission = command.DmPermission ?? true;
 					action.IsNsfw = command.IsNsfw;
+					action.AllowedContexts = command.AllowedContexts;
 				}).ConfigureAwait(false);
 
 				commands.Add(discordBackendCommand);
@@ -255,6 +259,7 @@ internal class RegistrationWorker
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 						action.DmPermission = command.DmPermission ?? true;
 						action.IsNsfw = command.IsNsfw;
+						action.AllowedContexts = command.AllowedContexts;
 					}).ConfigureAwait(false);
 
 					commands.Add(discordBackendCommand);
@@ -283,6 +288,7 @@ internal class RegistrationWorker
 					if (command.DmPermission.HasValue)
 						action.DmPermission = command.DmPermission.Value;
 					action.IsNsfw = command.IsNsfw;
+					action.AllowedContexts = command.AllowedContexts;
 				}).ConfigureAwait(false);
 
 				commands.Add(discordBackendCommand);

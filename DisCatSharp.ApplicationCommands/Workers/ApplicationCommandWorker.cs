@@ -71,7 +71,7 @@ internal class CommandWorker
 			if (commandTranslation != null)
 				nameLocalizations = commandTranslation.NameTranslations;
 
-			var command = new DiscordApplicationCommand(contextAttribute.Name, null, null, contextAttribute.Type, nameLocalizations, null, contextAttribute.DefaultMemberPermissions, contextAttribute.DmPermission ?? true, isNsfw: contextAttribute.IsNsfw);
+			var command = new DiscordApplicationCommand(contextAttribute.Name, null, null, contextAttribute.Type, nameLocalizations, null, contextAttribute.DefaultMemberPermissions, contextAttribute.DmPermission ?? true, isNsfw: contextAttribute.IsNsfw, allowedContexts: contextAttribute.AllowedContexts);
 
 			var parameters = contextMethod.GetParameters();
 			if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(ContextMenuContext)))
@@ -163,7 +163,7 @@ internal class CommandWorker
 					descriptionLocalizations = commandTranslation.DescriptionTranslations;
 				}
 
-				var payload = new DiscordApplicationCommand(commandAttribute.Name, commandAttribute.Description, (localizedOptions != null && localizedOptions.Any() ? localizedOptions : null) ?? (options != null && options.Any() ? options : null), ApplicationCommandType.ChatInput, nameLocalizations, descriptionLocalizations, commandAttribute.DefaultMemberPermissions, commandAttribute.DmPermission ?? true, isNsfw: commandAttribute.IsNsfw);
+				var payload = new DiscordApplicationCommand(commandAttribute.Name, commandAttribute.Description, (localizedOptions != null && localizedOptions.Any() ? localizedOptions : null) ?? (options != null && options.Any() ? options : null), ApplicationCommandType.ChatInput, nameLocalizations, descriptionLocalizations, commandAttribute.DefaultMemberPermissions, commandAttribute.DmPermission ?? true, isNsfw: commandAttribute.IsNsfw, allowedContexts: commandAttribute.AllowedContexts);
 				commands.Add(payload);
 				commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
 			}
@@ -229,7 +229,7 @@ internal class NestedCommandWorker
 			}
 
 			//Initializes the command
-			var payload = new DiscordApplicationCommand(groupAttribute.Name, groupAttribute.Description, nameLocalizations: nameLocalizations, descriptionLocalizations: descriptionLocalizations, defaultMemberPermissions: groupAttribute.DefaultMemberPermissions, dmPermission: groupAttribute.DmPermission ?? true, isNsfw: groupAttribute.IsNsfw);
+			var payload = new DiscordApplicationCommand(groupAttribute.Name, groupAttribute.Description, nameLocalizations: nameLocalizations, descriptionLocalizations: descriptionLocalizations, defaultMemberPermissions: groupAttribute.DefaultMemberPermissions, dmPermission: groupAttribute.DmPermission ?? true, isNsfw: groupAttribute.IsNsfw, allowedContexts: groupAttribute.AllowedContexts);
 			commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
 
 			var commandMethods = new List<KeyValuePair<string, MethodInfo>>();
@@ -280,7 +280,7 @@ internal class NestedCommandWorker
 
 				//Creates the subcommand and adds it to the main command
 				var subpayload = new DiscordApplicationCommandOption(commandAttribute.Name, commandAttribute.Description, ApplicationCommandOptionType.SubCommand, false, null, localizedOptions ?? options, nameLocalizations: subNameLocalizations, descriptionLocalizations: subDescriptionLocalizations);
-				payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations, defaultMemberPermissions: payload.DefaultMemberPermissions, dmPermission: payload.DmPermission ?? true, isNsfw: payload.IsNsfw);
+				payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations, defaultMemberPermissions: payload.DefaultMemberPermissions, dmPermission: payload.DmPermission ?? true, isNsfw: payload.IsNsfw, allowedContexts: payload.AllowedContexts);
 				commandTypeSources.Add(new KeyValuePair<Type, Type>(subclassInfo, type));
 
 				//Adds it to the method lists
@@ -370,7 +370,7 @@ internal class NestedCommandWorker
 				//Adds the group to the command and method lists
 				var subpayload = new DiscordApplicationCommandOption(subgroupAttribute.Name, subgroupAttribute.Description, ApplicationCommandOptionType.SubCommandGroup, false, null, options, nameLocalizations: subNameLocalizations, descriptionLocalizations: subDescriptionLocalizations);
 				command.SubCommands.Add(new GroupCommand { Name = subgroupAttribute.Name, Methods = currentMethods });
-				payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations, defaultMemberPermissions: payload.DefaultMemberPermissions, dmPermission: payload.DmPermission ?? true, isNsfw: payload.IsNsfw);
+				payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations, defaultMemberPermissions: payload.DefaultMemberPermissions, dmPermission: payload.DmPermission ?? true, isNsfw: payload.IsNsfw, allowedContexts: payload.AllowedContexts);
 				commandTypeSources.Add(new KeyValuePair<Type, Type>(subclass, type));
 
 				//Accounts for lifespans for the sub group
