@@ -24,7 +24,6 @@ using System;
 
 namespace DisCatSharp.Enums;
 
-// TODO: Add to application commands. Field is "contexts" on DiscordApplicationCommand.
 /// <summary>
 /// Represents where application commands can be used.
 /// </summary>
@@ -34,15 +33,15 @@ public enum ApplicationCommandContexts : int
 	/// <summary>
 	/// Command can be used in guilds.
 	/// </summary>
-	Guild = 0,
+	Guilds = 1 << 0,
 
 	/// <summary>
 	/// Command can be used in direct messages.
 	/// </summary>
-	Dm = 1,
+	DirectMessages = 1 << 1,
 
 	/// <summary>
-	/// Command can be used in group direct messages.
+	/// Command can be used in group direct messages and direct messages.
 	/// </summary>
-	Gdm = 2
+	PrivateChannels = 1 << 2
 }

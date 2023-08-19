@@ -93,6 +93,12 @@ internal sealed class RestApplicationCommandCreatePayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("nsfw", NullValueHandling = NullValueHandling.Ignore)]
 	public bool Nsfw { get; set; }
+
+	/// <summary>
+	/// Gets where the command is allowed at.
+	/// </summary>
+	[JsonProperty("contexts", NullValueHandling = NullValueHandling.Include)]
+	public ApplicationCommandContexts? AllowedContexts { get; set; }
 }
 
 /// <summary>
@@ -147,6 +153,12 @@ internal sealed class RestApplicationCommandEditPayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("nsfw", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<bool> Nsfw { get; set; }
+
+	/// <summary>
+	/// Gets where the command is allowed at.
+	/// </summary>
+	[JsonProperty("contexts", NullValueHandling = NullValueHandling.Include)]
+	public Optional<ApplicationCommandContexts?> AllowedContexts { get; set; }
 }
 
 /// <summary>

@@ -48,6 +48,12 @@ public sealed class ContextMenuAttribute : Attribute
 	public Permissions? DefaultMemberPermissions { get; internal set; }
 
 	/// <summary>
+	/// Gets the allowed contexts of this command
+	/// </summary>
+	public ApplicationCommandContexts? AllowedContexts { get; set; }
+
+
+	/// <summary>
 	/// Gets whether the command can be used in direct messages.
 	/// </summary>
 	public bool? DmPermission { get; set; }
@@ -63,7 +69,8 @@ public sealed class ContextMenuAttribute : Attribute
 	/// <param name="type">The type of the context menu.</param>
 	/// <param name="name">The name of the context menu.</param>
 	/// <param name="isNsfw">Whether this context menu command is marked as NSFW.</param>
-	public ContextMenuAttribute(ApplicationCommandType type, string name, bool isNsfw = false)
+	/// <param name="allowedContexts">The allowed contexts of the context menu.</param>
+	public ContextMenuAttribute(ApplicationCommandType type, string name, bool isNsfw = false, int allowedContexts = 0)
 	{
 		if (type == ApplicationCommandType.ChatInput)
 			throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
@@ -73,6 +80,7 @@ public sealed class ContextMenuAttribute : Attribute
 		this.DefaultMemberPermissions = null;
 		this.DmPermission = null;
 		this.IsNsfw = isNsfw;
+		this.AllowedContexts = allowedContexts != 0 ? (ApplicationCommandContexts)allowedContexts : null;
 	}
 
 
@@ -83,7 +91,8 @@ public sealed class ContextMenuAttribute : Attribute
 	/// <param name="name">The name of the context menu.</param>
 	/// <param name="defaultMemberPermissions">The default member permissions.</param>
 	/// <param name="isNsfw">Whether this context menu command is marked as NSFW.</param>
-	public ContextMenuAttribute(ApplicationCommandType type, string name, long defaultMemberPermissions, bool isNsfw = false)
+	/// <param name="allowedContexts">The allowed contexts of the context menu.</param>
+	public ContextMenuAttribute(ApplicationCommandType type, string name, long defaultMemberPermissions, bool isNsfw = false, int allowedContexts = 0)
 	{
 		if (type == ApplicationCommandType.ChatInput)
 			throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
@@ -93,6 +102,7 @@ public sealed class ContextMenuAttribute : Attribute
 		this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
 		this.DmPermission = null;
 		this.IsNsfw = isNsfw;
+		this.AllowedContexts = allowedContexts != 0 ? (ApplicationCommandContexts)allowedContexts : null;
 	}
 
 
@@ -103,13 +113,15 @@ public sealed class ContextMenuAttribute : Attribute
 	/// <param name="name">The name of the context menu.</param>
 	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
-	public ContextMenuAttribute(ApplicationCommandType type, string name, bool dmPermission, bool isNsfw = false)
+	/// <param name="allowedContexts">The allowed contexts of the context menu.</param>
+	public ContextMenuAttribute(ApplicationCommandType type, string name, bool dmPermission, bool isNsfw = false, int allowedContexts = 0)
 	{
 		this.Type = type;
 		this.Name = name;
 		this.DefaultMemberPermissions = null;
 		this.DmPermission = dmPermission;
 		this.IsNsfw = isNsfw;
+		this.AllowedContexts = allowedContexts != 0 ? (ApplicationCommandContexts)allowedContexts : null;
 	}
 
 	/// <summary>
@@ -120,12 +132,14 @@ public sealed class ContextMenuAttribute : Attribute
 	/// <param name="defaultMemberPermissions">The default member permissions.</param>
 	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
-	public ContextMenuAttribute(ApplicationCommandType type, string name, long defaultMemberPermissions, bool dmPermission, bool isNsfw = false)
+	/// <param name="allowedContexts">The allowed contexts of the context menu.</param>
+	public ContextMenuAttribute(ApplicationCommandType type, string name, long defaultMemberPermissions, bool dmPermission, bool isNsfw = false, int allowedContexts = 0)
 	{
 		this.Type = type;
 		this.Name = name;
 		this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
 		this.DmPermission = dmPermission;
 		this.IsNsfw = isNsfw;
+		this.AllowedContexts = allowedContexts != 0 ? (ApplicationCommandContexts)allowedContexts : null;
 	}
 }
