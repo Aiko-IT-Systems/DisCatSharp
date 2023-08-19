@@ -5180,7 +5180,8 @@ public sealed class DiscordApiClient
 				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
 				DmPermission = command.DmPermission,
-				Nsfw = command.IsNsfw
+				Nsfw = command.IsNsfw,
+				AllowedContexts = command.AllowedContexts
 			});
 		}
 
@@ -5211,7 +5212,8 @@ public sealed class DiscordApiClient
 			DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
 			DefaultMemberPermission = command.DefaultMemberPermissions,
 			DmPermission = command.DmPermission,
-			Nsfw = command.IsNsfw
+			Nsfw = command.IsNsfw,
+			AllowedContexts = command.AllowedContexts
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
@@ -5258,10 +5260,11 @@ public sealed class DiscordApiClient
 	/// <param name="defaultMemberPermission">The default member permissions.</param>
 	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
+	/// <param name="allowedContexts">The allowed contexts.</param>
 	internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId,
 		Optional<string> name, Optional<string> description, Optional<List<DiscordApplicationCommandOption>?> options,
 		Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
-		Optional<Permissions?> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw)
+		Optional<Permissions?> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw, Optional<ApplicationCommandContexts?> allowedContexts)
 	{
 		var pld = new RestApplicationCommandEditPayload
 		{
@@ -5272,7 +5275,8 @@ public sealed class DiscordApiClient
 			DmPermission = dmPermission,
 			NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
-			Nsfw = isNsfw
+			Nsfw = isNsfw,
+			AllowedContexts = allowedContexts
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
@@ -5345,7 +5349,8 @@ public sealed class DiscordApiClient
 				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
 				DmPermission = command.DmPermission,
-				Nsfw = command.IsNsfw
+				Nsfw = command.IsNsfw,
+				AllowedContexts = command.AllowedContexts
 			});
 		}
 
@@ -5377,7 +5382,8 @@ public sealed class DiscordApiClient
 			DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
 			DefaultMemberPermission = command.DefaultMemberPermissions,
 			DmPermission = command.DmPermission,
-			Nsfw = command.IsNsfw
+			Nsfw = command.IsNsfw,
+			AllowedContexts = command.AllowedContexts
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
@@ -5426,10 +5432,11 @@ public sealed class DiscordApiClient
 	/// <param name="defaultMemberPermission">The default member permissions.</param>
 	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
+	/// <param name="allowedContexts">The allowed contexts.</param>
 	internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId,
 		Optional<string> name, Optional<string> description, Optional<List<DiscordApplicationCommandOption>?> options,
 		Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
-		Optional<Permissions?> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw)
+		Optional<Permissions?> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw, Optional<ApplicationCommandContexts?> allowedContexts)
 	{
 		var pld = new RestApplicationCommandEditPayload
 		{
@@ -5440,7 +5447,8 @@ public sealed class DiscordApiClient
 			DmPermission = dmPermission,
 			NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
-			Nsfw = isNsfw
+			Nsfw = isNsfw,
+			AllowedContexts = allowedContexts
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";

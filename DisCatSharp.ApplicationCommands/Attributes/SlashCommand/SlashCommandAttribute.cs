@@ -48,6 +48,11 @@ public class SlashCommandAttribute : Attribute
 	public Permissions? DefaultMemberPermissions { get; set; }
 
 	/// <summary>
+	/// Gets the allowed contexts of this command
+	/// </summary>
+	public ApplicationCommandContexts? AllowedContexts { get; set; }
+
+	/// <summary>
 	/// Gets the dm permission of this command
 	/// </summary>
 	public bool? DmPermission { get; set; }
@@ -63,13 +68,15 @@ public class SlashCommandAttribute : Attribute
 	/// <param name="name">The name of this slash command.</param>
 	/// <param name="description">The description of this slash command.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
-	public SlashCommandAttribute(string name, string description, bool isNsfw = false)
+	/// <param name="allowedContexts">The allowed contexts of this slash command.</param>
+	public SlashCommandAttribute(string name, string description, bool isNsfw = false, int allowedContexts = 0)
 	{
 		this.Name = name.ToLower();
 		this.Description = description;
 		this.DefaultMemberPermissions = null;
 		this.DmPermission = null;
 		this.IsNsfw = isNsfw;
+		this.AllowedContexts = allowedContexts != 0 ? (ApplicationCommandContexts)allowedContexts : null;
 	}
 
 	/// <summary>
@@ -79,13 +86,15 @@ public class SlashCommandAttribute : Attribute
 	/// <param name="description">The description of this slash command.</param>
 	/// <param name="defaultMemberPermissions">The default member permissions.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
-	public SlashCommandAttribute(string name, string description, long defaultMemberPermissions, bool isNsfw = false)
+	/// <param name="allowedContexts">The allowed contexts of this slash command.</param>
+	public SlashCommandAttribute(string name, string description, long defaultMemberPermissions, bool isNsfw = false, int allowedContexts = 0)
 	{
 		this.Name = name.ToLower();
 		this.Description = description;
 		this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
 		this.DmPermission = null;
 		this.IsNsfw = isNsfw;
+		this.AllowedContexts = allowedContexts != 0 ? (ApplicationCommandContexts)allowedContexts : null;
 	}
 
 	/// <summary>
@@ -95,13 +104,15 @@ public class SlashCommandAttribute : Attribute
 	/// <param name="description">The description of this slash command.</param>
 	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
-	public SlashCommandAttribute(string name, string description, bool dmPermission, bool isNsfw = false)
+	/// <param name="allowedContexts">The allowed contexts of this slash command.</param>
+	public SlashCommandAttribute(string name, string description, bool dmPermission, bool isNsfw = false, int allowedContexts = 0)
 	{
 		this.Name = name.ToLower();
 		this.Description = description;
 		this.DefaultMemberPermissions = null;
 		this.DmPermission = dmPermission;
 		this.IsNsfw = isNsfw;
+		this.AllowedContexts = allowedContexts != 0 ? (ApplicationCommandContexts)allowedContexts : null;
 	}
 
 	/// <summary>
@@ -112,12 +123,14 @@ public class SlashCommandAttribute : Attribute
 	/// <param name="defaultMemberPermissions">The default member permissions.</param>
 	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
-	public SlashCommandAttribute(string name, string description, long defaultMemberPermissions, bool dmPermission, bool isNsfw = false)
+	/// <param name="allowedContexts">The allowed contexts of this slash command.</param>
+	public SlashCommandAttribute(string name, string description, long defaultMemberPermissions, bool dmPermission, bool isNsfw = false, int allowedContexts = 0)
 	{
 		this.Name = name.ToLower();
 		this.Description = description;
 		this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
 		this.DmPermission = dmPermission;
 		this.IsNsfw = isNsfw;
+		this.AllowedContexts = allowedContexts != 0 ? (ApplicationCommandContexts)allowedContexts : null;
 	}
 }
