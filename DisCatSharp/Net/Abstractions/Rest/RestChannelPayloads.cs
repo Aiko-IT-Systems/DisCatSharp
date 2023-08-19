@@ -578,3 +578,15 @@ internal sealed class RestThreadChannelModifyPayload : ObservableApiObject
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Include)]
 	public Optional<ChannelFlags?> Flags { internal get; set; }
 }
+
+/// <summary>
+/// Represents a voice channel status modify payload.
+/// </summary>
+internal sealed class RestVoiceChannelStatusModifyPayload : ObservableApiObject
+{
+	/// <summary>
+	/// Gets or sets the status.
+	/// </summary>
+	[JsonProperty("status", NullValueHandling = NullValueHandling.Include)]
+	public string? Status { get; set; }
+}
