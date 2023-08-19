@@ -160,7 +160,7 @@ public sealed class DiscordOAuth2Client : IDisposable
 		this.VersionHeader = $"DiscordBot (https://github.com/Aiko-IT-Systems/DisCatSharp, v{vs})";
 		this.ApiClient.Rest.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", this.VersionHeader);
 
-		this._oauth2ClientErrored = new("CLIENT_ERRORED", EventExecutionLimit, this.Goof);
+		this.OAuth2ClientErroredInternal = new("CLIENT_ERRORED", EventExecutionLimit, this.Goof);
 		this.RSA = RSA.Create(4096);
 	}
 
@@ -342,11 +342,11 @@ public sealed class DiscordOAuth2Client : IDisposable
 	/// </summary>
 	public event AsyncEventHandler<DiscordOAuth2Client, ClientErrorEventArgs> OAuth2ClientErrored
 	{
-		add => this._oauth2ClientErrored.Register(value);
-		remove => this._oauth2ClientErrored.Unregister(value);
+		add => this.OAuth2ClientErroredInternal.Register(value);
+		remove => this.OAuth2ClientErroredInternal.Unregister(value);
 	}
 
-	internal AsyncEvent<DiscordOAuth2Client, ClientErrorEventArgs> _oauth2ClientErrored;
+	internal AsyncEvent<DiscordOAuth2Client, ClientErrorEventArgs> OAuth2ClientErroredInternal;
 
 	/// <summary>
 	/// Handles event errors.
@@ -366,7 +366,7 @@ public sealed class DiscordOAuth2Client : IDisposable
 		}
 
 		this.Logger.LogError(LoggerEvents.EventHandlerException, ex, "Event handler exception for event {Name} thrown from {Method} (defined in {Type})", asyncEvent.Name, handler.Method, handler.Method.DeclaringType);
-		this._oauth2ClientErrored.InvokeAsync(this, new(this.ServiceProvider) { EventName = asyncEvent.Name, Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
+		this.OAuth2ClientErroredInternal.InvokeAsync(this, new(this.ServiceProvider) { EventName = asyncEvent.Name, Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
 	}
 
 	/// <summary>
