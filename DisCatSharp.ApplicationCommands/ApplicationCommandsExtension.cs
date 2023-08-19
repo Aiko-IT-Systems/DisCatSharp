@@ -57,22 +57,22 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// A list of methods for top level commands.
 	/// </summary>
-	internal static List<CommandMethod> s_commandMethods { get; set; } = new();
+	internal static List<CommandMethod> CommandMethods { get; set; } = new();
 
 	/// <summary>
 	/// List of groups.
 	/// </summary>
-	internal static List<GroupCommand> s_groupCommands { get; set; } = new();
+	internal static List<GroupCommand> GroupCommands { get; set; } = new();
 
 	/// <summary>
 	/// List of groups with subgroups.
 	/// </summary>
-	internal static List<SubGroupCommand> s_subGroupCommands { get; set; } = new();
+	internal static List<SubGroupCommand> SubGroupCommands { get; set; } = new();
 
 	/// <summary>
 	/// List of context menus.
 	/// </summary>
-	internal static List<ContextMenuCommand> s_contextMenuCommands { get; set; } = new();
+	internal static List<ContextMenuCommand> ContextMenuCommands { get; set; } = new();
 
 	/// <summary>
 	/// List of global commands on discords backend.
@@ -266,10 +266,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		s_errored = false;
 		s_expectedCount = 0;
 		s_registrationCount = 0;
-		s_commandMethods.Clear();
-		s_groupCommands.Clear();
-		s_contextMenuCommands.Clear();
-		s_subGroupCommands.Clear();
+		CommandMethods.Clear();
+		GroupCommands.Clear();
+		ContextMenuCommands.Clear();
+		SubGroupCommands.Clear();
 		s_singletonModules.Clear();
 		s_registeredCommands.Clear();
 		GlobalCommandsInternal.Clear();
@@ -804,10 +804,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					}
 
 					//Adds to the global lists finally
-					s_commandMethods.AddRange(commandMethods.DistinctBy(x => x.Name));
-					s_groupCommands.AddRange(groupCommands.DistinctBy(x => x.Name));
-					s_subGroupCommands.AddRange(subGroupCommands.DistinctBy(x => x.Name));
-					s_contextMenuCommands.AddRange(contextMenuCommands.DistinctBy(x => x.Name));
+					CommandMethods.AddRange(commandMethods.DistinctBy(x => x.Name));
+					GroupCommands.AddRange(groupCommands.DistinctBy(x => x.Name));
+					SubGroupCommands.AddRange(subGroupCommands.DistinctBy(x => x.Name));
+					ContextMenuCommands.AddRange(contextMenuCommands.DistinctBy(x => x.Name));
 
 					s_registeredCommands.Add(new KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>(guildId, commands.ToList()));
 
@@ -987,9 +987,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							throw new InvalidOperationException("Application commands failed to register properly on startup.");
 						}
 
-						var methods = s_commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
-						var groups = s_groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
-						var subgroups = s_subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
+						var methods = CommandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
+						var groups = GroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
+						var subgroups = SubGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
 						if (!methods.Any() && !groups.Any() && !subgroups.Any())
 						{
 							await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("A application command was executed, but no command was registered for it.")).ConfigureAwait(false);
@@ -1056,9 +1056,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					throw new InvalidOperationException("Application commands failed to register properly on startup.");
 				case InteractionType.AutoComplete:
 				{
-					var methods = s_commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
-					var groups = s_groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
-					var subgroups = s_subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
+					var methods = CommandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
+					var groups = GroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
+					var subgroups = SubGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
 					if (!methods.Any() && !groups.Any() && !subgroups.Any())
 					{
 						await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("An autocomplete interaction was created, but no command was registered for it")).ConfigureAwait(false);
@@ -1244,7 +1244,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				}
 
 				//Gets the method for the command
-				var method = s_contextMenuCommands.FirstOrDefault(x => x.CommandId == e.Interaction.Data.Id);
+				var method = ContextMenuCommands.FirstOrDefault(x => x.CommandId == e.Interaction.Data.Id);
 
 				if (method == null)
 				{
