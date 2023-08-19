@@ -5630,9 +5630,9 @@ public sealed class DiscordApiClient
 	/// <param name="title">The title of the iframe.</param>
 	/// <param name="modalSize">The size of the iframe.</param>
 	/// <param name="iFramePath">The path of the iframe.</param>
-	internal async Task CreateInteractionIFrameResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, string customId, string title, IFrameModalSize modalSize, string? iFramePath = null)
+	internal async Task CreateInteractionIframeResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, string customId, string title, IframeModalSize modalSize, string? iFramePath = null)
 	{
-		var pld = new RestInteractionIFrameResponsePayload
+		var pld = new RestInteractionIframeResponsePayload
 		{
 			Type = type,
 			Data = new()
@@ -5640,7 +5640,7 @@ public sealed class DiscordApiClient
 				Title = title,
 				CustomId = customId,
 				ModalSize = modalSize,
-				IFramePath = iFramePath
+				IframePath = iFramePath
 			}
 		};
 
@@ -5820,6 +5820,26 @@ public sealed class DiscordApiClient
 		}
 
 		return new ReadOnlyCollection<DiscordStoreSku>(new List<DiscordStoreSku>(storeSkus));
+	}
+
+	/// <summary>
+	/// Gets the applications skus.
+	/// </summary>
+	/// <param name="applicationId">The application id to fetch the listenings for.</param>
+	/// <returns>A list of published listings with <see cref="DiscordStoreSku"/>s.</returns>
+	internal async Task<IReadOnlyList<DiscordSku>> GetSkusAsync(ulong applicationId)
+	{
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.SKUS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { application_id = applicationId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		var skus = JsonConvert.DeserializeObject<IEnumerable<DiscordSku>>(res.Response);
+		foreach (var sku in skus)
+			sku.Discord = this.Discord;
+
+		return new ReadOnlyCollection<DiscordSku>(new List<DiscordSku>(skus));
 	}
 
 	/// <summary>

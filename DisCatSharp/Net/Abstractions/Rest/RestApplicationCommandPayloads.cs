@@ -206,7 +206,7 @@ internal sealed class RestInteractionModalResponsePayload : ObservableApiObject
 /// <summary>
 /// Represents an interaction response iFrame payload.
 /// </summary>
-internal sealed class RestInteractionIFrameResponsePayload : ObservableApiObject
+internal sealed class RestInteractionIframeResponsePayload : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the type.
@@ -218,7 +218,7 @@ internal sealed class RestInteractionIFrameResponsePayload : ObservableApiObject
 	/// Gets the data.
 	/// </summary>
 	[JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordInteractionApplicationCommandIFrameCallbackData Data { get; set; }
+	public DiscordInteractionApplicationCommandIframeCallbackData Data { get; set; }
 }
 
 /// <summary>

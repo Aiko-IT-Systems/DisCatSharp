@@ -109,7 +109,7 @@ internal class DiscordInteractionApplicationCommandModalCallbackData
 /// <summary>
 /// Represents an interactions application command callback data for iFrames.
 /// </summary>
-internal class DiscordInteractionApplicationCommandIFrameCallbackData
+internal class DiscordInteractionApplicationCommandIframeCallbackData
 {
 	/// <summary>
 	/// Gets the custom id.
@@ -127,11 +127,11 @@ internal class DiscordInteractionApplicationCommandIFrameCallbackData
 	/// Gets the iFrame modal size.
 	/// </summary>
 	[JsonProperty("modal_size", NullValueHandling = NullValueHandling.Ignore)]
-	public IFrameModalSize ModalSize { get; internal set; }
+	public IframeModalSize ModalSize { get; internal set; }
 
 	/// <summary>
 	/// Gets the iFrame path.
 	/// </summary>
 	[JsonProperty("iframe_path", NullValueHandling = NullValueHandling.Include)]
-	public string? IFramePath { get; internal set; }
+	public string? IframePath { get; internal set; }
 }
