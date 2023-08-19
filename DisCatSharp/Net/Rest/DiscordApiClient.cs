@@ -5461,7 +5461,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates the interaction response.
+	/// Creates an interaction response.
 	/// </summary>
 	/// <param name="interactionId">The interaction id.</param>
 	/// <param name="interactionToken">The interaction token.</param>
@@ -5571,7 +5571,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates the interaction response.
+	/// Creates an interaction response with a modal.
 	/// </summary>
 	/// <param name="interactionId">The interaction id.</param>
 	/// <param name="interactionToken">The interaction token.</param>
@@ -5590,6 +5590,39 @@ public sealed class DiscordApiClient
 				Title = builder.Title,
 				CustomId = builder.CustomId,
 				ModalComponents = builder.ModalComponents
+			}
+		};
+
+		var values = new Dictionary<string, string>();
+
+		var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {interaction_id = interactionId, interaction_token = interactionToken }, out var path);
+
+		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
+		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Creates an interaction response with an iFrame.
+	/// </summary>
+	/// <param name="interactionId">The interaction id.</param>
+	/// <param name="interactionToken">The interaction token.</param>
+	/// <param name="type">The type.</param>
+	/// <param name="customId">The custom id of the iframe.</param>
+	/// <param name="title">The title of the iframe.</param>
+	/// <param name="modalSize">The size of the iframe.</param>
+	/// <param name="iFramePath">The path of the iframe.</param>
+	internal async Task CreateInteractionIFrameResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, string customId, string title, IFrameModalSize modalSize, string? iFramePath = null)
+	{
+		var pld = new RestInteractionIFrameResponsePayload
+		{
+			Type = type,
+			Data = new()
+			{
+				Title = title,
+				CustomId = customId,
+				ModalSize = modalSize,
+				IFramePath = iFramePath
 			}
 		};
 

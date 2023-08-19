@@ -148,6 +148,16 @@ public sealed class DiscordInteraction : SnowflakeObject
 		=> this.Type != InteractionType.Ping && this.Type != InteractionType.ModalSubmit ? this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token, InteractionResponseType.Modal, builder) : throw new NotSupportedException("You can't respond to an PING with a modal.");
 
 	/// <summary>
+	/// Creates an iframe response to this interaction.
+	/// </summary>
+	/// <param name="customId">The custom id of the iframe.</param>
+	/// <param name="title">The title of the iframe.</param>
+	/// <param name="modalSize">The size of the iframe.</param>
+	/// <param name="iFramePath">The path of the iframe.</param>
+	public Task CreateInteractionIFrameResponseAsync(string customId, string title, IFrameModalSize modalSize = IFrameModalSize.Normal, string? iFramePath = null)
+		=> this.Type != InteractionType.Ping ? this.Discord.ApiClient.CreateInteractionIFrameResponseAsync(this.Id, this.Token, InteractionResponseType.IFrame, customId, title, modalSize, iFramePath) : throw new NotSupportedException("You can't respond to an PING with an iframe.");
+
+	/// <summary>
 	/// Gets the original interaction response.
 	/// </summary>
 	/// <returns>The original message that was sent. This <b>does not work on ephemeral messages.</b></returns>
