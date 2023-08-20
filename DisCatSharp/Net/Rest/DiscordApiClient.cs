@@ -32,6 +32,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Entities.OAuth2;
 using DisCatSharp.Enums;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Abstractions.Rest;
@@ -60,6 +61,11 @@ public sealed class DiscordApiClient
 	internal BaseDiscordClient Discord { get; }
 
 	/// <summary>
+	/// Gets the oauth2 client.
+	/// </summary>
+	internal DiscordOAuth2Client OAuth2Client { get; }
+
+	/// <summary>
 	/// Gets the rest client.
 	/// </summary>
 	internal RestClient Rest { get; }
@@ -72,6 +78,20 @@ public sealed class DiscordApiClient
 	{
 		this.Discord = client;
 		this.Rest = new(client);
+	}
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="DiscordApiClient"/> class.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="proxy">The proxy.</param>
+	/// <param name="timeout">The timeout.</param>
+	/// <param name="useRelativeRateLimit">If true, use relative rate limit.</param>
+	/// <param name="logger">The logger.</param>
+	internal DiscordApiClient(DiscordOAuth2Client client, IWebProxy proxy, TimeSpan timeout, bool useRelativeRateLimit, ILogger logger)
+	{
+		this.OAuth2Client = client;
+		this.Rest = new(proxy, timeout, useRelativeRateLimit, logger);
 	}
 
 	/// <summary>
@@ -210,6 +230,26 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	/// Executes a rest form data request.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="bucket">The bucket.</param>
+	/// <param name="url">The url.</param>
+	/// <param name="method">The method.</param>
+	/// <param name="route">The route.</param>
+	/// <param name="headers">The headers.</param>
+	/// <param name="formData">The form data.</param>
+	/// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
+	internal Task<RestResponse> DoFormRequestAsync(DiscordOAuth2Client client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, Dictionary<string, string> formData, Dictionary<string, string> headers = null, double? ratelimitWaitOverride = null)
+	{
+		var req = new RestFormRequest(client, bucket, url, method, route, formData, headers, ratelimitWaitOverride);
+
+		this.Rest.ExecuteFormRequestAsync(req).LogTaskFault(this.OAuth2Client.Logger, LogLevel.Error, LoggerEvents.RestError, $"Error while executing request. Url: {url.AbsoluteUri}");
+
+		return req.WaitForCompletionAsync();
+	}
+
+	/// <summary>
 	/// Executes a multipart rest request for stickers.
 	/// </summary>
 	/// <param name="client">The client.</param>
@@ -260,7 +300,9 @@ public sealed class DiscordApiClient
 
 		return req.WaitForCompletionAsync();
 	}
+
 	// begin todo
+
 	#region Guild
 
 	/// <summary>
@@ -1660,6 +1702,7 @@ public sealed class DiscordApiClient
 	}
 
 	#endregion
+
 	// End todo
 
 	#region Guild Scheduled Events
@@ -1968,6 +2011,7 @@ public sealed class DiscordApiClient
 	#endregion
 
 	// begin todo
+
 	#region Channel
 	/// <summary>
 	/// Creates a guild channel.
@@ -3030,6 +3074,7 @@ public sealed class DiscordApiClient
 	#endregion
 
 	// End todo
+
 	#region Member
 	/// <summary>
 	/// Gets the current user async.
@@ -3881,7 +3926,7 @@ public sealed class DiscordApiClient
 	internal async Task<DiscordWebhook> GetWebhookAsync(ulong webhookId)
 	{
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {webhook_id = webhookId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { webhook_id = webhookId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord?.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -6065,5 +6110,268 @@ public sealed class DiscordApiClient
 		};
 		this.Rest.HttpClient.Send(request);
 	}
+
+	#endregion
+
+	#region OAuth2
+
+	/// <summary>
+	/// Gets the current oauth2 authorization information.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	internal async Task<DiscordAuthorizationInformation> GetCurrentOAuth2AuthorizationInformationAsync(string accessToken)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.OAUTH2}/@me";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Bearer", accessToken);
+
+		var url = Utilities.GetApiUriFor(path);
+		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers).ConfigureAwait(false);
+
+		var oauth2Info = DiscordJson.DeserializeObject<DiscordAuthorizationInformation>(res.Response, null);
+		return oauth2Info;
+	}
+
+	/// <summary>
+	/// Gets the current user.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	internal async Task<DiscordUser> GetCurrentUserAsync(string accessToken)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.USERS}/@me";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route,
+			new { application_id = this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) }, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Bearer", accessToken);
+
+		var url = Utilities.GetApiUriFor(path);
+		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
+			.ConfigureAwait(false);
+		var tuser = DiscordJson.DeserializeObject<TransportUser>(res.Response, null);
+		return new(tuser);
+	}
+
+	/// <summary>
+	/// Gets the current user's connections.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	internal async Task<IReadOnlyList<DiscordConnection>> GetCurrentUserConnectionsAsync(string accessToken)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.USERS}/@me{Endpoints.CONNECTIONS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Bearer", accessToken);
+
+		var url = Utilities.GetApiUriFor(path);
+		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
+			.ConfigureAwait(false);
+		return DiscordJson.DeserializeIEnumerableObject<List<DiscordConnection>>(res.Response, null);
+	}
+
+	/// <summary>
+	/// Gets the current user's guilds.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	internal async Task<IReadOnlyList<DiscordGuild>> GetCurrentUserGuildsAsync(string accessToken)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.USERS}/@me{Endpoints.GUILDS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Bearer", accessToken);
+
+		var url = Utilities.GetApiUriFor(path);
+		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
+			.ConfigureAwait(false);
+		return DiscordJson.DeserializeIEnumerableObject<List<DiscordGuild>>(res.Response, null);
+	}
+
+	/// <summary>
+	/// Gets the current user's guilds.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	/// <param name="guildId">The guild id to get the member for.</param>
+	internal async Task<DiscordMember> GetCurrentUserGuildMemberAsync(string accessToken, ulong guildId)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.USERS}/@me{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBER}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId.ToString(CultureInfo.InvariantCulture) }, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Bearer", accessToken);
+
+		var url = Utilities.GetApiUriFor(path);
+		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
+			.ConfigureAwait(false);
+		var tmember = DiscordJson.DeserializeObject<TransportMember>(res.Response, null);
+		return new(tmember);
+	}
+
+	/// <summary>
+	/// Gets the current user's role connection.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	internal async Task<DiscordApplicationRoleConnection> GetCurrentUserApplicationRoleConnectionAsync(string accessToken)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.USERS}/@me{Endpoints.APPLICATIONS}/:application_id/{Endpoints.ROLE_CONNECTIONS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route,
+			new { application_id = this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) }, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Bearer", accessToken);
+
+		var url = Utilities.GetApiUriFor(path);
+		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
+			.ConfigureAwait(false);
+		return DiscordJson.DeserializeObject<DiscordApplicationRoleConnection>(res.Response, null);
+	}
+
+	/// <summary>
+	/// Updates the current user's role connection.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	/// <param name="platformName">The platform name.</param>
+	/// <param name="platformUsername">The platform username.</param>
+	/// <param name="metadata">The metadata.</param>
+	internal Task ModifyCurrentUserApplicationRoleConnectionAsync(string accessToken, Optional<string> platformName, Optional<string> platformUsername, Optional<ApplicationRoleConnectionMetadata> metadata)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		RestOAuth2ApplicationRoleConnectionPayload pld = new()
+		{
+			PlatformName = platformName,
+			PlatformUsername = platformUsername,
+			Metadata = metadata.HasValue ? metadata.Value.GetKeyValuePairs() : Optional<Dictionary<string, string>>.None
+		};
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.USERS}/@me{Endpoints.APPLICATIONS}/:application_id/{Endpoints.ROLE_CONNECTIONS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { application_id = this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) }, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Bearer", accessToken);
+
+		var url = Utilities.GetApiUriFor(path);
+		this.DoRequestAsync(null, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		return Task.CompletedTask;
+	}
+
+	/// <summary>
+	/// Exchanges a code for an access token.
+	/// </summary>
+	/// <param name="code">The code.</param>
+	internal async Task<DiscordAccessToken> ExchangeOAuth2AccessTokenAsync(string code)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { }, out var path);
+
+		var formData = new Dictionary<string, string>
+		{
+			{ "client_id", this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) },
+			{ "client_secret", this.OAuth2Client.ClientSecret },
+			{ "grant_type", "authorization_code" },
+			{ "code", code },
+			{ "redirect_uri", this.OAuth2Client.RedirectUri.AbsoluteUri }
+		};
+
+		var url = Utilities.GetApiUriFor(path);
+		var res = await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData).ConfigureAwait(false);
+
+		var accessTokenInformation = DiscordJson.DeserializeObject<DiscordAccessToken>(res.Response, null);
+		return accessTokenInformation;
+	}
+
+	/// <summary>
+	/// Exchanges a refresh token for a new access token
+	/// </summary>
+	/// <param name="refreshToken">The refresh token.</param>
+	internal async Task<DiscordAccessToken> RefreshOAuth2AccessTokenAsync(string refreshToken)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { }, out var path);
+
+		var formData = new Dictionary<string, string>
+		{
+			{ "client_id", this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) },
+			{ "client_secret", this.OAuth2Client.ClientSecret },
+			{ "grant_type", "refresh_token" },
+			{ "refresh_token", refreshToken },
+			{ "redirect_uri", this.OAuth2Client.RedirectUri.AbsoluteUri }
+		};
+
+		var url = Utilities.GetApiUriFor(path);
+		var res = await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData).ConfigureAwait(false);
+
+		var accessTokenInformation = DiscordJson.DeserializeObject<DiscordAccessToken>(res.Response, null);
+		return accessTokenInformation;
+	}
+
+	/// <summary>
+	/// Revokes an oauth2 token.
+	/// </summary>
+	/// <param name="token">The token to revoke.</param>
+	/// <param name="type">The type of token to revoke.</param>
+	internal Task RevokeOAuth2TokenAsync(string token, string type)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}{Endpoints.REVOKE}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { }, out var path);
+
+		var authorizationString = Encoding.UTF8.GetBytes($"{this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture)}:{this.OAuth2Client.ClientSecret}");
+		var base64EncodedAuthorizationString = Convert.ToBase64String(authorizationString);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Basic", base64EncodedAuthorizationString);
+
+		var formData = new Dictionary<string, string>
+		{
+			{ "token", token },
+			{ "token_type_hint", type }
+		};
+
+		var url = Utilities.GetApiUriFor(path);
+		this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData, headers).ConfigureAwait(false);
+		return Task.CompletedTask;
+	}
+
 	#endregion
 }

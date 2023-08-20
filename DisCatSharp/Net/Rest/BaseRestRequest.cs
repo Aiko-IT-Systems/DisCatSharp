@@ -38,6 +38,11 @@ public abstract class BaseRestRequest
 	protected internal BaseDiscordClient Discord { get; }
 
 	/// <summary>
+	/// Gets the oauth2 client.
+	/// </summary>
+	protected internal DiscordOAuth2Client OAuth2Client { get; }
+
+	/// <summary>
 	/// Gets the request task source.
 	/// </summary>
 	protected internal TaskCompletionSource<RestResponse> RequestTaskSource { get; }
@@ -85,6 +90,34 @@ public abstract class BaseRestRequest
 	internal BaseRestRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, double? ratelimitWaitOverride = null)
 	{
 		this.Discord = client;
+		this.RateLimitBucket = bucket;
+		this.RequestTaskSource = new();
+		this.Url = url;
+		this.Method = method;
+		this.Route = route;
+		this.RateLimitWaitOverride = ratelimitWaitOverride;
+
+		if (headers != null)
+		{
+			headers = headers.Select(x => new KeyValuePair<string, string>(x.Key, Uri.EscapeDataString(x.Value)))
+				.ToDictionary(x => x.Key, x => x.Value);
+			this.Headers = headers;
+		}
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="BaseRestRequest"/> with specified parameters.
+	/// </summary>
+	/// <param name="client"><see cref="DiscordOAuth2Client"/> from which this request originated.</param>
+	/// <param name="bucket">Rate limit bucket to place this request in.</param>
+	/// <param name="url">Uri to which this request is going to be sent to.</param>
+	/// <param name="method">Method to use for this request,</param>
+	/// <param name="route">The generic route the request url will use.</param>
+	/// <param name="headers">Additional headers for this request.</param>
+	/// <param name="ratelimitWaitOverride">Override for ratelimit bucket wait time.</param>
+	internal BaseRestRequest(DiscordOAuth2Client client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, double? ratelimitWaitOverride = null)
+	{
+		this.OAuth2Client = client;
 		this.RateLimitBucket = bucket;
 		this.RequestTaskSource = new();
 		this.Url = url;

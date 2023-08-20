@@ -55,6 +55,16 @@ public static class Endpoints
 	public const string OAUTH2 = "/oauth2";
 
 	/// <summary>
+	/// The oauth2 token endpoint.
+	/// </summary>
+	public const string TOKEN = "/token";
+
+	/// <summary>
+	/// The oauth2 revoke endpoint.
+	/// </summary>
+	public const string REVOKE = "/revoke";
+
+	/// <summary>
 	/// The oauth2 authorize endpoint.
 	/// </summary>
 	public const string AUTHORIZE = "/authorize";
@@ -194,6 +204,11 @@ public static class Endpoints
 	/// The members endpoint.
 	/// </summary>
 	public const string MEMBERS = "/members";
+
+	/// <summary>
+	/// The member endpoint.
+	/// </summary>
+	public const string MEMBER = "/member";
 
 	/// <summary>
 	/// The typing endpoint.

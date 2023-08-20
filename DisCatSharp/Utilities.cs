@@ -45,7 +45,7 @@ namespace DisCatSharp;
 public static class Utilities
 {
 	/// <summary>
-	/// Gets the version of the library
+	/// Gets the version of the library.
 	/// </summary>
 	internal static string VersionHeader { get; set; }
 
@@ -115,7 +115,7 @@ public static class Utilities
 	/// <param name="path">The path.</param>
 	/// <param name="config">The config</param>
 	/// <returns>An Uri.</returns>
-	internal static Uri GetApiUriFor(string path, DiscordConfiguration config)
+	internal static Uri GetApiUriFor(string path, DiscordConfiguration? config = null)
 		=> new($"{GetApiBaseUri(config)}{path}");
 
 	/// <summary>
@@ -125,7 +125,7 @@ public static class Utilities
 	/// <param name="queryString">The query string.</param>
 	/// <param name="config">The config</param>
 	/// <returns>An Uri.</returns>
-	internal static Uri GetApiUriFor(string path, string queryString, DiscordConfiguration config)
+	internal static Uri GetApiUriFor(string path, string queryString, DiscordConfiguration? config = null)
 		=> new($"{GetApiBaseUri(config)}{path}{queryString}");
 
 	/// <summary>
@@ -134,7 +134,7 @@ public static class Utilities
 	/// <param name="path">The path.</param>
 	/// <param name="config">The config</param>
 	/// <returns>A QueryUriBuilder.</returns>
-	internal static QueryUriBuilder GetApiUriBuilderFor(string path, DiscordConfiguration config)
+	internal static QueryUriBuilder GetApiUriBuilderFor(string path, DiscordConfiguration? config = null)
 		=> new($"{GetApiBaseUri(config)}{path}");
 
 	/// <summary>

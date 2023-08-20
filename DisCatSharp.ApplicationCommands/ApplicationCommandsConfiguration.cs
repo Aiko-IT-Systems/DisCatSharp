@@ -96,6 +96,7 @@ public class ApplicationCommandsConfiguration
 	/// <summary>
 	/// Creates a new configuration with default values.
 	/// </summary>
+	[ActivatorUtilitiesConstructor]
 	public ApplicationCommandsConfiguration()
 	{ }
 

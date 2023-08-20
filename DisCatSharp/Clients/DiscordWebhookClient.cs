@@ -106,7 +106,7 @@ public class DiscordWebhookClient
 
 		var parsedTimeout = timeout ?? TimeSpan.FromSeconds(10);
 
-		this.ApiClient = new(proxy, parsedTimeout, useRelativeRateLimit, this.Logger);
+		this.ApiClient = new(proxy!, parsedTimeout, useRelativeRateLimit, this.Logger);
 		this.Hooks = new();
 		this.Webhooks = new ReadOnlyCollection<DiscordWebhook>(this.Hooks);
 	}
