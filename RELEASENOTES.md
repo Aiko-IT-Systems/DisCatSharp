@@ -4,6 +4,7 @@ DisCatSharp Release Notes
  	- Full support for onboarding
  	- Custom status support
     - Full support for Application Subscriptions aka. Premium Apps
+    - DiscordOAuth2Client: Allows bots to request and use access tokens for the Discord API.
 
 DisCatSharp.ApplicationCommands Release Notes
 

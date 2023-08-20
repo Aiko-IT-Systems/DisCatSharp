@@ -113,7 +113,6 @@ public sealed class DiscordEntitlement : SnowflakeObject
 	public DateTimeOffset? EndsAt
 		=> !string.IsNullOrWhiteSpace(this.EndsAtRaw) && DateTimeOffset.TryParse(this.EndsAtRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ? dto : null;
 
-
 	/// <summary>
 	/// Gets this entitlement's bound guild id.
 	/// </summary>

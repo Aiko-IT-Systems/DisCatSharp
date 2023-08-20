@@ -23,50 +23,45 @@
 using System;
 using System.Collections.Generic;
 
-using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
-namespace DisCatSharp;
+namespace DisCatSharp.Entities.OAuth2;
 
 /// <summary>
-/// Represents a default logger factory.
+/// Represents a <see cref="DiscordAuthorizationInformation"/>.
 /// </summary>
-internal class DefaultLoggerFactory : ILoggerFactory
+public sealed class DiscordAuthorizationInformation : ObservableApiObject
 {
 	/// <summary>
-	/// Gets the providers.
+	/// Gets the current application.
 	/// </summary>
-	private readonly List<ILoggerProvider> _providers = new();
-	private bool _isDisposed;
+	[JsonProperty("application")]
+	public DiscordApplication Application { get; internal set; }
 
 	/// <summary>
-	/// Adds a provider.
+	/// Gets the scopes the user has authorized the application for.
 	/// </summary>
-	/// <param name="provider">The provider to be added.</param>
-	public void AddProvider(ILoggerProvider provider) => this._providers.Add(provider);
+	[JsonProperty("scopes")]
+	public List<string> Scopes { get; internal set; } = new();
 
 	/// <summary>
-	/// Creates the logger.
+	/// Gets when the access token expires as raw string.
 	/// </summary>
-	/// <param name="categoryName">The category name.</param>
-	public ILogger CreateLogger(string categoryName) =>
-		this._isDisposed
-			? throw new InvalidOperationException("This logger factory is already disposed.")
-			: categoryName != typeof(BaseDiscordClient).FullName && categoryName != typeof(DiscordWebhookClient).FullName && categoryName != typeof(DiscordOAuth2Client).FullName
-				? throw new ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName}, {typeof(DiscordWebhookClient).FullName} or {typeof(DiscordOAuth2Client).FullName}, not {categoryName}.", nameof(categoryName))
-				: new CompositeDefaultLogger(this._providers);
+	[JsonProperty("expires")]
+	internal string ExpiresRaw { get; set; }
 
 	/// <summary>
-	/// Disposes the logger.
+	/// Gets when the access token expires.
 	/// </summary>
-	public void Dispose()
-	{
-		if (this._isDisposed)
-			return;
-		this._isDisposed = true;
+	[JsonIgnore]
+	internal DateTimeOffset Expires
+		=> DateTimeOffset.TryParse(this.ExpiresRaw, out var expires)
+			? expires
+			: throw new InvalidCastException("Something went wrong");
 
-		foreach (var provider in this._providers)
-			provider.Dispose();
-
-		this._providers.Clear();
-	}
+	/// <summary>
+	/// Gets the user who has authorized, if the user has authorized with the <c>identify</c> scope.
+	/// </summary>
+	[JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordUser? User { get; internal set; }
 }
