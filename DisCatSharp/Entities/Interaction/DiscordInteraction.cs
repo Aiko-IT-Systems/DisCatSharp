@@ -160,7 +160,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <param name="customId">The custom id of the iframe.</param>
 	/// <param name="title">The title of the iframe.</param>
 	/// <param name="modalSize">The size of the iframe.</param>
-	/// <param name="iFramePath">The path of the iframe.</param>
+	/// <param name="iFramePath">The path of the iframe. Uses %application_id%.discordsays.com/<c>:iframe_path</c>.</param>
 	public Task CreateInteractionIframeResponseAsync(string customId, string title, IframeModalSize modalSize = IframeModalSize.Normal, string? iFramePath = null)
 		=> this.Type != InteractionType.Ping ? this.Discord.ApiClient.CreateInteractionIframeResponseAsync(this.Id, this.Token, InteractionResponseType.Iframe, customId, title, modalSize, iFramePath) : throw new NotSupportedException("You can't respond to a PING with an iframe.");
 
