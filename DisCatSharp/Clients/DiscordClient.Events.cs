@@ -167,10 +167,10 @@ public sealed partial class DiscordClient
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, VoiceChannelStatusUpdateEventArgs> VoiceChannelStatusUpdated
 	{
-		add => this._voiceVoiceChannelStatusUpdated.Register(value);
-		remove => this._voiceVoiceChannelStatusUpdated.Unregister(value);
+		add => this._voiceChannelStatusUpdated.Register(value);
+		remove => this._voiceChannelStatusUpdated.Unregister(value);
 	}
-	private AsyncEvent<DiscordClient, VoiceChannelStatusUpdateEventArgs> _voiceVoiceChannelStatusUpdated;
+	private AsyncEvent<DiscordClient, VoiceChannelStatusUpdateEventArgs> _voiceChannelStatusUpdated;
 
 	#endregion
 
@@ -982,6 +982,37 @@ public sealed partial class DiscordClient
 		remove => this._componentInteractionCreated.Unregister(value);
 	}
 	private AsyncEvent<DiscordClient, ComponentInteractionCreateEventArgs> _componentInteractionCreated;
+
+	/// <summary>
+	/// Fired when an entitlement was created.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, EntitlementCreateEventArgs> EntitlementCreated
+	{
+		add => this._entitlementCreated.Register(value);
+		remove => this._entitlementCreated.Unregister(value);
+	}
+	private AsyncEvent<DiscordClient, EntitlementCreateEventArgs> _entitlementCreated;
+
+	/// <summary>
+	/// Fired when an entitlement was updated.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, EntitlementUpdateEventArgs> EntitlementUpdated
+	{
+		add => this._entitlementUpdated.Register(value);
+		remove => this._entitlementUpdated.Unregister(value);
+	}
+	private AsyncEvent<DiscordClient, EntitlementUpdateEventArgs> _entitlementUpdated;
+
+	/// <summary>
+	/// Fired when an entitlement was deleted.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, EntitlementDeleteEventArgs> EntitlementDeleted
+	{
+		add => this._entitlementDeleted.Register(value);
+		remove => this._entitlementDeleted.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, EntitlementDeleteEventArgs> _entitlementDeleted;
 
 	/// <summary>
 	/// Fired when a user starts typing in a channel.

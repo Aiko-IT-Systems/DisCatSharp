@@ -27,20 +27,20 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.EventArgs;
 
 /// <summary>
-/// Represents arguments for <see cref="DiscordClient.InteractionCreated"/>
+/// Represents arguments for <see cref="DiscordClient.EntitlementCreated"/>
 /// </summary>
-public class InteractionCreateEventArgs : DiscordEventArgs
+public class EntitlementCreateEventArgs : DiscordEventArgs
 {
 	/// <summary>
-	/// Gets the interaction data that was invoked.
+	/// Gets the entitlement that was created.
 	/// </summary>
-	public DiscordInteraction Interaction { get; internal set; }
+	public DiscordEntitlement Entitlement { get; set; }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="InteractionCreateEventArgs"/> class.
+	/// Initializes a new instance of the <see cref="EntitlementCreateEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	public InteractionCreateEventArgs(IServiceProvider provider)
+	internal EntitlementCreateEventArgs(IServiceProvider provider)
 		: base(provider)
 	{ }
 }

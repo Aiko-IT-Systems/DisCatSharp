@@ -163,10 +163,10 @@ public sealed partial class DiscordShardedClient
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, VoiceChannelStatusUpdateEventArgs> VoiceChannelStatusUpdated
 	{
-		add => this._voiceVoiceChannelStatusUpdated.Register(value);
-		remove => this._voiceVoiceChannelStatusUpdated.Unregister(value);
+		add => this._voiceChannelStatusUpdated.Register(value);
+		remove => this._voiceChannelStatusUpdated.Unregister(value);
 	}
-	private AsyncEvent<DiscordClient, VoiceChannelStatusUpdateEventArgs> _voiceVoiceChannelStatusUpdated;
+	private AsyncEvent<DiscordClient, VoiceChannelStatusUpdateEventArgs> _voiceChannelStatusUpdated;
 
 	#endregion
 
@@ -966,6 +966,38 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ComponentInteractionCreateEventArgs> _componentInteractionCreated;
 
 	/// <summary>
+	/// Fired when an entitlement was created.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, EntitlementCreateEventArgs> EntitlementCreated
+	{
+		add => this._entitlementCreated.Register(value);
+		remove => this._entitlementCreated.Unregister(value);
+	}
+	private AsyncEvent<DiscordClient, EntitlementCreateEventArgs> _entitlementCreated;
+
+	/// <summary>
+	/// Fired when an entitlement was updated.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, EntitlementUpdateEventArgs> EntitlementUpdated
+	{
+		add => this._entitlementUpdated.Register(value);
+		remove => this._entitlementUpdated.Unregister(value);
+	}
+	private AsyncEvent<DiscordClient, EntitlementUpdateEventArgs> _entitlementUpdated;
+
+	/// <summary>
+	/// Fired when an entitlement was deleted.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, EntitlementDeleteEventArgs> EntitlementDeleted
+	{
+		add => this._entitlementDeleted.Register(value);
+		remove => this._entitlementDeleted.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, EntitlementDeleteEventArgs> _entitlementDeleted;
+
+
+	/// <summary>
 	/// Fired when a user starts typing in a channel.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, TypingStartEventArgs> TypingStarted
@@ -1491,6 +1523,30 @@ public sealed partial class DiscordShardedClient
 		=> this._interactionCreated.InvokeAsync(client, e);
 
 	/// <summary>
+	/// Handles the entitlement create event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_EntitlementCreated(DiscordClient client, EntitlementCreateEventArgs e)
+		=> this._entitlementCreated.InvokeAsync(client, e);
+
+	/// <summary>
+	/// Handles the entitlement update event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_EntitlementUpdated(DiscordClient client, EntitlementUpdateEventArgs e)
+		=> this._entitlementUpdated.InvokeAsync(client, e);
+
+	/// <summary>
+	/// Handles the entitlement delete event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_EntitlementDeleted(DiscordClient client, EntitlementDeleteEventArgs e)
+		=> this._entitlementDeleted.InvokeAsync(client, e);
+
+	/// <summary>
 	/// Handles the component interaction create event.
 	/// </summary>
 	/// <param name="client">The client.</param>
@@ -1742,12 +1798,12 @@ public sealed partial class DiscordShardedClient
 		=> this._guildAuditLogEntryCreated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the channel topic updated event.
+	/// Handles the voice channel status updated event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
-	private Task Client_voiceVoiceChannelStatusUpdated(DiscordClient client, VoiceChannelStatusUpdateEventArgs e)
-		=> this._voiceVoiceChannelStatusUpdated.InvokeAsync(client, e);
+	private Task Client_VoiceChannelStatusUpdated(DiscordClient client, VoiceChannelStatusUpdateEventArgs e)
+		=> this._voiceChannelStatusUpdated.InvokeAsync(client, e);
 
 	#endregion
 }

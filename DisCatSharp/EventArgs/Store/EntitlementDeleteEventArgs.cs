@@ -27,20 +27,20 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.EventArgs;
 
 /// <summary>
-/// Represents arguments for <see cref="DiscordClient.InteractionCreated"/>
+/// Represents arguments for <see cref="DiscordClient.EntitlementDeleted"/>
 /// </summary>
-public class InteractionCreateEventArgs : DiscordEventArgs
+public class EntitlementDeleteEventArgs : DiscordEventArgs
 {
 	/// <summary>
-	/// Gets the interaction data that was invoked.
+	/// Gets the entitlement that was deleted.
 	/// </summary>
-	public DiscordInteraction Interaction { get; internal set; }
+	public DiscordEntitlement Entitlement { get; set; }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="InteractionCreateEventArgs"/> class.
+	/// Initializes a new instance of the <see cref="EntitlementDeleteEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	public InteractionCreateEventArgs(IServiceProvider provider)
+	internal EntitlementDeleteEventArgs(IServiceProvider provider)
 		: base(provider)
 	{ }
 }

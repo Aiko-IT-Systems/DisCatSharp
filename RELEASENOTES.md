@@ -3,6 +3,7 @@ DisCatSharp Release Notes
 	Notable Changes
  	- Full support for onboarding
  	- Custom status support
+    - Full support for Application Subscriptions aka. Premium Apps
 
 DisCatSharp.ApplicationCommands Release Notes
 

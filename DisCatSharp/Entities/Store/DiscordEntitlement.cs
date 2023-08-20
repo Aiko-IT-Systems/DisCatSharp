@@ -51,6 +51,13 @@ public sealed class DiscordEntitlement : SnowflakeObject
 	public ulong UserId;
 
 	/// <summary>
+	/// Gets this entitlement's bound user.
+	/// </summary>
+	[JsonIgnore]
+	public DiscordUser User
+		=> this.Discord.GetCachedOrEmptyUserInternal(this.UserId);
+
+	/// <summary>
 	/// Gets this entitlement's promotion id.
 	/// </summary>
 	[JsonProperty("promotion_id", NullValueHandling = NullValueHandling.Ignore)]
