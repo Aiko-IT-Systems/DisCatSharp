@@ -5812,14 +5812,11 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var storeSkus =  JsonConvert.DeserializeObject<IEnumerable<DiscordStoreSku>>(res.Response);
+		var storeSkus =  DiscordJson.DeserializeIEnumerableObject<List<DiscordStoreSku>>(res.Response, this.Discord);
 		foreach (var storeSku in storeSkus)
-		{
-			storeSku.Discord = this.Discord;
 			storeSku.Sku.Discord = this.Discord;
-		}
 
-		return new ReadOnlyCollection<DiscordStoreSku>(new List<DiscordStoreSku>(storeSkus));
+		return new ReadOnlyCollection<DiscordStoreSku>(storeSkus);
 	}
 
 	/// <summary>
@@ -5835,11 +5832,71 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var skus = JsonConvert.DeserializeObject<IEnumerable<DiscordSku>>(res.Response);
-		foreach (var sku in skus)
-			sku.Discord = this.Discord;
+		return new ReadOnlyCollection<DiscordSku>(DiscordJson.DeserializeIEnumerableObject<List<DiscordSku>>(res.Response, this.Discord));
+	}
 
-		return new ReadOnlyCollection<DiscordSku>(new List<DiscordSku>(skus));
+	/// <summary>
+	/// Gets the applications entitlements.
+	/// </summary>
+	/// <param name="applicationId">The application id to fetch the entitlement for.</param>
+	/// <param name="guildId">Filter returned entitlements to a specific guild id.</param>
+	/// <param name="userId">Filter returned entitlements to a specific user id.</param>
+	/// <returns>A list of <see cref="DiscordEntitlement"/>.</returns>
+	internal async Task<IReadOnlyList<DiscordEntitlement>> GetEntitlementsAsync(ulong applicationId, ulong? guildId, ulong? userId)
+	{
+		var urlParams = new Dictionary<string, string>();
+		if (guildId.HasValue)
+			urlParams["guild_id"] = guildId.Value.ToString();
+		if (userId.HasValue)
+			urlParams["user_id"] = userId.Value.ToString();
+
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.ENTITLEMENTS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { application_id = applicationId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		return new ReadOnlyCollection<DiscordEntitlement>(DiscordJson.DeserializeIEnumerableObject<List<DiscordEntitlement>>(res.Response, this.Discord));
+	}
+
+	/// <summary>
+	/// Creates a test entitlement.
+	/// </summary>
+	/// <param name="applicationId">The application id to create the entitlement for.</param>
+	/// <param name="skuId">The sku id to create the entitlement for.</param>
+	/// <param name="ownerId">The owner id to create the entitlement for.</param>
+	/// <param name="ownerType">The owner type to create the entitlement for.</param>
+	/// <returns>A partial <see cref="DiscordEntitlement"/>.</returns>
+	internal async Task<DiscordEntitlement> CreateTestEntitlementsAsync(ulong applicationId, ulong skuId, ulong ownerId, EntitlementOwnerType ownerType)
+	{
+		TestEntitlementCreatePayload pld = new()
+		{
+			SkuId = skuId,
+			OwnerId = ownerId,
+			OwnerType = ownerType
+		};
+
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.ENTITLEMENTS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { application_id = applicationId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		return DiscordJson.DeserializeObject<DiscordEntitlement>(res.Response, this.Discord);
+	}
+
+	/// <summary>
+	/// Deletes a test entitlement.
+	/// </summary>
+	/// <param name="applicationId">The application id to delete the entitlement for.</param>
+	/// <param name="entitlementId">The entitlement id to delete.</param>
+	internal async Task DeleteTestEntitlementsAsync(ulong applicationId, ulong entitlementId)
+	{
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.ENTITLEMENTS}/:entitlement_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { application_id = applicationId, entitlement_id = entitlementId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route).ConfigureAwait(false);
 	}
 
 	/// <summary>
