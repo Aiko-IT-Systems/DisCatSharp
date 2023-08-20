@@ -346,7 +346,10 @@ public sealed class DiscordOAuth2Client : IDisposable
 		remove => this.OAuth2ClientErroredInternal.Unregister(value);
 	}
 
-	internal AsyncEvent<DiscordOAuth2Client, ClientErrorEventArgs> OAuth2ClientErroredInternal;
+	/// <summary>
+	/// Triggered when an error occurs within an event handler.
+	/// </summary>
+	internal readonly AsyncEvent<DiscordOAuth2Client, ClientErrorEventArgs> OAuth2ClientErroredInternal;
 
 	/// <summary>
 	/// Handles event errors.
