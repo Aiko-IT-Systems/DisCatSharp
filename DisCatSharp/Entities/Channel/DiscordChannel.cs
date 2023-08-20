@@ -334,7 +334,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Initializes a new instance of the <see cref="DiscordChannel"/> class.
 	/// </summary>
 	internal DiscordChannel()
-		: base(new() { "hashes", "guild_hashes" })
+		: base(new() { "hashes", "guild_hashes", "owner_id", "thread_metadata", "message_count", "member_count", "total_message_sent", "member" })
 	{
 		this._permissionOverwritesLazy = new(() => new ReadOnlyCollection<DiscordOverwrite>(this.PermissionOverwritesInternal));
 	}
