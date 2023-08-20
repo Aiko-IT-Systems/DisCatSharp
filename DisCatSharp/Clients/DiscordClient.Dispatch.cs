@@ -137,6 +137,7 @@ public sealed partial class DiscordClient
 		TransportUser refUsr = default;
 		TransportMember refMbr = default;
 		DiscordApplicationCommand ac = default;
+		DiscordEntitlement ent = default;
 		JToken rawMbr = default;
 		var rawRefMsg = dat["referenced_message"]; // TODO: Can we remove this?
 		#endregion
@@ -658,12 +659,25 @@ public sealed partial class DiscordClient
 			case "guild_join_request_delete": // Deprecated
 				break;
 
+			case "entitlement_create":
+				ent = DiscordJson.DeserializeObject<DiscordEntitlement>(payloadString, this);
+				await this.OnEntitlementCreateAsync(ent).ConfigureAwait(false);
+				break;
+			case "entitlement_update":
+				ent = DiscordJson.DeserializeObject<DiscordEntitlement>(payloadString, this);
+				await this.OnEntitlementUpdateAsync(ent).ConfigureAwait(false);
+				break;
+			case "entitlement_delete":
+				ent = DiscordJson.DeserializeObject<DiscordEntitlement>(payloadString, this);
+				await this.OnEntitlementDeleteAsync(ent).ConfigureAwait(false);
+				break;
+
 			default:
 				await this.OnUnknownEventAsync(payload).ConfigureAwait(false);
 				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Unknown event: {name}\npayload: {payload}", payload.EventName, dat.ToString(Formatting.Indented));
 				break;
 
-				#endregion
+			#endregion
 		}
 	}
 
@@ -1012,7 +1026,7 @@ public sealed partial class DiscordClient
 			Channel = channel,
 			Status = status
 		};
-		await this._voiceVoiceChannelStatusUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		await this._voiceChannelStatusUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
 	#endregion
@@ -3522,64 +3536,103 @@ public sealed partial class DiscordClient
 	#region Misc
 
 	/// <summary>
-	/// Handles the typing start event.
+	/// Handles the entitlement create event.
 	/// </summary>
-	/// <param name="userId">The user id.</param>
-	/// <param name="channelId">The channel id.</param>
-	/// <param name="channel">The channel.</param>
-	/// <param name="guildId">The optional guild id.</param>
-	/// <param name="started">The time when the user started typing.</param>
-	/// <param name="mbr">The transport member.</param>
-	internal async Task OnTypingStartEventAsync(ulong userId, ulong channelId, DiscordChannel channel, ulong? guildId, DateTimeOffset started, TransportMember mbr)
+	/// <param name="entitlement">The created entitlement</param>
+	internal async Task OnEntitlementCreateAsync(DiscordEntitlement entitlement)
 	{
-		if (channel == null)
+		var ea = new EntitlementCreateEventArgs(this.ServiceProvider)
 		{
-			channel = new()
+			Entitlement = entitlement
+		};
+		await this._entitlementCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Handles the entitlement update event.
+	/// </summary>
+	/// <param name="entitlement">The updated entitlement</param>
+	internal async Task OnEntitlementUpdateAsync(DiscordEntitlement entitlement)
+	{
+		var ea = new EntitlementUpdateEventArgs(this.ServiceProvider)
+		{
+			Entitlement = entitlement
+		};
+		await this._entitlementUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Handles the entitlement delete event.
+	/// </summary>
+	/// <param name="entitlement">The deleted entitlement</param>
+	internal async Task OnEntitlementDeleteAsync(DiscordEntitlement entitlement)
+	{
+		var ea = new EntitlementDeleteEventArgs(this.ServiceProvider)
+		{
+			Entitlement = entitlement
+		};
+		await this._entitlementDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+
+		/// <summary>
+		/// Handles the typing start event.
+		/// </summary>
+		/// <param name="userId">The user id.</param>
+		/// <param name="channelId">The channel id.</param>
+		/// <param name="channel">The channel.</param>
+		/// <param name="guildId">The optional guild id.</param>
+		/// <param name="started">The time when the user started typing.</param>
+		/// <param name="mbr">The transport member.</param>
+		internal async Task OnTypingStartEventAsync(ulong userId, ulong channelId, DiscordChannel channel, ulong? guildId, DateTimeOffset started, TransportMember mbr)
+		{
+			if (channel == null)
 			{
-				Discord = this,
-				Id = channelId,
-				GuildId = guildId ?? default,
+				channel = new()
+				{
+					Discord = this,
+					Id = channelId,
+					GuildId = guildId ?? default,
+				};
+			}
+
+			var guild = this.InternalGetCachedGuild(guildId);
+			var usr = this.UpdateUser(new() { Id = userId, Discord = this }, guildId, guild, mbr);
+			var ea = new TypingStartEventArgs(this.ServiceProvider)
+			{
+				Channel = channel,
+				User = usr,
+				Guild = guild,
+				StartedAt = started
 			};
+			await this._typingStarted.InvokeAsync(this, ea).ConfigureAwait(false);
 		}
 
-		var guild = this.InternalGetCachedGuild(guildId);
-		var usr = this.UpdateUser(new() { Id = userId, Discord = this }, guildId, guild, mbr);
-		var ea = new TypingStartEventArgs(this.ServiceProvider)
+		/// <summary>
+		/// Handles the webhooks update.
+		/// </summary>
+		/// <param name="channel">The channel.</param>
+		/// <param name="guild">The guild.</param>
+		internal async Task OnWebhooksUpdateAsync(DiscordChannel channel, DiscordGuild guild)
 		{
-			Channel = channel,
-			User = usr,
-			Guild = guild,
-			StartedAt = started
-		};
-		await this._typingStarted.InvokeAsync(this, ea).ConfigureAwait(false);
-	}
+			var ea = new WebhooksUpdateEventArgs(this.ServiceProvider)
+			{
+				Channel = channel,
+				Guild = guild
+			};
+			await this._webhooksUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		}
 
-	/// <summary>
-	/// Handles the webhooks update.
-	/// </summary>
-	/// <param name="channel">The channel.</param>
-	/// <param name="guild">The guild.</param>
-	internal async Task OnWebhooksUpdateAsync(DiscordChannel channel, DiscordGuild guild)
-	{
-		var ea = new WebhooksUpdateEventArgs(this.ServiceProvider)
+		/// <summary>
+		/// Handles all unknown events.
+		/// </summary>
+		/// <param name="payload">The payload.</param>
+		internal async Task OnUnknownEventAsync(GatewayPayload payload)
 		{
-			Channel = channel,
-			Guild = guild
-		};
-		await this._webhooksUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
-	}
+			var ea = new UnknownEventArgs(this.ServiceProvider) { EventName = payload.EventName, Json = (payload.Data as JObject)?.ToString() };
+			await this._unknownEvent.InvokeAsync(this, ea).ConfigureAwait(false);
+		}
 
-	/// <summary>
-	/// Handles all unknown events.
-	/// </summary>
-	/// <param name="payload">The payload.</param>
-	internal async Task OnUnknownEventAsync(GatewayPayload payload)
-	{
-		var ea = new UnknownEventArgs(this.ServiceProvider) { EventName = payload.EventName, Json = (payload.Data as JObject)?.ToString() };
-		await this._unknownEvent.InvokeAsync(this, ea).ConfigureAwait(false);
-	}
+		#endregion
 
-	#endregion
-
-	#endregion
+		#endregion
 }

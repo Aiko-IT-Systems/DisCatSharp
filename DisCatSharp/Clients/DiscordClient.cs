@@ -254,7 +254,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._automodRuleDeleted = new("AUTO_MODERATION_RULE_DELETED", EventExecutionLimit, this.EventErrorHandler);
 		this._automodActionExecuted = new("AUTO_MODERATION_ACTION_EXECUTED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildAuditLogEntryCreated = new("GUILD_AUDIT_LOG_ENTRY_CREATED", EventExecutionLimit, this.EventErrorHandler);
-		this._voiceVoiceChannelStatusUpdated = new("CHANNEL_STATUS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._voiceChannelStatusUpdated = new("VOICE_CHANNEL_STATUS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._entitlementCreated = new("ENTITLEMENT_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._entitlementUpdated = new("ENTITLEMENT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._entitlementDeleted = new("ENTITLEMENT_DELETED", EventExecutionLimit, this.EventErrorHandler);
 
 		this.GuildsInternal.Clear();
 
