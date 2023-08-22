@@ -21,7 +21,10 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+
+using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
 
@@ -67,7 +70,7 @@ public sealed class DiscordEntitlement : SnowflakeObject
 	/// Gets this entitlement's type.
 	/// </summary>
 	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
-	public int Type;
+	public EntitlementType Type;
 
 	/// <summary>
 	/// Gets whether this entitlement was deleted.
@@ -131,4 +134,28 @@ public sealed class DiscordEntitlement : SnowflakeObject
 	/// </summary>
 	[JsonProperty("subscription_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong? SubscriptionId;
+
+	/// <summary>
+	/// Gets this entitlement's parent id.
+	/// </summary>
+	[JsonProperty("parent_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? ParentId;
+
+	/// <summary>
+	/// Gets this entitlement's gift code batch id.
+	/// </summary>
+	[JsonProperty("gift_code_batch_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? GiftCodeBatchId;
+
+	/// <summary>
+	/// Gets this entitlement's branches.
+	/// </summary>
+	[JsonProperty("branches", NullValueHandling = NullValueHandling.Ignore)]
+	public List<string> Branches = new();
+
+	/// <summary>
+	/// Gets this entitlement's gifter user id.
+	/// </summary>
+	[JsonProperty("gifter_user_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? GifterUserId;
 }
