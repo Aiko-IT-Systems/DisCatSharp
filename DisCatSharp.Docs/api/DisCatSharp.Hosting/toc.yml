@@ -13,4 +13,4 @@ items:
     name: IDiscordHostedService
   - uid: DisCatSharp.Hosting.IDiscordHostedShardService
     name: IDiscordHostedShardService
-memberLayout: SamePage
+memberLayout: SeparatePages

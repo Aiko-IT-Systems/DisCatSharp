@@ -94,7 +94,7 @@ And you're done! The select menu will now be sent when the user closes the selec
 
 ## Responding to select menus
 
-When any select menu is pressed, it will fire the [ComponentInteractionCreated](xref:DisCatSharp.DiscordClient#DisCatSharp_DiscordClient_ComponentInteractionCreated) event.
+When any select menu is pressed, it will fire the [ComponentInteractionCreated](xref:DisCatSharp.DiscordClient.ComponentInteractionCreated) event.
 
 In the event args, `Id` will be the id of the select menu you specified. There's also an `Interaction` property, which contains the interaction the event created. It's important to respond to an interaction within 3 seconds, or it will time out. Responding after this period will throw a `NotFoundException`.
 

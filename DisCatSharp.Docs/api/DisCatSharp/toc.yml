@@ -13,6 +13,8 @@ items:
     name: DiscordClient
   - uid: DisCatSharp.DiscordConfiguration
     name: DiscordConfiguration
+  - uid: DisCatSharp.DiscordOAuth2Client
+    name: DiscordOAuth2Client
   - uid: DisCatSharp.DiscordShardedClient
     name: DiscordShardedClient
   - uid: DisCatSharp.DiscordWebhookClient
@@ -176,6 +178,8 @@ items:
     name: DiscordEmbedVideo
   - uid: DisCatSharp.Entities.DiscordEmoji
     name: DiscordEmoji
+  - uid: DisCatSharp.Entities.DiscordEntitlement
+    name: DiscordEntitlement
   - uid: DisCatSharp.Entities.DiscordFollowedChannel
     name: DiscordFollowedChannel
   - uid: DisCatSharp.Entities.DiscordFollowupMessageBuilder
@@ -392,6 +396,17 @@ items:
     name: UserWithIdOnly
   - uid: DisCatSharp.Entities.WelcomeMessage
     name: WelcomeMessage
+- uid: DisCatSharp.Entities.OAuth2
+  name: DisCatSharp.Entities.OAuth2
+  items:
+  - uid: DisCatSharp.Entities.OAuth2.ApplicationRoleConnectionMetadata
+    name: ApplicationRoleConnectionMetadata
+  - uid: DisCatSharp.Entities.OAuth2.DiscordAccessToken
+    name: DiscordAccessToken
+  - uid: DisCatSharp.Entities.OAuth2.DiscordApplicationRoleConnection
+    name: DiscordApplicationRoleConnection
+  - uid: DisCatSharp.Entities.OAuth2.DiscordAuthorizationInformation
+    name: DiscordAuthorizationInformation
 - uid: DisCatSharp.Enums
   name: DisCatSharp.Enums
   items:
@@ -465,6 +480,8 @@ items:
     name: DiscordShortlink
   - uid: DisCatSharp.Enums.DomainHelpAttribute
     name: DomainHelpAttribute
+  - uid: DisCatSharp.Enums.EntitlementOwnerType
+    name: EntitlementOwnerType
   - uid: DisCatSharp.Enums.EventAttribute
     name: EventAttribute
   - uid: DisCatSharp.Enums.EventHandlerAttribute
@@ -479,6 +496,8 @@ items:
     name: GatewayCompressionLevel
   - uid: DisCatSharp.Enums.HubType
     name: HubType
+  - uid: DisCatSharp.Enums.IframeModalSize
+    name: IframeModalSize
   - uid: DisCatSharp.Enums.IntegrationExpireBehavior
     name: IntegrationExpireBehavior
   - uid: DisCatSharp.Enums.InteractionResponseType
@@ -612,8 +631,6 @@ items:
     name: ChannelDeleteEventArgs
   - uid: DisCatSharp.EventArgs.ChannelPinsUpdateEventArgs
     name: ChannelPinsUpdateEventArgs
-  - uid: DisCatSharp.EventArgs.ChannelStatusUpdateEventArgs
-    name: VoiceChannelStatusUpdateEventArgs
   - uid: DisCatSharp.EventArgs.ChannelUpdateEventArgs
     name: ChannelUpdateEventArgs
   - uid: DisCatSharp.EventArgs.ClientErrorEventArgs
@@ -628,6 +645,12 @@ items:
     name: DmChannelDeleteEventArgs
   - uid: DisCatSharp.EventArgs.EmbeddedActivityUpdateEventArgs
     name: EmbeddedActivityUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.EntitlementCreateEventArgs
+    name: EntitlementCreateEventArgs
+  - uid: DisCatSharp.EventArgs.EntitlementDeleteEventArgs
+    name: EntitlementDeleteEventArgs
+  - uid: DisCatSharp.EventArgs.EntitlementUpdateEventArgs
+    name: EntitlementUpdateEventArgs
   - uid: DisCatSharp.EventArgs.GuildApplicationCommandCountEventArgs
     name: GuildApplicationCommandCountEventArgs
   - uid: DisCatSharp.EventArgs.GuildAuditLogEntryCreateEventArgs
@@ -760,6 +783,8 @@ items:
     name: UserSpeakingEventArgs
   - uid: DisCatSharp.EventArgs.UserUpdateEventArgs
     name: UserUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.VoiceChannelStatusUpdateEventArgs
+    name: VoiceChannelStatusUpdateEventArgs
   - uid: DisCatSharp.EventArgs.VoiceServerUpdateEventArgs
     name: VoiceServerUpdateEventArgs
   - uid: DisCatSharp.EventArgs.VoiceStateUpdateEventArgs
@@ -862,4 +887,4 @@ items:
     name: WebSocketClient
   - uid: DisCatSharp.Net.WebSocket.WebSocketClientFactoryDelegate
     name: WebSocketClientFactoryDelegate
-memberLayout: SamePage
+memberLayout: SeparatePages

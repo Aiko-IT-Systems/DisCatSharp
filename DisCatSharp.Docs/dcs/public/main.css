@@ -51,6 +51,7 @@ footer {
 	--bs-nav-tabs-link-active-color: #16DB6C !important;
 	--bs-nav-tabs-link-active-bg: #020202 !important;
 	--bs-nav-tabs-link-active-border-color: rgba(255, 255, 255, 0.05) !important;
+	--bs-pagination-man-color: #FFFFFF !important;
 }
 
 .toc-offcanvas,
@@ -157,6 +158,44 @@ a:hover {
 
 .contribution a.edit-link {
 	color: #E5E891 !important;
+}
+
+.page-link {
+	position: relative;
+	display: block;
+	padding: var(--bs-pagination-padding-y) var(--bs-pagination-padding-x);
+	font-size: var(--bs-pagination-font-size) !important;
+	color: var(--bs-pagination-man-color) !important;
+	text-decoration: none;
+	background-color: var(--bs-pagination-bg) !important;
+	border: var(--bs-pagination-border-width) solid var(--bs-pagination-border-color);
+	transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.page-link.disabled, .disabled > .page-link {
+	color: var(--bs-pagination-disabled-color) !important;
+	pointer-events: none;
+}
+
+.page-link.active, .active > .page-link {
+	z-index: 3;
+	color: var(--bs-pagination-active-color) !important;
+	background-color: var(--bs-pagination-active-bg) !important;
+	border-color: var(--bs-pagination-active-border-color) !important;
+}
+
+.page-link:hover {
+	z-index: 2;
+	color: var(--bs-pagination-hover-color) !important;
+	background-color: var(--bs-pagination-hover-bg) !important;
+	border-color: var(--bs-pagination-hover-border-color) !important;
+}
+
+.sr-item > div > b {
+	color: white;
+	background-image: linear-gradient(to right, #F27121cc, #E94057cc, #8A2387cc);
+	border-radius: 6px;
+	padding: 3px 0px;
 }
 
 /**
