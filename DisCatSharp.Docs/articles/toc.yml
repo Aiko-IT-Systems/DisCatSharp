@@ -97,6 +97,10 @@ items:
                         href: modules/audio/voicenext/transmit.md
                       - name: Receiving
                         href: modules/audio/voicenext/receive.md
+          - name: OAuth2
+            items:
+                - name: DiscordOAuth2Client
+                  href: modules/oauth2/oauth2_client.md
           - name: Interactivity
             href: modules/interactivity.md
     - name: Miscellaneous
