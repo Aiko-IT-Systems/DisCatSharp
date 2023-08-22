@@ -92,17 +92,19 @@ items:
                 - name: VoiceNext
                   items:
                       - name: Prerequisites
-                        href: modules/audio/voicenext/prerequisites.md
+                        uid: modules_audio_voicenext_prerequisites
                       - name: Transmitting
-                        href: modules/audio/voicenext/transmit.md
+                        uid: modules_audio_voicenext_transmit
                       - name: Receiving
-                        href: modules/audio/voicenext/receive.md
+                        uid: modules_audio_voicenext_receive
           - name: OAuth2
             items:
                 - name: DiscordOAuth2Client
-                  href: modules/oauth2/oauth2_client.md
+                  uid: modules_oauth2_oauth2_client
           - name: Interactivity
-            href: modules/interactivity.md
+            items:
+                - name: Interactivity Introduction
+                  uid: modules_interactivity_introduction
     - name: Miscellaneous
       items:
           - name: Nightly Builds

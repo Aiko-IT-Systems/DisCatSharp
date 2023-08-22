@@ -126,7 +126,7 @@ This will update the message, and without the infamous <sub>(edited)</sub> next 
 # Interactivity
 Along with the typical `WaitForMessageAsync` and `WaitForReactionAsync` methods provided by interactivity, there are also select menus implementations as well.
 
-More information about how interactivity works can be found in [the interactivity article](xref:modules_interactivity)
+More information about how interactivity works can be found in [the interactivity article](xref:modules_interactivity_introduction)
 
 Since select menus create interactions, there are also two additional properties in the configuration:
 - @DisCatSharp.Interactivity.InteractivityConfiguration.ResponseBehavior

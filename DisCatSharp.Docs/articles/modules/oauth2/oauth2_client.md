@@ -9,7 +9,7 @@ author: DisCatSharp Team
 We support integrating discords OAuth2 directly into DisCatSharp bots.
 For this we've added the [DiscordOAuth2Client](xref:DisCatSharp.DiscordOAuth2Client).
 
-Additionally, we provide a new extension called `DisCatSharp.Extensions.OAuth2Web`, which provides you with a web server implementation and certain events.
+Additionally, we provide a new extension called [OAuth2WebExtention](xref:DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension) in the package `DisCatSharp.Extensions.OAuth2Web`, which provides you with a web server implementation and certain events.
 
 ## Example with OAuth2Web Extension
 
