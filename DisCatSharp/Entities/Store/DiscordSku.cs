@@ -95,6 +95,12 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	public string Slug { get; internal set; }
 
 	/// <summary>
+	/// Gets the sku price.
+	/// </summary>
+	[JsonProperty("price", NullValueHandling = NullValueHandling.Ignore)]
+	public SkuPrice Price { get; internal set; }
+
+	/// <summary>
 	/// Gets the sku flags.
 	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
@@ -153,4 +159,13 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	/// <returns>Whether the two skus are not equal.</returns>
 	public static bool operator !=(DiscordSku e1, DiscordSku e2)
 		=> !(e1 == e2);
+}
+
+public sealed class SkuPrice
+{
+	[JsonProperty("amount")]
+	public double Amount { get; internal set; }
+
+	[JsonProperty("currency")]
+	public string Currency { get; internal set; }
 }
