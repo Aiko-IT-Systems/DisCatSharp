@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
@@ -122,7 +123,14 @@ public sealed class DiscordTeamMember : IEquatable<DiscordTeamMember>
 	/// <summary>
 	/// Gets the member's permissions within the team.
 	/// </summary>
+	[DiscordDeprecated]
 	public IReadOnlyCollection<string> Permissions { get; internal set; }
+
+	/// <summary>
+	/// Gets the member's role within the team.
+	/// <para>Can be <c>owner</c>, <c>admin</c>, <c>developer</c> or <c>read-only</c>.</para>
+	/// </summary>
+	public string Role { get; internal set; }
 
 	/// <summary>
 	/// Gets the id of the team this member belongs to.
@@ -147,6 +155,7 @@ public sealed class DiscordTeamMember : IEquatable<DiscordTeamMember>
 	{
 		this.MembershipStatus = (DiscordTeamMembershipStatus)ttm.MembershipState;
 		this.Permissions = new ReadOnlySet<string>(new HashSet<string>(ttm.Permissions));
+		this.Role = ttm.Role;
 	}
 
 	/// <summary>
