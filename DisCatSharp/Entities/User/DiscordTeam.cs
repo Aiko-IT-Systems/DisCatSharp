@@ -129,6 +129,7 @@ public sealed class DiscordTeamMember : IEquatable<DiscordTeamMember>
 	/// <summary>
 	/// Gets the member's role within the team.
 	/// <para>Can be <c>owner</c>, <c>admin</c>, <c>developer</c> or <c>read-only</c>.</para>
+	/// <para>As per official spec, owner won't be transmitted via api, so we fake patch it. Thanks discord..</para>
 	/// </summary>
 	public string Role { get; internal set; }
 
