@@ -382,6 +382,8 @@ items:
     name: ResourceChannel
   - uid: DisCatSharp.Entities.RoleMention
     name: RoleMention
+  - uid: DisCatSharp.Entities.SkuPrice
+    name: SkuPrice
   - uid: DisCatSharp.Entities.SnowflakeObject
     name: SnowflakeObject
   - uid: DisCatSharp.Entities.StickerFormat
@@ -482,6 +484,8 @@ items:
     name: DomainHelpAttribute
   - uid: DisCatSharp.Enums.EntitlementOwnerType
     name: EntitlementOwnerType
+  - uid: DisCatSharp.Enums.EntitlementType
+    name: EntitlementType
   - uid: DisCatSharp.Enums.EventAttribute
     name: EventAttribute
   - uid: DisCatSharp.Enums.EventHandlerAttribute
