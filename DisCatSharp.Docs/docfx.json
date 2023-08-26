@@ -246,7 +246,7 @@
 			"https://xref.docs.microsoft.com/query?uid={uid}"
 		],
 		"xref": [
-			"https://ext-docs.dcs.aitsys.dev/xrefmap.yml"
+			"ext-xrefmap.yml"
 		],
 		"content": [
 			{
