@@ -5,4 +5,4 @@ items:
   items:
   - uid: DisCatSharp.Experimental.DisCatSharp
     name: DisCatSharp
-memberLayout: SamePage
+memberLayout: SeparatePages

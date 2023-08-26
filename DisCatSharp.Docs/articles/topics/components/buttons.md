@@ -161,7 +161,7 @@ And you're done! Simply add that to a builder, and when you send, you'll get a m
 
 ## Responding to button presses
 
-When any button is pressed, it will fire the [ComponentInteractionCreated](xref:DisCatSharp.DiscordClient#DisCatSharp_DiscordClient_ComponentInteractionCreated) event.
+When any button is pressed, it will fire the [ComponentInteractionCreated](xref:DisCatSharp.DiscordClient.ComponentInteractionCreated) event.
 
 In the event args, `Id` will be the id of the button you specified. There's also an `Interaction` property, which contains the interaction the event created. It's important to respond to an interaction within 3 seconds, or it will time out. Responding after this period will throw a `NotFoundException`.
 
@@ -194,7 +194,7 @@ This will update the message, and without the infamous <sub>(edited)</sub> next 
 
 Along with the typical `WaitForMessageAsync` and `WaitForReactionAsync` methods provided by interactivity, there are also button implementations as well.
 
-More information about how interactivity works can be found in [the interactivity article](xref:modules_interactivity)
+More information about how interactivity works can be found in [the interactivity article](xref:modules_interactivity_introduction)
 
 Since buttons create interactions, there are also two additional properties in the configuration:
 - @DisCatSharp.Interactivity.InteractivityConfiguration.ResponseBehavior

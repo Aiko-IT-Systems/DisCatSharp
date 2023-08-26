@@ -19,4 +19,4 @@ items:
     name: Features
   - uid: DisCatSharp.Attributes.RequiresFeatureAttribute
     name: RequiresFeatureAttribute
-memberLayout: SamePage
+memberLayout: SeparatePages
