@@ -95,4 +95,4 @@ items:
     name: ReflectionUtilities
   - uid: DisCatSharp.Common.Utilities.RuntimeInformation
     name: RuntimeInformation
-memberLayout: SamePage
+memberLayout: SeparatePages

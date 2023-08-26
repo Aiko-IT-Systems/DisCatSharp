@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 
 using Newtonsoft.Json;
@@ -83,8 +84,15 @@ internal sealed class TransportTeamMember
 	/// <summary>
 	/// Gets or sets the permissions.
 	/// </summary>
-	[JsonProperty("permissions", NullValueHandling = NullValueHandling.Include)]
+	[JsonProperty("permissions", NullValueHandling = NullValueHandling.Include), DiscordDeprecated]
 	public List<string> Permissions { get; set; }
+
+	/// <summary>
+	/// Gets the member's role within the team.
+	/// <para>Can be <c>owner</c>, <c>admin</c>, <c>developer</c> or <c>read-only</c>.</para>
+	/// </summary>
+	[JsonProperty("role")]
+	public string Role { get; set; }
 
 	/// <summary>
 	/// Gets or sets the team id.

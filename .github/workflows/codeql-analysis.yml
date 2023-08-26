@@ -33,7 +33,7 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: |
-          7.0.306
+          7.0.400
           6.x
     - name: Build
       run: |

@@ -1,5 +1,5 @@
 ---
-uid: modules_interactivity
+uid: modules_interactivity_introduction
 title: Interactivity Introduction
 hasDiscordComponents: true
 ---
