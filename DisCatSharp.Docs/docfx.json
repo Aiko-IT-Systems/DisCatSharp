@@ -328,7 +328,7 @@
 			"_ogImage": "/dcs-docs-embeds-logo.png",
 			"_fbPageId": "112155734832129",
 			"_twitterSite": "@DisCatSharp",
-			"_twitterImage": "https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png",
+			"_twitterImage": "/dcs-docs-embeds-logo.png",
 			"_layout": "conceptual",
 			"_urlNormalizationActive": true,
 			"_providerName": "AITSYS DocFx",
@@ -355,11 +355,11 @@
 		],
 		"postProcessors": [
 			"ExtractSearchIndex",
-			"DescriptionGenerator"
+			"DescriptionGenerator",
+			"LastModified"
 		],
 		"noLangKeyword": false,
 		"keepFileLink": true,
-		"cleanupCacheHistory": false,
 		"sitemap": {
 			"baseUrl": "https://docs.dcs.aitsys.dev/",
 			"changefreq": "daily",
