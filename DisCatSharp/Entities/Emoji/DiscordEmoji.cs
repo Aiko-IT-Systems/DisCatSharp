@@ -94,6 +94,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// Gets the unicode version of this emoji.
 	/// </summary>
 	/// <exception cref="InvalidOperationException">Thrown if emoji is not a unicode emoji.</exception>
+ 	[JsonIgnore]
 	public string UnicodeEmoji =>
 		this.Id != 0
 			? throw new InvalidOperationException("Emoji is not a unicode emoji")
