@@ -52,6 +52,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 
 	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
 	public List<ulong> RolesInternal;
+
 	private readonly Lazy<IReadOnlyList<ulong>> _rolesLazy;
 
 	/// <summary>
@@ -83,8 +84,8 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// Gets the image URL of this emoji.
 	/// </summary>
 	[JsonIgnore]
-	public string Url =>
-		this.Id == 0
+	public string Url
+		=> this.Id == 0
 			? throw new InvalidOperationException("Cannot get URL of unicode emojis.")
 			: this.IsAnimated
 				? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMOJIS}/{this.Id.ToString(CultureInfo.InvariantCulture)}.gif"
@@ -94,9 +95,9 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// Gets the unicode version of this emoji.
 	/// </summary>
 	/// <exception cref="InvalidOperationException">Thrown if emoji is not a unicode emoji.</exception>
- 	[JsonIgnore]
-	public string UnicodeEmoji =>
-		this.Id != 0
+	[JsonIgnore]
+	public string UnicodeEmoji
+		=> this.Id != 0
 			? throw new InvalidOperationException("Emoji is not a unicode emoji")
 			: s_unicodeEmojis.TryGetValue(this.Name, out var value)
 				? value
@@ -196,7 +197,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// </summary>
 	/// <param name="e1">Emoji to convert.</param>
 	public static implicit operator string(DiscordEmoji e1)
-		=> e1.ToString();
+		=> e1?.ToString();
 
 	/// <summary>
 	/// Checks whether specified unicode entity is a valid unicode emoji.
