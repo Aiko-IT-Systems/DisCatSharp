@@ -59,6 +59,12 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	public List<ulong> ManifestLabels { get; internal set; } = new();
 
 	/// <summary>
+	/// Gets the locales.
+	/// </summary>
+	[JsonProperty("locales", NullValueHandling = NullValueHandling.Ignore)]
+	public List<string> Locales { get; internal set; } = new();
+
+	/// <summary>
 	/// Gets the access type.
 	/// </summary>
 	[JsonProperty("access_type", NullValueHandling = NullValueHandling.Ignore)]
@@ -77,10 +83,22 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	public List<int> Features { get; internal set; } = new();
 
 	/// <summary>
+	/// Gets the skus genres.
+	/// </summary>
+	[JsonProperty("genres", NullValueHandling = NullValueHandling.Ignore)]
+	public List<int> Genres { get; internal set; } = new();
+
+	/// <summary>
 	/// Gets the skus release date.
 	/// </summary>
 	[JsonProperty("release_date", NullValueHandling = NullValueHandling.Ignore)]
 	public string ReleaseDate { get; internal set; }
+
+	/// <summary>
+	/// Gets the skus legal notice.
+	/// </summary>
+	[JsonProperty("legal_notice", NullValueHandling = NullValueHandling.Ignore)]
+	public string? LegalNotice { get; internal set; }
 
 	/// <summary>
 	/// Gets whether the sku is premium.
