@@ -151,7 +151,7 @@ public sealed class DiscordEntitlement : SnowflakeObject
 	/// Gets this entitlement's branches.
 	/// </summary>
 	[JsonProperty("branches", NullValueHandling = NullValueHandling.Ignore)]
-	public List<string> Branches = new();
+	public List<ulong> Branches = new();
 
 	/// <summary>
 	/// Gets this entitlement's gifter user id.
