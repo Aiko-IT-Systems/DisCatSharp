@@ -186,6 +186,10 @@ public sealed partial class DiscordClient
 				await this.OnVoiceChannelStatusUpdateAsync((ulong)dat["guild_id"], cid, status).ConfigureAwait(false);
 				break;
 
+			case "channel_topic_update":
+				// It's fired incorrectly.
+				break;
+
 			#endregion
 
 			#region Guild
