@@ -357,31 +357,31 @@ public enum Permissions : long
 	/// <summary>
 	/// Allows to use soundboard sounds in voice channels.
 	/// </summary>
-	[PermissionString("Use Soundboard"), DiscordInExperiment]
+	[PermissionString("Use Soundboard")]
 	UseSoundboard = 1L << 42,
 
 	/// <summary>
 	/// Allows to create guild emojis, stickers and soundboard sounds.
 	/// </summary>
-	[PermissionString("Create Guild Expressions"), DiscordUnreleased]
+	[PermissionString("Create Guild Expressions")]
 	CreateGuildExpressions = 1L << 43,
 
 	/// <summary>
 	/// Allows to create guild events.
 	/// </summary>
-	[PermissionString("Create Events"), DiscordUnreleased]
+	[PermissionString("Create Events")]
 	CreateEvents = 1L << 44,
 
 	/// <summary>
 	/// Allows the usage of custom soundboard sounds from other servers.
 	/// </summary>
-	[PermissionString("Use External Sounds"), DiscordInExperiment]
+	[PermissionString("Use External Sounds")]
 	UseExternalSounds = 1L << 45,
 
 	/// <summary>
 	/// Allows members to send voice messages.
 	/// </summary>
-	[PermissionString("Send Voice Messages"), DiscordInExperiment]
+	[PermissionString("Send Voice Messages")]
 	SendVoiceMessages = 1L << 46,
 
 	/// <summary>
