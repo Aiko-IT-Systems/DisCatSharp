@@ -1067,7 +1067,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									GuildLocale = e.Interaction.GuildLocale,
 									AppPermissions = e.Interaction.AppPermissions,
 									Entitlements = e.Interaction.Entitlements,
-									EntitlementSkuIds = e.Interaction.Entitlements
+									EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 								};
 								if (Configuration?.ServiceProvider != null)
 									context.Services = Configuration?.ServiceProvider;
@@ -1101,7 +1101,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									GuildLocale = e.Interaction.GuildLocale,
 									AppPermissions = e.Interaction.AppPermissions,
 									Entitlements = e.Interaction.Entitlements,
-									EntitlementSkuIds = e.Interaction.Entitlements
+									EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 								};
 								if (Configuration?.ServiceProvider != null)
 									context.Services = Configuration?.ServiceProvider;
@@ -1136,7 +1136,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									GuildLocale = e.Interaction.GuildLocale,
 									AppPermissions = e.Interaction.AppPermissions,
 									Entitlements = e.Interaction.Entitlements,
-									EntitlementSkuIds = e.Interaction.Entitlements
+									EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 								};
 								if (Configuration?.ServiceProvider != null)
 									context.Services = Configuration?.ServiceProvider;

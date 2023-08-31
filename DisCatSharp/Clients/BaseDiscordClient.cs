@@ -351,10 +351,10 @@ public abstract class BaseDiscordClient : IDisposable
 
 		if (transportApplication.Team == null)
 		{
-			app.Members = new(new[] { new DiscordUser(tapp.Owner) });
+			app.Members = new(new[] { new DiscordUser(transportApplication.Owner) });
 			app.Team = null;
 			app.TeamName = null;
-			app.Owner = new DiscordUser(tapp.Owner);
+			app.Owner = new DiscordUser(transportApplication.Owner);
 		}
 		else
 		{
@@ -365,7 +365,7 @@ public abstract class BaseDiscordClient : IDisposable
 				.ToArray();
 
 			foreach (var member in members)
-				if (member.User.Id == tapp.Team.OwnerId)
+				if (member.User.Id == transportApplication.Team.OwnerId)
 					member.Role = "owner";
 
 			var users = members
@@ -377,7 +377,7 @@ public abstract class BaseDiscordClient : IDisposable
 			app.Team.Owner = members.First(x => x.Role == "owner").User;
 			app.Team.Members = new List<DiscordTeamMember>(members);
 			app.TeamName = app.Team.Name;
-			app.Owner = new(tapp.Owner);
+			app.Owner = new(transportApplication.Owner);
 		}
 
 		app.GuildId = transportApplication.GuildId.ValueOrDefault();

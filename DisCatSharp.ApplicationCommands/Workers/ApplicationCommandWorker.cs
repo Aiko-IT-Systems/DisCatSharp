@@ -230,7 +230,7 @@ internal static class NestedCommandWorker
 			}
 
 			//Initializes the command
-			var payload = new DiscordApplicationCommand(groupAttribute.Name, groupAttribute.Description, nameLocalizations: nameLocalizations, descriptionLocalizations: descriptionLocalizations, defaultMemberPermissions: groupAttribute.DefaultMemberPermissions, dmPermission: groupAttribute.DmPermission ?? true, isNsfw: groupAttribute.IsNsfw, allowedContexts: payload.AllowedContexts);
+			var payload = new DiscordApplicationCommand(groupAttribute.Name, groupAttribute.Description, nameLocalizations: nameLocalizations, descriptionLocalizations: descriptionLocalizations, defaultMemberPermissions: groupAttribute.DefaultMemberPermissions, dmPermission: groupAttribute.DmPermission ?? true, isNsfw: groupAttribute.IsNsfw, allowedContexts: groupAttribute.AllowedContexts);
 			commandTypeSources.Add(new(type, type));
 
 			var commandMethods = new List<KeyValuePair<string, MethodInfo>>();

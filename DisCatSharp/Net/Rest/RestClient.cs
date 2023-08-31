@@ -607,6 +607,7 @@ internal sealed class RestClient : IDisposable
 									Exception = (RateLimitException)ex,
 									ApiEndpoint = request.Url.AbsoluteUri
 								}).ConfigureAwait(false);
+							}
 							this._logger.LogError(LoggerEvents.RatelimitHit, "Ratelimit hit, requeuing request to {url}", request.Url.AbsoluteUri);
 							await wait.ConfigureAwait(false);
 							this.ExecuteRequestAsync(request, bucket, ratelimitTcs)
@@ -630,7 +631,7 @@ internal sealed class RestClient : IDisposable
 			{
 				if (this._discord?.Configuration.EnableSentry ?? false)
 				{
-					if (senex != null)
+					if (sentryException != null)
 					{
 						Dictionary<string, object> debugInfo = new()
 						{
@@ -640,7 +641,7 @@ internal sealed class RestClient : IDisposable
 						sentryException.AddSentryContext("Request", debugInfo);
 						this._discord.Sentry.CaptureException(sentryException);
 					}
-
+				}
 				request.SetFaulted(ex);
 			}
 			else
