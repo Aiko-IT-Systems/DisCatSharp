@@ -32,6 +32,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Entities.OAuth2;
 using DisCatSharp.Enums;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Abstractions.Rest;
@@ -60,6 +61,11 @@ public sealed class DiscordApiClient
 	internal BaseDiscordClient Discord { get; }
 
 	/// <summary>
+	/// Gets the oauth2 client.
+	/// </summary>
+	internal DiscordOAuth2Client OAuth2Client { get; }
+
+	/// <summary>
 	/// Gets the rest client.
 	/// </summary>
 	internal RestClient Rest { get; }
@@ -72,6 +78,20 @@ public sealed class DiscordApiClient
 	{
 		this.Discord = client;
 		this.Rest = new(client);
+	}
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="DiscordApiClient"/> class.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="proxy">The proxy.</param>
+	/// <param name="timeout">The timeout.</param>
+	/// <param name="useRelativeRateLimit">If true, use relative rate limit.</param>
+	/// <param name="logger">The logger.</param>
+	internal DiscordApiClient(DiscordOAuth2Client client, IWebProxy proxy, TimeSpan timeout, bool useRelativeRateLimit, ILogger logger)
+	{
+		this.OAuth2Client = client;
+		this.Rest = new(proxy, timeout, useRelativeRateLimit, logger);
 	}
 
 	/// <summary>
@@ -203,6 +223,26 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	/// Executes a rest form data request.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="bucket">The bucket.</param>
+	/// <param name="url">The url.</param>
+	/// <param name="method">The method.</param>
+	/// <param name="route">The route.</param>
+	/// <param name="headers">The headers.</param>
+	/// <param name="formData">The form data.</param>
+	/// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
+	internal Task<RestResponse> DoFormRequestAsync(DiscordOAuth2Client client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, Dictionary<string, string> formData, Dictionary<string, string> headers = null, double? ratelimitWaitOverride = null)
+	{
+		var req = new RestFormRequest(client, bucket, url, method, route, formData, headers, ratelimitWaitOverride);
+
+		this.Rest.ExecuteFormRequestAsync(req).LogTaskFault(this.OAuth2Client.Logger, LogLevel.Error, LoggerEvents.RestError, $"Error while executing request. Url: {url.AbsoluteUri}");
+
+		return req.WaitForCompletionAsync();
+	}
+
+	/// <summary>
 	/// Executes a multipart rest request for stickers.
 	/// </summary>
 	/// <param name="client">The client.</param>
@@ -253,7 +293,9 @@ public sealed class DiscordApiClient
 
 		return req.WaitForCompletionAsync();
 	}
+
 	// begin todo
+
 	#region Guild
 
 	/// <summary>
@@ -370,7 +412,6 @@ public sealed class DiscordApiClient
 			VerificationLevel = verificationLevel,
 			IconBase64 = iconBase64,
 			SystemChannelFlags = systemChannelFlags
-
 		};
 
 		var route = $"{Endpoints.GUILDS}";
@@ -1639,6 +1680,7 @@ public sealed class DiscordApiClient
 	}
 
 	#endregion
+
 	// End todo
 
 	#region Guild Scheduled Events
@@ -1947,6 +1989,7 @@ public sealed class DiscordApiClient
 	#endregion
 
 	// begin todo
+
 	#region Channel
 	/// <summary>
 	/// Creates a guild channel.
@@ -2403,6 +2446,25 @@ public sealed class DiscordApiClient
 			ret.Initialize(this.Discord);
 
 		return new ReadOnlyCollection<DiscordChannel>(new List<DiscordChannel>(channelsRaw));
+	}
+
+	/// <summary>
+	/// Modifies a voice channels status.
+	/// </summary>
+	/// <param name="channelId">The voice channel id.</param>
+	/// <param name="status">The status.</param>
+	internal Task ModifyVoiceChannelStatusAsync(ulong channelId, string? status)
+	{
+		var pld = new RestVoiceChannelStatusModifyPayload
+		{
+			Status = status
+		};
+
+		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.VOICE_STATUS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { channel_id = channelId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld));
 	}
 
 	/// <summary>
@@ -2984,6 +3046,7 @@ public sealed class DiscordApiClient
 	#endregion
 
 	// End todo
+
 	#region Member
 	/// <summary>
 	/// Gets the current user async.
@@ -3831,7 +3894,7 @@ public sealed class DiscordApiClient
 	internal async Task<DiscordWebhook> GetWebhookAsync(ulong webhookId)
 	{
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {webhook_id = webhookId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { webhook_id = webhookId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord?.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -5123,7 +5186,8 @@ public sealed class DiscordApiClient
 				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
 				DmPermission = command.DmPermission,
-				Nsfw = command.IsNsfw
+				Nsfw = command.IsNsfw,
+				AllowedContexts = command.AllowedContexts
 			});
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
@@ -5153,7 +5217,8 @@ public sealed class DiscordApiClient
 			DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
 			DefaultMemberPermission = command.DefaultMemberPermissions,
 			DmPermission = command.DmPermission,
-			Nsfw = command.IsNsfw
+			Nsfw = command.IsNsfw,
+			AllowedContexts = command.AllowedContexts
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
@@ -5200,10 +5265,11 @@ public sealed class DiscordApiClient
 	/// <param name="defaultMemberPermission">The default member permissions.</param>
 	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
+	/// <param name="allowedContexts">The allowed contexts.</param>
 	internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId,
 		Optional<string> name, Optional<string> description, Optional<List<DiscordApplicationCommandOption>?> options,
 		Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
-		Optional<Permissions?> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw)
+		Optional<Permissions?> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw, Optional<ApplicationCommandContexts?> allowedContexts)
 	{
 		var pld = new RestApplicationCommandEditPayload
 		{
@@ -5214,7 +5280,8 @@ public sealed class DiscordApiClient
 			DmPermission = dmPermission,
 			NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
-			Nsfw = isNsfw
+			Nsfw = isNsfw,
+			AllowedContexts = allowedContexts
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
@@ -5286,7 +5353,8 @@ public sealed class DiscordApiClient
 				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
 				DmPermission = command.DmPermission,
-				Nsfw = command.IsNsfw
+				Nsfw = command.IsNsfw,
+				AllowedContexts = command.AllowedContexts
 			});
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
@@ -5317,7 +5385,8 @@ public sealed class DiscordApiClient
 			DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
 			DefaultMemberPermission = command.DefaultMemberPermissions,
 			DmPermission = command.DmPermission,
-			Nsfw = command.IsNsfw
+			Nsfw = command.IsNsfw,
+			AllowedContexts = command.AllowedContexts
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
@@ -5366,10 +5435,11 @@ public sealed class DiscordApiClient
 	/// <param name="defaultMemberPermission">The default member permissions.</param>
 	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
+	/// <param name="allowedContexts">The allowed contexts.</param>
 	internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId,
 		Optional<string> name, Optional<string> description, Optional<List<DiscordApplicationCommandOption>?> options,
 		Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
-		Optional<Permissions?> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw)
+		Optional<Permissions?> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw, Optional<ApplicationCommandContexts?> allowedContexts)
 	{
 		var pld = new RestApplicationCommandEditPayload
 		{
@@ -5380,7 +5450,8 @@ public sealed class DiscordApiClient
 			DmPermission = dmPermission,
 			NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
-			Nsfw = isNsfw
+			Nsfw = isNsfw,
+			AllowedContexts = allowedContexts
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";
@@ -5411,7 +5482,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates the interaction response.
+	/// Creates an interaction response.
 	/// </summary>
 	/// <param name="interactionId">The interaction id.</param>
 	/// <param name="interactionToken">The interaction token.</param>
@@ -5519,7 +5590,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates the interaction response.
+	/// Creates an interaction response with a modal.
 	/// </summary>
 	/// <param name="interactionId">The interaction id.</param>
 	/// <param name="interactionToken">The interaction token.</param>
@@ -5538,6 +5609,39 @@ public sealed class DiscordApiClient
 				Title = builder.Title,
 				CustomId = builder.CustomId,
 				ModalComponents = builder.ModalComponents
+			}
+		};
+
+		var values = new Dictionary<string, string>();
+
+		var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {interaction_id = interactionId, interaction_token = interactionToken }, out var path);
+
+		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
+		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Creates an interaction response with an iFrame.
+	/// </summary>
+	/// <param name="interactionId">The interaction id.</param>
+	/// <param name="interactionToken">The interaction token.</param>
+	/// <param name="type">The type.</param>
+	/// <param name="customId">The custom id of the iframe.</param>
+	/// <param name="title">The title of the iframe.</param>
+	/// <param name="modalSize">The size of the iframe.</param>
+	/// <param name="iFramePath">The path of the iframe.</param>
+	internal async Task CreateInteractionIframeResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, string customId, string title, IframeModalSize modalSize, string? iFramePath = null)
+	{
+		var pld = new RestInteractionIframeResponsePayload
+		{
+			Type = type,
+			Data = new()
+			{
+				Title = title,
+				CustomId = customId,
+				ModalSize = modalSize,
+				IframePath = iFramePath
 			}
 		};
 
@@ -5703,14 +5807,91 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var storeSkus =  JsonConvert.DeserializeObject<IEnumerable<DiscordStoreSku>>(res.Response);
+		var storeSkus =  DiscordJson.DeserializeIEnumerableObject<List<DiscordStoreSku>>(res.Response, this.Discord);
 		foreach (var storeSku in storeSkus)
-		{
-			storeSku.Discord = this.Discord;
 			storeSku.Sku.Discord = this.Discord;
-		}
 
-		return new ReadOnlyCollection<DiscordStoreSku>(new List<DiscordStoreSku>(storeSkus));
+		return new ReadOnlyCollection<DiscordStoreSku>(storeSkus);
+	}
+
+	/// <summary>
+	/// Gets the applications skus.
+	/// </summary>
+	/// <param name="applicationId">The application id to fetch the listenings for.</param>
+	/// <returns>A list of published listings with <see cref="DiscordStoreSku"/>s.</returns>
+	internal async Task<IReadOnlyList<DiscordSku>> GetSkusAsync(ulong applicationId)
+	{
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.SKUS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { application_id = applicationId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		return new ReadOnlyCollection<DiscordSku>(DiscordJson.DeserializeIEnumerableObject<List<DiscordSku>>(res.Response, this.Discord));
+	}
+
+	/// <summary>
+	/// Gets the applications entitlements.
+	/// </summary>
+	/// <param name="applicationId">The application id to fetch the entitlement for.</param>
+	/// <param name="guildId">Filter returned entitlements to a specific guild id.</param>
+	/// <param name="userId">Filter returned entitlements to a specific user id.</param>
+	/// <returns>A list of <see cref="DiscordEntitlement"/>.</returns>
+	internal async Task<IReadOnlyList<DiscordEntitlement>> GetEntitlementsAsync(ulong applicationId, ulong? guildId, ulong? userId)
+	{
+		var urlParams = new Dictionary<string, string>();
+		if (guildId.HasValue)
+			urlParams["guild_id"] = guildId.Value.ToString();
+		if (userId.HasValue)
+			urlParams["user_id"] = userId.Value.ToString();
+
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.ENTITLEMENTS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { application_id = applicationId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		return new ReadOnlyCollection<DiscordEntitlement>(DiscordJson.DeserializeIEnumerableObject<List<DiscordEntitlement>>(res.Response, this.Discord));
+	}
+
+	/// <summary>
+	/// Creates a test entitlement.
+	/// </summary>
+	/// <param name="applicationId">The application id to create the entitlement for.</param>
+	/// <param name="skuId">The sku id to create the entitlement for.</param>
+	/// <param name="ownerId">The owner id to create the entitlement for.</param>
+	/// <param name="ownerType">The owner type to create the entitlement for.</param>
+	/// <returns>A partial <see cref="DiscordEntitlement"/>.</returns>
+	internal async Task<DiscordEntitlement> CreateTestEntitlementsAsync(ulong applicationId, ulong skuId, ulong ownerId, EntitlementOwnerType ownerType)
+	{
+		TestEntitlementCreatePayload pld = new()
+		{
+			SkuId = skuId,
+			OwnerId = ownerId,
+			OwnerType = ownerType
+		};
+
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.ENTITLEMENTS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { application_id = applicationId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		return DiscordJson.DeserializeObject<DiscordEntitlement>(res.Response, this.Discord);
+	}
+
+	/// <summary>
+	/// Deletes a test entitlement.
+	/// </summary>
+	/// <param name="applicationId">The application id to delete the entitlement for.</param>
+	/// <param name="entitlementId">The entitlement id to delete.</param>
+	internal async Task DeleteTestEntitlementsAsync(ulong applicationId, ulong entitlementId)
+	{
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.ENTITLEMENTS}/:entitlement_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { application_id = applicationId, entitlement_id = entitlementId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -5879,5 +6060,268 @@ public sealed class DiscordApiClient
 		};
 		this.Rest.HttpClient.Send(request);
 	}
+
+	#endregion
+
+	#region OAuth2
+
+	/// <summary>
+	/// Gets the current oauth2 authorization information.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	internal async Task<DiscordAuthorizationInformation> GetCurrentOAuth2AuthorizationInformationAsync(string accessToken)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.OAUTH2}/@me";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Bearer", accessToken);
+
+		var url = Utilities.GetApiUriFor(path);
+		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers).ConfigureAwait(false);
+
+		var oauth2Info = DiscordJson.DeserializeObject<DiscordAuthorizationInformation>(res.Response, null);
+		return oauth2Info;
+	}
+
+	/// <summary>
+	/// Gets the current user.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	internal async Task<DiscordUser> GetCurrentUserAsync(string accessToken)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.USERS}/@me";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route,
+			new { application_id = this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) }, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Bearer", accessToken);
+
+		var url = Utilities.GetApiUriFor(path);
+		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
+			.ConfigureAwait(false);
+		var tuser = DiscordJson.DeserializeObject<TransportUser>(res.Response, null);
+		return new(tuser);
+	}
+
+	/// <summary>
+	/// Gets the current user's connections.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	internal async Task<IReadOnlyList<DiscordConnection>> GetCurrentUserConnectionsAsync(string accessToken)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.USERS}/@me{Endpoints.CONNECTIONS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Bearer", accessToken);
+
+		var url = Utilities.GetApiUriFor(path);
+		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
+			.ConfigureAwait(false);
+		return DiscordJson.DeserializeIEnumerableObject<List<DiscordConnection>>(res.Response, null);
+	}
+
+	/// <summary>
+	/// Gets the current user's guilds.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	internal async Task<IReadOnlyList<DiscordGuild>> GetCurrentUserGuildsAsync(string accessToken)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.USERS}/@me{Endpoints.GUILDS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Bearer", accessToken);
+
+		var url = Utilities.GetApiUriFor(path);
+		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
+			.ConfigureAwait(false);
+		return DiscordJson.DeserializeIEnumerableObject<List<DiscordGuild>>(res.Response, null);
+	}
+
+	/// <summary>
+	/// Gets the current user's guilds.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	/// <param name="guildId">The guild id to get the member for.</param>
+	internal async Task<DiscordMember> GetCurrentUserGuildMemberAsync(string accessToken, ulong guildId)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.USERS}/@me{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBER}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId.ToString(CultureInfo.InvariantCulture) }, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Bearer", accessToken);
+
+		var url = Utilities.GetApiUriFor(path);
+		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
+			.ConfigureAwait(false);
+		var tmember = DiscordJson.DeserializeObject<TransportMember>(res.Response, null);
+		return new(tmember);
+	}
+
+	/// <summary>
+	/// Gets the current user's role connection.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	internal async Task<DiscordApplicationRoleConnection> GetCurrentUserApplicationRoleConnectionAsync(string accessToken)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.USERS}/@me{Endpoints.APPLICATIONS}/:application_id/{Endpoints.ROLE_CONNECTIONS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route,
+			new { application_id = this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) }, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Bearer", accessToken);
+
+		var url = Utilities.GetApiUriFor(path);
+		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
+			.ConfigureAwait(false);
+		return DiscordJson.DeserializeObject<DiscordApplicationRoleConnection>(res.Response, null);
+	}
+
+	/// <summary>
+	/// Updates the current user's role connection.
+	/// </summary>
+	/// <param name="accessToken">The access token.</param>
+	/// <param name="platformName">The platform name.</param>
+	/// <param name="platformUsername">The platform username.</param>
+	/// <param name="metadata">The metadata.</param>
+	internal Task ModifyCurrentUserApplicationRoleConnectionAsync(string accessToken, Optional<string> platformName, Optional<string> platformUsername, Optional<ApplicationRoleConnectionMetadata> metadata)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		RestOAuth2ApplicationRoleConnectionPayload pld = new()
+		{
+			PlatformName = platformName,
+			PlatformUsername = platformUsername,
+			Metadata = metadata.HasValue ? metadata.Value.GetKeyValuePairs() : Optional<Dictionary<string, string>>.None
+		};
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.USERS}/@me{Endpoints.APPLICATIONS}/:application_id/{Endpoints.ROLE_CONNECTIONS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { application_id = this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) }, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Bearer", accessToken);
+
+		var url = Utilities.GetApiUriFor(path);
+		this.DoRequestAsync(null, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		return Task.CompletedTask;
+	}
+
+	/// <summary>
+	/// Exchanges a code for an access token.
+	/// </summary>
+	/// <param name="code">The code.</param>
+	internal async Task<DiscordAccessToken> ExchangeOAuth2AccessTokenAsync(string code)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { }, out var path);
+
+		var formData = new Dictionary<string, string>
+		{
+			{ "client_id", this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) },
+			{ "client_secret", this.OAuth2Client.ClientSecret },
+			{ "grant_type", "authorization_code" },
+			{ "code", code },
+			{ "redirect_uri", this.OAuth2Client.RedirectUri.AbsoluteUri }
+		};
+
+		var url = Utilities.GetApiUriFor(path);
+		var res = await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData).ConfigureAwait(false);
+
+		var accessTokenInformation = DiscordJson.DeserializeObject<DiscordAccessToken>(res.Response, null);
+		return accessTokenInformation;
+	}
+
+	/// <summary>
+	/// Exchanges a refresh token for a new access token
+	/// </summary>
+	/// <param name="refreshToken">The refresh token.</param>
+	internal async Task<DiscordAccessToken> RefreshOAuth2AccessTokenAsync(string refreshToken)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { }, out var path);
+
+		var formData = new Dictionary<string, string>
+		{
+			{ "client_id", this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) },
+			{ "client_secret", this.OAuth2Client.ClientSecret },
+			{ "grant_type", "refresh_token" },
+			{ "refresh_token", refreshToken },
+			{ "redirect_uri", this.OAuth2Client.RedirectUri.AbsoluteUri }
+		};
+
+		var url = Utilities.GetApiUriFor(path);
+		var res = await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData).ConfigureAwait(false);
+
+		var accessTokenInformation = DiscordJson.DeserializeObject<DiscordAccessToken>(res.Response, null);
+		return accessTokenInformation;
+	}
+
+	/// <summary>
+	/// Revokes an oauth2 token.
+	/// </summary>
+	/// <param name="token">The token to revoke.</param>
+	/// <param name="type">The type of token to revoke.</param>
+	internal Task RevokeOAuth2TokenAsync(string token, string type)
+	{
+		if (this.Discord != null!)
+			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
+
+		// ReSharper disable once HeuristicUnreachableCode
+		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}{Endpoints.REVOKE}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { }, out var path);
+
+		var authorizationString = Encoding.UTF8.GetBytes($"{this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture)}:{this.OAuth2Client.ClientSecret}");
+		var base64EncodedAuthorizationString = Convert.ToBase64String(authorizationString);
+
+		var headers = Utilities.GetBaseHeaders();
+		headers.Add("Basic", base64EncodedAuthorizationString);
+
+		var formData = new Dictionary<string, string>
+		{
+			{ "token", token },
+			{ "token_type_hint", type }
+		};
+
+		var url = Utilities.GetApiUriFor(path);
+		this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData, headers).ConfigureAwait(false);
+		return Task.CompletedTask;
+	}
+
 	#endregion
 }

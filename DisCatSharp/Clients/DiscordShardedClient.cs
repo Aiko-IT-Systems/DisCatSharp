@@ -663,8 +663,10 @@ public sealed partial class DiscordShardedClient
 		this._automodRuleDeleted = new("AUTO_MODERATION_RULE_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._automodActionExecuted = new("AUTO_MODERATION_ACTION_EXECUTED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildAuditLogEntryCreated = new("GUILD_AUDIT_LOG_ENTRY_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
-		this._channelTopicUpdated = new("CHANNEL_TOPIC_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
-
+		this._voiceChannelStatusUpdated = new("CHANNEL_STATUS_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._entitlementCreated = new("ENTITLEMENT_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._entitlementUpdated = new("ENTITLEMENT_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._entitlementDeleted = new("ENTITLEMENT_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 	}
 
 	/// <summary>
@@ -757,7 +759,10 @@ public sealed partial class DiscordShardedClient
 		client.AutomodRuleDeleted += this.Client_AutomodRuleDeleted;
 		client.AutomodActionExecuted += this.Client_AutomodActionExecuted;
 		client.GuildAuditLogEntryCreated += this.Client_GuildAuditLogEntryCreated;
-		client.ChannelTopicUpdated += this.Client_ChannelTopicUpdated;
+		client.VoiceChannelStatusUpdated += this.Client_VoiceChannelStatusUpdated;
+		client.EntitlementCreated += this.Client_EntitlementCreated;
+		client.EntitlementUpdated += this.Client_EntitlementUpdated;
+		client.EntitlementDeleted += this.Client_EntitlementDeleted;
 	}
 
 	/// <summary>
@@ -850,7 +855,10 @@ public sealed partial class DiscordShardedClient
 		client.AutomodRuleDeleted -= this.Client_AutomodRuleDeleted;
 		client.AutomodActionExecuted -= this.Client_AutomodActionExecuted;
 		client.GuildAuditLogEntryCreated -= this.Client_GuildAuditLogEntryCreated;
-		client.ChannelTopicUpdated -= this.Client_ChannelTopicUpdated;
+		client.VoiceChannelStatusUpdated -= this.Client_VoiceChannelStatusUpdated;
+		client.EntitlementCreated -= this.Client_EntitlementCreated;
+		client.EntitlementUpdated -= this.Client_EntitlementUpdated;
+		client.EntitlementDeleted -= this.Client_EntitlementDeleted;
 	}
 
 	/// <summary>

@@ -203,4 +203,4 @@ We introduced two new properties `Locale` and `GuildLocale` on [InteractionConte
 `Locale` is the locale of the user and always represented.
 `GuildLocale` is only represented, when the interaction is **not** in a DM.
 
-Furthermore we cache known user locales on the [DiscordUser](xref:DisCatSharp.Entities.DiscordUser#DisCatSharp_Entities_DiscordUser_Locale) object.
+Furthermore we cache known user locales on the [DiscordUser](xref:DisCatSharp.Entities.DiscordUser.Locale) object.

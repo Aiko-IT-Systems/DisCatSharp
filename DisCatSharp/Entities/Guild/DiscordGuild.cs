@@ -2211,7 +2211,7 @@ public partial class DiscordGuild : SnowflakeObject
 	{
 		var mdl = new ApplicationCommandEditModel();
 		action(mdl);
-		return await this.Discord.ApiClient.EditGuildApplicationCommandAsync(this.Discord.CurrentApplication!.Id, this.Id, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission, mdl.IsNsfw).ConfigureAwait(false);
+		return await this.Discord.ApiClient.EditGuildApplicationCommandAsync(this.Discord.CurrentApplication.Id, this.Id, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission, mdl.IsNsfw, mdl.AllowedContexts).ConfigureAwait(false);
 	}
 
 	/// <summary>

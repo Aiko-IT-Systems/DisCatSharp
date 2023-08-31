@@ -912,8 +912,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Ignoring, already received");
 			return Task.FromResult(true);
 		}
-		else
-			HandledInteractions.Add(e.Interaction.Id);
+
+	HandledInteractions.Add(e.Interaction.Id);
+
 		_ = Task.Run(async () =>
 		{
 			var type = this.GetInteractionType(e.Interaction.Data);
@@ -942,7 +943,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						Locale = e.Interaction.Locale,
 						GuildLocale = e.Interaction.GuildLocale,
 						AppPermissions = e.Interaction.AppPermissions,
-						Entitlements = e.Interaction.Entitlements
+						Entitlements = e.Interaction.Entitlements,
+						EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 					};
 					if (Configuration?.ServiceProvider != null)
 						context.Services = Configuration?.ServiceProvider;
@@ -1064,6 +1066,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									Locale = e.Interaction.Locale,
 									GuildLocale = e.Interaction.GuildLocale,
 									AppPermissions = e.Interaction.AppPermissions,
+									Entitlements = e.Interaction.Entitlements,
 									EntitlementSkuIds = e.Interaction.Entitlements
 								};
 								if (Configuration?.ServiceProvider != null)
@@ -1097,6 +1100,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									Locale = e.Interaction.Locale,
 									GuildLocale = e.Interaction.GuildLocale,
 									AppPermissions = e.Interaction.AppPermissions,
+									Entitlements = e.Interaction.Entitlements,
 									EntitlementSkuIds = e.Interaction.Entitlements
 								};
 								if (Configuration?.ServiceProvider != null)
@@ -1131,6 +1135,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									Locale = e.Interaction.Locale,
 									GuildLocale = e.Interaction.GuildLocale,
 									AppPermissions = e.Interaction.AppPermissions,
+									Entitlements = e.Interaction.Entitlements,
 									EntitlementSkuIds = e.Interaction.Entitlements
 								};
 								if (Configuration?.ServiceProvider != null)
@@ -1194,8 +1199,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Ignoring, already received");
 			return Task.FromResult(true);
 		}
-		else
-			HandledInteractions.Add(e.Interaction.Id);
+
+		HandledInteractions.Add(e.Interaction.Id);
+
 		_ = Task.Run(async () =>
 		{
 			//Creates the context
@@ -1216,7 +1222,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				Locale = e.Interaction.Locale,
 				GuildLocale = e.Interaction.GuildLocale,
 				AppPermissions = e.Interaction.AppPermissions,
-				Entitlements = e.Interaction.Entitlements
+				Entitlements = e.Interaction.Entitlements,
+				EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 			};
 			if (Configuration?.ServiceProvider != null)
 				context.Services = Configuration?.ServiceProvider;

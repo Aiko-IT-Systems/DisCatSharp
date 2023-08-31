@@ -40,6 +40,7 @@ public class InteractionCreateEventArgs : DiscordEventArgs
 	/// Initializes a new instance of the <see cref="InteractionCreateEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	public InteractionCreateEventArgs(IServiceProvider provider) : base(provider)
+	public InteractionCreateEventArgs(IServiceProvider provider)
+		: base(provider)
 	{ }
 }

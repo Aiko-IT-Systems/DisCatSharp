@@ -110,7 +110,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<ForumPostTag> AppliedTags
-	  => this.AppliedTagIds?.Select(id => this.Parent.GetForumPostTag(id)).Where(x => x != null).ToList();
+		=> this.AppliedTagIds?.Select(id => this.Parent.GetForumPostTag(id)).Where(x => x != null).ToList();
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordThreadChannel"/> class.

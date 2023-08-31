@@ -55,6 +55,16 @@ public static class Endpoints
 	public const string OAUTH2 = "/oauth2";
 
 	/// <summary>
+	/// The oauth2 token endpoint.
+	/// </summary>
+	public const string TOKEN = "/token";
+
+	/// <summary>
+	/// The oauth2 revoke endpoint.
+	/// </summary>
+	public const string REVOKE = "/revoke";
+
+	/// <summary>
 	/// The oauth2 authorize endpoint.
 	/// </summary>
 	public const string AUTHORIZE = "/authorize";
@@ -194,6 +204,11 @@ public static class Endpoints
 	/// The members endpoint.
 	/// </summary>
 	public const string MEMBERS = "/members";
+
+	/// <summary>
+	/// The member endpoint.
+	/// </summary>
+	public const string MEMBER = "/member";
 
 	/// <summary>
 	/// The typing endpoint.
@@ -416,6 +431,11 @@ public static class Endpoints
 	public const string STORE = "/store";
 
 	/// <summary>
+	/// The entitlements endpoint.
+	/// </summary>
+	public const string ENTITLEMENTS = "/entitlements";
+
+	/// <summary>
 	/// The app assets endpoint.
 	/// </summary>
 	public const string APP_ASSETS = "/app-assets";
@@ -515,6 +535,11 @@ public static class Endpoints
 	/// The metadata endpoint.
 	/// </summary>
 	public const string METADATA = "/metadata";
+
+	/// <summary>
+	/// The voice status endpoint.
+	/// </summary>
+	public const string VOICE_STATUS = "/voice-status";
 
 	public const string NEW_MEMBER_WELCOME = "/new-member-welcome";
 	[DiscordDeprecated]

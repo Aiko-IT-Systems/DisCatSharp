@@ -44,7 +44,7 @@ namespace DisCatSharp;
 public static class Utilities
 {
 	/// <summary>
-	/// Gets the version of the library
+	/// Gets the version of the library.
 	/// </summary>
 	internal static string VersionHeader { get; set; }
 
@@ -114,7 +114,7 @@ public static class Utilities
 	/// <param name="path">The path.</param>
 	/// <param name="config">The config</param>
 	/// <returns>An Uri.</returns>
-	internal static Uri GetApiUriFor(string path, DiscordConfiguration config)
+	internal static Uri GetApiUriFor(string path, DiscordConfiguration? config = null)
 		=> new($"{GetApiBaseUri(config)}{path}");
 
 	/// <summary>
@@ -124,7 +124,7 @@ public static class Utilities
 	/// <param name="queryString">The query string.</param>
 	/// <param name="config">The config</param>
 	/// <returns>An Uri.</returns>
-	internal static Uri GetApiUriFor(string path, string queryString, DiscordConfiguration config)
+	internal static Uri GetApiUriFor(string path, string queryString, DiscordConfiguration? config = null)
 		=> new($"{GetApiBaseUri(config)}{path}{queryString}");
 
 	/// <summary>
@@ -133,7 +133,7 @@ public static class Utilities
 	/// <param name="path">The path.</param>
 	/// <param name="config">The config</param>
 	/// <returns>A QueryUriBuilder.</returns>
-	internal static QueryUriBuilder GetApiUriBuilderFor(string path, DiscordConfiguration config)
+	internal static QueryUriBuilder GetApiUriBuilderFor(string path, DiscordConfiguration? config = null)
 		=> new($"{GetApiBaseUri(config)}{path}");
 
 	/// <summary>
@@ -241,7 +241,7 @@ public static class Utilities
 		var regex = new Regex(@"<@!?(\d+)>", RegexOptions.ECMAScript | RegexOptions.Compiled);
 		var matches = regex.Matches(message.Content);
 		return from Match match in matches
-			   select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+			select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -254,7 +254,7 @@ public static class Utilities
 		var regex = new Regex(@"<@&(\d+)>", RegexOptions.ECMAScript);
 		var matches = regex.Matches(message.Content);
 		return from Match match in matches
-			   select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+			select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -267,7 +267,7 @@ public static class Utilities
 		var regex = new Regex(@"<#(\d+)>", RegexOptions.ECMAScript);
 		var matches = regex.Matches(message.Content);
 		return from Match match in matches
-			   select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+			select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -280,7 +280,7 @@ public static class Utilities
 		var regex = new Regex(@"<a?:([a-zA-Z0-9_]+):(\d+)>", RegexOptions.ECMAScript);
 		var matches = regex.Matches(message.Content);
 		return from Match match in matches
-			   select ulong.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+			select ulong.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -409,19 +409,26 @@ public static class Utilities
 	/// Converts this <see cref="Permissions"/> into human-readable format.
 	/// </summary>
 	/// <param name="perm">Permissions enumeration to convert.</param>
+	/// <param name="useNewline">Whether to seperate permissions by newline. Defaults to <see langword="false"/>.</param>
+	/// <param name="sortAscending">Whether to sort permissions from a to z. Defaults to <see langword="true"/>.</param>
+	/// <param name="includeValue">Whether to include the permissions value. Defaults to <see langword="false"/>.</param>
+	/// <param name="shortIfAll">Whether to show <c>All Permissions</c>, if the member has all permissions. Defaults to &lt;see langword="false"/&gt;.</param>
 	/// <returns>Human-readable permissions.</returns>
-	public static string ToPermissionString(this Permissions perm)
+	public static string ToPermissionString(this Permissions perm, bool useNewline = false, bool sortAscending = true, bool includeValue = false, bool shortIfAll = false)
 	{
 		if (perm == Permissions.None)
 			return PermissionStrings[perm];
 
+		if (shortIfAll && perm.HasPermission(Permissions.All))
+			return PermissionStrings[Permissions.All];
+
 		perm &= PermissionMethods.FullPerms;
 
 		var strs = PermissionStrings
-			.Where(xkvp => xkvp.Key != Permissions.None && (perm & xkvp.Key) == xkvp.Key)
-			.Select(xkvp => xkvp.Value);
+			.Where(xkvp => xkvp.Key != Permissions.None && xkvp.Key != Permissions.All && (perm & xkvp.Key) == xkvp.Key)
+			.Select(xkvp => includeValue ? $"{xkvp.Value} ({(long)xkvp.Key})" : xkvp.Value);
 
-		return string.Join(", ", strs.OrderBy(xs => xs));
+		return string.Join(useNewline ? "\n" : ", ", sortAscending ? strs.OrderBy(xs => xs) : strs);
 	}
 
 	/// <summary>

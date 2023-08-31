@@ -4,8 +4,10 @@
 {{!include(favicon.ico)}}
 {{!include(.htaccess)}}
 {{!include(logo.png)}}
+{{!include(dcs-logo-embeds.png)}}
 {{!include(logo.svg)}}
 {{!include(logo_black.png)}}
+{{!include(dcs-docs-embeds-logo.png)}}
 {{!include(android-icon-36x36.png)}}
 {{!include(android-icon-48x48.png)}}
 {{!include(android-icon-72x72.png)}}
@@ -49,26 +51,27 @@
 		{{_appTitle}}{{/_appTitle}}</title>
 	<meta name="title"
 		content="{{#title}}{{title}}{{/title}}{{^title}}{{>partials/title}}{{/title}} {{#_appTitle}}| {{_appTitle}} {{/_appTitle}}">
-	<meta name="og:title"
+	<meta property="og:title"
 		content="{{#title}}{{title}}{{/title}}{{^title}}{{>partials/title}}{{/title}} {{#_appTitle}}| {{_appTitle}} {{/_appTitle}}">
-	{{#description}}
 	<meta name="description" content="{{description}}">
 	<meta property="og:description" content="{{description}}">
-	<meta name="twitter:description" content="{{description}}">
-	{{/description}}
 	{{#author}}
 	<meta name="author" content="{{author}}">{{/author}}
+	{{#_providerName}}
+	<meta name="provider_name" content="{{_providerName}}">{{/_providerName}}
+	{{#_providerUrl}}
+	<meta name="provider_url" content="{{_providerUrl}}">{{/_providerUrl}}
 	{{#keywords}}
 	<meta name="keywords" content="{{keywords}}">{{/keywords}}
 	{{#_ogType}}
-	<meta name="og:type" content="{{_ogType}}">{{/_ogType}}
+	<meta property="og:type" content="{{_ogType}}">{{/_ogType}}
 	{{#_ogImage}}
-	<meta name="og:image" content="{{_ogImage}}">
-	<meta name="og:image:alt" content="{{#title}}{{title}} {{/title}}Logo">
-	<meta name="og:image:type" content="image/png">
+	<meta property="og:image" content="{{_ogImage}}">
+	<meta property="og:image:alt" content="{{#title}}{{title}} {{/title}}Logo">
+	<meta property="og:image:type" content="image/png">
 	{{/_ogImage}}
 	{{#_appName}}
-	<meta name="og:site_name" content="{{_appName}}">{{/_appName}}
+	<meta property="og:site_name" content="{{_appName}}">{{/_appName}}
 	{{#_lang}}
 	<meta property="og:locale" content="{{_lang}}">{{/_lang}}
 	{{#_fbPageId}}
@@ -81,6 +84,7 @@
 	<meta name="twitter:creator" content="@aiko_it_systems">
 	<meta name="twitter:title"
 		content="{{#title}}{{title}}{{/title}}{{^title}}{{>partials/title}}{{/title}} {{#_appTitle}}| {{_appTitle}} {{/_appTitle}}">
+	<meta name="twitter:description" content="{{description}}">
 	{{#_twitterImage}}
 	<meta name="twitter:image" content="{{_twitterImage}}">
 	<meta name="twitter:image:alt" content="{{#title}}{{title}} {{/title}}Logo">

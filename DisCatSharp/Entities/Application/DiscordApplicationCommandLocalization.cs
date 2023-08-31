@@ -33,7 +33,7 @@ public sealed class DiscordApplicationCommandLocalization
 	/// <summary>
 	/// Gets the localization dict.
 	/// </summary>
-	public Dictionary<string, string> Localizations { get; internal set; }
+	public Dictionary<string, string> Localizations { get; internal set; } = new();
 
 	/// <summary>
 	/// Gets valid [locales](xref:modules_application_commands_translations_reference#valid-locales) for Discord.
@@ -86,7 +86,7 @@ public sealed class DiscordApplicationCommandLocalization
 	/// </summary>
 	/// <returns></returns>
 	public Dictionary<string, string> GetKeyValuePairs()
-			=> this.Localizations;
+		=> this.Localizations;
 
 	/// <summary>
 	/// Whether the [locale](xref:modules_application_commands_translations_reference#valid-locales) to be added is valid for Discord.

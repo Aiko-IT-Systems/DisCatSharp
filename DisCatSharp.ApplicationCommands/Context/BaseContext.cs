@@ -123,10 +123,17 @@ public class BaseContext
 	/// <para>Gets the entitlements.</para>
 	/// <para>This is related to premium subscriptions for bots.</para>
 	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
-	/// <see cref="DiscordClient.TryGetPublishedListings(ulong, out IReadOnlyList{DiscordStoreSku})"/> for more information.
 	/// </summary>
 	[DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
-	public List<ulong>? Entitlements { get; internal set; }
+	public List<DiscordEntitlement> Entitlements { get; internal set; } = new();
+
+	/// <summary>
+	/// <para>Gets the entitlement sku ids.</para>
+	/// <para>This is related to premium subscriptions for bots.</para>
+	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
+	/// </summary>
+	[DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
+	public List<ulong> EntitlementSkuIds { get; internal set; } = new();
 
 	/// <summary>
 	/// Gets the type of this interaction.
@@ -155,7 +162,17 @@ public class BaseContext
 	/// </summary>
 	/// <param name="builder">The data to send.</param>
 	public Task CreateModalResponseAsync(DiscordInteractionModalBuilder builder)
-		=> this.Interaction.Type != InteractionType.Ping && this.Interaction.Type != InteractionType.ModalSubmit ? this.Interaction.CreateInteractionModalResponseAsync(builder) : throw new NotSupportedException("You can't respond to an PING with a modal.");
+		=> this.Interaction.Type != InteractionType.Ping && this.Interaction.Type != InteractionType.ModalSubmit ? this.Interaction.CreateInteractionModalResponseAsync(builder) : throw new NotSupportedException("You can't respond to a PING with a modal.");
+
+	/// <summary>
+	/// Creates an iframe response to this interaction.
+	/// </summary>
+	/// <param name="customId">The custom id of the iframe.</param>
+	/// <param name="title">The title of the iframe.</param>
+	/// <param name="modalSize">The size of the iframe.</param>
+	/// <param name="iFramePath">The path of the iframe.</param>
+	public Task CreateInteractionIframeResponseAsync(string customId, string title, IframeModalSize modalSize = IframeModalSize.Normal, string? iFramePath = null)
+		=> this.Interaction.Type != InteractionType.Ping ? this.Interaction.CreateInteractionIframeResponseAsync(customId, title, modalSize, iFramePath) : throw new NotSupportedException("You can't respond to a PING with an iframe.");
 
 	/// <summary>
 	/// Edits the interaction response.

@@ -147,7 +147,7 @@ public enum ApplicationFlags : long
 	Active = 1L << 24,
 
 	/// <summary>
-	/// Allows the app to use IFrame modals.
+	/// Allows the app to use Iframe modals.
 	/// </summary>
 	IframeModal = 1L << 26
 }

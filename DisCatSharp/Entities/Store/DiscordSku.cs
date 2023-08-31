@@ -59,6 +59,12 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	public List<ulong> ManifestLabels { get; internal set; } = new();
 
 	/// <summary>
+	/// Gets the locales.
+	/// </summary>
+	[JsonProperty("locales", NullValueHandling = NullValueHandling.Ignore)]
+	public List<string> Locales { get; internal set; } = new();
+
+	/// <summary>
 	/// Gets the access type.
 	/// </summary>
 	[JsonProperty("access_type", NullValueHandling = NullValueHandling.Ignore)]
@@ -77,10 +83,22 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	public List<int> Features { get; internal set; } = new();
 
 	/// <summary>
+	/// Gets the skus genres.
+	/// </summary>
+	[JsonProperty("genres", NullValueHandling = NullValueHandling.Ignore)]
+	public List<int> Genres { get; internal set; } = new();
+
+	/// <summary>
 	/// Gets the skus release date.
 	/// </summary>
 	[JsonProperty("release_date", NullValueHandling = NullValueHandling.Ignore)]
 	public string ReleaseDate { get; internal set; }
+
+	/// <summary>
+	/// Gets the skus legal notice.
+	/// </summary>
+	[JsonProperty("legal_notice", NullValueHandling = NullValueHandling.Ignore)]
+	public string? LegalNotice { get; internal set; }
 
 	/// <summary>
 	/// Gets whether the sku is premium.
@@ -93,6 +111,12 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	/// </summary>
 	[JsonProperty("slug", NullValueHandling = NullValueHandling.Ignore)]
 	public string Slug { get; internal set; }
+
+	/// <summary>
+	/// Gets the sku price.
+	/// </summary>
+	[JsonProperty("price", NullValueHandling = NullValueHandling.Ignore)]
+	public SkuPrice Price { get; internal set; }
 
 	/// <summary>
 	/// Gets the sku flags.
@@ -153,4 +177,13 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	/// <returns>Whether the two skus are not equal.</returns>
 	public static bool operator !=(DiscordSku e1, DiscordSku e2)
 		=> !(e1 == e2);
+}
+
+public sealed class SkuPrice
+{
+	[JsonProperty("amount")]
+	public double Amount { get; internal set; }
+
+	[JsonProperty("currency")]
+	public string Currency { get; internal set; }
 }
