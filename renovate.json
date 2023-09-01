@@ -3,5 +3,11 @@
 	"extends": [
 		"local>Aiko-IT-Systems/renovate-config"
 	],
-  	"ignoreDeps": ["Microsoft.VisualStudio.SDK"]
+  	"ignoreDeps": ["Microsoft.VisualStudio.SDK"],
+	"packageRules": [
+	    {
+	      "matchManagers": ["npm"],
+	      "enabled": false
+	    }
+  ]
 }
