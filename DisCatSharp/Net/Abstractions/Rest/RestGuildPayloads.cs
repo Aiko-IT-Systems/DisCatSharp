@@ -352,6 +352,24 @@ internal sealed class RestGuildInventoryModifyPayload : ObservableApiObject
 }
 
 /// <summary>
+/// Represents guild incidents actions.
+/// </summary>
+internal sealed class RestGuildIncidentActionsModifyPayload : ObservableApiObject
+{
+	/// <summary>
+	/// Gets until when invites are disabled.
+	/// </summary>
+	[JsonProperty("invites_disabled_until", NullValueHandling = NullValueHandling.Include)]
+	public DateTimeOffset? InvitesDisabledUntil { get; set; }
+
+	/// <summary>
+	/// Gets until when direct messages are disabled.
+	/// </summary>
+	[JsonProperty("dms_disabled_until", NullValueHandling = NullValueHandling.Include)]
+	public DateTimeOffset? DmsDisabledUntil { get; set; }
+}
+
+/// <summary>
 /// Represents guild onboarding settings.
 /// </summary>
 internal sealed class RestGuildOnboardingModifyPayload : ObservableApiObject

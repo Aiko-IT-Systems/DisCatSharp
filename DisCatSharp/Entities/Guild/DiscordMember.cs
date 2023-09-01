@@ -208,7 +208,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	[JsonProperty("communication_disabled_until", NullValueHandling = NullValueHandling.Include)]
 	public DateTime? CommunicationDisabledUntil { get; internal set; }
-	
+
 	/// <summary>
 	/// Datetime until unusual dm activity time happened.
 	/// </summary>
