@@ -34,12 +34,12 @@ public class IncidentsData : ObservableApiObject
 	/// <summary>
 	/// Gets until when invites are disabled.
 	/// </summary>
-	[JsonProperty("invites_disabled_until")]
+	[JsonProperty("invites_disabled_until", NullValueHandling = NullValueHandling.Include)]
 	public DateTime? InvitesDisabledUntil { get; internal set; }
 
 	/// <summary>
 	/// Gets until when direct messages are disabled.
 	/// </summary>
-	[JsonProperty("dms_disabled_until")]
+	[JsonProperty("dms_disabled_until", NullValueHandling = NullValueHandling.Include)]
 	public DateTime? DmsDisabledUntil { get; internal set; }
 }
