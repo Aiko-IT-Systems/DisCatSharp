@@ -633,6 +633,32 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	/// Modifies the guilds incident actions.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="invitesDisabledUntil">Until when invites are disabled. Set <see langword="null"/> to disable.</param>
+	/// <param name="dmsDisabledUntil">Until when direct messages are disabled. Set <see langword="null"/> to disable.</param>
+	internal async Task<IncidentsData> ModifyGuildIncidentActionsAsync(ulong guildId, DateTimeOffset? invitesDisabledUntil, DateTimeOffset? dmsDisabledUntil)
+	{
+		var pld = new RestGuildIncidentActionsModifyPayload
+		{
+			InvitesDisabledUntil = invitesDisabledUntil,
+			DmsDisabledUntil = dmsDisabledUntil,
+		};
+
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.INCIDENT_ACTIONS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		var data = DiscordJson.DeserializeObject<IncidentsData>(res.Response, this.Discord);
+
+		this.Discord.Guilds[guildId].IncidentsData = data;
+		return data;
+	}
+
+	/// <summary>
 	/// Gets the guilds onboarding.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>

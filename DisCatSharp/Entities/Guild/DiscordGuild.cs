@@ -890,12 +890,13 @@ public partial class DiscordGuild : SnowflakeObject
 		var rulesChannelId = ChannelToId(rulesChannel, "Rules");
 		var publicUpdatesChannelId = ChannelToId(publicUpdatesChannel, "Public updates");
 
-		var features = this.RawFeatures.ToList();
+		var rfeatures = this.RawFeatures.ToList();
 		if (!this.RawFeatures.Contains("COMMUNITY") && enabled)
-			features.Add("COMMUNITY");
-		else if (this.RawFeatures.Contains("COMMUNITY") && !enabled) features.Remove("COMMUNITY");
+			rfeatures.Add("COMMUNITY");
+		else if (this.RawFeatures.Contains("COMMUNITY") && !enabled)
+			rfeatures.Remove("COMMUNITY");
 
-		return await this.Discord.ApiClient.ModifyGuildCommunitySettingsAsync(this.Id, features, rulesChannelId, publicUpdatesChannelId, preferredLocale, description, defaultMessageNotifications, explicitContentFilter, verificationLevel, reason).ConfigureAwait(false);
+		return await this.Discord.ApiClient.ModifyGuildCommunitySettingsAsync(this.Id, rfeatures, rulesChannelId, publicUpdatesChannelId, preferredLocale, description, defaultMessageNotifications, explicitContentFilter, verificationLevel, reason).ConfigureAwait(false);
 	}
 
 	[DiscordInExperiment, RequiresFeature(Attributes.Features.Community)]
@@ -923,12 +924,13 @@ public partial class DiscordGuild : SnowflakeObject
 
 		var safetyAlertsChannelId = ChannelToId(safetyAlertsChannel, "Safety Alerts");
 
-		var features = this.RawFeatures.ToList();
+		var rfeatures = this.RawFeatures.ToList();
 		if (!this.RawFeatures.Contains("RAID_ALERTS_ENABLED") && enabled)
-			features.Add("RAID_ALERTS_ENABLED");
-		else if (this.RawFeatures.Contains("RAID_ALERTS_ENABLED") && !enabled) features.Remove("RAID_ALERTS_ENABLED");
+			rfeatures.Add("RAID_ALERTS_ENABLED");
+		else if (this.RawFeatures.Contains("RAID_ALERTS_ENABLED") && !enabled)
+			rfeatures.Remove("RAID_ALERTS_ENABLED");
 
-		return await this.Discord.ApiClient.ModifyGuildSafetyAlertsSettingsAsync(this.Id, features, safetyAlertsChannelId, reason).ConfigureAwait(false);
+		return await this.Discord.ApiClient.ModifyGuildSafetyAlertsSettingsAsync(this.Id, rfeatures, safetyAlertsChannelId, reason).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -941,32 +943,47 @@ public partial class DiscordGuild : SnowflakeObject
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordGuild> EnableInvitesAsync(string? reason = null)
 	{
-		var features = this.RawFeatures.ToList();
+		var rfeatures = this.RawFeatures.ToList();
 		if (this.Features.HasFeature(GuildFeaturesEnum.InvitesDisabled))
-			features.Remove("INVITES_DISABLED");
+			rfeatures.Remove("INVITES_DISABLED");
 
-		return await this.Discord.ApiClient.ModifyGuildFeaturesAsync(this.Id, features, reason).ConfigureAwait(false);
+		return await this.Discord.ApiClient.ModifyGuildFeaturesAsync(this.Id, rfeatures, reason).ConfigureAwait(false);
 	}
 
 	/// <summary>
 	/// Disables invites for the guild.
 	/// </summary>
-	/// <param name="reason"></param>
-	/// <returns></returns>
+	/// <param name="reason">The audit log reason.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordGuild> DisableInvitesAsync(string? reason = null)
 	{
-		List<string> features = new();
 		var rfeatures = this.RawFeatures.ToList();
 		if (!this.Features.HasFeature(GuildFeaturesEnum.InvitesDisabled))
 			rfeatures.Add("INVITES_DISABLED");
-		features = rfeatures;
 
-		return await this.Discord.ApiClient.ModifyGuildFeaturesAsync(this.Id, features, reason).ConfigureAwait(false);
+		return await this.Discord.ApiClient.ModifyGuildFeaturesAsync(this.Id, rfeatures, reason).ConfigureAwait(false);
 	}
+
+	/// <summary>
+	/// Disables invites for the guild.
+	/// </summary>
+	/// <param name="invitesDisabledUntil">Until when invites are disabled. Set <see langword="null"/> to disable.</param>
+	/// <param name="dmsDisabledUntil">Until when direct messages are disabled. Set <see langword="null"/> to disable.</param>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<IncidentsData> ModifyIncidentActionsAsync(DateTimeOffset? invitesDisabledUntil = null, DateTimeOffset? dmsDisabledUntil = null)
+		=> invitesDisabledUntil.HasValue &&
+		   invitesDisabledUntil.Value.UtcDateTime > DateTimeOffset.UtcNow.UtcDateTime.AddHours(24)
+			? throw new InvalidOperationException("Cannot disable invites for more than 24 hours.")
+			: dmsDisabledUntil.HasValue &&
+			  dmsDisabledUntil.Value.UtcDateTime > DateTimeOffset.UtcNow.UtcDateTime.AddHours(24)
+				? throw new InvalidOperationException("Cannot disable direct messages for more than 24 hours.")
+				: await this.Discord.ApiClient.ModifyGuildIncidentActionsAsync(this.Id, invitesDisabledUntil, dmsDisabledUntil).ConfigureAwait(false);
 
 	/// <summary>
 	/// Timeout a specified member in this guild.
