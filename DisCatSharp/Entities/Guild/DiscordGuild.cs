@@ -583,7 +583,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets the guild incidents data.
 	/// </summary>
 	[JsonProperty("incidents_data", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
-	public object? IncidentsData { get; internal set; }
+	public IncidentsData? IncidentsData { get; internal set; }
 
 	/// <summary>
 	/// Gets the guild inventory settings.
