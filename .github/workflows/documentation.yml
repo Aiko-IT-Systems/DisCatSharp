@@ -15,7 +15,7 @@ jobs:
     name: Build documentation
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         token:  ${{ secrets.NYUW_TOKEN_GH }}
     - name: Setup .NET
@@ -62,7 +62,7 @@ jobs:
     needs: build
     steps:
     - name: Checkout docs repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: Aiko-IT-Systems/DisCatSharp.Docs
         token: ${{ secrets.NYUW_TOKEN_GH }}

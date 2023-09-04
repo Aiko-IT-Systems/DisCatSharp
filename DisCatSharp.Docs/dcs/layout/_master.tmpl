@@ -177,6 +177,17 @@
 	{{#_urlNormalizationActive}}
 	<meta name="docfx:urlnormalizationactive" content="true">{{/_urlNormalizationActive}}
 	<meta name="docfx:docurl" content="{{docurl}}">{{/docurl}}
+	<meta name="loc:inThisArticle" content="{{__global.inThisArticle}}">
+	<meta name="loc:searchResultsCount" content="{{__global.searchResultsCount}}">
+	<meta name="loc:searchNoResults" content="{{__global.searchNoResults}}">
+	<meta name="loc:tocFilter" content="{{__global.tocFilter}}">
+	<meta name="loc:nextArticle" content="{{__global.nextArticle}}">
+	<meta name="loc:prevArticle" content="{{__global.prevArticle}}">
+	<meta name="loc:themeLight" content="{{__global.themeLight}}">
+	<meta name="loc:themeDark" content="{{__global.themeDark}}">
+	<meta name="loc:themeAuto" content="{{__global.themeAuto}}">
+	<meta name="loc:changeTheme" content="{{__global.changeTheme}}">
+	<meta name="loc:copy" content="{{__global.copy}}">
 	<script src="//code.jquery.com/jquery-latest.js"></script>
 	<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
 		data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
@@ -213,9 +224,11 @@
 	<header class="bg-body border-bottom">
 		<nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
 			<div class="container-xxl flex-nowrap">
-				<a class="navbar-brand" href="{{_appLogoUrl}}{{^_appLogoUrl}}{{_rel}}index.html{{/_appLogoUrl}}"><img
-						id="logo" class="svg" src="{{_rel}}{{{_appLogoPath}}}{{^_appLogoPath}}logo.svg{{/_appLogoPath}}"
-						alt="{{_appName}}">&nbsp;&nbsp;{{_appName}}</a>
+				<a class="navbar-brand" href="{{_appLogoUrl}}{{^_appLogoUrl}}{{_rel}}index.html{{/_appLogoUrl}}">
+					<img id="logo" class="svg"
+						src="{{_rel}}{{{_appLogoPath}}}{{^_appLogoPath}}logo.svg{{/_appLogoPath}}" alt="{{_appName}}">
+					&nbsp;&nbsp;{{_appName}}
+				</a>
 				<button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse"
 					data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false"
 					aria-label="Toggle navigation">
@@ -269,10 +282,10 @@
 			{{^_disableContribution}}
 			<div class="contribution d-print-none">
 				{{#sourceurl}}
-				<a href="{{sourceurl}}" class="edit-link">Edit this page</a>
+				<a href="{{sourceurl}}" class="edit-link">{{__global.improveThisDoc}}</a>
 				{{/sourceurl}}
 				{{^sourceurl}}{{#docurl}}
-				<a href="{{docurl}}" class="edit-link">Edit this page</a>
+				<a href="{{docurl}}" class="edit-link">{{__global.improveThisDoc}}</a>
 				{{/docurl}}{{/sourceurl}}
 			</div>
 			{{/_disableContribution}}
@@ -280,7 +293,6 @@
 			{{^_disableNextArticle}}
 			<div class="next-article d-print-none border-top" id="nextArticle"></div>
 			{{/_disableNextArticle}}
-
 		</div>
 
 		<div class="affix">
