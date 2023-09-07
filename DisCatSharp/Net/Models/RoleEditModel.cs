@@ -35,7 +35,7 @@ public class RoleEditModel : BaseEditModel
 	/// <summary>
 	/// New role name
 	/// </summary>
-	public string Name { internal get; set; }
+	public string? Name { internal get; set; }
 
 	/// <summary>
 	/// New role permissions
@@ -60,12 +60,12 @@ public class RoleEditModel : BaseEditModel
 	/// <summary>
 	/// The new role icon.
 	/// </summary>
-	public Optional<Stream> Icon { internal get; set; }
+	public Optional<Stream?> Icon { internal get; set; }
 
 	/// <summary>
 	/// The new role icon from unicode emoji.
 	/// </summary>
-	public Optional<DiscordEmoji> UnicodeEmoji { internal get; set; }
+	public Optional<DiscordEmoji?> UnicodeEmoji { internal get; set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="RoleEditModel"/> class.

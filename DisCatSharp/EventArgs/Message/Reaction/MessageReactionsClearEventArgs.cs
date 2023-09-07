@@ -49,8 +49,7 @@ public class MessageReactionsClearEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Gets the guild in which the reactions were cleared.
 	/// </summary>
-	public DiscordGuild Guild
-		=> this.Channel.Guild;
+	public DiscordGuild? Guild { get; internal set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="MessageReactionsClearEventArgs"/> class.

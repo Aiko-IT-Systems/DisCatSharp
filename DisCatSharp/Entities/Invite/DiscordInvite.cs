@@ -107,7 +107,7 @@ public class DiscordInvite : ObservableApiObject
 	/// Gets the user who created the invite.
 	/// </summary>
 	[JsonProperty("inviter", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordUser Inviter { get; internal set; }
+	public DiscordUser? Inviter { get; internal set; }
 
 	/// <summary>
 	/// Gets the number of times this invite has been used.

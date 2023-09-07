@@ -913,7 +913,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			return Task.FromResult(true);
 		}
 
-	HandledInteractions.Add(e.Interaction.Id);
+		HandledInteractions.Add(e.Interaction.Id);
 
 		_ = Task.Run(async () =>
 		{

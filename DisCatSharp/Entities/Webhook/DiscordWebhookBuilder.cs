@@ -68,7 +68,7 @@ public sealed class DiscordWebhookBuilder
 	/// <summary>
 	/// Message to send on this webhook request.
 	/// </summary>
-	public string Content
+	public string? Content
 	{
 		get => this._content;
 		set
@@ -79,7 +79,8 @@ public sealed class DiscordWebhookBuilder
 			this._content = value;
 		}
 	}
-	private string _content;
+
+	private string? _content;
 
 	/// <summary>
 	/// Name of the new thread.
@@ -97,24 +98,28 @@ public sealed class DiscordWebhookBuilder
 	/// Embeds to send on this webhook request.
 	/// </summary>
 	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
+
 	private readonly List<DiscordEmbed> _embeds = new();
 
 	/// <summary>
 	/// Files to send on this webhook request.
 	/// </summary>
 	public IReadOnlyList<DiscordMessageFile> Files => this._files;
+
 	private readonly List<DiscordMessageFile> _files = new();
 
 	/// <summary>
 	/// Mentions to send on this webhook request.
 	/// </summary>
 	public IReadOnlyList<IMention> Mentions => this._mentions;
+
 	private readonly List<IMention> _mentions = new();
 
 	/// <summary>
 	/// Gets the components.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
+
 	private readonly List<DiscordActionRowComponent> _components = new();
 
 
@@ -122,6 +127,7 @@ public sealed class DiscordWebhookBuilder
 	/// Attachments to keep on this webhook request.
 	/// </summary>
 	public IReadOnlyList<DiscordAttachment> Attachments => this.AttachmentsInternal;
+
 	internal List<DiscordAttachment> AttachmentsInternal = new();
 
 	/// <summary>
@@ -279,7 +285,7 @@ public sealed class DiscordWebhookBuilder
 	/// <param name="data">File data.</param>
 	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
 	/// <param name="description">Description of the file.</param>
-	public DiscordWebhookBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string description = null)
+	public DiscordWebhookBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string? description = null)
 	{
 		if (this.Files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -302,7 +308,7 @@ public sealed class DiscordWebhookBuilder
 	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns></returns>
-	public DiscordWebhookBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string description = null)
+	public DiscordWebhookBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string? description = null)
 	{
 		if (this.Files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -390,8 +396,8 @@ public sealed class DiscordWebhookBuilder
 	/// <param name="webhook">The webhook that should be executed.</param>
 	/// <param name="threadId">Target thread id.</param>
 	/// <returns>The message sent</returns>
-	public async Task<DiscordMessage> SendAsync(DiscordWebhook webhook, ulong? threadId = null)
-		=> await webhook.ExecuteAsync(this, threadId.ToString()).ConfigureAwait(false);
+	public Task<DiscordMessage> SendAsync(DiscordWebhook webhook, ulong? threadId = null)
+		=> webhook.ExecuteAsync(this, threadId.ToString());
 
 	/// <summary>
 	/// Sends the modified webhook message.
@@ -400,8 +406,8 @@ public sealed class DiscordWebhookBuilder
 	/// <param name="message">The message to modify.</param>
 	/// <param name="thread">Target thread.</param>
 	/// <returns>The modified message</returns>
-	public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, DiscordMessage message, DiscordThreadChannel? thread = null)
-		=> await this.ModifyAsync(webhook, message.Id, thread?.Id).ConfigureAwait(false);
+	public Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, DiscordMessage message, DiscordThreadChannel? thread = null)
+		=> this.ModifyAsync(webhook, message.Id, thread?.Id);
 
 	/// <summary>
 	/// Sends the modified webhook message.
@@ -410,8 +416,8 @@ public sealed class DiscordWebhookBuilder
 	/// <param name="messageId">The id of the message to modify.</param>
 	/// <param name="threadId">Target thread id.</param>
 	/// <returns>The modified message</returns>
-	public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, ulong messageId, ulong? threadId = null)
-		=> await webhook.EditMessageAsync(messageId, this, threadId.ToString()).ConfigureAwait(false);
+	public Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, ulong messageId, ulong? threadId = null)
+		=> webhook.EditMessageAsync(messageId, this, threadId.ToString());
 
 	/// <summary>
 	/// Clears all message components on this builder.

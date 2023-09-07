@@ -49,12 +49,12 @@ public class VoiceStateUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Gets the voice state pre-update.
 	/// </summary>
-	public DiscordVoiceState Before { get; internal set; }
+	public DiscordVoiceState? Before { get; internal set; }
 
 	/// <summary>
 	/// Gets the voice state post-update.
 	/// </summary>
-	public DiscordVoiceState After { get; internal set; }
+	public DiscordVoiceState? After { get; internal set; }
 
 	/// <summary>
 	/// Gets the ID of voice session.
@@ -64,5 +64,7 @@ public class VoiceStateUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="VoiceStateUpdateEventArgs"/> class.
 	/// </summary>
-	internal VoiceStateUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal VoiceStateUpdateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

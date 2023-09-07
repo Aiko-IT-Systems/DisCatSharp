@@ -177,15 +177,14 @@ public class DiscordMessage : SnowflakeObject
 	/// Gets the message's content.
 	/// </summary>
 	[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
-	public string Content { get; internal set; }
+	public string? Content { get; internal set; }
 
 	/// <summary>
 	/// Gets the message's creation timestamp.
 	/// </summary>
 	[JsonIgnore]
 	public DateTimeOffset Timestamp
-		=> !string.IsNullOrWhiteSpace(this.TimestampRaw) && DateTimeOffset.TryParse(this.TimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ?
-			dto : this.CreationTimestamp;
+		=> !string.IsNullOrWhiteSpace(this.TimestampRaw) && DateTimeOffset.TryParse(this.TimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ? dto : this.CreationTimestamp;
 
 	/// <summary>
 	/// Gets the message's creation timestamp as raw string.
@@ -198,8 +197,7 @@ public class DiscordMessage : SnowflakeObject
 	/// </summary>
 	[JsonIgnore]
 	public DateTimeOffset? EditedTimestamp
-		=> !string.IsNullOrWhiteSpace(this.EditedTimestampRaw) && DateTimeOffset.TryParse(this.EditedTimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ?
-			dto : null;
+		=> !string.IsNullOrWhiteSpace(this.EditedTimestampRaw) && DateTimeOffset.TryParse(this.EditedTimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ? dto : null;
 
 	/// <summary>
 	/// Gets the message's edit timestamp as raw string. Will be null if the message was not edited.
@@ -230,13 +228,14 @@ public class DiscordMessage : SnowflakeObject
 	/// Gets users or members mentioned by this message.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyList<DiscordUser> MentionedUsers
-		=> this.MentionedUsersLazy.Value;
+	public IReadOnlyList<DiscordUser>? MentionedUsers
+		=> this.MentionedUsersLazy?.Value;
 
 	[JsonProperty("mentions", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordUser> MentionedUsersInternal;
+	internal List<DiscordUser>? MentionedUsersInternal;
+
 	[JsonIgnore]
-	internal readonly Lazy<IReadOnlyList<DiscordUser>> MentionedUsersLazy;
+	internal readonly Lazy<IReadOnlyList<DiscordUser>>? MentionedUsersLazy;
 
 	// TODO: this will probably throw an exception in DMs since it tries to wrap around a null List...
 	// this is probably low priority but need to find out a clean way to solve it...
@@ -244,65 +243,69 @@ public class DiscordMessage : SnowflakeObject
 	/// Gets roles mentioned by this message.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyList<DiscordRole> MentionedRoles
-		=> this._mentionedRolesLazy.Value;
+	public IReadOnlyList<DiscordRole>? MentionedRoles
+		=> this._mentionedRolesLazy?.Value;
 
 	[JsonIgnore]
-	internal List<DiscordRole> MentionedRolesInternal;
+	internal List<DiscordRole>? MentionedRolesInternal;
 
 	[JsonProperty("mention_roles")]
-	internal List<ulong> MentionedRoleIds;
+	internal List<ulong>? MentionedRoleIds;
 
 	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordRole>> _mentionedRolesLazy;
+	private readonly Lazy<IReadOnlyList<DiscordRole>>? _mentionedRolesLazy;
 
 	/// <summary>
 	/// Gets channels mentioned by this message.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyList<DiscordChannel> MentionedChannels
-		=> this._mentionedChannelsLazy.Value;
+	public IReadOnlyList<DiscordChannel>? MentionedChannels
+		=> this._mentionedChannelsLazy?.Value;
 
 	[JsonIgnore]
-	internal List<DiscordChannel> MentionedChannelsInternal;
+	internal List<DiscordChannel>? MentionedChannelsInternal;
+
 	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordChannel>> _mentionedChannelsLazy;
+	private readonly Lazy<IReadOnlyList<DiscordChannel>>? _mentionedChannelsLazy;
 
 	/// <summary>
 	/// Gets files attached to this message.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyList<DiscordAttachment> Attachments
-		=> this._attachmentsLazy.Value;
+	public IReadOnlyList<DiscordAttachment>? Attachments
+		=> this._attachmentsLazy?.Value;
 
 	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<DiscordAttachment> AttachmentsInternal = new();
+
 	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordAttachment>> _attachmentsLazy;
+	private readonly Lazy<IReadOnlyList<DiscordAttachment>>? _attachmentsLazy;
 
 	/// <summary>
 	/// Gets embeds attached to this message.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyList<DiscordEmbed> Embeds
-		=> this._embedsLazy.Value;
+	public IReadOnlyList<DiscordEmbed>? Embeds
+		=> this._embedsLazy?.Value;
 
 	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<DiscordEmbed> EmbedsInternal = new();
+
 	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordEmbed>> _embedsLazy;
+	private readonly Lazy<IReadOnlyList<DiscordEmbed>>? _embedsLazy;
 
 	/// <summary>
 	/// Gets reactions used on this message.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyList<DiscordReaction> Reactions
-		=> this._reactionsLazy.Value;
+	public IReadOnlyList<DiscordReaction>? Reactions
+		=> this._reactionsLazy?.Value;
 
 	[JsonProperty("reactions", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<DiscordReaction> ReactionsInternal = new();
+
 	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordReaction>> _reactionsLazy;
+	private readonly Lazy<IReadOnlyList<DiscordReaction>>? _reactionsLazy;
 
 	/// <summary>
 	/// Gets the nonce sent with the message, if the message was sent by the client.
@@ -409,7 +412,7 @@ public class DiscordMessage : SnowflakeObject
 	/// <summary>
 	/// Gets the message object for the referenced message
 	/// </summary>
-	[JsonProperty("referenced_message", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("referenced_message", NullValueHandling = NullValueHandling.Include)]
 	public DiscordMessage? ReferencedMessage { get; internal set; }
 
 	/// <summary>
@@ -496,13 +499,13 @@ public class DiscordMessage : SnowflakeObject
 	{
 		var mentions = new List<IMention>();
 
-		if (this.ReferencedMessage != null && this.MentionedUsersInternal.Contains(this.ReferencedMessage.Author))
+		if (this.ReferencedMessage is not null && this.MentionedUsersInternal != null && this.MentionedUsersInternal.Contains(this.ReferencedMessage.Author))
 			mentions.Add(new RepliedUserMention());
 
-		if (this.MentionedUsersInternal.Any())
+		if (this.MentionedUsersInternal != null && this.MentionedUsersInternal.Any())
 			mentions.AddRange(this.MentionedUsersInternal.Select(m => (IMention)new UserMention(m)));
 
-		if (this.MentionedRoleIds.Any())
+		if (this.MentionedRoleIds != null && this.MentionedRoleIds.Any())
 			mentions.AddRange(this.MentionedRoleIds.Select(r => (IMention)new RoleMention(r)));
 
 		return mentions;
@@ -540,7 +543,8 @@ public class DiscordMessage : SnowflakeObject
 			if (guild != null)
 			{
 				//this._mentionedRoles = this._mentionedRoles.Union(Utilities.GetRoleMentions(this).Select(xid => guild.GetRole(xid))).ToList();
-				this.MentionedRolesInternal = this.MentionedRolesInternal.Union(this.MentionedRoleIds.Select(xid => guild.GetRole(xid))).ToList();
+				if (this.MentionedRoleIds != null)
+					this.MentionedRolesInternal = this.MentionedRolesInternal.Union(this.MentionedRoleIds.Select(xid => guild.GetRole(xid))).ToList();
 				this.MentionedChannelsInternal = this.MentionedChannelsInternal.Union(Utilities.GetChannelMentions(this).Select(xid => guild.GetChannel(xid))).ToList();
 			}
 

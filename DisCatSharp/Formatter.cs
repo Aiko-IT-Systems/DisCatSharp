@@ -51,7 +51,7 @@ public static class Formatter
 	/// <param name="content">Contents of the block.</param>
 	/// <param name="language">Language to use for highlighting.</param>
 	/// <returns>Formatted block of code.</returns>
-	public static string BlockCode(this string content, string language = "")
+	public static string BlockCode(this string? content, string language = "")
 		=> $"```{language}\n{content}\n```";
 
 	/// <summary>

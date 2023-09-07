@@ -1353,7 +1353,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="guild">The guild to update.</param>
 	/// <param name="mbr">The member to update.</param>
 	/// <returns>The updated user.</returns>
-	private DiscordUser UpdateUser(DiscordUser usr, ulong? guildId, DiscordGuild guild, TransportMember? mbr)
+	private DiscordUser UpdateUser(DiscordUser usr, ulong? guildId, DiscordGuild? guild, TransportMember? mbr)
 	{
 		if (mbr != null)
 		{
@@ -1384,7 +1384,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 			DiscordMember member = default;
 
-			if (intents.HasAllPrivilegedIntents() && !guild.IsLarge)
+			if (intents.HasAllPrivilegedIntents() && (!guild?.IsLarge ?? true))
 				return usr; // we have the necessary privileged intents, no need to worry about caching here unless guild is large.
 
 			if (guild?.MembersInternal.TryGetValue(usr.Id, out member) == false)
@@ -1394,7 +1394,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			}
 			else if (intents.HasIntent(DiscordIntents.GuildPresences) || this.Configuration.AlwaysCacheMembers) // we can attempt to update it if it's already in cache.
 				if (!intents.HasIntent(DiscordIntents.GuildMembers)) // no need to update if we already have the member events
-					_ = guild.MembersInternal.TryUpdate(usr.Id, (DiscordMember)usr, member);
+					_ = guild?.MembersInternal.TryUpdate(usr.Id, (DiscordMember)usr, member);
 		}
 		else if (!string.IsNullOrEmpty(usr.Username)) // check if not a skeleton user
 			_ = this.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>

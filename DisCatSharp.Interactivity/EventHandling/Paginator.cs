@@ -162,11 +162,11 @@ internal class Paginator : IPaginator
 						continue;
 
 					if (req.PageCount > 1 &&
-					    (eventArgs.Emoji == emojis.Left ||
-					     eventArgs.Emoji == emojis.SkipLeft ||
-					     eventArgs.Emoji == emojis.Right ||
-					     eventArgs.Emoji == emojis.SkipRight ||
-					     eventArgs.Emoji == emojis.Stop))
+						(eventArgs.Emoji == emojis.Left ||
+						 eventArgs.Emoji == emojis.SkipLeft ||
+						 eventArgs.Emoji == emojis.Right ||
+						 eventArgs.Emoji == emojis.SkipRight ||
+						 eventArgs.Emoji == emojis.Stop))
 						await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
 					else if (eventArgs.Emoji == emojis.Stop &&
 							 req is PaginationRequest { PaginationDeletion: PaginationDeletion.DeleteMessage })

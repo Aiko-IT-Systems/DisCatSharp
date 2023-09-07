@@ -106,7 +106,7 @@ internal static class RegistrationWorker
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 						action.DmPermission = command.DmPermission ?? true;
 						action.IsNsfw = command.IsNsfw;
-					action.AllowedContexts = command.AllowedContexts;
+						action.AllowedContexts = command.AllowedContexts;
 					}).ConfigureAwait(false);
 
 					commands.Add(discordBackendCommand);

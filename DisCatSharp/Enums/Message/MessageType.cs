@@ -225,5 +225,20 @@ public enum MessageType : int
 	/// <summary>
 	/// Message indicating a false alarm was reported.
 	/// </summary>
-	GuildIncidentReportFalseAlarm = 39
+	GuildIncidentReportFalseAlarm = 39,
+
+	/// <summary>
+	/// Message prompting to "revive a dead chat".
+	/// </summary>
+	GuildDeadchatRevivePrompt = 40,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	CustomGift = 41,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	GuildGamingStatsPrompt = 42
 }

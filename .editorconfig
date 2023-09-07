@@ -20,12 +20,10 @@ end_of_line = crlf
 insert_final_newline = true
 dotnet_style_readonly_field=true:suggestion
 
-# Project files
-[*.{csproj,targets,yml}]
-indent_size = 2
-
-[NuGet.config]
-indent_size = 2
+[*.yml]
+intend_size = 2
+indent_style = space
+insert_final_newline = false
 
 # Solution files
 [*.sln]

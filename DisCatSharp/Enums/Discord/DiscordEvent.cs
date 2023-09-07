@@ -142,7 +142,7 @@ public enum DiscordEvent
 	AutomodRuleDeleted,
 	AutomodActionExecuted,
 	GuildAuditLogEntryCreated,
- 	VoiceChannelStatusUpdated,
+	VoiceChannelStatusUpdated,
 	EntitlementCreated,
 	EntitlementUpdated,
 	EntitlementDeleted

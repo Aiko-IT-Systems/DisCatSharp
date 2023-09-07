@@ -36,5 +36,5 @@ public sealed class RequireReferencedMessageAttribute : CheckBaseAttribute
 	{ }
 
 	public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
-		=> Task.FromResult(help || ctx.Message.ReferencedMessage != null);
+		=> Task.FromResult(help || ctx.Message.ReferencedMessage is not null);
 }

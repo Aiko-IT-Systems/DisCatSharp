@@ -219,9 +219,9 @@ public sealed class DiscordOAuth2Client : IDisposable
 		var responseState = responseQueryDictionary.GetValues("state")?.First();
 		if (!secure)
 			return requestState is not null && responseState is not null &&
-			       int.Parse(requestState.Split("::")[1]) == this.ClientId.GetHashCode() &&
-			       int.Parse(responseState.Split("::")[1]) == this.ClientId.GetHashCode() &&
-			       requestState == responseState;
+				   int.Parse(requestState.Split("::")[1]) == this.ClientId.GetHashCode() &&
+				   int.Parse(responseState.Split("::")[1]) == this.ClientId.GetHashCode() &&
+				   requestState == responseState;
 
 		if (requestState is null || responseState is null)
 			throw new NullReferenceException("State was null");

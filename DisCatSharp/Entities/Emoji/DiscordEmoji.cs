@@ -175,7 +175,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// <param name="e1">First emoji to compare.</param>
 	/// <param name="e2">Second emoji to compare.</param>
 	/// <returns>Whether the two emoji are equal.</returns>
-	public static bool operator ==(DiscordEmoji e1, DiscordEmoji e2)
+	public static bool operator ==(DiscordEmoji? e1, DiscordEmoji? e2)
 	{
 		var o1 = e1 as object;
 		var o2 = e2 as object;
@@ -189,7 +189,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// <param name="e1">First emoji to compare.</param>
 	/// <param name="e2">Second emoji to compare.</param>
 	/// <returns>Whether the two emoji are not equal.</returns>
-	public static bool operator !=(DiscordEmoji e1, DiscordEmoji e2)
+	public static bool operator !=(DiscordEmoji? e1, DiscordEmoji? e2)
 		=> !(e1 == e2);
 
 	/// <summary>
@@ -224,7 +224,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// <param name="unicodeEntity">Unicode entity to create the object from.</param>
 	/// <returns>Create <see cref="DiscordEmoji"/> object.</returns>
 	public static DiscordEmoji FromUnicode(string unicodeEntity)
-		=> FromUnicode(null, unicodeEntity);
+		=> FromUnicode(null!, unicodeEntity);
 
 	/// <summary>
 	/// Attempts to create an emoji object from a unicode entity.
@@ -233,7 +233,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// <param name="unicodeEntity">Unicode entity to create the object from.</param>
 	/// <param name="emoji">Resulting <see cref="DiscordEmoji"/> object.</param>
 	/// <returns>Whether the operation was successful.</returns>
-	public static bool TryFromUnicode(BaseDiscordClient client, string unicodeEntity, out DiscordEmoji emoji)
+	public static bool TryFromUnicode(BaseDiscordClient client, string unicodeEntity, out DiscordEmoji? emoji)
 	{
 		// this is a round-trip operation because of FE0F inconsistencies.
 		// through this, the inconsistency is normalized.
@@ -256,7 +256,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// <param name="emoji">Resulting <see cref="DiscordEmoji"/> object.</param>
 	/// <returns>Whether the operation was successful.</returns>
 	public static bool TryFromUnicode(string unicodeEntity, out DiscordEmoji emoji)
-		=> TryFromUnicode(null, unicodeEntity, out emoji);
+		=> TryFromUnicode(null!, unicodeEntity, out emoji);
 
 	/// <summary>
 	/// Creates an emoji object from a guild emote.
@@ -339,7 +339,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// <param name="name">Name of the emote to find, including colons (eg. :thinking:).</param>
 	/// <param name="emoji">Resulting <see cref="DiscordEmoji"/> object.</param>
 	/// <returns>Whether the operation was successful.</returns>
-	public static bool TryFromName(BaseDiscordClient client, string name, out DiscordEmoji emoji)
+	public static bool TryFromName(BaseDiscordClient client, string name, out DiscordEmoji? emoji)
 		=> TryFromName(client, name, true, out emoji);
 
 	/// <summary>
@@ -352,7 +352,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// <param name="includeGuilds">Should guild emojis be included in the search.</param>
 	/// <param name="emoji">Resulting <see cref="DiscordEmoji"/> object.</param>
 	/// <returns>Whether the operation was successful.</returns>
-	public static bool TryFromName(BaseDiscordClient client, string name, bool includeGuilds, out DiscordEmoji emoji)
+	public static bool TryFromName(BaseDiscordClient client, string name, bool includeGuilds, out DiscordEmoji? emoji)
 	{
 		if (client == null)
 			throw new ArgumentNullException(nameof(client), "Client cannot be null.");

@@ -149,7 +149,7 @@ public class InteractivityExtension : BaseExtension
 	/// <returns>A <see cref="InteractivityResult{T}"/> with the result of button that was pressed, if any.</returns>
 	/// <exception cref="InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
 	/// <exception cref="ArgumentException">Thrown when the message does not contain a button with the specified Id, or any buttons at all.</exception>
-																															public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, IEnumerable<DiscordButtonComponent> buttons, CancellationToken token)
+	public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, IEnumerable<DiscordButtonComponent> buttons, CancellationToken token)
 	{
 		if (message.Author != this.Client.CurrentUser)
 			throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
@@ -178,8 +178,8 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="customId">The custom id of the modal to wait for.</param>
 	/// <param name="timeoutOverride">Override the timeout period specified in <see cref="InteractivityConfiguration"/>.</param>
 	/// <returns>A <see cref="InteractivityResult{T}"/> with the result of the modal.</returns>
-		public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForModalAsync(string customId, TimeSpan? timeoutOverride = null)
-			=> this.WaitForModalAsync(customId, this.GetCancellationToken(timeoutOverride));	
+	public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForModalAsync(string customId, TimeSpan? timeoutOverride = null)
+		=> this.WaitForModalAsync(customId, this.GetCancellationToken(timeoutOverride));
 
 	/// <summary>
 	/// Waits for a user modal submit.

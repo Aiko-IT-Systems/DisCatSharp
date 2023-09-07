@@ -133,7 +133,7 @@ internal static class ApplicationCommandEqualityChecks
 	internal static bool DeepEqual(DiscordApplicationCommand source, DiscordApplicationCommand target, bool localizationEnabled = false, bool? sDmPerm = null, bool? tDmPerm = null)
 	{
 		var rootCheck = true;
-		rootCheck = source.Name == target.Name && source.Description == target.Description && source.Type == target.Type && source.DefaultMemberPermissions == target.DefaultMemberPermissions && sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw  && source.AllowedContexts == target.AllowedContexts;
+		rootCheck = source.Name == target.Name && source.Description == target.Description && source.Type == target.Type && source.DefaultMemberPermissions == target.DefaultMemberPermissions && sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw && source.AllowedContexts == target.AllowedContexts;
 
 		if (localizationEnabled)
 			rootCheck = rootCheck && source.NameLocalizations == target.NameLocalizations && source.DescriptionLocalizations == target.DescriptionLocalizations;

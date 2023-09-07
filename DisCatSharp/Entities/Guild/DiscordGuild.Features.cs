@@ -449,7 +449,7 @@ public enum GuildFeaturesEnum
 	AutomodDefaultList,
 
 	/// <summary>
-	/// Currently unknown.
+	/// Big funny guild.
 	/// </summary>
 	Bfg,
 

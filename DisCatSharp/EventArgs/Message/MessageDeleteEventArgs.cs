@@ -44,7 +44,7 @@ public class MessageDeleteEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Gets the guild this message belonged to.
 	/// </summary>
-	public DiscordGuild Guild { get; internal set; }
+	public DiscordGuild? Guild { get; internal set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="MessageDeleteEventArgs"/> class.

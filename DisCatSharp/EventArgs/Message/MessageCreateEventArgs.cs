@@ -64,17 +64,17 @@ public class MessageCreateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Gets the collection of mentioned users.
 	/// </summary>
-	public IReadOnlyList<DiscordUser> MentionedUsers { get; internal set; }
+	public IReadOnlyList<DiscordUser>? MentionedUsers { get; internal set; }
 
 	/// <summary>
 	/// Gets the collection of mentioned roles.
 	/// </summary>
-	public IReadOnlyList<DiscordRole> MentionedRoles { get; internal set; }
+	public IReadOnlyList<DiscordRole>? MentionedRoles { get; internal set; }
 
 	/// <summary>
 	/// Gets the collection of mentioned channels.
 	/// </summary>
-	public IReadOnlyList<DiscordChannel> MentionedChannels { get; internal set; }
+	public IReadOnlyList<DiscordChannel>? MentionedChannels { get; internal set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="MessageCreateEventArgs"/> class.

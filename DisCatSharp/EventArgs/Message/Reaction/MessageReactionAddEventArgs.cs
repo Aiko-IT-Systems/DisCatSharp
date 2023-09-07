@@ -59,7 +59,7 @@ public class MessageReactionAddEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Gets the guild in which the reaction was added.
 	/// </summary>
-	public DiscordGuild Guild { get; internal set; }
+	public DiscordGuild? Guild { get; internal set; }
 
 	/// <summary>
 	/// Gets the emoji used for this reaction.

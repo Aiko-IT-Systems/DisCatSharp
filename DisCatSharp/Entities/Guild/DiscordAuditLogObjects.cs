@@ -45,7 +45,7 @@ public abstract class DiscordAuditLogEntry : SnowflakeObject
 	/// <summary>
 	/// Gets the reason defined in the action.
 	/// </summary>
-	public string Reason { get; internal set; }
+	public string? Reason { get; internal set; }
 
 	/// <summary>
 	/// Gets the category under which the action falls.

@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
 
 using DisCatSharp.Attributes;
 
@@ -388,7 +387,7 @@ public enum Permissions : long
 	/// Allows members to interact with the Clyde AI bot.
 	/// </summary>
 	[PermissionString("Use Clyde AI"), DiscordInExperiment]
- 	UseClydeAi = 1L<<47,
+	UseClydeAi = 1L<<47,
 
 	/// <summary>
 	/// Allows members to create and edit voice channel status.

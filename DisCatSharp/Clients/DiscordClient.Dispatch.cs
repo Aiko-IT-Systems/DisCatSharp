@@ -681,7 +681,7 @@ public sealed partial class DiscordClient
 				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Unknown event: {name}\npayload: {payload}", payload.EventName, dat.ToString(Formatting.Indented));
 				break;
 
-			#endregion
+				#endregion
 		}
 	}
 
@@ -1314,7 +1314,7 @@ public sealed partial class DiscordClient
 				}
 			};
 
-			var dataList = await guild.ProcessAuditLog(workaroundAuditLogEntryList).ConfigureAwait(false);
+			var dataList = await guild.ProcessAuditLogAsync(workaroundAuditLogEntryList).ConfigureAwait(false);
 
 			await this._guildAuditLogEntryCreated.InvokeAsync(this, new(this.ServiceProvider) { Guild = guild, AuditLogEntry = dataList[0] }).ConfigureAwait(false);
 		}
@@ -2289,16 +2289,16 @@ public sealed partial class DiscordClient
 	/// <param name="member">The transport member.</param>
 	/// <param name="referenceAuthor">The reference transport user (author).</param>
 	/// <param name="referenceMember">The reference transport member.</param>
-	internal async Task OnMessageCreateEventAsync(DiscordMessage message, TransportUser author, TransportMember member, TransportUser referenceAuthor, TransportMember referenceMember)
+	internal Task OnMessageCreateEventAsync(DiscordMessage message, TransportUser author, TransportMember member, TransportUser referenceAuthor, TransportMember referenceMember)
 	{
 		message.Discord = this;
 		this.PopulateMessageReactionsAndCache(message, author, member);
 		message.PopulateMentions();
 
-		if (message.Channel == null && message.ChannelId == default)
+		if (message.Channel is null && message.ChannelId == default)
 			this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Channel which the last message belongs to is not in cache - cache state might be invalid!");
 
-		if (message.ReferencedMessage != null)
+		if (message.ReferencedMessage is not null)
 		{
 			message.ReferencedMessage.Discord = this;
 			this.PopulateMessageReactionsAndCache(message.ReferencedMessage, referenceAuthor, referenceMember);
@@ -2312,11 +2312,11 @@ public sealed partial class DiscordClient
 		{
 			Message = message,
 
-			MentionedUsers = new ReadOnlyCollection<DiscordUser>(message.MentionedUsersInternal),
+			MentionedUsers = message.MentionedUsersInternal != null ? new ReadOnlyCollection<DiscordUser>(message.MentionedUsersInternal) : null,
 			MentionedRoles = message.MentionedRolesInternal != null ? new ReadOnlyCollection<DiscordRole>(message.MentionedRolesInternal) : null,
 			MentionedChannels = message.MentionedChannelsInternal != null ? new ReadOnlyCollection<DiscordChannel>(message.MentionedChannelsInternal) : null
 		};
-		await this._messageCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._messageCreated.InvokeAsync(this, ea);
 	}
 
 	/// <summary>
@@ -2327,23 +2327,20 @@ public sealed partial class DiscordClient
 	/// <param name="member">The transport member.</param>
 	/// <param name="referenceAuthor">The reference transport user (author).</param>
 	/// <param name="referenceMember">The reference transport member.</param>
-	internal async Task OnMessageUpdateEventAsync(DiscordMessage message, TransportUser author, TransportMember member, TransportUser referenceAuthor, TransportMember referenceMember)
+	internal Task OnMessageUpdateEventAsync(DiscordMessage message, TransportUser author, TransportMember member, TransportUser referenceAuthor, TransportMember referenceMember)
 	{
-		DiscordGuild guild;
-
 		message.Discord = this;
 		var eventMessage = message;
 
-		DiscordMessage oldmsg = null;
+		DiscordMessage? oldmsg = null;
 		if (this.Configuration.MessageCacheSize == 0
 		    || this.MessageCache == null
 		    || !this.MessageCache.TryGet(xm => xm.Id == eventMessage.Id && xm.ChannelId == eventMessage.ChannelId, out message))
 		{
 			message = eventMessage;
 			this.PopulateMessageReactionsAndCache(message, author, member);
-			guild = message.Channel?.Guild;
 
-			if (message.ReferencedMessage != null)
+			if (message.ReferencedMessage is not null)
 			{
 				message.ReferencedMessage.Discord = this;
 				this.PopulateMessageReactionsAndCache(message.ReferencedMessage, referenceAuthor, referenceMember);
@@ -2354,7 +2351,6 @@ public sealed partial class DiscordClient
 		{
 			oldmsg = new(message);
 
-			guild = message.Channel?.Guild;
 			message.EditedTimestampRaw = eventMessage.EditedTimestampRaw;
 			if (eventMessage.Content != null)
 				message.Content = eventMessage.Content;
@@ -2370,11 +2366,11 @@ public sealed partial class DiscordClient
 		{
 			Message = message,
 			MessageBefore = oldmsg,
-			MentionedUsers = new ReadOnlyCollection<DiscordUser>(message.MentionedUsersInternal),
+			MentionedUsers = message.MentionedUsersInternal != null ? new ReadOnlyCollection<DiscordUser>(message.MentionedUsersInternal) : null,
 			MentionedRoles = message.MentionedRolesInternal != null ? new ReadOnlyCollection<DiscordRole>(message.MentionedRolesInternal) : null,
 			MentionedChannels = message.MentionedChannelsInternal != null ? new ReadOnlyCollection<DiscordChannel>(message.MentionedChannelsInternal) : null
 		};
-		await this._messageUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._messageUpdated.InvokeAsync(this, ea);
 	}
 
 	/// <summary>
@@ -2383,18 +2379,17 @@ public sealed partial class DiscordClient
 	/// <param name="messageId">The message id.</param>
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="guildId">The optional guild id.</param>
-	internal async Task OnMessageDeleteEventAsync(ulong messageId, ulong channelId, ulong? guildId)
+	internal Task OnMessageDeleteEventAsync(ulong messageId, ulong channelId, ulong? guildId)
 	{
 		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
 		var guild = this.InternalGetCachedGuild(guildId);
 
 		if (channel == null
-			|| this.Configuration.MessageCacheSize == 0
-			|| this.MessageCache == null
-			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+		    || this.Configuration.MessageCacheSize == 0
+		    || this.MessageCache == null
+		    || !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 			msg = new()
 			{
-
 				Id = messageId,
 				ChannelId = channelId,
 				Discord = this,
@@ -2405,11 +2400,11 @@ public sealed partial class DiscordClient
 
 		var ea = new MessageDeleteEventArgs(this.ServiceProvider)
 		{
-			Channel = channel,
+			Channel = channel!,
 			Message = msg,
 			Guild = guild
 		};
-		await this._messageDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._messageDeleted.InvokeAsync(this, ea);
 	}
 
 	/// <summary>
@@ -2418,7 +2413,7 @@ public sealed partial class DiscordClient
 	/// <param name="messageIds">The message ids.</param>
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="guildId">The optional guild id.</param>
-	internal async Task OnMessageBulkDeleteEventAsync(ulong[] messageIds, ulong channelId, ulong? guildId)
+	internal Task OnMessageBulkDeleteEventAsync(ulong[] messageIds, ulong channelId, ulong? guildId)
 	{
 		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
 
@@ -2426,9 +2421,9 @@ public sealed partial class DiscordClient
 		foreach (var messageId in messageIds)
 		{
 			if (channel == null
-				|| this.Configuration.MessageCacheSize == 0
-				|| this.MessageCache == null
-				|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+			    || this.Configuration.MessageCacheSize == 0
+			    || this.MessageCache == null
+			    || !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 				msg = new()
 				{
 					Id = messageId,
@@ -2440,15 +2435,17 @@ public sealed partial class DiscordClient
 			msgs.Add(msg);
 		}
 
-		var guild = this.InternalGetCachedGuild(guildId);
+		DiscordGuild? guild = null;
+		if (guildId.HasValue)
+			guild = this.InternalGetCachedGuild(guildId);
 
 		var ea = new MessageBulkDeleteEventArgs(this.ServiceProvider)
 		{
-			Channel = channel,
+			Channel = channel!,
 			Messages = new ReadOnlyCollection<DiscordMessage>(msgs),
 			Guild = guild
 		};
-		await this._messagesBulkDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._messagesBulkDeleted.InvokeAsync(this, ea);
 	}
 
 	#endregion
@@ -2468,6 +2465,7 @@ public sealed partial class DiscordClient
 	internal async Task OnMessageReactionAddAsync(ulong userId, ulong messageId, ulong channelId, ulong? guildId, TransportMember mbr, DiscordEmoji emoji, bool isBurst)
 	{
 		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
+
 		var guild = this.InternalGetCachedGuild(guildId);
 		emoji.Discord = this;
 
@@ -2507,7 +2505,7 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			Emoji = emoji,
 			IsBurst = isBurst,
-			Channel = channel,
+			Channel = channel!,
 			ChannelId = channelId
 		};
 		await this._messageReactionAdded.InvokeAsync(this, ea).ConfigureAwait(false);
@@ -2524,20 +2522,14 @@ public sealed partial class DiscordClient
 	/// <param name="isBurst">Whether a burst reaction was added.</param>
 	internal async Task OnMessageReactionRemoveAsync(ulong userId, ulong messageId, ulong channelId, ulong? guildId, DiscordEmoji emoji, bool isBurst)
 	{
-		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId) ?? new DiscordChannel()
-		{
-			Type = ChannelType.Unknown,
-			Id = channelId,
-			GuildId = guildId,
-			Discord = this
-		};
+		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
 
 		emoji.Discord = this;
 
 		if (!this.UserCache.TryGetValue(userId, out var usr))
 			usr = new() { Id = userId, Discord = this };
 
-		if (channel?.Guild != null)
+		if (channel?.Guild != null && channel.GuildId.HasValue)
 			usr = channel.Guild.Members.TryGetValue(userId, out var member)
 				? member
 				: new(usr) { Discord = this, GuildId = channel.GuildId.Value };
@@ -2573,7 +2565,7 @@ public sealed partial class DiscordClient
 			Guild = guild,
 			Emoji = emoji,
 			IsBurst = isBurst,
-			Channel = channel,
+			Channel = channel!,
 			ChannelId = channelId
 		};
 		await this._messageReactionRemoved.InvokeAsync(this, ea).ConfigureAwait(false);
@@ -2586,20 +2578,14 @@ public sealed partial class DiscordClient
 	/// <param name="messageId">The message id.</param>
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="guildId">The optional guild id.</param>
-	internal async Task OnMessageReactionRemoveAllAsync(ulong messageId, ulong channelId, ulong? guildId)
+	internal Task OnMessageReactionRemoveAllAsync(ulong messageId, ulong channelId, ulong? guildId)
 	{
-		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId) ?? new DiscordChannel()
-		{
-			Type = ChannelType.Unknown,
-			Id = channelId,
-			GuildId = guildId,
-			Discord = this
-		};
+		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
 
 		if (channel == null
-			|| this.Configuration.MessageCacheSize == 0
-			|| this.MessageCache == null
-			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+		    || this.Configuration.MessageCacheSize == 0
+		    || this.MessageCache == null
+		    || !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 			msg = new()
 			{
 				Id = messageId,
@@ -2613,10 +2599,11 @@ public sealed partial class DiscordClient
 
 		var ea = new MessageReactionsClearEventArgs(this.ServiceProvider)
 		{
-			Message = msg
+			Message = msg,
+			Guild = guild
 		};
 
-		await this._messageReactionsCleared.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._messageReactionsCleared.InvokeAsync(this, ea);
 	}
 
 	/// <summary>
@@ -2627,15 +2614,15 @@ public sealed partial class DiscordClient
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="partialEmoji">The raw discord emoji.</param>
-	internal async Task OnMessageReactionRemoveEmojiAsync(ulong messageId, ulong channelId, ulong guildId, DiscordEmoji partialEmoji)
+	internal Task OnMessageReactionRemoveEmojiAsync(ulong messageId, ulong channelId, ulong guildId, DiscordEmoji partialEmoji)
 	{
 		var guild = this.InternalGetCachedGuild(guildId);
 		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
 
 		if (channel == null
-			|| this.Configuration.MessageCacheSize == 0
-			|| this.MessageCache == null
-			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+		    || this.Configuration.MessageCacheSize == 0
+		    || this.MessageCache == null
+		    || !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 			msg = new()
 			{
 				Id = messageId,
@@ -2653,13 +2640,13 @@ public sealed partial class DiscordClient
 
 		var ea = new MessageReactionRemoveEmojiEventArgs(this.ServiceProvider)
 		{
-			Channel = channel,
+			Channel = channel!,
 			Guild = guild,
 			Message = msg,
 			Emoji = emoji
 		};
 
-		await this._messageReactionRemovedEmoji.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._messageReactionRemovedEmoji.InvokeAsync(this, ea);
 	}
 
 	#endregion
@@ -2670,40 +2657,40 @@ public sealed partial class DiscordClient
 	/// Handles the stage instance create event.
 	/// </summary>
 	/// <param name="stage">The created stage instance.</param>
-	internal async Task OnStageInstanceCreateEventAsync(DiscordStageInstance stage)
+	internal Task OnStageInstanceCreateEventAsync(DiscordStageInstance stage)
 	{
 		stage.Discord = this;
 
 		var guild = this.InternalGetCachedGuild(stage.GuildId);
 		guild.StageInstancesInternal[stage.Id] = stage;
 
-		await this._stageInstanceCreated.InvokeAsync(this, new(this.ServiceProvider) { StageInstance = stage, Guild = stage.Guild }).ConfigureAwait(false);
+		return this._stageInstanceCreated.InvokeAsync(this, new(this.ServiceProvider) { StageInstance = stage, Guild = stage.Guild });
 	}
 
 	/// <summary>
 	/// Handles the stage instance update event.
 	/// </summary>
 	/// <param name="stage">The updated stage instance.</param>
-	internal async Task OnStageInstanceUpdateEventAsync(DiscordStageInstance stage)
+	internal Task OnStageInstanceUpdateEventAsync(DiscordStageInstance stage)
 	{
 		stage.Discord = this;
 		var guild = this.InternalGetCachedGuild(stage.GuildId);
 		guild.StageInstancesInternal[stage.Id] = stage;
 
-		await this._stageInstanceUpdated.InvokeAsync(this, new(this.ServiceProvider) { StageInstance = stage, Guild = stage.Guild }).ConfigureAwait(false);
+		return this._stageInstanceUpdated.InvokeAsync(this, new(this.ServiceProvider) { StageInstance = stage, Guild = stage.Guild });
 	}
 
 	/// <summary>
 	/// Handles the stage instance delete event.
 	/// </summary>
 	/// <param name="stage">The deleted stage instance.</param>
-	internal async Task OnStageInstanceDeleteEventAsync(DiscordStageInstance stage)
+	internal Task OnStageInstanceDeleteEventAsync(DiscordStageInstance stage)
 	{
 		stage.Discord = this;
 		var guild = this.InternalGetCachedGuild(stage.GuildId);
 		guild.StageInstancesInternal[stage.Id] = stage;
 
-		await this._stageInstanceDeleted.InvokeAsync(this, new(this.ServiceProvider) { StageInstance = stage, Guild = stage.Guild }).ConfigureAwait(false);
+		return this._stageInstanceDeleted.InvokeAsync(this, new(this.ServiceProvider) { StageInstance = stage, Guild = stage.Guild });
 	}
 
 	#endregion
@@ -2928,6 +2915,7 @@ public sealed partial class DiscordClient
 	#endregion
 
 	#region Activities
+
 	/// <summary>
 	/// Dispatches the <see cref="EmbeddedActivityUpdated"/> event.
 	/// </summary>
@@ -2936,8 +2924,8 @@ public sealed partial class DiscordClient
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="jUsers">The users in the activity.</param>
 	/// <param name="appId">The application id.</param>
-	internal async Task OnEmbeddedActivityUpdateAsync(JObject trActivity, DiscordGuild guild, ulong channelId, JArray jUsers, ulong appId)
-		=> await Task.Delay(20).ConfigureAwait(false);
+	internal Task OnEmbeddedActivityUpdateAsync(JObject trActivity, DiscordGuild guild, ulong channelId, JArray jUsers, ulong appId)
+		=> Task.FromResult(false);
 
 	/*{
             try
@@ -2996,8 +2984,7 @@ public sealed partial class DiscordClient
 	/// </summary>
 	/// <param name="rawPresence">The raw presence.</param>
 	/// <param name="rawUser">The raw user.</param>
-
-	internal async Task OnPresenceUpdateEventAsync(JObject rawPresence, JObject rawUser)
+internal Task OnPresenceUpdateEventAsync(JObject rawPresence, JObject rawUser)
 	{
 		var uid = (ulong)rawUser["id"]!;
 		DiscordPresence old = null;
@@ -3045,15 +3032,14 @@ public sealed partial class DiscordClient
 			PresenceBefore = old,
 			PresenceAfter = presence
 		};
-		await this._presenceUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._presenceUpdated.InvokeAsync(this, ea);
 	}
 
 	/// <summary>
 	/// Handles the user settings update event.
 	/// </summary>
 	/// <param name="user">The transport user.</param>
-
-	internal async Task OnUserSettingsUpdateEventAsync(TransportUser user)
+	internal Task OnUserSettingsUpdateEventAsync(TransportUser user)
 	{
 		var usr = new DiscordUser(user) { Discord = this };
 
@@ -3061,15 +3047,14 @@ public sealed partial class DiscordClient
 		{
 			User = usr
 		};
-		await this._userSettingsUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._userSettingsUpdated.InvokeAsync(this, ea);
 	}
 
 	/// <summary>
 	/// Handles the user update event.
 	/// </summary>
 	/// <param name="user">The transport user.</param>
-
-	internal async Task OnUserUpdateEventAsync(TransportUser user)
+	internal Task OnUserUpdateEventAsync(TransportUser user)
 	{
 		var usrOld = new DiscordUser
 		{
@@ -3098,7 +3083,7 @@ public sealed partial class DiscordClient
 			UserAfter = this.CurrentUser,
 			UserBefore = usrOld
 		};
-		await this._userUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._userUpdated.InvokeAsync(this, ea);
 	}
 
 	#endregion
@@ -3109,7 +3094,7 @@ public sealed partial class DiscordClient
 	/// Handles the voice state update event.
 	/// </summary>
 	/// <param name="raw">The raw voice state update object.</param>
-	internal async Task OnVoiceStateUpdateEventAsync(JObject raw)
+	internal Task OnVoiceStateUpdateEventAsync(JObject raw)
 	{
 		var gid = (ulong)raw["guild_id"];
 		var uid = (ulong)raw["user_id"];
@@ -3143,7 +3128,7 @@ public sealed partial class DiscordClient
 			Before = vstateOld,
 			After = vstateNew
 		};
-		await this._voiceStateUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._voiceStateUpdated.InvokeAsync(this, ea);
 	}
 
 	/// <summary>
@@ -3512,65 +3497,65 @@ public sealed partial class DiscordClient
 		await this._entitlementDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
-		/// <summary>
-		/// Handles the typing start event.
-		/// </summary>
-		/// <param name="userId">The user id.</param>
-		/// <param name="channelId">The channel id.</param>
-		/// <param name="channel">The channel.</param>
-		/// <param name="guildId">The optional guild id.</param>
-		/// <param name="started">The time when the user started typing.</param>
-		/// <param name="mbr">The transport member.</param>
-		internal async Task OnTypingStartEventAsync(ulong userId, ulong channelId, DiscordChannel channel, ulong? guildId, DateTimeOffset started, TransportMember mbr)
+	/// <summary>
+	/// Handles the typing start event.
+	/// </summary>
+	/// <param name="userId">The user id.</param>
+	/// <param name="channelId">The channel id.</param>
+	/// <param name="channel">The channel.</param>
+	/// <param name="guildId">The optional guild id.</param>
+	/// <param name="started">The time when the user started typing.</param>
+	/// <param name="mbr">The transport member.</param>
+	internal async Task OnTypingStartEventAsync(ulong userId, ulong channelId, DiscordChannel channel, ulong? guildId, DateTimeOffset started, TransportMember mbr)
+	{
+		if (channel == null)
 		{
-			if (channel == null)
+			channel = new()
 			{
-				channel = new()
-				{
-					Discord = this,
-					Id = channelId,
-					GuildId = guildId ?? default,
-				};
-			}
-
-			var guild = this.InternalGetCachedGuild(guildId);
-			var usr = this.UpdateUser(new() { Id = userId, Discord = this }, guildId, guild, mbr);
-			var ea = new TypingStartEventArgs(this.ServiceProvider)
-			{
-				Channel = channel,
-				User = usr,
-				Guild = guild,
-				StartedAt = started
+				Discord = this,
+				Id = channelId,
+				GuildId = guildId ?? default,
 			};
-			await this._typingStarted.InvokeAsync(this, ea).ConfigureAwait(false);
 		}
 
-		/// <summary>
-		/// Handles the webhooks update.
-		/// </summary>
-		/// <param name="channel">The channel.</param>
-		/// <param name="guild">The guild.</param>
-		internal async Task OnWebhooksUpdateAsync(DiscordChannel channel, DiscordGuild guild)
+		var guild = this.InternalGetCachedGuild(guildId);
+		var usr = this.UpdateUser(new() { Id = userId, Discord = this }, guildId, guild, mbr);
+		var ea = new TypingStartEventArgs(this.ServiceProvider)
 		{
-			var ea = new WebhooksUpdateEventArgs(this.ServiceProvider)
-			{
-				Channel = channel,
-				Guild = guild
-			};
-			await this._webhooksUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
-		}
+			Channel = channel,
+			User = usr,
+			Guild = guild,
+			StartedAt = started
+		};
+		await this._typingStarted.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
 
-		/// <summary>
-		/// Handles all unknown events.
-		/// </summary>
-		/// <param name="payload">The payload.</param>
-		internal async Task OnUnknownEventAsync(GatewayPayload payload)
+	/// <summary>
+	/// Handles the webhooks update.
+	/// </summary>
+	/// <param name="channel">The channel.</param>
+	/// <param name="guild">The guild.</param>
+	internal async Task OnWebhooksUpdateAsync(DiscordChannel channel, DiscordGuild guild)
+	{
+		var ea = new WebhooksUpdateEventArgs(this.ServiceProvider)
 		{
-			var ea = new UnknownEventArgs(this.ServiceProvider) { EventName = payload.EventName, Json = (payload.Data as JObject)?.ToString() };
-			await this._unknownEvent.InvokeAsync(this, ea).ConfigureAwait(false);
-		}
+			Channel = channel,
+			Guild = guild
+		};
+		await this._webhooksUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
 
-		#endregion
+	/// <summary>
+	/// Handles all unknown events.
+	/// </summary>
+	/// <param name="payload">The payload.</param>
+	internal async Task OnUnknownEventAsync(GatewayPayload payload)
+	{
+		var ea = new UnknownEventArgs(this.ServiceProvider) { EventName = payload.EventName, Json = (payload.Data as JObject)?.ToString() };
+		await this._unknownEvent.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
 
-		#endregion
+	#endregion
+
+	#endregion
 }

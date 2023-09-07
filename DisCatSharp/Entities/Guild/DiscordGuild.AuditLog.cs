@@ -51,28 +51,28 @@ public partial class DiscordGuild
 	/// <returns>A collection of requested audit log entries.</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ViewAuditLog"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<IReadOnlyList<DiscordAuditLogEntry>> GetAuditLogsAsync(int? limit = null, DiscordMember byMember = null, AuditLogActionType? actionType = null)
+	public async Task<IReadOnlyList<DiscordAuditLogEntry>> GetAuditLogsAsync(int? limit = null, DiscordMember? byMember = null, AuditLogActionType? actionType = null)
 	{
 		var alrs = new List<AuditLog>();
-		int ac = 1, tc = 0, rmn = 100;
+		int ac = 1, tc = 0;
 		var last = 0ul;
 		while (ac > 0)
 		{
-			rmn = limit != null ? limit.Value - tc : 100;
+			var rmn = limit != null ? limit.Value - tc : 100;
 			rmn = Math.Min(100, rmn);
 			if (rmn <= 0) break;
 
 			var alr = await this.Discord.ApiClient.GetAuditLogsAsync(this.Id, rmn, null, last == 0 ? null : last, byMember?.Id, (int?)actionType).ConfigureAwait(false);
 			ac = alr.Entries.Count;
 			tc += ac;
-			if (ac > 0)
-			{
-				last = alr.Entries[alr.Entries.Count - 1].Id;
-				alrs.Add(alr);
-			}
+			if (ac <= 0)
+				continue;
+
+			last = alr.Entries[^1].Id;
+			alrs.Add(alr);
 		}
 
-		var auditLogResult = await this.ProcessAuditLog(alrs).ConfigureAwait(false);
+		var auditLogResult = await this.ProcessAuditLogAsync(alrs).ConfigureAwait(false);
 		return auditLogResult;
 	}
 
@@ -81,7 +81,7 @@ public partial class DiscordGuild
 	/// </summary>
 	/// <param name="auditLogApiResult">A list of raw audit log objects.</param>
 	/// <returns>The processed audit log list as readonly.</returns>
-	internal async Task<IReadOnlyList<DiscordAuditLogEntry>> ProcessAuditLog(List<AuditLog> auditLogApiResult)
+	internal async Task<IReadOnlyList<DiscordAuditLogEntry>> ProcessAuditLogAsync(List<AuditLog> auditLogApiResult)
 	{
 		List<AuditLogUser> amr = new();
 		if (auditLogApiResult.Any(ar => ar.Users != null && ar.Users.Any()))

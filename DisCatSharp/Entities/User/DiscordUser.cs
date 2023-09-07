@@ -201,7 +201,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Gets the user's avatar url.
 	/// </summary>
 	[JsonIgnore]
-	public string? AvatarUrl
+	public string AvatarUrl
 		=> string.IsNullOrWhiteSpace(this.AvatarHash) ? this.DefaultAvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarHash}.{(this.AvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
 	/// <summary>
@@ -562,20 +562,23 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	/// <param name="obj">Object to compare to.</param>
 	/// <returns>Whether the object is equal to this <see cref="DiscordUser"/>.</returns>
-	public override bool Equals(object obj) => this.Equals(obj as DiscordUser);
+	public override bool Equals(object obj)
+		=> this.Equals(obj as DiscordUser);
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordUser"/> is equal to another <see cref="DiscordUser"/>.
 	/// </summary>
 	/// <param name="e"><see cref="DiscordUser"/> to compare to.</param>
 	/// <returns>Whether the <see cref="DiscordUser"/> is equal to this <see cref="DiscordUser"/>.</returns>
-	public bool Equals(DiscordUser e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
+	public bool Equals(DiscordUser? e)
+		=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
 
 	/// <summary>
 	/// Gets the hash code for this <see cref="DiscordUser"/>.
 	/// </summary>
 	/// <returns>The hash code for this <see cref="DiscordUser"/>.</returns>
-	public override int GetHashCode() => this.Id.GetHashCode();
+	public override int GetHashCode()
+		=> this.Id.GetHashCode();
 
 	/// <summary>
 	/// Gets whether the two <see cref="DiscordUser"/> objects are equal.
@@ -583,7 +586,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <param name="e1">First user to compare.</param>
 	/// <param name="e2">Second user to compare.</param>
 	/// <returns>Whether the two users are equal.</returns>
-	public static bool operator ==(DiscordUser e1, DiscordUser e2)
+	public static bool operator ==(DiscordUser? e1, DiscordUser? e2)
 	{
 		var o1 = e1 as object;
 		var o2 = e2 as object;
@@ -597,7 +600,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <param name="e1">First user to compare.</param>
 	/// <param name="e2">Second user to compare.</param>
 	/// <returns>Whether the two users are not equal.</returns>
-	public static bool operator !=(DiscordUser e1, DiscordUser e2)
+	public static bool operator !=(DiscordUser? e1, DiscordUser? e2)
 		=> !(e1 == e2);
 }
 
@@ -611,11 +614,13 @@ internal class DiscordUserComparer : IEqualityComparer<DiscordUser>
 	/// </summary>
 	/// <param name="x">The first user</param>
 	/// <param name="y">The second user.</param>
-	public bool Equals(DiscordUser x, DiscordUser y) => x.Equals(y);
+	public bool Equals(DiscordUser x, DiscordUser y)
+		=> x.Equals(y);
 
 	/// <summary>
 	/// Gets the hash code.
 	/// </summary>
 	/// <param name="obj">The user.</param>
-	public int GetHashCode(DiscordUser obj) => obj.Id.GetHashCode();
+	public int GetHashCode(DiscordUser obj)
+		=> obj.Id.GetHashCode();
 }

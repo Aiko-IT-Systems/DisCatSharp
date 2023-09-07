@@ -101,7 +101,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// Gets the members avatar URL.
 	/// </summary>
 	[JsonIgnore]
-	public string? GuildAvatarUrl
+	public string GuildAvatarUrl
 		=> string.IsNullOrWhiteSpace(this.GuildAvatarHash) ? this.User.AvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.AVATARS}/{this.GuildAvatarHash}.{(this.GuildAvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
 	/// <summary>
@@ -750,7 +750,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="e"><see cref="DiscordMember"/> to compare to.</param>
 	/// <returns>Whether the <see cref="DiscordMember"/> is equal to this <see cref="DiscordMember"/>.</returns>
-	public bool Equals(DiscordMember e)
+	public bool Equals(DiscordMember? e)
 		=> e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.GuildId == e.GuildId));
 
 	/// <summary>
@@ -773,7 +773,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <param name="e1">First member to compare.</param>
 	/// <param name="e2">Second member to compare.</param>
 	/// <returns>Whether the two members are equal.</returns>
-	public static bool operator ==(DiscordMember e1, DiscordMember e2)
+	public static bool operator ==(DiscordMember? e1, DiscordMember? e2)
 	{
 		var o1 = e1 as object;
 		var o2 = e2 as object;
@@ -787,6 +787,6 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <param name="e1">First member to compare.</param>
 	/// <param name="e2">Second member to compare.</param>
 	/// <returns>Whether the two members are not equal.</returns>
-	public static bool operator !=(DiscordMember e1, DiscordMember e2)
+	public static bool operator !=(DiscordMember? e1, DiscordMember? e2)
 		=> !(e1 == e2);
 }
