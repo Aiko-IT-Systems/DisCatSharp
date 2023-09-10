@@ -53,10 +53,24 @@ public sealed partial class DiscordClient
 {
 	#region Private Fields
 
+	/// <summary>
+	/// Gets the resume gateway url.
+	/// </summary>
 	private string? _resumeGatewayUrl;
+
+	/// <summary>
+	/// Gets the session id.
+	/// </summary>
 	private string? _sessionId;
+
+	/// <summary>
+	/// Gets whether the guild download was completed.
+	/// </summary>
 	private bool _guildDownloadCompleted;
 
+	/// <summary>
+	/// Gets the temp timers.
+	/// </summary>
 	private readonly Dictionary<string, KeyValuePair<TimeoutHandler, Timer>> _tempTimers = new();
 
 	/// <summary>
@@ -116,12 +130,12 @@ public sealed partial class DiscordClient
 			return;
 		}
 
-		/*await this._payloadReceived.InvokeAsync(this, new(this.ServiceProvider)
-		{
-			EventName = payload.EventName,
-			PayloadObject = dat
-		}).ConfigureAwait(false);
-		*/
+		if (this.Configuration.EnableLibraryDeveloperMode)
+			await this._payloadReceived.InvokeAsync(this, new(this.ServiceProvider)
+			{
+				EventName = payload.EventName,
+				PayloadObject = dat
+			}).ConfigureAwait(false);
 
 		#region Default objects
 
