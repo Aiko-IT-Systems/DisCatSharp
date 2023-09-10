@@ -44,8 +44,10 @@ using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp;
 
+// TODO: Rework this shit
+
 /// <summary>
-/// Represents a discord Logger.ent.L
+/// Represents the discord dispatch client.
 /// </summary>
 public sealed partial class DiscordClient
 {
@@ -120,6 +122,7 @@ public sealed partial class DiscordClient
 			PayloadObject = dat
 		}).ConfigureAwait(false);
 		*/
+
 		#region Default objects
 
 		var payloadString = dat.ToString();
@@ -140,9 +143,10 @@ public sealed partial class DiscordClient
 		DiscordEntitlement ent = default;
 		JToken rawMbr = default;
 		var rawRefMsg = dat["referenced_message"]; // TODO: Can we remove this?
+
 		#endregion
 
-		switch (payload.EventName.ToLowerInvariant())
+		switch (payload.EventName?.ToLowerInvariant())
 		{
 			#region Gateway Status
 
@@ -681,7 +685,7 @@ public sealed partial class DiscordClient
 				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Unknown event: {name}\npayload: {payload}", payload.EventName, dat.ToString(Formatting.Indented));
 				break;
 
-				#endregion
+			#endregion
 		}
 	}
 
@@ -3137,7 +3141,7 @@ internal Task OnPresenceUpdateEventAsync(JObject rawPresence, JObject rawUser)
 	/// <param name="endpoint">The new endpoint.</param>
 	/// <param name="token">The new token.</param>
 	/// <param name="guild">The guild.</param>
-	internal async Task OnVoiceServerUpdateEventAsync(string endpoint, string token, DiscordGuild guild)
+	internal Task OnVoiceServerUpdateEventAsync(string endpoint, string token, DiscordGuild guild)
 	{
 		var ea = new VoiceServerUpdateEventArgs(this.ServiceProvider)
 		{
@@ -3145,7 +3149,7 @@ internal Task OnPresenceUpdateEventAsync(JObject rawPresence, JObject rawUser)
 			VoiceToken = token,
 			Guild = guild
 		};
-		await this._voiceServerUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._voiceServerUpdated.InvokeAsync(this, ea);
 	}
 
 	#endregion
