@@ -79,17 +79,6 @@ Automating a user account is against Discord's [Terms of Service](https://dis.gd
 
 ## How can I set a custom status?
 
-If you mean a *true* custom status like this:
-
-![help](/images/faq_01.png)
-
-No, you cannot. Discord does not allow bots to use custom statuses.
-
-<br/>
-However, if you meant an activity like this:
-
-![Bot Presence](/images/faq_02.png)
-
 You can use either of the following
 
 * The overload for [ConnectAsync](xref:DisCatSharp.DiscordClient.ConnectAsync*)(@DisCatSharp.Entities.DiscordActivity, @DisCatSharp.Entities.UserStatus?, [](xref:System.DateTimeOffset)?) which accepts a [DiscordActivity](xref:DisCatSharp.Entities.DiscordActivity).
