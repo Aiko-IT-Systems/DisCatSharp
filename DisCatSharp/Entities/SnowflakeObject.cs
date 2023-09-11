@@ -86,9 +86,17 @@ public abstract class SnowflakeObject : ObservableApiObject, IEquatable<Snowflak
 		=> !(left == right);
 
 	/// <summary>
-	/// Returns a <see langword="string"/> which represents the snowflake object. 
+	/// Determines whether a <see cref="SnowflakeObject"/> is null.
 	/// </summary>
-	/// <returns>A <see langword="string"/> which represents the current snowflake object.</returns>
+	/// <param name="target">The <see cref="SnowflakeObject"/>.</param>
+	/// <returns>Returns whether the current <see cref="NullableSnowflakeObject"/> is null.</returns>
+	public static bool operator !(SnowflakeObject? target)
+		=> target is null;
+
+	/// <summary>
+	/// Returns a <see langword="string"/> which represents the <see cref="SnowflakeObject"/>.
+	/// </summary>
+	/// <returns>A <see langword="string"/> which represents the current <see cref="SnowflakeObject"/>.</returns>
 	public override string ToString()
 		=> $"{this.GetType().Name} (ID: {this.Id})";
 
