@@ -336,4 +336,22 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 	/// <returns>Whether the two roles are not equal.</returns>
 	public static bool operator !=(DiscordRole e1, DiscordRole e2)
 		=> !(e1 == e2);
+
+	/// <summary>
+	/// Determines whether the left <see cref="DiscordRole"/> can moderate the right <see cref="DiscordMember"/>.
+	/// </summary>
+	/// <param name="left">The first <see cref="DiscordRole"/>.</param>
+	/// <param name="right">The second <see cref="DiscordMember"/>.</param>
+	/// <returns><see langword="true"/> if the left role can moderate the right member; otherwise, <see langword="false"/>.</returns>
+	public static bool operator >(DiscordRole? left, DiscordMember? right)
+		=> left is not null && right is not null && !right.IsOwner && left > right.Roles.OrderByDescending(r => r.Position).First();
+
+	/// <summary>
+	/// Determines whether the left <see cref="DiscordMember"/> can be moderated by the right <see cref="DiscordRole"/>.
+	/// </summary>
+	/// <param name="left">The first <see cref="DiscordMember"/>.</param>
+	/// <param name="right">The second <see cref="DiscordRole"/>.</param>
+	/// <returns><see langword="true"/> if the left member can be moderated by the right role; otherwise, <see langword="false"/>.</returns>
+	public static bool operator <(DiscordRole? left, DiscordMember? right)
+		=> left is not null && right is not null && (right.IsOwner || left < right.Roles.OrderByDescending(r => r.Position).First());
 }

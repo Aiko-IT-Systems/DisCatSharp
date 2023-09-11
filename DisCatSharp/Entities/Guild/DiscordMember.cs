@@ -839,4 +839,22 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <returns><see langword="true"/> if the left member can be moderated by the right member; otherwise, <see langword="false"/>.</returns>
 	public static bool operator <(DiscordMember? left, DiscordMember? right)
 		=> left is not null && right is not null && ((!left.IsOwner && right.IsOwner) || left.Roles.OrderByDescending(r => r.Position).First() < right.Roles.OrderByDescending(r => r.Position).First());
+
+	/// <summary>
+	/// Determines whether the left <see cref="DiscordMember"/> can moderate the right <see cref="DiscordRole"/>.
+	/// </summary>
+	/// <param name="left">The first <see cref="DiscordMember"/>.</param>
+	/// <param name="right">The second <see cref="DiscordRole"/>.</param>
+	/// <returns><see langword="true"/> if the left member can moderate the right role; otherwise, <see langword="false"/>.</returns>
+	public static bool operator >(DiscordMember? left, DiscordRole? right)
+		=> left is not null && right is not null && (left.IsOwner || left.Roles.OrderByDescending(r => r.Position).First() > right);
+
+	/// <summary>
+	/// Determines whether the left <see cref="DiscordMember"/> can be moderated by the right <see cref="DiscordRole"/>.
+	/// </summary>
+	/// <param name="left">The first <see cref="DiscordMember"/>.</param>
+	/// <param name="right">The second <see cref="DiscordRole"/>.</param>
+	/// <returns><see langword="true"/> if the left member can be moderated by the right role; otherwise, <see langword="false"/>.</returns>
+	public static bool operator <(DiscordMember? left, DiscordRole? right)
+		=> left is not null && right is not null && !left.IsOwner && left.Roles.OrderByDescending(r => r.Position).First() < right;
 }
