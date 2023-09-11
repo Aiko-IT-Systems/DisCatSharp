@@ -922,18 +922,18 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Creates the guild ban async.
 	/// </summary>
-	/// <param name="guildId">The guild_id.</param>
-	/// <param name="userId">The user_id.</param>
-	/// <param name="deleteMessageDays">The delete_message_days.</param>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="userId">The user id.</param>
+	/// <param name="deleteMessageSeconds">The number of seconds to delete messages for.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task CreateGuildBanAsync(ulong guildId, ulong userId, int deleteMessageDays, string? reason)
+	internal Task CreateGuildBanAsync(ulong guildId, ulong userId, int deleteMessageSeconds, string? reason)
 	{
-		if (deleteMessageDays is < 0 or > 7)
-			throw new ArgumentException("Delete message days must be a number between 0 and 7.", nameof(deleteMessageDays));
+		if (deleteMessageSeconds is < 0 or > 604800)
+			throw new ArgumentException("Delete message seconds must be a number between 0 and 604800.", nameof(deleteMessageSeconds));
 
 		var urlParams = new Dictionary<string, string>
 		{
-			["delete_message_days"] = deleteMessageDays.ToString(CultureInfo.InvariantCulture)
+			["delete_message_seconds"] = deleteMessageSeconds.ToString(CultureInfo.InvariantCulture)
 		};
 
 		var headers = Utilities.GetBaseHeaders();

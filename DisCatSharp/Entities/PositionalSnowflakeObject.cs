@@ -58,7 +58,8 @@ public abstract class PositionalSnowflakeObject : SnowflakeObject
 	/// <param name="right">The second <see cref="PositionalSnowflakeObject"/>.</param>
 	/// <returns><see langword="true"/> if the left one is higher positioned; otherwise, <see langword="false"/>.</returns>
 	public static bool operator >(PositionalSnowflakeObject? left, PositionalSnowflakeObject? right)
-		=> left is not null && right is not null && (left.HighIsLow ? left.Position < right.Position : left.Position > right.Position);
+		=> left is not null && right is not null &&
+		   (left.HighIsLow ? left.Position < right.Position : left.Position > right.Position);
 
 	/// <summary>
 	/// Determines whether the left <see cref="PositionalSnowflakeObject"/> is lower positioned than the right <see cref="PositionalSnowflakeObject"/>.
@@ -67,7 +68,8 @@ public abstract class PositionalSnowflakeObject : SnowflakeObject
 	/// <param name="right">The second <see cref="PositionalSnowflakeObject"/>.</param>
 	/// <returns><see langword="true"/> if the left one is lower positioned; otherwise, <see langword="false"/>.</returns>
 	public static bool operator <(PositionalSnowflakeObject? left, PositionalSnowflakeObject? right)
-		=> left is not null && right is not null && (left.HighIsLow ? left.Position > right.Position : left.Position < right.Position);
+		=> left is not null && right is not null &&
+		   (left.HighIsLow ? left.Position > right.Position : left.Position < right.Position);
 
 	/// <summary>
 	/// Returns a <see langword="string"/> which represents the <see cref="PositionalSnowflakeObject"/>.

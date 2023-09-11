@@ -20,17 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-
 namespace DisCatSharp.Exceptions;
 
-public class DisCatSharpException : Exception
+public sealed class ModerationException : DisCatSharpException
 {
 	/// <summary>
-	/// Represents a <see cref="DisCatSharpException"/>.
+	/// Represents a <see cref="ModerationException"/>.
 	/// </summary>
 	/// <param name="message">The exception message.</param>
-	internal DisCatSharpException(string message)
+	internal ModerationException(string message)
 		: base(message)
 	{ }
 }

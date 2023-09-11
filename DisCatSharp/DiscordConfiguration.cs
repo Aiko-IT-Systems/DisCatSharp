@@ -341,6 +341,12 @@ public sealed class DiscordConfiguration
 	internal string? CustomSentryDsn { get; set; } = null;
 
 	/// <summary>
+	/// Whether to disable moderation checks and its <see cref="ModerationException"/>.
+	/// <para>Keep it enabled if you want DisCatSharp to check locally if the bot can execute a moderation action on the target member.</para>
+	/// </summary>
+	public bool DisableModerationChecks { get; set; } = false;
+
+	/// <summary>
 	/// Creates a new configuration with default values.
 	/// </summary>
 	public DiscordConfiguration()
@@ -398,5 +404,6 @@ public sealed class DiscordConfiguration
 		this.SentryDebug = other.SentryDebug;
 		this.DisableExceptionFilter = other.DisableExceptionFilter;
 		this.CustomSentryDsn = other.CustomSentryDsn;
+		this.DisableModerationChecks = other.DisableModerationChecks;
 	}
 }

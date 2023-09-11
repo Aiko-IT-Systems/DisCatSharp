@@ -176,7 +176,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordRole> Roles
-		=> this.RoleIds.Select(id => this.Guild.GetRole(id)).Where(x => x != null).ToList();
+		=> this.RoleIds.Select(this.Guild.GetRole).Where(x => x != null).ToList();
 
 	/// <summary>
 	/// Gets the color associated with this user's top color-giving role, otherwise 0 (no color).
@@ -255,6 +255,9 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	public DiscordVoiceState? VoiceState
 		=> this.Discord.Guilds[this.GuildId].VoiceStates.TryGetValue(this.Id, out var voiceState) ? voiceState : null;
 
+	/// <summary>
+	/// Gets the guild id.
+	/// </summary>
 	[JsonIgnore]
 	internal ulong GuildId = 0;
 
@@ -458,6 +461,26 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	#endregion
 
 	/// <summary>
+	/// Lets a member bypass the membership requirements.
+	/// </summary>
+	/// <param name="reason">Reason for audit logs.</param>
+	/// <exception cref="ModerationException">Thrown when the bot can not moderate this <see cref="DiscordMember"/>.</exception>
+	public Task VerifyAsync(string? reason = null)
+		=> this.Guild.CurrentMember > this || this.Discord.Configuration.DisableModerationChecks
+			? this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default, default, default, true, this.MemberFlags, reason)
+			: throw new ModerationException("Can not verify this member");
+
+	/// <summary>
+	/// Lets a member not bypass the membership requirements anymore.
+	/// </summary>
+	/// <param name="reason">Reason for audit logs.</param>
+	/// <exception cref="ModerationException">Thrown when the bot can not moderate this <see cref="DiscordMember"/>.</exception>
+	public Task UnverifyAsync(string? reason = null)
+		=> this.Guild.CurrentMember > this || this.Discord.Configuration.DisableModerationChecks
+			? this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default, default, default, false, this.MemberFlags, reason)
+			: throw new ModerationException("Can not unverify this member");
+
+	/// <summary>
 	/// Sets this member's voice mute status.
 	/// </summary>
 	/// <param name="mute">Whether the member is to be muted.</param>
@@ -466,14 +489,11 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task SetMuteAsync(bool mute, string reason = null)
-		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, mute, default, default, default, this.MemberFlags, reason);
-
-	public Task VerifyAsync(string reason = null)
-		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default, default, default, true, this.MemberFlags, reason);
-
-	public Task UnverifyAsync(string reason = null)
-		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default, default, default, false, this.MemberFlags, reason);
+	/// <exception cref="ModerationException">Thrown when the bot can not moderate this <see cref="DiscordMember"/>.</exception>
+	public Task SetMuteAsync(bool mute, string? reason = null)
+		=> this.Guild.CurrentMember > this || this.Discord.Configuration.DisableModerationChecks
+			? this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, mute, default, default, default, this.MemberFlags, reason)
+			: throw new ModerationException("Can not mute this member");
 
 	/// <summary>
 	/// Sets this member's voice deaf status.
@@ -484,8 +504,11 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task SetDeafAsync(bool deaf, string reason = null)
-		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default, deaf, default, default, this.MemberFlags, reason);
+	/// <exception cref="ModerationException">Thrown when the bot can not moderate this <see cref="DiscordMember"/>.</exception>
+	public Task SetDeafAsync(bool deaf, string? reason = null)
+		=> this.Guild.CurrentMember > this || this.Discord.Configuration.DisableModerationChecks
+			? this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default, deaf, default, default, this.MemberFlags, reason)
+			: throw new ModerationException("Can not deaf this member");
 
 	/// <summary>
 	/// Modifies this member.
@@ -503,7 +526,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		if (mdl.VoiceChannel.HasValue && mdl.VoiceChannel.Value != null && mdl.VoiceChannel.Value.Type != ChannelType.Voice && mdl.VoiceChannel.Value.Type != ChannelType.Stage)
 			throw new ArgumentException("Given channel is not a voice or stage channel.", nameof(action));
 
-		if (mdl.Nickname.HasValue && this.Discord.CurrentUser.Id == this.Id)
+		if (mdl.Nickname.HasValue && this.Discord.CurrentUser!.Id == this.Id)
 		{
 			await this.Discord.ApiClient.ModifyCurrentMemberNicknameAsync(this.Guild.Id, mdl.Nickname.Value,
 				mdl.AuditLogReason).ConfigureAwait(false);
@@ -521,8 +544,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <summary>
 	/// Disconnects the member from their current voice channel.
 	/// </summary>
-	public async Task DisconnectFromVoiceAsync()
-		=> await this.ModifyAsync(x => x.VoiceChannel = null).ConfigureAwait(false);
+	public Task DisconnectFromVoiceAsync()
+		=> this.Guild.CurrentMember > this
+			? this.ModifyAsync(x => x.VoiceChannel = null)
+			: throw new ModerationException("Can not disconnect this member");
 
 	/// <summary>
 	/// Adds a timeout to a member.
@@ -533,8 +558,13 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task TimeoutAsync(DateTimeOffset until, string reason = null)
-		=> until.Subtract(DateTimeOffset.UtcNow).Days > 28 ? throw new ArgumentException("Timeout can not be longer than 28 days") : this.Discord.ApiClient.ModifyTimeoutAsync(this.Guild.Id, this.Id, until, reason);
+	/// <exception cref="ModerationException">Thrown when the bot can not moderate this <see cref="DiscordMember"/>.</exception>
+	public Task TimeoutAsync(DateTimeOffset until, string? reason = null)
+		=> until.Subtract(DateTimeOffset.UtcNow).Days > 28
+			? throw new ArgumentException("Timeout can not be longer than 28 days")
+			: this.Guild.CurrentMember > this || this.Discord.Configuration.DisableModerationChecks
+				? this.Discord.ApiClient.ModifyTimeoutAsync(this.Guild.Id, this.Id, until, reason)
+				: throw new ModerationException("Can not timeout this member");
 
 	/// <summary>
 	/// Adds a timeout to a member.
@@ -545,7 +575,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task TimeoutAsync(TimeSpan until, string reason = null)
+	/// <exception cref="ModerationException">Thrown when the bot can not moderate this <see cref="DiscordMember"/>.</exception>
+	public Task TimeoutAsync(TimeSpan until, string? reason = null)
 		=> this.TimeoutAsync(DateTimeOffset.UtcNow + until, reason);
 
 	/// <summary>
@@ -557,7 +588,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task TimeoutAsync(DateTime until, string reason = null)
+	/// <exception cref="ModerationException">Thrown when the bot can not moderate this <see cref="DiscordMember"/>.</exception>
+	public Task TimeoutAsync(DateTime until, string? reason = null)
 		=> this.TimeoutAsync(until.ToUniversalTime() - DateTime.UtcNow, reason);
 
 	/// <summary>
@@ -568,8 +600,11 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task RemoveTimeoutAsync(string reason = null)
-		=> this.Discord.ApiClient.ModifyTimeoutAsync(this.Guild.Id, this.Id, null, reason);
+	/// <exception cref="ModerationException">Thrown when the bot can not moderate this <see cref="DiscordMember"/>.</exception>
+	public Task RemoveTimeoutAsync(string? reason = null)
+		=> this.Guild.CurrentMember > this || this.Discord.Configuration.DisableModerationChecks
+			? this.Discord.ApiClient.ModifyTimeoutAsync(this.Guild.Id, this.Id, null, reason)
+			: throw new ModerationException("Can not un-timeout this member");
 
 	/// <summary>
 	/// Grants a role to the member.
@@ -580,7 +615,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task GrantRoleAsync(DiscordRole role, string reason = null)
+	public Task GrantRoleAsync(DiscordRole role, string? reason = null)
 		=> this.Discord.ApiClient.AddGuildMemberRoleAsync(this.Guild.Id, this.Id, role.Id, reason);
 
 	/// <summary>
@@ -592,7 +627,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task RevokeRoleAsync(DiscordRole role, string reason = null)
+	public Task RevokeRoleAsync(DiscordRole role, string? reason = null)
 		=> this.Discord.ApiClient.RemoveGuildMemberRoleAsync(this.Guild.Id, this.Id, role.Id, reason);
 
 	/// <summary>
@@ -604,42 +639,44 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task ReplaceRolesAsync(IEnumerable<DiscordRole> roles, string reason = null)
+	public Task ReplaceRolesAsync(IEnumerable<DiscordRole> roles, string? reason = null)
 		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, default,
 			Optional.Some(roles.Select(xr => xr.Id)), default, default, default, default, this.MemberFlags, reason);
 
 	/// <summary>
 	/// Bans this member from their guild.
 	/// </summary>
-	/// <param name="deleteMessageDays">How many days to remove messages from.</param>
+	/// <param name="deleteMessageSeconds">Number of seconds to delete messages for, between <c>0</c> and <c>604800</c> (7 days).</param>
 	/// <param name="reason">Reason for audit logs.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task BanAsync(int deleteMessageDays = 0, string reason = null)
-		=> this.Guild.BanMemberAsync(this, deleteMessageDays, reason);
+	/// <exception cref="ModerationException">Thrown when the bot can not moderate this <see cref="DiscordMember"/>.</exception>
+	public Task BanAsync(int deleteMessageSeconds = 0, string? reason = null)
+		=> this.Guild.CurrentMember > this || this.Discord.Configuration.DisableModerationChecks
+			? this.Guild.BanMemberAsync(this, deleteMessageSeconds, reason)
+			: throw new ModerationException("Can not ban this member");
 
 	/// <summary>
 	/// Unbans this member from their guild.
 	/// </summary>
-	/// <exception cref = "Exceptions.UnauthorizedException" > Thrown when the client does not have the<see cref="Permissions.BanMembers"/> permission.</exception>
+	/// <exception cref="UnauthorizedException"> Thrown when the client does not have the<see cref="Permissions.BanMembers"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task UnbanAsync(string reason = null)
+	public Task UnbanAsync(string? reason = null)
 		=> this.Guild.UnbanMemberAsync(this, reason);
 
 	/// <summary>
 	/// Kicks this member from their guild.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <returns></returns>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.KickMembers"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task RemoveAsync(string reason = null)
+	public Task RemoveAsync(string? reason = null)
 		=> this.Discord.ApiClient.RemoveGuildMemberAsync(this.GuildId, this.Id, reason);
 
 	/// <summary>
@@ -659,13 +696,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <param name="channel">The channel the member is currently in.</param>
 	/// <param name="suppress">Toggles the member's suppress state.</param>
 	/// <exception cref="ArgumentException">Thrown when the channel in not a voice channel.</exception>
-	public async Task UpdateVoiceStateAsync(DiscordChannel channel, bool? suppress)
-	{
-		if (channel.Type != ChannelType.Stage)
-			throw new ArgumentException("Voice state can only be updated in a stage channel.");
-
-		await this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, channel.Id, suppress).ConfigureAwait(false);
-	}
+	public Task UpdateVoiceStateAsync(DiscordChannel channel, bool? suppress)
+		=> channel.Type != ChannelType.Stage
+			? throw new ArgumentException("Voice state can only be updated in a stage channel.")
+			: this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, channel.Id, suppress);
 
 	/// <summary>
 	/// Makes the user a speaker.
@@ -675,13 +709,12 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task MakeSpeakerAsync()
+	public Task MakeSpeakerAsync()
 	{
 		var vs = this.VoiceState;
-		if (vs == null || vs.Channel.Type != ChannelType.Stage)
-			throw new ArgumentException("Voice state can only be updated when the user is inside an stage channel.");
-
-		await this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, vs.Channel.Id, false).ConfigureAwait(false);
+		return vs == null || vs.Channel == null || vs.Channel.Type != ChannelType.Stage
+			? throw new ArgumentException("Voice state can only be updated when the user is inside an stage channel.")
+			: this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, vs.Channel.Id, false);
 	}
 
 	/// <summary>
@@ -692,13 +725,12 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task MoveToAudienceAsync()
+	public Task MoveToAudienceAsync()
 	{
 		var vs = this.VoiceState;
-		if (vs == null || vs.Channel.Type != ChannelType.Stage)
-			throw new ArgumentException("Voice state can only be updated when the user is inside an stage channel.");
-
-		await this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, vs.Channel.Id, true).ConfigureAwait(false);
+		return vs == null || vs.Channel == null || vs.Channel.Type != ChannelType.Stage
+			? throw new ArgumentException("Voice state can only be updated when the user is inside an stage channel.")
+			: this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, vs.Channel.Id, true);
 	}
 
 	/// <summary>
@@ -789,4 +821,22 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <returns>Whether the two members are not equal.</returns>
 	public static bool operator !=(DiscordMember? e1, DiscordMember? e2)
 		=> !(e1 == e2);
+
+	/// <summary>
+	/// Determines whether the left <see cref="DiscordMember"/> can moderate the right <see cref="DiscordMember"/>.
+	/// </summary>
+	/// <param name="left">The first <see cref="DiscordMember"/>.</param>
+	/// <param name="right">The second <see cref="DiscordMember"/>.</param>
+	/// <returns><see langword="true"/> if the left member can moderate the right member; otherwise, <see langword="false"/>.</returns>
+	public static bool operator >(DiscordMember? left, DiscordMember? right)
+		=> left is not null && right is not null && ((left.IsOwner && !right.IsOwner) || left.Roles.OrderByDescending(r => r.Position).First() > right.Roles.OrderByDescending(r => r.Position).First());
+
+	/// <summary>
+	/// Determines whether the left <see cref="DiscordMember"/> can be moderated by the right <see cref="DiscordMember"/>.
+	/// </summary>
+	/// <param name="left">The first <see cref="DiscordMember"/>.</param>
+	/// <param name="right">The second <see cref="DiscordMember"/>.</param>
+	/// <returns><see langword="true"/> if the left member can be moderated by the right member; otherwise, <see langword="false"/>.</returns>
+	public static bool operator <(DiscordMember? left, DiscordMember? right)
+		=> left is not null && right is not null && ((!left.IsOwner && right.IsOwner) || left.Roles.OrderByDescending(r => r.Position).First() < right.Roles.OrderByDescending(r => r.Position).First());
 }
