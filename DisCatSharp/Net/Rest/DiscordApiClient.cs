@@ -836,7 +836,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task EnableGuildMfaAsync(ulong guildId, string? reason)
+	internal Task EnableGuildMfaAsync(ulong guildId, string? reason)
 	{
 		var pld = new RestGuildMfaLevelModifyPayload
 		{
@@ -851,7 +851,7 @@ public sealed class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld));
 	}
 
 	/// <summary>
@@ -859,7 +859,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task DisableGuildMfaAsync(ulong guildId, string? reason)
+	internal Task DisableGuildMfaAsync(ulong guildId, string? reason)
 	{
 		var pld = new RestGuildMfaLevelModifyPayload
 		{
@@ -874,7 +874,7 @@ public sealed class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld));
 	}
 
 	/// <summary>
