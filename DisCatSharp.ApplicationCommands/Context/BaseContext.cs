@@ -50,7 +50,7 @@ public class BaseContext
 	/// <summary>
 	/// Gets the guild this interaction was executed in.
 	/// </summary>
-	public DiscordGuild Guild { get; internal set; }
+	public DiscordGuild? Guild { get; internal set; }
 
 	/// <summary>
 	/// Gets the channel this interaction was executed in.
@@ -65,7 +65,7 @@ public class BaseContext
 	/// <summary>
 	/// Gets the member which executed this interaction, or null if the command is in a DM.
 	/// </summary>
-	public DiscordMember Member
+	public DiscordMember? Member
 		=> this.User is DiscordMember member ? member : null;
 
 	/// <summary>
@@ -112,7 +112,7 @@ public class BaseContext
 	/// <summary>
 	/// Gets the guild locale if applicable.
 	/// </summary>
-	public string GuildLocale { get; internal set; }
+	public string? GuildLocale { get; internal set; }
 
 	/// <summary>
 	/// Gets the applications permissions.
@@ -243,5 +243,5 @@ public class BaseContext
 	/// </summary>
 	/// <returns>The original interaction response.</returns>
 	public Task<DiscordMessage> GetOriginalResponseAsync()
-		 => this.Interaction.GetOriginalResponseAsync();
+		=> this.Interaction.GetOriginalResponseAsync();
 }

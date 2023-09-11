@@ -270,7 +270,7 @@ public sealed partial class DiscordClient
 				break;
 			case "auto_moderation_action_execution":
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnAutomodActionExecutedAsync(this.GuildsInternal[gid], dat).ConfigureAwait(false);
+				await this.OnAutomodActionExecutedAsync(this.GuildsInternal![gid], dat).ConfigureAwait(false);
 				break;
 			#endregion
 
