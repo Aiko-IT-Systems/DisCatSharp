@@ -63,7 +63,7 @@ public sealed partial class DiscordClient
 	/// Gets the heartbeat task.
 	/// Currently unused.
 	/// </summary>
-	private Task _heartbeatTask;
+	private Task? _heartbeatTask;
 
 	/// <summary>
 	/// Gets the default discord epoch for its snowflakes.

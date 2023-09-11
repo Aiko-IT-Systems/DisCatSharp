@@ -53,6 +53,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 {
 	#region Internal Fields/Properties
 
+	/// <summary>
+	/// Whether this client is a shard.
+	/// </summary>
 	internal bool IsShard = false;
 
 	/// <summary>
@@ -60,7 +63,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	internal RingBuffer<DiscordMessage>? MessageCache { get; }
 
+	/// <summary>
+	/// Gets the extensions.
+	/// </summary>
 	private List<BaseExtension>? _extensions = new();
+
+	/// <summary>
+	/// Gets the status update.
+	/// </summary>
 	private StatusUpdate? _status;
 
 	/// <summary>
@@ -71,6 +81,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	#endregion
 
 	#region Public Fields/Properties
+
 	/// <summary>
 	/// Gets the gateway protocol version.
 	/// </summary>
@@ -110,6 +121,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <see cref="GuildAvailable"/> or <see cref="GuildDownloadCompleted"/> events haven't been fired yet)
 	/// </summary>
 	public override IReadOnlyDictionary<ulong, DiscordGuild>? Guilds { get; }
+
+	/// <summary>
+	/// Gets the internal guild list.
+	/// </summary>
 	internal ConcurrentDictionary<ulong, DiscordGuild>? GuildsInternal = new();
 
 	/// <summary>
@@ -118,6 +133,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public int Ping
 		=> Volatile.Read(ref this._ping);
 
+	/// <summary>
+	/// Gets the current ping.
+	/// </summary>
 	private int _ping;
 
 	/// <summary>
@@ -126,7 +144,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public IReadOnlyDictionary<ulong, DiscordPresence> Presences
 		=> this._presencesLazy.Value;
 
-	internal Dictionary<ulong, DiscordPresence> PresencesInternal = new();
+	/// <summary>
+	/// Gets the internal presences.
+	/// </summary>
+	internal readonly Dictionary<ulong, DiscordPresence> PresencesInternal = new();
+
+	/// <summary>
+	/// Gets the internal presences lazy.
+	/// </summary>
 	private Lazy<IReadOnlyDictionary<ulong, DiscordPresence>> _presencesLazy;
 
 	/// <summary>
@@ -135,8 +160,16 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public IReadOnlyDictionary<string, DiscordActivity> EmbeddedActivities
 		=> this._embeddedActivitiesLazy.Value;
 
-	internal Dictionary<string, DiscordActivity> EmbeddedActivitiesInternal = new();
+	/// <summary>
+	/// Gets the internal embedded activities.
+	/// </summary>
+	internal readonly Dictionary<string, DiscordActivity> EmbeddedActivitiesInternal = new();
+
+	/// <summary>
+	/// Gets the embedded activities lazy.
+	/// </summary>
 	private Lazy<IReadOnlyDictionary<string, DiscordActivity>> _embeddedActivitiesLazy;
+
 	#endregion
 
 	#region Constructor/Internal Setup
@@ -152,13 +185,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		{
 			var intents = this.Configuration.Intents;
 			this.MessageCache = intents.HasIntent(DiscordIntents.GuildMessages) || intents.HasIntent(DiscordIntents.DirectMessages)
-					? new RingBuffer<DiscordMessage>(this.Configuration.MessageCacheSize)
-					: null;
+				? new RingBuffer<DiscordMessage>(this.Configuration.MessageCacheSize)
+				: null;
 		}
 
 		this.InternalSetup();
 
-		this.Guilds = new ReadOnlyConcurrentDictionary<ulong, DiscordGuild>(this.GuildsInternal);
+		if (this.GuildsInternal != null)
+			this.Guilds = new ReadOnlyConcurrentDictionary<ulong, DiscordGuild>(this.GuildsInternal);
 	}
 
 	/// <summary>
@@ -257,7 +291,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._entitlementUpdated = new("ENTITLEMENT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._entitlementDeleted = new("ENTITLEMENT_DELETED", EventExecutionLimit, this.EventErrorHandler);
 
-		this.GuildsInternal.Clear();
+		this.GuildsInternal?.Clear();
 
 		this._presencesLazy = new(() => new ReadOnlyDictionary<ulong, DiscordPresence>(this.PresencesInternal));
 		this._embeddedActivitiesLazy = new(() => new ReadOnlyDictionary<string, DiscordActivity>(this.EmbeddedActivitiesInternal));
@@ -274,7 +308,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public void AddExtension(BaseExtension ext)
 	{
 		ext.Setup(this);
-		this._extensions.Add(ext);
+		this._extensions?.Add(ext);
 	}
 
 	/// <summary>
@@ -283,7 +317,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <typeparam name="T">The type of extension to retrieve.</typeparam>
 	/// <returns>The requested extension.</returns>
 	public T? GetExtension<T>() where T : BaseExtension
-		=> this._extensions.FirstOrDefault(x => x.GetType() == typeof(T)) as T;
+		=> this._extensions?.FirstOrDefault(x => x.GetType() == typeof(T)) as T;
 
 	#endregion
 
@@ -369,11 +403,11 @@ public sealed partial class DiscordClient : BaseDiscordClient
 					w *= 2;
 			}
 
-		if (!s && cex != null)
-		{
-			this._connectionLock.Set();
-			throw new("Could not connect to Discord.", cex);
-		}
+		if (s || cex == null)
+			return;
+
+		this._connectionLock.Set();
+		throw new("Could not connect to Discord.", cex);
 
 		// non-closure, hence args
 		static void FailConnection(ManualResetEventSlim? cl) =>
@@ -1208,6 +1242,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	#endregion
 
 	#region Internal Caching Methods
+
 	/// <summary>
 	/// Gets the internal cached threads.
 	/// </summary>
@@ -1583,11 +1618,13 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			this.MessageCache?.Add(message);
 	}
 
-
 	#endregion
 
 	#region Disposal
 
+	/// <summary>
+	/// Disposes the client.
+	/// </summary>
 	~DiscordClient()
 	{
 		this.Dispose();
@@ -1596,7 +1633,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	/// Whether the client is disposed.
 	/// </summary>
-
 	private bool _disposed;
 
 	/// <summary>
@@ -1625,7 +1661,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			this._cancelTokenSource?.Cancel();
 			this._cancelTokenSource?.Dispose();
 		}
-		catch { }
+		catch
+		{ }
 
 		this.GuildsInternal = null;
 		this._heartbeatTask = null;

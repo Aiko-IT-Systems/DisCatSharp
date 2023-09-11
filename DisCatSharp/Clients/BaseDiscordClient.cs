@@ -354,7 +354,7 @@ public abstract class BaseDiscordClient : IDisposable
 			app.Members = new(new[] { new DiscordUser(transportApplication.Owner) });
 			app.Team = null;
 			app.TeamName = null;
-			app.Owner = new DiscordUser(transportApplication.Owner);
+			app.Owner = new(transportApplication.Owner);
 		}
 		else
 		{

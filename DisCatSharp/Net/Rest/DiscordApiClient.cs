@@ -2457,7 +2457,6 @@ public sealed class DiscordApiClient
 	/// Gets the guild channels async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
-
 	internal async Task<IReadOnlyList<DiscordChannel>> GetGuildChannelsAsync(ulong guildId)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.CHANNELS}";
@@ -2479,18 +2478,23 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="channelId">The voice channel id.</param>
 	/// <param name="status">The status.</param>
-	internal Task ModifyVoiceChannelStatusAsync(ulong channelId, string? status)
+	/// <param name="reason">The reason.</param>
+	internal Task ModifyVoiceChannelStatusAsync(ulong channelId, string? status, string? reason)
 	{
 		var pld = new RestVoiceChannelStatusModifyPayload
 		{
 			Status = status
 		};
 
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.VOICE_STATUS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { channel_id = channelId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld));
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld));
 	}
 
 	/// <summary>
@@ -2511,11 +2515,12 @@ public sealed class DiscordApiClient
 			SendStartNotification = sendStartNotification
 		};
 
-		var route = $"{Endpoints.STAGE_INSTANCES}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { }, out var path);
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
 			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.STAGE_INSTANCES}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);

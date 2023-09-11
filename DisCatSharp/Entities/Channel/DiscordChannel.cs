@@ -1007,7 +1007,6 @@ public class DiscordChannel : PositionalSnowflakeObject, IEquatable<DiscordChann
 	public Task<DiscordInvite> CreateInviteAsync(int maxAge = 86400, int maxUses = 0, bool temporary = false, bool unique = false, TargetType? targetType = null, ulong? targetApplicationId = null, ulong? targetUser = null, string? reason = null)
 		=> this.Discord.ApiClient.CreateChannelInviteAsync(this.Id, maxAge, maxUses, targetType, targetApplicationId, targetUser, temporary, unique, reason);
 
-
 	#region Voice Channel
 
 	/// <summary>
@@ -1017,9 +1016,8 @@ public class DiscordChannel : PositionalSnowflakeObject, IEquatable<DiscordChann
 	/// <exception cref="NotFoundException">Thrown when the voice channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	[DiscordInExperiment("Voice channel statuses are currently in experiment.")]
-	public Task SetVoiceChannelStatusAsync(string status)
-		=> this.Type != ChannelType.Voice ? throw new NotSupportedException("Cannot execute this request on a non-voice channel.") : this.Discord.ApiClient.ModifyVoiceChannelStatusAsync(this.Id, status);
+	public Task SetVoiceChannelStatusAsync(string status, string? reason = null)
+		=> this.Type != ChannelType.Voice ? throw new NotSupportedException("Cannot execute this request on a non-voice channel.") : this.Discord.ApiClient.ModifyVoiceChannelStatusAsync(this.Id, status, reason);
 
 	/// <summary>
 	/// Removes a voice channels status.
@@ -1027,9 +1025,8 @@ public class DiscordChannel : PositionalSnowflakeObject, IEquatable<DiscordChann
 	/// <exception cref="NotFoundException">Thrown when the voice channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	[DiscordInExperiment("Voice channel statuses are currently in experiment.")]
 	public Task RemoveVoiceChannelStatusAsync(string? reason = null)
-		=> this.Type != ChannelType.Voice ? throw new NotSupportedException("Cannot execute this request on a non-voice channel.") : this.Discord.ApiClient.ModifyVoiceChannelStatusAsync(this.Id, null);
+		=> this.Type != ChannelType.Voice ? throw new NotSupportedException("Cannot execute this request on a non-voice channel.") : this.Discord.ApiClient.ModifyVoiceChannelStatusAsync(this.Id, null, reason);
 
 	#endregion
 

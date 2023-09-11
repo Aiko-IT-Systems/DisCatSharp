@@ -256,9 +256,11 @@ public sealed partial class DiscordClient
 
 				await this.OnGuildIntegrationsUpdateEventAsync(this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
+
 			#endregion
 
 			#region Guild Automod
+
 			case "auto_moderation_rule_create":
 				await this.OnAutomodRuleCreatedAsync(dat.ToDiscordObject<AutomodRule>()).ConfigureAwait(false);
 				break;
@@ -272,6 +274,7 @@ public sealed partial class DiscordClient
 				gid = (ulong)dat["guild_id"]!;
 				await this.OnAutomodActionExecutedAsync(this.GuildsInternal![gid], dat).ConfigureAwait(false);
 				break;
+
 			#endregion
 
 			#region Guild Ban
