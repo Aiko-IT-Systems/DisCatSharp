@@ -36,5 +36,10 @@ public class AutomodRuleUpdateEventArgs : DiscordEventArgs
 	/// </summary>
 	public AutomodRule Rule { get; internal set; }
 
+	/// <summary>
+	/// Gets the belonging guild.
+	/// </summary>
+	public DiscordGuild Guild { get; internal set; }
+
 	public AutomodRuleUpdateEventArgs(IServiceProvider provider) : base(provider) { }
 }

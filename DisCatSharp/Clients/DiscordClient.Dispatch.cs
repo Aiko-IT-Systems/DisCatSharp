@@ -260,17 +260,17 @@ public sealed partial class DiscordClient
 
 			#region Guild Automod
 			case "auto_moderation_rule_create":
-				await this.OnAutomodRuleCreated(dat.ToDiscordObject<AutomodRule>()).ConfigureAwait(false);
+				await this.OnAutomodRuleCreatedAsync(dat.ToDiscordObject<AutomodRule>()).ConfigureAwait(false);
 				break;
 			case "auto_moderation_rule_update":
-				await this.OnAutomodRuleUpdated(dat.ToDiscordObject<AutomodRule>()).ConfigureAwait(false);
+				await this.OnAutomodRuleUpdatedAsync(dat.ToDiscordObject<AutomodRule>()).ConfigureAwait(false);
 				break;
 			case "auto_moderation_rule_delete":
-				await this.OnAutomodRuleDeleted(dat.ToDiscordObject<AutomodRule>()).ConfigureAwait(false);
+				await this.OnAutomodRuleDeletedAsync(dat.ToDiscordObject<AutomodRule>()).ConfigureAwait(false);
 				break;
 			case "auto_moderation_action_execution":
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnAutomodActionExecuted(this.GuildsInternal[gid], dat).ConfigureAwait(false);
+				await this.OnAutomodActionExecutedAsync(this.GuildsInternal[gid], dat).ConfigureAwait(false);
 				break;
 			#endregion
 
@@ -714,7 +714,7 @@ public sealed partial class DiscordClient
 	/// </summary>
 	/// <param name="ready">The ready payload.</param>
 	/// <param name="rawGuilds">The raw guilds.</param>
-	internal async Task OnReadyEventAsync(ReadyPayload ready, JArray rawGuilds)
+	internal Task OnReadyEventAsync(ReadyPayload ready, JArray rawGuilds)
 	{
 		//ready.CurrentUser.Discord = this;
 
@@ -733,7 +733,7 @@ public sealed partial class DiscordClient
 		this._resumeGatewayUrl = ready.ResumeGatewayUrl;
 		var rawGuildIndex = rawGuilds.ToDictionary(xt => (ulong)xt["id"], xt => (JObject)xt);
 
-		this.GuildsInternal.Clear();
+		this.GuildsInternal?.Clear();
 		foreach (var guild in ready.Guilds)
 		{
 			guild.Discord = this;
@@ -813,7 +813,7 @@ public sealed partial class DiscordClient
 			this.GuildsInternal[guild.Id] = guild;
 		}
 
-		await this._ready.InvokeAsync(this, new(this.ServiceProvider)).ConfigureAwait(false);
+		return this._ready.InvokeAsync(this, new(this.ServiceProvider));
 	}
 
 	/// <summary>
@@ -833,7 +833,7 @@ public sealed partial class DiscordClient
 	/// Handles the channel create event.
 	/// </summary>
 	/// <param name="channel">The channel.</param>
-	internal async Task OnChannelCreateEventAsync(DiscordChannel channel)
+	internal Task OnChannelCreateEventAsync(DiscordChannel channel)
 	{
 		channel.Initialize(this);
 
@@ -844,7 +844,7 @@ public sealed partial class DiscordClient
                 await this.RefreshChannelsAsync(channel.Guild.Id);
             }*/
 
-		await this._channelCreated.InvokeAsync(this, new(this.ServiceProvider) { Channel = channel, Guild = channel.Guild }).ConfigureAwait(false);
+		return this._channelCreated.InvokeAsync(this, new(this.ServiceProvider) { Channel = channel, Guild = channel.Guild });
 	}
 
 	/// <summary>
@@ -939,6 +939,7 @@ public sealed partial class DiscordClient
 				channelNew.DefaultReactionEmoji = null;
 				channelNew.DefaultSortOrder = null;
 			}
+
 			channelOld.Initialize(this);
 			channelNew.Initialize(this);
 
@@ -1006,7 +1007,7 @@ public sealed partial class DiscordClient
 	/// <param name="guildId">The optional guild id.</param>
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="lastPinTimestamp">The optional last pin timestamp.</param>
-	internal async Task OnChannelPinsUpdateAsync(ulong? guildId, ulong channelId, DateTimeOffset? lastPinTimestamp)
+	internal Task OnChannelPinsUpdateAsync(ulong? guildId, ulong channelId, DateTimeOffset? lastPinTimestamp)
 	{
 		var guild = this.InternalGetCachedGuild(guildId);
 		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
@@ -1017,7 +1018,7 @@ public sealed partial class DiscordClient
 			Channel = channel,
 			LastPinTimestamp = lastPinTimestamp
 		};
-		await this._channelPinsUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._channelPinsUpdated.InvokeAsync(this, ea);
 	}
 
 	/// <summary>
@@ -1026,7 +1027,7 @@ public sealed partial class DiscordClient
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="status">The optional status.</param>
-	internal async Task OnVoiceChannelStatusUpdateAsync(ulong guildId, ulong channelId, string? status)
+	internal Task OnVoiceChannelStatusUpdateAsync(ulong guildId, ulong channelId, string? status)
 	{
 		var guild = this.InternalGetCachedGuild(guildId);
 		var channel = this.InternalGetCachedChannel(channelId);
@@ -1037,7 +1038,7 @@ public sealed partial class DiscordClient
 			Channel = channel,
 			Status = status
 		};
-		await this._voiceChannelStatusUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._voiceChannelStatusUpdated.InvokeAsync(this, ea);
 	}
 
 	#endregion
@@ -1423,42 +1424,45 @@ public sealed partial class DiscordClient
 	/// Handles the created rule.
 	/// </summary>
 	/// <param name="newRule">The new added rule.</param>
-	internal async Task OnAutomodRuleCreated(AutomodRule newRule)
+	internal Task OnAutomodRuleCreatedAsync(AutomodRule newRule)
 	{
 		var sea = new AutomodRuleCreateEventArgs(this.ServiceProvider)
 		{
-			Rule = newRule
+			Rule = newRule,
+			Guild = this.GuildsInternal![newRule.GuildId]
 		};
 
-		await this._automodRuleCreated.InvokeAsync(this, sea).ConfigureAwait(false);
+		return this._automodRuleCreated.InvokeAsync(this, sea);
 	}
 
 	/// <summary>
 	/// Handles the updated rule.
 	/// </summary>
 	/// <param name="updatedRule">The updated rule.</param>
-	internal async Task OnAutomodRuleUpdated(AutomodRule updatedRule)
+	internal Task OnAutomodRuleUpdatedAsync(AutomodRule updatedRule)
 	{
 		var sea = new AutomodRuleUpdateEventArgs(this.ServiceProvider)
 		{
-			Rule = updatedRule
+			Rule = updatedRule,
+			Guild = this.GuildsInternal![updatedRule.GuildId]
 		};
 
-		await this._automodRuleUpdated.InvokeAsync(this, sea).ConfigureAwait(false);
+		return this._automodRuleUpdated.InvokeAsync(this, sea);
 	}
 
 	/// <summary>
 	/// Handles the deleted rule.
 	/// </summary>
 	/// <param name="deletedRule">The deleted rule.</param>
-	internal async Task OnAutomodRuleDeleted(AutomodRule deletedRule)
+	internal Task OnAutomodRuleDeletedAsync(AutomodRule deletedRule)
 	{
 		var sea = new AutomodRuleDeleteEventArgs(this.ServiceProvider)
 		{
-			Rule = deletedRule
+			Rule = deletedRule,
+			Guild = this.GuildsInternal![deletedRule.GuildId]
 		};
 
-		await this._automodRuleDeleted.InvokeAsync(this, sea).ConfigureAwait(false);
+		return this._automodRuleDeleted.InvokeAsync(this, sea);
 	}
 
 	/// <summary>
@@ -1466,7 +1470,7 @@ public sealed partial class DiscordClient
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <param name="rawPayload">The raw payload.</param>
-	internal async Task OnAutomodActionExecuted(DiscordGuild guild, JObject rawPayload)
+	internal Task OnAutomodActionExecutedAsync(DiscordGuild guild, JObject rawPayload)
 	{
 		var executedAction = rawPayload["action"].ToObject<AutomodAction>();
 		var ruleId = (ulong)rawPayload["rule_id"];
@@ -1494,7 +1498,7 @@ public sealed partial class DiscordClient
 			MatchedContent = matchedContent
 		};
 
-		await this._automodActionExecuted.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._automodActionExecuted.InvokeAsync(this, ea);
 	}
 
 	#endregion
@@ -3480,39 +3484,39 @@ internal Task OnPresenceUpdateEventAsync(JObject rawPresence, JObject rawUser)
 	/// Handles the entitlement create event.
 	/// </summary>
 	/// <param name="entitlement">The created entitlement</param>
-	internal async Task OnEntitlementCreateAsync(DiscordEntitlement entitlement)
+	internal Task OnEntitlementCreateAsync(DiscordEntitlement entitlement)
 	{
 		var ea = new EntitlementCreateEventArgs(this.ServiceProvider)
 		{
 			Entitlement = entitlement
 		};
-		await this._entitlementCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._entitlementCreated.InvokeAsync(this, ea);
 	}
 
 	/// <summary>
 	/// Handles the entitlement update event.
 	/// </summary>
 	/// <param name="entitlement">The updated entitlement</param>
-	internal async Task OnEntitlementUpdateAsync(DiscordEntitlement entitlement)
+	internal Task OnEntitlementUpdateAsync(DiscordEntitlement entitlement)
 	{
 		var ea = new EntitlementUpdateEventArgs(this.ServiceProvider)
 		{
 			Entitlement = entitlement
 		};
-		await this._entitlementUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._entitlementUpdated.InvokeAsync(this, ea);
 	}
 
 	/// <summary>
 	/// Handles the entitlement delete event.
 	/// </summary>
 	/// <param name="entitlement">The deleted entitlement</param>
-	internal async Task OnEntitlementDeleteAsync(DiscordEntitlement entitlement)
+	internal Task OnEntitlementDeleteAsync(DiscordEntitlement entitlement)
 	{
 		var ea = new EntitlementDeleteEventArgs(this.ServiceProvider)
 		{
 			Entitlement = entitlement
 		};
-		await this._entitlementDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._entitlementDeleted.InvokeAsync(this, ea);
 	}
 
 	/// <summary>
@@ -3524,7 +3528,7 @@ internal Task OnPresenceUpdateEventAsync(JObject rawPresence, JObject rawUser)
 	/// <param name="guildId">The optional guild id.</param>
 	/// <param name="started">The time when the user started typing.</param>
 	/// <param name="mbr">The transport member.</param>
-	internal async Task OnTypingStartEventAsync(ulong userId, ulong channelId, DiscordChannel channel, ulong? guildId, DateTimeOffset started, TransportMember mbr)
+	internal Task OnTypingStartEventAsync(ulong userId, ulong channelId, DiscordChannel channel, ulong? guildId, DateTimeOffset started, TransportMember mbr)
 	{
 		if (channel == null)
 		{
@@ -3545,7 +3549,7 @@ internal Task OnPresenceUpdateEventAsync(JObject rawPresence, JObject rawUser)
 			Guild = guild,
 			StartedAt = started
 		};
-		await this._typingStarted.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._typingStarted.InvokeAsync(this, ea);
 	}
 
 	/// <summary>
@@ -3553,24 +3557,24 @@ internal Task OnPresenceUpdateEventAsync(JObject rawPresence, JObject rawUser)
 	/// </summary>
 	/// <param name="channel">The channel.</param>
 	/// <param name="guild">The guild.</param>
-	internal async Task OnWebhooksUpdateAsync(DiscordChannel channel, DiscordGuild guild)
+	internal Task OnWebhooksUpdateAsync(DiscordChannel channel, DiscordGuild guild)
 	{
 		var ea = new WebhooksUpdateEventArgs(this.ServiceProvider)
 		{
 			Channel = channel,
 			Guild = guild
 		};
-		await this._webhooksUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._webhooksUpdated.InvokeAsync(this, ea);
 	}
 
 	/// <summary>
 	/// Handles all unknown events.
 	/// </summary>
 	/// <param name="payload">The payload.</param>
-	internal async Task OnUnknownEventAsync(GatewayPayload payload)
+	internal Task OnUnknownEventAsync(GatewayPayload payload)
 	{
 		var ea = new UnknownEventArgs(this.ServiceProvider) { EventName = payload.EventName, Json = (payload.Data as JObject)?.ToString() };
-		await this._unknownEvent.InvokeAsync(this, ea).ConfigureAwait(false);
+		return this._unknownEvent.InvokeAsync(this, ea);
 	}
 
 	#endregion

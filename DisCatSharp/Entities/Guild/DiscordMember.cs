@@ -168,6 +168,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<ulong> RoleIdsInternal;
+
 	[JsonIgnore]
 	private readonly Lazy<IReadOnlyList<ulong>> _roleIdsLazy;
 
@@ -755,11 +756,9 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		if (this.Guild.OwnerId == this.Id)
 			return PermissionMethods.FullPerms;
 
-		Permissions perms;
-
 		// assign @everyone permissions
 		var everyoneRole = this.Guild.EveryoneRole;
-		perms = everyoneRole.Permissions;
+		var perms = everyoneRole.Permissions;
 
 		// assign permissions from member's roles (in order)
 		perms |= this.Roles.Aggregate(Permissions.None, (c, role) => c | role.Permissions);

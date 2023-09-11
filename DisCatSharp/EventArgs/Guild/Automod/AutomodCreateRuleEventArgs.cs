@@ -37,6 +37,11 @@ public class AutomodRuleCreateEventArgs : DiscordEventArgs
 	public AutomodRule Rule { get; internal set; }
 
 	/// <summary>
+	/// Gets the belonging guild.
+	/// </summary>
+	public DiscordGuild Guild { get; internal set; }
+
+	/// <summary>
 	/// Initializes a new instance of the <see cref="AutomodRuleCreateEventArgs"/> class.
 	/// </summary>
 	public AutomodRuleCreateEventArgs(IServiceProvider provider) : base(provider) { }

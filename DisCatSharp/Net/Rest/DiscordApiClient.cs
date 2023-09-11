@@ -1623,7 +1623,7 @@ public sealed class DiscordApiClient
 		var ret = DiscordJson.DeserializeObject<AutomodRule>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
-		if (this.Discord is DiscordClient dc) await dc.OnAutomodRuleCreated(ret).ConfigureAwait(false);
+		if (this.Discord is DiscordClient dc) await dc.OnAutomodRuleCreatedAsync(ret).ConfigureAwait(false);
 
 		return ret;
 	}
@@ -1673,7 +1673,7 @@ public sealed class DiscordApiClient
 		var ret = DiscordJson.DeserializeObject<AutomodRule>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
-		if (this.Discord is DiscordClient dc) await dc.OnAutomodRuleUpdated(ret).ConfigureAwait(false);
+		if (this.Discord is DiscordClient dc) await dc.OnAutomodRuleUpdatedAsync(ret).ConfigureAwait(false);
 
 		return ret;
 	}
@@ -1700,7 +1700,7 @@ public sealed class DiscordApiClient
 		var ret = DiscordJson.DeserializeObject<AutomodRule>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
-		if (this.Discord is DiscordClient dc) await dc.OnAutomodRuleDeleted(ret).ConfigureAwait(false);
+		if (this.Discord is DiscordClient dc) await dc.OnAutomodRuleDeletedAsync(ret).ConfigureAwait(false);
 
 		return ret;
 	}
