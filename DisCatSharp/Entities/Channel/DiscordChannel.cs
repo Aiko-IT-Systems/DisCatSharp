@@ -87,6 +87,9 @@ public class DiscordChannel : PositionalSnowflakeObject, IEquatable<DiscordChann
 	[JsonProperty("template", NullValueHandling = NullValueHandling.Ignore)]
 	public string? Template { get; internal set; }
 
+	/// <inheritdoc />
+	internal override bool HighIsLow { get; set; } = true;
+
 	/// <summary>
 	/// Gets the flags of this channel.
 	/// </summary>

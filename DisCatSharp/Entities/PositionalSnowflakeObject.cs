@@ -38,6 +38,12 @@ public abstract class PositionalSnowflakeObject : SnowflakeObject
 	public int Position { get; internal set; }
 
 	/// <summary>
+	/// High position value equals a lower position.
+	/// </summary>
+	[JsonIgnore]
+	internal virtual bool HighIsLow { get; set; }
+
+	/// <summary>
 	/// Initializes a new instance of the <see cref="PositionalSnowflakeObject"/> class.
 	/// </summary>
 	/// <param name="ignored">List of property names to ignore during JSON serialization.</param>
@@ -52,7 +58,7 @@ public abstract class PositionalSnowflakeObject : SnowflakeObject
 	/// <param name="right">The second <see cref="PositionalSnowflakeObject"/>.</param>
 	/// <returns><see langword="true"/> if the left one is higher positioned; otherwise, <see langword="false"/>.</returns>
 	public static bool operator >(PositionalSnowflakeObject? left, PositionalSnowflakeObject? right)
-		=> left is not null && right is not null && left.Position < right.Position;
+		=> left is not null && right is not null && (left.HighIsLow ? left.Position < right.Position : left.Position > right.Position);
 
 	/// <summary>
 	/// Determines whether the left <see cref="PositionalSnowflakeObject"/> is lower positioned than the right <see cref="PositionalSnowflakeObject"/>.
@@ -61,7 +67,7 @@ public abstract class PositionalSnowflakeObject : SnowflakeObject
 	/// <param name="right">The second <see cref="PositionalSnowflakeObject"/>.</param>
 	/// <returns><see langword="true"/> if the left one is lower positioned; otherwise, <see langword="false"/>.</returns>
 	public static bool operator <(PositionalSnowflakeObject? left, PositionalSnowflakeObject? right)
-		=> left is not null && right is not null && left.Position > right.Position;
+		=> left is not null && right is not null && (left.HighIsLow ? left.Position > right.Position : left.Position < right.Position);
 
 	/// <summary>
 	/// Returns a <see langword="string"/> which represents the <see cref="PositionalSnowflakeObject"/>.

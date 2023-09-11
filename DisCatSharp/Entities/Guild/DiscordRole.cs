@@ -59,6 +59,9 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
 	public string? Description { get; internal set; }
 
+	/// <inheritdoc />
+	internal override bool HighIsLow { get; set; } = false;
+
 	/// <summary>
 	/// Gets the color of this role.
 	/// </summary>
