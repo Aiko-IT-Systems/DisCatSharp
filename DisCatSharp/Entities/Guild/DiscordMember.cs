@@ -514,6 +514,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// Modifies this member.
 	/// </summary>
 	/// <param name="action">Action to perform on this member.</param>
+	/// <exception cref="ArgumentException">Thrown if one or more arguments are invalid.</exception>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageNicknames"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -544,6 +545,11 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <summary>
 	/// Disconnects the member from their current voice channel.
 	/// </summary>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MoveMembers"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist or the member is not in a voice channel.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="ModerationException">Thrown when the bot can not moderate this <see cref="DiscordMember"/>.</exception>
 	public Task DisconnectFromVoiceAsync()
 		=> this.Guild.CurrentMember > this
 			? this.ModifyAsync(x => x.VoiceChannel = null)
