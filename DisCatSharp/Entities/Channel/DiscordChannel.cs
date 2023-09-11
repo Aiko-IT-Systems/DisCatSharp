@@ -41,7 +41,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a discord channel.
 /// </summary>
-public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
+public class DiscordChannel : PositionalSnowflakeObject, IEquatable<DiscordChannel>
 {
 	/// <summary>
 	/// Gets ID of the guild to which this channel belongs.
@@ -86,12 +86,6 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	[JsonProperty("template", NullValueHandling = NullValueHandling.Ignore)]
 	public string? Template { get; internal set; }
-
-	/// <summary>
-	/// Gets the position of this channel.
-	/// </summary>
-	[JsonProperty("position", NullValueHandling = NullValueHandling.Ignore)]
-	public int Position { get; internal set; }
 
 	/// <summary>
 	/// Gets the flags of this channel.

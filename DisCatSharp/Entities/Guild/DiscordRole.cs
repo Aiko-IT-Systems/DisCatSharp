@@ -39,7 +39,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a discord role, to which users can be assigned.
 /// </summary>
-public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
+public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 {
 	/// <summary>
 	/// Gets the name of this role.
@@ -74,12 +74,6 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// </summary>
 	[JsonProperty("hoist", NullValueHandling = NullValueHandling.Ignore)]
 	public bool IsHoisted { get; internal set; }
-
-	/// <summary>
-	/// Gets the position of this role in the role hierarchy.
-	/// </summary>
-	[JsonProperty("position", NullValueHandling = NullValueHandling.Ignore)]
-	public int Position { get; internal set; }
 
 	/// <summary>
 	/// Gets the permissions set for this role.
@@ -144,9 +138,15 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 		}
 	}
 
+	/// <summary>
+	/// Gets the guild.
+	/// </summary>
 	[JsonIgnore]
 	internal DiscordGuild? GuildInternal { get; set; }
 
+	/// <summary>
+	/// Gets the guild id.
+	/// </summary>
 	[JsonIgnore]
 	internal ulong GuildId = 0;
 
@@ -323,7 +323,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <returns>Whether the two roles are equal.</returns>
 	public static bool operator ==(DiscordRole e1, DiscordRole e2)
 		=> e1 is null == e2 is null
-		&& ((e1 is null && e2 is null) || e1.Id == e2.Id);
+		   && ((e1 is null && e2 is null) || e1.Id == e2.Id);
 
 	/// <summary>
 	/// Gets whether the two <see cref="DiscordRole"/> objects are not equal.
