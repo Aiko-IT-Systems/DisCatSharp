@@ -465,6 +465,9 @@ public class DiscordChannel : PositionalSnowflakeObject, IEquatable<DiscordChann
 		if (this.Guild == null)
 			throw new InvalidOperationException("Non-guild channels cannot be cloned.");
 
+		if (this.IsThread())
+			throw new InvalidOperationException("Threads cannot be cloned.");
+
 		var ovrs = this.PermissionOverwritesInternal.Select(ovr => new DiscordOverwriteBuilder(ovr)).ToList();
 
 		var bitrate = this.Bitrate;
@@ -477,8 +480,11 @@ public class DiscordChannel : PositionalSnowflakeObject, IEquatable<DiscordChann
 			userLimit = null;
 		}
 
-		if (this.Type == ChannelType.Stage) userLimit = null;
-		if (!this.IsWritable()) perUserRateLimit = Optional.None;
+		if (this.Type == ChannelType.Stage)
+			userLimit = null;
+
+		if (!this.IsWritable())
+			perUserRateLimit = Optional.None;
 
 		return this.Guild.CreateChannelAsync(this.Name, this.Type, this.Parent, this.Topic, bitrate, userLimit, ovrs, this.IsNsfw, perUserRateLimit, this.QualityMode, this.DefaultAutoArchiveDuration, this.Flags, reason);
 	}
@@ -1422,6 +1428,13 @@ public class DiscordChannel : PositionalSnowflakeObject, IEquatable<DiscordChann
 				? throw new ArgumentException("Voice state can only be updated in a stage channel.")
 				: this.Discord.ApiClient.UpdateCurrentUserVoiceStateAsync(this.Guild.Id, this.Id, suppress, requestToSpeakTimestamp);
 
+	/// <summary>
+	/// Uploads a file via gcp.
+	/// </summary>
+	/// <param name="name"></param>
+	/// <param name="stream"></param>
+	/// <param name="description"></param>
+	/// <returns>The upload information.</returns>
 	public async Task<GcpAttachmentUploadInformation> UploadFileAsync(string name, Stream stream, string? description = null)
 	{
 		GcpAttachment attachment = new(name, stream);
@@ -1529,6 +1542,14 @@ public class DiscordChannel : PositionalSnowflakeObject, IEquatable<DiscordChann
 	/// <returns>Whether the <see cref="DiscordChannel"/> is equal to this <see cref="DiscordChannel"/>.</returns>
 	public bool Equals(DiscordChannel? e)
 		=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
+
+	/// <summary>
+	/// Quickly clones a channel.
+	/// </summary>
+	/// <param name="channel">The channel to clone.</param>
+	/// <returns>The cloned channel.</returns>
+	public static DiscordChannel operator ++(DiscordChannel channel)
+		=> channel.CloneAsync().Result;
 
 	/// <summary>
 	/// Gets the hash code for this <see cref="DiscordChannel"/>.
