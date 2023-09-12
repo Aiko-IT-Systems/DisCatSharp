@@ -786,7 +786,7 @@ public partial class DiscordGuild : SnowflakeObject
 	/// <exception cref="NotFoundException">Thrown when the <paramref name="user"/> or <paramref name="accessToken"/> is not found.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task AddMemberAsync(DiscordUser user, string accessToken, string nickname = null, IEnumerable<DiscordRole> roles = null,
+	public Task AddMemberAsync(DiscordUser user, string accessToken, string? nickname = null, IEnumerable<DiscordRole>? roles = null,
 		bool muted = false, bool deaf = false)
 		=> this.Discord.ApiClient.AddGuildMemberAsync(this.Id, user.Id, accessToken, nickname, roles, muted, deaf);
 

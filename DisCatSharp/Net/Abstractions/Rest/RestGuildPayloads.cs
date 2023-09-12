@@ -444,7 +444,7 @@ internal sealed class RestGuildMemberAddPayload : IOAuth2Payload
 	/// Gets or sets the nickname.
 	/// </summary>
 	[JsonProperty("nick", NullValueHandling = NullValueHandling.Ignore)]
-	public string Nickname { get; set; }
+	public string? Nickname { get; set; }
 
 	/// <summary>
 	/// Gets or sets the roles.

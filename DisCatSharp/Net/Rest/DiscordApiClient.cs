@@ -1034,13 +1034,13 @@ public sealed class DiscordApiClient
 	/// <param name="roles">The roles.</param>
 	/// <param name="muted">If true, muted.</param>
 	/// <param name="deafened">If true, deafened.</param>
-	internal async Task<DiscordMember> AddGuildMemberAsync(ulong guildId, ulong userId, string accessToken, string nick,
-		IEnumerable<DiscordRole> roles, bool muted, bool deafened)
+	internal async Task<DiscordMember> AddGuildMemberAsync(ulong guildId, ulong userId, string accessToken, string? nick,
+		IEnumerable<DiscordRole>? roles, bool muted, bool deafened)
 	{
 		var pld = new RestGuildMemberAddPayload
 		{
 			AccessToken = accessToken,
-			Nickname = nick ?? "",
+			Nickname = nick,
 			Roles = roles ?? new List<DiscordRole>(),
 			Deaf = deafened,
 			Mute = muted
@@ -1572,7 +1572,7 @@ public sealed class DiscordApiClient
 	/// <param name="userId">The user_id.</param>
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="suppress">If true, suppress.</param>
-	internal async Task UpdateUserVoiceStateAsync(ulong guildId, ulong userId, ulong channelId, bool? suppress)
+	internal Task UpdateUserVoiceStateAsync(ulong guildId, ulong userId, ulong channelId, bool? suppress)
 	{
 		var pld = new RestGuildUpdateUserVoiceStatePayload { ChannelId = channelId, Suppress = suppress };
 
@@ -1581,8 +1581,8 @@ public sealed class DiscordApiClient
 			out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route,
-			payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route,
+			payload: DiscordJson.SerializeObject(pld));
 	}
 
 	/// <summary>
@@ -1674,7 +1674,8 @@ public sealed class DiscordApiClient
 		var ret = DiscordJson.DeserializeObject<AutomodRule>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
-		if (this.Discord is DiscordClient dc) await dc.OnAutomodRuleCreatedAsync(ret).ConfigureAwait(false);
+		if (this.Discord is DiscordClient dc)
+			await dc.OnAutomodRuleCreatedAsync(ret).ConfigureAwait(false);
 
 		return ret;
 	}
@@ -1726,7 +1727,8 @@ public sealed class DiscordApiClient
 		var ret = DiscordJson.DeserializeObject<AutomodRule>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
-		if (this.Discord is DiscordClient dc) await dc.OnAutomodRuleUpdatedAsync(ret).ConfigureAwait(false);
+		if (this.Discord is DiscordClient dc)
+			await dc.OnAutomodRuleUpdatedAsync(ret).ConfigureAwait(false);
 
 		return ret;
 	}
@@ -1755,7 +1757,8 @@ public sealed class DiscordApiClient
 		var ret = DiscordJson.DeserializeObject<AutomodRule>(res.Response, this.Discord);
 		ret.Discord = this.Discord;
 
-		if (this.Discord is DiscordClient dc) await dc.OnAutomodRuleDeletedAsync(ret).ConfigureAwait(false);
+		if (this.Discord is DiscordClient dc)
+			await dc.OnAutomodRuleDeletedAsync(ret).ConfigureAwait(false);
 
 		return ret;
 	}
@@ -1982,7 +1985,6 @@ public sealed class DiscordApiClient
 
 		var events = new Dictionary<ulong, DiscordScheduledEvent>();
 		var eventsRaw = JsonConvert.DeserializeObject<List<DiscordScheduledEvent>>(res.Response);
-		var guild = this.Discord.Guilds[guildId];
 
 		foreach (var ev in eventsRaw)
 		{

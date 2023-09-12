@@ -109,15 +109,19 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// </summary>
 	[JsonIgnore]
 	public string? CoverImageUrl
-		=> !string.IsNullOrWhiteSpace(this.CoverImageHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.GUILD_EVENTS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.CoverImageHash}.png" : null;
+		=> !string.IsNullOrWhiteSpace(this.CoverImageHash)
+			? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.GUILD_EVENTS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.CoverImageHash}.png"
+			: null;
 
 	/// <summary>
 	/// Gets the scheduled start time of the scheduled event.
 	/// </summary>
 	[JsonIgnore]
 	public DateTimeOffset? ScheduledStartTime
-		=> !string.IsNullOrWhiteSpace(this.ScheduledStartTimeRaw) && DateTimeOffset.TryParse(this.ScheduledStartTimeRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ?
-			dto : null;
+		=> !string.IsNullOrWhiteSpace(this.ScheduledStartTimeRaw) && DateTimeOffset.TryParse(this.ScheduledStartTimeRaw,
+			CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto)
+			? dto
+			: null;
 
 	/// <summary>
 	/// Gets the scheduled start time of the scheduled event as raw string.
@@ -130,8 +134,10 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// </summary>
 	[JsonIgnore]
 	public DateTimeOffset? ScheduledEndTime
-		=> !string.IsNullOrWhiteSpace(this.ScheduledEndTimeRaw) && DateTimeOffset.TryParse(this.ScheduledEndTimeRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ?
-			dto : null;
+		=> !string.IsNullOrWhiteSpace(this.ScheduledEndTimeRaw) && DateTimeOffset.TryParse(this.ScheduledEndTimeRaw,
+			CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto)
+			? dto
+			: null;
 
 	/// <summary>
 	/// Gets the scheduled end time of the scheduled event as raw string.
@@ -180,7 +186,8 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// </summary>
 	internal DiscordScheduledEvent()
 		: base(new() { "sku_ids" })
-	{ }
+	{
+	}
 
 	#region Methods
 
@@ -207,10 +214,16 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 		var coverBase64 = ImageTool.Base64FromStream(mdl.CoverImage);
 
 		var scheduledEndTime = Optional<DateTimeOffset>.None;
-		if (mdl.ScheduledEndTime.HasValue && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.External : this.EntityType == ScheduledEventEntityType.External)
+		if (mdl.ScheduledEndTime.HasValue && mdl.EntityType.HasValue
+			    ? mdl.EntityType == ScheduledEventEntityType.External
+			    : this.EntityType == ScheduledEventEntityType.External)
 			scheduledEndTime = mdl.ScheduledEndTime.Value;
 
-		await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, this.EntityType == ScheduledEventEntityType.External ? new DiscordScheduledEventEntityMetadata(mdl.Location.Value) : null, mdl.Name, mdl.ScheduledStartTime, scheduledEndTime, mdl.Description, mdl.EntityType, mdl.Status, coverBase64, mdl.AuditLogReason).ConfigureAwait(false);
+		await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId,
+			this.EntityType == ScheduledEventEntityType.External
+				? new DiscordScheduledEventEntityMetadata(mdl.Location.Value)
+				: null, mdl.Name, mdl.ScheduledStartTime, scheduledEndTime, mdl.Description, mdl.EntityType, mdl.Status,
+			coverBase64, mdl.AuditLogReason).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -221,7 +234,11 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordScheduledEvent> StartAsync(string? reason = null)
-		=> this.Status == ScheduledEventStatus.Scheduled ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Active, reason).ConfigureAwait(false) : throw new InvalidOperationException("You can only start scheduled events");
+		=> this.Status == ScheduledEventStatus.Scheduled
+			? await this.Discord.ApiClient
+				.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Active, reason)
+				.ConfigureAwait(false)
+			: throw new InvalidOperationException("You can only start scheduled events");
 
 	/// <summary>
 	/// Cancels the current scheduled event.
@@ -232,7 +249,11 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordScheduledEvent> CancelAsync(string? reason = null)
-		=> this.Status == ScheduledEventStatus.Scheduled ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Canceled, reason).ConfigureAwait(false) : throw new InvalidOperationException("You can only cancel scheduled events");
+		=> this.Status == ScheduledEventStatus.Scheduled
+			? await this.Discord.ApiClient
+				.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Canceled, reason)
+				.ConfigureAwait(false)
+			: throw new InvalidOperationException("You can only cancel scheduled events");
 
 	/// <summary>
 	/// Ends the current scheduled event.
@@ -243,7 +264,11 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordScheduledEvent> EndAsync(string? reason = null)
-		=> this.Status == ScheduledEventStatus.Active ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Completed, reason).ConfigureAwait(false) : throw new InvalidOperationException("You can only stop active events");
+		=> this.Status == ScheduledEventStatus.Active
+			? await this.Discord.ApiClient
+				.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Completed, reason)
+				.ConfigureAwait(false)
+			: throw new InvalidOperationException("You can only stop active events");
 
 	/// <summary>
 	/// Gets a list of users RSVP'd to the scheduled event.
@@ -256,8 +281,11 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetUsersAsync(int? limit = null, ulong? before = null, ulong? after = null, bool? withMember = null)
-		=> await this.Discord.ApiClient.GetGuildScheduledEventRspvUsersAsync(this.GuildId, this.Id, limit, before, after, withMember).ConfigureAwait(false);
+	public async Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetUsersAsync(int? limit = null,
+		ulong? before = null, ulong? after = null, bool? withMember = null)
+		=> await this.Discord.ApiClient
+			.GetGuildScheduledEventRspvUsersAsync(this.GuildId, this.Id, limit, before, after, withMember)
+			.ConfigureAwait(false);
 
 	/// <summary>
 	/// Deletes a scheduled event.
@@ -268,7 +296,8 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task DeleteAsync(string? reason = null)
-		=> await this.Discord.ApiClient.DeleteGuildScheduledEventAsync(this.GuildId, this.Id, reason).ConfigureAwait(false);
+		=> await this.Discord.ApiClient.DeleteGuildScheduledEventAsync(this.GuildId, this.Id, reason)
+			.ConfigureAwait(false);
 
 	#endregion
 
@@ -306,7 +335,8 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) &&
+		       ((o1 == null && o2 == null) || e1.Id == e2.Id);
 	}
 
 	/// <summary>
