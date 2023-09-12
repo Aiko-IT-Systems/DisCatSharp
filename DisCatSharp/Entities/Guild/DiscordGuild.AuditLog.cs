@@ -1338,7 +1338,8 @@ public partial class DiscordGuild
 					break;
 
 				default:
-					this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown audit log action type: {Key} - this should be reported to library developers", (int)xac.ActionType);
+					if (this.Discord.Configuration.ReportMissingFields)
+						this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown audit log action type: {Key} - this should be reported to library developers", (int)xac.ActionType);
 					break;
 			}
 
