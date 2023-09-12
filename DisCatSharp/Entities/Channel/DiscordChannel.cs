@@ -28,6 +28,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
@@ -1012,18 +1013,24 @@ public class DiscordChannel : PositionalSnowflakeObject, IEquatable<DiscordChann
 	/// Sets a voice channels status.
 	/// </summary>
 	/// <param name="status">Status of the voice channel.</param>
+	/// <param name="reason">The audit log reason.</param>
 	/// <exception cref="NotFoundException">Thrown when the voice channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotSupportedException">Thrown when this function is called on a non-voice channel.</exception>
+	[RequiresFeature(Features.Override)]
 	public Task SetVoiceChannelStatusAsync(string status, string? reason = null)
 		=> this.Type != ChannelType.Voice ? throw new NotSupportedException("Cannot execute this request on a non-voice channel.") : this.Discord.ApiClient.ModifyVoiceChannelStatusAsync(this.Id, status, reason);
 
 	/// <summary>
 	/// Removes a voice channels status.
 	/// </summary>
+	/// <param name="reason">The audit log reason.</param>
 	/// <exception cref="NotFoundException">Thrown when the voice channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotSupportedException">Thrown when this function is called on a non-voice channel.</exception>
+	[RequiresFeature(Features.Override)]
 	public Task RemoveVoiceChannelStatusAsync(string? reason = null)
 		=> this.Type != ChannelType.Voice ? throw new NotSupportedException("Cannot execute this request on a non-voice channel.") : this.Discord.ApiClient.ModifyVoiceChannelStatusAsync(this.Id, null, reason);
 

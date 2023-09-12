@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
-  <Import Project="../DisCatSharp.Targets/Package.targets" />
-  <Import Project="../DisCatSharp.Targets/NuGet.targets" />
+	<Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
+	<Import Project="../DisCatSharp.Targets/Package.targets" />
+	<Import Project="../DisCatSharp.Targets/NuGet.targets" />
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<OutputType>Library</OutputType>
-	  <Version>10.4.2</Version>
-  </PropertyGroup>
+		<Version>10.4.2</Version>
+	</PropertyGroup>
 
-  <PropertyGroup>
-	<AssemblyName>DisCatSharp.Attributes</AssemblyName>
-	<RootNamespace>DisCatSharp.Attributes</RootNamespace>
-  </PropertyGroup>
-  
-  <PropertyGroup>
-	<PackageId>DisCatSharp.Attributes</PackageId>
-	<Description>
-	  DisCatSharp.Attributes
+	<PropertyGroup>
+		<AssemblyName>DisCatSharp.Attributes</AssemblyName>
+		<RootNamespace>DisCatSharp.Attributes</RootNamespace>
+	</PropertyGroup>
 
-	  Special Attributes for DisCatSharp.
-	</Description>
-	<PackageTags>DisCatSharp</PackageTags>
-  </PropertyGroup>
+	<PropertyGroup>
+		<PackageId>DisCatSharp.Attributes</PackageId>
+		<Description>
+			DisCatSharp.Attributes
+
+			Special Attributes for DisCatSharp.
+		</Description>
+		<PackageTags>DisCatSharp</PackageTags>
+	</PropertyGroup>
 </Project>

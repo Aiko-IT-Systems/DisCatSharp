@@ -229,7 +229,7 @@ internal sealed class RestClient : IDisposable
 			this._cleanerRunning = true;
 			this._bucketCleanerTokenSource = new();
 			this._cleanerTask = Task.Run(this.CleanupBucketsAsync, this._bucketCleanerTokenSource.Token);
-			this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task started.");
+			this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task started");
 		}
 
 		url = s_routeArgumentRegex.Replace(route, xm => routeParameters[xm.Groups[1].Value]);
@@ -240,6 +240,12 @@ internal sealed class RestClient : IDisposable
 	/// Executes the request.
 	/// </summary>
 	/// <param name="request">The request to be executed.</param>
+	/// <exception cref="NotFoundException">Thrown when the entity does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client is missing the permissiions to execute the request.</exception>
+	/// <exception cref="RequestSizeException">Thrown when the request size is too big..</exception>
+	/// <exception cref="RateLimitException">Thrown when Discord responded with a ratelimit.</exception>
 	public Task ExecuteRequestAsync(BaseRestRequest request)
 		=> request == null ? throw new ArgumentNullException(nameof(request)) : this.ExecuteRequestAsync(request, null, null);
 
@@ -248,6 +254,12 @@ internal sealed class RestClient : IDisposable
 	/// Executes the form data request.
 	/// </summary>
 	/// <param name="request">The request to be executed.</param>
+	/// <exception cref="NotFoundException">Thrown when the entity does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client is missing the permissiions to execute the request.</exception>
+	/// <exception cref="RequestSizeException">Thrown when the request size is too big..</exception>
+	/// <exception cref="RateLimitException">Thrown when Discord responded with a ratelimit.</exception>
 	public Task ExecuteFormRequestAsync(BaseRestRequest request)
 		=> request == null ? throw new ArgumentNullException(nameof(request)) : this.ExecuteFormRequestAsync(request, null, null);
 
@@ -258,7 +270,13 @@ internal sealed class RestClient : IDisposable
 	/// <param name="request">The request to be executed.</param>
 	/// <param name="bucket">The bucket.</param>
 	/// <param name="ratelimitTcs">The ratelimit task completion source.</param>
-	private async Task ExecuteFormRequestAsync(BaseRestRequest request, RateLimitBucket bucket, TaskCompletionSource<bool> ratelimitTcs)
+	/// <exception cref="NotFoundException">Thrown when the entity does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client is missing the permissiions to execute the request.</exception>
+	/// <exception cref="RequestSizeException">Thrown when the request size is too big..</exception>
+	/// <exception cref="RateLimitException">Thrown when Discord responded with a ratelimit.</exception>
+	private async Task ExecuteFormRequestAsync(BaseRestRequest request, RateLimitBucket? bucket, TaskCompletionSource<bool>? ratelimitTcs)
 	{
 		if (this._disposed)
 			return;
@@ -271,7 +289,7 @@ internal sealed class RestClient : IDisposable
 
 			bucket ??= request.RateLimitBucket;
 
-			ratelimitTcs ??= await this.WaitForInitialRateLimit(bucket).ConfigureAwait(false);
+			ratelimitTcs ??= await this.WaitForInitialRateLimitAsync(bucket).ConfigureAwait(false);
 
 			if (ratelimitTcs == null) // check rate limit only if we are not the probe request
 			{
@@ -301,7 +319,7 @@ internal sealed class RestClient : IDisposable
 					if (delay < TimeSpan.Zero)
 						delay = TimeSpan.FromMilliseconds(100);
 
-					this._logger.LogWarning(LoggerEvents.RatelimitPreemptive, "Preemptive ratelimit triggered - waiting until {0:yyyy-MM-dd HH:mm:ss zzz} ({1:c}).", resetDate, delay);
+					this._logger.LogWarning(LoggerEvents.RatelimitPreemptive, "Preemptive ratelimit triggered - waiting until {resetDate:yyyy-MM-dd HH:mm:ss zzz} ({delay:c})", resetDate, delay);
 					Task.Delay(delay)
 						.ContinueWith(_ => this.ExecuteFormRequestAsync(request, null, null))
 						.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
@@ -338,7 +356,7 @@ internal sealed class RestClient : IDisposable
 			}
 			catch (HttpRequestException httpex)
 			{
-				this._logger.LogError(LoggerEvents.RestError, httpex, "Request to {0} triggered an HttpException", request.Url.AbsoluteUri);
+				this._logger.LogError(LoggerEvents.RestError, httpex, "Request to {url} triggered an HttpException", request.Url.AbsoluteUri);
 				request.SetFaulted(httpex);
 				this.FailInitialRateLimitTest(request, ratelimitTcs);
 				return;
@@ -357,7 +375,8 @@ internal sealed class RestClient : IDisposable
 
 				case 401:
 				case 403:
-					ex = new UnauthorizedException(request, response);
+					var unauthorizedException = new UnauthorizedException(request, response);
+					ex = unauthorizedException.ErrorCode == 50001 ? new MissingAccessException(request, response) : unauthorizedException;
 					break;
 
 				case 404:
@@ -421,7 +440,7 @@ internal sealed class RestClient : IDisposable
 		}
 		catch (Exception ex)
 		{
-			this._logger.LogError(LoggerEvents.RestError, ex, "Request to {0} triggered an exception", request.Url.AbsoluteUri);
+			this._logger.LogError(LoggerEvents.RestError, ex, "Request to {url} triggered an exception", request.Url.AbsoluteUri);
 
 			// if something went wrong and we couldn't get rate limits for the first request here, allow the next request to run
 			if (bucket != null && ratelimitTcs != null && bucket.LimitTesting != 0)
@@ -461,7 +480,13 @@ internal sealed class RestClient : IDisposable
 	/// <param name="request">The request to be executed.</param>
 	/// <param name="bucket">The bucket.</param>
 	/// <param name="ratelimitTcs">The ratelimit task completion source.</param>
-	internal async Task ExecuteRequestAsync(BaseRestRequest request, RateLimitBucket? bucket = null, TaskCompletionSource<bool>? ratelimitTcs = null)
+	/// <exception cref="NotFoundException">Thrown when the entity does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client is missing the permissiions to execute the request.</exception>
+	/// <exception cref="RequestSizeException">Thrown when the request size is too big..</exception>
+	/// <exception cref="RateLimitException">Thrown when Discord responded with a ratelimit.</exception>
+	internal async Task ExecuteRequestAsync(BaseRestRequest request, RateLimitBucket? bucket, TaskCompletionSource<bool>? ratelimitTcs)
 	{
 		if (this._disposed)
 			return;
@@ -474,7 +499,7 @@ internal sealed class RestClient : IDisposable
 
 			bucket ??= request.RateLimitBucket;
 
-			ratelimitTcs ??= await this.WaitForInitialRateLimit(bucket).ConfigureAwait(false);
+			ratelimitTcs ??= await this.WaitForInitialRateLimitAsync(bucket).ConfigureAwait(false);
 
 			if (ratelimitTcs == null) // check rate limit only if we are not the probe request
 			{
@@ -504,13 +529,14 @@ internal sealed class RestClient : IDisposable
 					if (delay < TimeSpan.Zero)
 						delay = TimeSpan.FromMilliseconds(100);
 
-					this._logger.LogWarning(LoggerEvents.RatelimitPreemptive, "Preemptive ratelimit triggered - waiting until {resetDate:yyyy-MM-dd HH:mm:ss zzz} ({delay:c}).", resetDate, delay);
+					this._logger.LogWarning(LoggerEvents.RatelimitPreemptive, "Preemptive ratelimit triggered - waiting until {resetDate:yyyy-MM-dd HH:mm:ss zzz} ({delay:c})", resetDate, delay);
 					Task.Delay(delay)
 						.ContinueWith(_ => this.ExecuteRequestAsync(request, null, null))
 						.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
 
 					return;
 				}
+
 				this._logger.LogDebug(LoggerEvents.RatelimitDiag, "Request for {bucket} is allowed. Url: {url}", bucket.ToString(), request.Url.AbsoluteUri);
 			}
 			else
@@ -563,9 +589,9 @@ internal sealed class RestClient : IDisposable
 
 				case 401:
 				case 403:
-					ex = new UnauthorizedException(request, response);
+					var unauthorizedException = new UnauthorizedException(request, response);
+					ex = unauthorizedException.ErrorCode == 50001 ? new MissingAccessException(request, response) : unauthorizedException;
 					break;
-
 				case 404:
 					ex = new NotFoundException(request, response);
 					break;
@@ -595,19 +621,21 @@ internal sealed class RestClient : IDisposable
 								// we don't want to wait here until all the blocked requests have been run, additionally Set can never throw an exception that could be suppressed here
 								_ = this._globalRateLimitEvent.SetAsync();
 							}
+
 							this.ExecuteRequestAsync(request, bucket, ratelimitTcs)
 								.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while retrying request");
 						}
 						else
 						{
-							if (this._discord is not null && this._discord is DiscordClient)
+							if (this._discord is DiscordClient client)
 							{
-								await (this._discord as DiscordClient).RateLimitHitInternal.InvokeAsync(this._discord as DiscordClient, new(this._discord.ServiceProvider)
+								await client.RateLimitHitInternal.InvokeAsync(client, new(client.ServiceProvider)
 								{
 									Exception = (RateLimitException)ex,
 									ApiEndpoint = request.Url.AbsoluteUri
 								}).ConfigureAwait(false);
 							}
+
 							this._logger.LogError(LoggerEvents.RatelimitHit, "Ratelimit hit, requeuing request to {url}", request.Url.AbsoluteUri);
 							await wait.ConfigureAwait(false);
 							this.ExecuteRequestAsync(request, bucket, ratelimitTcs)
@@ -616,6 +644,7 @@ internal sealed class RestClient : IDisposable
 
 						return;
 					}
+
 					break;
 
 				case 500:
@@ -642,6 +671,7 @@ internal sealed class RestClient : IDisposable
 						this._discord.Sentry.CaptureException(sentryException);
 					}
 				}
+
 				request.SetFaulted(ex);
 			}
 			else
@@ -709,7 +739,7 @@ internal sealed class RestClient : IDisposable
 	/// Waits for the initial rate limit.
 	/// </summary>
 	/// <param name="bucket">The bucket.</param>
-	private async Task<TaskCompletionSource<bool>?> WaitForInitialRateLimit(RateLimitBucket bucket)
+	private async Task<TaskCompletionSource<bool>?> WaitForInitialRateLimitAsync(RateLimitBucket bucket)
 	{
 		while (!bucket.LimitValid)
 		{
@@ -775,12 +805,18 @@ internal sealed class RestClient : IDisposable
 		var req = new HttpRequestMessage(new(request.Method.ToString()), request.Url);
 		if (request.Headers != null && request.Headers.Any())
 			foreach (var kvp in request.Headers)
-				if (kvp.Key == "Bearer")
-					req.Headers.Authorization = new("Bearer", kvp.Value);
-				else if (kvp.Key == "Basic")
-					req.Headers.Authorization = new("Basic", kvp.Value);
-				else
-					req.Headers.Add(kvp.Key, kvp.Value);
+				switch (kvp.Key)
+				{
+					case "Bearer":
+						req.Headers.Authorization = new("Bearer", kvp.Value);
+						break;
+					case "Basic":
+						req.Headers.Authorization = new("Basic", kvp.Value);
+						break;
+					default:
+						req.Headers.Add(kvp.Key, kvp.Value);
+						break;
+				}
 
 		switch (request)
 		{
@@ -1086,9 +1122,12 @@ internal sealed class RestClient : IDisposable
 			this._bucketCleanerTokenSource.Cancel();
 
 		this._cleanerRunning = false;
-		this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task stopped.");
+		this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task stopped");
 	}
 
+	/// <summary>
+	/// Disposes the rest client.
+	/// </summary>
 	~RestClient()
 	{
 		this.Dispose();
@@ -1109,7 +1148,7 @@ internal sealed class RestClient : IDisposable
 		if (this._bucketCleanerTokenSource?.IsCancellationRequested == false)
 		{
 			this._bucketCleanerTokenSource?.Cancel();
-			this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task stopped.");
+			this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task stopped");
 		}
 
 		try

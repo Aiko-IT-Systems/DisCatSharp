@@ -29,9 +29,9 @@ using Newtonsoft.Json.Linq;
 namespace DisCatSharp.Exceptions;
 
 /// <summary>
-/// Represents an exception thrown when requester doesn't have necessary permissions to complete the request.
+/// Represents an exception thrown when requester doesn't have access to an endpoint / route.
 /// </summary>
-public class UnauthorizedException : DisCatSharpException
+public class MissingAccessException : DisCatSharpException
 {
 	/// <summary>
 	/// Gets the request that caused the exception.
@@ -51,15 +51,15 @@ public class UnauthorizedException : DisCatSharpException
 	/// <summary>
 	/// Gets the error code received.
 	/// </summary>
-	public int? ErrorCode { get; internal set; }
+	public int ErrorCode { get; internal set; }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="UnauthorizedException"/> class.
+	/// Initializes a new instance of the <see cref="MissingAccessException"/> class.
 	/// </summary>
 	/// <param name="request">The request.</param>
 	/// <param name="response">The response.</param>
-	internal UnauthorizedException(BaseRestRequest request, RestResponse response)
-		: base("Unauthorized: " + response.ResponseCode)
+	internal MissingAccessException(BaseRestRequest request, RestResponse response)
+		: base("Missing Access: " + response.ResponseCode)
 	{
 		this.WebRequest = request;
 		this.WebResponse = response;

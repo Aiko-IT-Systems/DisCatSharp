@@ -115,7 +115,7 @@ public abstract class BaseRestRequest
 	/// <param name="route">The generic route the request url will use.</param>
 	/// <param name="headers">Additional headers for this request.</param>
 	/// <param name="ratelimitWaitOverride">Override for ratelimit bucket wait time.</param>
-	internal BaseRestRequest(DiscordOAuth2Client client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, double? ratelimitWaitOverride = null)
+	internal BaseRestRequest(DiscordOAuth2Client client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string>? headers = null, double? ratelimitWaitOverride = null)
 	{
 		this.OAuth2Client = client;
 		this.RateLimitBucket = bucket;
