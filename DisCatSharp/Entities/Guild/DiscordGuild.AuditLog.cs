@@ -1327,6 +1327,16 @@ public partial class DiscordGuild
 				case AuditLogActionType.AutoModerationQuarantineUser:
 					break;
 
+				case AuditLogActionType.OnboardingQuestionCreate:
+				case AuditLogActionType.OnboardingQuestionUpdate:
+				case AuditLogActionType.OnboardingUpdate:
+				case AuditLogActionType.ServerGuideCreate:
+				case AuditLogActionType.ServerGuideUpdate:
+					break;
+
+				case AuditLogActionType.VoiceChannelStatusUpdate:
+					break;
+
 				default:
 					this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown audit log action type: {Key} - this should be reported to library developers", (int)xac.ActionType);
 					break;
@@ -1337,9 +1347,9 @@ public partial class DiscordGuild
 
 			entry.ActionCategory = xac.ActionType switch
 			{
-				AuditLogActionType.ChannelCreate or AuditLogActionType.EmojiCreate or AuditLogActionType.InviteCreate or AuditLogActionType.OverwriteCreate or AuditLogActionType.RoleCreate or AuditLogActionType.WebhookCreate or AuditLogActionType.IntegrationCreate or AuditLogActionType.StickerCreate or AuditLogActionType.StageInstanceCreate or AuditLogActionType.ThreadCreate or AuditLogActionType.GuildScheduledEventCreate or AuditLogActionType.AutoModerationRuleCreate => AuditLogActionCategory.Create,
+				AuditLogActionType.ChannelCreate or AuditLogActionType.EmojiCreate or AuditLogActionType.InviteCreate or AuditLogActionType.OverwriteCreate or AuditLogActionType.RoleCreate or AuditLogActionType.WebhookCreate or AuditLogActionType.IntegrationCreate or AuditLogActionType.StickerCreate or AuditLogActionType.StageInstanceCreate or AuditLogActionType.ThreadCreate or AuditLogActionType.GuildScheduledEventCreate or AuditLogActionType.AutoModerationRuleCreate or AuditLogActionType.OnboardingQuestionCreate or AuditLogActionType.ServerGuideCreate => AuditLogActionCategory.Create,
 				AuditLogActionType.ChannelDelete or AuditLogActionType.EmojiDelete or AuditLogActionType.InviteDelete or AuditLogActionType.MessageDelete or AuditLogActionType.MessageBulkDelete or AuditLogActionType.OverwriteDelete or AuditLogActionType.RoleDelete or AuditLogActionType.WebhookDelete or AuditLogActionType.IntegrationDelete or AuditLogActionType.StickerDelete or AuditLogActionType.StageInstanceDelete or AuditLogActionType.ThreadDelete or AuditLogActionType.GuildScheduledEventDelete or AuditLogActionType.AutoModerationRuleDelete => AuditLogActionCategory.Delete,
-				AuditLogActionType.ChannelUpdate or AuditLogActionType.EmojiUpdate or AuditLogActionType.InviteUpdate or AuditLogActionType.MemberRoleUpdate or AuditLogActionType.MemberUpdate or AuditLogActionType.OverwriteUpdate or AuditLogActionType.RoleUpdate or AuditLogActionType.WebhookUpdate or AuditLogActionType.IntegrationUpdate or AuditLogActionType.StickerUpdate or AuditLogActionType.StageInstanceUpdate or AuditLogActionType.ThreadUpdate or AuditLogActionType.GuildScheduledEventUpdate or AuditLogActionType.AutoModerationRuleUpdate => AuditLogActionCategory.Update,
+				AuditLogActionType.ChannelUpdate or AuditLogActionType.EmojiUpdate or AuditLogActionType.InviteUpdate or AuditLogActionType.MemberRoleUpdate or AuditLogActionType.MemberUpdate or AuditLogActionType.OverwriteUpdate or AuditLogActionType.RoleUpdate or AuditLogActionType.WebhookUpdate or AuditLogActionType.IntegrationUpdate or AuditLogActionType.StickerUpdate or AuditLogActionType.StageInstanceUpdate or AuditLogActionType.ThreadUpdate or AuditLogActionType.GuildScheduledEventUpdate or AuditLogActionType.AutoModerationRuleUpdate or AuditLogActionType.OnboardingQuestionUpdate or AuditLogActionType.OnboardingUpdate or AuditLogActionType.ServerGuideUpdate or AuditLogActionType.VoiceChannelStatusUpdate => AuditLogActionCategory.Update,
 				_ => AuditLogActionCategory.Other,
 			};
 			entry.Discord = this.Discord;

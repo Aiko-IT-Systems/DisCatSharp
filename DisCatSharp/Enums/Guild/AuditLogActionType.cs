@@ -305,5 +305,12 @@ public enum AuditLogActionType
 	/// <summary>
 	/// Indicates that automod quarantined a user.
 	/// </summary>
-	AutoModerationQuarantineUser = 146
+	AutoModerationQuarantineUser = 146,
+
+	OnboardingQuestionCreate = 163,
+	OnboardingQuestionUpdate = 164,
+	OnboardingUpdate = 167,
+	ServerGuideCreate = 190,
+	ServerGuideUpdate = 191,
+	VoiceChannelStatusUpdate = 192
 }
