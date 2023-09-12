@@ -28,7 +28,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
@@ -258,7 +257,7 @@ public class DiscordChannel : PositionalSnowflakeObject, IEquatable<DiscordChann
 	/// List of available tags for forum posts.
 	/// </summary>
 	[JsonProperty("default_reaction_emoji", NullValueHandling = NullValueHandling.Ignore)]
-	public ForumReactionEmoji DefaultReactionEmoji { get; internal set; }
+	public ForumReactionEmoji? DefaultReactionEmoji { get; internal set; }
 
 	[JsonProperty("default_sort_order", NullValueHandling = NullValueHandling.Include)]
 	public ForumPostSortOrder? DefaultSortOrder { get; internal set; }
@@ -1461,11 +1460,9 @@ public class DiscordChannel : PositionalSnowflakeObject, IEquatable<DiscordChann
 		if (this.Guild.OwnerId == mbr.Id)
 			return PermissionMethods.FullPerms;
 
-		Permissions perms;
-
 		// assign @everyone permissions
 		var everyoneRole = this.Guild.EveryoneRole;
-		perms = everyoneRole.Permissions;
+		var perms = everyoneRole.Permissions;
 
 		// roles that member is in
 		var mbRoles = mbr.Roles.Where(xr => xr.Id != everyoneRole.Id).ToList();

@@ -1826,7 +1826,6 @@ public partial class DiscordGuild : SnowflakeObject
 	/// </summary>
 	/// <param name="id">ID of the role to get.</param>
 	/// <returns>Requested role.</returns>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public DiscordRole? GetRole(ulong id)
 		=> this.RolesInternal.TryGetValue(id, out var role) ? role : null;
 
@@ -1835,7 +1834,6 @@ public partial class DiscordGuild : SnowflakeObject
 	/// </summary>
 	/// <param name="id">ID of the channel to get.</param>
 	/// <returns>Requested channel.</returns>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public DiscordChannel? GetChannel(ulong id)
 		=> this.ChannelsInternal != null && this.ChannelsInternal.TryGetValue(id, out var channel) ? channel : null;
 
@@ -1844,7 +1842,6 @@ public partial class DiscordGuild : SnowflakeObject
 	/// </summary>
 	/// <param name="id">ID of the thread to get.</param>
 	/// <returns>Requested thread.</returns>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public DiscordThreadChannel? GetThread(ulong id)
 		=> this.ThreadsInternal != null && this.ThreadsInternal.TryGetValue(id, out var thread) ? thread : null;
 
