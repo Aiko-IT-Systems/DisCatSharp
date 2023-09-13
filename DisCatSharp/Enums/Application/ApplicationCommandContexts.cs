@@ -20,28 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents where application commands can be used.
 /// </summary>
-[Flags]
 public enum ApplicationCommandContexts : int
 {
 	/// <summary>
 	/// Command can be used in guilds.
 	/// </summary>
-	Guilds = 1 << 0,
+	Guilds = 0,
 
 	/// <summary>
 	/// Command can be used in direct messages.
 	/// </summary>
-	DirectMessages = 1 << 1,
+	DirectMessages = 1,
 
 	/// <summary>
 	/// Command can be used in group direct messages and direct messages.
 	/// </summary>
-	PrivateChannels = 1 << 2
+	PrivateChannels = 2
 }

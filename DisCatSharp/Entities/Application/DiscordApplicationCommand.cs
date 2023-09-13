@@ -108,7 +108,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// Gets where the application command can be used.
 	/// </summary>
 	[JsonProperty("contexts", NullValueHandling = NullValueHandling.Ignore), DiscordUnreleased]
-	public ApplicationCommandContexts? AllowedContexts { get; set; }
+	public List<ApplicationCommandContexts>? AllowedContexts { get; set; }
 
 	/// <summary>
 	/// Gets whether the command is marked as NSFW.
@@ -147,7 +147,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 		IEnumerable<DiscordApplicationCommandOption>? options = null,
 		ApplicationCommandType type = ApplicationCommandType.ChatInput,
 		DiscordApplicationCommandLocalization? nameLocalizations = null, DiscordApplicationCommandLocalization? descriptionLocalizations = null,
-		Permissions? defaultMemberPermissions = null, bool? dmPermission = null, bool isNsfw = false, ApplicationCommandContexts? allowedContexts = null)
+		Permissions? defaultMemberPermissions = null, bool? dmPermission = null, bool isNsfw = false, List<ApplicationCommandContexts>? allowedContexts = null)
 		: base(new() { "guild_id" })
 	{
 		if (type is ApplicationCommandType.ChatInput)

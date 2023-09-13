@@ -5530,7 +5530,7 @@ public sealed class DiscordApiClient
 		Optional<DiscordApplicationCommandLocalization> nameLocalization,
 		Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
 		Optional<Permissions?> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw,
-		Optional<ApplicationCommandContexts?> allowedContexts)
+		Optional<List<ApplicationCommandContexts>?> allowedContexts)
 	{
 		var pld = new RestApplicationCommandEditPayload
 		{
@@ -5720,7 +5720,7 @@ public sealed class DiscordApiClient
 		Optional<DiscordApplicationCommandLocalization> nameLocalization,
 		Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
 		Optional<Permissions?> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw,
-		Optional<ApplicationCommandContexts?> allowedContexts)
+		Optional<List<ApplicationCommandContexts>?> allowedContexts)
 	{
 		var pld = new RestApplicationCommandEditPayload
 		{

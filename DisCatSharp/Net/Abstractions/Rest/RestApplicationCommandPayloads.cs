@@ -98,7 +98,7 @@ internal sealed class RestApplicationCommandCreatePayload : ObservableApiObject
 	/// Gets where the command is allowed at.
 	/// </summary>
 	[JsonProperty("contexts", NullValueHandling = NullValueHandling.Include)]
-	public ApplicationCommandContexts? AllowedContexts { get; set; }
+	public List<ApplicationCommandContexts>? AllowedContexts { get; set; }
 }
 
 /// <summary>
@@ -158,7 +158,7 @@ internal sealed class RestApplicationCommandEditPayload : ObservableApiObject
 	/// Gets where the command is allowed at.
 	/// </summary>
 	[JsonProperty("contexts", NullValueHandling = NullValueHandling.Include)]
-	public Optional<ApplicationCommandContexts?> AllowedContexts { get; set; }
+	public Optional<List<ApplicationCommandContexts>?> AllowedContexts { get; set; }
 }
 
 /// <summary>
