@@ -75,7 +75,7 @@ public class DiscordAttachment : NullableSnowflakeObject
 	/// </summary>
 	[JsonIgnore]
 	public DiscordSignedLink Uri
-		=> new(this.Discord, this.Url);
+		=> new(this.Url);
 
 	/// <summary>
 	/// Gets the proxied URL of the file.
@@ -89,7 +89,7 @@ public class DiscordAttachment : NullableSnowflakeObject
 	/// </summary>
 	[JsonIgnore]
 	public DiscordSignedLink ProxyUri
-		=> new(this.Discord, this.ProxyUrl);
+		=> new(this.ProxyUrl);
 
 	/// <summary>
 	/// Gets the height. Applicable only if the attachment is an image.

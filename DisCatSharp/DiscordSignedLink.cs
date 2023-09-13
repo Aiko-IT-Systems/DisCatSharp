@@ -21,96 +21,62 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Specialized;
+using System.Globalization;
 using System.Web;
 
 using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp;
 
+/// <summary>
+/// Represents a <see cref="DiscordSignedLink"/> used for attachments and other things to improve security
+/// and prevent bad actors from abusing Discord's CDN.
+/// </summary>
 public sealed class DiscordSignedLink : Uri
 {
 	/// <summary>
-	/// Gets the client.
+	/// When the signed link expires.
 	/// </summary>
-	internal BaseDiscordClient? Client { get; }
+	public DateTimeOffset? ExpiresAt { get; init; }
 
 	/// <summary>
-	/// Gets the timestamp indicating when the attachment URL will expire, after which point you'd need to retrieve another URL.
+	/// When the signed link was generated.
 	/// </summary>
-	internal string? ExpiresAtTimeStamp { get; }
+	public DateTimeOffset? IssuedAt { get; init; }
 
 	/// <summary>
-	/// Gets the datetime when the <see cref="Signature"/> will expire.
+	/// The signature of the signed link.
 	/// </summary>
-	public DateTime? ExpiresAt
-		=> !string.IsNullOrWhiteSpace(this.ExpiresAtTimeStamp) && int.TryParse(this.ExpiresAtTimeStamp, out var uts)
-			? DateTime.UnixEpoch.AddSeconds(uts)
-			: null;
+	public string? Signature { get; init; }
 
 	/// <summary>
-	/// Gets the timestamp indicating when the URL was issued
-	/// </summary>
-	internal string? IssuedAtTimeStamp { get; }
-
-	/// <summary>
-	/// Gets the datetime when the <see cref="Signature"/> was generated at.
-	/// </summary>
-	public DateTime? IssuedAt
-		=> !string.IsNullOrWhiteSpace(this.IssuedAtTimeStamp) && int.TryParse(this.IssuedAtTimeStamp, out var uts)
-			? DateTime.UnixEpoch.AddSeconds(uts)
-			: null;
-
-	/// <summary>
-	/// Gets the unique signature that remains valid until <see cref="ExpiresAt"/>.
-	/// </summary>
-	public string? Signature { get; internal set; }
-
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="Uri"/> class with the specified URI and inject the discord client.
-	/// </summary>
-	/// <param name="client">The discord client.</param>
-	/// <param name="uriString">A string that identifies the resource to be represented by the <see cref="Uri"/> instance.</param>
-	public DiscordSignedLink(BaseDiscordClient client, string uriString)
-		: base(uriString)
-	{
-		this.Client = client;
-		try
-		{
-			var query = HttpUtility.ParseQueryString(new Uri(uriString).Query);
-			if (!query.HasKeys())
-				return;
-
-			this.ExpiresAtTimeStamp = query.Get("ex");
-			this.IssuedAtTimeStamp = query.Get("is");
-			this.Signature = query.Get("sg");
-		}
-		catch (Exception ex)
-		{
-			this.Client.Logger.LogWarning("Uh nuh, parsing the signed link failed: {exception}\n\nYou can use it as normal Uri tho!", ex);
-		}
-	}
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="Uri"/> class with the specified URI.
+	/// Initializes a new instance of the <see cref="Uri"/> class with the specified URI for signed discord links.
 	/// </summary>
 	/// <param name="uriString">A string that identifies the resource to be represented by the <see cref="Uri"/> instance.</param>
 	public DiscordSignedLink(string uriString)
 		: base(uriString)
 	{
-		try
-		{
-			var query = HttpUtility.ParseQueryString(new Uri(uriString).Query);
-			if (!query.HasKeys())
-				return;
+		if (string.IsNullOrWhiteSpace(this.Query))
+			return;
 
-			this.ExpiresAtTimeStamp = query.Get("ex");
-			this.IssuedAtTimeStamp = query.Get("is");
-			this.Signature = query.Get("sg");
-		}
-		catch (Exception ex)
+		var queries = HttpUtility.ParseQueryString(this.Query);
+		if (!queries.HasKeys())
 		{
-			Console.WriteLine("Uh nuh, parsing the signed link failed: " + ex + "\n\nYou can use it as normal Uri tho!");
+			return;
 		}
+
+		if (queries.Get("ex") is { } expiresString && long.TryParse(expiresString, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var expiresTimeStamp))
+		{
+			this.ExpiresAt = DateTimeOffset.FromUnixTimeSeconds(expiresTimeStamp);
+		}
+
+		if (queries.Get("is") is { } issuedString && long.TryParse(issuedString, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var issuedTimeStamp))
+		{
+			this.IssuedAt = DateTimeOffset.FromUnixTimeSeconds(issuedTimeStamp);
+		}
+
+		this.Signature = queries.Get("sg");
 	}
 }
+
