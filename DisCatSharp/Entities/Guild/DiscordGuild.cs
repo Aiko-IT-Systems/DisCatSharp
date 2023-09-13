@@ -926,9 +926,14 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		return await this.Discord.ApiClient.ModifyGuildCommunitySettingsAsync(this.Id, rfeatures, rulesChannelId, publicUpdatesChannelId, preferredLocale, description, defaultMessageNotifications, explicitContentFilter, verificationLevel, reason).ConfigureAwait(false);
 	}
 
-	[DiscordInExperiment, RequiresFeature(Attributes.Features.Community)]
-	public async Task<DiscordGuild> ModifyInventorySettingsAsync(bool enabled, string? reason = null)
-		=> await this.Discord.ApiClient.ModifyGuildInventorySettingsAsync(this.Id, enabled, reason).ConfigureAwait(false);
+	/// <summary>
+	/// Modifies the guild's inventory settings.
+	/// </summary>
+	/// <param name="enabled">Whether to allow emoji packs to be collected.</param>
+	/// <param name="reason">The audit log reason, currently not supported.</param>
+	[DiscordInExperiment, RequiresFeature(Attributes.Features.Community | Attributes.Features.Override)]
+	public Task<DiscordGuild> ModifyInventorySettingsAsync(bool enabled, string? reason = null)
+		=> this.Discord.ApiClient.ModifyGuildInventorySettingsAsync(this.Id, enabled, reason);
 
 	/// <summary>
 	/// Modifies the safety alerts settings async.
