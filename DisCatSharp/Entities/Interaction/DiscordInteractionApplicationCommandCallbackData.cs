@@ -43,19 +43,19 @@ internal class DiscordInteractionApplicationCommandCallbackData : ObservableApiO
 	/// Gets the content.
 	/// </summary>
 	[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
-	public string Content { get; internal set; }
+	public string? Content { get; internal set; }
 
 	/// <summary>
 	/// Gets the embeds.
 	/// </summary>
 	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<DiscordEmbed> Embeds { get; internal set; }
+	public IReadOnlyList<DiscordEmbed>? Embeds { get; internal set; }
 
 	/// <summary>
 	/// Gets the mentions.
 	/// </summary>
 	[JsonProperty("allowed_mentions", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<IMention> Mentions { get; internal set; }
+	public IReadOnlyList<IMention>? Mentions { get; internal set; }
 
 	/// <summary>
 	/// Gets the flags.
@@ -67,19 +67,19 @@ internal class DiscordInteractionApplicationCommandCallbackData : ObservableApiO
 	/// Gets the components.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyCollection<DiscordActionRowComponent> Components { get; internal set; }
+	public IReadOnlyCollection<DiscordActionRowComponent>? Components { get; internal set; }
 
 	/// <summary>
 	/// Gets the autocomplete choices.
 	/// </summary>
 	[JsonProperty("choices", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyCollection<DiscordApplicationCommandAutocompleteChoice> Choices { get; internal set; }
+	public IReadOnlyCollection<DiscordApplicationCommandAutocompleteChoice>? Choices { get; internal set; }
 
 	/// <summary>
 	/// Gets the attachments.
 	/// </summary>
 	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
-	public List<DiscordAttachment> Attachments { get; set; }
+	public List<DiscordAttachment>? Attachments { get; set; }
 }
 
 /// <summary>

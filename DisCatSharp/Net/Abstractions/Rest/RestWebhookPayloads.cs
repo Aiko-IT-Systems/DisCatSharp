@@ -74,19 +74,19 @@ internal sealed class RestWebhookExecutePayload : ObservableApiObject
 	/// Gets or sets the content.
 	/// </summary>
 	[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
-	public string Content { get; set; }
+	public string? Content { get; set; }
 
 	/// <summary>
 	/// Gets or sets the username.
 	/// </summary>
 	[JsonProperty("username", NullValueHandling = NullValueHandling.Ignore)]
-	public string Username { get; set; }
+	public string? Username { get; set; }
 
 	/// <summary>
 	/// Gets or sets the avatar url.
 	/// </summary>
 	[JsonProperty("avatar_url", NullValueHandling = NullValueHandling.Ignore)]
-	public string AvatarUrl { get; set; }
+	public string? AvatarUrl { get; set; }
 
 	/// <summary>
 	/// Whether this message is tts.
@@ -98,34 +98,37 @@ internal sealed class RestWebhookExecutePayload : ObservableApiObject
 	/// Gets or sets the embeds.
 	/// </summary>
 	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordEmbed> Embeds { get; set; }
+	public IEnumerable<DiscordEmbed>? Embeds { get; set; }
 
 	/// <summary>
 	/// Gets or sets the mentions.
 	/// </summary>
 	[JsonProperty("allowed_mentions", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordMentions Mentions { get; set; }
+	public DiscordMentions? Mentions { get; set; }
 
 	/// <summary>
 	/// Gets or sets the components.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordActionRowComponent> Components { get; set; }
+	public IEnumerable<DiscordActionRowComponent>? Components { get; set; }
 
 	/// <summary>
 	/// Gets or sets the attachments.
 	/// </summary>
 	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
-	public List<DiscordAttachment> Attachments { get; set; }
+	public List<DiscordAttachment>? Attachments { get; set; }
 
 	///<summary>
 	/// Gets or sets the thread name.
 	/// </summary>
 	[JsonProperty("thread_name", NullValueHandling = NullValueHandling.Ignore)]
-	public string ThreadName { get; set; }
+	public string? ThreadName { get; set; }
 
+	/// <summary>
+	/// Gets or sets the message flags.
+	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
-	public MessageFlags Flags { get; set; }
+	public MessageFlags? Flags { get; set; }
 }
 
 /// <summary>
@@ -143,26 +146,29 @@ internal sealed class RestWebhookMessageEditPayload : ObservableApiObject
 	/// Gets or sets the embeds.
 	/// </summary>
 	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordEmbed> Embeds { get; set; }
+	public IEnumerable<DiscordEmbed>? Embeds { get; set; }
 
 	/// <summary>
 	/// Gets or sets the mentions.
 	/// </summary>
 	[JsonProperty("allowed_mentions", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<IMention> Mentions { get; set; }
+	public IEnumerable<IMention>? Mentions { get; set; }
 
 	/// <summary>
 	/// Gets or sets the attachments.
 	/// </summary>
 	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordAttachment> Attachments { get; set; }
+	public IEnumerable<DiscordAttachment>? Attachments { get; set; }
 
 	/// <summary>
 	/// Gets or sets the components.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordActionRowComponent> Components { get; set; }
+	public IEnumerable<DiscordActionRowComponent>? Components { get; set; }
 
+	/// <summary>
+	/// Gets or sets the message flags.
+	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
 	public MessageFlags? Flags { get; set; }
 }

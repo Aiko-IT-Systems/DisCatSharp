@@ -1441,7 +1441,7 @@ public class DiscordChannel : PositionalSnowflakeObject, IEquatable<DiscordChann
 	public async Task<GcpAttachmentUploadInformation> UploadFileAsync(string name, Stream stream, string? description = null)
 	{
 		GcpAttachment attachment = new(name, stream);
-		var response = await this.Discord.ApiClient.RequestFileUploadAsync(this.Id, attachment).ConfigureAwait(false);
+		var response = await this.Discord.ApiClient.RequestGcpFileUploadAsync(this.Id, attachment).ConfigureAwait(false);
 		var target = response.Attachments.First();
 		_ = Task.Run(() => this.Discord.ApiClient.UploadGcpFile(target, stream));
 		target.Filename = name;

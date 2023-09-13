@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DisCatSharp.Entities;
 
@@ -33,12 +34,44 @@ public sealed class DiscordApplicationCommandLocalization
 	/// <summary>
 	/// Gets the localization dict.
 	/// </summary>
-	public Dictionary<string, string> Localizations { get; internal set; } = new();
+	public Dictionary<string, string> Localizations { get; } = new();
 
 	/// <summary>
 	/// Gets valid [locales](xref:modules_application_commands_translations_reference#valid-locales) for Discord.
 	/// </summary>
-	internal List<string> ValidLocales = new() { "ru", "fi", "hr", "de", "hu", "sv-SE", "cs", "fr", "it", "en-GB", "pt-BR", "ja", "tr", "en-US", "es-ES", "uk", "hi", "th", "el", "no", "ro", "ko", "zh-TW", "vi", "zh-CN", "pl", "bg", "da", "nl", "lt" };
+	internal readonly List<string> ValidLocales = new()
+	{
+		"ru",
+		"fi",
+		"hr",
+		"de",
+		"hu",
+		"sv-SE",
+		"cs",
+		"fr",
+		"it",
+		"en-GB",
+		"pt-BR",
+		"ja",
+		"tr",
+		"en-US",
+		"es-ES",
+		"uk",
+		"hi",
+		"th",
+		"el",
+		"no",
+		"ro",
+		"ko",
+		"zh-TW",
+		"vi",
+		"zh-CN",
+		"pl",
+		"bg",
+		"da",
+		"nl",
+		"lt"
+	};
 
 	/// <summary>
 	/// Adds a localization.
@@ -51,7 +84,7 @@ public sealed class DiscordApplicationCommandLocalization
 			this.Localizations.Add(locale, value);
 		else
 			throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
-											$"Valid locales: {string.Join(", ", this.ValidLocales)}");
+			                                $"Valid locales: {string.Join(", ", this.ValidLocales)}");
 	}
 
 	/// <summary>
@@ -73,10 +106,9 @@ public sealed class DiscordApplicationCommandLocalization
 	public DiscordApplicationCommandLocalization(Dictionary<string, string> localizations)
 	{
 		if (localizations != null)
-			foreach (var locale in localizations.Keys)
-				if (!this.Validate(locale))
-					throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
-													$"Valid locales: {string.Join(", ", this.ValidLocales)}");
+			foreach (var locale in localizations.Keys.Where(locale => !this.Validate(locale)))
+				throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
+				                                $"Valid locales: {string.Join(", ", this.ValidLocales)}");
 
 		this.Localizations = localizations;
 	}

@@ -56,7 +56,7 @@ internal sealed class RestApplicationCommandCreatePayload : ObservableApiObject
 	/// Gets the description.
 	/// </summary>
 	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
-	public string Description { get; set; }
+	public string? Description { get; set; }
 
 	/// <summary>
 	/// Gets the description localizations.
@@ -68,7 +68,7 @@ internal sealed class RestApplicationCommandCreatePayload : ObservableApiObject
 	/// Gets the options.
 	/// </summary>
 	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordApplicationCommandOption> Options { get; set; }
+	public IEnumerable<DiscordApplicationCommandOption>? Options { get; set; }
 
 	/// <summary>
 	/// Whether the command is allowed for everyone.
@@ -182,7 +182,7 @@ internal sealed class RestInteractionResponsePayload : ObservableApiObject
 	/// Gets the attachments.
 	/// </summary>
 	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
-	public List<DiscordAttachment> Attachments { get; set; }
+	public List<DiscordAttachment>? Attachments { get; set; }
 }
 
 /// <summary>
@@ -230,7 +230,7 @@ internal sealed class RestFollowupMessageCreatePayload : ObservableApiObject
 	/// Gets the content.
 	/// </summary>
 	[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
-	public string Content { get; set; }
+	public string? Content { get; set; }
 
 	/// <summary>
 	/// Get whether the message is tts.
@@ -242,13 +242,13 @@ internal sealed class RestFollowupMessageCreatePayload : ObservableApiObject
 	/// Gets the embeds.
 	/// </summary>
 	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordEmbed> Embeds { get; set; }
+	public IEnumerable<DiscordEmbed>? Embeds { get; set; }
 
 	/// <summary>
 	/// Gets the mentions.
 	/// </summary>
 	[JsonProperty("allowed_mentions", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordMentions Mentions { get; set; }
+	public DiscordMentions? Mentions { get; set; }
 
 	/// <summary>
 	/// Gets the flags.
@@ -260,13 +260,13 @@ internal sealed class RestFollowupMessageCreatePayload : ObservableApiObject
 	/// Gets the components.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyCollection<DiscordActionRowComponent> Components { get; set; }
+	public IReadOnlyCollection<DiscordActionRowComponent>? Components { get; set; }
 
 	/// <summary>
 	/// Gets attachments.
 	/// </summary>
 	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
-	public List<DiscordAttachment> Attachments { get; set; }
+	public List<DiscordAttachment>? Attachments { get; set; }
 }
 
 /// <summary>
@@ -302,11 +302,11 @@ internal sealed class RestApplicationRoleConnectionMetadataPayload : ObservableA
 	/// Gets the metadata name translations.
 	/// </summary>
 	[JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
-	public Dictionary<string, string> NameLocalizations { get; set; }
+	public Dictionary<string, string>? NameLocalizations { get; set; }
 
 	/// <summary>
 	/// Gets the metadata description localizations.
 	/// </summary>
 	[JsonProperty("description_localizations", NullValueHandling = NullValueHandling.Ignore)]
-	public Dictionary<string, string> DescriptionLocalizations { get; set; }
+	public Dictionary<string, string>? DescriptionLocalizations { get; set; }
 }

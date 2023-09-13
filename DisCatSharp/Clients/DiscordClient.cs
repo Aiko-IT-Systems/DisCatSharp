@@ -587,14 +587,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <returns>A list of metadata records or <see langword="null"/>.</returns>
 	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> GetRoleConnectionMetadata()
-		 => await this.ApiClient.GetRoleConnectionMetadataRecords(this.CurrentApplication.Id).ConfigureAwait(false);
+		 => await this.ApiClient.GetRoleConnectionMetadataRecordsAsync(this.CurrentApplication.Id).ConfigureAwait(false);
 
 	/// <summary>
 	/// Updates the applications role connection metadata.
 	/// </summary>
 	/// <param name="metadata">A list of metadata objects. Max 5.</param>
 	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> UpdateRoleConnectionMetadata(IEnumerable<DiscordApplicationRoleConnectionMetadata> metadata)
-		 => await this.ApiClient.UpdateRoleConnectionMetadataRecords(this.CurrentApplication.Id, metadata).ConfigureAwait(false);
+		 => await this.ApiClient.UpdateRoleConnectionMetadataRecordsAsync(this.CurrentApplication.Id, metadata).ConfigureAwait(false);
 
 	/// <summary>
 	/// Removes all global application commands.
