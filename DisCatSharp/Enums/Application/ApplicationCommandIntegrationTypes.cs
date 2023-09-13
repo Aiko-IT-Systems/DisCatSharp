@@ -23,22 +23,17 @@
 namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Represents where application commands can be used.
+/// Represents the application command integration types.
 /// </summary>
-public enum ApplicationCommandContexts : int
+public enum ApplicationCommandIntegrationTypes : int
 {
 	/// <summary>
-	/// Command can be used in guilds.
+	/// Application command is installed for guild (default).
 	/// </summary>
-	Guilds = 0,
+	InstalledToGuild = 0,
 
 	/// <summary>
-	/// Command can be used in direct messages.
+	/// Application command is installed as user app.
 	/// </summary>
-	DirectMessages = 1,
-
-	/// <summary>
-	/// Command can be used in group direct messages and direct messages.
-	/// </summary>
-	PrivateChannels = 2
+	InstalledToUser = 1
 }
