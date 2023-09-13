@@ -83,6 +83,7 @@ public sealed class DiscordApiClient
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordApiClient"/> class.
+	/// <para>Intended for the <see cref="DiscordOAuth2Client"/>.</para>
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="proxy">The proxy.</param>
@@ -98,6 +99,7 @@ public sealed class DiscordApiClient
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordApiClient"/> class.
+	/// <para>Intended for meta-clients such as <see cref="DiscordWebhookClient"/>.</para>
 	/// </summary>
 	/// <param name="proxy">The proxy.</param>
 	/// <param name="timeout">The timeout.</param>
@@ -114,7 +116,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="values">The values.</param>
 	/// <param name="post">Whether this query will be transmitted via POST.</param>
-	private static string BuildQueryString(IDictionary<string, string> values, bool post = false)
+	private static string BuildQueryString(IDictionary<string, string>? values, bool post = false)
 	{
 		if (values == null || values.Count == 0)
 			return string.Empty;
