@@ -837,11 +837,6 @@ public partial class DiscordGuild : SnowflakeObject
 				? throw new ArgumentException("AFK channel needs to be a text channel.")
 				: c.Id);
 
-		static Optional<ulong?> ChannelToId(Optional<DiscordChannel> ch, string name)
-			=> ch.MapOrNull<ulong?>(c => c.Type != ChannelType.Text && c.Type != ChannelType.News
-				? throw new ArgumentException($"{name} channel needs to be a text channel.")
-				: c.Id);
-
 		var rulesChannelId = ChannelToId(mdl.RulesChannel, "Rules");
 		var publicUpdatesChannelId = ChannelToId(mdl.PublicUpdatesChannel, "Public updates");
 		var systemChannelId = ChannelToId(mdl.SystemChannel, "System");
@@ -857,6 +852,11 @@ public partial class DiscordGuild : SnowflakeObject
 			afkChannelId, mdl.AfkTimeout, iconBase64, mdl.Owner.Map(e => e.Id), splashBase64,
 			systemChannelId, mdl.SystemChannelFlags, publicUpdatesChannelId, rulesChannelId,
 			mdl.Description, bannerBase64, discoverySplashBase64, homeHeaderBase64, mdl.PreferredLocale, mdl.PremiumProgressBarEnabled, mdl.AuditLogReason);
+
+		static Optional<ulong?> ChannelToId(Optional<DiscordChannel> ch, string name)
+			=> ch.MapOrNull<ulong?>(c => c.Type != ChannelType.Text && c.Type != ChannelType.News
+				? throw new ArgumentException($"{name} channel needs to be a text channel.")
+				: c.Id);
 	}
 
 	/// <summary>
@@ -881,12 +881,6 @@ public partial class DiscordGuild : SnowflakeObject
 
 		var explicitContentFilter = ExplicitContentFilter.AllMembers;
 
-		static Optional<ulong?> ChannelToId(DiscordChannel? ch, string name)
-			=> ch == null ? null :
-				ch.Type != ChannelType.Text && ch.Type != ChannelType.News
-					? throw new ArgumentException($"{name} channel needs to be a text channel.")
-					: ch.Id;
-
 		var rulesChannelId = ChannelToId(rulesChannel, "Rules");
 		var publicUpdatesChannelId = ChannelToId(publicUpdatesChannel, "Public updates");
 
@@ -897,9 +891,15 @@ public partial class DiscordGuild : SnowflakeObject
 			rfeatures.Remove("COMMUNITY");
 
 		return this.Discord.ApiClient.ModifyGuildCommunitySettingsAsync(this.Id, rfeatures, rulesChannelId, publicUpdatesChannelId, preferredLocale, description, defaultMessageNotifications, explicitContentFilter, verificationLevel, reason);
+
+		static Optional<ulong?> ChannelToId(DiscordChannel? ch, string name)
+			=> ch == null ? null :
+				ch.Type != ChannelType.Text && ch.Type != ChannelType.News
+					? throw new ArgumentException($"{name} channel needs to be a text channel.")
+					: ch.Id;
 	}
 
-	[DiscordInExperiment, RequiresFeature(Attributes.Features.Community)]
+	[DiscordInExperiment, RequiresFeature(Attributes.Features.Community | Attributes.Features.Override)]
 	public Task<DiscordGuild> ModifyInventorySettingsAsync(bool enabled, string? reason = null)
 		=> this.Discord.ApiClient.ModifyGuildInventorySettingsAsync(this.Id, enabled, reason);
 
@@ -916,12 +916,6 @@ public partial class DiscordGuild : SnowflakeObject
 	[RequiresFeature(Attributes.Features.Community)]
 	public Task<DiscordGuild> ModifySafetyAlertsSettingsAsync(bool enabled, DiscordChannel? safetyAlertsChannel, string? reason = null)
 	{
-		static Optional<ulong?> ChannelToId(DiscordChannel? ch, string name)
-			=> ch == null ? null :
-				ch.Type != ChannelType.Text && ch.Type != ChannelType.News
-					? throw new ArgumentException($"{name} channel needs to be a text channel.")
-					: ch.Id;
-
 		var safetyAlertsChannelId = ChannelToId(safetyAlertsChannel, "Safety Alerts");
 
 		var rfeatures = this.RawFeatures.ToList();
@@ -931,6 +925,14 @@ public partial class DiscordGuild : SnowflakeObject
 			rfeatures.Remove("RAID_ALERTS_ENABLED");
 
 		return this.Discord.ApiClient.ModifyGuildSafetyAlertsSettingsAsync(this.Id, rfeatures, safetyAlertsChannelId, reason);
+
+		static Optional<ulong?> ChannelToId(DiscordChannel? ch, string name)
+			=> ch == null
+				? null
+				:
+				ch.Type != ChannelType.Text && ch.Type != ChannelType.News
+					? throw new ArgumentException($"{name} channel needs to be a text channel.")
+					: ch.Id;
 	}
 
 	/// <summary>

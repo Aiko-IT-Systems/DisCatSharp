@@ -362,11 +362,9 @@ public sealed class DiscordApiClient
 			await dc.OnGuildUpdateEventAsync(guildRest, rawMembers).ConfigureAwait(false);
 			return dc.GuildsInternal[guildRest.Id];
 		}
-		else
-		{
-			guildRest.Discord = this.Discord;
-			return guildRest;
-		}
+
+		guildRest.Discord = this.Discord;
+		return guildRest;
 	}
 
 	/// <summary>
