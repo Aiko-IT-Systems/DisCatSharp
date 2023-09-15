@@ -91,6 +91,11 @@ public class ApplicationCommandEditModel : ObservableApiObject
 	public Optional<List<ApplicationCommandContexts>?> AllowedContexts { internal get; set; }
 
 	/// <summary>
+	/// Sets the command's allowed integration types.
+	/// </summary>
+	public Optional<List<ApplicationCommandIntegrationTypes>?> IntegrationTypes { internal get; set; }
+
+	/// <summary>
 	/// Sets whether the command can be used in direct messages.
 	/// </summary>
 	public Optional<bool> DmPermission { internal get; set; }

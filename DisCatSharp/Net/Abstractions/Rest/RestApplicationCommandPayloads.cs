@@ -99,6 +99,13 @@ internal sealed class RestApplicationCommandCreatePayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("contexts", NullValueHandling = NullValueHandling.Include)]
 	public List<ApplicationCommandContexts>? AllowedContexts { get; set; }
+
+	/// <summary>
+	/// Gets the allowed integration types.
+	/// </summary>
+	[JsonProperty("integration_types", NullValueHandling = NullValueHandling.Ignore)]
+	public List<ApplicationCommandIntegrationTypes>? IntegrationTypes { get; set; }
+
 }
 
 /// <summary>
@@ -159,6 +166,12 @@ internal sealed class RestApplicationCommandEditPayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("contexts", NullValueHandling = NullValueHandling.Include)]
 	public Optional<List<ApplicationCommandContexts>?> AllowedContexts { get; set; }
+
+	/// <summary>
+	/// Gets the allowed integration types.
+	/// </summary>
+	[JsonProperty("integration_types", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<List<ApplicationCommandIntegrationTypes>?> IntegrationTypes { get; set; }
 }
 
 /// <summary>

@@ -51,7 +51,7 @@ internal static class ApplicationCommandEqualityChecks
 			ac1.Type,
 			ac1.NameLocalizations, ac1.DescriptionLocalizations,
 			ac1.DefaultMemberPermissions, ac1.DmPermission ?? true,
-			ac1.IsNsfw, ac1.AllowedContexts
+			ac1.IsNsfw, ac1.AllowedContexts, ac1.IntegrationTypes
 		);
 
 		if (sourceApplicationCommand.DefaultMemberPermissions == Permissions.None && targetApplicationCommand.DefaultMemberPermissions == null)
@@ -90,6 +90,7 @@ internal static class ApplicationCommandEqualityChecks
 						 && source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
 						 && source.DefaultMemberPermissions == target.DefaultMemberPermissions
 						 && sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw
+						 && source.AllowedContexts == target.AllowedContexts && source.IntegrationTypes == target.IntegrationTypes
 				}
 				: type switch
 				{
@@ -98,6 +99,7 @@ internal static class ApplicationCommandEqualityChecks
 						 && source.Type == target.Type
 						 && source.DefaultMemberPermissions == target.DefaultMemberPermissions
 						 && sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw
+						 && source.AllowedContexts == target.AllowedContexts && source.IntegrationTypes == target.IntegrationTypes
 				};
 
 		sDmPerm = null;
@@ -109,7 +111,8 @@ internal static class ApplicationCommandEqualityChecks
 				_ => source.Name == target.Name
 					&& source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
 					&& source.DefaultMemberPermissions == target.DefaultMemberPermissions
-					&& sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw && source.AllowedContexts == target.AllowedContexts
+					&& sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw
+					&& source.AllowedContexts == target.AllowedContexts && source.IntegrationTypes == target.IntegrationTypes
 			}
 			: type switch
 			{
@@ -117,7 +120,8 @@ internal static class ApplicationCommandEqualityChecks
 				_ => source.Name == target.Name
 					&& source.Type == target.Type
 					&& source.DefaultMemberPermissions == target.DefaultMemberPermissions
-					&& sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw && source.AllowedContexts == target.AllowedContexts
+					&& sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw
+					&& source.AllowedContexts == target.AllowedContexts && source.IntegrationTypes == target.IntegrationTypes
 			};
 	}
 
@@ -133,7 +137,7 @@ internal static class ApplicationCommandEqualityChecks
 	internal static bool DeepEqual(DiscordApplicationCommand source, DiscordApplicationCommand target, bool localizationEnabled = false, bool? sDmPerm = null, bool? tDmPerm = null)
 	{
 		var rootCheck = true;
-		rootCheck = source.Name == target.Name && source.Description == target.Description && source.Type == target.Type && source.DefaultMemberPermissions == target.DefaultMemberPermissions && sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw && source.AllowedContexts == target.AllowedContexts;
+		rootCheck = source.Name == target.Name && source.Description == target.Description && source.Type == target.Type && source.DefaultMemberPermissions == target.DefaultMemberPermissions && sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw && source.AllowedContexts == target.AllowedContexts && source.IntegrationTypes == target.IntegrationTypes;
 
 		if (localizationEnabled)
 			rootCheck = rootCheck && source.NameLocalizations == target.NameLocalizations && source.DescriptionLocalizations == target.DescriptionLocalizations;

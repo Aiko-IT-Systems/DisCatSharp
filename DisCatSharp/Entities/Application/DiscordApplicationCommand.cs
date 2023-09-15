@@ -108,7 +108,13 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// Gets where the application command can be used.
 	/// </summary>
 	[JsonProperty("contexts", NullValueHandling = NullValueHandling.Ignore), DiscordUnreleased]
-	public List<ApplicationCommandContexts>? AllowedContexts { get; set; }
+	public List<ApplicationCommandContexts>? AllowedContexts { get; internal set; }
+
+	/// <summary>
+	/// Gets the application command allowed integration types.
+	/// </summary>
+	[JsonProperty("integration_types", NullValueHandling = NullValueHandling.Ignore), DiscordUnreleased]
+	public List<ApplicationCommandIntegrationTypes>? IntegrationTypes { get; internal set; }
 
 	/// <summary>
 	/// Gets whether the command is marked as NSFW.
@@ -142,12 +148,14 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is NSFW.</param>
 	/// <param name="allowedContexts">Where the command can be used.</param>
+	/// <param name="integrationTypes">The allowed integration types.</param>
 	public DiscordApplicationCommand(
 		string name, string? description,
 		IEnumerable<DiscordApplicationCommandOption>? options = null,
 		ApplicationCommandType type = ApplicationCommandType.ChatInput,
 		DiscordApplicationCommandLocalization? nameLocalizations = null, DiscordApplicationCommandLocalization? descriptionLocalizations = null,
-		Permissions? defaultMemberPermissions = null, bool? dmPermission = null, bool isNsfw = false, List<ApplicationCommandContexts>? allowedContexts = null)
+		Permissions? defaultMemberPermissions = null, bool? dmPermission = null, bool isNsfw = false,
+		List<ApplicationCommandContexts>? allowedContexts = null, List<ApplicationCommandIntegrationTypes>? integrationTypes = null)
 		: base(new() { "guild_id" })
 	{
 		if (type is ApplicationCommandType.ChatInput)
@@ -186,6 +194,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 		this.DmPermission = dmPermission;
 		this.IsNsfw = isNsfw;
 		this.AllowedContexts = allowedContexts;
+		this.IntegrationTypes = integrationTypes;
 	}
 
 	/// <summary>
