@@ -25,21 +25,19 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands.Context;
-using DisCatSharp.Attributes;
 
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
-/// Defines that this application command is restricted to the owner of the bot.
+/// Defines that this application command is restricted to team members of the bot with owner role.
 /// </summary>
-[Deprecated("This is deprecated and will be remove in future in favor of RequireTeamXY"), AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-public sealed class ApplicationCommandRequireOwnerAttribute : ApplicationCommandCheckBaseAttribute
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
+public sealed class ApplicationCommandRequireTeamOwnerAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
-	/// Defines that this application command is restricted to the owner of the bot.
+	/// Defines that this application command is restricted to team members of the bot with owner role.
 	/// </summary>
-	[Deprecated("This is deprecated and will be remove in future in favor of RequireTeamXY")]
-	public ApplicationCommandRequireOwnerAttribute()
+	public ApplicationCommandRequireTeamOwnerAttribute()
 	{ }
 
 	/// <summary>
@@ -48,8 +46,10 @@ public sealed class ApplicationCommandRequireOwnerAttribute : ApplicationCommand
 	public override Task<bool> ExecuteChecksAsync(BaseContext ctx)
 	{
 		var app = ctx.Client.CurrentApplication!;
-		var me = ctx.Client.CurrentUser!;
+		if (app.Team is null)
+			return Task.FromResult(app.Owner.Id == ctx.User.Id);
 
-		return app != null ? Task.FromResult(app.Members.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
+		var teamMember = app.Team.Members.FirstOrDefault(x => x.User.Id == ctx.User.Id);
+		return teamMember == null ? Task.FromResult(false) : Task.FromResult(teamMember.Role is "owner");
 	}
 }
