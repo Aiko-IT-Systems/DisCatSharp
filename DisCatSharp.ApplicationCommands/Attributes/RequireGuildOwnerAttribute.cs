@@ -21,35 +21,27 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands.Context;
-using DisCatSharp.Attributes;
 
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
-/// Defines that this application command is restricted to the owner of the bot.
+/// Defines that this application command is only usable within a guild by its owner.
 /// </summary>
-[Deprecated("This is deprecated and will be remove in future in favor of RequireTeamXY"), AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-public sealed class ApplicationCommandRequireOwnerAttribute : ApplicationCommandCheckBaseAttribute
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
+public sealed class ApplicationCommandRequireGuildOwnerAttributeAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
-	/// Defines that this application command is restricted to the owner of the bot.
+	/// Defines that this command is only usable within a guild by its owner.
 	/// </summary>
-	[Deprecated("This is deprecated and will be remove in future in favor of RequireTeamXY")]
-	public ApplicationCommandRequireOwnerAttribute()
+	public ApplicationCommandRequireGuildOwnerAttributeAttribute()
 	{ }
 
 	/// <summary>
 	/// Runs checks.
 	/// </summary>
 	public override Task<bool> ExecuteChecksAsync(BaseContext ctx)
-	{
-		var app = ctx.Client.CurrentApplication!;
-		var me = ctx.Client.CurrentUser!;
-
-		return app != null ? Task.FromResult(app.Members.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
-	}
+		=> Task.FromResult(ctx.Guild is not null && ctx.Guild.OwnerId == ctx.User.Id);
 }
