@@ -453,9 +453,7 @@ internal class RegistrationWorker
 	/// <returns>A list of command ids.</returns>
 	private static List<ulong> BuildGlobalDeleteList(DiscordClient client, List<DiscordApplicationCommand> updateList = null)
 	{
-		if (ApplicationCommandsExtension.GlobalDiscordCommands == null || !ApplicationCommandsExtension.GlobalDiscordCommands.Any()
-			|| ApplicationCommandsExtension.GlobalDiscordCommands == null
-		)
+		if (ApplicationCommandsExtension.GlobalDiscordCommands == null || !ApplicationCommandsExtension.GlobalDiscordCommands.Any())
 			return null;
 
 		var discord = ApplicationCommandsExtension.GlobalDiscordCommands;
@@ -512,9 +510,7 @@ internal class RegistrationWorker
 			List<DiscordApplicationCommand> unchangedCommands
 		) BuildGlobalOverwriteList(DiscordClient client, List<DiscordApplicationCommand> updateList)
 	{
-		if (ApplicationCommandsExtension.GlobalDiscordCommands == null || !ApplicationCommandsExtension.GlobalDiscordCommands.Any()
-			|| updateList == null || ApplicationCommandsExtension.GlobalDiscordCommands == null
-		)
+		if (ApplicationCommandsExtension.GlobalDiscordCommands == null || !ApplicationCommandsExtension.GlobalDiscordCommands.Any() || updateList == null)
 			return (null, null);
 
 		var discord = ApplicationCommandsExtension.GlobalDiscordCommands;
