@@ -5626,8 +5626,7 @@ public sealed class DiscordApiClient
 				DefaultMemberPermission = command.DefaultMemberPermissions,
 				DmPermission = command.DmPermission,
 				Nsfw = command.IsNsfw,
-				AllowedContexts = command.AllowedContexts,
-				IntegrationTypes = command.IntegrationTypes
+				AllowedContexts = command.AllowedContexts
 			});
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
@@ -5663,8 +5662,7 @@ public sealed class DiscordApiClient
 			DefaultMemberPermission = command.DefaultMemberPermissions,
 			DmPermission = command.DmPermission,
 			Nsfw = command.IsNsfw,
-			AllowedContexts = command.AllowedContexts,
-			IntegrationTypes = command.IntegrationTypes
+			AllowedContexts = command.AllowedContexts
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
@@ -5739,8 +5737,7 @@ public sealed class DiscordApiClient
 			NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 			Nsfw = isNsfw,
-			AllowedContexts = allowedContexts,
-			IntegrationTypes = integrationTypes
+			AllowedContexts = allowedContexts
 		};
 
 		var route =
