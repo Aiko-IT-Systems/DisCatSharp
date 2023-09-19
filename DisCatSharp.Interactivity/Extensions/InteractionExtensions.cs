@@ -53,7 +53,7 @@ public static class InteractionExtensions
 	/// <param name="deletion">Deletion behaviour</param>
 	/// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
 	public static Task SendPaginatedResponseAsync(this DiscordInteraction interaction, bool deferred, bool ephemeral, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons = null, PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default, CancellationToken token = default)
-		=> MessageExtensions.GetInteractivity(interaction.Message).SendPaginatedResponseAsync(interaction, deferred, ephemeral, user, pages, buttons, behaviour, deletion, token);
+		=> (interaction.Discord as DiscordClient)?.GetInteractivity()?.SendPaginatedResponseAsync(interaction, deferred, ephemeral, user, pages, buttons, behaviour, deletion, token);
 
 	/// <summary>
 	/// Sends multiple modals to the user with a prompt to open the next one.
