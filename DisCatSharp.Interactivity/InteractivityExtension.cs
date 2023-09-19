@@ -179,7 +179,7 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="timeoutOverride">Override the timeout period specified in <see cref="InteractivityConfiguration"/>.</param>
 	/// <returns>A <see cref="InteractivityResult{T}"/> with the result of the modal.</returns>
 		public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForModalAsync(string customId, TimeSpan? timeoutOverride = null)
-			=> this.WaitForModalAsync(customId, this.GetCancellationToken(timeoutOverride));	
+			=> this.WaitForModalAsync(customId, this.GetCancellationToken(timeoutOverride));
 
 	/// <summary>
 	/// Waits for a user modal submit.
@@ -783,6 +783,15 @@ public class InteractivityExtension : BaseExtension
 		{
 			bts.SkipLeft.Disable();
 			bts.Left.Disable();
+		}
+
+		if (pages.Count() == 1)
+		{
+			bts.SkipRight.Disable();
+			bts.Left.Disable();
+			bts.Stop.Disable();
+			bts.Right.Disable();
+			bts.SkipRight.Disable();
 		}
 
 		DiscordMessage message;
