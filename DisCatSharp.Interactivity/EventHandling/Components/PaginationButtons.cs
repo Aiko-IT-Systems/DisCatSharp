@@ -67,6 +67,12 @@ public class PaginationButtons
 		this.SkipRight
 	};
 
+	public const string SKIP_LEFT_CUSTOM_ID = "pgb-skip-left";
+	public const string LEFT_CUSTOM_ID = "pgb-left";
+	public const string STOP_CUSTOM_ID = "pgb-stop";
+	public const string RIGHT_CUSTOM_ID = "pgb-right";
+	public const string SKIP_RIGHT_CUSTOM_ID = "pgb-skip-right";
+
 	/// <summary>
 	/// Initializes a new instance of the <see cref="PaginationButtons"/> class.
 	/// </summary>

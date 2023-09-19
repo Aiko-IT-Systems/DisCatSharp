@@ -140,7 +140,7 @@ public static class ChannelExtensions
 	/// <summary>
 	/// Retrieves an interactivity instance from a channel instance.
 	/// </summary>
-	private static InteractivityExtension GetInteractivity(DiscordChannel channel)
+	internal static InteractivityExtension GetInteractivity(DiscordChannel channel)
 	{
 		var client = (DiscordClient)channel.Discord;
 		var interactivity = client.GetInteractivity();
