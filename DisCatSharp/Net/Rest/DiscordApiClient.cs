@@ -5350,8 +5350,8 @@ public sealed class DiscordApiClient
 			Options = options,
 			DefaultMemberPermission = defaultMemberPermission,
 			DmPermission = dmPermission,
-			NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
-			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
+			NameLocalizations = nameLocalization.ValueOrDefault()?.GetKeyValuePairs(),
+			DescriptionLocalizations = descriptionLocalization.ValueOrDefault()?.GetKeyValuePairs(),
 			Nsfw = isNsfw,
 			AllowedContexts = allowedContexts,
 			IntegrationTypes = integrationTypes
@@ -5527,8 +5527,8 @@ public sealed class DiscordApiClient
 			Options = options,
 			DefaultMemberPermission = defaultMemberPermission,
 			DmPermission = dmPermission,
-			NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
-			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
+			NameLocalizations = nameLocalization.ValueOrDefault()?.GetKeyValuePairs(),
+			DescriptionLocalizations = descriptionLocalization.ValueOrDefault()?.GetKeyValuePairs(),
 			Nsfw = isNsfw,
 			AllowedContexts = allowedContexts
 		};
