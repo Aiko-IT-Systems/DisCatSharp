@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
+
 using DisCatSharp.Enums;
 
 namespace DisCatSharp.Entities;
@@ -57,8 +59,9 @@ public sealed class DiscordUserSelectComponent : DiscordBaseSelectComponent
 	/// <param name="minOptions">Minimum count of selectable options.</param>
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this select component should be initialized as being disabled. User sees a greyed out select component that cannot be interacted with.</param>
-	public DiscordUserSelectComponent(string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false)
-		: base(ComponentType.UserSelect, placeholder, customId, minOptions, maxOptions, disabled)
+	/// <param name="defaultValues">The default values of this select menu.</param>
+	public DiscordUserSelectComponent(string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false, IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
+		: base(ComponentType.UserSelect, placeholder, customId, minOptions, maxOptions, disabled, defaultValues)
 	{ }
 
 	/// <summary>
@@ -70,8 +73,9 @@ public sealed class DiscordUserSelectComponent : DiscordBaseSelectComponent
 	/// <param name="minOptions">Minimum count of selectable options.</param>
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this select component should be initialized as being disabled. User sees a greyed out select component that cannot be interacted with.</param>
-	public DiscordUserSelectComponent(string label, string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false)
-		: base(ComponentType.UserSelect, label, placeholder, customId, minOptions, maxOptions, disabled)
+	/// <param name="defaultValues">The default values of this select menu.</param>
+	public DiscordUserSelectComponent(string label, string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false, IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
+		: base(ComponentType.UserSelect, label, placeholder, customId, minOptions, maxOptions, disabled, defaultValues)
 	{ }
 
 	/// <summary>
