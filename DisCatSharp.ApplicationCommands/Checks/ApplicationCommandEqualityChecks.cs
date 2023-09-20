@@ -143,13 +143,13 @@ internal static class ApplicationCommandEqualityChecks
 	}
 
 	/// <summary>
-	/// Performs a SequenceEqual on a list if both <paramref name="source"/> and <paramref name="target"/> is not null.
+	/// Performs a SequenceEqual on an enumerable if both <paramref name="source"/> and <paramref name="target"/> is not null.
 	/// </summary>
 	/// <typeparam name="T">The containing type within the list.</typeparam>
-	/// <param name="source">The source list.</param>
-	/// <param name="target">The target list.</param>
-	/// <returns>Whether both nullable lists are equal.</returns>
-	internal static bool NullableSequenceEqual<T>(this List<T>? source, List<T>? target)
+	/// <param name="source">The source enumerable.</param>
+	/// <param name="target">The target enumerable.</param>
+	/// <returns>Whether both nullable enumerable are equal.</returns>
+	internal static bool NullableSequenceEqual<T>(this IEnumerable<T>? source, IEnumerable<T>? target)
 	{
 		if (source is not null && target is not null)
 			return source.OrderBy(x => x).SequenceEqual(target.OrderBy(x => x));
@@ -185,8 +185,8 @@ internal static class ApplicationCommandEqualityChecks
 
 		if (localizationEnabled)
 			rootCheck = rootCheck &&
-			            source.NameLocalizations.Localizations.SequenceEqual(target.NameLocalizations.Localizations) &&
-			            source.DescriptionLocalizations.Localizations.SequenceEqual(target.DescriptionLocalizations
+			            source.NameLocalizations.Localizations.NullableSequenceEqual(target.NameLocalizations.Localizations) &&
+			            source.DescriptionLocalizations.Localizations.NullableSequenceEqual(target.DescriptionLocalizations
 				            .Localizations);
 
 		// Compare the Options using recursion
@@ -230,9 +230,9 @@ internal static class ApplicationCommandEqualityChecks
 
 			if (localizationEnabled)
 				optionCheck = optionCheck &&
-				              sourceOption.NameLocalizations.Localizations.SequenceEqual(targetOption.NameLocalizations
+				              sourceOption.NameLocalizations.Localizations.NullableSequenceEqual(targetOption.NameLocalizations
 					              .Localizations) &&
-				              sourceOption.DescriptionLocalizations.Localizations.SequenceEqual(targetOption
+				              sourceOption.DescriptionLocalizations.Localizations.NullableSequenceEqual(targetOption
 					              .DescriptionLocalizations.Localizations);
 
 			if ((sourceOption.Choices is null && targetOption.Choices is not null) ||
