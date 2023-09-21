@@ -1,25 +1,3 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -682,7 +660,8 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildIncidentActionsModifyPayload
 		{
-			InvitesDisabledUntil = invitesDisabledUntil, DmsDisabledUntil = dmsDisabledUntil
+			InvitesDisabledUntil = invitesDisabledUntil,
+			DmsDisabledUntil = dmsDisabledUntil
 		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.INCIDENT_ACTIONS}";
@@ -731,7 +710,10 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildOnboardingModifyPayload()
 		{
-			Prompts = prompts, DefaultChannelIds = defaultChannelIds, Enabled = enabled, Mode = mode
+			Prompts = prompts,
+			DefaultChannelIds = defaultChannelIds,
+			Enabled = enabled,
+			Mode = mode
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -817,7 +799,8 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildSafetyModifyPayload
 		{
-			SafetyAlertsChannelId = safetyAlertsChannelId, Features = features
+			SafetyAlertsChannelId = safetyAlertsChannelId,
+			Features = features
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -1289,7 +1272,9 @@ public sealed class DiscordApiClient
 			ret.Channels = ret.Guild == null
 				? rawChannels.Select(r => new DiscordChannel
 				{
-					Id = (ulong)r["id"], Name = r["name"].ToString(), Position = (int)r["position"]
+					Id = (ulong)r["id"],
+					Name = r["name"].ToString(),
+					Position = (int)r["position"]
 				}).ToList()
 				: rawChannels.Select(r =>
 				{
@@ -1484,7 +1469,9 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildMembershipScreeningFormModifyPayload
 		{
-			Enabled = enabled, Description = description, Fields = fields
+			Enabled = enabled,
+			Description = description,
+			Fields = fields
 		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBER_VERIFICATION}";
@@ -1528,7 +1515,9 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildWelcomeScreenModifyPayload
 		{
-			Enabled = enabled, WelcomeChannels = welcomeChannels, Description = description
+			Enabled = enabled,
+			WelcomeChannels = welcomeChannels,
+			Description = description
 		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.WELCOME_SCREEN}";
@@ -1554,7 +1543,9 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildUpdateCurrentUserVoiceStatePayload
 		{
-			ChannelId = channelId, Suppress = suppress, RequestToSpeakTimestamp = requestToSpeakTimestamp
+			ChannelId = channelId,
+			Suppress = suppress,
+			RequestToSpeakTimestamp = requestToSpeakTimestamp
 		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.VOICE_STATES}/@me";
@@ -1702,7 +1693,10 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestAutomodRuleModifyPayload
 		{
-			Name = name, EventType = eventType, TriggerMetadata = metadata, Enabled = enabled
+			Name = name,
+			EventType = eventType,
+			TriggerMetadata = metadata,
+			Enabled = enabled
 		};
 
 		if (actions.HasValue)
@@ -2452,7 +2446,8 @@ public sealed class DiscordApiClient
 			pld.MessageReference =
 				new InternalDiscordMessageReference
 				{
-					MessageId = replyMessageId, FailIfNotExists = failOnInvalidReply
+					MessageId = replyMessageId,
+					FailIfNotExists = failOnInvalidReply
 				};
 
 		if (replyMessageId != null)
@@ -2498,7 +2493,8 @@ public sealed class DiscordApiClient
 		if (builder.ReplyId != null)
 			pld.MessageReference = new InternalDiscordMessageReference
 			{
-				MessageId = builder.ReplyId, FailIfNotExists = builder.FailOnInvalidReply
+				MessageId = builder.ReplyId,
+				FailIfNotExists = builder.FailOnInvalidReply
 			};
 
 		pld.Mentions = new(builder.Mentions ?? Mentions.All, builder.Mentions?.Any() ?? false, builder.MentionOnReply);
@@ -2538,7 +2534,10 @@ public sealed class DiscordApiClient
 			{
 				DiscordAttachment att = new()
 				{
-					Id = fileId, Discord = this.Discord, Description = file.Description, Filename = file.Filename
+					Id = fileId,
+					Discord = this.Discord,
+					Description = file.Description,
+					Filename = file.Filename
 				};
 				attachments.Add(att);
 				fileId++;
@@ -2808,7 +2807,10 @@ public sealed class DiscordApiClient
 			{
 				DiscordAttachment att = new()
 				{
-					Id = fileId, Discord = this.Discord, Description = file.Description, Filename = file.Filename
+					Id = fileId,
+					Discord = this.Discord,
+					Description = file.Description,
+					Filename = file.Filename
 				};
 				attachmentsNew.Add(att);
 				fileId++;
@@ -2998,7 +3000,9 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestChannelPermissionEditPayload
 		{
-			Type = type, Allow = allow & PermissionMethods.FullPerms, Deny = deny & PermissionMethods.FullPerms
+			Type = type,
+			Allow = allow & PermissionMethods.FullPerms,
+			Deny = deny & PermissionMethods.FullPerms
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -3225,7 +3229,7 @@ public sealed class DiscordApiClient
 
 		var duser = DiscordJson.DeserializeObject<DiscordUser>(res.Response, this.Discord);
 		if (this.Discord.Configuration.Intents.HasIntent(DiscordIntents.GuildPresences) && duser.Presence == null &&
-		    this.Discord is DiscordClient dc)
+			this.Discord is DiscordClient dc)
 			dc.PresencesInternal[duser.Id] = new()
 			{
 				Discord = dc,
@@ -3265,10 +3269,13 @@ public sealed class DiscordApiClient
 		});
 
 		if (this.Discord.Configuration.Intents.HasIntent(DiscordIntents.GuildPresences) && usr.Presence == null &&
-		    this.Discord is DiscordClient dc)
+			this.Discord is DiscordClient dc)
 			dc.PresencesInternal[usr.Id] = new()
 			{
-				Discord = dc, RawActivity = new(), Activity = new(), Status = UserStatus.Offline
+				Discord = dc,
+				RawActivity = new(),
+				Activity = new(),
+				Status = UserStatus.Offline
 			};
 
 		return new(tm) { Discord = this.Discord, GuildId = guildId };
@@ -3303,7 +3310,9 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestUserUpdateCurrentPayload
 		{
-			Username = username, AvatarBase64 = base64Avatar.ValueOrDefault(), AvatarSet = base64Avatar.HasValue
+			Username = username,
+			AvatarBase64 = base64Avatar.ValueOrDefault(),
+			AvatarSet = base64Avatar.HasValue
 		};
 
 		var route = $"{Endpoints.USERS}{Endpoints.ME}";
@@ -3602,8 +3611,8 @@ public sealed class DiscordApiClient
 		var urlParams = new Dictionary<string, string> { ["days"] = days.ToString(CultureInfo.InvariantCulture) };
 
 		var sb = includeRoles?.Aggregate(new StringBuilder(),
-			         (sb, id) => sb.Append($"&include_roles={id}"))
-		         ?? new StringBuilder();
+					 (sb, id) => sb.Append($"&include_roles={id}"))
+				 ?? new StringBuilder();
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.PRUNE}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId }, out var path);
@@ -3637,8 +3646,8 @@ public sealed class DiscordApiClient
 		};
 
 		var sb = includeRoles?.Aggregate(new StringBuilder(),
-			         (sb, id) => sb.Append($"&include_roles={id}"))
-		         ?? new StringBuilder();
+					 (sb, id) => sb.Append($"&include_roles={id}"))
+				 ?? new StringBuilder();
 
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -3999,7 +4008,9 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestWebhookPayload
 		{
-			Name = name, AvatarBase64 = base64Avatar.ValueOrDefault(), AvatarSet = base64Avatar.HasValue
+			Name = name,
+			AvatarBase64 = base64Avatar.ValueOrDefault(),
+			AvatarSet = base64Avatar.HasValue
 		};
 
 		var headers = new Dictionary<string, string>();
@@ -4272,7 +4283,7 @@ public sealed class DiscordApiClient
 		}
 
 		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.Files?.Count > 0 ||
-		    builder.IsTts == true || builder.Mentions != null)
+			builder.IsTts == true || builder.Mentions != null)
 			values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
@@ -4715,7 +4726,9 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestThreadChannelCreatePayload
 		{
-			Name = name, AutoArchiveDuration = autoArchiveDuration, PerUserRateLimit = rateLimitPerUser
+			Name = name,
+			AutoArchiveDuration = autoArchiveDuration,
+			PerUserRateLimit = rateLimitPerUser
 		};
 
 		if (isForum && builder is not null)
@@ -5425,19 +5438,19 @@ public sealed class DiscordApiClient
 		ulong applicationId, IEnumerable<DiscordApplicationCommand> commands)
 	{
 		var pld = commands.Select(command => new RestApplicationCommandCreatePayload()
-			{
-				Type = command.Type,
-				Name = command.Name,
-				Description = command.Type == ApplicationCommandType.ChatInput ? command.Description : null,
-				Options = command.Options,
-				NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
-				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
-				DefaultMemberPermission = command.DefaultMemberPermissions,
-				DmPermission = command.DmPermission,
-				Nsfw = command.IsNsfw,
-				AllowedContexts = command.AllowedContexts,
-				IntegrationTypes = command.IntegrationTypes
-			})
+		{
+			Type = command.Type,
+			Name = command.Name,
+			Description = command.Type == ApplicationCommandType.ChatInput ? command.Description : null,
+			Options = command.Options,
+			NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
+			DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
+			DefaultMemberPermission = command.DefaultMemberPermissions,
+			DmPermission = command.DmPermission,
+			Nsfw = command.IsNsfw,
+			AllowedContexts = command.AllowedContexts,
+			IntegrationTypes = command.IntegrationTypes
+		})
 			.ToList();
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
@@ -5863,7 +5876,7 @@ public sealed class DiscordApiClient
 
 		if (builder != null)
 			if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder?.IsTts == true ||
-			    builder.Mentions != null || builder.Files?.Count > 0 || builder.Components?.Count > 0)
+				builder.Mentions != null || builder.Files?.Count > 0 || builder.Components?.Count > 0)
 				values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 		var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
@@ -5902,7 +5915,9 @@ public sealed class DiscordApiClient
 			Type = type,
 			Data = new()
 			{
-				Title = builder.Title, CustomId = builder.CustomId, ModalComponents = builder.ModalComponents
+				Title = builder.Title,
+				CustomId = builder.CustomId,
+				ModalComponents = builder.ModalComponents
 			}
 		};
 
@@ -6038,7 +6053,7 @@ public sealed class DiscordApiClient
 			pld.Mentions = new(builder.Mentions, builder.Mentions.Any());
 
 		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts ||
-		    builder.Mentions != null || builder.Files?.Count > 0 || builder.Components?.Count > 0)
+			builder.Mentions != null || builder.Files?.Count > 0 || builder.Components?.Count > 0)
 			values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 		var route = $"{Endpoints.WEBHOOKS}/:application_id/:interaction_token";

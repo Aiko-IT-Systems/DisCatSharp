@@ -50,7 +50,6 @@ using Microsoft.Extensions.Logging;
 using DisCatSharp;
 using DisCatSharp.Net;
 using DisCatSharp.Lavalink;
-
 namespace FirstLavalinkBot;
 
 public class Program

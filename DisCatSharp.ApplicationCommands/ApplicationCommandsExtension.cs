@@ -1,25 +1,3 @@
-// This file is part of the DisCatSharp project.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -394,10 +372,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	public event AsyncEventHandler<ApplicationCommandsExtension, ApplicationCommandsModuleReadyEventArgs>
 		ApplicationCommandsModuleReady
-		{
-			add => this._applicationCommandsModuleReady.Register(value);
-			remove => this._applicationCommandsModuleReady.Unregister(value);
-		}
+	{
+		add => this._applicationCommandsModuleReady.Register(value);
+		remove => this._applicationCommandsModuleReady.Unregister(value);
+	}
 
 	private AsyncEvent<ApplicationCommandsExtension, ApplicationCommandsModuleReadyEventArgs>
 		_applicationCommandsModuleReady;
@@ -407,10 +385,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	public event AsyncEventHandler<ApplicationCommandsExtension, ApplicationCommandsModuleStartupFinishedEventArgs>
 		ApplicationCommandsModuleStartupFinished
-		{
-			add => this._applicationCommandsModuleStartupFinished.Register(value);
-			remove => this._applicationCommandsModuleStartupFinished.Unregister(value);
-		}
+	{
+		add => this._applicationCommandsModuleStartupFinished.Register(value);
+		remove => this._applicationCommandsModuleStartupFinished.Unregister(value);
+	}
 
 	private AsyncEvent<ApplicationCommandsExtension, ApplicationCommandsModuleStartupFinishedEventArgs>
 		_applicationCommandsModuleStartupFinished;
@@ -421,10 +399,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	public event AsyncEventHandler<ApplicationCommandsExtension, GuildApplicationCommandsRegisteredEventArgs>
 		GuildApplicationCommandsRegistered
-		{
-			add => this._guildApplicationCommandsRegistered.Register(value);
-			remove => this._guildApplicationCommandsRegistered.Unregister(value);
-		}
+	{
+		add => this._guildApplicationCommandsRegistered.Register(value);
+		remove => this._guildApplicationCommandsRegistered.Unregister(value);
+	}
 
 	private AsyncEvent<ApplicationCommandsExtension, GuildApplicationCommandsRegisteredEventArgs>
 		_guildApplicationCommandsRegistered;
@@ -434,10 +412,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	public event AsyncEventHandler<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs>
 		GlobalApplicationCommandsRegistered
-		{
-			add => this._globalApplicationCommandsRegistered.Register(value);
-			remove => this._globalApplicationCommandsRegistered.Unregister(value);
-		}
+	{
+		add => this._globalApplicationCommandsRegistered.Register(value);
+		remove => this._globalApplicationCommandsRegistered.Unregister(value);
+	}
 
 	private AsyncEvent<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs>
 		_globalApplicationCommandsRegistered;
@@ -590,7 +568,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				if (module.GetCustomAttribute<SlashCommandGroupAttribute>() != null)
 					classes.Add(module);
 				else if (module.GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
-				         .Any(x => x.IsDefined(typeof(SlashCommandGroupAttribute))))
+						 .Any(x => x.IsDefined(typeof(SlashCommandGroupAttribute))))
 				{
 					//Otherwise add the extreme nested groups
 					classes = module.GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
@@ -628,7 +606,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								{
 									var cgs = new List<CommandGroup>();
 									foreach (var scg in cmd.Options.Where(x =>
-										         x.Type == ApplicationCommandOptionType.SubCommandGroup))
+												 x.Type == ApplicationCommandOptionType.SubCommandGroup))
 									{
 										var cs = new List<Command>();
 										foreach (var sc in scg.Options)
@@ -644,7 +622,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 									var cs2 = new List<Command>();
 									foreach (var sc2 in cmd.Options.Where(x =>
-										         x.Type == ApplicationCommandOptionType.SubCommand))
+												 x.Type == ApplicationCommandOptionType.SubCommand))
 										if (sc2.Options == null || !sc2.Options.Any())
 											cs2.Add(new(sc2.Name, sc2.Description, null, null));
 										else
@@ -699,10 +677,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						{
 							var cs = new List<Command>();
 							foreach (var cmd in slashCommands.applicationCommands.Where(cmd =>
-								         cmd.Type == ApplicationCommandType.ChatInput && (cmd.Options == null ||
-									         !cmd.Options.Any(x =>
-										         x.Type is ApplicationCommandOptionType.SubCommand
-											         or ApplicationCommandOptionType.SubCommandGroup))))
+										 cmd.Type == ApplicationCommandType.ChatInput && (cmd.Options == null ||
+											 !cmd.Options.Any(x =>
+												 x.Type is ApplicationCommandOptionType.SubCommand
+													 or ApplicationCommandOptionType.SubCommandGroup))))
 								if (cmd.Options == null || !cmd.Options.Any())
 									cs.Add(new(cmd.Name, cmd.Description, null, ApplicationCommandType.ChatInput));
 								else
@@ -733,9 +711,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						if (Configuration.GenerateTranslationFilesOnly)
 						{
 							var cs = (from cmd in contextCommands.applicationCommands
-								where cmd.Type == ApplicationCommandType.Message ||
-								      cmd.Type == ApplicationCommandType.User
-								select new Command(cmd.Name, null, null, cmd.Type)).ToList();
+									  where cmd.Type == ApplicationCommandType.Message ||
+									  cmd.Type == ApplicationCommandType.User
+									  select new Command(cmd.Name, null, null, cmd.Type)).ToList();
 							if (cs.Any())
 								translation.AddRange(cs.Select(c =>
 									JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(c))));
@@ -750,8 +728,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 					//Accounts for lifespans
 					if (module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null &&
-					    module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan ==
-					    ApplicationCommandModuleLifespan.Singleton)
+						module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan ==
+						ApplicationCommandModuleLifespan.Singleton)
 						s_singletonModules.Add(CreateInstance(module, Configuration?.ServiceProvider));
 				}
 			}
@@ -884,7 +862,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					s_registeredCommands.Add(new(guildId, commands.ToList()));
 
 					foreach (var app in commandMethods.Select(command =>
-						         types.First(t => t.Type == command.Method.DeclaringType)))
+								 types.First(t => t.Type == command.Method.DeclaringType)))
 					{
 						// tf we wanted to do with app??
 					}
@@ -907,7 +885,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						await this._globalApplicationCommandsRegistered.InvokeAsync(this,
 							new(Configuration?.ServiceProvider)
 							{
-								Handled = true, RegisteredCommands = GlobalCommandsInternal
+								Handled = true,
+								RegisteredCommands = GlobalCommandsInternal
 							}).ConfigureAwait(false);
 
 					s_registrationCount++;
@@ -1336,8 +1315,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		if (data.Options == null!)
 			return ApplicationCommandFinalType.Command;
 		if (data.Options.All(x =>
-			    x.Type is not ApplicationCommandOptionType.SubCommand
-				    and not ApplicationCommandOptionType.SubCommandGroup))
+				x.Type is not ApplicationCommandOptionType.SubCommand
+					and not ApplicationCommandOptionType.SubCommandGroup))
 			return ApplicationCommandFinalType.Command;
 
 		if (data.Options.Any(x => x.Type is ApplicationCommandOptionType.SubCommandGroup))
@@ -1594,9 +1573,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		foreach (var parameter in parameters)
 			//Accounts for optional arguments without values given
 			if (parameter.IsOptional && (options == null ||
-			                             (!options?.Any(x =>
-				                             x.Name == parameter.GetCustomAttribute<OptionAttribute>().Name
-					                             .ToLower()) ?? true)))
+										 (!options?.Any(x =>
+											 x.Name == parameter.GetCustomAttribute<OptionAttribute>().Name
+												 .ToLower()) ?? true)))
 				args.Add(parameter.DefaultValue);
 			else
 			{
@@ -1626,22 +1605,23 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				{
 					//Checks through resolved
 					if (e.Interaction.Data.Resolved?.Attachments != null &&
-					    e.Interaction.Data.Resolved.Attachments.TryGetValue((ulong)option.Value, out var attachment))
+						e.Interaction.Data.Resolved.Attachments.TryGetValue((ulong)option.Value, out var attachment))
 						args.Add(attachment);
 					else
 						args.Add(new DiscordAttachment()
 						{
-							Id = (ulong)option.Value, Discord = this.Client.ApiClient.Discord
+							Id = (ulong)option.Value,
+							Discord = this.Client.ApiClient.Discord
 						});
 				}
 				else if (parameter.ParameterType == typeof(DiscordUser))
 				{
 					//Checks through resolved
 					if (e.Interaction.Data.Resolved?.Members != null &&
-					    e.Interaction.Data.Resolved.Members.TryGetValue((ulong)option.Value, out var member))
+						e.Interaction.Data.Resolved.Members.TryGetValue((ulong)option.Value, out var member))
 						args.Add(member);
 					else if (e.Interaction.Data.Resolved?.Users != null &&
-					         e.Interaction.Data.Resolved.Users.TryGetValue((ulong)option.Value, out var user))
+							 e.Interaction.Data.Resolved.Users.TryGetValue((ulong)option.Value, out var user))
 						args.Add(user);
 					else
 						args.Add(await this.Client.GetUserAsync((ulong)option.Value).ConfigureAwait(false));
@@ -1650,7 +1630,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				{
 					//Checks through resolved
 					if (e.Interaction.Data.Resolved?.Channels != null &&
-					    e.Interaction.Data.Resolved.Channels.TryGetValue((ulong)option.Value, out var channel))
+						e.Interaction.Data.Resolved.Channels.TryGetValue((ulong)option.Value, out var channel))
 						args.Add(channel);
 					else
 						args.Add(e.Interaction.Guild.GetChannel((ulong)option.Value));
@@ -1659,7 +1639,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				{
 					//Checks through resolved
 					if (e.Interaction.Data.Resolved?.Roles != null &&
-					    e.Interaction.Data.Resolved.Roles.TryGetValue((ulong)option.Value, out var role))
+						e.Interaction.Data.Resolved.Roles.TryGetValue((ulong)option.Value, out var role))
 						args.Add(role);
 					else
 						args.Add(e.Interaction.Guild.GetRole((ulong)option.Value));
@@ -1668,16 +1648,16 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				{
 					//Checks through resolved
 					if (e.Interaction.Data.Resolved?.Channels != null &&
-					    e.Interaction.Data.Resolved.Channels.TryGetValue((ulong)option.Value, out var channel))
+						e.Interaction.Data.Resolved.Channels.TryGetValue((ulong)option.Value, out var channel))
 						args.Add(channel);
 					else if (e.Interaction.Data.Resolved?.Roles != null &&
-					         e.Interaction.Data.Resolved.Roles.TryGetValue((ulong)option.Value, out var role))
+							 e.Interaction.Data.Resolved.Roles.TryGetValue((ulong)option.Value, out var role))
 						args.Add(role);
 					else if (e.Interaction.Data.Resolved?.Members != null &&
-					         e.Interaction.Data.Resolved.Members.TryGetValue((ulong)option.Value, out var member))
+							 e.Interaction.Data.Resolved.Members.TryGetValue((ulong)option.Value, out var member))
 						args.Add(member);
 					else if (e.Interaction.Data.Resolved?.Users != null &&
-					         e.Interaction.Data.Resolved.Users.TryGetValue((ulong)option.Value, out var user))
+							 e.Interaction.Data.Resolved.Users.TryGetValue((ulong)option.Value, out var user))
 						args.Add(user);
 					else
 						throw new ArgumentException("Error resolving mentionable option.");
@@ -1869,8 +1849,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		{
 			//Gets the attribute
 			var optionAttribute = parameter.GetCustomAttribute<OptionAttribute>() ??
-			                      throw new ArgumentException(
-				                      $"One or more arguments of the command '{commandName}' are missing the Option attribute!");
+								  throw new ArgumentException(
+									  $"One or more arguments of the command '{commandName}' are missing the Option attribute!");
 			var minimumValue = parameter.GetCustomAttribute<MinimumValueAttribute>()?.Value ?? null;
 			var maximumValue = parameter.GetCustomAttribute<MaximumValueAttribute>()?.Value ?? null;
 			var minimumLength = parameter.GetCustomAttribute<MinimumLengthAttribute>()?.Value ?? null;
@@ -2255,8 +2235,8 @@ internal sealed class DefaultHelpModule : ApplicationCommandsModule
 			else
 			{
 				var opt = foundCommand.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommand &&
-				                                          x.Name.StartsWith(context.Options[2].Value.ToString(),
-					                                          StringComparison.OrdinalIgnoreCase)).ToList();
+														  x.Name.StartsWith(context.Options[2].Value.ToString(),
+															  StringComparison.OrdinalIgnoreCase)).ToList();
 				options.AddRange(opt.Take(25).Select(option =>
 					new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name.Trim())));
 			}
@@ -2349,7 +2329,7 @@ internal sealed class DefaultHelpModule : ApplicationCommandsModule
 					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral()).ConfigureAwait(false);
 		}
 		else if (commandOneName is not null && commandTwoName is null &&
-		         !commandOneName.Equals("no_options_for_this_command"))
+				 !commandOneName.Equals("no_options_for_this_command"))
 		{
 			var commandsWithOptions = applicationCommands.FindAll(ac =>
 				ac.Options is not null && ac.Options.All(op => op.Type == ApplicationCommandOptionType.SubCommand));
