@@ -73,7 +73,7 @@ public class DiscordBaseSelectComponent : DiscordComponent
 				throw new OverflowException("The amount of default values cannot exceed the maximum amount of selectable options.");
 			if (type == ComponentType.MentionableSelect && defaultValues.Any(x => x.Type == "channel"))
 				throw new ArgumentException("The default values for a mentionable select must be of type user or role.", nameof(defaultValues));
-			if (type == ComponentType.ChannelSelect && defaultValues.Any(x => x.Type == "channel"))
+			if (type == ComponentType.ChannelSelect && defaultValues.Any(x => x.Type != "channel"))
 				throw new ArgumentException("The default values for a channel select menus must be of type channel.", nameof(defaultValues));
 			if (type == ComponentType.UserSelect && defaultValues.Any(x => x.Type != "user"))
 				throw new ArgumentException("The default values for a user select menus must be of type user.", nameof(defaultValues));
@@ -109,7 +109,7 @@ public class DiscordBaseSelectComponent : DiscordComponent
 				throw new OverflowException("The amount of default values cannot exceed the maximum amount of selectable options.");
 			if (type == ComponentType.MentionableSelect && defaultValues.Any(x => x.Type == "channel"))
 				throw new ArgumentException("The default values for a mentionable select must be of type user or role.", nameof(defaultValues));
-			if (type == ComponentType.ChannelSelect && defaultValues.Any(x => x.Type == "channel"))
+			if (type == ComponentType.ChannelSelect && defaultValues.Any(x => x.Type != "channel"))
 				throw new ArgumentException("The default values for a channel select menus must be of type channel.", nameof(defaultValues));
 			if (type == ComponentType.UserSelect && defaultValues.Any(x => x.Type != "user"))
 				throw new ArgumentException("The default values for a user select menus must be of type user.", nameof(defaultValues));
