@@ -1,10 +1,11 @@
-
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+
 using DisCatSharp.Attributes;
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -67,6 +68,7 @@ namespace DisCatSharp.Analyzer
 			context.RegisterSyntaxNodeAction(StatusAnalyzer, SyntaxKind.ElementAccessExpression);
 			context.RegisterSyntaxNodeAction(StatusAnalyzer, SyntaxKind.SimpleMemberAccessExpression);
 		}
+
 		private static void StatusAnalyzer(SyntaxNodeAnalysisContext context)
 		{
 			var invocation = context.Node;
@@ -76,6 +78,7 @@ namespace DisCatSharp.Analyzer
 				Console.WriteLine("Faulty");
 				return;
 			}
+
 			var attributes = declaration.GetAttributes();
 
 			var name = declaration.Name;
@@ -85,6 +88,7 @@ namespace DisCatSharp.Analyzer
 				name = declaration.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
 				kind = "Constructor";
 			}
+
 			var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(ExperimentalAttribute)));
 			var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DeprecatedAttribute)));
 			var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordInExperimentAttribute)));
@@ -97,31 +101,37 @@ namespace DisCatSharp.Analyzer
 				var message = GetMessage(experimentalAttributeData);
 				context.ReportDiagnostic(Diagnostic.Create(s_experimentalRule, invocation.GetLocation(), kind, name, message));
 			}
+
 			if (deprecatedAttributeData != null)
 			{
 				var message = GetMessage(deprecatedAttributeData);
 				context.ReportDiagnostic(Diagnostic.Create(s_deprecatedRule, invocation.GetLocation(), kind, name, message));
 			}
+
 			if (discordInExperimentAttributeData != null)
 			{
 				var message = GetMessage(discordInExperimentAttributeData);
 				context.ReportDiagnostic(Diagnostic.Create(s_discordInExperimentRule, invocation.GetLocation(), kind, name, message));
 			}
+
 			if (discordDeprecatedAttributeData != null)
 			{
 				var message = GetMessage(discordDeprecatedAttributeData);
 				context.ReportDiagnostic(Diagnostic.Create(s_discordDeprecatedRule, invocation.GetLocation(), kind, name, message));
 			}
+
 			if (discordUnreleasedAttributeData != null)
 			{
 				var message = GetMessage(discordUnreleasedAttributeData);
 				context.ReportDiagnostic(Diagnostic.Create(s_discordUnreleasedRule, invocation.GetLocation(), kind, name, message));
 			}
+
 			if (requiresFeatureAttributeData != null)
 			{
 				var message = GetFeatureMessage(requiresFeatureAttributeData);
 				context.ReportDiagnostic(Diagnostic.Create(s_requiresFeatureRule, invocation.GetLocation(), kind, name, message));
 			}
+
 			return;
 		}
 
@@ -129,14 +139,15 @@ namespace DisCatSharp.Analyzer
 		{
 			Console.WriteLine("Handling " + context.Symbol.Kind.ToString());
 			var syntaxTrees = from x in context.Symbol.Locations
-							  where x.IsInSource
-							  select x.SourceTree;
+			                  where x.IsInSource
+			                  select x.SourceTree;
 			var declaration = context.Symbol;
 			if (null == declaration)
 			{
 				Console.WriteLine("Faulty");
 				return;
 			}
+
 			var attributes = declaration.GetAttributes();
 
 			var name = declaration.Name;
@@ -147,9 +158,8 @@ namespace DisCatSharp.Analyzer
 				kind = "Constructor";
 			}
 			else if (kind == "NamedType")
-			{
 				kind = "Class";
-			}
+
 			var model = context.Compilation.GetSemanticModel(syntaxTrees.First(), true);
 
 			var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(ExperimentalAttribute)));
@@ -164,35 +174,41 @@ namespace DisCatSharp.Analyzer
 				var message = GetMessage(experimentalAttributeData);
 				context.ReportDiagnostic(Diagnostic.Create(s_experimentalRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
 			}
+
 			if (deprecatedAttributeData != null)
 			{
 				var message = GetMessage(deprecatedAttributeData);
 				context.ReportDiagnostic(Diagnostic.Create(s_deprecatedRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
 			}
+
 			if (discordInExperimentAttributeData != null)
 			{
 				var message = GetMessage(discordInExperimentAttributeData);
 				context.ReportDiagnostic(Diagnostic.Create(s_discordInExperimentRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
 			}
+
 			if (discordDeprecatedAttributeData != null)
 			{
 				var message = GetMessage(discordDeprecatedAttributeData);
 				context.ReportDiagnostic(Diagnostic.Create(s_discordDeprecatedRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
 			}
+
 			if (discordUnreleasedAttributeData != null)
 			{
 				var message = GetMessage(discordUnreleasedAttributeData);
 				context.ReportDiagnostic(Diagnostic.Create(s_discordUnreleasedRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
 			}
+
 			if (requiresFeatureAttributeData != null)
 			{
 				var message = GetFeatureMessage(requiresFeatureAttributeData);
 				context.ReportDiagnostic(Diagnostic.Create(s_requiresFeatureRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
 			}
+
 			return;
 		}
 
-		static bool IsRequiredAttribute(SemanticModel semanticModel, AttributeData attribute, Type desiredAttributeType)
+		private static bool IsRequiredAttribute(SemanticModel semanticModel, AttributeData attribute, Type desiredAttributeType)
 		{
 			var desiredTypeNamedSymbol = semanticModel.Compilation.GetTypeByMetadataName(desiredAttributeType.FullName);
 
@@ -200,10 +216,10 @@ namespace DisCatSharp.Analyzer
 			return result;
 		}
 
-		static string GetMessage(AttributeData attribute)
+		private static string GetMessage(AttributeData attribute)
 			=> attribute.ConstructorArguments.Length < 1 ? "Do not use in production." : attribute.ConstructorArguments[0].Value as string;
 
-		static string GetFeatureMessage(AttributeData attribute)
+		private static string GetFeatureMessage(AttributeData attribute)
 		{
 			var featureReqEnum = (Features)attribute.ConstructorArguments[0].Value;
 			var description = attribute.ConstructorArguments.Length > 1
@@ -237,7 +253,7 @@ namespace DisCatSharp.Analyzer
 		public static string ToFeaturesString(this Features features)
 		{
 			var strs = FeaturesStrings
-				.Where(xkvp =>(features & xkvp.Key) == xkvp.Key)
+				.Where(xkvp => (features & xkvp.Key) == xkvp.Key)
 				.Select(xkvp => xkvp.Value);
 
 			return string.Join(", ", strs.OrderBy(xs => xs));
