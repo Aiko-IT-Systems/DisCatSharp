@@ -146,15 +146,12 @@ public abstract class BaseDiscordClient : IDisposable
 					x.TimestampFormat = this.Configuration.LogTimestampFormat;
 					x.LogToStandardErrorThreshold = this.Configuration.MinimumLogLevel;
 				});
-				var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[]
-				{
-					configureNamedOptions
-				}, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
+				var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[] { configureNamedOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
 				var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory,
-				                                                              Enumerable
-					                                                              .Empty<IOptionsChangeTokenSource<
-						                                                              ConsoleLoggerOptions>>(),
-				                                                              new OptionsCache<ConsoleLoggerOptions>());
+					Enumerable
+						.Empty<IOptionsChangeTokenSource<
+							ConsoleLoggerOptions>>(),
+					new OptionsCache<ConsoleLoggerOptions>());
 
 				var l = new ConsoleLoggerProvider(optionsMonitor);
 				this.Configuration.LoggerFactory = new LoggerFactory();
@@ -167,9 +164,7 @@ public abstract class BaseDiscordClient : IDisposable
 		var vrs = "";
 		var ivr = ass.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
 		if (ivr != null)
-		{
 			vrs = ivr.InformationalVersion;
-		}
 		else
 		{
 			var v = ass.GetName().Version;
@@ -209,9 +204,7 @@ public abstract class BaseDiscordClient : IDisposable
 									return null;
 							}
 							else if (e.Extra.Count == 0 || !e.Extra.ContainsKey("Found Fields"))
-							{
 								return null;
-							}
 						}
 
 						if (e.HasUser())
@@ -224,12 +217,8 @@ public abstract class BaseDiscordClient : IDisposable
 								Username = this.CurrentUser.UsernameWithDiscriminator,
 								Other = new Dictionary<string, string>()
 								{
-									{
-										"developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given"
-									},
-									{
-										"email", this.Configuration.FeedbackEmail ?? "not_given"
-									}
+									{ "developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
+									{ "email", this.Configuration.FeedbackEmail ?? "not_given" }
 								}
 							};
 						return e;
@@ -264,9 +253,7 @@ public abstract class BaseDiscordClient : IDisposable
 								return null;
 						}
 						else if (e.Extra.Count == 0 || !e.Extra.ContainsKey("Found Fields"))
-						{
 							return null;
-						}
 					}
 
 					if (e.HasUser())
@@ -279,12 +266,8 @@ public abstract class BaseDiscordClient : IDisposable
 							Username = this.CurrentUser.UsernameWithDiscriminator,
 							Other = new Dictionary<string, string>()
 							{
-								{
-									"developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given"
-								},
-								{
-									"email", this.Configuration.FeedbackEmail ?? "not_given"
-								}
+								{ "developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
+								{ "email", this.Configuration.FeedbackEmail ?? "not_given" }
 							}
 						};
 					return e;
@@ -304,18 +287,16 @@ public abstract class BaseDiscordClient : IDisposable
 		this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-locale", this.Configuration.Locale);
 		if (!string.IsNullOrWhiteSpace(this.Configuration.Timezone))
 			this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone",
-			                                                              this.Configuration.Timezone);
+				this.Configuration.Timezone);
 		if (this.Configuration.Override != null)
 			this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties",
-			                                                              this.Configuration.Override);
+				this.Configuration.Override);
 
 		var a = typeof(DiscordClient).GetTypeInfo().Assembly;
 
 		var iv = a.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
 		if (iv != null)
-		{
 			this.VersionString = iv.InformationalVersion;
-		}
 		else
 		{
 			var v = a.GetName().Version;
@@ -341,8 +322,8 @@ public abstract class BaseDiscordClient : IDisposable
 			Summary = transportApplication.Summary,
 			IconHash = transportApplication.IconHash,
 			RpcOrigins = transportApplication.RpcOrigins != null
-				             ? new ReadOnlyCollection<string>(transportApplication.RpcOrigins)
-				             : null,
+				? new ReadOnlyCollection<string>(transportApplication.RpcOrigins)
+				: null,
 			Flags = transportApplication.Flags,
 			IsHook = transportApplication.IsHook,
 			Type = transportApplication.Type,
@@ -358,10 +339,7 @@ public abstract class BaseDiscordClient : IDisposable
 
 		if (transportApplication.Team == null)
 		{
-			app.Members = new(new[]
-			{
-				new DiscordUser(transportApplication.Owner)
-			});
+			app.Members = new(new[] { new DiscordUser(transportApplication.Owner) });
 			app.Team = null;
 			app.TeamName = null;
 			app.Owner = new(transportApplication.Owner);
@@ -428,7 +406,8 @@ public abstract class BaseDiscordClient : IDisposable
 		Optional<string?> interactionsEndpointUrl, Optional<string?> roleConnectionsVerificationUrl,
 		Optional<string?> customInstallUrl,
 		Optional<List<string>?> tags, Optional<Stream?> icon, Optional<Stream?> coverImage,
-		Optional<ApplicationFlags> flags, Optional<DiscordApplicationInstallParams?> installParams)
+		Optional<ApplicationFlags> flags, Optional<DiscordApplicationInstallParams?> installParams
+	)
 	{
 		var iconBase64 = ImageTool.Base64FromStream(icon);
 		var coverImageBase64 = ImageTool.Base64FromStream(coverImage);
@@ -437,9 +416,9 @@ public abstract class BaseDiscordClient : IDisposable
 				throw new InvalidOperationException("Tags can not exceed 20 chars.");
 
 		_ = await this.ApiClient
-			    .ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl,
-			                                       customInstallUrl, tags, iconBase64, coverImageBase64, flags,
-			                                       installParams).ConfigureAwait(false);
+			.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl,
+				customInstallUrl, tags, iconBase64, coverImageBase64, flags,
+				installParams).ConfigureAwait(false);
 		// We use GetCurrentApplicationAsync because modify returns internal data not meant for developers.
 		var app = await this.GetCurrentApplicationAsync().ConfigureAwait(false);
 		this.CurrentApplication = app;
@@ -481,12 +460,8 @@ public abstract class BaseDiscordClient : IDisposable
 				Username = this.CurrentUser?.UsernameWithDiscriminator,
 				Other = new Dictionary<string, string>()
 				{
-					{
-						"developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given"
-					},
-					{
-						"email", this.Configuration.FeedbackEmail ?? "not_given"
-					}
+					{ "developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
+					{ "email", this.Configuration.FeedbackEmail ?? "not_given" }
 				}
 			});
 	}

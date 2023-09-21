@@ -56,7 +56,7 @@ internal class ModalEventWaiter : IDisposable
 		catch (Exception e)
 		{
 			this._client.Logger.LogError(InteractivityEvents.InteractivityWaitError, e,
-			                             "An exception was thrown while waiting for modals.");
+				"An exception was thrown while waiting for modals.");
 			return null;
 		}
 		finally

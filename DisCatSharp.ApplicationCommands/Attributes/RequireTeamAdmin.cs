@@ -16,8 +16,7 @@ public sealed class ApplicationCommandRequireTeamAdminAttribute : ApplicationCom
 	/// Defines that this application command is restricted to team members of the bot with admin role or higher.
 	/// </summary>
 	public ApplicationCommandRequireTeamAdminAttribute()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Runs checks.

@@ -35,6 +35,5 @@ public class ThreadDeleteEventArgs : DiscordEventArgs
 	/// </summary>
 	internal ThreadDeleteEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

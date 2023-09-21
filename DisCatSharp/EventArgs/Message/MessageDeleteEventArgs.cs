@@ -29,6 +29,5 @@ public class MessageDeleteEventArgs : DiscordEventArgs
 	/// </summary>
 	internal MessageDeleteEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

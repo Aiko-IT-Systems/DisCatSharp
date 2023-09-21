@@ -558,6 +558,5 @@ internal sealed class AuditLog : ObservableApiObject
 			"application_commands",
 			"auto_moderation_rules"
 		})
-	{
-	}
+	{ }
 }

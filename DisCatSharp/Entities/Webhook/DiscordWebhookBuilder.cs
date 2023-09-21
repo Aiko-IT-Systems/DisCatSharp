@@ -110,8 +110,7 @@ public sealed class DiscordWebhookBuilder
 	/// Constructs a new empty webhook request builder.
 	/// </summary>
 	public DiscordWebhookBuilder()
-	{
-	} // I still see no point in initializing collections with empty collections. //
+	{ } // I still see no point in initializing collections with empty collections. //
 
 	/// <summary>
 	/// Sets the webhook response to suppress embeds.
@@ -263,8 +262,10 @@ public sealed class DiscordWebhookBuilder
 	/// <param name="data">File data.</param>
 	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
 	/// <param name="description">Description of the file.</param>
-	public DiscordWebhookBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false,
-	                                     string? description = null)
+	public DiscordWebhookBuilder AddFile(
+		string filename, Stream data, bool resetStreamPosition = false,
+		string? description = null
+	)
 	{
 		if (this.Files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -287,8 +288,10 @@ public sealed class DiscordWebhookBuilder
 	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns></returns>
-	public DiscordWebhookBuilder AddFile(FileStream stream, bool resetStreamPosition = false,
-	                                     string? description = null)
+	public DiscordWebhookBuilder AddFile(
+		FileStream stream, bool resetStreamPosition = false,
+		string? description = null
+	)
 	{
 		if (this.Files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -324,7 +327,6 @@ public sealed class DiscordWebhookBuilder
 			else
 				this._files.Add(new(file.Key, file.Value, null));
 		}
-
 
 		return this;
 	}
@@ -386,8 +388,10 @@ public sealed class DiscordWebhookBuilder
 	/// <param name="message">The message to modify.</param>
 	/// <param name="thread">Target thread.</param>
 	/// <returns>The modified message</returns>
-	public Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, DiscordMessage message,
-	                                        DiscordThreadChannel? thread = null)
+	public Task<DiscordMessage> ModifyAsync(
+		DiscordWebhook webhook, DiscordMessage message,
+		DiscordThreadChannel? thread = null
+	)
 		=> this.ModifyAsync(webhook, message.Id, thread?.Id);
 
 	/// <summary>

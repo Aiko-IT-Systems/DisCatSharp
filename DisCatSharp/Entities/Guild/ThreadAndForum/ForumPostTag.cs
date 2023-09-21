@@ -55,15 +55,14 @@ public class ForumPostTag : NullableSnowflakeObject, IEquatable<ForumPostTag>
 	[JsonIgnore]
 	public DiscordEmoji Emoji
 		=> this.UnicodeEmojiString != null
-			   ? DiscordEmoji.FromName(this.Discord, $":{this.UnicodeEmojiString}:", false)
-			   : DiscordEmoji.FromGuildEmote(this.Discord, this.EmojiId.Value);
+			? DiscordEmoji.FromName(this.Discord, $":{this.UnicodeEmojiString}:", false)
+			: DiscordEmoji.FromGuildEmote(this.Discord, this.EmojiId.Value);
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ForumPostTag"/> class.
 	/// </summary>
 	internal ForumPostTag()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ForumPostTag"/> class.
@@ -90,31 +89,31 @@ public class ForumPostTag : NullableSnowflakeObject, IEquatable<ForumPostTag>
 		var mdl = new ForumPostTagEditModel();
 		action(mdl);
 		var res = await this.Discord.ApiClient.ModifyForumChannelAsync(this.ChannelId, null, null, null, null, null,
-		                                                               null, this.Channel.InternalAvailableTags
-			                                                               .Where(x => x.Id != this.Id).ToList()
-			                                                               .Append(new()
-			                                                               {
-				                                                               Id = this.Id,
-				                                                               Discord = this.Discord,
-				                                                               ChannelId = this.ChannelId,
-				                                                               Channel = this.Channel,
-				                                                               EmojiId =
-					                                                               mdl.Emoji.HasValue
-						                                                               ? mdl.Emoji.Value.Id
-						                                                               : this.EmojiId,
-				                                                               Moderated =
-					                                                               mdl.Moderated.HasValue
-						                                                               ? mdl.Moderated.Value
-						                                                               : this.Moderated,
-				                                                               Name = mdl.Name.HasValue
-					                                                               ? mdl.Name.Value
-					                                                               : this.Name,
-				                                                               UnicodeEmojiString =
-					                                                               mdl.Emoji.HasValue
-						                                                               ? mdl.Emoji.Value.Name
-						                                                               : this.UnicodeEmojiString
-			                                                               }).ToList(), null, null, null, null, null,
-		                                                               null, null, mdl.AuditLogReason);
+			null, this.Channel.InternalAvailableTags
+				.Where(x => x.Id != this.Id).ToList()
+				.Append(new()
+				{
+					Id = this.Id,
+					Discord = this.Discord,
+					ChannelId = this.ChannelId,
+					Channel = this.Channel,
+					EmojiId =
+						mdl.Emoji.HasValue
+							? mdl.Emoji.Value.Id
+							: this.EmojiId,
+					Moderated =
+						mdl.Moderated.HasValue
+							? mdl.Moderated.Value
+							: this.Moderated,
+					Name = mdl.Name.HasValue
+						? mdl.Name.Value
+						: this.Name,
+					UnicodeEmojiString =
+						mdl.Emoji.HasValue
+							? mdl.Emoji.Value.Name
+							: this.UnicodeEmojiString
+				}).ToList(), null, null, null, null, null,
+			null, null, mdl.AuditLogReason);
 		return res.InternalAvailableTags.First(x => x.Id == this.Id);
 	}
 
@@ -124,10 +123,10 @@ public class ForumPostTag : NullableSnowflakeObject, IEquatable<ForumPostTag>
 	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
 	public Task DeleteAsync(string? reason = null)
 		=> this.Discord.ApiClient.ModifyForumChannelAsync(this.ChannelId, null, null, Optional.None, Optional.None,
-		                                                  null, Optional.None,
-		                                                  this.Channel.InternalAvailableTags.Where(x => x.Id != this.Id)
-			                                                  .ToList(), Optional.None, Optional.None, Optional.None,
-		                                                  Optional.None, Optional.None, null, Optional.None, reason);
+			null, Optional.None,
+			this.Channel.InternalAvailableTags.Where(x => x.Id != this.Id)
+				.ToList(), Optional.None, Optional.None, Optional.None,
+			Optional.None, Optional.None, null, Optional.None, reason);
 
 	/// <summary>
 	/// Checks whether this <see cref="ForumPostTag"/> is equal to another object.

@@ -37,6 +37,5 @@ public sealed class ContextMenuInteractionCreateEventArgs : InteractionCreateEve
 	/// <param name="provider">The provider.</param>
 	public ContextMenuInteractionCreateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

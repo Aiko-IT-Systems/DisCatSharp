@@ -30,6 +30,5 @@ public class MessageBulkDeleteEventArgs : DiscordEventArgs
 	/// </summary>
 	internal MessageBulkDeleteEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

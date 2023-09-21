@@ -29,8 +29,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 			"linked_users",
 			"banner_color"
 		})
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordUser"/> class.
@@ -124,8 +123,8 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	[JsonIgnore]
 	public virtual IReadOnlyList<DiscordColor>? ThemeColors
 		=> !(this.ThemeColorsInternal is not null && this.ThemeColorsInternal.Count != 0)
-			   ? null
-			   : this.ThemeColorsInternal.Select(x => new DiscordColor(x)).ToList();
+			? null
+			: this.ThemeColorsInternal.Select(x => new DiscordColor(x)).ToList();
 
 	/// <summary>
 	/// Gets the user's banner color integer.
@@ -145,8 +144,8 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	[JsonIgnore]
 	public string? BannerUrl
 		=> string.IsNullOrWhiteSpace(this.BannerHash)
-			   ? null
-			   : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}?size=4096";
+			? null
+			: $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}?size=4096";
 
 	/// <summary>
 	/// Gets the user's profile banner hash. Mutually exclusive with <see cref="BannerColor"/>.
@@ -194,16 +193,16 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	[JsonIgnore]
 	public string AvatarUrl
 		=> string.IsNullOrWhiteSpace(this.AvatarHash)
-			   ? this.DefaultAvatarUrl
-			   : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarHash}.{(this.AvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
+			? this.DefaultAvatarUrl
+			: $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarHash}.{(this.AvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
 	/// <summary>
 	/// Gets the user's avatar decoration url.
 	/// </summary>
 	[JsonIgnore]
 	public string? AvatarDecorationUrl => string.IsNullOrWhiteSpace(this.AvatarDecorationHash)
-		                                      ? null
-		                                      : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS_DECORATIONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarDecorationHash}.{(this.AvatarDecorationHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
+		? null
+		: $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS_DECORATIONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarDecorationHash}.{(this.AvatarDecorationHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
 	/// <summary>
 	/// Gets the URL of default avatar for this user.
@@ -356,8 +355,8 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordRpcApplication?> GetRpcInfoAsync()
 		=> this.IsBot
-			   ? await this.Discord.ApiClient.GetApplicationRpcInfoAsync(this.Id).ConfigureAwait(false)
-			   : await Task.FromResult<DiscordRpcApplication?>(null).ConfigureAwait(false);
+			? await this.Discord.ApiClient.GetApplicationRpcInfoAsync(this.Id).ConfigureAwait(false)
+			: await Task.FromResult<DiscordRpcApplication?>(null).ConfigureAwait(false);
 
 	/// <summary>
 	/// Whether this user is in a <see cref="DiscordGuild"/>
@@ -449,8 +448,8 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 			ImageFormat.Png => "png",
 			ImageFormat.WebP => "webp",
 			ImageFormat.Auto => !string.IsNullOrWhiteSpace(this.AvatarHash)
-				                    ? this.AvatarHash.StartsWith("a_") ? "gif" : "png"
-				                    : "png",
+				? this.AvatarHash.StartsWith("a_") ? "gif" : "png"
+				: "png",
 			ImageFormat.Unknown => throw new ArgumentException("Cannot determine image format", nameof(fmt)),
 			_ => throw new ArgumentOutOfRangeException(nameof(fmt))
 		};
@@ -557,8 +556,8 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <returns>String representation of this user.</returns>
 	public override string ToString()
 		=> this.IsMigrated
-			   ? $"User {this.Id}; {this.UsernameWithGlobalName}"
-			   : $"User {this.Id}; {this.UsernameWithDiscriminator}";
+			? $"User {this.Id}; {this.UsernameWithGlobalName}"
+			: $"User {this.Id}; {this.UsernameWithDiscriminator}";
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordUser"/> is equal to another object.

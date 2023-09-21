@@ -24,6 +24,5 @@ public class StageInstanceDeleteEventArgs : DiscordEventArgs
 	/// </summary>
 	internal StageInstanceDeleteEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

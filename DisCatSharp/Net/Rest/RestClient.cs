@@ -88,18 +88,18 @@ internal sealed class RestClient : IDisposable
 	/// <param name="client">The client.</param>
 	internal RestClient(BaseDiscordClient client)
 		: this(client.Configuration.Proxy, client.Configuration.HttpTimeout, client.Configuration.UseRelativeRatelimit,
-		       client.Logger)
+			client.Logger)
 	{
 		this._discord = client;
 		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization",
-		                                                              Utilities.GetFormattedToken(client));
+			Utilities.GetFormattedToken(client));
 		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-locale", client.Configuration.Locale);
 		if (!string.IsNullOrWhiteSpace(client.Configuration.Timezone))
 			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone",
-			                                                              client.Configuration.Timezone);
+				client.Configuration.Timezone);
 		if (client.Configuration.Override != null)
 			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties",
-			                                                              client.Configuration.Override);
+				client.Configuration.Override);
 		this.HttpClient.BaseAddress = new(Utilities.GetApiBaseUri(client.Configuration));
 	}
 
@@ -111,8 +111,10 @@ internal sealed class RestClient : IDisposable
 	/// <param name="timeout">The timeout.</param>
 	/// <param name="useRelativeRatelimit">Whether to use relative ratelimit.</param>
 	/// <param name="logger">The logger.</param>
-	internal RestClient(IWebProxy? proxy, TimeSpan timeout, bool useRelativeRatelimit,
-	                    ILogger logger)
+	internal RestClient(
+		IWebProxy? proxy, TimeSpan timeout, bool useRelativeRatelimit,
+		ILogger logger
+	)
 	{
 		this._logger = logger;
 
@@ -230,8 +232,8 @@ internal sealed class RestClient : IDisposable
 	/// <exception cref="RateLimitException">Thrown when Discord responded with a ratelimit.</exception>
 	public Task ExecuteRequestAsync(BaseRestRequest request)
 		=> request == null
-			   ? throw new ArgumentNullException(nameof(request))
-			   : this.ExecuteRequestAsync(request, null, null);
+			? throw new ArgumentNullException(nameof(request))
+			: this.ExecuteRequestAsync(request, null, null);
 
 	/// <summary>
 	/// Executes the form data request.
@@ -245,8 +247,8 @@ internal sealed class RestClient : IDisposable
 	/// <exception cref="RateLimitException">Thrown when Discord responded with a ratelimit.</exception>
 	public Task ExecuteFormRequestAsync(BaseRestRequest request)
 		=> request == null
-			   ? throw new ArgumentNullException(nameof(request))
-			   : this.ExecuteFormRequestAsync(request, null, null);
+			? throw new ArgumentNullException(nameof(request))
+			: this.ExecuteFormRequestAsync(request, null, null);
 
 	/// <summary>
 	/// Executes the form data request.
@@ -261,8 +263,10 @@ internal sealed class RestClient : IDisposable
 	/// <exception cref="UnauthorizedException">Thrown when the client is missing the permissiions to execute the request.</exception>
 	/// <exception cref="RequestSizeException">Thrown when the request size is too big..</exception>
 	/// <exception cref="RateLimitException">Thrown when Discord responded with a ratelimit.</exception>
-	private async Task ExecuteFormRequestAsync(BaseRestRequest request, RateLimitBucket? bucket,
-	                                           TaskCompletionSource<bool>? ratelimitTcs)
+	private async Task ExecuteFormRequestAsync(
+		BaseRestRequest request, RateLimitBucket? bucket,
+		TaskCompletionSource<bool>? ratelimitTcs
+	)
 	{
 		if (this._disposed)
 			return;
@@ -287,7 +291,7 @@ internal sealed class RestClient : IDisposable
 				if (Interlocked.Decrement(ref bucket.RemainingInternal) < 0)
 				{
 					this._logger.LogWarning(LoggerEvents.RatelimitDiag, "Request for {bucket} is blocked. Url: {url}",
-					                        bucket.ToString(), request.Url.AbsoluteUri);
+						bucket.ToString(), request.Url.AbsoluteUri);
 					var delay = bucket.Reset - now;
 					var resetDate = bucket.Reset;
 
@@ -300,7 +304,7 @@ internal sealed class RestClient : IDisposable
 					if (delay < new TimeSpan(-TimeSpan.TicksPerMinute))
 					{
 						this._logger.LogError(LoggerEvents.RatelimitDiag,
-						                      "Failed to retrieve ratelimits - giving up and allowing next request for bucket");
+							"Failed to retrieve ratelimits - giving up and allowing next request for bucket");
 						bucket.RemainingInternal = 1;
 					}
 
@@ -308,24 +312,22 @@ internal sealed class RestClient : IDisposable
 						delay = TimeSpan.FromMilliseconds(100);
 
 					this._logger.LogWarning(LoggerEvents.RatelimitPreemptive,
-					                        "Preemptive ratelimit triggered - waiting until {resetDate:yyyy-MM-dd HH:mm:ss zzz} ({delay:c})",
-					                        resetDate, delay);
+						"Preemptive ratelimit triggered - waiting until {resetDate:yyyy-MM-dd HH:mm:ss zzz} ({delay:c})",
+						resetDate, delay);
 					Task.Delay(delay)
 						.ContinueWith(_ => this.ExecuteFormRequestAsync(request, null, null))
 						.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError,
-						              "Error while executing request");
+							"Error while executing request");
 
 					return;
 				}
 
 				this._logger.LogDebug(LoggerEvents.RatelimitDiag, "Request for {bucket} is allowed. Url: {url}",
-				                      bucket.ToString(), request.Url.AbsoluteUri);
+					bucket.ToString(), request.Url.AbsoluteUri);
 			}
 			else
-			{
 				this._logger.LogDebug(LoggerEvents.RatelimitDiag, "Initial request for {bucket} is allowed. Url: {url}",
-				                      bucket.ToString(), request.Url.AbsoluteUri);
-			}
+					bucket.ToString(), request.Url.AbsoluteUri);
 
 			var req = this.BuildFormRequest(request);
 
@@ -339,8 +341,8 @@ internal sealed class RestClient : IDisposable
 					return;
 
 				res = await this.HttpClient
-					      .SendAsync(req, HttpCompletionOption.ResponseContentRead, CancellationToken.None)
-					      .ConfigureAwait(false);
+					.SendAsync(req, HttpCompletionOption.ResponseContentRead, CancellationToken.None)
+					.ConfigureAwait(false);
 
 				var bts = await res.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 				var txt = Utilities.UTF8.GetString(bts, 0, bts.Length);
@@ -348,14 +350,14 @@ internal sealed class RestClient : IDisposable
 				this._logger.LogTrace(LoggerEvents.RestRx, txt);
 
 				response.Headers = res.Headers.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value),
-				                                            StringComparer.OrdinalIgnoreCase);
+					StringComparer.OrdinalIgnoreCase);
 				response.Response = txt;
 				response.ResponseCode = (int)res.StatusCode;
 			}
 			catch (HttpRequestException httpex)
 			{
 				this._logger.LogError(LoggerEvents.RestError, httpex, "Request to {url} triggered an HttpException",
-				                      request.Url.AbsoluteUri);
+					request.Url.AbsoluteUri);
 				request.SetFaulted(httpex);
 				this.FailInitialRateLimitTest(request, ratelimitTcs);
 				return;
@@ -376,8 +378,8 @@ internal sealed class RestClient : IDisposable
 				case 403:
 					var unauthorizedException = new UnauthorizedException(request, response);
 					ex = unauthorizedException.ErrorCode == 50001
-						     ? new MissingAccessException(request, response)
-						     : unauthorizedException;
+						? new MissingAccessException(request, response)
+						: unauthorizedException;
 					break;
 
 				case 404:
@@ -399,8 +401,8 @@ internal sealed class RestClient : IDisposable
 						{
 							bucket.IsGlobal = true;
 							this._logger.LogError(LoggerEvents.RatelimitHit,
-							                      "Global ratelimit hit, cooling down for {uri}",
-							                      request.Url.AbsoluteUri);
+								"Global ratelimit hit, cooling down for {uri}",
+								request.Url.AbsoluteUri);
 							try
 							{
 								this._globalRateLimitEvent.Reset();
@@ -414,16 +416,16 @@ internal sealed class RestClient : IDisposable
 
 							this.ExecuteRequestAsync(request, bucket, ratelimitTcs)
 								.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError,
-								              "Error while retrying request");
+									"Error while retrying request");
 						}
 						else
 						{
 							this._logger.LogError(LoggerEvents.RatelimitHit,
-							                      "Ratelimit hit, requeuing request to {url}", request.Url.AbsoluteUri);
+								"Ratelimit hit, requeuing request to {url}", request.Url.AbsoluteUri);
 							await wait.ConfigureAwait(false);
 							this.ExecuteRequestAsync(request, bucket, ratelimitTcs)
 								.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError,
-								              "Error while retrying request");
+									"Error while retrying request");
 						}
 
 						return;
@@ -447,7 +449,7 @@ internal sealed class RestClient : IDisposable
 		catch (Exception ex)
 		{
 			this._logger.LogError(LoggerEvents.RestError, ex, "Request to {url} triggered an exception",
-			                      request.Url.AbsoluteUri);
+				request.Url.AbsoluteUri);
 
 			// if something went wrong and we couldn't get rate limits for the first request here, allow the next request to run
 			if (bucket != null && ratelimitTcs != null && bucket.LimitTesting != 0)
@@ -486,8 +488,10 @@ internal sealed class RestClient : IDisposable
 	/// <exception cref="UnauthorizedException">Thrown when the client is missing the permissiions to execute the request.</exception>
 	/// <exception cref="RequestSizeException">Thrown when the request size is too big..</exception>
 	/// <exception cref="RateLimitException">Thrown when Discord responded with a ratelimit.</exception>
-	internal async Task ExecuteRequestAsync(BaseRestRequest request, RateLimitBucket? bucket,
-	                                        TaskCompletionSource<bool>? ratelimitTcs)
+	internal async Task ExecuteRequestAsync(
+		BaseRestRequest request, RateLimitBucket? bucket,
+		TaskCompletionSource<bool>? ratelimitTcs
+	)
 	{
 		if (this._disposed)
 			return;
@@ -512,7 +516,7 @@ internal sealed class RestClient : IDisposable
 				if (Interlocked.Decrement(ref bucket.RemainingInternal) < 0)
 				{
 					this._logger.LogWarning(LoggerEvents.RatelimitDiag, "Request for {bucket} is blocked. Url: {url}",
-					                        bucket.ToString(), request.Url.AbsoluteUri);
+						bucket.ToString(), request.Url.AbsoluteUri);
 					var delay = bucket.Reset - now;
 					var resetDate = bucket.Reset;
 
@@ -525,7 +529,7 @@ internal sealed class RestClient : IDisposable
 					if (delay < new TimeSpan(-TimeSpan.TicksPerMinute))
 					{
 						this._logger.LogError(LoggerEvents.RatelimitDiag,
-						                      "Failed to retrieve ratelimits - giving up and allowing next request for bucket");
+							"Failed to retrieve ratelimits - giving up and allowing next request for bucket");
 						bucket.RemainingInternal = 1;
 					}
 
@@ -533,24 +537,22 @@ internal sealed class RestClient : IDisposable
 						delay = TimeSpan.FromMilliseconds(100);
 
 					this._logger.LogWarning(LoggerEvents.RatelimitPreemptive,
-					                        "Preemptive ratelimit triggered - waiting until {resetDate:yyyy-MM-dd HH:mm:ss zzz} ({delay:c})",
-					                        resetDate, delay);
+						"Preemptive ratelimit triggered - waiting until {resetDate:yyyy-MM-dd HH:mm:ss zzz} ({delay:c})",
+						resetDate, delay);
 					Task.Delay(delay)
 						.ContinueWith(_ => this.ExecuteRequestAsync(request, null, null))
 						.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError,
-						              "Error while executing request");
+							"Error while executing request");
 
 					return;
 				}
 
 				this._logger.LogDebug(LoggerEvents.RatelimitDiag, "Request for {bucket} is allowed. Url: {url}",
-				                      bucket.ToString(), request.Url.AbsoluteUri);
+					bucket.ToString(), request.Url.AbsoluteUri);
 			}
 			else
-			{
 				this._logger.LogDebug(LoggerEvents.RatelimitDiag, "Initial request for {bucket} is allowed. Url: {url}",
-				                      bucket.ToString(), request.Url.AbsoluteUri);
-			}
+					bucket.ToString(), request.Url.AbsoluteUri);
 
 			var req = this.BuildRequest(request);
 
@@ -567,8 +569,8 @@ internal sealed class RestClient : IDisposable
 					return;
 
 				res = await this.HttpClient
-					      .SendAsync(req, HttpCompletionOption.ResponseContentRead, CancellationToken.None)
-					      .ConfigureAwait(false);
+					.SendAsync(req, HttpCompletionOption.ResponseContentRead, CancellationToken.None)
+					.ConfigureAwait(false);
 
 				var bts = await res.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 				var txt = Utilities.UTF8.GetString(bts, 0, bts.Length);
@@ -576,14 +578,14 @@ internal sealed class RestClient : IDisposable
 				this._logger.LogTrace(LoggerEvents.RestRx, "{msg}", txt);
 
 				response.Headers = res.Headers.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value),
-				                                            StringComparer.OrdinalIgnoreCase);
+					StringComparer.OrdinalIgnoreCase);
 				response.Response = txt;
 				response.ResponseCode = (int)res.StatusCode;
 			}
 			catch (HttpRequestException httpRequestException)
 			{
 				this._logger.LogError(LoggerEvents.RestError, httpRequestException,
-				                      "Request to {url} triggered an HttpException", request.Url.AbsoluteUri);
+					"Request to {url} triggered an HttpException", request.Url.AbsoluteUri);
 				request.SetFaulted(httpRequestException);
 				this.FailInitialRateLimitTest(request, ratelimitTcs);
 				return;
@@ -606,8 +608,8 @@ internal sealed class RestClient : IDisposable
 				case 403:
 					var unauthorizedException = new UnauthorizedException(request, response);
 					ex = unauthorizedException.ErrorCode == 50001
-						     ? new MissingAccessException(request, response)
-						     : unauthorizedException;
+						? new MissingAccessException(request, response)
+						: unauthorizedException;
 					break;
 				case 404:
 					ex = new NotFoundException(request, response);
@@ -628,8 +630,8 @@ internal sealed class RestClient : IDisposable
 						{
 							bucket.IsGlobal = true;
 							this._logger.LogError(LoggerEvents.RatelimitHit,
-							                      "Global ratelimit hit, cooling down for {uri}",
-							                      request.Url.AbsoluteUri);
+								"Global ratelimit hit, cooling down for {uri}",
+								request.Url.AbsoluteUri);
 							try
 							{
 								this._globalRateLimitEvent.Reset();
@@ -643,7 +645,7 @@ internal sealed class RestClient : IDisposable
 
 							this.ExecuteRequestAsync(request, bucket, ratelimitTcs)
 								.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError,
-								              "Error while retrying request");
+									"Error while retrying request");
 						}
 						else
 						{
@@ -655,11 +657,11 @@ internal sealed class RestClient : IDisposable
 								}).ConfigureAwait(false);
 
 							this._logger.LogError(LoggerEvents.RatelimitHit,
-							                      "Ratelimit hit, requeuing request to {url}", request.Url.AbsoluteUri);
+								"Ratelimit hit, requeuing request to {url}", request.Url.AbsoluteUri);
 							await wait.ConfigureAwait(false);
 							this.ExecuteRequestAsync(request, bucket, ratelimitTcs)
 								.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError,
-								              "Error while retrying request");
+									"Error while retrying request");
 						}
 
 						return;
@@ -684,12 +686,8 @@ internal sealed class RestClient : IDisposable
 					{
 						Dictionary<string, object> debugInfo = new()
 						{
-							{
-								"route", request.Route
-							},
-							{
-								"time", DateTimeOffset.UtcNow
-							}
+							{ "route", request.Route },
+							{ "time", DateTimeOffset.UtcNow }
 						};
 						sentryException.AddSentryContext("Request", debugInfo);
 						this._discord.Sentry.CaptureException(sentryException);
@@ -698,14 +696,12 @@ internal sealed class RestClient : IDisposable
 				request.SetFaulted(ex);
 			}
 			else
-			{
 				request.SetCompleted(response);
-			}
 		}
 		catch (Exception ex)
 		{
 			this._logger.LogError(LoggerEvents.RestError, ex, "Request to {url} triggered an exception",
-			                      request.Url.AbsoluteUri);
+				request.Url.AbsoluteUri);
 
 			// if something went wrong and we couldn't get rate limits for the first request here, allow the next request to run
 			if (bucket != null && ratelimitTcs != null && bucket.LimitTesting != 0)
@@ -737,8 +733,10 @@ internal sealed class RestClient : IDisposable
 	/// <param name="request">The request.</param>
 	/// <param name="ratelimitTcs">The ratelimit task completion source.</param>
 	/// <param name="resetToInitial">Whether to reset to initial values.</param>
-	private void FailInitialRateLimitTest(BaseRestRequest request, TaskCompletionSource<bool>? ratelimitTcs,
-	                                      bool resetToInitial = false)
+	private void FailInitialRateLimitTest(
+		BaseRestRequest request, TaskCompletionSource<bool>? ratelimitTcs,
+		bool resetToInitial = false
+	)
 	{
 		if (ratelimitTcs == null && !resetToInitial)
 			return;
@@ -901,12 +899,8 @@ internal sealed class RestClient : IDisposable
 
 				var content = new MultipartFormDataContent(boundary)
 				{
-					{
-						new StringContent(multipartStickerWebRequest.Name), "name"
-					},
-					{
-						new StringContent(multipartStickerWebRequest.Tags), "tags"
-					}
+					{ new StringContent(multipartStickerWebRequest.Name), "name" },
+					{ new StringContent(multipartStickerWebRequest.Tags), "tags" }
 				};
 				if (multipartStickerWebRequest.Description is not null)
 					content.Add(new StringContent(multipartStickerWebRequest.Description), "description");
@@ -971,7 +965,6 @@ internal sealed class RestClient : IDisposable
 
 		if (hs.TryGetValue("X-RateLimit-Scope", out var scope)) bucket.Scope = scope;
 
-
 		if (hs.TryGetValue("X-RateLimit-Global", out var isGlobal) && isGlobal.ToLowerInvariant() == "true")
 		{
 			if (response.ResponseCode == 429)
@@ -1021,14 +1014,12 @@ internal sealed class RestClient : IDisposable
 		{
 			bucket.ResetAfter = TimeSpan.FromSeconds(double.Parse(resetAfter, CultureInfo.InvariantCulture));
 			newReset = clientTime + bucket.ResetAfter.Value + (request.RateLimitWaitOverride.HasValue
-				                                                   ? resetDelta
-				                                                   : TimeSpan.Zero);
+				? resetDelta
+				: TimeSpan.Zero);
 			bucket.ResetAfterOffset = newReset;
 		}
 		else
-		{
 			bucket.Reset = newReset;
-		}
 
 		var maximum = int.Parse(usesMax, CultureInfo.InvariantCulture);
 		var remaining = int.Parse(usesLeft, CultureInfo.InvariantCulture);
@@ -1081,7 +1072,7 @@ internal sealed class RestClient : IDisposable
 
 		{
 			this._logger.LogDebug(LoggerEvents.RestHashMover, "Updating hash in {key}: \"{old}\" -> \"{new}\"", hashKey,
-			                      oldHash, newHash);
+				oldHash, newHash);
 			var bucketId =
 				RateLimitBucket.GenerateBucketId(newHash, bucket.GuildId, bucket.ChannelId, bucket.WebhookId);
 
@@ -1115,8 +1106,7 @@ internal sealed class RestClient : IDisposable
 				await Task.Delay(this._bucketCleanupDelay, this._bucketCleanerTokenSource.Token).ConfigureAwait(false);
 			}
 			catch
-			{
-			}
+			{ }
 
 			if (this._disposed)
 				return;
@@ -1155,9 +1145,9 @@ internal sealed class RestClient : IDisposable
 
 			if (removedBuckets > 0)
 				this._logger.LogDebug(LoggerEvents.RestCleaner,
-				                      "Removed {count} unused bucket{multiple}: [{bucketIds}]", removedBuckets,
-				                      removedBuckets > 1 ? "s" : string.Empty,
-				                      bucketIdStrBuilder?.ToString().TrimEnd(',', ' '));
+					"Removed {count} unused bucket{multiple}: [{bucketIds}]", removedBuckets,
+					removedBuckets > 1 ? "s" : string.Empty,
+					bucketIdStrBuilder?.ToString().TrimEnd(',', ' '));
 
 			if (this._hashesToBuckets.IsEmpty)
 				break;
@@ -1203,8 +1193,7 @@ internal sealed class RestClient : IDisposable
 			this.HttpClient?.Dispose();
 		}
 		catch
-		{
-		}
+		{ }
 
 		this._routesToHashes.Clear();
 		this._hashesToBuckets.Clear();

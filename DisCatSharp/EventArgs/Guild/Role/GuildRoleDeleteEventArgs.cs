@@ -24,6 +24,5 @@ public class GuildRoleDeleteEventArgs : DiscordEventArgs
 	/// </summary>
 	internal GuildRoleDeleteEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

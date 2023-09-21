@@ -26,6 +26,5 @@ public class CommandEventArgs : DiscordEventArgs
 	/// <param name="provider">The provider.</param>
 	public CommandEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

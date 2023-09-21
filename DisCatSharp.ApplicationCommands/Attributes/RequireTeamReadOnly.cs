@@ -16,8 +16,7 @@ public sealed class ApplicationCommandRequireTeamReadOnlyAttribute : Application
 	/// Defines that this application command is restricted to team members of the bot with read-only role or higher.
 	/// </summary>
 	public ApplicationCommandRequireTeamReadOnlyAttribute()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Runs checks.
@@ -30,7 +29,7 @@ public sealed class ApplicationCommandRequireTeamReadOnlyAttribute : Application
 
 		var teamMember = app.Team?.Members.FirstOrDefault(x => x.User.Id == ctx.User.Id);
 		return teamMember == null
-			       ? Task.FromResult(false)
-			       : Task.FromResult(teamMember.Role is "read-only" or "developer" or "admin" or "owner");
+			? Task.FromResult(false)
+			: Task.FromResult(teamMember.Role is "read-only" or "developer" or "admin" or "owner");
 	}
 }

@@ -18,8 +18,10 @@ public class DiscordMessageFile
 	/// <param name="fileType">The file type.</param>
 	/// <param name="contentType">The content type.</param>
 	/// <param name="description">The description.</param>
-	internal DiscordMessageFile(string filename, Stream stream, long? resetPositionTo, string? fileType = null,
-	                            string? contentType = null, string? description = null)
+	internal DiscordMessageFile(
+		string filename, Stream stream, long? resetPositionTo, string? fileType = null,
+		string? contentType = null, string? description = null
+	)
 	{
 		this.Filename = filename;
 		this.FileType = fileType;

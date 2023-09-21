@@ -39,6 +39,5 @@ public sealed class DiscordComponentResult : ObservableApiObject
 	/// Initializes a new instance of the <see cref="DiscordComponentResult"/> class.
 	/// </summary>
 	internal DiscordComponentResult()
-	{
-	}
+	{ }
 }

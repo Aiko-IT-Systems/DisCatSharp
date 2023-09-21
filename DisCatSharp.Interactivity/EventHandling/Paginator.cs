@@ -50,7 +50,7 @@ internal class Paginator : IPaginator
 		catch (Exception ex)
 		{
 			this._client!.Logger.LogError(InteractivityEvents.InteractivityPaginationError, ex,
-			                              "Exception occurred while paginating");
+				"Exception occurred while paginating");
 		}
 		finally
 		{
@@ -62,7 +62,7 @@ internal class Paginator : IPaginator
 			catch (Exception ex)
 			{
 				this._client!.Logger.LogError(InteractivityEvents.InteractivityPaginationError, ex,
-				                              "Exception occurred while paginating");
+					"Exception occurred while paginating");
 			}
 		}
 	}
@@ -106,14 +106,12 @@ internal class Paginator : IPaginator
 							await msg.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User).ConfigureAwait(false);
 					}
 					else if (eventArgs.User.Id != this._client!.CurrentUser!.Id)
-					{
 						if (eventArgs.Emoji != emojis.Left &&
 						    eventArgs.Emoji != emojis.SkipLeft &&
 						    eventArgs.Emoji != emojis.Right &&
 						    eventArgs.Emoji != emojis.SkipRight &&
 						    eventArgs.Emoji != emojis.Stop)
 							await msg.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User).ConfigureAwait(false);
-					}
 				}
 		});
 		return Task.CompletedTask;
@@ -214,9 +212,7 @@ internal class Paginator : IPaginator
 				await msg.CreateReactionAsync(emojis.Stop).ConfigureAwait(false);
 		}
 		else if (emojis.Stop != null && p is PaginationRequest { PaginationDeletion: PaginationDeletion.DeleteMessage })
-		{
 			await msg.CreateReactionAsync(emojis.Stop).ConfigureAwait(false);
-		}
 	}
 
 	/// <summary>
@@ -230,21 +226,13 @@ internal class Paginator : IPaginator
 		var msg = await p.GetMessageAsync().ConfigureAwait(false);
 
 		if (emoji == emojis.SkipLeft)
-		{
 			await p.SkipLeftAsync().ConfigureAwait(false);
-		}
 		else if (emoji == emojis.Left)
-		{
 			await p.PreviousPageAsync().ConfigureAwait(false);
-		}
 		else if (emoji == emojis.Right)
-		{
 			await p.NextPageAsync().ConfigureAwait(false);
-		}
 		else if (emoji == emojis.SkipRight)
-		{
 			await p.SkipRightAsync().ConfigureAwait(false);
-		}
 		else if (emoji == emojis.Stop)
 		{
 			var tcs = await p.GetTaskCompletionSourceAsync().ConfigureAwait(false);

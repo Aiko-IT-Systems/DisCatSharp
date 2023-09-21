@@ -49,8 +49,10 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 	/// <param name="name">Name of this event.</param>
 	/// <param name="maxExecutionTime">Maximum handler execution time. A value of <see cref="TimeSpan.Zero"/> means infinite.</param>
 	/// <param name="exceptionHandler">Delegate which handles exceptions caused by this event.</param>
-	public AsyncEvent(string name, TimeSpan maxExecutionTime,
-	                  AsyncEventExceptionHandler<TSender, TArgs> exceptionHandler)
+	public AsyncEvent(
+		string name, TimeSpan maxExecutionTime,
+		AsyncEventExceptionHandler<TSender, TArgs> exceptionHandler
+	)
 		: base(name)
 	{
 		this._handlers = ImmutableArray<AsyncEventHandler<TSender, TArgs>>.Empty;
@@ -103,8 +105,10 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 	/// <param name="e">Arguments for this event.</param>
 	/// <param name="exceptionMode">Defines what to do with exceptions caught from handlers.</param>
 	/// <returns></returns>
-	public async Task InvokeAsync(TSender sender, TArgs e,
-	                              AsyncEventExceptionMode exceptionMode = AsyncEventExceptionMode.Default)
+	public async Task InvokeAsync(
+		TSender sender, TArgs e,
+		AsyncEventExceptionMode exceptionMode = AsyncEventExceptionMode.Default
+	)
 	{
 		var handlers = this._handlers;
 		if (handlers.Length == 0)
@@ -145,10 +149,8 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 					}
 				}
 				else if (handlerTask != null)
-				{
 					// No timeout is configured, or timeout already expired, proceed as usual
 					await handlerTask.ConfigureAwait(false);
-				}
 
 				if (e.Handled)
 					break;
@@ -166,7 +168,7 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 
 		if ((exceptionMode & AsyncEventExceptionMode.ThrowAll) != 0 && exceptions.Count > 0)
 			throw new AggregateException("Exceptions were thrown during execution of the event's handlers.",
-			                             exceptions);
+				exceptions);
 	}
 
 	/// <summary>

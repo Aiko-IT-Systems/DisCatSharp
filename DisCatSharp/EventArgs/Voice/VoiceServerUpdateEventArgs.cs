@@ -29,6 +29,5 @@ public class VoiceServerUpdateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal VoiceServerUpdateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

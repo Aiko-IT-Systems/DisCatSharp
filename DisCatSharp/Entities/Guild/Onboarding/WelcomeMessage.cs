@@ -49,6 +49,5 @@ public sealed class WelcomeMessage : ObservableApiObject
 	/// Constructs a welcome message for the server guide.
 	/// </summary>
 	internal WelcomeMessage()
-	{
-	}
+	{ }
 }

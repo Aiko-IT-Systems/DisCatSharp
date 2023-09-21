@@ -45,6 +45,5 @@ public class ThreadMembersUpdateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal ThreadMembersUpdateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

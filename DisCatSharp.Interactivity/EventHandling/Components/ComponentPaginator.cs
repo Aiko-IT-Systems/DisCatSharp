@@ -50,7 +50,7 @@ internal class ComponentPaginator : IPaginator
 		catch (Exception ex)
 		{
 			this._client.Logger.LogError(InteractivityEvents.InteractivityPaginationError, ex,
-			                             "There was an exception while paginating.");
+				"There was an exception while paginating.");
 		}
 		finally
 		{
@@ -62,7 +62,7 @@ internal class ComponentPaginator : IPaginator
 			catch (Exception ex)
 			{
 				this._client.Logger.LogError(InteractivityEvents.InteractivityPaginationError, ex,
-				                             "There was an exception while cleaning up pagination.");
+					"There was an exception while cleaning up pagination.");
 			}
 		}
 	}
@@ -139,7 +139,6 @@ internal class ComponentPaginator : IPaginator
 			return;
 
 		var page = await request.GetPageAsync().ConfigureAwait(false);
-
 
 		var bts = await request.GetButtonsAsync().ConfigureAwait(false);
 

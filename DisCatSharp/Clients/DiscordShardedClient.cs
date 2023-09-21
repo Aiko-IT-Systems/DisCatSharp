@@ -128,7 +128,7 @@ public sealed partial class DiscordShardedClient
 		{
 			this._configuration.LoggerFactory = new DefaultLoggerFactory();
 			this._configuration.LoggerFactory.AddProvider(new DefaultLoggerProvider(this._configuration.MinimumLogLevel,
-				                                              this._configuration.LogTimestampFormat));
+				this._configuration.LogTimestampFormat));
 		}
 		else if (this._configuration.LoggerFactory == null && this._configuration.EnableSentry)
 		{
@@ -138,15 +138,12 @@ public sealed partial class DiscordShardedClient
 				x.TimestampFormat = this._configuration.LogTimestampFormat;
 				x.LogToStandardErrorThreshold = this._configuration.MinimumLogLevel;
 			});
-			var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[]
-			{
-				configureNamedOptions
-			}, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
+			var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[] { configureNamedOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
 			var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory,
-			                                                              Enumerable
-				                                                              .Empty<IOptionsChangeTokenSource<
-					                                                              ConsoleLoggerOptions>>(),
-			                                                              new OptionsCache<ConsoleLoggerOptions>());
+				Enumerable
+					.Empty<IOptionsChangeTokenSource<
+						ConsoleLoggerOptions>>(),
+				new OptionsCache<ConsoleLoggerOptions>());
 
 			var l = new ConsoleLoggerProvider(optionsMonitor);
 			this._configuration.LoggerFactory = new LoggerFactory();
@@ -160,9 +157,7 @@ public sealed partial class DiscordShardedClient
 				var vs = "";
 				var iv = a.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
 				if (iv != null)
-				{
 					vs = iv.InformationalVersion;
-				}
 				else
 				{
 					var v = a.GetName().Version;
@@ -198,9 +193,7 @@ public sealed partial class DiscordShardedClient
 								return null;
 						}
 						else if (e.Extra.Count == 0 || !e.Extra.ContainsKey("Found Fields"))
-						{
 							return null;
-						}
 					}
 
 					if (e.HasUser())
@@ -213,12 +206,8 @@ public sealed partial class DiscordShardedClient
 							Username = this.CurrentUser.UsernameWithDiscriminator,
 							Other = new Dictionary<string, string>()
 							{
-								{
-									"developer", this._configuration.DeveloperUserId?.ToString() ?? "not_given"
-								},
-								{
-									"email", this._configuration.FeedbackEmail ?? "not_given"
-								}
+								{ "developer", this._configuration.DeveloperUserId?.ToString() ?? "not_given" },
+								{ "email", this._configuration.FeedbackEmail ?? "not_given" }
 							}
 						};
 					return e;
@@ -250,9 +239,9 @@ public sealed partial class DiscordShardedClient
 		{
 			if (this._configuration.TokenType != TokenType.Bot)
 				this.Logger.LogWarning(LoggerEvents.Misc,
-				                       "You are logging in with a token that is not a bot token. This is not officially supported by Discord, and can result in your account being terminated if you aren't careful.");
+					"You are logging in with a token that is not a bot token. This is not officially supported by Discord, and can result in your account being terminated if you aren't careful.");
 			this.Logger.LogInformation(LoggerEvents.Startup, "Lib {library}, version {version}", this._botLibrary,
-			                           this._versionString.Value);
+				this._versionString.Value);
 
 			var shardc = await this.InitializeShardsAsync().ConfigureAwait(false);
 			var connectTasks = new List<Task>();
@@ -265,9 +254,7 @@ public sealed partial class DiscordShardedClient
 					this.GatewayInfo.SessionBucket.MaxConcurrency = 1;
 
 				if (this.GatewayInfo.SessionBucket.MaxConcurrency == 1)
-				{
 					await this.ConnectShardAsync(i).ConfigureAwait(false);
-				}
 				else
 				{
 					//Concurrent login.
@@ -311,8 +298,8 @@ public sealed partial class DiscordShardedClient
 	public DiscordClient? GetShard(ulong guildId)
 	{
 		var index = this._manuallySharding
-			            ? this.GetShardIdFromGuilds(guildId)
-			            : Utilities.GetShardId(guildId, this.ShardClients.Count);
+			? this.GetShardIdFromGuilds(guildId)
+			: Utilities.GetShardId(guildId, this.ShardClients.Count);
 
 		return index != -1 ? this._shards[index] : null;
 	}
@@ -336,8 +323,10 @@ public sealed partial class DiscordShardedClient
 	/// <param name="userStatus">The optional status to set. Defaults to null.</param>
 	/// <param name="idleSince">Since when is the client performing the specified activity. Defaults to null.</param>
 	/// <returns>Asynchronous operation.</returns>
-	public async Task UpdateStatusAsync(DiscordActivity? activity = null, UserStatus? userStatus = null,
-	                                    DateTimeOffset? idleSince = null)
+	public async Task UpdateStatusAsync(
+		DiscordActivity? activity = null, UserStatus? userStatus = null,
+		DateTimeOffset? idleSince = null
+	)
 	{
 		var tasks = this._shards.Values.Select(client => client.UpdateStatusAsync(activity, userStatus, idleSince))
 			.ToList();
@@ -367,8 +356,8 @@ public sealed partial class DiscordShardedClient
 
 		this.GatewayInfo = await this.GetGatewayInfoAsync().ConfigureAwait(false);
 		var shardCount = this._configuration.ShardCount == 1
-			                 ? this.GatewayInfo.ShardCount
-			                 : this._configuration.ShardCount;
+			? this.GatewayInfo.ShardCount
+			: this._configuration.ShardCount;
 		var lf = new ShardedLoggerFactory(this.Logger);
 		for (var i = 0; i < shardCount; i++)
 		{
@@ -401,7 +390,7 @@ public sealed partial class DiscordShardedClient
 
 		http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
 		http.DefaultRequestHeaders.TryAddWithoutValidation("Authorization",
-		                                                   Utilities.GetFormattedToken(this._configuration));
+			Utilities.GetFormattedToken(this._configuration));
 		http.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-locale", this._configuration.Locale);
 		if (!string.IsNullOrWhiteSpace(this._configuration.Timezone))
 			http.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone", this._configuration.Timezone);
@@ -409,7 +398,7 @@ public sealed partial class DiscordShardedClient
 			http.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this._configuration.Override);
 
 		this.Logger.LogDebug(LoggerEvents.ShardRest,
-		                     $"Obtaining gateway information from GET {Endpoints.GATEWAY}{Endpoints.BOT}...");
+			$"Obtaining gateway information from GET {Endpoints.GATEWAY}{Endpoints.BOT}...");
 		var resp = await http.GetAsync(url).ConfigureAwait(false);
 
 		http.Dispose();
@@ -448,10 +437,10 @@ public sealed partial class DiscordShardedClient
 				case 429:
 				{
 					this.Logger.LogError(LoggerEvents.ShardClientError, "Ratelimit hit, requeuing request to {url}",
-					                     requestUrl);
+						requestUrl);
 
 					var hs = msg.Headers.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value),
-					                                  StringComparer.OrdinalIgnoreCase);
+						StringComparer.OrdinalIgnoreCase);
 					var waitInterval = 0;
 
 					if (hs.TryGetValue("Retry-After", out var retryAfterRaw))
@@ -609,7 +598,7 @@ public sealed partial class DiscordShardedClient
 		this._guildDeleted = new("GUILD_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildUnavailable = new("GUILD_UNAVAILABLE", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildDownloadCompleted = new("GUILD_DOWNLOAD_COMPLETED", DiscordClient.EventExecutionLimit,
-		                                   this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._inviteCreated = new("INVITE_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._inviteDeleted = new("INVITE_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._messageCreated = new("MESSAGE_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
@@ -621,7 +610,7 @@ public sealed partial class DiscordShardedClient
 		this._guildStickersUpdated =
 			new("GUILD_STICKER_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildIntegrationsUpdated = new("GUILD_INTEGRATIONS_UPDATED", DiscordClient.EventExecutionLimit,
-		                                     this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._guildMemberAdded = new("GUILD_MEMBER_ADDED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildMemberRemoved =
 			new("GUILD_MEMBER_REMOVED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
@@ -639,7 +628,7 @@ public sealed partial class DiscordShardedClient
 		this._componentInteractionCreated =
 			new("COMPONENT_INTERACTED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._contextMenuInteractionCreated = new("CONTEXT_MENU_INTERACTED", DiscordClient.EventExecutionLimit,
-		                                          this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._typingStarted = new("TYPING_STARTED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._userSettingsUpdated =
 			new("USER_SETTINGS_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
@@ -653,23 +642,23 @@ public sealed partial class DiscordShardedClient
 		this._messageReactionAdded =
 			new("MESSAGE_REACTION_ADDED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._messageReactionRemoved = new("MESSAGE_REACTION_REMOVED", DiscordClient.EventExecutionLimit,
-		                                   this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._messageReactionsCleared = new("MESSAGE_REACTIONS_CLEARED", DiscordClient.EventExecutionLimit,
-		                                    this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._messageReactionRemovedEmoji = new("MESSAGE_REACTION_REMOVED_EMOJI", DiscordClient.EventExecutionLimit,
-		                                        this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._webhooksUpdated = new("WEBHOOKS_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._heartbeated = new("HEARTBEATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._applicationCommandCreated = new("APPLICATION_COMMAND_CREATED", DiscordClient.EventExecutionLimit,
-		                                      this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._applicationCommandUpdated = new("APPLICATION_COMMAND_UPDATED", DiscordClient.EventExecutionLimit,
-		                                      this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._applicationCommandDeleted = new("APPLICATION_COMMAND_DELETED", DiscordClient.EventExecutionLimit,
-		                                      this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._guildApplicationCommandCountUpdated = new("GUILD_APPLICATION_COMMAND_COUNTS_UPDATED",
-		                                                DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+			DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._applicationCommandPermissionsUpdated = new("APPLICATION_COMMAND_PERMISSIONS_UPDATED",
-		                                                 DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+			DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildIntegrationCreated =
 			new("INTEGRATION_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildIntegrationUpdated =
@@ -693,35 +682,35 @@ public sealed partial class DiscordShardedClient
 		this._zombied = new("ZOMBIED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._payloadReceived = new("PAYLOAD_RECEIVED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildScheduledEventCreated = new("GUILD_SCHEDULED_EVENT_CREATED", DiscordClient.EventExecutionLimit,
-		                                       this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._guildScheduledEventUpdated = new("GUILD_SCHEDULED_EVENT_UPDATED", DiscordClient.EventExecutionLimit,
-		                                       this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._guildScheduledEventDeleted = new("GUILD_SCHEDULED_EVENT_DELETED", DiscordClient.EventExecutionLimit,
-		                                       this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._guildScheduledEventUserAdded = new("GUILD_SCHEDULED_EVENT_USER_ADDED", DiscordClient.EventExecutionLimit,
-		                                         this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._guildScheduledEventUserRemoved = new("GUILD_SCHEDULED_EVENT_USER_REMOVED",
-		                                           DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+			DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._embeddedActivityUpdated = new("EMBEDDED_ACTIVITY_UPDATED", DiscordClient.EventExecutionLimit,
-		                                    this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._guildMemberTimeoutAdded = new("GUILD_MEMBER_TIMEOUT_ADDED", DiscordClient.EventExecutionLimit,
-		                                    this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._guildMemberTimeoutChanged = new("GUILD_MEMBER_TIMEOUT_UPDATED", DiscordClient.EventExecutionLimit,
-		                                      this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._guildMemberTimeoutRemoved = new("GUILD_MEMBER_TIMEOUT_REMOVED", DiscordClient.EventExecutionLimit,
-		                                      this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._automodRuleCreated = new("AUTO_MODERATION_RULE_CREATED", DiscordClient.EventExecutionLimit,
-		                               this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._automodRuleUpdated = new("AUTO_MODERATION_RULE_UPDATED", DiscordClient.EventExecutionLimit,
-		                               this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._automodRuleDeleted = new("AUTO_MODERATION_RULE_DELETED", DiscordClient.EventExecutionLimit,
-		                               this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._automodActionExecuted = new("AUTO_MODERATION_ACTION_EXECUTED", DiscordClient.EventExecutionLimit,
-		                                  this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._guildAuditLogEntryCreated = new("GUILD_AUDIT_LOG_ENTRY_CREATED", DiscordClient.EventExecutionLimit,
-		                                      this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._voiceChannelStatusUpdated = new("CHANNEL_STATUS_UPDATED", DiscordClient.EventExecutionLimit,
-		                                      this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._entitlementCreated =
 			new("ENTITLEMENT_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._entitlementUpdated =

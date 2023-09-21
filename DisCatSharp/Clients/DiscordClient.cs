@@ -164,8 +164,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			var intents = this.Configuration.Intents;
 			this.MessageCache = intents.HasIntent(DiscordIntents.GuildMessages) ||
 			                    intents.HasIntent(DiscordIntents.DirectMessages)
-				                    ? new RingBuffer<DiscordMessage>(this.Configuration.MessageCacheSize)
-				                    : null;
+				? new RingBuffer<DiscordMessage>(this.Configuration.MessageCacheSize)
+				: null;
 		}
 
 		this.InternalSetup();
@@ -240,9 +240,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._applicationCommandDeleted =
 			new("APPLICATION_COMMAND_DELETED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildApplicationCommandCountUpdated = new("GUILD_APPLICATION_COMMAND_COUNTS_UPDATED", EventExecutionLimit,
-		                                                this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._applicationCommandPermissionsUpdated = new("APPLICATION_COMMAND_PERMISSIONS_UPDATED", EventExecutionLimit,
-		                                                 this.EventErrorHandler);
+			this.EventErrorHandler);
 		this._guildIntegrationCreated = new("INTEGRATION_CREATED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildIntegrationUpdated = new("INTEGRATION_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildIntegrationDeleted = new("INTEGRATION_DELETED", EventExecutionLimit, this.EventErrorHandler);
@@ -329,8 +329,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="UnauthorizedException">Thrown when an invalid token was provided.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task ConnectAsync(DiscordActivity? activity = null, UserStatus? status = null,
-	                               DateTimeOffset? idleSince = null)
+	public async Task ConnectAsync(
+		DiscordActivity? activity = null, UserStatus? status = null,
+		DateTimeOffset? idleSince = null
+	)
 	{
 		// Check if connection lock is already set, and set it if it isn't
 		if (!this._connectionLock.Wait(0))
@@ -344,9 +346,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		Exception cex = null;
 
 		if (activity == null && status == null && idleSince == null)
-		{
 			this._status = null;
-		}
 		else
 		{
 			var sinceUnix = idleSince != null ? (long?)Utilities.GetUnixTime(idleSince.Value) : null;
@@ -364,9 +364,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		{
 			if (this.Configuration.TokenType != TokenType.Bot)
 				this.Logger.LogWarning(LoggerEvents.Misc,
-				                       "You are logging in with a token that is not a bot token. This is not officially supported by Discord, and can result in your account being terminated if you aren't careful.");
+					"You are logging in with a token that is not a bot token. This is not officially supported by Discord, and can result in your account being terminated if you aren't careful.");
 			this.Logger.LogInformation(LoggerEvents.Startup, "Lib {name}, version {version}", this.BotLibrary,
-			                           this.VersionString);
+				this.VersionString);
 		}
 
 		while (i-- > 0 || this.Configuration.ReconnectIndefinitely)
@@ -399,7 +399,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				if (i <= 0 && !this.Configuration.ReconnectIndefinitely) break;
 
 				this.Logger.LogError(LoggerEvents.ConnectionFailure, ex,
-				                     "Connection attempt failed, retrying in {seconds}s", w / 1000);
+					"Connection attempt failed, retrying in {seconds}s", w / 1000);
 				await Task.Delay(w, this._cancelToken).ConfigureAwait(false);
 
 				if (i > 0)
@@ -495,8 +495,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			Summary = transportApplication.Summary,
 			IconHash = transportApplication.IconHash,
 			RpcOrigins = transportApplication.RpcOrigins != null
-				             ? new ReadOnlyCollection<string>(transportApplication.RpcOrigins)
-				             : null,
+				? new ReadOnlyCollection<string>(transportApplication.RpcOrigins)
+				: null,
 			Flags = transportApplication.Flags,
 			IsHook = transportApplication.IsHook,
 			Type = transportApplication.Type,
@@ -567,7 +567,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <returns>A list of <see cref="DiscordEntitlement"/>.</returns>
 	/// <exception cref="NotFoundException">Thrown when the entitlements do not exist.</exception>
 	public async Task<IReadOnlyList<DiscordEntitlement>> GetEntitlementsAsync(
-		ulong? guildId = null, ulong? userId = null)
+		ulong? guildId = null, ulong? userId = null
+	)
 		=> await this.ApiClient.GetEntitlementsAsync(this.CurrentApplication.Id, guildId, userId).ConfigureAwait(false);
 
 	/// <summary>
@@ -577,10 +578,12 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="ownerId">The owner id to create the entitlement for.</param>
 	/// <param name="ownerType">The owner type to create the entitlement for.</param>
 	/// <returns>A partial <see cref="DiscordEntitlement"/>.</returns>
-	public async Task<DiscordEntitlement> CreateTestEntitlementsAsync(ulong skuId, ulong ownerId,
-	                                                                  EntitlementOwnerType ownerType)
+	public async Task<DiscordEntitlement> CreateTestEntitlementsAsync(
+		ulong skuId, ulong ownerId,
+		EntitlementOwnerType ownerType
+	)
 		=> await this.ApiClient.CreateTestEntitlementsAsync(this.CurrentApplication.Id, skuId, ownerId, ownerType)
-			   .ConfigureAwait(false);
+			.ConfigureAwait(false);
 
 	/// <summary>
 	/// Deletes a test entitlement.
@@ -588,7 +591,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="entitlementId">The entitlement id to delete.</param>
 	public async Task DeleteTestEntitlementsAsync(ulong entitlementId)
 		=> await this.ApiClient.DeleteTestEntitlementsAsync(this.CurrentApplication.Id, entitlementId)
-			   .ConfigureAwait(false);
+			.ConfigureAwait(false);
 
 	/// <summary>
 	/// Gets the applications role connection metadata.
@@ -602,18 +605,19 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="metadata">A list of metadata objects. Max 5.</param>
 	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> UpdateRoleConnectionMetadata(
-		IEnumerable<DiscordApplicationRoleConnectionMetadata> metadata)
+		IEnumerable<DiscordApplicationRoleConnectionMetadata> metadata
+	)
 		=> await this.ApiClient.UpdateRoleConnectionMetadataRecordsAsync(this.CurrentApplication.Id, metadata)
-			   .ConfigureAwait(false);
+			.ConfigureAwait(false);
 
 	/// <summary>
 	/// Removes all global application commands.
 	/// </summary>
 	public async Task RemoveGlobalApplicationCommandsAsync()
 		=> await this.ApiClient
-			   .BulkOverwriteGlobalApplicationCommandsAsync(this.CurrentApplication.Id,
-			                                                Array.Empty<DiscordApplicationCommand>())
-			   .ConfigureAwait(false);
+			.BulkOverwriteGlobalApplicationCommandsAsync(this.CurrentApplication.Id,
+				Array.Empty<DiscordApplicationCommand>())
+			.ConfigureAwait(false);
 
 	/// <summary>
 	/// Removes all global application commands for a specific guild id.
@@ -621,9 +625,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="guildId">The target guild id.</param>
 	public async Task RemoveGuildApplicationCommandsAsync(ulong guildId)
 		=> await this.ApiClient
-			   .BulkOverwriteGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId,
-			                                               Array.Empty<DiscordApplicationCommand>())
-			   .ConfigureAwait(false);
+			.BulkOverwriteGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId,
+				Array.Empty<DiscordApplicationCommand>())
+			.ConfigureAwait(false);
 
 	/// <summary>
 	/// Removes all global application commands for a specific guild.
@@ -725,11 +729,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordEmbed? embed)
 		=> this.ApiClient.CreateMessageAsync(channel.Id, null, embed != null
-			                                                       ? new[]
-			                                                       {
-				                                                       embed
-			                                                       }
-			                                                       : null, null, null, false, false);
+			? new[] { embed }
+			: null, null, null, false, false);
 
 	/// <summary>
 	/// Sends a message with content and an embed.
@@ -744,11 +745,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, string content, DiscordEmbed? embed)
 		=> this.ApiClient.CreateMessageAsync(channel.Id, content, embed != null
-			                                                          ? new[]
-			                                                          {
-				                                                          embed
-			                                                          }
-			                                                          : null, null, null, false, false);
+			? new[] { embed }
+			: null, null, null, false, false);
 
 	/// <summary>
 	/// Sends a message with the <see cref="DisCatSharp.Entities.DiscordMessageBuilder"/>.
@@ -794,14 +792,16 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordGuild> CreateGuildAsync(string name, string? region = null, Optional<Stream> icon = default,
-	                                           VerificationLevel? verificationLevel = null,
-	                                           DefaultMessageNotifications? defaultMessageNotifications = null,
-	                                           SystemChannelFlags? systemChannelFlags = null)
+	public Task<DiscordGuild> CreateGuildAsync(
+		string name, string? region = null, Optional<Stream> icon = default,
+		VerificationLevel? verificationLevel = null,
+		DefaultMessageNotifications? defaultMessageNotifications = null,
+		SystemChannelFlags? systemChannelFlags = null
+	)
 	{
 		var iconBase64 = ImageTool.Base64FromStream(icon);
 		return this.ApiClient.CreateGuildAsync(name, region, iconBase64, verificationLevel, defaultMessageNotifications,
-		                                       systemChannelFlags);
+			systemChannelFlags);
 	}
 
 	/// <summary>
@@ -937,8 +937,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="NotFoundException">Thrown when the invite does not exists.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordInvite> GetInviteByCodeAsync(string code, bool? withCounts = null, bool? withExpiration = null,
-	                                                ulong? scheduledEventId = null)
+	public Task<DiscordInvite> GetInviteByCodeAsync(
+		string code, bool? withCounts = null, bool? withExpiration = null,
+		ulong? scheduledEventId = null
+	)
 		=> this.ApiClient.GetInviteAsync(code, withCounts, withExpiration, scheduledEventId);
 
 	/// <summary>
@@ -950,8 +952,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="withExpiration">Whether to include the expiration date in the returned invite.</param>
 	/// <param name="scheduledEventId">The scheduled event id.</param>
 	/// <returns>True if the invite was found, otherwise false.</returns>
-	public bool TryGetInviteByCode(string code, out DiscordInvite? invite, bool? withCounts = null,
-	                               bool? withExpiration = null, ulong? scheduledEventId = null)
+	public bool TryGetInviteByCode(
+		string code, out DiscordInvite? invite, bool? withCounts = null,
+		bool? withExpiration = null, ulong? scheduledEventId = null
+	)
 	{
 		try
 		{
@@ -1021,19 +1025,21 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="redirectUrl">Redirect Uri.</param>
 	/// <param name="permissions">Defaults to <see cref="Permissions.None"/>.</param>
 	/// <returns>The OAuth Url</returns>
-	public Uri GetInAppOAuth(Permissions permissions = Permissions.None, OAuthScopes scopes = OAuthScopes.BOT_DEFAULT,
-	                         string? redirectUrl = null)
+	public Uri GetInAppOAuth(
+		Permissions permissions = Permissions.None, OAuthScopes scopes = OAuthScopes.BOT_DEFAULT,
+		string? redirectUrl = null
+	)
 	{
 		permissions &= PermissionMethods.FullPerms;
 		return
 			new(new
-					    QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
-				    .AddParameter("client_id", this.CurrentApplication.Id.ToString(CultureInfo.InvariantCulture))
-				    .AddParameter("scope", OAuth.ResolveScopes(scopes))
-				    .AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
-				    .AddParameter("state", "")
-				    .AddParameter("redirect_uri", redirectUrl ?? string.Empty)
-				    .ToString());
+					QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
+				.AddParameter("client_id", this.CurrentApplication.Id.ToString(CultureInfo.InvariantCulture))
+				.AddParameter("scope", OAuth.ResolveScopes(scopes))
+				.AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
+				.AddParameter("state", "")
+				.AddParameter("redirect_uri", redirectUrl ?? string.Empty)
+				.ToString());
 	}
 
 	/// <summary>
@@ -1044,8 +1050,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="redirectUrl">Redirect Uri.</param>
 	/// <param name="permissions">Defaults to <see cref="Permissions.None"/>.</param>
 	/// <returns>The OAuth Url</returns>
-	public Uri GenerateInAppOauthFor(DiscordUser bot, Permissions permissions = Permissions.None,
-	                                 OAuthScopes scopes = OAuthScopes.BOT_DEFAULT, string? redirectUrl = null)
+	public Uri GenerateInAppOauthFor(
+		DiscordUser bot, Permissions permissions = Permissions.None,
+		OAuthScopes scopes = OAuthScopes.BOT_DEFAULT, string? redirectUrl = null
+	)
 	{
 		if (!bot.IsBot)
 			throw new ArgumentException("The user must be a bot.", nameof(bot));
@@ -1053,13 +1061,13 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		permissions &= PermissionMethods.FullPerms;
 		return
 			new(new
-					    QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
-				    .AddParameter("client_id", bot.Id.ToString(CultureInfo.InvariantCulture))
-				    .AddParameter("scope", OAuth.ResolveScopes(scopes))
-				    .AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
-				    .AddParameter("state", "")
-				    .AddParameter("redirect_uri", redirectUrl ?? "")
-				    .ToString());
+					QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
+				.AddParameter("client_id", bot.Id.ToString(CultureInfo.InvariantCulture))
+				.AddParameter("scope", OAuth.ResolveScopes(scopes))
+				.AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
+				.AddParameter("state", "")
+				.AddParameter("redirect_uri", redirectUrl ?? "")
+				.ToString());
 	}
 
 	/// <summary>
@@ -1133,8 +1141,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="userStatus">Status of the user.</param>
 	/// <param name="idleSince">Since when is the client performing the specified activity.</param>
 	/// <returns></returns>
-	public Task UpdateStatusAsync(DiscordActivity? activity = null, UserStatus? userStatus = null,
-	                              DateTimeOffset? idleSince = null)
+	public Task UpdateStatusAsync(
+		DiscordActivity? activity = null, UserStatus? userStatus = null,
+		DateTimeOffset? idleSince = null
+	)
 		=> this.InternalUpdateStatusAsync(activity, userStatus, idleSince);
 
 	/// <summary>
@@ -1174,7 +1184,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="withLocalizations">Whether to get the full localization dict.</param>
 	/// <returns>A list of global application commands.</returns>
 	public Task<IReadOnlyList<DiscordApplicationCommand>> GetGlobalApplicationCommandsAsync(
-		bool withLocalizations = false) =>
+		bool withLocalizations = false
+	) =>
 		this.ApiClient.GetGlobalApplicationCommandsAsync(this.CurrentApplication.Id, withLocalizations);
 
 	/// <summary>
@@ -1183,7 +1194,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="commands">The list of commands to overwrite with.</param>
 	/// <returns>The list of global commands.</returns>
 	public Task<IReadOnlyList<DiscordApplicationCommand>> BulkOverwriteGlobalApplicationCommandsAsync(
-		IEnumerable<DiscordApplicationCommand> commands) =>
+		IEnumerable<DiscordApplicationCommand> commands
+	) =>
 		this.ApiClient.BulkOverwriteGlobalApplicationCommandsAsync(this.CurrentApplication.Id, commands);
 
 	/// <summary>
@@ -1209,19 +1221,20 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="action">Action to perform.</param>
 	/// <returns>The edited command.</returns>
 	public async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(
-		ulong commandId, Action<ApplicationCommandEditModel> action)
+		ulong commandId, Action<ApplicationCommandEditModel> action
+	)
 	{
 		var mdl = new ApplicationCommandEditModel();
 		action(mdl);
 		var applicationId = this.CurrentApplication?.Id ??
 		                    (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
 		return await this.ApiClient.EditGlobalApplicationCommandAsync(applicationId, commandId, mdl.Name,
-		                                                              mdl.Description, mdl.Options,
-		                                                              mdl.NameLocalizations,
-		                                                              mdl.DescriptionLocalizations,
-		                                                              mdl.DefaultMemberPermissions, mdl.DmPermission,
-		                                                              mdl.IsNsfw, mdl.AllowedContexts,
-		                                                              mdl.IntegrationTypes).ConfigureAwait(false);
+			mdl.Description, mdl.Options,
+			mdl.NameLocalizations,
+			mdl.DescriptionLocalizations,
+			mdl.DefaultMemberPermissions, mdl.DmPermission,
+			mdl.IsNsfw, mdl.AllowedContexts,
+			mdl.IntegrationTypes).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1238,7 +1251,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="withLocalizations">Whether to get the full localization dict.</param>
 	/// <returns>A list of application commands in the guild.</returns>
 	public Task<IReadOnlyList<DiscordApplicationCommand>> GetGuildApplicationCommandsAsync(
-		ulong guildId, bool withLocalizations = false) =>
+		ulong guildId, bool withLocalizations = false
+	) =>
 		this.ApiClient.GetGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, withLocalizations);
 
 	/// <summary>
@@ -1248,7 +1262,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="commands">The list of commands to overwrite with.</param>
 	/// <returns>The list of guild commands.</returns>
 	public Task<IReadOnlyList<DiscordApplicationCommand>> BulkOverwriteGuildApplicationCommandsAsync(
-		ulong guildId, IEnumerable<DiscordApplicationCommand> commands) =>
+		ulong guildId, IEnumerable<DiscordApplicationCommand> commands
+	) =>
 		this.ApiClient.BulkOverwriteGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, commands);
 
 	/// <summary>
@@ -1258,7 +1273,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="command">The command to create.</param>
 	/// <returns>The created command.</returns>
 	public Task<DiscordApplicationCommand> CreateGuildApplicationCommandAsync(
-		ulong guildId, DiscordApplicationCommand command) =>
+		ulong guildId, DiscordApplicationCommand command
+	) =>
 		this.ApiClient.CreateGuildApplicationCommandAsync(this.CurrentApplication.Id, guildId, command);
 
 	/// <summary>
@@ -1278,19 +1294,20 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="action">Action to perform.</param>
 	/// <returns>The edited command.</returns>
 	public async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(
-		ulong guildId, ulong commandId, Action<ApplicationCommandEditModel> action)
+		ulong guildId, ulong commandId, Action<ApplicationCommandEditModel> action
+	)
 	{
 		var mdl = new ApplicationCommandEditModel();
 		action(mdl);
 		var applicationId = this.CurrentApplication?.Id ??
 		                    (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
 		return await this.ApiClient.EditGuildApplicationCommandAsync(applicationId, guildId, commandId, mdl.Name,
-		                                                             mdl.Description, mdl.Options,
-		                                                             mdl.NameLocalizations,
-		                                                             mdl.DescriptionLocalizations,
-		                                                             mdl.DefaultMemberPermissions, mdl.DmPermission,
-		                                                             mdl.IsNsfw, mdl.AllowedContexts,
-		                                                             mdl.IntegrationTypes).ConfigureAwait(false);
+			mdl.Description, mdl.Options,
+			mdl.NameLocalizations,
+			mdl.DescriptionLocalizations,
+			mdl.DefaultMemberPermissions, mdl.DmPermission,
+			mdl.IsNsfw, mdl.AllowedContexts,
+			mdl.IntegrationTypes).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1368,10 +1385,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <returns>The requested guild.</returns>
 	internal DiscordGuild? InternalGetCachedGuild(ulong? guildId)
 		=> this.GuildsInternal == null || !guildId.HasValue
-			   ? null
-			   : this.GuildsInternal.TryGetValue(guildId.Value, out var guild)
-				   ? guild
-				   : null;
+			? null
+			: this.GuildsInternal.TryGetValue(guildId.Value, out var guild)
+				? guild
+				: null;
 
 	/// <summary>
 	/// Updates a message.
@@ -1380,8 +1397,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="author">The author to update.</param>
 	/// <param name="guild">The guild to update.</param>
 	/// <param name="member">The member to update.</param>
-	private void UpdateMessage(DiscordMessage message, TransportUser? author, DiscordGuild? guild,
-	                           TransportMember? member)
+	private void UpdateMessage(
+		DiscordMessage message, TransportUser? author, DiscordGuild? guild,
+		TransportMember? member
+	)
 	{
 		if (author != null)
 		{
@@ -1401,17 +1420,17 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		if (channel != null) return;
 
 		channel = !message.GuildId.HasValue
-			          ? new DiscordDmChannel
-			          {
-				          Id = message.ChannelId,
-				          Discord = this,
-				          Type = ChannelType.Private
-			          }
-			          : new DiscordChannel
-			          {
-				          Id = message.ChannelId,
-				          Discord = this
-			          };
+			? new DiscordDmChannel
+			{
+				Id = message.ChannelId,
+				Discord = this,
+				Type = ChannelType.Private
+			}
+			: new DiscordChannel
+			{
+				Id = message.ChannelId,
+				Discord = this
+			};
 
 		message.Channel = channel;
 	}
@@ -1503,14 +1522,11 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			}
 			else if (intents.HasIntent(DiscordIntents.GuildPresences) ||
 			         this.Configuration.AlwaysCacheMembers) // we can attempt to update it if it's already in cache.
-			{
 				if (!intents.HasIntent(DiscordIntents
-					                       .GuildMembers)) // no need to update if we already have the member events
+					.GuildMembers)) // no need to update if we already have the member events
 					_ = guild?.MembersInternal.TryUpdate(usr.Id, (DiscordMember)usr, member);
-			}
 		}
 		else if (!string.IsNullOrEmpty(usr.Username)) // check if not a skeleton user
-		{
 			_ = this.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
 			{
 				old.Username = usr.Username;
@@ -1525,7 +1541,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.GlobalName = usr.GlobalName;
 				return old;
 			});
-		}
 
 		return usr;
 	}
@@ -1749,8 +1764,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			this._cancelTokenSource?.Dispose();
 		}
 		catch
-		{
-		}
+		{ }
 
 		this.GuildsInternal = null;
 		this._heartbeatTask = null;

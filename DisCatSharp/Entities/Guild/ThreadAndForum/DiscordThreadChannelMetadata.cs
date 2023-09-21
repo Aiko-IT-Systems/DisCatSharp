@@ -37,9 +37,9 @@ public class DiscordThreadChannelMetadata : ObservableApiObject
 	public DateTimeOffset? ArchiveTimestamp
 		=> !string.IsNullOrWhiteSpace(this.ArchiveTimestampRaw) &&
 		   DateTimeOffset.TryParse(this.ArchiveTimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None,
-		                           out var dto)
-			   ? dto
-			   : null;
+			   out var dto)
+			? dto
+			: null;
 
 	/// <summary>
 	/// Gets the timestamp when it was archived as raw string.
@@ -67,9 +67,9 @@ public class DiscordThreadChannelMetadata : ObservableApiObject
 	public DateTimeOffset? CreateTimestamp
 		=> !string.IsNullOrWhiteSpace(this.CreateTimestampRaw) &&
 		   DateTimeOffset.TryParse(this.CreateTimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None,
-		                           out var dto)
-			   ? dto
-			   : null;
+			   out var dto)
+			? dto
+			: null;
 
 	/// <summary>
 	/// Gets the timestamp when the thread was created as raw string.
@@ -82,6 +82,5 @@ public class DiscordThreadChannelMetadata : ObservableApiObject
 	/// Initializes a new instance of the <see cref="DiscordThreadChannelMetadata"/> class.
 	/// </summary>
 	internal DiscordThreadChannelMetadata()
-	{
-	}
+	{ }
 }

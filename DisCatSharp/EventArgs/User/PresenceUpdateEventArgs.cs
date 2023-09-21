@@ -39,6 +39,5 @@ public class PresenceUpdateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal PresenceUpdateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

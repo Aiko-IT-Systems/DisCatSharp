@@ -33,15 +33,17 @@ public static class CommandsNextUtilities
 	/// <param name="str">String to check for.</param>
 	/// <param name="comparisonType">Method of string comparison for the purposes of finding prefixes.</param>
 	/// <returns>Positive number if the prefix is present, -1 otherwise.</returns>
-	public static int GetStringPrefixLength(this DiscordMessage msg, string str,
-	                                        StringComparison comparisonType = StringComparison.Ordinal)
+	public static int GetStringPrefixLength(
+		this DiscordMessage msg, string str,
+		StringComparison comparisonType = StringComparison.Ordinal
+	)
 	{
 		var content = msg.Content;
 		return str.Length >= content.Length
-			       ? -1
-			       : !content.StartsWith(str, comparisonType)
-				       ? -1
-				       : str.Length;
+			? -1
+			: !content.StartsWith(str, comparisonType)
+				? -1
+				: str.Length;
 	}
 
 	/// <summary>
@@ -152,8 +154,8 @@ public static class CommandsNextUtilities
 			{
 				startPos = endPosition;
 				return startPosition != endPosition
-					       ? str[startPosition..endPosition].CleanupString(removeIndices)
-					       : null;
+					? str[startPosition..endPosition].CleanupString(removeIndices)
+					: null;
 			}
 		}
 
@@ -263,7 +265,7 @@ public static class CommandsNextUtilities
 					try
 					{
 						array.SetValue(await ctx.CommandsNext.ConvertArgument(rawArgumentList[i], ctx, arg.Type).ConfigureAwait(false),
-						               i - start);
+							i - start);
 					}
 					catch (Exception ex)
 					{
@@ -277,19 +279,17 @@ public static class CommandsNextUtilities
 				break;
 			}
 			else
-			{
 				try
 				{
 					args[i + 2] = rawArgumentList[i] != null
-						              ? await ctx.CommandsNext.ConvertArgument(rawArgumentList[i], ctx, arg.Type)
-							                .ConfigureAwait(false)
-						              : arg.DefaultValue;
+						? await ctx.CommandsNext.ConvertArgument(rawArgumentList[i], ctx, arg.Type)
+							.ConfigureAwait(false)
+						: arg.DefaultValue;
 				}
 				catch (Exception ex)
 				{
 					return new(ex);
 				}
-			}
 		}
 
 		return new(args, rawArgumentList);

@@ -48,6 +48,5 @@ public sealed class GroupCommandAttribute : Attribute
 	/// Marks this method as a group command.
 	/// </summary>
 	public GroupCommandAttribute()
-	{
-	}
+	{ }
 }

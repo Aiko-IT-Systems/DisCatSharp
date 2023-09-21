@@ -49,6 +49,5 @@ public class GuildMemberTimeoutUpdateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal GuildMemberTimeoutUpdateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

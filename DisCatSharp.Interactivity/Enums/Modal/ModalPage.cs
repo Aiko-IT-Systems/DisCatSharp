@@ -14,13 +14,15 @@ public class ModalPage
 	/// <param name="modal">The modal to display.</param>
 	/// <param name="openButton">The button to display to open the current page. This is skipped if possible.</param>
 	/// <param name="openText">The text to display to open the current page. This is skipped if possible.</param>
-	public ModalPage(DiscordInteractionModalBuilder modal, DiscordButtonComponent openButton = null,
-	                 string openText = null)
+	public ModalPage(
+		DiscordInteractionModalBuilder modal, DiscordButtonComponent openButton = null,
+		string openText = null
+	)
 	{
 		this.Modal = modal;
 		this.OpenButton = openButton ??
 		                  new DiscordButtonComponent(ButtonStyle.Primary, null, "Open next page", false,
-		                                             new(DiscordEmoji.FromUnicode("📄")));
+			                  new(DiscordEmoji.FromUnicode("📄")));
 		this.OpenMessage = new DiscordInteractionResponseBuilder()
 			.WithContent(openText ?? "`Click the button below to continue to the next page.`").AsEphemeral();
 	}

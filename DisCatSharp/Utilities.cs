@@ -61,9 +61,7 @@ public static class Utilities
 		var vs = "";
 		var iv = a.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
 		if (iv != null)
-		{
 			vs = iv.InformationalVersion;
-		}
 		else
 		{
 			var v = a.GetName().Version;
@@ -80,13 +78,13 @@ public static class Utilities
 	/// <returns>A string.</returns>
 	internal static string GetApiBaseUri(DiscordConfiguration? config = null)
 		=> (config?.ApiChannel ?? ApiChannel.Stable) switch
-		   {
-			   ApiChannel.Stable => Endpoints.BASE_URI,
-			   ApiChannel.Canary => Endpoints.CANARY_URI,
-			   ApiChannel.Ptb => Endpoints.PTB_URI,
-			   ApiChannel.Staging => Endpoints.STAGING_URI,
-			   _ => Endpoints.BASE_URI
-		   } + (config?.ApiVersion ?? "10");
+		{
+			ApiChannel.Stable => Endpoints.BASE_URI,
+			ApiChannel.Canary => Endpoints.CANARY_URI,
+			ApiChannel.Ptb => Endpoints.PTB_URI,
+			ApiChannel.Staging => Endpoints.STAGING_URI,
+			_ => Endpoints.BASE_URI
+		} + (config?.ApiVersion ?? "10");
 
 	/// <summary>
 	/// Gets the api uri for.
@@ -395,8 +393,10 @@ public static class Utilities
 	/// <param name="includeValue">Whether to include the permissions value. Defaults to <see langword="false"/>.</param>
 	/// <param name="shortIfAll">Whether to show <c>All Permissions</c>, if the member has all permissions. Defaults to &lt;see langword="false"/&gt;.</param>
 	/// <returns>Human-readable permissions.</returns>
-	public static string ToPermissionString(this Permissions perm, bool useNewline = false, bool sortAscending = true,
-	                                        bool includeValue = false, bool shortIfAll = false)
+	public static string ToPermissionString(
+		this Permissions perm, bool useNewline = false, bool sortAscending = true,
+		bool includeValue = false, bool shortIfAll = false
+	)
 	{
 		if (perm == Permissions.None)
 			return PermissionStrings[perm];
@@ -439,7 +439,7 @@ public static class Utilities
 			return;
 
 		task.ContinueWith(t => logger.Log(level, eventId, t.Exception, "{msg}", message),
-		                  TaskContinuationOptions.OnlyOnFaulted);
+			TaskContinuationOptions.OnlyOnFaulted);
 	}
 
 	/// <summary>

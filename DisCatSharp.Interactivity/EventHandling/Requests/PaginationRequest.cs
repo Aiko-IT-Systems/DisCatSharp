@@ -33,9 +33,11 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// <param name="emojis">Emojis for this pagination object</param>
 		/// <param name="timeout">Timeout time</param>
 		/// <param name="pages">Pagination pages</param>
-		internal PaginationRequest(DiscordMessage message, DiscordUser user, PaginationBehaviour behaviour,
-		                           PaginationDeletion deletion,
-		                           PaginationEmojis emojis, TimeSpan timeout, IEnumerable<Page> pages)
+		internal PaginationRequest(
+			DiscordMessage message, DiscordUser user, PaginationBehaviour behaviour,
+			PaginationDeletion deletion,
+			PaginationEmojis emojis, TimeSpan timeout, IEnumerable<Page> pages
+		)
 		{
 			this._tcs = new();
 			this._ct = new(timeout);

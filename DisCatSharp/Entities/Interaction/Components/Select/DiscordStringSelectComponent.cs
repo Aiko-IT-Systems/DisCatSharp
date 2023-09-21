@@ -49,9 +49,11 @@ public sealed class DiscordStringSelectComponent : DiscordBaseSelectComponent
 	/// <param name="minOptions">Minimum count of selectable options.</param>
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this select component should be initialized as being disabled. User sees a greyed out select component that cannot be interacted with.</param>
-	public DiscordStringSelectComponent(string placeholder, IEnumerable<DiscordStringSelectComponentOption> options,
-	                                    string customId = null, int minOptions = 1, int maxOptions = 1,
-	                                    bool disabled = false)
+	public DiscordStringSelectComponent(
+		string placeholder, IEnumerable<DiscordStringSelectComponentOption> options,
+		string customId = null, int minOptions = 1, int maxOptions = 1,
+		bool disabled = false
+	)
 		: base(ComponentType.StringSelect, placeholder, customId, minOptions, maxOptions, disabled)
 	{
 		this.Options = options.ToArray();
@@ -67,9 +69,11 @@ public sealed class DiscordStringSelectComponent : DiscordBaseSelectComponent
 	/// <param name="minOptions">Minimum count of selectable options.</param>
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this select component should be initialized as being disabled. User sees a greyed out select component that cannot be interacted with.</param>
-	public DiscordStringSelectComponent(string label, string placeholder,
-	                                    IEnumerable<DiscordStringSelectComponentOption> options, string customId = null,
-	                                    int minOptions = 1, int maxOptions = 1, bool disabled = false)
+	public DiscordStringSelectComponent(
+		string label, string placeholder,
+		IEnumerable<DiscordStringSelectComponentOption> options, string customId = null,
+		int minOptions = 1, int maxOptions = 1, bool disabled = false
+	)
 		: base(ComponentType.StringSelect, label, placeholder, customId, minOptions, maxOptions, disabled)
 	{
 		this.Options = options.ToArray();

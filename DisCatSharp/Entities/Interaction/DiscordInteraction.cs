@@ -53,17 +53,17 @@ public sealed class DiscordInteraction : SnowflakeObject
 		=> (this.Discord as DiscordClient).InternalGetCachedChannel(this.ChannelId) ??
 		   (DiscordChannel)(this.Discord as DiscordClient).InternalGetCachedThread(this.ChannelId) ??
 		   (this.Guild == null
-			    ? new DiscordDmChannel
-			    {
-				    Id = this.ChannelId,
-				    Type = ChannelType.Private,
-				    Discord = this.Discord
-			    }
-			    : new DiscordChannel()
-			    {
-				    Id = this.ChannelId,
-				    Discord = this.Discord
-			    });
+			   ? new DiscordDmChannel
+			   {
+				   Id = this.ChannelId,
+				   Type = ChannelType.Private,
+				   Discord = this.Discord
+			   }
+			   : new DiscordChannel()
+			   {
+				   Id = this.ChannelId,
+				   Discord = this.Discord
+			   });
 
 	/// <summary>
 	/// Gets the user that invoked this interaction.
@@ -146,9 +146,9 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <param name="builder">The data to send.</param>
 	public Task CreateInteractionModalResponseAsync(DiscordInteractionModalBuilder builder)
 		=> this.Type != InteractionType.Ping && this.Type != InteractionType.ModalSubmit
-			   ? this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token,
-			                                                                InteractionResponseType.Modal, builder)
-			   : throw new NotSupportedException("You can't respond to a PING with a modal.");
+			? this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token,
+				InteractionResponseType.Modal, builder)
+			: throw new NotSupportedException("You can't respond to a PING with a modal.");
 
 	/// <summary>
 	/// Creates an iframe response to this interaction.
@@ -157,14 +157,16 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <param name="title">The title of the iframe.</param>
 	/// <param name="modalSize">The size of the iframe.</param>
 	/// <param name="iFramePath">The path of the iframe. Uses %application_id%.discordsays.com/<c>:iframe_path</c>.</param>
-	public Task CreateInteractionIframeResponseAsync(string customId, string title,
-	                                                 IframeModalSize modalSize = IframeModalSize.Normal,
-	                                                 string? iFramePath = null)
+	public Task CreateInteractionIframeResponseAsync(
+		string customId, string title,
+		IframeModalSize modalSize = IframeModalSize.Normal,
+		string? iFramePath = null
+	)
 		=> this.Type != InteractionType.Ping
-			   ? this.Discord.ApiClient.CreateInteractionIframeResponseAsync(this.Id, this.Token,
-			                                                                 InteractionResponseType.Iframe, customId,
-			                                                                 title, modalSize, iFramePath)
-			   : throw new NotSupportedException("You can't respond to a PING with an iframe.");
+			? this.Discord.ApiClient.CreateInteractionIframeResponseAsync(this.Id, this.Token,
+				InteractionResponseType.Iframe, customId,
+				title, modalSize, iFramePath)
+			: throw new NotSupportedException("You can't respond to a PING with an iframe.");
 
 	/// <summary>
 	/// Gets the original interaction response.
@@ -188,13 +190,11 @@ public sealed class DiscordInteraction : SnowflakeObject
 			if (attachments?.Count > 0) builder.AttachmentsInternal.AddRange(attachments);
 		}
 		else if (builder.KeepAttachmentsInternal.HasValue)
-		{
 			builder.AttachmentsInternal.Clear();
-		}
 
 		return await this.Discord.ApiClient
-			       .EditOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, builder)
-			       .ConfigureAwait(false);
+			.EditOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, builder)
+			.ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -202,7 +202,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// </summary>>
 	public Task DeleteOriginalResponseAsync()
 		=> this.Discord.ApiClient.DeleteOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id,
-		                                                                 this.Token);
+			this.Token);
 
 	/// <summary>
 	/// Creates a follow up message to this interaction.
@@ -214,8 +214,8 @@ public sealed class DiscordInteraction : SnowflakeObject
 		builder.Validate();
 
 		return await this.Discord.ApiClient
-			       .CreateFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, builder)
-			       .ConfigureAwait(false);
+			.CreateFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, builder)
+			.ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -242,13 +242,11 @@ public sealed class DiscordInteraction : SnowflakeObject
 			if (attachments?.Count > 0) builder.AttachmentsInternal.AddRange(attachments);
 		}
 		else if (builder.KeepAttachmentsInternal.HasValue)
-		{
 			builder.AttachmentsInternal.Clear();
-		}
 
 		return await this.Discord.ApiClient
-			       .EditFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId, builder)
-			       .ConfigureAwait(false);
+			.EditFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId, builder)
+			.ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -267,6 +265,5 @@ public sealed class DiscordInteraction : SnowflakeObject
 			"channel",
 			"guild"
 		})
-	{
-	}
+	{ }
 }

@@ -18,6 +18,6 @@ public sealed class RequireStaffAttribute : CheckBaseAttribute
 	/// <param name="help">If true, help - returns true.</param>
 	public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
 		=> ctx.User.Flags.HasValue
-			   ? Task.FromResult(ctx.User.Flags.Value.HasFlag(UserFlags.Staff))
-			   : Task.FromResult(false);
+			? Task.FromResult(ctx.User.Flags.Value.HasFlag(UserFlags.Staff))
+			: Task.FromResult(false);
 }

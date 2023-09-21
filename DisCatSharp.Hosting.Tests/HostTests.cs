@@ -26,8 +26,10 @@ public sealed class Bot : DiscordHostedService
 
 public sealed class MyCustomBot : DiscordHostedService
 {
-	public MyCustomBot(IConfiguration config, ILogger<MyCustomBot> logger, IServiceProvider provider,
-	                   IHostApplicationLifetime lifetime)
+	public MyCustomBot(
+		IConfiguration config, ILogger<MyCustomBot> logger, IServiceProvider provider,
+		IHostApplicationLifetime lifetime
+	)
 		: base(config, logger, provider, lifetime, "MyCustomBot")
 	{
 		this.ConfigureAsync().GetAwaiter().GetResult();
@@ -42,8 +44,10 @@ public interface IBotTwoService : IDiscordHostedService
 
 public sealed class BotTwoService : DiscordHostedService, IBotTwoService
 {
-	public BotTwoService(IConfiguration config, ILogger<BotTwoService> logger, IServiceProvider provider,
-	                     IHostApplicationLifetime lifetime)
+	public BotTwoService(
+		IConfiguration config, ILogger<BotTwoService> logger, IServiceProvider provider,
+		IHostApplicationLifetime lifetime
+	)
 		: base(config, logger, provider, lifetime, "BotTwo")
 	{
 		this.ConfigureAsync().GetAwaiter().GetResult();
@@ -58,74 +62,34 @@ public class HostTests
 	private Dictionary<string, string> DefaultDiscord() =>
 		new()
 		{
-			{
-				"DisCatSharp:Discord:Token", "1234567890"
-			},
-			{
-				"DisCatSharp:Discord:TokenType", "Bot"
-			},
-			{
-				"DisCatSharp:Discord:MinimumLogLevel", "Information"
-			},
-			{
-				"DisCatSharp:Discord:UseRelativeRateLimit", "true"
-			},
-			{
-				"DisCatSharp:Discord:LogTimestampFormat", "yyyy-MM-dd HH:mm:ss zzz"
-			},
-			{
-				"DisCatSharp:Discord:LargeThreshold", "250"
-			},
-			{
-				"DisCatSharp:Discord:AutoReconnect", "true"
-			},
-			{
-				"DisCatSharp:Discord:ShardId", "123123"
-			},
-			{
-				"DisCatSharp:Discord:GatewayCompressionLevel", "Stream"
-			},
-			{
-				"DisCatSharp:Discord:MessageCacheSize", "1024"
-			},
-			{
-				"DisCatSharp:Discord:HttpTimeout", "00:00:20"
-			},
-			{
-				"DisCatSharp:Discord:ReconnectIndefinitely", "false"
-			},
-			{
-				"DisCatSharp:Discord:AlwaysCacheMembers", "true"
-			},
-			{
-				"DisCatSharp:Discord:DiscordIntents", "AllUnprivileged"
-			},
-			{
-				"DisCatSharp:Discord:MobileStatus", "false"
-			},
-			{
-				"DisCatSharp:Discord:UseCanary", "false"
-			},
-			{
-				"DisCatSharp:Discord:AutoRefreshChannelCache", "false"
-			},
-			{
-				"DisCatSharp:Discord:Intents", "AllUnprivileged"
-			}
+			{ "DisCatSharp:Discord:Token", "1234567890" },
+			{ "DisCatSharp:Discord:TokenType", "Bot" },
+			{ "DisCatSharp:Discord:MinimumLogLevel", "Information" },
+			{ "DisCatSharp:Discord:UseRelativeRateLimit", "true" },
+			{ "DisCatSharp:Discord:LogTimestampFormat", "yyyy-MM-dd HH:mm:ss zzz" },
+			{ "DisCatSharp:Discord:LargeThreshold", "250" },
+			{ "DisCatSharp:Discord:AutoReconnect", "true" },
+			{ "DisCatSharp:Discord:ShardId", "123123" },
+			{ "DisCatSharp:Discord:GatewayCompressionLevel", "Stream" },
+			{ "DisCatSharp:Discord:MessageCacheSize", "1024" },
+			{ "DisCatSharp:Discord:HttpTimeout", "00:00:20" },
+			{ "DisCatSharp:Discord:ReconnectIndefinitely", "false" },
+			{ "DisCatSharp:Discord:AlwaysCacheMembers", "true" },
+			{ "DisCatSharp:Discord:DiscordIntents", "AllUnprivileged" },
+			{ "DisCatSharp:Discord:MobileStatus", "false" },
+			{ "DisCatSharp:Discord:UseCanary", "false" },
+			{ "DisCatSharp:Discord:AutoRefreshChannelCache", "false" },
+			{ "DisCatSharp:Discord:Intents", "AllUnprivileged" }
 		};
 
 	public Dictionary<string, string> DiscordInteractivity() => new(this.DefaultDiscord())
 	{
-		{
-			"DisCatSharp:Using", "[\"DisCatSharp.Interactivity\"]"
-		}
+		{ "DisCatSharp:Using", "[\"DisCatSharp.Interactivity\"]" }
 	};
 
 	public Dictionary<string, string> DiscordInteractivityAndLavalink() => new(this.DefaultDiscord())
 	{
-		{
-			"DisCatSharp:Using", "[\"DisCatSharp.Interactivity\", \"DisCatSharp.Lavalink\"]"
-		}
+		{ "DisCatSharp:Using", "[\"DisCatSharp.Interactivity\", \"DisCatSharp.Lavalink\"]" }
 	};
 
 #pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
@@ -147,7 +111,8 @@ public class HostTests
 			.ConfigureServices(services => services.AddSingleton<TInterface, TBot>())
 			.ConfigureHostConfiguration(builder => builder.AddJsonFile(filename));
 
-	[Fact] public void TestBotCustomInterface()
+	[Fact]
+	public void TestBotCustomInterface()
 	{
 		IHost? host = null;
 
@@ -167,7 +132,8 @@ public class HostTests
 		}
 	}
 
-	[Fact] public void TestDifferentSection_InteractivityOnly()
+	[Fact]
+	public void TestDifferentSection_InteractivityOnly()
 	{
 		IHost? host = null;
 
@@ -184,7 +150,6 @@ public class HostTests
 			              DiscordIntents.Guilds;
 			Assert.Equal(intents, service.Client.Intents);
 
-
 			var interactivity = service.Client.GetExtension<InteractivityExtension>();
 			Assert.NotNull(interactivity);
 
@@ -197,7 +162,8 @@ public class HostTests
 		}
 	}
 
-	[Fact] public void TestDifferentSection_LavalinkOnly()
+	[Fact]
+	public void TestDifferentSection_LavalinkOnly()
 	{
 		IHost? host = null;
 
@@ -221,7 +187,8 @@ public class HostTests
 		}
 	}
 
-	[Fact] public void TestNoExtensions()
+	[Fact]
+	public void TestNoExtensions()
 	{
 		IHost? host = null;
 
@@ -240,7 +207,8 @@ public class HostTests
 		}
 	}
 
-	[Fact] public void TestInteractivityExtension()
+	[Fact]
+	public void TestInteractivityExtension()
 	{
 		IHost? host = null;
 
@@ -260,7 +228,8 @@ public class HostTests
 		}
 	}
 
-	[Fact] public void TestInteractivityLavalinkExtensions()
+	[Fact]
+	public void TestInteractivityLavalinkExtensions()
 	{
 		IHost? host = null;
 

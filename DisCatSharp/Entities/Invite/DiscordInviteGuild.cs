@@ -31,8 +31,8 @@ public class DiscordInviteGuild : SnowflakeObject
 	[JsonIgnore]
 	public string? IconUrl
 		=> !string.IsNullOrWhiteSpace(this.IconHash)
-			   ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.jpg"
-			   : null;
+			? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.jpg"
+			: null;
 
 	/// <summary>
 	/// Gets the hash of guild's invite splash.
@@ -46,8 +46,8 @@ public class DiscordInviteGuild : SnowflakeObject
 	[JsonIgnore]
 	public string? SplashUrl
 		=> !string.IsNullOrWhiteSpace(this.SplashHash)
-			   ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.SplashHash}.jpg"
-			   : null;
+			? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.SplashHash}.jpg"
+			: null;
 
 	/// <summary>
 	/// Gets the guild's banner hash, when applicable.
@@ -61,8 +61,8 @@ public class DiscordInviteGuild : SnowflakeObject
 	[JsonIgnore]
 	public string? BannerUrl
 		=> !string.IsNullOrWhiteSpace(this.Banner)
-			   ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.Id}/{this.Banner}"
-			   : null;
+			? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.Id}/{this.Banner}"
+			: null;
 
 	/// <summary>
 	/// Gets the guild description, when applicable.
@@ -110,6 +110,5 @@ public class DiscordInviteGuild : SnowflakeObject
 	/// Initializes a new instance of the <see cref="DiscordInviteGuild"/> class.
 	/// </summary>
 	internal DiscordInviteGuild()
-	{
-	}
+	{ }
 }

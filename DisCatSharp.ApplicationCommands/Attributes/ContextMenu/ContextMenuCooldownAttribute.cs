@@ -13,7 +13,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes;
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
 public sealed class ContextMenuCooldownAttribute : ApplicationCommandCheckBaseAttribute,
-                                                   ICooldown<BaseContext, ContextMenuCooldownBucket>
+	ICooldown<BaseContext, ContextMenuCooldownBucket>
 {
 	/// <summary>
 	/// Gets the maximum number of uses before this command triggers a cooldown for its bucket.
@@ -70,10 +70,10 @@ public sealed class ContextMenuCooldownAttribute : ApplicationCommandCheckBaseAt
 	{
 		var bucket = this.GetBucket(ctx);
 		return bucket == null
-			       ? TimeSpan.Zero
-			       : bucket.RemainingUses > 0
-				       ? TimeSpan.Zero
-				       : bucket.ResetsAt - DateTimeOffset.UtcNow;
+			? TimeSpan.Zero
+			: bucket.RemainingUses > 0
+				? TimeSpan.Zero
+				: bucket.ResetsAt - DateTimeOffset.UtcNow;
 	}
 
 	/// <summary>
@@ -126,11 +126,12 @@ public sealed class ContextMenuCooldownAttribute : ApplicationCommandCheckBaseAt
 /// </summary>
 public sealed class ContextMenuCooldownBucket : CooldownBucket
 {
-	internal ContextMenuCooldownBucket(int maxUses, TimeSpan resetAfter, ulong userId = 0, ulong channelId = 0,
-	                                   ulong guildId = 0)
+	internal ContextMenuCooldownBucket(
+		int maxUses, TimeSpan resetAfter, ulong userId = 0, ulong channelId = 0,
+		ulong guildId = 0
+	)
 		: base(maxUses, resetAfter, userId, channelId, guildId)
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Returns a string representation of this command cooldown bucket.

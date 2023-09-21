@@ -52,9 +52,9 @@ public sealed class RequireUserPermissionsAttribute : CheckBaseAttribute
 		var pusr = ctx.Channel.PermissionsFor(usr);
 
 		return (pusr & Permissions.Administrator) != 0
-			       ? Task.FromResult(true)
-			       : (pusr & this.Permissions) == this.Permissions
-				       ? Task.FromResult(true)
-				       : Task.FromResult(false);
+			? Task.FromResult(true)
+			: (pusr & this.Permissions) == this.Permissions
+				? Task.FromResult(true)
+				: Task.FromResult(false);
 	}
 }

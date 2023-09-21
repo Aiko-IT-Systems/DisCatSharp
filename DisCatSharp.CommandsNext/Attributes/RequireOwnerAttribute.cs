@@ -21,7 +21,7 @@ public sealed class RequireOwnerAttribute : CheckBaseAttribute
 		var me = ctx.Client.CurrentUser;
 
 		return app != null
-			       ? Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id))
-			       : Task.FromResult(ctx.User.Id == me.Id);
+			? Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id))
+			: Task.FromResult(ctx.User.Id == me.Id);
 	}
 }

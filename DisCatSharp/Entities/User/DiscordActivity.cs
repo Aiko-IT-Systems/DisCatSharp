@@ -208,9 +208,7 @@ public sealed class DiscordActivity
 			this.State = name;
 		}
 		else
-		{
 			this.Name = name;
-		}
 
 		this.ActivityType = type;
 	}
@@ -265,13 +263,13 @@ public sealed class DiscordActivity
 			this.CustomStatus.UpdateWith(rawActivity.State, rawActivity.Emoji);
 		else
 			this.CustomStatus = rawActivity?.IsCustomStatus() == true
-				                    ? new DiscordCustomStatus
-				                    {
-					                    Name = rawActivity.Name!,
-					                    State = rawActivity.State,
-					                    Emoji = rawActivity.Emoji
-				                    }
-				                    : null;
+				? new DiscordCustomStatus
+				{
+					Name = rawActivity.Name!,
+					State = rawActivity.State,
+					Emoji = rawActivity.Emoji
+				}
+				: null;
 	}
 }
 
@@ -299,8 +297,7 @@ public sealed class DiscordCustomStatus
 	/// Initializes a new instance of the <see cref="DiscordCustomStatus"/> class.
 	/// </summary>
 	internal DiscordCustomStatus()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordCustomStatus"/> class.
@@ -420,8 +417,7 @@ public sealed class DiscordRichPresence
 	/// Initializes a new instance of the <see cref="DiscordRichPresence"/> class.
 	/// </summary>
 	internal DiscordRichPresence()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordRichPresence"/> class.
@@ -466,11 +462,11 @@ public sealed class DiscordRichPresence
 		this.Details = rawGame?.Details;
 		this.State = rawGame?.State;
 		this.Application = rawGame?.ApplicationId != null
-			                   ? new DiscordApplication
-			                   {
-				                   Id = rawGame.ApplicationId.Value
-			                   }
-			                   : null;
+			? new DiscordApplication
+			{
+				Id = rawGame.ApplicationId.Value
+			}
+			: null;
 		this.Instance = rawGame?.Instance;
 		this.LargeImageText = rawGame?.Assets?.LargeImageText;
 		this.SmallImageText = rawGame?.Assets?.SmallImageText;

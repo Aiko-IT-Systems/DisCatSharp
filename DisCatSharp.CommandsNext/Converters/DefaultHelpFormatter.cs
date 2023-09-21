@@ -89,7 +89,7 @@ public class DefaultHelpFormatter : BaseHelpFormatter
 	public override BaseHelpFormatter WithSubcommands(IEnumerable<Command> subcommands)
 	{
 		this.EmbedBuilder.AddField(new(this._command != null ? "Subcommands" : "Commands",
-		                               string.Join(", ", subcommands.Select(x => Formatter.InlineCode(x.Name)))));
+			string.Join(", ", subcommands.Select(x => Formatter.InlineCode(x.Name)))));
 
 		return this;
 	}

@@ -6,8 +6,7 @@ namespace DisCatSharp.EventArgs;
 /// Represents base class for raw socket message event arguments.
 /// </summary>
 public abstract class SocketMessageEventArgs : AsyncEventArgs
-{
-}
+{ }
 
 /// <summary>
 /// Represents arguments for text message websocket event.

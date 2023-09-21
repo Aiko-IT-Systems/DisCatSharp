@@ -27,6 +27,5 @@ public class GuildApplicationCommandsRegisteredEventArgs : DiscordEventArgs
 	/// <param name="provider">The provider.</param>
 	internal GuildApplicationCommandsRegisteredEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

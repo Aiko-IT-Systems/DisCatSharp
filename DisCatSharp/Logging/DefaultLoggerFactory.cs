@@ -34,8 +34,8 @@ internal class DefaultLoggerFactory : ILoggerFactory
 			  categoryName != typeof(DiscordWebhookClient).FullName &&
 			  categoryName != typeof(DiscordOAuth2Client).FullName
 				? throw new
-					  ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName}, {typeof(DiscordWebhookClient).FullName} or {typeof(DiscordOAuth2Client).FullName}, not {categoryName}.",
-					                    nameof(categoryName))
+					ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName}, {typeof(DiscordWebhookClient).FullName} or {typeof(DiscordOAuth2Client).FullName}, not {categoryName}.",
+						nameof(categoryName))
 				: new CompositeDefaultLogger(this._providers);
 
 	/// <summary>

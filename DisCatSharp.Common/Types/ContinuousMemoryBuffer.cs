@@ -38,8 +38,10 @@ public sealed class ContinuousMemoryBuffer<T> : IMemoryBuffer<T> where T : unman
 	/// <param name="initialSize">Initial size of the buffer in bytes. Defaults to 64KiB.</param>
 	/// <param name="memPool">Memory pool to use for renting buffers. Defaults to <see cref="MemoryPool{T}.Shared"/>.</param>
 	/// <param name="clearOnDispose">Determines whether the underlying buffers should be cleared on exit. If dealing with sensitive data, it might be a good idea to set this option to true.</param>
-	public ContinuousMemoryBuffer(int initialSize = 65536, MemoryPool<byte>? memPool = default,
-	                              bool clearOnDispose = false)
+	public ContinuousMemoryBuffer(
+		int initialSize = 65536, MemoryPool<byte>? memPool = default,
+		bool clearOnDispose = false
+	)
 	{
 		this._itemSize = Unsafe.SizeOf<T>();
 		this._pool = memPool ?? MemoryPool<byte>.Shared;

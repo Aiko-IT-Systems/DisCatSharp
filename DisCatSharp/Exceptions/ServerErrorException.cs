@@ -48,7 +48,6 @@ public class ServerErrorException : DisCatSharpException
 				this.JsonMessage = j["message"].ToString();
 		}
 		catch (Exception)
-		{
-		}
+		{ }
 	}
 }

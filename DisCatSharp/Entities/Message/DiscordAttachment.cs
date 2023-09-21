@@ -119,6 +119,5 @@ public class DiscordAttachment : NullableSnowflakeObject
 	/// Initializes a new instance of the <see cref="DiscordAttachment"/> class.
 	/// </summary>
 	internal DiscordAttachment()
-	{
-	}
+	{ }
 }

@@ -38,6 +38,5 @@ public class MemberEditModel : BaseEditModel
 	/// Initializes a new instance of the <see cref="MemberEditModel"/> class.
 	/// </summary>
 	internal MemberEditModel()
-	{
-	}
+	{ }
 }

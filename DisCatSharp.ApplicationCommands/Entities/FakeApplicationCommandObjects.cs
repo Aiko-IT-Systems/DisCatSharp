@@ -12,8 +12,10 @@ internal class CommandGroupWithSubGroups : BaseCommand
 	[JsonProperty("groups")]
 	internal List<CommandGroup> SubGroups { get; set; }
 
-	internal CommandGroupWithSubGroups(string name, string description, List<CommandGroup> commands,
-	                                   ApplicationCommandType type)
+	internal CommandGroupWithSubGroups(
+		string name, string description, List<CommandGroup> commands,
+		ApplicationCommandType type
+	)
 		: base(name, description, type)
 	{
 		this.SubGroups = commands;
@@ -37,8 +39,10 @@ internal class Command : BaseCommand
 	[JsonProperty("options")]
 	internal List<DiscordApplicationCommandOption> Options { get; set; }
 
-	internal Command(string name, string? description = null, List<DiscordApplicationCommandOption> options = null,
-	                 ApplicationCommandType? type = null)
+	internal Command(
+		string name, string? description = null, List<DiscordApplicationCommandOption> options = null,
+		ApplicationCommandType? type = null
+	)
 		: base(name, description, type)
 	{
 		this.Options = options;

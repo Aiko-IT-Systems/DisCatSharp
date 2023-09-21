@@ -31,7 +31,7 @@ public class DiscordWebhookClient
 	/// </summary>
 	private static Regex s_webhookRegex { get; } =
 		new(@"(?:https?:\/\/)?discord(?:app)?.com\/api\/(?:v\d\/)?webhooks\/(?<id>\d+)\/(?<token>[A-Za-z0-9_\-]+)",
-		    RegexOptions.ECMAScript);
+			RegexOptions.ECMAScript);
 
 	/// <summary>
 	/// Gets the collection of registered webhooks.
@@ -59,8 +59,7 @@ public class DiscordWebhookClient
 	/// </summary>
 	public DiscordWebhookClient()
 		: this(null!, null)
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Creates a new webhook client, with specified HTTP proxy, timeout, and logging settings.
@@ -71,9 +70,11 @@ public class DiscordWebhookClient
 	/// <param name="loggerFactory">The optional logging factory to use for this client. Defaults to null.</param>
 	/// <param name="minimumLogLevel">The minimum logging level for messages. Defaults to information.</param>
 	/// <param name="logTimestampFormat">The timestamp format to use for the logger.</param>
-	public DiscordWebhookClient(IWebProxy proxy = null!, TimeSpan? timeout = null, bool useRelativeRateLimit = true,
-	                            ILoggerFactory loggerFactory = null!, LogLevel minimumLogLevel = LogLevel.Information,
-	                            string logTimestampFormat = "yyyy-MM-dd HH:mm:ss zzz")
+	public DiscordWebhookClient(
+		IWebProxy proxy = null!, TimeSpan? timeout = null, bool useRelativeRateLimit = true,
+		ILoggerFactory loggerFactory = null!, LogLevel minimumLogLevel = LogLevel.Information,
+		string logTimestampFormat = "yyyy-MM-dd HH:mm:ss zzz"
+	)
 	{
 		this.MinimumLogLevel = minimumLogLevel;
 		this.LogTimestampFormat = logTimestampFormat;

@@ -89,7 +89,7 @@ internal class ReactionCollector : IDisposable
 		catch (Exception ex)
 		{
 			this._client!.Logger.LogError(InteractivityEvents.InteractivityCollectorError, ex,
-			                              "Exception occurred while collecting reactions");
+				"Exception occurred while collecting reactions");
 		}
 		finally
 		{
@@ -122,7 +122,6 @@ internal class ReactionCollector : IDisposable
 				req.Collected.Add(reaction);
 			}
 			else
-			{
 				req.Collected.Add(new()
 				{
 					Emoji = eventArgs.Emoji,
@@ -131,7 +130,6 @@ internal class ReactionCollector : IDisposable
 						eventArgs.User
 					}
 				});
-			}
 
 		return Task.CompletedTask;
 	}

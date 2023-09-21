@@ -18,8 +18,10 @@ public static class ClientExtensions
 	/// <param name="configuration">A configuration instance. Default configuration values will be used if none is provided.</param>
 	/// <returns>A brand new <see cref="InteractivityExtension"/> instance.</returns>
 	/// <exception cref="InvalidOperationException">Thrown if interactivity has already been enabled for the client instance.</exception>
-	public static InteractivityExtension UseInteractivity(this DiscordClient client,
-	                                                      InteractivityConfiguration configuration = null)
+	public static InteractivityExtension UseInteractivity(
+		this DiscordClient client,
+		InteractivityConfiguration configuration = null
+	)
 	{
 		if (client.GetExtension<InteractivityExtension>() != null)
 			throw new
@@ -39,7 +41,8 @@ public static class ClientExtensions
 	/// <param name="configuration">Configuration to use for all shards. If one isn't provided, default configuration values will be used.</param>
 	/// <returns>A dictionary containing new <see cref="InteractivityExtension"/> instances for each shard.</returns>
 	public static async Task<IReadOnlyDictionary<int, InteractivityExtension>> UseInteractivityAsync(
-		this DiscordShardedClient client, InteractivityConfiguration configuration = null)
+		this DiscordShardedClient client, InteractivityConfiguration configuration = null
+	)
 	{
 		var extensions = new Dictionary<int, InteractivityExtension>();
 		await client.InitializeShardsAsync().ConfigureAwait(false);
@@ -67,7 +70,8 @@ public static class ClientExtensions
 	/// <param name="client">The shard client to retrieve interactivity instances from.</param>
 	/// <returns>A dictionary containing <see cref="InteractivityExtension"/> instances for each shard.</returns>
 	public static async Task<ReadOnlyDictionary<int, InteractivityExtension?>> GetInteractivityAsync(
-		this DiscordShardedClient client)
+		this DiscordShardedClient client
+	)
 	{
 		await client.InitializeShardsAsync().ConfigureAwait(false);
 		var extensions = client.ShardClients.Select(xkvp => xkvp.Value)

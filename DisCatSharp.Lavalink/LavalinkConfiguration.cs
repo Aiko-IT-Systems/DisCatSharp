@@ -99,8 +99,7 @@ public sealed class LavalinkConfiguration
 	/// </summary>
 	[ActivatorUtilitiesConstructor]
 	public LavalinkConfiguration()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Creates a new instance of <see cref="LavalinkConfiguration"/>, copying the properties of another configuration.

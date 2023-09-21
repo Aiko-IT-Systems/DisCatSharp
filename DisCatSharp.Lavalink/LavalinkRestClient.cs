@@ -71,12 +71,12 @@ internal sealed class LavalinkRestClient
 
 		this.TRACE_ENABLED = configuration.EnableTrace;
 		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent",
-		                                                              $"DisCatSharp.Lavalink/{this.Discord.VersionString}");
+			$"DisCatSharp.Lavalink/{this.Discord.VersionString}");
 		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", configuration.Password);
 		if (this.Discord.CurrentUser != null!)
 			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Id",
-			                                                              this.Discord.CurrentUser.Id
-				                                                              .ToString(CultureInfo.InvariantCulture));
+				this.Discord.CurrentUser.Id
+					.ToString(CultureInfo.InvariantCulture));
 	}
 
 	/// <summary>
@@ -90,7 +90,7 @@ internal sealed class LavalinkRestClient
 			return string.Empty;
 
 		var valuesCollection = values.Select(xkvp =>
-			                                     $"{WebUtility.UrlEncode(xkvp.Key)}={WebUtility.UrlEncode(xkvp.Value)}");
+			$"{WebUtility.UrlEncode(xkvp.Key)}={WebUtility.UrlEncode(xkvp.Value)}");
 		var valuesString = string.Join("&", valuesCollection);
 
 		return !post ? $"?{valuesString}" : valuesString;
@@ -115,16 +115,16 @@ internal sealed class LavalinkRestClient
 		{
 			var val = xp.GetValue(routeParams);
 			extractedRouteParams[xp.Name] = val is string xs
-				                                ? xs
-				                                : val is DateTime dt
-					                                ? dt.ToString("yyyy-MM-ddTHH:mm:sszzz",
-					                                              CultureInfo.InvariantCulture)
-					                                : val is DateTimeOffset dto
-						                                ? dto.ToString("yyyy-MM-ddTHH:mm:sszzz",
-						                                               CultureInfo.InvariantCulture)
-						                                : val is IFormattable xf
-							                                ? xf.ToString(null, CultureInfo.InvariantCulture)
-							                                : val.ToString();
+				? xs
+				: val is DateTime dt
+					? dt.ToString("yyyy-MM-ddTHH:mm:sszzz",
+						CultureInfo.InvariantCulture)
+					: val is DateTimeOffset dto
+						? dto.ToString("yyyy-MM-ddTHH:mm:sszzz",
+							CultureInfo.InvariantCulture)
+						: val is IFormattable xf
+							? xf.ToString(null, CultureInfo.InvariantCulture)
+							: val.ToString();
 		}
 
 		return s_routeArgumentRegex.Replace(route, xm => extractedRouteParams[xm.Groups[1].Value]);
@@ -143,9 +143,11 @@ internal sealed class LavalinkRestClient
 	/// <param name="path">The path.</param>
 	/// <param name="headers">The headers.</param>
 	/// <param name="payload">The payload.</param>
-	private async Task<LavalinkRestResponse> DoRequestAsync(HttpMethod method, string path,
-	                                                        IReadOnlyDictionary<string, string>? headers = null,
-	                                                        string? payload = null)
+	private async Task<LavalinkRestResponse> DoRequestAsync(
+		HttpMethod method, string path,
+		IReadOnlyDictionary<string, string>? headers = null,
+		string? payload = null
+	)
 	{
 		HttpRequestMessage request = new();
 		if (headers != null)
@@ -160,7 +162,7 @@ internal sealed class LavalinkRestClient
 		request.Method = method;
 		request.RequestUri = new(this.HttpClient.BaseAddress!, path);
 		var response = await this.HttpClient.SendAsync(request, HttpCompletionOption.ResponseContentRead)
-			               .ConfigureAwait(false);
+			.ConfigureAwait(false);
 
 		if (!response.IsSuccessStatusCode)
 		{
@@ -169,7 +171,7 @@ internal sealed class LavalinkRestClient
 			ex.Headers = response.Headers;
 			ex.Json = data;
 			this.Discord.Logger.LogError(LavalinkEvents.LavalinkRestError, ex,
-			                             "Lavalink rest encountered an exception: {data}", data);
+				"Lavalink rest encountered an exception: {data}", data);
 			throw ex;
 		}
 
@@ -177,8 +179,8 @@ internal sealed class LavalinkRestClient
 		{
 			ResponseCode = response.StatusCode,
 			Response = response.StatusCode != HttpStatusCode.NoContent
-				           ? await response.Content.ReadAsStringAsync().ConfigureAwait(false)
-				           : null,
+				? await response.Content.ReadAsStringAsync().ConfigureAwait(false)
+				: null,
 			Headers = response.Headers
 		};
 
@@ -194,8 +196,7 @@ internal sealed class LavalinkRestClient
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.VERSION}";
 		var path = GetPath(route, new
-		{
-		});
+			{ });
 		return await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
 	}
 
@@ -208,10 +209,9 @@ internal sealed class LavalinkRestClient
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.INFO}";
 		var path = GetPath(route, new
-		{
-		});
+			{ });
 		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}")
-			          .ConfigureAwait(false);
+			.ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkInfo>(res.Response!)!;
 	}
 
@@ -224,10 +224,9 @@ internal sealed class LavalinkRestClient
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.STATS}";
 		var path = GetPath(route, new
-		{
-		});
+			{ });
 		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}")
-			          .ConfigureAwait(false);
+			.ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkStats>(res.Response!)!;
 	}
 
@@ -238,7 +237,8 @@ internal sealed class LavalinkRestClient
 	/// <param name="config">The session config.</param>
 	/// <returns>The updated <see cref="LavalinkSessionConfiguration"/>.</returns>
 	internal async Task<LavalinkSessionConfiguration> UpdateSessionAsync(
-		string sessionId, LavalinkSessionConfiguration config)
+		string sessionId, LavalinkSessionConfiguration config
+	)
 	{
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.SESSIONS}/:session_id";
@@ -247,7 +247,7 @@ internal sealed class LavalinkRestClient
 			session_id = sessionId
 		});
 		var res = await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}",
-		                                    payload: LavalinkJson.SerializeObject(config)).ConfigureAwait(false);
+			payload: LavalinkJson.SerializeObject(config)).ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkSessionConfiguration>(res.Response!)!;
 	}
 
@@ -265,7 +265,7 @@ internal sealed class LavalinkRestClient
 			session_id = sessionId
 		});
 		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}")
-			          .ConfigureAwait(false);
+			.ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<List<LavalinkPlayer>>(res.Response!)!;
 	}
 
@@ -287,7 +287,7 @@ internal sealed class LavalinkRestClient
 			guild_id = guildId
 		});
 		await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}",
-		                          payload: LavalinkJson.SerializeObject(pld)).ConfigureAwait(false);
+			payload: LavalinkJson.SerializeObject(pld)).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -306,7 +306,7 @@ internal sealed class LavalinkRestClient
 			guild_id = guildId
 		});
 		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}")
-			          .ConfigureAwait(false);
+			.ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkPlayer>(res.Response!)!;
 	}
 
@@ -324,14 +324,16 @@ internal sealed class LavalinkRestClient
 	/// <param name="paused">Whether to pause the track.</param>
 	/// <param name="filters">The filters.</param>
 	/// <returns>The updated <see cref="LavalinkPlayer"/> object.</returns>
-	internal async Task<LavalinkPlayer> UpdatePlayerAsync(string sessionId, ulong guildId, bool noReplace = false,
-	                                                      Optional<string?> encodedTrack = default,
-	                                                      Optional<string> identifier = default,
-	                                                      Optional<int> position = default,
-	                                                      Optional<int?> endTime = default,
-	                                                      Optional<int> volume = default,
-	                                                      Optional<bool> paused = default,
-	                                                      Optional<LavalinkFilters> filters = default)
+	internal async Task<LavalinkPlayer> UpdatePlayerAsync(
+		string sessionId, ulong guildId, bool noReplace = false,
+		Optional<string?> encodedTrack = default,
+		Optional<string> identifier = default,
+		Optional<int> position = default,
+		Optional<int?> endTime = default,
+		Optional<int> volume = default,
+		Optional<bool> paused = default,
+		Optional<LavalinkFilters> filters = default
+	)
 	{
 		var queryDict = this.GetDefaultParams();
 		queryDict.Add("noReplace", noReplace.ToString().ToLower());
@@ -352,7 +354,7 @@ internal sealed class LavalinkRestClient
 			guild_id = guildId
 		});
 		var res = await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}",
-		                                    payload: LavalinkJson.SerializeObject(pld)).ConfigureAwait(false);
+			payload: LavalinkJson.SerializeObject(pld)).ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkPlayer>(res.Response!)!;
 	}
 
@@ -376,7 +378,7 @@ internal sealed class LavalinkRestClient
 			guild_id = guildId
 		});
 		await this.DoRequestAsync(HttpMethod.Patch, $"{path}{BuildQueryString(queryDict)}",
-		                          payload: LavalinkJson.SerializeObject(pld)).ConfigureAwait(false);
+			payload: LavalinkJson.SerializeObject(pld)).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -408,10 +410,9 @@ internal sealed class LavalinkRestClient
 		queryDict.Add("identifier", identifier);
 		var route = $"{Endpoints.V4}{Endpoints.LOAD_TRACKS}";
 		var path = GetPath(route, new
-		{
-		});
+			{ });
 		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}")
-			          .ConfigureAwait(false);
+			.ConfigureAwait(false);
 		var obj = JObject.Parse(res.Response!);
 		return new()
 		{
@@ -431,10 +432,9 @@ internal sealed class LavalinkRestClient
 		queryDict.Add("encodedTrack", base64Track);
 		var route = $"{Endpoints.V4}{Endpoints.DECODE_TRACK}";
 		var path = GetPath(route, new
-		{
-		});
+			{ });
 		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}")
-			          .ConfigureAwait(false);
+			.ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<LavalinkTrack>(res.Response!)!;
 	}
 
@@ -448,10 +448,9 @@ internal sealed class LavalinkRestClient
 		var queryDict = this.GetDefaultParams();
 		var route = $"{Endpoints.V4}{Endpoints.DECODE_TRACKS}";
 		var path = GetPath(route, new
-		{
-		});
+			{ });
 		var res = await this.DoRequestAsync(HttpMethod.Post, $"{path}{BuildQueryString(queryDict)}",
-		                                    payload: LavalinkJson.SerializeObject(base64Tracks)).ConfigureAwait(false);
+			payload: LavalinkJson.SerializeObject(base64Tracks)).ConfigureAwait(false);
 		return LavalinkJson.DeserializeObject<List<LavalinkTrack>>(res.Response!)!;
 	}
 }

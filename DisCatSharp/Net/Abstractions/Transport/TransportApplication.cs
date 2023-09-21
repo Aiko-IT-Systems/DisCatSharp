@@ -186,6 +186,5 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// Initializes a new instance of the <see cref="TransportApplication"/> class.
 	/// </summary>
 	internal TransportApplication()
-	{
-	}
+	{ }
 }

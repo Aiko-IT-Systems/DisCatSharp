@@ -25,6 +25,5 @@ public sealed class VoiceUserLeaveEventArgs : DiscordEventArgs
 	/// </summary>
 	internal VoiceUserLeaveEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

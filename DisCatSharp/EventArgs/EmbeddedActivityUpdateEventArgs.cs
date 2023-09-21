@@ -40,6 +40,5 @@ public class EmbeddedActivityUpdateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal EmbeddedActivityUpdateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

@@ -86,6 +86,5 @@ public class ChannelEditModel : BaseEditModel
 	/// Initializes a new instance of the <see cref="ChannelEditModel"/> class.
 	/// </summary>
 	internal ChannelEditModel()
-	{
-	}
+	{ }
 }

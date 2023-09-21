@@ -19,6 +19,5 @@ public class GuildIntegrationsUpdateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal GuildIntegrationsUpdateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

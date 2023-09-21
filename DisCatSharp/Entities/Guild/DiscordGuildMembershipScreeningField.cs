@@ -43,8 +43,10 @@ public class DiscordGuildMembershipScreeningField : ObservableApiObject
 	/// <param name="label">The label.</param>
 	/// <param name="values">The values.</param>
 	/// <param name="required">If true, required.</param>
-	public DiscordGuildMembershipScreeningField(MembershipScreeningFieldType type, string label,
-	                                            IEnumerable<string> values, bool required = true)
+	public DiscordGuildMembershipScreeningField(
+		MembershipScreeningFieldType type, string label,
+		IEnumerable<string> values, bool required = true
+	)
 	{
 		this.Type = type;
 		this.Label = label;
@@ -56,6 +58,5 @@ public class DiscordGuildMembershipScreeningField : ObservableApiObject
 	/// Initializes a new instance of the <see cref="DiscordGuildMembershipScreeningField"/> class.
 	/// </summary>
 	internal DiscordGuildMembershipScreeningField()
-	{
-	}
+	{ }
 }

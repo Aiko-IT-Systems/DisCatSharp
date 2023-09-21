@@ -101,8 +101,7 @@ public class WebSocketClient : IWebSocketClient
 			await this.DisconnectAsync().ConfigureAwait(false);
 		}
 		catch
-		{
-		}
+		{ }
 
 		// Disallow sending messages
 		await this._senderLock.WaitAsync().ConfigureAwait(false);
@@ -176,8 +175,7 @@ public class WebSocketClient : IWebSocketClient
 			}
 		}
 		catch
-		{
-		}
+		{ }
 		finally
 		{
 			this._senderLock.Release();
@@ -211,7 +209,7 @@ public class WebSocketClient : IWebSocketClient
 				var segLen = Math.Min(OUTGOING_CHUNK_SIZE, len - segStart);
 
 				await this._ws.SendAsync(new(bytes, segStart, segLen), WebSocketMessageType.Text, i == segCount - 1,
-				                         CancellationToken.None).ConfigureAwait(false);
+					CancellationToken.None).ConfigureAwait(false);
 			}
 		}
 		finally
@@ -301,24 +299,20 @@ public class WebSocketClient : IWebSocketClient
 				}
 
 				if (result.MessageType == WebSocketMessageType.Binary)
-				{
 					await this._messageReceived.InvokeAsync(this, new SocketBinaryMessageEventArgs(resultBytes))
 						.ConfigureAwait(false);
-				}
 				else if (result.MessageType == WebSocketMessageType.Text)
-				{
 					await this._messageReceived
 						.InvokeAsync(this, new SocketTextMessageEventArgs(Utilities.UTF8.GetString(resultBytes)))
 						.ConfigureAwait(false);
-				}
 				else // close
 				{
 					if (!this._isClientClose)
 					{
 						var code = result.CloseStatus.Value;
 						code = code is WebSocketCloseStatus.NormalClosure or WebSocketCloseStatus.EndpointUnavailable
-							       ? (WebSocketCloseStatus)4000
-							       : code;
+							? (WebSocketCloseStatus)4000
+							: code;
 
 						await this._ws.CloseOutputAsync(code, result.CloseStatusDescription, CancellationToken.None)
 							.ConfigureAwait(false);
@@ -415,9 +409,11 @@ public class WebSocketClient : IWebSocketClient
 	/// <param name="handler">The handler.</param>
 	/// <param name="sender">The sender.</param>
 	/// <param name="eventArgs">The event args.</param>
-	private void EventErrorHandler<TArgs>(AsyncEvent<WebSocketClient, TArgs> asyncEvent, Exception ex,
-	                                      AsyncEventHandler<WebSocketClient, TArgs> handler, WebSocketClient sender,
-	                                      TArgs eventArgs)
+	private void EventErrorHandler<TArgs>(
+		AsyncEvent<WebSocketClient, TArgs> asyncEvent, Exception ex,
+		AsyncEventHandler<WebSocketClient, TArgs> handler, WebSocketClient sender,
+		TArgs eventArgs
+	)
 		where TArgs : AsyncEventArgs
 		=> this._exceptionThrown.InvokeAsync(this, new(this._serviceProvider)
 		{

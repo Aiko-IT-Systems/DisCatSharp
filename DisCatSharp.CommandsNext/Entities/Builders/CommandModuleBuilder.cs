@@ -24,8 +24,7 @@ public sealed class CommandModuleBuilder
 	/// Creates a new command module builder.
 	/// </summary>
 	public CommandModuleBuilder()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Sets the type this builder will construct a module out of.
@@ -62,6 +61,6 @@ public sealed class CommandModuleBuilder
 			ModuleLifespan.Singleton => new SingletonCommandModule(this.Type, services),
 			ModuleLifespan.Transient => new TransientCommandModule(this.Type),
 			_ => throw new
-				     NotSupportedException("Module lifespans other than transient and singleton are not supported.")
+				NotSupportedException("Module lifespans other than transient and singleton are not supported.")
 		};
 }

@@ -29,6 +29,5 @@ public class VoiceChannelStatusUpdateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal VoiceChannelStatusUpdateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

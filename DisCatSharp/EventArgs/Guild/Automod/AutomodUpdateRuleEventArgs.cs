@@ -21,6 +21,5 @@ public class AutomodRuleUpdateEventArgs : DiscordEventArgs
 
 	public AutomodRuleUpdateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

@@ -21,6 +21,5 @@ public sealed class ContextMenuExecutedEventArgs : DiscordEventArgs
 	/// <param name="provider">The provider.</param>
 	public ContextMenuExecutedEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

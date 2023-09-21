@@ -13,6 +13,5 @@ public class CommandExecutionEventArgs : CommandEventArgs
 	/// <param name="provider">The provider.</param>
 	public CommandExecutionEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

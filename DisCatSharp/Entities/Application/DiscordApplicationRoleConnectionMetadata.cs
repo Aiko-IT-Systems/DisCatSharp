@@ -11,7 +11,7 @@ namespace DisCatSharp.Entities;
 /// Represents a role connection metadata object that is registered to an application.
 /// </summary>
 public sealed class DiscordApplicationRoleConnectionMetadata : ObservableApiObject,
-                                                               IEquatable<DiscordApplicationRoleConnectionMetadata>
+	IEquatable<DiscordApplicationRoleConnectionMetadata>
 {
 	/// <summary>
 	/// Gets the type of this role connection metadata object.
@@ -95,8 +95,10 @@ public sealed class DiscordApplicationRoleConnectionMetadata : ObservableApiObje
 	/// <param name="e1">The first command object.</param>
 	/// <param name="e2">The second command object.</param>
 	/// <returns>Whether the two <see cref="DiscordApplicationRoleConnectionMetadata"/> objects are equal.</returns>
-	public static bool operator ==(DiscordApplicationRoleConnectionMetadata e1,
-	                               DiscordApplicationRoleConnectionMetadata e2)
+	public static bool operator ==(
+		DiscordApplicationRoleConnectionMetadata e1,
+		DiscordApplicationRoleConnectionMetadata e2
+	)
 		=> e1.Equals(e2);
 
 	/// <summary>
@@ -105,8 +107,10 @@ public sealed class DiscordApplicationRoleConnectionMetadata : ObservableApiObje
 	/// <param name="e1">The first command object.</param>
 	/// <param name="e2">The second command object.</param>
 	/// <returns>Whether the two <see cref="DiscordApplicationRoleConnectionMetadata"/> objects are not equal.</returns>
-	public static bool operator !=(DiscordApplicationRoleConnectionMetadata e1,
-	                               DiscordApplicationRoleConnectionMetadata e2)
+	public static bool operator !=(
+		DiscordApplicationRoleConnectionMetadata e1,
+		DiscordApplicationRoleConnectionMetadata e2
+	)
 		=> !(e1 == e2);
 
 	/// <summary>

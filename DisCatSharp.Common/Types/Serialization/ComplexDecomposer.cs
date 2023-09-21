@@ -54,11 +54,7 @@ public sealed class ComplexDecomposer : IDecomposer
 		if (tobj != s_complex || obj is not Complex c)
 			return false;
 
-		decomposed = new[]
-		{
-			c.Real,
-			c.Imaginary
-		};
+		decomposed = new[] { c.Real, c.Imaginary };
 		return true;
 	}
 

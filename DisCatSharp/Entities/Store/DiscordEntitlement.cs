@@ -81,8 +81,8 @@ public sealed class DiscordEntitlement : SnowflakeObject
 	public DateTimeOffset? StartsAt
 		=> !string.IsNullOrWhiteSpace(this.StartsAtRaw) &&
 		   DateTimeOffset.TryParse(this.StartsAtRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto)
-			   ? dto
-			   : null;
+			? dto
+			: null;
 
 	/// <summary>
 	/// Gets when this entitlement ends as raw string.
@@ -97,8 +97,8 @@ public sealed class DiscordEntitlement : SnowflakeObject
 	public DateTimeOffset? EndsAt
 		=> !string.IsNullOrWhiteSpace(this.EndsAtRaw) &&
 		   DateTimeOffset.TryParse(this.EndsAtRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto)
-			   ? dto
-			   : null;
+			? dto
+			: null;
 
 	/// <summary>
 	/// Gets this entitlement's bound guild id.

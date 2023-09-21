@@ -116,8 +116,8 @@ public sealed class ImageTool : IDisposable
 
 		this.SourceStream.Seek(-2, SeekOrigin.End);
 		return br.ReadUInt16() == JPEG_MAGIC_2
-			       ? this._ifcache = ImageFormat.Jpeg
-			       : throw new InvalidDataException("The data within the stream was not valid image data.");
+			? this._ifcache = ImageFormat.Jpeg
+			: throw new InvalidDataException("The data within the stream was not valid image data.");
 	}
 
 	/// <summary>

@@ -64,10 +64,10 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	[JsonIgnore]
 	public string Url
 		=> this.Id == 0
-			   ? throw new InvalidOperationException("Cannot get URL of unicode emojis.")
-			   : this.IsAnimated
-				   ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMOJIS}/{this.Id.ToString(CultureInfo.InvariantCulture)}.gif"
-				   : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMOJIS}/{this.Id.ToString(CultureInfo.InvariantCulture)}.png";
+			? throw new InvalidOperationException("Cannot get URL of unicode emojis.")
+			: this.IsAnimated
+				? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMOJIS}/{this.Id.ToString(CultureInfo.InvariantCulture)}.gif"
+				: $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMOJIS}/{this.Id.ToString(CultureInfo.InvariantCulture)}.png";
 
 	/// <summary>
 	/// Gets the unicode version of this emoji.
@@ -76,12 +76,12 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	[JsonIgnore]
 	public string UnicodeEmoji
 		=> this.Id != 0
-			   ? throw new InvalidOperationException("Emoji is not a unicode emoji")
-			   : s_unicodeEmojis.TryGetValue(this.Name, out var value)
-				   ? value
-				   : s_discordNameLookup.ContainsKey(this.Name)
-					   ? this.Name
-					   : throw new InvalidOperationException("Emoji is not a unicode emoji");
+			? throw new InvalidOperationException("Emoji is not a unicode emoji")
+			: s_unicodeEmojis.TryGetValue(this.Name, out var value)
+				? value
+				: s_discordNameLookup.ContainsKey(this.Name)
+					? this.Name
+					: throw new InvalidOperationException("Emoji is not a unicode emoji");
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordEmoji"/> class.
@@ -107,10 +107,10 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// <returns>String representation of this emoji.</returns>
 	public override string ToString()
 		=> this.Id != 0
-			   ? this.IsAnimated
-				     ? $"<a:{this.Name}:{this.Id.ToString(CultureInfo.InvariantCulture)}>"
-				     : $"<:{this.Name}:{this.Id.ToString(CultureInfo.InvariantCulture)}>"
-			   : this.Name;
+			? this.IsAnimated
+				? $"<a:{this.Name}:{this.Id.ToString(CultureInfo.InvariantCulture)}>"
+				: $"<:{this.Name}:{this.Id.ToString(CultureInfo.InvariantCulture)}>"
+			: this.Name;
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordEmoji"/> is equal to another object.
@@ -194,13 +194,13 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// <returns>Create <see cref="DiscordEmoji"/> object.</returns>
 	public static DiscordEmoji FromUnicode(BaseDiscordClient client, string unicodeEntity)
 		=> !IsValidUnicode(unicodeEntity)
-			   ? throw new ArgumentException("Specified unicode entity is not a valid unicode emoji.",
-			                                 nameof(unicodeEntity))
-			   : new DiscordEmoji
-			   {
-				   Name = unicodeEntity,
-				   Discord = client
-			   };
+			? throw new ArgumentException("Specified unicode entity is not a valid unicode emoji.",
+				nameof(unicodeEntity))
+			: new DiscordEmoji
+			{
+				Name = unicodeEntity,
+				Discord = client
+			};
 
 	/// <summary>
 	/// Creates an emoji object from a unicode entity.

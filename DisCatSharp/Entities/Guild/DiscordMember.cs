@@ -81,8 +81,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	[JsonIgnore]
 	public string GuildAvatarUrl
 		=> string.IsNullOrWhiteSpace(this.GuildAvatarHash)
-			   ? this.User.AvatarUrl
-			   : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.AVATARS}/{this.GuildAvatarHash}.{(this.GuildAvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
+			? this.User.AvatarUrl
+			: $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.AVATARS}/{this.GuildAvatarHash}.{(this.GuildAvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
 	/// <summary>
 	/// Gets the members banner hash.
@@ -96,8 +96,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	[JsonIgnore]
 	public string? GuildBannerUrl
 		=> string.IsNullOrWhiteSpace(this.GuildBannerHash)
-			   ? this.User.BannerUrl
-			   : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.BANNERS}/{this.GuildBannerHash}.{(this.GuildBannerHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
+			? this.User.BannerUrl
+			: $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.BANNERS}/{this.GuildBannerHash}.{(this.GuildBannerHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
 	/// <summary>
 	/// The color of this member's banner. Mutually exclusive with <see cref="GuildBannerHash"/>.
@@ -264,10 +264,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	[JsonIgnore]
 	public int Hierarchy
 		=> this.IsOwner
-			   ? int.MaxValue
-			   : this.RoleIds.Count == 0
-				   ? 0
-				   : this.Roles.Max(x => x.Position);
+			? int.MaxValue
+			: this.RoleIds.Count == 0
+				? 0
+				: this.Roles.Max(x => x.Position);
 
 	/// <summary>
 	/// Gets the permissions for the current member.
@@ -454,9 +454,9 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="ModerationException">Thrown when the bot can not moderate this <see cref="DiscordMember"/>.</exception>
 	public Task VerifyAsync(string? reason = null)
 		=> this.Guild.CurrentMember > this || this.Discord.Configuration.DisableModerationChecks
-			   ? this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default,
-			                                                   default, default, true, this.MemberFlags, reason)
-			   : throw new ModerationException("Can not verify this member");
+			? this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default,
+				default, default, true, this.MemberFlags, reason)
+			: throw new ModerationException("Can not verify this member");
 
 	/// <summary>
 	/// Lets a member not bypass the membership requirements anymore.
@@ -465,9 +465,9 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="ModerationException">Thrown when the bot can not moderate this <see cref="DiscordMember"/>.</exception>
 	public Task UnverifyAsync(string? reason = null)
 		=> this.Guild.CurrentMember > this || this.Discord.Configuration.DisableModerationChecks
-			   ? this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default,
-			                                                   default, default, false, this.MemberFlags, reason)
-			   : throw new ModerationException("Can not unverify this member");
+			? this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default,
+				default, default, false, this.MemberFlags, reason)
+			: throw new ModerationException("Can not unverify this member");
 
 	/// <summary>
 	/// Sets this member's voice mute status.
@@ -481,9 +481,9 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="ModerationException">Thrown when the bot can not moderate this <see cref="DiscordMember"/>.</exception>
 	public Task SetMuteAsync(bool mute, string? reason = null)
 		=> this.Guild.CurrentMember > this || this.Discord.Configuration.DisableModerationChecks
-			   ? this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, mute, default,
-			                                                   default, default, this.MemberFlags, reason)
-			   : throw new ModerationException("Can not mute this member");
+			? this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, mute, default,
+				default, default, this.MemberFlags, reason)
+			: throw new ModerationException("Can not mute this member");
 
 	/// <summary>
 	/// Sets this member's voice deaf status.
@@ -497,9 +497,9 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="ModerationException">Thrown when the bot can not moderate this <see cref="DiscordMember"/>.</exception>
 	public Task SetDeafAsync(bool deaf, string? reason = null)
 		=> this.Guild.CurrentMember > this || this.Discord.Configuration.DisableModerationChecks
-			   ? this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default, deaf,
-			                                                   default, default, this.MemberFlags, reason)
-			   : throw new ModerationException("Can not deaf this member");
+			? this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default, deaf,
+				default, default, this.MemberFlags, reason)
+			: throw new ModerationException("Can not deaf this member");
 
 	/// <summary>
 	/// Modifies this member.
@@ -522,24 +522,22 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		if (mdl.Nickname.HasValue && this.Discord.CurrentUser!.Id == this.Id)
 		{
 			await this.Discord.ApiClient.ModifyCurrentMemberNicknameAsync(this.Guild.Id, mdl.Nickname.Value,
-			                                                              mdl.AuditLogReason).ConfigureAwait(false);
+				mdl.AuditLogReason).ConfigureAwait(false);
 
 			await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, Optional.None,
-			                                                    mdl.Roles.Map(e => e.Select(xr => xr.Id)), mdl.Muted,
-			                                                    mdl.Deafened,
-			                                                    mdl.VoiceChannel.Map(e => e?.Id), default,
-			                                                    this.MemberFlags, mdl.AuditLogReason)
+					mdl.Roles.Map(e => e.Select(xr => xr.Id)), mdl.Muted,
+					mdl.Deafened,
+					mdl.VoiceChannel.Map(e => e?.Id), default,
+					this.MemberFlags, mdl.AuditLogReason)
 				.ConfigureAwait(false);
 		}
 		else
-		{
 			await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, mdl.Nickname,
-			                                                    mdl.Roles.Map(e => e.Select(xr => xr.Id)), mdl.Muted,
-			                                                    mdl.Deafened,
-			                                                    mdl.VoiceChannel.Map(e => e?.Id), default,
-			                                                    this.MemberFlags, mdl.AuditLogReason)
+					mdl.Roles.Map(e => e.Select(xr => xr.Id)), mdl.Muted,
+					mdl.Deafened,
+					mdl.VoiceChannel.Map(e => e?.Id), default,
+					this.MemberFlags, mdl.AuditLogReason)
 				.ConfigureAwait(false);
-		}
 	}
 
 	/// <summary>
@@ -552,8 +550,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="ModerationException">Thrown when the bot can not moderate this <see cref="DiscordMember"/>.</exception>
 	public Task DisconnectFromVoiceAsync()
 		=> this.Guild.CurrentMember > this
-			   ? this.ModifyAsync(x => x.VoiceChannel = null)
-			   : throw new ModerationException("Can not disconnect this member");
+			? this.ModifyAsync(x => x.VoiceChannel = null)
+			: throw new ModerationException("Can not disconnect this member");
 
 	/// <summary>
 	/// Adds a timeout to a member.
@@ -567,10 +565,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="ModerationException">Thrown when the bot can not moderate this <see cref="DiscordMember"/>.</exception>
 	public Task TimeoutAsync(DateTimeOffset until, string? reason = null)
 		=> until.Subtract(DateTimeOffset.UtcNow).Days > 28
-			   ? throw new ArgumentException("Timeout can not be longer than 28 days")
-			   : this.Guild.CurrentMember > this || this.Discord.Configuration.DisableModerationChecks
-				   ? this.Discord.ApiClient.ModifyTimeoutAsync(this.Guild.Id, this.Id, until, reason)
-				   : throw new ModerationException("Can not timeout this member");
+			? throw new ArgumentException("Timeout can not be longer than 28 days")
+			: this.Guild.CurrentMember > this || this.Discord.Configuration.DisableModerationChecks
+				? this.Discord.ApiClient.ModifyTimeoutAsync(this.Guild.Id, this.Id, until, reason)
+				: throw new ModerationException("Can not timeout this member");
 
 	/// <summary>
 	/// Adds a timeout to a member.
@@ -609,8 +607,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="ModerationException">Thrown when the bot can not moderate this <see cref="DiscordMember"/>.</exception>
 	public Task RemoveTimeoutAsync(string? reason = null)
 		=> this.Guild.CurrentMember > this || this.Discord.Configuration.DisableModerationChecks
-			   ? this.Discord.ApiClient.ModifyTimeoutAsync(this.Guild.Id, this.Id, null, reason)
-			   : throw new ModerationException("Can not un-timeout this member");
+			? this.Discord.ApiClient.ModifyTimeoutAsync(this.Guild.Id, this.Id, null, reason)
+			: throw new ModerationException("Can not un-timeout this member");
 
 	/// <summary>
 	/// Grants a role to the member.
@@ -647,8 +645,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task ReplaceRolesAsync(IEnumerable<DiscordRole> roles, string? reason = null)
 		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, default,
-		                                                 Optional.Some(roles.Select(xr => xr.Id)), default, default,
-		                                                 default, default, this.MemberFlags, reason);
+			Optional.Some(roles.Select(xr => xr.Id)), default, default,
+			default, default, this.MemberFlags, reason);
 
 	/// <summary>
 	/// Bans this member from their guild.
@@ -662,8 +660,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="ModerationException">Thrown when the bot can not moderate this <see cref="DiscordMember"/>.</exception>
 	public Task BanAsync(int deleteMessageSeconds = 0, string? reason = null)
 		=> this.Guild.CurrentMember > this || this.Discord.Configuration.DisableModerationChecks
-			   ? this.Guild.BanMemberAsync(this, deleteMessageSeconds, reason)
-			   : throw new ModerationException("Can not ban this member");
+			? this.Guild.BanMemberAsync(this, deleteMessageSeconds, reason)
+			: throw new ModerationException("Can not ban this member");
 
 	/// <summary>
 	/// Unbans this member from their guild.
@@ -705,8 +703,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="ArgumentException">Thrown when the channel in not a voice channel.</exception>
 	public Task UpdateVoiceStateAsync(DiscordChannel channel, bool? suppress)
 		=> channel.Type != ChannelType.Stage
-			   ? throw new ArgumentException("Voice state can only be updated in a stage channel.")
-			   : this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, channel.Id, suppress);
+			? throw new ArgumentException("Voice state can only be updated in a stage channel.")
+			: this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, channel.Id, suppress);
 
 	/// <summary>
 	/// Makes the user a speaker.
@@ -720,9 +718,9 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	{
 		var vs = this.VoiceState;
 		return vs == null || vs.Channel == null || vs.Channel.Type != ChannelType.Stage
-			       ? throw new
-				         ArgumentException("Voice state can only be updated when the user is inside an stage channel.")
-			       : this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, vs.Channel.Id, false);
+			? throw new
+				ArgumentException("Voice state can only be updated when the user is inside an stage channel.")
+			: this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, vs.Channel.Id, false);
 	}
 
 	/// <summary>
@@ -737,9 +735,9 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	{
 		var vs = this.VoiceState;
 		return vs == null || vs.Channel == null || vs.Channel.Type != ChannelType.Stage
-			       ? throw new
-				         ArgumentException("Voice state can only be updated when the user is inside an stage channel.")
-			       : this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, vs.Channel.Id, true);
+			? throw new
+				ArgumentException("Voice state can only be updated when the user is inside an stage channel.")
+			: this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, vs.Channel.Id, true);
 	}
 
 	/// <summary>
@@ -775,8 +773,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <returns>String representation of this member.</returns>
 	public override string ToString()
 		=> this.IsMigrated
-			   ? $"Member {this.Id}; {this.UsernameWithGlobalName}"
-			   : $"Member {this.Id}; {this.UsernameWithDiscriminator}";
+			? $"Member {this.Id}; {this.UsernameWithGlobalName}"
+			: $"Member {this.Id}; {this.UsernameWithDiscriminator}";
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordMember"/> is equal to another object.

@@ -25,6 +25,5 @@ public class GuildAuditLogEntryCreateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal GuildAuditLogEntryCreateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

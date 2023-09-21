@@ -42,6 +42,5 @@ public class PayloadReceivedEventArgs : DiscordEventArgs
 	/// </summary>
 	internal PayloadReceivedEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

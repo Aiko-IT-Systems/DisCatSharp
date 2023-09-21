@@ -18,6 +18,5 @@ public class RateLimitExceptionEventArgs : DiscordEventArgs
 	/// </summary>
 	internal RateLimitExceptionEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

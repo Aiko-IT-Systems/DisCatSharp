@@ -38,8 +38,10 @@ public sealed class LavalinkChannelMix
 	/// <param name="leftToRight">The left to right channel mix factor (<c>0.0</c> to <c>1.0</c> where <c>0.5</c> is no effect)</param>
 	/// <param name="rightToLeft">The right to left channel mix factor (<c>0.0</c> to <c>1.0</c> where <c>0.5</c> is no effect)</param>
 	/// <param name="rightToRight">The right to right channel mix factor (<c>0.0</c> to <c>1.0</c> where <c>0.5</c> is no effect)</param>
-	public LavalinkChannelMix(Optional<float> leftToLeft, Optional<float> leftToRight, Optional<float> rightToLeft,
-	                          Optional<float> rightToRight)
+	public LavalinkChannelMix(
+		Optional<float> leftToLeft, Optional<float> leftToRight, Optional<float> rightToLeft,
+		Optional<float> rightToRight
+	)
 	{
 		this.LeftToLeft = leftToLeft;
 		this.LeftToRight = leftToRight;

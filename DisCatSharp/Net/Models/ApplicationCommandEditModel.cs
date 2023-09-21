@@ -38,7 +38,7 @@ public class ApplicationCommandEditModel : ObservableApiObject
 		{
 			if (value.Value.Length > 100)
 				throw new ArgumentException("Application command description cannot exceed 100 characters.",
-				                            nameof(value));
+					nameof(value));
 
 			this._description = value;
 		}

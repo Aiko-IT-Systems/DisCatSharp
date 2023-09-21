@@ -22,8 +22,7 @@ public sealed class SecureRandom : Random, IDisposable
 	/// Creates a new instance of <see cref="SecureRandom"/>.
 	/// </summary>
 	public SecureRandom()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Finalizes this <see cref="SecureRandom"/> instance by disposing it.

@@ -27,8 +27,7 @@ public abstract class PositionalSnowflakeObject : SnowflakeObject
 	/// <param name="ignored">List of property names to ignore during JSON serialization.</param>
 	internal PositionalSnowflakeObject(List<string>? ignored = null)
 		: base(ignored)
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Determines whether the left <see cref="PositionalSnowflakeObject"/> is higher positioned than the right <see cref="PositionalSnowflakeObject"/>.

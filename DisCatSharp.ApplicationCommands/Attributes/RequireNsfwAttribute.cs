@@ -15,8 +15,7 @@ public sealed class ApplicationCommandRequireNsfwAttribute : ApplicationCommandC
 	/// Defines that this command is only usable within a guild.
 	/// </summary>
 	public ApplicationCommandRequireNsfwAttribute()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Runs checks.

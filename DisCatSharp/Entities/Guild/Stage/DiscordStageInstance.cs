@@ -40,8 +40,7 @@ public class DiscordStageInstance : SnowflakeObject, IEquatable<DiscordStageInst
 			"privacy_level",
 			"discoverable_disabled"
 		})
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordStageInstance"/> is equal to another object.

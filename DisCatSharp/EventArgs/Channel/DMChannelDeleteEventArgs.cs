@@ -19,6 +19,5 @@ public class DmChannelDeleteEventArgs : DiscordEventArgs
 	/// </summary>
 	internal DmChannelDeleteEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

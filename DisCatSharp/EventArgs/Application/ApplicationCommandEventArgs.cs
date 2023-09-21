@@ -25,6 +25,5 @@ public sealed class ApplicationCommandEventArgs : DiscordEventArgs
 	/// <param name="provider">The provider.</param>
 	public ApplicationCommandEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

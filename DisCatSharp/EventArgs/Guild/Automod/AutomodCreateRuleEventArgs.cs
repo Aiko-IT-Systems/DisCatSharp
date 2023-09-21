@@ -24,6 +24,5 @@ public class AutomodRuleCreateEventArgs : DiscordEventArgs
 	/// </summary>
 	public AutomodRuleCreateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

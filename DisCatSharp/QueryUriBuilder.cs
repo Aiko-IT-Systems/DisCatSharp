@@ -64,8 +64,8 @@ internal class QueryUriBuilder
 		{
 			Query =
 				string.Join("&",
-				            this._queryParams.Select(e => Uri.EscapeDataString(e.Key) + '=' +
-				                                          Uri.EscapeDataString(e.Value)))
+					this._queryParams.Select(e => Uri.EscapeDataString(e.Key) + '=' +
+					                              Uri.EscapeDataString(e.Value)))
 		}.Uri;
 
 	/// <summary>

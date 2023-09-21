@@ -27,8 +27,7 @@ public class DiscordGuildDirectoryEntry : DiscordChannel, IEquatable<DiscordGuil
 	/// Initializes a new instance of the <see cref="DiscordGuildDirectoryEntry"/> class.
 	/// </summary>
 	internal DiscordGuildDirectoryEntry()
-	{
-	}
+	{ }
 
 #region Methods
 

@@ -13,8 +13,7 @@ public class AsyncExecutor
 	/// Creates a new instance of asynchronous executor.
 	/// </summary>
 	public AsyncExecutor()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Executes a specified task in an asynchronous manner, waiting for its completion.

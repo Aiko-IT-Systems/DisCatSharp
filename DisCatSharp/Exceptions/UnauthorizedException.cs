@@ -53,7 +53,6 @@ public class UnauthorizedException : DisCatSharpException
 				this.ErrorCode = Convert.ToInt32(j["code"].ToString());
 		}
 		catch (Exception)
-		{
-		}
+		{ }
 	}
 }

@@ -35,8 +35,8 @@ public class DiscordScheduledEventUser : ObservableApiObject, IEquatable<Discord
 	public DiscordScheduledEvent? ScheduledEvent
 		=> this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) &&
 		   guild.ScheduledEvents.TryGetValue(this.EventId, out var scheduledEvent)
-			   ? scheduledEvent
-			   : null;
+			? scheduledEvent
+			: null;
 
 	/// <summary>
 	/// Gets or sets the event id.
@@ -54,8 +54,7 @@ public class DiscordScheduledEventUser : ObservableApiObject, IEquatable<Discord
 	/// Initializes a new instance of the <see cref="DiscordScheduledEventUser"/> class.
 	/// </summary>
 	internal DiscordScheduledEventUser()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordScheduledEventUser"/> is equal to another object.

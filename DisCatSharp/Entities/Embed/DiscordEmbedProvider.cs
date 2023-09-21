@@ -25,6 +25,5 @@ public sealed class DiscordEmbedProvider : ObservableApiObject
 	/// Initializes a new instance of the <see cref="DiscordEmbedProvider"/> class.
 	/// </summary>
 	internal DiscordEmbedProvider()
-	{
-	}
+	{ }
 }

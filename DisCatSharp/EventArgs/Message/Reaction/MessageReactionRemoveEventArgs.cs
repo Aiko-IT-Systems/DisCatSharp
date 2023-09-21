@@ -53,6 +53,5 @@ public class MessageReactionRemoveEventArgs : DiscordEventArgs
 	/// </summary>
 	internal MessageReactionRemoveEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

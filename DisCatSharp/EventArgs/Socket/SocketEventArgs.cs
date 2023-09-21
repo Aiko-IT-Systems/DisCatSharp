@@ -12,6 +12,5 @@ public class SocketEventArgs : DiscordEventArgs
 	/// </summary>
 	public SocketEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

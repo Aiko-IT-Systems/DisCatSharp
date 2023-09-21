@@ -10,7 +10,7 @@ namespace DisCatSharp.Entities;
 /// Represents a application command permission.
 /// </summary>
 public sealed class DiscordApplicationCommandPermission : SnowflakeObject,
-                                                          IEquatable<DiscordApplicationCommandPermission>
+	IEquatable<DiscordApplicationCommandPermission>
 {
 	/// <summary>
 	/// Gets the id of the role or user.
@@ -34,8 +34,7 @@ public sealed class DiscordApplicationCommandPermission : SnowflakeObject,
 	/// Initializes a new instance of the <see cref="DiscordApplicationCommandPermission"/> class.
 	/// </summary>
 	internal DiscordApplicationCommandPermission()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordApplicationCommandPermission"/> class.

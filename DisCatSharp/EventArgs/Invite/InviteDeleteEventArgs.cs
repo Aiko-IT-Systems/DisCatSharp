@@ -29,6 +29,5 @@ public sealed class InviteDeleteEventArgs : DiscordEventArgs
 	/// </summary>
 	internal InviteDeleteEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

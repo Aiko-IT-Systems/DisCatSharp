@@ -30,7 +30,7 @@ internal class DcsUdpClient : BaseUdpClient
 	/// Gets the receiver task.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:Remove unread private members",
-	                                                 Justification = "<Pending>")]
+		Justification = "<Pending>")]
 	private Task _receiverTask;
 
 	/// <summary>
@@ -109,8 +109,7 @@ internal class DcsUdpClient : BaseUdpClient
 				this._packetQueue.Add(packet.Buffer);
 			}
 			catch (Exception)
-			{
-			}
+			{ }
 	}
 
 	/// <summary>

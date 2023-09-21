@@ -23,9 +23,10 @@ internal sealed class ComponentCollectRequest : ComponentMatchRequest
 	/// <param name="message"></param>
 	/// <param name="predicate">The predicate.</param>
 	/// <param name="cancellation">The cancellation token.</param>
-	public ComponentCollectRequest(DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate,
-	                               CancellationToken cancellation)
+	public ComponentCollectRequest(
+		DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate,
+		CancellationToken cancellation
+	)
 		: base(message, predicate, cancellation)
-	{
-	}
+	{ }
 }

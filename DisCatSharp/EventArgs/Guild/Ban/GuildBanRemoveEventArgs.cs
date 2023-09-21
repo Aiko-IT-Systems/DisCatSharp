@@ -24,6 +24,5 @@ public class GuildBanRemoveEventArgs : DiscordEventArgs
 	/// </summary>
 	internal GuildBanRemoveEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

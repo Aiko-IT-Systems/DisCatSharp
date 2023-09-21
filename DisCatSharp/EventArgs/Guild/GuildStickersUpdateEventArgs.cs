@@ -30,6 +30,5 @@ public class GuildStickersUpdateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal GuildStickersUpdateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

@@ -9,5 +9,4 @@ namespace DisCatSharp.Common.Serialization;
 [Obsolete("Use [DataMember] with EmitDefaultValue = true."),
  AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public sealed class IncludeNullAttribute : SerializationAttribute
-{
-}
+{ }

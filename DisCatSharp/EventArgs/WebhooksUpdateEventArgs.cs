@@ -24,6 +24,5 @@ public class WebhooksUpdateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal WebhooksUpdateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

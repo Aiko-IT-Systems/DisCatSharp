@@ -22,6 +22,5 @@ public class ZombiedEventArgs : DiscordEventArgs
 	/// </summary>
 	internal ZombiedEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

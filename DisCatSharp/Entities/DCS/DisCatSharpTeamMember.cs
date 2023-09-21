@@ -39,8 +39,8 @@ public sealed class DisCatSharpTeamMember : SnowflakeObject
 	/// </summary>
 	public string BannerUrl
 		=> string.IsNullOrWhiteSpace(this.BannerHash)
-			   ? null
-			   : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}?size=4096";
+			? null
+			: $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}?size=4096";
 
 	/// <summary>
 	/// Gets the user's profile banner hash. Mutually exclusive with <see cref="BannerColor"/>.
@@ -57,8 +57,8 @@ public sealed class DisCatSharpTeamMember : SnowflakeObject
 	/// </summary>
 	public string AvatarUrl
 		=> string.IsNullOrWhiteSpace(this.AvatarHash)
-			   ? this.DefaultAvatarUrl
-			   : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarHash}.{(this.AvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
+			? this.DefaultAvatarUrl
+			: $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarHash}.{(this.AvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
 	/// <summary>
 	/// Gets the URL of default avatar for this user.
@@ -70,6 +70,5 @@ public sealed class DisCatSharpTeamMember : SnowflakeObject
 	/// Initializes a new instance of the <see cref="DisCatSharpTeamMember"/> class.
 	/// </summary>
 	internal DisCatSharpTeamMember()
-	{
-	}
+	{ }
 }

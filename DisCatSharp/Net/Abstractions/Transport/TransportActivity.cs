@@ -154,8 +154,7 @@ internal sealed class TransportActivity : ObservableApiObject
 	/// Initializes a new instance of the <see cref="TransportActivity"/> class.
 	/// </summary>
 	internal TransportActivity()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="TransportActivity"/> class.
@@ -264,8 +263,8 @@ internal sealed class TransportActivity : ObservableApiObject
 		[JsonIgnore]
 		public DateTimeOffset? Start
 			=> this.StartInternal != null
-				   ? Utilities.GetDateTimeOffsetFromMilliseconds(this.StartInternal.Value, false)
-				   : null;
+				? Utilities.GetDateTimeOffsetFromMilliseconds(this.StartInternal.Value, false)
+				: null;
 
 		[JsonProperty("start", NullValueHandling = NullValueHandling.Ignore)]
 		internal long? StartInternal;
@@ -276,8 +275,8 @@ internal sealed class TransportActivity : ObservableApiObject
 		[JsonIgnore]
 		public DateTimeOffset? End
 			=> this.EndInternal != null
-				   ? Utilities.GetDateTimeOffsetFromMilliseconds(this.EndInternal.Value, false)
-				   : null;
+				? Utilities.GetDateTimeOffsetFromMilliseconds(this.EndInternal.Value, false)
+				: null;
 
 		[JsonProperty("end", NullValueHandling = NullValueHandling.Ignore)]
 		internal long? EndInternal;
@@ -322,12 +321,8 @@ internal sealed class GamePartySizeConverter : JsonConverter
 	public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
 	{
 		var obj = value is TransportActivity.GameParty.GamePartySize sinfo
-			          ? new object[]
-			          {
-				          sinfo.Current,
-				          sinfo.Maximum
-			          }
-			          : null;
+			? new object[] { sinfo.Current, sinfo.Maximum }
+			: null;
 		serializer.Serialize(writer, obj);
 	}
 

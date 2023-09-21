@@ -54,6 +54,5 @@ public class ThreadEditModel : BaseEditModel
 	/// Initializes a new instance of the <see cref="ThreadEditModel"/> class.
 	/// </summary>
 	internal ThreadEditModel()
-	{
-	}
+	{ }
 }

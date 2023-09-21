@@ -33,8 +33,8 @@ public class DiscordGuildPreview : SnowflakeObject
 	[JsonIgnore]
 	public string IconUrl
 		=> !string.IsNullOrWhiteSpace(this.IconHash)
-			   ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.{(this.IconHash.StartsWith("a_") ? "gif" : "png")}?size=1024"
-			   : null;
+			? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.{(this.IconHash.StartsWith("a_") ? "gif" : "png")}?size=1024"
+			: null;
 
 	/// <summary>
 	/// Gets the guild splash's hash.
@@ -48,8 +48,8 @@ public class DiscordGuildPreview : SnowflakeObject
 	[JsonIgnore]
 	public string SplashUrl
 		=> !string.IsNullOrWhiteSpace(this.SplashHash)
-			   ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.SplashHash}.png?size=1024"
-			   : null;
+			? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.SplashHash}.png?size=1024"
+			: null;
 
 	/// <summary>
 	/// Gets the guild discovery splash's hash.
@@ -63,8 +63,8 @@ public class DiscordGuildPreview : SnowflakeObject
 	[JsonIgnore]
 	public string DiscoverySplashUrl
 		=> !string.IsNullOrWhiteSpace(this.DiscoverySplashHash)
-			   ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILD_DISCOVERY_SPLASHES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.DiscoverySplashHash}.png?size=1024"
-			   : null;
+			? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILD_DISCOVERY_SPLASHES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.DiscoverySplashHash}.png?size=1024"
+			: null;
 
 	/// <summary>
 	/// Gets a collection of this guild's emojis.
@@ -128,6 +128,5 @@ public class DiscordGuildPreview : SnowflakeObject
 	/// Initializes a new instance of the <see cref="DiscordGuildPreview"/> class.
 	/// </summary>
 	internal DiscordGuildPreview()
-	{
-	}
+	{ }
 }

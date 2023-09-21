@@ -141,8 +141,8 @@ public class BaseContext
 	/// <param name="builder">The data to send.</param>
 	public Task CreateModalResponseAsync(DiscordInteractionModalBuilder builder)
 		=> this.Interaction.Type != InteractionType.Ping && this.Interaction.Type != InteractionType.ModalSubmit
-			   ? this.Interaction.CreateInteractionModalResponseAsync(builder)
-			   : throw new NotSupportedException("You can't respond to a PING with a modal.");
+			? this.Interaction.CreateInteractionModalResponseAsync(builder)
+			: throw new NotSupportedException("You can't respond to a PING with a modal.");
 
 	/// <summary>
 	/// Creates an iframe response to this interaction.
@@ -151,12 +151,14 @@ public class BaseContext
 	/// <param name="title">The title of the iframe.</param>
 	/// <param name="modalSize">The size of the iframe.</param>
 	/// <param name="iFramePath">The path of the iframe.</param>
-	public Task CreateInteractionIframeResponseAsync(string customId, string title,
-	                                                 IframeModalSize modalSize = IframeModalSize.Normal,
-	                                                 string? iFramePath = null)
+	public Task CreateInteractionIframeResponseAsync(
+		string customId, string title,
+		IframeModalSize modalSize = IframeModalSize.Normal,
+		string? iFramePath = null
+	)
 		=> this.Interaction.Type != InteractionType.Ping
-			   ? this.Interaction.CreateInteractionIframeResponseAsync(customId, title, modalSize, iFramePath)
-			   : throw new NotSupportedException("You can't respond to a PING with an iframe.");
+			? this.Interaction.CreateInteractionIframeResponseAsync(customId, title, modalSize, iFramePath)
+			: throw new NotSupportedException("You can't respond to a PING with an iframe.");
 
 	/// <summary>
 	/// Edits the interaction response.

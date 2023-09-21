@@ -21,6 +21,5 @@ public class ApplicationCommandsModuleReadyEventArgs : DiscordEventArgs
 	/// <param name="provider">The provider.</param>
 	internal ApplicationCommandsModuleReadyEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

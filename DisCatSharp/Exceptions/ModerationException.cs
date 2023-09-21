@@ -8,6 +8,5 @@ public sealed class ModerationException : DisCatSharpException
 	/// <param name="message">The exception message.</param>
 	internal ModerationException(string message)
 		: base(message)
-	{
-	}
+	{ }
 }

@@ -111,7 +111,8 @@ public class DiscordChannelConverter : IArgumentConverter<DiscordChannel>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
 	async Task<Optional<DiscordChannel>> IArgumentConverter<DiscordChannel>.ConvertAsync(
-		string value, CommandContext ctx)
+		string value, CommandContext ctx
+	)
 	{
 		if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var cid))
 		{
@@ -146,7 +147,8 @@ public class DiscordThreadChannelConverter : IArgumentConverter<DiscordThreadCha
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
 	async Task<Optional<DiscordThreadChannel>> IArgumentConverter<DiscordThreadChannel>.ConvertAsync(
-		string value, CommandContext ctx)
+		string value, CommandContext ctx
+	)
 	{
 		if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var tid))
 		{
@@ -221,8 +223,8 @@ public class DiscordGuildConverter : IArgumentConverter<DiscordGuild>
 	{
 		if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var gid))
 			return ctx.Client.Guilds.TryGetValue(gid, out var result)
-				       ? Task.FromResult(Optional.Some(result))
-				       : Task.FromResult(Optional<DiscordGuild>.None);
+				? Task.FromResult(Optional.Some(result))
+				: Task.FromResult(Optional<DiscordGuild>.None);
 
 		var cs = ctx.Config.CaseSensitive;
 		if (!cs)
@@ -249,11 +251,11 @@ public class DiscordInviteConverter : IArgumentConverter<DiscordInvite>
 		if (m.Success)
 		{
 			ulong? eventId = ulong.TryParse(m.Groups["event"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
-			                                out var eid)
-				                 ? eid
-				                 : null;
+				out var eid)
+				? eid
+				: null;
 			var result = await ctx.Client.GetInviteByCodeAsync(m.Groups["code"].Value, scheduledEventId: eventId)
-				             .ConfigureAwait(false);
+				.ConfigureAwait(false);
 			return Optional.FromNullable(result);
 		}
 
@@ -273,7 +275,8 @@ public class DiscordMessageConverter : IArgumentConverter<DiscordMessage>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
 	async Task<Optional<DiscordMessage>> IArgumentConverter<DiscordMessage>.ConvertAsync(
-		string value, CommandContext ctx)
+		string value, CommandContext ctx
+	)
 	{
 		if (string.IsNullOrWhiteSpace(value))
 			return Optional.None;
@@ -285,9 +288,9 @@ public class DiscordMessageConverter : IArgumentConverter<DiscordMessage>
 			var uripath = DiscordRegEx.MessageLink.Match(uri.AbsoluteUri);
 			if (!uripath.Success
 			    || !ulong.TryParse(uripath.Groups["channel"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
-			                       out var cid)
+				    out var cid)
 			    || !ulong.TryParse(uripath.Groups["message"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
-			                       out mid))
+				    out mid))
 				return Optional.None;
 
 			var chn = await ctx.Client.GetChannelAsync(cid).ConfigureAwait(false);
@@ -319,7 +322,8 @@ public class DiscordScheduledEventConverter : IArgumentConverter<DiscordSchedule
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
 	async Task<Optional<DiscordScheduledEvent>> IArgumentConverter<DiscordScheduledEvent>.ConvertAsync(
-		string value, CommandContext ctx)
+		string value, CommandContext ctx
+	)
 	{
 		if (string.IsNullOrWhiteSpace(value))
 			return Optional.None;
@@ -331,9 +335,9 @@ public class DiscordScheduledEventConverter : IArgumentConverter<DiscordSchedule
 			var uripath = DiscordRegEx.Event.Match(uri.AbsoluteUri);
 			if (uripath.Success
 			    && ulong.TryParse(uripath.Groups["guild"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
-			                      out var gid)
+				    out var gid)
 			    && ulong.TryParse(uripath.Groups["event"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
-			                      out seid))
+				    out seid))
 			{
 				var guild = await ctx.Client.GetGuildAsync(gid).ConfigureAwait(false);
 				if (guild == null)
@@ -390,18 +394,18 @@ public class DiscordEmojiConverter : IArgumentConverter<DiscordEmoji>
 			var anim = m.Groups["animated"].Success;
 
 			return !ulong.TryParse(sid, NumberStyles.Integer, CultureInfo.InvariantCulture, out var id)
-				       ? Task.FromResult(Optional<DiscordEmoji>.None)
-				       : DiscordEmoji.TryFromGuildEmote(ctx.Client, id, out emoji)
-					       ? Task.FromResult(Optional.Some(emoji))
-					       : Task.FromResult(Optional.Some(new DiscordEmoji
-					       {
-						       Discord = ctx.Client,
-						       Id = id,
-						       Name = name,
-						       IsAnimated = anim,
-						       RequiresColons = true,
-						       IsManaged = false
-					       }));
+				? Task.FromResult(Optional<DiscordEmoji>.None)
+				: DiscordEmoji.TryFromGuildEmote(ctx.Client, id, out emoji)
+					? Task.FromResult(Optional.Some(emoji))
+					: Task.FromResult(Optional.Some(new DiscordEmoji
+					{
+						Discord = ctx.Client,
+						Id = id,
+						Name = name,
+						IsAnimated = anim,
+						RequiresColons = true,
+						IsManaged = false
+					}));
 		}
 
 		return Task.FromResult(Optional<DiscordEmoji>.None);
@@ -422,7 +426,7 @@ public class DiscordColorConverter : IArgumentConverter<DiscordColor>
 	{
 		var m = CommonRegEx.HexColorString.Match(value);
 		if (m.Success && int.TryParse(m.Groups[1].Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture,
-		                              out var clr))
+			out var clr))
 			return Task.FromResult(Optional.Some<DiscordColor>(clr));
 
 		m = CommonRegEx.RgbColorString.Match(value);
@@ -433,8 +437,8 @@ public class DiscordColorConverter : IArgumentConverter<DiscordColor>
 			var p3 = byte.TryParse(m.Groups[3].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var b);
 
 			return !(p1 && p2 && p3)
-				       ? Task.FromResult(Optional<DiscordColor>.None)
-				       : Task.FromResult(Optional.Some(new DiscordColor(r, g, b)));
+				? Task.FromResult(Optional<DiscordColor>.None)
+				: Task.FromResult(Optional.Some(new DiscordColor(r, g, b)));
 		}
 
 		return Task.FromResult(Optional<DiscordColor>.None);

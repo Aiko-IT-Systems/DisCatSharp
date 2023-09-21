@@ -45,7 +45,6 @@ public class RequestSizeException : DisCatSharpException
 				this.JsonMessage = j["message"].ToString();
 		}
 		catch (Exception)
-		{
-		}
+		{ }
 	}
 }

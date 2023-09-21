@@ -29,22 +29,22 @@ internal sealed class ClientProperties : ObservableApiObject
 
 			var plat = RuntimeInformation.OSDescription.ToLowerInvariant();
 			return plat.Contains("freebsd")
-				       ? "freebsd"
-				       : plat.Contains("openbsd")
-					       ? "openbsd"
-					       : plat.Contains("netbsd")
-						       ? "netbsd"
-						       : plat.Contains("dragonfly")
-							       ? "dragonflybsd"
-							       : plat.Contains("miros bsd") || plat.Contains("mirbsd")
-								       ? "miros bsd"
-								       : plat.Contains("desktopbsd")
-									       ? "desktopbsd"
-									       : plat.Contains("darwin")
-										       ? "osx"
-										       : plat.Contains("unix")
-											       ? "unix"
-											       : "toaster (unknown)";
+				? "freebsd"
+				: plat.Contains("openbsd")
+					? "openbsd"
+					: plat.Contains("netbsd")
+						? "netbsd"
+						: plat.Contains("dragonfly")
+							? "dragonflybsd"
+							: plat.Contains("miros bsd") || plat.Contains("mirbsd")
+								? "miros bsd"
+								: plat.Contains("desktopbsd")
+									? "desktopbsd"
+									: plat.Contains("darwin")
+										? "osx"
+										: plat.Contains("unix")
+											? "unix"
+											: "toaster (unknown)";
 		}
 	}
 

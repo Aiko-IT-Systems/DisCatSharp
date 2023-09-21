@@ -18,6 +18,5 @@ public class CommandErrorEventArgs : CommandEventArgs
 	/// <param name="provider">The provider.</param>
 	public CommandErrorEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

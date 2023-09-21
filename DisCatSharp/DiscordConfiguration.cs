@@ -160,8 +160,8 @@ public sealed class DiscordConfiguration
 	{
 		internal get => this._webSocketClientFactory;
 		set => this._webSocketClientFactory =
-			       value ??
-			       throw new InvalidOperationException("You need to supply a valid WebSocket client factory method.");
+			value ??
+			throw new InvalidOperationException("You need to supply a valid WebSocket client factory method.");
 	}
 
 	/// <summary>
@@ -178,8 +178,8 @@ public sealed class DiscordConfiguration
 	{
 		internal get => this._udpClientFactory;
 		set => this._udpClientFactory =
-			       value ??
-			       throw new InvalidOperationException("You need to supply a valid UDP client factory method.");
+			value ??
+			throw new InvalidOperationException("You need to supply a valid UDP client factory method.");
 	}
 
 	/// <summary>
@@ -287,11 +287,11 @@ public sealed class DiscordConfiguration
 				this._exceptions?.Clear();
 			else
 				this._exceptions = value.All(val => val.BaseType == typeof(DisCatSharpException))
-					                   ? value
-					                   : throw new
-						                     InvalidOperationException("Can only track exceptions who inherit from " +
-						                                               nameof(DisCatSharpException) +
-						                                               " and must be constructed with typeof(Type)");
+					? value
+					: throw new
+						InvalidOperationException("Can only track exceptions who inherit from " +
+						                          nameof(DisCatSharpException) +
+						                          " and must be constructed with typeof(Type)");
 		}
 	}
 
@@ -335,8 +335,7 @@ public sealed class DiscordConfiguration
 	/// Creates a new configuration with default values.
 	/// </summary>
 	public DiscordConfiguration()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Utilized via dependency injection pipeline.

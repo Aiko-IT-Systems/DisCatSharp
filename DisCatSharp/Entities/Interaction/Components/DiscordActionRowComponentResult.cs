@@ -27,6 +27,5 @@ public sealed class DiscordActionRowComponentResult : ObservableApiObject
 	/// Initializes a new instance of the <see cref="DiscordActionRowComponentResult"/> class.
 	/// </summary>
 	internal DiscordActionRowComponentResult()
-	{
-	}
+	{ }
 }

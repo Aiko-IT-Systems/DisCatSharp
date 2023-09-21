@@ -36,14 +36,7 @@ public class PaginationButtons
 	/// <summary>
 	/// Gets the button array.
 	/// </summary>
-	internal DiscordButtonComponent[] ButtonArray => new[]
-	{
-		this.SkipLeft,
-		this.Left,
-		this.Stop,
-		this.Right,
-		this.SkipRight
-	};
+	internal DiscordButtonComponent[] ButtonArray => new[] { this.SkipLeft, this.Left, this.Stop, this.Right, this.SkipRight };
 
 	public const string SKIP_LEFT_CUSTOM_ID = "pgb-skip-left";
 	public const string LEFT_CUSTOM_ID = "pgb-left";

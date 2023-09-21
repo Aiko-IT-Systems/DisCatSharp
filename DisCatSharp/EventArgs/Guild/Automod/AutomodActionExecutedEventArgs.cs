@@ -35,8 +35,8 @@ public class AutomodActionExecutedEventArgs : DiscordEventArgs
 	/// </summary>
 	public DiscordMember Member
 		=> this.Guild.Members.TryGetValue(this.UserId, out var member)
-			   ? member
-			   : this.Guild.GetMemberAsync(this.UserId, true).Result;
+			? member
+			: this.Guild.GetMemberAsync(this.UserId, true).Result;
 
 	/// <summary>
 	/// The user id which caused this event.
@@ -79,6 +79,5 @@ public class AutomodActionExecutedEventArgs : DiscordEventArgs
 
 	public AutomodActionExecutedEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

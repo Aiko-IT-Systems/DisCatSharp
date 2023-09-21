@@ -24,6 +24,5 @@ public class StageInstanceUpdateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal StageInstanceUpdateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

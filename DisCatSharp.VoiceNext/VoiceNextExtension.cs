@@ -80,13 +80,13 @@ public sealed class VoiceNextExtension : BaseExtension
 	{
 		if (channel.Type != ChannelType.Voice && channel.Type != ChannelType.Stage)
 			throw new ArgumentException("Invalid channel specified; needs to be voice or stage channel",
-			                            nameof(channel));
+				nameof(channel));
 
 		if (channel.Guild == null)
 			throw new ArgumentException("Invalid channel specified; needs to be guild channel", nameof(channel));
 
 		if (!channel.PermissionsFor(channel.Guild.CurrentMember)
-			    .HasPermission(Permissions.AccessChannels | Permissions.UseVoice))
+			.HasPermission(Permissions.AccessChannels | Permissions.UseVoice))
 			throw new
 				InvalidOperationException("You need AccessChannels and UseVoice permission to connect to this voice channel");
 
@@ -229,9 +229,7 @@ public sealed class VoiceNextExtension : BaseExtension
 				epp = int.Parse(eps[(epi + 1)..]);
 			}
 			else
-			{
 				eph = eps;
-			}
 
 			vnc.WebSocketEndpoint = new()
 			{

@@ -177,9 +177,7 @@ public class GuildFeatures
 	public string ToString(string separator, bool humanReadable)
 	{
 		if (!humanReadable)
-		{
 			return string.Join(separator, this.Features);
-		}
 
 		else
 		{

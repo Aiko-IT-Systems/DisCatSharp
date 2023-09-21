@@ -26,6 +26,5 @@ public class ContextMenuErrorEventArgs : DiscordEventArgs
 	/// <param name="provider">The provider.</param>
 	public ContextMenuErrorEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

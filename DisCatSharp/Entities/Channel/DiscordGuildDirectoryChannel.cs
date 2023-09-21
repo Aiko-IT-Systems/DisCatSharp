@@ -15,8 +15,7 @@ public class DiscordGuildDirectoryChannel : DiscordChannel, IEquatable<DiscordGu
 	/// Initializes a new instance of the <see cref="DiscordGuildDirectoryChannel"/> class.
 	/// </summary>
 	internal DiscordGuildDirectoryChannel()
-	{
-	}
+	{ }
 
 	[JsonIgnore]
 	public IReadOnlyList<DiscordGuildDirectoryEntry> Entries =>

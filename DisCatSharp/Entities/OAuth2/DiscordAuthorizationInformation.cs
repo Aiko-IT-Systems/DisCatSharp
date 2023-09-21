@@ -34,8 +34,8 @@ public sealed class DiscordAuthorizationInformation : ObservableApiObject
 	[JsonIgnore]
 	internal DateTimeOffset Expires
 		=> DateTimeOffset.TryParse(this.ExpiresRaw, out var expires)
-			   ? expires
-			   : throw new InvalidCastException("Something went wrong");
+			? expires
+			: throw new InvalidCastException("Something went wrong");
 
 	/// <summary>
 	/// Gets the user who has authorized, if the user has authorized with the <c>identify</c> scope.

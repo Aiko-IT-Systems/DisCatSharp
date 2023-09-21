@@ -1111,24 +1111,26 @@ public sealed partial class DiscordShardedClient
 	/// <param name="handler">The event handler.</param>
 	/// <param name="sender">The sender.</param>
 	/// <param name="eventArgs">The event args.</param>
-	internal void EventErrorHandler<TArgs>(AsyncEvent<DiscordClient, TArgs> asyncEvent, Exception ex,
-	                                       AsyncEventHandler<DiscordClient, TArgs> handler, DiscordClient sender,
-	                                       TArgs eventArgs)
+	internal void EventErrorHandler<TArgs>(
+		AsyncEvent<DiscordClient, TArgs> asyncEvent, Exception ex,
+		AsyncEventHandler<DiscordClient, TArgs> handler, DiscordClient sender,
+		TArgs eventArgs
+	)
 		where TArgs : AsyncEventArgs
 	{
 		if (ex is AsyncEventTimeoutException)
 		{
 			this.Logger.LogWarning(LoggerEvents.EventHandlerException,
-			                       "An event handler for {name} took too long to execute. Defined as \"{method}\" located in \"{declaringType}\".",
-			                       asyncEvent.Name,
-			                       handler.Method.ToString()?.Replace(handler.Method.ReturnType.ToString(), "")
-				                       .TrimStart(), handler.Method.DeclaringType);
+				"An event handler for {name} took too long to execute. Defined as \"{method}\" located in \"{declaringType}\".",
+				asyncEvent.Name,
+				handler.Method.ToString()?.Replace(handler.Method.ReturnType.ToString(), "")
+					.TrimStart(), handler.Method.DeclaringType);
 			return;
 		}
 
 		this.Logger.LogError(LoggerEvents.EventHandlerException, ex,
-		                     "Event handler exception for event {name} thrown from {method} (defined in {type})",
-		                     asyncEvent.Name, handler.Method, handler.Method.DeclaringType);
+			"Event handler exception for event {name} thrown from {method} (defined in {type})",
+			asyncEvent.Name, handler.Method, handler.Method.DeclaringType);
 		this._clientErrored.InvokeAsync(sender, new(this.ShardClients[0].ServiceProvider)
 		{
 			EventName = asyncEvent.Name,
@@ -1166,11 +1168,13 @@ public sealed partial class DiscordShardedClient
 	/// <param name="handler">The event handler.</param>
 	/// <param name="sender">The sender.</param>
 	/// <param name="eventArgs">The event args.</param>
-	private void Goof<TArgs>(AsyncEvent<DiscordClient, TArgs> asyncEvent, Exception ex,
-	                         AsyncEventHandler<DiscordClient, TArgs> handler, DiscordClient sender, TArgs eventArgs)
+	private void Goof<TArgs>(
+		AsyncEvent<DiscordClient, TArgs> asyncEvent, Exception ex,
+		AsyncEventHandler<DiscordClient, TArgs> handler, DiscordClient sender, TArgs eventArgs
+	)
 		where TArgs : AsyncEventArgs => this.Logger.LogCritical(LoggerEvents.EventHandlerException, ex,
-		                                                        "Exception event handler {method} (defined in {type}) threw an exception",
-		                                                        handler.Method, handler.Method.DeclaringType);
+		"Exception event handler {method} (defined in {type}) threw an exception",
+		handler.Method, handler.Method.DeclaringType);
 
 #endregion
 
@@ -1685,8 +1689,10 @@ public sealed partial class DiscordShardedClient
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
-	private Task Client_GuildApplicationCommandCountUpdated(DiscordClient client,
-	                                                        GuildApplicationCommandCountEventArgs e)
+	private Task Client_GuildApplicationCommandCountUpdated(
+		DiscordClient client,
+		GuildApplicationCommandCountEventArgs e
+	)
 		=> this._guildApplicationCommandCountUpdated.InvokeAsync(client, e);
 
 	/// <summary>
@@ -1694,8 +1700,10 @@ public sealed partial class DiscordShardedClient
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
-	private Task Client_ApplicationCommandPermissionsUpdated(DiscordClient client,
-	                                                         ApplicationCommandPermissionsUpdateEventArgs e)
+	private Task Client_ApplicationCommandPermissionsUpdated(
+		DiscordClient client,
+		ApplicationCommandPermissionsUpdateEventArgs e
+	)
 		=> this._applicationCommandPermissionsUpdated.InvokeAsync(client, e);
 
 	/// <summary>

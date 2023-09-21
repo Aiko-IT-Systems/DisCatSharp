@@ -22,6 +22,5 @@ public class HeartbeatEventArgs : DiscordEventArgs
 	/// </summary>
 	internal HeartbeatEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

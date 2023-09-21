@@ -22,6 +22,5 @@ public class GlobalApplicationCommandsRegisteredEventArgs : DiscordEventArgs
 	/// <param name="provider">The provider.</param>
 	internal GlobalApplicationCommandsRegisteredEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

@@ -51,7 +51,7 @@ internal class Poller
 		catch (Exception ex)
 		{
 			this._client!.Logger.LogError(InteractivityEvents.InteractivityPollError, ex,
-			                              "Exception occurred while polling");
+				"Exception occurred while polling");
 		}
 		finally
 		{
@@ -88,7 +88,7 @@ internal class Poller
 					else
 					{
 						var member = await eventArgs.Channel.Guild!.GetMemberAsync(client.CurrentUser!.Id)
-							             .ConfigureAwait(false);
+							.ConfigureAwait(false);
 						if (eventArgs.Channel.PermissionsFor(member).HasPermission(Permissions.ManageMessages))
 							await eventArgs.Message.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User)
 								.ConfigureAwait(false);
@@ -109,9 +109,9 @@ internal class Poller
 			return Task.CompletedTask;
 
 		foreach (var req in this._requests
-			         .Where(req => req.Message.Id == eventArgs.Message.Id &&
-			                       req.Message.ChannelId == eventArgs.Channel.Id)
-			         .Where(req => eventArgs.User.Id != this._client!.CurrentUser!.Id))
+			.Where(req => req.Message.Id == eventArgs.Message.Id &&
+			              req.Message.ChannelId == eventArgs.Channel.Id)
+			.Where(req => eventArgs.User.Id != this._client!.CurrentUser!.Id))
 			req.RemoveReaction(eventArgs.Emoji, eventArgs.User);
 		return Task.CompletedTask;
 	}

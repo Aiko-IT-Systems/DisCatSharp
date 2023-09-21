@@ -162,8 +162,7 @@ public class DiscordInvite : ObservableApiObject
 			"guild_id",
 			"channel_id"
 		})
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Deletes the invite.

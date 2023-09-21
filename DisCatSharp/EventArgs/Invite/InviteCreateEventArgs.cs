@@ -29,6 +29,5 @@ public sealed class InviteCreateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal InviteCreateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

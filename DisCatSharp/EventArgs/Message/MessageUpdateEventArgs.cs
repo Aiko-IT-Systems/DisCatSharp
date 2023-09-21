@@ -64,6 +64,5 @@ public class MessageUpdateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal MessageUpdateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

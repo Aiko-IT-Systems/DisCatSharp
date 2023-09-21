@@ -73,9 +73,9 @@ public class DiscordUri
 	/// that would mean creating an invalid Uri, which would result in loss of data.</exception>
 	public Uri ToUri()
 		=> this.Type == DiscordUriType.Standard
-			   ? this._value as Uri
-			   : throw new UriFormatException(
-			                                  $@"DiscordUri ""{this._value}"" would be invalid as a regular URI, please the {nameof(this.Type)} property first.");
+			? this._value as Uri
+			: throw new UriFormatException(
+				$@"DiscordUri ""{this._value}"" would be invalid as a regular URI, please the {nameof(this.Type)} property first.");
 
 	/// <summary>
 	/// Represents a uri json converter.
@@ -98,19 +98,21 @@ public class DiscordUri
 		/// <param name="objectType">The object type.</param>
 		/// <param name="existingValue">The existing value.</param>
 		/// <param name="serializer">The serializer.</param>
-		public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-		                                JsonSerializer serializer)
+		public override object ReadJson(
+			JsonReader reader, Type objectType, object existingValue,
+			JsonSerializer serializer
+		)
 		{
 			var val = reader.Value;
 			return val == null
-				       ? null
-				       : val is not string s
-					       ? throw new
-						         JsonReaderException("DiscordUri value invalid format! This is a bug in DisCatSharp. " +
-						                             $"Include the type in your bug report: [[{reader.TokenType}]]")
-					       : IsStandard(s)
-						       ? new(new Uri(s))
-						       : new DiscordUri(s);
+				? null
+				: val is not string s
+					? throw new
+						JsonReaderException("DiscordUri value invalid format! This is a bug in DisCatSharp. " +
+						                    $"Include the type in your bug report: [[{reader.TokenType}]]")
+					: IsStandard(s)
+						? new(new Uri(s))
+						: new DiscordUri(s);
 		}
 
 		/// <summary>

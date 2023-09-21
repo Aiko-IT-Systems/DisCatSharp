@@ -25,8 +25,7 @@ public class AutomodAction : ObservableApiObject
 	/// Creates a new empty automod action.
 	/// </summary>
 	internal AutomodAction()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Creates a new automod action.

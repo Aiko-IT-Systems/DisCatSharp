@@ -24,6 +24,5 @@ public class ChannelDeleteEventArgs : DiscordEventArgs
 	/// </summary>
 	internal ChannelDeleteEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

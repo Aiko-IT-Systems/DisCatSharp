@@ -13,8 +13,10 @@ public static class ApplicationDiscoveryFlagExtensions
 	/// <param name="baseFlags">The existing flags.</param>
 	/// <param name="flag">The flags to search for.</param>
 	/// <returns></returns>
-	public static bool HasApplicationDiscoveryFlag(this ApplicationDiscoveryFlags baseFlags,
-	                                               ApplicationDiscoveryFlags flag) => (baseFlags & flag) == flag;
+	public static bool HasApplicationDiscoveryFlag(
+		this ApplicationDiscoveryFlags baseFlags,
+		ApplicationDiscoveryFlags flag
+	) => (baseFlags & flag) == flag;
 }
 
 [Flags]

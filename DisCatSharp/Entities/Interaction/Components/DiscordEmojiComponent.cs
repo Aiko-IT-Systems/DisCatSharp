@@ -25,8 +25,7 @@ public sealed class DiscordComponentEmoji : ObservableApiObject
 	/// Constructs a new component emoji to add to a <see cref="DiscordComponent"/>.
 	/// </summary>
 	public DiscordComponentEmoji()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Constructs a new component emoji from an emoji Id.

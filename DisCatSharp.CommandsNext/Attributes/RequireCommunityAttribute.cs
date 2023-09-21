@@ -14,8 +14,7 @@ public sealed class RequireCommunityAttribute : CheckBaseAttribute
 	/// Defines that this command is only usable within a community-enabled guild.
 	/// </summary>
 	public RequireCommunityAttribute()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Executes the a check.

@@ -91,8 +91,10 @@ public sealed class DiscordButtonComponent : DiscordComponent
 	/// <param name="disabled">Whether this button should be initialized as being disabled. User sees a greyed out button that cannot be interacted with.</param>
 	/// <param name="emoji">The emoji to add to the button. This is required if <paramref name="label"/> is empty or null.</param>
 	/// <exception cref="ArgumentException">Is thrown when neither the <paramref name="emoji"/> nor the <paramref name="label"/> is set.</exception>
-	public DiscordButtonComponent(ButtonStyle style, string? customId = null, string? label = null,
-	                              bool disabled = false, DiscordComponentEmoji? emoji = null)
+	public DiscordButtonComponent(
+		ButtonStyle style, string? customId = null, string? label = null,
+		bool disabled = false, DiscordComponentEmoji? emoji = null
+	)
 	{
 		this.Style = style;
 		this.CustomId = customId ?? Guid.NewGuid().ToString();

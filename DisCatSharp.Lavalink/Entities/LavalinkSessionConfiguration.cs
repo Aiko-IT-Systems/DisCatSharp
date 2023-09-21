@@ -36,6 +36,5 @@ public sealed class LavalinkSessionConfiguration
 	/// Constructs a new <see cref="LavalinkSessionConfiguration"/>.
 	/// </summary>
 	internal LavalinkSessionConfiguration()
-	{
-	}
+	{ }
 }

@@ -7,5 +7,4 @@ namespace DisCatSharp.CommandsNext.Attributes;
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public sealed class HiddenAttribute : Attribute
-{
-}
+{ }

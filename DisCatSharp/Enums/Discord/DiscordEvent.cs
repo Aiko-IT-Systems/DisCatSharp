@@ -13,8 +13,7 @@ public class EventAttribute : Attribute
 	internal readonly string? EventName;
 
 	public EventAttribute()
-	{
-	}
+	{ }
 
 	/// <param name="evtn"><para>The name of the event.</para>
 	/// <para>The attributed method's name will be used if null.</para></param>
@@ -29,8 +28,7 @@ public class EventAttribute : Attribute
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public class EventHandlerAttribute : Attribute
-{
-}
+{ }
 
 /// <summary>
 /// All events available in <see cref="DiscordClient"/> for use with <see cref="EventAttribute"/>.

@@ -20,6 +20,5 @@ public class InteractionCreateEventArgs : DiscordEventArgs
 	/// <param name="provider">The provider.</param>
 	public InteractionCreateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

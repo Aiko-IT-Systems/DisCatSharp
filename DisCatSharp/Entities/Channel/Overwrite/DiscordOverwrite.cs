@@ -59,8 +59,8 @@ public class DiscordOverwrite : SnowflakeObject
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task UpdateAsync(Permissions? allow = null, Permissions? deny = null, string reason = null)
 		=> this.Discord.ApiClient.EditChannelPermissionsAsync(this.ChannelId, this.Id, allow ?? this.Allowed,
-		                                                      deny ?? this.Denied,
-		                                                      this.Type.ToString().ToLowerInvariant(), reason);
+			deny ?? this.Denied,
+			this.Type.ToString().ToLowerInvariant(), reason);
 
 	/// <summary>
 	/// Gets the DiscordMember that is affected by this overwrite.
@@ -74,7 +74,7 @@ public class DiscordOverwrite : SnowflakeObject
 		this.Type != OverwriteType.Member
 			? throw new ArgumentException(nameof(this.Type), "This overwrite is for a role, not a member.")
 			: await (await this.Discord.ApiClient.GetChannelAsync(this.ChannelId).ConfigureAwait(false)).Guild
-				  .GetMemberAsync(this.Id).ConfigureAwait(false);
+				.GetMemberAsync(this.Id).ConfigureAwait(false);
 
 	/// <summary>
 	/// Gets the DiscordRole that is affected by this overwrite.
@@ -102,8 +102,7 @@ public class DiscordOverwrite : SnowflakeObject
 	/// Initializes a new instance of the <see cref="DiscordOverwrite"/> class.
 	/// </summary>
 	internal DiscordOverwrite()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Checks whether given permissions are allowed, denied, or not set.

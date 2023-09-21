@@ -50,6 +50,5 @@ public class VoiceReceiveEventArgs : DiscordEventArgs
 	/// </summary>
 	internal VoiceReceiveEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

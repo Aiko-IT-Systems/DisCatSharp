@@ -7,8 +7,7 @@ namespace DisCatSharp.Entities;
 /// Interface for mentionables
 /// </summary>
 public interface IMention
-{
-}
+{ }
 
 /// <summary>
 /// Allows a reply to ping the user being replied to.
@@ -64,8 +63,7 @@ public readonly struct UserMention : IMention
 	/// <param name="user"></param>
 	public UserMention(DiscordUser user)
 		: this(user.Id)
-	{
-	}
+	{ }
 
 	public static implicit operator UserMention(DiscordUser user) => new(user.Id);
 }
@@ -100,8 +98,7 @@ public readonly struct RoleMention : IMention
 	/// <param name="role"></param>
 	public RoleMention(DiscordRole role)
 		: this(role.Id)
-	{
-	}
+	{ }
 
 	public static implicit operator RoleMention(DiscordRole role) => new(role.Id);
 }
@@ -114,12 +111,7 @@ public static class Mentions
 	/// <summary>
 	/// All possible mentions - @everyone + @here, users, and roles.
 	/// </summary>
-	public static IReadOnlyList<IMention> All { get; } = new IMention[]
-	{
-		EveryoneMention.All,
-		UserMention.All,
-		RoleMention.All
-	};
+	public static IReadOnlyList<IMention> All { get; } = new IMention[] { EveryoneMention.All, UserMention.All, RoleMention.All };
 
 	/// <summary>
 	/// No mentions allowed.

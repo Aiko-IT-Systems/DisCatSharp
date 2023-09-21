@@ -19,8 +19,7 @@ public sealed class ApplicationCommandRequireOwnerAttribute : ApplicationCommand
 	/// </summary>
 	[Deprecated("This is deprecated and will be remove in future in favor of RequireTeamXY")]
 	public ApplicationCommandRequireOwnerAttribute()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Runs checks.
@@ -31,7 +30,7 @@ public sealed class ApplicationCommandRequireOwnerAttribute : ApplicationCommand
 		var me = ctx.Client.CurrentUser!;
 
 		return app != null
-			       ? Task.FromResult(app.Members.Any(x => x.Id == ctx.User.Id))
-			       : Task.FromResult(ctx.User.Id == me.Id);
+			? Task.FromResult(app.Members.Any(x => x.Id == ctx.User.Id))
+			: Task.FromResult(ctx.User.Id == me.Id);
 	}
 }

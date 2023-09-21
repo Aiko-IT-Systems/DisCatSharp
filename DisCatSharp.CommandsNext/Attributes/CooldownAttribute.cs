@@ -67,10 +67,10 @@ public sealed class CooldownAttribute : CheckBaseAttribute
 	{
 		var bucket = this.GetBucket(ctx);
 		return bucket == null
-			       ? TimeSpan.Zero
-			       : bucket.RemainingUses > 0
-				       ? TimeSpan.Zero
-				       : bucket.ResetsAt - DateTimeOffset.UtcNow;
+			? TimeSpan.Zero
+			: bucket.RemainingUses > 0
+				? TimeSpan.Zero
+				: bucket.ResetsAt - DateTimeOffset.UtcNow;
 	}
 
 	/// <summary>
@@ -209,8 +209,10 @@ public sealed class CommandCooldownBucket : IEquatable<CommandCooldownBucket>
 	/// <param name="userId">ID of the user with which this cooldown is associated.</param>
 	/// <param name="channelId">ID of the channel with which this cooldown is associated.</param>
 	/// <param name="guildId">ID of the guild with which this cooldown is associated.</param>
-	internal CommandCooldownBucket(int maxUses, TimeSpan resetAfter, ulong userId = 0, ulong channelId = 0,
-	                               ulong guildId = 0)
+	internal CommandCooldownBucket(
+		int maxUses, TimeSpan resetAfter, ulong userId = 0, ulong channelId = 0,
+		ulong guildId = 0
+	)
 	{
 		this._remainingUses = maxUses;
 		this.MaxUses = maxUses;

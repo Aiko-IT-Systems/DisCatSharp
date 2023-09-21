@@ -60,8 +60,7 @@ public sealed class DiscordAccessToken : ObservableApiObject
 	/// Constructs a new <see cref="DiscordAccessToken"/>.
 	/// </summary>
 	internal DiscordAccessToken()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Generates a new <see cref="DiscordAccessToken"/> from json.

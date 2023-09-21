@@ -23,8 +23,10 @@ public abstract class AsyncEventTimeoutException : Exception
 	/// <param name="asyncEvent">The async event.</param>
 	/// <param name="eventHandler">The event handler.</param>
 	/// <param name="message">The message.</param>
-	private protected AsyncEventTimeoutException(AsyncEvent asyncEvent,
-	                                             AsyncEventHandler<object, AsyncEventArgs> eventHandler, string message)
+	private protected AsyncEventTimeoutException(
+		AsyncEvent asyncEvent,
+		AsyncEventHandler<object, AsyncEventArgs> eventHandler, string message
+	)
 		: base(message)
 	{
 		this.Event = asyncEvent;
@@ -56,10 +58,11 @@ public class AsyncEventTimeoutException<TSender, TArgs> : AsyncEventTimeoutExcep
 	/// </summary>
 	/// <param name="asyncEvent">Event the execution of which timed out.</param>
 	/// <param name="eventHandler">Handler which timed out.</param>
-	public AsyncEventTimeoutException(AsyncEvent<TSender, TArgs> asyncEvent,
-	                                  AsyncEventHandler<TSender, TArgs> eventHandler)
+	public AsyncEventTimeoutException(
+		AsyncEvent<TSender, TArgs> asyncEvent,
+		AsyncEventHandler<TSender, TArgs> eventHandler
+	)
 		: base(asyncEvent, eventHandler as AsyncEventHandler<object, AsyncEventArgs>,
-		       "An event handler caused the invocation of an asynchronous event to time out.")
-	{
-	}
+			"An event handler caused the invocation of an asynchronous event to time out.")
+	{ }
 }

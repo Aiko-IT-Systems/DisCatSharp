@@ -44,6 +44,5 @@ public class ComponentInteractionCreateEventArgs : InteractionCreateEventArgs
 	/// </summary>
 	internal ComponentInteractionCreateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

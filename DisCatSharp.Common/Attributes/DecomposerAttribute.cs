@@ -23,7 +23,7 @@ public sealed class DecomposerAttribute : SerializationAttribute
 		    type.IsAbstract) // abstract covers static - static = abstract + sealed
 			throw new
 				ArgumentException("Invalid type specified. Must be a non-abstract class which implements DisCatSharp.Common.Serialization.IDecomposer interface.",
-				                  nameof(type));
+					nameof(type));
 
 		this.DecomposerType = type;
 	}

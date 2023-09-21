@@ -29,6 +29,5 @@ public class ThreadCreateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal ThreadCreateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

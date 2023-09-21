@@ -24,7 +24,7 @@ public sealed class AliasesAttribute : Attribute
 	{
 		if (aliases.Any(xa => xa == null || xa.Any(xc => char.IsWhiteSpace(xc))))
 			throw new ArgumentException("Aliases cannot contain whitespace characters or null strings.",
-			                            nameof(aliases));
+				nameof(aliases));
 
 		this.Aliases = new ReadOnlyCollection<string>(aliases);
 	}

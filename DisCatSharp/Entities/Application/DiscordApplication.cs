@@ -27,8 +27,8 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// </summary>
 	public override string? Icon
 		=> !string.IsNullOrWhiteSpace(this.IconHash)
-			   ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024"
-			   : null;
+			? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024"
+			: null;
 
 	/// <summary>
 	/// Gets the application's icon hash.
@@ -185,8 +185,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// Initializes a new instance of the <see cref="DiscordApplication"/> class.
 	/// </summary>
 	internal DiscordApplication()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Gets the application's cover image URL, in requested format and size.
@@ -216,8 +215,8 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 		};
 		var ssize = size.ToString(CultureInfo.InvariantCulture);
 		return !string.IsNullOrWhiteSpace(this.CoverImageHash)
-			       ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.{sfmt}?size={ssize}"
-			       : null;
+			? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.{sfmt}?size={ssize}"
+			: null;
 	}
 
 	/// <summary>
@@ -349,8 +348,7 @@ public sealed class DiscordApplicationAsset : DiscordAsset, IEquatable<DiscordAp
 	/// Initializes a new instance of the <see cref="DiscordApplicationAsset"/> class.
 	/// </summary>
 	internal DiscordApplicationAsset()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordApplicationAsset"/> class.

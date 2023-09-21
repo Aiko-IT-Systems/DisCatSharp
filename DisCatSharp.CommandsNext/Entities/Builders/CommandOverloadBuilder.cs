@@ -47,8 +47,7 @@ public sealed class CommandOverloadBuilder
 	/// <param name="method">Method to use for this overload.</param>
 	public CommandOverloadBuilder(MethodInfo method)
 		: this(method, null)
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Creates a new command overload builder from specified delegate.
@@ -56,8 +55,7 @@ public sealed class CommandOverloadBuilder
 	/// <param name="method">Delegate to use for this overload.</param>
 	public CommandOverloadBuilder(Delegate method)
 		: this(method.GetMethodInfo(), method.Target)
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Prevents a default instance of the <see cref="CommandOverloadBuilder"/> class from being created.
@@ -123,7 +121,7 @@ public sealed class CommandOverloadBuilder
 
 			if (i > 2 && !ca.IsOptional && !ca.IsCatchAll && args[i - 3].IsOptional)
 				throw new InvalidOverloadException("Non-optional argument cannot appear after an optional one", method,
-				                                   arg);
+					arg);
 
 			if (arg.ParameterType.IsArray && !isParams)
 				throw new InvalidOverloadException("Cannot use array arguments without params modifier.", method, arg);

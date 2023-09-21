@@ -30,6 +30,5 @@ public class UserSpeakingEventArgs : DiscordEventArgs
 	/// </summary>
 	internal UserSpeakingEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

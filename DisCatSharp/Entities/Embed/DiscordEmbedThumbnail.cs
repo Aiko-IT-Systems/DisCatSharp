@@ -37,6 +37,5 @@ public sealed class DiscordEmbedThumbnail : ObservableApiObject
 	/// Initializes a new instance of the <see cref="DiscordEmbedThumbnail"/> class.
 	/// </summary>
 	internal DiscordEmbedThumbnail()
-	{
-	}
+	{ }
 }

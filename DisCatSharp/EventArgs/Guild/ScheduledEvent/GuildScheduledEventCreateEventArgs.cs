@@ -24,6 +24,5 @@ public class GuildScheduledEventCreateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal GuildScheduledEventCreateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

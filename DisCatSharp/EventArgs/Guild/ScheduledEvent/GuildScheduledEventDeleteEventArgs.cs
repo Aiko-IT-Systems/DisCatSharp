@@ -31,6 +31,5 @@ public class GuildScheduledEventDeleteEventArgs : DiscordEventArgs
 	/// </summary>
 	internal GuildScheduledEventDeleteEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

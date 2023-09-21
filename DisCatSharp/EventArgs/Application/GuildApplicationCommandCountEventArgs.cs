@@ -35,6 +35,5 @@ public sealed class GuildApplicationCommandCountEventArgs : DiscordEventArgs
 	/// <param name="provider">The provider.</param>
 	public GuildApplicationCommandCountEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

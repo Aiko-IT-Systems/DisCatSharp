@@ -100,9 +100,9 @@ public sealed class CommandContext
 	internal CommandContext()
 	{
 		this._lazyMember = new(() => this.Guild != null && this.Guild.Members.TryGetValue(this.User.Id, out var member)
-			                             ? member
-			                             : this.Guild?.GetMemberAsync(this.User.Id).ConfigureAwait(false).GetAwaiter()
-				                             .GetResult());
+			? member
+			: this.Guild?.GetMemberAsync(this.User.Id).ConfigureAwait(false).GetAwaiter()
+				.GetResult());
 	}
 
 	/// <summary>

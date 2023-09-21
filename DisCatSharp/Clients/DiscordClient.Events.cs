@@ -1129,24 +1129,26 @@ public sealed partial class DiscordClient
 	/// <param name="handler">The event handler.</param>
 	/// <param name="sender">The sender.</param>
 	/// <param name="eventArgs">The event args.</param>
-	internal void EventErrorHandler<TSender, TArgs>(AsyncEvent<TSender, TArgs> asyncEvent, Exception ex,
-	                                                AsyncEventHandler<TSender, TArgs> handler, TSender sender,
-	                                                TArgs eventArgs)
+	internal void EventErrorHandler<TSender, TArgs>(
+		AsyncEvent<TSender, TArgs> asyncEvent, Exception ex,
+		AsyncEventHandler<TSender, TArgs> handler, TSender sender,
+		TArgs eventArgs
+	)
 		where TArgs : AsyncEventArgs
 	{
 		if (ex is AsyncEventTimeoutException)
 		{
 			this.Logger.LogWarning(LoggerEvents.EventHandlerException,
-			                       "An event handler for {name} took too long to execute. Defined as \"{method}\" located in \"{declaringType}\".",
-			                       asyncEvent.Name,
-			                       handler.Method.ToString()?.Replace(handler.Method.ReturnType.ToString(), "")
-				                       .TrimStart(), handler.Method.DeclaringType);
+				"An event handler for {name} took too long to execute. Defined as \"{method}\" located in \"{declaringType}\".",
+				asyncEvent.Name,
+				handler.Method.ToString()?.Replace(handler.Method.ReturnType.ToString(), "")
+					.TrimStart(), handler.Method.DeclaringType);
 			return;
 		}
 
 		this.Logger.LogError(LoggerEvents.EventHandlerException, ex,
-		                     "Event handler exception for event {name} thrown from {method} (defined in {type})",
-		                     asyncEvent.Name, handler.Method, handler.Method.DeclaringType);
+			"Event handler exception for event {name} thrown from {method} (defined in {type})",
+			asyncEvent.Name, handler.Method, handler.Method.DeclaringType);
 		this._clientErrored.InvokeAsync(this, new(this.ServiceProvider)
 		{
 			EventName = asyncEvent.Name,
@@ -1195,11 +1197,13 @@ public sealed partial class DiscordClient
 	/// <param name="handler">The event handler.</param>
 	/// <param name="sender">The sender.</param>
 	/// <param name="eventArgs">The event args.</param>
-	private void Goof<TSender, TArgs>(AsyncEvent<TSender, TArgs> asyncEvent, Exception ex,
-	                                  AsyncEventHandler<TSender, TArgs> handler, TSender sender, TArgs eventArgs)
+	private void Goof<TSender, TArgs>(
+		AsyncEvent<TSender, TArgs> asyncEvent, Exception ex,
+		AsyncEventHandler<TSender, TArgs> handler, TSender sender, TArgs eventArgs
+	)
 		where TArgs : AsyncEventArgs => this.Logger.LogCritical(LoggerEvents.EventHandlerException, ex,
-		                                                        "Exception event handler {method} (defined in {type}) threw an exception",
-		                                                        handler.Method, handler.Method.DeclaringType);
+		"Exception event handler {method} (defined in {type}) threw an exception",
+		handler.Method, handler.Method.DeclaringType);
 
 #endregion
 }

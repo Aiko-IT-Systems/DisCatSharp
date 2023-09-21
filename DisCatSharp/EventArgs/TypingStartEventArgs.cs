@@ -35,6 +35,5 @@ public class TypingStartEventArgs : DiscordEventArgs
 	/// </summary>
 	internal TypingStartEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

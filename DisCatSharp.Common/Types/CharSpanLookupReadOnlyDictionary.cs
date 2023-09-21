@@ -62,8 +62,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	/// <param name="values">Dictionary containing items to populate this dictionary with.</param>
 	public CharSpanLookupReadOnlyDictionary(IDictionary<string, TValue> values)
 		: this(values as IEnumerable<KeyValuePair<string, TValue>>)
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Creates a new <see cref="CharSpanLookupReadOnlyDictionary{TValue}"/> with string keys and items of type <typeparamref name="TValue"/> and populates it with key-value pairs from supplied dictionary.
@@ -71,8 +70,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	/// <param name="values">Dictionary containing items to populate this dictionary with.</param>
 	public CharSpanLookupReadOnlyDictionary(IReadOnlyDictionary<string, TValue> values)
 		: this(values as IEnumerable<KeyValuePair<string, TValue>>)
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Creates a new <see cref="CharSpanLookupReadOnlyDictionary{TValue}"/> with string keys and items of type <typeparamref name="TValue"/> and populates it with key-value pairs from supplied key-value collection.
@@ -95,8 +93,8 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	/// <returns>Whether the operation was successful.</returns>
 	public bool TryGetValue(string key, out TValue value)
 		=> key == null
-			   ? throw new ArgumentNullException(nameof(key))
-			   : this.TryRetrieveInternal(key.AsSpan(), out value);
+			? throw new ArgumentNullException(nameof(key))
+			: this.TryRetrieveInternal(key.AsSpan(), out value);
 
 	/// <summary>
 	/// Attempts to retrieve a value corresponding to the supplied key from this dictionary.
@@ -232,8 +230,10 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	/// <param name="items">The items.</param>
 	/// <param name="count">The count.</param>
 	/// <returns>An IReadOnlyDictionary.</returns>
-	private static IReadOnlyDictionary<ulong, KeyedValue> PrepareItems(IEnumerable<KeyValuePair<string, TValue>> items,
-	                                                                   out int count)
+	private static IReadOnlyDictionary<ulong, KeyedValue> PrepareItems(
+		IEnumerable<KeyValuePair<string, TValue>> items,
+		out int count
+	)
 	{
 		count = 0;
 		var dict = new Dictionary<ulong, KeyedValue>();

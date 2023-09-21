@@ -60,6 +60,5 @@ public class ScheduledEventEditModel : BaseEditModel
 	/// Initializes a new instance of the <see cref="ScheduledEventEditModel"/> class.
 	/// </summary>
 	internal ScheduledEventEditModel()
-	{
-	}
+	{ }
 }

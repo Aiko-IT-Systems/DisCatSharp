@@ -12,6 +12,5 @@ public sealed class ReadyEventArgs : DiscordEventArgs
 	/// </summary>
 	internal ReadyEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

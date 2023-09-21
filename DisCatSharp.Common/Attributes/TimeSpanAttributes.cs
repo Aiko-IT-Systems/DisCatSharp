@@ -8,8 +8,7 @@ namespace DisCatSharp.Common.Serialization;
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public sealed class TimeSpanSecondsAttribute : SerializationAttribute
-{
-}
+{ }
 
 /// <summary>
 /// <para>Specifies that this <see cref="TimeSpan"/> will be serialized as a number of whole milliseconds.</para>
@@ -17,5 +16,4 @@ public sealed class TimeSpanSecondsAttribute : SerializationAttribute
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public sealed class TimeSpanMillisecondsAttribute : SerializationAttribute
-{
-}
+{ }

@@ -32,8 +32,7 @@ internal sealed class Rtp : IDisposable
 	/// Initializes a new instance of the <see cref="Rtp"/> class.
 	/// </summary>
 	public Rtp()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Encodes the header.
@@ -54,7 +53,7 @@ internal sealed class Rtp : IDisposable
 		BinaryPrimitives.WriteUInt16BigEndian(target[2..], sequence); // header + magic
 		BinaryPrimitives.WriteUInt32BigEndian(target[4..], timestamp); // header + magic + sizeof(sequence)
 		BinaryPrimitives.WriteUInt32BigEndian(target[8..],
-		                                      ssrc); // header + magic + sizeof(sequence) + sizeof(timestamp)
+			ssrc); // header + magic + sizeof(sequence) + sizeof(timestamp)
 	}
 
 	/// <summary>
@@ -74,8 +73,10 @@ internal sealed class Rtp : IDisposable
 	/// <param name="timestamp">The timestamp.</param>
 	/// <param name="ssrc">The ssrc.</param>
 	/// <param name="hasExtension">If true, has extension.</param>
-	public void DecodeHeader(ReadOnlySpan<byte> source, out ushort sequence, out uint timestamp, out uint ssrc,
-	                         out bool hasExtension)
+	public void DecodeHeader(
+		ReadOnlySpan<byte> source, out ushort sequence, out uint timestamp, out uint ssrc,
+		out bool hasExtension
+	)
 	{
 		if (source.Length < HEADER_SIZE)
 			throw new ArgumentException("Header buffer is too short.", nameof(source));
@@ -137,6 +138,5 @@ internal sealed class Rtp : IDisposable
 	/// Disposes the Rtp.
 	/// </summary>
 	public void Dispose()
-	{
-	}
+	{ }
 }

@@ -68,8 +68,7 @@ public class Command
 	/// Initializes a new instance of the <see cref="Command"/> class.
 	/// </summary>
 	internal Command()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Executes this command with specified context.
@@ -86,7 +85,7 @@ public class Command
 			{
 				ctx.Overload = ovl;
 				var args = await CommandsNextUtilities.BindArguments(ctx, ctx.Config.IgnoreExtraArguments)
-					           .ConfigureAwait(false);
+					.ConfigureAwait(false);
 
 				if (!args.IsSuccessful)
 					continue;

@@ -45,7 +45,6 @@ public class NotFoundException : DisCatSharpException
 				this.JsonMessage = j["message"].ToString();
 		}
 		catch (Exception)
-		{
-		}
+		{ }
 	}
 }

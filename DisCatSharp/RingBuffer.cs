@@ -65,8 +65,7 @@ public class RingBuffer<T> : ICollection<T>
 	/// <exception cref="ArgumentOutOfRangeException" />
 	public RingBuffer(IEnumerable<T> elements)
 		: this(elements, 0)
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Creates a new ring buffer, filled with specified elements, and starting at specified index.
@@ -86,7 +85,7 @@ public class RingBuffer<T> : ICollection<T>
 
 		if (this.CurrentIndex >= this.InternalBuffer.Length || this.CurrentIndex < 0)
 			throw new ArgumentOutOfRangeException(nameof(index),
-			                                      "Index must be less than buffer capacity, and greater than zero.");
+				"Index must be less than buffer capacity, and greater than zero.");
 	}
 
 	/// <summary>
@@ -165,7 +164,7 @@ public class RingBuffer<T> : ICollection<T>
 	{
 		if (array.Length - index < 1)
 			throw new ArgumentException("Target array is too small to contain the elements from this buffer.",
-			                            nameof(array));
+				nameof(array));
 
 		var ci = 0;
 		for (var i = this.CurrentIndex; i < this.InternalBuffer.Length; i++)

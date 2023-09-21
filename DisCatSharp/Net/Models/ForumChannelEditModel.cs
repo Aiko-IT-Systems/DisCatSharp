@@ -91,6 +91,5 @@ public class ForumChannelEditModel : BaseEditModel
 	/// Initializes a new instance of the <see cref="ChannelEditModel"/> class.
 	/// </summary>
 	internal ForumChannelEditModel()
-	{
-	}
+	{ }
 }

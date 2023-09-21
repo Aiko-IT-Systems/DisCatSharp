@@ -25,6 +25,5 @@ public class DiscordMessageActivity : ObservableApiObject
 	/// Initializes a new instance of the <see cref="DiscordMessageActivity"/> class.
 	/// </summary>
 	internal DiscordMessageActivity()
-	{
-	}
+	{ }
 }

@@ -135,7 +135,8 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 		DiscordApplicationCommandLocalization? descriptionLocalizations = null,
 		Permissions? defaultMemberPermissions = null, bool? dmPermission = null, bool isNsfw = false,
 		List<ApplicationCommandContexts>? allowedContexts = null,
-		List<ApplicationCommandIntegrationTypes>? integrationTypes = null)
+		List<ApplicationCommandIntegrationTypes>? integrationTypes = null
+	)
 		: base(new()
 		{
 			"guild_id"
@@ -146,12 +147,12 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 			if (!Utilities.IsValidSlashCommandName(name))
 				throw new
 					ArgumentException("Invalid slash command name specified. It must be below 32 characters and not contain any whitespace.",
-					                  nameof(name));
+						nameof(name));
 			if (name.Any(char.IsUpper))
 				throw new ArgumentException("Slash command name cannot have any upper case characters.", nameof(name));
 			if (description is { Length: > 100 })
 				throw new ArgumentException("Slash command description cannot exceed 100 characters.",
-				                            nameof(description));
+					nameof(description));
 			if (string.IsNullOrWhiteSpace(description))
 				throw new ArgumentException("Slash commands need a description.", nameof(description));
 
@@ -192,8 +193,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 			"name_localizations",
 			"description_localizations"
 		}) // Why tf is that so inconsistent?!
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordApplicationCommand"/> object is equal to another object.

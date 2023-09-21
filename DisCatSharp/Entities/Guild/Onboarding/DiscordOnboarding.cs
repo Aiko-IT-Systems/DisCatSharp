@@ -64,6 +64,5 @@ public sealed class DiscordOnboarding : ObservableApiObject
 			"onboarding_prompts_seen",
 			"onboarding_responses_seen"
 		})
-	{
-	}
+	{ }
 }

@@ -181,7 +181,7 @@ public class CommandsNextExtension : BaseExtension
 			this.Client.MessageCreated += this.HandleCommandsAsync;
 		else
 			this.Client.Logger.LogWarning(CommandsNextEvents.Misc,
-			                              "Not attaching default command handler - if this is intentional, you can ignore this message");
+				"Not attaching default command handler - if this is intentional, you can ignore this message");
 
 		if (this._config.EnableDefaultHelp)
 		{
@@ -227,9 +227,9 @@ public class CommandsNextExtension : BaseExtension
 			foreach (var pfix in this._config.StringPrefixes)
 				if (mpos == -1 && !string.IsNullOrWhiteSpace(pfix))
 					mpos = e.Message.GetStringPrefixLength(pfix,
-					                                       this._config.CaseSensitive
-						                                       ? StringComparison.Ordinal
-						                                       : StringComparison.OrdinalIgnoreCase);
+						this._config.CaseSensitive
+							? StringComparison.Ordinal
+							: StringComparison.OrdinalIgnoreCase);
 
 		if (mpos == -1 && this._config.PrefixResolver != null)
 			mpos = await this._config.PrefixResolver(e.Message).ConfigureAwait(false);
@@ -308,9 +308,7 @@ public class CommandsNextExtension : BaseExtension
 				                                       x.Aliases?.Any(xx => xx.ToLowerInvariant() == next) == true);
 			}
 			else
-			{
 				cmd = cm2.Children.FirstOrDefault(x => x.Name == next || x.Aliases?.Contains(next) == true);
-			}
 
 			if (cmd == null)
 			{
@@ -481,9 +479,11 @@ public class CommandsNextExtension : BaseExtension
 	/// <param name="currentParent">The current parent.</param>
 	/// <param name="inheritedChecks">The inherited checks.</param>
 	/// <param name="foundCommands">The found commands.</param>
-	private void RegisterCommands(Type t, CommandGroupBuilder currentParent,
-	                              IEnumerable<CheckBaseAttribute> inheritedChecks,
-	                              out List<CommandBuilder> foundCommands)
+	private void RegisterCommands(
+		Type t, CommandGroupBuilder currentParent,
+		IEnumerable<CheckBaseAttribute> inheritedChecks,
+		out List<CommandBuilder> foundCommands
+	)
 	{
 		var ti = t.GetTypeInfo();
 
@@ -648,9 +648,9 @@ public class CommandsNextExtension : BaseExtension
 		foreach (var type in types)
 		{
 			this.RegisterCommands(type.AsType(),
-			                      groupBuilder,
-			                      !isModule ? moduleChecks : null,
-			                      out var tempCommands);
+				groupBuilder,
+				!isModule ? moduleChecks : null,
+				out var tempCommands);
 
 			if (isModule)
 				foreach (var chk in moduleChecks)
@@ -730,8 +730,10 @@ public class CommandsNextExtension : BaseExtension
 		/// <param name="command">The command.</param>
 		/// <returns>A Task.</returns>
 		[Command("help"), Description("Displays command help.")]
-		public async Task DefaultHelpAsync(CommandContext ctx,
-		                                   [Description("Command to provide help for.")] params string[] command)
+		public async Task DefaultHelpAsync(
+			CommandContext ctx,
+			[Description("Command to provide help for.")] params string[] command
+		)
 		{
 			var topLevel = ctx.CommandsNext._topLevelCommands.Values.Distinct();
 			var helpBuilder = ctx.CommandsNext._helpFormatter.Create(ctx);
@@ -749,12 +751,12 @@ public class CommandsNextExtension : BaseExtension
 					}
 
 					cmd = ctx.Config.CaseSensitive
-						      ? searchIn.FirstOrDefault(xc => xc.Name == c ||
-						                                      (xc.Aliases != null && xc.Aliases.Contains(c)))
-						      : searchIn.FirstOrDefault(xc => xc.Name.ToLowerInvariant() == c.ToLowerInvariant() ||
-						                                      (xc.Aliases != null && xc.Aliases
-							                                       .Select(xs => xs.ToLowerInvariant())
-							                                       .Contains(c.ToLowerInvariant())));
+						? searchIn.FirstOrDefault(xc => xc.Name == c ||
+						                                (xc.Aliases != null && xc.Aliases.Contains(c)))
+						: searchIn.FirstOrDefault(xc => xc.Name.ToLowerInvariant() == c.ToLowerInvariant() ||
+						                                (xc.Aliases != null && xc.Aliases
+							                                .Select(xs => xs.ToLowerInvariant())
+							                                .Contains(c.ToLowerInvariant())));
 
 					if (cmd == null)
 						break;
@@ -839,8 +841,10 @@ public class CommandsNextExtension : BaseExtension
 	/// <param name="cmd">Command to execute.</param>
 	/// <param name="rawArguments">Raw arguments to pass to command.</param>
 	/// <returns>Created fake context.</returns>
-	public CommandContext CreateFakeContext(DiscordUser actor, DiscordChannel channel, string messageContents,
-	                                        string prefix, Command cmd, string rawArguments = null)
+	public CommandContext CreateFakeContext(
+		DiscordUser actor, DiscordChannel channel, string messageContents,
+		string prefix, Command cmd, string rawArguments = null
+	)
 	{
 		var epoch = new DateTimeOffset(2015, 1, 1, 0, 0, 0, TimeSpan.Zero);
 		var now = DateTimeOffset.UtcNow;
@@ -879,10 +883,8 @@ public class CommandsNextExtension : BaseExtension
 					.ToList();
 			}
 			else
-			{
 				mentionedUsers = Utilities.GetUserMentions(msg).Select(this.Client.GetCachedOrEmptyUserInternal)
 					.ToList();
-			}
 		}
 
 		msg.MentionedUsersInternal = mentionedUsers;
@@ -933,8 +935,8 @@ public class CommandsNextExtension : BaseExtension
 
 		var cvr = await cv.ConvertAsync(value, ctx).ConfigureAwait(false);
 		return !cvr.HasValue
-			       ? throw new ArgumentException("Could not convert specified value to given type.", nameof(value))
-			       : cvr.Value;
+			? throw new ArgumentException("Could not convert specified value to given type.", nameof(value))
+			: cvr.Value;
 	}
 
 	/// <summary>
@@ -949,11 +951,7 @@ public class CommandsNextExtension : BaseExtension
 		var m = this._convertGeneric.MakeGenericMethod(type);
 		try
 		{
-			return await (m.Invoke(this, new object[]
-				             {
-					             value,
-					             ctx
-				             }) as Task<object>).ConfigureAwait(false);
+			return await (m.Invoke(this, new object[] { value, ctx }) as Task<object>).ConfigureAwait(false);
 		}
 		catch (TargetInvocationException ex)
 		{
@@ -1070,8 +1068,8 @@ public class CommandsNextExtension : BaseExtension
 	/// <returns>A string comparer.</returns>
 	internal IEqualityComparer<string> GetStringComparer()
 		=> this._config.CaseSensitive
-			   ? StringComparer.Ordinal
-			   : StringComparer.OrdinalIgnoreCase;
+			? StringComparer.Ordinal
+			: StringComparer.OrdinalIgnoreCase;
 
 #endregion
 

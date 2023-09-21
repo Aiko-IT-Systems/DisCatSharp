@@ -264,8 +264,8 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <returns>Whether the operation was successful.</returns>
 	public bool TryGetValue(string key, out TValue value)
 		=> key == null
-			   ? throw new ArgumentNullException(nameof(key))
-			   : this.TryRetrieveInternal(key.AsSpan(), out value);
+			? throw new ArgumentNullException(nameof(key))
+			: this.TryRetrieveInternal(key.AsSpan(), out value);
 
 	/// <summary>
 	/// Attempts to retrieve a value corresponding to the supplied key from this dictionary.
@@ -284,8 +284,8 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <returns>Whether the operation was successful.</returns>
 	public bool TryRemove(string key, out TValue value)
 		=> key == null
-			   ? throw new ArgumentNullException(nameof(key))
-			   : this.TryRemoveInternal(key.AsSpan(), out value);
+			? throw new ArgumentNullException(nameof(key))
+			: this.TryRemoveInternal(key.AsSpan(), out value);
 
 	/// <summary>
 	/// Attempts to remove a value corresponding to the supplied key from this dictionary.
@@ -375,8 +375,8 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <returns>A bool.</returns>
 	bool IDictionary.Contains(object key)
 		=> key is not string tkey
-			   ? throw new ArgumentException("Key needs to be an instance of a string.")
-			   : this.ContainsKey(tkey);
+			? throw new ArgumentException("Key needs to be an instance of a string.")
+			: this.ContainsKey(tkey);
 
 	/// <summary>
 	/// Gets the enumerator.

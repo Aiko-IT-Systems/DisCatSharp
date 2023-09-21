@@ -117,9 +117,9 @@ public class AutomodRule : SnowflakeObject
 		}
 
 		return await this.Discord.ApiClient
-			       .ModifyAutomodRuleAsync(this.GuildId, this.Id, mdl.Name, mdl.EventType, mdl.TriggerMetadata,
-			                               mdl.Actions, mdl.Enabled, mdl.ExemptRoles, mdl.ExemptChannels,
-			                               mdl.AuditLogReason).ConfigureAwait(false);
+			.ModifyAutomodRuleAsync(this.GuildId, this.Id, mdl.Name, mdl.EventType, mdl.TriggerMetadata,
+				mdl.Actions, mdl.Enabled, mdl.ExemptRoles, mdl.ExemptChannels,
+				mdl.AuditLogReason).ConfigureAwait(false);
 	}
 
 	/// <summary>

@@ -50,6 +50,5 @@ public class GuildMembersChunkEventArgs : DiscordEventArgs
 	/// </summary>
 	internal GuildMembersChunkEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

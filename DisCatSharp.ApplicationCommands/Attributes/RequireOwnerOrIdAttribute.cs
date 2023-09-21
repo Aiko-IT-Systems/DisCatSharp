@@ -41,8 +41,8 @@ public sealed class ApplicationCommandRequireOwnerOrIdAttribute : ApplicationCom
 		var me = ctx.Client.CurrentUser!;
 
 		var owner = app != null
-			            ? Task.FromResult(app.Members.Any(x => x.Id == ctx.User.Id))
-			            : Task.FromResult(ctx.User.Id == me.Id);
+			? Task.FromResult(app.Members.Any(x => x.Id == ctx.User.Id))
+			: Task.FromResult(ctx.User.Id == me.Id);
 
 		var allowed = this.UserIds.Contains(ctx.User.Id);
 

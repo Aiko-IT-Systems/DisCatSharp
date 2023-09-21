@@ -59,9 +59,11 @@ public class DiscordBaseSelectComponent : DiscordComponent
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this select component should be initialized as being disabled. User sees a greyed out select component that cannot be interacted with.</param>
 	/// <param name="defaultValues">The default values of this select menu. Not valid for <see cref="ComponentType.StringSelect"/>.</param>
-	internal DiscordBaseSelectComponent(ComponentType type, string placeholder, string customId = null,
-	                                    int minOptions = 1, int maxOptions = 1, bool disabled = false,
-	                                    IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
+	internal DiscordBaseSelectComponent(
+		ComponentType type, string placeholder, string customId = null,
+		int minOptions = 1, int maxOptions = 1, bool disabled = false,
+		IEnumerable<DiscordSelectDefaultValue>? defaultValues = null
+	)
 	{
 		this.Type = type;
 		this.CustomId = customId ?? Guid.NewGuid().ToString();
@@ -83,6 +85,7 @@ public class DiscordBaseSelectComponent : DiscordComponent
 			if (type == ComponentType.RoleSelect && defaultValues.Any(x => x.Type != "role"))
 				throw new ArgumentException("The default values for a role select menus must be of type role.", nameof(defaultValues));
 		}
+
 		this.DefaultValues = defaultValues?.ToList();
 	}
 
@@ -97,9 +100,11 @@ public class DiscordBaseSelectComponent : DiscordComponent
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this select component should be initialized as being disabled. User sees a greyed out select component that cannot be interacted with.</param>
 	/// <param name="defaultValues">The default values of this select menu. Not valid for <see cref="ComponentType.StringSelect"/>.</param>
-	internal DiscordBaseSelectComponent(ComponentType type, string label, string placeholder, string customId = null,
-	                                    int minOptions = 1, int maxOptions = 1, bool disabled = false,
-	                                    IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
+	internal DiscordBaseSelectComponent(
+		ComponentType type, string label, string placeholder, string customId = null,
+		int minOptions = 1, int maxOptions = 1, bool disabled = false,
+		IEnumerable<DiscordSelectDefaultValue>? defaultValues = null
+	)
 	{
 		this.Type = type;
 		this.Label = label;
@@ -122,10 +127,10 @@ public class DiscordBaseSelectComponent : DiscordComponent
 			if (type == ComponentType.RoleSelect && defaultValues.Any(x => x.Type != "role"))
 				throw new ArgumentException("The default values for a role select menus must be of type role.", nameof(defaultValues));
 		}
+
 		this.DefaultValues = defaultValues?.ToList();
 	}
 
 	internal DiscordBaseSelectComponent()
-	{
-	}
+	{ }
 }

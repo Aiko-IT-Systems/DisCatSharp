@@ -95,6 +95,5 @@ public class DiscordVoiceRegion : ObservableApiObject
 	/// Initializes a new instance of the <see cref="DiscordVoiceRegion"/> class.
 	/// </summary>
 	internal DiscordVoiceRegion()
-	{
-	}
+	{ }
 }

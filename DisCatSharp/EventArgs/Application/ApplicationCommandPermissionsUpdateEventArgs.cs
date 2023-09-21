@@ -36,6 +36,5 @@ public sealed class ApplicationCommandPermissionsUpdateEventArgs : DiscordEventA
 	/// <param name="provider">The provider.</param>
 	public ApplicationCommandPermissionsUpdateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

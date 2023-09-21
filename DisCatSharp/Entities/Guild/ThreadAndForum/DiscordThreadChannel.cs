@@ -100,8 +100,7 @@ public class DiscordThreadChannel : DiscordChannel
 			"hashes",
 			"guild_hashes"
 		})
-	{
-	}
+	{ }
 
 #region Methods
 
@@ -120,11 +119,11 @@ public class DiscordThreadChannel : DiscordChannel
 		action(mdl);
 
 		return this.Parent.Type == ChannelType.Forum && mdl.AppliedTags.HasValue && mdl.AppliedTags.Value.Count() > 5
-			       ? throw new NotSupportedException("Cannot have more than 5 applied tags.")
-			       : this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, mdl.Name, mdl.Locked,
-			                                                  mdl.Archived, mdl.PerUserRateLimit,
-			                                                  mdl.AutoArchiveDuration, mdl.Invitable, mdl.AppliedTags,
-			                                                  mdl.Pinned, mdl.AuditLogReason);
+			? throw new NotSupportedException("Cannot have more than 5 applied tags.")
+			: this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, mdl.Name, mdl.Locked,
+				mdl.Archived, mdl.PerUserRateLimit,
+				mdl.AutoArchiveDuration, mdl.Invitable, mdl.AppliedTags,
+				mdl.Pinned, mdl.AuditLogReason);
 	}
 
 	/// <summary>
@@ -138,12 +137,12 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task AddTagAsync(ForumPostTag tag, string reason = null)
 		=> this.AppliedTagIds.Count == 5
-			   ? throw new NotSupportedException("Cannot have more than 5 applied tags.")
-			   : this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, null, null, null, null,
-			                                              new List<ForumPostTag>(this.AppliedTags)
-			                                              {
-				                                              tag
-			                                              }, null, reason);
+			? throw new NotSupportedException("Cannot have more than 5 applied tags.")
+			: this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, null, null, null, null,
+				new List<ForumPostTag>(this.AppliedTags)
+				{
+					tag
+				}, null, reason);
 
 	/// <summary>
 	/// Remove a tag from the current thread.
@@ -156,9 +155,9 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task RemoveTagAsync(ForumPostTag tag, string reason = null)
 		=> await this.Discord.ApiClient
-			   .ModifyThreadAsync(this.Id, this.Parent.Type, null, null, null, null, null, null,
-			                      new List<ForumPostTag>(this.AppliedTags).Where(x => x != tag).ToList(), null, reason)
-			   .ConfigureAwait(false);
+			.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, null, null, null, null,
+				new List<ForumPostTag>(this.AppliedTags).Where(x => x != tag).ToList(), null, reason)
+			.ConfigureAwait(false);
 
 	/// <summary>
 	/// Archives a thread.
@@ -171,10 +170,12 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	[DiscordDeprecated("The locked parameter will be removed soon and is not applied anymore.")]
 	public Task ArchiveAsync(
-		[DiscordDeprecated("The locked parameter will be removed soon and is not applied anymore.")] bool locked = true,
-		string reason = null)
+		[DiscordDeprecated("The locked parameter will be removed soon and is not applied anymore.")]
+		bool locked = true,
+		string reason = null
+	)
 		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, true, null, null, null, null,
-		                                            null, reason);
+			null, reason);
 
 	/// <summary>
 	/// Unarchives a thread.
@@ -185,7 +186,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task UnarchiveAsync(string reason = null)
 		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, false, null, null, null,
-		                                            null, null, reason);
+			null, null, reason);
 
 	/// <summary>
 	/// Locks a thread.
@@ -197,7 +198,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task LockAsync(string reason = null)
 		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, true, null, null, null, null, null,
-		                                            null, reason);
+			null, reason);
 
 	/// <summary>
 	/// Unlocks a thread.
@@ -208,7 +209,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task UnlockAsync(string reason = null)
 		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, false, true, null, null, null,
-		                                            null, null, reason);
+			null, null, reason);
 
 	/// <summary>
 	/// Gets the members of a thread. Needs the <see cref="DiscordIntents.GuildMembers"/> intent.
@@ -220,7 +221,8 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<IReadOnlyList<DiscordThreadChannelMember>> GetMembersAsync(
-		bool withMember = false, ulong? after = null, int? limit = null)
+		bool withMember = false, ulong? after = null, int? limit = null
+	)
 		=> await this.Discord.ApiClient.GetThreadMembersAsync(this.Id).ConfigureAwait(false);
 
 	/// <summary>

@@ -36,8 +36,8 @@ public sealed class DisCatSharpTeam : SnowflakeObject
 	/// </summary>
 	public string Icon
 		=> !string.IsNullOrWhiteSpace(this.IconHash)
-			   ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.TEAM_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024"
-			   : null;
+			? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.TEAM_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024"
+			: null;
 
 	/// <summary>
 	/// Gets the team's icon's hash.
@@ -49,8 +49,8 @@ public sealed class DisCatSharpTeam : SnowflakeObject
 	/// </summary>
 	public string Logo
 		=> !string.IsNullOrWhiteSpace(this.LogoHash)
-			   ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}/{this.LogoHash}.png?size=1024"
-			   : null;
+			? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}/{this.LogoHash}.png?size=1024"
+			: null;
 
 	/// <summary>
 	/// Gets the team's logo's hash.
@@ -62,8 +62,8 @@ public sealed class DisCatSharpTeam : SnowflakeObject
 	/// </summary>
 	public string Banner
 		=> !string.IsNullOrWhiteSpace(this.BannerHash)
-			   ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.png?size=1024"
-			   : null;
+			? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.png?size=1024"
+			: null;
 
 	/// <summary>
 	/// Gets the team's banner's hash.
@@ -126,7 +126,7 @@ public sealed class DisCatSharpTeam : SnowflakeObject
 		{
 			var dcs = await http.GetStringAsync(new Uri("https://dcs.aitsys.dev/api/devs/")).ConfigureAwait(false);
 			var dcsGuild = await http.GetStringAsync(new Uri("https://dcs.aitsys.dev/api/guild/"))
-				               .ConfigureAwait(false);
+				.ConfigureAwait(false);
 
 			var app = JsonConvert.DeserializeObject<TransportApplication>(dcs);
 			var guild = JsonConvert.DeserializeObject<DiscordGuild>(dcsGuild);
@@ -163,7 +163,6 @@ public sealed class DisCatSharpTeam : SnowflakeObject
 					team.Add(owner);
 				}
 				else
-				{
 					team.Add(new()
 					{
 						Id = user.Id,
@@ -173,7 +172,6 @@ public sealed class DisCatSharpTeam : SnowflakeObject
 						BannerHash = tuser.BannerHash,
 						BannerColorInternal = tuser.BannerColorInternal
 					});
-				}
 			}
 
 			dcst.Owner = owner;
@@ -191,6 +189,5 @@ public sealed class DisCatSharpTeam : SnowflakeObject
 	}
 
 	private DisCatSharpTeam()
-	{
-	}
+	{ }
 }

@@ -274,8 +274,10 @@ public sealed class DiscordMessageBuilder
 	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The current builder to be chained.</returns>
-	public DiscordMessageBuilder WithFile(string fileName, Stream stream, bool resetStreamPosition = false,
-	                                      string description = null)
+	public DiscordMessageBuilder WithFile(
+		string fileName, Stream stream, bool resetStreamPosition = false,
+		string description = null
+	)
 	{
 		if (this.Files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -298,8 +300,10 @@ public sealed class DiscordMessageBuilder
 	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The current builder to be chained.</returns>
-	public DiscordMessageBuilder WithFile(FileStream stream, bool resetStreamPosition = false,
-	                                      string description = null)
+	public DiscordMessageBuilder WithFile(
+		FileStream stream, bool resetStreamPosition = false,
+		string description = null
+	)
 	{
 		if (this.Files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");

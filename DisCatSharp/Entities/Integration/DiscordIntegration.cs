@@ -111,6 +111,5 @@ public class DiscordIntegration : SnowflakeObject
 	/// Initializes a new instance of the <see cref="DiscordIntegration"/> class.
 	/// </summary>
 	internal DiscordIntegration()
-	{
-	}
+	{ }
 }

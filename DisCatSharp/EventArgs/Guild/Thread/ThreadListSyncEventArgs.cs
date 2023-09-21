@@ -35,6 +35,5 @@ public class ThreadListSyncEventArgs : DiscordEventArgs
 	/// </summary>
 	internal ThreadListSyncEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

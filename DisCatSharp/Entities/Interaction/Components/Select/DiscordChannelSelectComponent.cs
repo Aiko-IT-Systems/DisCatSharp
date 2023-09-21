@@ -51,10 +51,12 @@ public sealed class DiscordChannelSelectComponent : DiscordBaseSelectComponent
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this select component should be initialized as being disabled. User sees a greyed out select component that cannot be interacted with.</param>
 	/// <param name="defaultValues">The default values of this select menu.</param>
-	public DiscordChannelSelectComponent(string placeholder, IEnumerable<ChannelType> channelTypes = null,
-	                                     string customId = null, int minOptions = 1, int maxOptions = 1,
-	                                     bool disabled = false,
-	                                     IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
+	public DiscordChannelSelectComponent(
+		string placeholder, IEnumerable<ChannelType> channelTypes = null,
+		string customId = null, int minOptions = 1, int maxOptions = 1,
+		bool disabled = false,
+		IEnumerable<DiscordSelectDefaultValue>? defaultValues = null
+	)
 		: base(ComponentType.ChannelSelect, placeholder, customId, minOptions, maxOptions, disabled, defaultValues)
 	{
 		this.ChannelTypes = channelTypes?.ToArray() ?? Array.Empty<ChannelType>();
@@ -71,12 +73,14 @@ public sealed class DiscordChannelSelectComponent : DiscordBaseSelectComponent
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this select component should be initialized as being disabled. User sees a greyed out select component that cannot be interacted with.</param>
 	/// <param name="defaultValues">The default values of this select menu.</param>
-	public DiscordChannelSelectComponent(string label, string placeholder, IEnumerable<ChannelType> channelTypes = null,
-	                                     string customId = null, int minOptions = 1, int maxOptions = 1,
-	                                     bool disabled = false,
-	                                     IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
+	public DiscordChannelSelectComponent(
+		string label, string placeholder, IEnumerable<ChannelType> channelTypes = null,
+		string customId = null, int minOptions = 1, int maxOptions = 1,
+		bool disabled = false,
+		IEnumerable<DiscordSelectDefaultValue>? defaultValues = null
+	)
 		: base(ComponentType.ChannelSelect, label, placeholder, customId, minOptions, maxOptions, disabled,
-		       defaultValues)
+			defaultValues)
 	{
 		this.ChannelTypes = channelTypes?.ToArray() ?? Array.Empty<ChannelType>();
 	}

@@ -24,6 +24,5 @@ public class ChannelCreateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal ChannelCreateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

@@ -84,17 +84,19 @@ internal sealed class Opus : IDisposable
 	/// <param name="target">The target.</param>
 	/// <param name="useFec">If true, use fec.</param>
 	/// <param name="outputFormat">The output format.</param>
-	public void Decode(OpusDecoder decoder, ReadOnlySpan<byte> opus, ref Span<byte> target, bool useFec,
-	                   out AudioFormat outputFormat)
+	public void Decode(
+		OpusDecoder decoder, ReadOnlySpan<byte> opus, ref Span<byte> target, bool useFec,
+		out AudioFormat outputFormat
+	)
 	{
 		//if (target.Length != this.AudioFormat.CalculateMaximumFrameSize())
 		//    throw new ArgumentException("PCM target buffer size needs to be equal to maximum buffer size for specified audio format.", nameof(target));
 
 		Interop.OpusGetPacketMetrics(opus, this.AudioFormat.SampleRate, out var channels, out var frames,
-		                             out var samplesPerFrame, out var frameSize);
+			out var samplesPerFrame, out var frameSize);
 		outputFormat = this.AudioFormat.ChannelCount != channels
-			               ? new(this.AudioFormat.SampleRate, channels, this.AudioFormat.VoiceApplication)
-			               : this.AudioFormat;
+			? new(this.AudioFormat.SampleRate, channels, this.AudioFormat.VoiceApplication)
+			: this.AudioFormat;
 
 		if (decoder.AudioFormat.ChannelCount != channels)
 			decoder.Initialize(outputFormat);

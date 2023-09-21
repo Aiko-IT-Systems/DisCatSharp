@@ -60,7 +60,7 @@ internal class ComponentEventWaiter : IDisposable
 		catch (Exception e)
 		{
 			this._client.Logger.LogError(InteractivityEvents.InteractivityWaitError, e,
-			                             "An exception was thrown while waiting for components.");
+				"An exception was thrown while waiting for components.");
 			return null;
 		}
 		finally
@@ -75,7 +75,8 @@ internal class ComponentEventWaiter : IDisposable
 	/// <param name="request">The request to wait on.</param>
 	/// <returns>The result from request's predicate over the period of time leading up to the token's cancellation.</returns>
 	public async Task<IReadOnlyList<ComponentInteractionCreateEventArgs>> CollectMatchesAsync(
-		ComponentCollectRequest request)
+		ComponentCollectRequest request
+	)
 	{
 		this._collectRequests.Add(request);
 		try
@@ -85,7 +86,7 @@ internal class ComponentEventWaiter : IDisposable
 		catch (Exception e)
 		{
 			this._client.Logger.LogError(InteractivityEvents.InteractivityCollectorError, e,
-			                             "There was an error while collecting component event args.");
+				"There was an error while collecting component event args.");
 		}
 		finally
 		{
@@ -108,7 +109,6 @@ internal class ComponentEventWaiter : IDisposable
 
 			else if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
 				await args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
-
 
 		foreach (var creq in this._collectRequests.Where(creq => creq.Message == args.Message && creq.IsMatch(args)))
 		{

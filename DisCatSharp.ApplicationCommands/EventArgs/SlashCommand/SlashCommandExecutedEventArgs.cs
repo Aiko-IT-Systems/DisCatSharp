@@ -21,6 +21,5 @@ public class SlashCommandExecutedEventArgs : DiscordEventArgs
 	/// <param name="provider">The provider.</param>
 	public SlashCommandExecutedEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

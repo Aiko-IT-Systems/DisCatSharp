@@ -25,7 +25,8 @@ internal static class LavalinkJson
 	/// <typeparam name="T">The type of the object to deserialize to.</typeparam>
 	/// <param name="value">The object to deserialize.</param>
 	/// <returns>The deserialized object from the JSON string.</returns>
-	[DebuggerStepThrough] public static T? DeserializeObject<T>(string value)
+	[DebuggerStepThrough]
+	public static T? DeserializeObject<T>(string value)
 		=> JsonConvert.DeserializeObject<T>(value, s_setting);
 
 	/// <summary>
@@ -34,6 +35,7 @@ internal static class LavalinkJson
 	/// <param name="value">The object to serialize.</param>
 	/// <param name="formatting">Indicates how the output should be formatted. Defaults to <see cref="Formatting.Indented"/>.</param>
 	/// <returns>A JSON string representation of the object.</returns>
-	[DebuggerStepThrough] public static string SerializeObject(object? value, Formatting formatting = Formatting.None)
+	[DebuggerStepThrough]
+	public static string SerializeObject(object? value, Formatting formatting = Formatting.None)
 		=> JsonConvert.SerializeObject(value, formatting, s_setting);
 }

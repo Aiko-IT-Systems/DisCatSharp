@@ -160,12 +160,8 @@ public static class DiscordJson
 				Username = discord.CurrentUser.UsernameWithDiscriminator,
 				Other = new Dictionary<string, string>()
 				{
-					{
-						"developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given"
-					},
-					{
-						"email", discord.Configuration.FeedbackEmail ?? "not_given"
-					}
+					{ "developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
+					{ "email", discord.Configuration.FeedbackEmail ?? "not_given" }
 				}
 			};
 		var sid = discord.Sentry.CaptureEvent(sentryEvent);
@@ -242,12 +238,8 @@ public static class DiscordJson
 				Username = discord.CurrentUser.UsernameWithDiscriminator,
 				Other = new Dictionary<string, string>()
 				{
-					{
-						"developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given"
-					},
-					{
-						"email", discord.Configuration.FeedbackEmail ?? "not_given"
-					}
+					{ "developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
+					{ "email", discord.Configuration.FeedbackEmail ?? "not_given" }
 				}
 			};
 		var sid = discord.Sentry.CaptureEvent(sentryEvent);

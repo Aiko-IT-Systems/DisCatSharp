@@ -36,9 +36,11 @@ internal class ButtonPaginationRequest : IPaginationRequest
 	/// <param name="buttons">The buttons.</param>
 	/// <param name="pages">The pages.</param>
 	/// <param name="token">The token.</param>
-	public ButtonPaginationRequest(DiscordMessage message, DiscordUser user,
-	                               PaginationBehaviour behavior, ButtonPaginationBehavior buttonBehavior,
-	                               PaginationButtons buttons, IEnumerable<Page> pages, CancellationToken token)
+	public ButtonPaginationRequest(
+		DiscordMessage message, DiscordUser user,
+		PaginationBehaviour behavior, ButtonPaginationBehavior buttonBehavior,
+		PaginationButtons buttons, IEnumerable<Page> pages, CancellationToken token
+	)
 	{
 		this._user = user;
 		this._token = token;

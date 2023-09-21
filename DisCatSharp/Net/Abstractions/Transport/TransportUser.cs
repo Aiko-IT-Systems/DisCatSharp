@@ -150,8 +150,7 @@ internal class TransportUser : ObservableApiObject
 			"linked_users",
 			"banner_color"
 		})
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="TransportUser"/> class from an existing <see cref="TransportUser"/>.

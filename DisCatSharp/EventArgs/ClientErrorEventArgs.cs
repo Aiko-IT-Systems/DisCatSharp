@@ -22,6 +22,5 @@ public class ClientErrorEventArgs : DiscordEventArgs
 	/// </summary>
 	internal ClientErrorEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

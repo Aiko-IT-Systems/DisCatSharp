@@ -24,6 +24,5 @@ public class GuildRoleCreateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal GuildRoleCreateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

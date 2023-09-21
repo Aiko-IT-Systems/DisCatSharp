@@ -64,6 +64,5 @@ public sealed class DiscordStickerPack : SnowflakeObject
 	/// Initializes a new instance of the <see cref="DiscordStickerPack"/> class.
 	/// </summary>
 	internal DiscordStickerPack()
-	{
-	}
+	{ }
 }

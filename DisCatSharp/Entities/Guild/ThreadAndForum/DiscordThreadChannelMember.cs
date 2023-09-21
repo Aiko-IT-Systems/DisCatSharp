@@ -37,9 +37,9 @@ public class DiscordThreadChannelMember : SnowflakeObject, IEquatable<DiscordThr
 	public DateTimeOffset? JoinTimeStamp
 		=> !string.IsNullOrWhiteSpace(this.JoinTimeStampRaw) &&
 		   DateTimeOffset.TryParse(this.JoinTimeStampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None,
-		                           out var dto)
-			   ? dto
-			   : null;
+			   out var dto)
+			? dto
+			: null;
 
 	/// <summary>
 	/// Gets the timestamp when the user joined the thread as raw string.
@@ -127,6 +127,5 @@ public class DiscordThreadChannelMember : SnowflakeObject, IEquatable<DiscordThr
 			"mute_config",
 			"guild_id"
 		})
-	{
-	}
+	{ }
 }

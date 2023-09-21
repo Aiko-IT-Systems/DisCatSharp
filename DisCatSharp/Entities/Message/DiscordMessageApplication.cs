@@ -35,6 +35,5 @@ public class DiscordMessageApplication : SnowflakeObject
 	/// Initializes a new instance of the <see cref="DiscordMessageApplication"/> class.
 	/// </summary>
 	internal DiscordMessageApplication()
-	{
-	}
+	{ }
 }

@@ -41,8 +41,8 @@ public sealed class DiscordSignedLink : Uri
 			return;
 
 		if (queries.Get("ex") is { } expiresString && long.TryParse(expiresString, NumberStyles.HexNumber,
-		                                                            CultureInfo.InvariantCulture,
-		                                                            out var expiresTimeStamp))
+			CultureInfo.InvariantCulture,
+			out var expiresTimeStamp))
 			this.ExpiresAt = DateTimeOffset.FromUnixTimeSeconds(expiresTimeStamp);
 
 		if (queries.Get("is") is { } issuedString &&

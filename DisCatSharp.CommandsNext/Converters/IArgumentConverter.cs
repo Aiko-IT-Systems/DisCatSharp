@@ -8,8 +8,7 @@ namespace DisCatSharp.CommandsNext.Converters;
 /// Argument converter abstract.
 /// </summary>
 public interface IArgumentConverter
-{
-}
+{ }
 
 /// <summary>
 /// Represents a converter for specific argument type.

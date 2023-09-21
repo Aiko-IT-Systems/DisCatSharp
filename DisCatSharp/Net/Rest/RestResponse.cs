@@ -26,6 +26,5 @@ public sealed class RestResponse
 	/// Initializes a new instance of the <see cref="RestResponse"/> class.
 	/// </summary>
 	internal RestResponse()
-	{
-	}
+	{ }
 }

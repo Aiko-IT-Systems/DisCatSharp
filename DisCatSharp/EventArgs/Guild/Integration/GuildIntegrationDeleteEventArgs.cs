@@ -30,6 +30,5 @@ public class GuildIntegrationDeleteEventArgs : DiscordEventArgs
 	/// </summary>
 	internal GuildIntegrationDeleteEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

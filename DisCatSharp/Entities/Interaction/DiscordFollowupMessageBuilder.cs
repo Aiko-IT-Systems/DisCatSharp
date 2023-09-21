@@ -208,8 +208,10 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	public DiscordFollowupMessageBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false,
-	                                             string description = null)
+	public DiscordFollowupMessageBuilder AddFile(
+		string filename, Stream data, bool resetStreamPosition = false,
+		string description = null
+	)
 	{
 		if (this.Files.Count >= 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -232,8 +234,10 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	public DiscordFollowupMessageBuilder AddFile(FileStream stream, bool resetStreamPosition = false,
-	                                             string description = null)
+	public DiscordFollowupMessageBuilder AddFile(
+		FileStream stream, bool resetStreamPosition = false,
+		string description = null
+	)
 	{
 		if (this.Files.Count >= 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -270,7 +274,6 @@ public sealed class DiscordFollowupMessageBuilder
 			else
 				this._files.Add(new(file.Key, file.Value, null));
 		}
-
 
 		return this;
 	}

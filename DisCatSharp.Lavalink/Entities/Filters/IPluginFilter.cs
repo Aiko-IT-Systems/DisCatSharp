@@ -4,5 +4,4 @@ namespace DisCatSharp.Lavalink.Entities.Filters;
 /// Represents an plugin filter.
 /// </summary>
 public interface IPluginFilter
-{
-}
+{ }

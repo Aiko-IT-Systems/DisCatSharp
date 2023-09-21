@@ -30,6 +30,5 @@ public class GuildEmojisUpdateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal GuildEmojisUpdateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

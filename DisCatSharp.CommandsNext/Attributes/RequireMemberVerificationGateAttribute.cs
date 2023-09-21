@@ -11,8 +11,7 @@ public sealed class RequireMemberVerificationGateAttribute : CheckBaseAttribute
 	/// Defines that this command is only usable within guild which has enabled the member verification gate.
 	/// </summary>
 	public RequireMemberVerificationGateAttribute()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Executes the a check.

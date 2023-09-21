@@ -24,8 +24,6 @@ public sealed class RequireGuildOwnerAttribute : CheckBaseAttribute
 			return owner;
 		}
 		else
-		{
 			return false;
-		}
 	}
 }

@@ -24,7 +24,7 @@ public static class Formatter
 	/// </summary>
 	private static Regex s_mdStripRegex { get; } =
 		new(@"([`\*_~\[\]\(\)""\|]|<@\!?\d+>|<#\d+>|<@\&\d+>|<:[a-zA-Z0-9_\-]:\d+>|#{1,3} |> |>>> |\* )",
-		    RegexOptions.ECMAScript);
+			RegexOptions.ECMAScript);
 
 	/// <summary>
 	/// Creates a block of code.
@@ -228,8 +228,8 @@ public static class Formatter
 	/// <returns>Formatted mention.</returns>
 	public static string Mention(this DiscordUser user, bool nickname = false)
 		=> nickname
-			   ? $"<@!{user.Id.ToString(CultureInfo.InvariantCulture)}>"
-			   : $"<@{user.Id.ToString(CultureInfo.InvariantCulture)}>";
+			? $"<@!{user.Id.ToString(CultureInfo.InvariantCulture)}>"
+			: $"<@{user.Id.ToString(CultureInfo.InvariantCulture)}>";
 
 	/// <summary>
 	/// Creates a mention for specified channel.

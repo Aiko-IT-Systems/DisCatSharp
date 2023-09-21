@@ -34,6 +34,5 @@ public sealed class MessageReactionRemoveEmojiEventArgs : DiscordEventArgs
 	/// </summary>
 	internal MessageReactionRemoveEmojiEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

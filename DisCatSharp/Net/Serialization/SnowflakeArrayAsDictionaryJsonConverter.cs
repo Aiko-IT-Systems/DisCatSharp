@@ -30,9 +30,7 @@ internal class SnowflakeArrayAsDictionaryJsonConverter : JsonConverter
 	public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
 	{
 		if (value == null)
-		{
 			writer.WriteNull();
-		}
 		else
 		{
 			var type = value.GetType().GetTypeInfo();

@@ -29,6 +29,5 @@ public class ChannelUpdateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal ChannelUpdateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

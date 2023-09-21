@@ -15,8 +15,7 @@ public sealed class RequireDirectMessageAttribute : CheckBaseAttribute
 	/// Defines that this command is only usable within a direct message channel.
 	/// </summary>
 	public RequireDirectMessageAttribute()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Executes the a check.

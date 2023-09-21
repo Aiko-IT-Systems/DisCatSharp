@@ -25,6 +25,5 @@ public class DiscordInviteChannel : SnowflakeObject
 	/// Initializes a new instance of the <see cref="DiscordInviteChannel"/> class.
 	/// </summary>
 	internal DiscordInviteChannel()
-	{
-	}
+	{ }
 }

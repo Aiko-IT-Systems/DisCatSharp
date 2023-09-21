@@ -55,9 +55,11 @@ public class SlashCommandAttribute : Attribute
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
 	/// <param name="allowedContexts">The allowed contexts of this slash command.</param>
 	/// <param name="integrationTypes">The allowed integration types.</param>
-	public SlashCommandAttribute(string name, string description, bool isNsfw = false,
-	                             ApplicationCommandContexts[]? allowedContexts = null,
-	                             ApplicationCommandIntegrationTypes[]? integrationTypes = null)
+	public SlashCommandAttribute(
+		string name, string description, bool isNsfw = false,
+		ApplicationCommandContexts[]? allowedContexts = null,
+		ApplicationCommandIntegrationTypes[]? integrationTypes = null
+	)
 	{
 		this.Name = name.ToLower();
 		this.Description = description;
@@ -77,9 +79,11 @@ public class SlashCommandAttribute : Attribute
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
 	/// <param name="allowedContexts">The allowed contexts of this slash command.</param>
 	/// <param name="integrationTypes">The allowed integration types.</param>
-	public SlashCommandAttribute(string name, string description, long defaultMemberPermissions, bool isNsfw = false,
-	                             ApplicationCommandContexts[]? allowedContexts = null,
-	                             ApplicationCommandIntegrationTypes[]? integrationTypes = null)
+	public SlashCommandAttribute(
+		string name, string description, long defaultMemberPermissions, bool isNsfw = false,
+		ApplicationCommandContexts[]? allowedContexts = null,
+		ApplicationCommandIntegrationTypes[]? integrationTypes = null
+	)
 	{
 		this.Name = name.ToLower();
 		this.Description = description;
@@ -99,9 +103,11 @@ public class SlashCommandAttribute : Attribute
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
 	/// <param name="allowedContexts">The allowed contexts of this slash command.</param>
 	/// <param name="integrationTypes">The allowed integration types.</param>
-	public SlashCommandAttribute(string name, string description, bool dmPermission, bool isNsfw = false,
-	                             ApplicationCommandContexts[]? allowedContexts = null,
-	                             ApplicationCommandIntegrationTypes[]? integrationTypes = null)
+	public SlashCommandAttribute(
+		string name, string description, bool dmPermission, bool isNsfw = false,
+		ApplicationCommandContexts[]? allowedContexts = null,
+		ApplicationCommandIntegrationTypes[]? integrationTypes = null
+	)
 	{
 		this.Name = name.ToLower();
 		this.Description = description;
@@ -122,9 +128,11 @@ public class SlashCommandAttribute : Attribute
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
 	/// <param name="allowedContexts">The allowed contexts of this slash command.</param>
 	/// <param name="integrationTypes">The allowed integration types.</param>
-	public SlashCommandAttribute(string name, string description, long defaultMemberPermissions, bool dmPermission,
-	                             bool isNsfw = false, ApplicationCommandContexts[]? allowedContexts = null,
-	                             ApplicationCommandIntegrationTypes[]? integrationTypes = null)
+	public SlashCommandAttribute(
+		string name, string description, long defaultMemberPermissions, bool dmPermission,
+		bool isNsfw = false, ApplicationCommandContexts[]? allowedContexts = null,
+		ApplicationCommandIntegrationTypes[]? integrationTypes = null
+	)
 	{
 		this.Name = name.ToLower();
 		this.Description = description;

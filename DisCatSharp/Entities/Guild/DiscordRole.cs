@@ -92,8 +92,8 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 	[JsonIgnore]
 	public string? IconUrl
 		=> !string.IsNullOrWhiteSpace(this.IconHash)
-			   ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ROLE_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=64"
-			   : null;
+			? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ROLE_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=64"
+			: null;
 
 	/// <summary>
 	/// Gets the role unicode_emoji.
@@ -107,8 +107,8 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 	[JsonIgnore]
 	public DiscordEmoji? UnicodeEmoji
 		=> this.UnicodeEmojiString != null
-			   ? DiscordEmoji.FromName(this.Discord, $":{this.UnicodeEmojiString}:", false)
-			   : null;
+			? DiscordEmoji.FromName(this.Discord, $":{this.UnicodeEmojiString}:", false)
+			: null;
 
 	/// <summary>
 	/// Gets the guild this role belongs to.
@@ -174,10 +174,10 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 			{
 				RoleId = x.Id,
 				Position = x.Id == this.Id
-					           ? position
-					           : x.Position <= position
-						           ? x.Position - 1
-						           : x.Position
+					? position
+					: x.Position <= position
+						? x.Position - 1
+						: x.Position
 			});
 
 		return this.Discord.ApiClient.ModifyGuildRolePositionAsync(this.GuildId, roles, reason);
@@ -196,10 +196,12 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 	/// <exception cref="NotFoundException">Thrown when the role does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task ModifyAsync(string? name = null, Permissions? permissions = null, DiscordColor? color = null,
-	                        bool? hoist = null, bool? mentionable = null, string? reason = null)
+	public Task ModifyAsync(
+		string? name = null, Permissions? permissions = null, DiscordColor? color = null,
+		bool? hoist = null, bool? mentionable = null, string? reason = null
+	)
 		=> this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, name, permissions, color?.Value, hoist,
-		                                               mentionable, null, null, reason);
+			mentionable, null, null, reason);
 
 	/// <summary>
 	/// Updates this role.
@@ -232,8 +234,8 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 			case true when mdl.UnicodeEmoji.Value != null:
 				emoji = mdl.UnicodeEmoji
 					.MapOrNull(e => e.Id == 0
-						                ? e.Name
-						                : throw new ArgumentException("Emoji must be unicode"));
+						? e.Name
+						: throw new ArgumentException("Emoji must be unicode"));
 				break;
 			case true:
 				emoji = Optional.Some<string>(null);
@@ -241,10 +243,10 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 		}
 
 		return canContinue
-			       ? this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, mdl.Name, mdl.Permissions,
-			                                                     mdl.Color?.Value, mdl.Hoist, mdl.Mentionable, iconb64,
-			                                                     emoji, mdl.AuditLogReason)
-			       : throw new NotSupportedException($"Cannot modify role icon. Guild needs boost tier two.");
+			? this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, mdl.Name, mdl.Permissions,
+				mdl.Color?.Value, mdl.Hoist, mdl.Mentionable, iconb64,
+				emoji, mdl.AuditLogReason)
+			: throw new NotSupportedException($"Cannot modify role icon. Guild needs boost tier two.");
 	}
 
 	/// <summary>
@@ -265,8 +267,7 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 	/// Initializes a new instance of the <see cref="DiscordRole"/> class.
 	/// </summary>
 	internal DiscordRole()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Checks whether this role has specific permissions.

@@ -22,8 +22,8 @@ public sealed class DiscordRpcApplication : SnowflakeObject, IEquatable<DiscordR
 
 	[JsonIgnore]
 	public string? Icon => this.IconHash != null
-		                       ? $"https://cdn.discordapp.com{Endpoints.APP_ICONS}/{this.Id}/{this.IconHash}.png"
-		                       : null;
+		? $"https://cdn.discordapp.com{Endpoints.APP_ICONS}/{this.Id}/{this.IconHash}.png"
+		: null;
 
 	[JsonProperty("description")]
 	public string? Description;
@@ -68,8 +68,7 @@ public sealed class DiscordRpcApplication : SnowflakeObject, IEquatable<DiscordR
 	/// Initializes a new instance of the <see cref="DiscordRpcApplication"/> class.
 	/// </summary>
 	internal DiscordRpcApplication()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Generates an oauth url for the application.

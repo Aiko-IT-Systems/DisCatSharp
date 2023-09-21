@@ -59,7 +59,6 @@ public class BadRequestException : DisCatSharpException
 				this.Errors = j["errors"].ToString();
 		}
 		catch
-		{
-		}
+		{ }
 	}
 }

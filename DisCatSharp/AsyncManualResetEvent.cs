@@ -23,8 +23,7 @@ internal class AsyncManualResetEvent
 	/// </summary>
 	public AsyncManualResetEvent()
 		: this(false)
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="AsyncManualResetEvent"/> class.

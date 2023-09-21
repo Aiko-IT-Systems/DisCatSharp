@@ -22,8 +22,7 @@ public class SocketCloseEventArgs : DiscordEventArgs
 	/// </summary>
 	public SocketCloseEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }
 
 /// <summary>
@@ -41,6 +40,5 @@ public class SocketErrorEventArgs : DiscordEventArgs
 	/// </summary>
 	public SocketErrorEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

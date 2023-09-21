@@ -51,8 +51,8 @@ public class DiscordDmChannel : DiscordChannel
 	[JsonIgnore]
 	public string? IconUrl
 		=> !string.IsNullOrWhiteSpace(this.IconHash)
-			   ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.CHANNEL_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png"
-			   : null;
+			? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.CHANNEL_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png"
+			: null;
 
 	/// <summary>
 	/// Only use for Group DMs! Whitelisted bots only. Requires user's oauth2 access token.

@@ -54,6 +54,5 @@ public class MessageReactionAddEventArgs : DiscordEventArgs
 	/// </summary>
 	internal MessageReactionAddEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

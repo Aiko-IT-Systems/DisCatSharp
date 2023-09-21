@@ -77,13 +77,7 @@ public class TimeSpanConverter : IArgumentConverter<TimeSpan>
 		if (TimeSpan.TryParse(value, CultureInfo.InvariantCulture, out var result))
 			return Task.FromResult(Optional.Some(result));
 
-		var gps = new string[]
-		{
-			"days",
-			"hours",
-			"minutes",
-			"seconds"
-		};
+		var gps = new string[] { "days", "hours", "minutes", "seconds" };
 		var mtc = s_timeSpanRegex.Match(value);
 		if (!mtc.Success)
 			return Task.FromResult(Optional<TimeSpan>.None);

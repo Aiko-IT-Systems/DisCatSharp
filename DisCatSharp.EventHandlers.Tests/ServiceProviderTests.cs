@@ -10,17 +10,16 @@ namespace DisCatSharp.EventHandlers.Tests;
 public class ServiceProviderTests
 {
 	private class Resource
-	{
-	}
+	{ }
 
 	private class Handler
 	{
 		public Handler(Resource res)
-		{
-		}
+		{ }
 	}
 
-	[Fact] public void Test()
+	[Fact]
+	public void Test()
 	{
 		var poorClient = new DiscordClient(new()
 		{

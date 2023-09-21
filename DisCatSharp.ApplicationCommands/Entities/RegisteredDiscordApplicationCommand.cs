@@ -18,8 +18,7 @@ public sealed class RegisteredDiscordApplicationCommand : DiscordApplicationComm
 	/// Creates a new empty registered discord application command.
 	/// </summary>
 	internal RegisteredDiscordApplicationCommand()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Creates a new registered discord application command to control a dildo. (Lala told me to leave it)
@@ -43,7 +42,6 @@ public sealed class RegisteredDiscordApplicationCommand : DiscordApplicationComm
 		this.Type = parent.Type;
 		this.UnknownProperties = parent.UnknownProperties;
 		this.Version = parent.Version;
-
 
 		try
 		{
@@ -75,7 +73,7 @@ public sealed class RegisteredDiscordApplicationCommand : DiscordApplicationComm
 		catch (Exception)
 		{
 			ApplicationCommandsExtension.Logger.LogError("Failed to generate reflection properties for '{cmd}'",
-			                                             parent.Name);
+				parent.Name);
 		}
 	}
 

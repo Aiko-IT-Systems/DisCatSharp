@@ -16,8 +16,7 @@ public sealed class ApplicationCommandRequireDirectMessageAttribute : Applicatio
 	/// Defines that this command is only usable within a direct message channel.
 	/// </summary>
 	public ApplicationCommandRequireDirectMessageAttribute()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Runs checks.

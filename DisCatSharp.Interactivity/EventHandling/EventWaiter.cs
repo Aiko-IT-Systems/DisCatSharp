@@ -60,7 +60,7 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 		catch (Exception ex)
 		{
 			this._client!.Logger.LogError(InteractivityEvents.InteractivityWaitError, ex,
-			                              "An exception occurred while waiting for {0}", typeof(T).Name);
+				"An exception occurred while waiting for {0}", typeof(T).Name);
 		}
 		finally
 		{
@@ -86,7 +86,7 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 		catch (Exception ex)
 		{
 			this._client!.Logger.LogError(InteractivityEvents.InteractivityWaitError, ex,
-			                              "An exception occurred while collecting from {0}", typeof(T).Name);
+				"An exception occurred while collecting from {0}", typeof(T).Name);
 		}
 		finally
 		{

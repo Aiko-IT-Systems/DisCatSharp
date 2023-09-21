@@ -25,6 +25,5 @@ public sealed class VoiceUserJoinEventArgs : DiscordEventArgs
 	/// </summary>
 	internal VoiceUserJoinEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

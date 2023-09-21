@@ -25,6 +25,5 @@ public sealed class MessageAcknowledgeEventArgs : DiscordEventArgs
 	/// </summary>
 	internal MessageAcknowledgeEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }

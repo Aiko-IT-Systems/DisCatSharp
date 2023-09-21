@@ -66,9 +66,11 @@ public sealed class LavalinkDisortion
 	/// <param name="tanScale">The tan scale</param>
 	/// <param name="offset">The offset</param>
 	/// <param name="scale">The scale</param>
-	public LavalinkDisortion(Optional<float> sinOffset, Optional<float> sinScale, Optional<float> cosOffset,
-	                         Optional<float> cosScale, Optional<float> tanOffset, Optional<float> tanScale,
-	                         Optional<float> offset, Optional<float> scale)
+	public LavalinkDisortion(
+		Optional<float> sinOffset, Optional<float> sinScale, Optional<float> cosOffset,
+		Optional<float> cosScale, Optional<float> tanOffset, Optional<float> tanScale,
+		Optional<float> offset, Optional<float> scale
+	)
 	{
 		this.SinOffset = sinOffset;
 		this.SinScale = sinScale;

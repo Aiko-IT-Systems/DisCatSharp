@@ -24,6 +24,5 @@ public class UserUpdateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal UserUpdateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{
-	}
+	{ }
 }
