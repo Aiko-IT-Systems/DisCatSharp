@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,8 +24,8 @@ public sealed class GcpAttachment : ObservableApiObject
 	{
 		this.Filename = filename;
 		this.FileSize = int.TryParse(file.Length.ToString(), out var size)
-			? size
-			: throw new FileLoadException("File size too big", filename);
+			                ? size
+			                : throw new FileLoadException("File size too big", filename);
 	}
 }
 

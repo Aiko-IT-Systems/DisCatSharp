@@ -19,8 +19,11 @@ public sealed class DecomposerAttribute : SerializationAttribute
 	/// <param name="type">Type of decomposer to use.</param>
 	public DecomposerAttribute(Type type)
 	{
-		if (!typeof(IDecomposer).IsAssignableFrom(type) || !type.IsClass || type.IsAbstract) // abstract covers static - static = abstract + sealed
-			throw new ArgumentException("Invalid type specified. Must be a non-abstract class which implements DisCatSharp.Common.Serialization.IDecomposer interface.", nameof(type));
+		if (!typeof(IDecomposer).IsAssignableFrom(type) || !type.IsClass ||
+		    type.IsAbstract) // abstract covers static - static = abstract + sealed
+			throw new
+				ArgumentException("Invalid type specified. Must be a non-abstract class which implements DisCatSharp.Common.Serialization.IDecomposer interface.",
+				                  nameof(type));
 
 		this.DecomposerType = type;
 	}

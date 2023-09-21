@@ -101,6 +101,7 @@ public class CooldownBucket : IBucket, IEquatable<CooldownBucket>
 			Interlocked.Decrement(ref this.RemainingUsesInternal);
 			success = true;
 		}
+
 		Console.WriteLine($"[DecrementUseAsync]: Remaining: {this.RemainingUses}/{this.MaxUses} Resets: {this.ResetsAt} Now: {DateTimeOffset.UtcNow} Vars[u,c,g]: {this.UserId} {this.ChannelId} {this.GuildId} Id: {this.BucketId}");
 		// ...otherwise just fail
 		this.UsageSemaphore.Release();
@@ -119,7 +120,10 @@ public class CooldownBucket : IBucket, IEquatable<CooldownBucket>
 	/// </summary>
 	/// <param name="other"><see cref="CooldownBucket"/> to compare to.</param>
 	/// <returns>Whether the <see cref="CooldownBucket"/> is equal to this <see cref="CooldownBucket"/>.</returns>
-	public bool Equals(CooldownBucket other) => other is not null && (ReferenceEquals(this, other) || (this.UserId == other.UserId && this.ChannelId == other.ChannelId && this.GuildId == other.GuildId));
+	public bool Equals(CooldownBucket other) => other is not null &&
+	                                            (ReferenceEquals(this, other) ||
+	                                             (this.UserId == other.UserId && this.ChannelId == other.ChannelId &&
+	                                              this.GuildId == other.GuildId));
 
 	/// <summary>
 	/// Gets the hash code for this <see cref="CooldownBucket"/>.
@@ -159,6 +163,4 @@ public class CooldownBucket : IBucket, IEquatable<CooldownBucket>
 	/// <returns>Generated bucket ID.</returns>
 	public static string MakeId(ulong userId = 0, ulong channelId = 0, ulong guildId = 0)
 		=> $"{userId.ToString(CultureInfo.InvariantCulture)}:{channelId.ToString(CultureInfo.InvariantCulture)}:{guildId.ToString(CultureInfo.InvariantCulture)}";
-
-
 }

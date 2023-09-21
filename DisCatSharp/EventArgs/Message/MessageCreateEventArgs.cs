@@ -57,5 +57,8 @@ public class MessageCreateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="MessageCreateEventArgs"/> class.
 	/// </summary>
-	internal MessageCreateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal MessageCreateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

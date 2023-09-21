@@ -52,6 +52,8 @@ public class MissingAccessException : DisCatSharpException
 			if (j["code"] != null)
 				this.ErrorCode = Convert.ToInt32(j["code"].ToString());
 		}
-		catch (Exception) { }
+		catch (Exception)
+		{
+		}
 	}
 }

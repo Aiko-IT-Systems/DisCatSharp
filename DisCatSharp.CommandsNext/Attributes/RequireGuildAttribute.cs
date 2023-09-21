@@ -11,7 +11,8 @@ public sealed class RequireGuildAttribute : CheckBaseAttribute
 	/// Defines that this command is only usable within a guild.
 	/// </summary>
 	public RequireGuildAttribute()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Executes the a check.

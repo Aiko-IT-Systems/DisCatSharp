@@ -45,7 +45,9 @@ internal sealed class TransportTeam : ObservableApiObject
 	/// <summary>
 	/// Initializes a new instance of the <see cref="TransportTeam"/> class.
 	/// </summary>
-	internal TransportTeam() { }
+	internal TransportTeam()
+	{
+	}
 }
 
 /// <summary>
@@ -87,5 +89,7 @@ internal sealed class TransportTeamMember
 	/// <summary>
 	/// Initializes a new instance of the <see cref="TransportTeamMember"/> class.
 	/// </summary>
-	internal TransportTeamMember() { }
+	internal TransportTeamMember()
+	{
+	}
 }

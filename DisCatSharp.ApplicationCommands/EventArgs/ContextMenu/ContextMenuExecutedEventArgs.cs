@@ -19,6 +19,8 @@ public sealed class ContextMenuExecutedEventArgs : DiscordEventArgs
 	/// Initializes a new instance of the <see cref="ContextMenuExecutedEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	public ContextMenuExecutedEventArgs(IServiceProvider provider) : base(provider)
-	{ }
+	public ContextMenuExecutedEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

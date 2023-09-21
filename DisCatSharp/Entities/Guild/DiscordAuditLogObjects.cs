@@ -146,7 +146,9 @@ public sealed class DiscordAuditLogGuildEntry : DiscordAuditLogEntry
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogGuildEntry"/> class.
 	/// </summary>
-	internal DiscordAuditLogGuildEntry() { }
+	internal DiscordAuditLogGuildEntry()
+	{
+	}
 }
 
 /// <summary>
@@ -222,7 +224,9 @@ public sealed class DiscordAuditLogChannelEntry : DiscordAuditLogEntry
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogChannelEntry"/> class.
 	/// </summary>
-	internal DiscordAuditLogChannelEntry() { }
+	internal DiscordAuditLogChannelEntry()
+	{
+	}
 }
 
 /// <summary>
@@ -263,7 +267,9 @@ public sealed class DiscordAuditLogOverwriteEntry : DiscordAuditLogEntry
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogOverwriteEntry"/> class.
 	/// </summary>
-	internal DiscordAuditLogOverwriteEntry() { }
+	internal DiscordAuditLogOverwriteEntry()
+	{
+	}
 }
 
 /// <summary>
@@ -279,7 +285,9 @@ public sealed class DiscordAuditLogKickEntry : DiscordAuditLogEntry
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogKickEntry"/> class.
 	/// </summary>
-	internal DiscordAuditLogKickEntry() { }
+	internal DiscordAuditLogKickEntry()
+	{
+	}
 }
 
 /// <summary>
@@ -300,7 +308,9 @@ public sealed class DiscordAuditLogPruneEntry : DiscordAuditLogEntry
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogPruneEntry"/> class.
 	/// </summary>
-	internal DiscordAuditLogPruneEntry() { }
+	internal DiscordAuditLogPruneEntry()
+	{
+	}
 }
 
 /// <summary>
@@ -316,7 +326,9 @@ public sealed class DiscordAuditLogBanEntry : DiscordAuditLogEntry
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogBanEntry"/> class.
 	/// </summary>
-	internal DiscordAuditLogBanEntry() { }
+	internal DiscordAuditLogBanEntry()
+	{
+	}
 }
 
 /// <summary>
@@ -362,7 +374,9 @@ public sealed class DiscordAuditLogMemberUpdateEntry : DiscordAuditLogEntry
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogMemberUpdateEntry"/> class.
 	/// </summary>
-	internal DiscordAuditLogMemberUpdateEntry() { }
+	internal DiscordAuditLogMemberUpdateEntry()
+	{
+	}
 }
 
 /// <summary>
@@ -413,7 +427,9 @@ public sealed class DiscordAuditLogRoleUpdateEntry : DiscordAuditLogEntry
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogRoleUpdateEntry"/> class.
 	/// </summary>
-	internal DiscordAuditLogRoleUpdateEntry() { }
+	internal DiscordAuditLogRoleUpdateEntry()
+	{
+	}
 }
 
 /// <summary>
@@ -464,7 +480,9 @@ public sealed class DiscordAuditLogInviteEntry : DiscordAuditLogEntry
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogInviteEntry"/> class.
 	/// </summary>
-	internal DiscordAuditLogInviteEntry() { }
+	internal DiscordAuditLogInviteEntry()
+	{
+	}
 }
 
 /// <summary>
@@ -505,7 +523,9 @@ public sealed class DiscordAuditLogWebhookEntry : DiscordAuditLogEntry
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogWebhookEntry"/> class.
 	/// </summary>
-	internal DiscordAuditLogWebhookEntry() { }
+	internal DiscordAuditLogWebhookEntry()
+	{
+	}
 }
 
 /// <summary>
@@ -526,7 +546,9 @@ public sealed class DiscordAuditLogEmojiEntry : DiscordAuditLogEntry
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogEmojiEntry"/> class.
 	/// </summary>
-	internal DiscordAuditLogEmojiEntry() { }
+	internal DiscordAuditLogEmojiEntry()
+	{
+	}
 }
 
 /// <summary>
@@ -587,7 +609,9 @@ public sealed class DiscordAuditLogStickerEntry : DiscordAuditLogEntry
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogStickerEntry"/> class.
 	/// </summary>
-	internal DiscordAuditLogStickerEntry() { }
+	internal DiscordAuditLogStickerEntry()
+	{
+	}
 }
 
 /// <summary>
@@ -613,7 +637,9 @@ public sealed class DiscordAuditLogMessageEntry : DiscordAuditLogEntry
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogMessageEntry"/> class.
 	/// </summary>
-	internal DiscordAuditLogMessageEntry() { }
+	internal DiscordAuditLogMessageEntry()
+	{
+	}
 }
 
 /// <summary>
@@ -639,7 +665,9 @@ public sealed class DiscordAuditLogMessagePinEntry : DiscordAuditLogEntry
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogMessagePinEntry"/> class.
 	/// </summary>
-	internal DiscordAuditLogMessagePinEntry() { }
+	internal DiscordAuditLogMessagePinEntry()
+	{
+	}
 }
 
 /// <summary>
@@ -729,7 +757,9 @@ public sealed class DiscordAuditLogStageEntry : DiscordAuditLogEntry
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogStageEntry"/> class.
 	/// </summary>
-	internal DiscordAuditLogStageEntry() { }
+	internal DiscordAuditLogStageEntry()
+	{
+	}
 }
 
 /// <summary>
@@ -786,7 +816,9 @@ public sealed class DiscordAuditLogGuildScheduledEventEntry : DiscordAuditLogEnt
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogGuildScheduledEventEntry"/> class.
 	/// </summary>
-	internal DiscordAuditLogGuildScheduledEventEntry() { }
+	internal DiscordAuditLogGuildScheduledEventEntry()
+	{
+	}
 }
 
 /// <summary>
@@ -837,5 +869,7 @@ public sealed class DiscordAuditLogThreadEntry : DiscordAuditLogEntry
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogThreadEntry"/> class.
 	/// </summary>
-	internal DiscordAuditLogThreadEntry() { }
+	internal DiscordAuditLogThreadEntry()
+	{
+	}
 }

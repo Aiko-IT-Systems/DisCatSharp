@@ -20,5 +20,6 @@ public class EntitlementUpdateEventArgs : DiscordEventArgs
 	/// <param name="provider">The provider.</param>
 	internal EntitlementUpdateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{ }
+	{
+	}
 }

@@ -19,5 +19,8 @@ public class AutomodRuleUpdateEventArgs : DiscordEventArgs
 	/// </summary>
 	public DiscordGuild Guild { get; internal set; }
 
-	public AutomodRuleUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	public AutomodRuleUpdateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

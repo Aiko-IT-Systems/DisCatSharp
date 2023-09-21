@@ -55,7 +55,9 @@ public sealed class ContextMenuAttribute : Attribute
 	/// <param name="isNsfw">Whether the context menu is marked as NSFW.</param>
 	/// <param name="allowedContexts">The allowed contexts of the context menu.</param>
 	/// <param name="integrationTypes">The allowed integration types of the context menu.</param>
-	public ContextMenuAttribute(ApplicationCommandType type, string name, bool isNsfw = false, ApplicationCommandContexts[]? allowedContexts = null, ApplicationCommandIntegrationTypes[]? integrationTypes = null)
+	public ContextMenuAttribute(ApplicationCommandType type, string name, bool isNsfw = false,
+	                            ApplicationCommandContexts[]? allowedContexts = null,
+	                            ApplicationCommandIntegrationTypes[]? integrationTypes = null)
 	{
 		if (type == ApplicationCommandType.ChatInput)
 			throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
@@ -69,7 +71,6 @@ public sealed class ContextMenuAttribute : Attribute
 		this.IntegrationTypes = integrationTypes?.ToList();
 	}
 
-
 	/// <summary>
 	/// Marks this method as a context menu.
 	/// </summary>
@@ -79,7 +80,9 @@ public sealed class ContextMenuAttribute : Attribute
 	/// <param name="isNsfw">Whether the context menu is marked as NSFW.</param>
 	/// <param name="allowedContexts">The allowed contexts of the context menu.</param>
 	/// <param name="integrationTypes">The allowed integration types of the context menu.</param>
-	public ContextMenuAttribute(ApplicationCommandType type, string name, long defaultMemberPermissions, bool isNsfw = false, ApplicationCommandContexts[]? allowedContexts = null, ApplicationCommandIntegrationTypes[]? integrationTypes = null)
+	public ContextMenuAttribute(ApplicationCommandType type, string name, long defaultMemberPermissions,
+	                            bool isNsfw = false, ApplicationCommandContexts[]? allowedContexts = null,
+	                            ApplicationCommandIntegrationTypes[]? integrationTypes = null)
 	{
 		if (type == ApplicationCommandType.ChatInput)
 			throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
@@ -93,7 +96,6 @@ public sealed class ContextMenuAttribute : Attribute
 		this.IntegrationTypes = integrationTypes?.ToList();
 	}
 
-
 	/// <summary>
 	/// Marks this method as context menu.
 	/// </summary>
@@ -103,7 +105,9 @@ public sealed class ContextMenuAttribute : Attribute
 	/// <param name="isNsfw">Whether the context menu is marked as NSFW.</param>
 	/// <param name="allowedContexts">The allowed contexts of the context menu.</param>
 	/// <param name="integrationTypes">The allowed integration types of the context menu.</param>
-	public ContextMenuAttribute(ApplicationCommandType type, string name, bool dmPermission, bool isNsfw = false, ApplicationCommandContexts[]? allowedContexts = null, ApplicationCommandIntegrationTypes[]? integrationTypes = null)
+	public ContextMenuAttribute(ApplicationCommandType type, string name, bool dmPermission, bool isNsfw = false,
+	                            ApplicationCommandContexts[]? allowedContexts = null,
+	                            ApplicationCommandIntegrationTypes[]? integrationTypes = null)
 	{
 		if (type == ApplicationCommandType.ChatInput)
 			throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
@@ -127,7 +131,10 @@ public sealed class ContextMenuAttribute : Attribute
 	/// <param name="isNsfw">Whether the context menu is marked as NSFW.</param>
 	/// <param name="allowedContexts">The allowed contexts of the context menu.</param>
 	/// <param name="integrationTypes">The allowed integration types of the context menu.</param>
-	public ContextMenuAttribute(ApplicationCommandType type, string name, long defaultMemberPermissions, bool dmPermission, bool isNsfw = false, ApplicationCommandContexts[]? allowedContexts = null, ApplicationCommandIntegrationTypes[]? integrationTypes = null)
+	public ContextMenuAttribute(ApplicationCommandType type, string name, long defaultMemberPermissions,
+	                            bool dmPermission, bool isNsfw = false,
+	                            ApplicationCommandContexts[]? allowedContexts = null,
+	                            ApplicationCommandIntegrationTypes[]? integrationTypes = null)
 	{
 		if (type == ApplicationCommandType.ChatInput)
 			throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");

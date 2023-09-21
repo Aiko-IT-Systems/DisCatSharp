@@ -87,15 +87,22 @@ public sealed class DiscordPresence : ObservableApiObject
 	/// </summary>
 	// TODO: Add broadcast field
 	internal DiscordPresence()
-		: base(new() { "broadcast" })
-	{ }
+		: base(new()
+		{
+			"broadcast"
+		})
+	{
+	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordPresence"/> class.
 	/// </summary>
 	/// <param name="other">The other.</param>
 	internal DiscordPresence(DiscordPresence other)
-		: base(new() { "broadcast" })
+		: base(new()
+		{
+			"broadcast"
+		})
 	{
 		this.Discord = other.Discord;
 		this.Activity = other.Activity;
@@ -124,18 +131,21 @@ public sealed class DiscordClientStatus : ObservableApiObject
 	/// <summary>
 	/// Gets the user's status set for an active desktop (Windows, Linux, Mac) application session.
 	/// </summary>
-	[JsonProperty("desktop", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Populate)]
+	[JsonProperty("desktop", NullValueHandling = NullValueHandling.Ignore,
+	              DefaultValueHandling = DefaultValueHandling.Populate)]
 	public Optional<UserStatus> Desktop { get; internal set; } = UserStatus.Offline;
 
 	/// <summary>
 	/// Gets the user's status set for an active mobile (iOS, Android) application session.
 	/// </summary>
-	[JsonProperty("mobile", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Populate)]
+	[JsonProperty("mobile", NullValueHandling = NullValueHandling.Ignore,
+	              DefaultValueHandling = DefaultValueHandling.Populate)]
 	public Optional<UserStatus> Mobile { get; internal set; } = UserStatus.Offline;
 
 	/// <summary>
 	/// Gets the user's status set for an active web (browser, bot account) application session.
 	/// </summary>
-	[JsonProperty("web", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Populate)]
+	[JsonProperty("web", NullValueHandling = NullValueHandling.Ignore,
+	              DefaultValueHandling = DefaultValueHandling.Populate)]
 	public Optional<UserStatus> Web { get; internal set; } = UserStatus.Offline;
 }

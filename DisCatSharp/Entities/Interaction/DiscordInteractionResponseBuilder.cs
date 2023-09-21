@@ -27,6 +27,7 @@ public sealed class DiscordInteractionResponseBuilder
 			this.FlagsChanged = true;
 		}
 	}
+
 	private bool EPH { get; set; }
 
 	/// <summary>
@@ -41,6 +42,7 @@ public sealed class DiscordInteractionResponseBuilder
 			this.FlagsChanged = true;
 		}
 	}
+
 	private bool EMB_SUP { get; set; }
 
 	/// <summary>
@@ -55,6 +57,7 @@ public sealed class DiscordInteractionResponseBuilder
 			this.FlagsChanged = true;
 		}
 	}
+
 	private bool NOTI_SUP { get; set; }
 
 	/// <summary>
@@ -76,25 +79,28 @@ public sealed class DiscordInteractionResponseBuilder
 			this._content = value;
 		}
 	}
+
 	private string _content;
 
 	/// <summary>
 	/// Embeds to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
-	private readonly List<DiscordEmbed> _embeds = new();
 
+	private readonly List<DiscordEmbed> _embeds = new();
 
 	/// <summary>
 	/// Files to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordMessageFile> Files => this._files;
+
 	private readonly List<DiscordMessageFile> _files = new();
 
 	/// <summary>
 	/// Components to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
+
 	private readonly List<DiscordActionRowComponent> _components = new();
 
 	/// <summary>
@@ -102,20 +108,22 @@ public sealed class DiscordInteractionResponseBuilder
 	/// Mutually exclusive with content, embed, and components.
 	/// </summary>
 	public IReadOnlyList<DiscordApplicationCommandAutocompleteChoice> Choices => this._choices;
-	private readonly List<DiscordApplicationCommandAutocompleteChoice> _choices = new();
 
+	private readonly List<DiscordApplicationCommandAutocompleteChoice> _choices = new();
 
 	/// <summary>
 	/// Mentions to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<IMention> Mentions => this._mentions;
+
 	private readonly List<IMention> _mentions = new();
 
 	/// <summary>
 	/// Constructs a new empty interaction response builder.
 	/// </summary>
-	public DiscordInteractionResponseBuilder() { }
-
+	public DiscordInteractionResponseBuilder()
+	{
+	}
 
 	/// <summary>
 	/// Constructs a new <see cref="DiscordInteractionResponseBuilder"/> based on an existing <see cref="DisCatSharp.Entities.DiscordMessageBuilder"/>.
@@ -128,7 +136,6 @@ public sealed class DiscordInteractionResponseBuilder
 		this._embeds.AddRange(builder.Embeds);
 		this._components.AddRange(builder.Components);
 	}
-
 
 	/// <summary>
 	/// Appends a collection of components to the builder. Each call will append to a new row.
@@ -255,7 +262,8 @@ public sealed class DiscordInteractionResponseBuilder
 	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	public DiscordInteractionResponseBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string description = null)
+	public DiscordInteractionResponseBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false,
+	                                                 string description = null)
 	{
 		if (this.Files.Count >= 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -278,7 +286,8 @@ public sealed class DiscordInteractionResponseBuilder
 	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	public DiscordInteractionResponseBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string description = null)
+	public DiscordInteractionResponseBuilder AddFile(FileStream stream, bool resetStreamPosition = false,
+	                                                 string description = null)
 	{
 		if (this.Files.Count >= 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -300,7 +309,8 @@ public sealed class DiscordInteractionResponseBuilder
 	/// <param name="files">Dictionary of file name and file data.</param>
 	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	public DiscordInteractionResponseBuilder AddFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
+	public DiscordInteractionResponseBuilder AddFiles(Dictionary<string, Stream> files,
+	                                                  bool resetStreamPosition = false)
 	{
 		if (this.Files.Count + files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -356,7 +366,8 @@ public sealed class DiscordInteractionResponseBuilder
 	/// </summary>
 	/// <param name="choices">The choices to add.</param>
 	/// <returns>The current builder to chain calls with.</returns>
-	public DiscordInteractionResponseBuilder AddAutoCompleteChoices(IEnumerable<DiscordApplicationCommandAutocompleteChoice> choices)
+	public DiscordInteractionResponseBuilder AddAutoCompleteChoices(
+		IEnumerable<DiscordApplicationCommandAutocompleteChoice> choices)
 	{
 		this._choices.AddRange(choices);
 		return this;
@@ -367,7 +378,8 @@ public sealed class DiscordInteractionResponseBuilder
 	/// </summary>
 	/// <param name="choices">The choices to add.</param>
 	/// <returns>The current builder to chain calls with.</returns>
-	public DiscordInteractionResponseBuilder AddAutoCompleteChoices(params DiscordApplicationCommandAutocompleteChoice[] choices)
+	public DiscordInteractionResponseBuilder AddAutoCompleteChoices(
+		params DiscordApplicationCommandAutocompleteChoice[] choices)
 		=> this.AddAutoCompleteChoices((IEnumerable<DiscordApplicationCommandAutocompleteChoice>)choices);
 
 	/// <summary>

@@ -42,5 +42,6 @@ public class DuplicateOverloadException : Exception
 	/// Returns a string representation of this <see cref="DuplicateOverloadException"/>.
 	/// </summary>
 	/// <returns>A string representation.</returns>
-	public override string ToString() => $"{this.GetType()}: {this.Message}\nCommand name: {this.CommandName}\nArgument types: {this._argumentSetKey}"; // much like System.ArgumentException works
+	public override string ToString()
+		=> $"{this.GetType()}: {this.Message}\nCommand name: {this.CommandName}\nArgument types: {this._argumentSetKey}"; // much like System.ArgumentException works
 }

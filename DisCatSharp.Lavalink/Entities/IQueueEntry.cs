@@ -1,4 +1,3 @@
-
 using System.Threading.Tasks;
 
 namespace DisCatSharp.Lavalink.Entities;

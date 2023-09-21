@@ -30,12 +30,14 @@ internal class ModalMatchRequest
 	/// <param name="customId">The custom id.</param>
 	/// <param name="predicate">The predicate.</param>
 	/// <param name="cancellation">The cancellation token.</param>
-	public ModalMatchRequest(string customId, Func<ComponentInteractionCreateEventArgs, bool> predicate, CancellationToken cancellation)
+	public ModalMatchRequest(string customId, Func<ComponentInteractionCreateEventArgs, bool> predicate,
+	                         CancellationToken cancellation)
 	{
 		this.CustomId = customId;
 		this.Predicate = predicate;
 		this.Cancellation = cancellation;
-		this.Cancellation.Register(() => this.Tcs.TrySetResult(null)); // TrySetCancelled would probably be better but I digress ~Velvet //
+		this.Cancellation.Register(() => this.Tcs
+			                           .TrySetResult(null)); // TrySetCancelled would probably be better but I digress ~Velvet //
 	}
 
 	/// <summary>

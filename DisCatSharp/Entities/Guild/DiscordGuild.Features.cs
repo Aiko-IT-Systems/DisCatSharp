@@ -25,24 +25,31 @@ public class GuildFeatures
 	{
 		this.Features = new();
 
-		if (guild.RawFeatures.Contains("APPLICATION_COMMAND_PERMISSIONS_V2")) this.Features.Add(GuildFeaturesEnum.UsesApplicationCommandsPermissionsV2);
+		if (guild.RawFeatures.Contains("APPLICATION_COMMAND_PERMISSIONS_V2"))
+			this.Features.Add(GuildFeaturesEnum.UsesApplicationCommandsPermissionsV2);
 		if (guild.RawFeatures.Contains("RAID_ALERTS_ENABLED")) this.Features.Add(GuildFeaturesEnum.RaidAlertsEnabled);
-		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE_RESTRICTED")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizableRestricted);
+		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE_RESTRICTED"))
+			this.Features.Add(GuildFeaturesEnum.CreatorMonetizableRestricted);
 		if (guild.RawFeatures.Contains("VOICE_IN_THREADS")) this.Features.Add(GuildFeaturesEnum.VoiceInThreadsEnabled);
-		if (guild.RawFeatures.Contains("CHANNEL_HIGHLIGHTS_DISABLED")) this.Features.Add(GuildFeaturesEnum.ChannelHighlightsDisabled);
+		if (guild.RawFeatures.Contains("CHANNEL_HIGHLIGHTS_DISABLED"))
+			this.Features.Add(GuildFeaturesEnum.ChannelHighlightsDisabled);
 		if (guild.RawFeatures.Contains("CHANNEL_HIGHLIGHTS")) this.Features.Add(GuildFeaturesEnum.ChannelHighlights);
-		if (guild.RawFeatures.Contains("GUILD_ONBOARDING_EVER_ENABLED")) this.Features.Add(GuildFeaturesEnum.HadGuildOnBoardingEverEnabled);
+		if (guild.RawFeatures.Contains("GUILD_ONBOARDING_EVER_ENABLED"))
+			this.Features.Add(GuildFeaturesEnum.HadGuildOnBoardingEverEnabled);
 		if (guild.RawFeatures.Contains("BURST_REACTIONS")) this.Features.Add(GuildFeaturesEnum.CanUseBurstReactions);
-		if (guild.RawFeatures.Contains("CREATOR_STORE_PAGE")) this.Features.Add(GuildFeaturesEnum.CanUseCreatorStorePage);
+		if (guild.RawFeatures.Contains("CREATOR_STORE_PAGE"))
+			this.Features.Add(GuildFeaturesEnum.CanUseCreatorStorePage);
 
 		if (guild.RawFeatures.Contains("ANIMATED_ICON")) this.Features.Add(GuildFeaturesEnum.CanSetAnimatedIcon);
 		if (guild.RawFeatures.Contains("ANIMATED_BANNER")) this.Features.Add(GuildFeaturesEnum.CanSetAnimatedBanner);
 		if (guild.RawFeatures.Contains("BANNER")) this.Features.Add(GuildFeaturesEnum.CanSetBanner);
 		if (guild.RawFeatures.Contains("COMMUNITY")) this.Features.Add(GuildFeaturesEnum.HasCommunityEnabled);
-		if (!guild.RawFeatures.Contains("DISCOVERABLE_DISABLED") && guild.RawFeatures.Contains("DISCOVERABLE")) this.Features.Add(GuildFeaturesEnum.IsDiscoverable);
+		if (!guild.RawFeatures.Contains("DISCOVERABLE_DISABLED") && guild.RawFeatures.Contains("DISCOVERABLE"))
+			this.Features.Add(GuildFeaturesEnum.IsDiscoverable);
 		if (guild.RawFeatures.Contains("FEATUREABLE")) this.Features.Add(GuildFeaturesEnum.IsFeatureable);
 		if (guild.RawFeatures.Contains("INVITE_SPLASH")) this.Features.Add(GuildFeaturesEnum.CanSetInviteSplash);
-		if (guild.RawFeatures.Contains("MEMBER_VERIFICATION_GATE_ENABLED")) this.Features.Add(GuildFeaturesEnum.HasMembershipScreeningEnabled);
+		if (guild.RawFeatures.Contains("MEMBER_VERIFICATION_GATE_ENABLED"))
+			this.Features.Add(GuildFeaturesEnum.HasMembershipScreeningEnabled);
 		if (guild.RawFeatures.Contains("NEWS")) this.Features.Add(GuildFeaturesEnum.CanCreateNewsChannels);
 		if (guild.RawFeatures.Contains("PARTNERED")) this.Features.Add(GuildFeaturesEnum.IsPartnered);
 		if (guild.RawFeatures.Contains("MORE_EMOJI")) this.Features.Add(GuildFeaturesEnum.CanUploadMoreEmojis);
@@ -50,68 +57,107 @@ public class GuildFeatures
 		if (guild.RawFeatures.Contains("VANITY_URL")) this.Features.Add(GuildFeaturesEnum.CanSetVanityUrl);
 		if (guild.RawFeatures.Contains("VERIFIED")) this.Features.Add(GuildFeaturesEnum.IsVerified);
 		if (guild.RawFeatures.Contains("VIP_REGIONS")) this.Features.Add(GuildFeaturesEnum.CanAccessVipRegions);
-		if (guild.RawFeatures.Contains("WELCOME_SCREEN_ENABLED")) this.Features.Add(GuildFeaturesEnum.HasWelcomeScreenEnabled);
-		if (guild.RawFeatures.Contains("TICKETED_EVENTS_ENABLED")) this.Features.Add(GuildFeaturesEnum.HasTicketedEventsEnabled);
-		if (guild.RawFeatures.Contains("MONETIZATION_ENABLED")) this.Features.Add(GuildFeaturesEnum.HasMonetizationEnabled);
+		if (guild.RawFeatures.Contains("WELCOME_SCREEN_ENABLED"))
+			this.Features.Add(GuildFeaturesEnum.HasWelcomeScreenEnabled);
+		if (guild.RawFeatures.Contains("TICKETED_EVENTS_ENABLED"))
+			this.Features.Add(GuildFeaturesEnum.HasTicketedEventsEnabled);
+		if (guild.RawFeatures.Contains("MONETIZATION_ENABLED"))
+			this.Features.Add(GuildFeaturesEnum.HasMonetizationEnabled);
 		if (guild.RawFeatures.Contains("MORE_STICKERS")) this.Features.Add(GuildFeaturesEnum.CanUploadMoreStickers);
 		if (guild.RawFeatures.Contains("HUB")) this.Features.Add(GuildFeaturesEnum.IsHub);
-		if (guild.RawFeatures.Contains("THREADS_ENABLED_TESTING")) this.Features.Add(GuildFeaturesEnum.HasThreadTestingEnabled);
+		if (guild.RawFeatures.Contains("THREADS_ENABLED_TESTING"))
+			this.Features.Add(GuildFeaturesEnum.HasThreadTestingEnabled);
 		if (guild.RawFeatures.Contains("THREADS_ENABLED")) this.Features.Add(GuildFeaturesEnum.HasThreadsEnabled);
 		if (guild.RawFeatures.Contains("ROLE_ICONS")) this.Features.Add(GuildFeaturesEnum.CanSetRoleIcons);
-		if (guild.RawFeatures.Contains("NEW_THREAD_PERMISSIONS")) this.Features.Add(GuildFeaturesEnum.HasNewThreadPermissions);
-		if (guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_ENABLED")) this.Features.Add(GuildFeaturesEnum.HasRoleSubscriptionsEnabled);
-		if (guild.RawFeatures.Contains("PREMIUM_TIER_3_OVERRIDE")) this.Features.Add(GuildFeaturesEnum.PremiumTierThreeOverride);
-		if (guild.RawFeatures.Contains("THREAD_DEFAULT_AUTO_ARCHIVE_DURATION")) this.Features.Add(GuildFeaturesEnum.CanSetThreadDefaultAutoArchiveDuration);
-		if (guild.RawFeatures.Contains("TEXT_IN_VOICE_ENABLED")) this.Features.Add(GuildFeaturesEnum.TextInVoiceEnabled);
+		if (guild.RawFeatures.Contains("NEW_THREAD_PERMISSIONS"))
+			this.Features.Add(GuildFeaturesEnum.HasNewThreadPermissions);
+		if (guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_ENABLED"))
+			this.Features.Add(GuildFeaturesEnum.HasRoleSubscriptionsEnabled);
+		if (guild.RawFeatures.Contains("PREMIUM_TIER_3_OVERRIDE"))
+			this.Features.Add(GuildFeaturesEnum.PremiumTierThreeOverride);
+		if (guild.RawFeatures.Contains("THREAD_DEFAULT_AUTO_ARCHIVE_DURATION"))
+			this.Features.Add(GuildFeaturesEnum.CanSetThreadDefaultAutoArchiveDuration);
+		if (guild.RawFeatures.Contains("TEXT_IN_VOICE_ENABLED"))
+			this.Features.Add(GuildFeaturesEnum.TextInVoiceEnabled);
 		if (guild.RawFeatures.Contains("HAS_DIRECTORY_ENTRY")) this.Features.Add(GuildFeaturesEnum.HasDirectoryEntry);
 		if (guild.RawFeatures.Contains("LINKED_TO_HUB")) this.Features.Add(GuildFeaturesEnum.IsLinkedToHub);
 		if (guild.RawFeatures.Contains("MEMBER_PROFILES")) this.Features.Add(GuildFeaturesEnum.HasMemberProfiles);
 		if (guild.RawFeatures.Contains("INTERNAL_EMPLOYEE_ONLY")) this.Features.Add(GuildFeaturesEnum.IsStaffOnly);
-		if (guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE")) this.Features.Add(GuildFeaturesEnum.RoleSubscriptionsIsAvailableForPurchase);
+		if (guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE"))
+			this.Features.Add(GuildFeaturesEnum.RoleSubscriptionsIsAvailableForPurchase);
 		if (guild.RawFeatures.Contains("AUTO_MODERATION")) this.Features.Add(GuildFeaturesEnum.CanSetupAutoModeration);
 		if (guild.RawFeatures.Contains("GUILD_HOME_TEST")) this.Features.Add(GuildFeaturesEnum.GuildHomeTest);
 		if (guild.RawFeatures.Contains("INVITES_DISABLED")) this.Features.Add(GuildFeaturesEnum.InvitesDisabled);
 		if (guild.RawFeatures.Contains("ACTIVITIES_ALPHA")) this.Features.Add(GuildFeaturesEnum.ActivitiesAlpha);
 		if (guild.RawFeatures.Contains("ACTIVITIES_EMPLOYEE")) this.Features.Add(GuildFeaturesEnum.ActivitiesEmployee);
-		if (guild.RawFeatures.Contains("ACTIVITIES_INTERNAL_DEV")) this.Features.Add(GuildFeaturesEnum.ActivitiesInternalDev);
-		if (guild.RawFeatures.Contains("AUTOMOD_TRIGGER_KEYWORD_FILTER")) this.Features.Add(GuildFeaturesEnum.AutomodTriggerKeywordFilter);
-		if (guild.RawFeatures.Contains("AUTOMOD_TRIGGER_ML_SPAM_FILTER")) this.Features.Add(GuildFeaturesEnum.AutomodTriggerMlSpamFilter);
-		if (guild.RawFeatures.Contains("AUTOMOD_TRIGGER_SPAM_LINK_FILTERGuild")) this.Features.Add(GuildFeaturesEnum.AutomodTriggerSpamLinkFilterGuild);
+		if (guild.RawFeatures.Contains("ACTIVITIES_INTERNAL_DEV"))
+			this.Features.Add(GuildFeaturesEnum.ActivitiesInternalDev);
+		if (guild.RawFeatures.Contains("AUTOMOD_TRIGGER_KEYWORD_FILTER"))
+			this.Features.Add(GuildFeaturesEnum.AutomodTriggerKeywordFilter);
+		if (guild.RawFeatures.Contains("AUTOMOD_TRIGGER_ML_SPAM_FILTER"))
+			this.Features.Add(GuildFeaturesEnum.AutomodTriggerMlSpamFilter);
+		if (guild.RawFeatures.Contains("AUTOMOD_TRIGGER_SPAM_LINK_FILTERGuild"))
+			this.Features.Add(GuildFeaturesEnum.AutomodTriggerSpamLinkFilterGuild);
 		if (guild.RawFeatures.Contains("AUTOMOD_DEFAULT_LIST")) this.Features.Add(GuildFeaturesEnum.AutomodDefaultList);
 		if (guild.RawFeatures.Contains("BFG")) this.Features.Add(GuildFeaturesEnum.Bfg);
-		if (guild.RawFeatures.Contains("BOOSTING_TIERS_EXPERIMENT_MEDIUM_GUILD")) this.Features.Add(GuildFeaturesEnum.BoostingTiersExperimentMediumGuild);
-		if (guild.RawFeatures.Contains("BOOSTING_TIERS_EXPERIMENT_SMALL_GUILD")) this.Features.Add(GuildFeaturesEnum.BoostingTiersExperimentSmallGuild);
-		if (guild.RawFeatures.Contains("BOT_DEVELOPER_EARLY_ACCESS")) this.Features.Add(GuildFeaturesEnum.BotDeveloperEarlyAccess);
+		if (guild.RawFeatures.Contains("BOOSTING_TIERS_EXPERIMENT_MEDIUM_GUILD"))
+			this.Features.Add(GuildFeaturesEnum.BoostingTiersExperimentMediumGuild);
+		if (guild.RawFeatures.Contains("BOOSTING_TIERS_EXPERIMENT_SMALL_GUILD"))
+			this.Features.Add(GuildFeaturesEnum.BoostingTiersExperimentSmallGuild);
+		if (guild.RawFeatures.Contains("BOT_DEVELOPER_EARLY_ACCESS"))
+			this.Features.Add(GuildFeaturesEnum.BotDeveloperEarlyAccess);
 		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizable);
-		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE_DISABLED")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizableDisabled);
-		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE_PROVISIONAL")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizableProvisional);
-		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE_WHITEGLOVE")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizableWhiteGlove);
-		if (guild.RawFeatures.Contains("CREATOR_MONETIZATION_APPLICATION_ALLOWLIST")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizationApplicationAllowlist);
-		if (guild.RawFeatures.Contains("DEVELOPER_SUPPORT_SERVER")) this.Features.Add(GuildFeaturesEnum.DeveloperSupportServer);
-		if (guild.RawFeatures.Contains("EXPOSED_TO_ACTIVITIES_WTP_EXPERIMENT")) this.Features.Add(GuildFeaturesEnum.ExposedToActivitiesWtpExperiment);
-		if (guild.RawFeatures.Contains("GUILD_COMMUNICATION_DISABLED_GUILDS")) this.Features.Add(GuildFeaturesEnum.GuildCommunicationDisabledGuilds);
-		if (guild.RawFeatures.Contains("DISABLE_GUILD_COMMUNICATION")) this.Features.Add(GuildFeaturesEnum.DisableGuildCommunication);
+		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE_DISABLED"))
+			this.Features.Add(GuildFeaturesEnum.CreatorMonetizableDisabled);
+		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE_PROVISIONAL"))
+			this.Features.Add(GuildFeaturesEnum.CreatorMonetizableProvisional);
+		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE_WHITEGLOVE"))
+			this.Features.Add(GuildFeaturesEnum.CreatorMonetizableWhiteGlove);
+		if (guild.RawFeatures.Contains("CREATOR_MONETIZATION_APPLICATION_ALLOWLIST"))
+			this.Features.Add(GuildFeaturesEnum.CreatorMonetizationApplicationAllowlist);
+		if (guild.RawFeatures.Contains("DEVELOPER_SUPPORT_SERVER"))
+			this.Features.Add(GuildFeaturesEnum.DeveloperSupportServer);
+		if (guild.RawFeatures.Contains("EXPOSED_TO_ACTIVITIES_WTP_EXPERIMENT"))
+			this.Features.Add(GuildFeaturesEnum.ExposedToActivitiesWtpExperiment);
+		if (guild.RawFeatures.Contains("GUILD_COMMUNICATION_DISABLED_GUILDS"))
+			this.Features.Add(GuildFeaturesEnum.GuildCommunicationDisabledGuilds);
+		if (guild.RawFeatures.Contains("DISABLE_GUILD_COMMUNICATION"))
+			this.Features.Add(GuildFeaturesEnum.DisableGuildCommunication);
 		if (guild.RawFeatures.Contains("GUILD_HOME_OVERRIDE")) this.Features.Add(GuildFeaturesEnum.GuildHomeOverride);
-		if (guild.RawFeatures.Contains("GUILD_AUTOMOD_DEFAULT_LIST")) this.Features.Add(GuildFeaturesEnum.GuildAutomodDefaultList);
-		if (guild.RawFeatures.Contains("GUILD_MEMBER_VERIFICATION_EXPERIMENT")) this.Features.Add(GuildFeaturesEnum.GuildMemberVerificationExperiment);
-		if (guild.RawFeatures.Contains("GUILD_ROLE_SUBSCRIPTION_PURCHASE_FEEDBACK_LOOP")) this.Features.Add(GuildFeaturesEnum.GuildRoleSubscriptionPurchaseFeedbackLoop);
-		if (guild.RawFeatures.Contains("GUILD_ROLE_SUBSCRIPTION_TRIALS")) this.Features.Add(GuildFeaturesEnum.GuildRoleSubscriptionTrials);
-		if (guild.RawFeatures.Contains("HAD_EARLY_ACTIVITIES_ACCESS")) this.Features.Add(GuildFeaturesEnum.HadEarlyActivitiesAccess);
-		if (guild.RawFeatures.Contains("INCREASED_THREAD_LIMIT")) this.Features.Add(GuildFeaturesEnum.IncreasedThreadLimit);
-		if (guild.RawFeatures.Contains("MOBILE_WEB_ROLE_SUBSCRIPTION_PURCHASE_PAGE")) this.Features.Add(GuildFeaturesEnum.MobileWebRoleSubscriptionPurchasePage);
+		if (guild.RawFeatures.Contains("GUILD_AUTOMOD_DEFAULT_LIST"))
+			this.Features.Add(GuildFeaturesEnum.GuildAutomodDefaultList);
+		if (guild.RawFeatures.Contains("GUILD_MEMBER_VERIFICATION_EXPERIMENT"))
+			this.Features.Add(GuildFeaturesEnum.GuildMemberVerificationExperiment);
+		if (guild.RawFeatures.Contains("GUILD_ROLE_SUBSCRIPTION_PURCHASE_FEEDBACK_LOOP"))
+			this.Features.Add(GuildFeaturesEnum.GuildRoleSubscriptionPurchaseFeedbackLoop);
+		if (guild.RawFeatures.Contains("GUILD_ROLE_SUBSCRIPTION_TRIALS"))
+			this.Features.Add(GuildFeaturesEnum.GuildRoleSubscriptionTrials);
+		if (guild.RawFeatures.Contains("HAD_EARLY_ACTIVITIES_ACCESS"))
+			this.Features.Add(GuildFeaturesEnum.HadEarlyActivitiesAccess);
+		if (guild.RawFeatures.Contains("INCREASED_THREAD_LIMIT"))
+			this.Features.Add(GuildFeaturesEnum.IncreasedThreadLimit);
+		if (guild.RawFeatures.Contains("MOBILE_WEB_ROLE_SUBSCRIPTION_PURCHASE_PAGE"))
+			this.Features.Add(GuildFeaturesEnum.MobileWebRoleSubscriptionPurchasePage);
 		if (guild.RawFeatures.Contains("RELAY_ENABLED")) this.Features.Add(GuildFeaturesEnum.RelayEnabled);
-		if (guild.RawFeatures.Contains("RESTRICT_SPAM_RISK_GUILDS")) this.Features.Add(GuildFeaturesEnum.RestrictSpamRiskGuilds);
-		if (guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE")) this.Features.Add(GuildFeaturesEnum.RoleSubscriptionsAvailableForPurchase);
-		if (guild.RawFeatures.Contains("THREADS_ENABLED_TESTING")) this.Features.Add(GuildFeaturesEnum.ThreadsEnabledTesting);
-		if (guild.RawFeatures.Contains("VOICE_CHANNEL_EFFECTS")) this.Features.Add(GuildFeaturesEnum.VoiceChannelEffects);
+		if (guild.RawFeatures.Contains("RESTRICT_SPAM_RISK_GUILDS"))
+			this.Features.Add(GuildFeaturesEnum.RestrictSpamRiskGuilds);
+		if (guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE"))
+			this.Features.Add(GuildFeaturesEnum.RoleSubscriptionsAvailableForPurchase);
+		if (guild.RawFeatures.Contains("THREADS_ENABLED_TESTING"))
+			this.Features.Add(GuildFeaturesEnum.ThreadsEnabledTesting);
+		if (guild.RawFeatures.Contains("VOICE_CHANNEL_EFFECTS"))
+			this.Features.Add(GuildFeaturesEnum.VoiceChannelEffects);
 		if (guild.RawFeatures.Contains("SOUNDBOARD")) this.Features.Add(GuildFeaturesEnum.Soundboard);
 
 		if (guild.RawFeatures.Contains("COMMERCE")) this.Features.Add(GuildFeaturesEnum.Commerce);
-		if (guild.RawFeatures.Contains("EXPOSED_TO_BOOSTING_TIERS_EXPERIMENT")) this.Features.Add(GuildFeaturesEnum.ExposedToBoostingTiersExperiment);
+		if (guild.RawFeatures.Contains("EXPOSED_TO_BOOSTING_TIERS_EXPERIMENT"))
+			this.Features.Add(GuildFeaturesEnum.ExposedToBoostingTiersExperiment);
 		if (guild.RawFeatures.Contains("PUBLIC_DISABLED")) this.Features.Add(GuildFeaturesEnum.PublicDisabled);
 		if (guild.RawFeatures.Contains("PUBLIC")) this.Features.Add(GuildFeaturesEnum.Public);
-		if (guild.RawFeatures.Contains("SEVEN_DAY_THREAD_ARCHIVE")) this.Features.Add(GuildFeaturesEnum.SevenDayThreadArchive);
-		if (guild.RawFeatures.Contains("THREE_DAY_THREAD_ARCHIVE")) this.Features.Add(GuildFeaturesEnum.ThreeDayThreadArchive);
+		if (guild.RawFeatures.Contains("SEVEN_DAY_THREAD_ARCHIVE"))
+			this.Features.Add(GuildFeaturesEnum.SevenDayThreadArchive);
+		if (guild.RawFeatures.Contains("THREE_DAY_THREAD_ARCHIVE"))
+			this.Features.Add(GuildFeaturesEnum.ThreeDayThreadArchive);
 		if (guild.RawFeatures.Contains("FEATURABLE")) this.Features.Add(GuildFeaturesEnum.Featurable);
 		if (guild.RawFeatures.Contains("FORCE_RELAY")) this.Features.Add(GuildFeaturesEnum.ForceRelay);
 		if (guild.RawFeatures.Contains("LURKABLE")) this.Features.Add(GuildFeaturesEnum.Lurkable);
@@ -130,7 +176,10 @@ public class GuildFeatures
 
 	public string ToString(string separator, bool humanReadable)
 	{
-		if (!humanReadable) return string.Join(separator, this.Features);
+		if (!humanReadable)
+		{
+			return string.Join(separator, this.Features);
+		}
 
 		else
 		{
@@ -158,6 +207,7 @@ public class GuildFeatures
 				newText.Append(' ');
 			newText.Append(text[i]);
 		}
+
 		return newText.ToString();
 	}
 }
@@ -641,5 +691,5 @@ public enum GuildFeaturesEnum
 
 	RaidAlertsEnabled,
 
-	UsesApplicationCommandsPermissionsV2,
+	UsesApplicationCommandsPermissionsV2
 }

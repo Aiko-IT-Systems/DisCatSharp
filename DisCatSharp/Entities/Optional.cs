@@ -41,8 +41,8 @@ public static class Optional
 	/// <returns></returns>
 	public static Optional<T> FromNullable<T>(T value)
 		=> value == null
-			? None
-			: value;
+			   ? None
+			   : value;
 
 	/// <summary>
 	/// Creates a new <see cref="Optional{T}"/> with specified value and valid state.
@@ -59,8 +59,7 @@ public static class Optional
 	/// </summary>
 	/// <typeparam name="T">The type that the created instance is wrapping around.</typeparam>
 	/// <returns>Created optional.</returns>
-	[Obsolete("Use None.")]
-	public static Optional<T> FromNoValue<T>()
+	[Obsolete("Use None.")] public static Optional<T> FromNoValue<T>()
 		=> default;
 }
 
@@ -68,7 +67,8 @@ public static class Optional
 /// Unit type for creating an empty <see cref="Optional{T}"/>s.
 /// </summary>
 public struct None
-{ }
+{
+}
 
 /// <summary>
 /// Used internally to make serialization more convenient, do NOT change this, do NOT implement this yourself.
@@ -148,8 +148,8 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 	/// </returns>
 	public Optional<TOut> Map<TOut>(Func<T, TOut> mapper)
 		=> this.HasValue
-			? mapper(this._val)
-			: Optional.None;
+			   ? mapper(this._val)
+			   : Optional.None;
 
 	/// <summary>
 	/// Maps to <see cref="None"/> for <see cref="None"/>, to <code>default</code> for <code>null</code> and to the mapped value otherwise./>
@@ -159,10 +159,10 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 	/// <returns>The mapped value.</returns>
 	public Optional<TOut> MapOrNull<TOut>(Func<T, TOut> mapper)
 		=> this.HasValue
-			? this._val == null
-				? default
-				: mapper(this._val)
-			: Optional.None;
+			   ? this._val == null
+				     ? default
+				     : mapper(this._val)
+			   : Optional.None;
 
 	/// <summary>
 	/// Gets the value of the <see cref="Optional{T}"/> or a specified value, if the <see cref="Optional{T}"/> has no value.
@@ -171,8 +171,8 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 	/// <returns>Either the value of the <see cref="Optional{T}"/> if present or the provided value.</returns>
 	public T ValueOr(T other)
 		=> this.HasValue
-			? this._val
-			: other;
+			   ? this._val
+			   : other;
 
 	/// <summary>
 	/// Gets the value of the <see cref="Optional{T}"/> or the default value for <typeparamref name="T"/>, if the
@@ -222,7 +222,7 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 		{
 			T t => this.Equals(t),
 			Optional<T> opt => this.Equals(opt),
-			_ => false,
+			_ => false
 		};
 
 	/// <summary>
@@ -230,7 +230,8 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 	/// </summary>
 	/// <param name="e"><see cref="Optional{T}"/> to compare to.</param>
 	/// <returns>Whether the <see cref="Optional{T}"/> is equal to this <see cref="Optional{T}"/>.</returns>
-	public bool Equals(Optional<T> e) => (!this.HasValue && !e.HasValue) || (this.HasValue == e.HasValue && this.Value.Equals(e.Value));
+	public bool Equals(Optional<T> e)
+		=> (!this.HasValue && !e.HasValue) || (this.HasValue == e.HasValue && this.Value.Equals(e.Value));
 
 	/// <summary>
 	/// Checks whether the value of this <see cref="Optional{T}"/> is equal to specified object.
@@ -317,7 +318,7 @@ internal sealed class OptionalJsonContractResolver : DefaultContractResolver
 				return property;
 			default:
 				throw new InvalidOperationException(
-					"Can only serialize Optional<T> members that are fields or properties");
+				                                    "Can only serialize Optional<T> members that are fields or properties");
 		}
 	}
 }
@@ -356,19 +357,23 @@ internal sealed class OptionalJsonConverter : JsonConverter
 	/// <param name="existingValue">The existing value.</param>
 	/// <param name="serializer">The serializer.</param>
 	public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-		JsonSerializer serializer)
+	                                JsonSerializer serializer)
 	{
 		var genericType = objectType.GenericTypeArguments[0];
 
 		var constructor = objectType.GetTypeInfo().DeclaredConstructors
 			.FirstOrDefault(e => e.GetParameters()[0].ParameterType == genericType);
 
-		return constructor.Invoke(new[] { serializer.Deserialize(reader, genericType) });
+		return constructor.Invoke(new[]
+		{
+			serializer.Deserialize(reader, genericType)
+		});
 	}
 
 	/// <summary>
 	/// Whether it can convert.
 	/// </summary>
 	/// <param name="objectType">The object type.</param>
-	public override bool CanConvert(Type objectType) => objectType.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IOptional));
+	public override bool CanConvert(Type objectType)
+		=> objectType.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IOptional));
 }

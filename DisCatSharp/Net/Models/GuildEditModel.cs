@@ -116,5 +116,6 @@ public class GuildEditModel : BaseEditModel
 	/// Initializes a new instance of the <see cref="GuildEditModel"/> class.
 	/// </summary>
 	internal GuildEditModel()
-	{ }
+	{
+	}
 }

@@ -14,12 +14,14 @@ public sealed class RequireCommunityAttribute : CheckBaseAttribute
 	/// Defines that this command is only usable within a community-enabled guild.
 	/// </summary>
 	public RequireCommunityAttribute()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Executes the a check.
 	/// </summary>
 	/// <param name="ctx">The command context.</param>
 	/// <param name="help">If true, help - returns true.</param>
-	public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help) => Task.FromResult(ctx.Guild != null && ctx.Guild.IsCommunity);
+	public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
+		=> Task.FromResult(ctx.Guild != null && ctx.Guild.IsCommunity);
 }

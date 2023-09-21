@@ -22,7 +22,8 @@ public partial class DiscordEmoji
 	/// </summary>
 	static DiscordEmoji()
 	{
-		#region Generated Emoji Map
+#region Generated Emoji Map
+
 		s_unicodeEmojis = new Dictionary<string, string>
 		{
 			[":100:"] = "\U0001f4af",
@@ -3467,53 +3468,67 @@ public partial class DiscordEmoji
 			[":people_holding_hands_tone1:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_light_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone1_tone2:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
-			[":people_holding_hands_light_skin_tone_medium_light_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
+			[":people_holding_hands_light_skin_tone_medium_light_skin_tone:"] =
+				"\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone1_tone3:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_light_skin_tone_medium_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone1_tone4:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
-			[":people_holding_hands_light_skin_tone_medium_dark_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
+			[":people_holding_hands_light_skin_tone_medium_dark_skin_tone:"] =
+				"\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone1_tone5:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_light_skin_tone_dark_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone2:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_medium_light_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone2_tone1:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
-			[":people_holding_hands_medium_light_skin_tone_light_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
+			[":people_holding_hands_medium_light_skin_tone_light_skin_tone:"] =
+				"\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone2_tone3:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
-			[":people_holding_hands_medium_light_skin_tone_medium_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
+			[":people_holding_hands_medium_light_skin_tone_medium_skin_tone:"] =
+				"\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone2_tone4:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
-			[":people_holding_hands_medium_light_skin_tone_medium_dark_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
+			[":people_holding_hands_medium_light_skin_tone_medium_dark_skin_tone:"] =
+				"\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone2_tone5:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
-			[":people_holding_hands_medium_light_skin_tone_dark_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
+			[":people_holding_hands_medium_light_skin_tone_dark_skin_tone:"] =
+				"\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone3:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_medium_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone3_tone1:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_medium_skin_tone_light_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone3_tone2:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
-			[":people_holding_hands_medium_skin_tone_medium_light_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
+			[":people_holding_hands_medium_skin_tone_medium_light_skin_tone:"] =
+				"\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone3_tone4:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
-			[":people_holding_hands_medium_skin_tone_medium_dark_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
+			[":people_holding_hands_medium_skin_tone_medium_dark_skin_tone:"] =
+				"\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone3_tone5:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_medium_skin_tone_dark_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone4:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_medium_dark_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone4_tone1:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
-			[":people_holding_hands_medium_dark_skin_tone_light_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
+			[":people_holding_hands_medium_dark_skin_tone_light_skin_tone:"] =
+				"\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone4_tone2:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
-			[":people_holding_hands_medium_dark_skin_tone_medium_light_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
+			[":people_holding_hands_medium_dark_skin_tone_medium_light_skin_tone:"] =
+				"\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone4_tone3:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
-			[":people_holding_hands_medium_dark_skin_tone_medium_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
+			[":people_holding_hands_medium_dark_skin_tone_medium_skin_tone:"] =
+				"\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone4_tone5:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
-			[":people_holding_hands_medium_dark_skin_tone_dark_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
+			[":people_holding_hands_medium_dark_skin_tone_dark_skin_tone:"] =
+				"\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone5:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_dark_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone5_tone1:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_dark_skin_tone_light_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone5_tone2:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
-			[":people_holding_hands_dark_skin_tone_medium_light_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
+			[":people_holding_hands_dark_skin_tone_medium_light_skin_tone:"] =
+				"\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone5_tone3:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_dark_skin_tone_medium_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_holding_hands_tone5_tone4:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
-			[":people_holding_hands_dark_skin_tone_medium_dark_skin_tone:"] = "\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
+			[":people_holding_hands_dark_skin_tone_medium_dark_skin_tone:"] =
+				"\U0001f9d1\u200d\U0001f91d\u200d\U0001f9d1",
 			[":people_hugging:"] = "\U0001fac2",
 			[":people_with_bunny_ears_partying:"] = "\U0001f46f",
 			[":dancers:"] = "\U0001f46f",
@@ -6676,7 +6691,7 @@ public partial class DiscordEmoji
 			[":zipper_mouth:"] = "\U0001f910",
 			[":zipper_mouth_face:"] = "\U0001f910",
 			[":zombie:"] = "\U0001f9df",
-			[":zzz:"] = "\U0001f4a4",
+			[":zzz:"] = "\U0001f4a4"
 		};
 
 		s_discordNameLookup = new Dictionary<string, string>
@@ -10119,8 +10134,9 @@ public partial class DiscordEmoji
 			["\u0030\u20e3"] = ":zero:",
 			["\U0001f910"] = ":zipper_mouth:",
 			["\U0001f9df"] = ":zombie:",
-			["\U0001f4a4"] = ":zzz:",
+			["\U0001f4a4"] = ":zzz:"
 		};
-		#endregion
+
+#endregion
 	}
 }

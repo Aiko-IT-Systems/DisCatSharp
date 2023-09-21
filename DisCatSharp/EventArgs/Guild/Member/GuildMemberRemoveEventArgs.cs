@@ -22,5 +22,8 @@ public class GuildMemberRemoveEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="GuildMemberRemoveEventArgs"/> class.
 	/// </summary>
-	internal GuildMemberRemoveEventArgs(IServiceProvider provider) : base(provider) { }
+	internal GuildMemberRemoveEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

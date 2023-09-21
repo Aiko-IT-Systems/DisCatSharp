@@ -41,9 +41,14 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Style", "IDE0048:Add parentheses for clarity", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.SecureRandom.GetUInt8(System.Byte,System.Byte)~System.Byte")]
 [assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.SecureRandom.GetUInt8(System.Byte,System.Byte)~System.Byte")]
 [assembly: SuppressMessage("Style", "IDE0045:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.Utilities.AsyncExecutor.Execute(System.Threading.Tasks.Task)")]*/
-[assembly: SuppressMessage("Style", "IDE0062:Make local function 'static'", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.Utilities.AsyncExecutor.Execute(System.Threading.Tasks.Task)")]
+[assembly:
+	SuppressMessage("Style", "IDE0062:Make local function 'static'", Justification = "<Pending>", Scope = "member",
+	                Target = "~M:DisCatSharp.Common.Utilities.AsyncExecutor.Execute(System.Threading.Tasks.Task)")]
 //[assembly: SuppressMessage("Style", "IDE0045:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.Utilities.AsyncExecutor.Execute``1(System.Threading.Tasks.Task{``0})~``0")]
-[assembly: SuppressMessage("Style", "IDE0062:Make local function 'static'", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.Utilities.AsyncExecutor.Execute``1(System.Threading.Tasks.Task{``0})~``0")]
+[assembly:
+	SuppressMessage("Style", "IDE0062:Make local function 'static'", Justification = "<Pending>", Scope = "member",
+	                Target =
+		                "~M:DisCatSharp.Common.Utilities.AsyncExecutor.Execute``1(System.Threading.Tasks.Task{``0})~``0")]
 //[assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.Utilities.ReflectionUtilities.ToDictionary``1(``0)~System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object}")]
 [assembly: SuppressMessage("Usage", "DCS0102:[Discord] Deprecated", Justification = "<Pending>")]
 [assembly: SuppressMessage("Usage", "DCS0101:[Discord] InExperiment", Justification = "<Pending>")]
@@ -51,3 +56,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Usage", "DCS0001:[Discord] InExperiment", Justification = "<Pending>")]
 [assembly: SuppressMessage("Usage", "DCS0002:[Discord] InExperiment", Justification = "<Pending>")]
 [assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
+[assembly: SuppressMessage("GeneratedRegex", "SYSLIB1045:Convert to 'GeneratedRegexAttribute'.", Justification = "<Pending>")]

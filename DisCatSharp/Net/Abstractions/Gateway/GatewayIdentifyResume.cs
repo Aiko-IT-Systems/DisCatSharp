@@ -26,7 +26,10 @@ internal sealed class GatewayIdentify
 	/// </summary>
 	[JsonProperty("properties")]
 	public ClientProperties ClientProperties =>
-		new() { Discord = this.Discord };
+		new()
+		{
+			Discord = this.Discord
+		};
 
 	/// <summary>
 	/// Gets or sets whether to encrypt websocket traffic.

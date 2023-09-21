@@ -29,7 +29,9 @@ public sealed class VoiceNextConfiguration
 	/// Creates a new instance of <see cref="VoiceNextConfiguration"/>.
 	/// </summary>
 	[ActivatorUtilitiesConstructor]
-	public VoiceNextConfiguration() { }
+	public VoiceNextConfiguration()
+	{
+	}
 
 	/// <summary>
 	/// Creates a new instance of <see cref="VoiceNextConfiguration"/>, copying the properties of another configuration.
@@ -37,7 +39,8 @@ public sealed class VoiceNextConfiguration
 	/// <param name="other">Configuration the properties of which are to be copied.</param>
 	public VoiceNextConfiguration(VoiceNextConfiguration other)
 	{
-		this.AudioFormat = new(other.AudioFormat.SampleRate, other.AudioFormat.ChannelCount, other.AudioFormat.VoiceApplication);
+		this.AudioFormat = new(other.AudioFormat.SampleRate, other.AudioFormat.ChannelCount,
+		                       other.AudioFormat.VoiceApplication);
 		this.EnableIncoming = other.EnableIncoming;
 	}
 }

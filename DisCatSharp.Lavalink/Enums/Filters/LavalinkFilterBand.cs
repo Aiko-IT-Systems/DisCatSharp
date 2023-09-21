@@ -1,4 +1,3 @@
-
 namespace DisCatSharp.Lavalink.Enums.Filters;
 
 /// <summary>

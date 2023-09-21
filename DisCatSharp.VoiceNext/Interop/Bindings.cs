@@ -6,7 +6,8 @@ namespace DisCatSharp.VoiceNext.Interop;
 internal static unsafe class Bindings
 {
 	[DllImport("libopus", CallingConvention = CallingConvention.Cdecl)]
-	private static extern IntPtr opus_encoder_create(int samplingRate, int channels, int application, out OpusError error);
+	private static extern IntPtr opus_encoder_create(int samplingRate, int channels, int application,
+	                                                 out OpusError error);
 
 	[DllImport("libopus", CallingConvention = CallingConvention.Cdecl)]
 	private static extern void opus_encoder_destroy(IntPtr encoder);
@@ -24,7 +25,8 @@ internal static unsafe class Bindings
 	private static extern void opus_decoder_destroy(IntPtr decoder);
 
 	[DllImport("libopus", CallingConvention = CallingConvention.Cdecl)]
-	private static extern int opus_decode(IntPtr decoder, byte* opusData, int opusDataLength, byte* data, int frameSize, int decodeFec);
+	private static extern int opus_decode(IntPtr decoder, byte* opusData, int opusDataLength, byte* data, int frameSize,
+	                                      int decodeFec);
 
 	[DllImport("libopus", CallingConvention = CallingConvention.Cdecl)]
 	private static extern int opus_packet_get_nb_channels(byte* data);
@@ -41,7 +43,9 @@ internal static unsafe class Bindings
 	public static IntPtr CreateEncoder(int sampleRate, int channelCount, int application)
 	{
 		var encoder = opus_encoder_create(sampleRate, channelCount, application, out var error);
-		return error == OpusError.Ok ? encoder : throw new($"Failed to instantiate Opus encoder: {error} ({(int)error})");
+		return error == OpusError.Ok
+			       ? encoder
+			       : throw new($"Failed to instantiate Opus encoder: {error} ({(int)error})");
 	}
 
 	public static void SetEncoderOption(IntPtr encoder, OpusControl option, int value)
@@ -57,7 +61,9 @@ internal static unsafe class Bindings
 
 		fixed (byte* pcmPointer = pcm)
 		fixed (byte* dataPointer = data)
+		{
 			length = opus_encode(encoder, pcmPointer, frameSize, dataPointer, data.Length);
+		}
 
 		if (length < 0)
 		{
@@ -71,7 +77,9 @@ internal static unsafe class Bindings
 	public static IntPtr CreateDecoder(int sampleRate, int channelCount)
 	{
 		var decoder = opus_decoder_create(sampleRate, channelCount, out var error);
-		return error == OpusError.Ok ? decoder : throw new($"Failed to instantiate Opus decoder: {error} ({(int)error})");
+		return error == OpusError.Ok
+			       ? decoder
+			       : throw new($"Failed to instantiate Opus decoder: {error} ({(int)error})");
 	}
 
 	public static int Decode(IntPtr decoder, ReadOnlySpan<byte> data, int frameSize, Span<byte> pcm, bool useFec)
@@ -80,7 +88,9 @@ internal static unsafe class Bindings
 
 		fixed (byte* dataPointer = data)
 		fixed (byte* pcmPointer = pcm)
+		{
 			length = opus_decode(decoder, dataPointer, data.Length, pcmPointer, frameSize, useFec ? 1 : 0);
+		}
 
 		if (length < 0)
 		{
@@ -96,7 +106,9 @@ internal static unsafe class Bindings
 		var length = 0;
 
 		fixed (byte* pcmPointer = pcm)
+		{
 			length = opus_decode(decoder, null, 0, pcmPointer, frameSize, 1);
+		}
 
 		if (length < 0)
 		{

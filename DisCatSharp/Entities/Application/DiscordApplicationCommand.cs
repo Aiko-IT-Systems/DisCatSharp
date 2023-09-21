@@ -131,19 +131,27 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 		string name, string? description,
 		IEnumerable<DiscordApplicationCommandOption>? options = null,
 		ApplicationCommandType type = ApplicationCommandType.ChatInput,
-		DiscordApplicationCommandLocalization? nameLocalizations = null, DiscordApplicationCommandLocalization? descriptionLocalizations = null,
+		DiscordApplicationCommandLocalization? nameLocalizations = null,
+		DiscordApplicationCommandLocalization? descriptionLocalizations = null,
 		Permissions? defaultMemberPermissions = null, bool? dmPermission = null, bool isNsfw = false,
-		List<ApplicationCommandContexts>? allowedContexts = null, List<ApplicationCommandIntegrationTypes>? integrationTypes = null)
-		: base(new() { "guild_id" })
+		List<ApplicationCommandContexts>? allowedContexts = null,
+		List<ApplicationCommandIntegrationTypes>? integrationTypes = null)
+		: base(new()
+		{
+			"guild_id"
+		})
 	{
 		if (type is ApplicationCommandType.ChatInput)
 		{
 			if (!Utilities.IsValidSlashCommandName(name))
-				throw new ArgumentException("Invalid slash command name specified. It must be below 32 characters and not contain any whitespace.", nameof(name));
+				throw new
+					ArgumentException("Invalid slash command name specified. It must be below 32 characters and not contain any whitespace.",
+					                  nameof(name));
 			if (name.Any(char.IsUpper))
 				throw new ArgumentException("Slash command name cannot have any upper case characters.", nameof(name));
 			if (description is { Length: > 100 })
-				throw new ArgumentException("Slash command description cannot exceed 100 characters.", nameof(description));
+				throw new ArgumentException("Slash command description cannot exceed 100 characters.",
+				                            nameof(description));
 			if (string.IsNullOrWhiteSpace(description))
 				throw new ArgumentException("Slash commands need a description.", nameof(description));
 
@@ -179,8 +187,13 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// Creates a new empty Discord Application Command.
 	/// </summary>
 	internal DiscordApplicationCommand()
-		: base(new() { "name_localizations", "description_localizations" }) // Why tf is that so inconsistent?!
-	{ }
+		: base(new()
+		{
+			"name_localizations",
+			"description_localizations"
+		}) // Why tf is that so inconsistent?!
+	{
+	}
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordApplicationCommand"/> object is equal to another object.

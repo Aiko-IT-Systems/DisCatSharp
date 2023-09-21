@@ -16,7 +16,8 @@ public sealed class ApplicationCommandRequireTeamDeveloperAttribute : Applicatio
 	/// Defines that this application command is restricted to team members of the bot with developer role or higher.
 	/// </summary>
 	public ApplicationCommandRequireTeamDeveloperAttribute()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Runs checks.
@@ -28,6 +29,8 @@ public sealed class ApplicationCommandRequireTeamDeveloperAttribute : Applicatio
 			return Task.FromResult(app.Owner.Id == ctx.User.Id);
 
 		var teamMember = app.Team?.Members.FirstOrDefault(x => x.User.Id == ctx.User.Id);
-		return teamMember == null ? Task.FromResult(false) : Task.FromResult(teamMember.Role is "developer" or "admin" or "owner");
+		return teamMember == null
+			       ? Task.FromResult(false)
+			       : Task.FromResult(teamMember.Role is "developer" or "admin" or "owner");
 	}
 }

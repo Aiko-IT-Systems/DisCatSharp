@@ -37,8 +37,8 @@ internal class ButtonPaginationRequest : IPaginationRequest
 	/// <param name="pages">The pages.</param>
 	/// <param name="token">The token.</param>
 	public ButtonPaginationRequest(DiscordMessage message, DiscordUser user,
-		PaginationBehaviour behavior, ButtonPaginationBehavior buttonBehavior,
-		PaginationButtons buttons, IEnumerable<Page> pages, CancellationToken token)
+	                               PaginationBehaviour behavior, ButtonPaginationBehavior buttonBehavior,
+	                               PaginationButtons buttons, IEnumerable<Page> pages, CancellationToken token)
 	{
 		this._user = user;
 		this._token = token;
@@ -162,7 +162,8 @@ internal class ButtonPaginationRequest : IPaginationRequest
 	/// <summary>
 	/// Gets the emojis.
 	/// </summary>
-	public Task<PaginationEmojis> GetEmojisAsync() => Task.FromException<PaginationEmojis>(new NotSupportedException("Emojis aren't supported for this request."));
+	public Task<PaginationEmojis> GetEmojisAsync()
+		=> Task.FromException<PaginationEmojis>(new NotSupportedException("Emojis aren't supported for this request."));
 
 	/// <summary>
 	/// Gets the buttons.

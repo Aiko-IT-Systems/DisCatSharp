@@ -53,7 +53,7 @@ public sealed class RequireRolesAttribute : CheckBaseAttribute
 			RoleCheckMode.All => Task.FromResult(this.RoleNames.Count == inc),
 			RoleCheckMode.SpecifiedOnly => Task.FromResult(rnc == inc),
 			RoleCheckMode.None => Task.FromResult(inc == 0),
-			_ => Task.FromResult(inc > 0),
+			_ => Task.FromResult(inc > 0)
 		};
 	}
 }

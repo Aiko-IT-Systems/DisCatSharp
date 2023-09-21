@@ -18,6 +18,7 @@ public static class InteractivityHelpers
 			recalculatedPages.Add(tempPage);
 			pageCount++;
 		}
+
 		return recalculatedPages;
 	}
 }

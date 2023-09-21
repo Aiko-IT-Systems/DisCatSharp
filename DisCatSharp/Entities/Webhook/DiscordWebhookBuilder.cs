@@ -66,7 +66,6 @@ public sealed class DiscordWebhookBuilder
 	/// </summary>
 	public string? ThreadName { get; set; }
 
-
 	/// <summary>
 	/// Whether to keep previous attachments.
 	/// </summary>
@@ -100,7 +99,6 @@ public sealed class DiscordWebhookBuilder
 
 	private readonly List<DiscordActionRowComponent> _components = new();
 
-
 	/// <summary>
 	/// Attachments to keep on this webhook request.
 	/// </summary>
@@ -111,7 +109,9 @@ public sealed class DiscordWebhookBuilder
 	/// <summary>
 	/// Constructs a new empty webhook request builder.
 	/// </summary>
-	public DiscordWebhookBuilder() { } // I still see no point in initializing collections with empty collections. //
+	public DiscordWebhookBuilder()
+	{
+	} // I still see no point in initializing collections with empty collections. //
 
 	/// <summary>
 	/// Sets the webhook response to suppress embeds.
@@ -263,7 +263,8 @@ public sealed class DiscordWebhookBuilder
 	/// <param name="data">File data.</param>
 	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
 	/// <param name="description">Description of the file.</param>
-	public DiscordWebhookBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string? description = null)
+	public DiscordWebhookBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false,
+	                                     string? description = null)
 	{
 		if (this.Files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -286,7 +287,8 @@ public sealed class DiscordWebhookBuilder
 	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns></returns>
-	public DiscordWebhookBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string? description = null)
+	public DiscordWebhookBuilder AddFile(FileStream stream, bool resetStreamPosition = false,
+	                                     string? description = null)
 	{
 		if (this.Files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -384,7 +386,8 @@ public sealed class DiscordWebhookBuilder
 	/// <param name="message">The message to modify.</param>
 	/// <param name="thread">Target thread.</param>
 	/// <returns>The modified message</returns>
-	public Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, DiscordMessage message, DiscordThreadChannel? thread = null)
+	public Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, DiscordMessage message,
+	                                        DiscordThreadChannel? thread = null)
 		=> this.ModifyAsync(webhook, message.Id, thread?.Id);
 
 	/// <summary>
@@ -453,7 +456,8 @@ public sealed class DiscordWebhookBuilder
 		}
 		else
 		{
-			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any() && !this.Components.Any())
+			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any() &&
+			    !this.Components.Any())
 				throw new ArgumentException("You must specify content, an embed, a component, or at least one file.");
 		}
 	}

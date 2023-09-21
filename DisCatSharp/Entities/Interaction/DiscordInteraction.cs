@@ -50,7 +50,20 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// </summary>
 	[JsonIgnore] // TODO: Is now also partial "channel"
 	public DiscordChannel Channel
-		 => (this.Discord as DiscordClient).InternalGetCachedChannel(this.ChannelId) ?? (DiscordChannel)(this.Discord as DiscordClient).InternalGetCachedThread(this.ChannelId) ?? (this.Guild == null ? new DiscordDmChannel { Id = this.ChannelId, Type = ChannelType.Private, Discord = this.Discord } : new DiscordChannel() { Id = this.ChannelId, Discord = this.Discord });
+		=> (this.Discord as DiscordClient).InternalGetCachedChannel(this.ChannelId) ??
+		   (DiscordChannel)(this.Discord as DiscordClient).InternalGetCachedThread(this.ChannelId) ??
+		   (this.Guild == null
+			    ? new DiscordDmChannel
+			    {
+				    Id = this.ChannelId,
+				    Type = ChannelType.Private,
+				    Discord = this.Discord
+			    }
+			    : new DiscordChannel()
+			    {
+				    Id = this.ChannelId,
+				    Discord = this.Discord
+			    });
 
 	/// <summary>
 	/// Gets the user that invoked this interaction.
@@ -106,7 +119,8 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <para>This is related to premium subscriptions for bots.</para>
 	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
 	/// </summary>
-	[JsonProperty("entitlements", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
+	[JsonProperty("entitlements", NullValueHandling = NullValueHandling.Ignore),
+	 DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
 	public List<DiscordEntitlement> Entitlements { get; internal set; } = new();
 
 	/// <summary>
@@ -114,7 +128,8 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <para>This is related to premium subscriptions for bots.</para>
 	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
 	/// </summary>
-	[JsonProperty("entitlement_sku_ids", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
+	[JsonProperty("entitlement_sku_ids", NullValueHandling = NullValueHandling.Ignore),
+	 DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
 	public List<ulong> EntitlementSkuIds { get; internal set; } = new();
 
 	/// <summary>
@@ -130,7 +145,10 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// </summary>
 	/// <param name="builder">The data to send.</param>
 	public Task CreateInteractionModalResponseAsync(DiscordInteractionModalBuilder builder)
-		=> this.Type != InteractionType.Ping && this.Type != InteractionType.ModalSubmit ? this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token, InteractionResponseType.Modal, builder) : throw new NotSupportedException("You can't respond to a PING with a modal.");
+		=> this.Type != InteractionType.Ping && this.Type != InteractionType.ModalSubmit
+			   ? this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token,
+			                                                                InteractionResponseType.Modal, builder)
+			   : throw new NotSupportedException("You can't respond to a PING with a modal.");
 
 	/// <summary>
 	/// Creates an iframe response to this interaction.
@@ -139,8 +157,14 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <param name="title">The title of the iframe.</param>
 	/// <param name="modalSize">The size of the iframe.</param>
 	/// <param name="iFramePath">The path of the iframe. Uses %application_id%.discordsays.com/<c>:iframe_path</c>.</param>
-	public Task CreateInteractionIframeResponseAsync(string customId, string title, IframeModalSize modalSize = IframeModalSize.Normal, string? iFramePath = null)
-		=> this.Type != InteractionType.Ping ? this.Discord.ApiClient.CreateInteractionIframeResponseAsync(this.Id, this.Token, InteractionResponseType.Iframe, customId, title, modalSize, iFramePath) : throw new NotSupportedException("You can't respond to a PING with an iframe.");
+	public Task CreateInteractionIframeResponseAsync(string customId, string title,
+	                                                 IframeModalSize modalSize = IframeModalSize.Normal,
+	                                                 string? iFramePath = null)
+		=> this.Type != InteractionType.Ping
+			   ? this.Discord.ApiClient.CreateInteractionIframeResponseAsync(this.Id, this.Token,
+			                                                                 InteractionResponseType.Iframe, customId,
+			                                                                 title, modalSize, iFramePath)
+			   : throw new NotSupportedException("You can't respond to a PING with an iframe.");
 
 	/// <summary>
 	/// Gets the original interaction response.
@@ -159,19 +183,26 @@ public sealed class DiscordInteraction : SnowflakeObject
 		builder.Validate(isInteractionResponse: true);
 		if (builder.KeepAttachmentsInternal.HasValue && builder.KeepAttachmentsInternal.Value)
 		{
-			var attachments = this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token).Result.Attachments;
+			var attachments = this.Discord.ApiClient
+				.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token).Result.Attachments;
 			if (attachments?.Count > 0) builder.AttachmentsInternal.AddRange(attachments);
 		}
-		else if (builder.KeepAttachmentsInternal.HasValue) builder.AttachmentsInternal.Clear();
+		else if (builder.KeepAttachmentsInternal.HasValue)
+		{
+			builder.AttachmentsInternal.Clear();
+		}
 
-		return await this.Discord.ApiClient.EditOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, builder).ConfigureAwait(false);
+		return await this.Discord.ApiClient
+			       .EditOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, builder)
+			       .ConfigureAwait(false);
 	}
 
 	/// <summary>
 	/// Deletes the original interaction response.
 	/// </summary>>
 	public Task DeleteOriginalResponseAsync()
-		=> this.Discord.ApiClient.DeleteOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token);
+		=> this.Discord.ApiClient.DeleteOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id,
+		                                                                 this.Token);
 
 	/// <summary>
 	/// Creates a follow up message to this interaction.
@@ -182,7 +213,9 @@ public sealed class DiscordInteraction : SnowflakeObject
 	{
 		builder.Validate();
 
-		return await this.Discord.ApiClient.CreateFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, builder).ConfigureAwait(false);
+		return await this.Discord.ApiClient
+			       .CreateFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, builder)
+			       .ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -204,12 +237,18 @@ public sealed class DiscordInteraction : SnowflakeObject
 
 		if (builder.KeepAttachmentsInternal.HasValue && builder.KeepAttachmentsInternal.Value)
 		{
-			var attachments = this.Discord.ApiClient.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId).Result.Attachments;
+			var attachments = this.Discord.ApiClient
+				.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId).Result.Attachments;
 			if (attachments?.Count > 0) builder.AttachmentsInternal.AddRange(attachments);
 		}
-		else if (builder.KeepAttachmentsInternal.HasValue) builder.AttachmentsInternal.Clear();
+		else if (builder.KeepAttachmentsInternal.HasValue)
+		{
+			builder.AttachmentsInternal.Clear();
+		}
 
-		return await this.Discord.ApiClient.EditFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId, builder).ConfigureAwait(false);
+		return await this.Discord.ApiClient
+			       .EditFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId, builder)
+			       .ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -220,6 +259,14 @@ public sealed class DiscordInteraction : SnowflakeObject
 		=> this.Discord.ApiClient.DeleteFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
 
 	internal DiscordInteraction()
-		: base(new() { "member", "guild_id", "channel_id", "channel", "guild" })
-	{ }
+		: base(new()
+		{
+			"member",
+			"guild_id",
+			"channel_id",
+			"channel",
+			"guild"
+		})
+	{
+	}
 }

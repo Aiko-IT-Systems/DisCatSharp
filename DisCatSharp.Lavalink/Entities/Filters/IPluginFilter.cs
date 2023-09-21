@@ -1,4 +1,3 @@
-
 namespace DisCatSharp.Lavalink.Entities.Filters;
 
 /// <summary>
@@ -6,5 +5,4 @@ namespace DisCatSharp.Lavalink.Entities.Filters;
 /// </summary>
 public interface IPluginFilter
 {
-
 }

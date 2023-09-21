@@ -144,8 +144,14 @@ internal class TransportUser : ObservableApiObject
 	/// Initializes a new instance of the <see cref="TransportUser"/> class.
 	/// </summary>
 	internal TransportUser()
-		: base(new() { "display_name", "linked_users", "banner_color" })
-	{ }
+		: base(new()
+		{
+			"display_name",
+			"linked_users",
+			"banner_color"
+		})
+	{
+	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="TransportUser"/> class from an existing <see cref="TransportUser"/>.

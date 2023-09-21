@@ -310,16 +310,17 @@ public sealed class DiscordEmbedBuilder
 	public DiscordEmbedBuilder WithAuthor(string? name = null, string? url = null, string? iconUrl = null)
 	{
 		if (!string.IsNullOrEmpty(name) && name.Length > 256)
-			throw new NotSupportedException("Embed author name can not exceed 256 chars. See https://discord.com/developers/docs/resources/channel#embed-limits.");
+			throw new
+				NotSupportedException("Embed author name can not exceed 256 chars. See https://discord.com/developers/docs/resources/channel#embed-limits.");
 
 		this.Author = string.IsNullOrEmpty(name) && string.IsNullOrEmpty(url) && string.IsNullOrEmpty(iconUrl)
-			? null
-			: new EmbedAuthor
-			{
-				Name = name,
-				Url = url,
-				IconUrl = iconUrl
-			};
+			              ? null
+			              : new EmbedAuthor
+			              {
+				              Name = name,
+				              Url = url,
+				              IconUrl = iconUrl
+			              };
 		return this;
 	}
 
@@ -335,12 +336,12 @@ public sealed class DiscordEmbedBuilder
 			throw new ArgumentException("Footer text length cannot exceed 2048 characters.", nameof(text));
 
 		this.Footer = string.IsNullOrEmpty(text) && string.IsNullOrEmpty(iconUrl)
-			? null
-			: new EmbedFooter
-			{
-				Text = text,
-				IconUrl = iconUrl
-			};
+			              ? null
+			              : new EmbedFooter
+			              {
+				              Text = text,
+				              IconUrl = iconUrl
+			              };
 		return this;
 	}
 
@@ -472,7 +473,10 @@ public sealed class DiscordEmbedBuilder
 			};
 
 		if (this._imageUri != null)
-			embed.Image = new() { Url = this._imageUri };
+			embed.Image = new()
+			{
+				Url = this._imageUri
+			};
 		if (this.Thumbnail != null)
 			embed.Thumbnail = new()
 			{
@@ -481,7 +485,9 @@ public sealed class DiscordEmbedBuilder
 				Width = this.Thumbnail.Width
 			};
 
-		embed.Fields = new ReadOnlyCollection<DiscordEmbedField>(new List<DiscordEmbedField>(this._fields)); // copy the list, don't wrap it, prevents mutation
+		embed.Fields =
+			new ReadOnlyCollection<DiscordEmbedField>(new List<DiscordEmbedField>(this
+				                                          ._fields)); // copy the list, don't wrap it, prevents mutation
 
 		var charCount = 0;
 		if (embed.Fields.Any())
@@ -504,8 +510,9 @@ public sealed class DiscordEmbedBuilder
 			charCount += embed.Description.Length;
 
 		return charCount >= 6000
-			? throw new NotSupportedException("Total char count can not exceed 6000 chars. See https://discord.com/developers/docs/resources/channel#embed-limits.")
-			: embed;
+			       ? throw new
+				         NotSupportedException("Total char count can not exceed 6000 chars. See https://discord.com/developers/docs/resources/channel#embed-limits.")
+			       : embed;
 	}
 
 	/// <summary>

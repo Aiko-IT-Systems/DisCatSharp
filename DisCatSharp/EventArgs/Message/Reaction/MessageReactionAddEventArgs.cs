@@ -52,5 +52,8 @@ public class MessageReactionAddEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="MessageReactionAddEventArgs"/> class.
 	/// </summary>
-	internal MessageReactionAddEventArgs(IServiceProvider provider) : base(provider) { }
+	internal MessageReactionAddEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

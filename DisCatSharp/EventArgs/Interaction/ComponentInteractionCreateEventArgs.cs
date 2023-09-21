@@ -42,5 +42,8 @@ public class ComponentInteractionCreateEventArgs : InteractionCreateEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ComponentInteractionCreateEventArgs"/> class.
 	/// </summary>
-	internal ComponentInteractionCreateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal ComponentInteractionCreateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

@@ -12,7 +12,8 @@ namespace DisCatSharp.ApplicationCommands.Attributes;
 /// Defines a cooldown for this command. This allows you to define how many times can users execute a specific command
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-public sealed class SlashCommandCooldownAttribute : ApplicationCommandCheckBaseAttribute, ICooldown<BaseContext, SlashCommandCooldownBucket>
+public sealed class SlashCommandCooldownAttribute : ApplicationCommandCheckBaseAttribute,
+                                                    ICooldown<BaseContext, SlashCommandCooldownBucket>
 {
 	/// <summary>
 	/// Gets the maximum number of uses before this command triggers a cooldown for its bucket.
@@ -68,7 +69,11 @@ public sealed class SlashCommandCooldownAttribute : ApplicationCommandCheckBaseA
 	public TimeSpan GetRemainingCooldown(BaseContext ctx)
 	{
 		var bucket = this.GetBucket(ctx);
-		return bucket == null ? TimeSpan.Zero : bucket.RemainingUses > 0 ? TimeSpan.Zero : bucket.ResetsAt - DateTimeOffset.UtcNow;
+		return bucket == null
+			       ? TimeSpan.Zero
+			       : bucket.RemainingUses > 0
+				       ? TimeSpan.Zero
+				       : bucket.ResetsAt - DateTimeOffset.UtcNow;
 	}
 
 	/// <summary>
@@ -127,9 +132,9 @@ public sealed class SlashCommandCooldownBucket : CooldownBucket
 	/// <returns>String representation of this command cooldown bucket.</returns>
 	public override string ToString() => $"Slash Command bucket {this.BucketId}";
 
-	internal SlashCommandCooldownBucket(int maxUses, TimeSpan resetAfter, ulong userId = 0, ulong channelId = 0, ulong guildId = 0)
+	internal SlashCommandCooldownBucket(int maxUses, TimeSpan resetAfter, ulong userId = 0, ulong channelId = 0,
+	                                    ulong guildId = 0)
 		: base(maxUses, resetAfter, userId, channelId, guildId)
 	{
-
 	}
 }

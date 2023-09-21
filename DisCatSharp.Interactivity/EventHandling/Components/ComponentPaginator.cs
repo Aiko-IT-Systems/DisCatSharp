@@ -49,7 +49,8 @@ internal class ComponentPaginator : IPaginator
 		}
 		catch (Exception ex)
 		{
-			this._client.Logger.LogError(InteractivityEvents.InteractivityPaginationError, ex, "There was an exception while paginating.");
+			this._client.Logger.LogError(InteractivityEvents.InteractivityPaginationError, ex,
+			                             "There was an exception while paginating.");
 		}
 		finally
 		{
@@ -60,7 +61,8 @@ internal class ComponentPaginator : IPaginator
 			}
 			catch (Exception ex)
 			{
-				this._client.Logger.LogError(InteractivityEvents.InteractivityPaginationError, ex, "There was an exception while cleaning up pagination.");
+				this._client.Logger.LogError(InteractivityEvents.InteractivityPaginationError, ex,
+				                             "There was an exception while cleaning up pagination.");
 			}
 		}
 	}
@@ -70,7 +72,6 @@ internal class ComponentPaginator : IPaginator
 	/// </summary>
 	public void Dispose()
 		=> this._client.ComponentInteractionCreated -= this.Handle;
-
 
 	/// <summary>
 	/// Handles the pagination event.
@@ -88,13 +89,18 @@ internal class ComponentPaginator : IPaginator
 		if (this._config.AckPaginationButtons)
 		{
 			e.Handled = true;
-			await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate).ConfigureAwait(false);
+			await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate)
+				.ConfigureAwait(false);
 		}
 
 		if (await req.GetUserAsync().ConfigureAwait(false) != e.User)
 		{
 			if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
-				await e.Interaction.CreateFollowupMessageAsync(new() { Content = this._config.ResponseMessage, IsEphemeral = true }).ConfigureAwait(false);
+				await e.Interaction.CreateFollowupMessageAsync(new()
+				{
+					Content = this._config.ResponseMessage,
+					IsEphemeral = true
+				}).ConfigureAwait(false);
 
 			return;
 		}
@@ -166,6 +172,5 @@ internal class ComponentPaginator : IPaginator
 			this._builder.AddEmbed(page.Embed);
 
 		await this._builder.ModifyAsync(msg).ConfigureAwait(false);
-
 	}
 }

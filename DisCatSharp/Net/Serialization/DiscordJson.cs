@@ -54,7 +54,8 @@ public static class DiscordJson
 	/// <param name="json">The JSON string to deserialize from.</param>
 	/// <param name="discord">The Discord client instance associated with the deserialization.</param>
 	/// <returns>An instance of type <typeparamref name="T"/>.</returns>
-	public static T DeserializeIEnumerableObject<T>(string json, BaseDiscordClient? discord) where T : IEnumerable<ObservableApiObject>
+	public static T DeserializeIEnumerableObject<T>(string json, BaseDiscordClient? discord)
+		where T : IEnumerable<ObservableApiObject>
 		=> DeserializeIEnumerableObjectInternal<T>(json, discord);
 
 	/// <summary>
@@ -159,8 +160,12 @@ public static class DiscordJson
 				Username = discord.CurrentUser.UsernameWithDiscriminator,
 				Other = new Dictionary<string, string>()
 				{
-					{ "developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
-					{ "email", discord.Configuration.FeedbackEmail ?? "not_given" }
+					{
+						"developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given"
+					},
+					{
+						"email", discord.Configuration.FeedbackEmail ?? "not_given"
+					}
 				}
 			};
 		var sid = discord.Sentry.CaptureEvent(sentryEvent);
@@ -178,7 +183,8 @@ public static class DiscordJson
 	/// <param name="json">The JSON string to deserialize from.</param>
 	/// <param name="discord">The associated Discord client instance.</param>
 	/// <returns>An instance of type <typeparamref name="T"/>.</returns>
-	private static T DeserializeIEnumerableObjectInternal<T>(string json, BaseDiscordClient? discord) where T : IEnumerable<ObservableApiObject>
+	private static T DeserializeIEnumerableObjectInternal<T>(string json, BaseDiscordClient? discord)
+		where T : IEnumerable<ObservableApiObject>
 	{
 		var obj = JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings()
 		{
@@ -236,8 +242,12 @@ public static class DiscordJson
 				Username = discord.CurrentUser.UsernameWithDiscriminator,
 				Other = new Dictionary<string, string>()
 				{
-					{ "developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
-					{ "email", discord.Configuration.FeedbackEmail ?? "not_given" }
+					{
+						"developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given"
+					},
+					{
+						"email", discord.Configuration.FeedbackEmail ?? "not_given"
+					}
 				}
 			};
 		var sid = discord.Sentry.CaptureEvent(sentryEvent);

@@ -29,7 +29,8 @@ public sealed class DiscordGuildEmoji : DiscordEmoji
 	/// Initializes a new instance of the <see cref="DiscordGuildEmoji"/> class.
 	/// </summary>
 	internal DiscordGuildEmoji()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Modifies this emoji.

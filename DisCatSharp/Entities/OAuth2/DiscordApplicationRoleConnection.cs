@@ -51,7 +51,8 @@ public sealed class ApplicationRoleConnectionMetadata
 	/// Initializes a new instance of <see cref="ApplicationRoleConnectionMetadata"/>.
 	/// </summary>
 	internal ApplicationRoleConnectionMetadata()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Initializes a new instance of <see cref="ApplicationRoleConnectionMetadata"/>.

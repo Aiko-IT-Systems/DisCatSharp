@@ -38,7 +38,8 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 		var handler = typeInfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, T>));
 		this._matchRequests = new();
 		this._collectRequests = new();
-		this._event = (AsyncEvent<DiscordClient, T>)handler.GetValue(this._client) ?? throw new InvalidOperationException();
+		this._event = (AsyncEvent<DiscordClient, T>)handler.GetValue(this._client) ??
+		              throw new InvalidOperationException();
 		this._handler = this.HandleEvent;
 		this._event.Register(this._handler);
 	}
@@ -58,13 +59,15 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 		}
 		catch (Exception ex)
 		{
-			this._client!.Logger.LogError(InteractivityEvents.InteractivityWaitError, ex, "An exception occurred while waiting for {0}", typeof(T).Name);
+			this._client!.Logger.LogError(InteractivityEvents.InteractivityWaitError, ex,
+			                              "An exception occurred while waiting for {0}", typeof(T).Name);
 		}
 		finally
 		{
 			request.Dispose();
 			this._matchRequests?.TryRemove(request);
 		}
+
 		return result;
 	}
 
@@ -82,7 +85,8 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 		}
 		catch (Exception ex)
 		{
-			this._client!.Logger.LogError(InteractivityEvents.InteractivityWaitError, ex, "An exception occurred while collecting from {0}", typeof(T).Name);
+			this._client!.Logger.LogError(InteractivityEvents.InteractivityWaitError, ex,
+			                              "An exception occurred while collecting from {0}", typeof(T).Name);
 		}
 		finally
 		{
@@ -90,6 +94,7 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 			request.Dispose();
 			this._collectRequests?.TryRemove(request);
 		}
+
 		return result;
 	}
 

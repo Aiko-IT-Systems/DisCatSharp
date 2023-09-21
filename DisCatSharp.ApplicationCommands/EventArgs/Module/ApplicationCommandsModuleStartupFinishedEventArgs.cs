@@ -24,12 +24,18 @@ public class ApplicationCommandsModuleStartupFinishedEventArgs : DiscordEventArg
 	/// <summary>
 	/// Gets all registered guild commands mapped by guild id.
 	/// </summary>
-	public IReadOnlyDictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> RegisteredGuildCommands { get; internal set; }
+	public IReadOnlyDictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> RegisteredGuildCommands
+	{
+		get;
+		internal set;
+	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ApplicationCommandsModuleStartupFinishedEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	internal ApplicationCommandsModuleStartupFinishedEventArgs(IServiceProvider? provider) : base(provider)
-	{ }
+	internal ApplicationCommandsModuleStartupFinishedEventArgs(IServiceProvider? provider)
+		: base(provider)
+	{
+	}
 }

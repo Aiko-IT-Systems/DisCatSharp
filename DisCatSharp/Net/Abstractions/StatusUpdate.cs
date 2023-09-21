@@ -39,7 +39,7 @@ internal sealed class StatusUpdate : ObservableApiObject
 			UserStatus.DoNotDisturb => "dnd",
 			UserStatus.Invisible or UserStatus.Offline => "invisible",
 			UserStatus.Streaming => "streaming",
-			_ => "online",
+			_ => "online"
 		};
 
 	/// <summary>

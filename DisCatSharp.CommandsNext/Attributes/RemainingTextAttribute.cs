@@ -7,4 +7,5 @@ namespace DisCatSharp.CommandsNext.Attributes;
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
 public class RemainingTextAttribute : Attribute
-{ }
+{
+}

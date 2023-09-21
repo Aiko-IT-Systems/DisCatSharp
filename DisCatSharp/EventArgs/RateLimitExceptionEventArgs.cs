@@ -16,5 +16,8 @@ public class RateLimitExceptionEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="HeartbeatEventArgs"/> class.
 	/// </summary>
-	internal RateLimitExceptionEventArgs(IServiceProvider provider) : base(provider) { }
+	internal RateLimitExceptionEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

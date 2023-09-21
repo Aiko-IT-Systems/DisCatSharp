@@ -66,7 +66,11 @@ public sealed class CooldownAttribute : CheckBaseAttribute
 	public TimeSpan GetRemainingCooldown(CommandContext ctx)
 	{
 		var bucket = this.GetBucket(ctx);
-		return bucket == null ? TimeSpan.Zero : bucket.RemainingUses > 0 ? TimeSpan.Zero : bucket.ResetsAt - DateTimeOffset.UtcNow;
+		return bucket == null
+			       ? TimeSpan.Zero
+			       : bucket.RemainingUses > 0
+				       ? TimeSpan.Zero
+				       : bucket.ResetsAt - DateTimeOffset.UtcNow;
 	}
 
 	/// <summary>
@@ -205,7 +209,8 @@ public sealed class CommandCooldownBucket : IEquatable<CommandCooldownBucket>
 	/// <param name="userId">ID of the user with which this cooldown is associated.</param>
 	/// <param name="channelId">ID of the channel with which this cooldown is associated.</param>
 	/// <param name="guildId">ID of the guild with which this cooldown is associated.</param>
-	internal CommandCooldownBucket(int maxUses, TimeSpan resetAfter, ulong userId = 0, ulong channelId = 0, ulong guildId = 0)
+	internal CommandCooldownBucket(int maxUses, TimeSpan resetAfter, ulong userId = 0, ulong channelId = 0,
+	                               ulong guildId = 0)
 	{
 		this._remainingUses = maxUses;
 		this.MaxUses = maxUses;
@@ -267,7 +272,11 @@ public sealed class CommandCooldownBucket : IEquatable<CommandCooldownBucket>
 	/// </summary>
 	/// <param name="other"><see cref="CommandCooldownBucket"/> to compare to.</param>
 	/// <returns>Whether the <see cref="CommandCooldownBucket"/> is equal to this <see cref="CommandCooldownBucket"/>.</returns>
-	public bool Equals(CommandCooldownBucket other) => other is not null && (ReferenceEquals(this, other) || (this.UserId == other.UserId && this.ChannelId == other.ChannelId && this.GuildId == other.GuildId));
+	public bool Equals(CommandCooldownBucket other) => other is not null &&
+	                                                   (ReferenceEquals(this, other) ||
+	                                                    (this.UserId == other.UserId &&
+	                                                     this.ChannelId == other.ChannelId &&
+	                                                     this.GuildId == other.GuildId));
 
 	/// <summary>
 	/// Gets the hash code for this <see cref="CommandCooldownBucket"/>.

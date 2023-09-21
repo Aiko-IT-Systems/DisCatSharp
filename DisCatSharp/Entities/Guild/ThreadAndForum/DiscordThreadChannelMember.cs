@@ -35,8 +35,11 @@ public class DiscordThreadChannelMember : SnowflakeObject, IEquatable<DiscordThr
 	/// </summary>
 	[JsonIgnore]
 	public DateTimeOffset? JoinTimeStamp
-		=> !string.IsNullOrWhiteSpace(this.JoinTimeStampRaw) && DateTimeOffset.TryParse(this.JoinTimeStampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ?
-			dto : null;
+		=> !string.IsNullOrWhiteSpace(this.JoinTimeStampRaw) &&
+		   DateTimeOffset.TryParse(this.JoinTimeStampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None,
+		                           out var dto)
+			   ? dto
+			   : null;
 
 	/// <summary>
 	/// Gets the timestamp when the user joined the thread as raw string.
@@ -101,7 +104,8 @@ public class DiscordThreadChannelMember : SnowflakeObject, IEquatable<DiscordThr
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1.UserId == e2.UserId));
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) &&
+		       ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1.UserId == e2.UserId));
 	}
 
 	/// <summary>
@@ -117,6 +121,12 @@ public class DiscordThreadChannelMember : SnowflakeObject, IEquatable<DiscordThr
 	/// Initializes a new instance of the <see cref="DiscordThreadChannelMember"/> class.
 	/// </summary>
 	internal DiscordThreadChannelMember()
-		: base(new() { "muted", "mute_config", "guild_id" })
-	{ }
+		: base(new()
+		{
+			"muted",
+			"mute_config",
+			"guild_id"
+		})
+	{
+	}
 }

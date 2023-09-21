@@ -21,12 +21,16 @@ public sealed class DiscordRpcApplication : SnowflakeObject, IEquatable<DiscordR
 	public string? IconHash;
 
 	[JsonIgnore]
-	public string? Icon => this.IconHash != null ? $"https://cdn.discordapp.com{Endpoints.APP_ICONS}/{this.Id}/{this.IconHash}.png" : null;
+	public string? Icon => this.IconHash != null
+		                       ? $"https://cdn.discordapp.com{Endpoints.APP_ICONS}/{this.Id}/{this.IconHash}.png"
+		                       : null;
 
 	[JsonProperty("description")]
 	public string? Description;
+
 	[JsonProperty("summary")]
 	public string? Summary;
+
 	[JsonProperty("type")]
 	public string Type;
 
@@ -44,8 +48,10 @@ public sealed class DiscordRpcApplication : SnowflakeObject, IEquatable<DiscordR
 
 	[JsonProperty("terms_of_service_url")]
 	public string? TermsOfServiceUrl;
+
 	[JsonProperty("privacy_policy_url")]
 	public string? PrivacyPolicyUrl;
+
 	[JsonProperty("install_params")]
 	public DiscordApplicationInstallParams InstallParams;
 
@@ -62,7 +68,8 @@ public sealed class DiscordRpcApplication : SnowflakeObject, IEquatable<DiscordR
 	/// Initializes a new instance of the <see cref="DiscordRpcApplication"/> class.
 	/// </summary>
 	internal DiscordRpcApplication()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Generates an oauth url for the application.
@@ -73,7 +80,8 @@ public sealed class DiscordRpcApplication : SnowflakeObject, IEquatable<DiscordR
 	{
 		permissions &= PermissionMethods.FullPerms;
 		// hey look, it's not all annoying and blue :P
-		return new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
+		return new
+				QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
 			.AddParameter("client_id", this.Id.ToString(CultureInfo.InvariantCulture))
 			.AddParameter("scope", "bot")
 			.AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
@@ -114,7 +122,8 @@ public sealed class DiscordRpcApplication : SnowflakeObject, IEquatable<DiscordR
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) &&
+		       ((o1 == null && o2 == null) || e1.Id == e2.Id);
 	}
 
 	/// <summary>

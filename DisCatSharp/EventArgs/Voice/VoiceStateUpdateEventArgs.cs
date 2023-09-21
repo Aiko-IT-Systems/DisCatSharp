@@ -44,5 +44,6 @@ public class VoiceStateUpdateEventArgs : DiscordEventArgs
 	/// </summary>
 	internal VoiceStateUpdateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{ }
+	{
+	}
 }

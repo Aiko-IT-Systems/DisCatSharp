@@ -15,7 +15,8 @@ public static class AttachmentFlagExtensions
 	/// <param name="baseFlags">The existing flags.</param>
 	/// <param name="flag">The flags to search for.</param>
 	/// <returns></returns>
-	public static bool HasAttachmentFlag(this AttachmentFlags baseFlags, AttachmentFlags flag) => (baseFlags & flag) == flag;
+	public static bool HasAttachmentFlag(this AttachmentFlags baseFlags, AttachmentFlags flag)
+		=> (baseFlags & flag) == flag;
 }
 
 /// <summary>

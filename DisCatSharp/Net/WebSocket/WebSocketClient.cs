@@ -96,7 +96,13 @@ public class WebSocketClient : IWebSocketClient
 	public async Task ConnectAsync(Uri uri)
 	{
 		// Disconnect first
-		try { await this.DisconnectAsync().ConfigureAwait(false); } catch { }
+		try
+		{
+			await this.DisconnectAsync().ConfigureAwait(false);
+		}
+		catch
+		{
+		}
 
 		// Disallow sending messages
 		await this._senderLock.WaitAsync().ConfigureAwait(false);
@@ -146,7 +152,8 @@ public class WebSocketClient : IWebSocketClient
 		{
 			this._isClientClose = true;
 			if (this._ws != null && this._ws.State is WebSocketState.Open or WebSocketState.CloseReceived)
-				await this._ws.CloseOutputAsync((WebSocketCloseStatus)code, message, CancellationToken.None).ConfigureAwait(false);
+				await this._ws.CloseOutputAsync((WebSocketCloseStatus)code, message, CancellationToken.None)
+					.ConfigureAwait(false);
 
 			if (this._receiverTask != null)
 				await this._receiverTask.ConfigureAwait(false); // Ensure that receiving completed
@@ -168,7 +175,9 @@ public class WebSocketClient : IWebSocketClient
 				this._isDisposed = true;
 			}
 		}
-		catch { }
+		catch
+		{
+		}
 		finally
 		{
 			this._senderLock.Release();
@@ -201,7 +210,8 @@ public class WebSocketClient : IWebSocketClient
 				var segStart = OUTGOING_CHUNK_SIZE * i;
 				var segLen = Math.Min(OUTGOING_CHUNK_SIZE, len - segStart);
 
-				await this._ws.SendAsync(new(bytes, segStart, segLen), WebSocketMessageType.Text, i == segCount - 1, CancellationToken.None).ConfigureAwait(false);
+				await this._ws.SendAsync(new(bytes, segStart, segLen), WebSocketMessageType.Text, i == segCount - 1,
+				                         CancellationToken.None).ConfigureAwait(false);
 			}
 		}
 		finally
@@ -291,30 +301,49 @@ public class WebSocketClient : IWebSocketClient
 				}
 
 				if (result.MessageType == WebSocketMessageType.Binary)
-					await this._messageReceived.InvokeAsync(this, new SocketBinaryMessageEventArgs(resultBytes)).ConfigureAwait(false);
+				{
+					await this._messageReceived.InvokeAsync(this, new SocketBinaryMessageEventArgs(resultBytes))
+						.ConfigureAwait(false);
+				}
 				else if (result.MessageType == WebSocketMessageType.Text)
-					await this._messageReceived.InvokeAsync(this, new SocketTextMessageEventArgs(Utilities.UTF8.GetString(resultBytes))).ConfigureAwait(false);
+				{
+					await this._messageReceived
+						.InvokeAsync(this, new SocketTextMessageEventArgs(Utilities.UTF8.GetString(resultBytes)))
+						.ConfigureAwait(false);
+				}
 				else // close
 				{
 					if (!this._isClientClose)
 					{
 						var code = result.CloseStatus.Value;
 						code = code is WebSocketCloseStatus.NormalClosure or WebSocketCloseStatus.EndpointUnavailable
-							? (WebSocketCloseStatus)4000
-							: code;
+							       ? (WebSocketCloseStatus)4000
+							       : code;
 
-						await this._ws.CloseOutputAsync(code, result.CloseStatusDescription, CancellationToken.None).ConfigureAwait(false);
+						await this._ws.CloseOutputAsync(code, result.CloseStatusDescription, CancellationToken.None)
+							.ConfigureAwait(false);
 					}
 
-					await this._disconnected.InvokeAsync(this, new(this._serviceProvider) { CloseCode = (int)result.CloseStatus, CloseMessage = result.CloseStatusDescription }).ConfigureAwait(false);
+					await this._disconnected.InvokeAsync(this, new(this._serviceProvider)
+					{
+						CloseCode = (int)result.CloseStatus,
+						CloseMessage = result.CloseStatusDescription
+					}).ConfigureAwait(false);
 					break;
 				}
 			}
 		}
 		catch (Exception ex)
 		{
-			await this._exceptionThrown.InvokeAsync(this, new(this._serviceProvider) { Exception = ex }).ConfigureAwait(false);
-			await this._disconnected.InvokeAsync(this, new(this._serviceProvider) { CloseCode = -1, CloseMessage = "" }).ConfigureAwait(false);
+			await this._exceptionThrown.InvokeAsync(this, new(this._serviceProvider)
+			{
+				Exception = ex
+			}).ConfigureAwait(false);
+			await this._disconnected.InvokeAsync(this, new(this._serviceProvider)
+			{
+				CloseCode = -1,
+				CloseMessage = ""
+			}).ConfigureAwait(false);
 		}
 
 		// Don't await or you deadlock
@@ -331,7 +360,8 @@ public class WebSocketClient : IWebSocketClient
 	public static IWebSocketClient CreateNew(IWebProxy proxy, IServiceProvider provider)
 		=> new WebSocketClient(proxy, provider);
 
-	#region Events
+#region Events
+
 	/// <summary>
 	/// Triggered when the client connects successfully.
 	/// </summary>
@@ -340,6 +370,7 @@ public class WebSocketClient : IWebSocketClient
 		add => this._connected.Register(value);
 		remove => this._connected.Unregister(value);
 	}
+
 	private readonly AsyncEvent<WebSocketClient, SocketEventArgs> _connected;
 
 	/// <summary>
@@ -350,6 +381,7 @@ public class WebSocketClient : IWebSocketClient
 		add => this._disconnected.Register(value);
 		remove => this._disconnected.Unregister(value);
 	}
+
 	private readonly AsyncEvent<WebSocketClient, SocketCloseEventArgs> _disconnected;
 
 	/// <summary>
@@ -360,6 +392,7 @@ public class WebSocketClient : IWebSocketClient
 		add => this._messageReceived.Register(value);
 		remove => this._messageReceived.Unregister(value);
 	}
+
 	private readonly AsyncEvent<WebSocketClient, SocketMessageEventArgs> _messageReceived;
 
 	/// <summary>
@@ -370,6 +403,7 @@ public class WebSocketClient : IWebSocketClient
 		add => this._exceptionThrown.Register(value);
 		remove => this._exceptionThrown.Unregister(value);
 	}
+
 	private readonly AsyncEvent<WebSocketClient, SocketErrorEventArgs> _exceptionThrown;
 	private IServiceProvider _serviceProvider;
 
@@ -381,8 +415,14 @@ public class WebSocketClient : IWebSocketClient
 	/// <param name="handler">The handler.</param>
 	/// <param name="sender">The sender.</param>
 	/// <param name="eventArgs">The event args.</param>
-	private void EventErrorHandler<TArgs>(AsyncEvent<WebSocketClient, TArgs> asyncEvent, Exception ex, AsyncEventHandler<WebSocketClient, TArgs> handler, WebSocketClient sender, TArgs eventArgs)
+	private void EventErrorHandler<TArgs>(AsyncEvent<WebSocketClient, TArgs> asyncEvent, Exception ex,
+	                                      AsyncEventHandler<WebSocketClient, TArgs> handler, WebSocketClient sender,
+	                                      TArgs eventArgs)
 		where TArgs : AsyncEventArgs
-		=> this._exceptionThrown.InvokeAsync(this, new(this._serviceProvider) { Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
-	#endregion
+		=> this._exceptionThrown.InvokeAsync(this, new(this._serviceProvider)
+		{
+			Exception = ex
+		}).ConfigureAwait(false).GetAwaiter().GetResult();
+
+#endregion
 }

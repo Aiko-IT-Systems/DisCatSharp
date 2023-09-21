@@ -38,7 +38,8 @@ public sealed class InvalidOverloadException : Exception
 	/// <param name="method">Method that caused the problem.</param>
 	public InvalidOverloadException(string message, MethodInfo method)
 		: this(message, method, null)
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Returns a string representation of this <see cref="InvalidOverloadException"/>.

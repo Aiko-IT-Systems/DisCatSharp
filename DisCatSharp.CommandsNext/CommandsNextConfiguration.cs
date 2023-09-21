@@ -105,7 +105,8 @@ public sealed class CommandsNextConfiguration
 	/// Creates a new configuration with default values.
 	/// </summary>
 	public CommandsNextConfiguration()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Utilized via dependency injection pipeline.

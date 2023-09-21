@@ -28,5 +28,5 @@ public enum InviteFlags : int
 	/// Invite grants temporary guest membership.
 	/// All channels but the one invited to are hidden and user gets kicked if they leave the voice.
 	/// </summary>
-	GuestMembership = 1<<0
+	GuestMembership = 1 << 0
 }

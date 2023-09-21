@@ -82,7 +82,8 @@ public sealed class DiscordOverwriteBuilder
 	/// Creates a new and empty <see cref="DiscordOverwriteBuilder"/>.
 	/// </summary>
 	public DiscordOverwriteBuilder()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Allows a permission for this overwrite.
@@ -156,16 +157,13 @@ public sealed class DiscordOverwriteBuilder
 	/// Builds this DiscordOverwrite.
 	/// </summary>
 	/// <returns>Use this object for creation of new overwrites.</returns>
-	internal DiscordRestOverwrite Build()
+	internal DiscordRestOverwrite Build() => new()
 	{
-		return new()
-		{
-			Allow = this.Allowed,
-			Deny = this.Denied,
-			Id = this.Target,
-			Type = this.Type,
-		};
-	}
+		Allow = this.Allowed,
+		Deny = this.Denied,
+		Id = this.Target,
+		Type = this.Type
+	};
 }
 
 public static class DiscordOverwriteBuilderExtensions
@@ -180,12 +178,18 @@ public static class DiscordOverwriteBuilderExtensions
 	/// <param name="denied">The permissions deny.</param>
 	/// <param name="unset">The permissions to unset.</param>
 	/// <returns>A new <see cref="List{DiscordOverwriteBuilder}"/> containing the merged role.</returns>
-	public static List<DiscordOverwriteBuilder> Merge(this IEnumerable<DiscordOverwriteBuilder> builderList, OverwriteType type, ulong target, Permissions allowed, Permissions denied, Permissions unset = Permissions.None)
+	public static List<DiscordOverwriteBuilder> Merge(this IEnumerable<DiscordOverwriteBuilder> builderList,
+	                                                  OverwriteType type, ulong target, Permissions allowed,
+	                                                  Permissions denied, Permissions unset = Permissions.None)
 	{
 		var newList = builderList.ToList();
 
 		if (!newList.Any(x => x.Target == target && x.Type == type))
-			newList.Add(new() { Type = type, Target = target });
+			newList.Add(new()
+			{
+				Type = type,
+				Target = target
+			});
 
 		var discordOverwriteBuilder = newList.First(x => x.Target == target && x.Type == type);
 		discordOverwriteBuilder.Allow(allowed);
@@ -203,7 +207,9 @@ public static class DiscordOverwriteBuilderExtensions
 	/// <param name="denied">The permissions to deny.</param>
 	/// <param name="unset">The permissions to unset.</param>
 	/// <returns>A new <see cref="List{DiscordOverwriteBuilder}"/> containing the merged member.</returns>
-	public static List<DiscordOverwriteBuilder> Merge(this IEnumerable<DiscordOverwriteBuilder> builderList, DiscordMember member, Permissions allowed, Permissions denied, Permissions unset = Permissions.None)
+	public static List<DiscordOverwriteBuilder> Merge(this IEnumerable<DiscordOverwriteBuilder> builderList,
+	                                                  DiscordMember member, Permissions allowed, Permissions denied,
+	                                                  Permissions unset = Permissions.None)
 		=> builderList.Merge(OverwriteType.Member, member.Id, allowed, denied, unset);
 
 	/// <summary>
@@ -215,19 +221,29 @@ public static class DiscordOverwriteBuilderExtensions
 	/// <param name="denied">The permissions deny.</param>
 	/// <param name="unset">The permissions to unset.</param>
 	/// <returns>A new <see cref="List{DiscordOverwriteBuilder}"/> containing the merged role.</returns>
-	public static List<DiscordOverwriteBuilder> Merge(this IEnumerable<DiscordOverwriteBuilder> builderList, DiscordRole role, Permissions allowed, Permissions denied, Permissions unset = Permissions.None)
+	public static List<DiscordOverwriteBuilder> Merge(this IEnumerable<DiscordOverwriteBuilder> builderList,
+	                                                  DiscordRole role, Permissions allowed, Permissions denied,
+	                                                  Permissions unset = Permissions.None)
 		=> builderList.Merge(OverwriteType.Role, role.Id, allowed, denied, unset);
 
 	/// <inheritdoc cref="Merge(IEnumerable{DiscordOverwriteBuilder}, DiscordMember, Permissions, Permissions, Permissions)"/>
-	public static List<DiscordOverwriteBuilder> Merge(this IEnumerable<DiscordOverwrite> builderList, DiscordMember member, Permissions allowed, Permissions denied, Permissions unset = Permissions.None)
-		=> builderList.Select(x => new DiscordOverwriteBuilder(x)).Merge(OverwriteType.Member, member.Id, allowed, denied, unset);
+	public static List<DiscordOverwriteBuilder> Merge(this IEnumerable<DiscordOverwrite> builderList,
+	                                                  DiscordMember member, Permissions allowed, Permissions denied,
+	                                                  Permissions unset = Permissions.None)
+		=> builderList.Select(x => new DiscordOverwriteBuilder(x))
+			.Merge(OverwriteType.Member, member.Id, allowed, denied, unset);
 
 	/// <inheritdoc cref="Merge(IEnumerable{DiscordOverwriteBuilder}, DiscordRole, Permissions, Permissions, Permissions)"/>
-	public static List<DiscordOverwriteBuilder> Merge(this IEnumerable<DiscordOverwrite> builderList, DiscordRole role, Permissions allowed, Permissions denied, Permissions unset = Permissions.None)
-		=> builderList.Select(x => new DiscordOverwriteBuilder(x)).Merge(OverwriteType.Role, role.Id, allowed, denied, unset);
+	public static List<DiscordOverwriteBuilder> Merge(this IEnumerable<DiscordOverwrite> builderList, DiscordRole role,
+	                                                  Permissions allowed, Permissions denied,
+	                                                  Permissions unset = Permissions.None)
+		=> builderList.Select(x => new DiscordOverwriteBuilder(x))
+			.Merge(OverwriteType.Role, role.Id, allowed, denied, unset);
 
 	/// <inheritdoc cref="Merge(IEnumerable{DiscordOverwriteBuilder}, OverwriteType, ulong, Permissions, Permissions, Permissions)"/>
-	public static List<DiscordOverwriteBuilder> Merge(this IEnumerable<DiscordOverwrite> builderList, OverwriteType type, ulong target, Permissions allowed, Permissions denied, Permissions unset = Permissions.None)
+	public static List<DiscordOverwriteBuilder> Merge(this IEnumerable<DiscordOverwrite> builderList,
+	                                                  OverwriteType type, ulong target, Permissions allowed,
+	                                                  Permissions denied, Permissions unset = Permissions.None)
 		=> builderList.Select(x => new DiscordOverwriteBuilder(x)).Merge(type, target, allowed, denied, unset);
 }
 

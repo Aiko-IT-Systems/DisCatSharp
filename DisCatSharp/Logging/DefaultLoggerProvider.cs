@@ -27,7 +27,8 @@ internal class DefaultLoggerProvider : ILoggerProvider
 	/// <param name="client">The client.</param>
 	internal DefaultLoggerProvider(BaseDiscordClient client)
 		: this(client.Configuration.MinimumLogLevel, client.Configuration.LogTimestampFormat)
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DefaultLoggerProvider"/> class.
@@ -35,7 +36,8 @@ internal class DefaultLoggerProvider : ILoggerProvider
 	/// <param name="client">The client.</param>
 	internal DefaultLoggerProvider(DiscordWebhookClient client)
 		: this(client.MinimumLogLevel, client.LogTimestampFormat)
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DefaultLoggerProvider"/> class.
@@ -43,14 +45,16 @@ internal class DefaultLoggerProvider : ILoggerProvider
 	/// <param name="client">The client.</param>
 	internal DefaultLoggerProvider(DiscordOAuth2Client client)
 		: this(client.MinimumLogLevel, client.LogTimestampFormat)
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DefaultLoggerProvider"/> class.
 	/// </summary>
 	/// <param name="minLevel">The min level.</param>
 	/// <param name="timestampFormat">The timestamp format.</param>
-	internal DefaultLoggerProvider(LogLevel minLevel = LogLevel.Information, string timestampFormat = "yyyy-MM-dd HH:mm:ss zzz")
+	internal DefaultLoggerProvider(LogLevel minLevel = LogLevel.Information,
+	                               string timestampFormat = "yyyy-MM-dd HH:mm:ss zzz")
 	{
 		this._minimumLevel = minLevel;
 		this._timestampFormat = timestampFormat;
@@ -63,8 +67,12 @@ internal class DefaultLoggerProvider : ILoggerProvider
 	public ILogger CreateLogger(string categoryName) =>
 		this._isDisposed
 			? throw new InvalidOperationException("This logger provider is already disposed.")
-			: categoryName != typeof(BaseDiscordClient).FullName && categoryName != typeof(DiscordWebhookClient).FullName && categoryName != typeof(DiscordOAuth2Client).FullName
-				? throw new ArgumentException($"This provider can only provide instances of loggers for {typeof(BaseDiscordClient).FullName}, {typeof(DiscordWebhookClient).FullName} or {typeof(DiscordOAuth2Client).FullName}.", nameof(categoryName))
+			: categoryName != typeof(BaseDiscordClient).FullName &&
+			  categoryName != typeof(DiscordWebhookClient).FullName &&
+			  categoryName != typeof(DiscordOAuth2Client).FullName
+				? throw new
+					  ArgumentException($"This provider can only provide instances of loggers for {typeof(BaseDiscordClient).FullName}, {typeof(DiscordWebhookClient).FullName} or {typeof(DiscordOAuth2Client).FullName}.",
+					                    nameof(categoryName))
 				: new DefaultLogger(this._minimumLevel, this._timestampFormat);
 
 	/// <summary>

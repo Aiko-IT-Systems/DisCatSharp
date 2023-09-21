@@ -1,4 +1,3 @@
-
 using System;
 
 using DisCatSharp.Lavalink.Entities.Websocket;
@@ -57,9 +56,9 @@ public sealed class LavalinkStats
 	/// <summary>
 	///  Constructs an empty <see cref="LavalinkStats"/> object.
 	/// </summary>
-	[JsonConstructor]
-	internal LavalinkStats()
-	{ }
+	[JsonConstructor] internal LavalinkStats()
+	{
+	}
 
 	/// <summary>
 	/// Constructs a new <see cref="LavalinkStats"/> object from a <see cref="StatsOp"/> received via websocket.

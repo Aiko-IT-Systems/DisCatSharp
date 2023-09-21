@@ -23,7 +23,8 @@ public static class CommonRegEx
 	/// Represents a timespan.
 	/// </summary>
 	public static Regex TimeSpan
-		=> new(@"^(?<days>\d+d\s*)?(?<hours>\d{1,2}h\s*)?(?<minutes>\d{1,2}m\s*)?(?<seconds>\d{1,2}s\s*)?$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+		=> new(@"^(?<days>\d+d\s*)?(?<hours>\d{1,2}h\s*)?(?<minutes>\d{1,2}m\s*)?(?<seconds>\d{1,2}s\s*)?$",
+		       RegexOptions.ECMAScript | RegexOptions.Compiled);
 
 	/// <summary>
 	/// Represents a advanced youtube regex.
@@ -48,5 +49,6 @@ public static class CommonRegEx
 	/// </list>
 	/// </summary>
 	public static Regex AdvancedYoutubeRegex
-		=> new(@"http(s)?:\/\/(www\.)?youtu(\.be|be\.com)\/(watch\?v=|playlist)?(?<id>\w{1,})?((\?|\&)list=(?<list>[\w-_]{1,}))(&index=(?<index>\d{1,}))?", RegexOptions.ECMAScript | RegexOptions.Compiled);
+		=> new(@"http(s)?:\/\/(www\.)?youtu(\.be|be\.com)\/(watch\?v=|playlist)?(?<id>\w{1,})?((\?|\&)list=(?<list>[\w-_]{1,}))(&index=(?<index>\d{1,}))?",
+		       RegexOptions.ECMAScript | RegexOptions.Compiled);
 }

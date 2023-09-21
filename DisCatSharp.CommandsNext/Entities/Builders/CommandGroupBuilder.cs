@@ -26,7 +26,8 @@ public sealed class CommandGroupBuilder : CommandBuilder
 	/// </summary>
 	public CommandGroupBuilder()
 		: this(null)
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Creates a new command group builder.

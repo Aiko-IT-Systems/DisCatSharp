@@ -1,4 +1,3 @@
-
 // ReSharper disable InconsistentNaming
 
 namespace DisCatSharp.Enums;
@@ -57,9 +56,10 @@ public static class OAuth
 			OAuthScopes.IDENTIFY_BASIC => IDENTIFY_BASIC,
 			OAuthScopes.IDENTIFY_EXTENDED => IDENTIFY_EXTENDED,
 			OAuthScopes.ALL => ALL,
-			_ => BOT_DEFAULT,
+			_ => BOT_DEFAULT
 		};
 }
+
 /// <summary>
 /// The oauth scopes.
 /// </summary>

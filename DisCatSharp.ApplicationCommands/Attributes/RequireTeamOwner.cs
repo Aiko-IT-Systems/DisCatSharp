@@ -16,7 +16,8 @@ public sealed class ApplicationCommandRequireTeamOwnerAttribute : ApplicationCom
 	/// Defines that this application command is restricted to team members of the bot with owner role.
 	/// </summary>
 	public ApplicationCommandRequireTeamOwnerAttribute()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Runs checks.

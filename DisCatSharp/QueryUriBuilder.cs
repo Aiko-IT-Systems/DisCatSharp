@@ -18,6 +18,7 @@ internal class QueryUriBuilder
 	/// Gets the query parameters.
 	/// </summary>
 	public IReadOnlyList<KeyValuePair<string, string>> QueryParameters => this._queryParams;
+
 	private readonly List<KeyValuePair<string, string>> _queryParams = new();
 
 	/// <summary>
@@ -61,7 +62,10 @@ internal class QueryUriBuilder
 	public Uri Build() =>
 		new UriBuilder(this.SourceUri)
 		{
-			Query = string.Join("&", this._queryParams.Select(e => Uri.EscapeDataString(e.Key) + '=' + Uri.EscapeDataString(e.Value)))
+			Query =
+				string.Join("&",
+				            this._queryParams.Select(e => Uri.EscapeDataString(e.Key) + '=' +
+				                                          Uri.EscapeDataString(e.Value)))
 		}.Uri;
 
 	/// <summary>

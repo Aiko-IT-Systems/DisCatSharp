@@ -18,8 +18,8 @@ namespace DisCatSharp.Interactivity.EventHandling;
 /// </summary>
 internal class Poller
 {
-	DiscordClient? _client;
-	ConcurrentHashSet<PollRequest>? _requests;
+	private DiscordClient? _client;
+	private ConcurrentHashSet<PollRequest>? _requests;
 
 	/// <summary>
 	/// Creates a new EventWaiter object.
@@ -50,7 +50,8 @@ internal class Poller
 		}
 		catch (Exception ex)
 		{
-			this._client!.Logger.LogError(InteractivityEvents.InteractivityPollError, ex, "Exception occurred while polling");
+			this._client!.Logger.LogError(InteractivityEvents.InteractivityPollError, ex,
+			                              "Exception occurred while polling");
 		}
 		finally
 		{
@@ -58,6 +59,7 @@ internal class Poller
 			request.Dispose();
 			this._requests?.TryRemove(request);
 		}
+
 		return result;
 	}
 
@@ -75,17 +77,21 @@ internal class Poller
 		_ = Task.Run(async () =>
 		{
 			if (this._requests is not null)
-				foreach (var req in this._requests.Where(req => req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id))
-					if (req.Emojis.Contains(eventArgs.Emoji) && !req.Collected.Any(x => x.Voted.Contains(eventArgs.User)))
+				foreach (var req in this._requests.Where(req => req.Message.Id == eventArgs.Message.Id &&
+				                                                req.Message.ChannelId == eventArgs.Channel.Id))
+					if (req.Emojis.Contains(eventArgs.Emoji) &&
+					    !req.Collected.Any(x => x.Voted.Contains(eventArgs.User)))
 					{
 						if (eventArgs.User.Id != this._client!.CurrentUser!.Id)
 							req.AddReaction(eventArgs.Emoji, eventArgs.User);
 					}
 					else
 					{
-						var member = await eventArgs.Channel.Guild!.GetMemberAsync(client.CurrentUser!.Id).ConfigureAwait(false);
+						var member = await eventArgs.Channel.Guild!.GetMemberAsync(client.CurrentUser!.Id)
+							             .ConfigureAwait(false);
 						if (eventArgs.Channel.PermissionsFor(member).HasPermission(Permissions.ManageMessages))
-							await eventArgs.Message.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User).ConfigureAwait(false);
+							await eventArgs.Message.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User)
+								.ConfigureAwait(false);
 					}
 		});
 		return Task.CompletedTask;
@@ -102,7 +108,10 @@ internal class Poller
 		if (this._requests is null)
 			return Task.CompletedTask;
 
-		foreach (var req in this._requests.Where(req => req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id).Where(req => eventArgs.User.Id != this._client!.CurrentUser!.Id))
+		foreach (var req in this._requests
+			         .Where(req => req.Message.Id == eventArgs.Message.Id &&
+			                       req.Message.ChannelId == eventArgs.Channel.Id)
+			         .Where(req => eventArgs.User.Id != this._client!.CurrentUser!.Id))
 			req.RemoveReaction(eventArgs.Emoji, eventArgs.User);
 		return Task.CompletedTask;
 	}
@@ -118,7 +127,8 @@ internal class Poller
 		if (this._requests is null)
 			return Task.CompletedTask;
 
-		foreach (var req in this._requests.Where(req => req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id))
+		foreach (var req in this._requests.Where(req => req.Message.Id == eventArgs.Message.Id &&
+		                                                req.Message.ChannelId == eventArgs.Channel.Id))
 			req.ClearCollected();
 
 		return Task.CompletedTask;
@@ -140,6 +150,7 @@ internal class Poller
 			this._client.MessageReactionRemoved -= this.HandleReactionRemove;
 			this._client.MessageReactionsCleared -= this.HandleReactionClear;
 		}
+
 		this._client = null;
 		this._requests?.Clear();
 		this._requests = null;

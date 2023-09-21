@@ -26,7 +26,9 @@ public sealed class DiscordApplicationInstallParams : ObservableApiObject
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordApplicationInstallParams"/> class.
 	/// </summary>
-	internal DiscordApplicationInstallParams() { }
+	internal DiscordApplicationInstallParams()
+	{
+	}
 
 	public DiscordApplicationInstallParams(List<string>? scopes = null, Permissions? permissions = null)
 	{

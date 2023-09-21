@@ -25,5 +25,6 @@ public class IncidentsData : ObservableApiObject
 	/// Constructs a new <see cref="IncidentsData"/> object.
 	/// </summary>
 	internal IncidentsData()
-	{ }
+	{
+	}
 }

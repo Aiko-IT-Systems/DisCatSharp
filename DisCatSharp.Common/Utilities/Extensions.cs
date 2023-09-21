@@ -31,7 +31,10 @@ public static class Extensions
 	/// <returns>Calculated number length.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int CalculateLength(this sbyte num)
-		=> num == 0 ? 1 : (int)Math.Floor(Math.Log10(Math.Abs(num == sbyte.MinValue ? num + 1 : num))) + (num < 0 ? 2 /* include sign */ : 1);
+		=> num == 0
+			   ? 1
+			   : (int)Math.Floor(Math.Log10(Math.Abs(num == sbyte.MinValue ? num + 1 : num))) +
+			     (num < 0 ? 2 /* include sign */ : 1);
 
 	/// <summary>
 	/// Calculates the length of string representation of given number in base 10 (including sign, if present).
@@ -49,7 +52,10 @@ public static class Extensions
 	/// <returns>Calculated number length.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int CalculateLength(this short num)
-		=> num == 0 ? 1 : (int)Math.Floor(Math.Log10(Math.Abs(num == short.MinValue ? num + 1 : num))) + (num < 0 ? 2 /* include sign */ : 1);
+		=> num == 0
+			   ? 1
+			   : (int)Math.Floor(Math.Log10(Math.Abs(num == short.MinValue ? num + 1 : num))) +
+			     (num < 0 ? 2 /* include sign */ : 1);
 
 	/// <summary>
 	/// Calculates the length of string representation of given number in base 10 (including sign, if present).
@@ -67,7 +73,10 @@ public static class Extensions
 	/// <returns>Calculated number length.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int CalculateLength(this int num)
-		=> num == 0 ? 1 : (int)Math.Floor(Math.Log10(Math.Abs(num == int.MinValue ? num + 1 : num))) + (num < 0 ? 2 /* include sign */ : 1);
+		=> num == 0
+			   ? 1
+			   : (int)Math.Floor(Math.Log10(Math.Abs(num == int.MinValue ? num + 1 : num))) +
+			     (num < 0 ? 2 /* include sign */ : 1);
 
 	/// <summary>
 	/// Calculates the length of string representation of given number in base 10 (including sign, if present).
@@ -85,7 +94,10 @@ public static class Extensions
 	/// <returns>Calculated number length.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int CalculateLength(this long num)
-		=> num == 0 ? 1 : (int)Math.Floor(Math.Log10(Math.Abs(num == long.MinValue ? num + 1 : num))) + (num < 0 ? 2 /* include sign */ : 1);
+		=> num == 0
+			   ? 1
+			   : (int)Math.Floor(Math.Log10(Math.Abs(num == long.MinValue ? num + 1 : num))) +
+			     (num < 0 ? 2 /* include sign */ : 1);
 
 	/// <summary>
 	/// Calculates the length of string representation of given number in base 10 (including sign, if present).

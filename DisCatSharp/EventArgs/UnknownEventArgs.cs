@@ -22,5 +22,6 @@ public class UnknownEventArgs : DiscordEventArgs
 	/// </summary>
 	internal UnknownEventArgs(IServiceProvider provider)
 		: base(provider)
-	{ }
+	{
+	}
 }

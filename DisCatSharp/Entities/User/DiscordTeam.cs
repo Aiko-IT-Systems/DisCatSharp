@@ -28,7 +28,9 @@ public sealed class DiscordTeam : SnowflakeObject, IEquatable<DiscordTeam>
 	/// Gets the team's icon.
 	/// </summary>
 	public string? Icon
-		=> !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.TEAM_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null!;
+		=> !string.IsNullOrWhiteSpace(this.IconHash)
+			   ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.TEAM_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024"
+			   : null!;
 
 	/// <summary>
 	/// Gets the owner of the team.

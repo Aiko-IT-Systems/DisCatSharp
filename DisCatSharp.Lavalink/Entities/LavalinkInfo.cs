@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 
@@ -22,6 +21,7 @@ public sealed class LavalinkInfo
 	/// </summary>
 	[JsonIgnore]
 	public DateTimeOffset BuildTime => Utilities.GetDateTimeOffsetFromMilliseconds(this._buildTime);
+
 	/// <summary>
 	/// Gets the timestamp when this version was built.
 	/// </summary>
@@ -158,4 +158,3 @@ public sealed class Version
 	[JsonProperty("build")]
 	public string? Build { get; internal set; }
 }
-

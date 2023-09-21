@@ -97,18 +97,20 @@ internal sealed class UserStatusConverter : JsonConverter
 	/// <param name="objectType">The object type.</param>
 	/// <param name="existingValue">The existing value.</param>
 	/// <param name="serializer">The serializer.</param>
-	public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) =>
-		// Active sessions are indicated with an "online", "idle", or "dnd" string per platform. If a user is
-		// offline or invisible, the corresponding field is not present.
-		reader.Value?.ToString()?.ToLowerInvariant() switch // reader.Value can be a string, DateTime or DateTimeOffset (yes, it's weird)
-		{
-			"online" => UserStatus.Online,
-			"idle" => UserStatus.Idle,
-			"dnd" => UserStatus.DoNotDisturb,
-			"invisible" => UserStatus.Invisible,
-			"streaming" => UserStatus.Streaming,
-			_ => UserStatus.Offline,
-		};
+	public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+		=>
+			// Active sessions are indicated with an "online", "idle", or "dnd" string per platform. If a user is
+			// offline or invisible, the corresponding field is not present.
+			reader.Value?.ToString()?.ToLowerInvariant()
+				switch // reader.Value can be a string, DateTime or DateTimeOffset (yes, it's weird)
+				{
+					"online" => UserStatus.Online,
+					"idle" => UserStatus.Idle,
+					"dnd" => UserStatus.DoNotDisturb,
+					"invisible" => UserStatus.Invisible,
+					"streaming" => UserStatus.Streaming,
+					_ => UserStatus.Offline
+				};
 
 	/// <summary>
 	/// Whether this user5 status can be converted.
@@ -206,7 +208,9 @@ public sealed class DiscordActivity
 			this.State = name;
 		}
 		else
+		{
 			this.Name = name;
+		}
 
 		this.ActivityType = type;
 	}
@@ -259,14 +263,15 @@ public sealed class DiscordActivity
 
 		if (rawActivity?.IsCustomStatus() == true && this.CustomStatus != null)
 			this.CustomStatus.UpdateWith(rawActivity.State, rawActivity.Emoji);
-		else this.CustomStatus = rawActivity?.IsCustomStatus() == true
-			? new DiscordCustomStatus
-			{
-				Name = rawActivity.Name!,
-				State = rawActivity.State,
-				Emoji = rawActivity.Emoji
-			}
-			: null;
+		else
+			this.CustomStatus = rawActivity?.IsCustomStatus() == true
+				                    ? new DiscordCustomStatus
+				                    {
+					                    Name = rawActivity.Name!,
+					                    State = rawActivity.State,
+					                    Emoji = rawActivity.Emoji
+				                    }
+				                    : null;
 	}
 }
 
@@ -294,7 +299,8 @@ public sealed class DiscordCustomStatus
 	/// Initializes a new instance of the <see cref="DiscordCustomStatus"/> class.
 	/// </summary>
 	internal DiscordCustomStatus()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordCustomStatus"/> class.
@@ -413,7 +419,9 @@ public sealed class DiscordRichPresence
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordRichPresence"/> class.
 	/// </summary>
-	internal DiscordRichPresence() { }
+	internal DiscordRichPresence()
+	{
+	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordRichPresence"/> class.
@@ -457,13 +465,19 @@ public sealed class DiscordRichPresence
 	{
 		this.Details = rawGame?.Details;
 		this.State = rawGame?.State;
-		this.Application = rawGame?.ApplicationId != null ? new DiscordApplication { Id = rawGame.ApplicationId.Value } : null;
+		this.Application = rawGame?.ApplicationId != null
+			                   ? new DiscordApplication
+			                   {
+				                   Id = rawGame.ApplicationId.Value
+			                   }
+			                   : null;
 		this.Instance = rawGame?.Instance;
 		this.LargeImageText = rawGame?.Assets?.LargeImageText;
 		this.SmallImageText = rawGame?.Assets?.SmallImageText;
 		this.CurrentPartySize = rawGame?.Party?.Size?.Current;
 		this.MaximumPartySize = rawGame?.Party?.Size?.Maximum;
-		if (rawGame?.Party != null && ulong.TryParse(rawGame.Party.Id, NumberStyles.Number, CultureInfo.InvariantCulture, out var partyId))
+		if (rawGame?.Party != null &&
+		    ulong.TryParse(rawGame.Party.Id, NumberStyles.Number, CultureInfo.InvariantCulture, out var partyId))
 			this.PartyId = partyId;
 		this.Buttons = rawGame?.Buttons;
 		this.StartTimestamp = rawGame?.Timestamps?.Start;
@@ -476,9 +490,17 @@ public sealed class DiscordRichPresence
 		if (lid != null)
 		{
 			if (lid.StartsWith("spotify:"))
-				this.LargeImage = new DiscordSpotifyAsset { Id = lid };
+				this.LargeImage = new DiscordSpotifyAsset
+				{
+					Id = lid
+				};
 			else if (ulong.TryParse(lid, NumberStyles.Number, CultureInfo.InvariantCulture, out var ulid))
-				this.LargeImage = new DiscordApplicationAsset { Id = lid, Application = this.Application, Type = ApplicationAssetType.LargeImage };
+				this.LargeImage = new DiscordApplicationAsset
+				{
+					Id = lid,
+					Application = this.Application,
+					Type = ApplicationAssetType.LargeImage
+				};
 		}
 
 		var sid = rawGame?.Assets?.SmallImage;
@@ -486,9 +508,17 @@ public sealed class DiscordRichPresence
 			return;
 
 		if (sid.StartsWith("spotify:"))
-			this.SmallImage = new DiscordSpotifyAsset { Id = sid };
+			this.SmallImage = new DiscordSpotifyAsset
+			{
+				Id = sid
+			};
 		else if (ulong.TryParse(sid, NumberStyles.Number, CultureInfo.InvariantCulture, out var usid))
-			this.SmallImage = new DiscordApplicationAsset { Id = sid, Application = this.Application, Type = ApplicationAssetType.LargeImage };
+			this.SmallImage = new DiscordApplicationAsset
+			{
+				Id = sid,
+				Application = this.Application,
+				Type = ApplicationAssetType.LargeImage
+			};
 	}
 }
 

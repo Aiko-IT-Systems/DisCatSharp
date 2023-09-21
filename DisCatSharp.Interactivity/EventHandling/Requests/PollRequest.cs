@@ -116,6 +116,7 @@ public class PollEmoji
 
 	public readonly DiscordEmoji Emoji;
 	public readonly ConcurrentHashSet<DiscordUser> Voted;
+
 	/// <summary>
 	/// Gets the total.
 	/// </summary>

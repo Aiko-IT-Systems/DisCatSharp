@@ -19,7 +19,8 @@ public class DiscordScheduledEventEntityMetadata : ObservableApiObject
 	/// Initializes a new instance of the <see cref="DiscordScheduledEventEntityMetadata"/> class.
 	/// </summary>
 	internal DiscordScheduledEventEntityMetadata()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordScheduledEventEntityMetadata"/> class.

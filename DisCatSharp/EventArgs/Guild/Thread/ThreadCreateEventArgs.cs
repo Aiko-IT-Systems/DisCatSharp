@@ -27,5 +27,8 @@ public class ThreadCreateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ThreadCreateEventArgs"/> class.
 	/// </summary>
-	internal ThreadCreateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal ThreadCreateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

@@ -8,7 +8,6 @@ namespace DisCatSharp.CommandsNext.Attributes;
 /// <summary>
 /// Defines that a command is only usable within a direct message channel.
 /// </summary>
-
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 public sealed class RequireDirectMessageAttribute : CheckBaseAttribute
 {
@@ -16,7 +15,8 @@ public sealed class RequireDirectMessageAttribute : CheckBaseAttribute
 	/// Defines that this command is only usable within a direct message channel.
 	/// </summary>
 	public RequireDirectMessageAttribute()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Executes the a check.

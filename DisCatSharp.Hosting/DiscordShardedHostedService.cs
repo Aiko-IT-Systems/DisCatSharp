@@ -25,18 +25,22 @@ public abstract class DiscordShardedHostedService : BaseHostedService, IDiscordH
 	/// <param name="applicationLifetime">The application lifetime.</param>
 	/// <param name="configBotSection">The config bot section.</param>
 	protected DiscordShardedHostedService(IConfiguration config,
-		ILogger<DiscordShardedHostedService> logger,
-		IServiceProvider serviceProvider,
-		IHostApplicationLifetime applicationLifetime,
-		string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB)
+	                                      ILogger<DiscordShardedHostedService> logger,
+	                                      IServiceProvider serviceProvider,
+	                                      IHostApplicationLifetime applicationLifetime,
+	                                      string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions
+		                                      .DEFAULT_ROOT_LIB)
 		: base(config, logger, serviceProvider, applicationLifetime, configBotSection)
-	{ }
+	{
+	}
 
 	protected override Task ConfigureAsync()
 	{
 		try
 		{
-			var config = this.Configuration.ExtractConfig<DiscordConfiguration>(this.ServiceProvider, "Discord", this.BotSection);
+			var config =
+				this.Configuration.ExtractConfig<DiscordConfiguration>(this.ServiceProvider, "Discord",
+				                                                       this.BotSection);
 			this.ShardedClient = new(config);
 		}
 		catch (Exception ex)
@@ -53,9 +57,7 @@ public abstract class DiscordShardedHostedService : BaseHostedService, IDiscordH
 	protected override Task ConfigureExtensionsAsync()
 	{
 		foreach (var client in this.ShardedClient.ShardClients.Values)
-		{
 			this.InitializeExtensions(client);
-		}
 
 		return Task.CompletedTask;
 	}

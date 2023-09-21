@@ -39,6 +39,7 @@ public class RingBuffer<T> : ICollection<T>
 	/// Gets or sets the internal collection of items.
 	/// </summary>
 	protected T[] InternalBuffer { get; set; }
+
 	private bool _reachedEnd;
 
 	/// <summary>
@@ -64,7 +65,8 @@ public class RingBuffer<T> : ICollection<T>
 	/// <exception cref="ArgumentOutOfRangeException" />
 	public RingBuffer(IEnumerable<T> elements)
 		: this(elements, 0)
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Creates a new ring buffer, filled with specified elements, and starting at specified index.
@@ -83,7 +85,8 @@ public class RingBuffer<T> : ICollection<T>
 		this.Capacity = this.InternalBuffer.Length;
 
 		if (this.CurrentIndex >= this.InternalBuffer.Length || this.CurrentIndex < 0)
-			throw new ArgumentOutOfRangeException(nameof(index), "Index must be less than buffer capacity, and greater than zero.");
+			throw new ArgumentOutOfRangeException(nameof(index),
+			                                      "Index must be less than buffer capacity, and greater than zero.");
 	}
 
 	/// <summary>
@@ -161,7 +164,8 @@ public class RingBuffer<T> : ICollection<T>
 	public void CopyTo(T[] array, int index)
 	{
 		if (array.Length - index < 1)
-			throw new ArgumentException("Target array is too small to contain the elements from this buffer.", nameof(array));
+			throw new ArgumentException("Target array is too small to contain the elements from this buffer.",
+			                            nameof(array));
 
 		var ci = 0;
 		for (var i = this.CurrentIndex; i < this.InternalBuffer.Length; i++)
@@ -175,7 +179,8 @@ public class RingBuffer<T> : ICollection<T>
 	/// </summary>
 	/// <param name="item">Item to remove.</param>
 	/// <returns>Whether an item was removed or not.</returns>
-	public bool Remove(T item) => throw new NotImplementedException("This method is not implemented. Use .Remove(predicate) instead.");
+	public bool Remove(T item)
+		=> throw new NotImplementedException("This method is not implemented. Use .Remove(predicate) instead.");
 
 	/// <summary>
 	/// Removes an item from the buffer using given predicate to find it.

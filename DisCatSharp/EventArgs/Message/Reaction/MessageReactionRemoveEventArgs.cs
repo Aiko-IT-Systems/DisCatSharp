@@ -51,5 +51,8 @@ public class MessageReactionRemoveEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="MessageReactionRemoveEventArgs"/> class.
 	/// </summary>
-	internal MessageReactionRemoveEventArgs(IServiceProvider provider) : base(provider) { }
+	internal MessageReactionRemoveEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

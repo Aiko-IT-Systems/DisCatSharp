@@ -66,7 +66,9 @@ public class DiscordLinkButtonComponent : DiscordComponent
 	/// <param name="label">The text to display on the button. Can be left blank if <paramref name="emoji"/> is set.</param>
 	/// <param name="disabled">Whether or not this button can be pressed.</param>
 	/// <param name="emoji">The emoji to set with this button. This is required if <paramref name="label"/> is null or empty.</param>
-	public DiscordLinkButtonComponent(string url, string label, bool disabled = false, DiscordComponentEmoji emoji = null) : this()
+	public DiscordLinkButtonComponent(string url, string label, bool disabled = false,
+	                                  DiscordComponentEmoji emoji = null)
+		: this()
 	{
 		this.Url = url;
 		this.Label = label;

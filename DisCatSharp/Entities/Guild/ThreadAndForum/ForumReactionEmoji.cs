@@ -32,6 +32,7 @@ public class ForumReactionEmoji : ObservableApiObject
 	/// Gets the emoji.
 	/// </summary>
 	public DiscordEmoji GetEmoji(DiscordClient client)
-		=> this.EmojiName != null ? DiscordEmoji.FromName(client, $":{this.EmojiName}:", false) : DiscordEmoji.FromGuildEmote(client, this.EmojiId.Value);
-
+		=> this.EmojiName != null
+			   ? DiscordEmoji.FromName(client, $":{this.EmojiName}:", false)
+			   : DiscordEmoji.FromGuildEmote(client, this.EmojiId.Value);
 }

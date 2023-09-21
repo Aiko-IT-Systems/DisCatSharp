@@ -60,8 +60,8 @@ internal sealed class PayloadDecompressor : IDisposable
 	public bool TryDecompress(ArraySegment<byte> compressed, MemoryStream decompressed)
 	{
 		var zlib = this.CompressionLevel == GatewayCompressionLevel.Stream
-			? this._decompressorStream
-			: new(this._compressedStream, CompressionMode.Decompress, true);
+			           ? this._decompressorStream
+			           : new(this._compressedStream, CompressionMode.Decompress, true);
 
 		if (compressed.Array[0] == ZLIB_PREFIX)
 			this._compressedStream.Write(compressed.Array, compressed.Offset + 2, compressed.Count - 2);
@@ -86,7 +86,10 @@ internal sealed class PayloadDecompressor : IDisposable
 			zlib.CopyTo(decompressed);
 			return true;
 		}
-		catch { return false; }
+		catch
+		{
+			return false;
+		}
 		finally
 		{
 			this._compressedStream.Position = 0;

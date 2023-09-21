@@ -10,7 +10,8 @@ namespace DisCatSharp.ApplicationCommands.Attributes;
 /// <summary>
 /// Defines that this application command is restricted to the owner of the bot.
 /// </summary>
-[Deprecated("This is deprecated and will be remove in future in favor of RequireTeamXY"), AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
+[Deprecated("This is deprecated and will be remove in future in favor of RequireTeamXY"),
+ AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 public sealed class ApplicationCommandRequireOwnerAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
@@ -18,7 +19,8 @@ public sealed class ApplicationCommandRequireOwnerAttribute : ApplicationCommand
 	/// </summary>
 	[Deprecated("This is deprecated and will be remove in future in favor of RequireTeamXY")]
 	public ApplicationCommandRequireOwnerAttribute()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Runs checks.
@@ -28,6 +30,8 @@ public sealed class ApplicationCommandRequireOwnerAttribute : ApplicationCommand
 		var app = ctx.Client.CurrentApplication!;
 		var me = ctx.Client.CurrentUser!;
 
-		return app != null ? Task.FromResult(app.Members.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
+		return app != null
+			       ? Task.FromResult(app.Members.Any(x => x.Id == ctx.User.Id))
+			       : Task.FromResult(ctx.User.Id == me.Id);
 	}
 }

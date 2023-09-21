@@ -84,7 +84,8 @@ public class CommandBuilder
 	/// </summary>
 	public CommandBuilder()
 		: this(null)
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Creates a new command builder.
@@ -116,7 +117,8 @@ public class CommandBuilder
 	public CommandBuilder WithName(string name)
 	{
 		if (name == null || name.ToCharArray().Any(xc => char.IsWhiteSpace(xc)))
-			throw new ArgumentException("Command name cannot be null or contain any whitespace characters.", nameof(name));
+			throw new ArgumentException("Command name cannot be null or contain any whitespace characters.",
+			                            nameof(name));
 
 		if (this.Name != null)
 			throw new InvalidOperationException("This command already has a name.");
@@ -155,7 +157,8 @@ public class CommandBuilder
 			throw new ArgumentException("Aliases cannot contain whitespace characters or null strings.", nameof(alias));
 
 		if (this.Name == alias || this._aliasList.Contains(alias))
-			throw new ArgumentException("Aliases cannot contain the command name, and cannot be duplicate.", nameof(alias));
+			throw new ArgumentException("Aliases cannot contain the command name, and cannot be duplicate.",
+			                            nameof(alias));
 
 		this._aliasList.Add(alias);
 		return this;
@@ -227,7 +230,8 @@ public class CommandBuilder
 	public CommandBuilder WithOverload(CommandOverloadBuilder overload)
 	{
 		if (this._overloadArgumentSets.Contains(overload.ArgumentSet))
-			throw new DuplicateOverloadException(this.Name, overload.Arguments.Select(x => x.Type).ToList(), overload.ArgumentSet);
+			throw new DuplicateOverloadException(this.Name, overload.Arguments.Select(x => x.Type).ToList(),
+			                                     overload.ArgumentSet);
 
 		this._overloadArgumentSets.Add(overload.ArgumentSet);
 		this._overloadList.Add(overload);

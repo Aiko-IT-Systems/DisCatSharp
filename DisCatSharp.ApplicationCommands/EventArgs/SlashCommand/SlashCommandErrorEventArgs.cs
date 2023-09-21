@@ -24,6 +24,8 @@ public class SlashCommandErrorEventArgs : DiscordEventArgs
 	/// Initializes a new instance of the <see cref="SlashCommandErrorEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	public SlashCommandErrorEventArgs(IServiceProvider provider) : base(provider)
-	{ }
+	public SlashCommandErrorEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

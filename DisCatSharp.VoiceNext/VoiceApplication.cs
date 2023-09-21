@@ -1,4 +1,3 @@
-
 namespace DisCatSharp.VoiceNext;
 
 /// <summary>

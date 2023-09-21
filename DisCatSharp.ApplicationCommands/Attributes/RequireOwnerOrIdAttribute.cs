@@ -12,7 +12,8 @@ namespace DisCatSharp.ApplicationCommands.Attributes;
 /// <summary>
 /// Requires ownership of the bot or a whitelisted id to execute this command.
 /// </summary>
-[Deprecated("This is deprecated and will be remove in future in favor of RequireTeamXY"), AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
+[Deprecated("This is deprecated and will be remove in future in favor of RequireTeamXY"),
+ AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 public sealed class ApplicationCommandRequireOwnerOrIdAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
@@ -39,7 +40,9 @@ public sealed class ApplicationCommandRequireOwnerOrIdAttribute : ApplicationCom
 		var app = ctx.Client.CurrentApplication!;
 		var me = ctx.Client.CurrentUser!;
 
-		var owner = app != null ? Task.FromResult(app.Members.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
+		var owner = app != null
+			            ? Task.FromResult(app.Members.Any(x => x.Id == ctx.User.Id))
+			            : Task.FromResult(ctx.User.Id == me.Id);
 
 		var allowed = this.UserIds.Contains(ctx.User.Id);
 

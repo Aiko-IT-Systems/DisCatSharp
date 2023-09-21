@@ -58,6 +58,12 @@ public sealed class DiscordOnboarding : ObservableApiObject
 	/// Constructs a new onboarding configuration.
 	/// </summary>
 	internal DiscordOnboarding()
-		: base(new() { "responses", "onboarding_prompts_seen", "onboarding_responses_seen" })
-	{ }
+		: base(new()
+		{
+			"responses",
+			"onboarding_prompts_seen",
+			"onboarding_responses_seen"
+		})
+	{
+	}
 }

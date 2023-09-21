@@ -1,4 +1,3 @@
-
 using DisCatSharp.Entities;
 
 using Newtonsoft.Json;
@@ -39,7 +38,8 @@ public sealed class LavalinkKaraoke
 	/// <param name="monoLevel">The mono level</param>
 	/// <param name="filterBand">The filter band in Hz.</param>
 	/// <param name="filterWidth">The filter width.</param>
-	public LavalinkKaraoke(Optional<float> level, Optional<float> monoLevel, Optional<float> filterBand, Optional<float> filterWidth)
+	public LavalinkKaraoke(Optional<float> level, Optional<float> monoLevel, Optional<float> filterBand,
+	                       Optional<float> filterWidth)
 	{
 		this.Level = level;
 		this.MonoLevel = monoLevel;

@@ -40,7 +40,8 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// <summary>
 	/// Gets or sets the summary.
 	/// </summary>
-	[JsonProperty("summary", NullValueHandling = NullValueHandling.Include), DiscordDeprecated("Empty string, will be removed in API v11")]
+	[JsonProperty("summary", NullValueHandling = NullValueHandling.Include),
+	 DiscordDeprecated("Empty string, will be removed in API v11")]
 	public string? Summary { get; set; }
 
 	[JsonProperty("bot", NullValueHandling = NullValueHandling.Ignore)]
@@ -185,5 +186,6 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// Initializes a new instance of the <see cref="TransportApplication"/> class.
 	/// </summary>
 	internal TransportApplication()
-	{ }
+	{
+	}
 }

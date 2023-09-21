@@ -44,7 +44,8 @@ public static class DiscordClientExtensions
 	/// <param name="client">Discord sharded client to create VoiceNext instances for.</param>
 	/// <param name="config">Configuration for the VoiceNext clients.</param>
 	/// <returns>A dictionary of created VoiceNext clients.</returns>
-	public static async Task<IReadOnlyDictionary<int, VoiceNextExtension>> UseVoiceNextAsync(this DiscordShardedClient client, VoiceNextConfiguration config)
+	public static async Task<IReadOnlyDictionary<int, VoiceNextExtension>> UseVoiceNextAsync(
+		this DiscordShardedClient client, VoiceNextConfiguration config)
 	{
 		var modules = new Dictionary<int, VoiceNextExtension>();
 		await client.InitializeShardsAsync().ConfigureAwait(false);
@@ -73,10 +74,13 @@ public static class DiscordClientExtensions
 	/// </summary>
 	/// <param name="client">The shard client to retrieve <see cref="VoiceNextExtension"/> instances from.</param>
 	/// <returns>A dictionary containing <see cref="VoiceNextExtension"/> instances for each shard.</returns>
-	public static async Task<IReadOnlyDictionary<int, VoiceNextExtension?>> GetVoiceNextAsync(this DiscordShardedClient client)
+	public static async Task<IReadOnlyDictionary<int, VoiceNextExtension?>> GetVoiceNextAsync(
+		this DiscordShardedClient client)
 	{
 		await client.InitializeShardsAsync().ConfigureAwait(false);
-		var extensions = client.ShardClients.Values.ToDictionary(shard => shard.ShardId, shard => shard.GetExtension<VoiceNextExtension?>());
+		var extensions =
+			client.ShardClients.Values.ToDictionary(shard => shard.ShardId,
+			                                        shard => shard.GetExtension<VoiceNextExtension?>());
 
 		return new ReadOnlyDictionary<int, VoiceNextExtension?>(extensions);
 	}
@@ -100,10 +104,11 @@ public static class DiscordClientExtensions
 		if (channel.Discord is not DiscordClient discord || discord == null)
 			throw new NullReferenceException();
 
-		var vnext = discord.GetVoiceNext() ?? throw new InvalidOperationException("VoiceNext is not initialized for this Discord client.");
+		var vnext = discord.GetVoiceNext() ??
+		            throw new InvalidOperationException("VoiceNext is not initialized for this Discord client.");
 		var vnc = vnext.GetConnection(channel.Guild);
 		return vnc != null
-			? throw new InvalidOperationException("VoiceNext is already connected in this guild.")
-			: vnext.ConnectAsync(channel);
+			       ? throw new InvalidOperationException("VoiceNext is already connected in this guild.")
+			       : vnext.ConnectAsync(channel);
 	}
 }

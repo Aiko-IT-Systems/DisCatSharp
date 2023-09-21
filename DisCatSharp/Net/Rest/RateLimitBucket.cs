@@ -196,7 +196,8 @@ internal class RateLimitBucket : IEquatable<RateLimitBucket>
 		var channelId = this.ChannelId != string.Empty ? this.ChannelId : "channel_id";
 		var webhookId = this.WebhookId != string.Empty ? this.WebhookId : "webhook_id";
 
-		return $"{this.Scope} rate limit bucket [{this.Hash}:{guildId}:{channelId}:{webhookId}] [{this.Remaining}/{this.Maximum}] {(this.ResetAfter.HasValue ? this.ResetAfterOffset : this.Reset)}";
+		return
+			$"{this.Scope} rate limit bucket [{this.Hash}:{guildId}:{channelId}:{webhookId}] [{this.Remaining}/{this.Maximum}] {(this.ResetAfter.HasValue ? this.ResetAfterOffset : this.Reset)}";
 	}
 
 	/// <summary>

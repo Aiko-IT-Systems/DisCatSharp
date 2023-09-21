@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +32,7 @@ public sealed class LavalinkGuildPlayer
 		add => this._voiceStateUpdated.Register(value);
 		remove => this._voiceStateUpdated.Unregister(value);
 	}
+
 	private readonly AsyncEvent<DiscordClient, VoiceStateUpdateEventArgs> _voiceStateUpdated;
 
 	/// <summary>
@@ -43,6 +43,7 @@ public sealed class LavalinkGuildPlayer
 		add => this.TrackStartedEvent.Register(value);
 		remove => this.TrackStartedEvent.Unregister(value);
 	}
+
 	internal readonly AsyncEvent<LavalinkGuildPlayer, LavalinkTrackStartedEventArgs> TrackStartedEvent;
 
 	/// <summary>
@@ -53,6 +54,7 @@ public sealed class LavalinkGuildPlayer
 		add => this.TrackEndedEvent.Register(value);
 		remove => this.TrackEndedEvent.Unregister(value);
 	}
+
 	internal readonly AsyncEvent<LavalinkGuildPlayer, LavalinkTrackEndedEventArgs> TrackEndedEvent;
 
 	/// <summary>
@@ -63,6 +65,7 @@ public sealed class LavalinkGuildPlayer
 		add => this.TrackExceptionEvent.Register(value);
 		remove => this.TrackExceptionEvent.Unregister(value);
 	}
+
 	internal readonly AsyncEvent<LavalinkGuildPlayer, LavalinkTrackExceptionEventArgs> TrackExceptionEvent;
 
 	/// <summary>
@@ -73,6 +76,7 @@ public sealed class LavalinkGuildPlayer
 		add => this.TrackStuckEvent.Register(value);
 		remove => this.TrackStuckEvent.Unregister(value);
 	}
+
 	internal readonly AsyncEvent<LavalinkGuildPlayer, LavalinkTrackStuckEventArgs> TrackStuckEvent;
 
 	/// <summary>
@@ -83,6 +87,7 @@ public sealed class LavalinkGuildPlayer
 		add => this.StateUpdatedEvent.Register(value);
 		remove => this.StateUpdatedEvent.Unregister(value);
 	}
+
 	internal readonly AsyncEvent<LavalinkGuildPlayer, LavalinkPlayerStateUpdateEventArgs> StateUpdatedEvent;
 
 	/// <summary>
@@ -161,7 +166,8 @@ public sealed class LavalinkGuildPlayer
 	/// <summary>
 	/// Gets the internal queue entries.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0044:Add readonly modifier",
+	                                                 Justification = "<Pending>")]
 	private readonly SortedList<string, IQueueEntry> _queueEntriesInternal = new();
 
 	/// <summary>
@@ -169,6 +175,7 @@ public sealed class LavalinkGuildPlayer
 	/// </summary>
 	public IReadOnlyList<DiscordUser> CurrentUsers
 		=> new List<DiscordUser>(this.CurrentUsersInternal.Values);
+
 	/// <summary>
 	/// Gets the internal list of users.
 	/// </summary>
@@ -195,13 +202,15 @@ public sealed class LavalinkGuildPlayer
 		this.Session = session;
 		this.GuildId = guildId;
 		this.Player = player;
-		this._voiceStateUpdated = new("LAVALINK_PLAYER_VOICE_STATE_UPDATE", TimeSpan.Zero, this.Discord.EventErrorHandler);
+		this._voiceStateUpdated =
+			new("LAVALINK_PLAYER_VOICE_STATE_UPDATE", TimeSpan.Zero, this.Discord.EventErrorHandler);
 		this.TrackStartedEvent = new("LAVALINK_TRACK_STARTED", TimeSpan.Zero, this.Discord.EventErrorHandler);
 		this.TrackEndedEvent = new("LAVALINK_TRACK_ENDED", TimeSpan.Zero, this.Discord.EventErrorHandler);
 		this.TrackExceptionEvent = new("LAVALINK_TRACK_EXCEPTION", TimeSpan.Zero, this.Discord.EventErrorHandler);
 		this.TrackStuckEvent = new("LAVALINK_TRACK_STUCK", TimeSpan.Zero, this.Discord.EventErrorHandler);
 		this.StateUpdatedEvent = new("LAVALINK_PLAYER_STATE_UPDATED", TimeSpan.Zero, this.Discord.EventErrorHandler);
-		this.Discord.VoiceStateUpdated += async (sender, args) => await this._voiceStateUpdated.InvokeAsync(sender, args).ConfigureAwait(false);
+		this.Discord.VoiceStateUpdated += async (sender, args)
+			=> await this._voiceStateUpdated.InvokeAsync(sender, args).ConfigureAwait(false);
 		this.VoiceStateUpdated += this.OnVoiceStateUpdated;
 		this.CurrentUsersInternal.Add(this.Discord.CurrentUser!.Id, this.Discord.CurrentUser);
 		this.TrackEnded += this.OnTrackEnded;
@@ -273,15 +282,17 @@ public sealed class LavalinkGuildPlayer
 		action(mdl);
 
 		if (mdl.EncodedTrack.HasValue && !string.IsNullOrEmpty(mdl.EncodedTrack.Value) && mdl.Identifier.HasValue)
-			throw new InvalidOperationException($"Cannot set both {nameof(mdl.EncodedTrack)} & {mdl.Identifier}. Only one at a time.");
+			throw new
+				InvalidOperationException($"Cannot set both {nameof(mdl.EncodedTrack)} & {mdl.Identifier}. Only one at a time.");
 
 		this.Player = await this.Session.Rest.UpdatePlayerAsync(
-			this.Session.Config.SessionId!, this.GuildId, !mdl.Replace,
-			mdl.EncodedTrack, mdl.Identifier,
-			mdl.Position, mdl.EndTime,
-			mdl.Volume, mdl.Paused,
-			mdl.Filters
-		).ConfigureAwait(false);
+		                                                        this.Session.Config.SessionId!, this.GuildId,
+		                                                        !mdl.Replace,
+		                                                        mdl.EncodedTrack, mdl.Identifier,
+		                                                        mdl.Position, mdl.EndTime,
+		                                                        mdl.Volume, mdl.Paused,
+		                                                        mdl.Filters
+		                                                       ).ConfigureAwait(false);
 		return this;
 	}
 
@@ -294,7 +305,10 @@ public sealed class LavalinkGuildPlayer
 	/// <returns>The updated guild player.</returns>
 	public async Task<LavalinkGuildPlayer> PlayPartialAsync(string identifier, TimeSpan startTime, TimeSpan endTime)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: identifier, position: (int)startTime.TotalMilliseconds, endTime: (int)endTime.TotalMilliseconds).ConfigureAwait(false);
+		this.Player = await this.Session.Rest
+			              .UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false,
+			                                 identifier: identifier, position: (int)startTime.TotalMilliseconds,
+			                                 endTime: (int)endTime.TotalMilliseconds).ConfigureAwait(false);
 		return this;
 	}
 
@@ -307,7 +321,11 @@ public sealed class LavalinkGuildPlayer
 	/// <returns>The updated guild player.</returns>
 	public async Task<LavalinkGuildPlayer> PlayPartialAsync(LavalinkTrack track, TimeSpan startTime, TimeSpan endTime)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: track.Info.Identifier, position: (int)startTime.TotalMilliseconds, endTime: (int)endTime.TotalMilliseconds).ConfigureAwait(false);
+		this.Player = await this.Session.Rest
+			              .UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false,
+			                                 identifier: track.Info.Identifier,
+			                                 position: (int)startTime.TotalMilliseconds,
+			                                 endTime: (int)endTime.TotalMilliseconds).ConfigureAwait(false);
 		return this;
 	}
 
@@ -318,9 +336,13 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="startTime">The start time.</param>
 	/// <param name="endTime">The end time.</param>
 	/// <returns>The updated guild player.</returns>
-	public async Task<LavalinkGuildPlayer> PlayPartialEncodedAsync(string encodedTrack, TimeSpan startTime, TimeSpan endTime)
+	public async Task<LavalinkGuildPlayer> PlayPartialEncodedAsync(string encodedTrack, TimeSpan startTime,
+	                                                               TimeSpan endTime)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, encodedTrack, position: (int)startTime.TotalMilliseconds, endTime: (int)endTime.TotalMilliseconds).ConfigureAwait(false);
+		this.Player = await this.Session.Rest
+			              .UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, encodedTrack,
+			                                 position: (int)startTime.TotalMilliseconds,
+			                                 endTime: (int)endTime.TotalMilliseconds).ConfigureAwait(false);
 		return this;
 	}
 
@@ -331,7 +353,9 @@ public sealed class LavalinkGuildPlayer
 	/// <returns>The updated guild player.</returns>
 	public async Task<LavalinkGuildPlayer> PlayAsync(string identifier)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: identifier).ConfigureAwait(false);
+		this.Player = await this.Session.Rest
+			              .UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false,
+			                                 identifier: identifier).ConfigureAwait(false);
 		return this;
 	}
 
@@ -342,7 +366,9 @@ public sealed class LavalinkGuildPlayer
 	/// <returns>The updated guild player.</returns>
 	public async Task<LavalinkGuildPlayer> PlayAsync(LavalinkTrack track)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: track.Info.Identifier).ConfigureAwait(false);
+		this.Player = await this.Session.Rest
+			              .UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false,
+			                                 identifier: track.Info.Identifier).ConfigureAwait(false);
 		return this;
 	}
 
@@ -353,7 +379,9 @@ public sealed class LavalinkGuildPlayer
 	/// <returns>The updated guild player.</returns>
 	public async Task<LavalinkGuildPlayer> PlayEncodedAsync(string encodedTrack)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, encodedTrack).ConfigureAwait(false);
+		this.Player = await this.Session.Rest
+			              .UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, encodedTrack)
+			              .ConfigureAwait(false);
 		return this;
 	}
 
@@ -364,7 +392,9 @@ public sealed class LavalinkGuildPlayer
 	/// <returns>The updated guild player.</returns>
 	public async Task<LavalinkGuildPlayer> SeekAsync(TimeSpan position)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, position: (int)position.TotalMilliseconds).ConfigureAwait(false);
+		this.Player = await this.Session.Rest
+			              .UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true,
+			                                 position: (int)position.TotalMilliseconds).ConfigureAwait(false);
 		return this;
 	}
 
@@ -379,7 +409,9 @@ public sealed class LavalinkGuildPlayer
 		if (volume is < 0 or > 1000)
 			throw new ArgumentException("Volume can only be between 0 and 1000", nameof(volume));
 
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, volume: volume).ConfigureAwait(false);
+		this.Player = await this.Session.Rest
+			              .UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, volume: volume)
+			              .ConfigureAwait(false);
 		return this;
 	}
 
@@ -389,7 +421,9 @@ public sealed class LavalinkGuildPlayer
 	/// <returns>The updated guild player.</returns>
 	public async Task<LavalinkGuildPlayer> PauseAsync()
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, paused: true).ConfigureAwait(false);
+		this.Player = await this.Session.Rest
+			              .UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, paused: true)
+			              .ConfigureAwait(false);
 		return this;
 	}
 
@@ -399,7 +433,9 @@ public sealed class LavalinkGuildPlayer
 	/// <returns>The updated guild player.</returns>
 	public async Task<LavalinkGuildPlayer> ResumeAsync()
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, paused: false).ConfigureAwait(false);
+		this.Player = await this.Session.Rest
+			              .UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, paused: false)
+			              .ConfigureAwait(false);
 		return this;
 	}
 
@@ -409,7 +445,9 @@ public sealed class LavalinkGuildPlayer
 	/// <returns>The updated guild player.</returns>
 	public async Task<LavalinkGuildPlayer> StopAsync()
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, null).ConfigureAwait(false);
+		this.Player = await this.Session.Rest
+			              .UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, null)
+			              .ConfigureAwait(false);
 		return this;
 	}
 
@@ -429,22 +467,26 @@ public sealed class LavalinkGuildPlayer
 			var match = CommonRegEx.AdvancedYoutubeRegex.Match(url);
 			if (match.Groups["list"] != null! && !string.IsNullOrEmpty(match.Groups["list"].Value))
 			{
-				this.Session.Discord.Logger.LogTrace(LavalinkEvents.Misc, null, "Removed list from playlist url. Not supported.");
+				this.Session.Discord.Logger.LogTrace(LavalinkEvents.Misc, null,
+				                                     "Removed list from playlist url. Not supported.");
 				url = url.Replace($"list={match.Groups["list"].Value}", null);
 			}
 
 			if (match.Groups["index"] != null! && !string.IsNullOrEmpty(match.Groups["index"].Value))
 			{
-				this.Session.Discord.Logger.LogTrace(LavalinkEvents.Misc, null, "Removed index from playlist url. Not supported.");
+				this.Session.Discord.Logger.LogTrace(LavalinkEvents.Misc, null,
+				                                     "Removed index from playlist url. Not supported.");
 				url = url.Replace($"index={match.Groups["index"].Value}", null);
 			}
 		}
 
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, identifier: url).ConfigureAwait(false);
+		this.Player = await this.Session.Rest
+			              .UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, identifier: url)
+			              .ConfigureAwait(false);
 		return this;
 	}
 
-	#region Queue Operations
+#region Queue Operations
 
 	/// <summary>
 	/// Adds a <see cref="LavalinkTrack"/> to the queue.
@@ -469,7 +511,8 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="identifier">The identifier to look up.</param>
 	/// <returns><see langword="true"/> if the entry was found and removed.</returns>
 	public bool RemoveFromQueueByIdentifierAsync(string identifier)
-		=> this._queueEntriesInternal.Any() && this._queueEntriesInternal!.TryGetValue(identifier, out var entry) && this.RemoveFromQueue(entry!);
+		=> this._queueEntriesInternal.Any() && this._queueEntriesInternal!.TryGetValue(identifier, out var entry) &&
+		   this.RemoveFromQueue(entry!);
 
 	/// <summary>
 	/// Plays the queue while entries are presented.
@@ -498,7 +541,7 @@ public sealed class LavalinkGuildPlayer
 		}
 	}
 
-	#endregion
+#endregion
 
 	/// <summary>
 	/// Switches the player to a new channel.
@@ -539,7 +582,6 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="voiceState">The voice state to update with.</param>
 	internal void UpdateVoiceState(LavalinkVoiceState voiceState)
 		=> this.Player.VoiceState = voiceState;
-
 
 	/// <summary>
 	/// Disconnect the guild player from the channel.
@@ -592,11 +634,11 @@ public sealed class LavalinkGuildPlayer
 			return Task.CompletedTask;
 		}
 
-		if (args.Before.ChannelId == null || args.Before.ChannelId!.Value != this.ChannelId || (args.After.ChannelId == null && args.After.ChannelId!.Value == this.ChannelId))
+		if (args.Before.ChannelId == null || args.Before.ChannelId!.Value != this.ChannelId ||
+		    (args.After.ChannelId == null && args.After.ChannelId!.Value == this.ChannelId))
 			return Task.CompletedTask;
 
 		this.CurrentUsersInternal.Remove(args.User.Id);
 		return Task.CompletedTask;
-
 	}
 }

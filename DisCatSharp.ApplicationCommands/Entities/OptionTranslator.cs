@@ -28,6 +28,7 @@ internal class OptionTranslator
 	/// </summary>
 	[JsonProperty("name_translations")]
 	internal Dictionary<string, string> NameTranslationsDictionary { get; set; }
+
 	[JsonIgnore]
 	public DiscordApplicationCommandLocalization NameTranslations
 		=> new(this.NameTranslationsDictionary);
@@ -37,6 +38,7 @@ internal class OptionTranslator
 	/// </summary>
 	[JsonProperty("description_translations")]
 	internal Dictionary<string, string> DescriptionTranslationsDictionary { get; set; }
+
 	[JsonIgnore]
 	public DiscordApplicationCommandLocalization DescriptionTranslations
 		=> new(this.DescriptionTranslationsDictionary);

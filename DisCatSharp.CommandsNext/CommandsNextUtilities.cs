@@ -33,10 +33,15 @@ public static class CommandsNextUtilities
 	/// <param name="str">String to check for.</param>
 	/// <param name="comparisonType">Method of string comparison for the purposes of finding prefixes.</param>
 	/// <returns>Positive number if the prefix is present, -1 otherwise.</returns>
-	public static int GetStringPrefixLength(this DiscordMessage msg, string str, StringComparison comparisonType = StringComparison.Ordinal)
+	public static int GetStringPrefixLength(this DiscordMessage msg, string str,
+	                                        StringComparison comparisonType = StringComparison.Ordinal)
 	{
 		var content = msg.Content;
-		return str.Length >= content.Length ? -1 : !content.StartsWith(str, comparisonType) ? -1 : str.Length;
+		return str.Length >= content.Length
+			       ? -1
+			       : !content.StartsWith(str, comparisonType)
+				       ? -1
+				       : str.Length;
 	}
 
 	/// <summary>
@@ -100,7 +105,8 @@ public static class CommandsNextUtilities
 				if (!inEscape && !inBacktick && !inTripleBacktick)
 				{
 					inEscape = true;
-					if (str.IndexOf("\\`", i) == i || str.IndexOf("\\\"", i) == i || str.IndexOf("\\\\", i) == i || (str.Length >= i && char.IsWhiteSpace(str[i + 1])))
+					if (str.IndexOf("\\`", i) == i || str.IndexOf("\\\"", i) == i || str.IndexOf("\\\\", i) == i ||
+					    (str.Length >= i && char.IsWhiteSpace(str[i + 1])))
 						removeIndices.Add(i - startPosition);
 					i++;
 				}
@@ -145,7 +151,9 @@ public static class CommandsNextUtilities
 			if (endPosition != -1)
 			{
 				startPos = endPosition;
-				return startPosition != endPosition ? str[startPosition..endPosition].CleanupString(removeIndices) : null;
+				return startPosition != endPosition
+					       ? str[startPosition..endPosition].CleanupString(removeIndices)
+					       : null;
 			}
 		}
 
@@ -254,12 +262,14 @@ public static class CommandsNextUtilities
 				{
 					try
 					{
-						array.SetValue(await ctx.CommandsNext.ConvertArgument(rawArgumentList[i], ctx, arg.Type).ConfigureAwait(false), i - start);
+						array.SetValue(await ctx.CommandsNext.ConvertArgument(rawArgumentList[i], ctx, arg.Type).ConfigureAwait(false),
+						               i - start);
 					}
 					catch (Exception ex)
 					{
 						return new(ex);
 					}
+
 					i++;
 				}
 
@@ -270,7 +280,10 @@ public static class CommandsNextUtilities
 			{
 				try
 				{
-					args[i + 2] = rawArgumentList[i] != null ? await ctx.CommandsNext.ConvertArgument(rawArgumentList[i], ctx, arg.Type).ConfigureAwait(false) : arg.DefaultValue;
+					args[i + 2] = rawArgumentList[i] != null
+						              ? await ctx.CommandsNext.ConvertArgument(rawArgumentList[i], ctx, arg.Type)
+							                .ConfigureAwait(false)
+						              : arg.DefaultValue;
 				}
 				catch (Exception ex)
 				{
@@ -306,7 +319,9 @@ public static class CommandsNextUtilities
 			return false;
 
 		// check if anonymous
-		if (ti.IsGenericType && ti.Name.Contains("AnonymousType") && (ti.Name.StartsWith("<>") || ti.Name.StartsWith("VB$")) && (ti.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic)
+		if (ti.IsGenericType && ti.Name.Contains("AnonymousType") &&
+		    (ti.Name.StartsWith("<>") || ti.Name.StartsWith("VB$")) &&
+		    (ti.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic)
 			return false;
 
 		// check if abstract, static, or not a class
@@ -319,7 +334,8 @@ public static class CommandsNextUtilities
 			return false;
 
 		// qualifies if any method or type qualifies
-		return ti.DeclaredMethods.Any(xmi => xmi.IsCommandCandidate(out _)) || ti.DeclaredNestedTypes.Any(xti => xti.IsModuleCandidateType());
+		return ti.DeclaredMethods.Any(xmi => xmi.IsCommandCandidate(out _)) ||
+		       ti.DeclaredNestedTypes.Any(xti => xti.IsModuleCandidateType());
 	}
 
 	/// <summary>
@@ -340,7 +356,8 @@ public static class CommandsNextUtilities
 
 		// check if appropriate return and arguments
 		parameters = method.GetParameters();
-		if (!parameters.Any() || parameters.First().ParameterType != typeof(CommandContext) || method.ReturnType != typeof(Task))
+		if (!parameters.Any() || parameters.First().ParameterType != typeof(CommandContext) ||
+		    method.ReturnType != typeof(Task))
 			return false;
 
 		// qualifies
@@ -360,14 +377,16 @@ public static class CommandsNextUtilities
 			.ToArray();
 
 		if (constructors.Length != 1)
-			throw new ArgumentException("Specified type does not contain a public constructor or contains more than one public constructor.");
+			throw new
+				ArgumentException("Specified type does not contain a public constructor or contains more than one public constructor.");
 
 		var constructor = constructors[0];
 		var constructorArgs = constructor.GetParameters();
 		var args = new object[constructorArgs.Length];
 
 		if (constructorArgs.Length != 0 && services == null)
-			throw new InvalidOperationException("Dependency collection needs to be specified for parameterized constructors.");
+			throw new
+				InvalidOperationException("Dependency collection needs to be specified for parameterized constructors.");
 
 		// inject via constructor
 		if (constructorArgs.Length != 0)
@@ -377,7 +396,8 @@ public static class CommandsNextUtilities
 		var moduleInstance = Activator.CreateInstance(t, args);
 
 		// inject into properties
-		var props = t.GetRuntimeProperties().Where(xp => xp.CanWrite && xp.SetMethod != null && !xp.SetMethod.IsStatic && xp.SetMethod.IsPublic);
+		var props = t.GetRuntimeProperties()
+			.Where(xp => xp.CanWrite && xp.SetMethod != null && !xp.SetMethod.IsStatic && xp.SetMethod.IsPublic);
 		foreach (var prop in props)
 		{
 			if (prop.GetCustomAttribute<DontInjectAttribute>() != null)

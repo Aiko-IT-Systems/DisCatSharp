@@ -12,14 +12,17 @@ public readonly struct ArgumentBindingResult
 	/// Gets a value indicating whether the binding is successful.
 	/// </summary>
 	public bool IsSuccessful { get; }
+
 	/// <summary>
 	/// Gets the converted.
 	/// </summary>
 	public object[] Converted { get; }
+
 	/// <summary>
 	/// Gets the raw.
 	/// </summary>
 	public IReadOnlyList<string> Raw { get; }
+
 	/// <summary>
 	/// Gets the reason.
 	/// </summary>

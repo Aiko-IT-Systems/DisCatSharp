@@ -25,7 +25,10 @@ public class CommandGroup : Command
 	/// <summary>
 	/// Initializes a new instance of the <see cref="CommandGroup"/> class.
 	/// </summary>
-	internal CommandGroup() : base() { }
+	internal CommandGroup()
+		: base()
+	{
+	}
 
 	/// <summary>
 	/// Executes this command or its subcommand with specified context.
@@ -40,8 +43,12 @@ public class CommandGroup : Command
 		if (cn != null)
 		{
 			var cmd = ctx.Config.CaseSensitive
-				? this.Children.FirstOrDefault(xc => xc.Name == cn || (xc.Aliases != null && xc.Aliases.Contains(cn)))
-				: this.Children.FirstOrDefault(xc => xc.Name.ToLowerInvariant() == cn.ToLowerInvariant() || (xc.Aliases != null && xc.Aliases.Select(xs => xs.ToLowerInvariant()).Contains(cn.ToLowerInvariant())));
+				          ? this.Children.FirstOrDefault(xc => xc.Name == cn ||
+				                                               (xc.Aliases != null && xc.Aliases.Contains(cn)))
+				          : this.Children.FirstOrDefault(xc => xc.Name.ToLowerInvariant() == cn.ToLowerInvariant() ||
+				                                               (xc.Aliases != null && xc.Aliases
+					                                                .Select(xs => xs.ToLowerInvariant())
+					                                                .Contains(cn.ToLowerInvariant())));
 			if (cmd != null)
 			{
 				// pass the execution on
@@ -59,23 +66,25 @@ public class CommandGroup : Command
 
 				var fchecks = await cmd.RunChecksAsync(xctx, false).ConfigureAwait(false);
 				return fchecks.Any()
-					? new()
-					{
-						IsSuccessful = false,
-						Exception = new ChecksFailedException(cmd, xctx, fchecks),
-						Context = xctx
-					}
-					: await cmd.ExecuteAsync(xctx).ConfigureAwait(false);
+					       ? new()
+					       {
+						       IsSuccessful = false,
+						       Exception = new ChecksFailedException(cmd, xctx, fchecks),
+						       Context = xctx
+					       }
+					       : await cmd.ExecuteAsync(xctx).ConfigureAwait(false);
 			}
 		}
 
 		return !this.IsExecutableWithoutSubcommands
-			? new()
-			{
-				IsSuccessful = false,
-				Exception = new InvalidOperationException("No matching subcommands were found, and this group is not executable."),
-				Context = ctx
-			}
-			: await base.ExecuteAsync(ctx).ConfigureAwait(false);
+			       ? new()
+			       {
+				       IsSuccessful = false,
+				       Exception =
+					       new
+						       InvalidOperationException("No matching subcommands were found, and this group is not executable."),
+				       Context = ctx
+			       }
+			       : await base.ExecuteAsync(ctx).ConfigureAwait(false);
 	}
 }

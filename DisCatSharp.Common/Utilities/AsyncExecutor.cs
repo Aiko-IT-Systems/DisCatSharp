@@ -13,7 +13,8 @@ public class AsyncExecutor
 	/// Creates a new instance of asynchronous executor.
 	/// </summary>
 	public AsyncExecutor()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Executes a specified task in an asynchronous manner, waiting for its completion.
@@ -83,7 +84,8 @@ public class AsyncExecutor
 
 			// retrieve any exceptions or cancellation status
 			if (t.IsFaulted)
-				stateRef.Exception = t.Exception?.InnerExceptions.Count == 1 ? t.Exception.InnerException : t.Exception; // unwrap if 1
+				stateRef.Exception =
+					t.Exception?.InnerExceptions.Count == 1 ? t.Exception.InnerException : t.Exception; // unwrap if 1
 			else if (t.IsCanceled)
 				stateRef.Exception = new TaskCanceledException(t);
 

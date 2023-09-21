@@ -44,6 +44,8 @@ public class RateLimitException : DisCatSharpException
 			if (j["message"] != null)
 				this.JsonMessage = j["message"].ToString();
 		}
-		catch (Exception) { }
+		catch (Exception)
+		{
+		}
 	}
 }

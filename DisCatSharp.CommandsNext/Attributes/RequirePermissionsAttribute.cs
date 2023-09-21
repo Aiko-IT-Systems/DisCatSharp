@@ -44,9 +44,7 @@ public sealed class RequirePermissionsAttribute : CheckBaseAttribute
 
 		var channel = ctx.Channel;
 		if (ctx.Channel.GuildId == null)
-		{
 			channel = await ctx.Client.GetChannelAsync(ctx.Channel.Id, true).ConfigureAwait(false);
-		}
 
 		var usr = ctx.Member;
 		if (usr == null)

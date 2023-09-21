@@ -24,7 +24,9 @@ internal sealed class RestFormRequest : BaseRestRequest
 	/// <param name="formData">The form data.</param>
 	/// <param name="headers">The headers.</param>
 	/// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
-	internal RestFormRequest(DiscordOAuth2Client client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, Dictionary<string, string> formData, IReadOnlyDictionary<string, string>? headers = null, double? ratelimitWaitOverride = null)
+	internal RestFormRequest(DiscordOAuth2Client client, RateLimitBucket bucket, Uri url, RestRequestMethod method,
+	                         string route, Dictionary<string, string> formData,
+	                         IReadOnlyDictionary<string, string>? headers = null, double? ratelimitWaitOverride = null)
 		: base(client, bucket, url, method, route, headers, ratelimitWaitOverride)
 	{
 		this.FormData = formData;

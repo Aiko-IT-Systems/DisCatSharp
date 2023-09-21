@@ -47,7 +47,8 @@ public sealed class DiscordStringSelectComponentOption : ObservableApiObject
 	/// <param name="description">Description of the option.</param>
 	/// <param name="isDefault">Whether this option is default. If true, this option will be pre-selected.</param>
 	/// <param name="emoji">The emoji to set with this option.</param>
-	public DiscordStringSelectComponentOption(string label, string value, string description = null, bool isDefault = false, DiscordComponentEmoji emoji = null)
+	public DiscordStringSelectComponentOption(string label, string value, string description = null,
+	                                          bool isDefault = false, DiscordComponentEmoji emoji = null)
 	{
 		if (label.Length > 100)
 			throw new NotSupportedException("Select label can't be longer then 100 chars.");

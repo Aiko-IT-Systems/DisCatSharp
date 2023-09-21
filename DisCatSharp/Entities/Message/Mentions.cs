@@ -6,8 +6,9 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Interface for mentionables
 /// </summary>
-public interface IMention { }
-
+public interface IMention
+{
+}
 
 /// <summary>
 /// Allows a reply to ping the user being replied to.
@@ -52,13 +53,19 @@ public readonly struct UserMention : IMention
 	/// Allows the specific user to be mentioned
 	/// </summary>
 	/// <param name="id"></param>
-	public UserMention(ulong id) { this.Id = id; }
+	public UserMention(ulong id)
+	{
+		this.Id = id;
+	}
 
 	/// <summary>
 	/// Allows the specific user to be mentioned
 	/// </summary>
 	/// <param name="user"></param>
-	public UserMention(DiscordUser user) : this(user.Id) { }
+	public UserMention(DiscordUser user)
+		: this(user.Id)
+	{
+	}
 
 	public static implicit operator UserMention(DiscordUser user) => new(user.Id);
 }
@@ -82,13 +89,19 @@ public readonly struct RoleMention : IMention
 	/// Allows the specific id to be mentioned
 	/// </summary>
 	/// <param name="id"></param>
-	public RoleMention(ulong id) { this.Id = id; }
+	public RoleMention(ulong id)
+	{
+		this.Id = id;
+	}
 
 	/// <summary>
 	/// Allows the specific role to be mentioned
 	/// </summary>
 	/// <param name="role"></param>
-	public RoleMention(DiscordRole role) : this(role.Id) { }
+	public RoleMention(DiscordRole role)
+		: this(role.Id)
+	{
+	}
 
 	public static implicit operator RoleMention(DiscordRole role) => new(role.Id);
 }
@@ -101,7 +114,12 @@ public static class Mentions
 	/// <summary>
 	/// All possible mentions - @everyone + @here, users, and roles.
 	/// </summary>
-	public static IReadOnlyList<IMention> All { get; } = new IMention[] { EveryoneMention.All, UserMention.All, RoleMention.All };
+	public static IReadOnlyList<IMention> All { get; } = new IMention[]
+	{
+		EveryoneMention.All,
+		UserMention.All,
+		RoleMention.All
+	};
 
 	/// <summary>
 	/// No mentions allowed.

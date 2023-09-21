@@ -17,8 +17,8 @@ namespace DisCatSharp.Interactivity.EventHandling;
 /// </summary>
 internal class Paginator : IPaginator
 {
-	DiscordClient? _client;
-	ConcurrentHashSet<IPaginationRequest>? _requests;
+	private DiscordClient? _client;
+	private ConcurrentHashSet<IPaginationRequest>? _requests;
 
 	/// <summary>
 	/// Creates a new EventWaiter object.
@@ -49,7 +49,8 @@ internal class Paginator : IPaginator
 		}
 		catch (Exception ex)
 		{
-			this._client!.Logger.LogError(InteractivityEvents.InteractivityPaginationError, ex, "Exception occurred while paginating");
+			this._client!.Logger.LogError(InteractivityEvents.InteractivityPaginationError, ex,
+			                              "Exception occurred while paginating");
 		}
 		finally
 		{
@@ -60,7 +61,8 @@ internal class Paginator : IPaginator
 			}
 			catch (Exception ex)
 			{
-				this._client!.Logger.LogError(InteractivityEvents.InteractivityPaginationError, ex, "Exception occurred while paginating");
+				this._client!.Logger.LogError(InteractivityEvents.InteractivityPaginationError, ex,
+				                              "Exception occurred while paginating");
 			}
 		}
 	}
@@ -90,26 +92,28 @@ internal class Paginator : IPaginator
 					if (eventArgs.User.Id == usr.Id)
 					{
 						if (req.PageCount > 1 &&
-							(eventArgs.Emoji == emojis.Left ||
-							 eventArgs.Emoji == emojis.SkipLeft ||
-							 eventArgs.Emoji == emojis.Right ||
-							 eventArgs.Emoji == emojis.SkipRight ||
-							 eventArgs.Emoji == emojis.Stop))
+						    (eventArgs.Emoji == emojis.Left ||
+						     eventArgs.Emoji == emojis.SkipLeft ||
+						     eventArgs.Emoji == emojis.Right ||
+						     eventArgs.Emoji == emojis.SkipRight ||
+						     eventArgs.Emoji == emojis.Stop))
 							await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
 						else if (eventArgs.Emoji == emojis.Stop &&
-								 req is PaginationRequest paginationRequest &&
-								 paginationRequest.PaginationDeletion == PaginationDeletion.DeleteMessage)
+						         req is PaginationRequest paginationRequest &&
+						         paginationRequest.PaginationDeletion == PaginationDeletion.DeleteMessage)
 							await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
 						else
 							await msg.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User).ConfigureAwait(false);
 					}
 					else if (eventArgs.User.Id != this._client!.CurrentUser!.Id)
+					{
 						if (eventArgs.Emoji != emojis.Left &&
-							eventArgs.Emoji != emojis.SkipLeft &&
-							eventArgs.Emoji != emojis.Right &&
-							eventArgs.Emoji != emojis.SkipRight &&
-							eventArgs.Emoji != emojis.Stop)
+						    eventArgs.Emoji != emojis.SkipLeft &&
+						    eventArgs.Emoji != emojis.Right &&
+						    eventArgs.Emoji != emojis.SkipRight &&
+						    eventArgs.Emoji != emojis.Stop)
 							await msg.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User).ConfigureAwait(false);
+					}
 				}
 		});
 		return Task.CompletedTask;
@@ -140,14 +144,14 @@ internal class Paginator : IPaginator
 						continue;
 
 					if (req.PageCount > 1 &&
-						(eventArgs.Emoji == emojis.Left ||
-						 eventArgs.Emoji == emojis.SkipLeft ||
-						 eventArgs.Emoji == emojis.Right ||
-						 eventArgs.Emoji == emojis.SkipRight ||
-						 eventArgs.Emoji == emojis.Stop))
+					    (eventArgs.Emoji == emojis.Left ||
+					     eventArgs.Emoji == emojis.SkipLeft ||
+					     eventArgs.Emoji == emojis.Right ||
+					     eventArgs.Emoji == emojis.SkipRight ||
+					     eventArgs.Emoji == emojis.Stop))
 						await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
 					else if (eventArgs.Emoji == emojis.Stop &&
-							 req is PaginationRequest { PaginationDeletion: PaginationDeletion.DeleteMessage })
+					         req is PaginationRequest { PaginationDeletion: PaginationDeletion.DeleteMessage })
 						await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
 				}
 		});
@@ -210,7 +214,9 @@ internal class Paginator : IPaginator
 				await msg.CreateReactionAsync(emojis.Stop).ConfigureAwait(false);
 		}
 		else if (emojis.Stop != null && p is PaginationRequest { PaginationDeletion: PaginationDeletion.DeleteMessage })
+		{
 			await msg.CreateReactionAsync(emojis.Stop).ConfigureAwait(false);
+		}
 	}
 
 	/// <summary>
@@ -224,13 +230,21 @@ internal class Paginator : IPaginator
 		var msg = await p.GetMessageAsync().ConfigureAwait(false);
 
 		if (emoji == emojis.SkipLeft)
+		{
 			await p.SkipLeftAsync().ConfigureAwait(false);
+		}
 		else if (emoji == emojis.Left)
+		{
 			await p.PreviousPageAsync().ConfigureAwait(false);
+		}
 		else if (emoji == emojis.Right)
+		{
 			await p.NextPageAsync().ConfigureAwait(false);
+		}
 		else if (emoji == emojis.SkipRight)
+		{
 			await p.SkipRightAsync().ConfigureAwait(false);
+		}
 		else if (emoji == emojis.Stop)
 		{
 			var tcs = await p.GetTaskCompletionSourceAsync().ConfigureAwait(false);
@@ -267,6 +281,7 @@ internal class Paginator : IPaginator
 			this._client.MessageReactionRemoved -= this.HandleReactionRemove;
 			this._client.MessageReactionsCleared -= this.HandleReactionClear;
 		}
+
 		this._client = null;
 		this._requests?.Clear();
 		this._requests = null;

@@ -28,7 +28,9 @@ public class DiscordVoiceState : ObservableApiObject
 	/// </summary>
 	[JsonIgnore]
 	public DiscordGuild? Guild
-		=> this.GuildId != null && this.Discord.Guilds != null ? this.Discord.Guilds[this.GuildId.Value] : this.Channel?.Guild;
+		=> this.GuildId != null && this.Discord.Guilds != null
+			   ? this.Discord.Guilds[this.GuildId.Value]
+			   : this.Channel?.Guild;
 
 	/// <summary>
 	/// Gets ID of the channel this user is connected to.
@@ -41,7 +43,9 @@ public class DiscordVoiceState : ObservableApiObject
 	/// </summary>
 	[JsonIgnore]
 	public DiscordChannel? Channel
-		=> this.ChannelId != null && this.ChannelId.Value != 0 ? this.Discord.InternalGetCachedChannel(this.ChannelId.Value) : null;
+		=> this.ChannelId != null && this.ChannelId.Value != 0
+			   ? this.Discord.InternalGetCachedChannel(this.ChannelId.Value)
+			   : null;
 
 	/// <summary>
 	/// Gets ID of the user to which this voice state belongs.
@@ -129,7 +133,12 @@ public class DiscordVoiceState : ObservableApiObject
 	/// </summary>
 	[JsonIgnore]
 	public DiscordMember? Member
-		=> this.Guild?.Members.TryGetValue(this.TransportMember.User!.Id, out var member) ?? false ? member : new(this.TransportMember) { Discord = this.Discord };
+		=> this.Guild?.Members.TryGetValue(this.TransportMember.User!.Id, out var member) ?? false
+			   ? member
+			   : new(this.TransportMember)
+			   {
+				   Discord = this.Discord
+			   };
 
 	/// <summary>
 	/// Gets the transport member.
@@ -141,7 +150,8 @@ public class DiscordVoiceState : ObservableApiObject
 	/// Initializes a new instance of the <see cref="DiscordVoiceState"/> class.
 	/// </summary>
 	internal DiscordVoiceState()
-	{ }
+	{
+	}
 
 	// copy constructor for reduced boilerplate
 	/// <summary>

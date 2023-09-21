@@ -74,7 +74,6 @@ public class MaximumValueAttribute : Attribute
 	}
 }
 
-
 /// <summary>
 /// Sets a minimum value for this slash command option. Only valid for <see cref="string"/> parameters.
 /// </summary>

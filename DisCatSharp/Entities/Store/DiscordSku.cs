@@ -122,7 +122,7 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	/// <param name="e"><see cref="DiscordSku"/> to compare to.</param>
 	/// <returns>Whether the <see cref="DiscordSku"/> is equal to this <see cref="DiscordSku"/>.</returns>
 	public bool Equals(DiscordSku e)
-		=> e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id));
+		=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
 
 	/// <summary>
 	/// Gets the hash code for this <see cref="DiscordSku"/>.
@@ -143,8 +143,8 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 		var o2 = e2 as object;
 
 		return (o1 != null || o2 == null)
-			&& (o1 == null || o2 != null)
-			&& ((o1 == null && o2 == null) || (e1.Id == e2.Id));
+		       && (o1 == null || o2 != null)
+		       && ((o1 == null && o2 == null) || e1.Id == e2.Id);
 	}
 
 	/// <summary>

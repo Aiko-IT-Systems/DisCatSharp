@@ -8,7 +8,8 @@ namespace DisCatSharp.Common.Serialization;
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public sealed class UnixSecondsAttribute : SerializationAttribute
-{ }
+{
+}
 
 /// <summary>
 /// <para>Specifies that this <see cref="DateTime"/> or <see cref="DateTimeOffset"/> will be serialized as Unix timestamp milliseconds.</para>
@@ -16,4 +17,5 @@ public sealed class UnixSecondsAttribute : SerializationAttribute
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public sealed class UnixMillisecondsAttribute : SerializationAttribute
-{ }
+{
+}

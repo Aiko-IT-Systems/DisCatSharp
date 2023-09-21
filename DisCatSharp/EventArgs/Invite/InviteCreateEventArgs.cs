@@ -27,5 +27,8 @@ public sealed class InviteCreateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="InviteCreateEventArgs"/> class.
 	/// </summary>
-	internal InviteCreateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal InviteCreateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

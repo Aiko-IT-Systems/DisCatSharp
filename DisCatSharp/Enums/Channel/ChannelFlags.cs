@@ -31,6 +31,7 @@ public enum ChannelFlags : long
 	/// </summary>
 	[DiscordDeprecated]
 	RemovedFromHome = 1L << 0,
+
 	[DiscordDeprecated]
 	RemovedFromHighlights = RemovedFromHome,
 

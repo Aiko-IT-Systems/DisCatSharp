@@ -31,7 +31,8 @@ public abstract class NullableSnowflakeObject : ObservableApiObject, IEquatable<
 	/// <param name="ignored">List of property names to ignore during JSON serialization.</param>
 	internal NullableSnowflakeObject(List<string>? ignored = null)
 		: base(ignored)
-	{ }
+	{
+	}
 
 	/// <inheritdoc />
 	public override bool Equals(object? obj)

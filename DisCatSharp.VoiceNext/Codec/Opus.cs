@@ -47,6 +47,7 @@ internal sealed class Opus : IDisposable
 				sig = OpusSignal.Voice;
 				break;
 		}
+
 		Interop.OpusSetEncoderOption(this._encoder, OpusControl.SetSignal, (int)sig);
 		Interop.OpusSetEncoderOption(this._encoder, OpusControl.SetPacketLossPercent, 15);
 		Interop.OpusSetEncoderOption(this._encoder, OpusControl.SetInBandFec, 1);
@@ -83,13 +84,17 @@ internal sealed class Opus : IDisposable
 	/// <param name="target">The target.</param>
 	/// <param name="useFec">If true, use fec.</param>
 	/// <param name="outputFormat">The output format.</param>
-	public void Decode(OpusDecoder decoder, ReadOnlySpan<byte> opus, ref Span<byte> target, bool useFec, out AudioFormat outputFormat)
+	public void Decode(OpusDecoder decoder, ReadOnlySpan<byte> opus, ref Span<byte> target, bool useFec,
+	                   out AudioFormat outputFormat)
 	{
 		//if (target.Length != this.AudioFormat.CalculateMaximumFrameSize())
 		//    throw new ArgumentException("PCM target buffer size needs to be equal to maximum buffer size for specified audio format.", nameof(target));
 
-		Interop.OpusGetPacketMetrics(opus, this.AudioFormat.SampleRate, out var channels, out var frames, out var samplesPerFrame, out var frameSize);
-		outputFormat = this.AudioFormat.ChannelCount != channels ? new(this.AudioFormat.SampleRate, channels, this.AudioFormat.VoiceApplication) : this.AudioFormat;
+		Interop.OpusGetPacketMetrics(opus, this.AudioFormat.SampleRate, out var channels, out var frames,
+		                             out var samplesPerFrame, out var frameSize);
+		outputFormat = this.AudioFormat.ChannelCount != channels
+			               ? new(this.AudioFormat.SampleRate, channels, this.AudioFormat.VoiceApplication)
+			               : this.AudioFormat;
 
 		if (decoder.AudioFormat.ChannelCount != channels)
 			decoder.Initialize(outputFormat);
@@ -106,7 +111,8 @@ internal sealed class Opus : IDisposable
 	/// <param name="decoder">The decoder.</param>
 	/// <param name="frameSize">The frame size.</param>
 	/// <param name="target">The target.</param>
-	public void ProcessPacketLoss(OpusDecoder decoder, int frameSize, ref Span<byte> target) => Interop.OpusDecode(decoder.Decoder, frameSize, target);
+	public void ProcessPacketLoss(OpusDecoder decoder, int frameSize, ref Span<byte> target)
+		=> Interop.OpusDecode(decoder.Decoder, frameSize, target);
 
 	/// <summary>
 	/// Gets the last packet sample count.
@@ -178,6 +184,7 @@ public class OpusDecoder : IDisposable
 	/// Gets the opus.
 	/// </summary>
 	internal Opus Opus { get; }
+
 	/// <summary>
 	/// Gets the decoder.
 	/// </summary>
@@ -262,5 +269,5 @@ internal enum OpusSignal : int
 {
 	Auto = -1000,
 	Voice = 3001,
-	Music = 3002,
+	Music = 3002
 }

@@ -47,7 +47,8 @@ public sealed class NewMemberAction : ObservableApiObject
 	/// <param name="title">Te action's title.</param>
 	/// <param name="description">The action's description.</param>
 	/// <param name="emoji">The action's emoji.</param>
-	public NewMemberAction(ulong channelId, NewMemberActionType actionType, string title, string description, DiscordEmoji emoji)
+	public NewMemberAction(ulong channelId, NewMemberActionType actionType, string title, string description,
+	                       DiscordEmoji emoji)
 	{
 		this.ChannelId = channelId;
 		this.ActionType = actionType;
@@ -60,5 +61,6 @@ public sealed class NewMemberAction : ObservableApiObject
 	/// Constructs a new new-member action.
 	/// </summary>
 	internal NewMemberAction()
-	{ }
+	{
+	}
 }

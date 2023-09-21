@@ -34,7 +34,9 @@ public class AutomodActionExecutedEventArgs : DiscordEventArgs
 	/// The member which caused this event.
 	/// </summary>
 	public DiscordMember Member
-		=> this.Guild.Members.TryGetValue(this.UserId, out var member) ? member : this.Guild.GetMemberAsync(this.UserId, true).Result;
+		=> this.Guild.Members.TryGetValue(this.UserId, out var member)
+			   ? member
+			   : this.Guild.GetMemberAsync(this.UserId, true).Result;
 
 	/// <summary>
 	/// The user id which caused this event.
@@ -75,5 +77,8 @@ public class AutomodActionExecutedEventArgs : DiscordEventArgs
 	/// </summary>
 	public string? MatchedContent { get; internal set; }
 
-	public AutomodActionExecutedEventArgs(IServiceProvider provider) : base(provider) { }
+	public AutomodActionExecutedEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

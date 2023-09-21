@@ -1,4 +1,3 @@
-
 namespace DisCatSharp.Entities;
 
 /// <summary>
@@ -367,8 +366,13 @@ public class DiscordUnicodeEmoji
 	public const string COUCH_AND_LAMP = "\U0001f6cb";
 	public const string COUPLE = "\U0001f46b";
 	public const string COUPLEKISS = "\U0001f48f";
-	public const string COUPLEKISS_MM = "\U0001f468\U0000200d\U00002764\U0000fe0f\U0000200d\U0001f48b\U0000200d\U0001f468";
-	public const string COUPLEKISS_WW = "\U0001f469\U0000200d\U00002764\U0000fe0f\U0000200d\U0001f48b\U0000200d\U0001f469";
+
+	public const string COUPLEKISS_MM =
+		"\U0001f468\U0000200d\U00002764\U0000fe0f\U0000200d\U0001f48b\U0000200d\U0001f468";
+
+	public const string COUPLEKISS_WW =
+		"\U0001f469\U0000200d\U00002764\U0000fe0f\U0000200d\U0001f48b\U0000200d\U0001f469";
+
 	public const string COUPLE_MM = "\U0001f468\U0000200d\U00002764\U0000fe0f\U0000200d\U0001f468";
 	public const string COUPLE_WITH_HEART = "\U0001f491";
 	public const string COUPLE_WITH_HEART_MM = "\U0001f468\U0000200d\U00002764\U0000fe0f\U0000200d\U0001f468";

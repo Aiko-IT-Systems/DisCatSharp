@@ -61,7 +61,9 @@ public static class Utilities
 		var vs = "";
 		var iv = a.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
 		if (iv != null)
+		{
 			vs = iv.InformationalVersion;
+		}
 		else
 		{
 			var v = a.GetName().Version;
@@ -78,13 +80,13 @@ public static class Utilities
 	/// <returns>A string.</returns>
 	internal static string GetApiBaseUri(DiscordConfiguration? config = null)
 		=> (config?.ApiChannel ?? ApiChannel.Stable) switch
-		{
-			ApiChannel.Stable => Endpoints.BASE_URI,
-			ApiChannel.Canary => Endpoints.CANARY_URI,
-			ApiChannel.Ptb => Endpoints.PTB_URI,
-			ApiChannel.Staging => Endpoints.STAGING_URI,
-			_ => Endpoints.BASE_URI
-		} + (config?.ApiVersion ?? "10");
+		   {
+			   ApiChannel.Stable => Endpoints.BASE_URI,
+			   ApiChannel.Canary => Endpoints.CANARY_URI,
+			   ApiChannel.Ptb => Endpoints.PTB_URI,
+			   ApiChannel.Staging => Endpoints.STAGING_URI,
+			   _ => Endpoints.BASE_URI
+		   } + (config?.ApiVersion ?? "10");
 
 	/// <summary>
 	/// Gets the api uri for.
@@ -132,7 +134,7 @@ public static class Utilities
 		{
 			TokenType.Bearer => $"Bearer {config.Token}",
 			TokenType.Bot => $"Bot {config.Token}",
-			_ => throw new ArgumentException("Invalid token type specified.", nameof(config)),
+			_ => throw new ArgumentException("Invalid token type specified.", nameof(config))
 		};
 
 	/// <summary>
@@ -219,7 +221,7 @@ public static class Utilities
 		var regex = new Regex(@"<@!?(\d+)>", RegexOptions.ECMAScript | RegexOptions.Compiled);
 		var matches = regex.Matches(message.Content);
 		return from Match match in matches
-			   select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+		       select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -232,7 +234,7 @@ public static class Utilities
 		var regex = new Regex(@"<@&(\d+)>", RegexOptions.ECMAScript);
 		var matches = regex.Matches(message.Content);
 		return from Match match in matches
-			   select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+		       select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -245,7 +247,7 @@ public static class Utilities
 		var regex = new Regex(@"<#(\d+)>", RegexOptions.ECMAScript);
 		var matches = regex.Matches(message.Content);
 		return from Match match in matches
-			   select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+		       select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -258,7 +260,7 @@ public static class Utilities
 		var regex = new Regex(@"<a?:([a-zA-Z0-9_]+):(\d+)>", RegexOptions.ECMAScript);
 		var matches = regex.Matches(message.Content);
 		return from Match match in matches
-			   select ulong.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+		       select ulong.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -294,7 +296,8 @@ public static class Utilities
 	/// <param name="intents">The intents.</param>
 	/// <returns>A bool.</returns>
 	internal static bool HasReactionIntents(DiscordIntents intents)
-		=> intents.HasIntent(DiscordIntents.GuildMessageReactions) || intents.HasIntent(DiscordIntents.DirectMessageReactions);
+		=> intents.HasIntent(DiscordIntents.GuildMessageReactions) ||
+		   intents.HasIntent(DiscordIntents.DirectMessageReactions);
 
 	/// <summary>
 	/// Have the typing intents.
@@ -302,7 +305,8 @@ public static class Utilities
 	/// <param name="intents">The intents.</param>
 	/// <returns>A bool.</returns>
 	internal static bool HasTypingIntents(DiscordIntents intents)
-		=> intents.HasIntent(DiscordIntents.GuildMessageTyping) || intents.HasIntent(DiscordIntents.DirectMessageTyping);
+		=> intents.HasIntent(DiscordIntents.GuildMessageTyping) ||
+		   intents.HasIntent(DiscordIntents.DirectMessageTyping);
 
 	// https://discord.com/developers/docs/topics/gateway#sharding-sharding-formula
 	/// <summary>
@@ -382,7 +386,6 @@ public static class Utilities
 	public static DateTimeOffset? GetSnowflakeTime(this ulong? snowflake)
 		=> snowflake is not null ? DiscordClient.DiscordEpoch.AddMilliseconds(snowflake.Value >> 22) : null;
 
-
 	/// <summary>
 	/// Converts this <see cref="Permissions"/> into human-readable format.
 	/// </summary>
@@ -392,7 +395,8 @@ public static class Utilities
 	/// <param name="includeValue">Whether to include the permissions value. Defaults to <see langword="false"/>.</param>
 	/// <param name="shortIfAll">Whether to show <c>All Permissions</c>, if the member has all permissions. Defaults to &lt;see langword="false"/&gt;.</param>
 	/// <returns>Human-readable permissions.</returns>
-	public static string ToPermissionString(this Permissions perm, bool useNewline = false, bool sortAscending = true, bool includeValue = false, bool shortIfAll = false)
+	public static string ToPermissionString(this Permissions perm, bool useNewline = false, bool sortAscending = true,
+	                                        bool includeValue = false, bool shortIfAll = false)
 	{
 		if (perm == Permissions.None)
 			return PermissionStrings[perm];
@@ -434,7 +438,8 @@ public static class Utilities
 		if (logger == null)
 			return;
 
-		task.ContinueWith(t => logger.Log(level, eventId, t.Exception, "{msg}", message), TaskContinuationOptions.OnlyOnFaulted);
+		task.ContinueWith(t => logger.Log(level, eventId, t.Exception, "{msg}", message),
+		                  TaskContinuationOptions.OnlyOnFaulted);
 	}
 
 	/// <summary>

@@ -553,6 +553,11 @@ internal sealed class AuditLog : ObservableApiObject
         public IReadOnlyList<AuditLogApplicationCommand> ApplicationCommands { get; set; }
         */
 	internal AuditLog()
-		: base(new() { "application_commands", "auto_moderation_rules" })
-	{ }
+		: base(new()
+		{
+			"application_commands",
+			"auto_moderation_rules"
+		})
+	{
+	}
 }

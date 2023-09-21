@@ -23,6 +23,7 @@ public sealed class DiscordInteractionModalBuilder
 			this._title = value;
 		}
 	}
+
 	private string _title;
 
 	/// <summary>
@@ -34,6 +35,7 @@ public sealed class DiscordInteractionModalBuilder
 	/// Components to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> ModalComponents => this._components;
+
 	private readonly List<DiscordActionRowComponent> _components = new();
 
 	/// <summary>
@@ -105,10 +107,14 @@ public sealed class DiscordInteractionModalBuilder
 			throw new ArgumentException("You can only add 5 components to modals.");
 
 		if (this._components.Count + ara.Length > 5)
-			throw new ArgumentException($"You try to add too many components. We already have {this._components.Count}.");
+			throw new
+				ArgumentException($"You try to add too many components. We already have {this._components.Count}.");
 
 		foreach (var ar in ara)
-			this._components.Add(new(new List<DiscordComponent>() { ar }));
+			this._components.Add(new(new List<DiscordComponent>()
+			{
+				ar
+			}));
 
 		return this;
 	}
@@ -139,7 +145,10 @@ public sealed class DiscordInteractionModalBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	internal DiscordInteractionModalBuilder AddModalComponents(DiscordComponent component)
 	{
-		this._components.Add(new(new List<DiscordComponent>() { component }));
+		this._components.Add(new(new List<DiscordComponent>()
+		{
+			component
+		}));
 
 		return this;
 	}

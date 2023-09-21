@@ -78,7 +78,9 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// Gets the default avatar url for this webhook.
 	/// </summary>
 	public string? AvatarUrl
-		=> !string.IsNullOrWhiteSpace(this.AvatarHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id}/{this.AvatarHash}.png?size=1024" : null;
+		=> !string.IsNullOrWhiteSpace(this.AvatarHash)
+			   ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id}/{this.AvatarHash}.png?size=1024"
+			   : null;
 
 	/// <summary>
 	/// Gets the secure token of this webhook.
@@ -90,8 +92,12 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// Initializes a new instance of the <see cref="DiscordWebhook"/> class.
 	/// </summary>
 	internal DiscordWebhook()
-		: base(new() { "type" })
-	{ }
+		: base(new()
+		{
+			"type"
+		})
+	{
+	}
 
 	/// <summary>
 	/// Modifies this webhook.
@@ -105,7 +111,8 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordWebhook> ModifyAsync(string? name = null, Optional<Stream?> avatar = default, ulong? channelId = null, string? reason = null)
+	public Task<DiscordWebhook> ModifyAsync(string? name = null, Optional<Stream?> avatar = default,
+	                                        ulong? channelId = null, string? reason = null)
 	{
 		var avatarBase64 = ImageTool.Base64FromStream(avatar);
 
@@ -147,7 +154,8 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordMessage> GetMessageAsync(ulong messageId, ulong threadId)
-		=> (this.Discord?.ApiClient ?? this.ApiClient).GetWebhookMessageAsync(this.Id, this.Token!, messageId, threadId);
+		=> (this.Discord?.ApiClient ?? this.ApiClient).GetWebhookMessageAsync(this.Id, this.Token!, messageId,
+		                                                                      threadId);
 
 	/// <summary>
 	/// Tries to get a previously-sent webhook message.
@@ -219,13 +227,18 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> EditMessageAsync(ulong messageId, DiscordWebhookBuilder builder, string? threadId = null)
+	public async Task<DiscordMessage> EditMessageAsync(ulong messageId, DiscordWebhookBuilder builder,
+	                                                   string? threadId = null)
 	{
 		builder.Validate(true);
 		if (builder.KeepAttachmentsInternal.HasValue && builder.KeepAttachmentsInternal.Value)
-			builder.AttachmentsInternal.AddRange(this.ApiClient.GetWebhookMessageAsync(this.Id, this.Token!, messageId.ToString(), threadId).Result.Attachments);
+			builder.AttachmentsInternal.AddRange(this.ApiClient
+				                                     .GetWebhookMessageAsync(this.Id, this.Token!, messageId.ToString(),
+				                                                             threadId).Result.Attachments);
 		else if (builder.KeepAttachmentsInternal.HasValue) builder.AttachmentsInternal.Clear();
-		return await (this.Discord?.ApiClient ?? this.ApiClient).EditWebhookMessageAsync(this.Id, this.Token!, messageId.ToString(), builder, threadId).ConfigureAwait(false);
+		return await (this.Discord?.ApiClient ?? this.ApiClient)
+			       .EditWebhookMessageAsync(this.Id, this.Token!, messageId.ToString(), builder, threadId)
+			       .ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -247,7 +260,8 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task DeleteMessageAsync(ulong messageId, ulong threadId)
-		=> (this.Discord?.ApiClient ?? this.ApiClient).DeleteWebhookMessageAsync(this.Id, this.Token, messageId, threadId);
+		=> (this.Discord?.ApiClient ?? this.ApiClient).DeleteWebhookMessageAsync(this.Id, this.Token, messageId,
+			threadId);
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordWebhook"/> is equal to another object.
@@ -280,7 +294,8 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) &&
+		       ((o1 == null && o2 == null) || e1.Id == e2.Id);
 	}
 
 	/// <summary>

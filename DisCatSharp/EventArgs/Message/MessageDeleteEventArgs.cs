@@ -27,5 +27,8 @@ public class MessageDeleteEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="MessageDeleteEventArgs"/> class.
 	/// </summary>
-	internal MessageDeleteEventArgs(IServiceProvider provider) : base(provider) { }
+	internal MessageDeleteEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

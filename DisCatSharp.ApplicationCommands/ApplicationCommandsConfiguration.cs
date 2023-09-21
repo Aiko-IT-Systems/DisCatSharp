@@ -76,7 +76,8 @@ public class ApplicationCommandsConfiguration
 	/// </summary>
 	[ActivatorUtilitiesConstructor]
 	public ApplicationCommandsConfiguration()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Utilized via dependency injection pipeline.

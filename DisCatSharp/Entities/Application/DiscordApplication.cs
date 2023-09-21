@@ -26,7 +26,9 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// Gets the application's icon.
 	/// </summary>
 	public override string? Icon
-		=> !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null;
+		=> !string.IsNullOrWhiteSpace(this.IconHash)
+			   ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024"
+			   : null;
 
 	/// <summary>
 	/// Gets the application's icon hash.
@@ -183,7 +185,8 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// Initializes a new instance of the <see cref="DiscordApplication"/> class.
 	/// </summary>
 	internal DiscordApplication()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Gets the application's cover image URL, in requested format and size.
@@ -209,12 +212,12 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 			ImageFormat.Jpeg => "jpg",
 			ImageFormat.Auto or ImageFormat.Png => "png",
 			ImageFormat.WebP => "webp",
-			_ => throw new ArgumentOutOfRangeException(nameof(fmt)),
+			_ => throw new ArgumentOutOfRangeException(nameof(fmt))
 		};
 		var ssize = size.ToString(CultureInfo.InvariantCulture);
 		return !string.IsNullOrWhiteSpace(this.CoverImageHash)
-			? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.{sfmt}?size={ssize}"
-			: null;
+			       ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.{sfmt}?size={ssize}"
+			       : null;
 	}
 
 	/// <summary>
@@ -237,7 +240,8 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	{
 		permissions &= PermissionMethods.FullPerms;
 		// hey look, it's not all annoying and blue :P
-		return new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
+		return new
+				QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
 			.AddParameter("client_id", this.Id.ToString(CultureInfo.InvariantCulture))
 			.AddParameter("scope", "bot")
 			.AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
@@ -278,7 +282,8 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) &&
+		       ((o1 == null && o2 == null) || e1.Id == e2.Id);
 	}
 
 	/// <summary>
@@ -344,7 +349,8 @@ public sealed class DiscordApplicationAsset : DiscordAsset, IEquatable<DiscordAp
 	/// Initializes a new instance of the <see cref="DiscordApplicationAsset"/> class.
 	/// </summary>
 	internal DiscordApplicationAsset()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordApplicationAsset"/> class.
@@ -369,7 +375,8 @@ public sealed class DiscordApplicationAsset : DiscordAsset, IEquatable<DiscordAp
 	/// <param name="e"><see cref="DiscordApplicationAsset"/> to compare to.</param>
 	/// <returns>Whether the <see cref="DiscordApplicationAsset"/> is equal to this <see cref="DiscordApplicationAsset"/>.</returns>
 	public bool Equals(DiscordApplicationAsset e)
-		=> e is not null && this.GetHashCode() == e.GetHashCode() && this.Application.GetHashCode() == e.Application.GetHashCode();
+		=> e is not null && this.GetHashCode() == e.GetHashCode() &&
+		   this.Application.GetHashCode() == e.Application.GetHashCode();
 
 	/// <summary>
 	/// Gets the hash code for this <see cref="DiscordApplication"/>.
@@ -389,7 +396,8 @@ public sealed class DiscordApplicationAsset : DiscordAsset, IEquatable<DiscordAp
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.GetHashCode() == e2.GetHashCode());
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) &&
+		       ((o1 == null && o2 == null) || e1.GetHashCode() == e2.GetHashCode());
 	}
 
 	/// <summary>

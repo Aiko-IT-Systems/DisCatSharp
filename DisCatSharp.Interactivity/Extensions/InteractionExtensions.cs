@@ -30,8 +30,15 @@ public static class InteractionExtensions
 	/// <param name="behaviour">Pagination behaviour.</param>
 	/// <param name="deletion">Deletion behaviour</param>
 	/// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
-	public static Task SendPaginatedResponseAsync(this DiscordInteraction interaction, bool deferred, bool ephemeral, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons = null, PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default, CancellationToken token = default)
-		=> (interaction.Discord as DiscordClient)?.GetInteractivity()?.SendPaginatedResponseAsync(interaction, deferred, ephemeral, user, pages, buttons, behaviour, deletion, token);
+	public static Task SendPaginatedResponseAsync(this DiscordInteraction interaction, bool deferred, bool ephemeral,
+	                                              DiscordUser user, IEnumerable<Page> pages,
+	                                              PaginationButtons buttons = null,
+	                                              PaginationBehaviour? behaviour = default,
+	                                              ButtonPaginationBehavior? deletion = default,
+	                                              CancellationToken token = default)
+		=> (interaction.Discord as DiscordClient)?.GetInteractivity()
+			?.SendPaginatedResponseAsync(interaction, deferred, ephemeral, user, pages, buttons, behaviour, deletion,
+			                             token);
 
 	/// <summary>
 	/// Sends multiple modals to the user with a prompt to open the next one.
@@ -42,13 +49,16 @@ public static class InteractionExtensions
 	/// <returns>A read-only dictionary with the custom id of the components as the key.</returns>
 	/// <exception cref="ArgumentException">Is thrown when no modals are defined.</exception>
 	/// <exception cref="InvalidOperationException">Is thrown when interactivity is not enabled for the client/shard.</exception>
-	public static async Task<PaginatedModalResponse> CreatePaginatedModalResponseAsync(this DiscordInteraction interaction, IReadOnlyList<ModalPage> modals, TimeSpan? timeOutOverride = null)
+	public static async Task<PaginatedModalResponse> CreatePaginatedModalResponseAsync(
+		this DiscordInteraction interaction, IReadOnlyList<ModalPage> modals, TimeSpan? timeOutOverride = null)
 	{
 		if (modals is null || modals.Count == 0)
 			throw new ArgumentException("You have to set at least one page");
 
 		var client = (DiscordClient)interaction.Discord;
-		var interactivity = client.GetInteractivity() ?? throw new InvalidOperationException($"Interactivity is not enabled for this {(client.IsShard ? "shard" : "client")}.");
+		var interactivity = client.GetInteractivity() ??
+		                    throw new
+			                    InvalidOperationException($"Interactivity is not enabled for this {(client.IsShard ? "shard" : "client")}.");
 
 		timeOutOverride ??= TimeSpan.FromMinutes(15);
 
@@ -62,27 +72,46 @@ public static class InteractionExtensions
 
 			if (previousInteraction.Type is InteractionType.Ping or InteractionType.ModalSubmit)
 			{
-				await previousInteraction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, b.OpenMessage.AddComponents(b.OpenButton)).ConfigureAwait(false);
+				await previousInteraction
+					.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+					                     b.OpenMessage.AddComponents(b.OpenButton)).ConfigureAwait(false);
 				var originalResponse = await previousInteraction.GetOriginalResponseAsync().ConfigureAwait(false);
-				var modalOpen = await interactivity.WaitForButtonAsync(originalResponse, new List<DiscordButtonComponent> { b.OpenButton }, timeOutOverride).ConfigureAwait(false);
+				var modalOpen = await interactivity.WaitForButtonAsync(originalResponse,
+				                                                       new List<DiscordButtonComponent>
+				                                                       {
+					                                                       b.OpenButton
+				                                                       }, timeOutOverride).ConfigureAwait(false);
 
 				if (modalOpen.TimedOut)
 				{
-					_ = previousInteraction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent(b.OpenMessage.Content).AddComponents(b.OpenButton.Disable()));
-					return new() { TimedOut = true };
+					_ = previousInteraction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
+						                                                  .WithContent(b.OpenMessage.Content)
+						                                                  .AddComponents(b.OpenButton.Disable()));
+					return new()
+					{
+						TimedOut = true
+					};
 				}
 
 				await modalOpen.Result.Interaction.CreateInteractionModalResponseAsync(modal).ConfigureAwait(false);
 			}
 			else
+			{
 				await previousInteraction.CreateInteractionModalResponseAsync(modal).ConfigureAwait(false);
+			}
 
-			_ = previousInteraction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent(b.OpenMessage.Content).AddComponents(b.OpenButton.Disable()));
+			_ = previousInteraction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
+				                                                  .WithContent(b.OpenMessage.Content)
+				                                                  .AddComponents(b.OpenButton.Disable()));
 
-			var modalResult = await interactivity.WaitForModalAsync(modal.CustomId, timeOutOverride).ConfigureAwait(false);
+			var modalResult =
+				await interactivity.WaitForModalAsync(modal.CustomId, timeOutOverride).ConfigureAwait(false);
 
 			if (modalResult.TimedOut)
-				return new() { TimedOut = true };
+				return new()
+				{
+					TimedOut = true
+				};
 
 			if (modalResult.Result.Interaction.Data.Components is not null)
 				foreach (var submissions in modalResult.Result.Interaction.Data.Components)
@@ -91,8 +120,15 @@ public static class InteractionExtensions
 			previousInteraction = modalResult.Result.Interaction;
 		}
 
-		await previousInteraction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource, new DiscordInteractionResponseBuilder().AsEphemeral()).ConfigureAwait(false);
+		await previousInteraction
+			.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource,
+			                     new DiscordInteractionResponseBuilder().AsEphemeral()).ConfigureAwait(false);
 
-		return new() { TimedOut = false, Responses = caughtResponses, Interaction = previousInteraction };
+		return new()
+		{
+			TimedOut = false,
+			Responses = caughtResponses,
+			Interaction = previousInteraction
+		};
 	}
 }

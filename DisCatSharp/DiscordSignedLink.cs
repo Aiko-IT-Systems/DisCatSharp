@@ -40,13 +40,15 @@ public sealed class DiscordSignedLink : Uri
 		if (!queries.HasKeys())
 			return;
 
-		if (queries.Get("ex") is { } expiresString && long.TryParse(expiresString, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var expiresTimeStamp))
+		if (queries.Get("ex") is { } expiresString && long.TryParse(expiresString, NumberStyles.HexNumber,
+		                                                            CultureInfo.InvariantCulture,
+		                                                            out var expiresTimeStamp))
 			this.ExpiresAt = DateTimeOffset.FromUnixTimeSeconds(expiresTimeStamp);
 
-		if (queries.Get("is") is { } issuedString && long.TryParse(issuedString, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var issuedTimeStamp))
+		if (queries.Get("is") is { } issuedString &&
+		    long.TryParse(issuedString, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var issuedTimeStamp))
 			this.IssuedAt = DateTimeOffset.FromUnixTimeSeconds(issuedTimeStamp);
 
 		this.Signature = queries.Get("sg");
 	}
 }
-

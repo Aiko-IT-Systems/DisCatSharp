@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -25,6 +24,7 @@ public sealed class LavalinkExtension : BaseExtension
 		add => this._sessionDisconnected.Register(value);
 		remove => this._sessionDisconnected.Unregister(value);
 	}
+
 	private AsyncEvent<LavalinkExtension, LavalinkSessionDisconnectedEventArgs> _sessionDisconnected;
 
 	/// <summary>
@@ -35,6 +35,7 @@ public sealed class LavalinkExtension : BaseExtension
 		add => this._sessionConnected.Register(value);
 		remove => this._sessionConnected.Unregister(value);
 	}
+
 	private AsyncEvent<LavalinkExtension, LavalinkSessionConnectedEventArgs> _sessionConnected;
 
 	/// <summary>
@@ -62,7 +63,8 @@ public sealed class LavalinkExtension : BaseExtension
 	/// </summary>
 	internal LavalinkExtension()
 	{
-		this.ConnectedSessions = new ReadOnlyConcurrentDictionary<ConnectionEndpoint, LavalinkSession>(this._connectedSessions);
+		this.ConnectedSessions =
+			new ReadOnlyConcurrentDictionary<ConnectionEndpoint, LavalinkSession>(this._connectedSessions);
 	}
 
 	/// <summary>
@@ -80,7 +82,6 @@ public sealed class LavalinkExtension : BaseExtension
 		this._sessionDisconnected = new("LAVALINK_SESSION_DISCONNECTED", TimeSpan.Zero, this.Client.EventErrorHandler);
 		this._sessionConnected = new("LAVALINK_SESSION_CONNECTED", TimeSpan.Zero, this.Client.EventErrorHandler);
 	}
-
 
 	/// <summary>
 	/// Connect to a Lavalink session.
@@ -185,8 +186,10 @@ public sealed class LavalinkExtension : BaseExtension
 			var bPenaltyCount = b.Statistics.PlayingPlayers;
 
 			//cpu load
-			aPenaltyCount += (int)Math.Pow(1.05d, (100 * (a.Statistics.Cpu.SystemLoad / a.Statistics.Cpu.Cores) * 10) - 10);
-			bPenaltyCount += (int)Math.Pow(1.05d, (100 * (b.Statistics.Cpu.SystemLoad / a.Statistics.Cpu.Cores) * 10) - 10);
+			aPenaltyCount +=
+				(int)Math.Pow(1.05d, (100 * (a.Statistics.Cpu.SystemLoad / a.Statistics.Cpu.Cores) * 10) - 10);
+			bPenaltyCount +=
+				(int)Math.Pow(1.05d, (100 * (b.Statistics.Cpu.SystemLoad / a.Statistics.Cpu.Cores) * 10) - 10);
 
 			//frame load
 			if (a.Statistics.Frames!.Deficit > 0)

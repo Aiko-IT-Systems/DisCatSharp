@@ -41,7 +41,8 @@ public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 	/// <param name="initialSegmentCount">Number of segments to allocate. Defaults to 0.</param>
 	/// <param name="memPool">Memory pool to use for renting buffers. Defaults to <see cref="MemoryPool{T}.Shared"/>.</param>
 	/// <param name="clearOnDispose">Determines whether the underlying buffers should be cleared on exit. If dealing with sensitive data, it might be a good idea to set this option to true.</param>
-	public MemoryBuffer(int segmentSize = 65536, int initialSegmentCount = 0, MemoryPool<byte>? memPool = default, bool clearOnDispose = false)
+	public MemoryBuffer(int segmentSize = 65536, int initialSegmentCount = 0, MemoryPool<byte>? memPool = default,
+	                    bool clearOnDispose = false)
 	{
 		this._itemSize = Unsafe.SizeOf<T>();
 		if (segmentSize % this._itemSize != 0)
@@ -78,8 +79,8 @@ public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 			var mem = seg.Memory;
 			var avs = mem.Length - this._lastSegmentLength;
 			avs = avs > src.Length
-				? src.Length
-				: avs;
+				      ? src.Length
+				      : avs;
 			var dmem = mem[this._lastSegmentLength..];
 
 			src[..avs].CopyTo(dmem.Span);
@@ -133,8 +134,8 @@ public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 			var mem = seg.Memory;
 			var avs = mem.Length - this._lastSegmentLength;
 			avs = avs > len
-				? len
-				: avs;
+				      ? len
+				      : avs;
 			var dmem = mem[this._lastSegmentLength..];
 
 			var lsl = this._lastSegmentLength;
@@ -310,8 +311,8 @@ public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 		var segCap = this._segments.Count + segCount;
 		if (segCap > this._segments.Capacity)
 			this._segments.Capacity = segCap < this._segments.Capacity * 2
-				? this._segments.Capacity * 2
-				: segCap;
+				                          ? this._segments.Capacity * 2
+				                          : segCap;
 
 		for (var i = 0; i < segCount; i++)
 			this._segments.Add(this._pool.Rent(this._segmentSize));

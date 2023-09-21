@@ -39,5 +39,6 @@ public sealed class DiscordEmbedAuthor : ObservableApiObject
 	/// Initializes a new instance of the <see cref="DiscordEmbedAuthor"/> class.
 	/// </summary>
 	internal DiscordEmbedAuthor()
-	{ }
+	{
+	}
 }

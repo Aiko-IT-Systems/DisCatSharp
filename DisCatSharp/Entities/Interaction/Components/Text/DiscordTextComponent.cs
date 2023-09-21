@@ -94,7 +94,8 @@ public sealed class DiscordTextComponent : DiscordComponent
 	/// Constructs a new text component based on another text component.
 	/// </summary>
 	/// <param name="other">The button to copy.</param>
-	public DiscordTextComponent(DiscordTextComponent other) : this()
+	public DiscordTextComponent(DiscordTextComponent other)
+		: this()
 	{
 		this.CustomId = other.CustomId;
 		this.Style = other.Style;
@@ -119,7 +120,9 @@ public sealed class DiscordTextComponent : DiscordComponent
 	/// <param name="required">Whether this text component should be required.</param>
 	/// <param name="defaultValue">Pre-filled value for text field.</param>
 	/// <exception cref="ArgumentException">Is thrown when no label is set.</exception>
-	public DiscordTextComponent(TextComponentStyle style, string customId = null, string label = null, string placeholder = null, int? minLength = null, int? maxLength = null, bool required = true, string defaultValue = null)
+	public DiscordTextComponent(TextComponentStyle style, string customId = null, string label = null,
+	                            string placeholder = null, int? minLength = null, int? maxLength = null,
+	                            bool required = true, string defaultValue = null)
 	{
 		this.Style = style;
 		this.Label = label ?? throw new ArgumentException("A label is required.");

@@ -6,4 +6,5 @@ namespace DisCatSharp.Common.Serialization;
 /// ABC for serialization attributes.
 /// </summary>
 public abstract class SerializationAttribute : Attribute
-{ }
+{
+}

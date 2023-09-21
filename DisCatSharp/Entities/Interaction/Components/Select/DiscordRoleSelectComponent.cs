@@ -40,9 +40,12 @@ public sealed class DiscordRoleSelectComponent : DiscordBaseSelectComponent
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this select component should be initialized as being disabled. User sees a greyed out select component that cannot be interacted with.</param>
 	/// <param name="defaultValues">The default values of this select menu.</param>
-	public DiscordRoleSelectComponent(string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false, IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
+	public DiscordRoleSelectComponent(string placeholder, string customId = null, int minOptions = 1,
+	                                  int maxOptions = 1, bool disabled = false,
+	                                  IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
 		: base(ComponentType.RoleSelect, placeholder, customId, minOptions, maxOptions, disabled, defaultValues)
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Constructs a new <see cref="DiscordRoleSelectComponent"/> for modals.
@@ -54,14 +57,18 @@ public sealed class DiscordRoleSelectComponent : DiscordBaseSelectComponent
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this select component should be initialized as being disabled. User sees a greyed out select component that cannot be interacted with.</param>
 	/// <param name="defaultValues">The default values of this select menu.</param>
-	public DiscordRoleSelectComponent(string label, string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false, IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
+	public DiscordRoleSelectComponent(string label, string placeholder, string customId = null, int minOptions = 1,
+	                                  int maxOptions = 1, bool disabled = false,
+	                                  IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
 		: base(ComponentType.RoleSelect, label, placeholder, customId, minOptions, maxOptions, disabled, defaultValues)
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Constructs a new <see cref="DiscordRoleSelectComponent"/>.
 	/// </summary>
-	public DiscordRoleSelectComponent() : base()
+	public DiscordRoleSelectComponent()
+		: base()
 	{
 		this.Type = ComponentType.RoleSelect;
 	}

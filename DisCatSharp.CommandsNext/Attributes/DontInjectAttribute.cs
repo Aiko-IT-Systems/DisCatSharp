@@ -7,4 +7,5 @@ namespace DisCatSharp.CommandsNext.Attributes;
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public class DontInjectAttribute : Attribute
-{ }
+{
+}

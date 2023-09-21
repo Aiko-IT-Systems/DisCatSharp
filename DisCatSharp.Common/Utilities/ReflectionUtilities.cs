@@ -44,6 +44,7 @@ public static class ReflectionUtilities
 	public static IReadOnlyDictionary<string, object> ToDictionary<T>(this T obj) =>
 		obj == null
 			? throw new NullReferenceException()
-			: (IReadOnlyDictionary<string, object>)new CharSpanLookupReadOnlyDictionary<object>(typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+			: (IReadOnlyDictionary<string, object>)new CharSpanLookupReadOnlyDictionary<object>(typeof(T)
+				.GetProperties(BindingFlags.Public | BindingFlags.Instance)
 				.Select(x => new KeyValuePair<string, object>(x.Name, x.GetValue(obj))));
 }

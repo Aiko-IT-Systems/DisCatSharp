@@ -15,7 +15,14 @@ public class DiscordThreadResult : ObservableApiObject
 	/// </summary>
 	[JsonIgnore]
 	public Dictionary<ulong, DiscordThreadChannel> ReturnedThreads
-		=> this.Threads == null || !this.Threads.Any() ? new() : this.Threads.Select(t => new { t.Id, t }).ToDictionary(t => t.Id, t => t.t);
+		=> this.Threads == null || !this.Threads.Any()
+			   ? new()
+			   : this.Threads.Select(t => new
+			   {
+				   t.Id,
+				   t
+			   }).ToDictionary(t => t.Id, t => t.t);
+
 	[JsonProperty("threads", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<DiscordThreadChannel> Threads { get; set; }
 
@@ -36,5 +43,6 @@ public class DiscordThreadResult : ObservableApiObject
 	/// </summary>
 	internal DiscordThreadResult()
 		: base()
-	{ }
+	{
+	}
 }

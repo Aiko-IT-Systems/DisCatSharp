@@ -1,4 +1,3 @@
-
 using System.Net;
 using System.Net.Http.Headers;
 
@@ -28,5 +27,6 @@ internal sealed class LavalinkRestResponse
 	/// Initializes a new instance of the <see cref="LavalinkRestResponse"/> class.
 	/// </summary>
 	internal LavalinkRestResponse()
-	{ }
+	{
+	}
 }

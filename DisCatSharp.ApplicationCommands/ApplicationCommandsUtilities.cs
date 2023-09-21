@@ -42,7 +42,9 @@ public static class ApplicationCommandsUtilities
 		}
 
 		// check if anonymous
-		if (targetTypeInfo.IsGenericType && targetTypeInfo.Name.Contains("AnonymousType") && (targetTypeInfo.Name.StartsWith("<>") || targetTypeInfo.Name.StartsWith("VB$")) && (targetTypeInfo.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic)
+		if (targetTypeInfo.IsGenericType && targetTypeInfo.Name.Contains("AnonymousType") &&
+		    (targetTypeInfo.Name.StartsWith("<>") || targetTypeInfo.Name.StartsWith("VB$")) &&
+		    (targetTypeInfo.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic)
 		{
 			if (ApplicationCommandsExtension.DebugEnabled)
 				ApplicationCommandsExtension.Logger.LogDebug("Anonymous");
@@ -65,7 +67,8 @@ public static class ApplicationCommandsUtilities
 		if (ApplicationCommandsExtension.DebugEnabled)
 			ApplicationCommandsExtension.Logger.LogDebug("Checking qualifying methods");
 		// qualifies if any method or type qualifies
-		return targetTypeInfo.DeclaredMethods.Any(xmi => xmi.IsCommandCandidate(out _)) || targetTypeInfo.DeclaredNestedTypes.Any(xti => xti.IsModuleCandidateType());
+		return targetTypeInfo.DeclaredMethods.Any(xmi => xmi.IsCommandCandidate(out _)) ||
+		       targetTypeInfo.DeclaredNestedTypes.Any(xti => xti.IsModuleCandidateType());
 	}
 
 	/// <summary>
@@ -83,6 +86,7 @@ public static class ApplicationCommandsUtilities
 				ApplicationCommandsExtension.Logger.LogDebug("Not existent");
 			return false;
 		}
+
 		if (ApplicationCommandsExtension.DebugEnabled)
 			ApplicationCommandsExtension.Logger.LogDebug("Checking method {name}", method.Name);
 
@@ -96,10 +100,13 @@ public static class ApplicationCommandsUtilities
 
 		// check if appropriate return and arguments
 		parameters = method.GetParameters();
-		if (!parameters.Any() || (parameters.First().ParameterType != typeof(ContextMenuContext) && parameters.First().ParameterType != typeof(InteractionContext)) || method.ReturnType != typeof(Task))
+		if (!parameters.Any() ||
+		    (parameters.First().ParameterType != typeof(ContextMenuContext) &&
+		     parameters.First().ParameterType != typeof(InteractionContext)) || method.ReturnType != typeof(Task))
 		{
 			if (ApplicationCommandsExtension.DebugEnabled)
-				ApplicationCommandsExtension.Logger.LogDebug("Missing first parameter with type ContextMenuContext or InteractionContext");
+				ApplicationCommandsExtension.Logger
+					.LogDebug("Missing first parameter with type ContextMenuContext or InteractionContext");
 			return false;
 		}
 

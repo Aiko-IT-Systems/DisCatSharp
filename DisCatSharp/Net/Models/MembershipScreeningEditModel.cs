@@ -25,5 +25,7 @@ public class MembershipScreeningEditModel : BaseEditModel
 	/// <summary>
 	/// Initializes a new instance of the <see cref="MembershipScreeningEditModel"/> class.
 	/// </summary>
-	internal MembershipScreeningEditModel() { }
+	internal MembershipScreeningEditModel()
+	{
+	}
 }

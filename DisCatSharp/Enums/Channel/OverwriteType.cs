@@ -1,4 +1,3 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -14,5 +13,5 @@ public enum OverwriteType : int
 	/// <summary>
 	/// Specifies that this overwrite applies to a member.
 	/// </summary>
-	Member = 1,
+	Member = 1
 }

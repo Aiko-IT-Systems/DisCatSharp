@@ -31,12 +31,14 @@ internal class ComponentMatchRequest
 	/// <param name="message">The message.</param>
 	/// <param name="predicate">The predicate.</param>
 	/// <param name="cancellation">The cancellation token.</param>
-	public ComponentMatchRequest(DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate, CancellationToken cancellation)
+	public ComponentMatchRequest(DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate,
+	                             CancellationToken cancellation)
 	{
 		this.Message = message;
 		this.Predicate = predicate;
 		this.Cancellation = cancellation;
-		this.Cancellation.Register(() => this.Tcs.TrySetResult(null)); // TrySetCancelled would probably be better but I digress ~Velvet //
+		this.Cancellation.Register(() => this.Tcs
+			                           .TrySetResult(null)); // TrySetCancelled would probably be better but I digress ~Velvet //
 	}
 
 	/// <summary>

@@ -37,7 +37,11 @@ internal class ComponentEventWaiter : IDisposable
 		this._client.ComponentInteractionCreated += this.Handle;
 		this._config = config;
 
-		this._message = new() { Content = config.ResponseMessage ?? "This message was not meant for you.", IsEphemeral = true };
+		this._message = new()
+		{
+			Content = config.ResponseMessage ?? "This message was not meant for you.",
+			IsEphemeral = true
+		};
 	}
 
 	/// <summary>
@@ -55,7 +59,8 @@ internal class ComponentEventWaiter : IDisposable
 		}
 		catch (Exception e)
 		{
-			this._client.Logger.LogError(InteractivityEvents.InteractivityWaitError, e, "An exception was thrown while waiting for components.");
+			this._client.Logger.LogError(InteractivityEvents.InteractivityWaitError, e,
+			                             "An exception was thrown while waiting for components.");
 			return null;
 		}
 		finally
@@ -69,7 +74,8 @@ internal class ComponentEventWaiter : IDisposable
 	/// </summary>
 	/// <param name="request">The request to wait on.</param>
 	/// <returns>The result from request's predicate over the period of time leading up to the token's cancellation.</returns>
-	public async Task<IReadOnlyList<ComponentInteractionCreateEventArgs>> CollectMatchesAsync(ComponentCollectRequest request)
+	public async Task<IReadOnlyList<ComponentInteractionCreateEventArgs>> CollectMatchesAsync(
+		ComponentCollectRequest request)
 	{
 		this._collectRequests.Add(request);
 		try
@@ -78,7 +84,8 @@ internal class ComponentEventWaiter : IDisposable
 		}
 		catch (Exception e)
 		{
-			this._client.Logger.LogError(InteractivityEvents.InteractivityCollectorError, e, "There was an error while collecting component event args.");
+			this._client.Logger.LogError(InteractivityEvents.InteractivityCollectorError, e,
+			                             "There was an error while collecting component event args.");
 		}
 		finally
 		{
@@ -105,7 +112,8 @@ internal class ComponentEventWaiter : IDisposable
 
 		foreach (var creq in this._collectRequests.Where(creq => creq.Message == args.Message && creq.IsMatch(args)))
 		{
-			await args.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate).ConfigureAwait(false);
+			await args.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate)
+				.ConfigureAwait(false);
 
 			if (creq.IsMatch(args))
 				creq.Collected.Add(args);
@@ -114,6 +122,7 @@ internal class ComponentEventWaiter : IDisposable
 				await args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
 		}
 	}
+
 	/// <summary>
 	/// Disposes the waiter.
 	/// </summary>

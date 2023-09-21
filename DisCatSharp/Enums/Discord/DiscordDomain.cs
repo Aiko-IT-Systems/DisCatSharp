@@ -120,8 +120,7 @@ public enum CoreDomain
 	/// cdn.discordapp.com
 	/// </summary>
 	[DomainHelp("CDN", "cdn.discordapp.com")]
-	DiscordCdn = 19,
-
+	DiscordCdn = 19
 }
 
 /// <summary>
@@ -162,15 +161,13 @@ public enum UnusedDomain
 	/// <summary>
 	/// discordapp.io
 	/// </summary>
-	[Obsolete("Not in use.", false)]
-	[DomainHelp("IO domain for discord", "discordapp.io")]
+	[Obsolete("Not in use.", false), DomainHelp("IO domain for discord", "discordapp.io")]
 	DiscordAppIo = 1,
 
 	/// <summary>
 	/// discordcdn.com
 	/// </summary>
-	[Obsolete("Not in use.", false)]
-	[DomainHelp("Alternative CDN domain", "discordcdn.com")]
+	[Obsolete("Not in use.", false), DomainHelp("Alternative CDN domain", "discordcdn.com")]
 	DiscordCdnCom = 2
 }
 
@@ -188,7 +185,8 @@ public static class DiscordDomain
 	public static DomainHelpAttribute GetDomain(Enum domainEnum)
 	{
 		if (domainEnum is not CoreDomain && domainEnum is not OtherDomain && domainEnum is not UnusedDomain)
-			throw new NotSupportedException($"Invalid type. Found: {domainEnum.GetType()} Expected: CoreDomain or OtherDomain or UnusedDomain");
+			throw new
+				NotSupportedException($"Invalid type. Found: {domainEnum.GetType()} Expected: CoreDomain or OtherDomain or UnusedDomain");
 
 		if (domainEnum is CoreDomain domain && domain is CoreDomain.DiscordAdmin or CoreDomain.DiscordTools)
 			throw new UnauthorizedAccessException("You don't have access to this domains");
@@ -196,7 +194,8 @@ public static class DiscordDomain
 		var memberInfo = domainEnum.GetType().GetMember(domainEnum.ToString()).FirstOrDefault();
 		if (memberInfo != null)
 		{
-			var attribute = (DomainHelpAttribute)memberInfo.GetCustomAttributes(typeof(DomainHelpAttribute), false).FirstOrDefault();
+			var attribute = (DomainHelpAttribute)memberInfo.GetCustomAttributes(typeof(DomainHelpAttribute), false)
+				.FirstOrDefault();
 			return attribute;
 		}
 

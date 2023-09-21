@@ -20,7 +20,6 @@ public class ThreadMembersUpdateEventArgs : DiscordEventArgs
 	/// </summary>
 	public IReadOnlyList<DiscordMember> RemovedMembers { get; internal set; }
 
-
 	/// <summary>
 	/// Gets the users who were added to the thread.
 	/// </summary>
@@ -44,5 +43,8 @@ public class ThreadMembersUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ThreadMembersUpdateEventArgs"/> class.
 	/// </summary>
-	internal ThreadMembersUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal ThreadMembersUpdateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

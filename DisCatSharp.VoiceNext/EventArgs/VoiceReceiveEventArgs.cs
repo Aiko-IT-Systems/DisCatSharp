@@ -15,7 +15,6 @@ public class VoiceReceiveEventArgs : DiscordEventArgs
 	/// </summary>
 	public uint Ssrc { get; internal set; }
 
-
 	/// <summary>
 	/// Gets the user that sent the audio data.
 	/// </summary>
@@ -49,5 +48,8 @@ public class VoiceReceiveEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="VoiceReceiveEventArgs"/> class.
 	/// </summary>
-	internal VoiceReceiveEventArgs(IServiceProvider provider) : base(provider) { }
+	internal VoiceReceiveEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

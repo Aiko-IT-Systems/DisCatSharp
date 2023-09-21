@@ -28,5 +28,8 @@ public class GuildStickersUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="GuildStickersUpdateEventArgs"/> class.
 	/// </summary>
-	internal GuildStickersUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal GuildStickersUpdateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

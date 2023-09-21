@@ -41,14 +41,17 @@ public sealed class DiscordApplicationCommandAutocompleteChoice
 	/// <param name="name">The name of this option, which will be presented to the user.</param>
 	/// <param name="nameLocalizations">The localizations of the option name.</param>
 	/// <param name="value">The value of this option.</param>
-	public DiscordApplicationCommandAutocompleteChoice(string name, object value, DiscordApplicationCommandLocalization nameLocalizations = null)
+	public DiscordApplicationCommandAutocompleteChoice(string name, object value,
+	                                                   DiscordApplicationCommandLocalization nameLocalizations = null)
 	{
 		if (name.Length > 100)
 			throw new ArgumentException("Application command choice name cannot exceed 100 characters.", nameof(name));
 		if (value is string { Length: > 100 })
-			throw new ArgumentException("Application command choice value cannot exceed 100 characters.", nameof(value));
+			throw new ArgumentException("Application command choice value cannot exceed 100 characters.",
+			                            nameof(value));
 		if (!(value is string or long or int or double))
-			throw new InvalidOperationException($"Only {typeof(string)}, {typeof(long)}, {typeof(double)} or {typeof(int)} types may be passed to a autocomplete choice.");
+			throw new
+				InvalidOperationException($"Only {typeof(string)}, {typeof(long)}, {typeof(double)} or {typeof(int)} types may be passed to a autocomplete choice.");
 
 		this.Name = name;
 		this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();

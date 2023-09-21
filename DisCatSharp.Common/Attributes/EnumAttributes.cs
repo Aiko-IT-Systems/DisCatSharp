@@ -8,7 +8,8 @@ namespace DisCatSharp.Common.Serialization;
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public sealed class NumericEnumAttribute : SerializationAttribute
-{ }
+{
+}
 
 /// <summary>
 /// <para>Specifies that this enum should be serialized and deserialized as its string representation.</para>
@@ -16,4 +17,5 @@ public sealed class NumericEnumAttribute : SerializationAttribute
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public sealed class StringEnumAttribute : SerializationAttribute
-{ }
+{
+}

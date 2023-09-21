@@ -91,7 +91,9 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 	/// </summary>
 	[JsonIgnore]
 	public string? IconUrl
-		=> !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ROLE_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=64" : null;
+		=> !string.IsNullOrWhiteSpace(this.IconHash)
+			   ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ROLE_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=64"
+			   : null;
 
 	/// <summary>
 	/// Gets the role unicode_emoji.
@@ -104,7 +106,9 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 	/// </summary>
 	[JsonIgnore]
 	public DiscordEmoji? UnicodeEmoji
-		=> this.UnicodeEmojiString != null ? DiscordEmoji.FromName(this.Discord, $":{this.UnicodeEmojiString}:", false) : null;
+		=> this.UnicodeEmojiString != null
+			   ? DiscordEmoji.FromName(this.Discord, $":{this.UnicodeEmojiString}:", false)
+			   : null;
 
 	/// <summary>
 	/// Gets the guild this role belongs to.
@@ -151,7 +155,7 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 	public IReadOnlyList<KeyValuePair<ulong, DiscordMember>> Members
 		=> this.Guild.Members.Where(x => x.Value.RoleIds.Any(y => y == this.Id)).ToList();
 
-	#region Methods
+#region Methods
 
 	/// <summary>
 	/// Modifies this role's position.
@@ -170,8 +174,10 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 			{
 				RoleId = x.Id,
 				Position = x.Id == this.Id
-					? position
-					: x.Position <= position ? x.Position - 1 : x.Position
+					           ? position
+					           : x.Position <= position
+						           ? x.Position - 1
+						           : x.Position
 			});
 
 		return this.Discord.ApiClient.ModifyGuildRolePositionAsync(this.GuildId, roles, reason);
@@ -190,8 +196,10 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 	/// <exception cref="NotFoundException">Thrown when the role does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task ModifyAsync(string? name = null, Permissions? permissions = null, DiscordColor? color = null, bool? hoist = null, bool? mentionable = null, string? reason = null)
-		=> this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, name, permissions, color?.Value, hoist, mentionable, null, null, reason);
+	public Task ModifyAsync(string? name = null, Permissions? permissions = null, DiscordColor? color = null,
+	                        bool? hoist = null, bool? mentionable = null, string? reason = null)
+		=> this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, name, permissions, color?.Value, hoist,
+		                                               mentionable, null, null, reason);
 
 	/// <summary>
 	/// Updates this role.
@@ -207,7 +215,8 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 		action(mdl);
 
 		var canContinue = true;
-		if (mdl.Icon is { HasValue: true, Value: not null } || (mdl.UnicodeEmoji.HasValue && mdl.UnicodeEmoji.Value != null))
+		if (mdl.Icon is { HasValue: true, Value: not null } ||
+		    (mdl.UnicodeEmoji.HasValue && mdl.UnicodeEmoji.Value != null))
 			canContinue = this.Guild.Features.HasFeature(GuildFeaturesEnum.CanSetRoleIcons);
 
 		var iconb64 = Optional.FromNullable<string>(null);
@@ -223,15 +232,19 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 			case true when mdl.UnicodeEmoji.Value != null:
 				emoji = mdl.UnicodeEmoji
 					.MapOrNull(e => e.Id == 0
-						? e.Name
-						: throw new ArgumentException("Emoji must be unicode"));
+						                ? e.Name
+						                : throw new ArgumentException("Emoji must be unicode"));
 				break;
 			case true:
 				emoji = Optional.Some<string>(null);
 				break;
 		}
 
-		return canContinue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Hoist, mdl.Mentionable, iconb64, emoji, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify role icon. Guild needs boost tier two.");
+		return canContinue
+			       ? this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, mdl.Name, mdl.Permissions,
+			                                                     mdl.Color?.Value, mdl.Hoist, mdl.Mentionable, iconb64,
+			                                                     emoji, mdl.AuditLogReason)
+			       : throw new NotSupportedException($"Cannot modify role icon. Guild needs boost tier two.");
 	}
 
 	/// <summary>
@@ -246,13 +259,14 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 	public Task DeleteAsync(string? reason = null)
 		=> this.Discord.ApiClient.DeleteRoleAsync(this.GuildId, this.Id, reason);
 
-	#endregion
+#endregion
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordRole"/> class.
 	/// </summary>
 	internal DiscordRole()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Checks whether this role has specific permissions.
@@ -322,7 +336,8 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 	/// <param name="right">The second <see cref="DiscordMember"/>.</param>
 	/// <returns><see langword="true"/> if the left role can moderate the right member; otherwise, <see langword="false"/>.</returns>
 	public static bool operator >(DiscordRole? left, DiscordMember? right)
-		=> left is not null && right is not null && !right.IsOwner && left > right.Roles.OrderByDescending(r => r.Position).First();
+		=> left is not null && right is not null && !right.IsOwner &&
+		   left > right.Roles.OrderByDescending(r => r.Position).First();
 
 	/// <summary>
 	/// Determines whether the left <see cref="DiscordMember"/> can be moderated by the right <see cref="DiscordRole"/>.
@@ -331,5 +346,6 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 	/// <param name="right">The second <see cref="DiscordRole"/>.</param>
 	/// <returns><see langword="true"/> if the left member can be moderated by the right role; otherwise, <see langword="false"/>.</returns>
 	public static bool operator <(DiscordRole? left, DiscordMember? right)
-		=> left is not null && right is not null && (right.IsOwner || left < right.Roles.OrderByDescending(r => r.Position).First());
+		=> left is not null && right is not null &&
+		   (right.IsOwner || left < right.Roles.OrderByDescending(r => r.Position).First());
 }

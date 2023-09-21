@@ -41,7 +41,7 @@ public class DiscordStoreSku : SnowflakeObject, IEquatable<DiscordStoreSku>
 	/// <param name="e"><see cref="DiscordStoreSku"/> to compare to.</param>
 	/// <returns>Whether the <see cref="DiscordStoreSku"/> is equal to this <see cref="DiscordStoreSku"/>.</returns>
 	public bool Equals(DiscordStoreSku e)
-		=> e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id));
+		=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
 
 	/// <summary>
 	/// Gets the hash code for this <see cref="DiscordStoreSku"/>.
@@ -62,8 +62,8 @@ public class DiscordStoreSku : SnowflakeObject, IEquatable<DiscordStoreSku>
 		var o2 = e2 as object;
 
 		return (o1 != null || o2 == null)
-			&& (o1 == null || o2 != null)
-			&& ((o1 == null && o2 == null) || (e1.Id == e2.Id));
+		       && (o1 == null || o2 != null)
+		       && ((o1 == null && o2 == null) || e1.Id == e2.Id);
 	}
 
 	/// <summary>

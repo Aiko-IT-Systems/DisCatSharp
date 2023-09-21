@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 
@@ -81,6 +80,7 @@ public sealed class LavalinkTrackInfo
 	/// </summary>
 	[JsonIgnore]
 	public TimeSpan Length => !this.IsStream ? TimeSpan.FromMilliseconds(this.LengthInternal) : TimeSpan.Zero;
+
 	[JsonProperty("length")]
 	internal long LengthInternal;
 
@@ -95,6 +95,7 @@ public sealed class LavalinkTrackInfo
 	/// </summary>
 	[JsonIgnore]
 	public TimeSpan Position => TimeSpan.FromMilliseconds(this.PositionInternal);
+
 	[JsonProperty("position")]
 	internal long PositionInternal;
 

@@ -49,7 +49,8 @@ public sealed class DiscordOnboardingPromptOption : SnowflakeObject
 	/// <param name="roleIds">The role ids. Defaults to <see langword="null"/>.</param>
 	/// <param name="channelIds">The channel ids. Defaults to <see langword="null"/>.</param>
 	public DiscordOnboardingPromptOption(string title, string? description = null,
-		DiscordEmoji? emoji = null, List<ulong>? roleIds = null, List<ulong>? channelIds = null)
+	                                     DiscordEmoji? emoji = null, List<ulong>? roleIds = null,
+	                                     List<ulong>? channelIds = null)
 	{
 		this.Title = title;
 		this.Description = description;
@@ -62,5 +63,6 @@ public sealed class DiscordOnboardingPromptOption : SnowflakeObject
 	/// Constructs a new onboarding prompt option.
 	/// </summary>
 	internal DiscordOnboardingPromptOption()
-	{ }
+	{
+	}
 }

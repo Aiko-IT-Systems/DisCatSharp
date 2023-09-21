@@ -5,8 +5,8 @@ namespace DisCatSharp.Common.Serialization;
 /// <summary>
 /// Declares name of a property in serialized data. This is used for mapping serialized data to object properties and fields.
 /// </summary>
-[Obsolete("Use [DataMember] with set Name instead.")]
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+[Obsolete("Use [DataMember] with set Name instead."),
+ AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public sealed class SerializedNameAttribute : SerializationAttribute
 {
 	/// <summary>

@@ -17,5 +17,8 @@ public class UserSettingsUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="UserSettingsUpdateEventArgs"/> class.
 	/// </summary>
-	internal UserSettingsUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal UserSettingsUpdateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

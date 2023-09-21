@@ -27,7 +27,9 @@ internal class ShardedLoggerFactory : ILoggerFactory
 	/// Adds a provider.
 	/// </summary>
 	/// <param name="provider">The provider to be added.</param>
-	public void AddProvider(ILoggerProvider provider) => throw new InvalidOperationException("This is a passthrough logger container, it cannot register new providers.");
+	public void AddProvider(ILoggerProvider provider)
+		=> throw new
+			   InvalidOperationException("This is a passthrough logger container, it cannot register new providers.");
 
 	/// <summary>
 	/// Creates a logger.
@@ -35,12 +37,15 @@ internal class ShardedLoggerFactory : ILoggerFactory
 	/// <param name="categoryName">The category name.</param>
 	public ILogger CreateLogger(string categoryName) =>
 		categoryName != typeof(BaseDiscordClient).FullName
-			? throw new ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName}, not for {categoryName}", nameof(categoryName))
+			? throw new
+				  ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName}, not for {categoryName}",
+				                    nameof(categoryName))
 			: this._logger;
 
 	/// <summary>
 	/// Disposes the logger.
 	/// </summary>
 	public void Dispose()
-	{ }
+	{
+	}
 }

@@ -115,7 +115,9 @@ public sealed class CharSpanLookupDictionary<TValue> :
 			unsafe
 			{
 				fixed (char* chars = &key.GetPinnableReference())
+				{
 					this.TryInsertInternal(new(chars, 0, key.Length), value, true);
+				}
 			}
 		}
 	}
@@ -183,7 +185,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// </summary>
 	/// <param name="values">Dictionary containing items to populate this dictionary with.</param>
 	public CharSpanLookupDictionary(IReadOnlyDictionary<string, TValue> values)
-		 : this(values.Count)
+		: this(values.Count)
 	{
 		foreach (var (k, v) in values)
 			this.Add(k, v);
@@ -221,8 +223,10 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		unsafe
 		{
 			fixed (char* chars = &key.GetPinnableReference())
+			{
 				if (!this.TryInsertInternal(new(chars, 0, key.Length), value, false))
 					throw new ArgumentException("Given key is already present in the dictionary.", nameof(key));
+			}
 		}
 	}
 
@@ -246,7 +250,9 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		unsafe
 		{
 			fixed (char* chars = &key.GetPinnableReference())
+			{
 				return this.TryInsertInternal(new(chars, 0, key.Length), value, false);
+			}
 		}
 	}
 
@@ -258,8 +264,8 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <returns>Whether the operation was successful.</returns>
 	public bool TryGetValue(string key, out TValue value)
 		=> key == null
-			? throw new ArgumentNullException(nameof(key))
-			: this.TryRetrieveInternal(key.AsSpan(), out value);
+			   ? throw new ArgumentNullException(nameof(key))
+			   : this.TryRetrieveInternal(key.AsSpan(), out value);
 
 	/// <summary>
 	/// Attempts to retrieve a value corresponding to the supplied key from this dictionary.
@@ -278,8 +284,8 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <returns>Whether the operation was successful.</returns>
 	public bool TryRemove(string key, out TValue value)
 		=> key == null
-			? throw new ArgumentNullException(nameof(key))
-			: this.TryRemoveInternal(key.AsSpan(), out value);
+			   ? throw new ArgumentNullException(nameof(key))
+			   : this.TryRemoveInternal(key.AsSpan(), out value);
 
 	/// <summary>
 	/// Attempts to remove a value corresponding to the supplied key from this dictionary.
@@ -369,8 +375,8 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <returns>A bool.</returns>
 	bool IDictionary.Contains(object key)
 		=> key is not string tkey
-			? throw new ArgumentException("Key needs to be an instance of a string.")
-			: this.ContainsKey(tkey);
+			   ? throw new ArgumentException("Key needs to be an instance of a string.")
+			   : this.ContainsKey(tkey);
 
 	/// <summary>
 	/// Gets the enumerator.

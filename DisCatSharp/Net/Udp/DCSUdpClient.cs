@@ -26,12 +26,11 @@ internal class DcsUdpClient : BaseUdpClient
 	/// </summary>
 	private readonly BlockingCollection<byte[]> _packetQueue;
 
-
 	/// <summary>
 	/// Gets the receiver task.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:Remove unread private members",
-		Justification = "<Pending>")]
+	                                                 Justification = "<Pending>")]
 	private Task _receiverTask;
 
 	/// <summary>
@@ -109,7 +108,9 @@ internal class DcsUdpClient : BaseUdpClient
 				var packet = await this._client.ReceiveAsync().ConfigureAwait(false);
 				this._packetQueue.Add(packet.Buffer);
 			}
-			catch (Exception) { }
+			catch (Exception)
+			{
+			}
 	}
 
 	/// <summary>

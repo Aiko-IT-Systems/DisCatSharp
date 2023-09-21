@@ -47,21 +47,27 @@ internal class ReactionCollector : IDisposable
 		this._requests = new();
 
 		// Grabbing all three events from client
-		var handler = typeInfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, MessageReactionAddEventArgs>));
+		var handler =
+			typeInfo.DeclaredFields.First(x => x.FieldType ==
+			                                   typeof(AsyncEvent<DiscordClient, MessageReactionAddEventArgs>));
 
 		this._reactionAddEvent = (AsyncEvent<DiscordClient, MessageReactionAddEventArgs>)handler.GetValue(this._client);
 		this._reactionAddHandler = this.HandleReactionAdd;
 		this._reactionAddEvent?.Register(this._reactionAddHandler);
 
-		handler = typeInfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs>));
+		handler = typeInfo.DeclaredFields.First(x => x.FieldType ==
+		                                             typeof(AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs>));
 
-		this._reactionRemoveEvent = (AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs>)handler.GetValue(this._client);
+		this._reactionRemoveEvent =
+			(AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs>)handler.GetValue(this._client);
 		this._reactionRemoveHandler = this.HandleReactionRemove;
 		this._reactionRemoveEvent?.Register(this._reactionRemoveHandler);
 
-		handler = typeInfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, MessageReactionsClearEventArgs>));
+		handler = typeInfo.DeclaredFields.First(x => x.FieldType ==
+		                                             typeof(AsyncEvent<DiscordClient, MessageReactionsClearEventArgs>));
 
-		this._reactionClearEvent = (AsyncEvent<DiscordClient, MessageReactionsClearEventArgs>)handler.GetValue(this._client);
+		this._reactionClearEvent =
+			(AsyncEvent<DiscordClient, MessageReactionsClearEventArgs>)handler.GetValue(this._client);
 		this._reactionClearHandler = this.HandleReactionClear;
 		this._reactionClearEvent?.Register(this._reactionClearHandler);
 	}
@@ -82,7 +88,8 @@ internal class ReactionCollector : IDisposable
 		}
 		catch (Exception ex)
 		{
-			this._client!.Logger.LogError(InteractivityEvents.InteractivityCollectorError, ex, "Exception occurred while collecting reactions");
+			this._client!.Logger.LogError(InteractivityEvents.InteractivityCollectorError, ex,
+			                              "Exception occurred while collecting reactions");
 		}
 		finally
 		{
@@ -90,6 +97,7 @@ internal class ReactionCollector : IDisposable
 			request.Dispose();
 			this._requests?.TryRemove(request);
 		}
+
 		return result;
 	}
 
@@ -107,17 +115,23 @@ internal class ReactionCollector : IDisposable
 		foreach (var req in this._requests.Where(req => req.Message?.Id == eventArgs.Message.Id))
 			if (req.Collected!.Any(x => x.Emoji == eventArgs.Emoji && x.Users.Any(y => y.Id == eventArgs.User.Id)))
 			{
-				var reaction = req.Collected.First(x => x.Emoji == eventArgs.Emoji && x.Users.Any(y => y.Id == eventArgs.User.Id));
+				var reaction =
+					req.Collected.First(x => x.Emoji == eventArgs.Emoji && x.Users.Any(y => y.Id == eventArgs.User.Id));
 				req.Collected.TryRemove(reaction);
 				reaction.Users.Add(eventArgs.User);
 				req.Collected.Add(reaction);
 			}
 			else
+			{
 				req.Collected.Add(new()
 				{
 					Emoji = eventArgs.Emoji,
-					Users = new() { eventArgs.User }
+					Users = new()
+					{
+						eventArgs.User
+					}
 				});
+			}
 
 		return Task.CompletedTask;
 	}
@@ -140,12 +154,14 @@ internal class ReactionCollector : IDisposable
 			if (!req.Collected!.Any(x => x.Emoji == eventArgs.Emoji && x.Users.Any(y => y.Id == eventArgs.User.Id)))
 				continue;
 
-			var reaction = req.Collected.First(x => x.Emoji == eventArgs.Emoji && x.Users.Any(y => y.Id == eventArgs.User.Id));
+			var reaction =
+				req.Collected.First(x => x.Emoji == eventArgs.Emoji && x.Users.Any(y => y.Id == eventArgs.User.Id));
 			req.Collected.TryRemove(reaction);
 			reaction.Users.TryRemove(eventArgs.User);
 			if (reaction.Users.Count > 0)
 				req.Collected.Add(reaction);
 		}
+
 		return Task.CompletedTask;
 	}
 

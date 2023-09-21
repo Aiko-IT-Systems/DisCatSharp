@@ -43,8 +43,8 @@ internal readonly struct ConfigSection
 	public bool ContainsKey(string name)
 	{
 		var path = string.IsNullOrEmpty(this.Root)
-			? this.Config.ConfigPath(this.SectionName, name)
-			: this.Config.ConfigPath(this.Root, this.SectionName, name);
+			           ? this.Config.ConfigPath(this.SectionName, name)
+			           : this.Config.ConfigPath(this.Root, this.SectionName, name);
 
 		return !string.IsNullOrEmpty(this.Config[path]);
 	}

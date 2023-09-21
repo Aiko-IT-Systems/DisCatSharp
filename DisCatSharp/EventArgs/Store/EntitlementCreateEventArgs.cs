@@ -20,5 +20,6 @@ public class EntitlementCreateEventArgs : DiscordEventArgs
 	/// <param name="provider">The provider.</param>
 	internal EntitlementCreateEventArgs(IServiceProvider provider)
 		: base(provider)
-	{ }
+	{
+	}
 }

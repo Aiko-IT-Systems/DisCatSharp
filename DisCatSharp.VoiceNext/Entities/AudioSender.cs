@@ -20,7 +20,7 @@ internal class AudioSender : IDisposable
 	{
 		Normal,
 		AssumeNextLowSequenceIsOverflow,
-		AssumeNextHighSequenceIsOutOfOrder,
+		AssumeNextHighSequenceIsOutOfOrder
 	}
 
 	/// <summary>
@@ -64,7 +64,6 @@ internal class AudioSender : IDisposable
 	/// </summary>
 	public void Dispose() => this.Decoder?.Dispose();
 
-
 	/// <summary>
 	/// Accepts the 16-bit sequence number from the next RTP header in the associated stream and
 	/// uses heuristics to (attempt to) convert it into a 64-bit counter that takes into account
@@ -95,6 +94,7 @@ internal class AudioSender : IDisposable
 		// on either side.  in other words, as long as we're getting packets delivered within a
 		// minute or so of when they should be, the 64-bit sequence numbers coming out of this
 		// method will be perfectly consistent with reality.
+		// TODO: Fix name rule violation. Enforce uppercase. (IDE1006)
 		const ushort OVERFLOW_BUFFER_ZONE = 3_000;
 		const ushort LOW_THRESHOLD = OVERFLOW_BUFFER_ZONE;
 		const ushort HIGH_THRESHOLD = ushort.MaxValue - OVERFLOW_BUFFER_ZONE;

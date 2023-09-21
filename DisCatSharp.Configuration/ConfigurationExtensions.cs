@@ -18,15 +18,16 @@ internal static class ConfigurationExtensions
 	/// The factory error message.
 	/// </summary>
 	private const string FACTORY_ERROR_MESSAGE = "Require a function which provides a default entity to work with";
+
 	/// <summary>
 	/// The default root lib.
 	/// </summary>
 	public const string DEFAULT_ROOT_LIB = "DisCatSharp";
+
 	/// <summary>
 	/// The config suffix.
 	/// </summary>
 	private const string CONFIG_SUFFIX = "Configuration";
-
 
 	/// <summary>
 	/// Easily piece together paths that will work within <see cref="IConfiguration"/>
@@ -70,9 +71,9 @@ internal static class ConfigurationExtensions
 			if (typeof(IEnumerable).IsAssignableFrom(prop.PropertyType))
 			{
 				value = string.IsNullOrEmpty(section.GetValue(prop.Name))
-					? section.Config
-						.GetSection(section.GetPath(prop.Name)).Get(prop.PropertyType)
-					: Newtonsoft.Json.JsonConvert.DeserializeObject(entry, prop.PropertyType);
+					        ? section.Config
+						        .GetSection(section.GetPath(prop.Name)).Get(prop.PropertyType)
+					        : Newtonsoft.Json.JsonConvert.DeserializeObject(entry, prop.PropertyType);
 
 				if (value == null)
 					continue;
@@ -88,7 +89,9 @@ internal static class ConfigurationExtensions
 			{
 				// Primitive types are simple to convert
 				if (prop.PropertyType.IsPrimitive)
+				{
 					value = Convert.ChangeType(entry, prop.PropertyType);
+				}
 				else
 				{
 					// The following types require a different approach
@@ -108,7 +111,7 @@ internal static class ConfigurationExtensions
 			catch (Exception ex)
 			{
 				Console.Error.WriteLine(
-					$"Unable to convert value of '{entry}' to type '{prop.PropertyType.Name}' for prop '{prop.Name}' in config '{config.GetType().Name}'\n\t\t{ex.Message}");
+				                        $"Unable to convert value of '{entry}' to type '{prop.PropertyType.Name}' for prop '{prop.Name}' in config '{config.GetType().Name}'\n\t\t{ex.Message}");
 			}
 		}
 	}
@@ -145,7 +148,7 @@ internal static class ConfigurationExtensions
 	/// <returns>Hydrated instance of an entity which contains user-defined values (if any)</returns>
 	/// <exception cref="ArgumentNullException">When <paramref name="factory"/> is null</exception>
 	public static object ExtractConfig(this IConfiguration config, string sectionName, Func<object> factory,
-		string? rootSectionName = DEFAULT_ROOT_LIB)
+	                                   string? rootSectionName = DEFAULT_ROOT_LIB)
 	{
 		if (factory == null)
 			throw new ArgumentNullException(nameof(factory), FACTORY_ERROR_MESSAGE);
@@ -168,7 +171,8 @@ internal static class ConfigurationExtensions
 	/// <param name="rootSectionName">(Optional) Used when section is nested with another. Default value is <see cref="DEFAULT_ROOT_LIB"/></param>
 	/// <typeparam name="TConfig">Type of instance that <paramref name="sectionName"/> represents</typeparam>
 	/// <returns>Hydrated instance of <typeparamref name="TConfig"/> which contains the user-defined values (if any).</returns>
-	public static TConfig ExtractConfig<TConfig>(this IConfiguration config, IServiceProvider serviceProvider, string sectionName, string? rootSectionName = DEFAULT_ROOT_LIB)
+	public static TConfig ExtractConfig<TConfig>(this IConfiguration config, IServiceProvider serviceProvider,
+	                                             string sectionName, string? rootSectionName = DEFAULT_ROOT_LIB)
 		where TConfig : new()
 	{
 		// Default values should hopefully be provided from the constructor
@@ -188,7 +192,8 @@ internal static class ConfigurationExtensions
 	/// <param name="rootSectionName">(Optional) Used when section is nested with another. Default value is <see cref="DEFAULT_ROOT_LIB"/></param>
 	/// <typeparam name="TConfig">Type of instance that <paramref name="sectionName"/> represents</typeparam>
 	/// <returns>Hydrated instance of <typeparamref name="TConfig"/> which contains the user-defined values (if any).</returns>
-	public static TConfig ExtractConfig<TConfig>(this IConfiguration config, string sectionName, string? rootSectionName = DEFAULT_ROOT_LIB)
+	public static TConfig ExtractConfig<TConfig>(this IConfiguration config, string sectionName,
+	                                             string? rootSectionName = DEFAULT_ROOT_LIB)
 		where TConfig : new()
 	{
 		// Default values should hopefully be provided from the constructor
@@ -276,16 +281,17 @@ internal static class ConfigurationExtensions
 	/// <param name="botSectionName"></param>
 	/// <returns>Instance of <see cref="DiscordClient"/></returns>
 	public static DiscordClient BuildClient(this IConfiguration config, IServiceProvider serviceProvider,
-		string botSectionName = DEFAULT_ROOT_LIB)
+	                                        string botSectionName = DEFAULT_ROOT_LIB)
 	{
 		var section = config.HasSection(botSectionName, "Discord")
-			? "Discord"
-			: config.HasSection(botSectionName, $"Discord{CONFIG_SUFFIX}")
-				? $"Discord:{CONFIG_SUFFIX}"
-				: null;
+			              ? "Discord"
+			              : config.HasSection(botSectionName, $"Discord{CONFIG_SUFFIX}")
+				              ? $"Discord:{CONFIG_SUFFIX}"
+				              : null;
 
 		return string.IsNullOrEmpty(section)
-			? new(new(serviceProvider))
-			: new DiscordClient(config.ExtractConfig<DiscordConfiguration>(serviceProvider, section, botSectionName));
+			       ? new(new(serviceProvider))
+			       : new DiscordClient(config.ExtractConfig<DiscordConfiguration>(serviceProvider, section,
+				                           botSectionName));
 	}
 }

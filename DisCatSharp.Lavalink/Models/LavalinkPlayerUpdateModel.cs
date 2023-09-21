@@ -1,4 +1,3 @@
-
 using DisCatSharp.Entities;
 using DisCatSharp.Lavalink.Entities;
 using DisCatSharp.Lavalink.Entities.Filters;
@@ -64,5 +63,6 @@ public sealed class LavalinkPlayerUpdateModel
 	/// Initializes a new instance of the <see cref="LavalinkPlayerUpdateModel"/> class.
 	/// </summary>
 	internal LavalinkPlayerUpdateModel()
-	{ }
+	{
+	}
 }

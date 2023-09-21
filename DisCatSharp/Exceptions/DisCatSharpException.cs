@@ -10,5 +10,6 @@ public class DisCatSharpException : Exception
 	/// <param name="message">The exception message.</param>
 	internal DisCatSharpException(string message)
 		: base(message)
-	{ }
+	{
+	}
 }

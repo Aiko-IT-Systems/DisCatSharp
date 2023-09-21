@@ -1,4 +1,3 @@
-
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Lavalink.Entities.Websocket;

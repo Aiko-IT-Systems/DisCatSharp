@@ -29,7 +29,8 @@ public partial class DiscordGuild
 	/// <returns>A collection of requested audit log entries.</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ViewAuditLog"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<IReadOnlyList<DiscordAuditLogEntry>> GetAuditLogsAsync(int? limit = null, DiscordMember? byMember = null, AuditLogActionType? actionType = null)
+	public async Task<IReadOnlyList<DiscordAuditLogEntry>> GetAuditLogsAsync(
+		int? limit = null, DiscordMember? byMember = null, AuditLogActionType? actionType = null)
 	{
 		var alrs = new List<AuditLog>();
 		int ac = 1, tc = 0;
@@ -40,7 +41,9 @@ public partial class DiscordGuild
 			rmn = Math.Min(100, rmn);
 			if (rmn <= 0) break;
 
-			var alr = await this.Discord.ApiClient.GetAuditLogsAsync(this.Id, rmn, null, last == 0 ? null : last, byMember?.Id, (int?)actionType).ConfigureAwait(false);
+			var alr = await this.Discord.ApiClient
+				          .GetAuditLogsAsync(this.Id, rmn, null, last == 0 ? null : last, byMember?.Id,
+				                             (int?)actionType).ConfigureAwait(false);
 			ac = alr.Entries.Count;
 			tc += ac;
 			if (ac <= 0)
@@ -80,7 +83,10 @@ public partial class DiscordGuild
 					Discriminator = xau.Discriminator,
 					AvatarHash = xau.AvatarHash
 				};
-				var xu = new DiscordUser(xtu) { Discord = this.Discord };
+				var xu = new DiscordUser(xtu)
+				{
+					Discord = this.Discord
+				};
 				xu = this.Discord.UserCache.AddOrUpdate(xu.Id, xu, (id, old) =>
 				{
 					old.Username = xu.Username;
@@ -118,7 +124,15 @@ public partial class DiscordGuild
 		List<DiscordMember> ams = new();
 		Dictionary<ulong, DiscordMember> amd = new();
 		if (amr.Any())
-			ams = amr.Select(xau => this.MembersInternal != null && this.MembersInternal.TryGetValue(xau.Id, out var member) ? member : new() { Discord = this.Discord, Id = xau.Id, GuildId = this.Id }).ToList();
+			ams = amr.Select(xau => this.MembersInternal != null &&
+			                        this.MembersInternal.TryGetValue(xau.Id, out var member)
+				                        ? member
+				                        : new()
+				                        {
+					                        Discord = this.Discord,
+					                        Id = xau.Id,
+					                        GuildId = this.Id
+				                        }).ToList();
 		if (ams.Any())
 			amd = ams.ToDictionary(xm => xm.Id, xm => xm);
 
@@ -134,7 +148,18 @@ public partial class DiscordGuild
 			var whr = await this.GetWebhooksAsync().ConfigureAwait(false);
 			var whs = whr.ToDictionary(xh => xh.Id, xh => xh);
 
-			var amh = ahr.Select(xah => whs.TryGetValue(xah.Id, out var webhook) ? webhook : new() { Discord = this.Discord, Name = xah.Name, Id = xah.Id, AvatarHash = xah.AvatarHash, ChannelId = xah.ChannelId, GuildId = xah.GuildId, Token = xah.Token });
+			var amh = ahr.Select(xah => whs.TryGetValue(xah.Id, out var webhook)
+				                            ? webhook
+				                            : new()
+				                            {
+					                            Discord = this.Discord,
+					                            Name = xah.Name,
+					                            Id = xah.Id,
+					                            AvatarHash = xah.AvatarHash,
+					                            ChannelId = xah.ChannelId,
+					                            GuildId = xah.GuildId,
+					                            Token = xah.Token
+				                            });
 			ahd = amh.ToDictionary(xh => xh.Id, xh => xh);
 		}
 
@@ -163,13 +188,25 @@ public partial class DiscordGuild
 					{
 						PropertyChange<DiscordChannel> GetChannelChange()
 						{
-							ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-							ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+							ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture,
+							               out t1);
+							ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture,
+							               out t2);
 
 							return new()
 							{
-								Before = this.GetChannel(t1) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id },
-								After = this.GetChannel(t2) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id }
+								Before = this.GetChannel(t1) ?? new DiscordChannel
+								{
+									Id = t1,
+									Discord = this.Discord,
+									GuildId = this.Id
+								},
+								After = this.GetChannel(t2) ?? new DiscordChannel
+								{
+									Id = t1,
+									Discord = this.Discord,
+									GuildId = this.Id
+								}
 							};
 						}
 
@@ -186,16 +223,26 @@ public partial class DiscordGuild
 							case "owner_id":
 								entrygld.OwnerChange = new()
 								{
-									Before = this.MembersInternal != null && this.MembersInternal.TryGetValue(xc.OldValueUlong, out var oldMember) ? oldMember : await this.GetMemberAsync(xc.OldValueUlong).ConfigureAwait(false),
-									After = this.MembersInternal != null && this.MembersInternal.TryGetValue(xc.NewValueUlong, out var newMember) ? newMember : await this.GetMemberAsync(xc.NewValueUlong).ConfigureAwait(false)
+									Before = this.MembersInternal != null &&
+									         this.MembersInternal.TryGetValue(xc.OldValueUlong, out var oldMember)
+										         ? oldMember
+										         : await this.GetMemberAsync(xc.OldValueUlong).ConfigureAwait(false),
+									After = this.MembersInternal != null &&
+									        this.MembersInternal.TryGetValue(xc.NewValueUlong, out var newMember)
+										        ? newMember
+										        : await this.GetMemberAsync(xc.NewValueUlong).ConfigureAwait(false)
 								};
 								break;
 
 							case "icon_hash":
 								entrygld.IconChange = new()
 								{
-									Before = xc.OldValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id}/{xc.OldValueString}.webp" : null,
-									After = xc.OldValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id}/{xc.NewValueString}.webp" : null
+									Before = xc.OldValueString != null
+										         ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id}/{xc.OldValueString}.webp"
+										         : null,
+									After = xc.OldValueString != null
+										        ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id}/{xc.NewValueString}.webp"
+										        : null
 								};
 								break;
 
@@ -234,8 +281,12 @@ public partial class DiscordGuild
 							case "splash_hash":
 								entrygld.SplashChange = new()
 								{
-									Before = xc.OldValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id}/{xc.OldValueString}.webp?size=2048" : null,
-									After = xc.NewValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id}/{xc.NewValueString}.webp?size=2048" : null
+									Before = xc.OldValueString != null
+										         ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id}/{xc.OldValueString}.webp?size=2048"
+										         : null,
+									After = xc.NewValueString != null
+										        ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id}/{xc.NewValueString}.webp?size=2048"
+										        : null
 								};
 								break;
 
@@ -293,10 +344,13 @@ public partial class DiscordGuild
 
 							default:
 								if (this.Discord.Configuration.ReportMissingFields)
-									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in guild update: {Key} - this should be reported to library developers", xc.Key);
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog,
+									                               "Unknown key in guild update: {Key} - this should be reported to library developers",
+									                               xc.Key);
 								break;
 						}
 					}
+
 					break;
 
 				case AuditLogActionType.ChannelCreate:
@@ -304,7 +358,12 @@ public partial class DiscordGuild
 				case AuditLogActionType.ChannelUpdate:
 					entry = new DiscordAuditLogChannelEntry
 					{
-						Target = this.GetChannel(xac.TargetId.Value) ?? new DiscordChannel { Id = xac.TargetId.Value, Discord = this.Discord, GuildId = this.Id }
+						Target = this.GetChannel(xac.TargetId.Value) ?? new DiscordChannel
+						{
+							Id = xac.TargetId.Value,
+							Discord = this.Discord,
+							GuildId = this.Id
+						}
 					};
 
 					var entrychn = entry as DiscordAuditLogChannelEntry;
@@ -320,8 +379,10 @@ public partial class DiscordGuild
 								break;
 
 							case "type":
-								p1 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-								p2 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+								p1 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer,
+								                    CultureInfo.InvariantCulture, out t1);
+								p2 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                    CultureInfo.InvariantCulture, out t2);
 
 								entrychn.TypeChange = new()
 								{
@@ -341,16 +402,32 @@ public partial class DiscordGuild
 							case "permission_overwrites":
 								var olds = xc.OldValues?.OfType<JObject>()
 									?.Select(xjo => xjo.ToObject<DiscordOverwrite>())
-									?.Select(xo => { xo.Discord = this.Discord; return xo; });
+									?.Select(xo =>
+									{
+										xo.Discord = this.Discord;
+										return xo;
+									});
 
 								var news = xc.NewValues?.OfType<JObject>()
 									?.Select(xjo => xjo.ToObject<DiscordOverwrite>())
-									?.Select(xo => { xo.Discord = this.Discord; return xo; });
+									?.Select(xo =>
+									{
+										xo.Discord = this.Discord;
+										return xo;
+									});
 
 								entrychn.OverwriteChange = new()
 								{
-									Before = olds != null ? new ReadOnlyCollection<DiscordOverwrite>(new List<DiscordOverwrite>(olds)) : null,
-									After = news != null ? new ReadOnlyCollection<DiscordOverwrite>(new List<DiscordOverwrite>(news)) : null
+									Before = olds != null
+										         ? new
+											         ReadOnlyCollection<
+												         DiscordOverwrite>(new List<DiscordOverwrite>(olds))
+										         : null,
+									After = news != null
+										        ? new
+											        ReadOnlyCollection<
+												        DiscordOverwrite>(new List<DiscordOverwrite>(news))
+										        : null
 								};
 								break;
 
@@ -412,22 +489,36 @@ public partial class DiscordGuild
 							case "available_tags":
 								var oldTags = xc.OldValues?.OfType<JObject>()
 									?.Select(xjo => xjo.ToObject<ForumPostTag>())
-									?.Select(xo => { xo.Discord = this.Discord; return xo; });
+									?.Select(xo =>
+									{
+										xo.Discord = this.Discord;
+										return xo;
+									});
 
 								var newTags = xc.NewValues?.OfType<JObject>()
 									?.Select(xjo => xjo.ToObject<ForumPostTag>())
-									?.Select(xo => { xo.Discord = this.Discord; return xo; });
+									?.Select(xo =>
+									{
+										xo.Discord = this.Discord;
+										return xo;
+									});
 
 								entrychn.AvailableTagsChange = new()
 								{
-									Before = oldTags != null ? new List<ForumPostTag>(new List<ForumPostTag>(oldTags)) : null,
-									After = newTags != null ? new List<ForumPostTag>(new List<ForumPostTag>(newTags)) : null
+									Before = oldTags != null
+										         ? new List<ForumPostTag>(new List<ForumPostTag>(oldTags))
+										         : null,
+									After = newTags != null
+										        ? new List<ForumPostTag>(new List<ForumPostTag>(newTags))
+										        : null
 								};
 								break;
 
 							default:
 								if (this.Discord.Configuration.ReportMissingFields)
-									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in channel update: {Key} - this should be reported to library developers", xc.Key);
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog,
+									                               "Unknown key in channel update: {Key} - this should be reported to library developers",
+									                               xc.Key);
 								break;
 						}
 
@@ -438,7 +529,8 @@ public partial class DiscordGuild
 				case AuditLogActionType.OverwriteUpdate:
 					entry = new DiscordAuditLogOverwriteEntry
 					{
-						Target = this.GetChannel(xac.TargetId.Value)?.PermissionOverwrites.FirstOrDefault(xo => xo.Id == xac.Options.Id),
+						Target = this.GetChannel(xac.TargetId.Value)?.PermissionOverwrites
+							.FirstOrDefault(xo => xo.Id == xac.Options.Id),
 						Channel = this.GetChannel(xac.TargetId.Value)
 					};
 
@@ -447,8 +539,10 @@ public partial class DiscordGuild
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "deny":
-								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-								p2 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                    CultureInfo.InvariantCulture, out t1);
+								p2 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                    CultureInfo.InvariantCulture, out t2);
 
 								entryovr.DenyChange = new()
 								{
@@ -458,8 +552,10 @@ public partial class DiscordGuild
 								break;
 
 							case "allow":
-								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-								p2 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                    CultureInfo.InvariantCulture, out t1);
+								p2 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                    CultureInfo.InvariantCulture, out t2);
 
 								entryovr.AllowChange = new()
 								{
@@ -477,8 +573,10 @@ public partial class DiscordGuild
 								break;
 
 							case "id":
-								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-								p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                    CultureInfo.InvariantCulture, out t1);
+								p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer,
+								                    CultureInfo.InvariantCulture, out t2);
 
 								entryovr.TargetIdChange = new()
 								{
@@ -489,7 +587,9 @@ public partial class DiscordGuild
 
 							default:
 								if (this.Discord.Configuration.ReportMissingFields)
-									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in overwrite update: {Key} - this should be reported to library developers", xc.Key);
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog,
+									                               "Unknown key in overwrite update: {Key} - this should be reported to library developers",
+									                               xc.Key);
 								break;
 						}
 
@@ -498,7 +598,14 @@ public partial class DiscordGuild
 				case AuditLogActionType.Kick:
 					entry = new DiscordAuditLogKickEntry
 					{
-						Target = amd.TryGetValue(xac.TargetId.Value, out var kickMember) ? kickMember : new() { Id = xac.TargetId.Value, Discord = this.Discord, GuildId = this.Id }
+						Target = amd.TryGetValue(xac.TargetId.Value, out var kickMember)
+							         ? kickMember
+							         : new()
+							         {
+								         Id = xac.TargetId.Value,
+								         Discord = this.Discord,
+								         GuildId = this.Id
+							         }
 					};
 					break;
 
@@ -514,7 +621,14 @@ public partial class DiscordGuild
 				case AuditLogActionType.Unban:
 					entry = new DiscordAuditLogBanEntry
 					{
-						Target = amd.TryGetValue(xac.TargetId.Value, out var unbanMember) ? unbanMember : new() { Id = xac.TargetId.Value, Discord = this.Discord, GuildId = this.Id }
+						Target = amd.TryGetValue(xac.TargetId.Value, out var unbanMember)
+							         ? unbanMember
+							         : new()
+							         {
+								         Id = xac.TargetId.Value,
+								         Discord = this.Discord,
+								         GuildId = this.Id
+							         }
 					};
 					break;
 
@@ -522,7 +636,14 @@ public partial class DiscordGuild
 				case AuditLogActionType.MemberRoleUpdate:
 					entry = new DiscordAuditLogMemberUpdateEntry
 					{
-						Target = amd.TryGetValue(xac.TargetId.Value, out var roleUpdMember) ? roleUpdMember : new() { Id = xac.TargetId.Value, Discord = this.Discord, GuildId = this.Id }
+						Target = amd.TryGetValue(xac.TargetId.Value, out var roleUpdMember)
+							         ? roleUpdMember
+							         : new()
+							         {
+								         Id = xac.TargetId.Value,
+								         Discord = this.Discord,
+								         GuildId = this.Id
+							         }
 					};
 
 					var entrymbu = entry as DiscordAuditLogMemberUpdateEntry;
@@ -561,16 +682,22 @@ public partial class DiscordGuild
 								break;
 
 							case "$add":
-								entrymbu.AddedRoles = new ReadOnlyCollection<DiscordRole>(xc.NewValues.Select(xo => (ulong)xo["id"]).Select(this.GetRole).ToList());
+								entrymbu.AddedRoles =
+									new ReadOnlyCollection<DiscordRole>(xc.NewValues.Select(xo => (ulong)xo["id"])
+										                                    .Select(this.GetRole).ToList());
 								break;
 
 							case "$remove":
-								entrymbu.RemovedRoles = new ReadOnlyCollection<DiscordRole>(xc.NewValues.Select(xo => (ulong)xo["id"]).Select(this.GetRole).ToList());
+								entrymbu.RemovedRoles =
+									new ReadOnlyCollection<DiscordRole>(xc.NewValues.Select(xo => (ulong)xo["id"])
+										                                    .Select(this.GetRole).ToList());
 								break;
 
 							default:
 								if (this.Discord.Configuration.ReportMissingFields)
-									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in member update: {Key} - this should be reported to library developers", xc.Key);
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog,
+									                               "Unknown key in member update: {Key} - this should be reported to library developers",
+									                               xc.Key);
 								break;
 						}
 
@@ -581,7 +708,11 @@ public partial class DiscordGuild
 				case AuditLogActionType.RoleUpdate:
 					entry = new DiscordAuditLogRoleUpdateEntry
 					{
-						Target = this.GetRole(xac.TargetId.Value) ?? new DiscordRole { Id = xac.TargetId.Value, Discord = this.Discord }
+						Target = this.GetRole(xac.TargetId.Value) ?? new DiscordRole
+						{
+							Id = xac.TargetId.Value,
+							Discord = this.Discord
+						}
 					};
 
 					var entryrol = entry as DiscordAuditLogRoleUpdateEntry;
@@ -597,8 +728,10 @@ public partial class DiscordGuild
 								break;
 
 							case "color":
-								p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t3);
-								p2 = int.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t4);
+								p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                  CultureInfo.InvariantCulture, out t3);
+								p2 = int.TryParse(xc.NewValue as string, NumberStyles.Integer,
+								                  CultureInfo.InvariantCulture, out t4);
 
 								entryrol.ColorChange = new()
 								{
@@ -619,7 +752,7 @@ public partial class DiscordGuild
 								entryrol.PositionChange = new()
 								{
 									Before = xc.OldValue != null ? (int?)(long)xc.OldValue : null,
-									After = xc.NewValue != null ? (int?)(long)xc.NewValue : null,
+									After = xc.NewValue != null ? (int?)(long)xc.NewValue : null
 								};
 								break;
 
@@ -649,7 +782,9 @@ public partial class DiscordGuild
 
 							default:
 								if (this.Discord.Configuration.ReportMissingFields)
-									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in role update: {Key} - this should be reported to library developers", xc.Key);
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog,
+									                               "Unknown key in role update: {Key} - this should be reported to library developers",
+									                               xc.Key);
 								break;
 						}
 
@@ -677,8 +812,10 @@ public partial class DiscordGuild
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "max_age":
-								p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t3);
-								p2 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t4);
+								p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                  CultureInfo.InvariantCulture, out t3);
+								p2 = int.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                  CultureInfo.InvariantCulture, out t4);
 
 								entryinv.MaxAgeChange = new()
 								{
@@ -706,24 +843,56 @@ public partial class DiscordGuild
 								break;
 
 							case "inviter_id":
-								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-								p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                    CultureInfo.InvariantCulture, out t1);
+								p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer,
+								                    CultureInfo.InvariantCulture, out t2);
 
 								entryinv.InviterChange = new()
 								{
-									Before = amd.TryGetValue(t1, out var propBeforeMember) ? propBeforeMember : new() { Id = t1, Discord = this.Discord, GuildId = this.Id },
-									After = amd.TryGetValue(t2, out var propAfterMember) ? propAfterMember : new() { Id = t1, Discord = this.Discord, GuildId = this.Id },
+									Before = amd.TryGetValue(t1, out var propBeforeMember)
+										         ? propBeforeMember
+										         : new()
+										         {
+											         Id = t1,
+											         Discord = this.Discord,
+											         GuildId = this.Id
+										         },
+									After = amd.TryGetValue(t2, out var propAfterMember)
+										        ? propAfterMember
+										        : new()
+										        {
+											        Id = t1,
+											        Discord = this.Discord,
+											        GuildId = this.Id
+										        }
 								};
 								break;
 
 							case "channel_id":
-								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-								p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                    CultureInfo.InvariantCulture, out t1);
+								p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer,
+								                    CultureInfo.InvariantCulture, out t2);
 
 								entryinv.ChannelChange = new()
 								{
-									Before = p1 ? this.GetChannel(t1) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id } : null,
-									After = p2 ? this.GetChannel(t2) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id } : null
+									Before = p1
+										         ? this.GetChannel(t1) ?? new DiscordChannel
+										         {
+											         Id = t1,
+											         Discord = this.Discord,
+											         GuildId = this.Id
+										         }
+										         : null,
+									After = p2
+										        ? this.GetChannel(t2) ?? new DiscordChannel
+										        {
+											        Id = t1,
+											        Discord = this.Discord,
+											        GuildId = this.Id
+										        }
+										        : null
 								};
 
 								var ch = entryinv.ChannelChange.Before ?? entryinv.ChannelChange.After;
@@ -738,8 +907,10 @@ public partial class DiscordGuild
 								break;
 
 							case "uses":
-								p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t3);
-								p2 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t4);
+								p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                  CultureInfo.InvariantCulture, out t3);
+								p2 = int.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                  CultureInfo.InvariantCulture, out t4);
 
 								entryinv.UsesChange = new()
 								{
@@ -749,8 +920,10 @@ public partial class DiscordGuild
 								break;
 
 							case "max_uses":
-								p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t3);
-								p2 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t4);
+								p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                  CultureInfo.InvariantCulture, out t3);
+								p2 = int.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                  CultureInfo.InvariantCulture, out t4);
 
 								entryinv.MaxUsesChange = new()
 								{
@@ -762,7 +935,9 @@ public partial class DiscordGuild
 							// TODO: Add changes for target application
 							default:
 								if (this.Discord.Configuration.ReportMissingFields)
-									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in invite update: {Key} - this should be reported to library developers", xc.Key);
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog,
+									                               "Unknown key in invite update: {Key} - this should be reported to library developers",
+									                               xc.Key);
 								break;
 						}
 
@@ -774,7 +949,13 @@ public partial class DiscordGuild
 				case AuditLogActionType.WebhookUpdate:
 					entry = new DiscordAuditLogWebhookEntry
 					{
-						Target = ahd.TryGetValue(xac.TargetId.Value, out var webhook) ? webhook : new() { Id = xac.TargetId.Value, Discord = this.Discord }
+						Target = ahd.TryGetValue(xac.TargetId.Value, out var webhook)
+							         ? webhook
+							         : new()
+							         {
+								         Id = xac.TargetId.Value,
+								         Discord = this.Discord
+							         }
 					};
 
 					var entrywhk = entry as DiscordAuditLogWebhookEntry;
@@ -782,8 +963,10 @@ public partial class DiscordGuild
 						switch (xc.Key.ToLowerInvariant())
 						{
 							case "application_id": // ???
-								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-								p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                    CultureInfo.InvariantCulture, out t1);
+								p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer,
+								                    CultureInfo.InvariantCulture, out t2);
 
 								entrywhk.IdChange = new()
 								{
@@ -801,19 +984,37 @@ public partial class DiscordGuild
 								break;
 
 							case "channel_id":
-								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-								p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+								p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                    CultureInfo.InvariantCulture, out t1);
+								p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer,
+								                    CultureInfo.InvariantCulture, out t2);
 
 								entrywhk.ChannelChange = new()
 								{
-									Before = p1 ? this.GetChannel(t1) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id } : null,
-									After = p2 ? this.GetChannel(t2) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id } : null
+									Before = p1
+										         ? this.GetChannel(t1) ?? new DiscordChannel
+										         {
+											         Id = t1,
+											         Discord = this.Discord,
+											         GuildId = this.Id
+										         }
+										         : null,
+									After = p2
+										        ? this.GetChannel(t2) ?? new DiscordChannel
+										        {
+											        Id = t1,
+											        Discord = this.Discord,
+											        GuildId = this.Id
+										        }
+										        : null
 								};
 								break;
 
 							case "type": // ???
-								p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t3);
-								p2 = int.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t4);
+								p1 = int.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                  CultureInfo.InvariantCulture, out t3);
+								p2 = int.TryParse(xc.NewValue as string, NumberStyles.Integer,
+								                  CultureInfo.InvariantCulture, out t4);
 
 								entrywhk.TypeChange = new()
 								{
@@ -832,7 +1033,9 @@ public partial class DiscordGuild
 
 							default:
 								if (this.Discord.Configuration.ReportMissingFields)
-									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in webhook update: {Key} - this should be reported to library developers", xc.Key);
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog,
+									                               "Unknown key in webhook update: {Key} - this should be reported to library developers",
+									                               xc.Key);
 								break;
 						}
 
@@ -843,7 +1046,13 @@ public partial class DiscordGuild
 				case AuditLogActionType.EmojiUpdate:
 					entry = new DiscordAuditLogEmojiEntry
 					{
-						Target = this.EmojisInternal.TryGetValue(xac.TargetId.Value, out var target) ? target : new() { Id = xac.TargetId.Value, Discord = this.Discord }
+						Target = this.EmojisInternal.TryGetValue(xac.TargetId.Value, out var target)
+							         ? target
+							         : new()
+							         {
+								         Id = xac.TargetId.Value,
+								         Discord = this.Discord
+							         }
 					};
 
 					var entryemo = entry as DiscordAuditLogEmojiEntry;
@@ -860,7 +1069,9 @@ public partial class DiscordGuild
 
 							default:
 								if (this.Discord.Configuration.ReportMissingFields)
-									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in emote update: {Key} - this should be reported to library developers", xc.Key);
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog,
+									                               "Unknown key in emote update: {Key} - this should be reported to library developers",
+									                               xc.Key);
 								break;
 						}
 
@@ -871,7 +1082,13 @@ public partial class DiscordGuild
 				case AuditLogActionType.StageInstanceUpdate:
 					entry = new DiscordAuditLogStageEntry
 					{
-						Target = this.StageInstancesInternal.TryGetValue(xac.TargetId.Value, out var stage) ? stage : new() { Id = xac.TargetId.Value, Discord = this.Discord }
+						Target = this.StageInstancesInternal.TryGetValue(xac.TargetId.Value, out var stage)
+							         ? stage
+							         : new()
+							         {
+								         Id = xac.TargetId.Value,
+								         Discord = this.Discord
+							         }
 					};
 
 					var entrysta = entry as DiscordAuditLogStageEntry;
@@ -888,14 +1105,22 @@ public partial class DiscordGuild
 							case "privacy_level":
 								entrysta.PrivacyLevelChange = new()
 								{
-									Before = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5) ? (StagePrivacyLevel?)t5 : null,
-									After = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6) ? (StagePrivacyLevel?)t6 : null,
+									Before = long.TryParse(xc.OldValue as string, NumberStyles.Integer,
+									                       CultureInfo.InvariantCulture, out t5)
+										         ? (StagePrivacyLevel?)t5
+										         : null,
+									After = long.TryParse(xc.NewValue as string, NumberStyles.Integer,
+									                      CultureInfo.InvariantCulture, out t6)
+										        ? (StagePrivacyLevel?)t6
+										        : null
 								};
 								break;
 
 							default:
 								if (this.Discord.Configuration.ReportMissingFields)
-									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in stage instance update: {Key} - this should be reported to library developers", xc.Key);
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog,
+									                               "Unknown key in stage instance update: {Key} - this should be reported to library developers",
+									                               xc.Key);
 								break;
 						}
 
@@ -906,7 +1131,13 @@ public partial class DiscordGuild
 				case AuditLogActionType.StickerUpdate:
 					entry = new DiscordAuditLogStickerEntry
 					{
-						Target = this.StickersInternal.TryGetValue(xac.TargetId.Value, out var sticker) ? sticker : new() { Id = xac.TargetId.Value, Discord = this.Discord }
+						Target = this.StickersInternal.TryGetValue(xac.TargetId.Value, out var sticker)
+							         ? sticker
+							         : new()
+							         {
+								         Id = xac.TargetId.Value,
+								         Discord = this.Discord
+							         }
 					};
 
 					var entrysti = entry as DiscordAuditLogStickerEntry;
@@ -945,7 +1176,7 @@ public partial class DiscordGuild
 								entrysti.AvailabilityChange = new()
 								{
 									Before = (bool?)xc.OldValue,
-									After = (bool?)xc.NewValue,
+									After = (bool?)xc.NewValue
 								};
 								break;
 							case "asset":
@@ -963,8 +1194,10 @@ public partial class DiscordGuild
 								};
 								break;
 							case "type":
-								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
-								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
+								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                   CultureInfo.InvariantCulture, out t5);
+								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer,
+								                   CultureInfo.InvariantCulture, out t6);
 								entrysti.TypeChange = new()
 								{
 									Before = p1 ? (StickerType?)t5 : null,
@@ -972,8 +1205,10 @@ public partial class DiscordGuild
 								};
 								break;
 							case "format_type":
-								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
-								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
+								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                   CultureInfo.InvariantCulture, out t5);
+								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer,
+								                   CultureInfo.InvariantCulture, out t6);
 								entrysti.FormatChange = new()
 								{
 									Before = p1 ? (StickerFormat?)t5 : null,
@@ -983,12 +1218,13 @@ public partial class DiscordGuild
 
 							default:
 								if (this.Discord.Configuration.ReportMissingFields)
-									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in sticker update: {Key} - this should be reported to library developers", xc.Key);
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog,
+									                               "Unknown key in sticker update: {Key} - this should be reported to library developers",
+									                               xc.Key);
 								break;
 						}
 
 					break;
-
 
 
 				case AuditLogActionType.MessageDelete:
@@ -1000,15 +1236,26 @@ public partial class DiscordGuild
 
 					if (xac.Options != null)
 					{
-						entrymsg.Channel = this.GetChannel(xac.Options.ChannelId) ?? new DiscordChannel { Id = xac.Options.ChannelId, Discord = this.Discord, GuildId = this.Id };
+						entrymsg.Channel = this.GetChannel(xac.Options.ChannelId) ?? new DiscordChannel
+						{
+							Id = xac.Options.ChannelId,
+							Discord = this.Discord,
+							GuildId = this.Id
+						};
 						entrymsg.MessageCount = xac.Options.Count;
 					}
 
 					if (entrymsg.Channel != null)
 						entrymsg.Target = this.Discord is DiscordClient { MessageCache: not null } dc
-										  && dc.MessageCache.TryGet(xm => xm.Id == xac.TargetId.Value && xm.ChannelId == entrymsg.Channel.Id, out var msg)
-							? msg
-							: new() { Discord = this.Discord, Id = xac.TargetId.Value };
+						                  && dc.MessageCache
+							                  .TryGet(xm => xm.Id == xac.TargetId.Value && xm.ChannelId == entrymsg.Channel.Id,
+							                          out var msg)
+							                  ? msg
+							                  : new()
+							                  {
+								                  Discord = this.Discord,
+								                  Id = xac.TargetId.Value
+							                  };
 					break;
 				}
 
@@ -1024,16 +1271,31 @@ public partial class DiscordGuild
 					if (xac.Options != null)
 					{
 						DiscordMessage message = default;
-						dc.MessageCache?.TryGet(x => x.Id == xac.Options.MessageId && x.ChannelId == xac.Options.ChannelId, out message);
+						dc.MessageCache
+							?.TryGet(x => x.Id == xac.Options.MessageId && x.ChannelId == xac.Options.ChannelId,
+							         out message);
 
-						entrypin.Channel = this.GetChannel(xac.Options.ChannelId) ?? new DiscordChannel { Id = xac.Options.ChannelId, Discord = this.Discord, GuildId = this.Id };
-						entrypin.Message = message ?? new DiscordMessage { Id = xac.Options.MessageId, Discord = this.Discord };
+						entrypin.Channel = this.GetChannel(xac.Options.ChannelId) ?? new DiscordChannel
+						{
+							Id = xac.Options.ChannelId,
+							Discord = this.Discord,
+							GuildId = this.Id
+						};
+						entrypin.Message = message ?? new DiscordMessage
+						{
+							Id = xac.Options.MessageId,
+							Discord = this.Discord
+						};
 					}
 
 					if (xac.TargetId.HasValue)
 					{
 						dc.UserCache.TryGetValue(xac.TargetId.Value, out var user);
-						entrypin.Target = user ?? new DiscordUser { Id = user.Id, Discord = this.Discord };
+						entrypin.Target = user ?? new DiscordUser
+						{
+							Id = user.Id,
+							Discord = this.Discord
+						};
 					}
 
 					break;
@@ -1046,7 +1308,11 @@ public partial class DiscordGuild
 					if (!(this.Discord is DiscordClient dc && xac.TargetId.HasValue)) break;
 
 					dc.UserCache.TryGetValue(xac.TargetId.Value, out var bot);
-					(entry as DiscordAuditLogBotAddEntry).TargetBot = bot ?? new DiscordUser { Id = xac.TargetId.Value, Discord = this.Discord };
+					(entry as DiscordAuditLogBotAddEntry).TargetBot = bot ?? new DiscordUser
+					{
+						Id = xac.TargetId.Value,
+						Discord = this.Discord
+					};
 
 					break;
 				}
@@ -1059,7 +1325,12 @@ public partial class DiscordGuild
 					var moveentry = entry as DiscordAuditLogMemberMoveEntry;
 
 					moveentry.UserCount = xac.Options.Count;
-					moveentry.Channel = this.GetChannel(xac.Options.ChannelId) ?? new DiscordChannel { Id = xac.Options.ChannelId, Discord = this.Discord, GuildId = this.Id };
+					moveentry.Channel = this.GetChannel(xac.Options.ChannelId) ?? new DiscordChannel
+					{
+						Id = xac.Options.ChannelId,
+						Discord = this.Discord,
+						GuildId = this.Id
+					};
 					break;
 
 				case AuditLogActionType.MemberDisconnect:
@@ -1109,7 +1380,9 @@ public partial class DiscordGuild
 
 							default:
 								if (this.Discord.Configuration.ReportMissingFields)
-									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in integration update: {Key} - this should be reported to library developers", xc.Key);
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog,
+									                               "Unknown key in integration update: {Key} - this should be reported to library developers",
+									                               xc.Key);
 								break;
 						}
 
@@ -1120,7 +1393,13 @@ public partial class DiscordGuild
 				case AuditLogActionType.ThreadUpdate:
 					entry = new DiscordAuditLogThreadEntry
 					{
-						Target = this.ThreadsInternal.TryGetValue(xac.TargetId.Value, out var thread) ? thread : new() { Id = xac.TargetId.Value, Discord = this.Discord }
+						Target = this.ThreadsInternal.TryGetValue(xac.TargetId.Value, out var thread)
+							         ? thread
+							         : new()
+							         {
+								         Id = xac.TargetId.Value,
+								         Discord = this.Discord
+							         }
 					};
 
 					var entrythr = entry as DiscordAuditLogThreadEntry;
@@ -1136,8 +1415,10 @@ public partial class DiscordGuild
 								break;
 
 							case "type":
-								p1 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-								p2 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+								p1 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer,
+								                    CultureInfo.InvariantCulture, out t1);
+								p2 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                    CultureInfo.InvariantCulture, out t2);
 
 								entrythr.TypeChange = new()
 								{
@@ -1171,8 +1452,10 @@ public partial class DiscordGuild
 								break;
 
 							case "auto_archive_duration":
-								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
-								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
+								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                   CultureInfo.InvariantCulture, out t5);
+								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer,
+								                   CultureInfo.InvariantCulture, out t6);
 
 								entrythr.AutoArchiveDurationChange = new()
 								{
@@ -1191,7 +1474,9 @@ public partial class DiscordGuild
 
 							default:
 								if (this.Discord.Configuration.ReportMissingFields)
-									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in thread update: {Key} - this should be reported to library developers", xc.Key);
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog,
+									                               "Unknown key in thread update: {Key} - this should be reported to library developers",
+									                               xc.Key);
 								break;
 						}
 
@@ -1203,7 +1488,13 @@ public partial class DiscordGuild
 				case AuditLogActionType.GuildScheduledEventUpdate:
 					entry = new DiscordAuditLogGuildScheduledEventEntry
 					{
-						Target = this.ScheduledEventsInternal.TryGetValue(xac.TargetId.Value, out var scheduledEvent) ? scheduledEvent : new() { Id = xac.TargetId.Value, Discord = this.Discord }
+						Target = this.ScheduledEventsInternal.TryGetValue(xac.TargetId.Value, out var scheduledEvent)
+							         ? scheduledEvent
+							         : new()
+							         {
+								         Id = xac.TargetId.Value,
+								         Discord = this.Discord
+							         }
 					};
 
 					var entryse = entry as DiscordAuditLogGuildScheduledEventEntry;
@@ -1243,8 +1534,10 @@ public partial class DiscordGuild
 								break;
 
 							case "privacy_level":
-								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
-								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
+								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                   CultureInfo.InvariantCulture, out t5);
+								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer,
+								                   CultureInfo.InvariantCulture, out t6);
 
 								entryse.PrivacyLevelChange = new()
 								{
@@ -1254,8 +1547,10 @@ public partial class DiscordGuild
 								break;
 
 							case "entity_type":
-								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
-								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
+								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                   CultureInfo.InvariantCulture, out t5);
+								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer,
+								                   CultureInfo.InvariantCulture, out t6);
 
 								entryse.EntityTypeChange = new()
 								{
@@ -1265,8 +1560,10 @@ public partial class DiscordGuild
 								break;
 
 							case "status":
-								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
-								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
+								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer,
+								                   CultureInfo.InvariantCulture, out t5);
+								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer,
+								                   CultureInfo.InvariantCulture, out t6);
 
 								entryse.StatusChange = new()
 								{
@@ -1277,7 +1574,9 @@ public partial class DiscordGuild
 
 							default:
 								if (this.Discord.Configuration.ReportMissingFields)
-									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in scheduled event update: {Key} - this should be reported to library developers", xc.Key);
+									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog,
+									                               "Unknown key in scheduled event update: {Key} - this should be reported to library developers",
+									                               xc.Key);
 								break;
 						}
 
@@ -1317,7 +1616,9 @@ public partial class DiscordGuild
 
 				default:
 					if (this.Discord.Configuration.ReportMissingFields)
-						this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown audit log action type: {Key} - this should be reported to library developers", (int)xac.ActionType);
+						this.Discord.Logger.LogWarning(LoggerEvents.AuditLog,
+						                               "Unknown audit log action type: {Key} - this should be reported to library developers",
+						                               (int)xac.ActionType);
 					break;
 			}
 
@@ -1326,16 +1627,38 @@ public partial class DiscordGuild
 
 			entry.ActionCategory = xac.ActionType switch
 			{
-				AuditLogActionType.ChannelCreate or AuditLogActionType.EmojiCreate or AuditLogActionType.InviteCreate or AuditLogActionType.OverwriteCreate or AuditLogActionType.RoleCreate or AuditLogActionType.WebhookCreate or AuditLogActionType.IntegrationCreate or AuditLogActionType.StickerCreate or AuditLogActionType.StageInstanceCreate or AuditLogActionType.ThreadCreate or AuditLogActionType.GuildScheduledEventCreate or AuditLogActionType.AutoModerationRuleCreate or AuditLogActionType.OnboardingQuestionCreate or AuditLogActionType.ServerGuideCreate => AuditLogActionCategory.Create,
-				AuditLogActionType.ChannelDelete or AuditLogActionType.EmojiDelete or AuditLogActionType.InviteDelete or AuditLogActionType.MessageDelete or AuditLogActionType.MessageBulkDelete or AuditLogActionType.OverwriteDelete or AuditLogActionType.RoleDelete or AuditLogActionType.WebhookDelete or AuditLogActionType.IntegrationDelete or AuditLogActionType.StickerDelete or AuditLogActionType.StageInstanceDelete or AuditLogActionType.ThreadDelete or AuditLogActionType.GuildScheduledEventDelete or AuditLogActionType.AutoModerationRuleDelete => AuditLogActionCategory.Delete,
-				AuditLogActionType.ChannelUpdate or AuditLogActionType.EmojiUpdate or AuditLogActionType.InviteUpdate or AuditLogActionType.MemberRoleUpdate or AuditLogActionType.MemberUpdate or AuditLogActionType.OverwriteUpdate or AuditLogActionType.RoleUpdate or AuditLogActionType.WebhookUpdate or AuditLogActionType.IntegrationUpdate or AuditLogActionType.StickerUpdate or AuditLogActionType.StageInstanceUpdate or AuditLogActionType.ThreadUpdate or AuditLogActionType.GuildScheduledEventUpdate or AuditLogActionType.AutoModerationRuleUpdate or AuditLogActionType.OnboardingQuestionUpdate or AuditLogActionType.OnboardingUpdate or AuditLogActionType.ServerGuideUpdate or AuditLogActionType.VoiceChannelStatusUpdate => AuditLogActionCategory.Update,
-				_ => AuditLogActionCategory.Other,
+				AuditLogActionType.ChannelCreate or AuditLogActionType.EmojiCreate or AuditLogActionType.InviteCreate
+					or AuditLogActionType.OverwriteCreate or AuditLogActionType.RoleCreate
+					or AuditLogActionType.WebhookCreate or AuditLogActionType.IntegrationCreate
+					or AuditLogActionType.StickerCreate or AuditLogActionType.StageInstanceCreate
+					or AuditLogActionType.ThreadCreate or AuditLogActionType.GuildScheduledEventCreate
+					or AuditLogActionType.AutoModerationRuleCreate or AuditLogActionType.OnboardingQuestionCreate
+					or AuditLogActionType.ServerGuideCreate => AuditLogActionCategory.Create,
+				AuditLogActionType.ChannelDelete or AuditLogActionType.EmojiDelete or AuditLogActionType.InviteDelete
+					or AuditLogActionType.MessageDelete or AuditLogActionType.MessageBulkDelete
+					or AuditLogActionType.OverwriteDelete or AuditLogActionType.RoleDelete
+					or AuditLogActionType.WebhookDelete or AuditLogActionType.IntegrationDelete
+					or AuditLogActionType.StickerDelete or AuditLogActionType.StageInstanceDelete
+					or AuditLogActionType.ThreadDelete or AuditLogActionType.GuildScheduledEventDelete
+					or AuditLogActionType.AutoModerationRuleDelete => AuditLogActionCategory.Delete,
+				AuditLogActionType.ChannelUpdate or AuditLogActionType.EmojiUpdate or AuditLogActionType.InviteUpdate
+					or AuditLogActionType.MemberRoleUpdate or AuditLogActionType.MemberUpdate
+					or AuditLogActionType.OverwriteUpdate or AuditLogActionType.RoleUpdate
+					or AuditLogActionType.WebhookUpdate or AuditLogActionType.IntegrationUpdate
+					or AuditLogActionType.StickerUpdate or AuditLogActionType.StageInstanceUpdate
+					or AuditLogActionType.ThreadUpdate or AuditLogActionType.GuildScheduledEventUpdate
+					or AuditLogActionType.AutoModerationRuleUpdate or AuditLogActionType.OnboardingQuestionUpdate
+					or AuditLogActionType.OnboardingUpdate or AuditLogActionType.ServerGuideUpdate
+					or AuditLogActionType.VoiceChannelStatusUpdate => AuditLogActionCategory.Update,
+				_ => AuditLogActionCategory.Other
 			};
 			entry.Discord = this.Discord;
 			entry.ActionType = xac.ActionType;
 			entry.Id = xac.Id;
 			entry.Reason = xac.Reason;
-			entry.UserResponsible = amd.Any() && amd.TryGetValue(xac.UserId, out var resp) ? resp : this.MembersInternal[xac.UserId];
+			entry.UserResponsible = amd.Any() && amd.TryGetValue(xac.UserId, out var resp)
+				                        ? resp
+				                        : this.MembersInternal[xac.UserId];
 			entries.Add(entry);
 		}
 

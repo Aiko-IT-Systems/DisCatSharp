@@ -525,10 +525,13 @@ public static class Endpoints
 	public const string INCIDENT_ACTIONS = "/incident-actions";
 
 	public const string NEW_MEMBER_WELCOME = "/new-member-welcome";
+
 	[DiscordDeprecated]
 	public const string NEW_MEMBER_ACTIONS = "/new-member-actions";
+
 	[DiscordDeprecated]
 	public const string NEW_MEMBER_ACTION = "/new-member-action";
+
 	public const string APPLICATION_DIRECTORY = "/application-directory";
 	public const string SHARED_CANVAS = "/shared-canvas";
 	public const string LINES = "/lines";

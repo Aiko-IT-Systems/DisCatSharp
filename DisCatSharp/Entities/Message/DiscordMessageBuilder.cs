@@ -25,6 +25,7 @@ public sealed class DiscordMessageBuilder
 			this._content = value;
 		}
 	}
+
 	private string? _content;
 
 	/// <summary>
@@ -49,6 +50,7 @@ public sealed class DiscordMessageBuilder
 	/// Gets the Embeds to be sent.
 	/// </summary>
 	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
+
 	private readonly List<DiscordEmbed> _embeds = new();
 
 	/// <summary>
@@ -70,18 +72,21 @@ public sealed class DiscordMessageBuilder
 	/// Gets the Files to be sent in the Message.
 	/// </summary>
 	public IReadOnlyCollection<DiscordMessageFile> Files => this.FilesInternal;
+
 	internal readonly List<DiscordMessageFile> FilesInternal = new();
 
 	/// <summary>
 	/// Gets the components that will be attached to the message.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> Components => this.ComponentsInternal;
+
 	internal readonly List<DiscordActionRowComponent> ComponentsInternal = new(5);
 
 	/// <summary>
 	/// Gets the Attachments to be sent in the Message.
 	/// </summary>
 	public IReadOnlyList<DiscordAttachment> Attachments => this.AttachmentsInternal;
+
 	internal readonly List<DiscordAttachment> AttachmentsInternal = new();
 
 	/// <summary>
@@ -136,7 +141,6 @@ public sealed class DiscordMessageBuilder
 	/// <exception cref="ArgumentOutOfRangeException">No components were passed.</exception>
 	public DiscordMessageBuilder AddComponents(params DiscordComponent[] components)
 		=> this.AddComponents((IEnumerable<DiscordComponent>)components);
-
 
 	/// <summary>
 	/// Appends several rows of components to the message
@@ -239,7 +243,10 @@ public sealed class DiscordMessageBuilder
 		if (this.Mentions != null)
 			this.Mentions.Add(allowedMention);
 		else
-			this.Mentions = new() { allowedMention };
+			this.Mentions = new()
+			{
+				allowedMention
+			};
 
 		return this;
 	}
@@ -267,7 +274,8 @@ public sealed class DiscordMessageBuilder
 	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The current builder to be chained.</returns>
-	public DiscordMessageBuilder WithFile(string fileName, Stream stream, bool resetStreamPosition = false, string description = null)
+	public DiscordMessageBuilder WithFile(string fileName, Stream stream, bool resetStreamPosition = false,
+	                                      string description = null)
 	{
 		if (this.Files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -290,7 +298,8 @@ public sealed class DiscordMessageBuilder
 	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The current builder to be chained.</returns>
-	public DiscordMessageBuilder WithFile(FileStream stream, bool resetStreamPosition = false, string description = null)
+	public DiscordMessageBuilder WithFile(FileStream stream, bool resetStreamPosition = false,
+	                                      string description = null)
 	{
 		if (this.Files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -386,7 +395,6 @@ public sealed class DiscordMessageBuilder
 		return this;
 	}
 
-
 	/// <summary>
 	/// Sends the Message to a specific channel
 	/// </summary>
@@ -438,8 +446,10 @@ public sealed class DiscordMessageBuilder
 
 		if (!isModify)
 		{
-			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && this.Sticker is null && (!this.Components?.Any() ?? true))
-				throw new ArgumentException("You must specify content, an embed, a sticker, a component or at least one file.");
+			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) &&
+			    this.Sticker is null && (!this.Components?.Any() ?? true))
+				throw new
+					ArgumentException("You must specify content, an embed, a sticker, a component or at least one file.");
 
 			if (this.Components.Count > 5)
 				throw new InvalidOperationException("You can only have 5 action rows per message.");

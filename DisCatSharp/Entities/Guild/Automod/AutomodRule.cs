@@ -97,17 +97,29 @@ public class AutomodRule : SnowflakeObject
 
 		if (mdl.TriggerMetadata.HasValue)
 		{
-			if ((mdl.TriggerMetadata.Value.KeywordFilter != null || mdl.TriggerMetadata.Value.RegexPatterns != null) && this.TriggerType != AutomodTriggerType.Keyword)
-				throw new ArgumentException($"Cannot use KeywordFilter and RegexPattern for a {this.TriggerType} rule. Only {AutomodTriggerType.Keyword} is valid in this context.");
-			else if (mdl.TriggerMetadata.Value.AllowList != null && this.TriggerType != AutomodTriggerType.KeywordPreset)
-				throw new ArgumentException($"Cannot use AllowList for a {this.TriggerType} rule. Only {AutomodTriggerType.KeywordPreset} is valid in this context.");
-			else if (mdl.TriggerMetadata.Value.MentionTotalLimit != null && this.TriggerType != AutomodTriggerType.MentionSpam)
-				throw new ArgumentException($"Cannot use MentionTotalLimit for a {this.TriggerType} rule. Only {AutomodTriggerType.MentionSpam} is valid in this context.");
+			if ((mdl.TriggerMetadata.Value.KeywordFilter != null || mdl.TriggerMetadata.Value.RegexPatterns != null) &&
+			    this.TriggerType != AutomodTriggerType.Keyword)
+				throw new
+					ArgumentException($"Cannot use KeywordFilter and RegexPattern for a {this.TriggerType} rule. Only {AutomodTriggerType.Keyword} is valid in this context.");
+			else if (mdl.TriggerMetadata.Value.AllowList != null &&
+			         this.TriggerType != AutomodTriggerType.KeywordPreset)
+				throw new
+					ArgumentException($"Cannot use AllowList for a {this.TriggerType} rule. Only {AutomodTriggerType.KeywordPreset} is valid in this context.");
+			else if (mdl.TriggerMetadata.Value.MentionTotalLimit != null &&
+			         this.TriggerType != AutomodTriggerType.MentionSpam)
+				throw new
+					ArgumentException($"Cannot use MentionTotalLimit for a {this.TriggerType} rule. Only {AutomodTriggerType.MentionSpam} is valid in this context.");
 
-			if (mdl.TriggerMetadata.Value.MentionRaidProtectionEnabled != null && this.TriggerType != AutomodTriggerType.MentionSpam)
-				throw new ArgumentException($"Cannot use MentionRaidProtectionEnabled for a {this.TriggerType} rule. Only {AutomodTriggerType.MentionSpam} is valid in this context.");
+			if (mdl.TriggerMetadata.Value.MentionRaidProtectionEnabled != null &&
+			    this.TriggerType != AutomodTriggerType.MentionSpam)
+				throw new
+					ArgumentException($"Cannot use MentionRaidProtectionEnabled for a {this.TriggerType} rule. Only {AutomodTriggerType.MentionSpam} is valid in this context.");
 		}
-		return await this.Discord.ApiClient.ModifyAutomodRuleAsync(this.GuildId, this.Id, mdl.Name, mdl.EventType, mdl.TriggerMetadata, mdl.Actions, mdl.Enabled, mdl.ExemptRoles, mdl.ExemptChannels, mdl.AuditLogReason).ConfigureAwait(false);
+
+		return await this.Discord.ApiClient
+			       .ModifyAutomodRuleAsync(this.GuildId, this.Id, mdl.Name, mdl.EventType, mdl.TriggerMetadata,
+			                               mdl.Actions, mdl.Enabled, mdl.ExemptRoles, mdl.ExemptChannels,
+			                               mdl.AuditLogReason).ConfigureAwait(false);
 	}
 
 	/// <summary>

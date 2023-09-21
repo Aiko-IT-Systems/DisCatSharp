@@ -25,7 +25,7 @@ namespace DisCatSharp;
 /// </summary>
 public sealed partial class DiscordClient
 {
-	#region Private Fields
+#region Private Fields
 
 	/// <summary>
 	/// Gets the heartbeat interval.
@@ -78,9 +78,9 @@ public sealed partial class DiscordClient
 	/// </summary>
 	private CancellationToken _cancelToken;
 
-	#endregion
+#endregion
 
-	#region Connection Semaphore
+#region Connection Semaphore
 
 	/// <summary>
 	/// Gets the socket locks.
@@ -92,9 +92,9 @@ public sealed partial class DiscordClient
 	/// </summary>
 	private readonly ManualResetEventSlim _sessionLock = new(true);
 
-	#endregion
+#endregion
 
-	#region Internal Connection Methods
+#region Internal Connection Methods
 
 	/// <summary>
 	/// Reconnects the websocket client.
@@ -133,6 +133,7 @@ public sealed partial class DiscordClient
 		}
 
 		if (!this.Presences.ContainsKey(this.CurrentUser!.Id))
+		{
 			this.PresencesInternal[this.CurrentUser.Id] = new()
 			{
 				Discord = this,
@@ -142,6 +143,7 @@ public sealed partial class DiscordClient
 					Id = this.CurrentUser.Id
 				}
 			};
+		}
 		else
 		{
 			var pr = this.PresencesInternal[this.CurrentUser.Id];
@@ -152,10 +154,11 @@ public sealed partial class DiscordClient
 
 		Volatile.Write(ref this._skippedHeartbeats, 0);
 
-		this.WebSocketClient = this.Configuration.WebSocketClientFactory(this.Configuration.Proxy, this.ServiceProvider);
+		this.WebSocketClient =
+			this.Configuration.WebSocketClientFactory(this.Configuration.Proxy, this.ServiceProvider);
 		this._payloadDecompressor = this.Configuration.GatewayCompressionLevel != GatewayCompressionLevel.None
-			? new PayloadDecompressor(this.Configuration.GatewayCompressionLevel)
-			: null;
+			                            ? new PayloadDecompressor(this.Configuration.GatewayCompressionLevel)
+			                            : null;
 
 		this._cancelTokenSource = new();
 		this._cancelToken = this._cancelTokenSource.Token;
@@ -212,7 +215,8 @@ public sealed partial class DiscordClient
 			}
 			catch (Exception ex)
 			{
-				this.Logger.LogError(LoggerEvents.WebSocketReceiveFailure, ex, "Socket handler suppressed an exception");
+				this.Logger.LogError(LoggerEvents.WebSocketReceiveFailure, ex,
+				                     "Socket handler suppressed an exception");
 				if (this.Configuration.EnableSentry)
 					this.Sentry.CaptureException(ex);
 			}
@@ -230,30 +234,38 @@ public sealed partial class DiscordClient
 			if (!this._disposed)
 				this._cancelTokenSource.Cancel();
 
-			this.Logger.LogDebug(LoggerEvents.ConnectionClose, "Connection closed ({code}, '{message}')", e.CloseCode, e.CloseMessage);
+			this.Logger.LogDebug(LoggerEvents.ConnectionClose, "Connection closed ({code}, '{message}')", e.CloseCode,
+			                     e.CloseMessage);
 			await this._socketClosed.InvokeAsync(this, e).ConfigureAwait(false);
 
 
 			// TODO: We might need to include more 400X codes
 			if (this.Configuration.AutoReconnect && e.CloseCode is < 4001 or >= 5000)
 			{
-				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({code}, '{message}'), reconnecting", e.CloseCode, e.CloseMessage);
+				this.Logger.LogCritical(LoggerEvents.ConnectionClose,
+				                        "Connection terminated ({code}, '{message}'), reconnecting", e.CloseCode,
+				                        e.CloseMessage);
 
 				if (this._status == null)
 					await this.ConnectAsync().ConfigureAwait(false);
 				else if (this._status.IdleSince.HasValue)
-					await this.ConnectAsync(this._status.ActivityInternal, this._status.Status, Utilities.GetDateTimeOffsetFromMilliseconds(this._status.IdleSince.Value)).ConfigureAwait(false);
+					await this.ConnectAsync(this._status.ActivityInternal, this._status.Status,
+					                        Utilities.GetDateTimeOffsetFromMilliseconds(this._status.IdleSince.Value))
+						.ConfigureAwait(false);
 				else
 					await this.ConnectAsync(this._status.ActivityInternal, this._status.Status).ConfigureAwait(false);
 			}
 			else
-				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({code}, '{message}')", e.CloseCode, e.CloseMessage);
+			{
+				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({code}, '{message}')",
+				                        e.CloseCode, e.CloseMessage);
+			}
 		}
 	}
 
-	#endregion
+#endregion
 
-	#region WebSocket (Events)
+#region WebSocket (Events)
 
 	/// <summary>
 	/// Handles the socket message.
@@ -306,7 +318,9 @@ public sealed partial class DiscordClient
 			case GatewayOpCode.GuildSync:
 				break;
 			default:
-				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Unknown Discord opcode: {op}\nPayload: {payload}", payload.OpCode, payload.Data);
+				this.Logger.LogWarning(LoggerEvents.WebSocketReceive,
+				                       "Unknown Discord opcode: {op}\nPayload: {payload}", payload.OpCode,
+				                       payload.Data);
 				break;
 		}
 	}
@@ -374,7 +388,8 @@ public sealed partial class DiscordClient
 		}
 		else
 		{
-			this.Logger.LogWarning(LoggerEvents.SessionUpdate, "Attempt to start a session while another session is active");
+			this.Logger.LogWarning(LoggerEvents.SessionUpdate,
+			                       "Attempt to start a session while another session is active");
 			return;
 		}
 
@@ -427,12 +442,13 @@ public sealed partial class DiscordClient
 			}
 		}
 		catch (OperationCanceledException)
-		{ }
+		{
+		}
 	}
 
-	#endregion
+#endregion
 
-	#region Internal Gateway Methods
+#region Internal Gateway Methods
 
 	/// <summary>
 	/// Updates the status.
@@ -440,7 +456,8 @@ public sealed partial class DiscordClient
 	/// <param name="activity">The activity.</param>
 	/// <param name="userStatus">The optional user status.</param>
 	/// <param name="idleSince">Since when is the client performing the specified activity.</param>
-	internal async Task InternalUpdateStatusAsync(DiscordActivity? activity, UserStatus? userStatus, DateTimeOffset? idleSince)
+	internal async Task InternalUpdateStatusAsync(DiscordActivity? activity, UserStatus? userStatus,
+	                                              DateTimeOffset? idleSince)
 	{
 		if (activity is { Name.Length: > 128 })
 			throw new("Game name can't be longer than 128 characters!");
@@ -469,13 +486,18 @@ public sealed partial class DiscordClient
 		await this.WsSendAsync(statusString).ConfigureAwait(false);
 
 		if (!this.PresencesInternal.ContainsKey(this.CurrentUser!.Id))
+		{
 			this.PresencesInternal[this.CurrentUser.Id] = new()
 			{
 				Discord = this,
 				Activity = act,
 				Status = userStatus ?? UserStatus.Online,
-				InternalUser = new() { Id = this.CurrentUser.Id }
+				InternalUser = new()
+				{
+					Id = this.CurrentUser.Id
+				}
 			};
+		}
 		else
 		{
 			var pr = this.PresencesInternal[this.CurrentUser.Id];
@@ -496,7 +518,8 @@ public sealed partial class DiscordClient
 		{
 			case true when moreThan5:
 			{
-				this.Logger.LogCritical(LoggerEvents.HeartbeatFailure, "Server failed to acknowledge more than 5 heartbeats - connection is zombie");
+				this.Logger.LogCritical(LoggerEvents.HeartbeatFailure,
+				                        "Server failed to acknowledge more than 5 heartbeats - connection is zombie");
 
 				var args = new ZombiedEventArgs(this.ServiceProvider)
 				{
@@ -505,7 +528,8 @@ public sealed partial class DiscordClient
 				};
 				await this._zombied.InvokeAsync(this, args).ConfigureAwait(false);
 
-				await this.InternalReconnectAsync(code: 4001, message: "Too many heartbeats missed").ConfigureAwait(false);
+				await this.InternalReconnectAsync(code: 4001, message: "Too many heartbeats missed")
+					.ConfigureAwait(false);
 				return;
 			}
 			case false when moreThan5:
@@ -517,7 +541,8 @@ public sealed partial class DiscordClient
 				};
 				await this._zombied.InvokeAsync(this, args).ConfigureAwait(false);
 
-				this.Logger.LogWarning(LoggerEvents.HeartbeatFailure, "Server failed to acknowledge more than 5 heartbeats, but the guild download is still running - check your connection speed");
+				this.Logger.LogWarning(LoggerEvents.HeartbeatFailure,
+				                       "Server failed to acknowledge more than 5 heartbeats, but the guild download is still running - check your connection speed");
 				break;
 			}
 		}
@@ -565,7 +590,8 @@ public sealed partial class DiscordClient
 		var payloadstr = JsonConvert.SerializeObject(payload);
 		await this.WsSendAsync(payloadstr).ConfigureAwait(false);
 
-		this.Logger.LogDebug(LoggerEvents.Intents, "Registered gateway intents ({intents})", this.Configuration.Intents);
+		this.Logger.LogDebug(LoggerEvents.Intents, "Registered gateway intents ({intents})",
+		                     this.Configuration.Intents);
 	}
 
 	/// <summary>
@@ -616,16 +642,17 @@ public sealed partial class DiscordClient
 		return this.WebSocketClient!.SendMessageAsync(payload);
 	}
 
-	#endregion
+#endregion
 
-	#region Semaphore Methods
+#region Semaphore Methods
 
 	/// <summary>
 	/// Gets the socket lock.
 	/// </summary>
 	/// <returns>The added socket lock.</returns>
 	private SocketLock GetSocketLock()
-		=> s_socketLocks.GetOrAdd(this.CurrentApplication!.Id, appId => new(appId, this.GatewayInfo!.SessionBucket.MaxConcurrency));
+		=> s_socketLocks.GetOrAdd(this.CurrentApplication!.Id,
+		                          appId => new(appId, this.GatewayInfo!.SessionBucket.MaxConcurrency));
 
-	#endregion
+#endregion
 }

@@ -1,4 +1,3 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -19,5 +18,5 @@ public enum IframeModalSize : int
 	/// <summary>
 	/// Sends a big iFrame.
 	/// </summary>
-	Big  = 3
+	Big = 3
 }

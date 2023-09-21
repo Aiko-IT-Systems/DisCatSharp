@@ -55,10 +55,10 @@ internal class CollectRequest<T> : IDisposable where T : AsyncEventArgs
 			this.Collected.Clear();
 			this.Collected = null;
 		}
+
 		GC.SuppressFinalize(this);
 	}
 }
-
 
 /*
               ^  ^

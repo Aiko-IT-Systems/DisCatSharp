@@ -185,5 +185,6 @@ public class DiscordConnection : ObservableApiObject
 	/// Initializes a new instance of the <see cref="DiscordConnection"/> class.
 	/// </summary>
 	internal DiscordConnection()
-	{ }
+	{
+	}
 }

@@ -20,5 +20,8 @@ public class ClientErrorEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ClientErrorEventArgs"/> class.
 	/// </summary>
-	internal ClientErrorEventArgs(IServiceProvider provider) : base(provider) { }
+	internal ClientErrorEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

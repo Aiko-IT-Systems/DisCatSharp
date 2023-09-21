@@ -42,6 +42,7 @@ public sealed class VoiceNextConnection : IDisposable
 		add => this._userSpeaking.Register(value);
 		remove => this._userSpeaking.Unregister(value);
 	}
+
 	private readonly AsyncEvent<VoiceNextConnection, UserSpeakingEventArgs> _userSpeaking;
 
 	/// <summary>
@@ -52,6 +53,7 @@ public sealed class VoiceNextConnection : IDisposable
 		add => this._userJoined.Register(value);
 		remove => this._userJoined.Unregister(value);
 	}
+
 	private readonly AsyncEvent<VoiceNextConnection, VoiceUserJoinEventArgs> _userJoined;
 
 	/// <summary>
@@ -62,6 +64,7 @@ public sealed class VoiceNextConnection : IDisposable
 		add => this._userLeft.Register(value);
 		remove => this._userLeft.Unregister(value);
 	}
+
 	private readonly AsyncEvent<VoiceNextConnection, VoiceUserLeaveEventArgs> _userLeft;
 
 	/// <summary>
@@ -72,6 +75,7 @@ public sealed class VoiceNextConnection : IDisposable
 		add => this._voiceReceived.Register(value);
 		remove => this._voiceReceived.Unregister(value);
 	}
+
 	private readonly AsyncEvent<VoiceNextConnection, VoiceReceiveEventArgs> _voiceReceived;
 
 	/// <summary>
@@ -82,6 +86,7 @@ public sealed class VoiceNextConnection : IDisposable
 		add => this._voiceSocketError.Register(value);
 		remove => this._voiceSocketError.Unregister(value);
 	}
+
 	private readonly AsyncEvent<VoiceNextConnection, SocketErrorEventArgs> _voiceSocketError;
 
 	internal event VoiceDisconnectedEventHandler VoiceDisconnected;
@@ -135,6 +140,7 @@ public sealed class VoiceNextConnection : IDisposable
 	/// Gets or sets the token source.
 	/// </summary>
 	private CancellationTokenSource _tokenSource;
+
 	/// <summary>
 	/// Gets the token.
 	/// </summary>
@@ -150,10 +156,12 @@ public sealed class VoiceNextConnection : IDisposable
 	/// Gets or sets the server data.
 	/// </summary>
 	internal VoiceServerUpdatePayload ServerData { get; set; }
+
 	/// <summary>
 	/// Gets or sets the state data.
 	/// </summary>
 	internal VoiceStateUpdatePayload StateData { get; set; }
+
 	/// <summary>
 	/// Gets or sets a value indicating whether resume.
 	/// </summary>
@@ -183,6 +191,7 @@ public sealed class VoiceNextConnection : IDisposable
 	/// Gets or sets the selected encryption mode.
 	/// </summary>
 	private EncryptionMode _selectedEncryptionMode;
+
 	/// <summary>
 	/// Gets or sets the nonce.
 	/// </summary>
@@ -212,10 +221,12 @@ public sealed class VoiceNextConnection : IDisposable
 	/// Gets or sets the discovered endpoint.
 	/// </summary>
 	private IpEndpoint _discoveredEndpoint;
+
 	/// <summary>
 	/// Gets or sets the web socket endpoint.
 	/// </summary>
 	internal ConnectionEndpoint WebSocketEndpoint { get; set; }
+
 	/// <summary>
 	/// Gets or sets the udp endpoint.
 	/// </summary>
@@ -260,6 +271,7 @@ public sealed class VoiceNextConnection : IDisposable
 	/// Gets the keepalive timestamps.
 	/// </summary>
 	private readonly ConcurrentDictionary<ulong, long> _keepaliveTimestamps;
+
 	private ulong _lastKeepalive;
 
 	/// <summary>
@@ -271,6 +283,7 @@ public sealed class VoiceNextConnection : IDisposable
 	/// Gets or sets the sender token source.
 	/// </summary>
 	private CancellationTokenSource _senderTokenSource;
+
 	/// <summary>
 	/// Gets the sender token.
 	/// </summary>
@@ -286,6 +299,7 @@ public sealed class VoiceNextConnection : IDisposable
 	/// Gets or sets the receiver token source.
 	/// </summary>
 	private CancellationTokenSource _receiverTokenSource;
+
 	/// <summary>
 	/// Gets the receiver token.
 	/// </summary>
@@ -301,6 +315,7 @@ public sealed class VoiceNextConnection : IDisposable
 	/// Gets or sets the keepalive token source.
 	/// </summary>
 	private CancellationTokenSource _keepaliveTokenSource;
+
 	/// <summary>
 	/// Gets the keepalive token.
 	/// </summary>
@@ -323,6 +338,7 @@ public sealed class VoiceNextConnection : IDisposable
 	/// </summary>
 	public int WebSocketPing
 		=> Volatile.Read(ref this._wsPing);
+
 	private int _wsPing;
 
 	/// <summary>
@@ -330,6 +346,7 @@ public sealed class VoiceNextConnection : IDisposable
 	/// </summary>
 	public int UdpPing
 		=> Volatile.Read(ref this._udpPing);
+
 	private int _udpPing;
 
 	private int _queueCount;
@@ -348,7 +365,9 @@ public sealed class VoiceNextConnection : IDisposable
 	/// <param name="config">The config.</param>
 	/// <param name="server">The server.</param>
 	/// <param name="state">The state.</param>
-	internal VoiceNextConnection(DiscordClient client, DiscordGuild guild, DiscordChannel channel, VoiceNextConfiguration config, VoiceServerUpdatePayload server, VoiceStateUpdatePayload state)
+	internal VoiceNextConnection(DiscordClient client, DiscordGuild guild, DiscordChannel channel,
+	                             VoiceNextConfiguration config, VoiceServerUpdatePayload server,
+	                             VoiceStateUpdatePayload state)
 	{
 		this._discord = client;
 		this._guild = guild;
@@ -385,17 +404,25 @@ public sealed class VoiceNextConnection : IDisposable
 		{
 			eph = eps;
 		}
-		this.WebSocketEndpoint = new() { Hostname = eph, Port = epp };
+
+		this.WebSocketEndpoint = new()
+		{
+			Hostname = eph,
+			Port = epp
+		};
 
 		this._readyWait = new();
 
 		this._playingWait = null;
-		this._transmitChannel = Channel.CreateBounded<RawVoicePacket>(new BoundedChannelOptions(this._configuration.PacketQueueSize));
+		this._transmitChannel =
+			Channel.CreateBounded<RawVoicePacket>(new BoundedChannelOptions(this._configuration.PacketQueueSize));
 		this._keepaliveTimestamps = new();
 		this._pauseEvent = new(true);
 
 		this._udpClient = this._discord.Configuration.UdpClientFactory();
-		this._voiceWs = this._discord.Configuration.WebSocketClientFactory(this._discord.Configuration.Proxy, this._discord.ServiceProvider);
+		this._voiceWs =
+			this._discord.Configuration.WebSocketClientFactory(this._discord.Configuration.Proxy,
+			                                                   this._discord.ServiceProvider);
 		this._voiceWs.Disconnected += this.VoiceWS_SocketClosed;
 		this._voiceWs.MessageReceived += this.VoiceWS_SocketMessage;
 		this._voiceWs.Connected += this.VoiceWS_SocketOpened;
@@ -461,6 +488,7 @@ public sealed class VoiceNextConnection : IDisposable
 				Token = this.ServerData.Token
 			};
 		}
+
 		var vdj = JsonConvert.SerializeObject(vdp, Formatting.None);
 		await this.WsSendAsync(vdj).ConfigureAwait(false);
 	}
@@ -501,7 +529,11 @@ public sealed class VoiceNextConnection : IDisposable
 
 		var audioFormat = this.AudioFormat;
 
-		var packetArray = ArrayPool<byte>.Shared.Rent(this._rtp.CalculatePacketSize(audioFormat.SampleCountToSampleSize(audioFormat.CalculateMaximumFrameSize()), this._selectedEncryptionMode));
+		var packetArray =
+			ArrayPool<byte>.Shared
+				.Rent(this._rtp
+					      .CalculatePacketSize(audioFormat.SampleCountToSampleSize(audioFormat.CalculateMaximumFrameSize()),
+					                           this._selectedEncryptionMode));
 		var packet = packetArray.AsSpan();
 
 		this._rtp.EncodeHeader(this._sequence, this._timestamp, this._ssrc, packet);
@@ -558,7 +590,8 @@ public sealed class VoiceNextConnection : IDisposable
 		var synchronizerTicks = (double)Stopwatch.GetTimestamp();
 		var synchronizerResolution = Stopwatch.Frequency * 0.005;
 		var tickResolution = 10_000_000.0 / Stopwatch.Frequency;
-		this._discord.Logger.LogDebug(VoiceNextEvents.Misc, "Timer accuracy: {0}/{1} (high resolution? {2})", Stopwatch.Frequency, synchronizerResolution, Stopwatch.IsHighResolution);
+		this._discord.Logger.LogDebug(VoiceNextEvents.Misc, "Timer accuracy: {0}/{1} (high resolution? {2})",
+		                              Stopwatch.Frequency, synchronizerResolution, Stopwatch.IsHighResolution);
 
 		while (!token.IsCancellationRequested)
 		{
@@ -596,14 +629,17 @@ public sealed class VoiceNextConnection : IDisposable
 			var durationModifier = hasPacket ? rawPacket.Duration / 5 : 4;
 			var cts = Math.Max(Stopwatch.GetTimestamp() - synchronizerTicks, 0);
 			if (cts < synchronizerResolution * durationModifier)
-				await Task.Delay(TimeSpan.FromTicks((long)(((synchronizerResolution * durationModifier) - cts) * tickResolution))).ConfigureAwait(false);
+				await Task.Delay(TimeSpan.FromTicks((long)(((synchronizerResolution * durationModifier) - cts) *
+				                                           tickResolution))).ConfigureAwait(false);
 
 			synchronizerTicks += synchronizerResolution * durationModifier;
 
 			if (!hasPacket)
 				continue;
 
-			await this.SendSpeakingAsync(this._speakingFlags != SpeakingFlags.NotSpeaking ? this._speakingFlags : SpeakingFlags.Microphone).ConfigureAwait(false);
+			await this.SendSpeakingAsync(this._speakingFlags != SpeakingFlags.NotSpeaking
+				                             ? this._speakingFlags
+				                             : SpeakingFlags.Microphone).ConfigureAwait(false);
 			await client.SendAsync(data, length).ConfigureAwait(false);
 			ArrayPool<byte>.Shared.Return(data);
 
@@ -636,7 +672,9 @@ public sealed class VoiceNextConnection : IDisposable
 	/// <param name="voiceSender">The voice sender.</param>
 	/// <param name="outputFormat">The output format.</param>
 	/// <returns>A bool.</returns>
-	private bool ProcessPacket(ReadOnlySpan<byte> data, ref Memory<byte> opus, ref Memory<byte> pcm, IList<ReadOnlyMemory<byte>> pcmPackets, out AudioSender voiceSender, out AudioFormat outputFormat)
+	private bool ProcessPacket(ReadOnlySpan<byte> data, ref Memory<byte> opus, ref Memory<byte> pcm,
+	                           IList<ReadOnlyMemory<byte>> pcmPackets, out AudioSender voiceSender,
+	                           out AudioFormat outputFormat)
 	{
 		voiceSender = null;
 		outputFormat = default;
@@ -667,7 +705,8 @@ public sealed class VoiceNextConnection : IDisposable
 
 			gap = (ushort)(sequence - 1 - lastTrueSequence);
 			if (gap >= 5)
-				this._discord.Logger.LogWarning(VoiceNextEvents.VoiceReceiveFailure, "5 or more voice packets were dropped when receiving");
+				this._discord.Logger.LogWarning(VoiceNextEvents.VoiceReceiveFailure,
+				                                "5 or more voice packets were dropped when receiving");
 		}
 
 		Span<byte> nonce = stackalloc byte[Sodium.NonceSize];
@@ -683,7 +722,6 @@ public sealed class VoiceNextConnection : IDisposable
 
 			// Strip extensions, if any
 			if (hasExtension)
-			{
 				// RFC 5285, 4.2 One-Byte header
 				// http://www.rfcreader.com/#rfc5285_line186
 				if (opusSpan[0] == 0xBE && opusSpan[1] == 0xDE)
@@ -708,15 +746,11 @@ public sealed class VoiceNextConnection : IDisposable
 					opusSpan = opusSpan[i..];
 				}
 
-				// TODO: consider implementing RFC 5285, 4.3. Two-Byte Header
-			}
-
+			// TODO: consider implementing RFC 5285, 4.3. Two-Byte Header
 			if (opusSpan[0] == 0x90)
-			{
 				// I'm not 100% sure what this header is/does, however removing the data causes no
 				// real issues, and has the added benefit of removing a lot of noise.
 				opusSpan = opusSpan[2..];
-			}
 
 			if (gap == 1)
 			{
@@ -793,7 +827,8 @@ public sealed class VoiceNextConnection : IDisposable
 		}
 		catch (Exception ex)
 		{
-			this._discord.Logger.LogError(VoiceNextEvents.VoiceReceiveFailure, ex, "Exception occurred when decoding incoming audio data");
+			this._discord.Logger.LogError(VoiceNextEvents.VoiceReceiveFailure, ex,
+			                              "Exception occurred when decoding incoming audio data");
 		}
 	}
 
@@ -811,12 +846,14 @@ public sealed class VoiceNextConnection : IDisposable
 				return;
 
 			var tdelta = (int)((Stopwatch.GetTimestamp() - timestamp) / (double)Stopwatch.Frequency * 1000);
-			this._discord.Logger.LogDebug(VoiceNextEvents.VoiceKeepalive, "Received UDP keepalive {0} (ping {1}ms)", keepalive, tdelta);
+			this._discord.Logger.LogDebug(VoiceNextEvents.VoiceKeepalive, "Received UDP keepalive {0} (ping {1}ms)",
+			                              keepalive, tdelta);
 			Volatile.Write(ref this._udpPing, tdelta);
 		}
 		catch (Exception ex)
 		{
-			this._discord.Logger.LogError(VoiceNextEvents.VoiceKeepalive, ex, "Exception occurred when handling keepalive");
+			this._discord.Logger.LogError(VoiceNextEvents.VoiceKeepalive, ex,
+			                              "Exception occurred when handling keepalive");
 		}
 	}
 
@@ -937,7 +974,9 @@ public sealed class VoiceNextConnection : IDisposable
 			this._voiceWs.DisconnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 			this._udpClient.Close();
 		}
-		catch { }
+		catch
+		{
+		}
 
 		try
 		{
@@ -972,7 +1011,6 @@ public sealed class VoiceNextConnection : IDisposable
 
 		var token = this.TOKEN;
 		while (true)
-		{
 			try
 			{
 				token.ThrowIfCancellationRequested();
@@ -995,7 +1033,6 @@ public sealed class VoiceNextConnection : IDisposable
 			{
 				return;
 			}
-		}
 	}
 
 	/// <summary>
@@ -1046,7 +1083,8 @@ public sealed class VoiceNextConnection : IDisposable
 			Address = ip,
 			Port = port
 		};
-		this._discord.Logger.LogTrace(VoiceNextEvents.VoiceHandshake, "Endpoint discovery finished - discovered endpoint is {0}:{1}", ip, port);
+		this._discord.Logger.LogTrace(VoiceNextEvents.VoiceHandshake,
+		                              "Endpoint discovery finished - discovered endpoint is {0}:{1}", ip, port);
 
 		void PreparePacket(byte[] packet)
 		{
@@ -1075,7 +1113,8 @@ public sealed class VoiceNextConnection : IDisposable
 		this._selectedEncryptionMode = selectedEncryptionMode.Value;
 
 		// Ready
-		this._discord.Logger.LogTrace(VoiceNextEvents.VoiceHandshake, "Selected encryption mode is {0}", selectedEncryptionMode.Key);
+		this._discord.Logger.LogTrace(VoiceNextEvents.VoiceHandshake, "Selected encryption mode is {0}",
+		                              selectedEncryptionMode.Key);
 		var vsp = new VoiceDispatch
 		{
 			OpCode = 1,
@@ -1108,7 +1147,9 @@ public sealed class VoiceNextConnection : IDisposable
 	private async Task Stage2(VoiceSessionDescriptionPayload voiceSessionDescription)
 	{
 		this._selectedEncryptionMode = Sodium.SupportedModes[voiceSessionDescription.Mode.ToLowerInvariant()];
-		this._discord.Logger.LogTrace(VoiceNextEvents.VoiceHandshake, "Discord updated encryption mode - new mode is {0}", this._selectedEncryptionMode);
+		this._discord.Logger.LogTrace(VoiceNextEvents.VoiceHandshake,
+		                              "Discord updated encryption mode - new mode is {0}",
+		                              this._selectedEncryptionMode);
 
 		// start keepalive
 		this._keepaliveTokenSource = new();
@@ -1160,8 +1201,8 @@ public sealed class VoiceNextConnection : IDisposable
 				break;
 
 			case 5: // SPEAKING
-					// Don't spam OP5
-					// No longer spam, Discord supposedly doesn't send many of these
+				// Don't spam OP5
+				// No longer spam, Discord supposedly doesn't send many of these
 				this._discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received SPEAKING (OP5)");
 				var spd = opp.ToObject<VoiceSpeakingPayload>();
 				var foundUserInCache = this._discord.TryGetCachedUserInternal(spd.UserId.Value, out var resolvedUser);
@@ -1169,10 +1210,11 @@ public sealed class VoiceNextConnection : IDisposable
 				{
 					Speaking = spd.Speaking,
 					Ssrc = spd.Ssrc.Value,
-					User = resolvedUser,
+					User = resolvedUser
 				};
 
-				if (foundUserInCache && this._transmittingSsrCs.TryGetValue(spk.Ssrc, out var txssrc5) && txssrc5.Id == 0)
+				if (foundUserInCache && this._transmittingSsrCs.TryGetValue(spk.Ssrc, out var txssrc5) &&
+				    txssrc5.Id == 0)
 				{
 					txssrc5.User = spk.User;
 				}
@@ -1195,12 +1237,13 @@ public sealed class VoiceNextConnection : IDisposable
 				var dt = DateTime.Now;
 				var ping = (int)(dt - this._lastHeartbeat).TotalMilliseconds;
 				Volatile.Write(ref this._wsPing, ping);
-				this._discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received HEARTBEAT_ACK (OP6, {0}ms)", ping);
+				this._discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received HEARTBEAT_ACK (OP6, {0}ms)",
+				                              ping);
 				this._lastHeartbeat = dt;
 				break;
 
 			case 8: // HELLO
-					// this sends a heartbeat interval that we need to use for heartbeating
+				// this sends a heartbeat interval that we need to use for heartbeating
 				this._discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received HELLO (OP8)");
 				this._heartbeatInterval = opp["heartbeat_interval"].ToObject<int>();
 				break;
@@ -1214,18 +1257,22 @@ public sealed class VoiceNextConnection : IDisposable
 				this._discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received CLIENT_CONNECTED (OP12)");
 				var ujpd = opp.ToObject<VoiceUserJoinPayload>();
 				var usrj = await this._discord.GetUserAsync(ujpd.UserId, true).ConfigureAwait(false);
+			{
+				var opus = this._opus.CreateDecoder();
+				var vtx = new AudioSender(ujpd.Ssrc, opus)
 				{
-					var opus = this._opus.CreateDecoder();
-					var vtx = new AudioSender(ujpd.Ssrc, opus)
-					{
-						User = usrj
-					};
+					User = usrj
+				};
 
-					if (!this._transmittingSsrCs.TryAdd(vtx.Ssrc, vtx))
-						this._opus.DestroyDecoder(opus);
-				}
+				if (!this._transmittingSsrCs.TryAdd(vtx.Ssrc, vtx))
+					this._opus.DestroyDecoder(opus);
+			}
 
-				await this._userJoined.InvokeAsync(this, new(this._discord.ServiceProvider) { User = usrj, Ssrc = ujpd.Ssrc }).ConfigureAwait(false);
+				await this._userJoined.InvokeAsync(this, new(this._discord.ServiceProvider)
+				{
+					User = usrj,
+					Ssrc = ujpd.Ssrc
+				}).ConfigureAwait(false);
 				break;
 
 			case 13: // CLIENT_DISCONNECTED
@@ -1247,7 +1294,8 @@ public sealed class VoiceNextConnection : IDisposable
 				break;
 
 			default:
-				this._discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received unknown voice opcode (OP{0})", opc);
+				this._discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received unknown voice opcode (OP{0})",
+				                              opc);
 				break;
 		}
 	}
@@ -1260,7 +1308,8 @@ public sealed class VoiceNextConnection : IDisposable
 	/// <returns>A Task.</returns>
 	private async Task VoiceWS_SocketClosed(IWebSocketClient client, SocketCloseEventArgs e)
 	{
-		this._discord.Logger.LogDebug(VoiceNextEvents.VoiceConnectionClose, "Voice WebSocket closed ({0}, '{1}')", e.CloseCode, e.CloseMessage);
+		this._discord.Logger.LogDebug(VoiceNextEvents.VoiceConnectionClose, "Voice WebSocket closed ({0}, '{1}')",
+		                              e.CloseCode, e.CloseMessage);
 
 		// generally this should not be disposed on all disconnects, only on requested ones
 		// or something
@@ -1274,7 +1323,9 @@ public sealed class VoiceNextConnection : IDisposable
 		{
 			this._tokenSource.Cancel();
 			this._tokenSource = new();
-			this._voiceWs = this._discord.Configuration.WebSocketClientFactory(this._discord.Configuration.Proxy, this._discord.ServiceProvider);
+			this._voiceWs =
+				this._discord.Configuration.WebSocketClientFactory(this._discord.Configuration.Proxy,
+				                                                   this._discord.ServiceProvider);
 			this._voiceWs.Disconnected += this.VoiceWS_SocketClosed;
 			this._voiceWs.MessageReceived += this.VoiceWS_SocketMessage;
 			this._voiceWs.Connected += this.VoiceWS_SocketOpened;
@@ -1294,7 +1345,8 @@ public sealed class VoiceNextConnection : IDisposable
 	{
 		if (e is not SocketTextMessageEventArgs et)
 		{
-			this._discord.Logger.LogCritical(VoiceNextEvents.VoiceGatewayError, "Discord Voice Gateway sent binary data - unable to process");
+			this._discord.Logger.LogCritical(VoiceNextEvents.VoiceGatewayError,
+			                                 "Discord Voice Gateway sent binary data - unable to process");
 			return Task.CompletedTask;
 		}
 
@@ -1318,7 +1370,10 @@ public sealed class VoiceNextConnection : IDisposable
 	/// <param name="e">The e.</param>
 	/// <returns>A Task.</returns>
 	private Task VoiceWs_SocketException(IWebSocketClient client, SocketErrorEventArgs e)
-		=> this._voiceSocketError.InvokeAsync(this, new(this._discord.ServiceProvider) { Exception = e.Exception });
+		=> this._voiceSocketError.InvokeAsync(this, new(this._discord.ServiceProvider)
+		{
+			Exception = e.Exception
+		});
 
 	/// <summary>
 	/// Ws the send async.

@@ -67,7 +67,9 @@ public class Command
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Command"/> class.
 	/// </summary>
-	internal Command() { }
+	internal Command()
+	{
+	}
 
 	/// <summary>
 	/// Executes this command with specified context.
@@ -83,7 +85,8 @@ public class Command
 			foreach (var ovl in this.Overloads.OrderByDescending(x => x.Priority))
 			{
 				ctx.Overload = ovl;
-				var args = await CommandsNextUtilities.BindArguments(ctx, ctx.Config.IgnoreExtraArguments).ConfigureAwait(false);
+				var args = await CommandsNextUtilities.BindArguments(ctx, ctx.Config.IgnoreExtraArguments)
+					           .ConfigureAwait(false);
 
 				if (!args.IsSuccessful)
 					continue;
@@ -190,7 +193,7 @@ public class Command
 			return true;
 
 		return obj is Command cmd
-&& cmd.QualifiedName == this.QualifiedName;
+		       && cmd.QualifiedName == this.QualifiedName;
 	}
 
 	/// <summary>

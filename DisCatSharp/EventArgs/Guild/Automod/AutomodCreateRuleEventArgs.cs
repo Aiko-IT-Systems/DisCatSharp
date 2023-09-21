@@ -22,5 +22,8 @@ public class AutomodRuleCreateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="AutomodRuleCreateEventArgs"/> class.
 	/// </summary>
-	public AutomodRuleCreateEventArgs(IServiceProvider provider) : base(provider) { }
+	public AutomodRuleCreateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

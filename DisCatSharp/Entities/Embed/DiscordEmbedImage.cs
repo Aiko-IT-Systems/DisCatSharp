@@ -37,5 +37,6 @@ public sealed class DiscordEmbedImage : ObservableApiObject
 	/// Initializes a new instance of the <see cref="DiscordEmbedImage"/> class.
 	/// </summary>
 	internal DiscordEmbedImage()
-	{ }
+	{
+	}
 }

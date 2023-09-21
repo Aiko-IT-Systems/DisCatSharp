@@ -13,18 +13,22 @@ public sealed class ComplexDecomposer : IDecomposer
 	/// Gets the t complex.
 	/// </summary>
 	private static Type s_complex { get; } = typeof(Complex);
+
 	/// <summary>
 	/// Gets the t double array.
 	/// </summary>
 	private static Type s_doubleArray { get; } = typeof(double[]);
+
 	/// <summary>
 	/// Gets the t double enumerable.
 	/// </summary>
 	private static Type s_doubleEnumerable { get; } = typeof(IEnumerable<double>);
+
 	/// <summary>
 	/// Gets the t object array.
 	/// </summary>
 	private static Type s_objectArray { get; } = typeof(object[]);
+
 	/// <summary>
 	/// Gets the t object enumerable.
 	/// </summary>
@@ -37,9 +41,9 @@ public sealed class ComplexDecomposer : IDecomposer
 	/// <inheritdoc />
 	public bool CanRecompose(Type t)
 		=> t == s_doubleArray
-		|| t == s_objectArray
-		|| s_doubleEnumerable.IsAssignableFrom(t)
-		|| s_objectEnumerable.IsAssignableFrom(t);
+		   || t == s_objectArray
+		   || s_doubleEnumerable.IsAssignableFrom(t)
+		   || s_objectEnumerable.IsAssignableFrom(t);
 
 	/// <inheritdoc />
 	public bool TryDecompose(object obj, Type tobj, out object? decomposed, out Type tdecomposed)
@@ -50,7 +54,11 @@ public sealed class ComplexDecomposer : IDecomposer
 		if (tobj != s_complex || obj is not Complex c)
 			return false;
 
-		decomposed = new[] { c.Real, c.Imaginary };
+		decomposed = new[]
+		{
+			c.Real,
+			c.Imaginary
+		};
 		return true;
 	}
 

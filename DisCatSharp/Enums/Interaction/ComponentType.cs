@@ -1,4 +1,3 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -44,5 +43,5 @@ public enum ComponentType
 	/// <summary>
 	/// A select menu to select channels.
 	/// </summary>
-	ChannelSelect = 8,
+	ChannelSelect = 8
 }

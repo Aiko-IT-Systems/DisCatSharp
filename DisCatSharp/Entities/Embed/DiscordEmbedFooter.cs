@@ -31,5 +31,6 @@ public sealed class DiscordEmbedFooter : ObservableApiObject
 	/// Initializes a new instance of the <see cref="DiscordEmbedFooter"/> class.
 	/// </summary>
 	internal DiscordEmbedFooter()
-	{ }
+	{
+	}
 }

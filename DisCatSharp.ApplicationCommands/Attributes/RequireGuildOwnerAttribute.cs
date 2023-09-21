@@ -15,7 +15,8 @@ public sealed class ApplicationCommandRequireGuildOwnerAttributeAttribute : Appl
 	/// Defines that this command is only usable within a guild by its owner.
 	/// </summary>
 	public ApplicationCommandRequireGuildOwnerAttributeAttribute()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Runs checks.

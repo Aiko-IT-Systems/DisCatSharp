@@ -15,7 +15,8 @@ public sealed class ApplicationCommandRequireDisCatSharpDeveloperAttribute : App
 	/// Defines that this application command is restricted to DisCatSharp Developers.
 	/// </summary>
 	public ApplicationCommandRequireDisCatSharpDeveloperAttribute()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Runs checks.

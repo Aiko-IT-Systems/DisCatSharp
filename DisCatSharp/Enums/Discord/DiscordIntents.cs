@@ -39,8 +39,8 @@ public static class DiscordIntentExtensions
 	/// </summary>
 	/// <param name="intents">The intents.</param>
 	internal static bool HasAllPrivilegedIntents(this DiscordIntents intents)
-		=> intents.HasIntent(DiscordIntents.GuildMembers | DiscordIntents.GuildPresences | DiscordIntents.MessageContent);
-
+		=> intents.HasIntent(DiscordIntents.GuildMembers | DiscordIntents.GuildPresences |
+		                     DiscordIntents.MessageContent);
 
 	/// <summary>
 	/// Whether it has all v9 privileged intents.
@@ -191,8 +191,11 @@ public enum DiscordIntents
 	/// Includes all unprivileged intents.
 	/// <para>These are all intents excluding <see cref="GuildMembers"/>, <see cref="GuildPresences"/> and <see cref="MessageContent"/>.</para>
 	/// </summary>
-	AllUnprivileged = Guilds | GuildModeration | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates | GuildMessages |
-		GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping | GuildScheduledEvents | AutoModerationConfiguration | AutoModerationExecution,
+	AllUnprivileged = Guilds | GuildModeration | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks |
+	                  GuildInvites | GuildVoiceStates | GuildMessages |
+	                  GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions |
+	                  DirectMessageTyping | GuildScheduledEvents | AutoModerationConfiguration |
+	                  AutoModerationExecution,
 
 	/// <summary>
 	/// Includes all intents.

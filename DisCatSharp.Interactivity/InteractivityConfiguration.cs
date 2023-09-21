@@ -68,7 +68,8 @@ public sealed class InteractivityConfiguration
 	/// </summary>
 	[ActivatorUtilitiesConstructor]
 	public InteractivityConfiguration()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Creates a new instance of <see cref="InteractivityConfiguration"/>, copying the properties of another configuration.
@@ -87,7 +88,9 @@ public sealed class InteractivityConfiguration
 		this.PollBehaviour = other.PollBehaviour;
 		this.Timeout = other.Timeout;
 
-		if (this.ResponseBehavior is InteractionResponseBehavior.Respond && string.IsNullOrWhiteSpace(this.ResponseMessage))
-			throw new ArgumentException($"{nameof(this.ResponseMessage)} cannot be null, empty, or whitespace when {nameof(this.ResponseBehavior)} is set to respond.");
+		if (this.ResponseBehavior is InteractionResponseBehavior.Respond &&
+		    string.IsNullOrWhiteSpace(this.ResponseMessage))
+			throw new
+				ArgumentException($"{nameof(this.ResponseMessage)} cannot be null, empty, or whitespace when {nameof(this.ResponseBehavior)} is set to respond.");
 	}
 }

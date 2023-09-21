@@ -144,7 +144,6 @@ internal sealed class RestGuildModifyPayload : ObservableApiObject
 	[JsonProperty("home_header")]
 	public Optional<string> HomeHeaderBase64 { get; set; }
 
-
 	/// <summary>
 	/// Gets or sets the discovery splash base64.
 	/// </summary>

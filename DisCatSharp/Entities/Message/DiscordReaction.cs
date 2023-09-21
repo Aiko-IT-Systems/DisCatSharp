@@ -53,5 +53,6 @@ public class DiscordReaction : ObservableApiObject
 	/// Initializes a new instance of the <see cref="DiscordReaction"/> class.
 	/// </summary>
 	internal DiscordReaction()
-	{ }
+	{
+	}
 }

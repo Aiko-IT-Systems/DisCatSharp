@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -43,6 +42,7 @@ public sealed class LavalinkSession
 		add => this._lavalinkSocketError.Register(value);
 		remove => this._lavalinkSocketError.Unregister(value);
 	}
+
 	private readonly AsyncEvent<LavalinkSession, SocketErrorEventArgs> _lavalinkSocketError;
 
 	/// <summary>
@@ -53,6 +53,7 @@ public sealed class LavalinkSession
 		add => this._lavalinkSessionDisconnected.Register(value);
 		remove => this._lavalinkSessionDisconnected.Unregister(value);
 	}
+
 	private readonly AsyncEvent<LavalinkSession, LavalinkSessionDisconnectedEventArgs> _lavalinkSessionDisconnected;
 
 	/// <summary>
@@ -63,6 +64,7 @@ public sealed class LavalinkSession
 		add => this._lavalinkSessionConnected.Register(value);
 		remove => this._lavalinkSessionConnected.Unregister(value);
 	}
+
 	private readonly AsyncEvent<LavalinkSession, LavalinkSessionConnectedEventArgs> _lavalinkSessionConnected;
 
 	/// <summary>
@@ -73,6 +75,7 @@ public sealed class LavalinkSession
 		add => this._statsReceived.Register(value);
 		remove => this._statsReceived.Unregister(value);
 	}
+
 	private readonly AsyncEvent<LavalinkSession, LavalinkStatsReceivedEventArgs> _statsReceived;
 
 	/// <summary>
@@ -83,6 +86,7 @@ public sealed class LavalinkSession
 		add => this.GuildPlayerDestroyedEvent.Register(value);
 		remove => this.GuildPlayerDestroyedEvent.Unregister(value);
 	}
+
 	internal readonly AsyncEvent<LavalinkSession, GuildPlayerDestroyedEventArgs> GuildPlayerDestroyedEvent;
 
 	/// <summary>
@@ -93,6 +97,7 @@ public sealed class LavalinkSession
 		add => this._websocketClosed.Register(value);
 		remove => this._websocketClosed.Unregister(value);
 	}
+
 	private readonly AsyncEvent<LavalinkSession, LavalinkWebsocketClosedEventArgs> _websocketClosed;
 
 	/// <summary>
@@ -214,9 +219,12 @@ public sealed class LavalinkSession
 			this.Region = config.Region;
 
 		this._lavalinkSocketError = new("LAVALINK_SOCKET_ERROR", TimeSpan.Zero, this.Discord.EventErrorHandler);
-		this._lavalinkSessionDisconnected = new("LAVALINK_SESSION_DISCONNECTED", TimeSpan.Zero, this.Discord.EventErrorHandler);
-		this._lavalinkSessionConnected = new("LAVALINK_SESSION_CONNECTED", TimeSpan.Zero, this.Discord.EventErrorHandler);
-		this.GuildPlayerDestroyedEvent = new("LAVALINK_PLAYER_DESTROYED", TimeSpan.Zero, this.Discord.EventErrorHandler);
+		this._lavalinkSessionDisconnected =
+			new("LAVALINK_SESSION_DISCONNECTED", TimeSpan.Zero, this.Discord.EventErrorHandler);
+		this._lavalinkSessionConnected =
+			new("LAVALINK_SESSION_CONNECTED", TimeSpan.Zero, this.Discord.EventErrorHandler);
+		this.GuildPlayerDestroyedEvent =
+			new("LAVALINK_PLAYER_DESTROYED", TimeSpan.Zero, this.Discord.EventErrorHandler);
 		this._statsReceived = new("LAVALINK_STATS_RECEIVED", TimeSpan.Zero, this.Discord.EventErrorHandler);
 		this._websocketClosed = new("LAVALINK_WEBSOCKET_CLOSED", TimeSpan.Zero, this.Discord.EventErrorHandler);
 
@@ -245,7 +253,9 @@ public sealed class LavalinkSession
 	public async Task<string> GetLavalinkVersionAsync()
 	{
 		var versionInfo = await this.Rest.GetVersionAsync().ConfigureAwait(false);
-		return versionInfo.Headers.TryGetValues("Lavalink-Api-Version", out var headerValues) ? headerValues.First() : versionInfo.Response!;
+		return versionInfo.Headers.TryGetValues("Lavalink-Api-Version", out var headerValues)
+			       ? headerValues.First()
+			       : versionInfo.Response!;
 	}
 
 	/// <summary>
@@ -323,10 +333,13 @@ public sealed class LavalinkSession
 				Muted = false
 			}
 		};
-		await this.Rest.CreatePlayerAsync(this.Config.SessionId!, channel.Guild.Id, this.Config.DefaultVolume).ConfigureAwait(false);
-		await this.Discord.WsSendAsync(LavalinkJson.SerializeObject(vsd)).ConfigureAwait(false); // Send voice dispatch to trigger voice state & voice server update
+		await this.Rest.CreatePlayerAsync(this.Config.SessionId!, channel.Guild.Id, this.Config.DefaultVolume)
+			.ConfigureAwait(false);
+		await this.Discord.WsSendAsync(LavalinkJson.SerializeObject(vsd))
+			.ConfigureAwait(false); // Send voice dispatch to trigger voice state & voice server update
 		var vst = await vstut.Task.ConfigureAwait(false); // Wait for voice state update to get session_id
-		var vsr = await vsrut.Task.ConfigureAwait(false); // Wait for voice server update to get token, guild_id & endpoint
+		var vsr = await vsrut.Task
+			          .ConfigureAwait(false); // Wait for voice server update to get token, guild_id & endpoint
 		await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, channel.Guild.Id, new()
 		{
 			Endpoint = vsr.Endpoint,
@@ -449,7 +462,9 @@ public sealed class LavalinkSession
 		if (this.Discord.CurrentUser?.Id == null)
 			throw new InvalidOperationException("This operation requires the Discord client to be fully initialized.");
 
-		this._webSocket = this.Discord.Configuration.WebSocketClientFactory(this.Discord.Configuration.Proxy, this.Discord.ServiceProvider);
+		this._webSocket =
+			this.Discord.Configuration.WebSocketClientFactory(this.Discord.Configuration.Proxy,
+			                                                  this.Discord.ServiceProvider);
 		this._webSocket.Connected += this.Lavalink_WebSocket_Connected;
 		this._webSocket.Disconnected += this.Lavalink_WebSocket_Disconnected;
 		this._webSocket.ExceptionThrown += this.Lavalink_WebSocket_ExceptionThrown;
@@ -463,7 +478,9 @@ public sealed class LavalinkSession
 		do
 		{
 			if (this.Config.SessionId != null && !this._webSocket.DefaultHeaders.ContainsKey("Session-Id"))
+			{
 				this._webSocket.AddDefaultHeader("Session-Id", this.Config.SessionId);
+			}
 			else if (this.Config.SessionId != null)
 			{
 				this._webSocket.RemoveDefaultHeader("Session-Id");
@@ -478,9 +495,13 @@ public sealed class LavalinkSession
 					this._backoff = Math.Min(this._backoff * 2, MAXIMUM_BACKOFF);
 				}
 				else
+				{
 					this._backoff = MINIMUM_BACKOFF;
+				}
 
-				await this._webSocket.ConnectAsync(new($"{this.Config.SocketEndpoint.ToWebSocketString()}{Enums.Endpoints.V4}{Enums.Endpoints.WEBSOCKET}")).ConfigureAwait(false);
+				await this._webSocket
+					.ConnectAsync(new($"{this.Config.SocketEndpoint.ToWebSocketString()}{Enums.Endpoints.V4}{Enums.Endpoints.WEBSOCKET}"))
+					.ConfigureAwait(false);
 
 				this._sessionIdReceived = new();
 				var sessionId = await this._sessionIdReceived.Task.ConfigureAwait(false);
@@ -501,11 +522,14 @@ public sealed class LavalinkSession
 			{
 				if (!this.Config.SocketAutoReconnect || this._backoff == MAXIMUM_BACKOFF)
 				{
-					this.Discord.Logger.LogCritical(LavalinkEvents.LavalinkConnectionError, ex, "Failed to connect to Lavalink .-.");
+					this.Discord.Logger.LogCritical(LavalinkEvents.LavalinkConnectionError, ex,
+					                                "Failed to connect to Lavalink .-.");
 					throw;
 				}
 
-				this.Discord.Logger.LogCritical(LavalinkEvents.LavalinkConnectionError, ex, "Failed to connect to Lavalink, retrying in {count} ms.", this._backoff);
+				this.Discord.Logger.LogCritical(LavalinkEvents.LavalinkConnectionError, ex,
+				                                "Failed to connect to Lavalink, retrying in {count} ms.",
+				                                this._backoff);
 			}
 		}
 		while (this.Config.SocketAutoReconnect);
@@ -522,7 +546,8 @@ public sealed class LavalinkSession
 	{
 		if (args is not SocketTextMessageEventArgs et)
 		{
-			this.Discord.Logger.LogCritical(LavalinkEvents.LavalinkConnectionError, "Lavalink sent binary data O.o - unable to process");
+			this.Discord.Logger.LogCritical(LavalinkEvents.LavalinkConnectionError,
+			                                "Lavalink sent binary data O.o - unable to process");
 			return Task.CompletedTask;
 		}
 
@@ -539,7 +564,7 @@ public sealed class LavalinkSession
 					case OpType.Ready:
 					{
 						this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsRx, null,
-							"Received Lavalink Ready OP: {data}", json);
+						                             "Received Lavalink Ready OP: {data}", json);
 						var ready = LavalinkJson.DeserializeObject<ReadyOp>(json)!;
 						if (this._sessionIdReceived != null)
 							this._sessionIdReceived.SetResult(ready.SessionId);
@@ -547,56 +572,61 @@ public sealed class LavalinkSession
 							this.Config.SessionId = ready.SessionId;
 						if (ready.Resumed)
 							this.Discord.Logger.LogInformation(LavalinkEvents.LavalinkSessionConnected, null,
-								"Lavalink session {sessionId} resumed", ready.SessionId);
+							                                   "Lavalink session {sessionId} resumed", ready.SessionId);
 						break;
 					}
 					case OpType.PlayerUpdate:
 					{
 						this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsRx, null,
-							"Received Lavalink Player Update OP: {data}", json);
+						                             "Received Lavalink Player Update OP: {data}", json);
 						var playerUpdate = LavalinkJson.DeserializeObject<PlayerUpdateOp>(json)!;
 						if (this.ConnectedPlayersInternal.TryGetValue(playerUpdate.GuildId, out var value))
 						{
 							value.Player.PlayerState = playerUpdate.State;
-							await value.StateUpdatedEvent.InvokeAsync(value, new(this.Discord, playerUpdate.State)).ConfigureAwait(false);
+							await value.StateUpdatedEvent.InvokeAsync(value, new(this.Discord, playerUpdate.State))
+								.ConfigureAwait(false);
 						}
 
 						break;
 					}
 					case OpType.Stats:
 						this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsRx, null,
-							"Received Lavalink Stats OP: {data}", json);
+						                             "Received Lavalink Stats OP: {data}", json);
 						var stats = LavalinkJson.DeserializeObject<StatsOp>(json!)!;
 						this.Statistics = new(stats);
-						await this._statsReceived.InvokeAsync(this, new(this.Discord, this.Statistics)).ConfigureAwait(false);
+						await this._statsReceived.InvokeAsync(this, new(this.Discord, this.Statistics))
+							.ConfigureAwait(false);
 						break;
 					case OpType.Event:
 						this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsRx, null,
-							"Received Lavalink Event OP: {data}", json);
+						                             "Received Lavalink Event OP: {data}", json);
 						var eventOp = LavalinkJson.DeserializeObject<EventOp>(json!)!;
 
 						LavalinkGuildPlayer? player = null;
 
 						if (!string.IsNullOrEmpty(eventOp.GuildId) &&
-							this.ConnectedPlayersInternal.TryGetValue(Convert.ToUInt64(eventOp.GuildId),
-								out var eventPlayer))
+						    this.ConnectedPlayersInternal.TryGetValue(Convert.ToUInt64(eventOp.GuildId),
+						                                              out var eventPlayer))
 							player = eventPlayer;
 						switch (eventOp.Type)
 						{
 							case EventOpType.TrackStartEvent:
 								var startEvent = LavalinkJson.DeserializeObject<TrackStartEvent>(json!)!;
 								if (player != null)
-									await player.TrackStartedEvent.InvokeAsync(player, new(this.Discord, startEvent)).ConfigureAwait(false);
+									await player.TrackStartedEvent.InvokeAsync(player, new(this.Discord, startEvent))
+										.ConfigureAwait(false);
 								break;
 							case EventOpType.TrackEndEvent:
 								var endEvent = LavalinkJson.DeserializeObject<TrackEndEvent>(json!)!;
 								if (player != null)
-									await player.TrackEndedEvent.InvokeAsync(player, new(this.Discord, endEvent)).ConfigureAwait(false);
+									await player.TrackEndedEvent.InvokeAsync(player, new(this.Discord, endEvent))
+										.ConfigureAwait(false);
 								break;
 							case EventOpType.TrackStuckEvent:
 								var stuckEvent = LavalinkJson.DeserializeObject<TrackStuckEvent>(json!)!;
 								if (player != null)
-									await player.TrackStuckEvent.InvokeAsync(player, new(this.Discord, stuckEvent)).ConfigureAwait(false);
+									await player.TrackStuckEvent.InvokeAsync(player, new(this.Discord, stuckEvent))
+										.ConfigureAwait(false);
 								break;
 							case EventOpType.TrackExceptionEvent:
 								var exceptionEvent = LavalinkJson.DeserializeObject<TrackExceptionEvent>(json!)!;
@@ -606,12 +636,14 @@ public sealed class LavalinkSession
 								break;
 							case EventOpType.WebsocketClosedEvent:
 								var websocketClosedEvent = LavalinkJson.DeserializeObject<WebSocketClosedEvent>(json!)!;
-								await this._websocketClosed.InvokeAsync(this, new(this.Discord, websocketClosedEvent)).ConfigureAwait(false);
+								await this._websocketClosed.InvokeAsync(this, new(this.Discord, websocketClosedEvent))
+									.ConfigureAwait(false);
 								break;
 							default:
 								var ex = new InvalidDataException("Lavalink send an unknown up");
 								this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsException, ex,
-									"Wtf QwQ? Received unknown Lavalink Event OP type: {type}", eventOp.Type);
+								                             "Wtf QwQ? Received unknown Lavalink Event OP type: {type}",
+								                             eventOp.Type);
 								throw ex;
 						}
 
@@ -620,7 +652,7 @@ public sealed class LavalinkSession
 					{
 						var ex = new InvalidDataException("Lavalink send an unknown up");
 						this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsException, ex,
-							"Tf O.o? Received unknown Lavalink OP: {data}", json);
+						                             "Tf O.o? Received unknown Lavalink OP: {data}", json);
 						throw ex;
 					}
 				}
@@ -641,7 +673,10 @@ public sealed class LavalinkSession
 	/// <param name="client">The websocket client.</param>
 	/// <param name="args">The event args.</param>
 	private Task Lavalink_WebSocket_ExceptionThrown(IWebSocketClient client, SocketErrorEventArgs args)
-		=> this._lavalinkSocketError.InvokeAsync(this, new(client.ServiceProvider) { Exception = args.Exception });
+		=> this._lavalinkSocketError.InvokeAsync(this, new(client.ServiceProvider)
+		{
+			Exception = args.Exception
+		});
 
 	/// <summary>
 	/// Handles the event when the websocket disconnected.
@@ -652,7 +687,9 @@ public sealed class LavalinkSession
 	{
 		if (this.IsConnected && args.CloseCode != 1001 && args.CloseCode != -1)
 		{
-			this.Discord.Logger.LogWarning(LavalinkEvents.LavalinkSessionConnectionClosed, "Connection broken :/ ({code}, '{message}'), reconnecting", args.CloseCode, args.CloseMessage);
+			this.Discord.Logger.LogWarning(LavalinkEvents.LavalinkSessionConnectionClosed,
+			                               "Connection broken :/ ({code}, '{message}'), reconnecting", args.CloseCode,
+			                               args.CloseMessage);
 			await this._lavalinkSessionDisconnected.InvokeAsync(this, new(this, false)).ConfigureAwait(false);
 
 			if (this.Config.SocketAutoReconnect)
@@ -660,7 +697,9 @@ public sealed class LavalinkSession
 		}
 		else if (args.CloseCode != 1001 && args.CloseCode != -1)
 		{
-			this.Discord.Logger.LogInformation(LavalinkEvents.LavalinkSessionConnectionClosed, "Connection closed ({code}, '{message}')", args.CloseCode, args.CloseMessage);
+			this.Discord.Logger.LogInformation(LavalinkEvents.LavalinkSessionConnectionClosed,
+			                                   "Connection closed ({code}, '{message}')", args.CloseCode,
+			                                   args.CloseMessage);
 			this.SessionDisconnected?.Invoke(this);
 			await this._lavalinkSessionDisconnected.InvokeAsync(this, new(this, true)).ConfigureAwait(false);
 		}
@@ -671,15 +710,18 @@ public sealed class LavalinkSession
 			foreach (var kvp in this.ConnectedPlayersInternal)
 			{
 				await kvp.Value.DisconnectVoiceAsync().ConfigureAwait(false);
-				_ = Task.Run(async () => await this.GuildPlayerDestroyedEvent.InvokeAsync(this, new(kvp.Value)).ConfigureAwait(false));
+				_ = Task.Run(async () => await this.GuildPlayerDestroyedEvent.InvokeAsync(this, new(kvp.Value))
+					                         .ConfigureAwait(false));
 				_ = this.ConnectedPlayersInternal.TryRemove(kvp.Key, out _);
 			}
+
 			this.SessionDisconnected?.Invoke(this);
 			await this._lavalinkSessionDisconnected.InvokeAsync(this, new(this, false)).ConfigureAwait(false);
 
 			if (this.Config.SocketAutoReconnect)
 				await this.EstablishConnectionAsync().ConfigureAwait(false);
 		}
+
 		args.Handled = true;
 	}
 
@@ -713,7 +755,8 @@ public sealed class LavalinkSession
 		if (args.User.Id != this.Discord.CurrentUser!.Id)
 			return Task.CompletedTask;
 
-		if (args.After.Channel == null! && this.IsConnected && this.ConnectedPlayersInternal.TryGetValue(gld.Id, out var dGuildPlayer))
+		if (args.After.Channel == null! && this.IsConnected &&
+		    this.ConnectedPlayersInternal.TryGetValue(gld.Id, out var dGuildPlayer))
 			_ = Task.Run(async () =>
 			{
 				await Task.Delay(this.Config.WebSocketCloseTimeout).ConfigureAwait(false);
@@ -724,7 +767,8 @@ public sealed class LavalinkSession
 						await this.GuildPlayerDestroyedEvent.InvokeAsync(this, new(dGuildPlayer)).ConfigureAwait(false);
 				});
 			});
-		else if (!string.IsNullOrWhiteSpace(args.SessionId) && this.ConnectedPlayersInternal.TryGetValue(gld.Id, out var guildPlayer))
+		else if (!string.IsNullOrWhiteSpace(args.SessionId) &&
+		         this.ConnectedPlayersInternal.TryGetValue(gld.Id, out var guildPlayer))
 			_ = Task.Run(async () =>
 			{
 				var state = new LavalinkVoiceState()
@@ -734,11 +778,13 @@ public sealed class LavalinkSession
 					SessionId = args.After.SessionId
 				};
 				guildPlayer.UpdateVoiceState(state);
-				await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, guildPlayer.GuildId, state).ConfigureAwait(false);
+				await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, guildPlayer.GuildId, state)
+					.ConfigureAwait(false);
 				this.ConnectedPlayersInternal[gld.Id].ChannelId = args.After?.ChannelId ?? guildPlayer.ChannelId;
 			});
 
-		if (!string.IsNullOrWhiteSpace(args.SessionId) && args.Channel != null! && this._voiceStateUpdates.TryRemove(gld.Id, out var xe))
+		if (!string.IsNullOrWhiteSpace(args.SessionId) && args.Channel != null! &&
+		    this._voiceStateUpdates.TryRemove(gld.Id, out var xe))
 			xe.SetResult(args);
 
 		return Task.CompletedTask;
@@ -764,7 +810,8 @@ public sealed class LavalinkSession
 					Token = args.VoiceToken,
 					SessionId = guildPlayer.Player.VoiceState.SessionId
 				};
-				await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, guildPlayer.GuildId, state).ConfigureAwait(false);
+				await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, guildPlayer.GuildId, state)
+					.ConfigureAwait(false);
 				guildPlayer.UpdateVoiceState(state);
 			});
 

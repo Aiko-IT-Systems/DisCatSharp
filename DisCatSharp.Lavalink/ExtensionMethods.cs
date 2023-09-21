@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -29,7 +28,8 @@ public static class ExtensionMethods
 			throw new InvalidOperationException("Lavalink is already enabled for that client.");
 
 		if (!client.Configuration.Intents.HasIntent(DiscordIntents.GuildVoiceStates))
-			client.Logger.LogCritical(LavalinkEvents.Intents, "The Lavalink extension is registered but the guild voice states intent is not enabled. It is highly recommended to enable it.");
+			client.Logger.LogCritical(LavalinkEvents.Intents,
+			                          "The Lavalink extension is registered but the guild voice states intent is not enabled. It is highly recommended to enable it.");
 
 		var lava = new LavalinkExtension();
 		client.AddExtension(lava);
@@ -41,7 +41,8 @@ public static class ExtensionMethods
 	/// </summary>
 	/// <param name="client">Discord sharded client to create Lavalink instances for.</param>
 	/// <returns>A dictionary of created Lavalink clients.</returns>
-	public static async Task<IReadOnlyDictionary<int, LavalinkExtension>> UseLavalinkAsync(this DiscordShardedClient client)
+	public static async Task<IReadOnlyDictionary<int, LavalinkExtension>> UseLavalinkAsync(
+		this DiscordShardedClient client)
 	{
 		var modules = new Dictionary<int, LavalinkExtension>();
 		await client.InitializeShardsAsync().ConfigureAwait(false);
@@ -70,7 +71,8 @@ public static class ExtensionMethods
 	/// </summary>
 	/// <param name="client">The shard client to retrieve <see cref="LavalinkExtension"/> instances from.</param>
 	/// <returns>A dictionary containing <see cref="LavalinkExtension"/> instances for each shard.</returns>
-	public static async Task<IReadOnlyDictionary<int, LavalinkExtension?>> GetLavalinkAsync(this DiscordShardedClient client)
+	public static async Task<IReadOnlyDictionary<int, LavalinkExtension?>> GetLavalinkAsync(
+		this DiscordShardedClient client)
 	{
 		await client.InitializeShardsAsync().ConfigureAwait(false);
 		var extensions = new Dictionary<int, LavalinkExtension>();
@@ -103,7 +105,7 @@ public static class ExtensionMethods
 
 		var lava = discord.GetLavalink();
 		return lava == null
-			? throw new InvalidOperationException("Lavalink is not initialized for this Discord client.")
-			: session.ConnectAsync(channel);
+			       ? throw new InvalidOperationException("Lavalink is not initialized for this Discord client.")
+			       : session.ConnectAsync(channel);
 	}
 }

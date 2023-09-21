@@ -1,4 +1,3 @@
-
 using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp.Lavalink.Enums;

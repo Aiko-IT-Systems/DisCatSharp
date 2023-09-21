@@ -17,10 +17,12 @@ internal sealed class Rtp : IDisposable
 	/// The rtp no extension.
 	/// </summary>
 	private const byte RTP_NO_EXTENSION = 0x80;
+
 	/// <summary>
 	/// The rtp extension.
 	/// </summary>
 	private const byte RTP_EXTENSION = 0x90;
+
 	/// <summary>
 	/// The rtp version.
 	/// </summary>
@@ -30,7 +32,8 @@ internal sealed class Rtp : IDisposable
 	/// Initializes a new instance of the <see cref="Rtp"/> class.
 	/// </summary>
 	public Rtp()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Encodes the header.
@@ -48,9 +51,10 @@ internal sealed class Rtp : IDisposable
 		target[1] = RTP_VERSION;
 
 		// Write data big endian
-		BinaryPrimitives.WriteUInt16BigEndian(target[2..], sequence);  // header + magic
+		BinaryPrimitives.WriteUInt16BigEndian(target[2..], sequence); // header + magic
 		BinaryPrimitives.WriteUInt32BigEndian(target[4..], timestamp); // header + magic + sizeof(sequence)
-		BinaryPrimitives.WriteUInt32BigEndian(target[8..], ssrc);      // header + magic + sizeof(sequence) + sizeof(timestamp)
+		BinaryPrimitives.WriteUInt32BigEndian(target[8..],
+		                                      ssrc); // header + magic + sizeof(sequence) + sizeof(timestamp)
 	}
 
 	/// <summary>
@@ -58,7 +62,9 @@ internal sealed class Rtp : IDisposable
 	/// </summary>
 	/// <param name="source">The source.</param>
 	/// <returns>A bool.</returns>
-	public bool IsRtpHeader(ReadOnlySpan<byte> source) => source.Length >= HEADER_SIZE && (source[0] == RTP_NO_EXTENSION || source[0] == RTP_EXTENSION) && source[1] == RTP_VERSION;
+	public bool IsRtpHeader(ReadOnlySpan<byte> source) => source.Length >= HEADER_SIZE &&
+	                                                      (source[0] == RTP_NO_EXTENSION ||
+	                                                       source[0] == RTP_EXTENSION) && source[1] == RTP_VERSION;
 
 	/// <summary>
 	/// Decodes the header.
@@ -68,7 +74,8 @@ internal sealed class Rtp : IDisposable
 	/// <param name="timestamp">The timestamp.</param>
 	/// <param name="ssrc">The ssrc.</param>
 	/// <param name="hasExtension">If true, has extension.</param>
-	public void DecodeHeader(ReadOnlySpan<byte> source, out ushort sequence, out uint timestamp, out uint ssrc, out bool hasExtension)
+	public void DecodeHeader(ReadOnlySpan<byte> source, out ushort sequence, out uint timestamp, out uint ssrc,
+	                         out bool hasExtension)
 	{
 		if (source.Length < HEADER_SIZE)
 			throw new ArgumentException("Header buffer is too short.", nameof(source));
@@ -96,7 +103,7 @@ internal sealed class Rtp : IDisposable
 			EncryptionMode.XSalsa20Poly1305 => HEADER_SIZE + encryptedLength,
 			EncryptionMode.XSalsa20Poly1305Suffix => HEADER_SIZE + encryptedLength + Interop.SodiumNonceSize,
 			EncryptionMode.XSalsa20Poly1305Lite => HEADER_SIZE + encryptedLength + 4,
-			_ => throw new ArgumentException("Unsupported encryption mode.", nameof(encryptionMode)),
+			_ => throw new ArgumentException("Unsupported encryption mode.", nameof(encryptionMode))
 		};
 
 	/// <summary>
@@ -131,6 +138,5 @@ internal sealed class Rtp : IDisposable
 	/// </summary>
 	public void Dispose()
 	{
-
 	}
 }

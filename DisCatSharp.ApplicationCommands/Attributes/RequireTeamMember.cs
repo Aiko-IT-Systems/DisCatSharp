@@ -16,7 +16,8 @@ public sealed class ApplicationCommandRequireTeamMemberAttribute : ApplicationCo
 	/// Defines that this application command is restricted to the team members of the bot.
 	/// </summary>
 	public ApplicationCommandRequireTeamMemberAttribute()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Runs checks.
@@ -24,6 +25,8 @@ public sealed class ApplicationCommandRequireTeamMemberAttribute : ApplicationCo
 	public override Task<bool> ExecuteChecksAsync(BaseContext ctx)
 	{
 		var app = ctx.Client.CurrentApplication!;
-		return app.Team is null ? Task.FromResult(app.Owner.Id == ctx.User.Id) : Task.FromResult(app.Members.Any(x => x.Id == ctx.User.Id));
+		return app.Team is null
+			       ? Task.FromResult(app.Owner.Id == ctx.User.Id)
+			       : Task.FromResult(app.Members.Any(x => x.Id == ctx.User.Id));
 	}
 }

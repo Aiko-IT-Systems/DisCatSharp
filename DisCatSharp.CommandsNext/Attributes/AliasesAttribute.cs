@@ -23,7 +23,8 @@ public sealed class AliasesAttribute : Attribute
 	public AliasesAttribute(params string[] aliases)
 	{
 		if (aliases.Any(xa => xa == null || xa.Any(xc => char.IsWhiteSpace(xc))))
-			throw new ArgumentException("Aliases cannot contain whitespace characters or null strings.", nameof(aliases));
+			throw new ArgumentException("Aliases cannot contain whitespace characters or null strings.",
+			                            nameof(aliases));
 
 		this.Aliases = new ReadOnlyCollection<string>(aliases);
 	}

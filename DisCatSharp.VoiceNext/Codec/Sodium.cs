@@ -58,7 +58,9 @@ internal sealed class Sodium : IDisposable
 	public Sodium(ReadOnlyMemory<byte> key)
 	{
 		if (key.Length != Interop.SodiumKeySize)
-			throw new ArgumentException($"Invalid Sodium key size. Key needs to have a length of {Interop.SodiumKeySize} bytes.", nameof(key));
+			throw new
+				ArgumentException($"Invalid Sodium key size. Key needs to have a length of {Interop.SodiumKeySize} bytes.",
+				                  nameof(key));
 
 		this._key = key;
 
@@ -74,10 +76,13 @@ internal sealed class Sodium : IDisposable
 	public void GenerateNonce(ReadOnlySpan<byte> rtpHeader, Span<byte> target)
 	{
 		if (rtpHeader.Length != Rtp.HEADER_SIZE)
-			throw new ArgumentException($"RTP header needs to have a length of exactly {Rtp.HEADER_SIZE} bytes.", nameof(rtpHeader));
+			throw new ArgumentException($"RTP header needs to have a length of exactly {Rtp.HEADER_SIZE} bytes.",
+			                            nameof(rtpHeader));
 
 		if (target.Length != Interop.SodiumNonceSize)
-			throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.", nameof(target));
+			throw new
+				ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.",
+				                  nameof(target));
 
 		// Write the header to the beginning of the span.
 		rtpHeader.CopyTo(target);
@@ -93,7 +98,9 @@ internal sealed class Sodium : IDisposable
 	public void GenerateNonce(Span<byte> target)
 	{
 		if (target.Length != Interop.SodiumNonceSize)
-			throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.", nameof(target));
+			throw new
+				ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.",
+				                  nameof(target));
 
 		this._csprng.GetBytes(this._buffer);
 		this._buffer.AsSpan().CopyTo(target);
@@ -107,7 +114,9 @@ internal sealed class Sodium : IDisposable
 	public void GenerateNonce(uint nonce, Span<byte> target)
 	{
 		if (target.Length != Interop.SodiumNonceSize)
-			throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.", nameof(target));
+			throw new
+				ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.",
+				                  nameof(target));
 
 		// Write the uint to memory
 		BinaryPrimitives.WriteUInt32BigEndian(target, nonce);
@@ -151,7 +160,9 @@ internal sealed class Sodium : IDisposable
 	public void GetNonce(ReadOnlySpan<byte> source, Span<byte> target, EncryptionMode encryptionMode)
 	{
 		if (target.Length != Interop.SodiumNonceSize)
-			throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.", nameof(target));
+			throw new
+				ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.",
+				                  nameof(target));
 
 		switch (encryptionMode)
 		{
@@ -181,10 +192,14 @@ internal sealed class Sodium : IDisposable
 	public void Encrypt(ReadOnlySpan<byte> source, Span<byte> target, ReadOnlySpan<byte> nonce)
 	{
 		if (nonce.Length != Interop.SodiumNonceSize)
-			throw new ArgumentException($"Invalid nonce size. Nonce needs to have a length of {Interop.SodiumNonceSize} bytes.", nameof(nonce));
+			throw new
+				ArgumentException($"Invalid nonce size. Nonce needs to have a length of {Interop.SodiumNonceSize} bytes.",
+				                  nameof(nonce));
 
 		if (target.Length != Interop.SodiumMacSize + source.Length)
-			throw new ArgumentException($"Invalid target buffer size. Target buffer needs to have a length that is a sum of input buffer length and Sodium MAC size ({Interop.SodiumMacSize} bytes).", nameof(target));
+			throw new
+				ArgumentException($"Invalid target buffer size. Target buffer needs to have a length that is a sum of input buffer length and Sodium MAC size ({Interop.SodiumMacSize} bytes).",
+				                  nameof(target));
 
 		int result;
 		if ((result = Interop.Encrypt(source, target, this._key.Span, nonce)) != 0)
@@ -200,10 +215,14 @@ internal sealed class Sodium : IDisposable
 	public void Decrypt(ReadOnlySpan<byte> source, Span<byte> target, ReadOnlySpan<byte> nonce)
 	{
 		if (nonce.Length != Interop.SodiumNonceSize)
-			throw new ArgumentException($"Invalid nonce size. Nonce needs to have a length of {Interop.SodiumNonceSize} bytes.", nameof(nonce));
+			throw new
+				ArgumentException($"Invalid nonce size. Nonce needs to have a length of {Interop.SodiumNonceSize} bytes.",
+				                  nameof(nonce));
 
 		if (target.Length != source.Length - Interop.SodiumMacSize)
-			throw new ArgumentException($"Invalid target buffer size. Target buffer needs to have a length that is input buffer decreased by Sodium MAC size ({Interop.SodiumMacSize} bytes).", nameof(target));
+			throw new
+				ArgumentException($"Invalid target buffer size. Target buffer needs to have a length that is input buffer decreased by Sodium MAC size ({Interop.SodiumMacSize} bytes).",
+				                  nameof(target));
 
 		int result;
 		if ((result = Interop.Decrypt(source, target, this._key.Span, nonce)) != 0)
@@ -227,7 +246,8 @@ internal sealed class Sodium : IDisposable
 			if (availableModes.Contains(kvMode.Key))
 				return kvMode;
 
-		throw new CryptographicException("Could not negotiate Sodium encryption modes, as none of the modes offered by Discord are supported. This is usually an indicator that something went very wrong.");
+		throw new
+			CryptographicException("Could not negotiate Sodium encryption modes, as none of the modes offered by Discord are supported. This is usually an indicator that something went very wrong.");
 	}
 
 	/// <summary>

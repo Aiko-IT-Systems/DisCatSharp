@@ -41,15 +41,18 @@ public sealed class DiscordApplicationCommandOptionChoice
 	/// <param name="name">The name of the parameter choice.</param>
 	/// <param name="value">The value of the parameter choice.</param>
 	/// <param name="nameLocalizations">The localizations of the parameter choice name.</param>
-	public DiscordApplicationCommandOptionChoice(string name, object value, DiscordApplicationCommandLocalization nameLocalizations = null)
+	public DiscordApplicationCommandOptionChoice(string name, object value,
+	                                             DiscordApplicationCommandLocalization nameLocalizations = null)
 	{
 		if (!(value is string or long or int or double))
-			throw new InvalidOperationException($"Only {typeof(string)}, {typeof(long)}, {typeof(double)} or {typeof(int)} types may be passed to a command option choice.");
+			throw new
+				InvalidOperationException($"Only {typeof(string)}, {typeof(long)}, {typeof(double)} or {typeof(int)} types may be passed to a command option choice.");
 
 		if (name.Length > 100)
 			throw new ArgumentException("Application command choice name cannot exceed 100 characters.", nameof(name));
 		if (value is string { Length: > 100 })
-			throw new ArgumentException("Application command choice value cannot exceed 100 characters.", nameof(value));
+			throw new ArgumentException("Application command choice value cannot exceed 100 characters.",
+			                            nameof(value));
 
 		this.Name = name;
 		this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();

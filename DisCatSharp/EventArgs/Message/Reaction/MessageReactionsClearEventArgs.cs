@@ -32,5 +32,8 @@ public class MessageReactionsClearEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="MessageReactionsClearEventArgs"/> class.
 	/// </summary>
-	internal MessageReactionsClearEventArgs(IServiceProvider provider) : base(provider) { }
+	internal MessageReactionsClearEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

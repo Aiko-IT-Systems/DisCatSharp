@@ -79,13 +79,16 @@ public sealed class VoiceNextExtension : BaseExtension
 	public async Task<VoiceNextConnection> ConnectAsync(DiscordChannel channel)
 	{
 		if (channel.Type != ChannelType.Voice && channel.Type != ChannelType.Stage)
-			throw new ArgumentException("Invalid channel specified; needs to be voice or stage channel", nameof(channel));
+			throw new ArgumentException("Invalid channel specified; needs to be voice or stage channel",
+			                            nameof(channel));
 
 		if (channel.Guild == null)
 			throw new ArgumentException("Invalid channel specified; needs to be guild channel", nameof(channel));
 
-		if (!channel.PermissionsFor(channel.Guild.CurrentMember).HasPermission(Permissions.AccessChannels | Permissions.UseVoice))
-			throw new InvalidOperationException("You need AccessChannels and UseVoice permission to connect to this voice channel");
+		if (!channel.PermissionsFor(channel.Guild.CurrentMember)
+			    .HasPermission(Permissions.AccessChannels | Permissions.UseVoice))
+			throw new
+				InvalidOperationException("You need AccessChannels and UseVoice permission to connect to this voice channel");
 
 		var gld = channel.Guild;
 		if (this._activeConnections.ContainsKey(gld.Id))
@@ -187,7 +190,8 @@ public sealed class VoiceNextExtension : BaseExtension
 			if (this._activeConnections.TryGetValue(e.Guild.Id, out var vnc))
 				vnc.TargetChannel = e.Channel;
 
-			if (!string.IsNullOrWhiteSpace(e.SessionId) && e.Channel != null && this._voiceStateUpdates.TryRemove(gld.Id, out var xe))
+			if (!string.IsNullOrWhiteSpace(e.SessionId) && e.Channel != null &&
+			    this._voiceStateUpdates.TryRemove(gld.Id, out var xe))
 				xe.SetResult(e);
 		}
 
@@ -228,7 +232,12 @@ public sealed class VoiceNextExtension : BaseExtension
 			{
 				eph = eps;
 			}
-			vnc.WebSocketEndpoint = new() { Hostname = eph, Port = epp };
+
+			vnc.WebSocketEndpoint = new()
+			{
+				Hostname = eph,
+				Port = epp
+			};
 
 			vnc.Resume = false;
 			await vnc.ReconnectAsync().ConfigureAwait(false);

@@ -8,7 +8,8 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a guild application command permission.
 /// </summary>
-public sealed class DiscordGuildApplicationCommandPermission : SnowflakeObject, IEquatable<DiscordGuildApplicationCommandPermission>
+public sealed class DiscordGuildApplicationCommandPermission : SnowflakeObject,
+                                                               IEquatable<DiscordGuildApplicationCommandPermission>
 {
 	/// <summary>
 	/// Gets the id of the command.
@@ -44,7 +45,9 @@ public sealed class DiscordGuildApplicationCommandPermission : SnowflakeObject, 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordGuildApplicationCommandPermission"/> class.
 	/// </summary>
-	internal DiscordGuildApplicationCommandPermission() { }
+	internal DiscordGuildApplicationCommandPermission()
+	{
+	}
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordGuildApplicationCommandPermission"/> object is equal to another object.
@@ -60,7 +63,8 @@ public sealed class DiscordGuildApplicationCommandPermission : SnowflakeObject, 
 	/// <param name="e1">The first command object.</param>
 	/// <param name="e2">The second command object.</param>
 	/// <returns>Whether the two <see cref="DiscordGuildApplicationCommandPermission"/> objects are equal.</returns>
-	public static bool operator ==(DiscordGuildApplicationCommandPermission e1, DiscordGuildApplicationCommandPermission e2)
+	public static bool operator ==(DiscordGuildApplicationCommandPermission e1,
+	                               DiscordGuildApplicationCommandPermission e2)
 		=> e1.Equals(e2);
 
 	/// <summary>
@@ -69,7 +73,8 @@ public sealed class DiscordGuildApplicationCommandPermission : SnowflakeObject, 
 	/// <param name="e1">The first command object.</param>
 	/// <param name="e2">The second command object.</param>
 	/// <returns>Whether the two <see cref="DiscordGuildApplicationCommandPermission"/> objects are not equal.</returns>
-	public static bool operator !=(DiscordGuildApplicationCommandPermission e1, DiscordGuildApplicationCommandPermission e2)
+	public static bool operator !=(DiscordGuildApplicationCommandPermission e1,
+	                               DiscordGuildApplicationCommandPermission e2)
 		=> !(e1 == e2);
 
 	/// <summary>
@@ -77,7 +82,8 @@ public sealed class DiscordGuildApplicationCommandPermission : SnowflakeObject, 
 	/// </summary>
 	/// <param name="other">The object to compare to.</param>
 	/// <returns>Whether the two <see cref="DiscordGuildApplicationCommandPermission"/> objects are not equal.</returns>
-	public override bool Equals(object other) => other is DiscordGuildApplicationCommandPermission dgacp && this.Equals(dgacp);
+	public override bool Equals(object other)
+		=> other is DiscordGuildApplicationCommandPermission dgacp && this.Equals(dgacp);
 
 	/// <summary>
 	/// Gets the hash code for this <see cref="DiscordGuildApplicationCommandPermission"/>.

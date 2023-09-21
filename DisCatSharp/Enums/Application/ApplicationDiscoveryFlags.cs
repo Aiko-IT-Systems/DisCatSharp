@@ -13,7 +13,8 @@ public static class ApplicationDiscoveryFlagExtensions
 	/// <param name="baseFlags">The existing flags.</param>
 	/// <param name="flag">The flags to search for.</param>
 	/// <returns></returns>
-	public static bool HasApplicationDiscoveryFlag(this ApplicationDiscoveryFlags baseFlags, ApplicationDiscoveryFlags flag) => (baseFlags & flag) == flag;
+	public static bool HasApplicationDiscoveryFlag(this ApplicationDiscoveryFlags baseFlags,
+	                                               ApplicationDiscoveryFlags flag) => (baseFlags & flag) == flag;
 }
 
 [Flags]
@@ -22,85 +23,85 @@ public enum ApplicationDiscoveryFlags : long
 	/// <summary>
 	/// Application is verified.
 	/// </summary>
-	IsVerified = 1<<0,
+	IsVerified = 1 << 0,
 
 	/// <summary>
 	/// Application has at least one tag set.
 	/// </summary>
-	HasAtLeastOneTag = 1<<1,
+	HasAtLeastOneTag = 1 << 1,
 
 	/// <summary>
 	/// Application has a description.
 	/// </summary>
-	HasDescription = 1<<2,
+	HasDescription = 1 << 2,
 
 	/// <summary>
 	/// Applications has a terms of service.
 	/// </summary>
-	HasTermsOfService = 1<<3,
+	HasTermsOfService = 1 << 3,
 
 	/// <summary>
 	/// Application has a privacy policy.
 	/// </summary>
-	HasPrivacyPolicy = 1<<4,
+	HasPrivacyPolicy = 1 << 4,
 
 	/// <summary>
 	/// Application has custom install url or install params.
 	/// </summary>
-	HasCustomInstallUrlOrInstallParams = 1<<5,
+	HasCustomInstallUrlOrInstallParams = 1 << 5,
 
 	/// <summary>
 	/// Application's name is safe for work.
 	/// </summary>
-	HasSafeName = 1<<6,
+	HasSafeName = 1 << 6,
 
 	/// <summary>
 	/// Application's description is safe for work.
 	/// </summary>
-	HasSafeDescription = 1<<7,
+	HasSafeDescription = 1 << 7,
 
 	/// <summary>
 	/// Application has the message content approved or utilizes application commands.
 	/// </summary>
-	HasApprovedCommandsOrMessageContent = 1<<8,
+	HasApprovedCommandsOrMessageContent = 1 << 8,
 
 	/// <summary>
 	/// Application has a support guild set.
 	/// </summary>
-	HasSupportGuild = 1<<9,
+	HasSupportGuild = 1 << 9,
 
 	/// <summary>
 	/// Application's commands are safe for work.
 	/// </summary>
-	HasSafeCommands = 1<<10,
+	HasSafeCommands = 1 << 10,
 
 	/// <summary>
 	/// Application's owner has MFA enabled.
 	/// </summary>
-	OwnerHasMfa = 1<<11,
+	OwnerHasMfa = 1 << 11,
 
 	/// <summary>
 	/// Application's directory long description is safe for work.
 	/// </summary>
-	HasSafeDirectoryLongDescription = 1<<12,
+	HasSafeDirectoryLongDescription = 1 << 12,
 
 	/// <summary>
 	/// Application has at least one supported locale set.
 	/// </summary>
-	HasAtLeastOneSupportedLocale = 1<<13,
+	HasAtLeastOneSupportedLocale = 1 << 13,
 
 	/// <summary>
 	/// Application's directory short description is safe for work.
 	/// </summary>
-	HasSafeDirectoryShortDescription = 1<<14,
+	HasSafeDirectoryShortDescription = 1 << 14,
 
 	/// <summary>
 	/// Application's role connections metadata is safe for work.
 	/// </summary>
-	HasSafeRoleConnections = 1<<15,
+	HasSafeRoleConnections = 1 << 15,
 
 	/// <summary>
 	/// Application has met all criteria and is eligible for discovery.
 	/// </summary>
-	IsEligible = 1<<16
+	IsEligible = 1 << 16
 }

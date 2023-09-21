@@ -22,5 +22,8 @@ public class GuildScheduledEventCreateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="GuildScheduledEventCreateEventArgs"/> class.
 	/// </summary>
-	internal GuildScheduledEventCreateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal GuildScheduledEventCreateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{
+	}
 }

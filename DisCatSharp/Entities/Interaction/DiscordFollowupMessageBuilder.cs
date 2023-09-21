@@ -27,6 +27,7 @@ public sealed class DiscordFollowupMessageBuilder
 			this.FlagsChanged = true;
 		}
 	}
+
 	private bool EPH { get; set; }
 
 	/// <summary>
@@ -41,6 +42,7 @@ public sealed class DiscordFollowupMessageBuilder
 			this.FlagsChanged = true;
 		}
 	}
+
 	private bool EMB_SUP { get; set; }
 
 	/// <summary>
@@ -55,6 +57,7 @@ public sealed class DiscordFollowupMessageBuilder
 			this.FlagsChanged = true;
 		}
 	}
+
 	private bool NOTI_SUP { get; set; }
 
 	/// <summary>
@@ -76,32 +79,36 @@ public sealed class DiscordFollowupMessageBuilder
 			this._content = value;
 		}
 	}
+
 	private string _content;
 
 	/// <summary>
 	/// Embeds to send on followup message.
 	/// </summary>
 	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
+
 	private readonly List<DiscordEmbed> _embeds = new();
 
 	/// <summary>
 	/// Files to send on this followup message.
 	/// </summary>
 	public IReadOnlyList<DiscordMessageFile> Files => this._files;
+
 	private readonly List<DiscordMessageFile> _files = new();
 
 	/// <summary>
 	/// Components to send on this followup message.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
+
 	private readonly List<DiscordActionRowComponent> _components = new();
 
 	/// <summary>
 	/// Mentions to send on this followup message.
 	/// </summary>
 	public IReadOnlyList<IMention> Mentions => this._mentions;
-	private readonly List<IMention> _mentions = new();
 
+	private readonly List<IMention> _mentions = new();
 
 	/// <summary>
 	/// Appends a collection of components to the message.
@@ -148,6 +155,7 @@ public sealed class DiscordFollowupMessageBuilder
 		this._components.Add(arc);
 		return this;
 	}
+
 	/// <summary>
 	/// Indicates if the followup message must use text-to-speech.
 	/// </summary>
@@ -200,7 +208,8 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	public DiscordFollowupMessageBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string description = null)
+	public DiscordFollowupMessageBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false,
+	                                             string description = null)
 	{
 		if (this.Files.Count >= 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -223,7 +232,8 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	public DiscordFollowupMessageBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string description = null)
+	public DiscordFollowupMessageBuilder AddFile(FileStream stream, bool resetStreamPosition = false,
+	                                             string description = null)
 	{
 		if (this.Files.Count >= 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -342,7 +352,8 @@ public sealed class DiscordFollowupMessageBuilder
 	/// </summary>
 	internal void Validate()
 	{
-		if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any() && !this.Components.Any())
+		if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any() &&
+		    !this.Components.Any())
 			throw new ArgumentException("You must specify content, an embed, a component, or at least one file.");
 	}
 }

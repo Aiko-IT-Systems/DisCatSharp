@@ -22,8 +22,10 @@ public static class ChannelExtensions
 	/// <param name="predicate">A predicate that should return <see langword="true"/> if a message matches.</param>
 	/// <param name="timeoutOverride">Overrides the timeout set in <see cref="InteractivityConfiguration.Timeout"/></param>
 	/// <exception cref="InvalidOperationException">Thrown if interactivity is not enabled for the client associated with the channel.</exception>
-	public static Task<InteractivityResult<DiscordMessage>> GetNextMessageAsync(this DiscordChannel channel, Func<DiscordMessage, bool> predicate, TimeSpan? timeoutOverride = null)
-		=> GetInteractivity(channel).WaitForMessageAsync(msg => msg.ChannelId == channel.Id && predicate(msg), timeoutOverride);
+	public static Task<InteractivityResult<DiscordMessage>> GetNextMessageAsync(
+		this DiscordChannel channel, Func<DiscordMessage, bool> predicate, TimeSpan? timeoutOverride = null)
+		=> GetInteractivity(channel)
+			.WaitForMessageAsync(msg => msg.ChannelId == channel.Id && predicate(msg), timeoutOverride);
 
 	/// <summary>
 	/// Waits for the next message sent in this channel.
@@ -31,7 +33,8 @@ public static class ChannelExtensions
 	/// <param name="channel">The channel to monitor.</param>
 	/// <param name="timeoutOverride">Overrides the timeout set in <see cref="InteractivityConfiguration.Timeout"/></param>
 	/// <exception cref="InvalidOperationException">Thrown if interactivity is not enabled for the client associated with the channel.</exception>
-	public static Task<InteractivityResult<DiscordMessage>> GetNextMessageAsync(this DiscordChannel channel, TimeSpan? timeoutOverride = null)
+	public static Task<InteractivityResult<DiscordMessage>> GetNextMessageAsync(
+		this DiscordChannel channel, TimeSpan? timeoutOverride = null)
 		=> channel.GetNextMessageAsync(msg => true, timeoutOverride);
 
 	/// <summary>
@@ -41,7 +44,8 @@ public static class ChannelExtensions
 	/// <param name="user">The target user.</param>
 	/// <param name="timeoutOverride">Overrides the timeout set in <see cref="InteractivityConfiguration.Timeout"/></param>
 	/// <exception cref="InvalidOperationException">Thrown if interactivity is not enabled for the client associated with the channel.</exception>
-	public static Task<InteractivityResult<DiscordMessage>> GetNextMessageAsync(this DiscordChannel channel, DiscordUser user, TimeSpan? timeoutOverride = null)
+	public static Task<InteractivityResult<DiscordMessage>> GetNextMessageAsync(
+		this DiscordChannel channel, DiscordUser user, TimeSpan? timeoutOverride = null)
 		=> channel.GetNextMessageAsync(msg => msg.Author.Id == user.Id, timeoutOverride);
 
 	/// <summary>
@@ -51,9 +55,9 @@ public static class ChannelExtensions
 	/// <param name="user">The target user.</param>
 	/// <param name="timeoutOverride">Overrides the timeout set in <see cref="InteractivityConfiguration.Timeout"/></param>
 	/// <exception cref="InvalidOperationException">Thrown if interactivity is not enabled for the client associated with the channel.</exception>
-	public static Task<InteractivityResult<TypingStartEventArgs>> WaitForUserTypingAsync(this DiscordChannel channel, DiscordUser user, TimeSpan? timeoutOverride = null)
+	public static Task<InteractivityResult<TypingStartEventArgs>> WaitForUserTypingAsync(
+		this DiscordChannel channel, DiscordUser user, TimeSpan? timeoutOverride = null)
 		=> GetInteractivity(channel).WaitForUserTypingAsync(user, channel, timeoutOverride);
-
 
 	/// <summary>
 	/// Sends a new paginated message.
@@ -66,8 +70,12 @@ public static class ChannelExtensions
 	/// <param name="deletion">Deletion behaviour.</param>
 	/// <param name="timeoutOverride">Override timeout period.</param>
 	/// <exception cref="InvalidOperationException">Thrown if interactivity is not enabled for the client associated with the channel.</exception>
-	public static Task SendPaginatedMessageAsync(this DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationEmojis emojis, PaginationBehaviour? behaviour = default, PaginationDeletion? deletion = default, TimeSpan? timeoutOverride = null)
-		=> GetInteractivity(channel).SendPaginatedMessageAsync(channel, user, pages, emojis, behaviour, deletion, timeoutOverride);
+	public static Task SendPaginatedMessageAsync(this DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages,
+	                                             PaginationEmojis emojis, PaginationBehaviour? behaviour = default,
+	                                             PaginationDeletion? deletion = default,
+	                                             TimeSpan? timeoutOverride = null)
+		=> GetInteractivity(channel)
+			.SendPaginatedMessageAsync(channel, user, pages, emojis, behaviour, deletion, timeoutOverride);
 
 	/// <summary>
 	/// Sends a new paginated message with buttons.
@@ -80,11 +88,18 @@ public static class ChannelExtensions
 	/// <param name="deletion">Deletion behaviour</param>
 	/// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
 	/// <exception cref="InvalidOperationException">Thrown if interactivity is not enabled for the client associated with the channel.</exception>
-	public static Task SendPaginatedMessageAsync(this DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons, PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default, CancellationToken token = default)
-		=> GetInteractivity(channel).SendPaginatedMessageAsync(channel, user, pages, buttons, behaviour, deletion, token);
+	public static Task SendPaginatedMessageAsync(this DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages,
+	                                             PaginationButtons buttons, PaginationBehaviour? behaviour = default,
+	                                             ButtonPaginationBehavior? deletion = default,
+	                                             CancellationToken token = default)
+		=> GetInteractivity(channel)
+			.SendPaginatedMessageAsync(channel, user, pages, buttons, behaviour, deletion, token);
 
 	/// <inheritdoc cref="SendPaginatedMessageAsync(DiscordChannel, DiscordUser, IEnumerable{Page}, PaginationButtons, PaginationBehaviour?, ButtonPaginationBehavior?, CancellationToken)"/>
-	public static Task SendPaginatedMessageAsync(this DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default, CancellationToken token = default)
+	public static Task SendPaginatedMessageAsync(this DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages,
+	                                             PaginationBehaviour? behaviour = default,
+	                                             ButtonPaginationBehavior? deletion = default,
+	                                             CancellationToken token = default)
 		=> channel.SendPaginatedMessageAsync(user, pages, default, behaviour, deletion, token);
 
 	/// <summary>
@@ -98,9 +113,12 @@ public static class ChannelExtensions
 	/// <param name="deletion">Deletion behaviour.</param>
 	/// <param name="timeoutOverride">Override timeout period.</param>
 	/// <exception cref="InvalidOperationException">Thrown if interactivity is not enabled for the client associated with the channel.</exception>
-	public static Task SendPaginatedMessageAsync(this DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons, TimeSpan? timeoutOverride, PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default)
-		=> GetInteractivity(channel).SendPaginatedMessageAsync(channel, user, pages, buttons, timeoutOverride, behaviour, deletion);
-
+	public static Task SendPaginatedMessageAsync(this DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages,
+	                                             PaginationButtons buttons, TimeSpan? timeoutOverride,
+	                                             PaginationBehaviour? behaviour = default,
+	                                             ButtonPaginationBehavior? deletion = default)
+		=> GetInteractivity(channel)
+			.SendPaginatedMessageAsync(channel, user, pages, buttons, timeoutOverride, behaviour, deletion);
 
 	/// <summary>
 	/// Sends the paginated message async.
@@ -112,7 +130,9 @@ public static class ChannelExtensions
 	/// <param name="behaviour">The behaviour.</param>
 	/// <param name="deletion">The deletion.</param>
 	/// <returns>A Task.</returns>
-	public static Task SendPaginatedMessageAsync(this DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, TimeSpan? timeoutOverride, PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default)
+	public static Task SendPaginatedMessageAsync(this DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages,
+	                                             TimeSpan? timeoutOverride, PaginationBehaviour? behaviour = default,
+	                                             ButtonPaginationBehavior? deletion = default)
 		=> channel.SendPaginatedMessageAsync(user, pages, default, timeoutOverride, behaviour, deletion);
 
 	/// <summary>
@@ -123,6 +143,8 @@ public static class ChannelExtensions
 		var client = (DiscordClient)channel.Discord;
 		var interactivity = client.GetInteractivity();
 
-		return interactivity ?? throw new InvalidOperationException($"Interactivity is not enabled for this {(client.IsShard ? "shard" : "client")}.");
+		return interactivity ??
+		       throw new
+			       InvalidOperationException($"Interactivity is not enabled for this {(client.IsShard ? "shard" : "client")}.");
 	}
 }

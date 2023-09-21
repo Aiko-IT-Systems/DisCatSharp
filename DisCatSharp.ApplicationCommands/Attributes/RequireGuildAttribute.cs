@@ -15,7 +15,8 @@ public sealed class ApplicationCommandRequireGuildAttribute : ApplicationCommand
 	/// Defines that this command is only usable within a guild.
 	/// </summary>
 	public ApplicationCommandRequireGuildAttribute()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Runs checks.

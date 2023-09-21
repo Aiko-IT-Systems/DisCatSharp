@@ -111,14 +111,17 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// Initializes a new instance of the <see cref="DiscordSticker"/> class.
 	/// </summary>
 	internal DiscordSticker()
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Gets the hash code of the current sticker.
 	/// </summary>
 	/// <returns>The hash code.</returns>
 	public override int GetHashCode()
-		=> this.PackId != null ? HashCode.Combine(this.Id.GetHashCode(), this.PackId.GetHashCode()) : HashCode.Combine(this.Id.GetHashCode(), this.GuildId.GetHashCode());
+		=> this.PackId != null
+			   ? HashCode.Combine(this.Id.GetHashCode(), this.PackId.GetHashCode())
+			   : HashCode.Combine(this.Id.GetHashCode(), this.GuildId.GetHashCode());
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordSticker"/> is equal to another object.
@@ -153,16 +156,19 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
-	public Task<DiscordSticker> ModifyAsync(Optional<string> name, Optional<string?> description, Optional<string?> tags, string? reason = null)
+	public Task<DiscordSticker> ModifyAsync(Optional<string> name, Optional<string?> description,
+	                                        Optional<string?> tags, string? reason = null)
 		=> !this.GuildId.HasValue
-			? throw new ArgumentException("This sticker does not belong to a guild.")
-			: name.HasValue && name.Value.Length is < 2 or > 30
-				? throw new ArgumentException("Sticker name needs to be between 2 and 30 characters long.")
-				: description.HasValue && description.Value.Length is < 1 or > 100
-					? throw new ArgumentException("Sticker description needs to be between 1 and 100 characters long.")
-					: tags.HasValue && !DiscordEmoji.TryFromUnicode(this.Discord, tags.Value, out var emoji)
-						? throw new ArgumentException("Sticker tags needs to be a unicode emoji.")
-						: this.Discord.ApiClient.ModifyGuildStickerAsync(this.GuildId.Value, this.Id, name, description, tags, reason);
+			   ? throw new ArgumentException("This sticker does not belong to a guild.")
+			   : name.HasValue && name.Value.Length is < 2 or > 30
+				   ? throw new ArgumentException("Sticker name needs to be between 2 and 30 characters long.")
+				   : description.HasValue && description.Value.Length is < 1 or > 100
+					   ? throw new
+						     ArgumentException("Sticker description needs to be between 1 and 100 characters long.")
+					   : tags.HasValue && !DiscordEmoji.TryFromUnicode(this.Discord, tags.Value, out var emoji)
+						   ? throw new ArgumentException("Sticker tags needs to be a unicode emoji.")
+						   : this.Discord.ApiClient.ModifyGuildStickerAsync(this.GuildId.Value, this.Id, name,
+						                                                    description, tags, reason);
 
 	/// <summary>
 	/// Deletes the sticker
@@ -173,7 +179,9 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
 	public Task DeleteAsync(string? reason = null)
-		=> this.GuildId.HasValue ? this.Discord.ApiClient.DeleteGuildStickerAsync(this.GuildId.Value, this.Id, reason) : throw new ArgumentException("The requested sticker is no guild sticker.");
+		=> this.GuildId.HasValue
+			   ? this.Discord.ApiClient.DeleteGuildStickerAsync(this.GuildId.Value, this.Id, reason)
+			   : throw new ArgumentException("The requested sticker is no guild sticker.");
 }
 
 /// <summary>

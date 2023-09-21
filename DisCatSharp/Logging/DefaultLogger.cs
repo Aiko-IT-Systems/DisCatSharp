@@ -27,7 +27,8 @@ public class DefaultLogger : ILogger<BaseDiscordClient>
 	/// <param name="client">The client.</param>
 	internal DefaultLogger(BaseDiscordClient client)
 		: this(client.Configuration.MinimumLogLevel, client.Configuration.LogTimestampFormat)
-	{ }
+	{
+	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DefaultLogger"/> class.
@@ -48,7 +49,8 @@ public class DefaultLogger : ILogger<BaseDiscordClient>
 	/// <param name="state">The state.</param>
 	/// <param name="exception">The exception.</param>
 	/// <param name="formatter">The formatter.</param>
-	public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+	public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception,
+	                        Func<TState, Exception, string> formatter)
 	{
 		if (!this.IsEnabled(logLevel))
 			return;
@@ -86,6 +88,7 @@ public class DefaultLogger : ILogger<BaseDiscordClient>
 					Console.ForegroundColor = ConsoleColor.Black;
 					break;
 			}
+
 			Console.Write(logLevel switch
 			{
 				LogLevel.Trace => "[Trace] ",
