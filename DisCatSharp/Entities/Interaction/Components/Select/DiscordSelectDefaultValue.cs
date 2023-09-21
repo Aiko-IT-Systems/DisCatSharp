@@ -61,4 +61,11 @@ public sealed class DiscordSelectDefaultValue
 		this.Id = channel.Id;
 		this.Type = "channel";
 	}
+
+	/// <summary>
+	/// Constructs a new <see cref="DiscordSelectDefaultValue"/> for a channel.
+	/// </summary>
+	internal DiscordSelectDefaultValue()
+	{
+	}
 }
