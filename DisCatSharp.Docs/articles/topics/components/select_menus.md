@@ -99,8 +99,7 @@ When any select menu is pressed, it will fire the [ComponentInteractionCreated](
 In the event args, `Id` will be the id of the select menu you specified. There's also an `Interaction` property, which contains the interaction the event created. It's important to respond to an interaction within 3 seconds, or it will time out. Responding after this period will throw a `NotFoundException`.
 
 With select menus, there are two new response types: `DefferedMessageUpdate` and `UpdateMessage`.
-
-Using `DeferredMessageUpdate` lets you create followup messages via the [followup message builder](xref:DisCatSharp.Entities.DiscordFollowupMessageBuilder).
+using `DeferredMessageUpdate` lets you create followup messages via the [followup message builder](xref:DisCatSharp.Entities.DiscordFollowupMessageBuilder).
 
 You have 15 minutes from that point to make followup messages. Responding to that interaction looks like this:
 

@@ -194,7 +194,6 @@ Your entire program should now look like this:
 using System;
 using System.Threading.Tasks;
 using DisCatSharp;
-
 namespace MyFirstBot
 {
     class Program
