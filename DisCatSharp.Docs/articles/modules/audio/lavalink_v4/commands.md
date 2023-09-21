@@ -15,7 +15,6 @@ Before we start we will need to make sure ApplicationCommands is configured. For
 
 ```cs
 using DisCatSharp.ApplicationCommands;
-
 namespace FirstLavalinkBot;
 
 public class MyFirstLavalinkCommands : ApplicationCommandsModule
@@ -69,7 +68,6 @@ using DisCatSharp.ApplicationCommands.Attributes;
 using DisCatSharp.Lavalink;
 using DisCatSharp.Lavalink.Entities;
 using DisCatSharp.Lavalink.Enums;
-
 namespace FirstLavalinkBot;
 
 public class MyFirstLavalinkCommands : BaseCommandModule
