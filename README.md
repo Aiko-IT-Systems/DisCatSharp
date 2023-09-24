@@ -23,6 +23,7 @@
 - Partial support for role subscriptions
 - Partial support for burst reactions
 - Full support for onboarding
+- Support for default select menu values (THANKS MAISY FOR ADDING IT TO DISCORD) 
 
 ## Breaking
 

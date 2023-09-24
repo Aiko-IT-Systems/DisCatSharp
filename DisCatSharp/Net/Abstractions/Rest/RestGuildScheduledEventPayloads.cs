@@ -37,12 +37,6 @@ internal sealed class RestGuildScheduledEventCreatePayload : ObservableApiObject
 	public string? Description { get; set; }
 
 	/// <summary>
-	/// Gets or sets the privacy level of the scheduled event.
-	/// </summary>
-	[JsonProperty("privacy_level")]
-	public ScheduledEventPrivacyLevel PrivacyLevel { get; set; }
-
-	/// <summary>
 	/// Gets or sets the time to schedule the scheduled event.
 	/// </summary>
 	[JsonProperty("scheduled_start_time")]

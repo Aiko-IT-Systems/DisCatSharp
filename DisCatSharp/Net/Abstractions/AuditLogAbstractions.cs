@@ -242,12 +242,6 @@ internal sealed class AuditLogGuildScheduledEvent
 	public string ScheduledEndTime { get; set; }
 
 	/// <summary>
-	/// Gets the scheduled event privacy level.
-	/// </summary>
-	[JsonProperty("privacy_level")]
-	public ScheduledEventPrivacyLevel PrivacyLevel { get; set; }
-
-	/// <summary>
 	/// Gets the scheduled event status.
 	/// </summary>
 	[JsonProperty("status")]
