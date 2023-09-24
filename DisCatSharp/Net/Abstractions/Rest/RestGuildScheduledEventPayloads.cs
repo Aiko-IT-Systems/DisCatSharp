@@ -59,6 +59,12 @@ internal sealed class RestGuildScheduledEventCreatePayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("image", NullValueHandling = NullValueHandling.Include)]
 	public Optional<string> CoverBase64 { get; set; }
+
+	/// <summary>
+	/// Gets or sets the privacy level of the scheduled event.
+	/// </summary>
+	[JsonProperty("privacy_level")]
+	public int PrivacyLevel { get; } = 2;
 }
 
 /// <summary>
@@ -119,4 +125,10 @@ internal sealed class RestGuildScheduledEventModifyPayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("status")]
 	public Optional<ScheduledEventStatus> Status { get; set; }
+
+	/// <summary>
+	/// Gets or sets the privacy level of the scheduled event.
+	/// </summary>
+	[JsonProperty("privacy_level")]
+	public int PrivacyLevel { get; } = 2;
 }
