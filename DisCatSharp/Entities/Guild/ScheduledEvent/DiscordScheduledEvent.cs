@@ -117,12 +117,6 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	internal string ScheduledEndTimeRaw { get; set; }
 
 	/// <summary>
-	/// Gets the privacy level of the scheduled event.
-	/// </summary>
-	[JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
-	internal ScheduledEventPrivacyLevel PrivacyLevel { get; set; }
-
-	/// <summary>
 	/// Gets the status of the scheduled event.
 	/// </summary>
 	[JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]

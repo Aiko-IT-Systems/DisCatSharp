@@ -722,11 +722,6 @@ public sealed class DiscordAuditLogStageEntry : DiscordAuditLogEntry
 	public PropertyChange<string> TopicChange { get; internal set; }
 
 	/// <summary>
-	/// Gets the description of stage instance's privacy level change.
-	/// </summary>
-	public PropertyChange<StagePrivacyLevel?> PrivacyLevelChange { get; internal set; }
-
-	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogStageEntry"/> class.
 	/// </summary>
 	internal DiscordAuditLogStageEntry() { }
@@ -767,11 +762,6 @@ public sealed class DiscordAuditLogGuildScheduledEventEntry : DiscordAuditLogEnt
 	/// Gets the location change.
 	/// </summary>
 	public PropertyChange<string> LocationChange { get; internal set; }
-
-	/// <summary>
-	/// Gets the privacy level change.
-	/// </summary>
-	public PropertyChange<ScheduledEventPrivacyLevel?> PrivacyLevelChange { get; internal set; }
 
 	/// <summary>
 	/// Gets the status change.

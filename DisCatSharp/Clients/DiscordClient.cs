@@ -1335,7 +1335,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.EntityId = scheduledEvent.EntityId;
 				old.EntityType = scheduledEvent.EntityType;
 				old.EntityMetadata = scheduledEvent.EntityMetadata;
-				old.PrivacyLevel = scheduledEvent.PrivacyLevel;
 				old.Name = scheduledEvent.Name;
 				old.Status = scheduledEvent.Status;
 				old.UserCount = scheduledEvent.UserCount;
