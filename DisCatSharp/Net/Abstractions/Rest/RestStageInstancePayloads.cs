@@ -24,7 +24,7 @@ internal sealed class RestStageInstanceCreatePayload : ObservableApiObject
 	/// <summary>
 	/// Gets or sets the associated scheduled event id.
 	/// </summary>
-	[JsonProperty("guild_scheduled_event_id", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("guild_scheduled_event_id", NullValueHandling = NullValueHandling.Include)]
 	public ulong? ScheduledEventId { get; set; }
 
 	/// <summary>
@@ -32,6 +32,12 @@ internal sealed class RestStageInstanceCreatePayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("send_start_notification", NullValueHandling = NullValueHandling.Ignore)]
 	public bool SendStartNotification { get; set; }
+
+	/// <summary>
+	/// Gets or sets the privacy level of the scheduled event.
+	/// </summary>
+	[JsonProperty("privacy_level")]
+	public int PrivacyLevel { get; } = 2;
 }
 
 /// <summary>
