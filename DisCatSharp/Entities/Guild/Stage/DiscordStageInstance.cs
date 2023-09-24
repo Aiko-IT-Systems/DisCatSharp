@@ -38,12 +38,6 @@ public class DiscordStageInstance : SnowflakeObject, IEquatable<DiscordStageInst
 	public string Topic { get; internal set; }
 
 	/// <summary>
-	/// Gets the topic of the Stage instance.
-	/// </summary>
-	[JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated("Will be static due to the discovery removal.")]
-	public StagePrivacyLevel PrivacyLevel { get; internal set; } = StagePrivacyLevel.GuildOnly;
-
-	/// <summary>
 	/// Gets whether or not stage discovery is disabled.
 	/// </summary>
 	[JsonProperty("discoverable_disabled", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated("Will be removed due to the discovery removal.")]

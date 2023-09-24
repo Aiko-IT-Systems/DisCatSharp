@@ -895,13 +895,6 @@ public partial class DiscordGuild
 									After = xc.NewValueString
 								};
 								break;
-							case "privacy_level":
-								entrysta.PrivacyLevelChange = new()
-								{
-									Before = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5) ? (StagePrivacyLevel?)t5 : null,
-									After = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6) ? (StagePrivacyLevel?)t6 : null,
-								};
-								break;
 
 							default:
 								if (this.Discord.Configuration.ReportMissingFields)
@@ -1265,17 +1258,6 @@ public partial class DiscordGuild
 								{
 									Before = xc.OldValueString,
 									After = xc.NewValueString
-								};
-								break;
-
-							case "privacy_level":
-								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
-								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
-
-								entryse.PrivacyLevelChange = new()
-								{
-									Before = p1 ? (ScheduledEventPrivacyLevel?)t5 : null,
-									After = p2 ? (ScheduledEventPrivacyLevel?)t6 : null
 								};
 								break;
 
