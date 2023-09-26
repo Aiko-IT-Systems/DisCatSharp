@@ -3374,16 +3374,13 @@ public sealed class DiscordApiClient
 			Mentionable = mentionable,
 		};
 
-		if (emoji.HasValue && !iconb64.HasValue)
-			pld.UnicodeEmoji = emoji;
-
 		if (emoji.HasValue && iconb64.HasValue)
 		{
 			pld.IconBase64 = null;
 			pld.UnicodeEmoji = emoji;
-		}
-
-		if (iconb64.HasValue)
+		} else if (emoji.HasValue && !iconb64.HasValue)
+			pld.UnicodeEmoji = emoji;
+		else if (iconb64.HasValue && !emoji.HasValue)
 			pld.IconBase64 = iconb64;
 
 		var headers = Utilities.GetBaseHeaders();
