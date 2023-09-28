@@ -55,7 +55,7 @@ public class RoleEditModel : BaseEditModel
 		this.Color = null;
 		this.Hoist = null;
 		this.Mentionable = null;
-		this.Icon = null;
-		this.UnicodeEmoji = null;
+		this.Icon = Optional.None;
+		this.UnicodeEmoji = Optional.None;
 	}
 }

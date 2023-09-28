@@ -201,7 +201,7 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 		bool? hoist = null, bool? mentionable = null, string? reason = null
 	)
 		=> this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, name, permissions, color?.Value, hoist,
-			mentionable, null, null, reason);
+			mentionable, Optional.None, Optional.None, reason);
 
 	/// <summary>
 	/// Updates this role.
@@ -225,9 +225,11 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 		if (mdl.Icon is { HasValue: true, Value: not null })
 			iconb64 = ImageTool.Base64FromStream(mdl.Icon);
 		else if (mdl.Icon.HasValue)
-			iconb64 = Optional.Some<string>(null);
+			iconb64 = Optional.Some<string?>(null);
+		else
+			iconb64 = Optional.None;
 
-		var emoji = Optional.FromNullable<string>(null);
+		var emoji = Optional.FromNullable<string?>(null);
 
 		switch (mdl.UnicodeEmoji.HasValue)
 		{
@@ -238,7 +240,10 @@ public class DiscordRole : PositionalSnowflakeObject, IEquatable<DiscordRole>
 						: throw new ArgumentException("Emoji must be unicode"));
 				break;
 			case true:
-				emoji = Optional.Some<string>(null);
+				emoji = Optional.Some<string?>(null);
+				break;
+			case false:
+				emoji = Optional.None;
 				break;
 		}
 
