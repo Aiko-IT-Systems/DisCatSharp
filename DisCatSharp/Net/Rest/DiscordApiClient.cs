@@ -4137,15 +4137,15 @@ public sealed class DiscordApiClient
 			Mentionable = mentionable
 		};
 
-		if (emoji.HasValue && iconb64.HasValue)
+		if (emoji.HasValue && iconBase64.HasValue)
 		{
 			pld.IconBase64 = null;
 			pld.UnicodeEmoji = emoji;
 		}
-		else if (emoji.HasValue && !iconb64.HasValue)
+		else if (emoji.HasValue && !iconBase64.HasValue)
 			pld.UnicodeEmoji = emoji;
-		else if (iconb64.HasValue && !emoji.HasValue)
-			pld.IconBase64 = iconb64;
+		else if (iconBase64.HasValue && !emoji.HasValue)
+			pld.IconBase64 = iconBase64;
 
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
