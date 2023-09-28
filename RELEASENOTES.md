@@ -5,10 +5,11 @@ DisCatSharp Release Notes
  	- Custom status support
     - Full support for Application Subscriptions aka. Premium Apps
     - DiscordOAuth2Client: Allows bots to request and use access tokens for the Discord API.
+	- Support for default select menu values (THANKS MAISY FOR ADDING IT TO DISCORD)
 
 DisCatSharp.ApplicationCommands Release Notes
 
-- None
+    Contains a rework for command registration (Kinda wacky tho with translation-enabled commands)
 
 DisCatSharp.CommandsNext Release Notes
 
@@ -16,7 +17,7 @@ DisCatSharp.CommandsNext Release Notes
 
 DisCatSharp.Interactivity Release Notes
 
-- None
+    Contains important bug fixes for interactions and pagination
 
 DisCatSharp.Common Release Notes
 
