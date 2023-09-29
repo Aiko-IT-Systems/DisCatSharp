@@ -49,6 +49,6 @@ public sealed class DiscordSignedLink : Uri
 		    long.TryParse(issuedString, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var issuedTimeStamp))
 			this.IssuedAt = DateTimeOffset.FromUnixTimeSeconds(issuedTimeStamp);
 
-		this.Signature = queries.Get("sg");
+		this.Signature = queries.Get("hm");
 	}
 }
