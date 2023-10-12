@@ -308,7 +308,7 @@ public sealed class LavalinkGuildPlayer
 	/// <returns>The updated guild player.</returns>
 	public async Task<LavalinkGuildPlayer> PlayPartialAsync(LavalinkTrack track, TimeSpan startTime, TimeSpan endTime)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: track.Info.Identifier, position: (int)startTime.TotalMilliseconds, endTime: (int)endTime.TotalMilliseconds).ConfigureAwait(false);
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: track.Info.Uri.ToString(), position: (int)startTime.TotalMilliseconds, endTime: (int)endTime.TotalMilliseconds).ConfigureAwait(false);
 		return this;
 	}
 
@@ -343,7 +343,7 @@ public sealed class LavalinkGuildPlayer
 	/// <returns>The updated guild player.</returns>
 	public async Task<LavalinkGuildPlayer> PlayAsync(LavalinkTrack track)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: track.Info.Identifier).ConfigureAwait(false);
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: track.Info.Uri.ToString()).ConfigureAwait(false);
 		return this;
 	}
 
@@ -452,7 +452,7 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="entry">The entry to add. Please construct a new() entry for every track.</param>
 	/// <param name="track">The track to attach.</param>
 	public void AddToQueue<T>(T entry, LavalinkTrack track) where T : IQueueEntry
-		=> this._queueEntriesInternal.Add(track.Info.Identifier, entry.AddTrack(track));
+		=> this._queueEntriesInternal.Add(track.Info.Uri.ToString(), entry.AddTrack(track));
 
 	/// <summary>
 	/// Removes a queue entry.
@@ -460,7 +460,7 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="entry">The entry to remove.</param>
 	/// <returns><see langword="true"/> if the entry was found and removed.</returns>
 	public bool RemoveFromQueue(IQueueEntry entry)
-		=> this._queueEntriesInternal.Remove(entry.Track.Info.Identifier);
+		=> this._queueEntriesInternal.Remove(entry.Track.Info.Uri.ToString());
 
 	/// <summary>
 	/// Removes a queue entry by the track identifier.
