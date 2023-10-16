@@ -13,7 +13,7 @@ public class GuildAuditLogEntryCreateEventArgs : DiscordEventArgs
 	/// Gets the audit log entry.
 	/// Cast to correct type by action type.
 	/// </summary>
-	public DiscordAuditLogEntry AuditLogEntry { get; internal set; }
+	public object AuditLogEntry { get; internal set; }
 
 	/// <summary>
 	/// Gets the guild in which the update occurred.
