@@ -51,6 +51,7 @@ Written with love and for everyone.
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Entities\Guild\AuditLog\Types\" />
     <Folder Include="Entities\Interaction\Components\Attachment\" />
     <Folder Include="Entities\Interaction\Components\DateTime\" />
     <Folder Include="Entities\Interaction\Components\Radio\" />

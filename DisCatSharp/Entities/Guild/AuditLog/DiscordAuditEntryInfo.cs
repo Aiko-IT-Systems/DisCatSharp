@@ -28,7 +28,7 @@ public sealed class DiscordAuditEntryInfo
 	/// Event Types: <see cref="AuditLogActionType.AutoModerationBlockMessage"/>, <see cref="AuditLogActionType.AutoModerationFlagToChannel"/>, <see cref="AuditLogActionType.AutoModerationUserCommunicationDisabled"/>
 	/// </summary>
 	[JsonProperty("auto_moderation_rule_trigger_type", NullValueHandling = NullValueHandling.Ignore)]
-	public string? AutoModerationRuleTriggerType { get; set; } = null;
+	public AutomodTriggerType? AutoModerationRuleTriggerType { get; set; } = null;
 
 	/// <summary>
 	/// Gets or sets the ID of the channel in which the entities were targeted.
@@ -56,7 +56,7 @@ public sealed class DiscordAuditEntryInfo
 	/// Event Types: <see cref="AuditLogActionType.ChannelOverwriteCreate"/>, <see cref="AuditLogActionType.ChannelOverwriteUpdate"/>, <see cref="AuditLogActionType.ChannelOverwriteDelete"/>"/>
 	/// </summary>
 	[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-	public ulong? OverwrittenEntityId { get; set; } = null;
+	public SnowflakeObject? OverwrittenEntityId { get; set; } = null;
 
 	/// <summary>
 	/// Gets or sets the number of members removed by the prune.
@@ -84,7 +84,7 @@ public sealed class DiscordAuditEntryInfo
 	/// Event Types: <see cref="AuditLogActionType.ChannelOverwriteCreate"/>, <see cref="AuditLogActionType.ChannelOverwriteUpdate"/>, <see cref="AuditLogActionType.ChannelOverwriteDelete"/>
 	/// </summary>
 	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
-	public int? OverwrittenEntityType { get; set; } = null;
+	public OverwriteType? OverwrittenEntityType { get; set; } = null;
 
 	/// <summary>
 	/// Gets or sets the type of integration which performed the action.
