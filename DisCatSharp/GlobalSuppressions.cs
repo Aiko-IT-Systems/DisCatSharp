@@ -82,3 +82,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Usage", "DCS0200:[Discord] Requires Features", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.Entities.DiscordGuild.PublicUpdatesChannel")]
 [assembly: SuppressMessage("Usage", "DCS0200:[Discord] Requires Features", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.Entities.DiscordGuild.RulesChannel")]
 [assembly: SuppressMessage("Usage", "DCS0200:[Discord] Requires Features", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.Entities.DiscordGuild.SafetyAltersChannel")]
+[assembly: SuppressMessage("Style", "IDE0048:Add parentheses for clarity", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Entities.DiscordRole.op_Equality(DisCatSharp.Entities.DiscordRole,DisCatSharp.Entities.DiscordRole)~System.Boolean")]

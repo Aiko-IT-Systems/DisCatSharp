@@ -148,7 +148,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	public IReadOnlyList<KeyValuePair<ulong, DiscordMember>> Members
 		=> this.Guild.Members.Where(x => x.Value.RoleIds.Any(x => x == this.Id)).ToList();
 
-	#region Methods
+#region Methods
 
 	/// <summary>
 	/// Modifies this role's position.
@@ -168,7 +168,9 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 				RoleId = x.Id,
 				Position = x.Id == this.Id
 					? position
-					: x.Position <= position ? x.Position - 1 : x.Position
+					: x.Position <= position
+						? x.Position - 1
+						: x.Position
 			});
 
 		return this.Discord.ApiClient.ModifyGuildRolePositionAsync(this.GuildId, roles, reason);
@@ -194,44 +196,33 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// Updates this role.
 	/// </summary>
 	/// <param name="action">The action.</param>
-	/// <exception cref = "Exceptions.UnauthorizedException" > Thrown when the client does not have the<see cref="Permissions.ManageRoles"/> permission.</exception>
+	/// <exception cref="UnauthorizedException"> Thrown when the client does not have the<see cref="Permissions.ManageRoles"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the role does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="Exception">A delegate callback throws an exception.</exception>
 	public Task ModifyAsync(Action<RoleEditModel> action)
 	{
 		var mdl = new RoleEditModel();
 		action(mdl);
 
 		var canContinue = true;
-		if ((mdl.Icon.HasValue && mdl.Icon.Value != null) || (mdl.UnicodeEmoji.HasValue && mdl.UnicodeEmoji.Value != null))
+		if (mdl.Icon is { HasValue: true, Value: not null } || mdl.UnicodeEmoji is { HasValue: true, Value: not null })
 			canContinue = this.Guild.Features.HasFeature(GuildFeaturesEnum.CanSetRoleIcons);
 
-		var iconb64 = Optional.FromNullable<string>(null);
-		if (mdl.Icon.HasValue && mdl.Icon.Value != null)
-			iconb64 = ImageTool.Base64FromStream(mdl.Icon);
-		else if (mdl.Icon.HasValue)
-			iconb64 = Optional.Some<string?>(null);
-		else
-			iconb64 = Optional.None;
-
-		var emoji = Optional.FromNullable<string?>(null);
-
-		switch (mdl.UnicodeEmoji.HasValue)
+		var iconb64 = mdl.Icon.HasValue switch
 		{
-			case true when mdl.UnicodeEmoji.Value != null:
-				emoji = mdl.UnicodeEmoji
-					.MapOrNull(e => e.Id == 0
-						? e.Name
-						: throw new ArgumentException("Emoji must be unicode"));
-				break;
-			case true:
-				emoji = Optional.Some<string?>(null);
-				break;
-			case false:
-				emoji = Optional.None;
-				break;
-		}
+			true when mdl.Icon.Value != null => ImageTool.Base64FromStream(mdl.Icon),
+			true => Optional.Some<string?>(null),
+			_ => (Optional<string>)Optional.None
+		};
+
+		var emoji = mdl.UnicodeEmoji.HasValue switch
+		{
+			true when mdl.UnicodeEmoji.Value != null => mdl.UnicodeEmoji.MapOrNull(e => e.Id == 0 ? e.Name : throw new ArgumentException("Emoji must be unicode")),
+			true => Optional.Some<string?>(null),
+			false => Optional.None
+		};
 
 		return canContinue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Hoist, mdl.Mentionable, iconb64, emoji, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify role icon. Guild needs boost tier two.");
 	}
@@ -248,7 +239,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	public Task DeleteAsync(string reason = null)
 		=> this.Discord.ApiClient.DeleteRoleAsync(this.GuildId, this.Id, reason);
 
-	#endregion
+#endregion
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordRole"/> class.
@@ -306,7 +297,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <returns>Whether the two roles are equal.</returns>
 	public static bool operator ==(DiscordRole e1, DiscordRole e2)
 		=> e1 is null == e2 is null
-		&& ((e1 is null && e2 is null) || e1.Id == e2.Id);
+		   && (e1 is null && e2 is null || e1.Id == e2.Id);
 
 	/// <summary>
 	/// Gets whether the two <see cref="DiscordRole"/> objects are not equal.
