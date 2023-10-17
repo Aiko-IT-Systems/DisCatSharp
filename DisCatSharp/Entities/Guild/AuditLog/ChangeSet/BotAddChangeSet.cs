@@ -11,4 +11,6 @@ public sealed class BotAddChangeSet : DiscordAuditLogEntry
 	{
 		this.ValidFor = AuditLogActionType.BotAdd;
 	}
+
+	public DiscordUser Bot => this.Discord.GetCachedOrEmptyUserInternal(this.TargetId!.Value);
 }
