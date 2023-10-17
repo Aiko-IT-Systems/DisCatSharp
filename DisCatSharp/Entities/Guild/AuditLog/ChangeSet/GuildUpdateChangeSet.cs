@@ -118,82 +118,82 @@ public class GuildUpdateChangeSet : AuditLogChangeSet
 	{
 		get
 		{
-			var description = $"{this.UserId} executed {this.GetType().Name.Replace("ChangeSet", string.Empty)}\n";
+			var description = $"{this.UserId} executed {this.GetType().Name.Replace("ChangeSet", string.Empty)} with reason {this.Reason ?? $"No reason given".Italic()}\n";
 
 			if (this.NameChanged)
-				description += this.NameAfter != null ? $"- Set Name to {this.NameAfter}\n" : "- Unset Name\n";
+				description += this.NameAfter is not null ? $"- Set Name to {this.NameAfter}\n" : "- Unset Name\n";
 
 			if (this.IconChanged)
-				description += this.IconAfter != null ? $"- Set Icon to {this.IconAfter}\n" : "- Unset Icon\n";
+				description += this.IconAfter is not null ? $"- Set Icon to {this.IconAfter}\n" : "- Unset Icon\n";
 
 			if (this.SplashChanged)
-				description += this.SplashAfter != null ? $"- Set Splash to {this.SplashAfter}\n" : "- Unset Splash\n";
+				description += this.SplashAfter is not null ? $"- Set Splash to {this.SplashAfter}\n" : "- Unset Splash\n";
 
 			if (this.DiscoverySplashChanged)
-				description += this.DiscoverySplashAfter != null ? $"- Set Discovery Splash to {this.DiscoverySplashAfter}\n" : "- Unset Discovery Splash\n";
+				description += this.DiscoverySplashAfter is not null ? $"- Set Discovery Splash to {this.DiscoverySplashAfter}\n" : "- Unset Discovery Splash\n";
 
 			if (this.OwnerIdChanged)
-				description += this.OwnerIdAfter != null ? $"- Set Owner ID to {this.OwnerIdAfter}\n" : "- Unset Owner ID\n";
+				description += this.OwnerIdAfter is not null ? $"- Set Owner ID to {this.OwnerIdAfter}\n" : "- Unset Owner ID\n";
 
 			if (this.AfkChannelIdChanged)
-				description += this.AfkChannelIdAfter != null ? $"- Set AFK Channel ID to {this.AfkChannelIdAfter}\n" : "- Unset AFK Channel ID\n";
+				description += this.AfkChannelIdAfter is not null ? $"- Set AFK Channel ID to {this.AfkChannelIdAfter}\n" : "- Unset AFK Channel ID\n";
 
 			if (this.AfkTimeoutChanged)
-				description += this.AfkTimeoutAfter != null ? $"- Set AFK Timeout to {this.AfkTimeoutAfter} seconds\n" : "- Unset AFK Timeout\n";
+				description += this.AfkTimeoutAfter is not null ? $"- Set AFK Timeout to {this.AfkTimeoutAfter} seconds\n" : "- Unset AFK Timeout\n";
 
 			if (this.WidgetEnabledChanged)
-				description += this.WidgetEnabledAfter != null ? $"- Set Widget Enabled to {this.WidgetEnabledAfter}\n" : "- Unset Widget Enabled\n";
+				description += this.WidgetEnabledAfter is not null ? $"- Set Widget Enabled to {this.WidgetEnabledAfter}\n" : "- Unset Widget Enabled\n";
 
 			if (this.WidgetChannelIdChanged)
-				description += this.WidgetChannelIdAfter != null ? $"- Set Widget Channel ID to {this.WidgetChannelIdAfter}\n" : "- Unset Widget Channel ID\n";
+				description += this.WidgetChannelIdAfter is not null ? $"- Set Widget Channel ID to {this.WidgetChannelIdAfter}\n" : "- Unset Widget Channel ID\n";
 
 			if (this.VerificationLevelChanged)
-				description += this.VerificationLevelAfter != null ? $"- Set Verification Level to {this.VerificationLevelAfter}\n" : "- Unset Verification Level\n";
+				description += this.VerificationLevelAfter is not null ? $"- Set Verification Level to {this.VerificationLevelAfter}\n" : "- Unset Verification Level\n";
 
 			if (this.DefaultMessageNotificationsChanged)
-				description += this.DefaultMessageNotificationsAfter != null ? $"- Set Default Message Notifications to {this.DefaultMessageNotificationsAfter}\n" : "- Unset Default Message Notifications\n";
+				description += this.DefaultMessageNotificationsAfter is not null ? $"- Set Default Message Notifications to {this.DefaultMessageNotificationsAfter}\n" : "- Unset Default Message Notifications\n";
 
 			if (this.ExplicitContentFilterChanged)
-				description += this.ExplicitContentFilterAfter != null ? $"- Set Explicit Content Filter to {this.ExplicitContentFilterAfter}\n" : "- Unset Explicit Content Filter\n";
+				description += this.ExplicitContentFilterAfter is not null ? $"- Set Explicit Content Filter to {this.ExplicitContentFilterAfter}\n" : "- Unset Explicit Content Filter\n";
 
 			if (this.FeaturesChanged)
-				description += this.FeaturesAfter != null ? $"- Set Features to {string.Join(", ", this.FeaturesAfter)}\n" : "- Unset Features\n";
+				description += this.FeaturesAfter is not null ? $"- Set Features to {string.Join(", ", this.FeaturesAfter)}\n" : "- Unset Features\n";
 
 			if (this.MfaLevelChanged)
-				description += this.MfaLevelAfter != null ? $"- Set MFA Level to {this.MfaLevelAfter}\n" : "- Unset MFA Level\n";
+				description += this.MfaLevelAfter is not null ? $"- Set MFA Level to {this.MfaLevelAfter}\n" : "- Unset MFA Level\n";
 
 			if (this.SystemChannelIdChanged)
-				description += this.SystemChannelIdAfter != null ? $"- Set System Channel ID to {this.SystemChannelIdAfter}\n" : "- Unset System Channel ID\n";
+				description += this.SystemChannelIdAfter is not null ? $"- Set System Channel ID to {this.SystemChannelIdAfter}\n" : "- Unset System Channel ID\n";
 
 			if (this.SystemChannelFlagsChanged)
-				description += this.SystemChannelFlagsAfter != null ? $"- Set System Channel Flags to {this.SystemChannelFlagsAfter}\n" : "- Unset System Channel Flags\n";
+				description += this.SystemChannelFlagsAfter is not null ? $"- Set System Channel Flags to {this.SystemChannelFlagsAfter}\n" : "- Unset System Channel Flags\n";
 
 			if (this.RulesChannelIdChanged)
-				description += this.RulesChannelIdAfter != null ? $"- Set Rules Channel ID to {this.RulesChannelIdAfter}\n" : "- Unset Rules Channel ID\n";
+				description += this.RulesChannelIdAfter is not null ? $"- Set Rules Channel ID to {this.RulesChannelIdAfter}\n" : "- Unset Rules Channel ID\n";
 
 			if (this.VanityUrlCodeChanged)
-				description += this.VanityUrlCodeAfter != null ? $"- Set Vanity URL Code to {this.VanityUrlCodeAfter}\n" : "- Unset Vanity URL Code\n";
+				description += this.VanityUrlCodeAfter is not null ? $"- Set Vanity URL Code to {this.VanityUrlCodeAfter}\n" : "- Unset Vanity URL Code\n";
 
 			if (this.DescriptionChanged)
-				description += this.DescriptionAfter != null ? $"- Set Description to {this.DescriptionAfter}\n" : "- Unset Description\n";
+				description += this.DescriptionAfter is not null ? $"- Set Description to {this.DescriptionAfter}\n" : "- Unset Description\n";
 
 			if (this.BannerChanged)
-				description += this.BannerAfter != null ? $"- Set Banner to {this.BannerAfter}\n" : "- Unset Banner\n";
+				description += this.BannerAfter is not null ? $"- Set Banner to {this.BannerAfter}\n" : "- Unset Banner\n";
 
 			if (this.PreferredLocaleChanged)
-				description += this.PreferredLocaleAfter != null ? $"- Set Preferred Locale to {this.PreferredLocaleAfter}\n" : "- Unset Preferred Locale\n";
+				description += this.PreferredLocaleAfter is not null ? $"- Set Preferred Locale to {this.PreferredLocaleAfter}\n" : "- Unset Preferred Locale\n";
 
 			if (this.PublicUpdatesChannelIdChanged)
-				description += this.PublicUpdatesChannelIdAfter != null ? $"- Set Public Updates Channel ID to {this.PublicUpdatesChannelIdAfter}\n" : "- Unset Public Updates Channel ID\n";
+				description += this.PublicUpdatesChannelIdAfter is not null ? $"- Set Public Updates Channel ID to {this.PublicUpdatesChannelIdAfter}\n" : "- Unset Public Updates Channel ID\n";
 
 			if (this.NsfwLevelChanged)
-				description += this.NsfwLevelAfter != null ? $"- Set NSFW Level to {this.NsfwLevelAfter}\n" : "- Unset NSFW Level\n";
+				description += this.NsfwLevelAfter is not null ? $"- Set NSFW Level to {this.NsfwLevelAfter}\n" : "- Unset NSFW Level\n";
 
 			if (this.PremiumProgressBarEnabledChanged)
-				description += this.PremiumProgressBarEnabledAfter != null ? $"- Set Premium Progress Bar Enabled to {this.PremiumProgressBarEnabledAfter}\n" : "- Unset Premium Progress Bar Enabled\n";
+				description += this.PremiumProgressBarEnabledAfter is not null ? $"- Set Premium Progress Bar Enabled to {this.PremiumProgressBarEnabledAfter}\n" : "- Unset Premium Progress Bar Enabled\n";
 
 			if (this.SafetyAlertsChannelIdChanged)
-				description += this.SafetyAlertsChannelIdAfter != null ? $"- Set Safety Alerts Channel ID to {this.SafetyAlertsChannelIdAfter}\n" : "- Unset Safety Alerts Channel ID\n";
+				description += this.SafetyAlertsChannelIdAfter is not null ? $"- Set Safety Alerts Channel ID to {this.SafetyAlertsChannelIdAfter}\n" : "- Unset Safety Alerts Channel ID\n";
 
 			return description;
 		}
