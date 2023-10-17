@@ -2,7 +2,7 @@
 namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Represents the invite type .
+/// Represents the invite type.
 /// </summary>
 public enum TargetType
 {
