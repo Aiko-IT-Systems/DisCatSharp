@@ -8,9 +8,9 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a change set for updating the name of an emoji.
 /// </summary>
-public class EmojiUpdateChangeSet : DiscordAuditLogEntry
+public sealed class EmojiUpdateChangeSet : DiscordAuditLogEntry
 {
-	public EmojiUpdateChangeSet()
+	internal EmojiUpdateChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.EmojiUpdate;
 	}

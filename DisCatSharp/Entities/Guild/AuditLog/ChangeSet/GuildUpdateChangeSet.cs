@@ -8,9 +8,9 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a change set for a server settings update.
 /// </summary>
-public class GuildUpdateChangeSet : DiscordAuditLogEntry
+public sealed class GuildUpdateChangeSet : DiscordAuditLogEntry
 {
-	public GuildUpdateChangeSet()
+	internal GuildUpdateChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.GuildUpdate;
 	}

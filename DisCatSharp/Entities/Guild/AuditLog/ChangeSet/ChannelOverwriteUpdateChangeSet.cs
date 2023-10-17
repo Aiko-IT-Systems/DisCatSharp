@@ -7,9 +7,9 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a change set for updating a permission overwrite for a channel.
 /// </summary>
-public class ChannelOverwriteUpdateChangeSet : DiscordAuditLogEntry
+public sealed class ChannelOverwriteUpdateChangeSet : DiscordAuditLogEntry
 {
-	public ChannelOverwriteUpdateChangeSet()
+	internal ChannelOverwriteUpdateChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.ChannelOverwriteUpdate;
 	}

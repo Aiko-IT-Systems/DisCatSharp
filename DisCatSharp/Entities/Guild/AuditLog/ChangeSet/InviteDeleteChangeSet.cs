@@ -1,7 +1,7 @@
-﻿namespace DisCatSharp.Entities;
+namespace DisCatSharp.Entities;
 
 /// <summary>
 /// Represents a change set for deleting a server invite.
 /// </summary>
-public class InviteDeleteChangeSet : DiscordAuditLogEntry
+public sealed class InviteDeleteChangeSet : DiscordAuditLogEntry
 { }

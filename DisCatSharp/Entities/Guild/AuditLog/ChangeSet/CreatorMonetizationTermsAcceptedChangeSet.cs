@@ -5,9 +5,9 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a change set for the acceptance of creator monetization terms.
 /// </summary>
-public class CreatorMonetizationTermsAcceptedChangeSet : DiscordAuditLogEntry
+public sealed class CreatorMonetizationTermsAcceptedChangeSet : DiscordAuditLogEntry
 {
-	public CreatorMonetizationTermsAcceptedChangeSet()
+	internal CreatorMonetizationTermsAcceptedChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.CreatorMonetizationTermsAccepted;
 	}

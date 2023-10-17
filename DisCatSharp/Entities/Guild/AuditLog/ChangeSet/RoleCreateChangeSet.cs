@@ -1,7 +1,7 @@
-﻿namespace DisCatSharp.Entities;
+namespace DisCatSharp.Entities;
 
 /// <summary>
 /// Represents a change set for creating a role.
 /// </summary>
-public class RoleCreateChangeSet : DiscordAuditLogEntry
+public sealed class RoleCreateChangeSet : DiscordAuditLogEntry
 { }

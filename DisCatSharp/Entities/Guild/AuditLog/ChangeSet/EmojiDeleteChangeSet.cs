@@ -8,9 +8,9 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a change set for deleting an emoji.
 /// </summary>
-public class EmojiDeleteChangeSet : DiscordAuditLogEntry
+public sealed class EmojiDeleteChangeSet : DiscordAuditLogEntry
 {
-	public EmojiDeleteChangeSet()
+	internal EmojiDeleteChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.EmojiDelete;
 	}

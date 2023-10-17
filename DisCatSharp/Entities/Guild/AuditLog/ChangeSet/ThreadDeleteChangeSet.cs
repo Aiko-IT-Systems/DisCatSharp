@@ -1,7 +1,7 @@
-﻿namespace DisCatSharp.Entities;
+namespace DisCatSharp.Entities;
 
 /// <summary>
 /// Represents a change set for deleting a thread.
 /// </summary>
-public class ThreadDeleteChangeSet : DiscordAuditLogEntry
+public sealed class ThreadDeleteChangeSet : DiscordAuditLogEntry
 { }

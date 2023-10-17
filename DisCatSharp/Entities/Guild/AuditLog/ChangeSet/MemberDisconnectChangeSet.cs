@@ -1,7 +1,7 @@
-﻿namespace DisCatSharp.Entities;
+namespace DisCatSharp.Entities;
 
 /// <summary>
 /// Represents a change set for disconnecting a member from a voice channel.
 /// </summary>
-public class MemberDisconnectChangeSet : DiscordAuditLogEntry
+public sealed class MemberDisconnectChangeSet : DiscordAuditLogEntry
 { }
