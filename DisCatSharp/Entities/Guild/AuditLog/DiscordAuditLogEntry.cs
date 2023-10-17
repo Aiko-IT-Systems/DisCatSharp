@@ -70,7 +70,7 @@ public class DiscordAuditLogEntry : SnowflakeObject
 	/// <typeparam name="T">The type to convert to. Use the type based on the <see cref="ActionType"/>.</typeparam>
 	/// <returns>The easy to-use audit log entry.</returns>
 	/// <exception cref="InvalidCastException">Thrown when the <see cref="ActionType"/> is not compatible with the targets <see cref="ValidFor"/> type.</exception>
-	public T? As<T>()
+	public T As<T>()
 		where T : DiscordAuditLogEntry, new()
 	{
 		if (this is T t)
