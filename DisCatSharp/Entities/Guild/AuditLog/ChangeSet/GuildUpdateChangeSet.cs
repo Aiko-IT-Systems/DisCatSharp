@@ -115,6 +115,7 @@ public class GuildUpdateChangeSet : DiscordAuditLogEntry
 	public ulong? SafetyAlertsChannelIdBefore => ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "safety_alerts_channel_id")?.OldValue);
 	public ulong? SafetyAlertsChannelIdAfter => ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "safety_alerts_channel_id")?.NewValue);
 
+	/// <inheritdoc />
 	internal override string ChangeDescription
 	{
 		get
