@@ -28,7 +28,7 @@ public sealed class ChannelCreateChangeSet : DiscordAuditLogEntry
 	public ChannelFlags Flags => (ChannelFlags)this.Changes.FirstOrDefault(x => x.Key == "flags")?.NewValue;
 
 	public ulong? ParentId => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "parent_id")?.NewValue;
-	public DiscordChannel? Parent => this.Discord.Guilds[this.GuildId].Channels[this.ParentId.Value];
+	public DiscordChannel? Parent => this.Discord.Guilds[this.GuildId].Channels.TryGetValue(this.ParentId ?? 0ul, out var channel) ? channel : null;
 
 	#region Voice
 	public int? Bitrate => (int?)this.Changes.FirstOrDefault(x => x.Key == "bitrate")?.NewValue;

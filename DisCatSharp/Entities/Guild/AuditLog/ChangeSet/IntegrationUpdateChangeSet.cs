@@ -30,8 +30,8 @@ public sealed class IntegrationUpdateChangeSet : DiscordAuditLogEntry
 	public bool RoleIdChanged => this.RoleIdBefore is not null || this.RoleIdAfter is not null;
 	public ulong? RoleIdBefore => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "role_id")?.OldValue;
 	public ulong? RoleIdAfter => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "role_id")?.NewValue;
-	public DiscordRole? RoleBefore => this.Discord.Guilds[this.GuildId].Roles[this.RoleIdBefore!.Value];
-	public DiscordRole? RoleAfter => this.Discord.Guilds[this.GuildId].Roles[this.RoleIdAfter!.Value];
+	public DiscordRole? RoleBefore => this.Discord.Guilds[this.GuildId].Roles.TryGetValue(this.RoleIdBefore ?? 0ul, out var role) ? role : null;
+	public DiscordRole? RoleAfter => this.Discord.Guilds[this.GuildId].Roles.TryGetValue(this.RoleIdAfter ?? 0ul, out var role) ? role : null;
 
 	public bool EnableEmoticonsChanged => this.EnableEmoticonsBefore is not null || this.EnableEmoticonsAfter is not null;
 	public bool? EnableEmoticonsBefore => (bool?)this.Changes.FirstOrDefault(x => x.Key == "enable_emoticons")?.OldValue;

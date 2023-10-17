@@ -21,7 +21,7 @@ public sealed class IntegrationDeleteChangeSet : DiscordAuditLogEntry
 	public bool? Syncing => (bool?)this.Changes.FirstOrDefault(x => x.Key == "syncing")?.OldValue;
 
 	public ulong? RoleId => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "role_id")?.OldValue;
-	public DiscordRole? Role => this.Discord.Guilds[this.GuildId].Roles[this.RoleId!.Value];
+	public DiscordRole? Role => this.Discord.Guilds[this.GuildId].Roles.TryGetValue(this.RoleId ?? 0ul, out var role) ? role : null;
 
 	public bool? EnableEmoticons => (bool?)this.Changes.FirstOrDefault(x => x.Key == "enable_emoticons")?.OldValue;
 	public IntegrationExpireBehavior? ExpireBehavior => (IntegrationExpireBehavior?)this.Changes.FirstOrDefault(x => x.Key == "expire_behavior")?.OldValue;

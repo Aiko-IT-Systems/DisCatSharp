@@ -55,8 +55,8 @@ public sealed class ChannelUpdateChangeSet : DiscordAuditLogEntry
 	public bool ParentIdChanged => this.ParentIdBefore is not null || this.ParentIdAfter is not null;
 	public ulong? ParentIdBefore => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "parent_id")?.OldValue;
 	public ulong? ParentIdAfter => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "parent_id")?.NewValue;
-	public DiscordChannel? ParentBefore => this.Discord.Guilds[this.GuildId].Channels[this.ParentIdBefore.Value];
-	public DiscordChannel? ParentAfter => this.Discord.Guilds[this.GuildId].Channels[this.ParentIdAfter.Value];
+	public DiscordChannel? ParentBefore => this.Discord.Guilds[this.GuildId].Channels.TryGetValue(this.ParentIdBefore ?? 0ul, out var channel) ? channel : null;
+	public DiscordChannel? ParentAfter => this.Discord.Guilds[this.GuildId].Channels.TryGetValue(this.ParentIdAfter ?? 0ul, out var channel) ? channel : null;
 
 	#region Voice
 	public bool BitrateChanged => this.BitrateBefore is not null || this.BitrateAfter is not null;
