@@ -4,7 +4,7 @@ using System.Linq;
 
 using DisCatSharp.Enums;
 
-namespace DisCatSharp.Entities.Guild.AuditLog;
+namespace DisCatSharp.Entities.Guild;
 
 /// <summary>
 /// Represents a change set for a server settings update.

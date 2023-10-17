@@ -1,6 +1,6 @@
 using DisCatSharp.Enums;
 
-namespace DisCatSharp.Entities.Guild.AuditLog;
+namespace DisCatSharp.Entities.Guild;
 
 /// <summary>
 /// Represents a dynamic change set.

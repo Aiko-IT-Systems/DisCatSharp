@@ -1,8 +1,7 @@
-﻿namespace DisCatSharp.Entities.Guild.AuditLog;
+﻿namespace DisCatSharp.Entities.Guild;
 
 /// <summary>
 /// Represents a change set for pruning members from the server.
 /// </summary>
 public class MemberPruneChangeSet : AuditLogChangeSet
-{
-}
+{ }

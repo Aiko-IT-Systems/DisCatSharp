@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Entities.Guild.AuditLog;
+namespace DisCatSharp.Entities.Guild;
 
 /// <summary>
 /// Represents a Discord audit log.
