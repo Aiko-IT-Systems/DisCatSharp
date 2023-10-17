@@ -56,10 +56,7 @@ public class DiscordAuditLogEntry : SnowflakeObject
 	/// <exception cref="InvalidCastException">Thrown when the <see cref="ActionType"/> is not compatible with the targets <see cref="AuditLogChangeSet.ValidFor"/> type.</exception>
 	public T? As<T>()
 		where T : AuditLogChangeSet
-	{
-		if (this is T { IsValid: true } toConvert)
-			return toConvert;
-
-		throw new InvalidCastException($"Cannot convert {this.GetType().Name} with action type {this.ActionType} to {typeof(T).Name}.");
-	}
+		=> this is T { IsValid: true } toConvert
+			? toConvert
+			: throw new InvalidCastException($"Cannot convert {this.GetType().Name} with action type {this.ActionType} to {typeof(T).Name}.");
 }
