@@ -36,7 +36,7 @@ public class GuildUpdateChangeSet : DiscordAuditLogEntry
 	public ulong? OwnerIdAfter => ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "owner_id")?.NewValue);
 
 	public bool AfkChannelIdChanged => this.AfkChannelIdBefore is not null || this.AfkChannelIdAfter is not null;
-	public ulong? AfkChannelIdBefore =>ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "afk_channel_id")?.OldValue);
+	public ulong? AfkChannelIdBefore => ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "afk_channel_id")?.OldValue);
 	public ulong? AfkChannelIdAfter => ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "afk_channel_id")?.NewValue);
 
 	public bool AfkTimeoutChanged => this.AfkTimeoutBefore is not null || this.AfkTimeoutAfter is not null;
@@ -119,82 +119,157 @@ public class GuildUpdateChangeSet : DiscordAuditLogEntry
 	{
 		get
 		{
-			var description = $"{this.UserId} executed {this.GetType().Name.Replace("ChangeSet", string.Empty)} with reason {this.Reason ?? $"No reason given".Italic()}\n";
+			var description = $"{this.UserId} executed {this.GetType().Name.Replace("ChangeSet", string.Empty)} with reason {this.Reason ?? "No reason given".Italic()}\n";
 
 			if (this.NameChanged)
-				description += this.NameAfter is not null ? $"- Set Name to {this.NameAfter}\n" : "- Unset Name\n";
+			{
+				description += $"Old Name: {this.NameBefore ?? "Not set"}\n";
+				description += $"New Name: {this.NameAfter ?? "Not set"}\n";
+			}
 
 			if (this.IconChanged)
-				description += this.IconAfter is not null ? $"- Set Icon to {this.IconAfter}\n" : "- Unset Icon\n";
+			{
+				description += $"Old Icon: {this.IconBefore ?? "Not set"}\n";
+				description += $"New Icon: {this.IconAfter ?? "Not set"}\n";
+			}
 
 			if (this.SplashChanged)
-				description += this.SplashAfter is not null ? $"- Set Splash to {this.SplashAfter}\n" : "- Unset Splash\n";
+			{
+				description += $"Old Splash: {this.SplashBefore ?? "Not set"}\n";
+				description += $"New Splash: {this.SplashAfter ?? "Not set"}\n";
+			}
 
 			if (this.DiscoverySplashChanged)
-				description += this.DiscoverySplashAfter is not null ? $"- Set Discovery Splash to {this.DiscoverySplashAfter}\n" : "- Unset Discovery Splash\n";
+			{
+				description += $"Old Discovery Splash: {this.DiscoverySplashBefore ?? "Not set"}\n";
+				description += $"New Discovery Splash: {this.DiscoverySplashAfter ?? "Not set"}\n";
+			}
 
 			if (this.OwnerIdChanged)
-				description += this.OwnerIdAfter is not null ? $"- Set Owner ID to {this.OwnerIdAfter}\n" : "- Unset Owner ID\n";
+			{
+				description += $"Old Owner ID: {this.OwnerIdBefore?.ToString() ?? "Not set"}\n";
+				description += $"New Owner ID: {this.OwnerIdAfter?.ToString() ?? "Not set"}\n";
+			}
 
 			if (this.AfkChannelIdChanged)
-				description += this.AfkChannelIdAfter is not null ? $"- Set AFK Channel ID to {this.AfkChannelIdAfter}\n" : "- Unset AFK Channel ID\n";
+			{
+				description += $"Old AFK Channel ID: {this.AfkChannelIdBefore?.ToString() ?? "Not set"}\n";
+				description += $"New AFK Channel ID: {this.AfkChannelIdAfter?.ToString() ?? "Not set"}\n";
+			}
 
 			if (this.AfkTimeoutChanged)
-				description += this.AfkTimeoutAfter is not null ? $"- Set AFK Timeout to {this.AfkTimeoutAfter} seconds\n" : "- Unset AFK Timeout\n";
+			{
+				description += $"Old AFK Timeout: {this.AfkTimeoutBefore?.ToString() ?? "Not set"} seconds\n";
+				description += $"New AFK Timeout: {this.AfkTimeoutAfter?.ToString() ?? "Not set"} seconds\n";
+			}
 
 			if (this.WidgetEnabledChanged)
-				description += this.WidgetEnabledAfter is not null ? $"- Set Widget Enabled to {this.WidgetEnabledAfter}\n" : "- Unset Widget Enabled\n";
+			{
+				description += $"Old Widget Enabled: {this.WidgetEnabledBefore?.ToString() ?? "Not set"}\n";
+				description += $"New Widget Enabled: {this.WidgetEnabledAfter?.ToString() ?? "Not set"}\n";
+			}
 
 			if (this.WidgetChannelIdChanged)
-				description += this.WidgetChannelIdAfter is not null ? $"- Set Widget Channel ID to {this.WidgetChannelIdAfter}\n" : "- Unset Widget Channel ID\n";
+			{
+				description += $"Old Widget Channel ID: {this.WidgetChannelIdBefore?.ToString() ?? "Not set"}\n";
+				description += $"New Widget Channel ID: {this.WidgetChannelIdAfter?.ToString() ?? "Not set"}\n";
+			}
 
 			if (this.VerificationLevelChanged)
-				description += this.VerificationLevelAfter is not null ? $"- Set Verification Level to {this.VerificationLevelAfter}\n" : "- Unset Verification Level\n";
+			{
+				description += $"Old Verification Level: {this.VerificationLevelBefore?.ToString() ?? "Not set"}\n";
+				description += $"New Verification Level: {this.VerificationLevelAfter?.ToString() ?? "Not set"}\n";
+			}
 
 			if (this.DefaultMessageNotificationsChanged)
-				description += this.DefaultMessageNotificationsAfter is not null ? $"- Set Default Message Notifications to {this.DefaultMessageNotificationsAfter}\n" : "- Unset Default Message Notifications\n";
+			{
+				description += $"Old Default Message Notifications: {this.DefaultMessageNotificationsBefore?.ToString() ?? "Not set"}\n";
+				description += $"New Default Message Notifications: {this.DefaultMessageNotificationsAfter?.ToString() ?? "Not set"}\n";
+			}
 
 			if (this.ExplicitContentFilterChanged)
-				description += this.ExplicitContentFilterAfter is not null ? $"- Set Explicit Content Filter to {this.ExplicitContentFilterAfter}\n" : "- Unset Explicit Content Filter\n";
+			{
+				description += $"Old Explicit Content Filter: {this.ExplicitContentFilterBefore?.ToString() ?? "Not set"}\n";
+				description += $"New Explicit Content Filter: {this.ExplicitContentFilterAfter?.ToString() ?? "Not set"}\n";
+			}
 
 			if (this.FeaturesChanged)
-				description += this.FeaturesAfter is not null ? $"- Set Features to {string.Join(", ", this.FeaturesAfter)}\n" : "- Unset Features\n";
+			{
+				description += $"Old Features: {string.Join(", ", this.FeaturesBefore ?? new List<string>())}\n";
+				description += $"New Features: {string.Join(", ", this.FeaturesAfter ?? new List<string>())}\n";
+			}
 
 			if (this.MfaLevelChanged)
-				description += this.MfaLevelAfter is not null ? $"- Set MFA Level to {this.MfaLevelAfter}\n" : "- Unset MFA Level\n";
+			{
+				description += $"Old MFA Level: {this.MfaLevelBefore?.ToString() ?? "Not set"}\n";
+				description += $"New MFA Level: {this.MfaLevelAfter?.ToString() ?? "Not set"}\n";
+			}
 
 			if (this.SystemChannelIdChanged)
-				description += this.SystemChannelIdAfter is not null ? $"- Set System Channel ID to {this.SystemChannelIdAfter}\n" : "- Unset System Channel ID\n";
+			{
+				description += $"Old System Channel ID: {this.SystemChannelIdBefore?.ToString() ?? "Not set"}\n";
+				description += $"New System Channel ID: {this.SystemChannelIdAfter?.ToString() ?? "Not set"}\n";
+			}
 
 			if (this.SystemChannelFlagsChanged)
-				description += this.SystemChannelFlagsAfter is not null ? $"- Set System Channel Flags to {this.SystemChannelFlagsAfter}\n" : "- Unset System Channel Flags\n";
+			{
+				description += $"Old System Channel Flags: {this.SystemChannelFlagsBefore?.ToString() ?? "Not set"}\n";
+				description += $"New System Channel Flags: {this.SystemChannelFlagsAfter?.ToString() ?? "Not set"}\n";
+			}
 
 			if (this.RulesChannelIdChanged)
-				description += this.RulesChannelIdAfter is not null ? $"- Set Rules Channel ID to {this.RulesChannelIdAfter}\n" : "- Unset Rules Channel ID\n";
+			{
+				description += $"Old Rules Channel ID: {this.RulesChannelIdBefore?.ToString() ?? "Not set"}\n";
+				description += $"New Rules Channel ID: {this.RulesChannelIdAfter?.ToString() ?? "Not set"}\n";
+			}
 
 			if (this.VanityUrlCodeChanged)
-				description += this.VanityUrlCodeAfter is not null ? $"- Set Vanity URL Code to {this.VanityUrlCodeAfter}\n" : "- Unset Vanity URL Code\n";
+			{
+				description += $"Old Vanity URL Code: {this.VanityUrlCodeBefore ?? "Not set"}\n";
+				description += $"New Vanity URL Code: {this.VanityUrlCodeAfter ?? "Not set"}\n";
+			}
 
 			if (this.DescriptionChanged)
-				description += this.DescriptionAfter is not null ? $"- Set Description to {this.DescriptionAfter}\n" : "- Unset Description\n";
+			{
+				description += $"Old Description: {this.DescriptionBefore ?? "Not set"}\n";
+				description += $"New Description: {this.DescriptionAfter ?? "Not set"}\n";
+			}
 
 			if (this.BannerChanged)
-				description += this.BannerAfter is not null ? $"- Set Banner to {this.BannerAfter}\n" : "- Unset Banner\n";
+			{
+				description += $"Old Banner: {this.BannerBefore ?? "Not set"}\n";
+				description += $"New Banner: {this.BannerAfter ?? "Not set"}\n";
+			}
 
 			if (this.PreferredLocaleChanged)
-				description += this.PreferredLocaleAfter is not null ? $"- Set Preferred Locale to {this.PreferredLocaleAfter}\n" : "- Unset Preferred Locale\n";
+			{
+				description += $"Old Preferred Locale: {this.PreferredLocaleBefore ?? "Not set"}\n";
+				description += $"New Preferred Locale: {this.PreferredLocaleAfter ?? "Not set"}\n";
+			}
 
 			if (this.PublicUpdatesChannelIdChanged)
-				description += this.PublicUpdatesChannelIdAfter is not null ? $"- Set Public Updates Channel ID to {this.PublicUpdatesChannelIdAfter}\n" : "- Unset Public Updates Channel ID\n";
+			{
+				description += $"Old Public Updates Channel ID: {this.PublicUpdatesChannelIdBefore?.ToString() ?? "Not set"}\n";
+				description += $"New Public Updates Channel ID: {this.PublicUpdatesChannelIdAfter?.ToString() ?? "Not set"}\n";
+			}
 
 			if (this.NsfwLevelChanged)
-				description += this.NsfwLevelAfter is not null ? $"- Set NSFW Level to {this.NsfwLevelAfter}\n" : "- Unset NSFW Level\n";
+			{
+				description += $"Old NSFW Level: {this.NsfwLevelBefore?.ToString() ?? "Not set"}\n";
+				description += $"New NSFW Level: {this.NsfwLevelAfter?.ToString() ?? "Not set"}\n";
+			}
 
 			if (this.PremiumProgressBarEnabledChanged)
-				description += this.PremiumProgressBarEnabledAfter is not null ? $"- Set Premium Progress Bar Enabled to {this.PremiumProgressBarEnabledAfter}\n" : "- Unset Premium Progress Bar Enabled\n";
+			{
+				description += $"Old Premium Progress Bar Enabled: {this.PremiumProgressBarEnabledBefore?.ToString() ?? "Not set"}\n";
+				description += $"New Premium Progress Bar Enabled: {this.PremiumProgressBarEnabledAfter?.ToString() ?? "Not set"}\n";
+			}
 
 			if (this.SafetyAlertsChannelIdChanged)
-				description += this.SafetyAlertsChannelIdAfter is not null ? $"- Set Safety Alerts Channel ID to {this.SafetyAlertsChannelIdAfter}\n" : "- Unset Safety Alerts Channel ID\n";
+			{
+				description += $"Old Safety Alerts Channel ID: {this.SafetyAlertsChannelIdBefore?.ToString() ?? "Not set"}\n";
+				description += $"New Safety Alerts Channel ID: {this.SafetyAlertsChannelIdAfter?.ToString() ?? "Not set"}\n";
+			}
 
 			return description;
 		}
