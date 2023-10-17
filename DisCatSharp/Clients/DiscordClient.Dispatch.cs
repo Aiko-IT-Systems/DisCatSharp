@@ -1343,7 +1343,7 @@ public sealed partial class DiscordClient
 
 			await this._guildAuditLogEntryCreated.InvokeAsync(this, new(this.ServiceProvider)
 			{
-				Guild = guild, AuditLogEntry = auditLogCreateEntry
+				Guild = guild, AuditLogEntry = null
 			}).ConfigureAwait(false);
 		}
 		catch (Exception)
