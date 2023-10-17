@@ -7,8 +7,21 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents additional information about the <see cref="DiscordAuditLogEntry"/>.
 /// </summary>
-public sealed class DiscordAuditEntryInfo
+public sealed class DiscordAuditEntryInfo : ObservableApiObject
 {
+	/// <summary>
+	/// Gets or sets the guild in which the entities were targeted.
+	/// </summary>
+	[JsonIgnore]
+	internal DiscordGuild Guild
+		=> (this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null!)!;
+
+	/// <summary>
+	/// Gets or sets the ID of the guild in which the entities were targeted.
+	/// </summary>
+	[JsonIgnore]
+	internal ulong GuildId { get; set; }
+
 	/// <summary>
 	/// Gets or sets the ID of the app whose permissions were targeted.
 	/// Event Type: <see cref="AuditLogActionType.ApplicationCommandPermissionUpdate"/>.
@@ -36,6 +49,13 @@ public sealed class DiscordAuditEntryInfo
 	/// </summary>
 	[JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong? ChannelId { get; internal set; } = null;
+
+	/// <summary>
+	/// Gets the channel in which the entities were targeted.
+	/// </summary>
+	[JsonIgnore]
+	public DiscordChannel? Channel
+		=> this.ChannelId.HasValue ? this.Guild.GetChannel(this.ChannelId.Value) : null;
 
 	/// <summary>
 	/// Gets or sets the number of entities that were targeted.

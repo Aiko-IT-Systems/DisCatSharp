@@ -2306,6 +2306,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 			last = alr.Entries[^1].Id;
 			alrs.Add(alr);
 		}
+
 		return alrs;
 	}
 

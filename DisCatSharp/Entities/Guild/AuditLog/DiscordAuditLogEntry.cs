@@ -30,6 +30,10 @@ public class DiscordAuditLogEntry : SnowflakeObject
 	[JsonProperty("user_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong? UserId { get; internal set; }
 
+	[JsonIgnore]
+	public DiscordUser? User
+		=> this.UserId.HasValue ? this.Discord.GetCachedOrEmptyUserInternal(this.UserId.Value) : null;
+
 	/// <summary>
 	/// Gets the type of action that occurred in the audit log entry.
 	/// </summary>

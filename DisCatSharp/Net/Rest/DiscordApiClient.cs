@@ -1174,6 +1174,16 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var auditLogData = DiscordJson.DeserializeObject<DiscordAuditLog>(res.Response, this.Discord);
+		auditLogData.GuildId = guildId;
+		auditLogData.Entries.ForEach(x =>
+		{
+			x.Discord = this.Discord;
+			if (x.Options is null)
+				return;
+
+			x.Options.Discord = this.Discord;
+			x.Options.GuildId = auditLogData.GuildId;
+		});
 
 		return auditLogData;
 	}

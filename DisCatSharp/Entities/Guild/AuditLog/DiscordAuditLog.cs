@@ -10,6 +10,12 @@ namespace DisCatSharp.Entities;
 public sealed class DiscordAuditLog : ObservableApiObject
 {
 	/// <summary>
+	/// Gets or sets the ID of the guild in which the entities were targeted.
+	/// </summary>
+	[JsonIgnore]
+	internal ulong GuildId { get; set; }
+
+	/// <summary>
 	/// List of application commands referenced in the <see cref="DiscordAuditLog"/>.
 	/// </summary>
 	[JsonProperty("application_commands", NullValueHandling = NullValueHandling.Ignore)]
