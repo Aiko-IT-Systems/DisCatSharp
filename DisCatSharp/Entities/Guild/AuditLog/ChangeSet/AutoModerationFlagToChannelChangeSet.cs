@@ -9,7 +9,7 @@ public sealed class AutoModerationFlagToChannelChangeSet : DiscordAuditLogEntry
 {
 	internal AutoModerationFlagToChannelChangeSet()
 	{
-		this.ValidFor = AuditLogActionType.AutoModerationBlockMessage;
+		this.ValidFor = AuditLogActionType.AutoModerationFlagToChannel;
 	}
 
 	/// <summary>
