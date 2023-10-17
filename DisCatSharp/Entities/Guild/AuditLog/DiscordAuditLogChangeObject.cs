@@ -4,5 +4,4 @@ namespace DisCatSharp.Entities.Guild.AuditLog;
 /// Represents a Discord audit log change object.
 /// </summary>
 public class DiscordAuditLogChangeObject
-{
-}
+{ }

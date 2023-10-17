@@ -33,37 +33,37 @@ public enum AuditLogActionType
 	/// <summary>
 	/// Indicates that the channel permission overwrite was created.
 	/// </summary>
-	OverwriteCreate = 13,
+	ChannelOverwriteCreate = 13,
 
 	/// <summary>
 	/// Indicates that the channel permission overwrite was updated.
 	/// </summary>
-	OverwriteUpdate = 14,
+	ChannelOverwriteUpdate = 14,
 
 	/// <summary>
 	/// Indicates that the channel permission overwrite was deleted.
 	/// </summary>
-	OverwriteDelete = 15,
+	ChannelOverwriteDelete = 15,
 
 	/// <summary>
 	/// Indicates that the user was kicked.
 	/// </summary>
-	Kick = 20,
+	MemberKick = 20,
 
 	/// <summary>
 	/// Indicates that users were pruned.
 	/// </summary>
-	Prune = 21,
+	MemberPrune = 21,
 
 	/// <summary>
 	/// Indicates that the user was banned.
 	/// </summary>
-	Ban = 22,
+	MemberBanAdd = 22,
 
 	/// <summary>
 	/// Indicates that the user was unbanned.
 	/// </summary>
-	Unban = 23,
+	MemberBanRemove = 23,
 
 	/// <summary>
 	/// Indicates that the member was updated.
@@ -273,17 +273,27 @@ public enum AuditLogActionType
 	/// <summary>
 	/// Indicates that automod flagged a message.
 	/// </summary>
-	AutoModerationFlagMessage = 144,
+	AutoModerationFlagToChannel = 144,
 
 	/// <summary>
 	/// Indicates that automod timed out a user.
 	/// </summary>
-	AutoModerationTimeOutUser = 145,
+	AutoModerationUserCommunicationDisabled = 145,
 
 	/// <summary>
 	/// Indicates that automod quarantined a user.
 	/// </summary>
 	AutoModerationQuarantineUser = 146,
+
+	/// <summary>
+	/// Creator monetization request was created.
+	/// </summary>
+	CreatorMonetizationRequestCreated = 150,
+
+	/// <summary>
+	/// Creator monetization terms were accepted.
+	/// </summary>
+	CreatorMonetizationTermsAccepted = 151,
 
 	OnboardingQuestionCreate = 163,
 	OnboardingQuestionUpdate = 164,
