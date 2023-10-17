@@ -13,6 +13,12 @@ namespace DisCatSharp.Entities;
 public class DiscordAuditLogEntry : SnowflakeObject
 {
 	/// <summary>
+	/// Gets or sets the ID of the guild in which the entities were targeted.
+	/// </summary>
+	[JsonIgnore]
+	internal ulong GuildId { get; set; }
+
+	/// <summary>
 	/// Gets the ID of the affected entity (webhook, user, role, etc.).
 	/// </summary>
 	[JsonProperty("target_id", NullValueHandling = NullValueHandling.Ignore)]
