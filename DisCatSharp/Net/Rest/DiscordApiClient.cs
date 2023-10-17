@@ -1177,6 +1177,7 @@ public sealed class DiscordApiClient
 		auditLogData.GuildId = guildId;
 		auditLogData.Entries.ForEach(x =>
 		{
+			x.GuildId = auditLogData.GuildId;
 			x.Discord = this.Discord;
 			if (x.Options is null)
 				return;
