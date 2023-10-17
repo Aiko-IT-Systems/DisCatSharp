@@ -10,10 +10,16 @@ public class AuditLogChangeSet : DiscordAuditLogEntry
 	/// <summary>
 	/// Gets the change description.
 	/// </summary>
-	public string? ChangeDescription { get; internal set; } = null;
+	public virtual string? ChangeDescription { get; internal set; } = null;
 
-	public AuditLogActionType ValidFor { get; internal set; } = AuditLogActionType.Invalid;
+	/// <summary>
+	/// Gets the valid action type for this change set.
+	/// </summary>
+	public AuditLogActionType ValidFor { get; internal set; }
 
+	/// <summary>
+	/// Gets whether this change set is valid.
+	/// </summary>
 	public bool IsValid
 		=> this.ActionType == this.ValidFor;
 
