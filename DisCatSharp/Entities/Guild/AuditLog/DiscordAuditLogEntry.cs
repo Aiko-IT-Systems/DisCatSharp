@@ -9,7 +9,7 @@ namespace DisCatSharp.Entities.Guild.AuditLog;
 /// <summary>
 /// Represents a Discord audit log entry.
 /// </summary>
-public class DiscordAuditLogEntry : SnowflakeObject
+public sealed class DiscordAuditLogEntry : SnowflakeObject
 {
 	[JsonProperty("target_id", NullValueHandling = NullValueHandling.Ignore)]
 	public SnowflakeObject? TargetId { get; internal set; }
@@ -24,7 +24,7 @@ public class DiscordAuditLogEntry : SnowflakeObject
 	public AuditLogActionType ActionType { get; internal set; }
 
 	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordAuditEntryInfo Options { get; internal set; }
+	public DiscordAuditEntryInfo? Options { get; internal set; }
 
 	[JsonProperty("reason", NullValueHandling = NullValueHandling.Ignore)]
 	public string? Reason { get; internal set; }
