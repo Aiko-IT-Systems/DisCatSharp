@@ -182,11 +182,11 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	public string AvatarUrl
 		=> string.IsNullOrWhiteSpace(this.AvatarHash) ? this.DefaultAvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarHash}.{(this.AvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
-	/*/// <summary>
+	/// <summary>
 	/// Gets the user's avatar decoration url.
 	/// </summary>
 	[JsonIgnore]
-	public string? AvatarDecorationUrl => string.IsNullOrWhiteSpace(this.AvatarDecorationHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS_DECORATIONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarDecorationHash}.{(this.AvatarDecorationHash.StartsWith("a_") ? "gif" : "png")}?size=1024";*/
+	public string? AvatarDecorationUrl => this.AvatarDecorationData?.AssetUrl;
 
 	/// <summary>
 	/// Gets the URL of default avatar for this user.
@@ -584,6 +584,12 @@ public class AvatarDecorationData
 {
 	[JsonProperty("asset", NullValueHandling = NullValueHandling.Ignore)]
 	public string Asset { get; internal set; }
+
+	/// <summary>
+	/// Gets the user's avatar decoration url.
+	/// </summary>
+	[JsonIgnore]
+	public string? AssetUrl => string.IsNullOrWhiteSpace(this.Asset) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS_DECORATION_PRESETS}/{this.Asset}.png?size=1024";
 
 	[JsonProperty("sku_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong SkuId { get; internal set; }
