@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,10 +8,12 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a change set for a server settings update.
 /// </summary>
-public class GuildUpdateChangeSet : AuditLogChangeSet
+public class GuildUpdateChangeSet : DiscordAuditLogEntry
 {
-	/// <inheritdoc cref="AuditLogChangeSet.ValidFor" />
-	public new AuditLogActionType ValidFor = AuditLogActionType.GuildUpdate;
+	public GuildUpdateChangeSet()
+	{
+		this.ValidFor = AuditLogActionType.GuildUpdate;
+	}
 
 	public bool NameChanged => this.NameBefore is not null || this.NameAfter is not null;
 	public string? NameBefore => (string?)this.Changes.FirstOrDefault(x => x.Key == "name")?.OldValue;
@@ -31,12 +32,12 @@ public class GuildUpdateChangeSet : AuditLogChangeSet
 	public string? DiscoverySplashAfter => (string?)this.Changes.FirstOrDefault(x => x.Key == "discovery_splash")?.NewValue;
 
 	public bool OwnerIdChanged => this.OwnerIdBefore is not null || this.OwnerIdAfter is not null;
-	public ulong? OwnerIdBefore => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "owner_id")?.OldValue;
-	public ulong? OwnerIdAfter => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "owner_id")?.NewValue;
+	public ulong? OwnerIdBefore => ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "owner_id")?.OldValue);
+	public ulong? OwnerIdAfter => ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "owner_id")?.NewValue);
 
 	public bool AfkChannelIdChanged => this.AfkChannelIdBefore is not null || this.AfkChannelIdAfter is not null;
-	public ulong? AfkChannelIdBefore => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "afk_channel_id")?.OldValue;
-	public ulong? AfkChannelIdAfter => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "afk_channel_id")?.NewValue;
+	public ulong? AfkChannelIdBefore =>ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "afk_channel_id")?.OldValue);
+	public ulong? AfkChannelIdAfter => ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "afk_channel_id")?.NewValue);
 
 	public bool AfkTimeoutChanged => this.AfkTimeoutBefore is not null || this.AfkTimeoutAfter is not null;
 	public int? AfkTimeoutBefore => (int?)this.Changes.FirstOrDefault(x => x.Key == "afk_timeout")?.OldValue;
@@ -47,8 +48,8 @@ public class GuildUpdateChangeSet : AuditLogChangeSet
 	public bool? WidgetEnabledAfter => (bool?)this.Changes.FirstOrDefault(x => x.Key == "widget_enabled")?.NewValue;
 
 	public bool WidgetChannelIdChanged => this.WidgetChannelIdBefore is not null || this.WidgetChannelIdAfter is not null;
-	public ulong? WidgetChannelIdBefore => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "widget_channel_id")?.OldValue;
-	public ulong? WidgetChannelIdAfter => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "widget_channel_id")?.NewValue;
+	public ulong? WidgetChannelIdBefore => ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "widget_channel_id")?.OldValue);
+	public ulong? WidgetChannelIdAfter => ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "widget_channel_id")?.NewValue);
 
 	public bool VerificationLevelChanged => this.VerificationLevelBefore is not null || this.VerificationLevelAfter is not null;
 	public VerificationLevel? VerificationLevelBefore => (VerificationLevel?)this.Changes.FirstOrDefault(x => x.Key == "verification_level")?.OldValue;
@@ -71,16 +72,16 @@ public class GuildUpdateChangeSet : AuditLogChangeSet
 	public MfaLevel? MfaLevelAfter => (MfaLevel?)this.Changes.FirstOrDefault(x => x.Key == "mfa_level")?.NewValue;
 
 	public bool SystemChannelIdChanged => this.SystemChannelIdBefore is not null || this.SystemChannelIdAfter is not null;
-	public ulong? SystemChannelIdBefore => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "system_channel_id")?.OldValue;
-	public ulong? SystemChannelIdAfter => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "system_channel_id")?.NewValue;
+	public ulong? SystemChannelIdBefore => ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "system_channel_id")?.OldValue);
+	public ulong? SystemChannelIdAfter => ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "system_channel_id")?.NewValue);
 
 	public bool SystemChannelFlagsChanged => this.SystemChannelFlagsBefore is not null || this.SystemChannelFlagsAfter is not null;
 	public SystemChannelFlags? SystemChannelFlagsBefore => (SystemChannelFlags?)this.Changes.FirstOrDefault(x => x.Key == "system_channel_flags")?.OldValue;
 	public SystemChannelFlags? SystemChannelFlagsAfter => (SystemChannelFlags?)this.Changes.FirstOrDefault(x => x.Key == "system_channel_flags")?.NewValue;
 
 	public bool RulesChannelIdChanged => this.RulesChannelIdBefore is not null || this.RulesChannelIdAfter is not null;
-	public ulong? RulesChannelIdBefore => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "rules_channel_id")?.OldValue;
-	public ulong? RulesChannelIdAfter => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "rules_channel_id")?.NewValue;
+	public ulong? RulesChannelIdBefore => ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "rules_channel_id")?.OldValue);
+	public ulong? RulesChannelIdAfter => ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "rules_channel_id")?.NewValue);
 
 	public bool VanityUrlCodeChanged => this.VanityUrlCodeBefore is not null || this.VanityUrlCodeAfter is not null;
 	public string? VanityUrlCodeBefore => (string?)this.Changes.FirstOrDefault(x => x.Key == "vanity_url_code")?.OldValue;
@@ -99,8 +100,8 @@ public class GuildUpdateChangeSet : AuditLogChangeSet
 	public string? PreferredLocaleAfter => (string?)this.Changes.FirstOrDefault(x => x.Key == "preferred_locale")?.NewValue;
 
 	public bool PublicUpdatesChannelIdChanged => this.PublicUpdatesChannelIdBefore is not null || this.PublicUpdatesChannelIdAfter is not null;
-	public ulong? PublicUpdatesChannelIdBefore => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "public_updates_channel_id")?.OldValue;
-	public ulong? PublicUpdatesChannelIdAfter => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "public_updates_channel_id")?.NewValue;
+	public ulong? PublicUpdatesChannelIdBefore => ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "public_updates_channel_id")?.OldValue);
+	public ulong? PublicUpdatesChannelIdAfter => ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "public_updates_channel_id")?.NewValue);
 
 	public bool NsfwLevelChanged => this.NsfwLevelBefore is not null || this.NsfwLevelAfter is not null;
 	public NsfwLevel? NsfwLevelBefore => (NsfwLevel?)this.Changes.FirstOrDefault(x => x.Key == "nsfw_level")?.OldValue;
@@ -111,10 +112,10 @@ public class GuildUpdateChangeSet : AuditLogChangeSet
 	public bool? PremiumProgressBarEnabledAfter => (bool?)this.Changes.FirstOrDefault(x => x.Key == "premium_progress_bar_enabled")?.NewValue;
 
 	public bool SafetyAlertsChannelIdChanged => this.SafetyAlertsChannelIdBefore is not null || this.SafetyAlertsChannelIdAfter is not null;
-	public ulong? SafetyAlertsChannelIdBefore => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "safety_alerts_channel_id")?.OldValue;
-	public ulong? SafetyAlertsChannelIdAfter => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "safety_alerts_channel_id")?.NewValue;
+	public ulong? SafetyAlertsChannelIdBefore => ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "safety_alerts_channel_id")?.OldValue);
+	public ulong? SafetyAlertsChannelIdAfter => ConvertToUlong(this.Changes.FirstOrDefault(x => x.Key == "safety_alerts_channel_id")?.NewValue);
 
-	public override string ChangeDescription
+	internal override string ChangeDescription
 	{
 		get
 		{

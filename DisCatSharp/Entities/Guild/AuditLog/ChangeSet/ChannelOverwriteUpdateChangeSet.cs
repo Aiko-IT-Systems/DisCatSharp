@@ -7,10 +7,12 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a change set for updating a permission overwrite for a channel.
 /// </summary>
-public class ChannelOverwriteUpdateChangeSet : AuditLogChangeSet
+public class ChannelOverwriteUpdateChangeSet : DiscordAuditLogEntry
 {
-	/// <inheritdoc cref="AuditLogChangeSet.ValidFor" />
-	public new AuditLogActionType ValidFor = AuditLogActionType.ChannelOverwriteUpdate;
+	public ChannelOverwriteUpdateChangeSet()
+	{
+		this.ValidFor = AuditLogActionType.ChannelOverwriteUpdate;
+	}
 
 	public bool AllowChanged => this.AllowBefore is not null || this.AllowAfter is not null;
 	public Permissions? AllowBefore => (Permissions?)this.Changes.FirstOrDefault(x => x.Key == "allow")?.OldValue;
@@ -20,7 +22,7 @@ public class ChannelOverwriteUpdateChangeSet : AuditLogChangeSet
 	public Permissions? DenyBefore => (Permissions?)this.Changes.FirstOrDefault(x => x.Key == "deny")?.OldValue;
 	public Permissions? DenyAfter => (Permissions?)this.Changes.FirstOrDefault(x => x.Key == "deny")?.NewValue;
 
-	public override string ChangeDescription
+	internal override string ChangeDescription
 	{
 		get
 		{

@@ -3,5 +3,5 @@
 /// <summary>
 /// Represents a change set for updating an Auto Moderation rule.
 /// </summary>
-public class AutoModerationRuleUpdateChangeSet : AuditLogChangeSet
+public class AutoModerationRuleUpdateChangeSet : DiscordAuditLogEntry
 { }

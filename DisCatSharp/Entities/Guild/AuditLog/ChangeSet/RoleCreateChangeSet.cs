@@ -3,5 +3,5 @@
 /// <summary>
 /// Represents a change set for creating a role.
 /// </summary>
-public class RoleCreateChangeSet : AuditLogChangeSet
+public class RoleCreateChangeSet : DiscordAuditLogEntry
 { }

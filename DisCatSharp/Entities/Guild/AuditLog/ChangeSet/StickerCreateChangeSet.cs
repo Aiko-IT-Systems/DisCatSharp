@@ -3,5 +3,5 @@
 /// <summary>
 /// Represents a change set for creating a sticker.
 /// </summary>
-public class StickerCreateChangeSet : AuditLogChangeSet
+public class StickerCreateChangeSet : DiscordAuditLogEntry
 { }

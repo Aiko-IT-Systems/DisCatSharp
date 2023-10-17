@@ -1,4 +1,3 @@
-﻿using System;
 using System.Linq;
 
 using DisCatSharp.Enums;
@@ -8,10 +7,12 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a change set for adding a permission overwrite to a channel.
 /// </summary>
-public class ChannelOverwriteCreateChangeSet : AuditLogChangeSet
+public class ChannelOverwriteCreateChangeSet : DiscordAuditLogEntry
 {
-	/// <inheritdoc cref="AuditLogChangeSet.ValidFor" />
-	public new AuditLogActionType ValidFor = AuditLogActionType.ChannelOverwriteCreate;
+	public ChannelOverwriteCreateChangeSet()
+	{
+		this.ValidFor = AuditLogActionType.ChannelOverwriteCreate;
+	}
 
 	public bool AllowChanged => this.AllowBefore is not null || this.AllowAfter is not null;
 	public Permissions? AllowBefore => (Permissions?)this.Changes.FirstOrDefault(x => x.Key == "allow")?.OldValue;
@@ -21,7 +22,7 @@ public class ChannelOverwriteCreateChangeSet : AuditLogChangeSet
 	public Permissions? DenyBefore => (Permissions?)this.Changes.FirstOrDefault(x => x.Key == "deny")?.OldValue;
 	public Permissions? DenyAfter => (Permissions?)this.Changes.FirstOrDefault(x => x.Key == "deny")?.NewValue;
 
-	public override string ChangeDescription
+	internal override string ChangeDescription
 	{
 		get
 		{

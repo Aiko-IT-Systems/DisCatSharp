@@ -3,5 +3,5 @@
 /// <summary>
 /// Represents a change set for updating onboarding settings.
 /// </summary>
-public class OnboardingUpdateChangeSet : AuditLogChangeSet
+public class OnboardingUpdateChangeSet : DiscordAuditLogEntry
 { }

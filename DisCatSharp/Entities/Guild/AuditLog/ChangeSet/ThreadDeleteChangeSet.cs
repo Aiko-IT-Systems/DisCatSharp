@@ -3,5 +3,5 @@
 /// <summary>
 /// Represents a change set for deleting a thread.
 /// </summary>
-public class ThreadDeleteChangeSet : AuditLogChangeSet
+public class ThreadDeleteChangeSet : DiscordAuditLogEntry
 { }

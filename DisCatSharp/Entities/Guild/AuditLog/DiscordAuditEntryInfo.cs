@@ -56,7 +56,7 @@ public sealed class DiscordAuditEntryInfo
 	/// Event Types: <see cref="AuditLogActionType.ChannelOverwriteCreate"/>, <see cref="AuditLogActionType.ChannelOverwriteUpdate"/>, <see cref="AuditLogActionType.ChannelOverwriteDelete"/>"/>
 	/// </summary>
 	[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-	public SnowflakeObject? OverwrittenEntityId { get; internal set; } = null;
+	public ulong? OverwrittenEntityId { get; internal set; } = null;
 
 	/// <summary>
 	/// Gets or sets the number of members removed by the prune.

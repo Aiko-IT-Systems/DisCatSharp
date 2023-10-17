@@ -3,5 +3,5 @@
 /// <summary>
 /// Represents a change set for creating an emoji.
 /// </summary>
-public class EmojiCreateChangeSet : AuditLogChangeSet
+public class EmojiCreateChangeSet : DiscordAuditLogEntry
 { }
