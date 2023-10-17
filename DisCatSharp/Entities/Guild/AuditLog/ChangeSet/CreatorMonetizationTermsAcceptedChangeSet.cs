@@ -1,7 +1,18 @@
-﻿namespace DisCatSharp.Entities;
+using DisCatSharp.Enums;
+
+namespace DisCatSharp.Entities;
 
 /// <summary>
 /// Represents a change set for the acceptance of creator monetization terms.
 /// </summary>
 public class CreatorMonetizationTermsAcceptedChangeSet : DiscordAuditLogEntry
-{ }
+{
+	public CreatorMonetizationTermsAcceptedChangeSet()
+	{
+		this.ValidFor = AuditLogActionType.CreatorMonetizationTermsAccepted;
+	}
+
+	/// <inheritdoc />
+	internal override string? ChangeDescription
+		=> $"{this.UserId} accepted Creator Monetization Terms";
+}
