@@ -2,12 +2,12 @@ using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Entities.Guild;
+namespace DisCatSharp.Entities;
 
 /// <summary>
 /// Represents a Discord audit log.
 /// </summary>
-public sealed class DiscordAuditLog
+public sealed class DiscordAuditLog : ObservableApiObject
 {
 	/// <summary>
 	/// List of application commands referenced in the <see cref="DiscordAuditLog"/>.

@@ -1146,14 +1146,13 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Gets the audit logs async.
 	/// </summary>
-	/// <param name="guildId">The guild_id.</param>
+	/// <param name="guildId">The guild id.</param>
 	/// <param name="limit">The limit.</param>
 	/// <param name="after">The after.</param>
 	/// <param name="before">The before.</param>
-	/// <param name="responsible">The responsible.</param>
-	/// <param name="actionType">The action_type.</param>
-
-	internal async Task<AuditLog> GetAuditLogsAsync(ulong guildId, int limit, ulong? after, ulong? before, ulong? responsible, int? actionType)
+	/// <param name="responsible">The responsible user.</param>
+	/// <param name="actionType">The action type.</param>
+	internal async Task<DiscordAuditLog> GetAuditLogsAsync(ulong guildId, int limit, ulong? after, ulong? before, ulong? responsible, int? actionType)
 	{
 		var urlParams = new Dictionary<string, string>
 		{
@@ -1169,14 +1168,14 @@ public sealed class DiscordApiClient
 			urlParams["action_type"] = actionType?.ToString(CultureInfo.InvariantCulture);
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.AUDIT_LOGS}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id = guildId }, out var path);
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var auditLogDataRaw = DiscordJson.DeserializeObject<AuditLog>(res.Response, this.Discord);
+		var auditLogData = DiscordJson.DeserializeObject<DiscordAuditLog>(res.Response, this.Discord);
 
-		return auditLogDataRaw;
+		return auditLogData;
 	}
 
 	/// <summary>

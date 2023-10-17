@@ -1,6 +1,6 @@
 using DisCatSharp.Enums;
 
-namespace DisCatSharp.Entities.Guild;
+namespace DisCatSharp.Entities;
 
 /// <summary>
 /// Represents a dynamic change set.

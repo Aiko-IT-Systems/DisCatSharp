@@ -5,7 +5,7 @@ using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Entities.Guild;
+namespace DisCatSharp.Entities;
 
 /// <summary>
 /// Represents a Discord audit log entry.

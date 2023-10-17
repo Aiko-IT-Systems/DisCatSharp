@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Entities.Guild;
+namespace DisCatSharp.Entities;
 
 /// <summary>
 /// Represents a <see cref="DiscordAuditLogChangeObject"/> in a <see cref="DiscordAuditLogEntry"/>.

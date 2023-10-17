@@ -2,7 +2,7 @@ using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Entities.Guild;
+namespace DisCatSharp.Entities;
 
 /// <summary>
 /// Represents additional information about the <see cref="DiscordAuditLogEntry"/>.

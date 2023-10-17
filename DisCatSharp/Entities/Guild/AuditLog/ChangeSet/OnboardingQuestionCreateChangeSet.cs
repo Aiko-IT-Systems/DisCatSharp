@@ -1,4 +1,4 @@
-﻿namespace DisCatSharp.Entities.Guild;
+﻿namespace DisCatSharp.Entities;
 
 /// <summary>
 /// Represents a change set for creating an onboarding question.

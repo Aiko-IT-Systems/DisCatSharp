@@ -1,7 +1,6 @@
 using System;
 
 using DisCatSharp.Entities;
-using DisCatSharp.Entities.Guild.AuditLog;
 
 namespace DisCatSharp.EventArgs;
 
