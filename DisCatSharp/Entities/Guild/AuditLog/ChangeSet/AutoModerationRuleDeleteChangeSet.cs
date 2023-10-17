@@ -23,8 +23,8 @@ public class AutoModerationRuleDeleteChangeSet : DiscordAuditLogEntry
 	public AutomodTriggerMetadata TriggerMetadata => (AutomodTriggerMetadata)this.Changes.FirstOrDefault(x => x.Key == "trigger_metadata")?.OldValue;
 
 	public IReadOnlyList<ulong>? ExemptRoleIds => ((IReadOnlyList<string>?)this.Changes.FirstOrDefault(x => x.Key == "exempt_roles")?.OldValue)?.Select(x => ConvertToUlong(x)!.Value).ToList();
-	public IEnumerable<DiscordRole> ExemptRoles => this.ExemptRoles.Select(x => this.Discord.Guilds[this.GuildId].Roles[x.Id]);
+	public IEnumerable<DiscordRole> ExemptRoles => this.ExemptRoleIds.Select(x => this.Discord.Guilds[this.GuildId].Roles[x]);
 
 	public IReadOnlyList<ulong>? ExemptChannelIds => ((IReadOnlyList<string>?)this.Changes.FirstOrDefault(x => x.Key == "exempt_channels")?.OldValue)?.Select(x => ConvertToUlong(x)!.Value).ToList();
-	public IEnumerable<DiscordChannel> ExemptChannels => this.ExemptChannels.Select(x => this.Discord.Guilds[this.GuildId].Channels[x.Id]);
+	public IEnumerable<DiscordChannel> ExemptChannels => this.ExemptChannelIds.Select(x => this.Discord.Guilds[this.GuildId].Channels[x]);
 }
