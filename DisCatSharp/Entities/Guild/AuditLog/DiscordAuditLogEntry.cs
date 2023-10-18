@@ -13,6 +13,12 @@ namespace DisCatSharp.Entities;
 public class DiscordAuditLogEntry : SnowflakeObject
 {
 	/// <summary>
+	/// Gets the client instance this object is tied to.
+	/// </summary>
+	[JsonIgnore]
+	internal new DiscordClient Discord { get; set; }
+
+	/// <summary>
 	/// Gets or sets the ID of the guild in which the entities were targeted.
 	/// </summary>
 	[JsonIgnore]
