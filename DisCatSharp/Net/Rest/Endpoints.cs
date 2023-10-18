@@ -202,7 +202,7 @@ public static class Endpoints
 	/// <summary>
 	/// The avatar decorations endpoint.
 	/// </summary>
-	public const string AVATARS_DECORATIONS = "/avatars-decorations";
+	public const string AVATARS_DECORATION_PRESETS = "/avatar-decoration-presets";
 
 	/// <summary>
 	/// The bans endpoint.
