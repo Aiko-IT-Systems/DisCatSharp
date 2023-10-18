@@ -15,5 +15,5 @@ public sealed class BotAddChangeSet : DiscordAuditLogEntry
 	public DiscordUser Bot => this.Discord.GetCachedOrEmptyUserInternal(this.TargetId!.Value);
 
     internal override string? ChangeDescription
-		=> $"{this.UserId} added {this.Bot.Username ?? "Not cached"}.Italic() ({this.TargetId})";
+		=> $"{this.UserId} added {this.Bot.Username ?? "Not cached".Italic()} ({this.TargetId})";
 }
