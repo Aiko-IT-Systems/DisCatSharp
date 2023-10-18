@@ -1,25 +1,3 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -46,7 +24,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// </summary>
 	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 	public string Name { get; internal set; }
-	
+
 	/// <summary>
 	/// Gets the version number for this role.
 	/// </summary>
@@ -210,7 +188,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task ModifyAsync(string name = null, Permissions? permissions = null, DiscordColor? color = null, bool? hoist = null, bool? mentionable = null, string reason = null)
-		=> this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, name, permissions, color?.Value, hoist, mentionable, null, null, reason);
+		=> this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, name, permissions, color?.Value, hoist, mentionable, Optional.None, Optional.None, reason);
 
 	/// <summary>
 	/// Updates this role.
@@ -233,17 +211,27 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 		if (mdl.Icon.HasValue && mdl.Icon.Value != null)
 			iconb64 = ImageTool.Base64FromStream(mdl.Icon);
 		else if (mdl.Icon.HasValue)
-			iconb64 = Optional.Some<string>(null);
+			iconb64 = Optional.Some<string?>(null);
+		else
+			iconb64 = Optional.None;
 
-		var emoji = Optional.FromNullable<string>(null);
+		var emoji = Optional.FromNullable<string?>(null);
 
-		if (mdl.UnicodeEmoji.HasValue && mdl.UnicodeEmoji.Value != null)
-			emoji = mdl.UnicodeEmoji
-				.MapOrNull(e => e.Id == 0
-					? e.Name
-					: throw new ArgumentException("Emoji must be unicode"));
-		else if (mdl.UnicodeEmoji.HasValue)
-			emoji = Optional.Some<string>(null);
+		switch (mdl.UnicodeEmoji.HasValue)
+		{
+			case true when mdl.UnicodeEmoji.Value != null:
+				emoji = mdl.UnicodeEmoji
+					.MapOrNull(e => e.Id == 0
+						? e.Name
+						: throw new ArgumentException("Emoji must be unicode"));
+				break;
+			case true:
+				emoji = Optional.Some<string?>(null);
+				break;
+			case false:
+				emoji = Optional.None;
+				break;
+		}
 
 		return canContinue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Hoist, mdl.Mentionable, iconb64, emoji, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify role icon. Guild needs boost tier two.");
 	}

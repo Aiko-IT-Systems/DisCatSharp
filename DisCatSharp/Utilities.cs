@@ -1,25 +1,3 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -424,26 +402,33 @@ public static class Utilities
 	/// <returns>Computed timestamp.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static DateTimeOffset? GetSnowflakeTime(this ulong? snowflake)
-		=> snowflake != null && snowflake.HasValue ? DiscordClient.DiscordEpoch.AddMilliseconds(snowflake.Value >> 22) : null;
+		=> snowflake is not null ? DiscordClient.DiscordEpoch.AddMilliseconds(snowflake.Value >> 22) : null;
 
 
 	/// <summary>
 	/// Converts this <see cref="Permissions"/> into human-readable format.
 	/// </summary>
 	/// <param name="perm">Permissions enumeration to convert.</param>
+	/// <param name="useNewline">Whether to seperate permissions by newline. Defaults to <see langword="false"/>.</param>
+	/// <param name="sortAscending">Whether to sort permissions from a to z. Defaults to <see langword="true"/>.</param>
+	/// <param name="includeValue">Whether to include the permissions value. Defaults to <see langword="false"/>.</param>
+	/// <param name="shortIfAll">Whether to show <c>All Permissions</c>, if the member has all permissions. Defaults to &lt;see langword="false"/&gt;.</param>
 	/// <returns>Human-readable permissions.</returns>
-	public static string ToPermissionString(this Permissions perm)
+	public static string ToPermissionString(this Permissions perm, bool useNewline = false, bool sortAscending = true, bool includeValue = false, bool shortIfAll = false)
 	{
 		if (perm == Permissions.None)
 			return PermissionStrings[perm];
 
+		if (shortIfAll && perm.HasPermission(Permissions.All))
+			return PermissionStrings[Permissions.All];
+
 		perm &= PermissionMethods.FullPerms;
 
 		var strs = PermissionStrings
-			.Where(xkvp => xkvp.Key != Permissions.None && (perm & xkvp.Key) == xkvp.Key)
-			.Select(xkvp => xkvp.Value);
+			.Where(xkvp => xkvp.Key != Permissions.None && xkvp.Key != Permissions.All && (perm & xkvp.Key) == xkvp.Key)
+			.Select(xkvp => includeValue ? $"{xkvp.Value} ({(long)xkvp.Key})" : xkvp.Value);
 
-		return string.Join(", ", strs.OrderBy(xs => xs));
+		return string.Join(useNewline ? "\n" : ", ", sortAscending ? strs.OrderBy(xs => xs) : strs);
 	}
 
 	/// <summary>
@@ -453,13 +438,7 @@ public static class Utilities
 	/// <param name="characters">Characters to check for.</param>
 	/// <returns>Whether the string contained these characters.</returns>
 	public static bool Contains(this string str, params char[] characters)
-	{
-		foreach (var xc in str)
-			if (characters.Contains(xc))
-				return true;
-
-		return false;
-	}
+		=> str.Any(characters.Contains);
 
 	/// <summary>
 	/// Logs the task fault.

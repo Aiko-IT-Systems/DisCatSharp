@@ -1,26 +1,6 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using DisCatSharp.Enums;
 
@@ -63,6 +43,11 @@ public class DiscordBaseSelectComponent : DiscordComponent
 	[JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
 	public string Label { get; internal set; } = null;
 
+	/// <summary>
+	/// The default values of this select menu.
+	/// </summary>
+	[JsonProperty("default_values", NullValueHandling = NullValueHandling.Ignore)]
+	public List<DiscordSelectDefaultValue>? DefaultValues { get; internal set; } = null;
 
 	/// <summary>
 	/// Constructs a new <see cref="DiscordBaseSelectComponent"/>.
@@ -73,7 +58,8 @@ public class DiscordBaseSelectComponent : DiscordComponent
 	/// <param name="minOptions">Minimum count of selectable options.</param>
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this select component should be initialized as being disabled. User sees a greyed out select component that cannot be interacted with.</param>
-	internal DiscordBaseSelectComponent(ComponentType type, string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false)
+	/// <param name="defaultValues">The default values of this select menu. Not valid for <see cref="ComponentType.StringSelect"/>.</param>
+	internal DiscordBaseSelectComponent(ComponentType type, string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false, IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
 	{
 		this.Type = type;
 		this.CustomId = customId ?? Guid.NewGuid().ToString(); ;
@@ -81,6 +67,20 @@ public class DiscordBaseSelectComponent : DiscordComponent
 		this.Placeholder = placeholder;
 		this.MinimumSelectedValues = minOptions;
 		this.MaximumSelectedValues = maxOptions;
+		if (defaultValues is not null)
+		{
+			if (defaultValues.Count() > maxOptions)
+				throw new OverflowException("The amount of default values cannot exceed the maximum amount of selectable options.");
+			if (type == ComponentType.MentionableSelect && defaultValues.Any(x => x.Type == "channel"))
+				throw new ArgumentException("The default values for a mentionable select must be of type user or role.", nameof(defaultValues));
+			if (type == ComponentType.ChannelSelect && defaultValues.Any(x => x.Type != "channel"))
+				throw new ArgumentException("The default values for a channel select menus must be of type channel.", nameof(defaultValues));
+			if (type == ComponentType.UserSelect && defaultValues.Any(x => x.Type != "user"))
+				throw new ArgumentException("The default values for a user select menus must be of type user.", nameof(defaultValues));
+			if (type == ComponentType.RoleSelect && defaultValues.Any(x => x.Type != "role"))
+				throw new ArgumentException("The default values for a role select menus must be of type role.", nameof(defaultValues));
+		}
+		this.DefaultValues = defaultValues?.ToList();
 	}
 
 	/// <summary>
@@ -93,7 +93,8 @@ public class DiscordBaseSelectComponent : DiscordComponent
 	/// <param name="minOptions">Minimum count of selectable options.</param>
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this select component should be initialized as being disabled. User sees a greyed out select component that cannot be interacted with.</param>
-	internal DiscordBaseSelectComponent(ComponentType type, string label, string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false)
+	/// <param name="defaultValues">The default values of this select menu. Not valid for <see cref="ComponentType.StringSelect"/>.</param>
+	internal DiscordBaseSelectComponent(ComponentType type, string label, string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false, IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
 	{
 		this.Type = type;
 		this.Label = label;
@@ -102,6 +103,20 @@ public class DiscordBaseSelectComponent : DiscordComponent
 		this.Placeholder = placeholder;
 		this.MinimumSelectedValues = minOptions;
 		this.MaximumSelectedValues = maxOptions;
+		if (defaultValues is not null)
+		{
+			if (defaultValues.Count() > maxOptions)
+				throw new OverflowException("The amount of default values cannot exceed the maximum amount of selectable options.");
+			if (type == ComponentType.MentionableSelect && defaultValues.Any(x => x.Type == "channel"))
+				throw new ArgumentException("The default values for a mentionable select must be of type user or role.", nameof(defaultValues));
+			if (type == ComponentType.ChannelSelect && defaultValues.Any(x => x.Type != "channel"))
+				throw new ArgumentException("The default values for a channel select menus must be of type channel.", nameof(defaultValues));
+			if (type == ComponentType.UserSelect && defaultValues.Any(x => x.Type != "user"))
+				throw new ArgumentException("The default values for a user select menus must be of type user.", nameof(defaultValues));
+			if (type == ComponentType.RoleSelect && defaultValues.Any(x => x.Type != "role"))
+				throw new ArgumentException("The default values for a role select menus must be of type role.", nameof(defaultValues));
+		}
+		this.DefaultValues = defaultValues?.ToList();
 	}
 
 	internal DiscordBaseSelectComponent()

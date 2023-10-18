@@ -1,25 +1,3 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -1138,7 +1116,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		var mdl = new ApplicationCommandEditModel();
 		action(mdl);
 		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
-		return await this.ApiClient.EditGlobalApplicationCommandAsync(applicationId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission, mdl.IsNsfw, mdl.AllowedContexts).ConfigureAwait(false);
+		return await this.ApiClient.EditGlobalApplicationCommandAsync(applicationId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission, mdl.IsNsfw, mdl.AllowedContexts, mdl.IntegrationTypes).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1196,7 +1174,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		var mdl = new ApplicationCommandEditModel();
 		action(mdl);
 		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
-		return await this.ApiClient.EditGuildApplicationCommandAsync(applicationId, guildId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission, mdl.IsNsfw, mdl.AllowedContexts).ConfigureAwait(false);
+		return await this.ApiClient.EditGuildApplicationCommandAsync(applicationId, guildId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission, mdl.IsNsfw, mdl.AllowedContexts, mdl.IntegrationTypes).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1357,7 +1335,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.EntityId = scheduledEvent.EntityId;
 				old.EntityType = scheduledEvent.EntityType;
 				old.EntityMetadata = scheduledEvent.EntityMetadata;
-				old.PrivacyLevel = scheduledEvent.PrivacyLevel;
 				old.Name = scheduledEvent.Name;
 				old.Status = scheduledEvent.Status;
 				old.UserCount = scheduledEvent.UserCount;

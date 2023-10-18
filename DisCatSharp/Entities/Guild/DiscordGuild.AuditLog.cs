@@ -1,25 +1,3 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -917,13 +895,6 @@ public partial class DiscordGuild
 									After = xc.NewValueString
 								};
 								break;
-							case "privacy_level":
-								entrysta.PrivacyLevelChange = new()
-								{
-									Before = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5) ? (StagePrivacyLevel?)t5 : null,
-									After = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6) ? (StagePrivacyLevel?)t6 : null,
-								};
-								break;
 
 							default:
 								if (this.Discord.Configuration.ReportMissingFields)
@@ -1290,17 +1261,6 @@ public partial class DiscordGuild
 								};
 								break;
 
-							case "privacy_level":
-								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
-								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
-
-								entryse.PrivacyLevelChange = new()
-								{
-									Before = p1 ? (ScheduledEventPrivacyLevel?)t5 : null,
-									After = p2 ? (ScheduledEventPrivacyLevel?)t6 : null
-								};
-								break;
-
 							case "entity_type":
 								p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
 								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
@@ -1353,6 +1313,16 @@ public partial class DiscordGuild
 				case AuditLogActionType.AutoModerationQuarantineUser:
 					break;
 
+				case AuditLogActionType.OnboardingQuestionCreate:
+				case AuditLogActionType.OnboardingQuestionUpdate:
+				case AuditLogActionType.OnboardingUpdate:
+				case AuditLogActionType.ServerGuideCreate:
+				case AuditLogActionType.ServerGuideUpdate:
+					break;
+
+				case AuditLogActionType.VoiceChannelStatusUpdate:
+					break;
+
 				default:
 					this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown audit log action type: {Key} - this should be reported to library developers", (int)xac.ActionType);
 					break;
@@ -1363,9 +1333,9 @@ public partial class DiscordGuild
 
 			entry.ActionCategory = xac.ActionType switch
 			{
-				AuditLogActionType.ChannelCreate or AuditLogActionType.EmojiCreate or AuditLogActionType.InviteCreate or AuditLogActionType.OverwriteCreate or AuditLogActionType.RoleCreate or AuditLogActionType.WebhookCreate or AuditLogActionType.IntegrationCreate or AuditLogActionType.StickerCreate or AuditLogActionType.StageInstanceCreate or AuditLogActionType.ThreadCreate or AuditLogActionType.GuildScheduledEventCreate or AuditLogActionType.AutoModerationRuleCreate => AuditLogActionCategory.Create,
+				AuditLogActionType.ChannelCreate or AuditLogActionType.EmojiCreate or AuditLogActionType.InviteCreate or AuditLogActionType.OverwriteCreate or AuditLogActionType.RoleCreate or AuditLogActionType.WebhookCreate or AuditLogActionType.IntegrationCreate or AuditLogActionType.StickerCreate or AuditLogActionType.StageInstanceCreate or AuditLogActionType.ThreadCreate or AuditLogActionType.GuildScheduledEventCreate or AuditLogActionType.AutoModerationRuleCreate or AuditLogActionType.OnboardingQuestionCreate or AuditLogActionType.ServerGuideCreate => AuditLogActionCategory.Create,
 				AuditLogActionType.ChannelDelete or AuditLogActionType.EmojiDelete or AuditLogActionType.InviteDelete or AuditLogActionType.MessageDelete or AuditLogActionType.MessageBulkDelete or AuditLogActionType.OverwriteDelete or AuditLogActionType.RoleDelete or AuditLogActionType.WebhookDelete or AuditLogActionType.IntegrationDelete or AuditLogActionType.StickerDelete or AuditLogActionType.StageInstanceDelete or AuditLogActionType.ThreadDelete or AuditLogActionType.GuildScheduledEventDelete or AuditLogActionType.AutoModerationRuleDelete => AuditLogActionCategory.Delete,
-				AuditLogActionType.ChannelUpdate or AuditLogActionType.EmojiUpdate or AuditLogActionType.InviteUpdate or AuditLogActionType.MemberRoleUpdate or AuditLogActionType.MemberUpdate or AuditLogActionType.OverwriteUpdate or AuditLogActionType.RoleUpdate or AuditLogActionType.WebhookUpdate or AuditLogActionType.IntegrationUpdate or AuditLogActionType.StickerUpdate or AuditLogActionType.StageInstanceUpdate or AuditLogActionType.ThreadUpdate or AuditLogActionType.GuildScheduledEventUpdate or AuditLogActionType.AutoModerationRuleUpdate => AuditLogActionCategory.Update,
+				AuditLogActionType.ChannelUpdate or AuditLogActionType.EmojiUpdate or AuditLogActionType.InviteUpdate or AuditLogActionType.MemberRoleUpdate or AuditLogActionType.MemberUpdate or AuditLogActionType.OverwriteUpdate or AuditLogActionType.RoleUpdate or AuditLogActionType.WebhookUpdate or AuditLogActionType.IntegrationUpdate or AuditLogActionType.StickerUpdate or AuditLogActionType.StageInstanceUpdate or AuditLogActionType.ThreadUpdate or AuditLogActionType.GuildScheduledEventUpdate or AuditLogActionType.AutoModerationRuleUpdate or AuditLogActionType.OnboardingQuestionUpdate or AuditLogActionType.OnboardingUpdate or AuditLogActionType.ServerGuideUpdate or AuditLogActionType.VoiceChannelStatusUpdate => AuditLogActionCategory.Update,
 				_ => AuditLogActionCategory.Other,
 			};
 			entry.Discord = this.Discord;

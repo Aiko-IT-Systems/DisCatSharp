@@ -1,25 +1,3 @@
-// This file is part of the DisCatSharp project.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
 using System.IO;
 
@@ -73,8 +51,8 @@ public interface IMemoryBuffer<T> : IDisposable where T : unmanaged
 	void Write(Stream stream);
 
 	/// <summary>
-	/// Reads data from this buffer to the specified destination buffer. This method will write either as many 
-	/// bytes as there are in the destination buffer, or however many bytes are available in this buffer, 
+	/// Reads data from this buffer to the specified destination buffer. This method will write either as many
+	/// bytes as there are in the destination buffer, or however many bytes are available in this buffer,
 	/// whichever is less.
 	/// </summary>
 	/// <param name="destination">Buffer to read the data from this buffer into.</param>
@@ -84,8 +62,8 @@ public interface IMemoryBuffer<T> : IDisposable where T : unmanaged
 	bool Read(Span<T> destination, ulong source, out int itemsWritten);
 
 	/// <summary>
-	/// Reads data from this buffer to specified destination array. This method will write either as many bytes 
-	/// as specified for the destination array, or however many bytes are available in this buffer, whichever is 
+	/// Reads data from this buffer to specified destination array. This method will write either as many bytes
+	/// as specified for the destination array, or however many bytes are available in this buffer, whichever is
 	/// less.
 	/// </summary>
 	/// <param name="data">Array to read the data from this buffer into.</param>
@@ -97,8 +75,8 @@ public interface IMemoryBuffer<T> : IDisposable where T : unmanaged
 	bool Read(T[] data, int start, int count, ulong source, out int itemsWritten);
 
 	/// <summary>
-	/// Reads data from this buffer to specified destination array slice. This method will write either as many 
-	/// bytes as specified in the target slice, or however many bytes are available in this buffer, whichever is 
+	/// Reads data from this buffer to specified destination array slice. This method will write either as many
+	/// bytes as specified in the target slice, or however many bytes are available in this buffer, whichever is
 	/// less.
 	/// </summary>
 	/// <param name="data"></param>

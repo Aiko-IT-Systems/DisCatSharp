@@ -1,24 +1,3 @@
-// This file is part of the DisCatSharp project.
-//
-// Copyright (c) 2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
 
 using System;
 using System.Collections.Generic;
@@ -329,7 +308,7 @@ public sealed class LavalinkGuildPlayer
 	/// <returns>The updated guild player.</returns>
 	public async Task<LavalinkGuildPlayer> PlayPartialAsync(LavalinkTrack track, TimeSpan startTime, TimeSpan endTime)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: track.Info.Identifier, position: (int)startTime.TotalMilliseconds, endTime: (int)endTime.TotalMilliseconds).ConfigureAwait(false);
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: track.Info.Uri.ToString(), position: (int)startTime.TotalMilliseconds, endTime: (int)endTime.TotalMilliseconds).ConfigureAwait(false);
 		return this;
 	}
 
@@ -364,7 +343,7 @@ public sealed class LavalinkGuildPlayer
 	/// <returns>The updated guild player.</returns>
 	public async Task<LavalinkGuildPlayer> PlayAsync(LavalinkTrack track)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: track.Info.Identifier).ConfigureAwait(false);
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: track.Info.Uri.ToString()).ConfigureAwait(false);
 		return this;
 	}
 
@@ -473,7 +452,7 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="entry">The entry to add. Please construct a new() entry for every track.</param>
 	/// <param name="track">The track to attach.</param>
 	public void AddToQueue<T>(T entry, LavalinkTrack track) where T : IQueueEntry
-		=> this._queueEntriesInternal.Add(track.Info.Identifier, entry.AddTrack(track));
+		=> this._queueEntriesInternal.Add(track.Info.Uri.ToString(), entry.AddTrack(track));
 
 	/// <summary>
 	/// Removes a queue entry.
@@ -481,7 +460,7 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="entry">The entry to remove.</param>
 	/// <returns><see langword="true"/> if the entry was found and removed.</returns>
 	public bool RemoveFromQueue(IQueueEntry entry)
-		=> this._queueEntriesInternal.Remove(entry.Track.Info.Identifier);
+		=> this._queueEntriesInternal.Remove(entry.Track.Info.Uri.ToString());
 
 	/// <summary>
 	/// Removes a queue entry by the track identifier.

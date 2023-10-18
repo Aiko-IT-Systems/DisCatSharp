@@ -15,13 +15,13 @@ jobs:
     name: Build documentation
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         token:  ${{ secrets.NYUW_TOKEN_GH }}
     - name: Setup .NET
       uses: actions/setup-dotnet@v3.2.0
       with:
-        dotnet-version: 7.0.400
+        dotnet-version: 7.0.401
     - name: Git fetch unshallow
       run: git fetch --unshallow
     - name: Install DocFX
@@ -64,7 +64,7 @@ jobs:
     needs: build
     steps:
     - name: Checkout docs repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: Aiko-IT-Systems/DisCatSharp.Docs
         token: ${{ secrets.NYUW_TOKEN_GH }}

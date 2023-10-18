@@ -16,13 +16,13 @@ jobs:
     name: Build documentation
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         token:  ${{ secrets.NYUW_TOKEN_GH }}
     - name: Setup .NET
       uses: actions/setup-dotnet@v3.2.0
       with:
-        dotnet-version: 7.0.400
+        dotnet-version: 7.0.401
     - name: Install DocFX
       run: dotnet tool update -g docfx --prerelease
       continue-on-error: true
@@ -61,7 +61,7 @@ jobs:
         git_user_name: NyuwBot
         git_user_email: nyuw@aitsys.dev
     - name: Checkout docs repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: Aiko-IT-Systems/DisCatSharp.Docs
         token: ${{ secrets.NYUW_TOKEN_GH }}

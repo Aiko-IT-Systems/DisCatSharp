@@ -2,7 +2,6 @@ using DisCatSharp;
 using DisCatSharp.ApplicationCommands;
 using DisCatSharp.ApplicationCommands.Attributes;
 using DisCatSharp.ApplicationCommands.Context;
-
 namespace Bot.Commands;
 
 internal class SlashCommand : ApplicationCommandsModule

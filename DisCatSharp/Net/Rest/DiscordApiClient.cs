@@ -1,25 +1,3 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -637,6 +615,32 @@ public sealed class DiscordApiClient
 
 		this.Discord.Guilds[guildId].InventorySettings = new() { IsEmojiPackCollectible = isEmojiPackCollectible };
 		return this.Discord.Guilds[guildId];
+	}
+
+	/// <summary>
+	/// Modifies the guilds incident actions.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="invitesDisabledUntil">Until when invites are disabled. Set <see langword="null"/> to disable.</param>
+	/// <param name="dmsDisabledUntil">Until when direct messages are disabled. Set <see langword="null"/> to disable.</param>
+	internal async Task<IncidentsData> ModifyGuildIncidentActionsAsync(ulong guildId, DateTimeOffset? invitesDisabledUntil, DateTimeOffset? dmsDisabledUntil)
+	{
+		var pld = new RestGuildIncidentActionsModifyPayload
+		{
+			InvitesDisabledUntil = invitesDisabledUntil,
+			DmsDisabledUntil = dmsDisabledUntil,
+		};
+
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.INCIDENT_ACTIONS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		var data = DiscordJson.DeserializeObject<IncidentsData>(res.Response, this.Discord);
+
+		this.Discord.Guilds[guildId].IncidentsData = data;
+		return data;
 	}
 
 	/// <summary>
@@ -3370,16 +3374,13 @@ public sealed class DiscordApiClient
 			Mentionable = mentionable,
 		};
 
-		if (emoji.HasValue && !iconb64.HasValue)
-			pld.UnicodeEmoji = emoji;
-
 		if (emoji.HasValue && iconb64.HasValue)
 		{
 			pld.IconBase64 = null;
 			pld.UnicodeEmoji = emoji;
-		}
-
-		if (iconb64.HasValue)
+		} else if (emoji.HasValue && !iconb64.HasValue)
+			pld.UnicodeEmoji = emoji;
+		else if (iconb64.HasValue && !emoji.HasValue)
 			pld.IconBase64 = iconb64;
 
 		var headers = Utilities.GetBaseHeaders();
@@ -5226,7 +5227,8 @@ public sealed class DiscordApiClient
 				DefaultMemberPermission = command.DefaultMemberPermissions,
 				DmPermission = command.DmPermission,
 				Nsfw = command.IsNsfw,
-				AllowedContexts = command.AllowedContexts
+				AllowedContexts = command.AllowedContexts,
+				IntegrationTypes = command.IntegrationTypes
 			});
 		}
 
@@ -5258,7 +5260,8 @@ public sealed class DiscordApiClient
 			DefaultMemberPermission = command.DefaultMemberPermissions,
 			DmPermission = command.DmPermission,
 			Nsfw = command.IsNsfw,
-			AllowedContexts = command.AllowedContexts
+			AllowedContexts = command.AllowedContexts,
+			IntegrationTypes = command.IntegrationTypes
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
@@ -5306,10 +5309,14 @@ public sealed class DiscordApiClient
 	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
 	/// <param name="allowedContexts">The allowed contexts.</param>
-	internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId,
+	/// <param name="integrationTypes">The allowed integration types.</param>
+	internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId,
+		ulong commandId,
 		Optional<string> name, Optional<string> description, Optional<List<DiscordApplicationCommandOption>?> options,
-		Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
-		Optional<Permissions?> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw, Optional<ApplicationCommandContexts?> allowedContexts)
+		Optional<DiscordApplicationCommandLocalization> nameLocalization,
+		Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
+		Optional<Permissions?> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw,
+		Optional<List<ApplicationCommandContexts>?> allowedContexts, Optional<List<ApplicationCommandIntegrationTypes>?> integrationTypes)
 	{
 		var pld = new RestApplicationCommandEditPayload
 		{
@@ -5318,10 +5325,11 @@ public sealed class DiscordApiClient
 			Options = options,
 			DefaultMemberPermission = defaultMemberPermission,
 			DmPermission = dmPermission,
-			NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
-			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
+			NameLocalizations = nameLocalization.ValueOrDefault()?.GetKeyValuePairs(),
+			DescriptionLocalizations = descriptionLocalization.ValueOrDefault()?.GetKeyValuePairs(),
 			Nsfw = isNsfw,
-			AllowedContexts = allowedContexts
+			AllowedContexts = allowedContexts,
+			IntegrationTypes = integrationTypes
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
@@ -5478,10 +5486,14 @@ public sealed class DiscordApiClient
 	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
 	/// <param name="allowedContexts">The allowed contexts.</param>
-	internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId,
+	/// <param name="integrationTypes">The allowed integration types.</param>
+	internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId,
+		ulong commandId,
 		Optional<string> name, Optional<string> description, Optional<List<DiscordApplicationCommandOption>?> options,
-		Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
-		Optional<Permissions?> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw, Optional<ApplicationCommandContexts?> allowedContexts)
+		Optional<DiscordApplicationCommandLocalization> nameLocalization,
+		Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
+		Optional<Permissions?> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw,
+		Optional<List<ApplicationCommandContexts>?> allowedContexts, Optional<List<ApplicationCommandIntegrationTypes>?> integrationTypes)
 	{
 		var pld = new RestApplicationCommandEditPayload
 		{
@@ -5490,8 +5502,8 @@ public sealed class DiscordApiClient
 			Options = options,
 			DefaultMemberPermission = defaultMemberPermission,
 			DmPermission = dmPermission,
-			NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
-			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
+			NameLocalizations = nameLocalization.ValueOrDefault()?.GetKeyValuePairs(),
+			DescriptionLocalizations = descriptionLocalization.ValueOrDefault()?.GetKeyValuePairs(),
 			Nsfw = isNsfw,
 			AllowedContexts = allowedContexts
 		};
