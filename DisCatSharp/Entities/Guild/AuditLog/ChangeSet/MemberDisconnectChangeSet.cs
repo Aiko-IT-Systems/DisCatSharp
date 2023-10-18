@@ -14,5 +14,5 @@ public sealed class MemberDisconnectChangeSet : DiscordAuditLogEntry
 		this.ValidFor = AuditLogActionType.MemberDisconnect;
 	}
 
-	public int Count => (int)this.Changes.FirstOrDefault(x => x.Key == "count")?.OldValue;
+	public int Count => (int)this.Options.Count;
 }

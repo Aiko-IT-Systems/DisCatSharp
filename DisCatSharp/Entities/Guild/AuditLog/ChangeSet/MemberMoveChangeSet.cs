@@ -14,8 +14,8 @@ public sealed class MemberMoveChangeSet : DiscordAuditLogEntry
 		this.ValidFor = AuditLogActionType.MemberMove;
 	}
 
-	public int Count => (int)this.Changes.FirstOrDefault(x => x.Key == "count")?.OldValue;
+	public int Count => (int)this.Options.Count;
 
-	public ulong ChannelId => (ulong)this.Changes.FirstOrDefault(x => x.Key == "channel_id")?.OldValue;
+	public ulong ChannelId => (ulong)this.Options.ChannelId;
 	public DiscordChannel? Channel => this.Discord.Guilds[this.GuildId].Channels.TryGetValue(this.ChannelId, out var channel) ? channel : null;
 }
