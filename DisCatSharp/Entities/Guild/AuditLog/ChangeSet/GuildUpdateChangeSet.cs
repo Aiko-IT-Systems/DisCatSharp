@@ -10,7 +10,7 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class GuildUpdateChangeSet : DiscordAuditLogEntry
 {
-	internal GuildUpdateChangeSet()
+	public GuildUpdateChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.GuildUpdate;
 	}

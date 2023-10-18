@@ -9,7 +9,7 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class MemberPruneChangeSet : DiscordAuditLogEntry
 {
-	internal MemberPruneChangeSet()
+	public MemberPruneChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.MemberPrune;
 	}

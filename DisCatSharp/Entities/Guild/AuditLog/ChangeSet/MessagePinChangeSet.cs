@@ -7,7 +7,7 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class MessagePinChangeSet : DiscordAuditLogEntry
 {
-	internal MessagePinChangeSet()
+	public MessagePinChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.MessagePin;
 	}

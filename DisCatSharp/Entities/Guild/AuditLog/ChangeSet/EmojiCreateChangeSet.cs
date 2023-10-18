@@ -10,7 +10,7 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class EmojiCreateChangeSet : DiscordAuditLogEntry
 {
-	internal EmojiCreateChangeSet()
+	public EmojiCreateChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.EmojiCreate;
 	}

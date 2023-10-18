@@ -7,7 +7,7 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class CreatorMonetizationTermsAcceptedChangeSet : DiscordAuditLogEntry
 {
-	internal CreatorMonetizationTermsAcceptedChangeSet()
+	public CreatorMonetizationTermsAcceptedChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.CreatorMonetizationTermsAccepted;
 	}

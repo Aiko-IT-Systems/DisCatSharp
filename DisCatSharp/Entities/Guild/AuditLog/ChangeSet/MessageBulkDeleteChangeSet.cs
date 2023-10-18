@@ -7,7 +7,7 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class MessageBulkDeleteChangeSet : DiscordAuditLogEntry
 {
-	internal MessageBulkDeleteChangeSet()
+	public MessageBulkDeleteChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.MessageBulkDelete;
 	}

@@ -7,7 +7,7 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class MemberKickChangeSet : DiscordAuditLogEntry
 {
-	internal MemberKickChangeSet()
+	public MemberKickChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.MemberKick;
 	}

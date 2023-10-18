@@ -10,7 +10,7 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class InviteCreateChangeSet : DiscordAuditLogEntry
 {
-	internal InviteCreateChangeSet()
+	public InviteCreateChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.InviteCreate;
 

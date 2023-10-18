@@ -7,7 +7,7 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class MemberBanAddChangeSet : DiscordAuditLogEntry
 {
-	internal MemberBanAddChangeSet()
+	public MemberBanAddChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.MemberBanAdd;
 	}

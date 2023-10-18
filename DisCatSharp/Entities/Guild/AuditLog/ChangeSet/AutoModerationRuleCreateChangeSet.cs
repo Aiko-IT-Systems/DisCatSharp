@@ -10,7 +10,7 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class AutoModerationRuleCreateChangeSet : DiscordAuditLogEntry
 {
-	internal AutoModerationRuleCreateChangeSet()
+	public AutoModerationRuleCreateChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.AutoModerationRuleCreate;
 	}

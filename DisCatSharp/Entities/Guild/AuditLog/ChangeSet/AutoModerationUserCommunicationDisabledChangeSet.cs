@@ -7,7 +7,7 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class AutoModerationUserCommunicationDisabledChangeSet : DiscordAuditLogEntry
 {
-	internal AutoModerationUserCommunicationDisabledChangeSet()
+	public AutoModerationUserCommunicationDisabledChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.AutoModerationUserCommunicationDisabled;
 	}

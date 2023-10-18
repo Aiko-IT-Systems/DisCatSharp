@@ -7,7 +7,7 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class BotAddChangeSet : DiscordAuditLogEntry
 {
-	internal BotAddChangeSet()
+	public BotAddChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.BotAdd;
 	}

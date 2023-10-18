@@ -9,7 +9,7 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class ChannelUpdateChangeSet : DiscordAuditLogEntry
 {
-	internal ChannelUpdateChangeSet()
+	public ChannelUpdateChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.ChannelUpdate;
 	}

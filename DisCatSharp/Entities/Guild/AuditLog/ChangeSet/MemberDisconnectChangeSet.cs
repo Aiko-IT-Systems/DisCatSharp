@@ -9,7 +9,7 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class MemberDisconnectChangeSet : DiscordAuditLogEntry
 {
-	internal MemberDisconnectChangeSet()
+	public MemberDisconnectChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.MemberDisconnect;
 	}

@@ -10,7 +10,7 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class IntegrationUpdateChangeSet : DiscordAuditLogEntry
 {
-	internal IntegrationUpdateChangeSet()
+	public IntegrationUpdateChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.IntegrationUpdate;
 	}

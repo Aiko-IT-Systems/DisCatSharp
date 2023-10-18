@@ -7,7 +7,7 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class CreatorMonetizationRequestCreatedChangeSet : DiscordAuditLogEntry
 {
-	internal CreatorMonetizationRequestCreatedChangeSet()
+	public CreatorMonetizationRequestCreatedChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.CreatorMonetizationRequestCreated;
 	}

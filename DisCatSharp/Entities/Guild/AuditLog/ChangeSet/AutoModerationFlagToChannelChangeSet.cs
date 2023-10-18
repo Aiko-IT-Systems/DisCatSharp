@@ -7,7 +7,7 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class AutoModerationFlagToChannelChangeSet : DiscordAuditLogEntry
 {
-	internal AutoModerationFlagToChannelChangeSet()
+	public AutoModerationFlagToChannelChangeSet()
 	{
 		this.ValidFor = AuditLogActionType.AutoModerationFlagToChannel;
 	}
