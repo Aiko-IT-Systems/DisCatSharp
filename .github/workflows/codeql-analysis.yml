@@ -7,6 +7,7 @@ on:
     branches: [ main ]
   schedule:
     - cron: '39 18 * * 3'
+  merge_group:
   workflow_dispatch:
 
 jobs:
@@ -23,7 +24,7 @@ jobs:
         language: [ 'csharp' ]
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
@@ -32,7 +33,7 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: |
-          7.0.306
+          7.0.401
           6.x
     - name: Build
       run: |

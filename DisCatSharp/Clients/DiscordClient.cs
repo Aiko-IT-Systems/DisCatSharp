@@ -1,25 +1,3 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -55,6 +33,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	#region Internal Fields/Properties
 
 	internal bool IsShard = false;
+
 	/// <summary>
 	/// Gets the message cache.
 	/// </summary>
@@ -253,7 +232,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._automodRuleDeleted = new("AUTO_MODERATION_RULE_DELETED", EventExecutionLimit, this.EventErrorHandler);
 		this._automodActionExecuted = new("AUTO_MODERATION_ACTION_EXECUTED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildAuditLogEntryCreated = new("GUILD_AUDIT_LOG_ENTRY_CREATED", EventExecutionLimit, this.EventErrorHandler);
-		this._channelTopicUpdated = new("CHANNEL_TOPIC_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._voiceChannelStatusUpdated = new("VOICE_CHANNEL_STATUS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._entitlementCreated = new("ENTITLEMENT_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._entitlementUpdated = new("ENTITLEMENT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._entitlementDeleted = new("ENTITLEMENT_DELETED", EventExecutionLimit, this.EventErrorHandler);
 
 		this.GuildsInternal.Clear();
 
@@ -505,24 +487,47 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Tries to get the published store sku listings (premium application subscription).
+	/// Gets the published store sku listings (premium application subscription).
 	/// </summary>
 	/// <param name="applicationId">The application id to fetch the listings for.</param>
-	/// <param name="skuList">A list of published listings with <see cref="DiscordStoreSku"/>s, if found.</param>
-	/// <returns>True if found, otherwise false.</returns>
-	public bool TryGetPublishedListings(ulong applicationId, out IReadOnlyList<DiscordStoreSku> skuList)
-	{
-		try
-		{
-			skuList = this.ApiClient.GetPublishedListingsAsync(applicationId).ConfigureAwait(false).GetAwaiter().GetResult();
-			return true;
-		}
-		catch (Exception)
-		{
-			skuList = null;
-			return false;
-		}
-	}
+	/// <returns>A list of published listings with <see cref="DiscordStoreSku"/>s.</returns>
+	public async Task<IReadOnlyList<DiscordStoreSku>> GetPublishedListingsAsync(ulong applicationId)
+		=> await this.ApiClient.GetPublishedListingsAsync(applicationId).ConfigureAwait(false);
+
+	/// <summary>
+	/// Gets the applications skus.
+	/// </summary>
+	/// <returns>A list of published listings with <see cref="DiscordSku"/>s.</returns>
+	/// <exception cref="NotFoundException">Thrown when the skus do not exist.</exception>
+	public async Task<IReadOnlyList<DiscordSku>> GetSkusAsync()
+		=> await this.ApiClient.GetSkusAsync(this.CurrentApplication.Id).ConfigureAwait(false);
+
+	/// <summary>
+	/// Gets the applications entitlements.
+	/// </summary>
+	/// <param name="guildId">Filter returned entitlements to a specific guild id.</param>
+	/// <param name="userId">Filter returned entitlements to a specific user id.</param>
+	/// <returns>A list of <see cref="DiscordEntitlement"/>.</returns>
+	/// <exception cref="NotFoundException">Thrown when the entitlements do not exist.</exception>
+	public async Task<IReadOnlyList<DiscordEntitlement>> GetEntitlementsAsync(ulong? guildId = null, ulong? userId = null)
+		=> await this.ApiClient.GetEntitlementsAsync(this.CurrentApplication.Id, guildId, userId).ConfigureAwait(false);
+
+	/// <summary>
+	/// Creates a test entitlement.
+	/// </summary>
+	/// <param name="skuId">The sku id to create the entitlement for.</param>
+	/// <param name="ownerId">The owner id to create the entitlement for.</param>
+	/// <param name="ownerType">The owner type to create the entitlement for.</param>
+	/// <returns>A partial <see cref="DiscordEntitlement"/>.</returns>
+	public async Task<DiscordEntitlement> CreateTestEntitlementsAsync(ulong skuId, ulong ownerId, EntitlementOwnerType ownerType)
+		=> await this.ApiClient.CreateTestEntitlementsAsync(this.CurrentApplication.Id, skuId, ownerId, ownerType).ConfigureAwait(false);
+
+	/// <summary>
+	/// Deletes a test entitlement.
+	/// </summary>
+	/// <param name="entitlementId">The entitlement id to delete.</param>
+	public async Task DeleteTestEntitlementsAsync(ulong entitlementId)
+		=> await this.ApiClient.DeleteTestEntitlementsAsync(this.CurrentApplication.Id, entitlementId).ConfigureAwait(false);
 
 	/// <summary>
 	/// Gets the applications role connection metadata.
@@ -1111,7 +1116,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		var mdl = new ApplicationCommandEditModel();
 		action(mdl);
 		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
-		return await this.ApiClient.EditGlobalApplicationCommandAsync(applicationId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission, mdl.IsNsfw).ConfigureAwait(false);
+		return await this.ApiClient.EditGlobalApplicationCommandAsync(applicationId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission, mdl.IsNsfw, mdl.AllowedContexts, mdl.IntegrationTypes).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1169,7 +1174,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		var mdl = new ApplicationCommandEditModel();
 		action(mdl);
 		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
-		return await this.ApiClient.EditGuildApplicationCommandAsync(applicationId, guildId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission, mdl.IsNsfw).ConfigureAwait(false);
+		return await this.ApiClient.EditGuildApplicationCommandAsync(applicationId, guildId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission, mdl.IsNsfw, mdl.AllowedContexts, mdl.IntegrationTypes).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1330,7 +1335,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.EntityId = scheduledEvent.EntityId;
 				old.EntityType = scheduledEvent.EntityType;
 				old.EntityMetadata = scheduledEvent.EntityMetadata;
-				old.PrivacyLevel = scheduledEvent.PrivacyLevel;
 				old.Name = scheduledEvent.Name;
 				old.Status = scheduledEvent.Status;
 				old.UserCount = scheduledEvent.UserCount;

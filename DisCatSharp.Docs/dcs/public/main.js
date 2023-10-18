@@ -2,6 +2,7 @@
 
 export default {
   defaultTheme: 'dark',
+  disableThemeSelect: true,
   iconLinks: [
     {
       icon: 'github',

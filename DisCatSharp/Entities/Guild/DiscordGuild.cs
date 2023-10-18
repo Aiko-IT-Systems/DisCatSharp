@@ -1,25 +1,3 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -583,7 +561,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets the guild incidents data.
 	/// </summary>
 	[JsonProperty("incidents_data", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
-	public object? IncidentsData { get; internal set; }
+	public IncidentsData? IncidentsData { get; internal set; }
 
 	/// <summary>
 	/// Gets the guild inventory settings.
@@ -904,15 +882,15 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		var explicitContentFilter = ExplicitContentFilter.AllMembers;
 
 		static Optional<ulong?> ChannelToId(DiscordChannel ch, string name)
-			=> ch == null ? null :
-				ch.Type != ChannelType.Text && ch.Type != ChannelType.News
+			=> ch == null
+				? null
+				: ch.Type != ChannelType.Text && ch.Type != ChannelType.News
 					? throw new ArgumentException($"{name} channel needs to be a text channel.")
 					: ch.Id;
 
 		var rulesChannelId = ChannelToId(rulesChannel, "Rules");
 		var publicUpdatesChannelId = ChannelToId(publicUpdatesChannel, "Public updates");
 
-		List<string> features = new();
 		var rfeatures = this.RawFeatures.ToList();
 		if (!this.RawFeatures.Contains("COMMUNITY") && enabled)
 		{
@@ -922,14 +900,18 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		{
 			rfeatures.Remove("COMMUNITY");
 		}
-		features = rfeatures;
 
-		return await this.Discord.ApiClient.ModifyGuildCommunitySettingsAsync(this.Id, features, rulesChannelId, publicUpdatesChannelId, preferredLocale, description, defaultMessageNotifications, explicitContentFilter, verificationLevel, reason).ConfigureAwait(false);
+		return await this.Discord.ApiClient.ModifyGuildCommunitySettingsAsync(this.Id, rfeatures, rulesChannelId, publicUpdatesChannelId, preferredLocale, description, defaultMessageNotifications, explicitContentFilter, verificationLevel, reason).ConfigureAwait(false);
 	}
 
-	[DiscordInExperiment, RequiresFeature(Attributes.Features.Community)]
-	public async Task<DiscordGuild> ModifyInventorySettingsAsync(bool enabled, string? reason = null)
-		=> await this.Discord.ApiClient.ModifyGuildInventorySettingsAsync(this.Id, enabled, reason).ConfigureAwait(false);
+	/// <summary>
+	/// Modifies the guild's inventory settings.
+	/// </summary>
+	/// <param name="enabled">Whether to allow emoji packs to be collected.</param>
+	/// <param name="reason">The audit log reason, currently not supported.</param>
+	[DiscordInExperiment, RequiresFeature(Attributes.Features.Community | Attributes.Features.Override)]
+	public Task<DiscordGuild> ModifyInventorySettingsAsync(bool enabled, string? reason = null)
+		=> this.Discord.ApiClient.ModifyGuildInventorySettingsAsync(this.Id, enabled, reason);
 
 	/// <summary>
 	/// Modifies the safety alerts settings async.
@@ -945,14 +927,14 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public async Task<DiscordGuild> ModifySafetyAlertsSettingsAsync(bool enabled, DiscordChannel safetyAlertsChannel, string? reason = null)
 	{
 		static Optional<ulong?> ChannelToId(DiscordChannel ch, string name)
-			=> ch == null ? null :
-				ch.Type != ChannelType.Text && ch.Type != ChannelType.News
+			=> ch == null
+				? null
+				: ch.Type != ChannelType.Text && ch.Type != ChannelType.News
 					? throw new ArgumentException($"{name} channel needs to be a text channel.")
 					: ch.Id;
 
 		var safetyAlertsChannelId = ChannelToId(safetyAlertsChannel, "Safety Alerts");
 
-		List<string> features = new();
 		var rfeatures = this.RawFeatures.ToList();
 		if (!this.RawFeatures.Contains("RAID_ALERTS_ENABLED") && enabled)
 		{
@@ -962,9 +944,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		{
 			rfeatures.Remove("RAID_ALERTS_ENABLED");
 		}
-		features = rfeatures;
 
-		return await this.Discord.ApiClient.ModifyGuildSafetyAlertsSettingsAsync(this.Id, features, safetyAlertsChannelId, reason).ConfigureAwait(false);
+		return await this.Discord.ApiClient.ModifyGuildSafetyAlertsSettingsAsync(this.Id, rfeatures, safetyAlertsChannelId, reason).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -977,34 +958,47 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordGuild> EnableInvitesAsync(string? reason = null)
 	{
-		List<string> features = new();
 		var rfeatures = this.RawFeatures.ToList();
 		if (this.Features.HasFeature(GuildFeaturesEnum.InvitesDisabled))
 			rfeatures.Remove("INVITES_DISABLED");
-		features = rfeatures;
 
-		return await this.Discord.ApiClient.ModifyGuildFeaturesAsync(this.Id, features, reason).ConfigureAwait(false);
+		return await this.Discord.ApiClient.ModifyGuildFeaturesAsync(this.Id, rfeatures, reason).ConfigureAwait(false);
 	}
 
 	/// <summary>
 	/// Disables invites for the guild.
 	/// </summary>
-	/// <param name="reason"></param>
-	/// <returns></returns>
+	/// <param name="reason">The audit log reason.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordGuild> DisableInvitesAsync(string? reason = null)
 	{
-		List<string> features = new();
 		var rfeatures = this.RawFeatures.ToList();
 		if (!this.Features.HasFeature(GuildFeaturesEnum.InvitesDisabled))
 			rfeatures.Add("INVITES_DISABLED");
-		features = rfeatures;
 
-		return await this.Discord.ApiClient.ModifyGuildFeaturesAsync(this.Id, features, reason).ConfigureAwait(false);
+		return await this.Discord.ApiClient.ModifyGuildFeaturesAsync(this.Id, rfeatures, reason).ConfigureAwait(false);
 	}
+
+	/// <summary>
+	/// Disables invites for the guild.
+	/// </summary>
+	/// <param name="invitesDisabledUntil">Until when invites are disabled. Set <see langword="null"/> to disable.</param>
+	/// <param name="dmsDisabledUntil">Until when direct messages are disabled. Set <see langword="null"/> to disable.</param>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<IncidentsData> ModifyIncidentActionsAsync(DateTimeOffset? invitesDisabledUntil = null, DateTimeOffset? dmsDisabledUntil = null)
+		=> invitesDisabledUntil.HasValue &&
+		   invitesDisabledUntil.Value.UtcDateTime > DateTimeOffset.UtcNow.UtcDateTime.AddHours(24)
+			? throw new InvalidOperationException("Cannot disable invites for more than 24 hours.")
+			: dmsDisabledUntil.HasValue &&
+			  dmsDisabledUntil.Value.UtcDateTime > DateTimeOffset.UtcNow.UtcDateTime.AddHours(24)
+				? throw new InvalidOperationException("Cannot disable direct messages for more than 24 hours.")
+				: await this.Discord.ApiClient.ModifyGuildIncidentActionsAsync(this.Id, invitesDisabledUntil, dmsDisabledUntil).ConfigureAwait(false);
 
 	/// <summary>
 	/// Timeout a specified member in this guild.
@@ -2251,7 +2245,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	{
 		var mdl = new ApplicationCommandEditModel();
 		action(mdl);
-		return await this.Discord.ApiClient.EditGuildApplicationCommandAsync(this.Discord.CurrentApplication.Id, this.Id, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission, mdl.IsNsfw).ConfigureAwait(false);
+		return await this.Discord.ApiClient.EditGuildApplicationCommandAsync(this.Discord.CurrentApplication.Id, this.Id, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission, mdl.IsNsfw, mdl.AllowedContexts, mdl.IntegrationTypes).ConfigureAwait(false);
 	}
 
 	/// <summary>

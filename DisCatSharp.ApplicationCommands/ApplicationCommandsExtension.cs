@@ -1,25 +1,3 @@
-// This file is part of the DisCatSharp project.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -57,22 +35,22 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// A list of methods for top level commands.
 	/// </summary>
-	private static List<CommandMethod> s_commandMethods { get; set; } = new();
+	internal static List<CommandMethod> CommandMethods { get; set; } = new();
 
 	/// <summary>
 	/// List of groups.
 	/// </summary>
-	private static List<GroupCommand> s_groupCommands { get; set; } = new();
+	internal static List<GroupCommand> GroupCommands { get; set; } = new();
 
 	/// <summary>
 	/// List of groups with subgroups.
 	/// </summary>
-	private static List<SubGroupCommand> s_subGroupCommands { get; set; } = new();
+	internal static List<SubGroupCommand> SubGroupCommands { get; set; } = new();
 
 	/// <summary>
 	/// List of context menus.
 	/// </summary>
-	private static List<ContextMenuCommand> s_contextMenuCommands { get; set; } = new();
+	internal static List<ContextMenuCommand> ContextMenuCommands { get; set; } = new();
 
 	/// <summary>
 	/// List of global commands on discords backend.
@@ -107,8 +85,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// Gets a list of registered commands. The key is the guild id (null if global).
 	/// </summary>
-	public IReadOnlyList<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> RegisteredCommands
-		=> s_registeredCommands;
+	public IReadOnlyList<KeyValuePair<ulong?, IReadOnlyList<RegisteredDiscordApplicationCommand>>> RegisteredCommands
+		=> s_registeredCommands.Select(guild =>
+			new KeyValuePair<ulong?, IReadOnlyList<RegisteredDiscordApplicationCommand>>(guild.Key, guild.Value
+					.Select(parent => new RegisteredDiscordApplicationCommand(parent)).ToList())).ToList();
 	private static List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> s_registeredCommands = new();
 
 	/// <summary>
@@ -264,10 +244,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		s_errored = false;
 		s_expectedCount = 0;
 		s_registrationCount = 0;
-		s_commandMethods.Clear();
-		s_groupCommands.Clear();
-		s_contextMenuCommands.Clear();
-		s_subGroupCommands.Clear();
+		CommandMethods.Clear();
+		GroupCommands.Clear();
+		ContextMenuCommands.Clear();
+		SubGroupCommands.Clear();
 		s_singletonModules.Clear();
 		s_registeredCommands.Clear();
 		GlobalCommandsInternal.Clear();
@@ -754,7 +734,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						{
 							if (updateList != null && updateList.Any())
 							{
-								var regCommands = await  RegistrationWorker.RegisterGuildCommandsAsync(this.Client, guildId.Value, updateList).ConfigureAwait(false);
+								var regCommands = await RegistrationWorker.RegisterGuildCommandsAsync(this.Client, guildId.Value, updateList).ConfigureAwait(false);
 								var actualCommands = regCommands.Distinct().ToList();
 								commands.AddRange(actualCommands);
 								GuildCommandsInternal.Add(guildId.Value, actualCommands);
@@ -802,10 +782,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					}
 
 					//Adds to the global lists finally
-					s_commandMethods.AddRange(commandMethods.DistinctBy(x => x.Name));
-					s_groupCommands.AddRange(groupCommands.DistinctBy(x => x.Name));
-					s_subGroupCommands.AddRange(subGroupCommands.DistinctBy(x => x.Name));
-					s_contextMenuCommands.AddRange(contextMenuCommands.DistinctBy(x => x.Name));
+					CommandMethods.AddRange(commandMethods.DistinctBy(x => x.Name));
+					GroupCommands.AddRange(groupCommands.DistinctBy(x => x.Name));
+					SubGroupCommands.AddRange(subGroupCommands.DistinctBy(x => x.Name));
+					ContextMenuCommands.AddRange(contextMenuCommands.DistinctBy(x => x.Name));
 
 					s_registeredCommands.Add(new KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>(guildId, commands.ToList()));
 
@@ -941,8 +921,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Ignoring, already received");
 			return Task.FromResult(true);
 		}
-		else
-			HandledInteractions.Add(e.Interaction.Id);
+
+	HandledInteractions.Add(e.Interaction.Id);
+
 		_ = Task.Run(async () =>
 		{
 			var type = this.GetInteractionType(e.Interaction.Data);
@@ -972,7 +953,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						Locale = e.Interaction.Locale,
 						GuildLocale = e.Interaction.GuildLocale,
 						AppPermissions = e.Interaction.AppPermissions,
-						Entitlements = e.Interaction.Entitlements
+						Entitlements = e.Interaction.Entitlements,
+						EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 					};
 
 					try
@@ -983,9 +965,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							throw new InvalidOperationException("Application commands failed to register properly on startup.");
 						}
 
-						var methods = s_commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
-						var groups = s_groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
-						var subgroups = s_subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
+						var methods = CommandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
+						var groups = GroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
+						var subgroups = SubGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
 						if (!methods.Any() && !groups.Any() && !subgroups.Any())
 						{
 							await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("A application command was executed, but no command was registered for it.")).ConfigureAwait(false);
@@ -1052,9 +1034,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					throw new InvalidOperationException("Application commands failed to register properly on startup.");
 				case InteractionType.AutoComplete:
 				{
-					var methods = s_commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
-					var groups = s_groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
-					var subgroups = s_subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
+					var methods = CommandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
+					var groups = GroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
+					var subgroups = SubGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
 					if (!methods.Any() && !groups.Any() && !subgroups.Any())
 					{
 						await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("An autocomplete interaction was created, but no command was registered for it")).ConfigureAwait(false);
@@ -1087,7 +1069,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								Locale = e.Interaction.Locale,
 								GuildLocale = e.Interaction.GuildLocale,
 								AppPermissions = e.Interaction.AppPermissions,
-								EntitlementSkuIds = e.Interaction.Entitlements
+								Entitlements = e.Interaction.Entitlements,
+								EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 							};
 
 							var choices = await ((Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context })).ConfigureAwait(false);
@@ -1119,7 +1102,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								Locale = e.Interaction.Locale,
 								GuildLocale = e.Interaction.GuildLocale,
 								AppPermissions = e.Interaction.AppPermissions,
-								EntitlementSkuIds = e.Interaction.Entitlements
+								Entitlements = e.Interaction.Entitlements,
+								EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 							};
 
 							var choices = await ((Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context })).ConfigureAwait(false);
@@ -1152,7 +1136,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								Locale = e.Interaction.Locale,
 								GuildLocale = e.Interaction.GuildLocale,
 								AppPermissions = e.Interaction.AppPermissions,
-								EntitlementSkuIds = e.Interaction.Entitlements
+								Entitlements = e.Interaction.Entitlements,
+								EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 							};
 
 							var choices = await ((Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context })).ConfigureAwait(false);
@@ -1200,8 +1185,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Ignoring, already received");
 			return Task.FromResult(true);
 		}
-		else
-			HandledInteractions.Add(e.Interaction.Id);
+
+		HandledInteractions.Add(e.Interaction.Id);
+
 		_ = Task.Run(async () =>
 		{
 			//Creates the context
@@ -1223,7 +1209,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				Locale = e.Interaction.Locale,
 				GuildLocale = e.Interaction.GuildLocale,
 				AppPermissions = e.Interaction.AppPermissions,
-				Entitlements = e.Interaction.Entitlements
+				Entitlements = e.Interaction.Entitlements,
+				EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 			};
 
 			try
@@ -1235,7 +1222,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				}
 
 				//Gets the method for the command
-				var method = s_contextMenuCommands.FirstOrDefault(x => x.CommandId == e.Interaction.Data.Id);
+				var method = ContextMenuCommands.FirstOrDefault(x => x.CommandId == e.Interaction.Data.Id);
 
 				if (method == null)
 				{

@@ -1,25 +1,3 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +14,11 @@ public abstract class BaseRestRequest
 	/// Gets the discord client.
 	/// </summary>
 	protected internal BaseDiscordClient Discord { get; }
+
+	/// <summary>
+	/// Gets the oauth2 client.
+	/// </summary>
+	protected internal DiscordOAuth2Client OAuth2Client { get; }
 
 	/// <summary>
 	/// Gets the request task source.
@@ -85,6 +68,34 @@ public abstract class BaseRestRequest
 	internal BaseRestRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, double? ratelimitWaitOverride = null)
 	{
 		this.Discord = client;
+		this.RateLimitBucket = bucket;
+		this.RequestTaskSource = new();
+		this.Url = url;
+		this.Method = method;
+		this.Route = route;
+		this.RateLimitWaitOverride = ratelimitWaitOverride;
+
+		if (headers != null)
+		{
+			headers = headers.Select(x => new KeyValuePair<string, string>(x.Key, Uri.EscapeDataString(x.Value)))
+				.ToDictionary(x => x.Key, x => x.Value);
+			this.Headers = headers;
+		}
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="BaseRestRequest"/> with specified parameters.
+	/// </summary>
+	/// <param name="client"><see cref="DiscordOAuth2Client"/> from which this request originated.</param>
+	/// <param name="bucket">Rate limit bucket to place this request in.</param>
+	/// <param name="url">Uri to which this request is going to be sent to.</param>
+	/// <param name="method">Method to use for this request,</param>
+	/// <param name="route">The generic route the request url will use.</param>
+	/// <param name="headers">Additional headers for this request.</param>
+	/// <param name="ratelimitWaitOverride">Override for ratelimit bucket wait time.</param>
+	internal BaseRestRequest(DiscordOAuth2Client client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, double? ratelimitWaitOverride = null)
+	{
+		this.OAuth2Client = client;
 		this.RateLimitBucket = bucket;
 		this.RequestTaskSource = new();
 		this.Url = url;

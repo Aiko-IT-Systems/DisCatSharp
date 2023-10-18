@@ -1,25 +1,3 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System.Collections.Generic;
 
 using DisCatSharp.Enums;
@@ -29,7 +7,7 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents a interactions application command callback data.
+/// Represents an interactions application command callback data.
 /// </summary>
 internal class DiscordInteractionApplicationCommandCallbackData : ObservableApiObject
 {
@@ -83,7 +61,7 @@ internal class DiscordInteractionApplicationCommandCallbackData : ObservableApiO
 }
 
 /// <summary>
-/// Represents a interactions application command callback data.
+/// Represents an interactions application command callback data for modals.
 /// </summary>
 internal class DiscordInteractionApplicationCommandModalCallbackData
 {
@@ -104,4 +82,34 @@ internal class DiscordInteractionApplicationCommandModalCallbackData
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
 	public IReadOnlyCollection<DiscordComponent> ModalComponents { get; internal set; }
+}
+
+/// <summary>
+/// Represents an interactions application command callback data for iFrames.
+/// </summary>
+internal class DiscordInteractionApplicationCommandIframeCallbackData
+{
+	/// <summary>
+	/// Gets the custom id.
+	/// </summary>
+	[JsonProperty("custom_id", NullValueHandling = NullValueHandling.Ignore)]
+	public string CustomId { get; internal set; }
+
+	/// <summary>
+	/// Gets the content.
+	/// </summary>
+	[JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
+	public string Title { get; internal set; }
+
+	/// <summary>
+	/// Gets the iFrame modal size.
+	/// </summary>
+	[JsonProperty("modal_size", NullValueHandling = NullValueHandling.Ignore)]
+	public IframeModalSize ModalSize { get; internal set; }
+
+	/// <summary>
+	/// Gets the iFrame path.
+	/// </summary>
+	[JsonProperty("iframe_path", NullValueHandling = NullValueHandling.Include)]
+	public string? IframePath { get; internal set; }
 }

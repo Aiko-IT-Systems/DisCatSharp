@@ -73,8 +73,6 @@ items:
   items:
   - uid: DisCatSharp.Common.Utilities.AsyncEvent
     name: AsyncEvent
-  - uid: DisCatSharp.Common.Utilities.AsyncEvent`2
-    name: AsyncEvent<TSender, TArgs>
   - uid: DisCatSharp.Common.Utilities.AsyncEventArgs
     name: AsyncEventArgs
   - uid: DisCatSharp.Common.Utilities.AsyncEventExceptionHandler`2
@@ -87,6 +85,8 @@ items:
     name: AsyncEventTimeoutException
   - uid: DisCatSharp.Common.Utilities.AsyncEventTimeoutException`2
     name: AsyncEventTimeoutException<TSender, TArgs>
+  - uid: DisCatSharp.Common.Utilities.AsyncEvent`2
+    name: AsyncEvent<TSender, TArgs>
   - uid: DisCatSharp.Common.Utilities.AsyncExecutor
     name: AsyncExecutor
   - uid: DisCatSharp.Common.Utilities.AsyncManualResetEvent
@@ -95,4 +95,4 @@ items:
     name: ReflectionUtilities
   - uid: DisCatSharp.Common.Utilities.RuntimeInformation
     name: RuntimeInformation
-memberLayout: SamePage
+memberLayout: SeparatePages

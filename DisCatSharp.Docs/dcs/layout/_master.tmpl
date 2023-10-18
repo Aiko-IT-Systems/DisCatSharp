@@ -4,8 +4,10 @@
 {{!include(favicon.ico)}}
 {{!include(.htaccess)}}
 {{!include(logo.png)}}
+{{!include(dcs-logo-embeds.png)}}
 {{!include(logo.svg)}}
 {{!include(logo_black.png)}}
+{{!include(dcs-docs-embeds-logo.png)}}
 {{!include(android-icon-36x36.png)}}
 {{!include(android-icon-48x48.png)}}
 {{!include(android-icon-72x72.png)}}
@@ -49,26 +51,27 @@
 		{{_appTitle}}{{/_appTitle}}</title>
 	<meta name="title"
 		content="{{#title}}{{title}}{{/title}}{{^title}}{{>partials/title}}{{/title}} {{#_appTitle}}| {{_appTitle}} {{/_appTitle}}">
-	<meta name="og:title"
+	<meta property="og:title"
 		content="{{#title}}{{title}}{{/title}}{{^title}}{{>partials/title}}{{/title}} {{#_appTitle}}| {{_appTitle}} {{/_appTitle}}">
-	{{#description}}
 	<meta name="description" content="{{description}}">
 	<meta property="og:description" content="{{description}}">
-	<meta name="twitter:description" content="{{description}}">
-	{{/description}}
 	{{#author}}
 	<meta name="author" content="{{author}}">{{/author}}
+	{{#_providerName}}
+	<meta name="provider_name" content="{{_providerName}}">{{/_providerName}}
+	{{#_providerUrl}}
+	<meta name="provider_url" content="{{_providerUrl}}">{{/_providerUrl}}
 	{{#keywords}}
 	<meta name="keywords" content="{{keywords}}">{{/keywords}}
 	{{#_ogType}}
-	<meta name="og:type" content="{{_ogType}}">{{/_ogType}}
+	<meta property="og:type" content="{{_ogType}}">{{/_ogType}}
 	{{#_ogImage}}
-	<meta name="og:image" content="{{_ogImage}}">
-	<meta name="og:image:alt" content="{{#title}}{{title}} {{/title}}Logo">
-	<meta name="og:image:type" content="image/png">
+	<meta property="og:image" content="{{_ogImage}}">
+	<meta property="og:image:alt" content="{{#title}}{{title}} {{/title}}Logo">
+	<meta property="og:image:type" content="image/png">
 	{{/_ogImage}}
 	{{#_appName}}
-	<meta name="og:site_name" content="{{_appName}}">{{/_appName}}
+	<meta property="og:site_name" content="{{_appName}}">{{/_appName}}
 	{{#_lang}}
 	<meta property="og:locale" content="{{_lang}}">{{/_lang}}
 	{{#_fbPageId}}
@@ -81,6 +84,7 @@
 	<meta name="twitter:creator" content="@aiko_it_systems">
 	<meta name="twitter:title"
 		content="{{#title}}{{title}}{{/title}}{{^title}}{{>partials/title}}{{/title}} {{#_appTitle}}| {{_appTitle}} {{/_appTitle}}">
+	<meta name="twitter:description" content="{{description}}">
 	{{#_twitterImage}}
 	<meta name="twitter:image" content="{{_twitterImage}}">
 	<meta name="twitter:image:alt" content="{{#title}}{{title}} {{/title}}Logo">
@@ -106,55 +110,56 @@
 	<link rel="shortcut icon" href="{{_rel}}{{{_appFaviconPath}}}{{^_appFaviconPath}}favicon.ico{{/_appFaviconPath}}">
 	{{#hasDiscordComponents}}
 	<script>
-      window.$discordMessage = {
-        profiles: {
-          dcs: {
-            author: "DisCatSharp",
-            avatar: "https://cdn.discordapp.com/avatars/887519008604180541/cc3b7410330027b0682900b6c612b735.png?size=256",
-            roleColor: "#eb0404",
-            roleName: "System Bots",
-			roleIcon: "https://cdn.discordapp.com/role-icons/858098536759820379/bda0df094fa6f95b01c4846518034835.png?size=256",
-            bot: true,
-            verified: true
-          },
-		  user: {
-            author: "Discord User",
-            avatar: "https://cdn.discordapp.com/embed/avatars/5.png",
-            roleColor: "#00c0ff",
-            roleName: "Users"
-          },
-		  dcs_user: {
-            author: "Drac",
-            avatar: "https://cdn.discordapp.com/avatars/666339628613107725/a97c269a653ecc2ff143f7bddb36a782.png?size=256",
-			roleColor: "#a221e6",
-			roleName: "VIP",
-			roleIcon: "https://cdn.discordapp.com/role-icons/858099411434209280/ce6432b51488efd0fa09fadb12cbfb47.png?size=256"
-          },
-		  dcs_owner: {
-            author: "Lala Sabathil",
-            avatar: "https://cdn.discordapp.com/avatars/856780995629154305/cca4f0fdd07fa17a31f99139f8f45e87.png?size=256",
-			roleColor: "#fc0fc0",
-			roleName: "AITSYS Leader",
-			roleIcon: "https://cdn.discordapp.com/role-icons/1070126281422819380/b829ba0483ed2723034292651731f357.png?size=256"
-          },
-		  user_dm: {
-            author: "Discord User",
-            avatar: "https://cdn.discordapp.com/embed/avatars/5.png"
-          },
-		  dcs_user_dm: {
-            author: "Drac",
-            avatar: "https://cdn.discordapp.com/avatars/666339628613107725/a97c269a653ecc2ff143f7bddb36a782.png?size=256"
-		  }
-        },
-		defaultMode: "cozy",
-		defaultTheme: "dark", // replace with amoled soon
-		defaultBackground: "discord"
-      };
+		window.$discordMessage = {
+			profiles: {
+				dcs: {
+					author: "DisCatSharp",
+					avatar: "https://cdn.discordapp.com/avatars/887519008604180541/cc3b7410330027b0682900b6c612b735.png?size=256",
+					roleColor: "#eb0404",
+					roleName: "System Bots",
+					roleIcon: "https://cdn.discordapp.com/role-icons/858098536759820379/bda0df094fa6f95b01c4846518034835.png?size=256",
+					bot: true,
+					verified: true
+				},
+				user: {
+					author: "Discord User",
+					avatar: "https://cdn.discordapp.com/embed/avatars/5.png",
+					roleColor: "#00c0ff",
+					roleName: "Users"
+				},
+				dcs_user: {
+					author: "Drac",
+					avatar: "https://cdn.discordapp.com/avatars/666339628613107725/a97c269a653ecc2ff143f7bddb36a782.png?size=256",
+					roleColor: "#a221e6",
+					roleName: "VIP",
+					roleIcon: "https://cdn.discordapp.com/role-icons/858099411434209280/ce6432b51488efd0fa09fadb12cbfb47.png?size=256"
+				},
+				dcs_owner: {
+					author: "Lala Sabathil",
+					avatar: "https://cdn.discordapp.com/avatars/856780995629154305/cca4f0fdd07fa17a31f99139f8f45e87.png?size=256",
+					roleColor: "#fc0fc0",
+					roleName: "AITSYS Leader",
+					roleIcon: "https://cdn.discordapp.com/role-icons/1070126281422819380/b829ba0483ed2723034292651731f357.png?size=256"
+				},
+				user_dm: {
+					author: "Discord User",
+					avatar: "https://cdn.discordapp.com/embed/avatars/5.png"
+				},
+				dcs_user_dm: {
+					author: "Drac",
+					avatar: "https://cdn.discordapp.com/avatars/666339628613107725/a97c269a653ecc2ff143f7bddb36a782.png?size=256"
+				}
+			},
+			defaultMode: "cozy",
+			defaultTheme: "dark", // replace with amoled soon
+			defaultBackground: "discord"
+		};
 	</script>
 	<script type="module" src="https://unpkg.com/@aitsys/discord-components-core"></script>
 	{{/hasDiscordComponents}}
 	<link rel="stylesheet" href="{{_rel}}public/docfx.min.css">
 	<link rel="stylesheet" href="{{_rel}}public/main.css">
+	<link rel="stylesheet" href="{{_rel}}public/collapsible.css">
 	<link href="//cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.css" type="text/css"
 		rel="stylesheet" />
 	<meta name="docfx:navrel" content="{{_navRel}}">
@@ -168,26 +173,41 @@
 	{{#_disableTocFilter}}
 	<meta name="docfx:disabletocfilter" content="true">{{/_disableTocFilter}}
 	{{#docurl}}
+	{{#_urlNormalizationActive}}
+	<meta name="docfx:urlnormalizationactive" content="true">{{/_urlNormalizationActive}}
 	<meta name="docfx:docurl" content="{{docurl}}">{{/docurl}}
+	<meta name="loc:inThisArticle" content="{{__global.inThisArticle}}">
+	<meta name="loc:searchResultsCount" content="{{__global.searchResultsCount}}">
+	<meta name="loc:searchNoResults" content="{{__global.searchNoResults}}">
+	<meta name="loc:tocFilter" content="{{__global.tocFilter}}">
+	<meta name="loc:nextArticle" content="{{__global.nextArticle}}">
+	<meta name="loc:prevArticle" content="{{__global.prevArticle}}">
+	<meta name="loc:themeLight" content="{{__global.themeLight}}">
+	<meta name="loc:themeDark" content="{{__global.themeDark}}">
+	<meta name="loc:themeAuto" content="{{__global.themeAuto}}">
+	<meta name="loc:changeTheme" content="{{__global.changeTheme}}">
+	<meta name="loc:copy" content="{{__global.copy}}">
 	<script src="//code.jquery.com/jquery-latest.js"></script>
 	<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
 		data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
 	<script type="module" src="{{_rel}}public/main.js"></script>
-	<script src="//cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="//cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.js" type="text/javascript"
+		charset="utf-8"></script>
 	<script type="text/javascript" src="{{_rel}}public/plugin-featherlight.js"></script>
+	<script type="text/javascript" src="{{_rel}}public/collapsible.js"></script>
 	{{/redirect_url}}
 </head>
-  {{^redirect_url}}
-  <script type="module">
-    import options from './{{_rel}}public/main.js'
-    import { init } from './{{_rel}}public/docfx.min.js'
-    init(options)
-  </script>
+{{^redirect_url}}
+<script type="module">
+	import options from './{{_rel}}public/main.js'
+	import { init } from './{{_rel}}public/docfx.min.js'
+	init(options)
+</script>
 
-  <script>
-    const theme = 'dark' //localStorage.getItem('theme') || 'auto'
-    document.documentElement.setAttribute('data-bs-theme', 'dark') //document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
-  </script>
+<script>
+	const theme = 'dark' //localStorage.getItem('theme') || 'auto'
+	document.documentElement.setAttribute('data-bs-theme', 'dark') //document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+</script>
 
 {{#_googleAnalyticsTagId}}
 <script async src="https://www.googletagmanager.com/gtag/js?id={{_googleAnalyticsTagId}}"></script>
@@ -203,9 +223,11 @@
 	<header class="bg-body border-bottom">
 		<nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
 			<div class="container-xxl flex-nowrap">
-				<a class="navbar-brand" href="{{_appLogoUrl}}{{^_appLogoUrl}}{{_rel}}index.html{{/_appLogoUrl}}"><img
-						id="logo" class="svg" src="{{_rel}}{{{_appLogoPath}}}{{^_appLogoPath}}logo.svg{{/_appLogoPath}}"
-						alt="{{_appName}}">&nbsp;&nbsp;{{_appName}}</a>
+				<a class="navbar-brand" href="{{_appLogoUrl}}{{^_appLogoUrl}}{{_rel}}index.html{{/_appLogoUrl}}">
+					<img id="logo" class="svg"
+						src="{{_rel}}{{{_appLogoPath}}}{{^_appLogoPath}}logo.svg{{/_appLogoPath}}" alt="{{_appName}}">
+					&nbsp;&nbsp;{{_appName}}
+				</a>
 				<button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse"
 					data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false"
 					aria-label="Toggle navigation">
@@ -259,10 +281,10 @@
 			{{^_disableContribution}}
 			<div class="contribution d-print-none">
 				{{#sourceurl}}
-				<a href="{{sourceurl}}" class="edit-link">Edit this page</a>
+				<a href="{{sourceurl}}" class="edit-link">{{__global.improveThisDoc}}</a>
 				{{/sourceurl}}
 				{{^sourceurl}}{{#docurl}}
-				<a href="{{docurl}}" class="edit-link">Edit this page</a>
+				<a href="{{docurl}}" class="edit-link">{{__global.improveThisDoc}}</a>
 				{{/docurl}}{{/sourceurl}}
 			</div>
 			{{/_disableContribution}}
@@ -270,7 +292,6 @@
 			{{^_disableNextArticle}}
 			<div class="next-article d-print-none border-top" id="nextArticle"></div>
 			{{/_disableNextArticle}}
-
 		</div>
 
 		<div class="affix">

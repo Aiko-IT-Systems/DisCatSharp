@@ -1,25 +1,3 @@
-// This file is part of the DisCatSharp project.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -123,10 +101,17 @@ public class BaseContext
 	/// <para>Gets the entitlements.</para>
 	/// <para>This is related to premium subscriptions for bots.</para>
 	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
-	/// <see cref="DiscordClient.TryGetPublishedListings(ulong, out IReadOnlyList{DiscordStoreSku})"/> for more information.
 	/// </summary>
 	[DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
-	public List<ulong> Entitlements { get; internal set; }
+	public List<DiscordEntitlement> Entitlements { get; internal set; } = new();
+
+	/// <summary>
+	/// <para>Gets the entitlement sku ids.</para>
+	/// <para>This is related to premium subscriptions for bots.</para>
+	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
+	/// </summary>
+	[DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
+	public List<ulong> EntitlementSkuIds { get; internal set; } = new();
 
 	/// <summary>
 	/// Gets the type of this interaction.
@@ -155,7 +140,17 @@ public class BaseContext
 	/// </summary>
 	/// <param name="builder">The data to send.</param>
 	public Task CreateModalResponseAsync(DiscordInteractionModalBuilder builder)
-		=> this.Interaction.Type != InteractionType.Ping && this.Interaction.Type != InteractionType.ModalSubmit ? this.Interaction.CreateInteractionModalResponseAsync(builder) : throw new NotSupportedException("You can't respond to an PING with a modal.");
+		=> this.Interaction.Type != InteractionType.Ping && this.Interaction.Type != InteractionType.ModalSubmit ? this.Interaction.CreateInteractionModalResponseAsync(builder) : throw new NotSupportedException("You can't respond to a PING with a modal.");
+
+	/// <summary>
+	/// Creates an iframe response to this interaction.
+	/// </summary>
+	/// <param name="customId">The custom id of the iframe.</param>
+	/// <param name="title">The title of the iframe.</param>
+	/// <param name="modalSize">The size of the iframe.</param>
+	/// <param name="iFramePath">The path of the iframe.</param>
+	public Task CreateInteractionIframeResponseAsync(string customId, string title, IframeModalSize modalSize = IframeModalSize.Normal, string? iFramePath = null)
+		=> this.Interaction.Type != InteractionType.Ping ? this.Interaction.CreateInteractionIframeResponseAsync(customId, title, modalSize, iFramePath) : throw new NotSupportedException("You can't respond to a PING with an iframe.");
 
 	/// <summary>
 	/// Edits the interaction response.

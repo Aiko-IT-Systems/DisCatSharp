@@ -16,7 +16,9 @@
 			"dest": "api/DisCatSharp",
 			"filter": "filter_config.yml",
 			"disableDefaultFilter": false,
-			"memberLayout": "samePage"
+			"memberLayout": "separatePages",
+			"namespaceLayout": "flattened",
+			"enumSortOrder": "declaringOrder"
 		},
 		{
 			"src": [
@@ -34,7 +36,9 @@
 			"dest": "api/DisCatSharp.Interactivity",
 			"filter": "filter_config.yml",
 			"disableDefaultFilter": false,
-			"memberLayout": "samePage"
+			"memberLayout": "separatePages",
+			"namespaceLayout": "flattened",
+			"enumSortOrder": "declaringOrder"
 		},
 		{
 			"src": [
@@ -52,7 +56,9 @@
 			"dest": "api/DisCatSharp.Common",
 			"filter": "filter_config.yml",
 			"disableDefaultFilter": false,
-			"memberLayout": "samePage"
+			"memberLayout": "separatePages",
+			"namespaceLayout": "flattened",
+			"enumSortOrder": "declaringOrder"
 		},
 		{
 			"src": [
@@ -70,7 +76,9 @@
 			"dest": "api/DisCatSharp.Hosting",
 			"filter": "filter_config.yml",
 			"disableDefaultFilter": false,
-			"memberLayout": "samePage"
+			"memberLayout": "separatePages",
+			"namespaceLayout": "flattened",
+			"enumSortOrder": "declaringOrder"
 		},
 		{
 			"src": [
@@ -88,7 +96,9 @@
 			"dest": "api/DisCatSharp.Configuration",
 			"filter": "filter_config.yml",
 			"disableDefaultFilter": false,
-			"memberLayout": "samePage"
+			"memberLayout": "separatePages",
+			"namespaceLayout": "flattened",
+			"enumSortOrder": "declaringOrder"
 		},
 		{
 			"src": [
@@ -106,7 +116,9 @@
 			"dest": "api/DisCatSharp.ApplicationCommands",
 			"filter": "filter_config.yml",
 			"disableDefaultFilter": false,
-			"memberLayout": "samePage"
+			"memberLayout": "separatePages",
+			"namespaceLayout": "flattened",
+			"enumSortOrder": "declaringOrder"
 		},
 		{
 			"src": [
@@ -124,7 +136,9 @@
 			"dest": "api/DisCatSharp.CommandsNext",
 			"filter": "filter_config.yml",
 			"disableDefaultFilter": false,
-			"memberLayout": "samePage"
+			"memberLayout": "separatePages",
+			"namespaceLayout": "flattened",
+			"enumSortOrder": "declaringOrder"
 		},
 		{
 			"src": [
@@ -142,7 +156,9 @@
 			"dest": "api/DisCatSharp.Hosting.DependencyInjection",
 			"filter": "filter_config.yml",
 			"disableDefaultFilter": false,
-			"memberLayout": "samePage"
+			"memberLayout": "separatePages",
+			"namespaceLayout": "flattened",
+			"enumSortOrder": "declaringOrder"
 		},
 		{
 			"src": [
@@ -160,7 +176,9 @@
 			"dest": "api/DisCatSharp.VoiceNext",
 			"filter": "filter_config.yml",
 			"disableDefaultFilter": false,
-			"memberLayout": "samePage"
+			"memberLayout": "separatePages",
+			"namespaceLayout": "flattened",
+			"enumSortOrder": "declaringOrder"
 		},
 		{
 			"src": [
@@ -178,7 +196,9 @@
 			"dest": "api/DisCatSharp.Attributes",
 			"filter": "filter_config.yml",
 			"disableDefaultFilter": false,
-			"memberLayout": "samePage"
+			"memberLayout": "separatePages",
+			"namespaceLayout": "flattened",
+			"enumSortOrder": "declaringOrder"
 		},
 		{
 			"src": [
@@ -196,7 +216,9 @@
 			"dest": "api/DisCatSharp.Experimental",
 			"filter": "filter_config.yml",
 			"disableDefaultFilter": false,
-			"memberLayout": "samePage"
+			"memberLayout": "separatePages",
+			"namespaceLayout": "flattened",
+			"enumSortOrder": "declaringOrder"
 		},
 		{
 			"src": [
@@ -214,12 +236,17 @@
 			"dest": "api/DisCatSharp.Lavalink",
 			"filter": "filter_config.yml",
 			"disableDefaultFilter": false,
-			"memberLayout": "samePage"
+			"memberLayout": "separatePages",
+			"namespaceLayout": "flattened",
+			"enumSortOrder": "declaringOrder"
 		}
 	],
 	"build": {
 		"xrefService": [
 			"https://xref.docs.microsoft.com/query?uid={uid}"
+		],
+		"xref": [
+			"ext-xrefmap.yml"
 		],
 		"content": [
 			{
@@ -298,11 +325,15 @@
 			"_googleTagId": "G-8JHG7YVNKK",
 			"_lang": "en-US",
 			"_ogType": "website",
-			"_ogImage": "https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png",
+			"_ogImage": "/dcs-docs-embeds-logo.png",
 			"_fbPageId": "112155734832129",
 			"_twitterSite": "@DisCatSharp",
-			"_twitterImage": "https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png",
-			"_layout": "conceptual"
+			"_twitterImage": "/dcs-docs-embeds-logo.png",
+			"_layout": "conceptual",
+			"_urlNormalizationActive": true,
+			"_providerName": "AITSYS DocFx",
+			"_providerUrl": "https://github.com/Aiko-IT-Systems/docfx",
+			"description": "Your library to write discord bots in C# with focus on always providing access to the latest discord features."
 		},
 		"disableGitFeatures": false,
 		"exportRawModel": false,
@@ -312,7 +343,9 @@
 		"fileMetadata": {
 			"_ogType": {
 				"articles/**/*.md": "article",
-				"changelogs/**/*.md": "article"
+				"changelogs/**/*.md": "article",
+				"natives/**/*.md": "article",
+				"vs/**/*.md": "article"
 			}
 		},
 		"template": [
@@ -321,11 +354,12 @@
 			"dcs"
 		],
 		"postProcessors": [
-			"ExtractSearchIndex"
+			"ExtractSearchIndex",
+			"DescriptionGenerator",
+			"LastModified"
 		],
 		"noLangKeyword": false,
-		"keepFileLink": false,
-		"cleanupCacheHistory": false,
+		"keepFileLink": true,
 		"sitemap": {
 			"baseUrl": "https://docs.dcs.aitsys.dev/",
 			"changefreq": "daily",

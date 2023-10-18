@@ -13,6 +13,8 @@ items:
     name: DiscordClient
   - uid: DisCatSharp.DiscordConfiguration
     name: DiscordConfiguration
+  - uid: DisCatSharp.DiscordOAuth2Client
+    name: DiscordOAuth2Client
   - uid: DisCatSharp.DiscordShardedClient
     name: DiscordShardedClient
   - uid: DisCatSharp.DiscordWebhookClient
@@ -176,6 +178,8 @@ items:
     name: DiscordEmbedVideo
   - uid: DisCatSharp.Entities.DiscordEmoji
     name: DiscordEmoji
+  - uid: DisCatSharp.Entities.DiscordEntitlement
+    name: DiscordEntitlement
   - uid: DisCatSharp.Entities.DiscordFollowedChannel
     name: DiscordFollowedChannel
   - uid: DisCatSharp.Entities.DiscordFollowupMessageBuilder
@@ -190,6 +194,8 @@ items:
     name: DiscordGuildDirectoryEntry
   - uid: DisCatSharp.Entities.DiscordGuildEmoji
     name: DiscordGuildEmoji
+  - uid: DisCatSharp.Entities.DiscordGuildInventorySettings
+    name: DiscordGuildInventorySettings
   - uid: DisCatSharp.Entities.DiscordGuildMembershipScreening
     name: DiscordGuildMembershipScreening
   - uid: DisCatSharp.Entities.DiscordGuildMembershipScreeningField
@@ -248,6 +254,12 @@ items:
     name: DiscordMessageInteraction
   - uid: DisCatSharp.Entities.DiscordMessageReference
     name: DiscordMessageReference
+  - uid: DisCatSharp.Entities.DiscordOnboarding
+    name: DiscordOnboarding
+  - uid: DisCatSharp.Entities.DiscordOnboardingPrompt
+    name: DiscordOnboardingPrompt
+  - uid: DisCatSharp.Entities.DiscordOnboardingPromptOption
+    name: DiscordOnboardingPromptOption
   - uid: DisCatSharp.Entities.DiscordOverwrite
     name: DiscordOverwrite
   - uid: DisCatSharp.Entities.DiscordOverwriteBuilder
@@ -276,6 +288,8 @@ items:
     name: DiscordScheduledEventEntityMetadata
   - uid: DisCatSharp.Entities.DiscordScheduledEventUser
     name: DiscordScheduledEventUser
+  - uid: DisCatSharp.Entities.DiscordServerGuide
+    name: DiscordServerGuide
   - uid: DisCatSharp.Entities.DiscordSku
     name: DiscordSku
   - uid: DisCatSharp.Entities.DiscordSpotifyAsset
@@ -334,6 +348,12 @@ items:
     name: ForumPostTag
   - uid: DisCatSharp.Entities.ForumReactionEmoji
     name: ForumReactionEmoji
+  - uid: DisCatSharp.Entities.GcpAttachment
+    name: GcpAttachment
+  - uid: DisCatSharp.Entities.GcpAttachmentUploadInformation
+    name: GcpAttachmentUploadInformation
+  - uid: DisCatSharp.Entities.GcpAttachmentsResponse
+    name: GcpAttachmentsResponse
   - uid: DisCatSharp.Entities.GuildFeatures
     name: GuildFeatures
   - uid: DisCatSharp.Entities.GuildFeaturesEnum
@@ -342,6 +362,8 @@ items:
     name: IMention
   - uid: DisCatSharp.Entities.Mentions
     name: Mentions
+  - uid: DisCatSharp.Entities.NewMemberAction
+    name: NewMemberAction
   - uid: DisCatSharp.Entities.None
     name: None
   - uid: DisCatSharp.Entities.NullableSnowflakeObject
@@ -356,8 +378,12 @@ items:
     name: PropertyChange<T>
   - uid: DisCatSharp.Entities.RepliedUserMention
     name: RepliedUserMention
+  - uid: DisCatSharp.Entities.ResourceChannel
+    name: ResourceChannel
   - uid: DisCatSharp.Entities.RoleMention
     name: RoleMention
+  - uid: DisCatSharp.Entities.SkuPrice
+    name: SkuPrice
   - uid: DisCatSharp.Entities.SnowflakeObject
     name: SnowflakeObject
   - uid: DisCatSharp.Entities.StickerFormat
@@ -370,6 +396,19 @@ items:
     name: UserStatus
   - uid: DisCatSharp.Entities.UserWithIdOnly
     name: UserWithIdOnly
+  - uid: DisCatSharp.Entities.WelcomeMessage
+    name: WelcomeMessage
+- uid: DisCatSharp.Entities.OAuth2
+  name: DisCatSharp.Entities.OAuth2
+  items:
+  - uid: DisCatSharp.Entities.OAuth2.ApplicationRoleConnectionMetadata
+    name: ApplicationRoleConnectionMetadata
+  - uid: DisCatSharp.Entities.OAuth2.DiscordAccessToken
+    name: DiscordAccessToken
+  - uid: DisCatSharp.Entities.OAuth2.DiscordApplicationRoleConnection
+    name: DiscordApplicationRoleConnection
+  - uid: DisCatSharp.Entities.OAuth2.DiscordAuthorizationInformation
+    name: DiscordAuthorizationInformation
 - uid: DisCatSharp.Enums
   name: DisCatSharp.Enums
   items:
@@ -395,6 +434,10 @@ items:
     name: ApplicationRoleConnectionMetadataType
   - uid: DisCatSharp.Enums.ApplicationVerificationState
     name: ApplicationVerificationState
+  - uid: DisCatSharp.Enums.AttachmentFlagExtensions
+    name: AttachmentFlagExtensions
+  - uid: DisCatSharp.Enums.AttachmentFlags
+    name: AttachmentFlags
   - uid: DisCatSharp.Enums.AuditLogActionCategory
     name: AuditLogActionCategory
   - uid: DisCatSharp.Enums.AuditLogActionType
@@ -439,6 +482,10 @@ items:
     name: DiscordShortlink
   - uid: DisCatSharp.Enums.DomainHelpAttribute
     name: DomainHelpAttribute
+  - uid: DisCatSharp.Enums.EntitlementOwnerType
+    name: EntitlementOwnerType
+  - uid: DisCatSharp.Enums.EntitlementType
+    name: EntitlementType
   - uid: DisCatSharp.Enums.EventAttribute
     name: EventAttribute
   - uid: DisCatSharp.Enums.EventHandlerAttribute
@@ -453,6 +500,8 @@ items:
     name: GatewayCompressionLevel
   - uid: DisCatSharp.Enums.HubType
     name: HubType
+  - uid: DisCatSharp.Enums.IframeModalSize
+    name: IframeModalSize
   - uid: DisCatSharp.Enums.IntegrationExpireBehavior
     name: IntegrationExpireBehavior
   - uid: DisCatSharp.Enums.InteractionResponseType
@@ -483,12 +532,16 @@ items:
     name: MessageType
   - uid: DisCatSharp.Enums.MfaLevel
     name: MfaLevel
+  - uid: DisCatSharp.Enums.NewMemberActionType
+    name: NewMemberActionType
   - uid: DisCatSharp.Enums.NsfwLevel
     name: NsfwLevel
   - uid: DisCatSharp.Enums.OAuth
     name: OAuth
   - uid: DisCatSharp.Enums.OAuthScopes
     name: OAuthScopes
+  - uid: DisCatSharp.Enums.OnboardingMode
+    name: OnboardingMode
   - uid: DisCatSharp.Enums.OtherDomain
     name: OtherDomain
   - uid: DisCatSharp.Enums.OverwriteType
@@ -497,16 +550,18 @@ items:
     name: PermissionLevel
   - uid: DisCatSharp.Enums.PermissionMethods
     name: PermissionMethods
-  - uid: DisCatSharp.Enums.Permissions
-    name: Permissions
   - uid: DisCatSharp.Enums.PermissionStringAttribute
     name: PermissionStringAttribute
+  - uid: DisCatSharp.Enums.Permissions
+    name: Permissions
   - uid: DisCatSharp.Enums.PremiumTier
     name: PremiumTier
   - uid: DisCatSharp.Enums.PremiumType
     name: PremiumType
   - uid: DisCatSharp.Enums.PriceTierType
     name: PriceTierType
+  - uid: DisCatSharp.Enums.PromptType
+    name: PromptType
   - uid: DisCatSharp.Enums.RoleFlags
     name: RoleFlags
   - uid: DisCatSharp.Enums.RpcApplicationState
@@ -594,6 +649,12 @@ items:
     name: DmChannelDeleteEventArgs
   - uid: DisCatSharp.EventArgs.EmbeddedActivityUpdateEventArgs
     name: EmbeddedActivityUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.EntitlementCreateEventArgs
+    name: EntitlementCreateEventArgs
+  - uid: DisCatSharp.EventArgs.EntitlementDeleteEventArgs
+    name: EntitlementDeleteEventArgs
+  - uid: DisCatSharp.EventArgs.EntitlementUpdateEventArgs
+    name: EntitlementUpdateEventArgs
   - uid: DisCatSharp.EventArgs.GuildApplicationCommandCountEventArgs
     name: GuildApplicationCommandCountEventArgs
   - uid: DisCatSharp.EventArgs.GuildAuditLogEntryCreateEventArgs
@@ -614,16 +675,14 @@ items:
     name: GuildIntegrationCreateEventArgs
   - uid: DisCatSharp.EventArgs.GuildIntegrationDeleteEventArgs
     name: GuildIntegrationDeleteEventArgs
-  - uid: DisCatSharp.EventArgs.GuildIntegrationsUpdateEventArgs
-    name: GuildIntegrationsUpdateEventArgs
   - uid: DisCatSharp.EventArgs.GuildIntegrationUpdateEventArgs
     name: GuildIntegrationUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.GuildIntegrationsUpdateEventArgs
+    name: GuildIntegrationsUpdateEventArgs
   - uid: DisCatSharp.EventArgs.GuildMemberAddEventArgs
     name: GuildMemberAddEventArgs
   - uid: DisCatSharp.EventArgs.GuildMemberRemoveEventArgs
     name: GuildMemberRemoveEventArgs
-  - uid: DisCatSharp.EventArgs.GuildMembersChunkEventArgs
-    name: GuildMembersChunkEventArgs
   - uid: DisCatSharp.EventArgs.GuildMemberTimeoutAddEventArgs
     name: GuildMemberTimeoutAddEventArgs
   - uid: DisCatSharp.EventArgs.GuildMemberTimeoutRemoveEventArgs
@@ -632,6 +691,8 @@ items:
     name: GuildMemberTimeoutUpdateEventArgs
   - uid: DisCatSharp.EventArgs.GuildMemberUpdateEventArgs
     name: GuildMemberUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.GuildMembersChunkEventArgs
+    name: GuildMembersChunkEventArgs
   - uid: DisCatSharp.EventArgs.GuildRoleCreateEventArgs
     name: GuildRoleCreateEventArgs
   - uid: DisCatSharp.EventArgs.GuildRoleDeleteEventArgs
@@ -710,10 +771,10 @@ items:
     name: ThreadDeleteEventArgs
   - uid: DisCatSharp.EventArgs.ThreadListSyncEventArgs
     name: ThreadListSyncEventArgs
-  - uid: DisCatSharp.EventArgs.ThreadMembersUpdateEventArgs
-    name: ThreadMembersUpdateEventArgs
   - uid: DisCatSharp.EventArgs.ThreadMemberUpdateEventArgs
     name: ThreadMemberUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.ThreadMembersUpdateEventArgs
+    name: ThreadMembersUpdateEventArgs
   - uid: DisCatSharp.EventArgs.ThreadUpdateEventArgs
     name: ThreadUpdateEventArgs
   - uid: DisCatSharp.EventArgs.TypingStartEventArgs
@@ -726,6 +787,8 @@ items:
     name: UserSpeakingEventArgs
   - uid: DisCatSharp.EventArgs.UserUpdateEventArgs
     name: UserUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.VoiceChannelStatusUpdateEventArgs
+    name: VoiceChannelStatusUpdateEventArgs
   - uid: DisCatSharp.EventArgs.VoiceServerUpdateEventArgs
     name: VoiceServerUpdateEventArgs
   - uid: DisCatSharp.EventArgs.VoiceStateUpdateEventArgs
@@ -778,11 +841,6 @@ items:
     name: RestResponse
   - uid: DisCatSharp.Net.SessionBucket
     name: SessionBucket
-- uid: DisCatSharp.Net.Abstractions
-  name: DisCatSharp.Net.Abstractions
-  items:
-  - uid: DisCatSharp.Net.Abstractions.RestForumPostTagPayloads
-    name: RestForumPostTagPayloads
 - uid: DisCatSharp.Net.Models
   name: DisCatSharp.Net.Models
   items:
@@ -833,4 +891,4 @@ items:
     name: WebSocketClient
   - uid: DisCatSharp.Net.WebSocket.WebSocketClientFactoryDelegate
     name: WebSocketClientFactoryDelegate
-memberLayout: SamePage
+memberLayout: SeparatePages

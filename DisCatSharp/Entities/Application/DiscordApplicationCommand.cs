@@ -1,29 +1,8 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -33,7 +12,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a command that is registered to an application.
 /// </summary>
-public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordApplicationCommand>
+public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordApplicationCommand>
 {
 	/// <summary>
 	/// Gets the type of this application command.
@@ -103,11 +82,17 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 	[JsonProperty("dm_permission", NullValueHandling = NullValueHandling.Ignore)]
 	public bool? DmPermission { get; internal set; }
 
-	/*/// <summary>
+	/// <summary>
 	/// Gets where the application command can be used.
 	/// </summary>
 	[JsonProperty("contexts", NullValueHandling = NullValueHandling.Ignore), DiscordUnreleased]
-	internal ApplicationCommandContexts Contexts { get; set; }*/
+	public List<ApplicationCommandContexts>? AllowedContexts { get; internal set; }
+
+	/// <summary>
+	/// Gets the application command allowed integration types.
+	/// </summary>
+	[JsonProperty("integration_types", NullValueHandling = NullValueHandling.Ignore), DiscordUnreleased]
+	public List<ApplicationCommandIntegrationTypes>? IntegrationTypes { get; internal set; }
 
 	/// <summary>
 	/// Gets whether the command is marked as NSFW.
@@ -122,7 +107,7 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 	public ulong Version { get; internal set; }
 
 	/// <summary>
-	/// Gets the name localizations.
+	/// Gets the mention for this command.
 	/// </summary>
 	[JsonIgnore]
 	public string Mention => this.Type == ApplicationCommandType.ChatInput ? $"</{this.Name}:{this.Id}>" : this.Name;
@@ -139,14 +124,16 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 	/// <param name="defaultMemberPermissions">The default member permissions.</param>
 	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is NSFW.</param>
-	// /// <param name="contexts">Where the command can be used.</param>
+	/// <param name="allowedContexts">Where the command can be used.</param>
+	/// <param name="integrationTypes">The allowed integration types.</param>
 	public DiscordApplicationCommand(
 		string name, string description,
 		IEnumerable<DiscordApplicationCommandOption>? options = null,
 		ApplicationCommandType type = ApplicationCommandType.ChatInput,
 		DiscordApplicationCommandLocalization? nameLocalizations = null, DiscordApplicationCommandLocalization? descriptionLocalizations = null,
-		Permissions? defaultMemberPermissions = null, bool? dmPermission = null, bool isNsfw = false)//, ApplicationCommandContexts contexts = null)
-		: base(new() { "guild_id", "contexts" })
+		Permissions? defaultMemberPermissions = null, bool? dmPermission = null, bool isNsfw = false,
+		List<ApplicationCommandContexts>? allowedContexts = null, List<ApplicationCommandIntegrationTypes>? integrationTypes = null)
+		: base(new() { "guild_id" })
 	{
 		if (type is ApplicationCommandType.ChatInput)
 		{
@@ -182,8 +169,16 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 		this.DefaultMemberPermissions = defaultMemberPermissions;
 		this.DmPermission = dmPermission;
 		this.IsNsfw = isNsfw;
-		//this.Contexts = contexts;
+		this.AllowedContexts = allowedContexts;
+		this.IntegrationTypes = integrationTypes;
 	}
+
+	/// <summary>
+	/// Creates a new empty Discord Application Command.
+	/// </summary>
+	internal DiscordApplicationCommand()
+		: base(new() { "name_localizations", "description_localizations" }) // Why tf is that so inconsistent?!
+	{ }
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordApplicationCommand"/> object is equal to another object.

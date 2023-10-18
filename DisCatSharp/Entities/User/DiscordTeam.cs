@@ -1,29 +1,8 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
@@ -122,7 +101,17 @@ public sealed class DiscordTeamMember : IEquatable<DiscordTeamMember>
 	/// <summary>
 	/// Gets the member's permissions within the team.
 	/// </summary>
+	[DiscordDeprecated]
 	public IReadOnlyCollection<string> Permissions { get; internal set; }
+
+	/// <summary>
+	/// Gets the member's role within the team.
+	/// <para>Can be <c>owner</c>, <c>admin</c>, <c>developer</c> or <c>read-only</c>.</para>
+	/// <para>As per official spec, owner won't be transmitted via api, so we fake patch it. Thanks discord..</para>
+	/// <para>For those interested, here's the pull request with the owner removal: <see href="https://github.com/discord/discord-api-docs/pull/6384">#6384</see>.</para>
+	/// <para>For those with access to ddevs internal: <see href="https://discord.com/channels/613425648685547541/801247546151403531/1144720730613895219">Message in #api at Discord Developers</see>.</para>
+	/// </summary>
+	public string Role { get; internal set; }
 
 	/// <summary>
 	/// Gets the id of the team this member belongs to.
@@ -147,6 +136,7 @@ public sealed class DiscordTeamMember : IEquatable<DiscordTeamMember>
 	{
 		this.MembershipStatus = (DiscordTeamMembershipStatus)ttm.MembershipState;
 		this.Permissions = new ReadOnlySet<string>(new HashSet<string>(ttm.Permissions));
+		this.Role = ttm.Role;
 	}
 
 	/// <summary>

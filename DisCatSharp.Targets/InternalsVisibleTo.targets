@@ -25,6 +25,7 @@
 	<InternalsVisibleTo Include="DisCatSharp.DocsGenerator" />
 	<InternalsVisibleTo Include="DisCatSharp.StaffApps" />
 	<InternalsVisibleTo Include="DisCatSharp.Experimental" />
+	<InternalsVisibleTo Include="DisCatSharp.Extensions.OAuth2Web" />
 	<InternalsVisibleTo Include="DisCatSharp.Extensions.TwoFactorCommands" />
 	<InternalsVisibleTo Include="Nyaw" />
 	<InternalsVisibleTo Include="MikuSharp" />

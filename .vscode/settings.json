@@ -13,5 +13,6 @@
         "hlsl",
         "powershell",
         "xml"
-    ]
+    ],
+    "dotnet.defaultSolution": "DisCatSharp.sln"
 }

@@ -326,3 +326,4 @@ Thumbs.db
 .manifest
 dcs-artifacts/
 _exported_templates/
+package-lock.json

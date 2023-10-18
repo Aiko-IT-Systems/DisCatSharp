@@ -79,21 +79,10 @@ Automating a user account is against Discord's [Terms of Service](https://dis.gd
 
 ## How can I set a custom status?
 
-If you mean a *true* custom status like this:
-
-![help](/images/faq_01.png)
-
-No, you cannot. Discord does not allow bots to use custom statuses.
-
-<br/>
-However, if you meant an activity like this:
-
-![Bot Presence](/images/faq_02.png)
-
 You can use either of the following
 
-* The overload for [ConnectAsync](xref:DisCatSharp.DiscordClient#DisCatSharp_DiscordClient_ConnectAsync_DisCatSharp_Entities_DiscordActivity_System_Nullable_DisCatSharp_Entities_UserStatus__System_Nullable_System_DateTimeOffset__)(@DisCatSharp.Entities.DiscordActivity, @DisCatSharp.Entities.UserStatus?, [](xref:System.DateTimeOffset)?) which accepts a [DiscordActivity](xref:DisCatSharp.Entities.DiscordActivity).
-* [UpdateStatusAsync](xref:DisCatSharp.DiscordClient#DisCatSharp_DiscordClient_UpdateStatusAsync_DisCatSharp_Entities_DiscordActivity_System_Nullable_DisCatSharp_Entities_UserStatus__System_Nullable_System_DateTimeOffset__)(@DisCatSharp.Entities.DiscordActivity, @DisCatSharp.Entities.UserStatus?, [](xref:System.DateTimeOffset)?) OR [UpdateStatusAsync](xref:DisCatSharp.DiscordShardedClient#DisCatSharp_DiscordShardedClient_UpdateStatusAsync_DisCatSharp_Entities_DiscordActivity_System_Nullable_DisCatSharp_Entities_UserStatus__System_Nullable_System_DateTimeOffset__)(@DisCatSharp.Entities.DiscordActivity, @DisCatSharp.Entities.UserStatus?, [](xref:System.DateTimeOffset)?) (for the sharded client) at any point after `Ready` has been fired.
+* The overload for [ConnectAsync](xref:DisCatSharp.DiscordClient.ConnectAsync*)(@DisCatSharp.Entities.DiscordActivity, @DisCatSharp.Entities.UserStatus?, [](xref:System.DateTimeOffset)?) which accepts a [DiscordActivity](xref:DisCatSharp.Entities.DiscordActivity).
+* [UpdateStatusAsync](xref:DisCatSharp.DiscordClient.UpdateStatusAsync*)(@DisCatSharp.Entities.DiscordActivity, @DisCatSharp.Entities.UserStatus?, [](xref:System.DateTimeOffset)?) OR [UpdateStatusAsync](xref:DisCatSharp.DiscordShardedClient.UpdateStatusAsync*)(@DisCatSharp.Entities.DiscordActivity, @DisCatSharp.Entities.UserStatus?, [](xref:System.DateTimeOffset)?) (for the sharded client) at any point after `Ready` has been fired.
 
 ## Am I able to retrieve a @DisCatSharp.Entities.DiscordRole by name?
 

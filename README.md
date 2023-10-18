@@ -18,11 +18,12 @@
 
 - Support for the new [Username System](https://dis.gd/usernames) (pomelo)
 - Support for [Linked Roles](https://discord.com/build/linked-roles)
-- Support for [Application Subscriptions](https://discord.com/build/apply-now)
+- Full support for [Application Subscriptions](https://discord.com/build/apply-now)
 - Support for [Voice Messages](https://support.discord.com/hc/en-us/articles/13091096725527)
 - Partial support for role subscriptions
 - Partial support for burst reactions
 - Full support for onboarding
+- Support for default select menu values (THANKS MAISY FOR ADDING IT TO DISCORD) 
 
 ## Breaking
 

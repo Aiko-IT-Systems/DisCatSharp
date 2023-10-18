@@ -94,13 +94,12 @@ And you're done! The select menu will now be sent when the user closes the selec
 
 ## Responding to select menus
 
-When any select menu is pressed, it will fire the [ComponentInteractionCreated](xref:DisCatSharp.DiscordClient#DisCatSharp_DiscordClient_ComponentInteractionCreated) event.
+When any select menu is pressed, it will fire the [ComponentInteractionCreated](xref:DisCatSharp.DiscordClient.ComponentInteractionCreated) event.
 
 In the event args, `Id` will be the id of the select menu you specified. There's also an `Interaction` property, which contains the interaction the event created. It's important to respond to an interaction within 3 seconds, or it will time out. Responding after this period will throw a `NotFoundException`.
 
 With select menus, there are two new response types: `DefferedMessageUpdate` and `UpdateMessage`.
-
-Using `DeferredMessageUpdate` lets you create followup messages via the [followup message builder](xref:DisCatSharp.Entities.DiscordFollowupMessageBuilder).
+using `DeferredMessageUpdate` lets you create followup messages via the [followup message builder](xref:DisCatSharp.Entities.DiscordFollowupMessageBuilder).
 
 You have 15 minutes from that point to make followup messages. Responding to that interaction looks like this:
 
@@ -126,7 +125,7 @@ This will update the message, and without the infamous <sub>(edited)</sub> next 
 # Interactivity
 Along with the typical `WaitForMessageAsync` and `WaitForReactionAsync` methods provided by interactivity, there are also select menus implementations as well.
 
-More information about how interactivity works can be found in [the interactivity article](xref:modules_interactivity)
+More information about how interactivity works can be found in [the interactivity article](xref:modules_interactivity_introduction)
 
 Since select menus create interactions, there are also two additional properties in the configuration:
 - @DisCatSharp.Interactivity.InteractivityConfiguration.ResponseBehavior

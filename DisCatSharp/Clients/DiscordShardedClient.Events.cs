@@ -1,25 +1,3 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
 using System.Threading.Tasks;
 
@@ -158,15 +136,15 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ChannelPinsUpdateEventArgs> _channelPinsUpdated;
 
 	/// <summary>
-	/// Fired whenever a channel's topic is updated.
+	/// Fired whenever a voice channel's status is updated.
 	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
 	/// </summary>
-	public event AsyncEventHandler<DiscordClient, ChannelTopicUpdateEventArgs> ChannelTopicUpdated
+	public event AsyncEventHandler<DiscordClient, VoiceChannelStatusUpdateEventArgs> VoiceChannelStatusUpdated
 	{
-		add => this._channelTopicUpdated.Register(value);
-		remove => this._channelTopicUpdated.Unregister(value);
+		add => this._voiceChannelStatusUpdated.Register(value);
+		remove => this._voiceChannelStatusUpdated.Unregister(value);
 	}
-	private AsyncEvent<DiscordClient, ChannelTopicUpdateEventArgs> _channelTopicUpdated;
+	private AsyncEvent<DiscordClient, VoiceChannelStatusUpdateEventArgs> _voiceChannelStatusUpdated;
 
 	#endregion
 
@@ -966,6 +944,38 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ComponentInteractionCreateEventArgs> _componentInteractionCreated;
 
 	/// <summary>
+	/// Fired when an entitlement was created.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, EntitlementCreateEventArgs> EntitlementCreated
+	{
+		add => this._entitlementCreated.Register(value);
+		remove => this._entitlementCreated.Unregister(value);
+	}
+	private AsyncEvent<DiscordClient, EntitlementCreateEventArgs> _entitlementCreated;
+
+	/// <summary>
+	/// Fired when an entitlement was updated.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, EntitlementUpdateEventArgs> EntitlementUpdated
+	{
+		add => this._entitlementUpdated.Register(value);
+		remove => this._entitlementUpdated.Unregister(value);
+	}
+	private AsyncEvent<DiscordClient, EntitlementUpdateEventArgs> _entitlementUpdated;
+
+	/// <summary>
+	/// Fired when an entitlement was deleted.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, EntitlementDeleteEventArgs> EntitlementDeleted
+	{
+		add => this._entitlementDeleted.Register(value);
+		remove => this._entitlementDeleted.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, EntitlementDeleteEventArgs> _entitlementDeleted;
+
+
+	/// <summary>
 	/// Fired when a user starts typing in a channel.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, TypingStartEventArgs> TypingStarted
@@ -1491,6 +1501,30 @@ public sealed partial class DiscordShardedClient
 		=> this._interactionCreated.InvokeAsync(client, e);
 
 	/// <summary>
+	/// Handles the entitlement create event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_EntitlementCreated(DiscordClient client, EntitlementCreateEventArgs e)
+		=> this._entitlementCreated.InvokeAsync(client, e);
+
+	/// <summary>
+	/// Handles the entitlement update event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_EntitlementUpdated(DiscordClient client, EntitlementUpdateEventArgs e)
+		=> this._entitlementUpdated.InvokeAsync(client, e);
+
+	/// <summary>
+	/// Handles the entitlement delete event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_EntitlementDeleted(DiscordClient client, EntitlementDeleteEventArgs e)
+		=> this._entitlementDeleted.InvokeAsync(client, e);
+
+	/// <summary>
 	/// Handles the component interaction create event.
 	/// </summary>
 	/// <param name="client">The client.</param>
@@ -1742,12 +1776,12 @@ public sealed partial class DiscordShardedClient
 		=> this._guildAuditLogEntryCreated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the channel topic updated event.
+	/// Handles the voice channel status updated event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
-	private Task Client_ChannelTopicUpdated(DiscordClient client, ChannelTopicUpdateEventArgs e)
-		=> this._channelTopicUpdated.InvokeAsync(client, e);
+	private Task Client_VoiceChannelStatusUpdated(DiscordClient client, VoiceChannelStatusUpdateEventArgs e)
+		=> this._voiceChannelStatusUpdated.InvokeAsync(client, e);
 
 	#endregion
 }

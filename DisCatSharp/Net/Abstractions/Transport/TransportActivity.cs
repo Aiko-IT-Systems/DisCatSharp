@@ -1,25 +1,3 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -40,19 +18,19 @@ internal sealed class TransportActivity : ObservableApiObject
 	/// Gets or sets the id of user's activity.
 	/// </summary>
 	[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-	public string Id { get; internal set; }
+	public string? Id { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets the name of the game the user is playing.
 	/// </summary>
 	[JsonProperty("name", NullValueHandling = NullValueHandling.Include)]
-	public string Name { get; internal set; }
+	public string? Name { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets the stream URI, if applicable.
 	/// </summary>
 	[JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
-	public string StreamUrl { get; internal set; }
+	public string? StreamUrl { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets the livestream type.
@@ -66,7 +44,7 @@ internal sealed class TransportActivity : ObservableApiObject
 	/// <para>This is a component of the rich presence, and, as such, can only be used by regular users.</para>
 	/// </summary>
 	[JsonProperty("details", NullValueHandling = NullValueHandling.Ignore)]
-	public string Details { get; internal set; }
+	public string? Details { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets game state.
@@ -74,13 +52,13 @@ internal sealed class TransportActivity : ObservableApiObject
 	/// <para>This is a component of the rich presence, and, as such, can only be used by regular users.</para>
 	/// </summary>
 	[JsonProperty("state", NullValueHandling = NullValueHandling.Ignore)]
-	public string State { get; internal set; }
+	public string? State { get; internal set; }
 
 	/// <summary>
 	/// Gets the emoji details for a custom status, if any.
 	/// </summary>
 	[JsonProperty("emoji", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordEmoji Emoji { get; internal set; }
+	public DiscordEmoji? Emoji { get; internal set; }
 
 	/// <summary>
 	/// Gets ID of the application for which this rich presence is for.
@@ -98,7 +76,7 @@ internal sealed class TransportActivity : ObservableApiObject
 	/// Gets or sets the application id string.
 	/// </summary>
 	[JsonProperty("application_id", NullValueHandling = NullValueHandling.Ignore)]
-	internal string ApplicationIdStr { get; set; }
+	internal string? ApplicationIdStr { get; set; }
 
 	/// <summary>
 	/// Gets or sets instance status.
@@ -114,7 +92,7 @@ internal sealed class TransportActivity : ObservableApiObject
 	/// This is a component of the rich presence, and, as such, can only be used by regular users.
 	/// </summary>
 	[JsonProperty("party", NullValueHandling = NullValueHandling.Ignore)]
-	public GameParty Party { get; internal set; }
+	public GameParty? Party { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets information about assets related to this rich presence.
@@ -122,7 +100,7 @@ internal sealed class TransportActivity : ObservableApiObject
 	/// This is a component of the rich presence, and, as such, can only be used by regular users.
 	/// </summary>
 	[JsonProperty("assets", NullValueHandling = NullValueHandling.Ignore)]
-	public PresenceAssets Assets { get; internal set; }
+	public PresenceAssets? Assets { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets information about buttons in this rich presence.
@@ -130,7 +108,7 @@ internal sealed class TransportActivity : ObservableApiObject
 	/// This is a component of the rich presence, and, as such, can only be used by regular users.
 	/// </summary>
 	[JsonProperty("buttons", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<string> Buttons { get; internal set; }
+	public IReadOnlyList<string>? Buttons { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets platform in this rich presence.
@@ -138,7 +116,7 @@ internal sealed class TransportActivity : ObservableApiObject
 	/// This is a component of the rich presence, and, as such, can only be used by regular users.
 	/// </summary>
 	[JsonProperty("platform", NullValueHandling = NullValueHandling.Ignore)]
-	public string Platform { get; internal set; }
+	public string? Platform { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets sync_id in this rich presence.
@@ -146,7 +124,7 @@ internal sealed class TransportActivity : ObservableApiObject
 	/// This is a component of the rich presence, and, as such, can only be used by regular users.
 	/// </summary>
 	[JsonProperty("sync_id", NullValueHandling = NullValueHandling.Ignore)]
-	public string SyncId { get; internal set; }
+	public string? SyncId { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets session_id in this rich presence.
@@ -154,7 +132,7 @@ internal sealed class TransportActivity : ObservableApiObject
 	/// This is a component of the rich presence, and, as such, can only be used by regular users.
 	/// </summary>
 	[JsonProperty("session_id", NullValueHandling = NullValueHandling.Ignore)]
-	public string SessionId { get; internal set; }
+	public string? SessionId { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets information about current game's timestamps.
@@ -162,7 +140,7 @@ internal sealed class TransportActivity : ObservableApiObject
 	/// This is a component of the rich presence, and, as such, can only be used by regular users.
 	/// </summary>
 	[JsonProperty("timestamps", NullValueHandling = NullValueHandling.Ignore)]
-	public GameTimestamps Timestamps { get; internal set; }
+	public GameTimestamps? Timestamps { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets information about current game's secret values.
@@ -170,7 +148,7 @@ internal sealed class TransportActivity : ObservableApiObject
 	/// This is a component of the rich presence, and, as such, can only be used by regular users.
 	/// </summary>
 	[JsonProperty("secrets", NullValueHandling = NullValueHandling.Ignore)]
-	public GameSecrets Secrets { get; internal set; }
+	public GameSecrets? Secrets { get; internal set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="TransportActivity"/> class.
@@ -186,7 +164,10 @@ internal sealed class TransportActivity : ObservableApiObject
 		if (game == null)
 			return;
 
+		if (game.ActivityType == ActivityType.Custom)
+			this.Id = "custom";
 		this.Name = game.Name;
+		this.State = game.State;
 		this.ActivityType = game.ActivityType;
 		this.StreamUrl = game.StreamUrl;
 	}
@@ -218,7 +199,7 @@ internal sealed class TransportActivity : ObservableApiObject
 		/// Gets the large image text.
 		/// </summary>
 		[JsonProperty("large_text", NullValueHandling = NullValueHandling.Ignore)]
-		public string LargeImageText { get; internal set; }
+		public string? LargeImageText { get; internal set; }
 
 		/// <summary>
 		/// Gets the small image asset ID.
@@ -230,7 +211,7 @@ internal sealed class TransportActivity : ObservableApiObject
 		/// Gets the small image text.
 		/// </summary>
 		[JsonProperty("small_text", NullValueHandling = NullValueHandling.Ignore)]
-		public string SmallImageText { get; internal set; }
+		public string? SmallImageText { get; internal set; }
 	}
 
 	/// <summary>
@@ -242,13 +223,13 @@ internal sealed class TransportActivity : ObservableApiObject
 		/// Gets the game party ID.
 		/// </summary>
 		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-		public string Id { get; internal set; }
+		public string? Id { get; internal set; }
 
 		/// <summary>
 		/// Gets the size of the party.
 		/// </summary>
 		[JsonProperty("size", NullValueHandling = NullValueHandling.Ignore)]
-		public GamePartySize Size { get; internal set; }
+		public GamePartySize? Size { get; internal set; }
 
 		/// <summary>
 		/// Represents information about party size.
@@ -303,19 +284,19 @@ internal sealed class TransportActivity : ObservableApiObject
 		/// Gets the secret value for join action.
 		/// </summary>
 		[JsonProperty("join", NullValueHandling = NullValueHandling.Ignore)]
-		public string Join { get; internal set; }
+		public string? Join { get; internal set; }
 
 		/// <summary>
 		/// Gets the secret value for match action.
 		/// </summary>
 		[JsonProperty("match", NullValueHandling = NullValueHandling.Ignore)]
-		public string Match { get; internal set; }
+		public string? Match { get; internal set; }
 
 		/// <summary>
 		/// Gets the secret value for spectate action.
 		/// </summary>
 		[JsonProperty("spectate", NullValueHandling = NullValueHandling.Ignore)]
-		public string Spectate { get; internal set; }
+		public string? Spectate { get; internal set; }
 	}
 }
 

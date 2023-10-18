@@ -1,28 +1,7 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -44,6 +23,7 @@ namespace DisCatSharp.Net;
 /// <summary>
 /// Represents a client used to make REST requests.
 /// </summary>
+[SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
 internal sealed class RestClient : IDisposable
 {
 	/// <summary>
@@ -245,6 +225,217 @@ internal sealed class RestClient : IDisposable
 	public Task ExecuteRequestAsync(BaseRestRequest request)
 		=> request == null ? throw new ArgumentNullException(nameof(request)) : this.ExecuteRequestAsync(request, null, null);
 
+
+	/// <summary>
+	/// Executes the form data request.
+	/// </summary>
+	/// <param name="request">The request to be executed.</param>
+	public Task ExecuteFormRequestAsync(BaseRestRequest request)
+		=> request == null ? throw new ArgumentNullException(nameof(request)) : this.ExecuteFormRequestAsync(request, null, null);
+
+	/// <summary>
+	/// Executes the form data request.
+	/// This is to allow proper rescheduling of the first request from a bucket.
+	/// </summary>
+	/// <param name="request">The request to be executed.</param>
+	/// <param name="bucket">The bucket.</param>
+	/// <param name="ratelimitTcs">The ratelimit task completion source.</param>
+	private async Task ExecuteFormRequestAsync(BaseRestRequest request, RateLimitBucket bucket, TaskCompletionSource<bool> ratelimitTcs)
+	{
+		if (this._disposed)
+			return;
+
+		HttpResponseMessage res = default;
+
+		try
+		{
+			await this._globalRateLimitEvent.WaitAsync().ConfigureAwait(false);
+
+			bucket ??= request.RateLimitBucket;
+
+			ratelimitTcs ??= await this.WaitForInitialRateLimit(bucket).ConfigureAwait(false);
+
+			if (ratelimitTcs == null) // check rate limit only if we are not the probe request
+			{
+				var now = DateTimeOffset.UtcNow;
+
+				await bucket.TryResetLimitAsync(now).ConfigureAwait(false);
+
+				// Decrement the remaining number of requests as there can be other concurrent requests before this one finishes and has a chance to update the bucket
+				if (Interlocked.Decrement(ref bucket.RemainingInternal) < 0)
+				{
+					this._logger.LogWarning(LoggerEvents.RatelimitDiag, "Request for {bucket} is blocked. Url: {url}", bucket.ToString(), request.Url.AbsoluteUri);
+					var delay = bucket.Reset - now;
+					var resetDate = bucket.Reset;
+
+					if (this._useResetAfter)
+					{
+						delay = bucket.ResetAfter.Value;
+						resetDate = bucket.ResetAfterOffset;
+					}
+
+					if (delay < new TimeSpan(-TimeSpan.TicksPerMinute))
+					{
+						this._logger.LogError(LoggerEvents.RatelimitDiag, "Failed to retrieve ratelimits - giving up and allowing next request for bucket");
+						bucket.RemainingInternal = 1;
+					}
+
+					if (delay < TimeSpan.Zero)
+						delay = TimeSpan.FromMilliseconds(100);
+
+					this._logger.LogWarning(LoggerEvents.RatelimitPreemptive, "Preemptive ratelimit triggered - waiting until {0:yyyy-MM-dd HH:mm:ss zzz} ({1:c}).", resetDate, delay);
+					Task.Delay(delay)
+						.ContinueWith(_ => this.ExecuteFormRequestAsync(request, null, null))
+						.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
+
+					return;
+				}
+
+				this._logger.LogDebug(LoggerEvents.RatelimitDiag, "Request for {bucket} is allowed. Url: {url}", bucket.ToString(), request.Url.AbsoluteUri);
+			}
+			else
+				this._logger.LogDebug(LoggerEvents.RatelimitDiag, "Initial request for {bucket} is allowed. Url: {url}", bucket.ToString(), request.Url.AbsoluteUri);
+
+			var req = this.BuildFormRequest(request);
+
+			if (this.Debug)
+				this._logger.LogTrace(LoggerEvents.Misc, await req.Content.ReadAsStringAsync());
+
+			var response = new RestResponse();
+			try
+			{
+				if (this._disposed)
+					return;
+
+				res = await this.HttpClient.SendAsync(req, HttpCompletionOption.ResponseContentRead, CancellationToken.None).ConfigureAwait(false);
+
+				var bts = await res.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+				var txt = Utilities.UTF8.GetString(bts, 0, bts.Length);
+
+				this._logger.LogTrace(LoggerEvents.RestRx, txt);
+
+				response.Headers = res.Headers.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
+				response.Response = txt;
+				response.ResponseCode = (int)res.StatusCode;
+			}
+			catch (HttpRequestException httpex)
+			{
+				this._logger.LogError(LoggerEvents.RestError, httpex, "Request to {0} triggered an HttpException", request.Url.AbsoluteUri);
+				request.SetFaulted(httpex);
+				this.FailInitialRateLimitTest(request, ratelimitTcs);
+				return;
+			}
+
+			this.UpdateBucket(request, response, ratelimitTcs);
+
+			Exception ex = null;
+
+			switch (response.ResponseCode)
+			{
+				case 400:
+				case 405:
+					ex = new BadRequestException(request, response);
+					break;
+
+				case 401:
+				case 403:
+					ex = new UnauthorizedException(request, response);
+					break;
+
+				case 404:
+					ex = new NotFoundException(request, response);
+					break;
+
+				case 413:
+					ex = new RequestSizeException(request, response);
+					break;
+
+				case 429:
+					ex = new RateLimitException(request, response);
+
+					// check the limit info and requeue
+					this.Handle429(response, out var wait, out var global);
+					if (wait != null)
+					{
+						if (global)
+						{
+							bucket.IsGlobal = true;
+							this._logger.LogError(LoggerEvents.RatelimitHit, "Global ratelimit hit, cooling down for {uri}", request.Url.AbsoluteUri);
+							try
+							{
+								this._globalRateLimitEvent.Reset();
+								await wait.ConfigureAwait(false);
+							}
+							finally
+							{
+								// we don't want to wait here until all the blocked requests have been run, additionally Set can never throw an exception that could be suppressed here
+								_ = this._globalRateLimitEvent.SetAsync();
+							}
+
+							this.ExecuteRequestAsync(request, bucket, ratelimitTcs)
+								.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while retrying request");
+						}
+						else
+						{
+							this._logger.LogError(LoggerEvents.RatelimitHit, "Ratelimit hit, requeuing request to {url}", request.Url.AbsoluteUri);
+							await wait.ConfigureAwait(false);
+							this.ExecuteRequestAsync(request, bucket, ratelimitTcs)
+								.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while retrying request");
+						}
+
+						return;
+					}
+
+					break;
+
+				case 500:
+				case 502:
+				case 503:
+				case 504:
+					ex = new ServerErrorException(request, response);
+					break;
+			}
+
+			if (ex != null)
+				request.SetFaulted(ex);
+			else
+				request.SetCompleted(response);
+		}
+		catch (Exception ex)
+		{
+			this._logger.LogError(LoggerEvents.RestError, ex, "Request to {0} triggered an exception", request.Url.AbsoluteUri);
+
+			// if something went wrong and we couldn't get rate limits for the first request here, allow the next request to run
+			if (bucket != null && ratelimitTcs != null && bucket.LimitTesting != 0)
+				this.FailInitialRateLimitTest(request, ratelimitTcs);
+
+			if (!request.TrySetFaulted(ex))
+				throw;
+		}
+		finally
+		{
+			res?.Dispose();
+
+			// Get and decrement active requests in this bucket by 1.
+			_ = this._requestQueue.TryGetValue(bucket.BucketId, out var count);
+			this._requestQueue[bucket.BucketId] = Interlocked.Decrement(ref count);
+
+			// If it's 0 or less, we can remove the bucket from the active request queue,
+			// along with any of its past routes.
+			if (count <= 0)
+			{
+				foreach (var r in bucket.RouteHashes)
+				{
+					if (this._requestQueue.ContainsKey(r))
+					{
+						_ = this._requestQueue.TryRemove(r, out _);
+					}
+				}
+			}
+		}
+	}
+
+
 	/// <summary>
 	/// Executes the request.
 	/// This is to allow proper rescheduling of the first request from a bucket.
@@ -388,7 +579,7 @@ internal sealed class RestClient : IDisposable
 						}
 						else
 						{
-							if (this._discord is DiscordClient)
+							if (this._discord is not null && this._discord is DiscordClient)
 							{
 								await (this._discord as DiscordClient).RateLimitHitInternal.InvokeAsync(this._discord as DiscordClient, new(this._discord.ServiceProvider)
 								{
@@ -417,7 +608,7 @@ internal sealed class RestClient : IDisposable
 
 			if (ex != null)
 			{
-				if (this._discord.Configuration.EnableSentry)
+				if (this._discord?.Configuration.EnableSentry ?? false)
 				{
 					if (senex != null)
 					{
@@ -530,7 +721,34 @@ internal sealed class RestClient : IDisposable
 
 			// if the request failed and the response did not have rate limit headers we have allow the next request and wait again, thus this is a loop here
 		}
+
 		return null;
+	}
+
+	/// <summary>
+	/// Builds the form data request.
+	/// </summary>
+	/// <param name="request">The request.</param>
+	/// <returns>A http request message.</returns>
+	private HttpRequestMessage BuildFormRequest(BaseRestRequest request)
+	{
+		var req = new HttpRequestMessage(new(request.Method.ToString()), request.Url);
+		if (request.Headers != null && request.Headers.Any())
+			foreach (var kvp in request.Headers)
+				if (kvp.Key == "Bearer")
+					req.Headers.Authorization = new("Bearer", kvp.Value);
+				else if (kvp.Key == "Basic")
+					req.Headers.Authorization = new("Basic", kvp.Value);
+				else
+					req.Headers.Add(kvp.Key, kvp.Value);
+
+		if (request is not RestFormRequest formRequest)
+			throw new InvalidOperationException();
+
+		req.Content = new FormUrlEncodedContent(formRequest.FormData);
+		req.Content.Headers.ContentType = new("application/x-www-form-urlencoded");
+
+		return req;
 	}
 
 	/// <summary>
@@ -543,7 +761,12 @@ internal sealed class RestClient : IDisposable
 		var req = new HttpRequestMessage(new(request.Method.ToString()), request.Url);
 		if (request.Headers != null && request.Headers.Any())
 			foreach (var kvp in request.Headers)
-				req.Headers.Add(kvp.Key, kvp.Value);
+				if (kvp.Key == "Bearer")
+					req.Headers.Authorization = new("Bearer", kvp.Value);
+				else if (kvp.Key == "Basic")
+					req.Headers.Authorization = new("Basic", kvp.Value);
+				else
+					req.Headers.Add(kvp.Key, kvp.Value);
 
 		if (request is RestRequest nmprequest && !string.IsNullOrWhiteSpace(nmprequest.Payload))
 		{
@@ -611,6 +834,7 @@ internal sealed class RestClient : IDisposable
 
 			req.Content = content;
 		}
+
 		return req;
 	}
 

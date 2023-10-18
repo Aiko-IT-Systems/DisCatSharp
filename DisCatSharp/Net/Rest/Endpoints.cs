@@ -1,25 +1,3 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 using DisCatSharp.Attributes;
 
 namespace DisCatSharp.Net;
@@ -53,6 +31,16 @@ public static class Endpoints
 	/// The oauth2 endpoint.
 	/// </summary>
 	public const string OAUTH2 = "/oauth2";
+
+	/// <summary>
+	/// The oauth2 token endpoint.
+	/// </summary>
+	public const string TOKEN = "/token";
+
+	/// <summary>
+	/// The oauth2 revoke endpoint.
+	/// </summary>
+	public const string REVOKE = "/revoke";
 
 	/// <summary>
 	/// The oauth2 authorize endpoint.
@@ -194,6 +182,11 @@ public static class Endpoints
 	/// The members endpoint.
 	/// </summary>
 	public const string MEMBERS = "/members";
+
+	/// <summary>
+	/// The member endpoint.
+	/// </summary>
+	public const string MEMBER = "/member";
 
 	/// <summary>
 	/// The typing endpoint.
@@ -416,6 +409,11 @@ public static class Endpoints
 	public const string STORE = "/store";
 
 	/// <summary>
+	/// The entitlements endpoint.
+	/// </summary>
+	public const string ENTITLEMENTS = "/entitlements";
+
+	/// <summary>
 	/// The app assets endpoint.
 	/// </summary>
 	public const string APP_ASSETS = "/app-assets";
@@ -515,6 +513,16 @@ public static class Endpoints
 	/// The metadata endpoint.
 	/// </summary>
 	public const string METADATA = "/metadata";
+
+	/// <summary>
+	/// The voice status endpoint.
+	/// </summary>
+	public const string VOICE_STATUS = "/voice-status";
+
+	/// <summary>
+	/// The incident actions endpoint.
+	/// </summary>
+	public const string INCIDENT_ACTIONS = "/incident-actions";
 
 	public const string NEW_MEMBER_WELCOME = "/new-member-welcome";
 	[DiscordDeprecated]

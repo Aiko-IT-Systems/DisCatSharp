@@ -1,24 +1,3 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
-//
-// Copyright (c) 2021-2023 AITSYS
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
 
 #pragma warning disable CS0618
 using System;
@@ -343,9 +322,10 @@ public abstract class BaseDiscordClient : IDisposable
 
 		if (tapp.Team == null)
 		{
-			app.Owners = new(new[] { new DiscordUser(tapp.Owner) });
+			app.Members = new(new[] { new DiscordUser(tapp.Owner) });
 			app.Team = null;
 			app.TeamName = null;
+			app.Owner = new DiscordUser(tapp.Owner);
 		}
 		else
 		{
@@ -355,15 +335,20 @@ public abstract class BaseDiscordClient : IDisposable
 				.Select(x => new DiscordTeamMember(x) { TeamId = app.Team.Id, TeamName = app.Team.Name, User = new(x.User) })
 				.ToArray();
 
-			var owners = members
+			foreach (var member in members)
+				if (member.User.Id == tapp.Team.OwnerId)
+					member.Role = "owner";
+
+			var users = members
 				.Where(x => x.MembershipStatus == DiscordTeamMembershipStatus.Accepted)
 				.Select(x => x.User)
 				.ToArray();
 
-			app.Owners = new(owners);
-			app.Team.Owner = owners.FirstOrDefault(x => x.Id == tapp.Team.OwnerId);
+			app.Members = new(users);
+			app.Team.Owner = members.First(x => x.Role == "owner").User;
 			app.Team.Members = new List<DiscordTeamMember>(members);
 			app.TeamName = app.Team.Name;
+			app.Owner = new(tapp.Owner);
 		}
 
 		app.GuildId = tapp.GuildId.ValueOrDefault();
