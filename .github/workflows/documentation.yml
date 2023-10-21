@@ -25,7 +25,7 @@ jobs:
     - name: Git fetch unshallow
       run: git fetch --unshallow
     - name: Install DocFX
-      run: dotnet tool update -g docfx --prerelease
+      run: dotnet tool update -g docfx --version 2.71.0
     - name: Restore packages
       run: dotnet restore DisCatSharp.sln
     - name: Build library
