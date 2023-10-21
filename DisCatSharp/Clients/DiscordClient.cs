@@ -462,7 +462,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			old.AvatarHash = cacheUser.AvatarHash;
 			old.BannerHash = cacheUser.BannerHash;
 			old.BannerColorInternal = cacheUser.BannerColorInternal;
-			old.AvatarDecorationHash = cacheUser.AvatarDecorationHash;
+			old.AvatarDecorationData = cacheUser.AvatarDecorationData;
 			old.ThemeColorsInternal = cacheUser.ThemeColorsInternal;
 			old.Pronouns = cacheUser.Pronouns;
 			old.GlobalName = cacheUser.GlobalName;
@@ -1490,7 +1490,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 					old.AvatarHash = cachedUser.AvatarHash;
 					old.BannerHash = cachedUser.BannerHash;
 					old.BannerColorInternal = cachedUser.BannerColorInternal;
-					old.AvatarDecorationHash = cachedUser.AvatarDecorationHash;
+					old.AvatarDecorationData = cachedUser.AvatarDecorationData;
 					old.ThemeColorsInternal = cachedUser.ThemeColorsInternal;
 					old.Pronouns = cachedUser.Pronouns;
 					old.Locale = cachedUser.Locale;
