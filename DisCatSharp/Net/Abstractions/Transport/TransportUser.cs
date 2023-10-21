@@ -56,10 +56,10 @@ internal class TransportUser : ObservableApiObject
 	public string AvatarHash { get; internal set; }
 
 	/// <summary>
-	/// Gets the avatar decoration hash.
+	/// Gets the user's avatar decoration data.
 	/// </summary>
-	[JsonProperty("avatar_decoration", NullValueHandling = NullValueHandling.Ignore)]
-	public string AvatarDecorationHash { get; internal set; }
+	[JsonProperty("avatar_decoration_data", NullValueHandling = NullValueHandling.Ignore)]
+	public AvatarDecorationData AvatarDecorationData { get; internal set; }
 
 	/// <summary>
 	/// Gets the banner hash.

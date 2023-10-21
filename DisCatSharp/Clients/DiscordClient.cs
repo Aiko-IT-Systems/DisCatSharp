@@ -1533,7 +1533,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.AvatarHash = usr.AvatarHash;
 				old.BannerHash = usr.BannerHash;
 				old.BannerColorInternal = usr.BannerColorInternal;
-				old.AvatarDecorationHash = usr.AvatarDecorationHash;
+				old.AvatarDecorationData = usr.AvatarDecorationData;
 				old.ThemeColorsInternal = usr.ThemeColorsInternal;
 				old.Pronouns = usr.Pronouns;
 				old.Locale = usr.Locale;
