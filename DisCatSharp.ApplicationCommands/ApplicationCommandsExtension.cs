@@ -451,6 +451,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>
 				(null, new ApplicationCommandsModuleConfiguration(typeof(DefaultHelpModule))));
 			commandsPending = updateList.Select(x => x.Key).Distinct().ToList();
+		} else {
+			try {
+				updateList.Remove(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>
+				(null, new ApplicationCommandsModuleConfiguration(typeof(DefaultHelpModule))));
+			}
+			catch
+			{ }
+
+			commandsPending = updateList.Select(x => x.Key).Distinct().ToList();
 		}
 
 		if (globalCommands != null && globalCommands.Any())
