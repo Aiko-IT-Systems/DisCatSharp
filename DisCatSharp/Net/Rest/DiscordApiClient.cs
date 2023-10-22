@@ -5214,23 +5214,24 @@ public sealed class DiscordApiClient
 	internal async Task<IReadOnlyList<DiscordApplicationCommand>> BulkOverwriteGlobalApplicationCommandsAsync(ulong applicationId, IEnumerable<DiscordApplicationCommand> commands)
 	{
 		var pld = new List<RestApplicationCommandCreatePayload>();
-		foreach (var command in commands)
-		{
-			pld.Add(new()
+		if (commands.Any())
+			foreach (var command in commands)
 			{
-				Type = command.Type,
-				Name = command.Name,
-				Description = command.Type == ApplicationCommandType.ChatInput ? command.Description : null,
-				Options = command.Options,
-				NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
-				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
-				DefaultMemberPermission = command.DefaultMemberPermissions,
-				DmPermission = command.DmPermission,
-				Nsfw = command.IsNsfw,
-				AllowedContexts = command.AllowedContexts,
-				IntegrationTypes = command.IntegrationTypes
-			});
-		}
+				pld.Add(new()
+				{
+					Type = command.Type,
+					Name = command.Name,
+					Description = command.Type == ApplicationCommandType.ChatInput ? command.Description : null,
+					Options = command.Options,
+					NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
+					DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
+					DefaultMemberPermission = command.DefaultMemberPermissions,
+					DmPermission = command.DmPermission,
+					Nsfw = command.IsNsfw,
+					AllowedContexts = command.AllowedContexts,
+					IntegrationTypes = command.IntegrationTypes
+				});
+			}
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new {application_id = applicationId }, out var path);
@@ -5390,22 +5391,23 @@ public sealed class DiscordApiClient
 	internal async Task<IReadOnlyList<DiscordApplicationCommand>> BulkOverwriteGuildApplicationCommandsAsync(ulong applicationId, ulong guildId, IEnumerable<DiscordApplicationCommand> commands)
 	{
 		var pld = new List<RestApplicationCommandCreatePayload>();
-		foreach (var command in commands)
-		{
-			pld.Add(new()
+		if (commands.Any())
+			foreach (var command in commands)
 			{
-				Type = command.Type,
-				Name = command.Name,
-				Description = command.Type == ApplicationCommandType.ChatInput ? command.Description : null,
-				Options = command.Options,
-				NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
-				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
-				DefaultMemberPermission = command.DefaultMemberPermissions,
-				DmPermission = command.DmPermission,
-				Nsfw = command.IsNsfw,
-				AllowedContexts = command.AllowedContexts
-			});
-		}
+				pld.Add(new()
+				{
+					Type = command.Type,
+					Name = command.Name,
+					Description = command.Type == ApplicationCommandType.ChatInput ? command.Description : null,
+					Options = command.Options,
+					NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
+					DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
+					DefaultMemberPermission = command.DefaultMemberPermissions,
+					DmPermission = command.DmPermission,
+					Nsfw = command.IsNsfw,
+					AllowedContexts = command.AllowedContexts
+				});
+			}
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new {application_id = applicationId, guild_id = guildId }, out var path);
