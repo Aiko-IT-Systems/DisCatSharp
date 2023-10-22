@@ -17,7 +17,7 @@ jobs:
       - name: Set outputs
         id: vars
         run: |
-          echo "version=10.4.1" >> $GITHUB_OUTPUT
+          echo "version=10.4.2" >> $GITHUB_OUTPUT
           echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
       - name: "Create Sentry release"
         uses: getsentry/action-release@v1.4.1
