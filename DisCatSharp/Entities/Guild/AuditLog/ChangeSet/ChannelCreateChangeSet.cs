@@ -30,19 +30,23 @@ public sealed class ChannelCreateChangeSet : DiscordAuditLogEntry
 	public ulong? ParentId => (ulong?)this.Changes.FirstOrDefault(x => x.Key == "parent_id")?.NewValue;
 	public DiscordChannel? Parent => this.Discord.Guilds[this.GuildId].Channels.TryGetValue(this.ParentId ?? 0ul, out var channel) ? channel : null;
 
-	#region Voice
+#region Voice
+
 	public int? Bitrate => (int?)this.Changes.FirstOrDefault(x => x.Key == "bitrate")?.NewValue;
 	public int? UserLimit => (int?)this.Changes.FirstOrDefault(x => x.Key == "user_limit")?.NewValue;
 	public string? RtcRegionId => (string?)this.Changes.FirstOrDefault(x => x.Key == "rtc_region")?.NewValue;
 	public DiscordVoiceRegion? RtcRegion => this.Discord.VoiceRegions[this.RtcRegionId];
 	public VideoQualityMode? VideoQualityMode => (VideoQualityMode?)this.Changes.FirstOrDefault(x => x.Key == "video_quality_mode")?.NewValue;
-	#endregion
 
-	#region Forum
+#endregion
+
+#region Forum
+
 	public ForumPostTag? AvailableTags => (ForumPostTag?)this.Changes.FirstOrDefault(x => x.Key == "available_tags")?.NewValue;
 	public ForumReactionEmoji? DefaultReactionEmoji => (ForumReactionEmoji?)this.Changes.FirstOrDefault(x => x.Key == "default_reaction_emoji")?.NewValue;
 	public ForumPostSortOrder? DefaultSortOrder => (ForumPostSortOrder?)this.Changes.FirstOrDefault(x => x.Key == "default_sort_order")?.NewValue;
 	public ForumLayout? DefaultLayout => (ForumLayout?)this.Changes.FirstOrDefault(x => x.Key == "default_forum_layout")?.NewValue;
-	public int? DefaultThreadPerUserRateLimit => (int?)this.Changes.FirstOrDefault(x => x.Key == "default_thread_rate_limit_per_user")?.NewValue; 
-	#endregion
+	public int? DefaultThreadPerUserRateLimit => (int?)this.Changes.FirstOrDefault(x => x.Key == "default_thread_rate_limit_per_user")?.NewValue;
+
+#endregion
 }

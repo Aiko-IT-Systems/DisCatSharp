@@ -58,7 +58,8 @@ public sealed class ChannelUpdateChangeSet : DiscordAuditLogEntry
 	public DiscordChannel? ParentBefore => this.Discord.Guilds[this.GuildId].Channels.TryGetValue(this.ParentIdBefore ?? 0ul, out var channel) ? channel : null;
 	public DiscordChannel? ParentAfter => this.Discord.Guilds[this.GuildId].Channels.TryGetValue(this.ParentIdAfter ?? 0ul, out var channel) ? channel : null;
 
-	#region Voice
+#region Voice
+
 	public bool BitrateChanged => this.BitrateBefore is not null || this.BitrateAfter is not null;
 	public int? BitrateBefore => (int?)this.Changes.FirstOrDefault(x => x.Key == "bitrate")?.OldValue;
 	public int? BitrateAfter => (int?)this.Changes.FirstOrDefault(x => x.Key == "bitrate")?.NewValue;
@@ -76,9 +77,11 @@ public sealed class ChannelUpdateChangeSet : DiscordAuditLogEntry
 	public bool VideoQualityModeChanged => this.VideoQualityModeBefore is not null || this.VideoQualityModeAfter is not null;
 	public VideoQualityMode? VideoQualityModeBefore => (VideoQualityMode?)this.Changes.FirstOrDefault(x => x.Key == "video_quality_mode")?.OldValue;
 	public VideoQualityMode? VideoQualityModeAfter => (VideoQualityMode?)this.Changes.FirstOrDefault(x => x.Key == "video_quality_mode")?.NewValue;
-	#endregion
 
-	#region Forum
+#endregion
+
+#region Forum
+
 	public bool AvailableTagsChanged => this.AvailableTagsBefore is not null || this.AvailableTagsAfter is not null;
 	public ForumPostTag? AvailableTagsBefore => (ForumPostTag?)this.Changes.FirstOrDefault(x => x.Key == "available_tags")?.OldValue;
 	public ForumPostTag? AvailableTagsAfter => (ForumPostTag?)this.Changes.FirstOrDefault(x => x.Key == "available_tags")?.NewValue;
@@ -98,5 +101,6 @@ public sealed class ChannelUpdateChangeSet : DiscordAuditLogEntry
 	public bool DefaultThreadPerUserRateLimitChanged => this.DefaultThreadPerUserRateLimitBefore is not null || this.DefaultThreadPerUserRateLimitAfter is not null;
 	public int? DefaultThreadPerUserRateLimitBefore => (int?)this.Changes.FirstOrDefault(x => x.Key == "default_thread_rate_limit_per_user")?.OldValue;
 	public int? DefaultThreadPerUserRateLimitAfter => (int?)this.Changes.FirstOrDefault(x => x.Key == "default_thread_rate_limit_per_user")?.NewValue;
-	#endregion
+
+#endregion
 }
