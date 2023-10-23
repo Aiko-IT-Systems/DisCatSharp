@@ -7,7 +7,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a <see cref="DiscordAuditLogChangeObject"/> in a <see cref="DiscordAuditLogEntry"/>.
 /// </summary>
-public class DiscordAuditLogChangeObject
+public sealed class DiscordAuditLogChangeObject
 {
 	/// <summary>
 	/// Gets the new value of the change.

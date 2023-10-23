@@ -12,5 +12,12 @@ public sealed class MemberBanRemoveChangeSet : DiscordAuditLogEntry
 		this.ValidFor = AuditLogActionType.MemberBanRemove;
 	}
 
+	/// <summary>
+	/// Gets the user who was unbanned.
+	/// </summary>
 	public DiscordUser Target => this.Discord.GetCachedOrEmptyUserInternal(this.TargetId!.Value);
+
+	/// <inheritdoc />
+	internal override string? ChangeDescription
+		=> $"{this.User} unbanned {this.Target} with reason {this.Reason ?? "none"}";
 }

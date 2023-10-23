@@ -25,7 +25,7 @@ public sealed class EmojiDeleteChangeSet : DiscordAuditLogEntry
 	{
 		get
 		{
-			var description = $"{this.UserId} deleted emoji {this.TargetId}:\n";
+			var description = $"{this.User} deleted emoji {this.TargetId}:\n";
 			if (this.EmojiNameChanged)
 				description += $"- Name: {this.EmojiName}\n";
 			if (this.RolesAllowedChanged)

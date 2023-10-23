@@ -42,6 +42,9 @@ public class DiscordAuditLogEntry : SnowflakeObject
 	[JsonProperty("user_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong? UserId { get; internal set; }
 
+	/// <summary>
+	/// Gets the user or app that made the changes.
+	/// </summary>
 	[JsonIgnore]
 	public DiscordUser? User
 		=> this.UserId.HasValue ? this.Discord.GetCachedOrEmptyUserInternal(this.UserId.Value) : null;

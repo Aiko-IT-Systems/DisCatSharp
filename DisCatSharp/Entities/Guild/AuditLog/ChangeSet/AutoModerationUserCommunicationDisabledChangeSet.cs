@@ -30,5 +30,14 @@ public sealed class AutoModerationUserCommunicationDisabledChangeSet : DiscordAu
 	/// <summary>
 	/// The channel in which the rule triggered.
 	/// </summary>
-	public DiscordChannel Channel => this.Options.Channel;
+	public DiscordChannel? Channel => this.Options.Channel;
+
+	/// <summary>
+	/// The member that was timed out.
+	/// </summary>
+	public DiscordMember TargetMember => this.Discord.Guilds[this.GuildId].Members[this.TargetId.Value!];
+
+	/// <inheritdoc />
+	internal override string? ChangeDescription
+		=> $"Automod timed out {this.TargetMember} for reason {this.Reason ?? "none"}";
 }

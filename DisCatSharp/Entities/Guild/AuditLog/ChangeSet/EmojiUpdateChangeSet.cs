@@ -27,7 +27,7 @@ public sealed class EmojiUpdateChangeSet : DiscordAuditLogEntry
 	{
 		get
 		{
-			var description = $"{this.UserId} updated emoji {this.TargetId}:\n";
+			var description = $"{this.User} updated emoji {this.TargetId}:\n";
 			if (this.EmojiNameChanged)
 			{
 				description += this.EmojiNameBefore is not null ? $"- Emoji Name Before: {this.EmojiNameBefore}\n" : "- Emoji Name Before: Not set\n";

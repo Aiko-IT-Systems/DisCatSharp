@@ -25,7 +25,7 @@ public sealed class EmojiCreateChangeSet : DiscordAuditLogEntry
 	{
 		get
 		{
-			var description = $"{this.UserId} created a new emoji with the following details:\n";
+			var description = $"{this.User} created a new emoji with the following details:\n";
 			if (this.EmojiNameChanged)
 				description += $"- Emoji Name: {this.EmojiName}\n";
 			if (this.RolesAllowedChanged)

@@ -120,7 +120,7 @@ public sealed class GuildUpdateChangeSet : DiscordAuditLogEntry
 	{
 		get
 		{
-			var description = $"{this.UserId} executed {this.GetType().Name.Replace("ChangeSet", string.Empty)} with reason {this.Reason ?? "No reason given".Italic()}\n";
+			var description = $"{this.User} executed {this.GetType().Name.Replace("ChangeSet", string.Empty)} with reason {this.Reason ?? "No reason given".Italic()}\n";
 
 			if (this.NameChanged)
 			{

@@ -12,8 +12,12 @@ public sealed class BotAddChangeSet : DiscordAuditLogEntry
 		this.ValidFor = AuditLogActionType.BotAdd;
 	}
 
+	/// <summary>
+	/// Gets the bot user that was added.
+	/// </summary>
 	public DiscordUser Bot => this.Discord.GetCachedOrEmptyUserInternal(this.TargetId!.Value);
 
+	/// <inheritdoc />
 	internal override string? ChangeDescription
-		=> $"{this.UserId} added {this.Bot.Username ?? "Not cached".Italic()} ({this.TargetId})";
+		=> $"{this.User} added {this.Bot.Username ?? "Not cached".Italic()} ({this.TargetId})";
 }

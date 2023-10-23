@@ -14,5 +14,17 @@ public sealed class MemberDisconnectChangeSet : DiscordAuditLogEntry
 		this.ValidFor = AuditLogActionType.MemberDisconnect;
 	}
 
-	public int Count => (int)this.Options.Count;
+	/// <summary>
+	/// Gets the count of members that were disconnected.
+	/// </summary>
+	public int Count => this.Options!.Count.Value;
+
+	/// <summary>
+	/// Gets the channel from which the members were disconnected.
+	/// </summary>
+	public DiscordChannel Channel => this.Discord.Guilds[this.GuildId].GetChannel(this.TargetId.Value!);
+
+	/// <inheritdoc />
+	internal override string? ChangeDescription
+		=> $"{this.User} disconnected {this.Count} users from {this.Channel} with reason {this.Reason ?? "none"}";
 }

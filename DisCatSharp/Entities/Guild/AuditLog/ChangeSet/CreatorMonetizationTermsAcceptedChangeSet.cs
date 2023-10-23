@@ -14,5 +14,5 @@ public sealed class CreatorMonetizationTermsAcceptedChangeSet : DiscordAuditLogE
 
 	/// <inheritdoc />
 	internal override string? ChangeDescription
-		=> $"{this.UserId} accepted Creator Monetization Terms";
+		=> $"{this.User} accepted Creator Monetization Terms";
 }

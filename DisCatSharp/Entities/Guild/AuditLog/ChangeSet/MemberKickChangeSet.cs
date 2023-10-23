@@ -12,5 +12,12 @@ public sealed class MemberKickChangeSet : DiscordAuditLogEntry
 		this.ValidFor = AuditLogActionType.MemberKick;
 	}
 
+	/// <summary>
+	/// Gets the user who was kicked.
+	/// </summary>
 	public DiscordUser Target => this.Discord.GetCachedOrEmptyUserInternal(this.TargetId!.Value);
+
+	/// <inheritdoc />
+	internal override string? ChangeDescription
+		=> $"{this.User} kicked {this.Target} with reason {this.Reason ?? "none"}";
 }

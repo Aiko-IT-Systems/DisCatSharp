@@ -14,5 +14,5 @@ public sealed class CreatorMonetizationRequestCreatedChangeSet : DiscordAuditLog
 
 	/// <inheritdoc />
 	internal override string? ChangeDescription
-		=> $"{this.UserId} created Creator Monetization Request";
+		=> $"{this.User} created Creator Monetization Request";
 }

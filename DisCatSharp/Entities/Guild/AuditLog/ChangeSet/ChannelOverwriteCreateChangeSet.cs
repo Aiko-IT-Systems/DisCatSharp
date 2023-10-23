@@ -22,11 +22,12 @@ public sealed class ChannelOverwriteCreateChangeSet : DiscordAuditLogEntry
 	public Permissions? DenyBefore => (Permissions?)this.Changes.FirstOrDefault(x => x.Key == "deny")?.OldValue;
 	public Permissions? DenyAfter => (Permissions?)this.Changes.FirstOrDefault(x => x.Key == "deny")?.NewValue;
 
+	/// <inheritdoc />
 	internal override string ChangeDescription
 	{
 		get
 		{
-			var description = $"{this.UserId} executed {this.GetType().Name.Replace("ChangeSet", string.Empty)} for {this.Options!.OverwrittenEntityType} with id{this.Options.OverwrittenEntityId} {(this.Options.OverwrittenEntityType == OverwriteType.Role ? $" and name {this.Options.RoleName}" : string.Empty)} with reason {this.Reason ?? $"No reason given".Italic()}\n";
+			var description = $"{this.User} executed {this.GetType().Name.Replace("ChangeSet", string.Empty)} for {this.Options!.OverwrittenEntityType} with id{this.Options.OverwrittenEntityId} {(this.Options.OverwrittenEntityType == OverwriteType.Role ? $" and name {this.Options.RoleName}" : string.Empty)} with reason {this.Reason ?? $"No reason given".Italic()}\n";
 
 			if (this.AllowChanged)
 				description += this.AllowAfter is not null ? $"- Set Allowed Permissions to {this.AllowAfter}\n" : "- Unset Allowed Permissions\n";
