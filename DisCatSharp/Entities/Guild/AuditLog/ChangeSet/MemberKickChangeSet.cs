@@ -19,5 +19,5 @@ public sealed class MemberKickChangeSet : DiscordAuditLogEntry
 
 	/// <inheritdoc />
 	internal override string? ChangeDescription
-		=> $"{this.User} kicked {this.Target} with reason {this.Reason ?? "none"}";
+		=> $"{this.User} kicked {this.Target} with reason {this.Reason ?? "No reason given".Italic()}";
 }

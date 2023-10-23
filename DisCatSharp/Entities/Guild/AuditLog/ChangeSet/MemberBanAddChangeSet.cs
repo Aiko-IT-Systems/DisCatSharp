@@ -19,5 +19,5 @@ public sealed class MemberBanAddChangeSet : DiscordAuditLogEntry
 
 	/// <inheritdoc />
 	internal override string? ChangeDescription
-		=> $"{this.User} banned {this.Target} with reason {this.Reason ?? "none"}";
+		=> $"{this.User} banned {this.Target} with reason {this.Reason ?? "No reason given".Italic()}";
 }

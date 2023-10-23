@@ -31,4 +31,13 @@ public sealed class AutoModerationBlockMessageChangeSet : DiscordAuditLogEntry
 	/// The channel in which the rule triggered.
 	/// </summary>
 	public DiscordChannel Channel => this.Options.Channel;
+
+	/// <summary>
+	/// The member that was timed out.
+	/// </summary>
+	public DiscordMember TargetMember => this.Discord.Guilds[this.GuildId].Members[this.TargetId.Value!];
+
+	/// <inheritdoc />
+	internal override string? ChangeDescription
+		=> $"Automod blocked a message from being sended in {this.Channel} from {this.TargetMember} for reason {this.Reason ?? "No reason given".Italic()}";
 }

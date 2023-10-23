@@ -39,5 +39,5 @@ public sealed class AutoModerationUserCommunicationDisabledChangeSet : DiscordAu
 
 	/// <inheritdoc />
 	internal override string? ChangeDescription
-		=> $"Automod timed out {this.TargetMember} for reason {this.Reason ?? "none"}";
+		=> $"Automod timed out {this.TargetMember} for reason {this.Reason ?? "No reason given".Italic()}";
 }

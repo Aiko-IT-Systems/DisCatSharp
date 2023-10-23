@@ -19,5 +19,5 @@ public sealed class BotAddChangeSet : DiscordAuditLogEntry
 
 	/// <inheritdoc />
 	internal override string? ChangeDescription
-		=> $"{this.User} added {this.Bot.Username ?? "Not cached".Italic()} ({this.TargetId})";
+		=> $"{this.User} added {this.Bot}";
 }

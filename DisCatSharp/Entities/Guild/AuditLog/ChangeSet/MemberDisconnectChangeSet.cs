@@ -26,5 +26,5 @@ public sealed class MemberDisconnectChangeSet : DiscordAuditLogEntry
 
 	/// <inheritdoc />
 	internal override string? ChangeDescription
-		=> $"{this.User} disconnected {this.Count} users from {this.Channel} with reason {this.Reason ?? "none"}";
+		=> $"{this.User} disconnected {this.Count} users from {this.Channel} with reason {this.Reason ?? "No reason given".Italic()}";
 }
