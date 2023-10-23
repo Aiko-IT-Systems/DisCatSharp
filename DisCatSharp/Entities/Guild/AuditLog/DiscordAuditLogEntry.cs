@@ -104,8 +104,14 @@ public class DiscordAuditLogEntry : SnowflakeObject
 			UserId = this.UserId,
 			ActionType = this.ActionType,
 			Options = this.Options,
-			Id = this.Id
+			Id = this.Id,
+			Discord = this.Discord,
+			Reason = this.Reason,
+			GuildId = this.GuildId
 		};
+
+		if (target.Options is not null)
+			target.Options.Discord = this.Discord;
 
 		return target.ValidFor == this.ActionType
 			? target
