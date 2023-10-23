@@ -1,4 +1,4 @@
-# Wirting articles for DisCatSharp
+# Writing articles for DisCatSharp
 
 ## Markdown header
 
