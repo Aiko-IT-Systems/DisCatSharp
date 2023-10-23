@@ -81,7 +81,7 @@ public class DiscordAuditLogEntry : SnowflakeObject
 
 	/// <inheritdoc />
 	public override string ToString()
-		=> this.ChangeDescription ?? $"{this.UserId} executed {this.ActionType}";
+		=> this.ChangeDescription ?? $"{this.User} executed {this.ActionType}";
 
 	/// <summary>
 	/// Gets this <see cref="DiscordAuditLogEntry"/> as an easy to-use change set with the given type.
