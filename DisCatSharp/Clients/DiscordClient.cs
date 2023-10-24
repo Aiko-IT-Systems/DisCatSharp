@@ -1513,14 +1513,19 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			{
 				var xtm = xj.ToDiscordObject<TransportMember>();
 
-				var xu = new DiscordUser(xtm.User) { Discord = this };
-				_ = this.UserCache.AddOrUpdate(xtm.User.Id, xu, (id, old) =>
+				var usr = new DiscordUser(xtm.User) { Discord = this };
+				_ = this.UserCache.AddOrUpdate(xtm.User.Id, usr, (id, old) =>
 				{
-					old.Username = xu.Username;
-					old.Discriminator = xu.Discriminator;
-					old.AvatarHash = xu.AvatarHash;
-					old.PremiumType = xu.PremiumType;
-					old.GlobalName = xu.GlobalName;
+					old.Username = usr.Username;
+					old.Discriminator = usr.Discriminator;
+					old.AvatarHash = usr.AvatarHash;
+					old.BannerHash = usr.BannerHash;
+					old.BannerColorInternal = usr.BannerColorInternal;
+					old.AvatarDecorationData = usr.AvatarDecorationData;
+					old.ThemeColorsInternal = usr.ThemeColorsInternal;
+					old.Pronouns = usr.Pronouns;
+					old.Locale = usr.Locale;
+					old.GlobalName = usr.GlobalName;
 					return old;
 				});
 

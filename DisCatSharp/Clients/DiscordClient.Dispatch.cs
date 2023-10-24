@@ -736,16 +736,22 @@ public sealed partial class DiscordClient
 				{
 					var xtm = xj.ToObject<TransportMember>();
 
-					var xu = new DiscordUser(xtm.User)
+					var usr = new DiscordUser(xtm.User)
 					{
 						Discord = this
 					};
-					xu = this.UserCache.AddOrUpdate(xtm.User.Id, xu, (id, old) =>
+					usr = this.UserCache.AddOrUpdate(xtm.User.Id, usr, (id, old) =>
 					{
-						old.Username = xu.Username;
-						old.Discriminator = xu.Discriminator;
-						old.AvatarHash = xu.AvatarHash;
-						old.GlobalName = xu.GlobalName;
+						old.Username = usr.Username;
+						old.Discriminator = usr.Discriminator;
+						old.AvatarHash = usr.AvatarHash;
+						old.BannerHash = usr.BannerHash;
+						old.BannerColorInternal = usr.BannerColorInternal;
+						old.AvatarDecorationData = usr.AvatarDecorationData;
+						old.ThemeColorsInternal = usr.ThemeColorsInternal;
+						old.Pronouns = usr.Pronouns;
+						old.Locale = usr.Locale;
+						old.GlobalName = usr.GlobalName;
 						return old;
 					});
 
@@ -1861,6 +1867,12 @@ public sealed partial class DiscordClient
 			old.Username = usr.Username;
 			old.Discriminator = usr.Discriminator;
 			old.AvatarHash = usr.AvatarHash;
+			old.BannerHash = usr.BannerHash;
+			old.BannerColorInternal = usr.BannerColorInternal;
+			old.AvatarDecorationData = usr.AvatarDecorationData;
+			old.ThemeColorsInternal = usr.ThemeColorsInternal;
+			old.Pronouns = usr.Pronouns;
+			old.Locale = usr.Locale;
 			old.GlobalName = usr.GlobalName;
 			return old;
 		});
@@ -1924,6 +1936,12 @@ public sealed partial class DiscordClient
 			old.Username = usr.Username;
 			old.Discriminator = usr.Discriminator;
 			old.AvatarHash = usr.AvatarHash;
+			old.BannerHash = usr.BannerHash;
+			old.BannerColorInternal = usr.BannerColorInternal;
+			old.AvatarDecorationData = usr.AvatarDecorationData;
+			old.ThemeColorsInternal = usr.ThemeColorsInternal;
+			old.Pronouns = usr.Pronouns;
+			old.Locale = usr.Locale;
 			old.GlobalName = usr.GlobalName;
 			return old;
 		});

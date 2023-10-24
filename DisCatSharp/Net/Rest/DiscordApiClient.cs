@@ -346,10 +346,15 @@ public sealed class DiscordApiClient
 			this.Discord.UserCache.AddOrUpdate(xtm.User.Id, usr, (id, old) =>
 			{
 				old.Username = usr.Username;
-				old.Discord = usr.Discord;
+				old.Discriminator = usr.Discriminator;
 				old.AvatarHash = usr.AvatarHash;
+				old.BannerHash = usr.BannerHash;
+				old.BannerColorInternal = usr.BannerColorInternal;
+				old.AvatarDecorationData = usr.AvatarDecorationData;
+				old.ThemeColorsInternal = usr.ThemeColorsInternal;
+				old.Pronouns = usr.Pronouns;
+				old.Locale = usr.Locale;
 				old.GlobalName = usr.GlobalName;
-
 				return old;
 			});
 
