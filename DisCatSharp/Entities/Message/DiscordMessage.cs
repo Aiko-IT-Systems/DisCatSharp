@@ -593,7 +593,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 	{
 		builder.Validate(true);
-		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0 ? Optional.Some(builder.Attachments.AsEnumerable()) : builder.KeepAttachmentsInternal.HasValue ? builder.KeepAttachmentsInternal.Value && this.Attachments is not null ? Optional.Some(this.Attachments.AsEnumerable()) : Array.Empty<DiscordAttachment>() : null).ConfigureAwait(false);
+		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0 ? Optional.Some(builder.Attachments.AsEnumerable()) : builder.KeepAttachmentsInternal.HasValue ? builder.KeepAttachmentsInternal.Value && this.Attachments is not null ? Optional.Some(this.Attachments.AsEnumerable()) : Array.Empty<DiscordAttachment>() : Optional.None).ConfigureAwait(false);
 	}
 
 
@@ -633,7 +633,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		var builder = new DiscordMessageBuilder();
 		action(builder);
 		builder.Validate(true);
-		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0 ? Optional.Some(builder.Attachments.AsEnumerable()) : builder.KeepAttachmentsInternal.HasValue ? builder.KeepAttachmentsInternal.Value && this.Attachments is not null ? Optional.Some(this.Attachments.AsEnumerable()) : Array.Empty<DiscordAttachment>() : null).ConfigureAwait(false);
+		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0 ? Optional.Some(builder.Attachments.AsEnumerable()) : builder.KeepAttachmentsInternal.HasValue ? builder.KeepAttachmentsInternal.Value && this.Attachments is not null ? Optional.Some(this.Attachments.AsEnumerable()) : Array.Empty<DiscordAttachment>() : Optional.None).ConfigureAwait(false);
 	}
 
 
