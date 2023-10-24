@@ -19,7 +19,7 @@ public class DiscordAttachment : NullableSnowflakeObject
 	/// <summary>
 	/// Gets the name of the file. Please use <see cref="Filename"/> in future.
 	/// </summary>
-	[Deprecated("Naming was incorrect, will be removed in future in favor of Filename")]
+	[Deprecated("Naming was incorrect, will be removed in future in favor of Filename"), JsonIgnore]
 	public string FileName
 		=> this.Filename;
 
