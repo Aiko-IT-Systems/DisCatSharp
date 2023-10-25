@@ -294,6 +294,13 @@ public sealed class DiscordConfiguration
 	public ulong? DeveloperUserId { internal get; set; } = null;
 
 	/// <summary>
+	/// <para>Causes the <see cref="DiscordClient.PayloadReceived"/> event to be fired.</para>
+	/// <para>Useful if you want to work with raw events.</para>
+	/// <para>Defaults to <see langword="false"/>.</para>
+	/// </summary>
+	public bool EnablePayloadReceivedEvent { internal get; set; } = false;
+
+	/// <summary>
 	/// <para>Sets which exceptions to track with sentry.</para>
 	/// <para>Do not touch this unless you're developing the library.</para>
 	/// </summary>
@@ -403,5 +410,6 @@ public sealed class DiscordConfiguration
 		this.SentryDebug = other.SentryDebug;
 		this.DisableExceptionFilter = other.DisableExceptionFilter;
 		this.CustomSentryDsn = other.CustomSentryDsn;
+		this.EnablePayloadReceivedEvent = other.EnablePayloadReceivedEvent;
 	}
 }
