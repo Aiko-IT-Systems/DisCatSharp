@@ -92,12 +92,12 @@ public sealed partial class DiscordClient
 			return;
 		}
 
-		/*await this._payloadReceived.InvokeAsync(this, new(this.ServiceProvider)
-		{
-			EventName = payload.EventName,
-			PayloadObject = dat
-		}).ConfigureAwait(false);
-		*/
+		if ((this.Configuration?.EnableLibraryDeveloperMode ?? false) || (this.Configuration?.EnablePayloadReceivedEvent ?? false))
+			await this._payloadReceived.InvokeAsync(this, new(this.ServiceProvider)
+			{
+				EventName = payload.EventName,
+				PayloadObject = dat
+			}).ConfigureAwait(false);
 
 #region Default objects
 
