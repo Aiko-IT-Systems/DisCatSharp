@@ -1497,7 +1497,7 @@ public sealed partial class DiscordShardedClient
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
-	private Task Client_InteractionCreate(DiscordClient client, InteractionCreateEventArgs e)
+	private Task Client_InteractionCreated(DiscordClient client, InteractionCreateEventArgs e)
 		=> this._interactionCreated.InvokeAsync(client, e);
 
 	/// <summary>

@@ -115,7 +115,7 @@ public static class DiscordJson
 			Logger = nameof(DiscordJson),
 			Message = sentryMessage
 		};
-		sentryEvent.SetFingerprint("{{ default }}", "{{ module }}", sentryJson.GetHashCode().ToString());
+		sentryEvent.SetFingerprint(BaseDiscordClient.GenerateSentryFingerPrint(sentryEvent, sentryJson.GetHashCode().ToString()));
 		sentryEvent.SetExtra("Found Fields", sentryJson);
 		if (discord.Configuration.AttachUserInfo && discord.CurrentUser != null)
 			sentryEvent.User = new()
@@ -180,7 +180,7 @@ public static class DiscordJson
 			Logger = nameof(DiscordJson),
 			Message = sentryMessage
 		};
-		sentryEvent.SetFingerprint("{{ default }}", "{{ module }}", sentryJson.GetHashCode().ToString());
+		sentryEvent.SetFingerprint(BaseDiscordClient.GenerateSentryFingerPrint(sentryEvent, sentryJson.GetHashCode().ToString()));
 		sentryEvent.SetExtra("Found Fields", sentryJson);
 		if (discord.Configuration.AttachUserInfo && discord.CurrentUser != null)
 			sentryEvent.User = new()
