@@ -1,4 +1,3 @@
-
 #pragma warning disable CS0618
 using System;
 using System.Collections.Concurrent;
@@ -31,7 +30,7 @@ namespace DisCatSharp;
 /// </summary>
 public sealed partial class DiscordShardedClient
 {
-	#region Public Properties
+#region Public Properties
 
 	/// <summary>
 	/// Gets the logger for this client.
@@ -70,9 +69,9 @@ public sealed partial class DiscordShardedClient
 	public IReadOnlyDictionary<string, DiscordVoiceRegion> VoiceRegions
 		=> this._voiceRegionsLazy?.Value;
 
-	#endregion
+#endregion
 
-	#region Private Properties/Fields
+#region Private Properties/Fields
 
 	/// <summary>
 	/// Gets the configuration.
@@ -104,9 +103,9 @@ public sealed partial class DiscordShardedClient
 	/// </summary>
 	private readonly bool _manuallySharding;
 
-	#endregion
+#endregion
 
-	#region Constructor
+#region Constructor
 
 	/// <summary>
 	/// Initializes a new auto-sharding Discord client.
@@ -137,8 +136,11 @@ public sealed partial class DiscordShardedClient
 				x.Format = ConsoleLoggerFormat.Default;
 				x.TimestampFormat = this._configuration.LogTimestampFormat;
 				x.LogToStandardErrorThreshold = this._configuration.MinimumLogLevel;
-
-			}); var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[] { configureNamedOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
+			});
+			var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[]
+			{
+				configureNamedOptions
+			}, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
 			var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleLoggerOptions>>(), new OptionsCache<ConsoleLoggerOptions>());
 
 			var l = new ConsoleLoggerProvider(optionsMonitor);
@@ -159,6 +161,7 @@ public sealed partial class DiscordShardedClient
 					var v = a.GetName().Version;
 					vs = v?.ToString(3);
 				}
+
 				o.InitializeSdk = true;
 				o.Dsn = BaseDiscordClient.SentryDsn;
 				o.DetectStartupTime = StartupTimeDetectionMode.Fast;
@@ -199,10 +202,17 @@ public sealed partial class DiscordShardedClient
 								Username = this.CurrentUser.UsernameWithDiscriminator,
 								Other = new Dictionary<string, string>()
 								{
-									{ "developer", this._configuration.DeveloperUserId?.ToString() ?? "not_given" },
-									{ "email", this._configuration.FeedbackEmail ?? "not_given" }
+									{
+										"developer", this._configuration.DeveloperUserId?.ToString() ?? "not_given"
+									},
+									{
+										"email", this._configuration.FeedbackEmail ?? "not_given"
+									}
 								}
 							};
+
+					if (!e.Extra.ContainsKey("Found Fields"))
+						e.SetFingerprint(BaseDiscordClient.GenerateSentryFingerPrint(e));
 					return e;
 				};
 			});
@@ -212,9 +222,9 @@ public sealed partial class DiscordShardedClient
 		this.Logger ??= this._configuration.LoggerFactory!.CreateLogger<BaseDiscordClient>();
 	}
 
-	#endregion
+#endregion
 
-	#region Public Methods
+#region Public Methods
 
 	/// <summary>
 	/// Initializes and connects all shards.
@@ -328,9 +338,9 @@ public sealed partial class DiscordShardedClient
 	public async Task<DisCatSharpTeam> GetLibraryDevelopmentTeamAsync()
 		=> await this.GetShard(0).GetLibraryDevelopmentTeamAsync().ConfigureAwait(false);
 
-	#endregion
+#endregion
 
-	#region Internal Methods
+#region Internal Methods
 
 	/// <summary>
 	/// Initializes the shards.
@@ -348,9 +358,7 @@ public sealed partial class DiscordShardedClient
 		{
 			var cfg = new DiscordConfiguration(this._configuration)
 			{
-				ShardId = i,
-				ShardCount = shardCount,
-				LoggerFactory = lf
+				ShardId = i, ShardCount = shardCount, LoggerFactory = lf
 			};
 
 			var client = new DiscordClient(cfg);
@@ -361,9 +369,9 @@ public sealed partial class DiscordShardedClient
 		return shardCount;
 	}
 
-	#endregion
+#endregion
 
-	#region Private Methods & Version Property
+#region Private Methods & Version Property
 
 	/// <summary>
 	/// Gets the gateway info.
@@ -413,9 +421,7 @@ public sealed partial class DiscordShardedClient
 			var code = (int)msg.StatusCode;
 
 			if (code == 401 || code == 403)
-			{
 				throw new($"Authentication failed, check your token and try again: {code} {msg.ReasonPhrase}");
-			}
 			else if (code == 429)
 			{
 				this.Logger.LogError(LoggerEvents.ShardClientError, $"Ratelimit hit, requeuing request to {reqUrl}");
@@ -430,13 +436,9 @@ public sealed partial class DiscordShardedClient
 				return true;
 			}
 			else if (code >= 500)
-			{
 				throw new($"Internal Server Error: {code} {msg.ReasonPhrase}");
-			}
 			else
-			{
 				throw new($"An unsuccessful HTTP status code was encountered: {code} {msg.ReasonPhrase}");
-			}
 		}
 	}
 
@@ -465,9 +467,9 @@ public sealed partial class DiscordShardedClient
 	/// </summary>
 	private readonly string _botLibrary = "DisCatSharp";
 
-	#endregion
+#endregion
 
-	#region Private Connection Methods
+#region Private Connection Methods
 
 	/// <summary>
 	/// Connects a shard.
@@ -537,7 +539,6 @@ public sealed partial class DiscordShardedClient
 		this.CurrentApplication = null;
 
 		for (var i = 0; i < this._shards.Count; i++)
-		{
 			if (this._shards.TryGetValue(i, out var client))
 			{
 				this.UnhookEventHandlers(client);
@@ -547,16 +548,15 @@ public sealed partial class DiscordShardedClient
 				if (enableLogger)
 					this.Logger.LogInformation(LoggerEvents.ShardShutdown, "Disconnected shard {0}.", i);
 			}
-		}
 
 		this._shards.Clear();
 
 		return Task.CompletedTask;
 	}
 
-	#endregion
+#endregion
 
-	#region Event Handler Initialization/Registering
+#region Event Handler Initialization/Registering
 
 	/// <summary>
 	/// Sets the shard client up internally..
@@ -694,7 +694,7 @@ public sealed partial class DiscordShardedClient
 		client.MessageUpdated += this.Client_MessageUpdate;
 		client.MessageDeleted += this.Client_MessageDelete;
 		client.MessagesBulkDeleted += this.Client_MessageBulkDelete;
-		client.InteractionCreated += this.Client_InteractionCreate;
+		client.InteractionCreated += this.Client_InteractionCreated;
 		client.ComponentInteractionCreated += this.Client_ComponentInteractionCreate;
 		client.ContextMenuInteractionCreated += this.Client_ContextMenuInteractionCreate;
 		client.TypingStarted += this.Client_TypingStart;
@@ -732,7 +732,7 @@ public sealed partial class DiscordShardedClient
 		client.GuildScheduledEventCreated += this.Client_GuildScheduledEventCreated;
 		client.GuildScheduledEventUpdated += this.Client_GuildScheduledEventUpdated;
 		client.GuildScheduledEventDeleted += this.Client_GuildScheduledEventDeleted;
-		client.GuildScheduledEventUserAdded += this.Client_GuildScheduledEventUserAdded; ;
+		client.GuildScheduledEventUserAdded += this.Client_GuildScheduledEventUserAdded;
 		client.GuildScheduledEventUserRemoved += this.Client_GuildScheduledEventUserRemoved;
 		client.EmbeddedActivityUpdated += this.Client_EmbeddedActivityUpdated;
 		client.GuildMemberTimeoutAdded += this.Client_GuildMemberTimeoutAdded;
@@ -790,7 +790,7 @@ public sealed partial class DiscordShardedClient
 		client.MessageUpdated -= this.Client_MessageUpdate;
 		client.MessageDeleted -= this.Client_MessageDelete;
 		client.MessagesBulkDeleted -= this.Client_MessageBulkDelete;
-		client.InteractionCreated -= this.Client_InteractionCreate;
+		client.InteractionCreated -= this.Client_InteractionCreated;
 		client.ComponentInteractionCreated -= this.Client_ComponentInteractionCreate;
 		client.ContextMenuInteractionCreated -= this.Client_ContextMenuInteractionCreate;
 		client.TypingStarted -= this.Client_TypingStart;
@@ -828,7 +828,7 @@ public sealed partial class DiscordShardedClient
 		client.GuildScheduledEventCreated -= this.Client_GuildScheduledEventCreated;
 		client.GuildScheduledEventUpdated -= this.Client_GuildScheduledEventUpdated;
 		client.GuildScheduledEventDeleted -= this.Client_GuildScheduledEventDeleted;
-		client.GuildScheduledEventUserAdded -= this.Client_GuildScheduledEventUserAdded; ;
+		client.GuildScheduledEventUserAdded -= this.Client_GuildScheduledEventUserAdded;
 		client.GuildScheduledEventUserRemoved -= this.Client_GuildScheduledEventUserRemoved;
 		client.EmbeddedActivityUpdated -= this.Client_EmbeddedActivityUpdated;
 		client.GuildMemberTimeoutAdded -= this.Client_GuildMemberTimeoutAdded;
@@ -853,24 +853,20 @@ public sealed partial class DiscordShardedClient
 	private int GetShardIdFromGuilds(ulong id)
 	{
 		foreach (var s in this._shards.Values)
-		{
 			if (s.GuildsInternal.TryGetValue(id, out _))
-			{
 				return s.ShardId;
-			}
-		}
 
 		return -1;
 	}
 
-	#endregion
+#endregion
 
-	#region Destructor
+#region Destructor
 
 	~DiscordShardedClient()
 	{
 		this.InternalStopAsync(false).GetAwaiter().GetResult();
 	}
 
-	#endregion
+#endregion
 }

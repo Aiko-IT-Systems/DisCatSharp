@@ -264,6 +264,9 @@ public abstract class BaseDiscordClient : IDisposable
 									}
 								}
 							};
+
+					if (!e.Extra.ContainsKey("Found Fields"))
+						e.SetFingerprint(GenerateSentryFingerPrint(e));
 					return e;
 				}
 			});
@@ -527,4 +530,44 @@ public abstract class BaseDiscordClient : IDisposable
 	/// Disposes this client.
 	/// </summary>
 	public abstract void Dispose();
+
+	/// <summary>
+	/// Generates a fingerprint for sentry.
+	/// </summary>
+	/// <param name="ev">The sentry event.</param>
+	/// <param name="additional">The optional additional fingerprint value, if any.</param>
+	internal static IEnumerable<string> GenerateSentryFingerPrint(SentryEvent ev, string? additional = null)
+	{
+		var fingerPrint = new List<string>
+		{
+			ev.Level.ToString(), ev.Logger
+		};
+
+		if (ev.Message?.Message is not null)
+			fingerPrint.Add(ev.Message.Message);
+
+		if (additional is not null)
+			fingerPrint.Add(additional);
+
+		var ex = ev.Exception;
+
+		if (ex is null)
+			return fingerPrint;
+
+		fingerPrint.Add(ex.GetType().FullName);
+		if (!string.IsNullOrEmpty(ex.Message))
+			fingerPrint.Add(ex.Message);
+
+		if (ex.TargetSite is not null)
+			fingerPrint.Add(ex.TargetSite.ToString());
+
+		if (ex.InnerException is null)
+			return fingerPrint;
+
+		fingerPrint.Add(ex.InnerException.GetType().FullName);
+		if (!string.IsNullOrEmpty(ex.InnerException.Message))
+			fingerPrint.Add(ex.InnerException.Message);
+
+		return fingerPrint;
+	}
 }
