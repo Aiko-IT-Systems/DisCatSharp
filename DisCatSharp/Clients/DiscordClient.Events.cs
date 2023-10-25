@@ -1078,6 +1078,7 @@ public sealed partial class DiscordClient
 
 	/// <summary>
 	/// Fired when a gateway payload is received.
+	/// Only fired when <see cref="DiscordConfiguration.EnableLibraryDeveloperMode"/> or <see cref="DiscordConfiguration.EnablePayloadReceivedEvent"/> is enabled.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, PayloadReceivedEventArgs> PayloadReceived
 	{
