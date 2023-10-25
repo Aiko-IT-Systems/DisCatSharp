@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp;
 
 /// <summary>
-/// Represents a discord client.
+/// A Discord API wrapper.
 /// </summary>
 public sealed partial class DiscordClient
 {

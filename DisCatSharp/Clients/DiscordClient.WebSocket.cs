@@ -20,7 +20,7 @@ using Sentry;
 namespace DisCatSharp;
 
 /// <summary>
-/// Represents a discord websocket client.
+/// A Discord API wrapper.
 /// </summary>
 public sealed partial class DiscordClient
 {

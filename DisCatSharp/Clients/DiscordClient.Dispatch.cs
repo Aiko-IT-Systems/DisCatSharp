@@ -23,7 +23,7 @@ using Newtonsoft.Json.Linq;
 namespace DisCatSharp;
 
 /// <summary>
-/// Represents a discord Logger.ent.L
+/// A Discord API wrapper.
 /// </summary>
 public sealed partial class DiscordClient
 {
