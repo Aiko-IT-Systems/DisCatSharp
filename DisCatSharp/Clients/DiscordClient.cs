@@ -356,6 +356,16 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			throw new("Could not connect to Discord.", cex);
 		}
 
+		if (this.Configuration.AutoFetchSkuId)
+		{
+			var skus = await this.ApiClient.GetSkusAsync(this.CurrentApplication.Id).ConfigureAwait(false);
+			if (skus.Any())
+			{
+				this.Configuration.SkuId = skus.First(x => x.Type is SkuType.Subscription).Id;
+				this.Configuration.TestSkuId = skus.First(x => x.Type is SkuType.SubscriptionTest).Id;
+			}
+		}
+
 		// non-closure, hence args
 		static void FailConnection(ManualResetEventSlim cl) =>
 			// unlock this (if applicable) so we can let others attempt to connect
