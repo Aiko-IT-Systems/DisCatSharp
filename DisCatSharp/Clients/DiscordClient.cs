@@ -356,7 +356,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			throw new("Could not connect to Discord.", cex);
 		}
 
-		if (this.Configuration.AutoFetchSkuId)
+		if (this.Configuration.AutoFetchSkuIds)
 		{
 			var skus = await this.ApiClient.GetSkusAsync(this.CurrentApplication.Id).ConfigureAwait(false);
 			if (skus.Any())
