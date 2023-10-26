@@ -351,6 +351,24 @@ public sealed class DiscordConfiguration
 	internal string? CustomSentryDsn { get; set; } = null;
 
 	/// <summary>
+	/// Whether to autofetch the sku ids.
+	/// <para>Mutually exclusive to <see cref="SkuId"/> and <see cref="TestSkuId"/>.</para>
+	/// </summary>
+	public bool AutoFetchSkuIds { get; set; } = false;
+
+	/// <summary>
+	/// The applications sku id for premium apps.
+	/// <para>Mutually exclusive to <see cref="AutoFetchSkuIds"/>.</para>
+	/// </summary>
+	public ulong? SkuId { get; set; } = null;
+
+	/// <summary>
+	/// The applications test sku id for premium apps.
+	/// <para>Mutually exclusive to <see cref="AutoFetchSkuIds"/>.</para>
+	/// </summary>
+	public ulong? TestSkuId { get; set; } = null;
+
+	/// <summary>
 	/// Creates a new configuration with default values.
 	/// </summary>
 	public DiscordConfiguration()
@@ -411,5 +429,8 @@ public sealed class DiscordConfiguration
 		this.DisableExceptionFilter = other.DisableExceptionFilter;
 		this.CustomSentryDsn = other.CustomSentryDsn;
 		this.EnablePayloadReceivedEvent = other.EnablePayloadReceivedEvent;
+		this.AutoFetchSkuIds = other.AutoFetchSkuIds;
+		this.SkuId = other.SkuId;
+		this.TestSkuId = other.TestSkuId;
 	}
 }
