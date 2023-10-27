@@ -68,3 +68,11 @@ DCS0103 |  Usage   |  Warning | DCS0103_DiscordUnreleased_Attribute_Analyzer, [D
 Rule ID | Category | Severity | Notes
 --------|----------|----------|--------------------
 DCS0200 |  Usage   |  Info    | DCS0200_Requires_Feature_Attribute_Analyzer, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0200)
+
+## Release 6.1
+
+### Changed Rules
+
+Rule ID | Category | Severity | Notes
+--------|----------|----------|--------------------
+DCS0200 |  Usage   |  Info    | DCS0200_Requires_Feature_Attribute_Analyzer, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0200)
