@@ -7,6 +7,10 @@ DisCatSharp Release Notes
     - DiscordOAuth2Client: Allows bots to request and use access tokens for the Discord API.
     - Support for default select menu values (THANKS MAISY FOR ADDING IT TO DISCORD)
 
+DisCatSharp.Attributes Release Notes
+
+	Added new required feature enums to notate feature usage
+
 DisCatSharp.ApplicationCommands Release Notes
 
     Contains a rework for command registration (Kinda wacky tho with translation-enabled commands)

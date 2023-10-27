@@ -9,7 +9,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<OutputType>Library</OutputType>
-	  <Version>10.4.2</Version>
+	  <Version>10.4.3</Version>
   </PropertyGroup>
 
   <PropertyGroup>
