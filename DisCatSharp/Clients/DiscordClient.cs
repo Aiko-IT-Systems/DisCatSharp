@@ -501,6 +501,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="applicationId">The application id to fetch the listings for.</param>
 	/// <returns>A list of published listings with <see cref="DiscordStoreSku"/>s.</returns>
+	[RequiresFeature(Features.MonetizedApplication)]
 	public async Task<IReadOnlyList<DiscordStoreSku>> GetPublishedListingsAsync(ulong applicationId)
 		=> await this.ApiClient.GetPublishedListingsAsync(applicationId).ConfigureAwait(false);
 
@@ -509,6 +510,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <returns>A list of published listings with <see cref="DiscordSku"/>s.</returns>
 	/// <exception cref="NotFoundException">Thrown when the skus do not exist.</exception>
+	[RequiresFeature(Features.MonetizedApplication)]
 	public async Task<IReadOnlyList<DiscordSku>> GetSkusAsync()
 		=> await this.ApiClient.GetSkusAsync(this.CurrentApplication.Id).ConfigureAwait(false);
 
@@ -519,6 +521,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="userId">Filter returned entitlements to a specific user id.</param>
 	/// <returns>A list of <see cref="DiscordEntitlement"/>.</returns>
 	/// <exception cref="NotFoundException">Thrown when the entitlements do not exist.</exception>
+	[RequiresFeature(Features.MonetizedApplication)]
 	public async Task<IReadOnlyList<DiscordEntitlement>> GetEntitlementsAsync(ulong? guildId = null, ulong? userId = null)
 		=> await this.ApiClient.GetEntitlementsAsync(this.CurrentApplication.Id, guildId, userId).ConfigureAwait(false);
 
@@ -529,6 +532,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="ownerId">The owner id to create the entitlement for.</param>
 	/// <param name="ownerType">The owner type to create the entitlement for.</param>
 	/// <returns>A partial <see cref="DiscordEntitlement"/>.</returns>
+	[RequiresFeature(Features.MonetizedApplication)]
 	public async Task<DiscordEntitlement> CreateTestEntitlementsAsync(ulong skuId, ulong ownerId, EntitlementOwnerType ownerType)
 		=> await this.ApiClient.CreateTestEntitlementsAsync(this.CurrentApplication.Id, skuId, ownerId, ownerType).ConfigureAwait(false);
 
@@ -536,6 +540,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// Deletes a test entitlement.
 	/// </summary>
 	/// <param name="entitlementId">The entitlement id to delete.</param>
+	[RequiresFeature(Features.MonetizedApplication)]
 	public async Task DeleteTestEntitlementsAsync(ulong entitlementId)
 		=> await this.ApiClient.DeleteTestEntitlementsAsync(this.CurrentApplication.Id, entitlementId).ConfigureAwait(false);
 
