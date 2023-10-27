@@ -27,11 +27,11 @@ Documentation: https://docs.dcs.aitsys.dev/articles/modules/application_commands
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="5.5.0">
+    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="DisCatSharp.Attributes" Version="10.4.2" />
+    <PackageReference Include="DisCatSharp.Attributes" Version="10.4.3" />
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />

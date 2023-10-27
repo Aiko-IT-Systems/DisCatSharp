@@ -354,18 +354,21 @@ public sealed class DiscordConfiguration
 	/// Whether to autofetch the sku ids.
 	/// <para>Mutually exclusive to <see cref="SkuId"/> and <see cref="TestSkuId"/>.</para>
 	/// </summary>
+	[RequiresFeature(Features.MonetizedApplication)]
 	public bool AutoFetchSkuIds { get; set; } = false;
 
 	/// <summary>
 	/// The applications sku id for premium apps.
 	/// <para>Mutually exclusive to <see cref="AutoFetchSkuIds"/>.</para>
 	/// </summary>
+	[RequiresFeature(Features.MonetizedApplication)]
 	public ulong? SkuId { get; set; } = null;
 
 	/// <summary>
 	/// The applications test sku id for premium apps.
 	/// <para>Mutually exclusive to <see cref="AutoFetchSkuIds"/>.</para>
 	/// </summary>
+	[RequiresFeature(Features.MonetizedApplication)]
 	public ulong? TestSkuId { get; set; } = null;
 
 	/// <summary>
