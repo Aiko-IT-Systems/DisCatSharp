@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands.Context;
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 
 namespace DisCatSharp.ApplicationCommands.Attributes;
@@ -9,7 +10,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes;
 /// <summary>
 /// Defines that usage of this application command is restricted to users with a specified entitlement.
 /// </summary>
-[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false), RequiresFeature(Features.MonetizedApplication)]
 public sealed class ApplicationCommandRequirePremiumAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
@@ -21,6 +22,7 @@ public sealed class ApplicationCommandRequirePremiumAttribute : ApplicationComma
 	/// Defines that usage of this command is restricted to users with a specified entitlement.
 	/// </summary>
 	/// <param name="entitlementId">Entitlement id required to execute this command.</param>
+	[RequiresFeature(Features.MonetizedApplication)]
 	public ApplicationCommandRequirePremiumAttribute(ulong entitlementId)
 	{
 		this.EntitlementId = entitlementId;
@@ -30,6 +32,7 @@ public sealed class ApplicationCommandRequirePremiumAttribute : ApplicationComma
 	/// Defines that usage of this command is restricted to users with a specified entitlement.
 	/// <para>Use this attribute if you set <see cref="DiscordConfiguration.SkuId"/> or <see cref="DiscordConfiguration.AutoFetchSkuId"/> in your &lt;see cref="DiscordConfiguration"/&gt;.</para>
 	/// </summary>
+	[RequiresFeature(Features.MonetizedApplication)]
 	public ApplicationCommandRequirePremiumAttribute()
 	{ }
 
@@ -51,7 +54,7 @@ public sealed class ApplicationCommandRequirePremiumAttribute : ApplicationComma
 /// <summary>
 /// Defines that usage of this application command is restricted to users with a test entitlement.
 /// </summary>
-[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false),RequiresFeature(Features.MonetizedApplication)]
 public sealed class ApplicationCommandRequirePremiumTestAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
@@ -63,6 +66,7 @@ public sealed class ApplicationCommandRequirePremiumTestAttribute : ApplicationC
 	/// Defines that usage of this command is restricted to users with a specified entitlement.
 	/// </summary>
 	/// <param name="entitlementId">Entitlement id required to execute this command.</param>
+	[RequiresFeature(Features.MonetizedApplication)]
 	public ApplicationCommandRequirePremiumTestAttribute(ulong entitlementId)
 	{
 		this.EntitlementId = entitlementId;
@@ -72,6 +76,7 @@ public sealed class ApplicationCommandRequirePremiumTestAttribute : ApplicationC
 	/// Defines that usage of this command is restricted to users with a specified entitlement.
 	/// <para>Use this attribute if you set <see cref="DiscordConfiguration.TestSkuId"/> or <see cref="DiscordConfiguration.AutoFetchSkuId"/> in your <see cref="DiscordConfiguration"/>.</para>
 	/// </summary>
+	[RequiresFeature(Features.MonetizedApplication)]
 	public ApplicationCommandRequirePremiumTestAttribute()
 	{ }
 
