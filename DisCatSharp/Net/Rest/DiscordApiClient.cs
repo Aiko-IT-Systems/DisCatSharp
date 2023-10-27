@@ -51,17 +51,18 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordApiClient"/> class.
 	/// </summary>
-	/// <param name="client">The client.</param>
+	/// <param name="client">The base discord client.</param>
 	internal DiscordApiClient(BaseDiscordClient client)
 	{
 		this.Discord = client;
+		this.OAuth2Client = null!;
 		this.Rest = new(client);
 	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordApiClient"/> class.
 	/// </summary>
-	/// <param name="client">The client.</param>
+	/// <param name="client">The oauth2 client.</param>
 	/// <param name="proxy">The proxy.</param>
 	/// <param name="timeout">The timeout.</param>
 	/// <param name="useRelativeRateLimit">If true, use relative rate limit.</param>
@@ -69,6 +70,7 @@ public sealed class DiscordApiClient
 	internal DiscordApiClient(DiscordOAuth2Client client, IWebProxy proxy, TimeSpan timeout, bool useRelativeRateLimit, ILogger logger)
 	{
 		this.OAuth2Client = client;
+		this.Discord = null!;
 		this.Rest = new(proxy, timeout, useRelativeRateLimit, logger);
 	}
 
@@ -79,8 +81,10 @@ public sealed class DiscordApiClient
 	/// <param name="timeout">The timeout.</param>
 	/// <param name="useRelativeRateLimit">If true, use relative rate limit.</param>
 	/// <param name="logger">The logger.</param>
-	internal DiscordApiClient(IWebProxy proxy, TimeSpan timeout, bool useRelativeRateLimit, ILogger logger) // This is for meta-clients, such as the webhook client
+	internal DiscordApiClient(IWebProxy proxy, TimeSpan timeout, bool useRelativeRateLimit, ILogger logger)
 	{
+		this.Discord = null!;
+		this.OAuth2Client = null!;
 		this.Rest = new(proxy, timeout, useRelativeRateLimit, logger);
 	}
 
@@ -104,8 +108,7 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Prepares the message.
 	/// </summary>
-	/// <param name="msgRaw">The msg_raw.</param>
-	/// <returns>A DiscordMessage.</returns>
+	/// <param name="msgRaw">The raw message.</param>
 	private DiscordMessage PrepareMessage(JToken msgRaw)
 	{
 		var author = msgRaw["author"].ToObject<TransportUser>();
