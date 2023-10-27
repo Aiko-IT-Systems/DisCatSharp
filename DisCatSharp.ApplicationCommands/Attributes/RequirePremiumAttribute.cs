@@ -30,7 +30,7 @@ public sealed class ApplicationCommandRequirePremiumAttribute : ApplicationComma
 
 	/// <summary>
 	/// Defines that usage of this command is restricted to users with a specified entitlement.
-	/// <para>Use this attribute if you set <see cref="DiscordConfiguration.SkuId"/> or <see cref="DiscordConfiguration.AutoFetchSkuId"/> in your &lt;see cref="DiscordConfiguration"/&gt;.</para>
+	/// <para>Use this attribute if you set <see cref="DiscordConfiguration.SkuId"/> or <see cref="DiscordConfiguration.AutoFetchSkuIds"/> in your &lt;see cref="DiscordConfiguration"/&gt;.</para>
 	/// </summary>
 	[RequiresFeature(Features.MonetizedApplication)]
 	public ApplicationCommandRequirePremiumAttribute()
@@ -74,7 +74,7 @@ public sealed class ApplicationCommandRequirePremiumTestAttribute : ApplicationC
 
 	/// <summary>
 	/// Defines that usage of this command is restricted to users with a specified entitlement.
-	/// <para>Use this attribute if you set <see cref="DiscordConfiguration.TestSkuId"/> or <see cref="DiscordConfiguration.AutoFetchSkuId"/> in your <see cref="DiscordConfiguration"/>.</para>
+	/// <para>Use this attribute if you set <see cref="DiscordConfiguration.TestSkuId"/> or <see cref="DiscordConfiguration.AutoFetchSkuIds"/> in your <see cref="DiscordConfiguration"/>.</para>
 	/// </summary>
 	[RequiresFeature(Features.MonetizedApplication)]
 	public ApplicationCommandRequirePremiumTestAttribute()
