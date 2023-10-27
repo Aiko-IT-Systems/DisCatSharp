@@ -9,26 +9,29 @@ namespace DisCatSharp.Attributes;
 [Flags]
 public enum Features : long
 {
-	[FeatureDescription("Required that you specify an override in the DiscordConfiguration.")]
+	[FeatureDescription("Requires that you specify an override in the DiscordConfiguration.")]
 	Override = 1<<0,
 
-	[FeatureDescription("Required that the guild has onboarding enabled.")]
+	[FeatureDescription("Requires that the guild has onboarding enabled.")]
 	Onboarding = 1<<1,
 
-	[FeatureDescription("Required that the guild is partnered.")]
+	[FeatureDescription("Requires that the guild is partnered.")]
 	Partnered = 1<<2,
 
-	[FeatureDescription("Required that the guild is verified.")]
+	[FeatureDescription("Requires that the guild is verified.")]
 	Verified = 1<<3,
 
-	[FeatureDescription("Required that the guild has discovery enabled.")]
+	[FeatureDescription("Requires that the guild has discovery enabled.")]
 	Discoverable = 1<<4,
 
-	[FeatureDescription("Required that the guild has community enabled.")]
+	[FeatureDescription("Requires that the guild has community enabled.")]
 	Community = 1<<5,
 
-	[FeatureDescription("Required that the guild has monetization enabled.")]
-	ServerSubscription = 1<<6
+	[FeatureDescription("Requires that the guild has monetization enabled.")]
+	ServerSubscription = 1<<6,
+
+	[FeatureDescription("Requires that the application has monetization enabled.")]
+	MonetizedApplication = 1<<7
 }
 
 
