@@ -943,43 +943,67 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> this.ApiClient.GetStickerPacksAsync();
 
 	/// <summary>
-	/// Gets the In-App OAuth Url.
+	/// Gets the In-App OAuth Url for the current application.
 	/// </summary>
-	/// <param name="scopes">Defaults to <see cref="DisCatSharp.Enums.OAuthScopes.BOT_DEFAULT"/>.</param>
+	/// <param name="scopes">The scopes to send with the request. Defaults to <see cref="DisCatSharp.Enums.OAuthScopes.BOT_DEFAULT"/>. Mutually exclusive to <paramref name="manual_scopes"/>.</param>
 	/// <param name="redir">Redirect Uri.</param>
 	/// <param name="permissions">Defaults to <see cref="Permissions.None"/>.</param>
+	/// <param name="user_install">Whether to install as user app.</param>
+	/// <param name="guild_id">The guild id to pre-select.</param>
+	/// <param name="state">The state to send with the request.</param>
+	/// <param name="access_type">The access type to send with the request (offline|online).</param>
+	/// <param name="response_type">The response type to send with the request (code|token).</param>
+	/// <param name="prompt">Whether to prompt the user for authorization.</param>
+	/// <param name="manual_scopes">The scopes to send with the request. Mutually exclusive to <paramref name="scopes"/>.</param>
 	/// <returns>The OAuth Url</returns>
-	public Uri GetInAppOAuth(Permissions permissions = Permissions.None, OAuthScopes scopes = OAuthScopes.BOT_DEFAULT, string redir = null)
+	public Uri GetInAppOAuth(Permissions permissions = Permissions.None, OAuthScopes scopes = OAuthScopes.BOT_DEFAULT, string? redir = null, bool user_install = false, ulong? guild_id = null, string? state = null, string? access_type = null, string? response_type = null, bool prompt = true, string? manual_scopes = null)
 	{
 		permissions &= PermissionMethods.FullPerms;
 		return new(new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
 			.AddParameter("client_id", this.CurrentApplication.Id.ToString(CultureInfo.InvariantCulture))
-			.AddParameter("scope", OAuth.ResolveScopes(scopes))
+			.AddParameter("scope", manual_scopes ?? OAuth.ResolveScopes(scopes))
 			.AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
-			.AddParameter("state", "")
-			.AddParameter("redirect_uri", redir ?? "")
+			.AddParameter("state", state ?? string.Empty)
+			.AddParameter("redirect_uri", redir ?? string.Empty)
+			.AddParameter("user_install", user_install.ToString(CultureInfo.InvariantCulture))
+			.AddParameter("guild_id", guild_id.HasValue ? guild_id.Value.ToString(CultureInfo.InvariantCulture) : string.Empty)
+			.AddParameter("access_type", access_type ?? string.Empty)
+			.AddParameter("response_type", response_type ?? string.Empty)
+			.AddParameter("prompt", prompt ? "consent" : "none")
 			.ToString());
 	}
 
 	/// <summary>
-	/// Generates an In-App OAuth Url.
+	/// Generates an In-App OAuth Url for a specific <paramref name="bot"/>.
 	/// </summary>
 	/// <param name="bot">The bot to generate the url for.</param>
-	/// <param name="scopes">Defaults to <see cref="DisCatSharp.Enums.OAuthScopes.BOT_DEFAULT"/>.</param>
+	/// <param name="scopes">The scopes to send with the request. Defaults to <see cref="DisCatSharp.Enums.OAuthScopes.BOT_DEFAULT"/>. Mutually exclusive to <paramref name="manual_scopes"/>.</param>
 	/// <param name="redir">Redirect Uri.</param>
 	/// <param name="permissions">Defaults to <see cref="Permissions.None"/>.</param>
+	/// <param name="user_install">Whether to install as user app.</param>
+	/// <param name="guild_id">The guild id to pre-select.</param>
+	/// <param name="state">The state to send with the request.</param>
+	/// <param name="access_type">The access type to send with the request (offline|online).</param>
+	/// <param name="response_type">The response type to send with the request (code|token).</param>
+	/// <param name="prompt">Whether to prompt the user for authorization.</param>
+	/// <param name="manual_scopes">The scopes to send with the request. Mutually exclusive to <paramref name="scopes"/>.</param>
 	/// <returns>The OAuth Url</returns>
-	public Uri GenerateInAppOauthFor(DiscordUser bot, Permissions permissions = Permissions.None, OAuthScopes scopes = OAuthScopes.BOT_DEFAULT, string redir = null)
+	public Uri GenerateInAppOauthFor(DiscordUser bot, Permissions permissions = Permissions.None, OAuthScopes scopes = OAuthScopes.BOT_DEFAULT, string? redir = null, bool user_install = false, ulong? guild_id = null, string? state = null, string? access_type = null, string? response_type = null, bool prompt = true, string? manual_scopes = null)
 	{
 		if (!bot.IsBot)
 			throw new ArgumentException("The user must be a bot.", nameof(bot));
 		permissions &= PermissionMethods.FullPerms;
 		return new(new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
 			.AddParameter("client_id", bot.Id.ToString(CultureInfo.InvariantCulture))
-			.AddParameter("scope", OAuth.ResolveScopes(scopes))
+			.AddParameter("scope", manual_scopes ?? OAuth.ResolveScopes(scopes))
 			.AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
-			.AddParameter("state", "")
-			.AddParameter("redirect_uri", redir ?? "")
+			.AddParameter("state", state ?? string.Empty)
+			.AddParameter("redirect_uri", redir ?? string.Empty)
+			.AddParameter("user_install", user_install.ToString(CultureInfo.InvariantCulture))
+			.AddParameter("guild_id", guild_id.HasValue ? guild_id.Value.ToString(CultureInfo.InvariantCulture) : string.Empty)
+			.AddParameter("access_type", access_type ?? string.Empty)
+			.AddParameter("response_type", response_type ?? string.Empty)
+			.AddParameter("prompt", prompt ? "consent" : "none")
 			.ToString());
 	}
 
