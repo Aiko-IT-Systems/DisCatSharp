@@ -25,7 +25,7 @@ public enum ApplicationDiscoveryEligibilityFlags : long
 	/// <summary>
 	/// Application is verified.
 	/// </summary>
-	Ierified = 1<<0,
+	Verified = 1<<0,
 
 	/// <summary>
 	/// Application has at least one tag set.
