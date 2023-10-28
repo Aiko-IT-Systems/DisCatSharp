@@ -30,20 +30,27 @@ public enum AttachmentFlags
 	None = 0,
 
 	/// <summary>
+	/// This attachment is a clip.
+	/// </summary>
+	Clip = 1 << 0,
+
+	/// <summary>
 	/// This attachment is a thumbnail.
 	/// </summary>
-	[DiscordUnreleased]
-	IsThumbnail = 1 << 1,
+	Thumbnail = 1 << 1,
 
 	/// <summary>
 	/// This attachment was edited with remix (https://support.discord.com/hc/en-us/articles/15145601963031).
 	/// </summary>
-	[DiscordInExperiment]
-	IsRemix = 1 << 2,
+	Remix = 1 << 2,
 
 	/// <summary>
-	/// This attachment is a flag.
+	/// This attachment is a spoiler.
 	/// </summary>
-	[DiscordUnreleased]
-	IsClip = 1 << 3
+	Spoiler = 1 << 3,
+
+	/// <summary>
+	/// This attachment contains explicit media.
+	/// </summary>
+	ContainsExplicitMedia = 1 << 4,
 }
