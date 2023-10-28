@@ -204,5 +204,10 @@ public enum MessageType : int
 	/// <summary>
 	/// Message indicating a false alarm was reported.
 	/// </summary>
-	GuildIncidentReportFalseAlarm = 39
+	GuildIncidentReportFalseAlarm = 39,
+
+	/// <summary>
+	/// Message indicating that a user bought something from the server shop.
+	/// </summary>
+	PurchaseNotification = 44
 }
