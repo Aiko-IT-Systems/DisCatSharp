@@ -42,7 +42,7 @@ public enum ApplicationFlags : long
 	/// <summary>
 	/// Unknown.
 	/// </summary>
-	ApplicationAutoModerationRuleCreateBadge = 1<<6,
+	AutoModerationRuleCreateBadge = 1<<6,
 
 	/// <summary>
 	/// Allows the application to create activity assets.
