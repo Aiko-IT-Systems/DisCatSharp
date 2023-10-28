@@ -51,7 +51,7 @@ public enum InteractionResponseType
 
 	/// <summary>
 	/// <para>Responds to the interaction with an iframe.</para>
-	/// <para><note type="warning">Can only be used if you are whitelisted..</note></para>
+	/// <para><note type="warning">Can only be used if you are whitelisted.</note></para>
 	/// </summary>
 	[DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
 	Iframe = 11
