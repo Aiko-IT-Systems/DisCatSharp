@@ -29,7 +29,9 @@ public sealed class EmojiCreateChangeSet : DiscordAuditLogEntry
 			if (this.EmojiNameChanged)
 				description += $"- Emoji Name: {this.EmojiName}\n";
 			if (this.RolesAllowedChanged)
-				description += $"- Roles Allowed: {string.Join(", ", this.RolesAllowed)}\n";
+				description += this.RolesAllowed != null && this.RolesAllowed.Any()
+					? $"- Roles Allowed: {string.Join(", ", this.RolesAllowed.Select(this.Discord.Guilds[this.GuildId].GetRole))}\n"
+					: "- Allowed everyone to use the emoji";
 			return description;
 		}
 	}

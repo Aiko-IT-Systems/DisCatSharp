@@ -36,8 +36,8 @@ public sealed class EmojiUpdateChangeSet : DiscordAuditLogEntry
 
 			if (this.RolesAllowedChanged)
 			{
-				description += this.RolesAllowedBefore is not null ? $"- Roles Before: {string.Join(", ", this.RolesAllowedBefore)}\n" : "- Roles Before: Not set\n";
-				description += this.RolesAllowedAfter is not null ? $"- Roles After: {string.Join(", ", this.RolesAllowedAfter)}\n" : "- Roles After: Not set\n";
+				description += this.RolesAllowedBefore is not null ? $"- Roles Allowed Before: {string.Join(", ", this.RolesAllowedBefore.Select(this.Discord.Guilds[this.GuildId].GetRole))}\n" : "- Roles Allowed Before: Not set\n";
+				description += this.RolesAllowedAfter is not null ? $"- Roles Allowed After: {string.Join(", ", this.RolesAllowedAfter.Select(this.Discord.Guilds[this.GuildId].GetRole))}\n" : "- Roles Allowed After: Not set\n";
 			}
 
 			return description;
