@@ -15,6 +15,11 @@ public sealed class WebhookUpdateChangeSet : DiscordAuditLogEntry
 	}
 
 	/// <summary>
+	/// Gets a value indicating whether the name of the webhook has changed.
+	/// </summary>
+	public bool NameChanged => this.NameBefore is not null || this.NameAfter is not null;
+
+	/// <summary>
 	/// Gets the old name of the webhook.
 	/// </summary>
 	public string? NameBefore => (string?)this.Changes.FirstOrDefault(x => x.Key == "name")?.OldValue;
@@ -23,6 +28,11 @@ public sealed class WebhookUpdateChangeSet : DiscordAuditLogEntry
 	/// Gets the new name of the webhook.
 	/// </summary>
 	public string? NameAfter => (string?)this.Changes.FirstOrDefault(x => x.Key == "name")?.NewValue;
+
+	/// <summary>
+	/// Gets a value indicating whether the avatar hash of the webhook has changed.
+	/// </summary>
+	public bool AvatarChanged => this.AvatarBefore is not null || this.AvatarAfter is not null;
 
 	/// <summary>
 	/// Gets the old avatar hash of the webhook.
