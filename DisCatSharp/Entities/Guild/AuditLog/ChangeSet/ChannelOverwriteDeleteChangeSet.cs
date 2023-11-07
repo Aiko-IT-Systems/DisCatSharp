@@ -14,28 +14,13 @@ public sealed class ChannelOverwriteDeleteChangeSet : DiscordAuditLogEntry
 		this.ValidFor = AuditLogActionType.ChannelOverwriteDelete;
 	}
 
-	public bool AllowChanged => this.AllowBefore is not null || this.AllowAfter is not null;
-	public Permissions? AllowBefore => (Permissions?)this.Changes.FirstOrDefault(x => x.Key == "allow")?.OldValue;
-	public Permissions? AllowAfter => (Permissions?)this.Changes.FirstOrDefault(x => x.Key == "allow")?.NewValue;
+	/// <summary>
+	/// Gets the allowed permissions before the change.
+	/// </summary>
+	public Permissions? Allowed => (Permissions?)this.Changes.FirstOrDefault(x => x.Key == "allow")?.OldValue;
 
-	public bool DenyChanged => this.DenyBefore is not null || this.DenyAfter is not null;
-	public Permissions? DenyBefore => (Permissions?)this.Changes.FirstOrDefault(x => x.Key == "deny")?.OldValue;
-	public Permissions? DenyAfter => (Permissions?)this.Changes.FirstOrDefault(x => x.Key == "deny")?.NewValue;
-
-	/// <inheritdoc />
-	internal override string ChangeDescription
-	{
-		get
-		{
-			var description = $"{this.User} executed {this.GetType().Name.Replace("ChangeSet", string.Empty)} for {this.Options!.OverwrittenEntityType} with id{this.Options.OverwrittenEntityId} {(this.Options.OverwrittenEntityType == OverwriteType.Role ? $" and name {this.Options.RoleName}" : string.Empty)} with reason {this.Reason ?? $"No reason given".Italic()}\n";
-
-			if (this.AllowChanged)
-				description += this.AllowAfter is not null ? $"- Set Allowed Permissions to {this.AllowAfter}\n" : "- Unset Allowed Permissions\n";
-
-			if (this.DenyChanged)
-				description += this.DenyAfter is not null ? $"- Set Denied Permissions to {this.DenyAfter}\n" : "- Unset Denied Permissions\n";
-
-			return description;
-		}
-	}
+	/// <summary>
+	/// Gets the denied permissions before the change.
+	/// </summary>
+	public Permissions? Denied => (Permissions?)this.Changes.FirstOrDefault(x => x.Key == "deny")?.OldValue;
 }

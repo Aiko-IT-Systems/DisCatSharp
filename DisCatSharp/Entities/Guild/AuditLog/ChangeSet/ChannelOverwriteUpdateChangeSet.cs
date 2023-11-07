@@ -14,12 +14,34 @@ public sealed class ChannelOverwriteUpdateChangeSet : DiscordAuditLogEntry
 		this.ValidFor = AuditLogActionType.ChannelOverwriteUpdate;
 	}
 
+	/// <summary>
+	/// Gets a value indicating whether the allowed permissions have changed.
+	/// </summary>
 	public bool AllowChanged => this.AllowBefore is not null || this.AllowAfter is not null;
+
+	/// <summary>
+	/// Gets the old allowed permissions before the change.
+	/// </summary>
 	public Permissions? AllowBefore => (Permissions?)this.Changes.FirstOrDefault(x => x.Key == "allow")?.OldValue;
+
+	/// <summary>
+	/// Gets the new allowed permissions after the change.
+	/// </summary>
 	public Permissions? AllowAfter => (Permissions?)this.Changes.FirstOrDefault(x => x.Key == "allow")?.NewValue;
 
+	/// <summary>
+	/// Gets a value indicating whether the denied permissions have changed.
+	/// </summary>
 	public bool DenyChanged => this.DenyBefore is not null || this.DenyAfter is not null;
+
+	/// <summary>
+	/// Gets the old denied permissions before the change.
+	/// </summary>
 	public Permissions? DenyBefore => (Permissions?)this.Changes.FirstOrDefault(x => x.Key == "deny")?.OldValue;
+
+	/// <summary>
+	/// Gets the new denied permissions after the change.
+	/// </summary>
 	public Permissions? DenyAfter => (Permissions?)this.Changes.FirstOrDefault(x => x.Key == "deny")?.NewValue;
 
 	/// <inheritdoc />
