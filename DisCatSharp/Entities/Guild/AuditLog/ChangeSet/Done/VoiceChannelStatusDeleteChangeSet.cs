@@ -5,14 +5,14 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a change set for updating voice channel status.
 /// </summary>
-public sealed class VoiceChannelStatusUpdateChangeSet : DiscordAuditLogEntry
+public sealed class VoiceChannelStatusDeleteChangeSet : DiscordAuditLogEntry
 {
-	public VoiceChannelStatusUpdateChangeSet()
+	public VoiceChannelStatusDeleteChangeSet()
 	{
-		this.ValidFor = AuditLogActionType.VoiceChannelStatusUpdate;
+		this.ValidFor = AuditLogActionType.VoiceChannelStatusDelete;
 	}
 
 	public ulong ChannelId => (ulong)this.Options!.ChannelId;
 	public DiscordChannel? Channel => this.Discord.Guilds[this.GuildId].Channels.TryGetValue(this.ChannelId, out var channel) ? channel : null;
-	public string Status => this.Options!.Status!;
+
 }
