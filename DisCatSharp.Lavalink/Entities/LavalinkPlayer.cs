@@ -44,7 +44,7 @@ public sealed class LavalinkPlayer
 	/// Gets the player voice state.
 	/// </summary>
 	[JsonProperty("voice")]
-	internal LavalinkVoiceState VoiceState { get; set; }
+	public LavalinkVoiceState VoiceState { get; set; }
 
 	/// <summary>
 	/// Gets the player filters.
