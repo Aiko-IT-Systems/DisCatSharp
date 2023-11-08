@@ -70,4 +70,9 @@ public static class Internals
 	/// </summary>
 	/// <param name="channel">The channel.</param>
 	internal static bool IsMovable(this DiscordChannel channel) => channel.Type == ChannelType.Voice || channel.Type == ChannelType.Stage || channel.Type == ChannelType.Text || channel.Type == ChannelType.Category || channel.Type == ChannelType.Forum || channel.Type == ChannelType.News;
+
+	/// <summary>
+	/// Gets clyde's user id.
+	/// </summary>
+	internal static ulong ClydeUserId => 1081004946872352958;
 }
