@@ -16,37 +16,37 @@ public enum AuditLogActionType
 	GuildUpdate = 1,
 
 	/// <summary>
-	/// Indicates that the channel was created.
+	/// Indicates that a channel was created.
 	/// </summary>
 	ChannelCreate = 10,
 
 	/// <summary>
-	/// Indicates that the channel was updated.
+	/// Indicates that a channel was updated.
 	/// </summary>
 	ChannelUpdate = 11,
 
 	/// <summary>
-	/// Indicates that the channel was deleted.
+	/// Indicates that a channel was deleted.
 	/// </summary>
 	ChannelDelete = 12,
 
 	/// <summary>
-	/// Indicates that the channel permission overwrite was created.
+	/// Indicates that a channel permission overwrite was created.
 	/// </summary>
 	ChannelOverwriteCreate = 13,
 
 	/// <summary>
-	/// Indicates that the channel permission overwrite was updated.
+	/// Indicates that a channel permission overwrite was updated.
 	/// </summary>
 	ChannelOverwriteUpdate = 14,
 
 	/// <summary>
-	/// Indicates that the channel permission overwrite was deleted.
+	/// Indicates that a channel permission overwrite was deleted.
 	/// </summary>
 	ChannelOverwriteDelete = 15,
 
 	/// <summary>
-	/// Indicates that the user was kicked.
+	/// Indicates that a user was kicked.
 	/// </summary>
 	MemberKick = 20,
 
@@ -56,32 +56,32 @@ public enum AuditLogActionType
 	MemberPrune = 21,
 
 	/// <summary>
-	/// Indicates that the user was banned.
+	/// Indicates that a user was banned.
 	/// </summary>
 	MemberBanAdd = 22,
 
 	/// <summary>
-	/// Indicates that the user was unbanned.
+	/// Indicates that a user was unbanned.
 	/// </summary>
 	MemberBanRemove = 23,
 
 	/// <summary>
-	/// Indicates that the member was updated.
+	/// Indicates that a member was updated.
 	/// </summary>
 	MemberUpdate = 24,
 
 	/// <summary>
-	/// Indicates that the member's roles were updated.
+	/// Indicates that a member's roles were updated.
 	/// </summary>
 	MemberRoleUpdate = 25,
 
 	/// <summary>
-	/// Indicates that the member has moved to another voice channel.
+	/// Indicates that a member was moved to another voice channel.
 	/// </summary>
 	MemberMove = 26,
 
 	/// <summary>
-	/// Indicates that the member has disconnected from a voice channel.
+	/// Indicates that a member was disconnected from a voice channel.
 	/// </summary>
 	MemberDisconnect = 27,
 
@@ -91,47 +91,47 @@ public enum AuditLogActionType
 	BotAdd = 28,
 
 	/// <summary>
-	/// Indicates that the role was created.
+	/// Indicates that a role was created.
 	/// </summary>
 	RoleCreate = 30,
 
 	/// <summary>
-	/// Indicates that the role was updated.
+	/// Indicates that a role was updated.
 	/// </summary>
 	RoleUpdate = 31,
 
 	/// <summary>
-	/// Indicates that the role was deleted.
+	/// Indicates that a role was deleted.
 	/// </summary>
 	RoleDelete = 32,
 
 	/// <summary>
-	/// Indicates that the invite was created.
+	/// Indicates that an invite was created.
 	/// </summary>
 	InviteCreate = 40,
 
 	/// <summary>
-	/// Indicates that the invite was updated.
+	/// Indicates that an invite was updated.
 	/// </summary>
 	InviteUpdate = 41,
 
 	/// <summary>
-	/// Indicates that the invite was deleted.
+	/// Indicates that an invite was deleted.
 	/// </summary>
 	InviteDelete = 42,
 
 	/// <summary>
-	/// Indicates that the webhook was created.
+	/// Indicates that a webhook was created.
 	/// </summary>
 	WebhookCreate = 50,
 
 	/// <summary>
-	/// Indicates that the webook was updated.
+	/// Indicates that a webook was updated.
 	/// </summary>
 	WebhookUpdate = 51,
 
 	/// <summary>
-	/// Indicates that the webhook was deleted.
+	/// Indicates that a webhook was deleted.
 	/// </summary>
 	WebhookDelete = 52,
 
@@ -151,7 +151,7 @@ public enum AuditLogActionType
 	EmojiDelete = 62,
 
 	/// <summary>
-	/// Indicates that the message was deleted.
+	/// Indicates that a message was deleted.
 	/// </summary>
 	MessageDelete = 72,
 
@@ -186,32 +186,32 @@ public enum AuditLogActionType
 	IntegrationDelete = 82,
 
 	/// <summary>
-	/// Indicates that an stage instance was created.
+	/// Indicates that a stage instance was created.
 	/// </summary>
 	StageInstanceCreate = 83,
 
 	/// <summary>
-	/// Indicates that an stage instance was updated.
+	/// Indicates that a stage instance was updated.
 	/// </summary>
 	StageInstanceUpdate = 84,
 
 	/// <summary>
-	/// Indicates that an stage instance was deleted.
+	/// Indicates that a stage instance was deleted.
 	/// </summary>
 	StageInstanceDelete = 85,
 
 	/// <summary>
-	/// Indicates that an sticker was created.
+	/// Indicates that a sticker was created.
 	/// </summary>
 	StickerCreate = 90,
 
 	/// <summary>
-	/// Indicates that an sticker was updated.
+	/// Indicates that a sticker was updated.
 	/// </summary>
 	StickerUpdate = 91,
 
 	/// <summary>
-	/// Indicates that an sticker was deleted.
+	/// Indicates that a sticker was deleted.
 	/// </summary>
 	StickerDelete = 92,
 
@@ -231,37 +231,37 @@ public enum AuditLogActionType
 	GuildScheduledEventDelete = 102,
 
 	/// <summary>
-	/// Indicates that an thread was created.
+	/// Indicates that a thread was created.
 	/// </summary>
 	ThreadCreate = 110,
 
 	/// <summary>
-	/// Indicates that an thread was updated.
+	/// Indicates that a thread was updated.
 	/// </summary>
 	ThreadUpdate = 111,
 
 	/// <summary>
-	/// Indicates that an thread was deleted.
+	/// Indicates that a thread was deleted.
 	/// </summary>
 	ThreadDelete = 112,
 
 	/// <summary>
-	/// Indicates that the permissions for an application command was updated.
+	/// Indicates that permissions for an application command were updated.
 	/// </summary>
 	ApplicationCommandPermissionUpdate = 121,
 
 	/// <summary>
-	/// Indicates that a new automod rule has been added.
+	/// Indicates that an automod rule has been added.
 	/// </summary>
 	AutoModerationRuleCreate = 140,
 
 	/// <summary>
-	/// Indicates that a automod rule has been updated.
+	/// Indicates that an automod rule has been updated.
 	/// </summary>
 	AutoModerationRuleUpdate = 141,
 
 	/// <summary>
-	/// Indicates that a automod rule has been deleted.
+	/// Indicates that an automod rule has been deleted.
 	/// </summary>
 	AutoModerationRuleDelete = 142,
 
@@ -286,20 +286,53 @@ public enum AuditLogActionType
 	AutoModerationQuarantineUser = 146,
 
 	/// <summary>
-	/// Creator monetization request was created.
+	/// Indicates that a creator monetization request was created.
 	/// </summary>
 	CreatorMonetizationRequestCreated = 150,
 
 	/// <summary>
-	/// Creator monetization terms were accepted.
+	/// Indicates that the creator monetization terms were accepted.
 	/// </summary>
 	CreatorMonetizationTermsAccepted = 151,
 
+	/// <summary>
+	/// Indicates that an onboarding question was created.
+	/// </summary>
 	OnboardingQuestionCreate = 163,
+
+	/// <summary>
+	/// Indicates that an onboarding question was updated.
+	/// </summary>
 	OnboardingQuestionUpdate = 164,
+
+	/// <summary>
+	/// Indicates that the onboarding was updated.
+	/// </summary>
 	OnboardingUpdate = 167,
+
+	/// <summary>
+	/// Indicates that the server guide was created.
+	/// </summary>
 	ServerGuideCreate = 190,
+
+	/// <summary>
+	/// Indicates that the server guide was updated.
+	/// </summary>
 	ServerGuideUpdate = 191,
+
+	/// <summary>
+	/// Indicates that a voice channel status was updated.
+	/// </summary>
 	VoiceChannelStatusUpdate = 192,
-	VoiceChannelStatusDelete = 193
+
+	/// <summary>
+	/// Indicates that a voice channel status was deleted.
+	/// </summary>
+	VoiceChannelStatusDelete = 193,
+
+	/// <summary>
+	/// Indicates that the Clyde AI profile was updated.
+	/// </summary>
+	// ReSharper disable once InconsistentNaming
+	ClydeAIProfileUpdate = 194
 }

@@ -553,4 +553,5 @@ public static class Endpoints
 	public const string CONSENT = "/consent";
 	public const string SETTINGS = "/settings";
 	public const string INVENTORY = "/inventory";
+	public const string CLYDE_SETTINGS = "/clyde-settings";
 }
