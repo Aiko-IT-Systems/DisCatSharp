@@ -37,7 +37,7 @@ public class VoiceStateUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Gets the ID of voice session.
 	/// </summary>
-	internal string SessionId { get; set; }
+	public string SessionId { get; set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="VoiceStateUpdateEventArgs"/> class.

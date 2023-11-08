@@ -22,7 +22,7 @@ public class VoiceServerUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Gets the voice connection token.
 	/// </summary>
-	internal string VoiceToken { get; set; }
+	public string VoiceToken { get; set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="VoiceServerUpdateEventArgs"/> class.
