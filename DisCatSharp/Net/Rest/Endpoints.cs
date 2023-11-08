@@ -525,10 +525,13 @@ public static class Endpoints
 	public const string INCIDENT_ACTIONS = "/incident-actions";
 
 	public const string NEW_MEMBER_WELCOME = "/new-member-welcome";
+
 	[DiscordDeprecated]
 	public const string NEW_MEMBER_ACTIONS = "/new-member-actions";
+
 	[DiscordDeprecated]
 	public const string NEW_MEMBER_ACTION = "/new-member-action";
+
 	public const string APPLICATION_DIRECTORY = "/application-directory";
 	public const string SHARED_CANVAS = "/shared-canvas";
 	public const string LINES = "/lines";
@@ -550,4 +553,7 @@ public static class Endpoints
 	public const string CONSENT = "/consent";
 	public const string SETTINGS = "/settings";
 	public const string INVENTORY = "/inventory";
+	public const string CLYDE_SETTINGS = "/clyde-settings";
+	public const string CLYDE_PROFILES = "/clyde-profiles";
+	public const string GENERATE_PERSONALITY = "/generate-personality";
 }
