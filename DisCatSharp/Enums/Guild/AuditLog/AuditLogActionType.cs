@@ -300,5 +300,6 @@ public enum AuditLogActionType
 	OnboardingUpdate = 167,
 	ServerGuideCreate = 190,
 	ServerGuideUpdate = 191,
-	VoiceChannelStatusUpdate = 192
+	VoiceChannelStatusUpdate = 192,
+	VoiceChannelStatusDelete = 193
 }
