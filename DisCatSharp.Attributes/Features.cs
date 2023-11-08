@@ -31,7 +31,10 @@ public enum Features : long
 	ServerSubscription = 1<<6,
 
 	[FeatureDescription("Requires that the application has monetization enabled.")]
-	MonetizedApplication = 1<<7
+	MonetizedApplication = 1<<7,
+
+	[FeatureDescription("Requires that the user and/or guild has a specific experiment and/or treatment.")]
+	Experiment = 1<<8,
 }
 
 
