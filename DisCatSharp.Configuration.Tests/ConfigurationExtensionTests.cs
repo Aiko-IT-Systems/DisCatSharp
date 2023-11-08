@@ -14,26 +14,41 @@ namespace DisCatSharp.Configuration.Tests;
 
 public class ConfigurationExtensionTests
 {
-	#region Test Classes
-	class SampleClass
+#region Test Classes
+
+	private class SampleClass
 	{
 		public int Amount { get; set; }
 		public string? Email { get; set; }
 	}
 
-	class ClassWithArray
+	private class ClassWithArray
 	{
-		public int[] Values { get; set; } = { 1, 2, 3, 4, 5 };
-		public string[] Strings { get; set; } = { "1", "2", "3", "4", "5" };
+		public int[] Values { get; set; } =
+		{
+			1, 2, 3, 4, 5
+		};
+
+		public string[] Strings { get; set; } =
+		{
+			"1", "2", "3", "4", "5"
+		};
 	}
 
-	class ClassWithEnumerable
+	private class ClassWithEnumerable
 	{
-		public IEnumerable<int> Values { get; set; } = new[] { 1, 2, 3, 4, 5 };
-		public IEnumerable<string> Strings { get; set; } = new[] { "1", "2", "3", "4", "5" };
+		public IEnumerable<int> Values { get; set; } = new[]
+		{
+			1, 2, 3, 4, 5
+		};
+
+		public IEnumerable<string> Strings { get; set; } = new[]
+		{
+			"1", "2", "3", "4", "5"
+		};
 	}
 
-	class ClassWithList
+	private class ClassWithList
 	{
 		public List<string> Strings { get; set; } = new()
 		{
@@ -54,17 +69,19 @@ public class ConfigurationExtensionTests
 		};
 	}
 
-	class SampleClass2
+	private class SampleClass2
 	{
 		public TimeSpan Timeout { get; set; } = TimeSpan.FromMinutes(7);
 		public string Name { get; set; } = "Sample";
 		public string ConstructorValue { get; }
+
 		public SampleClass2(string value)
 		{
 			this.ConstructorValue = value;
 		}
 	}
-	#endregion
+
+#endregion
 
 	private IConfiguration EnumerableTestConfiguration() =>
 		new ConfigurationBuilder()
@@ -86,8 +103,8 @@ public class ConfigurationExtensionTests
 		.Build();
 
 	private IConfiguration DiscordIntentsConfig() => new ConfigurationBuilder()
-			.AddJsonFile("intents-discord.json")
-			.Build();
+		.AddJsonFile("intents-discord.json")
+		.Build();
 
 	private IConfiguration DiscordHaphazardConfig() => new ConfigurationBuilder()
 		.AddJsonFile("haphazard-discord.json")
@@ -97,44 +114,63 @@ public class ConfigurationExtensionTests
 	private IConfiguration SampleConfig() => new ConfigurationBuilder()
 		.AddInMemoryCollection(new Dictionary<string, string>
 		{
-			{ "Sample:Amount", "200" },
-			{ "Sample:Email", "test@gmail.com" }
+			{
+				"Sample:Amount", "200"
+			},
+			{
+				"Sample:Email", "test@gmail.com"
+			}
 		})
 		.Build();
 
 	private IConfiguration SampleClass2Configuration_Default() => new ConfigurationBuilder()
 		.AddInMemoryCollection(new Dictionary<string, string>
 		{
-			{"Random:Stuff", "Meow"},
-			{"SampleClass2:Name", "Purfection"}
+			{
+				"Random:Stuff", "Meow"
+			},
+			{
+				"SampleClass2:Name", "Purfection"
+			}
 		})
 		.Build();
 
 	private IConfiguration SampleClass2Configuration_Change() => new ConfigurationBuilder()
 		.AddInMemoryCollection(new Dictionary<string, string>
 		{
-			{ "SampleClass:Timeout", "01:30:00" }, { "SampleClass:NotValid", "Something" }
+			{
+				"SampleClass:Timeout", "01:30:00"
+			},
+			{
+				"SampleClass:NotValid", "Something"
+			}
 		})
 		.Build();
 
 	private IConfiguration SampleClass2EnumerableTest() => new ConfigurationBuilder()
 		.AddInMemoryCollection(new Dictionary<string, string>
 		{
-			{ "SampleClass:EnumerableTest", "[\"10\",\"20\",\"30\"]" }
+			{
+				"SampleClass:EnumerableTest", "[\"10\",\"20\",\"30\"]"
+			}
 		})
 		.Build();
 
 	private IConfiguration SampleClass2ArrayTest() => new ConfigurationBuilder()
 		.AddInMemoryCollection(new Dictionary<string, string>
 		{
-			{ "SampleClass:ArrayTest", "[\"10\",\"20\",\"30\"]" }
+			{
+				"SampleClass:ArrayTest", "[\"10\",\"20\",\"30\"]"
+			}
 		})
 		.Build();
 
 	private IConfiguration SampleClass2ListTest() => new ConfigurationBuilder()
 		.AddInMemoryCollection(new Dictionary<string, string>
 		{
-			{ "SampleClass:ListTest", "[\"10\",\"20\",\"30\"]" }
+			{
+				"SampleClass:ListTest", "[\"10\",\"20\",\"30\"]"
+			}
 		})
 		.Build();
 #pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
@@ -147,7 +183,7 @@ public class ConfigurationExtensionTests
 		var config = source.ExtractConfig<DiscordConfiguration>("Discord");
 
 		var expected = DiscordIntents.GuildEmojisAndStickers | DiscordIntents.GuildMembers |
-					   DiscordIntents.GuildInvites | DiscordIntents.GuildMessageReactions;
+		               DiscordIntents.GuildInvites | DiscordIntents.GuildMessageReactions;
 
 		Assert.Equal(expected, config.Intents);
 	}
@@ -159,7 +195,7 @@ public class ConfigurationExtensionTests
 
 		var config = source.ExtractConfig<DiscordConfiguration>("Discord");
 		var expectedIntents = DiscordIntents.GuildEmojisAndStickers | DiscordIntents.GuildMembers |
-							  DiscordIntents.Guilds;
+		                      DiscordIntents.Guilds;
 
 		Assert.Equal(expectedIntents, config.Intents);
 		Assert.True(config.MobileStatus);
@@ -206,7 +242,7 @@ public class ConfigurationExtensionTests
 	public void TestExtractConfig_V2_Default()
 	{
 		var source = this.SampleClass2Configuration_Default();
-		var config = (SampleClass2) source.ExtractConfig("SampleClass", () => new SampleClass2("Test"), null);
+		var config = (SampleClass2)source.ExtractConfig("SampleClass", () => new SampleClass2("Test"), null);
 		Assert.Equal(TimeSpan.FromMinutes(7), config.Timeout);
 		Assert.Equal("Test", config.ConstructorValue);
 		Assert.Equal("Sample", config.Name);
@@ -216,7 +252,7 @@ public class ConfigurationExtensionTests
 	public void TestExtractConfig_V2_Change()
 	{
 		var source = this.SampleClass2Configuration_Change();
-		var config = (SampleClass2) source.ExtractConfig("SampleClass", () => new SampleClass2("Test123"), null);
+		var config = (SampleClass2)source.ExtractConfig("SampleClass", () => new SampleClass2("Test123"), null);
 		var span = new TimeSpan(0, 1, 30, 0);
 		Assert.Equal(span, config.Timeout);
 		Assert.Equal("Test123", config.ConstructorValue);
@@ -314,4 +350,3 @@ public class ConfigurationExtensionTests
 #pragma warning restore 8625
 	}
 }
-

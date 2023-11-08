@@ -19,7 +19,6 @@ namespace DisCatSharp.Interactivity;
 /// </summary>
 public class InteractivityExtension : BaseExtension
 {
-
 	/// <summary>
 	/// Gets the config.
 	/// </summary>
@@ -44,7 +43,7 @@ public class InteractivityExtension : BaseExtension
 	private Poller _poller;
 
 	private Paginator _paginator;
-	private  ComponentPaginator _compPaginator;
+	private ComponentPaginator _compPaginator;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="InteractivityExtension"/> class.
@@ -52,7 +51,7 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="cfg">The configuration.</param>
 	internal InteractivityExtension(InteractivityConfiguration cfg)
 	{
-		this.Config = new InteractivityConfiguration(cfg);
+		this.Config = new(cfg);
 	}
 
 	/// <summary>
@@ -62,18 +61,17 @@ public class InteractivityExtension : BaseExtension
 	protected internal override void Setup(DiscordClient client)
 	{
 		this.Client = client;
-		this._messageCreatedWaiter = new EventWaiter<MessageCreateEventArgs>(this.Client);
-		this._messageReactionAddWaiter = new EventWaiter<MessageReactionAddEventArgs>(this.Client);
-		this._componentInteractionWaiter = new EventWaiter<ComponentInteractionCreateEventArgs>(this.Client);
-		this._modalInteractionWaiter = new EventWaiter<ComponentInteractionCreateEventArgs>(this.Client);
-		this._typingStartWaiter = new EventWaiter<TypingStartEventArgs>(this.Client);
-		this._poller = new Poller(this.Client);
-		this._reactionCollector = new ReactionCollector(this.Client);
-		this._paginator = new Paginator(this.Client);
-		this._compPaginator = new ComponentPaginator(this.Client, this.Config);
-		this._componentEventWaiter = new ComponentEventWaiter(this.Client, this.Config);
-		this._modalEventWaiter = new ModalEventWaiter(this.Client, this.Config);
-
+		this._messageCreatedWaiter = new(this.Client);
+		this._messageReactionAddWaiter = new(this.Client);
+		this._componentInteractionWaiter = new(this.Client);
+		this._modalInteractionWaiter = new(this.Client);
+		this._typingStartWaiter = new(this.Client);
+		this._poller = new(this.Client);
+		this._reactionCollector = new(this.Client);
+		this._paginator = new(this.Client);
+		this._compPaginator = new(this.Client, this.Config);
+		this._componentEventWaiter = new(this.Client, this.Config);
+		this._modalEventWaiter = new(this.Client, this.Config);
 	}
 
 	/// <summary>
@@ -95,7 +93,7 @@ public class InteractivityExtension : BaseExtension
 		foreach (var em in emojis)
 			await m.CreateReactionAsync(em).ConfigureAwait(false);
 
-		var res = await this._poller.DoPollAsync(new PollRequest(m, timeout ?? this.Config.Timeout, emojis)).ConfigureAwait(false);
+		var res = await this._poller.DoPollAsync(new(m, timeout ?? this.Config.Timeout, emojis)).ConfigureAwait(false);
 
 		var pollBehaviour = behaviour ?? this.Config.PollBehaviour;
 		var thisMember = await m.Channel.Guild.GetMemberAsync(this.Client.CurrentUser.Id).ConfigureAwait(false);
@@ -103,7 +101,7 @@ public class InteractivityExtension : BaseExtension
 		if (pollBehaviour == PollBehaviour.DeleteEmojis && m.Channel.PermissionsFor(thisMember).HasPermission(Permissions.ManageMessages))
 			await m.DeleteAllReactionsAsync().ConfigureAwait(false);
 
-		return new ReadOnlyCollection<PollEmoji>(res.ToList());
+		return new(res.ToList());
 	}
 
 	/// <summary>
@@ -127,7 +125,7 @@ public class InteractivityExtension : BaseExtension
 	/// <returns>A <see cref="InteractivityResult{T}"/> with the result of button that was pressed, if any.</returns>
 	/// <exception cref="InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
 	/// <exception cref="ArgumentException">Thrown when the message does not contain a button with the specified Id, or any buttons at all.</exception>
-																															public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, IEnumerable<DiscordButtonComponent> buttons, CancellationToken token)
+	public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, IEnumerable<DiscordButtonComponent> buttons, CancellationToken token)
 	{
 		if (message.Author != this.Client.CurrentUser)
 			throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
@@ -142,12 +140,12 @@ public class InteractivityExtension : BaseExtension
 			throw new ArgumentException("Provided Message does not contain any button components.");
 
 		var res = await this._componentEventWaiter
-			.WaitForMatchAsync(new ComponentMatchRequest(message,
+			.WaitForMatchAsync(new(message,
 				c =>
 					c.Interaction.Data.ComponentType == ComponentType.Button &&
 					buttons.Any(b => b.CustomId == c.Id), token)).ConfigureAwait(false);
 
-		return new InteractivityResult<ComponentInteractionCreateEventArgs>(res is null, res);
+		return new(res is null, res);
 	}
 
 	/// <summary>
@@ -156,8 +154,8 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="customId">The custom id of the modal to wait for.</param>
 	/// <param name="timeoutOverride">Override the timeout period specified in <see cref="InteractivityConfiguration"/>.</param>
 	/// <returns>A <see cref="InteractivityResult{T}"/> with the result of the modal.</returns>
-		public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForModalAsync(string customId, TimeSpan? timeoutOverride = null)
-			=> this.WaitForModalAsync(customId, this.GetCancellationToken(timeoutOverride));
+	public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForModalAsync(string customId, TimeSpan? timeoutOverride = null)
+		=> this.WaitForModalAsync(customId, this.GetCancellationToken(timeoutOverride));
 
 	/// <summary>
 	/// Waits for a user modal submit.
@@ -169,11 +167,11 @@ public class InteractivityExtension : BaseExtension
 	{
 		var result =
 			await this
-			._modalEventWaiter
-			.WaitForModalMatchAsync(new ModalMatchRequest(customId, c => c.Interaction.Type == InteractionType.ModalSubmit, token))
-			.ConfigureAwait(false);
+				._modalEventWaiter
+				.WaitForModalMatchAsync(new(customId, c => c.Interaction.Type == InteractionType.ModalSubmit, token))
+				.ConfigureAwait(false);
 
-		return new InteractivityResult<ComponentInteractionCreateEventArgs>(result is null, result);
+		return new(result is null, result);
 	}
 
 	/// <summary>
@@ -210,11 +208,11 @@ public class InteractivityExtension : BaseExtension
 
 		var result =
 			await this
-			._componentEventWaiter
-			.WaitForMatchAsync(new ComponentMatchRequest(message, c => c.Interaction.Data.ComponentType == ComponentType.Button && ids.Contains(c.Id), token))
-			.ConfigureAwait(false);
+				._componentEventWaiter
+				.WaitForMatchAsync(new(message, c => c.Interaction.Data.ComponentType == ComponentType.Button && ids.Contains(c.Id), token))
+				.ConfigureAwait(false);
 
-		return new InteractivityResult<ComponentInteractionCreateEventArgs>(result is null, result);
+		return new(result is null, result);
 	}
 
 	/// <summary>
@@ -251,11 +249,10 @@ public class InteractivityExtension : BaseExtension
 
 		var result = await this
 			._componentEventWaiter
-			.WaitForMatchAsync(new ComponentMatchRequest(message, (c) => c.Interaction.Data.ComponentType is ComponentType.Button && c.User == user, token))
+			.WaitForMatchAsync(new(message, (c) => c.Interaction.Data.ComponentType is ComponentType.Button && c.User == user, token))
 			.ConfigureAwait(false);
 
-		return new InteractivityResult<ComponentInteractionCreateEventArgs>(result is null, result);
-
+		return new(result is null, result);
 	}
 
 	/// <summary>
@@ -292,12 +289,13 @@ public class InteractivityExtension : BaseExtension
 
 		if (!message.Components.SelectMany(c => c.Components).OfType<DiscordButtonComponent>().Any(c => c.CustomId == id))
 			throw new ArgumentException($"Message does not contain button with Id of '{id}'.");
+
 		var result = await this
 			._componentEventWaiter
-			.WaitForMatchAsync(new ComponentMatchRequest(message, (c) => c.Interaction.Data.ComponentType is ComponentType.Button && c.Id == id, token))
+			.WaitForMatchAsync(new(message, (c) => c.Interaction.Data.ComponentType is ComponentType.Button && c.Id == id, token))
 			.ConfigureAwait(false);
 
-		return new InteractivityResult<ComponentInteractionCreateEventArgs>(result is null, result);
+		return new(result is null, result);
 	}
 
 	/// <summary>
@@ -328,12 +326,11 @@ public class InteractivityExtension : BaseExtension
 
 		var result = await this
 			._componentEventWaiter
-			.WaitForMatchAsync(new ComponentMatchRequest(message, c => c.Interaction.Data.ComponentType is ComponentType.Button && predicate(c), token))
+			.WaitForMatchAsync(new(message, c => c.Interaction.Data.ComponentType is ComponentType.Button && predicate(c), token))
 			.ConfigureAwait(false);
 
-		return new InteractivityResult<ComponentInteractionCreateEventArgs>(result is null, result);
+		return new(result is null, result);
 	}
-
 
 	/// <summary>
 	/// Waits for any dropdown to be interacted with.
@@ -367,10 +364,10 @@ public class InteractivityExtension : BaseExtension
 
 		var result = await this
 			._componentEventWaiter
-			.WaitForMatchAsync(new ComponentMatchRequest(message, c => c.Interaction.Data.ComponentType == selectType && predicate(c), token))
+			.WaitForMatchAsync(new(message, c => c.Interaction.Data.ComponentType == selectType && predicate(c), token))
 			.ConfigureAwait(false);
 
-		return new InteractivityResult<ComponentInteractionCreateEventArgs>(result is null, result);
+		return new(result is null, result);
 	}
 
 	/// <summary>
@@ -409,10 +406,10 @@ public class InteractivityExtension : BaseExtension
 
 		var result = await this
 			._componentEventWaiter
-			.WaitForMatchAsync(new ComponentMatchRequest(message, (c) => c.Interaction.Data.ComponentType == selectType && c.Id == id, token))
+			.WaitForMatchAsync(new(message, (c) => c.Interaction.Data.ComponentType == selectType && c.Id == id, token))
 			.ConfigureAwait(false);
 
-		return new InteractivityResult<ComponentInteractionCreateEventArgs>(result is null, result);
+		return new(result is null, result);
 	}
 
 	/// <summary>
@@ -452,27 +449,28 @@ public class InteractivityExtension : BaseExtension
 
 		var result = await this
 			._componentEventWaiter
-			.WaitForMatchAsync(new ComponentMatchRequest(message, (c) => c.Id == id && c.User == user, token)).ConfigureAwait(false);
+			.WaitForMatchAsync(new(message, (c) => c.Id == id && c.User == user, token)).ConfigureAwait(false);
 
-		return new InteractivityResult<ComponentInteractionCreateEventArgs>(result is null, result);
+		return new(result is null, result);
 	}
-
 
 	/// <summary>
 	/// Waits for a specific message.
 	/// </summary>
 	/// <param name="predicate">Predicate to match.</param>
 	/// <param name="timeoutOverride">Override timeout period.</param>
-	public async Task<InteractivityResult<DiscordMessage>> WaitForMessageAsync(Func<DiscordMessage, bool> predicate,
-		TimeSpan? timeoutOverride = null)
+	public async Task<InteractivityResult<DiscordMessage>> WaitForMessageAsync(
+		Func<DiscordMessage, bool> predicate,
+		TimeSpan? timeoutOverride = null
+	)
 	{
 		if (!Utilities.HasMessageIntents(this.Client.Configuration.Intents))
 			throw new InvalidOperationException("No message intents are enabled.");
 
 		var timeout = timeoutOverride ?? this.Config.Timeout;
-		var returns = await this._messageCreatedWaiter.WaitForMatchAsync(new MatchRequest<MessageCreateEventArgs>(x => predicate(x.Message), timeout)).ConfigureAwait(false);
+		var returns = await this._messageCreatedWaiter.WaitForMatchAsync(new(x => predicate(x.Message), timeout)).ConfigureAwait(false);
 
-		return new InteractivityResult<DiscordMessage>(returns == null, returns?.Message);
+		return new(returns == null, returns?.Message);
 	}
 
 	/// <summary>
@@ -480,16 +478,18 @@ public class InteractivityExtension : BaseExtension
 	/// </summary>
 	/// <param name="predicate">Predicate to match.</param>
 	/// <param name="timeoutOverride">Override timeout period.</param>
-	public async Task<InteractivityResult<MessageReactionAddEventArgs>> WaitForReactionAsync(Func<MessageReactionAddEventArgs, bool> predicate,
-		TimeSpan? timeoutOverride = null)
+	public async Task<InteractivityResult<MessageReactionAddEventArgs>> WaitForReactionAsync(
+		Func<MessageReactionAddEventArgs, bool> predicate,
+		TimeSpan? timeoutOverride = null
+	)
 	{
 		if (!Utilities.HasReactionIntents(this.Client.Configuration.Intents))
 			throw new InvalidOperationException("No reaction intents are enabled.");
 
 		var timeout = timeoutOverride ?? this.Config.Timeout;
-		var returns = await this._messageReactionAddWaiter.WaitForMatchAsync(new MatchRequest<MessageReactionAddEventArgs>(predicate, timeout)).ConfigureAwait(false);
+		var returns = await this._messageReactionAddWaiter.WaitForMatchAsync(new(predicate, timeout)).ConfigureAwait(false);
 
-		return new InteractivityResult<MessageReactionAddEventArgs>(returns == null, returns);
+		return new(returns == null, returns);
 	}
 
 	/// <summary>
@@ -499,8 +499,11 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="message">Message reaction was added to.</param>
 	/// <param name="user">User that made the reaction.</param>
 	/// <param name="timeoutOverride">Override timeout period.</param>
-	public async Task<InteractivityResult<MessageReactionAddEventArgs>> WaitForReactionAsync(DiscordMessage message, DiscordUser user,
-		TimeSpan? timeoutOverride = null)
+	public async Task<InteractivityResult<MessageReactionAddEventArgs>> WaitForReactionAsync(
+		DiscordMessage message,
+		DiscordUser user,
+		TimeSpan? timeoutOverride = null
+	)
 		=> await this.WaitForReactionAsync(x => x.User.Id == user.Id && x.Message.Id == message.Id, timeoutOverride).ConfigureAwait(false);
 
 	/// <summary>
@@ -511,8 +514,12 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="message">Message reaction was added to.</param>
 	/// <param name="user">User that made the reaction.</param>
 	/// <param name="timeoutOverride">Override timeout period.</param>
-	public async Task<InteractivityResult<MessageReactionAddEventArgs>> WaitForReactionAsync(Func<MessageReactionAddEventArgs, bool> predicate,
-		DiscordMessage message, DiscordUser user, TimeSpan? timeoutOverride = null)
+	public async Task<InteractivityResult<MessageReactionAddEventArgs>> WaitForReactionAsync(
+		Func<MessageReactionAddEventArgs, bool> predicate,
+		DiscordMessage message,
+		DiscordUser user,
+		TimeSpan? timeoutOverride = null
+	)
 		=> await this.WaitForReactionAsync(x => predicate(x) && x.User.Id == user.Id && x.Message.Id == message.Id, timeoutOverride).ConfigureAwait(false);
 
 	/// <summary>
@@ -522,8 +529,11 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="predicate">predicate to match.</param>
 	/// <param name="user">User that made the reaction.</param>
 	/// <param name="timeoutOverride">Override timeout period.</param>
-	public async Task<InteractivityResult<MessageReactionAddEventArgs>> WaitForReactionAsync(Func<MessageReactionAddEventArgs, bool> predicate,
-		DiscordUser user, TimeSpan? timeoutOverride = null)
+	public async Task<InteractivityResult<MessageReactionAddEventArgs>> WaitForReactionAsync(
+		Func<MessageReactionAddEventArgs, bool> predicate,
+		DiscordUser user,
+		TimeSpan? timeoutOverride = null
+	)
 		=> await this.WaitForReactionAsync(x => predicate(x) && x.User.Id == user.Id, timeoutOverride).ConfigureAwait(false);
 
 	/// <summary>
@@ -532,18 +542,21 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="user">User that starts typing.</param>
 	/// <param name="channel">Channel the user is typing in.</param>
 	/// <param name="timeoutOverride">Override timeout period.</param>
-	public async Task<InteractivityResult<TypingStartEventArgs>> WaitForUserTypingAsync(DiscordUser user,
-		DiscordChannel channel, TimeSpan? timeoutOverride = null)
+	public async Task<InteractivityResult<TypingStartEventArgs>> WaitForUserTypingAsync(
+		DiscordUser user,
+		DiscordChannel channel,
+		TimeSpan? timeoutOverride = null
+	)
 	{
 		if (!Utilities.HasTypingIntents(this.Client.Configuration.Intents))
 			throw new InvalidOperationException("No typing intents are enabled.");
 
 		var timeout = timeoutOverride ?? this.Config.Timeout;
 		var returns = await this._typingStartWaiter.WaitForMatchAsync(
-			new MatchRequest<TypingStartEventArgs>(x => x.User.Id == user.Id && x.Channel.Id == channel.Id, timeout))
+				new(x => x.User.Id == user.Id && x.Channel.Id == channel.Id, timeout))
 			.ConfigureAwait(false);
 
-		return new InteractivityResult<TypingStartEventArgs>(returns == null, returns);
+		return new(returns == null, returns);
 	}
 
 	/// <summary>
@@ -558,10 +571,10 @@ public class InteractivityExtension : BaseExtension
 
 		var timeout = timeoutOverride ?? this.Config.Timeout;
 		var returns = await this._typingStartWaiter.WaitForMatchAsync(
-			new MatchRequest<TypingStartEventArgs>(x => x.User.Id == user.Id, timeout))
+				new(x => x.User.Id == user.Id, timeout))
 			.ConfigureAwait(false);
 
-		return new InteractivityResult<TypingStartEventArgs>(returns == null, returns);
+		return new(returns == null, returns);
 	}
 
 	/// <summary>
@@ -576,10 +589,10 @@ public class InteractivityExtension : BaseExtension
 
 		var timeout = timeoutOverride ?? this.Config.Timeout;
 		var returns = await this._typingStartWaiter.WaitForMatchAsync(
-			new MatchRequest<TypingStartEventArgs>(x => x.Channel.Id == channel.Id, timeout))
+				new(x => x.Channel.Id == channel.Id, timeout))
 			.ConfigureAwait(false);
 
-		return new InteractivityResult<TypingStartEventArgs>(returns == null, returns);
+		return new(returns == null, returns);
 	}
 
 	/// <summary>
@@ -593,7 +606,7 @@ public class InteractivityExtension : BaseExtension
 			throw new InvalidOperationException("No reaction intents are enabled.");
 
 		var timeout = timeoutOverride ?? this.Config.Timeout;
-		var collection = await this._reactionCollector.CollectAsync(new ReactionCollectRequest(m, timeout)).ConfigureAwait(false);
+		var collection = await this._reactionCollector.CollectAsync(new(m, timeout)).ConfigureAwait(false);
 
 		return collection;
 	}
@@ -609,8 +622,8 @@ public class InteractivityExtension : BaseExtension
 		var timeout = timeoutOverride ?? this.Config.Timeout;
 
 		using var waiter = new EventWaiter<T>(this.Client);
-		var res = await waiter.WaitForMatchAsync(new MatchRequest<T>(predicate, timeout)).ConfigureAwait(false);
-		return new InteractivityResult<T>(res == null, res);
+		var res = await waiter.WaitForMatchAsync(new(predicate, timeout)).ConfigureAwait(false);
+		return new(res == null, res);
 	}
 
 	/// <summary>
@@ -623,7 +636,7 @@ public class InteractivityExtension : BaseExtension
 		var timeout = timeoutOverride ?? this.Config.Timeout;
 
 		using var waiter = new EventWaiter<T>(this.Client);
-		var res = await waiter.CollectMatchesAsync(new CollectRequest<T>(predicate, timeout)).ConfigureAwait(false);
+		var res = await waiter.CollectMatchesAsync(new(predicate, timeout)).ConfigureAwait(false);
 		return res;
 	}
 
@@ -638,14 +651,20 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="deletion">Deletion behaviour.</param>
 	/// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
 	public async Task SendPaginatedMessageAsync(
-		DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons,
-		PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default, CancellationToken token = default)
+		DiscordChannel channel,
+		DiscordUser user,
+		IEnumerable<Page> pages,
+		PaginationButtons buttons,
+		PaginationBehaviour? behaviour = default,
+		ButtonPaginationBehavior? deletion = default,
+		CancellationToken token = default
+	)
 	{
 		var bhv = behaviour ?? this.Config.PaginationBehaviour;
 		var del = deletion ?? this.Config.ButtonBehavior;
 		var bts = buttons ?? this.Config.PaginationButtons;
 
-		bts = new PaginationButtons(bts);
+		bts = new(bts);
 		if (bhv is PaginationBehaviour.Ignore)
 		{
 			bts.SkipLeft.Disable();
@@ -675,8 +694,14 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="deletion">Deletion behaviour.</param>
 	/// <param name="timeoutOverride">Override timeout period.</param>
 	public Task SendPaginatedMessageAsync(
-		DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons, TimeSpan? timeoutOverride,
-		PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default)
+		DiscordChannel channel,
+		DiscordUser user,
+		IEnumerable<Page> pages,
+		PaginationButtons buttons,
+		TimeSpan? timeoutOverride,
+		PaginationBehaviour? behaviour = default,
+		ButtonPaginationBehavior? deletion = default
+	)
 		=> this.SendPaginatedMessageAsync(channel, user, pages, buttons, behaviour, deletion, this.GetCancellationToken(timeoutOverride));
 
 	/// <summary>
@@ -716,8 +741,15 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="behaviour">Pagination behaviour (when hitting max and min indices).</param>
 	/// <param name="deletion">Deletion behaviour.</param>
 	/// <param name="timeoutOverride">Override timeout period.</param>
-	public async Task SendPaginatedMessageAsync(DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationEmojis emojis,
-		PaginationBehaviour? behaviour = default, PaginationDeletion? deletion = default, TimeSpan? timeoutOverride = null)
+	public async Task SendPaginatedMessageAsync(
+		DiscordChannel channel,
+		DiscordUser user,
+		IEnumerable<Page> pages,
+		PaginationEmojis emojis,
+		PaginationBehaviour? behaviour = default,
+		PaginationDeletion? deletion = default,
+		TimeSpan? timeoutOverride = null
+	)
 	{
 		var builder = new DiscordMessageBuilder()
 			.WithContent(pages.First().Content)
@@ -756,7 +788,7 @@ public class InteractivityExtension : BaseExtension
 		var del = deletion ?? this.Config.ButtonBehavior;
 		var bts = buttons ?? this.Config.PaginationButtons;
 
-		bts = new PaginationButtons(bts);
+		bts = new(bts);
 		if (bhv is PaginationBehaviour.Ignore)
 		{
 			bts.SkipLeft.Disable();
@@ -777,17 +809,17 @@ public class InteractivityExtension : BaseExtension
 		if (deferred)
 		{
 			var builder = new DiscordWebhookBuilder()
-			.WithContent(pages.First().Content)
-			.AddEmbed(pages.First().Embed)
-			.AddComponents(bts.ButtonArray);
+				.WithContent(pages.First().Content)
+				.AddEmbed(pages.First().Embed)
+				.AddComponents(bts.ButtonArray);
 			message = await interaction.EditOriginalResponseAsync(builder).ConfigureAwait(false);
 		}
 		else
 		{
 			var builder = new DiscordInteractionResponseBuilder()
-			.WithContent(pages.First().Content)
-			.AddEmbed(pages.First().Embed)
-			.AddComponents(bts.ButtonArray);
+				.WithContent(pages.First().Content)
+				.AddEmbed(pages.First().Embed)
+				.AddComponents(bts.ButtonArray);
 			if (ephemeral)
 				builder = builder.AsEphemeral();
 			await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, builder).ConfigureAwait(false);
@@ -798,7 +830,6 @@ public class InteractivityExtension : BaseExtension
 
 		await this._compPaginator.DoPaginationAsync(req).ConfigureAwait(false);
 	}
-
 
 	/// <summary>
 	/// Waits for a custom pagination request to finish.
@@ -839,7 +870,7 @@ public class InteractivityExtension : BaseExtension
 			case SplitType.Line:
 				var subsplit = input.Split('\n');
 
-				split = new List<string>();
+				split = new();
 				var s = "";
 
 				for (var i = 0; i < subsplit.Length; i++)
@@ -851,6 +882,7 @@ public class InteractivityExtension : BaseExtension
 						s = "";
 					}
 				}
+
 				if (split.All(x => x != s))
 					split.Add(s);
 				break;
@@ -859,7 +891,7 @@ public class InteractivityExtension : BaseExtension
 		var page = 1;
 		foreach (var s in split)
 		{
-			result.Add(new Page($"Page {page}:\n{s}"));
+			result.Add(new($"Page {page}:\n{s}"));
 			page++;
 		}
 
@@ -892,7 +924,7 @@ public class InteractivityExtension : BaseExtension
 			case SplitType.Line:
 				var subsplit = input.Split('\n');
 
-				split = new List<string>();
+				split = new();
 				var s = "";
 
 				for (var i = 0; i < subsplit.Length; i++)
@@ -904,6 +936,7 @@ public class InteractivityExtension : BaseExtension
 						s = "";
 					}
 				}
+
 				if (!split.Any(x => x == s))
 					split.Add(s);
 				break;
@@ -912,7 +945,7 @@ public class InteractivityExtension : BaseExtension
 		var page = 1;
 		foreach (var s in split)
 		{
-			result.Add(new Page("", new DiscordEmbedBuilder(embed).WithDescription(s).WithFooter($"Page {page}/{split.Count}")));
+			result.Add(new("", new DiscordEmbedBuilder(embed).WithDescription(s).WithFooter($"Page {page}/{split.Count}")));
 			page++;
 		}
 
@@ -955,7 +988,10 @@ public class InteractivityExtension : BaseExtension
 		var at = this.Config.ResponseBehavior switch
 		{
 			InteractionResponseBehavior.Ack => interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate),
-			InteractionResponseBehavior.Respond => interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder { Content = this.Config.ResponseMessage, IsEphemeral = true}),
+			InteractionResponseBehavior.Respond => interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new()
+			{
+				Content = this.Config.ResponseMessage, IsEphemeral = true
+			}),
 			InteractionResponseBehavior.Ignore => Task.CompletedTask,
 			_ => throw new ArgumentException("Unknown enum value.")
 		};

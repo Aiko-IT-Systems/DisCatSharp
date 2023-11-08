@@ -21,7 +21,7 @@ public sealed class AsyncManualResetEvent
 	/// <param name="initialState">Initial state of this event.</param>
 	public AsyncManualResetEvent(bool initialState)
 	{
-		this._resetTcs = new TaskCompletionSource<bool>();
+		this._resetTcs = new();
 		if (initialState)
 			this._resetTcs.TrySetResult(initialState);
 	}
@@ -51,7 +51,7 @@ public sealed class AsyncManualResetEvent
 		while (true)
 		{
 			var tcs = this._resetTcs;
-			if (!tcs.Task.IsCompleted || Interlocked.CompareExchange(ref this._resetTcs, new TaskCompletionSource<bool>(), tcs) == tcs)
+			if (!tcs.Task.IsCompleted || Interlocked.CompareExchange(ref this._resetTcs, new(), tcs) == tcs)
 				return;
 		}
 	}

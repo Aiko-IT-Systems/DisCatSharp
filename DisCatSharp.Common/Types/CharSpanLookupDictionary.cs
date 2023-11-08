@@ -18,10 +18,12 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// Gets the collection of all keys present in this dictionary.
 	/// </summary>
 	public IEnumerable<string> Keys => this.GetKeysInternal();
+
 	/// <summary>
 	/// Gets the keys.
 	/// </summary>
 	ICollection<string> IDictionary<string, TValue>.Keys => this.GetKeysInternal();
+
 	/// <summary>
 	/// Gets the keys.
 	/// </summary>
@@ -31,10 +33,12 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// Gets the collection of all values present in this dictionary.
 	/// </summary>
 	public IEnumerable<TValue> Values => this.GetValuesInternal();
+
 	/// <summary>
 	/// Gets the values.
 	/// </summary>
 	ICollection<TValue> IDictionary<string, TValue>.Values => this.GetValuesInternal();
+
 	/// <summary>
 	/// Gets the values.
 	/// </summary>
@@ -112,7 +116,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 			unsafe
 			{
 				fixed (char* chars = &key.GetPinnableReference())
-					this.TryInsertInternal(new string(chars, 0, key.Length), value, true);
+					this.TryInsertInternal(new(chars, 0, key.Length), value, true);
 			}
 		}
 	}
@@ -156,7 +160,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// </summary>
 	public CharSpanLookupDictionary()
 	{
-		this._internalBuckets = new Dictionary<ulong, KeyedValue>();
+		this._internalBuckets = new();
 	}
 
 	/// <summary>
@@ -165,7 +169,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <param name="initialCapacity">Initial capacity of the dictionary.</param>
 	public CharSpanLookupDictionary(int initialCapacity)
 	{
-		this._internalBuckets = new Dictionary<ulong, KeyedValue>(initialCapacity);
+		this._internalBuckets = new(initialCapacity);
 	}
 
 	/// <summary>
@@ -184,7 +188,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// </summary>
 	/// <param name="values">Dictionary containing items to populate this dictionary with.</param>
 	public CharSpanLookupDictionary(IReadOnlyDictionary<string, TValue> values)
-		 : this(values.Count)
+		: this(values.Count)
 	{
 		foreach (var (k, v) in values)
 			this.Add(k, v);
@@ -222,7 +226,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		unsafe
 		{
 			fixed (char* chars = &key.GetPinnableReference())
-				if (!this.TryInsertInternal(new string(chars, 0, key.Length), value, false))
+				if (!this.TryInsertInternal(new(chars, 0, key.Length), value, false))
 					throw new ArgumentException("Given key is already present in the dictionary.", nameof(key));
 		}
 	}
@@ -247,7 +251,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		unsafe
 		{
 			fixed (char* chars = &key.GetPinnableReference())
-				return this.TryInsertInternal(new string(chars, 0, key.Length), value, false);
+				return this.TryInsertInternal(new(chars, 0, key.Length), value, false);
 		}
 	}
 
@@ -428,7 +432,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 			var kdv = v;
 			while (kdv != null)
 			{
-				array[i++] = new KeyValuePair<string, TValue>(kdv.Key, kdv.Value);
+				array[i++] = new(kdv.Key, kdv.Value);
 				kdv = kdv.Next;
 			}
 		}
@@ -484,7 +488,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		var hash = key.CalculateKnuthHash();
 		if (!this._internalBuckets.ContainsKey(hash))
 		{
-			this._internalBuckets.Add(hash, new KeyedValue(key, hash, value));
+			this._internalBuckets.Add(hash, new(key, hash, value));
 			this.Count++;
 			return true;
 		}
@@ -506,7 +510,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 			kdv = kdv.Next;
 		}
 
-		kdvLast.Next = new KeyedValue(key, hash, value);
+		kdvLast.Next = new(key, hash, value);
 		this.Count++;
 		return true;
 	}
@@ -526,13 +530,11 @@ public sealed class CharSpanLookupDictionary<TValue> :
 			return false;
 
 		while (kdv != null)
-		{
 			if (key.SequenceEqual(kdv.Key.AsSpan()))
 			{
 				value = kdv.Value;
 				return true;
 			}
-		}
 
 		return false;
 	}
@@ -561,11 +563,8 @@ public sealed class CharSpanLookupDictionary<TValue> :
 			return true;
 		}
 		else if (kdv.Next == null)
-		{
 			// Only bucket under this hash and key does not match, cannot remove
-
 			return false;
-		}
 		else if (key.SequenceEqual(kdv.Key.AsSpan()))
 		{
 			// First key in the bucket matches, pop it and set its child as current bucket
@@ -668,10 +667,12 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		/// Gets the key hash.
 		/// </summary>
 		public ulong KeyHash { get; }
+
 		/// <summary>
 		/// Gets the key.
 		/// </summary>
 		public string Key { get; }
+
 		/// <summary>
 		/// Gets or sets the value.
 		/// </summary>
@@ -707,18 +708,22 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		/// Gets the current.
 		/// </summary>
 		public KeyValuePair<string, TValue> Current { get; private set; }
+
 		/// <summary>
 		/// Gets the current.
 		/// </summary>
 		object IEnumerator.Current => this.Current;
+
 		/// <summary>
 		/// Gets the key.
 		/// </summary>
 		object IDictionaryEnumerator.Key => this.Current.Key;
+
 		/// <summary>
 		/// Gets the value.
 		/// </summary>
 		object IDictionaryEnumerator.Value => this.Current.Value;
+
 		/// <summary>
 		/// Gets the entry.
 		/// </summary>
@@ -762,13 +767,13 @@ public sealed class CharSpanLookupDictionary<TValue> :
 					return false;
 
 				kdv = this._internalEnumerator.Current.Value;
-				this.Current = new KeyValuePair<string, TValue>(kdv.Key, kdv.Value);
+				this.Current = new(kdv.Key, kdv.Value);
 
 				this._currentValue = kdv.Next;
 				return true;
 			}
 
-			this.Current = new KeyValuePair<string, TValue>(kdv.Key, kdv.Value);
+			this.Current = new(kdv.Key, kdv.Value);
 			this._currentValue = kdv.Next;
 			return true;
 		}

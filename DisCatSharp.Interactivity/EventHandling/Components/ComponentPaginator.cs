@@ -70,7 +70,6 @@ internal class ComponentPaginator : IPaginator
 	/// </summary>
 	public void Dispose() => this._client.ComponentInteractionCreated -= this.Handle;
 
-
 	/// <summary>
 	/// Handles the pagination event.
 	/// </summary>
@@ -93,7 +92,10 @@ internal class ComponentPaginator : IPaginator
 		if (await req.GetUserAsync().ConfigureAwait(false) != e.User)
 		{
 			if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
-				await e.Interaction.CreateFollowupMessageAsync(new DiscordFollowupMessageBuilder { Content = this._config.ResponseMessage, IsEphemeral = true }).ConfigureAwait(false);
+				await e.Interaction.CreateFollowupMessageAsync(new()
+				{
+					Content = this._config.ResponseMessage, IsEphemeral = true
+				}).ConfigureAwait(false);
 
 			return;
 		}
@@ -124,7 +126,7 @@ internal class ComponentPaginator : IPaginator
 			_ when id == buttons.SkipRight.CustomId => request.SkipRightAsync(),
 			_ when id == buttons.Stop.CustomId => Task.FromResult(tcs.TrySetResult(true)),
 			_ when id == buttons.Left.CustomId => request.PreviousPageAsync(),
-			_ when id == buttons.Right.CustomId => request.NextPageAsync(),
+			_ when id == buttons.Right.CustomId => request.NextPageAsync()
 		};
 
 		await paginationTask.ConfigureAwait(false);
@@ -133,7 +135,6 @@ internal class ComponentPaginator : IPaginator
 			return;
 
 		var page = await request.GetPageAsync().ConfigureAwait(false);
-
 
 		var bts = await request.GetButtonsAsync().ConfigureAwait(false);
 
@@ -156,6 +157,5 @@ internal class ComponentPaginator : IPaginator
 			.AddComponents(bts);
 
 		await this._builder.ModifyAsync(msg).ConfigureAwait(false);
-
 	}
 }

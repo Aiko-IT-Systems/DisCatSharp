@@ -54,7 +54,7 @@ public sealed class ApplicationCommandRequirePremiumAttribute : ApplicationComma
 /// <summary>
 /// Defines that usage of this application command is restricted to users with a test entitlement.
 /// </summary>
-[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false),RequiresFeature(Features.MonetizedApplication)]
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false), RequiresFeature(Features.MonetizedApplication)]
 public sealed class ApplicationCommandRequirePremiumTestAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>

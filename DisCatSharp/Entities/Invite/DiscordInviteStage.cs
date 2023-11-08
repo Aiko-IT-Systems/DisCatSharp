@@ -18,8 +18,7 @@ public class DiscordInviteStage : SnowflakeObject
 	[JsonIgnore]
 	public IReadOnlyDictionary<ulong, DiscordMember> Members { get; internal set; }
 
-	[JsonProperty("members", NullValueHandling = NullValueHandling.Ignore)]
-	[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
+	[JsonProperty("members", NullValueHandling = NullValueHandling.Ignore), JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
 	internal ConcurrentDictionary<ulong, DiscordMember> MembersInternal = new();
 
 	/// <summary>

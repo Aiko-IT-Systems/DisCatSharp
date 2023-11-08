@@ -37,9 +37,7 @@ public static class StreamExtensions
 		{
 			int bytesRead;
 			while ((bytesRead = await source.ReadAsync(buffer.AsMemory(0, bufferLength), cancellationToken).ConfigureAwait(false)) != 0)
-			{
-				await destination.WriteAsync(new ReadOnlyMemory<byte>(buffer, 0, bytesRead), cancellationToken).ConfigureAwait(false);
-			}
+				await destination.WriteAsync(new(buffer, 0, bytesRead), cancellationToken).ConfigureAwait(false);
 		}
 		finally
 		{

@@ -54,8 +54,6 @@ public sealed class RequireBoostingAttribute : CheckBaseAttribute
 			return member != null && member.PremiumSince.HasValue ? await Task.FromResult(member.PremiumSince.Value.UtcDateTime.Date < DateTime.UtcNow.Date.AddDays(-this.Since)).ConfigureAwait(false) : await Task.FromResult(false).ConfigureAwait(false);
 		}
 		else
-		{
 			return ctx.Member != null && ctx.Member.PremiumSince.HasValue ? await Task.FromResult(ctx.Member.PremiumSince.Value.UtcDateTime.Date < DateTime.UtcNow.Date.AddDays(-this.Since)).ConfigureAwait(false) : await Task.FromResult(false).ConfigureAwait(false);
-		}
 	}
 }

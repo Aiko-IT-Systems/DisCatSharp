@@ -305,7 +305,7 @@ public static class Extensions
 	/// <returns>Whether the character is in basic alphanumeric character range.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool IsBasicAlphanumeric(this char c)
-		=> (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
+		=> c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9';
 
 	/// <summary>
 	/// Returns whether supplied character is in the 0-9 range.
@@ -323,7 +323,7 @@ public static class Extensions
 	/// <returns>Whether the character is in basic letter character range.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool IsBasicLetter(this char c)
-		=> (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+		=> c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z';
 
 	/// <summary>
 	/// Tests whether given string ends with given character.
@@ -452,7 +452,6 @@ public static class Extensions
 		if (!enumerator.MoveNext())
 			return false;
 
-
 		values = (first, enumerator.Current);
 		return true;
 	}
@@ -481,13 +480,11 @@ public static class Extensions
 	internal static bool RemoveFirst<T>(this IList<T> list, Predicate<T> predicate)
 	{
 		for (var i = 0; i < list.Count; i++)
-		{
 			if (predicate(list[i]))
 			{
 				list.RemoveAt(i);
 				return true;
 			}
-		}
 
 		return false;
 	}
@@ -501,8 +498,6 @@ public static class Extensions
 	internal static void Populate<T>(this T[] arr, T value)
 	{
 		for (var i = 0; i < arr.Length; i++)
-		{
 			arr[i] = value;
-		}
 	}
 }

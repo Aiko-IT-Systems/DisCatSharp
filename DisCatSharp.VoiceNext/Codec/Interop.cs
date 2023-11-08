@@ -8,7 +8,8 @@ namespace DisCatSharp.VoiceNext.Codec;
 /// </summary>
 internal static class Interop
 {
-	#region Sodium wrapper
+#region Sodium wrapper
+
 	/// <summary>
 	/// The sodium library name.
 	/// </summary>
@@ -63,7 +64,7 @@ internal static class Interop
 	/// <param name="key">The key.</param>
 	/// <returns>An int.</returns>
 	[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_easy")]
-	private static unsafe extern int _SodiumSecretBoxCreate(byte* buffer, byte* message, ulong messageLength, byte* nonce, byte* key);
+	private static extern unsafe int _SodiumSecretBoxCreate(byte* buffer, byte* message, ulong messageLength, byte* nonce, byte* key);
 
 	/// <summary>
 	/// _S the sodium secret box open.
@@ -75,7 +76,7 @@ internal static class Interop
 	/// <param name="key">The key.</param>
 	/// <returns>An int.</returns>
 	[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_open_easy")]
-	private static unsafe extern int _SodiumSecretBoxOpen(byte* buffer, byte* encryptedMessage, ulong encryptedLength, byte* nonce, byte* key);
+	private static extern unsafe int _SodiumSecretBoxOpen(byte* buffer, byte* encryptedMessage, ulong encryptedLength, byte* nonce, byte* key);
 
 	/// <summary>
 	/// Encrypts supplied buffer using xsalsa20_poly1305 algorithm, using supplied key and nonce to perform encryption.
@@ -116,9 +117,11 @@ internal static class Interop
 
 		return status;
 	}
-	#endregion
 
-	#region Opus wrapper
+#endregion
+
+#region Opus wrapper
+
 	/// <summary>
 	/// The opus library name.
 	/// </summary>
@@ -152,7 +155,7 @@ internal static class Interop
 	/// <param name="maxDataBytes">The max data bytes.</param>
 	/// <returns>An int.</returns>
 	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_encode")]
-	private static unsafe extern int _OpusEncode(IntPtr encoder, byte* pcmData, int frameSize, byte* data, int maxDataBytes);
+	private static extern unsafe int _OpusEncode(IntPtr encoder, byte* pcmData, int frameSize, byte* data, int maxDataBytes);
 
 	/// <summary>
 	/// _S the opus encoder control.
@@ -192,7 +195,7 @@ internal static class Interop
 	/// <param name="decodeFec">The decode fec.</param>
 	/// <returns>An int.</returns>
 	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_decode")]
-	private static unsafe extern int _OpusDecode(IntPtr decoder, byte* opusData, int opusDataLength, byte* data, int frameSize, int decodeFec);
+	private static extern unsafe int _OpusDecode(IntPtr decoder, byte* opusData, int opusDataLength, byte* data, int frameSize, int decodeFec);
 
 	/// <summary>
 	/// _S the opus get packet channel count.
@@ -200,7 +203,7 @@ internal static class Interop
 	/// <param name="opusData">The opus data.</param>
 	/// <returns>An int.</returns>
 	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_packet_get_nb_channels")]
-	private static unsafe extern int _OpusGetPacketChannelCount(byte* opusData);
+	private static extern unsafe int _OpusGetPacketChannelCount(byte* opusData);
 
 	/// <summary>
 	/// _S the opus get packet frame count.
@@ -209,7 +212,7 @@ internal static class Interop
 	/// <param name="length">The length.</param>
 	/// <returns>An int.</returns>
 	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_packet_get_nb_frames")]
-	private static unsafe extern int _OpusGetPacketFrameCount(byte* opusData, int length);
+	private static extern unsafe int _OpusGetPacketFrameCount(byte* opusData, int length);
 
 	/// <summary>
 	/// _S the opus get packet sample per frame count.
@@ -218,7 +221,7 @@ internal static class Interop
 	/// <param name="samplingRate">The sampling rate.</param>
 	/// <returns>An int.</returns>
 	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_packet_get_samples_per_frame")]
-	private static unsafe extern int _OpusGetPacketSamplePerFrameCount(byte* opusData, int samplingRate);
+	private static extern unsafe int _OpusGetPacketSamplePerFrameCount(byte* opusData, int samplingRate);
 
 	/// <summary>
 	/// _S the opus decoder control.
@@ -238,7 +241,7 @@ internal static class Interop
 	public static IntPtr OpusCreateEncoder(AudioFormat audioFormat)
 	{
 		var encoder = _OpusCreateEncoder(audioFormat.SampleRate, audioFormat.ChannelCount, (int)audioFormat.VoiceApplication, out var error);
-		return error != OpusError.Ok ? throw new Exception($"Could not instantiate Opus encoder: {error} ({(int)error}).") : encoder;
+		return error != OpusError.Ok ? throw new($"Could not instantiate Opus encoder: {error} ({(int)error}).") : encoder;
 	}
 
 	/// <summary>
@@ -251,7 +254,7 @@ internal static class Interop
 	{
 		var error = OpusError.Ok;
 		if ((error = _OpusEncoderControl(encoder, option, value)) != OpusError.Ok)
-			throw new Exception($"Could not set Opus encoder option: {error} ({(int)error}).");
+			throw new($"Could not set Opus encoder option: {error} ({(int)error}).");
 	}
 
 	/// <summary>
@@ -272,7 +275,7 @@ internal static class Interop
 		if (len < 0)
 		{
 			var error = (OpusError)len;
-			throw new Exception($"Could not encode PCM data to Opus: {error} ({(int)error}).");
+			throw new($"Could not encode PCM data to Opus: {error} ({(int)error}).");
 		}
 
 		opus = opus[..len];
@@ -286,7 +289,7 @@ internal static class Interop
 	public static IntPtr OpusCreateDecoder(AudioFormat audioFormat)
 	{
 		var decoder = _OpusCreateDecoder(audioFormat.SampleRate, audioFormat.ChannelCount, out var error);
-		return error != OpusError.Ok ? throw new Exception($"Could not instantiate Opus decoder: {error} ({(int)error}).") : decoder;
+		return error != OpusError.Ok ? throw new($"Could not instantiate Opus decoder: {error} ({(int)error}).") : decoder;
 	}
 
 	/// <summary>
@@ -309,7 +312,7 @@ internal static class Interop
 		if (len < 0)
 		{
 			var error = (OpusError)len;
-			throw new Exception($"Could not decode PCM data from Opus: {error} ({(int)error}).");
+			throw new($"Could not decode PCM data from Opus: {error} ({(int)error}).");
 		}
 
 		return len;
@@ -332,7 +335,7 @@ internal static class Interop
 		if (len < 0)
 		{
 			var error = (OpusError)len;
-			throw new Exception($"Could not decode PCM data from Opus: {error} ({(int)error}).");
+			throw new($"Could not decode PCM data from Opus: {error} ({(int)error}).");
 		}
 
 		return len;
@@ -366,5 +369,6 @@ internal static class Interop
 	/// <param name="sampleCount">The sample count.</param>
 	public static void OpusGetLastPacketDuration(IntPtr decoder, out int sampleCount)
 		=> _OpusDecoderControl(decoder, OpusControl.GetLastPacketDuration, out sampleCount);
-	#endregion
+
+#endregion
 }

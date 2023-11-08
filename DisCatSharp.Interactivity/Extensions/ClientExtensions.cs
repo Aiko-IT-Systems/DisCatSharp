@@ -22,7 +22,7 @@ public static class ClientExtensions
 	{
 		if (client.GetExtension<InteractivityExtension>() != null) throw new InvalidOperationException($"Interactivity is already enabled for this {(client.IsShard ? "shard" : "client")}.");
 
-		configuration ??= new InteractivityConfiguration();
+		configuration ??= new();
 		var extension = new InteractivityExtension(configuration);
 		client.AddExtension(extension);
 
@@ -68,10 +68,8 @@ public static class ClientExtensions
 		var extensions = new Dictionary<int, InteractivityExtension>();
 
 		foreach (var shard in client.ShardClients.Select(xkvp => xkvp.Value))
-		{
 			extensions.Add(shard.ShardId, shard.GetExtension<InteractivityExtension>());
-		}
 
-		return new ReadOnlyDictionary<int, InteractivityExtension>(extensions);
+		return new(extensions);
 	}
 }

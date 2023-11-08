@@ -43,7 +43,7 @@ public sealed class CooldownAttribute : CheckBaseAttribute
 		this.MaxUses = maxUses;
 		this.Reset = TimeSpan.FromSeconds(resetAfter);
 		this.BucketType = bucketType;
-		this._buckets = new ConcurrentDictionary<string, CommandCooldownBucket>();
+		this._buckets = new();
 	}
 
 	/// <summary>
@@ -66,7 +66,11 @@ public sealed class CooldownAttribute : CheckBaseAttribute
 	public TimeSpan GetRemainingCooldown(CommandContext ctx)
 	{
 		var bucket = this.GetBucket(ctx);
-		return bucket == null ? TimeSpan.Zero : bucket.RemainingUses > 0 ? TimeSpan.Zero : bucket.ResetsAt - DateTimeOffset.UtcNow;
+		return bucket == null
+			? TimeSpan.Zero
+			: bucket.RemainingUses > 0
+				? TimeSpan.Zero
+				: bucket.ResetsAt - DateTimeOffset.UtcNow;
 	}
 
 	/// <summary>
@@ -110,7 +114,7 @@ public sealed class CooldownAttribute : CheckBaseAttribute
 		var bid = this.GetBucketId(ctx, out var usr, out var chn, out var gld);
 		if (!this._buckets.TryGetValue(bid, out var bucket))
 		{
-			bucket = new CommandCooldownBucket(this.MaxUses, this.Reset, usr, chn, gld);
+			bucket = new(this.MaxUses, this.Reset, usr, chn, gld);
 			this._buckets.AddOrUpdate(bid, bucket, (k, v) => bucket);
 		}
 
@@ -215,7 +219,7 @@ public sealed class CommandCooldownBucket : IEquatable<CommandCooldownBucket>
 		this.ChannelId = channelId;
 		this.GuildId = guildId;
 		this.BucketId = MakeId(userId, channelId, guildId);
-		this._usageSemaphore = new SemaphoreSlim(1, 1);
+		this._usageSemaphore = new(1, 1);
 	}
 
 	/// <summary>
@@ -267,7 +271,7 @@ public sealed class CommandCooldownBucket : IEquatable<CommandCooldownBucket>
 	/// </summary>
 	/// <param name="other"><see cref="CommandCooldownBucket"/> to compare to.</param>
 	/// <returns>Whether the <see cref="CommandCooldownBucket"/> is equal to this <see cref="CommandCooldownBucket"/>.</returns>
-	public bool Equals(CommandCooldownBucket other) => other is not null && (ReferenceEquals(this, other) || (this.UserId == other.UserId && this.ChannelId == other.ChannelId && this.GuildId == other.GuildId));
+	public bool Equals(CommandCooldownBucket other) => other is not null && (ReferenceEquals(this, other) || this.UserId == other.UserId && this.ChannelId == other.ChannelId && this.GuildId == other.GuildId);
 
 	/// <summary>
 	/// Gets the hash code for this <see cref="CommandCooldownBucket"/>.
@@ -286,7 +290,7 @@ public sealed class CommandCooldownBucket : IEquatable<CommandCooldownBucket>
 		var null1 = bucket1 is null;
 		var null2 = bucket2 is null;
 
-		return (null1 && null2) || (null1 == null2 && null1.Equals(null2));
+		return null1 && null2 || null1 == null2 && null1.Equals(null2);
 	}
 
 	/// <summary>

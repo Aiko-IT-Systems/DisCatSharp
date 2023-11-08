@@ -33,11 +33,13 @@ public abstract class BaseHostedService : BackgroundService
 	/// <param name="serviceProvider">The service provider.</param>
 	/// <param name="applicationLifetime">The application lifetime.</param>
 	/// <param name="configBotSection">The config bot section.</param>
-	internal BaseHostedService(IConfiguration config,
+	internal BaseHostedService(
+		IConfiguration config,
 		ILogger<BaseHostedService> logger,
 		IServiceProvider serviceProvider,
 		IHostApplicationLifetime applicationLifetime,
-		string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB)
+		string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB
+	)
 	{
 		this.Configuration = config;
 		this.Logger = logger;
@@ -97,7 +99,10 @@ public abstract class BaseHostedService : BackgroundService
 
 				var instance = ctors.Any(x => x.GetParameters().Length == 1 && x.GetParameters().First().ParameterType == typePair.Value.ConfigType)
 					? Activator.CreateInstance(typePair.Value.ImplementationType, flags, null,
-												new[] { configInstance }, null)
+						new[]
+						{
+							configInstance
+						}, null)
 					: Activator.CreateInstance(typePair.Value.ImplementationType, true);
 
 				/*
@@ -107,7 +112,6 @@ public abstract class BaseHostedService : BackgroundService
 
                        ActivatorUtilities requires a public constructor, anything with internal breaks
                      */
-
 
 				if (instance == null)
 				{
@@ -166,11 +170,11 @@ public abstract class BaseHostedService : BackgroundService
 		catch (Exception ex)
 		{
 			/*
-                 * Anything before DOTNET 6 will
-                 * fail silently despite throwing an exception in this method
-                 * So to overcome this obstacle we need to log what happens and
-                 * manually exit
-                 */
+			 * Anything before DOTNET 6 will
+			 * fail silently despite throwing an exception in this method
+			 * So to overcome this obstacle we need to log what happens and
+			 * manually exit
+			 */
 			this.Logger.LogError($"Was unable to start {this.GetType().Name} Bot as a Hosted Service");
 
 			// Power given to developer for handling exception

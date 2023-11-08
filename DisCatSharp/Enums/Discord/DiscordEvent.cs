@@ -1,4 +1,3 @@
-
 #nullable enable
 using System;
 
@@ -27,7 +26,8 @@ public class EventAttribute : Attribute
 /// Classes marked with this attribute will be considered for event handler registration from an assembly.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-public class EventHandlerAttribute : Attribute { }
+public class EventHandlerAttribute : Attribute
+{ }
 
 /// <summary>
 /// All events available in <see cref="DiscordClient"/> for use with <see cref="EventAttribute"/>.
@@ -120,7 +120,7 @@ public enum DiscordEvent
 	AutomodRuleDeleted,
 	AutomodActionExecuted,
 	GuildAuditLogEntryCreated,
- 	VoiceChannelStatusUpdated,
+	VoiceChannelStatusUpdated,
 	EntitlementCreated,
 	EntitlementUpdated,
 	EntitlementDeleted

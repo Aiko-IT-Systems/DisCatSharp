@@ -25,7 +25,6 @@ public sealed class RequireUserPermissionsAttribute : CheckBaseAttribute
 	/// Defines that usage of this command is restricted to members with specified permissions.
 	/// </summary>
 	/// <param name="permissions">Permissions required to execute this command.</param>
-
 	/// <param name="ignoreDms">Sets this check's behaviour in DMs. True means the check will always pass in DMs, whereas false means that it will always fail.</param>
 	public RequireUserPermissionsAttribute(Permissions permissions, bool ignoreDms = true)
 	{

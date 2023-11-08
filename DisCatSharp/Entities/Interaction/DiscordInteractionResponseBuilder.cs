@@ -27,6 +27,7 @@ public sealed class DiscordInteractionResponseBuilder
 			this.FlagsChanged = true;
 		}
 	}
+
 	private bool EPH { get; set; }
 
 	/// <summary>
@@ -41,6 +42,7 @@ public sealed class DiscordInteractionResponseBuilder
 			this.FlagsChanged = true;
 		}
 	}
+
 	private bool EMB_SUP { get; set; }
 
 	/// <summary>
@@ -55,6 +57,7 @@ public sealed class DiscordInteractionResponseBuilder
 			this.FlagsChanged = true;
 		}
 	}
+
 	private bool NOTI_SUP { get; set; }
 
 	/// <summary>
@@ -72,28 +75,32 @@ public sealed class DiscordInteractionResponseBuilder
 		{
 			if (value != null && value.Length > 2000)
 				throw new ArgumentException("Content length cannot exceed 2000 characters.", nameof(value));
+
 			this._content = value;
 		}
 	}
+
 	private string _content;
 
 	/// <summary>
 	/// Embeds to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
-	private readonly List<DiscordEmbed> _embeds = new();
 
+	private readonly List<DiscordEmbed> _embeds = new();
 
 	/// <summary>
 	/// Files to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordMessageFile> Files => this._files;
+
 	private readonly List<DiscordMessageFile> _files = new();
 
 	/// <summary>
 	/// Components to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
+
 	private readonly List<DiscordActionRowComponent> _components = new();
 
 	/// <summary>
@@ -101,20 +108,20 @@ public sealed class DiscordInteractionResponseBuilder
 	/// Mutually exclusive with content, embed, and components.
 	/// </summary>
 	public IReadOnlyList<DiscordApplicationCommandAutocompleteChoice> Choices => this._choices;
-	private readonly List<DiscordApplicationCommandAutocompleteChoice> _choices = new();
 
+	private readonly List<DiscordApplicationCommandAutocompleteChoice> _choices = new();
 
 	/// <summary>
 	/// Mentions to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<IMention> Mentions => this._mentions;
+
 	private readonly List<IMention> _mentions = new();
 
 	/// <summary>
 	/// Constructs a new empty interaction response builder.
 	/// </summary>
 	public DiscordInteractionResponseBuilder() { }
-
 
 	/// <summary>
 	/// Constructs a new <see cref="DiscordInteractionResponseBuilder"/> based on an existing <see cref="DisCatSharp.Entities.DiscordMessageBuilder"/>.
@@ -127,7 +134,6 @@ public sealed class DiscordInteractionResponseBuilder
 		this._embeds.AddRange(builder.Embeds);
 		this._components.AddRange(builder.Components);
 	}
-
 
 	/// <summary>
 	/// Appends a collection of components to the builder. Each call will append to a new row.
@@ -314,7 +320,6 @@ public sealed class DiscordInteractionResponseBuilder
 			else
 				this._files.Add(new(file.Key, file.Value, null));
 		}
-
 
 		return this;
 	}

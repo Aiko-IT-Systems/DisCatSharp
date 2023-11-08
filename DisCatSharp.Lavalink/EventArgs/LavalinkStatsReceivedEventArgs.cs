@@ -1,4 +1,3 @@
-
 using DisCatSharp.EventArgs;
 using DisCatSharp.Lavalink.Entities;
 

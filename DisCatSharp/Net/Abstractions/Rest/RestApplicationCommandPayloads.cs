@@ -83,7 +83,6 @@ internal sealed class RestApplicationCommandCreatePayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("integration_types", NullValueHandling = NullValueHandling.Ignore)]
 	public List<ApplicationCommandIntegrationTypes>? IntegrationTypes { get; set; }
-
 }
 
 /// <summary>

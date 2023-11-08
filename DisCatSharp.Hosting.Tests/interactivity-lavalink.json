@@ -1,8 +1,8 @@
 {
-    "DisCatSharp": {
-        "Using": [
-            "Interactivity",
-            "Lavalink"
-        ]
-    }
+	"DisCatSharp": {
+		"Using": [
+			"Interactivity",
+			"Lavalink"
+		]
+	}
 }

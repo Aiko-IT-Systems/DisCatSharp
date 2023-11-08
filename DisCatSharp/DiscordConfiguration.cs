@@ -34,6 +34,7 @@ public sealed class DiscordConfiguration
 			this._token = value.Trim();
 		}
 	}
+
 	private string _token = "";
 
 	/// <summary>
@@ -314,9 +315,10 @@ public sealed class DiscordConfiguration
 				throw new AccessViolationException("Cannot set this as non-library-dev");
 			else if (value == null)
 				this._exceptions.Clear();
-			else this._exceptions = value.All(val => val.BaseType == typeof(DisCatSharpException))
-				? value
-				: throw new InvalidOperationException("Can only track exceptions who inherit from " + nameof(DisCatSharpException) + " and must be constructed with typeof(Type)");
+			else
+				this._exceptions = value.All(val => val.BaseType == typeof(DisCatSharpException))
+					? value
+					: throw new InvalidOperationException("Can only track exceptions who inherit from " + nameof(DisCatSharpException) + " and must be constructed with typeof(Type)");
 		}
 	}
 
@@ -325,8 +327,7 @@ public sealed class DiscordConfiguration
 	/// </summary>
 	private List<Type> _exceptions = new()
 	{
-		typeof(ServerErrorException),
-		typeof(BadRequestException)
+		typeof(ServerErrorException), typeof(BadRequestException)
 	};
 
 	/// <summary>

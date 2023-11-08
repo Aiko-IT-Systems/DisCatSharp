@@ -86,6 +86,7 @@ public class DefaultLogger : ILogger<BaseDiscordClient>
 					Console.ForegroundColor = ConsoleColor.Black;
 					break;
 			}
+
 			Console.Write(logLevel switch
 			{
 				LogLevel.Trace => "[Trace] ",

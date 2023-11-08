@@ -24,7 +24,9 @@ internal static class ApplicationCommandEqualityChecks
 	/// <param name="isGuild">Whether the equal check is performed for a guild command.</param>
 	internal static bool IsEqualTo(
 		this DiscordApplicationCommand? ac1,
-		DiscordApplicationCommand? targetApplicationCommand, DiscordClient client, bool isGuild
+		DiscordApplicationCommand? targetApplicationCommand,
+		DiscordClient client,
+		bool isGuild
 	)
 	{
 		if (targetApplicationCommand is null || ac1 is null)
@@ -83,8 +85,12 @@ internal static class ApplicationCommandEqualityChecks
 	/// <param name="localizationEnabled">Whether localization is enabled.</param>
 	/// <param name="guild">Whether the equal check is performed for a guild command.</param>
 	internal static bool SoftEqual(
-		this DiscordApplicationCommand source, DiscordApplicationCommand target,
-		ApplicationCommandType type, BaseDiscordClient client, bool localizationEnabled = false, bool guild = false
+		this DiscordApplicationCommand source,
+		DiscordApplicationCommand target,
+		ApplicationCommandType type,
+		BaseDiscordClient client,
+		bool localizationEnabled = false,
+		bool guild = false
 	)
 	{
 		bool? sDmPerm = source.DmPermission ?? true;
@@ -182,8 +188,12 @@ internal static class ApplicationCommandEqualityChecks
 	/// <param name="sDmPerm">The source dm permission.</param>
 	/// <param name="tDmPerm">The target dm permission.</param>
 	internal static bool DeepEqual(
-		DiscordApplicationCommand source, DiscordApplicationCommand target, BaseDiscordClient client,
-		bool localizationEnabled = false, bool? sDmPerm = null, bool? tDmPerm = null
+		DiscordApplicationCommand source,
+		DiscordApplicationCommand target,
+		BaseDiscordClient client,
+		bool localizationEnabled = false,
+		bool? sDmPerm = null,
+		bool? tDmPerm = null
 	)
 	{
 		var name = source.Name;
@@ -218,13 +228,14 @@ internal static class ApplicationCommandEqualityChecks
 	/// <param name="localizationEnabled">Whether localization is enabled.</param>
 	private static (bool Equal, string? Reason) DeepEqualOptions(
 		IReadOnlyList<DiscordApplicationCommandOption>? sourceOptions,
-		IReadOnlyList<DiscordApplicationCommandOption>? targetOptions, bool localizationEnabled
+		IReadOnlyList<DiscordApplicationCommandOption>? targetOptions,
+		bool localizationEnabled
 	)
 	{
 		if (sourceOptions == null && targetOptions == null)
 			return (true, null);
 
-		if ((sourceOptions != null && targetOptions == null) || (sourceOptions == null && targetOptions != null))
+		if (sourceOptions != null && targetOptions == null || sourceOptions == null && targetOptions != null)
 			return (false, "source or target option null, but not both");
 
 		if (sourceOptions!.Count != targetOptions!.Count)
@@ -251,8 +262,8 @@ internal static class ApplicationCommandEqualityChecks
 				              sourceOption.RawDescriptionLocalizations.AreDictionariesEqual(targetOption
 					              .RawDescriptionLocalizations);
 
-			if ((sourceOption.Choices is null && targetOption.Choices is not null) ||
-			    (sourceOption.Choices is not null && targetOption.Choices is null))
+			if (sourceOption.Choices is null && targetOption.Choices is not null ||
+			    sourceOption.Choices is not null && targetOption.Choices is null)
 				return (false, "source or target choices null, but not both - " + sourceOption.Name);
 
 			if (sourceOption.Choices is not null && targetOption.Choices is not null)
@@ -263,10 +274,10 @@ internal static class ApplicationCommandEqualityChecks
 					return (false, "choice mismatch - " + sourceOption.Name);
 			}
 
-			if ((sourceOption.ChannelTypes is null && targetOption.ChannelTypes is not null) ||
-			    (sourceOption.ChannelTypes is not null && targetOption.ChannelTypes is null) ||
-			    (sourceOption.ChannelTypes is not null && targetOption.ChannelTypes is not null &&
-			     !sourceOption.ChannelTypes.OrderBy(x => x).All(targetOption.ChannelTypes.OrderBy(x => x).Contains)))
+			if (sourceOption.ChannelTypes is null && targetOption.ChannelTypes is not null ||
+			    sourceOption.ChannelTypes is not null && targetOption.ChannelTypes is null ||
+			    sourceOption.ChannelTypes is not null && targetOption.ChannelTypes is not null &&
+			    !sourceOption.ChannelTypes.OrderBy(x => x).All(targetOption.ChannelTypes.OrderBy(x => x).Contains))
 				return (false, "channel type mismatch - " + sourceOption.Name);
 
 			var rec = DeepEqualOptions(sourceOption.Options, targetOption.Options, localizationEnabled);

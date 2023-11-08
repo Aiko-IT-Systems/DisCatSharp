@@ -133,7 +133,7 @@ public static class Utilities
 		{
 			TokenType.Bearer => $"Bearer {config.Token}",
 			TokenType.Bot => $"Bot {config.Token}",
-			_ => throw new ArgumentException("Invalid token type specified.", nameof(config)),
+			_ => throw new ArgumentException("Invalid token type specified.", nameof(config))
 		};
 
 	/// <summary>
@@ -220,7 +220,7 @@ public static class Utilities
 		var regex = new Regex(@"<@!?(\d+)>", RegexOptions.ECMAScript | RegexOptions.Compiled);
 		var matches = regex.Matches(message.Content);
 		return from Match match in matches
-			   select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+			select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -233,7 +233,7 @@ public static class Utilities
 		var regex = new Regex(@"<@&(\d+)>", RegexOptions.ECMAScript);
 		var matches = regex.Matches(message.Content);
 		return from Match match in matches
-			   select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+			select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -246,7 +246,7 @@ public static class Utilities
 		var regex = new Regex(@"<#(\d+)>", RegexOptions.ECMAScript);
 		var matches = regex.Matches(message.Content);
 		return from Match match in matches
-			   select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+			select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -259,7 +259,7 @@ public static class Utilities
 		var regex = new Regex(@"<a?:([a-zA-Z0-9_]+):(\d+)>", RegexOptions.ECMAScript);
 		var matches = regex.Matches(message.Content);
 		return from Match match in matches
-			   select ulong.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+			select ulong.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -279,8 +279,7 @@ public static class Utilities
 	/// <param name="guild">The guild.</param>
 	/// <param name="taad">The taad.</param>
 	/// <returns>A bool.</returns>
-	[DiscordDeprecated, Deprecated]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
+	[DiscordDeprecated, Deprecated, System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
 	internal static bool CheckThreadAutoArchiveDurationFeature(DiscordGuild guild, ThreadAutoArchiveDuration taad)
 		=> true;
 
@@ -289,8 +288,7 @@ public static class Utilities
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <returns>A bool.</returns>
-	[DiscordDeprecated, Deprecated]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
+	[DiscordDeprecated, Deprecated, System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
 	internal static bool CheckThreadPrivateFeature(DiscordGuild guild)
 		=> true;
 
@@ -403,7 +401,6 @@ public static class Utilities
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static DateTimeOffset? GetSnowflakeTime(this ulong? snowflake)
 		=> snowflake is not null ? DiscordClient.DiscordEpoch.AddMilliseconds(snowflake.Value >> 22) : null;
-
 
 	/// <summary>
 	/// Converts this <see cref="Permissions"/> into human-readable format.

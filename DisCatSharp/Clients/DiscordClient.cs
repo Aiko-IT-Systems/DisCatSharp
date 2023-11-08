@@ -30,7 +30,7 @@ namespace DisCatSharp;
 /// </summary>
 public sealed partial class DiscordClient : BaseDiscordClient
 {
-	#region Internal Fields/Properties
+#region Internal Fields/Properties
 
 	internal bool IsShard = false;
 
@@ -47,9 +47,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	private readonly ManualResetEventSlim _connectionLock = new(true);
 
-	#endregion
+#endregion
 
-	#region Public Fields/Properties
+#region Public Fields/Properties
+
 	/// <summary>
 	/// Gets the gateway protocol version.
 	/// </summary>
@@ -90,6 +91,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <see cref="GuildAvailable"/> or <see cref="GuildDownloadCompleted"/> events haven't been fired yet)
 	/// </summary>
 	public override IReadOnlyDictionary<ulong, DiscordGuild> Guilds { get; }
+
 	internal ConcurrentDictionary<ulong, DiscordGuild> GuildsInternal = new();
 
 	/// <summary>
@@ -117,9 +119,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 	internal Dictionary<string, DiscordActivity> EmbeddedActivitiesInternal = new();
 	private Lazy<IReadOnlyDictionary<string, DiscordActivity>> _embeddedActivitiesLazy;
-	#endregion
 
-	#region Constructor/Internal Setup
+#endregion
+
+#region Constructor/Internal Setup
 
 	/// <summary>
 	/// Initializes a new instance of <see cref="DiscordClient"/>.
@@ -132,8 +135,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		{
 			var intents = this.Configuration.Intents;
 			this.MessageCache = intents.HasIntent(DiscordIntents.GuildMessages) || intents.HasIntent(DiscordIntents.DirectMessages)
-					? new RingBuffer<DiscordMessage>(this.Configuration.MessageCacheSize)
-					: null;
+				? new RingBuffer<DiscordMessage>(this.Configuration.MessageCacheSize)
+				: null;
 		}
 
 		this.InternalSetup();
@@ -243,9 +246,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._embeddedActivitiesLazy = new(() => new ReadOnlyDictionary<string, DiscordActivity>(this.EmbeddedActivitiesInternal));
 	}
 
-	#endregion
+#endregion
 
-	#region Client Extension Methods
+#region Client Extension Methods
 
 	/// <summary>
 	/// Registers an extension with this client.
@@ -265,9 +268,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public T GetExtension<T>() where T : BaseExtension
 		=> this._extensions.FirstOrDefault(x => x.GetType() == typeof(T)) as T;
 
-	#endregion
+#endregion
 
-	#region Public Connection Methods
+#region Public Connection Methods
 
 	/// <summary>
 	/// Connects to the gateway.
@@ -283,6 +286,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		// Check if connection lock is already set, and set it if it isn't
 		if (!this._connectionLock.Wait(0))
 			throw new InvalidOperationException("This client is already connected.");
+
 		this._connectionLock.Set();
 
 		var w = 7500;
@@ -313,7 +317,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		}
 
 		while (i-- > 0 || this.Configuration.ReconnectIndefinitely)
-		{
 			try
 			{
 				await this.InternalConnectAsync().ConfigureAwait(false);
@@ -348,7 +351,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				if (i > 0)
 					w *= 2;
 			}
-		}
 
 		if (!s && cex != null)
 		{
@@ -377,7 +379,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="startNewSession">Whether to start a new session.</param>
 	public Task ReconnectAsync(bool startNewSession = true)
-		=> this.InternalReconnectAsync(startNewSession, code: startNewSession ? 1000 : 4002);
+		=> this.InternalReconnectAsync(startNewSession, startNewSession ? 1000 : 4002);
 
 	/// <summary>
 	/// Disconnects from the gateway.
@@ -389,9 +391,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			await this.WebSocketClient.DisconnectAsync().ConfigureAwait(false);
 	}
 
-	#endregion
+#endregion
 
-	#region Public REST Methods
+#region Public REST Methods
 
 	/// <summary>
 	/// Gets a user.
@@ -549,14 +551,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <returns>A list of metadata records or <see langword="null"/>.</returns>
 	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> GetRoleConnectionMetadata()
-		 => await this.ApiClient.GetRoleConnectionMetadataRecords(this.CurrentApplication.Id).ConfigureAwait(false);
+		=> await this.ApiClient.GetRoleConnectionMetadataRecords(this.CurrentApplication.Id).ConfigureAwait(false);
 
 	/// <summary>
 	/// Updates the applications role connection metadata.
 	/// </summary>
 	/// <param name="metadata">A list of metadata objects. Max 5.</param>
 	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> UpdateRoleConnectionMetadata(IEnumerable<DiscordApplicationRoleConnectionMetadata> metadata)
-		 => await this.ApiClient.UpdateRoleConnectionMetadataRecords(this.CurrentApplication.Id, metadata).ConfigureAwait(false);
+		=> await this.ApiClient.UpdateRoleConnectionMetadataRecords(this.CurrentApplication.Id, metadata).ConfigureAwait(false);
 
 	/// <summary>
 	/// Removes all global application commands.
@@ -655,7 +657,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, string content)
-		=> this.ApiClient.CreateMessageAsync(channel.Id, content, embeds: null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+		=> this.ApiClient.CreateMessageAsync(channel.Id, content, null, null, null, false, false);
 
 	/// <summary>
 	/// Sends a message with an embed.
@@ -668,7 +670,12 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordEmbed embed)
-		=> this.ApiClient.CreateMessageAsync(channel.Id, null, embed != null ? new[] { embed } : null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+		=> this.ApiClient.CreateMessageAsync(channel.Id, null, embed != null
+			? new[]
+			{
+				embed
+			}
+			: null, null, null, false, false);
 
 	/// <summary>
 	/// Sends a message with content and an embed.
@@ -682,7 +689,12 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, string content, DiscordEmbed embed)
-		=> this.ApiClient.CreateMessageAsync(channel.Id, content, embed != null ? new[] { embed } : null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+		=> this.ApiClient.CreateMessageAsync(channel.Id, content, embed != null
+			? new[]
+			{
+				embed
+			}
+			: null, null, null, false, false);
 
 	/// <summary>
 	/// Sends a message with the <see cref="DisCatSharp.Entities.DiscordMessageBuilder"/>.
@@ -728,8 +740,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordGuild> CreateGuildAsync(string name, string region = null, Optional<Stream> icon = default, VerificationLevel? verificationLevel = null,
-		DefaultMessageNotifications? defaultMessageNotifications = null, SystemChannelFlags? systemChannelFlags = null)
+	public Task<DiscordGuild> CreateGuildAsync(
+		string name,
+		string region = null,
+		Optional<Stream> icon = default,
+		VerificationLevel? verificationLevel = null,
+		DefaultMessageNotifications? defaultMessageNotifications = null,
+		SystemChannelFlags? systemChannelFlags = null
+	)
 	{
 		var iconb64 = ImageTool.Base64FromStream(icon);
 		return this.ApiClient.CreateGuildAsync(name, region, iconb64, verificationLevel, defaultMessageNotifications, systemChannelFlags);
@@ -992,6 +1010,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	{
 		if (!bot.IsBot)
 			throw new ArgumentException("The user must be a bot.", nameof(bot));
+
 		permissions &= PermissionMethods.FullPerms;
 		return new(new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
 			.AddParameter("client_id", bot.Id.ToString(CultureInfo.InvariantCulture))
@@ -1199,7 +1218,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="commandId">The id of the command to get.</param>
 	/// <returns>The command with the id.</returns>
 	public Task<DiscordApplicationCommand> GetGuildApplicationCommandAsync(ulong guildId, ulong commandId) =>
-		 this.ApiClient.GetGuildApplicationCommandAsync(this.CurrentApplication.Id, guildId, commandId);
+		this.ApiClient.GetGuildApplicationCommandAsync(this.CurrentApplication.Id, guildId, commandId);
 
 	/// <summary>
 	/// Edits a application command in a guild.
@@ -1241,9 +1260,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public Task<DiscordGuildApplicationCommandPermission> GetApplicationCommandPermissionAsync(ulong guildId, ulong commandId)
 		=> null;
 
-	#endregion
+#endregion
 
-	#region Internal Caching Methods
+#region Internal Caching Methods
+
 	/// <summary>
 	/// Gets the internal cached threads.
 	/// </summary>
@@ -1260,7 +1280,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		return null;
 	}
-
 
 	/// <summary>
 	/// Gets the internal cached scheduled event.
@@ -1309,10 +1328,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	internal DiscordGuild InternalGetCachedGuild(ulong? guildId)
 	{
 		if (this.GuildsInternal != null && guildId.HasValue)
-		{
 			if (this.GuildsInternal.TryGetValue(guildId.Value, out var guild))
 				return guild;
-		}
 
 		return null;
 	}
@@ -1328,7 +1345,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	{
 		if (author != null)
 		{
-			var usr = new DiscordUser(author) { Discord = this };
+			var usr = new DiscordUser(author)
+			{
+				Discord = this
+			};
 
 			if (member != null)
 				member.User = author;
@@ -1343,14 +1363,11 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		channel = !message.GuildId.HasValue
 			? new DiscordDmChannel
 			{
-				Id = message.ChannelId,
-				Discord = this,
-				Type = ChannelType.Private
+				Id = message.ChannelId, Discord = this, Type = ChannelType.Private
 			}
 			: new DiscordChannel
 			{
-				Id = message.ChannelId,
-				Discord = this
+				Id = message.ChannelId, Discord = this
 			};
 
 		message.Channel = channel;
@@ -1365,7 +1382,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	private DiscordScheduledEvent UpdateScheduledEvent(DiscordScheduledEvent scheduledEvent, DiscordGuild guild)
 	{
 		if (scheduledEvent != null)
-		{
 			_ = guild.ScheduledEventsInternal.AddOrUpdate(scheduledEvent.Id, scheduledEvent, (id, old) =>
 			{
 				old.Discord = this;
@@ -1381,7 +1397,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.ScheduledEndTimeRaw = scheduledEvent.ScheduledEndTimeRaw;
 				return old;
 			});
-		}
 
 		return scheduledEvent;
 	}
@@ -1400,7 +1415,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		{
 			if (mbr.User != null)
 			{
-				usr = new(mbr.User) { Discord = this };
+				usr = new(mbr.User)
+				{
+					Discord = this
+				};
 
 				_ = this.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
 				{
@@ -1417,7 +1435,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 					return old;
 				});
 
-				usr = new DiscordMember(mbr) { Discord = this, GuildId = guildId.Value };
+				usr = new DiscordMember(mbr)
+				{
+					Discord = this, GuildId = guildId.Value
+				};
 			}
 
 			var intents = this.Configuration.Intents;
@@ -1429,21 +1450,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				if (guild?.MembersInternal.TryGetValue(usr.Id, out member) == false)
 				{
 					if (intents.HasIntent(DiscordIntents.GuildMembers) || this.Configuration.AlwaysCacheMembers) // member can be updated by events, so cache it
-					{
 						guild.MembersInternal.TryAdd(usr.Id, (DiscordMember)usr);
-					}
 				}
 				else if (intents.HasIntent(DiscordIntents.GuildPresences) || this.Configuration.AlwaysCacheMembers) // we can attempt to update it if it's already in cache.
-				{
 					if (!intents.HasIntent(DiscordIntents.GuildMembers)) // no need to update if we already have the member events
-					{
 						_ = guild.MembersInternal.TryUpdate(usr.Id, (DiscordMember)usr, member);
-					}
-				}
 			}
 		}
 		else if (usr.Username != null) // check if not a skeleton user
-		{
 			_ = this.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
 			{
 				old.Username = usr.Username;
@@ -1458,7 +1472,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.GlobalName = usr.GlobalName;
 				return old;
 			});
-		}
 
 		return usr;
 	}
@@ -1504,7 +1517,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		var guild = this.GuildsInternal[newGuild.Id];
 
 		if (newGuild.ChannelsInternal != null && !newGuild.ChannelsInternal.IsEmpty)
-		{
 			foreach (var channel in newGuild.ChannelsInternal.Values)
 			{
 				if (guild.ChannelsInternal.TryGetValue(channel.Id, out _)) continue;
@@ -1513,27 +1525,22 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 				guild.ChannelsInternal[channel.Id] = channel;
 			}
-		}
 
 		if (newGuild.ThreadsInternal != null && !newGuild.ThreadsInternal.IsEmpty)
-		{
 			foreach (var thread in newGuild.ThreadsInternal.Values)
 			{
 				if (guild.ThreadsInternal.TryGetValue(thread.Id, out _)) continue;
 
 				guild.ThreadsInternal[thread.Id] = thread;
 			}
-		}
 
 		if (newGuild.ScheduledEventsInternal != null && !newGuild.ScheduledEventsInternal.IsEmpty)
-		{
 			foreach (var @event in newGuild.ScheduledEventsInternal.Values)
 			{
 				if (guild.ScheduledEventsInternal.TryGetValue(@event.Id, out _)) continue;
 
 				guild.ScheduledEventsInternal[@event.Id] = @event;
 			}
-		}
 
 		foreach (var newEmoji in newGuild.EmojisInternal.Values)
 			_ = guild.EmojisInternal.GetOrAdd(newEmoji.Id, _ => newEmoji);
@@ -1552,7 +1559,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			{
 				var xtm = xj.ToDiscordObject<TransportMember>();
 
-				var usr = new DiscordUser(xtm.User) { Discord = this };
+				var usr = new DiscordUser(xtm.User)
+				{
+					Discord = this
+				};
 				_ = this.UserCache.AddOrUpdate(xtm.User.Id, usr, (id, old) =>
 				{
 					old.Username = usr.Username;
@@ -1568,7 +1578,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 					return old;
 				});
 
-				guild.MembersInternal[xtm.User.Id] = new(xtm) { Discord = this, GuildId = guild.Id };
+				guild.MembersInternal[xtm.User.Id] = new(xtm)
+				{
+					Discord = this, GuildId = guild.Id
+				};
 			}
 		}
 
@@ -1642,10 +1655,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			this.MessageCache?.Add(message);
 	}
 
+#endregion
 
-	#endregion
-
-	#region Disposal
+#region Disposal
 
 	~DiscordClient()
 	{
@@ -1655,7 +1667,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	/// Whether the client is disposed.
 	/// </summary>
-
 	private bool _disposed;
 
 	/// <summary>
@@ -1693,5 +1704,5 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			SentrySdk.EndSession();
 	}
 
-	#endregion
+#endregion
 }

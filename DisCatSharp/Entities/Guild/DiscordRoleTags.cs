@@ -25,6 +25,7 @@ public class DiscordRoleTags : ObservableApiObject
 	[JsonIgnore]
 	public bool IsPremiumSubscriber
 		=> this.PremiumSubscriber.HasValue && this.PremiumSubscriber.Value;
+
 	[JsonProperty("premium_subscriber", NullValueHandling = NullValueHandling.Include)]
 	internal bool? PremiumSubscriber = false;
 

@@ -1,4 +1,3 @@
-
 using System;
 using System.Net;
 
@@ -110,15 +109,11 @@ public sealed class LavalinkConfiguration
 	{
 		this.RestEndpoint = new()
 		{
-			Hostname = other.RestEndpoint.Hostname,
-			Port = other.RestEndpoint.Port,
-			Secured = other.RestEndpoint.Secured
+			Hostname = other.RestEndpoint.Hostname, Port = other.RestEndpoint.Port, Secured = other.RestEndpoint.Secured
 		};
 		this.SocketEndpoint = new()
 		{
-			Hostname = other.SocketEndpoint.Hostname,
-			Port = other.SocketEndpoint.Port,
-			Secured = other.SocketEndpoint.Secured
+			Hostname = other.SocketEndpoint.Hostname, Port = other.SocketEndpoint.Port, Secured = other.SocketEndpoint.Secured
 		};
 		this.Password = other.Password;
 		this.SessionId = other.SessionId;

@@ -105,6 +105,7 @@ public sealed class DiscordButtonComponent : DiscordComponent
 			this.Label = label ?? throw new ArgumentException("Label can only be null if emoji is set.");
 			this.Emoji = null;
 		}
+
 		this.Type = ComponentType.Button;
 	}
 }

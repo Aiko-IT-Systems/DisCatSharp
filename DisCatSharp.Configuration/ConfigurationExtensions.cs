@@ -18,15 +18,16 @@ internal static class ConfigurationExtensions
 	/// The factory error message.
 	/// </summary>
 	private const string FACTORY_ERROR_MESSAGE = "Require a function which provides a default entity to work with";
+
 	/// <summary>
 	/// The default root lib.
 	/// </summary>
 	public const string DEFAULT_ROOT_LIB = "DisCatSharp";
+
 	/// <summary>
 	/// The config suffix.
 	/// </summary>
 	private const string CONFIG_SUFFIX = "Configuration";
-
 
 	/// <summary>
 	/// Easily piece together paths that will work within <see cref="IConfiguration"/>
@@ -143,8 +144,12 @@ internal static class ConfigurationExtensions
 	/// <param name="rootSectionName">(Optional) Used when section is nested within another. Default value is <see cref="DEFAULT_ROOT_LIB"/></param>
 	/// <returns>Hydrated instance of an entity which contains user-defined values (if any)</returns>
 	/// <exception cref="ArgumentNullException">When <paramref name="factory"/> is null</exception>
-	public static object ExtractConfig(this IConfiguration config, string sectionName, Func<object> factory,
-		string? rootSectionName = DEFAULT_ROOT_LIB)
+	public static object ExtractConfig(
+		this IConfiguration config,
+		string sectionName,
+		Func<object> factory,
+		string? rootSectionName = DEFAULT_ROOT_LIB
+	)
 	{
 		if (factory == null)
 			throw new ArgumentNullException(nameof(factory), FACTORY_ERROR_MESSAGE);
@@ -152,7 +157,7 @@ internal static class ConfigurationExtensions
 		// create default instance
 		var instance = factory();
 
-		HydrateInstance(ref instance, new ConfigSection(ref config, sectionName, rootSectionName));
+		HydrateInstance(ref instance, new(ref config, sectionName, rootSectionName));
 
 		return instance;
 	}
@@ -173,7 +178,7 @@ internal static class ConfigurationExtensions
 		// Default values should hopefully be provided from the constructor
 		var configInstance = ActivatorUtilities.CreateInstance(serviceProvider, typeof(TConfig));
 
-		HydrateInstance(ref configInstance, new ConfigSection(ref config, sectionName, rootSectionName));
+		HydrateInstance(ref configInstance, new(ref config, sectionName, rootSectionName));
 
 		return (TConfig)configInstance;
 	}
@@ -193,7 +198,7 @@ internal static class ConfigurationExtensions
 		// Default values should hopefully be provided from the constructor
 		object configInstance = new TConfig();
 
-		HydrateInstance(ref configInstance, new ConfigSection(ref config, sectionName, rootSectionName));
+		HydrateInstance(ref configInstance, new(ref config, sectionName, rootSectionName));
 
 		return (TConfig)configInstance;
 	}
@@ -274,8 +279,11 @@ internal static class ConfigurationExtensions
 	/// <param name="serviceProvider"></param>
 	/// <param name="botSectionName"></param>
 	/// <returns>Instance of <see cref="DiscordClient"/></returns>
-	public static DiscordClient BuildClient(this IConfiguration config, IServiceProvider serviceProvider,
-		string botSectionName = DEFAULT_ROOT_LIB)
+	public static DiscordClient BuildClient(
+		this IConfiguration config,
+		IServiceProvider serviceProvider,
+		string botSectionName = DEFAULT_ROOT_LIB
+	)
 	{
 		var section = config.HasSection(botSectionName, "Discord")
 			? "Discord"
@@ -284,7 +292,7 @@ internal static class ConfigurationExtensions
 				: null;
 
 		return string.IsNullOrEmpty(section)
-			? new DiscordClient(new DiscordConfiguration(serviceProvider))
+			? new(new(serviceProvider))
 			: new DiscordClient(config.ExtractConfig<DiscordConfiguration>(serviceProvider, section, botSectionName));
 	}
 }

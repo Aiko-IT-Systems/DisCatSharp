@@ -17,7 +17,7 @@ public class ModalPage
 	public ModalPage(DiscordInteractionModalBuilder modal, DiscordButtonComponent openButton = null, string openText = null)
 	{
 		this.Modal = modal;
-		this.OpenButton = openButton ?? new DiscordButtonComponent(ButtonStyle.Primary, null, "Open next page", false, new DiscordComponentEmoji(DiscordEmoji.FromUnicode("📄")));
+		this.OpenButton = openButton ?? new DiscordButtonComponent(ButtonStyle.Primary, null, "Open next page", false, new(DiscordEmoji.FromUnicode("📄")));
 		this.OpenMessage = new DiscordInteractionResponseBuilder().WithContent(openText ?? "`Click the button below to continue to the next page.`").AsEphemeral();
 	}
 

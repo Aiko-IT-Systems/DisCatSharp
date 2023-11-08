@@ -1,9 +1,9 @@
-
 namespace DisCatSharp.Entities;
 
 public readonly partial struct DiscordColor
 {
-	#region Black and White
+#region Black and White
+
 	/// <summary>
 	/// Represents no color, or integer 0;
 	/// </summary>
@@ -38,9 +38,11 @@ public readonly partial struct DiscordColor
 	/// Very dark gray, or #666666.
 	/// </summary>
 	public static DiscordColor VeryDarkGray { get; } = new(0x666666);
-	#endregion
 
-	#region Discord branding colors
+#endregion
+
+#region Discord branding colors
+
 	// See https://discord.com/branding.
 
 	/// <summary>
@@ -67,9 +69,11 @@ public readonly partial struct DiscordColor
 	/// Discord Red, or #ED4245.
 	/// </summary>
 	public static DiscordColor Red { get; } = new(0xED4245);
-	#endregion
 
-	#region Other colors
+#endregion
+
+#region Other colors
+
 	/// <summary>
 	/// Dark red, or #7F0000.
 	/// </summary>
@@ -217,5 +221,6 @@ public readonly partial struct DiscordColor
 	/// Sienna, or #882D17.
 	/// </summary>
 	public static DiscordColor Sienna { get; } = new(0x882D17);
-	#endregion
+
+#endregion
 }

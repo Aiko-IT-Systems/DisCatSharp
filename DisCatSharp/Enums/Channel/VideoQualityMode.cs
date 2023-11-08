@@ -1,4 +1,3 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -14,5 +13,5 @@ public enum VideoQualityMode : int
 	/// <summary>
 	/// Indicates that the video quality is 720p.
 	/// </summary>
-	Full = 2,
+	Full = 2
 }

@@ -1,4 +1,3 @@
-
 namespace DisCatSharp.Interactivity.Enums;
 
 /// <summary>
@@ -10,14 +9,17 @@ public enum ButtonPaginationBehavior
 	/// The buttons should be disabled when pagination times out.
 	/// </summary>
 	Disable,
+
 	/// <summary>
 	/// The buttons should be left as is when pagination times out.
 	/// </summary>
 	Ignore,
+
 	/// <summary>
 	/// The entire message should be deleted when pagination times out.
 	/// </summary>
 	DeleteMessage,
+
 	/// <summary>
 	/// The buttons should be removed entirely when pagination times out.
 	/// </summary>

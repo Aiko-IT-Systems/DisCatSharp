@@ -23,6 +23,7 @@ public class PayloadReceivedEventArgs : DiscordEventArgs
 	}
 
 	private string _json;
+
 	/// <summary>
 	/// Gets or sets the payload object.
 	/// </summary>

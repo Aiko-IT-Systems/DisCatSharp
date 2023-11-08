@@ -221,5 +221,5 @@ public class BaseContext
 	/// </summary>
 	/// <returns>The original interaction response.</returns>
 	public Task<DiscordMessage> GetOriginalResponseAsync()
-		 => this.Interaction.GetOriginalResponseAsync();
+		=> this.Interaction.GetOriginalResponseAsync();
 }

@@ -25,8 +25,10 @@ public sealed class DiscordRpcApplication : SnowflakeObject, IEquatable<DiscordR
 
 	[JsonProperty("description")]
 	public string? Description;
+
 	[JsonProperty("summary")]
 	public string? Summary;
+
 	[JsonProperty("type")]
 	public string Type;
 
@@ -44,8 +46,10 @@ public sealed class DiscordRpcApplication : SnowflakeObject, IEquatable<DiscordR
 
 	[JsonProperty("terms_of_service_url")]
 	public string? TermsOfServiceUrl;
+
 	[JsonProperty("privacy_policy_url")]
 	public string? PrivacyPolicyUrl;
+
 	[JsonProperty("install_params")]
 	public DiscordApplicationInstallParams InstallParams;
 
@@ -114,7 +118,7 @@ public sealed class DiscordRpcApplication : SnowflakeObject, IEquatable<DiscordR
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && (o1 == null && o2 == null || e1.Id == e2.Id);
 	}
 
 	/// <summary>

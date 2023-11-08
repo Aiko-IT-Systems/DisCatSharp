@@ -314,7 +314,10 @@ internal sealed class GamePartySizeConverter : JsonConverter
 	public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
 	{
 		var obj = value is TransportActivity.GameParty.GamePartySize sinfo
-			? new object[] { sinfo.Current, sinfo.Maximum }
+			? new object[]
+			{
+				sinfo.Current, sinfo.Maximum
+			}
 			: null;
 		serializer.Serialize(writer, obj);
 	}
@@ -331,8 +334,7 @@ internal sealed class GamePartySizeConverter : JsonConverter
 		var arr = this.ReadArrayObject(reader, serializer);
 		return new TransportActivity.GameParty.GamePartySize
 		{
-			Current = (long)arr[0],
-			Maximum = (long)arr[1],
+			Current = (long)arr[0], Maximum = (long)arr[1]
 		};
 	}
 

@@ -73,7 +73,6 @@ public static class ExtensionMethods
 	public static CommandsNextExtension GetCommandsNext(this DiscordClient client)
 		=> client.GetExtension<CommandsNextExtension>();
 
-
 	/// <summary>
 	/// Gets the active CommandsNext modules for all shards in this client.
 	/// </summary>
@@ -85,9 +84,7 @@ public static class ExtensionMethods
 		var extensions = new Dictionary<int, CommandsNextExtension>();
 
 		foreach (var shard in client.ShardClients.Select(xkvp => xkvp.Value))
-		{
 			extensions.Add(shard.ShardId, shard.GetExtension<CommandsNextExtension>());
-		}
 
 		return new ReadOnlyDictionary<int, CommandsNextExtension>(extensions);
 	}
@@ -102,6 +99,7 @@ public static class ExtensionMethods
 		foreach (var extension in extensions.Values)
 			extension.RegisterCommands(assembly);
 	}
+
 	/// <summary>
 	/// Registers all commands from a given command class.
 	/// </summary>
@@ -112,6 +110,7 @@ public static class ExtensionMethods
 		foreach (var extension in extensions.Values)
 			extension.RegisterCommands<T>();
 	}
+
 	/// <summary>
 	/// Registers all commands from a given command class.
 	/// </summary>
@@ -122,6 +121,7 @@ public static class ExtensionMethods
 		foreach (var extension in extensions.Values)
 			extension.RegisterCommands(t);
 	}
+
 	/// <summary>
 	/// Builds and registers all supplied commands.
 	/// </summary>

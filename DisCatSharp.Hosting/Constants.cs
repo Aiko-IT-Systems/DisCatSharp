@@ -1,4 +1,3 @@
-
 namespace DisCatSharp.Hosting;
 
 /// <summary>
@@ -10,10 +9,12 @@ internal static class Constants
 	/// Gets the lib name.
 	/// </summary>
 	public static string LibName => Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB;
+
 	/// <summary>
 	/// Gets the config suffix.
 	/// </summary>
 	public static string ConfigSuffix => "Configuration";
+
 	/// <summary>
 	/// Gets the extension suffix.
 	/// </summary>

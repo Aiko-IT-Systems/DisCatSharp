@@ -129,7 +129,22 @@ public class DiscordApplicationCommandOption
 	/// <param name="descriptionLocalizations">The localizations of the parameter description.</param>
 	/// <param name="minimumLength">The minimum allowed length of the string. (Min 0)</param>
 	/// <param name="maximumLength">The maximum allowed length of the string. (Min 1)</param>
-	public DiscordApplicationCommandOption(string name, string description, ApplicationCommandOptionType type, bool required = false, IEnumerable<DiscordApplicationCommandOptionChoice>? choices = null, IEnumerable<DiscordApplicationCommandOption>? options = null, IEnumerable<ChannelType>? channelTypes = null, bool autocomplete = false, object minimumValue = null, object maximumValue = null, DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null, int? minimumLength = null, int? maximumLength = null)
+	public DiscordApplicationCommandOption(
+		string name,
+		string description,
+		ApplicationCommandOptionType type,
+		bool required = false,
+		IEnumerable<DiscordApplicationCommandOptionChoice>? choices = null,
+		IEnumerable<DiscordApplicationCommandOption>? options = null,
+		IEnumerable<ChannelType>? channelTypes = null,
+		bool autocomplete = false,
+		object minimumValue = null,
+		object maximumValue = null,
+		DiscordApplicationCommandLocalization nameLocalizations = null,
+		DiscordApplicationCommandLocalization descriptionLocalizations = null,
+		int? minimumLength = null,
+		int? maximumLength = null
+	)
 	{
 		if (!Utilities.IsValidSlashCommandName(name))
 			throw new ArgumentException("Invalid application command option name specified. It must be below 32 characters and not contain any whitespace.", nameof(name));
@@ -139,6 +154,7 @@ public class DiscordApplicationCommandOption
 			throw new ArgumentException("Application command option description cannot exceed 100 characters.", nameof(description));
 		if (autocomplete && (choices?.Any() ?? false))
 			throw new InvalidOperationException("Auto-complete slash command options cannot provide choices.");
+
 		if (type == ApplicationCommandOptionType.SubCommand || type == ApplicationCommandOptionType.SubCommandGroup)
 			if (string.IsNullOrWhiteSpace(description))
 				throw new ArgumentException("Slash commands need a description.", nameof(description));

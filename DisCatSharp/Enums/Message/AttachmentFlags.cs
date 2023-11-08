@@ -52,5 +52,5 @@ public enum AttachmentFlags
 	/// <summary>
 	/// This attachment contains explicit media.
 	/// </summary>
-	ContainsExplicitMedia = 1 << 4,
+	ContainsExplicitMedia = 1 << 4
 }

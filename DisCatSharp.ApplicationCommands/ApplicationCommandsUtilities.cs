@@ -83,6 +83,7 @@ public static class ApplicationCommandsUtilities
 				ApplicationCommandsExtension.Logger.LogDebug("Not existent");
 			return false;
 		}
+
 		if (ApplicationCommandsExtension.DebugEnabled)
 			ApplicationCommandsExtension.Logger.LogDebug("Checking method {name}", method.Name);
 
@@ -96,7 +97,7 @@ public static class ApplicationCommandsUtilities
 
 		// check if appropriate return and arguments
 		parameters = method.GetParameters();
-		if (!parameters.Any() || (parameters.First().ParameterType != typeof(ContextMenuContext) && parameters.First().ParameterType != typeof(InteractionContext)) || method.ReturnType != typeof(Task))
+		if (!parameters.Any() || parameters.First().ParameterType != typeof(ContextMenuContext) && parameters.First().ParameterType != typeof(InteractionContext) || method.ReturnType != typeof(Task))
 		{
 			if (ApplicationCommandsExtension.DebugEnabled)
 				ApplicationCommandsExtension.Logger.LogDebug("Missing first parameter with type ContextMenuContext or InteractionContext");

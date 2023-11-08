@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -43,6 +42,7 @@ public sealed class LavalinkSession
 		add => this._lavalinkSocketError.Register(value);
 		remove => this._lavalinkSocketError.Unregister(value);
 	}
+
 	private readonly AsyncEvent<LavalinkSession, SocketErrorEventArgs> _lavalinkSocketError;
 
 	/// <summary>
@@ -53,6 +53,7 @@ public sealed class LavalinkSession
 		add => this._lavalinkSessionDisconnected.Register(value);
 		remove => this._lavalinkSessionDisconnected.Unregister(value);
 	}
+
 	private readonly AsyncEvent<LavalinkSession, LavalinkSessionDisconnectedEventArgs> _lavalinkSessionDisconnected;
 
 	/// <summary>
@@ -63,6 +64,7 @@ public sealed class LavalinkSession
 		add => this._lavalinkSessionConnected.Register(value);
 		remove => this._lavalinkSessionConnected.Unregister(value);
 	}
+
 	private readonly AsyncEvent<LavalinkSession, LavalinkSessionConnectedEventArgs> _lavalinkSessionConnected;
 
 	/// <summary>
@@ -73,6 +75,7 @@ public sealed class LavalinkSession
 		add => this._statsReceived.Register(value);
 		remove => this._statsReceived.Unregister(value);
 	}
+
 	private readonly AsyncEvent<LavalinkSession, LavalinkStatsReceivedEventArgs> _statsReceived;
 
 	/// <summary>
@@ -83,6 +86,7 @@ public sealed class LavalinkSession
 		add => this.GuildPlayerDestroyedEvent.Register(value);
 		remove => this.GuildPlayerDestroyedEvent.Unregister(value);
 	}
+
 	internal readonly AsyncEvent<LavalinkSession, GuildPlayerDestroyedEventArgs> GuildPlayerDestroyedEvent;
 
 	/// <summary>
@@ -93,6 +97,7 @@ public sealed class LavalinkSession
 		add => this._websocketClosed.Register(value);
 		remove => this._websocketClosed.Unregister(value);
 	}
+
 	private readonly AsyncEvent<LavalinkSession, LavalinkWebsocketClosedEventArgs> _websocketClosed;
 
 	/// <summary>
@@ -120,6 +125,7 @@ public sealed class LavalinkSession
 	/// Gets the minimum backoff.
 	/// </summary>
 	private const int MINIMUM_BACKOFF = 7500;
+
 	/// <summary>
 	/// Gets the maximum backoff.
 	/// </summary>
@@ -168,8 +174,7 @@ public sealed class LavalinkSession
 	/// </summary>
 	public LavalinkSessionConfiguration Configuration { get; internal set; } = new()
 	{
-		Resuming = true,
-		TimeoutSeconds = 60
+		Resuming = true, TimeoutSeconds = 60
 	};
 
 	/// <summary>
@@ -303,7 +308,7 @@ public sealed class LavalinkSession
 		if (this.ConnectedPlayersInternal.TryGetValue(channel.Guild.Id, out var connectedGuild))
 			return connectedGuild;
 
-		if (channel.Guild == null! || (channel.Type != ChannelType.Voice && channel.Type != ChannelType.Stage))
+		if (channel.Guild == null! || channel.Type != ChannelType.Voice && channel.Type != ChannelType.Stage)
 			throw new ArgumentException("Invalid channel specified.", nameof(channel));
 
 		var vstut = new TaskCompletionSource<VoiceStateUpdateEventArgs>();
@@ -316,10 +321,7 @@ public sealed class LavalinkSession
 			OpCode = 4,
 			Payload = new VoiceStateUpdatePayload()
 			{
-				GuildId = channel.Guild.Id,
-				ChannelId = channel.Id,
-				Deafened = deafened,
-				Muted = false
+				GuildId = channel.Guild.Id, ChannelId = channel.Id, Deafened = deafened, Muted = false
 			}
 		};
 		await this.Rest.CreatePlayerAsync(this.Config.SessionId!, channel.Guild.Id, this.Config.DefaultVolume).ConfigureAwait(false);
@@ -328,9 +330,7 @@ public sealed class LavalinkSession
 		var vsr = await vsrut.Task.ConfigureAwait(false); // Wait for voice server update to get token, guild_id & endpoint
 		await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, channel.Guild.Id, new()
 		{
-			Endpoint = vsr.Endpoint,
-			Token = vsr.VoiceToken,
-			SessionId = vst.SessionId
+			Endpoint = vsr.Endpoint, Token = vsr.VoiceToken, SessionId = vst.SessionId
 		}).ConfigureAwait(false);
 		var player = await this.Rest.GetPlayerAsync(this.Config.SessionId!, channel.Guild.Id).ConfigureAwait(false);
 
@@ -506,8 +506,7 @@ public sealed class LavalinkSession
 
 				this.Discord.Logger.LogCritical(LavalinkEvents.LavalinkConnectionError, ex, "Failed to connect to Lavalink, retrying in {count} ms.", this._backoff);
 			}
-		}
-		while (this.Config.SocketAutoReconnect);
+		} while (this.Config.SocketAutoReconnect);
 
 		Volatile.Write(ref this._isDisposed, false);
 	}
@@ -640,7 +639,10 @@ public sealed class LavalinkSession
 	/// <param name="client">The websocket client.</param>
 	/// <param name="args">The event args.</param>
 	private Task Lavalink_WebSocket_ExceptionThrown(IWebSocketClient client, SocketErrorEventArgs args)
-		=> this._lavalinkSocketError.InvokeAsync(this, new(client.ServiceProvider) { Exception = args.Exception });
+		=> this._lavalinkSocketError.InvokeAsync(this, new(client.ServiceProvider)
+		{
+			Exception = args.Exception
+		});
 
 	/// <summary>
 	/// Handles the event when the websocket disconnected.
@@ -673,12 +675,14 @@ public sealed class LavalinkSession
 				_ = Task.Run(async () => await this.GuildPlayerDestroyedEvent.InvokeAsync(this, new(kvp.Value)).ConfigureAwait(false));
 				_ = this.ConnectedPlayersInternal.TryRemove(kvp.Key, out _);
 			}
+
 			this.SessionDisconnected?.Invoke(this);
 			await this._lavalinkSessionDisconnected.InvokeAsync(this, new(this, false)).ConfigureAwait(false);
 
 			if (this.Config.SocketAutoReconnect)
 				await this.EstablishConnectionAsync().ConfigureAwait(false);
 		}
+
 		args.Handled = true;
 	}
 
@@ -728,9 +732,7 @@ public sealed class LavalinkSession
 			{
 				var state = new LavalinkVoiceState()
 				{
-					Endpoint = guildPlayer.Player.VoiceState.Endpoint,
-					Token = guildPlayer.Player.VoiceState.Token,
-					SessionId = args.After.SessionId
+					Endpoint = guildPlayer.Player.VoiceState.Endpoint, Token = guildPlayer.Player.VoiceState.Token, SessionId = args.After.SessionId
 				};
 				guildPlayer.UpdateVoiceState(state);
 				await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, guildPlayer.GuildId, state).ConfigureAwait(false);
@@ -759,9 +761,7 @@ public sealed class LavalinkSession
 			{
 				var state = new LavalinkVoiceState()
 				{
-					Endpoint = args.Endpoint,
-					Token = args.VoiceToken,
-					SessionId = guildPlayer.Player.VoiceState.SessionId
+					Endpoint = args.Endpoint, Token = args.VoiceToken, SessionId = guildPlayer.Player.VoiceState.SessionId
 				};
 				await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, guildPlayer.GuildId, state).ConfigureAwait(false);
 				guildPlayer.UpdateVoiceState(state);

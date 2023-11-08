@@ -1,4 +1,3 @@
-
 namespace DisCatSharp.ApplicationCommands.Enums;
 
 /// <summary>
@@ -6,7 +5,6 @@ namespace DisCatSharp.ApplicationCommands.Enums;
 /// </summary>
 public enum CooldownBucketType : int
 {
-
 	/// <summary>
 	/// Denotes that the command will have its cooldown applied globally.
 	/// </summary>

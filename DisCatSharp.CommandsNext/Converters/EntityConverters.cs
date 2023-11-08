@@ -43,7 +43,7 @@ public class DiscordUserConverter : IArgumentConverter<DiscordUser>
 
 		var us = ctx.Client.Guilds.Values
 			.SelectMany(xkvp => xkvp.Members.Values)
-			.Where(xm => (cs ? xm.Username : xm.Username.ToLowerInvariant()) == un && ((dv != null && xm.Discriminator == dv) || dv == null));
+			.Where(xm => (cs ? xm.Username : xm.Username.ToLowerInvariant()) == un && (dv != null && xm.Discriminator == dv || dv == null));
 
 		var usr = us.FirstOrDefault();
 		return Optional.FromNullable<DiscordUser>(usr);
@@ -91,8 +91,8 @@ public class DiscordMemberConverter : IArgumentConverter<DiscordMember>
 		var dv = di != -1 ? value[(di + 1)..] : null;
 
 		var us = ctx.Guild.Members.Values
-			.Where(xm => ((cs ? xm.Username : xm.Username.ToLowerInvariant()) == un && ((dv != null && xm.Discriminator == dv) || dv == null))
-					  || (cs ? xm.Nickname : xm.Nickname?.ToLowerInvariant()) == value);
+			.Where(xm => (cs ? xm.Username : xm.Username.ToLowerInvariant()) == un && (dv != null && xm.Discriminator == dv || dv == null)
+			             || (cs ? xm.Nickname : xm.Nickname?.ToLowerInvariant()) == value);
 
 		return Optional.FromNullable(us.FirstOrDefault());
 	}
@@ -216,11 +216,9 @@ public class DiscordGuildConverter : IArgumentConverter<DiscordGuild>
 	Task<Optional<DiscordGuild>> IArgumentConverter<DiscordGuild>.ConvertAsync(string value, CommandContext ctx)
 	{
 		if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var gid))
-		{
 			return ctx.Client.Guilds.TryGetValue(gid, out var result)
 				? Task.FromResult(Optional.Some(result))
 				: Task.FromResult(Optional<DiscordGuild>.None);
-		}
 
 		var cs = ctx.Config.CaseSensitive;
 		if (!cs)
@@ -230,7 +228,6 @@ public class DiscordGuildConverter : IArgumentConverter<DiscordGuild>
 		return Task.FromResult(Optional.FromNullable(gld));
 	}
 }
-
 
 /// <summary>
 /// Represents a discord invite converter.
@@ -248,7 +245,9 @@ public class DiscordInviteConverter : IArgumentConverter<DiscordInvite>
 		if (m.Success)
 		{
 			ulong? eventId = ulong.TryParse(m.Groups["event"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
-				out var eid) ? eid : null;
+				out var eid)
+				? eid
+				: null;
 			var result = await ctx.Client.GetInviteByCodeAsync(m.Groups["code"].Value, scheduledEventId: eventId).ConfigureAwait(false);
 			return Optional.FromNullable(result);
 		}
@@ -279,8 +278,8 @@ public class DiscordMessageConverter : IArgumentConverter<DiscordMessage>
 		{
 			var uripath = DiscordRegEx.MessageLink.Match(uri.AbsoluteUri);
 			if (!uripath.Success
-				|| !ulong.TryParse(uripath.Groups["channel"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var cid)
-				|| !ulong.TryParse(uripath.Groups["message"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out mid))
+			    || !ulong.TryParse(uripath.Groups["channel"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var cid)
+			    || !ulong.TryParse(uripath.Groups["message"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out mid))
 				return Optional.None;
 
 			var chn = await ctx.Client.GetChannelAsync(cid).ConfigureAwait(false);
@@ -322,10 +321,10 @@ public class DiscordScheduledEventConverter : IArgumentConverter<DiscordSchedule
 		{
 			var uripath = DiscordRegEx.Event.Match(uri.AbsoluteUri);
 			if (uripath.Success
-				&& ulong.TryParse(uripath.Groups["guild"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
-					out var gid)
-				&& ulong.TryParse(uripath.Groups["event"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
-					out seid))
+			    && ulong.TryParse(uripath.Groups["guild"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
+				    out var gid)
+			    && ulong.TryParse(uripath.Groups["event"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
+				    out seid))
 			{
 				var guild = await ctx.Client.GetGuildAsync(gid).ConfigureAwait(false);
 				if (guild == null)
@@ -384,16 +383,16 @@ public class DiscordEmojiConverter : IArgumentConverter<DiscordEmoji>
 			return !ulong.TryParse(sid, NumberStyles.Integer, CultureInfo.InvariantCulture, out var id)
 				? Task.FromResult(Optional<DiscordEmoji>.None)
 				: DiscordEmoji.TryFromGuildEmote(ctx.Client, id, out emoji)
-				? Task.FromResult(Optional.Some(emoji))
-				: Task.FromResult(Optional.Some(new DiscordEmoji
-				{
-					Discord = ctx.Client,
-					Id = id,
-					Name = name,
-					IsAnimated = anim,
-					RequiresColons = true,
-					IsManaged = false
-				}));
+					? Task.FromResult(Optional.Some(emoji))
+					: Task.FromResult(Optional.Some(new DiscordEmoji
+					{
+						Discord = ctx.Client,
+						Id = id,
+						Name = name,
+						IsAnimated = anim,
+						RequiresColons = true,
+						IsManaged = false
+					}));
 		}
 
 		return Task.FromResult(Optional<DiscordEmoji>.None);

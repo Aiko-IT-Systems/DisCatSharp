@@ -19,7 +19,6 @@ internal class InteractionPaginationRequest : IPaginationRequest
 
 	private readonly TaskCompletionSource<bool> _tcs = new();
 
-
 	private DiscordInteraction _lastInteraction;
 	private CancellationTokenSource _interactionCts;
 
@@ -29,7 +28,6 @@ internal class InteractionPaginationRequest : IPaginationRequest
 	private readonly PaginationButtons _buttons;
 	private readonly PaginationBehaviour _wrapBehavior;
 	private readonly ButtonPaginationBehavior _behaviorBehavior;
-
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="InteractionPaginationRequest"/> class.
@@ -42,13 +40,20 @@ internal class InteractionPaginationRequest : IPaginationRequest
 	/// <param name="buttons">The buttons.</param>
 	/// <param name="pages">The pages.</param>
 	/// <param name="token">The token.</param>
-	public InteractionPaginationRequest(DiscordInteraction interaction, DiscordMessage message, DiscordUser user,
-		PaginationBehaviour behavior, ButtonPaginationBehavior behaviorBehavior,
-		PaginationButtons buttons, IEnumerable<Page> pages, CancellationToken token)
+	public InteractionPaginationRequest(
+		DiscordInteraction interaction,
+		DiscordMessage message,
+		DiscordUser user,
+		PaginationBehaviour behavior,
+		ButtonPaginationBehavior behaviorBehavior,
+		PaginationButtons buttons,
+		IEnumerable<Page> pages,
+		CancellationToken token
+	)
 	{
 		this._user = user;
 		this._token = token;
-		this._buttons = new PaginationButtons(buttons);
+		this._buttons = new(buttons);
 		this._message = message;
 		this._wrapBehavior = behavior;
 		this._behaviorBehavior = behaviorBehavior;
@@ -71,7 +76,7 @@ internal class InteractionPaginationRequest : IPaginationRequest
 	{
 		this._interactionCts?.Dispose();
 		this._lastInteraction = interaction;
-		this._interactionCts = new CancellationTokenSource(TimeSpan.FromSeconds((60 * 15) - 5));
+		this._interactionCts = new(TimeSpan.FromSeconds(60 * 15 - 5));
 		this._interactionCts.Token.Register(() => this._tcs.TrySetResult(false));
 	}
 

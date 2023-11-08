@@ -1,4 +1,3 @@
-
 using DisCatSharp.Lavalink.Enums;
 
 using Newtonsoft.Json;

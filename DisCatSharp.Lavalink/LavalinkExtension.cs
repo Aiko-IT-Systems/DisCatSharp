@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -25,6 +24,7 @@ public sealed class LavalinkExtension : BaseExtension
 		add => this._sessionDisconnected.Register(value);
 		remove => this._sessionDisconnected.Unregister(value);
 	}
+
 	private AsyncEvent<LavalinkExtension, LavalinkSessionDisconnectedEventArgs> _sessionDisconnected;
 
 	/// <summary>
@@ -35,6 +35,7 @@ public sealed class LavalinkExtension : BaseExtension
 		add => this._sessionConnected.Register(value);
 		remove => this._sessionConnected.Unregister(value);
 	}
+
 	private AsyncEvent<LavalinkExtension, LavalinkSessionConnectedEventArgs> _sessionConnected;
 
 	/// <summary>
@@ -80,7 +81,6 @@ public sealed class LavalinkExtension : BaseExtension
 		this._sessionConnected = new("LAVALINK_SESSION_CONNECTED", TimeSpan.Zero, this.Client.EventErrorHandler);
 	}
 
-
 	/// <summary>
 	/// Connect to a Lavalink session.
 	/// </summary>
@@ -100,6 +100,7 @@ public sealed class LavalinkExtension : BaseExtension
 			var versionInfo = await this.REST.GetVersionAsync().ConfigureAwait(false);
 			if (!versionInfo.Headers.Contains("Lavalink-Api-Version"))
 				throw new("Lavalink v4 is required");
+
 			if (versionInfo.Headers.TryGetValues("Lavalink-Api-Version", out var headerValues))
 				if (headerValues.First() != "4")
 					throw new("Lavalink v4 is required");
@@ -183,27 +184,27 @@ public sealed class LavalinkExtension : BaseExtension
 			var bPenaltyCount = b.Statistics.PlayingPlayers;
 
 			//cpu load
-			aPenaltyCount += (int)Math.Pow(1.05d, (100 * (a.Statistics.Cpu.SystemLoad / a.Statistics.Cpu.Cores) * 10) - 10);
-			bPenaltyCount += (int)Math.Pow(1.05d, (100 * (b.Statistics.Cpu.SystemLoad / a.Statistics.Cpu.Cores) * 10) - 10);
+			aPenaltyCount += (int)Math.Pow(1.05d, 100 * (a.Statistics.Cpu.SystemLoad / a.Statistics.Cpu.Cores) * 10 - 10);
+			bPenaltyCount += (int)Math.Pow(1.05d, 100 * (b.Statistics.Cpu.SystemLoad / a.Statistics.Cpu.Cores) * 10 - 10);
 
 			//frame load
 			if (a.Statistics.Frames!.Deficit > 0)
 			{
 				//deficit frame load
-				aPenaltyCount += (int)((Math.Pow(1.03d, 500f * (a.Statistics.Frames.Deficit / 3000f)) * 600) - 600);
+				aPenaltyCount += (int)(Math.Pow(1.03d, 500f * (a.Statistics.Frames.Deficit / 3000f)) * 600 - 600);
 
 				//null frame load
-				aPenaltyCount += (int)((Math.Pow(1.03d, 500f * (a.Statistics.Frames.Deficit / 3000f)) * 300) - 300);
+				aPenaltyCount += (int)(Math.Pow(1.03d, 500f * (a.Statistics.Frames.Deficit / 3000f)) * 300 - 300);
 			}
 
 			//frame load
 			if (b.Statistics.Frames!.Deficit > 0)
 			{
 				//deficit frame load
-				bPenaltyCount += (int)((Math.Pow(1.03d, 500f * (b.Statistics.Frames.Deficit / 3000f)) * 600) - 600);
+				bPenaltyCount += (int)(Math.Pow(1.03d, 500f * (b.Statistics.Frames.Deficit / 3000f)) * 600 - 600);
 
 				//null frame load
-				bPenaltyCount += (int)((Math.Pow(1.03d, 500f * (b.Statistics.Frames.Deficit / 3000f)) * 300) - 300);
+				bPenaltyCount += (int)(Math.Pow(1.03d, 500f * (b.Statistics.Frames.Deficit / 3000f)) * 300 - 300);
 			}
 
 			return aPenaltyCount - bPenaltyCount;

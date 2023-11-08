@@ -68,8 +68,14 @@ public class DiscordWebhookClient
 	/// <param name="loggerFactory">The optional logging factory to use for this client. Defaults to null.</param>
 	/// <param name="minimumLogLevel">The minimum logging level for messages. Defaults to information.</param>
 	/// <param name="logTimestampFormat">The timestamp format to use for the logger.</param>
-	public DiscordWebhookClient(IWebProxy proxy = null!, TimeSpan? timeout = null, bool useRelativeRateLimit = true,
-		ILoggerFactory loggerFactory = null!, LogLevel minimumLogLevel = LogLevel.Information, string logTimestampFormat = "yyyy-MM-dd HH:mm:ss zzz")
+	public DiscordWebhookClient(
+		IWebProxy proxy = null!,
+		TimeSpan? timeout = null,
+		bool useRelativeRateLimit = true,
+		ILoggerFactory loggerFactory = null!,
+		LogLevel minimumLogLevel = LogLevel.Information,
+		string logTimestampFormat = "yyyy-MM-dd HH:mm:ss zzz"
+	)
 	{
 		this.MinimumLogLevel = minimumLogLevel;
 		this.LogTimestampFormat = logTimestampFormat;
@@ -99,6 +105,7 @@ public class DiscordWebhookClient
 	{
 		if (string.IsNullOrWhiteSpace(token))
 			throw new ArgumentNullException(nameof(token));
+
 		token = token.Trim();
 
 		if (this.Hooks.Any(x => x.Id == id))
@@ -207,7 +214,6 @@ public class DiscordWebhookClient
 		var messages = new Dictionary<DiscordWebhook, DiscordMessage>();
 
 		foreach (var hook in this.Hooks)
-		{
 			try
 			{
 				if (this.Username != null)
@@ -220,7 +226,6 @@ public class DiscordWebhookClient
 			{
 				deadHooks.Add(hook);
 			}
-		}
 
 		// Removing dead webhooks from collection
 		foreach (var xwh in deadHooks)

@@ -126,7 +126,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// <param name="e"><see cref="DiscordEmoji"/> to compare to.</param>
 	/// <returns>Whether the <see cref="DiscordEmoji"/> is equal to this <see cref="DiscordEmoji"/>.</returns>
 	public bool Equals(DiscordEmoji e)
-		=> e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.Name == e.Name));
+		=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id && this.Name == e.Name);
 
 	/// <summary>
 	/// Gets the hash code for this <see cref="DiscordEmoji"/>.
@@ -135,8 +135,8 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	public override int GetHashCode()
 	{
 		var hash = 13;
-		hash = (hash * 7) + this.Id.GetHashCode();
-		hash = (hash * 7) + this.Name.GetHashCode();
+		hash = hash * 7 + this.Id.GetHashCode();
+		hash = hash * 7 + this.Name.GetHashCode();
 
 		return hash;
 	}
@@ -158,7 +158,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1.Name == e2.Name));
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && (o1 == null && o2 == null || e1.Id == e2.Id && e1.Name == e2.Name);
 	}
 
 	/// <summary>
@@ -194,7 +194,10 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	public static DiscordEmoji FromUnicode(BaseDiscordClient client, string unicodeEntity)
 		=> !IsValidUnicode(unicodeEntity)
 			? throw new ArgumentException("Specified unicode entity is not a valid unicode emoji.", nameof(unicodeEntity))
-			: new DiscordEmoji { Name = unicodeEntity, Discord = client };
+			: new DiscordEmoji
+			{
+				Name = unicodeEntity, Discord = client
+			};
 
 	/// <summary>
 	/// Creates an emoji object from a unicode entity.
@@ -223,7 +226,10 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 		if (!s_unicodeEmojis.TryGetValue(discordName, out unicodeEntity))
 			return false;
 
-		emoji = new() { Name = unicodeEntity, Discord = client };
+		emoji = new()
+		{
+			Name = unicodeEntity, Discord = client
+		};
 		return true;
 	}
 
@@ -248,10 +254,8 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 			throw new ArgumentNullException(nameof(client), "Client cannot be null.");
 
 		foreach (var guild in client.Guilds.Values)
-		{
 			if (guild.Emojis.TryGetValue(id, out var found))
 				return found;
-		}
 
 		throw new KeyNotFoundException("Given emote was not found.");
 	}
@@ -269,10 +273,8 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 			throw new ArgumentNullException(nameof(client), "Client cannot be null.");
 
 		foreach (var guild in client.Guilds.Values)
-		{
 			if (guild.Emojis.TryGetValue(id, out emoji))
 				return true;
-		}
 
 		emoji = null;
 		return false;
@@ -296,7 +298,10 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 			throw new ArgumentNullException(nameof(name), "Name cannot be empty or null.");
 
 		if (s_unicodeEmojis.TryGetValue(name, out var unicodeEntity))
-			return new() { Discord = client, Name = unicodeEntity };
+			return new()
+			{
+				Discord = client, Name = unicodeEntity
+			};
 
 		if (includeGuilds)
 		{
@@ -344,7 +349,10 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 
 		if (s_unicodeEmojis.TryGetValue(name, out var unicodeEntity))
 		{
-			emoji = new() { Discord = client, Name = unicodeEntity };
+			emoji = new()
+			{
+				Discord = client, Name = unicodeEntity
+			};
 			return true;
 		}
 

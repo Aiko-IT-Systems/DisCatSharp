@@ -40,7 +40,12 @@ internal sealed class ClientProperties : ObservableApiObject
 				return "miros bsd";
 			else if (plat.Contains("desktopbsd"))
 				return "desktopbsd";
-			else return plat.Contains("darwin") ? "osx" : plat.Contains("unix") ? "unix" : "toaster (unknown)";
+			else
+				return plat.Contains("darwin")
+					? "osx"
+					: plat.Contains("unix")
+						? "unix"
+						: "toaster (unknown)";
 		}
 	}
 

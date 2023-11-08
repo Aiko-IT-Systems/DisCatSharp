@@ -40,5 +40,4 @@ public sealed class AutoModerationFlagToChannelChangeSet : DiscordAuditLogEntry
 	/// <inheritdoc />
 	internal override string? ChangeDescription
 		=> $"Automod flagged a message in {this.Channel} from {this.TargetMember} for reason {this.Reason ?? "No reason given".Italic()}";
-
 }

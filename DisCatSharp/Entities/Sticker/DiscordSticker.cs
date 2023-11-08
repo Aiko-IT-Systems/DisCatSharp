@@ -138,7 +138,6 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// </summary>
 	public override string ToString() => $"Sticker {this.Id}; {this.Name}; {this.FormatType}";
 
-
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 	/// <summary>
 	/// Modifies the sticker
@@ -163,7 +162,6 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 						? throw new ArgumentException("Sticker tags needs to be a unicode emoji.")
 						: this.Discord.ApiClient.ModifyGuildStickerAsync(this.GuildId.Value, this.Id, name, description, tags, reason);
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-
 
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 	/// <summary>

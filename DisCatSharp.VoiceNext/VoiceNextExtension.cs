@@ -48,12 +48,12 @@ public sealed class VoiceNextExtension : BaseExtension
 	/// <param name="config">The config.</param>
 	internal VoiceNextExtension(VoiceNextConfiguration config)
 	{
-		this._configuration = new VoiceNextConfiguration(config);
+		this._configuration = new(config);
 		this.IsIncomingEnabled = config.EnableIncoming;
 
-		this._activeConnections = new ConcurrentDictionary<ulong, VoiceNextConnection>();
-		this._voiceStateUpdates = new ConcurrentDictionary<ulong, TaskCompletionSource<VoiceStateUpdateEventArgs>>();
-		this._voiceServerUpdates = new ConcurrentDictionary<ulong, TaskCompletionSource<VoiceServerUpdateEventArgs>>();
+		this._activeConnections = new();
+		this._voiceStateUpdates = new();
+		this._voiceServerUpdates = new();
 	}
 
 	/// <summary>
@@ -102,10 +102,7 @@ public sealed class VoiceNextExtension : BaseExtension
 			OpCode = 4,
 			Payload = new VoiceStateUpdatePayload
 			{
-				GuildId = gld.Id,
-				ChannelId = channel.Id,
-				Deafened = false,
-				Muted = false
+				GuildId = gld.Id, ChannelId = channel.Id, Deafened = false, Muted = false
 			}
 		};
 		var vsj = JsonConvert.SerializeObject(vsd, Formatting.None);
@@ -114,15 +111,12 @@ public sealed class VoiceNextExtension : BaseExtension
 		var vstu = await vstut.Task.ConfigureAwait(false);
 		var vstup = new VoiceStateUpdatePayload
 		{
-			SessionId = vstu.SessionId,
-			UserId = vstu.User.Id
+			SessionId = vstu.SessionId, UserId = vstu.User.Id
 		};
 		var vsru = await vsrut.Task.ConfigureAwait(false);
 		var vsrup = new VoiceServerUpdatePayload
 		{
-			Endpoint = vsru.Endpoint,
-			GuildId = vsru.Guild.Id,
-			Token = vsru.VoiceToken
+			Endpoint = vsru.Endpoint, GuildId = vsru.Guild.Id, Token = vsru.VoiceToken
 		};
 
 		var vnc = new VoiceNextConnection(this.Client, gld, channel, this._configuration, vsrup, vstup);
@@ -156,8 +150,7 @@ public sealed class VoiceNextExtension : BaseExtension
 			OpCode = 4,
 			Payload = new VoiceStateUpdatePayload
 			{
-				GuildId = guild.Id,
-				ChannelId = null
+				GuildId = guild.Id, ChannelId = null
 			}
 		};
 		var vsj = JsonConvert.SerializeObject(vsd, Formatting.None);
@@ -208,11 +201,9 @@ public sealed class VoiceNextExtension : BaseExtension
 
 		if (this._activeConnections.TryGetValue(e.Guild.Id, out var vnc))
 		{
-			vnc.ServerData = new VoiceServerUpdatePayload
+			vnc.ServerData = new()
 			{
-				Endpoint = e.Endpoint,
-				GuildId = e.Guild.Id,
-				Token = e.VoiceToken
+				Endpoint = e.Endpoint, GuildId = e.Guild.Id, Token = e.VoiceToken
 			};
 
 			var eps = e.Endpoint;
@@ -225,10 +216,12 @@ public sealed class VoiceNextExtension : BaseExtension
 				epp = int.Parse(eps[(epi + 1)..]);
 			}
 			else
-			{
 				eph = eps;
-			}
-			vnc.WebSocketEndpoint = new ConnectionEndpoint { Hostname = eph, Port = epp };
+
+			vnc.WebSocketEndpoint = new()
+			{
+				Hostname = eph, Port = epp
+			};
 
 			vnc.Resume = false;
 			await vnc.ReconnectAsync().ConfigureAwait(false);

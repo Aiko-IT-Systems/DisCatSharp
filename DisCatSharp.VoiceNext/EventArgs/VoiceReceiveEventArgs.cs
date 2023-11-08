@@ -15,7 +15,6 @@ public class VoiceReceiveEventArgs : DiscordEventArgs
 	/// </summary>
 	public uint Ssrc { get; internal set; }
 
-
 	/// <summary>
 	/// Gets the user that sent the audio data.
 	/// </summary>
