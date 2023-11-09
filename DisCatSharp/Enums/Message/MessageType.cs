@@ -207,6 +207,11 @@ public enum MessageType : int
 	GuildIncidentReportFalseAlarm = 39,
 
 	/// <summary>
+	/// Message indicating a poll was created.
+	/// </summary>
+	Poll = 43,
+
+	/// <summary>
 	/// Message indicating that a user bought something from the server shop.
 	/// </summary>
 	PurchaseNotification = 44
