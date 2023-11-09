@@ -116,7 +116,7 @@ public static class DiscordJson
 		{
 			Level = SentryLevel.Warning, Logger = nameof(DiscordJson), Message = sentryMessage
 		};
-		sentryEvent.SetFingerprint(BaseDiscordClient.GenerateSentryFingerPrint(sentryEvent, sentryJson.GetHashCode().ToString()));
+		sentryEvent.SetFingerprint(BaseDiscordClient.GenerateSentryFingerPrint(sentryEvent));
 		sentryEvent.SetExtra("Found Fields", sentryJson);
 		if (discord.Configuration.AttachUserInfo && discord.CurrentUser != null)
 			sentryEvent.User = new()
@@ -185,7 +185,7 @@ public static class DiscordJson
 		{
 			Level = SentryLevel.Warning, Logger = nameof(DiscordJson), Message = sentryMessage
 		};
-		sentryEvent.SetFingerprint(BaseDiscordClient.GenerateSentryFingerPrint(sentryEvent, sentryJson.GetHashCode().ToString()));
+		sentryEvent.SetFingerprint(BaseDiscordClient.GenerateSentryFingerPrint(sentryEvent));
 		sentryEvent.SetExtra("Found Fields", sentryJson);
 		if (discord.Configuration.AttachUserInfo && discord.CurrentUser != null)
 			sentryEvent.User = new()
