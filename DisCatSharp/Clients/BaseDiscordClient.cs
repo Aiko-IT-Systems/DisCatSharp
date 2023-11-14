@@ -33,7 +33,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <summary>
 	/// Gets the api client.
 	/// </summary>
-	internal protected DiscordApiClient ApiClient { get; }
+	protected internal DiscordApiClient ApiClient { get; }
 
 	/// <summary>
 	/// Gets the sentry client.
@@ -48,7 +48,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <summary>
 	/// Gets the configuration.
 	/// </summary>
-	internal protected DiscordConfiguration Configuration { get; }
+	protected internal DiscordConfiguration Configuration { get; }
 
 	/// <summary>
 	/// Gets the instance of the logger for this client.
