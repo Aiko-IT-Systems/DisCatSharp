@@ -34,8 +34,8 @@ Documentation: https://docs.dcs.aitsys.dev/articles/modules/audio/voicenext/prer
     </PackageReference>
     <PackageReference Include="DisCatSharp.Attributes" Version="10.4.3" />
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
-    <PackageReference Include="System.Threading.Channels" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="System.Threading.Channels" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
