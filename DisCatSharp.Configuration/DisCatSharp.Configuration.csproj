@@ -28,8 +28,8 @@
     </PackageReference>
     <PackageReference Include="DisCatSharp.Attributes" Version="10.4.3" />
       <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
-      <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
 

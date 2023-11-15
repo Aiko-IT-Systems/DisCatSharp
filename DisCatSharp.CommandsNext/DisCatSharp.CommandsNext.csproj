@@ -39,7 +39,7 @@ Documentation: https://docs.dcs.aitsys.dev/articles/modules/commandsnext/intro.h
     </PackageReference>
     <PackageReference Include="DisCatSharp.Attributes" Version="10.4.3" />
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
   </ItemGroup>
 
 </Project>
