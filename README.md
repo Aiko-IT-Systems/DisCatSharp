@@ -16,6 +16,7 @@
 
 ## New
 
+- NET 8 Support
 - Support for the new [Username System](https://dis.gd/usernames) (pomelo)
 - Support for [Linked Roles](https://discord.com/build/linked-roles)
 - Full support for [Application Subscriptions](https://discord.com/build/apply-now)
@@ -23,7 +24,7 @@
 - Partial support for role subscriptions
 - Partial support for burst reactions
 - Full support for onboarding
-- Support for default select menu values (THANKS MAISY FOR ADDING IT TO DISCORD) 
+- Support for default select menu values (THANKS MAISY FOR ADDING IT TO DISCORD)
 
 ## Breaking
 

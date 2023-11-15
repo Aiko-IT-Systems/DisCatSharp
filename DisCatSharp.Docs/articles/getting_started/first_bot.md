@@ -33,7 +33,7 @@ Enter your desired project name, then click on the `Create` button.
 ![Name Project Screen](/images/getting_started_first_bot_03.png)
 
 <br/>
-Now select `.NET 7.0` from the dropdown menu, tick the `Do not use top-level statements` checkbox and click on the `Next` button.
+Now select `.NET 7.0` or `.NET 8.0` from the dropdown menu, tick the `Do not use top-level statements` checkbox and click on the `Next` button.
 
 ![Framework Project Screen](/images/getting_started_first_bot_04.png)
 
