@@ -365,7 +365,7 @@ public enum Permissions : long
 	/// <summary>
 	/// Allows members to interact with the Clyde AI bot.
 	/// </summary>
-	[PermissionString("Use Clyde AI"), DiscordInExperiment]
+	[PermissionString("Use Clyde AI"), DiscordDeprecated("Clyde will be shutdown by December 2023")]
  	UseClydeAi = 1L<<47,
 
 	/// <summary>
