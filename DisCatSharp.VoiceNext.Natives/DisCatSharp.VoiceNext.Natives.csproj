@@ -28,6 +28,7 @@ Manual Download: https://docs.dcs.aitsys.dev/natives/index.html
 
   <ItemGroup>
     <Content Include="runtimes/**/*.*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>true</Pack>
       <PackagePath>runtimes</PackagePath>
     </Content>
