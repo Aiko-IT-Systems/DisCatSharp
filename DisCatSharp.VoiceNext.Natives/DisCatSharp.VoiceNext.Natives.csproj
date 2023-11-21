@@ -26,12 +26,21 @@ Manual Download: https://docs.dcs.aitsys.dev/natives/index.html
 	<Nullable>annotations</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="runtimes/**/*.*">
-      <Pack>true</Pack>
-      <PackagePath>runtimes</PackagePath>
-    </Content>
-  </ItemGroup>
+
+	<ItemGroup Condition=" '$(IncludeAssets)' == '' ">
+		<!-- Logic for normal build -->
+		<Content Include="runtimes/**/*.*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(IncludeAssets)' != '' ">
+		<!-- Logic for NuGet packing -->
+		<Content Include="runtimes/**/*.*">
+			<Pack>true</Pack>
+			<PackagePath>runtimes</PackagePath>
+		</Content>
+	</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.1.0">

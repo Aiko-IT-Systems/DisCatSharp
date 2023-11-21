@@ -655,6 +655,8 @@ public sealed class VoiceNextConnection : IDisposable
 				// user isn't present as we haven't received a speaking event yet.
 				User = null
 			};
+
+			_transmittingSsrCs.TryAdd(ssrc, vtx);
 		}
 
 		voiceSender = vtx;
