@@ -189,39 +189,39 @@ csharp_preserve_single_line_statements = true
 
 # Naming rules
 
-dotnet_naming_rule.interface_should_be_begins_with_i.severity = error
+dotnet_naming_rule.interface_should_be_begins_with_i.severity = hint
 dotnet_naming_rule.interface_should_be_begins_with_i.symbols = interface
 dotnet_naming_rule.interface_should_be_begins_with_i.style = begins_with_i
 
-dotnet_naming_rule.private_static_readonly_fields_convention.severity = error
+dotnet_naming_rule.private_static_readonly_fields_convention.severity = hint
 dotnet_naming_rule.private_static_readonly_fields_convention.symbols = private_static_fields_readonly
 dotnet_naming_rule.private_static_readonly_fields_convention.style = private_static_camel_case
 
-dotnet_naming_rule.private_static_fields_convention.severity = error
+dotnet_naming_rule.private_static_fields_convention.severity = hint
 dotnet_naming_rule.private_static_fields_convention.symbols = private_static_field_props
 dotnet_naming_rule.private_static_fields_convention.style = private_static_camel_case
 
-dotnet_naming_rule.readonly.severity = error
+dotnet_naming_rule.readonly.severity = hint
 dotnet_naming_rule.readonly.symbols = readonly
 dotnet_naming_rule.readonly.style = underscore_prefixed_camel_case
 
-dotnet_naming_rule.private_field_should_be_underscore_prefixed_camel_case.severity = error
+dotnet_naming_rule.private_field_should_be_underscore_prefixed_camel_case.severity = hint
 dotnet_naming_rule.private_field_should_be_underscore_prefixed_camel_case.symbols = private_fields
 dotnet_naming_rule.private_field_should_be_underscore_prefixed_camel_case.style = underscore_prefixed_camel_case
 
-dotnet_naming_rule.types_should_be_pascal_case.severity = error
+dotnet_naming_rule.types_should_be_pascal_case.severity = hint
 dotnet_naming_rule.types_should_be_pascal_case.symbols = types
 dotnet_naming_rule.types_should_be_pascal_case.style = pascal_case
 
-dotnet_naming_rule.const_fields_should_be_all_upper.severity = error
+dotnet_naming_rule.const_fields_should_be_all_upper.severity = hint
 dotnet_naming_rule.const_fields_should_be_all_upper.symbols = const_fields
 dotnet_naming_rule.const_fields_should_be_all_upper.style = constant_style
 
-dotnet_naming_rule.constants_should_be_upper_case.severity = error
+dotnet_naming_rule.constants_should_be_upper_case.severity = hint
 dotnet_naming_rule.constants_should_be_upper_case.symbols = constants
 dotnet_naming_rule.constants_should_be_upper_case.style = constant_style
 
-dotnet_naming_rule.private_props_not_allowed.severity = error
+dotnet_naming_rule.private_props_not_allowed.severity = hint
 dotnet_naming_rule.private_props_not_allowed.symbols = private_prop
 dotnet_naming_rule.private_props_not_allowed.style = constant_style
 

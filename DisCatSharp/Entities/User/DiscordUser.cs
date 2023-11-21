@@ -562,12 +562,16 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <param name="e1">First user to compare.</param>
 	/// <param name="e2">Second user to compare.</param>
 	/// <returns>Whether the two users are equal.</returns>
-	public static bool operator ==(DiscordUser e1, DiscordUser e2)
+	public static bool operator ==(DiscordUser? e1, DiscordUser? e2)
 	{
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+		if (o1 is null && o2 is null) return true;
+		if (o1 is null || o2 is null) // one of them is null
+			return false;
+
+		return e1.Id == e2.Id;
 	}
 
 	/// <summary>
@@ -576,7 +580,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <param name="e1">First user to compare.</param>
 	/// <param name="e2">Second user to compare.</param>
 	/// <returns>Whether the two users are not equal.</returns>
-	public static bool operator !=(DiscordUser e1, DiscordUser e2)
+	public static bool operator !=(DiscordUser? e1, DiscordUser? e2)
 		=> !(e1 == e2);
 }
 
