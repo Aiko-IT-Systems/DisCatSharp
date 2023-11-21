@@ -6,7 +6,7 @@ namespace DisCatSharp.VoiceNext.Codec;
 /// <summary>
 /// The opus.
 /// </summary>
-internal sealed class Opus : IDisposable
+public class Opus : IDisposable
 {
 	/// <summary>
 	/// Gets the audio format.
