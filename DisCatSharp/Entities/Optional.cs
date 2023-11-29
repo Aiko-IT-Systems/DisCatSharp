@@ -73,7 +73,7 @@ public struct None
 /// <summary>
 /// Used internally to make serialization more convenient, do NOT change this, do NOT implement this yourself.
 /// </summary>
-internal interface IOptional
+public interface IOptional
 {
 	/// <summary>
 	/// Gets a whether it has a value.
