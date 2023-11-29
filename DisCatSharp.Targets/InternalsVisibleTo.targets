@@ -33,5 +33,6 @@
 	<InternalsVisibleTo Include="ProjectMakoto" />
 	<InternalsVisibleTo Include="SidePlus_AuthBot" />
 	<InternalsVisibleTo Include="SidePlus_Helper" />
+	<InternalsVisibleTo Include="Cache_Design" />
   </ItemGroup>
 </Project>
