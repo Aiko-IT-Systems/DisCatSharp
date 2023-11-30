@@ -53,4 +53,8 @@ Common tools for DisCatSharp, like regexes and converters!
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
+
 </Project>

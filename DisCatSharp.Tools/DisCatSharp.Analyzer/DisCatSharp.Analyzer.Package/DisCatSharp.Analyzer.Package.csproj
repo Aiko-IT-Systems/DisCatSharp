@@ -69,7 +69,7 @@
   <ItemGroup>
 	<ProjectReference Include="..\DisCatSharp.Analyzer\DisCatSharp.Analyzer.csproj" />
 	<PackageReference Include="DisCatSharp.Attributes" Version="10.4.3" PrivateAssets="all" GeneratePathProperty="true" />
-	<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.7.0" PrivateAssets="all" />
+	<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.8.0" PrivateAssets="all" />
 	<PackageReference Update="NETStandard.Library" PrivateAssets="all" />
   </ItemGroup>
 
