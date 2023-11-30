@@ -46,4 +46,8 @@ Documentation: https://docs.dcs.aitsys.dev/articles/modules/audio/voicenext/prer
     <ProjectReference Include="..\DisCatSharp.VoiceNext.Natives\DisCatSharp.VoiceNext.Natives.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
+
 </Project>
