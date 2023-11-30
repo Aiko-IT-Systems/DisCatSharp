@@ -27,6 +27,7 @@ public sealed class DiscordInteractionResponseBuilder
 			this.FlagsChanged = true;
 		}
 	}
+
 	private bool EPH { get; set; }
 
 	/// <summary>
@@ -41,6 +42,7 @@ public sealed class DiscordInteractionResponseBuilder
 			this.FlagsChanged = true;
 		}
 	}
+
 	private bool EMB_SUP { get; set; }
 
 	/// <summary>
@@ -55,6 +57,7 @@ public sealed class DiscordInteractionResponseBuilder
 			this.FlagsChanged = true;
 		}
 	}
+
 	private bool NOTI_SUP { get; set; }
 
 	/// <summary>
@@ -72,28 +75,32 @@ public sealed class DiscordInteractionResponseBuilder
 		{
 			if (value != null && value.Length > 2000)
 				throw new ArgumentException("Content length cannot exceed 2000 characters.", nameof(value));
+
 			this._content = value;
 		}
 	}
+
 	private string _content;
 
 	/// <summary>
 	/// Embeds to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
-	private readonly List<DiscordEmbed> _embeds = new();
 
+	private readonly List<DiscordEmbed> _embeds = new();
 
 	/// <summary>
 	/// Files to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordMessageFile> Files => this._files;
+
 	private readonly List<DiscordMessageFile> _files = new();
 
 	/// <summary>
 	/// Components to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
+
 	private readonly List<DiscordActionRowComponent> _components = new();
 
 	/// <summary>
@@ -101,20 +108,27 @@ public sealed class DiscordInteractionResponseBuilder
 	/// Mutually exclusive with content, embed, and components.
 	/// </summary>
 	public IReadOnlyList<DiscordApplicationCommandAutocompleteChoice> Choices => this._choices;
-	private readonly List<DiscordApplicationCommandAutocompleteChoice> _choices = new();
 
+	private readonly List<DiscordApplicationCommandAutocompleteChoice> _choices = new();
 
 	/// <summary>
 	/// Mentions to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<IMention> Mentions => this._mentions;
+
 	private readonly List<IMention> _mentions = new();
+
+	/// <summary>
+	/// The hints to send on this interaction response.
+	/// </summary>
+	public IReadOnlyList<DiscordInteractionCallbackHint> CallbackHints => this._callbackHints;
+
+	private readonly List<DiscordInteractionCallbackHint> _callbackHints = new();
 
 	/// <summary>
 	/// Constructs a new empty interaction response builder.
 	/// </summary>
 	public DiscordInteractionResponseBuilder() { }
-
 
 	/// <summary>
 	/// Constructs a new <see cref="DiscordInteractionResponseBuilder"/> based on an existing <see cref="DisCatSharp.Entities.DiscordMessageBuilder"/>.
@@ -128,6 +142,24 @@ public sealed class DiscordInteractionResponseBuilder
 		this._components.AddRange(builder.Components);
 	}
 
+	/// <summary>
+	/// Provides the interaction respond with <see cref="DiscordInteractionCallbackHint"/>s.
+	/// </summary>
+	/// <param name="hintBuilder">The hint builder.</param>
+	/// <returns>The current builder to chain calls with.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when the <paramref name="hintBuilder"/> is <see langword="null"/>.</exception>
+	public DiscordInteractionResponseBuilder WithCallbackHints(DiscordCallbackHintBuilder hintBuilder)
+	{
+		if (hintBuilder == null)
+			throw new ArgumentNullException(nameof(hintBuilder), "Callback hint builder cannot be null.");
+
+		if (!hintBuilder.CallbackHints.Any())
+			return this;
+
+		this._callbackHints.Clear();
+		this._callbackHints.AddRange(hintBuilder.CallbackHints);
+		return this;
+	}
 
 	/// <summary>
 	/// Appends a collection of components to the builder. Each call will append to a new row.
@@ -142,7 +174,8 @@ public sealed class DiscordInteractionResponseBuilder
 	/// Appends several rows of components to the message
 	/// </summary>
 	/// <param name="components">The rows of components to add, holding up to five each.</param>
-	/// <returns></returns>
+	/// <returns>The current builder to chain calls with.</returns>
+	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
 	public DiscordInteractionResponseBuilder AddComponents(IEnumerable<DiscordActionRowComponent> components)
 	{
 		var ara = components.ToArray();
@@ -179,6 +212,7 @@ public sealed class DiscordInteractionResponseBuilder
 	/// Indicates if the interaction response will be text-to-speech.
 	/// </summary>
 	/// <param name="tts">Text-to-speech</param>
+	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder WithTts(bool tts)
 	{
 		this.IsTts = tts;
@@ -188,6 +222,7 @@ public sealed class DiscordInteractionResponseBuilder
 	/// <summary>
 	/// Sets the interaction response to be ephemeral.
 	/// </summary>
+	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AsEphemeral()
 	{
 		this.FlagsChanged = true;
@@ -198,6 +233,7 @@ public sealed class DiscordInteractionResponseBuilder
 	/// <summary>
 	/// Sets the interaction response to suppress embeds.
 	/// </summary>
+	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder SuppressEmbeds()
 	{
 		this.FlagsChanged = true;
@@ -208,6 +244,7 @@ public sealed class DiscordInteractionResponseBuilder
 	/// <summary>
 	/// Sets the interaction response to be send as silent message.
 	/// </summary>
+	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AsSilentMessage()
 	{
 		this.FlagsChanged = true;
@@ -219,6 +256,7 @@ public sealed class DiscordInteractionResponseBuilder
 	/// Sets the content of the message to send.
 	/// </summary>
 	/// <param name="content">Content to send.</param>
+	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder WithContent(string content)
 	{
 		this.Content = content;
@@ -229,6 +267,7 @@ public sealed class DiscordInteractionResponseBuilder
 	/// Adds an embed to send with the interaction response.
 	/// </summary>
 	/// <param name="embed">Embed to add.</param>
+	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddEmbed(DiscordEmbed embed)
 	{
 		if (embed != null)
@@ -240,6 +279,7 @@ public sealed class DiscordInteractionResponseBuilder
 	/// Adds the given embeds to send with the interaction response.
 	/// </summary>
 	/// <param name="embeds">Embeds to add.</param>
+	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddEmbeds(IEnumerable<DiscordEmbed> embeds)
 	{
 		this._embeds.AddRange(embeds);
@@ -315,7 +355,6 @@ public sealed class DiscordInteractionResponseBuilder
 				this._files.Add(new(file.Key, file.Value, null));
 		}
 
-
 		return this;
 	}
 
@@ -323,6 +362,7 @@ public sealed class DiscordInteractionResponseBuilder
 	/// Adds the mention to the mentions to parse, etc. with the interaction response.
 	/// </summary>
 	/// <param name="mention">Mention to add.</param>
+	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddMention(IMention mention)
 	{
 		this._mentions.Add(mention);
@@ -333,6 +373,7 @@ public sealed class DiscordInteractionResponseBuilder
 	/// Adds the mentions to the mentions to parse, etc. with the interaction response.
 	/// </summary>
 	/// <param name="mentions">Mentions to add.</param>
+	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddMentions(IEnumerable<IMention> mentions)
 	{
 		this._mentions.AddRange(mentions);

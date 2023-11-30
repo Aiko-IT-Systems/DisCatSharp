@@ -146,6 +146,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	public Task CreateInteractionModalResponseAsync(DiscordInteractionModalBuilder builder)
 		=> this.Type != InteractionType.Ping && this.Type != InteractionType.ModalSubmit ? this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token, InteractionResponseType.Modal, builder) : throw new NotSupportedException("You can't respond to a PING with a modal.");
 
+	// TODO: Add hints support
 	/// <summary>
 	/// Creates an iframe response to this interaction.
 	/// </summary>

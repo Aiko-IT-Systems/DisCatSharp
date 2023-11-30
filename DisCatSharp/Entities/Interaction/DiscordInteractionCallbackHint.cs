@@ -25,5 +25,5 @@ public sealed class DiscordInteractionCallbackHint
 	/// The permissions that the bot requires to use this callback.
 	/// </summary>
 	[JsonProperty("required_permissions", NullValueHandling = NullValueHandling.Ignore)]
-	public Permissions RequiredPermissions { get; internal set; }
+	public Permissions? RequiredPermissions { get; internal set; }
 }
