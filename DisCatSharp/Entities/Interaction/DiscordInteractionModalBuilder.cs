@@ -19,9 +19,11 @@ public sealed class DiscordInteractionModalBuilder
 		{
 			if (value != null && value.Length > 128)
 				throw new ArgumentException("Title length cannot exceed 128 characters.", nameof(value));
+
 			this._title = value;
 		}
 	}
+
 	private string _title;
 
 	/// <summary>
@@ -33,7 +35,15 @@ public sealed class DiscordInteractionModalBuilder
 	/// Components to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> ModalComponents => this._components;
+
 	private readonly List<DiscordActionRowComponent> _components = new();
+
+	/// <summary>
+	/// The hints to send on this interaction response.
+	/// </summary>
+	public IReadOnlyList<DiscordInteractionCallbackHint> CallbackHints => this._callbackHints;
+
+	private readonly List<DiscordInteractionCallbackHint> _callbackHints = new();
 
 	/// <summary>
 	/// Constructs a new empty interaction modal builder.
@@ -44,15 +54,44 @@ public sealed class DiscordInteractionModalBuilder
 		this.CustomId = customId ?? Guid.NewGuid().ToString();
 	}
 
+	/// <summary>
+	/// Sets the title of the modal.
+	/// </summary>
+	/// <param name="title">The title to set.</param>
+	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionModalBuilder WithTitle(string title)
 	{
 		this.Title = title;
 		return this;
 	}
 
+	/// <summary>
+	/// Sets the custom id of the modal.
+	/// </summary>
+	/// <param name="customId">The custom id to set.</param>
+	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionModalBuilder WithCustomId(string customId)
 	{
 		this.CustomId = customId;
+		return this;
+	}
+
+	/// <summary>
+	/// Provides the interaction respond with <see cref="DiscordInteractionCallbackHint"/>s.
+	/// </summary>
+	/// <param name="hintBuilder">The hint builder.</param>
+	/// <returns>The current builder to chain calls with.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when the <paramref name="hintBuilder"/> is <see langword="null"/>.</exception>
+	public DiscordInteractionModalBuilder WithCallbackHints(DiscordCallbackHintBuilder hintBuilder)
+	{
+		if (hintBuilder == null)
+			throw new ArgumentNullException(nameof(hintBuilder), "Callback hint builder cannot be null.");
+
+		if (!hintBuilder.CallbackHints.Any())
+			return this;
+
+		this._callbackHints.Clear();
+		this._callbackHints.AddRange(hintBuilder.CallbackHints);
 		return this;
 	}
 
@@ -107,7 +146,10 @@ public sealed class DiscordInteractionModalBuilder
 			throw new ArgumentException($"You try to add too many components. We already have {this._components.Count}.");
 
 		foreach (var ar in ara)
-			this._components.Add(new(new List<DiscordComponent>() { ar }));
+			this._components.Add(new(new List<DiscordComponent>()
+			{
+				ar
+			}));
 
 		return this;
 	}
@@ -138,7 +180,10 @@ public sealed class DiscordInteractionModalBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	internal DiscordInteractionModalBuilder AddModalComponents(DiscordComponent component)
 	{
-		this._components.Add(new(new List<DiscordComponent>() { component }));
+		this._components.Add(new(new List<DiscordComponent>()
+		{
+			component
+		}));
 
 		return this;
 	}
@@ -155,7 +200,7 @@ public sealed class DiscordInteractionModalBuilder
 	public void Clear()
 	{
 		this._components.Clear();
-		this.Title = null;
-		this.CustomId = null;
+		this.Title = null!;
+		this.CustomId = null!;
 	}
 }
