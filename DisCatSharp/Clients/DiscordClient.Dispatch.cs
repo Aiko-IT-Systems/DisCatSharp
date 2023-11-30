@@ -3404,7 +3404,8 @@ public sealed partial class DiscordClient
 		if (member != null)
 		{
 			usr = new DiscordMember(member) { GuildId = guildId.Value, Discord = this };
-			this.UpdateUser(usr, guildId, interaction.Guild, member);
+			if (interaction.Guild is not null)
+				this.UpdateUser(usr, guildId, interaction.Guild, member);
 		}
 		else
 		{

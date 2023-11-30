@@ -55,11 +55,11 @@ internal static class ApplicationCommandEqualityChecks
 		{
 			sourceApplicationCommand.IntegrationTypes ??= new()
 			{
-				ApplicationCommandIntegrationTypes.InstalledToGuild
+				ApplicationCommandIntegrationTypes.GuildInstall
 			};
 			targetApplicationCommand.IntegrationTypes ??= new()
 			{
-				ApplicationCommandIntegrationTypes.InstalledToGuild
+				ApplicationCommandIntegrationTypes.GuildInstall
 			};
 		}
 

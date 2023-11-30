@@ -9,10 +9,10 @@ public enum ApplicationCommandIntegrationTypes : int
 	/// <summary>
 	/// Application command is installed for guild (default).
 	/// </summary>
-	InstalledToGuild = 0,
+	GuildInstall = 0,
 
 	/// <summary>
 	/// Application command is installed as user app.
 	/// </summary>
-	InstalledToUser = 1
+	UserInstall = 1
 }

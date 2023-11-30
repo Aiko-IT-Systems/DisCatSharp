@@ -9,15 +9,15 @@ public enum ApplicationCommandContexts : int
 	/// <summary>
 	/// Command can be used in guilds.
 	/// </summary>
-	Guilds = 0,
+	Guild = 0,
 
 	/// <summary>
-	/// Command can be used in direct messages.
+	/// Command can be used in direct messages with the bot.
 	/// </summary>
-	DirectMessages = 1,
+	BotDm = 1,
 
 	/// <summary>
 	/// Command can be used in group direct messages and direct messages.
 	/// </summary>
-	PrivateChannels = 2
+	PrivateChannel = 2
 }
