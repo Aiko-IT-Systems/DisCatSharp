@@ -35,12 +35,14 @@ public sealed class DiscordInteractionResolvedCollection : ObservableApiObject
 
 	/// <summary>
 	/// Gets the resolved message objects, if any.
+	/// <para>Not applicable for messages with resolved data for auto-populated select menus.</para>
 	/// </summary>
 	[JsonProperty("messages", NullValueHandling = NullValueHandling.Ignore)]
 	public IReadOnlyDictionary<ulong, DiscordMessage> Messages { get; internal set; }
 
 	/// <summary>
 	/// Gets the resolved attachments objects, if any.
+	/// <para>Not applicable for messages with resolved data for auto-populated select menus.</para>
 	/// </summary>
 	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
 	public IReadOnlyDictionary<ulong, DiscordAttachment> Attachments { get; internal set; }
