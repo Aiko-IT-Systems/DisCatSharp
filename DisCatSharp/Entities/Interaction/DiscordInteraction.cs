@@ -129,7 +129,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// Gets which integrations authorized the interaction.
 	/// </summary>
 	[JsonProperty("authorizing_integration_owners", NullValueHandling = NullValueHandling.Ignore)]
-	public AuthorizingIntegrationOwners AuthorizingIntegrationOwners { get; internal set; }
+	public AuthorizingIntegrationOwners? AuthorizingIntegrationOwners { get; internal set; }
 
 	/// <summary>
 	/// Creates a response to this interaction.
