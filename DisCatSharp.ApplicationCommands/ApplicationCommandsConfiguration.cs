@@ -30,6 +30,7 @@ public class ApplicationCommandsConfiguration
 	/// </summary>
 	public bool EnableLocalization { internal get; set; } = false;
 
+	// TODO: Check if it interferes with callback hints
 	/// <summary>
 	/// <para>Automatically defer all responses.</para>
 	/// <note type="note">If you enable this, you can't use CreateResponse. Use EditResponse instead.</note>
