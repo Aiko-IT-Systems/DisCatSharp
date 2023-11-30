@@ -77,7 +77,7 @@ public sealed class DiscordInteractionModalBuilder
 	}
 
 	/// <summary>
-	/// Provides the interaction respond with <see cref="DiscordInteractionCallbackHint"/>s.
+	/// Provides the interaction response with <see cref="DiscordInteractionCallbackHint"/>s.
 	/// </summary>
 	/// <param name="hintBuilder">The hint builder.</param>
 	/// <returns>The current builder to chain calls with.</returns>

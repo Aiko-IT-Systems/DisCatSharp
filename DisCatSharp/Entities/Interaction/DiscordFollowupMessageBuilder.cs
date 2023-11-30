@@ -27,6 +27,7 @@ public sealed class DiscordFollowupMessageBuilder
 			this.FlagsChanged = true;
 		}
 	}
+
 	private bool EPH { get; set; }
 
 	/// <summary>
@@ -41,6 +42,7 @@ public sealed class DiscordFollowupMessageBuilder
 			this.FlagsChanged = true;
 		}
 	}
+
 	private bool EMB_SUP { get; set; }
 
 	/// <summary>
@@ -55,6 +57,7 @@ public sealed class DiscordFollowupMessageBuilder
 			this.FlagsChanged = true;
 		}
 	}
+
 	private bool NOTI_SUP { get; set; }
 
 	/// <summary>
@@ -72,35 +75,40 @@ public sealed class DiscordFollowupMessageBuilder
 		{
 			if (value != null && value.Length > 2000)
 				throw new ArgumentException("Content length cannot exceed 2000 characters.", nameof(value));
+
 			this._content = value;
 		}
 	}
+
 	private string _content;
 
 	/// <summary>
 	/// Embeds to send on followup message.
 	/// </summary>
 	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
+
 	private readonly List<DiscordEmbed> _embeds = new();
 
 	/// <summary>
 	/// Files to send on this followup message.
 	/// </summary>
 	public IReadOnlyList<DiscordMessageFile> Files => this._files;
+
 	private readonly List<DiscordMessageFile> _files = new();
 
 	/// <summary>
 	/// Components to send on this followup message.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
+
 	private readonly List<DiscordActionRowComponent> _components = new();
 
 	/// <summary>
 	/// Mentions to send on this followup message.
 	/// </summary>
 	public IReadOnlyList<IMention> Mentions => this._mentions;
-	private readonly List<IMention> _mentions = new();
 
+	private readonly List<IMention> _mentions = new();
 
 	/// <summary>
 	/// Appends a collection of components to the message.
@@ -147,6 +155,7 @@ public sealed class DiscordFollowupMessageBuilder
 		this._components.Add(arc);
 		return this;
 	}
+
 	/// <summary>
 	/// Indicates if the followup message must use text-to-speech.
 	/// </summary>
@@ -259,7 +268,6 @@ public sealed class DiscordFollowupMessageBuilder
 			else
 				this._files.Add(new(file.Key, file.Value, null));
 		}
-
 
 		return this;
 	}
