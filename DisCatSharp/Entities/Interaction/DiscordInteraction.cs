@@ -50,7 +50,15 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// </summary>
 	[JsonIgnore] // TODO: Is now also partial "channel"
 	public DiscordChannel Channel
-		 => (this.Discord as DiscordClient).InternalGetCachedChannel(this.ChannelId) ?? (DiscordChannel)(this.Discord as DiscordClient).InternalGetCachedThread(this.ChannelId) ?? (this.Guild == null ? new DiscordDmChannel { Id = this.ChannelId, Type = ChannelType.Private, Discord = this.Discord } : new DiscordChannel() { Id = this.ChannelId, Discord = this.Discord });
+		=> (this.Discord as DiscordClient).InternalGetCachedChannel(this.ChannelId) ?? (DiscordChannel)(this.Discord as DiscordClient).InternalGetCachedThread(this.ChannelId) ?? (this.Guild == null
+			? new DiscordDmChannel
+			{
+				Id = this.ChannelId, Type = ChannelType.Private, Discord = this.Discord
+			}
+			: new DiscordChannel()
+			{
+				Id = this.ChannelId, Discord = this.Discord
+			});
 
 	/// <summary>
 	/// Gets the user that invoked this interaction.
@@ -118,6 +126,12 @@ public sealed class DiscordInteraction : SnowflakeObject
 	public List<ulong> EntitlementSkuIds { get; internal set; } = new();
 
 	/// <summary>
+	/// Gets which integrations authorized the interaction.
+	/// </summary>
+	[JsonProperty("authorizing_integration_owners", NullValueHandling = NullValueHandling.Ignore)]
+	public AuthorizingIntegrationOwners AuthorizingIntegrationOwners { get; internal set; }
+
+	/// <summary>
 	/// Creates a response to this interaction.
 	/// </summary>
 	/// <param name="type">The type of the response.</param>
@@ -161,14 +175,10 @@ public sealed class DiscordInteraction : SnowflakeObject
 		{
 			var attachments = this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token).Result.Attachments;
 			if (attachments?.Count > 0)
-			{
 				builder.AttachmentsInternal.AddRange(attachments);
-			}
 		}
 		else if (builder.KeepAttachmentsInternal.HasValue)
-		{
 			builder.AttachmentsInternal.Clear();
-		}
 
 		return await this.Discord.ApiClient.EditOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, builder).ConfigureAwait(false);
 	}
@@ -212,14 +222,10 @@ public sealed class DiscordInteraction : SnowflakeObject
 		{
 			var attachments = this.Discord.ApiClient.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId).Result.Attachments;
 			if (attachments?.Count > 0)
-			{
 				builder.AttachmentsInternal.AddRange(attachments);
-			}
 		}
 		else if (builder.KeepAttachmentsInternal.HasValue)
-		{
 			builder.AttachmentsInternal.Clear();
-		}
 
 		return await this.Discord.ApiClient.EditFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId, builder).ConfigureAwait(false);
 	}
@@ -232,6 +238,14 @@ public sealed class DiscordInteraction : SnowflakeObject
 		=> this.Discord.ApiClient.DeleteFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
 
 	internal DiscordInteraction()
-		: base(new() { "member", "guild_id", "channel_id", "channel", "guild" })
+		: base(new()
+		{
+			"member",
+			"guild_id",
+			"channel_id",
+			"channel",
+			"guild",
+			"user"
+		})
 	{ }
 }
