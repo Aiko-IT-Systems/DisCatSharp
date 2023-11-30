@@ -2038,7 +2038,7 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 		}
 	}
 
-	[SlashCommand("help", "Displays command help", true, false, new[]
+	[SlashCommand("help", "Displays command help", false, new[]
 	{
 		ApplicationCommandContexts.Guild, ApplicationCommandContexts.BotDm, ApplicationCommandContexts.PrivateChannel
 	}, new[]
@@ -2048,13 +2048,10 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 	internal async Task DefaultHelpAsync(
 		InteractionContext ctx,
 		[Autocomplete(typeof(DefaultHelpAutoCompleteProvider)), Option("option_one", "top level command to provide help for", true)]
-		
 		string commandName,
 		[Autocomplete(typeof(DefaultHelpAutoCompleteLevelOneProvider)), Option("option_two", "subgroup or command to provide help for", true)]
-		
 		string commandOneName = null,
 		[Autocomplete(typeof(DefaultHelpAutoCompleteLevelTwoProvider)), Option("option_three", "command to provide help for", true)]
-		
 		string commandTwoName = null
 	)
 	{
