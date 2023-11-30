@@ -28,7 +28,7 @@
 		<ContinuousIntegrationBuild>false</ContinuousIntegrationBuild>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
 	</ItemGroup>
 	<PropertyGroup Condition="'$(Configuration)' == 'Release' And '$(GITHUB_ACTIONS)' == 'true' And '$(SENTRY_AUTH_TOKEN)' != ''">
 		<SentryOrg>aitsys</SentryOrg>
