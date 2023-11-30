@@ -174,6 +174,13 @@ internal sealed class RestInteractionResponsePayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
 	public List<DiscordAttachment> Attachments { get; set; }
+
+	// TODO: Implement if it gets added to the api
+	/*/// <summary>
+	/// Gets the callback hint.
+	/// </summary>
+	[JsonProperty("hint", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordInteractionCallbackHint CallbackHint { get; set; }*/
 }
 
 /// <summary>
@@ -192,6 +199,13 @@ internal sealed class RestInteractionModalResponsePayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordInteractionApplicationCommandModalCallbackData Data { get; set; }
+
+	// TODO: Implement if it gets added to the api
+	/*/// <summary>
+	/// Gets the callback hint.
+	/// </summary>
+	[JsonProperty("hint", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordInteractionCallbackHint CallbackHint { get; set; }*/
 }
 
 /// <summary>
@@ -210,6 +224,13 @@ internal sealed class RestInteractionIframeResponsePayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordInteractionApplicationCommandIframeCallbackData Data { get; set; }
+
+	// TODO: Implement if it gets added to the api
+	/*/// <summary>
+	/// Gets the callback hint.
+	/// </summary>
+	[JsonProperty("hint", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordInteractionCallbackHint CallbackHint { get; set; }*/
 }
 
 /// <summary>

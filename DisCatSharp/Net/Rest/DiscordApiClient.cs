@@ -5589,7 +5589,12 @@ public sealed class DiscordApiClient
 			pld = new()
 			{
 				Type = type,
-				Data = data
+				Data = data/*,
+				CallbackHint = new()
+				{
+					AllowedCallbackType = type,
+					Ephemerality = (builder?.IsEphemeral ?? false) ? InteractionCallbackEphemerality.Required : InteractionCallbackEphemerality.Optional
+				}*/
 			};
 
 
@@ -5630,7 +5635,11 @@ public sealed class DiscordApiClient
 					Choices = builder.Choices,
 					Attachments = null
 				},
-				Attachments = null
+				Attachments = null/*,
+				CallbackHint = new()
+				{
+					AllowedCallbackType = type
+				}*/
 			};
 		}
 
@@ -5675,7 +5684,11 @@ public sealed class DiscordApiClient
 				Title = builder.Title,
 				CustomId = builder.CustomId,
 				ModalComponents = builder.ModalComponents
-			}
+			}/*,
+			CallbackHint = new()
+			{
+				AllowedCallbackType = type
+			}*/
 		};
 
 		var values = new Dictionary<string, string>();
@@ -5708,7 +5721,11 @@ public sealed class DiscordApiClient
 				CustomId = customId,
 				ModalSize = modalSize,
 				IframePath = iFramePath
-			}
+			}/*,
+			CallbackHint = new()
+			{
+				AllowedCallbackType = type
+			}*/
 		};
 
 		var values = new Dictionary<string, string>();
