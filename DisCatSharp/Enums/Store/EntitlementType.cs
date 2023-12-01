@@ -12,5 +12,6 @@ public enum EntitlementType : int
 	TestModePurchase = 4,
 	FreePurchase = 5,
 	UserGift = 6,
-	PremiumPurchase = 7
+	PremiumPurchase = 7,
+ 	ApplicationSubscription = 8
 }
