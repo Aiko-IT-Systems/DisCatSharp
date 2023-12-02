@@ -25,6 +25,13 @@ public class ApplicationCommandsConfiguration
 	public bool EnableDefaultHelp { internal get; set; } = true;
 
 	/// <summary>
+	/// <para>This option enables the default help command with user apps capability.</para>
+	/// <para>Mutually exclusive with <see cref="EnableDefaultHelp"/>.</para>
+	/// <para>Defaults to <see langword="false"/>.</para>
+	/// </summary>
+	internal bool EnableDefaultUserAppsHelp { get; set; } = false;
+
+	/// <summary>
 	/// This option enables the localization feature.
 	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
@@ -103,5 +110,6 @@ public class ApplicationCommandsConfiguration
 		this.AutoDefer = acc.AutoDefer;
 		this.EnableLocalization = acc.EnableLocalization;
 		this.GenerateTranslationFilesOnly = acc.GenerateTranslationFilesOnly;
+		this.EnableDefaultUserAppsHelp = acc.EnableDefaultUserAppsHelp;
 	}
 }

@@ -459,6 +459,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			updateList.Add(new(null, new(typeof(DefaultHelpModule))));
 			commandsPending = updateList.Select(x => x.Key).Distinct().ToList();
 		}
+		else if (Configuration is not null && Configuration.EnableDefaultUserAppsHelp)
+		{
+			updateList.Add(new(null, new(typeof(DefaultUserAppsHelpModule))));
+			commandsPending = updateList.Select(x => x.Key).Distinct().ToList();
+		}
 		else
 		{
 			try
@@ -2038,13 +2043,7 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 		}
 	}
 
-	[SlashCommand("help", "Displays command help", false, new[]
-	{
-		ApplicationCommandContexts.Guild, ApplicationCommandContexts.BotDm, ApplicationCommandContexts.PrivateChannel
-	}, new[]
-	{
-		ApplicationCommandIntegrationTypes.GuildInstall, ApplicationCommandIntegrationTypes.UserInstall
-	})]
+	[SlashCommand("help", "Displays command help")]
 	internal async Task DefaultHelpAsync(
 		InteractionContext ctx,
 		[Autocomplete(typeof(DefaultHelpAutoCompleteProvider)), Option("option_one", "top level command to provide help for", true)]
@@ -2052,6 +2051,278 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 		[Autocomplete(typeof(DefaultHelpAutoCompleteLevelOneProvider)), Option("option_two", "subgroup or command to provide help for", true)]
 		string commandOneName = null,
 		[Autocomplete(typeof(DefaultHelpAutoCompleteLevelTwoProvider)), Option("option_three", "command to provide help for", true)]
+		string commandTwoName = null
+	)
+	{
+		List<DiscordApplicationCommand> applicationCommands = null;
+		var globalCommandsTask = ctx.Client.GetGlobalApplicationCommandsAsync();
+		if (ctx.Guild != null)
+		{
+			var guildCommandsTask = ctx.Client.GetGuildApplicationCommandsAsync(ctx.Guild.Id);
+			await Task.WhenAll(globalCommandsTask, guildCommandsTask).ConfigureAwait(false);
+			applicationCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
+				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+				.GroupBy(ac => ac.Name).Select(x => x.First())
+				.ToList();
+		}
+		else
+		{
+			await Task.WhenAll(globalCommandsTask).ConfigureAwait(false);
+			applicationCommands = globalCommandsTask.Result
+				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+				.GroupBy(ac => ac.Name).Select(x => x.First())
+				.ToList();
+		}
+
+		if (applicationCommands.Count < 1)
+		{
+			if (ApplicationCommandsExtension.Configuration.AutoDefer)
+				await ctx.EditResponseAsync(new DiscordWebhookBuilder()
+					.WithContent($"There are no slash commands")).ConfigureAwait(false);
+			else
+				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
+					.WithContent($"There are no slash commands").AsEphemeral()).ConfigureAwait(false);
+			return;
+		}
+
+		if (commandTwoName is not null && !commandTwoName.Equals("no_options_for_this_command"))
+		{
+			var commandsWithSubCommands = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.Any(op => op.Type == ApplicationCommandOptionType.SubCommandGroup));
+			var subCommandParent = commandsWithSubCommands.FirstOrDefault(cm => cm.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase));
+			var cmdParent = commandsWithSubCommands.FirstOrDefault(cm => cm.Options.Any(op => op.Name.Equals(commandOneName))).Options
+				.FirstOrDefault(opt => opt.Name.Equals(commandOneName, StringComparison.OrdinalIgnoreCase));
+			var cmd = cmdParent.Options.FirstOrDefault(op => op.Name.Equals(commandTwoName, StringComparison.OrdinalIgnoreCase));
+			var discordEmbed = new DiscordEmbedBuilder
+			{
+				Title = "Help", Description = $"{subCommandParent.Mention.Replace(subCommandParent.Name, $"{subCommandParent.Name} {cmdParent.Name} {cmd.Name}")}: {cmd.Description ?? "No description provided."}"
+			};
+			if (cmd.Options is not null)
+			{
+				var commandOptions = cmd.Options.ToList();
+				var sb = new StringBuilder();
+
+				foreach (var option in commandOptions)
+					sb.Append('`').Append(option.Name).Append("`: ").Append(option.Description ?? "No description provided.").Append('\n');
+
+				sb.Append('\n');
+				discordEmbed.AddField(new("Arguments", sb.ToString().Trim()));
+			}
+
+			if (ApplicationCommandsExtension.Configuration.AutoDefer)
+				await ctx.EditResponseAsync(new DiscordWebhookBuilder()
+					.AddEmbed(discordEmbed)).ConfigureAwait(false);
+			else
+				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral()).ConfigureAwait(false);
+		}
+		else if (commandOneName is not null && commandTwoName is null && !commandOneName.Equals("no_options_for_this_command"))
+		{
+			var commandsWithOptions = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.All(op => op.Type == ApplicationCommandOptionType.SubCommand));
+			var subCommandParent = commandsWithOptions.FirstOrDefault(cm => cm.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase));
+			var subCommand = subCommandParent.Options.FirstOrDefault(op => op.Name.Equals(commandOneName, StringComparison.OrdinalIgnoreCase));
+			var discordEmbed = new DiscordEmbedBuilder
+			{
+				Title = "Help", Description = $"{subCommandParent.Mention.Replace(subCommandParent.Name, $"{subCommandParent.Name} {subCommand.Name}")}: {subCommand.Description ?? "No description provided."}"
+			};
+			if (subCommand.Options is not null)
+			{
+				var commandOptions = subCommand.Options.ToList();
+				var sb = new StringBuilder();
+
+				foreach (var option in commandOptions)
+					sb.Append('`').Append(option.Name).Append("`: ").Append(option.Description ?? "No description provided.").Append('\n');
+
+				sb.Append('\n');
+				discordEmbed.AddField(new("Arguments", sb.ToString().Trim()));
+			}
+
+			if (ApplicationCommandsExtension.Configuration.AutoDefer)
+				await ctx.EditResponseAsync(new DiscordWebhookBuilder().AddEmbed(discordEmbed)).ConfigureAwait(false);
+			else
+				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral()).ConfigureAwait(false);
+		}
+		else
+		{
+			var command = applicationCommands.FirstOrDefault(cm => cm.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase));
+			if (command is null)
+			{
+				if (ApplicationCommandsExtension.Configuration.AutoDefer)
+					await ctx.EditResponseAsync(new DiscordWebhookBuilder()
+						.WithContent($"No command called {commandName} in guild {ctx.Guild.Name}")).ConfigureAwait(false);
+				else
+					await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
+						.WithContent($"No command called {commandName} in guild {ctx.Guild.Name}").AsEphemeral()).ConfigureAwait(false);
+				return;
+			}
+
+			var discordEmbed = new DiscordEmbedBuilder
+			{
+				Title = "Help", Description = $"{command.Mention}: {command.Description ?? "No description provided."}"
+			}.AddField(new("Command is NSFW", command.IsNsfw.ToString()));
+			if (command.Options is not null)
+			{
+				var commandOptions = command.Options.ToList();
+				var sb = new StringBuilder();
+
+				foreach (var option in commandOptions)
+					sb.Append('`').Append(option.Name).Append("`: ").Append(option.Description ?? "No description provided.").Append('\n');
+
+				sb.Append('\n');
+				discordEmbed.AddField(new("Arguments", sb.ToString().Trim()));
+			}
+
+			if (ApplicationCommandsExtension.Configuration.AutoDefer)
+				await ctx.EditResponseAsync(new DiscordWebhookBuilder().AddEmbed(discordEmbed)).ConfigureAwait(false);
+			else
+				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral()).ConfigureAwait(false);
+		}
+	}
+}
+
+#endregion
+
+#region Default User Apps Help
+
+/// <summary>
+/// Represents the default user apps help module.
+/// </summary>
+internal class DefaultUserAppsHelpModule : ApplicationCommandsModule
+{
+	public class DefaultUserAppsHelpAutoCompleteProvider : IAutocompleteProvider
+	{
+		public async Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context)
+		{
+			var options = new List<DiscordApplicationCommandAutocompleteChoice>();
+
+			IEnumerable<DiscordApplicationCommand> slashCommands = null;
+			var globalCommandsTask = context.Client.GetGlobalApplicationCommandsAsync();
+			if (context.Guild != null)
+			{
+				var guildCommandsTask = context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
+				await Task.WhenAll(globalCommandsTask, guildCommandsTask).ConfigureAwait(false);
+				slashCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
+					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+					.GroupBy(ac => ac.Name).Select(x => x.First())
+					.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase))
+					.ToList();
+			}
+			else
+			{
+				await Task.WhenAll(globalCommandsTask).ConfigureAwait(false);
+				slashCommands = globalCommandsTask.Result
+					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+					.GroupBy(ac => ac.Name).Select(x => x.First())
+					.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase))
+					.ToList();
+			}
+
+			foreach (var sc in slashCommands.Take(25))
+				options.Add(new(sc.Name, sc.Name.Trim()));
+			return options.AsEnumerable();
+		}
+	}
+
+	public class DefaultUserAppsHelpAutoCompleteLevelOneProvider : IAutocompleteProvider
+	{
+		public async Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context)
+		{
+			var options = new List<DiscordApplicationCommandAutocompleteChoice>();
+			IEnumerable<DiscordApplicationCommand> slashCommands = null;
+			var globalCommandsTask = context.Client.GetGlobalApplicationCommandsAsync();
+			if (context.Guild != null)
+			{
+				var guildCommandsTask = context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
+				await Task.WhenAll(globalCommandsTask, guildCommandsTask).ConfigureAwait(false);
+				slashCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
+					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+					.GroupBy(ac => ac.Name).Select(x => x.First());
+			}
+			else
+			{
+				await Task.WhenAll(globalCommandsTask).ConfigureAwait(false);
+				slashCommands = globalCommandsTask.Result
+					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+					.GroupBy(ac => ac.Name).Select(x => x.First());
+			}
+
+			var command = slashCommands.FirstOrDefault(ac =>
+				ac.Name.Equals(context.Options[0].Value.ToString().Trim(), StringComparison.OrdinalIgnoreCase));
+			if (command is null || command.Options is null)
+				options.Add(new("no_options_for_this_command", "no_options_for_this_command"));
+			else
+			{
+				var opt = command.Options.Where(c => c.Type is ApplicationCommandOptionType.SubCommandGroup or ApplicationCommandOptionType.SubCommand
+				                                     && c.Name.StartsWith(context.Options[1].Value.ToString(), StringComparison.InvariantCultureIgnoreCase)).ToList();
+				foreach (var option in opt.Take(25))
+					options.Add(new(option.Name, option.Name.Trim()));
+			}
+
+			return options.AsEnumerable();
+		}
+	}
+
+	public class DefaultUserAppsHelpAutoCompleteLevelTwoProvider : IAutocompleteProvider
+	{
+		public async Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context)
+		{
+			var options = new List<DiscordApplicationCommandAutocompleteChoice>();
+			IEnumerable<DiscordApplicationCommand> slashCommands = null;
+			var globalCommandsTask = context.Client.GetGlobalApplicationCommandsAsync();
+			if (context.Guild != null)
+			{
+				var guildCommandsTask = context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
+				await Task.WhenAll(globalCommandsTask, guildCommandsTask).ConfigureAwait(false);
+				slashCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
+					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+					.GroupBy(ac => ac.Name).Select(x => x.First());
+			}
+			else
+			{
+				await Task.WhenAll(globalCommandsTask).ConfigureAwait(false);
+				slashCommands = globalCommandsTask.Result
+					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+					.GroupBy(ac => ac.Name).Select(x => x.First());
+			}
+
+			var command = slashCommands.FirstOrDefault(ac =>
+				ac.Name.Equals(context.Options[0].Value.ToString().Trim(), StringComparison.OrdinalIgnoreCase));
+			if (command.Options is null)
+			{
+				options.Add(new("no_options_for_this_command", "no_options_for_this_command"));
+				return options.AsEnumerable();
+			}
+
+			var foundCommand = command.Options.FirstOrDefault(op => op.Name.Equals(context.Options[1].Value.ToString().Trim(), StringComparison.OrdinalIgnoreCase));
+			if (foundCommand is null || foundCommand.Options is null)
+				options.Add(new("no_options_for_this_command", "no_options_for_this_command"));
+			else
+			{
+				var opt = foundCommand.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommand &&
+				                                          x.Name.StartsWith(context.Options[2].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
+				foreach (var option in opt.Take(25))
+					options.Add(new(option.Name, option.Name.Trim()));
+			}
+
+			return options.AsEnumerable();
+		}
+	}
+
+	[SlashCommand("help", "Displays command help", false, new[]
+	{
+		ApplicationCommandContexts.Guild, ApplicationCommandContexts.BotDm, ApplicationCommandContexts.PrivateChannel
+	}, new[]
+	{
+		ApplicationCommandIntegrationTypes.GuildInstall, ApplicationCommandIntegrationTypes.UserInstall
+	})]
+	internal async Task DefaulUserAppstHelpAsync(
+		InteractionContext ctx,
+		[Autocomplete(typeof(DefaultUserAppsHelpAutoCompleteProvider)), Option("option_one", "top level command to provide help for", true)]
+		string commandName,
+		[Autocomplete(typeof(DefaultUserAppsHelpAutoCompleteLevelOneProvider)), Option("option_two", "subgroup or command to provide help for", true)]
+		string commandOneName = null,
+		[Autocomplete(typeof(DefaultUserAppsHelpAutoCompleteLevelTwoProvider)), Option("option_three", "command to provide help for", true)]
 		string commandTwoName = null
 	)
 	{
