@@ -133,7 +133,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 		DiscordApplicationCommandLocalization? nameLocalizations = null, DiscordApplicationCommandLocalization? descriptionLocalizations = null,
 		Permissions? defaultMemberPermissions = null, bool? dmPermission = null, bool isNsfw = false,
 		List<ApplicationCommandContexts>? allowedContexts = null, List<ApplicationCommandIntegrationTypes>? integrationTypes = null)
-		: base(new() { "guild_id" })
+		: base(new() { "guild_id", "name_localizations", "description_localizations" })
 	{
 		if (type is ApplicationCommandType.ChatInput)
 		{
@@ -177,7 +177,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// Creates a new empty Discord Application Command.
 	/// </summary>
 	internal DiscordApplicationCommand()
-		: base(new() { "name_localizations", "description_localizations" }) // Why tf is that so inconsistent?!
+		: base(new() { "name_localizations", "description_localizations", "guild_id" }) // Why tf is that so inconsistent?!
 	{ }
 
 	/// <summary>
