@@ -222,7 +222,7 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 		{
 			T t => this.Equals(t),
 			Optional<T> opt => this.Equals(opt),
-			_ => false,
+			_ => false
 		};
 
 	/// <summary>
@@ -230,7 +230,7 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 	/// </summary>
 	/// <param name="e"><see cref="Optional{T}"/> to compare to.</param>
 	/// <returns>Whether the <see cref="Optional{T}"/> is equal to this <see cref="Optional{T}"/>.</returns>
-	public bool Equals(Optional<T> e) => (!this.HasValue && !e.HasValue) || (this.HasValue == e.HasValue && this.Value.Equals(e.Value));
+	public bool Equals(Optional<T> e) => !this.HasValue && !e.HasValue || this.HasValue == e.HasValue && this.Value.Equals(e.Value);
 
 	/// <summary>
 	/// Checks whether the value of this <see cref="Optional{T}"/> is equal to specified object.
@@ -339,17 +339,13 @@ internal sealed class OptionalJsonConverter : JsonConverter
 		var val = (value as IOptional).RawValue;
 		// JToken.FromObject will throw if `null` so we manually write a null value.
 		if (val == null)
-		{
 			// you can read serializer.NullValueHandling here, but unfortunately you can **not** skip serialization
 			// here, or else you will get a nasty JsonWriterException, so we just ignore its value and manually
 			// write the null.
 			writer.WriteToken(JsonToken.Null);
-		}
 		else
-		{
 			// convert the value to a JSON object and write it to the property value.
 			JToken.FromObject(val).WriteTo(writer);
-		}
 	}
 
 	/// <summary>
@@ -359,15 +355,22 @@ internal sealed class OptionalJsonConverter : JsonConverter
 	/// <param name="objectType">The object type.</param>
 	/// <param name="existingValue">The existing value.</param>
 	/// <param name="serializer">The serializer.</param>
-	public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-		JsonSerializer serializer)
+	public override object ReadJson(
+		JsonReader reader,
+		Type objectType,
+		object existingValue,
+		JsonSerializer serializer
+	)
 	{
 		var genericType = objectType.GenericTypeArguments[0];
 
 		var constructor = objectType.GetTypeInfo().DeclaredConstructors
 			.FirstOrDefault(e => e.GetParameters()[0].ParameterType == genericType);
 
-		return constructor.Invoke(new[] { serializer.Deserialize(reader, genericType) });
+		return constructor.Invoke(new[]
+		{
+			serializer.Deserialize(reader, genericType)
+		});
 	}
 
 	/// <summary>

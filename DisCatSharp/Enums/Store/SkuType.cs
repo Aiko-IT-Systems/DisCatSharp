@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the sku type.
 /// </summary>
-public enum SkuType : int
+public enum SkuType
 {
 	/// <summary>
 	/// An application sku.

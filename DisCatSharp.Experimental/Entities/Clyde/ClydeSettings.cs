@@ -1,3 +1,4 @@
+using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 
 using Newtonsoft.Json;
@@ -7,6 +8,7 @@ namespace DisCatSharp.Experimental.Entities;
 /// <summary>
 /// Represents a clyde settings object in guilds.
 /// </summary>
+[DiscordDeprecated]
 public sealed class ClydeSettings : ObservableApiObject
 {
 	/// <summary>

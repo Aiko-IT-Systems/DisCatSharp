@@ -14,7 +14,7 @@ namespace DisCatSharp;
 /// </summary>
 public sealed partial class DiscordShardedClient
 {
-	#region WebSocket
+#region WebSocket
 
 	/// <summary>
 	/// Fired whenever a WebSocket error occurs within the client.
@@ -24,6 +24,7 @@ public sealed partial class DiscordShardedClient
 		add => this._socketErrored.Register(value);
 		remove => this._socketErrored.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, SocketErrorEventArgs> _socketErrored;
 
 	/// <summary>
@@ -34,6 +35,7 @@ public sealed partial class DiscordShardedClient
 		add => this._socketOpened.Register(value);
 		remove => this._socketOpened.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, SocketEventArgs> _socketOpened;
 
 	/// <summary>
@@ -44,6 +46,7 @@ public sealed partial class DiscordShardedClient
 		add => this._socketClosed.Register(value);
 		remove => this._socketClosed.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, SocketCloseEventArgs> _socketClosed;
 
 	/// <summary>
@@ -54,6 +57,7 @@ public sealed partial class DiscordShardedClient
 		add => this._ready.Register(value);
 		remove => this._ready.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, ReadyEventArgs> _ready;
 
 	/// <summary>
@@ -64,6 +68,7 @@ public sealed partial class DiscordShardedClient
 		add => this._resumed.Register(value);
 		remove => this._resumed.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, ReadyEventArgs> _resumed;
 
 	/// <summary>
@@ -74,11 +79,12 @@ public sealed partial class DiscordShardedClient
 		add => this._heartbeated.Register(value);
 		remove => this._heartbeated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, HeartbeatEventArgs> _heartbeated;
 
-	#endregion
+#endregion
 
-	#region Channel
+#region Channel
 
 	/// <summary>
 	/// Fired when a new channel is created.
@@ -89,6 +95,7 @@ public sealed partial class DiscordShardedClient
 		add => this._channelCreated.Register(value);
 		remove => this._channelCreated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, ChannelCreateEventArgs> _channelCreated;
 
 	/// <summary>
@@ -100,6 +107,7 @@ public sealed partial class DiscordShardedClient
 		add => this._channelUpdated.Register(value);
 		remove => this._channelUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, ChannelUpdateEventArgs> _channelUpdated;
 
 	/// <summary>
@@ -111,6 +119,7 @@ public sealed partial class DiscordShardedClient
 		add => this._channelDeleted.Register(value);
 		remove => this._channelDeleted.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, ChannelDeleteEventArgs> _channelDeleted;
 
 	/// <summary>
@@ -122,6 +131,7 @@ public sealed partial class DiscordShardedClient
 		add => this._dmChannelDeleted.Register(value);
 		remove => this._dmChannelDeleted.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, DmChannelDeleteEventArgs> _dmChannelDeleted;
 
 	/// <summary>
@@ -133,6 +143,7 @@ public sealed partial class DiscordShardedClient
 		add => this._channelPinsUpdated.Register(value);
 		remove => this._channelPinsUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, ChannelPinsUpdateEventArgs> _channelPinsUpdated;
 
 	/// <summary>
@@ -144,11 +155,12 @@ public sealed partial class DiscordShardedClient
 		add => this._voiceChannelStatusUpdated.Register(value);
 		remove => this._voiceChannelStatusUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, VoiceChannelStatusUpdateEventArgs> _voiceChannelStatusUpdated;
 
-	#endregion
+#endregion
 
-	#region Guild
+#region Guild
 
 	/// <summary>
 	/// Fired when the user joins a new guild.
@@ -160,6 +172,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildCreated.Register(value);
 		remove => this._guildCreated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildCreateEventArgs> _guildCreated;
 
 	/// <summary>
@@ -170,6 +183,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildAvailable.Register(value);
 		remove => this._guildAvailable.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildCreateEventArgs> _guildAvailable;
 
 	/// <summary>
@@ -181,6 +195,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildUpdated.Register(value);
 		remove => this._guildUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildUpdateEventArgs> _guildUpdated;
 
 	/// <summary>
@@ -192,6 +207,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildDeleted.Register(value);
 		remove => this._guildDeleted.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildDeleteEventArgs> _guildDeleted;
 
 	/// <summary>
@@ -202,6 +218,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildUnavailable.Register(value);
 		remove => this._guildUnavailable.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildDeleteEventArgs> _guildUnavailable;
 
 	/// <summary>
@@ -212,6 +229,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildDownloadCompleted.Register(value);
 		remove => this._guildDownloadCompleted.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildDownloadCompletedEventArgs> _guildDownloadCompleted;
 
 	/// <summary>
@@ -223,6 +241,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildEmojisUpdated.Register(value);
 		remove => this._guildEmojisUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildEmojisUpdateEventArgs> _guildEmojisUpdated;
 
 	/// <summary>
@@ -234,6 +253,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildStickersUpdated.Register(value);
 		remove => this._guildStickersUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildStickersUpdateEventArgs> _guildStickersUpdated;
 
 	/// <summary>
@@ -244,11 +264,13 @@ public sealed partial class DiscordShardedClient
 		add => this._guildIntegrationsUpdated.Register(value);
 		remove => this._guildIntegrationsUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildIntegrationsUpdateEventArgs> _guildIntegrationsUpdated;
 
-	#endregion
+#endregion
 
-	#region Automod
+#region Automod
+
 	/// <summary>
 	/// Fired when an auto mod rule gets created.
 	/// </summary>
@@ -257,6 +279,7 @@ public sealed partial class DiscordShardedClient
 		add => this._automodRuleCreated.Register(value);
 		remove => this._automodRuleCreated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, AutomodRuleCreateEventArgs> _automodRuleCreated;
 
 	/// <summary>
@@ -267,6 +290,7 @@ public sealed partial class DiscordShardedClient
 		add => this._automodRuleUpdated.Register(value);
 		remove => this._automodRuleUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, AutomodRuleUpdateEventArgs> _automodRuleUpdated;
 
 	/// <summary>
@@ -277,6 +301,7 @@ public sealed partial class DiscordShardedClient
 		add => this._automodRuleDeleted.Register(value);
 		remove => this._automodRuleDeleted.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, AutomodRuleDeleteEventArgs> _automodRuleDeleted;
 
 	/// <summary>
@@ -287,6 +312,7 @@ public sealed partial class DiscordShardedClient
 		add => this._automodActionExecuted.Register(value);
 		remove => this._automodActionExecuted.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, AutomodActionExecutedEventArgs> _automodActionExecuted;
 
 	/// <summary>
@@ -297,10 +323,12 @@ public sealed partial class DiscordShardedClient
 		add => this._guildAuditLogEntryCreated.Register(value);
 		remove => this._guildAuditLogEntryCreated.Unregister(value);
 	}
-	private AsyncEvent<DiscordClient, GuildAuditLogEntryCreateEventArgs> _guildAuditLogEntryCreated;
-	#endregion
 
-	#region Guild Ban
+	private AsyncEvent<DiscordClient, GuildAuditLogEntryCreateEventArgs> _guildAuditLogEntryCreated;
+
+#endregion
+
+#region Guild Ban
 
 	/// <summary>
 	/// Fired when a guild ban gets added
@@ -311,6 +339,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildBanAdded.Register(value);
 		remove => this._guildBanAdded.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildBanAddEventArgs> _guildBanAdded;
 
 	/// <summary>
@@ -322,11 +351,12 @@ public sealed partial class DiscordShardedClient
 		add => this._guildBanRemoved.Register(value);
 		remove => this._guildBanRemoved.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildBanRemoveEventArgs> _guildBanRemoved;
 
-	#endregion
+#endregion
 
-	#region Guild Timeout
+#region Guild Timeout
 
 	/// <summary>
 	/// Fired when a guild member timeout gets added.
@@ -337,6 +367,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildMemberTimeoutAdded.Register(value);
 		remove => this._guildMemberTimeoutAdded.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildMemberTimeoutAddEventArgs> _guildMemberTimeoutAdded;
 
 	/// <summary>
@@ -348,8 +379,8 @@ public sealed partial class DiscordShardedClient
 		add => this._guildMemberTimeoutChanged.Register(value);
 		remove => this._guildMemberTimeoutChanged.Unregister(value);
 	}
-	private AsyncEvent<DiscordClient, GuildMemberTimeoutUpdateEventArgs> _guildMemberTimeoutChanged;
 
+	private AsyncEvent<DiscordClient, GuildMemberTimeoutUpdateEventArgs> _guildMemberTimeoutChanged;
 
 	/// <summary>
 	/// Fired when a guild member timeout gets removed.
@@ -360,11 +391,12 @@ public sealed partial class DiscordShardedClient
 		add => this._guildMemberTimeoutRemoved.Register(value);
 		remove => this._guildMemberTimeoutRemoved.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildMemberTimeoutRemoveEventArgs> _guildMemberTimeoutRemoved;
 
-	#endregion
+#endregion
 
-	#region Guild Event
+#region Guild Event
 
 	/// <summary>
 	/// Fired when a scheduled event is created.
@@ -375,6 +407,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildScheduledEventCreated.Register(value);
 		remove => this._guildScheduledEventCreated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildScheduledEventCreateEventArgs> _guildScheduledEventCreated;
 
 	/// <summary>
@@ -386,6 +419,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildScheduledEventUpdated.Register(value);
 		remove => this._guildScheduledEventUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildScheduledEventUpdateEventArgs> _guildScheduledEventUpdated;
 
 	/// <summary>
@@ -397,6 +431,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildScheduledEventDeleted.Register(value);
 		remove => this._guildScheduledEventDeleted.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildScheduledEventDeleteEventArgs> _guildScheduledEventDeleted;
 
 	/// <summary>
@@ -408,6 +443,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildScheduledEventUserAdded.Register(value);
 		remove => this._guildScheduledEventUserAdded.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildScheduledEventUserAddEventArgs> _guildScheduledEventUserAdded;
 
 	/// <summary>
@@ -419,11 +455,12 @@ public sealed partial class DiscordShardedClient
 		add => this._guildScheduledEventUserRemoved.Register(value);
 		remove => this._guildScheduledEventUserRemoved.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildScheduledEventUserRemoveEventArgs> _guildScheduledEventUserRemoved;
 
-	#endregion
+#endregion
 
-	#region Guild Integration
+#region Guild Integration
 
 	/// <summary>
 	/// Fired when a guild integration is created.
@@ -434,6 +471,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildIntegrationCreated.Register(value);
 		remove => this._guildIntegrationCreated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildIntegrationCreateEventArgs> _guildIntegrationCreated;
 
 	/// <summary>
@@ -445,6 +483,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildIntegrationUpdated.Register(value);
 		remove => this._guildIntegrationUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildIntegrationUpdateEventArgs> _guildIntegrationUpdated;
 
 	/// <summary>
@@ -456,11 +495,12 @@ public sealed partial class DiscordShardedClient
 		add => this._guildIntegrationDeleted.Register(value);
 		remove => this._guildIntegrationDeleted.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildIntegrationDeleteEventArgs> _guildIntegrationDeleted;
 
-	#endregion
+#endregion
 
-	#region Guild Member
+#region Guild Member
 
 	/// <summary>
 	/// Fired when a new user joins a guild.
@@ -471,6 +511,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildMemberAdded.Register(value);
 		remove => this._guildMemberAdded.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildMemberAddEventArgs> _guildMemberAdded;
 
 	/// <summary>
@@ -482,6 +523,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildMemberRemoved.Register(value);
 		remove => this._guildMemberRemoved.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildMemberRemoveEventArgs> _guildMemberRemoved;
 
 	/// <summary>
@@ -493,6 +535,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildMemberUpdated.Register(value);
 		remove => this._guildMemberUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildMemberUpdateEventArgs> _guildMemberUpdated;
 
 	/// <summary>
@@ -503,11 +546,12 @@ public sealed partial class DiscordShardedClient
 		add => this._guildMembersChunk.Register(value);
 		remove => this._guildMembersChunk.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildMembersChunkEventArgs> _guildMembersChunk;
 
-	#endregion
+#endregion
 
-	#region Guild Role
+#region Guild Role
 
 	/// <summary>
 	/// Fired when a guild role is created.
@@ -518,6 +562,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildRoleCreated.Register(value);
 		remove => this._guildRoleCreated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildRoleCreateEventArgs> _guildRoleCreated;
 
 	/// <summary>
@@ -529,6 +574,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildRoleUpdated.Register(value);
 		remove => this._guildRoleUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildRoleUpdateEventArgs> _guildRoleUpdated;
 
 	/// <summary>
@@ -540,11 +586,12 @@ public sealed partial class DiscordShardedClient
 		add => this._guildRoleDeleted.Register(value);
 		remove => this._guildRoleDeleted.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildRoleDeleteEventArgs> _guildRoleDeleted;
 
-	#endregion
+#endregion
 
-	#region Invite
+#region Invite
 
 	/// <summary>
 	/// Fired when an invite is created.
@@ -555,6 +602,7 @@ public sealed partial class DiscordShardedClient
 		add => this._inviteCreated.Register(value);
 		remove => this._inviteCreated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, InviteCreateEventArgs> _inviteCreated;
 
 	/// <summary>
@@ -566,11 +614,12 @@ public sealed partial class DiscordShardedClient
 		add => this._inviteDeleted.Register(value);
 		remove => this._inviteDeleted.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, InviteDeleteEventArgs> _inviteDeleted;
 
-	#endregion
+#endregion
 
-	#region Message
+#region Message
 
 	/// <summary>
 	/// Fired when a message is created.
@@ -581,6 +630,7 @@ public sealed partial class DiscordShardedClient
 		add => this._messageCreated.Register(value);
 		remove => this._messageCreated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, MessageCreateEventArgs> _messageCreated;
 
 	/// <summary>
@@ -592,6 +642,7 @@ public sealed partial class DiscordShardedClient
 		add => this._messageUpdated.Register(value);
 		remove => this._messageUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, MessageUpdateEventArgs> _messageUpdated;
 
 	/// <summary>
@@ -603,6 +654,7 @@ public sealed partial class DiscordShardedClient
 		add => this._messageDeleted.Register(value);
 		remove => this._messageDeleted.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, MessageDeleteEventArgs> _messageDeleted;
 
 	/// <summary>
@@ -614,11 +666,12 @@ public sealed partial class DiscordShardedClient
 		add => this._messageBulkDeleted.Register(value);
 		remove => this._messageBulkDeleted.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, MessageBulkDeleteEventArgs> _messageBulkDeleted;
 
-	#endregion
+#endregion
 
-	#region Message Reaction
+#region Message Reaction
 
 	/// <summary>
 	/// Fired when a reaction gets added to a message.
@@ -629,6 +682,7 @@ public sealed partial class DiscordShardedClient
 		add => this._messageReactionAdded.Register(value);
 		remove => this._messageReactionAdded.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, MessageReactionAddEventArgs> _messageReactionAdded;
 
 	/// <summary>
@@ -640,6 +694,7 @@ public sealed partial class DiscordShardedClient
 		add => this._messageReactionRemoved.Register(value);
 		remove => this._messageReactionRemoved.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs> _messageReactionRemoved;
 
 	/// <summary>
@@ -651,6 +706,7 @@ public sealed partial class DiscordShardedClient
 		add => this._messageReactionsCleared.Register(value);
 		remove => this._messageReactionsCleared.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, MessageReactionsClearEventArgs> _messageReactionsCleared;
 
 	/// <summary>
@@ -662,11 +718,12 @@ public sealed partial class DiscordShardedClient
 		add => this._messageReactionRemovedEmoji.Register(value);
 		remove => this._messageReactionRemovedEmoji.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, MessageReactionRemoveEmojiEventArgs> _messageReactionRemovedEmoji;
 
-	#endregion
+#endregion
 
-	#region Stage Instance
+#region Stage Instance
 
 	/// <summary>
 	/// Fired when a Stage Instance is created.
@@ -677,6 +734,7 @@ public sealed partial class DiscordShardedClient
 		add => this._stageInstanceCreated.Register(value);
 		remove => this._stageInstanceCreated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, StageInstanceCreateEventArgs> _stageInstanceCreated;
 
 	/// <summary>
@@ -688,6 +746,7 @@ public sealed partial class DiscordShardedClient
 		add => this._stageInstanceUpdated.Register(value);
 		remove => this._stageInstanceUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, StageInstanceUpdateEventArgs> _stageInstanceUpdated;
 
 	/// <summary>
@@ -699,11 +758,12 @@ public sealed partial class DiscordShardedClient
 		add => this._stageInstanceDeleted.Register(value);
 		remove => this._stageInstanceDeleted.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, StageInstanceDeleteEventArgs> _stageInstanceDeleted;
 
-	#endregion
+#endregion
 
-	#region Thread
+#region Thread
 
 	/// <summary>
 	/// Fired when a thread is created.
@@ -714,6 +774,7 @@ public sealed partial class DiscordShardedClient
 		add => this._threadCreated.Register(value);
 		remove => this._threadCreated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, ThreadCreateEventArgs> _threadCreated;
 
 	/// <summary>
@@ -725,6 +786,7 @@ public sealed partial class DiscordShardedClient
 		add => this._threadUpdated.Register(value);
 		remove => this._threadUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, ThreadUpdateEventArgs> _threadUpdated;
 
 	/// <summary>
@@ -736,6 +798,7 @@ public sealed partial class DiscordShardedClient
 		add => this._threadDeleted.Register(value);
 		remove => this._threadDeleted.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, ThreadDeleteEventArgs> _threadDeleted;
 
 	/// <summary>
@@ -747,6 +810,7 @@ public sealed partial class DiscordShardedClient
 		add => this._threadListSynced.Register(value);
 		remove => this._threadListSynced.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, ThreadListSyncEventArgs> _threadListSynced;
 
 	/// <summary>
@@ -758,6 +822,7 @@ public sealed partial class DiscordShardedClient
 		add => this._threadMemberUpdated.Register(value);
 		remove => this._threadMemberUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, ThreadMemberUpdateEventArgs> _threadMemberUpdated;
 
 	/// <summary>
@@ -769,11 +834,12 @@ public sealed partial class DiscordShardedClient
 		add => this._threadMembersUpdated.Register(value);
 		remove => this._threadMembersUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, ThreadMembersUpdateEventArgs> _threadMembersUpdated;
 
-	#endregion
+#endregion
 
-	#region Activities
+#region Activities
 
 	/// <summary>
 	/// Fired when a embedded activity has been updated.
@@ -783,11 +849,12 @@ public sealed partial class DiscordShardedClient
 		add => this._embeddedActivityUpdated.Register(value);
 		remove => this._embeddedActivityUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, EmbeddedActivityUpdateEventArgs> _embeddedActivityUpdated;
 
-	#endregion
+#endregion
 
-	#region User/Presence Update
+#region User/Presence Update
 
 	/// <summary>
 	/// Fired when a presence has been updated.
@@ -798,8 +865,8 @@ public sealed partial class DiscordShardedClient
 		add => this._presenceUpdated.Register(value);
 		remove => this._presenceUpdated.Unregister(value);
 	}
-	private AsyncEvent<DiscordClient, PresenceUpdateEventArgs> _presenceUpdated;
 
+	private AsyncEvent<DiscordClient, PresenceUpdateEventArgs> _presenceUpdated;
 
 	/// <summary>
 	/// Fired when the current user updates their settings.
@@ -810,6 +877,7 @@ public sealed partial class DiscordShardedClient
 		add => this._userSettingsUpdated.Register(value);
 		remove => this._userSettingsUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, UserSettingsUpdateEventArgs> _userSettingsUpdated;
 
 	/// <summary>
@@ -824,11 +892,12 @@ public sealed partial class DiscordShardedClient
 		add => this._userUpdated.Register(value);
 		remove => this._userUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, UserUpdateEventArgs> _userUpdated;
 
-	#endregion
+#endregion
 
-	#region Voice
+#region Voice
 
 	/// <summary>
 	/// Fired when someone joins/leaves/moves voice channels.
@@ -839,6 +908,7 @@ public sealed partial class DiscordShardedClient
 		add => this._voiceStateUpdated.Register(value);
 		remove => this._voiceStateUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, VoiceStateUpdateEventArgs> _voiceStateUpdated;
 
 	/// <summary>
@@ -850,11 +920,12 @@ public sealed partial class DiscordShardedClient
 		add => this._voiceServerUpdated.Register(value);
 		remove => this._voiceServerUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, VoiceServerUpdateEventArgs> _voiceServerUpdated;
 
-	#endregion
+#endregion
 
-	#region Application
+#region Application
 
 	/// <summary>
 	/// Fired when a new application command is registered.
@@ -864,6 +935,7 @@ public sealed partial class DiscordShardedClient
 		add => this._applicationCommandCreated.Register(value);
 		remove => this._applicationCommandCreated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, ApplicationCommandEventArgs> _applicationCommandCreated;
 
 	/// <summary>
@@ -874,6 +946,7 @@ public sealed partial class DiscordShardedClient
 		add => this._applicationCommandUpdated.Register(value);
 		remove => this._applicationCommandUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, ApplicationCommandEventArgs> _applicationCommandUpdated;
 
 	/// <summary>
@@ -884,6 +957,7 @@ public sealed partial class DiscordShardedClient
 		add => this._applicationCommandDeleted.Register(value);
 		remove => this._applicationCommandDeleted.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, ApplicationCommandEventArgs> _applicationCommandDeleted;
 
 	/// <summary>
@@ -894,6 +968,7 @@ public sealed partial class DiscordShardedClient
 		add => this._guildApplicationCommandCountUpdated.Register(value);
 		remove => this._guildApplicationCommandCountUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, GuildApplicationCommandCountEventArgs> _guildApplicationCommandCountUpdated;
 
 	/// <summary>
@@ -918,10 +993,9 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, ApplicationCommandPermissionsUpdateEventArgs> _applicationCommandPermissionsUpdated;
 
+#endregion
 
-	#endregion
-
-	#region Misc
+#region Misc
 
 	/// <summary>
 	/// Fired when an interaction is invoked.
@@ -931,6 +1005,7 @@ public sealed partial class DiscordShardedClient
 		add => this._interactionCreated.Register(value);
 		remove => this._interactionCreated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, InteractionCreateEventArgs> _interactionCreated;
 
 	/// <summary>
@@ -941,6 +1016,7 @@ public sealed partial class DiscordShardedClient
 		add => this._componentInteractionCreated.Register(value);
 		remove => this._componentInteractionCreated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, ComponentInteractionCreateEventArgs> _componentInteractionCreated;
 
 	/// <summary>
@@ -951,6 +1027,7 @@ public sealed partial class DiscordShardedClient
 		add => this._entitlementCreated.Register(value);
 		remove => this._entitlementCreated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, EntitlementCreateEventArgs> _entitlementCreated;
 
 	/// <summary>
@@ -961,6 +1038,7 @@ public sealed partial class DiscordShardedClient
 		add => this._entitlementUpdated.Register(value);
 		remove => this._entitlementUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, EntitlementUpdateEventArgs> _entitlementUpdated;
 
 	/// <summary>
@@ -974,7 +1052,6 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, EntitlementDeleteEventArgs> _entitlementDeleted;
 
-
 	/// <summary>
 	/// Fired when a user starts typing in a channel.
 	/// </summary>
@@ -983,6 +1060,7 @@ public sealed partial class DiscordShardedClient
 		add => this._typingStarted.Register(value);
 		remove => this._typingStarted.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, TypingStartEventArgs> _typingStarted;
 
 	/// <summary>
@@ -993,6 +1071,7 @@ public sealed partial class DiscordShardedClient
 		add => this._unknownEvent.Register(value);
 		remove => this._unknownEvent.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, UnknownEventArgs> _unknownEvent;
 
 	/// <summary>
@@ -1003,6 +1082,7 @@ public sealed partial class DiscordShardedClient
 		add => this._webhooksUpdated.Register(value);
 		remove => this._webhooksUpdated.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, WebhooksUpdateEventArgs> _webhooksUpdated;
 
 	/// <summary>
@@ -1013,11 +1093,12 @@ public sealed partial class DiscordShardedClient
 		add => this._clientErrored.Register(value);
 		remove => this._clientErrored.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, ClientErrorEventArgs> _clientErrored;
 
-	#endregion
+#endregion
 
-	#region Error Handling
+#region Error Handling
 
 	/// <summary>
 	/// Handles event errors.
@@ -1037,9 +1118,11 @@ public sealed partial class DiscordShardedClient
 		}
 
 		this.Logger.LogError(LoggerEvents.EventHandlerException, ex, "Event handler exception for event {0} thrown from {1} (defined in {2})", asyncEvent.Name, handler.Method, handler.Method.DeclaringType);
-		this._clientErrored.InvokeAsync(sender, new(this.ShardClients[0].ServiceProvider) { EventName = asyncEvent.Name, Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
+		this._clientErrored.InvokeAsync(sender, new(this.ShardClients[0].ServiceProvider)
+		{
+			EventName = asyncEvent.Name, Exception = ex
+		}).ConfigureAwait(false).GetAwaiter().GetResult();
 	}
-
 
 	/// <summary>
 	/// Fired on heartbeat attempt cancellation due to too many failed heartbeats.
@@ -1049,6 +1132,7 @@ public sealed partial class DiscordShardedClient
 		add => this._zombied.Register(value);
 		remove => this._zombied.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, ZombiedEventArgs> _zombied;
 
 	/// <summary>
@@ -1059,6 +1143,7 @@ public sealed partial class DiscordShardedClient
 		add => this._payloadReceived.Register(value);
 		remove => this._payloadReceived.Unregister(value);
 	}
+
 	private AsyncEvent<DiscordClient, PayloadReceivedEventArgs> _payloadReceived;
 
 	/// <summary>
@@ -1072,9 +1157,9 @@ public sealed partial class DiscordShardedClient
 	private void Goof<TArgs>(AsyncEvent<DiscordClient, TArgs> asyncEvent, Exception ex, AsyncEventHandler<DiscordClient, TArgs> handler, DiscordClient sender, TArgs eventArgs)
 		where TArgs : AsyncEventArgs => this.Logger.LogCritical(LoggerEvents.EventHandlerException, ex, "Exception event handler {0} (defined in {1}) threw an exception", handler.Method, handler.Method.DeclaringType);
 
-	#endregion
+#endregion
 
-	#region Event Dispatchers
+#region Event Dispatchers
 
 	/// <summary>
 	/// Handles the client zombied event.
@@ -1580,7 +1665,6 @@ public sealed partial class DiscordShardedClient
 	private Task Client_ApplicationCommandDeleted(DiscordClient client, ApplicationCommandEventArgs e)
 		=> this._applicationCommandDeleted.InvokeAsync(client, e);
 
-
 	/// <summary>
 	/// Handles the guild application command count updated event.
 	/// </summary>
@@ -1588,7 +1672,6 @@ public sealed partial class DiscordShardedClient
 	/// <param name="e">The event args.</param>
 	private Task Client_GuildApplicationCommandCountUpdated(DiscordClient client, GuildApplicationCommandCountEventArgs e)
 		=> this._guildApplicationCommandCountUpdated.InvokeAsync(client, e);
-
 
 	/// <summary>
 	/// Handles the application command permissions updated event.
@@ -1694,7 +1777,6 @@ public sealed partial class DiscordShardedClient
 	private Task Client_ThreadMembersUpdated(DiscordClient client, ThreadMembersUpdateEventArgs e)
 		=> this._threadMembersUpdated.InvokeAsync(client, e);
 
-
 	/// <summary>
 	/// Handles the scheduled event created event.
 	/// </summary>
@@ -1783,5 +1865,5 @@ public sealed partial class DiscordShardedClient
 	private Task Client_VoiceChannelStatusUpdated(DiscordClient client, VoiceChannelStatusUpdateEventArgs e)
 		=> this._voiceChannelStatusUpdated.InvokeAsync(client, e);
 
-	#endregion
+#endregion
 }

@@ -43,6 +43,7 @@ public sealed class DiscordComponentEmoji : ObservableApiObject
 	{
 		if (!DiscordEmoji.IsValidUnicode(name))
 			throw new ArgumentException("Only unicode emojis can be passed.");
+
 		this.Name = name;
 	}
 

@@ -18,8 +18,8 @@ namespace DisCatSharp.Interactivity.EventHandling;
 /// </summary>
 internal class Poller
 {
-	DiscordClient _client;
-	ConcurrentHashSet<PollRequest> _requests;
+	private DiscordClient _client;
+	private ConcurrentHashSet<PollRequest> _requests;
 
 	/// <summary>
 	/// Creates a new EventWaiter object.
@@ -28,7 +28,7 @@ internal class Poller
 	public Poller(DiscordClient client)
 	{
 		this._client = client;
-		this._requests = new ConcurrentHashSet<PollRequest>();
+		this._requests = new();
 
 		this._client.MessageReactionAdded += this.HandleReactionAdd;
 		this._client.MessageReactionRemoved += this.HandleReactionRemove;
@@ -54,10 +54,11 @@ internal class Poller
 		}
 		finally
 		{
-			result = new ReadOnlyCollection<PollEmoji>(new HashSet<PollEmoji>(request.Collected).ToList());
+			result = new(new HashSet<PollEmoji>(request.Collected).ToList());
 			request.Dispose();
 			this._requests.TryRemove(request);
 		}
+
 		return result;
 	}
 
@@ -75,7 +76,6 @@ internal class Poller
 		_ = Task.Run(async () =>
 		{
 			foreach (var req in this._requests)
-			{
 				// match message
 				if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
 				{
@@ -91,7 +91,6 @@ internal class Poller
 							await eventArgs.Message.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User).ConfigureAwait(false);
 					}
 				}
-			}
 		});
 		return Task.CompletedTask;
 	}
@@ -105,14 +104,10 @@ internal class Poller
 	private Task HandleReactionRemove(DiscordClient client, MessageReactionRemoveEventArgs eventArgs)
 	{
 		foreach (var req in this._requests)
-		{
 			// match message
 			if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
-			{
 				if (eventArgs.User.Id != this._client.CurrentUser.Id)
 					req.RemoveReaction(eventArgs.Emoji, eventArgs.User);
-			}
-		}
 		return Task.CompletedTask;
 	}
 
@@ -125,13 +120,9 @@ internal class Poller
 	private Task HandleReactionClear(DiscordClient client, MessageReactionsClearEventArgs eventArgs)
 	{
 		foreach (var req in this._requests)
-		{
 			// match message
 			if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
-			{
 				req.ClearCollected();
-			}
-		}
 		return Task.CompletedTask;
 	}
 

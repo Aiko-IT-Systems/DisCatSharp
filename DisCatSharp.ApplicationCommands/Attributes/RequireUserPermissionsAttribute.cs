@@ -52,6 +52,8 @@ public sealed class ApplicationCommandRequireUserPermissionsAttribute : Applicat
 
 		return (pusr & Permissions.Administrator) != 0
 			? Task.FromResult(true)
-			: (pusr & this.Permissions) == this.Permissions ? Task.FromResult(true) : Task.FromResult(false);
+			: (pusr & this.Permissions) == this.Permissions
+				? Task.FromResult(true)
+				: Task.FromResult(false);
 	}
 }

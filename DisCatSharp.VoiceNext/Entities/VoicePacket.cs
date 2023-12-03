@@ -8,10 +8,12 @@ internal struct VoicePacket
 	/// Gets the bytes.
 	/// </summary>
 	public ReadOnlyMemory<byte> Bytes { get; }
+
 	/// <summary>
 	/// Gets the millisecond duration.
 	/// </summary>
 	public int MillisecondDuration { get; }
+
 	/// <summary>
 	/// Gets or sets a value indicating whether is silence.
 	/// </summary>

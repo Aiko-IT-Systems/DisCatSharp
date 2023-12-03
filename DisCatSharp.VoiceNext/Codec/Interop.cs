@@ -8,7 +8,8 @@ namespace DisCatSharp.VoiceNext.Codec;
 /// </summary>
 internal static class Interop
 {
-	#region Sodium wrapper
+#region Sodium wrapper
+
 	/// <summary>
 	/// The sodium library name.
 	/// </summary>
@@ -116,9 +117,11 @@ internal static class Interop
 
 		return status;
 	}
-	#endregion
 
-	#region Opus wrapper
+#endregion
+
+#region Opus wrapper
+
 	/// <summary>
 	/// The opus library name.
 	/// </summary>
@@ -238,7 +241,7 @@ internal static class Interop
 	public static IntPtr OpusCreateEncoder(AudioFormat audioFormat)
 	{
 		var encoder = _OpusCreateEncoder(audioFormat.SampleRate, audioFormat.ChannelCount, (int)audioFormat.VoiceApplication, out var error);
-		return error != OpusError.Ok ? throw new Exception($"Could not instantiate Opus encoder: {error} ({(int)error}).") : encoder;
+		return error != OpusError.Ok ? throw new($"Could not instantiate Opus encoder: {error} ({(int)error}).") : encoder;
 	}
 
 	/// <summary>
@@ -251,7 +254,7 @@ internal static class Interop
 	{
 		var error = OpusError.Ok;
 		if ((error = _OpusEncoderControl(encoder, option, value)) != OpusError.Ok)
-			throw new Exception($"Could not set Opus encoder option: {error} ({(int)error}).");
+			throw new($"Could not set Opus encoder option: {error} ({(int)error}).");
 	}
 
 	/// <summary>
@@ -272,7 +275,7 @@ internal static class Interop
 		if (len < 0)
 		{
 			var error = (OpusError)len;
-			throw new Exception($"Could not encode PCM data to Opus: {error} ({(int)error}).");
+			throw new($"Could not encode PCM data to Opus: {error} ({(int)error}).");
 		}
 
 		opus = opus[..len];
@@ -286,7 +289,7 @@ internal static class Interop
 	public static IntPtr OpusCreateDecoder(AudioFormat audioFormat)
 	{
 		var decoder = _OpusCreateDecoder(audioFormat.SampleRate, audioFormat.ChannelCount, out var error);
-		return error != OpusError.Ok ? throw new Exception($"Could not instantiate Opus decoder: {error} ({(int)error}).") : decoder;
+		return error != OpusError.Ok ? throw new($"Could not instantiate Opus decoder: {error} ({(int)error}).") : decoder;
 	}
 
 	/// <summary>
@@ -309,7 +312,7 @@ internal static class Interop
 		if (len < 0)
 		{
 			var error = (OpusError)len;
-			throw new Exception($"Could not decode PCM data from Opus: {error} ({(int)error}).");
+			throw new($"Could not decode PCM data from Opus: {error} ({(int)error}).");
 		}
 
 		return len;
@@ -332,7 +335,7 @@ internal static class Interop
 		if (len < 0)
 		{
 			var error = (OpusError)len;
-			throw new Exception($"Could not decode PCM data from Opus: {error} ({(int)error}).");
+			throw new($"Could not decode PCM data from Opus: {error} ({(int)error}).");
 		}
 
 		return len;
@@ -366,5 +369,6 @@ internal static class Interop
 	/// <param name="sampleCount">The sample count.</param>
 	public static void OpusGetLastPacketDuration(IntPtr decoder, out int sampleCount)
 		=> _OpusDecoderControl(decoder, OpusControl.GetLastPacketDuration, out sampleCount);
-	#endregion
+
+#endregion
 }

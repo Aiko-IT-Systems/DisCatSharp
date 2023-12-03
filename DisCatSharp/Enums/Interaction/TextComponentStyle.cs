@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents a button's style/color.
 /// </summary>
-public enum TextComponentStyle : int
+public enum TextComponentStyle
 {
 	/// <summary>
 	/// A small text input.

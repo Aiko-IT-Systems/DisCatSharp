@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the test entitlement owner type.
 /// </summary>
-public enum EntitlementType : int
+public enum EntitlementType
 {
 	Purchase = 1,
 	PremiumSubscription = 2,
@@ -13,5 +12,5 @@ public enum EntitlementType : int
 	FreePurchase = 5,
 	UserGift = 6,
 	PremiumPurchase = 7,
- 	ApplicationSubscription = 8
+	ApplicationSubscription = 8
 }

@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the type of a message.
 /// </summary>
-public enum MessageType : int
+public enum MessageType
 {
 	/// <summary>
 	/// Indicates a regular message.

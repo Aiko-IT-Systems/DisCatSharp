@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the entity type for a scheduled event.
 /// </summary>
-public enum ScheduledEventEntityType : int
+public enum ScheduledEventEntityType
 {
 	/// <summary>
 	/// Indicates that the events is hold in a stage instance.

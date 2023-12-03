@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Experimental.Entities;
 using DisCatSharp.Experimental.Payloads;
@@ -35,6 +35,7 @@ internal sealed class DiscordApiClientHook
 	/// Gets the clyde profile for the given <paramref name="profileId"/>.
 	/// </summary>
 	/// <param name="profileId">The profile id to get.</param>
+	[DiscordDeprecated]
 	internal async Task<ClydeProfile> GetClydeProfileAsync(ulong profileId)
 	{
 		var route = $"{Endpoints.CLYDE_PROFILES}/:profile_id";
@@ -54,6 +55,7 @@ internal sealed class DiscordApiClientHook
 	/// Gets the clyde settings for the given <paramref name="guildId"/>.
 	/// </summary>
 	/// <param name="guildId">The guild id to get clyde's settings for.</param>
+	[DiscordDeprecated]
 	internal async Task<ClydeSettings> GetClydeSettingsAsync(ulong guildId)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.CLYDE_SETTINGS}";
@@ -74,6 +76,7 @@ internal sealed class DiscordApiClientHook
 	/// </summary>
 	/// <param name="guildId">The guild id to modify clyde's settings for.</param>
 	/// <param name="profileId">The profile id to apply.</param>
+	[DiscordDeprecated]
 	internal async Task<ClydeSettings> ModifyClydeSettingsAsync(ulong guildId, ulong profileId)
 	{
 		ClydeSettingsProfileIdOnlyUpdatePayload pld = new()
@@ -105,6 +108,7 @@ internal sealed class DiscordApiClientHook
 	/// <param name="avatarBase64">The new avatar.</param>
 	/// <param name="bannerBase64">The new banner.</param>
 	/// <param name="themeColors">The new theme colors.</param>
+	[DiscordDeprecated]
 	internal async Task<ClydeSettings> ModifyClydeSettingsAsync(
 		ulong guildId,
 		Optional<string?> name,
@@ -142,6 +146,7 @@ internal sealed class DiscordApiClientHook
 	/// Generates a basePersonality for clyde based on the given <paramref name="basePersonality"/>.
 	/// </summary>
 	/// <param name="basePersonality">The base base personality to generate a new one from.</param>
+	[DiscordDeprecated]
 	internal async Task<string> GenerateClydePersonalityAsync(string? basePersonality = null)
 	{
 		PersonalityGenerationPayload pld = new()

@@ -82,6 +82,9 @@ public sealed class DiscordOAuth2Client : IDisposable
 	/// </summary>
 	internal static TimeSpan EventExecutionLimit { get; } = TimeSpan.FromMinutes(1);
 
+	/// <summary>
+	/// Gets the RSA instance.
+	/// </summary>
 	private RSA RSA { get; }
 
 	/// <summary>
@@ -97,8 +100,18 @@ public sealed class DiscordOAuth2Client : IDisposable
 	/// <param name="loggerFactory">The optional logging factory to use for this client. Defaults to null.</param>
 	/// <param name="minimumLogLevel">The minimum logging level for messages. Defaults to information.</param>
 	/// <param name="logTimestampFormat">The timestamp format to use for the logger.</param>
-	public DiscordOAuth2Client(ulong clientId, string clientSecret, string redirectUri, IServiceProvider provider = null!, IWebProxy proxy = null!, TimeSpan? timeout = null, bool useRelativeRateLimit = true,
-		ILoggerFactory loggerFactory = null!, LogLevel minimumLogLevel = LogLevel.Information, string logTimestampFormat = "yyyy-MM-dd HH:mm:ss zzz")
+	public DiscordOAuth2Client(
+		ulong clientId,
+		string clientSecret,
+		string redirectUri,
+		IServiceProvider provider = null!,
+		IWebProxy proxy = null!,
+		TimeSpan? timeout = null,
+		bool useRelativeRateLimit = true,
+		ILoggerFactory loggerFactory = null!,
+		LogLevel minimumLogLevel = LogLevel.Information,
+		string logTimestampFormat = "yyyy-MM-dd HH:mm:ss zzz"
+	)
 	{
 		this.MinimumLogLevel = minimumLogLevel;
 		this.LogTimestampFormat = logTimestampFormat;
@@ -118,7 +131,6 @@ public sealed class DiscordOAuth2Client : IDisposable
 		var parsedTimeout = timeout ?? TimeSpan.FromSeconds(10);
 
 		this.ApiClient = new(this, proxy!, parsedTimeout, useRelativeRateLimit, this.Logger);
-
 
 		this.ApiClient.Rest.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("client_id", this.ClientId.ToString());
 		this.ApiClient.Rest.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("client_secret", this.ClientSecret);
@@ -197,9 +209,9 @@ public sealed class DiscordOAuth2Client : IDisposable
 		var responseState = responseQueryDictionary.GetValues("state")?.First();
 		if (!secure)
 			return requestState is not null && responseState is not null &&
-				   int.Parse(requestState.Split("::")[1]) == this.ClientId.GetHashCode() &&
-				   int.Parse(responseState.Split("::")[1]) == this.ClientId.GetHashCode() &&
-				   requestState == responseState;
+			       int.Parse(requestState.Split("::")[1]) == this.ClientId.GetHashCode() &&
+			       int.Parse(responseState.Split("::")[1]) == this.ClientId.GetHashCode() &&
+			       requestState == responseState;
 
 		if (requestState is null || responseState is null)
 			throw new NullReferenceException("State was null");
@@ -314,7 +326,6 @@ public sealed class DiscordOAuth2Client : IDisposable
 	public Task UpdateCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken, string platformName, string platformUsername, ApplicationRoleConnectionMetadata metadata)
 		=> accessToken.Scope.Split(' ').Any(x => x == "role_connections.write") ? this.ApiClient.ModifyCurrentUserApplicationRoleConnectionAsync(accessToken.AccessToken, platformName, platformUsername, metadata) : throw new AccessViolationException("Access token does not include role_connections.write scope");
 
-
 	/// <summary>
 	/// Fired whenever an error occurs within an event handler.
 	/// </summary>
@@ -346,8 +357,11 @@ public sealed class DiscordOAuth2Client : IDisposable
 			return;
 		}
 
-		this.Logger.LogError(LoggerEvents.EventHandlerException, ex, "Event handler exception for event {Name} thrown from {Method} (defined in {Type})", asyncEvent.Name, handler.Method, handler.Method.DeclaringType);
-		this.OAuth2ClientErroredInternal.InvokeAsync(this, new(this.ServiceProvider) { EventName = asyncEvent.Name, Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
+		this.Logger.LogError(LoggerEvents.EventHandlerException, ex, "Event handler exception for event {Name} thrown from {@Method} (defined in {Type})", asyncEvent.Name, handler.Method, handler.Method.DeclaringType);
+		this.OAuth2ClientErroredInternal.InvokeAsync(this, new(this.ServiceProvider)
+		{
+			EventName = asyncEvent.Name, Exception = ex
+		}).ConfigureAwait(false).GetAwaiter().GetResult();
 	}
 
 	/// <summary>

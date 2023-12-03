@@ -69,7 +69,6 @@ public sealed class ContextMenuAttribute : Attribute
 		this.IntegrationTypes = integrationTypes?.ToList();
 	}
 
-
 	/// <summary>
 	/// Marks this method as a context menu.
 	/// </summary>
@@ -92,7 +91,6 @@ public sealed class ContextMenuAttribute : Attribute
 		this.AllowedContexts = allowedContexts?.ToList();
 		this.IntegrationTypes = integrationTypes?.ToList();
 	}
-
 
 	/// <summary>
 	/// Marks this method as context menu.

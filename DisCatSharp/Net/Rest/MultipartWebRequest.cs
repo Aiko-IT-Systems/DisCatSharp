@@ -40,8 +40,18 @@ internal sealed class MultipartWebRequest : BaseRestRequest
 	/// <param name="files">The files.</param>
 	/// <param name="ratelimitWaitOverride">The ratelimit_wait_override.</param>
 	/// <param name="overwriteFileIdStart">The file id start.</param>
-	internal MultipartWebRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, IReadOnlyDictionary<string, string> values = null,
-		IReadOnlyCollection<DiscordMessageFile> files = null, double? ratelimitWaitOverride = null, int? overwriteFileIdStart = null)
+	internal MultipartWebRequest(
+		BaseDiscordClient client,
+		RateLimitBucket bucket,
+		Uri url,
+		RestRequestMethod method,
+		string route,
+		IReadOnlyDictionary<string, string> headers = null,
+		IReadOnlyDictionary<string, string> values = null,
+		IReadOnlyCollection<DiscordMessageFile> files = null,
+		double? ratelimitWaitOverride = null,
+		int? overwriteFileIdStart = null
+	)
 		: base(client, bucket, url, method, route, headers, ratelimitWaitOverride)
 	{
 		this.Values = values;
@@ -49,7 +59,6 @@ internal sealed class MultipartWebRequest : BaseRestRequest
 		this.Files = files.ToDictionary(x => x.Filename, x => x.Stream);
 	}
 }
-
 
 /// <summary>
 /// Represents a multipart HTTP request for stickers.
@@ -90,8 +99,19 @@ internal sealed class MultipartStickerWebRequest : BaseRestRequest
 	/// <param name="tags">The sticker tag.</param>
 	/// <param name="description">The sticker description.</param>
 	/// <param name="ratelimitWaitOverride">The ratelimit_wait_override.</param>
-	internal MultipartStickerWebRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null,
-		DiscordMessageFile file = null, string name = "", string tags = "", string description = "", double? ratelimitWaitOverride = null)
+	internal MultipartStickerWebRequest(
+		BaseDiscordClient client,
+		RateLimitBucket bucket,
+		Uri url,
+		RestRequestMethod method,
+		string route,
+		IReadOnlyDictionary<string, string> headers = null,
+		DiscordMessageFile file = null,
+		string name = "",
+		string tags = "",
+		string description = "",
+		double? ratelimitWaitOverride = null
+	)
 		: base(client, bucket, url, method, route, headers, ratelimitWaitOverride)
 	{
 		this.File = file;

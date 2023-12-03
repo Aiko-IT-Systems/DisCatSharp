@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents notification settings for a thread.
 /// </summary>
-public enum ThreadMemberFlags : int
+public enum ThreadMemberFlags
 {
 	/// <summary>
 	/// Indicates that the notification setting is set to has interacted.

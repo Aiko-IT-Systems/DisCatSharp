@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents a server's premium tier.
 /// </summary>
-public enum PremiumTier : int
+public enum PremiumTier
 {
 	/// <summary>
 	/// Indicates that this server was not boosted.

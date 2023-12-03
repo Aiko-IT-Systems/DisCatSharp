@@ -21,9 +21,11 @@ public sealed class DiscordMessageBuilder
 		{
 			if (value != null && value.Length > 2000)
 				throw new ArgumentException("Content cannot exceed 2000 characters.", nameof(value));
+
 			this._content = value;
 		}
 	}
+
 	private string _content;
 
 	/// <summary>
@@ -48,6 +50,7 @@ public sealed class DiscordMessageBuilder
 	/// Gets the Embeds to be sent.
 	/// </summary>
 	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
+
 	private readonly List<DiscordEmbed> _embeds = new();
 
 	/// <summary>
@@ -69,18 +72,21 @@ public sealed class DiscordMessageBuilder
 	/// Gets the Files to be sent in the Message.
 	/// </summary>
 	public IReadOnlyCollection<DiscordMessageFile> Files => this.FilesInternal;
+
 	internal readonly List<DiscordMessageFile> FilesInternal = new();
 
 	/// <summary>
 	/// Gets the components that will be attached to the message.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> Components => this.ComponentsInternal;
+
 	internal readonly List<DiscordActionRowComponent> ComponentsInternal = new(5);
 
 	/// <summary>
 	/// Gets the Attachments to be sent in the Message.
 	/// </summary>
 	public IReadOnlyList<DiscordAttachment> Attachments => this.AttachmentsInternal;
+
 	internal readonly List<DiscordAttachment> AttachmentsInternal = new();
 
 	/// <summary>
@@ -135,7 +141,6 @@ public sealed class DiscordMessageBuilder
 	/// <exception cref="ArgumentOutOfRangeException">No components were passed.</exception>
 	public DiscordMessageBuilder AddComponents(params DiscordComponent[] components)
 		=> this.AddComponents((IEnumerable<DiscordComponent>)components);
-
 
 	/// <summary>
 	/// Appends several rows of components to the message
@@ -212,6 +217,7 @@ public sealed class DiscordMessageBuilder
 	{
 		if (embed == null)
 			return this; //Providing null embeds will produce a 400 response from Discord.//
+
 		this._embeds.Add(embed);
 		return this;
 	}
@@ -237,7 +243,10 @@ public sealed class DiscordMessageBuilder
 		if (this.Mentions != null)
 			this.Mentions.Add(allowedMention);
 		else
-			this.Mentions = new() { allowedMention };
+			this.Mentions = new()
+			{
+				allowedMention
+			};
 
 		return this;
 	}
@@ -333,9 +342,7 @@ public sealed class DiscordMessageBuilder
 	{
 		this.AttachmentsInternal.Add(new()
 		{
-			Filename = gcpAttachment.Filename,
-			UploadedFilename = gcpAttachment.UploadFilename,
-			Description = gcpAttachment.Description
+			Filename = gcpAttachment.Filename, UploadedFilename = gcpAttachment.UploadFilename, Description = gcpAttachment.Description
 		});
 
 		return this;
@@ -383,7 +390,6 @@ public sealed class DiscordMessageBuilder
 
 		return this;
 	}
-
 
 	/// <summary>
 	/// Sends the Message to a specific channel

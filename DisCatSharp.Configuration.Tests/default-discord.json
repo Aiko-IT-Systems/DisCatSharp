@@ -1,23 +1,23 @@
 {
-    "DisCatSharp": {
-        "Discord": {
-            "Token": "1234567890",
-            "TokenType": "Bot",
-            "MinimumLogLevel": "Information",
-            "UseRelativeRateLimit": true,
-            "LogTimestampFormat": "yyyy-MM-dd HH:mm:ss zzz",
-            "LargeThreshold": 250,
-            "AutoReconnect": true,
-            "ShardId": 123123,
-            "GatewayCompressionLevel": "Stream",
-            "MessageCacheSize": 1024,
-            "HttpTimeout": "00:00:20",
-            "ReconnectIndefinitely": false,
-            "AlwaysCacheMembers": true,
-            "MobileStatus": false,
-            "UseCanary": false,
-            "AutoRefreshChannelCache": false,
-            "Intents": "AllUnprivileged"
-        }
-    }
+	"DisCatSharp": {
+		"Discord": {
+			"Token": "1234567890",
+			"TokenType": "Bot",
+			"MinimumLogLevel": "Information",
+			"UseRelativeRateLimit": true,
+			"LogTimestampFormat": "yyyy-MM-dd HH:mm:ss zzz",
+			"LargeThreshold": 250,
+			"AutoReconnect": true,
+			"ShardId": 123123,
+			"GatewayCompressionLevel": "Stream",
+			"MessageCacheSize": 1024,
+			"HttpTimeout": "00:00:20",
+			"ReconnectIndefinitely": false,
+			"AlwaysCacheMembers": true,
+			"MobileStatus": false,
+			"UseCanary": false,
+			"AutoRefreshChannelCache": false,
+			"Intents": "AllUnprivileged"
+		}
+	}
 }

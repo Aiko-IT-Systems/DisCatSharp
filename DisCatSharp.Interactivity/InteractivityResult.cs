@@ -1,4 +1,3 @@
-
 namespace DisCatSharp.Interactivity;
 
 /// <summary>
@@ -11,6 +10,7 @@ public readonly struct InteractivityResult<T>
 	/// Whether interactivity was timed out
 	/// </summary>
 	public bool TimedOut { get; }
+
 	/// <summary>
 	/// Result
 	/// </summary>

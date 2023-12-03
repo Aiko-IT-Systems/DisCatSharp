@@ -1,5 +1,3 @@
-
-#nullable enable
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -14,7 +12,8 @@ namespace DisCatSharp.EventHandlers.Tests;
 public class BasicEventHandlerTests
 {
 	[EventHandler]
-	private class HandlerA { }
+	private class HandlerA
+	{ }
 
 	[EventHandler]
 	private class HandlerB
@@ -54,7 +53,10 @@ public class BasicEventHandlerTests
 		private static Task ThisEventDoesNotExist() => Task.CompletedTask;
 	}
 
-	private readonly DiscordClient _client = new(new() { Token = "1" });
+	private readonly DiscordClient _client = new(new()
+	{
+		Token = "1"
+	});
 
 	[Fact]
 	public void TestUtility()
@@ -113,12 +115,13 @@ public class BasicEventHandlerTests
 	private bool IsEventRegistered(string name)
 	{
 		// This is super hacky, but I think it should be good enough.
-		if (name.Length == 0) { throw new ArgumentException("name mustn't be empty"); }
+		if (name.Length == 0)
+			throw new ArgumentException("name mustn't be empty");
+
 		name = "_" + char.ToLower(name[0]) + name[1..];
 		var asyncEvent = typeof(DiscordClient).GetField(name, BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(this._client);
 		dynamic handlers = asyncEvent?.GetType().GetField("_handlers", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(asyncEvent)
-			?? throw new ArgumentException($"Unknown event \"{name}\"");
+		                   ?? throw new ArgumentException($"Unknown event \"{name}\"");
 		return handlers.Length != 0;
 	}
-
 }

@@ -9,7 +9,10 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public partial struct DiscordColor
 {
-	private static readonly char[] s_hexAlphabet = new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+	private static readonly char[] s_hexAlphabet = new[]
+	{
+		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+	};
 
 	/// <summary>
 	/// Gets the integer representation of this color.
@@ -20,13 +23,13 @@ public partial struct DiscordColor
 	/// Gets the red component of this color as an 8-bit integer.
 	/// </summary>
 	public byte R
-		=> (byte)((this.Value >> 16) & 0xFF);
+		=> (byte)(this.Value >> 16 & 0xFF);
 
 	/// <summary>
 	/// Gets the green component of this color as an 8-bit integer.
 	/// </summary>
 	public byte G
-		=> (byte)((this.Value >> 8) & 0xFF);
+		=> (byte)(this.Value >> 8 & 0xFF);
 
 	/// <summary>
 	/// Gets the blue component of this color as an 8-bit integer.
@@ -51,7 +54,7 @@ public partial struct DiscordColor
 	/// <param name="b">Value of the blue component.</param>
 	public DiscordColor(byte r, byte g, byte b)
 	{
-		this.Value = (r << 16) | (g << 8) | b;
+		this.Value = r << 16 | g << 8 | b;
 	}
 
 	/// <summary>
@@ -69,7 +72,7 @@ public partial struct DiscordColor
 		var gb = (byte)(g * 255);
 		var bb = (byte)(b * 255);
 
-		this.Value = (rb << 16) | (gb << 8) | bb;
+		this.Value = rb << 16 | gb << 8 | bb;
 	}
 
 	/// <summary>

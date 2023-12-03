@@ -38,11 +38,7 @@ public class PaginationButtons
 	/// </summary>
 	internal DiscordButtonComponent[] ButtonArray => new[]
 	{
-		this.SkipLeft,
-		this.Left,
-		this.Stop,
-		this.Right,
-		this.SkipRight
+		this.SkipLeft, this.Left, this.Stop, this.Right, this.SkipRight
 	};
 
 	public const string SKIP_LEFT_CUSTOM_ID = "pgb-skip-left";
@@ -56,11 +52,11 @@ public class PaginationButtons
 	/// </summary>
 	public PaginationButtons()
 	{
-		this.SkipLeft = new DiscordButtonComponent(ButtonStyle.Secondary, "leftskip", null, false, new DiscordComponentEmoji(DiscordEmoji.FromUnicode("⏮")));
-		this.Left = new DiscordButtonComponent(ButtonStyle.Secondary, "left", null, false, new DiscordComponentEmoji(DiscordEmoji.FromUnicode("◀")));
-		this.Stop = new DiscordButtonComponent(ButtonStyle.Secondary, "stop", null, false, new DiscordComponentEmoji(DiscordEmoji.FromUnicode("⏹")));
-		this.Right = new DiscordButtonComponent(ButtonStyle.Secondary, "right", null, false, new DiscordComponentEmoji(DiscordEmoji.FromUnicode("▶")));
-		this.SkipRight = new DiscordButtonComponent(ButtonStyle.Secondary, "rightskip", null, false, new DiscordComponentEmoji(DiscordEmoji.FromUnicode("⏭")));
+		this.SkipLeft = new(ButtonStyle.Secondary, "leftskip", null, false, new(DiscordEmoji.FromUnicode("⏮")));
+		this.Left = new(ButtonStyle.Secondary, "left", null, false, new(DiscordEmoji.FromUnicode("◀")));
+		this.Stop = new(ButtonStyle.Secondary, "stop", null, false, new(DiscordEmoji.FromUnicode("⏹")));
+		this.Right = new(ButtonStyle.Secondary, "right", null, false, new(DiscordEmoji.FromUnicode("▶")));
+		this.SkipRight = new(ButtonStyle.Secondary, "rightskip", null, false, new(DiscordEmoji.FromUnicode("⏭")));
 	}
 
 	/// <summary>
@@ -69,10 +65,10 @@ public class PaginationButtons
 	/// <param name="other">The other <see cref="PaginationButtons"/>.</param>
 	public PaginationButtons(PaginationButtons other)
 	{
-		this.Stop = new DiscordButtonComponent(other.Stop);
-		this.Left = new DiscordButtonComponent(other.Left);
-		this.Right = new DiscordButtonComponent(other.Right);
-		this.SkipLeft = new DiscordButtonComponent(other.SkipLeft);
-		this.SkipRight = new DiscordButtonComponent(other.SkipRight);
+		this.Stop = new(other.Stop);
+		this.Left = new(other.Left);
+		this.Right = new(other.Right);
+		this.SkipLeft = new(other.SkipLeft);
+		this.SkipRight = new(other.SkipRight);
 	}
 }

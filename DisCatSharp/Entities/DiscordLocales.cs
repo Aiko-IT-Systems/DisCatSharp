@@ -1,4 +1,3 @@
-
 namespace DisCatSharp.Entities;
 
 public static class DiscordLocales

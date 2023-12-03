@@ -68,8 +68,7 @@ public sealed class InteractivityConfiguration
 	/// </summary>
 	[ActivatorUtilitiesConstructor]
 	public InteractivityConfiguration()
-	{
-	}
+	{ }
 
 	/// <summary>
 	/// Creates a new instance of <see cref="InteractivityConfiguration"/>, copying the properties of another configuration.

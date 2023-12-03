@@ -1,7 +1,6 @@
-
 namespace DisCatSharp.VoiceNext.Interop;
 
-internal enum OpusControl : int
+internal enum OpusControl
 {
 	SetBitrate = 4002,
 	SetBandwidth = 4008,

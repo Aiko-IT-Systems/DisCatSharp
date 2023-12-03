@@ -16,10 +16,12 @@ internal struct ExtensionConfigResult
 	/// Gets or sets the section.
 	/// </summary>
 	public ConfigSection? Section { get; set; }
+
 	/// <summary>
 	/// Gets or sets the config type.
 	/// </summary>
 	public Type ConfigType { get; set; }
+
 	/// <summary>
 	/// Gets or sets the implementation type.
 	/// </summary>
@@ -44,7 +46,6 @@ internal static class ConfigurationExtensions
 	/// <returns>Assemblies which meet the given names. No duplicates</returns>
 	public static List<Assembly> FindAssemblies(IEnumerable<string>? names)
 	{
-
 		/*
               There is a possibility that an assembly can be referenced in multiple assemblies.
               To alleviate duplicates we need to shrink our queue as we find things
@@ -68,13 +69,11 @@ internal static class ConfigurationExtensions
 
 			// Is this something we're looking for?
 			if (queue.Remove(loadedAssemblyName))
-			{
 				results.Add(assembly);
-			}
 
 			// Time to check if one of the referenced assemblies is something we're looking for
 			foreach (var referencedAssembly in assembly.GetReferencedAssemblies()
-													  .Where(x => x.Name != null && queue.Contains(x.Name)))
+				.Where(x => x.Name != null && queue.Contains(x.Name)))
 				try
 				{
 					// Must load the assembly into our workspace so we can do stuff with it later
@@ -97,8 +96,10 @@ internal static class ConfigurationExtensions
 	/// <param name="configuration"></param>
 	/// <param name="rootName"></param>
 	/// <returns>Dictionary where Key -> Name of implemented type<br/>Value -> <see cref="ExtensionConfigResult"/></returns>
-	public static Dictionary<string, ExtensionConfigResult> FindImplementedExtensions(this IConfiguration configuration,
-		string rootName = Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB)
+	public static Dictionary<string, ExtensionConfigResult> FindImplementedExtensions(
+		this IConfiguration configuration,
+		string rootName = Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB
+	)
 	{
 		if (string.IsNullOrEmpty(rootName))
 			throw new ArgumentNullException(nameof(rootName), "Root name must be provided");
@@ -120,7 +121,7 @@ internal static class ConfigurationExtensions
 		assemblyNames = string.IsNullOrEmpty(configuration[configuration.ConfigPath(rootName, "Using")])
 			? configuration.GetSection(configuration.ConfigPath(rootName, "Using")).Get<string[]>()
 			: Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(
-					configuration[configuration.ConfigPath(rootName, "Using")]);
+				configuration[configuration.ConfigPath(rootName, "Using")]);
 		foreach (var assembly in FindAssemblies(assemblyNames.Select(x => x.StartsWith(Constants.LibName) ? x : $"{Constants.LibName}.{x}")))
 		{
 			ExtensionConfigResult result = new();
@@ -167,5 +168,4 @@ internal static class ConfigurationExtensions
 
 		return results;
 	}
-
 }

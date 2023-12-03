@@ -15,26 +15,32 @@ public sealed class ImageTool : IDisposable
 	/// The png magic .
 	/// </summary>
 	private const ulong PNG_MAGIC = 0x0A1A_0A0D_474E_5089;
+
 	/// <summary>
 	/// The jpeg magic 1.
 	/// </summary>
 	private const ushort JPEG_MAGIC_1 = 0xD8FF;
+
 	/// <summary>
 	/// The jpeg magic 2.
 	/// </summary>
 	private const ushort JPEG_MAGIC_2 = 0xD9FF;
+
 	/// <summary>
 	/// The gif magic 1
 	/// </summary>
 	private const ulong GIF_MAGIC_1 = 0x0000_6139_3846_4947;
+
 	/// <summary>
 	/// The gif magic 2.
 	/// </summary>
 	private const ulong GIF_MAGIC_2 = 0x0000_6137_3846_4947;
+
 	/// <summary>
 	/// The webp magic 1.
 	/// </summary>
 	private const uint WEBP_MAGIC_1 = 0x4646_4952;
+
 	/// <summary>
 	/// The webp magic 2.
 	/// </summary>
@@ -44,10 +50,12 @@ public sealed class ImageTool : IDisposable
 	/// The gif mask.
 	/// </summary>
 	private const ulong GIF_MASK = 0x0000_FFFF_FFFF_FFFF;
+
 	/// <summary>
 	/// The mask 32.
 	/// </summary>
 	private const ulong MASK32 = 0x0000_0000_FFFF_FFFF;
+
 	/// <summary>
 	/// The mask 16.
 	/// </summary>
@@ -179,7 +187,7 @@ public sealed class ImageTool : IDisposable
 /// <summary>
 /// Represents format of an image.
 /// </summary>
-public enum ImageFormat : int
+public enum ImageFormat
 {
 	/// <summary>
 	/// The format is unknown

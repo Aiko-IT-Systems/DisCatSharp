@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents guild verification level.
 /// </summary>
-public enum VerificationLevel : int
+public enum VerificationLevel
 {
 	/// <summary>
 	/// No verification. Anyone can join and chat right away.

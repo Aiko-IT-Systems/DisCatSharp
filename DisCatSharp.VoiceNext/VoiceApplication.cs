@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.VoiceNext;
 
 /// <summary>
 /// Represents encoder settings preset for Opus.
 /// </summary>
-public enum VoiceApplication : int
+public enum VoiceApplication
 {
 	/// <summary>
 	/// Defines that the encoder must optimize settings for voice data.

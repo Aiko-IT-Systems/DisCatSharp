@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents a guilds hub type.
 /// </summary>
-public enum HubType : int
+public enum HubType
 {
 	/// <summary>
 	/// Indicates that the hub is a default one.

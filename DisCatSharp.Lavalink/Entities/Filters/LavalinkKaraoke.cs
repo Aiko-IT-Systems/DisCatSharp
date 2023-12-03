@@ -1,4 +1,3 @@
-
 using DisCatSharp.Entities;
 
 using Newtonsoft.Json;

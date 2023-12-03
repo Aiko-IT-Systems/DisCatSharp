@@ -25,6 +25,7 @@ public sealed class DiscordEmbedField : ObservableApiObject
 			{
 				if (value == null)
 					throw new ArgumentNullException(nameof(value));
+
 				throw new ArgumentException("Name cannot be empty or whitespace.", nameof(value));
 			}
 
@@ -51,6 +52,7 @@ public sealed class DiscordEmbedField : ObservableApiObject
 			{
 				if (value == null)
 					throw new ArgumentNullException(nameof(value));
+
 				throw new ArgumentException("Value cannot be empty or whitespace.", nameof(value));
 			}
 

@@ -51,3 +51,5 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Usage", "DCS0001:[Discord] InExperiment", Justification = "<Pending>")]
 [assembly: SuppressMessage("Usage", "DCS0002:[Discord] InExperiment", Justification = "<Pending>")]
 [assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
+[assembly: SuppressMessage("Style", "IDE0048:Add parentheses for clarity", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.Extensions.IsBasicAlphanumeric(System.Char)~System.Boolean")]
+[assembly: SuppressMessage("Style", "IDE0048:Add parentheses for clarity", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Common.Extensions.IsBasicLetter(System.Char)~System.Boolean")]

@@ -54,7 +54,6 @@ public static class ChannelExtensions
 	public static Task<InteractivityResult<TypingStartEventArgs>> WaitForUserTypingAsync(this DiscordChannel channel, DiscordUser user, TimeSpan? timeoutOverride = null)
 		=> GetInteractivity(channel).WaitForUserTypingAsync(user, channel, timeoutOverride);
 
-
 	/// <summary>
 	/// Sends a new paginated message.
 	/// </summary>
@@ -100,7 +99,6 @@ public static class ChannelExtensions
 	/// <exception cref="InvalidOperationException">Thrown if interactivity is not enabled for the client associated with the channel.</exception>
 	public static Task SendPaginatedMessageAsync(this DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons, TimeSpan? timeoutOverride, PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default)
 		=> GetInteractivity(channel).SendPaginatedMessageAsync(channel, user, pages, buttons, timeoutOverride, behaviour, deletion);
-
 
 	/// <summary>
 	/// Sends the paginated message async.

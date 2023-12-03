@@ -42,22 +42,22 @@ public enum ApplicationFlags : long
 	/// <summary>
 	/// Unknown.
 	/// </summary>
-	AutoModerationRuleCreateBadge = 1<<6,
+	AutoModerationRuleCreateBadge = 1 << 6,
 
 	/// <summary>
 	/// Allows the application to create activity assets.
 	/// </summary>
-	AllowAssets = 1L<<8,
+	AllowAssets = 1L << 8,
 
 	/// <summary>
 	/// Allows the application to enable activity spectating.
 	/// </summary>
-	AllowActivityActionSpectate = 1L<<9,
+	AllowActivityActionSpectate = 1L << 9,
 
 	/// <summary>
 	/// Allows the application to enable join requests for activities.
 	/// </summary>
-	AllowActivityActionJoinRequest = 1L<<10,
+	AllowActivityActionJoinRequest = 1L << 10,
 
 	/// <summary>
 	/// The application has connected to RPC.

@@ -87,7 +87,7 @@ public class DiscordScheduledEventUser : ObservableApiObject, IEquatable<Discord
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || HashCode.Combine(e1.User.Id, e1.EventId) == HashCode.Combine(e2.User.Id, e2.EventId));
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && (o1 == null && o2 == null || HashCode.Combine(e1.User.Id, e1.EventId) == HashCode.Combine(e2.User.Id, e2.EventId));
 	}
 
 	/// <summary>

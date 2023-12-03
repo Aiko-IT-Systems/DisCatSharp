@@ -1,4 +1,5 @@
 using System;
+
 // ReSharper disable InconsistentNaming
 
 namespace DisCatSharp.Common.Serialization;
@@ -45,7 +46,7 @@ public sealed class TimeSpanFormatAttribute : SerializationAttribute
 	/// <param name="kind">Predefined format kind to use.</param>
 	public TimeSpanFormatAttribute(TimeSpanFormatKind kind)
 	{
-		if (kind < 0 || kind > TimeSpanFormatKind.InvariantLocaleShort)
+		if (kind is < 0 or > TimeSpanFormatKind.InvariantLocaleShort)
 			throw new ArgumentOutOfRangeException(nameof(kind), "Specified format kind is not legal or supported.");
 
 		this.Kind = kind;
@@ -71,7 +72,7 @@ public sealed class TimeSpanFormatAttribute : SerializationAttribute
 /// <para>Defines which built-in format to use for <see cref="TimeSpan"/> serialization.</para>
 /// <para>See https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-timespan-format-strings and https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-timespan-format-strings for more details.</para>
 /// </summary>
-public enum TimeSpanFormatKind : int
+public enum TimeSpanFormatKind
 {
 	/// <summary>
 	/// Specifies ISO 8601-like time format, which is equivalent to .NET format string of @"ddThh\:mm\:ss\.fff".

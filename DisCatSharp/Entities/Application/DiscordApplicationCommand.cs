@@ -127,13 +127,22 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// <param name="allowedContexts">Where the command can be used.</param>
 	/// <param name="integrationTypes">The allowed integration types.</param>
 	public DiscordApplicationCommand(
-		string name, string description,
+		string name,
+		string description,
 		IEnumerable<DiscordApplicationCommandOption>? options = null,
 		ApplicationCommandType type = ApplicationCommandType.ChatInput,
-		DiscordApplicationCommandLocalization? nameLocalizations = null, DiscordApplicationCommandLocalization? descriptionLocalizations = null,
-		Permissions? defaultMemberPermissions = null, bool? dmPermission = null, bool isNsfw = false,
-		List<ApplicationCommandContexts>? allowedContexts = null, List<ApplicationCommandIntegrationTypes>? integrationTypes = null)
-		: base(new() { "guild_id", "name_localizations", "description_localizations" })
+		DiscordApplicationCommandLocalization? nameLocalizations = null,
+		DiscordApplicationCommandLocalization? descriptionLocalizations = null,
+		Permissions? defaultMemberPermissions = null,
+		bool? dmPermission = null,
+		bool isNsfw = false,
+		List<ApplicationCommandContexts>? allowedContexts = null,
+		List<ApplicationCommandIntegrationTypes>? integrationTypes = null
+	)
+		: base(new()
+		{
+			"guild_id", "name_localizations", "description_localizations"
+		})
 	{
 		if (type is ApplicationCommandType.ChatInput)
 		{
@@ -155,6 +164,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 				throw new ArgumentException("Context menus do not support descriptions.");
 			if (options?.Any() ?? false)
 				throw new ArgumentException("Context menus do not support options.");
+
 			description = string.Empty;
 
 			this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
@@ -177,7 +187,10 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// Creates a new empty Discord Application Command.
 	/// </summary>
 	internal DiscordApplicationCommand()
-		: base(new() { "name_localizations", "description_localizations", "guild_id" }) // Why tf is that so inconsistent?!
+		: base(new()
+		{
+			"name_localizations", "description_localizations", "guild_id"
+		}) // Why tf is that so inconsistent?!
 	{ }
 
 	/// <summary>

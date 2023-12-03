@@ -36,7 +36,11 @@ public static class CommandsNextUtilities
 	public static int GetStringPrefixLength(this DiscordMessage msg, string str, StringComparison comparisonType = StringComparison.Ordinal)
 	{
 		var content = msg.Content;
-		return str.Length >= content.Length ? -1 : !content.StartsWith(str, comparisonType) ? -1 : str.Length;
+		return str.Length >= content.Length
+			? -1
+			: !content.StartsWith(str, comparisonType)
+				? -1
+				: str.Length;
 	}
 
 	/// <summary>
@@ -85,6 +89,7 @@ public static class CommandsNextUtilities
 		for (; i < str.Length; i++)
 			if (!char.IsWhiteSpace(str[i]))
 				break;
+
 		startPos = i;
 
 		var endPosition = -1;
@@ -99,7 +104,7 @@ public static class CommandsNextUtilities
 				if (!inEscape && !inBacktick && !inTripleBacktick)
 				{
 					inEscape = true;
-					if (str.IndexOf("\\`", i) == i || str.IndexOf("\\\"", i) == i || str.IndexOf("\\\\", i) == i || (str.Length >= i && char.IsWhiteSpace(str[i + 1])))
+					if (str.IndexOf("\\`", i) == i || str.IndexOf("\\\"", i) == i || str.IndexOf("\\\\", i) == i || str.Length >= i && char.IsWhiteSpace(str[i + 1]))
 						removeIndices.Add(i - startPosition);
 					i++;
 				}
@@ -234,13 +239,13 @@ public static class CommandsNextUtilities
 			}
 
 			if (argValue == null && !arg.IsOptional && !arg.IsCatchAll)
-				return new ArgumentBindingResult(new ArgumentException("Not enough arguments supplied to the command."));
+				return new(new ArgumentException("Not enough arguments supplied to the command."));
 			else if (argValue == null)
 				rawArgumentList.Add(null);
 		}
 
 		if (!ignoreSurplus && foundAt < argString.Length)
-			return new ArgumentBindingResult(new ArgumentException("Too many arguments were supplied to this command."));
+			return new(new ArgumentException("Too many arguments were supplied to this command."));
 
 		for (var i = 0; i < overload.Arguments.Count; i++)
 		{
@@ -257,8 +262,9 @@ public static class CommandsNextUtilities
 					}
 					catch (Exception ex)
 					{
-						return new ArgumentBindingResult(ex);
+						return new(ex);
 					}
+
 					i++;
 				}
 
@@ -266,19 +272,17 @@ public static class CommandsNextUtilities
 				break;
 			}
 			else
-			{
 				try
 				{
 					args[i + 2] = rawArgumentList[i] != null ? await ctx.CommandsNext.ConvertArgument(rawArgumentList[i], ctx, arg.Type).ConfigureAwait(false) : arg.DefaultValue;
 				}
 				catch (Exception ex)
 				{
-					return new ArgumentBindingResult(ex);
+					return new(ex);
 				}
-			}
 		}
 
-		return new ArgumentBindingResult(args, rawArgumentList);
+		return new(args, rawArgumentList);
 	}
 
 	/// <summary>

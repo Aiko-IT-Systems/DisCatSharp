@@ -178,7 +178,7 @@ public sealed class DiscordTeamMember : IEquatable<DiscordTeamMember>
 /// <summary>
 /// Signifies the status of user's team membership.
 /// </summary>
-public enum DiscordTeamMembershipStatus : int
+public enum DiscordTeamMembershipStatus
 {
 	/// <summary>
 	/// Indicates that this user is invited to the team, and is pending membership.

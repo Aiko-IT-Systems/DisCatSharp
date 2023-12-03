@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents default notification level for a guild.
 /// </summary>
-public enum DefaultMessageNotifications : int
+public enum DefaultMessageNotifications
 {
 	/// <summary>
 	/// All messages will trigger push notifications.

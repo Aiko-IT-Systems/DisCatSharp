@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 
 using DisCatSharp.Entities;
-using DisCatSharp.Enums;
 
 using Microsoft.Extensions.Logging;
 
@@ -43,8 +42,6 @@ public sealed class RegisteredDiscordApplicationCommand : DiscordApplicationComm
 		this.UnknownProperties = parent.UnknownProperties;
 		this.Version = parent.Version;
 
-
-
 		try
 		{
 			if (ApplicationCommandsExtension.CommandMethods.Any(x => x.CommandId == this.Id))
@@ -78,13 +75,11 @@ public sealed class RegisteredDiscordApplicationCommand : DiscordApplicationComm
 	/// </summary>
 	public MethodInfo? CommandMethod { get; internal set; }
 
-
 	/// <summary>
 	/// The type that contains the sub commands of this command.
 	/// <see langword="null"/> if command is not a group command or reflection failed.
 	/// </summary>
 	public Type? CommandType { get; internal set; }
-
 
 	/// <summary>
 	/// The type this command is contained in.

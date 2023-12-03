@@ -139,7 +139,7 @@ public sealed class ContinuousMemoryBuffer<T> : IMemoryBuffer<T> where T : unman
 			throw new ArgumentOutOfRangeException(nameof(source), "Cannot copy data from beyond the buffer.");
 
 		var start = (int)source;
-		var sbuff = this._buff[start..this._pos ].Span;
+		var sbuff = this._buff[start..this._pos].Span;
 		var dbuff = MemoryMarshal.AsBytes(destination);
 		if (sbuff.Length > dbuff.Length)
 			sbuff = sbuff[..dbuff.Length];

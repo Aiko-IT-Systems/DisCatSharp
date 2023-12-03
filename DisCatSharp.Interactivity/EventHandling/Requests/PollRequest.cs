@@ -30,18 +30,16 @@ public class PollRequest
 	/// <param name="emojis"></param>
 	public PollRequest(DiscordMessage message, TimeSpan timeout, IEnumerable<DiscordEmoji> emojis)
 	{
-		this.Tcs = new TaskCompletionSource<bool>();
-		this.Ct = new CancellationTokenSource(timeout);
+		this.Tcs = new();
+		this.Ct = new(timeout);
 		this.Ct.Token.Register(() => this.Tcs.TrySetResult(true));
 		this.Timeout = timeout;
 		this.Emojis = emojis.ToList();
-		this.Collected = new ConcurrentHashSet<PollEmoji>();
+		this.Collected = new();
 		this.Message = message;
 
 		foreach (var e in emojis)
-		{
-			this.Collected.Add(new PollEmoji(e));
-		}
+			this.Collected.Add(new(e));
 	}
 
 	/// <summary>
@@ -51,9 +49,7 @@ public class PollRequest
 	{
 		this.Collected.Clear();
 		foreach (var e in this.Emojis)
-		{
-			this.Collected.Add(new PollEmoji(e));
-		}
+			this.Collected.Add(new(e));
 	}
 
 	/// <summary>
@@ -64,7 +60,6 @@ public class PollRequest
 	internal void RemoveReaction(DiscordEmoji emoji, DiscordUser member)
 	{
 		if (this.Collected.Any(x => x.Emoji == emoji))
-		{
 			if (this.Collected.Any(x => x.Voted.Contains(member)))
 			{
 				var e = this.Collected.First(x => x.Emoji == emoji);
@@ -72,7 +67,6 @@ public class PollRequest
 				e.Voted.TryRemove(member);
 				this.Collected.Add(e);
 			}
-		}
 	}
 
 	/// <summary>
@@ -83,7 +77,6 @@ public class PollRequest
 	internal void AddReaction(DiscordEmoji emoji, DiscordUser member)
 	{
 		if (this.Collected.Any(x => x.Emoji == emoji))
-		{
 			if (!this.Collected.Any(x => x.Voted.Contains(member)))
 			{
 				var e = this.Collected.First(x => x.Emoji == emoji);
@@ -91,7 +84,6 @@ public class PollRequest
 				e.Voted.Add(member);
 				this.Collected.Add(e);
 			}
-		}
 	}
 
 	~PollRequest()
@@ -121,11 +113,12 @@ public class PollEmoji
 	internal PollEmoji(DiscordEmoji emoji)
 	{
 		this.Emoji = emoji;
-		this.Voted = new ConcurrentHashSet<DiscordUser>();
+		this.Voted = new();
 	}
 
 	public DiscordEmoji Emoji;
 	public ConcurrentHashSet<DiscordUser> Voted;
+
 	/// <summary>
 	/// Gets the total.
 	/// </summary>

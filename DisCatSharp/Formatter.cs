@@ -17,6 +17,7 @@ public static class Formatter
 	/// Gets the md sanitize regex.
 	/// </summary>
 	private static Regex s_mdSanitizeRegex { get; } = new(@"([`\*_~<>\[\]\(\)""@\!\&#:\|])", RegexOptions.ECMAScript);
+
 	/// <summary>
 	/// Gets the md strip regex.
 	/// </summary>
@@ -197,8 +198,8 @@ public static class Formatter
 	/// <returns>Formatted mention.</returns>
 	public static string Mention(this DiscordUser user, bool nickname = false)
 		=> nickname
-		? $"<@!{user.Id.ToString(CultureInfo.InvariantCulture)}>"
-		: $"<@{user.Id.ToString(CultureInfo.InvariantCulture)}>";
+			? $"<@!{user.Id.ToString(CultureInfo.InvariantCulture)}>"
+			: $"<@{user.Id.ToString(CultureInfo.InvariantCulture)}>";
 
 	/// <summary>
 	/// Creates a mention for specified channel.

@@ -25,8 +25,8 @@ internal class MatchRequest<T> : IDisposable where T : AsyncEventArgs
 	/// <param name="timeout">Timeout time</param>
 	public MatchRequest(Func<T, bool> predicate, TimeSpan timeout)
 	{
-		this.Tcs = new TaskCompletionSource<T>();
-		this.Ct = new CancellationTokenSource(timeout);
+		this.Tcs = new();
+		this.Ct = new(timeout);
 		this.Predicate = predicate;
 		this.Ct.Token.Register(() => this.Tcs.TrySetResult(null));
 		this.Timeout = timeout;

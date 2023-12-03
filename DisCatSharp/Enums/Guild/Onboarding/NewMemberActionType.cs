@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the new member action type for the server guide.
 /// </summary>
-public enum NewMemberActionType : int
+public enum NewMemberActionType
 {
 	/// <summary>
 	/// The member needs to visit the channel.

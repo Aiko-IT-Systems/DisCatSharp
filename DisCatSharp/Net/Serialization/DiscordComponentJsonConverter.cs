@@ -39,7 +39,7 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 			return null;
 
 		var job = JObject.Load(reader);
-		var type = (job["type"]?.ToObject<ComponentType>()) ?? throw new ArgumentException($"Value {reader} does not have a component type specifier");
+		var type = job["type"]?.ToObject<ComponentType>() ?? throw new ArgumentException($"Value {reader} does not have a component type specifier");
 		DiscordComponent cmp;
 		cmp = type switch
 		{
@@ -52,7 +52,10 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 			ComponentType.RoleSelect => new DiscordRoleSelectComponent(),
 			ComponentType.MentionableSelect => new DiscordMentionableSelectComponent(),
 			ComponentType.ChannelSelect => new DiscordChannelSelectComponent(),
-			_ => new() { Type = type }
+			_ => new()
+			{
+				Type = type
+			}
 		};
 
 		// Populate the existing component with the values in the JObject. This avoids a recursive JsonConverter loop

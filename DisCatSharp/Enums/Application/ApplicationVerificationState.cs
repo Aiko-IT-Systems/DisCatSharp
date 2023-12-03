@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the application verification state (<see cref="UserFlags.VerifiedBot"/>).
 /// </summary>
-public enum ApplicationVerificationState : int
+public enum ApplicationVerificationState
 {
 	/// <summary>
 	/// This application is ineligible for verification

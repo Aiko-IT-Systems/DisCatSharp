@@ -22,7 +22,7 @@ public class AsyncExecutor
 	public void Execute(Task task)
 	{
 		// create state object
-		var taskState = new StateRef<object>(new AutoResetEvent(false));
+		var taskState = new StateRef<object>(new(false));
 
 		// queue a task and wait for it to finish executing
 		task.ContinueWith(TaskCompletionHandler, taskState);
@@ -47,9 +47,7 @@ public class AsyncExecutor
 					stateRef.Exception = t.Exception;
 			}
 			else if (t.IsCanceled)
-			{
 				stateRef.Exception = new TaskCanceledException(t);
-			}
 
 			// signal that the execution is done
 			stateRef.Lock.Set();
@@ -65,7 +63,7 @@ public class AsyncExecutor
 	public T Execute<T>(Task<T> task)
 	{
 		// create state object
-		var taskState = new StateRef<T>(new AutoResetEvent(false));
+		var taskState = new StateRef<T>(new(false));
 
 		// queue a task and wait for it to finish executing
 		task.ContinueWith(TaskCompletionHandler, taskState);
@@ -80,7 +78,7 @@ public class AsyncExecutor
 			return taskState.Result;
 
 		// throw exception if no result
-		throw new Exception("Task returned no result.");
+		throw new("Task returned no result.");
 
 		// completion method
 		void TaskCompletionHandler(Task<T> t, object state)
@@ -97,9 +95,7 @@ public class AsyncExecutor
 					stateRef.Exception = t.Exception;
 			}
 			else if (t.IsCanceled)
-			{
 				stateRef.Exception = new TaskCanceledException(t);
-			}
 
 			// return the result from the task, if any
 			if (t.IsCompleted && !t.IsFaulted)

@@ -56,9 +56,14 @@ public sealed class DiscordOnboardingPrompt : SnowflakeObject
 	/// <param name="required">Whether the prompt is required. Defaults to <see langword="true"/>.</param>
 	/// <param name="inOnboarding">Whether the prompt is shown in onboarding. Defaults to <see langword="true"/>.</param>
 	/// <param name="type">The prompt type. Defaults to <see cref="PromptType.MultipleChoice"/>.</param>
-	public DiscordOnboardingPrompt(string title, List<DiscordOnboardingPromptOption> options,
-		bool singleSelect = false, bool required = true,
-		bool inOnboarding = true, PromptType type = PromptType.MultipleChoice)
+	public DiscordOnboardingPrompt(
+		string title,
+		List<DiscordOnboardingPromptOption> options,
+		bool singleSelect = false,
+		bool required = true,
+		bool inOnboarding = true,
+		PromptType type = PromptType.MultipleChoice
+	)
 	{
 		this.Title = title;
 		this.Options = options;

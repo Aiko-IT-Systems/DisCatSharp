@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the layout for posts in a forum channel.
 /// </summary>
-public enum ForumLayout : int
+public enum ForumLayout
 {
 	/// <summary>
 	/// Forum channel will use default layout settings.

@@ -70,6 +70,7 @@ public static class DiscordJson
 			jsonTextWriter.Formatting = jsonSerializer.Formatting;
 			jsonSerializer.Serialize(jsonTextWriter, value, type);
 		}
+
 		return stringWriter.ToString();
 	}
 
@@ -81,9 +82,11 @@ public static class DiscordJson
 		})!;
 		if (discord == null)
 			return obj;
+
 		obj.Discord = discord;
 
 		if (!discord.Configuration.ReportMissingFields || !obj.AdditionalProperties.Any()) return obj;
+
 		var sentryMessage = "Found missing properties in api response for " + obj.GetType().Name;
 		List<string> sentryFields = new();
 		var vals = 0;
@@ -93,13 +96,12 @@ public static class DiscordJson
 			if (obj.IgnoredJsonKeys.Count == 0 || !obj.IgnoredJsonKeys.Any(x => x == ap.Key))
 			{
 				if (vals == 1)
-				{
 					if (discord.Configuration.EnableLibraryDeveloperMode)
 					{
 						discord.Logger.LogInformation("{sentry}", sentryMessage);
 						discord.Logger.LogDebug("{json}", json);
 					}
-				}
+
 				sentryFields.Add(ap.Key);
 				if (discord.Configuration.EnableLibraryDeveloperMode)
 					discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, obj.GetType().Name);
@@ -107,13 +109,12 @@ public static class DiscordJson
 		}
 
 		if (!discord.Configuration.EnableSentry || sentryFields.Count == 0) return obj;
+
 		var sentryJson = JsonConvert.SerializeObject(sentryFields);
 		sentryMessage += "\n\nNew fields: " + sentryJson;
 		SentryEvent sentryEvent = new()
 		{
-			Level = SentryLevel.Warning,
-			Logger = nameof(DiscordJson),
-			Message = sentryMessage
+			Level = SentryLevel.Warning, Logger = nameof(DiscordJson), Message = sentryMessage
 		};
 		sentryEvent.SetFingerprint(BaseDiscordClient.GenerateSentryFingerPrint(sentryEvent));
 		sentryEvent.SetExtra("Found Fields", sentryJson);
@@ -124,8 +125,12 @@ public static class DiscordJson
 				Username = discord.CurrentUser.UsernameWithDiscriminator,
 				Other = new Dictionary<string, string>()
 				{
-					{ "developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
-					{ "email", discord.Configuration.FeedbackEmail ?? "not_given" }
+					{
+						"developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given"
+					},
+					{
+						"email", discord.Configuration.FeedbackEmail ?? "not_given"
+					}
 				}
 			};
 		var sid = discord.Sentry.CaptureEvent(sentryEvent);
@@ -144,10 +149,12 @@ public static class DiscordJson
 		})!;
 		if (discord == null)
 			return obj;
+
 		foreach (var ob in obj)
 			ob.Discord = discord;
 
 		if (!discord.Configuration.ReportMissingFields || !obj.Any(x => x.AdditionalProperties.Any())) return obj;
+
 		var first = obj.First();
 		var sentryMessage = "Found missing properties in api response for " + first.GetType().Name;
 		List<string> sentryFields = new();
@@ -158,13 +165,12 @@ public static class DiscordJson
 			if (first.IgnoredJsonKeys.Count == 0 || !first.IgnoredJsonKeys.Any(x => x == ap.Key))
 			{
 				if (vals == 1)
-				{
 					if (discord.Configuration.EnableLibraryDeveloperMode)
 					{
 						discord.Logger.LogInformation("{sentry}", sentryMessage);
 						discord.Logger.LogDebug("{json}", json);
 					}
-				}
+
 				sentryFields.Add(ap.Key);
 				if (discord.Configuration.EnableLibraryDeveloperMode)
 					discord.Logger.LogInformation("Found field {field} on {object}", ap.Key, first.GetType().Name);
@@ -172,13 +178,12 @@ public static class DiscordJson
 		}
 
 		if (!discord.Configuration.EnableSentry || sentryFields.Count == 0) return obj;
+
 		var sentryJson = JsonConvert.SerializeObject(sentryFields);
 		sentryMessage += "\n\nNew fields: " + sentryJson;
 		SentryEvent sentryEvent = new()
 		{
-			Level = SentryLevel.Warning,
-			Logger = nameof(DiscordJson),
-			Message = sentryMessage
+			Level = SentryLevel.Warning, Logger = nameof(DiscordJson), Message = sentryMessage
 		};
 		sentryEvent.SetFingerprint(BaseDiscordClient.GenerateSentryFingerPrint(sentryEvent));
 		sentryEvent.SetExtra("Found Fields", sentryJson);
@@ -189,8 +194,12 @@ public static class DiscordJson
 				Username = discord.CurrentUser.UsernameWithDiscriminator,
 				Other = new Dictionary<string, string>()
 				{
-					{ "developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
-					{ "email", discord.Configuration.FeedbackEmail ?? "not_given" }
+					{
+						"developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given"
+					},
+					{
+						"email", discord.Configuration.FeedbackEmail ?? "not_given"
+					}
 				}
 			};
 		var sid = discord.Sentry.CaptureEvent(sentryEvent);

@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the status for a scheduled event.
 /// </summary>
-public enum ScheduledEventStatus : int
+public enum ScheduledEventStatus
 {
 	/// <summary>
 	/// Indicates that the event is scheduled.

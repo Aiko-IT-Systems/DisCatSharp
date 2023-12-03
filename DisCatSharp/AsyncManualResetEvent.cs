@@ -15,6 +15,9 @@ internal class AsyncManualResetEvent
 	/// </summary>
 	public bool IsSet => this._tsc != null && this._tsc.Task.IsCompleted;
 
+	/// <summary>
+	/// The task completion source.
+	/// </summary>
 	private TaskCompletionSource<bool> _tsc;
 
 	/// <summary>

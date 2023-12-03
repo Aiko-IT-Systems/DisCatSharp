@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the value of explicit content filter in a guild.
 /// </summary>
-public enum ExplicitContentFilter : int
+public enum ExplicitContentFilter
 {
 	/// <summary>
 	/// Explicit content filter is disabled.

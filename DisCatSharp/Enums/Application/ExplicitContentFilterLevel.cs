@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the explicit content filter level.
 /// </summary>
-public enum ExplicitContentFilterLevel : int
+public enum ExplicitContentFilterLevel
 {
 	/// <summary>
 	/// Media content will not be scanned

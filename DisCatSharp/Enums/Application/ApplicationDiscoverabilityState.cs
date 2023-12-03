@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the application discoverability state.
 /// </summary>
-public enum ApplicationDiscoverabilityState : int
+public enum ApplicationDiscoverabilityState
 {
 	/// <summary>
 	/// This application is ineligible for the application directory

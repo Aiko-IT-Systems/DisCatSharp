@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represent's a rule's action type.
 /// </summary>
-public enum AutomodActionType : int
+public enum AutomodActionType
 {
 	/// <summary>
 	/// Blocks the content of a message according to the rule.
