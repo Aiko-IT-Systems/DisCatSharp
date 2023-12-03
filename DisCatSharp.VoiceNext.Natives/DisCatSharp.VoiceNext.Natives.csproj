@@ -47,7 +47,7 @@ Manual Download: https://docs.dcs.aitsys.dev/natives/index.html
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="DisCatSharp.Attributes" Version="10.4.3" />
+    <PackageReference Include="DisCatSharp.Attributes" Version="10.4.4" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="System.Reflection" Version="4.3.0" />
     <PackageReference Include="System.Runtime" Version="4.3.1" />

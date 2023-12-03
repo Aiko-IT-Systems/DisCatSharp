@@ -80,7 +80,7 @@
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="DisCatSharp.Attributes">
-      <Version>10.4.3</Version>
+      <Version>10.4.4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.SDK">
       <Version>17.7.37357</Version>
