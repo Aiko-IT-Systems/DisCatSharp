@@ -1,4 +1,3 @@
-
 namespace DisCatSharp.Net.Models;
 
 /// <summary>

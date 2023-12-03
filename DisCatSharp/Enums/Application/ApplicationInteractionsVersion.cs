@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the application interactions version.
 /// </summary>
-public enum ApplicationInteractionsVersion : int
+public enum ApplicationInteractionsVersion
 {
 	/// <summary>
 	/// Only Interaction Create events are sent as documented (default)

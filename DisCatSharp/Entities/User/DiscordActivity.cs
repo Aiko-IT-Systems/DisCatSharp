@@ -59,7 +59,6 @@ internal sealed class UserStatusConverter : JsonConverter
 	public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
 	{
 		if (value is UserStatus status)
-		{
 			switch (status) // reader.Value can be a string, DateTime or DateTimeOffset (yes, it's weird)
 			{
 				case UserStatus.Online:
@@ -87,7 +86,6 @@ internal sealed class UserStatusConverter : JsonConverter
 					writer.WriteValue("offline");
 					return;
 			}
-		}
 	}
 
 	/// <summary>
@@ -107,7 +105,7 @@ internal sealed class UserStatusConverter : JsonConverter
 			"dnd" => UserStatus.DoNotDisturb,
 			"invisible" => UserStatus.Invisible,
 			"streaming" => UserStatus.Streaming,
-			_ => UserStatus.Offline,
+			_ => UserStatus.Offline
 		};
 
 	/// <summary>
@@ -258,14 +256,13 @@ public sealed class DiscordActivity
 
 		if (rawActivity?.IsCustomStatus() == true && this.CustomStatus != null)
 			this.CustomStatus.UpdateWith(rawActivity.State, rawActivity.Emoji);
-		else this.CustomStatus = rawActivity?.IsCustomStatus() == true
-			? new DiscordCustomStatus
-			{
-				Name = rawActivity.Name!,
-				State = rawActivity.State,
-				Emoji = rawActivity.Emoji
-			}
-			: null;
+		else
+			this.CustomStatus = rawActivity?.IsCustomStatus() == true
+				? new DiscordCustomStatus
+				{
+					Name = rawActivity.Name!, State = rawActivity.State, Emoji = rawActivity.Emoji
+				}
+				: null;
 	}
 }
 
@@ -456,7 +453,12 @@ public sealed class DiscordRichPresence
 	{
 		this.Details = rawGame?.Details;
 		this.State = rawGame?.State;
-		this.Application = rawGame?.ApplicationId != null ? new DiscordApplication { Id = rawGame.ApplicationId.Value } : null;
+		this.Application = rawGame?.ApplicationId != null
+			? new DiscordApplication
+			{
+				Id = rawGame.ApplicationId.Value
+			}
+			: null;
 		this.Instance = rawGame?.Instance;
 		this.LargeImageText = rawGame?.Assets?.LargeImageText;
 		this.SmallImageText = rawGame?.Assets?.SmallImageText;
@@ -475,18 +477,30 @@ public sealed class DiscordRichPresence
 		if (lid != null)
 		{
 			if (lid.StartsWith("spotify:"))
-				this.LargeImage = new DiscordSpotifyAsset { Id = lid };
+				this.LargeImage = new DiscordSpotifyAsset
+				{
+					Id = lid
+				};
 			else if (ulong.TryParse(lid, NumberStyles.Number, CultureInfo.InvariantCulture, out var ulid))
-				this.LargeImage = new DiscordApplicationAsset { Id = lid, Application = this.Application, Type = ApplicationAssetType.LargeImage };
+				this.LargeImage = new DiscordApplicationAsset
+				{
+					Id = lid, Application = this.Application, Type = ApplicationAssetType.LargeImage
+				};
 		}
 
 		var sid = rawGame?.Assets?.SmallImage;
 		if (sid != null)
 		{
 			if (sid.StartsWith("spotify:"))
-				this.SmallImage = new DiscordSpotifyAsset { Id = sid };
+				this.SmallImage = new DiscordSpotifyAsset
+				{
+					Id = sid
+				};
 			else if (ulong.TryParse(sid, NumberStyles.Number, CultureInfo.InvariantCulture, out var usid))
-				this.SmallImage = new DiscordApplicationAsset { Id = sid, Application = this.Application, Type = ApplicationAssetType.LargeImage };
+				this.SmallImage = new DiscordApplicationAsset
+				{
+					Id = sid, Application = this.Application, Type = ApplicationAssetType.LargeImage
+				};
 		}
 	}
 }

@@ -1,8 +1,8 @@
 {
-    "BotTwo": {
-        "Discord": {
-            "Token": "1234567890",
-            "Intents": "Guilds"
-        }
-    }
+	"BotTwo": {
+		"Discord": {
+			"Token": "1234567890",
+			"Intents": "Guilds"
+		}
+	}
 }

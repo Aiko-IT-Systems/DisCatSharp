@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
-using DisCatSharp.Enums;
-using DisCatSharp.Net;
 
 using Newtonsoft.Json;
 
@@ -14,6 +11,7 @@ namespace DisCatSharp.Experimental.Entities;
 /// <summary>
 /// Represents a clyde profile.
 /// </summary>
+[DiscordDeprecated]
 public sealed class ClydeProfile : ObservableApiObject
 {
 	/// <summary>

@@ -20,7 +20,7 @@ public static class DiscordClientExtensions
 	/// <param name="client">Discord client to create VoiceNext instance for.</param>
 	/// <returns>VoiceNext client instance.</returns>
 	public static VoiceNextExtension UseVoiceNext(this DiscordClient client)
-		=> UseVoiceNext(client, new VoiceNextConfiguration());
+		=> UseVoiceNext(client, new());
 
 	/// <summary>
 	/// Creates a new VoiceNext client with specified settings.
@@ -79,9 +79,7 @@ public static class DiscordClientExtensions
 		var extensions = new Dictionary<int, VoiceNextExtension>();
 
 		foreach (var shard in client.ShardClients.Values)
-		{
 			extensions.Add(shard.ShardId, shard.GetExtension<VoiceNextExtension>());
-		}
 
 		return new ReadOnlyDictionary<int, VoiceNextExtension>(extensions);
 	}

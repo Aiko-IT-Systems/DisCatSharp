@@ -62,7 +62,8 @@ public class DiscordBaseSelectComponent : DiscordComponent
 	internal DiscordBaseSelectComponent(ComponentType type, string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false, IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
 	{
 		this.Type = type;
-		this.CustomId = customId ?? Guid.NewGuid().ToString(); ;
+		this.CustomId = customId ?? Guid.NewGuid().ToString();
+		;
 		this.Disabled = disabled;
 		this.Placeholder = placeholder;
 		this.MinimumSelectedValues = minOptions;
@@ -80,6 +81,7 @@ public class DiscordBaseSelectComponent : DiscordComponent
 			if (type == ComponentType.RoleSelect && defaultValues.Any(x => x.Type != "role"))
 				throw new ArgumentException("The default values for a role select menus must be of type role.", nameof(defaultValues));
 		}
+
 		this.DefaultValues = defaultValues?.ToList();
 	}
 
@@ -98,7 +100,8 @@ public class DiscordBaseSelectComponent : DiscordComponent
 	{
 		this.Type = type;
 		this.Label = label;
-		this.CustomId = customId ?? Guid.NewGuid().ToString(); ;
+		this.CustomId = customId ?? Guid.NewGuid().ToString();
+		;
 		this.Disabled = disabled;
 		this.Placeholder = placeholder;
 		this.MinimumSelectedValues = minOptions;
@@ -116,11 +119,10 @@ public class DiscordBaseSelectComponent : DiscordComponent
 			if (type == ComponentType.RoleSelect && defaultValues.Any(x => x.Type != "role"))
 				throw new ArgumentException("The default values for a role select menus must be of type role.", nameof(defaultValues));
 		}
+
 		this.DefaultValues = defaultValues?.ToList();
 	}
 
 	internal DiscordBaseSelectComponent()
-	{
-
-	}
+	{ }
 }

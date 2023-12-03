@@ -1,4 +1,3 @@
-
 using System.Runtime.Serialization;
 
 using DisCatSharp.Lavalink.Entities;

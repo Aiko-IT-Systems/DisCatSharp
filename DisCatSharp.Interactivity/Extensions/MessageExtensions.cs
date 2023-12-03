@@ -33,6 +33,7 @@ public static class MessageExtensions
 	/// <param name="timeoutOverride">Overrides the timeout set in <see cref="InteractivityConfiguration.Timeout"/></param>
 	public static Task<InteractivityResult<DiscordMessage>> GetNextMessageAsync(this DiscordMessage message, Func<DiscordMessage, bool> predicate, TimeSpan? timeoutOverride = null)
 		=> message.Channel.GetNextMessageAsync(msg => msg.Author.Id == message.Author.Id && message.ChannelId == msg.ChannelId && predicate(msg), timeoutOverride);
+
 	/// <summary>
 	/// Waits for any button to be pressed on the specified message.
 	/// </summary>
@@ -47,6 +48,7 @@ public static class MessageExtensions
 	/// <param name="timeoutOverride">Overrides the timeout set in <see cref="InteractivityConfiguration.Timeout"/></param>
 	public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(this DiscordMessage message, TimeSpan? timeoutOverride = null)
 		=> GetInteractivity(message).WaitForButtonAsync(message, timeoutOverride);
+
 	/// <summary>
 	/// Waits for any button to be pressed on the specified message.
 	/// </summary>
@@ -54,6 +56,7 @@ public static class MessageExtensions
 	/// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
 	public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(this DiscordMessage message, CancellationToken token)
 		=> GetInteractivity(message).WaitForButtonAsync(message, token);
+
 	/// <summary>
 	/// Waits for a button with the specified Id to be pressed on the specified message.
 	/// </summary>
@@ -119,7 +122,6 @@ public static class MessageExtensions
 	public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(this DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate, ComponentType selectType, TimeSpan? timeoutOverride = null)
 		=> GetInteractivity(message).WaitForSelectAsync(message, predicate, selectType, timeoutOverride);
 
-
 	/// <summary>
 	/// Waits for any dropdown to be interacted with.
 	/// </summary>
@@ -171,7 +173,7 @@ public static class MessageExtensions
 	/// <param name="selectType">The <see cref="ComponentType">type</see> of the select menu.</param>
 	/// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
 	public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(this DiscordMessage message, DiscordUser user, string id, ComponentType selectType, CancellationToken token)
-   => GetInteractivity(message).WaitForSelectAsync(message, user, id, selectType, token);
+		=> GetInteractivity(message).WaitForSelectAsync(message, user, id, selectType, token);
 
 	/// <summary>
 	/// Waits for a reaction on this message from a specific user.
@@ -202,7 +204,6 @@ public static class MessageExtensions
 	/// <exception cref="InvalidOperationException">Thrown if interactivity is not enabled for the client associated with the message.</exception>
 	public static Task<ReadOnlyCollection<Reaction>> CollectReactionsAsync(this DiscordMessage message, TimeSpan? timeoutOverride = null)
 		=> GetInteractivity(message).CollectReactionsAsync(message, timeoutOverride);
-
 
 	/// <summary>
 	/// Begins a poll using this message.

@@ -16,6 +16,5 @@ public enum RoleFlags
 	/// <summary>
 	/// This role is in a prompt.
 	/// </summary>
-	InPrompt = 1 << 0,
+	InPrompt = 1 << 0
 }
-

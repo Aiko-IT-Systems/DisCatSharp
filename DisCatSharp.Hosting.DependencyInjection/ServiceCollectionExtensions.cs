@@ -76,7 +76,8 @@ public static class ServiceCollectionExtensions
 	/// <typeparam name="TService">Your custom bot</typeparam>
 	/// <returns>Reference to <paramref name="services"/> for chaining purposes</returns>
 	public static IServiceCollection AddDiscordHostedShardService<TInterface, TService>(
-		this IServiceCollection services)
+		this IServiceCollection services
+	)
 		where TInterface : class, IDiscordHostedShardService
 		where TService : class, TInterface, IDiscordHostedShardService
 	{

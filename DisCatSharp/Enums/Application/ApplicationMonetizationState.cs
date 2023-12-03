@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the application discoverability state.
 /// </summary>
-public enum ApplicationMonetizationState : int
+public enum ApplicationMonetizationState
 {
 	/// <summary>
 	/// This application does not have monetization set up

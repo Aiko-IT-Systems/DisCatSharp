@@ -90,7 +90,10 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// Initializes a new instance of the <see cref="DiscordWebhook"/> class.
 	/// </summary>
 	internal DiscordWebhook()
-		: base(new() { "type" })
+		: base(new()
+		{
+			"type"
+		})
 	{ }
 
 	/// <summary>
@@ -223,13 +226,9 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	{
 		builder.Validate(true);
 		if (builder.KeepAttachmentsInternal.HasValue && builder.KeepAttachmentsInternal.Value)
-		{
 			builder.AttachmentsInternal.AddRange(this.ApiClient.GetWebhookMessageAsync(this.Id, this.Token, messageId.ToString(), threadId).Result.Attachments);
-		}
 		else if (builder.KeepAttachmentsInternal.HasValue)
-		{
 			builder.AttachmentsInternal.Clear();
-		}
 		return await (this.Discord?.ApiClient ?? this.ApiClient).EditWebhookMessageAsync(this.Id, this.Token, messageId.ToString(), builder, threadId).ConfigureAwait(false);
 	}
 
@@ -285,7 +284,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && (o1 == null && o2 == null || e1.Id == e2.Id);
 	}
 
 	/// <summary>

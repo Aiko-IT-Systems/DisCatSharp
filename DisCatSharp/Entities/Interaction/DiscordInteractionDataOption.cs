@@ -56,7 +56,7 @@ public sealed class DiscordInteractionDataOption : ObservableApiObject
 					ApplicationCommandOptionType.Mentionable => ulong.Parse(this.RawValue),
 					ApplicationCommandOptionType.Number => double.Parse(this.RawValue),
 					ApplicationCommandOptionType.Attachment => ulong.Parse(this.RawValue),
-					_ => this.RawValue,
+					_ => this.RawValue
 				};
 
 	/// <summary>

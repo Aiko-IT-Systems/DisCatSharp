@@ -138,5 +138,4 @@ public abstract class BaseRestRequest
 	/// <param name="ex">The exception to set.</param>
 	protected internal bool TrySetFaulted(Exception ex)
 		=> this.RequestTaskSource.TrySetException(ex);
-
 }

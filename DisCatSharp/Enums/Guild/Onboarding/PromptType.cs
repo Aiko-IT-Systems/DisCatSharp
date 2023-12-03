@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the prompt types for onboarding.
 /// </summary>
-public enum PromptType : int
+public enum PromptType
 {
 	/// <summary>
 	/// The prompt type is multiple choice.

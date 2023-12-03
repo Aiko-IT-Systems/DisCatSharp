@@ -210,7 +210,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 			ImageFormat.Jpeg => "jpg",
 			ImageFormat.Auto or ImageFormat.Png => "png",
 			ImageFormat.WebP => "webp",
-			_ => throw new ArgumentOutOfRangeException(nameof(fmt)),
+			_ => throw new ArgumentOutOfRangeException(nameof(fmt))
 		};
 		var ssize = size.ToString(CultureInfo.InvariantCulture);
 		return !string.IsNullOrWhiteSpace(this.CoverImageHash)
@@ -279,7 +279,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && (o1 == null && o2 == null || e1.Id == e2.Id);
 	}
 
 	/// <summary>
@@ -390,7 +390,7 @@ public sealed class DiscordApplicationAsset : DiscordAsset, IEquatable<DiscordAp
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && (o1 == null && o2 == null || e1.Id == e2.Id);
 	}
 
 	/// <summary>
@@ -433,7 +433,7 @@ public sealed class DiscordSpotifyAsset : DiscordAsset
 /// <summary>
 /// Determines the type of the asset attached to the application.
 /// </summary>
-public enum ApplicationAssetType : int
+public enum ApplicationAssetType
 {
 	/// <summary>
 	/// Unknown type. This indicates something went terribly wrong.

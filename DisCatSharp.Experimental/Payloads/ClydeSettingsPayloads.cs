@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 
 using Newtonsoft.Json;
@@ -13,6 +10,7 @@ namespace DisCatSharp.Experimental.Payloads;
 /// <summary>
 /// Represents a clyde settings update payload with a profile id.
 /// </summary>
+[DiscordDeprecated]
 internal sealed class ClydeSettingsProfileIdOnlyUpdatePayload : ObservableApiObject
 {
 	/// <summary>
@@ -31,6 +29,7 @@ internal sealed class ClydeSettingsProfileIdOnlyUpdatePayload : ObservableApiObj
 /// <summary>
 /// Represents a clyde settings update payload.
 /// </summary>
+[DiscordDeprecated]
 internal sealed class ClydeSettingsProfileUpdatePayload : ObservableApiObject
 {
 	/// <summary>
@@ -73,6 +72,7 @@ internal sealed class ClydeSettingsProfileUpdatePayload : ObservableApiObject
 /// <summary>
 /// Represents a personality generation payload.
 /// </summary>
+[DiscordDeprecated]
 internal sealed class PersonalityGenerationPayload : ObservableApiObject
 {
 	/// <summary>

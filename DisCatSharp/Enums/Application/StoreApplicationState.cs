@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the store application state.
 /// </summary>
-public enum StoreApplicationState : int
+public enum StoreApplicationState
 {
 	/// <summary>
 	/// This application does not have a commerce license

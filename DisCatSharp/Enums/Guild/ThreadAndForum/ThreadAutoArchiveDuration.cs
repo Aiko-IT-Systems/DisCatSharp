@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the auto-archive duration for a thread.
 /// </summary>
-public enum ThreadAutoArchiveDuration : int
+public enum ThreadAutoArchiveDuration
 {
 	/// <summary>
 	/// Indicates that the thread will be auto archived after one hour.

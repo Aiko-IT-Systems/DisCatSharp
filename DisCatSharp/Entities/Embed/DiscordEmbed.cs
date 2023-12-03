@@ -49,6 +49,7 @@ public sealed class DiscordEmbed : ObservableApiObject
 
 	[JsonProperty("color", NullValueHandling = NullValueHandling.Include)]
 	internal Optional<int> ColorInternal;
+
 	[JsonIgnore]
 	private readonly Lazy<Optional<DiscordColor>> _colorLazy;
 

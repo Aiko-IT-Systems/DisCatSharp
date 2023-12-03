@@ -1,4 +1,3 @@
-
 namespace DisCatSharp.Entities;
 
 /// <summary>
@@ -6,9 +5,9 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public class DiscordProtocol
 {
-	#region Properties
+#region Properties
 
-	#endregion
+#endregion
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordProtocol"/> class.
@@ -16,7 +15,7 @@ public class DiscordProtocol
 	public DiscordProtocol()
 	{ }
 
-	#region Methods
+#region Methods
 
-	#endregion
+#endregion
 }

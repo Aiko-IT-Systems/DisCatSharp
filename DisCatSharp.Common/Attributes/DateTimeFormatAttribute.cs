@@ -1,4 +1,5 @@
 using System;
+
 // ReSharper disable InconsistentNaming
 
 namespace DisCatSharp.Common.Serialization;
@@ -45,7 +46,7 @@ public sealed class DateTimeFormatAttribute : SerializationAttribute
 	/// <param name="kind">Predefined format kind to use.</param>
 	public DateTimeFormatAttribute(DateTimeFormatKind kind)
 	{
-		if (kind < 0 || kind > DateTimeFormatKind.InvariantLocaleShort)
+		if (kind is < 0 or > DateTimeFormatKind.InvariantLocaleShort)
 			throw new ArgumentOutOfRangeException(nameof(kind), "Specified format kind is not legal or supported.");
 
 		this.Kind = kind;
@@ -71,7 +72,7 @@ public sealed class DateTimeFormatAttribute : SerializationAttribute
 /// <para>Defines which built-in format to use for for <see cref="DateTime"/> and <see cref="System.DateTimeOffset"/> serialization.</para>
 /// <para>See https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings and https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings for more details.</para>
 /// </summary>
-public enum DateTimeFormatKind : int
+public enum DateTimeFormatKind
 {
 	/// <summary>
 	/// Specifies ISO 8601 format, which is equivalent to .NET format string of "yyyy-MM-ddTHH:mm:ss.fffzzz".

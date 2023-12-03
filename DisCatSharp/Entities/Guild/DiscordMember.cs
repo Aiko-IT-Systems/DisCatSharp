@@ -135,7 +135,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	[JsonIgnore]
 	public string DisplayName
-		=> this.Nickname ?? (this.IsMigrated ? (this.GlobalName ?? this.Username) : this.Username);
+		=> this.Nickname ?? (this.IsMigrated ? this.GlobalName ?? this.Username : this.Username);
 
 	/// <summary>
 	/// List of role ids
@@ -146,6 +146,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<ulong> RoleIdsInternal;
+
 	[JsonIgnore]
 	private readonly Lazy<IReadOnlyList<ulong>> _roleIdsLazy;
 
@@ -207,7 +208,6 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	public bool HasUnusualDmActivity
 		=> this.UnusualDmActivityUntil != null && this.UnusualDmActivityUntil.Value.ToUniversalTime() > DateTime.UtcNow;
 
-
 	/// <summary>
 	/// If the user is deafened
 	/// </summary>
@@ -255,7 +255,11 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	[JsonIgnore]
 	public int Hierarchy
-		=> this.IsOwner ? int.MaxValue : this.RoleIds.Count == 0 ? 0 : this.Roles.Max(x => x.Position);
+		=> this.IsOwner
+			? int.MaxValue
+			: this.RoleIds.Count == 0
+				? 0
+				: this.Roles.Max(x => x.Position);
 
 	/// <summary>
 	/// Gets the permissions for the current member.
@@ -270,7 +274,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	public Permissions Permissions
 		=> this.InteractionPermissions ?? this.GetPermissions();
 
-	#region Overridden user properties
+#region Overridden user properties
 
 	/// <summary>
 	/// Gets the user.
@@ -433,7 +437,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		internal set => this.User.Flags = value;
 	}
 
-	#endregion
+#endregion
 
 	/// <summary>
 	/// Sets this member's voice mute status.
@@ -491,11 +495,9 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 				mdl.VoiceChannel.Map(e => e?.Id), default, this.MemberFlags, mdl.AuditLogReason).ConfigureAwait(false);
 		}
 		else
-		{
 			await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, mdl.Nickname,
 				mdl.Roles.Map(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
 				mdl.VoiceChannel.Map(e => e?.Id), default, this.MemberFlags, mdl.AuditLogReason).ConfigureAwait(false);
-		}
 	}
 
 	/// <summary>
@@ -731,7 +733,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <param name="e"><see cref="DiscordMember"/> to compare to.</param>
 	/// <returns>Whether the <see cref="DiscordMember"/> is equal to this <see cref="DiscordMember"/>.</returns>
 	public bool Equals(DiscordMember e)
-		=> e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.GuildId == e.GuildId));
+		=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id && this.GuildId == e.GuildId);
 
 	/// <summary>
 	/// Gets the hash code for this <see cref="DiscordMember"/>.
@@ -741,8 +743,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	{
 		var hash = 13;
 
-		hash = (hash * 7) + this.Id.GetHashCode();
-		hash = (hash * 7) + this.GuildId.GetHashCode();
+		hash = hash * 7 + this.Id.GetHashCode();
+		hash = hash * 7 + this.GuildId.GetHashCode();
 
 		return hash;
 	}
@@ -758,7 +760,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1.GuildId == e2.GuildId));
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && (o1 == null && o2 == null || e1.Id == e2.Id && e1.GuildId == e2.GuildId);
 	}
 
 	/// <summary>

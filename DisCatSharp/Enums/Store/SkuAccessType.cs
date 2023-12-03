@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the sku access type.
 /// </summary>
-public enum SkuAccessType : int
+public enum SkuAccessType
 {
 	/// <summary>
 	/// User has full access.

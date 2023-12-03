@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the formats for a guild widget.
 /// </summary>
-public enum WidgetType : int
+public enum WidgetType
 {
 	/// <summary>
 	/// The widget is represented in shield format.

@@ -34,7 +34,7 @@ public class DiscordOverwrite : SnowflakeObject
 	[JsonIgnore]
 	internal ulong ChannelId;
 
-	#region Methods
+#region Methods
 
 	/// <summary>
 	/// Deletes this channel overwrite.
@@ -91,7 +91,7 @@ public class DiscordOverwrite : SnowflakeObject
 	public DiscordOverwriteBuilder ConvertToBuilder()
 		=> new(this);
 
-	#endregion
+#endregion
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordOverwrite"/> class.
@@ -107,7 +107,9 @@ public class DiscordOverwrite : SnowflakeObject
 	public PermissionLevel CheckPermission(Permissions permission) =>
 		(this.Allowed & permission) != 0
 			? PermissionLevel.Allowed
-			: (this.Denied & permission) != 0 ? PermissionLevel.Denied : PermissionLevel.Unset;
+			: (this.Denied & permission) != 0
+				? PermissionLevel.Denied
+				: PermissionLevel.Unset;
 
 	/// <summary>
 	/// Automatically converts this <see cref="DiscordOverwrite"/> to a <see cref="DiscordOverwriteBuilder"/>.

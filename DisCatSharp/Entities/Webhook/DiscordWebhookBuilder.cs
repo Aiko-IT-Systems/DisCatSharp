@@ -53,9 +53,11 @@ public sealed class DiscordWebhookBuilder
 		{
 			if (value != null && value.Length > 2000)
 				throw new ArgumentException("Content length cannot exceed 2000 characters.", nameof(value));
+
 			this._content = value;
 		}
 	}
+
 	private string _content;
 
 	/// <summary>
@@ -63,7 +65,6 @@ public sealed class DiscordWebhookBuilder
 	/// Only works if the webhook is send in a <see cref="ChannelType.Forum"/>.
 	/// </summary>
 	public string ThreadName { get; set; }
-
 
 	/// <summary>
 	/// Whether to keep previous attachments.
@@ -74,31 +75,35 @@ public sealed class DiscordWebhookBuilder
 	/// Embeds to send on this webhook request.
 	/// </summary>
 	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
+
 	private readonly List<DiscordEmbed> _embeds = new();
 
 	/// <summary>
 	/// Files to send on this webhook request.
 	/// </summary>
 	public IReadOnlyList<DiscordMessageFile> Files => this._files;
+
 	private readonly List<DiscordMessageFile> _files = new();
 
 	/// <summary>
 	/// Mentions to send on this webhook request.
 	/// </summary>
 	public IReadOnlyList<IMention> Mentions => this._mentions;
+
 	private readonly List<IMention> _mentions = new();
 
 	/// <summary>
 	/// Gets the components.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
-	private readonly List<DiscordActionRowComponent> _components = new();
 
+	private readonly List<DiscordActionRowComponent> _components = new();
 
 	/// <summary>
 	/// Attachments to keep on this webhook request.
 	/// </summary>
 	public IReadOnlyList<DiscordAttachment> Attachments => this.AttachmentsInternal;
+
 	internal List<DiscordAttachment> AttachmentsInternal = new();
 
 	/// <summary>
@@ -315,7 +320,6 @@ public sealed class DiscordWebhookBuilder
 			else
 				this._files.Add(new(file.Key, file.Value, null));
 		}
-
 
 		return this;
 	}

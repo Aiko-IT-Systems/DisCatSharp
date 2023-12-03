@@ -20,8 +20,10 @@ public static class ExtensionMethods
 	/// <param name="client">Client to enable application commands for.</param>
 	/// <param name="config">Configuration to use.</param>
 	/// <returns>Created <see cref="ApplicationCommandsExtension"/>.</returns>
-	public static ApplicationCommandsExtension UseApplicationCommands(this DiscordClient client,
-		ApplicationCommandsConfiguration config = null)
+	public static ApplicationCommandsExtension UseApplicationCommands(
+		this DiscordClient client,
+		ApplicationCommandsConfiguration config = null
+	)
 	{
 		if (client.GetExtension<ApplicationCommandsExtension>() != null)
 			throw new InvalidOperationException("Application commands are already enabled for that client.");
@@ -75,6 +77,7 @@ public static class ExtensionMethods
 	{
 		if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
 			throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
+
 		foreach (var extension in extensions.Values)
 			extension.RegisterGlobalCommands(type, translationSetup);
 	}
@@ -90,7 +93,6 @@ public static class ExtensionMethods
 	{
 		foreach (var extension in extensions.Values)
 			extension.RegisterGuildCommands<T>(guildId, translationSetup);
-
 	}
 
 	/// <summary>
@@ -104,6 +106,7 @@ public static class ExtensionMethods
 	{
 		if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
 			throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
+
 		foreach (var extension in extensions.Values)
 			extension.RegisterGuildCommands(type, guildId, translationSetup);
 	}
@@ -141,17 +144,18 @@ public static class ExtensionMethods
 			var values = Enum.GetValues(type);
 
 			foreach (int val in values)
-			{
 				if (val == e.ToInt32(CultureInfo.InvariantCulture))
 				{
 					var memInfo = type.GetMember(type.GetEnumName(val));
 
 					return memInfo[0]
 						.GetCustomAttributes(typeof(ChoiceNameAttribute), false)
-						.FirstOrDefault() is ChoiceNameAttribute nameAttribute ? nameAttribute.Name : type.GetEnumName(val);
+						.FirstOrDefault() is ChoiceNameAttribute nameAttribute
+						? nameAttribute.Name
+						: type.GetEnumName(val);
 				}
-			}
 		}
+
 		return null;
 	}
 }

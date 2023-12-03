@@ -1,4 +1,3 @@
-
 namespace DisCatSharp.VoiceNext.Interop;
 
 internal struct OpusPacketMetrics

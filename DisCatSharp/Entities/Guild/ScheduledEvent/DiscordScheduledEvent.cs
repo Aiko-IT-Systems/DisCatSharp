@@ -93,8 +93,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// </summary>
 	[JsonIgnore]
 	public DateTimeOffset? ScheduledStartTime
-		=> !string.IsNullOrWhiteSpace(this.ScheduledStartTimeRaw) && DateTimeOffset.TryParse(this.ScheduledStartTimeRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ?
-			dto : null;
+		=> !string.IsNullOrWhiteSpace(this.ScheduledStartTimeRaw) && DateTimeOffset.TryParse(this.ScheduledStartTimeRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ? dto : null;
 
 	/// <summary>
 	/// Gets the scheduled start time of the scheduled event as raw string.
@@ -107,8 +106,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// </summary>
 	[JsonIgnore]
 	public DateTimeOffset? ScheduledEndTime
-		=> !string.IsNullOrWhiteSpace(this.ScheduledEndTimeRaw) && DateTimeOffset.TryParse(this.ScheduledEndTimeRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ?
-			dto : null;
+		=> !string.IsNullOrWhiteSpace(this.ScheduledEndTimeRaw) && DateTimeOffset.TryParse(this.ScheduledEndTimeRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ? dto : null;
 
 	/// <summary>
 	/// Gets the scheduled end time of the scheduled event as raw string.
@@ -159,11 +157,13 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// Initializes a new instance of the <see cref="DiscordScheduledEvent"/> class.
 	/// </summary>
 	internal DiscordScheduledEvent()
-		: base(new() { "sku_ids" })
+		: base(new()
+		{
+			"sku_ids"
+		})
 	{ }
 
-	#region Methods
-
+#region Methods
 
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 	/// <summary>
@@ -196,7 +196,6 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 		await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, this.EntityType == ScheduledEventEntityType.External ? new DiscordScheduledEventEntityMetadata(mdl.Location.Value) : null, mdl.Name, mdl.ScheduledStartTime, scheduledEndTime, mdl.Description, mdl.EntityType, mdl.Status, coverb64, mdl.AuditLogReason).ConfigureAwait(false);
 	}
 
-
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 	/// <summary>
 	/// Starts the current scheduled event.
@@ -208,7 +207,6 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	public async Task<DiscordScheduledEvent> StartAsync(string reason = null)
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Status == ScheduledEventStatus.Scheduled ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Active, reason).ConfigureAwait(false) : throw new InvalidOperationException("You can only start scheduled events");
-
 
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 	/// <summary>
@@ -223,7 +221,6 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Status == ScheduledEventStatus.Scheduled ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Canceled, reason).ConfigureAwait(false) : throw new InvalidOperationException("You can only cancel scheduled events");
 
-
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 	/// <summary>
 	/// Ends the current scheduled event.
@@ -236,7 +233,6 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	public async Task<DiscordScheduledEvent> EndAsync(string reason = null)
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Status == ScheduledEventStatus.Active ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Completed, reason).ConfigureAwait(false) : throw new InvalidOperationException("You can only stop active events");
-
 
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 	/// <summary>
@@ -254,7 +250,6 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> await this.Discord.ApiClient.GetGuildScheduledEventRspvUsersAsync(this.GuildId, this.Id, limit, before, after, withMember).ConfigureAwait(false);
 
-
 #pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 	/// <summary>
 	/// Deletes a scheduled event.
@@ -268,7 +263,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> await this.Discord.ApiClient.DeleteGuildScheduledEventAsync(this.GuildId, this.Id, reason).ConfigureAwait(false);
 
-	#endregion
+#endregion
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordScheduledEvent"/> is equal to another object.
@@ -304,7 +299,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && (o1 == null && o2 == null || e1.Id == e2.Id);
 	}
 
 	/// <summary>

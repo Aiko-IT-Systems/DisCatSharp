@@ -21,9 +21,9 @@ public class DiscordGuildDirectoryChannel : DiscordChannel, IEquatable<DiscordGu
 	public IReadOnlyList<DiscordGuildDirectoryEntry> Entries =>
 		this.Guild.ChannelsInternal.Values.Where(e => e.ParentId == this.Id).Select(x => x as DiscordGuildDirectoryEntry).ToList();
 
-	#region Methods
+#region Methods
 
-	#endregion
+#endregion
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordGuildDirectoryChannel"/> is equal to another object.
@@ -59,7 +59,7 @@ public class DiscordGuildDirectoryChannel : DiscordChannel, IEquatable<DiscordGu
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && (o1 == null && o2 == null || e1.Id == e2.Id);
 	}
 
 	/// <summary>

@@ -9,7 +9,6 @@ namespace DisCatSharp.ApplicationCommands.Attributes;
 [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true)]
 public class ChoiceProviderAttribute : Attribute
 {
-
 	/// <summary>
 	/// The type of the provider.
 	/// </summary>

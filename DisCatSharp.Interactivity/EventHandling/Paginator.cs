@@ -17,8 +17,8 @@ namespace DisCatSharp.Interactivity.EventHandling;
 /// </summary>
 internal class Paginator : IPaginator
 {
-	DiscordClient _client;
-	ConcurrentHashSet<IPaginationRequest> _requests;
+	private DiscordClient _client;
+	private ConcurrentHashSet<IPaginationRequest> _requests;
 
 	/// <summary>
 	/// Creates a new EventWaiter object.
@@ -27,7 +27,7 @@ internal class Paginator : IPaginator
 	public Paginator(DiscordClient client)
 	{
 		this._client = client;
-		this._requests = new ConcurrentHashSet<IPaginationRequest>();
+		this._requests = new();
 
 		this._client.MessageReactionAdded += this.HandleReactionAdd;
 		this._client.MessageReactionRemoved += this.HandleReactionRemove;
@@ -88,36 +88,26 @@ internal class Paginator : IPaginator
 					if (eventArgs.User.Id == usr.Id)
 					{
 						if (req.PageCount > 1 &&
-							(eventArgs.Emoji == emojis.Left ||
-							 eventArgs.Emoji == emojis.SkipLeft ||
-							 eventArgs.Emoji == emojis.Right ||
-							 eventArgs.Emoji == emojis.SkipRight ||
-							 eventArgs.Emoji == emojis.Stop))
-						{
+						    (eventArgs.Emoji == emojis.Left ||
+						     eventArgs.Emoji == emojis.SkipLeft ||
+						     eventArgs.Emoji == emojis.Right ||
+						     eventArgs.Emoji == emojis.SkipRight ||
+						     eventArgs.Emoji == emojis.Stop))
 							await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
-						}
 						else if (eventArgs.Emoji == emojis.Stop &&
-								 req is PaginationRequest paginationRequest &&
-								 paginationRequest.PaginationDeletion == PaginationDeletion.DeleteMessage)
-						{
+						         req is PaginationRequest paginationRequest &&
+						         paginationRequest.PaginationDeletion == PaginationDeletion.DeleteMessage)
 							await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
-						}
 						else
-						{
 							await msg.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User).ConfigureAwait(false);
-						}
 					}
 					else if (eventArgs.User.Id != this._client.CurrentUser.Id)
-					{
 						if (eventArgs.Emoji != emojis.Left &&
-						   eventArgs.Emoji != emojis.SkipLeft &&
-						   eventArgs.Emoji != emojis.Right &&
-						   eventArgs.Emoji != emojis.SkipRight &&
-						   eventArgs.Emoji != emojis.Stop)
-						{
+						    eventArgs.Emoji != emojis.SkipLeft &&
+						    eventArgs.Emoji != emojis.Right &&
+						    eventArgs.Emoji != emojis.SkipRight &&
+						    eventArgs.Emoji != emojis.Stop)
 							await msg.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User).ConfigureAwait(false);
-						}
-					}
 				}
 			}
 		});
@@ -143,26 +133,20 @@ internal class Paginator : IPaginator
 				var usr = await req.GetUserAsync().ConfigureAwait(false);
 
 				if (msg.Id == eventArgs.Message.Id)
-				{
 					if (eventArgs.User.Id == usr.Id)
 					{
 						if (req.PageCount > 1 &&
-							(eventArgs.Emoji == emojis.Left ||
-							 eventArgs.Emoji == emojis.SkipLeft ||
-							 eventArgs.Emoji == emojis.Right ||
-							 eventArgs.Emoji == emojis.SkipRight ||
-							 eventArgs.Emoji == emojis.Stop))
-						{
+						    (eventArgs.Emoji == emojis.Left ||
+						     eventArgs.Emoji == emojis.SkipLeft ||
+						     eventArgs.Emoji == emojis.Right ||
+						     eventArgs.Emoji == emojis.SkipRight ||
+						     eventArgs.Emoji == emojis.Stop))
 							await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
-						}
 						else if (eventArgs.Emoji == emojis.Stop &&
-								 req is PaginationRequest paginationRequest &&
-								 paginationRequest.PaginationDeletion == PaginationDeletion.DeleteMessage)
-						{
+						         req is PaginationRequest paginationRequest &&
+						         paginationRequest.PaginationDeletion == PaginationDeletion.DeleteMessage)
 							await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
-						}
 					}
-				}
 			}
 		});
 
@@ -186,9 +170,7 @@ internal class Paginator : IPaginator
 				var msg = await req.GetMessageAsync().ConfigureAwait(false);
 
 				if (msg.Id == eventArgs.Message.Id)
-				{
 					await this.ResetReactionsAsync(req).ConfigureAwait(false);
-				}
 			}
 		});
 
@@ -225,9 +207,7 @@ internal class Paginator : IPaginator
 				await msg.CreateReactionAsync(emojis.Stop).ConfigureAwait(false);
 		}
 		else if (emojis.Stop != null && p is PaginationRequest paginationRequest && paginationRequest.PaginationDeletion == PaginationDeletion.DeleteMessage)
-		{
 			await msg.CreateReactionAsync(emojis.Stop).ConfigureAwait(false);
-		}
 	}
 
 	/// <summary>

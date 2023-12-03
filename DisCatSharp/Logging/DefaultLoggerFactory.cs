@@ -14,6 +14,7 @@ internal class DefaultLoggerFactory : ILoggerFactory
 	/// Gets the providers.
 	/// </summary>
 	private readonly List<ILoggerProvider> _providers = new();
+
 	private bool _isDisposed;
 
 	/// <summary>
@@ -40,6 +41,7 @@ internal class DefaultLoggerFactory : ILoggerFactory
 	{
 		if (this._isDisposed)
 			return;
+
 		this._isDisposed = true;
 
 		foreach (var provider in this._providers)

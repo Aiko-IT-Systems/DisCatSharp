@@ -1,4 +1,3 @@
-
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Usage", "DCS0102:[Discord] Deprecated", Justification = "<Pending>")]

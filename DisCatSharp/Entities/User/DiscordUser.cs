@@ -23,7 +23,10 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Initializes a new instance of the <see cref="DiscordUser"/> class.
 	/// </summary>
 	internal DiscordUser()
-		: base(new() { "display_name", "linked_users", "banner_color" })
+		: base(new()
+		{
+			"display_name", "linked_users", "banner_color"
+		})
 	{ }
 
 	/// <summary>
@@ -271,7 +274,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	public bool IsCurrent
 		=> this.Id == this.Discord.CurrentUser.Id;
 
-	#region Extension of DiscordUser
+#region Extension of DiscordUser
 
 	/// <summary>
 	/// Whether this member is a <see cref="UserFlags.CertifiedModerator"/>
@@ -279,7 +282,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <returns><see cref="bool"/></returns>
 	[JsonIgnore]
 	public bool IsMod
-			=> this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.CertifiedModerator);
+		=> this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.CertifiedModerator);
 
 	/// <summary>
 	/// Whether this member is a <see cref="UserFlags.Partner"/>
@@ -287,7 +290,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <returns><see cref="bool"/></returns>
 	[JsonIgnore]
 	public bool IsPartner
-			=> this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.Partner);
+		=> this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.Partner);
 
 	/// <summary>
 	/// Whether this member is a <see cref="UserFlags.VerifiedBot"/>
@@ -295,7 +298,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <returns><see cref="bool"/></returns>
 	[JsonIgnore]
 	public bool IsVerifiedBot
-			=> this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.VerifiedBot);
+		=> this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.VerifiedBot);
 
 	/// <summary>
 	/// Whether this member is a <see cref="UserFlags.VerifiedDeveloper"/>
@@ -303,7 +306,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <returns><see cref="bool"/></returns>
 	[JsonIgnore]
 	public bool IsBotDev
-			=> this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.VerifiedDeveloper);
+		=> this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.VerifiedDeveloper);
 
 	/// <summary>
 	/// Whether this member is a <see cref="UserFlags.ActiveDeveloper"/>
@@ -311,7 +314,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <returns><see cref="bool"/></returns>
 	[JsonIgnore]
 	public bool IsActiveDeveloper
-			=> this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.ActiveDeveloper);
+		=> this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.ActiveDeveloper);
 
 	/// <summary>
 	/// Whether this member is a <see cref="UserFlags.Staff"/>
@@ -319,9 +322,9 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <returns><see cref="bool"/></returns>
 	[JsonIgnore]
 	public bool IsStaff
-			=> this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.Staff);
+		=> this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.Staff);
 
-	#endregion
+#endregion
 
 	/// <summary>
 	/// Fetches the user from the API.
@@ -358,7 +361,6 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		{
 			var member = await guild.GetMemberAsync(this.Id).ConfigureAwait(false);
 			return member is not null;
-
 		}
 		catch (NotFoundException)
 		{
@@ -430,7 +432,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 			ImageFormat.Png => "png",
 			ImageFormat.WebP => "webp",
 			ImageFormat.Auto => !string.IsNullOrWhiteSpace(this.AvatarHash) ? this.AvatarHash.StartsWith("a_") ? "gif" : "png" : "png",
-			_ => throw new ArgumentOutOfRangeException(nameof(fmt)),
+			_ => throw new ArgumentOutOfRangeException(nameof(fmt))
 		};
 		var ssize = size.ToString(CultureInfo.InvariantCulture);
 		if (!string.IsNullOrWhiteSpace(this.AvatarHash))

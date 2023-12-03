@@ -47,12 +47,13 @@ public class Opus : IDisposable
 				sig = OpusSignal.Voice;
 				break;
 		}
+
 		Interop.OpusSetEncoderOption(this._encoder, OpusControl.SetSignal, (int)sig);
 		Interop.OpusSetEncoderOption(this._encoder, OpusControl.SetPacketLossPercent, 15);
 		Interop.OpusSetEncoderOption(this._encoder, OpusControl.SetInBandFec, 1);
 		Interop.OpusSetEncoderOption(this._encoder, OpusControl.SetBitrate, 131072);
 
-		this._managedDecoders = new List<OpusDecoder>();
+		this._managedDecoders = new();
 	}
 
 	/// <summary>
@@ -89,7 +90,7 @@ public class Opus : IDisposable
 		//    throw new ArgumentException("PCM target buffer size needs to be equal to maximum buffer size for specified audio format.", nameof(target));
 
 		Interop.OpusGetPacketMetrics(opus, this.AudioFormat.SampleRate, out var channels, out var frames, out var samplesPerFrame, out var frameSize);
-		outputFormat = this.AudioFormat.ChannelCount != channels ? new AudioFormat(this.AudioFormat.SampleRate, channels, this.AudioFormat.VoiceApplication) : this.AudioFormat;
+		outputFormat = this.AudioFormat.ChannelCount != channels ? new(this.AudioFormat.SampleRate, channels, this.AudioFormat.VoiceApplication) : this.AudioFormat;
 
 		if (decoder.AudioFormat.ChannelCount != channels)
 			decoder.Initialize(outputFormat);
@@ -157,10 +158,8 @@ public class Opus : IDisposable
 		Interop.OpusDestroyEncoder(this._encoder);
 
 		lock (this._managedDecoders)
-		{
 			foreach (var decoder in this._managedDecoders)
 				decoder.Dispose();
-		}
 	}
 }
 
@@ -178,6 +177,7 @@ public class OpusDecoder : IDisposable
 	/// Gets the opus.
 	/// </summary>
 	internal Opus Opus { get; }
+
 	/// <summary>
 	/// Gets the decoder.
 	/// </summary>
@@ -244,7 +244,7 @@ internal enum OpusError
 /// <summary>
 /// The opus control.
 /// </summary>
-internal enum OpusControl : int
+internal enum OpusControl
 {
 	SetBitrate = 4002,
 	SetBandwidth = 4008,
@@ -258,9 +258,9 @@ internal enum OpusControl : int
 /// <summary>
 /// The opus signal.
 /// </summary>
-internal enum OpusSignal : int
+internal enum OpusSignal
 {
 	Auto = -1000,
 	Voice = 3001,
-	Music = 3002,
+	Music = 3002
 }

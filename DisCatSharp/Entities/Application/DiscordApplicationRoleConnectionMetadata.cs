@@ -67,8 +67,12 @@ public sealed class DiscordApplicationRoleConnectionMetadata : ObservableApiObje
 	/// Creates a new instance of a <see cref="DiscordApplicationRoleConnectionMetadata"/>.
 	/// </summary>
 	public DiscordApplicationRoleConnectionMetadata(
-		ApplicationRoleConnectionMetadataType type, string key, string name, string description,
-		DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null
+		ApplicationRoleConnectionMetadataType type,
+		string key,
+		string name,
+		string description,
+		DiscordApplicationCommandLocalization nameLocalizations = null,
+		DiscordApplicationCommandLocalization descriptionLocalizations = null
 	)
 	{
 		this.Type = type;

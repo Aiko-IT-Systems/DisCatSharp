@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents a rule's keyword preset types.
 /// </summary>
-public enum AutomodKeywordPresetType : int
+public enum AutomodKeywordPresetType
 {
 	/// <summary>
 	/// Words that may be considered forms of swearing or cursing.

@@ -66,6 +66,5 @@ public sealed class DiscordSelectDefaultValue
 	/// Constructs a new <see cref="DiscordSelectDefaultValue"/> for a channel.
 	/// </summary>
 	internal DiscordSelectDefaultValue()
-	{
-	}
+	{ }
 }

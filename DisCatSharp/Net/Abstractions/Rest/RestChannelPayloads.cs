@@ -311,7 +311,6 @@ internal sealed class RestChannelMessageCreatePayload : RestChannelMessageEditPa
 	/// </summary>
 	[JsonProperty("message_reference", NullValueHandling = NullValueHandling.Ignore)]
 	public InternalDiscordMessageReference? MessageReference { get; set; }
-
 }
 
 /// <summary>

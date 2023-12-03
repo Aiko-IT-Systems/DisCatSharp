@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// The visibility type of user account connections.
 /// </summary>
-public enum ConnectionVisibilityType : int
+public enum ConnectionVisibilityType
 {
 	/// <summary>
 	/// This connection type is only visible to the owning user.

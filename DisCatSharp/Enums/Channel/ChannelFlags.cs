@@ -31,6 +31,7 @@ public enum ChannelFlags : long
 	/// </summary>
 	[DiscordDeprecated]
 	RemovedFromHome = 1L << 0,
+
 	[DiscordDeprecated]
 	RemovedFromHighlights = RemovedFromHome,
 
@@ -105,7 +106,7 @@ public enum ChannelFlags : long
 	/// </summary>
 	[DiscordInExperiment]
 	IsBroadcasting = 1L << 14,
-	
+
 	/// <summary>
 	/// Hides the media download options for <see cref="ChannelType.GuildMedia"/> channels.
 	/// </summary>

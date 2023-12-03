@@ -19,7 +19,13 @@ internal static class Helpers
 		var zero = 0;
 		var i = 0;
 		for (; i < buff.Length / 4; i++)
+		{
+#if NET8_0_OR_GREATER
+			MemoryMarshal.Write(buff, in zero);
+#else
 			MemoryMarshal.Write(buff, ref zero);
+#endif
+		}
 
 		var remainder = buff.Length % 4;
 		if (remainder == 0)

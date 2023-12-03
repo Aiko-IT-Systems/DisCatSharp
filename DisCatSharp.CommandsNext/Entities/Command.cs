@@ -98,10 +98,9 @@ public class Command
 				var ret = (Task)ovl.Callable.DynamicInvoke(args.Converted);
 				await ret.ConfigureAwait(false);
 				executed = true;
-				res = new CommandResult
+				res = new()
 				{
-					IsSuccessful = true,
-					Context = ctx
+					IsSuccessful = true, Context = ctx
 				};
 
 				if (mdl is BaseCommandModule bcmAfter)
@@ -114,11 +113,9 @@ public class Command
 		}
 		catch (Exception ex)
 		{
-			res = new CommandResult
+			res = new()
 			{
-				IsSuccessful = false,
-				Exception = ex,
-				Context = ctx
+				IsSuccessful = false, Exception = ex, Context = ctx
 			};
 		}
 
@@ -190,7 +187,7 @@ public class Command
 			return true;
 
 		return obj is Command cmd
-&& cmd.QualifiedName == this.QualifiedName;
+		       && cmd.QualifiedName == this.QualifiedName;
 	}
 
 	/// <summary>

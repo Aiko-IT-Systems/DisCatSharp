@@ -20,7 +20,6 @@ public class ThreadMembersUpdateEventArgs : DiscordEventArgs
 	/// </summary>
 	public IReadOnlyList<DiscordMember> RemovedMembers { get; internal set; }
 
-
 	/// <summary>
 	/// Gets the users who were added to the thread.
 	/// </summary>

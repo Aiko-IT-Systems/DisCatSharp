@@ -20,7 +20,7 @@ internal class AudioSender : IDisposable
 	{
 		Normal,
 		AssumeNextLowSequenceIsOverflow,
-		AssumeNextHighSequenceIsOutOfOrder,
+		AssumeNextHighSequenceIsOutOfOrder
 	}
 
 	/// <summary>
@@ -63,7 +63,6 @@ internal class AudioSender : IDisposable
 	/// Disposes .
 	/// </summary>
 	public void Dispose() => this.Decoder?.Dispose();
-
 
 	/// <summary>
 	/// Accepts the 16-bit sequence number from the next RTP header in the associated stream and

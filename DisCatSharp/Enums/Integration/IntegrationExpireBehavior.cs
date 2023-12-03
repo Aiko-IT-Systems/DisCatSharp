@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the integration expire behavior.
 /// </summary>
-public enum IntegrationExpireBehavior : int
+public enum IntegrationExpireBehavior
 {
 	/// <summary>
 	/// Removes the role from the member.

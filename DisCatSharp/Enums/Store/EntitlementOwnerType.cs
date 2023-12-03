@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the test entitlement owner type.
 /// </summary>
-public enum EntitlementOwnerType : int
+public enum EntitlementOwnerType
 {
 	/// <summary>
 	/// Owner id is a guild.

@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the rpc application state.
 /// </summary>
-public enum RpcApplicationState : int
+public enum RpcApplicationState
 {
 	DisabledOrNone = 0,
 	Unsubmitted = 1,

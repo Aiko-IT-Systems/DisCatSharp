@@ -87,17 +87,13 @@ public sealed class CommandOverloadBuilder
 			setb.Append(arg.ParameterType).Append(';');
 			var ca = new CommandArgument
 			{
-				Name = arg.Name,
-				Type = arg.ParameterType,
-				IsOptional = arg.IsOptional,
-				DefaultValue = arg.IsOptional ? arg.DefaultValue : null
+				Name = arg.Name, Type = arg.ParameterType, IsOptional = arg.IsOptional, DefaultValue = arg.IsOptional ? arg.DefaultValue : null
 			};
 
 			var attrsCustom = new List<Attribute>();
 			var attrs = arg.GetCustomAttributes();
 			var isParams = false;
 			foreach (var xa in attrs)
-			{
 				switch (xa)
 				{
 					case DescriptionAttribute d:
@@ -119,7 +115,6 @@ public sealed class CommandOverloadBuilder
 						attrsCustom.Add(xa);
 						break;
 				}
-			}
 
 			if (i > 2 && !ca.IsOptional && !ca.IsCatchAll && args[i - 3].IsOptional)
 				throw new InvalidOverloadException("Non-optional argument cannot appear after an optional one", method, arg);
@@ -160,10 +155,7 @@ public sealed class CommandOverloadBuilder
 	{
 		var ovl = new CommandOverload()
 		{
-			Arguments = this.Arguments,
-			Priority = this.Priority,
-			Callable = this.Callable,
-			InvocationTarget = this._invocationTarget
+			Arguments = this.Arguments, Priority = this.Priority, Callable = this.Callable, InvocationTarget = this._invocationTarget
 		};
 
 		return ovl;

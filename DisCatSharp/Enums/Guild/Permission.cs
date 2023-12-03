@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 
 using DisCatSharp.Attributes;
 
@@ -138,7 +137,7 @@ public enum Permissions : long
 	/// Allows the user to go live.
 	/// </summary>
 	[PermissionString("Allow Stream")]
-	Stream  = 1L << 9,
+	Stream = 1L << 9,
 
 	/// <summary>
 	/// Allows accessing text and voice channels. Disabling this permission hides channels.
@@ -366,7 +365,7 @@ public enum Permissions : long
 	/// Allows members to interact with the Clyde AI bot.
 	/// </summary>
 	[PermissionString("Use Clyde AI"), DiscordDeprecated("Clyde will be shutdown by December 2023")]
- 	UseClydeAi = 1L<<47,
+	UseClydeAi = 1L << 47,
 
 	/// <summary>
 	/// Allows members to create and edit voice channel status.

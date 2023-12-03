@@ -18,6 +18,7 @@ internal class QueryUriBuilder
 	/// Gets the query parameters.
 	/// </summary>
 	public IReadOnlyList<KeyValuePair<string, string>> QueryParameters => this._queryParams;
+
 	private readonly List<KeyValuePair<string, string>> _queryParams = new();
 
 	/// <summary>

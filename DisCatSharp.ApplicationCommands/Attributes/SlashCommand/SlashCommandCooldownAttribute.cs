@@ -45,7 +45,7 @@ public sealed class SlashCommandCooldownAttribute : ApplicationCommandCheckBaseA
 		this.MaxUses = maxUses;
 		this.Reset = TimeSpan.FromSeconds(resetAfter);
 		this.BucketType = bucketType;
-		this.Buckets = new ConcurrentDictionary<string, SlashCommandCooldownBucket>();
+		this.Buckets = new();
 	}
 
 	/// <summary>
@@ -68,7 +68,11 @@ public sealed class SlashCommandCooldownAttribute : ApplicationCommandCheckBaseA
 	public TimeSpan GetRemainingCooldown(BaseContext ctx)
 	{
 		var bucket = this.GetBucket(ctx);
-		return bucket == null ? TimeSpan.Zero : bucket.RemainingUses > 0 ? TimeSpan.Zero : bucket.ResetsAt - DateTimeOffset.UtcNow;
+		return bucket == null
+			? TimeSpan.Zero
+			: bucket.RemainingUses > 0
+				? TimeSpan.Zero
+				: bucket.ResetsAt - DateTimeOffset.UtcNow;
 	}
 
 	/// <summary>
@@ -108,7 +112,7 @@ public sealed class SlashCommandCooldownAttribute : ApplicationCommandCheckBaseA
 		var bid = this.GetBucketId(ctx, out var usr, out var chn, out var gld);
 		if (!this.Buckets.TryGetValue(bid, out var bucket))
 		{
-			bucket = new SlashCommandCooldownBucket(this.MaxUses, this.Reset, usr, chn, gld);
+			bucket = new(this.MaxUses, this.Reset, usr, chn, gld);
 			this.Buckets.AddOrUpdate(bid, bucket, (k, v) => bucket);
 		}
 
@@ -129,7 +133,5 @@ public sealed class SlashCommandCooldownBucket : CooldownBucket
 
 	internal SlashCommandCooldownBucket(int maxUses, TimeSpan resetAfter, ulong userId = 0, ulong channelId = 0, ulong guildId = 0)
 		: base(maxUses, resetAfter, userId, channelId, guildId)
-	{
-
-	}
+	{ }
 }

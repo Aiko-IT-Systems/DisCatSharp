@@ -41,6 +41,5 @@ public sealed class RequireOwnerOrIdAttribute : CheckBaseAttribute
 		var allowed = this.UserIds.Contains(ctx.User.Id);
 
 		return owner || allowed;
-
 	}
 }

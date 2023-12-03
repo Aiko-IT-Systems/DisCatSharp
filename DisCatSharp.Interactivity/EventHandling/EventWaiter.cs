@@ -20,12 +20,12 @@ namespace DisCatSharp.Interactivity.EventHandling;
 /// <typeparam name="T"></typeparam>
 internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 {
-	DiscordClient _client;
-	AsyncEvent<DiscordClient, T> _event;
-	AsyncEventHandler<DiscordClient, T> _handler;
-	ConcurrentHashSet<MatchRequest<T>> _matchRequests;
-	ConcurrentHashSet<CollectRequest<T>> _collectRequests;
-	bool _disposed;
+	private DiscordClient _client;
+	private AsyncEvent<DiscordClient, T> _event;
+	private AsyncEventHandler<DiscordClient, T> _handler;
+	private ConcurrentHashSet<MatchRequest<T>> _matchRequests;
+	private ConcurrentHashSet<CollectRequest<T>> _collectRequests;
+	private bool _disposed;
 
 	/// <summary>
 	/// Creates a new EventWaiter object.
@@ -36,10 +36,10 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 		this._client = client;
 		var tinfo = this._client.GetType().GetTypeInfo();
 		var handler = tinfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, T>));
-		this._matchRequests = new ConcurrentHashSet<MatchRequest<T>>();
-		this._collectRequests = new ConcurrentHashSet<CollectRequest<T>>();
+		this._matchRequests = new();
+		this._collectRequests = new();
 		this._event = (AsyncEvent<DiscordClient, T>)handler.GetValue(this._client);
-		this._handler = new AsyncEventHandler<DiscordClient, T>(this.HandleEvent);
+		this._handler = new(this.HandleEvent);
 		this._event.Register(this._handler);
 	}
 
@@ -65,6 +65,7 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 			request.Dispose();
 			this._matchRequests.TryRemove(request);
 		}
+
 		return result;
 	}
 
@@ -86,10 +87,11 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 		}
 		finally
 		{
-			result = new ReadOnlyCollection<T>(new HashSet<T>(request.Collected).ToList());
+			result = new(new HashSet<T>(request.Collected).ToList());
 			request.Dispose();
 			this._collectRequests.TryRemove(request);
 		}
+
 		return result;
 	}
 
@@ -103,20 +105,12 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 		if (!this._disposed)
 		{
 			foreach (var req in this._matchRequests)
-			{
 				if (req.Predicate(eventArgs))
-				{
 					req.Tcs.TrySetResult(eventArgs);
-				}
-			}
 
 			foreach (var req in this._collectRequests)
-			{
 				if (req.Predicate(eventArgs))
-				{
 					req.Collected.Add(eventArgs);
-				}
-			}
 		}
 
 		return Task.CompletedTask;

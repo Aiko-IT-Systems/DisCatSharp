@@ -1,4 +1,3 @@
-
 using DisCatSharp.Entities;
 using DisCatSharp.Lavalink.Entities;
 using DisCatSharp.Lavalink.Entities.Filters;

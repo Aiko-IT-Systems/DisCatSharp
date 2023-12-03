@@ -106,12 +106,11 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 		// Collect exceptions
 		List<Exception> exceptions = null;
 		if ((exceptionMode & AsyncEventExceptionMode.ThrowAll) != 0)
-			exceptions = new List<Exception>(handlers.Length * 2 /* timeout + regular */);
+			exceptions = new(handlers.Length * 2 /* timeout + regular */);
 
 		// If we have a timeout configured, start the timeout task
 		var timeout = this.MaximumExecutionTime > TimeSpan.Zero ? Task.Delay(this.MaximumExecutionTime) : null;
 		foreach (var handler in handlers)
-		{
 			try
 			{
 				// Start the handler execution
@@ -120,7 +119,6 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 				{
 					// If timeout is configured, wait for any task to finish
 					// If the timeout task finishes first, the handler is causing a timeout
-
 					var result = await Task.WhenAny(timeout, handlerTask).ConfigureAwait(false);
 					if (result == timeout)
 					{
@@ -138,10 +136,8 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 					}
 				}
 				else if (handlerTask != null)
-				{
 					// No timeout is configured, or timeout already expired, proceed as usual
 					await handlerTask.ConfigureAwait(false);
-				}
 
 				if (e.Handled)
 					break;
@@ -156,7 +152,6 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 				if ((exceptionMode & AsyncEventExceptionMode.ThrowFatal) == AsyncEventExceptionMode.ThrowFatal)
 					exceptions.Add(ex);
 			}
-		}
 
 		if ((exceptionMode & AsyncEventExceptionMode.ThrowAll) != 0 && exceptions.Count > 0)
 			throw new AggregateException("Exceptions were thrown during execution of the event's handlers.", exceptions);

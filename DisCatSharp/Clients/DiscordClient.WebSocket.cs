@@ -24,7 +24,7 @@ namespace DisCatSharp;
 /// </summary>
 public sealed partial class DiscordClient
 {
-	#region Private Fields
+#region Private Fields
 
 	private int _heartbeatInterval;
 	private DateTimeOffset _lastHeartbeat;
@@ -41,9 +41,9 @@ public sealed partial class DiscordClient
 	private CancellationTokenSource _cancelTokenSource;
 	private CancellationToken _cancelToken;
 
-	#endregion
+#endregion
 
-	#region Connection Semaphore
+#region Connection Semaphore
 
 	/// <summary>
 	/// Gets the socket locks.
@@ -53,11 +53,11 @@ public sealed partial class DiscordClient
 	/// <summary>
 	/// Gets the session lock.
 	/// </summary>
-	private readonly ManualResetEventSlim _sessionLock  = new(true);
+	private readonly ManualResetEventSlim _sessionLock = new(true);
 
-	#endregion
+#endregion
 
-	#region Internal Connection Methods
+#region Internal Connection Methods
 
 	/// <summary>
 	/// Reconnects the websocket client.
@@ -96,7 +96,6 @@ public sealed partial class DiscordClient
 		}
 
 		if (!this.Presences.ContainsKey(this.CurrentUser.Id))
-		{
 			this.PresencesInternal[this.CurrentUser.Id] = new()
 			{
 				Discord = this,
@@ -108,7 +107,6 @@ public sealed partial class DiscordClient
 					Id = this.CurrentUser.Id
 				}
 			};
-		}
 		else
 		{
 			var pr = this.PresencesInternal[this.CurrentUser.Id];
@@ -143,8 +141,6 @@ public sealed partial class DiscordClient
 
 		await this.WebSocketClient.ConnectAsync(gwuri.Build()).ConfigureAwait(false);
 
-
-
 		Task SocketOnConnect(IWebSocketClient sender, SocketEventArgs e)
 			=> this._socketOpened.InvokeAsync(this, e);
 
@@ -152,9 +148,7 @@ public sealed partial class DiscordClient
 		{
 			string msg = null;
 			if (e is SocketTextMessageEventArgs etext)
-			{
 				msg = etext.Message;
-			}
 			else if (e is SocketBinaryMessageEventArgs ebin)
 			{
 				using var ms = new MemoryStream();
@@ -197,7 +191,6 @@ public sealed partial class DiscordClient
 			this.Logger.LogDebug(LoggerEvents.ConnectionClose, "Connection closed ({0}, '{1}')", e.CloseCode, e.CloseMessage);
 			await this._socketClosed.InvokeAsync(this, e).ConfigureAwait(false);
 
-
 			// TODO: We might need to include more 400X codes
 			if (this.Configuration.AutoReconnect && (e.CloseCode < 4001 || e.CloseCode >= 5000))
 			{
@@ -205,22 +198,19 @@ public sealed partial class DiscordClient
 
 				if (this._status == null)
 					await this.ConnectAsync().ConfigureAwait(false);
-				else
-					if (this._status.IdleSince.HasValue)
+				else if (this._status.IdleSince.HasValue)
 					await this.ConnectAsync(this._status.ActivityInternal, this._status.Status, Utilities.GetDateTimeOffsetFromMilliseconds(this._status.IdleSince.Value)).ConfigureAwait(false);
 				else
 					await this.ConnectAsync(this._status.ActivityInternal, this._status.Status).ConfigureAwait(false);
 			}
 			else
-			{
 				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({0}, '{1}')", e.CloseCode, e.CloseMessage);
-			}
 		}
 	}
 
-	#endregion
+#endregion
 
-	#region WebSocket (Events)
+#region WebSocket (Events)
 
 	/// <summary>
 	/// Handles the socket message.
@@ -354,8 +344,7 @@ public sealed partial class DiscordClient
 
 		var args = new HeartbeatEventArgs(this.ServiceProvider)
 		{
-			Ping = this.Ping,
-			Timestamp = DateTimeOffset.Now
+			Ping = this.Ping, Timestamp = DateTimeOffset.Now
 		};
 
 		await this._heartbeated.InvokeAsync(this, args).ConfigureAwait(false);
@@ -380,9 +369,9 @@ public sealed partial class DiscordClient
 		catch (OperationCanceledException) { }
 	}
 
-	#endregion
+#endregion
 
-	#region Internal Gateway Methods
+#region Internal Gateway Methods
 
 	/// <summary>
 	/// Updates the status.
@@ -400,18 +389,14 @@ public sealed partial class DiscordClient
 
 		var status = new StatusUpdate
 		{
-			Activity = new(act),
-			IdleSince = sinceUnix,
-			IsAfk = idleSince != null,
-			Status = userStatus ?? UserStatus.Online
+			Activity = new(act), IdleSince = sinceUnix, IsAfk = idleSince != null, Status = userStatus ?? UserStatus.Online
 		};
 
 		// Solution to have status persist between sessions
 		this._status = status;
 		var statusUpdate = new GatewayPayload
 		{
-			OpCode = GatewayOpCode.StatusUpdate,
-			Data = status
+			OpCode = GatewayOpCode.StatusUpdate, Data = status
 		};
 
 		var statusstr = JsonConvert.SerializeObject(statusUpdate);
@@ -419,15 +404,16 @@ public sealed partial class DiscordClient
 		await this.WsSendAsync(statusstr).ConfigureAwait(false);
 
 		if (!this.PresencesInternal.ContainsKey(this.CurrentUser.Id))
-		{
 			this.PresencesInternal[this.CurrentUser.Id] = new()
 			{
 				Discord = this,
 				Activity = act,
 				Status = userStatus ?? UserStatus.Online,
-				InternalUser = new() { Id = this.CurrentUser.Id }
+				InternalUser = new()
+				{
+					Id = this.CurrentUser.Id
+				}
 			};
-		}
 		else
 		{
 			var pr = this.PresencesInternal[this.CurrentUser.Id];
@@ -450,8 +436,7 @@ public sealed partial class DiscordClient
 
 			var args = new ZombiedEventArgs(this.ServiceProvider)
 			{
-				Failures = Volatile.Read(ref this._skippedHeartbeats),
-				GuildDownloadCompleted = true
+				Failures = Volatile.Read(ref this._skippedHeartbeats), GuildDownloadCompleted = true
 			};
 			await this._zombied.InvokeAsync(this, args).ConfigureAwait(false);
 
@@ -462,8 +447,7 @@ public sealed partial class DiscordClient
 		{
 			var args = new ZombiedEventArgs(this.ServiceProvider)
 			{
-				Failures = Volatile.Read(ref this._skippedHeartbeats),
-				GuildDownloadCompleted = false
+				Failures = Volatile.Read(ref this._skippedHeartbeats), GuildDownloadCompleted = false
 			};
 			await this._zombied.InvokeAsync(this, args).ConfigureAwait(false);
 
@@ -474,8 +458,7 @@ public sealed partial class DiscordClient
 		this.Logger.LogTrace(LoggerEvents.Heartbeat, "Sending heartbeat");
 		var heartbeat = new GatewayPayload
 		{
-			OpCode = GatewayOpCode.Heartbeat,
-			Data = seq
+			OpCode = GatewayOpCode.Heartbeat, Data = seq
 		};
 		var heartbeatStr = JsonConvert.SerializeObject(heartbeat);
 		await this.WsSendAsync(heartbeatStr).ConfigureAwait(false);
@@ -498,8 +481,7 @@ public sealed partial class DiscordClient
 			LargeThreshold = this.Configuration.LargeThreshold,
 			ShardInfo = new()
 			{
-				ShardId = this.Configuration.ShardId,
-				ShardCount = this.Configuration.ShardCount
+				ShardId = this.Configuration.ShardId, ShardCount = this.Configuration.ShardCount
 			},
 			Presence = status,
 			Intents = this.Configuration.Intents,
@@ -507,8 +489,7 @@ public sealed partial class DiscordClient
 		};
 		var payload = new GatewayPayload
 		{
-			OpCode = GatewayOpCode.Identify,
-			Data = identify
+			OpCode = GatewayOpCode.Identify, Data = identify
 		};
 		var payloadstr = JsonConvert.SerializeObject(payload);
 		await this.WsSendAsync(payloadstr).ConfigureAwait(false);
@@ -523,20 +504,18 @@ public sealed partial class DiscordClient
 	{
 		var resume = new GatewayResume
 		{
-			Token = Utilities.GetFormattedToken(this),
-			SessionId = this._sessionId,
-			SequenceNumber = Volatile.Read(ref this._lastSequence)
+			Token = Utilities.GetFormattedToken(this), SessionId = this._sessionId, SequenceNumber = Volatile.Read(ref this._lastSequence)
 		};
 		var resumePayload = new GatewayPayload
 		{
-			OpCode = GatewayOpCode.Resume,
-			Data = resume
+			OpCode = GatewayOpCode.Resume, Data = resume
 		};
 		var resumestr = JsonConvert.SerializeObject(resumePayload);
 		this.GatewayUri = new(this._resumeGatewayUrl);
 		this.Logger.LogDebug(LoggerEvents.ConnectionClose, "Request to resume via {gw}", this.GatewayUri.AbsoluteUri);
 		await this.WsSendAsync(resumestr).ConfigureAwait(false);
 	}
+
 	/// <summary>
 	/// Internals the update gateway async.
 	/// </summary>
@@ -558,9 +537,9 @@ public sealed partial class DiscordClient
 		await this.WebSocketClient.SendMessageAsync(payload).ConfigureAwait(false);
 	}
 
-	#endregion
+#endregion
 
-	#region Semaphore Methods
+#region Semaphore Methods
 
 	/// <summary>
 	/// Gets the socket lock.
@@ -569,5 +548,5 @@ public sealed partial class DiscordClient
 	private SocketLock GetSocketLock()
 		=> s_socketLocks.GetOrAdd(this.CurrentApplication.Id, appId => new(appId, this.GatewayInfo.SessionBucket.MaxConcurrency));
 
-	#endregion
+#endregion
 }

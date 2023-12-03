@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents a button's style/color.
 /// </summary>
-public enum ButtonStyle : int
+public enum ButtonStyle
 {
 	/// <summary>
 	/// Blurple button.
@@ -19,7 +18,7 @@ public enum ButtonStyle : int
 	/// <summary>
 	/// Green button.
 	/// </summary>
-	Success  = 3,
+	Success = 3,
 
 	/// <summary>
 	/// Red button.

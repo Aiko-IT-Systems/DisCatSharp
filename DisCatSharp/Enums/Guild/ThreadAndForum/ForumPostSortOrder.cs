@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the default sort order for posts in a forum channel.
 /// </summary>
-public enum ForumPostSortOrder : int
+public enum ForumPostSortOrder
 {
 	/// <summary>
 	/// Sort forum posts by activity.

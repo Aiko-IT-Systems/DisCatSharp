@@ -1,6 +1,6 @@
 namespace DisCatSharp.Enums;
 
-public enum InteractionCallbackEphemerality : int
+public enum InteractionCallbackEphemerality
 {
 	Optional = 0,
 	Required = 1

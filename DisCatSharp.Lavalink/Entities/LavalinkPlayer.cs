@@ -1,4 +1,3 @@
-
 using DisCatSharp.Lavalink.Entities.Filters;
 
 using Newtonsoft.Json;

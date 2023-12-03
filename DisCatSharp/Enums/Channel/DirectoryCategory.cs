@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents a directory entries primary category type.
 /// </summary>
-public enum DirectoryCategory : int
+public enum DirectoryCategory
 {
 	/// <summary>
 	/// Indicates that this entry falls under the category Clubs.

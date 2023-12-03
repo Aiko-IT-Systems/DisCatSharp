@@ -1,7 +1,7 @@
 {
-    "DisCatSharp": {
-        "Discord": {
-            "Intents": "GuildEmojisAndStickers,GuildMembers,GuildInvites,GuildMessageReactions"
-        }
-    }
+	"DisCatSharp": {
+		"Discord": {
+			"Intents": "GuildEmojisAndStickers,GuildMembers,GuildInvites,GuildMessageReactions"
+		}
+	}
 }

@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents a channel permission overwrite's type.
 /// </summary>
-public enum OverwriteType : int
+public enum OverwriteType
 {
 	/// <summary>
 	/// Specifies that this overwrite applies to a role.
@@ -14,5 +13,5 @@ public enum OverwriteType : int
 	/// <summary>
 	/// Specifies that this overwrite applies to a member.
 	/// </summary>
-	Member = 1,
+	Member = 1
 }

@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents where application commands can be used.
 /// </summary>
-public enum ApplicationCommandContexts : int
+public enum ApplicationCommandContexts
 {
 	/// <summary>
 	/// Command can be used in guilds.

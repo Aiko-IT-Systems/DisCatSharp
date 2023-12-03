@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the onboarding mode.
 /// </summary>
-public enum OnboardingMode : int
+public enum OnboardingMode
 {
 	/// <summary>
 	/// Counts only Default Channels towards constraints.

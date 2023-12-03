@@ -1,4 +1,3 @@
-
 namespace DisCatSharp.Interactivity.Enums;
 
 /// <summary>

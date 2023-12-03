@@ -38,7 +38,10 @@ public sealed class WelcomeMessage : ObservableApiObject
 	/// <param name="message">The message. Use <c>[@username]</c> to mention the new member. Required.</param>
 	public WelcomeMessage(ulong authorId, string message)
 	{
-		this.AuthorIds = new() { authorId };
+		this.AuthorIds = new()
+		{
+			authorId
+		};
 		this.Message = message;
 	}
 

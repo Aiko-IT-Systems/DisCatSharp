@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Project>
-  <ItemGroup>
-    <SourceRoot Include="$(MSBuildThisFileDirectory)/"/>
-  </ItemGroup>
+	<ItemGroup>
+		<SourceRoot Include="$(MSBuildThisFileDirectory)/" />
+	</ItemGroup>
 	<PropertyGroup>
 		<!--<CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)/DisCatSharp.Tools/DisCatSharp.ruleset</CodeAnalysisRuleSet>-->
-    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+		<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
 	</PropertyGroup>
 </Project>

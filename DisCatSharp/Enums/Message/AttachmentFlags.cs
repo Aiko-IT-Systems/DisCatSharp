@@ -1,7 +1,5 @@
 using System;
 
-using DisCatSharp.Attributes;
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -52,5 +50,5 @@ public enum AttachmentFlags
 	/// <summary>
 	/// This attachment contains explicit media.
 	/// </summary>
-	ContainsExplicitMedia = 1 << 4,
+	ContainsExplicitMedia = 1 << 4
 }

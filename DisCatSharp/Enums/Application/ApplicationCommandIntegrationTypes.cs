@@ -1,10 +1,9 @@
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the application command integration types.
 /// </summary>
-public enum ApplicationCommandIntegrationTypes : int
+public enum ApplicationCommandIntegrationTypes
 {
 	/// <summary>
 	/// Application command is installed for guild (default).

@@ -22,7 +22,8 @@ public partial class DiscordEmoji
 	/// </summary>
 	static DiscordEmoji()
 	{
-		#region Generated Emoji Map
+#region Generated Emoji Map
+
 		s_unicodeEmojis = new Dictionary<string, string>
 		{
 			[":100:"] = "\U0001f4af",
@@ -6676,7 +6677,7 @@ public partial class DiscordEmoji
 			[":zipper_mouth:"] = "\U0001f910",
 			[":zipper_mouth_face:"] = "\U0001f910",
 			[":zombie:"] = "\U0001f9df",
-			[":zzz:"] = "\U0001f4a4",
+			[":zzz:"] = "\U0001f4a4"
 		};
 
 		s_discordNameLookup = new Dictionary<string, string>
@@ -10119,8 +10120,9 @@ public partial class DiscordEmoji
 			["\u0030\u20e3"] = ":zero:",
 			["\U0001f910"] = ":zipper_mouth:",
 			["\U0001f9df"] = ":zombie:",
-			["\U0001f4a4"] = ":zzz:",
+			["\U0001f4a4"] = ":zzz:"
 		};
-		#endregion
+
+#endregion
 	}
 }

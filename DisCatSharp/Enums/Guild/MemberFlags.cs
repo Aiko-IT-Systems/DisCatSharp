@@ -45,6 +45,7 @@ public enum MemberFlags : long
 	/// </summary>
 	[DiscordInExperiment]
 	BypassesVerification = 1 << 2,
+
 	[DiscordInExperiment]
 	Verified = BypassesVerification,
 
@@ -77,12 +78,11 @@ public enum MemberFlags : long
 	/// Members username or nickname contains words that are not allowed.
 	/// </summary>
 	[DiscordInExperiment]
-	AutomodQuarantinedUsernameOrGuildNickname = 1<<7,
+	AutomodQuarantinedUsernameOrGuildNickname = 1 << 7,
 
 	/// <summary>
 	/// Members user or guild bio contains words that are not allowed.
 	/// </summary>
 	[DiscordInExperiment]
-	AutomodQuarantinedBio = 1<<8
+	AutomodQuarantinedBio = 1 << 8
 }
-

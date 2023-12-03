@@ -5,7 +5,7 @@ namespace DisCatSharp.Enums;
 /// <summary>
 /// Represents a rule's content type.
 /// </summary>
-public enum AutomodTriggerType : int
+public enum AutomodTriggerType
 {
 	/// <summary>
 	/// Checks if content contains words from a user defined list of keywords.
