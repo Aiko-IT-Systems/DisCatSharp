@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -9,13 +9,13 @@
 
   <PropertyGroup>
     <PackageId>DisCatSharp.Analyzer.Roselyn</PackageId>
-		<Version>6.1.0</Version>
-    <PackageVersion>6.1.0</PackageVersion>
+		<Version>6.2.0</Version>
+    <PackageVersion>6.2.0</PackageVersion>
     <Authors>AITSYS</Authors>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>DisCatSharp Analyzer</Description>
     <PackageReleaseNotes>Various DisCatSharp Analyzers.</PackageReleaseNotes>
-    <Copyright>Copyright 2022-2023 AITSYS</Copyright>
+    <Copyright>Copyright 2022-2024 AITSYS</Copyright>
     <PackageTags>Analyzer, analyzers</PackageTags>
     <DevelopmentDependency>true</DevelopmentDependency>
     <NoPackageAnalysis>true</NoPackageAnalysis>

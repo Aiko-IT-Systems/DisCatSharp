@@ -75,7 +75,7 @@ namespace DisCatSharp.Analyzer
 			var declaration = context.SemanticModel.GetSymbolInfo(invocation, context.CancellationToken).Symbol;
 			if (null == declaration)
 			{
-				Console.WriteLine("Faulty");
+				Console.WriteLine(new LocalizableResourceString(nameof(Resources.Faulty), Resources.ResourceManager, typeof(Resources)));
 				return;
 			}
 
@@ -137,14 +137,14 @@ namespace DisCatSharp.Analyzer
 
 		private static void ExperimentalAnalyzer(SymbolAnalysisContext context)
 		{
-			Console.WriteLine("Handling " + context.Symbol.Kind.ToString());
+			Console.WriteLine(new LocalizableResourceString(nameof(Resources.Handling), Resources.ResourceManager, typeof(Resources)) + context.Symbol.Kind.ToString());
 			var syntaxTrees = from x in context.Symbol.Locations
 				where x.IsInSource
 				select x.SourceTree;
 			var declaration = context.Symbol;
 			if (null == declaration)
 			{
-				Console.WriteLine("Faulty");
+				Console.WriteLine(new LocalizableResourceString(nameof(Resources.Faulty), Resources.ResourceManager, typeof(Resources)));
 				return;
 			}
 
