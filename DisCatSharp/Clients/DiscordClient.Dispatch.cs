@@ -701,7 +701,7 @@ public sealed partial class DiscordClient
 		this._resumeGatewayUrl = ready.ResumeGatewayUrl;
 		var rawGuildIndex = rawGuilds.ToDictionary(xt => (ulong)xt["id"], xt => (JObject)xt);
 
-		this.GuildsInternal.Clear();
+		this.GuildsInternal.Clear(); // TODO: If we don't have any guilds, fire guild download completed with an empty list to let the application commmands extension be working in user-apps-only mode
 		foreach (var guild in ready.Guilds)
 		{
 			guild.Discord = this;
