@@ -151,7 +151,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// Whether this module finished the startup.
 	/// </summary>
-	internal bool StartupFinished { get; set; } = false;
+	internal static bool StartupFinished { get; set; } = false;
+
+	/// <summary>
+	/// Whether the application won't be in guilds but registers user app commands.
+	/// </summary>
+	internal static bool UserAppsOnlyMode { get; set; } = false;
 
 	/// <summary>
 	/// Gets the service provider this module was configured with.
@@ -176,6 +181,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		CheckAllGuilds = configuration?.CheckAllGuilds ?? false;
 		ManOr = configuration?.ManualOverride ?? false;
 		AutoDeferEnabled = configuration?.AutoDefer ?? false;
+		UserAppsOnlyMode = configuration?.UserAppsOnlyMode ?? false;
 	}
 
 	/// <summary>
@@ -200,18 +206,25 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		this._globalApplicationCommandsRegistered = new("GLOBAL_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 		this._guildApplicationCommandsRegistered = new("GUILD_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 
-		this.Client.GuildDownloadCompleted += (c, e) =>
-		{
-			_ = Task.Run(async () => await this.UpdateAsync().ConfigureAwait(false));
-			return Task.CompletedTask;
-		};
+		if (UserAppsOnlyMode)
+			this.Client.Ready += (c, e) =>
+			{
+				_ = Task.Run(async () => await this.UpdateAsync().ConfigureAwait(false));
+				return Task.CompletedTask;
+			};
+		else
+			this.Client.GuildDownloadCompleted += (c, e) =>
+			{
+				_ = Task.Run(async () => await this.UpdateAsync().ConfigureAwait(false));
+				return Task.CompletedTask;
+			};
 		this.Client.InteractionCreated += this.CatchInteractionsOnStartup;
 		this.Client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
 	}
 
 	private async Task CatchInteractionsOnStartup(DiscordClient sender, InteractionCreateEventArgs e)
 	{
-		if (!this.StartupFinished)
+		if (!StartupFinished)
 			await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().AsEphemeral().WithContent("Attention: This application is still starting up. Application commands are unavailable for now.")).ConfigureAwait(false);
 		else
 			await Task.Delay(1).ConfigureAwait(false);
@@ -219,7 +232,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 	private async Task CatchContextMenuInteractionsOnStartup(DiscordClient sender, ContextMenuInteractionCreateEventArgs e)
 	{
-		if (!this.StartupFinished)
+		if (!StartupFinished)
 			await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().AsEphemeral().WithContent("Attention: This application is still starting up. Context menu commands are unavailable for now.")).ConfigureAwait(false);
 		else
 			await Task.Delay(1).ConfigureAwait(false);
@@ -230,7 +243,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		this.Client.InteractionCreated -= this.CatchInteractionsOnStartup;
 		this.Client.ContextMenuInteractionCreated -= this.CatchContextMenuInteractionsOnStartup;
 
-		this.StartupFinished = true;
+		StartupFinished = true;
 
 		this.Client.InteractionCreated += this.InteractionHandler;
 		this.Client.ContextMenuInteractionCreated += this.ContextMenuHandler;
@@ -400,7 +413,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	{
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Request to register commands on shard {shard}", this.Client.ShardId);
 
-		if (this.StartupFinished)
+		if (StartupFinished)
 		{
 			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Shard {shard} already setup, skipping", this.Client.ShardId);
 			this.FinishedRegistration();
@@ -416,45 +429,50 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		List<DiscordApplicationCommand> globalCommands = null;
 		globalCommands = (await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false).ConfigureAwait(false)).ToList() ?? null;
 		var updateList = this._updateList;
-		var guilds = CheckAllGuilds ? this.Client.Guilds?.Keys.ToList() : updateList.Where(x => x.Key != null)?.Select(x => x.Key.Value).Distinct().ToList();
-		var wrongShards = guilds.Where(x => !this.Client.Guilds.ContainsKey(x)).ToList();
-		if (wrongShards.Any())
-		{
-			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Some guilds are not on the same shard as the client. Removing them from the update list.");
-			foreach (var guild in wrongShards)
+		List<ulong>? guilds = null;
+		if (!UserAppsOnlyMode) {
+			guilds = CheckAllGuilds ? this.Client.Guilds?.Keys.ToList() : updateList.Where(x => x.Key != null)?.Select(x => x.Key.Value).Distinct().ToList();
+			var wrongShards = guilds.Where(x => !this.Client.Guilds.ContainsKey(x)).ToList();
+			if (wrongShards.Any())
 			{
-				updateList.RemoveAll(x => x.Key == guild);
-				guilds.Remove(guild);
+				this.Client.Logger.Log(ApplicationCommandsLogLevel, "Some guilds are not on the same shard as the client. Removing them from the update list.");
+				foreach (var guild in wrongShards)
+				{
+					updateList.RemoveAll(x => x.Key == guild);
+					guilds.Remove(guild);
+				}
 			}
 		}
 
 		var commandsPending = updateList.Select(x => x.Key).Distinct().ToList();
 		s_expectedCount = commandsPending.Count;
 
-		foreach (var guild in guilds)
-		{
-			List<DiscordApplicationCommand> commands = null;
-			var unauthorized = false;
-			try
+		if (!UserAppsOnlyMode) {
+			foreach (var guild in guilds)
 			{
-				commands = (await this.Client.GetGuildApplicationCommandsAsync(guild, Configuration?.EnableLocalization ?? false).ConfigureAwait(false)).ToList() ?? null;
-			}
-			catch (UnauthorizedException)
-			{
-				unauthorized = true;
-			}
-			finally
-			{
-				if (!unauthorized && commands != null && commands.Any())
-					GuildDiscordCommands.Add(guild, commands.ToList());
-				else if (unauthorized)
-					failedGuilds.Add(guild);
+				List<DiscordApplicationCommand> commands = null;
+				var unauthorized = false;
+				try
+				{
+					commands = (await this.Client.GetGuildApplicationCommandsAsync(guild, Configuration?.EnableLocalization ?? false).ConfigureAwait(false)).ToList() ?? null;
+				}
+				catch (UnauthorizedException)
+				{
+					unauthorized = true;
+				}
+				finally
+				{
+					if (!unauthorized && commands != null && commands.Any())
+						GuildDiscordCommands.Add(guild, commands.ToList());
+					else if (unauthorized)
+						failedGuilds.Add(guild);
+				}
 			}
 		}
 
 		//Default should be to add the help and slash commands can be added without setting any configuration
 		//so this should still add the default help
-		if (Configuration is null || Configuration is not null && Configuration.EnableDefaultHelp)
+		if (Configuration is null || (Configuration is not null && Configuration.EnableDefaultHelp))
 		{
 			updateList.Add(new(null, new(typeof(DefaultHelpModule))));
 			commandsPending = updateList.Select(x => x.Key).Distinct().ToList();
@@ -497,7 +515,19 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		{
 			GuildsWithoutScope = failedGuilds
 		}).ConfigureAwait(false);
-		this.Client.GuildDownloadCompleted -= async (c, e) => await this.UpdateAsync().ConfigureAwait(false);
+
+		if (UserAppsOnlyMode)
+			this.Client.Ready -= (c, e) =>
+			{
+				_ = Task.Run(async () => await this.UpdateAsync().ConfigureAwait(false));
+				return Task.CompletedTask;
+			};
+		else
+			this.Client.GuildDownloadCompleted -= (c, e) =>
+			{
+				_ = Task.Run(async () => await this.UpdateAsync().ConfigureAwait(false));
+				return Task.CompletedTask;
+			};
 	}
 
 	/// <summary>
