@@ -171,4 +171,10 @@
   <data name="AnalyzerTitleRequiresFeature" xml:space="preserve">
     <value>[Discord] Requires Features</value>
   </data>
+  <data name="Handling" xml:space="preserve">
+	  <value>Handling </value>
+  </data>
+  <data name="Faulty" xml:space="preserve">
+	  <value>Faulty</value>
+  </data>
 </root>

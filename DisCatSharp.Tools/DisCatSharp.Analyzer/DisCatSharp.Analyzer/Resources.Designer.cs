@@ -221,5 +221,23 @@ namespace DisCatSharp.Analyzer {
                 return ResourceManager.GetString("AnalyzerTitleRequiresFeature", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string Faulty {
+            get {
+                return ResourceManager.GetString("Faulty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Handling .
+        /// </summary>
+        internal static string Handling {
+            get {
+                return ResourceManager.GetString("Handling", resourceCulture);
+            }
+        }
     }
 }
