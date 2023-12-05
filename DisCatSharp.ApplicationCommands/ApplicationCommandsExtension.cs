@@ -24,6 +24,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json;
+// ReSharper disable HeuristicUnreachableCode
 
 namespace DisCatSharp.ApplicationCommands;
 
@@ -154,11 +155,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	internal static bool StartupFinished { get; set; } = false;
 
 	/// <summary>
-	/// Whether the application won't be in guilds but registers user app commands.
-	/// </summary>
-	internal static bool UserAppsOnlyMode { get; set; } = false;
-
-	/// <summary>
 	/// Gets the service provider this module was configured with.
 	/// </summary>
 	public IServiceProvider Services
@@ -181,7 +177,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		CheckAllGuilds = configuration?.CheckAllGuilds ?? false;
 		ManOr = configuration?.ManualOverride ?? false;
 		AutoDeferEnabled = configuration?.AutoDefer ?? false;
-		UserAppsOnlyMode = configuration?.UserAppsOnlyMode ?? false;
 	}
 
 	/// <summary>
@@ -206,18 +201,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		this._globalApplicationCommandsRegistered = new("GLOBAL_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 		this._guildApplicationCommandsRegistered = new("GUILD_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 
-		if (UserAppsOnlyMode)
-			this.Client.Ready += (c, e) =>
-			{
+		this.Client.GuildDownloadCompleted += (c, e) =>
+		{
+			if (!StartupFinished)
 				_ = Task.Run(async () => await this.UpdateAsync().ConfigureAwait(false));
-				return Task.CompletedTask;
-			};
-		else
-			this.Client.GuildDownloadCompleted += (c, e) =>
-			{
-				_ = Task.Run(async () => await this.UpdateAsync().ConfigureAwait(false));
-				return Task.CompletedTask;
-			};
+			return Task.CompletedTask;
+		};
 		this.Client.InteractionCreated += this.CatchInteractionsOnStartup;
 		this.Client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
 	}
@@ -429,25 +418,23 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		List<DiscordApplicationCommand> globalCommands = null;
 		globalCommands = (await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false).ConfigureAwait(false)).ToList() ?? null;
 		var updateList = this._updateList;
-		List<ulong>? guilds = null;
-		if (!UserAppsOnlyMode) {
-			guilds = CheckAllGuilds ? this.Client.Guilds?.Keys.ToList() : updateList.Where(x => x.Key != null)?.Select(x => x.Key.Value).Distinct().ToList();
-			var wrongShards = guilds.Where(x => !this.Client.Guilds.ContainsKey(x)).ToList();
-			if (wrongShards.Any())
+
+		var guilds = CheckAllGuilds ? this.Client.Guilds?.Keys.ToList() : updateList.Where(x => x.Key != null)?.Select(x => x.Key.Value).Distinct().ToList();
+		var wrongShards = guilds is not null ? guilds.Where(x => !this.Client.Guilds.ContainsKey(x)).ToList() : new();
+		if (wrongShards.Any())
+		{
+			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Some guilds are not on the same shard as the client. Removing them from the update list");
+			foreach (var guild in wrongShards)
 			{
-				this.Client.Logger.Log(ApplicationCommandsLogLevel, "Some guilds are not on the same shard as the client. Removing them from the update list.");
-				foreach (var guild in wrongShards)
-				{
-					updateList.RemoveAll(x => x.Key == guild);
-					guilds.Remove(guild);
-				}
+				updateList.RemoveAll(x => x.Key == guild);
+				guilds.Remove(guild);
 			}
 		}
 
 		var commandsPending = updateList.Select(x => x.Key).Distinct().ToList();
 		s_expectedCount = commandsPending.Count;
 
-		if (!UserAppsOnlyMode) {
+		if (guilds is not null && guilds.Any())
 			foreach (var guild in guilds)
 			{
 				List<DiscordApplicationCommand> commands = null;
@@ -468,11 +455,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						failedGuilds.Add(guild);
 				}
 			}
-		}
 
 		//Default should be to add the help and slash commands can be added without setting any configuration
 		//so this should still add the default help
-		if (Configuration is null || (Configuration is not null && Configuration.EnableDefaultHelp))
+		if (Configuration is null || Configuration is not null && Configuration.EnableDefaultHelp)
 		{
 			updateList.Add(new(null, new(typeof(DefaultHelpModule))));
 			commandsPending = updateList.Select(x => x.Key).Distinct().ToList();
@@ -499,7 +485,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 		foreach (var key in commandsPending)
 		{
-			this.Client.Logger.Log(ApplicationCommandsLogLevel, key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands.");
+			this.Client.Logger.Log(ApplicationCommandsLogLevel, key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands");
 			if (key.HasValue)
 			{
 				this.Client.Logger.Log(ApplicationCommandsLogLevel, "Found guild {guild} in shard {shard}!", key.Value, this.Client.ShardId);
@@ -515,19 +501,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		{
 			GuildsWithoutScope = failedGuilds
 		}).ConfigureAwait(false);
-
-		if (UserAppsOnlyMode)
-			this.Client.Ready -= (c, e) =>
-			{
-				_ = Task.Run(async () => await this.UpdateAsync().ConfigureAwait(false));
-				return Task.CompletedTask;
-			};
-		else
-			this.Client.GuildDownloadCompleted -= (c, e) =>
-			{
-				_ = Task.Run(async () => await this.UpdateAsync().ConfigureAwait(false));
-				return Task.CompletedTask;
-			};
 	}
 
 	/// <summary>
