@@ -4548,7 +4548,8 @@ public sealed class DiscordApiClient
 			Embeds = builder.Embeds,
 			Components = builder.Components,
 			ThreadName = builder.ThreadName,
-			Flags = flags
+			Flags = flags,
+			AppliedTags = builder.AppliedTags.Any() ? builder.AppliedTags : null
 		};
 
 		if (builder.Mentions != null)

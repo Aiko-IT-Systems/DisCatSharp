@@ -107,6 +107,13 @@ public sealed class DiscordWebhookBuilder
 	internal List<DiscordAttachment> AttachmentsInternal = new();
 
 	/// <summary>
+	/// Forum post tags to send on this webhook request.
+	/// </summary>
+	public IReadOnlyList<ulong> AppliedTags => this._appliedTags;
+
+	private readonly List<ulong> _appliedTags = new();
+
+	/// <summary>
 	/// Constructs a new empty webhook request builder.
 	/// </summary>
 	public DiscordWebhookBuilder() { } // I still see no point in initializing collections with empty collections. //
@@ -362,6 +369,16 @@ public sealed class DiscordWebhookBuilder
 	public DiscordWebhookBuilder AddMentions(IEnumerable<IMention> mentions)
 	{
 		this._mentions.AddRange(mentions);
+		return this;
+	}
+
+	/// <summary>
+	/// Tags to apply to forum posts.
+	/// </summary>
+	/// <param name="tags">Tags to add.</param>
+	public DiscordWebhookBuilder WithAppliedTags(IEnumerable<ulong> tags)
+	{
+		this._appliedTags.AddRange(tags);
 		return this;
 	}
 

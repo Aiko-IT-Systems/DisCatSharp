@@ -104,6 +104,9 @@ internal sealed class RestWebhookExecutePayload : ObservableApiObject
 
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
 	public MessageFlags Flags { get; set; }
+
+	[JsonProperty("applied_tags", NullValueHandling = NullValueHandling.Ignore)]
+	public IEnumerable<ulong>? AppliedTags { get; set; }
 }
 
 /// <summary>
