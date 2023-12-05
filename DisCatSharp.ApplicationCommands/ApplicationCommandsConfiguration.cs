@@ -80,13 +80,6 @@ public class ApplicationCommandsConfiguration
 	public bool GenerateTranslationFilesOnly { internal get; set; } = false;
 
 	/// <summary>
-	/// <para>Whether the application will only use user apps commands without being in guilds.</para>
-	/// <para>Important if you intend to only use user apps commands. If not set, commands won't be registered.</para>
-	/// <para>Defaults to <see langword="false"/>.</para>
-	/// </summary>
-	public bool UserAppsOnlyMode { get; internal set; }
-
-	/// <summary>
 	/// Creates a new configuration with default values.
 	/// </summary>
 	[ActivatorUtilitiesConstructor]
@@ -118,6 +111,5 @@ public class ApplicationCommandsConfiguration
 		this.EnableLocalization = acc.EnableLocalization;
 		this.GenerateTranslationFilesOnly = acc.GenerateTranslationFilesOnly;
 		this.EnableDefaultUserAppsHelp = acc.EnableDefaultUserAppsHelp;
-		this.UserAppsOnlyMode = acc.UserAppsOnlyMode;
 	}
 }

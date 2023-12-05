@@ -699,98 +699,105 @@ public sealed partial class DiscordClient
 		this.GatewayVersion = ready.GatewayVersion;
 		this._sessionId = ready.SessionId;
 		this._resumeGatewayUrl = ready.ResumeGatewayUrl;
-		var rawGuildIndex = rawGuilds.ToDictionary(xt => (ulong)xt["id"], xt => (JObject)xt);
+		var rawGuildIndex = rawGuilds.Any() ? rawGuilds.ToDictionary(xt => (ulong)xt["id"], xt => (JObject)xt) : null;
 
-		this.GuildsInternal.Clear(); // TODO: If we don't have any guilds, fire guild download completed with an empty list to let the application commmands extension be working in user-apps-only mode
-		foreach (var guild in ready.Guilds)
-		{
-			guild.Discord = this;
-
-			guild.ChannelsInternal ??= new();
-
-			foreach (var xc in guild.Channels.Values)
+		this.GuildsInternal.Clear();
+		if (ready.Guilds.Any() && rawGuildIndex is not null)
+			foreach (var guild in ready.Guilds)
 			{
-				xc.GuildId = guild.Id;
-				xc.Initialize(this);
-			}
+				guild.Discord = this;
 
-			guild.RolesInternal ??= new();
+				guild.ChannelsInternal ??= new();
 
-			foreach (var xr in guild.Roles.Values)
-			{
-				xr.Discord = this;
-				xr.GuildId = guild.Id;
-			}
-
-			var rawGuild = rawGuildIndex[guild.Id];
-			var rawMembers = (JArray)rawGuild["members"];
-
-			if (guild.MembersInternal != null)
-				guild.MembersInternal.Clear();
-			else
-				guild.MembersInternal = new();
-
-			if (rawMembers != null)
-				foreach (var xj in rawMembers)
+				foreach (var xc in guild.Channels.Values)
 				{
-					var xtm = xj.ToObject<TransportMember>();
-
-					var usr = new DiscordUser(xtm.User)
-					{
-						Discord = this
-					};
-					usr = this.UserCache.AddOrUpdate(xtm.User.Id, usr, (id, old) =>
-					{
-						old.Username = usr.Username;
-						old.Discriminator = usr.Discriminator;
-						old.AvatarHash = usr.AvatarHash;
-						old.BannerHash = usr.BannerHash;
-						old.BannerColorInternal = usr.BannerColorInternal;
-						old.AvatarDecorationData = usr.AvatarDecorationData;
-						old.ThemeColorsInternal = usr.ThemeColorsInternal;
-						old.Pronouns = usr.Pronouns;
-						old.Locale = usr.Locale;
-						old.GlobalName = usr.GlobalName;
-						return old;
-					});
-
-					guild.MembersInternal[xtm.User.Id] = new(xtm)
-					{
-						Discord = this, GuildId = guild.Id
-					};
+					xc.GuildId = guild.Id;
+					xc.Initialize(this);
 				}
 
-			guild.EmojisInternal ??= new();
+				guild.RolesInternal ??= new();
 
-			foreach (var xe in guild.Emojis.Values)
-				xe.Discord = this;
+				foreach (var xr in guild.Roles.Values)
+				{
+					xr.Discord = this;
+					xr.GuildId = guild.Id;
+				}
 
-			guild.StickersInternal ??= new();
+				var rawGuild = rawGuildIndex[guild.Id];
+				var rawMembers = (JArray)rawGuild["members"];
 
-			foreach (var xs in guild.Stickers.Values)
-				xs.Discord = this;
+				if (guild.MembersInternal != null)
+					guild.MembersInternal.Clear();
+				else
+					guild.MembersInternal = new();
 
-			guild.VoiceStatesInternal ??= new();
+				if (rawMembers != null)
+					foreach (var xj in rawMembers)
+					{
+						var xtm = xj.ToObject<TransportMember>();
 
-			foreach (var xvs in guild.VoiceStates.Values)
-				xvs.Discord = this;
+						var usr = new DiscordUser(xtm.User)
+						{
+							Discord = this
+						};
+						usr = this.UserCache.AddOrUpdate(xtm.User.Id, usr, (id, old) =>
+						{
+							old.Username = usr.Username;
+							old.Discriminator = usr.Discriminator;
+							old.AvatarHash = usr.AvatarHash;
+							old.BannerHash = usr.BannerHash;
+							old.BannerColorInternal = usr.BannerColorInternal;
+							old.AvatarDecorationData = usr.AvatarDecorationData;
+							old.ThemeColorsInternal = usr.ThemeColorsInternal;
+							old.Pronouns = usr.Pronouns;
+							old.Locale = usr.Locale;
+							old.GlobalName = usr.GlobalName;
+							return old;
+						});
 
-			guild.ThreadsInternal ??= new();
+						guild.MembersInternal[xtm.User.Id] = new(xtm)
+						{
+							Discord = this, GuildId = guild.Id
+						};
+					}
 
-			foreach (var xt in guild.ThreadsInternal.Values)
-				xt.Discord = this;
+				guild.EmojisInternal ??= new();
 
-			guild.StageInstancesInternal ??= new();
+				foreach (var xe in guild.Emojis.Values)
+					xe.Discord = this;
 
-			foreach (var xsi in guild.StageInstancesInternal.Values)
-				xsi.Discord = this;
+				guild.StickersInternal ??= new();
 
-			guild.ScheduledEventsInternal ??= new();
+				foreach (var xs in guild.Stickers.Values)
+					xs.Discord = this;
 
-			foreach (var xse in guild.ScheduledEventsInternal.Values)
-				xse.Discord = this;
+				guild.VoiceStatesInternal ??= new();
 
-			this.GuildsInternal[guild.Id] = guild;
+				foreach (var xvs in guild.VoiceStates.Values)
+					xvs.Discord = this;
+
+				guild.ThreadsInternal ??= new();
+
+				foreach (var xt in guild.ThreadsInternal.Values)
+					xt.Discord = this;
+
+				guild.StageInstancesInternal ??= new();
+
+				foreach (var xsi in guild.StageInstancesInternal.Values)
+					xsi.Discord = this;
+
+				guild.ScheduledEventsInternal ??= new();
+
+				foreach (var xse in guild.ScheduledEventsInternal.Values)
+					xse.Discord = this;
+
+				this.GuildsInternal[guild.Id] = guild;
+			}
+		else
+		{
+			Volatile.Write(ref this._guildDownloadCompleted, true);
+			await this._guildDownloadCompletedEv.InvokeAsync(this, new(this.Guilds, true, this.ServiceProvider)).ConfigureAwait(false);
+			this.Logger.LogInformation(LoggerEvents.Startup, "Application has no guilds. Firing GuildDownloadCompleted event for internal tools");
 		}
 
 		await this._ready.InvokeAsync(this, new(this.ServiceProvider)).ConfigureAwait(false);
@@ -1149,7 +1156,7 @@ public sealed partial class DiscordClient
 			}).ConfigureAwait(false);
 
 		if (dcompl && !old)
-			await this._guildDownloadCompletedEv.InvokeAsync(this, new(this.Guilds, this.ServiceProvider)).ConfigureAwait(false);
+			await this._guildDownloadCompletedEv.InvokeAsync(this, new(this.Guilds, false, this.ServiceProvider)).ConfigureAwait(false);
 	}
 
 	/// <summary>
