@@ -16,7 +16,7 @@
 
 ## New
 
-- NET 8 Support
+- .NET 8 Support
 - Support for the new [Username System](https://dis.gd/usernames) (pomelo)
 - Support for [Linked Roles](https://discord.com/build/linked-roles)
 - Full support for [Application Subscriptions](https://discord.com/build/apply-now)
@@ -26,12 +26,15 @@
 - Full support for onboarding
 - Support for default select menu values (THANKS MAISY FOR ADDING IT TO DISCORD)
 - DisCatSharp can now check for new releases, including for extensions
+- Support for recurring scheduled events
 
 ## Breaking
 
 - Lavalink V4 implementation. Read more [here](https://docs.dcs.aitsys.dev/articles/modules/audio/lavalink_v4/intro)
 - Dropped support for .NET 6
 - Removed previously deprecated fields and methods
+- The caching system is under rework
+- Audit logs is under rework
 
 ----
 
