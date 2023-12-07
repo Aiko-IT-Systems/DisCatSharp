@@ -3424,13 +3424,14 @@ public sealed partial class DiscordClient
 		{
 			Discord = this
 		};
+		this.UserCache.AddOrUpdate(usr.Id, usr, (old, @new) => @new);
 
 		interaction.ChannelId = channelId;
 		interaction.GuildId = guildId;
 		interaction.Discord = this;
 		interaction.Data.Discord = this;
 
-		if (member != null)
+		if (member is not null)
 		{
 			usr = new DiscordMember(member)
 			{
@@ -3439,23 +3440,21 @@ public sealed partial class DiscordClient
 			if (interaction.Guild is not null)
 				this.UpdateUser(usr, guildId, interaction.Guild, member);
 		}
-		else
-			this.UserCache.AddOrUpdate(usr.Id, usr, (old, @new) => @new);
 
 		usr.Locale = interaction.Locale;
 		interaction.User = usr;
 
 		var resolved = interaction.Data.Resolved;
-		if (resolved != null)
+		if (resolved is not null)
 		{
-			if (resolved.Users != null)
+			if (resolved.Users is not null)
 				foreach (var c in resolved.Users)
 				{
 					c.Value.Discord = this;
 					this.UserCache.AddOrUpdate(c.Value.Id, c.Value, (old, @new) => @new);
 				}
 
-			if (resolved.Members != null)
+			if (resolved.Members is not null)
 				foreach (var c in resolved.Members)
 				{
 					c.Value.Discord = this;
@@ -3465,7 +3464,7 @@ public sealed partial class DiscordClient
 					this.UserCache.AddOrUpdate(c.Value.User.Id, c.Value.User, (old, @new) => @new);
 				}
 
-			if (resolved.Channels != null)
+			if (resolved.Channels is not null)
 				foreach (var c in resolved.Channels)
 				{
 					c.Value.Discord = this;
@@ -3483,7 +3482,7 @@ public sealed partial class DiscordClient
 					}
 				}
 
-			if (resolved.Roles != null)
+			if (resolved.Roles is not null)
 				foreach (var c in resolved.Roles)
 				{
 					c.Value.Discord = this;
@@ -3492,7 +3491,7 @@ public sealed partial class DiscordClient
 						c.Value.GuildId = guildId.Value;
 				}
 
-			if (resolved.Messages != null)
+			if (resolved.Messages is not null)
 				foreach (var m in resolved.Messages)
 				{
 					m.Value.Discord = this;
@@ -3501,14 +3500,14 @@ public sealed partial class DiscordClient
 						m.Value.GuildId = guildId.Value;
 				}
 
-			if (resolved.Attachments != null)
+			if (resolved.Attachments is not null)
 				foreach (var a in resolved.Attachments)
 					a.Value.Discord = this;
 		}
 
-		if (interaction.Type is InteractionType.Component || interaction.Type is InteractionType.ModalSubmit)
+		if (interaction.Type is InteractionType.Component or InteractionType.ModalSubmit)
 		{
-			if (interaction.Message != null)
+			if (interaction.Message is not null)
 			{
 				interaction.Message.Discord = this;
 				interaction.Message.ChannelId = interaction.ChannelId;
