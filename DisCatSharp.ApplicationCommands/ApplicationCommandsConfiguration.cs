@@ -1,5 +1,7 @@
 using System;
 
+using DisCatSharp.Attributes;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DisCatSharp.ApplicationCommands;
@@ -29,7 +31,8 @@ public class ApplicationCommandsConfiguration
 	/// <para>Mutually exclusive with <see cref="EnableDefaultHelp"/>.</para>
 	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
-	internal bool EnableDefaultUserAppsHelp { get; set; } = false;
+	[RequiresFeature(Features.Experiment, "This feature is in pre-alpha right now. If you don't have access, don't use it!")]
+	public bool EnableDefaultUserAppsHelp { get; set; } = false;
 
 	/// <summary>
 	/// This option enables the localization feature.
