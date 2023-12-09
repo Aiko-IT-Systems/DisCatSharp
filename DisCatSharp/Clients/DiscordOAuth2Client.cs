@@ -151,7 +151,7 @@ public sealed class DiscordOAuth2Client : IDisposable
 		this.ApiClient.Rest.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", this.VersionHeader);
 
 		this.OAuth2ClientErroredInternal = new("CLIENT_ERRORED", EventExecutionLimit, this.Goof);
-		this.RSA = RSA.Create(4096);
+		this.RSA = RSA.Create(1024);
 	}
 
 	/// <summary>
@@ -383,5 +383,8 @@ public sealed class DiscordOAuth2Client : IDisposable
 
 	/// <inheritdoc />
 	public void Dispose()
-		=> GC.SuppressFinalize(this);
+	{
+		this.RSA.Dispose();
+		GC.SuppressFinalize(this);
+	}
 }
