@@ -27,9 +27,9 @@
 	  Documentation: https://docs.dcs.aitsys.dev/articles/modules/audio/lavalink_v4/intro.html
 	</Description>
 	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Net7,Voice,Lavalink,Lavalink V4,Audio Player,Music,YouTube,Spotify,SoundCloud,Twitch,Vimeo,BandCamp,Apple Music,Yandex Music,Spotify,Spotify Recommendations,Deezer,Deezer ISRC,Local Music,Direct Url Music</PackageTags>
-	<Nullable>annotations</Nullable>
+
   </PropertyGroup>
-  
+
   <ItemGroup>
 	<ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
   </ItemGroup>

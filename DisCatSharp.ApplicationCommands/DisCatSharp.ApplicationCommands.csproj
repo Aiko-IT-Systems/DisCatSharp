@@ -23,7 +23,7 @@ Use it on top of your DisCatSharp powered bot and unleash the power of applicati
 Documentation: https://docs.dcs.aitsys.dev/articles/modules/application_commands/intro.html
 	</Description>
 	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Net7,Application Commands,Context Menu Commands</PackageTags>
-	<Nullable>annotations</Nullable>
+
   </PropertyGroup>
 
   <ItemGroup>
