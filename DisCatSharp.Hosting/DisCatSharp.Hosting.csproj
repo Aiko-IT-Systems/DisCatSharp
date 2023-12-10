@@ -12,7 +12,7 @@
     <PackageId>DisCatSharp.Hosting</PackageId>
     <Description>Hosting Extension for DisCatSharp.</Description>
 	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Net7,Hosting,Web</PackageTags>
-	<Nullable>annotations</Nullable>
+
   </PropertyGroup>
 
     <ItemGroup>

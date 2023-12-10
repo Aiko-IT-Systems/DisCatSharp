@@ -24,7 +24,7 @@ Note: Requires the Message Content Intent enabled for your discord application.
 Documentation: https://docs.dcs.aitsys.dev/articles/modules/commandsnext/intro.html
 	</Description>
 	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Net7,Text Commands</PackageTags>
-	<Nullable>annotations</Nullable>
+
   </PropertyGroup>
 
   <ItemGroup>

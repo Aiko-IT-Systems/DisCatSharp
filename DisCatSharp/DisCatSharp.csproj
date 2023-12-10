@@ -22,7 +22,7 @@ Your library to write discord bots in C# with a focus on always providing access
 Written with love and for everyone.
 	</Description>
     <PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Net7</PackageTags>
-    <Nullable>annotations</Nullable>
+
   </PropertyGroup>
 
   <ItemGroup>

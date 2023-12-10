@@ -23,7 +23,7 @@ Unleash the full power of discord commands.
 Documentation: https://docs.dcs.aitsys.dev/articles/modules/interactivity.html
 	</Description>
 	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Net7,Pagination,Reactions,Buttons,Interactive Commands,Interactivity,Message Components</PackageTags>
-	<Nullable>annotations</Nullable>
+
   </PropertyGroup>
 
   <ItemGroup>
