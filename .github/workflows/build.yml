@@ -36,3 +36,30 @@ jobs:
       run: dotnet build -c Release -v minimal DisCatSharp.sln
     - name: Test library
       run: dotnet test -v minimal -c Release --no-restore --no-build DisCatSharp.sln
+  pack:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4.0.0
+      with:
+        dotnet-version: |
+          8.0.100
+          7.0.404
+          6.x
+    - name: Build library
+      run: dotnet build -c Release -v minimal DisCatSharp.sln
+    - name: Publish library
+      run: dotnet pack -c Release -v minimal DisCatSharp.sln --no-build --no-restore --include-symbols --include-source -o ./artifacts DisCatSharp.sln
+    - name: Zip artifact files
+      uses: vimtor/action-zip@v1.1
+      with:
+        files: ./artifacts/
+        dest: ./DisCatSharp.zip
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3.1.3
+      with:
+        name: DisCatSharp.zip
+        path: ./DisCatSharp.zip
