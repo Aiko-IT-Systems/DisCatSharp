@@ -55,13 +55,8 @@ jobs:
       run: dotnet build -c Release -v minimal DisCatSharp.sln
     - name: Publish library
       run: dotnet pack -c Release -v minimal --no-build --no-restore --include-symbols --include-source -o ./artifacts DisCatSharp.sln
-    - name: Zip artifact files
-      uses: vimtor/action-zip@v1.1
-      with:
-        files: ./artifacts/
-        dest: ./DisCatSharp.zip
     - name: Upload artifacts
       uses: actions/upload-artifact@v3.1.3
       with:
-        name: DisCatSharp.zip
-        path: ./DisCatSharp.zip
+        name: DisCatSharp
+        path: ./artifacts/
