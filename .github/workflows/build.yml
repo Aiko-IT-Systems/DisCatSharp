@@ -39,6 +39,8 @@ jobs:
   pack:
     timeout-minutes: 15
     runs-on: ubuntu-latest
+    name: "Pack and Artifact"
+    needs: build
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
