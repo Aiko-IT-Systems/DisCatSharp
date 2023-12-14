@@ -35,5 +35,8 @@
 		<InternalsVisibleTo Include="SidePlus_AuthBot" />
 		<InternalsVisibleTo Include="SidePlus_Helper" />
 		<InternalsVisibleTo Include="Cache_Design" />
+		<InternalsVisibleTo Include="DisCatSharp.Extensions" />
+		<InternalsVisibleTo Include="DisCatSharp.Bots.DocBot" />
+		<InternalsVisibleTo Include="DisCatSharp.Bots.DocBot.Bot" />
 	</ItemGroup>
 </Project>
