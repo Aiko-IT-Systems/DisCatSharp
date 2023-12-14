@@ -43,7 +43,7 @@ jobs:
       shell: pwsh
       run: ./DisCatSharp.Tools/pack-docs.ps1 -DocsPath "./DisCatSharp.Docs" -OutputPath "./" -PackageName "dcs-docs-preview"
     - name: Upload packed docs
-      uses: actions/upload-artifact@v3.1.3
+      uses: actions/upload-artifact@v4.0.0
       with:
         name: dcs-docs-preview.zip
         path: dcs-docs-preview.zip
@@ -73,7 +73,7 @@ jobs:
       shell: pwsh
       run: Get-ChildItem -Exclude .git* | Remove-Item -Recurse -Force
     - name: Download packed docs
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: dcs-docs-preview.zip
     - name: Extract new docs

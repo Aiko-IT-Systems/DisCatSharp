@@ -43,7 +43,7 @@ jobs:
       shell: pwsh
       run: ./DisCatSharp.Tools/pack-docs.ps1 -DocsPath "./DisCatSharp.Docs" -OutputPath "./" -PackageName "dcs-docs"
     - name: Upload packed docs
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: dcs-docs.zip
         path: dcs-docs.zip
@@ -75,7 +75,7 @@ jobs:
       shell: pwsh
       run: Get-ChildItem -Exclude .git* | Remove-Item -Recurse -Force
     - name: Download packed docs
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: dcs-docs.zip
     - name: Extract new docs
