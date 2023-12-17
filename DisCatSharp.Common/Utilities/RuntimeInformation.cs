@@ -53,6 +53,6 @@ public static class RuntimeInformation
 			}
 		}
 
-		Version = mscorlib.AssemblyName.Version.ToString();
+		Version = mscorlib.AssemblyName.Version?.ToString();
 	}
 }

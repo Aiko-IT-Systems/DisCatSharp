@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DisCatSharp.Common;
 
@@ -438,7 +442,7 @@ public static class Extensions
 	/// <param name="enumerable">The enumerable.</param>
 	/// <param name="values">The output values. Undefined if <code>false</code> is returned.</param>
 	/// <returns>Whether the <see cref="IEnumerable{T}"/> contained enough elements.</returns>
-	internal static bool TryFirstTwo<T>(this IEnumerable<T> enumerable, out (T first, T second) values)
+	public static bool TryFirstTwo<T>(this IEnumerable<T> enumerable, out (T first, T second) values)
 	{
 		values = default;
 
@@ -477,7 +481,7 @@ public static class Extensions
 	/// <param name="list"></param>
 	/// <param name="predicate"></param>
 	/// <returns>Whether an item was removed.</returns>
-	internal static bool RemoveFirst<T>(this IList<T> list, Predicate<T> predicate)
+	public static bool RemoveFirst<T>(this IList<T> list, Predicate<T> predicate)
 	{
 		for (var i = 0; i < list.Count; i++)
 			if (predicate(list[i]))
@@ -495,9 +499,74 @@ public static class Extensions
 	/// <typeparam name="T"></typeparam>
 	/// <param name="arr"></param>
 	/// <param name="value"></param>
-	internal static void Populate<T>(this T[] arr, T value)
+	public static void Populate<T>(this T[] arr, T value)
 	{
 		for (var i = 0; i < arr.Length; i++)
 			arr[i] = value;
+	}
+
+	/// <summary>
+	/// Encodes a string to base64.
+	/// </summary>
+	/// <param name="text">The text to encode.</param>
+	/// <returns>The base64 encoded string.</returns>
+	public static string Base64Encode(this string text)
+	{
+		ArgumentNullException.ThrowIfNull(text, nameof(text));
+
+		var textBytes = Encoding.UTF8.GetBytes(text);
+		return Convert.ToBase64String(textBytes);
+	}
+
+	/// <summary>
+	/// Decodes a base64 string.
+	/// </summary>
+	/// <param name="base64">The base64 string to decode.</param>
+	/// <returns>The decoded string.</returns>
+	public static string Base64Decode(this string base64)
+	{
+		ArgumentNullException.ThrowIfNull(base64, nameof(base64));
+
+		base64 = WebUtility.UrlDecode(base64).Trim();
+		base64 = base64.Replace('-', '+').Replace('_', '/');
+		var d = base64.Length % 4;
+		if (d != 0)
+		{
+			base64 = base64.TrimEnd('=');
+			base64 += d % 2 > 0 ? '=' : "==";
+		}
+
+		var base64Bytes = Convert.FromBase64String(base64);
+		return Encoding.UTF8.GetString(base64Bytes);
+	}
+
+	/// <summary>
+	/// Generates a string from a stream.
+	/// </summary>
+	/// <param name="inputStream">The input stream.</param>
+	/// <returns>The converted stream.</returns>
+	public static async Task<string> GenerateStringFromStream(this Stream inputStream)
+	{
+		ArgumentNullException.ThrowIfNull(inputStream, nameof(inputStream));
+
+		using var reader = new StreamReader(inputStream, Encoding.UTF8);
+		return await reader.ReadToEndAsync().ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Generates a memory stream from a string.
+	/// </summary>
+	/// <param name="inputString">The input string.</param>
+	/// <returns>The converted memory stream.</returns>
+	public static async Task<MemoryStream> GenerateStreamFromString(this string inputString)
+	{
+		ArgumentNullException.ThrowIfNull(inputString, nameof(inputString));
+
+		var stream = new MemoryStream();
+		await using var writer = new StreamWriter(stream);
+		await writer.WriteAsync(inputString).ConfigureAwait(false);
+		await writer.FlushAsync().ConfigureAwait(false);
+		stream.Position = 0;
+		return stream;
 	}
 }
