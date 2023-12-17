@@ -1,8 +1,11 @@
+using System;
+
 namespace DisCatSharp.Common.Utilities;
 
 /// <summary>
 /// Defines the behaviour for throwing exceptions from <see cref="AsyncEvent{TSender, TArgs}.InvokeAsync(TSender, TArgs, AsyncEventExceptionMode)"/>.
 /// </summary>
+[Flags]
 public enum AsyncEventExceptionMode
 {
 	/// <summary>

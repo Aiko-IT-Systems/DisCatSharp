@@ -32,6 +32,8 @@ public class AsyncExecutor
 		if (taskState.Exception != null)
 			throw taskState.Exception;
 
+		return;
+
 		// completion method
 		void TaskCompletionHandler(Task t, object state)
 		{
@@ -41,16 +43,13 @@ public class AsyncExecutor
 			// retrieve any exceptions or cancellation status
 			if (t.IsFaulted)
 			{
-				if (t.Exception.InnerExceptions.Count == 1) // unwrap if 1
-					stateRef.Exception = t.Exception.InnerException;
-				else
-					stateRef.Exception = t.Exception;
+				stateRef!.Exception = t.Exception?.InnerExceptions.Count is 1 ? t.Exception.InnerException : t.Exception; // unwrap if 1
 			}
 			else if (t.IsCanceled)
-				stateRef.Exception = new TaskCanceledException(t);
+				stateRef!.Exception = new TaskCanceledException(t);
 
 			// signal that the execution is done
-			stateRef.Lock.Set();
+			stateRef!.Lock.Set();
 		}
 	}
 
@@ -89,23 +88,20 @@ public class AsyncExecutor
 			// retrieve any exceptions or cancellation status
 			if (t.IsFaulted)
 			{
-				if (t.Exception.InnerExceptions.Count == 1) // unwrap if 1
-					stateRef.Exception = t.Exception.InnerException;
-				else
-					stateRef.Exception = t.Exception;
+				stateRef!.Exception = t.Exception?.InnerExceptions.Count is 1 ? t.Exception.InnerException : t.Exception; // unwrap if 1
 			}
 			else if (t.IsCanceled)
-				stateRef.Exception = new TaskCanceledException(t);
+				stateRef!.Exception = new TaskCanceledException(t);
 
 			// return the result from the task, if any
 			if (t.IsCompleted && !t.IsFaulted)
 			{
-				stateRef.HasResult = true;
+				stateRef!.HasResult = true;
 				stateRef.Result = t.Result;
 			}
 
 			// signal that the execution is done
-			stateRef.Lock.Set();
+			stateRef!.Lock.Set();
 		}
 	}
 

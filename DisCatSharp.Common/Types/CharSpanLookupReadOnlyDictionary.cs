@@ -279,7 +279,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	/// <summary>
 	/// The keyed value.
 	/// </summary>
-	private class KeyedValue
+	private sealed class KeyedValue
 	{
 		/// <summary>
 		/// Gets the key hash.
@@ -318,7 +318,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	/// <summary>
 	/// The enumerator.
 	/// </summary>
-	private class Enumerator : IEnumerator<KeyValuePair<string, TValue>>
+	private sealed class Enumerator : IEnumerator<KeyValuePair<string, TValue>>
 	{
 		/// <summary>
 		/// Gets the current.

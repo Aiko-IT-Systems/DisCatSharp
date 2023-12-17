@@ -42,12 +42,10 @@ public static class LinqMethods
 	public static bool TryGetFirstValueByKey<TKey, TValue>(this Dictionary<TKey, TValue?>? dict, TKey key, out TValue? value)
 		where TKey : notnull
 	{
-		if (dict == null)
-		{
-			value = default;
-			return false;
-		}
+		if (dict != null)
+			return dict.TryGetValue(key, out value);
 
-		return dict.TryGetValue(key, out value);
+		value = default;
+		return false;
 	}
 }

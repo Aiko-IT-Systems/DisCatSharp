@@ -125,7 +125,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	{
 		get
 		{
-			if (!(key is string tkey))
+			if (key is not string tkey)
 				throw new ArgumentException("Key needs to be an instance of a string.");
 
 			if (!this.TryRetrieveInternal(tkey.AsSpan(), out var value))
@@ -136,10 +136,10 @@ public sealed class CharSpanLookupDictionary<TValue> :
 
 		set
 		{
-			if (!(key is string tkey))
+			if (key is not string tkey)
 				throw new ArgumentException("Key needs to be an instance of a string.");
 
-			if (!(value is TValue tvalue))
+			if (value is not TValue tvalue)
 			{
 				tvalue = default;
 				if (tvalue != null)
@@ -348,10 +348,10 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <param name="value">The value.</param>
 	void IDictionary.Add(object key, object value)
 	{
-		if (!(key is string tkey))
+		if (key is not string tkey)
 			throw new ArgumentException("Key needs to be an instance of a string.");
 
-		if (!(value is TValue tvalue))
+		if (value is not TValue tvalue)
 		{
 			tvalue = default;
 			if (tvalue != null)
@@ -367,7 +367,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <param name="key">The key.</param>
 	void IDictionary.Remove(object key)
 	{
-		if (!(key is string tkey))
+		if (key is not string tkey)
 			throw new ArgumentException("Key needs to be an instance of a string.");
 
 		this.TryRemove(tkey, out _);
@@ -380,7 +380,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <returns>A bool.</returns>
 	bool IDictionary.Contains(object key)
 	{
-		if (!(key is string tkey))
+		if (key is not string tkey)
 			throw new ArgumentException("Key needs to be an instance of a string.");
 
 		return this.ContainsKey(tkey);
@@ -553,26 +553,32 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		if (!this._internalBuckets.TryGetValue(hash, out var kdv))
 			return false;
 
-		if (kdv.Next == null && key.SequenceEqual(kdv.Key.AsSpan()))
+		switch (kdv.Next)
 		{
-			// Only bucket under this hash and key matches, pop the entire bucket
+			case null when key.SequenceEqual(kdv.Key.AsSpan()):
+				// Only bucket under this hash and key matches, pop the entire bucket
 
-			value = kdv.Value;
-			this._internalBuckets.Remove(hash);
-			this.Count--;
-			return true;
-		}
-		else if (kdv.Next == null)
+				value = kdv.Value;
+				this._internalBuckets.Remove(hash);
+				this.Count--;
+				return true;
 			// Only bucket under this hash and key does not match, cannot remove
-			return false;
-		else if (key.SequenceEqual(kdv.Key.AsSpan()))
-		{
-			// First key in the bucket matches, pop it and set its child as current bucket
+			case null:
+				return false;
+			default:
+			{
+				if (key.SequenceEqual(kdv.Key.AsSpan()))
+				{
+					// First key in the bucket matches, pop it and set its child as current bucket
 
-			value = kdv.Value;
-			this._internalBuckets[hash] = kdv.Next;
-			this.Count--;
-			return true;
+					value = kdv.Value;
+					this._internalBuckets[hash] = kdv.Next;
+					this.Count--;
+					return true;
+				}
+
+				break;
+			}
 		}
 
 		var kdvLast = kdv;
@@ -661,7 +667,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <summary>
 	/// The keyed value.
 	/// </summary>
-	private class KeyedValue
+	private sealed class KeyedValue
 	{
 		/// <summary>
 		/// Gets the key hash.
@@ -700,7 +706,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <summary>
 	/// The enumerator.
 	/// </summary>
-	private class Enumerator :
+	private sealed class Enumerator :
 		IEnumerator<KeyValuePair<string, TValue>>,
 		IDictionaryEnumerator
 	{

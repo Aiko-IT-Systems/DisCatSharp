@@ -120,7 +120,9 @@ public sealed class LavalinkGuildPlayer
 	/// Gets the guild this player is attached to.
 	/// </summary>
 	public DiscordGuild Guild
-		=> this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null!;
+		=> this.Discord.Guilds.TryGetValue(this.GuildId, out var guild)
+			? guild
+			: null!;
 
 	/// <summary>
 	/// Gets the discord client.
@@ -300,7 +302,8 @@ public sealed class LavalinkGuildPlayer
 	/// <returns>The updated guild player.</returns>
 	public async Task<LavalinkGuildPlayer> PlayPartialAsync(string identifier, TimeSpan startTime, TimeSpan endTime)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: identifier, position: (int)startTime.TotalMilliseconds, endTime: (int)endTime.TotalMilliseconds).ConfigureAwait(false);
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: identifier, position: (int)startTime.TotalMilliseconds,
+			endTime: (int)endTime.TotalMilliseconds).ConfigureAwait(false);
 		return this;
 	}
 
@@ -313,7 +316,8 @@ public sealed class LavalinkGuildPlayer
 	/// <returns>The updated guild player.</returns>
 	public async Task<LavalinkGuildPlayer> PlayPartialAsync(LavalinkTrack track, TimeSpan startTime, TimeSpan endTime)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: track.Info.Uri.ToString(), position: (int)startTime.TotalMilliseconds, endTime: (int)endTime.TotalMilliseconds).ConfigureAwait(false);
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, identifier: track.Info.Uri.ToString(),
+			position: (int)startTime.TotalMilliseconds, endTime: (int)endTime.TotalMilliseconds).ConfigureAwait(false);
 		return this;
 	}
 
@@ -326,7 +330,9 @@ public sealed class LavalinkGuildPlayer
 	/// <returns>The updated guild player.</returns>
 	public async Task<LavalinkGuildPlayer> PlayPartialEncodedAsync(string encodedTrack, TimeSpan startTime, TimeSpan endTime)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, encodedTrack, position: (int)startTime.TotalMilliseconds, endTime: (int)endTime.TotalMilliseconds).ConfigureAwait(false);
+		this.Player = await this.Session.Rest
+			.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, false, encodedTrack, position: (int)startTime.TotalMilliseconds, endTime: (int)endTime.TotalMilliseconds)
+			.ConfigureAwait(false);
 		return this;
 	}
 
@@ -450,7 +456,7 @@ public sealed class LavalinkGuildPlayer
 		return this;
 	}
 
-#region Queue Operations
+	#region Queue Operations
 
 	/// <summary>
 	/// Adds a <see cref="LavalinkTrack"/> to the queue.
@@ -504,7 +510,7 @@ public sealed class LavalinkGuildPlayer
 		}
 	}
 
-#endregion
+	#endregion
 
 	/// <summary>
 	/// Switches the player to a new channel.
@@ -518,14 +524,7 @@ public sealed class LavalinkGuildPlayer
 			throw new ArgumentException("Cannot switch to a non-voice channel", nameof(channel));
 
 		this.ChannelId = channel.Id;
-		var vsd = new DiscordDispatchPayload
-		{
-			OpCode = 4,
-			Payload = new VoiceStateUpdatePayload()
-			{
-				GuildId = this.GuildId, ChannelId = this.ChannelId, Deafened = deafened, Muted = false
-			}
-		};
+		var vsd = new DiscordDispatchPayload { OpCode = 4, Payload = new VoiceStateUpdatePayload() { GuildId = this.GuildId, ChannelId = this.ChannelId, Deafened = deafened, Muted = false } };
 		await this.Session.Discord.WsSendAsync(LavalinkJson.SerializeObject(vsd)).ConfigureAwait(false);
 	}
 
@@ -561,14 +560,7 @@ public sealed class LavalinkGuildPlayer
 	/// <returns></returns>
 	internal async Task DisconnectVoiceAsync()
 	{
-		var vsd = new DiscordDispatchPayload
-		{
-			OpCode = 4,
-			Payload = new VoiceStateUpdatePayload()
-			{
-				GuildId = this.GuildId, ChannelId = null, Deafened = false, Muted = false
-			}
-		};
+		var vsd = new DiscordDispatchPayload { OpCode = 4, Payload = new VoiceStateUpdatePayload() { GuildId = this.GuildId, ChannelId = null, Deafened = false, Muted = false } };
 		await this.Session.Discord.WsSendAsync(LavalinkJson.SerializeObject(vsd)).ConfigureAwait(false);
 	}
 
