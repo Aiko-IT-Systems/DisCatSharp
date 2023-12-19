@@ -201,8 +201,8 @@ namespace DisCatSharp.Analyzer
 		{
 			Console.WriteLine(new LocalizableResourceString(nameof(Resources.Handling), Resources.ResourceManager, typeof(Resources)) + context.Symbol.Kind.ToString());
 			var syntaxTrees = from x in context.Symbol.Locations
-				where x.IsInSource
-				select x.SourceTree;
+			                  where x.IsInSource
+			                  select x.SourceTree;
 			var declaration = context.Symbol;
 
 			// ReSharper disable HeuristicUnreachableCode
