@@ -1,4 +1,3 @@
-using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -15,13 +14,6 @@ public class DiscordAttachment : NullableSnowflakeObject
 	/// </summary>
 	[JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
 	public string Filename { get; internal set; }
-
-	/// <summary>
-	/// Gets the name of the file. Please use <see cref="Filename"/> in future.
-	/// </summary>
-	[Deprecated("Naming was incorrect, will be removed in future in favor of Filename"), JsonIgnore]
-	public string FileName
-		=> this.Filename;
 
 	/// <summary>
 	/// Gets the description of the file.
