@@ -171,10 +171,7 @@ public sealed class LavalinkSession
 	/// <summary>
 	/// Gets the current <see cref="LavalinkSessionConfiguration"/>.
 	/// </summary>
-	public LavalinkSessionConfiguration Configuration { get; internal set; } = new()
-	{
-		Resuming = true, TimeoutSeconds = 60
-	};
+	public LavalinkSessionConfiguration Configuration { get; internal set; } = new() { Resuming = true, TimeoutSeconds = 60 };
 
 	/// <summary>
 	/// Gets the web socket.
@@ -248,7 +245,9 @@ public sealed class LavalinkSession
 	public async Task<string> GetLavalinkVersionAsync()
 	{
 		var versionInfo = await this.Rest.GetVersionAsync().ConfigureAwait(false);
-		return versionInfo.Headers.TryGetValues("Lavalink-Api-Version", out var headerValues) ? headerValues.First() : versionInfo.Response!;
+		return versionInfo.Headers.TryGetValues("Lavalink-Api-Version", out var headerValues)
+			? headerValues.First()
+			: versionInfo.Response!;
 	}
 
 	/// <summary>
@@ -277,7 +276,7 @@ public sealed class LavalinkSession
 	/// </summary>
 	public async Task DestroyGuildPlayersAsync()
 	{
-		if (this.ConnectedPlayersInternal.Any())
+		if (!this.ConnectedPlayersInternal.IsEmpty)
 			foreach (var player in this.ConnectedPlayersInternal.Values)
 				await player.DisconnectAsync().ConfigureAwait(false);
 		this.ConnectedPlayersInternal.Clear();
@@ -315,28 +314,16 @@ public sealed class LavalinkSession
 		this._voiceStateUpdates[channel.Guild.Id] = vstut;
 		this._voiceServerUpdates[channel.Guild.Id] = vsrut;
 
-		var vsd = new DiscordDispatchPayload
-		{
-			OpCode = 4,
-			Payload = new VoiceStateUpdatePayload()
-			{
-				GuildId = channel.Guild.Id, ChannelId = channel.Id, Deafened = deafened, Muted = false
-			}
-		};
+		var vsd = new DiscordDispatchPayload { OpCode = 4, Payload = new VoiceStateUpdatePayload() { GuildId = channel.Guild.Id, ChannelId = channel.Id, Deafened = deafened, Muted = false } };
 		await this.Rest.CreatePlayerAsync(this.Config.SessionId!, channel.Guild.Id, this.Config.DefaultVolume).ConfigureAwait(false);
 		await this.Discord.WsSendAsync(LavalinkJson.SerializeObject(vsd)).ConfigureAwait(false); // Send voice dispatch to trigger voice state & voice server update
 		var vst = await vstut.Task.ConfigureAwait(false); // Wait for voice state update to get session_id
 		var vsr = await vsrut.Task.ConfigureAwait(false); // Wait for voice server update to get token, guild_id & endpoint
-		await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, channel.Guild.Id, new()
-		{
-			Endpoint = vsr.Endpoint, Token = vsr.VoiceToken, SessionId = vst.SessionId
-		}).ConfigureAwait(false);
+		await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, channel.Guild.Id, new() { Endpoint = vsr.Endpoint, Token = vsr.VoiceToken, SessionId = vst.SessionId })
+			.ConfigureAwait(false);
 		var player = await this.Rest.GetPlayerAsync(this.Config.SessionId!, channel.Guild.Id).ConfigureAwait(false);
 
-		var con = new LavalinkGuildPlayer(this, channel.Guild.Id, player)
-		{
-			ChannelId = channel.Id
-		};
+		var con = new LavalinkGuildPlayer(this, channel.Guild.Id, player) { ChannelId = channel.Id };
 		this.ConnectedPlayersInternal[channel.Guild.Id] = con;
 
 		return con;
@@ -360,14 +347,18 @@ public sealed class LavalinkSession
 	/// <param name="guild">The guild to get the player for.</param>
 	/// <returns>The found player or <see langword="null"/>.</returns>
 	public LavalinkGuildPlayer? GetGuildPlayer(DiscordGuild guild)
-		=> this.ConnectedPlayersInternal.TryGetValue(guild.Id, out var lgp) && lgp.IsConnected ? lgp : null;
+		=> this.ConnectedPlayersInternal.TryGetValue(guild.Id, out var lgp) && lgp.IsConnected
+			? lgp
+			: null;
 
 	/// <summary>
 	/// Gets all guild players.
 	/// </summary>
 	/// <returns>The found players or <see langword="null"/>.</returns>
 	public IReadOnlyList<LavalinkGuildPlayer>? GetGuildPlayersAsync()
-		=> this.ConnectedPlayersInternal.Any() ? this.ConnectedPlayersInternal.Values.ToList() : null;
+		=> !this.ConnectedPlayersInternal.IsEmpty
+			? this.ConnectedPlayersInternal.Values.ToList()
+			: null;
 
 	/// <summary>
 	/// Gets the lavalink player attached to <paramref name="guild"/>.
@@ -638,10 +629,7 @@ public sealed class LavalinkSession
 	/// <param name="client">The websocket client.</param>
 	/// <param name="args">The event args.</param>
 	private Task Lavalink_WebSocket_ExceptionThrown(IWebSocketClient client, SocketErrorEventArgs args)
-		=> this._lavalinkSocketError.InvokeAsync(this, new(client.ServiceProvider)
-		{
-			Exception = args.Exception
-		});
+		=> this._lavalinkSocketError.InvokeAsync(this, new(client.ServiceProvider) { Exception = args.Exception });
 
 	/// <summary>
 	/// Handles the event when the websocket disconnected.
@@ -729,10 +717,7 @@ public sealed class LavalinkSession
 		else if (!string.IsNullOrWhiteSpace(args.SessionId) && this.ConnectedPlayersInternal.TryGetValue(gld.Id, out var guildPlayer))
 			_ = Task.Run(async () =>
 			{
-				var state = new LavalinkVoiceState()
-				{
-					Endpoint = guildPlayer.Player.VoiceState.Endpoint, Token = guildPlayer.Player.VoiceState.Token, SessionId = args.After.SessionId
-				};
+				var state = new LavalinkVoiceState() { Endpoint = guildPlayer.Player.VoiceState.Endpoint, Token = guildPlayer.Player.VoiceState.Token, SessionId = args.After.SessionId };
 				guildPlayer.UpdateVoiceState(state);
 				await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, guildPlayer.GuildId, state).ConfigureAwait(false);
 				this.ConnectedPlayersInternal[gld.Id].ChannelId = args.After?.ChannelId ?? guildPlayer.ChannelId;
@@ -758,10 +743,7 @@ public sealed class LavalinkSession
 		if (this.ConnectedPlayersInternal.TryGetValue(args.Guild.Id, out var guildPlayer))
 			_ = Task.Run(async () =>
 			{
-				var state = new LavalinkVoiceState()
-				{
-					Endpoint = args.Endpoint, Token = args.VoiceToken, SessionId = guildPlayer.Player.VoiceState.SessionId
-				};
+				var state = new LavalinkVoiceState() { Endpoint = args.Endpoint, Token = args.VoiceToken, SessionId = guildPlayer.Player.VoiceState.SessionId };
 				await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, guildPlayer.GuildId, state).ConfigureAwait(false);
 				guildPlayer.UpdateVoiceState(state);
 			});

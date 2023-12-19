@@ -90,7 +90,9 @@ public class Opus : IDisposable
 		//    throw new ArgumentException("PCM target buffer size needs to be equal to maximum buffer size for specified audio format.", nameof(target));
 
 		Interop.OpusGetPacketMetrics(opus, this.AudioFormat.SampleRate, out var channels, out var frames, out var samplesPerFrame, out var frameSize);
-		outputFormat = this.AudioFormat.ChannelCount != channels ? new(this.AudioFormat.SampleRate, channels, this.AudioFormat.VoiceApplication) : this.AudioFormat;
+		outputFormat = this.AudioFormat.ChannelCount != channels
+			? new(this.AudioFormat.SampleRate, channels, this.AudioFormat.VoiceApplication)
+			: this.AudioFormat;
 
 		if (decoder.AudioFormat.ChannelCount != channels)
 			decoder.Initialize(outputFormat);
@@ -160,6 +162,8 @@ public class Opus : IDisposable
 		lock (this._managedDecoders)
 			foreach (var decoder in this._managedDecoders)
 				decoder.Dispose();
+
+		GC.SuppressFinalize(this);
 	}
 }
 
@@ -221,6 +225,7 @@ public class OpusDecoder : IDisposable
 		this._isDisposed = true;
 		if (this.Decoder != IntPtr.Zero)
 			Interop.OpusDestroyDecoder(this.Decoder);
+
 		GC.SuppressFinalize(this);
 	}
 }

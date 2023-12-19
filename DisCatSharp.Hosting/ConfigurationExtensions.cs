@@ -73,7 +73,7 @@ internal static class ConfigurationExtensions
 
 			// Time to check if one of the referenced assemblies is something we're looking for
 			foreach (var referencedAssembly in assembly.GetReferencedAssemblies()
-				.Where(x => x.Name != null && queue.Contains(x.Name)))
+				         .Where(x => x.Name != null && queue.Contains(x.Name)))
 				try
 				{
 					// Must load the assembly into our workspace so we can do stuff with it later
