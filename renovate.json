@@ -9,5 +9,6 @@
 	      "matchManagers": ["npm"],
 	      "enabled": false
 	    }
-  ]
+  ],
+  "ignorePaths": ["DisCatSharp.LavalinkV1/"]
 }
