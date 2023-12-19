@@ -48,5 +48,7 @@ public class VoiceReceiveEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="VoiceReceiveEventArgs"/> class.
 	/// </summary>
-	internal VoiceReceiveEventArgs(IServiceProvider provider) : base(provider) { }
+	internal VoiceReceiveEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

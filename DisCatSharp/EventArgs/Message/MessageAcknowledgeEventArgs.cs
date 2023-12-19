@@ -23,5 +23,7 @@ public sealed class MessageAcknowledgeEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="MessageAcknowledgeEventArgs"/> class.
 	/// </summary>
-	internal MessageAcknowledgeEventArgs(IServiceProvider provider) : base(provider) { }
+	internal MessageAcknowledgeEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

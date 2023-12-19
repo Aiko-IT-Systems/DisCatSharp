@@ -28,5 +28,7 @@ public class UserSpeakingEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="UserSpeakingEventArgs"/> class.
 	/// </summary>
-	internal UserSpeakingEventArgs(IServiceProvider provider) : base(provider) { }
+	internal UserSpeakingEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

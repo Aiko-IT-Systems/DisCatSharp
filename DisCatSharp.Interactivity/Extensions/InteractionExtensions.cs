@@ -103,7 +103,9 @@ public static class InteractionExtensions
 
 		return new()
 		{
-			TimedOut = false, Responses = caughtResponses, Interaction = previousInteraction
+			TimedOut = false,
+			Responses = caughtResponses,
+			Interaction = previousInteraction
 		};
 	}
 }

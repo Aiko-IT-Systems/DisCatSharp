@@ -34,6 +34,7 @@ public sealed class ApplicationCommandPermissionsUpdateEventArgs : DiscordEventA
 	/// Initializes a new instance of the <see cref="ApplicationCommandPermissionsUpdateEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	public ApplicationCommandPermissionsUpdateEventArgs(IServiceProvider provider) : base(provider)
+	public ApplicationCommandPermissionsUpdateEventArgs(IServiceProvider provider)
+		: base(provider)
 	{ }
 }

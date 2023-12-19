@@ -35,7 +35,8 @@ internal class ModalEventWaiter : IDisposable
 
 		this._message = new()
 		{
-			Content = config.ResponseMessage ?? "This modal was not meant for you.", IsEphemeral = true
+			Content = config.ResponseMessage ?? "This modal was not meant for you.",
+			IsEphemeral = true
 		};
 	}
 

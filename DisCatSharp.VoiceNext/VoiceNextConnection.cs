@@ -403,7 +403,8 @@ public sealed class VoiceNextConnection : IDisposable
 
 		this.WebSocketEndpoint = new()
 		{
-			Hostname = eph, Port = epp
+			Hostname = eph,
+			Port = epp
 		};
 
 		this._readyWait = new();
@@ -434,7 +435,9 @@ public sealed class VoiceNextConnection : IDisposable
 	{
 		var gwuri = new UriBuilder
 		{
-			Scheme = "wss", Host = this.WebSocketEndpoint.Hostname, Query = "encoding=json&v=4"
+			Scheme = "wss",
+			Host = this.WebSocketEndpoint.Hostname,
+			Query = "encoding=json&v=4"
 		};
 
 		return this._voiceWs.ConnectAsync(gwuri.Uri);
@@ -461,7 +464,10 @@ public sealed class VoiceNextConnection : IDisposable
 			vdp.OpCode = 0;
 			vdp.Payload = new VoiceIdentifyPayload
 			{
-				ServerId = this.ServerData.GuildId, UserId = this.StateData.UserId.Value, SessionId = this.StateData.SessionId, Token = this.ServerData.Token
+				ServerId = this.ServerData.GuildId,
+				UserId = this.StateData.UserId.Value,
+				SessionId = this.StateData.SessionId,
+				Token = this.ServerData.Token
 			};
 			this.Resume = true;
 		}
@@ -470,7 +476,9 @@ public sealed class VoiceNextConnection : IDisposable
 			vdp.OpCode = 7;
 			vdp.Payload = new VoiceIdentifyPayload
 			{
-				ServerId = this.ServerData.GuildId, SessionId = this.StateData.SessionId, Token = this.ServerData.Token
+				ServerId = this.ServerData.GuildId,
+				SessionId = this.StateData.SessionId,
+				Token = this.ServerData.Token
 			};
 		}
 
@@ -609,7 +617,7 @@ public sealed class VoiceNextConnection : IDisposable
 			var durationModifier = hasPacket ? rawPacket.Duration / 5 : 4;
 			var cts = Math.Max(Stopwatch.GetTimestamp() - synchronizerTicks, 0);
 			if (cts < synchronizerResolution * durationModifier)
-				await Task.Delay(TimeSpan.FromTicks((long)((synchronizerResolution * durationModifier - cts) * tickResolution))).ConfigureAwait(false);
+				await Task.Delay(TimeSpan.FromTicks((long)(((synchronizerResolution * durationModifier) - cts) * tickResolution))).ConfigureAwait(false);
 
 			synchronizerTicks += synchronizerResolution * durationModifier;
 
@@ -702,7 +710,7 @@ public sealed class VoiceNextConnection : IDisposable
 				// http://www.rfcreader.com/#rfc5285_line186
 				if (opusSpan[0] == 0xBE && opusSpan[1] == 0xDE)
 				{
-					var headerLen = opusSpan[2] << 8 | opusSpan[3];
+					var headerLen = (opusSpan[2] << 8) | opusSpan[3];
 					var i = 4;
 					for (; i < headerLen + 4; i++)
 					{
@@ -867,7 +875,8 @@ public sealed class VoiceNextConnection : IDisposable
 				OpCode = 5,
 				Payload = new VoiceSpeakingPayload
 				{
-					Speaking = flags, Delay = 0
+					Speaking = flags,
+					Delay = 0
 				}
 			};
 
@@ -946,7 +955,8 @@ public sealed class VoiceNextConnection : IDisposable
 			this._voiceWs.DisconnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 			this._udpClient.Close();
 		}
-		catch { }
+		catch
+		{ }
 
 		try
 		{
@@ -990,7 +1000,8 @@ public sealed class VoiceNextConnection : IDisposable
 
 				var hbd = new VoiceDispatch
 				{
-					OpCode = 3, Payload = UnixTimestamp(dt)
+					OpCode = 3,
+					Payload = UnixTimestamp(dt)
 				};
 				var hbj = JsonConvert.SerializeObject(hbd);
 				await this.WsSendAsync(hbj).ConfigureAwait(false);
@@ -1049,7 +1060,8 @@ public sealed class VoiceNextConnection : IDisposable
 		ReadPacket(ipd, out var ip, out var port);
 		this._discoveredEndpoint = new()
 		{
-			Address = ip, Port = port
+			Address = ip,
+			Port = port
 		};
 		this._discord.Logger.LogTrace(VoiceNextEvents.VoiceHandshake, "Endpoint discovery finished - discovered endpoint is {0}:{1}", ip, port);
 
@@ -1089,7 +1101,9 @@ public sealed class VoiceNextConnection : IDisposable
 				Protocol = "udp",
 				Data = new()
 				{
-					Address = this._discoveredEndpoint.Address.ToString(), Port = (ushort)this._discoveredEndpoint.Port, Mode = selectedEncryptionMode.Key
+					Address = this._discoveredEndpoint.Address.ToString(),
+					Port = (ushort)this._discoveredEndpoint.Port,
+					Mode = selectedEncryptionMode.Key
 				}
 			}
 		};
@@ -1170,7 +1184,9 @@ public sealed class VoiceNextConnection : IDisposable
 				var foundUserInCache = this._discord.TryGetCachedUserInternal(spd.UserId.Value, out var resolvedUser);
 				var spk = new UserSpeakingEventArgs(this._discord.ServiceProvider)
 				{
-					Speaking = spd.Speaking, Ssrc = spd.Ssrc.Value, User = resolvedUser
+					Speaking = spd.Speaking,
+					Ssrc = spd.Ssrc.Value,
+					User = resolvedUser
 				};
 
 				if (foundUserInCache && this._transmittingSsrCs.TryGetValue(spk.Ssrc, out var txssrc5) && txssrc5.Id == 0)
@@ -1226,7 +1242,8 @@ public sealed class VoiceNextConnection : IDisposable
 
 				await this._userJoined.InvokeAsync(this, new(this._discord.ServiceProvider)
 				{
-					User = usrj, Ssrc = ujpd.Ssrc
+					User = usrj,
+					Ssrc = ujpd.Ssrc
 				}).ConfigureAwait(false);
 				break;
 
@@ -1243,7 +1260,8 @@ public sealed class VoiceNextConnection : IDisposable
 				var usrl = await this._discord.GetUserAsync(ulpd.UserId, true).ConfigureAwait(false);
 				await this._userLeft.InvokeAsync(this, new(this._discord.ServiceProvider)
 				{
-					User = usrl, Ssrc = txssrc.Key
+					User = usrl,
+					Ssrc = txssrc.Key
 				}).ConfigureAwait(false);
 				break;
 

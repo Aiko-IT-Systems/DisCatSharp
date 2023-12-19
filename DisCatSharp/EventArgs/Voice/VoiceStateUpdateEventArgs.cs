@@ -42,5 +42,7 @@ public class VoiceStateUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="VoiceStateUpdateEventArgs"/> class.
 	/// </summary>
-	internal VoiceStateUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal VoiceStateUpdateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

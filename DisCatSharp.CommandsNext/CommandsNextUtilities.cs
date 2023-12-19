@@ -104,7 +104,7 @@ public static class CommandsNextUtilities
 				if (!inEscape && !inBacktick && !inTripleBacktick)
 				{
 					inEscape = true;
-					if (str.IndexOf("\\`", i) == i || str.IndexOf("\\\"", i) == i || str.IndexOf("\\\\", i) == i || str.Length >= i && char.IsWhiteSpace(str[i + 1]))
+					if (str.IndexOf("\\`", i) == i || str.IndexOf("\\\"", i) == i || str.IndexOf("\\\\", i) == i || (str.Length >= i && char.IsWhiteSpace(str[i + 1])))
 						removeIndices.Add(i - startPosition);
 					i++;
 				}

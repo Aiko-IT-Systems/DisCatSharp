@@ -22,5 +22,7 @@ public class WebhooksUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="WebhooksUpdateEventArgs"/> class.
 	/// </summary>
-	internal WebhooksUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal WebhooksUpdateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

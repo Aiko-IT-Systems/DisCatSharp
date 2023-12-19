@@ -31,7 +31,8 @@ public class DiscordMessageReference
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordMessageReference"/> class.
 	/// </summary>
-	internal DiscordMessageReference() { }
+	internal DiscordMessageReference()
+	{ }
 }
 
 internal struct InternalDiscordMessageReference

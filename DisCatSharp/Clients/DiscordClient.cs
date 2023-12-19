@@ -671,10 +671,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordEmbed embed)
 		=> this.ApiClient.CreateMessageAsync(channel.Id, null, embed != null
-			? new[]
-			{
-				embed
-			}
+			? new[] { embed }
 			: null, null, null, false, false);
 
 	/// <summary>
@@ -690,10 +687,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, string content, DiscordEmbed embed)
 		=> this.ApiClient.CreateMessageAsync(channel.Id, content, embed != null
-			? new[]
-			{
-				embed
-			}
+			? new[] { embed }
 			: null, null, null, false, false);
 
 	/// <summary>
@@ -1363,11 +1357,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		channel = !message.GuildId.HasValue
 			? new DiscordDmChannel
 			{
-				Id = message.ChannelId, Discord = this, Type = ChannelType.Private
+				Id = message.ChannelId,
+				Discord = this,
+				Type = ChannelType.Private
 			}
 			: new DiscordChannel
 			{
-				Id = message.ChannelId, Discord = this
+				Id = message.ChannelId,
+				Discord = this
 			};
 
 		message.Channel = channel;
@@ -1437,7 +1434,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 				usr = new DiscordMember(mbr)
 				{
-					Discord = this, GuildId = guildId.Value
+					Discord = this,
+					GuildId = guildId.Value
 				};
 			}
 
@@ -1580,7 +1578,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 				guild.MembersInternal[xtm.User.Id] = new(xtm)
 				{
-					Discord = this, GuildId = guild.Id
+					Discord = this,
+					GuildId = guild.Id
 				};
 			}
 		}
@@ -1695,7 +1694,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			this._cancelTokenSource?.Cancel();
 			this._cancelTokenSource?.Dispose();
 		}
-		catch { }
+		catch
+		{ }
 
 		this.GuildsInternal = null;
 		this._heartbeatTask = null;

@@ -28,5 +28,7 @@ public class GuildIntegrationDeleteEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="GuildIntegrationDeleteEventArgs"/> class.
 	/// </summary>
-	internal GuildIntegrationDeleteEventArgs(IServiceProvider provider) : base(provider) { }
+	internal GuildIntegrationDeleteEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

@@ -50,7 +50,9 @@ public sealed class LavalinkTrackExceptionEventArgs : DiscordEventArgs
 		this.Track = eventArgs.Track;
 		this.Exception = new()
 		{
-			Message = eventArgs.Exception.Message, Severity = eventArgs.Exception.Severity, Cause = eventArgs.Exception.Cause
+			Message = eventArgs.Exception.Message,
+			Severity = eventArgs.Exception.Severity,
+			Cause = eventArgs.Exception.Cause
 		};
 		this.GuildId = Convert.ToUInt64(eventArgs.GuildId);
 	}

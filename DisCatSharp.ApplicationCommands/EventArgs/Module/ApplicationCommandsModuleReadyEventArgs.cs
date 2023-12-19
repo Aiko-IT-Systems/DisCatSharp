@@ -19,6 +19,7 @@ public class ApplicationCommandsModuleReadyEventArgs : DiscordEventArgs
 	/// Initializes a new instance of the <see cref="ApplicationCommandsModuleReadyEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	internal ApplicationCommandsModuleReadyEventArgs(IServiceProvider provider) : base(provider)
+	internal ApplicationCommandsModuleReadyEventArgs(IServiceProvider provider)
+		: base(provider)
 	{ }
 }

@@ -456,7 +456,7 @@ public sealed class LavalinkGuildPlayer
 		return this;
 	}
 
-	#region Queue Operations
+#region Queue Operations
 
 	/// <summary>
 	/// Adds a <see cref="LavalinkTrack"/> to the queue.
@@ -510,7 +510,7 @@ public sealed class LavalinkGuildPlayer
 		}
 	}
 
-	#endregion
+#endregion
 
 	/// <summary>
 	/// Switches the player to a new channel.
@@ -524,7 +524,17 @@ public sealed class LavalinkGuildPlayer
 			throw new ArgumentException("Cannot switch to a non-voice channel", nameof(channel));
 
 		this.ChannelId = channel.Id;
-		var vsd = new DiscordDispatchPayload { OpCode = 4, Payload = new VoiceStateUpdatePayload() { GuildId = this.GuildId, ChannelId = this.ChannelId, Deafened = deafened, Muted = false } };
+		var vsd = new DiscordDispatchPayload
+		{
+			OpCode = 4,
+			Payload = new VoiceStateUpdatePayload()
+			{
+				GuildId = this.GuildId,
+				ChannelId = this.ChannelId,
+				Deafened = deafened,
+				Muted = false
+			}
+		};
 		await this.Session.Discord.WsSendAsync(LavalinkJson.SerializeObject(vsd)).ConfigureAwait(false);
 	}
 
@@ -560,7 +570,17 @@ public sealed class LavalinkGuildPlayer
 	/// <returns></returns>
 	internal async Task DisconnectVoiceAsync()
 	{
-		var vsd = new DiscordDispatchPayload { OpCode = 4, Payload = new VoiceStateUpdatePayload() { GuildId = this.GuildId, ChannelId = null, Deafened = false, Muted = false } };
+		var vsd = new DiscordDispatchPayload
+		{
+			OpCode = 4,
+			Payload = new VoiceStateUpdatePayload()
+			{
+				GuildId = this.GuildId,
+				ChannelId = null,
+				Deafened = false,
+				Muted = false
+			}
+		};
 		await this.Session.Discord.WsSendAsync(LavalinkJson.SerializeObject(vsd)).ConfigureAwait(false);
 	}
 

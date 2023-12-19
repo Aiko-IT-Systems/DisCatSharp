@@ -75,7 +75,7 @@ internal sealed class Rtp : IDisposable
 		if (source.Length < HEADER_SIZE)
 			throw new ArgumentException("Header buffer is too short.", nameof(source));
 
-		if (source[0] != RTP_NO_EXTENSION && source[0] != RTP_EXTENSION || source[1] != RTP_VERSION)
+		if ((source[0] != RTP_NO_EXTENSION && source[0] != RTP_EXTENSION) || source[1] != RTP_VERSION)
 			throw new ArgumentException("Invalid RTP header.", nameof(source));
 
 		hasExtension = source[0] == RTP_EXTENSION;

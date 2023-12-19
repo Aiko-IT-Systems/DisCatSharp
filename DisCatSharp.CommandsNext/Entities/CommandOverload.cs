@@ -31,5 +31,6 @@ public sealed class CommandOverload
 	/// <summary>
 	/// Initializes a new instance of the <see cref="CommandOverload"/> class.
 	/// </summary>
-	internal CommandOverload() { }
+	internal CommandOverload()
+	{ }
 }

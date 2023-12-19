@@ -37,5 +37,7 @@ public class PresenceUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="PresenceUpdateEventArgs"/> class.
 	/// </summary>
-	internal PresenceUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal PresenceUpdateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

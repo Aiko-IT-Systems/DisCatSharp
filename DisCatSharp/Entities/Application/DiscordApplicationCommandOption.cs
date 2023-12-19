@@ -178,5 +178,6 @@ public class DiscordApplicationCommandOption
 	/// <summary>
 	/// Creates a new empty DiscordApplicationCommandOption.
 	/// </summary>
-	internal DiscordApplicationCommandOption() { }
+	internal DiscordApplicationCommandOption()
+	{ }
 }

@@ -142,10 +142,7 @@ public abstract class BaseDiscordClient : IDisposable
 				x.TimestampFormat = this.Configuration.LogTimestampFormat;
 				x.LogToStandardErrorThreshold = this.Configuration.MinimumLogLevel;
 			});
-			var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[]
-			{
-				configureNamedOptions
-			}, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
+			var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[] { configureNamedOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
 			var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleLoggerOptions>>(), new OptionsCache<ConsoleLoggerOptions>());
 
 			var l = new ConsoleLoggerProvider(optionsMonitor);
@@ -208,12 +205,8 @@ public abstract class BaseDiscordClient : IDisposable
 									Username = this.CurrentUser.UsernameWithDiscriminator,
 									Other = new Dictionary<string, string>()
 									{
-										{
-											"developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given"
-										},
-										{
-											"email", this.Configuration.FeedbackEmail ?? "not_given"
-										}
+										{ "developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
+										{ "email", this.Configuration.FeedbackEmail ?? "not_given" }
 									}
 								};
 						return e;
@@ -259,12 +252,8 @@ public abstract class BaseDiscordClient : IDisposable
 								Username = this.CurrentUser.UsernameWithDiscriminator,
 								Other = new Dictionary<string, string>()
 								{
-									{
-										"developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given"
-									},
-									{
-										"email", this.Configuration.FeedbackEmail ?? "not_given"
-									}
+									{ "developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
+									{ "email", this.Configuration.FeedbackEmail ?? "not_given" }
 								}
 							};
 
@@ -334,10 +323,7 @@ public abstract class BaseDiscordClient : IDisposable
 
 		if (tapp.Team == null)
 		{
-			app.Members = new(new[]
-			{
-				new DiscordUser(tapp.Owner)
-			});
+			app.Members = new(new[] { new DiscordUser(tapp.Owner) });
 			app.Team = null;
 			app.TeamName = null;
 			app.Owner = new(tapp.Owner);
@@ -349,7 +335,9 @@ public abstract class BaseDiscordClient : IDisposable
 			var members = tapp.Team.Members
 				.Select(x => new DiscordTeamMember(x)
 				{
-					TeamId = app.Team.Id, TeamName = app.Team.Name, User = new(x.User)
+					TeamId = app.Team.Id,
+					TeamName = app.Team.Name,
+					User = new(x.User)
 				})
 				.ToArray();
 
@@ -457,12 +445,8 @@ public abstract class BaseDiscordClient : IDisposable
 				Username = this.CurrentUser.UsernameWithDiscriminator,
 				Other = new Dictionary<string, string>()
 				{
-					{
-						"developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given"
-					},
-					{
-						"email", this.Configuration.FeedbackEmail ?? "not_given"
-					}
+					{ "developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
+					{ "email", this.Configuration.FeedbackEmail ?? "not_given" }
 				}
 			});
 	}
@@ -524,7 +508,8 @@ public abstract class BaseDiscordClient : IDisposable
 
 		user = new()
 		{
-			Id = userId, Discord = this
+			Id = userId,
+			Discord = this
 		};
 		return false;
 	}
@@ -543,7 +528,8 @@ public abstract class BaseDiscordClient : IDisposable
 	{
 		var fingerPrint = new List<string>
 		{
-			ev.Level.ToString(), ev.Logger
+			ev.Level.ToString(),
+			ev.Logger
 		};
 
 		if (ev.Message?.Message is not null)

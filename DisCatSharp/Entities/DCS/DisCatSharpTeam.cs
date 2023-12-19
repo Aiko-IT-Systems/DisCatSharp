@@ -178,5 +178,6 @@ public sealed class DisCatSharpTeam : SnowflakeObject
 		}
 	}
 
-	private DisCatSharpTeam() { }
+	private DisCatSharpTeam()
+	{ }
 }

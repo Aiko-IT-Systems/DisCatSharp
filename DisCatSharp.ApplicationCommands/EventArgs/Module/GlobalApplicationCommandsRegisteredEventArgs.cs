@@ -20,6 +20,7 @@ public class GlobalApplicationCommandsRegisteredEventArgs : DiscordEventArgs
 	/// Initializes a new instance of the <see cref="GlobalApplicationCommandsRegisteredEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	internal GlobalApplicationCommandsRegisteredEventArgs(IServiceProvider provider) : base(provider)
+	internal GlobalApplicationCommandsRegisteredEventArgs(IServiceProvider provider)
+		: base(provider)
 	{ }
 }

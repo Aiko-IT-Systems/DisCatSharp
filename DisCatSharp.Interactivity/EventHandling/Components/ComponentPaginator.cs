@@ -94,7 +94,8 @@ internal class ComponentPaginator : IPaginator
 			if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
 				await e.Interaction.CreateFollowupMessageAsync(new()
 				{
-					Content = this._config.ResponseMessage, IsEphemeral = true
+					Content = this._config.ResponseMessage,
+					IsEphemeral = true
 				}).ConfigureAwait(false);
 
 			return;

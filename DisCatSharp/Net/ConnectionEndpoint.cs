@@ -37,13 +37,13 @@ public struct ConnectionEndpoint
 	/// Gets the hash code of this endpoint.
 	/// </summary>
 	/// <returns>Hash code of this endpoint.</returns>
-	public override readonly int GetHashCode() => 13 + 7 * this.Hostname.GetHashCode() + 7 * this.Port;
+	public readonly override int GetHashCode() => 13 + (7 * this.Hostname.GetHashCode()) + (7 * this.Port);
 
 	/// <summary>
 	/// Gets the string representation of this connection endpoint.
 	/// </summary>
 	/// <returns>String representation of this endpoint.</returns>
-	public override readonly string ToString() => $"{this.Hostname}:{this.Port}";
+	public readonly override string ToString() => $"{this.Hostname}:{this.Port}";
 
 	/// <summary>
 	/// Returns a http string.

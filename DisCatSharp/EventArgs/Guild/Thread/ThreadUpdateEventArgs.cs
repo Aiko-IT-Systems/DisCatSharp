@@ -32,5 +32,7 @@ public class ThreadUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ThreadUpdateEventArgs"/> class.
 	/// </summary>
-	internal ThreadUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal ThreadUpdateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

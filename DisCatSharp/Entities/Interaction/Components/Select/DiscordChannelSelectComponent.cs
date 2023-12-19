@@ -77,7 +77,8 @@ public sealed class DiscordChannelSelectComponent : DiscordBaseSelectComponent
 	/// <summary>
 	/// Constructs a new <see cref="DiscordChannelSelectComponent"/>.
 	/// </summary>
-	public DiscordChannelSelectComponent() : base()
+	public DiscordChannelSelectComponent()
+		: base()
 	{
 		this.Type = ComponentType.ChannelSelect;
 	}

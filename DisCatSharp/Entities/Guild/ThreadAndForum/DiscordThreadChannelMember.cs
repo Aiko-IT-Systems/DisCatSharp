@@ -80,7 +80,7 @@ public class DiscordThreadChannelMember : SnowflakeObject, IEquatable<DiscordThr
 	/// <param name="e"><see cref="DiscordThreadChannel"/> to compare to.</param>
 	/// <returns>Whether the <see cref="DiscordThreadChannel"/> is equal to this <see cref="DiscordThreadChannelMember"/>.</returns>
 	public bool Equals(DiscordThreadChannelMember e)
-		=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id && this.UserId == e.UserId);
+		=> e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.UserId == e.UserId));
 
 	/// <summary>
 	/// Gets the hash code for this <see cref="DiscordThreadChannelMember"/>.
@@ -100,7 +100,7 @@ public class DiscordThreadChannelMember : SnowflakeObject, IEquatable<DiscordThr
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && (o1 == null && o2 == null || e1.Id == e2.Id && e1.UserId == e2.UserId);
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1.UserId == e2.UserId));
 	}
 
 	/// <summary>
@@ -118,7 +118,9 @@ public class DiscordThreadChannelMember : SnowflakeObject, IEquatable<DiscordThr
 	internal DiscordThreadChannelMember()
 		: base(new()
 		{
-			"muted", "mute_config", "guild_id"
+			"muted",
+			"mute_config",
+			"guild_id"
 		})
 	{ }
 }

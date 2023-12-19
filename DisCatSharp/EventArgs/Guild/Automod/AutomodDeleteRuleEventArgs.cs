@@ -14,5 +14,7 @@ public class AutomodRuleDeleteEventArgs : DiscordEventArgs
 	/// </summary>
 	public AutomodRule Rule { get; internal set; }
 
-	public AutomodRuleDeleteEventArgs(IServiceProvider provider) : base(provider) { }
+	public AutomodRuleDeleteEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

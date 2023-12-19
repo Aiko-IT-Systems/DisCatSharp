@@ -20,5 +20,7 @@ public class ZombiedEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ZombiedEventArgs"/> class.
 	/// </summary>
-	internal ZombiedEventArgs(IServiceProvider provider) : base(provider) { }
+	internal ZombiedEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

@@ -27,5 +27,7 @@ public class ChannelPinsUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ChannelPinsUpdateEventArgs"/> class.
 	/// </summary>
-	internal ChannelPinsUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal ChannelPinsUpdateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

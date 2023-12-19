@@ -63,7 +63,7 @@ public class DiscordStoreSku : SnowflakeObject, IEquatable<DiscordStoreSku>
 
 		return (o1 != null || o2 == null)
 		       && (o1 == null || o2 != null)
-		       && (o1 == null && o2 == null || e1.Id == e2.Id);
+		       && ((o1 == null && o2 == null) || e1.Id == e2.Id);
 	}
 
 	/// <summary>

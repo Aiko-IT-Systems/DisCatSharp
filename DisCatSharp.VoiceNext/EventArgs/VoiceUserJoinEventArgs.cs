@@ -23,5 +23,7 @@ public sealed class VoiceUserJoinEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="VoiceUserJoinEventArgs"/> class.
 	/// </summary>
-	internal VoiceUserJoinEventArgs(IServiceProvider provider) : base(provider) { }
+	internal VoiceUserJoinEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

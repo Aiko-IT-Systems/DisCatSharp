@@ -27,5 +27,7 @@ public class VoiceChannelStatusUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="VoiceChannelStatusUpdateEventArgs"/> class.
 	/// </summary>
-	internal VoiceChannelStatusUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal VoiceChannelStatusUpdateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

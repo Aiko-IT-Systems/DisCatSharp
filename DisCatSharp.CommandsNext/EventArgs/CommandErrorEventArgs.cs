@@ -16,6 +16,7 @@ public class CommandErrorEventArgs : CommandEventArgs
 	/// Initializes a new instance of the <see cref="CommandErrorEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	public CommandErrorEventArgs(IServiceProvider provider) : base(provider)
+	public CommandErrorEventArgs(IServiceProvider provider)
+		: base(provider)
 	{ }
 }

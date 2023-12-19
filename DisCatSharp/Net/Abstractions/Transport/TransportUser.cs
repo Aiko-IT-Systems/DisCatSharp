@@ -146,7 +146,9 @@ internal class TransportUser : ObservableApiObject
 	internal TransportUser()
 		: base(new()
 		{
-			"display_name", "linked_users", "banner_color"
+			"display_name",
+			"linked_users",
+			"banner_color"
 		})
 	{ }
 

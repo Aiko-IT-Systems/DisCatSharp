@@ -733,7 +733,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <param name="e"><see cref="DiscordMember"/> to compare to.</param>
 	/// <returns>Whether the <see cref="DiscordMember"/> is equal to this <see cref="DiscordMember"/>.</returns>
 	public bool Equals(DiscordMember e)
-		=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id && this.GuildId == e.GuildId);
+		=> e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.GuildId == e.GuildId));
 
 	/// <summary>
 	/// Gets the hash code for this <see cref="DiscordMember"/>.
@@ -743,8 +743,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	{
 		var hash = 13;
 
-		hash = hash * 7 + this.Id.GetHashCode();
-		hash = hash * 7 + this.GuildId.GetHashCode();
+		hash = (hash * 7) + this.Id.GetHashCode();
+		hash = (hash * 7) + this.GuildId.GetHashCode();
 
 		return hash;
 	}
@@ -760,7 +760,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && (o1 == null && o2 == null || e1.Id == e2.Id && e1.GuildId == e2.GuildId);
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1.GuildId == e2.GuildId));
 	}
 
 	/// <summary>

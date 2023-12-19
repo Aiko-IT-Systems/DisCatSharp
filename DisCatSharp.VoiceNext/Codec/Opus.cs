@@ -160,8 +160,10 @@ public class Opus : IDisposable
 		Interop.OpusDestroyEncoder(this._encoder);
 
 		lock (this._managedDecoders)
+		{
 			foreach (var decoder in this._managedDecoders)
 				decoder.Dispose();
+		}
 
 		GC.SuppressFinalize(this);
 	}

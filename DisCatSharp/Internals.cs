@@ -32,7 +32,8 @@ public static class Internals
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Internals"/> class.
 	/// </summary>
-	static Internals() { }
+	static Internals()
+	{ }
 
 	/// <summary>
 	/// Whether the <see cref="DiscordChannel"/> is joinable via voice.

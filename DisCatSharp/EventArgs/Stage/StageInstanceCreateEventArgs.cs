@@ -22,5 +22,7 @@ public class StageInstanceCreateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="StageInstanceCreateEventArgs"/> class.
 	/// </summary>
-	internal StageInstanceCreateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal StageInstanceCreateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

@@ -22,5 +22,7 @@ public class ChannelDeleteEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ChannelDeleteEventArgs"/> class.
 	/// </summary>
-	internal ChannelDeleteEventArgs(IServiceProvider provider) : base(provider) { }
+	internal ChannelDeleteEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

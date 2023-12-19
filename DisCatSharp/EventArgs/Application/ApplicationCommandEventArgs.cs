@@ -23,6 +23,7 @@ public sealed class ApplicationCommandEventArgs : DiscordEventArgs
 	/// Initializes a new instance of the <see cref="ApplicationCommandEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	public ApplicationCommandEventArgs(IServiceProvider provider) : base(provider)
+	public ApplicationCommandEventArgs(IServiceProvider provider)
+		: base(provider)
 	{ }
 }

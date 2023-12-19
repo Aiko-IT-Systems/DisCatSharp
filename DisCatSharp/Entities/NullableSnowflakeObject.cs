@@ -25,5 +25,6 @@ public abstract class NullableSnowflakeObject : ObservableApiObject
 	/// <summary>
 	/// Initializes a new instance of the <see cref="NullableSnowflakeObject"/> class.
 	/// </summary>
-	internal NullableSnowflakeObject() { }
+	internal NullableSnowflakeObject()
+	{ }
 }

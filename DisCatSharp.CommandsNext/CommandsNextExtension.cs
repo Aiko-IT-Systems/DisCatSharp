@@ -244,7 +244,8 @@ public class CommandsNextExtension : BaseExtension
 		{
 			await this._error.InvokeAsync(this, new(this.Client.ServiceProvider)
 			{
-				Context = ctx, Exception = new CommandNotFoundException(fname)
+				Context = ctx,
+				Exception = new CommandNotFoundException(fname)
 			}).ConfigureAwait(false);
 			return;
 		}
@@ -369,14 +370,16 @@ public class CommandsNextExtension : BaseExtension
 			else
 				await this._error.InvokeAsync(this, new(this.Client.ServiceProvider)
 				{
-					Context = res.Context, Exception = res.Exception
+					Context = res.Context,
+					Exception = res.Exception
 				}).ConfigureAwait(false);
 		}
 		catch (Exception ex)
 		{
 			await this._error.InvokeAsync(this, new(this.Client.ServiceProvider)
 			{
-				Context = ctx, Exception = ex
+				Context = ctx,
+				Exception = ex
 			}).ConfigureAwait(false);
 		}
 		finally
@@ -688,7 +691,7 @@ public class CommandsNextExtension : BaseExtension
 		if (cmd.Parent != null)
 			return;
 
-		if (this._topLevelCommands.ContainsKey(cmd.Name) || cmd.Aliases != null && cmd.Aliases.Any(xs => this._topLevelCommands.ContainsKey(xs)))
+		if (this._topLevelCommands.ContainsKey(cmd.Name) || (cmd.Aliases != null && cmd.Aliases.Any(xs => this._topLevelCommands.ContainsKey(xs))))
 			throw new DuplicateCommandException(cmd.QualifiedName);
 
 		this._topLevelCommands[cmd.Name] = cmd;
@@ -732,8 +735,8 @@ public class CommandsNextExtension : BaseExtension
 					}
 
 					cmd = ctx.Config.CaseSensitive
-						? searchIn.FirstOrDefault(xc => xc.Name == c || xc.Aliases != null && xc.Aliases.Contains(c))
-						: searchIn.FirstOrDefault(xc => xc.Name.ToLowerInvariant() == c.ToLowerInvariant() || xc.Aliases != null && xc.Aliases.Select(xs => xs.ToLowerInvariant()).Contains(c.ToLowerInvariant()));
+						? searchIn.FirstOrDefault(xc => xc.Name == c || (xc.Aliases != null && xc.Aliases.Contains(c)))
+						: searchIn.FirstOrDefault(xc => xc.Name.ToLowerInvariant() == c.ToLowerInvariant() || (xc.Aliases != null && xc.Aliases.Select(xs => xs.ToLowerInvariant()).Contains(c.ToLowerInvariant())));
 
 					if (cmd == null)
 						break;
@@ -918,10 +921,7 @@ public class CommandsNextExtension : BaseExtension
 		var m = this._convertGeneric.MakeGenericMethod(type);
 		try
 		{
-			return await (m.Invoke(this, new object[]
-			{
-				value, ctx
-			}) as Task<object>).ConfigureAwait(false);
+			return await (m.Invoke(this, new object[] { value, ctx }) as Task<object>).ConfigureAwait(false);
 		}
 		catch (TargetInvocationException ex)
 		{

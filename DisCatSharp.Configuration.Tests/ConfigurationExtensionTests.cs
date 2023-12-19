@@ -24,28 +24,16 @@ public class ConfigurationExtensionTests
 
 	private class ClassWithArray
 	{
-		public int[] Values { get; set; } =
-		{
-			1, 2, 3, 4, 5
-		};
+		public int[] Values { get; set; } = { 1, 2, 3, 4, 5 };
 
-		public string[] Strings { get; set; } =
-		{
-			"1", "2", "3", "4", "5"
-		};
+		public string[] Strings { get; set; } = { "1", "2", "3", "4", "5" };
 	}
 
 	private class ClassWithEnumerable
 	{
-		public IEnumerable<int> Values { get; set; } = new[]
-		{
-			1, 2, 3, 4, 5
-		};
+		public IEnumerable<int> Values { get; set; } = new[] { 1, 2, 3, 4, 5 };
 
-		public IEnumerable<string> Strings { get; set; } = new[]
-		{
-			"1", "2", "3", "4", "5"
-		};
+		public IEnumerable<string> Strings { get; set; } = new[] { "1", "2", "3", "4", "5" };
 	}
 
 	private class ClassWithList
@@ -114,63 +102,45 @@ public class ConfigurationExtensionTests
 	private IConfiguration SampleConfig() => new ConfigurationBuilder()
 		.AddInMemoryCollection(new Dictionary<string, string>
 		{
-			{
-				"Sample:Amount", "200"
-			},
-			{
-				"Sample:Email", "test@gmail.com"
-			}
+			{ "Sample:Amount", "200" },
+			{ "Sample:Email", "test@gmail.com" }
 		})
 		.Build();
 
 	private IConfiguration SampleClass2Configuration_Default() => new ConfigurationBuilder()
 		.AddInMemoryCollection(new Dictionary<string, string>
 		{
-			{
-				"Random:Stuff", "Meow"
-			},
-			{
-				"SampleClass2:Name", "Purfection"
-			}
+			{ "Random:Stuff", "Meow" },
+			{ "SampleClass2:Name", "Purfection" }
 		})
 		.Build();
 
 	private IConfiguration SampleClass2Configuration_Change() => new ConfigurationBuilder()
 		.AddInMemoryCollection(new Dictionary<string, string>
 		{
-			{
-				"SampleClass:Timeout", "01:30:00"
-			},
-			{
-				"SampleClass:NotValid", "Something"
-			}
+			{ "SampleClass:Timeout", "01:30:00" },
+			{ "SampleClass:NotValid", "Something" }
 		})
 		.Build();
 
 	private IConfiguration SampleClass2EnumerableTest() => new ConfigurationBuilder()
 		.AddInMemoryCollection(new Dictionary<string, string>
 		{
-			{
-				"SampleClass:EnumerableTest", "[\"10\",\"20\",\"30\"]"
-			}
+			{ "SampleClass:EnumerableTest", "[\"10\",\"20\",\"30\"]" }
 		})
 		.Build();
 
 	private IConfiguration SampleClass2ArrayTest() => new ConfigurationBuilder()
 		.AddInMemoryCollection(new Dictionary<string, string>
 		{
-			{
-				"SampleClass:ArrayTest", "[\"10\",\"20\",\"30\"]"
-			}
+			{ "SampleClass:ArrayTest", "[\"10\",\"20\",\"30\"]" }
 		})
 		.Build();
 
 	private IConfiguration SampleClass2ListTest() => new ConfigurationBuilder()
 		.AddInMemoryCollection(new Dictionary<string, string>
 		{
-			{
-				"SampleClass:ListTest", "[\"10\",\"20\",\"30\"]"
-			}
+			{ "SampleClass:ListTest", "[\"10\",\"20\",\"30\"]" }
 		})
 		.Build();
 #pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.

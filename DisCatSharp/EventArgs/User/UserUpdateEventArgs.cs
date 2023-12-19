@@ -22,5 +22,7 @@ public class UserUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="UserUpdateEventArgs"/> class.
 	/// </summary>
-	internal UserUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal UserUpdateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

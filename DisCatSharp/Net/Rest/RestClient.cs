@@ -117,12 +117,16 @@ internal sealed class RestClient : IDisposable
 
 		var httphandler = new HttpClientHandler
 		{
-			UseCookies = false, AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip, UseProxy = proxy != null, Proxy = proxy
+			UseCookies = false,
+			AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip,
+			UseProxy = proxy != null,
+			Proxy = proxy
 		};
 
 		this.HttpClient = new(httphandler)
 		{
-			BaseAddress = new(Utilities.GetApiBaseUri(this._discord?.Configuration)), Timeout = timeout
+			BaseAddress = new(Utilities.GetApiBaseUri(this._discord?.Configuration)),
+			Timeout = timeout
 		};
 
 		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
@@ -578,7 +582,8 @@ internal sealed class RestClient : IDisposable
 							if (this._discord is not null && this._discord is DiscordClient)
 								await (this._discord as DiscordClient).RateLimitHitInternal.InvokeAsync(this._discord as DiscordClient, new(this._discord.ServiceProvider)
 								{
-									Exception = ex as RateLimitException, ApiEndpoint = request.Url.AbsoluteUri
+									Exception = ex as RateLimitException,
+									ApiEndpoint = request.Url.AbsoluteUri
 								});
 							this._logger.LogError(LoggerEvents.RatelimitHit, "Ratelimit hit, requeuing request to {url}", request.Url.AbsoluteUri);
 							await wait.ConfigureAwait(false);
@@ -607,12 +612,8 @@ internal sealed class RestClient : IDisposable
 					{
 						Dictionary<string, object> debugInfo = new()
 						{
-							{
-								"route", request.Route
-							},
-							{
-								"time", DateTimeOffset.UtcNow
-							}
+							{ "route", request.Route },
+							{ "time", DateTimeOffset.UtcNow }
 						};
 						senex.AddSentryContext("Request", debugInfo);
 						this._discord.Sentry.CaptureException(senex);
@@ -814,18 +815,10 @@ internal sealed class RestClient : IDisposable
 
 			var content = new MultipartFormDataContent(boundary)
 			{
-				{
-					new StringContent(mpsrequest.Name), "name"
-				},
-				{
-					new StringContent(mpsrequest.Tags), "tags"
-				},
-				{
-					new StringContent(mpsrequest.Description), "description"
-				},
-				{
-					sc, "file", fileName
-				}
+				{ new StringContent(mpsrequest.Name), "name" },
+				{ new StringContent(mpsrequest.Tags), "tags" },
+				{ new StringContent(mpsrequest.Description), "description" },
+				{ sc, "file", fileName }
 			};
 
 			req.Content = content;
@@ -1018,7 +1011,8 @@ internal sealed class RestClient : IDisposable
 			{
 				await Task.Delay(this._bucketCleanupDelay, this._bucketCleanerTokenSource.Token).ConfigureAwait(false);
 			}
-			catch { }
+			catch
+			{ }
 
 			if (this._disposed)
 				return;
@@ -1028,7 +1022,7 @@ internal sealed class RestClient : IDisposable
 			{
 				var bucket = this._hashesToBuckets.Values.FirstOrDefault(x => x.RouteHashes.Contains(key));
 
-				if (bucket == null || bucket != null && bucket.LastAttemptAt.AddSeconds(5) < DateTimeOffset.UtcNow)
+				if (bucket == null || (bucket != null && bucket.LastAttemptAt.AddSeconds(5) < DateTimeOffset.UtcNow))
 					_ = this._requestQueue.TryRemove(key, out _);
 			}
 
@@ -1100,7 +1094,8 @@ internal sealed class RestClient : IDisposable
 			this._bucketCleanerTokenSource?.Dispose();
 			this.HttpClient?.Dispose();
 		}
-		catch { }
+		catch
+		{ }
 
 		this._routesToHashes.Clear();
 		this._hashesToBuckets.Clear();

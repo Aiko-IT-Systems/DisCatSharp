@@ -57,7 +57,9 @@ internal static unsafe class Bindings
 
 		fixed (byte* pcmPointer = pcm)
 		fixed (byte* dataPointer = data)
+		{
 			length = opus_encode(encoder, pcmPointer, frameSize, dataPointer, data.Length);
+		}
 
 		if (length < 0)
 		{
@@ -80,7 +82,9 @@ internal static unsafe class Bindings
 
 		fixed (byte* dataPointer = data)
 		fixed (byte* pcmPointer = pcm)
+		{
 			length = opus_decode(decoder, dataPointer, data.Length, pcmPointer, frameSize, useFec ? 1 : 0);
+		}
 
 		if (length < 0)
 		{
@@ -96,7 +100,9 @@ internal static unsafe class Bindings
 		var length = 0;
 
 		fixed (byte* pcmPointer = pcm)
+		{
 			length = opus_decode(decoder, null, 0, pcmPointer, frameSize, 1);
+		}
 
 		if (length < 0)
 		{
@@ -120,7 +126,10 @@ internal static unsafe class Bindings
 
 		return new()
 		{
-			ChannelCount = channels, FrameCount = frames, SamplesPerFrame = samplesPerFrame, FrameSize = frames * samplesPerFrame
+			ChannelCount = channels,
+			FrameCount = frames,
+			SamplesPerFrame = samplesPerFrame,
+			FrameSize = frames * samplesPerFrame
 		};
 	}
 

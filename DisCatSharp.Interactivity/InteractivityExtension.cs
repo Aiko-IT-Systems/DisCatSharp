@@ -990,7 +990,8 @@ public class InteractivityExtension : BaseExtension
 			InteractionResponseBehavior.Ack => interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate),
 			InteractionResponseBehavior.Respond => interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new()
 			{
-				Content = this.Config.ResponseMessage, IsEphemeral = true
+				Content = this.Config.ResponseMessage,
+				IsEphemeral = true
 			}),
 			InteractionResponseBehavior.Ignore => Task.CompletedTask,
 			_ => throw new ArgumentException("Unknown enum value.")

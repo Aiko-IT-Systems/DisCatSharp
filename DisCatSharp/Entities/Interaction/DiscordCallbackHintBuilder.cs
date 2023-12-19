@@ -25,7 +25,9 @@ public sealed class DiscordCallbackHintBuilder
 	{
 		this.CallbackHints.Add(new()
 		{
-			AllowedCallbackType = intendedCallbackType, Ephemerality = intendedCallbackEphemerality, RequiredPermissions = intendedRequiredPermissions
+			AllowedCallbackType = intendedCallbackType,
+			Ephemerality = intendedCallbackEphemerality,
+			RequiredPermissions = intendedRequiredPermissions
 		});
 		return this;
 	}

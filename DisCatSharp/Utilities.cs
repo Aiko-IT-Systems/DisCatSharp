@@ -220,7 +220,7 @@ public static class Utilities
 		var regex = new Regex(@"<@!?(\d+)>", RegexOptions.ECMAScript | RegexOptions.Compiled);
 		var matches = regex.Matches(message.Content);
 		return from Match match in matches
-			select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+		       select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -233,7 +233,7 @@ public static class Utilities
 		var regex = new Regex(@"<@&(\d+)>", RegexOptions.ECMAScript);
 		var matches = regex.Matches(message.Content);
 		return from Match match in matches
-			select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+		       select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -246,7 +246,7 @@ public static class Utilities
 		var regex = new Regex(@"<#(\d+)>", RegexOptions.ECMAScript);
 		var matches = regex.Matches(message.Content);
 		return from Match match in matches
-			select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+		       select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -259,7 +259,7 @@ public static class Utilities
 		var regex = new Regex(@"<a?:([a-zA-Z0-9_]+):(\d+)>", RegexOptions.ECMAScript);
 		var matches = regex.Matches(message.Content);
 		return from Match match in matches
-			select ulong.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+		       select ulong.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>

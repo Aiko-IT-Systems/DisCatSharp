@@ -19,7 +19,8 @@ public class DiscordThreadResult : ObservableApiObject
 			? new()
 			: this.Threads.Select(t => new
 			{
-				t.Id, t
+				t.Id,
+				t
 			}).ToDictionary(t => t.Id, t => t.t);
 
 	[JsonProperty("threads", NullValueHandling = NullValueHandling.Ignore)]

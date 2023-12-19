@@ -68,7 +68,9 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 			throw new ArgumentNullException(nameof(handler));
 
 		lock (this._lock)
+		{
 			this._handlers = this._handlers.Add(handler);
+		}
 	}
 
 	/// <summary>
@@ -81,7 +83,9 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 			throw new ArgumentNullException(nameof(handler));
 
 		lock (this._lock)
+		{
 			this._handlers = this._handlers.Remove(handler);
+		}
 	}
 
 	/// <summary>

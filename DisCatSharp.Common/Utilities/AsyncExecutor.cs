@@ -42,9 +42,7 @@ public class AsyncExecutor
 
 			// retrieve any exceptions or cancellation status
 			if (t.IsFaulted)
-			{
 				stateRef!.Exception = t.Exception?.InnerExceptions.Count is 1 ? t.Exception.InnerException : t.Exception; // unwrap if 1
-			}
 			else if (t.IsCanceled)
 				stateRef!.Exception = new TaskCanceledException(t);
 
@@ -87,9 +85,7 @@ public class AsyncExecutor
 
 			// retrieve any exceptions or cancellation status
 			if (t.IsFaulted)
-			{
 				stateRef!.Exception = t.Exception?.InnerExceptions.Count is 1 ? t.Exception.InnerException : t.Exception; // unwrap if 1
-			}
 			else if (t.IsCanceled)
 				stateRef!.Exception = new TaskCanceledException(t);
 

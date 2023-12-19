@@ -13,7 +13,8 @@ public class ServiceProviderTests
 
 	private class Handler
 	{
-		public Handler(Resource res) { }
+		public Handler(Resource res)
+		{ }
 	}
 
 	[Fact]
@@ -27,7 +28,8 @@ public class ServiceProviderTests
 
 		var richClient = new DiscordClient(new()
 		{
-			Token = "2", ServiceProvider = new ServiceCollection().AddSingleton<Resource>().BuildServiceProvider()
+			Token = "2",
+			ServiceProvider = new ServiceCollection().AddSingleton<Resource>().BuildServiceProvider()
 		});
 		richClient.RegisterEventHandler<Handler>(); // May not throw.
 	}

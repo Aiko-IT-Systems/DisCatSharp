@@ -42,5 +42,7 @@ public class GuildMemberTimeoutRemoveEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="GuildMemberTimeoutRemoveEventArgs"/> class.
 	/// </summary>
-	internal GuildMemberTimeoutRemoveEventArgs(IServiceProvider provider) : base(provider) { }
+	internal GuildMemberTimeoutRemoveEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

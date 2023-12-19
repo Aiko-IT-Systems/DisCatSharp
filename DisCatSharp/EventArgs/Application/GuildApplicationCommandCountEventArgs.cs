@@ -33,6 +33,7 @@ public sealed class GuildApplicationCommandCountEventArgs : DiscordEventArgs
 	/// Initializes a new instance of the <see cref="GuildApplicationCommandCountEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	public GuildApplicationCommandCountEventArgs(IServiceProvider provider) : base(provider)
+	public GuildApplicationCommandCountEventArgs(IServiceProvider provider)
+		: base(provider)
 	{ }
 }

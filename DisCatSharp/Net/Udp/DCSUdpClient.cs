@@ -108,7 +108,8 @@ internal class DcsUdpClient : BaseUdpClient
 				var packet = await this._client.ReceiveAsync().ConfigureAwait(false);
 				this._packetQueue.Add(packet.Buffer);
 			}
-			catch (Exception) { }
+			catch (Exception)
+			{ }
 	}
 
 	/// <summary>

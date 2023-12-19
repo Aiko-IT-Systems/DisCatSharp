@@ -80,7 +80,8 @@ internal sealed class SocketLock : IDisposable
 			this._timeoutCancelSource.Cancel();
 			this._timeoutCancelSource.Dispose();
 		}
-		catch { }
+		catch
+		{ }
 
 		this._timeoutCancelSource = null;
 
@@ -105,7 +106,8 @@ internal sealed class SocketLock : IDisposable
 			this._timeoutCancelSource?.Cancel();
 			this._timeoutCancelSource?.Dispose();
 		}
-		catch { }
+		catch
+		{ }
 	}
 
 	/// <summary>

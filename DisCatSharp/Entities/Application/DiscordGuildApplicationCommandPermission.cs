@@ -44,7 +44,8 @@ public sealed class DiscordGuildApplicationCommandPermission : SnowflakeObject, 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordGuildApplicationCommandPermission"/> class.
 	/// </summary>
-	internal DiscordGuildApplicationCommandPermission() { }
+	internal DiscordGuildApplicationCommandPermission()
+	{ }
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordGuildApplicationCommandPermission"/> object is equal to another object.
