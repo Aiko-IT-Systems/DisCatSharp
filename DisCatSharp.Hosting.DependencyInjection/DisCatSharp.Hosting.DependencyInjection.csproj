@@ -11,7 +11,7 @@
     <PropertyGroup>
       <PackageId>DisCatSharp.Hosting.DependencyInjection</PackageId>
       <Description>Dependency Injection for the DisCatSharp Hosting Extension.</Description>
-	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Net7,Hosting,Web,Dependency Injection</PackageTags>
+	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Net8,Hosting,Web,Dependency Injection</PackageTags>
 
     </PropertyGroup>
 
