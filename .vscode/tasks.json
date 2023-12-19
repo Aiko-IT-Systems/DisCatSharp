@@ -1,35 +1,4 @@
 {
     "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "buildDebug",
-            "command": "./rebuild-all.ps1 artifacts -configuration Debug",
-            "type": "shell",
-            "group": "build",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "buildRelease",
-            "command": "./rebuild-all.ps1 artifacts -configuration Release",
-            "type": "shell",
-            "group": "build",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "buildReleaseDocs",
-            "command": "./rebuild-all.ps1 artifacts -configuration Release -docspath DisCatSharp.Docs -docspackagename dcs-docs",
-            "type": "shell",
-            "group": "build",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": "$msCompile"
-        }
-    ]
+    "tasks": []
 }

@@ -31,7 +31,6 @@ jobs:
         dotnet-version: |
           8.0.100
           7.0.404
-          6.x
     - name: Build library
       run: dotnet build -c Release -v minimal DisCatSharp.sln
     - name: Test library
@@ -50,7 +49,6 @@ jobs:
         dotnet-version: |
           8.0.100
           7.0.404
-          6.x
     - name: Build library
       run: dotnet build -c Release -v minimal DisCatSharp.sln
     - name: Publish library

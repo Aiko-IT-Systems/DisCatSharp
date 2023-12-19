@@ -35,7 +35,6 @@ jobs:
           dotnet-version: |
             8.0.100
             7.0.404
-            6.x
       - name: Restore dependencies
         run: dotnet restore DisCatSharp.sln
       - name: Build library as full release
