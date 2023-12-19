@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization;
+using System.Runtime.CompilerServices;
 
 namespace DisCatSharp.Common.Utilities;
 
@@ -21,7 +21,7 @@ public static class ReflectionUtilities
 	/// <param name="t">Type of the object to instantiate.</param>
 	/// <returns>Empty, uninitialized object of specified type.</returns>
 	public static object CreateEmpty(this Type t)
-		=> FormatterServices.GetUninitializedObject(t);
+		=> RuntimeHelpers.GetUninitializedObject(t);
 
 	/// <summary>
 	/// <para>Creates an empty, uninitialized instance of type <typeparamref name="T"/>.</para>
@@ -33,7 +33,7 @@ public static class ReflectionUtilities
 	/// <typeparam name="T">Type of the object to instantiate.</typeparam>
 	/// <returns>Empty, uninitialized object of specified type.</returns>
 	public static T CreateEmpty<T>()
-		=> (T)FormatterServices.GetUninitializedObject(typeof(T));
+		=> (T)RuntimeHelpers.GetUninitializedObject(typeof(T));
 
 	/// <summary>
 	/// Converts a given object into a dictionary of property name to property value mappings.
