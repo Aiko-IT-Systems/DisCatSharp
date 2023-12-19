@@ -39,10 +39,7 @@ internal sealed class DiscordApiClientHook
 	internal async Task<ClydeProfile> GetClydeProfileAsync(ulong profileId)
 	{
 		var route = $"{Endpoints.CLYDE_PROFILES}/:profile_id";
-		var bucket = this.ApiClient.Rest.GetBucket(RestRequestMethod.GET, route, new
-		{
-			profile_id = profileId
-		}, out var path);
+		var bucket = this.ApiClient.Rest.GetBucket(RestRequestMethod.GET, route, new { profile_id = profileId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.ApiClient.Discord.Configuration);
 		var res = await this.ApiClient.DoRequestAsync(this.ApiClient.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -59,10 +56,7 @@ internal sealed class DiscordApiClientHook
 	internal async Task<ClydeSettings> GetClydeSettingsAsync(ulong guildId)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.CLYDE_SETTINGS}";
-		var bucket = this.ApiClient.Rest.GetBucket(RestRequestMethod.GET, route, new
-		{
-			guild_id = guildId
-		}, out var path);
+		var bucket = this.ApiClient.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.ApiClient.Discord.Configuration);
 		var res = await this.ApiClient.DoRequestAsync(this.ApiClient.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -79,16 +73,10 @@ internal sealed class DiscordApiClientHook
 	[DiscordDeprecated]
 	internal async Task<ClydeSettings> ModifyClydeSettingsAsync(ulong guildId, ulong profileId)
 	{
-		ClydeSettingsProfileIdOnlyUpdatePayload pld = new()
-		{
-			ClydeProfileId = profileId
-		};
+		ClydeSettingsProfileIdOnlyUpdatePayload pld = new() { ClydeProfileId = profileId };
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.CLYDE_SETTINGS}";
-		var bucket = this.ApiClient.Rest.GetBucket(RestRequestMethod.PATCH, route, new
-		{
-			guild_id = guildId
-		}, out var path);
+		var bucket = this.ApiClient.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.ApiClient.Discord.Configuration);
 		var res = await this.ApiClient.DoRequestAsync(this.ApiClient.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
@@ -128,10 +116,7 @@ internal sealed class DiscordApiClientHook
 		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.CLYDE_SETTINGS}";
-		var bucket = this.ApiClient.Rest.GetBucket(RestRequestMethod.PATCH, route, new
-		{
-			guild_id = guildId
-		}, out var path);
+		var bucket = this.ApiClient.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.ApiClient.Discord.Configuration);
 		var res = await this.ApiClient.DoRequestAsync(this.ApiClient.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
@@ -149,14 +134,10 @@ internal sealed class DiscordApiClientHook
 	[DiscordDeprecated]
 	internal async Task<string> GenerateClydePersonalityAsync(string? basePersonality = null)
 	{
-		PersonalityGenerationPayload pld = new()
-		{
-			Personality = basePersonality ?? string.Empty
-		};
+		PersonalityGenerationPayload pld = new() { Personality = basePersonality ?? string.Empty };
 
 		var route = $"{Endpoints.CLYDE_PROFILES}{Endpoints.GENERATE_PERSONALITY}";
-		var bucket = this.ApiClient.Rest.GetBucket(RestRequestMethod.POST, route, new
-			{ }, out var path);
+		var bucket = this.ApiClient.Rest.GetBucket(RestRequestMethod.POST, route, new { }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.ApiClient.Discord.Configuration);
 		var res = await this.ApiClient.DoRequestAsync(this.ApiClient.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);

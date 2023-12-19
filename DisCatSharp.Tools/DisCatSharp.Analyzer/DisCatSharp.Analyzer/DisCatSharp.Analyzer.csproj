@@ -18,8 +18,10 @@
 	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
 	<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-	<IncludeSymbols>True</IncludeSymbols>
-	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<IncludeSymbols>False</IncludeSymbols>
+	<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+	<RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+	<RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -38,7 +40,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.8.37222" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.7.37357" />
   </ItemGroup>
 
   <ItemGroup>

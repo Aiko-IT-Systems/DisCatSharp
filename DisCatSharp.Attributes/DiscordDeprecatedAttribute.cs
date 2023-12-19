@@ -19,5 +19,6 @@ public sealed class DiscordDeprecatedAttribute : Attribute
 	}
 
 	public DiscordDeprecatedAttribute()
-	{ }
+	{
+	}
 }

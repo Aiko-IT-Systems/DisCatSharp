@@ -92,3 +92,10 @@ DCS0200 |  Usage   |     Info | DCS0200_Requires_Feature_Attribute_Analyzer, [Do
 Rule ID | Category | Severity | Notes
 --------|----------|----------|--------------------
 DCS0200 |  Usage   |     Info | DCS0200_Requires_Feature_Attribute_Analyzer, [Documentation](https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0200)
+
+## Release 6.2.1
+
+### Changed Rules
+
+Rule ID | Category | Severity | Notes
+--------|----------|----------|--------------------
