@@ -19,6 +19,5 @@ public sealed class DiscordInExperimentAttribute : Attribute
 	}
 
 	public DiscordInExperimentAttribute()
-	{
-	}
+	{ }
 }

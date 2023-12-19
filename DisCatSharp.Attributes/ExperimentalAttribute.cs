@@ -19,6 +19,5 @@ public sealed class ExperimentalAttribute : Attribute
 	}
 
 	public ExperimentalAttribute()
-	{
-	}
+	{ }
 }

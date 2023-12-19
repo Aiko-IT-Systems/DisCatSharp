@@ -19,6 +19,5 @@ public sealed class DeprecatedAttribute : Attribute
 	}
 
 	public DeprecatedAttribute()
-	{
-	}
+	{ }
 }
