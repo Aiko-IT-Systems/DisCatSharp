@@ -33,7 +33,7 @@ Documentation: https://docs.dcs.aitsys.dev/articles/modules/commandsnext/intro.h
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.0">
+    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
