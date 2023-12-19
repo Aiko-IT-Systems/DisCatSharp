@@ -16,7 +16,14 @@ namespace DisCatSharp.Analyzer
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class AttributeAnalyzer : DiagnosticAnalyzer
 	{
+		/// <summary>
+		/// The diagnostic ID prefix.
+		/// </summary>
 		public const string DIAGNOSTIC_ID_PREFIX = "DCS";
+
+		/// <summary>
+		/// The diagnostic category.
+		/// </summary>
 		public const string CATEGORY = "Usage";
 
 		private static readonly LocalizableString s_titleExperimental = new LocalizableResourceString(nameof(Resources.AnalyzerTitleExperimental), Resources.ResourceManager, typeof(Resources));
@@ -89,9 +96,16 @@ namespace DisCatSharp.Analyzer
 		private static readonly DiagnosticDescriptor s_requiresFeatureRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0200", s_titleRequiresFeature, s_messageFormatRequiresFeature,
 			CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionRequiresFeature, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0200");
 
+		/// <summary>
+		/// Returns a set of descriptors for the diagnostics that this analyzer is capable of producing.
+		/// </summary>
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
 			=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_requiresFeatureRule);
 
+		/// <summary>
+		/// Called once at session start to register actions in the analysis context.
+		/// </summary>
+		/// <param name="context">The analysis context.</param>
 		public override void Initialize(AnalysisContext context)
 		{
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
@@ -109,6 +123,10 @@ namespace DisCatSharp.Analyzer
 			context.RegisterSyntaxNodeAction(StatusAnalyzer, SyntaxKind.SimpleMemberAccessExpression);
 		}
 
+		/// <summary>
+		/// Analyzes the status of various components.
+		/// </summary>
+		/// <param name="context">The syntac node analysis context.</param>
 		private static void StatusAnalyzer(SyntaxNodeAnalysisContext context)
 		{
 			var invocation = context.Node;
@@ -175,6 +193,10 @@ namespace DisCatSharp.Analyzer
 			return;
 		}
 
+		/// <summary>
+		/// Analyzes the experimental state of various components.
+		/// </summary>
+		/// <param name="context">The symbol analysis context.</param>
 		private static void ExperimentalAnalyzer(SymbolAnalysisContext context)
 		{
 			Console.WriteLine(new LocalizableResourceString(nameof(Resources.Handling), Resources.ResourceManager, typeof(Resources)) + context.Symbol.Kind.ToString());
@@ -182,11 +204,15 @@ namespace DisCatSharp.Analyzer
 				where x.IsInSource
 				select x.SourceTree;
 			var declaration = context.Symbol;
+
+			// ReSharper disable HeuristicUnreachableCode
+			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
 			if (null == declaration)
 			{
 				Console.WriteLine(new LocalizableResourceString(nameof(Resources.Faulty), Resources.ResourceManager, typeof(Resources)));
 				return;
 			}
+			// ReSharper enable HeuristicUnreachableCode
 
 			var attributes = declaration.GetAttributes();
 
@@ -248,6 +274,13 @@ namespace DisCatSharp.Analyzer
 			return;
 		}
 
+		/// <summary>
+		/// Checks if the attribute is the desired attribute.
+		/// </summary>
+		/// <param name="semanticModel">The current semantic model.</param>
+		/// <param name="attribute">>The current attribute data.</param>
+		/// <param name="desiredAttributeType">The target attribute type to check for.</param>
+		/// <returns>Whether the <paramref name="attribute"/> contains the <paramref name="desiredAttributeType"/>.</returns>
 		private static bool IsRequiredAttribute(SemanticModel semanticModel, AttributeData attribute, Type desiredAttributeType)
 		{
 			if (desiredAttributeType.FullName is null)
@@ -259,14 +292,27 @@ namespace DisCatSharp.Analyzer
 			return result;
 		}
 
+		/// <summary>
+		/// Gets the message from the attribute.
+		/// </summary>
+		/// <param name="attribute">The current attribute data.</param>
+		/// <returns>The message.</returns>
 		private static string GetMessage(AttributeData attribute)
 			=> attribute.ConstructorArguments.Length < 1
 				? "Do not use in production."
 				: attribute.ConstructorArguments[0].Value as string;
 
+		/// <summary>
+		/// Gets the feature message from the attribute.
+		/// </summary>
+		/// <param name="attribute">The current attribute data.</param>
+		/// <returns>The message.</returns>
 		private static string GetFeatureMessage(AttributeData attribute)
 		{
-			var featureReqEnum = (Features)attribute.ConstructorArguments[0].Value;
+			if (attribute is null)
+				return string.Empty;
+
+			var featureReqEnum = (Features)attribute.ConstructorArguments[0].Value!;
 			var description = attribute.ConstructorArguments.Length > 1
 				? attribute.ConstructorArguments[1].Value as string
 				: "No additional information.";
@@ -274,10 +320,19 @@ namespace DisCatSharp.Analyzer
 		}
 	}
 
+	/// <summary>
+	/// Represents a various helper methods.
+	/// </summary>
 	internal static class Helpers
 	{
+		/// <summary>
+		/// Gets the feature strings.
+		/// </summary>
 		internal static Dictionary<Features, string> FeaturesStrings { get; set; }
 
+		/// <summary>
+		/// Initializes the <see cref="Helpers"/> class.
+		/// </summary>
 		static Helpers()
 		{
 			FeaturesStrings = new Dictionary<Features, string>();
@@ -289,12 +344,17 @@ namespace DisCatSharp.Analyzer
 			{
 				var xsv = xv.ToString();
 				var xmv = ti.DeclaredMembers.FirstOrDefault(xm => xm.Name == xsv);
-				var xav = xmv.GetCustomAttribute<FeatureDescriptionAttribute>();
+				var xav = xmv?.GetCustomAttribute<FeatureDescriptionAttribute>();
 
-				FeaturesStrings[xv] = xav.Description;
+				FeaturesStrings[xv] = xav?.Description ?? "No description given.";
 			}
 		}
 
+		/// <summary>
+		/// Converts a feature enum to a string.
+		/// </summary>
+		/// <param name="features">The feature enum to convert.</param>
+		/// <returns>The string representation of the feature enum.</returns>
 		public static string ToFeaturesString(this Features features)
 		{
 			var strs = FeaturesStrings
