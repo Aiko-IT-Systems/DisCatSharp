@@ -1,44 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../DisCatSharp.Targets/Version.targets" />
-  <Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
-  <Import Project="../DisCatSharp.Targets/Package.targets" />
-  <Import Project="../DisCatSharp.Targets/NuGet.targets" />
-  <Import Project="../DisCatSharp.Targets/Library.targets" />
-  <Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
+	<Import Project="../DisCatSharp.Targets/Version.targets" />
+	<Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
+	<Import Project="../DisCatSharp.Targets/Package.targets" />
+	<Import Project="../DisCatSharp.Targets/NuGet.targets" />
+	<Import Project="../DisCatSharp.Targets/Library.targets" />
+	<Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
 
-  <PropertyGroup>
-	<AssemblyName>DisCatSharp.Experimental</AssemblyName>
-	<RootNamespace>DisCatSharp.Experimental</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<AssemblyName>DisCatSharp.Experimental</AssemblyName>
+		<RootNamespace>DisCatSharp.Experimental</RootNamespace>
+	</PropertyGroup>
 
-  <PropertyGroup>
-	<PackageId>DisCatSharp.Experimental</PackageId>
-	<Description>
-	  DisCatSharp.Experimental
+	<PropertyGroup>
+		<PackageId>DisCatSharp.Experimental</PackageId>
+		<Description>
+			DisCatSharp.Experimental
 
-	  Experimental changes for DisCatSharp.
-	</Description>
-	<PackageTags>DisCatSharp,Experimental,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Net7</PackageTags>
+			Experimental changes for DisCatSharp.
+		</Description>
+		<PackageTags>DisCatSharp,Experimental,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Net8</PackageTags>
 
-  </PropertyGroup>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="DisCatSharp.Attributes" Version="10.4.4" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="DisCatSharp.Attributes" Version="10.4.4" />
+	</ItemGroup>
 
-  <ItemGroup>
-	<ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
-	<ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
+		<ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-	<PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+	</ItemGroup>
 
 </Project>
