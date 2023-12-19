@@ -7,11 +7,11 @@
 *.yml @Lulalaby
 *.ps1 @Lulalaby
 
-*.targets @Aiko-IT-Systems/aitsys-leader
-LICENSE.md @Aiko-IT-Systems/aitsys-leader
-README.md @Aiko-IT-Systems/aitsys-leader
+*.targets @Lulalaby
+LICENSE.md @Lulalaby
+README.md @Lulalaby
 
-/.github/ @Lulalaby @NyuwBot @Aiko-IT-Systems/aitsys-leader
+/.github/ @Lulalaby @NyuwBot
 
 #/DisCatSharp.Configuration/ @JBraunsmaJr
 #/DisCatSharp.Configuration.Tests/ @JBraunsmaJr
