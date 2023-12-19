@@ -19,5 +19,6 @@ public sealed class DiscordUnreleasedAttribute : Attribute
 	}
 
 	public DiscordUnreleasedAttribute()
-	{ }
+	{
+	}
 }

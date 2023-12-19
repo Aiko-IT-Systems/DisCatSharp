@@ -25,20 +25,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.0">
+    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="DisCatSharp.Attributes" Version="10.4.4" />
   </ItemGroup>
 
-	<ItemGroup>
+  <ItemGroup>
 	<ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
-	  <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+	<ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
   </ItemGroup>
 
-	<ItemGroup>
-	  <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-	</ItemGroup>
+  <ItemGroup>
+	<PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
 
 </Project>

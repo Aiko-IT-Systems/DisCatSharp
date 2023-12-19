@@ -5,4 +5,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("MicrosoftCodeAnalysisCorrectness", "RS1030:Do not invoke Compilation.GetSemanticModel() method within a diagnostic analyzer", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Analyzer.AttributeAnalyzer.ExperimentalAnalyzer(Microsoft.CodeAnalysis.Diagnostics.SymbolAnalysisContext)")]
+[assembly:
+	SuppressMessage("MicrosoftCodeAnalysisCorrectness", "RS1030:Do not invoke Compilation.GetSemanticModel() method within a diagnostic analyzer", Justification = "<Pending>", Scope = "member",
+		Target = "~M:DisCatSharp.Analyzer.AttributeAnalyzer.ExperimentalAnalyzer(Microsoft.CodeAnalysis.Diagnostics.SymbolAnalysisContext)")]
