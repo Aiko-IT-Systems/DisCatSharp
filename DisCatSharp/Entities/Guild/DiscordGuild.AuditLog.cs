@@ -75,7 +75,10 @@ public partial class DiscordGuild
 
 				var xtu = new TransportUser
 				{
-					Id = xau.Id, Username = xau.Username, Discriminator = xau.Discriminator, AvatarHash = xau.AvatarHash
+					Id = xau.Id,
+					Username = xau.Username,
+					Discriminator = xau.Discriminator,
+					AvatarHash = xau.AvatarHash
 				};
 				var xu = new DiscordUser(xtu)
 				{
@@ -122,7 +125,9 @@ public partial class DiscordGuild
 				? member
 				: new()
 				{
-					Discord = this.Discord, Id = xau.Id, GuildId = this.Id
+					Discord = this.Discord,
+					Id = xau.Id,
+					GuildId = this.Id
 				}).ToList();
 		if (ams.Any())
 			amd = ams.ToDictionary(xm => xm.Id, xm => xm);
@@ -186,11 +191,15 @@ public partial class DiscordGuild
 							{
 								Before = this.GetChannel(t1) ?? new DiscordChannel
 								{
-									Id = t1, Discord = this.Discord, GuildId = this.Id
+									Id = t1,
+									Discord = this.Discord,
+									GuildId = this.Id
 								},
 								After = this.GetChannel(t2) ?? new DiscordChannel
 								{
-									Id = t1, Discord = this.Discord, GuildId = this.Id
+									Id = t1,
+									Discord = this.Discord,
+									GuildId = this.Id
 								}
 							};
 						}
@@ -200,28 +209,32 @@ public partial class DiscordGuild
 							case "name":
 								entrygld.NameChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 
 							case "owner_id":
 								entrygld.OwnerChange = new()
 								{
-									Before = this.MembersInternal != null && this.MembersInternal.TryGetValue(xc.OldValueUlong, out var oldMember) ? oldMember : await this.GetMemberAsync(xc.OldValueUlong).ConfigureAwait(false), After = this.MembersInternal != null && this.MembersInternal.TryGetValue(xc.NewValueUlong, out var newMember) ? newMember : await this.GetMemberAsync(xc.NewValueUlong).ConfigureAwait(false)
+									Before = this.MembersInternal != null && this.MembersInternal.TryGetValue(xc.OldValueUlong, out var oldMember) ? oldMember : await this.GetMemberAsync(xc.OldValueUlong).ConfigureAwait(false),
+									After = this.MembersInternal != null && this.MembersInternal.TryGetValue(xc.NewValueUlong, out var newMember) ? newMember : await this.GetMemberAsync(xc.NewValueUlong).ConfigureAwait(false)
 								};
 								break;
 
 							case "icon_hash":
 								entrygld.IconChange = new()
 								{
-									Before = xc.OldValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id}/{xc.OldValueString}.webp" : null, After = xc.OldValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id}/{xc.NewValueString}.webp" : null
+									Before = xc.OldValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id}/{xc.OldValueString}.webp" : null,
+									After = xc.OldValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id}/{xc.NewValueString}.webp" : null
 								};
 								break;
 
 							case "verification_level":
 								entrygld.VerificationLevelChange = new()
 								{
-									Before = (VerificationLevel)(long)xc.OldValue, After = (VerificationLevel)(long)xc.NewValue
+									Before = (VerificationLevel)(long)xc.OldValue,
+									After = (VerificationLevel)(long)xc.NewValue
 								};
 								break;
 
@@ -232,7 +245,8 @@ public partial class DiscordGuild
 							case "system_channel_flags":
 								entrygld.SystemChannelFlagsChange = new()
 								{
-									Before = (SystemChannelFlags)(long)xc.OldValue, After = (SystemChannelFlags)(long)xc.NewValue
+									Before = (SystemChannelFlags)(long)xc.OldValue,
+									After = (SystemChannelFlags)(long)xc.NewValue
 								};
 								break;
 
@@ -251,14 +265,16 @@ public partial class DiscordGuild
 							case "splash_hash":
 								entrygld.SplashChange = new()
 								{
-									Before = xc.OldValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id}/{xc.OldValueString}.webp?size=2048" : null, After = xc.NewValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id}/{xc.NewValueString}.webp?size=2048" : null
+									Before = xc.OldValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id}/{xc.OldValueString}.webp?size=2048" : null,
+									After = xc.NewValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id}/{xc.NewValueString}.webp?size=2048" : null
 								};
 								break;
 
 							case "default_message_notifications":
 								entrygld.NotificationSettingsChange = new()
 								{
-									Before = (DefaultMessageNotifications)(long)xc.OldValue, After = (DefaultMessageNotifications)(long)xc.NewValue
+									Before = (DefaultMessageNotifications)(long)xc.OldValue,
+									After = (DefaultMessageNotifications)(long)xc.NewValue
 								};
 								break;
 
@@ -269,35 +285,40 @@ public partial class DiscordGuild
 							case "explicit_content_filter":
 								entrygld.ExplicitContentFilterChange = new()
 								{
-									Before = (ExplicitContentFilter)(long)xc.OldValue, After = (ExplicitContentFilter)(long)xc.NewValue
+									Before = (ExplicitContentFilter)(long)xc.OldValue,
+									After = (ExplicitContentFilter)(long)xc.NewValue
 								};
 								break;
 
 							case "mfa_level":
 								entrygld.MfaLevelChange = new()
 								{
-									Before = (MfaLevel)(long)xc.OldValue, After = (MfaLevel)(long)xc.NewValue
+									Before = (MfaLevel)(long)xc.OldValue,
+									After = (MfaLevel)(long)xc.NewValue
 								};
 								break;
 
 							case "region":
 								entrygld.RegionChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 
 							case "vanity_url_code":
 								entrygld.VanityUrlCodeChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 
 							case "premium_progress_bar_enabled":
 								entrygld.PremiumProgressBarChange = new()
 								{
-									Before = (bool)xc.OldValue, After = (bool)xc.NewValue
+									Before = (bool)xc.OldValue,
+									After = (bool)xc.NewValue
 								};
 								break;
 
@@ -317,7 +338,9 @@ public partial class DiscordGuild
 					{
 						Target = this.GetChannel(xac.TargetId.Value) ?? new DiscordChannel
 						{
-							Id = xac.TargetId.Value, Discord = this.Discord, GuildId = this.Id
+							Id = xac.TargetId.Value,
+							Discord = this.Discord,
+							GuildId = this.Id
 						}
 					};
 
@@ -328,7 +351,8 @@ public partial class DiscordGuild
 							case "name":
 								entrychn.NameChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 
@@ -338,14 +362,16 @@ public partial class DiscordGuild
 
 								entrychn.TypeChange = new()
 								{
-									Before = p1 ? (ChannelType?)t1 : null, After = p2 ? (ChannelType?)t2 : null
+									Before = p1 ? (ChannelType?)t1 : null,
+									After = p2 ? (ChannelType?)t2 : null
 								};
 								break;
 
 							case "flags":
 								entrychn.ChannelFlagsChange = new()
 								{
-									Before = (ChannelFlags)(long)(xc.OldValue ?? 0L), After = (ChannelFlags)(long)(xc.NewValue ?? 0L)
+									Before = (ChannelFlags)(long)(xc.OldValue ?? 0L),
+									After = (ChannelFlags)(long)(xc.NewValue ?? 0L)
 								};
 								break;
 
@@ -368,56 +394,64 @@ public partial class DiscordGuild
 
 								entrychn.OverwriteChange = new()
 								{
-									Before = olds != null ? new ReadOnlyCollection<DiscordOverwrite>(new List<DiscordOverwrite>(olds)) : null, After = news != null ? new ReadOnlyCollection<DiscordOverwrite>(new List<DiscordOverwrite>(news)) : null
+									Before = olds != null ? new ReadOnlyCollection<DiscordOverwrite>(new List<DiscordOverwrite>(olds)) : null,
+									After = news != null ? new ReadOnlyCollection<DiscordOverwrite>(new List<DiscordOverwrite>(news)) : null
 								};
 								break;
 
 							case "topic":
 								entrychn.TopicChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 
 							case "nsfw":
 								entrychn.NsfwChange = new()
 								{
-									Before = (bool?)xc.OldValue, After = (bool?)xc.NewValue
+									Before = (bool?)xc.OldValue,
+									After = (bool?)xc.NewValue
 								};
 								break;
 
 							case "rtc_region":
 								entrychn.RtcRegionIdChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 
 							case "bitrate":
 								entrychn.BitrateChange = new()
 								{
-									Before = (int?)(long?)xc.OldValue, After = (int?)(long?)xc.NewValue
+									Before = (int?)(long?)xc.OldValue,
+									After = (int?)(long?)xc.NewValue
 								};
 								break;
 
 							case "user_limit":
 								entrychn.UserLimitChange = new()
 								{
-									Before = (int?)(long?)xc.OldValue, After = (int?)(long?)xc.NewValue
+									Before = (int?)(long?)xc.OldValue,
+									After = (int?)(long?)xc.NewValue
 								};
 								break;
 
 							case "rate_limit_per_user":
 								entrychn.PerUserRateLimitChange = new()
 								{
-									Before = (int?)(long?)xc.OldValue, After = (int?)(long?)xc.NewValue
+									Before = (int?)(long?)xc.OldValue,
+									After = (int?)(long?)xc.NewValue
 								};
 								break;
 
 							case "default_auto_archive_duration":
 								entrychn.DefaultAutoArchiveDurationChange = new()
 								{
-									Before = (ThreadAutoArchiveDuration?)(long?)xc.OldValue, After = (ThreadAutoArchiveDuration?)(long?)xc.NewValue
+									Before = (ThreadAutoArchiveDuration?)(long?)xc.OldValue,
+									After = (ThreadAutoArchiveDuration?)(long?)xc.NewValue
 								};
 								break;
 							case "available_tags":
@@ -439,7 +473,8 @@ public partial class DiscordGuild
 
 								entrychn.AvailableTagsChange = new()
 								{
-									Before = oldTags != null ? new List<ForumPostTag>(new List<ForumPostTag>(oldTags)) : null, After = newTags != null ? new List<ForumPostTag>(new List<ForumPostTag>(newTags)) : null
+									Before = oldTags != null ? new List<ForumPostTag>(new List<ForumPostTag>(oldTags)) : null,
+									After = newTags != null ? new List<ForumPostTag>(new List<ForumPostTag>(newTags)) : null
 								};
 								break;
 
@@ -456,7 +491,8 @@ public partial class DiscordGuild
 				case AuditLogActionType.OverwriteUpdate:
 					entry = new DiscordAuditLogOverwriteEntry
 					{
-						Target = this.GetChannel(xac.TargetId.Value)?.PermissionOverwrites.FirstOrDefault(xo => xo.Id == xac.Options.Id), Channel = this.GetChannel(xac.TargetId.Value)
+						Target = this.GetChannel(xac.TargetId.Value)?.PermissionOverwrites.FirstOrDefault(xo => xo.Id == xac.Options.Id),
+						Channel = this.GetChannel(xac.TargetId.Value)
 					};
 
 					var entryovr = entry as DiscordAuditLogOverwriteEntry;
@@ -469,7 +505,8 @@ public partial class DiscordGuild
 
 								entryovr.DenyChange = new()
 								{
-									Before = p1 ? (Permissions?)t1 : null, After = p2 ? (Permissions?)t2 : null
+									Before = p1 ? (Permissions?)t1 : null,
+									After = p2 ? (Permissions?)t2 : null
 								};
 								break;
 
@@ -479,14 +516,16 @@ public partial class DiscordGuild
 
 								entryovr.AllowChange = new()
 								{
-									Before = p1 ? (Permissions?)t1 : null, After = p2 ? (Permissions?)t2 : null
+									Before = p1 ? (Permissions?)t1 : null,
+									After = p2 ? (Permissions?)t2 : null
 								};
 								break;
 
 							case "type":
 								entryovr.TypeChange = new()
 								{
-									Before = xc.OldValue != null ? (OverwriteType)(long)xc.OldValue : null, After = xc.NewValue != null ? (OverwriteType)(long)xc.NewValue : null
+									Before = xc.OldValue != null ? (OverwriteType)(long)xc.OldValue : null,
+									After = xc.NewValue != null ? (OverwriteType)(long)xc.NewValue : null
 								};
 								break;
 
@@ -496,7 +535,8 @@ public partial class DiscordGuild
 
 								entryovr.TargetIdChange = new()
 								{
-									Before = p1 ? t1 : null, After = p2 ? t2 : null
+									Before = p1 ? t1 : null,
+									After = p2 ? t2 : null
 								};
 								break;
 
@@ -515,7 +555,9 @@ public partial class DiscordGuild
 							? kickMember
 							: new()
 							{
-								Id = xac.TargetId.Value, Discord = this.Discord, GuildId = this.Id
+								Id = xac.TargetId.Value,
+								Discord = this.Discord,
+								GuildId = this.Id
 							}
 					};
 					break;
@@ -523,7 +565,8 @@ public partial class DiscordGuild
 				case AuditLogActionType.Prune:
 					entry = new DiscordAuditLogPruneEntry
 					{
-						Days = xac.Options.DeleteMemberDays, Toll = xac.Options.MembersRemoved
+						Days = xac.Options.DeleteMemberDays,
+						Toll = xac.Options.MembersRemoved
 					};
 					break;
 
@@ -535,7 +578,9 @@ public partial class DiscordGuild
 							? unbanMember
 							: new()
 							{
-								Id = xac.TargetId.Value, Discord = this.Discord, GuildId = this.Id
+								Id = xac.TargetId.Value,
+								Discord = this.Discord,
+								GuildId = this.Id
 							}
 					};
 					break;
@@ -548,7 +593,9 @@ public partial class DiscordGuild
 							? roleUpdMember
 							: new()
 							{
-								Id = xac.TargetId.Value, Discord = this.Discord, GuildId = this.Id
+								Id = xac.TargetId.Value,
+								Discord = this.Discord,
+								GuildId = this.Id
 							}
 					};
 
@@ -559,27 +606,31 @@ public partial class DiscordGuild
 							case "nick":
 								entrymbu.NicknameChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 
 							case "deaf":
 								entrymbu.DeafenChange = new()
 								{
-									Before = (bool?)xc.OldValue, After = (bool?)xc.NewValue
+									Before = (bool?)xc.OldValue,
+									After = (bool?)xc.NewValue
 								};
 								break;
 
 							case "mute":
 								entrymbu.MuteChange = new()
 								{
-									Before = (bool?)xc.OldValue, After = (bool?)xc.NewValue
+									Before = (bool?)xc.OldValue,
+									After = (bool?)xc.NewValue
 								};
 								break;
 							case "communication_disabled_until":
 								entrymbu.CommunicationDisabledUntilChange = new()
 								{
-									Before = (DateTime?)xc.OldValue, After = (DateTime?)xc.NewValue
+									Before = (DateTime?)xc.OldValue,
+									After = (DateTime?)xc.NewValue
 								};
 								break;
 
@@ -606,7 +657,8 @@ public partial class DiscordGuild
 					{
 						Target = this.GetRole(xac.TargetId.Value) ?? new DiscordRole
 						{
-							Id = xac.TargetId.Value, Discord = this.Discord
+							Id = xac.TargetId.Value,
+							Discord = this.Discord
 						}
 					};
 
@@ -617,7 +669,8 @@ public partial class DiscordGuild
 							case "name":
 								entryrol.NameChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 
@@ -627,42 +680,48 @@ public partial class DiscordGuild
 
 								entryrol.ColorChange = new()
 								{
-									Before = p1 ? t3 : null, After = p2 ? t4 : null
+									Before = p1 ? t3 : null,
+									After = p2 ? t4 : null
 								};
 								break;
 
 							case "permissions":
 								entryrol.PermissionChange = new()
 								{
-									Before = xc.OldValue != null ? (Permissions?)long.Parse((string)xc.OldValue) : null, After = xc.NewValue != null ? (Permissions?)long.Parse((string)xc.NewValue) : null
+									Before = xc.OldValue != null ? (Permissions?)long.Parse((string)xc.OldValue) : null,
+									After = xc.NewValue != null ? (Permissions?)long.Parse((string)xc.NewValue) : null
 								};
 								break;
 
 							case "position":
 								entryrol.PositionChange = new()
 								{
-									Before = xc.OldValue != null ? (int?)(long)xc.OldValue : null, After = xc.NewValue != null ? (int?)(long)xc.NewValue : null
+									Before = xc.OldValue != null ? (int?)(long)xc.OldValue : null,
+									After = xc.NewValue != null ? (int?)(long)xc.NewValue : null
 								};
 								break;
 
 							case "mentionable":
 								entryrol.MentionableChange = new()
 								{
-									Before = xc.OldValue != null ? (bool?)xc.OldValue : null, After = xc.NewValue != null ? (bool?)xc.NewValue : null
+									Before = xc.OldValue != null ? (bool?)xc.OldValue : null,
+									After = xc.NewValue != null ? (bool?)xc.NewValue : null
 								};
 								break;
 
 							case "hoist":
 								entryrol.HoistChange = new()
 								{
-									Before = (bool?)xc.OldValue, After = (bool?)xc.NewValue
+									Before = (bool?)xc.OldValue,
+									After = (bool?)xc.NewValue
 								};
 								break;
 
 							case "icon_hash":
 								entryrol.IconHashChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 
@@ -684,7 +743,10 @@ public partial class DiscordGuild
 						Discord = this.Discord,
 						Guild = new()
 						{
-							Discord = this.Discord, Id = this.Id, Name = this.Name, SplashHash = this.SplashHash
+							Discord = this.Discord,
+							Id = this.Id,
+							Name = this.Name,
+							SplashHash = this.SplashHash
 						}
 					};
 
@@ -698,7 +760,8 @@ public partial class DiscordGuild
 
 								entryinv.MaxAgeChange = new()
 								{
-									Before = p1 ? t3 : null, After = p2 ? t4 : null
+									Before = p1 ? t3 : null,
+									After = p2 ? t4 : null
 								};
 								break;
 
@@ -707,14 +770,16 @@ public partial class DiscordGuild
 
 								entryinv.CodeChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 
 							case "temporary":
 								entryinv.TemporaryChange = new()
 								{
-									Before = xc.OldValue != null ? (bool?)xc.OldValue : null, After = xc.NewValue != null ? (bool?)xc.NewValue : null
+									Before = xc.OldValue != null ? (bool?)xc.OldValue : null,
+									After = xc.NewValue != null ? (bool?)xc.NewValue : null
 								};
 								break;
 
@@ -728,13 +793,17 @@ public partial class DiscordGuild
 										? propBeforeMember
 										: new()
 										{
-											Id = t1, Discord = this.Discord, GuildId = this.Id
+											Id = t1,
+											Discord = this.Discord,
+											GuildId = this.Id
 										},
 									After = amd.TryGetValue(t2, out var propAfterMember)
 										? propAfterMember
 										: new()
 										{
-											Id = t1, Discord = this.Discord, GuildId = this.Id
+											Id = t1,
+											Discord = this.Discord,
+											GuildId = this.Id
 										}
 								};
 								break;
@@ -748,13 +817,17 @@ public partial class DiscordGuild
 									Before = p1
 										? this.GetChannel(t1) ?? new DiscordChannel
 										{
-											Id = t1, Discord = this.Discord, GuildId = this.Id
+											Id = t1,
+											Discord = this.Discord,
+											GuildId = this.Id
 										}
 										: null,
 									After = p2
 										? this.GetChannel(t2) ?? new DiscordChannel
 										{
-											Id = t1, Discord = this.Discord, GuildId = this.Id
+											Id = t1,
+											Discord = this.Discord,
+											GuildId = this.Id
 										}
 										: null
 								};
@@ -763,7 +836,10 @@ public partial class DiscordGuild
 								var cht = ch?.Type;
 								inv.Channel = new()
 								{
-									Discord = this.Discord, Id = p1 ? t1 : t2, Name = ch?.Name, Type = cht != null ? cht.Value : ChannelType.Unknown
+									Discord = this.Discord,
+									Id = p1 ? t1 : t2,
+									Name = ch?.Name,
+									Type = cht != null ? cht.Value : ChannelType.Unknown
 								};
 								break;
 
@@ -773,7 +849,8 @@ public partial class DiscordGuild
 
 								entryinv.UsesChange = new()
 								{
-									Before = p1 ? t3 : null, After = p2 ? t4 : null
+									Before = p1 ? t3 : null,
+									After = p2 ? t4 : null
 								};
 								break;
 
@@ -783,7 +860,8 @@ public partial class DiscordGuild
 
 								entryinv.MaxUsesChange = new()
 								{
-									Before = p1 ? t3 : null, After = p2 ? t4 : null
+									Before = p1 ? t3 : null,
+									After = p2 ? t4 : null
 								};
 								break;
 
@@ -806,7 +884,8 @@ public partial class DiscordGuild
 							? webhook
 							: new()
 							{
-								Id = xac.TargetId.Value, Discord = this.Discord
+								Id = xac.TargetId.Value,
+								Discord = this.Discord
 							}
 					};
 
@@ -820,14 +899,16 @@ public partial class DiscordGuild
 
 								entrywhk.IdChange = new()
 								{
-									Before = p1 ? t1 : null, After = p2 ? t2 : null
+									Before = p1 ? t1 : null,
+									After = p2 ? t2 : null
 								};
 								break;
 
 							case "name":
 								entrywhk.NameChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 
@@ -840,13 +921,17 @@ public partial class DiscordGuild
 									Before = p1
 										? this.GetChannel(t1) ?? new DiscordChannel
 										{
-											Id = t1, Discord = this.Discord, GuildId = this.Id
+											Id = t1,
+											Discord = this.Discord,
+											GuildId = this.Id
 										}
 										: null,
 									After = p2
 										? this.GetChannel(t2) ?? new DiscordChannel
 										{
-											Id = t1, Discord = this.Discord, GuildId = this.Id
+											Id = t1,
+											Discord = this.Discord,
+											GuildId = this.Id
 										}
 										: null
 								};
@@ -858,14 +943,16 @@ public partial class DiscordGuild
 
 								entrywhk.TypeChange = new()
 								{
-									Before = p1 ? t3 : null, After = p2 ? t4 : null
+									Before = p1 ? t3 : null,
+									After = p2 ? t4 : null
 								};
 								break;
 
 							case "avatar_hash":
 								entrywhk.AvatarHashChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 
@@ -886,7 +973,8 @@ public partial class DiscordGuild
 							? target
 							: new()
 							{
-								Id = xac.TargetId.Value, Discord = this.Discord
+								Id = xac.TargetId.Value,
+								Discord = this.Discord
 							}
 					};
 
@@ -897,7 +985,8 @@ public partial class DiscordGuild
 							case "name":
 								entryemo.NameChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 
@@ -918,7 +1007,8 @@ public partial class DiscordGuild
 							? stage
 							: new()
 							{
-								Id = xac.TargetId.Value, Discord = this.Discord
+								Id = xac.TargetId.Value,
+								Discord = this.Discord
 							}
 					};
 
@@ -929,7 +1019,8 @@ public partial class DiscordGuild
 							case "topic":
 								entrysta.TopicChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 
@@ -950,7 +1041,8 @@ public partial class DiscordGuild
 							? sticker
 							: new()
 							{
-								Id = xac.TargetId.Value, Discord = this.Discord
+								Id = xac.TargetId.Value,
+								Discord = this.Discord
 							}
 					};
 
@@ -961,43 +1053,50 @@ public partial class DiscordGuild
 							case "name":
 								entrysti.NameChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 							case "description":
 								entrysti.DescriptionChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 							case "tags":
 								entrysti.TagsChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 							case "guild_id":
 								entrysti.GuildIdChange = new()
 								{
-									Before = ulong.TryParse(xc.OldValueString, out var ogid) ? ogid : null, After = ulong.TryParse(xc.NewValueString, out var ngid) ? ngid : null
+									Before = ulong.TryParse(xc.OldValueString, out var ogid) ? ogid : null,
+									After = ulong.TryParse(xc.NewValueString, out var ngid) ? ngid : null
 								};
 								break;
 							case "available":
 								entrysti.AvailabilityChange = new()
 								{
-									Before = (bool?)xc.OldValue, After = (bool?)xc.NewValue
+									Before = (bool?)xc.OldValue,
+									After = (bool?)xc.NewValue
 								};
 								break;
 							case "asset":
 								entrysti.AssetChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 							case "id":
 								entrysti.IdChange = new()
 								{
-									Before = ulong.TryParse(xc.OldValueString, out var oid) ? oid : null, After = ulong.TryParse(xc.NewValueString, out var nid) ? nid : null
+									Before = ulong.TryParse(xc.OldValueString, out var oid) ? oid : null,
+									After = ulong.TryParse(xc.NewValueString, out var nid) ? nid : null
 								};
 								break;
 							case "type":
@@ -1005,7 +1104,8 @@ public partial class DiscordGuild
 								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
 								entrysti.TypeChange = new()
 								{
-									Before = p1 ? (StickerType?)t5 : null, After = p2 ? (StickerType?)t6 : null
+									Before = p1 ? (StickerType?)t5 : null,
+									After = p2 ? (StickerType?)t6 : null
 								};
 								break;
 							case "format_type":
@@ -1013,7 +1113,8 @@ public partial class DiscordGuild
 								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
 								entrysti.FormatChange = new()
 								{
-									Before = p1 ? (StickerFormat?)t5 : null, After = p2 ? (StickerFormat?)t6 : null
+									Before = p1 ? (StickerFormat?)t5 : null,
+									After = p2 ? (StickerFormat?)t6 : null
 								};
 								break;
 
@@ -1036,7 +1137,9 @@ public partial class DiscordGuild
 					{
 						entrymsg.Channel = this.GetChannel(xac.Options.ChannelId) ?? new DiscordChannel
 						{
-							Id = xac.Options.ChannelId, Discord = this.Discord, GuildId = this.Id
+							Id = xac.Options.ChannelId,
+							Discord = this.Discord,
+							GuildId = this.Id
 						};
 						entrymsg.MessageCount = xac.Options.Count;
 					}
@@ -1048,7 +1151,8 @@ public partial class DiscordGuild
 							? msg
 							: new()
 							{
-								Discord = this.Discord, Id = xac.TargetId.Value
+								Discord = this.Discord,
+								Id = xac.TargetId.Value
 							};
 					break;
 				}
@@ -1070,11 +1174,14 @@ public partial class DiscordGuild
 
 						entrypin.Channel = this.GetChannel(xac.Options.ChannelId) ?? new DiscordChannel
 						{
-							Id = xac.Options.ChannelId, Discord = this.Discord, GuildId = this.Id
+							Id = xac.Options.ChannelId,
+							Discord = this.Discord,
+							GuildId = this.Id
 						};
 						entrypin.Message = message ?? new DiscordMessage
 						{
-							Id = xac.Options.MessageId, Discord = this.Discord
+							Id = xac.Options.MessageId,
+							Discord = this.Discord
 						};
 					}
 
@@ -1083,7 +1190,8 @@ public partial class DiscordGuild
 						dc.UserCache.TryGetValue(xac.TargetId.Value, out var user);
 						entrypin.Target = user ?? new DiscordUser
 						{
-							Id = user.Id, Discord = this.Discord
+							Id = user.Id,
+							Discord = this.Discord
 						};
 					}
 
@@ -1100,7 +1208,8 @@ public partial class DiscordGuild
 					dc.UserCache.TryGetValue(xac.TargetId.Value, out var bot);
 					(entry as DiscordAuditLogBotAddEntry).TargetBot = bot ?? new DiscordUser
 					{
-						Id = xac.TargetId.Value, Discord = this.Discord
+						Id = xac.TargetId.Value,
+						Discord = this.Discord
 					};
 
 					break;
@@ -1117,7 +1226,9 @@ public partial class DiscordGuild
 					moveentry.UserCount = xac.Options.Count;
 					moveentry.Channel = this.GetChannel(xac.Options.ChannelId) ?? new DiscordChannel
 					{
-						Id = xac.Options.ChannelId, Discord = this.Discord, GuildId = this.Id
+						Id = xac.Options.ChannelId,
+						Discord = this.Discord,
+						GuildId = this.Id
 					};
 					break;
 
@@ -1140,25 +1251,29 @@ public partial class DiscordGuild
 							case "type":
 								integentry.Type = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 							case "enable_emoticons":
 								integentry.EnableEmoticons = new()
 								{
-									Before = (bool?)xc.OldValue, After = (bool?)xc.NewValue
+									Before = (bool?)xc.OldValue,
+									After = (bool?)xc.NewValue
 								};
 								break;
 							case "expire_behavior":
 								integentry.ExpireBehavior = new()
 								{
-									Before = (int?)xc.OldValue, After = (int?)xc.NewValue
+									Before = (int?)xc.OldValue,
+									After = (int?)xc.NewValue
 								};
 								break;
 							case "expire_grace_period":
 								integentry.ExpireBehavior = new()
 								{
-									Before = (int?)xc.OldValue, After = (int?)xc.NewValue
+									Before = (int?)xc.OldValue,
+									After = (int?)xc.NewValue
 								};
 								break;
 
@@ -1179,7 +1294,8 @@ public partial class DiscordGuild
 							? thread
 							: new()
 							{
-								Id = xac.TargetId.Value, Discord = this.Discord
+								Id = xac.TargetId.Value,
+								Discord = this.Discord
 							}
 					};
 
@@ -1190,7 +1306,8 @@ public partial class DiscordGuild
 							case "name":
 								entrythr.NameChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 
@@ -1200,28 +1317,32 @@ public partial class DiscordGuild
 
 								entrythr.TypeChange = new()
 								{
-									Before = p1 ? (ChannelType?)t1 : null, After = p2 ? (ChannelType?)t2 : null
+									Before = p1 ? (ChannelType?)t1 : null,
+									After = p2 ? (ChannelType?)t2 : null
 								};
 								break;
 
 							case "archived":
 								entrythr.ArchivedChange = new()
 								{
-									Before = xc.OldValue != null ? (bool?)xc.OldValue : null, After = xc.NewValue != null ? (bool?)xc.NewValue : null
+									Before = xc.OldValue != null ? (bool?)xc.OldValue : null,
+									After = xc.NewValue != null ? (bool?)xc.NewValue : null
 								};
 								break;
 
 							case "locked":
 								entrythr.LockedChange = new()
 								{
-									Before = xc.OldValue != null ? (bool?)xc.OldValue : null, After = xc.NewValue != null ? (bool?)xc.NewValue : null
+									Before = xc.OldValue != null ? (bool?)xc.OldValue : null,
+									After = xc.NewValue != null ? (bool?)xc.NewValue : null
 								};
 								break;
 
 							case "invitable":
 								entrythr.InvitableChange = new()
 								{
-									Before = xc.OldValue != null ? (bool?)xc.OldValue : null, After = xc.NewValue != null ? (bool?)xc.NewValue : null
+									Before = xc.OldValue != null ? (bool?)xc.OldValue : null,
+									After = xc.NewValue != null ? (bool?)xc.NewValue : null
 								};
 								break;
 
@@ -1231,14 +1352,16 @@ public partial class DiscordGuild
 
 								entrythr.AutoArchiveDurationChange = new()
 								{
-									Before = p1 ? (ThreadAutoArchiveDuration?)t5 : null, After = p2 ? (ThreadAutoArchiveDuration?)t6 : null
+									Before = p1 ? (ThreadAutoArchiveDuration?)t5 : null,
+									After = p2 ? (ThreadAutoArchiveDuration?)t6 : null
 								};
 								break;
 
 							case "rate_limit_per_user":
 								entrythr.PerUserRateLimitChange = new()
 								{
-									Before = (int?)(long?)xc.OldValue, After = (int?)(long?)xc.NewValue
+									Before = (int?)(long?)xc.OldValue,
+									After = (int?)(long?)xc.NewValue
 								};
 								break;
 
@@ -1259,7 +1382,8 @@ public partial class DiscordGuild
 							? scheduledEvent
 							: new()
 							{
-								Id = xac.TargetId.Value, Discord = this.Discord
+								Id = xac.TargetId.Value,
+								Discord = this.Discord
 							}
 					};
 
@@ -1270,28 +1394,32 @@ public partial class DiscordGuild
 							case "channel_id":
 								entryse.ChannelIdChange = new()
 								{
-									Before = ulong.TryParse(xc.OldValueString, out var ogid) ? ogid : null, After = ulong.TryParse(xc.NewValueString, out var ngid) ? ngid : null
+									Before = ulong.TryParse(xc.OldValueString, out var ogid) ? ogid : null,
+									After = ulong.TryParse(xc.NewValueString, out var ngid) ? ngid : null
 								};
 								break;
 
 							case "name":
 								entryse.NameChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 
 							case "description":
 								entryse.DescriptionChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 
 							case "location":
 								entryse.LocationChange = new()
 								{
-									Before = xc.OldValueString, After = xc.NewValueString
+									Before = xc.OldValueString,
+									After = xc.NewValueString
 								};
 								break;
 
@@ -1301,7 +1429,8 @@ public partial class DiscordGuild
 
 								entryse.EntityTypeChange = new()
 								{
-									Before = p1 ? (ScheduledEventEntityType?)t5 : null, After = p2 ? (ScheduledEventEntityType?)t6 : null
+									Before = p1 ? (ScheduledEventEntityType?)t5 : null,
+									After = p2 ? (ScheduledEventEntityType?)t6 : null
 								};
 								break;
 
@@ -1311,7 +1440,8 @@ public partial class DiscordGuild
 
 								entryse.StatusChange = new()
 								{
-									Before = p1 ? (ScheduledEventStatus?)t5 : null, After = p2 ? (ScheduledEventStatus?)t6 : null
+									Before = p1 ? (ScheduledEventStatus?)t5 : null,
+									After = p2 ? (ScheduledEventStatus?)t6 : null
 								};
 								break;
 

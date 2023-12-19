@@ -95,7 +95,8 @@ public class DiscordThreadChannel : DiscordChannel
 	internal DiscordThreadChannel()
 		: base(new()
 		{
-			"hashes", "guild_hashes"
+			"hashes",
+			"guild_hashes"
 		})
 	{ }
 

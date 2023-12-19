@@ -44,6 +44,7 @@ public class UnauthorizedException : DisCatSharpException
 			if (j["message"] != null)
 				this.JsonMessage = j["message"].ToString();
 		}
-		catch (Exception) { }
+		catch (Exception)
+		{ }
 	}
 }

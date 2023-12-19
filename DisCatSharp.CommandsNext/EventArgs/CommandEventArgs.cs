@@ -24,6 +24,7 @@ public class CommandEventArgs : DiscordEventArgs
 	/// Initializes a new instance of the <see cref="CommandEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	public CommandEventArgs(IServiceProvider provider) : base(provider)
+	public CommandEventArgs(IServiceProvider provider)
+		: base(provider)
 	{ }
 }

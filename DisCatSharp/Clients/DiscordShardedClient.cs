@@ -137,10 +137,7 @@ public sealed partial class DiscordShardedClient
 				x.TimestampFormat = this._configuration.LogTimestampFormat;
 				x.LogToStandardErrorThreshold = this._configuration.MinimumLogLevel;
 			});
-			var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[]
-			{
-				configureNamedOptions
-			}, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
+			var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[] { configureNamedOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
 			var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleLoggerOptions>>(), new OptionsCache<ConsoleLoggerOptions>());
 
 			var l = new ConsoleLoggerProvider(optionsMonitor);
@@ -202,12 +199,8 @@ public sealed partial class DiscordShardedClient
 								Username = this.CurrentUser.UsernameWithDiscriminator,
 								Other = new Dictionary<string, string>()
 								{
-									{
-										"developer", this._configuration.DeveloperUserId?.ToString() ?? "not_given"
-									},
-									{
-										"email", this._configuration.FeedbackEmail ?? "not_given"
-									}
+									{ "developer", this._configuration.DeveloperUserId?.ToString() ?? "not_given" },
+									{ "email", this._configuration.FeedbackEmail ?? "not_given" }
 								}
 							};
 
@@ -358,7 +351,9 @@ public sealed partial class DiscordShardedClient
 		{
 			var cfg = new DiscordConfiguration(this._configuration)
 			{
-				ShardId = i, ShardCount = shardCount, LoggerFactory = lf
+				ShardId = i,
+				ShardCount = shardCount,
+				LoggerFactory = lf
 			};
 
 			var client = new DiscordClient(cfg);

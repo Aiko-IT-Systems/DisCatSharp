@@ -235,7 +235,7 @@ internal static class ApplicationCommandEqualityChecks
 		if (sourceOptions == null && targetOptions == null)
 			return (true, null);
 
-		if (sourceOptions != null && targetOptions == null || sourceOptions == null && targetOptions != null)
+		if ((sourceOptions != null && targetOptions == null) || (sourceOptions == null && targetOptions != null))
 			return (false, "source or target option null, but not both");
 
 		if (sourceOptions!.Count != targetOptions!.Count)
@@ -262,8 +262,8 @@ internal static class ApplicationCommandEqualityChecks
 				              sourceOption.RawDescriptionLocalizations.AreDictionariesEqual(targetOption
 					              .RawDescriptionLocalizations);
 
-			if (sourceOption.Choices is null && targetOption.Choices is not null ||
-			    sourceOption.Choices is not null && targetOption.Choices is null)
+			if ((sourceOption.Choices is null && targetOption.Choices is not null) ||
+			    (sourceOption.Choices is not null && targetOption.Choices is null))
 				return (false, "source or target choices null, but not both - " + sourceOption.Name);
 
 			if (sourceOption.Choices is not null && targetOption.Choices is not null)
@@ -274,10 +274,10 @@ internal static class ApplicationCommandEqualityChecks
 					return (false, "choice mismatch - " + sourceOption.Name);
 			}
 
-			if (sourceOption.ChannelTypes is null && targetOption.ChannelTypes is not null ||
-			    sourceOption.ChannelTypes is not null && targetOption.ChannelTypes is null ||
-			    sourceOption.ChannelTypes is not null && targetOption.ChannelTypes is not null &&
-			    !sourceOption.ChannelTypes.OrderBy(x => x).All(targetOption.ChannelTypes.OrderBy(x => x).Contains))
+			if ((sourceOption.ChannelTypes is null && targetOption.ChannelTypes is not null) ||
+			    (sourceOption.ChannelTypes is not null && targetOption.ChannelTypes is null) ||
+			    (sourceOption.ChannelTypes is not null && targetOption.ChannelTypes is not null &&
+			     !sourceOption.ChannelTypes.OrderBy(x => x).All(targetOption.ChannelTypes.OrderBy(x => x).Contains)))
 				return (false, "channel type mismatch - " + sourceOption.Name);
 
 			var rec = DeepEqualOptions(sourceOption.Options, targetOption.Options, localizationEnabled);

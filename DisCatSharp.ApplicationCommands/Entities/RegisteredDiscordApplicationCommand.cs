@@ -17,7 +17,8 @@ public sealed class RegisteredDiscordApplicationCommand : DiscordApplicationComm
 	/// <summary>
 	/// Creates a new empty registered discord application command.
 	/// </summary>
-	internal RegisteredDiscordApplicationCommand() { }
+	internal RegisteredDiscordApplicationCommand()
+	{ }
 
 	/// <summary>
 	/// Creates a new registered discord application command to control a dildo. (Lala told me to leave it)

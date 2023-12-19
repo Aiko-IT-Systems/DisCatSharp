@@ -363,10 +363,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		!this.IsWritable()
 			? throw new ArgumentException("Cannot send a text message to a non-text channel.")
 			: this.Discord.ApiClient.CreateMessageAsync(this.Id, null, embed != null
-				? new[]
-				{
-					embed
-				}
+				? new[] { embed }
 				: null, null, null, false, false);
 
 	/// <summary>
@@ -383,10 +380,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		!this.IsWritable()
 			? throw new ArgumentException("Cannot send a text message to a non-text channel.")
 			: this.Discord.ApiClient.CreateMessageAsync(this.Id, content, embed != null
-				? new[]
-				{
-					embed
-				}
+				? new[] { embed }
 				: null, null, null, false, false);
 
 	/// <summary>
@@ -762,7 +756,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			{
 				var pmd = new RestGuildChannelNewParentPayload
 				{
-					ChannelId = x.Id, Position = x.Position >= position ? x.Position + 1 : x.Position
+					ChannelId = x.Id,
+					Position = x.Position >= position ? x.Position + 1 : x.Position
 				};
 				if (x.Id == this.Id)
 				{
@@ -907,7 +902,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 				msgs.InsertRange(0, fetch);
 				last = fetch.FirstOrDefault()?.Id;
 			}
-		} while (remaining > 0 && lastCount > 0);
+		}
+		while (remaining > 0 && lastCount > 0);
 
 		return new ReadOnlyCollection<DiscordMessage>(msgs);
 	}
@@ -1520,7 +1516,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && (o1 == null && o2 == null || e1.Id == e2.Id);
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
 	}
 
 	/// <summary>

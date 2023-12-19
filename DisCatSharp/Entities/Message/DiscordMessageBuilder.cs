@@ -342,7 +342,9 @@ public sealed class DiscordMessageBuilder
 	{
 		this.AttachmentsInternal.Add(new()
 		{
-			Filename = gcpAttachment.Filename, UploadedFilename = gcpAttachment.UploadFilename, Description = gcpAttachment.Description
+			Filename = gcpAttachment.Filename,
+			UploadedFilename = gcpAttachment.UploadFilename,
+			Description = gcpAttachment.Description
 		});
 
 		return this;

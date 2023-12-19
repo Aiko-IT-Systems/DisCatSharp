@@ -23,5 +23,7 @@ public class GuildIntegrationCreateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="GuildIntegrationCreateEventArgs"/> class.
 	/// </summary>
-	internal GuildIntegrationCreateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal GuildIntegrationCreateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

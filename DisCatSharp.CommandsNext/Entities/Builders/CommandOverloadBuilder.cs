@@ -87,7 +87,10 @@ public sealed class CommandOverloadBuilder
 			setb.Append(arg.ParameterType).Append(';');
 			var ca = new CommandArgument
 			{
-				Name = arg.Name, Type = arg.ParameterType, IsOptional = arg.IsOptional, DefaultValue = arg.IsOptional ? arg.DefaultValue : null
+				Name = arg.Name,
+				Type = arg.ParameterType,
+				IsOptional = arg.IsOptional,
+				DefaultValue = arg.IsOptional ? arg.DefaultValue : null
 			};
 
 			var attrsCustom = new List<Attribute>();
@@ -155,7 +158,10 @@ public sealed class CommandOverloadBuilder
 	{
 		var ovl = new CommandOverload()
 		{
-			Arguments = this.Arguments, Priority = this.Priority, Callable = this.Callable, InvocationTarget = this._invocationTarget
+			Arguments = this.Arguments,
+			Priority = this.Priority,
+			Callable = this.Callable,
+			InvocationTarget = this._invocationTarget
 		};
 
 		return ovl;

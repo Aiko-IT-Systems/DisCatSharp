@@ -128,7 +128,8 @@ public sealed class DiscordInteractionResponseBuilder
 	/// <summary>
 	/// Constructs a new empty interaction response builder.
 	/// </summary>
-	public DiscordInteractionResponseBuilder() { }
+	public DiscordInteractionResponseBuilder()
+	{ }
 
 	/// <summary>
 	/// Constructs a new <see cref="DiscordInteractionResponseBuilder"/> based on an existing <see cref="DisCatSharp.Entities.DiscordMessageBuilder"/>.

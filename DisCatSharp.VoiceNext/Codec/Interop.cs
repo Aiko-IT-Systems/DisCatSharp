@@ -93,7 +93,9 @@ internal static class Interop
 		fixed (byte* targetPtr = &target.GetPinnableReference())
 		fixed (byte* keyPtr = &key.GetPinnableReference())
 		fixed (byte* noncePtr = &nonce.GetPinnableReference())
+		{
 			status = _SodiumSecretBoxCreate(targetPtr, sourcePtr, (ulong)source.Length, noncePtr, keyPtr);
+		}
 
 		return status;
 	}
@@ -113,7 +115,9 @@ internal static class Interop
 		fixed (byte* targetPtr = &target.GetPinnableReference())
 		fixed (byte* keyPtr = &key.GetPinnableReference())
 		fixed (byte* noncePtr = &nonce.GetPinnableReference())
+		{
 			status = _SodiumSecretBoxOpen(targetPtr, sourcePtr, (ulong)source.Length, noncePtr, keyPtr);
+		}
 
 		return status;
 	}
@@ -270,7 +274,9 @@ internal static class Interop
 
 		fixed (byte* pcmPtr = &pcm.GetPinnableReference())
 		fixed (byte* opusPtr = &opus.GetPinnableReference())
+		{
 			len = _OpusEncode(encoder, pcmPtr, frameSize, opusPtr, opus.Length);
+		}
 
 		if (len < 0)
 		{
@@ -307,7 +313,9 @@ internal static class Interop
 
 		fixed (byte* opusPtr = &opus.GetPinnableReference())
 		fixed (byte* pcmPtr = &pcm.GetPinnableReference())
+		{
 			len = _OpusDecode(decoder, opusPtr, opus.Length, pcmPtr, frameSize, useFec ? 1 : 0);
+		}
 
 		if (len < 0)
 		{
@@ -330,7 +338,9 @@ internal static class Interop
 		var len = 0;
 
 		fixed (byte* pcmPtr = &pcm.GetPinnableReference())
+		{
 			len = _OpusDecode(decoder, null, 0, pcmPtr, frameSize, 1);
+		}
 
 		if (len < 0)
 		{

@@ -43,7 +43,7 @@ public class DiscordUserConverter : IArgumentConverter<DiscordUser>
 
 		var us = ctx.Client.Guilds.Values
 			.SelectMany(xkvp => xkvp.Members.Values)
-			.Where(xm => (cs ? xm.Username : xm.Username.ToLowerInvariant()) == un && (dv != null && xm.Discriminator == dv || dv == null));
+			.Where(xm => (cs ? xm.Username : xm.Username.ToLowerInvariant()) == un && ((dv != null && xm.Discriminator == dv) || dv == null));
 
 		var usr = us.FirstOrDefault();
 		return Optional.FromNullable<DiscordUser>(usr);
@@ -91,7 +91,7 @@ public class DiscordMemberConverter : IArgumentConverter<DiscordMember>
 		var dv = di != -1 ? value[(di + 1)..] : null;
 
 		var us = ctx.Guild.Members.Values
-			.Where(xm => (cs ? xm.Username : xm.Username.ToLowerInvariant()) == un && (dv != null && xm.Discriminator == dv || dv == null)
+			.Where(xm => ((cs ? xm.Username : xm.Username.ToLowerInvariant()) == un && ((dv != null && xm.Discriminator == dv) || dv == null))
 			             || (cs ? xm.Nickname : xm.Nickname?.ToLowerInvariant()) == value);
 
 		return Optional.FromNullable(us.FirstOrDefault());

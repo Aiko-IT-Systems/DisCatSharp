@@ -97,7 +97,7 @@ public sealed class SecureRandom : Random, IDisposable
 		min += offset;
 		max += offset;
 
-		return (sbyte)(Math.Abs(this.Generate<sbyte>()) % (max - min) + min - offset);
+		return (sbyte)((Math.Abs(this.Generate<sbyte>()) % (max - min)) + min - offset);
 	}
 
 	/// <summary>
@@ -111,7 +111,7 @@ public sealed class SecureRandom : Random, IDisposable
 		if (max <= min)
 			throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max));
 
-		return (byte)(this.Generate<byte>() % (max - min) + min);
+		return (byte)((this.Generate<byte>() % (max - min)) + min);
 	}
 
 	/// <summary>
@@ -129,7 +129,7 @@ public sealed class SecureRandom : Random, IDisposable
 		min += offset;
 		max += offset;
 
-		return (short)(Math.Abs(this.Generate<short>()) % (max - min) + min - offset);
+		return (short)((Math.Abs(this.Generate<short>()) % (max - min)) + min - offset);
 	}
 
 	/// <summary>
@@ -143,7 +143,7 @@ public sealed class SecureRandom : Random, IDisposable
 		if (max <= min)
 			throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max));
 
-		return (ushort)(this.Generate<ushort>() % (max - min) + min);
+		return (ushort)((this.Generate<ushort>() % (max - min)) + min);
 	}
 
 	/// <summary>
@@ -161,7 +161,7 @@ public sealed class SecureRandom : Random, IDisposable
 		min += offset;
 		max += offset;
 
-		return Math.Abs(this.Generate<int>()) % (max - min) + min - offset;
+		return (Math.Abs(this.Generate<int>()) % (max - min)) + min - offset;
 	}
 
 	/// <summary>
@@ -175,7 +175,7 @@ public sealed class SecureRandom : Random, IDisposable
 		if (max <= min)
 			throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max));
 
-		return this.Generate<uint>() % (max - min) + min;
+		return (this.Generate<uint>() % (max - min)) + min;
 	}
 
 	/// <summary>
@@ -193,7 +193,7 @@ public sealed class SecureRandom : Random, IDisposable
 		min += offset;
 		max += offset;
 
-		return Math.Abs(this.Generate<long>()) % (max - min) + min - offset;
+		return (Math.Abs(this.Generate<long>()) % (max - min)) + min - offset;
 	}
 
 	/// <summary>
@@ -207,7 +207,7 @@ public sealed class SecureRandom : Random, IDisposable
 		if (max <= min)
 			throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max));
 
-		return this.Generate<ulong>() % (max - min) + min;
+		return (this.Generate<ulong>() % (max - min)) + min;
 	}
 
 	/// <summary>

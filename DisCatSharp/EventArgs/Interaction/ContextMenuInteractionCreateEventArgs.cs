@@ -34,6 +34,7 @@ public sealed class ContextMenuInteractionCreateEventArgs : InteractionCreateEve
 	/// Initializes a new instance of the <see cref="ContextMenuInteractionCreateEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	public ContextMenuInteractionCreateEventArgs(IServiceProvider provider) : base(provider)
+	public ContextMenuInteractionCreateEventArgs(IServiceProvider provider)
+		: base(provider)
 	{ }
 }

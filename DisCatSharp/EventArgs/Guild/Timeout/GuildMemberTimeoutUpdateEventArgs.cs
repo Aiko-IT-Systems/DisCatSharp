@@ -47,5 +47,7 @@ public class GuildMemberTimeoutUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="GuildMemberTimeoutAddEventArgs"/> class.
 	/// </summary>
-	internal GuildMemberTimeoutUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal GuildMemberTimeoutUpdateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

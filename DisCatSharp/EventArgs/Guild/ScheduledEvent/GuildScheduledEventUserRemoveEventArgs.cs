@@ -32,5 +32,7 @@ public class GuildScheduledEventUserRemoveEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="GuildScheduledEventUserRemoveEventArgs"/> class.
 	/// </summary>
-	internal GuildScheduledEventUserRemoveEventArgs(IServiceProvider provider) : base(provider) { }
+	internal GuildScheduledEventUserRemoveEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

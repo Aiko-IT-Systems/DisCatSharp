@@ -121,7 +121,7 @@ public class ForumPostTag : NullableSnowflakeObject, IEquatable<ForumPostTag>
 	/// <param name="e"><see cref="ForumPostTag"/> to compare to.</param>
 	/// <returns>Whether the <see cref="ForumPostTag"/> is equal to this <see cref="ForumPostTag"/>.</returns>
 	public bool Equals(ForumPostTag e)
-		=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id && this.Name == e.Name);
+		=> e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.Name == e.Name));
 
 	/// <summary>
 	/// Gets the hash code for this <see cref="ForumPostTag"/>.
@@ -141,7 +141,7 @@ public class ForumPostTag : NullableSnowflakeObject, IEquatable<ForumPostTag>
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && (o1 == null && o2 == null || e1.Id == e2.Id);
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
 	}
 
 	/// <summary>

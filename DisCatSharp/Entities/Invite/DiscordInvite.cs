@@ -157,7 +157,8 @@ public class DiscordInvite : ObservableApiObject
 	internal DiscordInvite()
 		: base(new()
 		{
-			"guild_id", "channel_id"
+			"guild_id",
+			"channel_id"
 		})
 	{ }
 

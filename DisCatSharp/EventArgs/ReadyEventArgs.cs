@@ -10,5 +10,7 @@ public sealed class ReadyEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ReadyEventArgs"/> class.
 	/// </summary>
-	internal ReadyEventArgs(IServiceProvider provider) : base(provider) { }
+	internal ReadyEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

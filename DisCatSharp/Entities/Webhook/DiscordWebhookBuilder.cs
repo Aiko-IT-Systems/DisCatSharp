@@ -116,7 +116,8 @@ public sealed class DiscordWebhookBuilder
 	/// <summary>
 	/// Constructs a new empty webhook request builder.
 	/// </summary>
-	public DiscordWebhookBuilder() { } // I still see no point in initializing collections with empty collections. //
+	public DiscordWebhookBuilder()
+	{ } // I still see no point in initializing collections with empty collections. //
 
 	/// <summary>
 	/// Sets the webhook response to suppress embeds.

@@ -131,11 +131,15 @@ public sealed class DiscordApiClient
 		var channel = !ret.GuildId.HasValue
 			? new DiscordDmChannel
 			{
-				Id = ret.ChannelId, Discord = this.Discord, Type = ChannelType.Private
+				Id = ret.ChannelId,
+				Discord = this.Discord,
+				Type = ChannelType.Private
 			}
 			: new DiscordChannel
 			{
-				Id = ret.ChannelId, GuildId = ret.GuildId, Discord = this.Discord
+				Id = ret.ChannelId,
+				GuildId = ret.GuildId,
+				Discord = this.Discord
 			};
 
 		ret.Channel = channel;
@@ -171,7 +175,8 @@ public sealed class DiscordApiClient
 				if (!guild.Members.TryGetValue(author.Id, out var mbr))
 					mbr = new(usr)
 					{
-						Discord = this.Discord, GuildId = guild.Id
+						Discord = this.Discord,
+						GuildId = guild.Id
 					};
 				ret.Author = mbr;
 			}
@@ -358,7 +363,8 @@ public sealed class DiscordApiClient
 		}, out var path);
 		var querydict = new Dictionary<string, string>
 		{
-			["query"] = name, ["limit"] = limit.ToString()
+			["query"] = name,
+			["limit"] = limit.ToString()
 		};
 		var url = Utilities.GetApiUriFor(path, BuildQueryString(querydict), this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -390,7 +396,8 @@ public sealed class DiscordApiClient
 
 			mbrs.Add(new(xtm)
 			{
-				Discord = this.Discord, GuildId = guildId
+				Discord = this.Discord,
+				GuildId = guildId
 			});
 		}
 
@@ -407,7 +414,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.BANS}/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
-			guild_id = guildId, user_id = userId
+			guild_id = guildId,
+			user_id = userId
 		}, out var path);
 		var uri = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, uri, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -472,7 +480,8 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildCreateFromTemplatePayload
 		{
-			Name = name, IconBase64 = iconb64
+			Name = name,
+			IconBase64 = iconb64
 		};
 
 		var route = $"{Endpoints.GUILDS}{Endpoints.TEMPLATES}/:template_code";
@@ -707,7 +716,8 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildIncidentActionsModifyPayload
 		{
-			InvitesDisabledUntil = invitesDisabledUntil, DmsDisabledUntil = dmsDisabledUntil
+			InvitesDisabledUntil = invitesDisabledUntil,
+			DmsDisabledUntil = dmsDisabledUntil
 		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.INCIDENT_ACTIONS}";
@@ -758,7 +768,10 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildOnboardingModifyPayload()
 		{
-			Prompts = prompts, DefaultChannelIds = defaultChannelIds, Enabled = enabled, Mode = mode
+			Prompts = prompts,
+			DefaultChannelIds = defaultChannelIds,
+			Enabled = enabled,
+			Mode = mode
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -812,7 +825,10 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildServerGuideModifyPayload()
 		{
-			Enabled = enabled, WelcomeMessage = welcomeMessage, NewMemberActions = newMemberActions, ResourceChannels = resourceChannels
+			Enabled = enabled,
+			WelcomeMessage = welcomeMessage,
+			NewMemberActions = newMemberActions,
+			ResourceChannels = resourceChannels
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -844,7 +860,8 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildSafetyModifyPayload
 		{
-			SafetyAlertsChannelId = safetyAlertsChannelId, Features = features
+			SafetyAlertsChannelId = safetyAlertsChannelId,
+			Features = features
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -1033,7 +1050,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.BANS}/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
 		{
-			guild_id = guildId, user_id = userId
+			guild_id = guildId,
+			user_id = userId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, BuildQueryString(urlParams), this.Discord.Configuration);
@@ -1055,7 +1073,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.BANS}/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			guild_id = guildId, user_id = userId
+			guild_id = guildId,
+			user_id = userId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -1102,7 +1121,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
 		{
-			guild_id = guildId, user_id = userId
+			guild_id = guildId,
+			user_id = userId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -1157,7 +1177,9 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id{Endpoints.ROLES}/:role_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
 		{
-			guild_id = guildId, user_id = userId, role_id = roleId
+			guild_id = guildId,
+			user_id = userId,
+			role_id = roleId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -1180,7 +1202,9 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id{Endpoints.ROLES}/:role_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			guild_id = guildId, user_id = userId, role_id = roleId
+			guild_id = guildId,
+			user_id = userId,
+			role_id = roleId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -1358,7 +1382,9 @@ public sealed class DiscordApiClient
 		ret.Channels = ret.Guild == null
 			? rawChannels.Select(r => new DiscordChannel
 			{
-				Id = (ulong)r["id"], Name = r["name"].ToString(), Position = (int)r["position"]
+				Id = (ulong)r["id"],
+				Name = r["name"].ToString(),
+				Position = (int)r["position"]
 			}).ToList()
 			: rawChannels.Select(r =>
 			{
@@ -1402,7 +1428,8 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildWidgetSettingsPayload
 		{
-			Enabled = isEnabled, ChannelId = channelId
+			Enabled = isEnabled,
+			ChannelId = channelId
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -1454,7 +1481,8 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildTemplateCreateOrModifyPayload
 		{
-			Name = name, Description = description
+			Name = name,
+			Description = description
 		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.TEMPLATES}";
@@ -1481,7 +1509,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.TEMPLATES}/:template_code";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
 		{
-			guild_id = guildId, template_code = templateCode
+			guild_id = guildId,
+			template_code = templateCode
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -1503,13 +1532,15 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildTemplateCreateOrModifyPayload
 		{
-			Name = name, Description = description
+			Name = name,
+			Description = description
 		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.TEMPLATES}/:template_code";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 		{
-			guild_id = guildId, template_code = templateCode
+			guild_id = guildId,
+			template_code = templateCode
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -1530,7 +1561,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.TEMPLATES}/:template_code";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			guild_id = guildId, template_code = templateCode
+			guild_id = guildId,
+			template_code = templateCode
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -1572,7 +1604,9 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildMembershipScreeningFormModifyPayload
 		{
-			Enabled = enabled, Description = description, Fields = fields
+			Enabled = enabled,
+			Description = description,
+			Fields = fields
 		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBER_VERIFICATION}";
@@ -1619,7 +1653,9 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildWelcomeScreenModifyPayload
 		{
-			Enabled = enabled, WelcomeChannels = welcomeChannels, Description = description
+			Enabled = enabled,
+			WelcomeChannels = welcomeChannels,
+			Description = description
 		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.WELCOME_SCREEN}";
@@ -1646,7 +1682,9 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildUpdateCurrentUserVoiceStatePayload
 		{
-			ChannelId = channelId, Suppress = suppress, RequestToSpeakTimestamp = requestToSpeakTimestamp
+			ChannelId = channelId,
+			Suppress = suppress,
+			RequestToSpeakTimestamp = requestToSpeakTimestamp
 		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.VOICE_STATES}/@me";
@@ -1670,13 +1708,15 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildUpdateUserVoiceStatePayload
 		{
-			ChannelId = channelId, Suppress = suppress
+			ChannelId = channelId,
+			Suppress = suppress
 		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.VOICE_STATES}/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 		{
-			guild_id = guildId, user_id = userId
+			guild_id = guildId,
+			user_id = userId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -1716,7 +1756,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules/:rule_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
-			guild_id = guildId, rule_id = ruleId
+			guild_id = guildId,
+			rule_id = ruleId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -1820,7 +1861,10 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestAutomodRuleModifyPayload
 		{
-			Name = name, EventType = eventType, TriggerMetadata = metadata, Enabled = enabled
+			Name = name,
+			EventType = eventType,
+			TriggerMetadata = metadata,
+			Enabled = enabled
 		};
 
 		if (actions.HasValue)
@@ -1837,7 +1881,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules/:rule_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 		{
-			guild_id = guildId, rule_id = ruleId
+			guild_id = guildId,
+			rule_id = ruleId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -1864,7 +1909,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules/:rule_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			guild_id = guildId, rule_id = ruleId
+			guild_id = guildId,
+			rule_id = ruleId
 		}, out var path);
 
 		var headers = Utilities.GetBaseHeaders();
@@ -1971,7 +2017,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}/:scheduled_event_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 		{
-			guild_id = guildId, scheduled_event_id = scheduledEventId
+			guild_id = guildId,
+			scheduled_event_id = scheduledEventId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -2019,7 +2066,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}/:scheduled_event_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 		{
-			guild_id = guildId, scheduled_event_id = scheduledEventId
+			guild_id = guildId,
+			scheduled_event_id = scheduledEventId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -2065,7 +2113,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}/:scheduled_event_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
-			guild_id = guildId, scheduled_event_id = scheduledEventId
+			guild_id = guildId,
+			scheduled_event_id = scheduledEventId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
@@ -2155,7 +2204,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}/:scheduled_event_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			guild_id = guildId, scheduled_event_id = scheduledEventId
+			guild_id = guildId,
+			scheduled_event_id = scheduledEventId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -2188,7 +2238,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}/:scheduled_event_id{Endpoints.USERS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
-			guild_id = guildId, scheduled_event_id = scheduledEventId
+			guild_id = guildId,
+			scheduled_event_id = scheduledEventId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
@@ -2567,7 +2618,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
-			channel_id = channelId, message_id = messageId
+			channel_id = channelId,
+			message_id = messageId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -2613,10 +2665,7 @@ public sealed class DiscordApiClient
 			Content = content,
 			StickersIds = sticker is null
 				? Array.Empty<ulong>()
-				: new[]
-				{
-					sticker.Id
-				},
+				: new[] { sticker.Id },
 			IsTts = false,
 			HasEmbed = embeds?.Any() ?? false,
 			Embeds = embeds,
@@ -2626,7 +2675,8 @@ public sealed class DiscordApiClient
 		if (replyMessageId != null)
 			pld.MessageReference = new InternalDiscordMessageReference
 			{
-				MessageId = replyMessageId, FailIfNotExists = failOnInvalidReply
+				MessageId = replyMessageId,
+				FailIfNotExists = failOnInvalidReply
 			};
 
 		if (replyMessageId != null)
@@ -2666,10 +2716,7 @@ public sealed class DiscordApiClient
 			Content = builder.Content,
 			StickersIds = builder.Sticker is null
 				? Array.Empty<ulong>()
-				: new[]
-				{
-					builder.Sticker.Id
-				},
+				: new[] { builder.Sticker.Id },
 			IsTts = builder.IsTts,
 			HasEmbed = builder.Embeds != null,
 			Embeds = builder.Embeds,
@@ -2679,7 +2726,8 @@ public sealed class DiscordApiClient
 		if (builder.ReplyId != null)
 			pld.MessageReference = new InternalDiscordMessageReference
 			{
-				MessageId = builder.ReplyId, FailIfNotExists = builder.FailOnInvalidReply
+				MessageId = builder.ReplyId,
+				FailIfNotExists = builder.FailOnInvalidReply
 			};
 
 		pld.Mentions = new(builder.Mentions ?? Mentions.All, builder.Mentions?.Any() ?? false, builder.MentionOnReply);
@@ -2720,7 +2768,10 @@ public sealed class DiscordApiClient
 			{
 				DiscordAttachment att = new()
 				{
-					Id = fileId, Discord = this.Discord, Description = file.Description, Filename = file.Filename
+					Id = fileId,
+					Discord = this.Discord,
+					Description = file.Description,
+					Filename = file.Filename
 				};
 				attachments.Add(att);
 				fileId++;
@@ -2812,7 +2863,10 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestStageInstanceCreatePayload
 		{
-			ChannelId = channelId, Topic = topic, ScheduledEventId = scheduledEventId, SendStartNotification = sendStartNotification
+			ChannelId = channelId,
+			Topic = topic,
+			ScheduledEventId = scheduledEventId,
+			SendStartNotification = sendStartNotification
 		};
 
 		var route = $"{Endpoints.STAGE_INSTANCES}";
@@ -2943,7 +2997,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
-			channel_id = channelId, message_id = messageId
+			channel_id = channelId,
+			message_id = messageId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -2994,7 +3049,10 @@ public sealed class DiscordApiClient
 			{
 				DiscordAttachment att = new()
 				{
-					Id = fileId, Discord = this.Discord, Description = file.Description, Filename = file.Filename
+					Id = fileId,
+					Discord = this.Discord,
+					Description = file.Description,
+					Filename = file.Filename
 				};
 				attachmentsNew.Add(att);
 				fileId++;
@@ -3013,7 +3071,8 @@ public sealed class DiscordApiClient
 			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
 			var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 			{
-				channel_id = channelId, message_id = messageId
+				channel_id = channelId,
+				message_id = messageId
 			}, out var path);
 
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -3033,7 +3092,8 @@ public sealed class DiscordApiClient
 			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
 			var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 			{
-				channel_id = channelId, message_id = messageId
+				channel_id = channelId,
+				message_id = messageId
 			}, out var path);
 
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -3060,7 +3120,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			channel_id = channelId, message_id = messageId
+			channel_id = channelId,
+			message_id = messageId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -3177,7 +3238,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PERMISSIONS}/:overwrite_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			channel_id = channelId, overwrite_id = overwriteId
+			channel_id = channelId,
+			overwrite_id = overwriteId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -3197,7 +3259,9 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestChannelPermissionEditPayload
 		{
-			Type = type, Allow = allow & PermissionMethods.FullPerms, Deny = deny & PermissionMethods.FullPerms
+			Type = type,
+			Allow = allow & PermissionMethods.FullPerms,
+			Deny = deny & PermissionMethods.FullPerms
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -3207,7 +3271,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PERMISSIONS}/:overwrite_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
 		{
-			channel_id = channelId, overwrite_id = overwriteId
+			channel_id = channelId,
+			overwrite_id = overwriteId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -3263,7 +3328,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PINS}/:message_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
 		{
-			channel_id = channelId, message_id = messageId
+			channel_id = channelId,
+			message_id = messageId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -3280,7 +3346,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PINS}/:message_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			channel_id = channelId, message_id = messageId
+			channel_id = channelId,
+			message_id = messageId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -3298,13 +3365,15 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestChannelGroupDmRecipientAddPayload
 		{
-			AccessToken = accessToken, Nickname = nickname
+			AccessToken = accessToken,
+			Nickname = nickname
 		};
 
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CHANNELS}/:channel_id{Endpoints.RECIPIENTS}/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
 		{
-			channel_id = channelId, user_id = userId
+			channel_id = channelId,
+			user_id = userId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -3321,7 +3390,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CHANNELS}/:channel_id{Endpoints.RECIPIENTS}/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			channel_id = channelId, user_id = userId
+			channel_id = channelId,
+			user_id = userId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -3337,7 +3407,8 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestUserGroupDmCreatePayload
 		{
-			AccessTokens = accessTokens, Nicknames = nicks
+			AccessTokens = accessTokens,
+			Nicknames = nicks
 		};
 
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CHANNELS}";
@@ -3409,7 +3480,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.CROSSPOST}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
 		{
-			channel_id = channelId, message_id = messageId
+			channel_id = channelId,
+			message_id = messageId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -3477,7 +3549,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
-			guild_id = guildId, user_id = userId
+			guild_id = guildId,
+			user_id = userId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -3501,12 +3574,16 @@ public sealed class DiscordApiClient
 		if (this.Discord.Configuration.Intents.HasIntent(DiscordIntents.GuildPresences) && usr.Presence == null && this.Discord is DiscordClient dc)
 			dc.PresencesInternal[usr.Id] = new()
 			{
-				Discord = dc, RawActivity = new(), Activity = new(), Status = UserStatus.Offline
+				Discord = dc,
+				RawActivity = new(),
+				Activity = new(),
+				Status = UserStatus.Offline
 			};
 
 		return new(tm)
 		{
-			Discord = this.Discord, GuildId = guildId
+			Discord = this.Discord,
+			GuildId = guildId
 		};
 	}
 
@@ -3525,7 +3602,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			guild_id = guildId, user_id = userId
+			guild_id = guildId,
+			user_id = userId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, BuildQueryString(urlParams), this.Discord.Configuration);
@@ -3541,7 +3619,9 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestUserUpdateCurrentPayload
 		{
-			Username = username, AvatarBase64 = base64Avatar.ValueOrDefault(), AvatarSet = base64Avatar.HasValue
+			Username = username,
+			AvatarBase64 = base64Avatar.ValueOrDefault(),
+			AvatarSet = base64Avatar.HasValue
 		};
 
 		var route = $"{Endpoints.USERS}{Endpoints.ME}";
@@ -3635,7 +3715,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 		{
-			guild_id = guildId, user_id = userId
+			guild_id = guildId,
+			user_id = userId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -3663,7 +3744,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 		{
-			guild_id = guildId, user_id = userId
+			guild_id = guildId,
+			user_id = userId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -3766,7 +3848,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.ROLES}/:role_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 		{
-			guild_id = guildId, role_id = roleId
+			guild_id = guildId,
+			role_id = roleId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -3793,7 +3876,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.ROLES}/:role_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			guild_id = guildId, role_id = roleId
+			guild_id = guildId,
+			role_id = roleId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -3892,7 +3976,8 @@ public sealed class DiscordApiClient
 
 		var urlParams = new Dictionary<string, string>
 		{
-			["days"] = days.ToString(CultureInfo.InvariantCulture), ["compute_prune_count"] = computePruneCount.ToString()
+			["days"] = days.ToString(CultureInfo.InvariantCulture),
+			["compute_prune_count"] = computePruneCount.ToString()
 		};
 
 		var sb = includeRoles?.Aggregate(new StringBuilder(),
@@ -3989,7 +4074,8 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildIntegrationAttachPayload
 		{
-			Type = type, Id = id
+			Type = type,
+			Id = id
 		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.INTEGRATIONS}";
@@ -4017,13 +4103,16 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildIntegrationModifyPayload
 		{
-			ExpireBehavior = expireBehaviour, ExpireGracePeriod = expireGracePeriod, EnableEmoticons = enableEmoticons
+			ExpireBehavior = expireBehaviour,
+			ExpireGracePeriod = expireGracePeriod,
+			EnableEmoticons = enableEmoticons
 		};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.INTEGRATIONS}/:integration_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 		{
-			guild_id = guildId, integration_id = integrationId
+			guild_id = guildId,
+			integration_id = integrationId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -4043,7 +4132,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.INTEGRATIONS}/:integration_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			guild_id = guildId, integration_id = integration.Id
+			guild_id = guildId,
+			integration_id = integration.Id
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -4060,7 +4150,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.INTEGRATIONS}/:integration_id{Endpoints.SYNC}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
 		{
-			guild_id = guildId, integration_id = integrationId
+			guild_id = guildId,
+			integration_id = integrationId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -4291,7 +4382,9 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestWebhookPayload
 		{
-			Name = name, AvatarBase64 = base64Avatar.ValueOrDefault(), AvatarSet = base64Avatar.HasValue
+			Name = name,
+			AvatarBase64 = base64Avatar.ValueOrDefault(),
+			AvatarSet = base64Avatar.HasValue
 		};
 
 		var headers = new Dictionary<string, string>();
@@ -4390,7 +4483,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
-			webhook_id = webhookId, webhook_token = webhookToken
+			webhook_id = webhookId,
+			webhook_token = webhookToken
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord?.Configuration);
@@ -4416,7 +4510,10 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestWebhookPayload
 		{
-			Name = name, AvatarBase64 = base64Avatar.ValueOrDefault(), AvatarSet = base64Avatar.HasValue, ChannelId = channelId
+			Name = name,
+			AvatarBase64 = base64Avatar.ValueOrDefault(),
+			AvatarSet = base64Avatar.HasValue,
+			ChannelId = channelId
 		};
 
 		var headers = new Dictionary<string, string>();
@@ -4450,7 +4547,8 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestWebhookPayload
 		{
-			Name = name, AvatarBase64 = base64Avatar
+			Name = name,
+			AvatarBase64 = base64Avatar
 		};
 
 		var headers = new Dictionary<string, string>();
@@ -4460,7 +4558,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 		{
-			webhook_id = webhookId, webhook_token = webhookToken
+			webhook_id = webhookId,
+			webhook_token = webhookToken
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -4508,7 +4607,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			webhook_id = webhookId, webhook_token = webhookToken
+			webhook_id = webhookId,
+			webhook_token = webhookToken
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -4582,7 +4682,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
 		{
-			webhook_id = webhookId, webhook_token = webhookToken
+			webhook_id = webhookId,
+			webhook_token = webhookToken
 		}, out var path);
 
 		var qub = Utilities.GetApiUriBuilderFor(path, this.Discord?.Configuration).AddParameter("wait", "true");
@@ -4615,7 +4716,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.SLACK}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
 		{
-			webhook_id = webhookId, webhook_token = webhookToken
+			webhook_id = webhookId,
+			webhook_token = webhookToken
 		}, out var path);
 
 		var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true");
@@ -4639,7 +4741,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.GITHUB}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
 		{
-			webhook_id = webhookId, webhook_token = webhookToken
+			webhook_id = webhookId,
+			webhook_token = webhookToken
 		}, out var path);
 
 		var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true");
@@ -4708,7 +4811,9 @@ public sealed class DiscordApiClient
 			var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
 			var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 			{
-				webhook_id = webhookId, webhook_token = webhookToken, message_id = messageId
+				webhook_id = webhookId,
+				webhook_token = webhookToken,
+				message_id = messageId
 			}, out var path);
 
 			var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration);
@@ -4735,7 +4840,9 @@ public sealed class DiscordApiClient
 			var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
 			var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 			{
-				webhook_id = webhookId, webhook_token = webhookToken, message_id = messageId
+				webhook_id = webhookId,
+				webhook_token = webhookToken,
+				message_id = messageId
 			}, out var path);
 
 			var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration);
@@ -4777,7 +4884,9 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
-			webhook_id = webhookId, webhook_token = webhookToken, message_id = messageId
+			webhook_id = webhookId,
+			webhook_token = webhookToken,
+			message_id = messageId
 		}, out var path);
 
 		var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration);
@@ -4821,7 +4930,9 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			webhook_id = webhookId, webhook_token = webhookToken, message_id = messageId
+			webhook_id = webhookId,
+			webhook_token = webhookToken,
+			message_id = messageId
 		}, out var path);
 
 		var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration);
@@ -4865,7 +4976,9 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.REACTIONS}/:emoji{Endpoints.ME}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
 		{
-			channel_id = channelId, message_id = messageId, emoji
+			channel_id = channelId,
+			message_id = messageId,
+			emoji
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -4883,7 +4996,9 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.REACTIONS}/:emoji{Endpoints.ME}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			channel_id = channelId, message_id = messageId, emoji
+			channel_id = channelId,
+			message_id = messageId,
+			emoji
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -4907,7 +5022,10 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.REACTIONS}/:emoji/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			channel_id = channelId, message_id = messageId, emoji, user_id = userId
+			channel_id = channelId,
+			message_id = messageId,
+			emoji,
+			user_id = userId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -4933,7 +5051,9 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.REACTIONS}/:emoji";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
-			channel_id = channelId, message_id = messageId, emoji
+			channel_id = channelId,
+			message_id = messageId,
+			emoji
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, BuildQueryString(urlParams), this.Discord.Configuration);
@@ -4977,7 +5097,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.REACTIONS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			channel_id = channelId, message_id = messageId
+			channel_id = channelId,
+			message_id = messageId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -4995,7 +5116,9 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.REACTIONS}/:emoji";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			channel_id = channelId, message_id = messageId, emoji
+			channel_id = channelId,
+			message_id = messageId,
+			emoji
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -5034,7 +5157,9 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestThreadChannelCreatePayload
 		{
-			Name = name, AutoArchiveDuration = autoArchiveDuration, PerUserRateLimit = rateLimitPerUser
+			Name = name,
+			AutoArchiveDuration = autoArchiveDuration,
+			PerUserRateLimit = rateLimitPerUser
 		};
 
 		if (isForum)
@@ -5085,7 +5210,8 @@ public sealed class DiscordApiClient
 			}
 			: new
 			{
-				channel_id = channelId, message_id = messageId
+				channel_id = channelId,
+				message_id = messageId
 			};
 
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, param, out var path);
@@ -5158,7 +5284,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREAD_MEMBERS}/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
 		{
-			channel_id = channelId, user_id = userId
+			channel_id = channelId,
+			user_id = userId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -5181,7 +5308,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREAD_MEMBERS}/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
-			channel_id = channelId, user_id = userId
+			channel_id = channelId,
+			user_id = userId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
@@ -5202,7 +5330,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREAD_MEMBERS}/:user_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			channel_id = channelId, user_id = userId
+			channel_id = channelId,
+			user_id = userId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -5462,7 +5591,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.EMOJIS}/:emoji_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
-			guild_id = guildId, emoji_id = emojiId
+			guild_id = guildId,
+			emoji_id = emojiId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -5493,7 +5623,9 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildEmojiCreatePayload
 		{
-			Name = name, ImageB64 = imageb64, Roles = roles?.ToArray()
+			Name = name,
+			ImageB64 = imageb64,
+			Roles = roles?.ToArray()
 		};
 
 		var headers = new Dictionary<string, string>();
@@ -5535,7 +5667,8 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGuildEmojiModifyPayload
 		{
-			Name = name, Roles = roles?.ToArray()
+			Name = name,
+			Roles = roles?.ToArray()
 		};
 
 		var headers = new Dictionary<string, string>();
@@ -5545,7 +5678,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.EMOJIS}/:emoji_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 		{
-			guild_id = guildId, emoji_id = emojiId
+			guild_id = guildId,
+			emoji_id = emojiId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -5579,7 +5713,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.EMOJIS}/:emoji_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			guild_id = guildId, emoji_id = emojiId
+			guild_id = guildId,
+			emoji_id = emojiId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -5655,7 +5790,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}/:sticker_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
-			guild_id = guildId, sticker_id = stickerId
+			guild_id = guildId,
+			sticker_id = stickerId
 		}, out var path);
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 
@@ -5707,7 +5843,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}/:sticker_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 		{
-			guild_id = guildId, sticker_id = stickerId
+			guild_id = guildId,
+			sticker_id = stickerId
 		}, out var path);
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var headers = Utilities.GetBaseHeaders();
@@ -5716,7 +5853,9 @@ public sealed class DiscordApiClient
 
 		var pld = new RestStickerModifyPayload()
 		{
-			Name = name, Description = description, Tags = tags
+			Name = name,
+			Description = description,
+			Tags = tags
 		};
 
 		var values = new Dictionary<string, string>
@@ -5740,7 +5879,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}/:sticker_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			guild_id = guildId, sticker_id = stickerId
+			guild_id = guildId,
+			sticker_id = stickerId
 		}, out var path);
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var headers = Utilities.GetBaseHeaders();
@@ -5863,7 +6003,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
-			application_id = applicationId, command_id = commandId
+			application_id = applicationId,
+			command_id = commandId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -5922,7 +6063,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 		{
-			application_id = applicationId, command_id = commandId
+			application_id = applicationId,
+			command_id = commandId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -5944,7 +6086,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			application_id = applicationId, command_id = commandId
+			application_id = applicationId,
+			command_id = commandId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -5962,7 +6105,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
-			application_id = applicationId, guild_id = guildId
+			application_id = applicationId,
+			guild_id = guildId
 		}, out var path);
 
 		var querydict = new Dictionary<string, string>
@@ -6004,7 +6148,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
 		{
-			application_id = applicationId, guild_id = guildId
+			application_id = applicationId,
+			guild_id = guildId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -6039,7 +6184,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
 		{
-			application_id = applicationId, guild_id = guildId
+			application_id = applicationId,
+			guild_id = guildId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -6062,7 +6208,9 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
-			application_id = applicationId, guild_id = guildId, command_id = commandId
+			application_id = applicationId,
+			guild_id = guildId,
+			command_id = commandId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -6122,7 +6270,9 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 		{
-			application_id = applicationId, guild_id = guildId, command_id = commandId
+			application_id = applicationId,
+			guild_id = guildId,
+			command_id = commandId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -6145,7 +6295,9 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			application_id = applicationId, guild_id = guildId, command_id = commandId
+			application_id = applicationId,
+			guild_id = guildId,
+			command_id = commandId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -6196,7 +6348,9 @@ public sealed class DiscordApiClient
 
 			pld = new()
 			{
-				Type = type, Data = data, CallbackHints = builder?.CallbackHints
+				Type = type,
+				Data = data,
+				CallbackHints = builder?.CallbackHints
 			};
 
 			if (builder != null && builder.Files != null && builder.Files.Count > 0)
@@ -6249,7 +6403,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
 		{
-			interaction_id = interactionId, interaction_token = interactionToken
+			interaction_id = interactionId,
+			interaction_token = interactionToken
 		}, out var path);
 
 		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "false").Build();
@@ -6281,7 +6436,9 @@ public sealed class DiscordApiClient
 			Type = type,
 			Data = new()
 			{
-				Title = builder.Title, CustomId = builder.CustomId, ModalComponents = builder.ModalComponents
+				Title = builder.Title,
+				CustomId = builder.CustomId,
+				ModalComponents = builder.ModalComponents
 			},
 			CallbackHints = builder?.CallbackHints
 		};
@@ -6291,7 +6448,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
 		{
-			interaction_id = interactionId, interaction_token = interactionToken
+			interaction_id = interactionId,
+			interaction_token = interactionToken
 		}, out var path);
 
 		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
@@ -6315,7 +6473,10 @@ public sealed class DiscordApiClient
 			Type = type,
 			Data = new()
 			{
-				Title = title, CustomId = customId, ModalSize = modalSize, IframePath = iFramePath
+				Title = title,
+				CustomId = customId,
+				ModalSize = modalSize,
+				IframePath = iFramePath
 			},
 			CallbackHints = null
 		};
@@ -6325,7 +6486,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
 		{
-			interaction_id = interactionId, interaction_token = interactionToken
+			interaction_id = interactionId,
+			interaction_token = interactionToken
 		}, out var path);
 
 		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
@@ -6423,7 +6585,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.WEBHOOKS}/:application_id/:interaction_token";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
 		{
-			application_id = applicationId, interaction_token = interactionToken
+			application_id = applicationId,
+			interaction_token = interactionToken
 		}, out var path);
 
 		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
@@ -6556,7 +6719,9 @@ public sealed class DiscordApiClient
 	{
 		TestEntitlementCreatePayload pld = new()
 		{
-			SkuId = skuId, OwnerId = ownerId, OwnerType = ownerType
+			SkuId = skuId,
+			OwnerId = ownerId,
+			OwnerType = ownerType
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.ENTITLEMENTS}";
@@ -6581,7 +6746,8 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.ENTITLEMENTS}/:entitlement_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
-			application_id = applicationId, entitlement_id = entitlementId
+			application_id = applicationId,
+			entitlement_id = entitlementId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -6943,7 +7109,9 @@ public sealed class DiscordApiClient
 
 		RestOAuth2ApplicationRoleConnectionPayload pld = new()
 		{
-			PlatformName = platformName, PlatformUsername = platformUsername, Metadata = metadata.HasValue ? metadata.Value.GetKeyValuePairs() : Optional<Dictionary<string, string>>.None
+			PlatformName = platformName,
+			PlatformUsername = platformUsername,
+			Metadata = metadata.HasValue ? metadata.Value.GetKeyValuePairs() : Optional<Dictionary<string, string>>.None
 		};
 
 		// ReSharper disable once HeuristicUnreachableCode
@@ -6977,21 +7145,11 @@ public sealed class DiscordApiClient
 
 		var formData = new Dictionary<string, string>
 		{
-			{
-				"client_id", this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture)
-			},
-			{
-				"client_secret", this.OAuth2Client.ClientSecret
-			},
-			{
-				"grant_type", "authorization_code"
-			},
-			{
-				"code", code
-			},
-			{
-				"redirect_uri", this.OAuth2Client.RedirectUri.AbsoluteUri
-			}
+			{ "client_id", this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) },
+			{ "client_secret", this.OAuth2Client.ClientSecret },
+			{ "grant_type", "authorization_code" },
+			{ "code", code },
+			{ "redirect_uri", this.OAuth2Client.RedirectUri.AbsoluteUri }
 		};
 
 		var url = Utilities.GetApiUriFor(path);
@@ -7017,21 +7175,11 @@ public sealed class DiscordApiClient
 
 		var formData = new Dictionary<string, string>
 		{
-			{
-				"client_id", this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture)
-			},
-			{
-				"client_secret", this.OAuth2Client.ClientSecret
-			},
-			{
-				"grant_type", "refresh_token"
-			},
-			{
-				"refresh_token", refreshToken
-			},
-			{
-				"redirect_uri", this.OAuth2Client.RedirectUri.AbsoluteUri
-			}
+			{ "client_id", this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture) },
+			{ "client_secret", this.OAuth2Client.ClientSecret },
+			{ "grant_type", "refresh_token" },
+			{ "refresh_token", refreshToken },
+			{ "redirect_uri", this.OAuth2Client.RedirectUri.AbsoluteUri }
 		};
 
 		var url = Utilities.GetApiUriFor(path);
@@ -7064,12 +7212,8 @@ public sealed class DiscordApiClient
 
 		var formData = new Dictionary<string, string>
 		{
-			{
-				"token", token
-			},
-			{
-				"token_type_hint", type
-			}
+			{ "token", token },
+			{ "token_type_hint", type }
 		};
 
 		var url = Utilities.GetApiUriFor(path);

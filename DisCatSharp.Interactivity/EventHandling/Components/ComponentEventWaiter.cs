@@ -38,7 +38,8 @@ internal class ComponentEventWaiter : IDisposable
 
 		this._message = new()
 		{
-			Content = config.ResponseMessage ?? "This message was not meant for you.", IsEphemeral = true
+			Content = config.ResponseMessage ?? "This message was not meant for you.",
+			IsEphemeral = true
 		};
 	}
 

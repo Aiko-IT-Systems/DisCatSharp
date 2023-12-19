@@ -61,7 +61,8 @@ public sealed class DiscordRoleSelectComponent : DiscordBaseSelectComponent
 	/// <summary>
 	/// Constructs a new <see cref="DiscordRoleSelectComponent"/>.
 	/// </summary>
-	public DiscordRoleSelectComponent() : base()
+	public DiscordRoleSelectComponent()
+		: base()
 	{
 		this.Type = ComponentType.RoleSelect;
 	}

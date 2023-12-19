@@ -54,5 +54,6 @@ public class DiscordGuildMembershipScreeningField : ObservableApiObject
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordGuildMembershipScreeningField"/> class.
 	/// </summary>
-	internal DiscordGuildMembershipScreeningField() { }
+	internal DiscordGuildMembershipScreeningField()
+	{ }
 }

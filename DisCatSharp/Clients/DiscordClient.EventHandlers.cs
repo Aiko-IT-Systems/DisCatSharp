@@ -177,7 +177,7 @@ public sealed partial class DiscordClient
 		var delegates = (
 			from method in type.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
 			let attribute = method.GetCustomAttribute<EventAttribute>()
-			where attribute is not null && (registerStatic && method.IsStatic || handler is not null)
+			where attribute is not null && ((registerStatic && method.IsStatic) || handler is not null)
 			let eventName = attribute.EventName ?? method.Name
 			let eventInfo = this.GetType().GetEvent(eventName)
 			                ?? throw new ArgumentException($"Tried to register handler to non-existent event \"{eventName}\"")

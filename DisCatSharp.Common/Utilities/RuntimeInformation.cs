@@ -24,7 +24,8 @@ public static class RuntimeInformation
 		var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 		var mscorlib = loadedAssemblies.Select(x => new
 			{
-				Assembly = x, AssemblyName = x.GetName()
+				Assembly = x,
+				AssemblyName = x.GetName()
 			})
 			.FirstOrDefault(x => x.AssemblyName.Name is "mscorlib" or "System.Private.CoreLib");
 

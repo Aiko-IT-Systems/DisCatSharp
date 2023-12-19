@@ -23,5 +23,7 @@ public class GuildAuditLogEntryCreateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="GuildAuditLogEntryCreateEventArgs"/> class.
 	/// </summary>
-	internal GuildAuditLogEntryCreateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal GuildAuditLogEntryCreateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

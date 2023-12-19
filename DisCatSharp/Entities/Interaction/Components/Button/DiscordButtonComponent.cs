@@ -72,7 +72,8 @@ public sealed class DiscordButtonComponent : DiscordComponent
 	/// Constructs a new button based on another button.
 	/// </summary>
 	/// <param name="other">The button to copy.</param>
-	public DiscordButtonComponent(DiscordButtonComponent other) : this()
+	public DiscordButtonComponent(DiscordButtonComponent other)
+		: this()
 	{
 		this.CustomId = other.CustomId;
 		this.Style = other.Style;

@@ -19,6 +19,7 @@ public class SlashCommandExecutedEventArgs : DiscordEventArgs
 	/// Initializes a new instance of the <see cref="SlashCommandExecutedEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	public SlashCommandExecutedEventArgs(IServiceProvider provider) : base(provider)
+	public SlashCommandExecutedEventArgs(IServiceProvider provider)
+		: base(provider)
 	{ }
 }

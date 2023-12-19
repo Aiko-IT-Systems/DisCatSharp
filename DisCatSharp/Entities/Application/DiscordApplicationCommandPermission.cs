@@ -32,7 +32,8 @@ public sealed class DiscordApplicationCommandPermission : SnowflakeObject, IEqua
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordApplicationCommandPermission"/> class.
 	/// </summary>
-	internal DiscordApplicationCommandPermission() { }
+	internal DiscordApplicationCommandPermission()
+	{ }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordApplicationCommandPermission"/> class.

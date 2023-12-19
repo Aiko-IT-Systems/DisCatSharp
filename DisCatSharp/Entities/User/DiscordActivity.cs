@@ -260,7 +260,9 @@ public sealed class DiscordActivity
 			this.CustomStatus = rawActivity?.IsCustomStatus() == true
 				? new DiscordCustomStatus
 				{
-					Name = rawActivity.Name!, State = rawActivity.State, Emoji = rawActivity.Emoji
+					Name = rawActivity.Name!,
+					State = rawActivity.State,
+					Emoji = rawActivity.Emoji
 				}
 				: null;
 	}
@@ -409,7 +411,8 @@ public sealed class DiscordRichPresence
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordRichPresence"/> class.
 	/// </summary>
-	internal DiscordRichPresence() { }
+	internal DiscordRichPresence()
+	{ }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordRichPresence"/> class.
@@ -484,7 +487,9 @@ public sealed class DiscordRichPresence
 			else if (ulong.TryParse(lid, NumberStyles.Number, CultureInfo.InvariantCulture, out var ulid))
 				this.LargeImage = new DiscordApplicationAsset
 				{
-					Id = lid, Application = this.Application, Type = ApplicationAssetType.LargeImage
+					Id = lid,
+					Application = this.Application,
+					Type = ApplicationAssetType.LargeImage
 				};
 		}
 
@@ -499,7 +504,9 @@ public sealed class DiscordRichPresence
 			else if (ulong.TryParse(sid, NumberStyles.Number, CultureInfo.InvariantCulture, out var usid))
 				this.SmallImage = new DiscordApplicationAsset
 				{
-					Id = sid, Application = this.Application, Type = ApplicationAssetType.LargeImage
+					Id = sid,
+					Application = this.Application,
+					Type = ApplicationAssetType.LargeImage
 				};
 		}
 	}

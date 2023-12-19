@@ -73,7 +73,8 @@ public sealed class DiscordStringSelectComponent : DiscordBaseSelectComponent
 	/// <summary>
 	/// Constructs a new <see cref="DiscordStringSelectComponent"/>.
 	/// </summary>
-	public DiscordStringSelectComponent() : base()
+	public DiscordStringSelectComponent()
+		: base()
 	{
 		this.Type = ComponentType.StringSelect;
 	}

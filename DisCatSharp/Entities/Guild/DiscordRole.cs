@@ -206,7 +206,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 		action(mdl);
 
 		var canContinue = true;
-		if (mdl.Icon.HasValue && mdl.Icon.Value != null || mdl.UnicodeEmoji.HasValue && mdl.UnicodeEmoji.Value != null)
+		if ((mdl.Icon.HasValue && mdl.Icon.Value != null) || (mdl.UnicodeEmoji.HasValue && mdl.UnicodeEmoji.Value != null))
 			canContinue = this.Guild.Features.HasFeature(GuildFeaturesEnum.CanSetRoleIcons);
 
 		var iconb64 = Optional.FromNullable<string>(null);
@@ -314,7 +314,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <returns>Whether the two roles are equal.</returns>
 	public static bool operator ==(DiscordRole e1, DiscordRole e2)
 		=> e1 is null == e2 is null
-		   && (e1 is null && e2 is null || e1.Id == e2.Id);
+		   && ((e1 is null && e2 is null) || e1.Id == e2.Id);
 
 	/// <summary>
 	/// Gets whether the two <see cref="DiscordRole"/> objects are not equal.

@@ -39,5 +39,5 @@ public sealed class RequirePrefixesAttribute : CheckBaseAttribute
 	/// <param name="ctx">The command context.</param>
 	/// <param name="help">If true, help - returns true.</param>
 	public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
-		=> Task.FromResult(help && this.ShowInHelp || this.Prefixes.Contains(ctx.Prefix, ctx.CommandsNext.GetStringComparer()));
+		=> Task.FromResult((help && this.ShowInHelp) || this.Prefixes.Contains(ctx.Prefix, ctx.CommandsNext.GetStringComparer()));
 }

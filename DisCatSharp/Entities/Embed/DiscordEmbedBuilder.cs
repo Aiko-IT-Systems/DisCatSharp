@@ -125,19 +125,24 @@ public sealed class DiscordEmbedBuilder
 		if (original.Thumbnail != null)
 			this.Thumbnail = new()
 			{
-				Url = original.Thumbnail.Url?.ToString(), Height = original.Thumbnail.Height, Width = original.Thumbnail.Width
+				Url = original.Thumbnail.Url?.ToString(),
+				Height = original.Thumbnail.Height,
+				Width = original.Thumbnail.Width
 			};
 
 		if (original.Author != null)
 			this.Author = new()
 			{
-				IconUrl = original.Author.IconUrl?.ToString(), Name = original.Author.Name, Url = original.Author.Url?.ToString()
+				IconUrl = original.Author.IconUrl?.ToString(),
+				Name = original.Author.Name,
+				Url = original.Author.Url?.ToString()
 			};
 
 		if (original.Footer != null)
 			this.Footer = new()
 			{
-				IconUrl = original.Footer.IconUrl?.ToString(), Text = original.Footer.Text
+				IconUrl = original.Footer.IconUrl?.ToString(),
+				Text = original.Footer.Text
 			};
 
 		if (original.Fields?.Any() == true)
@@ -268,7 +273,9 @@ public sealed class DiscordEmbedBuilder
 	{
 		this.Thumbnail = new()
 		{
-			Url = url, Height = height, Width = width
+			Url = url,
+			Height = height,
+			Width = width
 		};
 
 		return this;
@@ -285,7 +292,9 @@ public sealed class DiscordEmbedBuilder
 	{
 		this.Thumbnail = new()
 		{
-			Uri = new(url), Height = height, Width = width
+			Uri = new(url),
+			Height = height,
+			Width = width
 		};
 
 		return this;
@@ -307,7 +316,9 @@ public sealed class DiscordEmbedBuilder
 			? null
 			: new EmbedAuthor
 			{
-				Name = name, Url = url, IconUrl = iconUrl
+				Name = name,
+				Url = url,
+				IconUrl = iconUrl
 			};
 		return this;
 	}
@@ -327,7 +338,8 @@ public sealed class DiscordEmbedBuilder
 			? null
 			: new EmbedFooter
 			{
-				Text = text, IconUrl = iconUrl
+				Text = text,
+				IconUrl = iconUrl
 			};
 		return this;
 	}
@@ -447,13 +459,16 @@ public sealed class DiscordEmbedBuilder
 		if (this.Footer != null)
 			embed.Footer = new()
 			{
-				Text = this.Footer.Text, IconUrl = this.Footer.IconUri
+				Text = this.Footer.Text,
+				IconUrl = this.Footer.IconUri
 			};
 
 		if (this.Author != null)
 			embed.Author = new()
 			{
-				Name = this.Author.Name, Url = this.Author.Uri, IconUrl = this.Author.IconUri
+				Name = this.Author.Name,
+				Url = this.Author.Uri,
+				IconUrl = this.Author.IconUri
 			};
 
 		if (this._imageUri != null)
@@ -464,7 +479,9 @@ public sealed class DiscordEmbedBuilder
 		if (this.Thumbnail != null)
 			embed.Thumbnail = new()
 			{
-				Url = this.Thumbnail.Uri, Height = this.Thumbnail.Height, Width = this.Thumbnail.Width
+				Url = this.Thumbnail.Uri,
+				Height = this.Thumbnail.Height,
+				Width = this.Thumbnail.Width
 			};
 
 		embed.Fields = new ReadOnlyCollection<DiscordEmbedField>(new List<DiscordEmbedField>(this._fields)); // copy the list, don't wrap it, prevents mutation

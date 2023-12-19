@@ -67,7 +67,8 @@ public class Command
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Command"/> class.
 	/// </summary>
-	internal Command() { }
+	internal Command()
+	{ }
 
 	/// <summary>
 	/// Executes this command with specified context.
@@ -100,7 +101,8 @@ public class Command
 				executed = true;
 				res = new()
 				{
-					IsSuccessful = true, Context = ctx
+					IsSuccessful = true,
+					Context = ctx
 				};
 
 				if (mdl is BaseCommandModule bcmAfter)
@@ -115,7 +117,9 @@ public class Command
 		{
 			res = new()
 			{
-				IsSuccessful = false, Exception = ex, Context = ctx
+				IsSuccessful = false,
+				Exception = ex,
+				Context = ctx
 			};
 		}
 

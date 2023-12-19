@@ -12,7 +12,8 @@ public class EventAttribute : Attribute
 {
 	internal readonly string? EventName;
 
-	public EventAttribute() { }
+	public EventAttribute()
+	{ }
 
 	/// <param name="evtn"><para>The name of the event.</para>
 	/// <para>The attributed method's name will be used if null.</para></param>

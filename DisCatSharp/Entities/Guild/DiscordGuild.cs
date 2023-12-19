@@ -611,9 +611,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 		Dictionary<ulong, List<DiscordChannel>> orderedChannels = new()
 		{
-			{
-				0, new()
-			}
+			{ 0, new() }
 		};
 
 		foreach (var channel in rawChannels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
@@ -645,9 +643,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 		Dictionary<ulong, List<DiscordChannel>> orderedChannels = new()
 		{
-			{
-				0, new()
-			}
+			{ 0, new() }
 		};
 
 		foreach (var channel in rawChannels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
@@ -1773,7 +1769,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 				});
 				var mbr = new DiscordMember(xtm)
 				{
-					Discord = this.Discord, GuildId = this.Id
+					Discord = this.Discord,
+					GuildId = this.Id
 				};
 				recmbr.Add(mbr);
 				if (hasIntent)
@@ -1819,7 +1816,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 		var payload = new GatewayPayload
 		{
-			OpCode = GatewayOpCode.RequestGuildMembers, Data = grgm
+			OpCode = GatewayOpCode.RequestGuildMembers,
+			Data = grgm
 		};
 
 		var payloadStr = JsonConvert.SerializeObject(payload, Formatting.None);
@@ -2326,7 +2324,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && (o1 == null && o2 == null || e1.Id == e2.Id);
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
 	}
 
 	/// <summary>

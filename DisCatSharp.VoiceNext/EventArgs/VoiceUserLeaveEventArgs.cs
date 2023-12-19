@@ -23,5 +23,7 @@ public sealed class VoiceUserLeaveEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="VoiceUserLeaveEventArgs"/> class.
 	/// </summary>
-	internal VoiceUserLeaveEventArgs(IServiceProvider provider) : base(provider) { }
+	internal VoiceUserLeaveEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

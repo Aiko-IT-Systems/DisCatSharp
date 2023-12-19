@@ -11,6 +11,7 @@ public class CommandExecutionEventArgs : CommandEventArgs
 	/// Initializes a new instance of the <see cref="CommandExecutionEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	public CommandExecutionEventArgs(IServiceProvider provider) : base(provider)
+	public CommandExecutionEventArgs(IServiceProvider provider)
+		: base(provider)
 	{ }
 }

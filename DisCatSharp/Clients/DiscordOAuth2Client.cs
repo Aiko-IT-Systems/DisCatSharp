@@ -360,7 +360,8 @@ public sealed class DiscordOAuth2Client : IDisposable
 		this.Logger.LogError(LoggerEvents.EventHandlerException, ex, "Event handler exception for event {Name} thrown from {@Method} (defined in {Type})", asyncEvent.Name, handler.Method, handler.Method.DeclaringType);
 		this.OAuth2ClientErroredInternal.InvokeAsync(this, new(this.ServiceProvider)
 		{
-			EventName = asyncEvent.Name, Exception = ex
+			EventName = asyncEvent.Name,
+			Exception = ex
 		}).ConfigureAwait(false).GetAwaiter().GetResult();
 	}
 

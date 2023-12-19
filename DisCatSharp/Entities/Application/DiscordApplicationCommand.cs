@@ -141,7 +141,9 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	)
 		: base(new()
 		{
-			"guild_id", "name_localizations", "description_localizations"
+			"guild_id",
+			"name_localizations",
+			"description_localizations"
 		})
 	{
 		if (type is ApplicationCommandType.ChatInput)
@@ -189,7 +191,9 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	internal DiscordApplicationCommand()
 		: base(new()
 		{
-			"name_localizations", "description_localizations", "guild_id"
+			"name_localizations",
+			"description_localizations",
+			"guild_id"
 		}) // Why tf is that so inconsistent?!
 	{ }
 

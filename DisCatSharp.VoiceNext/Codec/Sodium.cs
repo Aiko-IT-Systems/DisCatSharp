@@ -45,7 +45,9 @@ internal sealed class Sodium : IDisposable
 	{
 		SupportedModes = new ReadOnlyDictionary<string, EncryptionMode>(new Dictionary<string, EncryptionMode>()
 		{
-			["xsalsa20_poly1305_lite"] = EncryptionMode.XSalsa20Poly1305Lite, ["xsalsa20_poly1305_suffix"] = EncryptionMode.XSalsa20Poly1305Suffix, ["xsalsa20_poly1305"] = EncryptionMode.XSalsa20Poly1305
+			["xsalsa20_poly1305_lite"] = EncryptionMode.XSalsa20Poly1305Lite,
+			["xsalsa20_poly1305_suffix"] = EncryptionMode.XSalsa20Poly1305Suffix,
+			["xsalsa20_poly1305"] = EncryptionMode.XSalsa20Poly1305
 		});
 	}
 

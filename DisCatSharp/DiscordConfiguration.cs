@@ -327,7 +327,8 @@ public sealed class DiscordConfiguration
 	/// </summary>
 	private List<Type> _exceptions = new()
 	{
-		typeof(ServerErrorException), typeof(BadRequestException)
+		typeof(ServerErrorException),
+		typeof(BadRequestException)
 	};
 
 	/// <summary>

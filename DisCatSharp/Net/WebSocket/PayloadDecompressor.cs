@@ -86,7 +86,10 @@ internal sealed class PayloadDecompressor : IDisposable
 			zlib.CopyTo(decompressed);
 			return true;
 		}
-		catch { return false; }
+		catch
+		{
+			return false;
+		}
 		finally
 		{
 			this._compressedStream.Position = 0;

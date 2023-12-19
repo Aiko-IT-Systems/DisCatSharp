@@ -96,8 +96,12 @@ public class WebSocketClient : IWebSocketClient
 	public async Task ConnectAsync(Uri uri)
 	{
 		// Disconnect first
-		try { await this.DisconnectAsync().ConfigureAwait(false); }
-		catch { }
+		try
+		{
+			await this.DisconnectAsync().ConfigureAwait(false);
+		}
+		catch
+		{ }
 
 		// Disallow sending messages
 		await this._senderLock.WaitAsync().ConfigureAwait(false);
@@ -169,7 +173,8 @@ public class WebSocketClient : IWebSocketClient
 				this._isDisposed = true;
 			}
 		}
-		catch { }
+		catch
+		{ }
 		finally
 		{
 			this._senderLock.Release();
@@ -276,7 +281,8 @@ public class WebSocketClient : IWebSocketClient
 						break;
 
 					bs.Write(buffer.Array, 0, result.Count);
-				} while (!result.EndOfMessage);
+				}
+				while (!result.EndOfMessage);
 
 				resultBytes = new byte[bs.Length];
 				bs.Position = 0;
@@ -308,7 +314,8 @@ public class WebSocketClient : IWebSocketClient
 
 					await this._disconnected.InvokeAsync(this, new(this._serviceProvider)
 					{
-						CloseCode = (int)result.CloseStatus, CloseMessage = result.CloseStatusDescription
+						CloseCode = (int)result.CloseStatus,
+						CloseMessage = result.CloseStatusDescription
 					}).ConfigureAwait(false);
 					break;
 				}
@@ -322,7 +329,8 @@ public class WebSocketClient : IWebSocketClient
 			}).ConfigureAwait(false);
 			await this._disconnected.InvokeAsync(this, new(this._serviceProvider)
 			{
-				CloseCode = -1, CloseMessage = ""
+				CloseCode = -1,
+				CloseMessage = ""
 			}).ConfigureAwait(false);
 		}
 

@@ -75,5 +75,7 @@ public class AutomodActionExecutedEventArgs : DiscordEventArgs
 	/// </summary>
 	public string? MatchedContent { get; internal set; }
 
-	public AutomodActionExecutedEventArgs(IServiceProvider provider) : base(provider) { }
+	public AutomodActionExecutedEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

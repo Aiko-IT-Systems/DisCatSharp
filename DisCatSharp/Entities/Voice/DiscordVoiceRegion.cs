@@ -78,7 +78,7 @@ public class DiscordVoiceRegion : ObservableApiObject
 		var o1 = left as object;
 		var o2 = right as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && (o1 == null && o2 == null || left.Id == right.Id);
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || left.Id == right.Id);
 	}
 
 	/// <summary>

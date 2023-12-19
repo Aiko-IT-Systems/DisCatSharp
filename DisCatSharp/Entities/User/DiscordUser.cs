@@ -25,7 +25,9 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	internal DiscordUser()
 		: base(new()
 		{
-			"display_name", "linked_users", "banner_color"
+			"display_name",
+			"linked_users",
+			"banner_color"
 		})
 	{ }
 

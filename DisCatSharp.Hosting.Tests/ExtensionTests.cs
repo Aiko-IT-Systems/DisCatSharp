@@ -27,69 +27,31 @@ public class HostExtensionTests
 	private Dictionary<string, string> DefaultDiscord() =>
 		new()
 		{
-			{
-				"DisCatSharp:Discord:Token", "1234567890"
-			},
-			{
-				"DisCatSharp:Discord:TokenType", "Bot"
-			},
-			{
-				"DisCatSharp:Discord:MinimumLogLevel", "Information"
-			},
-			{
-				"DisCatSharp:Discord:UseRelativeRateLimit", "true"
-			},
-			{
-				"DisCatSharp:Discord:LogTimestampFormat", "yyyy-MM-dd HH:mm:ss zzz"
-			},
-			{
-				"DisCatSharp:Discord:LargeThreshold", "250"
-			},
-			{
-				"DisCatSharp:Discord:AutoReconnect", "true"
-			},
-			{
-				"DisCatSharp:Discord:ShardId", "123123"
-			},
-			{
-				"DisCatSharp:Discord:GatewayCompressionLevel", "Stream"
-			},
-			{
-				"DisCatSharp:Discord:MessageCacheSize", "1024"
-			},
-			{
-				"DisCatSharp:Discord:HttpTimeout", "00:00:20"
-			},
-			{
-				"DisCatSharp:Discord:ReconnectIndefinitely", "false"
-			},
-			{
-				"DisCatSharp:Discord:AlwaysCacheMembers", "true"
-			},
-			{
-				"DisCatSharp:Discord:DiscordIntents", "AllUnprivileged"
-			},
-			{
-				"DisCatSharp:Discord:MobileStatus", "false"
-			},
-			{
-				"DisCatSharp:Discord:UseCanary", "false"
-			},
-			{
-				"DisCatSharp:Discord:AutoRefreshChannelCache", "false"
-			},
-			{
-				"DisCatSharp:Discord:Intents", "AllUnprivileged"
-			}
+			{ "DisCatSharp:Discord:Token", "1234567890" },
+			{ "DisCatSharp:Discord:TokenType", "Bot" },
+			{ "DisCatSharp:Discord:MinimumLogLevel", "Information" },
+			{ "DisCatSharp:Discord:UseRelativeRateLimit", "true" },
+			{ "DisCatSharp:Discord:LogTimestampFormat", "yyyy-MM-dd HH:mm:ss zzz" },
+			{ "DisCatSharp:Discord:LargeThreshold", "250" },
+			{ "DisCatSharp:Discord:AutoReconnect", "true" },
+			{ "DisCatSharp:Discord:ShardId", "123123" },
+			{ "DisCatSharp:Discord:GatewayCompressionLevel", "Stream" },
+			{ "DisCatSharp:Discord:MessageCacheSize", "1024" },
+			{ "DisCatSharp:Discord:HttpTimeout", "00:00:20" },
+			{ "DisCatSharp:Discord:ReconnectIndefinitely", "false" },
+			{ "DisCatSharp:Discord:AlwaysCacheMembers", "true" },
+			{ "DisCatSharp:Discord:DiscordIntents", "AllUnprivileged" },
+			{ "DisCatSharp:Discord:MobileStatus", "false" },
+			{ "DisCatSharp:Discord:UseCanary", "false" },
+			{ "DisCatSharp:Discord:AutoRefreshChannelCache", "false" },
+			{ "DisCatSharp:Discord:Intents", "AllUnprivileged" }
 		};
 
 #pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 	public IConfiguration DiscordInteractivityConfiguration() => new ConfigurationBuilder()
 		.AddInMemoryCollection(new Dictionary<string, string>(this.DefaultDiscord())
 		{
-			{
-				"DisCatSharp:Using", "[\"DisCatSharp.Interactivity\"]"
-			} // this should be enough to automatically add the extension
+			{ "DisCatSharp:Using", "[\"DisCatSharp.Interactivity\"]" } // this should be enough to automatically add the extension
 		})
 		.Build();
 

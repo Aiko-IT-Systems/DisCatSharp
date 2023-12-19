@@ -344,7 +344,8 @@ public sealed partial class DiscordClient
 
 		var args = new HeartbeatEventArgs(this.ServiceProvider)
 		{
-			Ping = this.Ping, Timestamp = DateTimeOffset.Now
+			Ping = this.Ping,
+			Timestamp = DateTimeOffset.Now
 		};
 
 		await this._heartbeated.InvokeAsync(this, args).ConfigureAwait(false);
@@ -366,7 +367,8 @@ public sealed partial class DiscordClient
 				token.ThrowIfCancellationRequested();
 			}
 		}
-		catch (OperationCanceledException) { }
+		catch (OperationCanceledException)
+		{ }
 	}
 
 #endregion
@@ -389,14 +391,18 @@ public sealed partial class DiscordClient
 
 		var status = new StatusUpdate
 		{
-			Activity = new(act), IdleSince = sinceUnix, IsAfk = idleSince != null, Status = userStatus ?? UserStatus.Online
+			Activity = new(act),
+			IdleSince = sinceUnix,
+			IsAfk = idleSince != null,
+			Status = userStatus ?? UserStatus.Online
 		};
 
 		// Solution to have status persist between sessions
 		this._status = status;
 		var statusUpdate = new GatewayPayload
 		{
-			OpCode = GatewayOpCode.StatusUpdate, Data = status
+			OpCode = GatewayOpCode.StatusUpdate,
+			Data = status
 		};
 
 		var statusstr = JsonConvert.SerializeObject(statusUpdate);
@@ -436,7 +442,8 @@ public sealed partial class DiscordClient
 
 			var args = new ZombiedEventArgs(this.ServiceProvider)
 			{
-				Failures = Volatile.Read(ref this._skippedHeartbeats), GuildDownloadCompleted = true
+				Failures = Volatile.Read(ref this._skippedHeartbeats),
+				GuildDownloadCompleted = true
 			};
 			await this._zombied.InvokeAsync(this, args).ConfigureAwait(false);
 
@@ -447,7 +454,8 @@ public sealed partial class DiscordClient
 		{
 			var args = new ZombiedEventArgs(this.ServiceProvider)
 			{
-				Failures = Volatile.Read(ref this._skippedHeartbeats), GuildDownloadCompleted = false
+				Failures = Volatile.Read(ref this._skippedHeartbeats),
+				GuildDownloadCompleted = false
 			};
 			await this._zombied.InvokeAsync(this, args).ConfigureAwait(false);
 
@@ -458,7 +466,8 @@ public sealed partial class DiscordClient
 		this.Logger.LogTrace(LoggerEvents.Heartbeat, "Sending heartbeat");
 		var heartbeat = new GatewayPayload
 		{
-			OpCode = GatewayOpCode.Heartbeat, Data = seq
+			OpCode = GatewayOpCode.Heartbeat,
+			Data = seq
 		};
 		var heartbeatStr = JsonConvert.SerializeObject(heartbeat);
 		await this.WsSendAsync(heartbeatStr).ConfigureAwait(false);
@@ -481,7 +490,8 @@ public sealed partial class DiscordClient
 			LargeThreshold = this.Configuration.LargeThreshold,
 			ShardInfo = new()
 			{
-				ShardId = this.Configuration.ShardId, ShardCount = this.Configuration.ShardCount
+				ShardId = this.Configuration.ShardId,
+				ShardCount = this.Configuration.ShardCount
 			},
 			Presence = status,
 			Intents = this.Configuration.Intents,
@@ -489,7 +499,8 @@ public sealed partial class DiscordClient
 		};
 		var payload = new GatewayPayload
 		{
-			OpCode = GatewayOpCode.Identify, Data = identify
+			OpCode = GatewayOpCode.Identify,
+			Data = identify
 		};
 		var payloadstr = JsonConvert.SerializeObject(payload);
 		await this.WsSendAsync(payloadstr).ConfigureAwait(false);
@@ -504,11 +515,14 @@ public sealed partial class DiscordClient
 	{
 		var resume = new GatewayResume
 		{
-			Token = Utilities.GetFormattedToken(this), SessionId = this._sessionId, SequenceNumber = Volatile.Read(ref this._lastSequence)
+			Token = Utilities.GetFormattedToken(this),
+			SessionId = this._sessionId,
+			SequenceNumber = Volatile.Read(ref this._lastSequence)
 		};
 		var resumePayload = new GatewayPayload
 		{
-			OpCode = GatewayOpCode.Resume, Data = resume
+			OpCode = GatewayOpCode.Resume,
+			Data = resume
 		};
 		var resumestr = JsonConvert.SerializeObject(resumePayload);
 		this.GatewayUri = new(this._resumeGatewayUrl);

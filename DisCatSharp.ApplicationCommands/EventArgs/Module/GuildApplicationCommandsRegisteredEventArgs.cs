@@ -25,6 +25,7 @@ public class GuildApplicationCommandsRegisteredEventArgs : DiscordEventArgs
 	/// Initializes a new instance of the <see cref="GuildApplicationCommandsRegisteredEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	internal GuildApplicationCommandsRegisteredEventArgs(IServiceProvider provider) : base(provider)
+	internal GuildApplicationCommandsRegisteredEventArgs(IServiceProvider provider)
+		: base(provider)
 	{ }
 }

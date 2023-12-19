@@ -549,7 +549,8 @@ internal sealed class AuditLog : ObservableApiObject
 	internal AuditLog()
 		: base(new()
 		{
-			"application_commands", "auto_moderation_rules"
+			"application_commands",
+			"auto_moderation_rules"
 		})
 	{ }
 }

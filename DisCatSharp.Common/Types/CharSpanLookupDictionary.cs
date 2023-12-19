@@ -116,7 +116,9 @@ public sealed class CharSpanLookupDictionary<TValue> :
 			unsafe
 			{
 				fixed (char* chars = &key.GetPinnableReference())
+				{
 					this.TryInsertInternal(new(chars, 0, key.Length), value, true);
+				}
 			}
 		}
 	}
@@ -226,8 +228,10 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		unsafe
 		{
 			fixed (char* chars = &key.GetPinnableReference())
+			{
 				if (!this.TryInsertInternal(new(chars, 0, key.Length), value, false))
 					throw new ArgumentException("Given key is already present in the dictionary.", nameof(key));
+			}
 		}
 	}
 
@@ -251,7 +255,9 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		unsafe
 		{
 			fixed (char* chars = &key.GetPinnableReference())
+			{
 				return this.TryInsertInternal(new(chars, 0, key.Length), value, false);
+			}
 		}
 	}
 

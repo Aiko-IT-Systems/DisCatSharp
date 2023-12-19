@@ -29,7 +29,8 @@ public sealed class VoiceNextConfiguration
 	/// Creates a new instance of <see cref="VoiceNextConfiguration"/>.
 	/// </summary>
 	[ActivatorUtilitiesConstructor]
-	public VoiceNextConfiguration() { }
+	public VoiceNextConfiguration()
+	{ }
 
 	/// <summary>
 	/// Creates a new instance of <see cref="VoiceNextConfiguration"/>, copying the properties of another configuration.

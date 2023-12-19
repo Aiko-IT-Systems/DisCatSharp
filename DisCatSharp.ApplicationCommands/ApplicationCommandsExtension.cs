@@ -24,6 +24,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json;
+
 // ReSharper disable HeuristicUnreachableCode
 
 namespace DisCatSharp.ApplicationCommands;
@@ -458,7 +459,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 		//Default should be to add the help and slash commands can be added without setting any configuration
 		//so this should still add the default help
-		if (Configuration is null || Configuration is not null && Configuration.EnableDefaultHelp)
+		if (Configuration is null || (Configuration is not null && Configuration.EnableDefaultHelp))
 		{
 			updateList.Add(new(null, new(typeof(DefaultHelpModule))));
 			commandsPending = updateList.Select(x => x.Key).Distinct().ToList();
@@ -806,12 +807,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					if (guildId.HasValue)
 						await this._guildApplicationCommandsRegistered.InvokeAsync(this, new(Configuration?.ServiceProvider)
 						{
-							Handled = true, GuildId = guildId.Value, RegisteredCommands = GuildCommandsInternal.Any(c => c.Key == guildId.Value) ? GuildCommandsInternal.FirstOrDefault(c => c.Key == guildId.Value).Value : null
+							Handled = true,
+							GuildId = guildId.Value,
+							RegisteredCommands = GuildCommandsInternal.Any(c => c.Key == guildId.Value) ? GuildCommandsInternal.FirstOrDefault(c => c.Key == guildId.Value).Value : null
 						}).ConfigureAwait(false);
 					else
 						await this._globalApplicationCommandsRegistered.InvokeAsync(this, new(Configuration?.ServiceProvider)
 						{
-							Handled = true, RegisteredCommands = GlobalCommandsInternal
+							Handled = true,
+							RegisteredCommands = GlobalCommandsInternal
 						}).ConfigureAwait(false);
 
 					s_registrationCount++;
@@ -846,7 +850,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		{
 			await this._applicationCommandsModuleStartupFinished.InvokeAsync(this, new(Configuration?.ServiceProvider)
 			{
-				Handled = true, RegisteredGlobalCommands = GlobalCommandsInternal, RegisteredGuildCommands = GuildCommandsInternal, GuildsWithoutScope = this._missingScopeGuildIds
+				Handled = true,
+				RegisteredGlobalCommands = GlobalCommandsInternal,
+				RegisteredGuildCommands = GuildCommandsInternal,
+				GuildsWithoutScope = this._missingScopeGuildIds
 			}).ConfigureAwait(false);
 			if (Configuration.GenerateTranslationFilesOnly)
 			{
@@ -1022,7 +1029,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					{
 						await this._slashError.InvokeAsync(this, new(this.Client.ServiceProvider)
 						{
-							Context = context, Exception = ex
+							Context = context,
+							Exception = ex
 						}).ConfigureAwait(false);
 						this.Client.Logger.LogError(ex, "Error in slash interaction");
 					}
@@ -1073,10 +1081,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 							};
 
-							var choices = await ((Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>)providerMethod.Invoke(providerInstance, new[]
-							{
-								context
-							})).ConfigureAwait(false);
+							var choices = await ((Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>)providerMethod.Invoke(providerInstance, new[] { context })).ConfigureAwait(false);
 							await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices)).ConfigureAwait(false);
 						}
 
@@ -1109,10 +1114,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 							};
 
-							var choices = await ((Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>)providerMethod.Invoke(providerInstance, new[]
-							{
-								context
-							})).ConfigureAwait(false);
+							var choices = await ((Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>)providerMethod.Invoke(providerInstance, new[] { context })).ConfigureAwait(false);
 							await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices)).ConfigureAwait(false);
 						}
 
@@ -1146,10 +1148,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 							};
 
-							var choices = await ((Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>)providerMethod.Invoke(providerInstance, new[]
-							{
-								context
-							})).ConfigureAwait(false);
+							var choices = await ((Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>)providerMethod.Invoke(providerInstance, new[] { context })).ConfigureAwait(false);
 							await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices)).ConfigureAwait(false);
 						}
 					}
@@ -1240,10 +1239,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					throw new InvalidOperationException("A context menu command was executed, but no command was registered for it.");
 				}
 
-				await this.RunCommandAsync(context, method.Method, new[]
-				{
-					context
-				}).ConfigureAwait(false);
+				await this.RunCommandAsync(context, method.Method, new[] { context }).ConfigureAwait(false);
 
 				await this._contextMenuExecuted.InvokeAsync(this, new(this.Client.ServiceProvider)
 				{
@@ -1254,7 +1250,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			{
 				await this._contextMenuErrored.InvokeAsync(this, new(this.Client.ServiceProvider)
 				{
-					Context = context, Exception = ex
+					Context = context,
+					Exception = ex
 				}).ConfigureAwait(false);
 			}
 		});
@@ -1447,7 +1444,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					else
 						args.Add(new DiscordAttachment()
 						{
-							Id = (ulong)option.Value, Discord = this.Client.ApiClient.Discord
+							Id = (ulong)option.Value,
+							Discord = this.Client.ApiClient.Discord
 						});
 				}
 				else if (parameter.ParameterType == typeof(DiscordUser))
@@ -2097,7 +2095,8 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 			var cmd = cmdParent.Options.FirstOrDefault(op => op.Name.Equals(commandTwoName, StringComparison.OrdinalIgnoreCase));
 			var discordEmbed = new DiscordEmbedBuilder
 			{
-				Title = "Help", Description = $"{subCommandParent.Mention.Replace(subCommandParent.Name, $"{subCommandParent.Name} {cmdParent.Name} {cmd.Name}")}: {cmd.Description ?? "No description provided."}"
+				Title = "Help",
+				Description = $"{subCommandParent.Mention.Replace(subCommandParent.Name, $"{subCommandParent.Name} {cmdParent.Name} {cmd.Name}")}: {cmd.Description ?? "No description provided."}"
 			};
 			if (cmd.Options is not null)
 			{
@@ -2125,7 +2124,8 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 			var subCommand = subCommandParent.Options.FirstOrDefault(op => op.Name.Equals(commandOneName, StringComparison.OrdinalIgnoreCase));
 			var discordEmbed = new DiscordEmbedBuilder
 			{
-				Title = "Help", Description = $"{subCommandParent.Mention.Replace(subCommandParent.Name, $"{subCommandParent.Name} {subCommand.Name}")}: {subCommand.Description ?? "No description provided."}"
+				Title = "Help",
+				Description = $"{subCommandParent.Mention.Replace(subCommandParent.Name, $"{subCommandParent.Name} {subCommand.Name}")}: {subCommand.Description ?? "No description provided."}"
 			};
 			if (subCommand.Options is not null)
 			{
@@ -2161,7 +2161,8 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 
 			var discordEmbed = new DiscordEmbedBuilder
 			{
-				Title = "Help", Description = $"{command.Mention}: {command.Description ?? "No description provided."}"
+				Title = "Help",
+				Description = $"{command.Mention}: {command.Description ?? "No description provided."}"
 			}.AddField(new("Command is NSFW", command.IsNsfw.ToString()));
 			if (command.Options is not null)
 			{
@@ -2312,13 +2313,7 @@ internal class DefaultUserAppsHelpModule : ApplicationCommandsModule
 		}
 	}
 
-	[SlashCommand("help", "Displays command help", false, new[]
-	{
-		ApplicationCommandContexts.Guild, ApplicationCommandContexts.BotDm, ApplicationCommandContexts.PrivateChannel
-	}, new[]
-	{
-		ApplicationCommandIntegrationTypes.GuildInstall, ApplicationCommandIntegrationTypes.UserInstall
-	})]
+	[SlashCommand("help", "Displays command help", false, new[] { ApplicationCommandContexts.Guild, ApplicationCommandContexts.BotDm, ApplicationCommandContexts.PrivateChannel }, new[] { ApplicationCommandIntegrationTypes.GuildInstall, ApplicationCommandIntegrationTypes.UserInstall })]
 	internal async Task DefaulUserAppstHelpAsync(
 		InteractionContext ctx,
 		[Autocomplete(typeof(DefaultUserAppsHelpAutoCompleteProvider)), Option("option_one", "top level command to provide help for", true)]
@@ -2369,7 +2364,8 @@ internal class DefaultUserAppsHelpModule : ApplicationCommandsModule
 			var cmd = cmdParent.Options.FirstOrDefault(op => op.Name.Equals(commandTwoName, StringComparison.OrdinalIgnoreCase));
 			var discordEmbed = new DiscordEmbedBuilder
 			{
-				Title = "Help", Description = $"{subCommandParent.Mention.Replace(subCommandParent.Name, $"{subCommandParent.Name} {cmdParent.Name} {cmd.Name}")}: {cmd.Description ?? "No description provided."}"
+				Title = "Help",
+				Description = $"{subCommandParent.Mention.Replace(subCommandParent.Name, $"{subCommandParent.Name} {cmdParent.Name} {cmd.Name}")}: {cmd.Description ?? "No description provided."}"
 			};
 			if (cmd.Options is not null)
 			{
@@ -2397,7 +2393,8 @@ internal class DefaultUserAppsHelpModule : ApplicationCommandsModule
 			var subCommand = subCommandParent.Options.FirstOrDefault(op => op.Name.Equals(commandOneName, StringComparison.OrdinalIgnoreCase));
 			var discordEmbed = new DiscordEmbedBuilder
 			{
-				Title = "Help", Description = $"{subCommandParent.Mention.Replace(subCommandParent.Name, $"{subCommandParent.Name} {subCommand.Name}")}: {subCommand.Description ?? "No description provided."}"
+				Title = "Help",
+				Description = $"{subCommandParent.Mention.Replace(subCommandParent.Name, $"{subCommandParent.Name} {subCommand.Name}")}: {subCommand.Description ?? "No description provided."}"
 			};
 			if (subCommand.Options is not null)
 			{
@@ -2433,7 +2430,8 @@ internal class DefaultUserAppsHelpModule : ApplicationCommandsModule
 
 			var discordEmbed = new DiscordEmbedBuilder
 			{
-				Title = "Help", Description = $"{command.Mention}: {command.Description ?? "No description provided."}"
+				Title = "Help",
+				Description = $"{command.Mention}: {command.Description ?? "No description provided."}"
 			}.AddField(new("Command is NSFW", command.IsNsfw.ToString()));
 			if (command.Options is not null)
 			{

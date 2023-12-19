@@ -22,5 +22,7 @@ public class GuildRoleCreateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="GuildRoleCreateEventArgs"/> class.
 	/// </summary>
-	internal GuildRoleCreateEventArgs(IServiceProvider provider) : base(provider) { }
+	internal GuildRoleCreateEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

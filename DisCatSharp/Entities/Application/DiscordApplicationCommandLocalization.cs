@@ -74,7 +74,8 @@ public sealed class DiscordApplicationCommandLocalization
 	/// <summary>
 	/// Initializes a new instance of <see cref="DiscordApplicationCommandLocalization"/>.
 	/// </summary>
-	public DiscordApplicationCommandLocalization() { }
+	public DiscordApplicationCommandLocalization()
+	{ }
 
 	/// <summary>
 	/// Initializes a new instance of <see cref="DiscordApplicationCommandLocalization"/>.

@@ -22,5 +22,7 @@ public class GuildRoleDeleteEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="GuildRoleDeleteEventArgs"/> class.
 	/// </summary>
-	internal GuildRoleDeleteEventArgs(IServiceProvider provider) : base(provider) { }
+	internal GuildRoleDeleteEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

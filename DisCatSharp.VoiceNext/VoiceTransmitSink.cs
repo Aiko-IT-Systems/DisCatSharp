@@ -237,9 +237,11 @@ public sealed class VoiceTransmitSink : IDisposable
 
 		// pass through any filters, if applicable
 		lock (this._filters)
+		{
 			if (this._filters.Any())
 				foreach (var filter in this._filters)
 					filter.Transform(pcm16, this._connection.AudioFormat, this.SampleDuration);
+		}
 
 		if (this.VolumeModifier != 1)
 			// alter volume

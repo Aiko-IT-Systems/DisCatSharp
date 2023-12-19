@@ -94,7 +94,8 @@ public sealed class DiscordTextComponent : DiscordComponent
 	/// Constructs a new text component based on another text component.
 	/// </summary>
 	/// <param name="other">The button to copy.</param>
-	public DiscordTextComponent(DiscordTextComponent other) : this()
+	public DiscordTextComponent(DiscordTextComponent other)
+		: this()
 	{
 		this.CustomId = other.CustomId;
 		this.Style = other.Style;

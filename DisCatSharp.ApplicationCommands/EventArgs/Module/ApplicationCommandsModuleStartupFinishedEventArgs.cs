@@ -30,6 +30,7 @@ public class ApplicationCommandsModuleStartupFinishedEventArgs : DiscordEventArg
 	/// Initializes a new instance of the <see cref="ApplicationCommandsModuleStartupFinishedEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>
-	internal ApplicationCommandsModuleStartupFinishedEventArgs(IServiceProvider provider) : base(provider)
+	internal ApplicationCommandsModuleStartupFinishedEventArgs(IServiceProvider provider)
+		: base(provider)
 	{ }
 }

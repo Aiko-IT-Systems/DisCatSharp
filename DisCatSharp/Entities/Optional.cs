@@ -230,7 +230,7 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 	/// </summary>
 	/// <param name="e"><see cref="Optional{T}"/> to compare to.</param>
 	/// <returns>Whether the <see cref="Optional{T}"/> is equal to this <see cref="Optional{T}"/>.</returns>
-	public bool Equals(Optional<T> e) => !this.HasValue && !e.HasValue || this.HasValue == e.HasValue && this.Value.Equals(e.Value);
+	public bool Equals(Optional<T> e) => (!this.HasValue && !e.HasValue) || (this.HasValue == e.HasValue && this.Value.Equals(e.Value));
 
 	/// <summary>
 	/// Checks whether the value of this <see cref="Optional{T}"/> is equal to specified object.
@@ -367,10 +367,7 @@ internal sealed class OptionalJsonConverter : JsonConverter
 		var constructor = objectType.GetTypeInfo().DeclaredConstructors
 			.FirstOrDefault(e => e.GetParameters()[0].ParameterType == genericType);
 
-		return constructor.Invoke(new[]
-		{
-			serializer.Deserialize(reader, genericType)
-		});
+		return constructor.Invoke(new[] { serializer.Deserialize(reader, genericType) });
 	}
 
 	/// <summary>

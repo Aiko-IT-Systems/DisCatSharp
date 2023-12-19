@@ -22,5 +22,7 @@ public class GuildBanAddEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="GuildBanAddEventArgs"/> class.
 	/// </summary>
-	internal GuildBanAddEventArgs(IServiceProvider provider) : base(provider) { }
+	internal GuildBanAddEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
 }

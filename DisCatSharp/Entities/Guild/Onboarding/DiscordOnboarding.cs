@@ -60,7 +60,9 @@ public sealed class DiscordOnboarding : ObservableApiObject
 	internal DiscordOnboarding()
 		: base(new()
 		{
-			"responses", "onboarding_prompts_seen", "onboarding_responses_seen"
+			"responses",
+			"onboarding_prompts_seen",
+			"onboarding_responses_seen"
 		})
 	{ }
 }
