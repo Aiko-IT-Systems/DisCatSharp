@@ -101,6 +101,16 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 	private readonly T _val;
 
 	/// <summary>
+	/// Creates a new <see cref="Optional{T}"/> with specified value.
+	/// </summary>
+	/// <param name="value">Value of this option.</param>
+	public Optional(T value)
+	{
+		this._val = value;
+		this.HasValue = true;
+	}
+
+	/// <summary>
 	/// Performs a mapping operation on the current <see cref="Optional{T}"/>, turning it into an Optional holding a
 	/// <typeparamref name="TOut"/> instance if the source optional contains a value; otherwise, returns an
 	/// <see cref="Optional{T}"/> of that same type with no value.
@@ -214,9 +224,7 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 		=> this.Map(x => x.GetHashCode()).ValueOrDefault();
 
 	public static implicit operator Optional<T>(T val)
-#pragma warning disable 0618
-		=> Optional.Some(val);
-#pragma warning restore 0618
+		=> new(val);
 
 	public static explicit operator T(Optional<T> opt)
 		=> opt.Value;
