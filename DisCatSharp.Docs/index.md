@@ -16,12 +16,12 @@ hasDiscordComponents: true
     <discord-message profile="user_dm">What is that, do you have an invite?</discord-message>
     <discord-message profile="dcs_user_dm">
         Sure!<br/><br/><a target="_blank" class="discord-link external" href="https://discord.gg/discatsharp">https://discord.gg/discatsharp</a>
-		<discord-attachments slot="attachments"><discord-invite name="DisCatSharp" icon="https://cdn.discordapp.com/icons/858089281214087179/f75c3c2ca26b0f881c469a37b8c7c803.png" url="https://discord.gg/TpEJZr42gY" online="69" members="420" verified="true"></discord-invite></discord-attachments>
+		<discord-attachments slot="attachments"><discord-invite name="DisCatSharp" icon="https://cdn.discordapp.com/icons/858089281214087179/a_c5564abdc6aa3b6325d3b7c1c2fb820d.gif" url="https://discord.gg/TpEJZr42gY" online="69" members="420" verified="true"></discord-invite></discord-attachments>
     </discord-message>
 </discord-messages>
 <br/>
 <discord-messages>
-    <discord-header guild="DisCatSharp" channel="general" icon="https://cdn.discordapp.com/icons/858089281214087179/f75c3c2ca26b0f881c469a37b8c7c803.png">This is the main channel of DisCatSharp</discord-header>
+    <discord-header guild="DisCatSharp" channel="general" icon="https://cdn.discordapp.com/icons/858089281214087179/a_c5564abdc6aa3b6325d3b7c1c2fb820d.gif">This is the main channel of DisCatSharp</discord-header>
     <discord-system-message type="join">
         Welcome, <i style="color: #00c0ff;">Discord User</i>. We hope you brought pizza.
          <discord-reactions slot="reactions">
