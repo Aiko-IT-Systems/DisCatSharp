@@ -1,5 +1,9 @@
 DisCatSharp Release Notes
 
+    Breaking changes:
+    - Dropped support for .NET 6
+    - Removed previously deprecated fields and methods
+
 	Notable Changes
     - Full support for onboarding
     - Custom status support
