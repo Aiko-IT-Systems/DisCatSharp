@@ -3,12 +3,15 @@
 	"extends": [
 		"local>Aiko-IT-Systems/renovate-config"
 	],
-  	"ignoreDeps": ["Microsoft.VisualStudio.SDK"],
+	"ignoreDeps": ["Microsoft.VisualStudio.SDK"],
 	"packageRules": [
-	    {
-	      "matchManagers": ["npm"],
-	      "enabled": false
-	    }
-  ],
-  "ignorePaths": ["DisCatSharp.LavalinkV1/"]
+		{
+			"matchManagers": ["npm"],
+			"enabled": false
+		}
+	],
+	"ignorePaths": [
+		"DisCatSharp.LavalinkV1/",
+		"DisCatSharp.Tools/DisCatSharp.Analytics.VSIX/"
+	]
 }
