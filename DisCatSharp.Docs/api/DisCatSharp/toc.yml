@@ -40,6 +40,8 @@ items:
     name: ActivityType
   - uid: DisCatSharp.Entities.ApplicationAssetType
     name: ApplicationAssetType
+  - uid: DisCatSharp.Entities.AuthorizingIntegrationOwners
+    name: AuthorizingIntegrationOwners
   - uid: DisCatSharp.Entities.AutomodAction
     name: AutomodAction
   - uid: DisCatSharp.Entities.AutomodActionMetadata
@@ -48,6 +50,8 @@ items:
     name: AutomodRule
   - uid: DisCatSharp.Entities.AutomodTriggerMetadata
     name: AutomodTriggerMetadata
+  - uid: DisCatSharp.Entities.AvatarDecorationData
+    name: AvatarDecorationData
   - uid: DisCatSharp.Entities.DisCatSharpTeam
     name: DisCatSharpTeam
   - uid: DisCatSharp.Entities.DisCatSharpTeamMember
@@ -132,6 +136,8 @@ items:
     name: DiscordBaseSelectComponent
   - uid: DisCatSharp.Entities.DiscordButtonComponent
     name: DiscordButtonComponent
+  - uid: DisCatSharp.Entities.DiscordCallbackHintBuilder
+    name: DiscordCallbackHintBuilder
   - uid: DisCatSharp.Entities.DiscordChannel
     name: DiscordChannel
   - uid: DisCatSharp.Entities.DiscordChannelSelectComponent
@@ -214,6 +220,8 @@ items:
     name: DiscordIntegrationAccount
   - uid: DisCatSharp.Entities.DiscordInteraction
     name: DiscordInteraction
+  - uid: DisCatSharp.Entities.DiscordInteractionCallbackHint
+    name: DiscordInteractionCallbackHint
   - uid: DisCatSharp.Entities.DiscordInteractionData
     name: DiscordInteractionData
   - uid: DisCatSharp.Entities.DiscordInteractionDataOption
@@ -288,6 +296,8 @@ items:
     name: DiscordScheduledEventEntityMetadata
   - uid: DisCatSharp.Entities.DiscordScheduledEventUser
     name: DiscordScheduledEventUser
+  - uid: DisCatSharp.Entities.DiscordSelectDefaultValue
+    name: DiscordSelectDefaultValue
   - uid: DisCatSharp.Entities.DiscordServerGuide
     name: DiscordServerGuide
   - uid: DisCatSharp.Entities.DiscordSku
@@ -360,6 +370,10 @@ items:
     name: GuildFeaturesEnum
   - uid: DisCatSharp.Entities.IMention
     name: IMention
+  - uid: DisCatSharp.Entities.IOptional
+    name: IOptional
+  - uid: DisCatSharp.Entities.IncidentsData
+    name: IncidentsData
   - uid: DisCatSharp.Entities.Mentions
     name: Mentions
   - uid: DisCatSharp.Entities.NewMemberAction
@@ -416,6 +430,8 @@ items:
     name: ApiChannel
   - uid: DisCatSharp.Enums.ApplicationCommandContexts
     name: ApplicationCommandContexts
+  - uid: DisCatSharp.Enums.ApplicationCommandIntegrationTypes
+    name: ApplicationCommandIntegrationTypes
   - uid: DisCatSharp.Enums.ApplicationCommandOptionType
     name: ApplicationCommandOptionType
   - uid: DisCatSharp.Enums.ApplicationCommandPermissionType
@@ -424,12 +440,20 @@ items:
     name: ApplicationCommandType
   - uid: DisCatSharp.Enums.ApplicationDiscoverabilityState
     name: ApplicationDiscoverabilityState
-  - uid: DisCatSharp.Enums.ApplicationDiscoveryFlagExtensions
-    name: ApplicationDiscoveryFlagExtensions
-  - uid: DisCatSharp.Enums.ApplicationDiscoveryFlags
-    name: ApplicationDiscoveryFlags
+  - uid: DisCatSharp.Enums.ApplicationDiscoveryEligibilityFlagExtensions
+    name: ApplicationDiscoveryEligibilityFlagExtensions
+  - uid: DisCatSharp.Enums.ApplicationDiscoveryEligibilityFlags
+    name: ApplicationDiscoveryEligibilityFlags
   - uid: DisCatSharp.Enums.ApplicationFlags
     name: ApplicationFlags
+  - uid: DisCatSharp.Enums.ApplicationInteractionsVersion
+    name: ApplicationInteractionsVersion
+  - uid: DisCatSharp.Enums.ApplicationMonetizationEligibilityFlagExtensions
+    name: ApplicationMonetizationEligibilityFlagExtensions
+  - uid: DisCatSharp.Enums.ApplicationMonetizationEligibilityFlags
+    name: ApplicationMonetizationEligibilityFlags
+  - uid: DisCatSharp.Enums.ApplicationMonetizationState
+    name: ApplicationMonetizationState
   - uid: DisCatSharp.Enums.ApplicationRoleConnectionMetadataType
     name: ApplicationRoleConnectionMetadataType
   - uid: DisCatSharp.Enums.ApplicationVerificationState
@@ -492,6 +516,8 @@ items:
     name: EventHandlerAttribute
   - uid: DisCatSharp.Enums.ExplicitContentFilter
     name: ExplicitContentFilter
+  - uid: DisCatSharp.Enums.ExplicitContentFilterLevel
+    name: ExplicitContentFilterLevel
   - uid: DisCatSharp.Enums.ForumLayout
     name: ForumLayout
   - uid: DisCatSharp.Enums.ForumPostSortOrder
@@ -504,6 +530,8 @@ items:
     name: IframeModalSize
   - uid: DisCatSharp.Enums.IntegrationExpireBehavior
     name: IntegrationExpireBehavior
+  - uid: DisCatSharp.Enums.InteractionCallbackEphemerality
+    name: InteractionCallbackEphemerality
   - uid: DisCatSharp.Enums.InteractionResponseType
     name: InteractionResponseType
   - uid: DisCatSharp.Enums.InteractionType
@@ -560,6 +588,8 @@ items:
     name: PremiumType
   - uid: DisCatSharp.Enums.PriceTierType
     name: PriceTierType
+  - uid: DisCatSharp.Enums.ProductLine
+    name: ProductLine
   - uid: DisCatSharp.Enums.PromptType
     name: PromptType
   - uid: DisCatSharp.Enums.RoleFlags
@@ -568,8 +598,6 @@ items:
     name: RpcApplicationState
   - uid: DisCatSharp.Enums.ScheduledEventEntityType
     name: ScheduledEventEntityType
-  - uid: DisCatSharp.Enums.ScheduledEventPrivacyLevel
-    name: ScheduledEventPrivacyLevel
   - uid: DisCatSharp.Enums.ScheduledEventStatus
     name: ScheduledEventStatus
   - uid: DisCatSharp.Enums.SkuAccessType
@@ -584,8 +612,6 @@ items:
     name: SpeakingFlagExtensions
   - uid: DisCatSharp.Enums.SpeakingFlags
     name: SpeakingFlags
-  - uid: DisCatSharp.Enums.StagePrivacyLevel
-    name: StagePrivacyLevel
   - uid: DisCatSharp.Enums.StoreApplicationState
     name: StoreApplicationState
   - uid: DisCatSharp.Enums.SystemChannelFlags

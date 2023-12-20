@@ -35,16 +35,12 @@ items:
     name: DecomposerAttribute
   - uid: DisCatSharp.Common.Serialization.IDecomposer
     name: IDecomposer
-  - uid: DisCatSharp.Common.Serialization.IncludeNullAttribute
-    name: IncludeNullAttribute
   - uid: DisCatSharp.Common.Serialization.Int53Attribute
     name: Int53Attribute
   - uid: DisCatSharp.Common.Serialization.NumericEnumAttribute
     name: NumericEnumAttribute
   - uid: DisCatSharp.Common.Serialization.SerializationAttribute
     name: SerializationAttribute
-  - uid: DisCatSharp.Common.Serialization.SerializedNameAttribute
-    name: SerializedNameAttribute
   - uid: DisCatSharp.Common.Serialization.StringEnumAttribute
     name: StringEnumAttribute
   - uid: DisCatSharp.Common.Serialization.TimeSpanFormatAttribute

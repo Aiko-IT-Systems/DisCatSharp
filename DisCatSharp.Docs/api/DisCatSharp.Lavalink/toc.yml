@@ -48,6 +48,8 @@ items:
     name: LavalinkTrackInfo
   - uid: DisCatSharp.Lavalink.Entities.LavalinkTrackLoadingResult
     name: LavalinkTrackLoadingResult
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkVoiceState
+    name: LavalinkVoiceState
   - uid: DisCatSharp.Lavalink.Entities.MemoryStats
     name: MemoryStats
   - uid: DisCatSharp.Lavalink.Entities.Plugin

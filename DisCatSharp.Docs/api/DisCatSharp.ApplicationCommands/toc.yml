@@ -28,16 +28,26 @@ items:
     name: ApplicationCommandRequireDisCatSharpDeveloperAttribute
   - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireGuildAttribute
     name: ApplicationCommandRequireGuildAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireGuildOwnerAttributeAttribute
+    name: ApplicationCommandRequireGuildOwnerAttributeAttribute
   - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireNsfwAttribute
     name: ApplicationCommandRequireNsfwAttribute
-  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireOwnerAttribute
-    name: ApplicationCommandRequireOwnerAttribute
-  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireOwnerOrIdAttribute
-    name: ApplicationCommandRequireOwnerOrIdAttribute
   - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequirePermissionsAttribute
     name: ApplicationCommandRequirePermissionsAttribute
   - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequirePremiumAttribute
     name: ApplicationCommandRequirePremiumAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequirePremiumTestAttribute
+    name: ApplicationCommandRequirePremiumTestAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireTeamAdminAttribute
+    name: ApplicationCommandRequireTeamAdminAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireTeamDeveloperAttribute
+    name: ApplicationCommandRequireTeamDeveloperAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireTeamMemberAttribute
+    name: ApplicationCommandRequireTeamMemberAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireTeamOwnerAttribute
+    name: ApplicationCommandRequireTeamOwnerAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireTeamReadOnlyAttribute
+    name: ApplicationCommandRequireTeamReadOnlyAttribute
   - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireUserPermissionsAttribute
     name: ApplicationCommandRequireUserPermissionsAttribute
   - uid: DisCatSharp.ApplicationCommands.Attributes.AutocompleteAttribute
@@ -74,6 +84,8 @@ items:
     name: MinimumValueAttribute
   - uid: DisCatSharp.ApplicationCommands.Attributes.OptionAttribute
     name: OptionAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.RequireAnyPermissionsAttribute
+    name: RequireAnyPermissionsAttribute
   - uid: DisCatSharp.ApplicationCommands.Attributes.SlashCommandAttribute
     name: SlashCommandAttribute
   - uid: DisCatSharp.ApplicationCommands.Attributes.SlashCommandCooldownAttribute
