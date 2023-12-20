@@ -29,6 +29,8 @@
 ## Breaking
 
 - Lavalink V4 implementation. Read more [here](https://docs.dcs.aitsys.dev/articles/modules/audio/lavalink_v4/intro)
+- Dropped support for .NET 6
+- Removed previously deprecated fields and methods
 
 ----
 
