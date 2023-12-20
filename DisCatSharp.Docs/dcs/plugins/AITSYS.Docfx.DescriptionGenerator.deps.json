@@ -1,12 +1,12 @@
 {
   "runtimeTarget": {
-    "name": ".NETCoreApp,Version=v7.0",
+    "name": ".NETCoreApp,Version=v8.0",
     "signature": ""
   },
   "compilationOptions": {},
   "targets": {
-    ".NETCoreApp,Version=v7.0": {
-      "AITSYS.Docfx.DescriptionGenerator/4.0.0": {
+    ".NETCoreApp,Version=v8.0": {
+      "AITSYS.Docfx.DescriptionGenerator/5.0.0": {
         "dependencies": {
           "AngleSharp": "1.0.7",
           "Docfx.Common": "2.74.1",
@@ -21,10 +21,10 @@
       },
       "AngleSharp/1.0.7": {
         "dependencies": {
-          "System.Text.Encoding.CodePages": "7.0.0"
+          "System.Text.Encoding.CodePages": "8.0.0"
         },
         "runtime": {
-          "lib/net7.0/AngleSharp.dll": {
+          "lib/net8.0/AngleSharp.dll": {
             "assemblyVersion": "1.0.7.0",
             "fileVersion": "1.0.7.0"
           }
@@ -37,7 +37,7 @@
           "Spectre.Console": "0.48.0"
         },
         "runtime": {
-          "lib/net7.0/Docfx.Common.dll": {
+          "lib/net8.0/Docfx.Common.dll": {
             "assemblyVersion": "2.74.1.0",
             "fileVersion": "2.74.1.0"
           }
@@ -49,7 +49,7 @@
           "System.Collections.Immutable": "8.0.0"
         },
         "runtime": {
-          "lib/net7.0/Docfx.Plugins.dll": {
+          "lib/net8.0/Docfx.Plugins.dll": {
             "assemblyVersion": "2.74.1.0",
             "fileVersion": "2.74.1.0"
           }
@@ -60,7 +60,7 @@
           "YamlDotNet": "13.7.1"
         },
         "runtime": {
-          "lib/net7.0/Docfx.YamlSerialization.dll": {
+          "lib/net8.0/Docfx.YamlSerialization.dll": {
             "assemblyVersion": "2.74.1.0",
             "fileVersion": "2.74.1.0"
           }
@@ -87,20 +87,13 @@
           "System.Memory": "4.5.5"
         },
         "runtime": {
-          "lib/net7.0/Spectre.Console.dll": {
+          "lib/net8.0/Spectre.Console.dll": {
             "assemblyVersion": "0.0.0.0",
             "fileVersion": "0.48.0.0"
           }
         }
       },
-      "System.Collections.Immutable/8.0.0": {
-        "runtime": {
-          "lib/net7.0/System.Collections.Immutable.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
-          }
-        }
-      },
+      "System.Collections.Immutable/8.0.0": {},
       "System.Composition/8.0.0": {
         "dependencies": {
           "System.Composition.AttributedModel": "8.0.0",
@@ -112,7 +105,7 @@
       },
       "System.Composition.AttributedModel/8.0.0": {
         "runtime": {
-          "lib/net7.0/System.Composition.AttributedModel.dll": {
+          "lib/net8.0/System.Composition.AttributedModel.dll": {
             "assemblyVersion": "8.0.0.0",
             "fileVersion": "8.0.23.53103"
           }
@@ -123,7 +116,7 @@
           "System.Composition.AttributedModel": "8.0.0"
         },
         "runtime": {
-          "lib/net7.0/System.Composition.Convention.dll": {
+          "lib/net8.0/System.Composition.Convention.dll": {
             "assemblyVersion": "8.0.0.0",
             "fileVersion": "8.0.23.53103"
           }
@@ -134,7 +127,7 @@
           "System.Composition.Runtime": "8.0.0"
         },
         "runtime": {
-          "lib/net7.0/System.Composition.Hosting.dll": {
+          "lib/net8.0/System.Composition.Hosting.dll": {
             "assemblyVersion": "8.0.0.0",
             "fileVersion": "8.0.23.53103"
           }
@@ -142,7 +135,7 @@
       },
       "System.Composition.Runtime/8.0.0": {
         "runtime": {
-          "lib/net7.0/System.Composition.Runtime.dll": {
+          "lib/net8.0/System.Composition.Runtime.dll": {
             "assemblyVersion": "8.0.0.0",
             "fileVersion": "8.0.23.53103"
           }
@@ -155,14 +148,14 @@
           "System.Composition.Runtime": "8.0.0"
         },
         "runtime": {
-          "lib/net7.0/System.Composition.TypedParts.dll": {
+          "lib/net8.0/System.Composition.TypedParts.dll": {
             "assemblyVersion": "8.0.0.0",
             "fileVersion": "8.0.23.53103"
           }
         }
       },
       "System.Memory/4.5.5": {},
-      "System.Text.Encoding.CodePages/7.0.0": {},
+      "System.Text.Encoding.CodePages/8.0.0": {},
       "YamlDotNet/13.7.1": {
         "runtime": {
           "lib/net7.0/YamlDotNet.dll": {
@@ -174,7 +167,7 @@
     }
   },
   "libraries": {
-    "AITSYS.Docfx.DescriptionGenerator/4.0.0": {
+    "AITSYS.Docfx.DescriptionGenerator/5.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -284,12 +277,12 @@
       "path": "system.memory/4.5.5",
       "hashPath": "system.memory.4.5.5.nupkg.sha512"
     },
-    "System.Text.Encoding.CodePages/7.0.0": {
+    "System.Text.Encoding.CodePages/8.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-LSyCblMpvOe0N3E+8e0skHcrIhgV2huaNcjUUEa8hRtgEAm36aGkRoC8Jxlb6Ra6GSfF29ftduPNywin8XolzQ==",
-      "path": "system.text.encoding.codepages/7.0.0",
-      "hashPath": "system.text.encoding.codepages.7.0.0.nupkg.sha512"
+      "sha512": "sha512-OZIsVplFGaVY90G2SbpgU7EnCoOO5pw1t4ic21dBF3/1omrJFpAGoNAVpPyMVOC90/hvgkGG3VFqR13YgZMQfg==",
+      "path": "system.text.encoding.codepages/8.0.0",
+      "hashPath": "system.text.encoding.codepages.8.0.0.nupkg.sha512"
     },
     "YamlDotNet/13.7.1": {
       "type": "package",
