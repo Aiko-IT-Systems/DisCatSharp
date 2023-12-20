@@ -11,7 +11,7 @@
           "AngleSharp": "1.0.7",
           "Docfx.Common": "2.74.1",
           "Docfx.Plugins": "2.74.1",
-          "HtmlAgilityPack": "1.11.55",
+          "HtmlAgilityPack": "1.11.54",
           "System.Collections.Immutable": "8.0.0",
           "System.Composition": "8.0.0"
         },
@@ -66,11 +66,11 @@
           }
         }
       },
-      "HtmlAgilityPack/1.11.55": {
+      "HtmlAgilityPack/1.11.54": {
         "runtime": {
           "lib/netstandard2.0/HtmlAgilityPack.dll": {
-            "assemblyVersion": "1.11.55.0",
-            "fileVersion": "1.11.55.0"
+            "assemblyVersion": "1.11.54.0",
+            "fileVersion": "1.11.54.0"
           }
         }
       },
@@ -207,12 +207,12 @@
       "path": "docfx.yamlserialization/2.74.1",
       "hashPath": "docfx.yamlserialization.2.74.1.nupkg.sha512"
     },
-    "HtmlAgilityPack/1.11.55": {
+    "HtmlAgilityPack/1.11.54": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-aIAIUltlMf3S5gldT88UHV70DFkNf86YjjoFNNCXAfSwlHtYu3Oj+FB0xqUB8UlrDSVhYjJFY0VqL1IrcHGiZg==",
-      "path": "htmlagilitypack/1.11.55",
-      "hashPath": "htmlagilitypack.1.11.55.nupkg.sha512"
+      "sha512": "sha512-bgB79N4urc4D7hrD4R+Qk6CjPiYOfs6vfXNsmw3nCcfQEQvBQGjfAcl5k/tB1ZP1hA0d7xXs0jK8xAXV36IVUg==",
+      "path": "htmlagilitypack/1.11.54",
+      "hashPath": "htmlagilitypack.1.11.54.nupkg.sha512"
     },
     "Newtonsoft.Json/13.0.3": {
       "type": "package",
