@@ -1237,23 +1237,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public Task DeleteGuildApplicationCommandAsync(ulong guildId, ulong commandId) =>
 		this.ApiClient.DeleteGuildApplicationCommandAsync(this.CurrentApplication.Id, guildId, commandId);
 
-	/// <summary>
-	/// Gets all command permissions for a guild.
-	/// </summary>
-	/// <param name="guildId">The target guild.</param>
-	[DiscordDeprecated("This was removed 2022")]
-	public Task<IReadOnlyList<DiscordGuildApplicationCommandPermission>> GetGuildApplicationCommandPermissionsAsync(ulong guildId)
-		=> null;
-
-	/// <summary>
-	/// Gets the permissions for a guild command.
-	/// </summary>
-	/// <param name="guildId">The target guild.</param>
-	/// <param name="commandId">The target command id.</param>
-	[DiscordDeprecated("This was removed 2022")]
-	public Task<DiscordGuildApplicationCommandPermission> GetApplicationCommandPermissionAsync(ulong guildId, ulong commandId)
-		=> null;
-
 #endregion
 
 #region Internal Caching Methods

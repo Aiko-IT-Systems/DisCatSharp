@@ -195,36 +195,6 @@ public sealed class DiscordConfiguration
 	public bool MobileStatus { internal get; set; } = false;
 
 	/// <summary>
-	/// <para>Whether to use canary. <see cref="UsePtb"/> has to be false.</para>
-	/// <para>Defaults to <see langword="false"/>.</para>
-	/// </summary>
-	[Deprecated("Use ApiChannel instead.")]
-	public bool UseCanary
-	{
-		internal get => this.ApiChannel == ApiChannel.Canary;
-		set
-		{
-			if (value)
-				this.ApiChannel = ApiChannel.Canary;
-		}
-	}
-
-	/// <summary>
-	/// <para>Whether to use ptb. <see cref="UseCanary"/> has to be false.</para>
-	/// <para>Defaults to <see langword="false"/>.</para>
-	/// </summary>
-	[Deprecated("Use ApiChannel instead.")]
-	public bool UsePtb
-	{
-		internal get => this.ApiChannel == ApiChannel.Ptb;
-		set
-		{
-			if (value)
-				this.ApiChannel = ApiChannel.Ptb;
-		}
-	}
-
-	/// <summary>
 	/// <para>Which api channel to use.</para>
 	/// <para>Defaults to <see cref="ApiChannel.Stable"/>.</para>
 	/// </summary>
@@ -414,8 +384,6 @@ public sealed class DiscordConfiguration
 		this.Intents = other.Intents;
 		this.LoggerFactory = other.LoggerFactory;
 		this.MobileStatus = other.MobileStatus;
-		this.UseCanary = other.UseCanary;
-		this.UsePtb = other.UsePtb;
 		this.AutoRefreshChannelCache = other.AutoRefreshChannelCache;
 		this.ApiVersion = other.ApiVersion;
 		this.ServiceProvider = other.ServiceProvider;

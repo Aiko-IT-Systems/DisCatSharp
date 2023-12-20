@@ -1,4 +1,4 @@
-using System;
+using DisCatSharp.Attributes;
 
 namespace DisCatSharp.Enums;
 
@@ -15,7 +15,7 @@ public enum PremiumType
 	/// <summary>
 	/// Includes basic app perks like animated emojis and avatars.
 	/// </summary>
-	[Obsolete("Nitro Classic got replaced by Nitro Basic")]
+	[DiscordDeprecated("Nitro Classic got replaced by Nitro Basic")]
 	NitroClassic = 1,
 
 	/// <summary>

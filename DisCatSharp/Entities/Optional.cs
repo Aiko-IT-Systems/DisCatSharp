@@ -43,25 +43,6 @@ public static class Optional
 		=> value == null
 			? None
 			: value;
-
-	/// <summary>
-	/// Creates a new <see cref="Optional{T}"/> with specified value and valid state.
-	/// </summary>
-	/// <param name="value">Value to populate the optional with.</param>
-	/// <typeparam name="T">Type of the value.</typeparam>
-	/// <returns>Created optional.</returns>
-	[Obsolete("Renamed to Some.")]
-	public static Optional<T> FromValue<T>(T value)
-		=> value;
-
-	/// <summary>
-	/// Creates a new empty <see cref="Optional{T}"/> with no value and invalid state.
-	/// </summary>
-	/// <typeparam name="T">The type that the created instance is wrapping around.</typeparam>
-	/// <returns>Created optional.</returns>
-	[Obsolete("Use None.")]
-	public static Optional<T> FromNoValue<T>()
-		=> default;
 }
 
 /// <summary>
@@ -118,21 +99,6 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 	object IOptional.RawValue => this._val;
 
 	private readonly T _val;
-
-	/// <summary>
-	/// Creates a new <see cref="Optional{T}"/> with specified value.
-	/// </summary>
-	/// <param name="value">Value of this option.</param>
-	[Obsolete("Use Optional.Some")]
-	public Optional(T value)
-	{
-		this._val = value;
-		this.HasValue = true;
-	}
-
-	[Obsolete("Renamed to Map")]
-	public Optional<TOut> IfPresent<TOut>(Func<T, TOut> mapper)
-		=> this.Map(mapper);
 
 	/// <summary>
 	/// Performs a mapping operation on the current <see cref="Optional{T}"/>, turning it into an Optional holding a
@@ -249,7 +215,7 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 
 	public static implicit operator Optional<T>(T val)
 #pragma warning disable 0618
-		=> new(val);
+		=> Optional.Some(val);
 #pragma warning restore 0618
 
 	public static explicit operator T(Optional<T> opt)
