@@ -28,6 +28,8 @@ items:
   items:
   - uid: DisCatSharp.VoiceNext.Codec.EncryptionMode
     name: EncryptionMode
+  - uid: DisCatSharp.VoiceNext.Codec.Opus
+    name: Opus
   - uid: DisCatSharp.VoiceNext.Codec.OpusDecoder
     name: OpusDecoder
 - uid: DisCatSharp.VoiceNext.EventArgs
