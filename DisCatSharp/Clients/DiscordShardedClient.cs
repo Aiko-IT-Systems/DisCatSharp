@@ -324,13 +324,6 @@ public sealed partial class DiscordShardedClient
 		await Task.WhenAll(tasks).ConfigureAwait(false);
 	}
 
-	/// <summary>
-	/// <see cref="BaseDiscordClient.GetLibraryDevelopmentTeamAsync"/>
-	/// </summary>
-	[Obsolete("Don't use this right now, inactive")]
-	public async Task<DisCatSharpTeam> GetLibraryDevelopmentTeamAsync()
-		=> await this.GetShard(0).GetLibraryDevelopmentTeamAsync().ConfigureAwait(false);
-
 #endregion
 
 #region Internal Methods

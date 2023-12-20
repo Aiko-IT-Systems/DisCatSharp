@@ -43,6 +43,9 @@ internal sealed class TransportApplication : ObservableApiObject
 	[JsonProperty("summary", NullValueHandling = NullValueHandling.Include), DiscordDeprecated("Empty string, will be removed in API v11")]
 	public string Summary { get; set; }
 
+	/// <summary>
+	/// Gets the bot user.
+	/// </summary>
 	[JsonProperty("bot", NullValueHandling = NullValueHandling.Ignore)]
 	public TransportUser Bot { get; set; }
 

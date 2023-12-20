@@ -477,16 +477,6 @@ public abstract class BaseDiscordClient : IDisposable
 	}
 
 	/// <summary>
-	/// Gets some information about the development team behind DisCatSharp.
-	/// Can be used for crediting etc.
-	/// <para>Note: This call contacts servers managed by the DCS team, no information is collected.</para>
-	/// <returns>The team, or null with errors being logged on failure.</returns>
-	/// </summary>
-	[Deprecated("Don't use this right now, inactive")]
-	public async Task<DisCatSharpTeam> GetLibraryDevelopmentTeamAsync()
-		=> await DisCatSharpTeam.Get(this.RestClient, this.Logger, this.ApiClient).ConfigureAwait(false);
-
-	/// <summary>
 	/// Gets a cached user.
 	/// </summary>
 	/// <param name="userId">The user id.</param>

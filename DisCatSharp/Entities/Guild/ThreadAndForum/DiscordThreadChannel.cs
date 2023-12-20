@@ -153,14 +153,12 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <summary>
 	/// Archives a thread.
 	/// </summary>
-	/// <param name="locked">Whether the thread should be locked.</param>
 	/// <param name="reason">Reason for audit logs.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	[DiscordDeprecated("The locked parameter will be removed soon and is not applied anymore.")]
-	public Task ArchiveAsync([DiscordDeprecated("The locked parameter will be removed soon and is not applied anymore.")] bool locked = true, string reason = null)
+	public Task ArchiveAsync(string reason = null)
 		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, true, null, null, null, null, null, reason);
 
 	/// <summary>
