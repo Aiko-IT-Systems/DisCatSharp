@@ -295,11 +295,7 @@ public sealed class DiscordConfiguration
 	/// <summary>
 	/// The exception we track with sentry.
 	/// </summary>
-	private List<Type> _exceptions = new()
-	{
-		typeof(ServerErrorException),
-		typeof(BadRequestException)
-	};
+	private List<Type> _exceptions = [typeof(ServerErrorException), typeof(BadRequestException)];
 
 	/// <summary>
 	/// <para>Whether to enable the library developer mode.</para>
@@ -327,21 +323,26 @@ public sealed class DiscordConfiguration
 	/// <para>Mutually exclusive to <see cref="SkuId"/> and <see cref="TestSkuId"/>.</para>
 	/// </summary>
 	[RequiresFeature(Features.MonetizedApplication)]
-	public bool AutoFetchSkuIds { get; set; } = false;
+	public bool AutoFetchSkuIds { internal get; set; } = false;
 
 	/// <summary>
 	/// The applications sku id for premium apps.
 	/// <para>Mutually exclusive to <see cref="AutoFetchSkuIds"/>.</para>
 	/// </summary>
 	[RequiresFeature(Features.MonetizedApplication)]
-	public ulong? SkuId { get; set; } = null;
+	public ulong? SkuId { internal get; set; } = null;
 
 	/// <summary>
 	/// The applications test sku id for premium apps.
 	/// <para>Mutually exclusive to <see cref="AutoFetchSkuIds"/>.</para>
 	/// </summary>
 	[RequiresFeature(Features.MonetizedApplication)]
-	public ulong? TestSkuId { get; set; } = null;
+	public ulong? TestSkuId { internal get; set; } = null;
+
+	/// <summary>
+	/// Whether to disable the update check.
+	/// </summary>
+	public bool DisableUpdateCheck { internal get; set; } = false;
 
 	/// <summary>
 	/// Creates a new configuration with default values.
@@ -405,5 +406,6 @@ public sealed class DiscordConfiguration
 		this.AutoFetchSkuIds = other.AutoFetchSkuIds;
 		this.SkuId = other.SkuId;
 		this.TestSkuId = other.TestSkuId;
+		this.DisableUpdateCheck = other.DisableUpdateCheck;
 	}
 }
