@@ -312,9 +312,12 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		if (!this.IsShard)
 		{
 			if (this.Configuration.TokenType != TokenType.Bot)
-				this.Logger.LogWarning(LoggerEvents.Misc, "You are logging in with a token that is not a bot token. This is not officially supported by Discord, and can result in your account being terminated if you aren't careful.");
-			this.Logger.LogInformation(LoggerEvents.Startup, "Lib {0}, version {1}", this.BotLibrary, this.VersionString);
+				this.Logger.LogWarning(LoggerEvents.Misc, "You are logging in with a token that is not a bot token. This is not officially supported by Discord, and can result in your account being terminated if you aren't careful");
+			this.Logger.LogInformation(LoggerEvents.Startup, "Lib {LibraryName}, version {LibraryVersion}", this.BotLibrary, this.VersionString);
 		}
+
+		if (!this.Configuration.DisableUpdateCheck)
+			await Utilities.CheckVersionAsync(this, true, this.IsShard);
 
 		while (i-- > 0 || this.Configuration.ReconnectIndefinitely)
 			try

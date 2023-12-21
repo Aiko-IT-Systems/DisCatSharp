@@ -398,7 +398,7 @@ public abstract class BaseDiscordClient : IDisposable
 	{
 		var iconb64 = ImageTool.Base64FromStream(icon);
 		var coverImageb64 = ImageTool.Base64FromStream(coverImage);
-		if (tags != null && tags.HasValue && tags.Value != null)
+		if (tags != null && tags is { HasValue: true, Value: not null })
 			if (tags.Value.Any(x => x.Length > 20))
 				throw new InvalidOperationException("Tags can not exceed 20 chars.");
 
@@ -437,7 +437,7 @@ public abstract class BaseDiscordClient : IDisposable
 				this.InternalVoiceRegions.TryAdd(xvr.Id, xvr);
 		}
 
-		if (this.Configuration.EnableSentry && this.Configuration.AttachUserInfo)
+		if (this.Configuration is { EnableSentry: true, AttachUserInfo: true })
 			SentrySdk.ConfigureScope(x => x.User = new()
 			{
 				Id = this.CurrentUser.Id.ToString(),

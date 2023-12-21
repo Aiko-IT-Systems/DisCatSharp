@@ -234,12 +234,12 @@ public sealed partial class DiscordShardedClient
 		try
 		{
 			if (this._configuration.TokenType != TokenType.Bot)
-				this.Logger.LogWarning(LoggerEvents.Misc, "You are logging in with a token that is not a bot token. This is not officially supported by Discord, and can result in your account being terminated if you aren't careful.");
-			this.Logger.LogInformation(LoggerEvents.Startup, "Lib {0}, version {1}", this._botLibrary, this._versionString.Value);
+				this.Logger.LogWarning(LoggerEvents.Misc, "You are logging in with a token that is not a bot token. This is not officially supported by Discord, and can result in your account being terminated if you aren't careful");
+			this.Logger.LogInformation(LoggerEvents.Startup, "Lib {LibraryName}, version {LibraryVersion}", this._botLibrary, this._versionString.Value);
 
 			var shardc = await this.InitializeShardsAsync().ConfigureAwait(false);
 			var connectTasks = new List<Task>();
-			this.Logger.LogInformation(LoggerEvents.ShardStartup, "Booting {0} shards.", shardc);
+			this.Logger.LogInformation(LoggerEvents.ShardStartup, "Booting {NumShards} shards", shardc);
 
 			for (var i = 0; i < shardc; i++)
 			{
@@ -268,7 +268,7 @@ public sealed partial class DiscordShardedClient
 
 			var message = $"Shard initialization failed, check inner exceptions for details: ";
 
-			this.Logger.LogCritical(LoggerEvents.ShardClientError, $"{message}\n{ex}");
+			this.Logger.LogCritical(LoggerEvents.ShardClientError, "{Message}\n{Ex}", message, ex);
 			throw new AggregateException(message, ex);
 		}
 	}

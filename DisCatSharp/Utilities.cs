@@ -10,10 +10,13 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
+using DisCatSharp.Entities.DCS;
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
 
 using Microsoft.Extensions.Logging;
+
+using Newtonsoft.Json;
 
 namespace DisCatSharp;
 
@@ -466,5 +469,81 @@ public static class Utilities
 	{
 		key = kvp.Key;
 		value = kvp.Value;
+	}
+
+	/// <summary>
+	/// Gets whether the version check has finished.
+	/// </summary>
+	internal static Dictionary<string, bool> VersionCheckFinishedFor { get; } = [];
+
+	/// <summary>
+	/// Perfoms a version check against github releases.
+	/// </summary>
+	/// <param name="client">The base discord client.</param>
+	public static Task CheckVersionAsync(DiscordClient client)
+		=> CheckVersionAsync(client, false);
+
+	/// <summary>
+	/// Perfoms a version check against github releases.
+	/// </summary>
+	/// <param name="client">The base discord client.</param>
+	/// <param name="startupCheck">Whether this is called on startup.</param>
+	/// <param name="fromShard">Whether this method got called from a sharded client.</param>
+	/// <param name="owner">The owner of the target github <paramref name="repository"/>.</param>
+	/// <param name="repository">The target github repository.</param>
+	/// <param name="productName">The name of the product.</param>
+	/// <param name="manualVersion">The manual version string to check.</param>
+	/// <param name="githubToken">The token to use for private repositories.</param>
+	internal static async Task CheckVersionAsync(BaseDiscordClient client, bool startupCheck, bool fromShard = false, string owner = "Aiko-IT-Systems", string repository = "DisCatSharp", string productName = "DisCatSharp", string? manualVersion = null, string? githubToken = null)
+	{
+		if (startupCheck && VersionCheckFinishedFor.TryGetValue(productName, out var val) && val && manualVersion is null)
+			return;
+
+		try
+		{
+			var currentVersion = client.VersionString.Split('-')[0]!.Split('+')[0]!;
+			var splitVersion = currentVersion.Split('.');
+			var api = Convert.ToInt32(splitVersion[0]);
+			var major = Convert.ToInt32(splitVersion[1]);
+			var minor = Convert.ToInt32(splitVersion[2]);
+			var lastGitHubRelease = "0.0.0";
+			if (githubToken is not null)
+				client.RestClient.DefaultRequestHeaders.Authorization = new("token", githubToken);
+
+			var res = await client.RestClient.GetStringAsync($"https://api.github.com/repos/{owner}/{repository}/releases?per_page=1");
+
+			if (string.IsNullOrEmpty(res))
+			{
+				client.Logger.LogWarning("[{Type}] Failed to check for updates", fromShard ? "ShardedClient" : "Client");
+				return;
+			}
+
+			var releaseInformations = JsonConvert.DeserializeObject<List<GitHubRelease>>(res)!;
+			var targetLastRelease = releaseInformations.First();
+			lastGitHubRelease = targetLastRelease.TagName.Replace("v", string.Empty, StringComparison.InvariantCultureIgnoreCase);
+			var githubSplitVersion = lastGitHubRelease.Split('.');
+			var githubApi = Convert.ToInt32(githubSplitVersion[0]);
+			var githubMajor = Convert.ToInt32(githubSplitVersion[1]);
+			var githubMinor = Convert.ToInt32(githubSplitVersion[2]);
+
+			if (api < githubApi || (api == githubApi && major < githubMajor) || (api == githubApi && major == githubMajor && minor < githubMinor))
+				client.Logger.LogWarning("[{Type}] Your version of {Product} is outdated!\n\tCurrent version: v{CurrentVersion}\n\tLatest version: v{LastGitHubRelease}", fromShard ? "ShardedClient" : "Client", productName, client.VersionString, lastGitHubRelease);
+			else if (githubApi < api || (githubApi == api && githubMajor < major) || (githubApi == api && githubMajor == major && githubMinor < minor))
+				client.Logger.LogInformation("[{Type}] Your version of {Product} is newer than the latest release!\n\tNote that you are using a pre-release which is not recommended for production.\n\tCurrent version: v{CurrentVersion}\n\tLatest version: v{LastGitHubRelease}", fromShard ? "ShardedClient" : "Client", productName, client.VersionString, lastGitHubRelease);
+			else
+				client.Logger.LogInformation("[{Type}] Your version of {Product} is up to date!\n\tCurrent version: v{CurrentVersion}", fromShard ? "ShardedClient" : "Client", productName, client.VersionString);
+		}
+		catch
+		{
+			client.Logger.LogWarning("[{Type}] Failed to check for updates for {Product}", fromShard ? "ShardedClient" : "Client", productName);
+		}
+		finally
+		{
+			if (startupCheck)
+				if (!VersionCheckFinishedFor.TryAdd(productName, true) && VersionCheckFinishedFor.TryGetValue(productName, out _))
+					VersionCheckFinishedFor[productName] = true;
+			if (githubToken is not null)
+				client.RestClient.DefaultRequestHeaders.Authorization = null;
+		}
 	}
 }
