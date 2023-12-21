@@ -507,7 +507,6 @@ public static class Utilities
 			var api = Convert.ToInt32(splitVersion[0]);
 			var major = Convert.ToInt32(splitVersion[1]);
 			var minor = Convert.ToInt32(splitVersion[2]);
-			var lastGitHubRelease = "0.0.0";
 			if (githubToken is not null)
 				client.RestClient.DefaultRequestHeaders.Authorization = new("token", githubToken);
 
@@ -515,28 +514,28 @@ public static class Utilities
 
 			if (string.IsNullOrEmpty(res))
 			{
-				client.Logger.LogWarning("[{Type}] Failed to check for updates", fromShard ? "ShardedClient" : "Client");
+				client.Logger.LogWarning("[{Type}] Failed to check for updates. Could not determine remote version", fromShard ? "ShardedClient" : "Client");
 				return;
 			}
 
 			var releaseInformations = JsonConvert.DeserializeObject<List<GitHubRelease>>(res)!;
 			var targetLastRelease = releaseInformations.First();
-			lastGitHubRelease = targetLastRelease.TagName.Replace("v", string.Empty, StringComparison.InvariantCultureIgnoreCase);
+			var lastGitHubRelease = targetLastRelease.TagName.Replace("v", string.Empty, StringComparison.InvariantCultureIgnoreCase);
 			var githubSplitVersion = lastGitHubRelease.Split('.');
 			var githubApi = Convert.ToInt32(githubSplitVersion[0]);
 			var githubMajor = Convert.ToInt32(githubSplitVersion[1]);
 			var githubMinor = Convert.ToInt32(githubSplitVersion[2]);
 
 			if (api < githubApi || (api == githubApi && major < githubMajor) || (api == githubApi && major == githubMajor && minor < githubMinor))
-				client.Logger.LogWarning("[{Type}] Your version of {Product} is outdated!\n\tCurrent version: v{CurrentVersion}\n\tLatest version: v{LastGitHubRelease}", fromShard ? "ShardedClient" : "Client", productName, version, lastGitHubRelease);
+				client.Logger.LogCritical("[{Type}] Your version of {Product} is outdated!\n\tCurrent version: v{CurrentVersion}\n\tLatest version: v{LastGitHubRelease}", fromShard ? "ShardedClient" : "Client", productName, version, lastGitHubRelease);
 			else if (githubApi < api || (githubApi == api && githubMajor < major) || (githubApi == api && githubMajor == major && githubMinor < minor))
-				client.Logger.LogInformation("[{Type}] Your version of {Product} is newer than the latest release!\n\tNote that you are using a pre-release which is not recommended for production.\n\tCurrent version: v{CurrentVersion}\n\tLatest version: v{LastGitHubRelease}", fromShard ? "ShardedClient" : "Client", productName, version, lastGitHubRelease);
+				client.Logger.LogWarning("[{Type}] Your version of {Product} is newer than the latest release!\n\tPre-release are not recommended for production.\n\tCurrent version: v{CurrentVersion}\n\tLatest version: v{LastGitHubRelease}", fromShard ? "ShardedClient" : "Client", productName, version, lastGitHubRelease);
 			else
 				client.Logger.LogInformation("[{Type}] Your version of {Product} is up to date!\n\tCurrent version: v{CurrentVersion}", fromShard ? "ShardedClient" : "Client", productName, version);
 		}
-		catch
+		catch (Exception ex)
 		{
-			client.Logger.LogWarning("[{Type}] Failed to check for updates for {Product}", fromShard ? "ShardedClient" : "Client", productName);
+			client.Logger.LogWarning("[{Type}] Failed to check for updates for {Product}. Error: {Exception}", fromShard ? "ShardedClient" : "Client", productName, ex);
 		}
 		finally
 		{
