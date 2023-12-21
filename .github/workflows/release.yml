@@ -36,7 +36,7 @@ jobs:
             8.0.100
             7.0.404
       - name: Restore dependencies
-        run: dotnet restore DisCatSharp.sln
+        run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
       - name: Build library as full release
         if: ${{!inputs.release_as_prerelease}}
         shell: pwsh

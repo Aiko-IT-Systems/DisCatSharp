@@ -31,8 +31,10 @@ jobs:
         dotnet-version: |
           8.0.100
           7.0.404
+    - name: Restore Packages
+      run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
     - name: Build library
-      run: dotnet build -c Release -v minimal DisCatSharp.sln
+      run: dotnet build -c Release -v minimal --no-restore DisCatSharp.sln
     - name: Test library
       run: dotnet test -v minimal -c Release --no-restore --no-build DisCatSharp.sln
   pack:
@@ -49,8 +51,10 @@ jobs:
         dotnet-version: |
           8.0.100
           7.0.404
+    - name: Restore Packages
+      run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
     - name: Build library
-      run: dotnet build -c Release -v minimal DisCatSharp.sln
+      run: dotnet build -c Release -v minimal --no-restore DisCatSharp.sln
     - name: Publish library
       run: dotnet pack -c Release -v minimal --no-build --no-restore --include-symbols --include-source -o ./artifacts DisCatSharp.sln
     - name: Upload artifacts
