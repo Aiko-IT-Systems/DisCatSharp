@@ -35,6 +35,9 @@ public sealed class DiscordConfiguration
 		}
 	}
 
+	/// <summary>
+	/// Sets the token used to identify the client (protected).
+	/// </summary>
 	private string _token = "";
 
 	/// <summary>
@@ -351,6 +354,17 @@ public sealed class DiscordConfiguration
 	public VersionCheckMode UpdateCheckMode { internal get; set; } = VersionCheckMode.NuGet;
 
 	/// <summary>
+	/// Whether to include prerelease versions in the update check.
+	/// </summary>
+	public bool IncludePrereleaseInUpdateCheck { get; internal set; } = true;
+
+	/// <summary>
+	/// Sets the GitHub token to use for the update check.
+	/// <para>Only useful if extensions are private and <see cref="UpdateCheckMode"/> is <see cref="VersionCheckMode.GitHub"/>.</para>
+	/// </summary>
+	public string? UpdateCheckGitHubToken { get; set; } = null;
+
+	/// <summary>
 	/// Creates a new configuration with default values.
 	/// </summary>
 	public DiscordConfiguration()
@@ -414,5 +428,7 @@ public sealed class DiscordConfiguration
 		this.TestSkuId = other.TestSkuId;
 		this.DisableUpdateCheck = other.DisableUpdateCheck;
 		this.UpdateCheckMode = other.UpdateCheckMode;
+		this.IncludePrereleaseInUpdateCheck = other.IncludePrereleaseInUpdateCheck;
+		this.UpdateCheckGitHubToken = other.UpdateCheckGitHubToken;
 	}
 }
