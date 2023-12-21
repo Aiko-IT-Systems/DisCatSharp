@@ -11,6 +11,31 @@ public abstract class BaseExtension
 	public DiscordClient Client { get; protected set; }
 
 	/// <summary>
+	/// Gets the string representing the version of bot lib extension.
+	/// </summary>
+	public string VersionString { get; protected set; } = string.Empty;
+
+	/// <summary>
+	/// Gets whether this lib extension supports the built-in version checl.
+	/// </summary>
+	public bool HasVersionCheckSupport { get; protected set; } = false;
+
+	/// <summary>
+	/// Gets the repository owner of this lib extension.
+	/// </summary>
+	public string RepositoryOwner { get; protected set; } = string.Empty;
+
+	/// <summary>
+	/// Gets the repository of this lib extension.
+	/// </summary>
+	public string Repository { get; protected set; } = string.Empty;
+
+	/// <summary>
+	/// Gets the package id of this lib extension.
+	/// </summary>
+	public string PackageId { get; protected set; } = string.Empty;
+
+	/// <summary>
 	/// Initializes this extension for given <see cref="DiscordClient"/> instance.
 	/// </summary>
 	/// <param name="client">Discord client to initialize for.</param>

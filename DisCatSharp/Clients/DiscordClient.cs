@@ -39,7 +39,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	internal RingBuffer<DiscordMessage> MessageCache { get; }
 
-	private List<BaseExtension> _extensions = new();
+	private List<BaseExtension> _extensions = [];
 	private StatusUpdate _status;
 
 	/// <summary>
@@ -108,7 +108,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public IReadOnlyDictionary<ulong, DiscordPresence> Presences
 		=> this._presencesLazy.Value;
 
-	internal Dictionary<ulong, DiscordPresence> PresencesInternal = new();
+	internal Dictionary<ulong, DiscordPresence> PresencesInternal = [];
 	private Lazy<IReadOnlyDictionary<ulong, DiscordPresence>> _presencesLazy;
 
 	/// <summary>
@@ -117,7 +117,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public IReadOnlyDictionary<string, DiscordActivity> EmbeddedActivities
 		=> this._embeddedActivitiesLazy.Value;
 
-	internal Dictionary<string, DiscordActivity> EmbeddedActivitiesInternal = new();
+	internal Dictionary<string, DiscordActivity> EmbeddedActivitiesInternal = [];
 	private Lazy<IReadOnlyDictionary<string, DiscordActivity>> _embeddedActivitiesLazy;
 
 #endregion
@@ -317,7 +317,15 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		}
 
 		if (!this.Configuration.DisableUpdateCheck)
-			await Utilities.CheckVersionAsync(this, true, this.IsShard, checkMode: this.Configuration.UpdateCheckMode);
+		{
+			this.Logger.LogInformation("Checking versions..");
+			await Utilities.CheckVersionAsync(this, true, this.IsShard, githubToken: this.Configuration.UpdateCheckGitHubToken, includePrerelease: this.Configuration.IncludePrereleaseInUpdateCheck, checkMode: this.Configuration.UpdateCheckMode);
+			foreach (var extension in this._extensions.Where(extension => extension.HasVersionCheckSupport))
+				await Utilities.CheckVersionAsync(this, true, this.IsShard, extension.RepositoryOwner, extension.Repository, extension.PackageId, extension.VersionString, this.Configuration.UpdateCheckGitHubToken, this.Configuration.IncludePrereleaseInUpdateCheck, this.Configuration.UpdateCheckMode);
+			this.Logger.LogInformation("Done");
+		}
+		else
+			this.Logger.LogInformation("Skipped version check");
 
 		while (i-- > 0 || this.Configuration.ReconnectIndefinitely)
 			try
@@ -1632,7 +1640,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		this.UpdateMessage(message, author, guild, member);
 
-		message.ReactionsInternal ??= new();
+		message.ReactionsInternal ??= [];
 		foreach (var xr in message.ReactionsInternal)
 			xr.Emoji.Discord = this;
 
