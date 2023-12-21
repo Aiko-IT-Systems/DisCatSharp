@@ -556,4 +556,5 @@ public static class Endpoints
 	public const string CLYDE_SETTINGS = "/clyde-settings";
 	public const string CLYDE_PROFILES = "/clyde-profiles";
 	public const string GENERATE_PERSONALITY = "/generate-personality";
+	public const string REFRESH_URLS = "refresh-urls";
 }
