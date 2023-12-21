@@ -81,7 +81,7 @@ function Build-All([string] $target_dir_path, [string] $version_suffix, [string]
 
     # Restore nuget packages
     Write-Host "Restoring NuGet packages"
-    & dotnet restore -v minimal DisCatSharp.sln | Out-Host
+    & dotnet restore --no-cache -f -v minimal DisCatSharp.sln | Out-Host
     if ($LastExitCode -ne 0)
     {
         Write-Host "Restoring packages failed"

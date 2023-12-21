@@ -29,9 +29,9 @@ jobs:
     - name: Install DocFX
       run: dotnet tool update -g docfx
     - name: Restore packages
-      run: dotnet restore DisCatSharp.sln
+      run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
     - name: Build library
-      run: dotnet build -c Release --no-restore -v minimal -f net7.0 DisCatSharp.sln
+      run: dotnet build -c Release --no-restore -v minimal -f net8.0 DisCatSharp.sln
       timeout-minutes: 7
       continue-on-error: true
     #- name: Add Custom Plugins
