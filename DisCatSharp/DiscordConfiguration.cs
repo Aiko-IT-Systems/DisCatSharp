@@ -345,6 +345,12 @@ public sealed class DiscordConfiguration
 	public bool DisableUpdateCheck { internal get; set; } = false;
 
 	/// <summary>
+	/// Against which channel to check for updates.
+	/// <para>Defaults to <see cref="VersionCheckMode.NuGet"/>.</para>
+	/// </summary>
+	public VersionCheckMode UpdateCheckMode { internal get; set; } = VersionCheckMode.NuGet;
+
+	/// <summary>
 	/// Creates a new configuration with default values.
 	/// </summary>
 	public DiscordConfiguration()
@@ -407,5 +413,6 @@ public sealed class DiscordConfiguration
 		this.SkuId = other.SkuId;
 		this.TestSkuId = other.TestSkuId;
 		this.DisableUpdateCheck = other.DisableUpdateCheck;
+		this.UpdateCheckMode = other.UpdateCheckMode;
 	}
 }
