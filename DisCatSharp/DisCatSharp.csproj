@@ -47,6 +47,8 @@ Written with love and for everyone.
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NuGet.Protocol" Version="6.8.0" />
+    <PackageReference Include="Octokit" Version="9.0.0" />
     <PackageReference Include="Sentry" Version="3.41.3" />
     <PackageReference Include="Sentry.Extensions.Logging" Version="3.41.3" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.1" />

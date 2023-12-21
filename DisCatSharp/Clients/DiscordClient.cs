@@ -317,7 +317,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		}
 
 		if (!this.Configuration.DisableUpdateCheck)
-			await Utilities.CheckVersionAsync(this, true, this.IsShard);
+			await Utilities.CheckGitHubVersionAsync(this, true, this.IsShard);
 
 		while (i-- > 0 || this.Configuration.ReconnectIndefinitely)
 			try
