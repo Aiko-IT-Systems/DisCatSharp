@@ -25,6 +25,7 @@
 - Partial support for burst reactions
 - Full support for onboarding
 - Support for default select menu values (THANKS MAISY FOR ADDING IT TO DISCORD)
+- DisCatSharp can now check for new releases, including for extensions
 
 ## Breaking
 
