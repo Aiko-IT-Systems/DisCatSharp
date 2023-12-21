@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../DisCatSharp.Targets/Library.targets" />
-  <Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
+  <Import Project="../../DisCatSharp.Targets/Library.targets" />
+  <Import Project="../../DisCatSharp.Targets/InternalsVisibleTo.targets" />
 
     <PropertyGroup>
 		<Nullable>enable</Nullable>
@@ -33,23 +33,27 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DisCatSharp.Hosting\DisCatSharp.Hosting.csproj" />
-      <ProjectReference Include="..\DisCatSharp.Interactivity\DisCatSharp.Interactivity.csproj" />
-      <ProjectReference Include="..\DisCatSharp.Lavalink\DisCatSharp.Lavalink.csproj" />
-      <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+      <ProjectReference Include="..\..\DisCatSharp.Configuration\DisCatSharp.Configuration.csproj" />
+      <ProjectReference Include="..\..\DisCatSharp\DisCatSharp.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="interactivity-lavalink.json">
+      <None Update="enumerable-test.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="interactivity-different-section.json">
+      <None Update="section-with-suffix.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="lavalink-different-section.json">
+      <None Update="section-no-suffix.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="BotTwo.json">
+      <None Update="default-discord.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="intents-discord.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="haphazard-discord.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

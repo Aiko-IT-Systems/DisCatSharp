@@ -47,11 +47,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.ApplicationComm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Configuration", "DisCatSharp.Configuration\DisCatSharp.Configuration.csproj", "{603287D3-1EF2-47F1-A611-C7F25869DE14}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Configuration.Tests", "DisCatSharp.Configuration.Tests\DisCatSharp.Configuration.Tests.csproj", "{E15E88B4-63AD-42DE-B685-D31697C62194}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Configuration.Tests", "DisCatSharp.Tests\DisCatSharp.Configuration.Tests\DisCatSharp.Configuration.Tests.csproj", "{E15E88B4-63AD-42DE-B685-D31697C62194}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Hosting", "DisCatSharp.Hosting\DisCatSharp.Hosting.csproj", "{72CCE5D5-926B-432A-876A-065FA2BC9B7B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Hosting.Tests", "DisCatSharp.Hosting.Tests\DisCatSharp.Hosting.Tests.csproj", "{D02B598A-F0C9-4A8C-B8DE-7C0BAC8C9B94}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Hosting.Tests", "DisCatSharp.Tests\DisCatSharp.Hosting.Tests\DisCatSharp.Hosting.Tests.csproj", "{D02B598A-F0C9-4A8C-B8DE-7C0BAC8C9B94}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Hosting.DependencyInjection", "DisCatSharp.Hosting.DependencyInjection\DisCatSharp.Hosting.DependencyInjection.csproj", "{2D67D1DD-E5B2-40C7-80E2-54D63730E7F0}"
 EndProject
@@ -85,7 +85,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{11D25C98
 		DisCatSharp.Tools\rebuild-lib.ps1 = DisCatSharp.Tools\rebuild-lib.ps1
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.EventHandlers.Tests", "DisCatSharp.EventHandlers.Tests\DisCatSharp.EventHandlers.Tests.csproj", "{BE646FCD-8A56-46DC-978D-AC1E0A892A9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.EventHandlers.Tests", "DisCatSharp.Tests\DisCatSharp.EventHandlers.Tests\DisCatSharp.EventHandlers.Tests.csproj", "{BE646FCD-8A56-46DC-978D-AC1E0A892A9F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{267EFBFF-ECD2-4686-A5DE-5B642F8A7CCB}"
 EndProject
