@@ -501,7 +501,8 @@ public static class Utilities
 
 		try
 		{
-			var currentVersion = client.VersionString.Split('-')[0]!.Split('+')[0]!;
+			var version = manualVersion ?? client.VersionString;
+			var currentVersion = version.Split('-')[0]!.Split('+')[0]!;
 			var splitVersion = currentVersion.Split('.');
 			var api = Convert.ToInt32(splitVersion[0]);
 			var major = Convert.ToInt32(splitVersion[1]);
@@ -527,11 +528,11 @@ public static class Utilities
 			var githubMinor = Convert.ToInt32(githubSplitVersion[2]);
 
 			if (api < githubApi || (api == githubApi && major < githubMajor) || (api == githubApi && major == githubMajor && minor < githubMinor))
-				client.Logger.LogWarning("[{Type}] Your version of {Product} is outdated!\n\tCurrent version: v{CurrentVersion}\n\tLatest version: v{LastGitHubRelease}", fromShard ? "ShardedClient" : "Client", productName, client.VersionString, lastGitHubRelease);
+				client.Logger.LogWarning("[{Type}] Your version of {Product} is outdated!\n\tCurrent version: v{CurrentVersion}\n\tLatest version: v{LastGitHubRelease}", fromShard ? "ShardedClient" : "Client", productName, version, lastGitHubRelease);
 			else if (githubApi < api || (githubApi == api && githubMajor < major) || (githubApi == api && githubMajor == major && githubMinor < minor))
-				client.Logger.LogInformation("[{Type}] Your version of {Product} is newer than the latest release!\n\tNote that you are using a pre-release which is not recommended for production.\n\tCurrent version: v{CurrentVersion}\n\tLatest version: v{LastGitHubRelease}", fromShard ? "ShardedClient" : "Client", productName, client.VersionString, lastGitHubRelease);
+				client.Logger.LogInformation("[{Type}] Your version of {Product} is newer than the latest release!\n\tNote that you are using a pre-release which is not recommended for production.\n\tCurrent version: v{CurrentVersion}\n\tLatest version: v{LastGitHubRelease}", fromShard ? "ShardedClient" : "Client", productName, version, lastGitHubRelease);
 			else
-				client.Logger.LogInformation("[{Type}] Your version of {Product} is up to date!\n\tCurrent version: v{CurrentVersion}", fromShard ? "ShardedClient" : "Client", productName, client.VersionString);
+				client.Logger.LogInformation("[{Type}] Your version of {Product} is up to date!\n\tCurrent version: v{CurrentVersion}", fromShard ? "ShardedClient" : "Client", productName, version);
 		}
 		catch
 		{
