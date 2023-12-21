@@ -6,17 +6,27 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
-using DisCatSharp.Entities.DCS;
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
 
 using Microsoft.Extensions.Logging;
 
-using Newtonsoft.Json;
+using NuGet.Common;
+using NuGet.Protocol;
+using NuGet.Protocol.Core.Types;
+using NuGet.Versioning;
+
+using Octokit;
+using Octokit.Internal;
+
+using ILogger = Microsoft.Extensions.Logging.ILogger;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
+using Repository = NuGet.Protocol.Core.Types.Repository;
 
 namespace DisCatSharp;
 
@@ -480,8 +490,13 @@ public static class Utilities
 	/// Perfoms a version check against github releases.
 	/// </summary>
 	/// <param name="client">The base discord client.</param>
-	public static Task CheckVersionAsync(DiscordClient client)
-		=> CheckVersionAsync(client, false);
+	/// <param name="owner">The owner of the target github <paramref name="repository"/>.</param>
+	/// <param name="repository">The target github repository.</param>
+	/// <param name="productName">The name of the product.</param>
+	/// <param name="manualVersion">The manual version string to check.</param>
+	/// <param name="githubToken">The token to use for private repositories.</param>
+	public static Task CheckGitHubVersionAsync(DiscordClient client, string owner = "Aiko-IT-Systems", string repository = "DisCatSharp", string productName = "DisCatSharp", string? manualVersion = null, string? githubToken = null)
+		=> CheckGitHubVersionAsync(client, false, false, owner, repository, productName, manualVersion, githubToken);
 
 	/// <summary>
 	/// Perfoms a version check against github releases.
@@ -494,7 +509,21 @@ public static class Utilities
 	/// <param name="productName">The name of the product.</param>
 	/// <param name="manualVersion">The manual version string to check.</param>
 	/// <param name="githubToken">The token to use for private repositories.</param>
-	internal static async Task CheckVersionAsync(BaseDiscordClient client, bool startupCheck, bool fromShard = false, string owner = "Aiko-IT-Systems", string repository = "DisCatSharp", string productName = "DisCatSharp", string? manualVersion = null, string? githubToken = null)
+	internal static Task CheckVersionAsync(BaseDiscordClient client, bool startupCheck, bool fromShard = false, string owner = "Aiko-IT-Systems", string repository = "DisCatSharp", string productName = "DisCatSharp", string? manualVersion = null, string? githubToken = null)
+		=> CheckGitHubVersionAsync(client, startupCheck, fromShard, owner, repository, productName, manualVersion, githubToken);
+
+	/// <summary>
+	/// Perfoms a version check against github releases.
+	/// </summary>
+	/// <param name="client">The base discord client.</param>
+	/// <param name="startupCheck">Whether this is called on startup.</param>
+	/// <param name="fromShard">Whether this method got called from a sharded client.</param>
+	/// <param name="owner">The owner of the target github <paramref name="repository"/>.</param>
+	/// <param name="repository">The target github repository.</param>
+	/// <param name="productName">The name of the product.</param>
+	/// <param name="manualVersion">The manual version string to check.</param>
+	/// <param name="githubToken">The token to use for private repositories.</param>
+	internal static async Task CheckGitHubVersionAsync(BaseDiscordClient client, bool startupCheck, bool fromShard = false, string owner = "Aiko-IT-Systems", string repository = "DisCatSharp", string productName = "DisCatSharp", string? manualVersion = null, string? githubToken = null)
 	{
 		if (startupCheck && VersionCheckFinishedFor.TryGetValue(productName, out var val) && val && manualVersion is null)
 			return;
@@ -507,20 +536,18 @@ public static class Utilities
 			var api = Convert.ToInt32(splitVersion[0]);
 			var major = Convert.ToInt32(splitVersion[1]);
 			var minor = Convert.ToInt32(splitVersion[2]);
-			if (githubToken is not null)
-				client.RestClient.DefaultRequestHeaders.Authorization = new("token", githubToken);
 
-			var res = await client.RestClient.GetStringAsync($"https://api.github.com/repos/{owner}/{repository}/releases?per_page=1");
+			ApiConnection apiConnection = githubToken is not null ? new(new Connection(new($"{client.BotLibrary}", client.VersionString), new InMemoryCredentialStore(new(githubToken)))) : new(new Connection(new($"{client.BotLibrary}", client.VersionString)));
+			ReleasesClient releaseClient = new(apiConnection);
+			var latest = await releaseClient.GetLatest(owner, repository);
 
-			if (string.IsNullOrEmpty(res))
+			if (latest is null)
 			{
 				client.Logger.LogWarning("[{Type}] Failed to check for updates. Could not determine remote version", fromShard ? "ShardedClient" : "Client");
 				return;
 			}
 
-			var releaseInformations = JsonConvert.DeserializeObject<List<GitHubRelease>>(res)!;
-			var targetLastRelease = releaseInformations.First();
-			var lastGitHubRelease = targetLastRelease.TagName.Replace("v", string.Empty, StringComparison.InvariantCultureIgnoreCase);
+			var lastGitHubRelease = latest.TagName.Replace("v", string.Empty, StringComparison.InvariantCultureIgnoreCase);
 			var githubSplitVersion = lastGitHubRelease.Split('.');
 			var githubApi = Convert.ToInt32(githubSplitVersion[0]);
 			var githubMajor = Convert.ToInt32(githubSplitVersion[1]);
@@ -542,8 +569,41 @@ public static class Utilities
 			if (startupCheck)
 				if (!VersionCheckFinishedFor.TryAdd(productName, true) && VersionCheckFinishedFor.TryGetValue(productName, out _))
 					VersionCheckFinishedFor[productName] = true;
-			if (githubToken is not null)
-				client.RestClient.DefaultRequestHeaders.Authorization = null;
 		}
+	}
+
+	/// <summary>
+	/// Performs a version check against nuget.
+	/// </summary>
+	/// <param name="client">The base discord client.</param>
+	/// <param name="packageId">The id of the package.</param>
+	/// <param name="manualVersion">The manual version string to check.</param>
+	/// <returns></returns>
+	public static async Task CheckNuGetVersionAsync(BaseDiscordClient client, string packageId = "DisCatSharp", string? manualVersion = null, bool includePrerelease = true)
+	{
+		var repository = Repository.Factory.GetCoreV3("https://api.nuget.org/v3/index.json");
+		var resource = await repository.GetResourceAsync<MetadataResource>();
+		var sourceCache = new SourceCacheContext()
+		{
+			RefreshMemoryCache = true,
+			IgnoreFailedSources = true,
+			NoCache = true
+		};
+		var latestVersions = (await resource.GetLatestVersions(new List<string>()
+		{
+			packageId.ToLowerInvariant()
+		}, includePrerelease, false, sourceCache, new NullLogger(), CancellationToken.None))?.ToList() ?? throw new("Could not get latest versions");
+
+		var latestPackageVersion = latestVersions.First(x => string.Equals(x.Key, packageId, StringComparison.InvariantCultureIgnoreCase)).Value;
+		var version = manualVersion ?? client.VersionString;
+		var gitLessVersion = version.Split('+')[0];
+
+		NuGetVersion currentPackageVersion = new(gitLessVersion);
+		if (latestPackageVersion > currentPackageVersion)
+			client.Logger.LogCritical("Your version of {Product} is outdated!\n\tCurrent version: v{CurrentVersion}\n\tLatest version: v{LastGitHubRelease}", packageId, currentPackageVersion.OriginalVersion, latestPackageVersion.OriginalVersion);
+		else if (latestPackageVersion < currentPackageVersion)
+			client.Logger.LogWarning("Your version of {Product} is newer than the latest release!\n\tPre-release are not recommended for production.\n\tCurrent version: v{CurrentVersion}\n\tLatest version: v{LastGitHubRelease}", packageId, currentPackageVersion.OriginalVersion, latestPackageVersion.OriginalVersion);
+		else
+			client.Logger.LogInformation("Your version of {Product} is up to date!\n\tCurrent version: v{CurrentVersion}", packageId, currentPackageVersion.OriginalVersion);
 	}
 }
