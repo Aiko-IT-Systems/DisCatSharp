@@ -39,7 +39,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 		this.Id = user.Id;
 
-		this.RoleIdsInternal = new();
+		this.RoleIdsInternal = [];
 		this._roleIdsLazy = new(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
 	}
 
@@ -63,7 +63,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		this.CommunicationDisabledUntil = mbr.CommunicationDisabledUntil;
 		this.UnusualDmActivityUntil = mbr.UnusualDmActivityUntil;
 		this.AvatarHashInternal = mbr.AvatarHash;
-		this.RoleIdsInternal = mbr.Roles ?? new List<ulong>();
+		this.RoleIdsInternal = mbr.Roles ?? [];
 		this._roleIdsLazy = new(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
 		this.MemberFlags = mbr.MemberFlags;
 		this.InteractionPermissions = mbr.Permissions;

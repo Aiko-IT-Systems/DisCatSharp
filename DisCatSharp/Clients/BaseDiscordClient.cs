@@ -322,7 +322,7 @@ public abstract class BaseDiscordClient : IDisposable
 
 		if (tapp.Team == null)
 		{
-			app.Members = new(new[] { new DiscordUser(tapp.Owner) });
+			app.Members = [..new[] { new DiscordUser(tapp.Owner) }];
 			app.Team = null;
 			app.TeamName = null;
 			app.Owner = new(tapp.Owner);
@@ -349,7 +349,7 @@ public abstract class BaseDiscordClient : IDisposable
 				.Select(x => x.User)
 				.ToArray();
 
-			app.Members = new(users);
+			app.Members = [..users];
 			app.Team.Owner = members.First(x => x.Role == "owner").User;
 			app.Team.Members = new List<DiscordTeamMember>(members);
 			app.TeamName = app.Team.Name;

@@ -118,7 +118,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
 	/// </summary>
 	[JsonProperty("entitlements", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
-	public List<DiscordEntitlement> Entitlements { get; internal set; } = new();
+	public List<DiscordEntitlement> Entitlements { get; internal set; } = [];
 
 	/// <summary>
 	/// <para>Gets the entitlement sku ids.</para>
@@ -126,7 +126,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
 	/// </summary>
 	[JsonProperty("entitlement_sku_ids", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
-	public List<ulong> EntitlementSkuIds { get; internal set; } = new();
+	public List<ulong> EntitlementSkuIds { get; internal set; } = [];
 
 	/// <summary>
 	/// Gets which integrations authorized the interaction.
@@ -242,14 +242,6 @@ public sealed class DiscordInteraction : SnowflakeObject
 		=> this.Discord.ApiClient.DeleteFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
 
 	internal DiscordInteraction()
-		: base(new()
-		{
-			"member",
-			"guild_id",
-			"channel_id",
-			"channel",
-			"guild",
-			"user"
-		})
+		: base(["member", "guild_id", "channel_id", "channel", "guild", "user"])
 	{ }
 }

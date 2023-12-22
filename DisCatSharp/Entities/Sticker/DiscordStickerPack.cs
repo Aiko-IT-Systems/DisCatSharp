@@ -20,7 +20,7 @@ public sealed class DiscordStickerPack : SnowflakeObject
 	public IReadOnlyList<DiscordSticker> Stickers => this.StickersInternal;
 
 	[JsonProperty("stickers")]
-	internal List<DiscordSticker> StickersInternal = new();
+	internal List<DiscordSticker> StickersInternal = [];
 
 	/// <summary>
 	/// Gets the name of this sticker pack.

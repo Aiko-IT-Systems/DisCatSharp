@@ -87,21 +87,21 @@ public sealed class DiscordInteractionResponseBuilder
 	/// </summary>
 	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
 
-	private readonly List<DiscordEmbed> _embeds = new();
+	private readonly List<DiscordEmbed> _embeds = [];
 
 	/// <summary>
 	/// Files to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordMessageFile> Files => this._files;
 
-	private readonly List<DiscordMessageFile> _files = new();
+	private readonly List<DiscordMessageFile> _files = [];
 
 	/// <summary>
 	/// Components to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
 
-	private readonly List<DiscordActionRowComponent> _components = new();
+	private readonly List<DiscordActionRowComponent> _components = [];
 
 	/// <summary>
 	/// The choices to send on this interaction response.
@@ -109,21 +109,21 @@ public sealed class DiscordInteractionResponseBuilder
 	/// </summary>
 	public IReadOnlyList<DiscordApplicationCommandAutocompleteChoice> Choices => this._choices;
 
-	private readonly List<DiscordApplicationCommandAutocompleteChoice> _choices = new();
+	private readonly List<DiscordApplicationCommandAutocompleteChoice> _choices = [];
 
 	/// <summary>
 	/// Mentions to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<IMention> Mentions => this._mentions;
 
-	private readonly List<IMention> _mentions = new();
+	private readonly List<IMention> _mentions = [];
 
 	/// <summary>
 	/// The hints to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordInteractionCallbackHint> CallbackHints => this._callbackHints;
 
-	private readonly List<DiscordInteractionCallbackHint> _callbackHints = new();
+	private readonly List<DiscordInteractionCallbackHint> _callbackHints = [];
 
 	/// <summary>
 	/// Constructs a new empty interaction response builder.

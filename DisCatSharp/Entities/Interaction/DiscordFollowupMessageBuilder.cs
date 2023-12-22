@@ -87,28 +87,28 @@ public sealed class DiscordFollowupMessageBuilder
 	/// </summary>
 	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
 
-	private readonly List<DiscordEmbed> _embeds = new();
+	private readonly List<DiscordEmbed> _embeds = [];
 
 	/// <summary>
 	/// Files to send on this followup message.
 	/// </summary>
 	public IReadOnlyList<DiscordMessageFile> Files => this._files;
 
-	private readonly List<DiscordMessageFile> _files = new();
+	private readonly List<DiscordMessageFile> _files = [];
 
 	/// <summary>
 	/// Components to send on this followup message.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
 
-	private readonly List<DiscordActionRowComponent> _components = new();
+	private readonly List<DiscordActionRowComponent> _components = [];
 
 	/// <summary>
 	/// Mentions to send on this followup message.
 	/// </summary>
 	public IReadOnlyList<IMention> Mentions => this._mentions;
 
-	private readonly List<IMention> _mentions = new();
+	private readonly List<IMention> _mentions = [];
 
 	/// <summary>
 	/// Appends a collection of components to the message.

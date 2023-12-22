@@ -13,7 +13,7 @@ internal class DefaultLoggerFactory : ILoggerFactory
 	/// <summary>
 	/// Gets the providers.
 	/// </summary>
-	private readonly List<ILoggerProvider> _providers = new();
+	private readonly List<ILoggerProvider> _providers = [];
 
 	private bool _isDisposed;
 

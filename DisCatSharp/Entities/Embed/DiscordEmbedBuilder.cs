@@ -98,7 +98,7 @@ public sealed class DiscordEmbedBuilder
 	/// </summary>
 	public IReadOnlyList<DiscordEmbedField> Fields { get; }
 
-	private readonly List<DiscordEmbedField> _fields = new();
+	private readonly List<DiscordEmbedField> _fields = [];
 
 	/// <summary>
 	/// Constructs a new empty embed builder.

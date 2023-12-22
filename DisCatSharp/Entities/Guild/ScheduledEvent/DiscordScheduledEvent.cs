@@ -138,14 +138,16 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	[JsonProperty("entity_metadata", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordScheduledEventEntityMetadata EntityMetadata { get; internal set; }
 
-	/* This isn't used.
+	/*
+	 This isn't used.
          * See https://github.com/discord/discord-api-docs/pull/3586#issuecomment-969066061.
          * Was originally for paid stages.
         /// <summary>
         /// Gets the sku ids of the scheduled event.
         /// </summary>
         [JsonProperty("sku_ids", NullValueHandling = NullValueHandling.Ignore)]
-        public IReadOnlyList<ulong> SkuIds { get; internal set; }*/
+        public IReadOnlyList<ulong> SkuIds { get; internal set; }
+	*/
 
 	/// <summary>
 	/// Gets the total number of users subscribed to the scheduled event.
@@ -157,10 +159,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// Initializes a new instance of the <see cref="DiscordScheduledEvent"/> class.
 	/// </summary>
 	internal DiscordScheduledEvent()
-		: base(new()
-		{
-			"sku_ids"
-		})
+		: base(["sku_ids"])
 	{ }
 
 #region Methods

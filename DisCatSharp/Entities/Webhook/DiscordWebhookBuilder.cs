@@ -76,42 +76,42 @@ public sealed class DiscordWebhookBuilder
 	/// </summary>
 	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
 
-	private readonly List<DiscordEmbed> _embeds = new();
+	private readonly List<DiscordEmbed> _embeds = [];
 
 	/// <summary>
 	/// Files to send on this webhook request.
 	/// </summary>
 	public IReadOnlyList<DiscordMessageFile> Files => this._files;
 
-	private readonly List<DiscordMessageFile> _files = new();
+	private readonly List<DiscordMessageFile> _files = [];
 
 	/// <summary>
 	/// Mentions to send on this webhook request.
 	/// </summary>
 	public IReadOnlyList<IMention> Mentions => this._mentions;
 
-	private readonly List<IMention> _mentions = new();
+	private readonly List<IMention> _mentions = [];
 
 	/// <summary>
 	/// Gets the components.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
 
-	private readonly List<DiscordActionRowComponent> _components = new();
+	private readonly List<DiscordActionRowComponent> _components = [];
 
 	/// <summary>
 	/// Attachments to keep on this webhook request.
 	/// </summary>
 	public IReadOnlyList<DiscordAttachment> Attachments => this.AttachmentsInternal;
 
-	internal List<DiscordAttachment> AttachmentsInternal = new();
+	internal List<DiscordAttachment> AttachmentsInternal = [];
 
 	/// <summary>
 	/// Forum post tags to send on this webhook request.
 	/// </summary>
 	public IReadOnlyList<ulong> AppliedTags => this._appliedTags;
 
-	private readonly List<ulong> _appliedTags = new();
+	private readonly List<ulong> _appliedTags = [];
 
 	/// <summary>
 	/// Constructs a new empty webhook request builder.

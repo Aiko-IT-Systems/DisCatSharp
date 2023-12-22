@@ -54,7 +54,7 @@ public sealed partial class DiscordClient
 		{
 			var anon = ActivatorUtilities.CreateInstance(this.Configuration.ServiceProvider, type);
 
-			this._typeToAnonymousHandlers[type] = this._typeToAnonymousHandlers.TryGetValue(type, out var anonObjs) ? anonObjs : anonObjs = new();
+			this._typeToAnonymousHandlers[type] = this._typeToAnonymousHandlers.TryGetValue(type, out var anonObjs) ? anonObjs : anonObjs = [];
 
 			anonObjs.Add(anon);
 
@@ -189,7 +189,7 @@ public sealed partial class DiscordClient
 			select (eventInfo, dlgt)
 		).ToArray();
 
-		this._registrationToDelegate[(handler, type, registerStatic)] = this._registrationToDelegate.TryGetValue((handler, type, registerStatic), out var delList) ? delList : delList = new();
+		this._registrationToDelegate[(handler, type, registerStatic)] = this._registrationToDelegate.TryGetValue((handler, type, registerStatic), out var delList) ? delList : delList = [];
 
 		delList.Add(delegates);
 

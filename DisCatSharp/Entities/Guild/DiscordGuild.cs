@@ -145,7 +145,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		=> new(this.InternalRegisteredApplicationCommands);
 
 	[JsonIgnore]
-	internal List<DiscordApplicationCommand> InternalRegisteredApplicationCommands { get; set; } = new();
+	internal List<DiscordApplicationCommand> InternalRegisteredApplicationCommands { get; set; } = [];
 
 	/// <summary>
 	/// Gets the guild's AFK timeout.
@@ -611,11 +611,11 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 		Dictionary<ulong, List<DiscordChannel>> orderedChannels = new()
 		{
-			{ 0, new() }
+			{ 0, [] }
 		};
 
 		foreach (var channel in rawChannels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
-			orderedChannels.Add(channel.Id, new());
+			orderedChannels.Add(channel.Id, []);
 
 		foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Text || c.Type == ChannelType.News || c.Type == ChannelType.Forum)).OrderBy(c => c.Position))
 			orderedChannels[channel.ParentId.Value!].Add(channel);
@@ -643,11 +643,11 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 		Dictionary<ulong, List<DiscordChannel>> orderedChannels = new()
 		{
-			{ 0, new() }
+			{ 0, [] }
 		};
 
 		foreach (var channel in rawChannels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
-			orderedChannels.Add(channel.Id, new());
+			orderedChannels.Add(channel.Id, []);
 
 		foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Text || c.Type == ChannelType.News || c.Type == ChannelType.Forum)).OrderBy(c => c.Position))
 			orderedChannels[channel.ParentId.Value!].Add(channel);

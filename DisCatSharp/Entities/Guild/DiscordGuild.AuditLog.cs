@@ -61,7 +61,7 @@ public partial class DiscordGuild
 	/// <returns>The processed audit log list as readonly.</returns>
 	internal async Task<IReadOnlyList<DiscordAuditLogEntry>> ProcessAuditLog(List<AuditLog> auditLogApiResult)
 	{
-		List<AuditLogUser> amr = new();
+		List<AuditLogUser> amr = [];
 		if (auditLogApiResult.Any(ar => ar.Users != null && ar.Users.Any()))
 			amr = auditLogApiResult.SelectMany(xa => xa.Users)
 				.GroupBy(xu => xu.Id)
@@ -94,31 +94,31 @@ public partial class DiscordGuild
 				});
 			}
 
-		List<AuditLogGuildScheduledEvent> atgse = new();
+		List<AuditLogGuildScheduledEvent> atgse = [];
 		if (auditLogApiResult.Any(ar => ar.ScheduledEvents != null && ar.ScheduledEvents.Any()))
 			atgse = auditLogApiResult.SelectMany(xa => xa.ScheduledEvents)
 				.GroupBy(xse => xse.Id)
 				.Select(xgse => xgse.First()).ToList();
 
-		List<AuditLogThread> ath = new();
+		List<AuditLogThread> ath = [];
 		if (auditLogApiResult.Any(ar => ar.Threads != null && ar.Threads.Any()))
 			ath = auditLogApiResult.SelectMany(xa => xa.Threads)
 				.GroupBy(xt => xt.Id)
 				.Select(xgt => xgt.First()).ToList();
 
-		List<AuditLogIntegration> aig = new();
+		List<AuditLogIntegration> aig = [];
 		if (auditLogApiResult.Any(ar => ar.Integrations != null && ar.Integrations.Any()))
 			aig = auditLogApiResult.SelectMany(xa => xa.Integrations)
 				.GroupBy(xi => xi.Id)
 				.Select(xgi => xgi.First()).ToList();
 
-		List<AuditLogWebhook> ahr = new();
+		List<AuditLogWebhook> ahr = [];
 		if (auditLogApiResult.Any(ar => ar.Webhooks != null && ar.Webhooks.Any()))
 			ahr = auditLogApiResult.SelectMany(xa => xa.Webhooks)
 				.GroupBy(xh => xh.Id)
 				.Select(xgh => xgh.First()).ToList();
 
-		List<DiscordMember> ams = new();
+		List<DiscordMember> ams = [];
 		Dictionary<ulong, DiscordMember> amd = new();
 		if (amr.Any())
 			ams = amr.Select(xau => this.MembersInternal != null && this.MembersInternal.TryGetValue(xau.Id, out var member)
@@ -473,8 +473,8 @@ public partial class DiscordGuild
 
 								entrychn.AvailableTagsChange = new()
 								{
-									Before = oldTags != null ? new List<ForumPostTag>(new List<ForumPostTag>(oldTags)) : null,
-									After = newTags != null ? new List<ForumPostTag>(new List<ForumPostTag>(newTags)) : null
+									Before = oldTags != null ? [..new List<ForumPostTag>(oldTags)] : null,
+									After = newTags != null ? [..new List<ForumPostTag>(newTags)] : null
 								};
 								break;
 

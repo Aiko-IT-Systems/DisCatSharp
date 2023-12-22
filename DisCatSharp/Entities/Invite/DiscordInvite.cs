@@ -155,11 +155,7 @@ public class DiscordInvite : ObservableApiObject
 	/// Initializes a new instance of the <see cref="DiscordInvite"/> class.
 	/// </summary>
 	internal DiscordInvite()
-		: base(new()
-		{
-			"guild_id",
-			"channel_id"
-		})
+		: base(["guild_id", "channel_id"])
 	{ }
 
 	/// <summary>

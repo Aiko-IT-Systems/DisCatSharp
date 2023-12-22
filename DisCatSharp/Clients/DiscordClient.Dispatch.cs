@@ -866,7 +866,7 @@ public sealed partial class DiscordClient
 				Id = channelNew.Id,
 				LastMessageId = channelNew.LastMessageId,
 				Name = channelNew.Name,
-				PermissionOverwritesInternal = new(channelNew.PermissionOverwritesInternal),
+				PermissionOverwritesInternal = [..channelNew.PermissionOverwritesInternal],
 				Position = channelNew.Position,
 				Topic = channelNew.Topic,
 				Type = channelNew.Type,
@@ -1352,8 +1352,8 @@ public sealed partial class DiscordClient
 		try
 		{
 			var auditLogAction = DiscordJson.ToDiscordObject<AuditLogAction>(auditLogCreateEntry);
-			List<AuditLog> workaroundAuditLogEntryList = new()
-			{
+			List<AuditLog> workaroundAuditLogEntryList =
+			[
 				new()
 				{
 					Entries = new List<AuditLogAction>()
@@ -1361,7 +1361,7 @@ public sealed partial class DiscordClient
 						auditLogAction
 					}
 				}
-			};
+			];
 
 			var dataList = await guild.ProcessAuditLog(workaroundAuditLogEntryList).ConfigureAwait(false);
 
@@ -2645,7 +2645,7 @@ public sealed partial class DiscordClient
 			Id = messageId,
 			ChannelId = channelId,
 			Discord = this,
-			ReactionsInternal = new()
+			ReactionsInternal = []
 		};
 
 		var react = msg.ReactionsInternal.FirstOrDefault(xr => xr.Emoji == emoji);
@@ -3090,8 +3090,8 @@ public sealed partial class DiscordClient
 
 		thread.Discord = this;
 		guild.Discord = this;
-		List<DiscordThreadChannelMember> addedMembers = new();
-		List<ulong> removedMemberIds = new();
+		List<DiscordThreadChannelMember> addedMembers = [];
+		List<ulong> removedMemberIds = [];
 
 		if (membersAdded != null)
 			foreach (var xj in membersAdded)

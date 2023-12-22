@@ -20,7 +20,7 @@ public sealed class DiscordAuthorizationInformation : ObservableApiObject
 	/// Gets the scopes the user has authorized the application for.
 	/// </summary>
 	[JsonProperty("scopes")]
-	public List<string> Scopes { get; internal set; } = new();
+	public List<string> Scopes { get; internal set; } = [];
 
 	/// <summary>
 	/// Gets when the access token expires as raw string.
