@@ -177,7 +177,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <summary>
 	/// Gets the redirect uris.
 	/// </summary>
-	public List<string> RedirectUris { get; set; } = new();
+	public List<string> RedirectUris { get; set; } = [];
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordApplication"/> class.

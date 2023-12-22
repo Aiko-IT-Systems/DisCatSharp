@@ -57,12 +57,11 @@ internal class SnowflakeArrayAsDictionaryJsonConverter : JsonConverter
 
 		var entries = (IEnumerable)serializer.Deserialize(reader, objectType.GenericTypeArguments[1].MakeArrayType());
 		foreach (var entry in entries)
-			properties.SetValue(dict, entry, new object[]
-			{
+			properties.SetValue(dict, entry, [
 				(entry as SnowflakeObject)?.Id
 				?? (entry as DiscordVoiceState)?.UserId
 				?? throw new InvalidOperationException($"Type {entry?.GetType()} is not deserializable")
-			});
+			]);
 
 		return dict;
 	}

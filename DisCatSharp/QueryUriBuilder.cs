@@ -19,7 +19,7 @@ internal class QueryUriBuilder
 	/// </summary>
 	public IReadOnlyList<KeyValuePair<string, string>> QueryParameters => this._queryParams;
 
-	private readonly List<KeyValuePair<string, string>> _queryParams = new();
+	private readonly List<KeyValuePair<string, string>> _queryParams = [];
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="QueryUriBuilder"/> class.

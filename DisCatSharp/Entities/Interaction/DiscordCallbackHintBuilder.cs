@@ -12,7 +12,7 @@ public sealed class DiscordCallbackHintBuilder
 	/// <summary>
 	/// Gets the callback hints.
 	/// </summary>
-	public List<DiscordInteractionCallbackHint> CallbackHints { get; internal set; } = new();
+	public List<DiscordInteractionCallbackHint> CallbackHints { get; internal set; } = [];
 
 	/// <summary>
 	/// Adds a callback hint to the builder.

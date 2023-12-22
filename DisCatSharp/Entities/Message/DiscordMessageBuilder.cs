@@ -51,7 +51,7 @@ public sealed class DiscordMessageBuilder
 	/// </summary>
 	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
 
-	private readonly List<DiscordEmbed> _embeds = new();
+	private readonly List<DiscordEmbed> _embeds = [];
 
 	/// <summary>
 	/// Gets or Sets if the message should be TTS.
@@ -73,7 +73,7 @@ public sealed class DiscordMessageBuilder
 	/// </summary>
 	public IReadOnlyCollection<DiscordMessageFile> Files => this.FilesInternal;
 
-	internal readonly List<DiscordMessageFile> FilesInternal = new();
+	internal readonly List<DiscordMessageFile> FilesInternal = [];
 
 	/// <summary>
 	/// Gets the components that will be attached to the message.
@@ -87,7 +87,7 @@ public sealed class DiscordMessageBuilder
 	/// </summary>
 	public IReadOnlyList<DiscordAttachment> Attachments => this.AttachmentsInternal;
 
-	internal readonly List<DiscordAttachment> AttachmentsInternal = new();
+	internal readonly List<DiscordAttachment> AttachmentsInternal = [];
 
 	/// <summary>
 	/// Gets the Reply Message ID.
@@ -243,10 +243,7 @@ public sealed class DiscordMessageBuilder
 		if (this.Mentions != null)
 			this.Mentions.Add(allowedMention);
 		else
-			this.Mentions = new()
-			{
-				allowedMention
-			};
+			this.Mentions = [allowedMention];
 
 		return this;
 	}
@@ -386,7 +383,7 @@ public sealed class DiscordMessageBuilder
 
 		if (mention)
 		{
-			this.Mentions ??= new();
+			this.Mentions ??= [];
 			this.Mentions.Add(new RepliedUserMention());
 		}
 

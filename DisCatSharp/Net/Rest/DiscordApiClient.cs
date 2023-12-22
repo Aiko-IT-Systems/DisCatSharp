@@ -186,7 +186,7 @@ public sealed class DiscordApiClient
 
 		ret.PopulateMentions();
 
-		ret.ReactionsInternal ??= new();
+		ret.ReactionsInternal ??= [];
 		foreach (var xr in ret.ReactionsInternal)
 			xr.Emoji.Discord = this.Discord;
 	}
@@ -2381,7 +2381,7 @@ public sealed class DiscordApiClient
 		List<DiscordRestOverwrite> restoverwrites = null;
 		if (permissionOverwrites != null)
 		{
-			restoverwrites = new();
+			restoverwrites = [];
 			foreach (var ow in permissionOverwrites)
 				restoverwrites.Add(ow.Build());
 		}
@@ -2464,7 +2464,7 @@ public sealed class DiscordApiClient
 		List<DiscordRestOverwrite> restoverwrites = null;
 		if (permissionOverwrites != null)
 		{
-			restoverwrites = new();
+			restoverwrites = [];
 			foreach (var ow in permissionOverwrites)
 				restoverwrites.Add(ow.Build());
 		}
@@ -2524,7 +2524,7 @@ public sealed class DiscordApiClient
 		List<DiscordRestOverwrite> restoverwrites = null;
 		if (permissionOverwrites != null)
 		{
-			restoverwrites = new();
+			restoverwrites = [];
 			foreach (var ow in permissionOverwrites)
 				restoverwrites.Add(ow.Build());
 		}
@@ -2665,7 +2665,7 @@ public sealed class DiscordApiClient
 			Content = content,
 			StickersIds = sticker is null
 				? Array.Empty<ulong>()
-				: new[] { sticker.Id },
+				: [sticker.Id],
 			IsTts = false,
 			HasEmbed = embeds?.Any() ?? false,
 			Embeds = embeds,
@@ -2716,7 +2716,7 @@ public sealed class DiscordApiClient
 			Content = builder.Content,
 			StickersIds = builder.Sticker is null
 				? Array.Empty<ulong>()
-				: new[] { builder.Sticker.Id },
+				: [builder.Sticker.Id],
 			IsTts = builder.IsTts,
 			HasEmbed = builder.Embeds != null,
 			Embeds = builder.Embeds,
@@ -3044,7 +3044,7 @@ public sealed class DiscordApiClient
 		if (files?.Count > 0)
 		{
 			ulong fileId = 0;
-			List<DiscordAttachment> attachmentsNew = new();
+			List<DiscordAttachment> attachmentsNew = [];
 			foreach (var file in files)
 			{
 				DiscordAttachment att = new()
@@ -4658,7 +4658,7 @@ public sealed class DiscordApiClient
 		if (builder.Files?.Count > 0)
 		{
 			ulong fileId = 0;
-			List<DiscordAttachment> attachments = new();
+			List<DiscordAttachment> attachments = [];
 			foreach (var file in builder.Files)
 			{
 				DiscordAttachment att = new()
@@ -4784,7 +4784,7 @@ public sealed class DiscordApiClient
 		if (builder.Files?.Count > 0)
 		{
 			ulong fileId = 0;
-			List<DiscordAttachment> attachments = new();
+			List<DiscordAttachment> attachments = [];
 			foreach (var file in builder.Files)
 			{
 				DiscordAttachment att = new()
@@ -5182,7 +5182,7 @@ public sealed class DiscordApiClient
 			};
 			if (appliedTags != null && appliedTags.Any())
 			{
-				List<ulong> tags = new();
+				List<ulong> tags = [];
 
 				foreach (var b in appliedTags)
 					tags.Add(b.Id.Value);
@@ -6356,7 +6356,7 @@ public sealed class DiscordApiClient
 			if (builder != null && builder.Files != null && builder.Files.Count > 0)
 			{
 				ulong fileId = 0;
-				List<DiscordAttachment> attachments = new();
+				List<DiscordAttachment> attachments = [];
 				foreach (var file in builder.Files)
 				{
 					DiscordAttachment att = new()
@@ -6558,7 +6558,7 @@ public sealed class DiscordApiClient
 		if (builder.Files != null && builder.Files.Count > 0)
 		{
 			ulong fileId = 0;
-			List<DiscordAttachment> attachments = new();
+			List<DiscordAttachment> attachments = [];
 			foreach (var file in builder.Files)
 			{
 				DiscordAttachment att = new()
@@ -6914,10 +6914,7 @@ public sealed class DiscordApiClient
 	{
 		var pld = new RestGcpAttachmentsPayload
 		{
-			GcpAttachments = new()
-			{
-				attachment
-			}
+			GcpAttachments = [attachment]
 		};
 
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.ATTACHMENTS}";

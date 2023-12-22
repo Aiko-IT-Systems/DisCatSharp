@@ -341,7 +341,7 @@ internal sealed class OptionalJsonConverter : JsonConverter
 		var constructor = objectType.GetTypeInfo().DeclaredConstructors
 			.FirstOrDefault(e => e.GetParameters()[0].ParameterType == genericType);
 
-		return constructor.Invoke(new[] { serializer.Deserialize(reader, genericType) });
+		return constructor.Invoke([serializer.Deserialize(reader, genericType)]);
 	}
 
 	/// <summary>

@@ -29,7 +29,7 @@ public abstract class ObservableApiObject
 	}
 
 	[JsonIgnore]
-	internal List<string> IgnoredJsonKeys { get; set; } = new();
+	internal List<string> IgnoredJsonKeys { get; set; } = [];
 
 	protected ObservableApiObject(List<string>? ignored = null)
 	{

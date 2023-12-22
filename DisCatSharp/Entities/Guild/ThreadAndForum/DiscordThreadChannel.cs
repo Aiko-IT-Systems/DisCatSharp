@@ -93,11 +93,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// Initializes a new instance of the <see cref="DiscordThreadChannel"/> class.
 	/// </summary>
 	internal DiscordThreadChannel()
-		: base(new()
-		{
-			"hashes",
-			"guild_hashes"
-		})
+		: base(["hashes", "guild_hashes"])
 	{ }
 
 #region Methods

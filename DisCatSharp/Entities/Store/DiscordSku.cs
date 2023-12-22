@@ -34,13 +34,13 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	/// Gets the manifest labels.
 	/// </summary>
 	[JsonProperty("manifest_labels", NullValueHandling = NullValueHandling.Ignore)]
-	public List<ulong> ManifestLabels { get; internal set; } = new();
+	public List<ulong> ManifestLabels { get; internal set; } = [];
 
 	/// <summary>
 	/// Gets the locales.
 	/// </summary>
 	[JsonProperty("locales", NullValueHandling = NullValueHandling.Ignore)]
-	public List<string> Locales { get; internal set; } = new();
+	public List<string> Locales { get; internal set; } = [];
 
 	/// <summary>
 	/// Gets the access type.
@@ -58,13 +58,13 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	/// Gets the skus features.
 	/// </summary>
 	[JsonProperty("features", NullValueHandling = NullValueHandling.Ignore)]
-	public List<int> Features { get; internal set; } = new();
+	public List<int> Features { get; internal set; } = [];
 
 	/// <summary>
 	/// Gets the skus genres.
 	/// </summary>
 	[JsonProperty("genres", NullValueHandling = NullValueHandling.Ignore)]
-	public List<int> Genres { get; internal set; } = new();
+	public List<int> Genres { get; internal set; } = [];
 
 	/// <summary>
 	/// Gets the skus release date.

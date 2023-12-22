@@ -27,7 +27,7 @@ internal class ReadyPayload : ObservableApiObject
 	/// Gets the guilds available for this shard.
 	/// </summary>
 	[JsonProperty("guilds")]
-	public List<DiscordGuild> Guilds { get; private set; } = new();
+	public List<DiscordGuild> Guilds { get; private set; } = [];
 
 	/// <summary>
 	/// Gets the current session's ID.

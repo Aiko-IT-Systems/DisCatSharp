@@ -116,11 +116,6 @@ public class DiscordThreadChannelMember : SnowflakeObject, IEquatable<DiscordThr
 	/// Initializes a new instance of the <see cref="DiscordThreadChannelMember"/> class.
 	/// </summary>
 	internal DiscordThreadChannelMember()
-		: base(new()
-		{
-			"muted",
-			"mute_config",
-			"guild_id"
-		})
+		: base(["muted", "mute_config", "guild_id"])
 	{ }
 }

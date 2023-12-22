@@ -36,14 +36,14 @@ public sealed class DiscordInteractionModalBuilder
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> ModalComponents => this._components;
 
-	private readonly List<DiscordActionRowComponent> _components = new();
+	private readonly List<DiscordActionRowComponent> _components = [];
 
 	/// <summary>
 	/// The hints to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordInteractionCallbackHint> CallbackHints => this._callbackHints;
 
-	private readonly List<DiscordInteractionCallbackHint> _callbackHints = new();
+	private readonly List<DiscordInteractionCallbackHint> _callbackHints = [];
 
 	/// <summary>
 	/// Constructs a new empty interaction modal builder.

@@ -154,7 +154,7 @@ internal class RateLimitBucket : IEquatable<RateLimitBucket>
 		this.WebhookId = webhookId;
 
 		this.BucketId = GenerateBucketId(hash, guildId, channelId, webhookId);
-		this.RouteHashes = new();
+		this.RouteHashes = [];
 	}
 
 	/// <summary>

@@ -23,7 +23,7 @@ public class GuildFeatures
 	/// <param name="guild">Guild to check</param>
 	public GuildFeatures(DiscordGuild guild)
 	{
-		this.Features = new();
+		this.Features = [];
 
 		if (guild.RawFeatures.Contains("APPLICATION_COMMAND_PERMISSIONS_V2")) this.Features.Add(GuildFeaturesEnum.UsesApplicationCommandsPermissionsV2);
 		if (guild.RawFeatures.Contains("RAID_ALERTS_ENABLED")) this.Features.Add(GuildFeaturesEnum.RaidAlertsEnabled);

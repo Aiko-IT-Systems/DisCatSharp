@@ -15,7 +15,7 @@ public sealed class WelcomeMessage : ObservableApiObject
 	/// Can only be <c>1</c> and target must have write permission.
 	/// </summary>
 	[JsonProperty("author_ids", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<ulong> AuthorIds { get; set; } = new();
+	internal List<ulong> AuthorIds { get; set; } = [];
 
 	/// <summary>
 	/// Gets the author id.
@@ -38,10 +38,7 @@ public sealed class WelcomeMessage : ObservableApiObject
 	/// <param name="message">The message. Use <c>[@username]</c> to mention the new member. Required.</param>
 	public WelcomeMessage(ulong authorId, string message)
 	{
-		this.AuthorIds = new()
-		{
-			authorId
-		};
+		this.AuthorIds = [authorId];
 		this.Message = message;
 	}
 

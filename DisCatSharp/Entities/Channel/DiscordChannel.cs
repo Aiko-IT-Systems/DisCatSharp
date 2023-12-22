@@ -164,7 +164,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> this._permissionOverwritesLazy.Value;
 
 	[JsonProperty("permission_overwrites", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordOverwrite> PermissionOverwritesInternal = new();
+	internal List<DiscordOverwrite> PermissionOverwritesInternal = [];
 
 	[JsonIgnore]
 	private readonly Lazy<IReadOnlyList<DiscordOverwrite>> _permissionOverwritesLazy;
@@ -223,7 +223,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// List of available tags for forum posts.
 	/// </summary>
 	[JsonProperty("available_tags", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<ForumPostTag> InternalAvailableTags { get; set; } = new();
+	internal List<ForumPostTag> InternalAvailableTags { get; set; } = [];
 
 	/// <summary>
 	/// List of available tags for forum posts.
@@ -310,17 +310,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Initializes a new instance of the <see cref="DiscordChannel"/> class.
 	/// </summary>
 	internal DiscordChannel()
-		: base(new()
-		{
-			"hashes",
-			"guild_hashes",
-			"owner_id",
-			"thread_metadata",
-			"message_count",
-			"member_count",
-			"total_message_sent",
-			"member"
-		})
+		: base(["hashes", "guild_hashes", "owner_id", "thread_metadata", "message_count", "member_count", "total_message_sent", "member"])
 	{
 		this._permissionOverwritesLazy = new(() => new ReadOnlyCollection<DiscordOverwrite>(this.PermissionOverwritesInternal));
 	}

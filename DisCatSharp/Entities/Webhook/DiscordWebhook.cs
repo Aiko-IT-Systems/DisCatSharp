@@ -90,10 +90,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// Initializes a new instance of the <see cref="DiscordWebhook"/> class.
 	/// </summary>
 	internal DiscordWebhook()
-		: base(new()
-		{
-			"type"
-		})
+		: base(["type"])
 	{ }
 
 	/// <summary>

@@ -137,7 +137,7 @@ public sealed class DisCatSharpTeam : SnowflakeObject
 				Guild = guild,
 				SupportInvite = await apiClient.GetInviteAsync("GGYSywkxwN", true, true, null).ConfigureAwait(false)
 			};
-			List<DisCatSharpTeamMember> team = new();
+			List<DisCatSharpTeamMember> team = [];
 			DisCatSharpTeamMember owner = new();
 			foreach (var mb in app.Team.Members.OrderBy(m => m.User.Username))
 			{

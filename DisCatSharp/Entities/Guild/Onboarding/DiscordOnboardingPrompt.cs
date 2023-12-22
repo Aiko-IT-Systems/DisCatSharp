@@ -21,7 +21,7 @@ public sealed class DiscordOnboardingPrompt : SnowflakeObject
 	/// Gets the prompt options.
 	/// </summary>
 	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-	public List<DiscordOnboardingPromptOption> Options { get; internal set; } = new();
+	public List<DiscordOnboardingPromptOption> Options { get; internal set; } = [];
 
 	/// <summary>
 	/// Gets whether the prompt is single select.

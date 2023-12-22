@@ -32,7 +32,7 @@ public sealed class GcpAttachment : ObservableApiObject
 public sealed class GcpAttachmentsResponse : ObservableApiObject
 {
 	[JsonProperty("attachments")]
-	public List<GcpAttachmentUploadInformation> Attachments { get; set; } = new();
+	public List<GcpAttachmentUploadInformation> Attachments { get; set; } = [];
 }
 
 public sealed class GcpAttachmentUploadInformation : NullableSnowflakeObject

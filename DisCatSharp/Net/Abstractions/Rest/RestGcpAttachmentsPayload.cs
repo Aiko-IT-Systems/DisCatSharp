@@ -9,5 +9,5 @@ namespace DisCatSharp.Net.Abstractions.Rest;
 internal sealed class RestGcpAttachmentsPayload
 {
 	[JsonProperty("files")]
-	public List<GcpAttachment> GcpAttachments { get; set; } = new();
+	public List<GcpAttachment> GcpAttachments { get; set; } = [];
 }

@@ -28,13 +28,13 @@ public sealed class DiscordOnboarding : ObservableApiObject
 	/// Gets the onboarding prompts
 	/// </summary>
 	[JsonProperty("prompts", NullValueHandling = NullValueHandling.Ignore)]
-	public List<DiscordOnboardingPrompt> Prompts { get; internal set; } = new();
+	public List<DiscordOnboardingPrompt> Prompts { get; internal set; } = [];
 
 	/// <summary>
 	/// Gets the default channel ids.
 	/// </summary>
 	[JsonProperty("default_channel_ids", NullValueHandling = NullValueHandling.Ignore)]
-	public List<ulong> DefaultChannelIds { get; internal set; } = new();
+	public List<ulong> DefaultChannelIds { get; internal set; } = [];
 
 	/// <summary>
 	/// Gets whether onboarding is enabled.
@@ -58,11 +58,6 @@ public sealed class DiscordOnboarding : ObservableApiObject
 	/// Constructs a new onboarding configuration.
 	/// </summary>
 	internal DiscordOnboarding()
-		: base(new()
-		{
-			"responses",
-			"onboarding_prompts_seen",
-			"onboarding_responses_seen"
-		})
+		: base(["responses", "onboarding_prompts_seen", "onboarding_responses_seen"])
 	{ }
 }

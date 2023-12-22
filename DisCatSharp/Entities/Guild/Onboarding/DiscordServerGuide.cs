@@ -38,11 +38,11 @@ public sealed class DiscordServerGuide : ObservableApiObject
 	/// Gets the new member actions.
 	/// </summary>
 	[JsonProperty("new_member_actions", NullValueHandling = NullValueHandling.Ignore)]
-	public List<NewMemberAction> NewMemberActions { get; internal set; } = new();
+	public List<NewMemberAction> NewMemberActions { get; internal set; } = [];
 
 	/// <summary>
 	/// Gets the resource channels.
 	/// </summary>
 	[JsonProperty("resource_channels", NullValueHandling = NullValueHandling.Ignore)]
-	public List<ResourceChannel> ResourceChannels { get; internal set; } = new();
+	public List<ResourceChannel> ResourceChannels { get; internal set; } = [];
 }

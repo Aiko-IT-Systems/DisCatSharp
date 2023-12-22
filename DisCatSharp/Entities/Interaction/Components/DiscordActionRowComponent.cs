@@ -18,8 +18,8 @@ public sealed class DiscordActionRowComponent : DiscordComponent
 	[JsonIgnore]
 	public IReadOnlyCollection<DiscordComponent> Components
 	{
-		get => this._components ?? new List<DiscordComponent>();
-		set => this._components = new(value);
+		get => this._components ?? [];
+		set => this._components = [..value];
 	}
 
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
