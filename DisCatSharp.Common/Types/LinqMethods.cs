@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace DisCatSharp.Common;
@@ -17,7 +18,7 @@ public static class LinqMethods
 	/// <param name="predicate">The predicate.</param>
 	/// <param name="value">The value to get if succeeded</param>
 	/// <returns>Whether a value was found.</returns>
-	public static bool TryGetFirstValueWhere<TSource>(this List<TSource?> list, Func<TSource?, bool> predicate, out TSource? value)
+	public static bool TryGetFirstValueWhere<TSource>(this List<TSource?> list, Func<TSource?, bool> predicate, [NotNullWhen(true)] out TSource? value)
 	{
 		if (list.EmptyOrNull())
 		{
@@ -39,7 +40,7 @@ public static class LinqMethods
 	/// <param name="key">The key to search for.</param>
 	/// <param name="value">The value to get if succeeded.</param>
 	/// <returns>Whether a value was found through the key.</returns>
-	public static bool TryGetFirstValueByKey<TKey, TValue>(this Dictionary<TKey, TValue?>? dict, TKey key, out TValue? value)
+	public static bool TryGetFirstValueByKey<TKey, TValue>(this Dictionary<TKey, TValue?>? dict, TKey key, [NotNullWhen(true)] out TValue? value)
 		where TKey : notnull
 	{
 		if (dict != null)

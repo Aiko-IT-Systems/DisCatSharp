@@ -9,7 +9,7 @@ namespace DisCatSharp.ApplicationCommands.Entities;
 /// <summary>
 /// Represents a choice translator.
 /// </summary>
-internal class ChoiceTranslator
+internal sealed class ChoiceTranslator
 {
 	/// <summary>
 	/// Gets the choice name.

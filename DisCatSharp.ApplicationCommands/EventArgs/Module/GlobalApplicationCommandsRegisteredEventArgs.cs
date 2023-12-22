@@ -9,12 +9,12 @@ namespace DisCatSharp.ApplicationCommands.EventArgs;
 /// <summary>
 /// Represents arguments for a <see cref="ApplicationCommandsExtension.GlobalApplicationCommandsRegistered"/> event.
 /// </summary>
-public class GlobalApplicationCommandsRegisteredEventArgs : DiscordEventArgs
+public sealed class GlobalApplicationCommandsRegisteredEventArgs : DiscordEventArgs
 {
 	/// <summary>
 	/// Gets all registered global commands.
 	/// </summary>
-	public IReadOnlyList<DiscordApplicationCommand> RegisteredCommands { get; internal set; }
+	public IReadOnlyList<DiscordApplicationCommand> RegisteredCommands { get; internal set; } = [];
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="GlobalApplicationCommandsRegisteredEventArgs"/> class.

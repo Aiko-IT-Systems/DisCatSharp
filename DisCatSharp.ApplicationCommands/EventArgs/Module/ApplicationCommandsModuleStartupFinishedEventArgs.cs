@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
@@ -9,7 +10,7 @@ namespace DisCatSharp.ApplicationCommands.EventArgs;
 /// <summary>
 /// Represents arguments for a <see cref="ApplicationCommandsExtension.ApplicationCommandsModuleStartupFinished"/> event.
 /// </summary>
-public class ApplicationCommandsModuleStartupFinishedEventArgs : DiscordEventArgs
+public sealed class ApplicationCommandsModuleStartupFinishedEventArgs : DiscordEventArgs
 {
 	/// <summary>
 	/// Gets a list of all guild ids missing the application commands scope.

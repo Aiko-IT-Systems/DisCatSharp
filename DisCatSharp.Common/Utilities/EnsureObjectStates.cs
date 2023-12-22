@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace DisCatSharp.Common;
@@ -15,8 +16,9 @@ public static class EnsureObjectStates
 	/// <typeparam name="T2">Any value type.</typeparam>
 	/// <param name="dictionary">The dictionary to check on.</param>
 	/// <returns>True if satisfied, false otherwise.</returns>
-	public static bool EmptyOrNull<T1, T2>(this Dictionary<T1, T2?>? dictionary) where T1 : notnull
-		=> dictionary == null || dictionary.Count == 0 || dictionary.Keys.Count == 0;
+	[MemberNotNullWhen(false)]
+	public static bool EmptyOrNull<T1, T2>([NotNullWhen(false), AllowNull] this Dictionary<T1, T2?>? dictionary) where T1 : notnull
+		=> dictionary is null || dictionary.Count is 0 || dictionary.Keys.Count is 0;
 
 	/// <summary>
 	/// Checks whether the dictionary is not null and not empty.
@@ -25,8 +27,9 @@ public static class EnsureObjectStates
 	/// <typeparam name="T2">Any value type.</typeparam>
 	/// <param name="dictionary">The dictionary to check on.</param>
 	/// <returns>True if satisfied, false otherwise.</returns>
-	public static bool NotEmptyAndNotNull<T1, T2>(this Dictionary<T1, T2?>? dictionary) where T1 : notnull
-		=> dictionary != null && dictionary.Count != 0 && dictionary.Keys.Count != 0;
+	[MemberNotNullWhen(true)]
+	public static bool NotEmptyAndNotNull<T1, T2>([NotNullWhen(true), AllowNull] this Dictionary<T1, T2?>? dictionary) where T1 : notnull
+		=> dictionary is not null && dictionary.Count is not 0 && dictionary.Keys.Count is not 0;
 
 	/// <summary>
 	/// Checks whether the list is null or empty.
@@ -34,8 +37,9 @@ public static class EnsureObjectStates
 	/// <typeparam name="T">Any value type.</typeparam>
 	/// <param name="list">The list to check on.</param>
 	/// <returns>True if satisfied, false otherwise.</returns>
-	public static bool EmptyOrNull<T>(this List<T?>? list)
-		=> list == null || list.Count == 0;
+	[MemberNotNullWhen(false)]
+	public static bool EmptyOrNull<T>([NotNullWhen(false), AllowNull] this List<T?>? list)
+		=> list is null || list.Count is 0;
 
 	/// <summary>
 	/// Checks whether the list is not null and not empty.
@@ -43,6 +47,7 @@ public static class EnsureObjectStates
 	/// <typeparam name="T">Any value type.</typeparam>
 	/// <param name="list">The list to check on.</param>
 	/// <returns>True if satisfied, false otherwise.</returns>
-	public static bool NotEmptyAndNotNull<T>(this List<T?>? list)
-		=> list != null && list.Count != 0;
+	[MemberNotNullWhen(true)]
+	public static bool NotEmptyAndNotNull<T>([NotNullWhen(true), AllowNull] this List<T?>? list)
+		=> list is not null && list.Count is not 0;
 }

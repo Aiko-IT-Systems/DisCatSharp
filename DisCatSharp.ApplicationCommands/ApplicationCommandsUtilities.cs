@@ -10,6 +10,9 @@ using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp.ApplicationCommands;
 
+/// <summary>
+/// Provides a set of utility methods for application commands.
+/// </summary>
 public static class ApplicationCommandsUtilities
 {
 	/// <summary>

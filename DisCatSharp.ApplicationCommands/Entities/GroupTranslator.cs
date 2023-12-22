@@ -10,7 +10,7 @@ namespace DisCatSharp.ApplicationCommands.Entities;
 /// <summary>
 /// Represents a group translator.
 /// </summary>
-internal class GroupTranslator
+internal sealed class GroupTranslator
 {
 	/// <summary>
 	/// Gets the group name.

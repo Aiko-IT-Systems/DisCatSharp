@@ -49,10 +49,7 @@ public static class ExtensionMethods
 	public static async Task<IReadOnlyDictionary<int, ApplicationCommandsExtension>> GetApplicationCommandsAsync(this DiscordShardedClient client)
 	{
 		await client.InitializeShardsAsync().ConfigureAwait(false);
-		var modules = new Dictionary<int, ApplicationCommandsExtension>();
-		foreach (var shard in client.ShardClients.Values)
-			modules.Add(shard.ShardId, shard.GetExtension<ApplicationCommandsExtension>());
-		return modules;
+		return client.ShardClients.Values.ToDictionary(shard => shard.ShardId, shard => shard.GetExtension<ApplicationCommandsExtension>());
 	}
 
 	/// <summary>
@@ -138,24 +135,19 @@ public static class ExtensionMethods
 	/// <returns>The name.</returns>
 	public static string GetName<T>(this T e) where T : IConvertible
 	{
-		if (e is Enum)
-		{
-			var type = e.GetType();
-			var values = Enum.GetValues(type);
+		if (e is not Enum)
+			return null;
 
-			foreach (int val in values)
-				if (val == e.ToInt32(CultureInfo.InvariantCulture))
-				{
-					var memInfo = type.GetMember(type.GetEnumName(val));
+		var type = e.GetType();
+		var values = Enum.GetValues(type);
 
-					return memInfo[0]
-						.GetCustomAttributes(typeof(ChoiceNameAttribute), false)
-						.FirstOrDefault() is ChoiceNameAttribute nameAttribute
-						? nameAttribute.Name
-						: type.GetEnumName(val);
-				}
-		}
-
-		return null;
+		return (from int val in values
+		        where val == e.ToInt32(CultureInfo.InvariantCulture)
+		        let memInfo = type.GetMember(type.GetEnumName(val))
+		        select memInfo[0]
+			        .GetCustomAttributes(typeof(ChoiceNameAttribute), false)
+			        .FirstOrDefault() is ChoiceNameAttribute nameAttribute
+			        ? nameAttribute.Name
+			        : type.GetEnumName(val)).FirstOrDefault()!;
 	}
 }
