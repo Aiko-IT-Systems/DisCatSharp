@@ -566,11 +566,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return o1 is null && o2 is null
-			? true
-			: o1 is null || o2 is null
-				? false
-				: e1.Id == e2.Id;
+		return (o1 is null && o2 is null) || (o1 is not null && o2 is not null && e1.Id == e2.Id);
 	}
 
 	/// <summary>
