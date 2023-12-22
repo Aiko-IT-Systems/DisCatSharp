@@ -5,98 +5,50 @@ namespace DisCatSharp.Common.RegularExpressions;
 /// <summary>
 /// Provides common regex for discord related things.
 /// </summary>
-public static class DiscordRegEx
+public static partial class DiscordRegEx
 {
-	// language=regex
-	private const string WEBSITE = @"(https?:\/\/)?(www\.|canary\.|ptb\.)?(discord|discordapp)\.com\/";
+	[GeneratedRegex(@"^((https?:\/\/)?(www\.)?discord\.gg(\/.*)*|(https?:\/\/)?(www\.|canary\.|ptb\.)?(discord|discordapp)\.com\/invite)\/(?<code>[a-zA-Z0-9]*)(\?event=(?<event>\d+))?$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
+	public static partial Regex InviteRegex();
 
-	/// <summary>
-	/// Represents a invite.
-	/// </summary>
-	public static readonly Regex Invite
-		= new($@"^((https?:\/\/)?(www\.)?discord\.gg(\/.*)*|{WEBSITE}invite)\/(?<code>[a-zA-Z0-9]*)(\?event=(?<event>\d+))?$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+	[GeneratedRegex(@"^(https?:\/\/)?(www\.|canary\.|ptb\.)?(discord|discordapp)\.com\/channels\/(?<guild>(?:\d+|@me))\/(?<channel>\d+)\/(?<message>\d+)\/?", RegexOptions.Compiled | RegexOptions.ECMAScript)]
+	public static partial Regex MessageLinkRegex();
 
-	/// <summary>
-	/// Represents a message link.
-	/// </summary>
-	public static readonly Regex MessageLink
-		= new($@"^{WEBSITE}channels\/(?<guild>(?:\d+|@me))\/(?<channel>\d+)\/(?<message>\d+)\/?", RegexOptions.ECMAScript | RegexOptions.Compiled);
+	[GeneratedRegex("^<(?<animated>a)?:(?<name>[a-zA-Z0-9_]+?):(?<id>\\d+?)>$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
+	public static partial Regex EmojiRegex();
 
-	/// <summary>
-	/// Represents a emoji.
-	/// </summary>
-	public static readonly Regex Emoji
-		= new(@"^<(?<animated>a)?:(?<name>[a-zA-Z0-9_]+?):(?<id>\d+?)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+	[GeneratedRegex(@"^<(?<animated>a):(?<name>\w{2,32}):(?<id>\d{17,20})>$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
+	public static partial Regex AnimatedEmojiRegex();
 
-	/// <summary>
-	/// Represents a animated emoji.
-	/// </summary>
-	public static readonly Regex AnimatedEmoji
-		= new(@"^<(?<animated>a):(?<name>\w{2,32}):(?<id>\d{17,20})>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+	[GeneratedRegex(@"^<:(?<name>\w{2,32}):(?<id>\d{17,20})>$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
+	public static partial Regex StaticEmojiRegex();
 
-	/// <summary>
-	/// Represents a non-animated emoji.
-	/// </summary>
-	public static readonly Regex StaticEmoji
-		= new(@"^<:(?<name>\w{2,32}):(?<id>\d{17,20})>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+	[GeneratedRegex("^<t:(?<timestamp>-?\\d{1,13})(:(?<style>[tTdDfFR]))?>$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
+	public static partial Regex TimestampRegex();
 
-	/// <summary>
-	/// Represents a timestamp.
-	/// </summary>
-	public static readonly Regex Timestamp
-		= new(@"^<t:(?<timestamp>-?\d{1,13})(:(?<style>[tTdDfFR]))?>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+	[GeneratedRegex("^<t:(?<timestamp>-?\\d{1,13})$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
+	public static partial Regex DefaultStyledTimestampRegex();
 
-	/// <summary>
-	/// Represents a default styled timestamp.
-	/// </summary>
-	public static readonly Regex DefaultStyledTimestamp
-		= new(@"^<t:(?<timestamp>-?\d{1,13})$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+	[GeneratedRegex("^<t:(?<timestamp>-?\\d{1,13}):(?<style>[tTdDfFR])>$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
+	public static partial Regex StyledTimestampRegex();
 
-	/// <summary>
-	/// Represents a styled timestamp.
-	/// </summary>
-	public static readonly Regex StyledTimestamp
-		= new(@"^<t:(?<timestamp>-?\d{1,13}):(?<style>[tTdDfFR])>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+	[GeneratedRegex("^<@&(\\d+?)>$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
+	public static partial Regex RoleRegex();
 
-	/// <summary>
-	/// Represents a role.
-	/// </summary>
-	public static readonly Regex Role
-		= new(@"^<@&(\d+?)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+	[GeneratedRegex("^<#(\\d+)>$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
+	public static partial Regex ChannelRegex();
 
-	/// <summary>
-	/// Represents a channel.
-	/// </summary>
-	public static readonly Regex Channel
-		= new(@"^<#(\d+)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+	[GeneratedRegex(@"^<@\!?(\d+?)>$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
+	public static partial Regex UserRegex();
 
-	/// <summary>
-	/// Represents a user.
-	/// </summary>
-	public static readonly Regex User
-		= new(@"^<@\!?(\d+?)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+	[GeneratedRegex(@"^<@\!(?<id>\d{17,20})>$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
+	public static partial Regex UserWithNicknameRegex();
 
-	/// <summary>
-	/// Represents a user with nickname.
-	/// </summary>
-	public static readonly Regex UserWithNickname
-		= new(@"^<@\!(?<id>\d{17,20})>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+	[GeneratedRegex(@"^<@\!?(?<id>\d{17,20})>$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
+	public static partial Regex UserWithOptionalNicknameRegex();
 
-	/// <summary>
-	/// Represents a user with optional nickname.
-	/// </summary>
-	public static readonly Regex UserWithOptionalNickname
-		= new(@"^<@\!?(?<id>\d{17,20})>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+	[GeneratedRegex("^<@(?<id>\\d{17,20})>$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
+	public static partial Regex UserWithoutNicknameRegex();
 
-	/// <summary>
-	/// Represents a user without nickname.
-	/// </summary>
-	public static readonly Regex UserWithoutNickname
-		= new(@"^<@(?<id>\d{17,20})>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
-
-	/// <summary>
-	/// Represents a event.
-	/// </summary>
-	public static readonly Regex Event
-		= new($@"^{WEBSITE}events\/(?<guild>\d+)\/(?<event>\d+)$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+	[GeneratedRegex(@"^(https?:\/\/)?(www\.|canary\.|ptb\.)?(discord|discordapp)\.com\/events\/(?<guild>\d+)\/(?<event>\d+)$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
+	public static partial Regex EventRegex();
 }

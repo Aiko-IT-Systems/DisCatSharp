@@ -433,21 +433,21 @@ public sealed class LavalinkGuildPlayer
 	/// <exception cref="NotSupportedException">Thrown when the <paramref name="url"/> is a pure youtube playlist.</exception>
 	public async Task<LavalinkGuildPlayer> PlayDirectUrlAsync(string url)
 	{
-		if (CommonRegEx.AdvancedYoutubeRegex.IsMatch(url))
+		if (CommonRegEx.AdvancedYoutubeRegex().IsMatch(url))
 		{
 			if (url.Contains("playlist"))
 				throw new NotSupportedException("Lavalink is unable to play a playlist directly.");
 
-			var match = CommonRegEx.AdvancedYoutubeRegex.Match(url);
+			var match = CommonRegEx.AdvancedYoutubeRegex().Match(url);
 			if (match.Groups["list"] != null! && !string.IsNullOrEmpty(match.Groups["list"].Value))
 			{
-				this.Session.Discord.Logger.LogTrace(LavalinkEvents.Misc, null, "Removed list from playlist url. Not supported.");
+				this.Session.Discord.Logger.LogTrace(LavalinkEvents.Misc, null, "Removed list from playlist url. Not supported");
 				url = url.Replace($"list={match.Groups["list"].Value}", null);
 			}
 
 			if (match.Groups["index"] != null! && !string.IsNullOrEmpty(match.Groups["index"].Value))
 			{
-				this.Session.Discord.Logger.LogTrace(LavalinkEvents.Misc, null, "Removed index from playlist url. Not supported.");
+				this.Session.Discord.Logger.LogTrace(LavalinkEvents.Misc, null, "Removed index from playlist url. Not supported");
 				url = url.Replace($"index={match.Groups["index"].Value}", null);
 			}
 		}
