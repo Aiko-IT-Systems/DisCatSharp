@@ -169,7 +169,7 @@ public sealed class LavalinkGuildPlayer
 	/// Gets the internal queue entries.
 	/// </summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>")]
-	private SortedList<string, IQueueEntry> _queueEntriesInternal = new();
+	private SortedList<string, IQueueEntry> _queueEntriesInternal = [];
 
 	/// <summary>
 	/// Gets a list of current user in the <see cref="Channel"/>.
@@ -180,7 +180,7 @@ public sealed class LavalinkGuildPlayer
 	/// <summary>
 	/// Gets the internal list of users.
 	/// </summary>
-	internal readonly Dictionary<ulong, DiscordUser> CurrentUsersInternal = new();
+	internal readonly Dictionary<ulong, DiscordUser> CurrentUsersInternal = [];
 
 	/// <summary>
 	/// Gets whether this player is currently connected.
@@ -481,7 +481,7 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="identifier">The identifier to look up.</param>
 	/// <returns><see langword="true"/> if the entry was found and removed.</returns>
 	public bool RemoveFromQueueByIdentifierAsync(string identifier)
-		=> this._queueEntriesInternal.Any() && this._queueEntriesInternal!.TryGetValue(identifier, out var entry) && this.RemoveFromQueue(entry!);
+		=> this._queueEntriesInternal.Count != 0 && this._queueEntriesInternal!.TryGetValue(identifier, out var entry) && this.RemoveFromQueue(entry!);
 
 	/// <summary>
 	/// Plays the queue while entries are presented.

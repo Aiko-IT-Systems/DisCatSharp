@@ -331,7 +331,7 @@ public sealed class VoiceNextConnection : IDisposable
 	/// Gets whether this connection is still playing audio.
 	/// </summary>
 	public bool IsPlaying
-		=> this._playingWait != null && !this._playingWait.Task.IsCompleted;
+		=> this._playingWait is { Task.IsCompleted: false };
 
 	/// <summary>
 	/// Gets the websocket round-trip time in ms.
@@ -657,7 +657,7 @@ public sealed class VoiceNextConnection : IDisposable
 	/// <param name="voiceSender">The voice sender.</param>
 	/// <param name="outputFormat">The output format.</param>
 	/// <returns>A bool.</returns>
-	private bool ProcessPacket(ReadOnlySpan<byte> data, ref Memory<byte> opus, ref Memory<byte> pcm, IList<ReadOnlyMemory<byte>> pcmPackets, out AudioSender voiceSender, out AudioFormat outputFormat)
+	private bool ProcessPacket(ReadOnlySpan<byte> data, ref Memory<byte> opus, ref Memory<byte> pcm, List<ReadOnlyMemory<byte>> pcmPackets, out AudioSender voiceSender, out AudioFormat outputFormat)
 	{
 		voiceSender = null;
 		outputFormat = default;

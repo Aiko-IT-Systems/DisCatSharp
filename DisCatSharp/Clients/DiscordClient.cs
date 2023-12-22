@@ -696,7 +696,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, string content, DiscordEmbed embed)
+	public
+Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, string content, DiscordEmbed embed)
 		=> this.ApiClient.CreateMessageAsync(channel.Id, content, embed != null
 			? new[] { embed }
 			: null, null, null, false, false);
@@ -711,7 +712,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuilder builder)
+	public
+Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuilder builder)
 		=> this.ApiClient.CreateMessageAsync(channel.Id, builder);
 
 	/// <summary>
@@ -1508,7 +1510,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		var guild = this.GuildsInternal[newGuild.Id];
 
-		if (newGuild.ChannelsInternal != null && !newGuild.ChannelsInternal.IsEmpty)
+		if (newGuild.ChannelsInternal is { IsEmpty: false })
 			foreach (var channel in newGuild.ChannelsInternal.Values)
 			{
 				if (guild.ChannelsInternal.TryGetValue(channel.Id, out _)) continue;
@@ -1518,7 +1520,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				guild.ChannelsInternal[channel.Id] = channel;
 			}
 
-		if (newGuild.ThreadsInternal != null && !newGuild.ThreadsInternal.IsEmpty)
+		if (newGuild.ThreadsInternal is { IsEmpty: false })
 			foreach (var thread in newGuild.ThreadsInternal.Values)
 			{
 				if (guild.ThreadsInternal.TryGetValue(thread.Id, out _)) continue;
@@ -1526,7 +1528,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				guild.ThreadsInternal[thread.Id] = thread;
 			}
 
-		if (newGuild.ScheduledEventsInternal != null && !newGuild.ScheduledEventsInternal.IsEmpty)
+		if (newGuild.ScheduledEventsInternal is { IsEmpty: false })
 			foreach (var @event in newGuild.ScheduledEventsInternal.Values)
 			{
 				if (guild.ScheduledEventsInternal.TryGetValue(@event.Id, out _)) continue;

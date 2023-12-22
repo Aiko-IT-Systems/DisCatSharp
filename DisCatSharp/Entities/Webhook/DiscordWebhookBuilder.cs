@@ -51,7 +51,7 @@ public sealed class DiscordWebhookBuilder
 		get => this._content;
 		set
 		{
-			if (value != null && value.Length > 2000)
+			if (value is { Length: > 2000 })
 				throw new ArgumentException("Content length cannot exceed 2000 characters.", nameof(value));
 
 			this._content = value;
@@ -177,11 +177,13 @@ public sealed class DiscordWebhookBuilder
 		var cmpArr = components.ToArray();
 		var count = cmpArr.Length;
 
-		if (!cmpArr.Any())
-			throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
-
-		if (count > 5)
-			throw new ArgumentException("Cannot add more than 5 components per action row!");
+		switch (count)
+		{
+			case 0:
+				throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
+			case > 5:
+				throw new ArgumentException("Cannot add more than 5 components per action row!");
+		}
 
 		var comp = new DiscordActionRowComponent(cmpArr);
 		this._components.Add(comp);

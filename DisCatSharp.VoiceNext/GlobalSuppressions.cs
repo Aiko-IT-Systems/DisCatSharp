@@ -34,3 +34,7 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Usage", "DCS0002:[Discord] InExperiment", Justification = "<Pending>")]
 [assembly: SuppressMessage("Interoperability", "SYSLIB1054:Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time", Justification = "<Pending>")]
 [assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
+[assembly: SuppressMessage("Style", "IDE0290:Use primary constructor", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.VoiceNext.Entities.AudioSender.#ctor(System.UInt32,DisCatSharp.VoiceNext.Codec.OpusDecoder)")]
+[assembly: SuppressMessage("Style", "IDE0290:Use primary constructor", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.VoiceNext.Entities.VoicePacket.#ctor(System.ReadOnlyMemory{System.Byte},System.Int32,System.Boolean)")]
+[assembly: SuppressMessage("Style", "IDE0290:Use primary constructor", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.VoiceNext.RawVoicePacket.#ctor(System.Memory{System.Byte},System.Int32,System.Boolean)")]
+[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.VoiceNext.Entities.AudioSender.GetTrueSequenceAfterWrapping(System.UInt16)~System.UInt64")]

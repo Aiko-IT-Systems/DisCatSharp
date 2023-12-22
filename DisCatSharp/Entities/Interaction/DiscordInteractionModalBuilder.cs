@@ -17,7 +17,7 @@ public sealed class DiscordInteractionModalBuilder
 		get => this._title;
 		set
 		{
-			if (value != null && value.Length > 128)
+			if (value is { Length: > 128 })
 				throw new ArgumentException("Title length cannot exceed 128 characters.", nameof(value));
 
 			this._title = value;
@@ -87,7 +87,7 @@ public sealed class DiscordInteractionModalBuilder
 		if (hintBuilder == null)
 			throw new ArgumentNullException(nameof(hintBuilder), "Callback hint builder cannot be null.");
 
-		if (!hintBuilder.CallbackHints.Any())
+		if (hintBuilder.CallbackHints.Count == 0)
 			return this;
 
 		this._callbackHints.Clear();

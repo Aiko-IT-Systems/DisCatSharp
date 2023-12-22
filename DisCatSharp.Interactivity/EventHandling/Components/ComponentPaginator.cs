@@ -19,7 +19,7 @@ internal class ComponentPaginator : IPaginator
 	private readonly DiscordClient _client;
 	private readonly InteractivityConfiguration _config;
 	private readonly DiscordMessageBuilder _builder = new();
-	private readonly Dictionary<ulong, IPaginationRequest> _requests = new();
+	private readonly Dictionary<ulong, IPaginationRequest> _requests = [];
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ComponentPaginator"/> class.
@@ -119,15 +119,14 @@ internal class ComponentPaginator : IPaginator
 		var id = args.Id;
 		var tcs = await request.GetTaskCompletionSourceAsync().ConfigureAwait(false);
 
-#pragma warning disable CS8846 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
 		var paginationTask = id switch
-#pragma warning restore CS8846 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
 		{
 			_ when id == buttons.SkipLeft.CustomId => request.SkipLeftAsync(),
 			_ when id == buttons.SkipRight.CustomId => request.SkipRightAsync(),
 			_ when id == buttons.Stop.CustomId => Task.FromResult(tcs.TrySetResult(true)),
 			_ when id == buttons.Left.CustomId => request.PreviousPageAsync(),
-			_ when id == buttons.Right.CustomId => request.NextPageAsync()
+			_ when id == buttons.Right.CustomId => request.NextPageAsync(),
+			_ => throw new ArgumentOutOfRangeException(nameof(args), "Id was out of range")
 		};
 
 		await paginationTask.ConfigureAwait(false);

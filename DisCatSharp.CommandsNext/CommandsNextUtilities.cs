@@ -52,7 +52,7 @@ public static class CommandsNextUtilities
 	public static int GetMentionPrefixLength(this DiscordMessage msg, DiscordUser user)
 	{
 		var content = msg.Content;
-		if (!content.StartsWith("<@"))
+		if (!content.StartsWith("<@", StringComparison.Ordinal))
 			return -1;
 
 		var cni = content.IndexOf('>');
@@ -238,7 +238,7 @@ public static class CommandsNextUtilities
 				rawArgumentList.Add(argValue);
 			}
 
-			if (argValue == null && !arg.IsOptional && !arg.IsCatchAll)
+			if (argValue == null && arg is { IsOptional: false, IsCatchAll: false })
 				return new(new ArgumentException("Not enough arguments supplied to the command."));
 			else if (argValue == null)
 				rawArgumentList.Add(null);
@@ -250,7 +250,7 @@ public static class CommandsNextUtilities
 		for (var i = 0; i < overload.Arguments.Count; i++)
 		{
 			var arg = overload.Arguments[i];
-			if (arg.IsCatchAll && arg.IsArray)
+			if (arg is { IsCatchAll: true, IsArray: true })
 			{
 				var array = Array.CreateInstance(arg.Type, rawArgumentList.Count - i);
 				var start = i;
@@ -309,7 +309,7 @@ public static class CommandsNextUtilities
 			return false;
 
 		// check if anonymous
-		if (ti.IsGenericType && ti.Name.Contains("AnonymousType") && (ti.Name.StartsWith("<>") || ti.Name.StartsWith("VB$")) && (ti.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic)
+		if (ti.IsGenericType && ti.Name.Contains("AnonymousType") && (ti.Name.StartsWith("<>", StringComparison.Ordinal) || ti.Name.StartsWith("VB$", StringComparison.Ordinal)) && (ti.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic)
 			return false;
 
 		// check if abstract, static, or not a class
@@ -343,11 +343,8 @@ public static class CommandsNextUtilities
 
 		// check if appropriate return and arguments
 		parameters = method.GetParameters();
-		if (!parameters.Any() || parameters.First().ParameterType != typeof(CommandContext) || method.ReturnType != typeof(Task))
-			return false;
 
-		// qualifies
-		return true;
+		return parameters.Length != 0 && parameters.First().ParameterType == typeof(CommandContext) && method.ReturnType == typeof(Task);
 	}
 
 	/// <summary>
@@ -394,7 +391,7 @@ public static class CommandsNextUtilities
 		}
 
 		// inject into fields
-		var fields = t.GetRuntimeFields().Where(xf => !xf.IsInitOnly && !xf.IsStatic && xf.IsPublic);
+		var fields = t.GetRuntimeFields().Where(xf => !xf.IsInitOnly && xf is { IsStatic: false, IsPublic: true });
 		foreach (var field in fields)
 		{
 			if (field.GetCustomAttribute<DontInjectAttribute>() != null)

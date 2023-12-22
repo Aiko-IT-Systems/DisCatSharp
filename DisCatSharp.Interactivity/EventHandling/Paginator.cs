@@ -27,7 +27,7 @@ internal class Paginator : IPaginator
 	public Paginator(DiscordClient client)
 	{
 		this._client = client;
-		this._requests = new();
+		this._requests = [];
 
 		this._client.MessageReactionAdded += this.HandleReactionAdd;
 		this._client.MessageReactionRemoved += this.HandleReactionRemove;
@@ -95,8 +95,7 @@ internal class Paginator : IPaginator
 						     eventArgs.Emoji == emojis.Stop))
 							await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
 						else if (eventArgs.Emoji == emojis.Stop &&
-						         req is PaginationRequest paginationRequest &&
-						         paginationRequest.PaginationDeletion == PaginationDeletion.DeleteMessage)
+						         req is PaginationRequest { PaginationDeletion: PaginationDeletion.DeleteMessage })
 							await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
 						else
 							await msg.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User).ConfigureAwait(false);
@@ -143,8 +142,7 @@ internal class Paginator : IPaginator
 						     eventArgs.Emoji == emojis.Stop))
 							await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
 						else if (eventArgs.Emoji == emojis.Stop &&
-						         req is PaginationRequest paginationRequest &&
-						         paginationRequest.PaginationDeletion == PaginationDeletion.DeleteMessage)
+						         req is PaginationRequest { PaginationDeletion: PaginationDeletion.DeleteMessage })
 							await this.PaginateAsync(req, eventArgs.Emoji).ConfigureAwait(false);
 					}
 			}
@@ -206,7 +204,7 @@ internal class Paginator : IPaginator
 			if (emojis.Stop != null)
 				await msg.CreateReactionAsync(emojis.Stop).ConfigureAwait(false);
 		}
-		else if (emojis.Stop != null && p is PaginationRequest paginationRequest && paginationRequest.PaginationDeletion == PaginationDeletion.DeleteMessage)
+		else if (emojis.Stop != null && p is PaginationRequest { PaginationDeletion: PaginationDeletion.DeleteMessage })
 			await msg.CreateReactionAsync(emojis.Stop).ConfigureAwait(false);
 	}
 

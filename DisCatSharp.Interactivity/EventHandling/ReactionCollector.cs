@@ -44,7 +44,7 @@ internal class ReactionCollector : IDisposable
 		this._client = client;
 		var tinfo = this._client.GetType().GetTypeInfo();
 
-		this._requests = new();
+		this._requests = [];
 
 		// Grabbing all three events from client
 		var handler = tinfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, MessageReactionAddEventArgs>));
@@ -117,10 +117,10 @@ internal class ReactionCollector : IDisposable
 					req.Collected.Add(new()
 					{
 						Emoji = eventArgs.Emoji,
-						Users = new()
-						{
+						Users =
+						[
 							eventArgs.User
-						}
+						]
 					});
 			}
 
@@ -213,7 +213,7 @@ public class ReactionCollectRequest : IDisposable
 	public ReactionCollectRequest(DiscordMessage msg, TimeSpan timeout)
 	{
 		this.Message = msg;
-		this.Collected = new();
+		this.Collected = [];
 		this.Timeout = timeout;
 		this.Tcs = new();
 		this.Ct = new(this.Timeout);

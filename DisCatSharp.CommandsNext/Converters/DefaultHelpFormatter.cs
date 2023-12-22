@@ -43,9 +43,9 @@ public class DefaultHelpFormatter : BaseHelpFormatter
 	{
 		this._command = command;
 
-		this.EmbedBuilder.WithDescription($"{Formatter.InlineCode(command.Name)}: {command.Description ?? "No description provided."}");
+		this.EmbedBuilder.WithDescription($"{command.Name.InlineCode()}: {command.Description ?? "No description provided."}");
 
-		if (command is CommandGroup cgroup && cgroup.IsExecutableWithoutSubcommands)
+		if (command is CommandGroup { IsExecutableWithoutSubcommands: true })
 			this.EmbedBuilder.WithDescription($"{this.EmbedBuilder.Description}\n\nThis group can be executed as a standalone command.");
 
 		if (command.Aliases?.Any() == true)
@@ -83,7 +83,7 @@ public class DefaultHelpFormatter : BaseHelpFormatter
 	/// <returns>This help formatter.</returns>
 	public override BaseHelpFormatter WithSubcommands(IEnumerable<Command> subcommands)
 	{
-		this.EmbedBuilder.AddField(new(this._command != null ? "Subcommands" : "Commands", string.Join(", ", subcommands.Select(x => Formatter.InlineCode(x.Name)))));
+		this.EmbedBuilder.AddField(new(this._command != null ? "Subcommands" : "Commands", string.Join(", ", subcommands.Select(x => x.Name.InlineCode()))));
 
 		return this;
 	}

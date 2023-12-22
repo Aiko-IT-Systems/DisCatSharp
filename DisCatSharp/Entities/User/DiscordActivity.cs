@@ -479,7 +479,7 @@ public sealed class DiscordRichPresence
 		var lid = rawGame?.Assets?.LargeImage;
 		if (lid != null)
 		{
-			if (lid.StartsWith("spotify:"))
+			if (lid.StartsWith("spotify:", StringComparison.Ordinal))
 				this.LargeImage = new DiscordSpotifyAsset
 				{
 					Id = lid
@@ -496,7 +496,7 @@ public sealed class DiscordRichPresence
 		var sid = rawGame?.Assets?.SmallImage;
 		if (sid != null)
 		{
-			if (sid.StartsWith("spotify:"))
+			if (sid.StartsWith("spotify:", StringComparison.Ordinal))
 				this.SmallImage = new DiscordSpotifyAsset
 				{
 					Id = sid

@@ -52,7 +52,7 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 	public AsyncEvent(string name, TimeSpan maxExecutionTime, AsyncEventExceptionHandler<TSender, TArgs> exceptionHandler)
 		: base(name)
 	{
-		this._handlers = ImmutableArray<AsyncEventHandler<TSender, TArgs>>.Empty;
+		this._handlers = [];
 		this._exceptionHandler = exceptionHandler;
 
 		this.MaximumExecutionTime = maxExecutionTime;
@@ -64,8 +64,7 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 	/// <param name="handler">Handler to register for this event.</param>
 	public void Register(AsyncEventHandler<TSender, TArgs> handler)
 	{
-		if (handler == null)
-			throw new ArgumentNullException(nameof(handler));
+		ArgumentNullException.ThrowIfNull(handler);
 
 		lock (this._lock)
 		{
@@ -79,8 +78,7 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 	/// <param name="handler">Handler to unregister from the event.</param>
 	public void Unregister(AsyncEventHandler<TSender, TArgs> handler)
 	{
-		if (handler == null)
-			throw new ArgumentNullException(nameof(handler));
+		ArgumentNullException.ThrowIfNull(handler);
 
 		lock (this._lock)
 		{
@@ -91,7 +89,7 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 	/// <summary>
 	/// Unregisters all existing handlers from this event.
 	/// </summary>
-	public void UnregisterAll() => this._handlers = ImmutableArray<AsyncEventHandler<TSender, TArgs>>.Empty;
+	public void UnregisterAll() => this._handlers = [];
 
 	/// <summary>
 	/// <para>Raises this event by invoking all of its registered handlers, in order of registration.</para>

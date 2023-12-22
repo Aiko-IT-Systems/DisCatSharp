@@ -27,8 +27,7 @@ internal class QueryUriBuilder
 	/// <param name="uri">The uri.</param>
 	public QueryUriBuilder(string uri)
 	{
-		if (uri == null)
-			throw new ArgumentNullException(nameof(uri));
+		ArgumentNullException.ThrowIfNull(uri);
 
 		this.SourceUri = new(uri);
 	}
@@ -39,8 +38,7 @@ internal class QueryUriBuilder
 	/// <param name="uri">The uri.</param>
 	public QueryUriBuilder(Uri uri)
 	{
-		if (uri == null)
-			throw new ArgumentNullException(nameof(uri));
+		ArgumentNullException.ThrowIfNull(uri);
 
 		this.SourceUri = uri;
 	}

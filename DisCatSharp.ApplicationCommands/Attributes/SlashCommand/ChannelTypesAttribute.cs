@@ -23,6 +23,6 @@ public class ChannelTypesAttribute : Attribute
 	/// <param name="channelTypes">The channel types to allow.</param>
 	public ChannelTypesAttribute(params ChannelType[] channelTypes)
 	{
-		this.ChannelTypes = channelTypes.ToList();
+		this.ChannelTypes = [.. channelTypes];
 	}
 }

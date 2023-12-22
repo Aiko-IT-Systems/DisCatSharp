@@ -327,7 +327,7 @@ public sealed class DiscordApiClient
 			guild_id = guildId
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route, urlParams).ConfigureAwait(false);
 
 		var json = JObject.Parse(res.Response);
@@ -1143,7 +1143,7 @@ public sealed class DiscordApiClient
 	internal async Task<IReadOnlyList<TransportMember>> ListGuildMembersAsync(ulong guildId, int? limit, ulong? after)
 	{
 		var urlParams = new Dictionary<string, string>();
-		if (limit != null && limit > 0)
+		if (limit is > 0)
 			urlParams["limit"] = limit.Value.ToString(CultureInfo.InvariantCulture);
 		if (after != null)
 			urlParams["after"] = after.Value.ToString(CultureInfo.InvariantCulture);
@@ -1154,7 +1154,7 @@ public sealed class DiscordApiClient
 			guild_id = guildId
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var membersRaw = JsonConvert.DeserializeObject<List<TransportMember>>(res.Response);
@@ -1329,7 +1329,7 @@ public sealed class DiscordApiClient
 			guild_id = guildId
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var auditLogDataRaw = DiscordJson.DeserializeObject<AuditLog>(res.Response, this.Discord);
@@ -2117,7 +2117,7 @@ public sealed class DiscordApiClient
 			scheduled_event_id = scheduledEventId
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
@@ -2160,7 +2160,7 @@ public sealed class DiscordApiClient
 			guild_id = guildId
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var events = new Dictionary<ulong, DiscordScheduledEvent>();
@@ -2226,7 +2226,7 @@ public sealed class DiscordApiClient
 	internal async Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetGuildScheduledEventRspvUsersAsync(ulong guildId, ulong scheduledEventId, int? limit, ulong? before, ulong? after, bool? withMember)
 	{
 		var urlParams = new Dictionary<string, string>();
-		if (limit != null && limit > 0)
+		if (limit is > 0)
 			urlParams["limit"] = limit.Value.ToString(CultureInfo.InvariantCulture);
 		if (before != null)
 			urlParams["before"] = before.Value.ToString(CultureInfo.InvariantCulture);
@@ -2242,11 +2242,11 @@ public sealed class DiscordApiClient
 			scheduled_event_id = scheduledEventId
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var rspvUsers = JsonConvert.DeserializeObject<IEnumerable<DiscordScheduledEventUser>>(res.Response);
-		Dictionary<ulong, DiscordScheduledEventUser> rspv = new();
+		Dictionary<ulong, DiscordScheduledEventUser> rspv = [];
 
 		foreach (var rspvUser in rspvUsers)
 		{
@@ -2296,10 +2296,9 @@ public sealed class DiscordApiClient
 	/// <param name="perUserRateLimit">The per user rate limit.</param>
 	/// <param name="qualityMode">The quality mode.</param>
 	/// <param name="defaultAutoArchiveDuration">The default auto archive duration.</param>
+	/// <param name="flags">The channel flags.</param>
 	/// <param name="reason">The reason.</param>
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 	internal async Task<DiscordChannel> CreateGuildChannelAsync(ulong guildId, string name, ChannelType type, ulong? parent, Optional<string> topic, int? bitrate, int? userLimit, IEnumerable<DiscordOverwriteBuilder> overwrites, bool? nsfw, Optional<int?> perUserRateLimit, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? defaultAutoArchiveDuration, Optional<ChannelFlags?> flags, string reason)
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 	{
 		var restOverwrites = new List<DiscordRestOverwrite>();
 		if (overwrites != null)
@@ -2355,8 +2354,9 @@ public sealed class DiscordApiClient
 	/// <param name="perUserRateLimit">The per user rate limit.</param>
 	/// <param name="postCreateUserRateLimit">The per user post create rate limit.</param>
 	/// <param name="defaultAutoArchiveDuration">The default auto archive duration.</param>
+	/// <param name="defaultSortOrder">The default sort order.</param>
+	/// <param name="flags">The channel flags.</param>
 	/// <param name="reason">The reason.</param>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
 	internal async Task<DiscordChannel> CreateForumChannelAsync(
 		ulong guildId,
 		string name,
@@ -2365,18 +2365,14 @@ public sealed class DiscordApiClient
 		Optional<string> template,
 		bool? nsfw,
 		Optional<ForumReactionEmoji> defaultReactionEmoji,
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 		Optional<int?> perUserRateLimit,
 		Optional<int?> postCreateUserRateLimit,
 		Optional<ForumPostSortOrder> defaultSortOrder,
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 		ThreadAutoArchiveDuration? defaultAutoArchiveDuration,
 		IEnumerable<DiscordOverwriteBuilder> permissionOverwrites,
 		Optional<ChannelFlags?> flags,
 		string reason
 	)
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 	{
 		List<DiscordRestOverwrite> restoverwrites = null;
 		if (permissionOverwrites != null)
@@ -2439,8 +2435,8 @@ public sealed class DiscordApiClient
 	/// <param name="autoArchiveDuration">The default auto archive duration.</param>
 	/// <param name="type">The type.</param>
 	/// <param name="permissionOverwrites">The permission overwrites.</param>
+	/// <param name="flags">The channel flags.</param>
 	/// <param name="reason">The reason.</param>
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 	internal Task ModifyChannelAsync(
 		ulong channelId,
 		string name,
@@ -2459,7 +2455,6 @@ public sealed class DiscordApiClient
 		Optional<ChannelFlags?> flags,
 		string reason
 	)
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 	{
 		List<DiscordRestOverwrite> restoverwrites = null;
 		if (permissionOverwrites != null)
@@ -2501,7 +2496,25 @@ public sealed class DiscordApiClient
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
 	}
 
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
+	/// <summary>
+	/// Modifies the forum channel.
+	/// </summary>
+	/// <param name="channelId">The channel id.</param>
+	/// <param name="name">The name.</param>
+	/// <param name="parent">The parent.</param>
+	/// <param name="position">The position.</param>
+	/// <param name="topic">The topic.</param>
+	/// <param name="template">The template.</param>
+	/// <param name="defaultReactionEmoji">The default reaction emoji.</param>
+	/// <param name="permissionOverwrites">The overwrites.</param>
+	/// <param name="nsfw">If true, nsfw.</param>
+	/// <param name="availableTags">The available tags.</param>
+	/// <param name="defaultSortOrder">The default sort order.</param>
+	/// <param name="perUserRateLimit">The per user rate limit.</param>
+	/// <param name="postCreateUserRateLimit">The per user post create rate limit.</param>
+	/// <param name="defaultAutoArchiveDuration">The default auto archive duration.</param>
+	/// <param name="flags">The channel flags.</param>
+	/// <param name="reason">The reason.</param>
 	internal async Task<DiscordChannel> ModifyForumChannelAsync(
 		ulong channelId,
 		string name,
@@ -2643,7 +2656,7 @@ public sealed class DiscordApiClient
 	/// <param name="components">The components.</param>
 	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string content, IEnumerable<DiscordEmbed> embeds, DiscordSticker sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply, ReadOnlyCollection<DiscordActionRowComponent>? components = null)
 	{
-		if (content != null && content.Length > 2000)
+		if (content is { Length: > 2000 })
 			throw new ArgumentException("Message content length cannot exceed 2000 characters.");
 
 		if (!embeds?.Any() ?? true)
@@ -2976,7 +2989,7 @@ public sealed class DiscordApiClient
 			channel_id = channelId
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var msgsRaw = JArray.Parse(res.Response);
@@ -3023,7 +3036,7 @@ public sealed class DiscordApiClient
 	/// <param name="attachments">The attachments to keep.</param>
 	internal async Task<DiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, Optional<IEnumerable<IMention>> mentions, IReadOnlyList<DiscordActionRowComponent> components, Optional<bool> suppressEmbed, IReadOnlyCollection<DiscordMessageFile> files, Optional<IEnumerable<DiscordAttachment>> attachments)
 	{
-		if (embeds.HasValue && embeds.Value != null)
+		if (embeds is { HasValue: true, Value: not null })
 			foreach (var embed in embeds.Value)
 				if (embed.Timestamp != null)
 					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
@@ -3705,9 +3718,9 @@ public sealed class DiscordApiClient
 			Deafen = deaf,
 			Mute = mute,
 			VoiceChannelId = voiceChannelId,
-			Flags = verify.HasValue && verify.Value
+			Flags = verify is { HasValue: true, Value: true }
 				? flags | MemberFlags.BypassesVerification
-				: verify.HasValue && !verify.Value
+				: verify is { HasValue: true, Value: false }
 					? flags & ~MemberFlags.BypassesVerification
 					: Optional.None
 		};
@@ -4225,7 +4238,7 @@ public sealed class DiscordApiClient
 			invite_code = inviteCode
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var ret = DiscordJson.DeserializeObject<DiscordInvite>(res.Response, this.Discord);
@@ -4799,7 +4812,7 @@ public sealed class DiscordApiClient
 				fileId++;
 			}
 
-			if (builder.Attachments != null && builder.Attachments?.Count > 0)
+			if (builder.Attachments is { Count: > 0 })
 				attachments.AddRange(builder.Attachments);
 
 			pld.Attachments = attachments;
@@ -5312,7 +5325,7 @@ public sealed class DiscordApiClient
 			user_id = userId
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var threadMember = DiscordJson.DeserializeObject<DiscordThreadChannelMember>(res.Response, this.Discord);
@@ -5356,7 +5369,7 @@ public sealed class DiscordApiClient
 
 		if (after != null && withMember)
 			urlParams["after"] = after.Value.ToString(CultureInfo.InvariantCulture);
-		if (limit != null && limit > 0 && withMember)
+		if (limit is > 0 && withMember)
 			urlParams["limit"] = limit.Value.ToString(CultureInfo.InvariantCulture);
 
 		var route = $"{Endpoints.CHANNELS}/:thread_id{Endpoints.THREAD_MEMBERS}";
@@ -5365,7 +5378,7 @@ public sealed class DiscordApiClient
 			thread_id = threadId
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var tm = DiscordJson.DeserializeIEnumerableObject<List<DiscordThreadChannelMember>>(res.Response, this.Discord);
@@ -5405,7 +5418,7 @@ public sealed class DiscordApiClient
 		var urlParams = new Dictionary<string, string>();
 		if (before != null)
 			urlParams["before"] = before.Value.ToString(CultureInfo.InvariantCulture);
-		if (limit != null && limit > 0)
+		if (limit is > 0)
 			urlParams["limit"] = limit.Value.ToString(CultureInfo.InvariantCulture);
 
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.USERS}{Endpoints.ME}{Endpoints.THREADS}{Endpoints.THREAD_ARCHIVED}{Endpoints.THREAD_PRIVATE}";
@@ -5414,7 +5427,7 @@ public sealed class DiscordApiClient
 			channel_id = channelId
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var threadReturn = DiscordJson.DeserializeObject<DiscordThreadResult>(res.Response, this.Discord);
@@ -5433,7 +5446,7 @@ public sealed class DiscordApiClient
 		var urlParams = new Dictionary<string, string>();
 		if (before != null)
 			urlParams["before"] = before.Value.ToString(CultureInfo.InvariantCulture);
-		if (limit != null && limit > 0)
+		if (limit is > 0)
 			urlParams["limit"] = limit.Value.ToString(CultureInfo.InvariantCulture);
 
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREADS}{Endpoints.THREAD_ARCHIVED}{Endpoints.THREAD_PUBLIC}";
@@ -5442,7 +5455,7 @@ public sealed class DiscordApiClient
 			channel_id = channelId
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var threadReturn = DiscordJson.DeserializeObject<DiscordThreadResult>(res.Response, this.Discord);
@@ -5461,7 +5474,7 @@ public sealed class DiscordApiClient
 		var urlParams = new Dictionary<string, string>();
 		if (before != null)
 			urlParams["before"] = before.Value.ToString(CultureInfo.InvariantCulture);
-		if (limit != null && limit > 0)
+		if (limit is > 0)
 			urlParams["limit"] = limit.Value.ToString(CultureInfo.InvariantCulture);
 
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREADS}{Endpoints.THREAD_ARCHIVED}{Endpoints.THREAD_PRIVATE}";
@@ -5470,7 +5483,7 @@ public sealed class DiscordApiClient
 			channel_id = channelId
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var threadReturn = DiscordJson.DeserializeObject<DiscordThreadResult>(res.Response, this.Discord);
@@ -5506,7 +5519,7 @@ public sealed class DiscordApiClient
 
 		if (parentType == ChannelType.Forum)
 		{
-			if (appliedTags.HasValue && appliedTags.Value != null)
+			if (appliedTags is { HasValue: true, Value: not null })
 			{
 				List<ulong> tags = new(appliedTags.Value.Count());
 
@@ -5516,7 +5529,7 @@ public sealed class DiscordApiClient
 				pld.AppliedTags = tags;
 			}
 
-			if (pinned.HasValue && pinned.Value.HasValue)
+			if (pinned is { HasValue: true, Value: not null })
 				pld.Flags = pinned.Value.Value ? ChannelFlags.Pinned : Optional.None;
 		}
 
@@ -6264,7 +6277,8 @@ public sealed class DiscordApiClient
 			NameLocalizations = nameLocalization.ValueOrDefault()?.GetKeyValuePairs(),
 			DescriptionLocalizations = descriptionLocalization.ValueOrDefault()?.GetKeyValuePairs(),
 			Nsfw = isNsfw,
-			AllowedContexts = allowedContexts
+			AllowedContexts = allowedContexts,
+			IntegrationTypes = integrationTypes
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";
@@ -6322,7 +6336,7 @@ public sealed class DiscordApiClient
 
 		if (type != InteractionResponseType.AutoCompleteResult)
 		{
-			MessageFlags? flags = builder != null && builder.FlagsChanged ? MessageFlags.None : null;
+			MessageFlags? flags = builder is { FlagsChanged: true } ? MessageFlags.None : null;
 			if (builder != null)
 			{
 				if (builder.IsEphemeral)
@@ -6353,7 +6367,7 @@ public sealed class DiscordApiClient
 				CallbackHints = builder?.CallbackHints
 			};
 
-			if (builder != null && builder.Files != null && builder.Files.Count > 0)
+			if (builder is { Files.Count: > 0 })
 			{
 				ulong fileId = 0;
 				List<DiscordAttachment> attachments = [];
@@ -6534,7 +6548,7 @@ public sealed class DiscordApiClient
 				if (embed.Timestamp != null)
 					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
-		MessageFlags? flags = builder != null && builder.FlagsChanged ? MessageFlags.None : null;
+		MessageFlags? flags = builder is { FlagsChanged: true } ? MessageFlags.None : null;
 		if (builder != null)
 		{
 			if (builder.IsEphemeral)
@@ -6555,7 +6569,7 @@ public sealed class DiscordApiClient
 			Components = builder.Components
 		};
 
-		if (builder.Files != null && builder.Files.Count > 0)
+		if (builder.Files is { Count: > 0 })
 		{
 			ulong fileId = 0;
 			List<DiscordAttachment> attachments = [];
@@ -6651,7 +6665,7 @@ public sealed class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 			{ }, out var path);
 
-		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var storeSkus = DiscordJson.DeserializeIEnumerableObject<List<DiscordStoreSku>>(res.Response, this.Discord);
@@ -6701,7 +6715,7 @@ public sealed class DiscordApiClient
 			application_id = applicationId
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		return new ReadOnlyCollection<DiscordEntitlement>(DiscordJson.DeserializeIEnumerableObject<List<DiscordEntitlement>>(res.Response, this.Discord));

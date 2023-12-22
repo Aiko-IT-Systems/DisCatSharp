@@ -33,7 +33,7 @@ public class UriConverter : IArgumentConverter<Uri>
 	{
 		try
 		{
-			if (value.StartsWith("<") && value.EndsWith(">"))
+			if (value.StartsWith("<", StringComparison.Ordinal) && value.EndsWith(">", StringComparison.Ordinal))
 				value = value[1..^1];
 
 			return Task.FromResult(Optional.Some(new Uri(value)));

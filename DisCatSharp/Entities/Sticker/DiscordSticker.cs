@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
+using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
 
 using Newtonsoft.Json;
@@ -73,7 +74,7 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<string> Tags
-		=> this.InternalTags != null ? this.InternalTags.Split(',') : Array.Empty<string>();
+		=> this.InternalTags != null ? this.InternalTags.Split(',') : [];
 
 	/// <summary>
 	/// Gets the asset hash of the sticker.
@@ -138,7 +139,6 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// </summary>
 	public override string ToString() => $"Sticker {this.Id}; {this.Name}; {this.FormatType}";
 
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 	/// <summary>
 	/// Modifies the sticker
 	/// </summary>
@@ -161,9 +161,7 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 					: tags.HasValue && !DiscordEmoji.TryFromUnicode(this.Discord, tags.Value, out var emoji)
 						? throw new ArgumentException("Sticker tags needs to be a unicode emoji.")
 						: this.Discord.ApiClient.ModifyGuildStickerAsync(this.GuildId.Value, this.Id, name, description, tags, reason);
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
 	/// <summary>
 	/// Deletes the sticker
 	/// </summary>
@@ -173,7 +171,6 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
 	public Task DeleteAsync(string reason = null)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.GuildId.HasValue ? this.Discord.ApiClient.DeleteGuildStickerAsync(this.GuildId.Value, this.Id, reason) : throw new ArgumentException("The requested sticker is no guild sticker.");
 }
 

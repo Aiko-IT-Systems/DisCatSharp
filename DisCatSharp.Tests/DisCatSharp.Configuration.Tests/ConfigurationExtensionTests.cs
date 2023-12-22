@@ -38,23 +38,23 @@ public class ConfigurationExtensionTests
 
 	private class ClassWithList
 	{
-		public List<string> Strings { get; set; } = new()
-		{
+		public List<string> Strings { get; set; } =
+		[
 			"1",
 			"2",
 			"3",
 			"4",
 			"5"
-		};
+		];
 
-		public List<int> Values { get; set; } = new()
-		{
+		public List<int> Values { get; set; } =
+		[
 			1,
 			2,
 			3,
 			4,
 			5
-		};
+		];
 	}
 
 	private class SampleClass2
@@ -98,7 +98,6 @@ public class ConfigurationExtensionTests
 		.AddJsonFile("haphazard-discord.json")
 		.Build();
 
-#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 	private IConfiguration SampleConfig() => new ConfigurationBuilder()
 		.AddInMemoryCollection(new Dictionary<string, string>
 		{
@@ -143,7 +142,6 @@ public class ConfigurationExtensionTests
 			{ "SampleClass:ListTest", "[\"10\",\"20\",\"30\"]" }
 		})
 		.Build();
-#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 
 	[Fact]
 	public void TestExtractDiscordConfig_Intents()
@@ -303,9 +301,7 @@ public class ConfigurationExtensionTests
 
 		Assert.True(source.HasSection("DiscordConfiguration"));
 		Assert.False(source.HasSection("Discord"));
-#pragma warning disable 8625
 		Assert.False(source.HasSection("DiscordConfiguration", null));
-#pragma warning restore 8625
 	}
 
 	[Fact]
@@ -315,8 +311,6 @@ public class ConfigurationExtensionTests
 
 		Assert.True(source.HasSection("Discord"));
 		Assert.False(source.HasSection("DiscordConfiguration"));
-#pragma warning disable 8625
 		Assert.False(source.HasSection("Discord", null));
-#pragma warning restore 8625
 	}
 }

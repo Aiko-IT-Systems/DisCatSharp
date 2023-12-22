@@ -10,12 +10,12 @@ public partial class DiscordEmoji
 	/// <summary>
 	/// Gets a mapping of :name: => unicode.
 	/// </summary>
-	private static IReadOnlyDictionary<string, string> s_unicodeEmojis { get; }
+	private static Dictionary<string, string> s_unicodeEmojis { get; }
 
 	/// <summary>
 	/// Gets a mapping of unicode => :name:.
 	/// </summary>
-	private static IReadOnlyDictionary<string, string> s_discordNameLookup { get; }
+	private static Dictionary<string, string> s_discordNameLookup { get; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordEmoji"/> class.

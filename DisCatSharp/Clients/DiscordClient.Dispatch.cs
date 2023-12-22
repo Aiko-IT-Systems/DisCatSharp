@@ -33,7 +33,7 @@ public sealed partial class DiscordClient
 	private string _sessionId;
 	private bool _guildDownloadCompleted;
 
-	private readonly Dictionary<string, KeyValuePair<TimeoutHandler, Timer>> _tempTimers = new();
+	private readonly Dictionary<string, KeyValuePair<TimeoutHandler, Timer>> _tempTimers = [];
 
 	/// <summary>
 	/// Represents a timeout handler.
@@ -213,10 +213,10 @@ public sealed partial class DiscordClient
 				gid = (ulong)dat["guild_id"]!;
 
 				// discord fires this event inconsistently if the current user leaves a guild.
-				if (!this.GuildsInternal.ContainsKey(gid))
+				if (!this.GuildsInternal.TryGetValue(gid, out var value))
 					return;
 
-				await this.OnGuildIntegrationsUpdateEventAsync(this.GuildsInternal[gid]).ConfigureAwait(false);
+				await this.OnGuildIntegrationsUpdateEventAsync(value).ConfigureAwait(false);
 				break;
 
 #endregion
@@ -296,10 +296,10 @@ public sealed partial class DiscordClient
 				itg = DiscordJson.DeserializeObject<DiscordIntegration>(payloadString, this);
 
 				// discord fires this event inconsistently if the current user leaves a guild.
-				if (!this.GuildsInternal.ContainsKey(gid))
+				if (!this.GuildsInternal.TryGetValue(gid, out var icGuildVal))
 					return;
 
-				await this.OnGuildIntegrationCreateEventAsync(this.GuildsInternal[gid], itg).ConfigureAwait(false);
+				await this.OnGuildIntegrationCreateEventAsync(icGuildVal, itg).ConfigureAwait(false);
 				break;
 
 			case "integration_update":
@@ -307,20 +307,20 @@ public sealed partial class DiscordClient
 				itg = DiscordJson.DeserializeObject<DiscordIntegration>(payloadString, this);
 
 				// discord fires this event inconsistently if the current user leaves a guild.
-				if (!this.GuildsInternal.ContainsKey(gid))
+				if (!this.GuildsInternal.TryGetValue(gid, out var iuGuildVal))
 					return;
 
-				await this.OnGuildIntegrationUpdateEventAsync(this.GuildsInternal[gid], itg).ConfigureAwait(false);
+				await this.OnGuildIntegrationUpdateEventAsync(iuGuildVal, itg).ConfigureAwait(false);
 				break;
 
 			case "integration_delete":
 				gid = (ulong)dat["guild_id"]!;
 
 				// discord fires this event inconsistently if the current user leaves a guild.
-				if (!this.GuildsInternal.ContainsKey(gid))
+				if (!this.GuildsInternal.TryGetValue(gid, out var idGuildVal))
 					return;
 
-				await this.OnGuildIntegrationDeleteEventAsync(this.GuildsInternal[gid], (ulong)dat["id"], (ulong?)dat["application_id"]).ConfigureAwait(false);
+				await this.OnGuildIntegrationDeleteEventAsync(idGuildVal, (ulong)dat["id"], (ulong?)dat["application_id"]).ConfigureAwait(false);
 				break;
 
 #endregion
@@ -336,7 +336,7 @@ public sealed partial class DiscordClient
 				gid = (ulong)dat["guild_id"]!;
 				usr = DiscordJson.DeserializeObject<TransportUser>(dat["user"]!.ToString(), this);
 
-				if (!this.GuildsInternal.ContainsKey(gid))
+				if (!this.GuildsInternal.TryGetValue(gid, out var gmrGuildVal))
 				{
 					// discord fires this event inconsistently if the current user leaves a guild.
 					if (usr.Id != this.CurrentUser.Id)
@@ -344,7 +344,7 @@ public sealed partial class DiscordClient
 					return;
 				}
 
-				await this.OnGuildMemberRemoveEventAsync(usr, this.GuildsInternal[gid]).ConfigureAwait(false);
+				await this.OnGuildMemberRemoveEventAsync(usr, gmrGuildVal).ConfigureAwait(false);
 				break;
 
 			case "guild_member_update":
@@ -407,7 +407,7 @@ public sealed partial class DiscordClient
 				if (rawMbr != null)
 					mbr = DiscordJson.DeserializeObject<TransportMember>(rawMbr.ToString(), this);
 
-				if (rawRefMsg != null && rawRefMsg.HasValues)
+				if (rawRefMsg is { HasValues: true })
 				{
 					if (rawRefMsg.SelectToken("author") != null)
 						refUsr = DiscordJson.DeserializeObject<TransportUser>(rawRefMsg.SelectToken("author")!.ToString(), this);
@@ -425,7 +425,7 @@ public sealed partial class DiscordClient
 				if (rawMbr != null)
 					mbr = DiscordJson.DeserializeObject<TransportMember>(rawMbr.ToString(), this);
 
-				if (rawRefMsg != null && rawRefMsg.HasValues)
+				if (rawRefMsg is { HasValues: true })
 				{
 					if (rawRefMsg.SelectToken("author") != null)
 						refUsr = DiscordJson.DeserializeObject<TransportUser>(rawRefMsg.SelectToken("author")!.ToString(), this);
@@ -703,7 +703,7 @@ public sealed partial class DiscordClient
 		var rawGuildIndex = rawGuilds.Any() ? rawGuilds.ToDictionary(xt => (ulong)xt["id"], xt => (JObject)xt) : null;
 
 		this.GuildsInternal.Clear();
-		if (ready.Guilds.Any() && rawGuildIndex is not null)
+		if (ready.Guilds.Count != 0 && rawGuildIndex is not null)
 			foreach (var guild in ready.Guilds)
 			{
 				guild.Discord = this;
@@ -911,10 +911,10 @@ public sealed partial class DiscordClient
 				channelNew.DefaultReactionEmoji = channel.DefaultReactionEmoji;
 				channelNew.DefaultSortOrder = channel.DefaultSortOrder;
 
-				if (channelNew.InternalAvailableTags != null && channelNew.InternalAvailableTags.Any())
+				if (channelNew.InternalAvailableTags != null && channelNew.InternalAvailableTags.Count != 0)
 					channelNew.InternalAvailableTags.Clear();
 
-				if (channel.InternalAvailableTags != null && channel.InternalAvailableTags.Any())
+				if (channel.InternalAvailableTags != null && channel.InternalAvailableTags.Count != 0)
 					channelNew.InternalAvailableTags.AddRange(channel.InternalAvailableTags);
 			}
 			else
@@ -1178,14 +1178,14 @@ public sealed partial class DiscordClient
 	{
 		DiscordGuild oldGuild;
 
-		if (!this.GuildsInternal.ContainsKey(guild.Id))
+		if (!this.GuildsInternal.TryGetValue(guild.Id, out var value))
 		{
 			this.GuildsInternal[guild.Id] = guild;
 			oldGuild = null;
 		}
 		else
 		{
-			var gld = this.GuildsInternal[guild.Id];
+			var gld = value;
 
 			oldGuild = new()
 			{
@@ -1351,7 +1351,7 @@ public sealed partial class DiscordClient
 	{
 		try
 		{
-			var auditLogAction = DiscordJson.ToDiscordObject<AuditLogAction>(auditLogCreateEntry);
+			var auditLogAction = auditLogCreateEntry.ToDiscordObject<AuditLogAction>();
 			List<AuditLog> workaroundAuditLogEntryList =
 			[
 				new()
@@ -1660,11 +1660,11 @@ public sealed partial class DiscordClient
 			return;
 
 		DiscordScheduledEvent oldEvent;
-		if (!guild.ScheduledEventsInternal.ContainsKey(scheduledEvent.Id))
+		if (!guild.ScheduledEventsInternal.TryGetValue(scheduledEvent.Id, out var value))
 			oldEvent = null;
 		else
 		{
-			var ev = guild.ScheduledEventsInternal[scheduledEvent.Id];
+			var ev = value;
 			oldEvent = new()
 			{
 				Id = ev.Id,
@@ -2117,7 +2117,7 @@ public sealed partial class DiscordClient
 
 		this.Logger.LogTrace("Trying to execute timeout event.");
 
-		if (data.TimeoutUntilOld.HasValue && data.TimeoutUntilNew.HasValue)
+		if (data is { TimeoutUntilOld: not null, TimeoutUntilNew: not null })
 		{
 			// A timeout was updated.
 
@@ -2162,7 +2162,7 @@ public sealed partial class DiscordClient
 			};
 			await this._guildMemberTimeoutAdded.InvokeAsync(this, ea).ConfigureAwait(false);
 		}
-		else if (data.TimeoutUntilOld.HasValue && !data.TimeoutUntilNew.HasValue)
+		else if (data is { TimeoutUntilOld: not null, TimeoutUntilNew: null })
 		{
 			// A timeout was removed.
 
@@ -3228,7 +3228,7 @@ public sealed partial class DiscordClient
 
 		// reuse arrays / avoid linq (this is a hot zone)
 		if (presence.Activities == null || rawPresence["activities"] == null)
-			presence.InternalActivities = Array.Empty<DiscordActivity>();
+			presence.InternalActivities = [];
 		else
 		{
 			if (presence.InternalActivities.Length != presence.RawActivities.Length)
@@ -3609,7 +3609,7 @@ public sealed partial class DiscordClient
 						try
 						{
 							if (this.Guilds.TryGetValue(guildId.Value, out var guild))
-								if (guild.ChannelsInternal.TryGetValue(c.Key, out var channel) && channel.PermissionOverwritesInternal != null && channel.PermissionOverwritesInternal.Any())
+								if (guild.ChannelsInternal.TryGetValue(c.Key, out var channel) && channel.PermissionOverwritesInternal != null && channel.PermissionOverwritesInternal.Count != 0)
 									c.Value.PermissionOverwritesInternal = channel.PermissionOverwritesInternal;
 						}
 						catch (Exception)

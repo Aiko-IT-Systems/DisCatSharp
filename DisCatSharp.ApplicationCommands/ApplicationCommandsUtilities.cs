@@ -42,7 +42,7 @@ public static class ApplicationCommandsUtilities
 		}
 
 		// check if anonymous
-		if (ti.IsGenericType && ti.Name.Contains("AnonymousType") && (ti.Name.StartsWith("<>") || ti.Name.StartsWith("VB$")) && (ti.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic)
+		if (ti.IsGenericType && ti.Name.Contains("AnonymousType") && (ti.Name.StartsWith("<>", StringComparison.Ordinal) || ti.Name.StartsWith("VB$", StringComparison.Ordinal)) && (ti.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic)
 		{
 			if (ApplicationCommandsExtension.DebugEnabled)
 				ApplicationCommandsExtension.Logger.LogDebug("Anonymous");
@@ -97,7 +97,7 @@ public static class ApplicationCommandsUtilities
 
 		// check if appropriate return and arguments
 		parameters = method.GetParameters();
-		if (!parameters.Any() || (parameters.First().ParameterType != typeof(ContextMenuContext) && parameters.First().ParameterType != typeof(InteractionContext)) || method.ReturnType != typeof(Task))
+		if (parameters.Length == 0 || (parameters.First().ParameterType != typeof(ContextMenuContext) && parameters.First().ParameterType != typeof(InteractionContext)) || method.ReturnType != typeof(Task))
 		{
 			if (ApplicationCommandsExtension.DebugEnabled)
 				ApplicationCommandsExtension.Logger.LogDebug("Missing first parameter with type ContextMenuContext or InteractionContext");

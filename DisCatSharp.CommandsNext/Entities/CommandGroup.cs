@@ -37,13 +37,13 @@ public class CommandGroup : Command
 	public override async Task<CommandResult> ExecuteAsync(CommandContext ctx)
 	{
 		var findPos = 0;
-		var cn = CommandsNextUtilities.ExtractNextArgument(ctx.RawArgumentString, ref findPos);
+		var cn = ctx.RawArgumentString.ExtractNextArgument(ref findPos);
 
 		if (cn != null)
 		{
 			var cmd = ctx.Config.CaseSensitive
 				? this.Children.FirstOrDefault(xc => xc.Name == cn || (xc.Aliases != null && xc.Aliases.Contains(cn)))
-				: this.Children.FirstOrDefault(xc => xc.Name.ToLowerInvariant() == cn.ToLowerInvariant() || (xc.Aliases != null && xc.Aliases.Select(xs => xs.ToLowerInvariant()).Contains(cn.ToLowerInvariant())));
+				: this.Children.FirstOrDefault(xc => string.Equals(xc.Name, cn, StringComparison.InvariantCultureIgnoreCase) || (xc.Aliases != null && xc.Aliases.Select(xs => xs.ToLowerInvariant()).Contains(cn.ToLowerInvariant())));
 			if (cmd != null)
 			{
 				// pass the execution on

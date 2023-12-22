@@ -36,8 +36,7 @@ public class DiscordUri
 	/// <param name="value">The value.</param>
 	internal DiscordUri(string value)
 	{
-		if (value == null)
-			throw new ArgumentNullException(nameof(value));
+		ArgumentNullException.ThrowIfNull(value);
 
 		if (IsStandard(value))
 		{
@@ -56,7 +55,7 @@ public class DiscordUri
 	/// </summary>
 	/// <param name="value">Uri string</param>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private static bool IsStandard(string value) => !value.StartsWith("attachment://");
+	private static bool IsStandard(string value) => !value.StartsWith("attachment://", StringComparison.Ordinal);
 
 	/// <summary>
 	/// Returns a string representation of this DiscordUri.

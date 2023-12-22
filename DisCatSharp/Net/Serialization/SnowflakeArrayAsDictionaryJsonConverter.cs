@@ -50,7 +50,7 @@ internal class SnowflakeArrayAsDictionaryJsonConverter : JsonConverter
 		var constructor = objectType.GetTypeInfo().DeclaredConstructors
 			.FirstOrDefault(e => !e.IsStatic && e.GetParameters().Length == 0);
 
-		var dict = constructor.Invoke(Array.Empty<object>());
+		var dict = constructor.Invoke([]);
 
 		// the default name of an indexer is "Item"
 		var properties = objectType.GetTypeInfo().GetDeclaredProperty("Item");

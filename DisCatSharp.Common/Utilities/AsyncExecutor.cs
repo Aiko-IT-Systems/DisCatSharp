@@ -90,7 +90,7 @@ public class AsyncExecutor
 				stateRef!.Exception = new TaskCanceledException(t);
 
 			// return the result from the task, if any
-			if (t.IsCompleted && !t.IsFaulted)
+			if (t is { IsCompleted: true, IsFaulted: false })
 			{
 				stateRef!.HasResult = true;
 				stateRef.Result = t.Result;

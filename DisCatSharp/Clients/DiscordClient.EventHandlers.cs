@@ -15,8 +15,8 @@ namespace DisCatSharp;
 /// </summary>
 public sealed partial class DiscordClient
 {
-	private readonly Dictionary<(object?, Type, bool), List<(EventInfo, Delegate)[]>> _registrationToDelegate = new();
-	private readonly Dictionary<Type, List<object>> _typeToAnonymousHandlers = new();
+	private readonly Dictionary<(object?, Type, bool), List<(EventInfo, Delegate)[]>> _registrationToDelegate = [];
+	private readonly Dictionary<Type, List<object>> _typeToAnonymousHandlers = [];
 
 	/// <summary>
 	/// Registers all methods annotated with <see cref="EventAttribute"/> from the given object.

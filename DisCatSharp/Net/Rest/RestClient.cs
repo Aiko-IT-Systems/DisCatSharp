@@ -130,7 +130,7 @@ internal sealed class RestClient : IDisposable
 		};
 
 		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
-		if (this._discord != null && this._discord.Configuration != null)
+		if (this._discord is { Configuration: not null })
 		{
 			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-locale", this._discord.Configuration.Locale);
 			if (!string.IsNullOrWhiteSpace(this._discord.Configuration.Timezone))
@@ -288,7 +288,7 @@ internal sealed class RestClient : IDisposable
 					if (delay < TimeSpan.Zero)
 						delay = TimeSpan.FromMilliseconds(100);
 
-					this._logger.LogWarning(LoggerEvents.RatelimitPreemptive, "Preemptive ratelimit triggered - waiting until {0:yyyy-MM-dd HH:mm:ss zzz} ({1:c}).", resetDate, delay);
+					this._logger.LogWarning(LoggerEvents.RatelimitPreemptive, "Preemptive ratelimit triggered - waiting until {ResetDate:yyyy-MM-dd HH:mm:ss zzz} ({Delay:c})", resetDate, delay);
 					Task.Delay(delay)
 						.ContinueWith(_ => this.ExecuteFormRequestAsync(request, null, null))
 						.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
@@ -304,7 +304,7 @@ internal sealed class RestClient : IDisposable
 			var req = this.BuildFormRequest(request);
 
 			if (this.Debug)
-				this._logger.LogTrace(LoggerEvents.Misc, await req.Content.ReadAsStringAsync());
+				this._logger.LogTrace(LoggerEvents.Misc, "Rest Request Content:\n{Content}", await req.Content?.ReadAsStringAsync()!);
 
 			var response = new RestResponse();
 			try
@@ -317,7 +317,7 @@ internal sealed class RestClient : IDisposable
 				var bts = await res.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 				var txt = Utilities.UTF8.GetString(bts, 0, bts.Length);
 
-				this._logger.LogTrace(LoggerEvents.RestRx, txt);
+				this._logger.LogTrace(LoggerEvents.RestRx, "Rest Response Content: {Content}", txt);
 
 				response.Headers = res.Headers.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
 				response.Response = txt;
@@ -325,7 +325,7 @@ internal sealed class RestClient : IDisposable
 			}
 			catch (HttpRequestException httpex)
 			{
-				this._logger.LogError(LoggerEvents.RestError, httpex, "Request to {0} triggered an HttpException", request.Url.AbsoluteUri);
+				this._logger.LogError(LoggerEvents.RestError, httpex, "Request to {Url} triggered an HttpException", request.Url.AbsoluteUri);
 				request.SetFaulted(httpex);
 				this.FailInitialRateLimitTest(request, ratelimitTcs);
 				return;
@@ -408,7 +408,7 @@ internal sealed class RestClient : IDisposable
 		}
 		catch (Exception ex)
 		{
-			this._logger.LogError(LoggerEvents.RestError, ex, "Request to {0} triggered an exception", request.Url.AbsoluteUri);
+			this._logger.LogError(LoggerEvents.RestError, ex, "Request to {Url} triggered an exception", request.Url.AbsoluteUri);
 
 			// if something went wrong and we couldn't get rate limits for the first request here, allow the next request to run
 			if (bucket != null && ratelimitTcs != null && bucket.LimitTesting != 0)

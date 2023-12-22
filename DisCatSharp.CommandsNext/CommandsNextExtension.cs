@@ -62,7 +62,7 @@ public class CommandsNextExtension : BaseExtension
 	internal CommandsNextExtension(CommandsNextConfiguration cfg)
 	{
 		this._config = new(cfg);
-		this._topLevelCommands = new();
+		this._topLevelCommands = [];
 		this._registeredCommandsLazy = new(() => new ReadOnlyDictionary<string, Command>(this._topLevelCommands));
 		this._helpFormatter = new();
 		this._helpFormatter.SetFormatterType<DefaultHelpFormatter>();
@@ -149,7 +149,7 @@ public class CommandsNextExtension : BaseExtension
 
 		var t = this.GetType();
 		var ms = t.GetTypeInfo().DeclaredMethods;
-		var m = ms.FirstOrDefault(xm => xm.Name == "ConvertArgumentToObj" && xm.ContainsGenericParameters && !xm.IsStatic && xm.IsPrivate);
+		var m = ms.FirstOrDefault(xm => xm is { Name: "ConvertArgumentToObj", ContainsGenericParameters: true } and { IsStatic: false, IsPrivate: true });
 		this._convertGeneric = m;
 	}
 
@@ -222,9 +222,8 @@ public class CommandsNextExtension : BaseExtension
 			mpos = e.Message.GetMentionPrefixLength(this.Client.CurrentUser);
 
 		if (this._config.StringPrefixes?.Any() == true)
-			foreach (var pfix in this._config.StringPrefixes)
-				if (mpos == -1 && !string.IsNullOrWhiteSpace(pfix))
-					mpos = e.Message.GetStringPrefixLength(pfix, this._config.CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase);
+			foreach (var pfix in this._config.StringPrefixes.Where(pfix => mpos == -1 && !string.IsNullOrWhiteSpace(pfix)))
+				mpos = e.Message.GetStringPrefixLength(pfix, this._config.CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase);
 
 		if (mpos == -1 && this._config.PrefixResolver != null)
 			mpos = await this._config.PrefixResolver(e.Message).ConfigureAwait(false);
@@ -506,11 +505,11 @@ public class CommandsNextExtension : BaseExtension
 					{
 						moduleName = ti.Name;
 
-						if (moduleName.EndsWith("Group") && moduleName != "Group")
+						if (moduleName.EndsWith("Group", StringComparison.Ordinal) && moduleName != "Group")
 							moduleName = moduleName[0..^5];
-						else if (moduleName.EndsWith("Module") && moduleName != "Module")
+						else if (moduleName.EndsWith("Module", StringComparison.Ordinal) && moduleName != "Module")
 							moduleName = moduleName[0..^6];
-						else if (moduleName.EndsWith("Commands") && moduleName != "Commands")
+						else if (moduleName.EndsWith("Commands", StringComparison.Ordinal) && moduleName != "Commands")
 							moduleName = moduleName[0..^8];
 					}
 
@@ -575,7 +574,7 @@ public class CommandsNextExtension : BaseExtension
 			if (commandName == null)
 			{
 				commandName = m.Name;
-				if (commandName.EndsWith("Async") && commandName != "Async")
+				if (commandName.EndsWith("Async", StringComparison.Ordinal) && commandName != "Async")
 					commandName = commandName[0..^5];
 			}
 
@@ -597,7 +596,7 @@ public class CommandsNextExtension : BaseExtension
 
 			commandBuilder.WithOverload(new(m));
 
-			if (!isModule && moduleChecks.Any())
+			if (!isModule && moduleChecks.Count != 0)
 				foreach (var chk in moduleChecks)
 					commandBuilder.WithExecutionCheck(chk);
 
@@ -722,7 +721,7 @@ public class CommandsNextExtension : BaseExtension
 			var topLevel = ctx.CommandsNext._topLevelCommands.Values.Distinct();
 			var helpBuilder = ctx.CommandsNext._helpFormatter.Create(ctx);
 
-			if (command != null && command.Any())
+			if (command != null && command.Length != 0)
 			{
 				Command cmd = null;
 				var searchIn = topLevel;
@@ -736,7 +735,7 @@ public class CommandsNextExtension : BaseExtension
 
 					cmd = ctx.Config.CaseSensitive
 						? searchIn.FirstOrDefault(xc => xc.Name == c || (xc.Aliases != null && xc.Aliases.Contains(c)))
-						: searchIn.FirstOrDefault(xc => xc.Name.ToLowerInvariant() == c.ToLowerInvariant() || (xc.Aliases != null && xc.Aliases.Select(xs => xs.ToLowerInvariant()).Contains(c.ToLowerInvariant())));
+						: searchIn.FirstOrDefault(xc => string.Equals(xc.Name, c, StringComparison.InvariantCultureIgnoreCase) || (xc.Aliases != null && xc.Aliases.Select(xs => xs.ToLowerInvariant()).Contains(c.ToLowerInvariant())));
 
 					if (cmd == null)
 						break;
@@ -770,7 +769,7 @@ public class CommandsNextExtension : BaseExtension
 							eligibleCommands.Add(candidateCommand);
 					}
 
-					if (eligibleCommands.Any())
+					if (eligibleCommands.Count != 0)
 						helpBuilder.WithSubcommands(eligibleCommands.OrderBy(xc => xc.Name));
 				}
 			}
@@ -791,7 +790,7 @@ public class CommandsNextExtension : BaseExtension
 						eligibleCommands.Add(sc);
 				}
 
-				if (eligibleCommands.Any())
+				if (eligibleCommands.Count != 0)
 					helpBuilder.WithSubcommands(eligibleCommands.OrderBy(xc => xc.Name));
 			}
 
@@ -837,10 +836,10 @@ public class CommandsNextExtension : BaseExtension
 			Pinned = false,
 			MentionEveryone = messageContents.Contains("@everyone"),
 			IsTts = false,
-			AttachmentsInternal = new(),
-			EmbedsInternal = new(),
+			AttachmentsInternal = [],
+			EmbedsInternal = [],
 			TimestampRaw = now.ToString("yyyy-MM-ddTHH:mm:sszzz"),
-			ReactionsInternal = new()
+			ReactionsInternal = []
 		};
 
 		var mentionedUsers = new List<DiscordUser>();
@@ -921,7 +920,7 @@ public class CommandsNextExtension : BaseExtension
 		var m = this._convertGeneric.MakeGenericMethod(type);
 		try
 		{
-			return await (m.Invoke(this, new object[] { value, ctx }) as Task<object>).ConfigureAwait(false);
+			return await (m.Invoke(this, [value, ctx]) as Task<object>).ConfigureAwait(false);
 		}
 		catch (TargetInvocationException ex)
 		{

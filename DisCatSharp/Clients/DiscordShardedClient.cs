@@ -1,4 +1,3 @@
-#pragma warning disable CS0618
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -133,19 +132,25 @@ public sealed partial class DiscordShardedClient
 		{
 			var configureNamedOptions = new ConfigureNamedOptions<ConsoleLoggerOptions>(string.Empty, x =>
 			{
-				x.Format = ConsoleLoggerFormat.Default;
+#pragma warning disable CS0618 // Type or member is obsolete
 				x.TimestampFormat = this._configuration.LogTimestampFormat;
+#pragma warning restore CS0618 // Type or member is obsolete
 				x.LogToStandardErrorThreshold = this._configuration.MinimumLogLevel;
 			});
 			var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[] { configureNamedOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
 			var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleLoggerOptions>>(), new OptionsCache<ConsoleLoggerOptions>());
+			/*
+			var configureFormatterOptions = new ConfigureNamedOptions<ConsoleFormatterOptions>(string.Empty, x => { x.TimestampFormat = this.Configuration.LogTimestampFormat; });
+			var formatterFactory = new OptionsFactory<ConsoleFormatterOptions>(new[] { configureFormatterOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleFormatterOptions>>());
+			var formatterMonitor = new OptionsMonitor<ConsoleFormatterOptions>(formatterFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleFormatterOptions>>(), new OptionsCache<ConsoleFormatterOptions>());
+			*/
 
 			var l = new ConsoleLoggerProvider(optionsMonitor);
 			this._configuration.LoggerFactory = new LoggerFactory();
 			this._configuration.LoggerFactory.AddProvider(l);
 		}
 
-		if (this._configuration.LoggerFactory != null && this._configuration.EnableSentry)
+		if (this._configuration is { LoggerFactory: not null, EnableSentry: true })
 			this._configuration.LoggerFactory.AddSentry(o =>
 			{
 				var a = typeof(DiscordClient).GetTypeInfo().Assembly;
@@ -178,7 +183,7 @@ public sealed partial class DiscordShardedClient
 				o.UseAsyncFileIO = true;
 				o.Debug = this._configuration.SentryDebug;
 				o.EnableScopeSync = true;
-				o.BeforeSend = e =>
+				o.SetBeforeSend((e, _) =>
 				{
 					if (!this._configuration.DisableExceptionFilter)
 					{
@@ -207,7 +212,7 @@ public sealed partial class DiscordShardedClient
 					if (!e.Extra.ContainsKey("Found Fields"))
 						e.SetFingerprint(BaseDiscordClient.GenerateSentryFingerPrint(e));
 					return e;
-				};
+				});
 			});
 
 		this._configuration.HasShardLogger = true;

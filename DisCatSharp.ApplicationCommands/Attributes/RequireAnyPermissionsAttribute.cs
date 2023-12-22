@@ -25,7 +25,7 @@ public sealed class RequireAnyPermissionsAttribute : ApplicationCommandCheckBase
 	/// <param name="permissions">Permissions required to execute this command.</param>
 	public RequireAnyPermissionsAttribute(params Permissions[] permissions)
 	{
-		this.AnyPermissions = permissions.ToList();
+		this.AnyPermissions = [.. permissions];
 	}
 
 	/// <summary>

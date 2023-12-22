@@ -99,7 +99,7 @@ public abstract class BaseHostedService : BackgroundService
 
 				var instance = ctors.Any(x => x.GetParameters().Length == 1 && x.GetParameters().First().ParameterType == typePair.Value.ConfigType)
 					? Activator.CreateInstance(typePair.Value.ImplementationType, flags, null,
-						new[] { configInstance }, null)
+						[configInstance], null)
 					: Activator.CreateInstance(typePair.Value.ImplementationType, true);
 
 				/*

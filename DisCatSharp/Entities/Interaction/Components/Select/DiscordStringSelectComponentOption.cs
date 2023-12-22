@@ -53,7 +53,7 @@ public sealed class DiscordStringSelectComponentOption : ObservableApiObject
 			throw new NotSupportedException("Select label can't be longer then 100 chars.");
 		if (value.Length > 100)
 			throw new NotSupportedException("Select value can't be longer then 100 chars.");
-		if (description != null && description.Length > 100)
+		if (description is { Length: > 100 })
 			throw new NotSupportedException("Select description can't be longer then 100 chars.");
 
 		this.Label = label;

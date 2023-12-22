@@ -50,7 +50,7 @@ internal static class ConfigurationExtensions
               There is a possibility that an assembly can be referenced in multiple assemblies.
               To alleviate duplicates we need to shrink our queue as we find things
              */
-		List<Assembly> results = new();
+		List<Assembly> results = [];
 
 		if (names is null)
 			return results;
@@ -58,7 +58,7 @@ internal static class ConfigurationExtensions
 		var queue = names.ToList();
 		foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
 		{
-			if (!queue.Any())
+			if (queue.Count == 0)
 				break;
 
 			var loadedAssemblyName = assembly.GetName().Name;
@@ -104,7 +104,7 @@ internal static class ConfigurationExtensions
 		if (string.IsNullOrEmpty(rootName))
 			throw new ArgumentNullException(nameof(rootName), "Root name must be provided");
 
-		Dictionary<string, ExtensionConfigResult> results = new();
+		Dictionary<string, ExtensionConfigResult> results = [];
 		string[]? assemblyNames;
 
 		// Has the user defined a using section within the root name?
@@ -122,12 +122,12 @@ internal static class ConfigurationExtensions
 			? configuration.GetSection(configuration.ConfigPath(rootName, "Using")).Get<string[]>()
 			: Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(
 				configuration[configuration.ConfigPath(rootName, "Using")]);
-		foreach (var assembly in FindAssemblies(assemblyNames.Select(x => x.StartsWith(Constants.LibName) ? x : $"{Constants.LibName}.{x}")))
+		foreach (var assembly in FindAssemblies(assemblyNames.Select(x => x.StartsWith(Constants.LibName, StringComparison.Ordinal) ? x : $"{Constants.LibName}.{x}")))
 		{
 			ExtensionConfigResult result = new();
 
 			foreach (var type in assembly.ExportedTypes
-				.Where(x => x.Name.EndsWith(Constants.ConfigSuffix) && !x.IsAbstract && !x.IsInterface))
+				.Where(x => x.Name.EndsWith(Constants.ConfigSuffix, StringComparison.Ordinal) && x is { IsAbstract: false, IsInterface: false }))
 			{
 				var sectionName = type.Name;
 				var prefix = type.Name.Replace(Constants.ConfigSuffix, "");
@@ -154,8 +154,8 @@ internal static class ConfigurationExtensions
                      */
 
 				var implementationType = assembly.ExportedTypes.FirstOrDefault(x =>
-					!x.IsAbstract && !x.IsInterface && x.Name.StartsWith(prefix) &&
-					x.Name.EndsWith(Constants.ExtensionSuffix) && x.IsAssignableTo(typeof(BaseExtension)));
+					x is { IsAbstract: false, IsInterface: false } && x.Name.StartsWith(prefix, StringComparison.Ordinal) &&
+					x.Name.EndsWith(Constants.ExtensionSuffix, StringComparison.Ordinal) && x.IsAssignableTo(typeof(BaseExtension)));
 
 				// If the implementation type was found we can add it to our result set
 				if (implementationType != null)

@@ -353,7 +353,7 @@ public sealed class DiscordOAuth2Client : IDisposable
 	{
 		if (ex is AsyncEventTimeoutException)
 		{
-			this.Logger.LogWarning(LoggerEvents.EventHandlerException, $"An event handler for {asyncEvent.Name} took too long to execute. Defined as \"{handler.Method.ToString().Replace(handler.Method.ReturnType.ToString(), "").TrimStart()}\" located in \"{handler.Method.DeclaringType}\".");
+			this.Logger.LogWarning(LoggerEvents.EventHandlerException, "An event handler for {AsyncEventName} took too long to execute. Defined as \"{TrimStart}\" located in \"{MethodDeclaringType}\"", asyncEvent.Name, handler.Method.ToString()?.Replace(handler.Method.ReturnType.ToString(), "").TrimStart(), handler.Method.DeclaringType);
 			return;
 		}
 
@@ -374,7 +374,7 @@ public sealed class DiscordOAuth2Client : IDisposable
 	/// <param name="sender">The sender.</param>
 	/// <param name="eventArgs">The event args.</param>
 	private void Goof<TSender, TArgs>(AsyncEvent<TSender, TArgs> asyncEvent, Exception ex, AsyncEventHandler<TSender, TArgs> handler, TSender sender, TArgs eventArgs)
-		where TArgs : AsyncEventArgs => this.Logger.LogCritical(LoggerEvents.EventHandlerException, ex, "Exception event handler {0} (defined in {1}) threw an exception", handler.Method, handler.Method.DeclaringType);
+		where TArgs : AsyncEventArgs => this.Logger.LogCritical(LoggerEvents.EventHandlerException, ex, "Exception event handler {Method} (defined in {DeclaringType}) threw an exception", handler.Method, handler.Method.DeclaringType);
 
 	/// <inheritdoc />
 	~DiscordOAuth2Client()

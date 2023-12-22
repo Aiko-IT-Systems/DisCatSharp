@@ -47,7 +47,7 @@ internal class RegistrationWorker
 					action.NameLocalizations = command.NameLocalizations;
 					action.Description = command.Description;
 					action.DescriptionLocalizations = command.DescriptionLocalizations;
-					if (command.Options != null && command.Options.Any())
+					if (command.Options != null && command.Options.Count != 0)
 						action.Options = Optional.Some(command.Options);
 					action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 					action.DmPermission = command.DmPermission ?? true;
@@ -81,7 +81,7 @@ internal class RegistrationWorker
 						action.NameLocalizations = command.NameLocalizations;
 						action.Description = command.Description;
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
-						if (command.Options != null && command.Options.Any())
+						if (command.Options != null && command.Options.Count != 0)
 							action.Options = Optional.Some(command.Options);
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 						action.DmPermission = command.DmPermission ?? true;
@@ -109,7 +109,7 @@ internal class RegistrationWorker
 					action.NameLocalizations = command.NameLocalizations;
 					action.Description = command.Description;
 					action.DescriptionLocalizations = command.DescriptionLocalizations;
-					if (command.Options != null && command.Options.Any())
+					if (command.Options != null && command.Options.Count != 0)
 						action.Options = Optional.Some(command.Options);
 					action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 					action.DmPermission = command.DmPermission ?? true;
@@ -127,7 +127,7 @@ internal class RegistrationWorker
 		{
 			client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, $"[AC GLOBAL] Overwriting all application commands.");
 
-			List<DiscordApplicationCommand> overwriteList = new();
+			List<DiscordApplicationCommand> overwriteList = [];
 			foreach (var overwrite in changedCommands)
 			{
 				var cmd = overwrite.Value;
@@ -202,7 +202,7 @@ internal class RegistrationWorker
 					action.NameLocalizations = command.NameLocalizations;
 					action.Description = command.Description;
 					action.DescriptionLocalizations = command.DescriptionLocalizations;
-					if (command.Options != null && command.Options.Any())
+					if (command.Options != null && command.Options.Count != 0)
 						action.Options = Optional.Some(command.Options);
 					action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 					action.DmPermission = command.DmPermission ?? true;
@@ -236,7 +236,7 @@ internal class RegistrationWorker
 						action.NameLocalizations = command.NameLocalizations;
 						action.Description = command.Description;
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
-						if (command.Options != null && command.Options.Any())
+						if (command.Options != null && command.Options.Count != 0)
 							action.Options = Optional.Some(command.Options);
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions;
 						action.DmPermission = command.DmPermission ?? true;
@@ -264,7 +264,7 @@ internal class RegistrationWorker
 					action.NameLocalizations = command.NameLocalizations;
 					action.Description = command.Description;
 					action.DescriptionLocalizations = command.DescriptionLocalizations;
-					if (command.Options != null && command.Options.Any())
+					if (command.Options != null && command.Options.Count != 0)
 						action.Options = Optional.Some(command.Options);
 					if (command.DefaultMemberPermissions.HasValue)
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
@@ -284,7 +284,7 @@ internal class RegistrationWorker
 		{
 			client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, @"[AC GUILD] Overwriting all application commands. Guild ID: {guild}", guildId);
 
-			List<DiscordApplicationCommand> overwriteList = new();
+			List<DiscordApplicationCommand> overwriteList = [];
 			foreach (var overwrite in changedCommands)
 			{
 				var cmd = overwrite.Value;
@@ -335,12 +335,12 @@ internal class RegistrationWorker
 	/// <returns>A list of command ids.</returns>
 	private static List<ulong> BuildGuildDeleteList(DiscordClient client, ulong guildId, List<DiscordApplicationCommand> updateList)
 	{
-		if (ApplicationCommandsExtension.GuildDiscordCommands == null || !ApplicationCommandsExtension.GuildDiscordCommands.Any()
-		                                                              || !ApplicationCommandsExtension.GuildDiscordCommands.TryGetFirstValueByKey(guildId, out var discord)
+		if (ApplicationCommandsExtension.GuildDiscordCommands == null || ApplicationCommandsExtension.GuildDiscordCommands.Count == 0
+																	  || !ApplicationCommandsExtension.GuildDiscordCommands.TryGetFirstValueByKey(guildId, out var discord)
 		)
 			return null;
 
-		List<ulong> invalidCommandIds = new();
+		List<ulong> invalidCommandIds = [];
 
 		if (discord == null)
 			return null;
@@ -365,12 +365,12 @@ internal class RegistrationWorker
 	/// <returns></returns>
 	private static List<DiscordApplicationCommand> BuildGuildCreateList(DiscordClient client, ulong guildId, List<DiscordApplicationCommand> updateList)
 	{
-		if (ApplicationCommandsExtension.GuildDiscordCommands == null || !ApplicationCommandsExtension.GuildDiscordCommands.Any()
-		                                                              || updateList == null || !ApplicationCommandsExtension.GuildDiscordCommands.TryGetFirstValueByKey(guildId, out var discord)
+		if (ApplicationCommandsExtension.GuildDiscordCommands == null || ApplicationCommandsExtension.GuildDiscordCommands.Count == 0
+																	  || updateList == null || !ApplicationCommandsExtension.GuildDiscordCommands.TryGetFirstValueByKey(guildId, out var discord)
 		)
 			return updateList;
 
-		List<DiscordApplicationCommand> newCommands = new();
+		List<DiscordApplicationCommand> newCommands = [];
 
 		if (discord == null)
 			return updateList;
@@ -394,14 +394,14 @@ internal class RegistrationWorker
 		List<DiscordApplicationCommand> unchangedCommands
 		) BuildGuildOverwriteList(DiscordClient client, ulong guildId, List<DiscordApplicationCommand> updateList)
 	{
-		if (ApplicationCommandsExtension.GuildDiscordCommands == null || !ApplicationCommandsExtension.GuildDiscordCommands.Any()
-		                                                              || ApplicationCommandsExtension.GuildDiscordCommands.All(l => l.Key != guildId) || updateList == null
+		if (ApplicationCommandsExtension.GuildDiscordCommands == null || ApplicationCommandsExtension.GuildDiscordCommands.Count == 0
+																	  || ApplicationCommandsExtension.GuildDiscordCommands.All(l => l.Key != guildId) || updateList == null
 		                                                              || !ApplicationCommandsExtension.GuildDiscordCommands.TryGetFirstValueByKey(guildId, out var discord)
 		)
 			return (null, null);
 
-		Dictionary<ulong, DiscordApplicationCommand> updateCommands = new();
-		List<DiscordApplicationCommand> unchangedCommands = new();
+		Dictionary<ulong, DiscordApplicationCommand> updateCommands = [];
+		List<DiscordApplicationCommand> unchangedCommands = [];
 
 		if (discord == null)
 			return (null, null);
@@ -435,12 +435,12 @@ internal class RegistrationWorker
 	/// <returns>A list of command ids.</returns>
 	private static List<ulong> BuildGlobalDeleteList(DiscordClient client, List<DiscordApplicationCommand> updateList = null)
 	{
-		if (ApplicationCommandsExtension.GlobalDiscordCommands == null || !ApplicationCommandsExtension.GlobalDiscordCommands.Any())
+		if (ApplicationCommandsExtension.GlobalDiscordCommands == null || ApplicationCommandsExtension.GlobalDiscordCommands.Count == 0)
 			return null;
 
 		var discord = ApplicationCommandsExtension.GlobalDiscordCommands;
 
-		List<ulong> invalidCommandIds = new();
+		List<ulong> invalidCommandIds = [];
 
 		if (discord == null)
 			return null;
@@ -464,12 +464,12 @@ internal class RegistrationWorker
 	/// <returns>A list of commands.</returns>
 	private static List<DiscordApplicationCommand> BuildGlobalCreateList(DiscordClient client, List<DiscordApplicationCommand> updateList)
 	{
-		if (ApplicationCommandsExtension.GlobalDiscordCommands == null || !ApplicationCommandsExtension.GlobalDiscordCommands.Any() || updateList == null)
+		if (ApplicationCommandsExtension.GlobalDiscordCommands == null || ApplicationCommandsExtension.GlobalDiscordCommands.Count == 0 || updateList == null)
 			return updateList;
 
 		var discord = ApplicationCommandsExtension.GlobalDiscordCommands;
 
-		List<DiscordApplicationCommand> newCommands = new();
+		List<DiscordApplicationCommand> newCommands = [];
 
 		if (discord == null)
 			return updateList;
@@ -492,7 +492,7 @@ internal class RegistrationWorker
 		List<DiscordApplicationCommand> unchangedCommands
 		) BuildGlobalOverwriteList(DiscordClient client, List<DiscordApplicationCommand> updateList)
 	{
-		if (ApplicationCommandsExtension.GlobalDiscordCommands == null || !ApplicationCommandsExtension.GlobalDiscordCommands.Any() || updateList == null)
+		if (ApplicationCommandsExtension.GlobalDiscordCommands == null || ApplicationCommandsExtension.GlobalDiscordCommands.Count == 0 || updateList == null)
 			return (null, null);
 
 		var discord = ApplicationCommandsExtension.GlobalDiscordCommands;
@@ -500,8 +500,8 @@ internal class RegistrationWorker
 		if (discord == null)
 			return (null, null);
 
-		Dictionary<ulong, DiscordApplicationCommand> updateCommands = new();
-		List<DiscordApplicationCommand> unchangedCommands = new();
+		Dictionary<ulong, DiscordApplicationCommand> updateCommands = [];
+		List<DiscordApplicationCommand> unchangedCommands = [];
 		foreach (var cmd in updateList)
 			if (discord.TryGetFirstValueWhere(d => d.Name == cmd.Name, out var command))
 				if (command.IsEqualTo(cmd, client, false))

@@ -124,8 +124,7 @@ public class DiscordWebhookClient
 	/// <returns>The registered webhook.</returns>
 	public Task<DiscordWebhook> AddWebhookAsync(Uri url)
 	{
-		if (url == null)
-			throw new ArgumentNullException(nameof(url));
+		ArgumentNullException.ThrowIfNull(url);
 
 		var m = s_webhookRegex.Match(url.ToString());
 		if (!m.Success)
@@ -148,8 +147,7 @@ public class DiscordWebhookClient
 	/// <returns>The registered webhook.</returns>
 	public async Task<DiscordWebhook> AddWebhookAsync(ulong id, BaseDiscordClient client)
 	{
-		if (client == null)
-			throw new ArgumentNullException(nameof(client));
+		ArgumentNullException.ThrowIfNull(client);
 
 		if (this.Hooks.Any(x => x.Id == id))
 			throw new ArgumentException("This webhook is already registered with this client.");
@@ -168,8 +166,7 @@ public class DiscordWebhookClient
 	/// <returns>The registered webhook.</returns>
 	public DiscordWebhook AddWebhook(DiscordWebhook webhook)
 	{
-		if (webhook == null!)
-			throw new ArgumentNullException(nameof(webhook));
+		ArgumentNullException.ThrowIfNull(webhook);
 
 		if (this.Hooks.Any(x => x.Id == webhook.Id))
 			throw new ArgumentException("This webhook is already registered with this client.");

@@ -67,7 +67,7 @@ public partial class DiscordGuild
 				.GroupBy(xu => xu.Id)
 				.Select(xgu => xgu.First()).ToList();
 
-		if (amr.Any())
+		if (amr.Count != 0)
 			foreach (var xau in amr)
 			{
 				if (this.Discord.UserCache.ContainsKey(xau.Id))
@@ -119,8 +119,8 @@ public partial class DiscordGuild
 				.Select(xgh => xgh.First()).ToList();
 
 		List<DiscordMember> ams = [];
-		Dictionary<ulong, DiscordMember> amd = new();
-		if (amr.Any())
+		Dictionary<ulong, DiscordMember> amd = [];
+		if (amr.Count != 0)
 			ams = amr.Select(xau => this.MembersInternal != null && this.MembersInternal.TryGetValue(xau.Id, out var member)
 				? member
 				: new()
@@ -129,17 +129,15 @@ public partial class DiscordGuild
 					Id = xau.Id,
 					GuildId = this.Id
 				}).ToList();
-		if (ams.Any())
+		if (ams.Count != 0)
 			amd = ams.ToDictionary(xm => xm.Id, xm => xm);
 
-#pragma warning disable CS0219
 		Dictionary<ulong, DiscordThreadChannel> dtc = null;
 		Dictionary<ulong, DiscordIntegration> di = null;
 		Dictionary<ulong, DiscordScheduledEvent> dse = null;
-#pragma warning restore
 
 		Dictionary<ulong, DiscordWebhook> ahd = null;
-		if (ahr.Any())
+		if (ahr.Count != 0)
 		{
 			var whr = await this.GetWebhooksAsync().ConfigureAwait(false);
 			var whs = whr.ToDictionary(xh => xh.Id, xh => xh);
@@ -1145,8 +1143,7 @@ public partial class DiscordGuild
 					}
 
 					if (entrymsg.Channel != null)
-						entrymsg.Target = this.Discord is DiscordClient dc
-						                  && dc.MessageCache != null
+						entrymsg.Target = this.Discord is DiscordClient { MessageCache: not null } dc
 						                  && dc.MessageCache.TryGet(xm => xm.Id == xac.TargetId.Value && xm.ChannelId == entrymsg.Channel.Id, out var msg)
 							? msg
 							: new()
@@ -1547,7 +1544,7 @@ public partial class DiscordGuild
 			entry.ActionType = xac.ActionType;
 			entry.Id = xac.Id;
 			entry.Reason = xac.Reason;
-			entry.UserResponsible = amd.Any() && amd.TryGetValue(xac.UserId, out var resp) ? resp : this.MembersInternal[xac.UserId];
+			entry.UserResponsible = amd.Count != 0 && amd.TryGetValue(xac.UserId, out var resp) ? resp : this.MembersInternal[xac.UserId];
 			entries.Add(entry);
 		}
 

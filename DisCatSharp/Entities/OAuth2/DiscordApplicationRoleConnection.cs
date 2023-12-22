@@ -45,7 +45,7 @@ public sealed class ApplicationRoleConnectionMetadata
 	/// <para>The <c>key</c> is the metadata key.</para>
 	/// <para>The <c>value</c> is the string-ified value of the metadata.</para>
 	/// </summary>
-	public Dictionary<string, string> Metadata { get; internal set; } = new();
+	public Dictionary<string, string> Metadata { get; internal set; } = [];
 
 	/// <summary>
 	/// Initializes a new instance of <see cref="ApplicationRoleConnectionMetadata"/>.
