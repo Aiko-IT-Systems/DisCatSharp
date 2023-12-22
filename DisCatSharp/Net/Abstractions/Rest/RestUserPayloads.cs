@@ -52,7 +52,7 @@ internal sealed class RestUserUpdateCurrentPayload : ObservableApiObject
 	/// Gets or sets the avatar base64.
 	/// </summary>
 	[JsonProperty("avatar", NullValueHandling = NullValueHandling.Include)]
-	public string AvatarBase64 { get; set; }
+	public Optional<string?> AvatarBase64 { get; set; }
 
 	/// <summary>
 	/// Gets or sets a value indicating whether avatar set.

@@ -46,8 +46,8 @@ internal sealed class StatusUpdate : ObservableApiObject
 	/// Gets or sets the game the user is playing.
 	/// </summary>
 	[JsonProperty("game", NullValueHandling = NullValueHandling.Ignore)]
-	public TransportActivity Activity { get; set; }
+	public TransportActivity? Activity { get; set; }
 
 	[JsonIgnore]
-	internal DiscordActivity ActivityInternal;
+	internal DiscordActivity? ActivityInternal;
 }

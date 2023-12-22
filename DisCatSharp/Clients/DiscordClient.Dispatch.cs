@@ -29,52 +29,20 @@ public sealed partial class DiscordClient
 {
 #region Private Fields
 
-	private string _resumeGatewayUrl;
-	private string _sessionId;
-	private bool _guildDownloadCompleted;
-
-	private readonly Dictionary<string, KeyValuePair<TimeoutHandler, Timer>> _tempTimers = [];
+	/// <summary>
+	/// /Gets the resume gateway url.
+	/// </summary>
+	private string? _resumeGatewayUrl;
 
 	/// <summary>
-	/// Represents a timeout handler.
+	/// Gets the session id.
 	/// </summary>
-	internal class TimeoutHandler
-	{
-		/// <summary>
-		/// Gets the member.
-		/// </summary>
-		internal readonly DiscordMember Member;
+	private string? _sessionId;
 
-		/// <summary>
-		/// Gets the guild.
-		/// </summary>
-		internal readonly DiscordGuild Guild;
-
-		/// <summary>
-		/// Gets the old timeout value.
-		/// </summary>
-		internal DateTime? TimeoutUntilOld;
-
-		/// <summary>
-		/// Gets the new timeout value.
-		/// </summary>
-		internal DateTime? TimeoutUntilNew;
-
-		/// <summary>
-		/// Constructs a new <see cref="TimeoutHandler"/>.
-		/// </summary>
-		/// <param name="mbr">The affected member.</param>
-		/// <param name="guild">The affected guild.</param>
-		/// <param name="too">The old timeout value.</param>
-		/// <param name="ton">The new timeout value.</param>
-		internal TimeoutHandler(DiscordMember mbr, DiscordGuild guild, DateTime? too, DateTime? ton)
-		{
-			this.Guild = guild;
-			this.Member = mbr;
-			this.TimeoutUntilOld = too;
-			this.TimeoutUntilNew = ton;
-		}
-	}
+	/// <summary>
+	/// Gets whether the guild download has been completed.
+	/// </summary>
+	private bool _guildDownloadCompleted = false;
 
 #endregion
 
@@ -398,7 +366,7 @@ public sealed partial class DiscordClient
 			case "message_ack":
 				cid = (ulong)dat["channel_id"]!;
 				var mid = (ulong)dat["message_id"]!;
-				await this.OnMessageAckEventAsync(this.InternalGetCachedChannel(cid), mid).ConfigureAwait(false);
+				await this.OnMessageAckEventAsync(this.InternalGetCachedChannel(cid) ?? this.InternalGetCachedThread(cid), mid).ConfigureAwait(false);
 				break;
 
 			case "message_create":
@@ -636,7 +604,7 @@ public sealed partial class DiscordClient
 				if (rawMbr != null)
 					mbr = DiscordJson.DeserializeObject<TransportMember>(rawMbr.ToString(), this);
 
-				await this.OnTypingStartEventAsync((ulong)dat["user_id"], cid, this.InternalGetCachedChannel(cid), (ulong?)dat["guild_id"], Utilities.GetDateTimeOffset((long)dat["timestamp"]), mbr).ConfigureAwait(false);
+				await this.OnTypingStartEventAsync((ulong)dat["user_id"], cid, this.InternalGetCachedChannel(cid) ?? this.InternalGetCachedThread(cid), (ulong?)dat["guild_id"], Utilities.GetDateTimeOffset((long)dat["timestamp"]), mbr).ConfigureAwait(false);
 				break;
 
 			case "webhooks_update":
@@ -2082,113 +2050,6 @@ public sealed partial class DiscordClient
 			UnusualDmActivityBefore = udauOld
 		};
 		await this._guildMemberUpdated.InvokeAsync(this, eargs).ConfigureAwait(false);
-	}
-
-	/// <summary>
-	/// Handles timeout events.
-	/// </summary>
-	/// <param name="state">Internally used as uid for the timer data.</param>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>")]
-	private async void TimeoutTimer(object state)
-	{
-		var tid = (string)state;
-		var data = this._tempTimers.First(x => x.Key == tid).Value.Key;
-		var timer = this._tempTimers.First(x => x.Key == tid).Value.Value;
-
-		IReadOnlyList<DiscordAuditLogEntry> auditlog = null;
-		DiscordAuditLogMemberUpdateEntry filtered = null;
-		try
-		{
-			auditlog = await data.Guild.GetAuditLogsAsync(10, null, AuditLogActionType.MemberUpdate).ConfigureAwait(false);
-			var preFiltered = auditlog.Select(x => x as DiscordAuditLogMemberUpdateEntry).Where(x => x.Target.Id == data.Member.Id);
-			filtered = preFiltered.First();
-		}
-		catch (UnauthorizedException)
-		{ }
-		catch (Exception)
-		{
-			this.Logger.LogTrace("Failing timeout event.");
-			await timer.DisposeAsync().ConfigureAwait(false);
-			this._tempTimers.Remove(tid);
-			return;
-		}
-
-		var actor = filtered?.UserResponsible as DiscordMember;
-
-		this.Logger.LogTrace("Trying to execute timeout event.");
-
-		if (data is { TimeoutUntilOld: not null, TimeoutUntilNew: not null })
-		{
-			// A timeout was updated.
-
-			if (filtered != null && auditlog == null)
-			{
-				this.Logger.LogTrace("Re-scheduling timeout event.");
-				timer.Change(2000, Timeout.Infinite);
-				return;
-			}
-
-			var ea = new GuildMemberTimeoutUpdateEventArgs(this.ServiceProvider)
-			{
-				Guild = data.Guild,
-				Target = data.Member,
-				TimeoutBefore = data.TimeoutUntilOld.Value,
-				TimeoutAfter = data.TimeoutUntilNew.Value,
-				Actor = actor,
-				AuditLogId = filtered?.Id,
-				AuditLogReason = filtered?.Reason
-			};
-			await this._guildMemberTimeoutChanged.InvokeAsync(this, ea).ConfigureAwait(false);
-		}
-		else if (!data.TimeoutUntilOld.HasValue && data.TimeoutUntilNew.HasValue)
-		{
-			// A timeout was added.
-
-			if (filtered != null && auditlog == null)
-			{
-				this.Logger.LogTrace("Re-scheduling timeout event.");
-				timer.Change(2000, Timeout.Infinite);
-				return;
-			}
-
-			var ea = new GuildMemberTimeoutAddEventArgs(this.ServiceProvider)
-			{
-				Guild = data.Guild,
-				Target = data.Member,
-				Timeout = data.TimeoutUntilNew.Value,
-				Actor = actor,
-				AuditLogId = filtered?.Id,
-				AuditLogReason = filtered?.Reason
-			};
-			await this._guildMemberTimeoutAdded.InvokeAsync(this, ea).ConfigureAwait(false);
-		}
-		else if (data is { TimeoutUntilOld: not null, TimeoutUntilNew: null })
-		{
-			// A timeout was removed.
-
-			if (filtered != null && auditlog == null)
-			{
-				this.Logger.LogTrace("Re-scheduling timeout event.");
-				timer.Change(2000, Timeout.Infinite);
-				return;
-			}
-
-			var ea = new GuildMemberTimeoutRemoveEventArgs(this.ServiceProvider)
-			{
-				Guild = data.Guild,
-				Target = data.Member,
-				TimeoutBefore = data.TimeoutUntilOld.Value,
-				Actor = actor,
-				AuditLogId = filtered?.Id,
-				AuditLogReason = filtered?.Reason
-			};
-			await this._guildMemberTimeoutRemoved.InvokeAsync(this, ea).ConfigureAwait(false);
-		}
-
-		// Ending timer because it worked.
-		this.Logger.LogTrace("Removing timeout event.");
-		await timer.DisposeAsync().ConfigureAwait(false);
-		this._tempTimers.Remove(tid);
 	}
 
 	/// <summary>

@@ -48,7 +48,7 @@ internal class TransportMember : ObservableApiObject
 	/// Gets the user.
 	/// </summary>
 	[JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]
-	public TransportUser User { get; internal set; }
+	public TransportUser? User { get; internal set; }
 
 	/// <summary>
 	/// Gets the nickname.

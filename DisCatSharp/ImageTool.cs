@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 
@@ -93,30 +94,28 @@ public sealed class ImageTool : IDisposable
 	/// <returns>Detected format.</returns>
 	public ImageFormat GetFormat()
 	{
-		if (this._ifcache != ImageFormat.Unknown)
+		if (this._ifcache is not ImageFormat.Unknown)
 			return this._ifcache;
 
-		using (var br = new BinaryReader(this.SourceStream, Utilities.UTF8, true))
+		using var br = new BinaryReader(this.SourceStream, Utilities.UTF8, true);
+		var bgn64 = br.ReadUInt64();
+		if (bgn64 is PNG_MAGIC)
+			return this._ifcache = ImageFormat.Png;
+
+		bgn64 &= GIF_MASK;
+		if (bgn64 is GIF_MAGIC_1 or GIF_MAGIC_2)
+			return this._ifcache = ImageFormat.Gif;
+
+		var bgn32 = (uint)(bgn64 & MASK32);
+		if (bgn32 is WEBP_MAGIC_1 && br.ReadUInt32() is WEBP_MAGIC_2)
+			return this._ifcache = ImageFormat.WebP;
+
+		var bgn16 = (ushort)(bgn32 & MASK16);
+		if (bgn16 is JPEG_MAGIC_1)
 		{
-			var bgn64 = br.ReadUInt64();
-			if (bgn64 == PNG_MAGIC)
-				return this._ifcache = ImageFormat.Png;
-
-			bgn64 &= GIF_MASK;
-			if (bgn64 == GIF_MAGIC_1 || bgn64 == GIF_MAGIC_2)
-				return this._ifcache = ImageFormat.Gif;
-
-			var bgn32 = (uint)(bgn64 & MASK32);
-			if (bgn32 == WEBP_MAGIC_1 && br.ReadUInt32() == WEBP_MAGIC_2)
-				return this._ifcache = ImageFormat.WebP;
-
-			var bgn16 = (ushort)(bgn32 & MASK16);
-			if (bgn16 == JPEG_MAGIC_1)
-			{
-				this.SourceStream.Seek(-2, SeekOrigin.End);
-				if (br.ReadUInt16() == JPEG_MAGIC_2)
-					return this._ifcache = ImageFormat.Jpeg;
-			}
+			this.SourceStream.Seek(-2, SeekOrigin.End);
+			if (br.ReadUInt16() is JPEG_MAGIC_2)
+				return this._ifcache = ImageFormat.Jpeg;
 		}
 
 		throw new InvalidDataException("The data within the stream was not valid image data.");
@@ -171,15 +170,13 @@ public sealed class ImageTool : IDisposable
 	/// </summary>
 	/// <param name="stream">The optional stream.</param>
 	/// <returns>The optional base 64 string.</returns>
-	public static Optional<string> Base64FromStream(Optional<Stream> stream)
+	public static Optional<string?> Base64FromStream(Optional<Stream?> stream)
 	{
-		if (stream.HasValue)
-		{
-			var val = stream.Value;
-			return val != null ? Base64FromStream(val) : null!;
-		}
+		if (!stream.HasValue)
+			return Optional.None;
 
-		return Optional.None;
+		var val = stream.Value;
+		return val is not null ? Base64FromStream(val) : null;
 	}
 }
 

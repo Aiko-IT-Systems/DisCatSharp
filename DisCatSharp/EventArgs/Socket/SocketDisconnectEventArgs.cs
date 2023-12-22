@@ -15,7 +15,7 @@ public class SocketCloseEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Gets the close message sent by remote host.
 	/// </summary>
-	public string CloseMessage { get; internal set; }
+	public string? CloseMessage { get; internal set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="SocketCloseEventArgs"/> class.
