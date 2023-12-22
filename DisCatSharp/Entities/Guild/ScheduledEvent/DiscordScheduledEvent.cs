@@ -45,8 +45,8 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <summary>
 	/// Gets the ID of the user that created the scheduled event.
 	/// </summary>
-	[JsonProperty("creator_id")]
-	public ulong CreatorId { get; internal set; }
+	[JsonProperty("creator_id", NullValueHandling = NullValueHandling.Ignore)] // TODO: Check if this is a bug or not
+	public ulong? CreatorId { get; internal set; }
 
 	/// <summary>
 	/// Gets the user that created the scheduled event.
