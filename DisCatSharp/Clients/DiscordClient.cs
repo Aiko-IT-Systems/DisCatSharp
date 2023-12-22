@@ -375,7 +375,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 					w *= 2;
 			}
 
-		if (!s && cex != null)
+		if (!s && cex is not null)
 		{
 			this._connectionLock.Set();
 			throw new("Could not connect to Discord.", cex);
@@ -388,8 +388,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		if (!skus.Any())
 			return;
 
-		this.Configuration.SkuId = skus.First(x => x.Type is SkuType.Subscription).Id;
-		this.Configuration.TestSkuId = skus.First(x => x.Type is SkuType.SubscriptionTest).Id;
+		this.Configuration.SkuId = skus.FirstOrDefault(x => x.Type is SkuType.Subscription)?.Id;
+		this.Configuration.TestSkuId = skus.FirstOrDefault(x => x.Type is SkuType.SubscriptionTest)?.Id;
 
 		return;
 

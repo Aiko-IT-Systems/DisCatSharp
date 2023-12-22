@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
-using DisCatSharp.Net;
 using DisCatSharp.VoiceNext.Entities;
 
 using Newtonsoft.Json;
@@ -147,9 +146,8 @@ public sealed class VoiceNextExtension : BaseExtension
 	/// <returns>A Task.</returns>
 	private async Task Vnc_VoiceDisconnected(DiscordGuild guild)
 	{
-		VoiceNextConnection vnc = null;
 		if (this._activeConnections.ContainsKey(guild.Id))
-			this._activeConnections.TryRemove(guild.Id, out vnc);
+			this._activeConnections.TryRemove(guild.Id, out _);
 
 		var vsd = new VoiceDispatch
 		{
@@ -173,21 +171,21 @@ public sealed class VoiceNextExtension : BaseExtension
 	private Task Client_VoiceStateUpdate(DiscordClient client, VoiceStateUpdateEventArgs e)
 	{
 		var gld = e.Guild;
-		if (gld == null)
+		if (gld is null)
 			return Task.CompletedTask;
 
-		if (e.User == null)
+		if (e.User is null)
 			return Task.CompletedTask;
 
 		if (e.User.Id == this.Client.CurrentUser.Id)
 		{
-			if (e.After.Channel == null && this._activeConnections.TryRemove(gld.Id, out var ac))
+			if (e.After.Channel is null && this._activeConnections.TryRemove(gld.Id, out var ac))
 				ac.Disconnect();
 
 			if (this._activeConnections.TryGetValue(e.Guild.Id, out var vnc))
 				vnc.TargetChannel = e.Channel;
 
-			if (!string.IsNullOrWhiteSpace(e.SessionId) && e.Channel != null && this._voiceStateUpdates.TryRemove(gld.Id, out var xe))
+			if (!string.IsNullOrWhiteSpace(e.SessionId) && e.Channel is not null && this._voiceStateUpdates.TryRemove(gld.Id, out var xe))
 				xe.SetResult(e);
 		}
 
@@ -203,7 +201,7 @@ public sealed class VoiceNextExtension : BaseExtension
 	private async Task Client_VoiceServerUpdate(DiscordClient client, VoiceServerUpdateEventArgs e)
 	{
 		var gld = e.Guild;
-		if (gld == null)
+		if (gld is null)
 			return;
 
 		if (this._activeConnections.TryGetValue(e.Guild.Id, out var vnc))
@@ -217,7 +215,7 @@ public sealed class VoiceNextExtension : BaseExtension
 
 			var eps = e.Endpoint;
 			var epi = eps.LastIndexOf(':');
-			var eph = string.Empty;
+			string eph;
 			var epp = 443;
 			if (epi != -1)
 			{
@@ -240,7 +238,7 @@ public sealed class VoiceNextExtension : BaseExtension
 		if (this._voiceServerUpdates.ContainsKey(gld.Id))
 		{
 			this._voiceServerUpdates.TryRemove(gld.Id, out var xe);
-			xe.SetResult(e);
+			xe?.SetResult(e);
 		}
 	}
 }

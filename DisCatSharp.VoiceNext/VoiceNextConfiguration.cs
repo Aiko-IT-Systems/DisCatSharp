@@ -17,7 +17,7 @@ public sealed class VoiceNextConfiguration
 	/// <para>Sets whether incoming voice receiver should be enabled.</para>
 	/// <para>Defaults to false.</para>
 	/// </summary>
-	public bool EnableIncoming { internal get; set; }
+	public bool EnableIncoming { internal get; set; } = false;
 
 	/// <summary>
 	/// <para>Sets the size of the packet queue.</para>
@@ -40,5 +40,6 @@ public sealed class VoiceNextConfiguration
 	{
 		this.AudioFormat = new(other.AudioFormat.SampleRate, other.AudioFormat.ChannelCount, other.AudioFormat.VoiceApplication);
 		this.EnableIncoming = other.EnableIncoming;
+		this.PacketQueueSize = other.PacketQueueSize;
 	}
 }

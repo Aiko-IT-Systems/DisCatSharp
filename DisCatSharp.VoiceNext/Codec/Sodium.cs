@@ -73,7 +73,7 @@ internal sealed class Sodium : IDisposable
 	/// <param name="target">The target.</param>
 	public void GenerateNonce(ReadOnlySpan<byte> rtpHeader, Span<byte> target)
 	{
-		if (rtpHeader.Length != Rtp.HEADER_SIZE)
+		if (rtpHeader.Length is not Rtp.HEADER_SIZE)
 			throw new ArgumentException($"RTP header needs to have a length of exactly {Rtp.HEADER_SIZE} bytes.", nameof(rtpHeader));
 
 		if (target.Length != Interop.SodiumNonceSize)
@@ -187,7 +187,7 @@ internal sealed class Sodium : IDisposable
 			throw new ArgumentException($"Invalid target buffer size. Target buffer needs to have a length that is a sum of input buffer length and Sodium MAC size ({Interop.SodiumMacSize} bytes).", nameof(target));
 
 		int result;
-		if ((result = Interop.Encrypt(source, target, this._key.Span, nonce)) != 0)
+		if ((result = Interop.Encrypt(source, target, this._key.Span, nonce)) is not 0)
 			throw new CryptographicException($"Could not encrypt the buffer. Sodium returned code {result}.");
 	}
 
@@ -206,14 +206,15 @@ internal sealed class Sodium : IDisposable
 			throw new ArgumentException($"Invalid target buffer size. Target buffer needs to have a length that is input buffer decreased by Sodium MAC size ({Interop.SodiumMacSize} bytes).", nameof(target));
 
 		int result;
-		if ((result = Interop.Decrypt(source, target, this._key.Span, nonce)) != 0)
+		if ((result = Interop.Decrypt(source, target, this._key.Span, nonce)) is not 0)
 			throw new CryptographicException($"Could not decrypt the buffer. Sodium returned code {result}.");
 	}
 
 	/// <summary>
 	/// Disposes the Sodium.
 	/// </summary>
-	public void Dispose() => this._csprng.Dispose();
+	public void Dispose()
+		=> this._csprng.Dispose();
 
 	/// <summary>
 	/// Selects the mode.
