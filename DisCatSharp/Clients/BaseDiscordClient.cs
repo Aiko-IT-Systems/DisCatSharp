@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -463,24 +464,22 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <para>If no value is provided, the configuration value will be used instead.</para>
 	/// </summary>
 	/// <returns>A gateway info object.</returns>
-	public async Task<GatewayInfo> GetGatewayInfoAsync(string token = null)
+	public async Task<GatewayInfo> GetGatewayInfoAsync(string? token = null)
 	{
-		if (this.Configuration.TokenType != TokenType.Bot)
+		if (this.Configuration.TokenType is not TokenType.Bot)
 			throw new InvalidOperationException("Only bot tokens can access this info.");
 
-		if (string.IsNullOrEmpty(this.Configuration.Token))
-		{
-			if (string.IsNullOrEmpty(token))
-				throw new InvalidOperationException("Could not locate a valid token.");
+		if (!string.IsNullOrEmpty(this.Configuration.Token))
+			return await this.ApiClient.GetGatewayInfoAsync().ConfigureAwait(false);
 
-			this.Configuration.Token = token;
+		if (string.IsNullOrEmpty(token))
+			throw new InvalidOperationException("Could not locate a valid token.");
 
-			var res = await this.ApiClient.GetGatewayInfoAsync().ConfigureAwait(false);
-			this.Configuration.Token = null;
-			return res;
-		}
+		this.Configuration.Token = token;
 
-		return await this.ApiClient.GetGatewayInfoAsync().ConfigureAwait(false);
+		var res = await this.ApiClient.GetGatewayInfoAsync().ConfigureAwait(false);
+		this.Configuration.Token = null;
+		return res;
 	}
 
 	/// <summary>
@@ -489,7 +488,13 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <param name="userId">The user id.</param>
 	internal DiscordUser GetCachedOrEmptyUserInternal(ulong userId)
 	{
-		this.TryGetCachedUserInternal(userId, out var user);
+		if (!this.TryGetCachedUserInternal(userId, out var user))
+			user = new()
+			{
+				Id = userId,
+				Discord = this
+			};
+
 		return user;
 	}
 
@@ -498,18 +503,8 @@ public abstract class BaseDiscordClient : IDisposable
 	/// </summary>
 	/// <param name="userId">The user id.</param>
 	/// <param name="user">The user.</param>
-	internal bool TryGetCachedUserInternal(ulong userId, out DiscordUser user)
-	{
-		if (this.UserCache.TryGetValue(userId, out user))
-			return true;
-
-		user = new()
-		{
-			Id = userId,
-			Discord = this
-		};
-		return false;
-	}
+	internal bool TryGetCachedUserInternal(ulong userId, [MaybeNullWhen(false)] out DiscordUser user)
+		=> this.UserCache.TryGetValue(userId, out user);
 
 	/// <summary>
 	/// Disposes this client.

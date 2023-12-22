@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -37,10 +38,17 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	/// Gets the message cache.
 	/// </summary>
-	internal RingBuffer<DiscordMessage> MessageCache { get; }
+	internal RingBuffer<DiscordMessage>? MessageCache { get; } // TODO: Check usage
 
-	private List<BaseExtension> _extensions = [];
-	private StatusUpdate _status;
+	/// <summary>
+	/// Gets the list of extensions.
+	/// </summary>
+	private readonly List<BaseExtension> _extensions = [];
+
+	/// <summary>
+	/// Gets the status update.
+	/// </summary>
+	private StatusUpdate? _status;
 
 	/// <summary>
 	/// Gets the connection lock.
@@ -59,7 +67,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	/// Gets the gateway session information for this client.
 	/// </summary>
-	public GatewayInfo GatewayInfo { get; internal set; }
+	public GatewayInfo? GatewayInfo { get; internal set; }
 
 	/// <summary>
 	/// Gets the gateway URL.
@@ -69,9 +77,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	/// Gets the total number of shards the bot is connected to.
 	/// </summary>
-	public int ShardCount => this.GatewayInfo != null
-		? this.GatewayInfo.ShardCount
-		: this.Configuration.ShardCount;
+	public int ShardCount => this.GatewayInfo?.ShardCount ?? this.Configuration.ShardCount;
 
 	/// <summary>
 	/// Gets the currently connected shard ID.
@@ -92,7 +98,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	public override IReadOnlyDictionary<ulong, DiscordGuild> Guilds { get; }
 
-	internal ConcurrentDictionary<ulong, DiscordGuild> GuildsInternal = new();
+	/// <summary>
+	/// Gets the guilds.
+	/// </summary>
+	internal readonly ConcurrentDictionary<ulong, DiscordGuild> GuildsInternal = [];
 
 	/// <summary>
 	/// Gets the websocket latency for this client.
@@ -100,7 +109,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public int Ping
 		=> Volatile.Read(ref this._ping);
 
-	private int _ping;
+	/// <summary>
+	/// Gets the ping.
+	/// </summary>
+	private int _ping = 0;
 
 	/// <summary>
 	/// Gets the collection of presences held by this client.
@@ -265,7 +277,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <typeparam name="T">The type of extension to retrieve.</typeparam>
 	/// <returns>The requested extension.</returns>
-	public T GetExtension<T>() where T : BaseExtension
+	public T? GetExtension<T>() where T : BaseExtension
 		=> this._extensions.FirstOrDefault(x => x.GetType() == typeof(T)) as T;
 
 #endregion
@@ -281,7 +293,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="UnauthorizedException">Thrown when an invalid token was provided.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task ConnectAsync(DiscordActivity activity = null, UserStatus? status = null, DateTimeOffset? idlesince = null)
+	public async Task ConnectAsync(DiscordActivity? activity = null, UserStatus? status = null, DateTimeOffset? idlesince = null)
 	{
 		// Check if connection lock is already set, and set it if it isn't
 		if (!this._connectionLock.Wait(0))
@@ -292,19 +304,19 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		var w = 7500;
 		var i = 5;
 		var s = false;
-		Exception cex = null;
+		Exception? cex = null;
 
-		if (activity == null && status == null && idlesince == null)
+		if (activity is null && status is null && idlesince is null)
 			this._status = null;
 		else
 		{
 			var sinceUnix = idlesince != null ? (long?)Utilities.GetUnixTime(idlesince.Value) : null;
 			this._status = new()
 			{
-				Activity = new(activity),
+				Activity = activity is not null ? new(activity) : null,
 				Status = status ?? UserStatus.Online,
 				IdleSince = sinceUnix,
-				IsAfk = idlesince != null,
+				IsAfk = idlesince is not null,
 				ActivityInternal = activity
 			};
 		}
@@ -356,8 +368,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				cex = ex;
 				if (i <= 0 && !this.Configuration.ReconnectIndefinitely) break;
 
-				this.Logger.LogError(LoggerEvents.ConnectionFailure, ex, "Connection attempt failed, retrying in {0}s", w / 1000);
-				await Task.Delay(w).ConfigureAwait(false);
+				this.Logger.LogError(LoggerEvents.ConnectionFailure, ex, "Connection attempt failed, retrying in {Seconds}s", w / 1000);
+				await Task.Delay(w, this._cancelToken).ConfigureAwait(false);
 
 				if (i > 0)
 					w *= 2;
@@ -369,18 +381,20 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			throw new("Could not connect to Discord.", cex);
 		}
 
-		if (this.Configuration.AutoFetchSkuIds)
-		{
-			var skus = await this.ApiClient.GetSkusAsync(this.CurrentApplication.Id).ConfigureAwait(false);
-			if (skus.Any())
-			{
-				this.Configuration.SkuId = skus.First(x => x.Type is SkuType.Subscription).Id;
-				this.Configuration.TestSkuId = skus.First(x => x.Type is SkuType.SubscriptionTest).Id;
-			}
-		}
+		if (!this.Configuration.AutoFetchSkuIds)
+			return;
+
+		var skus = await this.ApiClient.GetSkusAsync(this.CurrentApplication.Id).ConfigureAwait(false);
+		if (!skus.Any())
+			return;
+
+		this.Configuration.SkuId = skus.First(x => x.Type is SkuType.Subscription).Id;
+		this.Configuration.TestSkuId = skus.First(x => x.Type is SkuType.SubscriptionTest).Id;
+
+		return;
 
 		// non-closure, hence args
-		static void FailConnection(ManualResetEventSlim cl) =>
+		static void FailConnection(ManualResetEventSlim? cl) =>
 			// unlock this (if applicable) so we can let others attempt to connect
 			cl?.Set();
 	}
@@ -398,7 +412,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public async Task DisconnectAsync()
 	{
 		this.Configuration.AutoReconnect = false;
-		if (this.WebSocketClient != null)
+		if (this.WebSocketClient is not null)
 			await this.WebSocketClient.DisconnectAsync().ConfigureAwait(false);
 	}
 
@@ -417,27 +431,25 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordUser> GetUserAsync(ulong userId, bool fetch = false)
 	{
-		if (fetch || !this.TryGetCachedUserInternal(userId, out var cachedUsr))
+		if (!fetch && this.TryGetCachedUserInternal(userId, out var cachedUsr))
+			return cachedUsr;
+
+		var usr = await this.ApiClient.GetUserAsync(userId).ConfigureAwait(false);
+		usr = this.UserCache.AddOrUpdate(userId, usr, (id, old) =>
 		{
-			var usr = await this.ApiClient.GetUserAsync(userId).ConfigureAwait(false);
-			usr = this.UserCache.AddOrUpdate(userId, usr, (id, old) =>
-			{
-				old.Username = usr.Username;
-				old.Discriminator = usr.Discriminator;
-				old.AvatarHash = usr.AvatarHash;
-				old.BannerHash = usr.BannerHash;
-				old.BannerColorInternal = usr.BannerColorInternal;
-				old.AvatarDecorationData = usr.AvatarDecorationData;
-				old.ThemeColorsInternal = usr.ThemeColorsInternal;
-				old.Pronouns = usr.Pronouns;
-				old.GlobalName = usr.GlobalName;
-				return old;
-			});
+			old.Username = usr.Username;
+			old.Discriminator = usr.Discriminator;
+			old.AvatarHash = usr.AvatarHash;
+			old.BannerHash = usr.BannerHash;
+			old.BannerColorInternal = usr.BannerColorInternal;
+			old.AvatarDecorationData = usr.AvatarDecorationData;
+			old.ThemeColorsInternal = usr.ThemeColorsInternal;
+			old.Pronouns = usr.Pronouns;
+			old.GlobalName = usr.GlobalName;
+			return old;
+		});
 
-			return usr;
-		}
-
-		return cachedUsr;
+		return usr;
 	}
 
 	/// <summary>
@@ -495,14 +507,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="user">The user, if found.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to true.</param>
 	/// <returns>True if found, otherwise false.</returns>
-	public bool TryGetUser(ulong userId, out DiscordUser user, bool fetch = true)
+	public bool TryGetUser(ulong userId, [NotNullWhen(true)] out DiscordUser? user, bool fetch = true)
 	{
 		try
 		{
 			user = this.GetUserAsync(userId, fetch).ConfigureAwait(false).GetAwaiter().GetResult();
 			return true;
 		}
-		catch (Exception)
+		catch (NotFoundException)
 		{
 			user = null;
 			return false;
@@ -610,14 +622,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="channel">The queried channel, if found.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to true.</param>
 	/// <returns>True if channel found, otherwise false.</returns>
-	public bool TryGetChannel(ulong id, out DiscordChannel channel, bool fetch = true)
+	public bool TryGetChannel(ulong id, [NotNullWhen(true)] out DiscordChannel? channel, bool fetch = true)
 	{
 		try
 		{
 			channel = this.GetChannelAsync(id, fetch).ConfigureAwait(false).GetAwaiter().GetResult();
 			return true;
 		}
-		catch (Exception)
+		catch (NotFoundException)
 		{
 			channel = null;
 			return false;
@@ -643,14 +655,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="thread">The thread, if found.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to true.</param>
 	/// <returns>True if found, otherwise false.</returns>
-	public bool TryGetThread(ulong id, out DiscordThreadChannel thread, bool fetch = true)
+	public bool TryGetThread(ulong id, [NotNullWhen(true)] out DiscordThreadChannel? thread, bool fetch = true)
 	{
 		try
 		{
 			thread = this.GetThreadAsync(id, fetch).ConfigureAwait(false).GetAwaiter().GetResult();
 			return true;
 		}
-		catch (Exception)
+		catch (NotFoundException)
 		{
 			thread = null;
 			return false;
@@ -697,7 +709,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public
-Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, string content, DiscordEmbed embed)
+		Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, string content, DiscordEmbed embed)
 		=> this.ApiClient.CreateMessageAsync(channel.Id, content, embed != null
 			? new[] { embed }
 			: null, null, null, false, false);
@@ -713,7 +725,7 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, string content, Di
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public
-Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuilder builder)
+		Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuilder builder)
 		=> this.ApiClient.CreateMessageAsync(channel.Id, builder);
 
 	/// <summary>
@@ -807,14 +819,14 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 	/// <param name="withCounts">Whether to include approximate presence and member counts in the returned guild.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to true.</param>
 	/// <returns>True if the guild was found, otherwise false.</returns>
-	public bool TryGetGuild(ulong id, out DiscordGuild guild, bool? withCounts = null, bool fetch = true)
+	public bool TryGetGuild(ulong id, [NotNullWhen(true)] out DiscordGuild? guild, bool? withCounts = null, bool fetch = true)
 	{
 		try
 		{
 			guild = this.GetGuildAsync(id, withCounts, fetch).ConfigureAwait(false).GetAwaiter().GetResult();
 			return true;
 		}
-		catch (Exception)
+		catch (NotFoundException)
 		{
 			guild = null;
 			return false;
@@ -838,14 +850,14 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 	/// <param name="id">The guild ID.</param>
 	/// <param name="preview">The preview, if found.</param>
 	/// <returns>True if the preview was found, otherwise false.</returns>
-	public bool TryGetGuildPreview(ulong id, out DiscordGuildPreview preview)
+	public bool TryGetGuildPreview(ulong id, [NotNullWhen(true)] out DiscordGuildPreview? preview)
 	{
 		try
 		{
 			preview = this.ApiClient.GetGuildPreviewAsync(id).ConfigureAwait(false).GetAwaiter().GetResult();
 			return true;
 		}
-		catch (Exception)
+		catch (NotFoundException)
 		{
 			preview = null;
 			return false;
@@ -868,14 +880,14 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 	/// <param name="id">The Guild Id.</param>
 	/// <param name="widget">The widget, if found.</param>
 	/// <returns>True if the widget was found, otherwise false.</returns>
-	public bool TryGetGuildWidget(ulong id, out DiscordWidget widget)
+	public bool TryGetGuildWidget(ulong id, [NotNullWhen(true)] out DiscordWidget? widget)
 	{
 		try
 		{
 			widget = this.ApiClient.GetGuildWidgetAsync(id).ConfigureAwait(false).GetAwaiter().GetResult();
 			return true;
 		}
-		catch (Exception)
+		catch (NotFoundException)
 		{
 			widget = null;
 			return false;
@@ -905,14 +917,14 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 	/// <param name="withExpiration">Whether to include the expiration date in the returned invite.</param>
 	/// <param name="scheduledEventId">The scheduled event id.</param>
 	/// <returns>True if the invite was found, otherwise false.</returns>
-	public bool TryGetInviteByCode(string code, out DiscordInvite invite, bool? withCounts = null, bool? withExpiration = null, ulong? scheduledEventId = null)
+	public bool TryGetInviteByCode(string code, [NotNullWhen(true)] out DiscordInvite? invite, bool? withCounts = null, bool? withExpiration = null, ulong? scheduledEventId = null)
 	{
 		try
 		{
 			invite = this.GetInviteByCodeAsync(code, withCounts, withExpiration, scheduledEventId).ConfigureAwait(false).GetAwaiter().GetResult();
 			return true;
 		}
-		catch (Exception)
+		catch (NotFoundException)
 		{
 			invite = null;
 			return false;
@@ -944,14 +956,14 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 	/// <returns>True if found, otherwise false.</returns>
 	/// <param name="id">The id of the sticker.</param>
 	/// <param name="sticker">The sticker, if found.</param>
-	public bool TryGetSticker(ulong id, out DiscordSticker sticker)
+	public bool TryGetSticker(ulong id, [NotNullWhen(true)] out DiscordSticker? sticker)
 	{
 		try
 		{
 			sticker = this.GetStickerAsync(id).ConfigureAwait(false).GetAwaiter().GetResult();
 			return true;
 		}
-		catch (Exception)
+		catch (NotFoundException)
 		{
 			sticker = null;
 			return false;
@@ -1050,14 +1062,14 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 	/// <param name="id">The target webhook id.</param>
 	/// <param name="webhook">The webhook, if found.</param>
 	/// <returns>True if found, otherwise false.</returns>
-	public bool TryGetWebhook(ulong id, out DiscordWebhook webhook)
+	public bool TryGetWebhook(ulong id, [NotNullWhen(true)] out DiscordWebhook? webhook)
 	{
 		try
 		{
 			webhook = this.GetWebhookAsync(id).ConfigureAwait(false).GetAwaiter().GetResult();
 			return true;
 		}
-		catch (Exception)
+		catch (NotFoundException)
 		{
 			webhook = null;
 			return false;
@@ -1083,14 +1095,14 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 	/// <param name="token">The target webhook token.</param>
 	/// <param name="webhook">The webhook, if found.</param>
 	/// <returns>True if found, otherwise false.</returns>
-	public bool TryGetWebhookWithToken(ulong id, string token, out DiscordWebhook webhook)
+	public bool TryGetWebhookWithToken(ulong id, string token, [NotNullWhen(true)] out DiscordWebhook? webhook)
 	{
 		try
 		{
 			webhook = this.GetWebhookWithTokenAsync(id, token).ConfigureAwait(false).GetAwaiter().GetResult();
 			return true;
 		}
-		catch (Exception)
+		catch (NotFoundException)
 		{
 			webhook = null;
 			return false;
@@ -1116,11 +1128,11 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordUser> UpdateCurrentUserAsync(string username = null, Optional<Stream> avatar = default)
+	public async Task<DiscordUser> UpdateCurrentUserAsync(string? username = null, Optional<Stream?> avatar = default)
 	{
 		var av64 = ImageTool.Base64FromStream(avatar);
 
-		var usr = await this.ApiClient.ModifyCurrentUserAsync(username, av64).ConfigureAwait(false);
+		var usr = await this.ApiClient.ModifyCurrentUserAsync(username ?? this.CurrentUser.Username, av64).ConfigureAwait(false);
 
 		this.CurrentUser.Username = usr.Username;
 		this.CurrentUser.Discriminator = usr.Discriminator;
@@ -1294,7 +1306,7 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 	/// <param name="channelId">The target channel id.</param>
 	/// <param name="guildId">The target guild id.</param>
 	/// <returns>The requested channel.</returns>
-	internal DiscordChannel InternalGetCachedChannel(ulong channelId, ulong? guildId = null)
+	internal DiscordChannel? InternalGetCachedChannel(ulong channelId, ulong? guildId = null)
 	{
 		if (this.Guilds == null)
 			return null;
@@ -1331,16 +1343,16 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 	/// <param name="author">The author to update.</param>
 	/// <param name="guild">The guild to update.</param>
 	/// <param name="member">The member to update.</param>
-	private void UpdateMessage(DiscordMessage message, TransportUser author, DiscordGuild guild, TransportMember member)
+	private void UpdateMessage(DiscordMessage message, TransportUser? author, DiscordGuild guild, TransportMember? member)
 	{
-		if (author != null)
+		if (author is not null)
 		{
 			var usr = new DiscordUser(author)
 			{
 				Discord = this
 			};
 
-			if (member != null)
+			if (member is not null)
 				member.User = author;
 
 			message.Author = this.UpdateUser(usr, guild?.Id, guild, member);
@@ -1348,7 +1360,8 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 
 		var channel = this.InternalGetCachedChannel(message.ChannelId);
 
-		if (channel != null) return;
+		if (channel is not null)
+			return;
 
 		channel = !message.GuildId.HasValue
 			? new DiscordDmChannel
@@ -1402,11 +1415,11 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 	/// <param name="guild">The guild to update.</param>
 	/// <param name="mbr">The member to update.</param>
 	/// <returns>The updated user.</returns>
-	private DiscordUser UpdateUser(DiscordUser usr, ulong? guildId, DiscordGuild guild, TransportMember mbr)
+	private DiscordUser UpdateUser(DiscordUser usr, ulong? guildId, DiscordGuild? guild, TransportMember? mbr)
 	{
-		if (mbr != null)
+		if (mbr is not null && guild is not null)
 		{
-			if (mbr.User != null)
+			if (mbr.User is not null)
 			{
 				usr = new(mbr.User)
 				{
@@ -1437,21 +1450,19 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 
 			var intents = this.Configuration.Intents;
 
-			DiscordMember member = default;
+			if (intents.HasAllPrivilegedIntents() && !guild.IsLarge) // we have the necessary privileged intents, no need to worry about caching here unless guild is large.
+				return usr;
 
-			if (!intents.HasAllPrivilegedIntents() || guild.IsLarge) // we have the necessary privileged intents, no need to worry about caching here unless guild is large.
+			if (!guild.MembersInternal.TryGetValue(usr.Id, out var member))
 			{
-				if (guild?.MembersInternal.TryGetValue(usr.Id, out member) == false)
-				{
-					if (intents.HasIntent(DiscordIntents.GuildMembers) || this.Configuration.AlwaysCacheMembers) // member can be updated by events, so cache it
-						guild.MembersInternal.TryAdd(usr.Id, (DiscordMember)usr);
-				}
-				else if (intents.HasIntent(DiscordIntents.GuildPresences) || this.Configuration.AlwaysCacheMembers) // we can attempt to update it if it's already in cache.
-					if (!intents.HasIntent(DiscordIntents.GuildMembers)) // no need to update if we already have the member events
-						_ = guild.MembersInternal.TryUpdate(usr.Id, (DiscordMember)usr, member);
+				if (intents.HasIntent(DiscordIntents.GuildMembers) || this.Configuration.AlwaysCacheMembers) // member can be updated by events, so cache it
+					guild.MembersInternal.TryAdd(usr.Id, (DiscordMember)usr);
 			}
+			else if (intents.HasIntent(DiscordIntents.GuildPresences) || this.Configuration.AlwaysCacheMembers) // we can attempt to update it if it's already in cache.
+				if (!intents.HasIntent(DiscordIntents.GuildMembers)) // no need to update if we already have the member events
+					_ = guild.MembersInternal.TryUpdate(usr.Id, (DiscordMember)usr, member);
 		}
-		else if (usr.Username != null) // check if not a skeleton user
+		else if (usr.Username is not null) // check if not a skeleton user
 			_ = this.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
 			{
 				old.Username = usr.Username;
@@ -1475,12 +1486,11 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <param name="rawEvents">The raw events.</param>
-	private void UpdateCachedScheduledEvent(DiscordGuild guild, JArray rawEvents)
+	private void UpdateCachedScheduledEvent(DiscordGuild guild, JArray? rawEvents)
 	{
-		if (this._disposed)
-			return;
+		ObjectDisposedException.ThrowIf(true, this._disposed);
 
-		if (rawEvents != null)
+		if (rawEvents is not null)
 		{
 			guild.ScheduledEventsInternal.Clear();
 
@@ -1500,20 +1510,19 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 	/// </summary>
 	/// <param name="newGuild">The new guild.</param>
 	/// <param name="rawMembers">The raw members.</param>
-	private void UpdateCachedGuild(DiscordGuild newGuild, JArray rawMembers)
+	private void UpdateCachedGuild(DiscordGuild newGuild, JArray? rawMembers)
 	{
-		if (this._disposed)
-			return;
+		ObjectDisposedException.ThrowIf(true, this._disposed);
 
-		if (!this.GuildsInternal.ContainsKey(newGuild.Id))
-			this.GuildsInternal[newGuild.Id] = newGuild;
+		this.GuildsInternal.TryAdd(newGuild.Id, newGuild);
 
 		var guild = this.GuildsInternal[newGuild.Id];
 
 		if (newGuild.ChannelsInternal is { IsEmpty: false })
 			foreach (var channel in newGuild.ChannelsInternal.Values)
 			{
-				if (guild.ChannelsInternal.TryGetValue(channel.Id, out _)) continue;
+				if (guild.ChannelsInternal.TryGetValue(channel.Id, out _))
+					continue;
 
 				channel.Initialize(this);
 
@@ -1523,7 +1532,8 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 		if (newGuild.ThreadsInternal is { IsEmpty: false })
 			foreach (var thread in newGuild.ThreadsInternal.Values)
 			{
-				if (guild.ThreadsInternal.TryGetValue(thread.Id, out _)) continue;
+				if (guild.ThreadsInternal.TryGetValue(thread.Id, out _))
+					continue;
 
 				guild.ThreadsInternal[thread.Id] = thread;
 			}
@@ -1531,21 +1541,22 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 		if (newGuild.ScheduledEventsInternal is { IsEmpty: false })
 			foreach (var @event in newGuild.ScheduledEventsInternal.Values)
 			{
-				if (guild.ScheduledEventsInternal.TryGetValue(@event.Id, out _)) continue;
+				if (guild.ScheduledEventsInternal.TryGetValue(@event.Id, out _))
+					continue;
 
 				guild.ScheduledEventsInternal[@event.Id] = @event;
 			}
 
 		foreach (var newEmoji in newGuild.EmojisInternal.Values)
-			_ = guild.EmojisInternal.GetOrAdd(newEmoji.Id, _ => newEmoji);
+			_ = guild.EmojisInternal.GetOrAdd(newEmoji.Id, newEmoji);
 
 		foreach (var newSticker in newGuild.StickersInternal.Values)
-			_ = guild.StickersInternal.GetOrAdd(newSticker.Id, _ => newSticker);
+			_ = guild.StickersInternal.GetOrAdd(newSticker.Id, newSticker);
 
 		foreach (var newStageInstance in newGuild.StageInstancesInternal.Values)
-			_ = guild.StageInstancesInternal.GetOrAdd(newStageInstance.Id, _ => newStageInstance);
+			_ = guild.StageInstancesInternal.GetOrAdd(newStageInstance.Id, newStageInstance);
 
-		if (rawMembers != null)
+		if (rawMembers is not null)
 		{
 			guild.MembersInternal.Clear();
 
@@ -1553,6 +1564,7 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 			{
 				var xtm = xj.ToDiscordObject<TransportMember>();
 
+				ArgumentNullException.ThrowIfNull(xtm.User);
 				var usr = new DiscordUser(xtm.User)
 				{
 					Discord = this
@@ -1582,7 +1594,8 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 
 		foreach (var role in newGuild.RolesInternal.Values)
 		{
-			if (guild.RolesInternal.TryGetValue(role.Id, out _)) continue;
+			if (guild.RolesInternal.TryGetValue(role.Id, out _))
+				continue;
 
 			role.GuildId = guild.Id;
 			guild.RolesInternal[role.Id] = role;
@@ -1636,7 +1649,7 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 	/// <param name="message">The message.</param>
 	/// <param name="author">The author.</param>
 	/// <param name="member">The member.</param>
-	private void PopulateMessageReactionsAndCache(DiscordMessage message, TransportUser author, TransportMember member)
+	private void PopulateMessageReactionsAndCache(DiscordMessage message, TransportUser author, TransportMember? member)
 	{
 		var guild = message.Channel?.Guild ?? this.InternalGetCachedGuild(message.GuildId);
 
@@ -1646,7 +1659,7 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 		foreach (var xr in message.ReactionsInternal)
 			xr.Emoji.Discord = this;
 
-		if (this.Configuration.MessageCacheSize > 0 && message.Channel != null)
+		if (this.Configuration.MessageCacheSize > 0 && message.Channel is not null)
 			this.MessageCache?.Add(message);
 	}
 
@@ -1654,6 +1667,9 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 
 #region Disposal
 
+	/// <summary>
+	/// Disposes the client.
+	/// </summary>
 	~DiscordClient()
 	{
 		this.Dispose();
@@ -1669,8 +1685,7 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 	/// </summary>
 	public override void Dispose()
 	{
-		if (this._disposed)
-			return;
+		ObjectDisposedException.ThrowIf(true, this._disposed);
 
 		this._disposed = true;
 		GC.SuppressFinalize(this);
@@ -1680,7 +1695,7 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 		this.CurrentUser = null;
 
 		var extensions = this._extensions; // prevent _extensions being modified during dispose
-		this._extensions = null;
+		this._extensions.Clear();
 		foreach (var extension in extensions)
 			if (extension is IDisposable disposable)
 				disposable.Dispose();
@@ -1693,8 +1708,8 @@ Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuil
 		catch
 		{ }
 
-		this.GuildsInternal = null;
-		this._heartbeatTask = null;
+		this.GuildsInternal.Clear();
+		this._heartbeatTask?.Dispose();
 
 		if (this.Configuration.EnableSentry)
 			SentrySdk.EndSession();

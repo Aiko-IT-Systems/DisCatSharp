@@ -23,7 +23,7 @@ public sealed class DiscordConfiguration
 	/// <summary>
 	/// Sets the token used to identify the client.
 	/// </summary>
-	public string Token
+	public string? Token
 	{
 		internal get => this._token;
 		set
@@ -38,7 +38,7 @@ public sealed class DiscordConfiguration
 	/// <summary>
 	/// Sets the token used to identify the client (protected).
 	/// </summary>
-	private string _token = "";
+	private string? _token;
 
 	/// <summary>
 	/// <para>Sets the type of the token used to identify the client.</para>

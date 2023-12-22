@@ -24,12 +24,12 @@ internal sealed class SocketLock : IDisposable
 	/// <summary>
 	/// Gets or sets the timeout cancel source.
 	/// </summary>
-	private CancellationTokenSource _timeoutCancelSource;
+	private CancellationTokenSource? _timeoutCancelSource;
 
 	/// <summary>
 	/// Gets the cancel token.
 	/// </summary>
-	private CancellationToken TIMEOUT_CANCEL => this._timeoutCancelSource.Token;
+	private CancellationToken? _timeoutCancel;
 
 	/// <summary>
 	/// Gets or sets the unlock task.
@@ -49,7 +49,8 @@ internal sealed class SocketLock : IDisposable
 	public SocketLock(ulong appId, int maxConcurrency)
 	{
 		this.ApplicationId = appId;
-		this._timeoutCancelSource = null;
+		this._timeoutCancelSource = null!;
+		this._timeoutCancel = null!;
 		this._maxConcurrency = maxConcurrency;
 		this._lockSemaphore = new(maxConcurrency);
 	}
@@ -59,10 +60,11 @@ internal sealed class SocketLock : IDisposable
 	/// </summary>
 	public async Task LockAsync()
 	{
-		await this._lockSemaphore.WaitAsync().ConfigureAwait(false);
+		await this._lockSemaphore.WaitAsync(CancellationToken.None).ConfigureAwait(false);
 
 		this._timeoutCancelSource = new();
-		this._unlockTask = Task.Delay(TimeSpan.FromSeconds(30), this.TIMEOUT_CANCEL);
+		this._timeoutCancel = this._timeoutCancelSource.Token;
+		this._unlockTask = Task.Delay(TimeSpan.FromSeconds(30), this._timeoutCancel.Value);
 		_ = this._unlockTask.ContinueWith(this.InternalUnlock, TaskContinuationOptions.NotOnCanceled);
 	}
 
@@ -72,7 +74,7 @@ internal sealed class SocketLock : IDisposable
 	/// <param name="unlockDelay">The unlock delay.</param>
 	public void UnlockAfter(TimeSpan unlockDelay)
 	{
-		if (this._timeoutCancelSource == null || this._lockSemaphore.CurrentCount > 0)
+		if (this._timeoutCancelSource is null || this._lockSemaphore.CurrentCount > 0)
 			return; // it's not unlockable because it's post-IDENTIFY or not locked
 
 		try
