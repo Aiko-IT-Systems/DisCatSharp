@@ -41,7 +41,7 @@ internal class AudioSender : IDisposable
 	/// <summary>
 	/// Gets or sets the user.
 	/// </summary>
-	public DiscordUser User { get; set; } = null;
+	public DiscordUser? User { get; set; } = null;
 
 	/// <summary>
 	/// Gets or sets the last sequence.
@@ -62,7 +62,8 @@ internal class AudioSender : IDisposable
 	/// <summary>
 	/// Disposes .
 	/// </summary>
-	public void Dispose() => this.Decoder?.Dispose();
+	public void Dispose()
+		=> this.Decoder?.Dispose();
 
 	/// <summary>
 	/// Accepts the 16-bit sequence number from the next RTP header in the associated stream and

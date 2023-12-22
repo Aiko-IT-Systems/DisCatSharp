@@ -60,7 +60,8 @@ internal sealed class Rtp : IDisposable
 	/// </summary>
 	/// <param name="source">The source.</param>
 	/// <returns>A bool.</returns>
-	public bool IsRtpHeader(ReadOnlySpan<byte> source) => source.Length >= HEADER_SIZE && (source[0] == RTP_NO_EXTENSION || source[0] == RTP_EXTENSION) && source[1] == RTP_VERSION;
+	public bool IsRtpHeader(ReadOnlySpan<byte> source)
+		=> source.Length >= HEADER_SIZE && (source[0] is RTP_NO_EXTENSION || source[0] is RTP_EXTENSION) && source[1] is RTP_VERSION;
 
 	/// <summary>
 	/// Decodes the header.
@@ -75,10 +76,10 @@ internal sealed class Rtp : IDisposable
 		if (source.Length < HEADER_SIZE)
 			throw new ArgumentException("Header buffer is too short.", nameof(source));
 
-		if ((source[0] != RTP_NO_EXTENSION && source[0] != RTP_EXTENSION) || source[1] != RTP_VERSION)
+		if ((source[0] is not RTP_NO_EXTENSION && source[0] is not RTP_EXTENSION) || source[1] is not RTP_VERSION)
 			throw new ArgumentException("Invalid RTP header.", nameof(source));
 
-		hasExtension = source[0] == RTP_EXTENSION;
+		hasExtension = source[0] is RTP_EXTENSION;
 
 		// Read data big endian
 		sequence = BinaryPrimitives.ReadUInt16BigEndian(source[2..]);
