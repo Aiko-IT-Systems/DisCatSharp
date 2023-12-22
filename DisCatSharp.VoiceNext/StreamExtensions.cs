@@ -24,11 +24,9 @@ public static class StreamExtensions
 		// adapted from CoreFX
 		// https://source.dot.net/#System.Private.CoreLib/Stream.cs,8048a9680abdd13b
 
-		if (source is null)
-			throw new ArgumentNullException(nameof(source));
-		if (destination is null)
-			throw new ArgumentNullException(nameof(destination));
-		if (bufferSize != null && bufferSize <= 0)
+		ArgumentNullException.ThrowIfNull(source);
+		ArgumentNullException.ThrowIfNull(destination);
+		if (bufferSize is <= 0)
 			throw new ArgumentOutOfRangeException(nameof(bufferSize), bufferSize, "bufferSize cannot be less than or equal to zero");
 
 		var bufferLength = bufferSize ?? destination.SampleLength;

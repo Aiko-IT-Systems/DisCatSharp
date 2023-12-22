@@ -63,7 +63,7 @@ public sealed class DiscordInteractionData : SnowflakeObject
 	/// Gets the values of the interaction.
 	/// </summary>
 	[JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
-	public string[] Values { get; internal set; } = Array.Empty<string>();
+	public string[] Values { get; internal set; } = [];
 
 	/// <summary>
 	/// Gets the type of the interaction.

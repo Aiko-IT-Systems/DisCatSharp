@@ -41,7 +41,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	[JsonIgnore]
 	public string IconUrl
-		=> !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.{(this.IconHash.StartsWith("a_") ? "gif" : "png")}?size=1024" : null;
+		=> !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.{(this.IconHash.StartsWith("a_", StringComparison.Ordinal) ? "gif" : "png")}?size=1024" : null;
 
 	/// <summary>
 	/// Gets the guild splash's hash.
@@ -490,7 +490,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	[JsonIgnore]
 	public string BannerUrl
-		=> !string.IsNullOrWhiteSpace(this.BannerHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}" : null;
+		=> !string.IsNullOrWhiteSpace(this.BannerHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_", StringComparison.Ordinal) ? "gif" : "png")}" : null;
 
 	/// <summary>
 	/// Whether this guild has the community feature enabled.
@@ -585,7 +585,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	private Dictionary<ulong, DiscordChannel> InternalSortChannels()
 	{
-		Dictionary<ulong, DiscordChannel> keyValuePairs = new();
+		Dictionary<ulong, DiscordChannel> keyValuePairs = [];
 		var orderedChannels = this.GetOrderedChannels();
 		foreach (var orderedChannel in orderedChannels)
 		{
@@ -1910,8 +1910,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		if (name.Length < 2 || name.Length > 50)
 			throw new ArgumentException("Emoji name needs to be between 2 and 50 characters long.");
 
-		if (image == null)
-			throw new ArgumentNullException(nameof(image));
+		ArgumentNullException.ThrowIfNull(image);
 
 		var image64 = ImageTool.Base64FromStream(image);
 
@@ -1930,8 +1929,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordGuildEmoji> ModifyEmojiAsync(DiscordGuildEmoji emoji, string name, IEnumerable<DiscordRole> roles = null, string reason = null)
 	{
-		if (emoji == null)
-			throw new ArgumentNullException(nameof(emoji));
+		ArgumentNullException.ThrowIfNull(emoji);
 
 		if (emoji.Guild.Id != this.Id)
 			throw new ArgumentException("This emoji does not belong to this guild.");
@@ -2051,7 +2049,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 			throw new ArgumentException("Sticker name needs to be between 2 and 30 characters long.");
 		if (description.HasValue && (description.Value.Length < 1 || description.Value.Length > 100))
 			throw new ArgumentException("Sticker description needs to be between 1 and 100 characters long.");
-		if (emoji.HasValue && emoji.Value.Id > 0)
+		if (emoji is { HasValue: true, Value.Id: > 0 })
 			throw new ArgumentException("Only unicode emojis can be used with stickers.");
 
 		string uemoji = null;

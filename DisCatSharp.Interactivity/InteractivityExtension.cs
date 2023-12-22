@@ -133,7 +133,7 @@ public class InteractivityExtension : BaseExtension
 		if (!buttons.Any())
 			throw new ArgumentException("You must specify at least one button to listen for.");
 
-		if (!message.Components.Any())
+		if (message.Components.Count == 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
 		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
@@ -198,7 +198,7 @@ public class InteractivityExtension : BaseExtension
 		if (message.Author != this.Client.CurrentUser)
 			throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
-		if (!message.Components.Any())
+		if (message.Components.Count == 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
 		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
@@ -241,7 +241,7 @@ public class InteractivityExtension : BaseExtension
 		if (message.Author != this.Client.CurrentUser)
 			throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
-		if (!message.Components.Any())
+		if (message.Components.Count == 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
 		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
@@ -281,7 +281,7 @@ public class InteractivityExtension : BaseExtension
 		if (message.Author != this.Client.CurrentUser)
 			throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
-		if (!message.Components.Any())
+		if (message.Components.Count == 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
 		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
@@ -318,7 +318,7 @@ public class InteractivityExtension : BaseExtension
 		if (message.Author != this.Client.CurrentUser)
 			throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
-		if (!message.Components.Any())
+		if (message.Components.Count == 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
 		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
@@ -356,7 +356,7 @@ public class InteractivityExtension : BaseExtension
 		if (message.Author != this.Client.CurrentUser)
 			throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
-		if (!message.Components.Any())
+		if (message.Components.Count == 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
 		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type == selectType))
@@ -395,7 +395,7 @@ public class InteractivityExtension : BaseExtension
 		if (message.Author != this.Client.CurrentUser)
 			throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
-		if (!message.Components.Any())
+		if (message.Components.Count == 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
 		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type == selectType))
@@ -438,7 +438,7 @@ public class InteractivityExtension : BaseExtension
 		if (message.Author != this.Client.CurrentUser)
 			throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
-		if (!message.Components.Any())
+		if (message.Components.Count == 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
 		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type == selectType))
@@ -865,12 +865,12 @@ public class InteractivityExtension : BaseExtension
 		{
 			default:
 			case SplitType.Character:
-				split = this.SplitString(input, 500).ToList();
+				split = [.. this.SplitString(input, 500)];
 				break;
 			case SplitType.Line:
 				var subsplit = input.Split('\n');
 
-				split = new();
+				split = [];
 				var s = "";
 
 				for (var i = 0; i < subsplit.Length; i++)
@@ -919,12 +919,12 @@ public class InteractivityExtension : BaseExtension
 		{
 			default:
 			case SplitType.Character:
-				split = this.SplitString(input, 500).ToList();
+				split = [.. this.SplitString(input, 500)];
 				break;
 			case SplitType.Line:
 				var subsplit = input.Split('\n');
 
-				split = new();
+				split = [];
 				var s = "";
 
 				for (var i = 0; i < subsplit.Length; i++)

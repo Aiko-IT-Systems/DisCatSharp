@@ -41,7 +41,7 @@ internal class RateLimitBucket : IEquatable<RateLimitBucket>
 		{
 			this.IsUnlimited = value.Contains(s_unlimitedHash);
 
-			if (this.BucketId != null && !this.BucketId.StartsWith(value))
+			if (this.BucketId != null && !this.BucketId.StartsWith(value, StringComparison.Ordinal))
 			{
 				var id = GenerateBucketId(value, this.GuildId, this.ChannelId, this.WebhookId);
 				this.BucketId = id;

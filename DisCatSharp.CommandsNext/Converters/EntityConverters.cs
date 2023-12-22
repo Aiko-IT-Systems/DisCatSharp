@@ -272,7 +272,7 @@ public class DiscordMessageConverter : IArgumentConverter<DiscordMessage>
 		if (string.IsNullOrWhiteSpace(value))
 			return Optional.None;
 
-		var msguri = value.StartsWith("<") && value.EndsWith(">") ? value[1..^1] : value;
+		var msguri = value.StartsWith("<", StringComparison.Ordinal) && value.EndsWith(">", StringComparison.Ordinal) ? value[1..^1] : value;
 		ulong mid;
 		if (Uri.TryCreate(msguri, UriKind.Absolute, out var uri))
 		{
@@ -315,7 +315,7 @@ public class DiscordScheduledEventConverter : IArgumentConverter<DiscordSchedule
 		if (string.IsNullOrWhiteSpace(value))
 			return Optional.None;
 
-		var msguri = value.StartsWith("<") && value.EndsWith(">") ? value[1..^1] : value;
+		var msguri = value.StartsWith("<", StringComparison.Ordinal) && value.EndsWith(">", StringComparison.Ordinal) ? value[1..^1] : value;
 		ulong seid;
 		if (Uri.TryCreate(msguri, UriKind.Absolute, out var uri))
 		{

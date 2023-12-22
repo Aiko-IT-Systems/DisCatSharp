@@ -221,11 +221,13 @@ internal static class ConfigurationExtensions
 	/// <returns>True if section exists, otherwise false</returns>
 	public static bool HasSection(this IConfiguration config, params string[] values)
 	{
-		if (!values.Any())
-			return false;
-
-		if (values.Length == 1)
-			return config.GetChildren().Any(x => x.Key == values[0]);
+		switch (values.Length)
+		{
+			case 0:
+				return false;
+			case 1:
+				return config.GetChildren().Any(x => x.Key == values[0]);
+		}
 
 		if (config.GetChildren().All(x => x.Key != values[0]))
 			return false;

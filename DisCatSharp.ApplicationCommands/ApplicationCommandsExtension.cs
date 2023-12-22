@@ -37,22 +37,22 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// A list of methods for top level commands.
 	/// </summary>
-	internal static List<CommandMethod> CommandMethods { get; set; } = new();
+	internal static List<CommandMethod> CommandMethods { get; set; } = [];
 
 	/// <summary>
 	/// List of groups.
 	/// </summary>
-	internal static List<GroupCommand> GroupCommands { get; set; } = new();
+	internal static List<GroupCommand> GroupCommands { get; set; } = [];
 
 	/// <summary>
 	/// List of groups with subgroups.
 	/// </summary>
-	internal static List<SubGroupCommand> SubGroupCommands { get; set; } = new();
+	internal static List<SubGroupCommand> SubGroupCommands { get; set; } = [];
 
 	/// <summary>
 	/// List of context menus.
 	/// </summary>
-	internal static List<ContextMenuCommand> ContextMenuCommands { get; set; } = new();
+	internal static List<ContextMenuCommand> ContextMenuCommands { get; set; } = [];
 
 	/// <summary>
 	/// List of global commands on discords backend.
@@ -67,12 +67,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// Singleton modules.
 	/// </summary>
-	private static List<object> s_singletonModules { get; set; } = new();
+	private static List<object> s_singletonModules { get; set; } = [];
 
 	/// <summary>
 	/// List of modules to register.
 	/// </summary>
-	private readonly List<KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>> _updateList = new();
+	private readonly List<KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>> _updateList = [];
 
 	/// <summary>
 	/// Configuration for Discord.
@@ -92,7 +92,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			new KeyValuePair<ulong?, IReadOnlyList<RegisteredDiscordApplicationCommand>>(guild.Key, guild.Value
 				.Select(parent => new RegisteredDiscordApplicationCommand(parent)).ToList())).ToList();
 
-	private static List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> s_registeredCommands = new();
+	private static readonly List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> s_registeredCommands = [];
 
 	/// <summary>
 	/// Gets a list of registered global commands.
@@ -100,7 +100,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	public IReadOnlyList<DiscordApplicationCommand> GlobalCommands
 		=> GlobalCommandsInternal;
 
-	internal static List<DiscordApplicationCommand> GlobalCommandsInternal = new();
+	internal static List<DiscordApplicationCommand> GlobalCommandsInternal = [];
 
 	/// <summary>
 	/// Gets a list of registered guild commands mapped by guild id.
@@ -108,7 +108,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	public IReadOnlyDictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommands
 		=> GuildCommandsInternal;
 
-	internal static Dictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommandsInternal = new();
+	internal static Dictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommandsInternal = [];
 
 	/// <summary>
 	/// Gets the registration count.
@@ -164,7 +164,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// Gets a list of handled interactions. Fix for double interaction execution bug.
 	/// </summary>
-	internal static List<ulong> HandledInteractions = new();
+	internal static List<ulong> HandledInteractions = [];
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
@@ -410,19 +410,19 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			return;
 		}
 
-		GlobalDiscordCommands = new();
-		GuildDiscordCommands = new();
+		GlobalDiscordCommands = [];
+		GuildDiscordCommands = [];
 
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Expected Count: {count}", s_expectedCount);
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Shard {shard} has {guilds} guilds.", this.Client.ShardId, this.Client.Guilds?.Count);
-		List<ulong> failedGuilds = new();
+		List<ulong> failedGuilds = [];
 		List<DiscordApplicationCommand> globalCommands = null;
 		globalCommands = (await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false).ConfigureAwait(false)).ToList() ?? null;
 		var updateList = this._updateList;
 
 		var guilds = CheckAllGuilds ? this.Client.Guilds?.Keys.ToList() : updateList.Where(x => x.Key != null)?.Select(x => x.Key.Value).Distinct().ToList();
-		var wrongShards = guilds is not null ? guilds.Where(x => !this.Client.Guilds.ContainsKey(x)).ToList() : new();
-		if (wrongShards.Any())
+		var wrongShards = guilds is not null ? guilds.Where(x => !this.Client.Guilds.ContainsKey(x)).ToList() : [];
+		if (wrongShards.Count != 0)
 		{
 			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Some guilds are not on the same shard as the client. Removing them from the update list");
 			foreach (var guild in wrongShards)
@@ -435,7 +435,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		var commandsPending = updateList.Select(x => x.Key).Distinct().ToList();
 		s_expectedCount = commandsPending.Count;
 
-		if (guilds is not null && guilds.Any())
+		if (guilds is not null && guilds.Count != 0)
 			foreach (var guild in guilds)
 			{
 				List<DiscordApplicationCommand> commands = null;
@@ -450,8 +450,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				}
 				finally
 				{
-					if (!unauthorized && commands != null && commands.Any())
-						GuildDiscordCommands.Add(guild, commands.ToList());
+					if (!unauthorized && commands != null && commands.Count != 0)
+						GuildDiscordCommands.Add(guild, [.. commands]);
 					else if (unauthorized)
 						failedGuilds.Add(guild);
 				}
@@ -481,7 +481,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			commandsPending = updateList.Select(x => x.Key).Distinct().ToList();
 		}
 
-		if (globalCommands != null && globalCommands.Any())
+		if (globalCommands != null && globalCommands.Count != 0)
 			GlobalDiscordCommands.AddRange(globalCommands);
 
 		foreach (var key in commandsPending)
@@ -560,7 +560,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 					var slashGroupsTuple = await NestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildId, groupTranslations).ConfigureAwait(false);
 
-					if (slashGroupsTuple.applicationCommands != null && slashGroupsTuple.applicationCommands.Any())
+					if (slashGroupsTuple.applicationCommands != null && slashGroupsTuple.applicationCommands.Count != 0)
 					{
 						updateList.AddRange(slashGroupsTuple.applicationCommands);
 						if (Configuration.GenerateTranslationFilesOnly)
@@ -575,10 +575,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									{
 										var cs = new List<Command>();
 										foreach (var sc in scg.Options)
-											if (sc.Options == null || !sc.Options.Any())
+											if (sc.Options == null || sc.Options.Count == 0)
 												cs.Add(new(sc.Name, sc.Description, null, null));
 											else
-												cs.Add(new(sc.Name, sc.Description, sc.Options.ToList(), null));
+												cs.Add(new(sc.Name, sc.Description, [.. sc.Options], null));
 										cgs.Add(new(scg.Name, scg.Description, cs, null));
 									}
 
@@ -586,32 +586,32 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 									var cs2 = new List<Command>();
 									foreach (var sc2 in cmd.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommand))
-										if (sc2.Options == null || !sc2.Options.Any())
+										if (sc2.Options == null || sc2.Options.Count == 0)
 											cs2.Add(new(sc2.Name, sc2.Description, null, null));
 										else
-											cs2.Add(new(sc2.Name, sc2.Description, sc2.Options.ToList(), null));
+											cs2.Add(new(sc2.Name, sc2.Description, [.. sc2.Options], null));
 									cgs2.Add(new(cmd.Name, cmd.Description, cs2, ApplicationCommandType.ChatInput));
 								}
 
-							if (cgwsgs.Any())
+							if (cgwsgs.Count != 0)
 								foreach (var cgwsg in cgwsgs)
 									groupTranslation.Add(JsonConvert.DeserializeObject<GroupTranslator>(JsonConvert.SerializeObject(cgwsg)));
-							if (cgs2.Any())
+							if (cgs2.Count != 0)
 								foreach (var cg2 in cgs2)
 									groupTranslation.Add(JsonConvert.DeserializeObject<GroupTranslator>(JsonConvert.SerializeObject(cg2)));
 						}
 					}
 
-					if (slashGroupsTuple.commandTypeSources != null && slashGroupsTuple.commandTypeSources.Any())
+					if (slashGroupsTuple.commandTypeSources != null && slashGroupsTuple.commandTypeSources.Count != 0)
 						commandTypeSources.AddRange(slashGroupsTuple.commandTypeSources);
 
-					if (slashGroupsTuple.singletonModules != null && slashGroupsTuple.singletonModules.Any())
+					if (slashGroupsTuple.singletonModules != null && slashGroupsTuple.singletonModules.Count != 0)
 						s_singletonModules.AddRange(slashGroupsTuple.singletonModules);
 
-					if (slashGroupsTuple.groupCommands != null && slashGroupsTuple.groupCommands.Any())
+					if (slashGroupsTuple.groupCommands != null && slashGroupsTuple.groupCommands.Count != 0)
 						groupCommands.AddRange(slashGroupsTuple.groupCommands);
 
-					if (slashGroupsTuple.subGroupCommands != null && slashGroupsTuple.subGroupCommands.Any())
+					if (slashGroupsTuple.subGroupCommands != null && slashGroupsTuple.subGroupCommands.Count != 0)
 						subGroupCommands.AddRange(slashGroupsTuple.subGroupCommands);
 				}
 
@@ -628,7 +628,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 					var slashCommands = await CommandWorker.ParseBasicSlashCommandsAsync(type, methods, guildId, commandTranslations).ConfigureAwait(false);
 
-					if (slashCommands.applicationCommands != null && slashCommands.applicationCommands.Any())
+					if (slashCommands.applicationCommands != null && slashCommands.applicationCommands.Count != 0)
 					{
 						updateList.AddRange(slashCommands.applicationCommands);
 						if (Configuration.GenerateTranslationFilesOnly)
@@ -637,22 +637,22 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							foreach (var cmd in slashCommands.applicationCommands)
 								if (cmd.Type == ApplicationCommandType.ChatInput && (cmd.Options == null || !cmd.Options.Any(x => x.Type == ApplicationCommandOptionType.SubCommand || x.Type == ApplicationCommandOptionType.SubCommandGroup)))
 								{
-									if (cmd.Options == null || !cmd.Options.Any())
+									if (cmd.Options == null || cmd.Options.Count == 0)
 										cs.Add(new(cmd.Name, cmd.Description, null, ApplicationCommandType.ChatInput));
 									else
-										cs.Add(new(cmd.Name, cmd.Description, cmd.Options.ToList(), ApplicationCommandType.ChatInput));
+										cs.Add(new(cmd.Name, cmd.Description, [.. cmd.Options], ApplicationCommandType.ChatInput));
 								}
 
-							if (cs.Any())
+							if (cs.Count != 0)
 								foreach (var c in cs)
 									translation.Add(JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(c)));
 						}
 					}
 
-					if (slashCommands.commandTypeSources != null && slashCommands.commandTypeSources.Any())
+					if (slashCommands.commandTypeSources != null && slashCommands.commandTypeSources.Count != 0)
 						commandTypeSources.AddRange(slashCommands.commandTypeSources);
 
-					if (slashCommands.commandMethods != null && slashCommands.commandMethods.Any())
+					if (slashCommands.commandMethods != null && slashCommands.commandMethods.Count != 0)
 						commandMethods.AddRange(slashCommands.commandMethods);
 
 					//Context Menus
@@ -660,7 +660,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 					var contextCommands = await CommandWorker.ParseContextMenuCommands(type, contextMethods, commandTranslations).ConfigureAwait(false);
 
-					if (contextCommands.applicationCommands != null && contextCommands.applicationCommands.Any())
+					if (contextCommands.applicationCommands != null && contextCommands.applicationCommands.Count != 0)
 					{
 						updateList.AddRange(contextCommands.applicationCommands);
 						if (Configuration.GenerateTranslationFilesOnly)
@@ -669,16 +669,16 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							foreach (var cmd in contextCommands.applicationCommands)
 								if (cmd.Type == ApplicationCommandType.Message || cmd.Type == ApplicationCommandType.User)
 									cs.Add(new(cmd.Name, null, null, cmd.Type));
-							if (cs.Any())
+							if (cs.Count != 0)
 								foreach (var c in cs)
 									translation.Add(JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(c)));
 						}
 					}
 
-					if (contextCommands.commandTypeSources != null && contextCommands.commandTypeSources.Any())
+					if (contextCommands.commandTypeSources != null && contextCommands.commandTypeSources.Count != 0)
 						commandTypeSources.AddRange(contextCommands.commandTypeSources);
 
-					if (contextCommands.contextMenuCommands != null && contextCommands.contextMenuCommands.Any())
+					if (contextCommands.contextMenuCommands != null && contextCommands.contextMenuCommands.Count != 0)
 						contextMenuCommands.AddRange(contextCommands.contextMenuCommands);
 
 					//Accounts for lifespans
@@ -717,13 +717,13 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			else
 				try
 				{
-					List<DiscordApplicationCommand> commands = new();
+					List<DiscordApplicationCommand> commands = [];
 
 					try
 					{
 						if (guildId == null)
 						{
-							if (updateList != null && updateList.Any())
+							if (updateList != null && updateList.Count != 0)
 							{
 								var regCommands = await RegistrationWorker.RegisterGlobalCommandsAsync(this.Client, updateList).ConfigureAwait(false);
 								var actualCommands = regCommands.Distinct().ToList();
@@ -743,7 +743,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						}
 						else
 						{
-							if (updateList != null && updateList.Any())
+							if (updateList != null && updateList.Count != 0)
 							{
 								var regCommands = await RegistrationWorker.RegisterGuildCommandsAsync(this.Client, guildId.Value, updateList).ConfigureAwait(false);
 								var actualCommands = regCommands.Distinct().ToList();
@@ -859,7 +859,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			{
 				try
 				{
-					if (translation != null && translation.Any())
+					if (translation != null && translation.Count != 0)
 					{
 						var fileName = $"translation_generator_export-shard{this.Client.ShardId}-SINGLE-{s_registrationCount}_of_{s_expectedCount}.json";
 						var fs = File.Create(fileName);
@@ -877,7 +877,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						this.Client.Logger.LogInformation("Exported base translation to {exppath}", fileName);
 					}
 
-					if (groupTranslation != null && groupTranslation.Any())
+					if (groupTranslation != null && groupTranslation.Count != 0)
 					{
 						var fileName = $"translation_generator_export-shard{this.Client.ShardId}-GROUP-{s_registrationCount}_of_{s_expectedCount}.json";
 						var fs = File.Create(fileName);
@@ -1377,7 +1377,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		}
 
 		// inject into fields
-		var fields = t.GetRuntimeFields().Where(xf => !xf.IsInitOnly && !xf.IsStatic && xf.IsPublic);
+		var fields = t.GetRuntimeFields().Where(xf => !xf.IsInitOnly && xf is { IsStatic: false, IsPublic: true });
 		foreach (var field in fields)
 		{
 			if (field.GetCustomAttribute<DontInjectAttribute>() != null)
@@ -1723,7 +1723,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		s_commandMethods.Clear();
 		s_groupCommands.Clear();
 		s_subGroupCommands.Clear();
-		s_registeredCommands.Clear();
+		_registeredCommands.Clear();
 		s_contextMenuCommands.Clear();
 		GlobalDiscordCommands.Clear();
 		GuildDiscordCommands.Clear();
@@ -1894,7 +1894,7 @@ internal class SubGroupCommand
 	/// <summary>
 	/// Gets or sets the sub commands.
 	/// </summary>
-	public List<GroupCommand> SubCommands { get; set; } = new();
+	public List<GroupCommand> SubCommands { get; set; } = [];
 }
 
 /// <summary>
@@ -2214,7 +2214,7 @@ internal class DefaultUserAppsHelpModule : ApplicationCommandsModule
 			}
 			else
 			{
-				await Task.WhenAll(globalCommandsTask).ConfigureAwait(false);
+				await globalCommandsTask.ConfigureAwait(false);
 				slashCommands = globalCommandsTask.Result
 					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
 					.GroupBy(ac => ac.Name).Select(x => x.First())
@@ -2245,7 +2245,7 @@ internal class DefaultUserAppsHelpModule : ApplicationCommandsModule
 			}
 			else
 			{
-				await Task.WhenAll(globalCommandsTask).ConfigureAwait(false);
+				await globalCommandsTask.ConfigureAwait(false);
 				slashCommands = globalCommandsTask.Result
 					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
 					.GroupBy(ac => ac.Name).Select(x => x.First());
@@ -2284,7 +2284,7 @@ internal class DefaultUserAppsHelpModule : ApplicationCommandsModule
 			}
 			else
 			{
-				await Task.WhenAll(globalCommandsTask).ConfigureAwait(false);
+				await globalCommandsTask.ConfigureAwait(false);
 				slashCommands = globalCommandsTask.Result
 					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
 					.GroupBy(ac => ac.Name).Select(x => x.First());
@@ -2313,7 +2313,7 @@ internal class DefaultUserAppsHelpModule : ApplicationCommandsModule
 		}
 	}
 
-	[SlashCommand("help", "Displays command help", false, new[] { ApplicationCommandContexts.Guild, ApplicationCommandContexts.BotDm, ApplicationCommandContexts.PrivateChannel }, new[] { ApplicationCommandIntegrationTypes.GuildInstall, ApplicationCommandIntegrationTypes.UserInstall })]
+	[SlashCommand("help", "Displays command help", false, [ApplicationCommandContexts.Guild, ApplicationCommandContexts.BotDm, ApplicationCommandContexts.PrivateChannel], [ApplicationCommandIntegrationTypes.GuildInstall, ApplicationCommandIntegrationTypes.UserInstall])]
 	internal async Task DefaulUserAppstHelpAsync(
 		InteractionContext ctx,
 		[Autocomplete(typeof(DefaultUserAppsHelpAutoCompleteProvider)), Option("option_one", "top level command to provide help for", true)]
@@ -2337,7 +2337,7 @@ internal class DefaultUserAppsHelpModule : ApplicationCommandsModule
 		}
 		else
 		{
-			await Task.WhenAll(globalCommandsTask).ConfigureAwait(false);
+			await globalCommandsTask.ConfigureAwait(false);
 			applicationCommands = globalCommandsTask.Result
 				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
 				.GroupBy(ac => ac.Name).Select(x => x.First())

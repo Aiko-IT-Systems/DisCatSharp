@@ -20,7 +20,7 @@ public sealed class DiscordEmbedBuilder
 		get => this._title;
 		set
 		{
-			if (value != null && value.Length > 256)
+			if (value is { Length: > 256 })
 				throw new ArgumentException("Title length cannot exceed 256 characters.", nameof(value));
 
 			this._title = value;
@@ -37,7 +37,7 @@ public sealed class DiscordEmbedBuilder
 		get => this._description;
 		set
 		{
-			if (value != null && value.Length > 4096)
+			if (value is { Length: > 4096 })
 				throw new ArgumentException("Description length cannot exceed 4096 characters.", nameof(value));
 
 			this._description = value;
@@ -331,7 +331,7 @@ public sealed class DiscordEmbedBuilder
 	/// <returns>This embed builder.</returns>
 	public DiscordEmbedBuilder WithFooter(string text = null, string iconUrl = null)
 	{
-		if (text != null && text.Length > 2048)
+		if (text is { Length: > 2048 })
 			throw new ArgumentException("Footer text length cannot exceed 2048 characters.", nameof(text));
 
 		this.Footer = string.IsNullOrEmpty(text) && string.IsNullOrEmpty(iconUrl)
@@ -531,7 +531,7 @@ public sealed class DiscordEmbedBuilder
 			get => this._name;
 			set
 			{
-				if (value != null && value.Length > 256)
+				if (value is { Length: > 256 })
 					throw new ArgumentException("Author name length cannot exceed 256 characters.", nameof(value));
 
 				this._name = value;
@@ -576,7 +576,7 @@ public sealed class DiscordEmbedBuilder
 			get => this._text;
 			set
 			{
-				if (value != null && value.Length > 2048)
+				if (value is { Length: > 2048 })
 					throw new ArgumentException("Footer text length cannot exceed 2048 characters.", nameof(value));
 
 				this._text = value;

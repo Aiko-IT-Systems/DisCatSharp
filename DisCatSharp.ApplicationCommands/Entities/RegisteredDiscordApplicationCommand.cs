@@ -49,19 +49,19 @@ public sealed class RegisteredDiscordApplicationCommand : DiscordApplicationComm
 			{
 				this.CommandMethod = ApplicationCommandsExtension.CommandMethods.First(x => x.CommandId == this.Id).Method;
 				this.ContainingType = this.CommandMethod.DeclaringType;
-				this.CustomAttributes = this.CommandMethod.GetCustomAttributes().Where(x => !x.GetType().Namespace.StartsWith("DisCatSharp")).ToList();
+				this.CustomAttributes = this.CommandMethod.GetCustomAttributes().Where(x => !x.GetType().Namespace.StartsWith("DisCatSharp", StringComparison.Ordinal)).ToList();
 			}
 			else if (ApplicationCommandsExtension.ContextMenuCommands.Any(x => x.CommandId == this.Id))
 			{
 				this.CommandMethod = ApplicationCommandsExtension.ContextMenuCommands.First(x => x.CommandId == this.Id).Method;
 				this.ContainingType = this.CommandMethod.DeclaringType;
-				this.CustomAttributes = this.CommandMethod.GetCustomAttributes().Where(x => !x.GetType().Namespace.StartsWith("DisCatSharp")).ToList();
+				this.CustomAttributes = this.CommandMethod.GetCustomAttributes().Where(x => !x.GetType().Namespace.StartsWith("DisCatSharp", StringComparison.Ordinal)).ToList();
 			}
 			else if (ApplicationCommandsExtension.GroupCommands.Any(x => x.CommandId == this.Id))
 			{
 				this.CommandType = ApplicationCommandsExtension.GroupCommands.First(x => x.CommandId == this.Id).Methods.First().Value.DeclaringType;
 				this.ContainingType = this.CommandType.DeclaringType;
-				this.CustomAttributes = this.CommandType.GetCustomAttributes().Where(x => !x.GetType().Namespace.StartsWith("DisCatSharp")).ToList();
+				this.CustomAttributes = this.CommandType.GetCustomAttributes().Where(x => !x.GetType().Namespace.StartsWith("DisCatSharp", StringComparison.Ordinal)).ToList();
 			}
 		}
 		catch (Exception)

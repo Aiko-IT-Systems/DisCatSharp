@@ -258,7 +258,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	[JsonIgnore]
 	public string Mention
-		=> Formatter.Mention(this);
+		=> this.Mention();
 
 	/// <summary>
 	/// Gets this channel's children. This applies only to channel categories.
@@ -366,7 +366,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed) =>
+	public
+Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed) =>
 		!this.IsWritable()
 			? throw new ArgumentException("Cannot send a text message to a non-text channel.")
 			: this.Discord.ApiClient.CreateMessageAsync(this.Id, content, embed != null
@@ -382,7 +383,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder builder)
+	public
+Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder builder)
 		=> this.Discord.ApiClient.CreateMessageAsync(this.Id, builder);
 
 	/// <summary>
@@ -463,8 +465,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public async Task<DiscordMessage> GetMessageAsync(ulong id, bool fetch = false) =>
 		this.Discord.Configuration.MessageCacheSize > 0
 		&& !fetch
-		&& this.Discord is DiscordClient dc
-		&& dc.MessageCache != null
+		&& this.Discord is DiscordClient { MessageCache: not null } dc
 		&& dc.MessageCache.TryGet(xm => xm.Id == id && xm.ChannelId == this.Id, out var msg)
 			? msg
 			: await this.Discord.ApiClient.GetMessageAsync(this.Id, id).ConfigureAwait(false);
@@ -532,7 +533,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		var mdl = new ForumChannelEditModel();
 		action(mdl);
 
-		if (mdl.DefaultAutoArchiveDuration.HasValue && mdl.DefaultAutoArchiveDuration.Value.HasValue)
+		if (mdl.DefaultAutoArchiveDuration is { HasValue: true, Value: not null })
 			if (!Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.DefaultAutoArchiveDuration.Value.Value))
 				throw new NotSupportedException($"Cannot modify DefaultAutoArchiveDuration. Guild needs boost tier {(mdl.DefaultAutoArchiveDuration.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 

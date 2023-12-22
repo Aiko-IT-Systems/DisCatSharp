@@ -39,7 +39,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		this.AvatarDecorationData = transport.AvatarDecorationData;
 		this.BannerHash = transport.BannerHash;
 		this.BannerColorInternal = transport.BannerColor;
-		this.ThemeColorsInternal = (transport.ThemeColors ?? Array.Empty<int>()).ToList();
+		this.ThemeColorsInternal = [.. transport.ThemeColors ?? []];
 		this.IsBot = transport.IsBot;
 		this.MfaEnabled = transport.MfaEnabled;
 		this.Verified = transport.Verified;
@@ -133,7 +133,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	[JsonIgnore]
 	public string BannerUrl
-		=> string.IsNullOrWhiteSpace(this.BannerHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}?size=4096";
+		=> string.IsNullOrWhiteSpace(this.BannerHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_", StringComparison.Ordinal) ? "gif" : "png")}?size=4096";
 
 	/// <summary>
 	/// Gets the user's profile banner hash. Mutually exclusive with <see cref="BannerColor"/>.
@@ -180,7 +180,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	[JsonIgnore]
 	public string AvatarUrl
-		=> string.IsNullOrWhiteSpace(this.AvatarHash) ? this.DefaultAvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarHash}.{(this.AvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
+		=> string.IsNullOrWhiteSpace(this.AvatarHash) ? this.DefaultAvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarHash}.{(this.AvatarHash.StartsWith("a_", StringComparison.Ordinal) ? "gif" : "png")}?size=1024";
 
 	/// <summary>
 	/// Gets the user's avatar decoration url.
@@ -262,7 +262,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	[JsonIgnore]
 	public string Mention
-		=> Formatter.Mention(this, this is DiscordMember);
+		=> this.Mention(this is DiscordMember);
 
 	/// <summary>
 	/// Gets whether this user is the Client which created this object.
@@ -428,7 +428,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 			ImageFormat.Jpeg => "jpg",
 			ImageFormat.Png => "png",
 			ImageFormat.WebP => "webp",
-			ImageFormat.Auto => !string.IsNullOrWhiteSpace(this.AvatarHash) ? this.AvatarHash.StartsWith("a_") ? "gif" : "png" : "png",
+			ImageFormat.Auto => !string.IsNullOrWhiteSpace(this.AvatarHash) ? this.AvatarHash.StartsWith("a_", StringComparison.Ordinal) ? "gif" : "png" : "png",
 			_ => throw new ArgumentOutOfRangeException(nameof(fmt))
 		};
 		var ssize = size.ToString(CultureInfo.InvariantCulture);
@@ -566,11 +566,11 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		if (o1 is null && o2 is null) return true;
-		if (o1 is null || o2 is null) // one of them is null
-			return false;
-
-		return e1.Id == e2.Id;
+		return o1 is null && o2 is null
+			? true
+			: o1 is null || o2 is null
+				? false
+				: e1.Id == e2.Id;
 	}
 
 	/// <summary>

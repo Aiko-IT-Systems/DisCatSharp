@@ -57,7 +57,7 @@ public static class Utilities
 	/// </summary>
 	static Utilities()
 	{
-		PermissionStrings = new();
+		PermissionStrings = [];
 		var t = typeof(Permissions);
 		var ti = t.GetTypeInfo();
 		var vals = Enum.GetValues(t).Cast<Permissions>();
@@ -155,7 +155,7 @@ public static class Utilities
 	/// </summary>
 	/// <returns>A Dictionary.</returns>
 	internal static Dictionary<string, string> GetBaseHeaders()
-		=> new();
+		=> [];
 
 	/// <summary>
 	/// Gets the user agent.
@@ -461,8 +461,7 @@ public static class Utilities
 	/// <param name="message">The message.</param>
 	internal static void LogTaskFault(this Task task, ILogger logger, LogLevel level, EventId eventId, string message)
 	{
-		if (task == null)
-			throw new ArgumentNullException(nameof(task));
+		ArgumentNullException.ThrowIfNull(task);
 
 		if (logger == null)
 			return;
@@ -564,7 +563,7 @@ public static class Utilities
 				{
 					PageCount = 1,
 					PageSize = 1
-				})).FirstOrDefault()
+				})).ToList().FirstOrDefault()
 				: await releaseClient.GetLatest(owner, repository);
 
 			if (latest is null)

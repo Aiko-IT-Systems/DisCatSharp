@@ -87,7 +87,7 @@ public sealed class VoiceTransmitSink : IDisposable
 		this._pcmMemory = this._pcmBuffer.AsMemory();
 		this._pcmBufferLength = 0;
 		this._writeSemaphore = new(1, 1);
-		this._filters = new();
+		this._filters = [];
 	}
 
 	/// <summary>
@@ -194,8 +194,7 @@ public sealed class VoiceTransmitSink : IDisposable
 	/// <param name="order">Order of the new filter. This determines where the filter will be inserted in the filter pipeline.</param>
 	public void InstallFilter(IVoiceFilter filter, int order = int.MaxValue)
 	{
-		if (filter == null)
-			throw new ArgumentNullException(nameof(filter));
+		ArgumentNullException.ThrowIfNull(filter);
 
 		if (order < 0)
 			throw new ArgumentOutOfRangeException(nameof(order), "Filter order must be greater than or equal to 0.");
@@ -217,8 +216,7 @@ public sealed class VoiceTransmitSink : IDisposable
 	/// <returns>Whether the filter was uninstalled.</returns>
 	public bool UninstallFilter(IVoiceFilter filter)
 	{
-		if (filter == null)
-			throw new ArgumentNullException(nameof(filter));
+		ArgumentNullException.ThrowIfNull(filter);
 
 		lock (this._filters)
 		{
@@ -238,7 +236,7 @@ public sealed class VoiceTransmitSink : IDisposable
 		// pass through any filters, if applicable
 		lock (this._filters)
 		{
-			if (this._filters.Any())
+			if (this._filters.Count != 0)
 				foreach (var filter in this._filters)
 					filter.Transform(pcm16, this._connection.AudioFormat, this.SampleDuration);
 		}

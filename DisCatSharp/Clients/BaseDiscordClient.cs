@@ -1,4 +1,3 @@
-#pragma warning disable CS0618
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -137,12 +136,18 @@ public abstract class BaseDiscordClient : IDisposable
 		{
 			var configureNamedOptions = new ConfigureNamedOptions<ConsoleLoggerOptions>(string.Empty, x =>
 			{
-				x.Format = ConsoleLoggerFormat.Default;
+#pragma warning disable CS0618 // Type or member is obsolete
 				x.TimestampFormat = this.Configuration.LogTimestampFormat;
+#pragma warning restore CS0618 // Type or member is obsolete
 				x.LogToStandardErrorThreshold = this.Configuration.MinimumLogLevel;
 			});
 			var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[] { configureNamedOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
 			var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleLoggerOptions>>(), new OptionsCache<ConsoleLoggerOptions>());
+			/*
+			var configureFormatterOptions = new ConfigureNamedOptions<ConsoleFormatterOptions>(string.Empty, x => { x.TimestampFormat = this.Configuration.LogTimestampFormat; });
+			var formatterFactory = new OptionsFactory<ConsoleFormatterOptions>(new[] { configureFormatterOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleFormatterOptions>>());
+			var formatterMonitor = new OptionsMonitor<ConsoleFormatterOptions>(formatterFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleFormatterOptions>>(), new OptionsCache<ConsoleFormatterOptions>());
+			*/
 
 			var l = new ConsoleLoggerProvider(optionsMonitor);
 			this.Configuration.LoggerFactory = new LoggerFactory();
@@ -161,7 +166,7 @@ public abstract class BaseDiscordClient : IDisposable
 		}
 
 		if (!this.Configuration.HasShardLogger)
-			if (this.Configuration.LoggerFactory != null && this.Configuration.EnableSentry)
+			if (this.Configuration is { LoggerFactory: not null, EnableSentry: true })
 				this.Configuration.LoggerFactory.AddSentry(o =>
 				{
 					o.InitializeSdk = true;
@@ -183,7 +188,7 @@ public abstract class BaseDiscordClient : IDisposable
 					if (!this.Configuration.DisableExceptionFilter)
 						o.AddExceptionFilter(new DisCatSharpExceptionFilter(this.Configuration));
 					o.Debug = this.Configuration.SentryDebug;
-					o.BeforeSend = e =>
+					o.SetBeforeSend((e, _) =>
 					{
 						if (!this.Configuration.DisableExceptionFilter)
 						{
@@ -209,11 +214,12 @@ public abstract class BaseDiscordClient : IDisposable
 									}
 								};
 						return e;
-					};
+					});
 				});
 
 		if (this.Configuration.EnableSentry)
-			this.Sentry = new(new()
+		{
+			SentryOptions options = new()
 			{
 				DetectStartupTime = StartupTimeDetectionMode.Fast,
 				DiagnosticLevel = SentryLevel.Debug,
@@ -229,38 +235,40 @@ public abstract class BaseDiscordClient : IDisposable
 				IsEnvironmentUser = false,
 				UseAsyncFileIO = true,
 				EnableScopeSync = true,
-				Debug = this.Configuration.SentryDebug,
-				BeforeSend = e =>
+				Debug = this.Configuration.SentryDebug
+			};
+			options.SetBeforeSend((e, _) =>
+			{
+				if (!this.Configuration.DisableExceptionFilter)
 				{
-					if (!this.Configuration.DisableExceptionFilter)
+					if (e.Exception != null)
 					{
-						if (e.Exception != null)
-						{
-							if (!this.Configuration.TrackExceptions.Contains(e.Exception.GetType()))
-								return null;
-						}
-						else if (e.Extra.Count == 0 || !e.Extra.ContainsKey("Found Fields"))
+						if (!this.Configuration.TrackExceptions.Contains(e.Exception.GetType()))
 							return null;
 					}
-
-					if (!e.HasUser())
-						if (this.Configuration.AttachUserInfo && this.CurrentUser! != null!)
-							e.User = new()
-							{
-								Id = this.CurrentUser.Id.ToString(),
-								Username = this.CurrentUser.UsernameWithDiscriminator,
-								Other = new Dictionary<string, string>()
-								{
-									{ "developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
-									{ "email", this.Configuration.FeedbackEmail ?? "not_given" }
-								}
-							};
-
-					if (!e.Extra.ContainsKey("Found Fields"))
-						e.SetFingerprint(GenerateSentryFingerPrint(e));
-					return e;
+					else if (e.Extra.Count == 0 || !e.Extra.ContainsKey("Found Fields"))
+						return null;
 				}
+
+				if (!e.HasUser())
+					if (this.Configuration.AttachUserInfo && this.CurrentUser! != null!)
+						e.User = new()
+						{
+							Id = this.CurrentUser.Id.ToString(),
+							Username = this.CurrentUser.UsernameWithDiscriminator,
+							Other = new Dictionary<string, string>()
+							{
+								{ "developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
+								{ "email", this.Configuration.FeedbackEmail ?? "not_given" }
+							}
+						};
+
+				if (!e.Extra.ContainsKey("Found Fields"))
+					e.SetFingerprint(GenerateSentryFingerPrint(e));
+				return e;
 			});
+			this.Sentry = new(options);
+		}
 
 		this.Logger ??= this.Configuration.LoggerFactory!.CreateLogger<BaseDiscordClient>();
 

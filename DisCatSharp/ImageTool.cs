@@ -75,8 +75,7 @@ public sealed class ImageTool : IDisposable
 	/// <param name="stream">Stream to work with.</param>
 	public ImageTool(Stream stream)
 	{
-		if (stream == null)
-			throw new ArgumentNullException(nameof(stream));
+		ArgumentNullException.ThrowIfNull(stream);
 
 		if (!stream.CanRead || !stream.CanSeek)
 			throw new ArgumentException("The stream needs to be both readable and seekable.", nameof(stream));

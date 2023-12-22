@@ -48,7 +48,7 @@ public sealed class DiscordApplicationCommandOptionChoice
 
 		if (name.Length > 100)
 			throw new ArgumentException("Application command choice name cannot exceed 100 characters.", nameof(name));
-		if (value is string val && val.Length > 100)
+		if (value is string { Length: > 100 })
 			throw new ArgumentException("Application command choice value cannot exceed 100 characters.", nameof(value));
 
 		this.Name = name;

@@ -54,7 +54,7 @@ public sealed class DiscordChannelSelectComponent : DiscordBaseSelectComponent
 	public DiscordChannelSelectComponent(string placeholder, IEnumerable<ChannelType> channelTypes = null, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false, IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
 		: base(ComponentType.ChannelSelect, placeholder, customId, minOptions, maxOptions, disabled, defaultValues)
 	{
-		this.ChannelTypes = channelTypes?.ToArray() ?? Array.Empty<ChannelType>();
+		this.ChannelTypes = channelTypes?.ToArray() ?? [];
 	}
 
 	/// <summary>
@@ -71,7 +71,7 @@ public sealed class DiscordChannelSelectComponent : DiscordBaseSelectComponent
 	public DiscordChannelSelectComponent(string label, string placeholder, IEnumerable<ChannelType> channelTypes = null, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false, IEnumerable<DiscordSelectDefaultValue>? defaultValues = null)
 		: base(ComponentType.ChannelSelect, label, placeholder, customId, minOptions, maxOptions, disabled, defaultValues)
 	{
-		this.ChannelTypes = channelTypes?.ToArray() ?? Array.Empty<ChannelType>();
+		this.ChannelTypes = channelTypes?.ToArray() ?? [];
 	}
 
 	/// <summary>

@@ -28,7 +28,7 @@ internal class Poller
 	public Poller(DiscordClient client)
 	{
 		this._client = client;
-		this._requests = new();
+		this._requests = [];
 
 		this._client.MessageReactionAdded += this.HandleReactionAdd;
 		this._client.MessageReactionRemoved += this.HandleReactionRemove;

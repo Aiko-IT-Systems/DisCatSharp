@@ -86,12 +86,10 @@ public class HostTests
 		{ "DisCatSharp:Using", "[\"DisCatSharp.Interactivity\", \"DisCatSharp.Lavalink\"]" }
 	};
 
-#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 	private IHostBuilder Create(Dictionary<string, string> configValues) =>
 		Host.CreateDefaultBuilder()
 			.ConfigureServices(services => services.AddSingleton<IDiscordHostedService, Bot>())
 			.ConfigureHostConfiguration(builder => builder.AddInMemoryCollection(configValues));
-#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 
 	private IHostBuilder Create(string filename) =>
 		Host.CreateDefaultBuilder()

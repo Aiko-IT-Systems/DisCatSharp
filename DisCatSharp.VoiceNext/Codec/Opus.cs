@@ -53,7 +53,7 @@ public class Opus : IDisposable
 		Interop.OpusSetEncoderOption(this._encoder, OpusControl.SetInBandFec, 1);
 		Interop.OpusSetEncoderOption(this._encoder, OpusControl.SetBitrate, 131072);
 
-		this._managedDecoders = new();
+		this._managedDecoders = [];
 	}
 
 	/// <summary>

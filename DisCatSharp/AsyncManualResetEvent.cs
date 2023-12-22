@@ -13,7 +13,7 @@ internal class AsyncManualResetEvent
 	/// <summary>
 	/// Gets a value indicating whether this is set.
 	/// </summary>
-	public bool IsSet => this._tsc != null && this._tsc.Task.IsCompleted;
+	public bool IsSet => this._tsc is { Task.IsCompleted: true };
 
 	/// <summary>
 	/// The task completion source.

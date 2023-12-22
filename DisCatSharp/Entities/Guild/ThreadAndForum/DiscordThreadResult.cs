@@ -15,8 +15,8 @@ public class DiscordThreadResult : ObservableApiObject
 	/// </summary>
 	[JsonIgnore]
 	public Dictionary<ulong, DiscordThreadChannel> ReturnedThreads
-		=> this.Threads == null || !this.Threads.Any()
-			? new()
+		=> this.Threads == null || this.Threads.Count == 0
+			? []
 			: this.Threads.Select(t => new
 			{
 				t.Id,

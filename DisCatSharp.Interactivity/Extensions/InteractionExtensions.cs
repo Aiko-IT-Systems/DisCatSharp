@@ -52,7 +52,7 @@ public static class InteractionExtensions
 
 		timeOutOverride ??= TimeSpan.FromMinutes(15);
 
-		Dictionary<string, string> caughtResponses = new();
+		Dictionary<string, string> caughtResponses = [];
 
 		var previousInteraction = interaction;
 

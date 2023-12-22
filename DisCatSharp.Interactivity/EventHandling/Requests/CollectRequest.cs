@@ -33,7 +33,7 @@ internal class CollectRequest<T> : IDisposable where T : AsyncEventArgs
 		this.Predicate = predicate;
 		this.Ct.Token.Register(() => this.Tcs.TrySetResult(true));
 		this.Timeout = timeout;
-		this.Collected = new();
+		this.Collected = [];
 	}
 
 	~CollectRequest()

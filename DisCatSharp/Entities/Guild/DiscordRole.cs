@@ -139,7 +139,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// </summary>
 	[JsonIgnore]
 	public string Mention
-		=> Formatter.Mention(this);
+		=> this.Mention();
 
 	/// <summary>
 	/// Gets a list of members that have this role. Requires ServerMembers Intent.
@@ -206,23 +206,16 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 		action(mdl);
 
 		var canContinue = true;
-		if ((mdl.Icon.HasValue && mdl.Icon.Value != null) || (mdl.UnicodeEmoji.HasValue && mdl.UnicodeEmoji.Value != null))
+		if (mdl.Icon is { HasValue: true, Value: not null } || (mdl.UnicodeEmoji.HasValue && mdl.UnicodeEmoji.Value != null))
 			canContinue = this.Guild.Features.HasFeature(GuildFeaturesEnum.CanSetRoleIcons);
 
 		var iconb64 = Optional.FromNullable<string>(null);
-		switch (mdl.Icon.HasValue)
+		iconb64 = mdl.Icon.HasValue switch
 		{
-			case true when mdl.Icon.Value != null:
-				iconb64 = ImageTool.Base64FromStream(mdl.Icon);
-				break;
-			case true:
-				iconb64 = Optional.Some<string?>(null);
-				break;
-			default:
-				iconb64 = Optional.None;
-				break;
-		}
-
+			true when mdl.Icon.Value != null => ImageTool.Base64FromStream(mdl.Icon),
+			true => Optional.Some<string?>(null),
+			_ => Optional.None,
+		};
 		var emoji = Optional.FromNullable<string?>(null);
 
 		switch (mdl.UnicodeEmoji.HasValue)

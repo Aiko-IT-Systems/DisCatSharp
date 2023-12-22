@@ -14,13 +14,11 @@ public class HostExtensionTests
 {
 #region Reference to external assemblies - required to ensure they're loaded
 
-#pragma warning disable 414
 
 	private InteractivityConfiguration? _interactivityConfig = null;
 	private LavalinkConfiguration? _lavalinkConfig = null;
 	private DiscordConfiguration? _discordConfig = null;
 
-#pragma warning restore 414
 
 #endregion
 
@@ -47,7 +45,6 @@ public class HostExtensionTests
 			{ "DisCatSharp:Discord:Intents", "AllUnprivileged" }
 		};
 
-#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 	public IConfiguration DiscordInteractivityConfiguration() => new ConfigurationBuilder()
 		.AddInMemoryCollection(new Dictionary<string, string>(this.DefaultDiscord())
 		{
@@ -58,7 +55,6 @@ public class HostExtensionTests
 	public IConfiguration DiscordOnlyConfiguration() => new ConfigurationBuilder()
 		.AddInMemoryCollection(this.DefaultDiscord())
 		.Build();
-#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 
 	public IConfiguration DiscordInteractivityAndLavaLinkConfiguration() => new ConfigurationBuilder()
 		.AddJsonFile("interactivity-lavalink.json")

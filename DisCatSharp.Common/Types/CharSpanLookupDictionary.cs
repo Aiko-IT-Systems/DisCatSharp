@@ -78,8 +78,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	{
 		get
 		{
-			if (key == null)
-				throw new ArgumentNullException(nameof(key));
+			ArgumentNullException.ThrowIfNull(key);
 
 			if (!this.TryRetrieveInternal(key.AsSpan(), out var value))
 				throw new KeyNotFoundException($"The given key '{key}' was not present in the dictionary.");
@@ -89,8 +88,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 
 		set
 		{
-			if (key == null)
-				throw new ArgumentNullException(nameof(key));
+			ArgumentNullException.ThrowIfNull(key);
 
 			this.TryInsertInternal(key, value, true);
 		}
@@ -162,7 +160,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// </summary>
 	public CharSpanLookupDictionary()
 	{
-		this._internalBuckets = new();
+		this._internalBuckets = [];
 	}
 
 	/// <summary>
@@ -269,8 +267,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <returns>Whether the operation was successful.</returns>
 	public bool TryGetValue(string key, out TValue value)
 	{
-		if (key == null)
-			throw new ArgumentNullException(nameof(key));
+		ArgumentNullException.ThrowIfNull(key);
 
 		return this.TryRetrieveInternal(key.AsSpan(), out value);
 	}
@@ -292,8 +289,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	/// <returns>Whether the operation was successful.</returns>
 	public bool TryRemove(string key, out TValue value)
 	{
-		if (key == null)
-			throw new ArgumentNullException(nameof(key));
+		ArgumentNullException.ThrowIfNull(key);
 
 		return this.TryRemoveInternal(key.AsSpan(), out value);
 	}

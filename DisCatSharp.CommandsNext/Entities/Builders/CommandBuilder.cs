@@ -92,19 +92,19 @@ public class CommandBuilder
 	/// <param name="module">Module on which this command is to be defined.</param>
 	public CommandBuilder(ICommandModule module)
 	{
-		this._aliasList = new();
+		this._aliasList = [];
 		this.Aliases = new ReadOnlyCollection<string>(this._aliasList);
 
-		this._executionCheckList = new();
+		this._executionCheckList = [];
 		this.ExecutionChecks = new ReadOnlyCollection<CheckBaseAttribute>(this._executionCheckList);
 
-		this._overloadArgumentSets = new();
-		this._overloadList = new();
+		this._overloadArgumentSets = [];
+		this._overloadList = [];
 		this.Overloads = new ReadOnlyCollection<CommandOverloadBuilder>(this._overloadList);
 
 		this.Module = module;
 
-		this._customAttributeList = new();
+		this._customAttributeList = [];
 		this.CustomAttributes = new ReadOnlyCollection<Attribute>(this._customAttributeList);
 	}
 
@@ -135,7 +135,7 @@ public class CommandBuilder
 	/// <returns>This builder.</returns>
 	public CommandBuilder WithAliases(params string[] aliases)
 	{
-		if (aliases == null || !aliases.Any())
+		if (aliases == null || aliases.Length == 0)
 			throw new ArgumentException("You need to pass at least one alias.", nameof(aliases));
 
 		foreach (var alias in aliases)

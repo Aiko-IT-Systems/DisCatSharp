@@ -17,7 +17,7 @@ namespace DisCatSharp.Interactivity.EventHandling;
 internal class ModalEventWaiter : IDisposable
 {
 	private readonly DiscordClient _client;
-	private readonly ConcurrentHashSet<ModalMatchRequest> _modalMatchRequests = new();
+	private readonly ConcurrentHashSet<ModalMatchRequest> _modalMatchRequests = [];
 
 	private readonly DiscordFollowupMessageBuilder _message;
 	private readonly InteractivityConfiguration _config;

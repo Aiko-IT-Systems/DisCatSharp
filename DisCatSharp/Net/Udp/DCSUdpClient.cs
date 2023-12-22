@@ -48,7 +48,7 @@ internal class DcsUdpClient : BaseUdpClient
 	/// </summary>
 	public DcsUdpClient()
 	{
-		this._packetQueue = new();
+		this._packetQueue = [];
 		this._tokenSource = new();
 	}
 

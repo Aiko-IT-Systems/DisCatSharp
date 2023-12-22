@@ -73,7 +73,7 @@ public sealed class DiscordInteractionResponseBuilder
 		get => this._content;
 		set
 		{
-			if (value != null && value.Length > 2000)
+			if (value is { Length: > 2000 })
 				throw new ArgumentException("Content length cannot exceed 2000 characters.", nameof(value));
 
 			this._content = value;
@@ -154,7 +154,7 @@ public sealed class DiscordInteractionResponseBuilder
 		if (hintBuilder == null)
 			throw new ArgumentNullException(nameof(hintBuilder), "Callback hint builder cannot be null.");
 
-		if (!hintBuilder.CallbackHints.Any())
+		if (hintBuilder.CallbackHints.Count == 0)
 			return this;
 
 		this._callbackHints.Clear();

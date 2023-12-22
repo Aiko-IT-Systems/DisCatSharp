@@ -68,8 +68,7 @@ public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 	/// <inheritdoc />
 	public void Write(ReadOnlySpan<T> data)
 	{
-		if (this._isDisposed)
-			throw new ObjectDisposedException("This buffer is disposed.");
+		ObjectDisposedException.ThrowIf(this._isDisposed, this);
 
 		var src = MemoryMarshal.AsBytes(data);
 		this.Grow(src.Length);
@@ -109,8 +108,7 @@ public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 	/// <inheritdoc />
 	public void Write(Stream stream)
 	{
-		if (this._isDisposed)
-			throw new ObjectDisposedException("This buffer is disposed.");
+		ObjectDisposedException.ThrowIf(this._isDisposed, this);
 
 		if (stream.CanSeek)
 			this.WriteStreamSeekable(stream);
@@ -173,8 +171,7 @@ public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 	public bool Read(Span<T> destination, ulong source, out int itemsWritten)
 	{
 		itemsWritten = 0;
-		if (this._isDisposed)
-			throw new ObjectDisposedException("This buffer is disposed.");
+		ObjectDisposedException.ThrowIf(this._isDisposed, this);
 
 		source *= (ulong)this._itemSize;
 		if (source > this.Count)
@@ -234,8 +231,7 @@ public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 	/// <inheritdoc />
 	public T[] ToArray()
 	{
-		if (this._isDisposed)
-			throw new ObjectDisposedException("This buffer is disposed.");
+		ObjectDisposedException.ThrowIf(this._isDisposed, this);
 
 		var bytes = new T[this.Count];
 		this.Read(bytes, 0, out _);
@@ -245,8 +241,7 @@ public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 	/// <inheritdoc />
 	public void CopyTo(Stream destination)
 	{
-		if (this._isDisposed)
-			throw new ObjectDisposedException("This buffer is disposed.");
+		ObjectDisposedException.ThrowIf(this._isDisposed, this);
 
 		var longest = this._segments.Max(x => x.Memory.Length);
 		var buff = new byte[longest];
@@ -264,8 +259,7 @@ public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 	/// <inheritdoc />
 	public void Clear()
 	{
-		if (this._isDisposed)
-			throw new ObjectDisposedException("This buffer is disposed.");
+		ObjectDisposedException.ThrowIf(this._isDisposed, this);
 
 		this._segNo = 0;
 		this._lastSegmentLength = 0;

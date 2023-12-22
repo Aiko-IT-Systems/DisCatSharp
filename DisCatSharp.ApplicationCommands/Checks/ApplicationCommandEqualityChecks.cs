@@ -55,14 +55,14 @@ internal static class ApplicationCommandEqualityChecks
 		}
 		else
 		{
-			sourceApplicationCommand.IntegrationTypes ??= new()
-			{
+			sourceApplicationCommand.IntegrationTypes ??=
+			[
 				ApplicationCommandIntegrationTypes.GuildInstall
-			};
-			targetApplicationCommand.IntegrationTypes ??= new()
-			{
+			];
+			targetApplicationCommand.IntegrationTypes ??=
+			[
 				ApplicationCommandIntegrationTypes.GuildInstall
-			};
+			];
 		}
 
 		client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel,
@@ -150,10 +150,9 @@ internal static class ApplicationCommandEqualityChecks
 	/// <returns>Whether both nullable enumerable are equal.</returns>
 	internal static bool NullableSequenceEqual<T>(this List<T>? source, List<T>? target)
 	{
-		if (source is not null && target is not null)
-			return source.All(target.Contains) && source.Count == target.Count;
-
-		return source is null && target is null;
+		return source is not null && target is not null
+			? source.All(target.Contains) && source.Count == target.Count
+			: source is null && target is null;
 	}
 
 	/// <summary>
@@ -211,13 +210,13 @@ internal static class ApplicationCommandEqualityChecks
 			            source.RawNameLocalizations.AreDictionariesEqual(target.RawNameLocalizations) &&
 			            source.RawDescriptionLocalizations.AreDictionariesEqual(target.RawDescriptionLocalizations);
 
-		var optionsEqual = DeepEqualOptions(source.Options, target.Options, localizationEnabled);
-		if (optionsEqual.Reason is not null)
-			client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, "Inequality found in options of {name} - {reason}", name, optionsEqual.Reason);
+		var (equal, reason) = DeepEqualOptions(source.Options, target.Options, localizationEnabled);
+		if (reason is not null)
+			client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, "Inequality found in options of {name} - {reason}", name, reason);
 		if (!rootCheck)
 			client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, "Inequality found in root of {name}", name);
 
-		return rootCheck && optionsEqual.Equal;
+		return rootCheck && equal;
 	}
 
 	/// <summary>
@@ -280,9 +279,9 @@ internal static class ApplicationCommandEqualityChecks
 			     !sourceOption.ChannelTypes.OrderBy(x => x).All(targetOption.ChannelTypes.OrderBy(x => x).Contains)))
 				return (false, "channel type mismatch - " + sourceOption.Name);
 
-			var rec = DeepEqualOptions(sourceOption.Options, targetOption.Options, localizationEnabled);
-			if (!rec.Equal)
-				return (false, "Options Recursive - " + sourceOption.Name + " -- " + rec.Reason);
+			var (equal, reason) = DeepEqualOptions(sourceOption.Options, targetOption.Options, localizationEnabled);
+			if (!equal)
+				return (false, "Options Recursive - " + sourceOption.Name + " -- " + reason);
 
 			if (!optionCheck)
 				return (false, "OptionCheck - " + sourceOption.Name);

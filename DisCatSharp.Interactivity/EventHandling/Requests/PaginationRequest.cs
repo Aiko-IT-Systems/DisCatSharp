@@ -55,9 +55,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			this._behaviour = behaviour;
 			this._emojis = emojis;
 
-			this._pages = new();
-			foreach (var p in pages)
-				this._pages.Add(p);
+			this._pages = [.. pages];
 		}
 
 		/// <summary>

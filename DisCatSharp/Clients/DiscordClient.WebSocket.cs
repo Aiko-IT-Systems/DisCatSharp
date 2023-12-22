@@ -247,7 +247,7 @@ public sealed partial class DiscordClient
 				break;
 
 			default:
-				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Unknown Discord opcode: {0}\nPayload: {1}", payload.OpCode, payload.Data);
+				this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Unknown Discord opcode: {OpCode}\nPayload: {Payload}", payload.OpCode, payload.Data);
 				break;
 		}
 	}
@@ -383,7 +383,7 @@ public sealed partial class DiscordClient
 	/// <param name="idleSince">Since when is the client performing the specified activity.</param>
 	internal async Task InternalUpdateStatusAsync(DiscordActivity activity, UserStatus? userStatus, DateTimeOffset? idleSince)
 	{
-		if (activity != null && activity.Name != null && activity.Name.Length > 128)
+		if (activity is { Name.Length: > 128 })
 			throw new("Game name can't be longer than 128 characters!");
 
 		var sinceUnix = idleSince != null ? (long?)Utilities.GetUnixTime(idleSince.Value) : null;
@@ -409,7 +409,7 @@ public sealed partial class DiscordClient
 
 		await this.WsSendAsync(statusstr).ConfigureAwait(false);
 
-		if (!this.PresencesInternal.ContainsKey(this.CurrentUser.Id))
+		if (!this.PresencesInternal.TryGetValue(this.CurrentUser.Id, out var value))
 			this.PresencesInternal[this.CurrentUser.Id] = new()
 			{
 				Discord = this,
@@ -422,9 +422,8 @@ public sealed partial class DiscordClient
 			};
 		else
 		{
-			var pr = this.PresencesInternal[this.CurrentUser.Id];
-			pr.Activity = act;
-			pr.Status = userStatus ?? pr.Status;
+			value.Activity = act;
+			value.Status = userStatus ?? value.Status;
 		}
 	}
 
