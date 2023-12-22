@@ -971,8 +971,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						var subgroups = SubGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
 						if (!methods.Any() && !groups.Any() && !subgroups.Any())
 						{
-							await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("A application command was executed, but no command was registered for it.")).ConfigureAwait(false);
-							throw new InvalidOperationException("A application command was executed, but no command was registered for it.");
+							await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("An application command was executed, but no command was registered for it.").AsEphemeral()).ConfigureAwait(false);
+							throw new InvalidOperationException($"An application command was executed, but no command was registered for it.\n\tCommand name: {e.Interaction.Data.Name}\n\tCommand ID: {e.Interaction.Data.Id}");
 						}
 
 						switch (type)
