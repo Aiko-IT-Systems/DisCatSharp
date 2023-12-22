@@ -10,7 +10,7 @@ namespace DisCatSharp.ApplicationCommands.Entities;
 /// <summary>
 /// Represents a command translator.
 /// </summary>
-internal class CommandTranslator
+internal sealed class CommandTranslator
 {
 	/// <summary>
 	/// Gets the command name.

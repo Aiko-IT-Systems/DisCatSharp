@@ -18,27 +18,27 @@ public class BaseContext
 	/// <summary>
 	/// Gets the interaction that was created.
 	/// </summary>
-	public DiscordInteraction Interaction { get; internal set; }
+	public DiscordInteraction Interaction { get; internal init; }
 
 	/// <summary>
 	/// Gets the client for this interaction.
 	/// </summary>
-	public DiscordClient Client { get; internal set; }
+	public DiscordClient Client { get; internal init; }
 
 	/// <summary>
 	/// Gets the guild this interaction was executed in.
 	/// </summary>
-	public DiscordGuild Guild { get; internal set; }
+	public DiscordGuild Guild { get; internal init; }
 
 	/// <summary>
 	/// Gets the channel this interaction was executed in.
 	/// </summary>
-	public DiscordChannel Channel { get; internal set; }
+	public DiscordChannel Channel { get; internal init; }
 
 	/// <summary>
 	/// Gets the user which executed this interaction.
 	/// </summary>
-	public DiscordUser User { get; internal set; }
+	public DiscordUser User { get; internal init; }
 
 	/// <summary>
 	/// Gets the member which executed this interaction, or null if the command is in a DM.
@@ -64,7 +64,7 @@ public class BaseContext
 	/// <summary>
 	/// Gets the name of the command.
 	/// </summary>
-	public string CommandName { get; internal set; }
+	public string CommandName { get; internal init; }
 
 	/// <summary>
 	/// Gets the name of the sub command.

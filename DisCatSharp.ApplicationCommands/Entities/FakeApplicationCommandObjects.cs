@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands.Entities;
 
-internal class CommandGroupWithSubGroups : BaseCommand
+internal sealed class CommandGroupWithSubGroups : BaseCommand
 {
 	[JsonProperty("groups")]
 	internal List<CommandGroup> SubGroups { get; set; }
@@ -19,7 +19,7 @@ internal class CommandGroupWithSubGroups : BaseCommand
 	}
 }
 
-internal class CommandGroup : BaseCommand
+internal sealed class CommandGroup : BaseCommand
 {
 	[JsonProperty("commands")]
 	internal List<Command> Commands { get; set; }
@@ -31,12 +31,12 @@ internal class CommandGroup : BaseCommand
 	}
 }
 
-internal class Command : BaseCommand
+internal sealed class Command : BaseCommand
 {
 	[JsonProperty("options")]
-	internal List<DiscordApplicationCommandOption> Options { get; set; }
+	internal List<DiscordApplicationCommandOption>? Options { get; set; }
 
-	internal Command(string name, string? description = null, List<DiscordApplicationCommandOption> options = null, ApplicationCommandType? type = null)
+	internal Command(string name, string? description = null, List<DiscordApplicationCommandOption>? options = null, ApplicationCommandType? type = null)
 		: base(name, description, type)
 	{
 		this.Options = options;

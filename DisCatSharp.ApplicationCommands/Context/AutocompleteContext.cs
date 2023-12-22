@@ -12,7 +12,7 @@ namespace DisCatSharp.ApplicationCommands.Context;
 /// <summary>
 /// Represents a context for an autocomplete interaction.
 /// </summary>
-public class AutocompleteContext
+public sealed class AutocompleteContext
 {
 	/// <summary>
 	/// The interaction created.
@@ -22,12 +22,12 @@ public class AutocompleteContext
 	/// <summary>
 	/// Gets the client for this interaction.
 	/// </summary>
-	public DiscordClient Client { get; internal set; }
+	public DiscordClient Client { get; internal init; }
 
 	/// <summary>
 	/// Gets the guild this interaction was executed in.
 	/// </summary>
-	public DiscordGuild Guild { get; internal set; }
+	public DiscordGuild Guild { get; internal init; }
 
 	/// <summary>
 	/// Gets the channel this interaction was executed in.
@@ -37,7 +37,7 @@ public class AutocompleteContext
 	/// <summary>
 	/// Gets the user which executed this interaction.
 	/// </summary>
-	public DiscordUser User { get; internal set; }
+	public DiscordUser User { get; internal init; }
 
 	/// <summary>
 	/// Gets the member which executed this interaction, or null if the command is in a DM.
@@ -91,7 +91,7 @@ public class AutocompleteContext
 	/// <summary>
 	/// The options already provided.
 	/// </summary>
-	public IReadOnlyList<DiscordInteractionDataOption> Options { get; internal set; }
+	public IReadOnlyList<DiscordInteractionDataOption> Options { get; internal init; }
 
 	/// <summary>
 	/// The option to autocomplete.

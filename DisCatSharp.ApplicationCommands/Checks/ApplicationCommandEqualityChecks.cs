@@ -55,14 +55,8 @@ internal static class ApplicationCommandEqualityChecks
 		}
 		else
 		{
-			sourceApplicationCommand.IntegrationTypes ??=
-			[
-				ApplicationCommandIntegrationTypes.GuildInstall
-			];
-			targetApplicationCommand.IntegrationTypes ??=
-			[
-				ApplicationCommandIntegrationTypes.GuildInstall
-			];
+			sourceApplicationCommand.IntegrationTypes ??= [ApplicationCommandIntegrationTypes.GuildInstall];
+			targetApplicationCommand.IntegrationTypes ??= [ApplicationCommandIntegrationTypes.GuildInstall];
 		}
 
 		client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel,
@@ -149,11 +143,9 @@ internal static class ApplicationCommandEqualityChecks
 	/// <param name="target">The target enumerable.</param>
 	/// <returns>Whether both nullable enumerable are equal.</returns>
 	internal static bool NullableSequenceEqual<T>(this List<T>? source, List<T>? target)
-	{
-		return source is not null && target is not null
+		=> source is not null && target is not null
 			? source.All(target.Contains) && source.Count == target.Count
 			: source is null && target is null;
-	}
 
 	/// <summary>
 	/// Checks whether two dictionaries are equal.
@@ -168,6 +160,9 @@ internal static class ApplicationCommandEqualityChecks
 
 		if (sourceDictionary is null && targetDictionary is null)
 			return true;
+
+		if (sourceDictionary is null || targetDictionary is null)
+			return false;
 
 		foreach (var kvp in sourceDictionary)
 			if (!targetDictionary.TryGetValue(kvp.Key, out var value) || value != kvp.Value)

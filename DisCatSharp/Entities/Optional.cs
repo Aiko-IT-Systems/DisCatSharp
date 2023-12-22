@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
@@ -38,8 +39,8 @@ public static class Optional
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <param name="value"></param>
-	/// <returns></returns>
-	public static Optional<T> FromNullable<T>(T value)
+	[MemberNotNull]
+	public static Optional<T?> FromNullable<T>([AllowNull] T? value)
 		=> value == null
 			? None
 			: value;

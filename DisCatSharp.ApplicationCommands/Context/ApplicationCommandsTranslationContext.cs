@@ -5,7 +5,7 @@ namespace DisCatSharp.ApplicationCommands.Context;
 /// <summary>
 /// The application commands translation context.
 /// </summary>
-public class ApplicationCommandsTranslationContext
+public sealed class ApplicationCommandsTranslationContext
 {
 	/// <summary>
 	/// Gets the type.
@@ -38,9 +38,17 @@ public class ApplicationCommandsTranslationContext
 		this.Name = name;
 	}
 
+	/// <summary>
+	/// Adds the group translation.
+	/// </summary>
+	/// <param name="translationJson"></param>
 	public void AddGroupTranslation(string translationJson)
 		=> this.GroupTranslations = translationJson;
 
+	/// <summary>
+	/// Adds the single translation.
+	/// </summary>
+	/// <param name="translationJson"></param>
 	public void AddSingleTranslation(string translationJson)
 		=> this.SingleTranslations = translationJson;
 }

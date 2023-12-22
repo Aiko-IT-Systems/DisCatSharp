@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
 
@@ -9,7 +10,7 @@ namespace DisCatSharp.ApplicationCommands.Entities;
 /// <summary>
 /// Represents a option translator.
 /// </summary>
-internal class OptionTranslator
+internal sealed class OptionTranslator
 {
 	/// <summary>
 	/// Gets the option name.
@@ -22,6 +23,12 @@ internal class OptionTranslator
 	/// </summary>
 	[JsonProperty("description")]
 	public string Description { get; set; }
+
+	/// <summary>
+	/// Gets the option type
+	/// </summary>
+	[JsonProperty("type")]
+	public ApplicationCommandOptionType? Type { get; set; }
 
 	/// <summary>
 	/// Gets the option name translations.

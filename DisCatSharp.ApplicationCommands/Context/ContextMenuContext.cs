@@ -10,7 +10,7 @@ public sealed class ContextMenuContext : BaseContext
 	/// <summary>
 	/// The user this command targets, if applicable.
 	/// </summary>
-	public DiscordUser TargetUser { get; internal set; }
+	public DiscordUser TargetUser { get; internal init; }
 
 	/// <summary>
 	/// The member this command targets, if applicable.

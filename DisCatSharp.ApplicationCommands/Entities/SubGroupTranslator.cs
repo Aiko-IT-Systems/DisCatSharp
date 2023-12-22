@@ -9,7 +9,7 @@ namespace DisCatSharp.ApplicationCommands.Entities;
 /// <summary>
 /// Represents a sub group translator.
 /// </summary>
-internal class SubGroupTranslator
+internal sealed class SubGroupTranslator
 {
 	/// <summary>
 	/// Gets the sub group name.
