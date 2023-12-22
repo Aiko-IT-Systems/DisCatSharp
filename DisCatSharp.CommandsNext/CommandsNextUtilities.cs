@@ -24,7 +24,7 @@ public static class CommandsNextUtilities
 	/// <summary>
 	/// Gets the user regex.
 	/// </summary>
-	private static Regex s_userRegex { get; } = DiscordRegEx.User;
+	private static Regex s_userRegex { get; } = DiscordRegEx.UserRegex();
 
 	/// <summary>
 	/// Checks whether the message has a specified string prefix.

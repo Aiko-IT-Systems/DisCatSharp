@@ -26,7 +26,7 @@ public class DiscordUserConverter : IArgumentConverter<DiscordUser>
 			return Optional.FromNullable(result);
 		}
 
-		var m = DiscordRegEx.User.Match(value);
+		var m = DiscordRegEx.UserRegex().Match(value);
 		if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out uid))
 		{
 			var result = await ctx.Client.GetUserAsync(uid).ConfigureAwait(false);
@@ -71,7 +71,7 @@ public class DiscordMemberConverter : IArgumentConverter<DiscordMember>
 			return Optional.FromNullable(result);
 		}
 
-		var m = DiscordRegEx.User.Match(value);
+		var m = DiscordRegEx.UserRegex().Match(value);
 		if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out uid))
 		{
 			var result = await ctx.Guild.GetMemberAsync(uid).ConfigureAwait(false);
@@ -116,7 +116,7 @@ public class DiscordChannelConverter : IArgumentConverter<DiscordChannel>
 			return Optional.FromNullable(result);
 		}
 
-		var m = DiscordRegEx.Channel.Match(value);
+		var m = DiscordRegEx.ChannelRegex().Match(value);
 		if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out cid))
 		{
 			var result = await ctx.Client.GetChannelAsync(cid).ConfigureAwait(false);
@@ -150,7 +150,7 @@ public class DiscordThreadChannelConverter : IArgumentConverter<DiscordThreadCha
 			return Optional.FromNullable(result);
 		}
 
-		var m = DiscordRegEx.Channel.Match(value);
+		var m = DiscordRegEx.ChannelRegex().Match(value);
 		if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out tid))
 		{
 			var result = await ctx.Client.GetThreadAsync(tid).ConfigureAwait(false);
@@ -187,7 +187,7 @@ public class DiscordRoleConverter : IArgumentConverter<DiscordRole>
 			return Task.FromResult(Optional.FromNullable(result));
 		}
 
-		var m = DiscordRegEx.Role.Match(value);
+		var m = DiscordRegEx.RoleRegex().Match(value);
 		if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out rid))
 		{
 			var result = ctx.Guild.GetRole(rid);
@@ -241,7 +241,7 @@ public class DiscordInviteConverter : IArgumentConverter<DiscordInvite>
 	/// <param name="ctx">The command context.</param>
 	async Task<Optional<DiscordInvite>> IArgumentConverter<DiscordInvite>.ConvertAsync(string value, CommandContext ctx)
 	{
-		var m = DiscordRegEx.Invite.Match(value);
+		var m = DiscordRegEx.InviteRegex().Match(value);
 		if (m.Success)
 		{
 			ulong? eventId = ulong.TryParse(m.Groups["event"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
@@ -276,7 +276,7 @@ public class DiscordMessageConverter : IArgumentConverter<DiscordMessage>
 		ulong mid;
 		if (Uri.TryCreate(msguri, UriKind.Absolute, out var uri))
 		{
-			var uripath = DiscordRegEx.MessageLink.Match(uri.AbsoluteUri);
+			var uripath = DiscordRegEx.MessageLinkRegex().Match(uri.AbsoluteUri);
 			if (!uripath.Success
 			    || !ulong.TryParse(uripath.Groups["channel"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var cid)
 			    || !ulong.TryParse(uripath.Groups["message"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out mid))
@@ -319,7 +319,7 @@ public class DiscordScheduledEventConverter : IArgumentConverter<DiscordSchedule
 		ulong seid;
 		if (Uri.TryCreate(msguri, UriKind.Absolute, out var uri))
 		{
-			var uripath = DiscordRegEx.Event.Match(uri.AbsoluteUri);
+			var uripath = DiscordRegEx.EventRegex().Match(uri.AbsoluteUri);
 			if (uripath.Success
 			    && ulong.TryParse(uripath.Groups["guild"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
 				    out var gid)
@@ -373,7 +373,7 @@ public class DiscordEmojiConverter : IArgumentConverter<DiscordEmoji>
 			return Task.FromResult(Optional.Some(result));
 		}
 
-		var m = DiscordRegEx.Emoji.Match(value);
+		var m = DiscordRegEx.EmojiRegex().Match(value);
 		if (m.Success)
 		{
 			var sid = m.Groups["id"].Value;
@@ -411,11 +411,11 @@ public class DiscordColorConverter : IArgumentConverter<DiscordColor>
 	/// <param name="ctx">The command context.</param>
 	Task<Optional<DiscordColor>> IArgumentConverter<DiscordColor>.ConvertAsync(string value, CommandContext ctx)
 	{
-		var m = CommonRegEx.HexColorString.Match(value);
+		var m = CommonRegEx.HexColorStringRegex().Match(value);
 		if (m.Success && int.TryParse(m.Groups[1].Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var clr))
 			return Task.FromResult(Optional.Some<DiscordColor>(clr));
 
-		m = CommonRegEx.RgbColorString.Match(value);
+		m = CommonRegEx.RgbColorStringRegex().Match(value);
 		if (m.Success)
 		{
 			var p1 = byte.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var r);

@@ -55,7 +55,7 @@ public class TimeSpanConverter : IArgumentConverter<TimeSpan>
 	/// </summary>
 	static TimeSpanConverter()
 	{
-		s_timeSpanRegex = CommonRegEx.TimeSpan;
+		s_timeSpanRegex = CommonRegEx.TimeSpanRegex();
 	}
 
 	/// <summary>
