@@ -1,8 +1,8 @@
 using System;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 
+using DisCatSharp.Common.RegularExpressions;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
@@ -13,16 +13,6 @@ namespace DisCatSharp;
 /// </summary>
 public static class Formatter
 {
-	/// <summary>
-	/// Gets the md sanitize regex.
-	/// </summary>
-	private static Regex s_mdSanitizeRegex { get; } = new(@"([`\*_~<>\[\]\(\)""@\!\&#:\|])", RegexOptions.ECMAScript);
-
-	/// <summary>
-	/// Gets the md strip regex.
-	/// </summary>
-	private static Regex s_mdStripRegex { get; } = new(@"([`\*_~\[\]\(\)""\|]|<@\!?\d+>|<#\d+>|<@\&\d+>|<:[a-zA-Z0-9_\-]:\d+>|#{1,3} |> |>>> |\* )", RegexOptions.ECMAScript);
-
 	/// <summary>
 	/// Creates a block of code.
 	/// </summary>
@@ -180,7 +170,7 @@ public static class Formatter
 	/// <param name="text">Text to sanitize.</param>
 	/// <returns>Sanitized text.</returns>
 	public static string Sanitize(this string text)
-		=> s_mdSanitizeRegex.Replace(text, m => $"\\{m.Groups[1].Value}");
+		=> CommonRegEx.MdSanitizeRegex().Replace(text, m => $"\\{m.Groups[1].Value}");
 
 	/// <summary>
 	/// Removes all markdown formatting from specified text.
@@ -188,7 +178,7 @@ public static class Formatter
 	/// <param name="text">Text to strip of formatting.</param>
 	/// <returns>Formatting-stripped text.</returns>
 	public static string Strip(this string text)
-		=> s_mdStripRegex.Replace(text, m => string.Empty);
+		=> CommonRegEx.MdStripRegex().Replace(text, m => string.Empty);
 
 	/// <summary>
 	/// Creates a mention for specified user or member. Can optionally specify to resolve nicknames.

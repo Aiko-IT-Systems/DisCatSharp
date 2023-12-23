@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
+using DisCatSharp.Common.RegularExpressions;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
@@ -170,11 +171,7 @@ public static class Utilities
 	/// <param name="message">The message.</param>
 	/// <returns>A bool.</returns>
 	internal static bool ContainsUserMentions(string message)
-	{
-		var pattern = @"<@(\d+)>";
-		var regex = new Regex(pattern, RegexOptions.ECMAScript);
-		return regex.IsMatch(message);
-	}
+		=> DiscordRegEx.UserWithoutNicknameRegex().IsMatch(message);
 
 	/// <summary>
 	/// Contains the nickname mentions.
@@ -182,11 +179,7 @@ public static class Utilities
 	/// <param name="message">The message.</param>
 	/// <returns>A bool.</returns>
 	internal static bool ContainsNicknameMentions(string message)
-	{
-		var pattern = @"<@!(\d+)>";
-		var regex = new Regex(pattern, RegexOptions.ECMAScript);
-		return regex.IsMatch(message);
-	}
+		=> DiscordRegEx.UserWithNicknameRegex().IsMatch(message);
 
 	/// <summary>
 	/// Contains the channel mentions.
@@ -194,11 +187,7 @@ public static class Utilities
 	/// <param name="message">The message.</param>
 	/// <returns>A bool.</returns>
 	internal static bool ContainsChannelMentions(string message)
-	{
-		var pattern = @"<#(\d+)>";
-		var regex = new Regex(pattern, RegexOptions.ECMAScript);
-		return regex.IsMatch(message);
-	}
+		=> DiscordRegEx.ChannelRegex().IsMatch(message);
 
 	/// <summary>
 	/// Contains the role mentions.
@@ -206,11 +195,7 @@ public static class Utilities
 	/// <param name="message">The message.</param>
 	/// <returns>A bool.</returns>
 	internal static bool ContainsRoleMentions(string message)
-	{
-		var pattern = @"<@&(\d+)>";
-		var regex = new Regex(pattern, RegexOptions.ECMAScript);
-		return regex.IsMatch(message);
-	}
+		=> DiscordRegEx.RoleRegex().IsMatch(message);
 
 	/// <summary>
 	/// Contains the emojis.
@@ -218,11 +203,7 @@ public static class Utilities
 	/// <param name="message">The message.</param>
 	/// <returns>A bool.</returns>
 	internal static bool ContainsEmojis(string message)
-	{
-		var pattern = @"<a?:(.*):(\d+)>";
-		var regex = new Regex(pattern, RegexOptions.ECMAScript);
-		return regex.IsMatch(message);
-	}
+		=> DiscordRegEx.EmojiRegex().IsMatch(message);
 
 	/// <summary>
 	/// Gets the user mentions.
@@ -231,8 +212,7 @@ public static class Utilities
 	/// <returns>A list of ulong.</returns>
 	internal static IEnumerable<ulong> GetUserMentions(DiscordMessage message)
 	{
-		var regex = new Regex(@"<@!?(\d+)>", RegexOptions.ECMAScript | RegexOptions.Compiled);
-		var matches = regex.Matches(message.Content);
+		var matches = DiscordRegEx.UserWithOptionalNicknameRegex().Matches(message.Content);
 		return from Match match in matches
 		       select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
@@ -244,8 +224,7 @@ public static class Utilities
 	/// <returns>A list of ulong.</returns>
 	internal static IEnumerable<ulong> GetRoleMentions(DiscordMessage message)
 	{
-		var regex = new Regex(@"<@&(\d+)>", RegexOptions.ECMAScript);
-		var matches = regex.Matches(message.Content);
+		var matches = DiscordRegEx.RoleRegex().Matches(message.Content);
 		return from Match match in matches
 		       select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
@@ -257,8 +236,7 @@ public static class Utilities
 	/// <returns>A list of ulong.</returns>
 	internal static IEnumerable<ulong> GetChannelMentions(DiscordMessage message)
 	{
-		var regex = new Regex(@"<#(\d+)>", RegexOptions.ECMAScript);
-		var matches = regex.Matches(message.Content);
+		var matches = DiscordRegEx.ChannelRegex().Matches(message.Content);
 		return from Match match in matches
 		       select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
@@ -270,8 +248,7 @@ public static class Utilities
 	/// <returns>A list of ulong.</returns>
 	internal static IEnumerable<ulong> GetEmojis(DiscordMessage message)
 	{
-		var regex = new Regex(@"<a?:([a-zA-Z0-9_]+):(\d+)>", RegexOptions.ECMAScript);
-		var matches = regex.Matches(message.Content);
+		var matches = DiscordRegEx.EmojiRegex().Matches(message.Content);
 		return from Match match in matches
 		       select ulong.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
 	}
@@ -282,29 +259,7 @@ public static class Utilities
 	/// <param name="name">The name.</param>
 	/// <returns>A bool.</returns>
 	internal static bool IsValidSlashCommandName(string name)
-	{
-		var regex = new Regex(@"^[\w-]{1,32}$");
-		return regex.IsMatch(name);
-	}
-
-	/// <summary>
-	/// Checks the thread auto archive duration feature.
-	/// </summary>
-	/// <param name="guild">The guild.</param>
-	/// <param name="taad">The taad.</param>
-	/// <returns>A bool.</returns>
-	[DiscordDeprecated, Deprecated, System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
-	internal static bool CheckThreadAutoArchiveDurationFeature(DiscordGuild guild, ThreadAutoArchiveDuration taad)
-		=> true;
-
-	/// <summary>
-	/// Checks the thread private feature.
-	/// </summary>
-	/// <param name="guild">The guild.</param>
-	/// <returns>A bool.</returns>
-	[DiscordDeprecated, Deprecated, System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
-	internal static bool CheckThreadPrivateFeature(DiscordGuild guild)
-		=> true;
+		=> DiscordRegEx.ApplicationCommandNameRegex().IsMatch(name);
 
 	/// <summary>
 	/// Have the message intents.
@@ -459,14 +414,15 @@ public static class Utilities
 	/// <param name="level">The level.</param>
 	/// <param name="eventId">The event id.</param>
 	/// <param name="message">The message.</param>
-	internal static void LogTaskFault(this Task task, ILogger logger, LogLevel level, EventId eventId, string message)
+	/// <param name="args">An object array that contains zero or more objects to format.</param>
+	internal static void LogTaskFault(this Task task, ILogger? logger, LogLevel level, EventId eventId, string? message, params object?[] args)
 	{
 		ArgumentNullException.ThrowIfNull(task);
 
 		if (logger == null)
 			return;
 
-		task.ContinueWith(t => logger.Log(level, eventId, t.Exception, message), TaskContinuationOptions.OnlyOnFaulted);
+		task.ContinueWith(t => logger.Log(level, eventId, t.Exception, message, args), TaskContinuationOptions.OnlyOnFaulted);
 	}
 
 	/// <summary>

@@ -7,6 +7,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+using DisCatSharp.Common.RegularExpressions;
 using DisCatSharp.Entities;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
@@ -24,12 +25,6 @@ public class DiscordWebhookClient
 	/// Gets the logger for this client.
 	/// </summary>
 	public ILogger<DiscordWebhookClient> Logger { get; }
-
-	/// <summary>
-	/// Gets the webhook regex.
-	/// This regex has 2 named capture groups: "id" and "token".
-	/// </summary>
-	private static Regex s_webhookRegex { get; } = new(@"(?:https?:\/\/)?discord(?:app)?.com\/api\/(?:v\d\/)?webhooks\/(?<id>\d+)\/(?<token>[A-Za-z0-9_\-]+)", RegexOptions.ECMAScript);
 
 	/// <summary>
 	/// Gets the collection of registered webhooks.
@@ -126,7 +121,7 @@ public class DiscordWebhookClient
 	{
 		ArgumentNullException.ThrowIfNull(url);
 
-		var m = s_webhookRegex.Match(url.ToString());
+		var m = DiscordRegEx.WebhookRegex().Match(url.ToString());
 		if (!m.Success)
 			throw new ArgumentException("Invalid webhook URL supplied.", nameof(url));
 
