@@ -43,3 +43,9 @@ nuget sources disable -Name discatsharp-git-releases
 These releases are considered to not be stable at all. Use them with care.
 
 And before you ask, the token is public 😉 We created a read-only account just for this registry.
+
+
+ >[!NOTE]
+ > To get the correct version, look at git, copy the target commit hash and select the corresponding version with {version}-{hash}
+ > As example: DisCatSharp: 10.5.0-97ac8e24f400b6053da7e6e4b3dea338eaf1bdef
+ > The easiest way to do this is to install any version and modify the .csproj file afterwards.
