@@ -1488,7 +1488,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="rawEvents">The raw events.</param>
 	private void UpdateCachedScheduledEvent(DiscordGuild guild, JArray? rawEvents)
 	{
-		ObjectDisposedException.ThrowIf(true, this._disposed);
+		ObjectDisposedException.ThrowIf(this._disposed, this);
 
 		if (rawEvents is not null)
 		{
@@ -1512,7 +1512,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="rawMembers">The raw members.</param>
 	private void UpdateCachedGuild(DiscordGuild newGuild, JArray? rawMembers)
 	{
-		ObjectDisposedException.ThrowIf(true, this._disposed);
+		ObjectDisposedException.ThrowIf(this._disposed, this);
 
 		this.GuildsInternal.TryAdd(newGuild.Id, newGuild);
 
@@ -1685,7 +1685,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	public override void Dispose()
 	{
-		ObjectDisposedException.ThrowIf(true, this._disposed);
+		ObjectDisposedException.ThrowIf(this._disposed, this);
 
 		this._disposed = true;
 		GC.SuppressFinalize(this);
