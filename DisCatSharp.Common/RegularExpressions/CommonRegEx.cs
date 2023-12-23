@@ -25,6 +25,6 @@ public static partial class CommonRegEx
 	[GeneratedRegex("([`\\*_~<>\\[\\]\\(\\)\"@\\!\\&#:\\|])", RegexOptions.Compiled | RegexOptions.ECMAScript)]
 	public static partial Regex MdSanitizeRegex();
 
-	[GeneratedRegex(":([a-z_]+)", RegexOptions.ECMAScript | RegexOptions.Compiled)]
+	[GeneratedRegex(":([a-z_]+)", RegexOptions.Compiled | RegexOptions.ECMAScript)]
 	public static partial Regex HttpRouteRegex();
 }

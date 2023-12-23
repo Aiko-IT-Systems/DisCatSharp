@@ -55,6 +55,6 @@ public static partial class DiscordRegEx
 	[GeneratedRegex(@"^[\w-]{1,32}$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
 	public static partial Regex ApplicationCommandNameRegex();
 
-	[GeneratedRegex(@"(?:https?:\/\/)?discord(?:app)?.com\/api\/(?:v\d\/)?webhooks\/(?<id>\d+)\/(?<token>[A-Za-z0-9_\-]+)", RegexOptions.ECMAScript | RegexOptions.Compiled)]
+	[GeneratedRegex(@"(?:https?:\/\/)?discord(?:app)?.com\/api\/(?:v\d\/)?webhooks\/(?<id>\d+)\/(?<token>[A-Za-z0-9_\-]+)", RegexOptions.Compiled | RegexOptions.ECMAScript)]
 	public static partial Regex WebhookRegex();
 }
