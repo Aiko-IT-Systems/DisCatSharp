@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -7,8 +6,6 @@ using System.Threading.Tasks;
 using DisCatSharp.ApplicationCommands.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
-
-using SixLabors.ImageSharp.ColorSpaces;
 
 using Xunit;
 using Xunit.Abstractions;
