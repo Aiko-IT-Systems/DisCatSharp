@@ -6,7 +6,8 @@ namespace DisCatSharp.VoiceNext.Codec;
 /// <summary>
 /// The opus.
 /// </summary>
-public sealed class Opus : IDisposable
+// ReSharper disable once ClassCanBeSealed.Global - This class can be used by other projects.
+public class Opus : IDisposable
 {
 	/// <summary>
 	/// Gets the audio format.

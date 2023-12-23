@@ -6,7 +6,8 @@ namespace DisCatSharp.VoiceNext.Codec;
 /// <summary>
 /// The rtp.
 /// </summary>
-internal sealed class Rtp : IDisposable
+// ReSharper disable once ClassCanBeSealed.Global - This class can be used by other projects.
+internal class Rtp : IDisposable
 {
 	/// <summary>
 	/// The header size.

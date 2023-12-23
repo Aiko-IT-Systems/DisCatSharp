@@ -11,7 +11,8 @@ namespace DisCatSharp.VoiceNext.Codec;
 /// <summary>
 /// The sodium.
 /// </summary>
-internal sealed class Sodium : IDisposable
+// ReSharper disable once ClassCanBeSealed.Global - This class can be used by other projects.
+internal class Sodium : IDisposable
 {
 	/// <summary>
 	/// Gets the supported modes.
