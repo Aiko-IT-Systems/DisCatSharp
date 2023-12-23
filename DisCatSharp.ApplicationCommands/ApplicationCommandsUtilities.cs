@@ -52,7 +52,7 @@ public static class ApplicationCommandsUtilities
 			return false;
 		}
 
-		// check if abstract, static, or not a class
+		// check if abstract, or not a class
 		if (!ti.IsClass || ti.IsAbstract)
 			return false;
 
@@ -90,8 +90,8 @@ public static class ApplicationCommandsUtilities
 		if (ApplicationCommandsExtension.DebugEnabled)
 			ApplicationCommandsExtension.Logger.LogDebug("Checking method {name}", method.Name);
 
-		// check if static, non-public, abstract, a constructor, or a special name
-		if (method.IsAbstract || method.IsConstructor || method.IsSpecialName) // method.IsStatic
+		// check if non-public, abstract, a constructor, or a special name
+		if (method.IsAbstract || method.IsConstructor || method.IsSpecialName)
 		{
 			if (ApplicationCommandsExtension.DebugEnabled)
 				ApplicationCommandsExtension.Logger.LogDebug("abstract, constructor or special name");
