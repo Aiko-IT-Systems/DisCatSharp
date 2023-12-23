@@ -8,7 +8,7 @@ namespace DisCatSharp.SafetyTests;
 
 public class HttpTests
 {
-	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient")]
+	[Fact(DisplayName = "Ensure that no authorization header is set by DiscordClient in the public rest client")]
 	public void BuiltInRestClientEnsureNoAuthorization()
 	{
 		DiscordClient client = new(new()

@@ -93,6 +93,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.SafetyTests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Lavalink", "DisCatSharp.Lavalink\DisCatSharp.Lavalink.csproj", "{1ADC1D06-3DB8-4741-B740-13161B40CBA3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.ApplicationCommands.Tests", "DisCatSharp.Tests\DisCatSharp.ApplicationCommands.Tests\DisCatSharp.ApplicationCommands.Tests.csproj", "{B4837A35-F5D1-4CF0-941B-961407E3CC36}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -163,6 +165,10 @@ Global
 		{1ADC1D06-3DB8-4741-B740-13161B40CBA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1ADC1D06-3DB8-4741-B740-13161B40CBA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1ADC1D06-3DB8-4741-B740-13161B40CBA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4837A35-F5D1-4CF0-941B-961407E3CC36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4837A35-F5D1-4CF0-941B-961407E3CC36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4837A35-F5D1-4CF0-941B-961407E3CC36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4837A35-F5D1-4CF0-941B-961407E3CC36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -175,6 +181,7 @@ Global
 		{11D25C98-6D11-412C-8016-BE070315326F} = {84464D70-687B-40A8-836D-C4F737698969}
 		{BE646FCD-8A56-46DC-978D-AC1E0A892A9F} = {267EFBFF-ECD2-4686-A5DE-5B642F8A7CCB}
 		{9F012C5C-6A47-4E5D-8819-5D2DD0743E65} = {267EFBFF-ECD2-4686-A5DE-5B642F8A7CCB}
+		{B4837A35-F5D1-4CF0-941B-961407E3CC36} = {267EFBFF-ECD2-4686-A5DE-5B642F8A7CCB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {23F3A981-51B8-4285-A38C-3267F1D25FE7}

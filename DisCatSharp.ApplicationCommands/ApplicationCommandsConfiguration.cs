@@ -83,6 +83,11 @@ public class ApplicationCommandsConfiguration
 	public bool GenerateTranslationFilesOnly { internal get; set; } = false;
 
 	/// <summary>
+	/// Whether to enable unit test mode.
+	/// </summary>
+	internal bool UnitTestMode { get; set; } = false;
+
+	/// <summary>
 	/// Creates a new configuration with default values.
 	/// </summary>
 	[ActivatorUtilitiesConstructor]
@@ -114,5 +119,6 @@ public class ApplicationCommandsConfiguration
 		this.EnableLocalization = acc.EnableLocalization;
 		this.GenerateTranslationFilesOnly = acc.GenerateTranslationFilesOnly;
 		this.EnableDefaultUserAppsHelp = acc.EnableDefaultUserAppsHelp;
+		this.UnitTestMode = acc.UnitTestMode;
 	}
 }

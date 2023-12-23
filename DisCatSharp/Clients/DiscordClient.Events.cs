@@ -235,7 +235,7 @@ public sealed partial class DiscordClient
 		remove => this._guildDownloadCompletedEv.Unregister(value);
 	}
 
-	private AsyncEvent<DiscordClient, GuildDownloadCompletedEventArgs> _guildDownloadCompletedEv;
+	internal AsyncEvent<DiscordClient, GuildDownloadCompletedEventArgs> _guildDownloadCompletedEv;
 
 	/// <summary>
 	/// Fired when a guilds emojis get updated
