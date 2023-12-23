@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+using DisCatSharp.Common.RegularExpressions;
 using DisCatSharp.Entities;
 using DisCatSharp.Lavalink.Entities;
 using DisCatSharp.Lavalink.Entities.Filters;
@@ -35,11 +36,6 @@ internal sealed class LavalinkRestClient
 	/// Gets the http client.
 	/// </summary>
 	internal HttpClient HttpClient { get; }
-
-	/// <summary>
-	/// Gets the route argument regex.
-	/// </summary>
-	private static Regex s_routeArgumentRegex { get; } = new(@":([a-z_]+)", RegexOptions.Compiled);
 
 	/// <summary>
 	/// Gets whether trace is enabled.
@@ -122,7 +118,7 @@ internal sealed class LavalinkRestClient
 							: val.ToString();
 		}
 
-		return s_routeArgumentRegex.Replace(route, xm => extractedRouteParams[xm.Groups[1].Value]);
+		return CommonRegEx.HttpRouteRegex().Replace(route, xm => extractedRouteParams[xm.Groups[1].Value]);
 	}
 
 	private Dictionary<string, string> GetDefaultParams()

@@ -367,7 +367,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public
-Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed) =>
+		Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed) =>
 		!this.IsWritable()
 			? throw new ArgumentException("Cannot send a text message to a non-text channel.")
 			: this.Discord.ApiClient.CreateMessageAsync(this.Id, content, embed != null
@@ -384,7 +384,7 @@ Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed) =>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public
-Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder builder)
+		Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder builder)
 		=> this.Discord.ApiClient.CreateMessageAsync(this.Id, builder);
 
 	/// <summary>
@@ -506,10 +506,6 @@ Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder builder)
 
 		var mdl = new ChannelEditModel();
 		action(mdl);
-		// TODO: Boost tier not required anymore for auto archive durations
-		if (mdl.DefaultAutoArchiveDuration.HasValue)
-			if (!Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.DefaultAutoArchiveDuration.Value))
-				throw new NotSupportedException($"Cannot modify DefaultAutoArchiveDuration. Guild needs boost tier {(mdl.DefaultAutoArchiveDuration.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 
 		return this.Discord.ApiClient.ModifyChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Nsfw,
 			mdl.Parent.Map(p => p?.Id), mdl.Bitrate, mdl.UserLimit, mdl.PerUserRateLimit, mdl.RtcRegion.Map(r => r?.Id),
@@ -532,10 +528,6 @@ Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder builder)
 
 		var mdl = new ForumChannelEditModel();
 		action(mdl);
-
-		if (mdl.DefaultAutoArchiveDuration is { HasValue: true, Value: not null })
-			if (!Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.DefaultAutoArchiveDuration.Value.Value))
-				throw new NotSupportedException($"Cannot modify DefaultAutoArchiveDuration. Guild needs boost tier {(mdl.DefaultAutoArchiveDuration.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 
 		return mdl.AvailableTags.HasValue && mdl.AvailableTags.Value.Count > 20
 			? throw new NotSupportedException("Cannot have more than 20 tags in a forum channel.")
@@ -1075,8 +1067,6 @@ Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder builder)
 
 	/// <summary>
 	/// Creates a thread.
-	/// Depending on whether it is created inside an <see cref="ChannelType.News"/> or an <see cref="ChannelType.Text"/> it is either an <see cref="ChannelType.NewsThread"/> or an <see cref="ChannelType.PublicThread"/>.
-	/// Depending on whether the <see cref="ChannelType"/> is set to <see cref="ChannelType.PrivateThread"/> it is either an <see cref="ChannelType.PrivateThread"/> or an <see cref="ChannelType.PublicThread"/> (default).
 	/// </summary>
 	/// <param name="name">The name of the thread.</param>
 	/// <param name="autoArchiveDuration"><see cref="ThreadAutoArchiveDuration"/> till it gets archived. Defaults to <see cref="ThreadAutoArchiveDuration.OneHour"/>.</param>
@@ -1088,21 +1078,17 @@ Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder builder)
 	/// <exception cref="NotFoundException">Thrown when the guild hasn't enabled threads atm.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	/// <exception cref="NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified. This happens, when the guild hasn't reached a certain boost <see cref="PremiumTier"/>. Or if <see cref="GuildFeaturesEnum.CanCreatePrivateThreads"/> is not enabled for guild. This happens, if the guild does not have <see cref="PremiumTier.TierTwo"/></exception>
+	/// <exception cref="NotSupportedException">Thrown when a wrong <paramref name="type"/> was given.</exception>
 	public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration autoArchiveDuration = ThreadAutoArchiveDuration.OneHour, ChannelType type = ChannelType.PublicThread, int? rateLimitPerUser = null, string reason = null) =>
 		type != ChannelType.NewsThread && type != ChannelType.PublicThread && type != ChannelType.PrivateThread
 			? throw new NotSupportedException("Wrong thread type given.")
 			: !this.IsThreadHolder()
 				? throw new NotSupportedException("Parent channel can't have threads.")
-				: type == ChannelType.PrivateThread
-					? Utilities.CheckThreadPrivateFeature(this.Guild)
-						? Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, autoArchiveDuration)
-							? await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, autoArchiveDuration, type, rateLimitPerUser, isForum: false, reason: reason).ConfigureAwait(false)
-							: throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(autoArchiveDuration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.")
-						: throw new NotSupportedException($"Cannot create a private thread. Guild needs to be boost tier two.")
-					: Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, autoArchiveDuration)
-						? await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, autoArchiveDuration, this.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, rateLimitPerUser, isForum: false, reason: reason).ConfigureAwait(false)
-						: throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(autoArchiveDuration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
+				: await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, autoArchiveDuration, this.Type == ChannelType.News
+					? ChannelType.NewsThread
+					: type == ChannelType.PrivateThread
+						? ChannelType.PrivateThread
+						: ChannelType.PublicThread, rateLimitPerUser, isForum: false, reason: reason).ConfigureAwait(false);
 
 	/// <summary>
 	/// Creates a forum post.

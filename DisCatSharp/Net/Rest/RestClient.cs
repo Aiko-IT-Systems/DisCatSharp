@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+using DisCatSharp.Common.RegularExpressions;
 using DisCatSharp.Exceptions;
 
 using Microsoft.Extensions.Logging;
@@ -26,11 +27,6 @@ namespace DisCatSharp.Net;
 [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
 internal sealed class RestClient : IDisposable
 {
-	/// <summary>
-	/// Gets the route argument regex.
-	/// </summary>
-	private static Regex s_routeArgumentRegex { get; } = new(@":([a-z_]+)");
-
 	/// <summary>
 	/// Gets the http client.
 	/// </summary>
@@ -220,7 +216,7 @@ internal sealed class RestClient : IDisposable
 			this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task started.");
 		}
 
-		url = s_routeArgumentRegex.Replace(route, xm => rparams[xm.Groups[1].Value]);
+		url = CommonRegEx.HttpRouteRegex().Replace(route, xm => rparams[xm.Groups[1].Value]);
 		return bucket;
 	}
 

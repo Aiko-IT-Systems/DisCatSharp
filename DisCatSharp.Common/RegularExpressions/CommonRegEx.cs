@@ -18,4 +18,13 @@ public static partial class CommonRegEx
 
 	[GeneratedRegex(@"http(s)?:\/\/(www\.)?youtu(\.be|be\.com)\/(watch\?v=|playlist)?(?<id>\w{1,})?((\?|\&)list=(?<list>[\w-_]{1,}))(&index=(?<index>\d{1,}))?", RegexOptions.Compiled | RegexOptions.ECMAScript)]
 	public static partial Regex AdvancedYoutubeRegex();
+
+	[GeneratedRegex(@"([`\*_~\[\]\(\)""\|]|<@\!?\d+>|<#\d+>|<@\&\d+>|<:[a-zA-Z0-9_\-]:\d+>|#{1,3} |> |>>> |\* )", RegexOptions.ECMAScript | RegexOptions.Compiled)]
+	public static partial Regex MdStripRegex();
+
+	[GeneratedRegex("([`\\*_~<>\\[\\]\\(\\)\"@\\!\\&#:\\|])", RegexOptions.Compiled | RegexOptions.ECMAScript)]
+	public static partial Regex MdSanitizeRegex();
+
+	[GeneratedRegex(":([a-z_]+)", RegexOptions.ECMAScript | RegexOptions.Compiled)]
+	public static partial Regex HttpRouteRegex();
 }

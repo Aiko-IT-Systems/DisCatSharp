@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using DisCatSharp.CommandsNext.Attributes;
@@ -21,11 +20,6 @@ namespace DisCatSharp.CommandsNext;
 /// </summary>
 public static class CommandsNextUtilities
 {
-	/// <summary>
-	/// Gets the user regex.
-	/// </summary>
-	private static Regex s_userRegex { get; } = DiscordRegEx.UserRegex();
-
 	/// <summary>
 	/// Checks whether the message has a specified string prefix.
 	/// </summary>
@@ -60,7 +54,7 @@ public static class CommandsNextUtilities
 			return -1;
 
 		var cnp = content[..(cni + 1)];
-		var m = s_userRegex.Match(cnp);
+		var m = DiscordRegEx.UserRegex().Match(cnp);
 		if (!m.Success)
 			return -1;
 

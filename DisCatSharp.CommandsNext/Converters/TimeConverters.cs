@@ -1,6 +1,5 @@
 using System;
 using System.Globalization;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using DisCatSharp.Common.RegularExpressions;
@@ -11,7 +10,7 @@ namespace DisCatSharp.CommandsNext.Converters;
 /// <summary>
 /// Represents a date time converter.
 /// </summary>
-public class DateTimeConverter : IArgumentConverter<DateTime>
+public sealed class DateTimeConverter : IArgumentConverter<DateTime>
 {
 	/// <summary>
 	/// Converts a string.
@@ -27,7 +26,7 @@ public class DateTimeConverter : IArgumentConverter<DateTime>
 /// <summary>
 /// Represents a date time offset converter.
 /// </summary>
-public class DateTimeOffsetConverter : IArgumentConverter<DateTimeOffset>
+public sealed class DateTimeOffsetConverter : IArgumentConverter<DateTimeOffset>
 {
 	/// <summary>
 	/// Converts a string.
@@ -43,21 +42,8 @@ public class DateTimeOffsetConverter : IArgumentConverter<DateTimeOffset>
 /// <summary>
 /// Represents a time span converter.
 /// </summary>
-public class TimeSpanConverter : IArgumentConverter<TimeSpan>
+public sealed class TimeSpanConverter : IArgumentConverter<TimeSpan>
 {
-	/// <summary>
-	/// Gets or sets the time span regex.
-	/// </summary>
-	private static Regex s_timeSpanRegex { get; set; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="TimeSpanConverter"/> class.
-	/// </summary>
-	static TimeSpanConverter()
-	{
-		s_timeSpanRegex = CommonRegEx.TimeSpanRegex();
-	}
-
 	/// <summary>
 	/// Converts a string.
 	/// </summary>
@@ -78,7 +64,7 @@ public class TimeSpanConverter : IArgumentConverter<TimeSpan>
 			return Task.FromResult(Optional.Some(result));
 
 		var gps = new string[] { "days", "hours", "minutes", "seconds" };
-		var mtc = s_timeSpanRegex.Match(value);
+		var mtc = CommonRegEx.TimeSpanRegex().Match(value);
 		if (!mtc.Success)
 			return Task.FromResult(Optional<TimeSpan>.None);
 
