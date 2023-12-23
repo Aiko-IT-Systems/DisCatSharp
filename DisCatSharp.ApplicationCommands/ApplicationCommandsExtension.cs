@@ -176,6 +176,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	public IServiceProvider Services
 		=> Configuration.ServiceProvider;
 
+	internal static bool IsCalledByUnitTest { get; set; } = false;
+
 	/// <summary>
 	/// Gets a list of handled interactions. Fix for double interaction execution bug.
 	/// </summary>
@@ -193,6 +195,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		CheckAllGuilds = configuration?.CheckAllGuilds ?? false;
 		ManOr = configuration?.ManualOverride ?? false;
 		AutoDeferEnabled = configuration?.AutoDefer ?? false;
+		IsCalledByUnitTest = configuration?.UnitTestMode ?? false;
 
 		this._slashError = new("SLASHCOMMAND_ERRORED", TimeSpan.Zero, null!);
 		this._slashExecuted = new("SLASHCOMMAND_EXECUTED", TimeSpan.Zero, null!);
@@ -448,7 +451,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Expected Count: {count}", s_expectedCount);
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Shard {shard} has {guilds} guilds", this.Client.ShardId, this.Client.Guilds?.Count);
 		List<ulong> failedGuilds = [];
-		var globalCommands = (await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false).ConfigureAwait(false)).ToList() ?? null;
+		var globalCommands = IsCalledByUnitTest ? null : (await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false).ConfigureAwait(false))?.ToList() ?? null;
 
 		var guilds = CheckAllGuilds ? this.Client.Guilds?.Keys.ToList() : this._updateList.Where(x => x.Key != null)?.Select(x => x.Key.Value).Distinct().ToList();
 		var wrongShards = guilds is not null && this.Client.Guilds is not null ? guilds.Where(x => !this.Client.Guilds.ContainsKey(x)).ToList() : [];
@@ -558,6 +561,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		var groupTranslation = new List<GroupTranslator>();
 		var translation = new List<CommandTranslator>();
 
+		List<DiscordApplicationCommand> unitTestCommands = [];
+
 		//Iterates over all the modules
 		foreach (var config in types)
 		{
@@ -597,6 +602,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 					if (slashGroupsTuple.applicationCommands is not null && slashGroupsTuple.applicationCommands.Count is not 0)
 					{
+						if (IsCalledByUnitTest)
+							unitTestCommands.AddRange(slashGroupsTuple.applicationCommands);
 						updateList.AddRange(slashGroupsTuple.applicationCommands);
 						if (Configuration.GenerateTranslationFilesOnly)
 						{
@@ -663,6 +670,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 					if (slashCommands.applicationCommands != null && slashCommands.applicationCommands.Count != 0)
 					{
+						if (IsCalledByUnitTest)
+							unitTestCommands.AddRange(slashCommands.applicationCommands);
 						updateList.AddRange(slashCommands.applicationCommands);
 						if (Configuration.GenerateTranslationFilesOnly)
 						{
@@ -691,6 +700,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 					if (contextCommands.applicationCommands != null && contextCommands.applicationCommands.Count != 0)
 					{
+						if (IsCalledByUnitTest)
+							unitTestCommands.AddRange(contextCommands.applicationCommands);
 						updateList.AddRange(contextCommands.applicationCommands);
 						if (Configuration.GenerateTranslationFilesOnly)
 						{
@@ -734,7 +745,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			}
 		}
 
-		if (!s_errored)
+		if (!s_errored && !IsCalledByUnitTest)
 		{
 			updateList = updateList.DistinctBy(x => x.Name).ToList();
 			if (Configuration.GenerateTranslationFilesOnly)
@@ -865,6 +876,32 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 					s_errored = true;
 				}
+		}
+		else if (IsCalledByUnitTest)
+		{
+			CommandMethods.AddRange(commandMethods.DistinctBy(x => x.Name));
+			GroupCommands.AddRange(groupCommands.DistinctBy(x => x.Name));
+			SubGroupCommands.AddRange(subGroupCommands.DistinctBy(x => x.Name));
+			ContextMenuCommands.AddRange(contextMenuCommands.DistinctBy(x => x.Name));
+
+			s_registeredCommands.Add(new(guildId, unitTestCommands.ToList()));
+
+			foreach (var app in commandMethods.Select(command => types.First(t => t.Type == command.Method.DeclaringType)))
+			{ }
+
+			if (guildId.HasValue)
+				await this._guildApplicationCommandsRegistered.InvokeAsync(this, new(Configuration?.ServiceProvider)
+				{
+					Handled = true,
+					GuildId = guildId.Value,
+					RegisteredCommands = GuildCommandsInternal.Any(c => c.Key == guildId.Value) ? GuildCommandsInternal.FirstOrDefault(c => c.Key == guildId.Value).Value : null
+				}).ConfigureAwait(false);
+			else
+				await this._globalApplicationCommandsRegistered.InvokeAsync(this, new(Configuration?.ServiceProvider)
+				{
+					Handled = true,
+					RegisteredCommands = GlobalCommandsInternal
+				}).ConfigureAwait(false);
 		}
 	}
 
