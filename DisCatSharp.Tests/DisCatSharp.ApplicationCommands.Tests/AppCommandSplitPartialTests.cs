@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.ApplicationCommands.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
@@ -50,13 +51,16 @@ public class AppCommandSplitPartialTests
 			await Task.Delay(1);
 
 		Assert.True(regFired);
-		var commands = extension.RegisteredCommands;
+		var commands = extension.RegisteredCommands.ToList();
 		Assert.Single(commands);
 		Assert.NotNull(commands.FirstOrDefault(x => x.Key is null).Value);
 		Assert.Single(commands.FirstOrDefault(x => x.Key is null).Value);
-		var command = commands.FirstOrDefault(x => x.Key is null).Value.First();
+		var command = commands.First(x => x.Key is null).Value[0];
 		Assert.Equal("test", command.Name);
 		Assert.Equal("test", command.Description);
+		var attributes = command.CommandType?.GetCustomAttributes(typeof(ApplicationCommandRequireDirectMessageAttribute), true);
+		Assert.NotNull(attributes);
+		Assert.Single(attributes);
 		Assert.NotNull(command.Options);
 		Assert.All(command.Options, x => Assert.True(x.Type is ApplicationCommandOptionType.SubCommand));
 		Assert.True(command.Options.Any(x => x.Name is "test_1"));
