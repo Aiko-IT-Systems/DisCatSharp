@@ -31,13 +31,13 @@ To use them, follow these instructions:
 
 ```bash
 # Register Registry
-nuget sources add -Name discatsharp-git-releases -Source https://registry.aitsys-infra.tools/nuget/discatsharp-git-releases/index.json -Username bytesafe -Password 01HJ80HC4S65ADXD4H5SANV23E
+dotnet nuget add source https://registry.aitsys-infra.tools/nuget/discatsharp-git-releases/index.json -n discatsharp-git-releases -u bytesafe -p 01HJ80HC4S65ADXD4H5SANV23E --store-password-in-clear-text
 
 # Restore from registry
-nuget restore -Source discatsharp-git-releases
+dotnet restore -s discatsharp-git-releases -f --no-cache
 
 # Disable Registry
-nuget sources disable -Name discatsharp-git-releases
+dotnet nuget remove source discatsharp-git-releases
 ```
 
 These releases are considered to not be stable at all. Use them with care.
