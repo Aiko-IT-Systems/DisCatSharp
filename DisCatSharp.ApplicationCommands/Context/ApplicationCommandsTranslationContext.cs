@@ -20,12 +20,12 @@ public sealed class ApplicationCommandsTranslationContext
 	/// <summary>
 	/// Gets the group translation json.
 	/// </summary>
-	internal string GroupTranslations { get; set; }
+	internal string? GroupTranslations { get; set; }
 
 	/// <summary>
 	/// Gets the single translation json.
 	/// </summary>
-	internal string SingleTranslations { get; set; }
+	internal string? SingleTranslations { get; set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ApplicationCommandsTranslationContext"/> class.

@@ -29,14 +29,14 @@ public class DiscordApplicationCommandOption
 	/// Sets the name localizations.
 	/// </summary>
 	[JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
-	internal Dictionary<string, string> RawNameLocalizations { get; set; }
+	internal Dictionary<string, string>? RawNameLocalizations { get; set; }
 
 	/// <summary>
 	/// Gets the name localizations.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordApplicationCommandLocalization NameLocalizations
-		=> new(this.RawNameLocalizations);
+	public DiscordApplicationCommandLocalization? NameLocalizations
+		=> this.RawNameLocalizations is not null ? new(this.RawNameLocalizations) : null;
 
 	/// <summary>
 	/// Gets the description of this command parameter.
@@ -48,14 +48,14 @@ public class DiscordApplicationCommandOption
 	/// Sets the description localizations.
 	/// </summary>
 	[JsonProperty("description_localizations", NullValueHandling = NullValueHandling.Ignore)]
-	internal Dictionary<string, string> RawDescriptionLocalizations { get; set; }
+	internal Dictionary<string, string>? RawDescriptionLocalizations { get; set; }
 
 	/// <summary>
 	/// Gets the description localizations.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordApplicationCommandLocalization DescriptionLocalizations
-		=> new(this.RawDescriptionLocalizations);
+	public DiscordApplicationCommandLocalization? DescriptionLocalizations
+		=> this.RawDescriptionLocalizations is not null ? new(this.RawDescriptionLocalizations) : null;
 
 	/// <summary>
 	/// Gets whether this command parameter is required.
@@ -92,13 +92,13 @@ public class DiscordApplicationCommandOption
 	/// Gets the minimum value for this slash command parameter.
 	/// </summary>
 	[JsonProperty("min_value", NullValueHandling = NullValueHandling.Ignore)]
-	public object MinimumValue { get; internal set; }
+	public object? MinimumValue { get; internal set; }
 
 	/// <summary>
 	/// Gets the maximum value for this slash command parameter.
 	/// </summary>
 	[JsonProperty("max_value", NullValueHandling = NullValueHandling.Ignore)]
-	public object MaximumValue { get; internal set; }
+	public object? MaximumValue { get; internal set; }
 
 	/// <summary>
 	/// Gets the maximum length for this slash command parameter.
@@ -138,10 +138,10 @@ public class DiscordApplicationCommandOption
 		IEnumerable<DiscordApplicationCommandOption>? options = null,
 		IEnumerable<ChannelType>? channelTypes = null,
 		bool autocomplete = false,
-		object minimumValue = null,
-		object maximumValue = null,
-		DiscordApplicationCommandLocalization nameLocalizations = null,
-		DiscordApplicationCommandLocalization descriptionLocalizations = null,
+		object? minimumValue = null,
+		object? maximumValue = null,
+		DiscordApplicationCommandLocalization? nameLocalizations = null,
+		DiscordApplicationCommandLocalization? descriptionLocalizations = null,
 		int? minimumLength = null,
 		int? maximumLength = null
 	)
@@ -155,7 +155,7 @@ public class DiscordApplicationCommandOption
 		if (autocomplete && (choices?.Any() ?? false))
 			throw new InvalidOperationException("Auto-complete slash command options cannot provide choices.");
 
-		if (type == ApplicationCommandOptionType.SubCommand || type == ApplicationCommandOptionType.SubCommandGroup)
+		if (type is ApplicationCommandOptionType.SubCommand or ApplicationCommandOptionType.SubCommandGroup)
 			if (string.IsNullOrWhiteSpace(description))
 				throw new ArgumentException("Slash commands need a description.", nameof(description));
 
@@ -163,9 +163,9 @@ public class DiscordApplicationCommandOption
 		this.Description = description;
 		this.Type = type;
 		this.Required = required;
-		this.Choices = choices != null && choices.Any() ? choices.ToList() : null;
-		this.Options = options != null && options.Any() ? options.ToList() : null;
-		this.ChannelTypes = channelTypes != null && channelTypes.Any() ? channelTypes.ToList() : null;
+		this.Choices = choices is not null && choices.Any() ? choices.ToList() : null;
+		this.Options = options is not null && options.Any() ? options.ToList() : null;
+		this.ChannelTypes = channelTypes is not null && channelTypes.Any() ? channelTypes.ToList() : null;
 		this.AutoComplete = autocomplete;
 		this.MinimumValue = minimumValue;
 		this.MaximumValue = maximumValue;
