@@ -15,7 +15,7 @@ public abstract class AsyncEventTimeoutException : Exception
 	/// <summary>
 	/// Gets the handler which caused the timeout.
 	/// </summary>
-	public AsyncEventHandler<object, AsyncEventArgs> Handler { get; }
+	public AsyncEventHandler<object, AsyncEventArgs>? Handler { get; }
 
 	/// <summary>
 	/// Prevents a default instance of the <see cref="AsyncEventTimeoutException"/> class from being created.
@@ -23,7 +23,7 @@ public abstract class AsyncEventTimeoutException : Exception
 	/// <param name="asyncEvent">The async event.</param>
 	/// <param name="eventHandler">The event handler.</param>
 	/// <param name="message">The message.</param>
-	private protected AsyncEventTimeoutException(AsyncEvent asyncEvent, AsyncEventHandler<object, AsyncEventArgs> eventHandler, string message)
+	private protected AsyncEventTimeoutException(AsyncEvent asyncEvent, AsyncEventHandler<object, AsyncEventArgs>? eventHandler, string message)
 		: base(message)
 	{
 		this.Event = asyncEvent;
@@ -37,25 +37,22 @@ public abstract class AsyncEventTimeoutException : Exception
 /// </summary>
 /// <typeparam name="TSender">Type of sender that dispatched this asynchronous event.</typeparam>
 /// <typeparam name="TArgs">Type of event arguments for the asynchronous event.</typeparam>
-public class AsyncEventTimeoutException<TSender, TArgs> : AsyncEventTimeoutException
+/// <remarks>
+/// Creates a new timeout exception for specified event and handler.
+/// </remarks>
+/// <param name="asyncEvent">Event the execution of which timed out.</param>
+/// <param name="eventHandler">Handler which timed out.</param>
+public sealed class AsyncEventTimeoutException<TSender, TArgs>(AsyncEvent asyncEvent, AsyncEventHandler<TSender, TArgs> eventHandler)
+	: AsyncEventTimeoutException(asyncEvent, eventHandler as AsyncEventHandler<object, AsyncEventArgs>, "An event handler caused the invocation of an asynchronous event to time out.")
 	where TArgs : AsyncEventArgs
 {
 	/// <summary>
 	/// Gets the event the invocation of which caused the timeout.
 	/// </summary>
-	public new AsyncEvent<TSender, TArgs> Event => base.Event as AsyncEvent<TSender, TArgs>;
+	public new AsyncEvent<TSender, TArgs> Event => base.Event as AsyncEvent<TSender, TArgs> ?? throw new NullReferenceException();
 
 	/// <summary>
 	/// Gets the handler which caused the timeout.
 	/// </summary>
-	public new AsyncEventHandler<TSender, TArgs> Handler => base.Handler as AsyncEventHandler<TSender, TArgs>;
-
-	/// <summary>
-	/// Creates a new timeout exception for specified event and handler.
-	/// </summary>
-	/// <param name="asyncEvent">Event the execution of which timed out.</param>
-	/// <param name="eventHandler">Handler which timed out.</param>
-	public AsyncEventTimeoutException(AsyncEvent<TSender, TArgs> asyncEvent, AsyncEventHandler<TSender, TArgs> eventHandler)
-		: base(asyncEvent, eventHandler as AsyncEventHandler<object, AsyncEventArgs>, "An event handler caused the invocation of an asynchronous event to time out.")
-	{ }
+	public new AsyncEventHandler<TSender, TArgs> Handler => base.Handler as AsyncEventHandler<TSender, TArgs> ?? throw new NullReferenceException();
 }

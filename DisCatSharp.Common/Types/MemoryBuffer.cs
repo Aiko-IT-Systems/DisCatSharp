@@ -41,7 +41,7 @@ public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 	/// <param name="memPool">Memory pool to use for renting buffers. Defaults to <see cref="MemoryPool{T}.Shared"/>.</param>
 	/// <param name="clearOnDispose">Determines whether the underlying buffers should be cleared on exit. If dealing with sensitive data, it might be a good idea to set this option to true.</param>
 	public MemoryBuffer(
-		int segmentSize = 65536, int initialSegmentCount = 0, MemoryPool<byte> memPool = default,
+		int segmentSize = 65536, int initialSegmentCount = 0, MemoryPool<byte>? memPool = default,
 		bool clearOnDispose = false
 	)
 	{

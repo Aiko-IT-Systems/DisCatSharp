@@ -14,7 +14,7 @@ public static class RuntimeInformation
 	/// <summary>
 	/// Gets the current runtime's version.
 	/// </summary>
-	public static string Version { get; }
+	public static string? Version { get; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="RuntimeInformation"/> class.
@@ -29,22 +29,28 @@ public static class RuntimeInformation
 			})
 			.FirstOrDefault(x => x.AssemblyName.Name is "mscorlib" or "System.Private.CoreLib");
 
+		if (mscorlib is null)
+			return;
+
 		var location = mscorlib.Assembly.Location;
 		var assemblyFile = new FileInfo(location);
-		var versionFile = new FileInfo(Path.Combine(assemblyFile.Directory.FullName, ".version"));
-		if (versionFile.Exists)
+		if (assemblyFile.Directory is not null)
 		{
-			var lines = File.ReadAllLines(versionFile.FullName, new UTF8Encoding(false));
-
-			if (lines.Length >= 2)
+			var versionFile = new FileInfo(Path.Combine(assemblyFile.Directory.FullName, ".version"));
+			if (versionFile.Exists)
 			{
-				Version = lines[1];
-				return;
+				var lines = File.ReadAllLines(versionFile.FullName, new UTF8Encoding(false));
+
+				if (lines.Length >= 2)
+				{
+					Version = lines[1];
+					return;
+				}
 			}
 		}
 
 		var infVersion = mscorlib.Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-		if (infVersion != null)
+		if (infVersion is not null)
 		{
 			var infVersionString = infVersion.InformationalVersion;
 			if (!string.IsNullOrWhiteSpace(infVersionString))

@@ -634,7 +634,7 @@ public sealed class VoiceNextConnection : IDisposable
 				continue;
 
 			await this.SendSpeakingAsync(this._speakingFlags is not SpeakingFlags.NotSpeaking ? this._speakingFlags : SpeakingFlags.Microphone).ConfigureAwait(false);
-ArgumentNullException.ThrowIfNull(data);
+			ArgumentNullException.ThrowIfNull(data);
 			await this._udpClient.SendAsync(data, length).ConfigureAwait(false);
 			ArrayPool<byte>.Shared.Return(data);
 

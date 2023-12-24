@@ -14,11 +14,9 @@ public class HostExtensionTests
 {
 #region Reference to external assemblies - required to ensure they're loaded
 
-
 	private InteractivityConfiguration? _interactivityConfig = null;
 	private LavalinkConfiguration? _lavalinkConfig = null;
 	private DiscordConfiguration? _discordConfig = null;
-
 
 #endregion
 

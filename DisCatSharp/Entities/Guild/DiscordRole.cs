@@ -214,7 +214,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 		{
 			true when mdl.Icon.Value != null => ImageTool.Base64FromStream(mdl.Icon),
 			true => Optional.Some<string?>(null),
-			_ => Optional.None,
+			_ => Optional.None
 		};
 		var emoji = Optional.FromNullable<string?>(null);
 

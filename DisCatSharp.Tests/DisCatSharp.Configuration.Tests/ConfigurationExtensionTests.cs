@@ -24,9 +24,9 @@ public class ConfigurationExtensionTests
 
 	private class ClassWithArray
 	{
-		public int[] Values { get; set; } = { 1, 2, 3, 4, 5 };
+		public int[] Values { get; set; } = [1, 2, 3, 4, 5];
 
-		public string[] Strings { get; set; } = { "1", "2", "3", "4", "5" };
+		public string[] Strings { get; set; } = ["1", "2", "3", "4", "5"];
 	}
 
 	private class ClassWithEnumerable
@@ -38,35 +38,16 @@ public class ConfigurationExtensionTests
 
 	private class ClassWithList
 	{
-		public List<string> Strings { get; set; } =
-		[
-			"1",
-			"2",
-			"3",
-			"4",
-			"5"
-		];
+		public List<string> Strings { get; set; } = ["1", "2", "3", "4", "5"];
 
-		public List<int> Values { get; set; } =
-		[
-			1,
-			2,
-			3,
-			4,
-			5
-		];
+		public List<int> Values { get; set; } = [1, 2, 3, 4, 5];
 	}
 
-	private class SampleClass2
+	private class SampleClass2(string value)
 	{
 		public TimeSpan Timeout { get; set; } = TimeSpan.FromMinutes(7);
 		public string Name { get; set; } = "Sample";
-		public string ConstructorValue { get; }
-
-		public SampleClass2(string value)
-		{
-			this.ConstructorValue = value;
-		}
+		public string ConstructorValue { get; } = value;
 	}
 
 #endregion
@@ -99,7 +80,7 @@ public class ConfigurationExtensionTests
 		.Build();
 
 	private IConfiguration SampleConfig() => new ConfigurationBuilder()
-		.AddInMemoryCollection(new Dictionary<string, string>
+		.AddInMemoryCollection(new Dictionary<string, string?>
 		{
 			{ "Sample:Amount", "200" },
 			{ "Sample:Email", "test@gmail.com" }
@@ -107,7 +88,7 @@ public class ConfigurationExtensionTests
 		.Build();
 
 	private IConfiguration SampleClass2Configuration_Default() => new ConfigurationBuilder()
-		.AddInMemoryCollection(new Dictionary<string, string>
+		.AddInMemoryCollection(new Dictionary<string, string?>
 		{
 			{ "Random:Stuff", "Meow" },
 			{ "SampleClass2:Name", "Purfection" }
@@ -115,7 +96,7 @@ public class ConfigurationExtensionTests
 		.Build();
 
 	private IConfiguration SampleClass2Configuration_Change() => new ConfigurationBuilder()
-		.AddInMemoryCollection(new Dictionary<string, string>
+		.AddInMemoryCollection(new Dictionary<string, string?>
 		{
 			{ "SampleClass:Timeout", "01:30:00" },
 			{ "SampleClass:NotValid", "Something" }
@@ -123,21 +104,21 @@ public class ConfigurationExtensionTests
 		.Build();
 
 	private IConfiguration SampleClass2EnumerableTest() => new ConfigurationBuilder()
-		.AddInMemoryCollection(new Dictionary<string, string>
+		.AddInMemoryCollection(new Dictionary<string, string?>
 		{
 			{ "SampleClass:EnumerableTest", "[\"10\",\"20\",\"30\"]" }
 		})
 		.Build();
 
 	private IConfiguration SampleClass2ArrayTest() => new ConfigurationBuilder()
-		.AddInMemoryCollection(new Dictionary<string, string>
+		.AddInMemoryCollection(new Dictionary<string, string?>
 		{
 			{ "SampleClass:ArrayTest", "[\"10\",\"20\",\"30\"]" }
 		})
 		.Build();
 
 	private IConfiguration SampleClass2ListTest() => new ConfigurationBuilder()
-		.AddInMemoryCollection(new Dictionary<string, string>
+		.AddInMemoryCollection(new Dictionary<string, string?>
 		{
 			{ "SampleClass:ListTest", "[\"10\",\"20\",\"30\"]" }
 		})

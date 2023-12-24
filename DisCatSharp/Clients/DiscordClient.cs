@@ -177,7 +177,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._guildUpdated = new("GUILD_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildDeleted = new("GUILD_DELETED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildUnavailable = new("GUILD_UNAVAILABLE", EventExecutionLimit, this.EventErrorHandler);
-		this._guildDownloadCompletedEv = new("GUILD_DOWNLOAD_COMPLETED", EventExecutionLimit, this.EventErrorHandler);
+		this.GuildDownloadCompletedEv = new("GUILD_DOWNLOAD_COMPLETED", EventExecutionLimit, this.EventErrorHandler);
 		this._inviteCreated = new("INVITE_CREATED", EventExecutionLimit, this.EventErrorHandler);
 		this._inviteDeleted = new("INVITE_DELETED", EventExecutionLimit, this.EventErrorHandler);
 		this._messageCreated = new("MESSAGE_CREATED", EventExecutionLimit, this.EventErrorHandler);

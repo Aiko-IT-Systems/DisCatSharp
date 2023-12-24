@@ -12,21 +12,14 @@ using Xunit.Abstractions;
 
 namespace DisCatSharp.ApplicationCommands.Tests;
 
-public class AppCommandSplitPartialTests
+public class AppCommandSplitPartialTests(ITestOutputHelper testOutputHelper)
 {
-	private readonly ITestOutputHelper _testOutputHelper;
-
 	private readonly DiscordClient _client = new(new()
 	{
 		Token = "1"
 	});
 
 	internal readonly ReadOnlyDictionary<ulong, DiscordGuild> Guilds = new Dictionary<ulong, DiscordGuild>().AsReadOnly();
-
-	public AppCommandSplitPartialTests(ITestOutputHelper testOutputHelper)
-	{
-		this._testOutputHelper = testOutputHelper;
-	}
 
 	[Fact(DisplayName = "Test of registration for commands split across files")]
 	public async Task TestSplitRegistrationAndProperLocalRegistration()
@@ -43,7 +36,7 @@ public class AppCommandSplitPartialTests
 			return Task.CompletedTask;
 		};
 		extension.RegisterGlobalCommands<SplitTest.TestCommand>();
-		await this._client._guildDownloadCompletedEv.InvokeAsync(this._client, new(this.Guilds, true, null!));
+		await this._client.GuildDownloadCompletedEv.InvokeAsync(this._client, new(this.Guilds, true, null!));
 		while (!regFired)
 			await Task.Delay(1);
 
@@ -60,11 +53,11 @@ public class AppCommandSplitPartialTests
 		Assert.Single(attributes);
 		Assert.NotNull(command.Options);
 		Assert.All(command.Options, x => Assert.True(x.Type is ApplicationCommandOptionType.SubCommand));
-		Assert.True(command.Options.Any(x => x.Name is "test_1"));
-		Assert.True(command.Options.Any(x => x.Name is "test_2"));
+		Assert.Contains(command.Options, x => x.Name is "test_1");
+		Assert.Contains(command.Options, x => x.Name is "test_2");
 		Assert.NotNull(command.Options.First(x => x.Name is "test_2").Options);
 		var option = command.Options.First(x => x.Name is "test_2").Options;
-		Assert.True(option!.Any(y => y is { Name: "user", Required: false, Type: ApplicationCommandOptionType.User }));
-		this._testOutputHelper.WriteLine("Command registration successful");
+		Assert.Contains(option!, y => y is { Name: "user", Required: false, Type: ApplicationCommandOptionType.User });
+		testOutputHelper.WriteLine("Command registration successful");
 	}
 }

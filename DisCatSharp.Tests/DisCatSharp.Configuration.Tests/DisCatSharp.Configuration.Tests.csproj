@@ -1,61 +1,61 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../../DisCatSharp.Targets/Library.targets" />
-  <Import Project="../../DisCatSharp.Targets/InternalsVisibleTo.targets" />
+	<Import Project="../../DisCatSharp.Targets/Library.targets" />
+	<Import Project="../../DisCatSharp.Targets/InternalsVisibleTo.targets" />
 
-    <PropertyGroup>
+	<PropertyGroup>
 		<Nullable>enable</Nullable>
 		<NoWarn>1591;NU5128;DV2001;CS0271</NoWarn>
-        <IsPackable>false</IsPackable>
-        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+		<IsPackable>false</IsPackable>
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
 		<IsTestProject>true</IsTestProject>
-    </PropertyGroup>
+	</PropertyGroup>
 
-    <ItemGroup>
-    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="DisCatSharp.Attributes" Version="10.4.4" />
-        <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-        <PackageReference Include="xunit" Version="2.6.4" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.6">
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="coverlet.collector" Version="6.0.0">
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="DisCatSharp.Attributes" Version="10.4.4" />
+		<PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+		<PackageReference Include="xunit" Version="2.6.4" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.5.6">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="coverlet.collector" Version="6.0.0">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\DisCatSharp.Configuration\DisCatSharp.Configuration.csproj" />
-      <ProjectReference Include="..\..\DisCatSharp\DisCatSharp.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\DisCatSharp.Configuration\DisCatSharp.Configuration.csproj" />
+		<ProjectReference Include="..\..\DisCatSharp\DisCatSharp.csproj" />
+	</ItemGroup>
 
-    <ItemGroup>
-      <None Update="enumerable-test.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="section-with-suffix.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="section-no-suffix.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="default-discord.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="intents-discord.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="haphazard-discord.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
+	<ItemGroup>
+		<None Update="enumerable-test.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="section-with-suffix.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="section-no-suffix.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="default-discord.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="intents-discord.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="haphazard-discord.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

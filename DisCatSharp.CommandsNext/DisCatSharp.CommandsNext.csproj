@@ -1,49 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../DisCatSharp.Targets/Version.targets" />
-  <Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
-  <Import Project="../DisCatSharp.Targets/Package.targets" />
-  <Import Project="../DisCatSharp.Targets/NuGet.targets" />
-  <Import Project="../DisCatSharp.Targets/Library.targets" />
-  <Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
+	<Import Project="../DisCatSharp.Targets/Version.targets" />
+	<Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
+	<Import Project="../DisCatSharp.Targets/Package.targets" />
+	<Import Project="../DisCatSharp.Targets/NuGet.targets" />
+	<Import Project="../DisCatSharp.Targets/Library.targets" />
+	<Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
 
-  <PropertyGroup>
-    <AssemblyName>DisCatSharp.CommandsNext</AssemblyName>
-    <RootNamespace>DisCatSharp.CommandsNext</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<AssemblyName>DisCatSharp.CommandsNext</AssemblyName>
+		<RootNamespace>DisCatSharp.CommandsNext</RootNamespace>
+	</PropertyGroup>
 
-  <PropertyGroup>
-	<PackageId>DisCatSharp.CommandsNext</PackageId>
-	<Description>
-DisCatSharp Commands Next Extension
+	<PropertyGroup>
+		<PackageId>DisCatSharp.CommandsNext</PackageId>
+		<Description>
+			DisCatSharp Commands Next Extension
 
-Allow your users to use text commands in your bot.
+			Allow your users to use text commands in your bot.
 
-Note: Requires the Message Content Intent enabled for your discord application.
-Documentation: https://docs.dcs.aitsys.dev/articles/modules/commandsnext/intro.html
-	</Description>
-	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Net8,Text Commands</PackageTags>
+			Note: Requires the Message Content Intent enabled for your discord application.
+			Documentation: https://docs.dcs.aitsys.dev/articles/modules/commandsnext/intro.html
+		</Description>
+		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Net8,Text Commands</PackageTags>
 
-  </PropertyGroup>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
-    <ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+		<ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="DisCatSharp.Attributes" Version="10.4.4" />
-    <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="DisCatSharp.Attributes" Version="10.4.4" />
+		<PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+	</ItemGroup>
 
 </Project>
