@@ -20,7 +20,7 @@ public class HostExtensionTests
 
 #endregion
 
-	private Dictionary<string, string> DefaultDiscord() =>
+	private Dictionary<string, string?> DefaultDiscord() =>
 		new()
 		{
 			{ "DisCatSharp:Discord:Token", "1234567890" },
@@ -44,7 +44,7 @@ public class HostExtensionTests
 		};
 
 	public IConfiguration DiscordInteractivityConfiguration() => new ConfigurationBuilder()
-		.AddInMemoryCollection(new Dictionary<string, string>(this.DefaultDiscord())
+		.AddInMemoryCollection(new Dictionary<string, string?>(this.DefaultDiscord())
 		{
 			{ "DisCatSharp:Using", "[\"DisCatSharp.Interactivity\"]" } // this should be enough to automatically add the extension
 		})

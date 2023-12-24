@@ -53,7 +53,7 @@ public sealed class BotTwoService : DiscordHostedService, IBotTwoService
 
 public class HostTests
 {
-	private Dictionary<string, string> DefaultDiscord() =>
+	private Dictionary<string, string?> DefaultDiscord() =>
 		new()
 		{
 			{ "DisCatSharp:Discord:Token", "1234567890" },
@@ -76,17 +76,17 @@ public class HostTests
 			{ "DisCatSharp:Discord:Intents", "AllUnprivileged" }
 		};
 
-	public Dictionary<string, string> DiscordInteractivity() => new(this.DefaultDiscord())
+	public Dictionary<string, string?> DiscordInteractivity() => new(this.DefaultDiscord())
 	{
 		{ "DisCatSharp:Using", "[\"DisCatSharp.Interactivity\"]" }
 	};
 
-	public Dictionary<string, string> DiscordInteractivityAndLavalink() => new(this.DefaultDiscord())
+	public Dictionary<string, string?> DiscordInteractivityAndLavalink() => new(this.DefaultDiscord())
 	{
 		{ "DisCatSharp:Using", "[\"DisCatSharp.Interactivity\", \"DisCatSharp.Lavalink\"]" }
 	};
 
-	private IHostBuilder Create(Dictionary<string, string> configValues) =>
+	private IHostBuilder Create(Dictionary<string, string?> configValues) =>
 		Host.CreateDefaultBuilder()
 			.ConfigureServices(services => services.AddSingleton<IDiscordHostedService, Bot>())
 			.ConfigureHostConfiguration(builder => builder.AddInMemoryCollection(configValues));

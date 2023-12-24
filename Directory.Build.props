@@ -5,7 +5,5 @@
 		<SourceRoot Include="$(MSBuildThisFileDirectory)/" />
 	</ItemGroup>
 	<PropertyGroup>
-		<!--<CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)/DisCatSharp.Tools/DisCatSharp.ruleset</CodeAnalysisRuleSet>-->
-		<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
 	</PropertyGroup>
 </Project>

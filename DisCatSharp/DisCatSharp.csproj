@@ -32,7 +32,7 @@
 
 	<ItemGroup>
 		<Content Include="res\discatsharp.png">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
 
