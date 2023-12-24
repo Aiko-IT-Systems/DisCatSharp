@@ -365,6 +365,11 @@ public sealed class DiscordConfiguration
 	public string? UpdateCheckGitHubToken { get; set; } = null;
 
 	/// <summary>
+	/// Whether to show release notes in the update check.
+	/// </summary>
+	public bool ShowReleaseNotesInUpdateCheck { get; set; } = true;
+
+	/// <summary>
 	/// Creates a new configuration with default values.
 	/// </summary>
 	public DiscordConfiguration()
@@ -430,5 +435,6 @@ public sealed class DiscordConfiguration
 		this.UpdateCheckMode = other.UpdateCheckMode;
 		this.IncludePrereleaseInUpdateCheck = other.IncludePrereleaseInUpdateCheck;
 		this.UpdateCheckGitHubToken = other.UpdateCheckGitHubToken;
+		this.ShowReleaseNotesInUpdateCheck = other.ShowReleaseNotesInUpdateCheck;
 	}
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -10,7 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-using DisCatSharp.Attributes;
+using DisCatSharp.Common;
 using DisCatSharp.Common.RegularExpressions;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
@@ -19,6 +20,7 @@ using DisCatSharp.Net;
 using Microsoft.Extensions.Logging;
 
 using NuGet.Common;
+using NuGet.Packaging;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
@@ -528,6 +530,26 @@ public static class Utilities
 				return;
 			}
 
+			string? releaseNotes = null;
+			if (client.Configuration.ShowReleaseNotesInUpdateCheck)
+			{
+				var assetUrl = latest.Assets.FirstOrDefault(x => x.Name is "RELEASENOTES.md")?.BrowserDownloadUrl;
+				if (assetUrl is not null)
+					try
+					{
+						GitHubClient gitHubClient = new(apiConnection.Connection);
+						var response = await gitHubClient.Connection.GetRawStream(new(assetUrl), new Dictionary<string, string>()
+						{
+							{ "Accept", "application/octet-stream " }
+						});
+						releaseNotes = await response.Body.GenerateStringFromStream();
+					}
+					catch
+					{
+						releaseNotes = null;
+					}
+			}
+
 			var lastGitHubRelease = latest.TagName.Replace("v", string.Empty, StringComparison.InvariantCultureIgnoreCase);
 			var githubSplitVersion = lastGitHubRelease.Split('.');
 			var githubApi = Convert.ToInt32(githubSplitVersion[0]);
@@ -540,6 +562,16 @@ public static class Utilities
 				client.Logger.LogWarning("[{Type}] Your version of {Product} is newer than the latest release!\n\tPre-releases are not recommended for production.\n\tCurrent version: v{CurrentVersion}\n\tLatest version: v{LastGitHubRelease}", fromShard ? "ShardedClient" : "Client", productName, version, lastGitHubRelease);
 			else
 				client.Logger.LogInformation("[{Type}] Your version of {Product} is up to date!\n\tCurrent version: v{CurrentVersion}", fromShard ? "ShardedClient" : "Client", productName, version);
+
+			if (client.Configuration.ShowReleaseNotesInUpdateCheck)
+			{
+				if (!string.IsNullOrEmpty(releaseNotes))
+					client.Logger.LogInformation("Release Notes:\n{ReleaseNotes}", releaseNotes);
+				else
+					client.Logger.LogWarning("Could not find any release notes");
+			}
+			else
+				client.Logger.LogInformation("Release notes disabled by config");
 		}
 		catch (Exception ex)
 		{
@@ -590,6 +622,24 @@ public static class Utilities
 			}
 
 			var latestPackageVersion = latestVersions.First(x => string.Equals(x.Key, packageId, StringComparison.InvariantCultureIgnoreCase)).Value;
+			string? releaseNotes = null;
+			if (client.Configuration.ShowReleaseNotesInUpdateCheck)
+			{
+				var dResource = await repository.GetResourceAsync<FindPackageByIdResource>();
+
+				await using var packageStream = new MemoryStream();
+				await dResource.CopyNupkgToStreamAsync(
+					packageId,
+					latestPackageVersion,
+					packageStream,
+					sourceCache,
+					new NullLogger(),
+					CancellationToken.None);
+				using var packageReader = new PackageArchiveReader(packageStream);
+				var nuspecReader = await packageReader.GetNuspecReaderAsync(CancellationToken.None);
+				releaseNotes = nuspecReader.GetReleaseNotes();
+			}
+
 			var version = manualVersion ?? client.VersionString;
 			var gitLessVersion = version.Split('+')[0];
 
@@ -600,6 +650,16 @@ public static class Utilities
 				client.Logger.LogWarning("[{Type}] Your version of {Product} is newer than the latest release!\n\tPre-releases are not recommended for production.\n\tCurrent version: v{CurrentVersion}\n\tLatest version: v{LastGitHubRelease}", fromShard ? "ShardedClient" : "Client", packageId, currentPackageVersion.OriginalVersion, latestPackageVersion.OriginalVersion);
 			else
 				client.Logger.LogInformation("[{Type}] Your version of {Product} is up to date!\n\tCurrent version: v{CurrentVersion}", fromShard ? "ShardedClient" : "Client", packageId, currentPackageVersion.OriginalVersion);
+
+			if (client.Configuration.ShowReleaseNotesInUpdateCheck)
+			{
+				if (!string.IsNullOrEmpty(releaseNotes))
+					client.Logger.LogInformation("Release Notes:\n{ReleaseNotes}", releaseNotes);
+				else
+					client.Logger.LogWarning("Could not find any release notes");
+			}
+			else
+				client.Logger.LogInformation("Release notes disabled by config");
 		}
 		catch (Exception ex)
 		{
