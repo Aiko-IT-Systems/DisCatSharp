@@ -18,8 +18,9 @@ public static class LinqMethods
 	/// <param name="predicate">The predicate.</param>
 	/// <param name="value">The value to get if succeeded</param>
 	/// <returns>Whether a value was found.</returns>
-	public static bool TryGetFirstValueWhere<TSource>(this List<TSource?> list, Func<TSource?, bool> predicate, [NotNullWhen(true)] out TSource? value)
+	public static bool TryGetFirstValueWhere<TSource>(this List<TSource?>? list, Func<TSource?, bool> predicate, [NotNullWhen(true)] out TSource? value)
 	{
+		ArgumentNullException.ThrowIfNull(predicate);
 		if (list.EmptyOrNull())
 		{
 			value = default;
@@ -43,7 +44,7 @@ public static class LinqMethods
 	public static bool TryGetFirstValueByKey<TKey, TValue>(this Dictionary<TKey, TValue?>? dict, TKey key, [NotNullWhen(true)] out TValue? value)
 		where TKey : notnull
 	{
-		if (dict != null)
+		if (dict is not null)
 			return dict.TryGetValue(key, out value);
 
 		value = default;
