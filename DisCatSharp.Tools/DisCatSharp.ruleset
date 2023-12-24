@@ -1,5 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="DisCatSharp Rule Set" Description=" " ToolsVersion="17.0">
+  <Rules AnalyzerId="DisCatSharp.Analyzer" RuleNamespace="DisCatSharp.Analyzer">
+    <Rule Id="DCS0001" Action="Hidden" />
+    <Rule Id="DCS0002" Action="Hidden" />
+    <Rule Id="DCS0101" Action="Hidden" />
+    <Rule Id="DCS0102" Action="Hidden" />
+    <Rule Id="DCS0103" Action="Hidden" />
+    <Rule Id="DCS0200" Action="Hidden" />
+  </Rules>
   <Rules AnalyzerId="Microsoft.Analyzers.NativeCodeAnalysis" RuleNamespace="Microsoft.Rules.Native">
     <Rule Id="C26100" Action="Warning" />
     <Rule Id="C26101" Action="Warning" />
