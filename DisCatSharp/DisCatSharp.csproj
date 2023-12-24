@@ -36,7 +36,7 @@ Written with love and for everyone.
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.1">
+    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
