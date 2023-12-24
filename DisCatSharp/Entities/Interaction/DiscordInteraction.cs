@@ -27,7 +27,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	public DiscordInteractionData Data { get; internal set; }
 
 	/// <summary>
-	/// Gets the Id of the guild that invoked this interaction.
+	/// Gets the Id of the guild that invoked this interaction, if any.
 	/// </summary>
 	[JsonIgnore]
 	public ulong? GuildId { get; internal set; }

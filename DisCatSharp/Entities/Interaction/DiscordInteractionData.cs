@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,17 +22,21 @@ public sealed class DiscordInteractionData : SnowflakeObject
 	/// Gets the parameters and values of the invoked interaction.
 	/// </summary>
 	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<DiscordInteractionDataOption> Options { get; internal set; }
+	public IReadOnlyList<DiscordInteractionDataOption> Options { get; internal set; } = [];
 
 	/// <summary>
-	/// Gets the component rows (Applicable to modal submits).
+	/// Gets the component rows. Only applicable to modal submits.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordActionRowComponentResult> ComponentsInternal { get; set; }
+	internal List<DiscordActionRowComponentResult> ComponentsInternal { get; set; } = [];
 
+	/// <summary>
+	/// Gets the components. Only applicable to modal submits.
+	/// <para>If you want to get the components, use <see cref="DiscordInteraction"/>.<see cref="DiscordInteraction.Message"/>.<see cref="DiscordMessage.Components"/> instead.</para>
+	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordComponentResult> Components
-		=> this.ComponentsInternal.Select(x => x.Components[0]).ToList();
+		=> this.ComponentsInternal.Where(comp => comp.Components.All(innerComp => innerComp.Type == ComponentType.InputText)).Select(x => x.Components[0]).ToList();
 
 	/// <summary>
 	/// Gets the Discord snowflake objects resolved from this interaction's arguments.
@@ -71,6 +74,9 @@ public sealed class DiscordInteractionData : SnowflakeObject
 	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
 	public ApplicationCommandType Type { get; internal set; }
 
+	/// <summary>
+	/// Gets the Id of the guild this interaction was invoked in, if any.
+	/// </summary>
 	[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong? GuildId { get; internal set; }
 }
