@@ -765,9 +765,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							if (updateList != null && updateList.Count != 0)
 							{
 								var regCommands = await RegistrationWorker.RegisterGlobalCommandsAsync(this.Client, updateList).ConfigureAwait(false);
-								var actualCommands = regCommands.Distinct().ToList();
-								commands.AddRange(actualCommands);
-								GlobalCommandsInternal.AddRange(actualCommands);
+if (regCommands is not null)
+{
+	var actualCommands = regCommands.Distinct().ToList();
+	commands.AddRange(actualCommands);
+	GlobalCommandsInternal.AddRange(actualCommands);
+}
 							}
 							else
 								foreach (var cmd in GlobalDiscordCommands)
