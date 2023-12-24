@@ -278,12 +278,7 @@ public static class Extensions
 	/// <returns>Whether the value is in range.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool IsInRange(this float num, float min, float max, bool inclusive = true)
-	{
-		if (min > max)
-			return false;
-
-		return inclusive ? num >= min && num <= max : num > min && num < max;
-	}
+		=> min <= max && (inclusive ? num >= min && num <= max : num > min && num < max);
 
 	/// <summary>
 	/// Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.
@@ -295,12 +290,7 @@ public static class Extensions
 	/// <returns>Whether the value is in range.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool IsInRange(this double num, double min, double max, bool inclusive = true)
-	{
-		if (min > max)
-			return false;
-
-		return inclusive ? num >= min && num <= max : num > min && num < max;
-	}
+		=> !(min > max) && (inclusive ? num >= min && num <= max : num > min && num < max);
 
 	/// <summary>
 	/// Returns whether supplied character is in any of the following ranges: a-z, A-Z, 0-9.

@@ -1,49 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../DisCatSharp.Targets/Version.targets" />
-  <Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
-  <Import Project="../DisCatSharp.Targets/Package.targets" />
-  <Import Project="../DisCatSharp.Targets/NuGet.targets" />
-  <Import Project="../DisCatSharp.Targets/Library.targets" />
-<Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
+	<Import Project="../DisCatSharp.Targets/Version.targets" />
+	<Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
+	<Import Project="../DisCatSharp.Targets/Package.targets" />
+	<Import Project="../DisCatSharp.Targets/NuGet.targets" />
+	<Import Project="../DisCatSharp.Targets/Library.targets" />
+	<Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
 
-  <PropertyGroup>
-    <AssemblyName>DisCatSharp.VoiceNext</AssemblyName>
-    <RootNamespace>DisCatSharp.VoiceNext</RootNamespace>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+	<PropertyGroup>
+		<AssemblyName>DisCatSharp.VoiceNext</AssemblyName>
+		<RootNamespace>DisCatSharp.VoiceNext</RootNamespace>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <PackageId>DisCatSharp.VoiceNext</PackageId>
-	<Description>
-DisCatSharp Voice Next Extension
+	<PropertyGroup>
+		<PackageId>DisCatSharp.VoiceNext</PackageId>
+		<Description>
+			DisCatSharp Voice Next Extension
 
-Easy made audio player for discord bots.
+			Easy made audio player for discord bots.
 
-Documentation: https://docs.dcs.aitsys.dev/articles/modules/audio/voicenext/prerequisites.html
-	</Description>
-	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Net8,Voice,Audio Player</PackageTags>
+			Documentation: https://docs.dcs.aitsys.dev/articles/modules/audio/voicenext/prerequisites.html
+		</Description>
+		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Net8,Voice,Audio Player</PackageTags>
 
-  </PropertyGroup>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="DisCatSharp.Attributes" Version="10.4.4" />
-    <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-    <PackageReference Include="System.Threading.Channels" Version="8.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="DisCatSharp.Attributes" Version="10.4.4" />
+		<PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+		<PackageReference Include="System.Threading.Channels" Version="8.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+	</ItemGroup>
 
 </Project>

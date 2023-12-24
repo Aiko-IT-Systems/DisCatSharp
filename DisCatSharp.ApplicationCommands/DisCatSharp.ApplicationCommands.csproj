@@ -1,48 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../DisCatSharp.Targets/Version.targets" />
-  <Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
-  <Import Project="../DisCatSharp.Targets/Package.targets" />
-  <Import Project="../DisCatSharp.Targets/NuGet.targets" />
-  <Import Project="../DisCatSharp.Targets/Library.targets" />
-  <Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
+	<Import Project="../DisCatSharp.Targets/Version.targets" />
+	<Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
+	<Import Project="../DisCatSharp.Targets/Package.targets" />
+	<Import Project="../DisCatSharp.Targets/NuGet.targets" />
+	<Import Project="../DisCatSharp.Targets/Library.targets" />
+	<Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
 
-  <PropertyGroup>
-    <AssemblyName>DisCatSharp.ApplicationCommands</AssemblyName>
-    <RootNamespace>DisCatSharp.ApplicationCommands</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<AssemblyName>DisCatSharp.ApplicationCommands</AssemblyName>
+		<RootNamespace>DisCatSharp.ApplicationCommands</RootNamespace>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <PackageId>DisCatSharp.ApplicationCommands</PackageId>
-	<Description>
-DisCatSharp Application Commands Extension
+	<PropertyGroup>
+		<PackageId>DisCatSharp.ApplicationCommands</PackageId>
+		<Description>
+			DisCatSharp Application Commands Extension
 
-Use it on top of your DisCatSharp powered bot and unleash the power of application commands in discord.
+			Use it on top of your DisCatSharp powered bot and unleash the power of application commands in discord.
 
-Documentation: https://docs.dcs.aitsys.dev/articles/modules/application_commands/intro.html
-	</Description>
-	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Net8,Application Commands,Context Menu Commands</PackageTags>
+			Documentation: https://docs.dcs.aitsys.dev/articles/modules/application_commands/intro.html
+		</Description>
+		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Net8,Application Commands,Context Menu Commands</PackageTags>
 
-  </PropertyGroup>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="DisCatSharp.Attributes" Version="10.4.4" />
-    <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="DisCatSharp.Attributes" Version="10.4.4" />
+		<PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
-    <ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+		<ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+	</ItemGroup>
 </Project>

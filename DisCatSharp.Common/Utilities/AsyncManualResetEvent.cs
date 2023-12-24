@@ -13,6 +13,9 @@ public sealed class AsyncManualResetEvent
 	/// </summary>
 	public bool IsSet => this._resetTcs?.Task?.IsCompleted == true;
 
+	/// <summary>
+	/// Gets the task completion source for this event.
+	/// </summary>
 	private volatile TaskCompletionSource<bool> _resetTcs;
 
 	/// <summary>

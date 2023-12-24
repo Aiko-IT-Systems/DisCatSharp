@@ -64,8 +64,7 @@ public class DiscordVoiceState : ObservableApiObject
 			if (this.Guild is not null)
 				usr = this.Guild.MembersInternal.GetValueOrDefault(this.UserId);
 
-			if (usr is null)
-				usr = this.Discord.GetCachedOrEmptyUserInternal(this.UserId);
+			usr ??= this.Discord.GetCachedOrEmptyUserInternal(this.UserId);
 
 			return usr;
 		}

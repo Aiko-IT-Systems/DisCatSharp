@@ -20,7 +20,6 @@ public class VoiceReceiveEventArgs : DiscordEventArgs
 	/// </summary>
 	public DiscordUser? User { get; internal set; }
 
-
 	/// <summary>
 	/// Gets the received voice data, decoded to PCM format.
 	/// </summary>

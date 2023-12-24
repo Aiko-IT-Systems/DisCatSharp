@@ -117,10 +117,7 @@ internal class ReactionCollector : IDisposable
 					req.Collected.Add(new()
 					{
 						Emoji = eventArgs.Emoji,
-						Users =
-						[
-							eventArgs.User
-						]
+						Users = [eventArgs.User]
 					});
 			}
 

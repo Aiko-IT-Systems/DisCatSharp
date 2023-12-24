@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace DisCatSharp.Common.Serialization;
 
@@ -30,7 +30,7 @@ public interface IDecomposer
 	/// <param name="decomposed">Decomposition result.</param>
 	/// <param name="tdecomposed">Type of the result.</param>
 	/// <returns>Whether the operation was successful.</returns>
-	bool TryDecompose(object obj, Type tobj, out object decomposed, out Type tdecomposed);
+	bool TryDecompose(object obj, Type tobj, out object? decomposed, out Type tdecomposed);
 
 	/// <summary>
 	/// Attempts to recompose given object of specified source type, into specified target type. The operation produces the recomposed object.
@@ -40,5 +40,5 @@ public interface IDecomposer
 	/// <param name="trecomposed">Type to recompose into.</param>
 	/// <param name="recomposed">Recomposition result.</param>
 	/// <returns>Whether the operation was successful.</returns>
-	bool TryRecompose(object obj, Type tobj, Type trecomposed, out object recomposed);
+	bool TryRecompose(object obj, Type tobj, Type trecomposed, out object? recomposed);
 }

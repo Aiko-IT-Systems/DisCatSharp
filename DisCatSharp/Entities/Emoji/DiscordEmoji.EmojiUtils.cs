@@ -24,7 +24,7 @@ public partial class DiscordEmoji
 	{
 #region Generated Emoji Map
 
-		s_unicodeEmojis = new Dictionary<string, string>
+		s_unicodeEmojis = new()
 		{
 			[":100:"] = "\U0001f4af",
 			[":1234:"] = "\U0001f522",
@@ -6680,7 +6680,7 @@ public partial class DiscordEmoji
 			[":zzz:"] = "\U0001f4a4"
 		};
 
-		s_discordNameLookup = new Dictionary<string, string>
+		s_discordNameLookup = new()
 		{
 			["\U0001f4af"] = ":100:",
 			["\U0001f522"] = ":1234:",

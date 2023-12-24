@@ -30,33 +30,35 @@ public abstract class AsyncEvent
 /// </summary>
 /// <typeparam name="TSender">Type of the object that dispatches this event.</typeparam>
 /// <typeparam name="TArgs">Type of event argument object passed to this event's handlers.</typeparam>
-public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
+/// <remarks>
+/// Creates a new asynchronous event with specified name and exception handler.
+/// </remarks>
+/// <param name="name">Name of this event.</param>
+/// <param name="maxExecutionTime">Maximum handler execution time. A value of <see cref="TimeSpan.Zero"/> means infinite.</param>
+/// <param name="exceptionHandler">Delegate which handles exceptions caused by this event.</param>
+public sealed class AsyncEvent<TSender, TArgs>(string name, TimeSpan maxExecutionTime, AsyncEventExceptionHandler<TSender, TArgs>? exceptionHandler) : AsyncEvent(name)
 	where TArgs : AsyncEventArgs
 {
 	/// <summary>
 	/// Gets the maximum allotted execution time for all handlers. Any event which causes the handler to time out
 	/// will raise a non-fatal <see cref="AsyncEventTimeoutException{TSender, TArgs}"/>.
 	/// </summary>
-	public TimeSpan MaximumExecutionTime { get; }
-
-	private readonly object _lock = new();
-	private ImmutableArray<AsyncEventHandler<TSender, TArgs>> _handlers;
-	private readonly AsyncEventExceptionHandler<TSender, TArgs> _exceptionHandler;
+	public TimeSpan MaximumExecutionTime { get; } = maxExecutionTime;
 
 	/// <summary>
-	/// Creates a new asynchronous event with specified name and exception handler.
+	/// Gets the lock.
 	/// </summary>
-	/// <param name="name">Name of this event.</param>
-	/// <param name="maxExecutionTime">Maximum handler execution time. A value of <see cref="TimeSpan.Zero"/> means infinite.</param>
-	/// <param name="exceptionHandler">Delegate which handles exceptions caused by this event.</param>
-	public AsyncEvent(string name, TimeSpan maxExecutionTime, AsyncEventExceptionHandler<TSender, TArgs> exceptionHandler)
-		: base(name)
-	{
-		this._handlers = [];
-		this._exceptionHandler = exceptionHandler;
+	private readonly object _lock = new();
 
-		this.MaximumExecutionTime = maxExecutionTime;
-	}
+	/// <summary>
+	/// Gets or sets the event handlers.
+	/// </summary>
+	private ImmutableArray<AsyncEventHandler<TSender, TArgs>> _handlers = [];
+
+	/// <summary>
+	/// Gets or sets the exception handler.
+	/// </summary>
+	private readonly AsyncEventExceptionHandler<TSender, TArgs>? _exceptionHandler = exceptionHandler;
 
 	/// <summary>
 	/// Registers a new handler for this event.
@@ -106,7 +108,7 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 			return;
 
 		// Collect exceptions
-		List<Exception> exceptions = null;
+		List<Exception> exceptions = [];
 		if ((exceptionMode & AsyncEventExceptionMode.ThrowAll) != 0)
 			exceptions = new(handlers.Length * 2 /* timeout + regular */);
 
@@ -167,8 +169,5 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 	/// <param name="sender">The sender.</param>
 	/// <param name="args">The args.</param>
 	private void HandleException(Exception ex, AsyncEventHandler<TSender, TArgs> handler, TSender sender, TArgs args)
-	{
-		if (this._exceptionHandler != null)
-			this._exceptionHandler(this, ex, handler, sender, args);
-	}
+		=> this._exceptionHandler?.Invoke(this, ex, handler, sender, args);
 }

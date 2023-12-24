@@ -1,48 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../DisCatSharp.Targets/Version.targets" />
-  <Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
-  <Import Project="../DisCatSharp.Targets/Package.targets" />
-  <Import Project="../DisCatSharp.Targets/NuGet.targets" />
-  <Import Project="../DisCatSharp.Targets/Library.targets" />
-  <Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
+	<Import Project="../DisCatSharp.Targets/Version.targets" />
+	<Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
+	<Import Project="../DisCatSharp.Targets/Package.targets" />
+	<Import Project="../DisCatSharp.Targets/NuGet.targets" />
+	<Import Project="../DisCatSharp.Targets/Library.targets" />
+	<Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
 
-  <PropertyGroup>
-    <AssemblyName>DisCatSharp.Interactivity</AssemblyName>
-    <RootNamespace>DisCatSharp.Interactivity</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<AssemblyName>DisCatSharp.Interactivity</AssemblyName>
+		<RootNamespace>DisCatSharp.Interactivity</RootNamespace>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <PackageId>DisCatSharp.Interactivity</PackageId>
-	<Description>
-DisCatSharp Interactivity Extension
+	<PropertyGroup>
+		<PackageId>DisCatSharp.Interactivity</PackageId>
+		<Description>
+			DisCatSharp Interactivity Extension
 
-Unleash the full power of discord commands.
+			Unleash the full power of discord commands.
 
-Documentation: https://docs.dcs.aitsys.dev/articles/modules/interactivity.html
-	</Description>
-	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Net8,Pagination,Reactions,Buttons,Interactive Commands,Interactivity,Message Components</PackageTags>
+			Documentation: https://docs.dcs.aitsys.dev/articles/modules/interactivity.html
+		</Description>
+		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Net8,Pagination,Reactions,Buttons,Interactive Commands,Interactivity,Message Components</PackageTags>
 
-  </PropertyGroup>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="ConcurrentHashSet" Version="1.3.0" />
-    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="DisCatSharp.Attributes" Version="10.4.4" />
-    <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="ConcurrentHashSet" Version="1.3.0" />
+		<PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="DisCatSharp.Attributes" Version="10.4.4" />
+		<PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+	</ItemGroup>
 
 </Project>

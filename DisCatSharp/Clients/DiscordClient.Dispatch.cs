@@ -766,7 +766,7 @@ public sealed partial class DiscordClient
 		else
 		{
 			Volatile.Write(ref this._guildDownloadCompleted, true);
-			await this._guildDownloadCompletedEv.InvokeAsync(this, new(this.Guilds, true, this.ServiceProvider)).ConfigureAwait(false);
+			await this.GuildDownloadCompletedEv.InvokeAsync(this, new(this.Guilds, true, this.ServiceProvider)).ConfigureAwait(false);
 			this.Logger.LogInformation(LoggerEvents.Startup, "Application has no guilds. Firing GuildDownloadCompleted event for internal tools");
 		}
 
@@ -1134,7 +1134,7 @@ public sealed partial class DiscordClient
 			}).ConfigureAwait(false);
 
 		if (dcompl && !old)
-			await this._guildDownloadCompletedEv.InvokeAsync(this, new(this.Guilds, false, this.ServiceProvider)).ConfigureAwait(false);
+			await this.GuildDownloadCompletedEv.InvokeAsync(this, new(this.Guilds, false, this.ServiceProvider)).ConfigureAwait(false);
 	}
 
 	/// <summary>

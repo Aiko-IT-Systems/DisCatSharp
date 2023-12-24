@@ -1,76 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../DisCatSharp.Targets/Version.targets" />
-  <Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
-  <Import Project="../DisCatSharp.Targets/Package.targets" />
-  <Import Project="../DisCatSharp.Targets/NuGet.targets" />
-  <Import Project="../DisCatSharp.Targets/Library.targets" />
-  <Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
+	<Import Project="../DisCatSharp.Targets/Version.targets" />
+	<Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
+	<Import Project="../DisCatSharp.Targets/Package.targets" />
+	<Import Project="../DisCatSharp.Targets/NuGet.targets" />
+	<Import Project="../DisCatSharp.Targets/Library.targets" />
+	<Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
 
-  <PropertyGroup>
-    <AssemblyName>DisCatSharp</AssemblyName>
-    <RootNamespace>DisCatSharp</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<AssemblyName>DisCatSharp</AssemblyName>
+		<RootNamespace>DisCatSharp</RootNamespace>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <PackageId>DisCatSharp</PackageId>
-    <Description>
-DisCatSharp
+	<PropertyGroup>
+		<PackageId>DisCatSharp</PackageId>
+		<Description>
+			DisCatSharp
 
-Your library to write discord bots in C# with a focus on always providing access to the latest discord features.
-Written with love and for everyone.
-	</Description>
-    <PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Net8</PackageTags>
+			Your library to write discord bots in C# with a focus on always providing access to the latest discord features.
+			Written with love and for everyone.
+		</Description>
+		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Net8</PackageTags>
 
-  </PropertyGroup>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="res\discatsharp.png" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="res\discatsharp.png" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="res\discatsharp.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="res\discatsharp.png">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="DisCatSharp.Attributes" Version="10.4.4" />
-    <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
-    <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="NuGet.Protocol" Version="6.8.0" />
-    <PackageReference Include="Octokit" Version="9.0.0" />
-    <PackageReference Include="Sentry" Version="3.41.3" />
-    <PackageReference Include="Sentry.Extensions.Logging" Version="3.41.3" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.1" />
-    <PackageReference Include="System.Memory" Version="4.5.5" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    <PackageReference Include="System.Net.WebSockets" Version="4.3.0" />
-    <PackageReference Include="System.Net.WebSockets.Client" Version="4.3.2" />
-    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="DisCatSharp.Attributes" Version="10.4.4" />
+		<PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
+		<PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="NuGet.Protocol" Version="6.8.0" />
+		<PackageReference Include="Octokit" Version="9.0.0" />
+		<PackageReference Include="Sentry" Version="3.41.3" />
+		<PackageReference Include="Sentry.Extensions.Logging" Version="3.41.3" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.1" />
+		<PackageReference Include="System.Memory" Version="4.5.5" />
+		<PackageReference Include="System.Net.Http" Version="4.3.4" />
+		<PackageReference Include="System.Net.WebSockets" Version="4.3.0" />
+		<PackageReference Include="System.Net.WebSockets.Client" Version="4.3.2" />
+		<PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entities\Interaction\Components\Attachment\" />
-    <Folder Include="Entities\Interaction\Components\DateTime\" />
-    <Folder Include="Entities\Interaction\Components\Radio\" />
-    <Folder Include="Ascii\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Entities\Interaction\Components\Attachment\" />
+		<Folder Include="Entities\Interaction\Components\DateTime\" />
+		<Folder Include="Entities\Interaction\Components\Radio\" />
+		<Folder Include="Ascii\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+	</ItemGroup>
 </Project>

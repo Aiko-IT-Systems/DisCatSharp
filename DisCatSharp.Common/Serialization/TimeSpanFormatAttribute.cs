@@ -5,20 +5,20 @@ using System;
 namespace DisCatSharp.Common.Serialization;
 
 /// <summary>
-/// Defines the format for string-serialized <see cref="DateTime"/> and <see cref="DateTimeOffset"/> objects.
+/// Defines the format for string-serialized <see cref="TimeSpan"/> objects.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-public sealed class DateTimeFormatAttribute : SerializationAttribute
+public sealed class TimeSpanFormatAttribute : SerializationAttribute
 {
 	/// <summary>
-	/// Gets the ISO 8601 format string of "yyyy-MM-ddTHH:mm:ss.fffzzz".
+	/// Gets the ISO 8601 format string of @"ddThh\:mm\:ss\.fff".
 	/// </summary>
-	public const string FORMAT_ISO_8601 = "yyyy-MM-ddTHH:mm:ss.fffzzz";
+	public const string FORMAT_ISO_8601 = @"ddThh\:mm\:ss\.fff";
 
 	/// <summary>
-	/// Gets the RFC 1123 format string of "R".
+	/// Gets the constant format.
 	/// </summary>
-	public const string FORMAT_RFC_1123 = "R";
+	public const string FORMAT_CONSTANT = "c";
 
 	/// <summary>
 	/// Gets the general long format.
@@ -33,20 +33,20 @@ public sealed class DateTimeFormatAttribute : SerializationAttribute
 	/// <summary>
 	/// Gets the custom datetime format string to use.
 	/// </summary>
-	public string Format { get; }
+	public string? Format { get; }
 
 	/// <summary>
 	/// Gets the predefined datetime format kind.
 	/// </summary>
-	public DateTimeFormatKind Kind { get; }
+	public TimeSpanFormatKind Kind { get; }
 
 	/// <summary>
 	/// Specifies a predefined format to use.
 	/// </summary>
 	/// <param name="kind">Predefined format kind to use.</param>
-	public DateTimeFormatAttribute(DateTimeFormatKind kind)
+	public TimeSpanFormatAttribute(TimeSpanFormatKind kind)
 	{
-		if (kind is < 0 or > DateTimeFormatKind.InvariantLocaleShort)
+		if (kind is < 0 or > TimeSpanFormatKind.InvariantLocaleShort)
 			throw new ArgumentOutOfRangeException(nameof(kind), "Specified format kind is not legal or supported.");
 
 		this.Kind = kind;
@@ -55,34 +55,34 @@ public sealed class DateTimeFormatAttribute : SerializationAttribute
 
 	/// <summary>
 	/// <para>Specifies a custom format to use.</para>
-	/// <para>See https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings for more details.</para>
+	/// <para>See https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-timespan-format-strings for more details.</para>
 	/// </summary>
 	/// <param name="format">Custom format string to use.</param>
-	public DateTimeFormatAttribute(string format)
+	public TimeSpanFormatAttribute(string format)
 	{
 		if (string.IsNullOrWhiteSpace(format))
 			throw new ArgumentNullException(nameof(format), "Specified format cannot be null or empty.");
 
-		this.Kind = DateTimeFormatKind.Custom;
+		this.Kind = TimeSpanFormatKind.Custom;
 		this.Format = format;
 	}
 }
 
 /// <summary>
-/// <para>Defines which built-in format to use for for <see cref="DateTime"/> and <see cref="System.DateTimeOffset"/> serialization.</para>
-/// <para>See https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings and https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings for more details.</para>
+/// <para>Defines which built-in format to use for <see cref="TimeSpan"/> serialization.</para>
+/// <para>See https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-timespan-format-strings and https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-timespan-format-strings for more details.</para>
 /// </summary>
-public enum DateTimeFormatKind
+public enum TimeSpanFormatKind
 {
 	/// <summary>
-	/// Specifies ISO 8601 format, which is equivalent to .NET format string of "yyyy-MM-ddTHH:mm:ss.fffzzz".
+	/// Specifies ISO 8601-like time format, which is equivalent to .NET format string of @"ddThh\:mm\:ss\.fff".
 	/// </summary>
 	ISO8601 = 0,
 
 	/// <summary>
-	/// Specifies RFC 1123 format, which is equivalent to .NET format string of "R".
+	/// Specifies a format defined by <see cref="System.Globalization.CultureInfo.InvariantCulture"/>, with a format string of "c".
 	/// </summary>
-	RFC1123 = 1,
+	InvariantConstant = 1,
 
 	/// <summary>
 	/// Specifies a format defined by <see cref="System.Globalization.CultureInfo.CurrentCulture"/>, with a format string of "G". This format is not recommended for portability reasons.
@@ -95,12 +95,12 @@ public enum DateTimeFormatKind
 	CurrentLocaleShort = 3,
 
 	/// <summary>
-	/// Specifies a format defined by <see cref="System.Globalization.CultureInfo.InvariantCulture"/>, with a format string of "G".
+	/// Specifies a format defined by <see cref="System.Globalization.CultureInfo.InvariantCulture"/>, with a format string of "G". This format is not recommended for portability reasons.
 	/// </summary>
 	InvariantLocaleLong = 4,
 
 	/// <summary>
-	/// Specifies a format defined by <see cref="System.Globalization.CultureInfo.InvariantCulture"/>, with a format string of "g".
+	/// Specifies a format defined by <see cref="System.Globalization.CultureInfo.InvariantCulture"/>, with a format string of "g". This format is not recommended for portability reasons.
 	/// </summary>
 	InvariantLocaleShort = 5,
 

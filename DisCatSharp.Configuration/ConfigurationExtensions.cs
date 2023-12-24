@@ -219,8 +219,11 @@ internal static class ConfigurationExtensions
 	/// <param name="config"></param>
 	/// <param name="values"></param>
 	/// <returns>True if section exists, otherwise false</returns>
-	public static bool HasSection(this IConfiguration config, params string[] values)
+	public static bool HasSection(this IConfiguration config, params string?[] values)
 	{
+		if (values == null)
+			return false;
+
 		switch (values.Length)
 		{
 			case 0:
