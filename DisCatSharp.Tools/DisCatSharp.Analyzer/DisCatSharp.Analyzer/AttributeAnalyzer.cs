@@ -129,65 +129,74 @@ namespace DisCatSharp.Analyzer
 		/// <param name="context">The syntac node analysis context.</param>
 		private static void StatusAnalyzer(SyntaxNodeAnalysisContext context)
 		{
-			var invocation = context.Node;
-			var declaration = context.SemanticModel.GetSymbolInfo(invocation, context.CancellationToken).Symbol;
-			if (null == declaration)
+			try
 			{
-				Console.WriteLine(new LocalizableResourceString(nameof(Resources.Faulty), Resources.ResourceManager, typeof(Resources)));
-				return;
+				var invocation = context.Node;
+				var declaration = context.SemanticModel.GetSymbolInfo(invocation, context.CancellationToken).Symbol;
+				if (null == declaration)
+				{
+					Console.WriteLine(new LocalizableResourceString(nameof(Resources.Faulty), Resources.ResourceManager, typeof(Resources)));
+					return;
+				}
+
+				var attributes = declaration.GetAttributes();
+
+				var name = declaration.Name;
+				var kind = declaration.Kind.ToString();
+				if (name == ".ctor")
+				{
+					name = declaration.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+					kind = "Constructor";
+				}
+
+				var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(ExperimentalAttribute)));
+				var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DeprecatedAttribute)));
+				var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordInExperimentAttribute)));
+				var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordDeprecatedAttribute)));
+				var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordUnreleasedAttribute)));
+				var requiresFeatureAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(RequiresFeatureAttribute)));
+
+				if (experimentalAttributeData != null)
+				{
+					var message = GetMessage(experimentalAttributeData);
+					context.ReportDiagnostic(Diagnostic.Create(s_experimentalRule, invocation.GetLocation(), kind, name, message));
+				}
+
+				if (deprecatedAttributeData != null)
+				{
+					var message = GetMessage(deprecatedAttributeData);
+					context.ReportDiagnostic(Diagnostic.Create(s_deprecatedRule, invocation.GetLocation(), kind, name, message));
+				}
+
+				if (discordInExperimentAttributeData != null)
+				{
+					var message = GetMessage(discordInExperimentAttributeData);
+					context.ReportDiagnostic(Diagnostic.Create(s_discordInExperimentRule, invocation.GetLocation(), kind, name, message));
+				}
+
+				if (discordDeprecatedAttributeData != null)
+				{
+					var message = GetMessage(discordDeprecatedAttributeData);
+					context.ReportDiagnostic(Diagnostic.Create(s_discordDeprecatedRule, invocation.GetLocation(), kind, name, message));
+				}
+
+				if (discordUnreleasedAttributeData != null)
+				{
+					var message = GetMessage(discordUnreleasedAttributeData);
+					context.ReportDiagnostic(Diagnostic.Create(s_discordUnreleasedRule, invocation.GetLocation(), kind, name, message));
+				}
+
+				if (requiresFeatureAttributeData != null)
+				{
+					var message = GetFeatureMessage(requiresFeatureAttributeData);
+					context.ReportDiagnostic(Diagnostic.Create(s_requiresFeatureRule, invocation.GetLocation(), kind, name, message));
+				}
 			}
-
-			var attributes = declaration.GetAttributes();
-
-			var name = declaration.Name;
-			var kind = declaration.Kind.ToString();
-			if (name == ".ctor")
+			catch(Exception ex)
 			{
-				name = declaration.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-				kind = "Constructor";
-			}
-
-			var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(ExperimentalAttribute)));
-			var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DeprecatedAttribute)));
-			var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordInExperimentAttribute)));
-			var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordDeprecatedAttribute)));
-			var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordUnreleasedAttribute)));
-			var requiresFeatureAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(RequiresFeatureAttribute)));
-
-			if (experimentalAttributeData != null)
-			{
-				var message = GetMessage(experimentalAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(s_experimentalRule, invocation.GetLocation(), kind, name, message));
-			}
-
-			if (deprecatedAttributeData != null)
-			{
-				var message = GetMessage(deprecatedAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(s_deprecatedRule, invocation.GetLocation(), kind, name, message));
-			}
-
-			if (discordInExperimentAttributeData != null)
-			{
-				var message = GetMessage(discordInExperimentAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(s_discordInExperimentRule, invocation.GetLocation(), kind, name, message));
-			}
-
-			if (discordDeprecatedAttributeData != null)
-			{
-				var message = GetMessage(discordDeprecatedAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(s_discordDeprecatedRule, invocation.GetLocation(), kind, name, message));
-			}
-
-			if (discordUnreleasedAttributeData != null)
-			{
-				var message = GetMessage(discordUnreleasedAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(s_discordUnreleasedRule, invocation.GetLocation(), kind, name, message));
-			}
-
-			if (requiresFeatureAttributeData != null)
-			{
-				var message = GetFeatureMessage(requiresFeatureAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(s_requiresFeatureRule, invocation.GetLocation(), kind, name, message));
+				Console.WriteLine($"StatusAnalyzer threw an exception: {ex.Message}");
+				if (!string.IsNullOrEmpty(ex.StackTrace))
+					Console.WriteLine(ex.StackTrace);
 			}
 
 			return;
@@ -199,76 +208,84 @@ namespace DisCatSharp.Analyzer
 		/// <param name="context">The symbol analysis context.</param>
 		private static void ExperimentalAnalyzer(SymbolAnalysisContext context)
 		{
-			Console.WriteLine(new LocalizableResourceString(nameof(Resources.Handling), Resources.ResourceManager, typeof(Resources)) + context.Symbol.Kind.ToString());
-			var syntaxTrees = from x in context.Symbol.Locations
-			                  where x.IsInSource
-			                  select x.SourceTree;
-			var declaration = context.Symbol;
-
-			// ReSharper disable HeuristicUnreachableCode
-			// ReSharper disable once ConditionIsAlwaysTrueOrFalse
-			if (null == declaration)
+			try
 			{
-				Console.WriteLine(new LocalizableResourceString(nameof(Resources.Faulty), Resources.ResourceManager, typeof(Resources)));
-				return;
+				var syntaxTrees = from x in context.Symbol.Locations
+								where x.IsInSource
+								select x.SourceTree;
+				var declaration = context.Symbol;
+
+				// ReSharper disable HeuristicUnreachableCode
+				// ReSharper disable once ConditionIsAlwaysTrueOrFalse
+				if (null == declaration)
+				{
+					Console.WriteLine(new LocalizableResourceString(nameof(Resources.Faulty), Resources.ResourceManager, typeof(Resources)));
+					return;
+				}
+				// ReSharper enable HeuristicUnreachableCode
+
+				var attributes = declaration.GetAttributes();
+
+				var name = declaration.Name;
+				var kind = declaration.Kind.ToString();
+				if (name == ".ctor")
+				{
+					name = declaration.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+					kind = "Constructor";
+				}
+				else if (kind == "NamedType")
+					kind = "Class";
+
+				var model = context.Compilation.GetSemanticModel(syntaxTrees.First(), true);
+
+				var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(ExperimentalAttribute)));
+				var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DeprecatedAttribute)));
+				var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordInExperimentAttribute)));
+				var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordDeprecatedAttribute)));
+				var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordUnreleasedAttribute)));
+				var requiresFeatureAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(RequiresFeatureAttribute)));
+
+				if (experimentalAttributeData != null)
+				{
+					var message = GetMessage(experimentalAttributeData);
+					context.ReportDiagnostic(Diagnostic.Create(s_experimentalRule, context.Symbol.Locations.FirstOrDefault(x => x.IsInSource), kind, name, message));
+				}
+
+				if (deprecatedAttributeData != null)
+				{
+					var message = GetMessage(deprecatedAttributeData);
+					context.ReportDiagnostic(Diagnostic.Create(s_deprecatedRule, context.Symbol.Locations.FirstOrDefault(x => x.IsInSource), kind, name, message));
+				}
+
+				if (discordInExperimentAttributeData != null)
+				{
+					var message = GetMessage(discordInExperimentAttributeData);
+					context.ReportDiagnostic(Diagnostic.Create(s_discordInExperimentRule, context.Symbol.Locations.FirstOrDefault(x => x.IsInSource), kind, name, message));
+				}
+
+				if (discordDeprecatedAttributeData != null)
+				{
+					var message = GetMessage(discordDeprecatedAttributeData);
+					context.ReportDiagnostic(Diagnostic.Create(s_discordDeprecatedRule, context.Symbol.Locations.FirstOrDefault(x => x.IsInSource), kind, name, message));
+				}
+
+				if (discordUnreleasedAttributeData != null)
+				{
+					var message = GetMessage(discordUnreleasedAttributeData);
+					context.ReportDiagnostic(Diagnostic.Create(s_discordUnreleasedRule, context.Symbol.Locations.FirstOrDefault(x => x.IsInSource), kind, name, message));
+				}
+
+				if (requiresFeatureAttributeData != null)
+				{
+					var message = GetFeatureMessage(requiresFeatureAttributeData);
+					context.ReportDiagnostic(Diagnostic.Create(s_requiresFeatureRule, context.Symbol.Locations.FirstOrDefault(x => x.IsInSource), kind, name, message));
+				}
 			}
-			// ReSharper enable HeuristicUnreachableCode
-
-			var attributes = declaration.GetAttributes();
-
-			var name = declaration.Name;
-			var kind = declaration.Kind.ToString();
-			if (name == ".ctor")
+			catch(Exception ex)
 			{
-				name = declaration.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-				kind = "Constructor";
-			}
-			else if (kind == "NamedType")
-				kind = "Class";
-
-			var model = context.Compilation.GetSemanticModel(syntaxTrees.First(), true);
-
-			var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(ExperimentalAttribute)));
-			var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DeprecatedAttribute)));
-			var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordInExperimentAttribute)));
-			var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordDeprecatedAttribute)));
-			var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordUnreleasedAttribute)));
-			var requiresFeatureAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(RequiresFeatureAttribute)));
-
-			if (experimentalAttributeData != null)
-			{
-				var message = GetMessage(experimentalAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(s_experimentalRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
-			}
-
-			if (deprecatedAttributeData != null)
-			{
-				var message = GetMessage(deprecatedAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(s_deprecatedRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
-			}
-
-			if (discordInExperimentAttributeData != null)
-			{
-				var message = GetMessage(discordInExperimentAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(s_discordInExperimentRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
-			}
-
-			if (discordDeprecatedAttributeData != null)
-			{
-				var message = GetMessage(discordDeprecatedAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(s_discordDeprecatedRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
-			}
-
-			if (discordUnreleasedAttributeData != null)
-			{
-				var message = GetMessage(discordUnreleasedAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(s_discordUnreleasedRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
-			}
-
-			if (requiresFeatureAttributeData != null)
-			{
-				var message = GetFeatureMessage(requiresFeatureAttributeData);
-				context.ReportDiagnostic(Diagnostic.Create(s_requiresFeatureRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message));
+				Console.WriteLine($"StatusAnalyzer threw an exception: {ex.Message}");
+				if (!string.IsNullOrEmpty(ex.StackTrace))
+					Console.WriteLine(ex.StackTrace);
 			}
 
 			return;
