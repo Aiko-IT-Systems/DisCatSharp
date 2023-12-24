@@ -4,11 +4,11 @@
 	<PropertyGroup>
 		<NoWarn>1591;NU5128;DV2001;NETSDK1188;CS8600;CS8625;CS8601;CS8604;CS0219;CS8618;CS8619;CS8597;CS8603;CS8602;CS8765;CS8632;CS8633;CS8714;CS8629;CS8767;CS8620</NoWarn>
 		<LangVersion>latest</LangVersion>
-		<Optimize>True</Optimize>
-		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
 		<Optimize>False</Optimize>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<Optimize>True</Optimize>
 	</PropertyGroup>
 </Project>

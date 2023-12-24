@@ -1,16 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<Import Project="../../DisCatSharp.Targets/Library.targets" />
+	<Import Project="../../DisCatSharp.Targets/TestProject.targets" />
 	<Import Project="../../DisCatSharp.Targets/InternalsVisibleTo.targets" />
-
-	<PropertyGroup>
-		<Nullable>enable</Nullable>
-		<NoWarn>1591;NU5128;DV2001;CS0271</NoWarn>
-		<IsPackable>false</IsPackable>
-		<GenerateDocumentationFile>false</GenerateDocumentationFile>
-		<IsTestProject>true</IsTestProject>
-		<RootNamespace>DisCatSharp.SafetyTests</RootNamespace>
-	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="FluentAssertions" Version="6.12.0" />
