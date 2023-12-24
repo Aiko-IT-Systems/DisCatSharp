@@ -60,11 +60,15 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{D911BF2D-523E-4504-935D-AEDA353305D8}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\build.yml = .github\workflows\build.yml
-		.github\workflows\codeql.yml = .github\workflows\codeql.yml
+		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
+		.github\workflows\create_diagram.yml = .github\workflows\create_diagram.yml
 		.github\workflows\documentation.yml = .github\workflows\documentation.yml
 		.github\workflows\documentation_test.yml = .github\workflows\documentation_test.yml
+		.github\workflows\internal-release.yml = .github\workflows\internal-release.yml
 		.github\workflows\labeler.yml = .github\workflows\labeler.yml
+		.github\workflows\public-dev-release.yml = .github\workflows\public-dev-release.yml
 		.github\workflows\release.yml = .github\workflows\release.yml
+		.github\workflows\sentry.yml = .github\workflows\sentry.yml
 		.github\workflows\tweet.yml = .github\workflows\tweet.yml
 	EndProjectSection
 EndProject
@@ -93,7 +97,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.SafetyTests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Lavalink", "DisCatSharp.Lavalink\DisCatSharp.Lavalink.csproj", "{1ADC1D06-3DB8-4741-B740-13161B40CBA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.ApplicationCommands.Tests", "DisCatSharp.Tests\DisCatSharp.ApplicationCommands.Tests\DisCatSharp.ApplicationCommands.Tests.csproj", "{B4837A35-F5D1-4CF0-941B-961407E3CC36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.ApplicationCommands.Tests", "DisCatSharp.Tests\DisCatSharp.ApplicationCommands.Tests\DisCatSharp.ApplicationCommands.Tests.csproj", "{B4837A35-F5D1-4CF0-941B-961407E3CC36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
