@@ -16,7 +16,8 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 	/// <summary>
 	/// Whether the converter can write.
 	/// </summary>
-	public override bool CanWrite => false;
+	public override bool CanWrite
+		=> false;
 
 	/// <summary>
 	/// Writes the json.
@@ -24,7 +25,8 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 	/// <param name="writer">The writer.</param>
 	/// <param name="value">The value.</param>
 	/// <param name="serializer">The serializer.</param>
-	public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) => throw new NotImplementedException();
+	public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+		=> throw new NotImplementedException();
 
 	/// <summary>
 	/// Reads the json.
@@ -33,18 +35,17 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 	/// <param name="objectType">The object type.</param>
 	/// <param name="existingValue">The existing value.</param>
 	/// <param name="serializer">The serializer.</param>
-	public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+	public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
 	{
-		if (reader.TokenType == JsonToken.Null)
+		if (reader.TokenType is JsonToken.Null)
 			return null;
 
 		var job = JObject.Load(reader);
 		var type = job["type"]?.ToObject<ComponentType>() ?? throw new ArgumentException($"Value {reader} does not have a component type specifier");
-		DiscordComponent cmp;
-		cmp = type switch
+		DiscordComponent cmp = type switch
 		{
 			ComponentType.ActionRow => new DiscordActionRowComponent(),
-			ComponentType.Button when (string)job["url"] is not null => new DiscordLinkButtonComponent(),
+			ComponentType.Button when (string?)job["url"] is not null => new DiscordLinkButtonComponent(),
 			ComponentType.Button => new DiscordButtonComponent(),
 			ComponentType.StringSelect => new DiscordStringSelectComponent(),
 			ComponentType.InputText => new DiscordTextComponent(),
@@ -69,5 +70,6 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 	/// Whether the json can convert.
 	/// </summary>
 	/// <param name="objectType">The object type.</param>
-	public override bool CanConvert(Type objectType) => typeof(DiscordComponent).IsAssignableFrom(objectType);
+	public override bool CanConvert(Type objectType)
+		=> typeof(DiscordComponent).IsAssignableFrom(objectType);
 }

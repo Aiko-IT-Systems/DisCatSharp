@@ -8,27 +8,27 @@ namespace DisCatSharp.Net;
 /// <summary>
 /// Represents a rate limit bucket.
 /// </summary>
-internal class RateLimitBucket : IEquatable<RateLimitBucket>
+internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 {
 	/// <summary>
 	/// Gets the Id of the guild bucket.
 	/// </summary>
-	public string GuildId { get; internal set; }
+	public string GuildId { get; }
 
 	/// <summary>
 	/// Gets the Id of the channel bucket.
 	/// </summary>
-	public string ChannelId { get; internal set; }
+	public string ChannelId { get; }
 
 	/// <summary>
 	/// Gets the ID of the webhook bucket.
 	/// </summary>
-	public string WebhookId { get; internal set; }
+	public string WebhookId { get; }
 
 	/// <summary>
 	/// Gets the Id of the ratelimit bucket.
 	/// </summary>
-	public volatile string BucketId;
+	public volatile string? BucketId;
 
 	/// <summary>
 	/// Gets or sets the ratelimit hash of this bucket.
@@ -41,7 +41,7 @@ internal class RateLimitBucket : IEquatable<RateLimitBucket>
 		{
 			this.IsUnlimited = value.Contains(s_unlimitedHash);
 
-			if (this.BucketId != null && !this.BucketId.StartsWith(value, StringComparison.Ordinal))
+			if (this.BucketId is not null && !this.BucketId.StartsWith(value, StringComparison.Ordinal))
 			{
 				var id = GenerateBucketId(value, this.GuildId, this.ChannelId, this.WebhookId);
 				this.BucketId = id;
@@ -52,6 +52,9 @@ internal class RateLimitBucket : IEquatable<RateLimitBucket>
 		}
 	}
 
+	/// <summary>
+	/// Gets the ratelimit hash of this bucket.
+	/// </summary>
 	internal string HashInternal;
 
 	/// <summary>
@@ -96,10 +99,13 @@ internal class RateLimitBucket : IEquatable<RateLimitBucket>
 	public string Scope { get; internal set; } = "user";
 
 	/// <summary>
-	/// Gets the time interval to wait before the rate limit resets as offset
+	/// Gets the time interval to wait before the rate limit resets as offset.
 	/// </summary>
 	internal DateTimeOffset ResetAfterOffset { get; set; }
 
+	/// <summary>
+	/// Gets or sets the remaining number of requests to the maximum when the ratelimit is reset.
+	/// </summary>
 	internal volatile int RemainingInternal;
 
 	/// <summary>
@@ -109,24 +115,24 @@ internal class RateLimitBucket : IEquatable<RateLimitBucket>
 	internal volatile bool IsUnlimited;
 
 	/// <summary>
-	/// If the initial request for this bucket that is determining the rate limits is currently executing
-	/// This is a int because booleans can't be accessed atomically
+	/// If the initial request for this bucket that is determining the rate limits is currently executing.
+	/// This is a int because booleans can't be accessed atomically.
 	/// 0 => False, all other values => True
 	/// </summary>
 	internal volatile int LimitTesting;
 
 	/// <summary>
-	/// Task to wait for the rate limit test to finish
+	/// Task to wait for the rate limit test to finish.
 	/// </summary>
-	internal volatile Task LimitTestFinished;
+	internal volatile Task? LimitTestFinished;
 
 	/// <summary>
-	/// If the rate limits have been determined
+	/// If the rate limits have been determined.
 	/// </summary>
 	internal volatile bool LimitValid;
 
 	/// <summary>
-	/// Rate limit reset in ticks, UTC on the next response after the rate limit has been reset
+	/// Rate limit reset in ticks, UTC on the next response after the rate limit has been reset.
 	/// </summary>
 	internal long NextReset;
 
@@ -137,6 +143,9 @@ internal class RateLimitBucket : IEquatable<RateLimitBucket>
 	/// </summary>
 	internal volatile int LimitResetting;
 
+	/// <summary>
+	/// Gets the unlimited hash.
+	/// </summary>
 	private static readonly string s_unlimitedHash = "unlimited";
 
 	/// <summary>
@@ -219,7 +228,7 @@ internal class RateLimitBucket : IEquatable<RateLimitBucket>
 	/// </summary>
 	/// <returns>The hash code for this <see cref="RateLimitBucket"/>.</returns>
 	public override int GetHashCode()
-		=> this.BucketId.GetHashCode();
+		=> this.BucketId?.GetHashCode() ?? -1;
 
 	/// <summary>
 	/// Sets remaining number of requests to the maximum when the ratelimit is reset
@@ -230,7 +239,7 @@ internal class RateLimitBucket : IEquatable<RateLimitBucket>
 		if (this.ResetAfter.HasValue)
 			this.ResetAfter = this.ResetAfterOffset - now;
 
-		if (this.NextReset == 0)
+		if (this.NextReset is 0)
 			return;
 
 		if (this.NextReset > now.UtcTicks)
@@ -239,7 +248,7 @@ internal class RateLimitBucket : IEquatable<RateLimitBucket>
 		while (Interlocked.CompareExchange(ref this.LimitResetting, 1, 0) != 0)
 			await Task.Yield();
 
-		if (this.NextReset != 0)
+		if (this.NextReset is not 0)
 		{
 			this.RemainingInternal = this.Maximum;
 			this.NextReset = 0;

@@ -5,17 +5,17 @@ namespace DisCatSharp.Net;
 /// <summary>
 /// Represents a network connection IP endpoint.
 /// </summary>
-public struct IpEndpoint
+public readonly struct IpEndpoint
 {
 	/// <summary>
 	/// Gets or sets the hostname associated with this endpoint.
 	/// </summary>
-	public IPAddress Address { get; set; }
+	public IPAddress Address { get; init; }
 
 	/// <summary>
 	/// Gets or sets the port associated with this endpoint.
 	/// </summary>
-	public int Port { get; set; }
+	public int Port { get; init; }
 
 	/// <summary>
 	/// Creates a new IP endpoint structure.

@@ -27,14 +27,14 @@ internal class SnowflakeArrayAsDictionaryJsonConverter : JsonConverter
 	/// <param name="writer">The writer.</param>
 	/// <param name="value">The value.</param>
 	/// <param name="serializer">The serializer.</param>
-	public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+	public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
 	{
-		if (value == null)
+		if (value is null)
 			writer.WriteNull();
 		else
 		{
 			var type = value.GetType().GetTypeInfo();
-			JToken.FromObject(type.GetDeclaredProperty("Values").GetValue(value)).WriteTo(writer);
+			JToken.FromObject(type.GetDeclaredProperty("Values")!.GetValue(value)!).WriteTo(writer);
 		}
 	}
 
@@ -45,17 +45,20 @@ internal class SnowflakeArrayAsDictionaryJsonConverter : JsonConverter
 	/// <param name="objectType">The object type.</param>
 	/// <param name="existingValue">The existing value.</param>
 	/// <param name="serializer">The serializer.</param>
-	public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+	public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
 	{
 		var constructor = objectType.GetTypeInfo().DeclaredConstructors
 			.FirstOrDefault(e => !e.IsStatic && e.GetParameters().Length == 0);
 
-		var dict = constructor.Invoke([]);
+		var dict = constructor?.Invoke([]);
 
 		// the default name of an indexer is "Item"
 		var properties = objectType.GetTypeInfo().GetDeclaredProperty("Item");
 
-		var entries = (IEnumerable)serializer.Deserialize(reader, objectType.GenericTypeArguments[1].MakeArrayType());
+		var entries = (IEnumerable?)serializer.Deserialize(reader, objectType.GenericTypeArguments[1].MakeArrayType());
+		if (entries is null || properties is null)
+			return dict!;
+
 		foreach (var entry in entries)
 			properties.SetValue(dict, entry, [
 				(entry as SnowflakeObject)?.Id
@@ -73,10 +76,14 @@ internal class SnowflakeArrayAsDictionaryJsonConverter : JsonConverter
 	public override bool CanConvert(Type objectType)
 	{
 		var genericTypedef = objectType.GetGenericTypeDefinition();
-		if (genericTypedef != typeof(Dictionary<,>) && genericTypedef != typeof(ConcurrentDictionary<,>)) return false;
-		if (objectType.GenericTypeArguments[0] != typeof(ulong)) return false;
+		if (genericTypedef != typeof(Dictionary<,>) && genericTypedef != typeof(ConcurrentDictionary<,>))
+			return false;
+
+		if (objectType.GenericTypeArguments[0] != typeof(ulong))
+			return false;
 
 		var valueParam = objectType.GenericTypeArguments[1];
+
 		return typeof(SnowflakeObject).GetTypeInfo().IsAssignableFrom(valueParam.GetTypeInfo()) ||
 		       valueParam == typeof(DiscordVoiceState);
 	}

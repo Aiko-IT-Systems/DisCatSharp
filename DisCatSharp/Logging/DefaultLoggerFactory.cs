@@ -15,21 +15,25 @@ internal class DefaultLoggerFactory : ILoggerFactory
 	/// </summary>
 	private readonly List<ILoggerProvider> _providers = [];
 
+	/// <summary>
+	/// Gets whether this logger factory is disposed.
+	/// </summary>
 	private bool _isDisposed;
 
 	/// <summary>
 	/// Adds a provider.
 	/// </summary>
 	/// <param name="provider">The provider to be added.</param>
-	public void AddProvider(ILoggerProvider provider) => this._providers.Add(provider);
+	public void AddProvider(ILoggerProvider provider)
+		=> this._providers.Add(provider);
 
 	/// <summary>
 	/// Creates the logger.
 	/// </summary>
 	/// <param name="categoryName">The category name.</param>
-	public ILogger CreateLogger(string categoryName) =>
-		this._isDisposed
-			? throw new InvalidOperationException("This logger factory is already disposed.")
+	public ILogger CreateLogger(string categoryName)
+		=> this._isDisposed
+			? throw new ObjectDisposedException(nameof(DefaultLoggerFactory), "This logger factory is already disposed.")
 			: categoryName != typeof(BaseDiscordClient).FullName && categoryName != typeof(DiscordWebhookClient).FullName && categoryName != typeof(DiscordOAuth2Client).FullName
 				? throw new ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName}, {typeof(DiscordWebhookClient).FullName} or {typeof(DiscordOAuth2Client).FullName}, not {categoryName}.", nameof(categoryName))
 				: new CompositeDefaultLogger(this._providers);
@@ -39,8 +43,7 @@ internal class DefaultLoggerFactory : ILoggerFactory
 	/// </summary>
 	public void Dispose()
 	{
-		if (this._isDisposed)
-			return;
+		ObjectDisposedException.ThrowIf(this._isDisposed, this);
 
 		this._isDisposed = true;
 

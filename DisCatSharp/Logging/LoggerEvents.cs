@@ -146,4 +146,14 @@ public static class LoggerEvents
 	/// Events pertaining to Discord API requests from the <see cref="DiscordShardedClient"/>.
 	/// </summary>
 	public static EventId ShardRest { get; } = new(127, nameof(ShardRest));
+
+	/// <summary>
+	/// Events pertaining to API requests from the <see cref="DiscordOAuth2Client"/>.
+	/// </summary>
+	public static EventId OAuthRest { get; } = new(128, nameof(OAuthRest));
+
+	/// <summary>
+	/// Events is library side.
+	/// </summary>
+	public static EventId Library { get; } = new(129, nameof(Library));
 }

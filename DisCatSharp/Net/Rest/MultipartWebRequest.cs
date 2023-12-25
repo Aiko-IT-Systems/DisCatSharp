@@ -15,12 +15,12 @@ internal sealed class MultipartWebRequest : BaseRestRequest
 	/// <summary>
 	/// Gets the dictionary of values attached to this request.
 	/// </summary>
-	public IReadOnlyDictionary<string, string> Values { get; }
+	public IReadOnlyDictionary<string, string>? Values { get; }
 
 	/// <summary>
 	/// Gets the dictionary of files attached to this request.
 	/// </summary>
-	public IReadOnlyDictionary<string, Stream> Files { get; }
+	public IReadOnlyDictionary<string, Stream>? Files { get; }
 
 	/// <summary>
 	/// Overwrites the file id start.
@@ -46,9 +46,9 @@ internal sealed class MultipartWebRequest : BaseRestRequest
 		Uri url,
 		RestRequestMethod method,
 		string route,
-		IReadOnlyDictionary<string, string> headers = null,
-		IReadOnlyDictionary<string, string> values = null,
-		IReadOnlyCollection<DiscordMessageFile> files = null,
+		IReadOnlyDictionary<string, string>? headers = null,
+		IReadOnlyDictionary<string, string>? values = null,
+		IEnumerable<DiscordMessageFile>? files = null,
 		double? ratelimitWaitOverride = null,
 		int? overwriteFileIdStart = null
 	)
@@ -56,7 +56,7 @@ internal sealed class MultipartWebRequest : BaseRestRequest
 	{
 		this.Values = values;
 		this.OverwriteFileIdStart = overwriteFileIdStart;
-		this.Files = files.ToDictionary(x => x.Filename, x => x.Stream);
+		this.Files = files?.ToDictionary(x => x.Filename, x => x.Stream);
 	}
 }
 
@@ -68,7 +68,7 @@ internal sealed class MultipartStickerWebRequest : BaseRestRequest
 	/// <summary>
 	/// Gets the file.
 	/// </summary>
-	public DiscordMessageFile File { get; }
+	public DiscordMessageFile? File { get; }
 
 	/// <summary>
 	/// Gets the name.
@@ -78,7 +78,7 @@ internal sealed class MultipartStickerWebRequest : BaseRestRequest
 	/// <summary>
 	/// Gets the description.
 	/// </summary>
-	public string Description { get; }
+	public string? Description { get; }
 
 	/// <summary>
 	/// Gets the tags.
@@ -93,11 +93,11 @@ internal sealed class MultipartStickerWebRequest : BaseRestRequest
 	/// <param name="url">The url.</param>
 	/// <param name="method">The method.</param>
 	/// <param name="route">The route.</param>
-	/// <param name="headers">The headers.</param>
-	/// <param name="file">The file.</param>
 	/// <param name="name">The sticker name.</param>
 	/// <param name="tags">The sticker tag.</param>
 	/// <param name="description">The sticker description.</param>
+	/// <param name="headers">The headers.</param>
+	/// <param name="file">The file.</param>
 	/// <param name="ratelimitWaitOverride">The ratelimit_wait_override.</param>
 	internal MultipartStickerWebRequest(
 		BaseDiscordClient client,
@@ -105,11 +105,11 @@ internal sealed class MultipartStickerWebRequest : BaseRestRequest
 		Uri url,
 		RestRequestMethod method,
 		string route,
-		IReadOnlyDictionary<string, string> headers = null,
-		DiscordMessageFile file = null,
-		string name = "",
-		string tags = "",
-		string description = "",
+		string name,
+		string tags,
+		string? description = null,
+		IReadOnlyDictionary<string, string>? headers = null,
+		DiscordMessageFile? file = null,
 		double? ratelimitWaitOverride = null
 	)
 		: base(client, bucket, url, method, route, headers, ratelimitWaitOverride)

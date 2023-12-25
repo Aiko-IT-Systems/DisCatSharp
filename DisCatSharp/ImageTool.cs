@@ -67,8 +67,15 @@ public sealed class ImageTool : IDisposable
 	/// </summary>
 	public Stream SourceStream { get; }
 
-	private ImageFormat _ifcache;
-	private string _b64Cache;
+	/// <summary>
+	/// Gets the format of this image.
+	/// </summary>
+	private ImageFormat _ifcache = ImageFormat.Unknown;
+
+	/// <summary>
+	/// Gets the base64 string of this image.
+	/// </summary>
+	private string? _b64Cache;
 
 	/// <summary>
 	/// Creates a new image tool from given stream.
@@ -84,8 +91,7 @@ public sealed class ImageTool : IDisposable
 		this.SourceStream = stream;
 		this.SourceStream.Seek(0, SeekOrigin.Begin);
 
-		this._ifcache = 0;
-		this._b64Cache = null!;
+		this._b64Cache = null;
 	}
 
 	/// <summary>
