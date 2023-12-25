@@ -339,7 +339,7 @@ internal sealed class RestClient : IDisposable
 
 				response.Headers = res.Headers?.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
 				response.Response = txt;
-				response.ResponseCode = (int)res.StatusCode;
+				response.ResponseCode = res.StatusCode;
 			}
 			catch (HttpRequestException httpex)
 			{
@@ -355,25 +355,25 @@ internal sealed class RestClient : IDisposable
 
 			switch (response.ResponseCode)
 			{
-				case (int)HttpStatusCode.BadRequest:
-				case (int)HttpStatusCode.MethodNotAllowed:
+				case HttpStatusCode.BadRequest:
+				case HttpStatusCode.MethodNotAllowed:
 					ex = new BadRequestException(request, response);
 					break;
 
-				case (int)HttpStatusCode.Unauthorized:
-				case (int)HttpStatusCode.Forbidden:
+				case HttpStatusCode.Unauthorized:
+				case HttpStatusCode.Forbidden:
 					ex = new UnauthorizedException(request, response);
 					break;
 
-				case (int)HttpStatusCode.NotFound:
+				case HttpStatusCode.NotFound:
 					ex = new NotFoundException(request, response);
 					break;
 
-				case (int)HttpStatusCode.RequestEntityTooLarge:
+				case HttpStatusCode.RequestEntityTooLarge:
 					ex = new RequestSizeException(request, response);
 					break;
 
-				case (int)HttpStatusCode.TooManyRequests:
+				case HttpStatusCode.TooManyRequests:
 					ex = new RateLimitException(request, response);
 
 					// check the limit info and requeue
@@ -411,15 +411,15 @@ internal sealed class RestClient : IDisposable
 
 					break;
 
-				case (int)HttpStatusCode.InternalServerError:
-				case (int)HttpStatusCode.BadGateway:
-				case (int)HttpStatusCode.ServiceUnavailable:
-				case (int)HttpStatusCode.GatewayTimeout:
+				case HttpStatusCode.InternalServerError:
+				case HttpStatusCode.BadGateway:
+				case HttpStatusCode.ServiceUnavailable:
+				case HttpStatusCode.GatewayTimeout:
 					ex = new ServerErrorException(request, response);
 					break;
 			}
 
-			if (ex != null)
+			if (ex is not null)
 				request.SetFaulted(ex);
 			else
 				request.SetCompleted(response);
@@ -429,7 +429,7 @@ internal sealed class RestClient : IDisposable
 			this._logger.LogError(LoggerEvents.RestError, ex, "Request to {Url} triggered an exception", request.Url.AbsoluteUri);
 
 			// if something went wrong and we couldn't get rate limits for the first request here, allow the next request to run
-			if (bucket != null && ratelimitTcs != null && bucket.LimitTesting != 0)
+			if (bucket is not null && ratelimitTcs is not null && bucket.LimitTesting is not 0)
 				this.FailInitialRateLimitTest(request, ratelimitTcs);
 
 			if (!request.TrySetFaulted(ex))
@@ -539,7 +539,7 @@ internal sealed class RestClient : IDisposable
 
 				response.Headers = res.Headers?.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
 				response.Response = txt;
-				response.ResponseCode = (int)res.StatusCode;
+				response.ResponseCode = res.StatusCode;
 			}
 			catch (HttpRequestException httpex)
 			{
@@ -555,26 +555,26 @@ internal sealed class RestClient : IDisposable
 			Exception? senex = null;
 			switch (response.ResponseCode)
 			{
-				case (int)HttpStatusCode.BadRequest:
-				case (int)HttpStatusCode.MethodNotAllowed:
+				case HttpStatusCode.BadRequest:
+				case HttpStatusCode.MethodNotAllowed:
 					ex = new BadRequestException(request, response);
 					senex = new(ex.Message + "\nJson Response: " + ((ex as BadRequestException)?.JsonMessage ?? "null"), ex);
 					break;
 
-				case (int)HttpStatusCode.Unauthorized:
-				case (int)HttpStatusCode.Forbidden:
+				case HttpStatusCode.Unauthorized:
+				case HttpStatusCode.Forbidden:
 					ex = new UnauthorizedException(request, response);
 					break;
 
-				case (int)HttpStatusCode.NotFound:
+				case HttpStatusCode.NotFound:
 					ex = new NotFoundException(request, response);
 					break;
 
-				case (int)HttpStatusCode.RequestEntityTooLarge:
+				case HttpStatusCode.RequestEntityTooLarge:
 					ex = new RequestSizeException(request, response);
 					break;
 
-				case (int)HttpStatusCode.TooManyRequests:
+				case HttpStatusCode.TooManyRequests:
 					ex = new RateLimitException(request, response);
 
 					// check the limit info and requeue
@@ -618,19 +618,19 @@ internal sealed class RestClient : IDisposable
 
 					break;
 
-				case (int)HttpStatusCode.InternalServerError:
-				case (int)HttpStatusCode.BadGateway:
-				case (int)HttpStatusCode.ServiceUnavailable:
-				case (int)HttpStatusCode.GatewayTimeout:
+				case HttpStatusCode.InternalServerError:
+				case HttpStatusCode.BadGateway:
+				case HttpStatusCode.ServiceUnavailable:
+				case HttpStatusCode.GatewayTimeout:
 					ex = new ServerErrorException(request, response);
 					senex = new(ex.Message + "\nJson Response: " + ((ex as ServerErrorException)!.JsonMessage ?? "null"), ex);
 					break;
 			}
 
-			if (ex != null)
+			if (ex is not null)
 			{
 				if (this._discord?.Configuration?.EnableSentry ?? false)
-					if (senex != null)
+					if (senex is not null)
 					{
 						Dictionary<string, object> debugInfo = new()
 						{
@@ -661,7 +661,7 @@ internal sealed class RestClient : IDisposable
 		{
 			res?.Dispose();
 
-			if (bucket is not null)
+			if (bucket?.BucketId is not null)
 			{
 				// Get and decrement active requests in this bucket by 1.
 				_ = this._requestQueue.TryGetValue(bucket.BucketId, out var count);
@@ -910,7 +910,7 @@ internal sealed class RestClient : IDisposable
 
 		if (response.Headers is null)
 		{
-			if (response.ResponseCode is not (int)HttpStatusCode.TooManyRequests) // do not fail when ratelimit was or the next request will be scheduled hitting the rate limit again
+			if (response.ResponseCode is not HttpStatusCode.TooManyRequests) // do not fail when ratelimit was or the next request will be scheduled hitting the rate limit again
 				this.FailInitialRateLimitTest(request, ratelimitTcs);
 			return;
 		}
@@ -922,7 +922,7 @@ internal sealed class RestClient : IDisposable
 
 		if (hs.TryGetValue(CommonHeaders.RATELIMIT_GLOBAL, out var isGlobal) && isGlobal.ToLowerInvariant() is "true")
 		{
-			if (response.ResponseCode is (int)HttpStatusCode.TooManyRequests)
+			if (response.ResponseCode is HttpStatusCode.TooManyRequests)
 				return;
 
 			bucket.IsGlobal = true;
@@ -940,7 +940,7 @@ internal sealed class RestClient : IDisposable
 		if (!r1 || !r2 || !r3 || !r4)
 		{
 			//If the limits were determined before this request, make the bucket initial again.
-			if (response.ResponseCode is not (int)HttpStatusCode.TooManyRequests)
+			if (response.ResponseCode is not HttpStatusCode.TooManyRequests)
 				this.FailInitialRateLimitTest(request, ratelimitTcs, ratelimitTcs is null);
 
 			return;
