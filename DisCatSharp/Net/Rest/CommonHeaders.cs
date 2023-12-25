@@ -1,4 +1,4 @@
-namespace DisCatSharp.Net.Rest;
+namespace DisCatSharp.Net;
 
 /// <summary>
 /// Represents common headers used by the Discord API.

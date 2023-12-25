@@ -16,7 +16,6 @@ using DisCatSharp.Common.RegularExpressions;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
-using DisCatSharp.Net.Rest;
 
 using Microsoft.Extensions.Logging;
 

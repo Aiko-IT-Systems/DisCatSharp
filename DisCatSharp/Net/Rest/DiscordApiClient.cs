@@ -14,7 +14,6 @@ using DisCatSharp.Entities.OAuth2;
 using DisCatSharp.Enums;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Abstractions.Rest;
-using DisCatSharp.Net.Rest;
 using DisCatSharp.Net.Serialization;
 
 using Microsoft.Extensions.Logging;
