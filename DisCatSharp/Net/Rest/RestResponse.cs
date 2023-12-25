@@ -21,7 +21,7 @@ public sealed class RestResponse
 	/// <summary>
 	/// Gets the contents of the response sent by the remote party.
 	/// </summary>
-	public string Response { get; internal set; }
+	public string Response { get; internal set; } = null!;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="RestResponse"/> class.
