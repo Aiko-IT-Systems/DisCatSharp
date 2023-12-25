@@ -579,7 +579,7 @@ internal sealed class RestClient : IDisposable
 
 					// check the limit info and requeue
 					this.Handle429(response, out var wait, out var global);
-					if (wait != null)
+					if (wait is not null)
 					{
 						if (global)
 						{
@@ -749,7 +749,7 @@ internal sealed class RestClient : IDisposable
 	private HttpRequestMessage BuildFormRequest(BaseRestRequest request)
 	{
 		var req = new HttpRequestMessage(new(request.Method.ToString()), request.Url);
-		if (request.Headers != null && request.Headers.Any())
+		if (request.Headers is not null && request.Headers.Any())
 			foreach (var kvp in request.Headers)
 				switch (kvp.Key)
 				{
@@ -1039,8 +1039,6 @@ internal sealed class RestClient : IDisposable
 
 			return newHash;
 		});
-
-		return;
 	}
 
 	/// <summary>
