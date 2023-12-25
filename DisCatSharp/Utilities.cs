@@ -16,6 +16,7 @@ using DisCatSharp.Common.RegularExpressions;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
+using DisCatSharp.Net.Rest;
 
 using Microsoft.Extensions.Logging;
 
@@ -148,8 +149,8 @@ public static class Utilities
 	internal static string GetFormattedToken(DiscordConfiguration config)
 		=> config.TokenType switch
 		{
-			TokenType.Bearer => $"Bearer {config.Token}",
-			TokenType.Bot => $"Bot {config.Token}",
+			TokenType.Bearer => $"{CommonHeaders.AUTHORIZATION_BEARER} {config.Token}",
+			TokenType.Bot => $"{CommonHeaders.AUTHORIZATION_BOT} {config.Token}",
 			_ => throw new ArgumentException("Invalid token type specified.", nameof(config))
 		};
 

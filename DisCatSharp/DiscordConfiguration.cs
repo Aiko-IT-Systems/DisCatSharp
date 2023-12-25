@@ -48,7 +48,7 @@ public sealed class DiscordConfiguration
 
 	/// <summary>
 	/// <para>Sets the minimum logging level for messages.</para>
-	/// <para>Typically, the default value of <see cref="LogLevel.Information"/> is ok for most uses.</para>
+	/// <para>Defaults to <see cref="LogLevel.Information"/>.</para>
 	/// </summary>
 	public LogLevel MinimumLogLevel { internal get; set; } = LogLevel.Information;
 
@@ -114,7 +114,7 @@ public sealed class DiscordConfiguration
 	/// <para>Sets the proxy to use for HTTP and WebSocket connections to Discord.</para>
 	/// <para>Defaults to <see langword="null"/>.</para>
 	/// </summary>
-	public IWebProxy Proxy { internal get; set; } = null!;
+	public IWebProxy? Proxy { internal get; set; } = null;
 
 	/// <summary>
 	/// <para>Sets the timeout for HTTP requests.</para>
@@ -213,7 +213,7 @@ public sealed class DiscordConfiguration
 	/// <para>Do not use, this is meant for DisCatSharp Devs.</para>
 	/// <para>Defaults to <see langword="null"/>.</para>
 	/// </summary>
-	public string Override { internal get; set; } = null!;
+	public string? Override { internal get; set; } = null;
 
 	/// <summary>
 	/// Sets your preferred API language. See <see cref="DiscordLocales" /> for valid locales.
@@ -237,7 +237,7 @@ public sealed class DiscordConfiguration
 	/// <para>This allows passing data around without resorting to static members.</para>
 	/// <para>Defaults to an empty service provider.</para>
 	/// </summary>
-	public IServiceProvider ServiceProvider { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
+	public IServiceProvider ServiceProvider { internal get; init; } = new ServiceCollection().BuildServiceProvider(true);
 
 	/// <summary>
 	/// <para>Whether to report missing fields for discord object.</para>

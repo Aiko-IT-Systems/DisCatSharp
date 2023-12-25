@@ -144,7 +144,7 @@ public static class Formatter
 	/// <param name="content">Array of strings to transform into a list.</param>
 	/// <returns>Formatted text.</returns>
 	public static string SimpleList(this string[] content)
-		=> string.Join("\n", content.Select(x => $"* {x}"));
+		=> string.Join("\n", content.Select(x => $"- {x}"));
 
 	/// <summary>
 	/// Creates a URL that won't create a link preview.
@@ -160,9 +160,10 @@ public static class Formatter
 	/// <param name="text">Text to display the link as.</param>
 	/// <param name="url">Url that the link will lead to.</param>
 	/// <param name="altText">Alt text to display on hover.</param>
+	/// <param name="embedless">Whether to supress url embeds.</param>
 	/// <returns>Formatted url.</returns>
-	public static string MaskedUrl(this string text, Uri url, string altText = "")
-		=> $"[{text}]({url}{(!string.IsNullOrWhiteSpace(altText) ? $" \"{altText}\"" : "")})";
+	public static string MaskedUrl(this string text, Uri url, string? altText = null, bool embedless = false)
+		=> $"[{text}]({(embedless ? EmbedlessUrl(url) : url)}{(!string.IsNullOrWhiteSpace(altText) ? $" \"{altText}\"" : string.Empty)})";
 
 	/// <summary>
 	/// Escapes all markdown formatting from specified text.

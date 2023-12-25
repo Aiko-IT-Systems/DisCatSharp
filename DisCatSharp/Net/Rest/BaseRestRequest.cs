@@ -13,12 +13,12 @@ public abstract class BaseRestRequest
 	/// <summary>
 	/// Gets the discord client.
 	/// </summary>
-	protected internal BaseDiscordClient Discord { get; }
+	protected internal BaseDiscordClient? Discord { get; }
 
 	/// <summary>
 	/// Gets the oauth2 client.
 	/// </summary>
-	protected internal DiscordOAuth2Client OAuth2Client { get; }
+	protected internal DiscordOAuth2Client? OAuth2Client { get; }
 
 	/// <summary>
 	/// Gets the request task source.
@@ -43,7 +43,7 @@ public abstract class BaseRestRequest
 	/// <summary>
 	/// Gets the headers sent with this request.
 	/// </summary>
-	public IReadOnlyDictionary<string, string> Headers { get; }
+	public IReadOnlyDictionary<string, string>? Headers { get; } = null;
 
 	/// <summary>
 	/// Gets the override for the rate limit bucket wait time.
@@ -65,7 +65,7 @@ public abstract class BaseRestRequest
 	/// <param name="route">The generic route the request url will use.</param>
 	/// <param name="headers">Additional headers for this request.</param>
 	/// <param name="ratelimitWaitOverride">Override for ratelimit bucket wait time.</param>
-	internal BaseRestRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, double? ratelimitWaitOverride = null)
+	internal BaseRestRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string>? headers = null, double? ratelimitWaitOverride = null)
 	{
 		this.Discord = client;
 		this.RateLimitBucket = bucket;
@@ -75,12 +75,12 @@ public abstract class BaseRestRequest
 		this.Route = route;
 		this.RateLimitWaitOverride = ratelimitWaitOverride;
 
-		if (headers != null)
-		{
-			headers = headers.Select(x => new KeyValuePair<string, string>(x.Key, Uri.EscapeDataString(x.Value)))
-				.ToDictionary(x => x.Key, x => x.Value);
-			this.Headers = headers;
-		}
+		if (headers is null)
+			return;
+
+		headers = headers.Select(x => new KeyValuePair<string, string>(x.Key, Uri.EscapeDataString(x.Value)))
+			.ToDictionary(x => x.Key, x => x.Value);
+		this.Headers = headers;
 	}
 
 	/// <summary>
@@ -93,7 +93,7 @@ public abstract class BaseRestRequest
 	/// <param name="route">The generic route the request url will use.</param>
 	/// <param name="headers">Additional headers for this request.</param>
 	/// <param name="ratelimitWaitOverride">Override for ratelimit bucket wait time.</param>
-	internal BaseRestRequest(DiscordOAuth2Client client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, double? ratelimitWaitOverride = null)
+	internal BaseRestRequest(DiscordOAuth2Client client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string>? headers = null, double? ratelimitWaitOverride = null)
 	{
 		this.OAuth2Client = client;
 		this.RateLimitBucket = bucket;
@@ -103,12 +103,12 @@ public abstract class BaseRestRequest
 		this.Route = route;
 		this.RateLimitWaitOverride = ratelimitWaitOverride;
 
-		if (headers != null)
-		{
-			headers = headers.Select(x => new KeyValuePair<string, string>(x.Key, Uri.EscapeDataString(x.Value)))
-				.ToDictionary(x => x.Key, x => x.Value);
-			this.Headers = headers;
-		}
+		if (headers is null)
+			return;
+
+		headers = headers.Select(x => new KeyValuePair<string, string>(x.Key, Uri.EscapeDataString(x.Value)))
+			.ToDictionary(x => x.Key, x => x.Value);
+		this.Headers = headers;
 	}
 
 	/// <summary>

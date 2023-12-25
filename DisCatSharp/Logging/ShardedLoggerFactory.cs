@@ -27,7 +27,8 @@ internal class ShardedLoggerFactory : ILoggerFactory
 	/// Adds a provider.
 	/// </summary>
 	/// <param name="provider">The provider to be added.</param>
-	public void AddProvider(ILoggerProvider provider) => throw new InvalidOperationException("This is a passthrough logger container, it cannot register new providers.");
+	public void AddProvider(ILoggerProvider provider)
+		=> throw new InvalidOperationException("This is a passthrough logger container, it cannot register new providers.");
 
 	/// <summary>
 	/// Creates a logger.

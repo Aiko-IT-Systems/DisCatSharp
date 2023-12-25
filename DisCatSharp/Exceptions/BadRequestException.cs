@@ -22,17 +22,17 @@ public class BadRequestException : DisCatSharpException
 	/// <summary>
 	/// Gets the error code for this exception.
 	/// </summary>
-	public int Code { get; internal set; }
+	public int? Code { get; internal set; } = null;
 
 	/// <summary>
 	/// Gets the JSON message received.
 	/// </summary>
-	public string JsonMessage { get; internal set; }
+	public string? JsonMessage { get; internal set; } = null;
 
 	/// <summary>
 	/// Gets the form error responses in JSON format.
 	/// </summary>
-	public string Errors { get; internal set; }
+	public string? Errors { get; internal set; } = null;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="BadRequestException"/> class.
@@ -49,14 +49,14 @@ public class BadRequestException : DisCatSharpException
 		{
 			var j = JObject.Parse(response.Response);
 
-			if (j["code"] != null)
-				this.Code = (int)j["code"];
+			if (j["code"] is not null)
+				this.Code = (int)j["code"]!;
 
-			if (j["message"] != null)
-				this.JsonMessage = j["message"].ToString();
+			if (j["message"] is not null)
+				this.JsonMessage = j["message"]!.ToString();
 
-			if (j["errors"] != null)
-				this.Errors = j["errors"].ToString();
+			if (j["errors"] is not null)
+				this.Errors = j["errors"]!.ToString();
 		}
 		catch
 		{ }

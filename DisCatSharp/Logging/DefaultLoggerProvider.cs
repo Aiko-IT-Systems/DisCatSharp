@@ -19,6 +19,9 @@ internal class DefaultLoggerProvider : ILoggerProvider
 	/// </summary>
 	private readonly string _timestampFormat;
 
+	/// <summary>
+	/// Gets a value indicating whether this <see cref="DefaultLoggerProvider"/> is disposed.
+	/// </summary>
 	private bool _isDisposed;
 
 	/// <summary>
@@ -62,7 +65,7 @@ internal class DefaultLoggerProvider : ILoggerProvider
 	/// <param name="categoryName">The category name.</param>
 	public ILogger CreateLogger(string categoryName) =>
 		this._isDisposed
-			? throw new InvalidOperationException("This logger provider is already disposed.")
+			? throw new ObjectDisposedException(nameof(DefaultLoggerProvider), "This logger provider is already disposed.")
 			: categoryName != typeof(BaseDiscordClient).FullName && categoryName != typeof(DiscordWebhookClient).FullName && categoryName != typeof(DiscordOAuth2Client).FullName
 				? throw new ArgumentException($"This provider can only provide instances of loggers for {typeof(BaseDiscordClient).FullName}, {typeof(DiscordWebhookClient).FullName} or {typeof(DiscordOAuth2Client).FullName}.", nameof(categoryName))
 				: new DefaultLogger(this._minimumLevel, this._timestampFormat);

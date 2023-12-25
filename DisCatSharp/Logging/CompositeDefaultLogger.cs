@@ -22,7 +22,7 @@ internal class CompositeDefaultLogger : ILogger<BaseDiscordClient>
 	/// <param name="providers">The providers.</param>
 	public CompositeDefaultLogger(IEnumerable<ILoggerProvider> providers)
 	{
-		this._loggers = providers.Select(x => x.CreateLogger(typeof(BaseDiscordClient).FullName))
+		this._loggers = providers.Select(x => x.CreateLogger(typeof(BaseDiscordClient).FullName!))
 			.OfType<ILogger<BaseDiscordClient>>()
 			.ToList();
 	}
@@ -42,7 +42,7 @@ internal class CompositeDefaultLogger : ILogger<BaseDiscordClient>
 	/// <param name="state">The state.</param>
 	/// <param name="exception">The exception.</param>
 	/// <param name="formatter">The formatter.</param>
-	public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+	public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
 	{
 		foreach (var logger in this._loggers)
 			logger.Log(logLevel, eventId, state, exception, formatter);
@@ -52,5 +52,6 @@ internal class CompositeDefaultLogger : ILogger<BaseDiscordClient>
 	/// Begins the scope.
 	/// </summary>
 	/// <param name="state">The state.</param>
-	public IDisposable BeginScope<TState>(TState state) => throw new NotImplementedException();
+	public IDisposable BeginScope<TState>(TState state) where TState : notnull
+		=> throw new NotImplementedException();
 }

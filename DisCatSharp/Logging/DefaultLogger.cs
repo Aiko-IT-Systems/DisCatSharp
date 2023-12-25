@@ -48,7 +48,7 @@ public class DefaultLogger : ILogger<BaseDiscordClient>
 	/// <param name="state">The state.</param>
 	/// <param name="exception">The exception.</param>
 	/// <param name="formatter">The formatter.</param>
-	public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+	public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
 	{
 		if (!this.IsEnabled(logLevel))
 			return;
@@ -85,6 +85,10 @@ public class DefaultLogger : ILogger<BaseDiscordClient>
 					Console.BackgroundColor = ConsoleColor.Red;
 					Console.ForegroundColor = ConsoleColor.Black;
 					break;
+				case LogLevel.None:
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, null);
 			}
 
 			Console.Write(logLevel switch
@@ -96,17 +100,17 @@ public class DefaultLogger : ILogger<BaseDiscordClient>
 				LogLevel.Error => "[Error] ",
 				LogLevel.Critical => "[Critical ]",
 				LogLevel.None => "[None ] ",
-				_ => "[?????] "
+				_ => throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, null)
 			});
 			Console.ResetColor();
 
 			//The foreground color is off.
-			if (logLevel == LogLevel.Critical)
+			if (logLevel is LogLevel.Critical)
 				Console.Write(" ");
 
 			var message = formatter(state, exception);
 			Console.WriteLine(message);
-			if (exception != null)
+			if (exception is not null)
 				Console.WriteLine(exception);
 		}
 	}
@@ -123,5 +127,6 @@ public class DefaultLogger : ILogger<BaseDiscordClient>
 	/// </summary>
 	/// <param name="state">The state.</param>
 	/// <returns>An IDisposable.</returns>
-	public IDisposable BeginScope<TState>(TState state) => throw new NotImplementedException();
+	public IDisposable BeginScope<TState>(TState state) where TState : notnull
+		=> throw new NotImplementedException();
 }

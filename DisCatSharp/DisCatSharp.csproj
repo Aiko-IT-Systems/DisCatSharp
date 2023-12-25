@@ -27,16 +27,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="res\discatsharp.png" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Content Include="res\discatsharp.png">
-			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

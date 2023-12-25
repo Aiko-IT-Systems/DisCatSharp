@@ -1,13 +1,11 @@
 using System.IO;
 
-using DisCatSharp.Attributes;
-
 namespace DisCatSharp.Entities;
 
 /// <summary>
 /// Represents the File that should be sent to Discord from the <see cref="DisCatSharp.Entities.DiscordMessageBuilder"/>.
 /// </summary>
-public class DiscordMessageFile
+public sealed class DiscordMessageFile
 {
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordMessageFile"/> class.
@@ -18,7 +16,7 @@ public class DiscordMessageFile
 	/// <param name="fileType">The file type.</param>
 	/// <param name="contentType">The content type.</param>
 	/// <param name="description">The description.</param>
-	internal DiscordMessageFile(string filename, Stream stream, long? resetPositionTo, string fileType = null, string contentType = null, string description = null)
+	internal DiscordMessageFile(string filename, Stream stream, long? resetPositionTo, string? fileType = null, string? contentType = null, string? description = null)
 	{
 		this.Filename = filename;
 		this.FileType = fileType;
@@ -31,37 +29,30 @@ public class DiscordMessageFile
 	/// <summary>
 	/// Gets the name of the File.
 	/// </summary>
-	public string Filename { get; internal set; }
-
-	/// <summary>
-	/// Gets the FileName of the File. Please use <see cref="Filename"/> in future.
-	/// </summary>
-	[Deprecated("Naming was incorrect, will be removed in future in favor of Filename")]
-	public string FileName
-		=> this.Filename;
+	public string Filename { get; }
 
 	/// <summary>
 	/// Gets the description of the File.
 	/// </summary>
-	public string Description { get; internal set; }
+	public string? Description { get; }
 
 	/// <summary>
 	/// Gets the stream of the File.
 	/// </summary>
-	public Stream Stream { get; internal set; }
+	public Stream Stream { get; }
 
 	/// <summary>
 	/// Gets or sets the file type.
 	/// </summary>
-	internal string FileType { get; set; }
+	internal string? FileType { get; }
 
 	/// <summary>
 	/// Gets or sets the content type.
 	/// </summary>
-	internal string ContentType { get; set; }
+	internal string? ContentType { get; }
 
 	/// <summary>
 	/// Gets the position the File should be reset to.
 	/// </summary>
-	internal long? ResetPositionTo { get; set; }
+	internal long? ResetPositionTo { get; }
 }

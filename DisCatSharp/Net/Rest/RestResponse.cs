@@ -15,7 +15,7 @@ public sealed class RestResponse
 	/// <summary>
 	/// Gets the headers sent by the remote party.
 	/// </summary>
-	public IReadOnlyDictionary<string, string> Headers { get; internal set; }
+	public IReadOnlyDictionary<string, string>? Headers { get; internal set; }
 
 	/// <summary>
 	/// Gets the contents of the response sent by the remote party.

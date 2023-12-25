@@ -24,7 +24,7 @@ public class UnauthorizedException : DisCatSharpException
 	/// <summary>
 	/// Gets the JSON received.
 	/// </summary>
-	public string JsonMessage { get; internal set; }
+	public string? JsonMessage { get; internal set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="UnauthorizedException"/> class.
@@ -42,7 +42,7 @@ public class UnauthorizedException : DisCatSharpException
 			var j = JObject.Parse(response.Response);
 
 			if (j["message"] != null)
-				this.JsonMessage = j["message"].ToString();
+				this.JsonMessage = j["message"]!.ToString();
 		}
 		catch (Exception)
 		{ }

@@ -43,12 +43,12 @@ internal sealed class PayloadDecompressor : IDisposable
 	/// <param name="compressionLevel">The compression level.</param>
 	public PayloadDecompressor(GatewayCompressionLevel compressionLevel)
 	{
-		if (compressionLevel == GatewayCompressionLevel.None)
+		if (compressionLevel is GatewayCompressionLevel.None)
 			throw new InvalidOperationException("Decompressor requires a valid compression mode.");
 
 		this.CompressionLevel = compressionLevel;
 		this._compressedStream = new();
-		if (this.CompressionLevel == GatewayCompressionLevel.Stream)
+		if (this.CompressionLevel is GatewayCompressionLevel.Stream)
 			this._decompressorStream = new(this._compressedStream, CompressionMode.Decompress);
 	}
 
@@ -59,7 +59,7 @@ internal sealed class PayloadDecompressor : IDisposable
 	/// <param name="decompressed">The decompressed memory stream.</param>
 	public bool TryDecompress(ArraySegment<byte> compressed, MemoryStream decompressed)
 	{
-		var zlib = this.CompressionLevel == GatewayCompressionLevel.Stream
+		var zlib = this.CompressionLevel is GatewayCompressionLevel.Stream
 			? this._decompressorStream
 			: new(this._compressedStream, CompressionMode.Decompress, true);
 

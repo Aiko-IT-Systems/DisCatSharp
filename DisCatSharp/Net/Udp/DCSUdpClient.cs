@@ -105,8 +105,8 @@ internal class DcsUdpClient : BaseUdpClient
 		while (!this.TOKEN.IsCancellationRequested)
 			try
 			{
-				var packet = await this._client.ReceiveAsync().ConfigureAwait(false);
-				this._packetQueue.Add(packet.Buffer);
+				var packet = await this._client.ReceiveAsync(this.TOKEN).ConfigureAwait(false);
+				this._packetQueue.Add(packet.Buffer, this.TOKEN);
 			}
 			catch (Exception)
 			{ }
