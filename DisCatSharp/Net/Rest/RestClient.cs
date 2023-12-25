@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Common.RegularExpressions;
 using DisCatSharp.Exceptions;
-using DisCatSharp.Net.Rest;
 
 using Microsoft.Extensions.Logging;
 
