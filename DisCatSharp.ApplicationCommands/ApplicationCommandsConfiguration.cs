@@ -77,7 +77,7 @@ public class ApplicationCommandsConfiguration
 	public bool DebugStartup { internal get; set; } = false;
 
 	/// <summary>
-	/// <para>>Whether to only generate translations files and abort after that.</para>
+	/// <para>Whether to only generate translations files and abort after that.</para>
 	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
 	public bool GenerateTranslationFilesOnly { internal get; set; } = false;
