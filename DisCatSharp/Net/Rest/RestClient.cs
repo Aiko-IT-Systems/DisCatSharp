@@ -105,7 +105,7 @@ internal sealed class RestClient : IDisposable
 	{
 		this._discord = client;
 
-		this.Debug = this._discord.Configuration.MinimumLogLevel is LogLevel.Debug or LogLevel.Trace;
+		this.Debug = this._discord.Configuration.MinimumLogLevel is LogLevel.Trace;
 
 		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.AUTHORIZATION, Utilities.GetFormattedToken(client));
 		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.DISCORD_LOCALE, client.Configuration.Locale);

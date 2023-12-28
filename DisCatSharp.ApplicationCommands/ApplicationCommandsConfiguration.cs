@@ -64,6 +64,7 @@ public class ApplicationCommandsConfiguration
 	/// </note>
 	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
+	[Deprecated("This options is not used anymore. It will be removed in the future.")]
 	public bool ManualOverride { internal get; set; } = false;
 
 	/// <summary>
@@ -114,7 +115,6 @@ public class ApplicationCommandsConfiguration
 		this.ServiceProvider = acc.ServiceProvider;
 		this.DebugStartup = acc.DebugStartup;
 		this.CheckAllGuilds = acc.CheckAllGuilds;
-		this.ManualOverride = acc.ManualOverride;
 		this.AutoDefer = acc.AutoDefer;
 		this.EnableLocalization = acc.EnableLocalization;
 		this.GenerateTranslationFilesOnly = acc.GenerateTranslationFilesOnly;
