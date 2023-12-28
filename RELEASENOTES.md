@@ -29,6 +29,7 @@ DisCatSharp.ApplicationCommands Release Notes
     - Removed previously deprecated fields and methods
 
     Contains a rework for command registration (Kinda wacky tho with translation-enabled commands)
+	Fixed a major issue with application commands. Upgrade mandatory
 
 
 DisCatSharp.CommandsNext Release Notes
