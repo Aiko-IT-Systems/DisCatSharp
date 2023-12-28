@@ -28,6 +28,11 @@ public sealed class ApplicationCommandsModuleStartupFinishedEventArgs : DiscordE
 	public IReadOnlyDictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> RegisteredGuildCommands { get; internal set; }
 
 	/// <summary>
+	/// Gets the shard id of the shard that finished loading.
+	/// </summary>
+	public int ShardId { get; internal set; }
+
+	/// <summary>
 	/// Initializes a new instance of the <see cref="ApplicationCommandsModuleStartupFinishedEventArgs"/> class.
 	/// </summary>
 	/// <param name="provider">The provider.</param>

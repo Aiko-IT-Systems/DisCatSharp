@@ -13,6 +13,7 @@ using DisCatSharp.ApplicationCommands.Enums;
 using DisCatSharp.ApplicationCommands.EventArgs;
 using DisCatSharp.ApplicationCommands.Exceptions;
 using DisCatSharp.ApplicationCommands.Workers;
+using DisCatSharp.Attributes;
 using DisCatSharp.Common;
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
@@ -120,19 +121,14 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	internal static readonly Dictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommandsInternal = [];
 
 	/// <summary>
-	/// Gets the registration count.
+	/// Gets the guild ids where the applications.commands scope is missing.
 	/// </summary>
-	private static int s_registrationCount { get; set; }
-
-	/// <summary>
-	/// Gets the expected count.
-	/// </summary>
-	private static int s_expectedCount { get; set; }
+	private List<ulong> MISSING_SCOPE_GUILD_IDS { get; set; } = [];
 
 	/// <summary>
 	/// Gets the guild ids where the applications.commands scope is missing.
 	/// </summary>
-	private List<ulong> MISSING_SCOPE_GUILD_IDS { get; set; } = [];
+	private static List<ulong> s_missingScopeGuildIdsGlobal { get; set; } = [];
 
 	/// <summary>
 	/// Gets whether debug is enabled.
@@ -168,6 +164,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// Whether this module finished the startup.
 	/// </summary>
+	internal bool ShardStartupFinished { get; set; } = false;
+
+	/// <summary>
+	/// Whether this module finished the startup.
+	/// </summary>
 	internal static bool StartupFinished { get; set; } = false;
 
 	/// <summary>
@@ -187,6 +188,21 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	internal static readonly List<ulong> HandledInteractions = [];
 
 	/// <summary>
+	/// Gets the shard count.
+	/// </summary>
+	internal static int ShardCount { get; set; } = 1;
+
+	/// <summary>
+	/// Gets the count of shards who finished initializing the module.
+	/// </summary>
+	internal static int FinishedShardCount { get; set; } = 0;
+
+	/// <summary>
+	/// Gets whether the finish event was fired.
+	/// </summary>
+	public static bool FinishFired { get; set; } = false;
+
+	/// <summary>
 	/// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
 	/// </summary>
 	/// <param name="configuration">The configuration.</param>
@@ -196,7 +212,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		Configuration = configuration;
 		DebugEnabled = configuration?.DebugStartup ?? false;
 		CheckAllGuilds = configuration?.CheckAllGuilds ?? false;
-		ManOr = configuration?.ManualOverride ?? false;
 		AutoDeferEnabled = configuration?.AutoDefer ?? false;
 		IsCalledByUnitTest = configuration?.UnitTestMode ?? false;
 
@@ -208,6 +223,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		this._applicationCommandsModuleStartupFinished = new("APPLICATION_COMMANDS_MODULE_STARTUP_FINISHED", TimeSpan.Zero, null!);
 		this._globalApplicationCommandsRegistered = new("GLOBAL_COMMANDS_REGISTERED", TimeSpan.Zero, null!);
 		this._guildApplicationCommandsRegistered = new("GUILD_COMMANDS_REGISTERED", TimeSpan.Zero, null!);
+		this.ApplicationCommandsModuleStartupFinished += this.CheckStartupFinishAsync;
 	}
 
 	/// <summary>
@@ -221,16 +237,17 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			throw new InvalidOperationException("What did I tell you?");
 
 		this.Client = client;
+		ShardCount = client.ShardCount;
 		Logger = client.Logger;
 
 		this.Client.GuildDownloadCompleted += (c, e) =>
 		{
-			if (!StartupFinished)
+			if (!this.ShardStartupFinished)
 				_ = Task.Run(async () => await this.UpdateAsync().ConfigureAwait(false));
 			return Task.CompletedTask;
 		};
-		this.Client.InteractionCreated += CatchInteractionsOnStartup;
-		this.Client.ContextMenuInteractionCreated += CatchContextMenuInteractionsOnStartup;
+		this.Client.InteractionCreated += this.CatchInteractionsOnStartup;
+		this.Client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
 	}
 
 	/// <summary>
@@ -239,9 +256,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <param name="sender">The client.</param>
 	/// <param name="e">The interaction create event args.</param>
 	/// <returns></returns>
-	private static async Task CatchInteractionsOnStartup(DiscordClient sender, InteractionCreateEventArgs e)
+	private async Task CatchInteractionsOnStartup(DiscordClient sender, InteractionCreateEventArgs e)
 	{
-		if (!StartupFinished)
+		if (!this.ShardStartupFinished)
 			await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().AsEphemeral().WithContent("Attention: This application is still starting up. Application commands are unavailable for now.")).ConfigureAwait(false);
 		else
 			await Task.Delay(1).ConfigureAwait(false);
@@ -252,9 +269,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	/// <param name="sender">The client.</param>
 	/// <param name="e">The context menu interaction create event args.</param>
-	private static async Task CatchContextMenuInteractionsOnStartup(DiscordClient sender, ContextMenuInteractionCreateEventArgs e)
+	private async Task CatchContextMenuInteractionsOnStartup(DiscordClient sender, ContextMenuInteractionCreateEventArgs e)
 	{
-		if (!StartupFinished)
+		if (!this.ShardStartupFinished)
 			await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().AsEphemeral().WithContent("Attention: This application is still starting up. Context menu commands are unavailable for now.")).ConfigureAwait(false);
 		else
 			await Task.Delay(1).ConfigureAwait(false);
@@ -266,10 +283,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	private void FinishedRegistration()
 	{
-		this.Client.InteractionCreated -= CatchInteractionsOnStartup;
-		this.Client.ContextMenuInteractionCreated -= CatchContextMenuInteractionsOnStartup;
-
-		StartupFinished = true;
+		this.Client.InteractionCreated -= this.CatchInteractionsOnStartup;
+		this.Client.ContextMenuInteractionCreated -= this.CatchContextMenuInteractionsOnStartup;
 
 		this.Client.InteractionCreated += this.InteractionHandler;
 		this.Client.ContextMenuInteractionCreated += this.ContextMenuHandler;
@@ -284,8 +299,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		this._updateList.Clear();
 		s_singletonModules.Clear();
 		s_errored = false;
-		s_expectedCount = 0;
-		s_registrationCount = 0;
+		ShardCount = 1;
 		CommandMethods.Clear();
 		GroupCommands.Clear();
 		ContextMenuCommands.Clear();
@@ -294,8 +308,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		s_registeredCommands.Clear();
 		GlobalCommandsInternal.Clear();
 		GuildCommandsInternal.Clear();
-		this.Client.InteractionCreated += CatchInteractionsOnStartup;
-		this.Client.ContextMenuInteractionCreated += CatchContextMenuInteractionsOnStartup;
+		s_missingScopeGuildIdsGlobal.Clear();
+		this.MISSING_SCOPE_GUILD_IDS.Clear();
+		HandledInteractions.Clear();
+		FinishedShardCount = 0;
+		FinishFired = false;
+		StartupFinished = false;
+		this.ShardStartupFinished = false;
+		this.Client.InteractionCreated += this.CatchInteractionsOnStartup;
+		this.Client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
 	}
 
 	/// <summary>
@@ -454,17 +475,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	{
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Request to register commands on shard {shard}", this.Client.ShardId);
 
-		if (StartupFinished)
+		if (this.ShardStartupFinished)
 		{
 			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Shard {shard} already setup, skipping", this.Client.ShardId);
-			this.FinishedRegistration();
 			return;
 		}
 
 		GlobalDiscordCommands = [];
 		GuildDiscordCommands = [];
 
-		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Expected Count: {count}", s_expectedCount);
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Shard {shard} has {guilds} guilds", this.Client.ShardId, this.Client.Guilds?.Count);
 		List<ulong> failedGuilds = [];
 		var globalCommands = IsCalledByUnitTest ? null : (await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false).ConfigureAwait(false))?.ToList() ?? null;
@@ -482,7 +501,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		}
 
 		var commandsPending = this._updateList.Select(x => x.Key).Distinct().ToList();
-		s_expectedCount = commandsPending.Count;
 
 		if (guilds is not null && guilds.Count != 0)
 			foreach (var guild in guilds)
@@ -551,11 +569,21 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		}
 
 		this.MISSING_SCOPE_GUILD_IDS = [..failedGuilds];
+		s_missingScopeGuildIdsGlobal.AddRange(failedGuilds);
+		this.ShardStartupFinished = true;
+		FinishedShardCount++;
 
-		await this._applicationCommandsModuleReady.InvokeAsync(this, new(Configuration?.ServiceProvider)
+		StartupFinished = FinishedShardCount == ShardCount;
+
+		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Application command setup finished for shard {ShardId}, enabling receiving", this.Client.ShardId);
+		await this._applicationCommandsModuleStartupFinished.InvokeAsync(this, new(Configuration?.ServiceProvider)
 		{
-			GuildsWithoutScope = failedGuilds
+			RegisteredGlobalCommands = GlobalCommandsInternal,
+			RegisteredGuildCommands = GuildCommandsInternal,
+			GuildsWithoutScope = this.MISSING_SCOPE_GUILD_IDS,
+			ShardId = this.Client.ShardId
 		}).ConfigureAwait(false);
+		this.FinishedRegistration();
 	}
 
 	/// <summary>
@@ -767,10 +795,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		{
 			updateList = updateList.DistinctBy(x => x.Name).ToList();
 			if (Configuration.GenerateTranslationFilesOnly)
-			{
-				s_registrationCount++;
-				await this.CheckRegistrationStartup(ManOr, translation, groupTranslation);
-			}
+				await this.CheckRegistrationStartup(translation, groupTranslation);
 			else
 				try
 				{
@@ -863,8 +888,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					foreach (var app in commandMethods.Select(command => types.First(t => t.Type == command.Method.DeclaringType)))
 					{ }
 
-					this.Client.Logger.Log(ApplicationCommandsLogLevel, "Expected Count: {exp}\nCurrent Count: {cur}", s_expectedCount, s_registrationCount);
-
 					if (guildId.HasValue)
 						await this._guildApplicationCommandsRegistered.InvokeAsync(this, new(Configuration?.ServiceProvider)
 						{
@@ -879,8 +902,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							RegisteredCommands = GlobalCommandsInternal
 						}).ConfigureAwait(false);
 
-					s_registrationCount++;
-					await this.CheckRegistrationStartup(ManOr, translation, groupTranslation);
+					await this.CheckRegistrationStartup(translation, groupTranslation);
 				}
 				catch (NullReferenceException ex)
 				{
@@ -932,74 +954,76 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// Checks the registration startup.
 	/// </summary>
-	/// <param name="man">Whether this check was manually triggered.</param>
 	/// <param name="translation">The optional translations.</param>
 	/// <param name="groupTranslation">The optional group translations.</param>
-	private async Task CheckRegistrationStartup(bool man = false, List<CommandTranslator>? translation = null, List<GroupTranslator>? groupTranslation = null)
+	private async Task CheckRegistrationStartup(List<CommandTranslator>? translation = null, List<GroupTranslator>? groupTranslation = null)
 	{
-		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Checking counts...\n\nExpected Count: {exp}\nCurrent Count: {cur}", s_expectedCount, s_registrationCount);
-
-		if (s_registrationCount == s_expectedCount || man)
+		if (Configuration.GenerateTranslationFilesOnly)
 		{
-			await this._applicationCommandsModuleStartupFinished.InvokeAsync(this, new(Configuration?.ServiceProvider)
+			try
 			{
-				Handled = true,
-				RegisteredGlobalCommands = GlobalCommandsInternal,
-				RegisteredGuildCommands = GuildCommandsInternal,
-				GuildsWithoutScope = this.MISSING_SCOPE_GUILD_IDS
-			}).ConfigureAwait(false);
-			if (Configuration.GenerateTranslationFilesOnly)
-			{
-				try
+				if (translation is not null && translation.Count is not 0)
 				{
-					if (translation is not null && translation.Count is not 0)
-					{
-						var fileName = $"translation_generator_export-shard{this.Client.ShardId}-SINGLE-{s_registrationCount}_of_{s_expectedCount}.json";
-						var fs = File.Create(fileName);
-						var ms = new MemoryStream();
-						var writer = new StreamWriter(ms);
-						await writer.WriteAsync(JsonConvert.SerializeObject(translation.DistinctBy(x => x.Name), Formatting.Indented)).ConfigureAwait(false);
-						await writer.FlushAsync().ConfigureAwait(false);
-						ms.Position = 0;
-						await ms.CopyToAsync(fs).ConfigureAwait(false);
-						await fs.FlushAsync().ConfigureAwait(false);
-						fs.Close();
-						await fs.DisposeAsync().ConfigureAwait(false);
-						ms.Close();
-						await ms.DisposeAsync().ConfigureAwait(false);
-						this.Client.Logger.LogInformation("Exported base translation to {exppath}", fileName);
-					}
-
-					if (groupTranslation is not null && groupTranslation.Count is not 0)
-					{
-						var fileName = $"translation_generator_export-shard{this.Client.ShardId}-GROUP-{s_registrationCount}_of_{s_expectedCount}.json";
-						var fs = File.Create(fileName);
-						var ms = new MemoryStream();
-						var writer = new StreamWriter(ms);
-						await writer.WriteAsync(JsonConvert.SerializeObject(groupTranslation.DistinctBy(x => x.Name), Formatting.Indented)).ConfigureAwait(false);
-						await writer.FlushAsync().ConfigureAwait(false);
-						ms.Position = 0;
-						await ms.CopyToAsync(fs).ConfigureAwait(false);
-						await fs.FlushAsync().ConfigureAwait(false);
-						fs.Close();
-						await fs.DisposeAsync().ConfigureAwait(false);
-						ms.Close();
-						await ms.DisposeAsync().ConfigureAwait(false);
-						this.Client.Logger.LogInformation("Exported base translation to {exppath}", fileName);
-					}
-				}
-				catch (Exception ex)
-				{
-					this.Client.Logger.LogError(@"{msg}", ex.Message);
-					this.Client.Logger.LogError(@"{stack}", ex.StackTrace);
+					var fileName = $"translation_generator_export-shard{this.Client.ShardId}-SINGLE.json";
+					var fs = File.Create(fileName);
+					var ms = new MemoryStream();
+					var writer = new StreamWriter(ms);
+					await writer.WriteAsync(JsonConvert.SerializeObject(translation.DistinctBy(x => x.Name), Formatting.Indented)).ConfigureAwait(false);
+					await writer.FlushAsync().ConfigureAwait(false);
+					ms.Position = 0;
+					await ms.CopyToAsync(fs).ConfigureAwait(false);
+					await fs.FlushAsync().ConfigureAwait(false);
+					fs.Close();
+					await fs.DisposeAsync().ConfigureAwait(false);
+					ms.Close();
+					await ms.DisposeAsync().ConfigureAwait(false);
+					this.Client.Logger.LogInformation("Exported base translation to {exppath}", fileName);
 				}
 
-				this.FinishedRegistration();
-				await this.Client.DisconnectAsync().ConfigureAwait(false);
+				if (groupTranslation is not null && groupTranslation.Count is not 0)
+				{
+					var fileName = $"translation_generator_export-shard{this.Client.ShardId}-GROUP.json";
+					var fs = File.Create(fileName);
+					var ms = new MemoryStream();
+					var writer = new StreamWriter(ms);
+					await writer.WriteAsync(JsonConvert.SerializeObject(groupTranslation.DistinctBy(x => x.Name), Formatting.Indented)).ConfigureAwait(false);
+					await writer.FlushAsync().ConfigureAwait(false);
+					ms.Position = 0;
+					await ms.CopyToAsync(fs).ConfigureAwait(false);
+					await fs.FlushAsync().ConfigureAwait(false);
+					fs.Close();
+					await fs.DisposeAsync().ConfigureAwait(false);
+					ms.Close();
+					await ms.DisposeAsync().ConfigureAwait(false);
+					this.Client.Logger.LogInformation("Exported base translation to {exppath}", fileName);
+				}
 			}
-			else
-				this.FinishedRegistration();
+			catch (Exception ex)
+			{
+				this.Client.Logger.LogError(@"{msg}", ex.Message);
+				this.Client.Logger.LogError(@"{stack}", ex.StackTrace);
+			}
+
+			await this.Client.DisconnectAsync().ConfigureAwait(false);
 		}
+	}
+
+	/// <summary>
+	/// Checks whether we finished up the complete startup.
+	/// </summary>
+	private async Task CheckStartupFinishAsync(ApplicationCommandsExtension sender, ApplicationCommandsModuleStartupFinishedEventArgs args)
+	{
+		if (StartupFinished)
+			if (!FinishFired)
+			{
+				await this._applicationCommandsModuleReady.InvokeAsync(sender, new(Configuration?.ServiceProvider)
+				{
+					GuildsWithoutScope = s_missingScopeGuildIdsGlobal
+				}).ConfigureAwait(false);
+				FinishFired = true;
+			}
+
+		args.Handled = false;
 	}
 
 	/// <summary>
@@ -1010,9 +1034,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	private Task InteractionHandler(DiscordClient client, InteractionCreateEventArgs e)
 	{
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Got slash interaction on shard {shard}", this.Client.ShardId);
-		if (HandledInteractions.Contains(e.Interaction.Id))
+		if (HandledInteractions.Contains(e.Interaction.Id) || (e.Interaction.GuildId.HasValue && !client.Guilds.ContainsKey(e.Interaction.GuildId.Value)))
 		{
-			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Ignoring, already received");
+			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Ignoring, already received or wrong shard");
 			return Task.FromResult(true);
 		}
 
