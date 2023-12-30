@@ -1,5 +1,8 @@
 DisCatSharp Release Notes
 
+	Important fix:
+ 	- Apparently the built-in c# method for building uris broke. The gateway uri included never the gateway version, encoding and compression. This is fixed now!
+
     Breaking changes:
     - Dropped support for .NET 6
     - Removed previously deprecated fields and methods
