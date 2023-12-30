@@ -165,16 +165,16 @@ public sealed partial class DiscordClient
 		this.WebSocketClient.MessageReceived += SocketOnMessage;
 		this.WebSocketClient.ExceptionThrown += SocketOnException;
 
-		var gwuri = new QueryUriBuilder(this.GatewayUri)
-			.AddParameter("v", this.Configuration.ApiVersion)
-			.AddParameter("encoding", "json");
+		var gwuri = this.GatewayUri.AddParameter("v", this.Configuration.ApiVersion).AddParameter("encoding", "json");
 
 		if (this.Configuration.GatewayCompressionLevel == GatewayCompressionLevel.Stream)
-			gwuri.AddParameter("compress", "zlib-stream");
+			gwuri = gwuri.AddParameter("compress", "zlib-stream");
+
+		this.GatewayUri = gwuri;
 
 		this.Logger.LogDebug(LoggerEvents.Startup, "Connecting to {gw}", this.GatewayUri.AbsoluteUri);
 
-		await this.WebSocketClient.ConnectAsync(gwuri.Build()).ConfigureAwait(false);
+		await this.WebSocketClient.ConnectAsync(this.GatewayUri).ConfigureAwait(false);
 		return;
 
 		Task SocketOnConnect(IWebSocketClient sender, SocketEventArgs e)
