@@ -2,8 +2,19 @@ name: "Sentry Release"
 
 on:
   push:
+    branches:
+      - main
+    paths-ignore:
+        - "DisCatSharp.Docs/**"
+        - "DisCatSharp.Archive/**"
+        - "DisCatSharp.Tools/**"
+        - "DisCatSharp.Logos/**"
+        - "DisCatSharp.Attributes/**"
+        - "*.md"
+        - "*.json"
   release:
-    types: [published]
+    types:
+        - published
 
 permissions: write-all
 
@@ -29,4 +40,3 @@ jobs:
           environment: ${{ github.event_name == 'release' && github.event.action == 'published' && 'prod' || 'dev' }}
           ignore_missing: true
           version: DisCatSharp@${{ steps.vars.outputs.version }}+${{ steps.vars.outputs.sha }}
-

@@ -4,6 +4,14 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+        - "DisCatSharp.Docs/**"
+        - "DisCatSharp.Archive/**"
+        - "DisCatSharp.Tools/**"
+        - "DisCatSharp.Logos/**"
+        - "DisCatSharp.Attributes/**"
+        - "*.md"
+        - "*.json"
   pull_request:
   merge_group:
   workflow_dispatch:
