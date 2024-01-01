@@ -373,7 +373,6 @@ public sealed class DiscordConfiguration
 	/// <summary>
 	/// Creates a new configuration with default values.
 	/// </summary>
-	[ActivatorUtilitiesConstructor]
 	public DiscordConfiguration()
 	{ }
 
