@@ -74,15 +74,6 @@ The repository containing the source code for this library can be found [here](h
 -   [Schattenclown](https://github.com/Schattenclown)
 -   [FabiChan99](https://github.com/FabiChan99)
 
-### Hacktober Participants
-
-The following users participated in Hacktoberfest 2022 and contributed to DisCatSharp:
-
--   [Mira](https://github.com/TheXorog)
--   [Sh1be](https://github.com/xMaxximum)
--   [Lulalaby](https://github.com/Lulalaby)
--   [Badger](https://github.com/JBraunsmaJr)
-
 ### Thanks
 
 Big thanks goes to the following people who helped us without being part of the core team ♥️
