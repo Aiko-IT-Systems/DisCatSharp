@@ -43,7 +43,7 @@
 		"memberLayout": {
 			"type": "string",
 			"description": "The layout of the member page. Can be 'samePage' or 'separatePages'.",
-			"enum": ["samePage", "separatePages"],
+			"enum": ["samePage", "separatePages", "SamePage", "SeparatePages"],
 			"default": "separatePages",
 			"additionalProperties": false
 		}

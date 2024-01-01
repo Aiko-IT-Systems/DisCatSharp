@@ -132,4 +132,4 @@ items:
   items:
   - uid: DisCatSharp.Lavalink.Models.LavalinkPlayerUpdateModel
     name: LavalinkPlayerUpdateModel
-memberLayout: separatePages
+memberLayout: SeparatePages

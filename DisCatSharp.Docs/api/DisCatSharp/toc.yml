@@ -636,6 +636,8 @@ items:
     name: UserFlags
   - uid: DisCatSharp.Enums.VerificationLevel
     name: VerificationLevel
+  - uid: DisCatSharp.Enums.VersionCheckMode
+    name: VersionCheckMode
   - uid: DisCatSharp.Enums.VideoQualityMode
     name: VideoQualityMode
   - uid: DisCatSharp.Enums.WidgetType
@@ -847,6 +849,8 @@ items:
   items:
   - uid: DisCatSharp.Net.BaseRestRequest
     name: BaseRestRequest
+  - uid: DisCatSharp.Net.CommonHeaders
+    name: CommonHeaders
   - uid: DisCatSharp.Net.ConnectionEndpoint
     name: ConnectionEndpoint
   - uid: DisCatSharp.Net.DiscordApiClient
@@ -917,4 +921,4 @@ items:
     name: WebSocketClient
   - uid: DisCatSharp.Net.WebSocket.WebSocketClientFactoryDelegate
     name: WebSocketClientFactoryDelegate
-memberLayout: separatePages
+memberLayout: SeparatePages
