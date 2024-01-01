@@ -41,4 +41,4 @@ items:
     name: VoiceUserJoinEventArgs
   - uid: DisCatSharp.VoiceNext.EventArgs.VoiceUserLeaveEventArgs
     name: VoiceUserLeaveEventArgs
-memberLayout: SeparatePages
+memberLayout: separatePages

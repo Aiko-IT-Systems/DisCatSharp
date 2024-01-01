@@ -62,4 +62,4 @@ items:
     name: InteractionExtensions
   - uid: DisCatSharp.Interactivity.Extensions.MessageExtensions
     name: MessageExtensions
-memberLayout: SeparatePages
+memberLayout: separatePages

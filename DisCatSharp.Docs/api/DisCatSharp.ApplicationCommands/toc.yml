@@ -151,4 +151,4 @@ items:
     name: ContextMenuExecutionChecksFailedException
   - uid: DisCatSharp.ApplicationCommands.Exceptions.SlashExecutionChecksFailedException
     name: SlashExecutionChecksFailedException
-memberLayout: SeparatePages
+memberLayout: separatePages
