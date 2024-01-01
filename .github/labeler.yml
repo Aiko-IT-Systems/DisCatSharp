@@ -10,14 +10,11 @@ labels:
       - ".*.png"
       - ".*.svg"
       - ".*.jpeg"
-      - ".*.guf"
+      - ".*.gif"
       - ".*.css"
   - label: "documentation"
     files:
       - "DisCatSharp.Docs/.*"
-  - label: "core"
-    files:
-      - "DisCatSharp/.*"
   - label: "experimental"
     title: ^[Exp]:.*
   - label: "dependencies"

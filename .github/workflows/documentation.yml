@@ -84,6 +84,7 @@ jobs:
     - name: Delete packed docs
       uses: geekyeggo/delete-artifact@v4
       with:
+        token: ${{ secrets.NYUW_TOKEN_GH }}
         name: dcs-docs.zip
     - name: Add .htaccess
       run: rm -f .htaccess && wget https://gist.githubusercontent.com/Lulalaby/8a032d0ddebb9125691094edc67b6593/raw/0c4bf0423cfe334fdd5092b014d2481759dd052a/.htaccess

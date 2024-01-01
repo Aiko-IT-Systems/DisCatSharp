@@ -2,9 +2,19 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ main ]
+    branches:
+        - main
+    paths-ignore:
+        - "DisCatSharp.Docs/**"
+        - "DisCatSharp.Archive/**"
+        - "DisCatSharp.Tools/**"
+        - "DisCatSharp.Logos/**"
+        - "DisCatSharp.Attributes/**"
+        - "*.md"
+        - "*.json"
   pull_request:
-    branches: [ main ]
+    branches:
+        - main
   schedule:
     - cron: '39 18 * * 3'
   merge_group:
