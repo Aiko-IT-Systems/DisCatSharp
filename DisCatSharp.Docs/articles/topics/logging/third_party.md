@@ -5,6 +5,7 @@ author: DisCatSharp Team
 ---
 
 # Using a Third Party Logger
+
 While the default logging implementation will meet the needs of most, some may desire to make use of a more robust implementation which provides more features.
 Thankfully, DisCatSharp allows you to use any logging library which has an implementation for the [logging abstractions](https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.logging) provided by Microsoft.
 
@@ -23,6 +24,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateLogger();
 ```
+
 This will make a new Serilog logger instance which will write to the console sink.
 
 <br/>

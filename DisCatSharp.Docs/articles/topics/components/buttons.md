@@ -21,11 +21,12 @@ Furthermore, buttons come in two types: regular, and link. Link buttons contain 
 > Link buttons do **not** have a custom id and do **not** send interactions when pressed.
 
 Buttons consist of five parts:
-- Id
-- Style
-- Label
-- Emoji
-- Disabled
+
+-   Id
+-   Style
+-   Label
+-   Emoji
+-   Disabled
 
 The id of the button is a settable string on buttons, and is specified by the developer. Discord sends this id back in the [interaction object](https://discord.dev/interactions/slash-commands#interaction).
 
@@ -45,7 +46,7 @@ var myButton = new DiscordButtonComponent()
 
 This will create a blurple button with the text that reads "Very cool button!". When a user pushes it, `"my_very_cool_button"` will be sent back as the `Id` property on the event. This is expanded on in the [how to respond to buttons](#responding-to-button-presses).
 
-The label of a button is optional *if* an emoji is specified. The label can be up to 80 characters in length.
+The label of a button is optional _if_ an emoji is specified. The label can be up to 80 characters in length.
 The emoji of a button is a [partial emoji object](https://discord.dev/interactions/message-components#component-object), which means that **any valid emoji is usable**, even if your bot does not have access to it's origin server.
 
 The disabled field of a button is rather self explanatory. If this is set to true, the user will see a greyed out button which they cannot interact with.
@@ -76,6 +77,7 @@ var builder = new DiscordMessageBuilder()
     .WithContent("This message has buttons! Pretty neat innit?")
     .AddComponents(myButton);
 ```
+
 Now you have a message with a button. Congratulations! It's important to note that `.AddComponents()` will create a new row with each call, so **add everything you want on one row in one call!**
 
 Buttons can be added in any order you fancy. Lets add 5 to demonstrate each color, and a link button for good measure.
@@ -92,6 +94,7 @@ var builder = new DiscordMessageBuilder()
         new DiscordLinkButtonComponent("https://some-super-cool.site", "Link")
     });
 ```
+
 As promised, not too complicated. Links however are `DiscordLinkButtonComponent`, which takes a URL as it's first parameter, and the label. Link buttons can also have an emoji, like regular buttons.
 
 Lets also add a second row of buttons, but disable them, so the user can't push them all willy-nilly.
@@ -106,6 +109,7 @@ builder.AddComponents(new DiscordComponent[]
     new DiscordLinkButtonComponent("https://some-super-cool.site", "Link", true)
 });
 ```
+
 Practically identical, but now with `true` as an extra parameter. This is the `Disabled` property.
 
 Produces a message like such:
@@ -144,9 +148,8 @@ var myButton = new DiscordButtonComponent
     new DiscordComponentEmoji(922569846569455646)
 );
 ```
+
 And you're done! Simply add that to a builder, and when you send, you'll get a message that has a button with our cute logo!
-
-
 
 <discord-messages>
     <discord-message profile="dcs">
@@ -157,7 +160,6 @@ And you're done! Simply add that to a builder, and when you send, you'll get a m
             </discord-action-row>
     </discord-message>
 </discord-messages>
-
 
 ## Responding to button presses
 
@@ -186,8 +188,8 @@ client.ComponentInteractionCreated += async (s, e) =>
     await e.Interaction.CreateResponseAsync(InteractionResponseType.UpdateMessage, new DiscordInteractionResponseBuilder().WithContent("No more buttons for you >:)"));
 }
 ```
-This will update the message, and without the infamous <sub>(edited)</sub> next to it. Nice.
 
+This will update the message, and without the infamous <sub>(edited)</sub> next to it. Nice.
 
 # Interactivity
 
@@ -196,8 +198,9 @@ Along with the typical `WaitForMessageAsync` and `WaitForReactionAsync` methods 
 More information about how interactivity works can be found in [the interactivity article](xref:modules_interactivity_introduction)
 
 Since buttons create interactions, there are also two additional properties in the configuration:
-- @DisCatSharp.Interactivity.InteractivityConfiguration.ResponseBehavior
-- @DisCatSharp.Interactivity.InteractivityConfiguration.ResponseMessage
+
+-   @DisCatSharp.Interactivity.InteractivityConfiguration.ResponseBehavior
+-   @DisCatSharp.Interactivity.InteractivityConfiguration.ResponseMessage
 
 @DisCatSharp.Interactivity.InteractivityConfiguration.ResponseBehavior is what interactivity will do when handling something that isn't a valid valid button, in the context of waiting for a specific button. It defaults to @DisCatSharp.Interactivity.Enums.InteractionResponseBehavior.Ignore, which will cause the interaction fail.
 

@@ -14,5 +14,7 @@
         "powershell",
         "xml"
     ],
-    "dotnet.defaultSolution": "DisCatSharp.sln"
+    "dotnet.defaultSolution": "DisCatSharp.sln",
+    "files.eol": "\n",
+    "files.trimFinalNewlines": true
 }

@@ -70,6 +70,7 @@ var msg = await new DiscordMessageBuilder()
 ### Sending an Inline Reply
 
 For sending an inline reply, you'll have to use the MessageBuilder to construct your message, see example below:
+
 ```cs
 var msg = await new DiscordMessageBuilder()
     .WithContent($"I'm talking to *you*!")

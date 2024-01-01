@@ -28,11 +28,11 @@ See https://www.jetbrains.com/help/rider/Settings_Roslyn_Analyzers.html
 
 #### Included Rules
 
-Rule ID | Category | Severity | Notes
---------|----------|----------|-------
-[DCS0001](xref:vs_analyzer_dcs_0001) | Usage | Warning | Experimental Attribute Analyzer
-[DCS0002](xref:vs_analyzer_dcs_0002) | Usage | Warning | Deprecated Attribute Analyzer
-[DCS0101](xref:vs_analyzer_dcs_0101) | Usage | Warning | DiscordInExperiment Attribute Analyzer
-[DCS0102](xref:vs_analyzer_dcs_0102) | Usage | Warning | DiscordDeprecated Attribute Analyzer
-[DCS0103](xref:vs_analyzer_dcs_0103) | Usage | Warning | DiscordUnreleased Attribute Analyzer
-[DCS0200](xref:vs_analyzer_dcs_0200) | Usage | Info    | RequiresFeature Attribute Analyzer
+| Rule ID                              | Category | Severity | Notes                                  |
+| ------------------------------------ | -------- | -------- | -------------------------------------- |
+| [DCS0001](xref:vs_analyzer_dcs_0001) | Usage    | Warning  | Experimental Attribute Analyzer        |
+| [DCS0002](xref:vs_analyzer_dcs_0002) | Usage    | Warning  | Deprecated Attribute Analyzer          |
+| [DCS0101](xref:vs_analyzer_dcs_0101) | Usage    | Warning  | DiscordInExperiment Attribute Analyzer |
+| [DCS0102](xref:vs_analyzer_dcs_0102) | Usage    | Warning  | DiscordDeprecated Attribute Analyzer   |
+| [DCS0103](xref:vs_analyzer_dcs_0103) | Usage    | Warning  | DiscordUnreleased Attribute Analyzer   |
+| [DCS0200](xref:vs_analyzer_dcs_0200) | Usage    | Info     | RequiresFeature Attribute Analyzer     |

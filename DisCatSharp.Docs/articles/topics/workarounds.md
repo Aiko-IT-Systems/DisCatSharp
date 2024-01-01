@@ -8,7 +8,8 @@ author: DisCatSharp Team
 
 Here is a collection of common workarounds for minor problems.
 
-## Thread warns with *.. take too long to execute*
+## Thread warns with _.. take too long to execute_
+
 This warning happens from time to time if you're doing big tasks on events.
 A quick workaround for this warning is the following method:
 
@@ -20,10 +21,10 @@ discordClient.VoiceStateUpdated += (sender, args) =>
 };
 ```
 
-
 With this you start a new non-blocking thread.
 
 Another alternative is:
+
 ```cs
 new Thread(Method).Start()
 ```

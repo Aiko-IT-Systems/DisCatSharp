@@ -12,7 +12,6 @@ DisCatSharp ships with a default logging implementation which is **enabled autom
 
 This is a basic implementation that only sends log messages to the console.
 
-
 ## Minimum Logging Level
 
 You're able to adjust the verbosity of log messages via `DiscordConfiguration`.
@@ -23,6 +22,7 @@ new DiscordConfiguration()
     MinimumLogLevel = LogLevel.Debug
 };
 ```
+
 The example above will display level log messages that are higher than or equal to `Debug`.
 
 ![Debug Level Logging](/images/topics_logging_default_02.png)
@@ -42,7 +42,6 @@ new DiscordConfiguration()
 
 For a list of all available format specifiers, check out the MSDN page for [custom date and time format strings](https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings#day-d-format-specifier).
 
-
 ## Log Levels
 
 Below is a table of all log levels and the kind of messages you can expect from each.
@@ -55,7 +54,7 @@ Name|Position|Description
 `Debug`|1| Ratelimit buckets and related information.
 `Trace`|0| Websocket & REST traffic.
 
- >[!WARNING]
- > The `Trace` log level is *not* recommended for use in production.
- >
- > It is intended for debugging DisCatSharp and may display tokens and other sensitive data.
+> [!WARNING]
+> The `Trace` log level is _not_ recommended for use in production.
+>
+> It is intended for debugging DisCatSharp and may display tokens and other sensitive data.

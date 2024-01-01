@@ -29,8 +29,8 @@ DisCatSharp 10.4 and higher target .NET 7 primary and backports .NET 6.
 
 # Getting Started
 
-If you're writing a Discord bot for the first time, you'll want to start with *[creating a bot account](xref:getting_started_bot_account)*.
+If you're writing a Discord bot for the first time, you'll want to start with _[creating a bot account](xref:getting_started_bot_account)_.
 
-Otherwise, if you have a bot account already, start off with the *[writing your first bot](xref:getting_started_first_bot)* article.
+Otherwise, if you have a bot account already, start off with the _[writing your first bot](xref:getting_started_first_bot)_ article.
 
 Once you're up and running, feel free to browse through the [API Documentation](xref:api_index)!

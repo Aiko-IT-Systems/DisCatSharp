@@ -7,22 +7,24 @@ author: DisCatSharp Team
 # Prerequisites
 
 Install the following packages:
- - DisCatSharp.ProjectTemplates
+
+-   DisCatSharp.ProjectTemplates
 
 To Install the latest:
+
 ```powershell
 dotnet new --install DisCatSharp.ProjectTemplates
 ```
 
 To install a specific version (example uses 10.0.0):
+
 ```powershell
 dotnet new --install DisCatSharp.ProjectTemplates::10.0.0
 ```
 
 # Steps
 
-![Install Setup](/images/pt_nuget_install.png)
------
+## ![Install Setup](/images/pt_nuget_install.png)
 
 If you're using Visual Studio, the templates will show up when creating a new project/solution
 ![Install Setup](/images/pt_project_new.png)
@@ -44,7 +46,7 @@ list last, the `Bot` project is considered the startup. You would think that a c
 
 At this point in time the template is ready to run!
 
------
+---
 
 # Templates
 
