@@ -410,3 +410,7 @@ a.discord-button[href]::after {
 .discord-header {
 	display: contents !important;
 }
+
+.IMPORTANT > p > code {
+	color: #ffffff !important;
+}
