@@ -104,6 +104,7 @@ public sealed class CommandsNextConfiguration
 	/// <summary>
 	/// Creates a new configuration with default values.
 	/// </summary>
+	[ActivatorUtilitiesConstructor]
 	public CommandsNextConfiguration()
 	{ }
 

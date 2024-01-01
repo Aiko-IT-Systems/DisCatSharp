@@ -366,12 +366,14 @@ public sealed class DiscordConfiguration
 
 	/// <summary>
 	/// Whether to show release notes in the update check.
+	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
-	public bool ShowReleaseNotesInUpdateCheck { get; set; } = true;
+	public bool ShowReleaseNotesInUpdateCheck { get; set; } = false;
 
 	/// <summary>
 	/// Creates a new configuration with default values.
 	/// </summary>
+	[ActivatorUtilitiesConstructor]
 	public DiscordConfiguration()
 	{ }
 

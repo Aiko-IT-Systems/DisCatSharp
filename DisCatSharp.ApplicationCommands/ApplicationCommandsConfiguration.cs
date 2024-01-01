@@ -57,17 +57,6 @@ public class ApplicationCommandsConfiguration
 	public bool CheckAllGuilds { internal get; set; } = false;
 
 	/// <summary>
-	/// <para>This option can override the default registration behavior of the module.</para>
-	/// <note type="warning">
-	/// <para>It can lead to unexpected behavior of the application commands module.</para>
-	/// <para>Enable this option only if DisCatSharp support advises you to do so.</para>
-	/// </note>
-	/// <para>Defaults to <see langword="false"/>.</para>
-	/// </summary>
-	[Deprecated("This options is not used anymore. It will be removed in the future.")]
-	public bool ManualOverride { internal get; set; } = false;
-
-	/// <summary>
 	/// <para>This option increases the debug output of the module.</para>
 	/// <note type="warning">
 	/// <para>This is not recommended for production use.</para>
