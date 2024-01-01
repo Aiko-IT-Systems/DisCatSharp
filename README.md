@@ -12,6 +12,12 @@
 
 ----
 
+# Information
+
+This repository is currently under lockdown (read-only) due to a pending release.
+
+----
+
 # News
 
 ## New
