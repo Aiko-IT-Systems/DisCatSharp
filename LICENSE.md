@@ -131,7 +131,7 @@ https://datatracker.ietf.org/ipr/1526/
 
 ## DisCatSharp.Common
 ```
-Copyright 2021-2023 AITSYS
+Copyright 2021-2024 AITSYS
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -1,0 +1,39 @@
+items:
+- name: Overview
+  uid: api_index
+- name: Modules
+  expanded: true
+  items:
+  - name: DisCatSharp
+    uid: api_discatsharp_index
+    tocHref: DisCatSharp/toc.yml
+  - name: DisCatSharp.ApplicationCommands
+    uid: api_discatsharp_applicationcommands_index
+    tocHref: DisCatSharp.ApplicationCommands/toc.yml
+  - name: DisCatSharp.Attributes
+    uid: api_discatsharp_attributes_index
+    tocHref: DisCatSharp.Attributes/toc.yml
+  - name: DisCatSharp.CommandsNext
+    uid: api_discatsharp_commandsnext_index
+    tocHref: DisCatSharp.CommandsNext/toc.yml
+  - name: DisCatSharp.Common
+    uid: api_discatsharp_common_index
+    tocHref: DisCatSharp.Common/toc.yml
+  - name: DisCatSharp.Experimental
+    uid: api_discatsharp_experimental_index
+    tocHref: DisCatSharp.Experimental/toc.yml
+  - name: DisCatSharp.Hosting
+    uid: api_discatsharp_hosting_index
+    tocHref: DisCatSharp.Hosting/toc.yml
+  - name: DisCatSharp.Hosting.DependencyInjection
+    uid: api_discatsharp_hosting_dependencyinjection_index
+    tocHref: DisCatSharp.Hosting.DependencyInjection/toc.yml
+  - name: DisCatSharp.Interactivity
+    uid: api_discatsharp_interactivity_index
+    tocHref: DisCatSharp.Interactivity/toc.yml
+  - name: DisCatSharp.Lavalink
+    uid: api_discatsharp_lavalink_index
+    tocHref: DisCatSharp.Lavalink/toc.yml
+  - name: DisCatSharp.VoiceNext
+    uid: api_discatsharp_voicenext_index
+    tocHref: DisCatSharp.VoiceNext/toc.yml

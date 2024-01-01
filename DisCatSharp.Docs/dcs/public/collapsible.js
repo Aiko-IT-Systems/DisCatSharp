@@ -2,7 +2,7 @@
 * Collapsible.js v2.0.0
 * https://github.com/jordnkr/collapsible
 *
-* Copyright 2023 Lala Sabathil
+* Copyright 2023-2024 Lala Sabathil
 * Copyright 2017, Jordan Ruedy
 * This content is released under the MIT license
 * http://opensource.org/licenses/MIT
