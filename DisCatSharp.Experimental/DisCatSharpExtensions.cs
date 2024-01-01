@@ -27,7 +27,7 @@ public static class DisCatSharpExtensions
 	/// <param name="client">The discord client.</param>
 	/// <param name="profileId">The profile id to get.</param>
 	[RequiresFeature(Features.Override | Features.Experiment, "This method requires the guild and/or user to have access to clyde with treatment 5."),
-	 DiscordDeprecated] // TODO: Change to Features.Experiment
+	 DiscordDeprecated]
 	public static async Task<ClydeProfile> GetClydeProfileAsync(this DiscordClient client, ulong profileId)
 	{
 		DiscordApiClientHook hook = new(client.ApiClient);
@@ -39,7 +39,7 @@ public static class DisCatSharpExtensions
 	/// </summary>
 	/// <param name="guild">The guild to get clyde's settings for.</param>
 	[RequiresFeature(Features.Override | Features.Experiment, "This method requires the guild and/or user to have access to clyde with treatment 5."),
-	 DiscordDeprecated] // TODO: Change to Features.Experiment
+	 DiscordDeprecated]
 	public static async Task<ClydeSettings> GetClydeSettingsAsync(this DiscordGuild guild)
 	{
 		DiscordApiClientHook hook = new(guild.Discord.ApiClient);
@@ -52,7 +52,7 @@ public static class DisCatSharpExtensions
 	/// <param name="guild">The guild to modify clyde's settings for.</param>
 	/// <param name="profileId">The profile id to apply.</param>
 	[RequiresFeature(Features.Override | Features.Experiment, "This method requires the guild and/or user to have access to clyde with treatment 5."),
-	 DiscordDeprecated] // TODO: Change to Features.Experiment
+	 DiscordDeprecated]
 	public static async Task<ClydeSettings> ModifyClydeSettingsAsync(this DiscordGuild guild, ulong profileId)
 	{
 		DiscordApiClientHook hook = new(guild.Discord.ApiClient);
@@ -69,7 +69,7 @@ public static class DisCatSharpExtensions
 	/// <param name="banner">The new banner.</param>
 	/// <param name="themeColors">The new theme colors.</param>
 	[RequiresFeature(Features.Override | Features.Experiment, "This method requires the guild and/or user to have access to clyde with treatment 5."),
-	 DiscordDeprecated] // TODO: Change to Features.Experiment
+	 DiscordDeprecated]
 	public static async Task<ClydeSettings> ModifyClydeSettingsAsync(
 		this DiscordGuild guild,
 		Optional<string?> name,
@@ -95,7 +95,7 @@ public static class DisCatSharpExtensions
 	/// <param name="client">The discord client.</param>
 	/// <param name="basePersonality">The base base personality to generate a new one from.</param>
 	[RequiresFeature(Features.Override | Features.Experiment, "This method requires the guild and/or user to have access to clyde with treatment 5."),
-	 DiscordDeprecated] // TODO: Change to Features.Experiment
+	 DiscordDeprecated]
 	public static async Task<string> GenerateClydePersonalityAsync(this DiscordClient client, string? basePersonality = null)
 	{
 		DiscordApiClientHook hook = new(client.ApiClient);
