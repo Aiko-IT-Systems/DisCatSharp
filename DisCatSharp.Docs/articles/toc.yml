@@ -1,6 +1,6 @@
 items:
     - name: Preamble
-      href: preamble.md
+      href: index.md
     - name: FAQ
       href: faq.md
     - name: Getting Started
