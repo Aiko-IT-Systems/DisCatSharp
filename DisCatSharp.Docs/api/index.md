@@ -18,7 +18,6 @@ Welcome to the DisCatSharp Global API reference.
 - [DisCatSharp.VoiceNext](xref:api_discatsharp_voicenext_index)
 
 ## Hosting packages
-- [DisCatSharp.Configuration](xref:api_discatsharp_configuration_index)
 - [DisCatSharp.Hosting](xref:api_discatsharp_hosting_index)
 - [DisCatSharp.DependencyInjection](xref:api_discatsharp_hosting_dependencyinjection_index)
 

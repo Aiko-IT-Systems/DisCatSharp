@@ -12,4 +12,4 @@ items:
     name: ClydeProfile
   - uid: DisCatSharp.Experimental.Entities.ClydeSettings
     name: ClydeSettings
-memberLayout: SeparatePages
+memberLayout: separatePages

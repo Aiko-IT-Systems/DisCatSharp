@@ -218,4 +218,4 @@ items:
     name: DuplicateOverloadException
   - uid: DisCatSharp.CommandsNext.Exceptions.InvalidOverloadException
     name: InvalidOverloadException
-memberLayout: SeparatePages
+memberLayout: separatePages
