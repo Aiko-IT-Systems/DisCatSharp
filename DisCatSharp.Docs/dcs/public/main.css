@@ -414,3 +414,7 @@ a.discord-button[href]::after {
 .IMPORTANT > p > code {
 	color: #ffffff !important;
 }
+
+.table-responsive {
+	overflow-x: inherit !important;
+}
