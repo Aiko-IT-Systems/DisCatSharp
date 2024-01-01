@@ -1158,7 +1158,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					break;
 				}
 				case InteractionType.AutoComplete when s_errored:
-					await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("Application commands failed to register properly on startup.")).ConfigureAwait(false);
 					throw new InvalidOperationException("Application commands failed to register properly on startup.");
 				case InteractionType.AutoComplete:
 				{
@@ -1166,10 +1165,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					var groups = GroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
 					var subgroups = SubGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id).ToList();
 					if (methods.Count is 0 && groups.Count is 0 && subgroups.Count is 0)
-					{
-						await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("An autocomplete interaction was created, but no command was registered for it")).ConfigureAwait(false);
 						throw new InvalidOperationException("An autocomplete interaction was created, but no command was registered for it");
-					}
 
 					try
 					{
@@ -1361,7 +1357,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			{
 				if (s_errored)
 				{
-					await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("Context menus failed to register properly on startup.")).ConfigureAwait(false);
+					await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("Context menus failed to register properly on startup.").AsEphemeral()).ConfigureAwait(false);
 					throw new InvalidOperationException("Context menus failed to register properly on startup.");
 				}
 
@@ -1370,7 +1366,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 				if (method == null)
 				{
-					await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("A context menu command was executed, but no command was registered for it.")).ConfigureAwait(false);
+					await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("A context menu command was executed, but no command was registered for it.").AsEphemeral()).ConfigureAwait(false);
 					throw new InvalidOperationException("A context menu command was executed, but no command was registered for it.");
 				}
 
