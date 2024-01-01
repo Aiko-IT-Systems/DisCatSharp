@@ -5,4 +5,4 @@ items:
   items:
   - uid: DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions
     name: ServiceCollectionExtensions
-memberLayout: separatePages
+memberLayout: SeparatePages

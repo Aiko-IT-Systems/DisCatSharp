@@ -5,8 +5,8 @@ items:
   items:
   - uid: DisCatSharp.VoiceNext.AudioFormat
     name: AudioFormat
-  - uid: DisCatSharp.VoiceNext.DiscordClientExtensions
-    name: DiscordClientExtensions
+  - uid: DisCatSharp.VoiceNext.ExtensionMethods
+    name: ExtensionMethods
   - uid: DisCatSharp.VoiceNext.IVoiceFilter
     name: IVoiceFilter
   - uid: DisCatSharp.VoiceNext.StreamExtensions
@@ -41,4 +41,4 @@ items:
     name: VoiceUserJoinEventArgs
   - uid: DisCatSharp.VoiceNext.EventArgs.VoiceUserLeaveEventArgs
     name: VoiceUserLeaveEventArgs
-memberLayout: separatePages
+memberLayout: SeparatePages
