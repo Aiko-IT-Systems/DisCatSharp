@@ -8,7 +8,7 @@ author: DisCatSharp Team
 
 ## Consuming Events
 
-DisCatSharp makes use of *asynchronous events* which will execute each handler asynchronously in sequential order.
+DisCatSharp makes use of _asynchronous events_ which will execute each handler asynchronously in sequential order.
 This event system will require event handlers have a `Task` return type and take two parameters.
 
 The first parameter will contain an instance of the object which fired the event.<br/>
@@ -106,14 +106,14 @@ In the above example an instance of `SomeClass` will need to be provided to the 
 
 You can also register individual types, and even individual objects as event handlers using the overloaded method `DiscordClient.RegisterEventHandler`. In both of those cases the attribute `EventHandler` is not required.
 
-When registering an object as a handler, by default the type's static methods will *not* be considered as event handling methods.
+When registering an object as a handler, by default the type's static methods will _not_ be considered as event handling methods.
 This allows for registering multiple instances of the same type without registering their static event handling methods multiple times.
 To register the static methods exclusively, use `DiscordClient.RegisterStaticEventHandler` with the type in question.
 
 ## Dependency Injection
 
 Often, you need a way to get data in and out of your event handlers.
-Although you *could* use `static` fields to accomplish this, the preferred solution would be *dependency injection*.
+Although you _could_ use `static` fields to accomplish this, the preferred solution would be _dependency injection_.
 
 First, you need to register the services that you can use in the event handlers in the future.
 
@@ -130,6 +130,7 @@ var config = new DiscordConfiguration()
         .BuildServiceProvider()
 };
 ```
+
 In this case, we have registered two services: `YourService` as Scoped and` YourSecondService` as Singleton.
 
 Now you can use them in your event handlers.
@@ -144,11 +145,11 @@ private async Task MessageCreatedHandler(DiscordClient s, MessageCreateEventArgs
 
 ### Services
 
-Lifespan|Instantiated
-:---:|:---
-Singleton|One time when added to the collection.
-Scoped|Once for each event handler.
-Transient|Every request to the ServiceProvider.
+| Lifespan  | Instantiated                           |
+| :-------: | :------------------------------------- |
+| Singleton | One time when added to the collection. |
+|  Scoped   | Once for each event handler.           |
+| Transient | Every request to the ServiceProvider.  |
 
 ## Avoiding Deadlocks
 

@@ -18,11 +18,11 @@ If you find a bug, come up with a new idea, or just want to report something, yo
 
 When reporting an issue, make sure to include as much detail as possible. If at all possible, please include:
 
-* Steps to reproduce the issue
-* What were you trying to achieve
-* Expected/actual result
-* Stack traces, exception types, messages
-* Attempted solutions
+-   Steps to reproduce the issue
+-   What were you trying to achieve
+-   Expected/actual result
+-   Stack traces, exception types, messages
+-   Attempted solutions
 
 ## Contributing
 

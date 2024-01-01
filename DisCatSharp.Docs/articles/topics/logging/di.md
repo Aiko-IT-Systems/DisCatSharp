@@ -18,9 +18,9 @@ If we are using the DisCatSharp ProjectTemplates there will be a project with a 
 
 ###WebHost: Serilog
 
-- Serilog.AspNetCore
-- Serilog.Extensions.Hosting -- Gives us the `UseSerilog` extension
-- Serilog.Sinks.Console      -- Sinks are used to direct where logs go. In this case we need it for outputting to console
+-   Serilog.AspNetCore
+-   Serilog.Extensions.Hosting -- Gives us the `UseSerilog` extension
+-   Serilog.Sinks.Console -- Sinks are used to direct where logs go. In this case we need it for outputting to console
 
 ```cs
 using Serilog;

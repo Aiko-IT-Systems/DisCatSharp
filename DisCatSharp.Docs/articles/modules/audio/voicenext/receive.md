@@ -6,8 +6,10 @@ title: Receiving
 ## Receiving with VoiceNext
 
 ### Enable Receiver
+
 Receiving incoming audio is disabled by default to save on bandwidth, as most users will never make use of incoming data.
 This can be changed by providing a configuration object to `DiscordClient#UseVoiceNext()`.
+
 ```cs
 var discord = new DiscordClient();
 
@@ -18,14 +20,18 @@ discord.UseVoiceNext(new VoiceNextConfiguration()
 ```
 
 ### Establish Connection
+
 The voice channel join process is the exact same as when transmitting.
+
 ```cs
 DiscordChannel channel;
 VoiceNextConnection connection = await channel.ConnectAsync();
 ```
 
 ### Write Event Handler
+
 We'll be able to receive incoming audio from the `VoiceReceived` event fired by `VoiceNextConnection`.
+
 ```cs
 connection.VoiceReceived += ReceiveHandler;
 ```
@@ -38,7 +44,8 @@ You can convert each packet to another format, concatenate them all together, fe
 When a user is speaking, `VoiceReceived` should fire once every twenty milliseconds and its packet will contain around twenty milliseconds worth of audio; this can vary due to differences in client settings.
 To help keep track of the torrent of packets for each user, you can use user IDs in combination the synchronization value (SSRC) sent by Discord to determine the source of each packet.
 
-This short-and-simple example will use [ffmpeg](https://ffmpeg.org/about.html) to convert each packet to a *wav* file.
+This short-and-simple example will use [ffmpeg](https://ffmpeg.org/about.html) to convert each packet to a _wav_ file.
+
 ```cs
 private async Task ReceiveHandler(VoiceNextConnection _, VoiceReceiveEventArgs args)
 {
@@ -59,8 +66,8 @@ That's really all there is to it. Connect to a voice channel, hook an event, pro
 
 ![Wav Files](/images/voicenext_receive_01.png)
 
-
 ## Example Commands
+
 ```cs
 [Command("start")]
 public async Task StartCommand(CommandContext ctx, DiscordChannel channel = null)

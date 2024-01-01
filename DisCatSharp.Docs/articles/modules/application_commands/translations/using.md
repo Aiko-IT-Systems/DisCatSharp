@@ -13,6 +13,7 @@ This makes it easier to modify them, while keeping the code itself clean.
 ## Adding Translations
 
 Translations are added the same way like permissions are added to Application Commands:
+
 ```cs
 const string TRANSLATION_PATH = "translations/";
 
@@ -32,8 +33,7 @@ Client.GetApplicationCommands().RegisterGuildCommands<MySimpleCommands>(12154846
 ```
 
 > [!WARNING]
- > If you add a translation to a class, you have to supply translations for every command in this class. Otherwise it will fail.
-
+> If you add a translation to a class, you have to supply translations for every command in this class. Otherwise it will fail.
 
 ## Creating The Translation JSON
 
@@ -44,6 +44,7 @@ The `name` key in the JSON will be mapped to the command / option / choice names
 ### Translation For Slash Command Groups
 
 Imagine, your class look like the following example:
+
 ```cs
 public class MyCommand : ApplicationCommandsModule
 {
@@ -72,68 +73,70 @@ public class MyCommand : ApplicationCommandsModule
 
 The translation json is a object of [Command Group Objects](xref:modules_application_commands_translations_reference#command-group-object)
 A correct translation json for english and german would look like that:
+
 ```json
 [
-    {
-        "name": "my_command",
+	{
+		"name": "my_command",
 		"description": "This is description of the command group.",
-        "name_translations": {
-            "en-US": "my_command",
-            "de": "mein_befehl"
-        },
-        "description_translations": {
-            "en-US": "This is description of the command group.",
-            "de": "Das ist die description der Befehl Gruppe."
-        },
-        "commands": [
-            {
-                "name": "first",
+		"name_translations": {
+			"en-US": "my_command",
+			"de": "mein_befehl"
+		},
+		"description_translations": {
+			"en-US": "This is description of the command group.",
+			"de": "Das ist die description der Befehl Gruppe."
+		},
+		"commands": [
+			{
+				"name": "first",
 				"description": "First",
-                "type": 1, // Type 1 for slash command
-                "name_translations": {
-                    "en-US": "first",
-                    "de": "erste"
-                },
-                "description_translations": {
-                    "en-US": "This is description of the command.",
-                    "de": "Das ist die Beschreibung des Befehls."
-                }
-            },
-            {
-                "name": "second",
+				"type": 1, // Type 1 for slash command
+				"name_translations": {
+					"en-US": "first",
+					"de": "erste"
+				},
+				"description_translations": {
+					"en-US": "This is description of the command.",
+					"de": "Das ist die Beschreibung des Befehls."
+				}
+			},
+			{
+				"name": "second",
 				"description": "Second",
-                "type": 1, // Type 1 for slash command
-                "name_translations": {
-                    "en-US": "second",
-                    "de": "zweite"
-                },
-                "description_translations": {
-                    "en-US": "This is description of the command.",
-                    "de": "Das ist die Beschreibung des Befehls."
-                },
-                "options": [
-                    {
-                        "name": "value",
+				"type": 1, // Type 1 for slash command
+				"name_translations": {
+					"en-US": "second",
+					"de": "zweite"
+				},
+				"description_translations": {
+					"en-US": "This is description of the command.",
+					"de": "Das ist die Beschreibung des Befehls."
+				},
+				"options": [
+					{
+						"name": "value",
 						"description": "Some string value.",
-                        "name_translations": {
-                            "en-US": "value",
-                            "de": "wert"
-                        },
-                        "description_translations": {
-                            "en-US": "Some string value.",
-                            "de": "Ein string Wert."
-                        }
-                    }
-                ]
-            }
-        ]
-    }
+						"name_translations": {
+							"en-US": "value",
+							"de": "wert"
+						},
+						"description_translations": {
+							"en-US": "Some string value.",
+							"de": "Ein string Wert."
+						}
+					}
+				]
+			}
+		]
+	}
 ]
 ```
 
 ### Translation For Slash Commands & Context Menu Commands
 
 Now imagine, that your class look like this example:
+
 ```cs
 public class MySimpleCommands : ApplicationCommandsModule
 {
@@ -161,33 +164,33 @@ Please note that the description field is optional. We suggest setting it for sl
 Context menu commands can't have a description, so omit it.
 
 A correct json for this example would look like that:
+
 ```json
 [
-   {
-      "name":"my_command",
-	  "description": "This is description of the command.",
-      "type": 1, // Type 1 for slash command
-      "name_translations":{
-         "en-US":"my_command",
-         "de":"mein_befehl"
-      },
-      "description_translations":{
-         "en-US":"This is description of the command.",
-         "de":"Das ist die Beschreibung des Befehls."
-      }
-   },
-   {
-      "name":"My Command",
-	  "description": null,
-      "type": 2, // Type 2 for user context menu command
-      "name_translations":{
-         "en-US":"My Command",
-         "de":"Mein Befehl"
-      }
-   }
+	{
+		"name": "my_command",
+		"description": "This is description of the command.",
+		"type": 1, // Type 1 for slash command
+		"name_translations": {
+			"en-US": "my_command",
+			"de": "mein_befehl"
+		},
+		"description_translations": {
+			"en-US": "This is description of the command.",
+			"de": "Das ist die Beschreibung des Befehls."
+		}
+	},
+	{
+		"name": "My Command",
+		"description": null,
+		"type": 2, // Type 2 for user context menu command
+		"name_translations": {
+			"en-US": "My Command",
+			"de": "Mein Befehl"
+		}
+	}
 ]
 ```
-
 
 ## Available Locales
 

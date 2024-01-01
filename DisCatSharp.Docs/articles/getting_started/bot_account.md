@@ -8,8 +8,8 @@ author: DisCatSharp Team
 
 ## Create an Application
 
->[!NOTE]
- > You can also use discords official [getting started](https://discord.com/developers/docs/getting-started#building-your-first-discord-app) tutorial till step 2.
+> [!NOTE]
+> You can also use discords official [getting started](https://discord.com/developers/docs/getting-started#building-your-first-discord-app) tutorial till step 2.
 
 Before you're able to create a [bot account](https://discord.com/developers/docs/topics/oauth2#bots) to interact with the Discord API, you'll need to create a new OAuth2 application.
 [Create](https://discord.com/developers/applications?new_application=true) a new application in the [Discord Developer Portal](https://discord.com/developers/).
@@ -59,12 +59,12 @@ If your bot requires specific permissions to function, you'd select them in the 
 
 ![Permissions](/images/getting_started_bot_account_08.png "Permissions Panel")
 
-The invite link in the *scopes* panel will update each time you change the permissions.<br/>
+The invite link in the _scopes_ panel will update each time you change the permissions.<br/>
 Be sure to copy it again after any changes!
 
 ## Get Bot Token
 
-Instead of logging in to Discord with a username and password, bot accounts use a long string called a *token* to authenticate.
+Instead of logging in to Discord with a username and password, bot accounts use a long string called a _token_ to authenticate.
 You'll want to retrieve the token for your bot account so you can use it with DisCatSharp.
 
 Head back to the bot page and click on `Reset Token` just below the bot's username field.
@@ -77,11 +77,11 @@ Click on `Yes, do it!` to confirm the reset.
 
 Go ahead and copy your bot token and save it somewhere. You'll be using it soon!
 
->[!IMPORTANT]
- > Handle your bot token with care! Anyone who has your token will have access to your bot account.
- > Be sure to store it in a secure location and *never* give it to *anybody*.
- >
- > If you ever believe your token has been compromised, be sure to hit the `Reset Token` button (as seen above) to invalidate your old token and get a brand new token.
+> [!IMPORTANT]
+> Handle your bot token with care! Anyone who has your token will have access to your bot account.
+> Be sure to store it in a secure location and _never_ give it to _anybody_.
+>
+> If you ever believe your token has been compromised, be sure to hit the `Reset Token` button (as seen above) to invalidate your old token and get a brand new token.
 
 ## Write Some Code
 

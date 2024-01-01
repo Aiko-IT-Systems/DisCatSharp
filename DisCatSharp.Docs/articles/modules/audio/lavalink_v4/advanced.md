@@ -9,11 +9,13 @@ author: DisCatSharp Team
 Given the new possibilities to use Lavalink with Spotify, Apple Music, Deezer and Yandex Music, we go a bit deeper into this topic here.
 
 ## Preamble
+
 For this to work, you need the following plugin installed in your Lavalink server: https://github.com/topi314/LavaSrc
 
 ## Setup
 
 General config:
+
 ```yml
 lavalink:
   plugins:
@@ -42,6 +44,7 @@ plugins:
 ```
 
 ### Spotify Setup
+
 ```yml
 plugins:
   lavasrc:
@@ -55,6 +58,7 @@ plugins:
 ```
 
 ### Apple Music Setup
+
 ```yml
 plugins:
   lavasrc:
@@ -66,6 +70,7 @@ plugins:
 ```
 
 ### Deezer Setup
+
 ```yml
 plugins:
   lavasrc:
@@ -75,6 +80,7 @@ plugins:
 ```
 
 ### Yandex Music Setup
+
 ```yml
 plugins:
   lavasrc:
@@ -86,9 +92,11 @@ plugins:
 ## Usage
 
 ### Client Configuration
+
 You don't have to configure anything directly in DisCatSharp.Lavalink.
 
 ### Code Snippets
+
 ```cs
 // We got the search as string from xy already
 string search = "spsearch:Shooting Stars";
@@ -125,6 +133,7 @@ LavalinkLoadResult result = await guildPlayer.LoadTracksAsync(type, query);
 // We can now use the result and play the song.
 // Same for Apple Music.
 ```
+
 ## Conclusion
 
 This is the most basic example of how to use the new Lavalink features. You can find more information in the Lavalink plugin docs: https://github.com/topi314/LavaSrc#usage

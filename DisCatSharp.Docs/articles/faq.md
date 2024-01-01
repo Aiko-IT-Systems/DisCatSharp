@@ -22,7 +22,7 @@ Discord uses a websocket connection to send and receive data. This is called the
 
 ## Code I copied from an article isn't compiling or working as expected. Why?
 
-*Please use the code snippets as a reference; don't blindly copy-paste code!*
+_Please use the code snippets as a reference; don't blindly copy-paste code!_
 
 The snippets of code in the articles are meant to serve as examples to help you understand how to use a part of the library.
 
@@ -34,13 +34,12 @@ Many issues can be resolved with Intellisense by searching for similarly named m
 
 To troubleshoot, please ensure that:
 
-* You are using the latest version of DisCatSharp.
-* You have properly enabled VoiceNext with your instance of @DisCatSharp.DiscordClient.
-* You are *not* using VoiceNext in an event handler.
-* You have [opus and libsodium](xref:modules_audio_voicenext_prerequisites) available in your target environment.
+-   You are using the latest version of DisCatSharp.
+-   You have properly enabled VoiceNext with your instance of @DisCatSharp.DiscordClient.
+-   You are _not_ using VoiceNext in an event handler.
+-   You have [opus and libsodium](xref:modules_audio_voicenext_prerequisites) available in your target environment.
 
-
-## Why am I getting *heartbeat skipped* message in my console?
+## Why am I getting _heartbeat skipped_ message in my console?
 
 There are two possible reasons:
 
@@ -56,11 +55,11 @@ Please take a look at our short article on [handling exceptions](xref:topics_eve
 
 ## Why am I getting a 4XX error and how can I fix it?
 
-HTTP Error Code|Cause|Resolution
-:---:|:---|:---
-`401`|Invalid token.|Verify your token and make sure no errors were made.<br/>The client secret found on the 'general information' tab of your application page *is not* your token.
-`403`|Not enough permissions.|Verify permissions and ensure your bot account has a role higher than the target user.<br/>Administrator permissions *do not* bypass the role hierarchy.
-`404`|Requested object not found.|This usually means the entity does not exist. You should reattempt then inform your user.
+| HTTP Error Code | Cause                       | Resolution                                                                                                                                                      |
+| :-------------: | :-------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|      `401`      | Invalid token.              | Verify your token and make sure no errors were made.<br/>The client secret found on the 'general information' tab of your application page _is not_ your token. |
+|      `403`      | Not enough permissions.     | Verify permissions and ensure your bot account has a role higher than the target user.<br/>Administrator permissions _do not_ bypass the role hierarchy.        |
+|      `404`      | Requested object not found. | This usually means the entity does not exist. You should reattempt then inform your user.                                                                       |
 
 ## I cannot modify a specific user or role. Why is this?
 
@@ -81,12 +80,12 @@ Automating a user account is against Discord's [Terms of Service](https://dis.gd
 
 You can use either of the following
 
-* The overload for [ConnectAsync](xref:DisCatSharp.DiscordClient.ConnectAsync*)(@DisCatSharp.Entities.DiscordActivity, @DisCatSharp.Entities.UserStatus?, [](xref:System.DateTimeOffset)?) which accepts a [DiscordActivity](xref:DisCatSharp.Entities.DiscordActivity).
-* [UpdateStatusAsync](xref:DisCatSharp.DiscordClient.UpdateStatusAsync*)(@DisCatSharp.Entities.DiscordActivity, @DisCatSharp.Entities.UserStatus?, [](xref:System.DateTimeOffset)?) OR [UpdateStatusAsync](xref:DisCatSharp.DiscordShardedClient.UpdateStatusAsync*)(@DisCatSharp.Entities.DiscordActivity, @DisCatSharp.Entities.UserStatus?, [](xref:System.DateTimeOffset)?) (for the sharded client) at any point after `Ready` has been fired.
+-   The overload for [ConnectAsync](xref:DisCatSharp.DiscordClient.ConnectAsync*)(@DisCatSharp.Entities.DiscordActivity, @DisCatSharp.Entities.UserStatus?, [](xref:System.DateTimeOffset)?) which accepts a [DiscordActivity](xref:DisCatSharp.Entities.DiscordActivity).
+-   [UpdateStatusAsync](xref:DisCatSharp.DiscordClient.UpdateStatusAsync*)(@DisCatSharp.Entities.DiscordActivity, @DisCatSharp.Entities.UserStatus?, [](xref:System.DateTimeOffset)?) OR [UpdateStatusAsync](xref:DisCatSharp.DiscordShardedClient.UpdateStatusAsync*)(@DisCatSharp.Entities.DiscordActivity, @DisCatSharp.Entities.UserStatus?, [](xref:System.DateTimeOffset)?) (for the sharded client) at any point after `Ready` has been fired.
 
 ## Am I able to retrieve a @DisCatSharp.Entities.DiscordRole by name?
 
-Yes. Use LINQ on the `Roles` property of your instance of [DiscordGuild](xref:DisCatSharp.Entities.DiscordGuild) and compare against the `Name` of  each [DiscordRole](xref:DisCatSharp.Entities.DiscordRole).
+Yes. Use LINQ on the `Roles` property of your instance of [DiscordGuild](xref:DisCatSharp.Entities.DiscordGuild) and compare against the `Name` of each [DiscordRole](xref:DisCatSharp.Entities.DiscordRole).
 
 ## Why are my events not firing?
 

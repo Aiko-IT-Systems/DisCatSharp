@@ -6,8 +6,7 @@ title: Translation Reference
 # Translation Reference
 
 > [!NOTE]
- > DisCatSharp uses [JSON](https://www.json.org) to inject the translations of [Application Commands](https://discord.com/developers/docs/interactions/application-commands).
-
+> DisCatSharp uses [JSON](https://www.json.org) to inject the translations of [Application Commands](https://discord.com/developers/docs/interactions/application-commands).
 
 ## Command Object
 
@@ -61,20 +60,21 @@ title: Translation Reference
 
 ## Option Choice Object
 
-| Key                      | Value                                         | Description                                                                         |
-| ------------------------ | --------------------------------------------- | ----------------------------------------------------------------------------------- |
-| name                     | string                                        | name of the application command option choice                                       |
-| name_translations        | array of [Translation KVPs](#translation-kvp) | array of translation key-value-pairs for the application command option choice name |
+| Key               | Value                                         | Description                                                                         |
+| ----------------- | --------------------------------------------- | ----------------------------------------------------------------------------------- |
+| name              | string                                        | name of the application command option choice                                       |
+| name_translations | array of [Translation KVPs](#translation-kvp) | array of translation key-value-pairs for the application command option choice name |
 
 ## Translation KVP
 
 A translation object is a key-value-pair of `"locale": "value"`.
 
 ### Example Translation Array:
+
 ```json
 {
-    "en-US": "Hello",
-    "de": "Hallo"
+	"en-US": "Hello",
+	"de": "Hallo"
 }
 ```
 

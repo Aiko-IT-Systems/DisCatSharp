@@ -7,11 +7,11 @@ hasDiscordComponents: true
 
 # Your First Bot
 
- >[!NOTE]
- > This article assumes the following:
- > * You have [created a bot account](xref:getting_started_bot_account "Creating a Bot Account") and have a bot token.
- > * You have [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) installed on your computer.
-
+> [!NOTE]
+> This article assumes the following:
+>
+> -   You have [created a bot account](xref:getting_started_bot_account "Creating a Bot Account") and have a bot token.
+> -   You have [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) installed on your computer.
 
 ## Create a Project
 
@@ -41,11 +41,10 @@ Now select `.NET 7.0` or `.NET 8.0` from the dropdown menu, tick the `Do not use
 Voilà! Your project has been created!
 ![Visual Studio IDE](/images/getting_started_first_bot_05.png)
 
-
 ## Install Package
 
 Now that you have a project created, you'll want to get DisCatSharp installed.
-Locate the *solution explorer* on the right side, then right click on `Dependencies` and select `Manage NuGet Packages` from the context menu.
+Locate the _solution explorer_ on the right side, then right click on `Dependencies` and select `Manage NuGet Packages` from the context menu.
 
 ![Dependencies Context Menu](/images/getting_started_first_bot_06.png)
 
@@ -60,17 +59,18 @@ Select the `Browse` tab towards the top left, then type `DisCatSharp` into the s
 The first results should be the DisCatSharp packages.
 
 <!--![Search Results](/images/getting_started_first_bot_07.png)-->
-Package|Description
-:---: |:---:
-`DisCatSharp`|Main package; Discord API client.
-`DisCatSharp.CommandsNext`|Add-on which provides a command framework.
-`DisCatSharp.Common`|Common tools & converters
-`DisCatSharp.Interactivity`|Add-on which allows for interactive commands.
-`DisCatSharp.Lavalink`|Client implementation for [Lavalink](xref:modules_audio_lavalink_v4_intro). Useful for music bots.
-`DisCatSharp.ApplicationCommands`|Add-on which makes dealing with application commands easier.
-`DisCatSharp.VoiceNext`|Add-on which enables connectivity to Discord voice channels.
-`DisCatSharp.VoiceNext.Natives`|Voice next natives.
-`DisCatSharp.Analyzers.Roselyn`|Our custom analyzer, providing extended IntelliSense functions. As example warns you about deprecated discord features.
+
+|              Package              |                                                       Description                                                       |
+| :-------------------------------: | :---------------------------------------------------------------------------------------------------------------------: |
+|           `DisCatSharp`           |                                            Main package; Discord API client.                                            |
+|    `DisCatSharp.CommandsNext`     |                                       Add-on which provides a command framework.                                        |
+|       `DisCatSharp.Common`        |                                                Common tools & converters                                                |
+|    `DisCatSharp.Interactivity`    |                                      Add-on which allows for interactive commands.                                      |
+|      `DisCatSharp.Lavalink`       |           Client implementation for [Lavalink](xref:modules_audio_lavalink_v4_intro). Useful for music bots.            |
+| `DisCatSharp.ApplicationCommands` |                              Add-on which makes dealing with application commands easier.                               |
+|      `DisCatSharp.VoiceNext`      |                              Add-on which enables connectivity to Discord voice channels.                               |
+|  `DisCatSharp.VoiceNext.Natives`  |                                                   Voice next natives.                                                   |
+|  `DisCatSharp.Analyzers.Roselyn`  | Our custom analyzer, providing extended IntelliSense functions. As example warns you about deprecated discord features. |
 
 <br/>
 We'll only need the `DisCatSharp` package for the basic bot we'll be writing in this article.<br/>
@@ -80,7 +80,6 @@ Select it from the list then click the `Install` button to the right.
 
 You're now ready to write some code!
 
-
 ## First Lines of Code
 
 DisCatSharp implements [Task-based Asynchronous Pattern](https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/consuming-the-task-based-asynchronous-pattern).
@@ -89,7 +88,7 @@ Because of this, the majority of DisCatSharp methods must be executed in a metho
 Due to the way the compiler generates the underlying [IL](https://en.wikipedia.org/wiki/Common_Intermediate_Language) code,
 marking our `Main` method as `async` has the potential to cause problems. As a result, we must pass the program execution to an `async` method.
 
-Head back to your *Program.cs* tab and empty the `Main` method by deleting line 9.
+Head back to your _Program.cs_ tab and empty the `Main` method by deleting line 9.
 
 ![Code Editor](/images/getting_started_first_bot_09.png)
 
@@ -127,7 +126,7 @@ Create an object initializer for `DiscordConfiguration` and populate the `Token`
 Next add the `Intents` Property and Populated it with the @DisCatSharp.DiscordIntents.AllUnprivileged and DiscordIntents.MessageContent values.
 The message content intent must be enabled in the developer portal as well.
 These Intents
-are required for certain Events to be fired.  Please visit this [article](xref:topics_intents) for more information.
+are required for certain Events to be fired. Please visit this [article](xref:topics_intents) for more information.
 
 ```cs
 var discord = new DiscordClient(new DiscordConfiguration()
@@ -138,26 +137,27 @@ var discord = new DiscordClient(new DiscordConfiguration()
 });
 ```
 
- >[!WARNING]
- > We hard-code the token in the above snippet to keep things simple and easy to understand.
- >
- > Hard-coding your token is *not* a smart idea, especially if you plan on distributing your source code.
- > Instead you should store your token in an external medium, such as a configuration file or environment variable, and read that into your program to be used with DisCatSharp.
+> [!WARNING]
+> We hard-code the token in the above snippet to keep things simple and easy to understand.
+>
+> Hard-coding your token is _not_ a smart idea, especially if you plan on distributing your source code.
+> Instead you should store your token in an external medium, such as a configuration file or environment variable, and read that into your program to be used with DisCatSharp.
 
 Follow that up with `await discord.ConnectAsync();` to connect and login to Discord, and `await Task.Delay(-1);` at the end of the method to prevent the console window from closing prematurely.
+
 ```cs
 var discord = new DiscordClient();
 
 await discord.ConnectAsync();
 await Task.Delay(-1);
 ```
+
 As before, Intellisense will have auto generated the needed `using` directive for you if you typed this in by hand.<br/>
 If you've copied the snippet, be sure to apply the recommended suggestion to insert the required directive.
 
 If you hit `F5` on your keyboard to compile and run your program, you'll be greeted by a happy little console with a single log message from DisCatSharp. Woo hoo!
 
 ![Program Console](/images/getting_started_first_bot_12.png)
-
 
 ## Spicing Up Your Bot
 
@@ -175,7 +175,7 @@ discord.MessageCreated += async (s, e) =>
 ```
 
 Then, add an `if` statement into the body of your event lambda that will check if `e.Message.Content` starts with your desired trigger word and respond with
-a message using `e.Message.RespondAsync` if it does. For this example, we'll have the bot to respond with *pong!* for each message that starts with *ping*.
+a message using `e.Message.RespondAsync` if it does. For this example, we'll have the bot to respond with _pong!_ for each message that starts with _ping_.
 
 ```cs
 discord.MessageCreated += async (s, e) =>
@@ -184,7 +184,6 @@ discord.MessageCreated += async (s, e) =>
 		await e.Message.RespondAsync("pong!");
 };
 ```
-
 
 ## The Finished Product
 
@@ -226,8 +225,8 @@ namespace MyFirstBot
 }
 ```
 
-Hit `F5` to run your bot, then send *ping* in any channel your bot account has access to.<br/>
-Your bot should respond with *pong!* for each *ping* you send.
+Hit `F5` to run your bot, then send _ping_ in any channel your bot account has access to.<br/>
+Your bot should respond with _pong!_ for each _ping_ you send.
 
 Congrats, your bot now does something!
 
@@ -239,11 +238,10 @@ Congrats, your bot now does something!
     </discord-message>
 </discord-messages>
 
-
 ## Further Reading
 
 Now that you have a basic bot up and running, you should take a look at the following:
 
-* [Events](xref:topics_events)
-* [CommandsNext](xref:modules_commandsnext_intro)
-* [ApplicationCommands](xref:modules_application_commands_intro)
+-   [Events](xref:topics_events)
+-   [CommandsNext](xref:modules_commandsnext_intro)
+-   [ApplicationCommands](xref:modules_application_commands_intro)

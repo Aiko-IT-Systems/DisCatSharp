@@ -32,14 +32,14 @@ discord.UseInteractivity(new InteractivityConfiguration()
 
 There are two ways available to use interactivity:
 
-* Extension methods available for `DiscordChannel`, `DiscordMessage`, `DiscordClient` and `DiscordInteraction`.
-* [Instance methods](xref:DisCatSharp.Interactivity.InteractivityExtension#methods) available from `InteractivityExtension`.
+-   Extension methods available for `DiscordChannel`, `DiscordMessage`, `DiscordClient` and `DiscordInteraction`.
+-   [Instance methods](xref:DisCatSharp.Interactivity.InteractivityExtension#methods) available from `InteractivityExtension`.
 
 We'll have a quick look at a few common interactivity methods along with an example of use for each.
 
 The first (and arguably most useful) extension method is `SendPaginatedMessageAsync` for `DiscordChannel`.
 
-This method displays a collection of *'pages'* which are selected one-at-a-time by the user through reaction buttons.
+This method displays a collection of _'pages'_ which are selected one-at-a-time by the user through reaction buttons.
 Each button click will move the page view in one direction or the other until the timeout is reached.
 
 You'll need to create a collection of pages before you can invoke this method.
@@ -81,7 +81,7 @@ public async Task PaginationCommand(CommandContext ctx)
 Next we'll look at the `WaitForReactionAsync` extension method for `DiscordMessage`.
 This method waits for a reaction from a specific user and returns the emoji that was used.
 
-An overload of this method also enables you to wait for a *specific* reaction, as shown in the example below.
+An overload of this method also enables you to wait for a _specific_ reaction, as shown in the example below.
 
 ```cs
 public async Task ReactionCommand(CommandContext ctx, DiscordMember member)

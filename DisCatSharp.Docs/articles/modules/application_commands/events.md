@@ -4,6 +4,7 @@ title: Application Commands Events
 ---
 
 # Application Commands events
+
 Sometimes we need to add a variety of actions and checks before and after executing a command.
 We can do this in the commands itself, or we can use special events for this.
 
@@ -68,6 +69,7 @@ If you return `true`, then the command method will be executed after that, other
 ## After execution
 
 If you want to create actions after executing the command, then you need to do the same, but override a different method:
+
 ```cs
 public override async Task AfterSlashExecutionAsync(InteractionContext ctx)
 {
@@ -78,6 +80,7 @@ public override async Task AfterSlashExecutionAsync(InteractionContext ctx)
 ## Context menus
 
 You can also add similar actions for the context menus. But this time, you need to override the other methods:
+
 ```cs
 public class MyGuildCommands : ApplicationCommandsModule
 {
