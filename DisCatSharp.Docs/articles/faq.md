@@ -6,6 +6,12 @@ author: DisCatSharp Team
 
 # Frequently Asked Questions
 
+## Why don't you provide light mode for the documentation?
+
+Because light attracts bugs.
+
+Jokes aside, I mainly use dark mode, and I don't want to maintain two versions of the documentation. CSS is painful enough.
+
 ## What is a snowflake
 
 Discord calls their IDs snowflakes.

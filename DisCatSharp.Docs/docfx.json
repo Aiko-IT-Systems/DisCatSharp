@@ -355,8 +355,7 @@
 		],
 		"postProcessors": [
 			"ExtractSearchIndex",
-			"DescriptionGenerator",
-			"LastModifiedx"
+			"DescriptionGenerator"
 		],
 		"noLangKeyword": false,
 		"keepFileLink": true,
