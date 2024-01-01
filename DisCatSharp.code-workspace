@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../DisCatSharp.Extensions"
 		}
 	],
 	"settings": {
@@ -13,6 +16,7 @@
 		"licenser.license": "MIT",
 		"licenser.projectName": "DisCatSharp",
 		"licenser.useSingleLineStyle": false,
+		"licenser.disableAutoHeaderInsertion": true,
 		"json.schemaDownload.enable": true,
 		"json.schemas": [
 			{
