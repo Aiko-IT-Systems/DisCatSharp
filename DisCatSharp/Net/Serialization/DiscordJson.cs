@@ -41,7 +41,7 @@ public static class DiscordJson
 	/// <typeparam name="T">The type</typeparam>
 	/// <param name="json">The received json.</param>
 	/// <param name="discord">The discord client.</param>
-	public static T DeserializeObject<T>(string json, BaseDiscordClient? discord) where T : ObservableApiObject
+	public static T DeserializeObject<T>(string? json, BaseDiscordClient? discord) where T : ObservableApiObject
 		=> DeserializeObjectInternal<T>(json, discord);
 
 	/// <summary>
@@ -50,7 +50,7 @@ public static class DiscordJson
 	/// <typeparam name="T">The enumerable type.</typeparam>
 	/// <param name="json">The received json.</param>
 	/// <param name="discord">The discord client.</param>
-	public static T DeserializeIEnumerableObject<T>(string json, BaseDiscordClient? discord) where T : IEnumerable<ObservableApiObject>
+	public static T DeserializeIEnumerableObject<T>(string? json, BaseDiscordClient? discord) where T : IEnumerable<ObservableApiObject>
 		=> DeserializeIEnumerableObjectInternal<T>(json, discord);
 
 	/// <summary>Populates an object with the values from a JSON node.</summary>
@@ -95,8 +95,11 @@ public static class DiscordJson
 	/// <typeparam name="T">The type</typeparam>
 	/// <param name="json">The received json.</param>
 	/// <param name="discord">The discord client.</param>
-	private static T DeserializeObjectInternal<T>(string json, BaseDiscordClient? discord) where T : ObservableApiObject
+	private static T DeserializeObjectInternal<T>(string? json, BaseDiscordClient? discord) where T : ObservableApiObject
 	{
+		if (string.IsNullOrEmpty(json))
+			return default;
+		
 		var obj = JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings()
 		{
 			ContractResolver = new OptionalJsonContractResolver()
@@ -168,8 +171,11 @@ public static class DiscordJson
 	/// <typeparam name="T">The enumerable type.</typeparam>
 	/// <param name="json">The received json.</param>
 	/// <param name="discord">The discord client.</param>
-	private static T DeserializeIEnumerableObjectInternal<T>(string json, BaseDiscordClient? discord) where T : IEnumerable<ObservableApiObject>
+	private static T DeserializeIEnumerableObjectInternal<T>(string? json, BaseDiscordClient? discord) where T : IEnumerable<ObservableApiObject>
 	{
+		if (string.IsNullOrEmpty(json))
+			return default;
+		
 		var obj = JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings()
 		{
 			ContractResolver = new OptionalJsonContractResolver()

@@ -526,8 +526,7 @@ internal sealed class RestClient : IDisposable
 			var response = new RestResponse();
 			try
 			{
-				if (this._disposed)
-					return;
+				ObjectDisposedException.ThrowIf(this._disposed, this);
 
 				res = await this.HttpClient.SendAsync(req, HttpCompletionOption.ResponseContentRead, CancellationToken.None).ConfigureAwait(false);
 
