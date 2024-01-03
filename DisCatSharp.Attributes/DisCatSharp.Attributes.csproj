@@ -5,12 +5,12 @@
 	<Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
 	<Import Project="../DisCatSharp.Targets/Package.targets" />
 	<Import Project="../DisCatSharp.Targets/NuGet.targets" />
+	<Import Project="../DisCatSharp.Targets/Version.targets" />
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<OutputType>Library</OutputType>
-		<Version>10.6.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -25,10 +25,11 @@
 
 			Special Attributes for DisCatSharp.
 		</Description>
-		<PackageTags>DisCatSharp</PackageTags>
+		<PackageTags>DisCatSharp,DisCatSharp Attributes</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 	</ItemGroup>
+
 </Project>
