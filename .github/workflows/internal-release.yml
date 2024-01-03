@@ -39,9 +39,9 @@ jobs:
         run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{ steps.vars.outputs.sha }}
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-      - name: Build tools as pre-release
-        shell: pwsh
-        run: ./DisCatSharp.Tools/rebuild-tools.ps1 -ArtifactLocation ./dcs-tools-artifacts -Configuration Release -VersionSuffix ${{ steps.vars.outputs.sha }}
+#      - name: Build tools as pre-release
+#        shell: pwsh
+#        run: ./DisCatSharp.Tools/rebuild-tools.ps1 -ArtifactLocation ./dcs-tools-artifacts -Configuration Release -VersionSuffix ${{ steps.vars.outputs.sha }}
       - name: Build attributes as pre-release
         shell: pwsh
         run: ./DisCatSharp.Tools/rebuild-attributes.ps1 -ArtifactLocation ./dcs-attributes-artifacts -Configuration Release -VersionSuffix ${{ steps.vars.outputs.sha }}
@@ -51,9 +51,9 @@ jobs:
       - name: Remove symbol packages
         run: rm *.snupkg
         working-directory: ./dcs-artifacts
-      - name: Remove symbol packages for tools
-        run: rm *.snupkg
-        working-directory: ./dcs-tools-artifacts
+#      - name: Remove symbol packages for tools
+#        run: rm *.snupkg
+#        working-directory: ./dcs-tools-artifacts
       - name: Remove symbol packages for attributes
         run: rm *.snupkg
         working-directory: ./dcs-attributes-artifacts
@@ -62,9 +62,9 @@ jobs:
       - name: Publish to library to AITSYS Internal Registry
         run: dotnet nuget push --source aitsys -k ${{ secrets.BYTESAFE }} *
         working-directory: ./dcs-artifacts
-      - name: Publish to tools to AITSYS Internal Registry
-        run: dotnet nuget push --source aitsys -k ${{ secrets.BYTESAFE }} *
-        working-directory: ./dcs-tools-artifacts
+#      - name: Publish to tools to AITSYS Internal Registry
+#        run: dotnet nuget push --source aitsys -k ${{ secrets.BYTESAFE }} *
+#        working-directory: ./dcs-tools-artifacts
       - name: Publish to attributes to AITSYS Internal Registry
         run: dotnet nuget push --source aitsys -k ${{ secrets.BYTESAFE }} *
         working-directory: ./dcs-attributes-artifacts
