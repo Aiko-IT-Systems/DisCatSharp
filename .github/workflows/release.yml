@@ -17,6 +17,15 @@ on:
         required: false
         type: boolean
         default: false
+      packages_to_release:
+        description: "Packages to release"
+        required: false
+        type: choice
+        options:
+            - "DisCatSharp"
+            - "DisCatSharp.Attributes"
+            - "DisCatSharp.Tools"
+
 
 env:
   DOTNET_NOLOGO: true
@@ -48,20 +57,43 @@ jobs:
           dotnet-version: |
             8.0.100
             7.0.404
-      - name: Restore dependencies
+      - name: Restore dependencies (DisCatSharp)
+        if: ${{ github.event.inputs.packages_to_release }} == 'DisCatSharp'
         run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
-      - name: Build library as full release
+      - name: Restore dependencies (DisCatSharp.Attributes)
+        if: ${{ github.event.inputs.packages_to_release }} == 'DisCatSharp.Attributes'
+        run: dotnet restore --no-cache -f -v minimal DisCatSharp.Attributes/DisCatSharp.Attributes.csproj
+      - name: Restore dependencies (DisCatSharp.Tools)
+        if: ${{ github.event.inputs.packages_to_release }} == 'DisCatSharp.Tools'
+        run: dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.sln
+      - name: Build DisCatSharp as full release
         if: ${{!inputs.release_as_prerelease}}
         shell: pwsh
         run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-      - name: Build library as pre-release
+      - name: Build DisCatSharp as pre-release
         if: ${{inputs.release_as_prerelease}}
         shell: pwsh
         run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{github.event.inputs.version_suffix}}
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      - name: Build DisCatSharp.Attributes as full release
+        if: ${{!inputs.release_as_prerelease}} && ${{ github.event.inputs.packages_to_release }} == 'DisCatSharp.Attributes'
+        shell: pwsh
+        run: ./DisCatSharp.Tools/rebuild-attributes.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release
+      - name: Build DisCatSharp.Attributes as pre-release
+        if: ${{inputs.release_as_prerelease}} && ${{ github.event.inputs.packages_to_release }} == 'DisCatSharp.Attributes'
+        shell: pwsh
+        run: ./DisCatSharp.Tools/rebuild-attributes.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{github.event.inputs.version_suffix}}
+      - name: Build DisCatSharp.Tools as full release
+        if: ${{!inputs.release_as_prerelease}} && ${{ github.event.inputs.packages_to_release }} == 'DisCatSharp.Tools'
+        shell: pwsh
+        run: ./DisCatSharp.Tools/rebuild-tools.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release
+      - name: Build DisCatSharp.Tools as pre-release
+        if: ${{inputs.release_as_prerelease}} && ${{ github.event.inputs.packages_to_release }} == 'DisCatSharp.Tools'
+        shell: pwsh
+        run: ./DisCatSharp.Tools/rebuild-tools.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{github.event.inputs.version_suffix}}
       - name: Remove invalid packages
         shell: pwsh
         run: rm *.symbols.*
@@ -75,19 +107,20 @@ jobs:
         run: dotnet nuget push --source https://nuget.pkg.github.com/Aiko-IT-Systems/index.json -k ${{secrets.NYUW_TOKEN_GH}} *
         working-directory: ./dcs-artifacts
       - name: Set outputs
+        if: ${{ github.event.inputs.packages_to_release }} == 'DisCatSharp'
         id: vars
         run: |
           echo "version=10.6.0" >> $GITHUB_OUTPUT
           echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
       - name: "Create Sentry prod release"
-        if: ${{!inputs.release_as_prerelease}}
+        if: ${{!inputs.release_as_prerelease}} && ${{ github.event.inputs.packages_to_release }} == 'DisCatSharp'
         uses: getsentry/action-release@v1.6.0
         with:
           environment: prod
           ignore_missing: true
           version: DisCatSharp@${{ steps.vars.outputs.version }}+${{ steps.vars.outputs.sha }}
       - name: "Create Sentry dev release"
-        if: ${{inputs.release_as_prerelease}}
+        if: ${{inputs.release_as_prerelease}} && ${{ github.event.inputs.packages_to_release }} == 'DisCatSharp'
         uses: getsentry/action-release@v1.6.0
         with:
           environment: dev
