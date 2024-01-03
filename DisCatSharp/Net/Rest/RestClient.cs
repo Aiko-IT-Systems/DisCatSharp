@@ -244,6 +244,7 @@ internal sealed class RestClient : IDisposable
 	/// Executes the request.
 	/// </summary>
 	/// <param name="request">The request to be executed.</param>
+	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
 	public Task ExecuteRequestAsync(BaseRestRequest request, bool targetDebug = false)
 		=> request is null ? throw new ArgumentNullException(nameof(request)) : this.ExecuteRequestAsync(request, null, null, targetDebug);
 
@@ -251,8 +252,9 @@ internal sealed class RestClient : IDisposable
 	/// Executes the form data request.
 	/// </summary>
 	/// <param name="request">The request to be executed.</param>
-	public Task ExecuteFormRequestAsync(BaseRestRequest request)
-		=> request is null ? throw new ArgumentNullException(nameof(request)) : this.ExecuteFormRequestAsync(request, null, null);
+	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
+	public Task ExecuteFormRequestAsync(BaseRestRequest request, bool targetDebug = false)
+		=> request is null ? throw new ArgumentNullException(nameof(request)) : this.ExecuteFormRequestAsync(request, null, null, targetDebug);
 
 	/// <summary>
 	/// Executes the form data request.
@@ -261,7 +263,8 @@ internal sealed class RestClient : IDisposable
 	/// <param name="request">The request to be executed.</param>
 	/// <param name="bucket">The bucket.</param>
 	/// <param name="ratelimitTcs">The ratelimit task completion source.</param>
-	private async Task ExecuteFormRequestAsync(BaseRestRequest request, RateLimitBucket? bucket, TaskCompletionSource<bool>? ratelimitTcs)
+	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
+	private async Task ExecuteFormRequestAsync(BaseRestRequest request, RateLimitBucket? bucket, TaskCompletionSource<bool>? ratelimitTcs, bool targetDebug = false)
 	{
 		if (this._disposed)
 			return;
@@ -461,6 +464,7 @@ internal sealed class RestClient : IDisposable
 	/// <param name="request">The request to be executed.</param>
 	/// <param name="bucket">The bucket.</param>
 	/// <param name="ratelimitTcs">The ratelimit task completion source.</param>
+	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
 	private async Task ExecuteRequestAsync(BaseRestRequest request, RateLimitBucket? bucket, TaskCompletionSource<bool>? ratelimitTcs, bool targetDebug = false)
 	{
 		ObjectDisposedException.ThrowIf(this._disposed, this);
