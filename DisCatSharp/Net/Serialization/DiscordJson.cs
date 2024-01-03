@@ -79,7 +79,7 @@ public static class DiscordJson
 	/// <param name="jsonSerializer">The json serializer.</param>
 	private static string SerializeObjectInternal(object value, Type type, JsonSerializer jsonSerializer)
 	{
-		var stringWriter = new StringWriter(new(256), CultureInfo.InvariantCulture);
+		var stringWriter = new StringWriter(new(), CultureInfo.InvariantCulture);
 		using (var jsonTextWriter = new JsonTextWriter(stringWriter))
 		{
 			jsonTextWriter.Formatting = jsonSerializer.Formatting;
