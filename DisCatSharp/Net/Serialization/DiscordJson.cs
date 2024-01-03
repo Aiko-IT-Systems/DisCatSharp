@@ -97,9 +97,8 @@ public static class DiscordJson
 	/// <param name="discord">The discord client.</param>
 	private static T DeserializeObjectInternal<T>(string? json, BaseDiscordClient? discord) where T : ObservableApiObject
 	{
-		if (string.IsNullOrEmpty(json))
-			return default;
-		
+		ArgumentNullException.ThrowIfNull(json, nameof(json));
+
 		var obj = JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings()
 		{
 			ContractResolver = new OptionalJsonContractResolver()
@@ -173,9 +172,8 @@ public static class DiscordJson
 	/// <param name="discord">The discord client.</param>
 	private static T DeserializeIEnumerableObjectInternal<T>(string? json, BaseDiscordClient? discord) where T : IEnumerable<ObservableApiObject>
 	{
-		if (string.IsNullOrEmpty(json))
-			return default;
-		
+		ArgumentNullException.ThrowIfNull(json, nameof(json));
+
 		var obj = JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings()
 		{
 			ContractResolver = new OptionalJsonContractResolver()
