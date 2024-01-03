@@ -291,8 +291,7 @@ internal sealed class RestClient : IDisposable
 
 					if (this._useResetAfter)
 					{
-						if (bucket.ResetAfter.HasValue)
-							delay = bucket.ResetAfter.Value;
+						delay = bucket.ResetAfter.Value;
 						resetDate = bucket.ResetAfterOffset;
 					}
 
@@ -321,7 +320,7 @@ internal sealed class RestClient : IDisposable
 			var req = this.BuildFormRequest(request);
 
 			if (this.Debug && req.Content is not null)
-				this._logger.Log(this._discord?.Configuration.MinimumLogLevel ?? LogLevel.Trace, LoggerEvents.RestTx, "Rest Form Request Content:\n{Content}", await req.Content.ReadAsStringAsync()!);
+				this._logger.Log(LogLevel.Trace, LoggerEvents.RestTx, "Rest Form Request Content:\n{Content}", await req.Content.ReadAsStringAsync()!);
 
 			var response = new RestResponse();
 			try
@@ -335,7 +334,7 @@ internal sealed class RestClient : IDisposable
 				var txt = Utilities.UTF8.GetString(bts, 0, bts.Length);
 
 				if (this.Debug)
-					this._logger.Log(this._discord?.Configuration.MinimumLogLevel ?? LogLevel.Trace, LoggerEvents.RestRx, "Rest Form Response Content: {Content}", txt);
+					this._logger.Log(LogLevel.Trace, LoggerEvents.RestRx, "Rest Form Response Content: {Content}", txt);
 
 				response.Headers = res.Headers?.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
 				response.Response = txt;
@@ -491,8 +490,7 @@ internal sealed class RestClient : IDisposable
 
 					if (this._useResetAfter)
 					{
-						if (bucket.ResetAfter.HasValue)
-							delay = bucket.ResetAfter.Value;
+						delay = bucket.ResetAfter.Value;
 						resetDate = bucket.ResetAfterOffset;
 					}
 
@@ -521,7 +519,7 @@ internal sealed class RestClient : IDisposable
 			var req = this.BuildRequest(request);
 
 			if (this.Debug && req.Content is not null)
-				this._logger.Log(this._discord?.Configuration.MinimumLogLevel ?? LogLevel.Trace, LoggerEvents.RestTx, "Rest Request Content:\n{Content}", await req.Content.ReadAsStringAsync());
+				this._logger.Log(LogLevel.Trace, LoggerEvents.RestTx, "Rest Request Content:\n{Content}", await req.Content.ReadAsStringAsync());
 
 			var response = new RestResponse();
 			try
@@ -534,7 +532,7 @@ internal sealed class RestClient : IDisposable
 				var txt = Utilities.UTF8.GetString(bts, 0, bts.Length);
 
 				if (this.Debug)
-					this._logger.Log(this._discord?.Configuration.MinimumLogLevel ?? LogLevel.Trace, LoggerEvents.RestRx, "Rest Response Content: {Content}", txt);
+					this._logger.Log(LogLevel.Trace, LoggerEvents.RestRx, "Rest Response Content: {Content}", txt);
 
 				response.Headers = res.Headers?.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
 				response.Response = txt;
