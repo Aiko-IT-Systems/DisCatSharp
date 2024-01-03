@@ -4,8 +4,8 @@ items:
 - name: Version 10.X
   expanded: true
   items:
-  - name: Version 10.5.0
-    href: v10/10_5_0.md
+  - name: Version 10.5.1
+    href: v10/10_5_1.md
   - name: Version 10.4.0
     href: v10/10_4_0.md
   - name: Version 10.3.0

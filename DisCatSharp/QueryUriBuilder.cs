@@ -63,7 +63,7 @@ internal class QueryUriBuilder
 	public Uri Build() =>
 		new UriBuilder(this.SourceUri)
 		{
-			Query = this._queryParams.Count is 0 ? string.Join("&", this._queryParams.Select(e => Uri.EscapeDataString(e.Key) + '=' + Uri.EscapeDataString(e.Value))) : string.Empty
+			Query = this._queryParams.Count is not 0 ? string.Join("&", this._queryParams.Select(e => Uri.EscapeDataString(e.Key) + '=' + Uri.EscapeDataString(e.Value))) : string.Empty
 		}.Uri;
 
 	/// <summary>

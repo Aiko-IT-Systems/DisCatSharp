@@ -244,15 +244,17 @@ internal sealed class RestClient : IDisposable
 	/// Executes the request.
 	/// </summary>
 	/// <param name="request">The request to be executed.</param>
-	public Task ExecuteRequestAsync(BaseRestRequest request)
-		=> request is null ? throw new ArgumentNullException(nameof(request)) : this.ExecuteRequestAsync(request, null, null);
+	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
+	public Task ExecuteRequestAsync(BaseRestRequest request, bool targetDebug = false)
+		=> request is null ? throw new ArgumentNullException(nameof(request)) : this.ExecuteRequestAsync(request, null, null, targetDebug);
 
 	/// <summary>
 	/// Executes the form data request.
 	/// </summary>
 	/// <param name="request">The request to be executed.</param>
-	public Task ExecuteFormRequestAsync(BaseRestRequest request)
-		=> request is null ? throw new ArgumentNullException(nameof(request)) : this.ExecuteFormRequestAsync(request, null, null);
+	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
+	public Task ExecuteFormRequestAsync(BaseRestRequest request, bool targetDebug = false)
+		=> request is null ? throw new ArgumentNullException(nameof(request)) : this.ExecuteFormRequestAsync(request, null, null, targetDebug);
 
 	/// <summary>
 	/// Executes the form data request.
@@ -261,7 +263,8 @@ internal sealed class RestClient : IDisposable
 	/// <param name="request">The request to be executed.</param>
 	/// <param name="bucket">The bucket.</param>
 	/// <param name="ratelimitTcs">The ratelimit task completion source.</param>
-	private async Task ExecuteFormRequestAsync(BaseRestRequest request, RateLimitBucket? bucket, TaskCompletionSource<bool>? ratelimitTcs)
+	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
+	private async Task ExecuteFormRequestAsync(BaseRestRequest request, RateLimitBucket? bucket, TaskCompletionSource<bool>? ratelimitTcs, bool targetDebug = false)
 	{
 		if (this._disposed)
 			return;
@@ -291,8 +294,7 @@ internal sealed class RestClient : IDisposable
 
 					if (this._useResetAfter)
 					{
-						if (bucket.ResetAfter.HasValue)
-							delay = bucket.ResetAfter.Value;
+						delay = bucket.ResetAfter.Value;
 						resetDate = bucket.ResetAfterOffset;
 					}
 
@@ -321,7 +323,7 @@ internal sealed class RestClient : IDisposable
 			var req = this.BuildFormRequest(request);
 
 			if (this.Debug && req.Content is not null)
-				this._logger.Log(this._discord?.Configuration.MinimumLogLevel ?? LogLevel.Trace, LoggerEvents.RestTx, "Rest Form Request Content:\n{Content}", await req.Content.ReadAsStringAsync()!);
+				this._logger.Log(LogLevel.Trace, LoggerEvents.RestTx, "Rest Form Request Content:\n{Content}", await req.Content.ReadAsStringAsync()!);
 
 			var response = new RestResponse();
 			try
@@ -335,7 +337,7 @@ internal sealed class RestClient : IDisposable
 				var txt = Utilities.UTF8.GetString(bts, 0, bts.Length);
 
 				if (this.Debug)
-					this._logger.Log(this._discord?.Configuration.MinimumLogLevel ?? LogLevel.Trace, LoggerEvents.RestRx, "Rest Form Response Content: {Content}", txt);
+					this._logger.Log(LogLevel.Trace, LoggerEvents.RestRx, "Rest Form Response Content: {Content}", txt);
 
 				response.Headers = res.Headers?.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
 				response.Response = txt;
@@ -462,9 +464,13 @@ internal sealed class RestClient : IDisposable
 	/// <param name="request">The request to be executed.</param>
 	/// <param name="bucket">The bucket.</param>
 	/// <param name="ratelimitTcs">The ratelimit task completion source.</param>
-	private async Task ExecuteRequestAsync(BaseRestRequest request, RateLimitBucket? bucket, TaskCompletionSource<bool>? ratelimitTcs)
+	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
+	private async Task ExecuteRequestAsync(BaseRestRequest request, RateLimitBucket? bucket, TaskCompletionSource<bool>? ratelimitTcs, bool targetDebug = false)
 	{
 		ObjectDisposedException.ThrowIf(this._disposed, this);
+
+		if (targetDebug)
+			Console.WriteLine("Meow");
 
 		HttpResponseMessage? res = default;
 
@@ -491,8 +497,7 @@ internal sealed class RestClient : IDisposable
 
 					if (this._useResetAfter)
 					{
-						if (bucket.ResetAfter.HasValue)
-							delay = bucket.ResetAfter.Value;
+						delay = bucket.ResetAfter.Value;
 						resetDate = bucket.ResetAfterOffset;
 					}
 
@@ -521,13 +526,12 @@ internal sealed class RestClient : IDisposable
 			var req = this.BuildRequest(request);
 
 			if (this.Debug && req.Content is not null)
-				this._logger.Log(this._discord?.Configuration.MinimumLogLevel ?? LogLevel.Trace, LoggerEvents.RestTx, "Rest Request Content:\n{Content}", await req.Content.ReadAsStringAsync());
+				this._logger.Log(LogLevel.Trace, LoggerEvents.RestTx, "Rest Request Content:\n{Content}", await req.Content.ReadAsStringAsync());
 
 			var response = new RestResponse();
 			try
 			{
-				if (this._disposed)
-					return;
+				ObjectDisposedException.ThrowIf(this._disposed, this);
 
 				res = await this.HttpClient.SendAsync(req, HttpCompletionOption.ResponseContentRead, CancellationToken.None).ConfigureAwait(false);
 
@@ -535,7 +539,7 @@ internal sealed class RestClient : IDisposable
 				var txt = Utilities.UTF8.GetString(bts, 0, bts.Length);
 
 				if (this.Debug)
-					this._logger.Log(this._discord?.Configuration.MinimumLogLevel ?? LogLevel.Trace, LoggerEvents.RestRx, "Rest Response Content: {Content}", txt);
+					this._logger.Log(LogLevel.Trace, LoggerEvents.RestRx, "Rest Response Content: {Content}", txt);
 
 				response.Headers = res.Headers?.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
 				response.Response = txt;
