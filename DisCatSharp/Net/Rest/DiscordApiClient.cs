@@ -4706,7 +4706,7 @@ public sealed class DiscordApiClient
 
 		var url = qub.Build();
 
-		var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files, targetDebug: true).ConfigureAwait(false);
+		var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
 		var ret = DiscordJson.DeserializeObject<DiscordMessage>(res.Response, this.Discord);
 
 		if (this.Discord != null!)
