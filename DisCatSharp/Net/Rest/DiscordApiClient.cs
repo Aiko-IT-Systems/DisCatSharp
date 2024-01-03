@@ -293,13 +293,14 @@ public sealed class DiscordApiClient
 		IReadOnlyDictionary<string, string>? headers = null,
 		IReadOnlyDictionary<string, string>? values = null,
 		IEnumerable<DiscordMessageFile>? files = null,
-		double? ratelimitWaitOverride = null
+		double? ratelimitWaitOverride = null,
+		bool targetDebug = false
 	)
 	{
 		var req = new MultipartWebRequest(client, bucket, url, method, route, headers, values, files, ratelimitWaitOverride);
 
 		if (this.Discord is not null)
-			this.Rest.ExecuteRequestAsync(req).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
+			this.Rest.ExecuteRequestAsync(req, targetDebug).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
 		else
 			_ = this.Rest.ExecuteRequestAsync(req);
 
@@ -4705,7 +4706,7 @@ public sealed class DiscordApiClient
 
 		var url = qub.Build();
 
-		var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
+		var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files, targetDebug: true).ConfigureAwait(false);
 		var ret = DiscordJson.DeserializeObject<DiscordMessage>(res.Response, this.Discord);
 
 		if (this.Discord != null!)
