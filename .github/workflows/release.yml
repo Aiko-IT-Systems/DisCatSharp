@@ -11,6 +11,12 @@ on:
         description: "Release as pre-release"
         required: true
         type: boolean
+        default: true
+      confirm_full_release:
+        description: "Confirm that you want to release as a full release"
+        required: false
+        type: boolean
+        default: false
 
 env:
   DOTNET_NOLOGO: true
@@ -29,6 +35,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Check Intention
+        if: ${{!inputs.release_as_prerelease}}
+        run: |
+          if [ "${{ inputs.confirm_full_release }}" = "false" ]; then
+            echo "Full release not confirmed, exiting."
+            exit 1
+          fi
       - name: Setup .NET
         uses: actions/setup-dotnet@v4.0.0
         with:
@@ -64,7 +77,7 @@ jobs:
       - name: Set outputs
         id: vars
         run: |
-          echo "version=10.5.0" >> $GITHUB_OUTPUT
+          echo "version=10.5.1" >> $GITHUB_OUTPUT
           echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
       - name: "Create Sentry prod release"
         if: ${{!inputs.release_as_prerelease}}

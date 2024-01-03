@@ -202,14 +202,15 @@ public sealed class DiscordApiClient
 	/// <param name="headers">The headers.</param>
 	/// <param name="payload">The payload.</param>
 	/// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
-	internal Task<RestResponse> DoRequestAsync(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string>? headers = null, string? payload = null, double? ratelimitWaitOverride = null)
+	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
+	internal Task<RestResponse> DoRequestAsync(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string>? headers = null, string? payload = null, double? ratelimitWaitOverride = null, bool targetDebug = false)
 	{
 		var req = new RestRequest(client, bucket, url, method, route, headers, payload, ratelimitWaitOverride);
 
 		if (this.Discord is not null)
-			this.Rest.ExecuteRequestAsync(req).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, $"Error while executing request. Url: {url.AbsoluteUri}");
+			this.Rest.ExecuteRequestAsync(req, targetDebug).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, $"Error while executing request. Url: {url.AbsoluteUri}");
 		else
-			_ = this.Rest.ExecuteRequestAsync(req);
+			_ = this.Rest.ExecuteRequestAsync(req, targetDebug);
 
 		return req.WaitForCompletionAsync();
 	}
@@ -225,11 +226,12 @@ public sealed class DiscordApiClient
 	/// <param name="headers">The headers.</param>
 	/// <param name="formData">The form data.</param>
 	/// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
-	internal Task<RestResponse> DoFormRequestAsync(DiscordOAuth2Client client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, Dictionary<string, string> formData, Dictionary<string, string>? headers = null, double? ratelimitWaitOverride = null)
+	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
+	internal Task<RestResponse> DoFormRequestAsync(DiscordOAuth2Client client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, Dictionary<string, string> formData, Dictionary<string, string>? headers = null, double? ratelimitWaitOverride = null, bool targetDebug = false)
 	{
 		var req = new RestFormRequest(client, bucket, url, method, route, formData, headers, ratelimitWaitOverride);
 
-		this.Rest.ExecuteFormRequestAsync(req).LogTaskFault(this.OAuth2Client.Logger, LogLevel.Error, LoggerEvents.RestError, $"Error while executing request. Url: {url.AbsoluteUri}");
+		this.Rest.ExecuteFormRequestAsync(req, targetDebug).LogTaskFault(this.OAuth2Client.Logger, LogLevel.Error, LoggerEvents.RestError, $"Error while executing request. Url: {url.AbsoluteUri}");
 
 		return req.WaitForCompletionAsync();
 	}
@@ -248,6 +250,7 @@ public sealed class DiscordApiClient
 	/// <param name="headers">The headers.</param>
 	/// <param name="file">The file.</param>
 	/// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
+	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
 	private Task<RestResponse> DoStickerMultipartAsync(
 		BaseDiscordClient client,
 		RateLimitBucket bucket,
@@ -259,15 +262,16 @@ public sealed class DiscordApiClient
 		string? description = null,
 		IReadOnlyDictionary<string, string>? headers = null,
 		DiscordMessageFile? file = null,
-		double? ratelimitWaitOverride = null
+		double? ratelimitWaitOverride = null,
+		bool targetDebug = false
 	)
 	{
 		var req = new MultipartStickerWebRequest(client, bucket, url, method, route, name, tags, description, headers, file, ratelimitWaitOverride);
 
 		if (this.Discord is not null)
-			this.Rest.ExecuteRequestAsync(req).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
+			this.Rest.ExecuteRequestAsync(req, targetDebug).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
 		else
-			_ = this.Rest.ExecuteRequestAsync(req);
+			_ = this.Rest.ExecuteRequestAsync(req, targetDebug);
 
 		return req.WaitForCompletionAsync();
 	}
@@ -284,6 +288,7 @@ public sealed class DiscordApiClient
 	/// <param name="values">The values.</param>
 	/// <param name="files">The files.</param>
 	/// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
+	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
 	private Task<RestResponse> DoMultipartAsync(
 		BaseDiscordClient client,
 		RateLimitBucket bucket,
@@ -293,15 +298,16 @@ public sealed class DiscordApiClient
 		IReadOnlyDictionary<string, string>? headers = null,
 		IReadOnlyDictionary<string, string>? values = null,
 		IEnumerable<DiscordMessageFile>? files = null,
-		double? ratelimitWaitOverride = null
+		double? ratelimitWaitOverride = null,
+		bool targetDebug = false
 	)
 	{
 		var req = new MultipartWebRequest(client, bucket, url, method, route, headers, values, files, ratelimitWaitOverride);
 
 		if (this.Discord is not null)
-			this.Rest.ExecuteRequestAsync(req).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
+			this.Rest.ExecuteRequestAsync(req, targetDebug).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
 		else
-			_ = this.Rest.ExecuteRequestAsync(req);
+			_ = this.Rest.ExecuteRequestAsync(req, targetDebug);
 
 		return req.WaitForCompletionAsync();
 	}
