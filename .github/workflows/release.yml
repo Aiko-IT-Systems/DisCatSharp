@@ -24,7 +24,7 @@ on:
         options:
             - "DisCatSharp"
             - "DisCatSharp.Attributes"
-            - "DisCatSharp.Tools"
+#            - "DisCatSharp.Tools" # This does not work currently
 
 
 env:
