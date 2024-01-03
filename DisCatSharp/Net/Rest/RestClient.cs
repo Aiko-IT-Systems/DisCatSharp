@@ -266,8 +266,10 @@ internal sealed class RestClient : IDisposable
 	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
 	private async Task ExecuteFormRequestAsync(BaseRestRequest request, RateLimitBucket? bucket, TaskCompletionSource<bool>? ratelimitTcs, bool targetDebug = false)
 	{
-		if (this._disposed)
-			return;
+		ObjectDisposedException.ThrowIf(this._disposed, this);
+
+		if (targetDebug)
+			Console.WriteLine("Meow");
 
 		HttpResponseMessage? res = default;
 
@@ -328,8 +330,7 @@ internal sealed class RestClient : IDisposable
 			var response = new RestResponse();
 			try
 			{
-				if (this._disposed)
-					return;
+				ObjectDisposedException.ThrowIf(this._disposed, this);
 
 				res = await this.HttpClient.SendAsync(req, HttpCompletionOption.ResponseContentRead, CancellationToken.None).ConfigureAwait(false);
 
