@@ -58,6 +58,26 @@ jobs:
           dotnet-version: |
             8.0.100
             7.0.404
+      - name: Set outputs
+        if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}
+        id: vars
+        run: |
+          echo "version=10.6.0" >> $GITHUB_OUTPUT
+          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+      - name: "Create Sentry prod release"
+        if: ${{ !inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp' }}
+        uses: getsentry/action-release@v1.6.0
+        with:
+          environment: prod
+          ignore_missing: true
+          version: DisCatSharp@${{ steps.vars.outputs.version }}+${{ steps.vars.outputs.sha }}
+      - name: "Create Sentry dev release"
+        if: ${{ inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp' }}
+        uses: getsentry/action-release@v1.6.0
+        with:
+          environment: dev
+          ignore_missing: true
+          version: DisCatSharp@${{ steps.vars.outputs.version }}-${{ github.event.inputs.version_suffix }}+${{ steps.vars.outputs.sha }}
       - name: Restore dependencies (DisCatSharp)
         if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}
         run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
@@ -106,23 +126,3 @@ jobs:
         shell: pwsh
         run: dotnet nuget push --source https://nuget.pkg.github.com/Aiko-IT-Systems/index.json -k ${{secrets.NYUW_TOKEN_GH}} *
         working-directory: ./dcs-artifacts
-      - name: Set outputs
-        if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}
-        id: vars
-        run: |
-          echo "version=10.6.0" >> $GITHUB_OUTPUT
-          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-      - name: "Create Sentry prod release"
-        if: ${{ !inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp' }}
-        uses: getsentry/action-release@v1.6.0
-        with:
-          environment: prod
-          ignore_missing: true
-          version: DisCatSharp@${{ steps.vars.outputs.version }}+${{ steps.vars.outputs.sha }}
-      - name: "Create Sentry dev release"
-        if: ${{ inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp' }}
-        uses: getsentry/action-release@v1.6.0
-        with:
-          environment: dev
-          ignore_missing: true
-          version: DisCatSharp@${{ steps.vars.outputs.version }}-${{ github.event.inputs.version_suffix }}+${{ steps.vars.outputs.sha }}
