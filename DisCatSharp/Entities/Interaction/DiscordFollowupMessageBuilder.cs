@@ -106,9 +106,7 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <summary>
 	/// Mentions to send on this followup message.
 	/// </summary>
-	public IReadOnlyList<IMention> Mentions => this._mentions;
-
-	private readonly List<IMention> _mentions = [];
+	public List<IMention>? Mentions { get; private set; }
 
 	/// <summary>
 	/// Appends a collection of components to the message.
@@ -279,7 +277,10 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder AddMention(IMention mention)
 	{
-		this._mentions.Add(mention);
+		if (this.Mentions != null)
+			this.Mentions.Add(mention);
+		else
+			this.Mentions = [mention];
 		return this;
 	}
 
@@ -290,7 +291,10 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder AddMentions(IEnumerable<IMention> mentions)
 	{
-		this._mentions.AddRange(mentions);
+		if (this.Mentions != null)
+			this.Mentions.AddRange(mentions);
+		else
+			this.Mentions = mentions.ToList();
 		return this;
 	}
 
@@ -338,7 +342,7 @@ public sealed class DiscordFollowupMessageBuilder
 		this.Content = "";
 		this._embeds.Clear();
 		this.IsTts = false;
-		this._mentions.Clear();
+		this.Mentions = null;
 		this._files.Clear();
 		this.IsEphemeral = false;
 		this._components.Clear();

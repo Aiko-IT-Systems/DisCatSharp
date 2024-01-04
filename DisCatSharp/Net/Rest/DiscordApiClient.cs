@@ -6428,7 +6428,7 @@ public sealed class DiscordApiClient
 		}, out var path);
 
 		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "false").Build();
-		if (builder != null)
+		if (builder != null && values.Count is not 0)
 		{
 			await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
 
@@ -6547,6 +6547,8 @@ public sealed class DiscordApiClient
 	/// <param name="builder">The builder.</param>
 	internal async Task<DiscordMessage> CreateFollowupMessageAsync(ulong applicationId, string interactionToken, DiscordFollowupMessageBuilder builder)
 	{
+		ArgumentNullException.ThrowIfNull(builder, nameof(builder));
+
 		builder.Validate();
 
 		if (builder.Embeds != null)
@@ -6555,15 +6557,12 @@ public sealed class DiscordApiClient
 					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
 		MessageFlags? flags = builder is { FlagsChanged: true } ? MessageFlags.None : null;
-		if (builder != null)
-		{
-			if (builder.IsEphemeral)
-				flags |= MessageFlags.Ephemeral;
-			if (builder.EmbedsSuppressed)
-				flags |= MessageFlags.SuppressedEmbeds;
-			if (builder.NotificationsSuppressed)
-				flags |= MessageFlags.SuppressNotifications;
-		}
+		if (builder.IsEphemeral)
+			flags |= MessageFlags.Ephemeral;
+		if (builder.EmbedsSuppressed)
+			flags |= MessageFlags.SuppressedEmbeds;
+		if (builder.NotificationsSuppressed)
+			flags |= MessageFlags.SuppressNotifications;
 
 		var values = new Dictionary<string, string>();
 		var pld = new RestFollowupMessageCreatePayload
@@ -6610,17 +6609,28 @@ public sealed class DiscordApiClient
 		}, out var path);
 
 		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
-		var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
-		var ret = DiscordJson.DeserializeObject<DiscordMessage>(res.Response, this.Discord);
+		RestResponse res;
+		if (values.Count is not 0)
+		{
+			res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
+			var ret = DiscordJson.DeserializeObject<DiscordMessage>(res.Response, this.Discord);
 
-		foreach (var att in ret.AttachmentsInternal)
-			att.Discord = this.Discord;
+			foreach (var att in ret.AttachmentsInternal)
+				att.Discord = this.Discord;
 
-		foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
-			file.Stream.Position = file.ResetPositionTo.Value;
+			foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
+				file.Stream.Position = file.ResetPositionTo.Value;
+			ret.Discord = this.Discord;
+			return ret;
+		}
+		else
+		{
+			res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+			var ret = DiscordJson.DeserializeObject<DiscordMessage>(res.Response, this.Discord);
 
-		ret.Discord = this.Discord;
-		return ret;
+			ret.Discord = this.Discord;
+			return ret;
+		}
 	}
 
 	/// <summary>
