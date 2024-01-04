@@ -114,9 +114,7 @@ public sealed class DiscordInteractionResponseBuilder
 	/// <summary>
 	/// Mentions to send on this interaction response.
 	/// </summary>
-	public IReadOnlyList<IMention> Mentions => this._mentions;
-
-	private readonly List<IMention> _mentions = [];
+	public List<IMention>? Mentions { get; private set; }
 
 	/// <summary>
 	/// The hints to send on this interaction response.
@@ -138,7 +136,7 @@ public sealed class DiscordInteractionResponseBuilder
 	public DiscordInteractionResponseBuilder(DiscordMessageBuilder builder)
 	{
 		this._content = builder.Content;
-		this._mentions = builder.Mentions;
+		this.Mentions = builder.Mentions;
 		this._embeds.AddRange(builder.Embeds);
 		this._components.AddRange(builder.Components);
 	}
@@ -366,7 +364,10 @@ public sealed class DiscordInteractionResponseBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddMention(IMention mention)
 	{
-		this._mentions.Add(mention);
+		if (this.Mentions != null)
+			this.Mentions.Add(mention);
+		else
+			this.Mentions = [mention];
 		return this;
 	}
 
@@ -377,7 +378,10 @@ public sealed class DiscordInteractionResponseBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddMentions(IEnumerable<IMention> mentions)
 	{
-		this._mentions.AddRange(mentions);
+		if (this.Mentions != null)
+			this.Mentions.AddRange(mentions);
+		else
+			this.Mentions = mentions.ToList();
 		return this;
 	}
 
@@ -426,7 +430,7 @@ public sealed class DiscordInteractionResponseBuilder
 		this._embeds.Clear();
 		this.IsTts = false;
 		this.IsEphemeral = false;
-		this._mentions.Clear();
+		this.Mentions = null;
 		this._components.Clear();
 		this._choices.Clear();
 		this._files.Clear();

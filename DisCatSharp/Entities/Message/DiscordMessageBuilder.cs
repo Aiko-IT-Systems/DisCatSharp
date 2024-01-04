@@ -66,7 +66,7 @@ public sealed class DiscordMessageBuilder
 	/// <summary>
 	/// Gets the Allowed Mentions for the message to be sent.
 	/// </summary>
-	public List<IMention> Mentions { get; private set; }
+	public List<IMention>? Mentions { get; private set; }
 
 	/// <summary>
 	/// Gets the Files to be sent in the Message.

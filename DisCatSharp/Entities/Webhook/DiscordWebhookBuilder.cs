@@ -64,7 +64,7 @@ public sealed class DiscordWebhookBuilder
 	/// Name of the new thread.
 	/// Only works if the webhook is send in a <see cref="ChannelType.Forum"/>.
 	/// </summary>
-	public string ThreadName { get; set; }
+	public string? ThreadName { get; set; }
 
 	/// <summary>
 	/// Whether to keep previous attachments.
@@ -88,9 +88,7 @@ public sealed class DiscordWebhookBuilder
 	/// <summary>
 	/// Mentions to send on this webhook request.
 	/// </summary>
-	public IReadOnlyList<IMention> Mentions => this._mentions;
-
-	private readonly List<IMention> _mentions = [];
+	public List<IMention>? Mentions { get; private set; }
 
 	/// <summary>
 	/// Gets the components.
@@ -361,7 +359,10 @@ public sealed class DiscordWebhookBuilder
 	/// <param name="mention">Mention to add.</param>
 	public DiscordWebhookBuilder AddMention(IMention mention)
 	{
-		this._mentions.Add(mention);
+		if (this.Mentions != null)
+			this.Mentions.Add(mention);
+		else
+			this.Mentions = [mention];
 		return this;
 	}
 
@@ -371,7 +372,10 @@ public sealed class DiscordWebhookBuilder
 	/// <param name="mentions">Mentions to add.</param>
 	public DiscordWebhookBuilder AddMentions(IEnumerable<IMention> mentions)
 	{
-		this._mentions.AddRange(mentions);
+		if (this.Mentions != null)
+			this.Mentions.AddRange(mentions);
+		else
+			this.Mentions = mentions.ToList();
 		return this;
 	}
 
@@ -448,7 +452,7 @@ public sealed class DiscordWebhookBuilder
 		this.Content = "";
 		this._embeds.Clear();
 		this.IsTts = false;
-		this._mentions.Clear();
+		this.Mentions = null;
 		this._files.Clear();
 		this.AttachmentsInternal.Clear();
 		this._components.Clear();
