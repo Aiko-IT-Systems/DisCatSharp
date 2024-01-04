@@ -19,6 +19,15 @@ When installing VoiceNext though NuGet, an additional package containing the nat
 
 However, if you are using DisCatSharp from source or without a NuGet package manager, you must manually [download](xref:natives) the binaries and place them at the root of your working directory where your application is located.
 
+If the package doesn't work, you might have to instruct msbuild to include it:
+
+```xml
+<PackageReference Include="DisCatSharp.VoiceNext.Natives" Version="10.6.0-nightly-001">
+	<IncludeAssets>runtime; native; contentfiles</IncludeAssets>
+</PackageReference>
+```
+
+
 ### MacOS
 
 Native libraries for Apple's macOS can be installed using the [Homebrew](https://brew.sh) package manager:
