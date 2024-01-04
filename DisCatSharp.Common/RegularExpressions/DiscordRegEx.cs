@@ -52,7 +52,7 @@ public static partial class DiscordRegEx
 	[GeneratedRegex(@"^(https?:\/\/)?(www\.|canary\.|ptb\.)?(discord|discordapp)\.com\/events\/(?<guild>\d+)\/(?<event>\d+)$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
 	public static partial Regex EventRegex();
 
-	[GeneratedRegex(@"^[\p{Ll}\p{Lt}_-]{1,32}$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
+	[GeneratedRegex(@"^[\p{Ll}\p{Lt}\w_-]{1,32}$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
 	public static partial Regex ApplicationCommandNameRegex();
 
 	[GeneratedRegex(@"(?:https?:\/\/)?discord(?:app)?.com\/api\/(?:v\d\/)?webhooks\/(?<id>\d+)\/(?<token>[A-Za-z0-9_\-]+)", RegexOptions.Compiled | RegexOptions.ECMAScript)]
