@@ -475,115 +475,124 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	{
 		this.Client.Logger.Log(LogLevel.Information, "Request to register commands on shard {shard}", this.Client.ShardId);
 
-		if (this.ShardStartupFinished)
+		try
 		{
-			this.Client.Logger.Log(LogLevel.Information, "Shard {shard} already setup, skipping", this.Client.ShardId);
-			return;
-		}
-
-		GlobalDiscordCommands = [];
-		GuildDiscordCommands = [];
-
-		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Shard {shard} has {guilds} guilds", this.Client.ShardId, this.Client.Guilds?.Count);
-		List<ulong> failedGuilds = [];
-		var globalCommands = IsCalledByUnitTest ? null : (await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false).ConfigureAwait(false))?.ToList() ?? null;
-
-		var guilds = CheckAllGuilds ? this.Client.Guilds?.Keys.ToList() : this._updateList.Where(x => x.Key != null)?.Select(x => x.Key.Value).Distinct().ToList();
-		var wrongShards = guilds is not null && this.Client.Guilds is not null ? guilds.Where(x => !this.Client.Guilds.ContainsKey(x)).ToList() : [];
-		if (wrongShards.Count is not 0)
-		{
-			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Some guilds are not on the same shard as the client. Removing them from the update list");
-			foreach (var guild in wrongShards)
+			if (this.ShardStartupFinished)
 			{
-				this._updateList.RemoveAll(x => x.Key == guild);
-				guilds?.Remove(guild);
+				this.Client.Logger.Log(LogLevel.Information, "Shard {shard} already setup, skipping", this.Client.ShardId);
+				return;
 			}
-		}
 
-		var commandsPending = this._updateList.Select(x => x.Key).Distinct().ToList();
+			GlobalDiscordCommands = [];
+			GuildDiscordCommands = [];
 
-		if (guilds is not null && guilds.Count != 0)
-			foreach (var guild in guilds)
+			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Shard {shard} has {guilds} guilds", this.Client.ShardId, this.Client.Guilds?.Count);
+			List<ulong> failedGuilds = [];
+			var globalCommands = IsCalledByUnitTest ? null : (await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false).ConfigureAwait(false))?.ToList() ?? null;
+
+			var guilds = CheckAllGuilds ? this.Client.Guilds?.Keys.ToList() : this._updateList.Where(x => x.Key != null)?.Select(x => x.Key.Value).Distinct().ToList();
+			var wrongShards = guilds is not null && this.Client.Guilds is not null ? guilds.Where(x => !this.Client.Guilds.ContainsKey(x)).ToList() : [];
+			if (wrongShards.Count is not 0)
 			{
-				List<DiscordApplicationCommand>? commands = null;
-				var unauthorized = false;
-				try
+				this.Client.Logger.Log(ApplicationCommandsLogLevel, "Some guilds are not on the same shard as the client. Removing them from the update list");
+				foreach (var guild in wrongShards)
 				{
-					commands = (await this.Client.GetGuildApplicationCommandsAsync(guild, Configuration?.EnableLocalization ?? false).ConfigureAwait(false)).ToList() ?? null;
+					this._updateList.RemoveAll(x => x.Key == guild);
+					guilds?.Remove(guild);
 				}
-				catch (UnauthorizedException)
+			}
+
+			var commandsPending = this._updateList.Select(x => x.Key).Distinct().ToList();
+
+			if (guilds is not null && guilds.Count != 0)
+				foreach (var guild in guilds)
 				{
-					unauthorized = true;
-				}
-				finally
-				{
-					switch (unauthorized)
+					List<DiscordApplicationCommand>? commands = null;
+					var unauthorized = false;
+					try
 					{
-						case false when commands is not null && commands.Count is not 0:
-							GuildDiscordCommands.Add(guild, [.. commands]);
-							break;
-						case true:
-							failedGuilds.Add(guild);
-							break;
+						commands = (await this.Client.GetGuildApplicationCommandsAsync(guild, Configuration?.EnableLocalization ?? false).ConfigureAwait(false)).ToList() ?? null;
+					}
+					catch (UnauthorizedException)
+					{
+						unauthorized = true;
+					}
+					finally
+					{
+						switch (unauthorized)
+						{
+							case false when commands is not null && commands.Count is not 0:
+								GuildDiscordCommands.Add(guild, [.. commands]);
+								break;
+							case true:
+								failedGuilds.Add(guild);
+								break;
+						}
 					}
 				}
-			}
 
-		//Default should be to add the help and slash commands can be added without setting any configuration
-		//so this should still add the default help
-		if (Configuration is null || (Configuration is not null && Configuration.EnableDefaultHelp))
-		{
-			this._updateList.Add(new(null, new(typeof(DefaultHelpModule))));
-			commandsPending = this._updateList.Select(x => x.Key).Distinct().ToList();
-		}
-		else if (Configuration is not null && Configuration.EnableDefaultUserAppsHelp)
-		{
-			this._updateList.Add(new(null, new(typeof(DefaultUserAppsHelpModule))));
-			commandsPending = this._updateList.Select(x => x.Key).Distinct().ToList();
-		}
-		else
-		{
-			try
+			//Default should be to add the help and slash commands can be added without setting any configuration
+			//so this should still add the default help
+			if (Configuration is null || (Configuration is not null && Configuration.EnableDefaultHelp))
 			{
-				this._updateList.Remove(new(null, new(typeof(DefaultHelpModule))));
+				this._updateList.Add(new(null, new(typeof(DefaultHelpModule))));
+				commandsPending = this._updateList.Select(x => x.Key).Distinct().ToList();
 			}
-			catch
-			{ }
-
-			commandsPending = this._updateList.Select(x => x.Key).Distinct().ToList();
-		}
-
-		if (globalCommands is not null && globalCommands.Count is not 0)
-			GlobalDiscordCommands.AddRange(globalCommands);
-
-		foreach (var key in commandsPending)
-		{
-			this.Client.Logger.Log(ApplicationCommandsLogLevel, key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands");
-			if (key.HasValue)
+			else if (Configuration is not null && Configuration.EnableDefaultUserAppsHelp)
 			{
-				this.Client.Logger.Log(ApplicationCommandsLogLevel, "Found guild {guild} in shard {shard}!", key.Value, this.Client.ShardId);
-				this.Client.Logger.Log(ApplicationCommandsLogLevel, "Registering");
+				this._updateList.Add(new(null, new(typeof(DefaultUserAppsHelpModule))));
+				commandsPending = this._updateList.Select(x => x.Key).Distinct().ToList();
+			}
+			else
+			{
+				try
+				{
+					this._updateList.Remove(new(null, new(typeof(DefaultHelpModule))));
+				}
+				catch
+				{ }
+
+				commandsPending = this._updateList.Select(x => x.Key).Distinct().ToList();
 			}
 
-			await this.RegisterCommands(this._updateList.Where(x => x.Key == key).Select(x => x.Value).ToList(), key).ConfigureAwait(false);
+			if (globalCommands is not null && globalCommands.Count is not 0)
+				GlobalDiscordCommands.AddRange(globalCommands);
+
+			foreach (var key in commandsPending)
+			{
+				this.Client.Logger.Log(ApplicationCommandsLogLevel, key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands");
+				if (key.HasValue)
+				{
+					this.Client.Logger.Log(ApplicationCommandsLogLevel, "Found guild {guild} in shard {shard}!", key.Value, this.Client.ShardId);
+					this.Client.Logger.Log(ApplicationCommandsLogLevel, "Registering");
+				}
+
+				await this.RegisterCommands(this._updateList.Where(x => x.Key == key).Select(x => x.Value).ToList(), key).ConfigureAwait(false);
+			}
+
+			this.MISSING_SCOPE_GUILD_IDS = [..failedGuilds];
+			s_missingScopeGuildIdsGlobal.AddRange(failedGuilds);
+			this.ShardStartupFinished = true;
+			FinishedShardCount++;
+
+			StartupFinished = FinishedShardCount == ShardCount;
+
+			this.Client.Logger.Log(LogLevel.Information, "Application command setup finished for shard {ShardId}, enabling receiving", this.Client.ShardId);
+			await this._applicationCommandsModuleStartupFinished.InvokeAsync(this, new(Configuration?.ServiceProvider)
+			{
+				RegisteredGlobalCommands = GlobalCommandsInternal,
+				RegisteredGuildCommands = GuildCommandsInternal,
+				GuildsWithoutScope = this.MISSING_SCOPE_GUILD_IDS,
+				ShardId = this.Client.ShardId
+			}).ConfigureAwait(false);
+			this.FinishedRegistration();
 		}
-
-		this.MISSING_SCOPE_GUILD_IDS = [..failedGuilds];
-		s_missingScopeGuildIdsGlobal.AddRange(failedGuilds);
-		this.ShardStartupFinished = true;
-		FinishedShardCount++;
-
-		StartupFinished = FinishedShardCount == ShardCount;
-
-		this.Client.Logger.Log(LogLevel.Information, "Application command setup finished for shard {ShardId}, enabling receiving", this.Client.ShardId);
-		await this._applicationCommandsModuleStartupFinished.InvokeAsync(this, new(Configuration?.ServiceProvider)
+		catch (Exception ex)
 		{
-			RegisteredGlobalCommands = GlobalCommandsInternal,
-			RegisteredGuildCommands = GuildCommandsInternal,
-			GuildsWithoutScope = this.MISSING_SCOPE_GUILD_IDS,
-			ShardId = this.Client.ShardId
-		}).ConfigureAwait(false);
-		this.FinishedRegistration();
+			this.Client.Logger.LogCritical(ex, "There was an error during the application commands setup");
+			this.Client.Logger.LogError(ex.Message);
+			this.Client.Logger.LogError(ex.StackTrace);
+		}
 	}
 
 	/// <summary>
