@@ -6,7 +6,6 @@
 	<Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
 	<Import Project="../DisCatSharp.Targets/Package.targets" />
 	<Import Project="../DisCatSharp.Targets/Library.targets" />
-	<Import Project="../DisCatSharp.Targets/InternalsVisibleTo.targets" />
 
 	<PropertyGroup>
 		<IncludeBuildOutput>false</IncludeBuildOutput>
@@ -44,11 +43,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.2">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="DisCatSharp.Attributes" Version="10.4.4" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
 		<PackageReference Include="System.Reflection" Version="4.3.0" />
 		<PackageReference Include="System.Runtime" Version="4.3.1" />
