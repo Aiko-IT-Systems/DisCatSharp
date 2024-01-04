@@ -473,11 +473,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	internal async Task UpdateAsync()
 	{
-		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Request to register commands on shard {shard}", this.Client.ShardId);
+		this.Client.Logger.Log(LogLevel.Information, "Request to register commands on shard {shard}", this.Client.ShardId);
 
 		if (this.ShardStartupFinished)
 		{
-			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Shard {shard} already setup, skipping", this.Client.ShardId);
+			this.Client.Logger.Log(LogLevel.Information, "Shard {shard} already setup, skipping", this.Client.ShardId);
 			return;
 		}
 
@@ -575,7 +575,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 		StartupFinished = FinishedShardCount == ShardCount;
 
-		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Application command setup finished for shard {ShardId}, enabling receiving", this.Client.ShardId);
+		this.Client.Logger.Log(LogLevel.Information, "Application command setup finished for shard {ShardId}, enabling receiving", this.Client.ShardId);
 		await this._applicationCommandsModuleStartupFinished.InvokeAsync(this, new(Configuration?.ServiceProvider)
 		{
 			RegisteredGlobalCommands = GlobalCommandsInternal,
@@ -593,7 +593,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <param name="guildId">The optional guild id.</param>
 	private async Task RegisterCommands(List<ApplicationCommandsModuleConfiguration> types, ulong? guildId)
 	{
-		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Registering commands on shard {shard}", this.Client.ShardId);
+		this.Client.Logger.Log(LogLevel.Information, "Registering commands on shard {shard}", this.Client.ShardId);
 		//Initialize empty lists to be added to the global ones at the end
 		var commandMethods = new List<CommandMethod>();
 		var groupCommands = new List<GroupCommand>();
