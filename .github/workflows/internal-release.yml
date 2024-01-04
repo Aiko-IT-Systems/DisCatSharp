@@ -65,6 +65,6 @@ jobs:
 #      - name: Publish to tools to AITSYS Internal Registry
 #        run: dotnet nuget push --source aitsys -k ${{ secrets.BYTESAFE }} *
 #        working-directory: ./dcs-tools-artifacts
-      - name: Publish to attributes to AITSYS Internal Registry
+      - name: Publish attributes to AITSYS Internal Registry
         run: dotnet nuget push --source aitsys -k ${{ secrets.BYTESAFE }} *
         working-directory: ./dcs-attributes-artifacts
