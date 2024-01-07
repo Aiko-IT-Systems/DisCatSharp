@@ -12,7 +12,7 @@ body {
 		font-family: var(--bs-font-sans-gg) !important;
     }
 
-	.discord-messages {
+	.discord-messages, discord-messages {
 		display: none !important;
 		visibility: hidden !important;
 	}
