@@ -187,6 +187,7 @@
 	<meta name="loc:themeAuto" content="{{__global.themeAuto}}">
 	<meta name="loc:changeTheme" content="{{__global.changeTheme}}">
 	<meta name="loc:copy" content="{{__global.copy}}">
+	<meta name="loc:downloadPdf" content="{{__global.downloadPdf}}">
 	<script src="//code.jquery.com/jquery-latest.js"></script>
 	<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
 		data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
@@ -198,11 +199,8 @@
 	{{/redirect_url}}
 </head>
 {{^redirect_url}}
-<script type="module">
-	import options from './{{_rel}}public/main.js'
-	import { init } from './{{_rel}}public/docfx.min.js'
-	init(options)
-</script>
+<script type="module" src="./{{_rel}}public/main.js"></script>
+<script type="module" src="./{{_rel}}public/docfx.min.js"></script>
 
 <script>
 	const theme = 'dark' //localStorage.getItem('theme') || 'auto'
@@ -292,6 +290,7 @@
 			{{^_disableNextArticle}}
 			<div class="next-article d-print-none border-top" id="nextArticle"></div>
 			{{/_disableNextArticle}}
+
 		</div>
 
 		<div class="affix">
@@ -303,7 +302,7 @@
 	<div class="container-xxl search-results" id="search-results"></div>
 	{{/_enableSearch}}
 
-	<footer class="border-top">
+	<footer class="border-top text-secondary">
 		<div class="container-xxl">
 			<div class="flex-fill">
 				{{{_appFooter}}}{{^_appFooter}}<span>Made with <a
