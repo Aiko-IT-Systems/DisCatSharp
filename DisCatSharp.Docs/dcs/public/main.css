@@ -6,6 +6,21 @@ body {
 	--bs-body-font-family: var(--bs-font-sans-gg) !important;
 }
 
+@media print {
+    @page {
+        margin: 0 !important;
+    }
+    body {
+        -webkit-print-color-adjust: exact;
+        -moz-print-color-adjust: exact;
+        -ms-print-color-adjust: exact;
+        print-color-adjust: exact;
+		--bs-body-font-family: var(--bs-font-sans-gg) !important;
+		font-family: var(--bs-font-sans-gg) !important;
+    }
+}
+
+
 footer {
 	text-align: center !important;
 }

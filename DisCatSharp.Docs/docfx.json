@@ -18,7 +18,8 @@
 			"disableDefaultFilter": false,
 			"memberLayout": "separatePages",
 			"namespaceLayout": "flattened",
-			"enumSortOrder": "declaringOrder"
+			"enumSortOrder": "declaringOrder",
+			"includeExplicitInterfaceImplementations": true
 		},
 		{
 			"src": [
@@ -38,7 +39,8 @@
 			"disableDefaultFilter": false,
 			"memberLayout": "separatePages",
 			"namespaceLayout": "flattened",
-			"enumSortOrder": "declaringOrder"
+			"enumSortOrder": "declaringOrder",
+			"includeExplicitInterfaceImplementations": true
 		},
 		{
 			"src": [
@@ -58,7 +60,8 @@
 			"disableDefaultFilter": false,
 			"memberLayout": "separatePages",
 			"namespaceLayout": "flattened",
-			"enumSortOrder": "declaringOrder"
+			"enumSortOrder": "declaringOrder",
+			"includeExplicitInterfaceImplementations": true
 		},
 		{
 			"src": [
@@ -78,7 +81,8 @@
 			"disableDefaultFilter": false,
 			"memberLayout": "separatePages",
 			"namespaceLayout": "flattened",
-			"enumSortOrder": "declaringOrder"
+			"enumSortOrder": "declaringOrder",
+			"includeExplicitInterfaceImplementations": true
 		},
 		{
 			"src": [
@@ -98,7 +102,8 @@
 			"disableDefaultFilter": false,
 			"memberLayout": "separatePages",
 			"namespaceLayout": "flattened",
-			"enumSortOrder": "declaringOrder"
+			"enumSortOrder": "declaringOrder",
+			"includeExplicitInterfaceImplementations": true
 		},
 		{
 			"src": [
@@ -118,7 +123,8 @@
 			"disableDefaultFilter": false,
 			"memberLayout": "separatePages",
 			"namespaceLayout": "flattened",
-			"enumSortOrder": "declaringOrder"
+			"enumSortOrder": "declaringOrder",
+			"includeExplicitInterfaceImplementations": true
 		},
 		{
 			"src": [
@@ -138,7 +144,8 @@
 			"disableDefaultFilter": false,
 			"memberLayout": "separatePages",
 			"namespaceLayout": "flattened",
-			"enumSortOrder": "declaringOrder"
+			"enumSortOrder": "declaringOrder",
+			"includeExplicitInterfaceImplementations": true
 		},
 		{
 			"src": [
@@ -158,7 +165,8 @@
 			"disableDefaultFilter": false,
 			"memberLayout": "separatePages",
 			"namespaceLayout": "flattened",
-			"enumSortOrder": "declaringOrder"
+			"enumSortOrder": "declaringOrder",
+			"includeExplicitInterfaceImplementations": true
 		},
 		{
 			"src": [
@@ -178,7 +186,8 @@
 			"disableDefaultFilter": false,
 			"memberLayout": "separatePages",
 			"namespaceLayout": "flattened",
-			"enumSortOrder": "declaringOrder"
+			"enumSortOrder": "declaringOrder",
+			"includeExplicitInterfaceImplementations": true
 		},
 		{
 			"src": [
@@ -198,7 +207,8 @@
 			"disableDefaultFilter": false,
 			"memberLayout": "separatePages",
 			"namespaceLayout": "flattened",
-			"enumSortOrder": "declaringOrder"
+			"enumSortOrder": "declaringOrder",
+			"includeExplicitInterfaceImplementations": true
 		},
 		{
 			"src": [
@@ -218,7 +228,8 @@
 			"disableDefaultFilter": false,
 			"memberLayout": "separatePages",
 			"namespaceLayout": "flattened",
-			"enumSortOrder": "declaringOrder"
+			"enumSortOrder": "declaringOrder",
+			"includeExplicitInterfaceImplementations": true
 		},
 		{
 			"src": [
@@ -238,7 +249,8 @@
 			"disableDefaultFilter": false,
 			"memberLayout": "separatePages",
 			"namespaceLayout": "flattened",
-			"enumSortOrder": "declaringOrder"
+			"enumSortOrder": "declaringOrder",
+			"includeExplicitInterfaceImplementations": true
 		}
 	],
 	"build": {
@@ -306,6 +318,11 @@
 		"overwrite": [],
 		"dest": "_site",
 		"globalMetadata": {
+      		"pdf": true,
+			"pdfTocPage": true,
+			"pdfFileName": "dcs-docs.pdf",
+			"pdfCoverPage": "pdf/cover.html",
+			"pdfFooterTemplate": "pdf/footer.html",
 			"_appTitle": "DisCatSharp Docs",
 			"_appName": "DisCatSharp",
 			"_appFooter": "<strong>Made with ❤️ by AITSYS</strong>",
@@ -346,6 +363,30 @@
 				"changelogs/**/*.md": "article",
 				"natives/**/*.md": "article",
 				"vs/**/*.md": "article"
+			},
+			"pdf": {
+				"api/DisCatSharp/toc.yml": false
+			},
+			"pdfFileName": {
+				"articles/toc.yml": "dcs-docs-atricles.pdf",
+				"changelogs/toc.yml": "dcs-docs-changelogs.pdf",
+				"natives/toc.yml": "dcs-docs-natives.pdf",
+				"vs/toc.yml": "dcs-docs-visualstudio-tools.pdf",
+				"toc.yml": "dcs-docs-main.pdf",
+				"api/toc.yml": "dcs-docs-api.pdf",
+				"api/DisCatSharp/toc.yml": "dcs-docs-api-discatsharp.pdf",
+				"api/DisCatSharp.Interactivity/toc.yml": "dcs-docs-api-interactivity.pdf",
+				"api/DisCatSharp.Common/toc.yml": "dcs-docs-api-common.pdf",
+				"api/DisCatSharp.Hosting/toc.yml": "dcs-docs-api-hosting.pdf",
+				"api/DisCatSharp.Configuration/toc.yml": "dcs-docs-api-configuration.pdf",
+				"api/DisCatSharp.ApplicationCommands/toc.yml": "dcs-docs-api-applicationcommands.pdf",
+				"api/DisCatSharp.CommandsNext/toc.yml": "dcs-docs-api-commandnext.pdf",
+				"api/DisCatSharp.Hosting.DependencyInjection/toc.yml": "dcs-docs-api-hosting-dependencyinjection.pdf",
+				"api/DisCatSharp.VoiceNext/toc.yml": "dcs-docs-api-voicenext.pdf",
+				"api/DisCatSharp.Attributes/toc.yml": "dcs-docs-api-attributes.pdf",
+				"api/DisCatSharp.Experimental/toc.yml": "dcs-docs-api-experimental.pdf",
+				"api/DisCatSharp.Lavalink/toc.yml": "dcs-docs-api-lavalink.pdf"
+
 			}
 		},
 		"template": [
