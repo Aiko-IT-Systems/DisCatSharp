@@ -17,7 +17,7 @@ hasDiscordComponents: true
     <discord-message profile="dcs_user_dm">How about DisCatSharp?</discord-message>
     <discord-message profile="user_dm">What is that, do you have an invite?</discord-message>
     <discord-message profile="dcs_user_dm">
-        Sure!<br/><br/><a target="_blank" class="discord-link external" href="https://discord.gg/discatsharp">https://discord.gg/discatsharp</a>
+        Sure!<br/><br/><a target="_blank" class="discord-link external" href="https://discord.gg/Uk7sggRBTm">https://discord.gg/Uk7sggRBTm</a>
 		<discord-attachments slot="attachments"><discord-invite name="DisCatSharp" icon="https://i.imgur.com/sHdXUPx.png" url="https://discord.gg/TpEJZr42gY" online="69" members="420" verified="true"></discord-invite></discord-attachments>
     </discord-message>
 </discord-messages>
