@@ -7,17 +7,15 @@ body {
 }
 
 @media print {
-    @page {
-        margin: 0 !important;
-    }
     body {
-        -webkit-print-color-adjust: exact;
-        -moz-print-color-adjust: exact;
-        -ms-print-color-adjust: exact;
-        print-color-adjust: exact;
 		--bs-body-font-family: var(--bs-font-sans-gg) !important;
 		font-family: var(--bs-font-sans-gg) !important;
     }
+
+	.discord-messages {
+		display: none !important;
+		visibility: hidden !important;
+	}
 }
 
 
