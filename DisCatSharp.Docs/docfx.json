@@ -368,7 +368,7 @@
 				"api/DisCatSharp/toc.yml": false
 			},
 			"pdfFileName": {
-				"articles/toc.yml": "dcs-docs-atricles.pdf",
+				"articles/toc.yml": "dcs-docs-articles.pdf",
 				"changelogs/toc.yml": "dcs-docs-changelogs.pdf",
 				"natives/toc.yml": "dcs-docs-natives.pdf",
 				"vs/toc.yml": "dcs-docs-visualstudio-tools.pdf",
