@@ -33,6 +33,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 {
 #region Internal Fields/Properties
 
+	/// <summary>
+	/// Gets whether this client is running as a shard.
+	/// </summary>
 	internal bool IsShard = false;
 
 	/// <summary>
