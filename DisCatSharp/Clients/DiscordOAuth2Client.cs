@@ -83,11 +83,6 @@ public sealed class DiscordOAuth2Client : IDisposable
 	internal static TimeSpan EventExecutionLimit { get; } = TimeSpan.FromMinutes(1);
 
 	/// <summary>
-	/// Gets the discord client.
-	/// </summary>
-	internal DiscordClient? DiscordClient { get; }
-
-	/// <summary>
 	/// Gets the RSA instance.
 	/// </summary>
 	private RSA RSA { get; }
@@ -105,7 +100,6 @@ public sealed class DiscordOAuth2Client : IDisposable
 	/// <param name="loggerFactory">The optional logging factory to use for this client. Defaults to null.</param>
 	/// <param name="minimumLogLevel">The minimum logging level for messages. Defaults to information.</param>
 	/// <param name="logTimestampFormat">The timestamp format to use for the logger.</param>
-	/// <param name="discordClient">Gets the optional discord client to populate access tokens on <see cref="DiscordUser"/> entities.</param>
 	public DiscordOAuth2Client(
 		ulong clientId,
 		string clientSecret,
@@ -116,15 +110,11 @@ public sealed class DiscordOAuth2Client : IDisposable
 		bool useRelativeRateLimit = true,
 		ILoggerFactory loggerFactory = null!,
 		LogLevel minimumLogLevel = LogLevel.Information,
-		string logTimestampFormat = "yyyy-MM-dd HH:mm:ss zzz",
-		DiscordClient? discordClient = null
+		string logTimestampFormat = "yyyy-MM-dd HH:mm:ss zzz"
 	)
 	{
 		this.MinimumLogLevel = minimumLogLevel;
 		this.LogTimestampFormat = logTimestampFormat;
-
-		if (discordClient is not null)
-			this.DiscordClient = discordClient;
 
 		if (loggerFactory == null!)
 		{
