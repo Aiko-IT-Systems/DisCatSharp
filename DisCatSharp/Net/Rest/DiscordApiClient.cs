@@ -1693,7 +1693,7 @@ public sealed class DiscordApiClient
 			RequestToSpeakTimestamp = requestToSpeakTimestamp
 		};
 
-		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.VOICE_STATES}/@me";
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.VOICE_STATES}{Endpoints.ME}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
 		{
 			guild_id = guildId
@@ -3518,7 +3518,7 @@ public sealed class DiscordApiClient
 	/// Gets the current user async.
 	/// </summary>
 	internal Task<DiscordUser> GetCurrentUserAsync()
-		=> this.GetUserAsync("@me");
+		=> this.GetUserAsync(Endpoints.ME);
 
 	/// <summary>
 	/// Gets the user async.
@@ -6788,7 +6788,7 @@ public sealed class DiscordApiClient
 	/// Gets the current application info via oauth2.
 	/// </summary>
 	internal Task<TransportApplication> GetCurrentApplicationOauth2InfoAsync()
-		=> this.GetApplicationOauth2InfoAsync("@me");
+		=> this.GetApplicationOauth2InfoAsync(Endpoints.ME);
 
 	/// <summary>
 	/// Gets the application rpc info.
@@ -6982,7 +6982,7 @@ public sealed class DiscordApiClient
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
 
 		// ReSharper disable once HeuristicUnreachableCode
-		var route = $"{Endpoints.OAUTH2}/@me";
+		var route = $"{Endpoints.OAUTH2}{Endpoints.ME}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 			{ }, out var path);
 
@@ -7006,7 +7006,7 @@ public sealed class DiscordApiClient
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
 
 		// ReSharper disable once HeuristicUnreachableCode
-		var route = $"{Endpoints.USERS}/@me";
+		var route = $"{Endpoints.USERS}{Endpoints.ME}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route,
 			new
 			{
@@ -7033,7 +7033,7 @@ public sealed class DiscordApiClient
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
 
 		// ReSharper disable once HeuristicUnreachableCode
-		var route = $"{Endpoints.USERS}/@me{Endpoints.CONNECTIONS}";
+		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CONNECTIONS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 			{ }, out var path);
 
@@ -7056,7 +7056,7 @@ public sealed class DiscordApiClient
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
 
 		// ReSharper disable once HeuristicUnreachableCode
-		var route = $"{Endpoints.USERS}/@me{Endpoints.GUILDS}";
+		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.GUILDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 			{ }, out var path);
 
@@ -7080,7 +7080,7 @@ public sealed class DiscordApiClient
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
 
 		// ReSharper disable once HeuristicUnreachableCode
-		var route = $"{Endpoints.USERS}/@me{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBER}";
+		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBER}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
 			guild_id = guildId.ToString(CultureInfo.InvariantCulture)
@@ -7106,7 +7106,7 @@ public sealed class DiscordApiClient
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
 
 		// ReSharper disable once HeuristicUnreachableCode
-		var route = $"{Endpoints.USERS}/@me{Endpoints.APPLICATIONS}/:application_id/{Endpoints.ROLE_CONNECTIONS}";
+		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.APPLICATIONS}/:application_id/{Endpoints.ROLE_CONNECTIONS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route,
 			new
 			{
@@ -7142,7 +7142,7 @@ public sealed class DiscordApiClient
 		};
 
 		// ReSharper disable once HeuristicUnreachableCode
-		var route = $"{Endpoints.USERS}/@me{Endpoints.APPLICATIONS}/:application_id/{Endpoints.ROLE_CONNECTIONS}";
+		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.APPLICATIONS}/:application_id/{Endpoints.ROLE_CONNECTIONS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
 		{
 			application_id = this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture)
