@@ -36,7 +36,7 @@ public class AppCommandSplitPartialTests(ITestOutputHelper testOutputHelper)
 			return Task.CompletedTask;
 		};
 		extension.RegisterGlobalCommands<SplitTest.TestCommand>();
-		await this._client.GuildDownloadCompletedEv.InvokeAsync(this._client, new(this.Guilds, true, null!));
+		await this._client.ReadyEv.InvokeAsync(this._client, new(null!));
 		while (!regFired)
 			await Task.Delay(1);
 

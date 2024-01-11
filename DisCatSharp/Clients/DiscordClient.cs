@@ -168,7 +168,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._socketErrored = new("SOCKET_ERRORED", EventExecutionLimit, this.Goof);
 		this._socketOpened = new("SOCKET_OPENED", EventExecutionLimit, this.EventErrorHandler);
 		this._socketClosed = new("SOCKET_CLOSED", EventExecutionLimit, this.EventErrorHandler);
-		this._ready = new("READY", EventExecutionLimit, this.EventErrorHandler);
+		this.ReadyEv = new("READY", EventExecutionLimit, this.EventErrorHandler);
 		this._resumed = new("RESUMED", EventExecutionLimit, this.EventErrorHandler);
 		this._channelCreated = new("CHANNEL_CREATED", EventExecutionLimit, this.EventErrorHandler);
 		this._channelUpdated = new("CHANNEL_UPDATED", EventExecutionLimit, this.EventErrorHandler);

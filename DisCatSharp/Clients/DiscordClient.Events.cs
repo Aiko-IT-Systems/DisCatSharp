@@ -58,11 +58,11 @@ public sealed partial class DiscordClient
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ReadyEventArgs> Ready
 	{
-		add => this._ready.Register(value);
-		remove => this._ready.Unregister(value);
+		add => this.ReadyEv.Register(value);
+		remove => this.ReadyEv.Unregister(value);
 	}
 
-	private AsyncEvent<DiscordClient, ReadyEventArgs> _ready;
+	internal AsyncEvent<DiscordClient, ReadyEventArgs> ReadyEv;
 
 	/// <summary>
 	/// Fired whenever a session is resumed.
