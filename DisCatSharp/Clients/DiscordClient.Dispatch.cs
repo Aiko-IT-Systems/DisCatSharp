@@ -653,8 +653,6 @@ public sealed partial class DiscordClient
 	/// <param name="rawGuilds">The raw guilds.</param>
 	internal async Task OnReadyEventAsync(ReadyPayload ready, JArray rawGuilds)
 	{
-		//ready.CurrentUser.Discord = this;
-
 		var rusr = ready.CurrentUser;
 		this.CurrentUser.Username = rusr.Username;
 		this.CurrentUser.Discriminator = rusr.Discriminator;
@@ -664,14 +662,21 @@ public sealed partial class DiscordClient
 		this.CurrentUser.IsBot = rusr.IsBot;
 		this.CurrentUser.Flags = rusr.Flags;
 		this.CurrentUser.GlobalName = rusr.GlobalName;
+		this.CurrentUser.Discord = this;
 
 		this.GatewayVersion = ready.GatewayVersion;
 		this._sessionId = ready.SessionId;
 		this._resumeGatewayUrl = ready.ResumeGatewayUrl;
-		var rawGuildIndex = rawGuilds.Any() ? rawGuilds.ToDictionary(xt => (ulong)xt["id"], xt => (JObject)xt) : null;
+		var rawGuildIndex = rawGuilds.Any() ? rawGuilds.ToDictionary(xt => (ulong)xt["id"]!, xt => (JObject)xt) : null;
+
+		if (rawGuildIndex is not null && rawGuildIndex.Count is not 0)
+		{
+			this.ReadyGuildIds.Clear();
+			this.ReadyGuildIds.AddRange(rawGuildIndex.Select(x => x.Key));
+		}
 
 		this.GuildsInternal.Clear();
-		if (ready.Guilds.Count != 0 && rawGuildIndex is not null)
+		if (ready.Guilds.Count is not 0 && rawGuildIndex is not null)
 			foreach (var guild in ready.Guilds)
 			{
 				guild.Discord = this;
