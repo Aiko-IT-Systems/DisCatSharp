@@ -775,7 +775,7 @@ public sealed partial class DiscordClient
 			this.Logger.LogInformation(LoggerEvents.Startup, "Application has no guilds. Firing GuildDownloadCompleted event for internal tools");
 		}
 
-		await this._ready.InvokeAsync(this, new(this.ServiceProvider)).ConfigureAwait(false);
+		await this.ReadyEv.InvokeAsync(this, new(this.ServiceProvider)).ConfigureAwait(false);
 	}
 
 	/// <summary>
