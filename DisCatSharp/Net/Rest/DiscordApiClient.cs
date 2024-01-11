@@ -3539,7 +3539,7 @@ public sealed class DiscordApiClient
 			user_id = userId
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path.Replace("//", "/"), this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var duser = DiscordJson.DeserializeObject<DiscordUser>(res.Response, this.Discord);
@@ -6809,7 +6809,7 @@ public sealed class DiscordApiClient
 			application_id = applicationId
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var url = Utilities.GetApiUriFor(path.Replace("//", "/"), this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var app = DiscordJson.DeserializeObject<TransportApplication>(res.Response, this.Discord);

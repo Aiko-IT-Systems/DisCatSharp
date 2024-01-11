@@ -240,7 +240,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		ShardCount = client.ShardCount;
 		Logger = client.Logger;
 
-		this.Client.GuildDownloadCompleted += (c, e) =>
+		this.Client.Ready += (c, e) =>
 		{
 			if (!this.ShardStartupFinished)
 				_ = Task.Run(async () => await this.UpdateAsync().ConfigureAwait(false));
@@ -486,12 +486,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			GlobalDiscordCommands = [];
 			GuildDiscordCommands = [];
 
-			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Shard {shard} has {guilds} guilds", this.Client.ShardId, this.Client.Guilds?.Count);
+			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Shard {shard} has {guilds} guilds", this.Client.ShardId, this.Client.ReadyGuildIds.Count);
 			List<ulong> failedGuilds = [];
 			var globalCommands = IsCalledByUnitTest ? null : (await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false).ConfigureAwait(false))?.ToList() ?? null;
 
-			var guilds = CheckAllGuilds ? this.Client.Guilds?.Keys.ToList() : this._updateList.Where(x => x.Key != null)?.Select(x => x.Key.Value).Distinct().ToList();
-			var wrongShards = guilds is not null && this.Client.Guilds is not null ? guilds.Where(x => !this.Client.Guilds.ContainsKey(x)).ToList() : [];
+			var guilds = CheckAllGuilds ? this.Client.ReadyGuildIds : this._updateList.Where(x => x.Key is not null)?.Select(x => x.Key.Value).Distinct().ToList();
+			var wrongShards = guilds is not null && this.Client.ReadyGuildIds.Count is not 0 ? guilds.Where(x => !this.Client.ReadyGuildIds.Contains(x)).ToList() : [];
 			if (wrongShards.Count is not 0)
 			{
 				this.Client.Logger.Log(ApplicationCommandsLogLevel, "Some guilds are not on the same shard as the client. Removing them from the update list");

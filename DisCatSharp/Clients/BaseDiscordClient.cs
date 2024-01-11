@@ -85,6 +85,11 @@ public abstract class BaseDiscordClient : IDisposable
 	public abstract IReadOnlyDictionary<ulong, DiscordGuild> Guilds { get; }
 
 	/// <summary>
+	/// Gets the guilds ids for this shard.
+	/// </summary>
+	internal List<ulong> ReadyGuildIds { get; } = [];
+
+	/// <summary>
 	/// Gets the cached users for this client.
 	/// </summary>
 	public ConcurrentDictionary<ulong, DiscordUser> UserCache { get; internal set; }
