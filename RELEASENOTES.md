@@ -27,6 +27,9 @@ DisCatSharp.Attributes Release Notes
 
 DisCatSharp.ApplicationCommands Release Notes
 
+	Important fix:
+ 	- Changed the timing when and how commands are registered to fix some issues
+
     Breaking changes:
     - Dropped support for .NET 6
     - Removed previously deprecated fields and methods
