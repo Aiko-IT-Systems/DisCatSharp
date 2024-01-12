@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -371,8 +372,19 @@ public sealed partial class DiscordShardedClient
 	/// </summary>
 	private async Task<GatewayInfo> GetGatewayInfoAsync()
 	{
+		var httphandler = new HttpClientHandler
+		{
+			UseCookies = false,
+			AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip,
+			UseProxy = this._configuration.Proxy != null,
+			Proxy = this._configuration.Proxy
+		};
 		var url = $"{Utilities.GetApiBaseUri(this._configuration)}{Endpoints.GATEWAY}{Endpoints.BOT}";
-		var http = new HttpClient();
+		var http = new HttpClient(httphandler)
+		{
+			BaseAddress = new(Utilities.GetApiBaseUri(this._configuration)),
+			Timeout = this._configuration.HttpTimeout
+		};
 
 		http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
 		http.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Utilities.GetFormattedToken(this._configuration));
