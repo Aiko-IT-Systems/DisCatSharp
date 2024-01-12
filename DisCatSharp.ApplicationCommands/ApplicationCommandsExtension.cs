@@ -323,17 +323,17 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// Cleans all guild application commands.
 	/// <note type="caution">You normally don't need to execute it.</note>
 	/// </summary>
-	internal async Task CleanGuildCommandsAsync()
+	public async Task CleanGuildCommandsAsync()
 	{
 		foreach (var guild in this.Client.Guilds.Values)
 			await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guild.Id, Array.Empty<DiscordApplicationCommand>()).ConfigureAwait(false);
 	}
 
 	/// <summary>
-	/// Cleans the global application commands.
+	/// Cleans all global application commands.
 	/// <note type="caution">You normally don't need to execute it.</note>
 	/// </summary>
-	internal async Task CleanGlobalCommandsAsync()
+	public async Task CleanGlobalCommandsAsync()
 		=> await this.Client.BulkOverwriteGlobalApplicationCommandsAsync(Array.Empty<DiscordApplicationCommand>()).ConfigureAwait(false);
 
 	/// <summary>
