@@ -1,11 +1,12 @@
 using DisCatSharp.Entities;
+using DisCatSharp.Enums.Core;
 
 namespace DisCatSharp.ApplicationCommands.Context;
 
 /// <summary>
 /// Represents a context for a context menu.
 /// </summary>
-public sealed class ContextMenuContext : BaseContext
+public sealed class ContextMenuContext(DisCatSharpCommandType type) : BaseContext(type)
 {
 	/// <summary>
 	/// The user this command targets, if applicable.
@@ -15,7 +16,7 @@ public sealed class ContextMenuContext : BaseContext
 	/// <summary>
 	/// The member this command targets, if applicable.
 	/// </summary>
-	public DiscordMember TargetMember
+	public DiscordMember? TargetMember
 		=> this.TargetUser is DiscordMember member ? member : null;
 
 	/// <summary>

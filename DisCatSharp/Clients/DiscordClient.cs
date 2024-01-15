@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
+using DisCatSharp.Entities.Core;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
@@ -134,6 +135,11 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 	internal Dictionary<string, DiscordActivity> EmbeddedActivitiesInternal = [];
 	private Lazy<IReadOnlyDictionary<string, DiscordActivity>> _embeddedActivitiesLazy;
+
+	/// <summary>
+	/// Gets the cooldown buckets for commands.
+	/// </summary>
+	public ConcurrentDictionary<string, CooldownBucket> CommandCooldownBuckets { get; } = [];
 
 #endregion
 
@@ -1696,6 +1702,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this.DisconnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 		this.ApiClient.Rest.Dispose();
 		this.CurrentUser = null;
+
+		this.CommandCooldownBuckets.Clear();
 
 		var extensions = this._extensions; // prevent _extensions being modified during dispose
 		this._extensions.Clear();

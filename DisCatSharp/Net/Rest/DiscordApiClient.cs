@@ -5946,21 +5946,20 @@ public sealed class DiscordApiClient
 	{
 		var pld = new List<RestApplicationCommandCreatePayload>();
 		if (commands.Any())
-			foreach (var command in commands)
-				pld.Add(new()
-				{
-					Type = command.Type,
-					Name = command.Name,
-					Description = command.Type == ApplicationCommandType.ChatInput ? command.Description : null,
-					Options = command.Options,
-					NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
-					DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
-					DefaultMemberPermission = command.DefaultMemberPermissions,
-					DmPermission = command.DmPermission,
-					Nsfw = command.IsNsfw,
-					AllowedContexts = command.AllowedContexts,
-					IntegrationTypes = command.IntegrationTypes
-				});
+			pld.AddRange(commands.Select(command => new RestApplicationCommandCreatePayload()
+			{
+				Type = command.Type,
+				Name = command.Name,
+				Description = command.Type is ApplicationCommandType.ChatInput ? command.Description : null,
+				Options = command.Options,
+				NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
+				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
+				DefaultMemberPermission = command.DefaultMemberPermissions,
+				DmPermission = command.DmPermission,
+				Nsfw = command.IsNsfw,
+				AllowedContexts = command.AllowedContexts,
+				IntegrationTypes = command.IntegrationTypes
+			}));
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
@@ -5986,10 +5985,10 @@ public sealed class DiscordApiClient
 		{
 			Type = command.Type,
 			Name = command.Name,
-			Description = command.Type == ApplicationCommandType.ChatInput ? command.Description : null,
+			Description = command.Type is ApplicationCommandType.ChatInput ? command.Description : null,
 			Options = command.Options,
-			NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
-			DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
+			NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
+			DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 			DefaultMemberPermission = command.DefaultMemberPermissions,
 			DmPermission = command.DmPermission,
 			Nsfw = command.IsNsfw,
@@ -6054,10 +6053,10 @@ public sealed class DiscordApiClient
 		ulong applicationId,
 		ulong commandId,
 		Optional<string> name,
-		Optional<string> description,
+		Optional<string?> description,
 		Optional<List<DiscordApplicationCommandOption>?> options,
-		Optional<DiscordApplicationCommandLocalization> nameLocalization,
-		Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
+		Optional<DiscordApplicationCommandLocalization?> nameLocalization,
+		Optional<DiscordApplicationCommandLocalization?> descriptionLocalization,
 		Optional<Permissions?> defaultMemberPermission,
 		Optional<bool> dmPermission,
 		Optional<bool> isNsfw,
@@ -6149,20 +6148,19 @@ public sealed class DiscordApiClient
 	{
 		var pld = new List<RestApplicationCommandCreatePayload>();
 		if (commands.Any())
-			foreach (var command in commands)
-				pld.Add(new()
-				{
-					Type = command.Type,
-					Name = command.Name,
-					Description = command.Type == ApplicationCommandType.ChatInput ? command.Description : null,
-					Options = command.Options,
-					NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
-					DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
-					DefaultMemberPermission = command.DefaultMemberPermissions,
-					DmPermission = command.DmPermission,
-					Nsfw = command.IsNsfw,
-					AllowedContexts = command.AllowedContexts
-				});
+			pld.AddRange(commands.Select(command => new RestApplicationCommandCreatePayload()
+			{
+				Type = command.Type,
+				Name = command.Name,
+				Description = command.Type is ApplicationCommandType.ChatInput ? command.Description : null,
+				Options = command.Options,
+				NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
+				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
+				DefaultMemberPermission = command.DefaultMemberPermissions,
+				DmPermission = command.DmPermission,
+				Nsfw = command.IsNsfw,
+				AllowedContexts = command.AllowedContexts
+			}));
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
@@ -6192,8 +6190,8 @@ public sealed class DiscordApiClient
 			Name = command.Name,
 			Description = command.Type == ApplicationCommandType.ChatInput ? command.Description : null,
 			Options = command.Options,
-			NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
-			DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
+			NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
+			DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 			DefaultMemberPermission = command.DefaultMemberPermissions,
 			DmPermission = command.DmPermission,
 			Nsfw = command.IsNsfw,
@@ -6262,10 +6260,10 @@ public sealed class DiscordApiClient
 		ulong guildId,
 		ulong commandId,
 		Optional<string> name,
-		Optional<string> description,
+		Optional<string?> description,
 		Optional<List<DiscordApplicationCommandOption>?> options,
-		Optional<DiscordApplicationCommandLocalization> nameLocalization,
-		Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
+		Optional<DiscordApplicationCommandLocalization?> nameLocalization,
+		Optional<DiscordApplicationCommandLocalization?> descriptionLocalization,
 		Optional<Permissions?> defaultMemberPermission,
 		Optional<bool> dmPermission,
 		Optional<bool> isNsfw,

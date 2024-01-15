@@ -36,14 +36,14 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// Sets the name localizations.
 	/// </summary>
 	[JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
-	internal Dictionary<string, string> RawNameLocalizations { get; set; }
+	internal Dictionary<string, string>? RawNameLocalizations { get; set; }
 
 	/// <summary>
 	/// Gets the name localizations.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordApplicationCommandLocalization NameLocalizations
-		=> new(this.RawNameLocalizations);
+	public DiscordApplicationCommandLocalization? NameLocalizations
+		=> this.RawNameLocalizations != null ? new(this.RawNameLocalizations) : null;
 
 	/// <summary>
 	/// Gets the description of this command.
@@ -55,14 +55,14 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// Sets the description localizations.
 	/// </summary>
 	[JsonProperty("description_localizations", NullValueHandling = NullValueHandling.Ignore)]
-	internal Dictionary<string, string> RawDescriptionLocalizations { get; set; }
+	internal Dictionary<string, string>? RawDescriptionLocalizations { get; set; }
 
 	/// <summary>
 	/// Gets the description localizations.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordApplicationCommandLocalization DescriptionLocalizations
-		=> new(this.RawDescriptionLocalizations);
+	public DiscordApplicationCommandLocalization? DescriptionLocalizations
+		=> this.RawDescriptionLocalizations != null ? new(this.RawDescriptionLocalizations) : null;
 
 	/// <summary>
 	/// Gets the potential parameters for this command.
@@ -145,7 +145,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 		{
 			if (!Utilities.IsValidSlashCommandName(name))
 				throw new ArgumentException("Invalid slash command name specified. It must be below 32 characters and not contain any whitespace.", nameof(name));
-			if (name.Any(ch => char.IsUpper(ch)))
+			if (name.Any(char.IsUpper))
 				throw new ArgumentException("Slash command name cannot have any upper case characters.", nameof(name));
 			if (description.Length > 100)
 				throw new ArgumentException("Slash command description cannot exceed 100 characters.", nameof(description));

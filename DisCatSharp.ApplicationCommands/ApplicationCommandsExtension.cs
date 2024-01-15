@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,11 +14,11 @@ using DisCatSharp.ApplicationCommands.Enums;
 using DisCatSharp.ApplicationCommands.EventArgs;
 using DisCatSharp.ApplicationCommands.Exceptions;
 using DisCatSharp.ApplicationCommands.Workers;
-using DisCatSharp.Attributes;
 using DisCatSharp.Common;
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
+using DisCatSharp.Enums.Core;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Exceptions;
 
@@ -1081,7 +1082,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						GuildLocale = e.Interaction.GuildLocale,
 						AppPermissions = e.Interaction.AppPermissions,
 						Entitlements = e.Interaction.Entitlements,
-						EntitlementSkuIds = e.Interaction.EntitlementSkuIds
+						EntitlementSkuIds = e.Interaction.EntitlementSkuIds,
+						UserId = e.Interaction.User.Id,
+						GuildId = e.Interaction.GuildId,
+						MemberId = e.Interaction.GuildId is not null ? e.Interaction.User.Id : null,
+						ChannelId = e.Interaction.ChannelId
 					};
 
 					try
@@ -1108,6 +1113,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								var method = methods.First().Method;
 								context.SubCommandName = null;
 								context.SubSubCommandName = null;
+								context.CommandGroupingType = DisCatSharpCommandGroupingType.Command;
 								if (DebugEnabled)
 									this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
 								var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options).ConfigureAwait(false);
@@ -1121,6 +1127,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								var method = groups.First().Methods.First(x => x.Key == command.Name).Value;
 								context.SubCommandName = command.Name;
 								context.SubSubCommandName = null;
+								context.CommandGroupingType = DisCatSharpCommandGroupingType.SubCommand;
 								if (DebugEnabled)
 									this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
 								var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options[0].Options).ConfigureAwait(false);
@@ -1136,6 +1143,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								var method = group.Methods.First(x => x.Key == command.Options[0].Name).Value;
 								context.SubCommandName = command.Name;
 								context.SubSubCommandName = command.Options[0].Name;
+								context.CommandGroupingType = DisCatSharpCommandGroupingType.SubGroupCommand;
 
 								if (DebugEnabled)
 									this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
@@ -1340,7 +1348,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		_ = Task.Run(async () =>
 		{
 			//Creates the context
-			var context = new ContextMenuContext
+			var context = new ContextMenuContext(e.Type switch
+			{
+				ApplicationCommandType.User => DisCatSharpCommandType.UserCommand,
+				ApplicationCommandType.Message => DisCatSharpCommandType.MessageCommand,
+				_ => throw new ArgumentOutOfRangeException(nameof(e.Type), "Unknown context menu type")
+			})
 			{
 				Interaction = e.Interaction,
 				Channel = e.Interaction.Channel,
@@ -1359,7 +1372,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				GuildLocale = e.Interaction.GuildLocale,
 				AppPermissions = e.Interaction.AppPermissions,
 				Entitlements = e.Interaction.Entitlements,
-				EntitlementSkuIds = e.Interaction.EntitlementSkuIds
+				EntitlementSkuIds = e.Interaction.EntitlementSkuIds,
+				CommandGroupingType = DisCatSharpCommandGroupingType.Command,
+				UserId = e.Interaction.User.Id,
+				GuildId = e.Interaction.GuildId,
+				MemberId = e.Interaction.GuildId is not null ? e.Interaction.User.Id : null,
+				ChannelId = e.Interaction.ChannelId
 			};
 
 			try

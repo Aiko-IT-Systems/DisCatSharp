@@ -1,10 +1,12 @@
 using System;
-using System.Collections.Concurrent;
+using System.Globalization;
 using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands.Context;
-using DisCatSharp.ApplicationCommands.Entities;
-using DisCatSharp.ApplicationCommands.Enums;
+using DisCatSharp.Entities;
+using DisCatSharp.Entities.Core;
+using DisCatSharp.Enums;
+using DisCatSharp.Enums.Core;
 
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
@@ -12,7 +14,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes;
 /// Defines a cooldown for this command. This allows you to define how many times can users execute a specific command
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-public sealed class ContextMenuCooldownAttribute : ApplicationCommandCheckBaseAttribute, ICooldown<BaseContext, ContextMenuCooldownBucket>
+public sealed class ContextMenuCooldownAttribute : ApplicationCommandCheckBaseAttribute, ICooldown<BaseContext, CooldownBucket>
 {
 	/// <summary>
 	/// Gets the maximum number of uses before this command triggers a cooldown for its bucket.
@@ -30,22 +32,16 @@ public sealed class ContextMenuCooldownAttribute : ApplicationCommandCheckBaseAt
 	public CooldownBucketType BucketType { get; }
 
 	/// <summary>
-	/// Gets the cooldown buckets for this command.
-	/// </summary>
-	internal readonly ConcurrentDictionary<string, ContextMenuCooldownBucket> Buckets;
-
-	/// <summary>
 	/// Defines a cooldown for this command. This means that users will be able to use the command a specific number of times before they have to wait to use it again.
 	/// </summary>
 	/// <param name="maxUses">Number of times the command can be used before triggering a cooldown.</param>
 	/// <param name="resetAfter">Number of seconds after which the cooldown is reset.</param>
-	/// <param name="bucketType">Type of cooldown bucket. This allows controlling whether the bucket will be cooled down per user, guild, channel, or globally.</param>
+	/// <param name="bucketType">Type of cooldown bucket. This allows controlling whether the bucket will be cooled down per user, guild, member, channel, and/or globally.</param>
 	public ContextMenuCooldownAttribute(int maxUses, double resetAfter, CooldownBucketType bucketType)
 	{
 		this.MaxUses = maxUses;
 		this.Reset = TimeSpan.FromSeconds(resetAfter);
 		this.BucketType = bucketType;
-		this.Buckets = new();
 	}
 
 	/// <summary>
@@ -53,11 +49,11 @@ public sealed class ContextMenuCooldownAttribute : ApplicationCommandCheckBaseAt
 	/// </summary>
 	/// <param name="ctx">Command context to get cooldown bucket for.</param>
 	/// <returns>Requested cooldown bucket, or null if one wasn't present.</returns>
-	public ContextMenuCooldownBucket GetBucket(BaseContext ctx)
+	public CooldownBucket GetBucket(BaseContext ctx)
 	{
-		var bid = this.GetBucketId(ctx, out _, out _, out _);
-		this.Buckets.TryGetValue(bid, out var bucket);
-		return bucket;
+		var bid = this.GetBucketId(ctx, out _, out _, out _, out _);
+		ctx.Client.CommandCooldownBuckets.TryGetValue(bid, out var bucket);
+		return bucket!;
 	}
 
 	/// <summary>
@@ -68,7 +64,7 @@ public sealed class ContextMenuCooldownAttribute : ApplicationCommandCheckBaseAt
 	public TimeSpan GetRemainingCooldown(BaseContext ctx)
 	{
 		var bucket = this.GetBucket(ctx);
-		return bucket == null
+		return bucket == null!
 			? TimeSpan.Zero
 			: bucket.RemainingUses > 0
 				? TimeSpan.Zero
@@ -82,8 +78,9 @@ public sealed class ContextMenuCooldownAttribute : ApplicationCommandCheckBaseAt
 	/// <param name="userId">ID of the user with which this bucket is associated.</param>
 	/// <param name="channelId">ID of the channel with which this bucket is associated.</param>
 	/// <param name="guildId">ID of the guild with which this bucket is associated.</param>
+	/// <param name="memberId">ID of the member with which this bucket is associated.</param>
 	/// <returns>Calculated bucket ID.</returns>
-	private string GetBucketId(BaseContext ctx, out ulong userId, out ulong channelId, out ulong guildId)
+	private string GetBucketId(BaseContext ctx, out ulong userId, out ulong channelId, out ulong guildId, out ulong memberId)
 	{
 		userId = 0ul;
 		if ((this.BucketType & CooldownBucketType.User) != 0)
@@ -92,14 +89,16 @@ public sealed class ContextMenuCooldownAttribute : ApplicationCommandCheckBaseAt
 		channelId = 0ul;
 		if ((this.BucketType & CooldownBucketType.Channel) != 0)
 			channelId = ctx.Channel.Id;
-		if ((this.BucketType & CooldownBucketType.Guild) != 0 && ctx.Guild == null)
-			channelId = ctx.Channel.Id;
 
 		guildId = 0ul;
-		if (ctx.Guild != null && (this.BucketType & CooldownBucketType.Guild) != 0)
+		if (ctx.Guild is not null && (this.BucketType & CooldownBucketType.Guild) != 0)
 			guildId = ctx.Guild.Id;
 
-		var bid = CooldownBucket.MakeId(userId, channelId, guildId);
+		memberId = 0ul;
+		if (ctx.Guild is not null && ctx.Member is not null && (this.BucketType & CooldownBucketType.Member) != 0)
+			memberId = ctx.Member.Id;
+
+		var bid = CooldownBucket.MakeId(ctx.FullCommandName, ctx.Interaction.Data.Id.ToString(CultureInfo.InvariantCulture), userId, channelId, guildId, memberId);
 		return bid;
 	}
 
@@ -109,29 +108,27 @@ public sealed class ContextMenuCooldownAttribute : ApplicationCommandCheckBaseAt
 	/// <param name="ctx">The command context.</param>
 	public override async Task<bool> ExecuteChecksAsync(BaseContext ctx)
 	{
-		var bid = this.GetBucketId(ctx, out var usr, out var chn, out var gld);
-		if (!this.Buckets.TryGetValue(bid, out var bucket))
-		{
-			bucket = new(this.MaxUses, this.Reset, usr, chn, gld);
-			this.Buckets.AddOrUpdate(bid, bucket, (k, v) => bucket);
-		}
+		var bid = this.GetBucketId(ctx, out var usr, out var chn, out var gld, out var mem);
+		if (ctx.Client.CommandCooldownBuckets.TryGetValue(bid, out var bucket))
+			return await this.RespondRatelimitHitAsync(ctx, await bucket.DecrementUseAsync(ctx), bucket);
 
-		return await bucket.DecrementUseAsync().ConfigureAwait(false);
+		bucket = new(this.MaxUses, this.Reset, ctx.FullCommandName, ctx.Interaction.Data.Id.ToString(CultureInfo.InvariantCulture), usr, chn, gld, mem);
+		ctx.Client.CommandCooldownBuckets.AddOrUpdate(bid, bucket, (k, v) => bucket);
+
+		return await this.RespondRatelimitHitAsync(ctx, await bucket.DecrementUseAsync(ctx), bucket);
 	}
-}
 
-/// <summary>
-/// Represents a cooldown bucket for commands.
-/// </summary>
-public sealed class ContextMenuCooldownBucket : CooldownBucket
-{
-	internal ContextMenuCooldownBucket(int maxUses, TimeSpan resetAfter, ulong userId = 0, ulong channelId = 0, ulong guildId = 0)
-		: base(maxUses, resetAfter, userId, channelId, guildId)
-	{ }
+	/// <inheritdoc/>
+	public async Task<bool> RespondRatelimitHitAsync(BaseContext ctx, bool noHit, CooldownBucket bucket)
+	{
+		if (noHit)
+			return true;
 
-	/// <summary>
-	/// Returns a string representation of this command cooldown bucket.
-	/// </summary>
-	/// <returns>String representation of this command cooldown bucket.</returns>
-	public override string ToString() => $"Context Menu Command bucket {this.BucketId}";
+		if (ApplicationCommandsExtension.Configuration.AutoDefer)
+			await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent($"Error: Ratelimit hit\nTry again {bucket.ResetsAt.Timestamp()}"));
+		else
+			await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent($"Error: Ratelimit hit\nTry again {bucket.ResetsAt.Timestamp()}").AsEphemeral());
+
+		return false;
+	}
 }
