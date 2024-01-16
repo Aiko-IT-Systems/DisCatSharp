@@ -21,9 +21,20 @@ internal sealed class ChoiceTranslator
 	/// Gets the choice name translations.
 	/// </summary>
 	[JsonProperty("name_translations")]
-	internal Dictionary<string, string> NameTranslationsDictionary { get; set; }
+	internal Dictionary<string, string>? NameTranslationsDictionary { get; set; }
 
 	[JsonIgnore]
-	public DiscordApplicationCommandLocalization NameTranslations
-		=> new(this.NameTranslationsDictionary);
+	public DiscordApplicationCommandLocalization? NameTranslations
+		=> this.NameTranslationsDictionary is not null ? new(this.NameTranslationsDictionary) : null;
+
+	internal static ChoiceTranslator FromApplicationCommandChoice(DiscordApplicationCommandOptionChoice option)
+	{
+		var translator = new ChoiceTranslator
+		{
+			Name = option.Name,
+			NameTranslationsDictionary = option.RawNameLocalizations
+		};
+
+		return translator;
+	}
 }

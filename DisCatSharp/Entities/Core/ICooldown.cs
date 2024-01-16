@@ -47,6 +47,7 @@ public interface ICooldown<in TContextType, out TBucketType>
 	/// Responds to a ratelimit hit.
 	/// </summary>
 	/// <param name="ctx">The command context.</param>
-	/// <param name="noHit">Whether the ratelimit wasn't it.</param>
+	/// <param name="noHit">Whether the ratelimit wasn't hit.</param>
+	/// <param name="bucket">The cooldown bucket.</param>
 	Task<bool> RespondRatelimitHitAsync(TContextType ctx, bool noHit, CooldownBucket bucket);
 }

@@ -4672,7 +4672,7 @@ public sealed class DiscordApiClient
 		};
 
 		if (builder.Mentions != null)
-			pld.Mentions = new(builder.Mentions, builder.Mentions.Any());
+			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0);
 
 		if (builder.Files?.Count > 0)
 		{
@@ -6594,7 +6594,7 @@ public sealed class DiscordApiClient
 		}
 
 		if (builder.Mentions != null)
-			pld.Mentions = new(builder.Mentions, builder.Mentions.Any());
+			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0);
 
 		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts == true || builder.Mentions != null || builder.Files?.Count > 0 || builder.Components?.Count > 0)
 			values["payload_json"] = DiscordJson.SerializeObject(pld);
