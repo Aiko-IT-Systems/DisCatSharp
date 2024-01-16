@@ -803,7 +803,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		{
 			updateList = updateList.DistinctBy(x => x.Name).ToList();
 			if (Configuration.GenerateTranslationFilesOnly)
-				await this.CheckRegistrationStartup(translation, groupTranslation);
+				await this.CheckRegistrationStartup(translation, groupTranslation, guildId);
 			else
 				try
 				{
@@ -964,7 +964,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	/// <param name="translation">The optional translations.</param>
 	/// <param name="groupTranslation">The optional group translations.</param>
-	private async Task CheckRegistrationStartup(List<CommandTranslator>? translation = null, List<GroupTranslator>? groupTranslation = null)
+	/// <param name="guildId">The optional guild id.</param>
+	private async Task CheckRegistrationStartup(List<CommandTranslator>? translation = null, List<GroupTranslator>? groupTranslation = null, ulong? guildId = null)
 	{
 		if (Configuration.GenerateTranslationFilesOnly)
 		{
@@ -972,7 +973,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			{
 				if (translation is not null && translation.Count is not 0)
 				{
-					var fileName = $"translation_generator_export-shard{this.Client.ShardId}-SINGLE.json";
+					var fileName = $"translation_generator_export-shard{this.Client.ShardId}-SINGLE-{(guildId.HasValue ? guildId.Value : "global")}.json";
 					var fs = File.Create(fileName);
 					var ms = new MemoryStream();
 					var writer = new StreamWriter(ms);
@@ -990,7 +991,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 				if (groupTranslation is not null && groupTranslation.Count is not 0)
 				{
-					var fileName = $"translation_generator_export-shard{this.Client.ShardId}-GROUP.json";
+					var fileName = $"translation_generator_export-shard{this.Client.ShardId}-GROUP-{(guildId.HasValue ? guildId.Value : "global")}.json";
 					var fs = File.Create(fileName);
 					var ms = new MemoryStream();
 					var writer = new StreamWriter(ms);
@@ -1029,6 +1030,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					GuildsWithoutScope = s_missingScopeGuildIdsGlobal
 				}).ConfigureAwait(false);
 				FinishFired = true;
+				if (Configuration.GenerateTranslationFilesOnly)
+					Environment.Exit(0);
 			}
 
 		args.Handled = false;
