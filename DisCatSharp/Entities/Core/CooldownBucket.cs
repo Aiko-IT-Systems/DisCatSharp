@@ -10,6 +10,7 @@ namespace DisCatSharp.Entities.Core;
 /// <summary>
 /// Represents a cooldown bucket.
 /// </summary>
+// ReSharper disable once ClassCanBeSealed.Global "This class can be inherited from by developers."
 public class CooldownBucket : IBucket, IEquatable<CooldownBucket>
 {
 	/// <summary>
