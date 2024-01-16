@@ -12,10 +12,14 @@ internal sealed class CommandGroupWithSubGroups : BaseCommand
 	[JsonProperty("groups")]
 	internal List<CommandGroup> SubGroups { get; set; }
 
-	internal CommandGroupWithSubGroups(string name, string description, List<CommandGroup> commands, ApplicationCommandType type)
+	[JsonProperty("commands")]
+	internal List<Command> Commands { get; set; }
+
+	internal CommandGroupWithSubGroups(string name, string description, List<CommandGroup> subGroups, List<Command> commands, ApplicationCommandType type)
 		: base(name, description, type)
 	{
-		this.SubGroups = commands;
+		this.SubGroups = subGroups;
+		this.Commands = commands;
 	}
 }
 

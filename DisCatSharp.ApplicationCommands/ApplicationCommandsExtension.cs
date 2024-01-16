@@ -662,12 +662,13 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						if (Configuration.GenerateTranslationFilesOnly)
 						{
 							var cgwsgs = new List<CommandGroupWithSubGroups>();
-							var cgs2 = new List<CommandGroup>();
 							foreach (var cmd in slashGroupsTuple.applicationCommands)
 								if (cmd.Type is ApplicationCommandType.ChatInput)
 								{
 									var cgs = new List<CommandGroup>();
+									var cs2 = new List<Command>();
 									if (cmd.Options is not null)
+									{
 										foreach (var scg in cmd.Options.Where(x => x.Type is ApplicationCommandOptionType.SubCommandGroup))
 										{
 											var cs = new List<Command>();
@@ -680,21 +681,18 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 											cgs.Add(new(scg.Name, scg.Description, cs, null));
 										}
 
-									cgwsgs.Add(new(cmd.Name, cmd.Description, cgs, cmd.Type));
+										foreach (var sc2 in cmd.Options.Where(x => x.Type is ApplicationCommandOptionType.SubCommand))
+											if (sc2.Options == null || sc2.Options.Count == 0)
+												cs2.Add(new(sc2.Name, sc2.Description, null, null));
+											else
+												cs2.Add(new(sc2.Name, sc2.Description, [.. sc2.Options], null));
+									}
 
-									var cs2 = new List<Command>();
-									foreach (var sc2 in cmd.Options.Where(x => x.Type is ApplicationCommandOptionType.SubCommand))
-										if (sc2.Options == null || sc2.Options.Count == 0)
-											cs2.Add(new(sc2.Name, sc2.Description, null, null));
-										else
-											cs2.Add(new(sc2.Name, sc2.Description, [.. sc2.Options], null));
-									cgs2.Add(new(cmd.Name, cmd.Description, cs2, cmd.Type));
+									cgwsgs.Add(new(cmd.Name, cmd.Description, cgs, cs2, cmd.Type));
 								}
 
 							if (cgwsgs.Count is not 0)
 								groupTranslation.AddRange(cgwsgs.Select(cgwsg => JsonConvert.DeserializeObject<GroupTranslator>(JsonConvert.SerializeObject(cgwsg))!));
-							if (cgs2.Count is not 0)
-								groupTranslation.AddRange(cgs2.Select(cg2 => JsonConvert.DeserializeObject<GroupTranslator>(JsonConvert.SerializeObject(cg2))!));
 						}
 					}
 
