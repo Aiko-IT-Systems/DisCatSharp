@@ -48,8 +48,8 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// <summary>
 	/// Gets the description of this command.
 	/// </summary>
-	[JsonProperty("description")]
-	public string Description { get; internal set; }
+	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
+	public string? Description { get; internal set; }
 
 	/// <summary>
 	/// Sets the description localizations.
@@ -110,7 +110,8 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// Gets the mention for this command.
 	/// </summary>
 	[JsonIgnore]
-	public string Mention => this.Type == ApplicationCommandType.ChatInput ? $"</{this.Name}:{this.Id}>" : this.Name;
+	public string Mention
+		=> this.Type == ApplicationCommandType.ChatInput ? $"</{this.Name}:{this.Id}>" : this.Name;
 
 	/// <summary>
 	/// Creates a new instance of a <see cref="DiscordApplicationCommand"/>.
@@ -128,7 +129,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// <param name="integrationTypes">The allowed integration types.</param>
 	public DiscordApplicationCommand(
 		string name,
-		string description,
+		string? description,
 		IEnumerable<DiscordApplicationCommandOption>? options = null,
 		ApplicationCommandType type = ApplicationCommandType.ChatInput,
 		DiscordApplicationCommandLocalization? nameLocalizations = null,
@@ -147,7 +148,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 				throw new ArgumentException("Invalid slash command name specified. It must be below 32 characters and not contain any whitespace.", nameof(name));
 			if (name.Any(char.IsUpper))
 				throw new ArgumentException("Slash command name cannot have any upper case characters.", nameof(name));
-			if (description.Length > 100)
+			if (description?.Length > 100)
 				throw new ArgumentException("Slash command description cannot exceed 100 characters.", nameof(description));
 			if (string.IsNullOrWhiteSpace(description))
 				throw new ArgumentException("Slash commands need a description.", nameof(description));

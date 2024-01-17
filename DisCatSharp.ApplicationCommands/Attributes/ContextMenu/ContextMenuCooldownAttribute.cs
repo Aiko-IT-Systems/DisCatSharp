@@ -1,12 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands.Context;
+using DisCatSharp.ApplicationCommands.Entities;
 using DisCatSharp.Entities;
 using DisCatSharp.Entities.Core;
 using DisCatSharp.Enums;
 using DisCatSharp.Enums.Core;
+
+using Sentry;
 
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
@@ -19,8 +23,9 @@ namespace DisCatSharp.ApplicationCommands.Attributes;
 /// <param name="maxUses">Number of times the command can be used before triggering a cooldown.</param>
 /// <param name="resetAfter">Number of seconds after which the cooldown is reset.</param>
 /// <param name="bucketType">Type of cooldown bucket. This allows controlling whether the bucket will be cooled down per user, guild, member, channel, and/or globally.</param>
+/// <param name="cooldownResponderType">The responder type used to respond to cooldown ratelimit hits.</param>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-public sealed class ContextMenuCooldownAttribute(int maxUses, double resetAfter, CooldownBucketType bucketType) : ApplicationCommandCheckBaseAttribute, ICooldown<BaseContext, CooldownBucket>
+public sealed class ContextMenuCooldownAttribute(int maxUses, double resetAfter, CooldownBucketType bucketType, Type? cooldownResponderType = null) : ApplicationCommandCheckBaseAttribute, ICooldown<BaseContext, CooldownBucket>
 {
 	/// <summary>
 	/// Gets the maximum number of uses before this command triggers a cooldown for its bucket.
@@ -36,6 +41,11 @@ public sealed class ContextMenuCooldownAttribute(int maxUses, double resetAfter,
 	/// Gets the type of the cooldown bucket. This determines how cooldowns are applied.
 	/// </summary>
 	public CooldownBucketType BucketType { get; } = bucketType;
+
+	/// <summary>
+	/// Gets the responder type.
+	/// </summary>
+	public Type? ResponderType { get; } = cooldownResponderType;
 
 	/// <summary>
 	/// Gets a cooldown bucket for given command context.
@@ -117,10 +127,19 @@ public sealed class ContextMenuCooldownAttribute(int maxUses, double resetAfter,
 		if (noHit)
 			return true;
 
-		if (ApplicationCommandsExtension.Configuration.AutoDefer)
-			await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent($"Error: Ratelimit hit\nTry again {bucket.ResetsAt.Timestamp()}"));
-		else
-			await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent($"Error: Ratelimit hit\nTry again {bucket.ResetsAt.Timestamp()}").AsEphemeral());
+		if (this.ResponderType is null)
+		{
+			if (ApplicationCommandsExtension.Configuration.AutoDefer)
+				await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent($"Error: Ratelimit hit\nTry again {bucket.ResetsAt.Timestamp()}"));
+			else
+				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent($"Error: Ratelimit hit\nTry again {bucket.ResetsAt.Timestamp()}").AsEphemeral());
+
+			return false;
+		}
+
+		var providerMethod = this.ResponderType.GetMethod(nameof(ICooldownResponder.Responder));
+		var providerInstance = Activator.CreateInstance(this.ResponderType);
+		await ((Task)providerMethod.Invoke(providerInstance, [ctx])).ConfigureAwait(false);
 
 		return false;
 	}

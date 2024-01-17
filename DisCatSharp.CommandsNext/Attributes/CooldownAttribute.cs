@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
+using DisCatSharp.CommandsNext.Entities;
 using DisCatSharp.Entities;
 using DisCatSharp.Entities.Core;
 using DisCatSharp.Enums.Core;
@@ -17,8 +18,9 @@ namespace DisCatSharp.CommandsNext.Attributes;
 /// <param name="maxUses">Number of times the command can be used before triggering a cooldown.</param>
 /// <param name="resetAfter">Number of seconds after which the cooldown is reset.</param>
 /// <param name="bucketType">Type of cooldown bucket. This allows controlling whether the bucket will be cooled down per user, guild, channel, or globally.</param>
+/// <param name="cooldownResponderType">The responder type used to respond to cooldown ratelimit hits.</param>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-public sealed class CooldownAttribute(int maxUses, double resetAfter, CooldownBucketType bucketType) : CheckBaseAttribute, ICooldown<CommandContext, CooldownBucket>
+public sealed class CooldownAttribute(int maxUses, double resetAfter, CooldownBucketType bucketType, Type? cooldownResponderType = null) : CheckBaseAttribute, ICooldown<CommandContext, CooldownBucket>
 {
 	/// <summary>
 	/// Gets the maximum number of uses before this command triggers a cooldown for its bucket.
@@ -34,6 +36,11 @@ public sealed class CooldownAttribute(int maxUses, double resetAfter, CooldownBu
 	/// Gets the type of the cooldown bucket. This determines how cooldowns are applied.
 	/// </summary>
 	public CooldownBucketType BucketType { get; } = bucketType;
+
+	/// <summary>
+	/// Gets the responder type.
+	/// </summary>
+	public Type? ResponderType { get; } = cooldownResponderType;
 
 	/// <summary>
 	/// Gets a cooldown bucket for given command context.
@@ -116,14 +123,23 @@ public sealed class CooldownAttribute(int maxUses, double resetAfter, CooldownBu
 		if (noHit)
 			return true;
 
-		try
+		if (this.ResponderType is null)
 		{
-			await ctx.Message.CreateReactionAsync(DiscordEmoji.FromName(ctx.Client, ":x:", false));
+			try
+			{
+				await ctx.Message.CreateReactionAsync(DiscordEmoji.FromName(ctx.Client, ":x:", false));
+			}
+			catch (UnauthorizedException)
+			{
+				// ignore
+			}
+
+			return false;
 		}
-		catch (UnauthorizedException)
-		{
-						// ignore
-		}
+
+		var providerMethod = this.ResponderType.GetMethod(nameof(ICooldownResponder.Responder));
+		var providerInstance = Activator.CreateInstance(this.ResponderType);
+		await ((Task)providerMethod.Invoke(providerInstance, [ctx])).ConfigureAwait(false);
 
 		return false;
 	}
