@@ -21,9 +21,9 @@ public sealed class RegisteredDiscordApplicationCommand : DiscordApplicationComm
 	{ }
 
 	/// <summary>
-	/// Creates a new registered discord application command to control a dildo. (Lala told me to leave it)
+	/// Creates a new registered discord application command.
 	/// </summary>
-	/// <param name="parent"></param>
+	/// <param name="parent">The original application command</param>
 	internal RegisteredDiscordApplicationCommand(DiscordApplicationCommand parent)
 	{
 		this.AdditionalProperties = parent.AdditionalProperties;

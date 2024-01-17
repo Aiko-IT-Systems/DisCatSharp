@@ -10,7 +10,7 @@ namespace DisCatSharp.ApplicationCommands.Entities;
 /// <summary>
 /// Represents a group translator.
 /// </summary>
-internal sealed class GroupTranslator
+public sealed class GroupTranslator
 {
 	/// <summary>
 	/// Gets the group name.
@@ -35,8 +35,11 @@ internal sealed class GroupTranslator
 	/// Gets the group name translations.
 	/// </summary>
 	[JsonProperty("name_translations")]
-	internal Dictionary<string, string>? NameTranslationsDictionary { get; set; }
+	public Dictionary<string, string>? NameTranslationsDictionary { get; set; }
 
+	/// <summary>
+	/// Gets the group name translations.
+	/// </summary>
 	[JsonIgnore]
 	public DiscordApplicationCommandLocalization? NameTranslations
 		=> this.NameTranslationsDictionary is not null ? new(this.NameTranslationsDictionary) : null;
@@ -45,8 +48,11 @@ internal sealed class GroupTranslator
 	/// Gets the group description translations.
 	/// </summary>
 	[JsonProperty("description_translations")]
-	internal Dictionary<string, string>? DescriptionTranslationsDictionary { get; set; }
+	public Dictionary<string, string>? DescriptionTranslationsDictionary { get; set; }
 
+	/// <summary>
+	/// Gets the group description translations.
+	/// </summary>
 	[JsonIgnore]
 	public DiscordApplicationCommandLocalization? DescriptionTranslations
 		=> this.DescriptionTranslationsDictionary is not null ? new(this.DescriptionTranslationsDictionary) : null;

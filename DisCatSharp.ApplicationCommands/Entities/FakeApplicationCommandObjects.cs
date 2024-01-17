@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands.Entities;
 
+// ReSharper disable InternalOrPrivateMemberNotDocumented
 internal sealed class CommandGroupWithSubGroups : BaseCommand
 {
 	[JsonProperty("groups")]
@@ -75,3 +76,4 @@ internal class BaseCommand
 		this.DescriptionTranslations = descriptionTranslations;
 	}
 }
+// ReSharper restore InternalOrPrivateMemberNotDocumented

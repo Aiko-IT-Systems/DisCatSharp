@@ -9,7 +9,7 @@ namespace DisCatSharp.ApplicationCommands.Entities;
 /// <summary>
 /// Represents a sub group translator.
 /// </summary>
-internal sealed class SubGroupTranslator
+public sealed class SubGroupTranslator
 {
 	/// <summary>
 	/// Gets the sub group name.
@@ -27,8 +27,11 @@ internal sealed class SubGroupTranslator
 	/// Gets the sub group name translations.
 	/// </summary>
 	[JsonProperty("name_translations")]
-	internal Dictionary<string, string>? NameTranslationsDictionary { get; set; }
+	public Dictionary<string, string>? NameTranslationsDictionary { get; set; }
 
+	/// <summary>
+	/// Gets the sub group name translations.
+	/// </summary>
 	[JsonIgnore]
 	public DiscordApplicationCommandLocalization? NameTranslations
 		=> this.NameTranslationsDictionary is not null ? new(this.NameTranslationsDictionary) : null;
@@ -37,8 +40,11 @@ internal sealed class SubGroupTranslator
 	/// Gets the sub group description translations.
 	/// </summary>
 	[JsonProperty("description_translations")]
-	internal Dictionary<string, string>? DescriptionTranslationsDictionary { get; set; }
+	public Dictionary<string, string>? DescriptionTranslationsDictionary { get; set; }
 
+	/// <summary>
+	/// Gets the sub group description translations.
+	/// </summary>
 	[JsonIgnore]
 	public DiscordApplicationCommandLocalization? DescriptionTranslations
 		=> this.DescriptionTranslationsDictionary is not null ? new(this.DescriptionTranslationsDictionary) : null;

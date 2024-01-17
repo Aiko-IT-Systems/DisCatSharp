@@ -10,7 +10,7 @@ namespace DisCatSharp.ApplicationCommands.Entities;
 /// <summary>
 /// Represents a command translator.
 /// </summary>
-internal sealed class CommandTranslator
+public sealed class CommandTranslator
 {
 	/// <summary>
 	/// Gets the command name.
@@ -35,8 +35,11 @@ internal sealed class CommandTranslator
 	/// Gets the command name translations.
 	/// </summary>
 	[JsonProperty("name_translations")]
-	internal Dictionary<string, string>? NameTranslationsDictionary { get; set; }
+	public Dictionary<string, string>? NameTranslationsDictionary { get; set; }
 
+	/// <summary>
+	/// Gets the command name translations.
+	/// </summary>
 	[JsonIgnore]
 	public DiscordApplicationCommandLocalization? NameTranslations
 		=> this.NameTranslationsDictionary is not null ? new(this.NameTranslationsDictionary) : null;
@@ -45,8 +48,11 @@ internal sealed class CommandTranslator
 	/// Gets the command description translations.
 	/// </summary>
 	[JsonProperty("description_translations")]
-	internal Dictionary<string, string>? DescriptionTranslationsDictionary { get; set; }
+	public Dictionary<string, string>? DescriptionTranslationsDictionary { get; set; }
 
+	/// <summary>
+	/// Gets the command description translations.
+	/// </summary>
 	[JsonIgnore]
 	public DiscordApplicationCommandLocalization? DescriptionTranslations
 		=> this.DescriptionTranslationsDictionary is not null ? new(this.DescriptionTranslationsDictionary) : null;

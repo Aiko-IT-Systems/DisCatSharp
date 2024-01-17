@@ -11,7 +11,7 @@ namespace DisCatSharp.ApplicationCommands.Entities;
 /// <summary>
 /// Represents a option translator.
 /// </summary>
-internal sealed class OptionTranslator
+public sealed class OptionTranslator
 {
 	/// <summary>
 	/// Gets the option name.
@@ -35,7 +35,7 @@ internal sealed class OptionTranslator
 	/// Gets the option name translations.
 	/// </summary>
 	[JsonProperty("name_translations")]
-	internal Dictionary<string, string>? NameTranslationsDictionary { get; set; }
+	public Dictionary<string, string>? NameTranslationsDictionary { get; set; }
 
 	[JsonIgnore]
 	public DiscordApplicationCommandLocalization? NameTranslations
@@ -45,7 +45,7 @@ internal sealed class OptionTranslator
 	/// Gets the option description translations.
 	/// </summary>
 	[JsonProperty("description_translations")]
-	internal Dictionary<string, string>? DescriptionTranslationsDictionary { get; set; }
+	public Dictionary<string, string>? DescriptionTranslationsDictionary { get; set; }
 
 	[JsonIgnore]
 	public DiscordApplicationCommandLocalization? DescriptionTranslations
@@ -57,7 +57,11 @@ internal sealed class OptionTranslator
 	[JsonProperty("choices", NullValueHandling = NullValueHandling.Ignore)]
 	public List<ChoiceTranslator>? Choices { get; set; }
 
-	internal static OptionTranslator FromApplicationCommandOption(DiscordApplicationCommandOption option)
+	/// <summary>
+	/// Converts a <see cref="DiscordApplicationCommandOption"/> to a <see cref="OptionTranslator"/>.
+	/// </summary>
+	/// <param name="option">The option to convert.</param>
+	public static OptionTranslator FromApplicationCommandOption(DiscordApplicationCommandOption option)
 	{
 		var optionTranslator = new OptionTranslator
 		{
