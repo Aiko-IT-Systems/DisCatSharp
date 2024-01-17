@@ -11,7 +11,6 @@ CommandsNext has a variety of built-in attributes to enhance your commands and p
 The majority of these attributes can be applied to your command methods and command groups.
 
 -   @DisCatSharp.CommandsNext.Attributes.AliasesAttribute
--   @DisCatSharp.CommandsNext.Attributes.CooldownAttribute
 -   @DisCatSharp.CommandsNext.Attributes.DescriptionAttribute
 -   @DisCatSharp.CommandsNext.Attributes.DontInjectAttribute
 -   @DisCatSharp.CommandsNext.Attributes.HiddenAttribute
