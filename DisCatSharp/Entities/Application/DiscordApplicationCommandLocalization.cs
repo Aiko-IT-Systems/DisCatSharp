@@ -17,7 +17,7 @@ public sealed class DiscordApplicationCommandLocalization
 	/// <summary>
 	/// Gets valid [locales](xref:modules_application_commands_translations_reference#valid-locales) for Discord.
 	/// </summary>
-	internal readonly List<string> ValidLocales = ["ru", "fi", "hr", "de", "hu", "sv-SE", "cs", "fr", "it", "en-GB", "pt-BR", "ja", "tr", "en-US", "es-ES", "uk", "hi", "th", "el", "no", "ro", "ko", "zh-TW", "vi", "zh-CN", "pl", "bg", "da", "nl", "lt"];
+	internal readonly List<string> ValidLocales = ["ru", "fi", "hr", "de", "hu", "sv-SE", "cs", "fr", "it", "en-GB", "pt-BR", "ja", "tr", "en-US", "es-ES", "uk", "hi", "th", "el", "no", "ro", "ko", "zh-TW", "vi", "zh-CN", "pl", "bg", "da", "nl", "lt", "id", "es-419"];
 
 	/// <summary>
 	/// Adds a localization.
