@@ -13,11 +13,11 @@ using DisCatSharp.ApplicationCommands.Enums;
 using DisCatSharp.ApplicationCommands.EventArgs;
 using DisCatSharp.ApplicationCommands.Exceptions;
 using DisCatSharp.ApplicationCommands.Workers;
-using DisCatSharp.Attributes;
 using DisCatSharp.Common;
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
+using DisCatSharp.Enums.Core;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Exceptions;
 
@@ -661,39 +661,37 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						if (Configuration.GenerateTranslationFilesOnly)
 						{
 							var cgwsgs = new List<CommandGroupWithSubGroups>();
-							var cgs2 = new List<CommandGroup>();
 							foreach (var cmd in slashGroupsTuple.applicationCommands)
 								if (cmd.Type is ApplicationCommandType.ChatInput)
 								{
 									var cgs = new List<CommandGroup>();
+									var cs2 = new List<Command>();
 									if (cmd.Options is not null)
+									{
 										foreach (var scg in cmd.Options.Where(x => x.Type is ApplicationCommandOptionType.SubCommandGroup))
 										{
 											var cs = new List<Command>();
 											if (scg.Options is not null)
 												foreach (var sc in scg.Options)
 													if (sc.Options is null || sc.Options.Count is 0)
-														cs.Add(new(sc.Name, sc.Description, null, null));
+														cs.Add(new(sc.Name, sc.Description, null, null, sc.RawNameLocalizations, sc.RawDescriptionLocalizations));
 													else
-														cs.Add(new(sc.Name, sc.Description, [.. sc.Options], null));
-											cgs.Add(new(scg.Name, scg.Description, cs, null));
+														cs.Add(new(sc.Name, sc.Description, [.. sc.Options], null, sc.RawNameLocalizations, sc.RawDescriptionLocalizations));
+											cgs.Add(new(scg.Name, scg.Description, cs, null, scg.RawNameLocalizations, scg.RawDescriptionLocalizations));
 										}
 
-									cgwsgs.Add(new(cmd.Name, cmd.Description, cgs, cmd.Type));
+										foreach (var sc2 in cmd.Options.Where(x => x.Type is ApplicationCommandOptionType.SubCommand))
+											if (sc2.Options == null || sc2.Options.Count == 0)
+												cs2.Add(new(sc2.Name, sc2.Description, null, null, sc2.RawNameLocalizations, sc2.RawDescriptionLocalizations));
+											else
+												cs2.Add(new(sc2.Name, sc2.Description, [.. sc2.Options], null, sc2.RawNameLocalizations, sc2.RawDescriptionLocalizations));
+									}
 
-									var cs2 = new List<Command>();
-									foreach (var sc2 in cmd.Options.Where(x => x.Type is ApplicationCommandOptionType.SubCommand))
-										if (sc2.Options == null || sc2.Options.Count == 0)
-											cs2.Add(new(sc2.Name, sc2.Description, null, null));
-										else
-											cs2.Add(new(sc2.Name, sc2.Description, [.. sc2.Options], null));
-									cgs2.Add(new(cmd.Name, cmd.Description, cs2, cmd.Type));
+									cgwsgs.Add(new(cmd.Name, cmd.Description, cgs, cs2, cmd.Type, cmd.RawNameLocalizations, cmd.RawDescriptionLocalizations));
 								}
 
 							if (cgwsgs.Count is not 0)
 								groupTranslation.AddRange(cgwsgs.Select(cgwsg => JsonConvert.DeserializeObject<GroupTranslator>(JsonConvert.SerializeObject(cgwsg))!));
-							if (cgs2.Count is not 0)
-								groupTranslation.AddRange(cgs2.Select(cg2 => JsonConvert.DeserializeObject<GroupTranslator>(JsonConvert.SerializeObject(cg2))!));
 						}
 					}
 
@@ -733,12 +731,20 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							var cs = new List<Command>();
 							foreach (var cmd in slashCommands.applicationCommands.Where(cmd => cmd.Type is ApplicationCommandType.ChatInput && (cmd.Options is null || !cmd.Options.Any(x => x.Type is ApplicationCommandOptionType.SubCommand or ApplicationCommandOptionType.SubCommandGroup))))
 								if (cmd.Options == null || cmd.Options.Count == 0)
-									cs.Add(new(cmd.Name, cmd.Description, null, ApplicationCommandType.ChatInput));
+									cs.Add(new(cmd.Name, cmd.Description, null, ApplicationCommandType.ChatInput, cmd.RawNameLocalizations, cmd.RawDescriptionLocalizations));
 								else
-									cs.Add(new(cmd.Name, cmd.Description, [.. cmd.Options], ApplicationCommandType.ChatInput));
+									cs.Add(new(cmd.Name, cmd.Description, [.. cmd.Options], ApplicationCommandType.ChatInput, cmd.RawNameLocalizations, cmd.RawDescriptionLocalizations));
 
 							if (cs.Count is not 0)
-								translation.AddRange(cs.Select(c => JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(c))!));
+								//translation.AddRange(cs.Select(c => JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(c))!));
+							{
+								foreach (var c in cs)
+								{
+									var json = JsonConvert.SerializeObject(c);
+									var obj = JsonConvert.DeserializeObject<CommandTranslator>(json);
+									translation.Add(obj!);
+								}
+							}
 						}
 					}
 
@@ -804,7 +810,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		{
 			updateList = updateList.DistinctBy(x => x.Name).ToList();
 			if (Configuration.GenerateTranslationFilesOnly)
-				await this.CheckRegistrationStartup(translation, groupTranslation);
+				await this.CheckRegistrationStartup(translation, groupTranslation, guildId);
 			else
 				try
 				{
@@ -911,7 +917,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							RegisteredCommands = GlobalCommandsInternal
 						}).ConfigureAwait(false);
 
-					await this.CheckRegistrationStartup(translation, groupTranslation);
+					await this.CheckRegistrationStartup(translation, groupTranslation, guildId);
 				}
 				catch (NullReferenceException ex)
 				{
@@ -965,7 +971,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	/// <param name="translation">The optional translations.</param>
 	/// <param name="groupTranslation">The optional group translations.</param>
-	private async Task CheckRegistrationStartup(List<CommandTranslator>? translation = null, List<GroupTranslator>? groupTranslation = null)
+	/// <param name="guildId">The optional guild id.</param>
+	private async Task CheckRegistrationStartup(List<CommandTranslator>? translation = null, List<GroupTranslator>? groupTranslation = null, ulong? guildId = null)
 	{
 		if (Configuration.GenerateTranslationFilesOnly)
 		{
@@ -973,7 +980,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			{
 				if (translation is not null && translation.Count is not 0)
 				{
-					var fileName = $"translation_generator_export-shard{this.Client.ShardId}-SINGLE.json";
+					var fileName = $"translation_generator_export-shard{this.Client.ShardId}-SINGLE-{(guildId.HasValue ? guildId.Value : "global")}.json";
 					var fs = File.Create(fileName);
 					var ms = new MemoryStream();
 					var writer = new StreamWriter(ms);
@@ -991,7 +998,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 				if (groupTranslation is not null && groupTranslation.Count is not 0)
 				{
-					var fileName = $"translation_generator_export-shard{this.Client.ShardId}-GROUP.json";
+					var fileName = $"translation_generator_export-shard{this.Client.ShardId}-GROUP-{(guildId.HasValue ? guildId.Value : "global")}.json";
 					var fs = File.Create(fileName);
 					var ms = new MemoryStream();
 					var writer = new StreamWriter(ms);
@@ -1030,6 +1037,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					GuildsWithoutScope = s_missingScopeGuildIdsGlobal
 				}).ConfigureAwait(false);
 				FinishFired = true;
+				if (Configuration.GenerateTranslationFilesOnly)
+					Environment.Exit(0);
 			}
 
 		args.Handled = false;
@@ -1081,7 +1090,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						GuildLocale = e.Interaction.GuildLocale,
 						AppPermissions = e.Interaction.AppPermissions,
 						Entitlements = e.Interaction.Entitlements,
-						EntitlementSkuIds = e.Interaction.EntitlementSkuIds
+						EntitlementSkuIds = e.Interaction.EntitlementSkuIds,
+						UserId = e.Interaction.User.Id,
+						GuildId = e.Interaction.GuildId,
+						MemberId = e.Interaction.GuildId is not null ? e.Interaction.User.Id : null,
+						ChannelId = e.Interaction.ChannelId
 					};
 
 					try
@@ -1340,7 +1353,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		_ = Task.Run(async () =>
 		{
 			//Creates the context
-			var context = new ContextMenuContext
+			var context = new ContextMenuContext(e.Type switch
+			{
+				ApplicationCommandType.User => DisCatSharpCommandType.UserCommand,
+				ApplicationCommandType.Message => DisCatSharpCommandType.MessageCommand,
+				_ => throw new ArgumentOutOfRangeException(nameof(e.Type), "Unknown context menu type")
+			})
 			{
 				Interaction = e.Interaction,
 				Channel = e.Interaction.Channel,
@@ -1359,7 +1377,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				GuildLocale = e.Interaction.GuildLocale,
 				AppPermissions = e.Interaction.AppPermissions,
 				Entitlements = e.Interaction.Entitlements,
-				EntitlementSkuIds = e.Interaction.EntitlementSkuIds
+				EntitlementSkuIds = e.Interaction.EntitlementSkuIds,
+				UserId = e.Interaction.User.Id,
+				GuildId = e.Interaction.GuildId,
+				MemberId = e.Interaction.GuildId is not null ? e.Interaction.User.Id : null,
+				ChannelId = e.Interaction.ChannelId
 			};
 
 			try

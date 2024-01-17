@@ -35,25 +35,25 @@ internal sealed class CommandTranslator
 	/// Gets the command name translations.
 	/// </summary>
 	[JsonProperty("name_translations")]
-	internal Dictionary<string, string> NameTranslationDictionary { get; set; }
+	internal Dictionary<string, string>? NameTranslationsDictionary { get; set; }
 
 	[JsonIgnore]
-	public DiscordApplicationCommandLocalization NameTranslations
-		=> new(this.NameTranslationDictionary);
+	public DiscordApplicationCommandLocalization? NameTranslations
+		=> this.NameTranslationsDictionary is not null ? new(this.NameTranslationsDictionary) : null;
 
 	/// <summary>
 	/// Gets the command description translations.
 	/// </summary>
 	[JsonProperty("description_translations")]
-	internal Dictionary<string, string> DescriptionTranslationDictionary { get; set; }
+	internal Dictionary<string, string>? DescriptionTranslationsDictionary { get; set; }
 
 	[JsonIgnore]
-	public DiscordApplicationCommandLocalization DescriptionTranslations
-		=> new(this.DescriptionTranslationDictionary);
+	public DiscordApplicationCommandLocalization? DescriptionTranslations
+		=> this.DescriptionTranslationsDictionary is not null ? new(this.DescriptionTranslationsDictionary) : null;
 
 	/// <summary>
 	/// Gets the option translators, if applicable.
 	/// </summary>
 	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-	public List<OptionTranslator> Options { get; set; }
+	public List<OptionTranslator>? Options { get; set; }
 }

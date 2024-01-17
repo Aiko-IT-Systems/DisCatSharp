@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Entities.Core;
+using DisCatSharp.Enums.Core;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,13 +13,8 @@ namespace DisCatSharp.CommandsNext;
 /// <summary>
 /// Represents a context in which a command is executed.
 /// </summary>
-public sealed class CommandContext
+public sealed class CommandContext : DisCatSharpCommandContext
 {
-	/// <summary>
-	/// Gets the client which received the message.
-	/// </summary>
-	public DiscordClient Client { get; internal set; }
-
 	/// <summary>
 	/// Gets the message that triggered the execution.
 	/// </summary>
@@ -32,7 +29,7 @@ public sealed class CommandContext
 	/// <summary>
 	/// Gets the guild in which the execution was triggered. This property is null for commands sent over direct messages.
 	/// </summary>
-	public DiscordGuild Guild
+	public DiscordGuild? Guild
 		=> this.Message.GuildId.HasValue ? this.Message.Guild : null;
 
 	/// <summary>
@@ -98,8 +95,9 @@ public sealed class CommandContext
 	/// Initializes a new instance of the <see cref="CommandContext"/> class.
 	/// </summary>
 	internal CommandContext()
+		: base(DisCatSharpCommandType.TextCommand)
 	{
-		this._lazyMember = new(() => this.Guild != null && this.Guild.Members.TryGetValue(this.User.Id, out var member) ? member : this.Guild?.GetMemberAsync(this.User.Id).ConfigureAwait(false).GetAwaiter().GetResult());
+		this._lazyMember = new(() => this.Guild is not null && this.Guild.Members.TryGetValue(this.User.Id, out var member) ? member : this.Guild?.GetMemberAsync(this.User.Id).ConfigureAwait(false).GetAwaiter().GetResult());
 	}
 
 	/// <summary>
@@ -182,6 +180,7 @@ public sealed class CommandContext
 		/// <summary>
 		/// Disposes the command context.
 		/// </summary>
-		public void Dispose() => this.Scope?.Dispose();
+		public void Dispose()
+			=> this.Scope?.Dispose();
 	}
 }

@@ -1,61 +1,57 @@
 using System;
-using System.Collections.Concurrent;
-using System.Globalization;
-using System.Threading;
 using System.Threading.Tasks;
+
+using DisCatSharp.CommandsNext.Entities;
+using DisCatSharp.Entities;
+using DisCatSharp.Entities.Core;
+using DisCatSharp.Enums.Core;
+using DisCatSharp.Exceptions;
 
 namespace DisCatSharp.CommandsNext.Attributes;
 
 /// <summary>
 /// Defines a cooldown for this command. This allows you to define how many times can users execute a specific command
 /// </summary>
+/// <remarks>
+/// Defines a cooldown for this command. This means that users will be able to use the command a specific number of times before they have to wait to use it again.
+/// </remarks>
+/// <param name="maxUses">Number of times the command can be used before triggering a cooldown.</param>
+/// <param name="resetAfter">Number of seconds after which the cooldown is reset.</param>
+/// <param name="bucketType">Type of cooldown bucket. This allows controlling whether the bucket will be cooled down per user, guild, channel, or globally.</param>
+/// <param name="cooldownResponderType">The responder type used to respond to cooldown ratelimit hits.</param>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-public sealed class CooldownAttribute : CheckBaseAttribute
+public sealed class CooldownAttribute(int maxUses, double resetAfter, CooldownBucketType bucketType, Type? cooldownResponderType = null) : CheckBaseAttribute, ICooldown<CommandContext, CooldownBucket>
 {
 	/// <summary>
 	/// Gets the maximum number of uses before this command triggers a cooldown for its bucket.
 	/// </summary>
-	public int MaxUses { get; }
+	public int MaxUses { get; } = maxUses;
 
 	/// <summary>
 	/// Gets the time after which the cooldown is reset.
 	/// </summary>
-	public TimeSpan Reset { get; }
+	public TimeSpan Reset { get; } = TimeSpan.FromSeconds(resetAfter);
 
 	/// <summary>
 	/// Gets the type of the cooldown bucket. This determines how cooldowns are applied.
 	/// </summary>
-	public CooldownBucketType BucketType { get; }
+	public CooldownBucketType BucketType { get; } = bucketType;
 
 	/// <summary>
-	/// Gets the cooldown buckets for this command.
+	/// Gets the responder type.
 	/// </summary>
-	private readonly ConcurrentDictionary<string, CommandCooldownBucket> _buckets;
-
-	/// <summary>
-	/// Defines a cooldown for this command. This means that users will be able to use the command a specific number of times before they have to wait to use it again.
-	/// </summary>
-	/// <param name="maxUses">Number of times the command can be used before triggering a cooldown.</param>
-	/// <param name="resetAfter">Number of seconds after which the cooldown is reset.</param>
-	/// <param name="bucketType">Type of cooldown bucket. This allows controlling whether the bucket will be cooled down per user, guild, channel, or globally.</param>
-	public CooldownAttribute(int maxUses, double resetAfter, CooldownBucketType bucketType)
-	{
-		this.MaxUses = maxUses;
-		this.Reset = TimeSpan.FromSeconds(resetAfter);
-		this.BucketType = bucketType;
-		this._buckets = new();
-	}
+	public Type? ResponderType { get; } = cooldownResponderType;
 
 	/// <summary>
 	/// Gets a cooldown bucket for given command context.
 	/// </summary>
 	/// <param name="ctx">Command context to get cooldown bucket for.</param>
 	/// <returns>Requested cooldown bucket, or null if one wasn't present.</returns>
-	public CommandCooldownBucket GetBucket(CommandContext ctx)
+	public CooldownBucket GetBucket(CommandContext ctx)
 	{
 		var bid = this.GetBucketId(ctx, out _, out _, out _);
-		this._buckets.TryGetValue(bid, out var bucket);
-		return bucket;
+		ctx.Client.CommandCooldownBuckets.TryGetValue(bid, out var bucket);
+		return bucket!;
 	}
 
 	/// <summary>
@@ -66,7 +62,7 @@ public sealed class CooldownAttribute : CheckBaseAttribute
 	public TimeSpan GetRemainingCooldown(CommandContext ctx)
 	{
 		var bucket = this.GetBucket(ctx);
-		return bucket == null
+		return bucket is null
 			? TimeSpan.Zero
 			: bucket.RemainingUses > 0
 				? TimeSpan.Zero
@@ -84,20 +80,20 @@ public sealed class CooldownAttribute : CheckBaseAttribute
 	private string GetBucketId(CommandContext ctx, out ulong userId, out ulong channelId, out ulong guildId)
 	{
 		userId = 0ul;
-		if ((this.BucketType & CooldownBucketType.User) != 0)
+		if (this.BucketType.HasFlag(CooldownBucketType.User))
 			userId = ctx.User.Id;
 
 		channelId = 0ul;
-		if ((this.BucketType & CooldownBucketType.Channel) != 0)
+		if (this.BucketType.HasFlag(CooldownBucketType.Channel))
 			channelId = ctx.Channel.Id;
-		if ((this.BucketType & CooldownBucketType.Guild) != 0 && ctx.Guild == null)
+		if (this.BucketType.HasFlag(CooldownBucketType.Guild) && ctx.Guild is null)
 			channelId = ctx.Channel.Id;
 
 		guildId = 0ul;
-		if (ctx.Guild != null && (this.BucketType & CooldownBucketType.Guild) != 0)
+		if (ctx.Guild is not null && this.BucketType.HasFlag(CooldownBucketType.Guild))
 			guildId = ctx.Guild.Id;
 
-		var bid = CommandCooldownBucket.MakeId(userId, channelId, guildId);
+		var bid = CooldownBucket.MakeId(ctx.Command.QualifiedName, "text", userId, channelId, guildId);
 		return bid;
 	}
 
@@ -112,203 +108,39 @@ public sealed class CooldownAttribute : CheckBaseAttribute
 			return true;
 
 		var bid = this.GetBucketId(ctx, out var usr, out var chn, out var gld);
-		if (!this._buckets.TryGetValue(bid, out var bucket))
+		if (ctx.Client.CommandCooldownBuckets.TryGetValue(bid, out var bucket))
+			return await this.RespondRatelimitHitAsync(ctx, await bucket.DecrementUseAsync(ctx), bucket);
+
+		bucket = new(this.MaxUses, this.Reset, ctx.Command.QualifiedName, "text", usr, chn, gld);
+		ctx.Client.CommandCooldownBuckets.AddOrUpdate(bid, bucket, (k, v) => bucket);
+
+		return await this.RespondRatelimitHitAsync(ctx, await bucket.DecrementUseAsync(ctx), bucket);
+	}
+
+	/// <inheritdoc/>
+	public async Task<bool> RespondRatelimitHitAsync(CommandContext ctx, bool noHit, CooldownBucket bucket)
+	{
+		if (noHit)
+			return true;
+
+		if (this.ResponderType is null)
 		{
-			bucket = new(this.MaxUses, this.Reset, usr, chn, gld);
-			this._buckets.AddOrUpdate(bid, bucket, (k, v) => bucket);
+			try
+			{
+				await ctx.Message.CreateReactionAsync(DiscordEmoji.FromName(ctx.Client, ":x:", false));
+			}
+			catch (UnauthorizedException)
+			{
+				// ignore
+			}
+
+			return false;
 		}
 
-		return await bucket.DecrementUseAsync().ConfigureAwait(false);
+		var providerMethod = this.ResponderType.GetMethod(nameof(ICooldownResponder.Responder));
+		var providerInstance = Activator.CreateInstance(this.ResponderType);
+		await ((Task)providerMethod.Invoke(providerInstance, [ctx])).ConfigureAwait(false);
+
+		return false;
 	}
-}
-
-/// <summary>
-/// Defines how are command cooldowns applied.
-/// </summary>
-public enum CooldownBucketType
-{
-	/// <summary>
-	/// Denotes that the command will have its cooldown applied per-user.
-	/// </summary>
-	User = 1,
-
-	/// <summary>
-	/// Denotes that the command will have its cooldown applied per-channel.
-	/// </summary>
-	Channel = 2,
-
-	/// <summary>
-	/// Denotes that the command will have its cooldown applied per-guild. In DMs, this applies the cooldown per-channel.
-	/// </summary>
-	Guild = 4,
-
-	/// <summary>
-	/// Denotes that the command will have its cooldown applied globally.
-	/// </summary>
-	Global = 0
-}
-
-/// <summary>
-/// Represents a cooldown bucket for commands.
-/// </summary>
-public sealed class CommandCooldownBucket : IEquatable<CommandCooldownBucket>
-{
-	/// <summary>
-	/// Gets the ID of the user with whom this cooldown is associated.
-	/// </summary>
-	public ulong UserId { get; }
-
-	/// <summary>
-	/// Gets the ID of the channel with which this cooldown is associated.
-	/// </summary>
-	public ulong ChannelId { get; }
-
-	/// <summary>
-	/// Gets the ID of the guild with which this cooldown is associated.
-	/// </summary>
-	public ulong GuildId { get; }
-
-	/// <summary>
-	/// Gets the ID of the bucket. This is used to distinguish between cooldown buckets.
-	/// </summary>
-	public string BucketId { get; }
-
-	/// <summary>
-	/// Gets the remaining number of uses before the cooldown is triggered.
-	/// </summary>
-	public int RemainingUses
-		=> Volatile.Read(ref this._remainingUses);
-
-	private int _remainingUses;
-
-	/// <summary>
-	/// Gets the maximum number of times this command can be used in given timespan.
-	/// </summary>
-	public int MaxUses { get; }
-
-	/// <summary>
-	/// Gets the date and time at which the cooldown resets.
-	/// </summary>
-	public DateTimeOffset ResetsAt { get; internal set; }
-
-	/// <summary>
-	/// Gets the time after which this cooldown resets.
-	/// </summary>
-	public TimeSpan Reset { get; internal set; }
-
-	/// <summary>
-	/// Gets the semaphore used to lock the use value.
-	/// </summary>
-	private readonly SemaphoreSlim _usageSemaphore;
-
-	/// <summary>
-	/// Creates a new command cooldown bucket.
-	/// </summary>
-	/// <param name="maxUses">Maximum number of uses for this bucket.</param>
-	/// <param name="resetAfter">Time after which this bucket resets.</param>
-	/// <param name="userId">ID of the user with which this cooldown is associated.</param>
-	/// <param name="channelId">ID of the channel with which this cooldown is associated.</param>
-	/// <param name="guildId">ID of the guild with which this cooldown is associated.</param>
-	internal CommandCooldownBucket(int maxUses, TimeSpan resetAfter, ulong userId = 0, ulong channelId = 0, ulong guildId = 0)
-	{
-		this._remainingUses = maxUses;
-		this.MaxUses = maxUses;
-		this.ResetsAt = DateTimeOffset.UtcNow + resetAfter;
-		this.Reset = resetAfter;
-		this.UserId = userId;
-		this.ChannelId = channelId;
-		this.GuildId = guildId;
-		this.BucketId = MakeId(userId, channelId, guildId);
-		this._usageSemaphore = new(1, 1);
-	}
-
-	/// <summary>
-	/// Decrements the remaining use counter.
-	/// </summary>
-	/// <returns>Whether decrement succeeded or not.</returns>
-	internal async Task<bool> DecrementUseAsync()
-	{
-		await this._usageSemaphore.WaitAsync().ConfigureAwait(false);
-
-		// if we're past reset time...
-		var now = DateTimeOffset.UtcNow;
-		if (now >= this.ResetsAt)
-		{
-			// ...do the reset and set a new reset time
-			Interlocked.Exchange(ref this._remainingUses, this.MaxUses);
-			this.ResetsAt = now + this.Reset;
-		}
-
-		// check if we have any uses left, if we do...
-		var success = false;
-		if (this.RemainingUses > 0)
-		{
-			// ...decrement, and return success...
-			Interlocked.Decrement(ref this._remainingUses);
-			success = true;
-		}
-
-		// ...otherwise just fail
-		this._usageSemaphore.Release();
-		return success;
-	}
-
-	/// <summary>
-	/// Returns a string representation of this command cooldown bucket.
-	/// </summary>
-	/// <returns>String representation of this command cooldown bucket.</returns>
-	public override string ToString() => $"Command bucket {this.BucketId}";
-
-	/// <summary>
-	/// Checks whether this <see cref="CommandCooldownBucket"/> is equal to another object.
-	/// </summary>
-	/// <param name="obj">Object to compare to.</param>
-	/// <returns>Whether the object is equal to this <see cref="CommandCooldownBucket"/>.</returns>
-	public override bool Equals(object obj) => this.Equals(obj as CommandCooldownBucket);
-
-	/// <summary>
-	/// Checks whether this <see cref="CommandCooldownBucket"/> is equal to another <see cref="CommandCooldownBucket"/>.
-	/// </summary>
-	/// <param name="other"><see cref="CommandCooldownBucket"/> to compare to.</param>
-	/// <returns>Whether the <see cref="CommandCooldownBucket"/> is equal to this <see cref="CommandCooldownBucket"/>.</returns>
-	public bool Equals(CommandCooldownBucket other) => other is not null && (ReferenceEquals(this, other) || (this.UserId == other.UserId && this.ChannelId == other.ChannelId && this.GuildId == other.GuildId));
-
-	/// <summary>
-	/// Gets the hash code for this <see cref="CommandCooldownBucket"/>.
-	/// </summary>
-	/// <returns>The hash code for this <see cref="CommandCooldownBucket"/>.</returns>
-	public override int GetHashCode() => HashCode.Combine(this.UserId, this.ChannelId, this.GuildId);
-
-	/// <summary>
-	/// Gets whether the two <see cref="CommandCooldownBucket"/> objects are equal.
-	/// </summary>
-	/// <param name="bucket1">First bucket to compare.</param>
-	/// <param name="bucket2">Second bucket to compare.</param>
-	/// <returns>Whether the two buckets are equal.</returns>
-	public static bool operator ==(CommandCooldownBucket bucket1, CommandCooldownBucket bucket2)
-	{
-		var null1 = bucket1 is null;
-		var null2 = bucket2 is null;
-
-		return (null1 && null2) || (null1 == null2 && null1.Equals(null2));
-	}
-
-	/// <summary>
-	/// Gets whether the two <see cref="CommandCooldownBucket"/> objects are not equal.
-	/// </summary>
-	/// <param name="bucket1">First bucket to compare.</param>
-	/// <param name="bucket2">Second bucket to compare.</param>
-	/// <returns>Whether the two buckets are not equal.</returns>
-	public static bool operator !=(CommandCooldownBucket bucket1, CommandCooldownBucket bucket2)
-		=> !(bucket1 == bucket2);
-
-	/// <summary>
-	/// Creates a bucket ID from given bucket parameters.
-	/// </summary>
-	/// <param name="userId">ID of the user with which this cooldown is associated.</param>
-	/// <param name="channelId">ID of the channel with which this cooldown is associated.</param>
-	/// <param name="guildId">ID of the guild with which this cooldown is associated.</param>
-	/// <returns>Generated bucket ID.</returns>
-	public static string MakeId(ulong userId = 0, ulong channelId = 0, ulong guildId = 0)
-		=> $"{userId.ToString(CultureInfo.InvariantCulture)}:{channelId.ToString(CultureInfo.InvariantCulture)}:{guildId.ToString(CultureInfo.InvariantCulture)}";
 }

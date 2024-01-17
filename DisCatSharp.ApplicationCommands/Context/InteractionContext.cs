@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums.Core;
 
 namespace DisCatSharp.ApplicationCommands.Context;
 
 /// <summary>
 /// Represents a context for an interaction.
 /// </summary>
-public sealed class InteractionContext : BaseContext
+public sealed class InteractionContext() : BaseContext(DisCatSharpCommandType.SlashCommand)
 {
 	/// <summary>
 	/// Gets the users mentioned in the command parameters.

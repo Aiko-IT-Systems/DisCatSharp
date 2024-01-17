@@ -1,17 +1,17 @@
 using System;
+using System.Threading.Tasks;
 
-using DisCatSharp.ApplicationCommands.Context;
-using DisCatSharp.ApplicationCommands.Enums;
+using DisCatSharp.Enums.Core;
 
-namespace DisCatSharp.ApplicationCommands.Entities;
+namespace DisCatSharp.Entities.Core;
 
 /// <summary>
 /// Cooldown feature contract
 /// </summary>
-/// <typeparam name="TContextType">Type of <see cref="BaseContext"/> in which this cooldown handles</typeparam>
+/// <typeparam name="TContextType">Type of <see cref="DisCatSharpCommandContext"/> in which this cooldown handles</typeparam>
 /// <typeparam name="TBucketType">Type of Cooldown bucket</typeparam>
 public interface ICooldown<in TContextType, out TBucketType>
-	where TContextType : BaseContext
+	where TContextType : DisCatSharpCommandContext
 	where TBucketType : CooldownBucket
 {
 	/// <summary>
@@ -42,4 +42,12 @@ public interface ICooldown<in TContextType, out TBucketType>
 	/// <param name="ctx">Command context to get cooldown bucket for.</param>
 	/// <returns>Requested cooldown bucket, or null if one wasn't present</returns>
 	TBucketType GetBucket(TContextType ctx);
+
+	/// <summary>
+	/// Responds to a ratelimit hit.
+	/// </summary>
+	/// <param name="ctx">The command context.</param>
+	/// <param name="noHit">Whether the ratelimit wasn't hit.</param>
+	/// <param name="bucket">The cooldown bucket.</param>
+	Task<bool> RespondRatelimitHitAsync(TContextType ctx, bool noHit, CooldownBucket bucket);
 }

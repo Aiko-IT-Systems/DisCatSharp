@@ -56,7 +56,11 @@ public class CommandGroup : Command
 					RawArgumentString = ctx.RawArgumentString[findPos..],
 					Prefix = ctx.Prefix,
 					CommandsNext = ctx.CommandsNext,
-					Services = ctx.Services
+					Services = ctx.Services,
+					UserId = ctx.Message.Author.Id,
+					GuildId = ctx.Message.GuildId,
+					MemberId = ctx.Message.GuildId is not null ? ctx.Message.Author.Id : null,
+					ChannelId = ctx.Message.ChannelId
 				};
 
 				var fchecks = await cmd.RunChecksAsync(xctx, false).ConfigureAwait(false);

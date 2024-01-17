@@ -1,8 +1,11 @@
-namespace DisCatSharp.ApplicationCommands.Enums;
+using System;
+
+namespace DisCatSharp.Enums.Core;
 
 /// <summary>
 /// Defines how are command cooldowns applied.
 /// </summary>
+[Flags]
 public enum CooldownBucketType
 {
 	/// <summary>
@@ -11,7 +14,7 @@ public enum CooldownBucketType
 	Global = 0,
 
 	/// <summary>
-	/// Denotes that the command will have its cooldown applied per-user.
+	/// Denotes that the command will have its cooldown applied per-user globally.
 	/// </summary>
 	User = 1,
 
@@ -21,7 +24,12 @@ public enum CooldownBucketType
 	Channel = 2,
 
 	/// <summary>
-	/// Denotes that the command will have its cooldown applied per-guild. In DMs, this applies the cooldown per-channel.
+	/// Denotes that the command will have its cooldown applied per-guild. Skipped for DMs.
 	/// </summary>
-	Guild = 4
+	Guild = 3,
+
+	/// <summary>
+	/// Denotes that the command will have its cooldown applied per-member per-guild. Skipped for DMs.
+	/// </summary>
+	Member = 4
 }

@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
+using DisCatSharp.Entities.Core;
 using DisCatSharp.Enums;
+using DisCatSharp.Enums.Core;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,7 +15,7 @@ namespace DisCatSharp.ApplicationCommands.Context;
 /// <summary>
 /// Represents a base context for application command contexts.
 /// </summary>
-public class BaseContext
+public class BaseContext : DisCatSharpCommandContext
 {
 	/// <summary>
 	/// Gets the interaction that was created.
@@ -21,14 +23,9 @@ public class BaseContext
 	public DiscordInteraction Interaction { get; internal init; }
 
 	/// <summary>
-	/// Gets the client for this interaction.
-	/// </summary>
-	public DiscordClient Client { get; internal init; }
-
-	/// <summary>
 	/// Gets the guild this interaction was executed in.
 	/// </summary>
-	public DiscordGuild Guild { get; internal init; }
+	public DiscordGuild? Guild { get; internal init; }
 
 	/// <summary>
 	/// Gets the channel this interaction was executed in.
@@ -43,7 +40,7 @@ public class BaseContext
 	/// <summary>
 	/// Gets the member which executed this interaction, or null if the command is in a DM.
 	/// </summary>
-	public DiscordMember Member
+	public DiscordMember? Member
 		=> this.User is DiscordMember member ? member : null;
 
 	/// <summary>
@@ -62,24 +59,9 @@ public class BaseContext
 	public ulong InteractionId { get; internal set; }
 
 	/// <summary>
-	/// Gets the name of the command.
-	/// </summary>
-	public string CommandName { get; internal init; }
-
-	/// <summary>
-	/// Gets the name of the sub command.
-	/// </summary>
-	public string? SubCommandName { get; internal set; }
-
-	/// <summary>
-	/// Gets the name of the sub command.
-	/// </summary>
-	public string? SubSubCommandName { get; internal set; }
-
-	/// <summary>
 	/// Gets the full command string, including the subcommand.
 	/// </summary>
-	public string FullCommandName
+	public override string FullCommandName
 		=> $"{this.CommandName}{(string.IsNullOrWhiteSpace(this.SubCommandName) ? "" : $" {this.SubCommandName}")}{(string.IsNullOrWhiteSpace(this.SubSubCommandName) ? "" : $" {this.SubSubCommandName}")}";
 
 	/// <summary>
@@ -124,6 +106,14 @@ public class BaseContext
 	/// <para>Defaults to an empty service provider.</para>
 	/// </summary>
 	public IServiceProvider Services { get; internal set; } = new ServiceCollection().BuildServiceProvider(true);
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="BaseContext"/> class.
+	/// </summary>
+	/// <param name="type">The command type.</param>
+	internal BaseContext(DisCatSharpCommandType type)
+		: base(type)
+	{ }
 
 	/// <summary>
 	/// Creates a response to this interaction.
