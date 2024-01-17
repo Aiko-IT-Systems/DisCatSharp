@@ -59,6 +59,8 @@ items:
                   href: modules/application_commands/modals.md
                 - name: Paginated Modals
                   href: modules/application_commands/paginated_modals.md
+                - name: Cooldowns
+                  href: modules/application_commands/cooldowns.md
           - name: CommandsNext
             items:
                 - name: Introduction
@@ -75,6 +77,8 @@ items:
                         href: modules/commandsnext/customization/argument_converters.md
                       - name: Command Handler
                         href: modules/commandsnext/customization/command_handler.md
+                - name: Cooldowns
+                  href: modules/commandsnext/cooldowns.md
           - name: Audio
             items:
                 - name: Lavalink V4
