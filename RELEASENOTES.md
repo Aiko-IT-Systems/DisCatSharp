@@ -1,105 +1,66 @@
 DisCatSharp Release Notes
 
 	Important fix:
- 	- Apparently the built-in c# method for building uris broke. The gateway uri included never the gateway version, encoding and compression. This is fixed now!
-
-    Breaking changes:
-    - Dropped support for .NET 6
-    - Removed previously deprecated fields and methods
+ 	- Applying the proxy configuration to the sharded client startup (it was missing)
 
     Notable Changes
-    - Full support for onboarding
-    - Custom status support
-    - Full support for Application Subscriptions aka. Premium Apps
-    - DiscordOAuth2Client: Allows bots to request and use access tokens for the Discord API.
-    - Support for default select menu values (THANKS MAISY FOR ADDING IT TO DISCORD)
-    - DisCatSharp can now check for new releases on startup. Including support for extensions 
+    - Added support for building and using cooldowns
 
 
 DisCatSharp.Attributes Release Notes
 
-    Breaking changes:
-    - Dropped support for .NET 6
-    - Removed previously deprecated fields and methods
-
-    Added new required feature enums to notate feature usage
+    None
 
 
 DisCatSharp.ApplicationCommands Release Notes
 
-	Important fix:
- 	- Changed the timing when and how commands are registered to fix some issues
-
     Breaking changes:
-    - Dropped support for .NET 6
-    - Removed previously deprecated fields and methods
+    - Fixed problems with translation generation and usage
 
-    Contains a rework for command registration (Kinda wacky tho with translation-enabled commands)
-	Fixed a major issue with application commands. Upgrade mandatory
+    Notable changes
+    - Added cooldowns for application commands
 
 
 DisCatSharp.CommandsNext Release Notes
 
-    Breaking changes:
-    - Dropped support for .NET 6
-    - Removed previously deprecated fields and methods
+    Notable changes:
+    - Fixed cooldowns
 
 
 DisCatSharp.Interactivity Release Notes
 
-    Breaking changes:
-    - Dropped support for .NET 6
-    - Removed previously deprecated fields and methods
-
-    Contains important bug fixes for interactions and pagination
+    None
 
 DisCatSharp.Common Release Notes
 
-    Breaking changes:
-    - Dropped support for .NET 6
-    - Removed previously deprecated fields and methods
-
-    We added all of our regexes to the Common package as GenereicRegexes
+    None
 
 
 DisCatSharp.Lavalink Release Notes
 
-    Breaking changes:
-    - Dropped support for .NET 6
-    - Removed previously deprecated fields and methods
-    - Lavalink got a complete rework for V4.
-    - Visit the documentation for more information: https://docs.dcs.aitsys.dev/articles/modules/audio/lavalink_v4/intro
+    None
 
 
 DisCatSharp.VoiceNext Release Notes
-
-    Breaking changes:
-    - Dropped support for .NET 6
-    - Removed previously deprecated fields and methods
 
     Will be deprecated soon and replaced by DisCatSharp.Voice
 
 
 DisCatSharp.Experimental Release Notes
 
-    Breaking changes:
-    - Dropped support for .NET 6
+    None
 
 
 DisCatSharp.Configuration Release Notes
 
-    Breaking changes:
-    - Dropped support for .NET 6
+    None
 
 
 DisCatSharp.Hosting Release Notes
 
-    Breaking changes:
-    - Dropped support for .NET 6
+    None
 
 
 DisCatSharp.Hosting.DependencyInjection Release Notes
 
-    Breaking changes:
-    - Dropped support for .NET 6
-
+    None
