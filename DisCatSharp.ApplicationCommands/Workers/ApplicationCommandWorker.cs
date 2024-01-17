@@ -249,10 +249,10 @@ internal class NestedCommandWorker
 						));
 					}
 
-					subNameLocalizations = subCommandTranslation.NameTranslations;
-					subDescriptionLocalizations = subCommandTranslation.DescriptionTranslations;
 				}
 
+				subNameLocalizations = subCommandTranslation.NameTranslations;
+				subDescriptionLocalizations = subCommandTranslation.DescriptionTranslations;
 				//Creates the subcommand and adds it to the main command
 				var subpayload = new DiscordApplicationCommandOption(commandAttribute.Name, commandAttribute.Description, ApplicationCommandOptionType.SubCommand, false, null, localizedOptions ?? options, nameLocalizations: subNameLocalizations, descriptionLocalizations: subDescriptionLocalizations);
 				payload = new(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations, defaultMemberPermissions: payload.DefaultMemberPermissions, dmPermission: payload.DmPermission ?? true, isNsfw: payload.IsNsfw, allowedContexts: payload.AllowedContexts, integrationTypes: payload.IntegrationTypes);
