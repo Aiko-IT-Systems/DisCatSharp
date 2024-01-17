@@ -675,20 +675,20 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 											if (scg.Options is not null)
 												foreach (var sc in scg.Options)
 													if (sc.Options is null || sc.Options.Count is 0)
-														cs.Add(new(sc.Name, sc.Description, null, null));
+														cs.Add(new(sc.Name, sc.Description, null, null, sc.RawNameLocalizations, sc.RawDescriptionLocalizations));
 													else
-														cs.Add(new(sc.Name, sc.Description, [.. sc.Options], null));
-											cgs.Add(new(scg.Name, scg.Description, cs, null));
+														cs.Add(new(sc.Name, sc.Description, [.. sc.Options], null, sc.RawNameLocalizations, sc.RawDescriptionLocalizations));
+											cgs.Add(new(scg.Name, scg.Description, cs, null, scg.RawNameLocalizations, scg.RawDescriptionLocalizations));
 										}
 
 										foreach (var sc2 in cmd.Options.Where(x => x.Type is ApplicationCommandOptionType.SubCommand))
 											if (sc2.Options == null || sc2.Options.Count == 0)
-												cs2.Add(new(sc2.Name, sc2.Description, null, null));
+												cs2.Add(new(sc2.Name, sc2.Description, null, null, sc2.RawNameLocalizations, sc2.RawDescriptionLocalizations));
 											else
-												cs2.Add(new(sc2.Name, sc2.Description, [.. sc2.Options], null));
+												cs2.Add(new(sc2.Name, sc2.Description, [.. sc2.Options], null, sc2.RawNameLocalizations, sc2.RawDescriptionLocalizations));
 									}
 
-									cgwsgs.Add(new(cmd.Name, cmd.Description, cgs, cs2, cmd.Type));
+									cgwsgs.Add(new(cmd.Name, cmd.Description, cgs, cs2, cmd.Type, cmd.RawNameLocalizations, cmd.RawDescriptionLocalizations));
 								}
 
 							if (cgwsgs.Count is not 0)
@@ -732,12 +732,20 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							var cs = new List<Command>();
 							foreach (var cmd in slashCommands.applicationCommands.Where(cmd => cmd.Type is ApplicationCommandType.ChatInput && (cmd.Options is null || !cmd.Options.Any(x => x.Type is ApplicationCommandOptionType.SubCommand or ApplicationCommandOptionType.SubCommandGroup))))
 								if (cmd.Options == null || cmd.Options.Count == 0)
-									cs.Add(new(cmd.Name, cmd.Description, null, ApplicationCommandType.ChatInput));
+									cs.Add(new(cmd.Name, cmd.Description, null, ApplicationCommandType.ChatInput, cmd.RawNameLocalizations, cmd.RawDescriptionLocalizations));
 								else
-									cs.Add(new(cmd.Name, cmd.Description, [.. cmd.Options], ApplicationCommandType.ChatInput));
+									cs.Add(new(cmd.Name, cmd.Description, [.. cmd.Options], ApplicationCommandType.ChatInput, cmd.RawNameLocalizations, cmd.RawDescriptionLocalizations));
 
 							if (cs.Count is not 0)
-								translation.AddRange(cs.Select(c => JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(c))!));
+								//translation.AddRange(cs.Select(c => JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(c))!));
+							{
+								foreach (var c in cs)
+								{
+									var json = JsonConvert.SerializeObject(c);
+									var obj = JsonConvert.DeserializeObject<CommandTranslator>(json);
+									translation.Add(obj!);
+								}
+							}
 						}
 					}
 
@@ -910,7 +918,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							RegisteredCommands = GlobalCommandsInternal
 						}).ConfigureAwait(false);
 
-					await this.CheckRegistrationStartup(translation, groupTranslation);
+					await this.CheckRegistrationStartup(translation, groupTranslation, guildId);
 				}
 				catch (NullReferenceException ex)
 				{
