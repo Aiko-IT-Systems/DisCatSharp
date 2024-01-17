@@ -258,7 +258,7 @@ public class CommandsNextExtension : BaseExtension
 	/// <param name="commandString">Qualified name of the command, optionally with arguments.</param>
 	/// <param name="rawArguments">Separated arguments.</param>
 	/// <returns>Found command or null if none was found.</returns>
-	public Command FindCommand(string commandString, out string rawArguments)
+	public Command FindCommand(string commandString, out string? rawArguments)
 	{
 		rawArguments = null;
 
@@ -323,7 +323,7 @@ public class CommandsNextExtension : BaseExtension
 	/// <param name="cmd">Command to execute.</param>
 	/// <param name="rawArguments">Raw arguments to pass to command.</param>
 	/// <returns>Created command execution context.</returns>
-	public CommandContext CreateContext(DiscordMessage msg, string prefix, Command cmd, string rawArguments = null)
+	public CommandContext CreateContext(DiscordMessage msg, string prefix, Command cmd, string? rawArguments = null)
 	{
 		var ctx = new CommandContext
 		{
@@ -334,7 +334,11 @@ public class CommandsNextExtension : BaseExtension
 			RawArgumentString = rawArguments ?? "",
 			Prefix = prefix,
 			CommandsNext = this,
-			Services = this.Services
+			Services = this.Services,
+			UserId = msg.Author.Id,
+			GuildId = msg.GuildId,
+			MemberId = msg.GuildId is not null ? msg.Author.Id : null,
+			ChannelId = msg.ChannelId
 		};
 
 		if (cmd != null && (cmd.Module is TransientCommandModule || cmd.Module == null))
@@ -839,7 +843,8 @@ public class CommandsNextExtension : BaseExtension
 			AttachmentsInternal = [],
 			EmbedsInternal = [],
 			TimestampRaw = now.ToString("yyyy-MM-ddTHH:mm:sszzz"),
-			ReactionsInternal = []
+			ReactionsInternal = [],
+			GuildId = channel.GuildId
 		};
 
 		var mentionedUsers = new List<DiscordUser>();
@@ -871,10 +876,14 @@ public class CommandsNextExtension : BaseExtension
 			RawArgumentString = rawArguments ?? "",
 			Prefix = prefix,
 			CommandsNext = this,
-			Services = this.Services
+			Services = this.Services,
+			UserId = msg.Author.Id,
+			GuildId = msg.GuildId,
+			MemberId = msg.GuildId is not null ? msg.Author.Id : null,
+			ChannelId = msg.ChannelId
 		};
 
-		if (cmd != null && (cmd.Module is TransientCommandModule || cmd.Module == null))
+		if (cmd != null && cmd.Module is TransientCommandModule or null)
 		{
 			var scope = ctx.Services.CreateScope();
 			ctx.ServiceScopeContext = new(ctx.Services, scope);

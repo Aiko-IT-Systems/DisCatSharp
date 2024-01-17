@@ -135,6 +135,12 @@ public sealed class DiscordInteraction : SnowflakeObject
 	public AuthorizingIntegrationOwners? AuthorizingIntegrationOwners { get; internal set; }
 
 	/// <summary>
+	/// Gets the interaction's calling context.
+	/// </summary>
+	[JsonProperty("context", NullValueHandling = NullValueHandling.Ignore)]
+	public ApplicationCommandContexts Context { get; internal set; }
+
+	/// <summary>
 	/// Creates a response to this interaction.
 	/// </summary>
 	/// <param name="type">The type of the response.</param>

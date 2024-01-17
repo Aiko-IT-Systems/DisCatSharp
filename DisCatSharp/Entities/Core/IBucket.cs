@@ -1,6 +1,7 @@
 using System;
+using System.Threading.Tasks;
 
-namespace DisCatSharp.ApplicationCommands.Entities;
+namespace DisCatSharp.Entities.Core;
 
 /// <summary>
 /// Defines the standard contract for bucket feature

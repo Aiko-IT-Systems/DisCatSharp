@@ -28,25 +28,25 @@ internal sealed class RestApplicationCommandCreatePayload : ObservableApiObject
 	/// Gets the name localizations.
 	/// </summary>
 	[JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
-	public Optional<Dictionary<string, string>> NameLocalizations { get; set; }
+	public Optional<Dictionary<string, string>?> NameLocalizations { get; set; }
 
 	/// <summary>
 	/// Gets the description.
 	/// </summary>
 	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
-	public string Description { get; set; }
+	public string? Description { get; set; }
 
 	/// <summary>
 	/// Gets the description localizations.
 	/// </summary>
 	[JsonProperty("description_localizations", NullValueHandling = NullValueHandling.Ignore)]
-	public Optional<Dictionary<string, string>> DescriptionLocalizations { get; set; }
+	public Optional<Dictionary<string, string>?> DescriptionLocalizations { get; set; }
 
 	/// <summary>
 	/// Gets the options.
 	/// </summary>
 	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordApplicationCommandOption> Options { get; set; }
+	public IEnumerable<DiscordApplicationCommandOption>? Options { get; set; }
 
 	/// <summary>
 	/// Whether the command is allowed for everyone.
@@ -99,26 +99,26 @@ internal sealed class RestApplicationCommandEditPayload : ObservableApiObject
 	/// <summary>
 	/// Gets the name localizations.
 	/// </summary>
-	[JsonProperty("name_localizations")]
-	public Optional<Dictionary<string, string>> NameLocalizations { get; set; }
+	[JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<Dictionary<string, string>?> NameLocalizations { get; set; }
 
 	/// <summary>
 	/// Gets the description.
 	/// </summary>
 	[JsonProperty("description")]
-	public Optional<string> Description { get; set; }
+	public Optional<string?> Description { get; set; }
 
 	/// <summary>
 	/// Gets the description localizations.
 	/// </summary>
-	[JsonProperty("description_localizations")]
-	public Optional<Dictionary<string, string>> DescriptionLocalizations { get; set; }
+	[JsonProperty("description_localizations", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<Dictionary<string, string>?> DescriptionLocalizations { get; set; }
 
 	/// <summary>
 	/// Gets the options.
 	/// </summary>
 	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-	public Optional<List<DiscordApplicationCommandOption>> Options { get; set; }
+	public Optional<List<DiscordApplicationCommandOption>?> Options { get; set; }
 
 	/// <summary>
 	/// The command needed permissions.

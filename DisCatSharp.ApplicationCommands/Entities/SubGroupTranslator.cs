@@ -27,21 +27,21 @@ internal sealed class SubGroupTranslator
 	/// Gets the sub group name translations.
 	/// </summary>
 	[JsonProperty("name_translations")]
-	internal Dictionary<string, string> NameTranslationsDictionary { get; set; }
+	internal Dictionary<string, string>? NameTranslationsDictionary { get; set; }
 
 	[JsonIgnore]
-	public DiscordApplicationCommandLocalization NameTranslations
-		=> new(this.NameTranslationsDictionary);
+	public DiscordApplicationCommandLocalization? NameTranslations
+		=> this.NameTranslationsDictionary is not null ? new(this.NameTranslationsDictionary) : null;
 
 	/// <summary>
 	/// Gets the sub group description translations.
 	/// </summary>
 	[JsonProperty("description_translations")]
-	internal Dictionary<string, string> DescriptionTranslationsDictionary { get; set; }
+	internal Dictionary<string, string>? DescriptionTranslationsDictionary { get; set; }
 
 	[JsonIgnore]
-	public DiscordApplicationCommandLocalization DescriptionTranslations
-		=> new(this.DescriptionTranslationsDictionary);
+	public DiscordApplicationCommandLocalization? DescriptionTranslations
+		=> this.DescriptionTranslationsDictionary is not null ? new(this.DescriptionTranslationsDictionary) : null;
 
 	/// <summary>
 	/// Gets the command translators.

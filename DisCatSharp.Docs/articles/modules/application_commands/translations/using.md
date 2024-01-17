@@ -79,6 +79,7 @@ A correct translation json for english and german would look like that:
 	{
 		"name": "my_command",
 		"description": "This is description of the command group.",
+		"type": 1,
 		"name_translations": {
 			"en-US": "my_command",
 			"de": "mein_befehl"
@@ -87,11 +88,11 @@ A correct translation json for english and german would look like that:
 			"en-US": "This is description of the command group.",
 			"de": "Das ist die description der Befehl Gruppe."
 		},
+		"groups": [],
 		"commands": [
 			{
 				"name": "first",
 				"description": "First",
-				"type": 1, // Type 1 for slash command
 				"name_translations": {
 					"en-US": "first",
 					"de": "erste"
@@ -104,7 +105,6 @@ A correct translation json for english and german would look like that:
 			{
 				"name": "second",
 				"description": "Second",
-				"type": 1, // Type 1 for slash command
 				"name_translations": {
 					"en-US": "second",
 					"de": "zweite"
@@ -117,6 +117,7 @@ A correct translation json for english and german would look like that:
 					{
 						"name": "value",
 						"description": "Some string value.",
+						"type": 3,
 						"name_translations": {
 							"en-US": "value",
 							"de": "wert"
@@ -182,7 +183,6 @@ A correct json for this example would look like that:
 	},
 	{
 		"name": "My Command",
-		"description": null,
 		"type": 2, // Type 2 for user context menu command
 		"name_translations": {
 			"en-US": "My Command",

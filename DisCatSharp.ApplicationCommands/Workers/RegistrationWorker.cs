@@ -356,14 +356,13 @@ internal class RegistrationWorker
 	/// <returns></returns>
 	private static List<DiscordApplicationCommand>? BuildGuildCreateList(DiscordClient client, ulong guildId, List<DiscordApplicationCommand>? updateList = null)
 	{
-		if (ApplicationCommandsExtension.GuildDiscordCommands.Count is 0
-		    || updateList is null || !ApplicationCommandsExtension.GuildDiscordCommands!.TryGetFirstValueByKey(guildId, out var discord)
-		)
+		if (updateList is null)
 			return null;
 
+		var success = ApplicationCommandsExtension.GuildDiscordCommands.TryGetFirstValueByKey(guildId, out var discord);
 		List<DiscordApplicationCommand> newCommands = [];
 
-		if (discord is null)
+		if (!success || discord is null || discord.Count is 0)
 			return updateList;
 
 		newCommands.AddRange(updateList.Where(cmd => discord.All(d => d.Name != cmd.Name)));
@@ -450,14 +449,14 @@ internal class RegistrationWorker
 	/// <returns>A list of commands.</returns>
 	private static List<DiscordApplicationCommand>? BuildGlobalCreateList(DiscordClient client, List<DiscordApplicationCommand>? updateList = null)
 	{
-		if (ApplicationCommandsExtension.GlobalDiscordCommands.Count is 0 || updateList is null)
-			return updateList;
+		if (updateList is null)
+			return null;
 
 		var discord = ApplicationCommandsExtension.GlobalDiscordCommands;
 
 		List<DiscordApplicationCommand> newCommands = [];
 
-		if (discord is null)
+		if (discord is null || discord.Count is 0)
 			return updateList;
 
 		newCommands.AddRange(updateList.Where(cmd => discord.All(d => d.Name != cmd.Name)));

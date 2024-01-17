@@ -233,20 +233,23 @@ internal class NestedCommandWorker
 				var commandTranslation = translator?.Single(c => c.Name == payload.Name);
 
 				var subCommandTranslation = commandTranslation?.Commands?.Single(sc => sc.Name == commandAttribute.Name);
-				if (subCommandTranslation?.Options is not null)
+				if (subCommandTranslation is not null)
 				{
-					localizedOptions = new(options.Count);
-					foreach (var option in options)
+					if (subCommandTranslation.Options is not null)
 					{
-						var choices = option.Choices is not null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count) : null;
-						if (option.Choices is not null && choices is not null)
-							choices.AddRange(option.Choices.Select(choice => new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, subCommandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations)));
+						localizedOptions = new(options.Count);
+						foreach (var option in options)
+						{
+							var choices = option.Choices is not null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count) : null;
+							if (option.Choices is not null && choices is not null)
+								choices.AddRange(option.Choices.Select(choice => new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, subCommandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations)));
 
-						localizedOptions.Add(new(option.Name, option.Description, option.Type, option.Required,
-							choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
-							subCommandTranslation.Options.Single(o => o.Name == option.Name).NameTranslations, subCommandTranslation.Options.Single(o => o.Name == option.Name).DescriptionTranslations,
-							option.MinimumLength, option.MaximumLength
-						));
+							localizedOptions.Add(new(option.Name, option.Description, option.Type, option.Required,
+								choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
+								subCommandTranslation.Options.Single(o => o.Name == option.Name).NameTranslations, subCommandTranslation.Options.Single(o => o.Name == option.Name).DescriptionTranslations,
+								option.MinimumLength, option.MaximumLength
+							));
+						}
 					}
 
 					subNameLocalizations = subCommandTranslation.NameTranslations;
