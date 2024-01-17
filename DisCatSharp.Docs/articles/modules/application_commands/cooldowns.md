@@ -9,7 +9,7 @@ hasDiscordComponents: true
 
 You can apply cooldowns to your application commands with the @DisCatSharp.ApplicationCommands.Attributes.SlashCommandCooldownAttribute & @DisCatSharp.ApplicationCommands.Attributes.ContextMenuCooldownAttribute.
 
-The cooldown attribute consists of three required parameters and one optional parameter.
+The cooldown attributes consists of three required parameters and one optional parameter.
 
 - `int maxUses` - The number of times a command can be used during the definied time before being put on cooldown.
 - `double resetAfter` - After how many seconds the cooldown resets.
@@ -18,7 +18,7 @@ The cooldown attribute consists of three required parameters and one optional pa
 ## Usage
 
 ```cs
-// We create a command which sends a meow to the channel. This command can be executed twice every 40 seconds per channel.
+// We create a slash command which sends a meow to the channel. This command can be executed twice every 40 seconds per channel.
 [SlashCommand("meow", "Meow at chat"), SlashCommandCooldown(2, 40, CooldownBucketType.Channel)]
 public async Task MeowAsync(InteractionContext ctx)
 {
@@ -27,6 +27,9 @@ public async Task MeowAsync(InteractionContext ctx)
 ```
 
 ### Visual Example
+
+Please note that the timestamp would show the actual time of the cooldown reset.
+We can't dynamically change the timestamp in the example, so we just use a static one.
 
 <discord-messages>
     <discord-message profile="dcs">
@@ -39,8 +42,7 @@ public async Task MeowAsync(InteractionContext ctx)
     </discord-message>
     <discord-message profile="dcs" ephemeral>
         <discord-command slot="reply" profile="dcs_user" command="/meow"></discord-command>
-        Error: Ratelimit hit
-        Try again <discord-time timestamp="1654800428" format="R"></discord-time>
+        Error: Ratelimit hit<br/>Try again <discord-time timestamp="1894912612" format="R"></discord-time>
     </discord-message>
 </discord-messages>
 

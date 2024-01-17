@@ -46,12 +46,8 @@ items:
     name: CheckBaseAttribute
   - uid: DisCatSharp.CommandsNext.Attributes.CommandAttribute
     name: CommandAttribute
-  - uid: DisCatSharp.CommandsNext.Attributes.CommandCooldownBucket
-    name: CommandCooldownBucket
   - uid: DisCatSharp.CommandsNext.Attributes.CooldownAttribute
     name: CooldownAttribute
-  - uid: DisCatSharp.CommandsNext.Attributes.CooldownBucketType
-    name: CooldownBucketType
   - uid: DisCatSharp.CommandsNext.Attributes.DescriptionAttribute
     name: DescriptionAttribute
   - uid: DisCatSharp.CommandsNext.Attributes.DontInjectAttribute
@@ -201,6 +197,8 @@ items:
     name: CommandHelpMessage
   - uid: DisCatSharp.CommandsNext.Entities.ICommandModule
     name: ICommandModule
+  - uid: DisCatSharp.CommandsNext.Entities.ICooldownResponder
+    name: ICooldownResponder
   - uid: DisCatSharp.CommandsNext.Entities.SingletonCommandModule
     name: SingletonCommandModule
   - uid: DisCatSharp.CommandsNext.Entities.TransientCommandModule

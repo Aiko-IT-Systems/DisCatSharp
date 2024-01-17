@@ -52,10 +52,6 @@ items:
     name: AutomodTriggerMetadata
   - uid: DisCatSharp.Entities.AvatarDecorationData
     name: AvatarDecorationData
-  - uid: DisCatSharp.Entities.DisCatSharpTeam
-    name: DisCatSharpTeam
-  - uid: DisCatSharp.Entities.DisCatSharpTeamMember
-    name: DisCatSharpTeamMember
   - uid: DisCatSharp.Entities.DiscordActionRowComponent
     name: DiscordActionRowComponent
   - uid: DisCatSharp.Entities.DiscordActionRowComponentResult
@@ -412,6 +408,17 @@ items:
     name: UserWithIdOnly
   - uid: DisCatSharp.Entities.WelcomeMessage
     name: WelcomeMessage
+- uid: DisCatSharp.Entities.Core
+  name: DisCatSharp.Entities.Core
+  items:
+  - uid: DisCatSharp.Entities.Core.CooldownBucket
+    name: CooldownBucket
+  - uid: DisCatSharp.Entities.Core.DisCatSharpCommandContext
+    name: DisCatSharpCommandContext
+  - uid: DisCatSharp.Entities.Core.IBucket
+    name: IBucket
+  - uid: DisCatSharp.Entities.Core.ICooldown`2
+    name: ICooldown<TContextType, TBucketType>
 - uid: DisCatSharp.Entities.OAuth2
   name: DisCatSharp.Entities.OAuth2
   items:
@@ -642,6 +649,13 @@ items:
     name: VideoQualityMode
   - uid: DisCatSharp.Enums.WidgetType
     name: WidgetType
+- uid: DisCatSharp.Enums.Core
+  name: DisCatSharp.Enums.Core
+  items:
+  - uid: DisCatSharp.Enums.Core.CooldownBucketType
+    name: CooldownBucketType
+  - uid: DisCatSharp.Enums.Core.DisCatSharpCommandType
+    name: DisCatSharpCommandType
 - uid: DisCatSharp.EventArgs
   name: DisCatSharp.EventArgs
   items:
