@@ -63,18 +63,11 @@ public class DisCatSharpCommandContext
 	public DisCatSharpCommandType CommandType { get; internal set; }
 
 	/// <summary>
-	/// Gets the command grouping type of the command.
-	/// </summary>
-	public DisCatSharpCommandGroupingType CommandGroupingType { get; internal set; }
-
-	/// <summary>
 	/// Initializes a new instance of the <see cref="DisCatSharpCommandContext"/> class.
 	/// </summary>
 	/// <param name="type">The command type.</param>
-	/// <param name="groupingType">The command grouping type.</param>
-	internal DisCatSharpCommandContext(DisCatSharpCommandType type, DisCatSharpCommandGroupingType groupingType = DisCatSharpCommandGroupingType.None)
+	internal DisCatSharpCommandContext(DisCatSharpCommandType type)
 	{
 		this.CommandType = type;
-		this.CommandGroupingType = groupingType;
 	}
 }

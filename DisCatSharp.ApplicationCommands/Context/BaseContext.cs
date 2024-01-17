@@ -111,9 +111,8 @@ public class BaseContext : DisCatSharpCommandContext
 	/// Initializes a new instance of the <see cref="BaseContext"/> class.
 	/// </summary>
 	/// <param name="type">The command type.</param>
-	/// <param name="groupingType">The command grouping type.</param>
-	internal BaseContext(DisCatSharpCommandType type, DisCatSharpCommandGroupingType groupingType = DisCatSharpCommandGroupingType.Command)
-		: base(type, groupingType)
+	internal BaseContext(DisCatSharpCommandType type)
+		: base(type)
 	{ }
 
 	/// <summary>

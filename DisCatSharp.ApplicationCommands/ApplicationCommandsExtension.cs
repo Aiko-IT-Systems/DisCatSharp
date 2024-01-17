@@ -1121,7 +1121,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								var method = methods.First().Method;
 								context.SubCommandName = null;
 								context.SubSubCommandName = null;
-								context.CommandGroupingType = DisCatSharpCommandGroupingType.Command;
 								if (DebugEnabled)
 									this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
 								var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options).ConfigureAwait(false);
@@ -1135,7 +1134,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								var method = groups.First().Methods.First(x => x.Key == command.Name).Value;
 								context.SubCommandName = command.Name;
 								context.SubSubCommandName = null;
-								context.CommandGroupingType = DisCatSharpCommandGroupingType.SubCommand;
 								if (DebugEnabled)
 									this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
 								var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options[0].Options).ConfigureAwait(false);
@@ -1151,7 +1149,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								var method = group.Methods.First(x => x.Key == command.Options[0].Name).Value;
 								context.SubCommandName = command.Name;
 								context.SubSubCommandName = command.Options[0].Name;
-								context.CommandGroupingType = DisCatSharpCommandGroupingType.SubGroupCommand;
 
 								if (DebugEnabled)
 									this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
@@ -1381,7 +1378,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				AppPermissions = e.Interaction.AppPermissions,
 				Entitlements = e.Interaction.Entitlements,
 				EntitlementSkuIds = e.Interaction.EntitlementSkuIds,
-				CommandGroupingType = DisCatSharpCommandGroupingType.Command,
 				UserId = e.Interaction.User.Id,
 				GuildId = e.Interaction.GuildId,
 				MemberId = e.Interaction.GuildId is not null ? e.Interaction.User.Id : null,
