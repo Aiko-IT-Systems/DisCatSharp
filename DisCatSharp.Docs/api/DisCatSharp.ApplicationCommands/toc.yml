@@ -66,8 +66,6 @@ items:
     name: ContextMenuAttribute
   - uid: DisCatSharp.ApplicationCommands.Attributes.ContextMenuCooldownAttribute
     name: ContextMenuCooldownAttribute
-  - uid: DisCatSharp.ApplicationCommands.Attributes.ContextMenuCooldownBucket
-    name: ContextMenuCooldownBucket
   - uid: DisCatSharp.ApplicationCommands.Attributes.DontInjectAttribute
     name: DontInjectAttribute
   - uid: DisCatSharp.ApplicationCommands.Attributes.IAutocompleteProvider
@@ -90,8 +88,6 @@ items:
     name: SlashCommandAttribute
   - uid: DisCatSharp.ApplicationCommands.Attributes.SlashCommandCooldownAttribute
     name: SlashCommandCooldownAttribute
-  - uid: DisCatSharp.ApplicationCommands.Attributes.SlashCommandCooldownBucket
-    name: SlashCommandCooldownBucket
   - uid: DisCatSharp.ApplicationCommands.Attributes.SlashCommandGroupAttribute
     name: SlashCommandGroupAttribute
 - uid: DisCatSharp.ApplicationCommands.Context
@@ -110,21 +106,25 @@ items:
 - uid: DisCatSharp.ApplicationCommands.Entities
   name: DisCatSharp.ApplicationCommands.Entities
   items:
-  - uid: DisCatSharp.ApplicationCommands.Entities.CooldownBucket
-    name: CooldownBucket
-  - uid: DisCatSharp.ApplicationCommands.Entities.IBucket
-    name: IBucket
-  - uid: DisCatSharp.ApplicationCommands.Entities.ICooldown`2
-    name: ICooldown<TContextType, TBucketType>
+  - uid: DisCatSharp.ApplicationCommands.Entities.ChoiceTranslator
+    name: ChoiceTranslator
+  - uid: DisCatSharp.ApplicationCommands.Entities.CommandTranslator
+    name: CommandTranslator
+  - uid: DisCatSharp.ApplicationCommands.Entities.GroupTranslator
+    name: GroupTranslator
+  - uid: DisCatSharp.ApplicationCommands.Entities.ICooldownResponder
+    name: ICooldownResponder
+  - uid: DisCatSharp.ApplicationCommands.Entities.OptionTranslator
+    name: OptionTranslator
   - uid: DisCatSharp.ApplicationCommands.Entities.RegisteredDiscordApplicationCommand
     name: RegisteredDiscordApplicationCommand
+  - uid: DisCatSharp.ApplicationCommands.Entities.SubGroupTranslator
+    name: SubGroupTranslator
 - uid: DisCatSharp.ApplicationCommands.Enums
   name: DisCatSharp.ApplicationCommands.Enums
   items:
   - uid: DisCatSharp.ApplicationCommands.Enums.ApplicationCommandModuleLifespan
     name: ApplicationCommandModuleLifespan
-  - uid: DisCatSharp.ApplicationCommands.Enums.CooldownBucketType
-    name: CooldownBucketType
 - uid: DisCatSharp.ApplicationCommands.EventArgs
   name: DisCatSharp.ApplicationCommands.EventArgs
   items:
