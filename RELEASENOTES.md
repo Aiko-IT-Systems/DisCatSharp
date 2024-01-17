@@ -19,6 +19,7 @@ DisCatSharp.ApplicationCommands Release Notes
 
     Notable changes
     - Added cooldowns for application commands
+    - Fix first-time command registration
 
 
 DisCatSharp.CommandsNext Release Notes
