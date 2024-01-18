@@ -62,9 +62,7 @@ Alternative hosts for our docs are:
 
 ## Bugs or Feature requests?
 
-Either join our official support guild at https://discord.gg/Uk7sggRBTm
-
-Or write us an email at [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
+Either join our official support guild at https://discord.gg/Uk7sggRBTm, open an issue or write us an email at [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
 
 <!-- All requests are tracked at [aitsys.dev](https://aitsys.dev/proje<ct/view/1/). We currently don't do that for reasons -->
 
