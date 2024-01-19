@@ -136,7 +136,7 @@ public sealed class SlashCommandCooldownAttribute(int maxUses, double resetAfter
 
 		var providerMethod = this.ResponderType.GetMethod(nameof(ICooldownResponder.Responder));
 		var providerInstance = Activator.CreateInstance(this.ResponderType);
-		await ((Task)providerMethod.Invoke(providerInstance, [ctx])).ConfigureAwait(false);
+		await ((Task)providerMethod.Invoke(providerInstance, [ctx, bucket])).ConfigureAwait(false);
 
 		return false;
 	}

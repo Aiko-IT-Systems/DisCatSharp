@@ -139,7 +139,7 @@ public sealed class CooldownAttribute(int maxUses, double resetAfter, CooldownBu
 
 		var providerMethod = this.ResponderType.GetMethod(nameof(ICooldownResponder.Responder));
 		var providerInstance = Activator.CreateInstance(this.ResponderType);
-		await ((Task)providerMethod.Invoke(providerInstance, [ctx])).ConfigureAwait(false);
+		await ((Task)providerMethod.Invoke(providerInstance, [ctx, bucket])).ConfigureAwait(false);
 
 		return false;
 	}
