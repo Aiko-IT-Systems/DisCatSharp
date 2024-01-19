@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands.Context;
+using DisCatSharp.Entities.Core;
 
 namespace DisCatSharp.ApplicationCommands.Entities;
 
@@ -13,5 +14,6 @@ public interface ICooldownResponder
 	/// Responds to cooldown ratelimit hits with given response.
 	/// </summary>
 	/// <param name="context">The context.</param>
-	Task Responder(BaseContext context);
+	/// <param name="cooldownBucket">Gets the current cooldown bucket.</param>
+	Task Responder(BaseContext context, CooldownBucket cooldownBucket);
 }
