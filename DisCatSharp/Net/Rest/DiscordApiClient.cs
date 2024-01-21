@@ -1106,20 +1106,20 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Adds the guild member async.
 	/// </summary>
-	/// <param name="guildId">The guild_id.</param>
-	/// <param name="userId">The user_id.</param>
-	/// <param name="accessToken">The access_token.</param>
-	/// <param name="nick">The nick.</param>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="userId">The user id.</param>
+	/// <param name="accessToken">The user's access token.</param>
+	/// <param name="nickname">The nickname.</param>
 	/// <param name="roles">The roles.</param>
 	/// <param name="muted">If true, muted.</param>
 	/// <param name="deafened">If true, deafened.</param>
-	internal async Task<DiscordMember> AddGuildMemberAsync(ulong guildId, ulong userId, string accessToken, string nick, IEnumerable<DiscordRole> roles, bool muted, bool deafened)
+	internal async Task<DiscordMember> AddGuildMemberAsync(ulong guildId, ulong userId, string accessToken, string? nickname = null, IEnumerable<DiscordRole>? roles = null, bool? muted = null, bool? deafened = null)
 	{
 		var pld = new RestGuildMemberAddPayload
 		{
 			AccessToken = accessToken,
-			Nickname = nick ?? "",
-			Roles = roles ?? new List<DiscordRole>(),
+			Nickname = nickname,
+			Roles = roles,
 			Deaf = deafened,
 			Mute = muted
 		};
@@ -1174,7 +1174,7 @@ public sealed class DiscordApiClient
 	/// <param name="userId">The user_id.</param>
 	/// <param name="roleId">The role_id.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task AddGuildMemberRoleAsync(ulong guildId, ulong userId, ulong roleId, string reason)
+	internal Task AddGuildMemberRoleAsync(ulong guildId, ulong userId, ulong roleId, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -1199,7 +1199,7 @@ public sealed class DiscordApiClient
 	/// <param name="userId">The user_id.</param>
 	/// <param name="roleId">The role_id.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task RemoveGuildMemberRoleAsync(ulong guildId, ulong userId, ulong roleId, string reason)
+	internal Task RemoveGuildMemberRoleAsync(ulong guildId, ulong userId, ulong roleId, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -1223,7 +1223,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="pld">The pld.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task ModifyGuildChannelPositionAsync(ulong guildId, IEnumerable<RestGuildChannelReorderPayload> pld, string reason)
+	internal Task ModifyGuildChannelPositionAsync(ulong guildId, IEnumerable<RestGuildChannelReorderPayload> pld, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -1245,7 +1245,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="pld">The pld.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task ModifyGuildChannelParentAsync(ulong guildId, IEnumerable<RestGuildChannelNewParentPayload> pld, string reason)
+	internal Task ModifyGuildChannelParentAsync(ulong guildId, IEnumerable<RestGuildChannelNewParentPayload> pld, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -1267,7 +1267,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="pld">The pld.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task DetachGuildChannelParentAsync(ulong guildId, IEnumerable<RestGuildChannelNoParentPayload> pld, string reason)
+	internal Task DetachGuildChannelParentAsync(ulong guildId, IEnumerable<RestGuildChannelNoParentPayload> pld, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -1289,7 +1289,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="pld">The pld.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task ModifyGuildRolePositionAsync(ulong guildId, IEnumerable<RestGuildRoleReorderPayload> pld, string reason)
+	internal Task ModifyGuildRolePositionAsync(ulong guildId, IEnumerable<RestGuildRoleReorderPayload> pld, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -1430,7 +1430,7 @@ public sealed class DiscordApiClient
 	/// <param name="isEnabled">If true, is enabled.</param>
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordWidgetSettings> ModifyGuildWidgetSettingsAsync(ulong guildId, bool? isEnabled, ulong? channelId, string reason)
+	internal async Task<DiscordWidgetSettings> ModifyGuildWidgetSettingsAsync(ulong guildId, bool? isEnabled, ulong? channelId, string? reason)
 	{
 		var pld = new RestGuildWidgetSettingsPayload
 		{
@@ -1798,7 +1798,7 @@ public sealed class DiscordApiClient
 		bool enabled = false,
 		IEnumerable<ulong> exemptRoles = null,
 		IEnumerable<ulong> exemptChannels = null,
-		string reason = null
+		string? reason = null
 	)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules";
@@ -1862,7 +1862,7 @@ public sealed class DiscordApiClient
 		Optional<bool> enabled,
 		Optional<List<ulong>> exemptRoles,
 		Optional<List<ulong>> exemptChannels,
-		string reason = null
+		string? reason = null
 	)
 	{
 		var pld = new RestAutomodRuleModifyPayload
@@ -1910,7 +1910,7 @@ public sealed class DiscordApiClient
 	/// <param name="ruleId">The rule id.</param>
 	/// <param name="reason">The reason for this deletion.</param>
 	/// <returns>The deleted auto mod rule.</returns>
-	internal async Task<AutomodRule> DeleteAutomodRuleAsync(ulong guildId, ulong ruleId, string reason = null)
+	internal async Task<AutomodRule> DeleteAutomodRuleAsync(ulong guildId, ulong ruleId, string? reason = null)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules/:rule_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
@@ -1944,7 +1944,7 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Creates a scheduled event.
 	/// </summary>
-	internal async Task<DiscordScheduledEvent> CreateGuildScheduledEventAsync(ulong guildId, ulong? channelId, DiscordScheduledEventEntityMetadata metadata, string name, DateTimeOffset scheduledStartTime, DateTimeOffset? scheduledEndTime, string description, ScheduledEventEntityType type, Optional<string> coverb64, string reason = null)
+	internal async Task<DiscordScheduledEvent> CreateGuildScheduledEventAsync(ulong guildId, ulong? channelId, DiscordScheduledEventEntityMetadata metadata, string name, DateTimeOffset scheduledStartTime, DateTimeOffset? scheduledEndTime, string description, ScheduledEventEntityType type, Optional<string> coverb64, string? reason = null)
 	{
 		var pld = new RestGuildScheduledEventCreatePayload
 		{
@@ -2000,7 +2000,7 @@ public sealed class DiscordApiClient
 		Optional<ScheduledEventEntityType> type,
 		Optional<ScheduledEventStatus> status,
 		Optional<string> coverb64,
-		string reason = null
+		string? reason = null
 	)
 	{
 		var pld = new RestGuildScheduledEventModifyPayload
@@ -2058,7 +2058,7 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Modifies a scheduled event.
 	/// </summary>
-	internal async Task<DiscordScheduledEvent> ModifyGuildScheduledEventStatusAsync(ulong guildId, ulong scheduledEventId, ScheduledEventStatus status, string reason = null)
+	internal async Task<DiscordScheduledEvent> ModifyGuildScheduledEventStatusAsync(ulong guildId, ulong scheduledEventId, ScheduledEventStatus status, string? reason = null)
 	{
 		var pld = new RestGuildScheduledEventModifyPayload
 		{
@@ -2201,7 +2201,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="scheduledEventId">The scheduled event id.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task DeleteGuildScheduledEventAsync(ulong guildId, ulong scheduledEventId, string reason)
+	internal Task DeleteGuildScheduledEventAsync(ulong guildId, ulong scheduledEventId, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -2304,7 +2304,7 @@ public sealed class DiscordApiClient
 	/// <param name="defaultAutoArchiveDuration">The default auto archive duration.</param>
 	/// <param name="flags">The channel flags.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordChannel> CreateGuildChannelAsync(ulong guildId, string name, ChannelType type, ulong? parent, Optional<string> topic, int? bitrate, int? userLimit, IEnumerable<DiscordOverwriteBuilder> overwrites, bool? nsfw, Optional<int?> perUserRateLimit, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? defaultAutoArchiveDuration, Optional<ChannelFlags?> flags, string reason)
+	internal async Task<DiscordChannel> CreateGuildChannelAsync(ulong guildId, string name, ChannelType type, ulong? parent, Optional<string> topic, int? bitrate, int? userLimit, IEnumerable<DiscordOverwriteBuilder> overwrites, bool? nsfw, Optional<int?> perUserRateLimit, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? defaultAutoArchiveDuration, Optional<ChannelFlags?> flags, string? reason)
 	{
 		var restOverwrites = new List<DiscordRestOverwrite>();
 		if (overwrites != null)
@@ -2377,7 +2377,7 @@ public sealed class DiscordApiClient
 		ThreadAutoArchiveDuration? defaultAutoArchiveDuration,
 		IEnumerable<DiscordOverwriteBuilder> permissionOverwrites,
 		Optional<ChannelFlags?> flags,
-		string reason
+		string? reason
 	)
 	{
 		List<DiscordRestOverwrite> restoverwrites = null;
@@ -2459,7 +2459,7 @@ public sealed class DiscordApiClient
 		Optional<ChannelType> type,
 		IEnumerable<DiscordOverwriteBuilder> permissionOverwrites,
 		Optional<ChannelFlags?> flags,
-		string reason
+		string? reason
 	)
 	{
 		List<DiscordRestOverwrite> restoverwrites = null;
@@ -2537,7 +2537,7 @@ public sealed class DiscordApiClient
 		Optional<ThreadAutoArchiveDuration?> defaultAutoArchiveDuration,
 		IEnumerable<DiscordOverwriteBuilder> permissionOverwrites,
 		Optional<ChannelFlags?> flags,
-		string reason
+		string? reason
 	)
 	{
 		List<DiscordRestOverwrite> restoverwrites = null;
@@ -2611,7 +2611,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task DeleteChannelAsync(ulong channelId, string reason)
+	internal Task DeleteChannelAsync(ulong channelId, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -2878,7 +2878,7 @@ public sealed class DiscordApiClient
 	/// <param name="sendStartNotification">Whether everyone should be notified about the stage.</param>
 	/// <param name="scheduledEventId">The associated scheduled event id.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordStageInstance> CreateStageInstanceAsync(ulong channelId, string topic, bool sendStartNotification, ulong? scheduledEventId = null, string reason = null)
+	internal async Task<DiscordStageInstance> CreateStageInstanceAsync(ulong channelId, string topic, bool sendStartNotification, ulong? scheduledEventId = null, string? reason = null)
 	{
 		var pld = new RestStageInstanceCreatePayload
 		{
@@ -2929,7 +2929,7 @@ public sealed class DiscordApiClient
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="topic">The topic.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task ModifyStageInstanceAsync(ulong channelId, Optional<string> topic, string reason)
+	internal Task ModifyStageInstanceAsync(ulong channelId, Optional<string> topic, string? reason)
 	{
 		var pld = new RestStageInstanceModifyPayload
 		{
@@ -2954,7 +2954,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task DeleteStageInstanceAsync(ulong channelId, string reason)
+	internal Task DeleteStageInstanceAsync(ulong channelId, string? reason)
 	{
 		var route = $"{Endpoints.STAGE_INSTANCES}/:channel_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
@@ -3130,7 +3130,7 @@ public sealed class DiscordApiClient
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task DeleteMessageAsync(ulong channelId, ulong messageId, string reason)
+	internal Task DeleteMessageAsync(ulong channelId, ulong messageId, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -3153,7 +3153,7 @@ public sealed class DiscordApiClient
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageIds">The message_ids.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task DeleteMessagesAsync(ulong channelId, IEnumerable<ulong> messageIds, string reason)
+	internal Task DeleteMessagesAsync(ulong channelId, IEnumerable<ulong> messageIds, string? reason)
 	{
 		var pld = new RestChannelMessageBulkDeletePayload
 		{
@@ -3210,7 +3210,7 @@ public sealed class DiscordApiClient
 	/// <param name="temporary">If true, temporary.</param>
 	/// <param name="unique">If true, unique.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordInvite> CreateChannelInviteAsync(ulong channelId, int maxAge, int maxUses, TargetType? targetType, ulong? targetApplicationId, ulong? targetUser, bool temporary, bool unique, string reason)
+	internal async Task<DiscordInvite> CreateChannelInviteAsync(ulong channelId, int maxAge, int maxUses, TargetType? targetType, ulong? targetApplicationId, ulong? targetUser, bool temporary, bool unique, string? reason)
 	{
 		var pld = new RestChannelInviteCreatePayload
 		{
@@ -3248,7 +3248,7 @@ public sealed class DiscordApiClient
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="overwriteId">The overwrite_id.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task DeleteChannelPermissionAsync(ulong channelId, ulong overwriteId, string reason)
+	internal Task DeleteChannelPermissionAsync(ulong channelId, ulong overwriteId, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -3274,7 +3274,7 @@ public sealed class DiscordApiClient
 	/// <param name="deny">The deny.</param>
 	/// <param name="type">The type.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task EditChannelPermissionsAsync(ulong channelId, ulong overwriteId, Permissions allow, Permissions deny, string type, string reason)
+	internal Task EditChannelPermissionsAsync(ulong channelId, ulong overwriteId, Permissions allow, Permissions deny, string type, string? reason)
 	{
 		var pld = new RestChannelPermissionEditPayload
 		{
@@ -3612,7 +3612,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="userId">The user_id.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task RemoveGuildMemberAsync(ulong guildId, ulong userId, string reason)
+	internal Task RemoveGuildMemberAsync(ulong guildId, ulong userId, string? reason)
 	{
 		var urlParams = new Dictionary<string, string>();
 		if (reason != null)
@@ -3710,7 +3710,7 @@ public sealed class DiscordApiClient
 		Optional<ulong?> voiceChannelId,
 		Optional<bool> verify,
 		MemberFlags flags,
-		string reason
+		string? reason
 	)
 	{
 		var headers = Utilities.GetBaseHeaders();
@@ -3749,7 +3749,7 @@ public sealed class DiscordApiClient
 	/// <param name="userId">The user_id.</param>
 	/// <param name="until">Datetime offset.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task ModifyTimeoutAsync(ulong guildId, ulong userId, DateTimeOffset? until, string reason)
+	internal Task ModifyTimeoutAsync(ulong guildId, ulong userId, DateTimeOffset? until, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -3777,7 +3777,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="nick">The nick.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task ModifyCurrentMemberNicknameAsync(ulong guildId, string nick, string reason)
+	internal Task ModifyCurrentMemberNicknameAsync(ulong guildId, string nick, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -3839,7 +3839,7 @@ public sealed class DiscordApiClient
 	/// <param name="iconb64">The icon.</param>
 	/// <param name="emoji">The unicode emoji icon.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordRole> ModifyGuildRoleAsync(ulong guildId, ulong roleId, string name, Permissions? permissions, int? color, bool? hoist, bool? mentionable, Optional<string> iconb64, Optional<string> emoji, string reason)
+	internal async Task<DiscordRole> ModifyGuildRoleAsync(ulong guildId, ulong roleId, string name, Permissions? permissions, int? color, bool? hoist, bool? mentionable, Optional<string> iconb64, Optional<string> emoji, string? reason)
 	{
 		var pld = new RestGuildRolePayload
 		{
@@ -3886,7 +3886,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="roleId">The role_id.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task DeleteRoleAsync(ulong guildId, ulong roleId, string reason)
+	internal Task DeleteRoleAsync(ulong guildId, ulong roleId, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -3913,7 +3913,7 @@ public sealed class DiscordApiClient
 	/// <param name="hoist">If true, hoist.</param>
 	/// <param name="mentionable">If true, mentionable.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordRole> CreateGuildRoleAsync(ulong guildId, string name, Permissions? permissions, int? color, bool? hoist, bool? mentionable, string reason)
+	internal async Task<DiscordRole> CreateGuildRoleAsync(ulong guildId, string name, Permissions? permissions, int? color, bool? hoist, bool? mentionable, string? reason)
 	{
 		var pld = new RestGuildRolePayload
 		{
@@ -3988,7 +3988,7 @@ public sealed class DiscordApiClient
 	/// <param name="computePruneCount">If true, compute_prune_count.</param>
 	/// <param name="includeRoles">The include_roles.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<int?> BeginGuildPruneAsync(ulong guildId, int days, bool computePruneCount, IEnumerable<ulong> includeRoles, string reason)
+	internal async Task<int?> BeginGuildPruneAsync(ulong guildId, int days, bool computePruneCount, IEnumerable<ulong> includeRoles, string? reason)
 	{
 		if (days < 0 || days > 30)
 			throw new ArgumentException("Prune inactivity days must be a number between 0 and 30.", nameof(days));
@@ -4256,7 +4256,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="inviteCode">The invite_code.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordInvite> DeleteInviteAsync(string inviteCode, string reason)
+	internal async Task<DiscordInvite> DeleteInviteAsync(string inviteCode, string? reason)
 	{
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -4397,7 +4397,7 @@ public sealed class DiscordApiClient
 	/// <param name="name">The name.</param>
 	/// <param name="base64Avatar">The base64_avatar.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordWebhook> CreateWebhookAsync(ulong channelId, string name, Optional<string> base64Avatar, string reason)
+	internal async Task<DiscordWebhook> CreateWebhookAsync(ulong channelId, string name, Optional<string> base64Avatar, string? reason)
 	{
 		var pld = new RestWebhookPayload
 		{
@@ -4525,7 +4525,7 @@ public sealed class DiscordApiClient
 	/// <param name="name">The name.</param>
 	/// <param name="base64Avatar">The base64_avatar.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordWebhook> ModifyWebhookAsync(ulong webhookId, ulong channelId, string name, Optional<string> base64Avatar, string reason)
+	internal async Task<DiscordWebhook> ModifyWebhookAsync(ulong webhookId, ulong channelId, string name, Optional<string> base64Avatar, string? reason)
 	{
 		var pld = new RestWebhookPayload
 		{
@@ -4562,7 +4562,7 @@ public sealed class DiscordApiClient
 	/// <param name="base64Avatar">The base64_avatar.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordWebhook> ModifyWebhookAsync(ulong webhookId, string name, string base64Avatar, string webhookToken, string reason)
+	internal async Task<DiscordWebhook> ModifyWebhookAsync(ulong webhookId, string name, string base64Avatar, string webhookToken, string? reason)
 	{
 		var pld = new RestWebhookPayload
 		{
@@ -4595,7 +4595,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task DeleteWebhookAsync(ulong webhookId, string reason)
+	internal Task DeleteWebhookAsync(ulong webhookId, string? reason)
 	{
 		var headers = new Dictionary<string, string>();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -4617,7 +4617,7 @@ public sealed class DiscordApiClient
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task DeleteWebhookAsync(ulong webhookId, string webhookToken, string reason)
+	internal Task DeleteWebhookAsync(ulong webhookId, string webhookToken, string? reason)
 	{
 		var headers = new Dictionary<string, string>();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -5032,7 +5032,7 @@ public sealed class DiscordApiClient
 	/// <param name="userId">The user_id.</param>
 	/// <param name="emoji">The emoji.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task DeleteUserReactionAsync(ulong channelId, ulong messageId, ulong userId, string emoji, string reason)
+	internal Task DeleteUserReactionAsync(ulong channelId, ulong messageId, ulong userId, string emoji, string? reason)
 	{
 		var headers = new Dictionary<string, string>();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -5107,7 +5107,7 @@ public sealed class DiscordApiClient
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task DeleteAllReactionsAsync(ulong channelId, ulong messageId, string reason)
+	internal Task DeleteAllReactionsAsync(ulong channelId, ulong messageId, string? reason)
 	{
 		var headers = new Dictionary<string, string>();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -5511,7 +5511,7 @@ public sealed class DiscordApiClient
 	/// <param name="appliedTags">The tags to add on creation.</param>
 	/// <param name="pinned">Whether the post is pinned.</param>
 	/// <param name="reason">The reason for the modification.</param>
-	internal Task ModifyThreadAsync(ulong threadId, ChannelType parentType, string name, Optional<bool?> locked, Optional<bool?> archived, Optional<int?> perUserRateLimit, Optional<ThreadAutoArchiveDuration?> autoArchiveDuration, Optional<bool?> invitable, Optional<IEnumerable<ForumPostTag>> appliedTags, Optional<bool?> pinned, string reason)
+	internal Task ModifyThreadAsync(ulong threadId, ChannelType parentType, string name, Optional<bool?> locked, Optional<bool?> archived, Optional<int?> perUserRateLimit, Optional<ThreadAutoArchiveDuration?> autoArchiveDuration, Optional<bool?> invitable, Optional<IEnumerable<ForumPostTag>> appliedTags, Optional<bool?> pinned, string? reason)
 	{
 		var pld = new RestThreadChannelModifyPayload
 		{
@@ -5638,7 +5638,7 @@ public sealed class DiscordApiClient
 	/// <param name="imageb64">The imageb64.</param>
 	/// <param name="roles">The roles.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordGuildEmoji> CreateGuildEmojiAsync(ulong guildId, string name, string imageb64, IEnumerable<ulong> roles, string reason)
+	internal async Task<DiscordGuildEmoji> CreateGuildEmojiAsync(ulong guildId, string name, string imageb64, IEnumerable<ulong> roles, string? reason)
 	{
 		var pld = new RestGuildEmojiCreatePayload
 		{
@@ -5682,7 +5682,7 @@ public sealed class DiscordApiClient
 	/// <param name="name">The name.</param>
 	/// <param name="roles">The roles.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordGuildEmoji> ModifyGuildEmojiAsync(ulong guildId, ulong emojiId, string name, IEnumerable<ulong> roles, string reason)
+	internal async Task<DiscordGuildEmoji> ModifyGuildEmojiAsync(ulong guildId, ulong emojiId, string name, IEnumerable<ulong> roles, string? reason)
 	{
 		var pld = new RestGuildEmojiModifyPayload
 		{
@@ -5723,7 +5723,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="emojiId">The emoji_id.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task DeleteGuildEmojiAsync(ulong guildId, ulong emojiId, string reason)
+	internal Task DeleteGuildEmojiAsync(ulong guildId, ulong emojiId, string? reason)
 	{
 		var headers = new Dictionary<string, string>();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -5829,7 +5829,7 @@ public sealed class DiscordApiClient
 	/// <param name="tags">The tags.</param>
 	/// <param name="file">The file.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordSticker> CreateGuildStickerAsync(ulong guildId, string name, string description, string tags, DiscordMessageFile file, string reason)
+	internal async Task<DiscordSticker> CreateGuildStickerAsync(ulong guildId, string name, string description, string tags, DiscordMessageFile file, string? reason)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
@@ -5857,7 +5857,7 @@ public sealed class DiscordApiClient
 	/// <param name="description">The description.</param>
 	/// <param name="tags">The tags.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordSticker> ModifyGuildStickerAsync(ulong guildId, ulong stickerId, Optional<string> name, Optional<string> description, Optional<string> tags, string reason)
+	internal async Task<DiscordSticker> ModifyGuildStickerAsync(ulong guildId, ulong stickerId, Optional<string> name, Optional<string> description, Optional<string> tags, string? reason)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}/:sticker_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
@@ -5893,7 +5893,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="stickerId">The sticker id.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task DeleteGuildStickerAsync(ulong guildId, ulong stickerId, string reason)
+	internal async Task DeleteGuildStickerAsync(ulong guildId, ulong stickerId, string? reason)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}/:sticker_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new

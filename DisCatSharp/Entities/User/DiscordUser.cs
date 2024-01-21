@@ -81,7 +81,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Only applicable if <see cref="IsMigrated"/> is <see langword="true"/>.
 	/// </summary>
 	[JsonProperty("global_name", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
-	public virtual string GlobalName { get; internal set; }
+	public virtual string? GlobalName { get; internal set; }
 
 	/// <summary>
 	/// <para>Whether this user account is migrated to the new username system.</para>
@@ -133,7 +133,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Gets the user's banner url
 	/// </summary>
 	[JsonIgnore]
-	public string BannerUrl
+	public string? BannerUrl
 		=> string.IsNullOrWhiteSpace(this.BannerHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_", StringComparison.Ordinal) ? "gif" : "png")}?size=4096";
 
 	/// <summary>
@@ -226,7 +226,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <para>This is only present in OAuth.</para>
 	/// </summary>
 	[JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
-	public virtual string Email { get; internal set; }
+	public virtual string? Email { get; internal set; }
 
 	/// <summary>
 	/// Gets the user's premium type.
@@ -256,7 +256,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Gets the user's pronouns.
 	/// </summary>
 	[JsonProperty("pronouns", NullValueHandling = NullValueHandling.Ignore)]
-	public virtual string Pronouns { get; internal set; }
+	public virtual string? Pronouns { get; internal set; }
 
 	/// <summary>
 	/// Gets the user's mention string.
@@ -370,6 +370,32 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		=> await oauth2Client.GetCurrentUserGuildMemberAsync(this.AccessToken, guildId);
 
 	/// <summary>
+	/// <para>Adds the user to the given <paramref name="guildId"/>.</para>
+	/// <para>Some parameters might need additional permissions for the bot on the target guild. See https://discord.com/developers/docs/resources/guild#add-guild-member for details.</para>
+	/// </summary>
+	/// <param name="oauth2Client">The oauth2 client.</param>
+	/// <param name="guildId">The guild id to add the member to.</param>
+	/// <param name="nickname">The new nickname.</param>
+	/// <param name="roles">The new roles.</param>
+	/// <param name="muted">Whether this user has to be muted.</param>
+	/// <param name="deafened">Whether this user has to be deafened.</param>
+	public async Task<DiscordMember> OAuth2AddToGuildAsync(DiscordOAuth2Client oauth2Client, ulong guildId, string? nickname = null, IEnumerable<DiscordRole>? roles = null, bool? muted = null, bool? deafened = null)
+		=> await oauth2Client.AddCurrentUserToGuildAsync(this.AccessToken, this.Id, guildId, nickname, roles, muted, deafened);
+
+	/// <summary>
+	/// <para>Adds the user to the given <paramref name="guild"/>.</para>
+	/// <para>Some parameters might need additional permissions for the bot on the target guild. See https://discord.com/developers/docs/resources/guild#add-guild-member for details.</para>
+	/// </summary>
+	/// <param name="oauth2Client">The oauth2 client.</param>
+	/// <param name="guild">The guild to add the member to.</param>
+	/// <param name="nickname">The new nickname.</param>
+	/// <param name="roles">The new roles.</param>
+	/// <param name="muted">Whether this user has to be muted.</param>
+	/// <param name="deafened">Whether this user has to be deafened.</param>
+	public async Task<DiscordMember> OAuth2AddToGuildAsync(DiscordOAuth2Client oauth2Client, DiscordGuild guild, string? nickname = null, IEnumerable<DiscordRole>? roles = null, bool? muted = null, bool? deafened = null)
+		=> await oauth2Client.AddCurrentUserToGuildAsync(this.AccessToken, this.Id, guild.Id, nickname, roles, muted, deafened);
+
+	/// <summary>
 	/// Gets the current user's oauth2 object.
 	/// <para>Requires a <see cref="DiscordAccessToken"/> set in <see cref="AccessToken"/>.</para>
 	/// </summary>
@@ -473,7 +499,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Gets this user's presence.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordPresence Presence
+	public DiscordPresence? Presence
 		=> this.Discord is DiscordClient dc && dc.Presences.TryGetValue(this.Id, out var presence) ? presence : null;
 
 	/// <summary>
