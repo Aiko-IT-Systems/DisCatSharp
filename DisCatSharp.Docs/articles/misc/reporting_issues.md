@@ -12,9 +12,10 @@ that happen while we fix bugs or implement new issues.
 
 ## Issue tracker
 
-If you find a bug, come up with a new idea, or just want to report something, you can open an ticket on our support guild.
+If you find a bug, come up with a new idea, or just want to report something, you have multiple ways to do so.
 
-[Issue Tracker](https://aitsys.dev/project/view/1/ "DisCatSharp Issues").
+[Discord Guild](https://discord.gg/2HWta4GXus "DisCatSharp Support Guild").
+[Issue Tracker](https://github.com/Aiko-IT-Systems/DisCatSharp/issues/new/choose "DisCatSharp Issues").
 
 When reporting an issue, make sure to include as much detail as possible. If at all possible, please include:
 

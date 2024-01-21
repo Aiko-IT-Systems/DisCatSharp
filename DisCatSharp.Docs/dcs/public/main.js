@@ -11,7 +11,7 @@ export default {
     },
     {
       icon: 'discord',
-      href: 'https://discord.gg/Uk7sggRBTm',
+      href: 'https://discord.gg/2HWta4GXus',
       title: 'Discord'
     },
     {
@@ -21,5 +21,3 @@ export default {
     }
   ]
 }
-
-
