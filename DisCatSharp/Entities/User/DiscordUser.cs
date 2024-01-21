@@ -279,7 +279,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <para>As alternative you can construct the object via <code>new DiscordAccessToken(string accessToken, string tokenType, int expiresIn, string refreshToken, string scope)</code>.</para>
 	/// </summary>
 	[JsonIgnore]
-	public DiscordAccessToken AccessToken { get; set; }
+	public DiscordAccessToken? AccessToken { get; set; }
 
 #region Extension of DiscordUser
 
@@ -340,16 +340,18 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <para>Requires a <see cref="DiscordAccessToken"/> set in <see cref="AccessToken"/>.</para>
 	/// </summary>
 	/// <param name="oauth2Client">The oauth2 client.</param>
+	/// <exception cref="NullReferenceException">Thrown when <see cref="AccessToken"/> is not present.</exception>
 	public async Task<IReadOnlyList<DiscordConnection>> OAuth2GetConnectionsAsync(DiscordOAuth2Client oauth2Client)
-		=> await oauth2Client.GetCurrentUserConnectionsAsync(this.AccessToken);
+		=> this.AccessToken is not null ? await oauth2Client.GetCurrentUserConnectionsAsync(this.AccessToken) : throw new NullReferenceException("You need to specify the AccessToken on this DiscordUser entity.");
 
 	/// <summary>
 	/// Gets the current user's guilds.
 	/// <para>Requires a <see cref="DiscordAccessToken"/> set in <see cref="AccessToken"/>.</para>
 	/// </summary>
 	/// <param name="oauth2Client">The oauth2 client.</param>
+	/// <exception cref="NullReferenceException">Thrown when <see cref="AccessToken"/> is not present.</exception>
 	public async Task<IReadOnlyList<DiscordGuild>> OAuth2GetGuildAsync(DiscordOAuth2Client oauth2Client)
-		=> await oauth2Client.GetCurrentUserGuildsAsync(this.AccessToken);
+		=> this.AccessToken is not null ? await oauth2Client.GetCurrentUserGuildsAsync(this.AccessToken) : throw new NullReferenceException("You need to specify the AccessToken on this DiscordUser entity.");
 
 	/// <summary>
 	/// Gets the current user's member object for given <paramref name="guild"/>.
@@ -357,8 +359,9 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	/// <param name="oauth2Client">The oauth2 client.</param>
 	/// <param name="guild">The guild to get the member object for.</param>
+	/// <exception cref="NullReferenceException">Thrown when <see cref="AccessToken"/> is not present.</exception>
 	public async Task<DiscordMember> OAuth2GetGuildMemberAsync(DiscordOAuth2Client oauth2Client, DiscordGuild guild)
-		=> await oauth2Client.GetCurrentUserGuildMemberAsync(this.AccessToken, guild.Id);
+		=> this.AccessToken is not null ? await oauth2Client.GetCurrentUserGuildMemberAsync(this.AccessToken, guild.Id) : throw new NullReferenceException("You need to specify the AccessToken on this DiscordUser entity.");
 
 	/// <summary>
 	/// Gets the current user's member object for given <paramref name="guildId"/>.
@@ -366,8 +369,9 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	/// <param name="oauth2Client">The oauth2 client.</param>
 	/// <param name="guildId">The guild id to get the member object for.</param>
+	/// <exception cref="NullReferenceException">Thrown when <see cref="AccessToken"/> is not present.</exception>
 	public async Task<DiscordMember> OAuth2GetGuildMemberAsync(DiscordOAuth2Client oauth2Client, ulong guildId)
-		=> await oauth2Client.GetCurrentUserGuildMemberAsync(this.AccessToken, guildId);
+		=> this.AccessToken is not null ? await oauth2Client.GetCurrentUserGuildMemberAsync(this.AccessToken, guildId) : throw new NullReferenceException("You need to specify the AccessToken on this DiscordUser entity.");
 
 	/// <summary>
 	/// <para>Adds the user to the given <paramref name="guildId"/>.</para>
@@ -379,8 +383,9 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <param name="roles">The new roles.</param>
 	/// <param name="muted">Whether this user has to be muted.</param>
 	/// <param name="deafened">Whether this user has to be deafened.</param>
+	/// <exception cref="NullReferenceException">Thrown when <see cref="AccessToken"/> is not present.</exception>
 	public async Task<DiscordMember> OAuth2AddToGuildAsync(DiscordOAuth2Client oauth2Client, ulong guildId, string? nickname = null, IEnumerable<DiscordRole>? roles = null, bool? muted = null, bool? deafened = null)
-		=> await oauth2Client.AddCurrentUserToGuildAsync(this.AccessToken, this.Id, guildId, nickname, roles, muted, deafened);
+		=> this.AccessToken is not null ? await oauth2Client.AddCurrentUserToGuildAsync(this.AccessToken, this.Id, guildId, nickname, roles, muted, deafened) : throw new NullReferenceException("You need to specify the AccessToken on this DiscordUser entity.");
 
 	/// <summary>
 	/// <para>Adds the user to the given <paramref name="guild"/>.</para>
@@ -392,32 +397,36 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <param name="roles">The new roles.</param>
 	/// <param name="muted">Whether this user has to be muted.</param>
 	/// <param name="deafened">Whether this user has to be deafened.</param>
+	/// <exception cref="NullReferenceException">Thrown when <see cref="AccessToken"/> is not present.</exception>
 	public async Task<DiscordMember> OAuth2AddToGuildAsync(DiscordOAuth2Client oauth2Client, DiscordGuild guild, string? nickname = null, IEnumerable<DiscordRole>? roles = null, bool? muted = null, bool? deafened = null)
-		=> await oauth2Client.AddCurrentUserToGuildAsync(this.AccessToken, this.Id, guild.Id, nickname, roles, muted, deafened);
+		=> this.AccessToken is not null ? await oauth2Client.AddCurrentUserToGuildAsync(this.AccessToken, this.Id, guild.Id, nickname, roles, muted, deafened) : throw new NullReferenceException("You need to specify the AccessToken on this DiscordUser entity.");
 
 	/// <summary>
 	/// Gets the current user's oauth2 object.
 	/// <para>Requires a <see cref="DiscordAccessToken"/> set in <see cref="AccessToken"/>.</para>
 	/// </summary>
 	/// <param name="oauth2Client">The oauth2 client.</param>
+	/// <exception cref="NullReferenceException">Thrown when <see cref="AccessToken"/> is not present.</exception>
 	public async Task<DiscordUser> OAuth2GetAsync(DiscordOAuth2Client oauth2Client)
-		=> await oauth2Client.GetCurrentUserAsync(this.AccessToken);
+		=> this.AccessToken is not null ? await oauth2Client.GetCurrentUserAsync(this.AccessToken) : throw new NullReferenceException("You need to specify the AccessToken on this DiscordUser entity.");
 
 	/// <summary>
 	/// Gets the current user's authorization info.
 	/// <para>Requires a <see cref="DiscordAccessToken"/> set in <see cref="AccessToken"/>.</para>
 	/// </summary>
 	/// <param name="oauth2Client">The oauth2 client.</param>
+	/// <exception cref="NullReferenceException">Thrown when <see cref="AccessToken"/> is not present.</exception>
 	public async Task<DiscordAuthorizationInformation> OAuth2GetAuthorizationInfoAsync(DiscordOAuth2Client oauth2Client)
-		=> await oauth2Client.GetCurrentAuthorizationInformationAsync(this.AccessToken);
+		=> this.AccessToken is not null ? await oauth2Client.GetCurrentAuthorizationInformationAsync(this.AccessToken) : throw new NullReferenceException("You need to specify the AccessToken on this DiscordUser entity.");
 
 	/// <summary>
 	/// Gets the current user's application role connection.
 	/// <para>Requires a <see cref="DiscordAccessToken"/> set in <see cref="AccessToken"/>.</para>
 	/// </summary>
 	/// <param name="oauth2Client">The oauth2 client.</param>
+	/// <exception cref="NullReferenceException">Thrown when <see cref="AccessToken"/> is not present.</exception>
 	public async Task<DiscordApplicationRoleConnection> OAuth2GetApplicationRoleConnectionAsync(DiscordOAuth2Client oauth2Client)
-		=> await oauth2Client.GetCurrentUserApplicationRoleConnectionAsync(this.AccessToken);
+		=> this.AccessToken is not null ? await oauth2Client.GetCurrentUserApplicationRoleConnectionAsync(this.AccessToken) : throw new NullReferenceException("You need to specify the AccessToken on this DiscordUser entity.");
 
 #endregion
 
