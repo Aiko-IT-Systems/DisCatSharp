@@ -310,6 +310,35 @@ public sealed class DiscordOAuth2Client : IDisposable
 		=> accessToken.Scope.Split(' ').Any(x => x == "guilds.members.read") ? this.ApiClient.GetCurrentUserGuildMemberAsync(accessToken.AccessToken, guildId) : throw new AccessViolationException("Access token does not include guilds.members.read scope");
 
 	/// <summary>
+	/// <para>Adds the current user to the given <paramref name="guildId"/>.</para>
+	/// <para>Some parameters might need additional permissions for the bot on the target guild. See https://discord.com/developers/docs/resources/guild#add-guild-member for details.</para>
+	/// <para>This methods invokes a sub-request to <see cref="GetCurrentUserAsync"/>.</para>
+	/// </summary>
+	/// <param name="accessToken">The discord access token.</param>
+	/// <param name="guildId">The guild id to add the member to.</param>
+	/// <param name="nickname">The new nickname.</param>
+	/// <param name="roles">The new roles.</param>
+	/// <param name="muted">Whether this user has to be muted.</param>
+	/// <param name="deafened">Whether this user has to be deafened.</param>
+	public async Task<DiscordMember> AddCurrentUserToGuildAsync(DiscordAccessToken accessToken, ulong guildId, string? nickname = null, IEnumerable<DiscordRole>? roles = null, bool? muted = null, bool? deafened = null)
+		=> accessToken.Scope.Split(' ').Any(x => x == "guilds.join") ? await this.ApiClient.AddGuildMemberAsync(guildId, (await this.GetCurrentUserAsync(accessToken)).Id, accessToken.AccessToken, nickname, roles, muted, deafened) : throw new AccessViolationException("Access token does not include guilds.join scope");
+
+	/// <summary>
+	/// <para>Adds the given <paramref name="userId"/> to the given <paramref name="guildId"/>.</para>
+	/// <para>Some parameters might need additional permissions for the bot on the target guild. See https://discord.com/developers/docs/resources/guild#add-guild-member for details.</para>
+	/// <para>This methods does not invoke a sub-request to <see cref="GetCurrentUserAsync"/>.</para>
+	/// </summary>
+	/// <param name="accessToken">The discord access token.</param>
+	/// <param name="userId">The user id to add.</param>
+	/// <param name="guildId">The guild id to add the member to.</param>
+	/// <param name="nickname">The new nickname.</param>
+	/// <param name="roles">The new roles.</param>
+	/// <param name="muted">Whether this user has to be muted.</param>
+	/// <param name="deafened">Whether this user has to be deafened.</param>
+	public async Task<DiscordMember> AddCurrentUserToGuildAsync(DiscordAccessToken accessToken, ulong userId, ulong guildId, string? nickname = null, IEnumerable<DiscordRole>? roles = null, bool? muted = null, bool? deafened = null)
+		=> accessToken.Scope.Split(' ').Any(x => x == "guilds.join") ? await this.ApiClient.AddGuildMemberAsync(guildId, userId, accessToken.AccessToken, nickname, roles, muted, deafened) : throw new AccessViolationException("Access token does not include guilds.join scope");
+
+	/// <summary>
 	/// Gets the current user's application role connection.
 	/// </summary>
 	/// <param name="accessToken">The discord access token.</param>

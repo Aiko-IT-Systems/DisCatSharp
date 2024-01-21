@@ -8,5 +8,5 @@ public class BaseEditModel
 	/// <summary>
 	/// Reason given in audit logs
 	/// </summary>
-	public string AuditLogReason { internal get; set; }
+	public string? AuditLogReason { internal get; set; }
 }

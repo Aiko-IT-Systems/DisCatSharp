@@ -749,12 +749,12 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <summary>
 	/// Adds a new member to this guild
 	/// </summary>
-	/// <param name="user">User to add</param>
-	/// <param name="accessToken">User's access token (OAuth2)</param>
-	/// <param name="nickname">new nickname</param>
-	/// <param name="roles">new roles</param>
-	/// <param name="muted">whether this user has to be muted</param>
-	/// <param name="deaf">whether this user has to be deafened</param>
+	/// <param name="user">The user to add.</param>
+	/// <param name="accessToken">The user's access token (OAuth2).</param>
+	/// <param name="nickname">The new nickname.</param>
+	/// <param name="roles">The new roles.</param>
+	/// <param name="muted">Whether this user has to be muted.</param>
+	/// <param name="deaf">Whether this user has to be deafened.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreateInstantInvite" /> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the <paramref name="user"/> or <paramref name="accessToken"/> is not found.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -762,10 +762,10 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public Task AddMemberAsync(
 		DiscordUser user,
 		string accessToken,
-		string nickname = null,
-		IEnumerable<DiscordRole> roles = null,
-		bool muted = false,
-		bool deaf = false
+		string? nickname = null,
+		IEnumerable<DiscordRole>? roles = null,
+		bool? muted = null,
+		bool? deaf = null
 	)
 		=> this.Discord.ApiClient.AddGuildMemberAsync(this.Id, user.Id, accessToken, nickname, roles, muted, deaf);
 

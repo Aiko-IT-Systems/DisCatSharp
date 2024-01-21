@@ -421,13 +421,13 @@ internal sealed class RestGuildMemberAddPayload : IOAuth2Payload
 	/// Gets or sets the nickname.
 	/// </summary>
 	[JsonProperty("nick", NullValueHandling = NullValueHandling.Ignore)]
-	public string Nickname { get; set; }
+	public string? Nickname { get; set; }
 
 	/// <summary>
 	/// Gets or sets the roles.
 	/// </summary>
 	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordRole> Roles { get; set; }
+	public IEnumerable<DiscordRole>? Roles { get; set; }
 
 	/// <summary>
 	/// Gets or sets a value indicating whether mute.
