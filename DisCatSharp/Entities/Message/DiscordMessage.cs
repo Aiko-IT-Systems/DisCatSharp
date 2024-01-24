@@ -480,18 +480,18 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 
 		try
   		{
-			if (this.ReferencedMessage is not null && this.MentionedUsersInternal && this.MentionedUsersInternal.Contains(this.ReferencedMessage.Author))
+			if (this.ReferencedMessage is not null && this.MentionedUsersInternal.Count is not 0 && this.MentionedUsersInternal.Contains(this.ReferencedMessage.Author))
 				mentions.Add(new RepliedUserMention());
 
-			if (this.MentionedUsersInternal.Count != 0)
+			if (this.MentionedUsersInternal.Count is not 0)
 				mentions.AddRange(this.MentionedUsersInternal.Select(m => (IMention)new UserMention(m)));
 
-			if (this.MentionedRoleIds.Count != 0)
+			if (this.MentionedRoleIds.Count is not 0)
 				mentions.AddRange(this.MentionedRoleIds.Select(r => (IMention)new RoleMention(r)));
 		}
   		catch
-    		{ }
-  
+    	{ }
+
 		return mentions;
 	}
 
