@@ -503,7 +503,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			RequiresCodeGrant = tapp.BotRequiresCodeGrant.ValueOrDefault(),
 			IsPublic = tapp.IsPublicBot.ValueOrDefault(),
 			RedirectUris = tapp.RedirectUris.ValueOrDefault(),
-			InteractionsEndpointUrl = tapp.InteractionsEndpointUrl.ValueOrDefault()
+			InteractionsEndpointUrl = tapp.InteractionsEndpointUrl.ValueOrDefault(),
+			IntegrationTypesConfig = tapp.IntegrationTypesConfig
 		};
 
 		return app;
