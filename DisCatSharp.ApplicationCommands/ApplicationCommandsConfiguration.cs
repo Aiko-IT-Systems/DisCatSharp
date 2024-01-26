@@ -9,7 +9,7 @@ namespace DisCatSharp.ApplicationCommands;
 /// <summary>
 /// A configuration for a <see cref="ApplicationCommandsExtension"/>
 /// </summary>
-public class ApplicationCommandsConfiguration
+public sealed class ApplicationCommandsConfiguration
 {
 	/// <summary>
 	/// <para>Sets the service provider.</para>
@@ -31,7 +31,7 @@ public class ApplicationCommandsConfiguration
 	/// <para>Mutually exclusive with <see cref="EnableDefaultHelp"/>.</para>
 	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
-	[RequiresFeature(Features.Experiment, "This feature is in pre-alpha right now. If you don't have access, don't use it!")]
+	[DiscordInExperiment, RequiresFeature(Features.Experiment, "Requires you to be part of the user apps experiment and the apps owner.")]
 	public bool EnableDefaultUserAppsHelp { get; set; } = false;
 
 	/// <summary>

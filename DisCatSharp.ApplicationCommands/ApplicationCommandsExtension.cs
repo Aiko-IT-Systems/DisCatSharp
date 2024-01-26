@@ -1052,7 +1052,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	private Task InteractionHandler(DiscordClient client, InteractionCreateEventArgs e)
 	{
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Got slash interaction on shard {shard}", this.Client.ShardId);
-		if (HandledInteractions.Contains(e.Interaction.Id) || (e.Interaction.GuildId.HasValue && !client.Guilds.ContainsKey(e.Interaction.GuildId.Value)))
+		if (HandledInteractions.Contains(e.Interaction.Id) || (e.Interaction.GuildId.HasValue && e.Interaction.AuthorizingIntegrationOwners?.GuildInstallKey is not null && !client.Guilds.ContainsKey(e.Interaction.GuildId.Value)))
 		{
 			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Ignoring, already received or wrong shard");
 			return Task.FromResult(true);
