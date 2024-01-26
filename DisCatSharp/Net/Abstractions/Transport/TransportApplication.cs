@@ -185,6 +185,12 @@ internal sealed class TransportApplication : ObservableApiObject
 	public Optional<List<string>> RedirectUris { get; set; }
 
 	/// <summary>
+	/// Gets or sets the integration types config.
+	/// </summary>
+	[JsonProperty("integration_types_config", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordIntegrationTypesConfig? IntegrationTypesConfig { get; set; }
+
+	/// <summary>
 	/// Initializes a new instance of the <see cref="TransportApplication"/> class.
 	/// </summary>
 	internal TransportApplication()

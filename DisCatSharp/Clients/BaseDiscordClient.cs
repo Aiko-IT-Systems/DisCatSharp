@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
@@ -127,37 +128,40 @@ public abstract class BaseDiscordClient : IDisposable
 		this.ServiceProvider = config.ServiceProvider;
 		if (this.Configuration.CustomSentryDsn != null)
 			SentryDsn = this.Configuration.CustomSentryDsn;
-		if (this.ServiceProvider != null)
+		if (this.ServiceProvider is not null)
 		{
 			this.Configuration.LoggerFactory ??= config.ServiceProvider.GetService<ILoggerFactory>()!;
 			this.Logger = config.ServiceProvider.GetService<ILogger<BaseDiscordClient>>()!;
 		}
 
-		if (this.Configuration.LoggerFactory == null && !this.Configuration.EnableSentry)
+		switch (this.Configuration.LoggerFactory)
 		{
-			this.Configuration.LoggerFactory = new DefaultLoggerFactory();
-			this.Configuration.LoggerFactory.AddProvider(new DefaultLoggerProvider(this));
-		}
-		else if (this.Configuration.LoggerFactory == null && this.Configuration.EnableSentry)
-		{
-			var configureNamedOptions = new ConfigureNamedOptions<ConsoleLoggerOptions>(string.Empty, x =>
+			case null when !this.Configuration.EnableSentry:
+				this.Configuration.LoggerFactory = new DefaultLoggerFactory();
+				this.Configuration.LoggerFactory.AddProvider(new DefaultLoggerProvider(this));
+				break;
+			case null when this.Configuration.EnableSentry:
 			{
+				var configureNamedOptions = new ConfigureNamedOptions<ConsoleLoggerOptions>(string.Empty, x =>
+				{
 #pragma warning disable CS0618 // Type or member is obsolete
-				x.TimestampFormat = this.Configuration.LogTimestampFormat;
+					x.TimestampFormat = this.Configuration.LogTimestampFormat;
 #pragma warning restore CS0618 // Type or member is obsolete
-				x.LogToStandardErrorThreshold = this.Configuration.MinimumLogLevel;
-			});
-			var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[] { configureNamedOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
-			var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleLoggerOptions>>(), new OptionsCache<ConsoleLoggerOptions>());
-			/*
+					x.LogToStandardErrorThreshold = this.Configuration.MinimumLogLevel;
+				});
+				var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[] { configureNamedOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
+				var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleLoggerOptions>>(), new OptionsCache<ConsoleLoggerOptions>());
+				/*
 			var configureFormatterOptions = new ConfigureNamedOptions<ConsoleFormatterOptions>(string.Empty, x => { x.TimestampFormat = this.Configuration.LogTimestampFormat; });
 			var formatterFactory = new OptionsFactory<ConsoleFormatterOptions>(new[] { configureFormatterOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleFormatterOptions>>());
 			var formatterMonitor = new OptionsMonitor<ConsoleFormatterOptions>(formatterFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleFormatterOptions>>(), new OptionsCache<ConsoleFormatterOptions>());
 			*/
 
-			var l = new ConsoleLoggerProvider(optionsMonitor);
-			this.Configuration.LoggerFactory = new LoggerFactory();
-			this.Configuration.LoggerFactory.AddProvider(l);
+				var l = new ConsoleLoggerProvider(optionsMonitor);
+				this.Configuration.LoggerFactory = new LoggerFactory();
+				this.Configuration.LoggerFactory.AddProvider(l);
+				break;
+			}
 		}
 
 		var ass = typeof(DiscordClient).GetTypeInfo().Assembly;
@@ -207,18 +211,20 @@ public abstract class BaseDiscordClient : IDisposable
 								return null;
 						}
 
-						if (!e.HasUser())
-							if (this.Configuration.AttachUserInfo && this.CurrentUser! != null!)
-								e.User = new()
+						if (e.HasUser())
+							return e;
+
+						if (this.Configuration.AttachUserInfo && this.CurrentUser! != null!)
+							e.User = new()
+							{
+								Id = this.CurrentUser.Id.ToString(),
+								Username = this.CurrentUser.UsernameWithDiscriminator,
+								Other = new Dictionary<string, string>()
 								{
-									Id = this.CurrentUser.Id.ToString(),
-									Username = this.CurrentUser.UsernameWithDiscriminator,
-									Other = new Dictionary<string, string>()
-									{
-										{ "developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
-										{ "email", this.Configuration.FeedbackEmail ?? "not_given" }
-									}
-								};
+									{ "developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
+									{ "email", this.Configuration.FeedbackEmail ?? "not_given" }
+								}
+							};
 						return e;
 					});
 				});
@@ -288,7 +294,7 @@ public abstract class BaseDiscordClient : IDisposable
 		this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-locale", this.Configuration.Locale);
 		if (!string.IsNullOrWhiteSpace(this.Configuration.Timezone))
 			this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone", this.Configuration.Timezone);
-		if (this.Configuration.Override != null)
+		if (this.Configuration.Override is not null)
 			this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this.Configuration.Override);
 
 		var a = typeof(DiscordClient).GetTypeInfo().Assembly;
@@ -320,7 +326,7 @@ public abstract class BaseDiscordClient : IDisposable
 			Description = tapp.Description,
 			Summary = tapp.Summary,
 			IconHash = tapp.IconHash,
-			RpcOrigins = tapp.RpcOrigins != null ? new ReadOnlyCollection<string>(tapp.RpcOrigins) : null,
+			RpcOrigins = tapp.RpcOrigins is not null ? new ReadOnlyCollection<string>(tapp.RpcOrigins) : null,
 			Flags = tapp.Flags,
 			IsHook = tapp.IsHook,
 			Type = tapp.Type,
@@ -331,10 +337,11 @@ public abstract class BaseDiscordClient : IDisposable
 			RoleConnectionsVerificationUrl = tapp.RoleConnectionsVerificationUrl.ValueOrDefault(),
 			InteractionsEndpointUrl = tapp.InteractionsEndpointUrl.ValueOrDefault(),
 			CoverImageHash = tapp.CoverImageHash.ValueOrDefault(),
-			Tags = (tapp.Tags ?? Enumerable.Empty<string>()).ToArray()
+			Tags = (tapp.Tags ?? Enumerable.Empty<string>()).ToArray(),
+			IntegrationTypesConfig = tapp.IntegrationTypesConfig
 		};
 
-		if (tapp.Team == null)
+		if (tapp.Team is null)
 		{
 			app.Members = [..new[] { new DiscordUser(tapp.Owner) }];
 			app.Team = null;
@@ -398,6 +405,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <param name="flags">The new application flags. Can be only limited gateway intents.</param>
 	/// <param name="installParams">The new install params.</param>
 	/// <returns>The updated application.</returns>
+	[DiscordDeprecated("Install params is gonna be replaced by integration types config")]
 	public async Task<DiscordApplication> UpdateCurrentApplicationInfoAsync(
 		Optional<string?> description,
 		Optional<string?> interactionsEndpointUrl,
@@ -407,16 +415,85 @@ public abstract class BaseDiscordClient : IDisposable
 		Optional<Stream?> icon,
 		Optional<Stream?> coverImage,
 		Optional<ApplicationFlags> flags,
+		[DiscordDeprecated("Replaced by Optional<DiscordIntegrationTypesConfig?>")]
 		Optional<DiscordApplicationInstallParams?> installParams
 	)
 	{
 		var iconb64 = ImageTool.Base64FromStream(icon);
 		var coverImageb64 = ImageTool.Base64FromStream(coverImage);
-		if (tags != null && tags is { HasValue: true, Value: not null })
+		if (tags is { HasValue: true, Value: not null })
 			if (tags.Value.Any(x => x.Length > 20))
 				throw new InvalidOperationException("Tags can not exceed 20 chars.");
 
-		_ = await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, installParams).ConfigureAwait(false);
+		_ = await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, installParams, Optional.None).ConfigureAwait(false);
+		// We use GetCurrentApplicationAsync because modify returns internal data not meant for developers.
+		var app = await this.GetCurrentApplicationAsync().ConfigureAwait(false);
+		this.CurrentApplication = app;
+		return app;
+	}
+
+	/// <summary>
+	/// Enables user app functionality.
+	/// </summary>
+	/// <returns>The updated application.</returns>
+	[DiscordInExperiment, RequiresFeature(Features.Experiment, "Requires you to be part of the user apps experiment and the apps owner.")]
+	public async Task<DiscordApplication> EnableUserAppsAsync()
+	{
+		var currentApplication = await this.GetCurrentApplicationAsync().ConfigureAwait(false);
+		var installParams = currentApplication.InstallParams;
+
+		DiscordIntegrationTypesConfig integrationTypesConfig = new()
+		{
+			UserInstall = new(),
+			GuildInstall = new()
+			{
+				OAuth2InstallParams = installParams is { Scopes: not null, Permissions: not null }
+					? new()
+					{
+						Scopes = installParams?.Scopes,
+						Permissions = installParams?.Permissions
+					}
+					: null
+			}
+		};
+
+		var app = await this.UpdateCurrentApplicationInfoAsync(Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, integrationTypesConfig).ConfigureAwait(false);
+		return app;
+	}
+
+	/// <summary>
+	/// Updates the current API application.
+	/// </summary>
+	/// <param name="description">The new description.</param>
+	/// <param name="interactionsEndpointUrl">The new interactions endpoint url.</param>
+	/// <param name="roleConnectionsVerificationUrl">The new role connections verification url.</param>
+	/// <param name="customInstallUrl">The new custom install url.</param>
+	/// <param name="tags">The new tags.</param>
+	/// <param name="icon">The new application icon.</param>
+	/// <param name="coverImage">The new application cover image.</param>
+	/// <param name="flags">The new application flags. Can be only limited gateway intents.</param>
+	/// <param name="integrationTypesConfig">The new integration types configuration.</param>
+	/// <returns>The updated application.</returns>
+	[DiscordInExperiment, RequiresFeature(Features.Experiment, "Requires you to be part of the user apps experiment and the apps owner.")]
+	public async Task<DiscordApplication> UpdateCurrentApplicationInfoAsync(
+		Optional<string?> description,
+		Optional<string?> interactionsEndpointUrl,
+		Optional<string?> roleConnectionsVerificationUrl,
+		Optional<string?> customInstallUrl,
+		Optional<List<string>?> tags,
+		Optional<Stream?> icon,
+		Optional<Stream?> coverImage,
+		Optional<ApplicationFlags> flags,
+		[DiscordInExperiment] Optional<DiscordIntegrationTypesConfig?> integrationTypesConfig
+	)
+	{
+		var iconb64 = ImageTool.Base64FromStream(icon);
+		var coverImageb64 = ImageTool.Base64FromStream(coverImage);
+		if (tags is { HasValue: true, Value: not null })
+			if (tags.Value.Any(x => x.Length > 20))
+				throw new InvalidOperationException("Tags can not exceed 20 chars.");
+
+		_ = await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, Optional.None, integrationTypesConfig).ConfigureAwait(false);
 		// We use GetCurrentApplicationAsync because modify returns internal data not meant for developers.
 		var app = await this.GetCurrentApplicationAsync().ConfigureAwait(false);
 		this.CurrentApplication = app;
@@ -435,16 +512,16 @@ public abstract class BaseDiscordClient : IDisposable
 	/// </summary>
 	public virtual async Task InitializeAsync()
 	{
-		if (this.CurrentUser == null)
+		if (this.CurrentUser is null)
 		{
 			this.CurrentUser = await this.ApiClient.GetCurrentUserAsync().ConfigureAwait(false);
 			this.UserCache.AddOrUpdate(this.CurrentUser.Id, this.CurrentUser, (id, xu) => this.CurrentUser);
 		}
 
-		if (this.Configuration.TokenType == TokenType.Bot && this.CurrentApplication == null)
+		if (this.Configuration.TokenType is TokenType.Bot && this.CurrentApplication is null)
 			this.CurrentApplication = await this.GetCurrentApplicationAsync().ConfigureAwait(false);
 
-		if (this.Configuration.TokenType != TokenType.Bearer && this.InternalVoiceRegions.IsEmpty)
+		if (this.Configuration.TokenType is not TokenType.Bearer && this.InternalVoiceRegions.IsEmpty)
 		{
 			var vrs = await this.ListVoiceRegionsAsync().ConfigureAwait(false);
 			foreach (var xvr in vrs)

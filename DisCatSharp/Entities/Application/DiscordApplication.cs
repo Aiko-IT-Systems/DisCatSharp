@@ -180,6 +180,11 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	public List<string> RedirectUris { get; set; } = [];
 
 	/// <summary>
+	/// Gets the integration types config.
+	/// </summary>
+	public DiscordIntegrationTypesConfig? IntegrationTypesConfig { get; set; }
+
+	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordApplication"/> class.
 	/// </summary>
 	internal DiscordApplication()
@@ -196,11 +201,11 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 		if (fmt == ImageFormat.Unknown)
 			throw new ArgumentException("You must specify valid image format.", nameof(fmt));
 
-		if (size < 16 || size > 2048)
+		if (size is < 16 or > 2048)
 			throw new ArgumentOutOfRangeException(nameof(size));
 
 		var log = Math.Log(size, 2);
-		if (log < 4 || log > 11 || log % 1 != 0)
+		if (log < 4 || log > 11 || log % 1 is not 0)
 			throw new ArgumentOutOfRangeException(nameof(size));
 
 		var sfmt = "";

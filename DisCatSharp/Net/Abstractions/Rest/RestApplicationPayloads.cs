@@ -62,4 +62,10 @@ internal sealed class RestApplicationModifyPayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("install_params", NullValueHandling = NullValueHandling.Include)]
 	public Optional<DiscordApplicationInstallParams?> InstallParams { get; set; }
+
+	/// <summary>
+	/// Gets or sets the integration types config.
+	/// </summary>
+	[JsonProperty("integration_types_config", NullValueHandling = NullValueHandling.Include)]
+	public Optional<DiscordIntegrationTypesConfig?> IntegrationTypesConfig { get; set; }
 }

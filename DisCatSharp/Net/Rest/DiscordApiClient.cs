@@ -6838,15 +6838,16 @@ public sealed class DiscordApiClient
 	/// Gets the application info.
 	/// </summary>
 	internal async Task<TransportApplication> ModifyCurrentApplicationInfoAsync(
-		Optional<string> description,
-		Optional<string> interactionsEndpointUrl,
-		Optional<string> roleConnectionsVerificationUrl,
+		Optional<string?> description,
+		Optional<string?> interactionsEndpointUrl,
+		Optional<string?> roleConnectionsVerificationUrl,
 		Optional<string?> customInstallUrl,
 		Optional<List<string>?> tags,
 		Optional<string?> iconb64,
 		Optional<string?> coverImageb64,
 		Optional<ApplicationFlags> flags,
-		Optional<DiscordApplicationInstallParams?> installParams
+		Optional<DiscordApplicationInstallParams?> installParams,
+		Optional<DiscordIntegrationTypesConfig?> integrationTypesConfig
 	)
 	{
 		var pld = new RestApplicationModifyPayload()
@@ -6859,7 +6860,8 @@ public sealed class DiscordApiClient
 			IconBase64 = iconb64,
 			ConverImageBase64 = coverImageb64,
 			Flags = flags,
-			InstallParams = installParams
+			InstallParams = installParams,
+			IntegrationTypesConfig = integrationTypesConfig
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}{Endpoints.ME}";

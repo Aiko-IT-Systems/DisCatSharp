@@ -286,7 +286,8 @@ public sealed class DiscordConfiguration
 		{
 			if (!this.EnableLibraryDeveloperMode)
 				throw new AccessViolationException("Cannot set this as non-library-dev");
-			else if (value == null)
+
+			if (value is null)
 				this._exceptions.Clear();
 			else
 				this._exceptions = value.All(val => val.BaseType == typeof(DisCatSharpException))
