@@ -96,7 +96,7 @@ public class MyFirstLavalinkCommands : BaseCommandModule
 	}
 
 	[SlashCommand("leave", "Leave the voice channel")]
-	public async Task LeaveAsync(InteractionContext ctx)
+	public async Task LeaveAsync(InteractionContext ctx, DiscordChannel channel)
 	{
 		await ctx.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
 		var lavalink = ctx.Client.GetLavalink();
