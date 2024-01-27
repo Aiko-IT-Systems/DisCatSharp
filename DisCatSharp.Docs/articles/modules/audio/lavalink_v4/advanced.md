@@ -24,7 +24,7 @@ lavalink:
 [..]
 plugins:
   lavasrc:
-    providers: # Custom providers for track loading. This is the default
+    providers:
       - "ytsearch:\"%ISRC%\"" # Will be ignored if track does not have an ISRC. See https://esearch.wikipedia.org/wiki/International_Standard_Recording_Code
       - "ytsearch:%QUERY%" # Will be used if track has no ISRC or no track could be found for the ISRC
       - "scsearch:%QUERY%" # Soundcloud search provider
@@ -35,7 +35,7 @@ plugins:
       - "dzisrc:%ISRC%" # Deezer ISRC provider
       - "dzsearch:%QUERY%" # Deezer search provider
       - "ymsearch:%QUERY%" # Yandex Music search provider
-    sources:
+      
     sources:
       spotify: true # Enable Spotify source
       applemusic: true # Enable Apple Music source
