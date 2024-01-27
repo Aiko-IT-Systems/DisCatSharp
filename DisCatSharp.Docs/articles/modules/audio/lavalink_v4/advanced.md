@@ -19,7 +19,7 @@ General config:
 ```yml
 lavalink:
   plugins:
-    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.0.0-beta.3"
+    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.0.1"
       repository: "https://maven.topi.wtf/releases"
 [..]
 plugins:
@@ -35,7 +35,7 @@ plugins:
       - "dzisrc:%ISRC%" # Deezer ISRC provider
       - "dzsearch:%QUERY%" # Deezer search provider
       - "ymsearch:%QUERY%" # Yandex Music search provider
-      
+
     sources:
       spotify: true # Enable Spotify source
       applemusic: true # Enable Apple Music source
