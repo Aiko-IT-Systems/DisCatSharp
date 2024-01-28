@@ -96,7 +96,7 @@ public class MyFirstLavalinkCommands : BaseCommandModule
 	}
 
 	[SlashCommand("leave", "Leave the voice channel")]
-	public async Task LeaveAsync(InteractionContext ctx, DiscordChannel channel)
+	public async Task LeaveAsync(InteractionContext ctx)
 	{
 		await ctx.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
 		var lavalink = ctx.Client.GetLavalink();
@@ -108,7 +108,7 @@ public class MyFirstLavalinkCommands : BaseCommandModule
 		}
 
 		await guildPlayer.DisconnectAsync();
-		await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent($"Left {channel.Mention}!"));
+		await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent($"Left {guildPlayer.channel.Mention}!"));
 	}
 }
 ```
