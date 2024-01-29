@@ -77,13 +77,13 @@ public class MyFirstLavalinkCommands : BaseCommandModule
 	{
 		await ctx.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
 		var lavalink = ctx.Client.GetLavalink();
-		if (!lava.ConnectedSessions.Any())
+		if (!lavalink.ConnectedSessions.Any())
 		{
 			await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("The Lavalink connection is not established"));
 			return;
 		}
 
-		var session = lava.ConnectedSessions.Values.First();
+		var session = lavalink.ConnectedSessions.Values.First();
 
 		if (channel.Type != ChannelType.Voice || channel.Type != ChannelType.Stage)
 		{
@@ -108,7 +108,7 @@ public class MyFirstLavalinkCommands : BaseCommandModule
 		}
 
 		await guildPlayer.DisconnectAsync();
-		await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent($"Left {channel.Mention}!"));
+		await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent($"Left {guildPlayer.channel.Mention}!"));
 	}
 }
 ```
