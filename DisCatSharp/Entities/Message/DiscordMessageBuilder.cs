@@ -112,6 +112,38 @@ public sealed class DiscordMessageBuilder
 	public bool FailOnInvalidReply { get; set; }
 
 	/// <summary>
+	/// Gets the nonce for the message.
+	/// </summary>
+	public string? Nonce { get; internal set; }
+
+	/// <summary>
+	/// Gets whether to enforce the nonce.
+	/// </summary>
+	public bool EnforceNonce { get; internal set; }
+
+	/// <summary>
+	/// Sets the nonce for the message.
+	/// </summary>
+	/// <param name="nonce">The nonce for the message. Max 25 chars.</param>
+	/// <returns>The current builder to be chained.</returns>
+	public DiscordMessageBuilder WithNonce(string nonce)
+	{
+		this.Nonce = nonce;
+		return this;
+	}
+
+	/// <summary>
+	/// Whether to enforce the nonce.
+	/// </summary>
+	/// <param name="enforceNonce">Controls the nonce enforcement.</param>
+	/// <returns>The current builder to be chained.</returns>
+	public DiscordMessageBuilder WithEnforceNonce(bool enforceNonce)
+	{
+		this.EnforceNonce = enforceNonce;
+		return this;
+	}
+
+	/// <summary>
 	/// Sets the Content of the Message.
 	/// </summary>
 	/// <param name="content">The content to be set.</param>
@@ -430,6 +462,8 @@ public sealed class DiscordMessageBuilder
 		this.Sticker = null;
 		this.AttachmentsInternal.Clear();
 		this.KeepAttachmentsInternal = false;
+		this.Nonce = null;
+		this.EnforceNonce = false;
 	}
 
 	/// <summary>
@@ -451,6 +485,9 @@ public sealed class DiscordMessageBuilder
 
 			if (this.Components.Any(c => c.Components.Count > 5))
 				throw new InvalidOperationException("Action rows can only have 5 components");
+
+			if (this.EnforceNonce && string.IsNullOrEmpty(this.Nonce))
+				throw new InvalidOperationException("Nonce enforcement is enabled, but no nonce is set.");
 		}
 	}
 }
