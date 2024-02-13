@@ -287,6 +287,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	public string Nonce { get; internal set; }
 
 	/// <summary>
+	/// Gets whether the <see cref="Nonce"/> is enforced to be validated.
+	/// </summary>
+	[JsonProperty("enforce_nonce", NullValueHandling = NullValueHandling.Ignore)]
+	public bool EnforceNonce { get; internal set; }
+
+	/// <summary>
 	/// Gets whether the message is pinned.
 	/// </summary>
 	[JsonProperty("pinned", NullValueHandling = NullValueHandling.Ignore)]

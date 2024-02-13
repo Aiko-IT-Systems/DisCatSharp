@@ -311,6 +311,18 @@ internal sealed class RestChannelMessageCreatePayload : RestChannelMessageEditPa
 	/// </summary>
 	[JsonProperty("message_reference", NullValueHandling = NullValueHandling.Ignore)]
 	public InternalDiscordMessageReference? MessageReference { get; set; }
+
+	/// <summary>
+	/// Gets or sets the nonce sent with the message.
+	/// </summary>
+	[JsonProperty("nonce", NullValueHandling = NullValueHandling.Ignore)]
+	public string Nonce { get; internal set; }
+
+	/// <summary>
+	/// Gets or sets whether to enforce the <see cref="Nonce"/> to be validated.
+	/// </summary>
+	[JsonProperty("enforce_nonce", NullValueHandling = NullValueHandling.Ignore)]
+	public bool EnforceNonce { get; internal set; }
 }
 
 /// <summary>

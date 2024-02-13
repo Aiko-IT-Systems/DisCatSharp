@@ -2739,7 +2739,9 @@ public sealed class DiscordApiClient
 			IsTts = builder.IsTts,
 			HasEmbed = builder.Embeds != null,
 			Embeds = builder.Embeds,
-			Components = builder.Components
+			Components = builder.Components,
+			Nonce = builder.Nonce,
+			EnforceNonce = builder.EnforceNonce
 		};
 
 		if (builder.ReplyId != null)
