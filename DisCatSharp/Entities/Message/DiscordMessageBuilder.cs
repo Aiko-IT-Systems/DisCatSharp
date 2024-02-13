@@ -114,12 +114,12 @@ public sealed class DiscordMessageBuilder
 	/// <summary>
 	/// Gets the nonce for the message.
 	/// </summary>
-	public string? Nonce { get; internal set; }
+	public string? Nonce { get; set; }
 
 	/// <summary>
 	/// Gets whether to enforce the nonce.
 	/// </summary>
-	public bool EnforceNonce { get; internal set; }
+	public bool EnforceNonce { get; set; }
 
 	/// <summary>
 	/// Sets the nonce for the message.
