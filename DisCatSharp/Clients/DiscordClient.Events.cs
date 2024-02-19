@@ -368,7 +368,6 @@ public sealed partial class DiscordClient
 	/// Fired when a guild member timeout gets added.
 	/// For this Event you need the <see cref="DiscordIntents.GuildModeration"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
 	/// </summary>
-	[Obsolete("This event is not actually fired. Use GuildMemberUpdated instead.")]
 	public event AsyncEventHandler<DiscordClient, GuildMemberTimeoutAddEventArgs> GuildMemberTimeoutAdded
 	{
 		add => this._guildMemberTimeoutAdded.Register(value);
@@ -381,7 +380,6 @@ public sealed partial class DiscordClient
 	/// Fired when a guild member timeout gets changed.
 	/// For this Event you need the <see cref="DiscordIntents.GuildMembers"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
 	/// </summary>
-	[Obsolete("This event is not actually fired. Use GuildMemberUpdated instead.")]
 	public event AsyncEventHandler<DiscordClient, GuildMemberTimeoutUpdateEventArgs> GuildMemberTimeoutChanged
 	{
 		add => this._guildMemberTimeoutChanged.Register(value);
@@ -394,7 +392,6 @@ public sealed partial class DiscordClient
 	/// Fired when a guild member timeout gets removed.
 	/// For this Event you need the <see cref="DiscordIntents.GuildMembers"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
 	/// </summary>
-	[Obsolete("This event is not actually fired. Use GuildMemberUpdated instead.")]
 	public event AsyncEventHandler<DiscordClient, GuildMemberTimeoutRemoveEventArgs> GuildMemberTimeoutRemoved
 	{
 		add => this._guildMemberTimeoutRemoved.Register(value);
