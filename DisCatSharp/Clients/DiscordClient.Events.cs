@@ -360,9 +360,9 @@ public sealed partial class DiscordClient
 
 	private AsyncEvent<DiscordClient, GuildBanRemoveEventArgs> _guildBanRemoved;
 
-#endregion
+	#endregion
 
-#region Guild Timeout
+	#region Guild Timeout
 
 	/// <summary>
 	/// Fired when a guild member timeout gets added.

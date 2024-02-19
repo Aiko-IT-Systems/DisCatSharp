@@ -2054,7 +2054,36 @@ public sealed partial class DiscordClient
 			GuildAvatarHashBefore = gAvOld,
 			UnusualDmActivityBefore = udauOld
 		};
+
 		await this._guildMemberUpdated.InvokeAsync(this, eargs).ConfigureAwait(false);
+
+		var timeoutBefore = (eargs.TimeoutBefore ?? DateTimeOffset.UtcNow) > DateTimeOffset.UtcNow ? eargs.TimeoutBefore : null; // safe guard in case timeout isnt null despite being in the past
+		var timeoutAfter = (eargs.TimeoutAfter ?? DateTimeOffset.MinValue) > DateTimeOffset.UtcNow ? eargs.TimeoutAfter : null;  // i remember that being an issue, idk if its fixed
+
+		if (timeoutBefore is null && timeoutAfter is not null)
+			await this._guildMemberTimeoutAdded.InvokeAsync(this, new GuildMemberTimeoutAddEventArgs(this.ServiceProvider)
+			{
+				Guild = guild,
+				Target = mbr,
+				Timeout = timeoutAfter.Value,
+			});
+
+		if (timeoutBefore is not null && timeoutAfter is not null)
+			await this._guildMemberTimeoutChanged.InvokeAsync(this, new GuildMemberTimeoutUpdateEventArgs(this.ServiceProvider)
+			{
+				Guild = guild,
+				Target = mbr,
+				TimeoutBefore = timeoutBefore.Value,
+				TimeoutAfter = timeoutAfter.Value,
+			});
+
+		if (timeoutBefore is not null && timeoutAfter is null)
+			await this._guildMemberTimeoutRemoved.InvokeAsync(this, new GuildMemberTimeoutRemoveEventArgs(this.ServiceProvider)
+			{
+				Guild = guild,
+				Target = mbr,
+				TimeoutBefore = timeoutBefore.Value,
+			});
 	}
 
 	/// <summary>
