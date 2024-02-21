@@ -93,6 +93,8 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		this.WebhookId = other.WebhookId;
 		this.GuildId = other.GuildId;
 		this.Resolved = other.Resolved;
+		this.Interaction = other.Interaction;
+		this.InteractionMetadata = other.InteractionMetadata;
 	}
 
 	/// <summary>
@@ -420,6 +422,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	[JsonProperty("resolved", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordInteractionResolvedCollection Resolved { get; internal set; }
+
+	/// <summary>
+	/// Gets the interaction metadata if the message is a response to an interaction.
+	/// </summary>
+	[JsonProperty("interaction_metadata", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordInteractionMetadata? InteractionMetadata { get; internal set; }
 
 	/// <summary>
 	/// Build the message reference.

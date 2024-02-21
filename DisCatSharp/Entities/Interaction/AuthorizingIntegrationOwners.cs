@@ -20,4 +20,10 @@ public sealed class AuthorizingIntegrationOwners
 	/// </summary>
 	[JsonProperty("0", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong? GuildInstallKey { get; internal set; }
+
+	/// <summary>
+	/// Constructs a new <see cref="AuthorizingIntegrationOwners"/> object.
+	/// </summary>
+	internal AuthorizingIntegrationOwners()
+	{ }
 }
