@@ -30,7 +30,7 @@ public class SlashCommandGroupAttribute : Attribute
 	/// <summary>
 	/// Gets the allowed contexts of this slash command group.
 	/// </summary>
-	public List<ApplicationCommandContexts>? AllowedContexts { get; set; }
+	public List<InteractionContextType>? AllowedContexts { get; set; }
 
 	/// <summary>
 	/// Gets the allowed integration types of this slash command group.
@@ -55,7 +55,7 @@ public class SlashCommandGroupAttribute : Attribute
 	/// <param name="isNsfw">Whether the slash command group is marked as NSFW.</param>
 	/// <param name="allowedContexts">The allowed contexts of the slash command group.</param>
 	/// <param name="integrationTypes">The allowed integration types of the slash command group.</param>
-	public SlashCommandGroupAttribute(string name, string description, bool isNsfw = false, ApplicationCommandContexts[]? allowedContexts = null, ApplicationCommandIntegrationTypes[]? integrationTypes = null)
+	public SlashCommandGroupAttribute(string name, string description, bool isNsfw = false, InteractionContextType[]? allowedContexts = null, ApplicationCommandIntegrationTypes[]? integrationTypes = null)
 	{
 		this.Name = name.ToLower();
 		this.Description = description;
@@ -75,7 +75,7 @@ public class SlashCommandGroupAttribute : Attribute
 	/// <param name="isNsfw">Whether the slash command group is marked as NSFW.</param>
 	/// <param name="allowedContexts">The allowed contexts of the slash command group.</param>
 	/// <param name="integrationTypes">The allowed integration types of the slash command group.</param>
-	public SlashCommandGroupAttribute(string name, string description, long defaultMemberPermissions, bool isNsfw = false, ApplicationCommandContexts[]? allowedContexts = null, ApplicationCommandIntegrationTypes[]? integrationTypes = null)
+	public SlashCommandGroupAttribute(string name, string description, long defaultMemberPermissions, bool isNsfw = false, InteractionContextType[]? allowedContexts = null, ApplicationCommandIntegrationTypes[]? integrationTypes = null)
 	{
 		this.Name = name.ToLower();
 		this.Description = description;
@@ -95,7 +95,7 @@ public class SlashCommandGroupAttribute : Attribute
 	/// <param name="isNsfw">Whether the slash command group is marked as NSFW.</param>
 	/// <param name="allowedContexts">The allowed contexts of the slash command group.</param>
 	/// <param name="integrationTypes">The allowed integration types of the slash command group.</param>
-	public SlashCommandGroupAttribute(string name, string description, bool dmPermission, bool isNsfw = false, ApplicationCommandContexts[]? allowedContexts = null, ApplicationCommandIntegrationTypes[]? integrationTypes = null)
+	public SlashCommandGroupAttribute(string name, string description, bool dmPermission, bool isNsfw = false, InteractionContextType[]? allowedContexts = null, ApplicationCommandIntegrationTypes[]? integrationTypes = null)
 	{
 		this.Name = name.ToLower();
 		this.Description = description;
@@ -116,7 +116,7 @@ public class SlashCommandGroupAttribute : Attribute
 	/// <param name="isNsfw">Whether the slash command group is marked as NSFW.</param>
 	/// <param name="allowedContexts">The allowed contexts of the slash command group.</param>
 	/// <param name="integrationTypes">The allowed integration types of the slash command group.</param>
-	public SlashCommandGroupAttribute(string name, string description, long defaultMemberPermissions, bool dmPermission, bool isNsfw = false, ApplicationCommandContexts[]? allowedContexts = null, ApplicationCommandIntegrationTypes[]? integrationTypes = null)
+	public SlashCommandGroupAttribute(string name, string description, long defaultMemberPermissions, bool dmPermission, bool isNsfw = false, InteractionContextType[]? allowedContexts = null, ApplicationCommandIntegrationTypes[]? integrationTypes = null)
 	{
 		this.Name = name.ToLower();
 		this.Description = description;

@@ -68,7 +68,7 @@ public class ApplicationCommandEditModel : ObservableApiObject
 	/// <summary>
 	/// Sets the command's allowed contexts.
 	/// </summary>
-	public Optional<List<ApplicationCommandContexts>?> AllowedContexts { internal get; set; }
+	public Optional<List<InteractionContextType>?> AllowedContexts { internal get; set; }
 
 	/// <summary>
 	/// Sets the command's allowed integration types.

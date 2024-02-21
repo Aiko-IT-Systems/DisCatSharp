@@ -86,7 +86,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// Gets where the application command can be used.
 	/// </summary>
 	[JsonProperty("contexts", NullValueHandling = NullValueHandling.Ignore), DiscordUnreleased]
-	public List<ApplicationCommandContexts>? AllowedContexts { get; internal set; }
+	public List<InteractionContextType>? AllowedContexts { get; internal set; }
 
 	/// <summary>
 	/// Gets the application command allowed integration types.
@@ -137,7 +137,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 		Permissions? defaultMemberPermissions = null,
 		bool? dmPermission = null,
 		bool isNsfw = false,
-		List<ApplicationCommandContexts>? allowedContexts = null,
+		List<InteractionContextType>? allowedContexts = null,
 		List<ApplicationCommandIntegrationTypes>? integrationTypes = null
 	)
 		: base(["guild_id", "name_localizations", "description_localizations"])
