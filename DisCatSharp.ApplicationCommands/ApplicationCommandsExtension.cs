@@ -2478,7 +2478,7 @@ internal sealed class DefaultUserAppsHelpModule : ApplicationCommandsModule
 		}
 	}
 
-	[SlashCommand("help", "Displays command help", false, [ApplicationCommandContexts.Guild, ApplicationCommandContexts.BotDm, ApplicationCommandContexts.PrivateChannel], [ApplicationCommandIntegrationTypes.GuildInstall, ApplicationCommandIntegrationTypes.UserInstall])]
+	[SlashCommand("help", "Displays command help", false, [InteractionContextType.Guild, InteractionContextType.BotDm, InteractionContextType.PrivateChannel], [ApplicationCommandIntegrationTypes.GuildInstall, ApplicationCommandIntegrationTypes.UserInstall])]
 	internal async Task DefaulUserAppstHelpAsync(
 		InteractionContext ctx,
 		[Autocomplete(typeof(DefaultUserAppsHelpAutoCompleteProvider)), Option("option_one", "top level command to provide help for", true)]

@@ -138,7 +138,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// Gets the interaction's calling context.
 	/// </summary>
 	[JsonProperty("context", NullValueHandling = NullValueHandling.Ignore)]
-	public ApplicationCommandContexts Context { get; internal set; }
+	public InteractionContextType Context { get; internal set; }
 
 	/// <summary>
 	/// Creates a response to this interaction.

@@ -6062,7 +6062,7 @@ public sealed class DiscordApiClient
 		Optional<Permissions?> defaultMemberPermission,
 		Optional<bool> dmPermission,
 		Optional<bool> isNsfw,
-		Optional<List<ApplicationCommandContexts>?> allowedContexts,
+		Optional<List<InteractionContextType>?> allowedContexts,
 		Optional<List<ApplicationCommandIntegrationTypes>?> integrationTypes
 	)
 	{
@@ -6269,7 +6269,7 @@ public sealed class DiscordApiClient
 		Optional<Permissions?> defaultMemberPermission,
 		Optional<bool> dmPermission,
 		Optional<bool> isNsfw,
-		Optional<List<ApplicationCommandContexts>?> allowedContexts,
+		Optional<List<InteractionContextType>?> allowedContexts,
 		Optional<List<ApplicationCommandIntegrationTypes>?> integrationTypes
 	)
 	{
