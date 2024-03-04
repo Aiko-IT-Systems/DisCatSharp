@@ -135,6 +135,6 @@ public class DiscordSignedLink : Uri
 		/// <param name="objectType">The object type.</param>
 		/// <returns>A bool.</returns>
 		public override bool CanConvert(Type objectType)
-			=> objectType == typeof(DiscordUri);
+			=> objectType == typeof(DiscordSignedLink);
 	}
 }
