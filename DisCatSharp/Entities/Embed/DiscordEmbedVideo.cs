@@ -13,7 +13,7 @@ public sealed class DiscordEmbedVideo : ObservableApiObject
 	/// Gets the source url of the video.
 	/// </summary>
 	[JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
-	public Uri Url { get; internal set; }
+	public DiscordSignedLink Url { get; internal set; }
 
 	/// <summary>
 	/// Gets the height of the video.
