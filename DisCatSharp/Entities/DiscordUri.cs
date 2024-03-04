@@ -63,7 +63,8 @@ public sealed class DiscordUri : DiscordSignedLink
 	/// Returns a string representation of this DiscordUri.
 	/// </summary>
 	/// <returns>This DiscordUri, as a string.</returns>
-	public override string ToString() => this._value.ToString();
+	public override string ToString()
+		=> this._value.ToString();
 
 	/// <summary>
 	/// Converts this DiscordUri into a canonical representation of a <see cref="Uri"/> if it can be represented as
@@ -122,7 +123,8 @@ public sealed class DiscordUri : DiscordSignedLink
 		/// </summary>
 		/// <param name="objectType">The object type.</param>
 		/// <returns>A bool.</returns>
-		public override bool CanConvert(Type objectType) => objectType == typeof(DiscordUri);
+		public override bool CanConvert(Type objectType)
+			=> objectType == typeof(DiscordUri);
 	}
 }
 
