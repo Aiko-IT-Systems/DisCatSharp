@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Net;
+namespace DisCatSharp.Entities;
 
 /// <summary>
 /// An URI in a Discord embed doesn't necessarily conform to the RFC 3986. If it uses the <c>attachment://</c>
@@ -11,7 +11,7 @@ namespace DisCatSharp.Net;
 /// Discord.
 /// </summary>
 [JsonConverter(typeof(DiscordUriJsonConverter))]
-public class DiscordUri
+public sealed class DiscordUri : DiscordSignedLink
 {
 	private readonly object _value;
 
@@ -25,6 +25,7 @@ public class DiscordUri
 	/// </summary>
 	/// <param name="value">The value.</param>
 	internal DiscordUri(Uri value)
+		: base(value)
 	{
 		this._value = value ?? throw new ArgumentNullException(nameof(value));
 		this.Type = DiscordUriType.Standard;
@@ -35,12 +36,13 @@ public class DiscordUri
 	/// </summary>
 	/// <param name="value">The value.</param>
 	internal DiscordUri(string value)
+		: base(value)
 	{
 		ArgumentNullException.ThrowIfNull(value);
 
 		if (IsStandard(value))
 		{
-			this._value = new Uri(value);
+			this._value = new DiscordSignedLink(value);
 			this.Type = DiscordUriType.Standard;
 		}
 		else
@@ -74,7 +76,7 @@ public class DiscordUri
 		=> this.Type == DiscordUriType.Standard
 			? this._value as Uri
 			: throw new UriFormatException(
-				$@"DiscordUri ""{this._value}"" would be invalid as a regular URI, please the {nameof(this.Type)} property first.");
+				$@"DiscordUri ""{this._value}"" would be invalid as a regular URI, please set the correct {nameof(this.Type)} property first.");
 
 	/// <summary>
 	/// Represents a uri json converter.
@@ -87,7 +89,8 @@ public class DiscordUri
 		/// <param name="writer">The writer.</param>
 		/// <param name="value">The value.</param>
 		/// <param name="serializer">The serializer.</param>
-		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) => writer.WriteValue((value as DiscordUri)._value);
+		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+			=> writer.WriteValue((value as DiscordUri)._value);
 
 		/// <summary>
 		/// Reads the json.
