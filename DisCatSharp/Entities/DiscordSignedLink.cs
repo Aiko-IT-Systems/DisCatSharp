@@ -2,14 +2,19 @@ using System;
 using System.Globalization;
 using System.Web;
 
+using Newtonsoft.Json;
+
 namespace DisCatSharp.Entities;
 
 /// <summary>
 /// Represents a <see cref="DiscordSignedLink"/> used for attachments and other things to improve security
 /// and prevent bad actors from abusing Discord's CDN.
 /// </summary>
+[JsonConverter(typeof(DiscordSignedLinkJsonConverter))]
 public class DiscordSignedLink : Uri
 {
+	private readonly object _rawValue;
+
 	/// <summary>
 	/// When the signed link expires.
 	/// </summary>
@@ -33,6 +38,8 @@ public class DiscordSignedLink : Uri
 		: base(uri.AbsoluteUri)
 	{
 		ArgumentNullException.ThrowIfNull(uri);
+
+		this._rawValue = uri.AbsoluteUri;
 
 		if (string.IsNullOrWhiteSpace(this.Query))
 			return;
@@ -63,6 +70,8 @@ public class DiscordSignedLink : Uri
 	{
 		ArgumentNullException.ThrowIfNull(uriString);
 
+		this._rawValue = uriString;
+
 		if (string.IsNullOrWhiteSpace(this.Query))
 			return;
 
@@ -81,5 +90,51 @@ public class DiscordSignedLink : Uri
 			this.IssuedAt = DateTimeOffset.FromUnixTimeSeconds(issuedTimeStamp);
 
 		this.Signature = queries.Get("hm");
+	}
+
+	/// <summary>
+	/// Represents a <see cref="DiscordSignedLinkJsonConverter"/>.
+	/// </summary>
+	internal sealed class DiscordSignedLinkJsonConverter : JsonConverter
+	{
+		/// <summary>
+		/// Writes the json.
+		/// </summary>
+		/// <param name="writer">The writer.</param>
+		/// <param name="value">The value.</param>
+		/// <param name="serializer">The serializer.</param>
+		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+			=> writer.WriteValue((value as DiscordSignedLink)._rawValue);
+
+		/// <summary>
+		/// Reads the json.
+		/// </summary>
+		/// <param name="reader">The reader.</param>
+		/// <param name="objectType">The object type.</param>
+		/// <param name="existingValue">The existing value.</param>
+		/// <param name="serializer">The serializer.</param>
+		public override object ReadJson(
+			JsonReader reader,
+			Type objectType,
+			object existingValue,
+			JsonSerializer serializer
+		)
+		{
+			var val = reader.Value;
+			return val == null
+				? null
+				: val is not string s
+					? throw new JsonReaderException("DiscordSignedLink value invalid format! This is a bug in DisCatSharp. " +
+					                                $"Include the type in your bug report: [[{reader.TokenType}]]")
+					: new DiscordSignedLink(s);
+		}
+
+		/// <summary>
+		/// Whether it can be converted.
+		/// </summary>
+		/// <param name="objectType">The object type.</param>
+		/// <returns>A bool.</returns>
+		public override bool CanConvert(Type objectType)
+			=> objectType == typeof(DiscordUri);
 	}
 }
