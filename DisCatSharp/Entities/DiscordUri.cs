@@ -11,7 +11,7 @@ namespace DisCatSharp.Entities;
 /// Discord.
 /// </summary>
 [JsonConverter(typeof(DiscordUriJsonConverter))]
-public sealed class DiscordUri : DiscordSignedLink
+public sealed class DiscordUri
 {
 	private readonly object _value;
 
@@ -25,7 +25,6 @@ public sealed class DiscordUri : DiscordSignedLink
 	/// </summary>
 	/// <param name="value">The value.</param>
 	internal DiscordUri(Uri value)
-		: base(value)
 	{
 		this._value = value ?? throw new ArgumentNullException(nameof(value));
 		this.Type = DiscordUriType.Standard;
@@ -36,13 +35,12 @@ public sealed class DiscordUri : DiscordSignedLink
 	/// </summary>
 	/// <param name="value">The value.</param>
 	internal DiscordUri(string value)
-		: base(value)
 	{
 		ArgumentNullException.ThrowIfNull(value);
 
 		if (IsStandard(value))
 		{
-			this._value = new DiscordSignedLink(value);
+			this._value = new Uri(value);
 			this.Type = DiscordUriType.Standard;
 		}
 		else
