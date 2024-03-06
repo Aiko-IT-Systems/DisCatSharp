@@ -35,6 +35,7 @@ public static class InteractionExtensions
 
 	/// <summary>
 	/// Sends multiple modals to the user with a prompt to open the next one.
+	/// <para><b>After the last modal, this method automatically responds with the thinking state. Use <see cref="DiscordInteraction.EditOriginalResponseAsync(DiscordWebhookBuilder)"/> to interact with the response.</b></para>
 	/// </summary>
 	/// <param name="interaction">The interaction to create a response to.</param>
 	/// <param name="modals">The modal pages.</param>
