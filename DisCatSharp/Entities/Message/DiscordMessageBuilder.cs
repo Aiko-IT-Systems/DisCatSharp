@@ -179,6 +179,15 @@ public sealed class DiscordMessageBuilder
 	/// </summary>
 	/// <param name="components">The rows of components to add, holding up to five each.</param>
 	/// <returns></returns>
+	/// <exception cref="ArgumentOutOfRangeException">No components were passed.</exception>
+	public DiscordMessageBuilder AddComponents(params DiscordActionRowComponent[] components)
+		=> this.AddComponents((IEnumerable<DiscordActionRowComponent>)components);
+
+	/// <summary>
+	/// Appends several rows of components to the message
+	/// </summary>
+	/// <param name="components">The rows of components to add, holding up to five each.</param>
+	/// <returns></returns>
 	public DiscordMessageBuilder AddComponents(IEnumerable<DiscordActionRowComponent> components)
 	{
 		var ara = components.ToArray();
