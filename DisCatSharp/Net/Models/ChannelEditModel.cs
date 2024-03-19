@@ -80,6 +80,11 @@ public class ChannelEditModel : BaseEditModel
 	/// </summary>
 	public IEnumerable<DiscordOverwriteBuilder> PermissionOverwrites { internal get; set; }
 
+	/// <summary>
+	/// Sets the channel's default forum layout
+	/// </summary>
+	public ForumLayout? ForumLayout { internal get; set; }
+
 	public Optional<ChannelFlags?> Flags { internal get; set; }
 
 	/// <summary>
