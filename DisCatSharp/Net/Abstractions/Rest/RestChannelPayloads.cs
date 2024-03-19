@@ -100,6 +100,12 @@ internal sealed class RestChannelCreatePayload : ObservableApiObject
 	public Optional<ForumPostSortOrder> DefaultSortOrder { get; internal set; }
 
 	/// <summary>
+	/// Gets the default forum layout for this channel
+	/// </summary>
+	[JsonProperty("default_forum_layout", NullValueHandling = NullValueHandling.Ignore)]
+	public ForumLayout? DefaultForumLayout { get; internal set; }
+
+	/// <summary>
 	/// Gets or sets the channel flags.
 	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Include)]
@@ -209,6 +215,12 @@ internal sealed class RestChannelModifyPayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("default_sort_order", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<ForumPostSortOrder?> DefaultSortOrder { get; internal set; }
+
+	/// <summary>
+	/// Gets the default forum layout for this channel
+	/// </summary>
+	[JsonProperty("default_forum_layout", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<ForumLayout?> ForumLayout { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets the channel flags.
