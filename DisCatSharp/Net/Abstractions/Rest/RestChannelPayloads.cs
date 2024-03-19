@@ -103,7 +103,7 @@ internal sealed class RestChannelCreatePayload : ObservableApiObject
 	/// Gets the default forum layout for this channel
 	/// </summary>
 	[JsonProperty("default_forum_layout", NullValueHandling = NullValueHandling.Ignore)]
-	public ForumLayout? DefaultForumLayout { get; internal set; }
+	public Optional<ForumLayout?> DefaultForumLayout { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets the channel flags.
