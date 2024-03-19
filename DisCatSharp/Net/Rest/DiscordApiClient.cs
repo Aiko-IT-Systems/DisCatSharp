@@ -2361,6 +2361,7 @@ public sealed class DiscordApiClient
 	/// <param name="postCreateUserRateLimit">The per user post create rate limit.</param>
 	/// <param name="defaultAutoArchiveDuration">The default auto archive duration.</param>
 	/// <param name="defaultSortOrder">The default sort order.</param>
+	/// <param name="defaultLayout">The default layout.</param>
 	/// <param name="flags">The channel flags.</param>
 	/// <param name="reason">The reason.</param>
 	internal async Task<DiscordChannel> CreateForumChannelAsync(
@@ -2374,6 +2375,7 @@ public sealed class DiscordApiClient
 		Optional<int?> perUserRateLimit,
 		Optional<int?> postCreateUserRateLimit,
 		Optional<ForumPostSortOrder> defaultSortOrder,
+		Optional<ForumLayout?> defaultLayout,
 		ThreadAutoArchiveDuration? defaultAutoArchiveDuration,
 		IEnumerable<DiscordOverwriteBuilder> permissionOverwrites,
 		Optional<ChannelFlags?> flags,
@@ -2402,6 +2404,7 @@ public sealed class DiscordApiClient
 			PermissionOverwrites = restoverwrites,
 			DefaultSortOrder = defaultSortOrder,
 			Flags = flags,
+			DefaultForumLayout = defaultLayout,
 			Type = ChannelType.Forum
 		};
 
