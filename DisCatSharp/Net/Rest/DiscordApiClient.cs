@@ -2364,7 +2364,7 @@ public sealed class DiscordApiClient
 	/// <param name="defaultLayout">The default layout.</param>
 	/// <param name="flags">The channel flags.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordChannel> CreateForumChannelAsync(
+	internal async Task<DiscordChannel> CreateGuildForumChannelAsync(
 		ulong guildId,
 		string name,
 		ulong? parent,
