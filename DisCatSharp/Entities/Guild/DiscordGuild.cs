@@ -1384,7 +1384,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		Optional<ChannelFlags?> flags = default,
 		string reason = null
 	)
-		=> this.Discord.ApiClient.CreateForumChannelAsync(this.Id, name, parent?.Id, topic, null, nsfw, defaultReactionEmoji, perUserRateLimit, postCreateUserRateLimit, defaultSortOrder, defaultLayout, defaultAutoArchiveDuration, overwrites, flags, reason);
+		=> this.Discord.ApiClient.CreateGuildForumChannelAsync(this.Id, name, parent?.Id, topic, null, nsfw, defaultReactionEmoji, perUserRateLimit, postCreateUserRateLimit, defaultSortOrder, defaultLayout, defaultAutoArchiveDuration, overwrites, flags, reason);
 
 	/// <summary>
 	/// Creates a new channel category in this guild.
