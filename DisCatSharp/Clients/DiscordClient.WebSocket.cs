@@ -37,6 +37,11 @@ public sealed partial class DiscordClient
 	private DateTimeOffset _lastHeartbeat;
 
 	/// <summary>
+	/// Gets whether we already identified
+	/// </summary>
+	private bool _identified = false;
+
+	/// <summary>
 	/// Gets the heartbeat task.
 	/// </summary>
 	private Task _heartbeatTask;
@@ -174,6 +179,7 @@ public sealed partial class DiscordClient
 
 		this.Logger.LogDebug(LoggerEvents.Startup, "Connecting to {gw}", this.GatewayUri.AbsoluteUri);
 
+		this._identified = false;
 		await this.WebSocketClient.ConnectAsync(this.GatewayUri).ConfigureAwait(false);
 		return;
 
@@ -239,6 +245,7 @@ public sealed partial class DiscordClient
 			if (this.Configuration.AutoReconnect && e.CloseCode is < 4001 or >= 5000)
 			{
 				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({CloseCode}, '{Reason}'), reconnecting", e.CloseCode, e.CloseMessage ?? "No reason given");
+				this._identified = false;
 
 				if (this._status is null)
 					await this.ConnectAsync().ConfigureAwait(false);
@@ -540,6 +547,8 @@ public sealed partial class DiscordClient
 	/// <param name="status">The status update payload.</param>
 	internal async Task SendIdentifyAsync(StatusUpdate? status)
 	{
+		if (this._identified)
+			return;
 		var identify = new GatewayIdentify
 		{
 			Token = Utilities.GetFormattedToken(this),
@@ -563,6 +572,7 @@ public sealed partial class DiscordClient
 		await this.WsSendAsync(payloadstr).ConfigureAwait(false);
 
 		this.Logger.LogDebug(LoggerEvents.Intents, "Registered gateway intents ({Intents})", this.Configuration.Intents);
+		this._identified = true;
 	}
 
 	/// <summary>
