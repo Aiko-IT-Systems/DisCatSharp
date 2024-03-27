@@ -2361,9 +2361,10 @@ public sealed class DiscordApiClient
 	/// <param name="postCreateUserRateLimit">The per user post create rate limit.</param>
 	/// <param name="defaultAutoArchiveDuration">The default auto archive duration.</param>
 	/// <param name="defaultSortOrder">The default sort order.</param>
+	/// <param name="defaultLayout">The default layout.</param>
 	/// <param name="flags">The channel flags.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordChannel> CreateForumChannelAsync(
+	internal async Task<DiscordChannel> CreateGuildForumChannelAsync(
 		ulong guildId,
 		string name,
 		ulong? parent,
@@ -2374,6 +2375,7 @@ public sealed class DiscordApiClient
 		Optional<int?> perUserRateLimit,
 		Optional<int?> postCreateUserRateLimit,
 		Optional<ForumPostSortOrder> defaultSortOrder,
+		Optional<ForumLayout?> defaultLayout,
 		ThreadAutoArchiveDuration? defaultAutoArchiveDuration,
 		IEnumerable<DiscordOverwriteBuilder> permissionOverwrites,
 		Optional<ChannelFlags?> flags,
@@ -2402,6 +2404,7 @@ public sealed class DiscordApiClient
 			PermissionOverwrites = restoverwrites,
 			DefaultSortOrder = defaultSortOrder,
 			Flags = flags,
+			DefaultForumLayout = defaultLayout,
 			Type = ChannelType.Forum
 		};
 
@@ -2442,6 +2445,7 @@ public sealed class DiscordApiClient
 	/// <param name="type">The type.</param>
 	/// <param name="permissionOverwrites">The permission overwrites.</param>
 	/// <param name="flags">The channel flags.</param>
+	/// <param name="forumLayout">The default forum layout.</param>
 	/// <param name="reason">The reason.</param>
 	internal Task ModifyChannelAsync(
 		ulong channelId,
@@ -2459,7 +2463,8 @@ public sealed class DiscordApiClient
 		Optional<ChannelType> type,
 		IEnumerable<DiscordOverwriteBuilder> permissionOverwrites,
 		Optional<ChannelFlags?> flags,
-		string? reason
+		string? reason,
+		ForumLayout? forumLayout
 	)
 	{
 		List<DiscordRestOverwrite> restoverwrites = null;
@@ -2485,7 +2490,8 @@ public sealed class DiscordApiClient
 			DefaultAutoArchiveDuration = autoArchiveDuration,
 			Type = type,
 			Flags = flags,
-			PermissionOverwrites = restoverwrites
+			PermissionOverwrites = restoverwrites,
+			ForumLayout = forumLayout
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -2521,6 +2527,7 @@ public sealed class DiscordApiClient
 	/// <param name="defaultAutoArchiveDuration">The default auto archive duration.</param>
 	/// <param name="flags">The channel flags.</param>
 	/// <param name="reason">The reason.</param>
+	/// <param name="forumLayout"></param>
 	internal async Task<DiscordChannel> ModifyForumChannelAsync(
 		ulong channelId,
 		string name,
@@ -2537,7 +2544,8 @@ public sealed class DiscordApiClient
 		Optional<ThreadAutoArchiveDuration?> defaultAutoArchiveDuration,
 		IEnumerable<DiscordOverwriteBuilder> permissionOverwrites,
 		Optional<ChannelFlags?> flags,
-		string? reason
+		string? reason,
+		Optional<ForumLayout?> forumLayout
 	)
 	{
 		List<DiscordRestOverwrite> restoverwrites = null;
@@ -2563,7 +2571,8 @@ public sealed class DiscordApiClient
 			PermissionOverwrites = restoverwrites,
 			DefaultSortOrder = defaultSortOrder,
 			Flags = flags,
-			AvailableTags = availableTags
+			AvailableTags = availableTags,
+			ForumLayout = forumLayout
 		};
 
 		var headers = Utilities.GetBaseHeaders();
