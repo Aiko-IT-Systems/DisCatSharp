@@ -52,6 +52,11 @@ public class ForumChannelEditModel : BaseEditModel
 	public Optional<ForumPostSortOrder?> DefaultSortOrder { internal get; set; }
 
 	/// <summary>
+	/// Sets the default forum layout
+	/// </summary>
+	public Optional<ForumLayout?> DefaultForumLayout { get; internal set; }
+
+	/// <summary>
 	/// <para>Sets the parent of this channel.</para>
 	/// <para>This should be channel with <see cref="DisCatSharp.Entities.DiscordChannel.Type"/> set to <see cref="ChannelType.Category"/>.</para>
 	/// </summary>

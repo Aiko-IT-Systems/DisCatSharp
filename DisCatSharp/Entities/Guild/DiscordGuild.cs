@@ -1361,6 +1361,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="postCreateUserRateLimit">Slow mode timeout for user post creations.</param>
 	/// <param name="defaultAutoArchiveDuration">The default auto archive duration for new threads.</param>
 	/// <param name="defaultSortOrder">The default sort order for posts in the new channel.</param>
+	/// <param name="defaultLayout">The default forum layout for this channel</param>
 	/// <param name="flags">The flags of the new channel.</param>
 	/// <param name="reason">Reason for audit logs.</param>
 	/// <returns>The newly-created channel.</returns>
@@ -1379,10 +1380,11 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		Optional<int?> postCreateUserRateLimit = default,
 		ThreadAutoArchiveDuration defaultAutoArchiveDuration = ThreadAutoArchiveDuration.OneDay,
 		Optional<ForumPostSortOrder> defaultSortOrder = default,
+		Optional<ForumLayout?> defaultLayout = default,
 		Optional<ChannelFlags?> flags = default,
 		string reason = null
 	)
-		=> this.Discord.ApiClient.CreateForumChannelAsync(this.Id, name, parent?.Id, topic, null, nsfw, defaultReactionEmoji, perUserRateLimit, postCreateUserRateLimit, defaultSortOrder, defaultAutoArchiveDuration, overwrites, flags, reason);
+		=> this.Discord.ApiClient.CreateGuildForumChannelAsync(this.Id, name, parent?.Id, topic, null, nsfw, defaultReactionEmoji, perUserRateLimit, postCreateUserRateLimit, defaultSortOrder, defaultLayout, defaultAutoArchiveDuration, overwrites, flags, reason);
 
 	/// <summary>
 	/// Creates a new channel category in this guild.
