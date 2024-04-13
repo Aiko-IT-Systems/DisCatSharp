@@ -55,6 +55,10 @@ public class DiscordConnection : ObservableApiObject
 	///			<description>false</description>
 	///		</item>
 	///		<item>
+	///			<term>bungie</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
 	///			<term>ebay</term>
 	///			<description>false</description>
 	///		</item>

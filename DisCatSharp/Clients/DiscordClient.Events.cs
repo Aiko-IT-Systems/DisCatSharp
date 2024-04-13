@@ -687,6 +687,32 @@ public sealed partial class DiscordClient
 
 	private AsyncEvent<DiscordClient, MessageBulkDeleteEventArgs> _messagesBulkDeleted;
 
+	/*
+	/// <summary>
+	/// Fired when a message poll vote is added.
+	/// For this Event you need the <see cref="DiscordIntents.GuildMessagePolls"/> and <see cref="DiscordIntents.DirectMessagePolls"/> intent (depending on where u want to receive events from) specified in <seealso cref="DiscordConfiguration.Intents"/>.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, MessagePollVoteAddEventArgs> MessagePollVoteAdded
+	{
+		add => this._messagePollVoteAdded.Register(value);
+		remove => this._messagePollVoteAdded.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, MessagePollVoteAddEventArgs> _messagePollVoteAdded;
+
+	/// <summary>
+	/// Fired when a message poll vote is removed.
+	/// For this Event you need the <see cref="DiscordIntents.GuildMessagePolls"/> and <see cref="DiscordIntents.DirectMessagePolls"/> intent (depending on where u want to receive events from) specified in <seealso cref="DiscordConfiguration.Intents"/>.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, MessagePollVoteRemoveEventArgs> MessagePollVoteRemoved
+	{
+		add => this._messagePollVoteRemoved.Register(value);
+		remove => this._messagePollVoteRemoved.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, MessagePollVoteRemoveEventArgs> _messagePollVoteRemoved;
+	*/
+
 #endregion
 
 #region Message Reaction
