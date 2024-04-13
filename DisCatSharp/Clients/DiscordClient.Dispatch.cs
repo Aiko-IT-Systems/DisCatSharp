@@ -413,6 +413,11 @@ public sealed partial class DiscordClient
 			case "message_delete_bulk":
 				await this.OnMessageBulkDeleteEventAsync(dat["ids"]!.ToObject<ulong[]>()!, (ulong)dat["channel_id"]!, (ulong?)dat["guild_id"]).ConfigureAwait(false);
 				break;
+			// TODO: Add poll gateway event
+			case "message_poll_vote_add":
+				break;
+			case "message_poll_vote_remove":
+				break;
 
 #endregion
 
