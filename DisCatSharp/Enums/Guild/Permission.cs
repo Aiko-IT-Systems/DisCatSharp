@@ -371,7 +371,13 @@ public enum Permissions : long
 	/// Allows members to create and edit voice channel status.
 	/// </summary>
 	[PermissionString("Set Voice Channel Status"), DiscordInExperiment]
-	SetVoiceChannelStatus = 1L << 48
+	SetVoiceChannelStatus = 1L << 48,
+
+	/// <summary>
+	/// Allows members to send polls.
+	/// </summary>
+	[PermissionString("Send Polls")]
+	SendPolls = 1L << 49
 }
 
 /// <summary>
