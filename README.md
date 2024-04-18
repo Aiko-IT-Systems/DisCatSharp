@@ -8,7 +8,7 @@
 ----
 
 # DisCatSharp
-## A Discord Bot Library written in C# for .NET
+## A Discord App Library written in C# for .NET
 
 ----
 
@@ -70,8 +70,8 @@ Either join our official support guild at https://discord.gg/2HWta4GXus, open an
 
 * [Howto](https://docs.dcs.aitsys.dev/articles/getting_started/bot_account.html)
 * [Examples](https://github.com/Aiko-IT-Systems/DisCatSharp.Examples)
-* [Template Bot(:warning:Outdated)](https://github.com/Aiko-IT-Systems/DisCatSharp.TemplateBot)
-* [Public Support Bot for DisCatSharp Server](https://github.com/Aiko-IT-Systems/DisCatSharp.Support)
+* [Template App(:warning:Outdated)](https://github.com/Aiko-IT-Systems/DisCatSharp.TemplateBot)
+* [Public Support App for DisCatSharp Server](https://github.com/Aiko-IT-Systems/DisCatSharp.Support)
 
 ## Visual Studio Tools
 * [DisCatSharp Analyzer Docs](https://docs.dcs.aitsys.dev/vs/index)
