@@ -94,7 +94,7 @@ public enum UserFlags : long
 	UnderageDeleted = 1L << 15,
 
 	/// <summary>
-	/// The user is a verified bot.
+	/// The user is a verified application.
 	/// </summary>
 	VerifiedBot = 1L << 16,
 
