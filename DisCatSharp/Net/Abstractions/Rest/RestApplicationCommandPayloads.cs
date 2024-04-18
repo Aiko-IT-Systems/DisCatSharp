@@ -278,6 +278,12 @@ internal sealed class RestFollowupMessageCreatePayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
 	public List<DiscordAttachment> Attachments { get; set; }
+
+	/// <summary>
+	/// Gets or sets the poll request.
+	/// </summary>
+	[JsonProperty("poll", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordPollRequest? DiscordPollRequest { get; internal set; }
 }
 
 /// <summary>

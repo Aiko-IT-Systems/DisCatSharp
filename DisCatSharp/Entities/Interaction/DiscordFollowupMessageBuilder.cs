@@ -109,6 +109,11 @@ public sealed class DiscordFollowupMessageBuilder
 	public List<IMention>? Mentions { get; private set; }
 
 	/// <summary>
+	/// Gets the poll for this message.
+	/// </summary>
+	public DiscordPollBuilder? Poll { get; private set; }
+
+	/// <summary>
 	/// Appends a collection of components to the message.
 	/// </summary>
 	/// <param name="components">The collection of components to add.</param>
@@ -155,6 +160,17 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	/// <summary>
+	/// Adds a poll to this builder.
+	/// </summary>
+	/// <param name="pollBuilder">The poll builder to add.</param>
+	/// <returns>The current builder to be chained.</returns>
+	public DiscordFollowupMessageBuilder WithPoll(DiscordPollBuilder pollBuilder)
+	{
+		this.Poll = pollBuilder;
+		return this;
+	}
+
+	/// <summary>
 	/// Indicates if the followup message must use text-to-speech.
 	/// </summary>
 	/// <param name="tts">Text-to-speech</param>
@@ -166,7 +182,7 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	/// <summary>
-	/// Sets the message to send with the followup message..
+	/// Sets the message to send with the followup message.
 	/// </summary>
 	/// <param name="content">Message to send.</param>
 	/// <returns>The builder to chain calls with.</returns>
@@ -335,11 +351,17 @@ public sealed class DiscordFollowupMessageBuilder
 		=> this._components.Clear();
 
 	/// <summary>
+	/// Clears the poll from this builder.
+	/// </summary>
+	public void ClearPoll()
+		=> this.Poll = null;
+
+	/// <summary>
 	/// Allows for clearing the Followup Message builder so that it can be used again to send a new message.
 	/// </summary>
 	public void Clear()
 	{
-		this.Content = "";
+		this.Content = null;
 		this._embeds.Clear();
 		this.IsTts = false;
 		this.Mentions = null;
@@ -353,7 +375,8 @@ public sealed class DiscordFollowupMessageBuilder
 	/// </summary>
 	internal void Validate()
 	{
-		if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any() && !this.Components.Any())
-			throw new ArgumentException("You must specify content, an embed, a component, or at least one file.");
+		if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any() && !this.Components.Any() && this.Poll is null)
+			throw new ArgumentException("You must specify content, an embed, a component, a poll, or at least one file.");
+		this.Poll?.Validate();
 	}
 }

@@ -669,7 +669,6 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, MessageBulkDeleteEventArgs> _messageBulkDeleted;
 
-	/*
 	/// <summary>
 	/// Fired when a message poll vote is added.
 	/// For this Event you need the <see cref="DiscordIntents.GuildMessagePolls"/> and <see cref="DiscordIntents.DirectMessagePolls"/> intent (depending on where u want to receive events from) specified in <seealso cref="DiscordConfiguration.Intents"/>.
@@ -693,7 +692,6 @@ public sealed partial class DiscordShardedClient
 	}
 
 	private AsyncEvent<DiscordClient, MessagePollVoteRemoveEventArgs> _messagePollVoteRemoved;
-	*/
 
 #endregion
 
@@ -1892,7 +1890,6 @@ public sealed partial class DiscordShardedClient
 	private Task Client_VoiceChannelStatusUpdated(DiscordClient client, VoiceChannelStatusUpdateEventArgs e)
 		=> this._voiceChannelStatusUpdated.InvokeAsync(client, e);
 
-	/*
 	/// <summary>
 	/// Handles the message poll vote add event.
 	/// </summary>
@@ -1908,7 +1905,6 @@ public sealed partial class DiscordShardedClient
 	/// <param name="e">The event args.</param>
 	private Task Client_MessagePollVoteRemoved(DiscordClient client, MessagePollVoteRemoveEventArgs e)
 		=> this._messagePollVoteRemoved.InvokeAsync(client, e);
-	*/
 
 #endregion
 }

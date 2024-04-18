@@ -124,6 +124,11 @@ public sealed class DiscordInteractionResponseBuilder
 	private readonly List<DiscordInteractionCallbackHint> _callbackHints = [];
 
 	/// <summary>
+	/// Gets the poll for this message.
+	/// </summary>
+	public DiscordPollBuilder? Poll { get; private set; }
+
+	/// <summary>
 	/// Constructs a new empty interaction response builder.
 	/// </summary>
 	public DiscordInteractionResponseBuilder()
@@ -204,6 +209,17 @@ public sealed class DiscordInteractionResponseBuilder
 
 		var arc = new DiscordActionRowComponent(compArr);
 		this._components.Add(arc);
+		return this;
+	}
+
+	/// <summary>
+	/// Adds a poll to this builder.
+	/// </summary>
+	/// <param name="pollBuilder">The poll builder to add.</param>
+	/// <returns>The current builder to be chained.</returns>
+	public DiscordInteractionResponseBuilder WithPoll(DiscordPollBuilder pollBuilder)
+	{
+		this.Poll = pollBuilder;
 		return this;
 	}
 
@@ -422,11 +438,17 @@ public sealed class DiscordInteractionResponseBuilder
 		=> this._components.Clear();
 
 	/// <summary>
+	/// Clears the poll from this builder.
+	/// </summary>
+	public void ClearPoll()
+		=> this.Poll = null;
+
+	/// <summary>
 	/// Allows for clearing the Interaction Response Builder so that it can be used again to send a new response.
 	/// </summary>
 	public void Clear()
 	{
-		this.Content = "";
+		this.Content = null;
 		this._embeds.Clear();
 		this.IsTts = false;
 		this.IsEphemeral = false;
@@ -434,5 +456,6 @@ public sealed class DiscordInteractionResponseBuilder
 		this._components.Clear();
 		this._choices.Clear();
 		this._files.Clear();
+		this.Poll = null;
 	}
 }

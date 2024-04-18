@@ -737,14 +737,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 							if (cs.Count is not 0)
 								//translation.AddRange(cs.Select(c => JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(c))!));
-							{
 								foreach (var c in cs)
 								{
 									var json = JsonConvert.SerializeObject(c);
 									var obj = JsonConvert.DeserializeObject<CommandTranslator>(json);
 									translation.Add(obj!);
 								}
-							}
 						}
 					}
 

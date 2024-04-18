@@ -330,7 +330,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		this._permissionOverwritesLazy = new(() => new ReadOnlyCollection<DiscordOverwrite>(this.PermissionOverwritesInternal));
 	}
 
-	#region Methods
+#region Methods
 
 	/// <summary>
 	/// Sends a message to this channel.
@@ -965,7 +965,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public Task<DiscordInvite> CreateInviteAsync(int maxAge = 86400, int maxUses = 0, bool temporary = false, bool unique = false, TargetType? targetType = null, ulong? targetApplicationId = null, ulong? targetUser = null, string reason = null)
 		=> this.Discord.ApiClient.CreateChannelInviteAsync(this.Id, maxAge, maxUses, targetType, targetApplicationId, targetUser, temporary, unique, reason);
 
-	#region Voice Channel
+#region Voice Channel
 
 	/// <summary>
 	/// Sets a voice channels status.
@@ -988,9 +988,9 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public Task RemoveVoiceChannelStatusAsync(string reason = null)
 		=> this.Type != ChannelType.Voice ? throw new NotSupportedException("Cannot execute this request on a non-voice channel.") : this.Discord.ApiClient.ModifyVoiceChannelStatusAsync(this.Id, null);
 
-	#endregion
+#endregion
 
-	#region Stage
+#region Stage
 
 	/// <summary>
 	/// Opens a stage.
@@ -1041,9 +1041,9 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public async Task<DiscordStageInstance> GetStageAsync()
 		=> await this.Discord.ApiClient.GetStageInstanceAsync(this.Id).ConfigureAwait(false);
 
-	#endregion
+#endregion
 
-	#region Scheduled Events
+#region Scheduled Events
 
 	/// <summary>
 	/// Creates a scheduled event based on the channel type.
@@ -1067,9 +1067,9 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		return await this.Guild.CreateScheduledEventAsync(name, scheduledStartTime, null, this, null, description, type, coverImage, reason).ConfigureAwait(false);
 	}
 
-	#endregion
+#endregion
 
-	#region Threads
+#region Threads
 
 	/// <summary>
 	/// Creates a thread.
@@ -1218,7 +1218,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public async Task<DiscordChannel> DeleteForumPostTag(ulong id, string reason = null)
 		=> this.Type != ChannelType.Forum ? throw new NotSupportedException("Channel needs to be type of Forum") : await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, Optional.None, Optional.None, null, Optional.None, this.InternalAvailableTags?.Where(x => x.Id != id)?.ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason).ConfigureAwait(false);
 
-	#endregion
+#endregion
 
 	/// <summary>
 	/// Adds a channel permission overwrite for specified role.
@@ -1463,7 +1463,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 						? $"Channel {this.Name} ({this.Id})"
 						: $"Channel {this.Id}";
 
-	#endregion
+#endregion
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordChannel"/> is equal to another object.

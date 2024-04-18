@@ -413,10 +413,11 @@ public sealed partial class DiscordClient
 			case "message_delete_bulk":
 				await this.OnMessageBulkDeleteEventAsync(dat["ids"]!.ToObject<ulong[]>()!, (ulong)dat["channel_id"]!, (ulong?)dat["guild_id"]).ConfigureAwait(false);
 				break;
-			// TODO: Add poll gateway event
 			case "message_poll_vote_add":
+				await this.OnMessagePollVoteAddEventAsync(dat).ConfigureAwait(false);
 				break;
 			case "message_poll_vote_remove":
+				await this.OnMessagePollVoteRemoveEventAsync(dat).ConfigureAwait(false);
 				break;
 
 #endregion
@@ -731,6 +732,7 @@ public sealed partial class DiscordClient
 							old.Pronouns = usr.Pronouns;
 							old.Locale = usr.Locale;
 							old.GlobalName = usr.GlobalName;
+							old.Clan = usr.Clan;
 							return old;
 						});
 
@@ -1904,6 +1906,7 @@ public sealed partial class DiscordClient
 			old.Pronouns = usr.Pronouns;
 			old.Locale = usr.Locale;
 			old.GlobalName = usr.GlobalName;
+			old.Clan = usr.Clan;
 			return old;
 		});
 
@@ -1977,6 +1980,7 @@ public sealed partial class DiscordClient
 			old.Pronouns = usr.Pronouns;
 			old.Locale = usr.Locale;
 			old.GlobalName = usr.GlobalName;
+			old.Clan = usr.Clan;
 			return old;
 		});
 
@@ -2507,6 +2511,104 @@ public sealed partial class DiscordClient
 			Guild = guild
 		};
 		await this._messagesBulkDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Handles the message poll vote add event.
+	/// </summary>
+	/// <param name="dat">The raw jobject.</param>
+	internal async Task OnMessagePollVoteAddEventAsync(JObject dat)
+	{
+		var channelId = (ulong)dat["channel_id"]!;
+		var messageId = (ulong)dat["message_id"]!;
+		var guildId = (ulong?)dat["channel_id"];
+		var userId = (ulong)dat["user_id"]!;
+		var answerId = (int)dat["answer_id"]!;
+
+		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
+		var guild = this.InternalGetCachedGuild(guildId);
+
+		if (!this.UserCache.TryGetValue(userId, out var user))
+			user = new()
+			{
+				Id = userId,
+				Discord = this
+			};
+
+		if (channel == null
+		    || this.Configuration.MessageCacheSize == 0
+		    || this.MessageCache == null
+		    || !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var message))
+			message = new()
+			{
+				Id = messageId,
+				ChannelId = channelId,
+				GuildId = guildId,
+				Discord = this
+			};
+
+		var ea = new MessagePollVoteAddEventArgs(this.ServiceProvider)
+		{
+			Channel = channel,
+			ChannelId = channelId,
+			Message = message,
+			MessageId = messageId,
+			Guild = guild,
+			GuildId = guildId,
+			User = user,
+			UserId = userId,
+			AnswerId = answerId
+		};
+		await this._messagePollVoteAdded.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Handles the message poll vote remove event.
+	/// </summary>
+	/// <param name="dat">The raw jobject.</param>
+	internal async Task OnMessagePollVoteRemoveEventAsync(JObject dat)
+	{
+		var channelId = (ulong)dat["channel_id"]!;
+		var messageId = (ulong)dat["message_id"]!;
+		var guildId = (ulong?)dat["channel_id"];
+		var userId = (ulong)dat["user_id"]!;
+		var answerId = (int)dat["answer_id"]!;
+
+		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
+		var guild = this.InternalGetCachedGuild(guildId);
+
+		if (!this.UserCache.TryGetValue(userId, out var user))
+			user = new()
+			{
+				Id = userId,
+				Discord = this
+			};
+
+		if (channel == null
+		    || this.Configuration.MessageCacheSize == 0
+		    || this.MessageCache == null
+		    || !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var message))
+			message = new()
+			{
+				Id = messageId,
+				ChannelId = channelId,
+				GuildId = guildId,
+				Discord = this
+			};
+
+		var ea = new MessagePollVoteRemoveEventArgs(this.ServiceProvider)
+		{
+			Channel = channel,
+			ChannelId = channelId,
+			Message = message,
+			MessageId = messageId,
+			Guild = guild,
+			GuildId = guildId,
+			User = user,
+			UserId = userId,
+			AnswerId = answerId
+		};
+		await this._messagePollVoteRemoved.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
 #endregion

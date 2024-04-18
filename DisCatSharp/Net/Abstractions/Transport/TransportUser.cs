@@ -135,6 +135,12 @@ internal class TransportUser : ObservableApiObject
 	public string Bio { get; internal set; }
 
 	/// <summary>
+	/// Gets the users clan.
+	/// </summary>
+	[JsonProperty("clan", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordClan? Clan { get; internal set; }
+
+	/// <summary>
 	/// Gets the users pronouns.
 	/// </summary>
 	[JsonProperty("pronouns", NullValueHandling = NullValueHandling.Ignore)]

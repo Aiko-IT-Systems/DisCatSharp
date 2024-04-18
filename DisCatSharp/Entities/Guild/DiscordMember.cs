@@ -359,6 +359,16 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	}
 
 	/// <summary>
+	/// Gets the member's banner hash.
+	/// </summary>
+	[JsonIgnore]
+	public override DiscordClan? Clan
+	{
+		get => this.User.Clan;
+		internal set => this.User.Clan = value;
+	}
+
+	/// <summary>
 	/// Gets whether the member is a bot.
 	/// </summary>
 	[JsonIgnore]

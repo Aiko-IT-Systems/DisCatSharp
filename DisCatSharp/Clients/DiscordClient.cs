@@ -260,10 +260,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._entitlementCreated = new("ENTITLEMENT_CREATED", EventExecutionLimit, this.EventErrorHandler);
 		this._entitlementUpdated = new("ENTITLEMENT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._entitlementDeleted = new("ENTITLEMENT_DELETED", EventExecutionLimit, this.EventErrorHandler);
-		/*
 		this._messagePollVoteAdded = new("MESSAGE_POLL_VOTE_ADDED", EventExecutionLimit, this.EventErrorHandler);
 		this._messagePollVoteRemoved = new("MESSAGE_POLL_VOTE_REMOVED", EventExecutionLimit, this.EventErrorHandler);
-		*/
 
 		this.GuildsInternal.Clear();
 
@@ -459,6 +457,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			old.ThemeColorsInternal = usr.ThemeColorsInternal;
 			old.Pronouns = usr.Pronouns;
 			old.GlobalName = usr.GlobalName;
+			old.Clan = usr.Clan;
 			return old;
 		});
 
@@ -1452,6 +1451,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 					old.Pronouns = usr.Pronouns;
 					old.Locale = usr.Locale;
 					old.GlobalName = usr.GlobalName;
+					old.Clan = usr.Clan;
 					return old;
 				});
 
@@ -1489,6 +1489,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.Pronouns = usr.Pronouns;
 				old.Locale = usr.Locale;
 				old.GlobalName = usr.GlobalName;
+				old.Clan = usr.Clan;
 				return old;
 			});
 
@@ -1595,6 +1596,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 					old.Pronouns = usr.Pronouns;
 					old.Locale = usr.Locale;
 					old.GlobalName = usr.GlobalName;
+					old.Clan = usr.Clan;
 					return old;
 				});
 

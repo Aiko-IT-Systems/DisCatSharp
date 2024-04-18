@@ -656,8 +656,8 @@ public sealed partial class DiscordShardedClient
 		this._entitlementCreated = new("ENTITLEMENT_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._entitlementUpdated = new("ENTITLEMENT_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._entitlementDeleted = new("ENTITLEMENT_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
-		/*this._messagePollVoteAdded = new("MESSAGE_POLL_VOTE_ADDED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
-		this._messagePollVoteRemoved = new("MESSAGE_POLL_VOTE_REMOVED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);*/
+		this._messagePollVoteAdded = new("MESSAGE_POLL_VOTE_ADDED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._messagePollVoteRemoved = new("MESSAGE_POLL_VOTE_REMOVED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 	}
 
 	/// <summary>
@@ -754,10 +754,8 @@ public sealed partial class DiscordShardedClient
 		client.EntitlementCreated += this.Client_EntitlementCreated;
 		client.EntitlementUpdated += this.Client_EntitlementUpdated;
 		client.EntitlementDeleted += this.Client_EntitlementDeleted;
-		/*
 		client.MessagePollVoteAdded += this.Client_MessagePollVoteAdded;
 		client.MessagePollVoteRemoved += this.Client_MessagePollVoteRemoved;
-		*/
 	}
 
 	/// <summary>
@@ -854,10 +852,8 @@ public sealed partial class DiscordShardedClient
 		client.EntitlementCreated -= this.Client_EntitlementCreated;
 		client.EntitlementUpdated -= this.Client_EntitlementUpdated;
 		client.EntitlementDeleted -= this.Client_EntitlementDeleted;
-		/*
 		client.MessagePollVoteAdded -= this.Client_MessagePollVoteAdded;
 		client.MessagePollVoteRemoved -= this.Client_MessagePollVoteRemoved;
-		*/
 	}
 
 	/// <summary>

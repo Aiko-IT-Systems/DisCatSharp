@@ -52,6 +52,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		this.Bio = transport.Bio;
 		this.Pronouns = transport.Pronouns;
 		this.GlobalName = transport.GlobalName;
+		this.Clan = transport.Clan;
 	}
 
 	/// <summary>
@@ -148,6 +149,12 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	[JsonProperty("bio", NullValueHandling = NullValueHandling.Ignore)]
 	public virtual string Bio { get; internal set; }
+
+	/// <summary>
+	/// Gets the users clan.
+	/// </summary>
+	[JsonProperty("clan", NullValueHandling = NullValueHandling.Ignore), DiscordUnreleased]
+	public virtual DiscordClan? Clan { get; internal set; }
 
 	/// <summary>
 	/// Gets the user's avatar hash.

@@ -122,6 +122,11 @@ public sealed class DiscordMessageBuilder
 	public bool EnforceNonce { get; set; }
 
 	/// <summary>
+	/// Gets the poll for this message.
+	/// </summary>
+	public DiscordPollBuilder? Poll { get; private set; }
+
+	/// <summary>
 	/// Sets the nonce for the message.
 	/// </summary>
 	/// <param name="nonce">The nonce for the message. Max 25 chars.</param>
@@ -162,6 +167,17 @@ public sealed class DiscordMessageBuilder
 	public DiscordMessageBuilder WithSticker(DiscordSticker sticker)
 	{
 		this.Sticker = sticker;
+		return this;
+	}
+
+	/// <summary>
+	/// Adds a poll to the message.
+	/// </summary>
+	/// <param name="pollBuilder">The poll builder to add.</param>
+	/// <returns>The current builder to be chained.</returns>
+	public DiscordMessageBuilder WithPoll(DiscordPollBuilder pollBuilder)
+	{
+		this.Poll = pollBuilder;
 		return this;
 	}
 
@@ -438,7 +454,8 @@ public sealed class DiscordMessageBuilder
 	/// </summary>
 	/// <param name="channel">The channel the message should be sent to.</param>
 	/// <returns>The current builder to be chained.</returns>
-	public Task<DiscordMessage> SendAsync(DiscordChannel channel) => channel.SendMessageAsync(this);
+	public Task<DiscordMessage> SendAsync(DiscordChannel channel)
+		=> channel.SendMessageAsync(this);
 
 	/// <summary>
 	/// Sends the modified message.
@@ -446,13 +463,20 @@ public sealed class DiscordMessageBuilder
 	/// </summary>
 	/// <param name="msg">The original Message to modify.</param>
 	/// <returns>The current builder to be chained.</returns>
-	public Task<DiscordMessage> ModifyAsync(DiscordMessage msg) => msg.ModifyAsync(this);
+	public Task<DiscordMessage> ModifyAsync(DiscordMessage msg)
+		=> msg.ModifyAsync(this);
 
 	/// <summary>
 	/// Clears all message components on this builder.
 	/// </summary>
 	public void ClearComponents()
 		=> this.ComponentsInternal.Clear();
+
+	/// <summary>
+	/// Clears the poll from this builder.
+	/// </summary>
+	public void ClearPoll()
+		=> this.Poll = null;
 
 	/// <summary>
 	/// Allows for clearing the Message Builder so that it can be used again to send a new message.
@@ -473,6 +497,7 @@ public sealed class DiscordMessageBuilder
 		this.KeepAttachmentsInternal = false;
 		this.Nonce = null;
 		this.EnforceNonce = false;
+		this.Poll = null;
 	}
 
 	/// <summary>
@@ -486,8 +511,8 @@ public sealed class DiscordMessageBuilder
 
 		if (!isModify)
 		{
-			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && this.Sticker is null && (!this.Components?.Any() ?? true))
-				throw new ArgumentException("You must specify content, an embed, a sticker, a component or at least one file.");
+			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && this.Sticker is null && (!this.Components?.Any() ?? true) && this.Poll is null)
+				throw new ArgumentException("You must specify content, an embed, a sticker, a component, a poll or at least one file.");
 
 			if (this.Components.Count > 5)
 				throw new InvalidOperationException("You can only have 5 action rows per message.");
@@ -497,6 +522,10 @@ public sealed class DiscordMessageBuilder
 
 			if (this.EnforceNonce && string.IsNullOrEmpty(this.Nonce))
 				throw new InvalidOperationException("Nonce enforcement is enabled, but no nonce is set.");
+
+			this.Poll?.Validate();
 		}
+		else if (this.Poll is not null)
+			throw new InvalidOperationException("Messages with polls can't be edited.");
 	}
 }
