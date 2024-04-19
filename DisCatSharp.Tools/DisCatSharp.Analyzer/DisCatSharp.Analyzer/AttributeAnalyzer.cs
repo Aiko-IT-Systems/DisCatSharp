@@ -192,7 +192,7 @@ namespace DisCatSharp.Analyzer
 					context.ReportDiagnostic(Diagnostic.Create(s_requiresFeatureRule, invocation.GetLocation(), kind, name, message));
 				}
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				Console.WriteLine($"StatusAnalyzer threw an exception: {ex.Message}");
 				if (!string.IsNullOrEmpty(ex.StackTrace))
@@ -211,8 +211,8 @@ namespace DisCatSharp.Analyzer
 			try
 			{
 				var syntaxTrees = from x in context.Symbol.Locations
-								where x.IsInSource
-								select x.SourceTree;
+				                  where x.IsInSource
+				                  select x.SourceTree;
 				var declaration = context.Symbol;
 
 				// ReSharper disable HeuristicUnreachableCode
@@ -281,7 +281,7 @@ namespace DisCatSharp.Analyzer
 					context.ReportDiagnostic(Diagnostic.Create(s_requiresFeatureRule, context.Symbol.Locations.FirstOrDefault(x => x.IsInSource), kind, name, message));
 				}
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				Console.WriteLine($"StatusAnalyzer threw an exception: {ex.Message}");
 				if (!string.IsNullOrEmpty(ex.StackTrace))

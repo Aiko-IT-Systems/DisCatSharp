@@ -112,6 +112,11 @@ public sealed class DiscordWebhookBuilder
 	private readonly List<ulong> _appliedTags = [];
 
 	/// <summary>
+	/// Gets the poll for this message.
+	/// </summary>
+	public DiscordPollBuilder? Poll { get; private set; }
+
+	/// <summary>
 	/// Constructs a new empty webhook request builder.
 	/// </summary>
 	public DiscordWebhookBuilder()
@@ -186,6 +191,17 @@ public sealed class DiscordWebhookBuilder
 		var comp = new DiscordActionRowComponent(cmpArr);
 		this._components.Add(comp);
 
+		return this;
+	}
+
+	/// <summary>
+	/// Adds a poll to this webhook builder.
+	/// </summary>
+	/// <param name="pollBuilder">The poll builder to add.</param>
+	/// <returns>The current builder to be chained.</returns>
+	public DiscordWebhookBuilder WithPoll(DiscordPollBuilder pollBuilder)
+	{
+		this.Poll = pollBuilder;
 		return this;
 	}
 
@@ -445,6 +461,12 @@ public sealed class DiscordWebhookBuilder
 		=> this._components.Clear();
 
 	/// <summary>
+	/// Clears the poll from this builder.
+	/// </summary>
+	public void ClearPoll()
+		=> this.Poll = null;
+
+	/// <summary>
 	/// Allows for clearing the Webhook Builder so that it can be used again to send a new message.
 	/// </summary>
 	public void Clear()
@@ -458,6 +480,7 @@ public sealed class DiscordWebhookBuilder
 		this._components.Clear();
 		this.KeepAttachmentsInternal = false;
 		this.ThreadName = null;
+		this.Poll = null;
 	}
 
 	/// <summary>
@@ -475,6 +498,9 @@ public sealed class DiscordWebhookBuilder
 
 			if (this.AvatarUrl.HasValue)
 				throw new ArgumentException("You cannot change the avatar of a message.");
+
+			if (this.Poll is not null)
+				throw new InvalidOperationException("You cannnot edit a poll.");
 		}
 		else if (isFollowup)
 		{
@@ -483,6 +509,9 @@ public sealed class DiscordWebhookBuilder
 
 			if (this.AvatarUrl.HasValue)
 				throw new ArgumentException("You cannot change the avatar of a follow up message.");
+
+			if (this.Poll is not null)
+				throw new InvalidOperationException("You cannnot edit a poll.");
 		}
 		else if (isInteractionResponse)
 		{
@@ -491,11 +520,15 @@ public sealed class DiscordWebhookBuilder
 
 			if (this.AvatarUrl.HasValue)
 				throw new ArgumentException("You cannot change the avatar of an interaction response.");
+
+			if (this.Poll is not null)
+				throw new InvalidOperationException("You cannnot edit a poll.");
 		}
 		else
 		{
-			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any() && !this.Components.Any())
-				throw new ArgumentException("You must specify content, an embed, a component, or at least one file.");
+			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any() && !this.Components.Any() && this.Poll is null)
+				throw new ArgumentException("You must specify content, an embed, a component, a poll, or at least one file.");
+			this.Poll?.Validate();
 		}
 	}
 }
