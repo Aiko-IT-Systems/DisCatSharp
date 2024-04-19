@@ -1767,6 +1767,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 					old.Pronouns = usr.Pronouns;
 					old.Locale = usr.Locale;
 					old.GlobalName = usr.GlobalName;
+					old.Clan = usr.Clan;
 					return old;
 				});
 				var mbr = new DiscordMember(xtm)

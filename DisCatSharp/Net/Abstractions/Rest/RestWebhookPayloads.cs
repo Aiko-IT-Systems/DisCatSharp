@@ -107,6 +107,12 @@ internal sealed class RestWebhookExecutePayload : ObservableApiObject
 
 	[JsonProperty("applied_tags", NullValueHandling = NullValueHandling.Ignore)]
 	public IEnumerable<ulong>? AppliedTags { get; set; }
+
+	/// <summary>
+	/// Gets or sets the poll request.
+	/// </summary>
+	[JsonProperty("poll", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordPollRequest? DiscordPollRequest { get; internal set; }
 }
 
 /// <summary>

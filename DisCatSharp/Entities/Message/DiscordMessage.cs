@@ -95,6 +95,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		this.Resolved = other.Resolved;
 		this.Interaction = other.Interaction;
 		this.InteractionMetadata = other.InteractionMetadata;
+		this.Poll = other.Poll;
+		if (this.Poll is not null)
+		{
+			this.Poll.ChannelId = this.ChannelId;
+			this.Poll.MessageId = this.Id;
+		}
 	}
 
 	/// <summary>
@@ -430,6 +436,34 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	public DiscordInteractionMetadata? InteractionMetadata { get; internal set; }
 
 	/// <summary>
+	/// Gets the poll of the message if one was attached.
+	/// </summary>
+	[JsonProperty("poll", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordPoll? Poll { get; internal set; }
+
+	/// <summary>
+	/// Gets whether this message has a poll.
+	/// </summary>
+	[JsonIgnore]
+	public bool HasPoll
+		=> this.Poll is not null;
+
+	/// <summary>
+	/// <para>Ends the poll on this message.</para>
+	/// <para>Works only for own polls and if they are not expired yet. </para>
+	/// </summary>
+	/// <returns>The fresh discord message.</returns>
+	/// <exception cref="InvalidOperationException">Thrown when the message has no poll, the author is not us, or the poll has been already ended.</exception>
+	public async Task<DiscordMessage> EndPollAsync()
+		=> this.Poll is null
+			? throw new InvalidOperationException("This message has no poll.")
+			: this.Author.Id != this.Discord.CurrentUser.Id
+				? throw new InvalidOperationException("Can only end own polls.")
+				: this.Poll.Results?.IsFinalized ?? false
+					? throw new InvalidOperationException("The poll was already ended.")
+					: await this.Discord.ApiClient.EndPollAsync(this.ChannelId, this.Id);
+
+	/// <summary>
 	/// Build the message reference.
 	/// </summary>
 	internal DiscordMessageReference InternalBuildMessageReference()
@@ -493,7 +527,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		var mentions = new List<IMention>();
 
 		try
-  		{
+		{
 			if (this.ReferencedMessage is not null && this.MentionedUsersInternal.Count is not 0 && this.MentionedUsersInternal.Contains(this.ReferencedMessage.Author))
 				mentions.Add(new RepliedUserMention());
 
@@ -503,8 +537,8 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 			if (this.MentionedRoleIds.Count is not 0)
 				mentions.AddRange(this.MentionedRoleIds.Select(r => (IMention)new RoleMention(r)));
 		}
-  		catch
-    	{ }
+		catch
+		{ }
 
 		return mentions;
 	}

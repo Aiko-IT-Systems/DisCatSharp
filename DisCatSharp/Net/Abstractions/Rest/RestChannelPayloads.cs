@@ -335,6 +335,12 @@ internal sealed class RestChannelMessageCreatePayload : RestChannelMessageEditPa
 	/// </summary>
 	[JsonProperty("enforce_nonce", NullValueHandling = NullValueHandling.Ignore)]
 	public bool EnforceNonce { get; internal set; }
+
+	/// <summary>
+	/// Gets or sets the poll request.
+	/// </summary>
+	[JsonProperty("poll", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordPollRequest? DiscordPollRequest { get; internal set; }
 }
 
 /// <summary>

@@ -360,9 +360,9 @@ public sealed partial class DiscordClient
 
 	private AsyncEvent<DiscordClient, GuildBanRemoveEventArgs> _guildBanRemoved;
 
-	#endregion
+#endregion
 
-	#region Guild Timeout
+#region Guild Timeout
 
 	/// <summary>
 	/// Fired when a guild member timeout gets added.
@@ -687,7 +687,6 @@ public sealed partial class DiscordClient
 
 	private AsyncEvent<DiscordClient, MessageBulkDeleteEventArgs> _messagesBulkDeleted;
 
-	/*
 	/// <summary>
 	/// Fired when a message poll vote is added.
 	/// For this Event you need the <see cref="DiscordIntents.GuildMessagePolls"/> and <see cref="DiscordIntents.DirectMessagePolls"/> intent (depending on where u want to receive events from) specified in <seealso cref="DiscordConfiguration.Intents"/>.
@@ -711,7 +710,6 @@ public sealed partial class DiscordClient
 	}
 
 	private AsyncEvent<DiscordClient, MessagePollVoteRemoveEventArgs> _messagePollVoteRemoved;
-	*/
 
 #endregion
 
