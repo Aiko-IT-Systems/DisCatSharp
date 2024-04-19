@@ -22,17 +22,17 @@ public sealed class DiscordPollMedia
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordPollMedia"/> class.
 	/// </summary>
-	internal DiscordPollMedia()
-	{ }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordPollMedia"/> class.
-	/// </summary>
 	/// <param name="text">The text of the field.</param>
-	/// <param name="emoji">The emoji of the field.</param>
+	/// <param name="partialEmoji">The emoji of the field.</param>
 	internal DiscordPollMedia(string text, PartialEmoji? partialEmoji = null)
 	{
 		this.Text = text;
 		this.Emoji = partialEmoji;
 	}
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="DiscordPollMedia"/> class.
+	/// </summary>
+	internal DiscordPollMedia()
+	{ }
 }

@@ -23,6 +23,8 @@ public sealed class DiscordPollAnswer
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordPollAnswer"/> class.
 	/// </summary>
+	/// <param name="text">The text to set.</param>
+	/// <param name="partialEmoji">The emoji to set.</param>
 	public DiscordPollAnswer(string text, PartialEmoji? partialEmoji = null)
 	{
 		this.PollMedia = new(text, partialEmoji);
