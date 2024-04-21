@@ -1026,43 +1026,90 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		=> this.Discord.ApiClient.ModifyTimeoutAsync(this.Id, memberId, null, reason);
 
 	/// <summary>
-	/// Bans a specified member from this guild.
+	/// Bans a specified <see cref="DiscordMember"/> from this guild.
 	/// </summary>
 	/// <param name="member">Member to ban.</param>
-	/// <param name="deleteMessageDays">How many days to remove messages from.</param>
+	/// <param name="deleteMessageSeconds">How many seconds to remove messages from the users. Minimum <c>0</c> seconds and maximum <c>604800 </c> seconds (7 days).</param>
 	/// <param name="reason">Reason for audit logs.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task BanMemberAsync(DiscordMember member, int deleteMessageDays = 0, string? reason = null)
-		=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, member.Id, deleteMessageDays, reason);
+	public Task BanMemberAsync(DiscordMember member, [DiscordDeprecated("This is now in seconds, we convert it until the next minor release.")] int deleteMessageSeconds = 0, string? reason = null)
+		=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, member.Id, deleteMessageSeconds < 8 && deleteMessageSeconds > 0 ? this.DaysToSeconds(deleteMessageSeconds) : deleteMessageSeconds, reason);
 
 	/// <summary>
-	/// Bans a specified user by ID. This doesn't require the user to be in this guild.
+	/// Bans a specified <see cref="DiscordUser"/>. This doesn't require the user to be in this guild.
 	/// </summary>
 	/// <param name="user">The user to ban.</param>
-	/// <param name="deleteMessageDays">How many days to remove messages from.</param>
+	/// <param name="deleteMessageSeconds">How many seconds to remove messages from the users. Minimum <c>0</c> seconds and maximum <c>604800 </c> seconds (7 days).</param>
 	/// <param name="reason">Reason for audit logs.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task BanMemberAsync(DiscordUser user, int deleteMessageDays = 0, string? reason = null)
-		=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, user.Id, deleteMessageDays, reason);
+	public Task BanMemberAsync(DiscordUser user, [DiscordDeprecated("This is now in seconds, we convert it until the next minor release.")] int deleteMessageSeconds = 0, string? reason = null)
+		=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, user.Id, deleteMessageSeconds < 8 && deleteMessageSeconds > 0 ? this.DaysToSeconds(deleteMessageSeconds) : deleteMessageSeconds, reason);
 
 	/// <summary>
-	/// Bans a specified user by ID. This doesn't require the user to be in this guild.
+	/// Bans a specified user ID from this guild. This doesn't require the user to be in this guild.
 	/// </summary>
 	/// <param name="userId">ID of the user to ban.</param>
-	/// <param name="deleteMessageDays">How many days to remove messages from.</param>
+	/// <param name="deleteMessageSeconds">How many seconds to remove messages from the users. Minimum <c>0</c> seconds and maximum <c>604800 </c> seconds (7 days).</param>
 	/// <param name="reason">Reason for audit logs.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task BanMemberAsync(ulong userId, int deleteMessageDays = 0, string reason = null)
-		=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, userId, deleteMessageDays, reason);
+	public Task BanMemberAsync(ulong userId, [DiscordDeprecated("This is now in seconds, we convert it until the next minor release.")] int deleteMessageSeconds = 0, string reason = null)
+		=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, userId, deleteMessageSeconds < 8 && deleteMessageSeconds > 0 ? this.DaysToSeconds(deleteMessageSeconds) : deleteMessageSeconds, reason);
+
+	/// <summary>
+	/// Converts days to seconds to help users transition from <c>deleteMessageDays</c> to <c>deleteMessageSeconds</c>.
+	/// </summary>
+	/// <param name="days">The days to convert to seconds.</param>
+	/// <returns>The days in seconds.</returns>
+	private int DaysToSeconds(int days)
+		=> days * 24 * 60 * 60;
+
+	/// <summary>
+	/// Bulk bans a list of <see cref="DiscordMember"/>s from this guild.
+	/// </summary>
+	/// <param name="members">The members to ban.</param>
+	/// <param name="deleteMessageSeconds">How many seconds to remove messages from the users. Minimum <c>0</c> seconds and maximum <c>604800 </c> seconds (7 days).</param>
+	/// <param name="reason">Reason for audit logs.</param>
+	/// <exception cref="ArgumentException">Thrown when <paramref name="deleteMessageSeconds"/> was too low or too high, or when <paramref name="members"/> contains more than <c>200</c> members.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> or <see cref="Permissions.ManageGuild"/> permission.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordBulkBanResponse> BulkBanMembersAsync(List<DiscordMember> members, int deleteMessageSeconds = 0, string? reason = null)
+		=> this.Discord.ApiClient.CreateGuildBulkBanAsync(this.Id, members.Select(x => x.Id).ToList(), deleteMessageSeconds, reason);
+
+	/// <summary>
+	/// Bulk bans a list of <see cref="DiscordUser"/>s from this guild. This doesn't require the users to be in this guild.
+	/// </summary>
+	/// <param name="users">The users to ban.</param>
+	/// <param name="deleteMessageSeconds">How many seconds to remove messages from the users. Minimum <c>0</c> seconds and maximum <c>604800 </c> seconds (7 days).</param>
+	/// <param name="reason">Reason for audit logs.</param>
+	/// <exception cref="ArgumentException">Thrown when <paramref name="deleteMessageSeconds"/> was too low or too high, or when <paramref name="users"/> contains more than <c>200</c> users.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> or <see cref="Permissions.ManageGuild"/> permission.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordBulkBanResponse> BulkBanMembersAsync(List<DiscordUser> users, int deleteMessageSeconds = 0, string? reason = null)
+		=> this.Discord.ApiClient.CreateGuildBulkBanAsync(this.Id, users.Select(x => x.Id).ToList(), deleteMessageSeconds, reason);
+
+	/// <summary>
+	/// Bans a list of user IDs from this guild. This doesn't require the users to be in this guild.
+	/// </summary>
+	/// <param name="userIds">The user IDs to ban.</param>
+	/// <param name="deleteMessageSeconds">How many seconds to remove messages from the users. Minimum <c>0</c> seconds and maximum <c>604800 </c> seconds (7 days).</param>
+	/// <param name="reason">Reason for audit logs.</param>
+	/// <exception cref="ArgumentException">Thrown when <paramref name="deleteMessageSeconds"/> was too low or too high, or when <paramref name="userIds"/> contains more than <c>200</c> user ids.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> or <see cref="Permissions.ManageGuild"/> permission.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordBulkBanResponse> BulkBanMembersAsync(List<ulong> userIds, int deleteMessageSeconds = 0, string reason = null)
+		=> this.Discord.ApiClient.CreateGuildBulkBanAsync(this.Id, userIds, deleteMessageSeconds, reason);
 
 	/// <summary>
 	/// Unbans a user from this guild.

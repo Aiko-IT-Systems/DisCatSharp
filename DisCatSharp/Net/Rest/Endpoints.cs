@@ -210,6 +210,11 @@ public static class Endpoints
 	public const string BANS = "/bans";
 
 	/// <summary>
+	/// The bulk ban endpoint.
+	/// </summary>
+	public const string BULK_BAN = "/bulk-ban";
+
+	/// <summary>
 	/// The webhook endpoint.
 	/// </summary>
 	public const string WEBHOOKS = "/webhooks";
