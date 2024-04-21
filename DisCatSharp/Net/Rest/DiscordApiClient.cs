@@ -1060,20 +1060,20 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates the guild ban async.
+	/// Creates a guild ban.
 	/// </summary>
-	/// <param name="guildId">The guild_id.</param>
-	/// <param name="userId">The user_id.</param>
-	/// <param name="deleteMessageDays">The delete_message_days.</param>
+	/// <param name="guildId">The guild id to ban from.</param>
+	/// <param name="userId">The user id to ban.</param>
+	/// <param name="deleteMessageSeconds">The delete message seconds.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task CreateGuildBanAsync(ulong guildId, ulong userId, int deleteMessageDays, string? reason)
+	internal Task CreateGuildBanAsync(ulong guildId, ulong userId, int deleteMessageSeconds, string? reason)
 	{
-		if (deleteMessageDays < 0 || deleteMessageDays > 7)
-			throw new ArgumentException("Delete message days must be a number between 0 and 7.", nameof(deleteMessageDays));
+		if (deleteMessageSeconds < 0 || deleteMessageSeconds > 7)
+			throw new ArgumentException("Delete message seconds must be a number between 0 and 604800.", nameof(deleteMessageSeconds));
 
-		var urlParams = new Dictionary<string, string>
+		var pld = new RestGuildBanPayload()
 		{
-			["delete_message_days"] = deleteMessageDays.ToString(CultureInfo.InvariantCulture)
+			DeleteMessageSeconds = deleteMessageSeconds
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -1087,8 +1087,43 @@ public sealed class DiscordApiClient
 			user_id = userId
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, BuildQueryString(urlParams), this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers);
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld));
+	}
+
+	/// <summary>
+	/// Creates a guild bulk ban.
+	/// </summary>
+	/// <param name="guildId">The guild id to ban from.</param>
+	/// <param name="userIds">The user ids to ban.</param>
+	/// <param name="deleteMessageSeconds">The delete message seconds.</param>
+	/// <param name="reason">The reason.</param>
+	internal async Task<DiscordBulkBanResponse> CreateGuildBulkBanAsync(ulong guildId, List<ulong> userIds, int deleteMessageSeconds, string? reason)
+	{
+		if (deleteMessageSeconds < 0 || deleteMessageSeconds > 7)
+			throw new ArgumentException("Delete message seconds must be a number between 0 and 604800.", nameof(deleteMessageSeconds));
+		if (userIds.Count > 200)
+			throw new ArgumentException("Can only bulk-ban up to 200 users.", nameof(userIds));
+
+		var pld = new RestGuildBulkBanPayload()
+		{
+			UserIds = userIds.ToList(),
+			DeleteMessageSeconds = deleteMessageSeconds,
+		};
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.BULK_BAN}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
+		{
+			guild_id = guildId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var response = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		return DiscordJson.DeserializeObject<DiscordBulkBanResponse>(response.Response, this.Discord);
 	}
 
 	/// <summary>
