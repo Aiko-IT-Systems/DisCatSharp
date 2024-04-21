@@ -26,8 +26,8 @@
 - Full support for onboarding
 - Support for default select menu values (THANKS MAISY FOR ADDING IT TO DISCORD)
 - DisCatSharp can now check for new releases, including for extensions
-- Full support for User Apps
-- Full support for [Polls](https://support.discord.com/hc/en-us/articles/22163184112407-Polls-FAQ)
+- 🆕 Full support for User Apps
+- 🆕 Full support for [Polls](https://support.discord.com/hc/en-us/articles/22163184112407)
 
 ## Breaking
 
