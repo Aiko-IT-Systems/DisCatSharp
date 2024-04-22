@@ -42,7 +42,7 @@ jobs:
       shell: pwsh
       run: ./DisCatSharp.Tools/pack-docs.ps1 -DocsPath "./DisCatSharp.Docs" -OutputPath "./" -PackageName "dcs-docs-preview"
     - name: Upload packed docs
-      uses: actions/upload-artifact@v4.3.2
+      uses: actions/upload-artifact@v4.3.3
       with:
         name: dcs-docs-preview.zip
         path: dcs-docs-preview.zip
