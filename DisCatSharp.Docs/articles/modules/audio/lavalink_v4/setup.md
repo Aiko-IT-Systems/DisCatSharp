@@ -29,9 +29,9 @@ server: # REST and WS server
   port: 2333
   address: 0.0.0.0
 plugins: # Uncomment the youtube config if you enabled the youtube plugin down below.
-#  youtube: # No extra configuration is necessary for bypassing age restrictions, read more here: https://github.com/lavalink-devs/youtube-source?tab=readme-ov-file#migration-from-lavaplayers-built-in-youtube-source
+#  youtube:
 #    enabled: true
-#    clients: ["MUSIC", "ANDROID", "WEB"]
+#    clients: ["MUSIC", "ANDROID", "WEB"] # Log in credentials are no longer support for bypassing age-gated videos. Instead, add 'TVHTML5EMBEDDED' to the clients. Do keep in mind that, even with this client enabled, age-restricted tracks are not guaranteed to play.
 lavalink:
   plugins: # Uncomment this plugin for youtube support. Replace VERSION with the latest version from here: https://github.com/lavalink-devs/youtube-source/releases
 #    - dependency: "com.github.lavalink-devs.lavaplayer-youtube-source:plugin:VERSION"
