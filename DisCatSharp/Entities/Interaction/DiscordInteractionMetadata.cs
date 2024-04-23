@@ -1,4 +1,5 @@
 using DisCatSharp.Enums;
+using DisCatSharp.Net.Abstractions;
 
 using Newtonsoft.Json;
 
@@ -16,10 +17,20 @@ public sealed class DiscordInteractionMetadata : SnowflakeObject
 	public InteractionType Type { get; internal set; }
 
 	/// <summary>
-	/// User ID of the user who triggered the interaction.
+	/// The transport user who triggered the interaction.
 	/// </summary>
-	[JsonProperty("user_id")]
-	public ulong UserId { get; internal set; }
+	[JsonProperty("user")]
+	internal TransportUser TransportUser { get; set; }
+
+	/// <summary>
+	/// Ther user who triggered the interaction.
+	/// </summary>
+	[JsonIgnore]
+	public DiscordUser User
+		=> new(this.TransportUser)
+		{
+			Discord = this.Discord
+		};
 
 	/// <summary>
 	/// This is the same field on interaction.

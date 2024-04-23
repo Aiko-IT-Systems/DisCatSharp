@@ -95,12 +95,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		this.Resolved = other.Resolved;
 		this.Interaction = other.Interaction;
 		this.InteractionMetadata = other.InteractionMetadata;
+		if (other.InteractionMetadata is not null && this.InteractionMetadata is not null)
+			this.InteractionMetadata.Discord = other.InteractionMetadata.Discord;
 		this.Poll = other.Poll;
-		if (this.Poll is not null)
-		{
-			this.Poll.ChannelId = this.ChannelId;
-			this.Poll.MessageId = this.Id;
-		}
+		if (this.Poll is null)
+			return;
+
+		this.Poll.ChannelId = this.ChannelId;
+		this.Poll.MessageId = this.Id;
 	}
 
 	/// <summary>
