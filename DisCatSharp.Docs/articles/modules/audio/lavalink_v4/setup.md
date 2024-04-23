@@ -21,22 +21,25 @@ To use the Lavalink server, you need to configure it first.
 
 Create a new YAML file called `application.yml`, and use the [example file](https://github.com/lavalink-devs/Lavalink/blob/dev/LavalinkServer/application.yml.example), or copy this snippet:
 
+>[!NOTE]
+> For YouTube Support, see the sections `plugins -> youtube` and `lavalink -> plugins` in the config.
+
 ```yaml
 server: # REST and WS server
   port: 2333
   address: 0.0.0.0
-plugins:
-#  name: # Name of the plugin
-#    some_key: some_value # Some key-value pair for the plugin
-#    another_key: another_value
+plugins: # Uncomment the youtube config if you enabled the youtube plugin down below.
+#  youtube: # No extra configuration is necessary for bypassing age restrictions, read more here: https://github.com/lavalink-devs/youtube-source?tab=readme-ov-file#migration-from-lavaplayers-built-in-youtube-source
+#    enabled: true
+#    clients: ["MUSIC", "ANDROID", "WEB"]
 lavalink:
-  plugins:
-#    - dependency: "group:artifact:version"
-#      repository: "repository"
+  plugins: # Uncomment this plugin for youtube support. Replace VERSION with the latest version from here: https://github.com/lavalink-devs/youtube-source/releases
+#    - dependency: "com.github.lavalink-devs.lavaplayer-youtube-source:plugin:VERSION"
+#      repository: "https://jitpack.io"
   server:
     password: "youshallnotpass"
-    sources:
-      youtube: true
+    sources: 
+      youtube: false # Keep this at false, for youtube support see the plugins section above.
       bandcamp: true
       soundcloud: true
       twitch: true
@@ -71,9 +74,6 @@ lavalink:
       #strategy: "RotateOnBan" # RotateOnBan | LoadBalance | NanoSwitch | RotatingNanoSwitch
       #searchTriggersFail: true # Whether a search 429 should trigger marking the ip as failing
       #retryLimit: -1 # -1 = use default lavaplayer value | 0 = infinity | >0 = retry will happen this numbers times
-    #youtubeConfig: # Required for avoiding all age restrictions by YouTube, some restricted videos still can be played without.
-      #email: "" # Email of Google account
-      #password: "" # (App) password of Google account
     #httpConfig: # Useful for blocking bad-actors from ip-grabbing your music node and attacking it, this way only the http proxy will be attacked
       #proxyHost: "localhost" # Hostname of the proxy, (ip or domain)
       #proxyPort: 3128 # Proxy port, 3128 is the default for squidProxy
