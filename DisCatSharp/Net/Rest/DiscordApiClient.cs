@@ -215,6 +215,9 @@ public sealed class DiscordApiClient
 
 		if (ret.Poll is not null)
 			ret.Poll.Discord = this.Discord;
+
+		if (ret.InteractionMetadata is not null)
+			ret.InteractionMetadata.Discord = this.Discord;
 	}
 
 	/// <summary>
