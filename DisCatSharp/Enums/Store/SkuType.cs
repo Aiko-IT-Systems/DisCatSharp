@@ -11,12 +11,12 @@ public enum SkuType
 	Application = 1,
 
 	/// <summary>
-	/// A durable sku.
+	/// Durable one-time purchase.
 	/// </summary>
 	Durable = 2,
 
 	/// <summary>
-	/// A consumable sku.
+	/// Consumable one-time purchase.
 	/// </summary>
 	Consumable = 3,
 
@@ -26,12 +26,12 @@ public enum SkuType
 	Bundle = 4,
 
 	/// <summary>
-	/// A subscription test sku.
+	/// Represents a recurring subscription.
 	/// </summary>
-	SubscriptionTest = 5,
+	Subscription = 5,
 
 	/// <summary>
-	/// A subscription sku.
+	/// System-generated group for each SUBSCRIPTION SKU created .
 	/// </summary>
-	Subscription = 6
+	SubscriptionGroup = 6
 }

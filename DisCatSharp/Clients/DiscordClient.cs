@@ -400,7 +400,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			return;
 
 		this.Configuration.SkuId = skus.FirstOrDefault(x => x.Type is SkuType.Subscription)?.Id;
-		this.Configuration.TestSkuId = skus.FirstOrDefault(x => x.Type is SkuType.SubscriptionTest)?.Id;
 
 		return;
 

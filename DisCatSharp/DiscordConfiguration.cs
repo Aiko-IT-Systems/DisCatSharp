@@ -337,13 +337,6 @@ public sealed class DiscordConfiguration
 	public ulong? SkuId { internal get; set; } = null;
 
 	/// <summary>
-	/// The applications test sku id for premium apps.
-	/// <para>Mutually exclusive to <see cref="AutoFetchSkuIds"/>.</para>
-	/// </summary>
-	[RequiresFeature(Features.MonetizedApplication)]
-	public ulong? TestSkuId { internal get; set; } = null;
-
-	/// <summary>
 	/// Whether to disable the update check.
 	/// </summary>
 	public bool DisableUpdateCheck { internal get; set; } = false;
@@ -432,7 +425,6 @@ public sealed class DiscordConfiguration
 		this.EnablePayloadReceivedEvent = other.EnablePayloadReceivedEvent;
 		this.AutoFetchSkuIds = other.AutoFetchSkuIds;
 		this.SkuId = other.SkuId;
-		this.TestSkuId = other.TestSkuId;
 		this.DisableUpdateCheck = other.DisableUpdateCheck;
 		this.UpdateCheckMode = other.UpdateCheckMode;
 		this.IncludePrereleaseInUpdateCheck = other.IncludePrereleaseInUpdateCheck;
