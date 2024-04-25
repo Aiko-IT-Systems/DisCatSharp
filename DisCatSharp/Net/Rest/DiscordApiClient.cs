@@ -3786,15 +3786,18 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Modifies the current user async.
 	/// </summary>
-	/// <param name="username">The username.</param>
-	/// <param name="base64Avatar">The base64_avatar.</param>
-	internal async Task<DiscordUser> ModifyCurrentUserAsync(string username, Optional<string?> base64Avatar)
+	/// <param name="username">The new username.</param>
+	/// <param name="base64Avatar">The new avatar.</param>
+	/// <param name="base64Banner">The new banner.</param>
+	internal async Task<DiscordUser> ModifyCurrentUserAsync(string username, Optional<string?> base64Avatar, Optional<string?> base64Banner)
 	{
 		var pld = new RestUserUpdateCurrentPayload
 		{
 			Username = username,
 			AvatarBase64 = base64Avatar,
-			AvatarSet = base64Avatar is { HasValue: true, Value: not null }
+			AvatarSet = base64Avatar is { HasValue: true, Value: not null },
+			BannerBase64 = base64Banner,
+			BannerSet = base64Banner is { HasValue: true, Value: not null }
 		};
 
 		var route = $"{Endpoints.USERS}{Endpoints.ME}";
