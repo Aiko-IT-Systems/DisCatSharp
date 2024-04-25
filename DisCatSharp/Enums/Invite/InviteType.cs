@@ -1,3 +1,5 @@
+using DisCatSharp.Attributes;
+
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -18,5 +20,9 @@ public enum InviteType
 	/// <summary>
 	/// Represents a friend invite.
 	/// </summary>
-	User = 2
+	Friend = 2,
+
+	/// <inheritdoc cref="Friend"/>
+	[Deprecated("We used the wrong name.")]
+	User = Friend
 }
