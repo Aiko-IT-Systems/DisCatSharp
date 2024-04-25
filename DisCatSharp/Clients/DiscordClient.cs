@@ -1136,19 +1136,22 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="username">New username.</param>
 	/// <param name="avatar">New avatar.</param>
+	/// <param name="banner">New banner.</param>
 	/// <returns>The modified user.</returns>
 	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordUser> UpdateCurrentUserAsync(string? username = null, Optional<Stream?> avatar = default)
+	public async Task<DiscordUser> UpdateCurrentUserAsync(string? username = null, Optional<Stream?> avatar = default, Optional<Stream?> banner = default)
 	{
 		var av64 = ImageTool.Base64FromStream(avatar);
+		var ba64 = ImageTool.Base64FromStream(banner);
 
-		var usr = await this.ApiClient.ModifyCurrentUserAsync(username ?? this.CurrentUser.Username, av64).ConfigureAwait(false);
+		var usr = await this.ApiClient.ModifyCurrentUserAsync(username ?? this.CurrentUser.Username, av64, ba64).ConfigureAwait(false);
 
 		this.CurrentUser.Username = usr.Username;
 		this.CurrentUser.Discriminator = usr.Discriminator;
 		this.CurrentUser.AvatarHash = usr.AvatarHash;
+		this.CurrentUser.BannerHash = usr.BannerHash;
 		return this.CurrentUser;
 	}
 

@@ -324,7 +324,7 @@ public sealed class DiscordConfiguration
 
 	/// <summary>
 	/// Whether to autofetch the sku ids.
-	/// <para>Mutually exclusive to <see cref="SkuId"/> and <see cref="TestSkuId"/>.</para>
+	/// <para>Mutually exclusive to <see cref="SkuId"/>.</para>
 	/// </summary>
 	[RequiresFeature(Features.MonetizedApplication)]
 	public bool AutoFetchSkuIds { internal get; set; } = false;

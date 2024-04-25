@@ -32,6 +32,12 @@ internal class TransportMember : ObservableApiObject
 	public string GuildBannerHash { get; internal set; }
 
 	/// <summary>
+	/// Gets the guild avatar decoration data.
+	/// </summary>
+	[JsonProperty("avatar_decoration_data", NullValueHandling = NullValueHandling.Ignore)]
+	public AvatarDecorationData GuildAvatarDecorationData { get; internal set; }
+
+	/// <summary>
 	/// Gets the guild bio.
 	/// This is not available to bots tho.
 	/// </summary>
@@ -121,4 +127,10 @@ internal class TransportMember : ObservableApiObject
 	/// </summary>
 	[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong GuildId { get; internal set; }
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="TransportMember"/> class.
+	/// </summary>
+	internal TransportMember()
+	{ }
 }

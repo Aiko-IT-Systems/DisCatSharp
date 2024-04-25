@@ -150,7 +150,7 @@ internal class TransportUser : ObservableApiObject
 	/// Initializes a new instance of the <see cref="TransportUser"/> class.
 	/// </summary>
 	internal TransportUser()
-		: base(["display_name", "linked_users", "banner_color"])
+		: base(["display_name", "linked_users", "banner_color", "authenticator_types"])
 	{ }
 
 	/// <summary>
@@ -175,5 +175,9 @@ internal class TransportUser : ObservableApiObject
 		this.OAuthFlags = other.OAuthFlags;
 		this.Bio = other.Bio;
 		this.Pronouns = other.Pronouns;
+		this.GlobalName = other.GlobalName;
+		this.Clan = other.Clan;
+		this.ThemeColors = other.ThemeColors;
+		this.AvatarDecorationData = other.AvatarDecorationData;
 	}
 }

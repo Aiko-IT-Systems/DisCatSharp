@@ -24,7 +24,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Initializes a new instance of the <see cref="DiscordUser"/> class.
 	/// </summary>
 	internal DiscordUser()
-		: base(["display_name", "linked_users", "banner_color"])
+		: base(["display_name", "linked_users", "banner_color", "authenticator_types"])
 	{ }
 
 	/// <summary>

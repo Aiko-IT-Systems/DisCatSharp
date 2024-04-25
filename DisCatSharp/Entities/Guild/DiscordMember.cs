@@ -67,6 +67,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		this._roleIdsLazy = new(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
 		this.MemberFlags = mbr.MemberFlags;
 		this.InteractionPermissions = mbr.Permissions;
+		this.GuildAvatarDecorationData = mbr.GuildAvatarDecorationData;
 	}
 
 	/// <summary>
@@ -94,6 +95,12 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	[JsonIgnore]
 	public string? GuildBannerUrl
 		=> string.IsNullOrWhiteSpace(this.GuildBannerHash) ? this.User.BannerUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.BANNERS}/{this.GuildBannerHash}.{(this.GuildBannerHash.StartsWith("a_", StringComparison.Ordinal) ? "gif" : "png")}?size=1024";
+
+	/// <summary>
+	/// Gets the members guild avatar decoration data.
+	/// </summary>
+	[JsonProperty("avatar_decoration_data", NullValueHandling = NullValueHandling.Ignore)]
+	public AvatarDecorationData GuildAvatarDecorationData { get; internal set; }
 
 	/// <summary>
 	/// The color of this member's banner. Mutually exclusive with <see cref="GuildBannerHash"/>.
@@ -339,7 +346,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	}
 
 	/// <summary>
-	/// Gets the member's avatar hash.
+	/// Gets the member's user avatar hash.
 	/// </summary>
 	[JsonIgnore]
 	public override string AvatarHash
@@ -349,7 +356,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	}
 
 	/// <summary>
-	/// Gets the member's banner hash.
+	/// Gets the member's user banner hash.
 	/// </summary>
 	[JsonIgnore]
 	public override string BannerHash
@@ -359,7 +366,17 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	}
 
 	/// <summary>
-	/// Gets the member's banner hash.
+	/// Gets the member's user avatar decoration data.
+	/// </summary>
+	[JsonIgnore]
+	public override AvatarDecorationData AvatarDecorationData
+	{
+		get => this.User.AvatarDecorationData;
+		internal set => this.User.AvatarDecorationData = value;
+	}
+
+	/// <summary>
+	/// Gets the member's clan.
 	/// </summary>
 	[JsonIgnore]
 	public override DiscordClan? Clan
