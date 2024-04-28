@@ -1,10 +1,16 @@
 DisCatSharp Release Notes
 
-	Important fix:
- 	- Applying the proxy configuration to the sharded client startup (it was missing)
+    Important fix:
+    - Fixed api call spamming for message reactions. We depend on message cache now or return an skeleton message if not found.
 
     Notable Changes
-    - Added support for building and using cooldowns
+    - Added methods to update the apps banner
+    - Fixed guild member banner and avatar decoration data
+    - Extended guild member update event args entity
+    - Fixed invite type name (incorrect one is deprecated now)
+    - Removed test sku id, since that was wrong
+    - Replaced user_id by full user object in message.interaction_metadata
+    - Added bulk ban methods
 
 
 DisCatSharp.Attributes Release Notes
@@ -14,19 +20,12 @@ DisCatSharp.Attributes Release Notes
 
 DisCatSharp.ApplicationCommands Release Notes
 
-    Breaking changes:
-    - Fixed problems with translation generation and usage
-
-    Notable changes
-    - Added cooldowns for application commands
-    - Fix first-time command registration
+    None
 
 
 DisCatSharp.CommandsNext Release Notes
 
-    Notable changes:
-    - Fixed cooldowns
-
+    None
 
 DisCatSharp.Interactivity Release Notes
 
