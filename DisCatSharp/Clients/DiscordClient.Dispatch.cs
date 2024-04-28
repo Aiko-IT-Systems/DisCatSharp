@@ -2637,7 +2637,14 @@ public sealed partial class DiscordClient
 	/// <param name="isBurst">Whether a burst reaction was added.</param>
 	internal async Task OnMessageReactionAddAsync(ulong userId, ulong messageId, ulong channelId, ulong? guildId, TransportMember mbr, DiscordEmoji emoji, bool isBurst)
 	{
-		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
+		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId) ?? new DiscordChannel()
+		{
+			Type = ChannelType.Unknown,
+			Id = channelId,
+			GuildId = guildId,
+			Discord = this
+		};
+
 		var guild = this.InternalGetCachedGuild(guildId);
 		emoji.Discord = this;
 
@@ -2647,18 +2654,17 @@ public sealed partial class DiscordClient
 			Discord = this
 		}, guildId, guild, mbr);
 
-		DiscordMessage? msg = null;
-
-		if (channel is not null)
-			msg = await channel.GetMessageAsync(messageId).ConfigureAwait(false);
-
-		msg ??= new()
-		{
-			Id = messageId,
-			ChannelId = channelId,
-			Discord = this,
-			ReactionsInternal = []
-		};
+		if (channel == null
+		    || this.Configuration.MessageCacheSize == 0
+		    || this.MessageCache == null
+		    || !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+			msg = new()
+			{
+				Id = messageId,
+				ChannelId = channelId,
+				Discord = this,
+				ReactionsInternal = []
+			};
 
 		var react = msg.ReactionsInternal.FirstOrDefault(xr => xr.Emoji == emoji);
 		if (react == null)
@@ -2724,17 +2730,17 @@ public sealed partial class DiscordClient
 					GuildId = channel.GuildId.Value
 				};
 
-		DiscordMessage? msg = null;
-
-		if (channel is not null)
-			msg = await channel.GetMessageAsync(messageId).ConfigureAwait(false);
-
-		msg ??= new()
-		{
-			Id = messageId,
-			ChannelId = channelId,
-			Discord = this
-		};
+		if (channel == null
+		    || this.Configuration.MessageCacheSize == 0
+		    || this.MessageCache == null
+		    || !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+			msg = new()
+			{
+				Id = messageId,
+				ChannelId = channelId,
+				Discord = this,
+				ReactionsInternal = []
+			};
 
 		var react = msg.ReactionsInternal?.FirstOrDefault(xr => xr.Emoji == emoji);
 		if (react != null)
