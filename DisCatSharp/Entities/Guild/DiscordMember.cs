@@ -151,7 +151,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// List of role ids
 	/// </summary>
 	[JsonIgnore]
-	internal IReadOnlyList<ulong> RoleIds
+	public IReadOnlyList<ulong> RoleIds
 		=> this._roleIdsLazy.Value;
 
 	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
@@ -162,6 +162,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 	/// <summary>
 	/// Gets the list of roles associated with this member.
+ 	/// <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordRole> Roles
@@ -169,6 +170,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 	/// <summary>
 	/// Gets the color associated with this user's top color-giving role, otherwise 0 (no color).
+ 	/// <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
 	/// </summary>
 	[JsonIgnore]
 	public DiscordColor Color
@@ -238,6 +240,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 	/// <summary>
 	/// Gets this member's voice state.
+ 	/// <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
 	/// </summary>
 	[JsonIgnore]
 	public DiscordVoiceState? VoiceState
@@ -247,10 +250,11 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// Gets the guild id for this member.
 	/// </summary>
 	[JsonIgnore]
-	internal ulong GuildId = 0;
+	public ulong GuildId = 0;
 
 	/// <summary>
 	/// Gets the guild of which this member is a part of.
+ 	/// <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
 	/// </summary>
 	[JsonIgnore]
 	public DiscordGuild Guild
@@ -258,6 +262,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 	/// <summary>
 	/// Gets whether this member is the Guild owner.
+ 	/// <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
 	/// </summary>
 	[JsonIgnore]
 	public bool IsOwner
@@ -282,6 +287,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 	/// <summary>
 	/// Gets the permissions for the current member.
+ 	/// <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
 	/// </summary>
 	[JsonIgnore]
 	public Permissions Permissions
