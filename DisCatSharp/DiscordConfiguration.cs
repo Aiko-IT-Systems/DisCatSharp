@@ -350,19 +350,19 @@ public sealed class DiscordConfiguration
 	/// <summary>
 	/// Whether to include prerelease versions in the update check.
 	/// </summary>
-	public bool IncludePrereleaseInUpdateCheck { get; internal set; } = true;
+	public bool IncludePrereleaseInUpdateCheck { internal get; set; } = true;
 
 	/// <summary>
 	/// Sets the GitHub token to use for the update check.
 	/// <para>Only useful if extensions are private and <see cref="UpdateCheckMode"/> is <see cref="VersionCheckMode.GitHub"/>.</para>
 	/// </summary>
-	public string? UpdateCheckGitHubToken { get; set; } = null;
+	public string? UpdateCheckGitHubToken { internal get; set; } = null;
 
 	/// <summary>
 	/// Whether to show release notes in the update check.
 	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
-	public bool ShowReleaseNotesInUpdateCheck { get; set; } = false;
+	public bool ShowReleaseNotesInUpdateCheck { internal get; set; } = false;
 
 	/// <summary>
 	/// Creates a new configuration with default values.
