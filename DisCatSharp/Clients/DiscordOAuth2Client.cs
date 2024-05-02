@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -85,7 +86,17 @@ public sealed class DiscordOAuth2Client : IDisposable
 	/// <summary>
 	/// Gets the RSA instance.
 	/// </summary>
-	private RSA RSA { get; }
+	private RSA RSA_KEY { get; }
+
+	/// <summary>
+	/// Gets the file name for the rsa private key.
+	/// </summary>
+	private const string RSA_PRIV_KEY_FILE_NAME = "dcs_oauth_rsa_priv";
+
+	/// <summary>
+	/// Gets the file name for the rsa public key.
+	/// </summary>
+	private const string RSA_PUB_KEY_FILE_NAME = "dcs_oauth_rsa_pub";
 
 	/// <summary>
 	/// Creates a new OAuth2 client.
@@ -151,7 +162,21 @@ public sealed class DiscordOAuth2Client : IDisposable
 		this.ApiClient.Rest.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", this.VersionHeader);
 
 		this.OAuth2ClientErroredInternal = new("CLIENT_ERRORED", EventExecutionLimit, this.Goof);
-		this.RSA = RSA.Create(2048);
+
+		if (File.Exists(RSA_PRIV_KEY_FILE_NAME) && File.Exists(RSA_PUB_KEY_FILE_NAME))
+		{
+			var privateKeyFileBytes = File.ReadAllBytes(RSA_PRIV_KEY_FILE_NAME);
+			var publicKeyFileBytes = File.ReadAllBytes(RSA_PUB_KEY_FILE_NAME);
+			this.RSA_KEY = RSA.Create();
+			this.RSA_KEY.ImportRSAPrivateKey(publicKeyFileBytes, out _);
+			this.RSA_KEY.ImportRSAPublicKey(privateKeyFileBytes, out _);
+		}
+		else
+		{
+			this.RSA_KEY = RSA.Create(2048);
+			File.WriteAllBytes(RSA_PRIV_KEY_FILE_NAME, this.RSA_KEY.ExportRSAPrivateKey());
+			File.WriteAllBytes(RSA_PUB_KEY_FILE_NAME, this.RSA_KEY.ExportRSAPublicKey());
+		}
 	}
 
 	/// <summary>
@@ -185,7 +210,7 @@ public sealed class DiscordOAuth2Client : IDisposable
 	/// </summary>
 	/// <param name="userId">The user id to bind the state on.</param>
 	public string GenerateSecureState(ulong userId)
-		=> Uri.EscapeDataString(Convert.ToBase64String(this.RSA.Encrypt(Encoding.UTF8.GetBytes($"{DateTimeOffset.UtcNow.UtcTicks}::{userId}::{this.ClientId.GetHashCode()}::{Guid.NewGuid()}"), RSAEncryptionPadding.OaepSHA256)));
+		=> Uri.EscapeDataString(Convert.ToBase64String(this.RSA_KEY.Encrypt(Encoding.UTF8.GetBytes($"{DateTimeOffset.UtcNow.UtcTicks}::{userId}::{this.ClientId.GetHashCode()}::{Guid.NewGuid()}"), RSAEncryptionPadding.OaepSHA256)));
 
 	/// <summary>
 	/// Reads a secured state generated from <see cref="GenerateSecureState"/>.
@@ -193,7 +218,7 @@ public sealed class DiscordOAuth2Client : IDisposable
 	/// </summary>
 	/// <param name="state">The state to read.</param>
 	public string ReadSecureState(string state)
-		=> Encoding.UTF8.GetString(this.RSA.Decrypt(Convert.FromBase64String(Uri.UnescapeDataString(state)), RSAEncryptionPadding.OaepSHA256));
+		=> Encoding.UTF8.GetString(this.RSA_KEY.Decrypt(Convert.FromBase64String(Uri.UnescapeDataString(state)), RSAEncryptionPadding.OaepSHA256));
 
 	/// <summary>
 	/// Validates the OAuth2 state.
@@ -414,7 +439,7 @@ public sealed class DiscordOAuth2Client : IDisposable
 	/// <inheritdoc />
 	public void Dispose()
 	{
-		this.RSA.Dispose();
+		this.RSA_KEY.Dispose();
 		GC.SuppressFinalize(this);
 	}
 }
