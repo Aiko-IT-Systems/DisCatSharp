@@ -159,7 +159,6 @@ public sealed class DiscordOAuth2Client : IDisposable
 		this.OAuth2ClientErroredInternal = new("CLIENT_ERRORED", EventExecutionLimit, this.Goof);
 
 		if (File.Exists(RSA_KEY_FILE_NAME))
-		{
 			try
 			{
 				var privatePublicKeyPemBytes = File.ReadAllText(RSA_KEY_FILE_NAME);
@@ -171,9 +170,7 @@ public sealed class DiscordOAuth2Client : IDisposable
 				this.Logger.LogCritical(ex, "Exception in RSA Import: {msg}", ex.Message);
 				throw;
 			}
-		}
 		else
-		{
 			try
 			{
 				this.RSA_KEY = new RSACryptoServiceProvider(2048);
@@ -185,7 +182,6 @@ public sealed class DiscordOAuth2Client : IDisposable
 				this.Logger.LogCritical(ex, "Exception in RSA Export: {msg}", ex.Message);
 				throw;
 			}
-		}
 	}
 
 	/// <summary>
@@ -219,7 +215,7 @@ public sealed class DiscordOAuth2Client : IDisposable
 	/// </summary>
 	/// <param name="userId">The user id to bind the state on.</param>
 	public string GenerateSecureState(ulong userId)
-		=> Uri.EscapeDataString(Convert.ToBase64String(this.RSA_KEY.Encrypt(Encoding.UTF8.GetBytes($"{DateTimeOffset.UtcNow.UtcTicks}::{userId}::{this.ClientId.GetHashCode()}::{Guid.NewGuid()}"), RSAEncryptionPadding.OaepSHA256)));
+		=> Uri.EscapeDataString(Convert.ToBase64String(this.RSA_KEY.Encrypt(Encoding.UTF8.GetBytes($"{DateTimeOffset.UtcNow.UtcTicks}::{userId}::{this.ClientId.GetHashCode()}::{Guid.NewGuid()}"), RSAEncryptionPadding.OaepSHA1)));
 
 	/// <summary>
 	/// Reads a secured state generated from <see cref="GenerateSecureState"/>.
@@ -227,7 +223,7 @@ public sealed class DiscordOAuth2Client : IDisposable
 	/// </summary>
 	/// <param name="state">The state to read.</param>
 	public string ReadSecureState(string state)
-		=> Encoding.UTF8.GetString(this.RSA_KEY.Decrypt(Convert.FromBase64String(Uri.UnescapeDataString(state)), RSAEncryptionPadding.OaepSHA256));
+		=> Encoding.UTF8.GetString(this.RSA_KEY.Decrypt(Convert.FromBase64String(Uri.UnescapeDataString(state)), RSAEncryptionPadding.OaepSHA1));
 
 	/// <summary>
 	/// Validates the OAuth2 state.
