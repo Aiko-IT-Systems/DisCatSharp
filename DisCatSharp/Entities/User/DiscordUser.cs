@@ -138,7 +138,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		=> string.IsNullOrWhiteSpace(this.BannerHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_", StringComparison.Ordinal) ? "gif" : "png")}?size=4096";
 
 	/// <summary>
-	/// Gets the user's profile banner hash. Mutually exclusive with <see cref="BannerColor"/>.
+	/// Gets the user's banner hash. Mutually exclusive with <see cref="BannerColor"/>.
 	/// </summary>
 	[JsonProperty("banner", NullValueHandling = NullValueHandling.Ignore)]
 	public virtual string BannerHash { get; internal set; }

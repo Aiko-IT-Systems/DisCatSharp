@@ -565,4 +565,5 @@ public static class Endpoints
 	public const string POLLS = "/polls";
 	public const string ANSWERS = "/answers";
 	public const string EXPIRE = "/expire";
+	public const string CLAN_BADGES = "/clan-badges";
 }

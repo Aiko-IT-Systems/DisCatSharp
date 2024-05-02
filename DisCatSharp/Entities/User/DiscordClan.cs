@@ -1,3 +1,9 @@
+using System;
+using System.Globalization;
+
+using DisCatSharp.Enums;
+using DisCatSharp.Net;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
@@ -24,6 +30,19 @@ public sealed class DiscordClan
 	/// </summary>
 	[JsonProperty("tag")]
 	public string Tag { get; internal set; }
+
+	/// <summary>
+	/// Gets the clan's badge url
+	/// </summary>
+	[JsonIgnore]
+	public string? BadgeUrl
+		=> string.IsNullOrWhiteSpace(this.BadgeHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.CLAN_BADGES}/{this.IdentityGuildId.ToString(CultureInfo.InvariantCulture)}/{this.BadgeHash}.{(this.BadgeHash.StartsWith("a_", StringComparison.Ordinal) ? "gif" : "png")}?size=1024";
+
+	/// <summary>
+	/// Gets the clans's badge hash.
+	/// </summary>
+	[JsonProperty("badge", NullValueHandling = NullValueHandling.Ignore)]
+	public string BadgeHash { get; internal set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordClan"/> class.
