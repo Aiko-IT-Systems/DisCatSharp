@@ -163,7 +163,7 @@ public sealed class DiscordOAuth2Client : IDisposable
 			try
 			{
 				var privatePublicKeyPemBytes = File.ReadAllText(RSA_KEY_FILE_NAME);
-				this.RSA_KEY = new RSACryptoServiceProvider(2047);
+				this.RSA_KEY = new RSACryptoServiceProvider(2048);
 				this.RSA_KEY.ImportFromPem(privatePublicKeyPemBytes.ToCharArray());
 			}
 			catch (Exception ex)
