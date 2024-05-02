@@ -89,14 +89,9 @@ public sealed class DiscordOAuth2Client : IDisposable
 	private RSA RSA_KEY { get; }
 
 	/// <summary>
-	/// Gets the file name for the rsa private key.
+	/// Gets the file name for the rsa public/private key.
 	/// </summary>
-	private const string RSA_PRIV_KEY_FILE_NAME = "dcs_oauth_rsa_priv";
-
-	/// <summary>
-	/// Gets the file name for the rsa public key.
-	/// </summary>
-	private const string RSA_PUB_KEY_FILE_NAME = "dcs_oauth_rsa_pub";
+	private const string RSA_KEY_FILE_NAME = "dcs_oauth_rsa.sdcs";
 
 	/// <summary>
 	/// Creates a new OAuth2 client.
@@ -163,19 +158,33 @@ public sealed class DiscordOAuth2Client : IDisposable
 
 		this.OAuth2ClientErroredInternal = new("CLIENT_ERRORED", EventExecutionLimit, this.Goof);
 
-		if (File.Exists(RSA_PRIV_KEY_FILE_NAME) && File.Exists(RSA_PUB_KEY_FILE_NAME))
+		if (File.Exists(RSA_KEY_FILE_NAME))
 		{
-			var privateKeyFileBytes = File.ReadAllBytes(RSA_PRIV_KEY_FILE_NAME);
-			var publicKeyFileBytes = File.ReadAllBytes(RSA_PUB_KEY_FILE_NAME);
-			this.RSA_KEY = RSA.Create();
-			this.RSA_KEY.ImportRSAPrivateKey(publicKeyFileBytes, out _);
-			this.RSA_KEY.ImportRSAPublicKey(privateKeyFileBytes, out _);
+			try
+			{
+				var privatePublicKeyPemBytes = File.ReadAllText(RSA_KEY_FILE_NAME);
+				this.RSA_KEY = new RSACryptoServiceProvider(2047);
+				this.RSA_KEY.ImportFromPem(privatePublicKeyPemBytes.ToCharArray());
+			}
+			catch (Exception ex)
+			{
+				this.Logger.LogCritical(ex, "Exception in RSA Import: {msg}", ex.Message);
+				throw;
+			}
 		}
 		else
 		{
-			this.RSA_KEY = RSA.Create(2048);
-			File.WriteAllBytes(RSA_PRIV_KEY_FILE_NAME, this.RSA_KEY.ExportRSAPrivateKey());
-			File.WriteAllBytes(RSA_PUB_KEY_FILE_NAME, this.RSA_KEY.ExportRSAPublicKey());
+			try
+			{
+				this.RSA_KEY = new RSACryptoServiceProvider(2048);
+				var privatePublicKeyPem = this.RSA_KEY.ExportRSAPrivateKeyPem();
+				File.WriteAllText(RSA_KEY_FILE_NAME, privatePublicKeyPem);
+			}
+			catch (Exception ex)
+			{
+				this.Logger.LogCritical(ex, "Exception in RSA Export: {msg}", ex.Message);
+				throw;
+			}
 		}
 	}
 
