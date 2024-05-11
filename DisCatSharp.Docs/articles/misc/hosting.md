@@ -28,32 +28,32 @@ If you don't have a PC or other gear sitting around, you may use your phone inst
 
 ## Requirements
 
-- An Android 5+ (7+ is recommended)
-- Termux
-- An internet connection
+- An Android 7+ phone (5+ is possible but, not recommended as it posses security issues).
+- Termux.
+- An internet connection.
 
 ## Setup
 
-- Initialize Termux
+- Initialize Termux.
 ```sh
 pkg update && pkg upgrade -y
 ```
 >[!NOTE]
 > It might ask you for input, just click enter and let the default option execute.
 
-- Install proot-distro package
+- Install proot-distro package.
 ```sh
 pkg install proot-distro -y
 ```
 
-- Install a Debian Virtual Machine (VM)
+- Install a Debian Virtual Machine (VM).
 ```sh
 proot-distro install debian
 ```
 >[!NOTE]
 > Installation time for anything will depend on your internet speed.
 
-- Login into Debian and initialize Debian
+- Login into Debian and initialize Debian.
 ```sh
 proot-distro login debian
 ```
@@ -61,34 +61,75 @@ proot-distro login debian
 apt update -y && apt upgrade -y
 ```
 
-- Install git and wget
+- Install git and wget.
 ```sh
 apt install git wget -y
 ```
 
-- Get the DotNET script
+- We get the DotNET script.
 ```sh
 wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && chmod +x ./dotnet-install.sh
 ```
 
-- Now, we install the sdk and runtime
+- Now, we install the DotNET sdk and runtime.
 ```sh
-./dotnet-install.sh --channel 8.0 --channel 8.0
+./dotnet-install.sh --channel 8.0
 ```
->[!WARNING]
-> The script doesn't automatically add it to path so, run `export PATH=$PATH:$HOME/.dotnet` and keep it in your `.bashrc` file.
+>[!NOTE]
+> The script doesn't automatically add DotNET to path so run, `export PATH=$PATH:$HOME/.dotnet` and keep it in your `.bashrc` file which can be found in your `~` directory. To edit the `.bashrc` file run, `nano ~/.bashrc` and paste in the arguments. The `.bashrc` file is your configuration file for the bash shell environment.
 
-- Clone your repo and cd into it
+>[!WARNING]
+> You will get an error code `0x8007000E` when you try to run it to fix it run, `export DOTNET_GCHeapHardLimit=1C0000000` and also put that in your `~/.bashrc` file. You may also get a huge error message about a "valid ICU package" to fix that run, `export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1` and run the bot again. Or simply add these lines to your `.csproj` file in your project folder:
+```xml
+<RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="true" />
+```
+
+### Cloud Hosted Code
+
+- If you have your code hosted with git or simply are able to download it, get the source code and `cd` into the directory. Example of a git repository on GitHub:
 ```sh
 git clone https://github.com/username/repo.git
 cd repo
 ```
-- Add your configuration file then build the project
-```sh
-dotnet run
-```
+- Add your configuration file then build the project.
+
+### Local Source Code
+
+- If you do not have your code hosted with git let's move the code inside the VM by following the given steps: 
+
+- Enable developer options on your phone, find out [here](https://developer.android.com/studio/debug/dev-options) and also enable USB debugging which you can do by going inside `Settings > Developer options > USB debugging` or where ever your phone's is located.
+
+- Find the option `Default USB configuration` and choose `Transferring files`. Disconnect your phone from the usb and reconnect it again.
+
+> [!NOTE]
+> A prompt should come up saying a new device is connected to the PC which is the phone. Go to `This PC` on Windows and double click on your device.
+
+- Double click on `Phone` or what it is named, then simply copy your project folder from your pc and paste it in there. If you want to keep it in a custom path, remember the path to the project.
+
+>[!NOTE]
+> Transferring of files will take a bit and be sure to not interrupt the process by shutting down any devices or disconnecting.
+
+- First, we setup Termux storage run, `termux-setup-storage` and then it'll prompt you to give Termux access to your files and folders. Then run, `ls ~/storage/shared` to make sure you have access.
+
 >[!WARNING]
-> You will get an error code `0x8007000E` to fix run, `export DOTNET_GCHeapHardLimit=1C0000000` and also put that in your `.bashrc` file. You may also get a huge error message about a "valid ICU package" to fix that run, `export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1` and run the bot again.
+> If you do not give Termux access to your files and folders, nothing will work going from here on.
+
+- Now, exit out of Debian and into normal Termux and make a new environment variable which leads us to the VM's root directory. Run, `export PROOTDISTROFS=/data/data/com.termux/files/usr/var/lib/proot-distro/installed-rootfs` and run `source $HOME/.bashrc`.
+
+>[!NOTE]
+>  If you do not have a `.bashrc` in your `$HOME` just run, `nano $HOME/.bashrc`, save and exit. Then run, the source command again.
+
+- Now, let's ove over the source code from our phone to the VM. Simply, run, `mv projectname/ $PROOTDISTROFS/debian/root/`.
+
+>[!NOTE]
+> Double, check for file path's as you may accidentally move the wrong files around.
+
+- Now, let's login back to Debian `proot-distro login debian` and check if it's here. To check, run `ls` and if you need `projectname` in the list then it's there. From here.
+
+- Add your configuration file then build the project.
+
+>[!NOTE]
+> If you have folders such as `bin/` and `obj/` from your prior builds on Windows, delete those by running, `rm -rf bin/ obj/` as without doing so, will result in an error. 
 
 ## Profit
 
