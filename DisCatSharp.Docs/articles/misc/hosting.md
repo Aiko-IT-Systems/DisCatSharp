@@ -88,7 +88,7 @@ cd repo
 dotnet run
 ```
 >[!WARNING]
-> You will get an error code `0x8007000E` to fix run, `export DOTNET_GCHeapHardLimit=1C0000000` and also put that in your `.bashrc` file.
+> You will get an error code `0x8007000E` to fix run, `export DOTNET_GCHeapHardLimit=1C0000000` and also put that in your `.bashrc` file. You may also get a huge error message about a "valid ICU package" to fix that run, `export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1` and run the bot again.
 
 ## Profit
 
