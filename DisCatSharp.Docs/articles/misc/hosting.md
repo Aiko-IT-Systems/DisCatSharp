@@ -22,6 +22,65 @@ Any modern hardware will work just fine, new or used.
 
 Depending on how complex your bot is, you may even consider purchasing a Raspberry Pi ($35).
 
+# Termux
+
+For those who don't have some PC or other hardware lying around alternatively you could use your phone. Using [Termux](https://termux.dev/en/) and a package called [proot-distro](https://github.com/termux/proot-distro), which we use to install a Debian vm and setup DotNET to run the bot. To those interested the steps are given below:
+
+## Requirements
+
+- An Android 5+
+- Termux
+- An internet connection
+
+## Setup
+
+- Initialize Termux
+```sh
+pkg update && pkg upgrade -y
+```
+*Note, it might ask you for input, just click enter and let the default option execute*
+
+- Install proot-distro package
+```sh
+pkg install proot-distro -y
+```
+
+- Install a Ubuntu vm
+```sh
+proot-distro install ubuntu -y
+```
+*Note, it may take a bit depending on your internet speed*
+
+- Login into Ubuntu and initialize Ubuntu
+```sh
+proot-distro login ubuntu
+```
+```sh
+apt-get update -y && apt-get upgrade -y
+```
+*Note, it may take a bit depending on your internet speed*
+
+- Update and install git and sdk
+```sh
+apt-get update -y && apt-get install -y dotnet-sdk-8.0 git -y
+```
+*Note, will take a bit*
+
+- Clone the repo where your bot source code is and cd into it
+```sh
+git clone https://github.com/KristalliDev/alpine.git
+cd alpine
+```
+- Add your configuration file and run the project
+```sh
+dotnet run
+```
+**Note, you may get an error code `0x8007000E` to fix type `export DOTNET_GCHeapHardLimit=1C0000000` and also put that in your `.bashrc`**
+
+## Profit
+
+Bot should be working fine, given you follow appropriate steps. For support or any inquires you can join the DisCatSharp [Discord](https://discord.com/invite/2HWta4GXus) or create an [Issue](https://github.com/Aiko-IT-Systems/DisCatSharp/issues).
+
 ## Third-Party Hosting
 
 The simplest, and probably most hassle-free (and maybe cheapest in the long run for dedicated machines) option is to find a provider
