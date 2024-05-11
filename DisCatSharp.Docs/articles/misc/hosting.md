@@ -61,9 +61,9 @@ proot-distro login debian
 apt update -y && apt upgrade -y
 ```
 
-- Update and install git and wget
+- Install git and wget
 ```sh
-apt update -y && apt install git wget -y
+apt install git wget -y
 ```
 
 - Get the DotNET script
