@@ -24,11 +24,11 @@ Depending on how complex your bot is, you may even consider purchasing a Raspber
 
 # Termux
 
-For those who don't have some PC or other hardware lying around alternatively you could use your phone. Using [Termux](https://termux.dev/en/) and a package called [proot-distro](https://github.com/termux/proot-distro), which we use to install a Debian vm and setup DotNET to run the bot. To those interested the steps are given below:
+If you don't have a PC or other gear sitting around, you may use your phone instead. Using [Termux](https://termux.dev/en/) and a program called [proot-distro](https://github.com/termux/proot-distro), we create a Debian virtual machine and configure DotNET to run the bot. For anyone interested, the instructions are detailed below:
 
 ## Requirements
 
-- An Android 5+
+- An Android 5+ (7+ is recommended)
 - Termux
 - An internet connection
 
@@ -38,48 +38,61 @@ For those who don't have some PC or other hardware lying around alternatively yo
 ```sh
 pkg update && pkg upgrade -y
 ```
-*Note, it might ask you for input, just click enter and let the default option execute*
+>[!NOTE]
+> It might ask you for input, just click enter and let the default option execute.
 
 - Install proot-distro package
 ```sh
 pkg install proot-distro -y
 ```
 
-- Install a Ubuntu vm
+- Install a Debian Virtual Machine (VM)
 ```sh
-proot-distro install ubuntu -y
+proot-distro install debian
 ```
-*Note, it may take a bit depending on your internet speed*
+>[!NOTE]
+> Installation time for anything will depend on your internet speed.
 
-- Login into Ubuntu and initialize Ubuntu
+- Login into Debian and initialize Debian
 ```sh
-proot-distro login ubuntu
+proot-distro login debian
 ```
 ```sh
-apt-get update -y && apt-get upgrade -y
+apt update -y && apt upgrade -y
 ```
-*Note, it may take a bit depending on your internet speed*
 
-- Update and install git and sdk
+- Update and install git and wget
 ```sh
-apt-get update -y && apt-get install -y dotnet-sdk-8.0 git -y
+apt update -y && apt install git wget -y
 ```
-*Note, will take a bit*
 
-- Clone the repo where your bot source code is and cd into it
+- Get the DotNET script
 ```sh
-git clone https://github.com/KristalliDev/alpine.git
-cd alpine
+wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && chmod +x ./dotnet-install.sh
 ```
-- Add your configuration file and run the project
+
+- Now, we install the sdk and runtime
+```sh
+./dotnet-install.sh --channel 8.0 --channel 8.0
+```
+>[!WARNING]
+> The script doesn't automatically add it to path so, run `export PATH=$PATH:$HOME/.dotnet` and keep it in your `.bashrc` file.
+
+- Clone your repo and cd into it
+```sh
+git clone https://github.com/username/repo.git
+cd repo
+```
+- Add your configuration file then build the project
 ```sh
 dotnet run
 ```
-**Note, you may get an error code `0x8007000E` to fix type `export DOTNET_GCHeapHardLimit=1C0000000` and also put that in your `.bashrc`**
+>[!WARNING]
+> You will get an error code `0x8007000E` to fix run, `export DOTNET_GCHeapHardLimit=1C0000000` and also put that in your `.bashrc` file.
 
 ## Profit
 
-Bot should be working fine, given you follow appropriate steps. For support or any inquires you can join the DisCatSharp [Discord](https://discord.com/invite/2HWta4GXus) or create an [Issue](https://github.com/Aiko-IT-Systems/DisCatSharp/issues).
+Bot should be working fine, given you follow appropriate steps. For support or any inquires you can join the DisCatSharp [Discord](https://discord.com/invite/2HWta4GXus).
 
 ## Third-Party Hosting
 
