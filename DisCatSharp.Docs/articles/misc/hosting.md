@@ -117,7 +117,7 @@ cd repo
 - Now, exit out of Debian and into normal Termux and make a new environment variable which leads us to the VM's root directory. Run, `export PROOTDISTROFS=/data/data/com.termux/files/usr/var/lib/proot-distro/installed-rootfs` and run `source $HOME/.bashrc`.
 
 >[!NOTE]
->  If you do not have a `.bashrc` in your `$HOME` just run, `nano $HOME/.bashrc`, save and exit. Then run, the source command again.
+> If you don't have a `.bashrc` file in your $HOME, just run `nano $HOME/.bashrc`, save, and exit. Then run the source command again.
 
 - Now, we'll move over the source code from our phone to the VM. Simply, run, `mv projectname/ $PROOTDISTROFS/debian/root/`.
 
