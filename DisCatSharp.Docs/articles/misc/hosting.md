@@ -103,9 +103,6 @@ cd repo
 
 - Find the option `Default USB configuration` and choose `Transferring files`. Disconnect your phone from the usb and reconnect it again.
 
-> [!NOTE]
-> A prompt should come up saying a new device is connected to the PC which is the phone. Go to `This PC` on Windows and double click on your device.
-
 - Double click on `Phone` or what it is named, then simply copy your project folder from your pc and paste it in there. If you want to keep it in a custom path, remember the path to the project.
 
 >[!NOTE]
