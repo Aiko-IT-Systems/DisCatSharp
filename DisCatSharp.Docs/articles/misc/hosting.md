@@ -97,7 +97,7 @@ cd repo
 
 ### Local Source Code
 
-- If you do not have your code hosted with git let's move the code inside the VM by following the given steps: 
+- If you do not have your source code hosted remotely, you can move the source code inside the VM by following the given steps: 
 
 - Enable developer options on your phone, find out [here](https://developer.android.com/studio/debug/dev-options) and also enable USB debugging which you can do by going inside `Settings > Developer options > USB debugging` or where ever your phone's is located.
 
