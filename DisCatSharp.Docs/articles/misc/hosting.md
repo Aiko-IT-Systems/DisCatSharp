@@ -28,7 +28,7 @@ If you don't have a PC or other gear sitting around, you may use your phone inst
 
 ## Requirements
 
-- An Android 7+ phone (5+ is possible but, not recommended as it posses security issues).
+- A phone with Android 7 or higher (5+ is possible but, not recommended as it posses security issues).
 - Termux.
 - An internet connection.
 
