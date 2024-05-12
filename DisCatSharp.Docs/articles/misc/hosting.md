@@ -79,7 +79,9 @@ wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && chmod +x ./dot
 > If the script doesn't automatically add `dotnet` to the path environment variable, run `export PATH=$PATH:$HOME/.dotnet` and add this command to the end of your `.bashrc` file which can be found in your user directory. To edit the `.bashrc` file run, `nano ~/.bashrc` and paste in the arguments. The `.bashrc` file is your configuration file for the bash shell environment.
 
 >[!WARNING]
-> You will get an error code `0x8007000E` when you try to run it to fix it run, `export DOTNET_GCHeapHardLimit=1C0000000` and also put that in your `~/.bashrc` file. You may also get a huge error message about a "valid ICU package" to fix that run, `export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1` and run the bot again. Or simply add these lines to your `.csproj` file in your project folder:
+> You might encounter the error code `0x8007000E` when you try to run the bot. To fix it, run `export DOTNET_GCHeapHardLimit=1C0000000` and also put that command into your `~/.bashrc` file. 
+
+You'll possibly also get hit with an error message about a "valid ICU package" to fix that, run `export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1` and run the bot again. Or simply add these lines to your `.csproj` file in your project folder:
 ```xml
 <RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="true" />
 ```
