@@ -38,7 +38,7 @@ If you don't have a PC or other gear sitting around, you may use your phone inst
 ```sh
 pkg update && pkg upgrade -y
 ```
->[!NOTE]
+>[!TIP]
 > It might ask you for input, just click enter and let the default option be executed.
 
 - Install proot-distro package.
@@ -114,19 +114,19 @@ cd repo
 
 - Now, exit out of Debian and into normal Termux and make a new environment variable which leads us to the VM's root directory. Run, `export PROOTDISTROFS=/data/data/com.termux/files/usr/var/lib/proot-distro/installed-rootfs` and run `source $HOME/.bashrc`.
 
->[!NOTE]
+>[!TIP]
 > If you don't have a `.bashrc` file in your $HOME, just run `nano $HOME/.bashrc`, save, and exit. Then run the source command again.
 
 - Now, we'll move over the source code from our phone to the VM. Simply, run, `mv projectname/ $PROOTDISTROFS/debian/root/`.
 
->[!NOTE]
+>[!WARNING]
 > Double-check file paths, as you might accidentally move the wrong files around.
 
 - Now, let's log back into Debian `proot-distro login debian` and check if the files are here. To check, you can run `ls` to list the current content of the folder.
 
 - Add your configuration file then build the project.
 
->[!NOTE]
+>[!CAUTION]
 > If you have folders such as `bin/` and `obj/` from your prior builds on your PC, delete those by running `rm -rf bin/ obj/`. You might run into issues otherwise.
 
 #### Profit
