@@ -80,7 +80,7 @@ wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && chmod +x ./dot
 
 >[!WARNING]
 > You might encounter the error code `0x8007000E` when you try to run the bot. To fix it, run `export DOTNET_GCHeapHardLimit=1C0000000` and also put that command into your `~/.bashrc` file. 
->> You'll possibly also get hit with an error message about a "valid ICU package" to fix that, run `export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1` and run the bot again. Or simply add these lines to your `.csproj` file in your project folder:
+> You'll possibly also get hit with an error message about a "valid ICU package" to fix that, run `export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1` and run the bot again. Or simply add these lines to your `.csproj` file in your project folder:
 ```xml
 <RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="true" />
 ```
