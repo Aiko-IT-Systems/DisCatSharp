@@ -8,7 +8,7 @@ author: DisCatSharp Team
 
 ## Free hosting
 
-If you're looking for free hosts, you've likely considered using [Heroku](https://www.heroku.com/) or [Glitch](https://glitch.com/).
+If you're looking for free hosts, you've likely considered using [Glitch](https://glitch.com/).
 We advise against using these platforms as they are designed to host web services, not Discord bots, and instances from either of these companies will shut down if there isn't enough internet traffic.
 Save yourself the headache and don't bother.
 
@@ -22,24 +22,24 @@ Any modern hardware will work just fine, new or used.
 
 Depending on how complex your bot is, you may even consider purchasing a Raspberry Pi ($35).
 
-# Termux
+### Termux
 
 If you don't have a PC or other gear sitting around, you may use your phone instead. Using [Termux](https://termux.dev/en/) and a program called [proot-distro](https://github.com/termux/proot-distro), we create a Debian virtual machine and configure DotNET to run the bot. For anyone interested, the instructions are detailed below:
 
-## Requirements
+#### Requirements
 
 - A phone with Android 7 or higher (5+ is possible but, not recommended as it posses security issues).
 - Termux.
 - An internet connection.
 
-## Setup
+#### Setup
 
 - Initialize Termux.
 ```sh
 pkg update && pkg upgrade -y
 ```
 >[!NOTE]
-> It might ask you for input, just click enter and let the default option execute.
+> It might ask you for input, just click enter and let the default option be executed.
 
 - Install proot-distro package.
 ```sh
@@ -53,7 +53,7 @@ proot-distro install debian
 >[!NOTE]
 > Installation time for anything will depend on your internet speed.
 
-- Login into Debian and initialize Debian.
+- Login into Debian and initialize it.
 ```sh
 proot-distro login debian
 ```
@@ -85,7 +85,7 @@ wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && chmod +x ./dot
 <RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="true" />
 ```
 
-### Cloud Hosted Code
+##### Cloud Hosted Code
 
 - If you have your code hosted with git or simply are able to download it, get the source code and `cd` into the directory. Example of a git repository on GitHub:
 ```sh
@@ -94,7 +94,7 @@ cd repo
 ```
 - Add your configuration file then build the project.
 
-### Local Source Code
+##### Local Source Code
 
 - If you do not have your source code hosted remotely, you can move the source code inside the VM by following the given steps: 
 
@@ -129,9 +129,9 @@ cd repo
 >[!NOTE]
 > If you have folders such as `bin/` and `obj/` from your prior builds on your PC, delete those by running `rm -rf bin/ obj/`. You might run into issues otherwise.
 
-## Profit
+#### Profit
 
-Bot should be working fine, given you follow appropriate steps. For support or any inquires you can join the DisCatSharp [Discord](https://discord.com/invite/2HWta4GXus).
+Bot should be working fine, given you follow appropriate steps. For support or any inquires you can join our discord.
 
 ## Third-Party Hosting
 
