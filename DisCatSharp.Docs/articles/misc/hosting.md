@@ -131,7 +131,7 @@ cd repo
 - Add your configuration file then build the project.
 
 >[!NOTE]
-> If you have folders such as `bin/` and `obj/` from your prior builds on Windows, delete those by running, `rm -rf bin/ obj/` as without doing so, will result in an error. 
+> If you have folders such as `bin/` and `obj/` from your prior builds on your PC, delete those by running `rm -rf bin/ obj/`. You might run into issues otherwise.
 
 ## Profit
 
