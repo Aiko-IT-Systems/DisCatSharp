@@ -119,7 +119,7 @@ cd repo
 >[!NOTE]
 >  If you do not have a `.bashrc` in your `$HOME` just run, `nano $HOME/.bashrc`, save and exit. Then run, the source command again.
 
-- Now, let's ove over the source code from our phone to the VM. Simply, run, `mv projectname/ $PROOTDISTROFS/debian/root/`.
+- Now, we'll move over the source code from our phone to the VM. Simply, run, `mv projectname/ $PROOTDISTROFS/debian/root/`.
 
 >[!NOTE]
 > Double, check for file path's as you may accidentally move the wrong files around.
