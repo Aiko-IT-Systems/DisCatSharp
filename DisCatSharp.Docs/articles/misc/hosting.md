@@ -126,7 +126,7 @@ cd repo
 >[!NOTE]
 > Double-check file paths, as you might accidentally move the wrong files around.
 
-- Now, let's login back to Debian `proot-distro login debian` and check if it's here. To check, run `ls` and if you need `projectname` in the list then it's there. From here.
+- Now, let's log back into Debian `proot-distro login debian` and check if the files are here. To check, you can run `ls` to list the current content of the folder.
 
 - Add your configuration file then build the project.
 
