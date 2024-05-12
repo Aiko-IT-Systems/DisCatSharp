@@ -109,7 +109,7 @@ cd repo
 - Double click on `Phone` or what it is named, then simply copy your project folder from your pc and paste it in there. If you want to keep it in a custom path, remember the path to the project.
 
 >[!NOTE]
-> Transferring of files will take a bit and be sure to not interrupt the process by shutting down any devices or disconnecting.
+> Transferring of files might take a bit. Be sure to not interrupt the process by shutting down or disconnecting your phone
 
 - First, we setup Termux storage run, `termux-setup-storage` and then it'll prompt you to give Termux access to your files and folders. Then run, `ls ~/storage/shared` to make sure you have access.
 
