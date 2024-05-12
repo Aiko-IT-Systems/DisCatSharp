@@ -122,7 +122,7 @@ cd repo
 - Now, we'll move over the source code from our phone to the VM. Simply, run, `mv projectname/ $PROOTDISTROFS/debian/root/`.
 
 >[!NOTE]
-> Double, check for file path's as you may accidentally move the wrong files around.
+> Double-check file paths, as you might accidentally move the wrong files around.
 
 - Now, let's login back to Debian `proot-distro login debian` and check if it's here. To check, run `ls` and if you need `projectname` in the list then it's there. From here.
 
