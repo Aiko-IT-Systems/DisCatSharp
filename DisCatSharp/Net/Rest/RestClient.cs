@@ -563,8 +563,7 @@ internal sealed class RestClient : IDisposable
 				case HttpStatusCode.BadRequest:
 				case HttpStatusCode.MethodNotAllowed:
 					ex = new BadRequestException(request, response);
-					// remove 'ex' as the innwer exweption uwu: 'ex' contains the request information which also
-					// contains the headers, including "Authorization"! second times a charm :)
+					// ex won't be added to avoid possible leaks
 					senex = new(ex.Message + "\nJson Response: " + ((ex as BadRequestException)?.JsonMessage ?? "null"));
 					break;
 
@@ -630,8 +629,7 @@ internal sealed class RestClient : IDisposable
 				case HttpStatusCode.ServiceUnavailable:
 				case HttpStatusCode.GatewayTimeout:
 					ex = new ServerErrorException(request, response);
-					// remove 'ex' as the innwer exweption uwu: 'ex' contains the request information which also
-					// contains the headers, including "Authorization"! second times a charm :)
+					// ex won't be added to avoid possible leaks
 					senex = new(ex.Message + "\nJson Response: " + ((ex as ServerErrorException)!.JsonMessage ?? "null"));
 					break;
 			}
