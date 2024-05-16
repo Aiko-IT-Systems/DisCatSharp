@@ -258,6 +258,14 @@ public abstract class BaseDiscordClient : IDisposable
 					b.Category,
 					b.Level));
 
+			options.SetBeforeSendTransaction(tr =>
+			{
+				if (tr.Request.Data is string str)
+					tr.Request.Data = Utilities.StripTokens(str);
+
+				return tr;
+			});
+
 			options.SetBeforeSend((e, _) =>
 			{
 				if (!this.Configuration.DisableExceptionFilter)
