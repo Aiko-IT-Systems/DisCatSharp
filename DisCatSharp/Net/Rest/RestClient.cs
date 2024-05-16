@@ -641,7 +641,7 @@ internal sealed class RestClient : IDisposable
 					{
 						Dictionary<string, object> debugInfo = new()
 						{
-							{ "route", request.Route },
+							{ "route", Utilities.StripTokensFromUri(request.Route) },
 							{ "time", DateTimeOffset.UtcNow }
 						};
 						senex.AddSentryContext("Request", debugInfo);

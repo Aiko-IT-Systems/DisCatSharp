@@ -1,4 +1,5 @@
 using System;
+using System.Buffers.Text;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
@@ -88,6 +89,62 @@ public static class Utilities
 		}
 
 		VersionHeader = $"DiscordBot (https://github.com/Aiko-IT-Systems/DisCatSharp, v{vs})";
+	}
+
+	/// <summary>
+	///	Removes discord-based tokens from a given uri/url.
+	/// </summary>
+	/// <param name="uri">The uri to remove the tokens from.</param>
+	/// <returns>A new uri with the tokens replaced with <c>{KEY_TOKEN}</c></returns>
+	public static string StripTokensFromUri(string uri)
+	{
+		if (string.IsNullOrWhiteSpace(uri))
+			return uri;
+
+		var parts = uri.Split('/');
+
+		// calculate the worst-case base64 data size
+		var worstCaseBase64Size = parts.Max(x =>
+		{
+			var padding = x.EndsWith("==", StringComparison.Ordinal)
+				? 2
+				: x.EndsWith("=", StringComparison.Ordinal)
+					? 1
+					: 0;
+
+			return (Encoding.UTF8.GetByteCount(x) * (3 / 4)) - padding;
+		});
+
+		// allocate a buffer for any base64 decoding.
+		var dest = worstCaseBase64Size <= 1024 ? stackalloc byte[worstCaseBase64Size] : new byte[worstCaseBase64Size];
+
+		var isWebhook = parts.Contains("webhooks") || parts.Contains("webhook");
+
+		for (var i = 0; i < parts.Length; i++)
+		{
+			var part = parts[i];
+
+			if (isWebhook && Regex.IsMatch(part, @"([a-zA-Z0-9]{68})"))
+			{
+				parts[i] = "{WEBHOOK_TOKEN}";
+				continue;
+			}
+
+			if (!Convert.TryFromBase64String(part, dest, out var count))
+				continue;
+
+			var b64Content = Encoding.UTF8.GetString(dest[..count]);
+
+			var tokenInnersMatch = Regex.Match(b64Content, @"^(.+):\d+?:[a-zA-Z0-9]{128}$");
+
+			if (!tokenInnersMatch.Success)
+				continue;
+
+			// replaces the token with the {KEY}_TOKEN, ex 'interaction:USERID:TOKEN' is replaced as 'INTERACTION_TOKEN'
+			parts[i] = $"{{{tokenInnersMatch.Groups[1].Value.ToUpperInvariant()}_TOKEN}}";
+		}
+
+		return string.Join('/', parts);
 	}
 
 	/// <summary>
