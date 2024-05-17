@@ -102,8 +102,7 @@ public static class Utilities
 		if (string.IsNullOrWhiteSpace(str))
 			return str;
 
-		str = Regex.Replace(str, @"([a-zA-Z0-9]{68})", "{WEBHOOK_TOKEN}");
-		str = Regex.Replace(str, @"^(.+):\d+?:[a-zA-Z0-9]{128}$", "{INTERACTION_TOKEN}");
+		str = Regex.Replace(str, @"([a-zA-Z0-9]{68,})", "{WEBHOOK_OR_INTERACTION_TOKEN}"); // Any alphanumeric string this long is likely to be sensitive information anyways
 		str = Regex.Replace(str, @"(mfa\.[a-z0-9_-]{20,})|((?<botid>[a-z0-9_-]{23,28})\.(?<creation>[a-z0-9_-]{6,7})\.(?<enc>[a-z0-9_-]{27,}))", "{ACCOUNT_TOKEN}");
 
 		return str;
