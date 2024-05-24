@@ -17,7 +17,7 @@ public sealed class DiscordClan
 	/// Gets the identity guild id.
 	/// </summary>
 	[JsonProperty("identity_guild_id")]
-	public ulong IdentityGuildId { get; internal set; }
+	public ulong? IdentityGuildId { get; internal set; }
 
 	/// <summary>
 	/// Gets whether the identity is enabled and shown to everyone.
