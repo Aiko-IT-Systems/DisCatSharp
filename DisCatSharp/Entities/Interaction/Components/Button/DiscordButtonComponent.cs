@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 
 using DisCatSharp.Enums;
 
@@ -93,6 +94,8 @@ public sealed class DiscordButtonComponent : DiscordComponent
 	/// <exception cref="ArgumentException">Is thrown when neither the <paramref name="emoji"/> nor the <paramref name="label"/> is set.</exception>
 	public DiscordButtonComponent(ButtonStyle style, string customId = null, string label = null, bool disabled = false, DiscordComponentEmoji emoji = null)
 	{
+		if (style is ButtonStyle.Link or ButtonStyle.Premium)
+			throw new InvalidEnumArgumentException("Can not use link or premium style on this type of button");
 		this.Style = style;
 		this.CustomId = customId ?? Guid.NewGuid().ToString();
 		this.Disabled = disabled;

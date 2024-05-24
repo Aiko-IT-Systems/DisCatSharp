@@ -62,13 +62,12 @@ public enum ChannelFlags : long
 	/// <summary>
 	/// Indicated that this channel is a guild resource channel.
 	/// </summary>
-	[DiscordInExperiment]
 	IsGuildResourceChannel = 1L << 7,
 
 	/// <summary>
 	/// Indicated that clyde has access to this thread.
 	/// </summary>
-	[DiscordInExperiment]
+	[DiscordDeprecated]
 	ClydeAi = 1L << 8,
 
 	/// <summary>
@@ -80,7 +79,6 @@ public enum ChannelFlags : long
 	/// <summary>
 	/// Indicates that this channel is a media channel.
 	/// </summary>
-	[DiscordUnreleased]
 	IsMediaChannel = 1L << 10,
 
 	/// <summary>
@@ -110,6 +108,5 @@ public enum ChannelFlags : long
 	/// <summary>
 	/// Hides the media download options for <see cref="ChannelType.GuildMedia"/> channels.
 	/// </summary>
-	[DiscordInExperiment]
 	HideMediaDownloadOptions = 1L << 15
 }

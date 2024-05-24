@@ -7,10 +7,11 @@ using DisCatSharp.Enums;
 
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
+// TODO: Add method to respond with button
 /// <summary>
 /// Defines that usage of this application command is restricted to users with a specified entitlement.
 /// </summary>
-[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false), RequiresFeature(Features.MonetizedApplication)]
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false), RequiresFeature(Features.MonetizedApplication), DiscordDeprecated]
 public sealed class ApplicationCommandRequirePremiumAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>

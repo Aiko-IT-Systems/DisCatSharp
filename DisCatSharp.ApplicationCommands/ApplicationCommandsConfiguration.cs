@@ -1,7 +1,5 @@
 using System;
 
-using DisCatSharp.Attributes;
-
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DisCatSharp.ApplicationCommands;
@@ -31,7 +29,6 @@ public sealed class ApplicationCommandsConfiguration
 	/// <para>Mutually exclusive with <see cref="EnableDefaultHelp"/>.</para>
 	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
-	[DiscordInExperiment, RequiresFeature(Features.Experiment, "Requires you to be part of the user apps experiment and the apps owner.")]
 	public bool EnableDefaultUserAppsHelp { get; set; } = false;
 
 	/// <summary>

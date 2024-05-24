@@ -73,7 +73,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Gets the username with the global name.
 	/// Example: @lulalaby (Lala Sabathil)
 	/// </summary>
-	[JsonIgnore, DiscordInExperiment]
+	[JsonIgnore]
 	public virtual string UsernameWithGlobalName
 		=> this.GlobalName != null ? $"{this.Username} ({this.GlobalName})" : this.Username;
 
@@ -81,7 +81,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Gets this user's global name.
 	/// Only applicable if <see cref="IsMigrated"/> is <see langword="true"/>.
 	/// </summary>
-	[JsonProperty("global_name", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
+	[JsonProperty("global_name", NullValueHandling = NullValueHandling.Ignore)]
 	public virtual string? GlobalName { get; internal set; }
 
 	/// <summary>

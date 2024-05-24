@@ -37,7 +37,7 @@ public class DiscordLinkButtonComponent : DiscordComponent
 	/// Gets the style.
 	/// </summary>
 	[JsonProperty("style", NullValueHandling = NullValueHandling.Ignore)]
-	internal int Style { get; set; } = 5; // Link = 5; Discord throws 400 otherwise //
+	internal ButtonStyle Style { get; set; } = ButtonStyle.Link;
 
 	/// <summary>
 	/// Enables this component if it was disabled before.

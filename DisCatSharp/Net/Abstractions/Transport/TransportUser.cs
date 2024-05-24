@@ -26,7 +26,7 @@ internal class TransportUser : ObservableApiObject
 	/// <summary>
 	/// Gets this user's global name.
 	/// </summary>
-	[JsonProperty("global_name", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
+	[JsonProperty("global_name", NullValueHandling = NullValueHandling.Ignore)]
 	public string GlobalName { get; internal set; }
 
 	/// <summary>
@@ -45,7 +45,7 @@ internal class TransportUser : ObservableApiObject
 	/// <summary>
 	/// Gets the username with the global name.
 	/// </summary>
-	[JsonIgnore, DiscordInExperiment]
+	[JsonIgnore]
 	internal string UsernameWithGlobalName
 		=> $"{this.Username} ({this.GlobalName})";
 

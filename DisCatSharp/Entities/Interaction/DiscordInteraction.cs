@@ -117,7 +117,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <para>This is related to premium subscriptions for bots.</para>
 	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
 	/// </summary>
-	[JsonProperty("entitlements", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
+	[JsonProperty("entitlements", NullValueHandling = NullValueHandling.Ignore)]
 	public List<DiscordEntitlement> Entitlements { get; internal set; } = [];
 
 	/// <summary>
@@ -125,7 +125,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <para>This is related to premium subscriptions for bots.</para>
 	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
 	/// </summary>
-	[JsonProperty("entitlement_sku_ids", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
+	[JsonProperty("entitlement_sku_ids", NullValueHandling = NullValueHandling.Ignore)]
 	public List<ulong> EntitlementSkuIds { get; internal set; } = [];
 
 	/// <summary>
