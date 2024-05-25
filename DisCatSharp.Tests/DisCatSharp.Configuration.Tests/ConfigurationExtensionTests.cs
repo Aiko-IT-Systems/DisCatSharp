@@ -171,7 +171,7 @@ public class ConfigurationExtensionTests
 		Assert.Equal(TimeSpan.FromSeconds(20), config.HttpTimeout);
 		Assert.False(config.ReconnectIndefinitely);
 		Assert.True(config.AlwaysCacheMembers);
-		Assert.Equal(DiscordIntents.AllUnprivileged, config.Intents);
+		Assert.Equal(DiscordIntents.AllUnprivileged | DiscordIntents.MessageContent, config.Intents);
 		Assert.False(config.MobileStatus);
 		Assert.Equal(config.ApiChannel, ApiChannel.Stable);
 		Assert.False(config.AutoRefreshChannelCache);

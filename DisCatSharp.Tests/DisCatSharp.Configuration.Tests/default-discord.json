@@ -17,7 +17,7 @@
 			"MobileStatus": false,
 			"UseCanary": false,
 			"AutoRefreshChannelCache": false,
-			"Intents": "AllUnprivileged"
+			"Intents": "AllUnprivileged|MessageContent"
 		}
 	}
 }
