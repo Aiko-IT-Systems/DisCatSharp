@@ -119,3 +119,9 @@ items:
             href: misc/hosting.md
           - name: Voice Activities
             href: misc/voice_activities.md
+          - name: Sentry
+            href: misc/sentry.md
+    - name: Security & Compliance
+      items:
+          - name: Sentry Vulnerability Report
+            href: sec_comp/sentry.md
