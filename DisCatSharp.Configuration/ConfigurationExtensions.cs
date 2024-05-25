@@ -38,7 +38,7 @@ internal static class ConfigurationExtensions
 	public static string ConfigPath(this IConfiguration config, params string[] values) => string.Join(":", values);
 
 	/// <summary>
-	/// Skims over the configuration section and only overrides values that are explicitly defined within the config
+	/// Skims over the configuration section and only overrides values that are explicitly defined within the config.
 	/// </summary>
 	/// <param name="config">Instance of config</param>
 	/// <param name="section">Section which contains values for <paramref name="config"/></param>
@@ -64,20 +64,24 @@ internal static class ConfigurationExtensions
 				continue;
 			}
 
-			// We need to address collections a bit differently
-			// They can come in the form of    "root:section:name" with a string representation OR
-			// "root:section:name:0"  <--- this is not detectable when checking the above path
-			if (typeof(IEnumerable).IsAssignableFrom(prop.PropertyType))
+			// Handle collection types differently
+			if (typeof(IEnumerable).IsAssignableFrom(prop.PropertyType) && prop.PropertyType != typeof(string))
 			{
-				value = string.IsNullOrEmpty(section.GetValue(prop.Name))
-					? section.Config
-						.GetSection(section.GetPath(prop.Name)).Get(prop.PropertyType)
-					: Newtonsoft.Json.JsonConvert.DeserializeObject(entry, prop.PropertyType);
+				if (string.IsNullOrEmpty(entry))
+				{
+					// Handle case for "root:section:name:0"
+					var subSection = section.Config.GetSection(section.GetPath(prop.Name));
+					if (subSection.Exists())
+						value = subSection.Get(prop.PropertyType);
+				}
+				else
+					// Handle case for "root:section:name"
+					value = Newtonsoft.Json.JsonConvert.DeserializeObject(entry, prop.PropertyType);
 
-				if (value == null)
-					continue;
+				if (value != null)
+					prop.SetValue(config, value);
 
-				prop.SetValue(config, value);
+				continue;
 			}
 
 			// From this point onward we require the 'entry' value to have something useful
@@ -86,21 +90,25 @@ internal static class ConfigurationExtensions
 
 			try
 			{
-				// Primitive types are simple to convert
-				if (prop.PropertyType.IsPrimitive)
-					value = Convert.ChangeType(entry, prop.PropertyType);
+				var targetType = prop.PropertyType;
+
+				// Handle nullable types
+				if (Nullable.GetUnderlyingType(targetType) != null)
+					targetType = Nullable.GetUnderlyingType(targetType);
+
+				// Primitive types and common types conversion
+				if (targetType.IsPrimitive)
+					value = Convert.ChangeType(entry, targetType);
+				else if (targetType.IsEnum)
+					value = Enum.Parse(targetType, entry.Replace('|', ','));
+				else if (targetType == typeof(TimeSpan))
+					value = TimeSpan.Parse(entry);
+				else if (targetType == typeof(DateTime))
+					value = DateTime.Parse(entry);
+				else if (targetType == typeof(DateTimeOffset))
+					value = DateTimeOffset.Parse(entry);
 				else
-				{
-					// The following types require a different approach
-					if (prop.PropertyType.IsEnum)
-						value = Enum.Parse(prop.PropertyType, entry);
-					else if (typeof(TimeSpan) == prop.PropertyType)
-						value = TimeSpan.Parse(entry);
-					else if (typeof(DateTime) == prop.PropertyType)
-						value = DateTime.Parse(entry);
-					else if (typeof(DateTimeOffset) == prop.PropertyType)
-						value = DateTimeOffset.Parse(entry);
-				}
+					throw new NotSupportedException($"Type '{targetType.Name}' is not supported.");
 
 				// Update value within our config instance
 				prop.SetValue(config, value);
@@ -108,7 +116,7 @@ internal static class ConfigurationExtensions
 			catch (Exception ex)
 			{
 				Console.Error.WriteLine(
-					$"Unable to convert value of '{entry}' to type '{prop.PropertyType.Name}' for prop '{prop.Name}' in config '{config.GetType().Name}'\n\t\t{ex.Message}");
+					$"Unable to convert value of '{entry}' to type '{prop.PropertyType.Name}' for property '{prop.Name}' in config '{config.GetType().Name}':\n\t\t{ex.Message}");
 			}
 		}
 	}
@@ -221,16 +229,11 @@ internal static class ConfigurationExtensions
 	/// <returns>True if section exists, otherwise false</returns>
 	public static bool HasSection(this IConfiguration config, params string?[] values)
 	{
-		if (values == null)
+		if (values == null || values.Length == 0)
 			return false;
 
-		switch (values.Length)
-		{
-			case 0:
-				return false;
-			case 1:
-				return config.GetChildren().Any(x => x.Key == values[0]);
-		}
+		if (values.Length == 1)
+			return config.GetChildren().Any(x => x.Key == values[0]);
 
 		if (config.GetChildren().All(x => x.Key != values[0]))
 			return false;
