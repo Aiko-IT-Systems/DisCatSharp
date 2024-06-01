@@ -8,7 +8,7 @@
 		<PackageProjectUrl>https://docs.dcs.aitsys.dev</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</RepositoryUrl>
 		<RepositoryType>Git</RepositoryType>
-		<PackageIcon>logobig.png</PackageIcon>
+		<PackageIcon>logo-pride.png</PackageIcon>
 		<PackageLicenseExpression />
 		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
@@ -27,7 +27,7 @@
 		</None>
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="..\DisCatSharp.Logos\logobig.png">
+		<None Include="..\DisCatSharp.Logos\logo-pride.png">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
 		</None>
