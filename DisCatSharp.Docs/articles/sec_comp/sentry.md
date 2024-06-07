@@ -61,7 +61,7 @@ Despite the validation that no sensitive data was being logged, additional measu
 
 ## Conclusion
 
-The initial claims were found to be unsubstantiated. However, we have taken this opportunity to enhance our security measures further to ensure the utmost safety and privacy for our users. We appreciate the community's vigilance and remain committed to maintaining a secure and reliable library.
+The initial claims were found to be unsubstantiated. However, we have taken this opportunity to enhance our security measures further to ensure the safety and privacy for our users. We appreciate the community's vigilance and remain committed to maintaining a secure and reliable library.
 
 For more details on the specific pull requests and discussions related to these measures, please refer to the following:
 - [Pull Request 494](https://github.com/Aiko-IT-Systems/DisCatSharp/pull/494)
