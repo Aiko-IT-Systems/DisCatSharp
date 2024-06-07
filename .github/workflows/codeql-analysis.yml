@@ -43,7 +43,7 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: |
-          8.0.300
+          8.0.301
           7.0.404
     - name: Restore dependencies
       run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
