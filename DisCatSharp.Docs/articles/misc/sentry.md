@@ -186,4 +186,4 @@ To enhance safety and ensure no sensitive information is leaked, various filters
 
 By maintaining these practices, DisCatSharp ensures user privacy while leveraging Sentry to improve the library's reliability and performance.
 
-For more information on configuring and using Sentry in DisCatSharp, refer to the official [DisCatSharp documentation](https://docs.dcs.aitsys.dev/changelogs/v10/10_6_0#sentry-integration).
+For more information on configuring and using Sentry in DisCatSharp, refer to the official [announcement](https://docs.dcs.aitsys.dev/changelogs/v10/10_6_0#sentry-integration).
