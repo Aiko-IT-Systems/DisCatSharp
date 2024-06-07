@@ -10,8 +10,6 @@ using DisCatSharp.Entities.Core;
 using DisCatSharp.Enums;
 using DisCatSharp.Enums.Core;
 
-using Sentry;
-
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>

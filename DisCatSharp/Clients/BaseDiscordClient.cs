@@ -195,6 +195,8 @@ public abstract class BaseDiscordClient : IDisposable
 					o.IsEnvironmentUser = false;
 					o.UseAsyncFileIO = true;
 					o.EnableScopeSync = true;
+					if (!this.Configuration.AttachRecentLogEntries)
+						o.MaxBreadcrumbs = 0;
 					if (!this.Configuration.DisableExceptionFilter)
 						o.AddExceptionFilter(new DisCatSharpExceptionFilter(this.Configuration));
 					o.Debug = this.Configuration.SentryDebug;
@@ -247,14 +249,15 @@ public abstract class BaseDiscordClient : IDisposable
 				IsEnvironmentUser = false,
 				UseAsyncFileIO = true,
 				EnableScopeSync = true,
-				Debug = this.Configuration.SentryDebug
+				Debug = this.Configuration.SentryDebug,
+				MaxBreadcrumbs = this.Configuration.AttachRecentLogEntries ? 100 : 0
 			};
 
 			options.SetBeforeBreadcrumb(b
-				=> new Breadcrumb(Utilities.StripTokens(b.Message),
+				=> new(Utilities.StripTokens(b.Message),
 					b.Type,
 					b.Data?.Select(x => new KeyValuePair<string, string>(x.Key, Utilities.StripTokens(x.Value)))
-					.ToDictionary(x => x.Key, x => x.Value),
+						.ToDictionary(x => x.Key, x => x.Value),
 					b.Category,
 					b.Level));
 

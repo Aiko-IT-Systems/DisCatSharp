@@ -644,6 +644,7 @@ internal sealed class RestClient : IDisposable
 						};
 						senex.AddSentryContext("Request", debugInfo);
 						this._discord.Sentry.CaptureException(senex);
+						_ = Task.Run(this._discord.Sentry.FlushAsync);
 					}
 
 				request.SetFaulted(ex);

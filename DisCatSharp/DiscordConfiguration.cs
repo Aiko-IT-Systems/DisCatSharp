@@ -248,6 +248,12 @@ public sealed class DiscordConfiguration
 	public bool EnableSentry { internal get; set; } = false;
 
 	/// <summary>
+	/// <para>Whether to attach recent log entris.</para>
+	/// <para>Defaults to <see langword="false"/>.</para>
+	/// </summary>
+	public bool AttachRecentLogEntries { internal get; set; } = false;
+
+	/// <summary>
 	/// <para>Whether to attach the bots username and id to sentry reports.</para>
 	/// <para>This helps us to pinpoint problems.</para>
 	/// <para>Defaults to <see langword="false"/>.</para>

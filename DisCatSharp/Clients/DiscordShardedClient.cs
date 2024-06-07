@@ -178,6 +178,8 @@ public sealed partial class DiscordShardedClient
 				o.StackTraceMode = StackTraceMode.Enhanced;
 				o.Release = $"{this.BotLibrary}@{vs}";
 				o.SendClientReports = true;
+				if (!this._configuration.AttachRecentLogEntries)
+					o.MaxBreadcrumbs = 0;
 				if (!this._configuration.DisableExceptionFilter)
 					o.AddExceptionFilter(new DisCatSharpExceptionFilter(this._configuration));
 				o.IsEnvironmentUser = false;
