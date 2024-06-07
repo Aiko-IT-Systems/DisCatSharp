@@ -282,6 +282,12 @@ public sealed class DiscordConfiguration
 	public bool EnablePayloadReceivedEvent { internal get; set; } = false;
 
 	/// <summary>
+	/// <para>Whether to replace every discord-based id with <c>{DISCORD_ID}</c>.</para>
+	/// <para>Defaults to <see langword="false"/>.</para>
+	/// </summary>
+	public bool EnableDiscordIdScrubber { internal get; set; } = false;
+
+	/// <summary>
 	/// <para>Sets which exceptions to track with sentry.</para>
 	/// <para>Do not touch this unless you're developing the library.</para>
 	/// </summary>
@@ -313,6 +319,12 @@ public sealed class DiscordConfiguration
 	/// <para>Defaults <see langword="false"/>.</para>
 	/// </summary>
 	internal bool EnableLibraryDeveloperMode { get; set; } = false;
+
+	/// <summary>
+	/// <para>Whether to disable all safety scrubbers.</para>
+	/// <para>Can only be enabled by whitelisted developers.</para>
+	/// </summary>
+	internal bool DisableScrubber { get; set; } = false;
 
 	/// <summary>
 	/// Whether to turn sentry's debug mode on.

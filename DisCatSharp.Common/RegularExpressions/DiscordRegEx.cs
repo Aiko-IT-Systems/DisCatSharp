@@ -40,6 +40,9 @@ public static partial class DiscordRegEx
 	[GeneratedRegex(@"^<@\!?(?<id>\d+?)>$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
 	public static partial Regex UserRegex();
 
+	[GeneratedRegex(@"^(?<id>\d{17,20})$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
+	public static partial Regex IdRegex();
+
 	[GeneratedRegex(@"^<@\!(?<id>\d{17,20})>$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
 	public static partial Regex UserWithNicknameRegex();
 
