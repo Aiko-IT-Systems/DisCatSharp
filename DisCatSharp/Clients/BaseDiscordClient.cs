@@ -253,21 +253,24 @@ public abstract class BaseDiscordClient : IDisposable
 				MaxBreadcrumbs = this.Configuration.AttachRecentLogEntries ? 100 : 0
 			};
 
-			options.SetBeforeBreadcrumb(b
-				=> new(Utilities.StripTokens(b.Message),
-					b.Type,
-					b.Data?.Select(x => new KeyValuePair<string, string>(x.Key, Utilities.StripTokens(x.Value)))
-						.ToDictionary(x => x.Key, x => x.Value),
-					b.Category,
-					b.Level));
-
-			options.SetBeforeSendTransaction(tr =>
+			if (!this.Configuration.DisableScrubber)
 			{
-				if (tr.Request.Data is string str)
-					tr.Request.Data = Utilities.StripTokens(str);
+				options.SetBeforeBreadcrumb(b
+					=> new(Utilities.StripIds(Utilities.StripTokens(b.Message), this.Configuration.EnableDiscordIdScrubber)!,
+						b.Type!,
+						b.Data?.Select(x => new KeyValuePair<string, string>(x.Key, Utilities.StripIds(Utilities.StripTokens(x.Value), this.Configuration.EnableDiscordIdScrubber)!))
+							.ToDictionary(x => x.Key, x => x.Value),
+						b.Category,
+						b.Level));
 
-				return tr;
-			});
+				options.SetBeforeSendTransaction(tr =>
+				{
+					if (tr.Request.Data is string str)
+						tr.Request.Data = Utilities.StripIds(Utilities.StripTokens(str), this.Configuration.EnableDiscordIdScrubber);
+
+					return tr;
+				});
+			}
 
 			options.SetBeforeSend((e, _) =>
 			{
