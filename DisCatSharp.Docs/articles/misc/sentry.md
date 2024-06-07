@@ -8,7 +8,7 @@ author: DisCatSharp Team
 
 ## Overview
 
-Sentry is an error tracking tool that helps developers monitor and fix crashes in real-time. In DisCatSharp, Sentry integration is utilized to report and analyze errors and missing fields, ensuring a more robust and reliable library.
+Sentry is an error tracking tool that helps developers monitor and fix crashes in real-time. In DisCatSharp, Sentry is utilized to report and analyze errors and missing fields, ensuring a more robust and reliable library.
 
 ## How Sentry is Used in DisCatSharp
 
@@ -16,7 +16,7 @@ The Sentry integration in DisCatSharp is configured to capture and report except
 
 ## Configuration Options
 
-The following configuration options are available for Sentry integration, and they are all **disabled** or set to **null** by default:
+The following configuration options are available for Sentry, and they are all **disabled** or set to **null** by default:
 
 - **ReportMissingFields**: Determines whether to report missing fields for Discord objects. This is useful for library development.
   ```csharp
