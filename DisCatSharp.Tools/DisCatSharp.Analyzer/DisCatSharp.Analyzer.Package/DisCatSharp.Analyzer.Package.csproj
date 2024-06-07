@@ -9,8 +9,8 @@
 
 	<PropertyGroup>
 		<PackageId>DisCatSharp.Analyzer.Roselyn</PackageId>
-		<Version>6.2.2</Version>
-		<PackageVersion>6.2.2</PackageVersion>
+		<Version>6.2.3</Version>
+		<PackageVersion>6.2.3</PackageVersion>
 		<Authors>AITSYS</Authors>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<Description>DisCatSharp Analyzer</Description>
