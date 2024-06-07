@@ -118,6 +118,7 @@ Either join our official support guild at https://discord.gg/2HWta4GXus, open an
 
 | Package                      | Stable                                                                                                        | Nightly                                                                                                                          |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| DisCatSharp.Attributes       | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Attributes.svg?label=&logo=nuget&style=flat-square)           | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Attributes.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)           |
 | DisCatSharp.Common           | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square)           | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)           |
 | DisCatSharp.Analyzer.Roselyn | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Analyzer.Roselyn.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Analyzer.Roselyn.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
 
