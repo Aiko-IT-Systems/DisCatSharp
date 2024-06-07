@@ -90,6 +90,24 @@ public static class Utilities
 		VersionHeader = $"DiscordBot (https://github.com/Aiko-IT-Systems/DisCatSharp, v{vs})";
 	}
 
+
+
+	/// <summary>
+	///	Removes discord-based tokens from a given string.
+	/// </summary>
+	/// <param name="str">The string to remove the tokens from.</param>
+	/// <returns>A new string with the tokens replaced with <c>{KEY_TOKEN}</c></returns>
+	public static string? StripTokens(string? str)
+	{
+		if (string.IsNullOrWhiteSpace(str))
+			return str;
+
+		str = Regex.Replace(str, @"([a-zA-Z0-9]{68,})", "{WEBHOOK_OR_INTERACTION_TOKEN}"); // Any alphanumeric string this long is likely to be sensitive information anyways
+		str = Regex.Replace(str, @"(mfa\.[a-z0-9_-]{20,})|((?<botid>[a-z0-9_-]{23,28})\.(?<creation>[a-z0-9_-]{6,7})\.(?<enc>[a-z0-9_-]{27,}))", "{BOT_OR_USER_TOKEN}");
+
+		return str;
+	}
+
 	/// <summary>
 	/// Adds the specified parameter to the Query String.
 	/// </summary>

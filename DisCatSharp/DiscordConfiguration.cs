@@ -239,10 +239,12 @@ public sealed class DiscordConfiguration
 	/// </summary>
 	public IServiceProvider ServiceProvider { internal get; init; } = new ServiceCollection().BuildServiceProvider(true);
 
+	// TODO: Add disclaimer and docs for sentry
 	/// <summary>
-	/// <para>Whether to report missing fields for discord object.</para>
+	/// <para>Whether to emable sentry.</para>
 	/// <para>This helps us to track missing data and library bugs better.</para>
 	/// <para>Defaults to <see langword="false"/>.</para>
+	/// <para><note type="note">TODO: Add disclaimer and docs.</note></para>
 	/// </summary>
 	public bool EnableSentry { internal get; set; } = false;
 

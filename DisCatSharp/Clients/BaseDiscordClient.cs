@@ -249,6 +249,23 @@ public abstract class BaseDiscordClient : IDisposable
 				EnableScopeSync = true,
 				Debug = this.Configuration.SentryDebug
 			};
+
+			options.SetBeforeBreadcrumb(b
+				=> new Breadcrumb(Utilities.StripTokens(b.Message),
+					b.Type,
+					b.Data?.Select(x => new KeyValuePair<string, string>(x.Key, Utilities.StripTokens(x.Value)))
+					.ToDictionary(x => x.Key, x => x.Value),
+					b.Category,
+					b.Level));
+
+			options.SetBeforeSendTransaction(tr =>
+			{
+				if (tr.Request.Data is string str)
+					tr.Request.Data = Utilities.StripTokens(str);
+
+				return tr;
+			});
+
 			options.SetBeforeSend((e, _) =>
 			{
 				if (!this.Configuration.DisableExceptionFilter)
