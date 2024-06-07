@@ -115,6 +115,7 @@ jobs:
         if: ${{inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp.Tools'}}
         run: ./DisCatSharp.Tools/rebuild-tools.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{github.event.inputs.version_suffix}}
       - name: Remove invalid packages
+        if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}
         shell: pwsh
         run: rm *.symbols.*
         working-directory: ./dcs-artifacts
