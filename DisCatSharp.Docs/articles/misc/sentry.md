@@ -28,6 +28,11 @@ The following configuration options are available for Sentry, and they are all *
   public bool EnableSentry { internal get; set; } = false;
   ```
 
+- **AttachRecentLogEntries**: If enabled, attaches the recent log entries.
+  ```csharp
+  public bool AttachRecentLogEntries { internal get; set; } = false;
+  ```
+
 - **AttachUserInfo**: If enabled, attaches the bot's username and ID to Sentry reports to help pinpoint problems.
   ```csharp
   public bool AttachUserInfo { internal get; set; } = false;
