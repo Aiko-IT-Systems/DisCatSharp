@@ -106,3 +106,10 @@ Rule ID | Category | Severity | Notes
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|--------------------
+
+## Release 6.2.3
+
+### Changed Rules
+
+Rule ID | Category | Severity | Notes
+--------|----------|----------|--------------------
