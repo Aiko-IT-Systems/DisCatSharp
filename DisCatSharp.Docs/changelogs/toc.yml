@@ -4,6 +4,8 @@ items:
 - name: Version 10.X
   expanded: true
   items:
+  - name: Version 10.6.3
+    href: v10/10_6_3.md
   - name: Version 10.6.2
     href: v10/10_6_2.md
   - name: Version 10.6.0

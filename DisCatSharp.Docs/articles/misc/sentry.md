@@ -32,6 +32,9 @@ The following configuration options are available for Sentry, and they are all *
 
 -   **AttachRecentLogEntries**: If enabled, attaches the recent log entries.
 
+    > [!IMPORTANT]
+    > Please be mindful about how much information you log, if you enabled this. We might be able to see unwanted things.
+
     ```csharp
     public bool AttachRecentLogEntries { internal get; set; } = false;
     ```
