@@ -432,12 +432,15 @@ public sealed class DiscordConfiguration
 		this.Timezone = other.Timezone;
 		this.ReportMissingFields = other.ReportMissingFields;
 		this.EnableSentry = other.EnableSentry;
+		this.AttachRecentLogEntries = other.AttachRecentLogEntries;
 		this.AttachUserInfo = other.AttachUserInfo;
 		this.FeedbackEmail = other.FeedbackEmail;
 		this.DeveloperUserId = other.DeveloperUserId;
+		this.EnableDiscordIdScrubber = other.EnableDiscordIdScrubber;
 		this.HasShardLogger = other.HasShardLogger;
 		this._exceptions = other._exceptions;
 		this.EnableLibraryDeveloperMode = other.EnableLibraryDeveloperMode;
+		this.DisableScrubber = other.DisableScrubber;
 		this.SentryDebug = other.SentryDebug;
 		this.DisableExceptionFilter = other.DisableExceptionFilter;
 		this.CustomSentryDsn = other.CustomSentryDsn;
