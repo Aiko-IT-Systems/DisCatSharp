@@ -243,7 +243,7 @@ public sealed class DiscordConfiguration
 	/// <para>Whether to enable sentry.</para>
 	/// <para>This helps us to track missing data and library bugs better.</para>
 	/// <para>Defaults to <see langword="false"/>.</para>
-	/// <para><note type="note">Please refer to https://docs.dcs.aitsys.dev/articles/misc/sentry for more information.</note></para>
+	/// <para><note type="note">Please refer to the <a href="https://docs.dcs.aitsys.dev/articles/misc/sentry">docs</a> for more information.</note></para>
 	/// </summary>
 	public bool EnableSentry { internal get; set; } = false;
 
@@ -432,12 +432,15 @@ public sealed class DiscordConfiguration
 		this.Timezone = other.Timezone;
 		this.ReportMissingFields = other.ReportMissingFields;
 		this.EnableSentry = other.EnableSentry;
+		this.AttachRecentLogEntries = other.AttachRecentLogEntries;
 		this.AttachUserInfo = other.AttachUserInfo;
 		this.FeedbackEmail = other.FeedbackEmail;
 		this.DeveloperUserId = other.DeveloperUserId;
+		this.EnableDiscordIdScrubber = other.EnableDiscordIdScrubber;
 		this.HasShardLogger = other.HasShardLogger;
 		this._exceptions = other._exceptions;
 		this.EnableLibraryDeveloperMode = other.EnableLibraryDeveloperMode;
+		this.DisableScrubber = other.DisableScrubber;
 		this.SentryDebug = other.SentryDebug;
 		this.DisableExceptionFilter = other.DisableExceptionFilter;
 		this.CustomSentryDsn = other.CustomSentryDsn;

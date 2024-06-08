@@ -8,4 +8,4 @@ author: DisCatSharp Team
 
 Please select the changelog you want to view from the left side.
 
-Current: [v10.6.3](xref:changelogs_v10_10_6_3)
+Current: [v10.6.4](xref:changelogs_v10_10_6_4)
