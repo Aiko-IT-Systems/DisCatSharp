@@ -110,6 +110,7 @@ public static class Utilities
 	/// Removes discord-based ids from a given string.
 	/// </summary>
 	/// <param name="str">The string to remove the ids from.</param>
+	/// <param name="strip">Whether to strip discord-based ids.</param>
 	/// <returns>A new string with the ids replaced with <c>{DISCORD_ID}</c>.</returns>
 	public static string? StripIds(string? str, bool strip)
 	{
