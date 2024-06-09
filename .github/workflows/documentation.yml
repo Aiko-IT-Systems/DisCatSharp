@@ -46,7 +46,7 @@ jobs:
       with:
         name: dcs-docs.zip
         path: dcs-docs.zip
-        retention-days: 30
+        retention-days: 5
 #    - name: Force add build files
 #      run: git add DisCatSharp.Docs/obj/.cache/build/* -f
 #    - name: Commit and push changes
