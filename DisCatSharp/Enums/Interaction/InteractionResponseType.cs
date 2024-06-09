@@ -1,4 +1,5 @@
 using DisCatSharp.Attributes;
+using DisCatSharp.Entities;
 
 namespace DisCatSharp.Enums;
 
@@ -45,8 +46,9 @@ public enum InteractionResponseType
 	/// <summary>
 	/// <para>Responds to the interaction with a message indicating that a premium subscription is required.</para>
 	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
+	/// <para><note type="warning">Deprecated. Create normal response instead and use <see cref="DiscordPremiumButtonComponent"/> with target sku id.</note></para>
 	/// </summary>
-	[DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
+	[DiscordDeprecated("Replaced by DiscordPremiumButtonComponent."), Deprecated]
 	PremiumRequired = 10,
 
 	/// <summary>

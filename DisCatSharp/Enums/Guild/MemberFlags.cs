@@ -37,22 +37,16 @@ public enum MemberFlags : long
 	/// <summary>
 	/// Member has completed onboarding.
 	/// </summary>
-	[DiscordInExperiment]
 	CompletedOnboarding = 1 << 1,
 
 	/// <summary>
 	/// Member bypasses guild verification requirements.
 	/// </summary>
-	[DiscordInExperiment]
 	BypassesVerification = 1 << 2,
-
-	[DiscordInExperiment]
-	Verified = BypassesVerification,
 
 	/// <summary>
 	/// Member has started onboarding.
 	/// </summary>
-	[DiscordInExperiment]
 	StartedOnboarding = 1 << 3,
 
 	/// <summary>
@@ -62,6 +56,7 @@ public enum MemberFlags : long
 	[DiscordInExperiment]
 	IsGuest = 1 << 4,
 
+	// TODO: Find out whether it's still correct
 	/// <summary>
 	/// Member has started home actions.
 	/// </summary>
@@ -77,12 +72,10 @@ public enum MemberFlags : long
 	/// <summary>
 	/// Members username or nickname contains words that are not allowed.
 	/// </summary>
-	[DiscordInExperiment]
 	AutomodQuarantinedUsernameOrGuildNickname = 1 << 7,
 
 	/// <summary>
 	/// Members user or guild bio contains words that are not allowed.
 	/// </summary>
-	[DiscordInExperiment]
 	AutomodQuarantinedBio = 1 << 8
 }

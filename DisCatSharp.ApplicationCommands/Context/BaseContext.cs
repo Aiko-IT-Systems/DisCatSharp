@@ -84,7 +84,6 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <para>This is related to premium subscriptions for bots.</para>
 	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
 	/// </summary>
-	[DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
 	public List<DiscordEntitlement> Entitlements { get; internal set; } = [];
 
 	/// <summary>
@@ -92,7 +91,6 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <para>This is related to premium subscriptions for bots.</para>
 	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
 	/// </summary>
-	[DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
 	public List<ulong> EntitlementSkuIds { get; internal set; } = [];
 
 	/// <summary>
