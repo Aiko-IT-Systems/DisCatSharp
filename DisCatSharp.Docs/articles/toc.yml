@@ -123,5 +123,5 @@ items:
             href: misc/sentry.md
     - name: Security & Compliance
       items:
-          - name: Sentry Vulnerability Report
+          - name: Sentry Safety Report
             href: sec_comp/sentry.md
