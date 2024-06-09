@@ -101,6 +101,7 @@ public class GuildEditModel : BaseEditModel
 	/// </summary>
 	public Optional<Stream> DiscoverySplash { get; set; }
 
+	// TODO: Check on this
 	/// <summary>
 	/// The new home header of the guild.
 	/// </summary>

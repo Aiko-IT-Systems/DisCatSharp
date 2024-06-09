@@ -44,14 +44,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	public ApplicationFlags Flags { get; internal set; }
 
 	/// <summary>
-	/// Gets the application's owners.
-	/// </summary>
-	[Deprecated]
-	public List<DiscordUser> Owners
-		=> this.Members;
-
-	/// <summary>
-	/// Gets the application's members.
+	/// Gets the application's team members.
 	/// </summary>
 	public List<DiscordUser> Members { get; internal set; }
 

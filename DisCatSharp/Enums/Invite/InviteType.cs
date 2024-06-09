@@ -20,9 +20,5 @@ public enum InviteType
 	/// <summary>
 	/// Represents a friend invite.
 	/// </summary>
-	Friend = 2,
-
-	/// <inheritdoc cref="Friend"/>
-	[Deprecated("We used the wrong name.")]
-	User = Friend
+	Friend = 2
 }

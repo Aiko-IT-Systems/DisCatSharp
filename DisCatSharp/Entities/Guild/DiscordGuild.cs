@@ -558,7 +558,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <summary>
 	/// Gets the guild inventory settings.
 	/// </summary>
-	[JsonProperty("inventory_settings", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
+	[JsonProperty("inventory_settings", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated]
 	public DiscordGuildInventorySettings? InventorySettings { get; internal set; }
 
 	[JsonProperty("embed_enabled")]
@@ -885,7 +885,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	/// <param name="enabled">Whether to allow emoji packs to be collected.</param>
 	/// <param name="reason">The audit log reason, currently not supported.</param>
-	[DiscordInExperiment, RequiresFeature(Attributes.Features.Community | Attributes.Features.Override)]
+	[DiscordDeprecated, RequiresFeature(Attributes.Features.Community | Attributes.Features.Override)]
 	public Task<DiscordGuild> ModifyInventorySettingsAsync(bool enabled, string? reason = null)
 		=> this.Discord.ApiClient.ModifyGuildInventorySettingsAsync(this.Id, enabled, reason);
 

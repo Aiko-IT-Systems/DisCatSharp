@@ -459,7 +459,6 @@ public abstract class BaseDiscordClient : IDisposable
 	/// Enables user app functionality.
 	/// </summary>
 	/// <returns>The updated application.</returns>
-	[DiscordInExperiment, RequiresFeature(Features.Experiment, "Requires you to be part of the user apps experiment and the apps owner.")]
 	public async Task<DiscordApplication> EnableUserAppsAsync()
 	{
 		var currentApplication = await this.GetCurrentApplicationAsync().ConfigureAwait(false);
@@ -497,7 +496,6 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <param name="flags">The new application flags. Can be only limited gateway intents.</param>
 	/// <param name="integrationTypesConfig">The new integration types configuration.</param>
 	/// <returns>The updated application.</returns>
-	[DiscordInExperiment, RequiresFeature(Features.Experiment, "Requires you to be part of the user apps experiment and the apps owner.")]
 	public async Task<DiscordApplication> UpdateCurrentApplicationInfoAsync(
 		Optional<string?> description,
 		Optional<string?> interactionsEndpointUrl,
@@ -507,7 +505,7 @@ public abstract class BaseDiscordClient : IDisposable
 		Optional<Stream?> icon,
 		Optional<Stream?> coverImage,
 		Optional<ApplicationFlags> flags,
-		[DiscordInExperiment] Optional<DiscordIntegrationTypesConfig?> integrationTypesConfig
+		Optional<DiscordIntegrationTypesConfig?> integrationTypesConfig
 	)
 	{
 		var iconb64 = ImageTool.Base64FromStream(icon);

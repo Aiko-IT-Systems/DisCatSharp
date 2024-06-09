@@ -14,7 +14,7 @@ public enum AutomodTriggerType
 	Keyword = 1,
 
 	/// <summary>
-	/// Checks if content contains a suspocopis link.
+	/// Checks if content contains a suspicious link.
 	/// </summary>
 	[DiscordDeprecated]
 	SuspiciousLinkFilter = 2,

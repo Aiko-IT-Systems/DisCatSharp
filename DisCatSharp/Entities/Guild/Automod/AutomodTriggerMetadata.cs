@@ -50,6 +50,6 @@ public class AutomodTriggerMetadata : ObservableApiObject
 	/// <summary>
 	/// Whether to automatically detect mention raids.
 	/// </summary>
-	[JsonProperty("mention_raid_protection_enabled", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment]
+	[JsonProperty("mention_raid_protection_enabled", NullValueHandling = NullValueHandling.Ignore)]
 	public bool? MentionRaidProtectionEnabled { get; set; } = null;
 }

@@ -337,14 +337,14 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <summary>
 	/// Gets the member's username with global name.
 	/// </summary>
-	[JsonIgnore, DiscordInExperiment]
+	[JsonIgnore]
 	public override string UsernameWithGlobalName
 		=> this.User.UsernameWithGlobalName;
 
 	/// <summary>
 	/// Gets the member's global name.
 	/// </summary>
-	[JsonIgnore, DiscordInExperiment]
+	[JsonIgnore]
 	public override string? GlobalName
 	{
 		get => this.User.GlobalName;

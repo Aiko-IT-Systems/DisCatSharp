@@ -26,7 +26,12 @@ public enum ButtonStyle
 	Danger = 4,
 
 	/// <summary>
-	/// Link Button.
+	/// Link button.
 	/// </summary>
-	Link = 5
+	Link = 5,
+
+	/// <summary>
+	/// Premium button.
+	/// </summary>
+	Premium = 6
 }
