@@ -1,10 +1,10 @@
 ---
 uid: sec_comp_sentry
-title: Sentry Vulnerability Report
+title: Sentry Safety Report
 author: DisCatSharp Team
 ---
 
-# Disclaimer on Recent Claims and Sentry Integration Measures
+# Recent Claims about the Sentry Integration and Measures Taken
 
 ## Overview
 
