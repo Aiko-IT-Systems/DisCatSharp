@@ -354,6 +354,27 @@ public sealed class DiscordEmbedBuilder
 		if (this._fields.Count >= 25)
 			throw new InvalidOperationException("Cannot add more than 25 fields.");
 
+
+		if (string.IsNullOrWhiteSpace(field.Name))
+		{
+			ArgumentNullException.ThrowIfNull(field.Name);
+
+			throw new ArgumentException("Name cannot be empty or whitespace.", nameof(field));
+		}
+
+		if (field.Name.Length > 256)
+			throw new ArgumentException("Embed field name length cannot exceed 256 characters.", nameof(field));
+
+		if (string.IsNullOrWhiteSpace(field.Value))
+		{
+			ArgumentNullException.ThrowIfNull(field.Value);
+
+			throw new ArgumentException("Value cannot be empty or whitespace.", nameof(field));
+		}
+
+		if (field.Value.Length > 1024)
+			throw new ArgumentException("Embed field value length cannot exceed 1024 characters.", nameof(field));
+
 		this._fields.Add(field);
 
 		return this;
