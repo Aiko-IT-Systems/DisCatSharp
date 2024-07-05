@@ -1,5 +1,3 @@
-using System;
-
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
@@ -9,57 +7,19 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class DiscordEmbedField : ObservableApiObject
 {
-	private string _name;
-
 	/// <summary>
 	/// The name of the field.
 	/// Must be non-null, non-empty and &lt;= 256 characters.
 	/// </summary>
 	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
-	public string Name
-	{
-		get => this._name;
-		set
-		{
-			if (string.IsNullOrWhiteSpace(value))
-			{
-				ArgumentNullException.ThrowIfNull(value);
+	public string Name { get; set; }
 
-				throw new ArgumentException("Name cannot be empty or whitespace.", nameof(value));
-			}
-
-			if (value.Length > 256)
-				throw new ArgumentException("Embed field name length cannot exceed 256 characters.");
-
-			this._name = value;
-		}
-	}
-
-	private string _value;
-
-	/// <summary>
+	/// /// <summary>
 	/// The value of the field.
 	/// Must be non-null, non-empty and &lt;= 1024 characters.
 	/// </summary>
 	[JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
-	public string Value
-	{
-		get => this._value;
-		set
-		{
-			if (string.IsNullOrWhiteSpace(value))
-			{
-				ArgumentNullException.ThrowIfNull(value);
-
-				throw new ArgumentException("Value cannot be empty or whitespace.", nameof(value));
-			}
-
-			if (value.Length > 1024)
-				throw new ArgumentException("Embed field value length cannot exceed 1024 characters.");
-
-			this._value = value;
-		}
-	}
+	public string Value { get; set; }
 
 	/// <summary>
 	/// Whether or not this field should display inline.
