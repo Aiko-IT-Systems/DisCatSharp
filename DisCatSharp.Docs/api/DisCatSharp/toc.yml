@@ -1,0 +1,938 @@
+### YamlMime:TableOfContent
+items:
+- uid: DisCatSharp
+  name: DisCatSharp
+  items:
+  - uid: DisCatSharp.BaseDiscordClient
+    name: BaseDiscordClient
+  - uid: DisCatSharp.BaseExtension
+    name: BaseExtension
+  - uid: DisCatSharp.DefaultLogger
+    name: DefaultLogger
+  - uid: DisCatSharp.DiscordClient
+    name: DiscordClient
+  - uid: DisCatSharp.DiscordConfiguration
+    name: DiscordConfiguration
+  - uid: DisCatSharp.DiscordOAuth2Client
+    name: DiscordOAuth2Client
+  - uid: DisCatSharp.DiscordShardedClient
+    name: DiscordShardedClient
+  - uid: DisCatSharp.DiscordWebhookClient
+    name: DiscordWebhookClient
+  - uid: DisCatSharp.Formatter
+    name: Formatter
+  - uid: DisCatSharp.ImageFormat
+    name: ImageFormat
+  - uid: DisCatSharp.ImageTool
+    name: ImageTool
+  - uid: DisCatSharp.Internals
+    name: Internals
+  - uid: DisCatSharp.LoggerEvents
+    name: LoggerEvents
+  - uid: DisCatSharp.RingBuffer`1
+    name: RingBuffer<T>
+  - uid: DisCatSharp.Utilities
+    name: Utilities
+- uid: DisCatSharp.Entities
+  name: DisCatSharp.Entities
+  items:
+  - uid: DisCatSharp.Entities.ActivityType
+    name: ActivityType
+  - uid: DisCatSharp.Entities.ApplicationAssetType
+    name: ApplicationAssetType
+  - uid: DisCatSharp.Entities.AuthorizingIntegrationOwners
+    name: AuthorizingIntegrationOwners
+  - uid: DisCatSharp.Entities.AutomodAction
+    name: AutomodAction
+  - uid: DisCatSharp.Entities.AutomodActionMetadata
+    name: AutomodActionMetadata
+  - uid: DisCatSharp.Entities.AutomodRule
+    name: AutomodRule
+  - uid: DisCatSharp.Entities.AutomodTriggerMetadata
+    name: AutomodTriggerMetadata
+  - uid: DisCatSharp.Entities.AvatarDecorationData
+    name: AvatarDecorationData
+  - uid: DisCatSharp.Entities.DiscordActionRowComponent
+    name: DiscordActionRowComponent
+  - uid: DisCatSharp.Entities.DiscordActionRowComponentResult
+    name: DiscordActionRowComponentResult
+  - uid: DisCatSharp.Entities.DiscordActivity
+    name: DiscordActivity
+  - uid: DisCatSharp.Entities.DiscordApplication
+    name: DiscordApplication
+  - uid: DisCatSharp.Entities.DiscordApplicationAsset
+    name: DiscordApplicationAsset
+  - uid: DisCatSharp.Entities.DiscordApplicationCommand
+    name: DiscordApplicationCommand
+  - uid: DisCatSharp.Entities.DiscordApplicationCommandAutocompleteChoice
+    name: DiscordApplicationCommandAutocompleteChoice
+  - uid: DisCatSharp.Entities.DiscordApplicationCommandLocalization
+    name: DiscordApplicationCommandLocalization
+  - uid: DisCatSharp.Entities.DiscordApplicationCommandOption
+    name: DiscordApplicationCommandOption
+  - uid: DisCatSharp.Entities.DiscordApplicationCommandOptionChoice
+    name: DiscordApplicationCommandOptionChoice
+  - uid: DisCatSharp.Entities.DiscordApplicationCommandPermission
+    name: DiscordApplicationCommandPermission
+  - uid: DisCatSharp.Entities.DiscordApplicationInstallParams
+    name: DiscordApplicationInstallParams
+  - uid: DisCatSharp.Entities.DiscordApplicationRoleConnectionMetadata
+    name: DiscordApplicationRoleConnectionMetadata
+  - uid: DisCatSharp.Entities.DiscordAsset
+    name: DiscordAsset
+  - uid: DisCatSharp.Entities.DiscordAttachment
+    name: DiscordAttachment
+  - uid: DisCatSharp.Entities.DiscordAuditLogBanEntry
+    name: DiscordAuditLogBanEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogBotAddEntry
+    name: DiscordAuditLogBotAddEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogChannelEntry
+    name: DiscordAuditLogChannelEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogEmojiEntry
+    name: DiscordAuditLogEmojiEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogEntry
+    name: DiscordAuditLogEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogGuildEntry
+    name: DiscordAuditLogGuildEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogGuildScheduledEventEntry
+    name: DiscordAuditLogGuildScheduledEventEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogIntegrationEntry
+    name: DiscordAuditLogIntegrationEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogInviteEntry
+    name: DiscordAuditLogInviteEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogKickEntry
+    name: DiscordAuditLogKickEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogMemberDisconnectEntry
+    name: DiscordAuditLogMemberDisconnectEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogMemberMoveEntry
+    name: DiscordAuditLogMemberMoveEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogMemberUpdateEntry
+    name: DiscordAuditLogMemberUpdateEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogMessageEntry
+    name: DiscordAuditLogMessageEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogMessagePinEntry
+    name: DiscordAuditLogMessagePinEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogOverwriteEntry
+    name: DiscordAuditLogOverwriteEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogPruneEntry
+    name: DiscordAuditLogPruneEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogRoleUpdateEntry
+    name: DiscordAuditLogRoleUpdateEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogStageEntry
+    name: DiscordAuditLogStageEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogStickerEntry
+    name: DiscordAuditLogStickerEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogThreadEntry
+    name: DiscordAuditLogThreadEntry
+  - uid: DisCatSharp.Entities.DiscordAuditLogWebhookEntry
+    name: DiscordAuditLogWebhookEntry
+  - uid: DisCatSharp.Entities.DiscordBan
+    name: DiscordBan
+  - uid: DisCatSharp.Entities.DiscordBaseSelectComponent
+    name: DiscordBaseSelectComponent
+  - uid: DisCatSharp.Entities.DiscordButtonComponent
+    name: DiscordButtonComponent
+  - uid: DisCatSharp.Entities.DiscordCallbackHintBuilder
+    name: DiscordCallbackHintBuilder
+  - uid: DisCatSharp.Entities.DiscordChannel
+    name: DiscordChannel
+  - uid: DisCatSharp.Entities.DiscordChannelSelectComponent
+    name: DiscordChannelSelectComponent
+  - uid: DisCatSharp.Entities.DiscordClientStatus
+    name: DiscordClientStatus
+  - uid: DisCatSharp.Entities.DiscordColor
+    name: DiscordColor
+  - uid: DisCatSharp.Entities.DiscordComponent
+    name: DiscordComponent
+  - uid: DisCatSharp.Entities.DiscordComponentEmoji
+    name: DiscordComponentEmoji
+  - uid: DisCatSharp.Entities.DiscordComponentResult
+    name: DiscordComponentResult
+  - uid: DisCatSharp.Entities.DiscordConnection
+    name: DiscordConnection
+  - uid: DisCatSharp.Entities.DiscordCustomStatus
+    name: DiscordCustomStatus
+  - uid: DisCatSharp.Entities.DiscordDmChannel
+    name: DiscordDmChannel
+  - uid: DisCatSharp.Entities.DiscordEmbed
+    name: DiscordEmbed
+  - uid: DisCatSharp.Entities.DiscordEmbedAuthor
+    name: DiscordEmbedAuthor
+  - uid: DisCatSharp.Entities.DiscordEmbedBuilder
+    name: DiscordEmbedBuilder
+  - uid: DisCatSharp.Entities.DiscordEmbedBuilder.EmbedAuthor
+    name: DiscordEmbedBuilder.EmbedAuthor
+  - uid: DisCatSharp.Entities.DiscordEmbedBuilder.EmbedFooter
+    name: DiscordEmbedBuilder.EmbedFooter
+  - uid: DisCatSharp.Entities.DiscordEmbedBuilder.EmbedThumbnail
+    name: DiscordEmbedBuilder.EmbedThumbnail
+  - uid: DisCatSharp.Entities.DiscordEmbedField
+    name: DiscordEmbedField
+  - uid: DisCatSharp.Entities.DiscordEmbedFooter
+    name: DiscordEmbedFooter
+  - uid: DisCatSharp.Entities.DiscordEmbedImage
+    name: DiscordEmbedImage
+  - uid: DisCatSharp.Entities.DiscordEmbedProvider
+    name: DiscordEmbedProvider
+  - uid: DisCatSharp.Entities.DiscordEmbedThumbnail
+    name: DiscordEmbedThumbnail
+  - uid: DisCatSharp.Entities.DiscordEmbedVideo
+    name: DiscordEmbedVideo
+  - uid: DisCatSharp.Entities.DiscordEmoji
+    name: DiscordEmoji
+  - uid: DisCatSharp.Entities.DiscordEntitlement
+    name: DiscordEntitlement
+  - uid: DisCatSharp.Entities.DiscordFollowedChannel
+    name: DiscordFollowedChannel
+  - uid: DisCatSharp.Entities.DiscordFollowupMessageBuilder
+    name: DiscordFollowupMessageBuilder
+  - uid: DisCatSharp.Entities.DiscordGuild
+    name: DiscordGuild
+  - uid: DisCatSharp.Entities.DiscordGuildApplicationCommandPermission
+    name: DiscordGuildApplicationCommandPermission
+  - uid: DisCatSharp.Entities.DiscordGuildDirectoryChannel
+    name: DiscordGuildDirectoryChannel
+  - uid: DisCatSharp.Entities.DiscordGuildDirectoryEntry
+    name: DiscordGuildDirectoryEntry
+  - uid: DisCatSharp.Entities.DiscordGuildEmoji
+    name: DiscordGuildEmoji
+  - uid: DisCatSharp.Entities.DiscordGuildInventorySettings
+    name: DiscordGuildInventorySettings
+  - uid: DisCatSharp.Entities.DiscordGuildMembershipScreening
+    name: DiscordGuildMembershipScreening
+  - uid: DisCatSharp.Entities.DiscordGuildMembershipScreeningField
+    name: DiscordGuildMembershipScreeningField
+  - uid: DisCatSharp.Entities.DiscordGuildPreview
+    name: DiscordGuildPreview
+  - uid: DisCatSharp.Entities.DiscordGuildTemplate
+    name: DiscordGuildTemplate
+  - uid: DisCatSharp.Entities.DiscordGuildWelcomeScreen
+    name: DiscordGuildWelcomeScreen
+  - uid: DisCatSharp.Entities.DiscordGuildWelcomeScreenChannel
+    name: DiscordGuildWelcomeScreenChannel
+  - uid: DisCatSharp.Entities.DiscordIntegration
+    name: DiscordIntegration
+  - uid: DisCatSharp.Entities.DiscordIntegrationAccount
+    name: DiscordIntegrationAccount
+  - uid: DisCatSharp.Entities.DiscordInteraction
+    name: DiscordInteraction
+  - uid: DisCatSharp.Entities.DiscordInteractionCallbackHint
+    name: DiscordInteractionCallbackHint
+  - uid: DisCatSharp.Entities.DiscordInteractionData
+    name: DiscordInteractionData
+  - uid: DisCatSharp.Entities.DiscordInteractionDataOption
+    name: DiscordInteractionDataOption
+  - uid: DisCatSharp.Entities.DiscordInteractionModalBuilder
+    name: DiscordInteractionModalBuilder
+  - uid: DisCatSharp.Entities.DiscordInteractionResolvedCollection
+    name: DiscordInteractionResolvedCollection
+  - uid: DisCatSharp.Entities.DiscordInteractionResponseBuilder
+    name: DiscordInteractionResponseBuilder
+  - uid: DisCatSharp.Entities.DiscordInvite
+    name: DiscordInvite
+  - uid: DisCatSharp.Entities.DiscordInviteChannel
+    name: DiscordInviteChannel
+  - uid: DisCatSharp.Entities.DiscordInviteGuild
+    name: DiscordInviteGuild
+  - uid: DisCatSharp.Entities.DiscordInviteStage
+    name: DiscordInviteStage
+  - uid: DisCatSharp.Entities.DiscordLinkButtonComponent
+    name: DiscordLinkButtonComponent
+  - uid: DisCatSharp.Entities.DiscordLocales
+    name: DiscordLocales
+  - uid: DisCatSharp.Entities.DiscordMember
+    name: DiscordMember
+  - uid: DisCatSharp.Entities.DiscordMentionableSelectComponent
+    name: DiscordMentionableSelectComponent
+  - uid: DisCatSharp.Entities.DiscordMessage
+    name: DiscordMessage
+  - uid: DisCatSharp.Entities.DiscordMessageActivity
+    name: DiscordMessageActivity
+  - uid: DisCatSharp.Entities.DiscordMessageApplication
+    name: DiscordMessageApplication
+  - uid: DisCatSharp.Entities.DiscordMessageBuilder
+    name: DiscordMessageBuilder
+  - uid: DisCatSharp.Entities.DiscordMessageFile
+    name: DiscordMessageFile
+  - uid: DisCatSharp.Entities.DiscordMessageInteraction
+    name: DiscordMessageInteraction
+  - uid: DisCatSharp.Entities.DiscordMessageReference
+    name: DiscordMessageReference
+  - uid: DisCatSharp.Entities.DiscordOnboarding
+    name: DiscordOnboarding
+  - uid: DisCatSharp.Entities.DiscordOnboardingPrompt
+    name: DiscordOnboardingPrompt
+  - uid: DisCatSharp.Entities.DiscordOnboardingPromptOption
+    name: DiscordOnboardingPromptOption
+  - uid: DisCatSharp.Entities.DiscordOverwrite
+    name: DiscordOverwrite
+  - uid: DisCatSharp.Entities.DiscordOverwriteBuilder
+    name: DiscordOverwriteBuilder
+  - uid: DisCatSharp.Entities.DiscordOverwriteBuilderExtensions
+    name: DiscordOverwriteBuilderExtensions
+  - uid: DisCatSharp.Entities.DiscordPresence
+    name: DiscordPresence
+  - uid: DisCatSharp.Entities.DiscordProtocol
+    name: DiscordProtocol
+  - uid: DisCatSharp.Entities.DiscordReaction
+    name: DiscordReaction
+  - uid: DisCatSharp.Entities.DiscordRichPresence
+    name: DiscordRichPresence
+  - uid: DisCatSharp.Entities.DiscordRole
+    name: DiscordRole
+  - uid: DisCatSharp.Entities.DiscordRoleSelectComponent
+    name: DiscordRoleSelectComponent
+  - uid: DisCatSharp.Entities.DiscordRoleTags
+    name: DiscordRoleTags
+  - uid: DisCatSharp.Entities.DiscordRpcApplication
+    name: DiscordRpcApplication
+  - uid: DisCatSharp.Entities.DiscordScheduledEvent
+    name: DiscordScheduledEvent
+  - uid: DisCatSharp.Entities.DiscordScheduledEventEntityMetadata
+    name: DiscordScheduledEventEntityMetadata
+  - uid: DisCatSharp.Entities.DiscordScheduledEventUser
+    name: DiscordScheduledEventUser
+  - uid: DisCatSharp.Entities.DiscordSelectDefaultValue
+    name: DiscordSelectDefaultValue
+  - uid: DisCatSharp.Entities.DiscordServerGuide
+    name: DiscordServerGuide
+  - uid: DisCatSharp.Entities.DiscordSku
+    name: DiscordSku
+  - uid: DisCatSharp.Entities.DiscordSpotifyAsset
+    name: DiscordSpotifyAsset
+  - uid: DisCatSharp.Entities.DiscordStageInstance
+    name: DiscordStageInstance
+  - uid: DisCatSharp.Entities.DiscordSticker
+    name: DiscordSticker
+  - uid: DisCatSharp.Entities.DiscordStickerPack
+    name: DiscordStickerPack
+  - uid: DisCatSharp.Entities.DiscordStoreSku
+    name: DiscordStoreSku
+  - uid: DisCatSharp.Entities.DiscordStringSelectComponent
+    name: DiscordStringSelectComponent
+  - uid: DisCatSharp.Entities.DiscordStringSelectComponentOption
+    name: DiscordStringSelectComponentOption
+  - uid: DisCatSharp.Entities.DiscordTeam
+    name: DiscordTeam
+  - uid: DisCatSharp.Entities.DiscordTeamMember
+    name: DiscordTeamMember
+  - uid: DisCatSharp.Entities.DiscordTeamMembershipStatus
+    name: DiscordTeamMembershipStatus
+  - uid: DisCatSharp.Entities.DiscordTextComponent
+    name: DiscordTextComponent
+  - uid: DisCatSharp.Entities.DiscordThreadChannel
+    name: DiscordThreadChannel
+  - uid: DisCatSharp.Entities.DiscordThreadChannelMember
+    name: DiscordThreadChannelMember
+  - uid: DisCatSharp.Entities.DiscordThreadChannelMetadata
+    name: DiscordThreadChannelMetadata
+  - uid: DisCatSharp.Entities.DiscordThreadResult
+    name: DiscordThreadResult
+  - uid: DisCatSharp.Entities.DiscordUnicodeEmoji
+    name: DiscordUnicodeEmoji
+  - uid: DisCatSharp.Entities.DiscordUser
+    name: DiscordUser
+  - uid: DisCatSharp.Entities.DiscordUserSelectComponent
+    name: DiscordUserSelectComponent
+  - uid: DisCatSharp.Entities.DiscordVoiceRegion
+    name: DiscordVoiceRegion
+  - uid: DisCatSharp.Entities.DiscordVoiceState
+    name: DiscordVoiceState
+  - uid: DisCatSharp.Entities.DiscordWebhook
+    name: DiscordWebhook
+  - uid: DisCatSharp.Entities.DiscordWebhookBuilder
+    name: DiscordWebhookBuilder
+  - uid: DisCatSharp.Entities.DiscordWidget
+    name: DiscordWidget
+  - uid: DisCatSharp.Entities.DiscordWidgetMember
+    name: DiscordWidgetMember
+  - uid: DisCatSharp.Entities.DiscordWidgetSettings
+    name: DiscordWidgetSettings
+  - uid: DisCatSharp.Entities.EveryoneMention
+    name: EveryoneMention
+  - uid: DisCatSharp.Entities.ForumPostTag
+    name: ForumPostTag
+  - uid: DisCatSharp.Entities.ForumReactionEmoji
+    name: ForumReactionEmoji
+  - uid: DisCatSharp.Entities.GcpAttachment
+    name: GcpAttachment
+  - uid: DisCatSharp.Entities.GcpAttachmentUploadInformation
+    name: GcpAttachmentUploadInformation
+  - uid: DisCatSharp.Entities.GcpAttachmentsResponse
+    name: GcpAttachmentsResponse
+  - uid: DisCatSharp.Entities.GuildFeatures
+    name: GuildFeatures
+  - uid: DisCatSharp.Entities.GuildFeaturesEnum
+    name: GuildFeaturesEnum
+  - uid: DisCatSharp.Entities.IMention
+    name: IMention
+  - uid: DisCatSharp.Entities.IOptional
+    name: IOptional
+  - uid: DisCatSharp.Entities.IncidentsData
+    name: IncidentsData
+  - uid: DisCatSharp.Entities.Mentions
+    name: Mentions
+  - uid: DisCatSharp.Entities.NewMemberAction
+    name: NewMemberAction
+  - uid: DisCatSharp.Entities.None
+    name: None
+  - uid: DisCatSharp.Entities.NullableSnowflakeObject
+    name: NullableSnowflakeObject
+  - uid: DisCatSharp.Entities.ObservableApiObject
+    name: ObservableApiObject
+  - uid: DisCatSharp.Entities.Optional
+    name: Optional
+  - uid: DisCatSharp.Entities.Optional`1
+    name: Optional<T>
+  - uid: DisCatSharp.Entities.PropertyChange`1
+    name: PropertyChange<T>
+  - uid: DisCatSharp.Entities.RepliedUserMention
+    name: RepliedUserMention
+  - uid: DisCatSharp.Entities.ResourceChannel
+    name: ResourceChannel
+  - uid: DisCatSharp.Entities.RoleMention
+    name: RoleMention
+  - uid: DisCatSharp.Entities.SkuPrice
+    name: SkuPrice
+  - uid: DisCatSharp.Entities.SnowflakeObject
+    name: SnowflakeObject
+  - uid: DisCatSharp.Entities.StickerFormat
+    name: StickerFormat
+  - uid: DisCatSharp.Entities.StickerType
+    name: StickerType
+  - uid: DisCatSharp.Entities.UserMention
+    name: UserMention
+  - uid: DisCatSharp.Entities.UserStatus
+    name: UserStatus
+  - uid: DisCatSharp.Entities.UserWithIdOnly
+    name: UserWithIdOnly
+  - uid: DisCatSharp.Entities.WelcomeMessage
+    name: WelcomeMessage
+- uid: DisCatSharp.Entities.Core
+  name: DisCatSharp.Entities.Core
+  items:
+  - uid: DisCatSharp.Entities.Core.CooldownBucket
+    name: CooldownBucket
+  - uid: DisCatSharp.Entities.Core.DisCatSharpCommandContext
+    name: DisCatSharpCommandContext
+  - uid: DisCatSharp.Entities.Core.IBucket
+    name: IBucket
+  - uid: DisCatSharp.Entities.Core.ICooldown`2
+    name: ICooldown<TContextType, TBucketType>
+- uid: DisCatSharp.Entities.OAuth2
+  name: DisCatSharp.Entities.OAuth2
+  items:
+  - uid: DisCatSharp.Entities.OAuth2.ApplicationRoleConnectionMetadata
+    name: ApplicationRoleConnectionMetadata
+  - uid: DisCatSharp.Entities.OAuth2.DiscordAccessToken
+    name: DiscordAccessToken
+  - uid: DisCatSharp.Entities.OAuth2.DiscordApplicationRoleConnection
+    name: DiscordApplicationRoleConnection
+  - uid: DisCatSharp.Entities.OAuth2.DiscordAuthorizationInformation
+    name: DiscordAuthorizationInformation
+- uid: DisCatSharp.Enums
+  name: DisCatSharp.Enums
+  items:
+  - uid: DisCatSharp.Enums.ApiChannel
+    name: ApiChannel
+  - uid: DisCatSharp.Enums.ApplicationCommandContexts
+    name: ApplicationCommandContexts
+  - uid: DisCatSharp.Enums.ApplicationCommandIntegrationTypes
+    name: ApplicationCommandIntegrationTypes
+  - uid: DisCatSharp.Enums.ApplicationCommandOptionType
+    name: ApplicationCommandOptionType
+  - uid: DisCatSharp.Enums.ApplicationCommandPermissionType
+    name: ApplicationCommandPermissionType
+  - uid: DisCatSharp.Enums.ApplicationCommandType
+    name: ApplicationCommandType
+  - uid: DisCatSharp.Enums.ApplicationDiscoverabilityState
+    name: ApplicationDiscoverabilityState
+  - uid: DisCatSharp.Enums.ApplicationDiscoveryEligibilityFlagExtensions
+    name: ApplicationDiscoveryEligibilityFlagExtensions
+  - uid: DisCatSharp.Enums.ApplicationDiscoveryEligibilityFlags
+    name: ApplicationDiscoveryEligibilityFlags
+  - uid: DisCatSharp.Enums.ApplicationFlags
+    name: ApplicationFlags
+  - uid: DisCatSharp.Enums.ApplicationInteractionsVersion
+    name: ApplicationInteractionsVersion
+  - uid: DisCatSharp.Enums.ApplicationMonetizationEligibilityFlagExtensions
+    name: ApplicationMonetizationEligibilityFlagExtensions
+  - uid: DisCatSharp.Enums.ApplicationMonetizationEligibilityFlags
+    name: ApplicationMonetizationEligibilityFlags
+  - uid: DisCatSharp.Enums.ApplicationMonetizationState
+    name: ApplicationMonetizationState
+  - uid: DisCatSharp.Enums.ApplicationRoleConnectionMetadataType
+    name: ApplicationRoleConnectionMetadataType
+  - uid: DisCatSharp.Enums.ApplicationVerificationState
+    name: ApplicationVerificationState
+  - uid: DisCatSharp.Enums.AttachmentFlagExtensions
+    name: AttachmentFlagExtensions
+  - uid: DisCatSharp.Enums.AttachmentFlags
+    name: AttachmentFlags
+  - uid: DisCatSharp.Enums.AuditLogActionCategory
+    name: AuditLogActionCategory
+  - uid: DisCatSharp.Enums.AuditLogActionType
+    name: AuditLogActionType
+  - uid: DisCatSharp.Enums.AutomodActionType
+    name: AutomodActionType
+  - uid: DisCatSharp.Enums.AutomodEventType
+    name: AutomodEventType
+  - uid: DisCatSharp.Enums.AutomodKeywordPresetType
+    name: AutomodKeywordPresetType
+  - uid: DisCatSharp.Enums.AutomodTriggerType
+    name: AutomodTriggerType
+  - uid: DisCatSharp.Enums.ButtonStyle
+    name: ButtonStyle
+  - uid: DisCatSharp.Enums.ChannelFlagExtensions
+    name: ChannelFlagExtensions
+  - uid: DisCatSharp.Enums.ChannelFlags
+    name: ChannelFlags
+  - uid: DisCatSharp.Enums.ChannelType
+    name: ChannelType
+  - uid: DisCatSharp.Enums.ComponentType
+    name: ComponentType
+  - uid: DisCatSharp.Enums.ConnectionMetadataVisibilityType
+    name: ConnectionMetadataVisibilityType
+  - uid: DisCatSharp.Enums.ConnectionVisibilityType
+    name: ConnectionVisibilityType
+  - uid: DisCatSharp.Enums.CoreDomain
+    name: CoreDomain
+  - uid: DisCatSharp.Enums.DefaultMessageNotifications
+    name: DefaultMessageNotifications
+  - uid: DisCatSharp.Enums.DirectoryCategory
+    name: DirectoryCategory
+  - uid: DisCatSharp.Enums.DiscordDomain
+    name: DiscordDomain
+  - uid: DisCatSharp.Enums.DiscordEvent
+    name: DiscordEvent
+  - uid: DisCatSharp.Enums.DiscordIntentExtensions
+    name: DiscordIntentExtensions
+  - uid: DisCatSharp.Enums.DiscordIntents
+    name: DiscordIntents
+  - uid: DisCatSharp.Enums.DiscordShortlink
+    name: DiscordShortlink
+  - uid: DisCatSharp.Enums.DomainHelpAttribute
+    name: DomainHelpAttribute
+  - uid: DisCatSharp.Enums.EntitlementOwnerType
+    name: EntitlementOwnerType
+  - uid: DisCatSharp.Enums.EntitlementType
+    name: EntitlementType
+  - uid: DisCatSharp.Enums.EventAttribute
+    name: EventAttribute
+  - uid: DisCatSharp.Enums.EventHandlerAttribute
+    name: EventHandlerAttribute
+  - uid: DisCatSharp.Enums.ExplicitContentFilter
+    name: ExplicitContentFilter
+  - uid: DisCatSharp.Enums.ExplicitContentFilterLevel
+    name: ExplicitContentFilterLevel
+  - uid: DisCatSharp.Enums.ForumLayout
+    name: ForumLayout
+  - uid: DisCatSharp.Enums.ForumPostSortOrder
+    name: ForumPostSortOrder
+  - uid: DisCatSharp.Enums.GatewayCompressionLevel
+    name: GatewayCompressionLevel
+  - uid: DisCatSharp.Enums.HubType
+    name: HubType
+  - uid: DisCatSharp.Enums.IframeModalSize
+    name: IframeModalSize
+  - uid: DisCatSharp.Enums.IntegrationExpireBehavior
+    name: IntegrationExpireBehavior
+  - uid: DisCatSharp.Enums.InteractionCallbackEphemerality
+    name: InteractionCallbackEphemerality
+  - uid: DisCatSharp.Enums.InteractionResponseType
+    name: InteractionResponseType
+  - uid: DisCatSharp.Enums.InteractionType
+    name: InteractionType
+  - uid: DisCatSharp.Enums.InviteFlagExtensions
+    name: InviteFlagExtensions
+  - uid: DisCatSharp.Enums.InviteFlags
+    name: InviteFlags
+  - uid: DisCatSharp.Enums.InviteType
+    name: InviteType
+  - uid: DisCatSharp.Enums.MemberFlagExtensions
+    name: MemberFlagExtensions
+  - uid: DisCatSharp.Enums.MemberFlags
+    name: MemberFlags
+  - uid: DisCatSharp.Enums.MembershipScreeningFieldType
+    name: MembershipScreeningFieldType
+  - uid: DisCatSharp.Enums.MentionType
+    name: MentionType
+  - uid: DisCatSharp.Enums.MessageActivityType
+    name: MessageActivityType
+  - uid: DisCatSharp.Enums.MessageFlagExtensions
+    name: MessageFlagExtensions
+  - uid: DisCatSharp.Enums.MessageFlags
+    name: MessageFlags
+  - uid: DisCatSharp.Enums.MessageType
+    name: MessageType
+  - uid: DisCatSharp.Enums.MfaLevel
+    name: MfaLevel
+  - uid: DisCatSharp.Enums.NewMemberActionType
+    name: NewMemberActionType
+  - uid: DisCatSharp.Enums.NsfwLevel
+    name: NsfwLevel
+  - uid: DisCatSharp.Enums.OAuth
+    name: OAuth
+  - uid: DisCatSharp.Enums.OAuthScopes
+    name: OAuthScopes
+  - uid: DisCatSharp.Enums.OnboardingMode
+    name: OnboardingMode
+  - uid: DisCatSharp.Enums.OtherDomain
+    name: OtherDomain
+  - uid: DisCatSharp.Enums.OverwriteType
+    name: OverwriteType
+  - uid: DisCatSharp.Enums.PermissionLevel
+    name: PermissionLevel
+  - uid: DisCatSharp.Enums.PermissionMethods
+    name: PermissionMethods
+  - uid: DisCatSharp.Enums.PermissionStringAttribute
+    name: PermissionStringAttribute
+  - uid: DisCatSharp.Enums.Permissions
+    name: Permissions
+  - uid: DisCatSharp.Enums.PremiumTier
+    name: PremiumTier
+  - uid: DisCatSharp.Enums.PremiumType
+    name: PremiumType
+  - uid: DisCatSharp.Enums.PriceTierType
+    name: PriceTierType
+  - uid: DisCatSharp.Enums.ProductLine
+    name: ProductLine
+  - uid: DisCatSharp.Enums.PromptType
+    name: PromptType
+  - uid: DisCatSharp.Enums.RoleFlags
+    name: RoleFlags
+  - uid: DisCatSharp.Enums.RpcApplicationState
+    name: RpcApplicationState
+  - uid: DisCatSharp.Enums.ScheduledEventEntityType
+    name: ScheduledEventEntityType
+  - uid: DisCatSharp.Enums.ScheduledEventStatus
+    name: ScheduledEventStatus
+  - uid: DisCatSharp.Enums.SkuAccessType
+    name: SkuAccessType
+  - uid: DisCatSharp.Enums.SkuFlagExtensions
+    name: SkuFlagExtensions
+  - uid: DisCatSharp.Enums.SkuFlags
+    name: SkuFlags
+  - uid: DisCatSharp.Enums.SkuType
+    name: SkuType
+  - uid: DisCatSharp.Enums.SpeakingFlagExtensions
+    name: SpeakingFlagExtensions
+  - uid: DisCatSharp.Enums.SpeakingFlags
+    name: SpeakingFlags
+  - uid: DisCatSharp.Enums.StoreApplicationState
+    name: StoreApplicationState
+  - uid: DisCatSharp.Enums.SystemChannelFlags
+    name: SystemChannelFlags
+  - uid: DisCatSharp.Enums.SystemChannelFlagsExtension
+    name: SystemChannelFlagsExtension
+  - uid: DisCatSharp.Enums.TargetType
+    name: TargetType
+  - uid: DisCatSharp.Enums.TextComponentStyle
+    name: TextComponentStyle
+  - uid: DisCatSharp.Enums.ThreadAutoArchiveDuration
+    name: ThreadAutoArchiveDuration
+  - uid: DisCatSharp.Enums.ThreadMemberFlags
+    name: ThreadMemberFlags
+  - uid: DisCatSharp.Enums.TimestampFormat
+    name: TimestampFormat
+  - uid: DisCatSharp.Enums.TokenType
+    name: TokenType
+  - uid: DisCatSharp.Enums.UnusedDomain
+    name: UnusedDomain
+  - uid: DisCatSharp.Enums.UserFlags
+    name: UserFlags
+  - uid: DisCatSharp.Enums.VerificationLevel
+    name: VerificationLevel
+  - uid: DisCatSharp.Enums.VersionCheckMode
+    name: VersionCheckMode
+  - uid: DisCatSharp.Enums.VideoQualityMode
+    name: VideoQualityMode
+  - uid: DisCatSharp.Enums.WidgetType
+    name: WidgetType
+- uid: DisCatSharp.Enums.Core
+  name: DisCatSharp.Enums.Core
+  items:
+  - uid: DisCatSharp.Enums.Core.CooldownBucketType
+    name: CooldownBucketType
+  - uid: DisCatSharp.Enums.Core.DisCatSharpCommandType
+    name: DisCatSharpCommandType
+- uid: DisCatSharp.EventArgs
+  name: DisCatSharp.EventArgs
+  items:
+  - uid: DisCatSharp.EventArgs.ApplicationCommandEventArgs
+    name: ApplicationCommandEventArgs
+  - uid: DisCatSharp.EventArgs.ApplicationCommandPermissionsUpdateEventArgs
+    name: ApplicationCommandPermissionsUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.AutomodActionExecutedEventArgs
+    name: AutomodActionExecutedEventArgs
+  - uid: DisCatSharp.EventArgs.AutomodRuleCreateEventArgs
+    name: AutomodRuleCreateEventArgs
+  - uid: DisCatSharp.EventArgs.AutomodRuleDeleteEventArgs
+    name: AutomodRuleDeleteEventArgs
+  - uid: DisCatSharp.EventArgs.AutomodRuleUpdateEventArgs
+    name: AutomodRuleUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.ChannelCreateEventArgs
+    name: ChannelCreateEventArgs
+  - uid: DisCatSharp.EventArgs.ChannelDeleteEventArgs
+    name: ChannelDeleteEventArgs
+  - uid: DisCatSharp.EventArgs.ChannelPinsUpdateEventArgs
+    name: ChannelPinsUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.ChannelUpdateEventArgs
+    name: ChannelUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.ClientErrorEventArgs
+    name: ClientErrorEventArgs
+  - uid: DisCatSharp.EventArgs.ComponentInteractionCreateEventArgs
+    name: ComponentInteractionCreateEventArgs
+  - uid: DisCatSharp.EventArgs.ContextMenuInteractionCreateEventArgs
+    name: ContextMenuInteractionCreateEventArgs
+  - uid: DisCatSharp.EventArgs.DiscordEventArgs
+    name: DiscordEventArgs
+  - uid: DisCatSharp.EventArgs.DmChannelDeleteEventArgs
+    name: DmChannelDeleteEventArgs
+  - uid: DisCatSharp.EventArgs.EmbeddedActivityUpdateEventArgs
+    name: EmbeddedActivityUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.EntitlementCreateEventArgs
+    name: EntitlementCreateEventArgs
+  - uid: DisCatSharp.EventArgs.EntitlementDeleteEventArgs
+    name: EntitlementDeleteEventArgs
+  - uid: DisCatSharp.EventArgs.EntitlementUpdateEventArgs
+    name: EntitlementUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.GuildApplicationCommandCountEventArgs
+    name: GuildApplicationCommandCountEventArgs
+  - uid: DisCatSharp.EventArgs.GuildAuditLogEntryCreateEventArgs
+    name: GuildAuditLogEntryCreateEventArgs
+  - uid: DisCatSharp.EventArgs.GuildBanAddEventArgs
+    name: GuildBanAddEventArgs
+  - uid: DisCatSharp.EventArgs.GuildBanRemoveEventArgs
+    name: GuildBanRemoveEventArgs
+  - uid: DisCatSharp.EventArgs.GuildCreateEventArgs
+    name: GuildCreateEventArgs
+  - uid: DisCatSharp.EventArgs.GuildDeleteEventArgs
+    name: GuildDeleteEventArgs
+  - uid: DisCatSharp.EventArgs.GuildDownloadCompletedEventArgs
+    name: GuildDownloadCompletedEventArgs
+  - uid: DisCatSharp.EventArgs.GuildEmojisUpdateEventArgs
+    name: GuildEmojisUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.GuildIntegrationCreateEventArgs
+    name: GuildIntegrationCreateEventArgs
+  - uid: DisCatSharp.EventArgs.GuildIntegrationDeleteEventArgs
+    name: GuildIntegrationDeleteEventArgs
+  - uid: DisCatSharp.EventArgs.GuildIntegrationUpdateEventArgs
+    name: GuildIntegrationUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.GuildIntegrationsUpdateEventArgs
+    name: GuildIntegrationsUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.GuildMemberAddEventArgs
+    name: GuildMemberAddEventArgs
+  - uid: DisCatSharp.EventArgs.GuildMemberRemoveEventArgs
+    name: GuildMemberRemoveEventArgs
+  - uid: DisCatSharp.EventArgs.GuildMemberTimeoutAddEventArgs
+    name: GuildMemberTimeoutAddEventArgs
+  - uid: DisCatSharp.EventArgs.GuildMemberTimeoutRemoveEventArgs
+    name: GuildMemberTimeoutRemoveEventArgs
+  - uid: DisCatSharp.EventArgs.GuildMemberTimeoutUpdateEventArgs
+    name: GuildMemberTimeoutUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.GuildMemberUpdateEventArgs
+    name: GuildMemberUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.GuildMembersChunkEventArgs
+    name: GuildMembersChunkEventArgs
+  - uid: DisCatSharp.EventArgs.GuildRoleCreateEventArgs
+    name: GuildRoleCreateEventArgs
+  - uid: DisCatSharp.EventArgs.GuildRoleDeleteEventArgs
+    name: GuildRoleDeleteEventArgs
+  - uid: DisCatSharp.EventArgs.GuildRoleUpdateEventArgs
+    name: GuildRoleUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.GuildScheduledEventCreateEventArgs
+    name: GuildScheduledEventCreateEventArgs
+  - uid: DisCatSharp.EventArgs.GuildScheduledEventDeleteEventArgs
+    name: GuildScheduledEventDeleteEventArgs
+  - uid: DisCatSharp.EventArgs.GuildScheduledEventUpdateEventArgs
+    name: GuildScheduledEventUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.GuildScheduledEventUserAddEventArgs
+    name: GuildScheduledEventUserAddEventArgs
+  - uid: DisCatSharp.EventArgs.GuildScheduledEventUserRemoveEventArgs
+    name: GuildScheduledEventUserRemoveEventArgs
+  - uid: DisCatSharp.EventArgs.GuildStickersUpdateEventArgs
+    name: GuildStickersUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.GuildUpdateEventArgs
+    name: GuildUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.HeartbeatEventArgs
+    name: HeartbeatEventArgs
+  - uid: DisCatSharp.EventArgs.InteractionCreateEventArgs
+    name: InteractionCreateEventArgs
+  - uid: DisCatSharp.EventArgs.InviteCreateEventArgs
+    name: InviteCreateEventArgs
+  - uid: DisCatSharp.EventArgs.InviteDeleteEventArgs
+    name: InviteDeleteEventArgs
+  - uid: DisCatSharp.EventArgs.MessageAcknowledgeEventArgs
+    name: MessageAcknowledgeEventArgs
+  - uid: DisCatSharp.EventArgs.MessageBulkDeleteEventArgs
+    name: MessageBulkDeleteEventArgs
+  - uid: DisCatSharp.EventArgs.MessageCreateEventArgs
+    name: MessageCreateEventArgs
+  - uid: DisCatSharp.EventArgs.MessageDeleteEventArgs
+    name: MessageDeleteEventArgs
+  - uid: DisCatSharp.EventArgs.MessageReactionAddEventArgs
+    name: MessageReactionAddEventArgs
+  - uid: DisCatSharp.EventArgs.MessageReactionRemoveEmojiEventArgs
+    name: MessageReactionRemoveEmojiEventArgs
+  - uid: DisCatSharp.EventArgs.MessageReactionRemoveEventArgs
+    name: MessageReactionRemoveEventArgs
+  - uid: DisCatSharp.EventArgs.MessageReactionsClearEventArgs
+    name: MessageReactionsClearEventArgs
+  - uid: DisCatSharp.EventArgs.MessageUpdateEventArgs
+    name: MessageUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.PayloadReceivedEventArgs
+    name: PayloadReceivedEventArgs
+  - uid: DisCatSharp.EventArgs.PresenceUpdateEventArgs
+    name: PresenceUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.RateLimitExceptionEventArgs
+    name: RateLimitExceptionEventArgs
+  - uid: DisCatSharp.EventArgs.ReadyEventArgs
+    name: ReadyEventArgs
+  - uid: DisCatSharp.EventArgs.SocketBinaryMessageEventArgs
+    name: SocketBinaryMessageEventArgs
+  - uid: DisCatSharp.EventArgs.SocketCloseEventArgs
+    name: SocketCloseEventArgs
+  - uid: DisCatSharp.EventArgs.SocketErrorEventArgs
+    name: SocketErrorEventArgs
+  - uid: DisCatSharp.EventArgs.SocketEventArgs
+    name: SocketEventArgs
+  - uid: DisCatSharp.EventArgs.SocketMessageEventArgs
+    name: SocketMessageEventArgs
+  - uid: DisCatSharp.EventArgs.SocketTextMessageEventArgs
+    name: SocketTextMessageEventArgs
+  - uid: DisCatSharp.EventArgs.StageInstanceCreateEventArgs
+    name: StageInstanceCreateEventArgs
+  - uid: DisCatSharp.EventArgs.StageInstanceDeleteEventArgs
+    name: StageInstanceDeleteEventArgs
+  - uid: DisCatSharp.EventArgs.StageInstanceUpdateEventArgs
+    name: StageInstanceUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.ThreadCreateEventArgs
+    name: ThreadCreateEventArgs
+  - uid: DisCatSharp.EventArgs.ThreadDeleteEventArgs
+    name: ThreadDeleteEventArgs
+  - uid: DisCatSharp.EventArgs.ThreadListSyncEventArgs
+    name: ThreadListSyncEventArgs
+  - uid: DisCatSharp.EventArgs.ThreadMemberUpdateEventArgs
+    name: ThreadMemberUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.ThreadMembersUpdateEventArgs
+    name: ThreadMembersUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.ThreadUpdateEventArgs
+    name: ThreadUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.TypingStartEventArgs
+    name: TypingStartEventArgs
+  - uid: DisCatSharp.EventArgs.UnknownEventArgs
+    name: UnknownEventArgs
+  - uid: DisCatSharp.EventArgs.UserSettingsUpdateEventArgs
+    name: UserSettingsUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.UserSpeakingEventArgs
+    name: UserSpeakingEventArgs
+  - uid: DisCatSharp.EventArgs.UserUpdateEventArgs
+    name: UserUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.VoiceChannelStatusUpdateEventArgs
+    name: VoiceChannelStatusUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.VoiceServerUpdateEventArgs
+    name: VoiceServerUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.VoiceStateUpdateEventArgs
+    name: VoiceStateUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.WebhooksUpdateEventArgs
+    name: WebhooksUpdateEventArgs
+  - uid: DisCatSharp.EventArgs.ZombiedEventArgs
+    name: ZombiedEventArgs
+- uid: DisCatSharp.Exceptions
+  name: DisCatSharp.Exceptions
+  items:
+  - uid: DisCatSharp.Exceptions.BadRequestException
+    name: BadRequestException
+  - uid: DisCatSharp.Exceptions.DisCatSharpException
+    name: DisCatSharpException
+  - uid: DisCatSharp.Exceptions.DisCatSharpExceptionFilter
+    name: DisCatSharpExceptionFilter
+  - uid: DisCatSharp.Exceptions.NotFoundException
+    name: NotFoundException
+  - uid: DisCatSharp.Exceptions.RateLimitException
+    name: RateLimitException
+  - uid: DisCatSharp.Exceptions.RequestSizeException
+    name: RequestSizeException
+  - uid: DisCatSharp.Exceptions.ServerErrorException
+    name: ServerErrorException
+  - uid: DisCatSharp.Exceptions.UnauthorizedException
+    name: UnauthorizedException
+- uid: DisCatSharp.Net
+  name: DisCatSharp.Net
+  items:
+  - uid: DisCatSharp.Net.BaseRestRequest
+    name: BaseRestRequest
+  - uid: DisCatSharp.Net.CommonHeaders
+    name: CommonHeaders
+  - uid: DisCatSharp.Net.ConnectionEndpoint
+    name: ConnectionEndpoint
+  - uid: DisCatSharp.Net.DiscordApiClient
+    name: DiscordApiClient
+  - uid: DisCatSharp.Net.DiscordUri
+    name: DiscordUri
+  - uid: DisCatSharp.Net.DiscordUriType
+    name: DiscordUriType
+  - uid: DisCatSharp.Net.Endpoints
+    name: Endpoints
+  - uid: DisCatSharp.Net.GatewayInfo
+    name: GatewayInfo
+  - uid: DisCatSharp.Net.IpEndpoint
+    name: IpEndpoint
+  - uid: DisCatSharp.Net.RestRequestMethod
+    name: RestRequestMethod
+  - uid: DisCatSharp.Net.RestResponse
+    name: RestResponse
+  - uid: DisCatSharp.Net.SessionBucket
+    name: SessionBucket
+- uid: DisCatSharp.Net.Models
+  name: DisCatSharp.Net.Models
+  items:
+  - uid: DisCatSharp.Net.Models.ApplicationCommandEditModel
+    name: ApplicationCommandEditModel
+  - uid: DisCatSharp.Net.Models.AutomodRuleEditModel
+    name: AutomodRuleEditModel
+  - uid: DisCatSharp.Net.Models.BaseEditModel
+    name: BaseEditModel
+  - uid: DisCatSharp.Net.Models.ChannelEditModel
+    name: ChannelEditModel
+  - uid: DisCatSharp.Net.Models.ForumChannelEditModel
+    name: ForumChannelEditModel
+  - uid: DisCatSharp.Net.Models.ForumPostTagEditModel
+    name: ForumPostTagEditModel
+  - uid: DisCatSharp.Net.Models.GuildEditModel
+    name: GuildEditModel
+  - uid: DisCatSharp.Net.Models.MemberEditModel
+    name: MemberEditModel
+  - uid: DisCatSharp.Net.Models.MembershipScreeningEditModel
+    name: MembershipScreeningEditModel
+  - uid: DisCatSharp.Net.Models.RoleEditModel
+    name: RoleEditModel
+  - uid: DisCatSharp.Net.Models.ScheduledEventEditModel
+    name: ScheduledEventEditModel
+  - uid: DisCatSharp.Net.Models.ThreadEditModel
+    name: ThreadEditModel
+  - uid: DisCatSharp.Net.Models.WelcomeScreenEditModel
+    name: WelcomeScreenEditModel
+- uid: DisCatSharp.Net.Serialization
+  name: DisCatSharp.Net.Serialization
+  items:
+  - uid: DisCatSharp.Net.Serialization.DiscordJson
+    name: DiscordJson
+- uid: DisCatSharp.Net.Udp
+  name: DisCatSharp.Net.Udp
+  items:
+  - uid: DisCatSharp.Net.Udp.BaseUdpClient
+    name: BaseUdpClient
+  - uid: DisCatSharp.Net.Udp.UdpClientFactoryDelegate
+    name: UdpClientFactoryDelegate
+- uid: DisCatSharp.Net.WebSocket
+  name: DisCatSharp.Net.WebSocket
+  items:
+  - uid: DisCatSharp.Net.WebSocket.IWebSocketClient
+    name: IWebSocketClient
+  - uid: DisCatSharp.Net.WebSocket.WebSocketClient
+    name: WebSocketClient
+  - uid: DisCatSharp.Net.WebSocket.WebSocketClientFactoryDelegate
+    name: WebSocketClientFactoryDelegate
+memberLayout: SeparatePages

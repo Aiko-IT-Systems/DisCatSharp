@@ -1,0 +1,10 @@
+{
+	"DisCatSharp": {
+		"Discord": {
+			"Intents": "GuildEmojisAndStickers,GuildMembers,Guilds",
+			"MobileStatus": true,
+			"LargeThreshold": 1000,
+			"HttpTimeout": "10:00:00"
+		}
+	}
+}

@@ -1,0 +1,94 @@
+### YamlMime:TableOfContent
+items:
+- uid: DisCatSharp.Common
+  name: DisCatSharp.Common
+  items:
+  - uid: DisCatSharp.Common.CharSpanLookupDictionary`1
+    name: CharSpanLookupDictionary<TValue>
+  - uid: DisCatSharp.Common.CharSpanLookupReadOnlyDictionary`1
+    name: CharSpanLookupReadOnlyDictionary<TValue>
+  - uid: DisCatSharp.Common.EnsureObjectStates
+    name: EnsureObjectStates
+  - uid: DisCatSharp.Common.Extensions
+    name: Extensions
+  - uid: DisCatSharp.Common.LinqMethods
+    name: LinqMethods
+  - uid: DisCatSharp.Common.SecureRandom
+    name: SecureRandom
+- uid: DisCatSharp.Common.RegularExpressions
+  name: DisCatSharp.Common.RegularExpressions
+  items:
+  - uid: DisCatSharp.Common.RegularExpressions.CommonRegEx
+    name: CommonRegEx
+  - uid: DisCatSharp.Common.RegularExpressions.DiscordRegEx
+    name: DiscordRegEx
+- uid: DisCatSharp.Common.Serialization
+  name: DisCatSharp.Common.Serialization
+  items:
+  - uid: DisCatSharp.Common.Serialization.ComplexDecomposer
+    name: ComplexDecomposer
+  - uid: DisCatSharp.Common.Serialization.DateTimeFormatAttribute
+    name: DateTimeFormatAttribute
+  - uid: DisCatSharp.Common.Serialization.DateTimeFormatKind
+    name: DateTimeFormatKind
+  - uid: DisCatSharp.Common.Serialization.DecomposerAttribute
+    name: DecomposerAttribute
+  - uid: DisCatSharp.Common.Serialization.IDecomposer
+    name: IDecomposer
+  - uid: DisCatSharp.Common.Serialization.Int53Attribute
+    name: Int53Attribute
+  - uid: DisCatSharp.Common.Serialization.NumericEnumAttribute
+    name: NumericEnumAttribute
+  - uid: DisCatSharp.Common.Serialization.SerializationAttribute
+    name: SerializationAttribute
+  - uid: DisCatSharp.Common.Serialization.StringEnumAttribute
+    name: StringEnumAttribute
+  - uid: DisCatSharp.Common.Serialization.TimeSpanFormatAttribute
+    name: TimeSpanFormatAttribute
+  - uid: DisCatSharp.Common.Serialization.TimeSpanFormatKind
+    name: TimeSpanFormatKind
+  - uid: DisCatSharp.Common.Serialization.TimeSpanMillisecondsAttribute
+    name: TimeSpanMillisecondsAttribute
+  - uid: DisCatSharp.Common.Serialization.TimeSpanSecondsAttribute
+    name: TimeSpanSecondsAttribute
+  - uid: DisCatSharp.Common.Serialization.UnixMillisecondsAttribute
+    name: UnixMillisecondsAttribute
+  - uid: DisCatSharp.Common.Serialization.UnixSecondsAttribute
+    name: UnixSecondsAttribute
+- uid: DisCatSharp.Common.Types
+  name: DisCatSharp.Common.Types
+  items:
+  - uid: DisCatSharp.Common.Types.ContinuousMemoryBuffer`1
+    name: ContinuousMemoryBuffer<T>
+  - uid: DisCatSharp.Common.Types.IMemoryBuffer`1
+    name: IMemoryBuffer<T>
+  - uid: DisCatSharp.Common.Types.MemoryBuffer`1
+    name: MemoryBuffer<T>
+- uid: DisCatSharp.Common.Utilities
+  name: DisCatSharp.Common.Utilities
+  items:
+  - uid: DisCatSharp.Common.Utilities.AsyncEvent
+    name: AsyncEvent
+  - uid: DisCatSharp.Common.Utilities.AsyncEventArgs
+    name: AsyncEventArgs
+  - uid: DisCatSharp.Common.Utilities.AsyncEventExceptionHandler`2
+    name: AsyncEventExceptionHandler<TSender, TArgs>
+  - uid: DisCatSharp.Common.Utilities.AsyncEventExceptionMode
+    name: AsyncEventExceptionMode
+  - uid: DisCatSharp.Common.Utilities.AsyncEventHandler`2
+    name: AsyncEventHandler<TSender, TArgs>
+  - uid: DisCatSharp.Common.Utilities.AsyncEventTimeoutException
+    name: AsyncEventTimeoutException
+  - uid: DisCatSharp.Common.Utilities.AsyncEventTimeoutException`2
+    name: AsyncEventTimeoutException<TSender, TArgs>
+  - uid: DisCatSharp.Common.Utilities.AsyncEvent`2
+    name: AsyncEvent<TSender, TArgs>
+  - uid: DisCatSharp.Common.Utilities.AsyncExecutor
+    name: AsyncExecutor
+  - uid: DisCatSharp.Common.Utilities.AsyncManualResetEvent
+    name: AsyncManualResetEvent
+  - uid: DisCatSharp.Common.Utilities.ReflectionUtilities
+    name: ReflectionUtilities
+  - uid: DisCatSharp.Common.Utilities.RuntimeInformation
+    name: RuntimeInformation
+memberLayout: SeparatePages

@@ -1,0 +1,193 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.31911.260
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp", "DisCatSharp\DisCatSharp.csproj", "{EB3D8310-DFAD-4295-97F9-82E253647583}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.VoiceNext", "DisCatSharp.VoiceNext\DisCatSharp.VoiceNext.csproj", "{FB6B9EE9-65FB-4DFB-8D51-06F0BE6C1BA5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4255B64D-92EC-46B3-BC3B-ED2C3A8073EE}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		BUILDING.md = BUILDING.md
+		CONTRIBUTING.md = CONTRIBUTING.md
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.CommandsNext", "DisCatSharp.CommandsNext\DisCatSharp.CommandsNext.csproj", "{C8ED55FB-E028-468D-955F-1534C20274EF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Interactivity", "DisCatSharp.Interactivity\DisCatSharp.Interactivity.csproj", "{DD32BEC3-0189-479F-86DC-CCF95E5634A9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F953F5D0-F0C9-41E6-ADBF-60A76D295899}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.config = .nuget\NuGet.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build Items", "Build Items", "{84464D70-687B-40A8-836D-C4F737698969}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{430C28D8-5F85-4D6E-AA68-211549435245}"
+	ProjectSection(SolutionItems) = preProject
+		.github\CODEOWNERS = .github\CODEOWNERS
+		.github\CODE_OF_CONDUCT.md = .github\CODE_OF_CONDUCT.md
+		.github\labeler.yml = .github\labeler.yml
+		.github\pull_request_template.md = .github\pull_request_template.md
+		.github\SECURITY.md = .github\SECURITY.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.VoiceNext.Natives", "DisCatSharp.VoiceNext.Natives\DisCatSharp.VoiceNext.Natives.csproj", "{BEC47B41-71E4-41D1-A4F9-BB7C56A1B82B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Common", "DisCatSharp.Common\DisCatSharp.Common.csproj", "{CD84A5C7-C7FF-48CA-B23D-FA726CF80E09}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.ApplicationCommands", "DisCatSharp.ApplicationCommands\DisCatSharp.ApplicationCommands.csproj", "{AD530FD0-523C-4DE7-9AF6-B9A3785492C2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Configuration", "DisCatSharp.Configuration\DisCatSharp.Configuration.csproj", "{603287D3-1EF2-47F1-A611-C7F25869DE14}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Configuration.Tests", "DisCatSharp.Tests\DisCatSharp.Configuration.Tests\DisCatSharp.Configuration.Tests.csproj", "{E15E88B4-63AD-42DE-B685-D31697C62194}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Hosting", "DisCatSharp.Hosting\DisCatSharp.Hosting.csproj", "{72CCE5D5-926B-432A-876A-065FA2BC9B7B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Hosting.Tests", "DisCatSharp.Tests\DisCatSharp.Hosting.Tests\DisCatSharp.Hosting.Tests.csproj", "{D02B598A-F0C9-4A8C-B8DE-7C0BAC8C9B94}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Hosting.DependencyInjection", "DisCatSharp.Hosting.DependencyInjection\DisCatSharp.Hosting.DependencyInjection.csproj", "{2D67D1DD-E5B2-40C7-80E2-54D63730E7F0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Experimental", "DisCatSharp.Experimental\DisCatSharp.Experimental.csproj", "{CF03EADC-E178-45B3-BD72-B6F70B625C8F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{D911BF2D-523E-4504-935D-AEDA353305D8}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yml = .github\workflows\build.yml
+		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
+		.github\workflows\create_diagram.yml = .github\workflows\create_diagram.yml
+		.github\workflows\documentation.yml = .github\workflows\documentation.yml
+		.github\workflows\documentation_test.yml = .github\workflows\documentation_test.yml
+		.github\workflows\internal-release.yml = .github\workflows\internal-release.yml
+		.github\workflows\labeler.yml = .github\workflows\labeler.yml
+		.github\workflows\public-dev-release.yml = .github\workflows\public-dev-release.yml
+		.github\workflows\release.yml = .github\workflows\release.yml
+		.github\workflows\sentry.yml = .github\workflows\sentry.yml
+		.github\workflows\tweet.yml = .github\workflows\tweet.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Targets", "Targets", "{4A7E065C-5EAF-4AD0-8002-306FCEEC946C}"
+	ProjectSection(SolutionItems) = preProject
+		DisCatSharp.Targets\DisCatSharp.targets = DisCatSharp.Targets\DisCatSharp.targets
+		DisCatSharp.Targets\InternalsVisibleTo.targets = DisCatSharp.Targets\InternalsVisibleTo.targets
+		DisCatSharp.Targets\Library.targets = DisCatSharp.Targets\Library.targets
+		DisCatSharp.Targets\NuGet.targets = DisCatSharp.Targets\NuGet.targets
+		DisCatSharp.Targets\Package.targets = DisCatSharp.Targets\Package.targets
+		DisCatSharp.Targets\TestProject.targets = DisCatSharp.Targets\TestProject.targets
+		DisCatSharp.Targets\Version.targets = DisCatSharp.Targets\Version.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{11D25C98-6D11-412C-8016-BE070315326F}"
+	ProjectSection(SolutionItems) = preProject
+		DisCatSharp.Tools\DisCatSharp.ruleset = DisCatSharp.Tools\DisCatSharp.ruleset
+		DisCatSharp.Tools\pack-docs.ps1 = DisCatSharp.Tools\pack-docs.ps1
+		DisCatSharp.Tools\rebuild-lib.ps1 = DisCatSharp.Tools\rebuild-lib.ps1
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.EventHandlers.Tests", "DisCatSharp.Tests\DisCatSharp.EventHandlers.Tests\DisCatSharp.EventHandlers.Tests.csproj", "{BE646FCD-8A56-46DC-978D-AC1E0A892A9F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{267EFBFF-ECD2-4686-A5DE-5B642F8A7CCB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.SafetyTests", "DisCatSharp.Tests\SafetyTests\DisCatSharp.SafetyTests.csproj", "{9F012C5C-6A47-4E5D-8819-5D2DD0743E65}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Lavalink", "DisCatSharp.Lavalink\DisCatSharp.Lavalink.csproj", "{1ADC1D06-3DB8-4741-B740-13161B40CBA3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.ApplicationCommands.Tests", "DisCatSharp.Tests\DisCatSharp.ApplicationCommands.Tests\DisCatSharp.ApplicationCommands.Tests.csproj", "{B4837A35-F5D1-4CF0-941B-961407E3CC36}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EB3D8310-DFAD-4295-97F9-82E253647583}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB3D8310-DFAD-4295-97F9-82E253647583}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB3D8310-DFAD-4295-97F9-82E253647583}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB3D8310-DFAD-4295-97F9-82E253647583}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB6B9EE9-65FB-4DFB-8D51-06F0BE6C1BA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB6B9EE9-65FB-4DFB-8D51-06F0BE6C1BA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB6B9EE9-65FB-4DFB-8D51-06F0BE6C1BA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB6B9EE9-65FB-4DFB-8D51-06F0BE6C1BA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8ED55FB-E028-468D-955F-1534C20274EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8ED55FB-E028-468D-955F-1534C20274EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8ED55FB-E028-468D-955F-1534C20274EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8ED55FB-E028-468D-955F-1534C20274EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD32BEC3-0189-479F-86DC-CCF95E5634A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD32BEC3-0189-479F-86DC-CCF95E5634A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD32BEC3-0189-479F-86DC-CCF95E5634A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD32BEC3-0189-479F-86DC-CCF95E5634A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEC47B41-71E4-41D1-A4F9-BB7C56A1B82B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEC47B41-71E4-41D1-A4F9-BB7C56A1B82B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEC47B41-71E4-41D1-A4F9-BB7C56A1B82B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEC47B41-71E4-41D1-A4F9-BB7C56A1B82B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD84A5C7-C7FF-48CA-B23D-FA726CF80E09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD84A5C7-C7FF-48CA-B23D-FA726CF80E09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD84A5C7-C7FF-48CA-B23D-FA726CF80E09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD84A5C7-C7FF-48CA-B23D-FA726CF80E09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD530FD0-523C-4DE7-9AF6-B9A3785492C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD530FD0-523C-4DE7-9AF6-B9A3785492C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD530FD0-523C-4DE7-9AF6-B9A3785492C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD530FD0-523C-4DE7-9AF6-B9A3785492C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{603287D3-1EF2-47F1-A611-C7F25869DE14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{603287D3-1EF2-47F1-A611-C7F25869DE14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{603287D3-1EF2-47F1-A611-C7F25869DE14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{603287D3-1EF2-47F1-A611-C7F25869DE14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E15E88B4-63AD-42DE-B685-D31697C62194}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E15E88B4-63AD-42DE-B685-D31697C62194}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E15E88B4-63AD-42DE-B685-D31697C62194}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E15E88B4-63AD-42DE-B685-D31697C62194}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72CCE5D5-926B-432A-876A-065FA2BC9B7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72CCE5D5-926B-432A-876A-065FA2BC9B7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72CCE5D5-926B-432A-876A-065FA2BC9B7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72CCE5D5-926B-432A-876A-065FA2BC9B7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D02B598A-F0C9-4A8C-B8DE-7C0BAC8C9B94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D02B598A-F0C9-4A8C-B8DE-7C0BAC8C9B94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D02B598A-F0C9-4A8C-B8DE-7C0BAC8C9B94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D02B598A-F0C9-4A8C-B8DE-7C0BAC8C9B94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D67D1DD-E5B2-40C7-80E2-54D63730E7F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D67D1DD-E5B2-40C7-80E2-54D63730E7F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D67D1DD-E5B2-40C7-80E2-54D63730E7F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D67D1DD-E5B2-40C7-80E2-54D63730E7F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF03EADC-E178-45B3-BD72-B6F70B625C8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF03EADC-E178-45B3-BD72-B6F70B625C8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF03EADC-E178-45B3-BD72-B6F70B625C8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF03EADC-E178-45B3-BD72-B6F70B625C8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE646FCD-8A56-46DC-978D-AC1E0A892A9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE646FCD-8A56-46DC-978D-AC1E0A892A9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE646FCD-8A56-46DC-978D-AC1E0A892A9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE646FCD-8A56-46DC-978D-AC1E0A892A9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F012C5C-6A47-4E5D-8819-5D2DD0743E65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F012C5C-6A47-4E5D-8819-5D2DD0743E65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F012C5C-6A47-4E5D-8819-5D2DD0743E65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F012C5C-6A47-4E5D-8819-5D2DD0743E65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1ADC1D06-3DB8-4741-B740-13161B40CBA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1ADC1D06-3DB8-4741-B740-13161B40CBA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1ADC1D06-3DB8-4741-B740-13161B40CBA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1ADC1D06-3DB8-4741-B740-13161B40CBA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4837A35-F5D1-4CF0-941B-961407E3CC36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4837A35-F5D1-4CF0-941B-961407E3CC36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4837A35-F5D1-4CF0-941B-961407E3CC36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4837A35-F5D1-4CF0-941B-961407E3CC36}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E15E88B4-63AD-42DE-B685-D31697C62194} = {267EFBFF-ECD2-4686-A5DE-5B642F8A7CCB}
+		{D02B598A-F0C9-4A8C-B8DE-7C0BAC8C9B94} = {267EFBFF-ECD2-4686-A5DE-5B642F8A7CCB}
+		{D911BF2D-523E-4504-935D-AEDA353305D8} = {430C28D8-5F85-4D6E-AA68-211549435245}
+		{4A7E065C-5EAF-4AD0-8002-306FCEEC946C} = {84464D70-687B-40A8-836D-C4F737698969}
+		{11D25C98-6D11-412C-8016-BE070315326F} = {84464D70-687B-40A8-836D-C4F737698969}
+		{BE646FCD-8A56-46DC-978D-AC1E0A892A9F} = {267EFBFF-ECD2-4686-A5DE-5B642F8A7CCB}
+		{9F012C5C-6A47-4E5D-8819-5D2DD0743E65} = {267EFBFF-ECD2-4686-A5DE-5B642F8A7CCB}
+		{B4837A35-F5D1-4CF0-941B-961407E3CC36} = {267EFBFF-ECD2-4686-A5DE-5B642F8A7CCB}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {23F3A981-51B8-4285-A38C-3267F1D25FE7}
+	EndGlobalSection
+EndGlobal

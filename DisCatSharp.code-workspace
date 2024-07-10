@@ -1,0 +1,52 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../DisCatSharp.Extensions"
+		}
+	],
+	"settings": {
+		"discord.lowerDetailsEditing": "Editing {file_name} ({current_line}/{total_lines})",
+		"discord.detailsEditing": "{workspace}",
+		"discord.lowerDetailsDebugging": "Debugging: {file_name}",
+		"discord.detailsDebugging": "{workspace}",
+		"licenser.author": "Aiko IT Systems",
+		"licenser.license": "MIT",
+		"licenser.projectName": "DisCatSharp",
+		"licenser.useSingleLineStyle": false,
+		"licenser.disableAutoHeaderInsertion": true,
+		"json.schemaDownload.enable": true,
+		"json.schemas": [
+			{
+				"fileMatch": [
+					"docfx.json"
+				],
+				"url": ""
+			}
+		],
+		"yaml.schemaStore.enable": true,
+		"yaml.schemas": {
+			"./DisCatSharp.Docs/docfx.toc.schema.json": "toc.yml"
+		},
+		"files.eol": "\n",
+		"files.trimFinalNewlines": true,
+		"cSpell.language": "en,en-US,de,de-DE",
+		"cSpell.enableFiletypes": [
+			"csv",
+			"csv (caret)",
+			"csv (dot)",
+			"csv (double quote)",
+			"csv (hyphen)",
+			"csv (pipe)",
+			"csv (semicolon)",
+			"csv (tilde)",
+			"csv (whitespace)",
+			"hlsl",
+			"powershell",
+			"xml"
+		],
+		"dotnet.defaultSolution": "DisCatSharp.sln",
+	}
+}

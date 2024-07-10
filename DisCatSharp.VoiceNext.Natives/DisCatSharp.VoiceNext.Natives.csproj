@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="../DisCatSharp.Targets/Version.targets" />
+	<Import Project="../DisCatSharp.Targets/DisCatSharp.targets" />
+	<Import Project="../DisCatSharp.Targets/Package.targets" />
+	<Import Project="../DisCatSharp.Targets/Library.targets" />
+
+	<PropertyGroup>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
+		<DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+		<IncludeSymbols>false</IncludeSymbols>
+		<SymbolPackageFormat>symbols.nupkg</SymbolPackageFormat>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<PackageId>DisCatSharp.VoiceNext.Natives</PackageId>
+		<Description>
+			Natives for DisCatSharp Voice Next Extension
+
+			Manual Download: https://docs.dcs.aitsys.dev/natives/index.html
+		</Description>
+		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Net8,Voice,Audio Player</PackageTags>
+
+	</PropertyGroup>
+
+
+	<ItemGroup Condition=" '$(IncludeAssets)' == '' ">
+		<!-- Logic for normal build -->
+		<Content Include="runtimes/**/*.*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(IncludeAssets)' != '' ">
+		<!-- Logic for NuGet packing -->
+		<Content Include="runtimes/**/*.*">
+			<Pack>true</Pack>
+			<PackagePath>runtimes</PackagePath>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+		<PackageReference Include="System.Reflection" Version="4.3.0" />
+		<PackageReference Include="System.Runtime" Version="4.3.1" />
+	</ItemGroup>
+
+</Project>

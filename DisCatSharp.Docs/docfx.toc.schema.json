@@ -1,0 +1,108 @@
+{
+	"title": "DocFx TOC file",
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"version": "1.0.0",
+	"description": "The schema for a DocFx TOC object.",
+	"id": "https://raw.githubusercontent.com/Aiko-IT-Systems/DisCatSharp/main/DisCatSharp.Docs/docfx.toc.schema.json",
+	"type": "object",
+	"additionalProperties": false,
+	"required": ["items"],
+	"properties": {
+		"items": {
+			"type": "array",
+			"description": "Array of tocNodes.",
+			"items": {
+				"$ref": "#/definitions/tocNode"
+			}
+		},
+		"metadata": {
+			"type": "object",
+			"description": "The metadata for the TOC.",
+			"additionalProperties": false,
+			"properties": {
+				"universal_ref_toc": {
+					"type": "string"
+				},
+				"universal_conceptual_toc": {
+					"type": "string"
+				},
+				"nodes_to_expand": {
+					"type": "string"
+				},
+				"pdf_url_template": {
+					"type": "string"
+				},
+				"pdf_absolute_path": {
+					"type": "string"
+				},
+				"pdf_name": {
+					"type": "string"
+				}
+			}
+		},
+		"memberLayout": {
+			"type": "string",
+			"description": "The layout of the member page. Can be 'samePage' or 'separatePages'.",
+			"enum": ["samePage", "separatePages", "SamePage", "SeparatePages"],
+			"default": "separatePages",
+			"additionalProperties": false
+		}
+	},
+	"definitions": {
+		"tocNode": {
+			"properties": {
+				"displayName": {
+					"description": "The display name of the toc entry.",
+					"type": "string",
+					"tags": ["localizable"]
+				},
+				"expanded": {
+					"description": "Expand children on load, only works if the template is modern.",
+					"type": "boolean"
+				},
+				"href": {
+					"description": "The path the TOC node leads to. Optional because a node can exist just to parent other nodes.",
+					"type": "string"
+				},
+				"homepage": {
+					"type": "string"
+				},
+				"items": {
+					"description": "If a node has children, they're listed in the items array.",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/tocNode"
+					}
+				},
+				"name": {
+					"description": "The display name for the TOC node.",
+					"type": "string",
+					"tags": ["localizable"]
+				},
+				"preserveContext": {
+					"type": "boolean"
+				},
+				"tocHref": {
+					"type": "string"
+				},
+				"topicHref": {
+					"type": "string"
+				},
+				"topicUid": {
+					"type": "string"
+				},
+				"type": {
+					"type": "string"
+				},
+				"uid": {
+					"description": "The uid of the article. Can be used instead of href.",
+					"type": "string"
+				}
+			},
+			"additionalProperties": false,
+			"required": ["name"],
+			"uniqueItems": true,
+			"type": "object"
+		}
+	}
+}

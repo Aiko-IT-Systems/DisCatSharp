@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<InternalsVisibleTo Include="DisCatSharp" />
+		<InternalsVisibleTo Include="DisCatSharp.ApplicationCommands" />
+		<InternalsVisibleTo Include="DisCatSharp.CommandsNext" />
+		<InternalsVisibleTo Include="DisCatSharp.Common" />
+		<InternalsVisibleTo Include="DisCatSharp.Configuration" />
+		<InternalsVisibleTo Include="DisCatSharp.Configuration.Tests" />
+		<InternalsVisibleTo Include="DisCatSharp.EventHandlers.Tests" />
+		<InternalsVisibleTo Include="DisCatSharp.Hosting" />
+		<InternalsVisibleTo Include="DisCatSharp.Hosting.DependencyInjection" />
+		<InternalsVisibleTo Include="DisCatSharp.Hosting.Tests" />
+		<InternalsVisibleTo Include="DisCatSharp.Interactivity" />
+		<InternalsVisibleTo Include="DisCatSharp.Lavalink" />
+		<InternalsVisibleTo Include="DisCatSharp.LavalinkV1" />
+		<InternalsVisibleTo Include="DisCatSharp.Phabricator" />
+		<InternalsVisibleTo Include="DisCatSharp.Support" />
+		<InternalsVisibleTo Include="DisCatSharp.Tests" />
+		<InternalsVisibleTo Include="DisCatSharp.SafetyTests.Internal" />
+		<InternalsVisibleTo Include="DisCatSharp.ApplicationCommands.Tests" />
+		<InternalsVisibleTo Include="DisCatSharp.VoiceNext" />
+		<InternalsVisibleTo Include="DisCatSharp.VoiceNext.Natives" />
+		<InternalsVisibleTo Include="DisCatSharp.DevTools" />
+		<InternalsVisibleTo Include="DisCatSharp.DocsGenerator" />
+		<InternalsVisibleTo Include="DisCatSharp.StaffApps" />
+		<InternalsVisibleTo Include="DisCatSharp.Experimental" />
+		<InternalsVisibleTo Include="DisCatSharp.Extensions.OAuth2Web" />
+		<InternalsVisibleTo Include="DisCatSharp.Extensions.TwoFactorCommands" />
+		<InternalsVisibleTo Include="Nyaw" />
+		<InternalsVisibleTo Include="MikuSharp" />
+		<InternalsVisibleTo Include="Microsoft.DocAsCode" />
+		<InternalsVisibleTo Include="Microsoft.DocAsCode.Metadata.ManagedReference" />
+		<InternalsVisibleTo Include="ProjectMakoto" />
+		<InternalsVisibleTo Include="SidePlus_AuthBot" />
+		<InternalsVisibleTo Include="SidePlus_Helper" />
+		<InternalsVisibleTo Include="Cache_Design" />
+		<InternalsVisibleTo Include="DisCatSharp.Extensions" />
+		<InternalsVisibleTo Include="DisCatSharp.Bots.DocBot" />
+		<InternalsVisibleTo Include="DisCatSharp.Bots.DocBot.Bot" />
+	</ItemGroup>
+</Project>

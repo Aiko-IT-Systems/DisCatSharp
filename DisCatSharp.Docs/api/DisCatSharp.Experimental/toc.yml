@@ -1,0 +1,15 @@
+### YamlMime:TableOfContent
+items:
+- uid: DisCatSharp.Experimental
+  name: DisCatSharp.Experimental
+  items:
+  - uid: DisCatSharp.Experimental.DisCatSharpExtensions
+    name: DisCatSharpExtensions
+- uid: DisCatSharp.Experimental.Entities
+  name: DisCatSharp.Experimental.Entities
+  items:
+  - uid: DisCatSharp.Experimental.Entities.ClydeProfile
+    name: ClydeProfile
+  - uid: DisCatSharp.Experimental.Entities.ClydeSettings
+    name: ClydeSettings
+memberLayout: SeparatePages

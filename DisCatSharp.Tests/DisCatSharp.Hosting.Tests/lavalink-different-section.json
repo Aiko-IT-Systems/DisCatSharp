@@ -1,0 +1,12 @@
+{
+	"MyCustomBot": {
+		"Using": [
+			"Lavalink"
+		],
+
+		"Discord": {
+			"Token": "1234567890",
+			"Intents": "Guilds"
+		}
+	}
+}

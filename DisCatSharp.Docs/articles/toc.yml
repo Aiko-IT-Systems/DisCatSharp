@@ -1,0 +1,127 @@
+items:
+    - name: Preamble
+      href: index.md
+    - name: FAQ
+      href: faq.md
+    - name: Getting Started
+      items:
+          - name: Creating a Bot Account
+            href: getting_started/bot_account.md
+          - name: Writing Your First Bot
+            href: getting_started/first_bot.md
+          - name: Bot as Hosted Service
+            href: getting_started/web_app.md
+          - name: Project Templates
+            href: getting_started/templates.md
+    - name: Topics
+      items:
+          - name: Events
+            href: topics/events.md
+          - name: Logging
+            items:
+                - name: The Default Logger
+                  href: topics/logging/default.md
+                - name: Third Party Loggers
+                  href: topics/logging/third_party.md
+                - name: Dependency Injection Loggers
+                  href: topics/logging/di.md
+          - name: Intents
+            href: topics/intents.md
+          - name: Sharding
+            href: topics/sharding.md
+          - name: Message Builder
+            href: topics/messagebuilder.md
+          - name: Components
+            items:
+                - name: Buttons
+                  href: topics/components/buttons.md
+                - name: Select Menu
+                  href: topics/components/select_menus.md
+          - name: Workarounds
+            href: topics/workarounds.md
+    - name: Modules
+      items:
+          - name: Application Commands
+            items:
+                - name: Introduction
+                  href: modules/application_commands/intro.md
+                - name: Options
+                  href: modules/application_commands/options.md
+                - name: Events
+                  href: modules/application_commands/events.md
+                - name: Translations
+                  items:
+                      - name: Using Translations
+                        href: modules/application_commands/translations/using.md
+                      - name: Translation Reference
+                        href: modules/application_commands/translations/reference.md
+                - name: Modals
+                  href: modules/application_commands/modals.md
+                - name: Paginated Modals
+                  href: modules/application_commands/paginated_modals.md
+                - name: Cooldowns
+                  href: modules/application_commands/cooldowns.md
+          - name: CommandsNext
+            items:
+                - name: Introduction
+                  href: modules/commandsnext/intro.md
+                - name: Command Attributes
+                  href: modules/commandsnext/command_attributes.md
+                - name: Dependency Injection
+                  href: modules/commandsnext/dependency_injection.md
+                - name: Customization
+                  items:
+                      - name: Help Formatter
+                        href: modules/commandsnext/customization/help_formatter.md
+                      - name: Argument Converters
+                        href: modules/commandsnext/customization/argument_converters.md
+                      - name: Command Handler
+                        href: modules/commandsnext/customization/command_handler.md
+                - name: Cooldowns
+                  href: modules/commandsnext/cooldowns.md
+          - name: Audio
+            items:
+                - name: Lavalink V4
+                  items:
+                      - name: Introduction
+                        uid: modules_audio_lavalink_v4_intro
+                      - name: Setup
+                        uid: modules_audio_lavalink_v4_setup
+                      - name: Configuration
+                        uid: modules_audio_lavalink_v4_configuration
+                      - name: Commands
+                        uid: modules_audio_lavalink_v4_commands
+                      - name: Advanced
+                        uid: modules_audio_lavalink_v4_advanced
+                - name: VoiceNext
+                  items:
+                      - name: Prerequisites
+                        uid: modules_audio_voicenext_prerequisites
+                      - name: Transmitting
+                        uid: modules_audio_voicenext_transmit
+                      - name: Receiving
+                        uid: modules_audio_voicenext_receive
+          - name: OAuth2
+            items:
+                - name: DiscordOAuth2Client
+                  uid: modules_oauth2_oauth2_client
+          - name: Interactivity
+            items:
+                - name: Interactivity Introduction
+                  uid: modules_interactivity_introduction
+    - name: Miscellaneous
+      items:
+          - name: Nightly Builds
+            href: misc/nightly_builds.md
+          - name: Reporting Issues
+            href: misc/reporting_issues.md
+          - name: Hosting
+            href: misc/hosting.md
+          - name: Voice Activities
+            href: misc/voice_activities.md
+          - name: Sentry
+            href: misc/sentry.md
+    - name: Security & Compliance
+      items:
+          - name: Sentry Safety Report
+            href: sec_comp/sentry.md

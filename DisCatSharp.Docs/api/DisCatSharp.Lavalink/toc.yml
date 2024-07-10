@@ -1,0 +1,135 @@
+### YamlMime:TableOfContent
+items:
+- uid: DisCatSharp.Lavalink
+  name: DisCatSharp.Lavalink
+  items:
+  - uid: DisCatSharp.Lavalink.ExtensionMethods
+    name: ExtensionMethods
+  - uid: DisCatSharp.Lavalink.LavalinkConfiguration
+    name: LavalinkConfiguration
+  - uid: DisCatSharp.Lavalink.LavalinkExtension
+    name: LavalinkExtension
+  - uid: DisCatSharp.Lavalink.LavalinkGuildPlayer
+    name: LavalinkGuildPlayer
+  - uid: DisCatSharp.Lavalink.LavalinkSession
+    name: LavalinkSession
+- uid: DisCatSharp.Lavalink.Entities
+  name: DisCatSharp.Lavalink.Entities
+  items:
+  - uid: DisCatSharp.Lavalink.Entities.CpuStats
+    name: CpuStats
+  - uid: DisCatSharp.Lavalink.Entities.FrameStats
+    name: FrameStats
+  - uid: DisCatSharp.Lavalink.Entities.Git
+    name: Git
+  - uid: DisCatSharp.Lavalink.Entities.IQueueEntry
+    name: IQueueEntry
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkException
+    name: LavalinkException
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkInfo
+    name: LavalinkInfo
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkPlayer
+    name: LavalinkPlayer
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkPlayerState
+    name: LavalinkPlayerState
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkPlaylist
+    name: LavalinkPlaylist
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkPlaylistInfo
+    name: LavalinkPlaylistInfo
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkPluginInfo
+    name: LavalinkPluginInfo
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkSessionConfiguration
+    name: LavalinkSessionConfiguration
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkStats
+    name: LavalinkStats
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkTrack
+    name: LavalinkTrack
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkTrackInfo
+    name: LavalinkTrackInfo
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkTrackLoadingResult
+    name: LavalinkTrackLoadingResult
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkVoiceState
+    name: LavalinkVoiceState
+  - uid: DisCatSharp.Lavalink.Entities.MemoryStats
+    name: MemoryStats
+  - uid: DisCatSharp.Lavalink.Entities.Plugin
+    name: Plugin
+  - uid: DisCatSharp.Lavalink.Entities.Version
+    name: Version
+- uid: DisCatSharp.Lavalink.Entities.Filters
+  name: DisCatSharp.Lavalink.Entities.Filters
+  items:
+  - uid: DisCatSharp.Lavalink.Entities.Filters.IPluginFilter
+    name: IPluginFilter
+  - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkChannelMix
+    name: LavalinkChannelMix
+  - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkDisortion
+    name: LavalinkDisortion
+  - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkEqualizer
+    name: LavalinkEqualizer
+  - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkFilters
+    name: LavalinkFilters
+  - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkKaraoke
+    name: LavalinkKaraoke
+  - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkLowPass
+    name: LavalinkLowPass
+  - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkRotation
+    name: LavalinkRotation
+  - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkTimescale
+    name: LavalinkTimescale
+  - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkTremolo
+    name: LavalinkTremolo
+  - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkVibrato
+    name: LavalinkVibrato
+- uid: DisCatSharp.Lavalink.Enums
+  name: DisCatSharp.Lavalink.Enums
+  items:
+  - uid: DisCatSharp.Lavalink.Enums.LavalinkEvents
+    name: LavalinkEvents
+  - uid: DisCatSharp.Lavalink.Enums.LavalinkLoadResultType
+    name: LavalinkLoadResultType
+  - uid: DisCatSharp.Lavalink.Enums.LavalinkSearchType
+    name: LavalinkSearchType
+  - uid: DisCatSharp.Lavalink.Enums.LavalinkTrackEndReason
+    name: LavalinkTrackEndReason
+  - uid: DisCatSharp.Lavalink.Enums.Severity
+    name: Severity
+- uid: DisCatSharp.Lavalink.Enums.Filters
+  name: DisCatSharp.Lavalink.Enums.Filters
+  items:
+  - uid: DisCatSharp.Lavalink.Enums.Filters.LavalinkFilterBand
+    name: LavalinkFilterBand
+- uid: DisCatSharp.Lavalink.EventArgs
+  name: DisCatSharp.Lavalink.EventArgs
+  items:
+  - uid: DisCatSharp.Lavalink.EventArgs.GuildPlayerDestroyedEventArgs
+    name: GuildPlayerDestroyedEventArgs
+  - uid: DisCatSharp.Lavalink.EventArgs.LavalinkPlayerStateUpdateEventArgs
+    name: LavalinkPlayerStateUpdateEventArgs
+  - uid: DisCatSharp.Lavalink.EventArgs.LavalinkSessionConnectedEventArgs
+    name: LavalinkSessionConnectedEventArgs
+  - uid: DisCatSharp.Lavalink.EventArgs.LavalinkSessionDisconnectedEventArgs
+    name: LavalinkSessionDisconnectedEventArgs
+  - uid: DisCatSharp.Lavalink.EventArgs.LavalinkStatsReceivedEventArgs
+    name: LavalinkStatsReceivedEventArgs
+  - uid: DisCatSharp.Lavalink.EventArgs.LavalinkTrackEndedEventArgs
+    name: LavalinkTrackEndedEventArgs
+  - uid: DisCatSharp.Lavalink.EventArgs.LavalinkTrackExceptionEventArgs
+    name: LavalinkTrackExceptionEventArgs
+  - uid: DisCatSharp.Lavalink.EventArgs.LavalinkTrackStartedEventArgs
+    name: LavalinkTrackStartedEventArgs
+  - uid: DisCatSharp.Lavalink.EventArgs.LavalinkTrackStuckEventArgs
+    name: LavalinkTrackStuckEventArgs
+  - uid: DisCatSharp.Lavalink.EventArgs.LavalinkWebsocketClosedEventArgs
+    name: LavalinkWebsocketClosedEventArgs
+- uid: DisCatSharp.Lavalink.Exceptions
+  name: DisCatSharp.Lavalink.Exceptions
+  items:
+  - uid: DisCatSharp.Lavalink.Exceptions.LavalinkRestException
+    name: LavalinkRestException
+- uid: DisCatSharp.Lavalink.Models
+  name: DisCatSharp.Lavalink.Models
+  items:
+  - uid: DisCatSharp.Lavalink.Models.LavalinkPlayerUpdateModel
+    name: LavalinkPlayerUpdateModel
+memberLayout: SeparatePages

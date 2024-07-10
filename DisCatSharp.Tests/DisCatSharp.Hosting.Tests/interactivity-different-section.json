@@ -1,0 +1,12 @@
+{
+	"MyCustomBot": {
+		"Using": [
+			"Interactivity"
+		],
+
+		"Discord": {
+			"Token": "1234567890",
+			"Intents": "GuildEmojisAndStickers,GuildMembers,Guilds"
+		}
+	}
+}

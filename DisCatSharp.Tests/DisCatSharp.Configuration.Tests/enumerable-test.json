@@ -1,0 +1,37 @@
+{
+	"ClassWithArray": {
+		"Values": [
+			10, 11, 12
+		],
+
+		"Strings": [
+			"One",
+			"Two",
+			"Three"
+		]
+	},
+
+	"ClassWithEnumerable": {
+		"Values": [
+			10, 11, 12
+		],
+
+		"Strings": [
+			"One",
+			"Two",
+			"Three"
+		]
+	},
+
+	"ClassWithList": {
+		"Values": [
+			10, 11, 12
+		],
+
+		"Strings": [
+			"One",
+			"Two",
+			"Three"
+		]
+	}
+}

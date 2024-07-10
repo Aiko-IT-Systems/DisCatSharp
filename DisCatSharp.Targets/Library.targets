@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<TargetFrameworks>net7.0;net8.0</TargetFrameworks>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	<PropertyGroup>
+		<AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+		<CodeAnalysisRuleSet>$(MSBuildProjectDirectory)/../DisCatSharp.Tools/DisCatSharp.ruleset</CodeAnalysisRuleSet>
+		<NoWarn>1591;NU5128;DV2001;NETSDK1188;CS8600;CS8625;CS8601;CS8604;CS0219;CS8618;CS8619;CS8597;CS8603;CS8602;CS8765;CS8632;CS8633;CS8714;CS8629;CS8767;CS8620;CS0649</NoWarn>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+</Project>
