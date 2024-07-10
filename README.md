@@ -35,6 +35,11 @@
 - Dropped support for .NET 6
 - Removed previously deprecated fields and methods
 
+## Furthermore
+
+We've squashed the history of DisCatSharp due to it's clone size and cluttered history.
+The original history can be seen in the tags OR at https://github.com/Aiko-IT-Systems/DisCatSharp.Backup (Archived version *before* the squash)
+
 ----
 
 # About
