@@ -16,7 +16,8 @@
 
 ## New
 
-- NET 8 Support
+- .NET 9 Support
+- .NET 8 Support
 - Support for the new [Username System](https://dis.gd/usernames) (pomelo)
 - Support for [Linked Roles](https://discord.com/build/linked-roles)
 - Full support for [Application Subscriptions](https://discord.com/build/apply-now)
@@ -35,11 +36,6 @@
 - Dropped support for .NET 6
 - Removed previously deprecated fields and methods
 
-## Furthermore
-
-We've squashed the history of DisCatSharp due to it's clone size and cluttered history.
-The original history can be seen in the tags OR at https://github.com/Aiko-IT-Systems/DisCatSharp.Backup (Archived version *before* the squash)
-
 ----
 
 # About
@@ -52,6 +48,11 @@ If you:
 - are ready to build great things
 
 Then this is the right place for you!
+
+## What Happened With The History
+
+We've squashed the history of DisCatSharp due to it's clone size and cluttered history.
+The original history can be seen in the releases / tags and at https://github.com/Aiko-IT-Systems/DisCatSharp.Backup (Archived version *before* the squash).
 
 ## Installing
 
