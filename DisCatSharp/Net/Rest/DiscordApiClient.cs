@@ -1071,7 +1071,7 @@ public sealed class DiscordApiClient
 	/// <param name="reason">The reason.</param>
 	internal Task CreateGuildBanAsync(ulong guildId, ulong userId, int deleteMessageSeconds, string? reason)
 	{
-		if (deleteMessageSeconds < 0 || deleteMessageSeconds > 7)
+		if (deleteMessageSeconds < 0 || deleteMessageSeconds > 604800)
 			throw new ArgumentException("Delete message seconds must be a number between 0 and 604800.", nameof(deleteMessageSeconds));
 
 		var pld = new RestGuildBanPayload()
@@ -1103,7 +1103,7 @@ public sealed class DiscordApiClient
 	/// <param name="reason">The reason.</param>
 	internal async Task<DiscordBulkBanResponse> CreateGuildBulkBanAsync(ulong guildId, List<ulong> userIds, int deleteMessageSeconds, string? reason)
 	{
-		if (deleteMessageSeconds < 0 || deleteMessageSeconds > 7)
+		if (deleteMessageSeconds < 0 || deleteMessageSeconds > 604800)
 			throw new ArgumentException("Delete message seconds must be a number between 0 and 604800.", nameof(deleteMessageSeconds));
 		if (userIds.Count > 200)
 			throw new ArgumentException("Can only bulk-ban up to 200 users.", nameof(userIds));
