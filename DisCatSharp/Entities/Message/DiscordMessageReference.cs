@@ -1,3 +1,5 @@
+using DisCatSharp.Enums;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
@@ -7,6 +9,11 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public class DiscordMessageReference
 {
+	/// <summary>
+	/// Gets the type of the reference.
+	/// </summary>
+	public ReferenceType Type { get; internal set; }
+
 	/// <summary>
 	/// Gets the original message.
 	/// </summary>
@@ -37,6 +44,21 @@ public class DiscordMessageReference
 
 internal struct InternalDiscordMessageReference
 {
+	public InternalDiscordMessageReference()
+	{
+		this.Type = ReferenceType.Default;
+		this.MessageId = null;
+		this.ChannelId = null;
+		this.GuildId = null;
+		this.FailIfNotExists = false;
+	}
+
+	/// <summary>
+	/// Gets the type of the reference.
+	/// </summary>
+	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+	internal ReferenceType Type { get; set; }
+
 	/// <summary>
 	/// Gets the message id.
 	/// </summary>

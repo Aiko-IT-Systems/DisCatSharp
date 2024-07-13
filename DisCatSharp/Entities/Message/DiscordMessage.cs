@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
@@ -345,11 +346,31 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	internal InternalDiscordMessageReference? InternalReference { get; set; }
 
 	/// <summary>
-	/// Gets the original message reference from the cross-posted message.
+	/// Gets the message reference.
 	/// </summary>
 	[JsonIgnore]
 	public DiscordMessageReference Reference
 		=> this.InternalReference.HasValue ? this?.InternalBuildMessageReference() : null;
+
+	/// <summary>
+	/// Gets the message snapshots.
+	/// </summary>
+	[JsonProperty("message_snapshots", NullValueHandling = NullValueHandling.Ignore)]
+	public List<DiscordMessageSnapshot>? MessageSnapshots { get; internal set; }
+
+	/// <summary>
+	/// Gets whether this message has a message reference (reply, announcement, etc.).
+	/// </summary>
+	[Experimental("We provide that temporary, as we figure out things.")]
+	public bool HasMessageReference
+		=> this.InternalReference is { Type: ReferenceType.Default };
+
+	/// <summary>
+	/// Gets whether this message has forwarded messages.
+	/// </summary>
+	[Experimental("We provide that temporary, as we figure out things.")]
+	public bool HasMessageSnapshots
+		=> this.InternalReference is { Type: ReferenceType.Forward };
 
 	/// <summary>
 	/// Gets the bitwise flags for this message.
@@ -474,6 +495,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		var guildId = this.InternalReference.Value.GuildId;
 		var channelId = this.InternalReference.Value.ChannelId;
 		var messageId = this.InternalReference.Value.MessageId;
+		var type = this.InternalReference.Value.Type;
 
 		var reference = new DiscordMessageReference();
 
@@ -487,6 +509,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 				};
 
 		var channel = client.InternalGetCachedChannel(channelId.Value);
+		reference.Type = type;
 
 		if (channel == null)
 		{

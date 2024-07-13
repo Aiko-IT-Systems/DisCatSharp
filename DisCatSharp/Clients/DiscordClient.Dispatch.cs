@@ -2377,6 +2377,17 @@ public sealed partial class DiscordClient
 			message.ReferencedMessage.PopulateMentions();
 		}
 
+		message.MessageSnapshots?.ForEach(x =>
+		{
+			x.Message.Discord = this;
+			if (x.Message.MentionedUsersInternal.Count is not 0)
+				x.Message.MentionedUsers.ForEach(u => u.Discord = this);
+			if (x.Message.AttachmentsInternal.Count is not 0)
+				x.Message.AttachmentsInternal.ForEach(a => a.Discord = this);
+			if (x.Message.EmbedsInternal.Count is not 0)
+				x.Message.EmbedsInternal.ForEach(a => a.Discord = this);
+		});
+
 		foreach (var sticker in message.Stickers)
 			sticker.Discord = this;
 
@@ -2434,6 +2445,28 @@ public sealed partial class DiscordClient
 			message.Pinned = eventMessage.Pinned;
 			message.IsTts = eventMessage.IsTts;
 		}
+
+		message.MessageSnapshots?.ForEach(x =>
+		{
+			x.Message.Discord = this;
+			if (x.Message.MentionedUsersInternal.Count is not 0)
+				x.Message.MentionedUsers.ForEach(u => u.Discord = this);
+			if (x.Message.AttachmentsInternal.Count is not 0)
+				x.Message.AttachmentsInternal.ForEach(a => a.Discord = this);
+			if (x.Message.EmbedsInternal.Count is not 0)
+				x.Message.EmbedsInternal.ForEach(a => a.Discord = this);
+		});
+
+		oldmsg?.MessageSnapshots?.ForEach(x =>
+		{
+			x.Message.Discord = this;
+			if (x.Message.MentionedUsersInternal.Count is not 0)
+				x.Message.MentionedUsers.ForEach(u => u.Discord = this);
+			if (x.Message.AttachmentsInternal.Count is not 0)
+				x.Message.AttachmentsInternal.ForEach(a => a.Discord = this);
+			if (x.Message.EmbedsInternal.Count is not 0)
+				x.Message.EmbedsInternal.ForEach(a => a.Discord = this);
+		});
 
 		message.PopulateMentions();
 
