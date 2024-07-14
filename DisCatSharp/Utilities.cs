@@ -91,6 +91,15 @@ public static class Utilities
 	}
 
 	/// <summary>
+	/// Shorthand method to strip both tokens and IDs.
+	/// </summary>
+	/// <param name="str">The string to strip tokens and IDs from.</param>
+	/// <param name="stripIds">Whether to strip ID's.</param>
+	/// <returns>A new string with the tokens replaced with <c>{WEBHOOK_OR_INTERACTION_TOKEN}</c> and <c>{BOT_OR_USER_TOKEN}</c> and optionally the ids replaced with <c>{DISCORD_ID}</c>.</returns>
+	public static string? StripTokensAndOptIds(string? str, bool stripIds)
+		=> StripIds(StripTokens(str), stripIds);
+
+	/// <summary>
 	///	Removes discord-based tokens from a given string.
 	/// </summary>
 	/// <param name="str">The string to remove the tokens from.</param>

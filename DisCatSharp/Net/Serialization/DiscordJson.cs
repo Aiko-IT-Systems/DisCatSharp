@@ -112,11 +112,12 @@ public static class DiscordJson
 		                    "JRE Line Number: " + jre.LineNumber + "\n" +
 		                    "JRE Line Position" + jre.LinePosition + "\n" +
 		                    "JRE Path" + jre.Path;
+
 		SentryEvent sentryEvent = new(new DiscordJsonException(jre))
 		{
 			Level = SentryLevel.Error,
 			Logger = nameof(DiscordJson),
-			Message = Utilities.StripIds(sentryMessage, discord.Configuration.EnableDiscordIdScrubber)
+			Message = Utilities.StripTokensAndOptIds(sentryMessage, discord.Configuration.EnableDiscordIdScrubber)
 		};
 		sentryEvent.SetFingerprint(BaseDiscordClient.GenerateSentryFingerPrint(sentryEvent));
 		if (discord.Configuration.AttachUserInfo && discord.CurrentUser is not null)
@@ -228,6 +229,7 @@ public static class DiscordJson
 			ContractResolver = new OptionalJsonContractResolver(),
 			Error = (s, e) => DiscordJsonErrorHandler(s, e, discord)
 		})!;
+
 		if (discord is null)
 			return obj;
 
