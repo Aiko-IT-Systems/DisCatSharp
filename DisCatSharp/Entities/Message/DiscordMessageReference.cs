@@ -38,7 +38,7 @@ public class DiscordMessageReference
 	/// Gets a readable message reference string.
 	/// </summary>
 	public override string ToString()
-		=> $"Guild: {(this.GuildId.HasValue ? this.GuildId.Value : "Not from guild")}, Channel: {this.Channel.Id}, Message: {this.Message.Id}";
+		=> $"Type: {this.Type}, Guild: {(this.GuildId.HasValue ? this.GuildId.Value : "Not from guild")}, Channel: {this.Channel.Id}, Message: {this.Message.Id}";
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordMessageReference"/> class.

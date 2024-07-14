@@ -14,7 +14,6 @@ using System.Web;
 
 using DisCatSharp.Common;
 using DisCatSharp.Common.RegularExpressions;
-using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
 
@@ -24,7 +23,6 @@ using NuGet.Common;
 using NuGet.Packaging;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
-using NuGet.Protocol.Plugins;
 using NuGet.Versioning;
 
 using Octokit;
