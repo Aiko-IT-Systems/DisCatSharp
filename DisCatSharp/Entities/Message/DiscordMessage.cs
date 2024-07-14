@@ -26,13 +26,9 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	{
 		this._attachmentsLazy = new(() => new ReadOnlyCollection<DiscordAttachment>(this.AttachmentsInternal));
 		this._embedsLazy = new(() => new ReadOnlyCollection<DiscordEmbed>(this.EmbedsInternal));
-		this._mentionedChannelsLazy = new(() => this.MentionedChannelsInternal != null
-			? new ReadOnlyCollection<DiscordChannel>(this.MentionedChannelsInternal)
-			: Array.Empty<DiscordChannel>());
-		this._mentionedRolesLazy = new(() => this.MentionedRolesInternal != null ? new ReadOnlyCollection<DiscordRole>(this.MentionedRolesInternal) : Array.Empty<DiscordRole>());
-		this._mentionedUsersLazy = new(() => this.MentionedUsersInternal != null
-			? new ReadOnlyCollection<DiscordUser>(this.MentionedUsersInternal)
-			: Array.Empty<DiscordUser>());
+		this._mentionedChannelsLazy = new(() => new ReadOnlyCollection<DiscordChannel>(this.MentionedChannelsInternal));
+		this._mentionedRolesLazy = new(() => new ReadOnlyCollection<DiscordRole>(this.MentionedRolesInternal));
+		this._mentionedUsersLazy = new(() => new ReadOnlyCollection<DiscordUser>(this.MentionedUsersInternal));
 		this._reactionsLazy = new(() => new ReadOnlyCollection<DiscordReaction>(this.ReactionsInternal));
 		this._stickersLazy = new(() => new ReadOnlyCollection<DiscordSticker>(this.StickersInternal));
 		this._jumpLink = new(() =>
@@ -74,12 +70,9 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		this.AttachmentsInternal = other.AttachmentsInternal; // the attachments cannot change, thus no need to copy and reallocate.
 		this.EmbedsInternal = [..other.EmbedsInternal];
 
-		if (other.MentionedChannelsInternal != null)
-			this.MentionedChannelsInternal = [..other.MentionedChannelsInternal];
-		if (other.MentionedRolesInternal != null)
-			this.MentionedRolesInternal = [..other.MentionedRolesInternal];
-		if (other.MentionedRoleIds != null)
-			this.MentionedRoleIds = [..other.MentionedRoleIds];
+		this.MentionedChannelsInternal = [..other.MentionedChannelsInternal];
+		this.MentionedRolesInternal = [..other.MentionedRolesInternal];
+		this.MentionedRoleIds = [..other.MentionedRoleIds];
 		this.MentionedUsersInternal = [..other.MentionedUsersInternal];
 		this.ReactionsInternal = [..other.ReactionsInternal];
 		this.StickersInternal = [..other.StickersInternal];
@@ -218,7 +211,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this._mentionedUsersLazy.Value;
 
 	[JsonProperty("mentions", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordUser> MentionedUsersInternal;
+	internal List<DiscordUser> MentionedUsersInternal = [];
 
 	[JsonIgnore]
 	private readonly Lazy<IReadOnlyList<DiscordUser>> _mentionedUsersLazy;
@@ -233,10 +226,10 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this._mentionedRolesLazy.Value;
 
 	[JsonIgnore]
-	internal List<DiscordRole> MentionedRolesInternal;
+	internal List<DiscordRole> MentionedRolesInternal = [];
 
 	[JsonProperty("mention_roles")]
-	internal List<ulong> MentionedRoleIds;
+	public List<ulong> MentionedRoleIds = [];
 
 	[JsonIgnore]
 	private readonly Lazy<IReadOnlyList<DiscordRole>> _mentionedRolesLazy;
@@ -249,7 +242,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this._mentionedChannelsLazy.Value;
 
 	[JsonIgnore]
-	internal List<DiscordChannel> MentionedChannelsInternal;
+	internal List<DiscordChannel> MentionedChannelsInternal = [];
 
 	[JsonIgnore]
 	private readonly Lazy<IReadOnlyList<DiscordChannel>> _mentionedChannelsLazy;
