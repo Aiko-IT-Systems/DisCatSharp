@@ -361,14 +361,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <summary>
 	/// Gets whether this message has a message reference (reply, announcement, etc.).
 	/// </summary>
-	[Experimental("We provide that temporary, as we figure out things.")]
+	[Experimental("We provide that temporary, as we figure out things."), JsonIgnore]
 	public bool HasMessageReference
 		=> this.InternalReference is { Type: ReferenceType.Default };
 
 	/// <summary>
 	/// Gets whether this message has forwarded messages.
 	/// </summary>
-	[Experimental("We provide that temporary, as we figure out things.")]
+	[Experimental("We provide that temporary, as we figure out things.") JsonIgnore]
 	public bool HasMessageSnapshots
 		=> this.InternalReference is { Type: ReferenceType.Forward };
 
