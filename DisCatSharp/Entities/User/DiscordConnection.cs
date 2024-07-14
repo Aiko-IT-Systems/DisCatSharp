@@ -99,6 +99,10 @@ public class DiscordConnection : ObservableApiObject
 	///			<description>false</description>
 	///		</item>
 	///		<item>
+	///			<term>roblox</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
 	///			<term>reddit</term>
 	///			<description>false</description>
 	///		</item>
