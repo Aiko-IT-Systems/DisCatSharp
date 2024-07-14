@@ -16,9 +16,11 @@
 		<Description>DisCatSharp Analyzer</Description>
 		<PackageReleaseNotes>Various DisCatSharp Analyzers.</PackageReleaseNotes>
 		<Copyright>Copyright 2022-2024 AITSYS</Copyright>
-		<PackageTags>Analyzer, analyzers</PackageTags>
+		<PackageTags>Analyzer, analyzers, DisCatSharp, dcs</PackageTags>
 		<DevelopmentDependency>true</DevelopmentDependency>
 		<NoPackageAnalysis>true</NoPackageAnalysis>
+		<NuGetAuditSuppress>true</NuGetAuditSuppress>
+		<NuGetAudit>false</NuGetAudit>
 
 		<TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);AddNuGetDlls;_AddAnalyzersToOutput</TargetsForTfmSpecificContentInPackage>
 
