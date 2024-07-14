@@ -1165,7 +1165,7 @@ public sealed class VoiceNextConnection : IDisposable
 	/// <returns>A Task.</returns>
 	private async Task HandleDispatch(JObject jo)
 	{
-		var opc = (int)jo["op"];
+		var opc = (int?)jo["op"];
 		ArgumentNullException.ThrowIfNull(opc);
 		var opp = jo["d"] as JObject;
 

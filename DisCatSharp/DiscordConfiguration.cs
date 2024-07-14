@@ -312,7 +312,7 @@ public sealed class DiscordConfiguration
 	/// <summary>
 	/// The exception we track with sentry.
 	/// </summary>
-	private List<Type> _exceptions = [typeof(ServerErrorException), typeof(BadRequestException)];
+	private List<Type> _exceptions = [typeof(ServerErrorException), typeof(BadRequestException), typeof(DiscordJsonException)];
 
 	/// <summary>
 	/// <para>Whether to enable the library developer mode.</para>

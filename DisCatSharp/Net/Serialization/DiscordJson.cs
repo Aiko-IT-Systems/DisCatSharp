@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Exceptions;
 
 using Microsoft.Extensions.Logging;
 
@@ -13,6 +14,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using Sentry;
+using Sentry.Protocol;
+
+using ErrorEventArgs = Newtonsoft.Json.Serialization.ErrorEventArgs;
 
 namespace DisCatSharp.Net.Serialization;
 
@@ -90,6 +94,43 @@ public static class DiscordJson
 	}
 
 	/// <summary>
+	/// Handles <see cref="DiscordJson"/> errors.
+	/// </summary>
+	/// <param name="sender">The sender.</param>
+	/// <param name="e">The error event args.</param>
+	/// <param name="discord">The discord client.</param>
+	private static void DiscordJsonErrorHandler(object? sender, ErrorEventArgs e, BaseDiscordClient? discord)
+	{
+		if (discord is null || e.ErrorContext.Error is not JsonReaderException jre)
+			return;
+
+		var sentryMessage = "DiscordJson error on deserialization (" + (sender?.GetType().Name ?? "x") + ")\n\n" +
+		                    "Path: " + e.ErrorContext.Path + "\n" +
+		                    "Original Object" + e.ErrorContext.OriginalObject + "\n" +
+		                    "Current Object" + e.CurrentObject;
+		SentryEvent sentryEvent = new(new DiscordJsonException(jre))
+		{
+			Level = SentryLevel.Error,
+			Logger = nameof(DiscordJson),
+			Message = sentryMessage
+		};
+		sentryEvent.SetFingerprint(BaseDiscordClient.GenerateSentryFingerPrint(sentryEvent));
+		if (discord.Configuration.AttachUserInfo && discord.CurrentUser is not null)
+			sentryEvent.User = new()
+			{
+				Id = discord.CurrentUser.Id.ToString(),
+				Username = discord.CurrentUser.UsernameWithDiscriminator,
+				Other = new Dictionary<string, string>()
+				{
+					{ "developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
+					{ "email", discord.Configuration.FeedbackEmail ?? "not_given" }
+				}
+			};
+		var sid = discord.Sentry.CaptureEvent(sentryEvent);
+		_ = Task.Run(discord.Sentry.FlushAsync);
+	}
+
+	/// <summary>
 	/// Deserializes the specified JSON string to an object.
 	/// </summary>
 	/// <typeparam name="T">The type</typeparam>
@@ -101,8 +142,10 @@ public static class DiscordJson
 
 		var obj = JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings()
 		{
-			ContractResolver = new OptionalJsonContractResolver()
+			ContractResolver = new OptionalJsonContractResolver(),
+			Error = (s, e) => DiscordJsonErrorHandler(s, e, discord)
 		})!;
+
 		if (discord is null)
 			return obj;
 
@@ -176,7 +219,8 @@ public static class DiscordJson
 
 		var obj = JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings()
 		{
-			ContractResolver = new OptionalJsonContractResolver()
+			ContractResolver = new OptionalJsonContractResolver(),
+			Error = (s, e) => DiscordJsonErrorHandler(s, e, discord)
 		})!;
 		if (discord is null)
 			return obj;

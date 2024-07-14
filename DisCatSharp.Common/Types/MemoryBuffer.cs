@@ -139,7 +139,7 @@ public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 
 			var lsl = this._lastSegmentLength;
 			var slen = dmem.Span.Length - lsl;
-			stream.Read(buff, 0, slen);
+			_ = stream.Read(buff, 0, slen);
 			buff.AsSpan(0, slen).CopyTo(dmem.Span);
 			len -= dmem.Span.Length;
 
