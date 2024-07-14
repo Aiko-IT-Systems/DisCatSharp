@@ -2392,6 +2392,7 @@ public sealed partial class DiscordClient
 				x.Message.MentionedChannelsInternal.ForEach(u => u.Discord = this);
 			if (x.Message.MentionedRolesInternal.Count is not 0)
 				x.Message.MentionedRolesInternal.ForEach(u => u.Discord = this);
+			x.Message.PopulateMentions();
 		});
 
 		foreach (var sticker in message.Stickers)
@@ -2467,6 +2468,7 @@ public sealed partial class DiscordClient
 				x.Message.MentionedChannelsInternal.ForEach(u => u.Discord = this);
 			if (x.Message.MentionedRolesInternal.Count is not 0)
 				x.Message.MentionedRolesInternal.ForEach(u => u.Discord = this);
+			x.Message.PopulateMentions();
 		});
 
 		oldmsg?.MessageSnapshots?.ForEach(x =>
@@ -2484,6 +2486,7 @@ public sealed partial class DiscordClient
 				x.Message.MentionedChannelsInternal.ForEach(u => u.Discord = this);
 			if (x.Message.MentionedRolesInternal.Count is not 0)
 				x.Message.MentionedRolesInternal.ForEach(u => u.Discord = this);
+			x.Message.PopulateMentions();
 		});
 
 		message.PopulateMentions();

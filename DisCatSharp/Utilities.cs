@@ -24,11 +24,13 @@ using NuGet.Common;
 using NuGet.Packaging;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
+using NuGet.Protocol.Plugins;
 using NuGet.Versioning;
 
 using Octokit;
 using Octokit.Internal;
 
+using Connection = Octokit.Connection;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 using Repository = NuGet.Protocol.Core.Types.Repository;
@@ -269,11 +271,11 @@ public static class Utilities
 	/// <summary>
 	/// Gets the user mentions.
 	/// </summary>
-	/// <param name="message">The message.</param>
+	/// <param name="message">The message content.</param>
 	/// <returns>A list of ulong.</returns>
-	internal static IEnumerable<ulong> GetUserMentions(DiscordMessage message)
+	internal static IEnumerable<ulong> GetUserMentions(string message)
 	{
-		var matches = DiscordRegEx.UserWithOptionalNicknameRegex().Matches(message.Content);
+		var matches = DiscordRegEx.UserWithOptionalNicknameRegex().Matches(message);
 		return from Match match in matches
 		       select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
@@ -281,11 +283,11 @@ public static class Utilities
 	/// <summary>
 	/// Gets the role mentions.
 	/// </summary>
-	/// <param name="message">The message.</param>
+	/// <param name="message">The message content.</param>
 	/// <returns>A list of ulong.</returns>
-	internal static IEnumerable<ulong> GetRoleMentions(DiscordMessage message)
+	internal static IEnumerable<ulong> GetRoleMentions(string message)
 	{
-		var matches = DiscordRegEx.RoleRegex().Matches(message.Content);
+		var matches = DiscordRegEx.RoleRegex().Matches(message);
 		return from Match match in matches
 		       select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
@@ -293,11 +295,11 @@ public static class Utilities
 	/// <summary>
 	/// Gets the channel mentions.
 	/// </summary>
-	/// <param name="message">The message.</param>
+	/// <param name="message">The message content.</param>
 	/// <returns>A list of ulong.</returns>
-	internal static IEnumerable<ulong> GetChannelMentions(DiscordMessage message)
+	internal static IEnumerable<ulong> GetChannelMentions(string message)
 	{
-		var matches = DiscordRegEx.ChannelRegex().Matches(message.Content);
+		var matches = DiscordRegEx.ChannelRegex().Matches(message);
 		return from Match match in matches
 		       select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
@@ -305,11 +307,11 @@ public static class Utilities
 	/// <summary>
 	/// Gets the emojis.
 	/// </summary>
-	/// <param name="message">The message.</param>
+	/// <param name="message">The message content.</param>
 	/// <returns>A list of ulong.</returns>
-	internal static IEnumerable<ulong> GetEmojis(DiscordMessage message)
+	internal static IEnumerable<ulong> GetEmojis(string message)
 	{
-		var matches = DiscordRegEx.EmojiRegex().Matches(message.Content);
+		var matches = DiscordRegEx.EmojiRegex().Matches(message);
 		return from Match match in matches
 		       select ulong.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
 	}

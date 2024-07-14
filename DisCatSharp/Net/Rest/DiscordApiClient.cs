@@ -21,6 +21,8 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+using MessageType = DisCatSharp.Enums.MessageType;
+
 namespace DisCatSharp.Net;
 
 /// <summary>
@@ -118,7 +120,7 @@ public sealed class DiscordApiClient
 		this.PopulateMessage(author, ret);
 
 		var referencedMsg = msgRaw["referenced_message"];
-		if (ret.MessageType == MessageType.Reply && !string.IsNullOrWhiteSpace(referencedMsg?.ToString()))
+		if (ret is { InternalReference: { Type: ReferenceType.Default }, MessageType: MessageType.Reply } && !string.IsNullOrWhiteSpace(referencedMsg?.ToString()))
 		{
 			author = referencedMsg["author"].ToObject<TransportUser>();
 			ret.ReferencedMessage.Discord = this.Discord;
@@ -208,6 +210,24 @@ public sealed class DiscordApiClient
 		}
 
 		ret.PopulateMentions();
+
+		ret.MessageSnapshots?.ForEach(x =>
+		{
+			x.Message.Discord = this.Discord;
+			if (x.Message.MentionedUsersInternal.Count is not 0)
+				x.Message.MentionedUsersInternal.ForEach(u => u.Discord = this.Discord);
+			if (x.Message.AttachmentsInternal.Count is not 0)
+				x.Message.AttachmentsInternal.ForEach(a => a.Discord = this.Discord);
+			if (x.Message.EmbedsInternal.Count is not 0)
+				x.Message.EmbedsInternal.ForEach(a => a.Discord = this.Discord);
+			if (ret.Reference is { GuildId: not null })
+				x.Message.GuildId = ret.Reference.GuildId;
+			if (x.Message.MentionedChannelsInternal.Count is not 0)
+				x.Message.MentionedChannelsInternal.ForEach(u => u.Discord = this.Discord);
+			if (x.Message.MentionedRolesInternal.Count is not 0)
+				x.Message.MentionedRolesInternal.ForEach(u => u.Discord = this.Discord);
+			x.Message.PopulateMentions();
+		});
 
 		ret.ReactionsInternal ??= [];
 		foreach (var xr in ret.ReactionsInternal)
@@ -2373,8 +2393,7 @@ public sealed class DiscordApiClient
 	{
 		var restOverwrites = new List<DiscordRestOverwrite>();
 		if (overwrites != null)
-			foreach (var ow in overwrites)
-				restOverwrites.Add(ow.Build());
+			restOverwrites.AddRange(overwrites.Select(ow => ow.Build()));
 
 		var pld = new RestChannelCreatePayload
 		{
@@ -2451,8 +2470,7 @@ public sealed class DiscordApiClient
 		if (permissionOverwrites != null)
 		{
 			restoverwrites = [];
-			foreach (var ow in permissionOverwrites)
-				restoverwrites.Add(ow.Build());
+			restoverwrites.AddRange(permissionOverwrites.Select(ow => ow.Build()));
 		}
 
 		var pld = new RestChannelCreatePayload
@@ -2536,8 +2554,7 @@ public sealed class DiscordApiClient
 		if (permissionOverwrites != null)
 		{
 			restoverwrites = [];
-			foreach (var ow in permissionOverwrites)
-				restoverwrites.Add(ow.Build());
+			restoverwrites.AddRange(permissionOverwrites.Select(ow => ow.Build()));
 		}
 
 		var pld = new RestChannelModifyPayload
@@ -2617,8 +2634,7 @@ public sealed class DiscordApiClient
 		if (permissionOverwrites != null)
 		{
 			restoverwrites = [];
-			foreach (var ow in permissionOverwrites)
-				restoverwrites.Add(ow.Build());
+			restoverwrites.AddRange(permissionOverwrites.Select(ow => ow.Build()));
 		}
 
 		var pld = new RestChannelModifyPayload
@@ -2734,6 +2750,7 @@ public sealed class DiscordApiClient
 	/// <param name="mentionReply">If true, mention reply.</param>
 	/// <param name="failOnInvalidReply">If true, fail on invalid reply.</param>
 	/// <param name="components">The components.</param>
+	/// <exception cref="ArgumentException">Thrown when the <paramref name="content"/> exceeds 2000 characters or is empty and if neither content, sticker, components and embeds are definied..</exception>
 	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string content, IEnumerable<DiscordEmbed> embeds, DiscordSticker sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply, ReadOnlyCollection<DiscordActionRowComponent>? components = null)
 	{
 		if (content is { Length: > 2000 })
@@ -2742,7 +2759,7 @@ public sealed class DiscordApiClient
 		if (!embeds?.Any() ?? true)
 		{
 			if (content == null && sticker == null && components == null)
-				throw new ArgumentException("You must specify message content, a sticker, components or an embed.");
+				throw new ArgumentException("You must specify message content, a sticker, components or embeds.");
 			if (content.Length == 0)
 				throw new ArgumentException("Message content must not be empty.");
 		}
@@ -2768,6 +2785,7 @@ public sealed class DiscordApiClient
 		if (replyMessageId != null)
 			pld.MessageReference = new InternalDiscordMessageReference
 			{
+				Type = ReferenceType.Default,
 				MessageId = replyMessageId,
 				FailIfNotExists = failOnInvalidReply
 			};
@@ -2822,6 +2840,7 @@ public sealed class DiscordApiClient
 		if (builder.ReplyId != null)
 			pld.MessageReference = new InternalDiscordMessageReference
 			{
+				Type = ReferenceType.Default,
 				MessageId = builder.ReplyId,
 				FailIfNotExists = builder.FailOnInvalidReply
 			};
@@ -2892,10 +2911,49 @@ public sealed class DiscordApiClient
 			var ret = this.PrepareMessage(JObject.Parse(res.Response));
 
 			foreach (var file in builder.FilesInternal.Where(x => x.ResetPositionTo.HasValue))
-				file.Stream.Position = file.ResetPositionTo.Value;
+				file.Stream.Position = file.ResetPositionTo!.Value;
 
 			return ret;
 		}
+	}
+
+	/// <summary>
+	/// Forwards a message.
+	/// </summary>
+	/// <param name="forwardMessage">The message to forward.</param>
+	/// <param name="targetChannelId">The target channel id to forward the message to.</param>
+	/// <param name="content">The content to attach.</param>
+	/// <exception cref="ArgumentException">Thrown when the <paramref name="content"/> exceeds 2000 characters.</exception>
+	public async Task<DiscordMessage> ForwardMessageAsync(DiscordMessage forwardMessage, ulong targetChannelId, string? content)
+	{
+		if (content is { Length: > 2000 })
+			throw new ArgumentException("Message content length cannot exceed 2000 characters.");
+
+		var pld = new RestChannelMessageCreatePayload
+		{
+			//HasContent = content != null,
+			//Content = content,
+			MessageReference = new InternalDiscordMessageReference
+			{
+				Type = ReferenceType.Forward,
+				MessageId = forwardMessage.Id,
+				ChannelId = forwardMessage.ChannelId,
+				GuildId = forwardMessage.GuildId
+			}
+		};
+
+		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
+		{
+			channel_id = targetChannelId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		var ret = this.PrepareMessage(JObject.Parse(res.Response));
+
+		return ret;
 	}
 
 	/// <summary>
@@ -7410,4 +7468,5 @@ public sealed class DiscordApiClient
 	}
 
 #endregion
+	
 }

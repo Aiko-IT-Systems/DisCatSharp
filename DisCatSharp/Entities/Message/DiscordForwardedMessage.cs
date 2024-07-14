@@ -67,22 +67,34 @@ public sealed class DiscordForwardedMessage : ObservableApiObject
 	public IReadOnlyList<DiscordEmbed> Embeds
 		=> this._embedsLazy.Value;
 
+	/// <summary>
+	/// Gets the attached <see cref="DiscordEmbed"/>s.
+	/// </summary>
 	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<DiscordEmbed> EmbedsInternal = [];
 
+	/// <summary>
+	/// Holds the list of <see cref="DiscordEmbed"/>s.
+	/// </summary>
 	[JsonIgnore]
 	private readonly Lazy<IReadOnlyList<DiscordEmbed>> _embedsLazy;
 
 	/// <summary>
-	/// Gets files attached to this forwarded message.
+	/// Gets the attached <see cref="DiscordAttachment"/>s.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordAttachment> Attachments
 		=> this._attachmentsLazy.Value;
 
+	/// <summary>
+	/// Gets the <see cref="DiscordAttachment"/>s.
+	/// </summary>
 	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<DiscordAttachment> AttachmentsInternal = [];
 
+	/// <summary>
+	/// Holds the list of <see cref="DiscordAttachment"/>s.
+	/// </summary>
 	[JsonIgnore]
 	private readonly Lazy<IReadOnlyList<DiscordAttachment>> _attachmentsLazy;
 
@@ -138,9 +150,15 @@ public sealed class DiscordForwardedMessage : ObservableApiObject
 	public IReadOnlyList<DiscordUser> MentionedUsers
 		=> this._mentionedUsersLazy.Value;
 
+	/// <summary>
+	/// Gets the mentioned <see cref="DiscordUser"/>s.
+	/// </summary>
 	[JsonProperty("mentions", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<DiscordUser> MentionedUsersInternal { get; set; } = [];
 
+	/// <summary>
+	/// Holds the list of <see cref="DiscordRole"/> mentions.
+	/// </summary>
 	[JsonIgnore]
 	private readonly Lazy<IReadOnlyList<DiscordUser>> _mentionedUsersLazy;
 
@@ -151,11 +169,11 @@ public sealed class DiscordForwardedMessage : ObservableApiObject
 	public IReadOnlyList<DiscordRole> MentionedRoles
 		=> this._mentionedRolesLazy.Value;
 
+	/// <summary>
+	/// Constructs the list of <see cref="DiscordRole"/> mentions.
+	/// </summary>
 	[JsonIgnore]
-	internal List<DiscordRole> MentionedRolesInternal
-		=> this.GuildId.HasValue && this.Discord.Guilds.ContainsKey(this.GuildId.Value)
-			? this.MentionedRoleIds.Select(x => this.Discord.Guilds[this.GuildId.Value].GetRole(x)).ToList()
-			: [];
+	internal List<DiscordRole> MentionedRolesInternal = [];
 
 	/// <summary>
 	/// Gets role ids mentioned by this forwarded message.
@@ -164,6 +182,9 @@ public sealed class DiscordForwardedMessage : ObservableApiObject
 	[JsonProperty("mention_roles")]
 	public List<ulong> MentionedRoleIds = [];
 
+	/// <summary>
+	/// Holds the list of <see cref="DiscordRole"/> mentions.
+	/// </summary>
 	[JsonIgnore]
 	private readonly Lazy<IReadOnlyList<DiscordRole>> _mentionedRolesLazy;
 
@@ -174,15 +195,75 @@ public sealed class DiscordForwardedMessage : ObservableApiObject
 	public IReadOnlyList<DiscordChannel> MentionedChannels
 		=> this._mentionedChannelsLazy.Value;
 
+	/// <summary>
+	/// Constructs the list of <see cref="DiscordChannel"/> mentions.
+	/// </summary>
 	[JsonIgnore]
 	internal List<DiscordChannel> MentionedChannelsInternal = [];
 
+	/// <summary>
+	/// Holds the list of <see cref="DiscordChannel"/> mentions.
+	/// </summary>
 	[JsonIgnore]
 	private readonly Lazy<IReadOnlyList<DiscordChannel>> _mentionedChannelsLazy;
 
 	/// <summary>
-	/// Gets all mentions from this forwarded message.
+	/// Gets the mentions of this forwarded message.
 	/// </summary>
-	internal void GetMentions()
-	{ }
+	/// <returns>An array of IMentions.</returns>
+	private List<IMention> GetMentions()
+	{
+		var mentions = new List<IMention>();
+
+		try
+		{
+			if (this.MentionedUsersInternal.Count is not 0)
+				mentions.AddRange(this.MentionedUsersInternal.Select(m => (IMention)new UserMention(m)));
+
+			if (this.MentionedRoleIds.Count is not 0)
+				mentions.AddRange(this.MentionedRoleIds.Select(r => (IMention)new RoleMention(r)));
+		}
+		catch
+		{ }
+
+		return mentions;
+	}
+
+	/// <summary>
+	/// Populates the mentions of this forwarded message.
+	/// </summary>
+	internal void PopulateMentions()
+	{
+		var guild = this.GuildId.HasValue && this.Discord.Guilds.TryGetValue(this.GuildId.Value, out var gld) ? gld : null;
+		this.MentionedUsersInternal ??= [];
+		this.MentionedRolesInternal ??= [];
+		this.MentionedChannelsInternal ??= [];
+
+		var mentionedUsers = new HashSet<DiscordUser>(new DiscordUserComparer());
+		if (guild is not null)
+			foreach (var usr in this.MentionedUsersInternal)
+			{
+				usr.Discord = this.Discord;
+				this.Discord.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
+				{
+					old.Username = usr.Username;
+					old.Discriminator = usr.Discriminator;
+					old.AvatarHash = usr.AvatarHash;
+					old.GlobalName = usr.GlobalName;
+					return old;
+				});
+
+				mentionedUsers.Add(guild.MembersInternal.TryGetValue(usr.Id, out var member) ? member : usr);
+			}
+
+		if (!string.IsNullOrWhiteSpace(this.Content))
+		{
+			if (guild is not null)
+				this.MentionedRolesInternal = this.MentionedRolesInternal.Union(this.MentionedRoleIds.Select(xid => guild.GetRole(xid))).ToList();
+
+			this.MentionedChannelsInternal = this.MentionedChannelsInternal.Union(Utilities.GetChannelMentions(this.Content).Select(xid => guild.GetChannel(xid))).ToList();
+		}
+
+		this.MentionedUsersInternal = [.. mentionedUsers];
+	}
 }

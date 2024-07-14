@@ -30,7 +30,9 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 			? new ReadOnlyCollection<DiscordChannel>(this.MentionedChannelsInternal)
 			: Array.Empty<DiscordChannel>());
 		this._mentionedRolesLazy = new(() => this.MentionedRolesInternal != null ? new ReadOnlyCollection<DiscordRole>(this.MentionedRolesInternal) : Array.Empty<DiscordRole>());
-		this.MentionedUsersLazy = new(() => new ReadOnlyCollection<DiscordUser>(this.MentionedUsersInternal));
+		this._mentionedUsersLazy = new(() => this.MentionedUsersInternal != null
+			? new ReadOnlyCollection<DiscordUser>(this.MentionedUsersInternal)
+			: Array.Empty<DiscordUser>());
 		this._reactionsLazy = new(() => new ReadOnlyCollection<DiscordReaction>(this.ReactionsInternal));
 		this._stickersLazy = new(() => new ReadOnlyCollection<DiscordSticker>(this.StickersInternal));
 		this._jumpLink = new(() =>
@@ -213,13 +215,13 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordUser> MentionedUsers
-		=> this.MentionedUsersLazy.Value;
+		=> this._mentionedUsersLazy.Value;
 
 	[JsonProperty("mentions", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<DiscordUser> MentionedUsersInternal;
 
 	[JsonIgnore]
-	internal readonly Lazy<IReadOnlyList<DiscordUser>> MentionedUsersLazy;
+	private readonly Lazy<IReadOnlyList<DiscordUser>> _mentionedUsersLazy;
 
 	// TODO: this will probably throw an exception in DMs since it tries to wrap around a null List...
 	// this is probably low priority but need to find out a clean way to solve it...
@@ -487,6 +489,15 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 					: await this.Discord.ApiClient.EndPollAsync(this.ChannelId, this.Id);
 
 	/// <summary>
+	/// Forwards this message to another channel.
+	/// </summary>
+	/// <param name="targetChannel">The channel to forward this message to.</param>
+	/// <param name="content">Content is not available at the moment, but already added for the future.</param>
+	/// <returns></returns>
+	public async Task<DiscordMessage> ForwardMessageAsync(DiscordChannel targetChannel, string? content = null)
+		=> await this.Discord.ApiClient.ForwardMessageAsync(this, targetChannel.Id, content);
+
+	/// <summary>
 	/// Build the message reference.
 	/// </summary>
 	internal DiscordMessageReference InternalBuildMessageReference()
@@ -600,12 +611,10 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 			}
 
 		if (!string.IsNullOrWhiteSpace(this.Content))
-			//mentionedUsers.UnionWith(Utilities.GetUserMentions(this).Select(this.Discord.GetCachedOrEmptyUserInternal));
 			if (guild != null)
 			{
-				//this._mentionedRoles = this._mentionedRoles.Union(Utilities.GetRoleMentions(this).Select(xid => guild.GetRole(xid))).ToList();
 				this.MentionedRolesInternal = this.MentionedRolesInternal.Union(this.MentionedRoleIds.Select(xid => guild.GetRole(xid))).ToList();
-				this.MentionedChannelsInternal = this.MentionedChannelsInternal.Union(Utilities.GetChannelMentions(this).Select(xid => guild.GetChannel(xid))).ToList();
+				this.MentionedChannelsInternal = this.MentionedChannelsInternal.Union(Utilities.GetChannelMentions(this.Content).Select(xid => guild.GetChannel(xid))).ToList();
 			}
 
 		this.MentionedUsersInternal = [.. mentionedUsers];
