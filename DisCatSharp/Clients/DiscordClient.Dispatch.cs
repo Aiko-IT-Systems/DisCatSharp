@@ -2381,11 +2381,17 @@ public sealed partial class DiscordClient
 		{
 			x.Message.Discord = this;
 			if (x.Message.MentionedUsersInternal.Count is not 0)
-				x.Message.MentionedUsers.ForEach(u => u.Discord = this);
+				x.Message.MentionedUsersInternal.ForEach(u => u.Discord = this);
 			if (x.Message.AttachmentsInternal.Count is not 0)
 				x.Message.AttachmentsInternal.ForEach(a => a.Discord = this);
 			if (x.Message.EmbedsInternal.Count is not 0)
 				x.Message.EmbedsInternal.ForEach(a => a.Discord = this);
+			if (message.Reference is { GuildId: not null })
+				x.Message.GuildId = message.Reference.GuildId;
+			if (x.Message.MentionedChannelsInternal.Count is not 0)
+				x.Message.MentionedChannelsInternal.ForEach(u => u.Discord = this);
+			if (x.Message.MentionedRolesInternal.Count is not 0)
+				x.Message.MentionedRolesInternal.ForEach(u => u.Discord = this);
 		});
 
 		foreach (var sticker in message.Stickers)
@@ -2450,22 +2456,34 @@ public sealed partial class DiscordClient
 		{
 			x.Message.Discord = this;
 			if (x.Message.MentionedUsersInternal.Count is not 0)
-				x.Message.MentionedUsers.ForEach(u => u.Discord = this);
+				x.Message.MentionedUsersInternal.ForEach(u => u.Discord = this);
 			if (x.Message.AttachmentsInternal.Count is not 0)
 				x.Message.AttachmentsInternal.ForEach(a => a.Discord = this);
 			if (x.Message.EmbedsInternal.Count is not 0)
 				x.Message.EmbedsInternal.ForEach(a => a.Discord = this);
+			if (message.Reference is { GuildId: not null })
+				x.Message.GuildId = message.Reference.GuildId;
+			if (x.Message.MentionedChannelsInternal.Count is not 0)
+				x.Message.MentionedChannelsInternal.ForEach(u => u.Discord = this);
+			if (x.Message.MentionedRolesInternal.Count is not 0)
+				x.Message.MentionedRolesInternal.ForEach(u => u.Discord = this);
 		});
 
 		oldmsg?.MessageSnapshots?.ForEach(x =>
 		{
 			x.Message.Discord = this;
 			if (x.Message.MentionedUsersInternal.Count is not 0)
-				x.Message.MentionedUsers.ForEach(u => u.Discord = this);
+				x.Message.MentionedUsersInternal.ForEach(u => u.Discord = this);
 			if (x.Message.AttachmentsInternal.Count is not 0)
 				x.Message.AttachmentsInternal.ForEach(a => a.Discord = this);
 			if (x.Message.EmbedsInternal.Count is not 0)
 				x.Message.EmbedsInternal.ForEach(a => a.Discord = this);
+			if (oldmsg.Reference is { GuildId: not null })
+				x.Message.GuildId = oldmsg.Reference.GuildId;
+			if (x.Message.MentionedChannelsInternal.Count is not 0)
+				x.Message.MentionedChannelsInternal.ForEach(u => u.Discord = this);
+			if (x.Message.MentionedRolesInternal.Count is not 0)
+				x.Message.MentionedRolesInternal.ForEach(u => u.Discord = this);
 		});
 
 		message.PopulateMentions();

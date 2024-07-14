@@ -1,45 +1,67 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 
 using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
-using DisCatSharp.Net.Abstractions;
 
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
 
+/// <summary>
+/// Represents a forwarded <see cref="DiscordMessage"/> which contains only a subset of fields.
+/// </summary>
 [DiscordInExperiment, Experimental("This is subject to change at any time.")]
-public class DiscordForwardedMessage : ObservableApiObject
+public sealed class DiscordForwardedMessage : ObservableApiObject
 {
+	/// <summary>
+	/// Constructs a new <see cref="DiscordForwardedMessage"/>.
+	/// </summary>
 	internal DiscordForwardedMessage()
 	{
 		this._attachmentsLazy = new(() => new ReadOnlyCollection<DiscordAttachment>(this.AttachmentsInternal));
 		this._embedsLazy = new(() => new ReadOnlyCollection<DiscordEmbed>(this.EmbedsInternal));
-		/*this._mentionedChannelsLazy = new(() => this.MentionedChannelsInternal != null
-			? new ReadOnlyCollection<DiscordChannel>(this.MentionedChannelsInternal)
-			: Array.Empty<DiscordChannel>());
-		this._mentionedRolesLazy = new(() => this.MentionedRolesInternal != null ? new ReadOnlyCollection<DiscordRole>(this.MentionedRolesInternal) : Array.Empty<DiscordRole>());
-		this.MentionedUsersLazy = new(() => new ReadOnlyCollection<DiscordUser>(this.MentionedUsersInternal));*/
+		this._mentionedChannelsLazy = new(() => new ReadOnlyCollection<DiscordChannel>(this.MentionedChannelsInternal));
+		this._mentionedRolesLazy = new(() => new ReadOnlyCollection<DiscordRole>(this.MentionedRolesInternal));
+		this._mentionedUsersLazy = new(() => new ReadOnlyCollection<DiscordUser>(this.MentionedUsersInternal));
 	}
 
 	/// <summary>
-	/// Gets the type of the message.
+	/// Constructs a new <see cref="DiscordForwardedMessage"/>.
+	/// </summary>
+	/// <param name="guildId">Optional guild id.</param>
+	internal DiscordForwardedMessage(ulong guildId)
+	{
+		this._attachmentsLazy = new(() => new ReadOnlyCollection<DiscordAttachment>(this.AttachmentsInternal));
+		this._embedsLazy = new(() => new ReadOnlyCollection<DiscordEmbed>(this.EmbedsInternal));
+		this._mentionedChannelsLazy = new(() => new ReadOnlyCollection<DiscordChannel>(this.MentionedChannelsInternal));
+		this._mentionedRolesLazy = new(() => new ReadOnlyCollection<DiscordRole>(this.MentionedRolesInternal));
+		this._mentionedUsersLazy = new(() => new ReadOnlyCollection<DiscordUser>(this.MentionedUsersInternal));
+		this.GuildId = guildId;
+	}
+
+	/// <summary>
+	/// Gets the guild id.
+	/// </summary>
+	internal ulong? GuildId { get; set; } = null;
+
+	/// <summary>
+	/// Gets the type of the forwarded message.
 	/// </summary>
 	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
 	public MessageType? MessageType { get; internal set; }
 
 	/// <summary>
-	/// Gets the message's content.
+	/// Gets the forwarded message's content.
 	/// </summary>
 	[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
-	public string Content { get; internal set; }
+	public string? Content { get; internal set; }
 
 	/// <summary>
-	/// Gets embeds attached to this message.
+	/// Gets embeds attached to this forwarded message.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordEmbed> Embeds
@@ -52,7 +74,7 @@ public class DiscordForwardedMessage : ObservableApiObject
 	private readonly Lazy<IReadOnlyList<DiscordEmbed>> _embedsLazy;
 
 	/// <summary>
-	/// Gets files attached to this message.
+	/// Gets files attached to this forwarded message.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordAttachment> Attachments
@@ -65,114 +87,102 @@ public class DiscordForwardedMessage : ObservableApiObject
 	private readonly Lazy<IReadOnlyList<DiscordAttachment>> _attachmentsLazy;
 
 	/// <summary>
-	/// Gets the message's creation timestamp.
+	/// Gets the forwarded message's creation timestamp.
 	/// </summary>
 	[JsonIgnore]
-	public DateTimeOffset? Timestamp
-		=> !string.IsNullOrWhiteSpace(this.TimestampRaw) && DateTimeOffset.TryParse(this.TimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ? dto : null;
+	public DateTimeOffset Timestamp
+		=> DateTimeOffset.TryParse(this.TimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ? dto : throw new ArithmeticException("Could not convert timestamp to DateTimeOffset");
 
 	/// <summary>
-	/// Gets the message's creation timestamp as raw string.
+	/// Gets the forwarded message's creation timestamp as raw string.
 	/// </summary>
 	[JsonProperty("timestamp", NullValueHandling = NullValueHandling.Ignore)]
 	internal string TimestampRaw { get; set; }
 
 	/// <summary>
-	/// Gets the message's edit timestamp. Will be null if the message was not edited.
+	/// Gets the forwarded message's edit timestamp. Will be null if the forwarded message was not edited.
 	/// </summary>
 	[JsonIgnore]
 	public DateTimeOffset? EditedTimestamp
 		=> !string.IsNullOrWhiteSpace(this.EditedTimestampRaw) && DateTimeOffset.TryParse(this.EditedTimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ? dto : null;
 
 	/// <summary>
-	/// Gets the message's edit timestamp as raw string. Will be null if the message was not edited.
+	/// Gets the forwarded message's edit timestamp as raw string. Will be null if the forwarded message was not edited.
 	/// </summary>
 	[JsonProperty("edited_timestamp", NullValueHandling = NullValueHandling.Ignore)]
-	internal string EditedTimestampRaw { get; set; }
+	internal string? EditedTimestampRaw { get; set; }
 
 	/// <summary>
-	/// Gets whether this message was edited.
+	/// Gets whether this forwarded message was edited.
 	/// </summary>
 	[JsonIgnore]
 	public bool IsEdited
 		=> !string.IsNullOrWhiteSpace(this.EditedTimestampRaw);
 
 	/// <summary>
-	/// Gets the bitwise flags for this message.
+	/// Gets the bitwise flags for this forwarded message.
 	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
 	public MessageFlags? Flags { get; internal set; }
 
 	/// <summary>
-	/// Gets whether the message mentions everyone.
+	/// Gets whether the forwarded message mentions everyone.
 	/// </summary>
 	[JsonProperty("mention_everyone", NullValueHandling = NullValueHandling.Ignore)]
 	public bool MentionEveryone { get; internal set; }
 
-	/*
-	 TODO: Implement if stable
-		/// <summary>
-		/// Gets users or members mentioned by this message.
-		/// </summary>
-		[JsonIgnore]
-		public IReadOnlyList<DiscordUser> MentionedUsers
-			=> this.MentionedUsersLazy.Value;
-	*/
-
-	[JsonProperty("mentions", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<TransportUser> MentionedUsersInternal { get; set; } = [];
-
 	/// <summary>
-	/// Gets users mentioned by this message.
+	/// Gets users or members mentioned by this forwarded message.
 	/// </summary>
 	[JsonIgnore]
-	public List<DiscordUser> MentionedUsers
-		=> this.MentionedUsersInternal.Count is not 0
-			? this.MentionedUsersInternal.Select(x => new DiscordUser(x)
-			{
-				Discord = this.Discord
-			}).ToList()
-			: [];
+	public IReadOnlyList<DiscordUser> MentionedUsers
+		=> this._mentionedUsersLazy.Value;
 
-	/*
-	 TODO: Implement if stable
+	[JsonProperty("mentions", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<DiscordUser> MentionedUsersInternal { get; set; } = [];
 
-	 [JsonIgnore]
-	 internal readonly Lazy<IReadOnlyList<DiscordUser>> MentionedUsersLazy;
-
-		 /// <summary>
-		 /// Gets roles mentioned by this message.
-		 /// </summary>
-		 [JsonIgnore]
-		 public IReadOnlyList<DiscordRole> MentionedRoles
-			 => this._mentionedRolesLazy.Value;
-
-		 [JsonIgnore]
-		 internal List<DiscordRole> MentionedRolesInternal;
-	 */
+	[JsonIgnore]
+	private readonly Lazy<IReadOnlyList<DiscordUser>> _mentionedUsersLazy;
 
 	/// <summary>
-	/// Gets role ids mentioned by this message.
+	/// Gets roles mentioned by this forwarded message.
+	/// </summary>
+	[JsonIgnore]
+	public IReadOnlyList<DiscordRole> MentionedRoles
+		=> this._mentionedRolesLazy.Value;
+
+	[JsonIgnore]
+	internal List<DiscordRole> MentionedRolesInternal
+		=> this.GuildId.HasValue && this.Discord.Guilds.ContainsKey(this.GuildId.Value)
+			? this.MentionedRoleIds.Select(x => this.Discord.Guilds[this.GuildId.Value].GetRole(x)).ToList()
+			: [];
+
+	/// <summary>
+	/// Gets role ids mentioned by this forwarded message.
+	/// If the bot is in the forwarded guild and has the guild on it's shard, you can use <see cref="MentionedRoles"/> to get the <see cref="DiscordRole"/>'s directly.
 	/// </summary>
 	[JsonProperty("mention_roles")]
 	public List<ulong> MentionedRoleIds = [];
 
-	/*
-	 TODO: Implement if stable
-		[JsonIgnore]
-		private readonly Lazy<IReadOnlyList<DiscordRole>> _mentionedRolesLazy;
+	[JsonIgnore]
+	private readonly Lazy<IReadOnlyList<DiscordRole>> _mentionedRolesLazy;
 
-		/// <summary>
-		/// Gets channels mentioned by this message.
-		/// </summary>
-		[JsonIgnore]
-		public IReadOnlyList<DiscordChannel> MentionedChannels
-			=> this._mentionedChannelsLazy.Value;
+	/// <summary>
+	/// Gets channels mentioned by this forwarded message.
+	/// </summary>
+	[JsonIgnore]
+	public IReadOnlyList<DiscordChannel> MentionedChannels
+		=> this._mentionedChannelsLazy.Value;
 
-		[JsonIgnore]
-		internal List<DiscordChannel> MentionedChannelsInternal;
+	[JsonIgnore]
+	internal List<DiscordChannel> MentionedChannelsInternal = [];
 
-		[JsonIgnore]
-		private readonly Lazy<IReadOnlyList<DiscordChannel>> _mentionedChannelsLazy;
-	*/
+	[JsonIgnore]
+	private readonly Lazy<IReadOnlyList<DiscordChannel>> _mentionedChannelsLazy;
+
+	/// <summary>
+	/// Gets all mentions from this forwarded message.
+	/// </summary>
+	internal void GetMentions()
+	{ }
 }

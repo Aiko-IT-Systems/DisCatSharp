@@ -349,7 +349,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// Gets the message reference.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordMessageReference Reference
+	public DiscordMessageReference? Reference
 		=> this.InternalReference.HasValue ? this?.InternalBuildMessageReference() : null;
 
 	/// <summary>
@@ -492,12 +492,16 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	internal DiscordMessageReference InternalBuildMessageReference()
 	{
 		var client = this.Discord as DiscordClient;
+		ArgumentNullException.ThrowIfNull(this.InternalReference);
 		var guildId = this.InternalReference.Value.GuildId;
 		var channelId = this.InternalReference.Value.ChannelId;
 		var messageId = this.InternalReference.Value.MessageId;
 		var type = this.InternalReference.Value.Type;
 
-		var reference = new DiscordMessageReference();
+		var reference = new DiscordMessageReference
+		{
+			GuildId = guildId
+		};
 
 		if (guildId.HasValue)
 			reference.Guild = client.GuildsInternal.TryGetValue(guildId.Value, out var g)
