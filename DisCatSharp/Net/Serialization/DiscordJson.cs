@@ -107,12 +107,16 @@ public static class DiscordJson
 		var sentryMessage = "DiscordJson error on deserialization (" + (sender?.GetType().Name ?? "x") + ")\n\n" +
 		                    "Path: " + e.ErrorContext.Path + "\n" +
 		                    "Original Object" + e.ErrorContext.OriginalObject + "\n" +
-		                    "Current Object" + e.CurrentObject;
+		                    "Current Object" + e.CurrentObject + "\n\n" +
+		                    "JRE Message:" + jre.Message + "\n" +
+		                    "JRE Line Number: " + jre.LineNumber + "\n" +
+		                    "JRE Line Position" + jre.LinePosition + "\n" +
+		                    "JRE Path" + jre.Path;
 		SentryEvent sentryEvent = new(new DiscordJsonException(jre))
 		{
 			Level = SentryLevel.Error,
 			Logger = nameof(DiscordJson),
-			Message = sentryMessage
+			Message = Utilities.StripIds(sentryMessage, discord.Configuration.EnableDiscordIdScrubber)
 		};
 		sentryEvent.SetFingerprint(BaseDiscordClient.GenerateSentryFingerPrint(sentryEvent));
 		if (discord.Configuration.AttachUserInfo && discord.CurrentUser is not null)
@@ -128,6 +132,8 @@ public static class DiscordJson
 			};
 		var sid = discord.Sentry.CaptureEvent(sentryEvent);
 		_ = Task.Run(discord.Sentry.FlushAsync);
+		if (discord.Configuration.EnableLibraryDeveloperMode)
+			discord.Logger.LogInformation("DiscordJson exception reported to sentry with id {sid}", sid.ToString());
 	}
 
 	/// <summary>
@@ -202,7 +208,7 @@ public static class DiscordJson
 		var sid = discord.Sentry.CaptureEvent(sentryEvent);
 		_ = Task.Run(discord.Sentry.FlushAsync);
 		if (discord.Configuration.EnableLibraryDeveloperMode)
-			discord.Logger.LogInformation("Reported to sentry with id {sid}", sid.ToString());
+			discord.Logger.LogInformation("Missing fields reported to sentry with id {sid}", sid.ToString());
 
 		return obj;
 	}
@@ -280,7 +286,7 @@ public static class DiscordJson
 		var sid = discord.Sentry.CaptureEvent(sentryEvent);
 		_ = Task.Run(discord.Sentry.FlushAsync);
 		if (discord.Configuration.EnableLibraryDeveloperMode)
-			discord.Logger.LogInformation("Reported to sentry with id {sid}", sid.ToString());
+			discord.Logger.LogInformation("Missing fields reported to sentry with id {sid}", sid.ToString());
 
 		return obj;
 	}
