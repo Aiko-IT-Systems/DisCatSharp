@@ -855,12 +855,12 @@ public class CommandsNextExtension : BaseExtension
 		{
 			if (msg.Channel.Guild != null)
 			{
-				mentionedUsers = Utilities.GetUserMentions(msg).Select(xid => msg.Channel.Guild.Members.TryGetValue(xid, out var member) ? member : null).Cast<DiscordUser>().ToList();
-				mentionedRoles = Utilities.GetRoleMentions(msg).Select(xid => msg.Channel.Guild.GetRole(xid)).ToList();
-				mentionedChannels = Utilities.GetChannelMentions(msg).Select(xid => msg.Channel.Guild.GetChannel(xid)).ToList();
+				mentionedUsers = Utilities.GetUserMentions(msg.Content).Select(xid => msg.Channel.Guild.Members.GetValueOrDefault(xid)).Cast<DiscordUser>().ToList();
+				mentionedRoles = Utilities.GetRoleMentions(msg.Content).Select(xid => msg.Channel.Guild.GetRole(xid)).ToList();
+				mentionedChannels = Utilities.GetChannelMentions(msg.Content).Select(xid => msg.Channel.Guild.GetChannel(xid)).ToList();
 			}
 			else
-				mentionedUsers = Utilities.GetUserMentions(msg).Select(this.Client.GetCachedOrEmptyUserInternal).ToList();
+				mentionedUsers = Utilities.GetUserMentions(msg.Content).Select(this.Client.GetCachedOrEmptyUserInternal).ToList();
 		}
 
 		msg.MentionedUsersInternal = mentionedUsers;

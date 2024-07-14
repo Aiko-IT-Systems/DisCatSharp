@@ -27,13 +27,18 @@ public class DiscordMessageReference
 	/// <summary>
 	/// Gets the guild of the original message.
 	/// </summary>
-	public DiscordGuild Guild { get; internal set; }
+	public DiscordGuild? Guild { get; internal set; }
+
+	/// <summary>
+	/// Gets the guild id.
+	/// </summary>
+	public ulong? GuildId { get; internal set; }
 
 	/// <summary>
 	/// Gets a readable message reference string.
 	/// </summary>
 	public override string ToString()
-		=> $"Guild: {this.Guild.Id}, Channel: {this.Channel.Id}, Message: {this.Message.Id}";
+		=> $"Type: {this.Type}, Guild: {(this.GuildId.HasValue ? this.GuildId.Value : "Not from guild")}, Channel: {this.Channel.Id}, Message: {this.Message.Id}";
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordMessageReference"/> class.
@@ -42,6 +47,9 @@ public class DiscordMessageReference
 	{ }
 }
 
+/// <summary>
+/// Represents raw data from the original message.
+/// </summary>
 internal struct InternalDiscordMessageReference
 {
 	public InternalDiscordMessageReference()

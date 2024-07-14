@@ -26,11 +26,9 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	{
 		this._attachmentsLazy = new(() => new ReadOnlyCollection<DiscordAttachment>(this.AttachmentsInternal));
 		this._embedsLazy = new(() => new ReadOnlyCollection<DiscordEmbed>(this.EmbedsInternal));
-		this._mentionedChannelsLazy = new(() => this.MentionedChannelsInternal != null
-			? new ReadOnlyCollection<DiscordChannel>(this.MentionedChannelsInternal)
-			: Array.Empty<DiscordChannel>());
-		this._mentionedRolesLazy = new(() => this.MentionedRolesInternal != null ? new ReadOnlyCollection<DiscordRole>(this.MentionedRolesInternal) : Array.Empty<DiscordRole>());
-		this.MentionedUsersLazy = new(() => new ReadOnlyCollection<DiscordUser>(this.MentionedUsersInternal));
+		this._mentionedChannelsLazy = new(() => new ReadOnlyCollection<DiscordChannel>(this.MentionedChannelsInternal));
+		this._mentionedRolesLazy = new(() => new ReadOnlyCollection<DiscordRole>(this.MentionedRolesInternal));
+		this._mentionedUsersLazy = new(() => new ReadOnlyCollection<DiscordUser>(this.MentionedUsersInternal));
 		this._reactionsLazy = new(() => new ReadOnlyCollection<DiscordReaction>(this.ReactionsInternal));
 		this._stickersLazy = new(() => new ReadOnlyCollection<DiscordSticker>(this.StickersInternal));
 		this._jumpLink = new(() =>
@@ -72,12 +70,9 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		this.AttachmentsInternal = other.AttachmentsInternal; // the attachments cannot change, thus no need to copy and reallocate.
 		this.EmbedsInternal = [..other.EmbedsInternal];
 
-		if (other.MentionedChannelsInternal != null)
-			this.MentionedChannelsInternal = [..other.MentionedChannelsInternal];
-		if (other.MentionedRolesInternal != null)
-			this.MentionedRolesInternal = [..other.MentionedRolesInternal];
-		if (other.MentionedRoleIds != null)
-			this.MentionedRoleIds = [..other.MentionedRoleIds];
+		this.MentionedChannelsInternal = [..other.MentionedChannelsInternal];
+		this.MentionedRolesInternal = [..other.MentionedRolesInternal];
+		this.MentionedRoleIds = [..other.MentionedRoleIds];
 		this.MentionedUsersInternal = [..other.MentionedUsersInternal];
 		this.ReactionsInternal = [..other.ReactionsInternal];
 		this.StickersInternal = [..other.StickersInternal];
@@ -213,13 +208,13 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordUser> MentionedUsers
-		=> this.MentionedUsersLazy.Value;
+		=> this._mentionedUsersLazy.Value;
 
 	[JsonProperty("mentions", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordUser> MentionedUsersInternal;
+	internal List<DiscordUser> MentionedUsersInternal = [];
 
 	[JsonIgnore]
-	internal readonly Lazy<IReadOnlyList<DiscordUser>> MentionedUsersLazy;
+	private readonly Lazy<IReadOnlyList<DiscordUser>> _mentionedUsersLazy;
 
 	// TODO: this will probably throw an exception in DMs since it tries to wrap around a null List...
 	// this is probably low priority but need to find out a clean way to solve it...
@@ -231,10 +226,10 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this._mentionedRolesLazy.Value;
 
 	[JsonIgnore]
-	internal List<DiscordRole> MentionedRolesInternal;
+	internal List<DiscordRole> MentionedRolesInternal = [];
 
 	[JsonProperty("mention_roles")]
-	internal List<ulong> MentionedRoleIds;
+	public List<ulong> MentionedRoleIds = [];
 
 	[JsonIgnore]
 	private readonly Lazy<IReadOnlyList<DiscordRole>> _mentionedRolesLazy;
@@ -247,7 +242,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this._mentionedChannelsLazy.Value;
 
 	[JsonIgnore]
-	internal List<DiscordChannel> MentionedChannelsInternal;
+	internal List<DiscordChannel> MentionedChannelsInternal = [];
 
 	[JsonIgnore]
 	private readonly Lazy<IReadOnlyList<DiscordChannel>> _mentionedChannelsLazy;
@@ -349,7 +344,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// Gets the message reference.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordMessageReference Reference
+	public DiscordMessageReference? Reference
 		=> this.InternalReference.HasValue ? this?.InternalBuildMessageReference() : null;
 
 	/// <summary>
@@ -487,17 +482,30 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 					: await this.Discord.ApiClient.EndPollAsync(this.ChannelId, this.Id);
 
 	/// <summary>
+	/// Forwards this message to another channel.
+	/// </summary>
+	/// <param name="targetChannel">The channel to forward this message to.</param>
+	/// <param name="content">Content is not available at the moment, but already added for the future.</param>
+	/// <returns></returns>
+	public async Task<DiscordMessage> ForwardMessageAsync(DiscordChannel targetChannel, string? content = null)
+		=> await this.Discord.ApiClient.ForwardMessageAsync(this, targetChannel.Id, content);
+
+	/// <summary>
 	/// Build the message reference.
 	/// </summary>
 	internal DiscordMessageReference InternalBuildMessageReference()
 	{
 		var client = this.Discord as DiscordClient;
+		ArgumentNullException.ThrowIfNull(this.InternalReference);
 		var guildId = this.InternalReference.Value.GuildId;
 		var channelId = this.InternalReference.Value.ChannelId;
 		var messageId = this.InternalReference.Value.MessageId;
 		var type = this.InternalReference.Value.Type;
 
-		var reference = new DiscordMessageReference();
+		var reference = new DiscordMessageReference
+		{
+			GuildId = guildId
+		};
 
 		if (guildId.HasValue)
 			reference.Guild = client.GuildsInternal.TryGetValue(guildId.Value, out var g)
@@ -596,12 +604,10 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 			}
 
 		if (!string.IsNullOrWhiteSpace(this.Content))
-			//mentionedUsers.UnionWith(Utilities.GetUserMentions(this).Select(this.Discord.GetCachedOrEmptyUserInternal));
 			if (guild != null)
 			{
-				//this._mentionedRoles = this._mentionedRoles.Union(Utilities.GetRoleMentions(this).Select(xid => guild.GetRole(xid))).ToList();
 				this.MentionedRolesInternal = this.MentionedRolesInternal.Union(this.MentionedRoleIds.Select(xid => guild.GetRole(xid))).ToList();
-				this.MentionedChannelsInternal = this.MentionedChannelsInternal.Union(Utilities.GetChannelMentions(this).Select(xid => guild.GetChannel(xid))).ToList();
+				this.MentionedChannelsInternal = this.MentionedChannelsInternal.Union(Utilities.GetChannelMentions(this.Content).Select(xid => guild.GetChannel(xid))).ToList();
 			}
 
 		this.MentionedUsersInternal = [.. mentionedUsers];
