@@ -21,9 +21,9 @@ public sealed partial class DiscordClient
 	/// <summary>
 	/// Gets all the registered event handlers.
 	/// </summary>
-	public IReadOnlyDictionary<Type, object> RegisteredEventhandlers => _registeredEventhandlers.AsReadOnly();
+	public IReadOnlyDictionary<Type, object> RegisteredEventhandlers => this._registeredEventhandlers.AsReadOnly();
 
-	private Dictionary<Type, object> _registeredEventhandlers = new Dictionary<Type, object>();
+	private readonly Dictionary<Type, object> _registeredEventhandlers = [];
 
 	/// <summary>
 	/// Registers all methods annotated with <see cref="EventAttribute"/> from the given object.
