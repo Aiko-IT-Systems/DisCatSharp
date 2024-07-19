@@ -19,6 +19,13 @@ public sealed partial class DiscordClient
 	private readonly Dictionary<Type, List<object>> _typeToAnonymousHandlers = [];
 
 	/// <summary>
+	/// Gets all the registered event handlers.
+	/// </summary>
+	public IReadOnlyDictionary<Type, object> RegisteredEventhandlers => this._registeredEventhandlers.AsReadOnly();
+
+	private readonly Dictionary<Type, object> _registeredEventhandlers = [];
+
+	/// <summary>
 	/// Registers all methods annotated with <see cref="EventAttribute"/> from the given object.
 	/// </summary>
 	/// <param name="handler">The event handler object.</param>
@@ -155,6 +162,9 @@ public sealed partial class DiscordClient
 	/// <param name="wasRegisteredWithStatic">Whether it considereded static methods.</param>
 	private void UnregisterEventHandlerImpl(object? handler, Type type, bool wasRegisteredWithStatic = true)
 	{
+		if (this._registeredEventhandlers.ContainsKey(type))
+			this._registeredEventhandlers.Remove(type);
+
 		if (!this._registrationToDelegate.TryGetValue((handler, type, wasRegisteredWithStatic), out var delegateLists) || delegateLists.Count == 0)
 			return;
 
@@ -192,6 +202,7 @@ public sealed partial class DiscordClient
 		this._registrationToDelegate[(handler, type, registerStatic)] = this._registrationToDelegate.TryGetValue((handler, type, registerStatic), out var delList) ? delList : delList = [];
 
 		delList.Add(delegates);
+		this._registeredEventhandlers.Add(type, handler);
 
 		foreach (var (evnt, dlgt) in delegates)
 			evnt.AddEventHandler(this, dlgt);
