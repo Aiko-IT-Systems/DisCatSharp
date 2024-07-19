@@ -115,7 +115,6 @@ internal class ComponentPaginator : IPaginator
 	private async Task HandlePaginationAsync(IPaginationRequest request, ComponentInteractionCreateEventArgs args)
 	{
 		var buttons = this._config.PaginationButtons;
-		var msg = await request.GetMessageAsync().ConfigureAwait(false);
 		var id = args.Id;
 		var tcs = await request.GetTaskCompletionSourceAsync().ConfigureAwait(false);
 
@@ -148,6 +147,8 @@ internal class ComponentPaginator : IPaginator
 			await args.Interaction.EditOriginalResponseAsync(builder).ConfigureAwait(false);
 			return;
 		}
+  
+		var msg = await request.GetMessageAsync().ConfigureAwait(false);
 
 		this._builder.Clear();
 
