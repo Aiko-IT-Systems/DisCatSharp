@@ -20,6 +20,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Options;
 
+using Newtonsoft.Json.Linq;
+
 using Sentry;
 
 namespace DisCatSharp;
@@ -112,6 +114,11 @@ public abstract class BaseDiscordClient : IDisposable
 	/// Gets the list of available voice regions. This property is meant as a way to modify <see cref="VoiceRegions"/>.
 	/// </summary>
 	protected internal ConcurrentDictionary<string, DiscordVoiceRegion> InternalVoiceRegions { get; set; }
+
+	/// <summary>
+	/// Gets the cached application emojis for this client.
+	/// </summary>
+	public abstract IReadOnlyDictionary<ulong, DiscordApplicationEmoji> Emojis { get; }
 
 	/// <summary>
 	/// Gets the lazy voice regions.
@@ -608,6 +615,18 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <param name="user">The user.</param>
 	internal bool TryGetCachedUserInternal(ulong userId, [MaybeNullWhen(false)] out DiscordUser user)
 		=> this.UserCache.TryGetValue(userId, out user);
+
+	/// <summary>
+	/// Updates the cached application emojis.
+	/// </summary>
+	/// <param name="rawEmojis">The raw emojis.</param>
+	internal abstract IReadOnlyDictionary<ulong, DiscordApplicationEmoji> UpdateCachedApplicationEmojis(JArray? rawEmojis);
+
+	/// <summary>
+	/// Updates a cached application emoji.
+	/// </summary>
+	/// <param name="emoji">The emoji.</param>
+	internal abstract DiscordApplicationEmoji UpdateCachedApplicationEmoji(DiscordApplicationEmoji emoji);
 
 	/// <summary>
 	/// Disposes this client.

@@ -5774,9 +5774,9 @@ public sealed class DiscordApiClient
 #region Emoji
 
 	/// <summary>
-	/// Gets the guild emojis async.
+	/// Gets the guild emojis.
 	/// </summary>
-	/// <param name="guildId">The guild_id.</param>
+	/// <param name="guildId">The guild id.</param>
 	internal async Task<IReadOnlyList<DiscordGuildEmoji>> GetGuildEmojisAsync(ulong guildId)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.EMOJIS}";
@@ -5817,10 +5817,10 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guild emoji async.
+	/// Gets the guild emoji.
 	/// </summary>
-	/// <param name="guildId">The guild_id.</param>
-	/// <param name="emojiId">The emoji_id.</param>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="emojiId">The emoji id.</param>
 	internal async Task<DiscordGuildEmoji> GetGuildEmojiAsync(ulong guildId, ulong emojiId)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.EMOJIS}/:emoji_id";
@@ -5847,9 +5847,9 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates the guild emoji async.
+	/// Creates the guild emoji.
 	/// </summary>
-	/// <param name="guildId">The guild_id.</param>
+	/// <param name="guildId">The guild id.</param>
 	/// <param name="name">The name.</param>
 	/// <param name="imageb64">The imageb64.</param>
 	/// <param name="roles">The roles.</param>
@@ -5891,10 +5891,10 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guild emoji async.
+	/// Modifies the guild emoji.
 	/// </summary>
-	/// <param name="guildId">The guild_id.</param>
-	/// <param name="emojiId">The emoji_id.</param>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="emojiId">The emoji id.</param>
 	/// <param name="name">The name.</param>
 	/// <param name="roles">The roles.</param>
 	/// <param name="reason">The reason.</param>
@@ -5934,10 +5934,10 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the guild emoji async.
+	/// Deletes the guild emoji.
 	/// </summary>
-	/// <param name="guildId">The guild_id.</param>
-	/// <param name="emojiId">The emoji_id.</param>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="emojiId">The emoji id.</param>
 	/// <param name="reason">The reason.</param>
 	internal Task DeleteGuildEmojiAsync(ulong guildId, ulong emojiId, string? reason)
 	{
@@ -5954,6 +5954,137 @@ public sealed class DiscordApiClient
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
+	}
+
+	/// <summary>
+	/// Gets the application emojis.
+	/// </summary>
+	/// <param name="applicationId">The application id.</param>
+	internal async Task<IReadOnlyList<DiscordApplicationEmoji>> GetApplicationEmojisAsync(ulong applicationId)
+	{
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.EMOJIS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			application_id = applicationId,
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		var emojisRaw = JsonConvert.DeserializeObject<JObject>(res.Response);
+
+		return this.Discord.UpdateCachedApplicationEmojis(emojisRaw?.Value<JArray>("items")).Select(x => x.Value).ToList();
+	}
+
+	/// <summary>
+	/// Gets an application emoji.
+	/// </summary>
+	/// <param name="applicationId">The application id.</param>
+	/// <param name="emojiId">The emoji id.</param>
+	internal async Task<DiscordApplicationEmoji> GetApplicationEmojiAsync(ulong applicationId, ulong emojiId)
+	{
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.EMOJIS}/:emoji_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			application_id = applicationId,
+			emoji_id = emojiId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		var emojiRaw = JObject.Parse(res.Response);
+		var emoji = emojiRaw.ToObject<DiscordApplicationEmoji>();
+
+		var xtu = emojiRaw["user"]?.ToObject<TransportUser>();
+		if (xtu is not null)
+			emoji.User = new(xtu);
+
+		return this.Discord.UpdateCachedApplicationEmoji(emoji);
+	}
+
+	/// <summary>
+	/// Creates an application emoji.
+	/// </summary>
+	/// <param name="applicationId">The application id.</param>
+	/// <param name="name">The name.</param>
+	/// <param name="imageb64">The imageb64.</param>
+	internal async Task<DiscordApplicationEmoji> CreateApplicationEmojiAsync(ulong applicationId, string name, string imageb64)
+	{
+		var pld = new RestApplicationEmojiCreatePayload()
+		{
+			Name = name,
+			ImageB64 = imageb64
+		};
+
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.EMOJIS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
+		{
+			application_id = applicationId,
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		var emojiRaw = JObject.Parse(res.Response);
+		var emoji = emojiRaw.ToObject<DiscordApplicationEmoji>();
+
+		var xtu = emojiRaw["user"]?.ToObject<TransportUser>();
+		if (xtu is not null)
+			emoji.User = new(xtu);
+
+		return this.Discord.UpdateCachedApplicationEmoji(emoji);
+	}
+
+	/// <summary>
+	/// Modifies an application emoji.
+	/// </summary>
+	/// <param name="applicationId">The application id.</param>
+	/// <param name="emojiId">The emoji id.</param>
+	/// <param name="name">The name.</param>
+	internal async Task<DiscordApplicationEmoji> ModifyApplicationEmojiAsync(ulong applicationId, ulong emojiId, string name)
+	{
+		var pld = new RestApplicationEmojiModifyPayload()
+		{
+			Name = name
+		};
+
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.EMOJIS}/:emoji_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
+		{
+			application_id = applicationId,
+			emoji_id = emojiId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		var emojiRaw = JObject.Parse(res.Response);
+		var emoji = emojiRaw.ToObject<DiscordApplicationEmoji>();
+
+		var xtu = emojiRaw["user"]?.ToObject<TransportUser>();
+		if (xtu is not null)
+			emoji.User = new(xtu);
+
+		return this.Discord.UpdateCachedApplicationEmoji(emoji);
+	}
+
+	/// <summary>
+	/// Deletes an application emoji.
+	/// </summary>
+	/// <param name="applicationId">The application id.</param>
+	/// <param name="emojiId">The emoji id.</param>
+	internal Task DeleteApplicationEmojiAsync(ulong applicationId, ulong emojiId)
+	{
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.EMOJIS}/:emoji_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
+		{
+			application_id = applicationId,
+			emoji_id = emojiId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
 	}
 
 #endregion
