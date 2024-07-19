@@ -199,6 +199,11 @@ internal class InteractionPaginationRequest : IPaginationRequest
 	public Task<DiscordMessage> GetMessageAsync() => Task.FromResult(this._message);
 
 	/// <summary>
+	/// Gets the message.
+	/// </summary>
+	public Task<DiscordInteraction> GetLastInteractionAsync() => Task.FromResult(this._lastInteraction);
+
+	/// <summary>
 	/// Gets the user.
 	/// </summary>
 	public Task<DiscordUser> GetUserAsync() => Task.FromResult(this._user);
