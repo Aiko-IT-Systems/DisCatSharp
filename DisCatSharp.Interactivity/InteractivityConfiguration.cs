@@ -34,7 +34,7 @@ public sealed class InteractivityConfiguration
 	public PaginationButtons PaginationButtons { internal get; set; } = new();
 
 	/// <summary>
-	/// Whether interactivity should ACK buttons that are pushed. Setting this to <see langword="true"/> will also prevent subsequent event handlers from running.
+	/// Whether interactivity should ACK buttons that are pushed.
 	/// </summary>
 	public bool AckPaginationButtons { internal get; set; }
 
