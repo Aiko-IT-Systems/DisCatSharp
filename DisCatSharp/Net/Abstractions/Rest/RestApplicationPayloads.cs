@@ -69,3 +69,28 @@ internal sealed class RestApplicationModifyPayload : ObservableApiObject
 	[JsonProperty("integration_types_config", NullValueHandling = NullValueHandling.Include)]
 	public Optional<DiscordIntegrationTypesConfig?> IntegrationTypesConfig { get; set; }
 }
+
+
+/// <summary>
+/// Represents a application emoji modify payload.
+/// </summary>
+internal class RestApplicationEmojiModifyPayload : ObservableApiObject
+{
+	/// <summary>
+	/// Gets or sets the name.
+	/// </summary>
+	[JsonProperty("name")]
+	public string Name { get; set; }
+}
+
+/// <summary>
+/// Represents a application emoji create payload.
+/// </summary>
+internal sealed class RestApplicationEmojiCreatePayload : RestApplicationEmojiModifyPayload
+{
+	/// <summary>
+	/// Gets or sets the image b64.
+	/// </summary>
+	[JsonProperty("image")]
+	public string ImageB64 { get; set; }
+}

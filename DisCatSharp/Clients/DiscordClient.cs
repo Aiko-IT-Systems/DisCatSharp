@@ -108,6 +108,16 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	internal readonly ConcurrentDictionary<ulong, DiscordGuild> GuildsInternal = [];
 
 	/// <summary>
+	/// Gets a dictionary of application emojis that this client has. The dictionary's key is the emoji ID.
+	/// </summary>
+	public override IReadOnlyDictionary<ulong, DiscordApplicationEmoji> Emojis { get; }
+
+	/// <summary>
+	/// Gets the application emojis.
+	/// </summary>
+	internal readonly ConcurrentDictionary<ulong, DiscordApplicationEmoji> EmojisInternal = [];
+
+	/// <summary>
 	/// Gets the websocket latency for this client.
 	/// </summary>
 	public int Ping
@@ -163,6 +173,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this.InternalSetup();
 
 		this.Guilds = new ReadOnlyConcurrentDictionary<ulong, DiscordGuild>(this.GuildsInternal);
+		this.Emojis = new ReadOnlyConcurrentDictionary<ulong, DiscordApplicationEmoji>(this.EmojisInternal);
 	}
 
 	/// <summary>
@@ -264,6 +275,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._messagePollVoteRemoved = new("MESSAGE_POLL_VOTE_REMOVED", EventExecutionLimit, this.EventErrorHandler);
 
 		this.GuildsInternal.Clear();
+		this.EmojisInternal.Clear();
 
 		this._presencesLazy = new(() => new ReadOnlyDictionary<ulong, DiscordPresence>(this.PresencesInternal));
 		this._embeddedActivitiesLazy = new(() => new ReadOnlyDictionary<string, DiscordActivity>(this.EmbeddedActivitiesInternal));
@@ -392,14 +404,20 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			throw new("Could not connect to Discord.", cex);
 		}
 
-		if (!this.Configuration.AutoFetchSkuIds)
+		if (this.Configuration is { AutoFetchSkuIds: false, AutoFetchApplicationEmojis: false })
 			return;
 
-		var skus = await this.ApiClient.GetSkusAsync(this.CurrentApplication.Id).ConfigureAwait(false);
-		if (!skus.Any())
-			return;
+		if (this.Configuration.AutoFetchSkuIds)
+		{
+			var skus = await this.ApiClient.GetSkusAsync(this.CurrentApplication.Id).ConfigureAwait(false);
+			if (!skus.Any())
+				return;
 
-		this.Configuration.SkuId = skus.FirstOrDefault(x => x.Type is SkuType.Subscription)?.Id;
+			this.Configuration.SkuId = skus.FirstOrDefault(x => x.Type is SkuType.Subscription)?.Id;
+		}
+
+		if (this.Configuration.AutoFetchApplicationEmojis)
+			await this.ApiClient.GetApplicationEmojisAsync(this.CurrentApplication.Id);
 
 		return;
 
@@ -614,6 +632,60 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="guild">The target guild.</param>
 	public async Task RemoveGuildApplicationCommandsAsync(DiscordGuild guild)
 		=> await this.RemoveGuildApplicationCommandsAsync(guild.Id).ConfigureAwait(false);
+
+	/// <summary>
+	/// Gets the application emojis.
+	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
+	/// </summary>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<IReadOnlyList<DiscordApplicationEmoji>> GetApplicationEmojisAsync(bool fetch = false)
+		=> (fetch ? null : this.InternalGetCachedApplicationEmojis()) ?? await this.ApiClient.GetApplicationEmojisAsync(this.CurrentApplication.Id).ConfigureAwait(false);
+
+	/// <summary>
+	/// Gets an application emoji.
+	/// </summary>
+	/// <param name="id">The emoji id.</param>
+	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
+	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordApplicationEmoji?> GetApplicationEmojiAsync(ulong id, bool fetch = false)
+		=> (fetch ? null : this.InternalGetCachedApplicationEmoji(id)) ?? await this.ApiClient.GetApplicationEmojiAsync(this.CurrentApplication.Id, id).ConfigureAwait(false);
+
+	/// <summary>
+	/// Creates an application emoji.
+	/// </summary>
+	/// <param name="name">The name.</param>
+	/// <param name="image">The image.</param>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordApplicationEmoji> CreateApplicationEmojiAsync(string name, Stream image)
+	{
+		var imageb64 = ImageTool.Base64FromStream(image);
+		return await this.ApiClient.CreateApplicationEmojiAsync(this.CurrentApplication.Id, name, imageb64);
+	}
+
+	/// <summary>
+	/// Modifies an application emoji.
+	/// </summary>
+	/// <param name="id">The emoji id.</param>
+	/// <param name="name">The name.</param>
+	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordApplicationEmoji> ModifyApplicationEmojiAsync(ulong id, string name)
+		=> this.ApiClient.ModifyApplicationEmojiAsync(this.CurrentApplication.Id, id, name);
+
+	/// <summary>
+	/// Deletes an application emoji.
+	/// </summary>
+	/// <param name="id">The emoji id.</param>
+	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task DeleteApplicationEmojiAsync(ulong id)
+		=> this.ApiClient.DeleteApplicationEmojiAsync(this.CurrentApplication.Id, id);
 
 	/// <summary>
 	/// Gets a channel.
@@ -1286,12 +1358,12 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="threadId">The target thread id.</param>
 	/// <returns>The requested thread.</returns>
-	internal DiscordThreadChannel InternalGetCachedThread(ulong threadId)
+	internal DiscordThreadChannel? InternalGetCachedThread(ulong threadId)
 	{
-		if (this.Guilds == null)
+		if (this.GuildsInternal == null || this.GuildsInternal.Count is 0)
 			return null;
 
-		foreach (var guild in this.Guilds.Values)
+		foreach (var guild in this.GuildsInternal.Values)
 			if (guild.Threads.TryGetValue(threadId, out var foundThread))
 				return foundThread;
 
@@ -1299,16 +1371,31 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
+	/// Gets an internal cached emoji.
+	/// </summary>
+	/// <param name="emojiId">The target emoji id.</param>
+	/// <returns>The requested emoji.</returns>
+	internal DiscordApplicationEmoji? InternalGetCachedApplicationEmoji(ulong emojiId)
+		=> this.EmojisInternal is null || this.EmojisInternal.Count is 0 ? null : this.EmojisInternal.GetValueOrDefault(emojiId);
+
+	/// <summary>
+	/// Gets the internal cached emojis.
+	/// </summary>
+	/// <returns>The requested emoji.</returns>
+	internal IReadOnlyList<DiscordApplicationEmoji>? InternalGetCachedApplicationEmojis()
+		=> this.EmojisInternal is null || this.EmojisInternal.Count is 0 ? null : this.EmojisInternal.Values.ToList();
+
+	/// <summary>
 	/// Gets the internal cached scheduled event.
 	/// </summary>
 	/// <param name="scheduledEventId">The target scheduled event id.</param>
 	/// <returns>The requested scheduled event.</returns>
-	internal DiscordScheduledEvent InternalGetCachedScheduledEvent(ulong scheduledEventId)
+	internal DiscordScheduledEvent? InternalGetCachedScheduledEvent(ulong scheduledEventId)
 	{
-		if (this.Guilds == null)
+		if (this.GuildsInternal == null || this.GuildsInternal.Count is 0)
 			return null;
 
-		foreach (var guild in this.Guilds.Values)
+		foreach (var guild in this.GuildsInternal.Values)
 			if (guild.ScheduledEvents.TryGetValue(scheduledEventId, out var foundScheduledEvent))
 				return foundScheduledEvent;
 
@@ -1323,10 +1410,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <returns>The requested channel.</returns>
 	internal DiscordChannel? InternalGetCachedChannel(ulong channelId, ulong? guildId = null)
 	{
-		if (this.Guilds == null)
+		if (this.GuildsInternal == null || this.GuildsInternal.Count is 0)
 			return null;
 
-		foreach (var guild in this.Guilds.Values)
+		foreach (var guild in this.GuildsInternal.Values)
 			if (guild.Channels.TryGetValue(channelId, out var foundChannel))
 			{
 				if (guildId.HasValue)
@@ -1342,9 +1429,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="guildId">The target guild id.</param>
 	/// <returns>The requested guild.</returns>
-	internal DiscordGuild InternalGetCachedGuild(ulong? guildId)
+	internal DiscordGuild? InternalGetCachedGuild(ulong? guildId)
 	{
-		if (this.GuildsInternal != null && guildId.HasValue)
+		if (this.GuildsInternal is { Count: not 0 } && guildId.HasValue)
 			if (this.GuildsInternal.TryGetValue(guildId.Value, out var guild))
 				return guild;
 
@@ -1402,6 +1489,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <returns>The updated scheduled event.</returns>
 	private DiscordScheduledEvent UpdateScheduledEvent(DiscordScheduledEvent scheduledEvent, DiscordGuild guild)
 	{
+		ObjectDisposedException.ThrowIf(this._disposed, this);
+
 		if (scheduledEvent != null)
 			_ = guild.ScheduledEventsInternal.AddOrUpdate(scheduledEvent.Id, scheduledEvent, (id, old) =>
 			{
@@ -1432,6 +1521,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <returns>The updated user.</returns>
 	private DiscordUser UpdateUser(DiscordUser usr, ulong? guildId, DiscordGuild? guild, TransportMember? mbr)
 	{
+		ObjectDisposedException.ThrowIf(this._disposed, this);
+
 		if (mbr is not null && guild is not null)
 		{
 			if (mbr.User is not null)
@@ -1503,7 +1594,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <param name="rawEvents">The raw events.</param>
-	private void UpdateCachedScheduledEvent(DiscordGuild guild, JArray? rawEvents)
+	private void UpdateCachedScheduledEvents(DiscordGuild guild, JArray? rawEvents)
 	{
 		ObjectDisposedException.ThrowIf(this._disposed, this);
 
@@ -1520,6 +1611,69 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				guild.ScheduledEventsInternal[xtm.Id] = xtm;
 			}
 		}
+	}
+
+	/// <summary>
+	/// Updates the cached application emojis.
+	/// </summary>
+	/// <param name="rawEmojis">The raw emojis.</param>
+	internal override IReadOnlyDictionary<ulong, DiscordApplicationEmoji> UpdateCachedApplicationEmojis(JArray? rawEmojis)
+	{
+		ObjectDisposedException.ThrowIf(this._disposed, this);
+
+		if (rawEmojis is not null)
+		{
+			this.EmojisInternal.Clear();
+
+			foreach (var xj in rawEmojis)
+			{
+				var xtm = xj.ToDiscordObject<DiscordApplicationEmoji>();
+
+				xtm.Discord = this;
+
+				if (xtm.User is not null)
+				{
+					xtm.User.Discord = this;
+					this.UpdateUser(xtm.User, null, null, null);
+				}
+
+				this.EmojisInternal[xtm.Id] = xtm;
+			}
+		}
+
+		return this.Emojis;
+	}
+
+	/// <summary>
+	/// Updates a cached application emoji.
+	/// </summary>
+	/// <param name="emoji">The emoji.</param>
+	internal override DiscordApplicationEmoji UpdateCachedApplicationEmoji(DiscordApplicationEmoji emoji)
+	{
+		ObjectDisposedException.ThrowIf(this._disposed, this);
+
+		if (emoji != null)
+		{
+			_ = this.EmojisInternal.AddOrUpdate(emoji.Id, emoji, (id, old) =>
+			{
+				old.Discord = this;
+				old.Name = emoji.Name;
+				old.RolesInternal = emoji.RolesInternal;
+				old.RequiresColons = emoji.RequiresColons;
+				old.IsManaged = emoji.IsManaged;
+				old.IsAnimated = emoji.IsAnimated;
+				old.IsAvailable = emoji.IsAvailable;
+				old.User = emoji.User;
+				return old;
+			});
+			if (emoji.User is null)
+				return emoji;
+
+			emoji.User.Discord = this;
+			this.UpdateUser(emoji.User, null, null, null);
+		}
+
+		return emoji;
 	}
 
 	/// <summary>
@@ -1729,6 +1883,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		{ }
 
 		this.GuildsInternal.Clear();
+		this.EmojisInternal.Clear();
 		this._heartbeatTask?.Dispose();
 
 		if (this.Configuration.EnableSentry)

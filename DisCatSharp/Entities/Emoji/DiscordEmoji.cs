@@ -29,7 +29,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	public IReadOnlyList<ulong> Roles => this._rolesLazy.Value;
 
 	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
-	public List<ulong> RolesInternal;
+	internal List<ulong> RolesInternal { get; set; } = [];
 
 	private readonly Lazy<IReadOnlyList<ulong>> _rolesLazy;
 
@@ -245,7 +245,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 		=> TryFromUnicode(null, unicodeEntity, out emoji);
 
 	/// <summary>
-	/// Creates an emoji object from a guild emote.
+	/// Gets an emoji object from an guild emote.
 	/// </summary>
 	/// <param name="client"><see cref="BaseDiscordClient"/> to attach to the object.</param>
 	/// <param name="id">Id of the emote.</param>
@@ -263,7 +263,24 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	}
 
 	/// <summary>
-	/// Attempts to create an emoji object from a guild emote.
+	/// Gets an emoji object from an application emote.
+	/// </summary>
+	/// <param name="client"><see cref="BaseDiscordClient"/> to attach to the object.</param>
+	/// <param name="id">Id of the emote.</param>
+	/// <returns>Create <see cref="DiscordEmoji"/> object.</returns>
+	public static DiscordEmoji FromApplicationEmote(BaseDiscordClient client, ulong id)
+	{
+		if (client == null)
+			throw new ArgumentNullException(nameof(client), "Client cannot be null.");
+
+		if (client.Emojis.TryGetValue(id, out var found))
+			return found;
+
+		throw new KeyNotFoundException("Given emote was not found.");
+	}
+
+	/// <summary>
+	/// Attempts to get an emoji object from an guild emote.
 	/// </summary>
 	/// <param name="client"><see cref="BaseDiscordClient"/> to attach to the object.</param>
 	/// <param name="id">Id of the emote.</param>
@@ -283,15 +300,16 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	}
 
 	/// <summary>
-	/// Creates an emoji object from emote name that includes colons (eg. :thinking:). This method also supports
-	/// skin tone variations (eg. :ok_hand::skin-tone-2:), standard emoticons (eg. :D), as well as guild emoji
+	/// Gets an emoji object from emote name that includes colons (eg. :thinking:). This method also supports
+	/// skin tone variations (eg. :ok_hand::skin-tone-2:), standard emoticons (eg. :D), guild emoji, as well as application emoji
 	/// (still specified by :name:).
 	/// </summary>
 	/// <param name="client"><see cref="BaseDiscordClient"/> to attach to the object.</param>
 	/// <param name="name">Name of the emote to find, including colons (eg. :thinking:).</param>
 	/// <param name="includeGuilds">Should guild emojis be included in the search.</param>
+	/// <param name="includeApplication">Should application emojis be included in the search.</param>
 	/// <returns>Create <see cref="DiscordEmoji"/> object.</returns>
-	public static DiscordEmoji FromName(BaseDiscordClient client, string name, bool includeGuilds = true)
+	public static DiscordEmoji FromName(BaseDiscordClient client, string name, bool includeGuilds = true, bool includeApplication = true)
 	{
 		if (client == null)
 			throw new ArgumentNullException(nameof(client), "Client cannot be null.");
@@ -317,6 +335,14 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 					return emoji;
 		}
 
+		if (includeApplication)
+		{
+			var ek = name.AsSpan().Slice(1, name.Length - 2);
+			foreach (var emoji in client.Emojis.Values)
+				if (emoji.Name.AsSpan().SequenceEqual(ek))
+					return emoji;
+		}
+
 		throw new ArgumentException("Invalid emoji name specified.", nameof(name));
 	}
 
@@ -330,19 +356,20 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// <param name="emoji">Resulting <see cref="DiscordEmoji"/> object.</param>
 	/// <returns>Whether the operation was successful.</returns>
 	public static bool TryFromName(BaseDiscordClient client, string name, out DiscordEmoji emoji)
-		=> TryFromName(client, name, true, out emoji);
+		=> TryFromName(client, name, true, true, out emoji);
 
 	/// <summary>
-	/// Attempts to create an emoji object from emote name that includes colons (eg. :thinking:). This method also
+	/// Attempts to get an emoji object from emote name that includes colons (eg. :thinking:). This method also
 	/// supports skin tone variations (eg. :ok_hand::skin-tone-2:), standard emoticons (eg. :D), as well as guild
 	/// emoji (still specified by :name:).
 	/// </summary>
 	/// <param name="client"><see cref="BaseDiscordClient"/> to attach to the object.</param>
 	/// <param name="name">Name of the emote to find, including colons (eg. :thinking:).</param>
 	/// <param name="includeGuilds">Should guild emojis be included in the search.</param>
+	/// <param name="includeApplication">Should application emojis be included in the search.</param>
 	/// <param name="emoji">Resulting <see cref="DiscordEmoji"/> object.</param>
 	/// <returns>Whether the operation was successful.</returns>
-	public static bool TryFromName(BaseDiscordClient client, string name, bool includeGuilds, out DiscordEmoji emoji)
+	public static bool TryFromName(BaseDiscordClient client, string name, bool includeGuilds, bool includeApplication, out DiscordEmoji emoji)
 	{
 		if (client == null)
 			throw new ArgumentNullException(nameof(client), "Client cannot be null.");
@@ -367,6 +394,17 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 
 			var ek = name.AsSpan().Slice(1, name.Length - 2);
 			foreach (var xemoji in allEmojis)
+				if (xemoji.Name.AsSpan().SequenceEqual(ek))
+				{
+					emoji = xemoji;
+					return true;
+				}
+		}
+
+		if (includeApplication)
+		{
+			var ek = name.AsSpan().Slice(1, name.Length - 2);
+			foreach (var xemoji in client.Emojis.Values)
 				if (xemoji.Name.AsSpan().SequenceEqual(ek))
 				{
 					emoji = xemoji;

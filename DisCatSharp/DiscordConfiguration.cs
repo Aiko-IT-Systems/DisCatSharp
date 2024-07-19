@@ -131,6 +131,12 @@ public sealed class DiscordConfiguration
 	public bool ReconnectIndefinitely { internal get; set; } = false;
 
 	/// <summary>
+	/// <para>Defines that the client should attempt to fetch application emojis on startup.</para>
+	/// <para>Defaults to <see langword="false"/>.</para>
+	/// </summary>
+	public bool AutoFetchApplicationEmojis { internal get; set; } = false;
+
+	/// <summary>
 	/// Sets whether the client should attempt to cache members if exclusively using unprivileged intents.
 	/// <para>
 	///     This will only take effect if there are no <see cref="DiscordIntents.GuildMembers"/> or <see cref="DiscordIntents.GuildPresences"/>
@@ -452,5 +458,6 @@ public sealed class DiscordConfiguration
 		this.IncludePrereleaseInUpdateCheck = other.IncludePrereleaseInUpdateCheck;
 		this.UpdateCheckGitHubToken = other.UpdateCheckGitHubToken;
 		this.ShowReleaseNotesInUpdateCheck = other.ShowReleaseNotesInUpdateCheck;
+		this.AutoFetchApplicationEmojis = other.AutoFetchApplicationEmojis;
 	}
 }

@@ -1,6 +1,6 @@
 DisCatSharp Release Notes
 
-    None
+    - Implemented application emojis. Read more here: https://discord.com/developers/docs/change-log#application-emoji. Breaking change in 'DiscordEmoji.TryFromName' (additional required parameter).
 
 
 DisCatSharp.Attributes Release Notes
