@@ -39,6 +39,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 		this.Id = user.Id;
 
+		this.ManualUser = user;
+
 		this.RoleIdsInternal = [];
 		this._roleIdsLazy = new(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
 	}
@@ -68,6 +70,11 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		this.MemberFlags = mbr.MemberFlags;
 		this.InteractionPermissions = mbr.Permissions;
 		this.GuildAvatarDecorationData = mbr.GuildAvatarDecorationData;
+		if (mbr.User is not null)
+			this.ManualUser = new(mbr.User)
+			{
+				Discord = this.Discord
+			};
 	}
 
 	/// <summary>
@@ -162,7 +169,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 	/// <summary>
 	/// Gets the list of roles associated with this member.
- 	/// <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
+	/// <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordRole> Roles
@@ -170,7 +177,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 	/// <summary>
 	/// Gets the color associated with this user's top color-giving role, otherwise 0 (no color).
- 	/// <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
+	/// <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
 	/// </summary>
 	[JsonIgnore]
 	public DiscordColor Color
@@ -240,7 +247,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 	/// <summary>
 	/// Gets this member's voice state.
- 	/// <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
+	/// <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
 	/// </summary>
 	[JsonIgnore]
 	public DiscordVoiceState? VoiceState
@@ -254,7 +261,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 	/// <summary>
 	/// Gets the guild of which this member is a part of.
- 	/// <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
+	/// <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
 	/// </summary>
 	[JsonIgnore]
 	public DiscordGuild Guild
@@ -262,7 +269,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 	/// <summary>
 	/// Gets whether this member is the Guild owner.
- 	/// <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
+	/// <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
 	/// </summary>
 	[JsonIgnore]
 	public bool IsOwner
@@ -287,7 +294,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 	/// <summary>
 	/// Gets the permissions for the current member.
- 	/// <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
+	/// <note type="warning">This will throw if accessed for an oauth2 constructed member.</note>
 	/// </summary>
 	[JsonIgnore]
 	public Permissions Permissions
