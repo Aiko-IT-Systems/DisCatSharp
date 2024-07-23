@@ -12,7 +12,8 @@ public static class PermissionMethods
 	/// <summary>
 	/// Gets the full permissions enum (long).
 	/// </summary>
-	internal static Permissions FullPerms { get; } = (Permissions)562949953421311L;
+	internal static Permissions FullPerms
+		=> (Permissions)1125899906842623L;
 
 	/// <summary>
 	/// Calculates whether this permission set contains the given permission.
@@ -77,7 +78,7 @@ public enum Permissions : long
 	/// Indicates all permissions are granted.
 	/// </summary>
 	[PermissionString("All Permissions")]
-	All = 562949953421311L,
+	All = 1125899906842623L,
 
 	/// <summary>
 	/// Allows creation of instant channel invites.
@@ -377,7 +378,15 @@ public enum Permissions : long
 	/// Allows members to send polls.
 	/// </summary>
 	[PermissionString("Send Polls")]
-	SendPolls = 1L << 49
+	SendPolls = 1L << 49,
+
+	/// <summary>
+	/// Allows user-installed apps to send public responses.
+	/// When disabled, users will still be allowed to use their apps but the responses will be ephemeral.
+	/// This only applies to apps not also installed to the server.
+	/// </summary>
+	[PermissionString("Use External Apps")]
+	UseExternalApps = 1L << 50
 }
 
 /// <summary>
