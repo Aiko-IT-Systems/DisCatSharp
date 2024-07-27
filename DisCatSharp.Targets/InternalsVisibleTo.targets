@@ -39,5 +39,7 @@
 		<InternalsVisibleTo Include="DisCatSharp.Extensions" />
 		<InternalsVisibleTo Include="DisCatSharp.Bots.DocBot" />
 		<InternalsVisibleTo Include="DisCatSharp.Bots.DocBot.Bot" />
+		<InternalsVisibleTo Include="BeluBOT" />
+		<InternalsVisibleTo Include="BeluGANG" />
 	</ItemGroup>
 </Project>
