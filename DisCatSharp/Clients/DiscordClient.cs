@@ -134,7 +134,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public IReadOnlyDictionary<ulong, DiscordPresence> Presences
 		=> this._presencesLazy.Value;
 
-	internal Dictionary<ulong, DiscordPresence> PresencesInternal = [];
+	internal ConcurrentDictionary<ulong, DiscordPresence> PresencesInternal = [];
 	private Lazy<IReadOnlyDictionary<ulong, DiscordPresence>> _presencesLazy;
 
 	/// <summary>
