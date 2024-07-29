@@ -143,7 +143,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public IReadOnlyDictionary<string, DiscordActivity> EmbeddedActivities
 		=> this._embeddedActivitiesLazy.Value;
 
-	internal Dictionary<string, DiscordActivity> EmbeddedActivitiesInternal = [];
+	internal ConcurrentDictionary<string, DiscordActivity> EmbeddedActivitiesInternal = [];
 	private Lazy<IReadOnlyDictionary<string, DiscordActivity>> _embeddedActivitiesLazy;
 
 	/// <summary>
