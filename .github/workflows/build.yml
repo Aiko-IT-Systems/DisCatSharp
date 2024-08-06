@@ -72,7 +72,7 @@ jobs:
     - name: Publish library
       run: dotnet pack -c Release -v minimal --no-build --no-restore --include-symbols --include-source -o ./artifacts DisCatSharp.sln
     - name: Upload artifacts
-      uses: actions/upload-artifact@v4.3.5
+      uses: actions/upload-artifact@v4.3.6
       with:
         name: DisCatSharp
         path: ./artifacts/
