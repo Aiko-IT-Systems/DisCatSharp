@@ -4042,6 +4042,29 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	/// Gets a guild role async.
+	/// </summary>
+	/// <param name="guildId">The guild_id.</param>
+	/// <param name="roleId">The role_id.</param>
+	internal async Task<DiscordRole> GetGuildRoleAsync(ulong guildId, ulong roleId)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.ROLES}/:role_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			guild_id = guildId,
+			role_id = roleId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		var ret = DiscordJson.DeserializeObject<DiscordRole>(res.Response, this.Discord);
+		ret.GuildId = guildId;
+
+		return ret;
+	}
+
+	/// <summary>
 	/// Modifies the guild role async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>

@@ -1898,13 +1898,20 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		=> this.Discord.ApiClient.CreateGuildRoleAsync(this.Id, name, permissions, color?.Value, hoist, mentionable, reason);
 
 	/// <summary>
-	/// Gets a role from this guild by its ID.
+	/// Gets a role from this guild's cache by its ID.
 	/// </summary>
 	/// <param name="id">ID of the role to get.</param>
 	/// <returns>Requested role.</returns>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public DiscordRole GetRole(ulong id)
 		=> this.RolesInternal.TryGetValue(id, out var role) ? role : null;
+
+	/// <summary>
+	/// Gets a role from this guild from the api by its ID.
+	/// </summary>
+	/// <param name="id">ID of the role to get.</param>
+	/// <returns>Requested role.</returns>
+	public async Task<DiscordRole> GetRoleAsync(ulong id)
+		=> await this.Discord.ApiClient.GetGuildRoleAsync(this.Id, id);
 
 	/// <summary>
 	/// Gets a channel from this guild by its ID.
