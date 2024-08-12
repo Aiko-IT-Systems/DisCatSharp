@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DisCatSharp.Common.Utilities;
@@ -48,7 +49,7 @@ public sealed class AsyncEvent<TSender, TArgs>(string name, TimeSpan maxExecutio
 	/// <summary>
 	/// Gets the lock.
 	/// </summary>
-	private readonly object _lock = new();
+	private readonly Lock _lock = new();
 
 	/// <summary>
 	/// Gets or sets the event handlers.

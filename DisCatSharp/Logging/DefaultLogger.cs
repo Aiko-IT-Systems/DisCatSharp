@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 
 using Microsoft.Extensions.Logging;
 
@@ -9,7 +10,7 @@ namespace DisCatSharp;
 /// </summary>
 public class DefaultLogger : ILogger<BaseDiscordClient>
 {
-	private static readonly object s_lock = new();
+	private static readonly Lock s_lock = new();
 
 	/// <summary>
 	/// Gets the minimum log level.
