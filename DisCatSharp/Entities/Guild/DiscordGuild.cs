@@ -1777,6 +1777,41 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	}
 
 	/// <summary>
+	/// Gets a member of this guild by their user ID.
+	/// </summary>
+	/// <param name="userId">ID of the member to get.</param>
+	/// <param name="member">The member object.</param>
+	/// <param name="fetch">Whether to fetch the member from the api prior to cache.</param>
+	/// <returns><see langword="true"/> if the member was found, <paramref name="member"/> will be a <see cref="DiscordMember"/> entity, otherwise <see langword="false"/> and <see langword="null"/>.</returns>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public bool TryGetMemberAsync(ulong userId, out DiscordMember? member, bool fetch = false)
+	{
+		if (!fetch && this.MembersInternal != null && this.MembersInternal.TryGetValue(userId, out var mbr))
+		{
+			member = mbr;
+			return true;
+		}
+
+		try
+		{
+			member = this.Discord.ApiClient.GetGuildMemberAsync(this.Id, userId).Result;
+		}
+		catch (NotFoundException)
+		{
+			member = null;
+			return false;
+		}
+
+		var intents = this.Discord.Configuration.Intents;
+
+		if (intents.HasIntent(DiscordIntents.GuildMembers))
+			if (this.MembersInternal != null)
+				this.MembersInternal[userId] = member;
+
+		return true;
+	}
+
+	/// <summary>
 	/// Retrieves a full list of members from Discord. This method will bypass cache.
 	/// </summary>
 	/// <returns>A collection of all members in this guild.</returns>
