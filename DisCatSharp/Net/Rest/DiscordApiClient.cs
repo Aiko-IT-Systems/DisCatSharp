@@ -7479,7 +7479,7 @@ public sealed class DiscordApiClient
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
 
 		// ReSharper disable once HeuristicUnreachableCode
-		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.APPLICATIONS}/:application_id/{Endpoints.ROLE_CONNECTIONS}";
+		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.APPLICATIONS}/:application_id{Endpoints.ROLE_CONNECTION}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route,
 			new
 			{
@@ -7502,7 +7502,7 @@ public sealed class DiscordApiClient
 	/// <param name="platformName">The platform name.</param>
 	/// <param name="platformUsername">The platform username.</param>
 	/// <param name="metadata">The metadata.</param>
-	internal Task ModifyCurrentUserApplicationRoleConnectionAsync(string accessToken, Optional<string> platformName, Optional<string> platformUsername, Optional<ApplicationRoleConnectionMetadata> metadata)
+	internal async Task<DiscordApplicationRoleConnection> ModifyCurrentUserApplicationRoleConnectionAsync(string accessToken, Optional<string> platformName, Optional<string> platformUsername, Optional<ApplicationRoleConnectionMetadata> metadata)
 	{
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
@@ -7515,7 +7515,7 @@ public sealed class DiscordApiClient
 		};
 
 		// ReSharper disable once HeuristicUnreachableCode
-		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.APPLICATIONS}/:application_id/{Endpoints.ROLE_CONNECTIONS}";
+		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.APPLICATIONS}/:application_id{Endpoints.ROLE_CONNECTION}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
 		{
 			application_id = this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture)
@@ -7525,8 +7525,8 @@ public sealed class DiscordApiClient
 		headers.Add("Bearer", accessToken);
 
 		var url = Utilities.GetApiUriFor(path);
-		this.DoRequestAsync(null, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
-		return Task.CompletedTask;
+		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		return DiscordJson.DeserializeObject<DiscordApplicationRoleConnection>(res.Response, null);
 	}
 
 	/// <summary>
@@ -7617,8 +7617,7 @@ public sealed class DiscordApiClient
 		};
 
 		var url = Utilities.GetApiUriFor(path);
-		this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData, headers).ConfigureAwait(false);
-		return Task.CompletedTask;
+		await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData, headers).ConfigureAwait(false);
 	}
 
 #endregion

@@ -435,6 +435,16 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	public async Task<DiscordApplicationRoleConnection> OAuth2GetApplicationRoleConnectionAsync(DiscordOAuth2Client oauth2Client)
 		=> this.AccessToken is not null ? await oauth2Client.GetCurrentUserApplicationRoleConnectionAsync(this.AccessToken) : throw new NullReferenceException("You need to specify the AccessToken on this DiscordUser entity.");
 
+	/// <summary>
+	/// Updates the current user's application role connection.
+	/// <para>Requires a <see cref="DiscordAccessToken"/> set in <see cref="AccessToken"/>.</para>
+	/// </summary>
+	/// <param name="platformName">The platform name.</param>
+	/// <param name="platformUsername">The platform username.</param>
+	/// <param name="metadata">The metadata.</param>
+	/// <exception cref="NullReferenceException">Thrown when <see cref="AccessToken"/> is not present.</exception>
+	public async Task<DiscordApplicationRoleConnection> OAuth2UpdateApplicationRoleConnectionAsync(DiscordOAuth2Client oauth2Client, string platformName, string platformUsername, ApplicationRoleConnectionMetadata metadata)
+		=> this.AccessToken is not null ? await oauth2Client.UpdateCurrentUserApplicationRoleConnectionAsync(this.AccessToken, platformName, platformUsername, metadata) : throw new NullReferenceException("You need to specify the AccessToken on this DiscordUser entity.");
 #endregion
 
 	/// <summary>
