@@ -173,7 +173,7 @@ A shorthand method exists as `GetResultAs<T>`:
 LavalinkTrack track = loadResult.LoadType switch {
     LavalinkLoadResultType.Track => loadResult.GetResultAs<LavalinkTrack>(),
     LavalinkLoadResultType.Playlist => loadResult.GetResultAs<LavalinkPlaylist>().Tracks.First(),
-    LavalinkLoadResultType.Search => loadResult.GetResultAs<List<LavalinkTrack>>().Tracks.First(),
+    LavalinkLoadResultType.Search => loadResult.GetResultAs<List<LavalinkTrack>>().First(),
     _ => throw new InvalidOperationException("Unexpected load result type.")
 };
 ```
