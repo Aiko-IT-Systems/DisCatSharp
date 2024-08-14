@@ -7594,7 +7594,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="token">The token to revoke.</param>
 	/// <param name="type">The type of token to revoke.</param>
-	internal Task RevokeOAuth2TokenAsync(string token, string type)
+	internal async Task RevokeOAuth2TokenAsync(string token, string type)
 	{
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
@@ -7621,5 +7621,5 @@ public sealed class DiscordApiClient
 	}
 
 #endregion
-	
+
 }
