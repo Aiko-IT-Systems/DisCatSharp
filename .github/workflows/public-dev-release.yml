@@ -26,9 +26,6 @@ env:
     DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
     DOTNET_CLI_TELEMETRY_OPTOUT: true
     DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
-    SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-    SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-    SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
 jobs:
     release:
@@ -55,6 +52,8 @@ jobs:
               run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Debug -VersionSuffix ${{ steps.vars.outputs.sha }}
               env:
                   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+                  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+                  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
             - name: Remove invalid packages
               run: rm *.symbols.*
               working-directory: ./dcs-artifacts

@@ -73,12 +73,16 @@ jobs:
               run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release
               env:
                   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+                  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+                  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
             - name: Build DisCatSharp as pre-release
               if: ${{inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp'}}
               shell: pwsh
               run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{github.event.inputs.version_suffix}}
               env:
                   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+                  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+                  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
             - name: Build DisCatSharp.Attributes as full release
               if: ${{!inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp.Attributes'}}
               shell: pwsh

@@ -21,9 +21,6 @@ env:
     DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
     DOTNET_CLI_TELEMETRY_OPTOUT: true
     DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
-    SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-    SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-    SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
 
 jobs:
     build:
@@ -73,7 +70,9 @@ jobs:
             - name: Build library
               run: dotnet build -c Release -v minimal --no-restore DisCatSharp.sln
               env:
-                  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+                SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+                SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+                SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
             - name: Publish library
               run: dotnet pack -c Release -v minimal --no-build --no-restore --include-symbols --include-source -o ./artifacts DisCatSharp.sln
             - name: Upload artifacts
