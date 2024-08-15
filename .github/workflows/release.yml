@@ -59,26 +59,6 @@ jobs:
             9.0.100-preview.6.24328.19
             8.0.301
             7.0.404
-      - name: Set outputs
-        if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}
-        id: vars
-        run: |
-          echo "version=10.6.5" >> $GITHUB_OUTPUT
-          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-      - name: "Create Sentry prod release"
-        if: ${{ !inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp' }}
-        uses: getsentry/action-release@v1.7.0
-        with:
-          environment: prod
-          ignore_missing: true
-          version: DisCatSharp@${{ steps.vars.outputs.version }}+${{ steps.vars.outputs.sha }}
-      - name: "Create Sentry dev release"
-        if: ${{ inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp' }}
-        uses: getsentry/action-release@v1.7.0
-        with:
-          environment: dev
-          ignore_missing: true
-          version: DisCatSharp@${{ steps.vars.outputs.version }}-${{ github.event.inputs.version_suffix }}+${{ steps.vars.outputs.sha }}
       - name: Restore dependencies (DisCatSharp)
         if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}
         run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln

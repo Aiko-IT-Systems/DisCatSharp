@@ -1,17 +1,6 @@
 name: "Sentry Release"
 
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-        - "DisCatSharp.Docs/**"
-        - "DisCatSharp.Archive/**"
-        - "DisCatSharp.Tools/**"
-        - "DisCatSharp.Logos/**"
-        - "DisCatSharp.Attributes/**"
-        - "*.md"
-        - "*.json"
   release:
     types:
         - published
@@ -28,7 +17,7 @@ jobs:
       - name: Set outputs
         id: vars
         run: |
-          echo "version=10.6.5" >> $GITHUB_OUTPUT
+          echo "version=10.6.6" >> $GITHUB_OUTPUT
           echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
       - name: "Create Sentry release"
         uses: getsentry/action-release@v1.7.0
