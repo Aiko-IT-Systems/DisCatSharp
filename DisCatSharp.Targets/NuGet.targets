@@ -29,11 +29,13 @@
 		<ContinuousIntegrationBuild>false</ContinuousIntegrationBuild>
 	</PropertyGroup>
 	<PropertyGroup
-		Condition="'$(Configuration)' == 'Release' And '$(GITHUB_ACTIONS)' == 'true' And '$(SENTRY_AUTH_TOKEN)' != ''">
+		Condition="'$(GITHUB_ACTIONS)' == 'true' And '$(SENTRY_AUTH_TOKEN)' != ''">
 		<SentryOrg>aitsys</SentryOrg>
 		<SentryProject>discatsharp</SentryProject>
 		<SentryUploadSymbols>true</SentryUploadSymbols>
 		<SentryUploadSources>true</SentryUploadSources>
 		<UseSentryCLI>true</UseSentryCLI>
+		<SentryCreateRelease>true</SentryCreateRelease>
+		<SentrySetCommits>true</SentrySetCommits>
 	</PropertyGroup>
 </Project>
