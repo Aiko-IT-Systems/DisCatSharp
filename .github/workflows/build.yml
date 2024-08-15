@@ -43,11 +43,11 @@ jobs:
             - name: Restore dependencies
               run: |
                   dotnet restore --no-cache -f -v minimal DisCatSharp.sln
-            #    dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.sln
+                  dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.sln
             - name: Build library
               run: dotnet build -c Release -v minimal --no-restore DisCatSharp.sln
-            #- name: Build tools
-            #  run: dotnet build -c Release -v minimal --no-restore DisCatSharp.Tools/DisCatSharp.Tools.sln
+            - name: Build tools
+              run: dotnet build -c Release -v minimal --no-restore DisCatSharp.Tools/DisCatSharp.Tools.sln
             - name: Test library
               run: dotnet test -v minimal -c Release --no-restore --no-build DisCatSharp.sln
     pack:
@@ -70,9 +70,9 @@ jobs:
             - name: Build library
               run: dotnet build -c Release -v minimal --no-restore DisCatSharp.sln
               env:
-                SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-                SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-                SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+                  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+                  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+                  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
             - name: Publish library
               run: dotnet pack -c Release -v minimal --no-build --no-restore --include-symbols --include-source -o ./artifacts DisCatSharp.sln
             - name: Upload artifacts
