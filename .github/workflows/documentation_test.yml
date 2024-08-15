@@ -1,106 +1,106 @@
 name: "Test Documentation"
 on:
-  pull_request:
-  merge_group:
+    pull_request:
+    merge_group:
 
 env:
-  DOTNET_NOLOGO: true
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-  DOTNET_CLI_TELEMETRY_OPTOUT: true
-  DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
+    DOTNET_NOLOGO: true
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+    DOTNET_CLI_TELEMETRY_OPTOUT: true
+    DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
 
 jobs:
-  build:
-    timeout-minutes: 20
-    runs-on: ubuntu-latest
-    name: Build documentation
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        token:  ${{ secrets.NYUW_TOKEN_GH }}
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4.0.1
-      with:
-        dotnet-version: |
-          9.0.100-preview.6.24328.19
-          8.0.301
-          7.0.403
-    - name: Install DocFX
-      run: dotnet tool update -g docfx
-      continue-on-error: true
-    - name: Restore packages
-      run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
-    - name: Build library
-      run: dotnet build -c Release -v minimal -f net8.0 --no-restore DisCatSharp.sln
-      timeout-minutes: 7
-      continue-on-error: true
-    #- name: Add Custom Plugins
-    #  run: cp -R DisCatSharp.Docs/dcs/plugins/* /home/runner/.dotnet/tools/.store/docfx/2.67.0/docfx/2.67.0/tools/net7.0/any/
-    - name: Build Docs
-      run: docfx DisCatSharp.Docs/docfx.json
-    - name: Pack Docs
-      shell: pwsh
-      run: ./DisCatSharp.Tools/pack-docs.ps1 -DocsPath "./DisCatSharp.Docs" -OutputPath "./" -PackageName "dcs-docs-preview"
-    - name: Upload packed docs
-      uses: actions/upload-artifact@v4.3.6
-      with:
-        name: dcs-docs-preview.zip
-        path: dcs-docs-preview.zip
-        retention-days: 2
-  test_documentation:
-    runs-on: ubuntu-latest
-    name: Test documentation
-    needs: build
-    steps:
-    - name: Dynamically create branch
-      uses: GuillaumeFalourd/create-other-repo-branch-action@v1.5
-      with:
-        repository_owner: Aiko-IT-Systems
-        repository_name: DisCatSharp.Docs
-        new_branch_name: ${{ github.head_ref }}
-        access_token: ${{ secrets.NYUW_TOKEN_GH }}
-        ignore_branch_exists: true
-        git_user_name: NyuwBot
-        git_user_email: nyuw@aitsys.dev
-    - name: Checkout docs repository
-      uses: actions/checkout@v4
-      with:
-        repository: Aiko-IT-Systems/DisCatSharp.Docs
-        token: ${{ secrets.NYUW_TOKEN_GH }}
-        ref: ${{ github.head_ref }}
-    - name: Purge old docs
-      shell: pwsh
-      run: Get-ChildItem -Exclude .git* | Remove-Item -Recurse -Force
-    - name: Download packed docs
-      uses: actions/download-artifact@v4
-      with:
-        name: dcs-docs-preview.zip
-    - name: Extract new docs
-      run: unzip dcs-docs-preview.zip -d .
-    - name: Deleze zip
-      run: rm dcs-docs-preview.zip
-    - name: Add .htaccess
-      run: rm -f .htaccess && wget https://gist.githubusercontent.com/Lulalaby/8a032d0ddebb9125691094edc67b6593/raw/0c4bf0423cfe334fdd5092b014d2481759dd052a/.htaccess
-    #- name: Add _redirects
-    #  run: rm -f _redirects && wget https://gist.githubusercontent.com/Lulalaby/0c784680a855fd161411002e3859b4fd/raw/9708d1acfce3f647cbb8da19c2022a20198979fa/_redirects
-    - name: Set access rights
-      run: sudo chmod 777 -R .
-    - name: Commit changes
-      run: |
-        git config user.name NyuwBot
-        git config user.email nyuw@aitsys.dev
-        git add .
-        git commit -m "Test-Docs update (https://github.com/${{github.repository}}/commit/${{github.sha}})"
-        git push -f
-    - name: Add PR Comment
-      if: always()
-      uses: mshick/add-pr-comment@v2
-      with:
-        refresh-message-position: true
-        message-success: |
-          Documentation test build passed! :tada:
-          Visit the cloudflare action run in https://github.com/Aiko-IT-Systems/DisCatSharp.Docs/commits/${{github.head_ref}} for details :3
+    build:
+        timeout-minutes: 20
+        runs-on: ubuntu-latest
+        name: Build documentation
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  token: ${{ secrets.NYUW_TOKEN_GH }}
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v4.0.1
+              with:
+                  dotnet-version: |
+                      9.0.100-preview.6.24328.19
+                      8.0.301
+                      7.0.403
+            - name: Install DocFX
+              run: dotnet tool update -g docfx
+              continue-on-error: true
+            - name: Restore packages
+              run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
+            - name: Build library
+              run: dotnet build -c Release -v minimal -f net8.0 --no-restore DisCatSharp.sln
+              timeout-minutes: 7
+              continue-on-error: true
+            #- name: Add Custom Plugins
+            #  run: cp -R DisCatSharp.Docs/dcs/plugins/* /home/runner/.dotnet/tools/.store/docfx/2.67.0/docfx/2.67.0/tools/net7.0/any/
+            - name: Build Docs
+              run: docfx DisCatSharp.Docs/docfx.json
+            - name: Pack Docs
+              shell: pwsh
+              run: ./DisCatSharp.Tools/pack-docs.ps1 -DocsPath "./DisCatSharp.Docs" -OutputPath "./" -PackageName "dcs-docs-preview"
+            - name: Upload packed docs
+              uses: actions/upload-artifact@v4.3.6
+              with:
+                  name: dcs-docs-preview.zip
+                  path: dcs-docs-preview.zip
+                  retention-days: 2
+    test_documentation:
+        runs-on: ubuntu-latest
+        name: Test documentation
+        needs: build
+        steps:
+            - name: Dynamically create branch
+              uses: GuillaumeFalourd/create-other-repo-branch-action@v1.5
+              with:
+                  repository_owner: Aiko-IT-Systems
+                  repository_name: DisCatSharp.Docs
+                  new_branch_name: ${{ github.head_ref }}
+                  access_token: ${{ secrets.NYUW_TOKEN_GH }}
+                  ignore_branch_exists: true
+                  git_user_name: NyuwBot
+                  git_user_email: nyuw@aitsys.dev
+            - name: Checkout docs repository
+              uses: actions/checkout@v4
+              with:
+                  repository: Aiko-IT-Systems/DisCatSharp.Docs
+                  token: ${{ secrets.NYUW_TOKEN_GH }}
+                  ref: ${{ github.head_ref }}
+            - name: Purge old docs
+              shell: pwsh
+              run: Get-ChildItem -Exclude .git* | Remove-Item -Recurse -Force
+            - name: Download packed docs
+              uses: actions/download-artifact@v4
+              with:
+                  name: dcs-docs-preview.zip
+            - name: Extract new docs
+              run: unzip dcs-docs-preview.zip -d .
+            - name: Deleze zip
+              run: rm dcs-docs-preview.zip
+            - name: Add .htaccess
+              run: rm -f .htaccess && wget https://gist.githubusercontent.com/Lulalaby/8a032d0ddebb9125691094edc67b6593/raw/0c4bf0423cfe334fdd5092b014d2481759dd052a/.htaccess
+            #- name: Add _redirects
+            #  run: rm -f _redirects && wget https://gist.githubusercontent.com/Lulalaby/0c784680a855fd161411002e3859b4fd/raw/9708d1acfce3f647cbb8da19c2022a20198979fa/_redirects
+            - name: Set access rights
+              run: sudo chmod 777 -R .
+            - name: Commit changes
+              run: |
+                  git config user.name NyuwBot
+                  git config user.email nyuw@aitsys.dev
+                  git add .
+                  git commit -m "Test-Docs update (https://github.com/${{github.repository}}/commit/${{github.sha}})"
+                  git push -f
+            - name: Add PR Comment
+              if: always()
+              uses: mshick/add-pr-comment@v2
+              with:
+                  refresh-message-position: true
+                  message-success: |
+                      Documentation test build passed! :tada:
+                      Visit the cloudflare action run in https://github.com/Aiko-IT-Systems/DisCatSharp.Docs/commits/${{github.head_ref}} for details :3
 
-          ![gif](https://media.tenor.com/3PjRNS8paykAAAAC/pat-pat-head.gif)
-        message-failure: "Documentation test build failed! :x:"
+                      ![gif](https://media.tenor.com/3PjRNS8paykAAAAC/pat-pat-head.gif)
+                  message-failure: "Documentation test build failed! :x:"

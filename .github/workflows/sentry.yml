@@ -1,31 +1,31 @@
 name: "Sentry Release"
 
 on:
-  release:
-    types:
-        - published
+    release:
+        types:
+            - published
 
 permissions: write-all
 
 jobs:
-  release:
-    name: Sentry Release
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Checkout repository"
-        uses: actions/checkout@v4
-      - name: Set outputs
-        id: vars
-        run: |
-          echo "version=10.6.6" >> $GITHUB_OUTPUT
-          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-      - name: "Create Sentry release"
-        uses: getsentry/action-release@v1.7.0
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-        with:
-          environment: ${{ github.event_name == 'release' && github.event.action == 'published' && 'prod' || 'dev' }}
-          ignore_missing: true
-          version: DisCatSharp@${{ steps.vars.outputs.version }}+${{ steps.vars.outputs.sha }}
+    release:
+        name: Sentry Release
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Checkout repository"
+              uses: actions/checkout@v4
+            - name: Set outputs
+              id: vars
+              run: |
+                  echo "version=10.6.6" >> $GITHUB_OUTPUT
+                  echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+            - name: "Create Sentry release"
+              uses: getsentry/action-release@v1.7.0
+              env:
+                  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+                  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+                  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+              with:
+                  environment: ${{ github.event_name == 'release' && github.event.action == 'published' && 'prod' || 'dev' }}
+                  ignore_missing: true
+                  version: DisCatSharp@${{ steps.vars.outputs.version }}+${{ steps.vars.outputs.sha }}

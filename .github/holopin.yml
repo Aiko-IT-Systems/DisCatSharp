@@ -1,6 +1,5 @@
 organization: aitsys
 defaultSticker: clo7y02ns18620gk0hnzuroa8
 stickers:
-  -
-    id: clo7y02ns18620gk0hnzuroa8
-    alias: dcs
+    - id: clo7y02ns18620gk0hnzuroa8
+      alias: dcs
