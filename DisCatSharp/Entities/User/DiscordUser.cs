@@ -439,6 +439,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Updates the current user's application role connection.
 	/// <para>Requires a <see cref="DiscordAccessToken"/> set in <see cref="AccessToken"/>.</para>
 	/// </summary>
+	/// <param name="oauth2Client">The oauth2 client.</param>
 	/// <param name="platformName">The platform name.</param>
 	/// <param name="platformUsername">The platform username.</param>
 	/// <param name="metadata">The metadata.</param>
