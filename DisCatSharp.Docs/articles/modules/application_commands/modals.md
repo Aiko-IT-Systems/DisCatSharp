@@ -32,6 +32,6 @@ public async Task SendModalAsync(InteractionContext ctx)
 	if (res.TimedOut)
 		return;
 
-	await res.Result.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordWebhookBuilder().WithContent(res.Result.Interaction.Data.Components?.First()?.Value ?? "Nothing was submitted."));
+	await res.Result.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent(res.Result.Interaction.Data.Components?.First()?.Value ?? "Nothing was submitted."));
 }
 ```
