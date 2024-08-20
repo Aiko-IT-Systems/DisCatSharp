@@ -23,8 +23,8 @@ jobs:
               with:
                   dotnet-version: |
                       9.0.100-preview.6.24328.19
-                      8.0.301
-                      7.0.403
+                      8.x
+                      7.x
             - name: Git fetch unshallow
               run: git fetch --unshallow
             - name: Install DocFX
