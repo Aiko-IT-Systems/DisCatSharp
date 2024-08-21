@@ -163,6 +163,11 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	public int? ApproximateGuildCount { get; internal set; }
 
 	/// <summary>
+	/// Gets the approximate user install count
+	/// </summary>
+	public int? ApproximateUserInstallCount { get; internal set; }
+
+	/// <summary>
 	/// Gets the interactions endpoint url.
 	/// </summary>
 	public string InteractionsEndpointUrl { get; set; }
