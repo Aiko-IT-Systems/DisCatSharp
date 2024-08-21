@@ -1055,6 +1055,16 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
+	/// Gets a sticker pack.
+	/// </summary>
+	/// <param name="id">The sticker pack's id.</param>
+	/// <returns>The sticker pack.</returns>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordStickerPack> GetStickerPackAsync(ulong id)
+		=> this.ApiClient.GetStickerPackAsync(id);
+
+	/// <summary>
 	/// Gets all nitro sticker packs.
 	/// </summary>
 	/// <returns>List of sticker packs.</returns>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using ConcurrentCollections;
@@ -105,17 +106,16 @@ internal class ComponentEventWaiter : IDisposable
 			else if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
 				await args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
 
-		foreach (var creq in this._collectRequests)
-			if (creq.Message == args.Message && creq.IsMatch(args))
-			{
-				await args.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate).ConfigureAwait(false);
+		foreach (var creq in this._collectRequests.Where(creq => creq.Message == args.Message && creq.IsMatch(args)))
+		{
+			await args.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate).ConfigureAwait(false);
 
-				if (creq.IsMatch(args))
-					creq.Collected.Add(args);
+			if (creq.IsMatch(args))
+				creq.Collected.Add(args);
 
-				else if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
-					await args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
-			}
+			else if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
+				await args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
+		}
 	}
 
 	/// <summary>

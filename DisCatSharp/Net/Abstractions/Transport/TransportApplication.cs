@@ -169,8 +169,17 @@ internal sealed class TransportApplication : ObservableApiObject
 	[JsonProperty("tags", NullValueHandling = NullValueHandling.Include)]
 	public List<string>? Tags { get; set; }
 
+	/// <summary>
+	/// Gets or sets the approximate guild count.
+	/// </summary>
 	[JsonProperty("approximate_guild_count", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<int> ApproximateGuildCount { get; set; }
+
+	/// <summary>
+	/// Gets or sets the approximate user install count.
+	/// </summary>
+	[JsonProperty("approximate_user_install_count", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<int> ApproximateUserInstallCount { get; set; }
 
 	/// <summary>
 	/// Gets or sets the interactions endpoint url.
