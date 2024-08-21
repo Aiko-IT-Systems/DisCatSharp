@@ -520,9 +520,6 @@ public sealed class DiscordWebhookBuilder
 
 			if (this.AvatarUrl.HasValue)
 				throw new ArgumentException("You cannot change the avatar of an interaction response.");
-
-			if (this.Poll is not null)
-				throw new InvalidOperationException("You cannnot edit a poll.");
 		}
 		else
 		{
