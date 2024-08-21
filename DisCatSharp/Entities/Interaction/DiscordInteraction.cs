@@ -145,8 +145,8 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// </summary>
 	/// <param name="type">The type of the response.</param>
 	/// <param name="builder">The data, if any, to send.</param>
-	public Task CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder builder = null)
-		=> this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, type, builder);
+	public async Task<DiscordMessage> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null)
+		=> await this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, type, builder);
 
 	/// <summary>
 	/// Creates a modal response to this interaction.
