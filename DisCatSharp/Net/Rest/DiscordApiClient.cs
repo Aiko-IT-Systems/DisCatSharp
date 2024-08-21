@@ -4042,6 +4042,29 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	/// Gets a guild role async.
+	/// </summary>
+	/// <param name="guildId">The guild_id.</param>
+	/// <param name="roleId">The role_id.</param>
+	internal async Task<DiscordRole> GetGuildRoleAsync(ulong guildId, ulong roleId)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.ROLES}/:role_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			guild_id = guildId,
+			role_id = roleId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		var ret = DiscordJson.DeserializeObject<DiscordRole>(res.Response, this.Discord);
+		ret.GuildId = guildId;
+
+		return ret;
+	}
+
+	/// <summary>
 	/// Modifies the guild role async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
@@ -7456,7 +7479,7 @@ public sealed class DiscordApiClient
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
 
 		// ReSharper disable once HeuristicUnreachableCode
-		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.APPLICATIONS}/:application_id/{Endpoints.ROLE_CONNECTIONS}";
+		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.APPLICATIONS}/:application_id{Endpoints.ROLE_CONNECTION}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route,
 			new
 			{
@@ -7479,7 +7502,7 @@ public sealed class DiscordApiClient
 	/// <param name="platformName">The platform name.</param>
 	/// <param name="platformUsername">The platform username.</param>
 	/// <param name="metadata">The metadata.</param>
-	internal Task ModifyCurrentUserApplicationRoleConnectionAsync(string accessToken, Optional<string> platformName, Optional<string> platformUsername, Optional<ApplicationRoleConnectionMetadata> metadata)
+	internal async Task<DiscordApplicationRoleConnection> ModifyCurrentUserApplicationRoleConnectionAsync(string accessToken, Optional<string> platformName, Optional<string> platformUsername, Optional<ApplicationRoleConnectionMetadata> metadata)
 	{
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
@@ -7492,7 +7515,7 @@ public sealed class DiscordApiClient
 		};
 
 		// ReSharper disable once HeuristicUnreachableCode
-		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.APPLICATIONS}/:application_id/{Endpoints.ROLE_CONNECTIONS}";
+		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.APPLICATIONS}/:application_id{Endpoints.ROLE_CONNECTION}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
 		{
 			application_id = this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture)
@@ -7502,8 +7525,8 @@ public sealed class DiscordApiClient
 		headers.Add("Bearer", accessToken);
 
 		var url = Utilities.GetApiUriFor(path);
-		this.DoRequestAsync(null, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
-		return Task.CompletedTask;
+		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		return DiscordJson.DeserializeObject<DiscordApplicationRoleConnection>(res.Response, null);
 	}
 
 	/// <summary>
@@ -7571,7 +7594,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="token">The token to revoke.</param>
 	/// <param name="type">The type of token to revoke.</param>
-	internal Task RevokeOAuth2TokenAsync(string token, string type)
+	internal async Task RevokeOAuth2TokenAsync(string token, string type)
 	{
 		if (this.Discord != null!)
 			throw new InvalidOperationException("Cannot use oauth2 endpoints with discord client");
@@ -7594,10 +7617,9 @@ public sealed class DiscordApiClient
 		};
 
 		var url = Utilities.GetApiUriFor(path);
-		this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData, headers).ConfigureAwait(false);
-		return Task.CompletedTask;
+		await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData, headers).ConfigureAwait(false);
 	}
 
 #endregion
-	
+
 }

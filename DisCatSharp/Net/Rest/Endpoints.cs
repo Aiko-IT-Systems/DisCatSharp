@@ -515,6 +515,11 @@ public static class Endpoints
 	public const string ROLE_CONNECTIONS = "/role-connections";
 
 	/// <summary>
+	/// The role connection endpoint.
+	/// </summary>
+	public const string ROLE_CONNECTION = "/role-connection";
+
+	/// <summary>
 	/// The metadata endpoint.
 	/// </summary>
 	public const string METADATA = "/metadata";

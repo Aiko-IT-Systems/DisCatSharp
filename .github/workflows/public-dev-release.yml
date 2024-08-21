@@ -1,65 +1,68 @@
 name: "Public Dev Release"
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-        - 'DisCatSharp/**'
-        - 'DisCatSharp.ApplicationCommands/**'
-        - 'DisCatSharp.CommandsNext/**'
-        - 'DisCatSharp.Common/**'
-        - 'DisCatSharp.Configuration/**'
-        - 'DisCatSharp.Experimental/**'
-        - 'DisCatSharp.Hosting/**'
-        - 'DisCatSharp.Hosting.DependencyInjection/**'
-        - 'DisCatSharp.Interactivity/**'
-        - 'DisCatSharp.Lavalink/**'
-        - 'DisCatSharp.VoiceNext/**'
-        - 'DisCatSharp.VoiceNext.Natives/**'
-        - 'DisCatSharp.Targets/**'
-        - 'DisCatSharp.sln'
+    workflow_dispatch:
+    push:
+        branches:
+            - main
+        paths:
+            - "DisCatSharp/**"
+            - "DisCatSharp.ApplicationCommands/**"
+            - "DisCatSharp.CommandsNext/**"
+            - "DisCatSharp.Common/**"
+            - "DisCatSharp.Configuration/**"
+            - "DisCatSharp.Experimental/**"
+            - "DisCatSharp.Hosting/**"
+            - "DisCatSharp.Hosting.DependencyInjection/**"
+            - "DisCatSharp.Interactivity/**"
+            - "DisCatSharp.Lavalink/**"
+            - "DisCatSharp.VoiceNext/**"
+            - "DisCatSharp.VoiceNext.Natives/**"
+            - "DisCatSharp.Targets/**"
+            - "DisCatSharp.sln"
 
 env:
-  DOTNET_NOLOGO: true
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-  DOTNET_CLI_TELEMETRY_OPTOUT: true
-  DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
+    DOTNET_NOLOGO: true
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+    DOTNET_CLI_TELEMETRY_OPTOUT: true
+    DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
 
 jobs:
-  release:
-    timeout-minutes: 15
-    runs-on: ubuntu-latest
-    name: Build library and release internally
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4.0.1
-        with:
-          dotnet-version: |
-            8.0.301
-            7.0.404
-      - name: Restore dependencies
-        run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
-      - name: Set outputs
-        id: vars
-        run: echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-      - name: Build library as pre-release
-        shell: pwsh
-        run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Debug -VersionSuffix ${{ steps.vars.outputs.sha }}
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-      - name: Remove invalid packages
-        run: rm *.symbols.*
-        working-directory: ./dcs-artifacts
-      - name: Remove symbol packages
-        run: rm *.snupkg
-        working-directory: ./dcs-artifacts
-      - name: Add AITSYS Internal NuGet source
-        run: dotnet nuget add source --name discatsharp-git-releases https://registry.aitsys-infra.tools/nuget/discatsharp-git-releases/index.json --username bytesafe --password ${{ secrets.BYTESAFE }} --store-password-in-clear-text
-        working-directory: ./dcs-artifacts
-      - name: Publish to AITSYS Internal Registry
-        run: dotnet nuget push --source discatsharp-git-releases -k ${{ secrets.BYTESAFE }} *
-        working-directory: ./dcs-artifacts
+    release:
+        timeout-minutes: 15
+        runs-on: ubuntu-latest
+        name: Build library and release internally
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v4.0.1
+              with:
+                  dotnet-version: |
+                      9.0.100-preview.6.24328.19
+                      8.0.301
+                      7.0.404
+            - name: Restore dependencies
+              run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
+            - name: Set outputs
+              id: vars
+              run: echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+            - name: Build library as pre-release
+              shell: pwsh
+              run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Debug -VersionSuffix ${{ steps.vars.outputs.sha }}
+              env:
+                  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+                  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+                  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+            - name: Remove invalid packages
+              run: rm *.symbols.*
+              working-directory: ./dcs-artifacts
+            - name: Remove symbol packages
+              run: rm *.snupkg
+              working-directory: ./dcs-artifacts
+            - name: Add AITSYS Internal NuGet source
+              run: dotnet nuget add source --name discatsharp-git-releases https://registry.aitsys-infra.tools/nuget/discatsharp-git-releases/index.json --username bytesafe --password ${{ secrets.BYTESAFE }} --store-password-in-clear-text
+              working-directory: ./dcs-artifacts
+            - name: Publish to AITSYS Internal Registry
+              run: dotnet nuget push --source discatsharp-git-releases -k ${{ secrets.BYTESAFE }} *
+              working-directory: ./dcs-artifacts
