@@ -448,6 +448,13 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	private readonly Lazy<DiscordMember> _currentMemberLazy;
 
 	/// <summary>
+	/// Gets the current guild member's voice state.
+	/// </summary>
+	/// <returns></returns>
+	public async Task<DiscordVoiceState?> GetCurrentMemberVoiceStateAsync()
+		=> await this.Discord.ApiClient.GetCurrentUserVoiceStateAsync(this.Id);
+
+	/// <summary>
 	/// Gets the @everyone role for this guild.
 	/// </summary>
 	[JsonIgnore]

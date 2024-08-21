@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using DisCatSharp.Entities;
 using DisCatSharp.Entities.OAuth2;
 using DisCatSharp.Enums;
+using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Abstractions.Rest;
 using DisCatSharp.Net.Serialization;
@@ -1763,6 +1764,30 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	/// Gets the current user's voice state async.
+	/// </summary>
+	/// <param name="guildId">The guild_id.</param>
+	internal async Task<DiscordVoiceState?> GetCurrentUserVoiceStateAsync(ulong guildId)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.VOICE_STATES}{Endpoints.ME}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			guild_id = guildId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		try
+		{
+			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+			return DiscordJson.DeserializeObject<DiscordVoiceState>(res.Response, this.Discord);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
+
+	/// <summary>
 	/// Updates the current user voice state async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
@@ -1786,6 +1811,32 @@ public sealed class DiscordApiClient
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Gets the user's voice state async.
+	/// </summary>
+	/// <param name="guildId">The guild_id.</param>
+	/// <param name="userId">The user_id.</param>
+	internal async Task<DiscordVoiceState?> GetUserVoiceStateAsync(ulong guildId, ulong userId)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.VOICE_STATES}/:user_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			guild_id = guildId,
+			user_id = userId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		try
+		{
+			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+			return DiscordJson.DeserializeObject<DiscordVoiceState>(res.Response, this.Discord);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
 	}
 
 	/// <summary>
