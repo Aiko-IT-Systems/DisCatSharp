@@ -23,11 +23,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.4">
+		<PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.5">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="DisCatSharp.Attributes" Version="10.6.3" />
+		<PackageReference Include="DisCatSharp.Attributes" Version="10.6.6" />
 		<PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
