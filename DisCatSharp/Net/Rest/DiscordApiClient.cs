@@ -6184,6 +6184,24 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	/// Gets the sticker pack.
+	/// </summary>
+	/// <param name="id">The sticker pack's id.</param>
+	internal async Task<DiscordStickerPack> GetStickerPackAsync(ulong id)
+	{
+		var route = $"{Endpoints.STICKERPACKS}/:pack_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			pack_id = id
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		return DiscordJson.DeserializeObject<DiscordStickerPack>(res.Response, this.Discord);
+	}
+
+	/// <summary>
 	/// Gets the sticker packs.
 	/// </summary>
 	internal async Task<IReadOnlyList<DiscordStickerPack>> GetStickerPacksAsync()

@@ -52,6 +52,12 @@ public sealed class DiscordStickerPack : SnowflakeObject
 	public ulong BannerAssetId { get; internal set; }
 
 	/// <summary>
+	/// Gets the descriptions of this pack.
+	/// </summary>
+	[JsonProperty("description")]
+	public string Description { get; internal set; }
+
+	/// <summary>
 	/// Gets the pack's banner url.
 	/// </summary>
 	[JsonIgnore]
