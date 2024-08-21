@@ -25,7 +25,7 @@ Another great resource is Microsoft's [Introduction to C#](https://learn.microso
 
 # Supported .NET Implementations
 
-DisCatSharp 10.5 and higher targets .NET 8 primary and backports .NET 7.
+DisCatSharp 10.6 and higher targets .NET 8 primary, supports .NET 9 and backports .NET 7.
 
 # Getting Started
 
