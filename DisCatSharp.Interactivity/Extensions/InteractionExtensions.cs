@@ -63,7 +63,8 @@ public static class InteractionExtensions
 
 			if (previousInteraction.Type is InteractionType.Ping or InteractionType.ModalSubmit)
 			{
-				var originalResponse = await previousInteraction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, b.OpenMessage.AddComponents(b.OpenButton)).ConfigureAwait(false);
+				await previousInteraction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, b.OpenMessage.AddComponents(b.OpenButton)).ConfigureAwait(false);
+				var originalResponse = await previousInteraction.GetOriginalResponseAsync().ConfigureAwait(false);
 				var modalOpen = await interactivity.WaitForButtonAsync(originalResponse, new List<DiscordButtonComponent>
 				{
 					b.OpenButton

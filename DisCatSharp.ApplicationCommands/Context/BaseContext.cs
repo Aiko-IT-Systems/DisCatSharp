@@ -120,7 +120,7 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <param name="type">The type of the response.</param>
 	/// <param name="builder">The data to be sent, if any.</param>
 	/// <returns></returns>
-	public async Task<DiscordMessage> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null)
+	public async Task CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null)
 		=> await this.Interaction.CreateResponseAsync(type, builder);
 
 	/// <summary>

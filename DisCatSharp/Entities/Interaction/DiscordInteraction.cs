@@ -145,7 +145,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// </summary>
 	/// <param name="type">The type of the response.</param>
 	/// <param name="builder">The data, if any, to send.</param>
-	public async Task<DiscordMessage> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null)
+	public async Task CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null)
 		=> await this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, type, builder);
 
 	/// <summary>

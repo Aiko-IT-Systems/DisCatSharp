@@ -822,7 +822,8 @@ public class InteractivityExtension : BaseExtension
 				.AddComponents(bts.ButtonArray);
 			if (ephemeral)
 				builder = builder.AsEphemeral();
-			message = await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, builder).ConfigureAwait(false);
+			await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, builder).ConfigureAwait(false);
+			message = await interaction.GetOriginalResponseAsync().ConfigureAwait(false);
 		}
 
 		var req = new InteractionPaginationRequest(interaction, message, user, bhv, del, bts, pages, token);

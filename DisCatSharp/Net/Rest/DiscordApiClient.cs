@@ -6884,7 +6884,10 @@ public sealed class DiscordApiClient
 
 		try
 		{
-			return DiscordJson.DeserializeObject<DiscordMessage>(response.Response, this.Discord);
+			if (response.ResponseCode is not HttpStatusCode.NoContent && !string.IsNullOrEmpty(response.Response))
+				return DiscordJson.DeserializeObject<DiscordMessage>(response.Response, this.Discord);
+			else
+				return null!;
 		}
 		catch
 		{
