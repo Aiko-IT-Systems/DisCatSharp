@@ -1,3 +1,5 @@
+using DisCatSharp.Enums;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
@@ -11,10 +13,10 @@ public sealed class DiscordInteractionResource
 	/// Gets the resource type.
 	/// </summary>
 	[JsonProperty("type")]
-	public int Type { get; internal set; }
+	public InteractionResponseType Type { get; internal set; }
 
 	/// <summary>
-	/// Only not-null if <see cref="Type"/> is <c>4</c>.
+	/// Gets the created message, if applicable.
 	/// </summary>
 	[JsonProperty("message", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordMessage? Message { get; internal set; }

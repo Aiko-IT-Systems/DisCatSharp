@@ -14,7 +14,7 @@ public sealed class DiscordInteractionResponse : ObservableApiObject
 	public DiscordInteractionResponseInteraction InteractionResponse { get; internal set; }
 
 	/// <summary>
-	/// Gets the interaction resource. If it's type is <c>4</c>, it will have a message attached.
+	/// Gets the interaction resource.
 	/// </summary>
 	[JsonProperty("resource")]
 	public DiscordInteractionResource Resource { get; internal set; }

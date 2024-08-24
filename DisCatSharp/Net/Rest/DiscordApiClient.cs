@@ -6881,18 +6881,9 @@ public sealed class DiscordApiClient
 		else
 			response = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		try
-		{
-			this.Discord.Logger.LogInformation(response.Response);
-			if (response.ResponseCode is not HttpStatusCode.NoContent && !string.IsNullOrEmpty(response.Response))
-				return DiscordJson.DeserializeObject<DiscordInteractionResponse>(response.Response, this.Discord);
-
-			return null!;
-		}
-		catch
-		{
-			return null!;
-		}
+		return response.ResponseCode is not HttpStatusCode.NoContent && !string.IsNullOrEmpty(response.Response)
+			? DiscordJson.DeserializeObject<DiscordInteractionResponse>(response.Response, this.Discord)
+			: null;
 	}
 
 	/// <summary>
