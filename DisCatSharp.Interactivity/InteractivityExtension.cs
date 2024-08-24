@@ -287,7 +287,7 @@ public class InteractivityExtension : BaseExtension
 		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
 			throw new ArgumentException("Message does not contain any button components.");
 
-		if (!message.Components.SelectMany(c => c.Components).OfType<DiscordButtonComponent>().Any(c => c.CustomId == id))
+		if (message.Components.SelectMany(c => c.Components).OfType<DiscordButtonComponent>().All(c => c.CustomId != id))
 			throw new ArgumentException($"Message does not contain button with Id of '{id}'.");
 
 		var result = await this
@@ -359,7 +359,7 @@ public class InteractivityExtension : BaseExtension
 		if (message.Components.Count == 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
-		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type == selectType))
+		if (message.Components.SelectMany(c => c.Components).All(c => c.Type != selectType))
 			throw new ArgumentException("Message does not contain any select components.");
 
 		var result = await this
@@ -398,7 +398,7 @@ public class InteractivityExtension : BaseExtension
 		if (message.Components.Count == 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
-		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type == selectType))
+		if (message.Components.SelectMany(c => c.Components).All(c => c.Type != selectType))
 			throw new ArgumentException("Message does not contain any select components.");
 
 		if (message.Components.SelectMany(c => c.Components).OfType<DiscordBaseSelectComponent>().All(c => c.CustomId != id))
@@ -441,7 +441,7 @@ public class InteractivityExtension : BaseExtension
 		if (message.Components.Count == 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
-		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type == selectType))
+		if (message.Components.SelectMany(c => c.Components).All(c => c.Type != selectType))
 			throw new ArgumentException("Message does not contain any select components.");
 
 		if (message.Components.SelectMany(c => c.Components).OfType<DiscordBaseSelectComponent>().All(c => c.CustomId != id))
@@ -654,7 +654,7 @@ public class InteractivityExtension : BaseExtension
 		DiscordChannel channel,
 		DiscordUser user,
 		IEnumerable<Page> pages,
-		PaginationButtons buttons,
+		PaginationButtons? buttons,
 		PaginationBehaviour? behaviour = default,
 		ButtonPaginationBehavior? deletion = default,
 		CancellationToken token = default
@@ -697,7 +697,7 @@ public class InteractivityExtension : BaseExtension
 		DiscordChannel channel,
 		DiscordUser user,
 		IEnumerable<Page> pages,
-		PaginationButtons buttons,
+		PaginationButtons? buttons,
 		TimeSpan? timeoutOverride,
 		PaginationBehaviour? behaviour = default,
 		ButtonPaginationBehavior? deletion = default
@@ -728,7 +728,7 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="deletion">The deletion.</param>
 	/// <returns>A Task.</returns>
 	public Task SendPaginatedMessageAsync(DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, TimeSpan? timeoutOverride, PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default)
-		=> this.SendPaginatedMessageAsync(channel, user, pages, timeoutOverride, behaviour, deletion);
+		=> this.SendPaginatedMessageAsync(channel, user, pages, default, timeoutOverride, behaviour, deletion);
 
 	/// <summary>
 	/// Sends a paginated message.
@@ -782,7 +782,7 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="behaviour">Pagination behaviour.</param>
 	/// <param name="deletion">Deletion behaviour.</param>
 	/// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
-	public async Task SendPaginatedResponseAsync(DiscordInteraction interaction, bool deferred, bool ephemeral, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons = null, PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default, CancellationToken token = default)
+	public async Task SendPaginatedResponseAsync(DiscordInteraction interaction, bool deferred, bool ephemeral, DiscordUser user, IEnumerable<Page> pages, PaginationButtons? buttons = null, PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default, CancellationToken token = default)
 	{
 		var bhv = behaviour ?? this.Config.PaginationBehaviour;
 		var del = deletion ?? this.Config.ButtonBehavior;
@@ -822,8 +822,7 @@ public class InteractivityExtension : BaseExtension
 				.AddComponents(bts.ButtonArray);
 			if (ephemeral)
 				builder = builder.AsEphemeral();
-			await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, builder).ConfigureAwait(false);
-			message = await interaction.GetOriginalResponseAsync().ConfigureAwait(false);
+			message = (await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, builder).ConfigureAwait(false)).Message;
 		}
 
 		var req = new InteractionPaginationRequest(interaction, message, user, bhv, del, bts, pages, token);
@@ -835,9 +834,9 @@ public class InteractivityExtension : BaseExtension
 	/// Waits for a custom pagination request to finish.
 	/// This does NOT handle removing emojis after finishing for you.
 	/// </summary>
-	/// <param name="request"></param>
-	/// <returns></returns>
-	public async Task WaitForCustomPaginationAsync(IPaginationRequest request) => await this._paginator.DoPaginationAsync(request).ConfigureAwait(false);
+	/// <param name="request">The request to wait for.</param>
+	public async Task WaitForCustomPaginationAsync(IPaginationRequest request)
+		=> await this._paginator.DoPaginationAsync(request).ConfigureAwait(false);
 
 	/// <summary>
 	/// Waits for custom button-based pagination request to finish.
@@ -845,7 +844,8 @@ public class InteractivityExtension : BaseExtension
 	/// This does <i><b>not</b></i> invoke <see cref="DisCatSharp.Interactivity.EventHandling.IPaginationRequest.DoCleanupAsync"/>.
 	/// </summary>
 	/// <param name="request">The request to wait for.</param>
-	public async Task WaitForCustomComponentPaginationAsync(IPaginationRequest request) => await this._compPaginator.DoPaginationAsync(request).ConfigureAwait(false);
+	public async Task WaitForCustomComponentPaginationAsync(IPaginationRequest request)
+		=> await this._compPaginator.DoPaginationAsync(request).ConfigureAwait(false);
 
 	/// <summary>
 	/// Generates pages from a string, and puts them in message content.
@@ -876,11 +876,11 @@ public class InteractivityExtension : BaseExtension
 				for (var i = 0; i < subsplit.Length; i++)
 				{
 					s += subsplit[i];
-					if (i >= 15 && i % 15 == 0)
-					{
-						split.Add(s);
-						s = "";
-					}
+					if (i < 15 || i % 15 != 0)
+						continue;
+
+					split.Add(s);
+					s = "";
 				}
 
 				if (split.All(x => x != s))
@@ -904,8 +904,7 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="input">Input string.</param>
 	/// <param name="splitType">How to split input string.</param>
 	/// <param name="embedBase">Base embed for output embeds.</param>
-	/// <returns></returns>
-	public IEnumerable<Page> GeneratePagesInEmbed(string input, SplitType splitType = SplitType.Character, DiscordEmbedBuilder embedBase = null)
+	public IEnumerable<Page> GeneratePagesInEmbed(string input, SplitType splitType = SplitType.Character, DiscordEmbedBuilder? embedBase = null)
 	{
 		if (string.IsNullOrEmpty(input))
 			throw new ArgumentException("You must provide a string that is not null or empty!");
@@ -930,14 +929,14 @@ public class InteractivityExtension : BaseExtension
 				for (var i = 0; i < subsplit.Length; i++)
 				{
 					s += $"{subsplit[i]}\n";
-					if (i % 15 == 0 && i != 0)
-					{
-						split.Add(s);
-						s = "";
-					}
+					if (i % 15 != 0 || i == 0)
+						continue;
+
+					split.Add(s);
+					s = "";
 				}
 
-				if (!split.Any(x => x == s))
+				if (split.All(x => x != s))
 					split.Add(s);
 				break;
 		}

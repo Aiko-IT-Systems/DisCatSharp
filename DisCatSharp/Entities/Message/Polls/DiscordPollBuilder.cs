@@ -42,7 +42,7 @@ public sealed class DiscordPollBuilder
 	public PollLayoutType LayoutType { get; internal set; } = PollLayoutType.Default;
 
 	/// <summary>
-	/// Gets or sets the number of hours the poll should be open for, up to 7 days.
+	/// Gets or sets the number of hours the poll should be open for, up to 32 days.
 	/// Defaults to <c>24</c> hours.
 	/// </summary>
 	public int Duration { get; set; } = 24;
@@ -127,6 +127,7 @@ public sealed class DiscordPollBuilder
 		{
 			if (answer.PollMedia.Text.Length > 55)
 				throw new ArgumentException($"Answers text cannot exceed 55 characters. Thrown in answer {answerId}");
+
 			answerId++;
 		}
 
@@ -173,7 +174,7 @@ public sealed class DiscordPollBuilder
 			throw new ArgumentException("You must specify a question.");
 
 		if (this.Duration > 168)
-			throw new ArgumentException("Polls can only be open for up to 7 days or 168 hours.");
+			throw new ArgumentException("Polls can only be open for up to 32 days or 768 hours.");
 	}
 
 	/// <summary>

@@ -37,9 +37,9 @@ jobs:
               uses: actions/setup-dotnet@v4.0.1
               with:
                   dotnet-version: |
-                      9.0.100-preview.6.24328.19
-                      8.0.301
-                      7.0.404
+                      9.0.100-preview.7.24407.12
+                      8.x
+                      7.x
             - name: Restore dependencies
               run: |
                   dotnet restore --no-cache -f -v minimal DisCatSharp.sln
@@ -62,9 +62,9 @@ jobs:
               uses: actions/setup-dotnet@v4.0.1
               with:
                   dotnet-version: |
-                      9.0.100-preview.6.24328.19
-                      8.0.301
-                      7.0.404
+                      9.0.100-preview.7.24407.12
+                      8.x
+                      7.x
             - name: Restore Packages
               run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
             - name: Build library

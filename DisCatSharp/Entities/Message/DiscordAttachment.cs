@@ -16,6 +16,12 @@ public class DiscordAttachment : NullableSnowflakeObject
 	public string Filename { get; internal set; }
 
 	/// <summary>
+	/// Gets the title of the file.
+	/// </summary>
+	[JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
+	public string? Title { get; set; }
+
+	/// <summary>
 	/// Gets the description of the file.
 	/// </summary>
 	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]

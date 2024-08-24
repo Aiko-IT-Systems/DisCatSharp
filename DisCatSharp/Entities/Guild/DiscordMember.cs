@@ -695,6 +695,13 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		=> channel.PlaceMemberAsync(this);
 
 	/// <summary>
+	/// Gets the member's voice state.
+	/// </summary>
+	/// <returns></returns>
+	public async Task<DiscordVoiceState?> GetVoiceStateAsync()
+		=> await this.Discord.ApiClient.GetUserVoiceStateAsync(this.Guild.Id, this.Id);
+
+	/// <summary>
 	/// Updates the member's suppress state in a stage channel.
 	/// </summary>
 	/// <param name="channel">The channel the member is currently in.</param>

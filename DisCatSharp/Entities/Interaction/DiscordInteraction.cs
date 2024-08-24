@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -145,15 +144,16 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// </summary>
 	/// <param name="type">The type of the response.</param>
 	/// <param name="builder">The data, if any, to send.</param>
-	public Task CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder builder = null)
-		=> this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, type, builder);
+	/// <returns>The created <see cref="DiscordMessage"/>, or <see langword="null"/> if <paramref name="type"/> creates no content.</returns>
+	public async Task<DiscordInteractionResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null)
+		=> await this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, type, builder);
 
 	/// <summary>
 	/// Creates a modal response to this interaction.
 	/// </summary>
 	/// <param name="builder">The data to send.</param>
 	public Task CreateInteractionModalResponseAsync(DiscordInteractionModalBuilder builder)
-		=> this.Type != InteractionType.Ping && this.Type != InteractionType.ModalSubmit ? this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token, InteractionResponseType.Modal, builder) : throw new NotSupportedException("You can't respond to a PING with a modal.");
+		=> this.Type is not InteractionType.Ping && this.Type is not InteractionType.ModalSubmit ? this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token, InteractionResponseType.Modal, builder) : throw new NotSupportedException("You can't respond to a PING with a modal.");
 
 	// TODO: Add hints support
 	/// <summary>
@@ -164,7 +164,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <param name="modalSize">The size of the iframe.</param>
 	/// <param name="iFramePath">The path of the iframe. Uses %application_id%.discordsays.com/<c>:iframe_path</c>.</param>
 	public Task CreateInteractionIframeResponseAsync(string customId, string title, IframeModalSize modalSize = IframeModalSize.Normal, string? iFramePath = null)
-		=> this.Type != InteractionType.Ping ? this.Discord.ApiClient.CreateInteractionIframeResponseAsync(this.Id, this.Token, InteractionResponseType.Iframe, customId, title, modalSize, iFramePath) : throw new NotSupportedException("You can't respond to a PING with an iframe.");
+		=> this.Type is not InteractionType.Ping ? this.Discord.ApiClient.CreateInteractionIframeResponseAsync(this.Id, this.Token, InteractionResponseType.Iframe, customId, title, modalSize, iFramePath) : throw new NotSupportedException("You can't respond to a PING with an iframe.");
 
 	/// <summary>
 	/// Gets the original interaction response.

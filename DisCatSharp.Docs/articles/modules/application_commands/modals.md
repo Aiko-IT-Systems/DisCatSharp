@@ -24,7 +24,7 @@ public async Task SendModalAsync(InteractionContext ctx)
 	DiscordInteractionModalBuilder builder = new DiscordInteractionModalBuilder();
 	builder.WithCustomId("modal_test");
 	builder.WithTitle("Modal Test");
-	builder.AddTextComponent(new DiscordTextComponent(TextComponentStyle.Paragraph, label: "Some input", required: false)));
+	builder.AddTextComponent(new DiscordTextComponent(TextComponentStyle.Paragraph, label: "Some input", required: false));
 
     await ctx.CreateModalResponseAsync(builder);
 	var res = await ctx.Client.GetInteractivity().WaitForModalAsync(builder.CustomId, TimeSpan.FromMinutes(1));

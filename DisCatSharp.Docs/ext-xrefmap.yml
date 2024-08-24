@@ -348,6 +348,12 @@ references:
   commentId: M:DisCatSharp.Extensions.OAuth2Web.ExtensionMethods.HasRequiredRedirectUriSet(DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension)
   fullName: DisCatSharp.Extensions.OAuth2Web.ExtensionMethods.HasRequiredRedirectUriSet(DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension)
   nameWithType: ExtensionMethods.HasRequiredRedirectUriSet(OAuth2WebExtension)
+- uid: DisCatSharp.Extensions.OAuth2Web.ExtensionMethods.HasRequiredRedirectUriSet(DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension,DisCatSharp.DiscordClient)
+  name: HasRequiredRedirectUriSet(OAuth2WebExtension, DiscordClient)
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.ExtensionMethods.HasRequiredRedirectUriSet.html#DisCatSharp_Extensions_OAuth2Web_ExtensionMethods_HasRequiredRedirectUriSet_DisCatSharp_Extensions_OAuth2Web_OAuth2WebExtension_DisCatSharp_DiscordClient_
+  commentId: M:DisCatSharp.Extensions.OAuth2Web.ExtensionMethods.HasRequiredRedirectUriSet(DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension,DisCatSharp.DiscordClient)
+  fullName: DisCatSharp.Extensions.OAuth2Web.ExtensionMethods.HasRequiredRedirectUriSet(DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension, DisCatSharp.DiscordClient)
+  nameWithType: ExtensionMethods.HasRequiredRedirectUriSet(OAuth2WebExtension, DiscordClient)
 - uid: DisCatSharp.Extensions.OAuth2Web.ExtensionMethods.HasRequiredRedirectUriSet*
   name: HasRequiredRedirectUriSet
   href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.ExtensionMethods.HasRequiredRedirectUriSet.html
@@ -515,6 +521,54 @@ references:
   commentId: Overload:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.ClientSecret
   fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.ClientSecret
   nameWithType: OAuth2WebConfiguration.ClientSecret
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputException
+  name: HtmlOutputException
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputException.html#DisCatSharp_Extensions_OAuth2Web_OAuth2WebConfiguration_HtmlOutputException
+  commentId: P:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputException
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputException
+  nameWithType: OAuth2WebConfiguration.HtmlOutputException
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputException*
+  name: HtmlOutputException
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputException.html
+  commentId: Overload:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputException
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputException
+  nameWithType: OAuth2WebConfiguration.HtmlOutputException
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputInvalidState
+  name: HtmlOutputInvalidState
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputInvalidState.html#DisCatSharp_Extensions_OAuth2Web_OAuth2WebConfiguration_HtmlOutputInvalidState
+  commentId: P:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputInvalidState
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputInvalidState
+  nameWithType: OAuth2WebConfiguration.HtmlOutputInvalidState
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputInvalidState*
+  name: HtmlOutputInvalidState
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputInvalidState.html
+  commentId: Overload:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputInvalidState
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputInvalidState
+  nameWithType: OAuth2WebConfiguration.HtmlOutputInvalidState
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputSecurityException
+  name: HtmlOutputSecurityException
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputSecurityException.html#DisCatSharp_Extensions_OAuth2Web_OAuth2WebConfiguration_HtmlOutputSecurityException
+  commentId: P:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputSecurityException
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputSecurityException
+  nameWithType: OAuth2WebConfiguration.HtmlOutputSecurityException
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputSecurityException*
+  name: HtmlOutputSecurityException
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputSecurityException.html
+  commentId: Overload:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputSecurityException
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputSecurityException
+  nameWithType: OAuth2WebConfiguration.HtmlOutputSecurityException
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputSuccess
+  name: HtmlOutputSuccess
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputSuccess.html#DisCatSharp_Extensions_OAuth2Web_OAuth2WebConfiguration_HtmlOutputSuccess
+  commentId: P:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputSuccess
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputSuccess
+  nameWithType: OAuth2WebConfiguration.HtmlOutputSuccess
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputSuccess*
+  name: HtmlOutputSuccess
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputSuccess.html
+  commentId: Overload:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputSuccess
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.HtmlOutputSuccess
+  nameWithType: OAuth2WebConfiguration.HtmlOutputSuccess
 - uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.ListenAll
   name: ListenAll
   href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.ListenAll.html#DisCatSharp_Extensions_OAuth2Web_OAuth2WebConfiguration_ListenAll
@@ -527,6 +581,54 @@ references:
   commentId: Overload:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.ListenAll
   fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.ListenAll
   nameWithType: OAuth2WebConfiguration.ListenAll
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LogTimestampFormat
+  name: LogTimestampFormat
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LogTimestampFormat.html#DisCatSharp_Extensions_OAuth2Web_OAuth2WebConfiguration_LogTimestampFormat
+  commentId: P:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LogTimestampFormat
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LogTimestampFormat
+  nameWithType: OAuth2WebConfiguration.LogTimestampFormat
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LogTimestampFormat*
+  name: LogTimestampFormat
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LogTimestampFormat.html
+  commentId: Overload:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LogTimestampFormat
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LogTimestampFormat
+  nameWithType: OAuth2WebConfiguration.LogTimestampFormat
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LoggerFactory
+  name: LoggerFactory
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LoggerFactory.html#DisCatSharp_Extensions_OAuth2Web_OAuth2WebConfiguration_LoggerFactory
+  commentId: P:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LoggerFactory
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LoggerFactory
+  nameWithType: OAuth2WebConfiguration.LoggerFactory
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LoggerFactory*
+  name: LoggerFactory
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LoggerFactory.html
+  commentId: Overload:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LoggerFactory
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.LoggerFactory
+  nameWithType: OAuth2WebConfiguration.LoggerFactory
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.MinimumLogLevel
+  name: MinimumLogLevel
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.MinimumLogLevel.html#DisCatSharp_Extensions_OAuth2Web_OAuth2WebConfiguration_MinimumLogLevel
+  commentId: P:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.MinimumLogLevel
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.MinimumLogLevel
+  nameWithType: OAuth2WebConfiguration.MinimumLogLevel
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.MinimumLogLevel*
+  name: MinimumLogLevel
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.MinimumLogLevel.html
+  commentId: Overload:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.MinimumLogLevel
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.MinimumLogLevel
+  nameWithType: OAuth2WebConfiguration.MinimumLogLevel
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.Proxy
+  name: Proxy
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.Proxy.html#DisCatSharp_Extensions_OAuth2Web_OAuth2WebConfiguration_Proxy
+  commentId: P:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.Proxy
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.Proxy
+  nameWithType: OAuth2WebConfiguration.Proxy
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.Proxy*
+  name: Proxy
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.Proxy.html
+  commentId: Overload:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.Proxy
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.Proxy
+  nameWithType: OAuth2WebConfiguration.Proxy
 - uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.ProxyTargetIpOrHost
   name: ProxyTargetIpOrHost
   href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.ProxyTargetIpOrHost.html#DisCatSharp_Extensions_OAuth2Web_OAuth2WebConfiguration_ProxyTargetIpOrHost
@@ -587,6 +689,18 @@ references:
   commentId: Overload:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.StartPort
   fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.StartPort
   nameWithType: OAuth2WebConfiguration.StartPort
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.UseHtmlOutput
+  name: UseHtmlOutput
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.UseHtmlOutput.html#DisCatSharp_Extensions_OAuth2Web_OAuth2WebConfiguration_UseHtmlOutput
+  commentId: P:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.UseHtmlOutput
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.UseHtmlOutput
+  nameWithType: OAuth2WebConfiguration.UseHtmlOutput
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.UseHtmlOutput*
+  name: UseHtmlOutput
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.UseHtmlOutput.html
+  commentId: Overload:DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.UseHtmlOutput
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebConfiguration.UseHtmlOutput
+  nameWithType: OAuth2WebConfiguration.UseHtmlOutput
 - uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension
   name: OAuth2WebExtension
   href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.html
@@ -617,6 +731,33 @@ references:
   commentId: E:DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.AuthorizationCodeReceived
   fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.AuthorizationCodeReceived
   nameWithType: OAuth2WebExtension.AuthorizationCodeReceived
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.GenerateOAuth2Url(System.UInt64,System.Collections.Generic.IEnumerable{System.String},System.Boolean)
+  name: GenerateOAuth2Url(ulong, IEnumerable<string>, bool)
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.GenerateOAuth2Url.html#DisCatSharp_Extensions_OAuth2Web_OAuth2WebExtension_GenerateOAuth2Url_System_UInt64_System_Collections_Generic_IEnumerable_System_String__System_Boolean_
+  commentId: M:DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.GenerateOAuth2Url(System.UInt64,System.Collections.Generic.IEnumerable{System.String},System.Boolean)
+  name.vb: GenerateOAuth2Url(ULong, IEnumerable(Of String), Boolean)
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.GenerateOAuth2Url(ulong, System.Collections.Generic.IEnumerable<string>, bool)
+  fullName.vb: DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.GenerateOAuth2Url(ULong, System.Collections.Generic.IEnumerable(Of String), Boolean)
+  nameWithType: OAuth2WebExtension.GenerateOAuth2Url(ulong, IEnumerable<string>, bool)
+  nameWithType.vb: OAuth2WebExtension.GenerateOAuth2Url(ULong, IEnumerable(Of String), Boolean)
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.GenerateOAuth2Url*
+  name: GenerateOAuth2Url
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.GenerateOAuth2Url.html
+  commentId: Overload:DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.GenerateOAuth2Url
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.GenerateOAuth2Url
+  nameWithType: OAuth2WebExtension.GenerateOAuth2Url
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.Logger
+  name: Logger
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.Logger.html#DisCatSharp_Extensions_OAuth2Web_OAuth2WebExtension_Logger
+  commentId: P:DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.Logger
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.Logger
+  nameWithType: OAuth2WebExtension.Logger
+- uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.Logger*
+  name: Logger
+  href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.Logger.html
+  commentId: Overload:DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.Logger
+  fullName: DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.Logger
+  nameWithType: OAuth2WebExtension.Logger
 - uid: DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.OAuth2Client
   name: OAuth2Client
   href: api/DisCatSharp.Extensions.OAuth2Web/DisCatSharp.Extensions.OAuth2Web.OAuth2WebExtension.OAuth2Client.html#DisCatSharp_Extensions_OAuth2Web_OAuth2WebExtension_OAuth2Client
@@ -1002,11 +1143,14 @@ references:
   fullName: DisCatSharp.Extensions.TwoFactorCommands.ExtensionMethods.GetTwoFactorAsync
   nameWithType: ExtensionMethods.GetTwoFactorAsync
 - uid: DisCatSharp.Extensions.TwoFactorCommands.ExtensionMethods.UseTwoFactor(DisCatSharp.DiscordClient,DisCatSharp.Extensions.TwoFactorCommands.TwoFactorConfiguration)
-  name: UseTwoFactor(DiscordClient, TwoFactorConfiguration)
+  name: UseTwoFactor(DiscordClient, TwoFactorConfiguration?)
   href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.ExtensionMethods.UseTwoFactor.html#DisCatSharp_Extensions_TwoFactorCommands_ExtensionMethods_UseTwoFactor_DisCatSharp_DiscordClient_DisCatSharp_Extensions_TwoFactorCommands_TwoFactorConfiguration_
   commentId: M:DisCatSharp.Extensions.TwoFactorCommands.ExtensionMethods.UseTwoFactor(DisCatSharp.DiscordClient,DisCatSharp.Extensions.TwoFactorCommands.TwoFactorConfiguration)
-  fullName: DisCatSharp.Extensions.TwoFactorCommands.ExtensionMethods.UseTwoFactor(DisCatSharp.DiscordClient, DisCatSharp.Extensions.TwoFactorCommands.TwoFactorConfiguration)
-  nameWithType: ExtensionMethods.UseTwoFactor(DiscordClient, TwoFactorConfiguration)
+  name.vb: UseTwoFactor(DiscordClient, TwoFactorConfiguration)
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.ExtensionMethods.UseTwoFactor(DisCatSharp.DiscordClient, DisCatSharp.Extensions.TwoFactorCommands.TwoFactorConfiguration?)
+  fullName.vb: DisCatSharp.Extensions.TwoFactorCommands.ExtensionMethods.UseTwoFactor(DisCatSharp.DiscordClient, DisCatSharp.Extensions.TwoFactorCommands.TwoFactorConfiguration)
+  nameWithType: ExtensionMethods.UseTwoFactor(DiscordClient, TwoFactorConfiguration?)
+  nameWithType.vb: ExtensionMethods.UseTwoFactor(DiscordClient, TwoFactorConfiguration)
 - uid: DisCatSharp.Extensions.TwoFactorCommands.ExtensionMethods.UseTwoFactor*
   name: UseTwoFactor
   href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.ExtensionMethods.UseTwoFactor.html
@@ -1014,11 +1158,14 @@ references:
   fullName: DisCatSharp.Extensions.TwoFactorCommands.ExtensionMethods.UseTwoFactor
   nameWithType: ExtensionMethods.UseTwoFactor
 - uid: DisCatSharp.Extensions.TwoFactorCommands.ExtensionMethods.UseTwoFactorAsync(DisCatSharp.DiscordShardedClient,DisCatSharp.Extensions.TwoFactorCommands.TwoFactorConfiguration)
-  name: UseTwoFactorAsync(DiscordShardedClient, TwoFactorConfiguration)
+  name: UseTwoFactorAsync(DiscordShardedClient, TwoFactorConfiguration?)
   href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.ExtensionMethods.UseTwoFactorAsync.html#DisCatSharp_Extensions_TwoFactorCommands_ExtensionMethods_UseTwoFactorAsync_DisCatSharp_DiscordShardedClient_DisCatSharp_Extensions_TwoFactorCommands_TwoFactorConfiguration_
   commentId: M:DisCatSharp.Extensions.TwoFactorCommands.ExtensionMethods.UseTwoFactorAsync(DisCatSharp.DiscordShardedClient,DisCatSharp.Extensions.TwoFactorCommands.TwoFactorConfiguration)
-  fullName: DisCatSharp.Extensions.TwoFactorCommands.ExtensionMethods.UseTwoFactorAsync(DisCatSharp.DiscordShardedClient, DisCatSharp.Extensions.TwoFactorCommands.TwoFactorConfiguration)
-  nameWithType: ExtensionMethods.UseTwoFactorAsync(DiscordShardedClient, TwoFactorConfiguration)
+  name.vb: UseTwoFactorAsync(DiscordShardedClient, TwoFactorConfiguration)
+  fullName: DisCatSharp.Extensions.TwoFactorCommands.ExtensionMethods.UseTwoFactorAsync(DisCatSharp.DiscordShardedClient, DisCatSharp.Extensions.TwoFactorCommands.TwoFactorConfiguration?)
+  fullName.vb: DisCatSharp.Extensions.TwoFactorCommands.ExtensionMethods.UseTwoFactorAsync(DisCatSharp.DiscordShardedClient, DisCatSharp.Extensions.TwoFactorCommands.TwoFactorConfiguration)
+  nameWithType: ExtensionMethods.UseTwoFactorAsync(DiscordShardedClient, TwoFactorConfiguration?)
+  nameWithType.vb: ExtensionMethods.UseTwoFactorAsync(DiscordShardedClient, TwoFactorConfiguration)
 - uid: DisCatSharp.Extensions.TwoFactorCommands.ExtensionMethods.UseTwoFactorAsync*
   name: UseTwoFactorAsync
   href: api/DisCatSharp.Extensions.TwoFactorCommands/DisCatSharp.Extensions.TwoFactorCommands.ExtensionMethods.UseTwoFactorAsync.html
@@ -1346,6 +1493,15 @@ references:
 - uid: api_index
   name: DisCatSharp Extensions Global API
   href: api/index.html
+- uid: extensions_oauth2_web_intro
+  name: OAuth2 Web Introduction
+  href: articles/extensions/oauth2_web/intro.html
+- uid: extensions_oauth2_web_requirements
+  name: OAuth2 Web Requirements
+  href: articles/extensions/oauth2_web/requirements.html
+- uid: extensions_oauth2_web_usage
+  name: OAuth2 Web Usage
+  href: articles/extensions/oauth2_web/usage.html
 - uid: extensions_twofactor_commands_intro
   name: TwoFactor Commands Introduction
   href: articles/extensions/twofactor_commands/intro.html
@@ -1360,4 +1516,4 @@ references:
   href: articles/misc/reporting_issues.html
 - uid: preamble
   name: Article Preamble
-  href: articles/preamble.html
+  href: articles/index.html

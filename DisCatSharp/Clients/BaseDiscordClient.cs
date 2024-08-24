@@ -414,6 +414,7 @@ public abstract class BaseDiscordClient : IDisposable
 		app.CoverImageHash = tapp.CoverImageHash.ValueOrDefault();
 		app.Guild = tapp.Guild.ValueOrDefault();
 		app.ApproximateGuildCount = tapp.ApproximateGuildCount.ValueOrDefault();
+		app.ApproximateUserInstallCount = tapp.ApproximateUserInstallCount.ValueOrDefault();
 		app.RequiresCodeGrant = tapp.BotRequiresCodeGrant.ValueOrDefault();
 		app.IsPublic = tapp.IsPublicBot.ValueOrDefault();
 		app.RedirectUris = tapp.RedirectUris.ValueOrDefault();
