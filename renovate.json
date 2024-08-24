@@ -9,6 +9,10 @@
 		{
 			"matchManagers": ["npm"],
 			"enabled": false
+		},
+		{
+			"matchPackageNames": ["Backport.System.Threading.Lock"],
+			"addLabels": ["manual-review"]
 		}
 	],
 	"ignorePaths": [
