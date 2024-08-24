@@ -11,7 +11,7 @@ public sealed class DiscordInteractionResponse : ObservableApiObject
 	/// Gets the created interaction.
 	/// </summary>
 	[JsonProperty("interaction")]
-	public DiscordInteractionResponseInteraction InteractionResponse { get; internal set; }
+	public DiscordInteractionResponseInteraction Interaction { get; internal set; }
 
 	/// <summary>
 	/// Gets the interaction resource.
