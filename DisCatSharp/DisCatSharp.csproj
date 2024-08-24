@@ -25,8 +25,11 @@
 		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Net8,Net9</PackageTags>
 	</PropertyGroup>
 
-	<ItemGroup>
+	<ItemGroup Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net9.0'))">
 		<PackageReference Include="Backport.System.Threading.Lock" Version="1.1.6" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.5">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
