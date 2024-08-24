@@ -6768,7 +6768,7 @@ public sealed class DiscordApiClient
 	/// <param name="interactionToken">The interaction token.</param>
 	/// <param name="type">The type.</param>
 	/// <param name="builder">The builder.</param>
-	internal async Task<DiscordMessage> CreateInteractionResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, DiscordInteractionResponseBuilder? builder)
+	internal async Task<DiscordInteractionResponse> CreateInteractionResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, DiscordInteractionResponseBuilder? builder)
 	{
 		if (builder?.Embeds != null)
 			foreach (var embed in builder.Embeds)
@@ -6777,10 +6777,10 @@ public sealed class DiscordApiClient
 
 		RestInteractionResponsePayload pld;
 
-		if (type != InteractionResponseType.AutoCompleteResult)
+		if (type is not InteractionResponseType.AutoCompleteResult)
 		{
 			MessageFlags? flags = builder is { FlagsChanged: true } ? MessageFlags.None : null;
-			if (builder != null)
+			if (builder is not null)
 			{
 				if (builder.IsEphemeral)
 					flags |= MessageFlags.Ephemeral;
@@ -6790,7 +6790,7 @@ public sealed class DiscordApiClient
 					flags |= MessageFlags.SuppressNotifications;
 			}
 
-			var data = builder != null
+			var data = builder is not null
 				? new DiscordInteractionApplicationCommandCallbackData
 				{
 					Content = builder?.Content ?? null,
@@ -6800,7 +6800,7 @@ public sealed class DiscordApiClient
 					Flags = flags,
 					Components = builder?.Components ?? null,
 					Choices = null,
-					DiscordPollRequest = builder.Poll?.Build()
+					DiscordPollRequest = builder?.Poll?.Build()
 				}
 				: null;
 
@@ -6830,7 +6830,8 @@ public sealed class DiscordApiClient
 				}
 
 				pld.Attachments = attachments;
-				pld.Data.Attachments = attachments;
+				if (pld.Data is not null)
+					pld.Data.Attachments = attachments;
 			}
 		}
 		else
@@ -6845,7 +6846,7 @@ public sealed class DiscordApiClient
 					Mentions = null,
 					Flags = null,
 					Components = null,
-					Choices = builder.Choices,
+					Choices = builder?.Choices,
 					Attachments = null,
 					DiscordPollRequest = null
 				},
@@ -6855,12 +6856,9 @@ public sealed class DiscordApiClient
 
 		var values = new Dictionary<string, string>();
 
-		if (builder != null)
-			if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts == true || builder.Mentions != null || builder.Files?.Count > 0 || builder.Components?.Count > 0)
+		if (builder is not null)
+			if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts || builder.Mentions is not null || builder.Files?.Count > 0 || builder.Components?.Count > 0)
 				values["payload_json"] = DiscordJson.SerializeObject(pld);
-
-		var headers = Utilities.GetBaseHeaders();
-		headers["with_response"] = "true";
 
 		var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
@@ -6871,23 +6869,25 @@ public sealed class DiscordApiClient
 
 		RestResponse response;
 
-		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "false").Build();
-		if (builder != null && values.Count is not 0)
+		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "false").AddParameter("with_response", "true").Build();
+		if (builder is not null && values.Count is not 0)
 		{
 			response = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
 
-			foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
-				file.Stream.Position = file.ResetPositionTo.Value;
+			if (builder.Files is not null)
+				foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
+					file.Stream.Position = file.ResetPositionTo!.Value;
 		}
 		else
 			response = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		try
 		{
+			this.Discord.Logger.LogInformation(response.Response);
 			if (response.ResponseCode is not HttpStatusCode.NoContent && !string.IsNullOrEmpty(response.Response))
-				return DiscordJson.DeserializeObject<DiscordMessage>(response.Response, this.Discord);
-			else
-				return null!;
+				return DiscordJson.DeserializeObject<DiscordInteractionResponse>(response.Response, this.Discord);
+
+			return null!;
 		}
 		catch
 		{

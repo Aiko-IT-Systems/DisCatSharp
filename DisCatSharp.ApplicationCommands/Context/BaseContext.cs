@@ -119,8 +119,8 @@ public class BaseContext : DisCatSharpCommandContext
 	/// </summary>
 	/// <param name="type">The type of the response.</param>
 	/// <param name="builder">The data to be sent, if any.</param>
-	/// <returns></returns>
-	public async Task CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null)
+	/// <returns>The created <see cref="DiscordMessage"/>, or <see langword="null"/> if <paramref name="type"/> creates no content.</returns>
+	public async Task<DiscordInteractionResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null)
 		=> await this.Interaction.CreateResponseAsync(type, builder);
 
 	/// <summary>
@@ -128,7 +128,7 @@ public class BaseContext : DisCatSharpCommandContext
 	/// </summary>
 	/// <param name="builder">The data to send.</param>
 	public Task CreateModalResponseAsync(DiscordInteractionModalBuilder builder)
-		=> this.Interaction.Type != InteractionType.Ping && this.Interaction.Type != InteractionType.ModalSubmit ? this.Interaction.CreateInteractionModalResponseAsync(builder) : throw new NotSupportedException("You can't respond to a PING with a modal.");
+		=> this.Interaction.Type is not InteractionType.Ping && this.Interaction.Type is not InteractionType.ModalSubmit ? this.Interaction.CreateInteractionModalResponseAsync(builder) : throw new NotSupportedException("You can't respond to a PING with a modal.");
 
 	/// <summary>
 	/// Creates an iframe response to this interaction.
@@ -138,7 +138,7 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <param name="modalSize">The size of the iframe.</param>
 	/// <param name="iFramePath">The path of the iframe.</param>
 	public Task CreateInteractionIframeResponseAsync(string customId, string title, IframeModalSize modalSize = IframeModalSize.Normal, string? iFramePath = null)
-		=> this.Interaction.Type != InteractionType.Ping ? this.Interaction.CreateInteractionIframeResponseAsync(customId, title, modalSize, iFramePath) : throw new NotSupportedException("You can't respond to a PING with an iframe.");
+		=> this.Interaction.Type is not InteractionType.Ping ? this.Interaction.CreateInteractionIframeResponseAsync(customId, title, modalSize, iFramePath) : throw new NotSupportedException("You can't respond to a PING with an iframe.");
 
 	/// <summary>
 	/// Edits the interaction response.
