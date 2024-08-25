@@ -1,6 +1,10 @@
 DisCatSharp Release Notes
 
     - Implemented application emojis. Read more here: https://discord.com/developers/docs/change-log#application-emoji. Breaking change in 'DiscordEmoji.TryFromName' (additional required parameter).
+    - .NET 9 Support
+    - Partial support for role subscriptions
+    - Partial support for burst reactions
+    - Support for getting voice states through Rest
 
 
 DisCatSharp.Attributes Release Notes
@@ -33,12 +37,13 @@ DisCatSharp.Lavalink Release Notes
 
 DisCatSharp.VoiceNext Release Notes
 
-    Will be deprecated soon and replaced by DisCatSharp.Voice
+    Will be deprecated 2025 and replaced by DisCatSharp.Voice
 
 
 DisCatSharp.Experimental Release Notes
 
-    None
+    - GCP Attachments
+    - Guild Member Search powered by elasticsearch
 
 
 DisCatSharp.Configuration Release Notes
