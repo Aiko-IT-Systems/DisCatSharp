@@ -35,6 +35,10 @@ public class DiscordConnection : ObservableApiObject
 	///			<description>false</description>
 	///		</item>
 	///		<item>
+	///			<term>anazon-music</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
 	///			<term>instagram</term>
 	///			<description>false</description>
 	///		</item>
