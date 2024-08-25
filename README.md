@@ -17,24 +17,13 @@
 ## New
 
 - .NET 9 Support
-- .NET 8 Support
-- Support for the new [Username System](https://dis.gd/usernames) (pomelo)
-- Support for [Linked Roles](https://discord.com/build/linked-roles)
-- Full support for [Application Subscriptions](https://discord.com/build/apply-now)
-- Support for [Voice Messages](https://support.discord.com/hc/en-us/articles/13091096725527)
 - Partial support for role subscriptions
 - Partial support for burst reactions
-- Full support for onboarding
-- Support for default select menu values (THANKS MAISY FOR ADDING IT TO DISCORD)
-- DisCatSharp can now check for new releases, including for extensions
-- 🆕 Full support for User Apps
-- 🆕 Full support for [Polls](https://support.discord.com/hc/en-us/articles/22163184112407)
+- Support for getting voice states through Rest
 
 ## Breaking
 
-- Lavalink V4 implementation. Read more [here](https://docs.dcs.aitsys.dev/articles/modules/audio/lavalink_v4/intro)
-- Dropped support for .NET 6
-- Removed previously deprecated fields and methods
+- _None_
 
 ----
 
