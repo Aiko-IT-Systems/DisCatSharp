@@ -1,8 +1,11 @@
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
+using DisCatSharp.Exceptions;
 using DisCatSharp.Experimental.Entities;
 using DisCatSharp.Experimental.Payloads;
 using DisCatSharp.Net;
@@ -163,5 +166,82 @@ internal sealed class DiscordApiClientHook
 
 		var generatedPersonality = DiscordJson.DeserializeObject<PersonalityGenerationPayload>(res.Response, this.ApiClient.Discord);
 		return generatedPersonality.Personality;
+	}
+
+	/// <summary>
+	/// Searches the guild members asynchronously based on the provided search parameters.
+	/// </summary>
+	/// <param name="guildId">The ID of the guild.</param>
+	/// <param name="searchParams">The search parameters.</param>
+	/// <exception cref="ValidationException">Thrown if the user gave an invalid input.</exception>
+	/// <exception cref="NotIndexedException">Thrown if the elastisearch endpoint has not finished indexing yet.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild" /> permission.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <returns>A list of supplemental guild members that match the search criteria.</returns>
+	internal async Task<DiscordSearchGuildMembersResponse> SearchGuildMembersAsync(ulong guildId, DiscordGuildMemberSearchParams searchParams)
+	{
+		var validationResult = DiscordGuildMemberSearchValidator.Validate(searchParams);
+		if (!validationResult.IsValid)
+			throw new ValidationException(
+				typeof(DiscordGuildMemberSearchParams),
+				"DiscordGuild.SearchGuildMembersAsync(DiscordGuildMemberSearchParams searchParams)",
+				validationResult.ErrorMessage!
+			);
+
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS_SEARCH}";
+
+		var bucket = this.ApiClient.Rest.GetBucket(RestRequestMethod.POST, route, new
+		{
+			guild_id = guildId
+		}, out var path);
+
+		var pld = DiscordJson.SerializeObject(searchParams);
+
+		var url = Utilities.GetApiUriFor(path, this.ApiClient.Discord.Configuration);
+
+		var res = await this.ApiClient.DoRequestAsync(this.ApiClient.Discord, bucket, url, RestRequestMethod.POST, route, payload: pld).ConfigureAwait(false);
+
+		if (res.ResponseCode is HttpStatusCode.Accepted)
+			throw new NotIndexedException(res);
+
+		var searchResponse = DiscordJson.DeserializeObject<DiscordSearchGuildMembersResponse>(res.Response, this.ApiClient.Discord);
+
+		foreach (var supplementalMember in searchResponse.Members)
+		{
+			supplementalMember.Discord = this.ApiClient.Discord;
+
+			if (supplementalMember.TransportMember.User is not null)
+			{
+				var usr = new DiscordUser(supplementalMember.TransportMember.User)
+				{
+					Discord = this.ApiClient.Discord
+				};
+
+				this.ApiClient.Discord.UserCache.AddOrUpdate(supplementalMember.TransportMember.User.Id, usr, (id, old) =>
+				{
+					old.Username = usr.Username;
+					old.Discriminator = usr.Discriminator;
+					old.AvatarHash = usr.AvatarHash;
+					old.BannerHash = usr.BannerHash;
+					old.BannerColorInternal = usr.BannerColorInternal;
+					old.AvatarDecorationData = usr.AvatarDecorationData;
+					old.ThemeColorsInternal = usr.ThemeColorsInternal;
+					old.Pronouns = usr.Pronouns;
+					old.Locale = usr.Locale;
+					old.GlobalName = usr.GlobalName;
+					old.Clan = usr.Clan;
+					return old;
+				});
+			}
+
+			supplementalMember.Member = new(supplementalMember.TransportMember)
+			{
+				Discord = this.ApiClient.Discord,
+				GuildId = guildId
+			};
+		}
+
+		return searchResponse;
 	}
 }

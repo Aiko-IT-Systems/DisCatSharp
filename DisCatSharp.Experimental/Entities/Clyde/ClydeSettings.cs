@@ -9,7 +9,7 @@ namespace DisCatSharp.Experimental.Entities;
 /// Represents a clyde settings object in guilds.
 /// </summary>
 [DiscordDeprecated]
-public sealed class ClydeSettings : ObservableApiObject
+internal sealed class ClydeSettings : ObservableApiObject
 {
 	/// <summary>
 	/// Gets the guild id.

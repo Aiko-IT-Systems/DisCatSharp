@@ -410,7 +410,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="name">The name.</param>
 	/// <param name="limit">The limit.</param>
-	internal async Task<IReadOnlyList<DiscordMember>> SearchMembersAsync(ulong guildId, string name, int? limit)
+	internal async Task<IReadOnlyList<DiscordMember>> SearchGuildMembersAsync(ulong guildId, string name, int? limit)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}{Endpoints.SEARCH}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new

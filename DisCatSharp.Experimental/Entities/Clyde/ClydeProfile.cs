@@ -12,7 +12,7 @@ namespace DisCatSharp.Experimental.Entities;
 /// Represents a clyde profile.
 /// </summary>
 [DiscordDeprecated]
-public sealed class ClydeProfile : ObservableApiObject
+internal sealed class ClydeProfile : ObservableApiObject
 {
 	/// <summary>
 	/// Gets clyde's profile name.

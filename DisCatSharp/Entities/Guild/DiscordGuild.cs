@@ -751,7 +751,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="limit">The maximum amount of members to return. Max 1000. Defaults to 1.</param>
 	/// <returns>The members found, if any.</returns>
 	public Task<IReadOnlyList<DiscordMember>> SearchMembersAsync(string name, int? limit = 1)
-		=> this.Discord.ApiClient.SearchMembersAsync(this.Id, name, limit);
+		=> this.Discord.ApiClient.SearchGuildMembersAsync(this.Id, name, limit);
 
 	/// <summary>
 	/// Adds a new member to this guild
