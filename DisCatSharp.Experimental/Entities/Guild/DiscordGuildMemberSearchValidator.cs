@@ -5,7 +5,7 @@ namespace DisCatSharp.Experimental.Entities;
 /// <summary>
 /// Provides a validator for <see cref="DiscordGuildMemberSearchParams"/>.
 /// </summary>
-internal sealed class DiscordGuildMemberSearchValidator
+public static class DiscordGuildMemberSearchValidator
 {
 	/// <summary>
 	/// Gets the max OR query item count.
@@ -37,21 +37,21 @@ internal sealed class DiscordGuildMemberSearchValidator
 	/// </summary>
 	/// <param name="searchParams">The search parameters to validate.</param>
 	/// <returns>A tuple containing a boolean indicating validity and an optional error message.</returns>
-	public static (bool IsValid, string? ErrorMessage) Validate(DiscordGuildMemberSearchParams searchParams)
+	public static (bool IsValid, string? ErrorMessage) Validate(this DiscordGuildMemberSearchParams searchParams)
 	{
 		if (searchParams.Limit is < MIN_LIMIT or > MAX_LIMIT)
 			return (false, $"Limit must be between {MIN_LIMIT} and {MAX_LIMIT}.");
 
 		if (searchParams.OrQuery is not null)
 		{
-			var orQueryCheck = ValidateQuery(searchParams.OrQuery, "OR", true);
+			var orQueryCheck = searchParams.OrQuery.ValidateQuery("OR", true);
 			if (!orQueryCheck.IsValid)
 				return orQueryCheck;
 		}
 
 		if (searchParams.AndQuery is not null)
 		{
-			var andQueryCheck = ValidateQuery(searchParams.AndQuery, "AND", false);
+			var andQueryCheck = searchParams.AndQuery.ValidateQuery("AND", false);
 			if (!andQueryCheck.IsValid)
 				return andQueryCheck;
 		}
@@ -62,18 +62,18 @@ internal sealed class DiscordGuildMemberSearchValidator
 	/// <summary>
 	/// Validates a DiscordMemberFilter query.
 	/// </summary>
-	private static (bool IsValid, string? ErrorMessage) ValidateQuery(DiscordMemberFilter filter, string queryType, bool validateOrQuery)
+	private static (bool IsValid, string? ErrorMessage) ValidateQuery(this DiscordMemberFilter filter, string queryType, bool validateOrQuery)
 	{
 		if (filter.UserId is not null)
 		{
-			var result = ValidateQueryConditions(filter.UserId, queryType, "UserId", ValidateSnowflakeType, allowRange: true);
+			var result = filter.UserId.ValidateQueryConditions(queryType, "UserId", ValidateSnowflakeType, allowRange: true);
 			if (!result.IsValid)
 				return result;
 		}
 
 		if (filter.Usernames is not null && validateOrQuery)
 		{
-			var result = ValidateQueryConditions(filter.Usernames, queryType, "Usernames", ValidateStringType, true);
+			var result = filter.Usernames.ValidateQueryConditions(queryType, "Usernames", ValidateStringType, true);
 			if (!result.IsValid)
 				return result;
 		}
@@ -82,28 +82,28 @@ internal sealed class DiscordGuildMemberSearchValidator
 
 		if (filter.RoleIds is not null)
 		{
-			var result = ValidateQueryConditions(filter.RoleIds, queryType, "RoleIds", ValidateSnowflakeType, true, true);
+			var result = filter.RoleIds.ValidateQueryConditions(queryType, "RoleIds", ValidateSnowflakeType, true, true);
 			if (!result.IsValid)
 				return result;
 		}
 
 		if (filter.GuildJoinedAt is not null)
 		{
-			var result = ValidateQueryConditions(filter.GuildJoinedAt, queryType, "GuildJoinedAt", ValidateIntegerType, allowRange: true);
+			var result = filter.GuildJoinedAt.ValidateQueryConditions(queryType, "GuildJoinedAt", ValidateIntegerType, allowRange: true);
 			if (!result.IsValid)
 				return result;
 		}
 
 		if (filter.JoinSourceType is not null)
 		{
-			var result = ValidateQueryConditions(filter.JoinSourceType, queryType, "JoinSourceType", ValidateIntegerType, true);
+			var result = filter.JoinSourceType.ValidateQueryConditions(queryType, "JoinSourceType", ValidateIntegerType, true);
 			if (!result.IsValid)
 				return result;
 		}
 
 		if (filter.SourceInviteCode is not null)
 		{
-			var result = ValidateQueryConditions(filter.SourceInviteCode, queryType, "SourceInviteCode", ValidateStringType, true);
+			var result = filter.SourceInviteCode.ValidateQueryConditions(queryType, "SourceInviteCode", ValidateStringType, true);
 			if (!result.IsValid)
 				return result;
 		}
@@ -121,7 +121,7 @@ internal sealed class DiscordGuildMemberSearchValidator
 	/// <summary>
 	/// Validates the conditions and types of an individual query within a filter.
 	/// </summary>
-	private static (bool IsValid, string? ErrorMessage) ValidateQueryConditions(DiscordQuery query, string queryType, string fieldName, Func<string, bool> validateType, bool allowOr = false, bool allowAnd = false, bool allowRange = false)
+	private static (bool IsValid, string? ErrorMessage) ValidateQueryConditions(this DiscordQuery query, string queryType, string fieldName, Func<string, bool> validateType, bool allowOr = false, bool allowAnd = false, bool allowRange = false)
 	{
 		if (query.OrQuery is not null && !allowOr)
 			return (false, $"{fieldName} in {queryType} filter cannot be used with OR queries.");
@@ -157,18 +157,18 @@ internal sealed class DiscordGuildMemberSearchValidator
 	/// <summary>
 	/// Validates safety signals queries.
 	/// </summary>
-	private static (bool IsValid, string? ErrorMessage) ValidateSafetySignals(DiscordSafetySignals safetySignals)
+	private static (bool IsValid, string? ErrorMessage) ValidateSafetySignals(this DiscordSafetySignals safetySignals)
 	{
 		if (safetySignals.UnusualDmActivityUntil is not null)
 		{
-			var result = ValidateQueryConditions(safetySignals.UnusualDmActivityUntil, "SafetySignals", "UnusualDmActivityUntil", ValidateIntegerType, allowRange: true);
+			var result = safetySignals.UnusualDmActivityUntil.ValidateQueryConditions("SafetySignals", "UnusualDmActivityUntil", ValidateIntegerType, allowRange: true);
 			if (!result.IsValid)
 				return result;
 		}
 
 		if (safetySignals.CommunicationDisabledUntil is not null)
 		{
-			var result = ValidateQueryConditions(safetySignals.CommunicationDisabledUntil, "SafetySignals", "CommunicationDisabledUntil", ValidateIntegerType, allowRange: true);
+			var result = safetySignals.CommunicationDisabledUntil.ValidateQueryConditions("SafetySignals", "CommunicationDisabledUntil", ValidateIntegerType, allowRange: true);
 			if (!result.IsValid)
 				return result;
 		}
@@ -179,18 +179,18 @@ internal sealed class DiscordGuildMemberSearchValidator
 	/// <summary>
 	/// Validates that the query type is snowflake.
 	/// </summary>
-	private static bool ValidateSnowflakeType(string query)
+	private static bool ValidateSnowflakeType(this string query)
 		=> ulong.TryParse(query, out _);
 
 	/// <summary>
 	/// Validates that the query type is integer.
 	/// </summary>
-	private static bool ValidateIntegerType(string query)
+	private static bool ValidateIntegerType(this string query)
 		=> int.TryParse(query, out _);
 
 	/// <summary>
 	/// Validates that the query type is string.
 	/// </summary>
-	private static bool ValidateStringType(string query)
+	private static bool ValidateStringType(this string query)
 		=> !string.IsNullOrWhiteSpace(query);
 }

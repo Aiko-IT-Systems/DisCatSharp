@@ -183,7 +183,7 @@ internal sealed class DiscordApiClientHook
 	/// <returns>A list of supplemental guild members that match the search criteria.</returns>
 	internal async Task<DiscordSearchGuildMembersResponse> SearchGuildMembersAsync(ulong guildId, DiscordGuildMemberSearchParams searchParams)
 	{
-		var validationResult = DiscordGuildMemberSearchValidator.Validate(searchParams);
+		var validationResult = searchParams.Validate();
 		if (!validationResult.IsValid)
 			throw new ValidationException(
 				typeof(DiscordGuildMemberSearchParams),
