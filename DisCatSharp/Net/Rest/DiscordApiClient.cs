@@ -2079,8 +2079,35 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Creates a scheduled event.
 	/// </summary>
-	internal async Task<DiscordScheduledEvent> CreateGuildScheduledEventAsync(ulong guildId, ulong? channelId, DiscordScheduledEventEntityMetadata metadata, string name, DateTimeOffset scheduledStartTime, DateTimeOffset? scheduledEndTime, string description, ScheduledEventEntityType type, Optional<string> coverb64, string? reason = null)
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="channelId">The channel id.</param>
+	/// <param name="metadata">The metadata.</param>
+	/// <param name="name">The name.</param>
+	/// <param name="scheduledStartTime">The scheduled start time.</param>
+	/// <param name="scheduledEndTime">The scheduled end time.</param>
+	/// <param name="description">The description.</param>
+	/// <param name="type">The type.</param>
+	/// <param name="coverb64">The cover image.</param>
+	/// <param name="recurrenceRule">The recurrence rule.</param>
+	/// <param name="reason">The reason.</param>
+	/// <returns>A scheduled event.</returns>
+	/// <exception cref="ValidationException">Thrown if the user gave an invalid input.</exception>
+	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	internal async Task<DiscordScheduledEvent> CreateGuildScheduledEventAsync(ulong guildId, ulong? channelId, DiscordScheduledEventEntityMetadata metadata, string name, DateTimeOffset scheduledStartTime, DateTimeOffset? scheduledEndTime, string description, ScheduledEventEntityType type, Optional<string> coverb64, DiscordScheduledEventRecurrenceRule? recurrenceRule, string? reason = null)
 	{
+		if (recurrenceRule is not null)
+		{
+			var validationResult = recurrenceRule.Validate();
+			if (!validationResult.IsValid)
+				throw new ValidationException(
+					typeof(DiscordScheduledEventRecurrenceRule),
+					"DiscordGuild.CreateScheduledEventAsync or DiscordGuild.CreateExternalScheduledEventAsync",
+					validationResult.ErrorMessage!
+				);
+		}
+		
 		var pld = new RestGuildScheduledEventCreatePayload
 		{
 			ChannelId = channelId,
@@ -2090,7 +2117,8 @@ public sealed class DiscordApiClient
 			ScheduledEndTime = scheduledEndTime,
 			Description = description,
 			EntityType = type,
-			CoverBase64 = coverb64
+			CoverBase64 = coverb64,
+			RecurrenceRule = recurrenceRule
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -2123,6 +2151,24 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Modifies a scheduled event.
 	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="scheduledEventId">The scheduled event id.</param>
+	/// <param name="channelId">The channel id.</param>
+	/// <param name="metadata">The metadata.</param>
+	/// <param name="name">The name.</param>
+	/// <param name="scheduledStartTime">The scheduled start time.</param>
+	/// <param name="scheduledEndTime">The scheduled end time.</param>
+	/// <param name="description">The description.</param>
+	/// <param name="type">The type.</param>
+	/// <param name="status">The status.</param>
+	/// <param name="coverb64">The cover image.</param>
+	/// <param name="recurrenceRule">The recurrence rule.</param>
+	/// <param name="reason">The reason.</param>
+	/// <returns>A scheduled event.</returns>
+	/// <exception cref="ValidationException">Thrown if the user gave an invalid input.</exception>
+	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	internal async Task<DiscordScheduledEvent> ModifyGuildScheduledEventAsync(
 		ulong guildId,
 		ulong scheduledEventId,
@@ -2134,10 +2180,22 @@ public sealed class DiscordApiClient
 		Optional<string> description,
 		Optional<ScheduledEventEntityType> type,
 		Optional<ScheduledEventStatus> status,
-		Optional<string> coverb64,
+		Optional<string?> coverb64,
+		Optional<DiscordScheduledEventRecurrenceRule?> recurrenceRule,
 		string? reason = null
 	)
 	{
+		if (recurrenceRule.HasValue && recurrenceRule.Value is not null)
+		{
+			var validationResult = recurrenceRule.Value.Validate();
+			if (!validationResult.IsValid)
+				throw new ValidationException(
+					typeof(DiscordScheduledEventRecurrenceRule),
+					"DiscordScheduledEvent.ModifyAsync(Action<ScheduledEventEditModel> action)",
+					validationResult.ErrorMessage!
+				);
+		}
+		
 		var pld = new RestGuildScheduledEventModifyPayload
 		{
 			ChannelId = channelId,
@@ -2148,7 +2206,8 @@ public sealed class DiscordApiClient
 			Description = description,
 			EntityType = type,
 			Status = status,
-			CoverBase64 = coverb64
+			CoverBase64 = coverb64,
+			RecurrenceRule = recurrenceRule
 		};
 
 		var headers = Utilities.GetBaseHeaders();

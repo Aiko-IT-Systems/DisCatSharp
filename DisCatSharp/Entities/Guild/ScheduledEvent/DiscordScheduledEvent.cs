@@ -151,6 +151,12 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	*/
 
 	/// <summary>
+	/// Gets the recurrence rule for this scheduled event, if any.
+	/// </summary>
+	[JsonProperty("recurrence_rule", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordScheduledEventRecurrenceRule? RecurrenceRule { get; internal set; }
+
+	/// <summary>
 	/// Gets the total number of users subscribed to the scheduled event.
 	/// </summary>
 	[JsonProperty("user_count", NullValueHandling = NullValueHandling.Ignore)]
@@ -169,6 +175,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// Modifies the current scheduled event.
 	/// </summary>
 	/// <param name="action">Action to perform on this thread</param>
+	/// <exception cref="ValidationException">Thrown if the user gave an invalid input.</exception>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -190,8 +197,8 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 		var scheduledEndTime = Optional<DateTimeOffset>.None;
 		if (mdl.ScheduledEndTime.HasValue && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.External : this.EntityType == ScheduledEventEntityType.External)
 			scheduledEndTime = mdl.ScheduledEndTime.Value;
-
-		await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, this.EntityType == ScheduledEventEntityType.External ? new DiscordScheduledEventEntityMetadata(mdl.Location.Value) : null, mdl.Name, mdl.ScheduledStartTime, scheduledEndTime, mdl.Description, mdl.EntityType, mdl.Status, coverb64, mdl.AuditLogReason).ConfigureAwait(false);
+		
+		await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, this.EntityType == ScheduledEventEntityType.External ? new DiscordScheduledEventEntityMetadata(mdl.Location.Value) : null, mdl.Name, mdl.ScheduledStartTime, scheduledEndTime, mdl.Description, mdl.EntityType, mdl.Status, coverb64, mdl.RecurrenceRule, mdl.AuditLogReason).ConfigureAwait(false);
 	}
 
 	/// <summary>

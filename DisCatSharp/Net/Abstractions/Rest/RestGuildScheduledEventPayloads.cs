@@ -40,13 +40,13 @@ internal sealed class RestGuildScheduledEventCreatePayload : ObservableApiObject
 	/// Gets or sets the time to schedule the scheduled event.
 	/// </summary>
 	[JsonProperty("scheduled_start_time")]
-	public DateTimeOffset ScheduledStartTime { get; internal set; }
+	public DateTimeOffset ScheduledStartTime { get; set; }
 
 	/// <summary>
 	/// Gets or sets the time when the scheduled event is scheduled to end.
 	/// </summary>
 	[JsonProperty("scheduled_end_time", NullValueHandling = NullValueHandling.Ignore)]
-	public DateTimeOffset? ScheduledEndTime { get; internal set; }
+	public DateTimeOffset? ScheduledEndTime { get; set; }
 
 	/// <summary>
 	/// Gets or sets the entity type of the scheduled event.
@@ -59,6 +59,12 @@ internal sealed class RestGuildScheduledEventCreatePayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("image", NullValueHandling = NullValueHandling.Include)]
 	public Optional<string> CoverBase64 { get; set; }
+
+	/// <summary>
+	/// Gets or sets the recurrence rule.
+	/// </summary>
+	[JsonProperty("recurrence_rule", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordScheduledEventRecurrenceRule? RecurrenceRule { get; set; }
 
 	/// <summary>
 	/// Gets or sets the privacy level of the scheduled event.
@@ -100,13 +106,13 @@ internal sealed class RestGuildScheduledEventModifyPayload : ObservableApiObject
 	/// Gets or sets the time to schedule the scheduled event.
 	/// </summary>
 	[JsonProperty("scheduled_start_time")]
-	public Optional<DateTimeOffset> ScheduledStartTime { get; internal set; }
+	public Optional<DateTimeOffset> ScheduledStartTime { get; set; }
 
 	/// <summary>
 	/// Gets or sets the time when the scheduled event is scheduled to end.
 	/// </summary>
 	[JsonProperty("scheduled_end_time")]
-	public Optional<DateTimeOffset> ScheduledEndTime { get; internal set; }
+	public Optional<DateTimeOffset> ScheduledEndTime { get; set; }
 
 	/// <summary>
 	/// Gets or sets the entity type of the scheduled event.
@@ -117,14 +123,20 @@ internal sealed class RestGuildScheduledEventModifyPayload : ObservableApiObject
 	/// <summary>
 	/// Gets or sets the cover image as base64.
 	/// </summary>
-	[JsonProperty("image")]
-	public Optional<string> CoverBase64 { get; set; }
+	[JsonProperty("image", NullValueHandling = NullValueHandling.Include)]
+	public Optional<string?> CoverBase64 { get; set; }
 
 	/// <summary>
 	/// Gets or sets the status of the scheduled event.
 	/// </summary>
 	[JsonProperty("status")]
 	public Optional<ScheduledEventStatus> Status { get; set; }
+
+	/// <summary>
+	/// Gets or sets the recurrence rule.
+	/// </summary>
+	[JsonProperty("recurrence_rule", NullValueHandling = NullValueHandling.Include)]
+	public Optional<DiscordScheduledEventRecurrenceRule?> RecurrenceRule { get; set; }
 
 	/// <summary>
 	/// Gets or sets the privacy level of the scheduled event.

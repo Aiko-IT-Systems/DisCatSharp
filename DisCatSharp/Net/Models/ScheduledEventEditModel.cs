@@ -57,6 +57,11 @@ public class ScheduledEventEditModel : BaseEditModel
 	public Optional<ScheduledEventStatus> Status { get; set; }
 
 	/// <summary>
+	/// Gets or sets the recurrence rule.
+	/// </summary>
+	public Optional<DiscordScheduledEventRecurrenceRule> RecurrenceRule { get; set; }
+	
+	/// <summary>
 	/// Initializes a new instance of the <see cref="ScheduledEventEditModel"/> class.
 	/// </summary>
 	internal ScheduledEventEditModel()

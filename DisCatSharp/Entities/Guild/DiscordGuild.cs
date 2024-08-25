@@ -1260,7 +1260,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	)
 		=> await this.Discord.ApiClient.CreateAutomodRuleAsync(this.Id, name, eventType, triggerType, actions, triggerMetadata, enabled, exemptRoles, exemptChannels, reason).ConfigureAwait(false);
 
-#region Scheduled Events
+	#region Scheduled Events
 
 	/// <summary>
 	/// Creates a scheduled event.
@@ -1273,15 +1273,17 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="description">The description.</param>
 	/// <param name="type">The type.</param>
 	/// <param name="coverImage">The cover image.</param>
+	/// <param name="recurrenceRule">The recurrence rule.</param>
 	/// <param name="reason">The reason.</param>
 	/// <returns>A scheduled event.</returns>
+	/// <exception cref="ValidationException">Thrown if the user gave an invalid input.</exception>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset? scheduledEndTime = null, DiscordChannel channel = null, DiscordScheduledEventEntityMetadata metadata = null, string description = null, ScheduledEventEntityType type = ScheduledEventEntityType.StageInstance, Optional<Stream> coverImage = default, string reason = null)
+	public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset? scheduledEndTime = null, DiscordChannel channel = null, DiscordScheduledEventEntityMetadata metadata = null, string description = null, ScheduledEventEntityType type = ScheduledEventEntityType.StageInstance, Optional<Stream> coverImage = default, DiscordScheduledEventRecurrenceRule? recurrenceRule = null, string reason = null)
 	{
 		var coverb64 = ImageTool.Base64FromStream(coverImage);
-		return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, type == ScheduledEventEntityType.External ? null : channel?.Id, type == ScheduledEventEntityType.External ? metadata : null, name, scheduledStartTime, scheduledEndTime.HasValue && type == ScheduledEventEntityType.External ? scheduledEndTime.Value : null, description, type, coverb64, reason).ConfigureAwait(false);
+		return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, type is ScheduledEventEntityType.External ? null : channel?.Id, type is ScheduledEventEntityType.External ? metadata : null, name, scheduledStartTime, scheduledEndTime.HasValue && type is ScheduledEventEntityType.External ? scheduledEndTime.Value : null, description, type, coverb64, recurrenceRule, reason).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1293,15 +1295,17 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="location">The location of the external event.</param>
 	/// <param name="description">The description.</param>
 	/// <param name="coverImage">The cover image.</param>
+	/// <param name="recurrenceRule">The recurrence rule.</param>
 	/// <param name="reason">The reason.</param>
 	/// <returns>A scheduled event.</returns>
+	/// <exception cref="ValidationException">Thrown if the user gave an invalid input.</exception>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordScheduledEvent> CreateExternalScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset scheduledEndTime, string location, string description = null, Optional<Stream> coverImage = default, string reason = null)
+	public async Task<DiscordScheduledEvent> CreateExternalScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset scheduledEndTime, string location, string description = null, Optional<Stream> coverImage = default, DiscordScheduledEventRecurrenceRule? recurrenceRule = null, string reason = null)
 	{
 		var coverb64 = ImageTool.Base64FromStream(coverImage);
-		return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, new(location), name, scheduledStartTime, scheduledEndTime, description, ScheduledEventEntityType.External, coverb64, reason).ConfigureAwait(false);
+		return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, new(location), name, scheduledStartTime, scheduledEndTime, description, ScheduledEventEntityType.External, coverb64, recurrenceRule, reason).ConfigureAwait(false);
 	}
 
 	/// <summary>
