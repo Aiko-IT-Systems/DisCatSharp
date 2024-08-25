@@ -946,7 +946,19 @@ public sealed partial class DiscordShardedClient
 	}
 
 	private AsyncEvent<DiscordClient, VoiceServerUpdateEventArgs> _voiceServerUpdated;
+	
+	/// <summary>
+	/// Fired when a voice channel effect was send.
+	/// For this Event you need the <see cref="DiscordIntents.GuildVoiceStates"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, VoiceChannelEffectSendEventArgs> VoiceChannelEffectSend
+	{
+		add => this._voiceChannelEffectSend.Register(value);
+		remove => this._voiceChannelEffectSend.Unregister(value);
+	}
 
+	private AsyncEvent<DiscordClient, VoiceChannelEffectSendEventArgs> _voiceChannelEffectSend;
+	
 #endregion
 
 #region Application
@@ -1553,6 +1565,15 @@ public sealed partial class DiscordShardedClient
 	/// <param name="e">The event args.</param>
 	private Task Client_VoiceServerUpdate(DiscordClient client, VoiceServerUpdateEventArgs e)
 		=> this._voiceServerUpdated.InvokeAsync(client, e);
+
+	/// <summary>
+	/// Handles the voice channel effect send event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	/// <returns></returns>
+	private Task Client_VoiceChannelEffectSend(DiscordClient client, VoiceChannelEffectSendEventArgs e)
+		=> this._voiceChannelEffectSend.InvokeAsync(client, e);
 
 	/// <summary>
 	/// Handles the guild members chunk event.

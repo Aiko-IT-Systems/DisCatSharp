@@ -542,6 +542,13 @@ public sealed partial class DiscordClient
 				await this.OnVoiceServerUpdateEventAsync((string)dat["endpoint"]!, (string)dat["token"]!, this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
 
+			case "voice_channel_effect_send":
+				gid = (ulong)dat["guild_id"]!;
+				cid = (ulong)dat["channel_id"]!;
+				uid = (ulong)dat["user_id"]!;
+				await this.OnVoiceChannelEffectSendEventAsync(gid, cid, uid, dat);
+				break;
+
 #endregion
 
 #region Interaction/Integration/Application
@@ -3448,6 +3455,57 @@ public sealed partial class DiscordClient
 			Guild = guild
 		};
 		await this._voiceServerUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+
+	internal async Task OnVoiceChannelEffectSendEventAsync(ulong gid, ulong cid, ulong uid, JObject rawObject)
+	{
+		var emoji = rawObject.TryGetValue("emoji", out var rawEmoji) ? rawEmoji.ToDiscordObject<DiscordEmoji>() : null;
+		if (emoji is not null)
+			emoji.Discord = this;
+		AnimationType? animationType = rawObject.TryGetValue("animation_type", out var rawAnimationType) && Enum.TryParse<AnimationType>((string)rawAnimationType!, out var parsedType) ? parsedType : null;
+		int? animationId= rawObject.TryGetValue("animation_id", out var rawAnimationId) ? Convert.ToInt32(rawAnimationId.ToString()) : null;
+		ulong? soundId = rawObject.TryGetValue("sound_id", out var rawSoundId) ? Convert.ToUInt64(rawSoundId.ToString()) : null;
+		double? soundVolume = rawObject.TryGetValue("sound_volume", out var rawSoundVolume) ? Convert.ToDouble(rawSoundVolume.ToString()) : null;
+
+		VoiceChannelEffectSendEventArgs ea = new(this.ServiceProvider)
+		{
+			Channel = this.Guilds.TryGetValue(gid, out var cacheGuild)
+				? cacheGuild.Channels.TryGetValue(cid, out var channel)
+					? channel
+					: new()
+					{
+						Id = cid,
+						GuildId = gid,
+						Discord = this
+					}
+				: new()
+				{
+					Id = cid,
+					GuildId = gid,
+					Discord = this
+				},
+			Guild = this.Guilds.TryGetValue(gid, out var guild)
+				? guild
+				: new()
+				{
+					Id = gid,
+					Discord = this
+				},
+			User = this.UserCache.TryGetValue(uid, out var user)
+				? user
+				: new()
+				{
+					Id = uid,
+					Discord = this
+				},
+			Emoji = emoji,
+			AnimationType = animationType,
+			AnimationId = animationId,
+			SoundId = soundId,
+			SoundVolume = soundVolume
+		};
+
+		await this._voiceChannelEffectSend.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
 #endregion

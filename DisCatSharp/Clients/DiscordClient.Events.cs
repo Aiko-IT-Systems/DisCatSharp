@@ -965,6 +965,18 @@ public sealed partial class DiscordClient
 
 	private AsyncEvent<DiscordClient, VoiceServerUpdateEventArgs> _voiceServerUpdated;
 
+	/// <summary>
+	/// Fired when a voice channel effect was send.
+	/// For this Event you need the <see cref="DiscordIntents.GuildVoiceStates"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, VoiceChannelEffectSendEventArgs> VoiceChannelEffectSend
+	{
+		add => this._voiceChannelEffectSend.Register(value);
+		remove => this._voiceChannelEffectSend.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, VoiceChannelEffectSendEventArgs> _voiceChannelEffectSend;
+
 #endregion
 
 #region Application

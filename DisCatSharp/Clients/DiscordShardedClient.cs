@@ -711,6 +711,7 @@ public sealed partial class DiscordShardedClient
 		client.UserUpdated += this.Client_UserUpdate;
 		client.VoiceStateUpdated += this.Client_VoiceStateUpdate;
 		client.VoiceServerUpdated += this.Client_VoiceServerUpdate;
+		client.VoiceChannelEffectSend += this.Client_VoiceChannelEffectSend;
 		client.GuildMembersChunked += this.Client_GuildMembersChunk;
 		client.UnknownEvent += this.Client_UnknownEvent;
 		client.MessageReactionAdded += this.Client_MessageReactionAdd;
@@ -809,6 +810,7 @@ public sealed partial class DiscordShardedClient
 		client.UserUpdated -= this.Client_UserUpdate;
 		client.VoiceStateUpdated -= this.Client_VoiceStateUpdate;
 		client.VoiceServerUpdated -= this.Client_VoiceServerUpdate;
+		client.VoiceChannelEffectSend -= this.Client_VoiceChannelEffectSend;
 		client.GuildMembersChunked -= this.Client_GuildMembersChunk;
 		client.UnknownEvent -= this.Client_UnknownEvent;
 		client.MessageReactionAdded -= this.Client_MessageReactionAdd;

@@ -105,7 +105,7 @@ public enum DiscordIntents
 
 	/// <summary>
 	/// Whether to include guild voice state events.
-	/// <para>This includes <see cref="DiscordClient.VoiceStateUpdated"/>.</para>
+	/// <para>This includes <see cref="DiscordClient.VoiceStateUpdated"/> and <see cref="DiscordClient.VoiceChannelEffectSend"/>.</para>
 	/// </summary>
 	GuildVoiceStates = 1 << 7,
 

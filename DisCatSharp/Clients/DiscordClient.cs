@@ -225,6 +225,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._userUpdated = new("USER_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._voiceStateUpdated = new("VOICE_STATE_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._voiceServerUpdated = new("VOICE_SERVER_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._voiceChannelEffectSend = new("VOICE_CHANNEL_EFFECT_SEND", EventExecutionLimit, this.EventErrorHandler);
 		this._guildMembersChunked = new("GUILD_MEMBERS_CHUNKED", EventExecutionLimit, this.EventErrorHandler);
 		this._unknownEvent = new("UNKNOWN_EVENT", EventExecutionLimit, this.EventErrorHandler);
 		this._messageReactionAdded = new("MESSAGE_REACTION_ADDED", EventExecutionLimit, this.EventErrorHandler);
