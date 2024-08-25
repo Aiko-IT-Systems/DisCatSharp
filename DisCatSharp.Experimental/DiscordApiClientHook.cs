@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
@@ -243,5 +245,33 @@ internal sealed class DiscordApiClientHook
 		}
 
 		return searchResponse;
+	}
+
+	internal async Task<GcpAttachmentsResponse> RequestFileUploadAsync(ulong channelId, GcpAttachment attachment)
+	{
+		var pld = new RestGcpAttachmentsPayload
+		{
+			GcpAttachments = [attachment]
+		};
+
+		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.ATTACHMENTS}";
+		var bucket = this.ApiClient.Rest.GetBucket(RestRequestMethod.POST, route, new
+		{
+			channel_id = channelId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.ApiClient.Discord.Configuration);
+		var res = await this.ApiClient.DoRequestAsync(this.ApiClient.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		return DiscordJson.DeserializeObject<GcpAttachmentsResponse>(res.Response, this.ApiClient.Discord);
+	}
+
+	internal void UploadGcpFile(GcpAttachmentUploadInformation target, Stream file)
+	{
+		HttpRequestMessage request = new(HttpMethod.Put, target.UploadUrl)
+		{
+			Content = new StreamContent(file)
+		};
+		this.ApiClient.Rest.HttpClient.Send(request);
 	}
 }

@@ -14,7 +14,6 @@ using DisCatSharp.Entities.OAuth2;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
-using DisCatSharp.Net.Abstractions.Rest;
 using DisCatSharp.Net.Serialization;
 
 using Microsoft.Extensions.Logging;
@@ -7388,34 +7387,6 @@ public sealed class DiscordApiClient
 		var info = JObject.Parse(res.Response).ToObject<GatewayInfo>();
 		info.SessionBucket.ResetAfter = DateTimeOffset.UtcNow + TimeSpan.FromMilliseconds(info.SessionBucket.ResetAfterInternal);
 		return info;
-	}
-
-	internal async Task<GcpAttachmentsResponse> RequestFileUploadAsync(ulong channelId, GcpAttachment attachment)
-	{
-		var pld = new RestGcpAttachmentsPayload
-		{
-			GcpAttachments = [attachment]
-		};
-
-		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.ATTACHMENTS}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
-		{
-			channel_id = channelId
-		}, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
-
-		return DiscordJson.DeserializeObject<GcpAttachmentsResponse>(res.Response, this.Discord);
-	}
-
-	internal void UploadGcpFile(GcpAttachmentUploadInformation target, Stream file)
-	{
-		HttpRequestMessage request = new(HttpMethod.Put, target.UploadUrl)
-		{
-			Content = new StreamContent(file)
-		};
-		this.Rest.HttpClient.Send(request);
 	}
 
 #endregion

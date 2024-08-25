@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
@@ -1369,17 +1368,6 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			throw new ArgumentException("Voice state can only be updated in a stage channel.");
 
 		await this.Discord.ApiClient.UpdateCurrentUserVoiceStateAsync(this.GuildId.Value, this.Id, suppress, requestToSpeakTimestamp).ConfigureAwait(false);
-	}
-
-	public async Task<GcpAttachmentUploadInformation> UploadFileAsync(string name, Stream stream, string? description = null)
-	{
-		GcpAttachment attachment = new(name, stream);
-		var response = await this.Discord.ApiClient.RequestFileUploadAsync(this.Id, attachment).ConfigureAwait(false);
-		var target = response.Attachments.First();
-		_ = Task.Run(() => this.Discord.ApiClient.UploadGcpFile(target, stream));
-		target.Filename = name;
-		target.Description = description;
-		return target;
 	}
 
 	/// <summary>

@@ -394,18 +394,6 @@ public sealed class DiscordMessageBuilder
 		return this;
 	}
 
-	public DiscordMessageBuilder AddGcpAttachment(GcpAttachmentUploadInformation gcpAttachment)
-	{
-		this.AttachmentsInternal.Add(new()
-		{
-			Filename = gcpAttachment.Filename,
-			UploadedFilename = gcpAttachment.UploadFilename,
-			Description = gcpAttachment.Description
-		});
-
-		return this;
-	}
-
 	/// <summary>
 	/// Modifies the given attachments on edit.
 	/// </summary>
