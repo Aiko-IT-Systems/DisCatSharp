@@ -213,5 +213,10 @@ public enum MessageType
 	/// <summary>
 	/// Message indicating that a user bought something from the server shop.
 	/// </summary>
-	PurchaseNotification = 44
+	PurchaseNotification = 44,
+
+	/// <summary>
+	/// Messages indicating a polls result are in.
+	/// </summary>
+	PollResult = 46
 }
