@@ -13,6 +13,14 @@ items:
             href: getting_started/web_app.md
           - name: Project Templates
             href: getting_started/templates.md
+    - name: Experimental
+      items:
+          - name: Preamble
+            uid: experimental_preamble
+          - name: ElasticSearch-Based Member Search
+            uid: experimental_search_guild_members
+          - name: GCP Attachments
+            uid: experimental_gcp_attachments
     - name: Topics
       items:
           - name: Events
