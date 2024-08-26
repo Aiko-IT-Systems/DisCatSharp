@@ -7,7 +7,7 @@ DisCatSharp Release Notes
     - Support for getting voice states through Rest
     - Full support for scheduled events including recurrency rules
     - Support for voice channel effect send events
-    - Full support for managing and **using** soundboard sounds
+    - Full support for managing and using soundboard sounds
 
 
 DisCatSharp.Attributes Release Notes
