@@ -682,6 +682,17 @@ public sealed partial class DiscordClient
 
 	private AsyncEvent<DiscordClient, GuildSoundboardSoundsUpdateEventArgs> _guildSoundboardSoundsUpdated;
 
+	/// <summary>
+	///     Fired in response to <see cref="DiscordClient.RequestSoundboardSoundsAsync"/>.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, SoundboardSoundsEventArgs> SoundboardSounds
+	{
+		add => this._soundboardSounds.Register(value);
+		remove => this._soundboardSounds.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, SoundboardSoundsEventArgs> _soundboardSounds;
+
 #endregion
 
 #region Invite

@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Lavalink.Payloads;
+namespace DisCatSharp.Net.Abstractions;
 
 /// <summary>
 ///     The discord voice state update payload.

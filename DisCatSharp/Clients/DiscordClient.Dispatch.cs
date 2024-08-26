@@ -349,6 +349,12 @@ public sealed partial class DiscordClient
 				await this.OnGuildSoundboardSoundsUpdateEventAsync(DiscordJson.DeserializeIEnumerableObject<List<DiscordSoundboardSound>>(dat["soundboard_sounds"]!.ToString(), this), gid).ConfigureAwait(false);
 				break;
 
+			case "soundboard_sounds":
+				gid = (ulong)dat["guild_id"]!;
+				var sounds = DiscordJson.DeserializeIEnumerableObject<List<DiscordSoundboardSound>>(dat["soundboard_sounds"].ToString(), this);
+				await this.OnSoundboardSoundsEventAsync(sounds, gid).ConfigureAwait(false);
+				break;
+
 #endregion
 
 #region Invite
@@ -2386,7 +2392,7 @@ public sealed partial class DiscordClient
 	///     Handles the guild soundboard sounds update event.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
-	/// <param name="sounds">The guild.</param>
+	/// <param name="sounds">The sounds.</param>
 	internal async Task OnGuildSoundboardSoundsUpdateEventAsync(List<DiscordSoundboardSound> sounds, ulong guildId)
 	{
 		var guild = this.Guilds[guildId];
@@ -2396,6 +2402,35 @@ public sealed partial class DiscordClient
 			SoundboardSounds = sounds
 		};
 		await this._guildSoundboardSoundsUpdated.InvokeAsync(this, args).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Handles the soundboard sounds event.
+	/// </summary>
+	/// <param name="sounds">The sounds.</param>
+	/// <param name="guildId">The guild id.</param>
+	internal async Task OnSoundboardSoundsEventAsync(List<DiscordSoundboardSound> sounds, ulong guildId)
+	{
+		var guild = this.Guilds.TryGetValue(guildId, out var cachedGuild) ? cachedGuild : new()
+		{
+			Id = guildId,
+			Discord = this
+		};
+
+		if (this.Guilds.ContainsKey(guildId))
+		{
+			this.Guilds[guildId].SoundboardSoundsInternal.Clear();
+			foreach (var sound in sounds)
+				this.Guilds[guildId].SoundboardSoundsInternal.TryAdd(sound.Id, sound);
+		}
+
+		if (this._soundboardSounds is not null)
+			await this._soundboardSounds.InvokeAsync(this, new(this.ServiceProvider)
+			{
+				GuildId = guildId,
+				Guild = guild,
+				Sounds = sounds
+			}).ConfigureAwait(false);
 	}
 
 #endregion

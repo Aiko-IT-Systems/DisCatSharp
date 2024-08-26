@@ -789,6 +789,17 @@ public sealed partial class DiscordShardedClient
 
 	private AsyncEvent<DiscordClient, GuildSoundboardSoundsUpdateEventArgs> _guildSoundboardSoundsUpdated;
 
+	/// <summary>
+	///     Fired in response to <see cref="DiscordClient.RequestSoundboardSoundsAsync"/>.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, SoundboardSoundsEventArgs> SoundboardSounds
+	{
+		add => this._soundboardSounds.Register(value);
+		remove => this._soundboardSounds.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, SoundboardSoundsEventArgs> _soundboardSounds;
+
 #endregion
 
 #region Message Reaction
@@ -2073,6 +2084,15 @@ public sealed partial class DiscordShardedClient
 	/// <param name="e">The event args.</param>
 	private Task Client_SoundboardSoundsUpdated(DiscordClient client, GuildSoundboardSoundsUpdateEventArgs e)
 		=> this._guildSoundboardSoundsUpdated.InvokeAsync(client, e);
+	
+	/// <summary>
+	///     Handles the soundboard sounds event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_SoundboardSounds(DiscordClient client, SoundboardSoundsEventArgs e)
+		=> this._soundboardSounds.InvokeAsync(client, e);
+
 
 #endregion
 }

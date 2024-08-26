@@ -278,6 +278,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._guildSoundboardSoundsUpdated = new("GUILD_SOUNDBOARD_SOUND_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildSoundboardSoundDeleted = new("GUILD_SOUNDBOARD_SOUND_DELETED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildSoundboardSoundsUpdated = new("GUILD_SOUNDBOARD_SOUNDS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._soundboardSounds = new("SOUNDBOARD_SOUNDS", EventExecutionLimit, this.EventErrorHandler);
 
 		this.GuildsInternal.Clear();
 		this.EmojisInternal.Clear();
@@ -452,6 +453,49 @@ public sealed partial class DiscordClient : BaseDiscordClient
 #endregion
 
 #region Public REST Methods
+
+	/// <summary>
+	///     Requests soundboard sounds over the gateway.
+	/// </summary>
+	/// <param name="guildIds">The guild ids to request sounds from.</param>
+	public async Task RequestSoundboardSoundsAsync(IEnumerable<ulong> guildIds)
+	{
+		var payload = new DiscordDispatchPayload
+		{
+			OpCode = 31,
+			Payload = new RequestSoundboardSoundsPayload
+			{
+				GuildIds = guildIds
+			}
+		};
+
+		await this.WsSendAsync(DiscordJson.SerializeObject(payload)).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Requests and waits for guild soundboard sounds.
+	/// </summary>
+	/// <param name="guildIds">The guild ids to request sounds from.</param>
+	/// <returns>The requested <see cref="DiscordSoundboardSound"/>'s as key-value-pair, where the key is a guild id.</returns>
+	public async Task<IReadOnlyDictionary<ulong, IReadOnlyList<DiscordSoundboardSound>>> RequestAndWaitForSoundboardSoundsAsync(IEnumerable<ulong> guildIds)
+	{
+		var targetGuildIds = guildIds.ToList();
+
+		Dictionary<ulong, IReadOnlyList<DiscordSoundboardSound>> guildSoundsKvp = [];
+		this.SoundboardSounds += (_, e) =>
+		{
+			if (targetGuildIds.Contains(e.GuildId))
+				guildSoundsKvp.TryAdd(e.GuildId, e.Sounds);
+			return Task.CompletedTask;
+		};
+
+		await this.RequestSoundboardSoundsAsync(targetGuildIds);
+
+		while (guildSoundsKvp.Keys.Count != targetGuildIds.Count)
+			await Task.Delay(TimeSpan.FromSeconds(1), this._cancelToken);
+
+		return guildSoundsKvp.AsReadOnly();
+	}
 
 	/// <summary>
 	///     Gets a user.

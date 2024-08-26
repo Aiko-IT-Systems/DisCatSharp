@@ -132,5 +132,6 @@ public enum DiscordEvent
 	GuildSoundboardSoundCreated,
 	GuildSoundboardSoundUpdated,
 	GuildSoundboardSoundDeleted,
-	GuildSoundboardSoundsUpdated
+	GuildSoundboardSoundsUpdated,
+	SoundboardSounds
 }

@@ -1,9 +1,9 @@
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Lavalink.Payloads;
+namespace DisCatSharp.Net.Abstractions;
 
 /// <summary>
-///     The voice dispatch.
+///     The discord dispatch.
 /// </summary>
 internal sealed class DiscordDispatchPayload
 {

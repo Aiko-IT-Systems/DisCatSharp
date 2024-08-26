@@ -18,6 +18,7 @@ using DisCatSharp.Lavalink.Enums.Websocket;
 using DisCatSharp.Lavalink.EventArgs;
 using DisCatSharp.Lavalink.Payloads;
 using DisCatSharp.Net;
+using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.WebSocket;
 
 using Microsoft.Extensions.Logging;

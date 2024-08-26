@@ -622,6 +622,7 @@ public sealed partial class DiscordShardedClient
 		this._userUpdated = new("USER_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._voiceStateUpdated = new("VOICE_STATE_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._voiceServerUpdated = new("VOICE_SERVER_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._voiceChannelEffectSend = new("VOICE_CHANNEL_EFFECT_SEND", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildMembersChunk = new("GUILD_MEMBERS_CHUNKED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._unknownEvent = new("UNKNOWN_EVENT", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._messageReactionAdded = new("MESSAGE_REACTION_ADDED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
@@ -669,6 +670,11 @@ public sealed partial class DiscordShardedClient
 		this._entitlementDeleted = new("ENTITLEMENT_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._messagePollVoteAdded = new("MESSAGE_POLL_VOTE_ADDED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._messagePollVoteRemoved = new("MESSAGE_POLL_VOTE_REMOVED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._guildSoundboardSoundCreated = new("GUILD_SOUNDBOARD_SOUND_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._guildSoundboardSoundsUpdated = new("GUILD_SOUNDBOARD_SOUND_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._guildSoundboardSoundDeleted = new("GUILD_SOUNDBOARD_SOUND_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._guildSoundboardSoundsUpdated = new("GUILD_SOUNDBOARD_SOUNDS_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._soundboardSounds = new("SOUNDBOARD_SOUNDS", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 	}
 
 	/// <summary>
@@ -772,6 +778,7 @@ public sealed partial class DiscordShardedClient
 		client.GuildSoundboardSoundUpdated += this.Client_SoundboardSoundUpdated;
 		client.GuildSoundboardSoundDeleted += this.Client_SoundboardSoundDeleted;
 		client.GuildSoundboardSoundsUpdated += this.Client_SoundboardSoundsUpdated;
+		client.SoundboardSounds += this.Client_SoundboardSounds;
 	}
 
 	/// <summary>
@@ -875,6 +882,7 @@ public sealed partial class DiscordShardedClient
 		client.GuildSoundboardSoundUpdated -= this.Client_SoundboardSoundUpdated;
 		client.GuildSoundboardSoundDeleted -= this.Client_SoundboardSoundDeleted;
 		client.GuildSoundboardSoundsUpdated -= this.Client_SoundboardSoundsUpdated;
+		client.SoundboardSounds -= this.Client_SoundboardSounds;
 	}
 
 	/// <summary>

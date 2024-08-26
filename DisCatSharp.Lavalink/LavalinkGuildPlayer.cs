@@ -15,6 +15,7 @@ using DisCatSharp.Lavalink.Enums;
 using DisCatSharp.Lavalink.EventArgs;
 using DisCatSharp.Lavalink.Models;
 using DisCatSharp.Lavalink.Payloads;
+using DisCatSharp.Net.Abstractions;
 
 using Microsoft.Extensions.Logging;
 
