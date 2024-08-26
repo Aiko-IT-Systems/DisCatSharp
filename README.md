@@ -20,6 +20,8 @@
 - Partial support for role subscriptions
 - Partial support for burst reactions
 - Support for getting voice states through Rest
+- Full support for scheduled events including recurrency rules
+- Suppor for voice channel effect send events
 
 ## Breaking
 
