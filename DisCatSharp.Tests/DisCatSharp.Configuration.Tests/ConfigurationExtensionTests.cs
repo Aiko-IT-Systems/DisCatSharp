@@ -14,6 +14,44 @@ namespace DisCatSharp.Configuration.Tests;
 
 public class ConfigurationExtensionTests
 {
+#region Test Classes
+
+	private class SampleClass
+	{
+		public int Amount { get; set; }
+		public string? Email { get; set; }
+	}
+
+	private class ClassWithArray
+	{
+		public int[] Values { get; set; } = [1, 2, 3, 4, 5];
+
+		public string[] Strings { get; set; } = ["1", "2", "3", "4", "5"];
+	}
+
+	private class ClassWithEnumerable
+	{
+		public IEnumerable<int> Values { get; set; } = new[] { 1, 2, 3, 4, 5 };
+
+		public IEnumerable<string> Strings { get; set; } = new[] { "1", "2", "3", "4", "5" };
+	}
+
+	private class ClassWithList
+	{
+		public List<string> Strings { get; set; } = ["1", "2", "3", "4", "5"];
+
+		public List<int> Values { get; set; } = [1, 2, 3, 4, 5];
+	}
+
+	private class SampleClass2(string value)
+	{
+		public TimeSpan Timeout { get; set; } = TimeSpan.FromMinutes(7);
+		public string Name { get; set; } = "Sample";
+		public string ConstructorValue { get; } = value;
+	}
+
+#endregion
+
 	private IConfiguration EnumerableTestConfiguration() =>
 		new ConfigurationBuilder()
 			.AddJsonFile("enumerable-test.json")
@@ -256,42 +294,4 @@ public class ConfigurationExtensionTests
 		Assert.False(source.HasSection("DiscordConfiguration"));
 		Assert.False(source.HasSection("Discord", null));
 	}
-
-#region Test Classes
-
-	private class SampleClass
-	{
-		public int Amount { get; }
-		public string? Email { get; }
-	}
-
-	private class ClassWithArray
-	{
-		public int[] Values { get; } = [1, 2, 3, 4, 5];
-
-		public string[] Strings { get; } = ["1", "2", "3", "4", "5"];
-	}
-
-	private class ClassWithEnumerable
-	{
-		public IEnumerable<int> Values { get; } = new[] { 1, 2, 3, 4, 5 };
-
-		public IEnumerable<string> Strings { get; } = new[] { "1", "2", "3", "4", "5" };
-	}
-
-	private class ClassWithList
-	{
-		public List<string> Strings { get; } = ["1", "2", "3", "4", "5"];
-
-		public List<int> Values { get; } = [1, 2, 3, 4, 5];
-	}
-
-	private class SampleClass2(string value)
-	{
-		public TimeSpan Timeout { get; } = TimeSpan.FromMinutes(7);
-		public string Name { get; } = "Sample";
-		public string ConstructorValue { get; } = value;
-	}
-
-#endregion
 }
