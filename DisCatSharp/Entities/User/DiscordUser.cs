@@ -398,9 +398,9 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <param name="fmt">Format of the avatar to get.</param>
 	/// <param name="size">Maximum size of the avatar. Must be a power of two, minimum 16, maximum 2048.</param>
 	/// <returns>URL of the user's avatar.</returns>
-	public string GetAvatarUrl(ImageFormat fmt, ushort size = 1024)
+	public string GetAvatarUrl(MediaFormat fmt, ushort size = 1024)
 	{
-		if (fmt is ImageFormat.Unknown)
+		if (fmt is MediaFormat.Unknown)
 			throw new ArgumentException("You must specify valid image format.", nameof(fmt));
 
 		if (size is < 16 or > 2048)
@@ -412,11 +412,11 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 
 		var sfmt = fmt switch
 		{
-			ImageFormat.Gif => "gif",
-			ImageFormat.Jpeg => "jpg",
-			ImageFormat.Png => "png",
-			ImageFormat.WebP => "webp",
-			ImageFormat.Auto => !string.IsNullOrWhiteSpace(this.AvatarHash) ? this.AvatarHash.StartsWith("a_", StringComparison.Ordinal) ? "gif" : "png" : "png",
+			MediaFormat.Gif => "gif",
+			MediaFormat.Jpeg => "jpg",
+			MediaFormat.Png => "png",
+			MediaFormat.WebP => "webp",
+			MediaFormat.Auto => !string.IsNullOrWhiteSpace(this.AvatarHash) ? this.AvatarHash.StartsWith("a_", StringComparison.Ordinal) ? "gif" : "png" : "png",
 			_ => throw new ArgumentOutOfRangeException(nameof(fmt))
 		};
 		var ssize = size.ToString(CultureInfo.InvariantCulture);

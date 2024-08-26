@@ -327,6 +327,30 @@ public sealed partial class DiscordClient
 
 #endregion
 
+#region Soundboard Sounds
+
+			case "guild_soundboard_sound_create":
+				gid = (ulong)dat["guild_id"]!;
+				await this.OnGuildSoundboardSoundCreateEventAsync(DiscordJson.DeserializeObject<DiscordSoundboardSound>(dat.ToString(), this), gid).ConfigureAwait(false);
+				break;
+
+			case "guild_soundboard_sound_update":
+				gid = (ulong)dat["guild_id"]!;
+				await this.OnGuildSoundboardSoundUpdateEventAsync(DiscordJson.DeserializeObject<DiscordSoundboardSound>(dat.ToString(), this), gid).ConfigureAwait(false);
+				break;
+
+			case "guild_soundboard_sound_delete":
+				gid = (ulong)dat["guild_id"]!;
+				await this.OnGuildSoundboardSoundDeleteEventAsync(Convert.ToUInt64(dat["sound_id"]!.ToString()), gid).ConfigureAwait(false);
+				break;
+
+			case "guild_soundboard_sounds_update":
+				gid = (ulong)dat["guild_id"]!;
+				await this.OnGuildSoundboardSoundsUpdateEventAsync(DiscordJson.DeserializeIEnumerableObject<List<DiscordSoundboardSound>>(dat["soundboard_sounds"]!.ToString(), this), gid).ConfigureAwait(false);
+				break;
+
+#endregion
+
 #region Invite
 
 			case "invite_create":
@@ -1077,6 +1101,7 @@ public sealed partial class DiscordClient
 		guild.VoiceStatesInternal ??= new();
 		guild.MembersInternal ??= new();
 		guild.ScheduledEventsInternal ??= new();
+		guild.SoundboardSoundsInternal ??= new();
 
 		this.UpdateCachedGuild(eventGuild, rawMembers);
 
@@ -1099,6 +1124,7 @@ public sealed partial class DiscordClient
 		foreach (var kvp in eventGuild.StickersInternal) guild.StickersInternal[kvp.Key] = kvp.Value;
 		foreach (var kvp in eventGuild.StageInstancesInternal) guild.StageInstancesInternal[kvp.Key] = kvp.Value;
 		foreach (var kvp in eventGuild.ScheduledEventsInternal) guild.ScheduledEventsInternal[kvp.Key] = kvp.Value;
+		foreach (var kvp in eventGuild.SoundboardSoundsInternal) guild.SoundboardSoundsInternal[kvp.Key] = kvp.Value;
 
 		foreach (var xc in guild.ChannelsInternal.Values)
 		{
@@ -1136,6 +1162,17 @@ public sealed partial class DiscordClient
 			xse.GuildId = guild.Id;
 			if (xse.Creator != null)
 				xse.Creator.Discord = this;
+		}
+
+		foreach (var xse in guild.SoundboardSoundsInternal.Values)
+		{
+			xse.Discord = this;
+			xse.GuildId = guild.Id;
+			if (xse.TransportUser != null)
+				xse.User = new(xse.TransportUser)
+				{
+					Discord = this
+				};
 		}
 
 		var old = Volatile.Read(ref this._guildDownloadCompleted);
@@ -1223,7 +1260,8 @@ public sealed partial class DiscordClient
 				RolesInternal = new(),
 				StageInstancesInternal = new(),
 				VoiceStatesInternal = new(),
-				ScheduledEventsInternal = new()
+				ScheduledEventsInternal = new(),
+				SoundboardSoundsInternal = new()
 			};
 
 			foreach (var kvp in gld.ChannelsInternal) oldGuild.ChannelsInternal[kvp.Key] = kvp.Value;
@@ -1235,6 +1273,7 @@ public sealed partial class DiscordClient
 			foreach (var kvp in gld.MembersInternal) oldGuild.MembersInternal[kvp.Key] = kvp.Value;
 			foreach (var kvp in gld.StageInstancesInternal) oldGuild.StageInstancesInternal[kvp.Key] = kvp.Value;
 			foreach (var kvp in gld.ScheduledEventsInternal) oldGuild.ScheduledEventsInternal[kvp.Key] = kvp.Value;
+			foreach (var kvp in gld.SoundboardSoundsInternal) oldGuild.SoundboardSoundsInternal[kvp.Key] = kvp.Value;
 		}
 
 		guild.Discord = this;
@@ -1290,6 +1329,17 @@ public sealed partial class DiscordClient
 			xse.GuildId = guild.Id;
 			if (xse.Creator != null)
 				xse.Creator.Discord = this;
+		}
+
+		foreach (var xse in guild.SoundboardSoundsInternal.Values)
+		{
+			xse.Discord = this;
+			xse.GuildId = guild.Id;
+			if (xse.TransportUser != null)
+				xse.User = new(xse.TransportUser)
+				{
+					Discord = this
+				};
 		}
 
 		await this._guildUpdated.InvokeAsync(this, new(this.ServiceProvider)
@@ -2272,6 +2322,80 @@ public sealed partial class DiscordClient
 			Role = role
 		};
 		await this._guildRoleDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+
+#endregion
+
+#region Guild Soundboard Sounds
+
+	/// <summary>
+	///     Handles the guild soundboard sound create event.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="sound">The sound.</param>
+	internal async Task OnGuildSoundboardSoundCreateEventAsync(DiscordSoundboardSound sound, ulong guildId)
+	{
+		var guild = this.Guilds[guildId];
+		guild.SoundboardSoundsInternal.TryAdd(sound.Id, sound);
+		var args = new GuildSoundboardSoundCreateEventArgs(this.ServiceProvider)
+		{
+			Guild = guild,
+			SoundboardSound = sound
+		};
+		await this._guildSoundboardSoundCreated.InvokeAsync(this, args).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Handles the guild soundboard sound update event.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="sound">The sound.</param>
+	internal async Task OnGuildSoundboardSoundUpdateEventAsync(DiscordSoundboardSound sound, ulong guildId)
+	{
+		var guild = this.Guilds[guildId];
+		guild.SoundboardSoundsInternal.TryRemove(sound.Id, out _);
+		guild.SoundboardSoundsInternal.TryAdd(sound.Id, sound);
+		var args = new GuildSoundboardSoundUpdateEventArgs(this.ServiceProvider)
+		{
+			Guild = guild,
+			SoundboardSound = sound
+		};
+		await this._guildSoundboardSoundUpdated.InvokeAsync(this, args).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Handles the guild soundboard sound delete event.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="soundId">The sound id.</param>
+	/// <returns></returns>
+	internal async Task OnGuildSoundboardSoundDeleteEventAsync(ulong soundId, ulong guildId)
+	{
+		var guild = this.Guilds[guildId];
+		guild.SoundboardSoundsInternal.TryRemove(soundId, out var sound);
+		var args = new GuildSoundboardSoundDeleteEventArgs(this.ServiceProvider)
+		{
+			Guild = guild,
+			SoundboardSoundId = soundId,
+			SoundboardSound = sound
+		};
+		await this._guildSoundboardSoundDeleted.InvokeAsync(this, args).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Handles the guild soundboard sounds update event.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="sounds">The guild.</param>
+	internal async Task OnGuildSoundboardSoundsUpdateEventAsync(List<DiscordSoundboardSound> sounds, ulong guildId)
+	{
+		var guild = this.Guilds[guildId];
+		var args = new GuildSoundboardSoundsUpdateEventArgs(this.ServiceProvider)
+		{
+			Guild = guild,
+			SoundboardSounds = sounds
+		};
+		await this._guildSoundboardSoundsUpdated.InvokeAsync(this, args).ConfigureAwait(false);
 	}
 
 #endregion

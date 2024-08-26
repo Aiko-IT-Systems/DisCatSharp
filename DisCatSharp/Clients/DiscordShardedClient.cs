@@ -768,6 +768,10 @@ public sealed partial class DiscordShardedClient
 		client.EntitlementDeleted += this.Client_EntitlementDeleted;
 		client.MessagePollVoteAdded += this.Client_MessagePollVoteAdded;
 		client.MessagePollVoteRemoved += this.Client_MessagePollVoteRemoved;
+		client.GuildSoundboardSoundCreated += this.Client_SoundboardSoundCreated;
+		client.GuildSoundboardSoundUpdated += this.Client_SoundboardSoundUpdated;
+		client.GuildSoundboardSoundDeleted += this.Client_SoundboardSoundDeleted;
+		client.GuildSoundboardSoundsUpdated += this.Client_SoundboardSoundsUpdated;
 	}
 
 	/// <summary>
@@ -867,6 +871,10 @@ public sealed partial class DiscordShardedClient
 		client.EntitlementDeleted -= this.Client_EntitlementDeleted;
 		client.MessagePollVoteAdded -= this.Client_MessagePollVoteAdded;
 		client.MessagePollVoteRemoved -= this.Client_MessagePollVoteRemoved;
+		client.GuildSoundboardSoundCreated -= this.Client_SoundboardSoundCreated;
+		client.GuildSoundboardSoundUpdated -= this.Client_SoundboardSoundUpdated;
+		client.GuildSoundboardSoundDeleted -= this.Client_SoundboardSoundDeleted;
+		client.GuildSoundboardSoundsUpdated -= this.Client_SoundboardSoundsUpdated;
 	}
 
 	/// <summary>

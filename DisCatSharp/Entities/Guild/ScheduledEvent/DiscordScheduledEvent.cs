@@ -241,7 +241,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 					? throw new ArgumentException("Channel needs to be a voice or stage channel.")
 					: c.Id);
 
-		var coverb64 = ImageTool.Base64FromStream(mdl.CoverImage);
+		var coverb64 = MediaTool.Base64FromStream(mdl.CoverImage);
 
 		var scheduledEndTime = Optional<DateTimeOffset>.None;
 		if (mdl.ScheduledEndTime.HasValue && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.External : this.EntityType == ScheduledEventEntityType.External)

@@ -117,7 +117,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordWebhook> ModifyAsync(string name = null, Optional<Stream> avatar = default, ulong? channelId = null, string reason = null)
 	{
-		var avatarb64 = ImageTool.Base64FromStream(avatar);
+		var avatarb64 = MediaTool.Base64FromStream(avatar);
 
 		var newChannelId = channelId ?? this.ChannelId;
 

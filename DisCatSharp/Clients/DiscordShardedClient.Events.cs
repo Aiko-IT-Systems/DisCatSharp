@@ -735,6 +735,62 @@ public sealed partial class DiscordShardedClient
 
 #endregion
 
+#region Guild Soundboard Sound
+
+	/// <summary>
+	///     Fired when a guild soundboard sound is created.
+	///     For this Event you need the <see cref="DiscordIntents.GuildExpressions" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildSoundboardSoundCreateEventArgs> GuildSoundboardSoundCreated
+	{
+		add => this._guildSoundboardSoundCreated.Register(value);
+		remove => this._guildSoundboardSoundCreated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildSoundboardSoundCreateEventArgs> _guildSoundboardSoundCreated;
+
+	/// <summary>
+	///     Fired when a guild soundboard sound is updated.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildSoundboardSoundUpdateEventArgs> GuildSoundboardSoundUpdated
+	{
+		add => this._guildSoundboardSoundUpdated.Register(value);
+		remove => this._guildSoundboardSoundUpdated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildSoundboardSoundUpdateEventArgs> _guildSoundboardSoundUpdated;
+
+	/// <summary>
+	///     Fired when a guild soundboard sound is deleted.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildSoundboardSoundDeleteEventArgs> GuildSoundboardSoundDeleted
+	{
+		add => this._guildSoundboardSoundDeleted.Register(value);
+		remove => this._guildSoundboardSoundDeleted.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildSoundboardSoundDeleteEventArgs> _guildSoundboardSoundDeleted;
+
+	/// <summary>
+	///     Fired when guild soundboard sounds is updated.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildSoundboardSoundsUpdateEventArgs> GuildSoundboardSoundsUpdated
+	{
+		add => this._guildSoundboardSoundsUpdated.Register(value);
+		remove => this._guildSoundboardSoundsUpdated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildSoundboardSoundsUpdateEventArgs> _guildSoundboardSoundsUpdated;
+
+#endregion
+
 #region Message Reaction
 
 	/// <summary>
@@ -1985,6 +2041,38 @@ public sealed partial class DiscordShardedClient
 	/// <param name="e">The event args.</param>
 	private Task Client_MessagePollVoteRemoved(DiscordClient client, MessagePollVoteRemoveEventArgs e)
 		=> this._messagePollVoteRemoved.InvokeAsync(client, e);
+
+	/// <summary>
+	///     Handles the guild soundboard sound created event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_SoundboardSoundCreated(DiscordClient client, GuildSoundboardSoundCreateEventArgs e)
+		=> this._guildSoundboardSoundCreated.InvokeAsync(client, e);
+
+	/// <summary>
+	///     Handles the guild soundboard sound updated event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_SoundboardSoundUpdated(DiscordClient client, GuildSoundboardSoundUpdateEventArgs e)
+		=> this._guildSoundboardSoundUpdated.InvokeAsync(client, e);
+
+	/// <summary>
+	///     Handles the guild soundboard sound deleted event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_SoundboardSoundDeleted(DiscordClient client, GuildSoundboardSoundDeleteEventArgs e)
+		=> this._guildSoundboardSoundDeleted.InvokeAsync(client, e);
+
+	/// <summary>
+	///     Handles the guild soundboard sounds updated event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_SoundboardSoundsUpdated(DiscordClient client, GuildSoundboardSoundsUpdateEventArgs e)
+		=> this._guildSoundboardSoundsUpdated.InvokeAsync(client, e);
 
 #endregion
 }

@@ -47,6 +47,9 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	[JsonProperty("guild_scheduled_events", NullValueHandling = NullValueHandling.Ignore), JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
 	internal ConcurrentDictionary<ulong, DiscordScheduledEvent> ScheduledEventsInternal = new();
 
+	[JsonProperty("soundboard_sounds", NullValueHandling = NullValueHandling.Ignore), JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
+	internal ConcurrentDictionary<ulong, DiscordSoundboardSound> SoundboardSoundsInternal = new();
+
 	[JsonProperty("stage_instances", NullValueHandling = NullValueHandling.Ignore), JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
 	internal ConcurrentDictionary<ulong, DiscordStageInstance> StageInstancesInternal = new();
 
@@ -906,11 +909,11 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		var publicUpdatesChannelId = ChannelToId(mdl.PublicUpdatesChannel, "Public updates");
 		var systemChannelId = ChannelToId(mdl.SystemChannel, "System");
 
-		var iconb64 = ImageTool.Base64FromStream(mdl.Icon);
-		var splashb64 = ImageTool.Base64FromStream(mdl.Splash);
-		var bannerb64 = ImageTool.Base64FromStream(mdl.Banner);
-		var discoverySplashb64 = ImageTool.Base64FromStream(mdl.DiscoverySplash);
-		var homeHeaderb64 = ImageTool.Base64FromStream(mdl.HomeHeader);
+		var iconb64 = MediaTool.Base64FromStream(mdl.Icon);
+		var splashb64 = MediaTool.Base64FromStream(mdl.Splash);
+		var bannerb64 = MediaTool.Base64FromStream(mdl.Banner);
+		var discoverySplashb64 = MediaTool.Base64FromStream(mdl.DiscoverySplash);
+		var homeHeaderb64 = MediaTool.Base64FromStream(mdl.HomeHeader);
 
 		return await this.Discord.ApiClient.ModifyGuildAsync(this.Id, mdl.Name,
 			mdl.VerificationLevel, mdl.DefaultMessageNotifications, mdl.MfaLevel, mdl.ExplicitContentFilter,
@@ -1447,7 +1450,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset? scheduledEndTime = null, DiscordChannel channel = null, DiscordScheduledEventEntityMetadata metadata = null, string description = null, ScheduledEventEntityType type = ScheduledEventEntityType.StageInstance, Optional<Stream> coverImage = default, DiscordScheduledEventRecurrenceRule? recurrenceRule = null, string reason = null)
 	{
-		var coverb64 = ImageTool.Base64FromStream(coverImage);
+		var coverb64 = MediaTool.Base64FromStream(coverImage);
 		return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, type is ScheduledEventEntityType.External ? null : channel?.Id, type is ScheduledEventEntityType.External ? metadata : null, name, scheduledStartTime, scheduledEndTime.HasValue && type is ScheduledEventEntityType.External ? scheduledEndTime.Value : null, description, type, coverb64, recurrenceRule, reason).ConfigureAwait(false);
 	}
 
@@ -1469,7 +1472,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordScheduledEvent> CreateExternalScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset scheduledEndTime, string location, string description = null, Optional<Stream> coverImage = default, DiscordScheduledEventRecurrenceRule? recurrenceRule = null, string reason = null)
 	{
-		var coverb64 = ImageTool.Base64FromStream(coverImage);
+		var coverb64 = MediaTool.Base64FromStream(coverImage);
 		return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, new(location), name, scheduledStartTime, scheduledEndTime, description, ScheduledEventEntityType.External, coverb64, recurrenceRule, reason).ConfigureAwait(false);
 	}
 
@@ -2251,7 +2254,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 		ArgumentNullException.ThrowIfNull(image);
 
-		var image64 = ImageTool.Base64FromStream(image);
+		var image64 = MediaTool.Base64FromStream(image);
 
 		return this.Discord.ApiClient.CreateGuildEmojiAsync(this.Id, name, image64, roles?.Select(xr => xr.Id), reason);
 	}
@@ -2669,6 +2672,84 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		action(mdl);
 		return await this.Discord.ApiClient.ModifyGuildWelcomeScreenAsync(this.Id, mdl.Enabled, mdl.WelcomeChannels, mdl.Description).ConfigureAwait(false);
 	}
+
+	/// <summary>
+	///     Creates a new soundboard sound in the guild.
+	/// </summary>
+	/// <param name="name">The name of the sound.</param>
+	/// <param name="sound">The sound file stream. Can be MP3 or OGG, and must be base64 encoded.</param>
+	/// <param name="volume">The volume of the sound. Optional.</param>
+	/// <param name="emojiId">The ID of the emoji associated with the sound. Optional.</param>
+	/// <param name="emojiName">The name of the emoji associated with the sound. Optional.</param>
+	/// <param name="reason">The reason for creating the sound, to be logged in the audit log. Optional.</param>
+	/// <returns>The created <see cref="DiscordSoundboardSound" />.</returns>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the <see cref="Permissions.CreateGuildExpressions" /> permission.
+	/// </exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordSoundboardSound> CreateSoundboardSoundAsync(string name, Stream sound, double? volume = null, ulong? emojiId = null, string? emojiName = null, string? reason = null)
+	{
+		var sound64 = MediaTool.Base64FromStream(sound);
+		return await this.Discord.ApiClient.CreateGuildSoundboardSoundAsync(this.Id, name, sound64, volume, emojiId, emojiName, reason);
+	}
+
+	/// <summary>
+	///     Modifies an existing soundboard sound.
+	/// </summary>
+	/// <param name="soundId">The ID of the sound to modify.</param>
+	/// <param name="action">The action to configure the soundboard sound edit model.</param>
+	/// <returns>The updated <see cref="DiscordSoundboardSound" />.</returns>
+	/// <exception cref="NotFoundException">Thrown when the soundboard sound cannot be found.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions" /> permission.
+	/// </exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordSoundboardSound> ModifySoundboardSoundAsync(ulong soundId, Action<SoundboardSoundEditModel> action)
+	{
+		var mdl = new SoundboardSoundEditModel();
+		action(mdl);
+
+		return await this.Discord.ApiClient.ModifyGuildSoundboardSoundAsync(
+			this.Id,
+			soundId,
+			mdl.Name,
+			mdl.Volume,
+			mdl.EmojiId,
+			mdl.EmojiName
+		).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Deletes a soundboard sound from the guild.
+	/// </summary>
+	/// <param name="soundId">The ID of the sound to delete.</param>
+	/// <param name="reason">The reason for deleting the sound, to be logged in the audit log. Optional.</param>
+	/// <returns>A task representing the deletion operation.</returns>
+	/// <exception cref="NotFoundException">Thrown when the soundboard sound cannot be found.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the <see cref="Permissions.ManageGuildExpressions" /> permission.
+	/// </exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task DeleteSoundboardSoundAsync(ulong soundId, string? reason = null)
+		=> this.Discord.ApiClient.DeleteGuildSoundboardSoundAsync(this.Id, soundId, reason);
+
+	/// <summary>
+	///     Gets a soundboard sound by its ID.
+	/// </summary>
+	/// <param name="soundId">The ID of the sound to retrieve.</param>
+	/// <returns>The requested <see cref="DiscordSoundboardSound" />.</returns>
+	/// <exception cref="NotFoundException">Thrown when the soundboard sound cannot be found.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordSoundboardSound> GetSoundboardSoundAsync(ulong soundId)
+		=> this.Discord.ApiClient.GetGuildSoundboardSoundAsync(this.Id, soundId);
+
+	/// <summary>
+	///     Lists all soundboard sounds in the guild.
+	/// </summary>
+	/// <returns>A collection of <see cref="DiscordSoundboardSound" /> objects representing all soundboard sounds in the guild.</returns>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<IReadOnlyList<DiscordSoundboardSound>> ListSoundboardSoundsAsync()
+		=> this.Discord.ApiClient.ListGuildSoundboardSoundsAsync(this.Id);
 
 #endregion
 }

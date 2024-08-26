@@ -128,5 +128,9 @@ public enum DiscordEvent
 	EntitlementDeleted,
 	MessagePollVoteAdded,
 	MessagePollVoteRemoved,
-	VoiceChannelEffectSend
+	VoiceChannelEffectSend,
+	GuildSoundboardSoundCreated,
+	GuildSoundboardSoundUpdated,
+	GuildSoundboardSoundDeleted,
+	GuildSoundboardSoundsUpdated
 }

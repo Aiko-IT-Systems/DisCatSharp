@@ -81,7 +81,7 @@ public static class DisCatSharpExtensions
 	{
 		DiscordApiClientHook hook = new(guild.Discord.ApiClient);
 
-		return await hook.ModifyClydeSettingsAsync(guild.Id, name, personality, ImageTool.Base64FromStream(avatar), ImageTool.Base64FromStream(banner),
+		return await hook.ModifyClydeSettingsAsync(guild.Id, name, personality, MediaTool.Base64FromStream(avatar), MediaTool.Base64FromStream(banner),
 			themeColors.HasValue && themeColors.Value.Count != 0
 				? themeColors.Value.Select(x => x.Value).ToList()
 				: themeColors.HasValue

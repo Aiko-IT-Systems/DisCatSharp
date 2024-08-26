@@ -455,8 +455,8 @@ public abstract class BaseDiscordClient : IDisposable
 		Optional<DiscordApplicationInstallParams?> installParams
 	)
 	{
-		var iconb64 = ImageTool.Base64FromStream(icon);
-		var coverImageb64 = ImageTool.Base64FromStream(coverImage);
+		var iconb64 = MediaTool.Base64FromStream(icon);
+		var coverImageb64 = MediaTool.Base64FromStream(coverImage);
 		if (tags is { HasValue: true, Value: not null })
 			if (tags.Value.Any(x => x.Length > 20))
 				throw new InvalidOperationException("Tags can not exceed 20 chars.");
@@ -521,8 +521,8 @@ public abstract class BaseDiscordClient : IDisposable
 		Optional<DiscordIntegrationTypesConfig?> integrationTypesConfig
 	)
 	{
-		var iconb64 = ImageTool.Base64FromStream(icon);
-		var coverImageb64 = ImageTool.Base64FromStream(coverImage);
+		var iconb64 = MediaTool.Base64FromStream(icon);
+		var coverImageb64 = MediaTool.Base64FromStream(coverImage);
 		if (tags is { HasValue: true, Value: not null })
 			if (tags.Value.Any(x => x.Length > 20))
 				throw new InvalidOperationException("Tags can not exceed 20 chars.");

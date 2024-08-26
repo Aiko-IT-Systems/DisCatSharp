@@ -628,6 +628,62 @@ public sealed partial class DiscordClient
 
 #endregion
 
+#region Guild Soundboard Sound
+
+	/// <summary>
+	///     Fired when a guild soundboard sound is created.
+	///     For this Event you need the <see cref="DiscordIntents.GuildExpressions" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildSoundboardSoundCreateEventArgs> GuildSoundboardSoundCreated
+	{
+		add => this._guildSoundboardSoundCreated.Register(value);
+		remove => this._guildSoundboardSoundCreated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildSoundboardSoundCreateEventArgs> _guildSoundboardSoundCreated;
+
+	/// <summary>
+	///     Fired when a guild soundboard sound is updated.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildSoundboardSoundUpdateEventArgs> GuildSoundboardSoundUpdated
+	{
+		add => this._guildSoundboardSoundUpdated.Register(value);
+		remove => this._guildSoundboardSoundUpdated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildSoundboardSoundUpdateEventArgs> _guildSoundboardSoundUpdated;
+
+	/// <summary>
+	///     Fired when a guild soundboard sound is deleted.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildSoundboardSoundDeleteEventArgs> GuildSoundboardSoundDeleted
+	{
+		add => this._guildSoundboardSoundDeleted.Register(value);
+		remove => this._guildSoundboardSoundDeleted.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildSoundboardSoundDeleteEventArgs> _guildSoundboardSoundDeleted;
+
+	/// <summary>
+	///     Fired when guild soundboard sounds is updated.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildSoundboardSoundsUpdateEventArgs> GuildSoundboardSoundsUpdated
+	{
+		add => this._guildSoundboardSoundsUpdated.Register(value);
+		remove => this._guildSoundboardSoundsUpdated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildSoundboardSoundsUpdateEventArgs> _guildSoundboardSoundsUpdated;
+
+#endregion
+
 #region Invite
 
 	/// <summary>

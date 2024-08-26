@@ -548,6 +548,7 @@ public static class Endpoints
 	public const string EMOJI_HOSE = "/emoji-hose";
 	public const string PINCODE = "/pincode";
 	public const string SOUNDBOARD_DEFAULT_SOUNDS = "/soundboard-default-sounds";
+	public const string SOUNDBOARD_SOUNDS = "/soundboard-sounds";
 	public const string CHANGELOGS = "/changelogs";
 	public const string CHANGELOGS_DESKTOP_JSON = "/config_0.json";
 	public const string CHANGELOGS_MOBILE_JSON = "/config_1.json";
@@ -572,4 +573,5 @@ public static class Endpoints
 	public const string EXPIRE = "/expire";
 	public const string CLAN_BADGES = "/clan-badges";
 	public const string MEMBERS_SEARCH = "/members-search";
+	public const string SEND_SOUNDBOARD_SOUND = "/send-soundboard-sound";
 }

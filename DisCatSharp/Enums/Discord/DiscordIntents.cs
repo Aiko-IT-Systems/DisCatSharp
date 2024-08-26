@@ -1,5 +1,7 @@
 using System;
 
+using DisCatSharp.Attributes;
+
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -105,13 +107,19 @@ public enum DiscordIntents
 	GuildModeration = 1 << 2,
 
 	/// <summary>
-	///     Whether to include guild emoji and sticker events.
+	///     Whether to include guild expression events.
 	///     <para>
-	///         This includes <see cref="DiscordClient.GuildEmojisUpdated" /> and
-	///         <see cref="DiscordClient.GuildStickersUpdated" />.
+	///         This includes <see cref="DiscordClient.GuildEmojisUpdated" />, <see cref="DiscordClient.GuildStickersUpdated" />,
+	/// <see cref="DiscordClient.GuildSoundboardSoundCreated"/>, <see cref="DiscordClient.GuildSoundboardSoundUpdated"/>, <see cref="DiscordClient.GuildSoundboardSoundDeleted"/> and <see cref="DiscordClient.GuildSoundboardSoundsUpdated"/>.
 	///     </para>
 	/// </summary>
-	GuildEmojisAndStickers = 1 << 3,
+	GuildExpressions = 1 << 3,
+
+	/// <summary>
+	/// <inheritdoc cref="GuildExpressions"/>.
+	/// </summary>
+	[DiscordDeprecated("Replaced by GuildExpressions")]
+	GuildEmojisAndStickers = GuildExpressions,
 
 	/// <summary>
 	///     Whether to include guild integration events.

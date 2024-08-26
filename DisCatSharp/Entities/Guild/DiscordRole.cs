@@ -289,7 +289,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 		var iconb64 = Optional.FromNullable<string>(null);
 		iconb64 = mdl.Icon.HasValue switch
 		{
-			true when mdl.Icon.Value != null => ImageTool.Base64FromStream(mdl.Icon),
+			true when mdl.Icon.Value != null => MediaTool.Base64FromStream(mdl.Icon),
 			true => Optional.Some<string?>(null),
 			_ => Optional.None
 		};

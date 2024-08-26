@@ -274,6 +274,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._entitlementDeleted = new("ENTITLEMENT_DELETED", EventExecutionLimit, this.EventErrorHandler);
 		this._messagePollVoteAdded = new("MESSAGE_POLL_VOTE_ADDED", EventExecutionLimit, this.EventErrorHandler);
 		this._messagePollVoteRemoved = new("MESSAGE_POLL_VOTE_REMOVED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildSoundboardSoundCreated = new("GUILD_SOUNDBOARD_SOUND_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildSoundboardSoundsUpdated = new("GUILD_SOUNDBOARD_SOUND_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildSoundboardSoundDeleted = new("GUILD_SOUNDBOARD_SOUND_DELETED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildSoundboardSoundsUpdated = new("GUILD_SOUNDBOARD_SOUNDS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 
 		this.GuildsInternal.Clear();
 		this.EmojisInternal.Clear();
@@ -663,7 +667,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordApplicationEmoji> CreateApplicationEmojiAsync(string name, Stream image)
 	{
-		var imageb64 = ImageTool.Base64FromStream(image);
+		var imageb64 = MediaTool.Base64FromStream(image);
 		return await this.ApiClient.CreateApplicationEmojiAsync(this.CurrentApplication.Id, name, imageb64);
 	}
 
@@ -870,7 +874,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		SystemChannelFlags? systemChannelFlags = null
 	)
 	{
-		var iconb64 = ImageTool.Base64FromStream(icon);
+		var iconb64 = MediaTool.Base64FromStream(icon);
 		return this.ApiClient.CreateGuildAsync(name, region, iconb64, verificationLevel, defaultMessageNotifications, systemChannelFlags);
 	}
 
@@ -885,7 +889,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordGuild> CreateGuildFromTemplateAsync(string code, string name, Optional<Stream> icon = default)
 	{
-		var iconb64 = ImageTool.Base64FromStream(icon);
+		var iconb64 = MediaTool.Base64FromStream(icon);
 		return this.ApiClient.CreateGuildFromTemplateAsync(code, name, iconb64);
 	}
 
@@ -1249,8 +1253,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordUser> UpdateCurrentUserAsync(string? username = null, Optional<Stream?> avatar = default, Optional<Stream?> banner = default)
 	{
-		var av64 = ImageTool.Base64FromStream(avatar);
-		var ba64 = ImageTool.Base64FromStream(banner);
+		var av64 = MediaTool.Base64FromStream(avatar);
+		var ba64 = MediaTool.Base64FromStream(banner);
 
 		var usr = await this.ApiClient.ModifyCurrentUserAsync(username ?? this.CurrentUser.Username, av64, ba64).ConfigureAwait(false);
 
@@ -1384,6 +1388,13 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="commandId">The id of the command.</param>
 	public Task DeleteGuildApplicationCommandAsync(ulong guildId, ulong commandId) =>
 		this.ApiClient.DeleteGuildApplicationCommandAsync(this.CurrentApplication.Id, guildId, commandId);
+
+	/// <summary>
+	///     Gets all default soundboard sounds available for all users.
+	/// </summary>
+	/// <returns>A list of <see cref="DiscordSoundboardSound" /> objects that are available by default.</returns>
+	public Task<IReadOnlyList<DiscordSoundboardSound>> ListDefaultSoundboardSoundsAsync()
+		=> this.ApiClient.ListDefaultSoundboardSoundsAsync();
 
 #endregion
 
@@ -1752,6 +1763,15 @@ public sealed partial class DiscordClient : BaseDiscordClient
 					continue;
 
 				guild.ScheduledEventsInternal[@event.Id] = @event;
+			}
+
+		if (newGuild.SoundboardSoundsInternal is { IsEmpty: false })
+			foreach (var @sound in newGuild.SoundboardSoundsInternal.Values)
+			{
+				if (guild.SoundboardSoundsInternal.TryGetValue(@sound.Id, out _))
+					continue;
+
+				guild.SoundboardSoundsInternal[@sound.Id] = @sound;
 			}
 
 		foreach (var newEmoji in newGuild.EmojisInternal.Values)

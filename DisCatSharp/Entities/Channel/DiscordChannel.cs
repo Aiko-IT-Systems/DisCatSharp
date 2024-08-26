@@ -485,6 +485,25 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
+	///     Sends a soundboard sound to a voice channel the user is connected to.
+	/// </summary>
+	/// <param name="soundId">The ID of the soundboard sound to play.</param>
+	/// <param name="sourceGuildId">
+	///     The ID of the guild the soundboard sound is from, required to play sounds from different
+	///     servers. Optional.
+	/// </param>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the <see cref="Permissions.Speak" />, <see cref="Permissions.UseSoundboard" />
+	///     ,
+	///     or <see cref="Permissions.UseExternalSounds" /> permissions, or if the user's voice state is invalid.
+	/// </exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task SendSoundboardSoundAsync(ulong soundId, ulong? sourceGuildId = null)
+		=> this.Type is not ChannelType.Voice and ChannelType.Stage
+			? throw new ArgumentException("Cannot send a soundboard sound to a non-voice channel.")
+			: this.Discord.ApiClient.SendSoundboardSoundAsync(this.Id, soundId, sourceGuildId);
+
+	/// <summary>
 	///     Deletes a guild channel
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
@@ -1505,7 +1524,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordWebhook> CreateWebhookAsync(string name, Optional<Stream> avatar = default, string reason = null)
 		=> await this.Discord.ApiClient.CreateWebhookAsync(this.IsThread() ? this.ParentId!.Value : this.Id, name,
-			ImageTool.Base64FromStream(avatar), reason).ConfigureAwait(false);
+			MediaTool.Base64FromStream(avatar), reason).ConfigureAwait(false);
 
 	/// <summary>
 	///     Returns a list of webhooks.

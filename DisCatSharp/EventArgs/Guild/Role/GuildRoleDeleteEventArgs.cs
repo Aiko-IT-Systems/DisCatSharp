@@ -24,5 +24,5 @@ public class GuildRoleDeleteEventArgs : DiscordEventArgs
 	/// <summary>
 	///     Gets the role that was deleted.
 	/// </summary>
-	public DiscordRole Role { get; internal set; }
+	public DiscordRole? Role { get; internal set; }
 }
