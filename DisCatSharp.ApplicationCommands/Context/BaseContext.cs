@@ -131,7 +131,7 @@ public class BaseContext : DisCatSharpCommandContext
 	///     The created <see cref="DiscordMessage" />, or <see langword="null" /> if <paramref name="type" /> creates no
 	///     content.
 	/// </returns>
-	public async Task<DiscordInteractionResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null)
+	public async Task<DiscordInteractionCallbackResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null)
 		=> await this.Interaction.CreateResponseAsync(type, builder);
 
 	/// <summary>

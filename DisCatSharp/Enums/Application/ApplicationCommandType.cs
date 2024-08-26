@@ -6,27 +6,22 @@ namespace DisCatSharp.Enums;
 public enum ApplicationCommandType
 {
 	/// <summary>
-	///     This command is registered as a slash-command, aka "Chat Input".
+	///     Slash commands; a text-based command that shows up when a user types "/".
 	/// </summary>
 	ChatInput = 1,
 
 	/// <summary>
-	///     This command is registered as a user context menu, and is applicable when interacting a user.
+	///     A UI-based command that shows up when you right click or tap on a user.
 	/// </summary>
 	User = 2,
 
 	/// <summary>
-	///     This command is registered as a message context menu, and is applicable when interacting with a message.
+	///     A UI-based command that shows up when you right click or tap on a message.
 	/// </summary>
 	Message = 3,
 
 	/// <summary>
-	///     Inbound only: An auto-complete option is being interacted with.
+	///     A UI-based command that represents the primary way to invoke an app's Activit.
 	/// </summary>
-	AutoCompleteRequest = 4,
-
-	/// <summary>
-	///     Inbound only: A modal was submitted.
-	/// </summary>
-	ModalSubmit = 5
+	PrimaryEntryPoint = 4
 }

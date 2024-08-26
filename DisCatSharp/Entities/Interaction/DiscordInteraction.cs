@@ -156,7 +156,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	///     The created <see cref="DiscordMessage" />, or <see langword="null" /> if <paramref name="type" /> creates no
 	///     content.
 	/// </returns>
-	public async Task<DiscordInteractionResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null)
+	public async Task<DiscordInteractionCallbackResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null)
 		=> await this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, type, builder);
 
 	/// <summary>

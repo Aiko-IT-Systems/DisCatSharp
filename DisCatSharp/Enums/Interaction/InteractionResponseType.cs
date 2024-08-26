@@ -65,5 +65,13 @@ public enum InteractionResponseType
 	///     </para>
 	/// </summary>
 	[DiscordInExperiment("Currently in closed beta."), Experimental("We provide this type but can't provide support.")]
-	Iframe = 11
+	Iframe = 11,
+
+	/// <summary>
+	///     <para>Launch the Activity associated with the app.</para>
+	///     <para>
+	///         <note type="warning">Can only be used if the app has activities enabled.</note>
+	///     </para>
+	/// </summary>
+	LaunchActivity = 12
 }

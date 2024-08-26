@@ -2182,7 +2182,7 @@ public sealed class DiscordApiClient
 
             return DiscordJson.DeserializeIEnumerableObject<List<DiscordSoundboardSound>>(res.Response, this.Discord);
         }
-        
+
         /// <summary>
         ///     Gets all default soundboard sounds available for all users.
         /// </summary>
@@ -2210,7 +2210,7 @@ public sealed class DiscordApiClient
 
             return DiscordJson.DeserializeObject<DiscordSoundboardSound>(res.Response, this.Discord);
         }
-        
+
         /// <summary>
         ///     Sends a soundboard sound to a voice channel the user is connected to.
         /// </summary>
@@ -6976,7 +6976,7 @@ public sealed class DiscordApiClient
 	/// <param name="interactionToken">The interaction token.</param>
 	/// <param name="type">The type.</param>
 	/// <param name="builder">The builder.</param>
-	internal async Task<DiscordInteractionResponse> CreateInteractionResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, DiscordInteractionResponseBuilder? builder)
+	internal async Task<DiscordInteractionCallbackResponse> CreateInteractionResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, DiscordInteractionResponseBuilder? builder)
 	{
 		if (builder?.Embeds != null)
 			foreach (var embed in builder.Embeds)
@@ -7090,7 +7090,7 @@ public sealed class DiscordApiClient
 			response = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		return response.ResponseCode is not HttpStatusCode.NoContent && !string.IsNullOrEmpty(response.Response)
-			? DiscordJson.DeserializeObject<DiscordInteractionResponse>(response.Response, this.Discord)
+			? DiscordJson.DeserializeObject<DiscordInteractionCallbackResponse>(response.Response, this.Discord)
 			: null;
 	}
 

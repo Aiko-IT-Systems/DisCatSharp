@@ -181,6 +181,9 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	[JsonProperty("version")]
 	public ulong Version { get; internal set; }
 
+	[JsonProperty("handler", NullValueHandling = NullValueHandling.Ignore)]
+	public ApplicationCommandHandlerType? HandlerType { get; internal set; }
+
 	/// <summary>
 	///     Gets the mention for this command.
 	/// </summary>

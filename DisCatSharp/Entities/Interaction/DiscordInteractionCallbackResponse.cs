@@ -5,13 +5,13 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///     Represents a interaction response.
 /// </summary>
-public sealed class DiscordInteractionResponse : ObservableApiObject
+public sealed class DiscordInteractionCallbackResponse : ObservableApiObject
 {
 	/// <summary>
 	///     Gets the created interaction.
 	/// </summary>
 	[JsonProperty("interaction")]
-	public DiscordInteractionResponseInteraction Interaction { get; internal set; }
+	public DiscordInteractionCallback Interaction { get; internal set; }
 
 	/// <summary>
 	///     Gets the interaction resource.

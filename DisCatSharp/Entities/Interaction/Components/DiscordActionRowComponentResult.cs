@@ -8,7 +8,7 @@ namespace DisCatSharp.Entities;
 
 /// <summary>
 ///     Represents a <see cref="DiscordActionRowComponentResult" /> resolved from a
-///     <see cref="DisCatSharp.Enums.ApplicationCommandType.ModalSubmit" />.
+///     <see cref="DisCatSharp.Enums.InteractionType.ModalSubmit" />.
 /// </summary>
 public sealed class DiscordActionRowComponentResult : ObservableApiObject
 {
