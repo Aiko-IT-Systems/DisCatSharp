@@ -6,7 +6,8 @@ DisCatSharp Release Notes
     - Partial support for burst reactions
     - Support for getting voice states through Rest
     - Full support for scheduled events including recurrency rules
-    - Suppor for voice channel effect send events
+    - Support for voice channel effect send events
+    - Full support for managing and **using** soundboard sounds
 
 
 DisCatSharp.Attributes Release Notes
