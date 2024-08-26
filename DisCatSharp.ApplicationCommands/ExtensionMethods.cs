@@ -10,16 +10,16 @@ using DisCatSharp.ApplicationCommands.Context;
 namespace DisCatSharp.ApplicationCommands;
 
 /// <summary>
-/// Defines various extension methods for application commands.
+///     Defines various extension methods for application commands.
 /// </summary>
 public static class ExtensionMethods
 {
 	/// <summary>
-	/// Enables application commands on this <see cref="DiscordClient"/>.
+	///     Enables application commands on this <see cref="DiscordClient" />.
 	/// </summary>
 	/// <param name="client">Client to enable application commands for.</param>
 	/// <param name="config">Configuration to use.</param>
-	/// <returns>Created <see cref="ApplicationCommandsExtension"/>.</returns>
+	/// <returns>Created <see cref="ApplicationCommandsExtension" />.</returns>
 	public static ApplicationCommandsExtension UseApplicationCommands(
 		this DiscordClient client,
 		ApplicationCommandsConfiguration? config = null
@@ -34,7 +34,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Gets the application commands module for this client.
+	///     Gets the application commands module for this client.
 	/// </summary>
 	/// <param name="client">Client to get application commands for.</param>
 	/// <returns>The module, or null if not activated.</returns>
@@ -42,10 +42,10 @@ public static class ExtensionMethods
 		=> client.GetExtension<ApplicationCommandsExtension>();
 
 	/// <summary>
-	/// Gets the application commands from this <see cref="DiscordShardedClient"/>.
+	///     Gets the application commands from this <see cref="DiscordShardedClient" />.
 	/// </summary>
 	/// <param name="client">Client to get application commands from.</param>
-	/// <returns>A dictionary of current <see cref="ApplicationCommandsExtension"/> with the key being the shard id.</returns>
+	/// <returns>A dictionary of current <see cref="ApplicationCommandsExtension" /> with the key being the shard id.</returns>
 	public static async Task<IReadOnlyDictionary<int, ApplicationCommandsExtension>> GetApplicationCommandsAsync(this DiscordShardedClient client)
 	{
 		await client.InitializeShardsAsync().ConfigureAwait(false);
@@ -53,7 +53,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Registers a command class with optional translation setup globally.
+	///     Registers a command class with optional translation setup globally.
 	/// </summary>
 	/// <param name="extensions">Sharding extensions.</param>
 	/// <typeparam name="T">The command class to register.</typeparam>
@@ -65,10 +65,10 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Registers a command class with optional translation setup globally.
+	///     Registers a command class with optional translation setup globally.
 	/// </summary>
 	/// <param name="extensions">Sharding extensions.</param>
-	/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
+	/// <param name="type">The <see cref="System.Type" /> of the command class to register.</param>
 	/// <param name="translationSetup">A callback to setup translations with.</param>
 	public static void RegisterGlobalCommands(this IReadOnlyDictionary<int, ApplicationCommandsExtension> extensions, Type type, Action<ApplicationCommandsTranslationContext>? translationSetup = null)
 	{
@@ -80,7 +80,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Registers a command class with optional translation setup for a guild.
+	///     Registers a command class with optional translation setup for a guild.
 	/// </summary>
 	/// <typeparam name="T">The command class to register.</typeparam>
 	/// <param name="extensions">Sharding extensions.</param>
@@ -93,10 +93,10 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Registers a command class with optional translation setup for a guild.
+	///     Registers a command class with optional translation setup for a guild.
 	/// </summary>
 	/// <param name="extensions">Sharding extensions.</param>
-	/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
+	/// <param name="type">The <see cref="System.Type" /> of the command class to register.</param>
 	/// <param name="guildId">The guild id to register it on.</param>
 	/// <param name="translationSetup">A callback to setup translations with.</param>
 	public static void RegisterGuildCommands(this IReadOnlyDictionary<int, ApplicationCommandsExtension> extensions, Type type, ulong guildId, Action<ApplicationCommandsTranslationContext> translationSetup = null)
@@ -109,11 +109,11 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Enables application commands on this <see cref="DiscordShardedClient"/>.
+	///     Enables application commands on this <see cref="DiscordShardedClient" />.
 	/// </summary>
 	/// <param name="client">Client to enable application commands on.</param>
 	/// <param name="config">Configuration to use.</param>
-	/// <returns>A dictionary of created <see cref="ApplicationCommandsExtension"/> with the key being the shard id.</returns>
+	/// <returns>A dictionary of created <see cref="ApplicationCommandsExtension" /> with the key being the shard id.</returns>
 	public static async Task<IReadOnlyDictionary<int, ApplicationCommandsExtension>> UseApplicationCommandsAsync(this DiscordShardedClient client, ApplicationCommandsConfiguration? config = null)
 	{
 		var modules = new Dictionary<int, ApplicationCommandsExtension>();
@@ -130,7 +130,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Gets the name from the <see cref="ChoiceNameAttribute"/> for this enum value.
+	///     Gets the name from the <see cref="ChoiceNameAttribute" /> for this enum value.
 	/// </summary>
 	/// <returns>The name.</returns>
 	public static string GetName<T>(this T e) where T : IConvertible

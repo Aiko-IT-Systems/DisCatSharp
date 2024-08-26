@@ -7,28 +7,75 @@ using System.Collections.ObjectModel;
 namespace DisCatSharp.Common;
 
 /// <summary>
-/// Represents collection of string keys and <typeparamref name="TValue"/> values, allowing the use of <see cref="ReadOnlySpan{T}"/> for dictionary operations.
+///     Represents collection of string keys and <typeparamref name="TValue" /> values, allowing the use of
+///     <see cref="ReadOnlySpan{T}" /> for dictionary operations.
 /// </summary>
 /// <typeparam name="TValue">Type of items in this dictionary.</typeparam>
 public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictionary<string, TValue?>
 {
 	/// <summary>
-	/// Gets the collection of all keys present in this dictionary.
+	///     Gets the internal buckets.
+	/// </summary>
+	private readonly ReadOnlyDictionary<ulong, KeyedValue?> _internalBuckets;
+
+	/// <summary>
+	///     Creates a new <see cref="CharSpanLookupReadOnlyDictionary{TValue}" /> with string keys and items of type
+	///     <typeparamref name="TValue" /> and populates it with key-value pairs from supplied dictionary.
+	/// </summary>
+	/// <param name="values">Dictionary containing items to populate this dictionary with.</param>
+	public CharSpanLookupReadOnlyDictionary(IDictionary<string, TValue?> values)
+		: this(values as IEnumerable<KeyValuePair<string, TValue?>>)
+	{ }
+
+	/// <summary>
+	///     Creates a new <see cref="CharSpanLookupReadOnlyDictionary{TValue}" /> with string keys and items of type
+	///     <typeparamref name="TValue" /> and populates it with key-value pairs from supplied dictionary.
+	/// </summary>
+	/// <param name="values">Dictionary containing items to populate this dictionary with.</param>
+	public CharSpanLookupReadOnlyDictionary(IReadOnlyDictionary<string, TValue?> values)
+		: this(values as IEnumerable<KeyValuePair<string, TValue?>>)
+	{ }
+
+	/// <summary>
+	///     Creates a new <see cref="CharSpanLookupReadOnlyDictionary{TValue}" /> with string keys and items of type
+	///     <typeparamref name="TValue" /> and populates it with key-value pairs from supplied key-value collection.
+	/// </summary>
+	/// <param name="values">Dictionary containing items to populate this dictionary with.</param>
+	public CharSpanLookupReadOnlyDictionary(IEnumerable<KeyValuePair<string, TValue?>> values)
+	{
+		ArgumentNullException.ThrowIfNull(values);
+
+		this._internalBuckets = PrepareItems(values, out var count);
+		this.Count = count;
+	}
+
+	/// <summary>
+	///     Gets a value corresponding to given key in this dictionary.
+	/// </summary>
+	/// <param name="key">Key to get or set the value for.</param>
+	/// <returns>Value matching the supplied key, if applicable.</returns>
+	public TValue? this[ReadOnlySpan<char> key]
+		=> !this.TryRetrieveInternal(key, out var value)
+			? throw new KeyNotFoundException("The given key was not present in the dictionary.")
+			: value;
+
+	/// <summary>
+	///     Gets the collection of all keys present in this dictionary.
 	/// </summary>
 	public IEnumerable<string> Keys => this.GetKeysInternal();
 
 	/// <summary>
-	/// Gets the collection of all values present in this dictionary.
+	///     Gets the collection of all values present in this dictionary.
 	/// </summary>
 	public IEnumerable<TValue?> Values => this.GetValuesInternal();
 
 	/// <summary>
-	/// Gets the total number of items in this dictionary.
+	///     Gets the total number of items in this dictionary.
 	/// </summary>
 	public int Count { get; }
 
 	/// <summary>
-	/// Gets a value corresponding to given key in this dictionary.
+	///     Gets a value corresponding to given key in this dictionary.
 	/// </summary>
 	/// <param name="key">Key to get or set the value for.</param>
 	/// <returns>Value matching the supplied key, if applicable.</returns>
@@ -45,50 +92,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	}
 
 	/// <summary>
-	/// Gets a value corresponding to given key in this dictionary.
-	/// </summary>
-	/// <param name="key">Key to get or set the value for.</param>
-	/// <returns>Value matching the supplied key, if applicable.</returns>
-	public TValue? this[ReadOnlySpan<char> key]
-		=> !this.TryRetrieveInternal(key, out var value)
-			? throw new KeyNotFoundException($"The given key was not present in the dictionary.")
-			: value;
-
-	/// <summary>
-	/// Gets the internal buckets.
-	/// </summary>
-	private readonly ReadOnlyDictionary<ulong, KeyedValue?> _internalBuckets;
-
-	/// <summary>
-	/// Creates a new <see cref="CharSpanLookupReadOnlyDictionary{TValue}"/> with string keys and items of type <typeparamref name="TValue"/> and populates it with key-value pairs from supplied dictionary.
-	/// </summary>
-	/// <param name="values">Dictionary containing items to populate this dictionary with.</param>
-	public CharSpanLookupReadOnlyDictionary(IDictionary<string, TValue?> values)
-		: this(values as IEnumerable<KeyValuePair<string, TValue?>>)
-	{ }
-
-	/// <summary>
-	/// Creates a new <see cref="CharSpanLookupReadOnlyDictionary{TValue}"/> with string keys and items of type <typeparamref name="TValue"/> and populates it with key-value pairs from supplied dictionary.
-	/// </summary>
-	/// <param name="values">Dictionary containing items to populate this dictionary with.</param>
-	public CharSpanLookupReadOnlyDictionary(IReadOnlyDictionary<string, TValue?> values)
-		: this(values as IEnumerable<KeyValuePair<string, TValue?>>)
-	{ }
-
-	/// <summary>
-	/// Creates a new <see cref="CharSpanLookupReadOnlyDictionary{TValue}"/> with string keys and items of type <typeparamref name="TValue"/> and populates it with key-value pairs from supplied key-value collection.
-	/// </summary>
-	/// <param name="values">Dictionary containing items to populate this dictionary with.</param>
-	public CharSpanLookupReadOnlyDictionary(IEnumerable<KeyValuePair<string, TValue?>> values)
-	{
-		ArgumentNullException.ThrowIfNull(values);
-
-		this._internalBuckets = PrepareItems(values, out var count);
-		this.Count = count;
-	}
-
-	/// <summary>
-	/// Attempts to retrieve a value corresponding to the supplied key from this dictionary.
+	///     Attempts to retrieve a value corresponding to the supplied key from this dictionary.
 	/// </summary>
 	/// <param name="key">Key to retrieve the value for.</param>
 	/// <param name="value">Retrieved value.</param>
@@ -101,7 +105,29 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	}
 
 	/// <summary>
-	/// Attempts to retrieve a value corresponding to the supplied key from this dictionary.
+	///     Checks whether this dictionary contains the specified key.
+	/// </summary>
+	/// <param name="key">Key to check for in this dictionary.</param>
+	/// <returns>Whether the key was present in the dictionary.</returns>
+	public bool ContainsKey(string key)
+		=> this.ContainsKeyInternal(key.AsSpan());
+
+	/// <summary>
+	///     Gets an enumerator over key-value pairs in this dictionary.
+	/// </summary>
+	/// <returns></returns>
+	public IEnumerator<KeyValuePair<string, TValue?>> GetEnumerator()
+		=> new Enumerator(this!);
+
+	/// <summary>
+	///     Gets the enumerator.
+	/// </summary>
+	/// <returns>An IEnumerator.</returns>
+	IEnumerator IEnumerable.GetEnumerator()
+		=> this.GetEnumerator();
+
+	/// <summary>
+	///     Attempts to retrieve a value corresponding to the supplied key from this dictionary.
 	/// </summary>
 	/// <param name="key">Key to retrieve the value for.</param>
 	/// <param name="value">Retrieved value.</param>
@@ -110,15 +136,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 		=> this.TryRetrieveInternal(key, out value);
 
 	/// <summary>
-	/// Checks whether this dictionary contains the specified key.
-	/// </summary>
-	/// <param name="key">Key to check for in this dictionary.</param>
-	/// <returns>Whether the key was present in the dictionary.</returns>
-	public bool ContainsKey(string key)
-		=> this.ContainsKeyInternal(key.AsSpan());
-
-	/// <summary>
-	/// Checks whether this dictionary contains the specified key.
+	///     Checks whether this dictionary contains the specified key.
 	/// </summary>
 	/// <param name="key">Key to check for in this dictionary.</param>
 	/// <returns>Whether the key was present in the dictionary.</returns>
@@ -126,21 +144,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 		=> this.ContainsKeyInternal(key);
 
 	/// <summary>
-	/// Gets an enumerator over key-value pairs in this dictionary.
-	/// </summary>
-	/// <returns></returns>
-	public IEnumerator<KeyValuePair<string, TValue?>> GetEnumerator()
-		=> new Enumerator(this!);
-
-	/// <summary>
-	/// Gets the enumerator.
-	/// </summary>
-	/// <returns>An IEnumerator.</returns>
-	IEnumerator IEnumerable.GetEnumerator()
-		=> this.GetEnumerator();
-
-	/// <summary>
-	/// Tries the retrieve internal.
+	///     Tries the retrieve internal.
 	/// </summary>
 	/// <param name="key">The key.</param>
 	/// <param name="value">The value.</param>
@@ -164,7 +168,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	}
 
 	/// <summary>
-	/// Contains the key internal.
+	///     Contains the key internal.
 	/// </summary>
 	/// <param name="key">The key.</param>
 	/// <returns>A bool.</returns>
@@ -186,7 +190,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	}
 
 	/// <summary>
-	/// Gets the keys internal.
+	///     Gets the keys internal.
 	/// </summary>
 	/// <returns>An ImmutableArray.</returns>
 	private ImmutableArray<string> GetKeysInternal()
@@ -206,7 +210,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	}
 
 	/// <summary>
-	/// Gets the values internal.
+	///     Gets the values internal.
 	/// </summary>
 	/// <returns>An ImmutableArray.</returns>
 	private ImmutableArray<TValue?> GetValuesInternal()
@@ -226,7 +230,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	}
 
 	/// <summary>
-	/// Prepares the items.
+	///     Prepares the items.
 	/// </summary>
 	/// <param name="items">The items.</param>
 	/// <param name="count">The count.</param>
@@ -268,10 +272,10 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	}
 
 	/// <summary>
-	/// The keyed value.
+	///     The keyed value.
 	/// </summary>
 	/// <remarks>
-	/// Initializes a new instance of the <see cref="KeyedValue"/> class.
+	///     Initializes a new instance of the <see cref="KeyedValue" /> class.
 	/// </remarks>
 	/// <param name="key">The key.</param>
 	/// <param name="keyHash">The key hash.</param>
@@ -279,58 +283,48 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 	private sealed class KeyedValue(string key, ulong keyHash, TValue? value)
 	{
 		/// <summary>
-		/// Gets the key hash.
+		///     Gets the key hash.
 		/// </summary>
 		public ulong KeyHash { get; } = keyHash;
 
 		/// <summary>
-		/// Gets the key.
+		///     Gets the key.
 		/// </summary>
 		public string Key { get; } = key;
 
 		/// <summary>
-		/// Gets or sets the value.
+		///     Gets or sets the value.
 		/// </summary>
-		public TValue? Value { get; set; } = value;
+		public TValue? Value { get; } = value;
 
 		/// <summary>
-		/// Gets or sets the next.
+		///     Gets or sets the next.
 		/// </summary>
 		public KeyedValue? Next { get; set; }
 	}
 
 	/// <summary>
-	/// The enumerator.
+	///     The enumerator.
 	/// </summary>
 	private sealed class Enumerator : IEnumerator<KeyValuePair<string, TValue?>>
 	{
 		/// <summary>
-		/// Gets the current.
-		/// </summary>
-		public KeyValuePair<string, TValue?> Current { get; private set; }
-
-		/// <summary>
-		/// Gets the current.
-		/// </summary>
-		object IEnumerator.Current => this.Current;
-
-		/// <summary>
-		/// Gets the internal dictionary.
+		///     Gets the internal dictionary.
 		/// </summary>
 		private readonly CharSpanLookupReadOnlyDictionary<TValue?> _internalDictionary;
 
 		/// <summary>
-		/// Gets the internal enumerator.
+		///     Gets the internal enumerator.
 		/// </summary>
 		private readonly IEnumerator<KeyValuePair<ulong, KeyedValue?>> _internalEnumerator;
 
 		/// <summary>
-		/// Gets or sets the current value.
+		///     Gets or sets the current value.
 		/// </summary>
 		private KeyedValue? _currentValue;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Enumerator"/> class.
+		///     Initializes a new instance of the <see cref="Enumerator" /> class.
 		/// </summary>
 		/// <param name="spDict">The sp dict.</param>
 		public Enumerator(CharSpanLookupReadOnlyDictionary<TValue?> spDict)
@@ -340,7 +334,17 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 		}
 
 		/// <summary>
-		/// Moves the next.
+		///     Gets the current.
+		/// </summary>
+		public KeyValuePair<string, TValue?> Current { get; private set; }
+
+		/// <summary>
+		///     Gets the current.
+		/// </summary>
+		object IEnumerator.Current => this.Current;
+
+		/// <summary>
+		///     Moves the next.
 		/// </summary>
 		/// <returns>A bool.</returns>
 		public bool MoveNext()
@@ -364,7 +368,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 		}
 
 		/// <summary>
-		/// Resets the.
+		///     Resets the.
 		/// </summary>
 		public void Reset()
 		{
@@ -375,7 +379,7 @@ public sealed class CharSpanLookupReadOnlyDictionary<TValue> : IReadOnlyDictiona
 		}
 
 		/// <summary>
-		/// Disposes the.
+		///     Disposes the.
 		/// </summary>
 		public void Dispose()
 			=> this.Reset();

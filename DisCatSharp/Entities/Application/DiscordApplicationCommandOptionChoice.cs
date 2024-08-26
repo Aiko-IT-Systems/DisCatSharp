@@ -6,37 +6,12 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents a command parameter choice for a <see cref="DiscordApplicationCommandOption"/>.
+///     Represents a command parameter choice for a <see cref="DiscordApplicationCommandOption" />.
 /// </summary>
 public sealed class DiscordApplicationCommandOptionChoice
 {
 	/// <summary>
-	/// Gets the name of this choice parameter.
-	/// </summary>
-	[JsonProperty("name")]
-	public string Name { get; set; }
-
-	/// <summary>
-	/// Sets the name localizations.
-	/// </summary>
-	[JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
-	internal Dictionary<string, string>? RawNameLocalizations { get; set; }
-
-	/// <summary>
-	/// Gets the name localizations.
-	/// </summary>
-	[JsonIgnore]
-	public DiscordApplicationCommandLocalization NameLocalizations
-		=> new(this.RawNameLocalizations);
-
-	/// <summary>
-	/// Gets the value of this choice parameter. This will either be a type of <see cref="int"/>, <see cref="long"/>, <see cref="double"/> or <see cref="string"/>.
-	/// </summary>
-	[JsonProperty("value")]
-	public object Value { get; set; }
-
-	/// <summary>
-	/// Creates a new instance of a <see cref="DiscordApplicationCommandOptionChoice"/>.
+	///     Creates a new instance of a <see cref="DiscordApplicationCommandOptionChoice" />.
 	/// </summary>
 	/// <param name="name">The name of the parameter choice.</param>
 	/// <param name="value">The value of the parameter choice.</param>
@@ -55,4 +30,30 @@ public sealed class DiscordApplicationCommandOptionChoice
 		this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
 		this.Value = value;
 	}
+
+	/// <summary>
+	///     Gets the name of this choice parameter.
+	/// </summary>
+	[JsonProperty("name")]
+	public string Name { get; set; }
+
+	/// <summary>
+	///     Sets the name localizations.
+	/// </summary>
+	[JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
+	internal Dictionary<string, string>? RawNameLocalizations { get; set; }
+
+	/// <summary>
+	///     Gets the name localizations.
+	/// </summary>
+	[JsonIgnore]
+	public DiscordApplicationCommandLocalization NameLocalizations
+		=> new(this.RawNameLocalizations);
+
+	/// <summary>
+	///     Gets the value of this choice parameter. This will either be a type of <see cref="int" />, <see cref="long" />,
+	///     <see cref="double" /> or <see cref="string" />.
+	/// </summary>
+	[JsonProperty("value")]
+	public object Value { get; set; }
 }

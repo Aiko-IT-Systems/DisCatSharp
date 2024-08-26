@@ -5,12 +5,12 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.CommandsNext.Converters;
 
 /// <summary>
-/// Represents a nullable converter.
+///     Represents a nullable converter.
 /// </summary>
 public class NullableConverter<T> : IArgumentConverter<T?> where T : struct
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>

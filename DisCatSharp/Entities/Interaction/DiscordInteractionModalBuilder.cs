@@ -5,12 +5,27 @@ using System.Linq;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Constructs an interaction modal response.
+///     Constructs an interaction modal response.
 /// </summary>
 public sealed class DiscordInteractionModalBuilder
 {
+	private readonly List<DiscordInteractionCallbackHint> _callbackHints = [];
+
+	private readonly List<DiscordActionRowComponent> _components = [];
+
+	private string _title;
+
 	/// <summary>
-	/// Title of modal.
+	///     Constructs a new empty interaction modal builder.
+	/// </summary>
+	public DiscordInteractionModalBuilder(string title = null, string customId = null)
+	{
+		this.Title = title ?? "Title";
+		this.CustomId = customId ?? Guid.NewGuid().ToString();
+	}
+
+	/// <summary>
+	///     Title of modal.
 	/// </summary>
 	public string Title
 	{
@@ -24,38 +39,23 @@ public sealed class DiscordInteractionModalBuilder
 		}
 	}
 
-	private string _title;
-
 	/// <summary>
-	/// Custom id of modal.
+	///     Custom id of modal.
 	/// </summary>
 	public string CustomId { get; set; }
 
 	/// <summary>
-	/// Components to send on this interaction response.
+	///     Components to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> ModalComponents => this._components;
 
-	private readonly List<DiscordActionRowComponent> _components = [];
-
 	/// <summary>
-	/// The hints to send on this interaction response.
+	///     The hints to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordInteractionCallbackHint> CallbackHints => this._callbackHints;
 
-	private readonly List<DiscordInteractionCallbackHint> _callbackHints = [];
-
 	/// <summary>
-	/// Constructs a new empty interaction modal builder.
-	/// </summary>
-	public DiscordInteractionModalBuilder(string title = null, string customId = null)
-	{
-		this.Title = title ?? "Title";
-		this.CustomId = customId ?? Guid.NewGuid().ToString();
-	}
-
-	/// <summary>
-	/// Sets the title of the modal.
+	///     Sets the title of the modal.
 	/// </summary>
 	/// <param name="title">The title to set.</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -66,7 +66,7 @@ public sealed class DiscordInteractionModalBuilder
 	}
 
 	/// <summary>
-	/// Sets the custom id of the modal.
+	///     Sets the custom id of the modal.
 	/// </summary>
 	/// <param name="customId">The custom id to set.</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -77,11 +77,11 @@ public sealed class DiscordInteractionModalBuilder
 	}
 
 	/// <summary>
-	/// Provides the interaction response with <see cref="DiscordInteractionCallbackHint"/>s.
+	///     Provides the interaction response with <see cref="DiscordInteractionCallbackHint" />s.
 	/// </summary>
 	/// <param name="hintBuilder">The hint builder.</param>
 	/// <returns>The current builder to chain calls with.</returns>
-	/// <exception cref="ArgumentNullException">Thrown when the <paramref name="hintBuilder"/> is <see langword="null"/>.</exception>
+	/// <exception cref="ArgumentNullException">Thrown when the <paramref name="hintBuilder" /> is <see langword="null" />.</exception>
 	public DiscordInteractionModalBuilder WithCallbackHints(DiscordCallbackHintBuilder hintBuilder)
 	{
 		if (hintBuilder == null)
@@ -96,7 +96,7 @@ public sealed class DiscordInteractionModalBuilder
 	}
 
 	/// <summary>
-	/// Appends a collection of text components to the builder. Each call will append to a new row.
+	///     Appends a collection of text components to the builder. Each call will append to a new row.
 	/// </summary>
 	/// <param name="components">The components to append. Up to five.</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -105,7 +105,7 @@ public sealed class DiscordInteractionModalBuilder
 		=> this.AddModalComponents(components);
 
 	/// <summary>
-	/// Appends a collection of select components to the builder. Each call will append to a new row.
+	///     Appends a collection of select components to the builder. Each call will append to a new row.
 	/// </summary>
 	/// <param name="components">The components to append. Up to five.</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -114,7 +114,7 @@ public sealed class DiscordInteractionModalBuilder
 		=> this.AddModalComponents(components);
 
 	/// <summary>
-	/// Appends a text component to the builder.
+	///     Appends a text component to the builder.
 	/// </summary>
 	/// <param name="component">The component to append.</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -122,7 +122,7 @@ public sealed class DiscordInteractionModalBuilder
 		=> this.AddModalComponents(component);
 
 	/// <summary>
-	/// Appends a select component to the builder.
+	///     Appends a select component to the builder.
 	/// </summary>
 	/// <param name="component">The component to append.</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -130,7 +130,7 @@ public sealed class DiscordInteractionModalBuilder
 		=> this.AddModalComponents(component);
 
 	/// <summary>
-	/// Appends a collection of components to the builder.
+	///     Appends a collection of components to the builder.
 	/// </summary>
 	/// <param name="components">The components to append. Up to five.</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -146,7 +146,7 @@ public sealed class DiscordInteractionModalBuilder
 			throw new ArgumentException($"You try to add too many components. We already have {this._components.Count}.");
 
 		foreach (var ar in ara)
-			this._components.Add(new(new List<DiscordComponent>()
+			this._components.Add(new(new List<DiscordComponent>
 			{
 				ar
 			}));
@@ -155,7 +155,7 @@ public sealed class DiscordInteractionModalBuilder
 	}
 
 	/// <summary>
-	/// Appends several rows of components to the message
+	///     Appends several rows of components to the message
 	/// </summary>
 	/// <param name="components">The rows of components to add, holding up to five each.</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -174,13 +174,13 @@ public sealed class DiscordInteractionModalBuilder
 	}
 
 	/// <summary>
-	/// Appends a collection of components to the builder. Each call will append to a new row.
+	///     Appends a collection of components to the builder. Each call will append to a new row.
 	/// </summary>
 	/// <param name="component">The component to append.</param>
 	/// <returns>The current builder to chain calls with.</returns>
 	internal DiscordInteractionModalBuilder AddModalComponents(DiscordComponent component)
 	{
-		this._components.Add(new(new List<DiscordComponent>()
+		this._components.Add(new(new List<DiscordComponent>
 		{
 			component
 		}));
@@ -189,13 +189,13 @@ public sealed class DiscordInteractionModalBuilder
 	}
 
 	/// <summary>
-	/// Clears all message components on this builder.
+	///     Clears all message components on this builder.
 	/// </summary>
 	public void ClearComponents()
 		=> this._components.Clear();
 
 	/// <summary>
-	/// Allows for clearing the Interaction Response Builder so that it can be used again to send a new response.
+	///     Allows for clearing the Interaction Response Builder so that it can be used again to send a new response.
 	/// </summary>
 	public void Clear()
 	{

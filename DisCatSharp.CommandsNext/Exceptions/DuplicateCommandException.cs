@@ -3,17 +3,12 @@ using System;
 namespace DisCatSharp.CommandsNext.Exceptions;
 
 /// <summary>
-/// Indicates that given command name or alias is taken.
+///     Indicates that given command name or alias is taken.
 /// </summary>
 public class DuplicateCommandException : Exception
 {
 	/// <summary>
-	/// Gets the name of the command that already exists.
-	/// </summary>
-	public string CommandName { get; }
-
-	/// <summary>
-	/// Creates a new exception indicating that given command name is already taken.
+	///     Creates a new exception indicating that given command name is already taken.
 	/// </summary>
 	/// <param name="name">Name of the command that was taken.</param>
 	internal DuplicateCommandException(string name)
@@ -23,7 +18,12 @@ public class DuplicateCommandException : Exception
 	}
 
 	/// <summary>
-	/// Returns a string representation of this <see cref="DuplicateCommandException"/>.
+	///     Gets the name of the command that already exists.
+	/// </summary>
+	public string CommandName { get; }
+
+	/// <summary>
+	///     Returns a string representation of this <see cref="DuplicateCommandException" />.
 	/// </summary>
 	/// <returns>A string representation.</returns>
 	public override string ToString() => $"{this.GetType()}: {this.Message}\nCommand name: {this.CommandName}"; // much like System.ArgumentException works

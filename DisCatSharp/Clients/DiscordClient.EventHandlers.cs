@@ -1,4 +1,3 @@
-#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,22 +10,21 @@ using Microsoft.Extensions.DependencyInjection;
 namespace DisCatSharp;
 
 /// <summary>
-/// A Discord API wrapper.
+///     A Discord API wrapper.
 /// </summary>
 public sealed partial class DiscordClient
 {
+	private readonly Dictionary<Type, object> _registeredEventhandlers = [];
 	private readonly Dictionary<(object?, Type, bool), List<(EventInfo, Delegate)[]>> _registrationToDelegate = [];
 	private readonly Dictionary<Type, List<object>> _typeToAnonymousHandlers = [];
 
 	/// <summary>
-	/// Gets all the registered event handlers.
+	///     Gets all the registered event handlers.
 	/// </summary>
 	public IReadOnlyDictionary<Type, object> RegisteredEventhandlers => this._registeredEventhandlers.AsReadOnly();
 
-	private readonly Dictionary<Type, object> _registeredEventhandlers = [];
-
 	/// <summary>
-	/// Registers all methods annotated with <see cref="EventAttribute"/> from the given object.
+	///     Registers all methods annotated with <see cref="EventAttribute" /> from the given object.
 	/// </summary>
 	/// <param name="handler">The event handler object.</param>
 	/// <param name="registerStatic">Whether to consider static methods.</param>
@@ -34,23 +32,26 @@ public sealed partial class DiscordClient
 		=> this.RegisterEventHandlerImpl(handler, handler.GetType(), registerStatic);
 
 	/// <summary>
-	/// Registers all static methods annotated with <see cref="EventAttribute"/> from the given type.
+	///     Registers all static methods annotated with <see cref="EventAttribute" /> from the given type.
 	/// </summary>
 	/// <param name="t">The static event handler type.</param>
 	public void RegisterStaticEventHandler(Type t)
 		=> this.RegisterEventHandlerImpl(null, t);
 
 	/// <summary>
-	/// <see cref="RegisterStaticEventHandler(Type)"/>.
+	///     <see cref="RegisterStaticEventHandler(Type)" />.
 	/// </summary>
 	/// <typeparam name="T">Type to register.</typeparam>
 	public void RegisterStaticEventHandler<T>()
 		=> this.RegisterStaticEventHandler(typeof(T));
 
 	/// <summary>
-	/// <para>If abstract, registers all static methods of the type.</para>
-	/// <para>If non-abstract, tries to instantiate it, optionally using the provided <see cref="DiscordConfiguration.ServiceProvider"/>
-	/// and registers all instance and static methods.</para>
+	///     <para>If abstract, registers all static methods of the type.</para>
+	///     <para>
+	///         If non-abstract, tries to instantiate it, optionally using the provided
+	///         <see cref="DiscordConfiguration.ServiceProvider" />
+	///         and registers all instance and static methods.
+	///     </para>
 	/// </summary>
 	/// <param name="type">Type to register.</param>
 	public void RegisterEventHandler(Type type)
@@ -70,14 +71,14 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// <see cref="RegisterEventHandler(Type)"/>.
+	///     <see cref="RegisterEventHandler(Type)" />.
 	/// </summary>
 	/// <typeparam name="T">Type to register.</typeparam>
 	public void RegisterEventHandler<T>()
 		=> this.RegisterEventHandler(typeof(T));
 
 	/// <summary>
-	/// Registers all types associated with the provided assembly that have the <see cref="EventHandler"/> attribute.
+	///     Registers all types associated with the provided assembly that have the <see cref="EventHandler" /> attribute.
 	/// </summary>
 	/// <param name="assembly">The assembly from which to get the types.</param>
 	public void RegisterEventHandlers(Assembly assembly)
@@ -87,7 +88,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Perfectly mirrors <see cref="RegisterEventHandler(object, bool)"/>.
+	///     Perfectly mirrors <see cref="RegisterEventHandler(object, bool)" />.
 	/// </summary>
 	/// <param name="handler">The event handler object.</param>
 	/// <param name="wasRegisteredWithStatic">Whether it considered static methods.</param>
@@ -95,21 +96,21 @@ public sealed partial class DiscordClient
 		=> this.UnregisterEventHandlerImpl(handler, handler.GetType(), wasRegisteredWithStatic);
 
 	/// <summary>
-	/// Perfectly mirrors <see cref="RegisterStaticEventHandler(Type)"/>.
+	///     Perfectly mirrors <see cref="RegisterStaticEventHandler(Type)" />.
 	/// </summary>
 	/// <param name="t">Type to unregister.</param>
 	public void UnregisterStaticEventHandler(Type t)
 		=> this.UnregisterEventHandlerImpl(null, t);
 
 	/// <summary>
-	/// Perfectly mirrors <see cref="RegisterStaticEventHandler{T}()"/>.
+	///     Perfectly mirrors <see cref="RegisterStaticEventHandler{T}()" />.
 	/// </summary>
 	/// <typeparam name="T">Type to unregister.</typeparam>
 	public void UnregisterStaticEventHandler<T>()
 		=> this.UnregisterEventHandler(typeof(T));
 
 	/// <summary>
-	/// Perfectly mirrors <see cref="RegisterEventHandler(Type)"/>.
+	///     Perfectly mirrors <see cref="RegisterEventHandler(Type)" />.
 	/// </summary>
 	/// <param name="t">Type to unregister.</param>
 	public void UnregisterEventHandler(Type t)
@@ -132,13 +133,13 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Perfectly mirrors <see cref="RegisterEventHandler{T}()"/>.
+	///     Perfectly mirrors <see cref="RegisterEventHandler{T}()" />.
 	/// </summary>
 	/// <typeparam name="T">The type to unregister</typeparam>
 	public void UnregisterEventHandler<T>() => this.UnregisterEventHandler(typeof(T));
 
 	/// <summary>
-	/// Perfectly mirrors <see cref="RegisterEventHandlers(Assembly)"/>.
+	///     Perfectly mirrors <see cref="RegisterEventHandlers(Assembly)" />.
 	/// </summary>
 	/// <param name="assembly">The assembly to unregister.</param>
 	public void UnregisterEventHandlers(Assembly assembly)
@@ -148,14 +149,14 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Gets the event handlers from the assembly.
+	///     Gets the event handlers from the assembly.
 	/// </summary>
 	/// <param name="assembly">The assembly to get the event handlers from.</param>
 	private static IEnumerable<Type> GetEventHandlersFromAssembly(Assembly assembly)
 		=> assembly.GetTypes().Where(t => t.GetCustomAttribute<EventHandlerAttribute>() is not null);
 
 	/// <summary>
-	/// Unregisters event handler implementations.
+	///     Unregisters event handler implementations.
 	/// </summary>
 	/// <param name="handler">The event handler object.</param>
 	/// <param name="type">The type.</param>
@@ -177,7 +178,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Rregisters event handler implementations.
+	///     Rregisters event handler implementations.
 	/// </summary>
 	/// <param name="handler">The event handler object.</param>
 	/// <param name="type">The type.</param>

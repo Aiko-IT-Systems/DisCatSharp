@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands.Attributes;
+using DisCatSharp.ApplicationCommands.Tests.SplitTest;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
@@ -35,7 +36,7 @@ public class AppCommandSplitPartialTests(ITestOutputHelper testOutputHelper)
 			regFired = true;
 			return Task.CompletedTask;
 		};
-		extension.RegisterGlobalCommands<SplitTest.TestCommand>();
+		extension.RegisterGlobalCommands<TestCommand>();
 		await this._client.ReadyEv.InvokeAsync(this._client, new(null!));
 		while (!regFired)
 			await Task.Delay(1);

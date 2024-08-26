@@ -7,27 +7,12 @@ using Newtonsoft.Json.Linq;
 namespace DisCatSharp.Exceptions;
 
 /// <summary>
-/// Represents an exception thrown when a requested resource is not found.
+///     Represents an exception thrown when a requested resource is not found.
 /// </summary>
 public class NotFoundException : DisCatSharpException
 {
 	/// <summary>
-	/// Gets the request that caused the exception.
-	/// </summary>
-	public BaseRestRequest WebRequest { get; internal set; }
-
-	/// <summary>
-	/// Gets the response to the request.
-	/// </summary>
-	public RestResponse WebResponse { get; internal set; }
-
-	/// <summary>
-	/// Gets the JSON received.
-	/// </summary>
-	public string? JsonMessage { get; internal set; } = null;
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="NotFoundException"/> class.
+	///     Initializes a new instance of the <see cref="NotFoundException" /> class.
 	/// </summary>
 	/// <param name="request">The request.</param>
 	/// <param name="response">The response.</param>
@@ -47,4 +32,19 @@ public class NotFoundException : DisCatSharpException
 		catch (Exception)
 		{ }
 	}
+
+	/// <summary>
+	///     Gets the request that caused the exception.
+	/// </summary>
+	public BaseRestRequest WebRequest { get; internal set; }
+
+	/// <summary>
+	///     Gets the response to the request.
+	/// </summary>
+	public RestResponse WebResponse { get; internal set; }
+
+	/// <summary>
+	///     Gets the JSON received.
+	/// </summary>
+	public string? JsonMessage { get; internal set; } = null;
 }

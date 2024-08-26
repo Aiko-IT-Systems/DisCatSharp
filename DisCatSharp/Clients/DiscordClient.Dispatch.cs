@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -23,33 +24,14 @@ using Newtonsoft.Json.Linq;
 namespace DisCatSharp;
 
 /// <summary>
-/// Represents a discord Logger.ent.L
+///     Represents a discord Logger.ent.L
 /// </summary>
 public sealed partial class DiscordClient
 {
-#region Private Fields
-
-	/// <summary>
-	/// /Gets the resume gateway url.
-	/// </summary>
-	private string? _resumeGatewayUrl;
-
-	/// <summary>
-	/// Gets the session id.
-	/// </summary>
-	private string? _sessionId;
-
-	/// <summary>
-	/// Gets whether the guild download has been completed.
-	/// </summary>
-	private bool _guildDownloadCompleted = false;
-
-#endregion
-
 #region Dispatch Handler
 
 	/// <summary>
-	/// Handles the dispatch payloads.
+	///     Handles the dispatch payloads.
 	/// </summary>
 	/// <param name="payload">The payload.</param>
 	internal async Task HandleDispatchAsync(GatewayPayload payload)
@@ -655,12 +637,31 @@ public sealed partial class DiscordClient
 
 #endregion
 
+#region Private Fields
+
+	/// <summary>
+	///     /Gets the resume gateway url.
+	/// </summary>
+	private string? _resumeGatewayUrl;
+
+	/// <summary>
+	///     Gets the session id.
+	/// </summary>
+	private string? _sessionId;
+
+	/// <summary>
+	///     Gets whether the guild download has been completed.
+	/// </summary>
+	private bool _guildDownloadCompleted = false;
+
+#endregion
+
 #region Events
 
 #region Gateway
 
 	/// <summary>
-	/// Handles the ready event.
+	///     Handles the ready event.
 	/// </summary>
 	/// <param name="ready">The ready payload.</param>
 	/// <param name="rawGuilds">The raw guilds.</param>
@@ -793,7 +794,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the resumed event.
+	///     Handles the resumed event.
 	/// </summary>
 	internal Task OnResumedAsync()
 	{
@@ -806,7 +807,7 @@ public sealed partial class DiscordClient
 #region Channel
 
 	/// <summary>
-	/// Handles the channel create event.
+	///     Handles the channel create event.
 	/// </summary>
 	/// <param name="channel">The channel.</param>
 	internal async Task OnChannelCreateEventAsync(DiscordChannel channel)
@@ -828,7 +829,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the channel update event.
+	///     Handles the channel update event.
 	/// </summary>
 	/// <param name="channel">The channel.</param>
 	internal async Task OnChannelUpdateEventAsync(DiscordChannel channel)
@@ -942,7 +943,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the channel delete event.
+	///     Handles the channel delete event.
 	/// </summary>
 	/// <param name="channel">The channel.</param>
 	internal async Task OnChannelDeleteEventAsync(DiscordChannel channel)
@@ -980,7 +981,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Refreshes the channels.
+	///     Refreshes the channels.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	internal async Task RefreshChannelsAsync(ulong guildId)
@@ -996,7 +997,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the channel pins update event.
+	///     Handles the channel pins update event.
 	/// </summary>
 	/// <param name="guildId">The optional guild id.</param>
 	/// <param name="channelId">The channel id.</param>
@@ -1016,7 +1017,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the voice channel status update event.
+	///     Handles the voice channel status update event.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="channelId">The channel id.</param>
@@ -1040,7 +1041,7 @@ public sealed partial class DiscordClient
 #region Guild
 
 	/// <summary>
-	/// Handles the guild create event.
+	///     Handles the guild create event.
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <param name="rawMembers">The raw members.</param>
@@ -1157,7 +1158,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the guild update event.
+	///     Handles the guild update event.
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <param name="rawMembers">The raw members.</param>
@@ -1299,7 +1300,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the guild delete event.
+	///     Handles the guild delete event.
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	internal async Task OnGuildDeleteEventAsync(DiscordGuild guild)
@@ -1330,7 +1331,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the guild audit log entry create event.
+	///     Handles the guild audit log entry create event.
 	/// </summary>
 	/// <param name="guild">The guild where the audit log entry was created.</param>
 	/// <param name="auditLogCreateEntry">The auditlog event.</param>
@@ -1343,7 +1344,7 @@ public sealed partial class DiscordClient
 			[
 				new()
 				{
-					Entries = new List<AuditLogAction>()
+					Entries = new List<AuditLogAction>
 					{
 						auditLogAction
 					}
@@ -1363,7 +1364,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the guild sync event.
+	///     Handles the guild sync event.
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <param name="isLarge">Whether the guild is a large guild..</param>
@@ -1392,7 +1393,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the guild emojis update event.
+	///     Handles the guild emojis update event.
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <param name="newEmojis">The new emojis.</param>
@@ -1417,7 +1418,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the stickers updated.
+	///     Handles the stickers updated.
 	/// </summary>
 	/// <param name="newStickers">The new stickers.</param>
 	/// <param name="guildId">The guild id.</param>
@@ -1451,7 +1452,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the created rule.
+	///     Handles the created rule.
 	/// </summary>
 	/// <param name="newRule">The new added rule.</param>
 	internal async Task OnAutomodRuleCreated(AutomodRule newRule)
@@ -1465,7 +1466,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the updated rule.
+	///     Handles the updated rule.
 	/// </summary>
 	/// <param name="updatedRule">The updated rule.</param>
 	internal async Task OnAutomodRuleUpdated(AutomodRule updatedRule)
@@ -1479,7 +1480,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the deleted rule.
+	///     Handles the deleted rule.
 	/// </summary>
 	/// <param name="deletedRule">The deleted rule.</param>
 	internal async Task OnAutomodRuleDeleted(AutomodRule deletedRule)
@@ -1493,7 +1494,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the rule action execution.
+	///     Handles the rule action execution.
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <param name="rawPayload">The raw payload.</param>
@@ -1533,7 +1534,7 @@ public sealed partial class DiscordClient
 #region Guild Ban
 
 	/// <summary>
-	/// Handles the guild ban add event.
+	///     Handles the guild ban add event.
 	/// </summary>
 	/// <param name="user">The transport user.</param>
 	/// <param name="guild">The guild.</param>
@@ -1567,7 +1568,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the guild ban remove event.
+	///     Handles the guild ban remove event.
 	/// </summary>
 	/// <param name="user">The transport user.</param>
 	/// <param name="guild">The guild.</param>
@@ -1605,7 +1606,7 @@ public sealed partial class DiscordClient
 #region Guild Scheduled Event
 
 	/// <summary>
-	/// Handles the scheduled event create event.
+	///     Handles the scheduled event create event.
 	/// </summary>
 	/// <param name="scheduledEvent">The created event.</param>
 	/// <param name="guild">The guild.</param>
@@ -1637,7 +1638,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the scheduled event update event.
+	///     Handles the scheduled event update event.
 	/// </summary>
 	/// <param name="scheduledEvent">The updated event.</param>
 	/// <param name="guild">The guild.</param>
@@ -1721,7 +1722,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the scheduled event delete event.
+	///     Handles the scheduled event delete event.
 	/// </summary>
 	/// <param name="scheduledEvent">The deleted event.</param>
 	/// <param name="guild">The guild.</param>
@@ -1756,10 +1757,10 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the scheduled event user add event.
-	/// <param name="guildScheduledEventId">The event.</param>
-	/// <param name="userId">The added user id.</param>
-	/// <param name="guild">The guild.</param>
+	///     Handles the scheduled event user add event.
+	///     <param name="guildScheduledEventId">The event.</param>
+	///     <param name="userId">The added user id.</param>
+	///     <param name="guild">The guild.</param>
 	/// </summary>
 	internal async Task OnGuildScheduledEventUserAddedEventAsync(ulong guildScheduledEventId, ulong userId, DiscordGuild guild)
 	{
@@ -1790,10 +1791,10 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the scheduled event user remove event.
-	/// <param name="guildScheduledEventId">The event.</param>
-	/// <param name="userId">The removed user id.</param>
-	/// <param name="guild">The guild.</param>
+	///     Handles the scheduled event user remove event.
+	///     <param name="guildScheduledEventId">The event.</param>
+	///     <param name="userId">The removed user id.</param>
+	///     <param name="guild">The guild.</param>
 	/// </summary>
 	internal async Task OnGuildScheduledEventUserRemovedEventAsync(ulong guildScheduledEventId, ulong userId, DiscordGuild guild)
 	{
@@ -1828,7 +1829,7 @@ public sealed partial class DiscordClient
 #region Guild Integration
 
 	/// <summary>
-	/// Handles the guild integration create event.
+	///     Handles the guild integration create event.
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <param name="integration">The integration.</param>
@@ -1844,7 +1845,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the guild integration update event.
+	///     Handles the guild integration update event.
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <param name="integration">The integration.</param>
@@ -1860,7 +1861,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the guild integrations update event.
+	///     Handles the guild integrations update event.
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	internal async Task OnGuildIntegrationsUpdateEventAsync(DiscordGuild guild)
@@ -1873,7 +1874,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the guild integration delete event.
+	///     Handles the guild integration delete event.
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <param name="integrationId">The integration id.</param>
@@ -1891,7 +1892,7 @@ public sealed partial class DiscordClient
 #region Guild Member
 
 	/// <summary>
-	/// Handles the guild member add event.
+	///     Handles the guild member add event.
 	/// </summary>
 	/// <param name="member">The transport member.</param>
 	/// <param name="guild">The guild.</param>
@@ -1935,7 +1936,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the guild member remove event.
+	///     Handles the guild member remove event.
 	/// </summary>
 	/// <param name="user">The transport user.</param>
 	/// <param name="guild">The guild.</param>
@@ -1962,7 +1963,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the guild member update event.
+	///     Handles the guild member update event.
 	/// </summary>
 	/// <param name="member">The transport member.</param>
 	/// <param name="guild">The guild.</param>
@@ -2111,7 +2112,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the guild members chunk event.
+	///     Handles the guild members chunk event.
 	/// </summary>
 	/// <param name="dat">The raw chunk data.</param>
 	internal async Task OnGuildMembersChunkEventAsync(JObject dat)
@@ -2190,7 +2191,7 @@ public sealed partial class DiscordClient
 #region Guild Role
 
 	/// <summary>
-	/// Handles the guild role create event.
+	///     Handles the guild role create event.
 	/// </summary>
 	/// <param name="role">The role.</param>
 	/// <param name="guild">The guild.</param>
@@ -2210,7 +2211,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the guild role update event.
+	///     Handles the guild role update event.
 	/// </summary>
 	/// <param name="role">The role.</param>
 	/// <param name="guild">The guild.</param>
@@ -2256,7 +2257,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the guild role delete event.
+	///     Handles the guild role delete event.
 	/// </summary>
 	/// <param name="roleId">The role id.</param>
 	/// <param name="guild">The guild.</param>
@@ -2278,7 +2279,7 @@ public sealed partial class DiscordClient
 #region Invite
 
 	/// <summary>
-	/// Handles the invite create event.
+	///     Handles the invite create event.
 	/// </summary>
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="guildId">The guild id.</param>
@@ -2308,7 +2309,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the invite delete event.
+	///     Handles the invite delete event.
 	/// </summary>
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="guildId">The guild id.</param>
@@ -2340,7 +2341,7 @@ public sealed partial class DiscordClient
 #region Message
 
 	/// <summary>
-	/// Handles the message acknowledge event.
+	///     Handles the message acknowledge event.
 	/// </summary>
 	/// <param name="chn">The channel.</param>
 	/// <param name="messageId">The message id.</param>
@@ -2361,7 +2362,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the message create event.
+	///     Handles the message create event.
 	/// </summary>
 	/// <param name="message">The message.</param>
 	/// <param name="author">The transport user (author).</param>
@@ -2416,7 +2417,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the message update event.
+	///     Handles the message update event.
 	/// </summary>
 	/// <param name="message">The message.</param>
 	/// <param name="author">The transport user (author).</param>
@@ -2510,7 +2511,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the message delete event.
+	///     Handles the message delete event.
 	/// </summary>
 	/// <param name="messageId">The message id.</param>
 	/// <param name="channelId">The channel id.</param>
@@ -2544,7 +2545,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the message bulk delete event.
+	///     Handles the message bulk delete event.
 	/// </summary>
 	/// <param name="messageIds">The message ids.</param>
 	/// <param name="channelId">The channel id.</param>
@@ -2583,7 +2584,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the message poll vote add event.
+	///     Handles the message poll vote add event.
 	/// </summary>
 	/// <param name="dat">The raw jobject.</param>
 	internal async Task OnMessagePollVoteAddEventAsync(JObject dat)
@@ -2632,7 +2633,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the message poll vote remove event.
+	///     Handles the message poll vote remove event.
 	/// </summary>
 	/// <param name="dat">The raw jobject.</param>
 	internal async Task OnMessagePollVoteRemoveEventAsync(JObject dat)
@@ -2687,7 +2688,7 @@ public sealed partial class DiscordClient
 #region Message Reaction
 
 	/// <summary>
-	/// Handles the message reaction add event.
+	///     Handles the message reaction add event.
 	/// </summary>
 	/// <param name="userId">The user id.</param>
 	/// <param name="messageId">The message id.</param>
@@ -2698,7 +2699,7 @@ public sealed partial class DiscordClient
 	/// <param name="isBurst">Whether a burst reaction was added.</param>
 	internal async Task OnMessageReactionAddAsync(ulong userId, ulong messageId, ulong channelId, ulong? guildId, TransportMember mbr, DiscordEmoji emoji, bool isBurst)
 	{
-		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId) ?? new DiscordChannel()
+		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId) ?? new DiscordChannel
 		{
 			Type = ChannelType.Unknown,
 			Id = channelId,
@@ -2755,7 +2756,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the message reaction remove event.
+	///     Handles the message reaction remove event.
 	/// </summary>
 	/// <param name="userId">The user id.</param>
 	/// <param name="messageId">The message id.</param>
@@ -2765,7 +2766,7 @@ public sealed partial class DiscordClient
 	/// <param name="isBurst">Whether a burst reaction was added.</param>
 	internal async Task OnMessageReactionRemoveAsync(ulong userId, ulong messageId, ulong channelId, ulong? guildId, DiscordEmoji emoji, bool isBurst)
 	{
-		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId) ?? new DiscordChannel()
+		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId) ?? new DiscordChannel
 		{
 			Type = ChannelType.Unknown,
 			Id = channelId,
@@ -2829,15 +2830,15 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the message reaction remove event.
-	/// Fired when all message reactions were removed.
+	///     Handles the message reaction remove event.
+	///     Fired when all message reactions were removed.
 	/// </summary>
 	/// <param name="messageId">The message id.</param>
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="guildId">The optional guild id.</param>
 	internal async Task OnMessageReactionRemoveAllAsync(ulong messageId, ulong channelId, ulong? guildId)
 	{
-		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId) ?? new DiscordChannel()
+		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId) ?? new DiscordChannel
 		{
 			Type = ChannelType.Unknown,
 			Id = channelId,
@@ -2869,8 +2870,8 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the message reaction remove event.
-	/// Fired when a emoji got removed.
+	///     Handles the message reaction remove event.
+	///     Fired when a emoji got removed.
 	/// </summary>
 	/// <param name="messageId">The message id.</param>
 	/// <param name="channelId">The channel id.</param>
@@ -2916,7 +2917,7 @@ public sealed partial class DiscordClient
 #region Stage Instance
 
 	/// <summary>
-	/// Handles the stage instance create event.
+	///     Handles the stage instance create event.
 	/// </summary>
 	/// <param name="stage">The created stage instance.</param>
 	internal async Task OnStageInstanceCreateEventAsync(DiscordStageInstance stage)
@@ -2934,7 +2935,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the stage instance update event.
+	///     Handles the stage instance update event.
 	/// </summary>
 	/// <param name="stage">The updated stage instance.</param>
 	internal async Task OnStageInstanceUpdateEventAsync(DiscordStageInstance stage)
@@ -2951,7 +2952,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the stage instance delete event.
+	///     Handles the stage instance delete event.
 	/// </summary>
 	/// <param name="stage">The deleted stage instance.</param>
 	internal async Task OnStageInstanceDeleteEventAsync(DiscordStageInstance stage)
@@ -2972,7 +2973,7 @@ public sealed partial class DiscordClient
 #region Thread
 
 	/// <summary>
-	/// Handles the thread create event.
+	///     Handles the thread create event.
 	/// </summary>
 	/// <param name="thread">The created thread.</param>
 	internal async Task OnThreadCreateEventAsync(DiscordThreadChannel thread)
@@ -2989,7 +2990,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the thread update event.
+	///     Handles the thread update event.
 	/// </summary>
 	/// <param name="thread">The updated thread.</param>
 	internal async Task OnThreadUpdateEventAsync(DiscordThreadChannel thread)
@@ -3078,7 +3079,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the thread delete event.
+	///     Handles the thread delete event.
 	/// </summary>
 	/// <param name="thread">The deleted thread.</param>
 	internal async Task OnThreadDeleteEventAsync(DiscordThreadChannel thread)
@@ -3102,7 +3103,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the thread list sync event.
+	///     Handles the thread list sync event.
 	/// </summary>
 	/// <param name="guild">The synced guild.</param>
 	/// <param name="channelIds">The synced channel ids.</param>
@@ -3127,7 +3128,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the thread member update event.
+	///     Handles the thread member update event.
 	/// </summary>
 	/// <param name="member">The updated member.</param>
 	internal async Task OnThreadMemberUpdateEventAsync(DiscordThreadChannelMember member)
@@ -3151,7 +3152,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the thread members update event.
+	///     Handles the thread members update event.
 	/// </summary>
 	/// <param name="guild">The target guild.</param>
 	/// <param name="threadId">The thread id of the target thread this update belongs to.</param>
@@ -3219,7 +3220,7 @@ public sealed partial class DiscordClient
 #region Activities
 
 	/// <summary>
-	/// Dispatches the <see cref="EmbeddedActivityUpdated"/> event.
+	///     Dispatches the <see cref="EmbeddedActivityUpdated" /> event.
 	/// </summary>
 	/// <param name="trActivity">The transport activity.</param>
 	/// <param name="guild">The guild.</param>
@@ -3282,7 +3283,7 @@ public sealed partial class DiscordClient
 #region User/Presence Update
 
 	/// <summary>
-	/// Handles the presence update event.
+	///     Handles the presence update event.
 	/// </summary>
 	/// <param name="rawPresence">The raw presence.</param>
 	/// <param name="rawUser">The raw user.</param>
@@ -3339,7 +3340,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the user settings update event.
+	///     Handles the user settings update event.
 	/// </summary>
 	/// <param name="user">The transport user.</param>
 	internal async Task OnUserSettingsUpdateEventAsync(TransportUser user)
@@ -3357,7 +3358,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the user update event.
+	///     Handles the user update event.
 	/// </summary>
 	/// <param name="user">The transport user.</param>
 	internal async Task OnUserUpdateEventAsync(TransportUser user)
@@ -3397,7 +3398,7 @@ public sealed partial class DiscordClient
 #region Voice
 
 	/// <summary>
-	/// Handles the voice state update event.
+	///     Handles the voice state update event.
 	/// </summary>
 	/// <param name="raw">The raw voice state update object.</param>
 	internal async Task OnVoiceStateUpdateEventAsync(JObject raw)
@@ -3441,7 +3442,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the voice server update event.
+	///     Handles the voice server update event.
 	/// </summary>
 	/// <param name="endpoint">The new endpoint.</param>
 	/// <param name="token">The new token.</param>
@@ -3463,7 +3464,7 @@ public sealed partial class DiscordClient
 		if (emoji is not null)
 			emoji.Discord = this;
 		AnimationType? animationType = rawObject.TryGetValue("animation_type", out var rawAnimationType) && Enum.TryParse<AnimationType>((string)rawAnimationType!, out var parsedType) ? parsedType : null;
-		int? animationId= rawObject.TryGetValue("animation_id", out var rawAnimationId) ? Convert.ToInt32(rawAnimationId.ToString()) : null;
+		int? animationId = rawObject.TryGetValue("animation_id", out var rawAnimationId) ? Convert.ToInt32(rawAnimationId.ToString()) : null;
 		ulong? soundId = rawObject.TryGetValue("sound_id", out var rawSoundId) ? Convert.ToUInt64(rawSoundId.ToString()) : null;
 		double? soundVolume = rawObject.TryGetValue("sound_volume", out var rawSoundVolume) ? Convert.ToDouble(rawSoundVolume.ToString()) : null;
 
@@ -3513,7 +3514,7 @@ public sealed partial class DiscordClient
 #region Commands
 
 	/// <summary>
-	/// Handles the application command create event.
+	///     Handles the application command create event.
 	/// </summary>
 	/// <param name="cmd">The application command.</param>
 	/// <param name="guildId">The optional guild id.</param>
@@ -3540,7 +3541,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the application command update event.
+	///     Handles the application command update event.
 	/// </summary>
 	/// <param name="cmd">The application command.</param>
 	/// <param name="guildId">The optional guild id.</param>
@@ -3567,7 +3568,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the application command delete event.
+	///     Handles the application command delete event.
 	/// </summary>
 	/// <param name="cmd">The application command.</param>
 	/// <param name="guildId">The optional guild id.</param>
@@ -3594,11 +3595,11 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the guild application command counts update event.
+	///     Handles the guild application command counts update event.
 	/// </summary>
-	/// <param name="chatInputCommandCount">The <see cref="ApplicationCommandType.ChatInput"/> count.</param>
-	/// <param name="userContextMenuCommandCount">The <see cref="ApplicationCommandType.User"/> count.</param>
-	/// <param name="messageContextMenuCount">The <see cref="ApplicationCommandType.Message"/> count.</param>
+	/// <param name="chatInputCommandCount">The <see cref="ApplicationCommandType.ChatInput" /> count.</param>
+	/// <param name="userContextMenuCommandCount">The <see cref="ApplicationCommandType.User" /> count.</param>
+	/// <param name="messageContextMenuCount">The <see cref="ApplicationCommandType.Message" /> count.</param>
 	/// <param name="guildId">The guild id.</param>
 	/// <returns>Count of application commands.</returns>
 	internal async Task OnGuildApplicationCommandCountsUpdateAsync(int chatInputCommandCount, int userContextMenuCommandCount, int messageContextMenuCount, ulong guildId)
@@ -3620,7 +3621,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the application command permissions update event.
+	///     Handles the application command permissions update event.
 	/// </summary>
 	/// <param name="perms">The new permissions.</param>
 	/// <param name="channelId">The command id.</param>
@@ -3666,7 +3667,7 @@ public sealed partial class DiscordClient
 #region Interaction
 
 	/// <summary>
-	/// Handles the interaction create event.
+	///     Handles the interaction create event.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="channelId">The channel id.</param>
@@ -3674,7 +3675,7 @@ public sealed partial class DiscordClient
 	/// <param name="member">The transport member.</param>
 	/// <param name="interaction">The interaction.</param>
 	/// <param name="rawInteraction">Debug.</param>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
+	[SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
 	internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction, string rawInteraction)
 	{
 		if (this.Configuration.EnableLibraryDeveloperMode)
@@ -3825,7 +3826,7 @@ public sealed partial class DiscordClient
 #region Misc
 
 	/// <summary>
-	/// Handles the entitlement create event.
+	///     Handles the entitlement create event.
 	/// </summary>
 	/// <param name="entitlement">The created entitlement</param>
 	internal async Task OnEntitlementCreateAsync(DiscordEntitlement entitlement)
@@ -3838,7 +3839,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the entitlement update event.
+	///     Handles the entitlement update event.
 	/// </summary>
 	/// <param name="entitlement">The updated entitlement</param>
 	internal async Task OnEntitlementUpdateAsync(DiscordEntitlement entitlement)
@@ -3851,7 +3852,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the entitlement delete event.
+	///     Handles the entitlement delete event.
 	/// </summary>
 	/// <param name="entitlement">The deleted entitlement</param>
 	internal async Task OnEntitlementDeleteAsync(DiscordEntitlement entitlement)
@@ -3864,7 +3865,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the typing start event.
+	///     Handles the typing start event.
 	/// </summary>
 	/// <param name="userId">The user id.</param>
 	/// <param name="channelId">The channel id.</param>
@@ -3899,7 +3900,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the webhooks update.
+	///     Handles the webhooks update.
 	/// </summary>
 	/// <param name="channel">The channel.</param>
 	/// <param name="guild">The guild.</param>
@@ -3914,7 +3915,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles all unknown events.
+	///     Handles all unknown events.
 	/// </summary>
 	/// <param name="payload">The payload.</param>
 	internal async Task OnUnknownEventAsync(GatewayPayload payload)

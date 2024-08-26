@@ -6,12 +6,12 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.CommandsNext.Converters;
 
 /// <summary>
-/// Represents a string converter.
+///     Represents a string converter.
 /// </summary>
 public class StringConverter : IArgumentConverter<string>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -20,12 +20,12 @@ public class StringConverter : IArgumentConverter<string>
 }
 
 /// <summary>
-/// Represents a uri converter.
+///     Represents a uri converter.
 /// </summary>
 public class UriConverter : IArgumentConverter<Uri>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>

@@ -9,18 +9,15 @@ using DisCatSharp.Enums;
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
-/// Defines that usage of this application command is restricted to members with any of the specified permissions. This check also verifies that the bot has the same permissions.
+///     Defines that usage of this application command is restricted to members with any of the specified permissions. This
+///     check also verifies that the bot has the same permissions.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 public sealed class RequireAnyPermissionsAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
-	/// Gets the permissions required by this attribute.
-	/// </summary>
-	public List<Permissions> AnyPermissions { get; }
-
-	/// <summary>
-	/// Defines that usage of this command is restricted to members with any of the specified permissions. This check also verifies that the bot has the same permissions.
+	///     Defines that usage of this command is restricted to members with any of the specified permissions. This check also
+	///     verifies that the bot has the same permissions.
 	/// </summary>
 	/// <param name="permissions">Permissions required to execute this command.</param>
 	public RequireAnyPermissionsAttribute(params Permissions[] permissions)
@@ -29,7 +26,12 @@ public sealed class RequireAnyPermissionsAttribute : ApplicationCommandCheckBase
 	}
 
 	/// <summary>
-	/// Runs checks.
+	///     Gets the permissions required by this attribute.
+	/// </summary>
+	public List<Permissions> AnyPermissions { get; }
+
+	/// <summary>
+	///     Runs checks.
 	/// </summary>
 	public override async Task<bool> ExecuteChecksAsync(BaseContext ctx)
 	{

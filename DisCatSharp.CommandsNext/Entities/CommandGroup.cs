@@ -8,29 +8,28 @@ using DisCatSharp.CommandsNext.Exceptions;
 namespace DisCatSharp.CommandsNext;
 
 /// <summary>
-/// Represents a command group.
+///     Represents a command group.
 /// </summary>
 public class CommandGroup : Command
 {
 	/// <summary>
-	/// Gets all the commands that belong to this module.
+	///     Initializes a new instance of the <see cref="CommandGroup" /> class.
+	/// </summary>
+	internal CommandGroup()
+	{ }
+
+	/// <summary>
+	///     Gets all the commands that belong to this module.
 	/// </summary>
 	public IReadOnlyList<Command> Children { get; internal set; }
 
 	/// <summary>
-	/// Gets whether this command is executable without subcommands.
+	///     Gets whether this command is executable without subcommands.
 	/// </summary>
 	public bool IsExecutableWithoutSubcommands => this.Overloads?.Any() == true;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="CommandGroup"/> class.
-	/// </summary>
-	internal CommandGroup()
-		: base()
-	{ }
-
-	/// <summary>
-	/// Executes this command or its subcommand with specified context.
+	///     Executes this command or its subcommand with specified context.
 	/// </summary>
 	/// <param name="ctx">Context to execute the command in.</param>
 	/// <returns>Command's execution results.</returns>

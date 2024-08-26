@@ -7,12 +7,12 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.CommandsNext.Converters;
 
 /// <summary>
-/// Represents a enum converter.
+///     Represents a enum converter.
 /// </summary>
 public class EnumConverter<T> : IArgumentConverter<T> where T : struct, IComparable, IConvertible, IFormattable
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>

@@ -9,20 +9,20 @@ using DisCatSharp.Common.Utilities;
 namespace DisCatSharp.Interactivity.EventHandling;
 
 /// <summary>
-/// CollectRequest is a class that serves as a representation of
-/// EventArgs that are being collected within a specific time frame.
+///     CollectRequest is a class that serves as a representation of
+///     EventArgs that are being collected within a specific time frame.
 /// </summary>
 /// <typeparam name="T"></typeparam>
 internal class CollectRequest<T> : IDisposable where T : AsyncEventArgs
 {
-	internal TaskCompletionSource<bool> Tcs;
+	internal ConcurrentHashSet<T> Collected;
 	internal CancellationTokenSource Ct;
 	internal Func<T, bool> Predicate;
+	internal TaskCompletionSource<bool> Tcs;
 	internal TimeSpan Timeout;
-	internal ConcurrentHashSet<T> Collected;
 
 	/// <summary>
-	/// Creates a new CollectRequest object.
+	///     Creates a new CollectRequest object.
 	/// </summary>
 	/// <param name="predicate">Predicate to match</param>
 	/// <param name="timeout">Timeout time</param>
@@ -36,13 +36,8 @@ internal class CollectRequest<T> : IDisposable where T : AsyncEventArgs
 		this.Collected = [];
 	}
 
-	~CollectRequest()
-	{
-		this.Dispose();
-	}
-
 	/// <summary>
-	/// Disposes this CollectRequest.
+	///     Disposes this CollectRequest.
 	/// </summary>
 	public void Dispose()
 	{
@@ -57,6 +52,11 @@ internal class CollectRequest<T> : IDisposable where T : AsyncEventArgs
 		}
 
 		GC.SuppressFinalize(this);
+	}
+
+	~CollectRequest()
+	{
+		this.Dispose();
 	}
 }
 

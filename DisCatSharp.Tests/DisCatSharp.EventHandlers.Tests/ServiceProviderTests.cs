@@ -8,15 +8,6 @@ namespace DisCatSharp.EventHandlers.Tests;
 
 public class ServiceProviderTests
 {
-	private class Resource
-	{ }
-
-	private class Handler
-	{
-		public Handler(Resource res)
-		{ }
-	}
-
 	[Fact]
 	public void Test()
 	{
@@ -32,5 +23,14 @@ public class ServiceProviderTests
 			ServiceProvider = new ServiceCollection().AddSingleton<Resource>().BuildServiceProvider()
 		});
 		richClient.RegisterEventHandler<Handler>(); // May not throw.
+	}
+
+	private class Resource
+	{ }
+
+	private class Handler
+	{
+		public Handler(Resource res)
+		{ }
 	}
 }

@@ -13,17 +13,17 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.Interactivity.EventHandling;
 
 /// <summary>
-/// The component paginator.
+///     The component paginator.
 /// </summary>
 internal class ComponentPaginator : IPaginator
 {
+	private readonly DiscordMessageBuilder _builder = new();
 	private readonly DiscordClient _client;
 	private readonly InteractivityConfiguration _config;
-	private readonly DiscordMessageBuilder _builder = new();
 	private readonly Dictionary<ulong, IPaginationRequest> _requests = [];
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="ComponentPaginator"/> class.
+	///     Initializes a new instance of the <see cref="ComponentPaginator" /> class.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="config">The config.</param>
@@ -35,7 +35,7 @@ internal class ComponentPaginator : IPaginator
 	}
 
 	/// <summary>
-	/// Does the pagination async.
+	///     Does the pagination async.
 	/// </summary>
 	/// <param name="request">The request.</param>
 	public async Task DoPaginationAsync(IPaginationRequest request)
@@ -67,12 +67,12 @@ internal class ComponentPaginator : IPaginator
 	}
 
 	/// <summary>
-	/// Disposes the paginator.
+	///     Disposes the paginator.
 	/// </summary>
 	public void Dispose() => this._client.ComponentInteractionCreated -= this.Handle;
 
 	/// <summary>
-	/// Handles the pagination event.
+	///     Handles the pagination event.
 	/// </summary>
 	/// <param name="_">The client.</param>
 	/// <param name="e">The event arguments.</param>
@@ -112,7 +112,7 @@ internal class ComponentPaginator : IPaginator
 	}
 
 	/// <summary>
-	/// Handles the pagination async.
+	///     Handles the pagination async.
 	/// </summary>
 	/// <param name="request">The request.</param>
 	/// <param name="args">The arguments.</param>

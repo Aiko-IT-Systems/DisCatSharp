@@ -26,89 +26,14 @@ using Sentry;
 namespace DisCatSharp;
 
 /// <summary>
-/// A Discord client that shards automatically.
+///     A Discord client that shards automatically.
 /// </summary>
 public sealed partial class DiscordShardedClient
 {
-#region Public Properties
-
-	/// <summary>
-	/// Gets the logger for this client.
-	/// </summary>
-	public ILogger<BaseDiscordClient> Logger { get; }
-
-	/// <summary>
-	/// Gets all client shards.
-	/// </summary>
-	public IReadOnlyDictionary<int, DiscordClient> ShardClients { get; }
-
-	/// <summary>
-	/// Gets the gateway info for the client's session.
-	/// </summary>
-	public GatewayInfo GatewayInfo { get; private set; }
-
-	/// <summary>
-	/// Gets the current user.
-	/// </summary>
-	public DiscordUser CurrentUser { get; private set; }
-
-	/// <summary>
-	/// Gets the bot library name.
-	/// </summary>
-	public string BotLibrary
-		=> "DisCatSharp";
-
-	/// <summary>
-	/// Gets the current application.
-	/// </summary>
-	public DiscordApplication CurrentApplication { get; private set; }
-
-	/// <summary>
-	/// Gets the list of available voice regions. Note that this property will not contain VIP voice regions.
-	/// </summary>
-	public IReadOnlyDictionary<string, DiscordVoiceRegion> VoiceRegions
-		=> this._voiceRegionsLazy?.Value;
-
-#endregion
-
-#region Private Properties/Fields
-
-	/// <summary>
-	/// Gets the configuration.
-	/// </summary>
-	private readonly DiscordConfiguration _configuration;
-
-	/// <summary>
-	/// Gets the list of available voice regions. This property is meant as a way to modify <see cref="VoiceRegions"/>.
-	/// </summary>
-	private ConcurrentDictionary<string, DiscordVoiceRegion> _internalVoiceRegions;
-
-	/// <summary>
-	/// Gets a list of shards.
-	/// </summary>
-	private readonly ConcurrentDictionary<int, DiscordClient> _shards = new();
-
-	/// <summary>
-	/// Gets a lazy list of voice regions.
-	/// </summary>
-	private Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>> _voiceRegionsLazy;
-
-	/// <summary>
-	/// Whether the shard client is started.
-	/// </summary>
-	private bool _isStarted;
-
-	/// <summary>
-	/// Whether manual sharding is enabled.
-	/// </summary>
-	private readonly bool _manuallySharding;
-
-#endregion
-
 #region Constructor
 
 	/// <summary>
-	/// Initializes a new auto-sharding Discord client.
+	///     Initializes a new auto-sharding Discord client.
 	/// </summary>
 	/// <param name="config">The configuration to use.</param>
 	public DiscordShardedClient(DiscordConfiguration config)
@@ -205,7 +130,7 @@ public sealed partial class DiscordShardedClient
 							{
 								Id = this.CurrentUser.Id.ToString(),
 								Username = this.CurrentUser.UsernameWithDiscriminator,
-								Other = new Dictionary<string, string>()
+								Other = new Dictionary<string, string>
 								{
 									{ "developer", this._configuration.DeveloperUserId?.ToString() ?? "not_given" },
 									{ "email", this._configuration.FeedbackEmail ?? "not_given" }
@@ -225,10 +150,127 @@ public sealed partial class DiscordShardedClient
 
 #endregion
 
+#region Internal Methods
+
+	/// <summary>
+	///     Initializes the shards.
+	/// </summary>
+	/// <returns>The count of initialized shards.</returns>
+	internal async Task<int> InitializeShardsAsync()
+	{
+		if (!this._shards.IsEmpty)
+			return this._shards.Count;
+
+		this.GatewayInfo = await this.GetGatewayInfoAsync().ConfigureAwait(false);
+		var shardCount = this._configuration.ShardCount == 1 ? this.GatewayInfo.ShardCount : this._configuration.ShardCount;
+		var lf = new ShardedLoggerFactory(this.Logger);
+		for (var i = 0; i < shardCount; i++)
+		{
+			var cfg = new DiscordConfiguration(this._configuration)
+			{
+				ShardId = i,
+				ShardCount = shardCount,
+				LoggerFactory = lf
+			};
+
+			var client = new DiscordClient(cfg);
+			if (!this._shards.TryAdd(i, client))
+				throw new InvalidOperationException("Could not initialize shards.");
+		}
+
+		return shardCount;
+	}
+
+#endregion
+
+#region Destructor
+
+	~DiscordShardedClient()
+	{
+		this.InternalStopAsync(false).GetAwaiter().GetResult();
+	}
+
+#endregion
+
+#region Public Properties
+
+	/// <summary>
+	///     Gets the logger for this client.
+	/// </summary>
+	public ILogger<BaseDiscordClient> Logger { get; }
+
+	/// <summary>
+	///     Gets all client shards.
+	/// </summary>
+	public IReadOnlyDictionary<int, DiscordClient> ShardClients { get; }
+
+	/// <summary>
+	///     Gets the gateway info for the client's session.
+	/// </summary>
+	public GatewayInfo GatewayInfo { get; private set; }
+
+	/// <summary>
+	///     Gets the current user.
+	/// </summary>
+	public DiscordUser CurrentUser { get; private set; }
+
+	/// <summary>
+	///     Gets the bot library name.
+	/// </summary>
+	public string BotLibrary
+		=> "DisCatSharp";
+
+	/// <summary>
+	///     Gets the current application.
+	/// </summary>
+	public DiscordApplication CurrentApplication { get; private set; }
+
+	/// <summary>
+	///     Gets the list of available voice regions. Note that this property will not contain VIP voice regions.
+	/// </summary>
+	public IReadOnlyDictionary<string, DiscordVoiceRegion> VoiceRegions
+		=> this._voiceRegionsLazy?.Value;
+
+#endregion
+
+#region Private Properties/Fields
+
+	/// <summary>
+	///     Gets the configuration.
+	/// </summary>
+	private readonly DiscordConfiguration _configuration;
+
+	/// <summary>
+	///     Gets the list of available voice regions. This property is meant as a way to modify <see cref="VoiceRegions" />.
+	/// </summary>
+	private ConcurrentDictionary<string, DiscordVoiceRegion> _internalVoiceRegions;
+
+	/// <summary>
+	///     Gets a list of shards.
+	/// </summary>
+	private readonly ConcurrentDictionary<int, DiscordClient> _shards = new();
+
+	/// <summary>
+	///     Gets a lazy list of voice regions.
+	/// </summary>
+	private Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>> _voiceRegionsLazy;
+
+	/// <summary>
+	///     Whether the shard client is started.
+	/// </summary>
+	private bool _isStarted;
+
+	/// <summary>
+	///     Whether manual sharding is enabled.
+	/// </summary>
+	private readonly bool _manuallySharding;
+
+#endregion
+
 #region Public Methods
 
 	/// <summary>
-	/// Initializes and connects all shards.
+	///     Initializes and connects all shards.
 	/// </summary>
 	/// <exception cref="AggregateException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>
@@ -274,7 +316,7 @@ public sealed partial class DiscordShardedClient
 		{
 			await this.InternalStopAsync(false).ConfigureAwait(false);
 
-			var message = $"Shard initialization failed, check inner exceptions for details: ";
+			var message = "Shard initialization failed, check inner exceptions for details: ";
 
 			this.Logger.LogCritical(LoggerEvents.ShardClientError, "{Message}\n{Ex}", message, ex);
 			throw new AggregateException(message, ex);
@@ -282,21 +324,21 @@ public sealed partial class DiscordShardedClient
 	}
 
 	/// <summary>
-	/// Disconnects and disposes all shards.
+	///     Disconnects and disposes all shards.
 	/// </summary>
 	/// <exception cref="InvalidOperationException"></exception>
 	public Task StopAsync()
 		=> this.InternalStopAsync();
 
 	/// <summary>
-	/// Gets a shard from a guild id.
-	/// <para>
-	///     If automatically sharding, this will use the <see cref="Utilities.GetShardId(ulong, int)"/> method.
-	///     Otherwise if manually sharding, it will instead iterate through each shard's guild caches.
-	/// </para>
+	///     Gets a shard from a guild id.
+	///     <para>
+	///         If automatically sharding, this will use the <see cref="Utilities.GetShardId(ulong, int)" /> method.
+	///         Otherwise if manually sharding, it will instead iterate through each shard's guild caches.
+	///     </para>
 	/// </summary>
 	/// <param name="guildId">The guild ID for the shard.</param>
-	/// <returns>The found <see cref="DiscordClient"/> shard. Otherwise null if the shard was not found for the guild id.</returns>
+	/// <returns>The found <see cref="DiscordClient" /> shard. Otherwise null if the shard was not found for the guild id.</returns>
 	public DiscordClient GetShard(ulong guildId)
 	{
 		var index = this._manuallySharding ? this.GetShardIdFromGuilds(guildId) : Utilities.GetShardId(guildId, this.ShardClients.Count);
@@ -305,19 +347,19 @@ public sealed partial class DiscordShardedClient
 	}
 
 	/// <summary>
-	/// Gets a shard from a guild.
-	/// <para>
-	///     If automatically sharding, this will use the <see cref="Utilities.GetShardId(ulong, int)"/> method.
-	///     Otherwise if manually sharding, it will instead iterate through each shard's guild caches.
-	/// </para>
+	///     Gets a shard from a guild.
+	///     <para>
+	///         If automatically sharding, this will use the <see cref="Utilities.GetShardId(ulong, int)" /> method.
+	///         Otherwise if manually sharding, it will instead iterate through each shard's guild caches.
+	///     </para>
 	/// </summary>
 	/// <param name="guild">The guild for the shard.</param>
-	/// <returns>The found <see cref="DiscordClient"/> shard. Otherwise null if the shard was not found for the guild.</returns>
+	/// <returns>The found <see cref="DiscordClient" /> shard. Otherwise null if the shard was not found for the guild.</returns>
 	public DiscordClient GetShard(DiscordGuild guild)
 		=> this.GetShard(guild.Id);
 
 	/// <summary>
-	/// Updates the status on all shards.
+	///     Updates the status on all shards.
 	/// </summary>
 	/// <param name="activity">The activity to set. Defaults to null.</param>
 	/// <param name="userStatus">The optional status to set. Defaults to null.</param>
@@ -334,43 +376,10 @@ public sealed partial class DiscordShardedClient
 
 #endregion
 
-#region Internal Methods
-
-	/// <summary>
-	/// Initializes the shards.
-	/// </summary>
-	/// <returns>The count of initialized shards.</returns>
-	internal async Task<int> InitializeShardsAsync()
-	{
-		if (!this._shards.IsEmpty)
-			return this._shards.Count;
-
-		this.GatewayInfo = await this.GetGatewayInfoAsync().ConfigureAwait(false);
-		var shardCount = this._configuration.ShardCount == 1 ? this.GatewayInfo.ShardCount : this._configuration.ShardCount;
-		var lf = new ShardedLoggerFactory(this.Logger);
-		for (var i = 0; i < shardCount; i++)
-		{
-			var cfg = new DiscordConfiguration(this._configuration)
-			{
-				ShardId = i,
-				ShardCount = shardCount,
-				LoggerFactory = lf
-			};
-
-			var client = new DiscordClient(cfg);
-			if (!this._shards.TryAdd(i, client))
-				throw new InvalidOperationException("Could not initialize shards.");
-		}
-
-		return shardCount;
-	}
-
-#endregion
-
 #region Private Methods & Version Property
 
 	/// <summary>
-	/// Gets the gateway info.
+	///     Gets the gateway info.
 	/// </summary>
 	private async Task<GatewayInfo> GetGatewayInfoAsync()
 	{
@@ -429,7 +438,7 @@ public sealed partial class DiscordShardedClient
 
 			if (code == 401 || code == 403)
 				throw new($"Authentication failed, check your token and try again: {code} {msg.ReasonPhrase}");
-			else if (code == 429)
+			if (code == 429)
 			{
 				this.Logger.LogError(LoggerEvents.ShardClientError, $"Ratelimit hit, requeuing request to {reqUrl}");
 
@@ -442,15 +451,15 @@ public sealed partial class DiscordShardedClient
 				await Task.Delay(waitInterval).ConfigureAwait(false);
 				return true;
 			}
-			else if (code >= 500)
+
+			if (code >= 500)
 				throw new($"Internal Server Error: {code} {msg.ReasonPhrase}");
-			else
-				throw new($"An unsuccessful HTTP status code was encountered: {code} {msg.ReasonPhrase}");
+			throw new($"An unsuccessful HTTP status code was encountered: {code} {msg.ReasonPhrase}");
 		}
 	}
 
 	/// <summary>
-	/// Gets the version string.
+	///     Gets the version string.
 	/// </summary>
 	private readonly Lazy<string> _versionString = new(() =>
 	{
@@ -470,7 +479,7 @@ public sealed partial class DiscordShardedClient
 	});
 
 	/// <summary>
-	/// Gets the name of the used bot library.
+	///     Gets the name of the used bot library.
 	/// </summary>
 	private readonly string _botLibrary = "DisCatSharp";
 
@@ -479,7 +488,7 @@ public sealed partial class DiscordShardedClient
 #region Private Connection Methods
 
 	/// <summary>
-	/// Connects a shard.
+	///     Connects a shard.
 	/// </summary>
 	/// <param name="i">The shard id.</param>
 	private async Task ConnectShardAsync(int i)
@@ -527,7 +536,7 @@ public sealed partial class DiscordShardedClient
 	}
 
 	/// <summary>
-	/// Stops all shards.
+	///     Stops all shards.
 	/// </summary>
 	/// <param name="enableLogger">Whether to enable the logger.</param>
 	private Task InternalStopAsync(bool enableLogger = true)
@@ -566,7 +575,7 @@ public sealed partial class DiscordShardedClient
 #region Event Handler Initialization/Registering
 
 	/// <summary>
-	/// Sets the shard client up internally..
+	///     Sets the shard client up internally..
 	/// </summary>
 	private void InternalSetup()
 	{
@@ -663,7 +672,7 @@ public sealed partial class DiscordShardedClient
 	}
 
 	/// <summary>
-	/// Hooks the event handlers.
+	///     Hooks the event handlers.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	private void HookEventHandlers(DiscordClient client)
@@ -762,7 +771,7 @@ public sealed partial class DiscordShardedClient
 	}
 
 	/// <summary>
-	/// Unhooks the event handlers.
+	///     Unhooks the event handlers.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	private void UnhookEventHandlers(DiscordClient client)
@@ -861,7 +870,7 @@ public sealed partial class DiscordShardedClient
 	}
 
 	/// <summary>
-	/// Gets the shard id from guilds.
+	///     Gets the shard id from guilds.
 	/// </summary>
 	/// <param name="id">The id.</param>
 	/// <returns>An int.</returns>
@@ -872,15 +881,6 @@ public sealed partial class DiscordShardedClient
 				return s.ShardId;
 
 		return -1;
-	}
-
-#endregion
-
-#region Destructor
-
-	~DiscordShardedClient()
-	{
-		this.InternalStopAsync(false).GetAwaiter().GetResult();
 	}
 
 #endregion

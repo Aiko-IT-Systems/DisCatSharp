@@ -27,106 +27,17 @@ using Sentry;
 namespace DisCatSharp;
 
 /// <summary>
-/// Represents a common base for various Discord Client implementations.
+///     Represents a common base for various Discord Client implementations.
 /// </summary>
 public abstract class BaseDiscordClient : IDisposable
 {
 	/// <summary>
-	/// Gets the api client.
-	/// </summary>
-	protected internal DiscordApiClient ApiClient { get; }
-
-	/// <summary>
-	/// Gets the sentry client.
-	/// </summary>
-	internal SentryClient Sentry { get; set; }
-
-	/// <summary>
-	/// Gets the sentry dsn.
-	/// </summary>
-	internal static string SentryDsn { get; set; } = "https://1da216e26a2741b99e8ccfccea1b7ac8@o1113828.ingest.sentry.io/4504901362515968";
-
-	/// <summary>
-	/// Gets the configuration.
-	/// </summary>
-	protected internal DiscordConfiguration Configuration { get; }
-
-	/// <summary>
-	/// Gets the instance of the logger for this client.
-	/// </summary>
-	public ILogger<BaseDiscordClient> Logger { get; internal set; }
-
-	/// <summary>
-	/// Gets the string representing the version of bot lib.
-	/// </summary>
-	public string VersionString { get; }
-
-	/// <summary>
-	/// Gets the bot library name.
-	/// </summary>
-	public string BotLibrary
-		=> "DisCatSharp";
-
-	/// <summary>
-	/// Gets the current user.
-	/// </summary>
-	public DiscordUser CurrentUser { get; internal set; }
-
-	/// <summary>
-	/// Gets the current application.
-	/// </summary>
-	public DiscordApplication CurrentApplication { get; internal set; }
-
-	/// <summary>
-	/// Exposes a <see cref="HttpClient">Http Client</see> for custom operations.
-	/// </summary>
-	public HttpClient RestClient { get; internal set; }
-
-	/// <summary>
-	/// Gets the cached guilds for this client.
-	/// </summary>
-	public abstract IReadOnlyDictionary<ulong, DiscordGuild> Guilds { get; }
-
-	/// <summary>
-	/// Gets the guilds ids for this shard.
-	/// </summary>
-	internal List<ulong> ReadyGuildIds { get; } = [];
-
-	/// <summary>
-	/// Gets the cached users for this client.
-	/// </summary>
-	public ConcurrentDictionary<ulong, DiscordUser> UserCache { get; internal set; }
-
-	/// <summary>
-	/// <para>Gets the service provider.</para>
-	/// <para>This allows passing data around without resorting to static members.</para>
-	/// <para>Defaults to null.</para>
-	/// </summary>
-	internal IServiceProvider ServiceProvider { get; set; }
-
-	/// <summary>
-	/// Gets the list of available voice regions. Note that this property will not contain VIP voice regions.
-	/// </summary>
-	public IReadOnlyDictionary<string, DiscordVoiceRegion> VoiceRegions
-		=> this.VoiceRegionsLazy.Value;
-
-	/// <summary>
-	/// Gets the list of available voice regions. This property is meant as a way to modify <see cref="VoiceRegions"/>.
-	/// </summary>
-	protected internal ConcurrentDictionary<string, DiscordVoiceRegion> InternalVoiceRegions { get; set; }
-
-	/// <summary>
-	/// Gets the cached application emojis for this client.
-	/// </summary>
-	public abstract IReadOnlyDictionary<ulong, DiscordApplicationEmoji> Emojis { get; }
-
-	/// <summary>
-	/// Gets the lazy voice regions.
+	///     Gets the lazy voice regions.
 	/// </summary>
 	internal Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>> VoiceRegionsLazy;
 
 	/// <summary>
-	/// Initializes this Discord API client.
+	///     Initializes this Discord API client.
 	/// </summary>
 	/// <param name="config">Configuration for this client.</param>
 	protected BaseDiscordClient(DiscordConfiguration config)
@@ -228,7 +139,7 @@ public abstract class BaseDiscordClient : IDisposable
 							{
 								Id = this.CurrentUser.Id.ToString(),
 								Username = this.CurrentUser.UsernameWithDiscriminator,
-								Other = new Dictionary<string, string>()
+								Other = new Dictionary<string, string>
 								{
 									{ "developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
 									{ "email", this.Configuration.FeedbackEmail ?? "not_given" }
@@ -298,7 +209,7 @@ public abstract class BaseDiscordClient : IDisposable
 						{
 							Id = this.CurrentUser.Id.ToString(),
 							Username = this.CurrentUser.UsernameWithDiscriminator,
-							Other = new Dictionary<string, string>()
+							Other = new Dictionary<string, string>
 							{
 								{ "developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
 								{ "email", this.Configuration.FeedbackEmail ?? "not_given" }
@@ -343,7 +254,101 @@ public abstract class BaseDiscordClient : IDisposable
 	}
 
 	/// <summary>
-	/// Gets the current API application.
+	///     Gets the api client.
+	/// </summary>
+	protected internal DiscordApiClient ApiClient { get; }
+
+	/// <summary>
+	///     Gets the sentry client.
+	/// </summary>
+	internal SentryClient Sentry { get; set; }
+
+	/// <summary>
+	///     Gets the sentry dsn.
+	/// </summary>
+	internal static string SentryDsn { get; set; } = "https://1da216e26a2741b99e8ccfccea1b7ac8@o1113828.ingest.sentry.io/4504901362515968";
+
+	/// <summary>
+	///     Gets the configuration.
+	/// </summary>
+	protected internal DiscordConfiguration Configuration { get; }
+
+	/// <summary>
+	///     Gets the instance of the logger for this client.
+	/// </summary>
+	public ILogger<BaseDiscordClient> Logger { get; internal set; }
+
+	/// <summary>
+	///     Gets the string representing the version of bot lib.
+	/// </summary>
+	public string VersionString { get; }
+
+	/// <summary>
+	///     Gets the bot library name.
+	/// </summary>
+	public string BotLibrary
+		=> "DisCatSharp";
+
+	/// <summary>
+	///     Gets the current user.
+	/// </summary>
+	public DiscordUser CurrentUser { get; internal set; }
+
+	/// <summary>
+	///     Gets the current application.
+	/// </summary>
+	public DiscordApplication CurrentApplication { get; internal set; }
+
+	/// <summary>
+	///     Exposes a <see cref="HttpClient">Http Client</see> for custom operations.
+	/// </summary>
+	public HttpClient RestClient { get; internal set; }
+
+	/// <summary>
+	///     Gets the cached guilds for this client.
+	/// </summary>
+	public abstract IReadOnlyDictionary<ulong, DiscordGuild> Guilds { get; }
+
+	/// <summary>
+	///     Gets the guilds ids for this shard.
+	/// </summary>
+	internal List<ulong> ReadyGuildIds { get; } = [];
+
+	/// <summary>
+	///     Gets the cached users for this client.
+	/// </summary>
+	public ConcurrentDictionary<ulong, DiscordUser> UserCache { get; internal set; }
+
+	/// <summary>
+	///     <para>Gets the service provider.</para>
+	///     <para>This allows passing data around without resorting to static members.</para>
+	///     <para>Defaults to null.</para>
+	/// </summary>
+	internal IServiceProvider ServiceProvider { get; set; }
+
+	/// <summary>
+	///     Gets the list of available voice regions. Note that this property will not contain VIP voice regions.
+	/// </summary>
+	public IReadOnlyDictionary<string, DiscordVoiceRegion> VoiceRegions
+		=> this.VoiceRegionsLazy.Value;
+
+	/// <summary>
+	///     Gets the list of available voice regions. This property is meant as a way to modify <see cref="VoiceRegions" />.
+	/// </summary>
+	protected internal ConcurrentDictionary<string, DiscordVoiceRegion> InternalVoiceRegions { get; set; }
+
+	/// <summary>
+	///     Gets the cached application emojis for this client.
+	/// </summary>
+	public abstract IReadOnlyDictionary<ulong, DiscordApplicationEmoji> Emojis { get; }
+
+	/// <summary>
+	///     Disposes this client.
+	/// </summary>
+	public abstract void Dispose();
+
+	/// <summary>
+	///     Gets the current API application.
 	/// </summary>
 	public async Task<DiscordApplication> GetCurrentApplicationAsync()
 	{
@@ -424,7 +429,7 @@ public abstract class BaseDiscordClient : IDisposable
 	}
 
 	/// <summary>
-	/// Updates the current API application.
+	///     Updates the current API application.
 	/// </summary>
 	/// <param name="description">The new description.</param>
 	/// <param name="interactionsEndpointUrl">The new interactions endpoint url.</param>
@@ -464,7 +469,7 @@ public abstract class BaseDiscordClient : IDisposable
 	}
 
 	/// <summary>
-	/// Enables user app functionality.
+	///     Enables user app functionality.
 	/// </summary>
 	/// <returns>The updated application.</returns>
 	public async Task<DiscordApplication> EnableUserAppsAsync()
@@ -492,7 +497,7 @@ public abstract class BaseDiscordClient : IDisposable
 	}
 
 	/// <summary>
-	/// Updates the current API application.
+	///     Updates the current API application.
 	/// </summary>
 	/// <param name="description">The new description.</param>
 	/// <param name="interactionsEndpointUrl">The new interactions endpoint url.</param>
@@ -530,14 +535,14 @@ public abstract class BaseDiscordClient : IDisposable
 	}
 
 	/// <summary>
-	/// Gets a list of voice regions.
+	///     Gets a list of voice regions.
 	/// </summary>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordVoiceRegion>> ListVoiceRegionsAsync()
 		=> this.ApiClient.ListVoiceRegionsAsync();
 
 	/// <summary>
-	/// Initializes this client. This method fetches information about current user, application, and voice regions.
+	///     Initializes this client. This method fetches information about current user, application, and voice regions.
 	/// </summary>
 	public virtual async Task InitializeAsync()
 	{
@@ -562,7 +567,7 @@ public abstract class BaseDiscordClient : IDisposable
 			{
 				Id = this.CurrentUser.Id.ToString(),
 				Username = this.CurrentUser.UsernameWithDiscriminator,
-				Other = new Dictionary<string, string>()
+				Other = new Dictionary<string, string>
 				{
 					{ "developer", this.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
 					{ "email", this.Configuration.FeedbackEmail ?? "not_given" }
@@ -571,8 +576,8 @@ public abstract class BaseDiscordClient : IDisposable
 	}
 
 	/// <summary>
-	/// Gets the current gateway info for the provided token.
-	/// <para>If no value is provided, the configuration value will be used instead.</para>
+	///     Gets the current gateway info for the provided token.
+	///     <para>If no value is provided, the configuration value will be used instead.</para>
 	/// </summary>
 	/// <returns>A gateway info object.</returns>
 	public async Task<GatewayInfo> GetGatewayInfoAsync(string? token = null)
@@ -594,7 +599,7 @@ public abstract class BaseDiscordClient : IDisposable
 	}
 
 	/// <summary>
-	/// Gets a cached user.
+	///     Gets a cached user.
 	/// </summary>
 	/// <param name="userId">The user id.</param>
 	internal DiscordUser GetCachedOrEmptyUserInternal(ulong userId)
@@ -610,7 +615,7 @@ public abstract class BaseDiscordClient : IDisposable
 	}
 
 	/// <summary>
-	/// Tries the get a cached user.
+	///     Tries the get a cached user.
 	/// </summary>
 	/// <param name="userId">The user id.</param>
 	/// <param name="user">The user.</param>
@@ -618,24 +623,19 @@ public abstract class BaseDiscordClient : IDisposable
 		=> this.UserCache.TryGetValue(userId, out user);
 
 	/// <summary>
-	/// Updates the cached application emojis.
+	///     Updates the cached application emojis.
 	/// </summary>
 	/// <param name="rawEmojis">The raw emojis.</param>
 	internal abstract IReadOnlyDictionary<ulong, DiscordApplicationEmoji> UpdateCachedApplicationEmojis(JArray? rawEmojis);
 
 	/// <summary>
-	/// Updates a cached application emoji.
+	///     Updates a cached application emoji.
 	/// </summary>
 	/// <param name="emoji">The emoji.</param>
 	internal abstract DiscordApplicationEmoji UpdateCachedApplicationEmoji(DiscordApplicationEmoji emoji);
 
 	/// <summary>
-	/// Disposes this client.
-	/// </summary>
-	public abstract void Dispose();
-
-	/// <summary>
-	/// Generates a fingerprint for sentry.
+	///     Generates a fingerprint for sentry.
 	/// </summary>
 	/// <param name="ev">The sentry event.</param>
 	/// <param name="additional">The optional additional fingerprint value, if any.</param>

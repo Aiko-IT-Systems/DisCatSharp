@@ -1,22 +1,22 @@
 namespace DisCatSharp.Lavalink.Enums;
 
 /// <summary>
-/// The lavalink search type.
+///     The lavalink search type.
 /// </summary>
 public enum LavalinkSearchType
 {
 	/// <summary>
-	/// Search on SoundCloud
+	///     Search on SoundCloud
 	/// </summary>
 	SoundCloud,
 
 	/// <summary>
-	/// Search on Youtube.
+	///     Search on Youtube.
 	/// </summary>
 	Youtube,
 
 	/// <summary>
-	/// Provide Lavalink with a plain URL.
+	///     Provide Lavalink with a plain URL.
 	/// </summary>
 	Plain,
 
@@ -40,32 +40,32 @@ public enum LavalinkSearchType
 	// Requires: https://github.com/topiSenpai/LavaSrc
 
 	/// <summary>
-	/// Search on Apple Music.
+	///     Search on Apple Music.
 	/// </summary>
 	AppleMusic,
 
 	/// <summary>
-	/// Search on Deezer.
+	///     Search on Deezer.
 	/// </summary>
 	Deezer,
 
 	/// <summary>
-	/// Search on Deezer with ISRC.
+	///     Search on Deezer with ISRC.
 	/// </summary>
 	DeezerISrc,
 
 	/// <summary>
-	/// Search on Yandex Music.
+	///     Search on Yandex Music.
 	/// </summary>
 	YandexMusic,
 
 	/// <summary>
-	/// Search on Spotify.
+	///     Search on Spotify.
 	/// </summary>
 	Spotify,
 
 	/// <summary>
-	/// Search on Spotify with recommendation seed.
+	///     Search on Spotify with recommendation seed.
 	/// </summary>
 	SpotifyRec
 }

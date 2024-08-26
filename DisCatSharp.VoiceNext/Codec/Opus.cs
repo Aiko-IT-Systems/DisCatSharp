@@ -4,28 +4,23 @@ using System.Collections.Generic;
 namespace DisCatSharp.VoiceNext.Codec;
 
 /// <summary>
-/// The opus.
+///     The opus.
 /// </summary>
 // ReSharper disable once ClassCanBeSealed.Global - This class can be used by other projects.
 public class Opus : IDisposable
 {
 	/// <summary>
-	/// Gets the audio format.
-	/// </summary>
-	public AudioFormat AudioFormat { get; }
-
-	/// <summary>
-	/// Gets the encoder.
+	///     Gets the encoder.
 	/// </summary>
 	private readonly IntPtr _encoder;
 
 	/// <summary>
-	/// Gets the managed decoders.
+	///     Gets the managed decoders.
 	/// </summary>
 	private readonly List<OpusDecoder> _managedDecoders;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="Opus"/> class.
+	///     Initializes a new instance of the <see cref="Opus" /> class.
 	/// </summary>
 	/// <param name="audioFormat">The audio format.</param>
 	public Opus(AudioFormat audioFormat)
@@ -53,7 +48,28 @@ public class Opus : IDisposable
 	}
 
 	/// <summary>
-	/// Encodes the Opus.
+	///     Gets the audio format.
+	/// </summary>
+	public AudioFormat AudioFormat { get; }
+
+	/// <summary>
+	///     Disposes the Opus.
+	/// </summary>
+	public void Dispose()
+	{
+		Interop.OpusDestroyEncoder(this._encoder);
+
+		lock (this._managedDecoders)
+		{
+			foreach (var decoder in this._managedDecoders)
+				decoder.Dispose();
+		}
+
+		GC.SuppressFinalize(this);
+	}
+
+	/// <summary>
+	///     Encodes the Opus.
 	/// </summary>
 	/// <param name="pcm">The pcm.</param>
 	/// <param name="target">The target.</param>
@@ -73,7 +89,7 @@ public class Opus : IDisposable
 	}
 
 	/// <summary>
-	/// Decodes the Opus.
+	///     Decodes the Opus.
 	/// </summary>
 	/// <param name="decoder">The decoder.</param>
 	/// <param name="opus">The opus.</param>
@@ -100,7 +116,7 @@ public class Opus : IDisposable
 	}
 
 	/// <summary>
-	/// Processes the packet loss.
+	///     Processes the packet loss.
 	/// </summary>
 	/// <param name="decoder">The decoder.</param>
 	/// <param name="frameSize">The frame size.</param>
@@ -109,7 +125,7 @@ public class Opus : IDisposable
 		=> Interop.OpusDecode(decoder.Decoder, frameSize, target);
 
 	/// <summary>
-	/// Gets the last packet sample count.
+	///     Gets the last packet sample count.
 	/// </summary>
 	/// <param name="decoder">The decoder.</param>
 	/// <returns>An int.</returns>
@@ -120,7 +136,7 @@ public class Opus : IDisposable
 	}
 
 	/// <summary>
-	/// Creates the decoder.
+	///     Creates the decoder.
 	/// </summary>
 	/// <returns>An OpusDecoder.</returns>
 	public OpusDecoder CreateDecoder()
@@ -134,7 +150,7 @@ public class Opus : IDisposable
 	}
 
 	/// <summary>
-	/// Destroys the decoder.
+	///     Destroys the decoder.
 	/// </summary>
 	/// <param name="decoder">The decoder.</param>
 	public void DestroyDecoder(OpusDecoder? decoder)
@@ -148,51 +164,20 @@ public class Opus : IDisposable
 			decoder.Dispose();
 		}
 	}
-
-	/// <summary>
-	/// Disposes the Opus.
-	/// </summary>
-	public void Dispose()
-	{
-		Interop.OpusDestroyEncoder(this._encoder);
-
-		lock (this._managedDecoders)
-		{
-			foreach (var decoder in this._managedDecoders)
-				decoder.Dispose();
-		}
-
-		GC.SuppressFinalize(this);
-	}
 }
 
 /// <summary>
-/// Represents an Opus decoder.
+///     Represents an Opus decoder.
 /// </summary>
 public sealed class OpusDecoder : IDisposable
 {
 	/// <summary>
-	/// Gets the audio format produced by this decoder.
-	/// </summary>
-	public AudioFormat AudioFormat { get; private set; }
-
-	/// <summary>
-	/// Gets the opus.
-	/// </summary>
-	internal Opus Opus { get; }
-
-	/// <summary>
-	/// Gets the decoder.
-	/// </summary>
-	internal IntPtr Decoder { get; private set; }
-
-	/// <summary>
-	/// Gets a value indicating whether this <see cref="OpusDecoder"/> is disposed.
+	///     Gets a value indicating whether this <see cref="OpusDecoder" /> is disposed.
 	/// </summary>
 	private volatile bool _isDisposed;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="OpusDecoder"/> class.
+	///     Initializes a new instance of the <see cref="OpusDecoder" /> class.
 	/// </summary>
 	/// <param name="managedOpus">The managed opus.</param>
 	internal OpusDecoder(Opus managedOpus)
@@ -201,23 +186,22 @@ public sealed class OpusDecoder : IDisposable
 	}
 
 	/// <summary>
-	/// Used to lazily initialize the decoder to make sure we're
-	/// using the correct output format, this way we don't end up
-	/// creating more decoders than we need.
+	///     Gets the audio format produced by this decoder.
 	/// </summary>
-	/// <param name="outputFormat"></param>
-	internal void Initialize(AudioFormat outputFormat)
-	{
-		if (this.Decoder != IntPtr.Zero)
-			Interop.OpusDestroyDecoder(this.Decoder);
-
-		this.AudioFormat = outputFormat;
-
-		this.Decoder = Interop.OpusCreateDecoder(outputFormat);
-	}
+	public AudioFormat AudioFormat { get; private set; }
 
 	/// <summary>
-	/// Disposes of this Opus decoder.
+	///     Gets the opus.
+	/// </summary>
+	internal Opus Opus { get; }
+
+	/// <summary>
+	///     Gets the decoder.
+	/// </summary>
+	internal IntPtr Decoder { get; private set; }
+
+	/// <summary>
+	///     Disposes of this Opus decoder.
 	/// </summary>
 	public void Dispose()
 	{
@@ -231,7 +215,23 @@ public sealed class OpusDecoder : IDisposable
 	}
 
 	/// <summary>
-	/// Disposes of this Opus decoder.
+	///     Used to lazily initialize the decoder to make sure we're
+	///     using the correct output format, this way we don't end up
+	///     creating more decoders than we need.
+	/// </summary>
+	/// <param name="outputFormat"></param>
+	internal void Initialize(AudioFormat outputFormat)
+	{
+		if (this.Decoder != IntPtr.Zero)
+			Interop.OpusDestroyDecoder(this.Decoder);
+
+		this.AudioFormat = outputFormat;
+
+		this.Decoder = Interop.OpusCreateDecoder(outputFormat);
+	}
+
+	/// <summary>
+	///     Disposes of this Opus decoder.
 	/// </summary>
 	~OpusDecoder()
 	{
@@ -240,7 +240,7 @@ public sealed class OpusDecoder : IDisposable
 }
 
 /// <summary>
-/// The opus error.
+///     The opus error.
 /// </summary>
 [Flags]
 internal enum OpusError
@@ -256,7 +256,7 @@ internal enum OpusError
 }
 
 /// <summary>
-/// The opus control.
+///     The opus control.
 /// </summary>
 internal enum OpusControl
 {
@@ -270,7 +270,7 @@ internal enum OpusControl
 }
 
 /// <summary>
-/// The opus signal.
+///     The opus signal.
 /// </summary>
 internal enum OpusSignal
 {

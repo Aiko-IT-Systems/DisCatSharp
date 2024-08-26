@@ -5,32 +5,32 @@ using System.Numerics;
 namespace DisCatSharp.Common.Serialization;
 
 /// <summary>
-/// Decomposes <see cref="Complex"/> numbers into tuples (arrays of 2).
+///     Decomposes <see cref="Complex" /> numbers into tuples (arrays of 2).
 /// </summary>
 public sealed class ComplexDecomposer : IDecomposer
 {
 	/// <summary>
-	/// Gets the complex type.
+	///     Gets the complex type.
 	/// </summary>
 	private static Type s_complex { get; } = typeof(Complex);
 
 	/// <summary>
-	/// Gets the double array.
+	///     Gets the double array.
 	/// </summary>
 	private static Type s_doubleArray { get; } = typeof(double[]);
 
 	/// <summary>
-	/// Gets the double enumerable.
+	///     Gets the double enumerable.
 	/// </summary>
 	private static Type s_doubleEnumerable { get; } = typeof(IEnumerable<double>);
 
 	/// <summary>
-	/// Gets the object array.
+	///     Gets the object array.
 	/// </summary>
 	private static Type s_objectArray { get; } = typeof(object[]);
 
 	/// <summary>
-	/// Gets the object enumerable.
+	///     Gets the object enumerable.
 	/// </summary>
 	private static Type s_objectEnumerable { get; } = typeof(IEnumerable<object>);
 

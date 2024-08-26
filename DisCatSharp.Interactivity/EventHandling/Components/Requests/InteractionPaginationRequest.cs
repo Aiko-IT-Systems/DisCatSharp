@@ -10,27 +10,27 @@ using DisCatSharp.Interactivity.Enums;
 namespace DisCatSharp.Interactivity.EventHandling;
 
 /// <summary>
-/// The interaction pagination request.
+///     The interaction pagination request.
 /// </summary>
 internal class InteractionPaginationRequest : IPaginationRequest
 {
-	private int _index;
+	private readonly ButtonPaginationBehavior _behaviorBehavior;
+	private readonly PaginationButtons _buttons;
+	private readonly DiscordMessage _message;
 	private readonly List<Page> _pages = [];
 
 	private readonly TaskCompletionSource<bool> _tcs = new();
 
-	private DiscordInteraction _lastInteraction;
-	private CancellationTokenSource _interactionCts;
-
 	private readonly CancellationToken _token;
 	private readonly DiscordUser _user;
-	private readonly DiscordMessage _message;
-	private readonly PaginationButtons _buttons;
 	private readonly PaginationBehaviour _wrapBehavior;
-	private readonly ButtonPaginationBehavior _behaviorBehavior;
+	private int _index;
+	private CancellationTokenSource _interactionCts;
+
+	private DiscordInteraction _lastInteraction;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="InteractionPaginationRequest"/> class.
+	///     Initializes a new instance of the <see cref="InteractionPaginationRequest" /> class.
 	/// </summary>
 	/// <param name="interaction">The interaction.</param>
 	/// <param name="message">The message.</param>
@@ -64,24 +64,12 @@ internal class InteractionPaginationRequest : IPaginationRequest
 	}
 
 	/// <summary>
-	/// Gets the page count.
+	///     Gets the page count.
 	/// </summary>
 	public int PageCount => this._pages.Count;
 
 	/// <summary>
-	/// Regenerates the cts.
-	/// </summary>
-	/// <param name="interaction">The interaction.</param>
-	internal void RegenerateCts(DiscordInteraction interaction)
-	{
-		this._interactionCts?.Dispose();
-		this._lastInteraction = interaction;
-		this._interactionCts = new(TimeSpan.FromSeconds((60 * 15) - 5));
-		this._interactionCts.Token.Register(() => this._tcs.TrySetResult(false));
-	}
-
-	/// <summary>
-	/// Gets the page.
+	///     Gets the page.
 	/// </summary>
 	public Task<Page> GetPageAsync()
 	{
@@ -109,7 +97,7 @@ internal class InteractionPaginationRequest : IPaginationRequest
 	}
 
 	/// <summary>
-	/// Skips the left page.
+	///     Skips the left page.
 	/// </summary>
 	public Task SkipLeftAsync()
 	{
@@ -125,7 +113,7 @@ internal class InteractionPaginationRequest : IPaginationRequest
 	}
 
 	/// <summary>
-	/// Skips the right page.
+	///     Skips the right page.
 	/// </summary>
 	public Task SkipRightAsync()
 	{
@@ -141,7 +129,7 @@ internal class InteractionPaginationRequest : IPaginationRequest
 	}
 
 	/// <summary>
-	/// Gets the next page.
+	///     Gets the next page.
 	/// </summary>
 	/// <returns>A Task.</returns>
 	public Task NextPageAsync()
@@ -162,7 +150,7 @@ internal class InteractionPaginationRequest : IPaginationRequest
 	}
 
 	/// <summary>
-	/// Gets the previous page.
+	///     Gets the previous page.
 	/// </summary>
 	public Task PreviousPageAsync()
 	{
@@ -182,39 +170,34 @@ internal class InteractionPaginationRequest : IPaginationRequest
 	}
 
 	/// <summary>
-	/// Gets the emojis.
+	///     Gets the emojis.
 	/// </summary>
 	public Task<PaginationEmojis> GetEmojisAsync()
 		=> Task.FromException<PaginationEmojis>(new NotSupportedException("Emojis aren't supported for this request."));
 
 	/// <summary>
-	/// Gets the buttons.
+	///     Gets the buttons.
 	/// </summary>
 	public Task<IEnumerable<DiscordButtonComponent>> GetButtonsAsync()
 		=> Task.FromResult((IEnumerable<DiscordButtonComponent>)this._buttons.ButtonArray);
 
 	/// <summary>
-	/// Gets the message.
+	///     Gets the message.
 	/// </summary>
 	public Task<DiscordMessage> GetMessageAsync() => Task.FromResult(this._message);
 
 	/// <summary>
-	/// Gets the message.
-	/// </summary>
-	public Task<DiscordInteraction> GetLastInteractionAsync() => Task.FromResult(this._lastInteraction);
-
-	/// <summary>
-	/// Gets the user.
+	///     Gets the user.
 	/// </summary>
 	public Task<DiscordUser> GetUserAsync() => Task.FromResult(this._user);
 
 	/// <summary>
-	/// Gets the task completion source.
+	///     Gets the task completion source.
 	/// </summary>
 	public Task<TaskCompletionSource<bool>> GetTaskCompletionSourceAsync() => Task.FromResult(this._tcs);
 
 	/// <summary>
-	/// Cleanup.
+	///     Cleanup.
 	/// </summary>
 	public async Task DoCleanupAsync()
 	{
@@ -249,4 +232,21 @@ internal class InteractionPaginationRequest : IPaginationRequest
 				break;
 		}
 	}
+
+	/// <summary>
+	///     Regenerates the cts.
+	/// </summary>
+	/// <param name="interaction">The interaction.</param>
+	internal void RegenerateCts(DiscordInteraction interaction)
+	{
+		this._interactionCts?.Dispose();
+		this._lastInteraction = interaction;
+		this._interactionCts = new(TimeSpan.FromSeconds((60 * 15) - 5));
+		this._interactionCts.Token.Register(() => this._tcs.TrySetResult(false));
+	}
+
+	/// <summary>
+	///     Gets the message.
+	/// </summary>
+	public Task<DiscordInteraction> GetLastInteractionAsync() => Task.FromResult(this._lastInteraction);
 }

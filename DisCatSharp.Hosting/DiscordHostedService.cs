@@ -10,21 +10,28 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.Hosting;
 
 /// <summary>
-/// Simple implementation for <see cref="DiscordClient"/> to work as a <see cref="Microsoft.Extensions.Hosting.BackgroundService"/>
+///     Simple implementation for <see cref="DiscordClient" /> to work as a
+///     <see cref="Microsoft.Extensions.Hosting.BackgroundService" />
 /// </summary>
 public abstract class DiscordHostedService : BaseHostedService, IDiscordHostedService
 {
-	/// <inheritdoc/>
-	public DiscordClient Client { get; protected set; }
-
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordHostedService"/> class.
+	///     Initializes a new instance of the <see cref="DiscordHostedService" /> class.
 	/// </summary>
 	/// <param name="config">IConfiguration provided via Dependency Injection. Aggregate method to access configuration files </param>
 	/// <param name="logger">An ILogger to work with, provided via Dependency Injection</param>
-	/// <param name="serviceProvider">ServiceProvider reference which contains all items currently registered for Dependency Injection</param>
-	/// <param name="applicationLifetime">Contains the appropriate methods for disposing / stopping BackgroundServices during runtime</param>
-	/// <param name="configBotSection">The name of the JSON/Config Key which contains the configuration for this Discord Service</param>
+	/// <param name="serviceProvider">
+	///     ServiceProvider reference which contains all items currently registered for Dependency
+	///     Injection
+	/// </param>
+	/// <param name="applicationLifetime">
+	///     Contains the appropriate methods for disposing / stopping BackgroundServices during
+	///     runtime
+	/// </param>
+	/// <param name="configBotSection">
+	///     The name of the JSON/Config Key which contains the configuration for this Discord
+	///     Service
+	/// </param>
 	protected DiscordHostedService(
 		IConfiguration config,
 		ILogger<DiscordHostedService> logger,
@@ -34,6 +41,9 @@ public abstract class DiscordHostedService : BaseHostedService, IDiscordHostedSe
 	)
 		: base(config, logger, serviceProvider, applicationLifetime, configBotSection)
 	{ }
+
+	/// <inheritdoc />
+	public DiscordClient Client { get; protected set; }
 
 	protected override Task ConfigureAsync()
 	{

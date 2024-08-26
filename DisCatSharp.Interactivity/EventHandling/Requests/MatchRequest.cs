@@ -7,19 +7,19 @@ using DisCatSharp.Common.Utilities;
 namespace DisCatSharp.Interactivity.EventHandling;
 
 /// <summary>
-/// MatchRequest is a class that serves as a representation of a
-/// match that is being waited for.
+///     MatchRequest is a class that serves as a representation of a
+///     match that is being waited for.
 /// </summary>
 /// <typeparam name="T"></typeparam>
 internal class MatchRequest<T> : IDisposable where T : AsyncEventArgs
 {
-	internal TaskCompletionSource<T> Tcs;
 	internal CancellationTokenSource Ct;
 	internal Func<T, bool> Predicate;
+	internal TaskCompletionSource<T> Tcs;
 	internal TimeSpan Timeout;
 
 	/// <summary>
-	/// Creates a new MatchRequest object.
+	///     Creates a new MatchRequest object.
 	/// </summary>
 	/// <param name="predicate">Predicate to match</param>
 	/// <param name="timeout">Timeout time</param>
@@ -32,13 +32,8 @@ internal class MatchRequest<T> : IDisposable where T : AsyncEventArgs
 		this.Timeout = timeout;
 	}
 
-	~MatchRequest()
-	{
-		this.Dispose();
-	}
-
 	/// <summary>
-	/// Disposes this MatchRequest.
+	///     Disposes this MatchRequest.
 	/// </summary>
 	public void Dispose()
 	{
@@ -46,5 +41,10 @@ internal class MatchRequest<T> : IDisposable where T : AsyncEventArgs
 		this.Tcs = null;
 		this.Predicate = null;
 		GC.SuppressFinalize(this);
+	}
+
+	~MatchRequest()
+	{
+		this.Dispose();
 	}
 }

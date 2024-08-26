@@ -1,11 +1,10 @@
-#nullable enable
 using System;
 
 namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Methods marked with this attribute will be registered as event handling methods
-/// if the associated type / an associated instance is being registered.
+///     Methods marked with this attribute will be registered as event handling methods
+///     if the associated type / an associated instance is being registered.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
 public class EventAttribute : Attribute
@@ -15,8 +14,10 @@ public class EventAttribute : Attribute
 	public EventAttribute()
 	{ }
 
-	/// <param name="evtn"><para>The name of the event.</para>
-	/// <para>The attributed method's name will be used if null.</para></param>
+	/// <param name="evtn">
+	///     <para>The name of the event.</para>
+	///     <para>The attributed method's name will be used if null.</para>
+	/// </param>
 	public EventAttribute(DiscordEvent evtn)
 	{
 		this.EventName = evtn.ToString();
@@ -24,14 +25,14 @@ public class EventAttribute : Attribute
 }
 
 /// <summary>
-/// Classes marked with this attribute will be considered for event handler registration from an assembly.
+///     Classes marked with this attribute will be considered for event handler registration from an assembly.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public class EventHandlerAttribute : Attribute
 { }
 
 /// <summary>
-/// All events available in <see cref="DiscordClient"/> for use with <see cref="EventAttribute"/>.
+///     All events available in <see cref="DiscordClient" /> for use with <see cref="EventAttribute" />.
 /// </summary>
 public enum DiscordEvent
 {

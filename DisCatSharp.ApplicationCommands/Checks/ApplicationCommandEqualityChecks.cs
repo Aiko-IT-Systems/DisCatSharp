@@ -11,12 +11,12 @@ using Newtonsoft.Json;
 namespace DisCatSharp.ApplicationCommands.Checks;
 
 /// <summary>
-/// The application command equality checks.
+///     The application command equality checks.
 /// </summary>
 internal static class ApplicationCommandEqualityChecks
 {
 	/// <summary>
-	/// Whether two application commands are equal.
+	///     Whether two application commands are equal.
 	/// </summary>
 	/// <param name="ac1">Source command.</param>
 	/// <param name="targetApplicationCommand">Command to check against.</param>
@@ -69,8 +69,8 @@ internal static class ApplicationCommandEqualityChecks
 	}
 
 	/// <summary>
-	/// Checks softly whether two <see cref="DiscordApplicationCommand"/>s are the same.
-	/// Excluding id, application id and version here.
+	///     Checks softly whether two <see cref="DiscordApplicationCommand" />s are the same.
+	///     Excluding id, application id and version here.
 	/// </summary>
 	/// <param name="source">Source application command.</param>
 	/// <param name="target">Application command to check against.</param>
@@ -136,7 +136,8 @@ internal static class ApplicationCommandEqualityChecks
 	}
 
 	/// <summary>
-	/// Performs a SequenceEqual on an enumerable if both <paramref name="source"/> and <paramref name="target"/> is not null.
+	///     Performs a SequenceEqual on an enumerable if both <paramref name="source" /> and <paramref name="target" /> is not
+	///     null.
 	/// </summary>
 	/// <typeparam name="T">The containing type within the list.</typeparam>
 	/// <param name="source">The source enumerable.</param>
@@ -148,7 +149,7 @@ internal static class ApplicationCommandEqualityChecks
 			: source is null && target is null;
 
 	/// <summary>
-	/// Checks whether two dictionaries are equal.
+	///     Checks whether two dictionaries are equal.
 	/// </summary>
 	/// <param name="sourceDictionary">The source dictionary.</param>
 	/// <param name="targetDictionary">The target dictionary.</param>
@@ -172,8 +173,8 @@ internal static class ApplicationCommandEqualityChecks
 	}
 
 	/// <summary>
-	/// Checks deeply whether two <see cref="DiscordApplicationCommand"/>s are the same.
-	/// Excluding id, application id and version here.
+	///     Checks deeply whether two <see cref="DiscordApplicationCommand" />s are the same.
+	///     Excluding id, application id and version here.
 	/// </summary>
 	/// <param name="source">Source application command.</param>
 	/// <param name="target">Application command to check against.</param>
@@ -215,7 +216,7 @@ internal static class ApplicationCommandEqualityChecks
 	}
 
 	/// <summary>
-	/// Checks deeply whether <see cref="DiscordApplicationCommandOption"/>s are the same.
+	///     Checks deeply whether <see cref="DiscordApplicationCommandOption" />s are the same.
 	/// </summary>
 	/// <param name="sourceOptions">Source options.</param>
 	/// <param name="targetOptions">Options to check against.</param>

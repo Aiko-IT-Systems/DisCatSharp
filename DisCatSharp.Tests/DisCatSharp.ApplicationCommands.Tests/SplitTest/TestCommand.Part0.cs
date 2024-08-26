@@ -1,4 +1,3 @@
-using DisCatSharp.ApplicationCommands;
 using DisCatSharp.ApplicationCommands.Attributes;
 
 namespace DisCatSharp.ApplicationCommands.Tests.SplitTest;

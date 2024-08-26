@@ -4,32 +4,32 @@ using System.Collections.Generic;
 namespace DisCatSharp.CommandsNext.Converters;
 
 /// <summary>
-/// Represents a argument binding result.
+///     Represents a argument binding result.
 /// </summary>
 public readonly struct ArgumentBindingResult
 {
 	/// <summary>
-	/// Gets a value indicating whether the binding is successful.
+	///     Gets a value indicating whether the binding is successful.
 	/// </summary>
 	public bool IsSuccessful { get; }
 
 	/// <summary>
-	/// Gets the converted.
+	///     Gets the converted.
 	/// </summary>
 	public object[] Converted { get; }
 
 	/// <summary>
-	/// Gets the raw.
+	///     Gets the raw.
 	/// </summary>
 	public IReadOnlyList<string> Raw { get; }
 
 	/// <summary>
-	/// Gets the reason.
+	///     Gets the reason.
 	/// </summary>
 	public Exception Reason { get; }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="ArgumentBindingResult"/> class.
+	///     Initializes a new instance of the <see cref="ArgumentBindingResult" /> class.
 	/// </summary>
 	/// <param name="converted">The converted.</param>
 	/// <param name="raw">The raw.</param>
@@ -42,7 +42,7 @@ public readonly struct ArgumentBindingResult
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="ArgumentBindingResult"/> class.
+	///     Initializes a new instance of the <see cref="ArgumentBindingResult" /> class.
 	/// </summary>
 	/// <param name="ex">The ex.</param>
 	public ArgumentBindingResult(Exception ex)

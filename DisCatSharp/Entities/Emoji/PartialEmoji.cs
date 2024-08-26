@@ -3,24 +3,12 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents a partial emoji to be send to discord.
+///     Represents a partial emoji to be send to discord.
 /// </summary>
 public sealed class PartialEmoji
 {
 	/// <summary>
-	/// Sets the guild emoji.
-	/// </summary>
-    [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-    public ulong? Id { get; internal set; }
-
-    /// <summary>
-    /// Sets the unicode emoji.
-    /// </summary>
-    [JsonProperty("name", NullValueHandling = NullValueHandling.Include)]
-    public string? Name { get; internal set; }
-
-	/// <summary>
-	/// Constructs a new <see cref="PartialEmoji"/> from a guild emoji id.
+	///     Constructs a new <see cref="PartialEmoji" /> from a guild emoji id.
 	/// </summary>
 	/// <param name="id">The emojis id.</param>
 	public PartialEmoji(ulong id)
@@ -30,7 +18,7 @@ public sealed class PartialEmoji
 	}
 
 	/// <summary>
-	/// Constructs a new <see cref="PartialEmoji"/> from an unicode emoji.
+	///     Constructs a new <see cref="PartialEmoji" /> from an unicode emoji.
 	/// </summary>
 	/// <param name="name">The unicode. I.e. 😀</param>
 	public PartialEmoji(string name)
@@ -40,7 +28,7 @@ public sealed class PartialEmoji
 	}
 
 	/// <summary>
-	/// Constructs a new <see cref="PartialEmoji"/> from a <see cref="DiscordEmoji"/>
+	///     Constructs a new <see cref="PartialEmoji" /> from a <see cref="DiscordEmoji" />
 	/// </summary>
 	/// <param name="discordEmoji"></param>
 	public PartialEmoji(DiscordEmoji discordEmoji)
@@ -58,12 +46,25 @@ public sealed class PartialEmoji
 	}
 
 	/// <summary>
-	/// Creates a new empty <see cref="PartialEmoji"/>
+	///     Creates a new empty <see cref="PartialEmoji" />
 	/// </summary>
-	internal PartialEmoji() { }
+	internal PartialEmoji()
+	{ }
 
 	/// <summary>
-	/// Implicitly converts <see cref="DiscordEmoji"/> to <see cref="PartialEmoji"/>.
+	///     Sets the guild emoji.
+	/// </summary>
+	[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? Id { get; internal set; }
+
+	/// <summary>
+	///     Sets the unicode emoji.
+	/// </summary>
+	[JsonProperty("name", NullValueHandling = NullValueHandling.Include)]
+	public string? Name { get; internal set; }
+
+	/// <summary>
+	///     Implicitly converts <see cref="DiscordEmoji" /> to <see cref="PartialEmoji" />.
 	/// </summary>
 	/// <param name="discordEmoji"></param>
 	public static implicit operator PartialEmoji(DiscordEmoji discordEmoji)

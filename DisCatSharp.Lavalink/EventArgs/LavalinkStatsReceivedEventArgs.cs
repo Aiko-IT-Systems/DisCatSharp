@@ -4,22 +4,12 @@ using DisCatSharp.Lavalink.Entities;
 namespace DisCatSharp.Lavalink.EventArgs;
 
 /// <summary>
-/// Represents event arguments for lavalink stats events .
+///     Represents event arguments for lavalink stats events .
 /// </summary>
 public sealed class LavalinkStatsReceivedEventArgs : DiscordEventArgs
 {
 	/// <summary>
-	/// Gets the discord client.
-	/// </summary>
-	public DiscordClient Discord { get; }
-
-	/// <summary>
-	/// Gets the updated statistics.
-	/// </summary>
-	public LavalinkStats Statistics { get; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="LavalinkTrackEndedEventArgs"/> class.
+	///     Initializes a new instance of the <see cref="LavalinkTrackEndedEventArgs" /> class.
 	/// </summary>
 	/// <param name="client">The discord client.</param>
 	/// <param name="stats">The received statistics.</param>
@@ -29,4 +19,14 @@ public sealed class LavalinkStatsReceivedEventArgs : DiscordEventArgs
 		this.Discord = client;
 		this.Statistics = stats;
 	}
+
+	/// <summary>
+	///     Gets the discord client.
+	/// </summary>
+	public DiscordClient Discord { get; }
+
+	/// <summary>
+	///     Gets the updated statistics.
+	/// </summary>
+	public LavalinkStats Statistics { get; }
 }

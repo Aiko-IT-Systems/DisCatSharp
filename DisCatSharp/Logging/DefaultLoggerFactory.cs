@@ -6,29 +6,29 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp;
 
 /// <summary>
-/// Represents a default logger factory.
+///     Represents a default logger factory.
 /// </summary>
 internal class DefaultLoggerFactory : ILoggerFactory
 {
 	/// <summary>
-	/// Gets the providers.
+	///     Gets the providers.
 	/// </summary>
 	private readonly List<ILoggerProvider> _providers = [];
 
 	/// <summary>
-	/// Gets whether this logger factory is disposed.
+	///     Gets whether this logger factory is disposed.
 	/// </summary>
 	private bool _isDisposed;
 
 	/// <summary>
-	/// Adds a provider.
+	///     Adds a provider.
 	/// </summary>
 	/// <param name="provider">The provider to be added.</param>
 	public void AddProvider(ILoggerProvider provider)
 		=> this._providers.Add(provider);
 
 	/// <summary>
-	/// Creates the logger.
+	///     Creates the logger.
 	/// </summary>
 	/// <param name="categoryName">The category name.</param>
 	public ILogger CreateLogger(string categoryName)
@@ -39,7 +39,7 @@ internal class DefaultLoggerFactory : ILoggerFactory
 				: new CompositeDefaultLogger(this._providers);
 
 	/// <summary>
-	/// Disposes the logger.
+	///     Disposes the logger.
 	/// </summary>
 	public void Dispose()
 	{

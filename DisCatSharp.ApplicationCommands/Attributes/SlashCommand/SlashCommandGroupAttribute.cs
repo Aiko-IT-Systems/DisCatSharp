@@ -7,48 +7,13 @@ using DisCatSharp.Enums;
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
-/// Represents a <see cref="DisCatSharp.Entities.DiscordApplicationCommand"/> group.
+///     Represents a <see cref="DisCatSharp.Entities.DiscordApplicationCommand" /> group.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
 public class SlashCommandGroupAttribute : Attribute
 {
 	/// <summary>
-	/// Gets the name of this slash command group.
-	/// </summary>
-	public string Name { get; set; }
-
-	/// <summary>
-	/// Gets the description of this slash command group.
-	/// </summary>
-	public string Description { get; set; }
-
-	/// <summary>
-	/// Gets the needed permission of this slash command group.
-	/// </summary>
-	public Permissions? DefaultMemberPermissions { get; set; }
-
-	/// <summary>
-	/// Gets the allowed contexts of this slash command group.
-	/// </summary>
-	public List<InteractionContextType>? AllowedContexts { get; set; }
-
-	/// <summary>
-	/// Gets the allowed integration types of this slash command group.
-	/// </summary>
-	public List<ApplicationCommandIntegrationTypes>? IntegrationTypes { get; set; }
-
-	/// <summary>
-	/// Gets the dm permission of this slash command group.
-	/// </summary>
-	public bool? DmPermission { get; set; }
-
-	/// <summary>
-	/// Gets whether this slash command group is marked as NSFW.
-	/// </summary>
-	public bool IsNsfw { get; set; }
-
-	/// <summary>
-	/// Marks this class as a slash command group.
+	///     Marks this class as a slash command group.
 	/// </summary>
 	/// <param name="name">The name of the slash command group.</param>
 	/// <param name="description">The description of the slash command group.</param>
@@ -67,7 +32,7 @@ public class SlashCommandGroupAttribute : Attribute
 	}
 
 	/// <summary>
-	/// Marks this method as a slash command group.
+	///     Marks this method as a slash command group.
 	/// </summary>
 	/// <param name="name">The name of the slash command group.</param>
 	/// <param name="description">The description of the slash command group.</param>
@@ -87,7 +52,7 @@ public class SlashCommandGroupAttribute : Attribute
 	}
 
 	/// <summary>
-	/// Marks this method as a slash command group.
+	///     Marks this method as a slash command group.
 	/// </summary>
 	/// <param name="name">The name of the slash command group.</param>
 	/// <param name="description">The description of the slash command group.</param>
@@ -107,7 +72,7 @@ public class SlashCommandGroupAttribute : Attribute
 	}
 
 	/// <summary>
-	/// Marks this method as a slash command group.
+	///     Marks this method as a slash command group.
 	/// </summary>
 	/// <param name="name">The name of the slash command group.</param>
 	/// <param name="description">The description of the slash command group.</param>
@@ -126,4 +91,39 @@ public class SlashCommandGroupAttribute : Attribute
 		this.AllowedContexts = allowedContexts?.ToList();
 		this.IntegrationTypes = integrationTypes?.ToList();
 	}
+
+	/// <summary>
+	///     Gets the name of this slash command group.
+	/// </summary>
+	public string Name { get; set; }
+
+	/// <summary>
+	///     Gets the description of this slash command group.
+	/// </summary>
+	public string Description { get; set; }
+
+	/// <summary>
+	///     Gets the needed permission of this slash command group.
+	/// </summary>
+	public Permissions? DefaultMemberPermissions { get; set; }
+
+	/// <summary>
+	///     Gets the allowed contexts of this slash command group.
+	/// </summary>
+	public List<InteractionContextType>? AllowedContexts { get; set; }
+
+	/// <summary>
+	///     Gets the allowed integration types of this slash command group.
+	/// </summary>
+	public List<ApplicationCommandIntegrationTypes>? IntegrationTypes { get; set; }
+
+	/// <summary>
+	///     Gets the dm permission of this slash command group.
+	/// </summary>
+	public bool? DmPermission { get; set; }
+
+	/// <summary>
+	///     Gets whether this slash command group is marked as NSFW.
+	/// </summary>
+	public bool IsNsfw { get; set; }
 }

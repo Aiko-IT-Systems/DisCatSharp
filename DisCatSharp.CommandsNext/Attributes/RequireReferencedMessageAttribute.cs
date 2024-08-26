@@ -3,12 +3,12 @@ using System.Threading.Tasks;
 namespace DisCatSharp.CommandsNext.Attributes;
 
 /// <summary>
-/// Defines that a command is only usable when sent in reply. Command will appear in help regardless of this attribute.
+///     Defines that a command is only usable when sent in reply. Command will appear in help regardless of this attribute.
 /// </summary>
 public sealed class RequireReferencedMessageAttribute : CheckBaseAttribute
 {
 	/// <summary>
-	/// Defines that a command is only usable when sent in reply. Command will appear in help regardless of this attribute.
+	///     Defines that a command is only usable when sent in reply. Command will appear in help regardless of this attribute.
 	/// </summary>
 	public RequireReferencedMessageAttribute()
 	{ }

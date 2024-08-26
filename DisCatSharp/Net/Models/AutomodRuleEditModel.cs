@@ -6,7 +6,7 @@ using DisCatSharp.Enums;
 namespace DisCatSharp.Net.Models;
 
 /// <summary>
-/// Represents an automod rule edit model.
+///     Represents an automod rule edit model.
 /// </summary>
 public class AutomodRuleEditModel : BaseEditModel
 {

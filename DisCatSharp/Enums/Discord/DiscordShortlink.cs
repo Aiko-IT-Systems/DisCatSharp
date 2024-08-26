@@ -1,7 +1,7 @@
 namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Discord short links.
+///     Discord short links.
 /// </summary>
 public static class DiscordShortlink
 {

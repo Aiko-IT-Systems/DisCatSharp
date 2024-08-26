@@ -3,24 +3,24 @@ using System.Threading.Tasks;
 namespace DisCatSharp.Net.Udp;
 
 /// <summary>
-/// Creates an instance of a UDP client implementation.
+///     Creates an instance of a UDP client implementation.
 /// </summary>
 /// <returns>Constructed UDP client implementation.</returns>
 public delegate BaseUdpClient UdpClientFactoryDelegate();
 
 /// <summary>
-/// Represents a base abstraction for all UDP client implementations.
+///     Represents a base abstraction for all UDP client implementations.
 /// </summary>
 public abstract class BaseUdpClient
 {
 	/// <summary>
-	/// Configures the UDP client.
+	///     Configures the UDP client.
 	/// </summary>
 	/// <param name="endpoint">Endpoint that the client will be communicating with.</param>
 	public abstract void Setup(ConnectionEndpoint endpoint);
 
 	/// <summary>
-	/// Sends a datagram.
+	///     Sends a datagram.
 	/// </summary>
 	/// <param name="data">Datagram.</param>
 	/// <param name="dataLength">Length of the datagram.</param>
@@ -28,13 +28,13 @@ public abstract class BaseUdpClient
 	public abstract Task SendAsync(byte[] data, int dataLength);
 
 	/// <summary>
-	/// Receives a datagram.
+	///     Receives a datagram.
 	/// </summary>
 	/// <returns>The received bytes.</returns>
 	public abstract Task<byte[]> ReceiveAsync();
 
 	/// <summary>
-	/// Closes and disposes the client.
+	///     Closes and disposes the client.
 	/// </summary>
 	public abstract void Close();
 }

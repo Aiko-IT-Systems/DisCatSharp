@@ -21,13 +21,16 @@ public partial class DiscordGuild
 	// TODO: Rework audit logs!
 
 	/// <summary>
-	/// Gets audit log entries for this guild.
+	///     Gets audit log entries for this guild.
 	/// </summary>
 	/// <param name="limit">Maximum number of entries to fetch.</param>
 	/// <param name="byMember">Filter by member responsible.</param>
 	/// <param name="actionType">Filter by action type.</param>
 	/// <returns>A collection of requested audit log entries.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ViewAuditLog"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ViewAuditLog" /> permission.
+	/// </exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<IReadOnlyList<DiscordAuditLogEntry>> GetAuditLogsAsync(int? limit = null, DiscordMember byMember = null, AuditLogActionType? actionType = null)
 	{
@@ -55,7 +58,7 @@ public partial class DiscordGuild
 	}
 
 	/// <summary>
-	/// Proceesses audit log objects.
+	///     Proceesses audit log objects.
 	/// </summary>
 	/// <param name="auditLogApiResult">A list of raw audit log objects.</param>
 	/// <returns>The processed audit log list as readonly.</returns>

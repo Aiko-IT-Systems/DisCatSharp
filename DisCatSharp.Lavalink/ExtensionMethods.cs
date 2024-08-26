@@ -13,12 +13,12 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.Lavalink;
 
 /// <summary>
-/// The discord client extensions.
+///     The discord client extensions.
 /// </summary>
 public static class ExtensionMethods
 {
 	/// <summary>
-	/// Creates a new Lavalink client with specified settings.
+	///     Creates a new Lavalink client with specified settings.
 	/// </summary>
 	/// <param name="client">Discord client to create Lavalink instance for.</param>
 	/// <returns>Lavalink client instance.</returns>
@@ -36,7 +36,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Creates new Lavalink clients on all shards in a given sharded client.
+	///     Creates new Lavalink clients on all shards in a given sharded client.
 	/// </summary>
 	/// <param name="client">Discord sharded client to create Lavalink instances for.</param>
 	/// <returns>A dictionary of created Lavalink clients.</returns>
@@ -57,7 +57,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Gets the active instance of the Lavalink client for the DiscordClient.
+	///     Gets the active instance of the Lavalink client for the DiscordClient.
 	/// </summary>
 	/// <param name="client">Discord client to get Lavalink instance for.</param>
 	/// <returns>Lavalink client instance.</returns>
@@ -65,10 +65,10 @@ public static class ExtensionMethods
 		=> client.GetExtension<LavalinkExtension>();
 
 	/// <summary>
-	/// Retrieves a <see cref="LavalinkExtension"/> instance for each shard.
+	///     Retrieves a <see cref="LavalinkExtension" /> instance for each shard.
 	/// </summary>
-	/// <param name="client">The shard client to retrieve <see cref="LavalinkExtension"/> instances from.</param>
-	/// <returns>A dictionary containing <see cref="LavalinkExtension"/> instances for each shard.</returns>
+	/// <param name="client">The shard client to retrieve <see cref="LavalinkExtension" /> instances from.</param>
+	/// <returns>A dictionary containing <see cref="LavalinkExtension" /> instances for each shard.</returns>
 	public static async Task<IReadOnlyDictionary<int, LavalinkExtension>> GetLavalinkAsync(this DiscordShardedClient client)
 	{
 		await client.InitializeShardsAsync().ConfigureAwait(false);
@@ -81,7 +81,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Connects to this voice channel using Lavalink.
+	///     Connects to this voice channel using Lavalink.
 	/// </summary>
 	/// <param name="channel">Channel to connect to.</param>
 	/// <param name="session">Lavalink session to connect through.</param>

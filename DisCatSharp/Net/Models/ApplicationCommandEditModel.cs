@@ -7,12 +7,16 @@ using DisCatSharp.Enums;
 namespace DisCatSharp.Net.Models;
 
 /// <summary>
-/// Represents a application command edit model.
+///     Represents a application command edit model.
 /// </summary>
 public class ApplicationCommandEditModel : ObservableApiObject
 {
+	private Optional<string> _description;
+
+	private Optional<string> _name;
+
 	/// <summary>
-	/// Sets the command's new name.
+	///     Sets the command's new name.
 	/// </summary>
 	public Optional<string> Name
 	{
@@ -26,10 +30,8 @@ public class ApplicationCommandEditModel : ObservableApiObject
 		}
 	}
 
-	private Optional<string> _name;
-
 	/// <summary>
-	/// Sets the command's new description
+	///     Sets the command's new description
 	/// </summary>
 	public Optional<string> Description
 	{
@@ -43,45 +45,43 @@ public class ApplicationCommandEditModel : ObservableApiObject
 		}
 	}
 
-	private Optional<string> _description;
-
 	/// <summary>
-	/// Sets the command's name localizations.
+	///     Sets the command's name localizations.
 	/// </summary>
 	public Optional<DiscordApplicationCommandLocalization> NameLocalizations { internal get; set; }
 
 	/// <summary>
-	/// Sets the command's description localizations.
+	///     Sets the command's description localizations.
 	/// </summary>
 	public Optional<DiscordApplicationCommandLocalization> DescriptionLocalizations { internal get; set; }
 
 	/// <summary>
-	/// Sets the command's new options.
+	///     Sets the command's new options.
 	/// </summary>
 	public Optional<List<DiscordApplicationCommandOption>?> Options { internal get; set; }
 
 	/// <summary>
-	/// Sets the command's needed permissions.
+	///     Sets the command's needed permissions.
 	/// </summary>
 	public Optional<Permissions?> DefaultMemberPermissions { internal get; set; }
 
 	/// <summary>
-	/// Sets the command's allowed contexts.
+	///     Sets the command's allowed contexts.
 	/// </summary>
 	public Optional<List<InteractionContextType>?> AllowedContexts { internal get; set; }
 
 	/// <summary>
-	/// Sets the command's allowed integration types.
+	///     Sets the command's allowed integration types.
 	/// </summary>
 	public Optional<List<ApplicationCommandIntegrationTypes>?> IntegrationTypes { internal get; set; }
 
 	/// <summary>
-	/// Sets whether the command can be used in direct messages.
+	///     Sets whether the command can be used in direct messages.
 	/// </summary>
 	public Optional<bool> DmPermission { internal get; set; }
 
 	/// <summary>
-	/// Sets whether the command is marked as NSFW.
+	///     Sets whether the command is marked as NSFW.
 	/// </summary>
 	public Optional<bool> IsNsfw { internal get; set; }
 }

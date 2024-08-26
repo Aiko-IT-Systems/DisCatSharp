@@ -7,48 +7,14 @@ using DisCatSharp.Enums;
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
-/// Represents a <see cref="DisCatSharp.Entities.DiscordApplicationCommand"/> with the type of <see cref="ApplicationCommandType.User"/> or <see cref="ApplicationCommandType.Message"/>.
+///     Represents a <see cref="DisCatSharp.Entities.DiscordApplicationCommand" /> with the type of
+///     <see cref="ApplicationCommandType.User" /> or <see cref="ApplicationCommandType.Message" />.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class ContextMenuAttribute : Attribute
 {
 	/// <summary>
-	/// Gets the name of this context menu.
-	/// </summary>
-	public string Name { get; internal set; }
-
-	/// <summary>
-	/// Gets the type of this context menu.
-	/// </summary>
-	public ApplicationCommandType Type { get; internal set; }
-
-	/// <summary>
-	/// Gets this context menu's needed permissions.
-	/// </summary>
-	public Permissions? DefaultMemberPermissions { get; internal set; }
-
-	/// <summary>
-	/// Gets the allowed contexts of this context menu.
-	/// </summary>
-	public List<InteractionContextType>? AllowedContexts { get; set; }
-
-	/// <summary>
-	/// Gets the allowed integration types of this context menu.
-	/// </summary>
-	public List<ApplicationCommandIntegrationTypes>? IntegrationTypes { get; set; }
-
-	/// <summary>
-	/// Gets whether this context menu can be used in direct messages.
-	/// </summary>
-	public bool? DmPermission { get; set; }
-
-	/// <summary>
-	/// Gets whether this context menu is marked as NSFW.
-	/// </summary>
-	public bool IsNsfw { get; set; }
-
-	/// <summary>
-	/// Marks this method as a context menu.
+	///     Marks this method as a context menu.
 	/// </summary>
 	/// <param name="type">The type of the context menu.</param>
 	/// <param name="name">The name of the context menu.</param>
@@ -70,7 +36,7 @@ public sealed class ContextMenuAttribute : Attribute
 	}
 
 	/// <summary>
-	/// Marks this method as a context menu.
+	///     Marks this method as a context menu.
 	/// </summary>
 	/// <param name="type">The type of the context menu.</param>
 	/// <param name="name">The name of the context menu.</param>
@@ -93,7 +59,7 @@ public sealed class ContextMenuAttribute : Attribute
 	}
 
 	/// <summary>
-	/// Marks this method as context menu.
+	///     Marks this method as context menu.
 	/// </summary>
 	/// <param name="type">The type of the context menu.</param>
 	/// <param name="name">The name of the context menu.</param>
@@ -116,7 +82,7 @@ public sealed class ContextMenuAttribute : Attribute
 	}
 
 	/// <summary>
-	/// Marks this method as a context menu.
+	///     Marks this method as a context menu.
 	/// </summary>
 	/// <param name="type">The type of the context menu.</param>
 	/// <param name="name">The name of the context menu.</param>
@@ -138,4 +104,39 @@ public sealed class ContextMenuAttribute : Attribute
 		this.AllowedContexts = allowedContexts?.ToList();
 		this.IntegrationTypes = integrationTypes?.ToList();
 	}
+
+	/// <summary>
+	///     Gets the name of this context menu.
+	/// </summary>
+	public string Name { get; internal set; }
+
+	/// <summary>
+	///     Gets the type of this context menu.
+	/// </summary>
+	public ApplicationCommandType Type { get; internal set; }
+
+	/// <summary>
+	///     Gets this context menu's needed permissions.
+	/// </summary>
+	public Permissions? DefaultMemberPermissions { get; internal set; }
+
+	/// <summary>
+	///     Gets the allowed contexts of this context menu.
+	/// </summary>
+	public List<InteractionContextType>? AllowedContexts { get; set; }
+
+	/// <summary>
+	///     Gets the allowed integration types of this context menu.
+	/// </summary>
+	public List<ApplicationCommandIntegrationTypes>? IntegrationTypes { get; set; }
+
+	/// <summary>
+	///     Gets whether this context menu can be used in direct messages.
+	/// </summary>
+	public bool? DmPermission { get; set; }
+
+	/// <summary>
+	///     Gets whether this context menu is marked as NSFW.
+	/// </summary>
+	public bool IsNsfw { get; set; }
 }

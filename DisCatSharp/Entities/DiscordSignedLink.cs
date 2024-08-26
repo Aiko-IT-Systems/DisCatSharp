@@ -7,8 +7,8 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents a <see cref="DiscordSignedLink"/> used for attachments and other things to improve security
-/// and prevent bad actors from abusing Discord's CDN.
+///     Represents a <see cref="DiscordSignedLink" /> used for attachments and other things to improve security
+///     and prevent bad actors from abusing Discord's CDN.
 /// </summary>
 [JsonConverter(typeof(DiscordSignedLinkJsonConverter))]
 public class DiscordSignedLink : Uri
@@ -16,24 +16,9 @@ public class DiscordSignedLink : Uri
 	private readonly object _rawValue;
 
 	/// <summary>
-	/// When the signed link expires.
+	///     Initializes a new instance of the <see cref="Uri" /> class with the specified URI for signed discord links.
 	/// </summary>
-	public DateTimeOffset? ExpiresAt { get; init; }
-
-	/// <summary>
-	/// When the signed link was generated.
-	/// </summary>
-	public DateTimeOffset? IssuedAt { get; init; }
-
-	/// <summary>
-	/// The signature of the signed link.
-	/// </summary>
-	public string? Signature { get; init; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="Uri"/> class with the specified URI for signed discord links.
-	/// </summary>
-	/// <param name="uri">An <see cref="Uri"/>.</param>
+	/// <param name="uri">An <see cref="Uri" />.</param>
 	public DiscordSignedLink(Uri uri)
 		: base(uri.AbsoluteUri)
 	{
@@ -62,9 +47,9 @@ public class DiscordSignedLink : Uri
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="Uri"/> class with the specified URI for signed discord links.
+	///     Initializes a new instance of the <see cref="Uri" /> class with the specified URI for signed discord links.
 	/// </summary>
-	/// <param name="uriString">A string that identifies the resource to be represented by the <see cref="Uri"/> instance.</param>
+	/// <param name="uriString">A string that identifies the resource to be represented by the <see cref="Uri" /> instance.</param>
 	public DiscordSignedLink(string uriString)
 		: base(uriString)
 	{
@@ -93,12 +78,27 @@ public class DiscordSignedLink : Uri
 	}
 
 	/// <summary>
-	/// Represents a <see cref="DiscordSignedLinkJsonConverter"/>.
+	///     When the signed link expires.
+	/// </summary>
+	public DateTimeOffset? ExpiresAt { get; init; }
+
+	/// <summary>
+	///     When the signed link was generated.
+	/// </summary>
+	public DateTimeOffset? IssuedAt { get; init; }
+
+	/// <summary>
+	///     The signature of the signed link.
+	/// </summary>
+	public string? Signature { get; init; }
+
+	/// <summary>
+	///     Represents a <see cref="DiscordSignedLinkJsonConverter" />.
 	/// </summary>
 	internal sealed class DiscordSignedLinkJsonConverter : JsonConverter
 	{
 		/// <summary>
-		/// Writes the json.
+		///     Writes the json.
 		/// </summary>
 		/// <param name="writer">The writer.</param>
 		/// <param name="value">The value.</param>
@@ -107,7 +107,7 @@ public class DiscordSignedLink : Uri
 			=> writer.WriteValue((value as DiscordSignedLink)._rawValue);
 
 		/// <summary>
-		/// Reads the json.
+		///     Reads the json.
 		/// </summary>
 		/// <param name="reader">The reader.</param>
 		/// <param name="objectType">The object type.</param>
@@ -130,7 +130,7 @@ public class DiscordSignedLink : Uri
 		}
 
 		/// <summary>
-		/// Whether it can be converted.
+		///     Whether it can be converted.
 		/// </summary>
 		/// <param name="objectType">The object type.</param>
 		/// <returns>A bool.</returns>

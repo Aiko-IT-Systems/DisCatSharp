@@ -15,19 +15,19 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.Interactivity.EventHandling;
 
 /// <summary>
-/// A component-based version of <see cref="EventWaiter{T}"/>
+///     A component-based version of <see cref="EventWaiter{T}" />
 /// </summary>
 internal class ComponentEventWaiter : IDisposable
 {
 	private readonly DiscordClient _client;
-	private readonly ConcurrentHashSet<ComponentMatchRequest> _matchRequests = [];
 	private readonly ConcurrentHashSet<ComponentCollectRequest> _collectRequests = [];
+	private readonly InteractivityConfiguration _config;
+	private readonly ConcurrentHashSet<ComponentMatchRequest> _matchRequests = [];
 
 	private readonly DiscordFollowupMessageBuilder _message;
-	private readonly InteractivityConfiguration _config;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="ComponentEventWaiter"/> class.
+	///     Initializes a new instance of the <see cref="ComponentEventWaiter" /> class.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="config">The config.</param>
@@ -45,7 +45,17 @@ internal class ComponentEventWaiter : IDisposable
 	}
 
 	/// <summary>
-	/// Waits for a specified <see cref="ComponentMatchRequest"/>'s predicate to be fulfilled.
+	///     Disposes the waiter.
+	/// </summary>
+	public void Dispose()
+	{
+		this._matchRequests.Clear();
+		this._collectRequests.Clear();
+		this._client.ComponentInteractionCreated -= this.Handle;
+	}
+
+	/// <summary>
+	///     Waits for a specified <see cref="ComponentMatchRequest" />'s predicate to be fulfilled.
 	/// </summary>
 	/// <param name="request">The request to wait for.</param>
 	/// <returns>The returned args, or null if it timed out.</returns>
@@ -69,7 +79,8 @@ internal class ComponentEventWaiter : IDisposable
 	}
 
 	/// <summary>
-	/// Collects reactions and returns the result when the <see cref="ComponentMatchRequest"/>'s cancellation token is canceled.
+	///     Collects reactions and returns the result when the <see cref="ComponentMatchRequest" />'s cancellation token is
+	///     canceled.
 	/// </summary>
 	/// <param name="request">The request to wait on.</param>
 	/// <returns>The result from request's predicate over the period of time leading up to the token's cancellation.</returns>
@@ -93,7 +104,7 @@ internal class ComponentEventWaiter : IDisposable
 	}
 
 	/// <summary>
-	/// Handles the waiter.
+	///     Handles the waiter.
 	/// </summary>
 	/// <param name="_">The client.</param>
 	/// <param name="args">The args.</param>
@@ -116,15 +127,5 @@ internal class ComponentEventWaiter : IDisposable
 			else if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
 				await args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
 		}
-	}
-
-	/// <summary>
-	/// Disposes the waiter.
-	/// </summary>
-	public void Dispose()
-	{
-		this._matchRequests.Clear();
-		this._collectRequests.Clear();
-		this._client.ComponentInteractionCreated -= this.Handle;
 	}
 }

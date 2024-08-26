@@ -10,7 +10,7 @@ using DisCatSharp.Experimental.Entities;
 namespace DisCatSharp.Experimental;
 
 /// <summary>
-/// Represents experimental extension methods for DisCatSharp.
+///     Represents experimental extension methods for DisCatSharp.
 /// </summary>
 public static class DisCatSharpExtensions
 {
@@ -22,7 +22,7 @@ public static class DisCatSharpExtensions
 	}
 
 	/// <summary>
-	/// Gets the clyde profile for the given <paramref name="profileId"/>.
+	///     Gets the clyde profile for the given <paramref name="profileId" />.
 	/// </summary>
 	/// <param name="client">The discord client.</param>
 	/// <param name="profileId">The profile id to get.</param>
@@ -35,7 +35,7 @@ public static class DisCatSharpExtensions
 	}
 
 	/// <summary>
-	/// Gets the clyde settings for the given <paramref name="guild"/>.
+	///     Gets the clyde settings for the given <paramref name="guild" />.
 	/// </summary>
 	/// <param name="guild">The guild to get clyde's settings for.</param>
 	[RequiresFeature(Features.Override | Features.Experiment, "This method requires the guild and/or user to have access to clyde with treatment 5."),
@@ -47,7 +47,7 @@ public static class DisCatSharpExtensions
 	}
 
 	/// <summary>
-	/// Modifies the clyde settings for the given <paramref name="guild"/> by applying a <paramref name="profileId"/>.
+	///     Modifies the clyde settings for the given <paramref name="guild" /> by applying a <paramref name="profileId" />.
 	/// </summary>
 	/// <param name="guild">The guild to modify clyde's settings for.</param>
 	/// <param name="profileId">The profile id to apply.</param>
@@ -60,7 +60,7 @@ public static class DisCatSharpExtensions
 	}
 
 	/// <summary>
-	/// Modifies the clyde settings for the given <paramref name="guild"/>.
+	///     Modifies the clyde settings for the given <paramref name="guild" />.
 	/// </summary>
 	/// <param name="guild">The guild to modify clyde's settings for.</param>
 	/// <param name="name">The new name.</param>
@@ -90,7 +90,7 @@ public static class DisCatSharpExtensions
 	}
 
 	/// <summary>
-	/// Generates a basePersonality for clyde based on the given <paramref name="basePersonality"/>.
+	///     Generates a basePersonality for clyde based on the given <paramref name="basePersonality" />.
 	/// </summary>
 	/// <param name="client">The discord client.</param>
 	/// <param name="basePersonality">The base base personality to generate a new one from.</param>

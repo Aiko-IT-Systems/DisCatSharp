@@ -10,71 +10,44 @@ using DisCatSharp.VoiceNext.Codec;
 namespace DisCatSharp.VoiceNext;
 
 /// <summary>
-/// Sink used to transmit audio data via <see cref="VoiceNextConnection"/>.
+///     Sink used to transmit audio data via <see cref="VoiceNextConnection" />.
 /// </summary>
 public sealed class VoiceTransmitSink : IDisposable
 {
 	/// <summary>
-	/// Gets the PCM sample duration for this sink.
-	/// </summary>
-	public int SampleDuration { get; }
-
-	/// <summary>
-	/// Gets the length of the PCM buffer for this sink.
-	/// Written packets should adhere to this size, but the sink will adapt to fit.
-	/// </summary>
-	public int SampleLength
-		=> this._pcmBuffer.Length;
-
-	/// <summary>
-	/// Gets or sets the volume modifier for this sink. Changing this will alter the volume of the output. 1.0 is 100%.
-	/// </summary>
-	public double VolumeModifier
-	{
-		get => this._volume;
-		set
-		{
-			if (value is < 0 or > 2.5)
-				throw new ArgumentOutOfRangeException(nameof(value), "Volume needs to be between 0% and 250%.");
-
-			this._volume = value;
-		}
-	}
-
-	private double _volume = 1.0;
-
-	/// <summary>
-	/// Gets the connection.
+	///     Gets the connection.
 	/// </summary>
 	private readonly VoiceNextConnection _connection;
 
 	/// <summary>
-	/// Gets the pcm buffer.
-	/// </summary>
-	private readonly byte[] _pcmBuffer;
-
-	/// <summary>
-	/// Gets the pcm memory.
-	/// </summary>
-	private readonly Memory<byte> _pcmMemory;
-
-	/// <summary>
-	/// Gets or sets the pcm buffer length.
-	/// </summary>
-	private int _pcmBufferLength;
-
-	/// <summary>
-	/// Gets the write semaphore.
-	/// </summary>
-	private readonly SemaphoreSlim _writeSemaphore;
-
-	/// <summary>
-	/// Gets the filters.
+	///     Gets the filters.
 	/// </summary>
 	private readonly List<IVoiceFilter> _filters;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="VoiceTransmitSink"/> class.
+	///     Gets the pcm buffer.
+	/// </summary>
+	private readonly byte[] _pcmBuffer;
+
+	/// <summary>
+	///     Gets the pcm memory.
+	/// </summary>
+	private readonly Memory<byte> _pcmMemory;
+
+	/// <summary>
+	///     Gets the write semaphore.
+	/// </summary>
+	private readonly SemaphoreSlim _writeSemaphore;
+
+	/// <summary>
+	///     Gets or sets the pcm buffer length.
+	/// </summary>
+	private int _pcmBufferLength;
+
+	private double _volume = 1.0;
+
+	/// <summary>
+	///     Initializes a new instance of the <see cref="VoiceTransmitSink" /> class.
 	/// </summary>
 	/// <param name="vnc">The vnc.</param>
 	/// <param name="pcmBufferDuration">The pcm buffer duration.</param>
@@ -90,7 +63,40 @@ public sealed class VoiceTransmitSink : IDisposable
 	}
 
 	/// <summary>
-	/// Writes PCM data to the sink. The data is prepared for transmission, and enqueued.
+	///     Gets the PCM sample duration for this sink.
+	/// </summary>
+	public int SampleDuration { get; }
+
+	/// <summary>
+	///     Gets the length of the PCM buffer for this sink.
+	///     Written packets should adhere to this size, but the sink will adapt to fit.
+	/// </summary>
+	public int SampleLength
+		=> this._pcmBuffer.Length;
+
+	/// <summary>
+	///     Gets or sets the volume modifier for this sink. Changing this will alter the volume of the output. 1.0 is 100%.
+	/// </summary>
+	public double VolumeModifier
+	{
+		get => this._volume;
+		set
+		{
+			if (value is < 0 or > 2.5)
+				throw new ArgumentOutOfRangeException(nameof(value), "Volume needs to be between 0% and 250%.");
+
+			this._volume = value;
+		}
+	}
+
+	/// <summary>
+	///     Disposes .
+	/// </summary>
+	public void Dispose()
+		=> this._writeSemaphore?.Dispose();
+
+	/// <summary>
+	///     Writes PCM data to the sink. The data is prepared for transmission, and enqueued.
 	/// </summary>
 	/// <param name="buffer">PCM data buffer to send.</param>
 	/// <param name="offset">Start of the data in the buffer.</param>
@@ -100,7 +106,7 @@ public sealed class VoiceTransmitSink : IDisposable
 		=> await this.WriteAsync(new(buffer, offset, count), cancellationToken).ConfigureAwait(false);
 
 	/// <summary>
-	/// Writes PCM data to the sink. The data is prepared for transmission, and enqueued.
+	///     Writes PCM data to the sink. The data is prepared for transmission, and enqueued.
 	/// </summary>
 	/// <param name="buffer">PCM data buffer to send.</param>
 	/// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
@@ -147,7 +153,7 @@ public sealed class VoiceTransmitSink : IDisposable
 	}
 
 	/// <summary>
-	/// Flushes the rest of the PCM data in this buffer to VoiceNext packet queue.
+	///     Flushes the rest of the PCM data in this buffer to VoiceNext packet queue.
 	/// </summary>
 	/// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
 	public async Task FlushAsync(CancellationToken cancellationToken = default)
@@ -165,20 +171,20 @@ public sealed class VoiceTransmitSink : IDisposable
 	}
 
 	/// <summary>
-	/// Pauses playback.
+	///     Pauses playback.
 	/// </summary>
 	public void Pause()
 		=> this._connection.Pause();
 
 	/// <summary>
-	/// Resumes playback.
+	///     Resumes playback.
 	/// </summary>
 	/// <returns></returns>
 	public async Task ResumeAsync()
 		=> await this._connection.ResumeAsync().ConfigureAwait(false);
 
 	/// <summary>
-	/// Gets the collection of installed PCM filters, in order of their execution.
+	///     Gets the collection of installed PCM filters, in order of their execution.
 	/// </summary>
 	/// <returns>Installed PCM filters, in order of execution.</returns>
 	public IEnumerable<IVoiceFilter> GetInstalledFilters()
@@ -190,7 +196,7 @@ public sealed class VoiceTransmitSink : IDisposable
 	}
 
 	/// <summary>
-	/// Installs a new PCM filter, with specified execution order.
+	///     Installs a new PCM filter, with specified execution order.
 	/// </summary>
 	/// <param name="filter">Filter to install.</param>
 	/// <param name="order">Order of the new filter. This determines where the filter will be inserted in the filter pipeline.</param>
@@ -211,7 +217,7 @@ public sealed class VoiceTransmitSink : IDisposable
 	}
 
 	/// <summary>
-	/// Uninstalls an installed PCM filter.
+	///     Uninstalls an installed PCM filter.
 	/// </summary>
 	/// <param name="filter">Filter to uninstall.</param>
 	/// <returns>Whether the filter was uninstalled.</returns>
@@ -226,7 +232,7 @@ public sealed class VoiceTransmitSink : IDisposable
 	}
 
 	/// <summary>
-	/// Applies the filters sync.
+	///     Applies the filters sync.
 	/// </summary>
 	/// <param name="pcmSpan">The pcm span.</param>
 	private void ApplyFiltersSync(Memory<byte> pcmSpan)
@@ -248,10 +254,4 @@ public sealed class VoiceTransmitSink : IDisposable
 		for (var i = 0; i < pcm16.Length; i++)
 			pcm16[i] = (short)(pcm16[i] * this.VolumeModifier);
 	}
-
-	/// <summary>
-	/// Disposes .
-	/// </summary>
-	public void Dispose()
-		=> this._writeSemaphore?.Dispose();
 }

@@ -14,21 +14,21 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.Interactivity.EventHandling;
 
 /// <summary>
-/// EventWaiter is a class that serves as a layer between the InteractivityExtension
-/// and the DiscordClient to listen to an event and check for matches to a predicate.
+///     EventWaiter is a class that serves as a layer between the InteractivityExtension
+///     and the DiscordClient to listen to an event and check for matches to a predicate.
 /// </summary>
 /// <typeparam name="T"></typeparam>
 internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 {
 	private DiscordClient _client;
+	private ConcurrentHashSet<CollectRequest<T>> _collectRequests;
+	private bool _disposed;
 	private AsyncEvent<DiscordClient, T> _event;
 	private AsyncEventHandler<DiscordClient, T> _handler;
 	private ConcurrentHashSet<MatchRequest<T>> _matchRequests;
-	private ConcurrentHashSet<CollectRequest<T>> _collectRequests;
-	private bool _disposed;
 
 	/// <summary>
-	/// Creates a new EventWaiter object.
+	///     Creates a new EventWaiter object.
 	/// </summary>
 	/// <param name="client">Your DiscordClient</param>
 	public EventWaiter(DiscordClient client)
@@ -39,12 +39,32 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 		this._matchRequests = [];
 		this._collectRequests = [];
 		this._event = (AsyncEvent<DiscordClient, T>)handler.GetValue(this._client);
-		this._handler = new(this.HandleEvent);
+		this._handler = this.HandleEvent;
 		this._event.Register(this._handler);
 	}
 
 	/// <summary>
-	/// Waits for a match to a specific request, else returns null.
+	///     Disposes this EventWaiter
+	/// </summary>
+	public void Dispose()
+	{
+		this._disposed = true;
+		this._event?.Unregister(this._handler);
+
+		this._event = null;
+		this._handler = null;
+		this._client = null;
+
+		this._matchRequests?.Clear();
+		this._collectRequests?.Clear();
+
+		this._matchRequests = null;
+		this._collectRequests = null;
+		GC.SuppressFinalize(this);
+	}
+
+	/// <summary>
+	///     Waits for a match to a specific request, else returns null.
 	/// </summary>
 	/// <param name="request">Request to match</param>
 	/// <returns></returns>
@@ -70,7 +90,7 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 	}
 
 	/// <summary>
-	/// Collects the matches async.
+	///     Collects the matches async.
 	/// </summary>
 	/// <param name="request">The request.</param>
 	public async Task<ReadOnlyCollection<T>> CollectMatchesAsync(CollectRequest<T> request)
@@ -96,7 +116,7 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 	}
 
 	/// <summary>
-	/// Handles the event.
+	///     Handles the event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="eventArgs">The event's arguments.</param>
@@ -119,25 +139,5 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 	~EventWaiter()
 	{
 		this.Dispose();
-	}
-
-	/// <summary>
-	/// Disposes this EventWaiter
-	/// </summary>
-	public void Dispose()
-	{
-		this._disposed = true;
-		this._event?.Unregister(this._handler);
-
-		this._event = null;
-		this._handler = null;
-		this._client = null;
-
-		this._matchRequests?.Clear();
-		this._collectRequests?.Clear();
-
-		this._matchRequests = null;
-		this._collectRequests = null;
-		GC.SuppressFinalize(this);
 	}
 }

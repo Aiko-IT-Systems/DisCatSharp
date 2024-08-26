@@ -9,12 +9,12 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.CommandsNext.Converters;
 
 /// <summary>
-/// Represents a discord user converter.
+///     Represents a discord user converter.
 /// </summary>
 public class DiscordUserConverter : IArgumentConverter<DiscordUser>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -51,12 +51,12 @@ public class DiscordUserConverter : IArgumentConverter<DiscordUser>
 }
 
 /// <summary>
-/// Represents a discord member converter.
+///     Represents a discord member converter.
 /// </summary>
 public class DiscordMemberConverter : IArgumentConverter<DiscordMember>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -99,12 +99,12 @@ public class DiscordMemberConverter : IArgumentConverter<DiscordMember>
 }
 
 /// <summary>
-/// Represents a discord channel converter.
+///     Represents a discord channel converter.
 /// </summary>
 public class DiscordChannelConverter : IArgumentConverter<DiscordChannel>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -133,12 +133,12 @@ public class DiscordChannelConverter : IArgumentConverter<DiscordChannel>
 }
 
 /// <summary>
-/// Represents a discord thread channel converter.
+///     Represents a discord thread channel converter.
 /// </summary>
 public class DiscordThreadChannelConverter : IArgumentConverter<DiscordThreadChannel>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -167,12 +167,12 @@ public class DiscordThreadChannelConverter : IArgumentConverter<DiscordThreadCha
 }
 
 /// <summary>
-/// Represents a discord role converter.
+///     Represents a discord role converter.
 /// </summary>
 public class DiscordRoleConverter : IArgumentConverter<DiscordRole>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -204,12 +204,12 @@ public class DiscordRoleConverter : IArgumentConverter<DiscordRole>
 }
 
 /// <summary>
-/// Represents a discord guild converter.
+///     Represents a discord guild converter.
 /// </summary>
 public class DiscordGuildConverter : IArgumentConverter<DiscordGuild>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -230,12 +230,12 @@ public class DiscordGuildConverter : IArgumentConverter<DiscordGuild>
 }
 
 /// <summary>
-/// Represents a discord invite converter.
+///     Represents a discord invite converter.
 /// </summary>
 public class DiscordInviteConverter : IArgumentConverter<DiscordInvite>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -258,12 +258,12 @@ public class DiscordInviteConverter : IArgumentConverter<DiscordInvite>
 }
 
 /// <summary>
-/// Represents a discord message converter.
+///     Represents a discord message converter.
 /// </summary>
 public class DiscordMessageConverter : IArgumentConverter<DiscordMessage>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -301,12 +301,12 @@ public class DiscordMessageConverter : IArgumentConverter<DiscordMessage>
 }
 
 /// <summary>
-/// Represents a discord scheduled event converter.
+///     Represents a discord scheduled event converter.
 /// </summary>
 public class DiscordScheduledEventConverter : IArgumentConverter<DiscordScheduledEvent>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -356,12 +356,12 @@ public class DiscordScheduledEventConverter : IArgumentConverter<DiscordSchedule
 }
 
 /// <summary>
-/// Represents a discord emoji converter.
+///     Represents a discord emoji converter.
 /// </summary>
 public class DiscordEmojiConverter : IArgumentConverter<DiscordEmoji>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -400,12 +400,12 @@ public class DiscordEmojiConverter : IArgumentConverter<DiscordEmoji>
 }
 
 /// <summary>
-/// Represents a discord color converter.
+///     Represents a discord color converter.
 /// </summary>
 public class DiscordColorConverter : IArgumentConverter<DiscordColor>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>

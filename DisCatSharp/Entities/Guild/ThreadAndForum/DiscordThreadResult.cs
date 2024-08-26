@@ -6,12 +6,18 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents a discord thread result.
+///     Represents a discord thread result.
 /// </summary>
 public class DiscordThreadResult : ObservableApiObject
 {
 	/// <summary>
-	/// Gets the returned threads.
+	///     Initializes a new instance of the <see cref="DiscordThreadResult" /> class.
+	/// </summary>
+	internal DiscordThreadResult()
+	{ }
+
+	/// <summary>
+	///     Gets the returned threads.
 	/// </summary>
 	[JsonIgnore]
 	public Dictionary<ulong, DiscordThreadChannel> ReturnedThreads
@@ -27,21 +33,14 @@ public class DiscordThreadResult : ObservableApiObject
 	internal List<DiscordThreadChannel> Threads { get; set; }
 
 	/// <summary>
-	/// Gets the active members.
+	///     Gets the active members.
 	/// </summary>
 	[JsonProperty("members", NullValueHandling = NullValueHandling.Ignore)]
 	public List<DiscordThreadChannelMember> ActiveMembers { get; internal set; }
 
 	/// <summary>
-	/// Whether there are more results.
+	///     Whether there are more results.
 	/// </summary>
 	[JsonProperty("has_more")]
 	public bool HasMore { get; internal set; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordThreadResult"/> class.
-	/// </summary>
-	internal DiscordThreadResult()
-		: base()
-	{ }
 }

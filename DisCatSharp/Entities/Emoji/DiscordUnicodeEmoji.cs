@@ -1,7 +1,7 @@
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents a discord unicode emoji.
+///     Represents a discord unicode emoji.
 /// </summary>
 public class DiscordUnicodeEmoji
 {

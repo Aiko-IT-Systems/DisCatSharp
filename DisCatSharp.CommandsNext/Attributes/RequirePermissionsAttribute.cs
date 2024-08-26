@@ -6,26 +6,21 @@ using DisCatSharp.Enums;
 namespace DisCatSharp.CommandsNext.Attributes;
 
 /// <summary>
-/// Defines that usage of this command is restricted to members with specified permissions. This check also verifies that the bot has the same permissions.
+///     Defines that usage of this command is restricted to members with specified permissions. This check also verifies
+///     that the bot has the same permissions.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 public sealed class RequirePermissionsAttribute : CheckBaseAttribute
 {
 	/// <summary>
-	/// Gets the permissions required by this attribute.
-	/// </summary>
-	public Permissions Permissions { get; }
-
-	/// <summary>
-	/// Gets or sets this check's behaviour in DMs. True means the check will always pass in DMs, whereas false means that it will always fail.
-	/// </summary>
-	public bool IgnoreDms { get; } = true;
-
-	/// <summary>
-	/// Defines that usage of this command is restricted to members with specified permissions. This check also verifies that the bot has the same permissions.
+	///     Defines that usage of this command is restricted to members with specified permissions. This check also verifies
+	///     that the bot has the same permissions.
 	/// </summary>
 	/// <param name="permissions">Permissions required to execute this command.</param>
-	/// <param name="ignoreDms">Sets this check's behaviour in DMs. True means the check will always pass in DMs, whereas false means that it will always fail.</param>
+	/// <param name="ignoreDms">
+	///     Sets this check's behaviour in DMs. True means the check will always pass in DMs, whereas false
+	///     means that it will always fail.
+	/// </param>
 	public RequirePermissionsAttribute(Permissions permissions, bool ignoreDms = true)
 	{
 		this.Permissions = permissions;
@@ -33,7 +28,18 @@ public sealed class RequirePermissionsAttribute : CheckBaseAttribute
 	}
 
 	/// <summary>
-	/// Executes the a check.
+	///     Gets the permissions required by this attribute.
+	/// </summary>
+	public Permissions Permissions { get; }
+
+	/// <summary>
+	///     Gets or sets this check's behaviour in DMs. True means the check will always pass in DMs, whereas false means that
+	///     it will always fail.
+	/// </summary>
+	public bool IgnoreDms { get; } = true;
+
+	/// <summary>
+	///     Executes the a check.
 	/// </summary>
 	/// <param name="ctx">The command context.</param>
 	/// <param name="help">If true, help - returns true.</param>

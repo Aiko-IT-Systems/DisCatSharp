@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.Interactivity.EventHandling;
 
 /// <summary>
-/// The paginator.
+///     The paginator.
 /// </summary>
 internal class Paginator : IPaginator
 {
@@ -21,7 +21,7 @@ internal class Paginator : IPaginator
 	private ConcurrentHashSet<IPaginationRequest> _requests;
 
 	/// <summary>
-	/// Creates a new EventWaiter object.
+	///     Creates a new EventWaiter object.
 	/// </summary>
 	/// <param name="client">Discord client</param>
 	public Paginator(DiscordClient client)
@@ -35,7 +35,7 @@ internal class Paginator : IPaginator
 	}
 
 	/// <summary>
-	/// Dos the pagination async.
+	///     Dos the pagination async.
 	/// </summary>
 	/// <param name="request">The request.</param>
 	public async Task DoPaginationAsync(IPaginationRequest request)
@@ -66,7 +66,20 @@ internal class Paginator : IPaginator
 	}
 
 	/// <summary>
-	/// Handles the reaction add.
+	///     Disposes this EventWaiter
+	/// </summary>
+	public void Dispose()
+	{
+		this._client.MessageReactionAdded -= this.HandleReactionAdd;
+		this._client.MessageReactionRemoved -= this.HandleReactionRemove;
+		this._client.MessageReactionsCleared -= this.HandleReactionClear;
+		this._client = null;
+		this._requests.Clear();
+		this._requests = null;
+	}
+
+	/// <summary>
+	///     Handles the reaction add.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="eventArgs">The event's arguments.</param>
@@ -114,7 +127,7 @@ internal class Paginator : IPaginator
 	}
 
 	/// <summary>
-	/// Handles the reaction remove.
+	///     Handles the reaction remove.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="eventArgs">The event's arguments.</param>
@@ -152,7 +165,7 @@ internal class Paginator : IPaginator
 	}
 
 	/// <summary>
-	/// Handles the reaction clear.
+	///     Handles the reaction clear.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="eventArgs">The eventArgs.</param>
@@ -176,7 +189,7 @@ internal class Paginator : IPaginator
 	}
 
 	/// <summary>
-	/// Resets the reactions async.
+	///     Resets the reactions async.
 	/// </summary>
 	/// <param name="p">The p.</param>
 	private async Task ResetReactionsAsync(IPaginationRequest p)
@@ -209,7 +222,7 @@ internal class Paginator : IPaginator
 	}
 
 	/// <summary>
-	/// Paginates the async.
+	///     Paginates the async.
 	/// </summary>
 	/// <param name="p">The p.</param>
 	/// <param name="emoji">The emoji.</param>
@@ -244,18 +257,5 @@ internal class Paginator : IPaginator
 	~Paginator()
 	{
 		this.Dispose();
-	}
-
-	/// <summary>
-	/// Disposes this EventWaiter
-	/// </summary>
-	public void Dispose()
-	{
-		this._client.MessageReactionAdded -= this.HandleReactionAdd;
-		this._client.MessageReactionRemoved -= this.HandleReactionRemove;
-		this._client.MessageReactionsCleared -= this.HandleReactionClear;
-		this._client = null;
-		this._requests.Clear();
-		this._requests = null;
 	}
 }

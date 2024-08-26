@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 namespace DisCatSharp.VoiceNext.Codec;
 
 /// <summary>
-/// The helpers.
+///     The helpers.
 /// </summary>
 internal static class Helpers
 {
 	/// <summary>
-	/// Fills the buffer with 0.
+	///     Fills the buffer with 0.
 	/// </summary>
 	/// <param name="buff">The buffer.</param>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]

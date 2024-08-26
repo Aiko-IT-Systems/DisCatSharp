@@ -12,18 +12,28 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents a Discord emoji.
+///     Represents a Discord emoji.
 /// </summary>
 public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 {
+	private readonly Lazy<IReadOnlyList<ulong>> _rolesLazy;
+
 	/// <summary>
-	/// Gets the name of this emoji.
+	///     Initializes a new instance of the <see cref="DiscordEmoji" /> class.
+	/// </summary>
+	internal DiscordEmoji()
+	{
+		this._rolesLazy = new(() => new ReadOnlyCollection<ulong>(this.RolesInternal));
+	}
+
+	/// <summary>
+	///     Gets the name of this emoji.
 	/// </summary>
 	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 	public string Name { get; internal set; }
 
 	/// <summary>
-	/// Gets IDs the roles this emoji is enabled for.
+	///     Gets IDs the roles this emoji is enabled for.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<ulong> Roles => this._rolesLazy.Value;
@@ -31,35 +41,33 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<ulong> RolesInternal { get; set; } = [];
 
-	private readonly Lazy<IReadOnlyList<ulong>> _rolesLazy;
-
 	/// <summary>
-	/// Gets whether this emoji requires colons to use.
+	///     Gets whether this emoji requires colons to use.
 	/// </summary>
 	[JsonProperty("require_colons")]
 	public bool RequiresColons { get; internal set; }
 
 	/// <summary>
-	/// Gets whether this emoji is managed by an integration.
+	///     Gets whether this emoji is managed by an integration.
 	/// </summary>
 	[JsonProperty("managed")]
 	public bool IsManaged { get; internal set; }
 
 	/// <summary>
-	/// Gets whether this emoji is animated.
+	///     Gets whether this emoji is animated.
 	/// </summary>
 	[JsonProperty("animated")]
 	public bool IsAnimated { get; internal set; }
 
 	/// <summary>
-	/// Gets whether the emoji is available for use.
-	/// An emoji may not be available due to loss of server boost.
+	///     Gets whether the emoji is available for use.
+	///     An emoji may not be available due to loss of server boost.
 	/// </summary>
 	[JsonProperty("available", NullValueHandling = NullValueHandling.Ignore)]
 	public bool IsAvailable { get; internal set; }
 
 	/// <summary>
-	/// Gets the image URL of this emoji.
+	///     Gets the image URL of this emoji.
 	/// </summary>
 	[JsonIgnore]
 	public string Url
@@ -70,7 +78,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 				: $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMOJIS}/{this.Id.ToString(CultureInfo.InvariantCulture)}.png";
 
 	/// <summary>
-	/// Gets the unicode version of this emoji.
+	///     Gets the unicode version of this emoji.
 	/// </summary>
 	/// <exception cref="InvalidOperationException">Thrown if emoji is not a unicode emoji.</exception>
 	[JsonIgnore]
@@ -84,15 +92,15 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 					: throw new InvalidOperationException("Emoji is not a unicode emoji");
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordEmoji"/> class.
+	///     Checks whether this <see cref="DiscordEmoji" /> is equal to another <see cref="DiscordEmoji" />.
 	/// </summary>
-	internal DiscordEmoji()
-	{
-		this._rolesLazy = new(() => new ReadOnlyCollection<ulong>(this.RolesInternal));
-	}
+	/// <param name="e"><see cref="DiscordEmoji" /> to compare to.</param>
+	/// <returns>Whether the <see cref="DiscordEmoji" /> is equal to this <see cref="DiscordEmoji" />.</returns>
+	public bool Equals(DiscordEmoji e)
+		=> e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.Name == e.Name));
 
 	/// <summary>
-	/// Gets emoji's name in non-Unicode format (eg. :thinking: instead of the Unicode representation of the emoji).
+	///     Gets emoji's name in non-Unicode format (eg. :thinking: instead of the Unicode representation of the emoji).
 	/// </summary>
 	public string GetDiscordName()
 	{
@@ -102,7 +110,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	}
 
 	/// <summary>
-	/// Returns a string representation of this emoji.
+	///     Returns a string representation of this emoji.
 	/// </summary>
 	/// <returns>String representation of this emoji.</returns>
 	public override string ToString()
@@ -113,25 +121,17 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 			: this.Name;
 
 	/// <summary>
-	/// Checks whether this <see cref="DiscordEmoji"/> is equal to another object.
+	///     Checks whether this <see cref="DiscordEmoji" /> is equal to another object.
 	/// </summary>
 	/// <param name="obj">Object to compare to.</param>
-	/// <returns>Whether the object is equal to this <see cref="DiscordEmoji"/>.</returns>
+	/// <returns>Whether the object is equal to this <see cref="DiscordEmoji" />.</returns>
 	public override bool Equals(object obj)
 		=> this.Equals(obj as DiscordEmoji);
 
 	/// <summary>
-	/// Checks whether this <see cref="DiscordEmoji"/> is equal to another <see cref="DiscordEmoji"/>.
+	///     Gets the hash code for this <see cref="DiscordEmoji" />.
 	/// </summary>
-	/// <param name="e"><see cref="DiscordEmoji"/> to compare to.</param>
-	/// <returns>Whether the <see cref="DiscordEmoji"/> is equal to this <see cref="DiscordEmoji"/>.</returns>
-	public bool Equals(DiscordEmoji e)
-		=> e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.Name == e.Name));
-
-	/// <summary>
-	/// Gets the hash code for this <see cref="DiscordEmoji"/>.
-	/// </summary>
-	/// <returns>The hash code for this <see cref="DiscordEmoji"/>.</returns>
+	/// <returns>The hash code for this <see cref="DiscordEmoji" />.</returns>
 	public override int GetHashCode()
 	{
 		var hash = 13;
@@ -142,13 +142,13 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	}
 
 	/// <summary>
-	/// Gets the reactions string.
+	///     Gets the reactions string.
 	/// </summary>
 	internal string ToReactionString()
 		=> this.Id != 0 ? $"{this.Name}:{this.Id.ToString(CultureInfo.InvariantCulture)}" : this.Name;
 
 	/// <summary>
-	/// Gets whether the two <see cref="DiscordEmoji"/> objects are equal.
+	///     Gets whether the two <see cref="DiscordEmoji" /> objects are equal.
 	/// </summary>
 	/// <param name="e1">First emoji to compare.</param>
 	/// <param name="e2">Second emoji to compare.</param>
@@ -162,7 +162,7 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	}
 
 	/// <summary>
-	/// Gets whether the two <see cref="DiscordEmoji"/> objects are not equal.
+	///     Gets whether the two <see cref="DiscordEmoji" /> objects are not equal.
 	/// </summary>
 	/// <param name="e1">First emoji to compare.</param>
 	/// <param name="e2">Second emoji to compare.</param>
@@ -171,14 +171,14 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 		=> !(e1 == e2);
 
 	/// <summary>
-	/// Implicitly converts this emoji to its string representation.
+	///     Implicitly converts this emoji to its string representation.
 	/// </summary>
 	/// <param name="e1">Emoji to convert.</param>
 	public static implicit operator string(DiscordEmoji e1)
 		=> e1?.ToString();
 
 	/// <summary>
-	/// Checks whether specified unicode entity is a valid unicode emoji.
+	///     Checks whether specified unicode entity is a valid unicode emoji.
 	/// </summary>
 	/// <param name="unicodeEntity">Entity to check.</param>
 	/// <returns>Whether it's a valid emoji.</returns>
@@ -186,11 +186,11 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 		=> s_discordNameLookup.ContainsKey(unicodeEntity);
 
 	/// <summary>
-	/// Creates an emoji object from a unicode entity.
+	///     Creates an emoji object from a unicode entity.
 	/// </summary>
-	/// <param name="client"><see cref="BaseDiscordClient"/> to attach to the object.</param>
+	/// <param name="client"><see cref="BaseDiscordClient" /> to attach to the object.</param>
 	/// <param name="unicodeEntity">Unicode entity to create the object from.</param>
-	/// <returns>Create <see cref="DiscordEmoji"/> object.</returns>
+	/// <returns>Create <see cref="DiscordEmoji" /> object.</returns>
 	public static DiscordEmoji FromUnicode(BaseDiscordClient client, string unicodeEntity)
 		=> !IsValidUnicode(unicodeEntity)
 			? throw new ArgumentException("Specified unicode entity is not a valid unicode emoji.", nameof(unicodeEntity))
@@ -201,19 +201,19 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 			};
 
 	/// <summary>
-	/// Creates an emoji object from a unicode entity.
+	///     Creates an emoji object from a unicode entity.
 	/// </summary>
 	/// <param name="unicodeEntity">Unicode entity to create the object from.</param>
-	/// <returns>Create <see cref="DiscordEmoji"/> object.</returns>
+	/// <returns>Create <see cref="DiscordEmoji" /> object.</returns>
 	public static DiscordEmoji FromUnicode(string unicodeEntity)
 		=> FromUnicode(null, unicodeEntity);
 
 	/// <summary>
-	/// Attempts to create an emoji object from a unicode entity.
+	///     Attempts to create an emoji object from a unicode entity.
 	/// </summary>
-	/// <param name="client"><see cref="BaseDiscordClient"/> to attach to the object.</param>
+	/// <param name="client"><see cref="BaseDiscordClient" /> to attach to the object.</param>
 	/// <param name="unicodeEntity">Unicode entity to create the object from.</param>
-	/// <param name="emoji">Resulting <see cref="DiscordEmoji"/> object.</param>
+	/// <param name="emoji">Resulting <see cref="DiscordEmoji" /> object.</param>
 	/// <returns>Whether the operation was successful.</returns>
 	public static bool TryFromUnicode(BaseDiscordClient client, string unicodeEntity, out DiscordEmoji emoji)
 	{
@@ -236,20 +236,20 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	}
 
 	/// <summary>
-	/// Attempts to create an emoji object from a unicode entity.
+	///     Attempts to create an emoji object from a unicode entity.
 	/// </summary>
 	/// <param name="unicodeEntity">Unicode entity to create the object from.</param>
-	/// <param name="emoji">Resulting <see cref="DiscordEmoji"/> object.</param>
+	/// <param name="emoji">Resulting <see cref="DiscordEmoji" /> object.</param>
 	/// <returns>Whether the operation was successful.</returns>
 	public static bool TryFromUnicode(string unicodeEntity, out DiscordEmoji emoji)
 		=> TryFromUnicode(null, unicodeEntity, out emoji);
 
 	/// <summary>
-	/// Gets an emoji object from an guild emote.
+	///     Gets an emoji object from an guild emote.
 	/// </summary>
-	/// <param name="client"><see cref="BaseDiscordClient"/> to attach to the object.</param>
+	/// <param name="client"><see cref="BaseDiscordClient" /> to attach to the object.</param>
 	/// <param name="id">Id of the emote.</param>
-	/// <returns>Create <see cref="DiscordEmoji"/> object.</returns>
+	/// <returns>Create <see cref="DiscordEmoji" /> object.</returns>
 	public static DiscordEmoji FromGuildEmote(BaseDiscordClient client, ulong id)
 	{
 		if (client == null)
@@ -263,11 +263,11 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	}
 
 	/// <summary>
-	/// Gets an emoji object from an application emote.
+	///     Gets an emoji object from an application emote.
 	/// </summary>
-	/// <param name="client"><see cref="BaseDiscordClient"/> to attach to the object.</param>
+	/// <param name="client"><see cref="BaseDiscordClient" /> to attach to the object.</param>
 	/// <param name="id">Id of the emote.</param>
-	/// <returns>Create <see cref="DiscordEmoji"/> object.</returns>
+	/// <returns>Create <see cref="DiscordEmoji" /> object.</returns>
 	public static DiscordEmoji FromApplicationEmote(BaseDiscordClient client, ulong id)
 	{
 		if (client == null)
@@ -280,11 +280,11 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	}
 
 	/// <summary>
-	/// Attempts to get an emoji object from an guild emote.
+	///     Attempts to get an emoji object from an guild emote.
 	/// </summary>
-	/// <param name="client"><see cref="BaseDiscordClient"/> to attach to the object.</param>
+	/// <param name="client"><see cref="BaseDiscordClient" /> to attach to the object.</param>
 	/// <param name="id">Id of the emote.</param>
-	/// <param name="emoji">Resulting <see cref="DiscordEmoji"/> object.</param>
+	/// <param name="emoji">Resulting <see cref="DiscordEmoji" /> object.</param>
 	/// <returns>Whether the operation was successful.</returns>
 	public static bool TryFromGuildEmote(BaseDiscordClient client, ulong id, out DiscordEmoji emoji)
 	{
@@ -300,15 +300,16 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	}
 
 	/// <summary>
-	/// Gets an emoji object from emote name that includes colons (eg. :thinking:). This method also supports
-	/// skin tone variations (eg. :ok_hand::skin-tone-2:), standard emoticons (eg. :D), guild emoji, as well as application emoji
-	/// (still specified by :name:).
+	///     Gets an emoji object from emote name that includes colons (eg. :thinking:). This method also supports
+	///     skin tone variations (eg. :ok_hand::skin-tone-2:), standard emoticons (eg. :D), guild emoji, as well as application
+	///     emoji
+	///     (still specified by :name:).
 	/// </summary>
-	/// <param name="client"><see cref="BaseDiscordClient"/> to attach to the object.</param>
+	/// <param name="client"><see cref="BaseDiscordClient" /> to attach to the object.</param>
 	/// <param name="name">Name of the emote to find, including colons (eg. :thinking:).</param>
 	/// <param name="includeGuilds">Should guild emojis be included in the search.</param>
 	/// <param name="includeApplication">Should application emojis be included in the search.</param>
-	/// <returns>Create <see cref="DiscordEmoji"/> object.</returns>
+	/// <returns>Create <see cref="DiscordEmoji" /> object.</returns>
 	public static DiscordEmoji FromName(BaseDiscordClient client, string name, bool includeGuilds = true, bool includeApplication = true)
 	{
 		if (client == null)
@@ -347,27 +348,27 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	}
 
 	/// <summary>
-	/// Attempts to create an emoji object from emote name that includes colons (eg. :thinking:). This method also
-	/// supports skin tone variations (eg. :ok_hand::skin-tone-2:), standard emoticons (eg. :D), as well as guild
-	/// emoji (still specified by :name:).
+	///     Attempts to create an emoji object from emote name that includes colons (eg. :thinking:). This method also
+	///     supports skin tone variations (eg. :ok_hand::skin-tone-2:), standard emoticons (eg. :D), as well as guild
+	///     emoji (still specified by :name:).
 	/// </summary>
-	/// <param name="client"><see cref="BaseDiscordClient"/> to attach to the object.</param>
+	/// <param name="client"><see cref="BaseDiscordClient" /> to attach to the object.</param>
 	/// <param name="name">Name of the emote to find, including colons (eg. :thinking:).</param>
-	/// <param name="emoji">Resulting <see cref="DiscordEmoji"/> object.</param>
+	/// <param name="emoji">Resulting <see cref="DiscordEmoji" /> object.</param>
 	/// <returns>Whether the operation was successful.</returns>
 	public static bool TryFromName(BaseDiscordClient client, string name, out DiscordEmoji emoji)
 		=> TryFromName(client, name, true, true, out emoji);
 
 	/// <summary>
-	/// Attempts to get an emoji object from emote name that includes colons (eg. :thinking:). This method also
-	/// supports skin tone variations (eg. :ok_hand::skin-tone-2:), standard emoticons (eg. :D), as well as guild
-	/// emoji (still specified by :name:).
+	///     Attempts to get an emoji object from emote name that includes colons (eg. :thinking:). This method also
+	///     supports skin tone variations (eg. :ok_hand::skin-tone-2:), standard emoticons (eg. :D), as well as guild
+	///     emoji (still specified by :name:).
 	/// </summary>
-	/// <param name="client"><see cref="BaseDiscordClient"/> to attach to the object.</param>
+	/// <param name="client"><see cref="BaseDiscordClient" /> to attach to the object.</param>
 	/// <param name="name">Name of the emote to find, including colons (eg. :thinking:).</param>
 	/// <param name="includeGuilds">Should guild emojis be included in the search.</param>
 	/// <param name="includeApplication">Should application emojis be included in the search.</param>
-	/// <param name="emoji">Resulting <see cref="DiscordEmoji"/> object.</param>
+	/// <param name="emoji">Resulting <see cref="DiscordEmoji" /> object.</param>
 	/// <returns>Whether the operation was successful.</returns>
 	public static bool TryFromName(BaseDiscordClient client, string name, bool includeGuilds, bool includeApplication, out DiscordEmoji emoji)
 	{

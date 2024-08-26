@@ -6,30 +6,30 @@ using DisCatSharp.CommandsNext.Entities;
 namespace DisCatSharp.CommandsNext.Builders;
 
 /// <summary>
-/// Represents an interface to build a command module.
+///     Represents an interface to build a command module.
 /// </summary>
 public sealed class CommandModuleBuilder
 {
 	/// <summary>
-	/// Gets the type this build will construct a module out of.
-	/// </summary>
-	public Type Type { get; private set; }
-
-	/// <summary>
-	/// Gets the lifespan for the built module.
-	/// </summary>
-	public ModuleLifespan Lifespan { get; private set; }
-
-	/// <summary>
-	/// Creates a new command module builder.
+	///     Creates a new command module builder.
 	/// </summary>
 	public CommandModuleBuilder()
 	{ }
 
 	/// <summary>
-	/// Sets the type this builder will construct a module out of.
+	///     Gets the type this build will construct a module out of.
 	/// </summary>
-	/// <param name="t">Type to build a module out of. It has to derive from <see cref="BaseCommandModule"/>.</param>
+	public Type Type { get; private set; }
+
+	/// <summary>
+	///     Gets the lifespan for the built module.
+	/// </summary>
+	public ModuleLifespan Lifespan { get; private set; }
+
+	/// <summary>
+	///     Sets the type this builder will construct a module out of.
+	/// </summary>
+	/// <param name="t">Type to build a module out of. It has to derive from <see cref="BaseCommandModule" />.</param>
 	/// <returns>This builder.</returns>
 	public CommandModuleBuilder WithType(Type t)
 	{
@@ -41,7 +41,7 @@ public sealed class CommandModuleBuilder
 	}
 
 	/// <summary>
-	/// Lifespan to give this module.
+	///     Lifespan to give this module.
 	/// </summary>
 	/// <param name="lifespan">Lifespan for this module.</param>
 	/// <returns>This builder.</returns>
@@ -52,7 +52,7 @@ public sealed class CommandModuleBuilder
 	}
 
 	/// <summary>
-	/// Builds the command module.
+	///     Builds the command module.
 	/// </summary>
 	/// <param name="services">The services.</param>
 	internal ICommandModule Build(IServiceProvider services) =>

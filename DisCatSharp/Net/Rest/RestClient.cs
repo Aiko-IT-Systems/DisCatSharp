@@ -21,83 +21,73 @@ using Sentry;
 namespace DisCatSharp.Net;
 
 /// <summary>
-/// Represents a client used to make REST requests.
+///     Represents a client used to make REST requests.
 /// </summary>
 [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
 internal sealed class RestClient : IDisposable
 {
 	/// <summary>
-	/// Gets the http client.
-	/// </summary>
-	internal HttpClient HttpClient { get; }
-
-	/// <summary>
-	/// Gets the discord client.
-	/// </summary>
-	private readonly BaseDiscordClient? _discord;
-
-	/// <summary>
-	/// Gets a value indicating whether debug is enabled.
-	/// </summary>
-	internal bool Debug { get; set; } = false;
-
-	/// <summary>
-	/// Gets the logger.
-	/// </summary>
-	private readonly ILogger _logger;
-
-	/// <summary>
-	/// Gets the routes to hashes.
-	/// </summary>
-	private readonly ConcurrentDictionary<string, string> _routesToHashes;
-
-	/// <summary>
-	/// Gets the hashes to buckets.
-	/// </summary>
-	private readonly ConcurrentDictionary<string, RateLimitBucket> _hashesToBuckets;
-
-	/// <summary>
-	/// Gets the request queue.
-	/// </summary>
-	private readonly ConcurrentDictionary<string, int> _requestQueue;
-
-	/// <summary>
-	/// Gets the global rate limit event.
-	/// </summary>
-	private readonly AsyncManualResetEvent _globalRateLimitEvent;
-
-	/// <summary>
-	/// Gets a value indicating whether use reset after.
-	/// </summary>
-	private readonly bool _useResetAfter;
-
-	/// <summary>
-	/// Gets the bucket cleaner token source.
-	/// </summary>
-	private CancellationTokenSource? _bucketCleanerTokenSource;
-
-	/// <summary>
-	/// Gets the bucket cleanup delay.
+	///     Gets the bucket cleanup delay.
 	/// </summary>
 	private readonly TimeSpan _bucketCleanupDelay = TimeSpan.FromSeconds(60);
 
 	/// <summary>
-	/// Gets whether the bucket cleaner is running.
+	///     Gets the discord client.
+	/// </summary>
+	private readonly BaseDiscordClient? _discord;
+
+	/// <summary>
+	///     Gets the global rate limit event.
+	/// </summary>
+	private readonly AsyncManualResetEvent _globalRateLimitEvent;
+
+	/// <summary>
+	///     Gets the hashes to buckets.
+	/// </summary>
+	private readonly ConcurrentDictionary<string, RateLimitBucket> _hashesToBuckets;
+
+	/// <summary>
+	///     Gets the logger.
+	/// </summary>
+	private readonly ILogger _logger;
+
+	/// <summary>
+	///     Gets the request queue.
+	/// </summary>
+	private readonly ConcurrentDictionary<string, int> _requestQueue;
+
+	/// <summary>
+	///     Gets the routes to hashes.
+	/// </summary>
+	private readonly ConcurrentDictionary<string, string> _routesToHashes;
+
+	/// <summary>
+	///     Gets a value indicating whether use reset after.
+	/// </summary>
+	private readonly bool _useResetAfter;
+
+	/// <summary>
+	///     Gets the bucket cleaner token source.
+	/// </summary>
+	private CancellationTokenSource? _bucketCleanerTokenSource;
+
+	/// <summary>
+	///     Gets whether the bucket cleaner is running.
 	/// </summary>
 	private volatile bool _cleanerRunning;
 
 	/// <summary>
-	/// Gets the cleaner task.
+	///     Gets the cleaner task.
 	/// </summary>
 	private Task? _cleanerTask;
 
 	/// <summary>
-	/// Gets whether the client is disposed.
+	///     Gets whether the client is disposed.
 	/// </summary>
 	private volatile bool _disposed;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="RestClient"/> class.
+	///     Initializes a new instance of the <see cref="RestClient" /> class.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	internal RestClient(BaseDiscordClient client)
@@ -116,8 +106,8 @@ internal sealed class RestClient : IDisposable
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="RestClient"/> class.
-	/// This is for meta-clients, such as the <see cref="DiscordWebhookClient"/> and <see cref="DiscordOAuth2Client"/>.
+	///     Initializes a new instance of the <see cref="RestClient" /> class.
+	///     This is for meta-clients, such as the <see cref="DiscordWebhookClient" /> and <see cref="DiscordOAuth2Client" />.
 	/// </summary>
 	/// <param name="proxy">The proxy.</param>
 	/// <param name="timeout">The timeout.</param>
@@ -165,7 +155,49 @@ internal sealed class RestClient : IDisposable
 	}
 
 	/// <summary>
-	/// Gets a ratelimit bucket.
+	///     Gets the http client.
+	/// </summary>
+	internal HttpClient HttpClient { get; }
+
+	/// <summary>
+	///     Gets a value indicating whether debug is enabled.
+	/// </summary>
+	internal bool Debug { get; set; } = false;
+
+	/// <summary>
+	///     Disposes the rest client.
+	/// </summary>
+	public void Dispose()
+	{
+		ObjectDisposedException.ThrowIf(this._disposed, this);
+
+		this._disposed = true;
+
+		this._globalRateLimitEvent.Reset();
+
+		if (this._bucketCleanerTokenSource?.IsCancellationRequested is false)
+		{
+			this._bucketCleanerTokenSource?.Cancel();
+			this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task stopped.");
+		}
+
+		try
+		{
+			this._cleanerTask?.Dispose();
+			this._bucketCleanerTokenSource?.Dispose();
+			this.HttpClient?.Dispose();
+		}
+		catch
+		{ }
+
+		this._routesToHashes.Clear();
+		this._hashesToBuckets.Clear();
+		this._requestQueue.Clear();
+		GC.SuppressFinalize(this);
+	}
+
+	/// <summary>
+	///     Gets a ratelimit bucket.
 	/// </summary>
 	/// <param name="method">The method.</param>
 	/// <param name="route">The route.</param>
@@ -241,7 +273,7 @@ internal sealed class RestClient : IDisposable
 	}
 
 	/// <summary>
-	/// Executes the request.
+	///     Executes the request.
 	/// </summary>
 	/// <param name="request">The request to be executed.</param>
 	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
@@ -249,7 +281,7 @@ internal sealed class RestClient : IDisposable
 		=> request is null ? throw new ArgumentNullException(nameof(request)) : this.ExecuteRequestAsync(request, null, null, targetDebug);
 
 	/// <summary>
-	/// Executes the form data request.
+	///     Executes the form data request.
 	/// </summary>
 	/// <param name="request">The request to be executed.</param>
 	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
@@ -257,8 +289,8 @@ internal sealed class RestClient : IDisposable
 		=> request is null ? throw new ArgumentNullException(nameof(request)) : this.ExecuteFormRequestAsync(request, null, null, targetDebug);
 
 	/// <summary>
-	/// Executes the form data request.
-	/// This is to allow proper rescheduling of the first request from a bucket.
+	///     Executes the form data request.
+	///     This is to allow proper rescheduling of the first request from a bucket.
 	/// </summary>
 	/// <param name="request">The request to be executed.</param>
 	/// <param name="bucket">The bucket.</param>
@@ -459,8 +491,8 @@ internal sealed class RestClient : IDisposable
 	}
 
 	/// <summary>
-	/// Executes the request.
-	/// This is to allow proper rescheduling of the first request from a bucket.
+	///     Executes the request.
+	///     This is to allow proper rescheduling of the first request from a bucket.
 	/// </summary>
 	/// <param name="request">The request to be executed.</param>
 	/// <param name="bucket">The bucket.</param>
@@ -684,7 +716,7 @@ internal sealed class RestClient : IDisposable
 	}
 
 	/// <summary>
-	/// Fails the initial rate limit test.
+	///     Fails the initial rate limit test.
 	/// </summary>
 	/// <param name="request">The request.</param>
 	/// <param name="ratelimitTcs">The ratelimit task completion source.</param>
@@ -714,7 +746,7 @@ internal sealed class RestClient : IDisposable
 	}
 
 	/// <summary>
-	/// Waits for the initial rate limit.
+	///     Waits for the initial rate limit.
 	/// </summary>
 	/// <param name="bucket">The bucket.</param>
 	private async Task<TaskCompletionSource<bool>?> WaitForInitialRateLimit(RateLimitBucket bucket)
@@ -748,7 +780,7 @@ internal sealed class RestClient : IDisposable
 	}
 
 	/// <summary>
-	/// Builds the form data request.
+	///     Builds the form data request.
 	/// </summary>
 	/// <param name="request">The request.</param>
 	/// <returns>A http request message.</returns>
@@ -780,7 +812,7 @@ internal sealed class RestClient : IDisposable
 	}
 
 	/// <summary>
-	/// Builds the request.
+	///     Builds the request.
 	/// </summary>
 	/// <param name="request">The request.</param>
 	/// <returns>A http request message.</returns>
@@ -876,7 +908,7 @@ internal sealed class RestClient : IDisposable
 	}
 
 	/// <summary>
-	/// Handles the HTTP 429 status.
+	///     Handles the HTTP 429 status.
 	/// </summary>
 	/// <param name="response">The response.</param>
 	/// <param name="waitTask">The wait task.</param>
@@ -905,7 +937,7 @@ internal sealed class RestClient : IDisposable
 	}
 
 	/// <summary>
-	/// Updates the bucket.
+	///     Updates the bucket.
 	/// </summary>
 	/// <param name="request">The request.</param>
 	/// <param name="response">The response.</param>
@@ -1003,7 +1035,7 @@ internal sealed class RestClient : IDisposable
 	}
 
 	/// <summary>
-	/// Updates the hash caches.
+	///     Updates the hash caches.
 	/// </summary>
 	/// <param name="request">The request.</param>
 	/// <param name="bucket">The bucket.</param>
@@ -1048,7 +1080,7 @@ internal sealed class RestClient : IDisposable
 	}
 
 	/// <summary>
-	/// Cleans the buckets.
+	///     Cleans the buckets.
 	/// </summary>
 	private async Task CleanupBucketsAsync()
 	{
@@ -1109,42 +1141,10 @@ internal sealed class RestClient : IDisposable
 	}
 
 	/// <summary>
-	/// Disposes the rest client.
+	///     Disposes the rest client.
 	/// </summary>
 	~RestClient()
 	{
 		this.Dispose();
-	}
-
-	/// <summary>
-	/// Disposes the rest client.
-	/// </summary>
-	public void Dispose()
-	{
-		ObjectDisposedException.ThrowIf(this._disposed, this);
-
-		this._disposed = true;
-
-		this._globalRateLimitEvent.Reset();
-
-		if (this._bucketCleanerTokenSource?.IsCancellationRequested is false)
-		{
-			this._bucketCleanerTokenSource?.Cancel();
-			this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task stopped.");
-		}
-
-		try
-		{
-			this._cleanerTask?.Dispose();
-			this._bucketCleanerTokenSource?.Dispose();
-			this.HttpClient?.Dispose();
-		}
-		catch
-		{ }
-
-		this._routesToHashes.Clear();
-		this._hashesToBuckets.Clear();
-		this._requestQueue.Clear();
-		GC.SuppressFinalize(this);
 	}
 }

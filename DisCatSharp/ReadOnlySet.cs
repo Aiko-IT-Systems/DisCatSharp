@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 namespace DisCatSharp;
 
 /// <summary>
-/// Read-only view of a given <see cref="ISet{T}"/>.
+///     Read-only view of a given <see cref="ISet{T}" />.
 /// </summary>
 /// <typeparam name="T">Type of the items in the set.</typeparam>
 internal readonly struct ReadOnlySet<T> : IReadOnlyCollection<T>
@@ -13,7 +13,7 @@ internal readonly struct ReadOnlySet<T> : IReadOnlyCollection<T>
 	private readonly ISet<T> _underlyingSet;
 
 	/// <summary>
-	/// Creates a new read-only view of the given set.
+	///     Creates a new read-only view of the given set.
 	/// </summary>
 	/// <param name="sourceSet">Set to create a view over.</param>
 	public ReadOnlySet(ISet<T> sourceSet)
@@ -22,12 +22,12 @@ internal readonly struct ReadOnlySet<T> : IReadOnlyCollection<T>
 	}
 
 	/// <summary>
-	/// Gets the number of items in the underlying set.
+	///     Gets the number of items in the underlying set.
 	/// </summary>
 	public int Count => this._underlyingSet.Count;
 
 	/// <summary>
-	/// Returns an enumerator that iterates through this set view.
+	///     Returns an enumerator that iterates through this set view.
 	/// </summary>
 	/// <returns>Enumerator for the underlying set.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -35,7 +35,7 @@ internal readonly struct ReadOnlySet<T> : IReadOnlyCollection<T>
 		=> this._underlyingSet.GetEnumerator();
 
 	/// <summary>
-	/// Returns an enumerator that iterates through this set view.
+	///     Returns an enumerator that iterates through this set view.
 	/// </summary>
 	/// <returns>Enumerator for the underlying set.</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]

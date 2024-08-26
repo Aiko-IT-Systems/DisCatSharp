@@ -5,27 +5,27 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp;
 
 /// <summary>
-/// Represents a default logger provider.
+///     Represents a default logger provider.
 /// </summary>
 internal class DefaultLoggerProvider : ILoggerProvider
 {
 	/// <summary>
-	/// Gets the minimum log level.
+	///     Gets the minimum log level.
 	/// </summary>
 	private readonly LogLevel _minimumLevel;
 
 	/// <summary>
-	/// Gets the timestamp format.
+	///     Gets the timestamp format.
 	/// </summary>
 	private readonly string _timestampFormat;
 
 	/// <summary>
-	/// Gets a value indicating whether this <see cref="DefaultLoggerProvider"/> is disposed.
+	///     Gets a value indicating whether this <see cref="DefaultLoggerProvider" /> is disposed.
 	/// </summary>
 	private bool _isDisposed;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DefaultLoggerProvider"/> class.
+	///     Initializes a new instance of the <see cref="DefaultLoggerProvider" /> class.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	internal DefaultLoggerProvider(BaseDiscordClient client)
@@ -33,7 +33,7 @@ internal class DefaultLoggerProvider : ILoggerProvider
 	{ }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DefaultLoggerProvider"/> class.
+	///     Initializes a new instance of the <see cref="DefaultLoggerProvider" /> class.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	internal DefaultLoggerProvider(DiscordWebhookClient client)
@@ -41,7 +41,7 @@ internal class DefaultLoggerProvider : ILoggerProvider
 	{ }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DefaultLoggerProvider"/> class.
+	///     Initializes a new instance of the <see cref="DefaultLoggerProvider" /> class.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	internal DefaultLoggerProvider(DiscordOAuth2Client client)
@@ -49,7 +49,7 @@ internal class DefaultLoggerProvider : ILoggerProvider
 	{ }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DefaultLoggerProvider"/> class.
+	///     Initializes a new instance of the <see cref="DefaultLoggerProvider" /> class.
 	/// </summary>
 	/// <param name="minLevel">The min level.</param>
 	/// <param name="timestampFormat">The timestamp format.</param>
@@ -60,7 +60,7 @@ internal class DefaultLoggerProvider : ILoggerProvider
 	}
 
 	/// <summary>
-	/// Creates the logger.
+	///     Creates the logger.
 	/// </summary>
 	/// <param name="categoryName">The category name.</param>
 	public ILogger CreateLogger(string categoryName) =>
@@ -71,7 +71,7 @@ internal class DefaultLoggerProvider : ILoggerProvider
 				: new DefaultLogger(this._minimumLevel, this._timestampFormat);
 
 	/// <summary>
-	/// Disposes the logger.
+	///     Disposes the logger.
 	/// </summary>
 	public void Dispose()
 		=> this._isDisposed = true;

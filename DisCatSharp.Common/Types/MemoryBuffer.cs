@@ -9,37 +9,33 @@ using System.Runtime.InteropServices;
 namespace DisCatSharp.Common.Types;
 
 /// <summary>
-/// Provides a resizable memory buffer, which can be read from and written to. It will automatically resize whenever required.
+///     Provides a resizable memory buffer, which can be read from and written to. It will automatically resize whenever
+///     required.
 /// </summary>
 /// <typeparam name="T">Type of item to hold in the buffer.</typeparam>
 public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 {
-	/// <inheritdoc />
-	public ulong Capacity =>
-		this._segments.Aggregate(0UL, (a, x) => a + (ulong)x.Memory.Length); // .Sum() does only int
-
-	/// <inheritdoc />
-	public ulong Length { get; private set; }
-
-	/// <inheritdoc />
-	public ulong Count => this.Length / (ulong)this._itemSize;
+	private readonly bool _clear;
+	private readonly int _itemSize;
 
 	private readonly MemoryPool<byte> _pool;
+	private readonly List<IMemoryOwner<byte>> _segments;
 	private readonly int _segmentSize;
+	private bool _isDisposed;
 	private int _lastSegmentLength;
 	private int _segNo;
-	private readonly bool _clear;
-	private readonly List<IMemoryOwner<byte>> _segments;
-	private readonly int _itemSize;
-	private bool _isDisposed;
 
 	/// <summary>
-	/// Creates a new buffer with a specified segment size, specified number of initially-allocated segments, and supplied memory pool.
+	///     Creates a new buffer with a specified segment size, specified number of initially-allocated segments, and supplied
+	///     memory pool.
 	/// </summary>
 	/// <param name="segmentSize">Byte size of an individual segment. Defaults to 64KiB.</param>
 	/// <param name="initialSegmentCount">Number of segments to allocate. Defaults to 0.</param>
-	/// <param name="memPool">Memory pool to use for renting buffers. Defaults to <see cref="MemoryPool{T}.Shared"/>.</param>
-	/// <param name="clearOnDispose">Determines whether the underlying buffers should be cleared on exit. If dealing with sensitive data, it might be a good idea to set this option to true.</param>
+	/// <param name="memPool">Memory pool to use for renting buffers. Defaults to <see cref="MemoryPool{T}.Shared" />.</param>
+	/// <param name="clearOnDispose">
+	///     Determines whether the underlying buffers should be cleared on exit. If dealing with
+	///     sensitive data, it might be a good idea to set this option to true.
+	/// </param>
 	public MemoryBuffer(
 		int segmentSize = 65536, int initialSegmentCount = 0, MemoryPool<byte>? memPool = default,
 		bool clearOnDispose = false
@@ -64,6 +60,16 @@ public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 
 		this._isDisposed = false;
 	}
+
+	/// <inheritdoc />
+	public ulong Capacity =>
+		this._segments.Aggregate(0UL, (a, x) => a + (ulong)x.Memory.Length); // .Sum() does only int
+
+	/// <inheritdoc />
+	public ulong Length { get; private set; }
+
+	/// <inheritdoc />
+	public ulong Count => this.Length / (ulong)this._itemSize;
 
 	/// <inheritdoc />
 	public void Write(ReadOnlySpan<T> data)
@@ -114,57 +120,6 @@ public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 			this.WriteStreamSeekable(stream);
 		else
 			this.WriteStreamUnseekable(stream);
-	}
-
-	/// <summary>
-	/// Writes the stream seekable.
-	/// </summary>
-	/// <param name="stream">The stream.</param>
-	private void WriteStreamSeekable(Stream stream)
-	{
-		var len = (int)(stream.Length - stream.Position);
-		this.Grow(len);
-
-		var buff = new byte[this._segmentSize];
-
-		while (this._segNo < this._segments.Count && len > 0)
-		{
-			var seg = this._segments[this._segNo];
-			var mem = seg.Memory;
-			var avs = mem.Length - this._lastSegmentLength;
-			avs = avs > len
-				? len
-				: avs;
-			var dmem = mem[this._lastSegmentLength..];
-
-			var lsl = this._lastSegmentLength;
-			var slen = dmem.Span.Length - lsl;
-			_ = stream.Read(buff, 0, slen);
-			buff.AsSpan(0, slen).CopyTo(dmem.Span);
-			len -= dmem.Span.Length;
-
-			this.Length += (ulong)avs;
-			this._lastSegmentLength += avs;
-
-			if (this._lastSegmentLength != mem.Length)
-				continue;
-
-			this._segNo++;
-			this._lastSegmentLength = 0;
-		}
-	}
-
-	/// <summary>
-	/// Writes the stream unseekable.
-	/// </summary>
-	/// <param name="stream">The stream.</param>
-	private void WriteStreamUnseekable(Stream stream)
-	{
-		var read = 0;
-		var buff = new byte[this._segmentSize];
-		var buffs = buff.AsSpan();
-		while ((read = stream.Read(buff, 0, buff.Length - this._lastSegmentLength)) != 0)
-			this.Write(MemoryMarshal.Cast<byte, T>(buffs[..read]));
 	}
 
 	/// <inheritdoc />
@@ -267,7 +222,7 @@ public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 	}
 
 	/// <summary>
-	/// Disposes of any resources claimed by this buffer.
+	///     Disposes of any resources claimed by this buffer.
 	/// </summary>
 	public void Dispose()
 	{
@@ -285,7 +240,58 @@ public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
 	}
 
 	/// <summary>
-	/// Grows the.
+	///     Writes the stream seekable.
+	/// </summary>
+	/// <param name="stream">The stream.</param>
+	private void WriteStreamSeekable(Stream stream)
+	{
+		var len = (int)(stream.Length - stream.Position);
+		this.Grow(len);
+
+		var buff = new byte[this._segmentSize];
+
+		while (this._segNo < this._segments.Count && len > 0)
+		{
+			var seg = this._segments[this._segNo];
+			var mem = seg.Memory;
+			var avs = mem.Length - this._lastSegmentLength;
+			avs = avs > len
+				? len
+				: avs;
+			var dmem = mem[this._lastSegmentLength..];
+
+			var lsl = this._lastSegmentLength;
+			var slen = dmem.Span.Length - lsl;
+			_ = stream.Read(buff, 0, slen);
+			buff.AsSpan(0, slen).CopyTo(dmem.Span);
+			len -= dmem.Span.Length;
+
+			this.Length += (ulong)avs;
+			this._lastSegmentLength += avs;
+
+			if (this._lastSegmentLength != mem.Length)
+				continue;
+
+			this._segNo++;
+			this._lastSegmentLength = 0;
+		}
+	}
+
+	/// <summary>
+	///     Writes the stream unseekable.
+	/// </summary>
+	/// <param name="stream">The stream.</param>
+	private void WriteStreamUnseekable(Stream stream)
+	{
+		var read = 0;
+		var buff = new byte[this._segmentSize];
+		var buffs = buff.AsSpan();
+		while ((read = stream.Read(buff, 0, buff.Length - this._lastSegmentLength)) != 0)
+			this.Write(MemoryMarshal.Cast<byte, T>(buffs[..read]));
+	}
+
+	/// <summary>
+	///     Grows the.
 	/// </summary>
 	/// <param name="minAmount">The min amount.</param>
 	private void Grow(int minAmount)

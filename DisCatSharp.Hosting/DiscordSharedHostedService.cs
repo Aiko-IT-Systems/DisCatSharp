@@ -10,14 +10,13 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.Hosting;
 
 /// <summary>
-/// Simple Implementation for <see cref="DiscordShardedClient"/> to work as a <see cref="Microsoft.Extensions.Hosting.BackgroundService"/>
+///     Simple Implementation for <see cref="DiscordShardedClient" /> to work as a
+///     <see cref="Microsoft.Extensions.Hosting.BackgroundService" />
 /// </summary>
 public abstract class DiscordShardedHostedService : BaseHostedService, IDiscordHostedShardService
 {
-	public DiscordShardedClient ShardedClient { get; protected set; }
-
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordShardedHostedService"/> class.
+	///     Initializes a new instance of the <see cref="DiscordShardedHostedService" /> class.
 	/// </summary>
 	/// <param name="config">The config.</param>
 	/// <param name="logger">The logger.</param>
@@ -33,6 +32,8 @@ public abstract class DiscordShardedHostedService : BaseHostedService, IDiscordH
 	)
 		: base(config, logger, serviceProvider, applicationLifetime, configBotSection)
 	{ }
+
+	public DiscordShardedClient ShardedClient { get; protected set; }
 
 	protected override Task ConfigureAsync()
 	{

@@ -10,12 +10,12 @@ using DisCatSharp.Enums;
 namespace DisCatSharp.VoiceNext;
 
 /// <summary>
-/// The discord client extensions.
+///     The discord client extensions.
 /// </summary>
 public static class ExtensionMethods
 {
 	/// <summary>
-	/// Creates a new VoiceNext client with specified settings.
+	///     Creates a new VoiceNext client with specified settings.
 	/// </summary>
 	/// <param name="client">Discord client to create VoiceNext instance for.</param>
 	/// <param name="config">Configuration for the VoiceNext client.</param>
@@ -31,7 +31,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Creates new VoiceNext clients on all shards in a given sharded client.
+	///     Creates new VoiceNext clients on all shards in a given sharded client.
 	/// </summary>
 	/// <param name="client">Discord sharded client to create VoiceNext instances for.</param>
 	/// <param name="config">Configuration for the VoiceNext clients.</param>
@@ -53,7 +53,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Gets the active instance of VoiceNext client for the DiscordClient.
+	///     Gets the active instance of VoiceNext client for the DiscordClient.
 	/// </summary>
 	/// <param name="client">Discord client to get VoiceNext instance for.</param>
 	/// <returns>VoiceNext client instance.</returns>
@@ -61,10 +61,10 @@ public static class ExtensionMethods
 		=> client.GetExtension<VoiceNextExtension>();
 
 	/// <summary>
-	/// Retrieves a <see cref="VoiceNextExtension"/> instance for each shard.
+	///     Retrieves a <see cref="VoiceNextExtension" /> instance for each shard.
 	/// </summary>
-	/// <param name="client">The shard client to retrieve <see cref="VoiceNextExtension"/> instances from.</param>
-	/// <returns>A dictionary containing <see cref="VoiceNextExtension"/> instances for each shard.</returns>
+	/// <param name="client">The shard client to retrieve <see cref="VoiceNextExtension" /> instances from.</param>
+	/// <returns>A dictionary containing <see cref="VoiceNextExtension" /> instances for each shard.</returns>
 	public static async Task<IReadOnlyDictionary<int, VoiceNextExtension?>> GetVoiceNextAsync(this DiscordShardedClient client)
 	{
 		await client.InitializeShardsAsync().ConfigureAwait(false);
@@ -74,7 +74,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Connects to this voice channel using VoiceNext.
+	///     Connects to this voice channel using VoiceNext.
 	/// </summary>
 	/// <param name="channel">Channel to connect to.</param>
 	/// <returns>If successful, the VoiceNext connection.</returns>

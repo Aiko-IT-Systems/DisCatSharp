@@ -6,12 +6,12 @@ using DisCatSharp.Entities.Core;
 namespace DisCatSharp.ApplicationCommands.Entities;
 
 /// <summary>
-/// The cooldown responder.
+///     The cooldown responder.
 /// </summary>
 public interface ICooldownResponder
 {
 	/// <summary>
-	/// Responds to cooldown ratelimit hits with given response.
+	///     Responds to cooldown ratelimit hits with given response.
 	/// </summary>
 	/// <param name="context">The context.</param>
 	/// <param name="cooldownBucket">Gets the current cooldown bucket.</param>

@@ -8,39 +8,41 @@ using DisCatSharp.Configuration.Models;
 
 using Microsoft.Extensions.Configuration;
 
+using Newtonsoft.Json;
+
 namespace DisCatSharp.Hosting;
 
 internal struct ExtensionConfigResult
 {
 	/// <summary>
-	/// Gets or sets the section.
+	///     Gets or sets the section.
 	/// </summary>
 	public ConfigSection? Section { get; set; }
 
 	/// <summary>
-	/// Gets or sets the config type.
+	///     Gets or sets the config type.
 	/// </summary>
 	public Type ConfigType { get; set; }
 
 	/// <summary>
-	/// Gets or sets the implementation type.
+	///     Gets or sets the implementation type.
 	/// </summary>
 	public Type ImplementationType { get; set; }
 }
 
 /// <summary>
-/// The configuration extensions.
+///     The configuration extensions.
 /// </summary>
 internal static class ConfigurationExtensions
 {
 	/// <summary>
-	/// Find assemblies that match the names provided via <paramref name="names"/>.
+	///     Find assemblies that match the names provided via <paramref name="names" />.
 	/// </summary>
 	/// <remarks>
-	/// In some cases the assembly the user is after could be used in the application but
-	/// not appear within the <see cref="AppDomain"/>. <br/>
-	/// The workaround for this is to check the assemblies in the <see cref="AppDomain"/>, as well as referenced
-	/// assemblies. If the targeted assembly is a reference, we need to load it into our workspace to get more info.
+	///     In some cases the assembly the user is after could be used in the application but
+	///     not appear within the <see cref="AppDomain" />. <br />
+	///     The workaround for this is to check the assemblies in the <see cref="AppDomain" />, as well as referenced
+	///     assemblies. If the targeted assembly is a reference, we need to load it into our workspace to get more info.
 	/// </remarks>
 	/// <param name="names">Names of assemblies to look for</param>
 	/// <returns>Assemblies which meet the given names. No duplicates</returns>
@@ -90,12 +92,12 @@ internal static class ConfigurationExtensions
 	}
 
 	/// <summary>
-	/// Easily identify which configuration types have been added to the <paramref name="configuration"/> <br/>
-	/// This way we can dynamically load extensions without explicitly doing so
+	///     Easily identify which configuration types have been added to the <paramref name="configuration" /> <br />
+	///     This way we can dynamically load extensions without explicitly doing so
 	/// </summary>
 	/// <param name="configuration"></param>
 	/// <param name="rootName"></param>
-	/// <returns>Dictionary where Key -> Name of implemented type<br/>Value -> <see cref="ExtensionConfigResult"/></returns>
+	/// <returns>Dictionary where Key -> Name of implemented type<br />Value -> <see cref="ExtensionConfigResult" /></returns>
 	public static Dictionary<string, ExtensionConfigResult> FindImplementedExtensions(
 		this IConfiguration configuration,
 		string rootName = Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB
@@ -120,7 +122,7 @@ internal static class ConfigurationExtensions
              */
 		assemblyNames = string.IsNullOrEmpty(configuration[configuration.ConfigPath(rootName, "Using")])
 			? configuration.GetSection(configuration.ConfigPath(rootName, "Using")).Get<string[]>()
-			: Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(
+			: JsonConvert.DeserializeObject<string[]>(
 				configuration[configuration.ConfigPath(rootName, "Using")]);
 		foreach (var assembly in FindAssemblies(assemblyNames.Select(x => x.StartsWith(Constants.LibName, StringComparison.Ordinal) ? x : $"{Constants.LibName}.{x}")))
 		{

@@ -15,96 +15,77 @@ namespace DisCatSharp.Net.WebSocket;
 // weebsocket
 // not even sure whether emzi or I posted this. much love, naam.
 /// <summary>
-/// The default, native-based WebSocket client implementation.
+///     The default, native-based WebSocket client implementation.
 /// </summary>
 public class WebSocketClient : IWebSocketClient
 {
 	/// <summary>
-	/// The outgoing chunk size.
+	///     The outgoing chunk size.
 	/// </summary>
 	private const int OUTGOING_CHUNK_SIZE = 8192; // 8 KiB
 
 	/// <summary>
-	/// The incoming chunk size.
+	///     The incoming chunk size.
 	/// </summary>
 	private const int INCOMING_CHUNK_SIZE = 32768; // 32 KiB
 
 	/// <summary>
-	/// Gets the proxy settings for this client.
-	/// </summary>
-	public IWebProxy Proxy { get; }
-
-	/// <summary>
-	/// Gets the collection of default headers to send when connecting to the remote endpoint.
-	/// </summary>
-	public IReadOnlyDictionary<string, string> DefaultHeaders { get; }
-
-	/// <summary>
-	/// Gets or sets the service provider.
-	/// </summary>
-	IServiceProvider IWebSocketClient.ServiceProvider
-	{
-		get => this._serviceProvider;
-		set => this._serviceProvider = value;
-	}
-
-	/// <summary>
-	/// Gets the default headers.
+	///     Gets the default headers.
 	/// </summary>
 	private readonly Dictionary<string, string> _defaultHeaders;
 
 	/// <summary>
-	/// Gets the receiver task.
-	/// </summary>
-	private Task? _receiverTask;
-
-	/// <summary>
-	/// Gets the receiver token source, if any.
-	/// </summary>
-	private CancellationTokenSource? _receiverTokenSource;
-
-	/// <summary>
-	/// Gets the receiver token.
-	/// </summary>
-	private CancellationToken _receiverToken;
-
-	/// <summary>
-	/// Gets the sender lock.
+	///     Gets the sender lock.
 	/// </summary>
 	private readonly SemaphoreSlim _senderLock;
 
 	/// <summary>
-	/// Gets the socket token source, if any.
-	/// </summary>
-	private CancellationTokenSource? _socketTokenSource;
-
-	/// <summary>
-	/// Gets the socket token.
-	/// </summary>
-	private CancellationToken _socketToken;
-
-	/// <summary>
-	/// Gets the WebSocket instance.
-	/// </summary>
-	private ClientWebSocket? _ws;
-
-	/// <summary>
-	/// Gets a value indicating whether this client is closed.
+	///     Gets a value indicating whether this client is closed.
 	/// </summary>
 	private volatile bool _isClientClose;
 
 	/// <summary>
-	/// Gets a value indicating whether this client is connected.
+	///     Gets a value indicating whether this client is connected.
 	/// </summary>
 	private volatile bool _isConnected;
 
 	/// <summary>
-	/// Gets a value indicating whether this client is disposed.
+	///     Gets a value indicating whether this client is disposed.
 	/// </summary>
 	private bool _isDisposed;
 
 	/// <summary>
-	/// Instantiates a new WebSocket client with specified proxy settings.
+	///     Gets the receiver task.
+	/// </summary>
+	private Task? _receiverTask;
+
+	/// <summary>
+	///     Gets the receiver token.
+	/// </summary>
+	private CancellationToken _receiverToken;
+
+	/// <summary>
+	///     Gets the receiver token source, if any.
+	/// </summary>
+	private CancellationTokenSource? _receiverTokenSource;
+
+	/// <summary>
+	///     Gets the socket token.
+	/// </summary>
+	private CancellationToken _socketToken;
+
+	/// <summary>
+	///     Gets the socket token source, if any.
+	/// </summary>
+	private CancellationTokenSource? _socketTokenSource;
+
+	/// <summary>
+	///     Gets the WebSocket instance.
+	/// </summary>
+	private ClientWebSocket? _ws;
+
+	/// <summary>
+	///     Instantiates a new WebSocket client with specified proxy settings.
 	/// </summary>
 	/// <param name="proxy">Proxy settings for the client.</param>
 	/// <param name="provider">Service provider.</param>
@@ -130,7 +111,26 @@ public class WebSocketClient : IWebSocketClient
 	}
 
 	/// <summary>
-	/// Connects to a specified remote WebSocket endpoint.
+	///     Gets the proxy settings for this client.
+	/// </summary>
+	public IWebProxy Proxy { get; }
+
+	/// <summary>
+	///     Gets the collection of default headers to send when connecting to the remote endpoint.
+	/// </summary>
+	public IReadOnlyDictionary<string, string> DefaultHeaders { get; }
+
+	/// <summary>
+	///     Gets or sets the service provider.
+	/// </summary>
+	IServiceProvider IWebSocketClient.ServiceProvider
+	{
+		get => this._serviceProvider;
+		set => this._serviceProvider = value;
+	}
+
+	/// <summary>
+	///     Connects to a specified remote WebSocket endpoint.
 	/// </summary>
 	/// <param name="uri">The URI of the WebSocket endpoint.</param>
 	public async Task ConnectAsync(Uri uri)
@@ -178,7 +178,7 @@ public class WebSocketClient : IWebSocketClient
 	}
 
 	/// <summary>
-	/// Disconnects the WebSocket connection.
+	///     Disconnects the WebSocket connection.
 	/// </summary>
 	/// <param name="code">The code</param>
 	/// <param name="message">The message</param>
@@ -222,7 +222,7 @@ public class WebSocketClient : IWebSocketClient
 	}
 
 	/// <summary>
-	/// Send a message to the WebSocket server.
+	///     Send a message to the WebSocket server.
 	/// </summary>
 	/// <param name="message">The message to send.</param>
 	public async Task SendMessageAsync(string message)
@@ -257,7 +257,7 @@ public class WebSocketClient : IWebSocketClient
 	}
 
 	/// <summary>
-	/// Adds a header to the default header collection.
+	///     Adds a header to the default header collection.
 	/// </summary>
 	/// <param name="name">Name of the header to add.</param>
 	/// <param name="value">Value of the header to add.</param>
@@ -269,7 +269,7 @@ public class WebSocketClient : IWebSocketClient
 	}
 
 	/// <summary>
-	/// Removes a header from the default header collection.
+	///     Removes a header from the default header collection.
 	/// </summary>
 	/// <param name="name">Name of the header to remove.</param>
 	/// <returns>Whether the operation succeeded.</returns>
@@ -277,7 +277,7 @@ public class WebSocketClient : IWebSocketClient
 		=> this._defaultHeaders.Remove(name);
 
 	/// <summary>
-	/// Disposes of resources used by this WebSocket client instance.
+	///     Disposes of resources used by this WebSocket client instance.
 	/// </summary>
 	public void Dispose()
 	{
@@ -294,7 +294,7 @@ public class WebSocketClient : IWebSocketClient
 	}
 
 	/// <summary>
-	/// Receivers the loop.
+	///     Receivers the loop.
 	/// </summary>
 	internal async Task ReceiverLoopAsync()
 	{
@@ -382,18 +382,18 @@ public class WebSocketClient : IWebSocketClient
 	}
 
 	/// <summary>
-	/// Creates a new instance of <see cref="WebSocketClient"/>.
+	///     Creates a new instance of <see cref="WebSocketClient" />.
 	/// </summary>
 	/// <param name="proxy">Proxy to use for this client instance.</param>
 	/// <param name="provider">Service provider.</param>
-	/// <returns>An instance of <see cref="WebSocketClient"/>.</returns>
+	/// <returns>An instance of <see cref="WebSocketClient" />.</returns>
 	public static IWebSocketClient CreateNew(IWebProxy proxy, IServiceProvider provider)
 		=> new WebSocketClient(proxy, provider);
 
 #region Events
 
 	/// <summary>
-	/// Triggered when the client connects successfully.
+	///     Triggered when the client connects successfully.
 	/// </summary>
 	public event AsyncEventHandler<IWebSocketClient, SocketEventArgs> Connected
 	{
@@ -404,7 +404,7 @@ public class WebSocketClient : IWebSocketClient
 	private readonly AsyncEvent<WebSocketClient, SocketEventArgs> _connected;
 
 	/// <summary>
-	/// Triggered when the client is disconnected.
+	///     Triggered when the client is disconnected.
 	/// </summary>
 	public event AsyncEventHandler<IWebSocketClient, SocketCloseEventArgs> Disconnected
 	{
@@ -415,7 +415,7 @@ public class WebSocketClient : IWebSocketClient
 	private readonly AsyncEvent<WebSocketClient, SocketCloseEventArgs> _disconnected;
 
 	/// <summary>
-	/// Triggered when the client receives a message from the remote party.
+	///     Triggered when the client receives a message from the remote party.
 	/// </summary>
 	public event AsyncEventHandler<IWebSocketClient, SocketMessageEventArgs> MessageReceived
 	{
@@ -426,7 +426,7 @@ public class WebSocketClient : IWebSocketClient
 	private readonly AsyncEvent<WebSocketClient, SocketMessageEventArgs> _messageReceived;
 
 	/// <summary>
-	/// Triggered when an error occurs in the client.
+	///     Triggered when an error occurs in the client.
 	/// </summary>
 	public event AsyncEventHandler<IWebSocketClient, SocketErrorEventArgs> ExceptionThrown
 	{
@@ -438,7 +438,7 @@ public class WebSocketClient : IWebSocketClient
 	private IServiceProvider _serviceProvider;
 
 	/// <summary>
-	/// Events the error handler.
+	///     Events the error handler.
 	/// </summary>
 	/// <param name="asyncEvent">The event.</param>
 	/// <param name="ex">The exception.</param>

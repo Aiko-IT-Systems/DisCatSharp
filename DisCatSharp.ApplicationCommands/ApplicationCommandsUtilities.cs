@@ -11,19 +11,19 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.ApplicationCommands;
 
 /// <summary>
-/// Provides a set of utility methods for application commands.
+///     Provides a set of utility methods for application commands.
 /// </summary>
 public static class ApplicationCommandsUtilities
 {
 	/// <summary>
-	/// Whether this module is a candidate type.
+	///     Whether this module is a candidate type.
 	/// </summary>
 	/// <param name="type">The type.</param>
 	internal static bool IsModuleCandidateType(this Type type)
 		=> type.GetTypeInfo().IsModuleCandidateType();
 
 	/// <summary>
-	/// Whether this module is a candidate type.
+	///     Whether this module is a candidate type.
 	/// </summary>
 	/// <param name="ti">The type info.</param>
 	internal static bool IsModuleCandidateType(this TypeInfo ti)
@@ -72,7 +72,7 @@ public static class ApplicationCommandsUtilities
 	}
 
 	/// <summary>
-	/// Whether this is a command candidate.
+	///     Whether this is a command candidate.
 	/// </summary>
 	/// <param name="method">The method.</param>
 	/// <param name="parameters">The parameters.</param>

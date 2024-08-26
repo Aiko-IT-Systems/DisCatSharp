@@ -12,37 +12,32 @@ using Newtonsoft.Json;
 namespace DisCatSharp.VoiceNext;
 
 /// <summary>
-/// Represents VoiceNext extension, which acts as Discord voice client.
+///     Represents VoiceNext extension, which acts as Discord voice client.
 /// </summary>
 public sealed class VoiceNextExtension : BaseExtension
 {
 	/// <summary>
-	/// Gets or sets the configuration.
-	/// </summary>
-	private readonly VoiceNextConfiguration _configuration;
-
-	/// <summary>
-	/// Gets or sets the active connections.
+	///     Gets or sets the active connections.
 	/// </summary>
 	private readonly ConcurrentDictionary<ulong, VoiceNextConnection> _activeConnections;
 
 	/// <summary>
-	/// Gets or sets the voice state updates.
+	///     Gets or sets the configuration.
 	/// </summary>
-	private readonly ConcurrentDictionary<ulong, TaskCompletionSource<VoiceStateUpdateEventArgs>> _voiceStateUpdates;
+	private readonly VoiceNextConfiguration _configuration;
 
 	/// <summary>
-	/// Gets or sets the voice server updates.
+	///     Gets or sets the voice server updates.
 	/// </summary>
 	private readonly ConcurrentDictionary<ulong, TaskCompletionSource<VoiceServerUpdateEventArgs>> _voiceServerUpdates;
 
 	/// <summary>
-	/// Gets whether this connection has incoming voice enabled.
+	///     Gets or sets the voice state updates.
 	/// </summary>
-	public bool IsIncomingEnabled { get; }
+	private readonly ConcurrentDictionary<ulong, TaskCompletionSource<VoiceStateUpdateEventArgs>> _voiceStateUpdates;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="VoiceNextExtension"/> class.
+	///     Initializes a new instance of the <see cref="VoiceNextExtension" /> class.
 	/// </summary>
 	/// <param name="config">The config.</param>
 	internal VoiceNextExtension(VoiceNextConfiguration config)
@@ -56,10 +51,15 @@ public sealed class VoiceNextExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// DO NOT USE THIS MANUALLY.
+	///     Gets whether this connection has incoming voice enabled.
+	/// </summary>
+	public bool IsIncomingEnabled { get; }
+
+	/// <summary>
+	///     DO NOT USE THIS MANUALLY.
 	/// </summary>
 	/// <param name="client">DO NOT USE THIS MANUALLY.</param>
-	/// <exception cref="InvalidOperationException"/>
+	/// <exception cref="InvalidOperationException" />
 	protected internal override void Setup(DiscordClient client)
 	{
 		if (this.Client != null)
@@ -72,7 +72,7 @@ public sealed class VoiceNextExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Create a VoiceNext connection for the specified channel.
+	///     Create a VoiceNext connection for the specified channel.
 	/// </summary>
 	/// <param name="channel">Channel to connect to.</param>
 	/// <returns>VoiceNext connection for this channel.</returns>
@@ -133,14 +133,14 @@ public sealed class VoiceNextExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Gets a VoiceNext connection for specified guild.
+	///     Gets a VoiceNext connection for specified guild.
 	/// </summary>
 	/// <param name="guild">Guild to get VoiceNext connection for.</param>
 	/// <returns>VoiceNext connection for the specified guild.</returns>
 	public VoiceNextConnection GetConnection(DiscordGuild guild) => this._activeConnections.TryGetValue(guild.Id, out var value) ? value : null;
 
 	/// <summary>
-	/// Vnc_S the voice disconnected.
+	///     Vnc_S the voice disconnected.
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <returns>A Task.</returns>
@@ -163,7 +163,7 @@ public sealed class VoiceNextExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Client_S the voice state update.
+	///     Client_S the voice state update.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The e.</param>
@@ -193,7 +193,7 @@ public sealed class VoiceNextExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Client_S the voice server update.
+	///     Client_S the voice server update.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The e.</param>

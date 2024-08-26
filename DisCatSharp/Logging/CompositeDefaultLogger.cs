@@ -7,17 +7,17 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp;
 
 /// <summary>
-/// Represents a composite default logger.
+///     Represents a composite default logger.
 /// </summary>
 internal class CompositeDefaultLogger : ILogger<BaseDiscordClient>
 {
 	/// <summary>
-	/// Gets the loggers.
+	///     Gets the loggers.
 	/// </summary>
 	private readonly List<ILogger<BaseDiscordClient>> _loggers;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="CompositeDefaultLogger"/> class.
+	///     Initializes a new instance of the <see cref="CompositeDefaultLogger" /> class.
 	/// </summary>
 	/// <param name="providers">The providers.</param>
 	public CompositeDefaultLogger(IEnumerable<ILoggerProvider> providers)
@@ -28,14 +28,14 @@ internal class CompositeDefaultLogger : ILogger<BaseDiscordClient>
 	}
 
 	/// <summary>
-	/// Whether the logger is enabled.
+	///     Whether the logger is enabled.
 	/// </summary>
 	/// <param name="logLevel">The log level.</param>
 	public bool IsEnabled(LogLevel logLevel)
 		=> true;
 
 	/// <summary>
-	/// Logs an event.
+	///     Logs an event.
 	/// </summary>
 	/// <param name="logLevel">The log level.</param>
 	/// <param name="eventId">The event id.</param>
@@ -49,7 +49,7 @@ internal class CompositeDefaultLogger : ILogger<BaseDiscordClient>
 	}
 
 	/// <summary>
-	/// Begins the scope.
+	///     Begins the scope.
 	/// </summary>
 	/// <param name="state">The state.</param>
 	public IDisposable BeginScope<TState>(TState state) where TState : notnull

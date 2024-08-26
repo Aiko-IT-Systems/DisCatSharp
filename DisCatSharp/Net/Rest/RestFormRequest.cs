@@ -4,17 +4,12 @@ using System.Collections.Generic;
 namespace DisCatSharp.Net;
 
 /// <summary>
-/// Represents a form data HTTP request.
+///     Represents a form data HTTP request.
 /// </summary>
 internal sealed class RestFormRequest : BaseRestRequest
 {
 	/// <summary>
-	/// Gets the form data sent with this request.
-	/// </summary>
-	public Dictionary<string, string> FormData { get; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="RestRequest"/> class.
+	///     Initializes a new instance of the <see cref="RestRequest" /> class.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="bucket">The bucket.</param>
@@ -29,4 +24,9 @@ internal sealed class RestFormRequest : BaseRestRequest
 	{
 		this.FormData = formData;
 	}
+
+	/// <summary>
+	///     Gets the form data sent with this request.
+	/// </summary>
+	public Dictionary<string, string> FormData { get; }
 }

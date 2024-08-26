@@ -5,22 +5,22 @@ namespace DisCatSharp.VoiceNext.Entities;
 internal struct VoicePacket
 {
 	/// <summary>
-	/// Gets the bytes.
+	///     Gets the bytes.
 	/// </summary>
 	public ReadOnlyMemory<byte> Bytes { get; }
 
 	/// <summary>
-	/// Gets the millisecond duration.
+	///     Gets the millisecond duration.
 	/// </summary>
 	public int MillisecondDuration { get; }
 
 	/// <summary>
-	/// Gets or sets a value indicating whether is silence.
+	///     Gets or sets a value indicating whether is silence.
 	/// </summary>
 	public bool IsSilence { get; set; }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="VoicePacket"/> class.
+	///     Initializes a new instance of the <see cref="VoicePacket" /> class.
 	/// </summary>
 	/// <param name="bytes">The bytes.</param>
 	/// <param name="msDuration">The ms duration.</param>

@@ -7,12 +7,27 @@ using System.Threading.Tasks;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Constructs a Message to be sent.
+///     Constructs a Message to be sent.
 /// </summary>
 public sealed class DiscordMessageBuilder
 {
+	private readonly List<DiscordEmbed> _embeds = [];
+
+	internal readonly List<DiscordAttachment> AttachmentsInternal = [];
+
+	internal readonly List<DiscordActionRowComponent> ComponentsInternal = new(5);
+
+	internal readonly List<DiscordMessageFile> FilesInternal = [];
+
+	private string _content;
+
 	/// <summary>
-	/// Gets or Sets the Message to be sent.
+	///     Whether to keep previous attachments.
+	/// </summary>
+	internal bool? KeepAttachmentsInternal;
+
+	/// <summary>
+	///     Gets or Sets the Message to be sent.
 	/// </summary>
 	public string Content
 	{
@@ -26,10 +41,8 @@ public sealed class DiscordMessageBuilder
 		}
 	}
 
-	private string _content;
-
 	/// <summary>
-	/// Gets or sets the embed for the builder. This will always set the builder to have one embed.
+	///     Gets or sets the embed for the builder. This will always set the builder to have one embed.
 	/// </summary>
 	public DiscordEmbed Embed
 	{
@@ -42,92 +55,79 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Gets the Sticker to be send.
+	///     Gets the Sticker to be send.
 	/// </summary>
 	public DiscordSticker Sticker { get; set; }
 
 	/// <summary>
-	/// Gets the Embeds to be sent.
+	///     Gets the Embeds to be sent.
 	/// </summary>
 	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
 
-	private readonly List<DiscordEmbed> _embeds = [];
-
 	/// <summary>
-	/// Gets or Sets if the message should be TTS.
+	///     Gets or Sets if the message should be TTS.
 	/// </summary>
 	public bool IsTts { get; set; }
 
 	/// <summary>
-	/// Whether to keep previous attachments.
-	/// </summary>
-	internal bool? KeepAttachmentsInternal;
-
-	/// <summary>
-	/// Gets the Allowed Mentions for the message to be sent.
+	///     Gets the Allowed Mentions for the message to be sent.
 	/// </summary>
 	public List<IMention>? Mentions { get; private set; }
 
 	/// <summary>
-	/// Gets the Files to be sent in the Message.
+	///     Gets the Files to be sent in the Message.
 	/// </summary>
 	public IReadOnlyCollection<DiscordMessageFile> Files => this.FilesInternal;
 
-	internal readonly List<DiscordMessageFile> FilesInternal = [];
-
 	/// <summary>
-	/// Gets the components that will be attached to the message.
+	///     Gets the components that will be attached to the message.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> Components => this.ComponentsInternal;
 
-	internal readonly List<DiscordActionRowComponent> ComponentsInternal = new(5);
-
 	/// <summary>
-	/// Gets the Attachments to be sent in the Message.
+	///     Gets the Attachments to be sent in the Message.
 	/// </summary>
 	public IReadOnlyList<DiscordAttachment> Attachments => this.AttachmentsInternal;
 
-	internal readonly List<DiscordAttachment> AttachmentsInternal = [];
-
 	/// <summary>
-	/// Gets the Reply Message ID.
+	///     Gets the Reply Message ID.
 	/// </summary>
 	public ulong? ReplyId { get; private set; }
 
 	/// <summary>
-	/// Gets if the Reply should mention the user.
+	///     Gets if the Reply should mention the user.
 	/// </summary>
 	public bool MentionOnReply { get; private set; }
 
 	/// <summary>
-	/// Gets if the embeds should be suppressed.
+	///     Gets if the embeds should be suppressed.
 	/// </summary>
 	public bool Suppressed { get; private set; }
 
 	/// <summary>
-	/// Gets if the Reply will error if the Reply Message Id does not reference a valid message.
-	/// <para>If set to false, invalid replies are send as a regular message.</para>
-	/// <para>Defaults to false.</para>
+	///     Gets if the Reply will error if the Reply Message Id does not reference a valid message.
+	///     <para>If set to false, invalid replies are send as a regular message.</para>
+	///     <para>Defaults to false.</para>
 	/// </summary>
 	public bool FailOnInvalidReply { get; set; }
 
 	/// <summary>
-	/// Gets the nonce for the message.
+	///     Gets the nonce for the message.
 	/// </summary>
 	public string? Nonce { get; set; }
 
 	/// <summary>
-	/// Gets whether to enforce the nonce.
+	///     Gets whether to enforce the nonce.
 	/// </summary>
 	public bool EnforceNonce { get; set; }
 
 	/// <summary>
-	/// Gets the poll for this message.
+	///     Gets the poll for this message.
 	/// </summary>
 	public DiscordPollBuilder? Poll { get; private set; }
 
 	/// <summary>
-	/// Sets the nonce for the message.
+	///     Sets the nonce for the message.
 	/// </summary>
 	/// <param name="nonce">The nonce for the message. Max 25 chars.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -138,7 +138,7 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Whether to enforce the nonce.
+	///     Whether to enforce the nonce.
 	/// </summary>
 	/// <param name="enforceNonce">Controls the nonce enforcement.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -149,7 +149,7 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Sets the Content of the Message.
+	///     Sets the Content of the Message.
 	/// </summary>
 	/// <param name="content">The content to be set.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -160,7 +160,7 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Adds a sticker to the message. Sticker must be from current guild.
+	///     Adds a sticker to the message. Sticker must be from current guild.
 	/// </summary>
 	/// <param name="sticker">The sticker to add.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -171,7 +171,7 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Adds a poll to the message.
+	///     Adds a poll to the message.
 	/// </summary>
 	/// <param name="pollBuilder">The poll builder to add.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -182,7 +182,7 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Adds a row of components to a message, up to 5 components per row, and up to 5 rows per message.
+	///     Adds a row of components to a message, up to 5 components per row, and up to 5 rows per message.
 	/// </summary>
 	/// <param name="components">The components to add to the message.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -191,7 +191,7 @@ public sealed class DiscordMessageBuilder
 		=> this.AddComponents((IEnumerable<DiscordComponent>)components);
 
 	/// <summary>
-	/// Appends several rows of components to the message
+	///     Appends several rows of components to the message
 	/// </summary>
 	/// <param name="components">The rows of components to add, holding up to five each.</param>
 	/// <returns></returns>
@@ -200,7 +200,7 @@ public sealed class DiscordMessageBuilder
 		=> this.AddComponents((IEnumerable<DiscordActionRowComponent>)components);
 
 	/// <summary>
-	/// Appends several rows of components to the message
+	///     Appends several rows of components to the message
 	/// </summary>
 	/// <param name="components">The rows of components to add, holding up to five each.</param>
 	/// <returns></returns>
@@ -218,7 +218,7 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Adds a row of components to a message, up to 5 components per row, and up to 5 rows per message.
+	///     Adds a row of components to a message, up to 5 components per row, and up to 5 rows per message.
 	/// </summary>
 	/// <param name="components">The components to add to the message.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -243,7 +243,7 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Sets if the message should be TTS.
+	///     Sets if the message should be TTS.
 	/// </summary>
 	/// <param name="isTts">If TTS should be set.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -254,7 +254,7 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Sets the embed for the current builder.
+	///     Sets the embed for the current builder.
 	/// </summary>
 	/// <param name="embed">The embed that should be set.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -268,7 +268,7 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Appends an embed to the current builder.
+	///     Appends an embed to the current builder.
 	/// </summary>
 	/// <param name="embed">The embed that should be appended.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -282,7 +282,7 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Appends several embeds to the current builder.
+	///     Appends several embeds to the current builder.
 	/// </summary>
 	/// <param name="embeds">The embeds that should be appended.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -293,7 +293,7 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Sets if the message has allowed mentions.
+	///     Sets if the message has allowed mentions.
 	/// </summary>
 	/// <param name="allowedMention">The allowed Mention that should be sent.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -308,7 +308,7 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Sets if the message has allowed mentions.
+	///     Sets if the message has allowed mentions.
 	/// </summary>
 	/// <param name="allowedMentions">The allowed Mentions that should be sent.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -323,11 +323,14 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Sets if the message has files to be sent.
+	///     Sets if the message has files to be sent.
 	/// </summary>
 	/// <param name="fileName">The fileName that the file should be sent as.</param>
 	/// <param name="stream">The Stream to the file.</param>
-	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+	/// <param name="resetStreamPosition">
+	///     Tells the API Client to reset the stream position to what it was after the file is
+	///     sent.
+	/// </param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The current builder to be chained.</returns>
 	public DiscordMessageBuilder WithFile(string fileName, Stream stream, bool resetStreamPosition = false, string description = null)
@@ -347,10 +350,13 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Sets if the message has files to be sent.
+	///     Sets if the message has files to be sent.
 	/// </summary>
 	/// <param name="stream">The Stream to the file.</param>
-	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+	/// <param name="resetStreamPosition">
+	///     Tells the API Client to reset the stream position to what it was after the file is
+	///     sent.
+	/// </param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The current builder to be chained.</returns>
 	public DiscordMessageBuilder WithFile(FileStream stream, bool resetStreamPosition = false, string description = null)
@@ -370,10 +376,13 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Sets if the message has files to be sent.
+	///     Sets if the message has files to be sent.
 	/// </summary>
 	/// <param name="files">The Files that should be sent.</param>
-	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+	/// <param name="resetStreamPosition">
+	///     Tells the API Client to reset the stream position to what it was after the file is
+	///     sent.
+	/// </param>
 	/// <returns>The current builder to be chained.</returns>
 	public DiscordMessageBuilder WithFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
 	{
@@ -395,7 +404,7 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Modifies the given attachments on edit.
+	///     Modifies the given attachments on edit.
 	/// </summary>
 	/// <param name="attachments">Attachments to edit.</param>
 	/// <returns></returns>
@@ -406,7 +415,7 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Whether to keep the message attachments, if new ones are added.
+	///     Whether to keep the message attachments, if new ones are added.
 	/// </summary>
 	/// <returns></returns>
 	public DiscordMessageBuilder KeepAttachments(bool keep)
@@ -416,7 +425,7 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Sets if the message is a reply
+	///     Sets if the message is a reply
 	/// </summary>
 	/// <param name="messageId">The ID of the message to reply to.</param>
 	/// <param name="mention">If we should mention the user in the reply.</param>
@@ -438,7 +447,7 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Sends the Message to a specific channel
+	///     Sends the Message to a specific channel
 	/// </summary>
 	/// <param name="channel">The channel the message should be sent to.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -446,8 +455,11 @@ public sealed class DiscordMessageBuilder
 		=> channel.SendMessageAsync(this);
 
 	/// <summary>
-	/// Sends the modified message.
-	/// <para>Note: Message replies cannot be modified. To clear the reply, simply pass <see langword="null"/> to <see cref="WithReply"/>.</para>
+	///     Sends the modified message.
+	///     <para>
+	///         Note: Message replies cannot be modified. To clear the reply, simply pass <see langword="null" /> to
+	///         <see cref="WithReply" />.
+	///     </para>
 	/// </summary>
 	/// <param name="msg">The original Message to modify.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -455,19 +467,19 @@ public sealed class DiscordMessageBuilder
 		=> msg.ModifyAsync(this);
 
 	/// <summary>
-	/// Clears all message components on this builder.
+	///     Clears all message components on this builder.
 	/// </summary>
 	public void ClearComponents()
 		=> this.ComponentsInternal.Clear();
 
 	/// <summary>
-	/// Clears the poll from this builder.
+	///     Clears the poll from this builder.
 	/// </summary>
 	public void ClearPoll()
 		=> this.Poll = null;
 
 	/// <summary>
-	/// Allows for clearing the Message Builder so that it can be used again to send a new message.
+	///     Allows for clearing the Message Builder so that it can be used again to send a new message.
 	/// </summary>
 	public void Clear()
 	{
@@ -489,7 +501,7 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	/// Does the validation before we send a the Create/Modify request.
+	///     Does the validation before we send a the Create/Modify request.
 	/// </summary>
 	/// <param name="isModify">Tells the method to perform the Modify Validation or Create Validation.</param>
 	internal void Validate(bool isModify = false)

@@ -7,48 +7,13 @@ using DisCatSharp.Enums;
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
-/// Represents a <see cref="DisCatSharp.Entities.DiscordApplicationCommand"/>.
+///     Represents a <see cref="DisCatSharp.Entities.DiscordApplicationCommand" />.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
 public class SlashCommandAttribute : Attribute
 {
 	/// <summary>
-	/// Gets the name of this command.
-	/// </summary>
-	public string Name { get; set; }
-
-	/// <summary>
-	/// Gets the description of this command.
-	/// </summary>
-	public string Description { get; set; }
-
-	/// <summary>
-	/// Gets the needed permission of this command.
-	/// </summary>
-	public Permissions? DefaultMemberPermissions { get; set; }
-
-	/// <summary>
-	/// Gets the allowed contexts of this command.
-	/// </summary>
-	public List<InteractionContextType>? AllowedContexts { get; set; }
-
-	/// <summary>
-	/// Gets the allowed integration types of this command.
-	/// </summary>
-	public List<ApplicationCommandIntegrationTypes>? IntegrationTypes { get; set; }
-
-	/// <summary>
-	/// Gets the dm permission of this command.
-	/// </summary>
-	public bool? DmPermission { get; set; }
-
-	/// <summary>
-	/// Gets whether this command is marked as NSFW.
-	/// </summary>
-	public bool IsNsfw { get; set; }
-
-	/// <summary>
-	/// Marks this method as a slash command.
+	///     Marks this method as a slash command.
 	/// </summary>
 	/// <param name="name">The name of this slash command.</param>
 	/// <param name="description">The description of this slash command.</param>
@@ -67,7 +32,7 @@ public class SlashCommandAttribute : Attribute
 	}
 
 	/// <summary>
-	/// Marks this method as a slash command.
+	///     Marks this method as a slash command.
 	/// </summary>
 	/// <param name="name">The name of this slash command.</param>
 	/// <param name="description">The description of this slash command.</param>
@@ -87,7 +52,7 @@ public class SlashCommandAttribute : Attribute
 	}
 
 	/// <summary>
-	/// Marks this method as a slash command.
+	///     Marks this method as a slash command.
 	/// </summary>
 	/// <param name="name">The name of this slash command.</param>
 	/// <param name="description">The description of this slash command.</param>
@@ -107,7 +72,7 @@ public class SlashCommandAttribute : Attribute
 	}
 
 	/// <summary>
-	/// Marks this method as a slash command.
+	///     Marks this method as a slash command.
 	/// </summary>
 	/// <param name="name">The name of this slash command.</param>
 	/// <param name="description">The description of this slash command.</param>
@@ -126,4 +91,39 @@ public class SlashCommandAttribute : Attribute
 		this.AllowedContexts = allowedContexts?.ToList();
 		this.IntegrationTypes = integrationTypes?.ToList();
 	}
+
+	/// <summary>
+	///     Gets the name of this command.
+	/// </summary>
+	public string Name { get; set; }
+
+	/// <summary>
+	///     Gets the description of this command.
+	/// </summary>
+	public string Description { get; set; }
+
+	/// <summary>
+	///     Gets the needed permission of this command.
+	/// </summary>
+	public Permissions? DefaultMemberPermissions { get; set; }
+
+	/// <summary>
+	///     Gets the allowed contexts of this command.
+	/// </summary>
+	public List<InteractionContextType>? AllowedContexts { get; set; }
+
+	/// <summary>
+	///     Gets the allowed integration types of this command.
+	/// </summary>
+	public List<ApplicationCommandIntegrationTypes>? IntegrationTypes { get; set; }
+
+	/// <summary>
+	///     Gets the dm permission of this command.
+	/// </summary>
+	public bool? DmPermission { get; set; }
+
+	/// <summary>
+	///     Gets whether this command is marked as NSFW.
+	/// </summary>
+	public bool IsNsfw { get; set; }
 }

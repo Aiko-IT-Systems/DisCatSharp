@@ -3,12 +3,12 @@ using System.Threading.Tasks;
 namespace DisCatSharp.CommandsNext;
 
 /// <summary>
-/// Represents a base class for all command modules.
+///     Represents a base class for all command modules.
 /// </summary>
 public abstract class BaseCommandModule
 {
 	/// <summary>
-	/// Called before a command in the implementing module is executed.
+	///     Called before a command in the implementing module is executed.
 	/// </summary>
 	/// <param name="ctx">Context in which the method is being executed.</param>
 	/// <returns></returns>
@@ -16,7 +16,7 @@ public abstract class BaseCommandModule
 		=> Task.Delay(0);
 
 	/// <summary>
-	/// Called after a command in the implementing module is successfully executed.
+	///     Called after a command in the implementing module is successfully executed.
 	/// </summary>
 	/// <param name="ctx">Context in which the method is being executed.</param>
 	/// <returns></returns>

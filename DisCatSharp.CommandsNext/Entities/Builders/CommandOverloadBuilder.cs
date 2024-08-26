@@ -12,37 +12,17 @@ using DisCatSharp.CommandsNext.Exceptions;
 namespace DisCatSharp.CommandsNext.Builders;
 
 /// <summary>
-/// Represents an interface to build a command overload.
+///     Represents an interface to build a command overload.
 /// </summary>
 public sealed class CommandOverloadBuilder
 {
 	/// <summary>
-	/// Gets a value that uniquely identifies an overload.
-	/// </summary>
-	internal string ArgumentSet { get; }
-
-	/// <summary>
-	/// Gets the collection of arguments this overload takes.
-	/// </summary>
-	public IReadOnlyList<CommandArgument> Arguments { get; }
-
-	/// <summary>
-	/// Gets this overload's priority when picking a suitable one for execution.
-	/// </summary>
-	public int Priority { get; set; }
-
-	/// <summary>
-	/// Gets the overload's callable delegate.
-	/// </summary>
-	public Delegate Callable { get; set; }
-
-	/// <summary>
-	/// Gets the invocation target.
+	///     Gets the invocation target.
 	/// </summary>
 	private readonly object _invocationTarget;
 
 	/// <summary>
-	/// Creates a new command overload builder from specified method.
+	///     Creates a new command overload builder from specified method.
 	/// </summary>
 	/// <param name="method">Method to use for this overload.</param>
 	public CommandOverloadBuilder(MethodInfo method)
@@ -50,7 +30,7 @@ public sealed class CommandOverloadBuilder
 	{ }
 
 	/// <summary>
-	/// Creates a new command overload builder from specified delegate.
+	///     Creates a new command overload builder from specified delegate.
 	/// </summary>
 	/// <param name="method">Delegate to use for this overload.</param>
 	public CommandOverloadBuilder(Delegate method)
@@ -58,7 +38,7 @@ public sealed class CommandOverloadBuilder
 	{ }
 
 	/// <summary>
-	/// Prevents a default instance of the <see cref="CommandOverloadBuilder"/> class from being created.
+	///     Prevents a default instance of the <see cref="CommandOverloadBuilder" /> class from being created.
 	/// </summary>
 	/// <param name="method">The method.</param>
 	/// <param name="target">The target.</param>
@@ -140,7 +120,27 @@ public sealed class CommandOverloadBuilder
 	}
 
 	/// <summary>
-	/// Sets the priority for this command overload.
+	///     Gets a value that uniquely identifies an overload.
+	/// </summary>
+	internal string ArgumentSet { get; }
+
+	/// <summary>
+	///     Gets the collection of arguments this overload takes.
+	/// </summary>
+	public IReadOnlyList<CommandArgument> Arguments { get; }
+
+	/// <summary>
+	///     Gets this overload's priority when picking a suitable one for execution.
+	/// </summary>
+	public int Priority { get; set; }
+
+	/// <summary>
+	///     Gets the overload's callable delegate.
+	/// </summary>
+	public Delegate Callable { get; set; }
+
+	/// <summary>
+	///     Sets the priority for this command overload.
 	/// </summary>
 	/// <param name="priority">Priority for this command overload.</param>
 	/// <returns>This builder.</returns>
@@ -152,11 +152,11 @@ public sealed class CommandOverloadBuilder
 	}
 
 	/// <summary>
-	/// Builds the command overload.
+	///     Builds the command overload.
 	/// </summary>
 	internal CommandOverload Build()
 	{
-		var ovl = new CommandOverload()
+		var ovl = new CommandOverload
 		{
 			Arguments = this.Arguments,
 			Priority = this.Priority,

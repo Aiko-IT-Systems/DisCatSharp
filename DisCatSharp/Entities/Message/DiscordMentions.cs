@@ -7,54 +7,30 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Handles mentionables.
+///     Handles mentionables.
 /// </summary>
 internal class DiscordMentions : ObservableApiObject
 {
 	/// <summary>
-	/// Parse users.
+	///     Parse users.
 	/// </summary>
 	[JsonIgnore]
 	private const string PARSE_USERS = "users";
 
 	/// <summary>
-	/// Parse roles.
+	///     Parse roles.
 	/// </summary>
 	[JsonIgnore]
 	private const string PARSE_ROLES = "roles";
 
 	/// <summary>
-	/// Parse everyone.
+	///     Parse everyone.
 	/// </summary>
 	[JsonIgnore]
 	private const string PARSE_EVERYONE = "everyone";
 
 	/// <summary>
-	/// Collection roles to serialize
-	/// </summary>
-	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<ulong> Roles { get; }
-
-	/// <summary>
-	/// Collection of users to serialize
-	/// </summary>
-	[JsonProperty("users", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<ulong> Users { get; }
-
-	/// <summary>
-	/// The values to be parsed
-	/// </summary>
-	[JsonProperty("parse", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<string> Parse { get; }
-
-	/// <summary>
-	/// For replies, whether to mention the author of the message being replied to.
-	/// </summary>
-	[JsonProperty("replied_user", NullValueHandling = NullValueHandling.Ignore)]
-	public bool? RepliedUser { get; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordMentions"/> class.
+	///     Initializes a new instance of the <see cref="DiscordMentions" /> class.
 	/// </summary>
 	/// <param name="mentions">The mentions.</param>
 	/// <param name="mention">If true, mention.</param>
@@ -116,4 +92,28 @@ internal class DiscordMentions : ObservableApiObject
 		if (parse.Count > 0)
 			this.Parse = parse.ToArray();
 	}
+
+	/// <summary>
+	///     Collection roles to serialize
+	/// </summary>
+	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
+	public IReadOnlyList<ulong> Roles { get; }
+
+	/// <summary>
+	///     Collection of users to serialize
+	/// </summary>
+	[JsonProperty("users", NullValueHandling = NullValueHandling.Ignore)]
+	public IReadOnlyList<ulong> Users { get; }
+
+	/// <summary>
+	///     The values to be parsed
+	/// </summary>
+	[JsonProperty("parse", NullValueHandling = NullValueHandling.Ignore)]
+	public IReadOnlyList<string> Parse { get; }
+
+	/// <summary>
+	///     For replies, whether to mention the author of the message being replied to.
+	/// </summary>
+	[JsonProperty("replied_user", NullValueHandling = NullValueHandling.Ignore)]
+	public bool? RepliedUser { get; }
 }

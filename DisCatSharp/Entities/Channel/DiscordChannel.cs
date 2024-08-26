@@ -16,76 +16,100 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents a discord channel.
+///     Represents a discord channel.
 /// </summary>
 public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 {
+	[JsonIgnore]
+	private readonly Lazy<IReadOnlyList<DiscordOverwrite>> _permissionOverwritesLazy;
+
+	[JsonProperty("permission_overwrites", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<DiscordOverwrite> PermissionOverwritesInternal = [];
+
 	/// <summary>
-	/// Gets ID of the guild to which this channel belongs.
+	///     Initializes a new instance of the <see cref="DiscordChannel" /> class.
+	/// </summary>
+	internal DiscordChannel()
+		: base(["hashes", "guild_hashes", "owner_id", "thread_metadata", "message_count", "member_count", "total_message_sent", "member"])
+	{
+		this._permissionOverwritesLazy = new(() => new ReadOnlyCollection<DiscordOverwrite>(this.PermissionOverwritesInternal));
+	}
+
+	/// <summary>
+	///     Initializes a new instance of the <see cref="DiscordChannel" /> class.
+	/// </summary>
+	internal DiscordChannel(List<string>? ignored = null)
+		: base(ignored)
+	{
+		this._permissionOverwritesLazy = new(() => new ReadOnlyCollection<DiscordOverwrite>(this.PermissionOverwritesInternal));
+	}
+
+	/// <summary>
+	///     Gets ID of the guild to which this channel belongs.
 	/// </summary>
 	[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong? GuildId { get; internal set; }
 
 	/// <summary>
-	/// Gets the version number for this channel.
+	///     Gets the version number for this channel.
 	/// </summary>
 	[JsonProperty("version", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong Version { get; internal set; }
 
 	/// <summary>
-	/// Gets ID of the category that contains this channel.
+	///     Gets ID of the category that contains this channel.
 	/// </summary>
 	[JsonProperty("parent_id", NullValueHandling = NullValueHandling.Include)]
 	public ulong? ParentId { get; internal set; }
 
 	/// <summary>
-	/// Gets the category that contains this channel.
+	///     Gets the category that contains this channel.
 	/// </summary>
 	[JsonIgnore]
 	public DiscordChannel Parent
 		=> this.ParentId.HasValue ? this.Guild.GetChannel(this.ParentId.Value) : null;
 
 	/// <summary>
-	/// Gets the name of this channel.
+	///     Gets the name of this channel.
 	/// </summary>
 	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 	public string Name { get; internal set; }
 
 	/// <summary>
-	/// Gets the type of this channel.
+	///     Gets the type of this channel.
 	/// </summary>
 	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
 	public ChannelType Type { get; internal set; }
 
 	/// <summary>
-	/// Gets the template for new posts in this channel.
-	/// Applicable if forum channel.
+	///     Gets the template for new posts in this channel.
+	///     Applicable if forum channel.
 	/// </summary>
 	[JsonProperty("template", NullValueHandling = NullValueHandling.Ignore)]
 	public string Template { get; internal set; }
 
 	/// <summary>
-	/// Gets the position of this channel.
+	///     Gets the position of this channel.
 	/// </summary>
 	[JsonProperty("position", NullValueHandling = NullValueHandling.Ignore)]
 	public int Position { get; internal set; }
 
 	/// <summary>
-	/// Gets the flags of this channel.
+	///     Gets the flags of this channel.
 	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
 	public ChannelFlags Flags { get; internal set; }
 
 	/// <summary>
-	/// Gets the icon emoji for this channel.
-	/// Only visible and configurable on mobile with the new layout.
+	///     Gets the icon emoji for this channel.
+	///     Only visible and configurable on mobile with the new layout.
 	/// </summary>
 	[JsonProperty("icon_emoji", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordEmoji? IconEmoji { get; internal set; }
 
 	/// <summary>
-	/// Gets the theme color for this channel.
-	/// Only visible and configurable on mobile with the new layout.
+	///     Gets the theme color for this channel.
+	///     Only visible and configurable on mobile with the new layout.
 	/// </summary>
 	[JsonProperty("theme_color", NullValueHandling = NullValueHandling.Ignore)]
 	internal int? ThemeColorInt { get; set; }
@@ -94,11 +118,205 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public DiscordColor? ThemeColor
 		=> this.ThemeColorInt.HasValue ? new DiscordColor(this.ThemeColorInt.Value) : null;
 
+	/// <summary>
+	///     Gets whether this channel is a DM channel.
+	/// </summary>
+	[JsonIgnore]
+	public bool IsPrivate
+		=> this.Type is ChannelType.Private or ChannelType.Group;
+
+	/// <summary>
+	///     Gets whether this channel is a channel category.
+	/// </summary>
+	[JsonIgnore]
+	public bool IsCategory
+		=> this.Type == ChannelType.Category;
+
+	/// <summary>
+	///     Gets whether this channel is a stage channel.
+	/// </summary>
+	[JsonIgnore]
+	public bool IsStage
+		=> this.Type == ChannelType.Stage;
+
+	/// <summary>
+	///     Gets the guild to which this channel belongs.
+	/// </summary>
+	[JsonIgnore]
+	public DiscordGuild Guild
+		=> this.GuildId.HasValue && this.Discord.Guilds.TryGetValue(this.GuildId.Value, out var guild) ? guild : null;
+
+	/// <summary>
+	///     Gets a collection of permission overwrites for this channel.
+	/// </summary>
+	[JsonIgnore]
+	public IReadOnlyList<DiscordOverwrite> PermissionOverwrites
+		=> this._permissionOverwritesLazy.Value;
+
+	/// <summary>
+	///     Gets the channel's topic. This is applicable to text channels only.
+	/// </summary>
+	[JsonProperty("topic", NullValueHandling = NullValueHandling.Ignore)]
+	public string Topic { get; internal set; }
+
+	/// <summary>
+	///     Gets the ID of the last message sent in this channel. This is applicable to text channels only.
+	/// </summary>
+	[JsonProperty("last_message_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? LastMessageId { get; internal set; }
+
+	/// <summary>
+	///     Gets this channel's bitrate. This is applicable to voice channels only.
+	/// </summary>
+	[JsonProperty("bitrate", NullValueHandling = NullValueHandling.Ignore)]
+	public int? Bitrate { get; internal set; }
+
+	/// <summary>
+	///     Gets this channel's user limit. This is applicable to voice channels only.
+	/// </summary>
+	[JsonProperty("user_limit", NullValueHandling = NullValueHandling.Ignore)]
+	public int? UserLimit { get; internal set; }
+
+	/// <summary>
+	///     <para>Gets the slow mode delay configured for this channel.</para>
+	///     <para>
+	///         All bots, as well as users with <see cref="Permissions.ManageChannels" /> or
+	///         <see cref="Permissions.ManageMessages" /> permissions in the channel are exempt from slow mode.
+	///     </para>
+	/// </summary>
+	[JsonProperty("rate_limit_per_user", NullValueHandling = NullValueHandling.Ignore)]
+	public int? PerUserRateLimit { get; internal set; }
+
+	/// <summary>
+	///     <para>Gets the slow mode delay configured for this channel for post creations.</para>
+	///     <para>
+	///         All bots, as well as users with <see cref="Permissions.ManageChannels" /> or
+	///         <see cref="Permissions.ManageMessages" /> permissions in the channel are exempt from slow mode.
+	///     </para>
+	/// </summary>
+	[JsonProperty("default_thread_rate_limit_per_user", NullValueHandling = NullValueHandling.Ignore)]
+	public int? PostCreateUserRateLimit { get; internal set; }
+
+	/// <summary>
+	///     Gets this channel's video quality mode. This is applicable to voice channels only.
+	/// </summary>
+	[JsonProperty("video_quality_mode", NullValueHandling = NullValueHandling.Ignore)]
+	public VideoQualityMode? QualityMode { get; internal set; }
+
+	/// <summary>
+	///     List of available tags for forum posts.
+	/// </summary>
+	[JsonIgnore]
+	public IReadOnlyList<ForumPostTag> AvailableTags => this.InternalAvailableTags;
+
+	/// <summary>
+	///     List of available tags for forum posts.
+	/// </summary>
+	[JsonProperty("available_tags", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<ForumPostTag> InternalAvailableTags { get; set; } = [];
+
+	/// <summary>
+	///     List of available tags for forum posts.
+	/// </summary>
+	[JsonProperty("default_reaction_emoji", NullValueHandling = NullValueHandling.Ignore)]
+	public ForumReactionEmoji DefaultReactionEmoji { get; internal set; }
+
+	[JsonProperty("default_sort_order", NullValueHandling = NullValueHandling.Include)]
+	public ForumPostSortOrder? DefaultSortOrder { get; internal set; }
+
+	/// <summary>
+	///     Gets the default forum layout for this channel
+	/// </summary>
+	[JsonProperty("default_forum_layout", NullValueHandling = NullValueHandling.Ignore)]
+	public ForumLayout? DefaultForumLayout { get; internal set; }
+
+	/// <summary>
+	///     Gets when the last pinned message was pinned.
+	/// </summary>
+	[JsonIgnore]
+	public DateTimeOffset? LastPinTimestamp
+		=> !string.IsNullOrWhiteSpace(this.LastPinTimestampRaw) && DateTimeOffset.TryParse(this.LastPinTimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ? dto : null;
+
+	/// <summary>
+	///     Gets when the last pinned message was pinned as raw string.
+	/// </summary>
+	[JsonProperty("last_pin_timestamp", NullValueHandling = NullValueHandling.Ignore)]
+	internal string LastPinTimestampRaw { get; set; }
+
+	/// <summary>
+	///     Gets this channel's default duration for newly created threads, in minutes, to automatically archive the thread
+	///     after recent activity.
+	/// </summary>
+	[JsonProperty("default_auto_archive_duration", NullValueHandling = NullValueHandling.Ignore)]
+	public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration { get; internal set; }
+
+	/// <summary>
+	///     Gets this channel's mention string.
+	/// </summary>
+	[JsonIgnore]
+	public string Mention
+		=> this.Mention();
+
+	/// <summary>
+	///     Gets this channel's children. This applies only to channel categories.
+	/// </summary>
+	[JsonIgnore]
+	public IReadOnlyList<DiscordChannel> Children =>
+		!this.IsCategory
+			? throw new ArgumentException("Only channel categories contain children.")
+			: this.Guild.ChannelsInternal.Values.Where(e => e.ParentId == this.Id).ToList();
+
+	/// <summary>
+	///     Gets the list of members currently in the channel (if voice channel), or members who can see the channel
+	///     (otherwise).
+	/// </summary>
+	[JsonIgnore]
+	public virtual IReadOnlyList<DiscordMember> Users =>
+		this.Guild == null
+			? throw new InvalidOperationException("Cannot query users outside of guild channels.")
+			: this.IsVoiceJoinable()
+				? this.Guild.Members.Values.Where(x => x.VoiceState?.ChannelId == this.Id).ToList()
+				: this.Guild.Members.Values.Where(x => (this.PermissionsFor(x) & Permissions.AccessChannels) == Permissions.AccessChannels).ToList();
+
+	/// <summary>
+	///     Gets whether this channel is an NSFW channel.
+	/// </summary>
+	[JsonProperty("nsfw")]
+	public bool IsNsfw { get; internal set; }
+
+	/// <summary>
+	///     Gets this channel's region id (if voice channel).
+	/// </summary>
+	[JsonProperty("rtc_region", NullValueHandling = NullValueHandling.Ignore)]
+	internal string RtcRegionId { get; set; }
+
+	/// <summary>
+	///     Gets this channel's region override (if voice channel).
+	/// </summary>
+	[JsonIgnore]
+	public DiscordVoiceRegion RtcRegion
+		=> this.RtcRegionId != null ? this.Discord.VoiceRegions[this.RtcRegionId] : null;
+
+	/// <summary>
+	///     Only sent on the resolved channels of interaction responses for application commands.
+	///     Gets the permissions of the user in this channel who invoked the command.
+	/// </summary>
+	[JsonProperty("permissions", NullValueHandling = NullValueHandling.Ignore)]
+	public Permissions? UserPermissions { get; internal set; }
+
+	/// <summary>
+	///     Checks whether this <see cref="DiscordChannel" /> is equal to another <see cref="DiscordChannel" />.
+	/// </summary>
+	/// <param name="e"><see cref="DiscordChannel" /> to compare to.</param>
+	/// <returns>Whether the <see cref="DiscordChannel" /> is equal to this <see cref="DiscordChannel" />.</returns>
+	public bool Equals(DiscordChannel e)
+		=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
+
 	// TODO: Voice channel statuses aka topic.
 
 	/// <summary>
-	/// Gets the maximum available position to move the channel to.
-	/// This can contain outdated information.
+	///     Gets the maximum available position to move the channel to.
+	///     This can contain outdated information.
 	/// </summary>
 	public int GetMaxPosition()
 	{
@@ -113,7 +331,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Gets the minimum available position to move the channel to.
+	///     Gets the minimum available position to move the channel to.
 	/// </summary>
 	public int GetMinPosition()
 	{
@@ -128,215 +346,55 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Gets whether this channel is a DM channel.
+	///     Checks whether this <see cref="DiscordChannel" /> is equal to another object.
 	/// </summary>
-	[JsonIgnore]
-	public bool IsPrivate
-		=> this.Type is ChannelType.Private or ChannelType.Group;
+	/// <param name="obj">Object to compare to.</param>
+	/// <returns>Whether the object is equal to this <see cref="DiscordChannel" />.</returns>
+	public override bool Equals(object obj)
+		=> this.Equals(obj as DiscordChannel);
 
 	/// <summary>
-	/// Gets whether this channel is a channel category.
+	///     Gets the hash code for this <see cref="DiscordChannel" />.
 	/// </summary>
-	[JsonIgnore]
-	public bool IsCategory
-		=> this.Type == ChannelType.Category;
+	/// <returns>The hash code for this <see cref="DiscordChannel" />.</returns>
+	public override int GetHashCode()
+		=> this.Id.GetHashCode();
 
 	/// <summary>
-	/// Gets whether this channel is a stage channel.
+	///     Gets whether the two <see cref="DiscordChannel" /> objects are equal.
 	/// </summary>
-	[JsonIgnore]
-	public bool IsStage
-		=> this.Type == ChannelType.Stage;
-
-	/// <summary>
-	/// Gets the guild to which this channel belongs.
-	/// </summary>
-	[JsonIgnore]
-	public DiscordGuild Guild
-		=> this.GuildId.HasValue && this.Discord.Guilds.TryGetValue(this.GuildId.Value, out var guild) ? guild : null;
-
-	/// <summary>
-	/// Gets a collection of permission overwrites for this channel.
-	/// </summary>
-	[JsonIgnore]
-	public IReadOnlyList<DiscordOverwrite> PermissionOverwrites
-		=> this._permissionOverwritesLazy.Value;
-
-	[JsonProperty("permission_overwrites", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordOverwrite> PermissionOverwritesInternal = [];
-
-	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordOverwrite>> _permissionOverwritesLazy;
-
-	/// <summary>
-	/// Gets the channel's topic. This is applicable to text channels only.
-	/// </summary>
-	[JsonProperty("topic", NullValueHandling = NullValueHandling.Ignore)]
-	public string Topic { get; internal set; }
-
-	/// <summary>
-	/// Gets the ID of the last message sent in this channel. This is applicable to text channels only.
-	/// </summary>
-	[JsonProperty("last_message_id", NullValueHandling = NullValueHandling.Ignore)]
-	public ulong? LastMessageId { get; internal set; }
-
-	/// <summary>
-	/// Gets this channel's bitrate. This is applicable to voice channels only.
-	/// </summary>
-	[JsonProperty("bitrate", NullValueHandling = NullValueHandling.Ignore)]
-	public int? Bitrate { get; internal set; }
-
-	/// <summary>
-	/// Gets this channel's user limit. This is applicable to voice channels only.
-	/// </summary>
-	[JsonProperty("user_limit", NullValueHandling = NullValueHandling.Ignore)]
-	public int? UserLimit { get; internal set; }
-
-	/// <summary>
-	/// <para>Gets the slow mode delay configured for this channel.</para>
-	/// <para>All bots, as well as users with <see cref="Permissions.ManageChannels"/> or <see cref="Permissions.ManageMessages"/> permissions in the channel are exempt from slow mode.</para>
-	/// </summary>
-	[JsonProperty("rate_limit_per_user", NullValueHandling = NullValueHandling.Ignore)]
-	public int? PerUserRateLimit { get; internal set; }
-
-	/// <summary>
-	/// <para>Gets the slow mode delay configured for this channel for post creations.</para>
-	/// <para>All bots, as well as users with <see cref="Permissions.ManageChannels"/> or <see cref="Permissions.ManageMessages"/> permissions in the channel are exempt from slow mode.</para>
-	/// </summary>
-	[JsonProperty("default_thread_rate_limit_per_user", NullValueHandling = NullValueHandling.Ignore)]
-	public int? PostCreateUserRateLimit { get; internal set; }
-
-	/// <summary>
-	/// Gets this channel's video quality mode. This is applicable to voice channels only.
-	/// </summary>
-	[JsonProperty("video_quality_mode", NullValueHandling = NullValueHandling.Ignore)]
-	public VideoQualityMode? QualityMode { get; internal set; }
-
-	/// <summary>
-	/// List of available tags for forum posts.
-	/// </summary>
-	[JsonIgnore]
-	public IReadOnlyList<ForumPostTag> AvailableTags => this.InternalAvailableTags;
-
-	/// <summary>
-	/// List of available tags for forum posts.
-	/// </summary>
-	[JsonProperty("available_tags", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<ForumPostTag> InternalAvailableTags { get; set; } = [];
-
-	/// <summary>
-	/// List of available tags for forum posts.
-	/// </summary>
-	[JsonProperty("default_reaction_emoji", NullValueHandling = NullValueHandling.Ignore)]
-	public ForumReactionEmoji DefaultReactionEmoji { get; internal set; }
-
-	[JsonProperty("default_sort_order", NullValueHandling = NullValueHandling.Include)]
-	public ForumPostSortOrder? DefaultSortOrder { get; internal set; }
-
-	/// <summary>
-	/// Gets the default forum layout for this channel
-	/// </summary>
-	[JsonProperty("default_forum_layout", NullValueHandling = NullValueHandling.Ignore)]
-	public ForumLayout? DefaultForumLayout { get; internal set; }
-
-	/// <summary>
-	/// Gets when the last pinned message was pinned.
-	/// </summary>
-	[JsonIgnore]
-	public DateTimeOffset? LastPinTimestamp
-		=> !string.IsNullOrWhiteSpace(this.LastPinTimestampRaw) && DateTimeOffset.TryParse(this.LastPinTimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ? dto : null;
-
-	/// <summary>
-	/// Gets when the last pinned message was pinned as raw string.
-	/// </summary>
-	[JsonProperty("last_pin_timestamp", NullValueHandling = NullValueHandling.Ignore)]
-	internal string LastPinTimestampRaw { get; set; }
-
-	/// <summary>
-	/// Gets this channel's default duration for newly created threads, in minutes, to automatically archive the thread after recent activity.
-	/// </summary>
-	[JsonProperty("default_auto_archive_duration", NullValueHandling = NullValueHandling.Ignore)]
-	public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration { get; internal set; }
-
-	/// <summary>
-	/// Gets this channel's mention string.
-	/// </summary>
-	[JsonIgnore]
-	public string Mention
-		=> this.Mention();
-
-	/// <summary>
-	/// Gets this channel's children. This applies only to channel categories.
-	/// </summary>
-	[JsonIgnore]
-	public IReadOnlyList<DiscordChannel> Children =>
-		!this.IsCategory
-			? throw new ArgumentException("Only channel categories contain children.")
-			: this.Guild.ChannelsInternal.Values.Where(e => e.ParentId == this.Id).ToList();
-
-	/// <summary>
-	/// Gets the list of members currently in the channel (if voice channel), or members who can see the channel (otherwise).
-	/// </summary>
-	[JsonIgnore]
-	public virtual IReadOnlyList<DiscordMember> Users =>
-		this.Guild == null
-			? throw new InvalidOperationException("Cannot query users outside of guild channels.")
-			: this.IsVoiceJoinable()
-				? this.Guild.Members.Values.Where(x => x.VoiceState?.ChannelId == this.Id).ToList()
-				: this.Guild.Members.Values.Where(x => (this.PermissionsFor(x) & Permissions.AccessChannels) == Permissions.AccessChannels).ToList();
-
-	/// <summary>
-	/// Gets whether this channel is an NSFW channel.
-	/// </summary>
-	[JsonProperty("nsfw")]
-	public bool IsNsfw { get; internal set; }
-
-	/// <summary>
-	/// Gets this channel's region id (if voice channel).
-	/// </summary>
-	[JsonProperty("rtc_region", NullValueHandling = NullValueHandling.Ignore)]
-	internal string RtcRegionId { get; set; }
-
-	/// <summary>
-	/// Gets this channel's region override (if voice channel).
-	/// </summary>
-	[JsonIgnore]
-	public DiscordVoiceRegion RtcRegion
-		=> this.RtcRegionId != null ? this.Discord.VoiceRegions[this.RtcRegionId] : null;
-
-	/// <summary>
-	/// Only sent on the resolved channels of interaction responses for application commands.
-	/// Gets the permissions of the user in this channel who invoked the command.
-	/// </summary>
-	[JsonProperty("permissions", NullValueHandling = NullValueHandling.Ignore)]
-	public Permissions? UserPermissions { get; internal set; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordChannel"/> class.
-	/// </summary>
-	internal DiscordChannel()
-		: base(["hashes", "guild_hashes", "owner_id", "thread_metadata", "message_count", "member_count", "total_message_sent", "member"])
+	/// <param name="e1">First channel to compare.</param>
+	/// <param name="e2">Second channel to compare.</param>
+	/// <returns>Whether the two channels are equal.</returns>
+	public static bool operator ==(DiscordChannel e1, DiscordChannel e2)
 	{
-		this._permissionOverwritesLazy = new(() => new ReadOnlyCollection<DiscordOverwrite>(this.PermissionOverwritesInternal));
+		var o1 = e1 as object;
+		var o2 = e2 as object;
+
+		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordChannel"/> class.
+	///     Gets whether the two <see cref="DiscordChannel" /> objects are not equal.
 	/// </summary>
-	internal DiscordChannel(List<string>? ignored = null)
-		: base(ignored)
-	{
-		this._permissionOverwritesLazy = new(() => new ReadOnlyCollection<DiscordOverwrite>(this.PermissionOverwritesInternal));
-	}
+	/// <param name="e1">First channel to compare.</param>
+	/// <param name="e2">Second channel to compare.</param>
+	/// <returns>Whether the two channels are not equal.</returns>
+	public static bool operator !=(DiscordChannel e1, DiscordChannel e2)
+		=> !(e1 == e2);
 
 #region Methods
 
 	/// <summary>
-	/// Sends a message to this channel.
+	///     Sends a message to this channel.
 	/// </summary>
 	/// <param name="content">Content of the message to send.</param>
 	/// <returns>The sent message.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission if TTS is true and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.SendMessages" /> permission if TTS is true and <see cref="Permissions.SendTtsMessages" /> if
+	///     TTS is true.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -346,11 +404,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			: this.Discord.ApiClient.CreateMessageAsync(this.Id, content, null, null, null, false, false);
 
 	/// <summary>
-	/// Sends a message to this channel.
+	///     Sends a message to this channel.
 	/// </summary>
 	/// <param name="embed">Embed to attach to the message.</param>
 	/// <returns>The sent message.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.SendMessages" /> permission and <see cref="Permissions.SendTtsMessages" /> if TTS is true.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -362,12 +423,16 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 				: null, null, null, false, false);
 
 	/// <summary>
-	/// Sends a message to this channel.
+	///     Sends a message to this channel.
 	/// </summary>
 	/// <param name="embed">Embed to attach to the message.</param>
 	/// <param name="content">Content of the message to send.</param>
 	/// <returns>The sent message.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission if TTS is true and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.SendMessages" /> permission if TTS is true and <see cref="Permissions.SendTtsMessages" /> if
+	///     TTS is true.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -380,11 +445,15 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 				: null, null, null, false, false);
 
 	/// <summary>
-	/// Sends a message to this channel.
+	///     Sends a message to this channel.
 	/// </summary>
 	/// <param name="builder">The builder with all the items to send.</param>
 	/// <returns>The sent message.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission TTS is true and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.SendMessages" /> permission TTS is true and <see cref="Permissions.SendTtsMessages" /> if
+	///     TTS is true.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -393,11 +462,15 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> this.Discord.ApiClient.CreateMessageAsync(this.Id, builder);
 
 	/// <summary>
-	/// Sends a message to this channel.
+	///     Sends a message to this channel.
 	/// </summary>
 	/// <param name="action">The builder with all the items to send.</param>
 	/// <returns>The sent message.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission TTS is true and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.SendMessages" /> permission TTS is true and <see cref="Permissions.SendTtsMessages" /> if
+	///     TTS is true.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -412,10 +485,13 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Deletes a guild channel
+	///     Deletes a guild channel
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageChannels" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -423,11 +499,15 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> this.Discord.ApiClient.DeleteChannelAsync(this.Id, reason);
 
 	/// <summary>
-	/// Clones this channel. This operation will create a channel with identical settings to this one. Note that this will not copy messages or tags.
+	///     Clones this channel. This operation will create a channel with identical settings to this one. Note that this will
+	///     not copy messages or tags.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
 	/// <returns>Newly-created channel.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageChannels" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -459,11 +539,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Gets a specific message.
+	///     Gets a specific message.
 	/// </summary>
 	/// <param name="id">The id of the message</param>
 	/// <param name="fetch">Whether to bypass the cache. Defaults to false.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ReadMessageHistory" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -476,11 +559,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			: await this.Discord.ApiClient.GetMessageAsync(this.Id, id).ConfigureAwait(false);
 
 	/// <summary>
-	/// Tries to get a specific message.
+	///     Tries to get a specific message.
 	/// </summary>
 	/// <param name="id">The id of the message</param>
 	/// <param name="fetch">Whether to bypass the cache. Defaults to true.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ReadMessageHistory" /> permission.
+	/// </exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMessage?> TryGetMessageAsync(ulong id, bool fetch = true)
@@ -496,11 +582,17 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Modifies the current channel.
+	///     Modifies the current channel.
 	/// </summary>
 	/// <param name="action">Action to perform on this channel</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/>.</exception>
-	/// <exception cref="NotSupportedException">Thrown when the client does not have the correct <see cref="PremiumTier"/> for modifying the <see cref="ThreadAutoArchiveDuration"/>.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageChannels" />.
+	/// </exception>
+	/// <exception cref="NotSupportedException">
+	///     Thrown when the client does not have the correct <see cref="PremiumTier" /> for
+	///     modifying the <see cref="ThreadAutoArchiveDuration" />.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -518,11 +610,17 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Modifies the current forum channel.
+	///     Modifies the current forum channel.
 	/// </summary>
 	/// <param name="action">Action to perform on this channel</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/>.</exception>
-	/// <exception cref="NotSupportedException">Thrown when the client does not have the correct <see cref="PremiumTier"/> for modifying the <see cref="ThreadAutoArchiveDuration"/>.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageChannels" />.
+	/// </exception>
+	/// <exception cref="NotSupportedException">
+	///     Thrown when the client does not have the correct <see cref="PremiumTier" /> for
+	///     modifying the <see cref="ThreadAutoArchiveDuration" />.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -542,15 +640,17 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Updates the channel position when it doesn't have a category.
-	///
-	/// Use <see cref="ModifyParentAsync"/> for moving to other categories.
-	/// Use <see cref="RemoveParentAsync"/> to move out of a category.
-	/// Use <see cref="ModifyPositionInCategoryAsync"/> for moving within a category.
+	///     Updates the channel position when it doesn't have a category.
+	///     Use <see cref="ModifyParentAsync" /> for moving to other categories.
+	///     Use <see cref="RemoveParentAsync" /> to move out of a category.
+	///     Use <see cref="ModifyPositionInCategoryAsync" /> for moving within a category.
 	/// </summary>
 	/// <param name="position">Position the channel should be moved to.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageChannels" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -578,19 +678,21 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Updates the channel position within it's own category.
-	///
-	/// Use <see cref="ModifyParentAsync"/> for moving to other categories.
-	/// Use <see cref="RemoveParentAsync"/> to move out of a category.
-	/// Use <see cref="ModifyPositionAsync"/> to move channels outside a category.
+	///     Updates the channel position within it's own category.
+	///     Use <see cref="ModifyParentAsync" /> for moving to other categories.
+	///     Use <see cref="RemoveParentAsync" /> to move out of a category.
+	///     Use <see cref="ModifyPositionAsync" /> to move channels outside a category.
 	/// </summary>
 	/// <param name="position">The position.</param>
 	/// <param name="reason">The reason.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageChannels" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	/// <exception cref="IndexOutOfRangeException">Thrown when <paramref name="position"/> is out of range.</exception>
+	/// <exception cref="IndexOutOfRangeException">Thrown when <paramref name="position" /> is out of range.</exception>
 	/// <exception cref="ArgumentException">Thrown when function is called on a channel without a parent channel.</exception>
 	public async Task ModifyPositionInCategoryAsync(int position, string reason = null)
 	{
@@ -638,7 +740,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Internally refreshes the channel list.
+	///     Internally refreshes the channel list.
 	/// </summary>
 	private async Task<IReadOnlyList<DiscordChannel>> InternalRefreshChannelsAsync()
 	{
@@ -665,7 +767,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Refreshes the positions.
+	///     Refreshes the positions.
 	/// </summary>
 	public async Task RefreshPositionsAsync()
 	{
@@ -679,22 +781,27 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Updates the channel position within it's own category.
-	/// Valid modes: '+' or 'down' to move a channel down | '-' or 'up' to move a channel up.
-	///
-	/// Use <see cref="ModifyParentAsync"/> for moving to other categories.
-	/// Use <see cref="RemoveParentAsync"/> to move out of a category.
-	/// Use <see cref="ModifyPositionAsync"/> to move channels outside a category.
+	///     Updates the channel position within it's own category.
+	///     Valid modes: '+' or 'down' to move a channel down | '-' or 'up' to move a channel up.
+	///     Use <see cref="ModifyParentAsync" /> for moving to other categories.
+	///     Use <see cref="RemoveParentAsync" /> to move out of a category.
+	///     Use <see cref="ModifyPositionAsync" /> to move channels outside a category.
 	/// </summary>
 	/// <param name="mode">The mode. Valid: '+' or 'down' to move a channel down | '-' or 'up' to move a channel up</param>
 	/// <param name="position">The position.</param>
 	/// <param name="reason">The reason.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageChannels" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	/// <exception cref="IndexOutOfRangeException">Thrown when <paramref name="position"/> is out of range.</exception>
-	/// <exception cref="ArgumentException">Thrown when function is called on a channel without a parent channel, a wrong mode is given or given position is zero.</exception>
+	/// <exception cref="IndexOutOfRangeException">Thrown when <paramref name="position" /> is out of range.</exception>
+	/// <exception cref="ArgumentException">
+	///     Thrown when function is called on a channel without a parent channel, a wrong mode
+	///     is given or given position is zero.
+	/// </exception>
 	public Task ModifyPositionInCategorySmartAsync(string mode, int position, string reason = null)
 	{
 		if (!this.IsMovableInParent())
@@ -708,21 +815,24 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		return positive
 			? position < this.GetMaxPosition()
 				? this.ModifyPositionInCategoryAsync(this.Position + position, reason)
-				: throw new IndexOutOfRangeException($"Position is not in range of category.")
+				: throw new IndexOutOfRangeException("Position is not in range of category.")
 			: negative
 				? position > this.GetMinPosition()
 					? this.ModifyPositionInCategoryAsync(this.Position - position, reason)
-					: throw new IndexOutOfRangeException($"Position is not in range of category.")
+					: throw new IndexOutOfRangeException("Position is not in range of category.")
 				: throw new ArgumentException("You can only modify with +X or -X. 0 is not valid.");
 	}
 
 	/// <summary>
-	/// Updates the channel parent, moving the channel to the bottom of the new category.
+	///     Updates the channel parent, moving the channel to the bottom of the new category.
 	/// </summary>
-	/// <param name="newParent">New parent for channel. Use <see cref="RemoveParentAsync(string)"/> to remove from parent.</param>
+	/// <param name="newParent">New parent for channel. Use <see cref="RemoveParentAsync(string)" /> to remove from parent.</param>
 	/// <param name="lockPermissions">Sync permissions with parent. Defaults to null.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageChannels" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -761,10 +871,13 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Moves the channel out of a category.
+	///     Moves the channel out of a category.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageChannels" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -798,35 +911,44 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Returns a list of messages before a certain message.
-	/// <param name="limit">The amount of messages to fetch.</param>
-	/// <param name="before">Message to fetch before from.</param>
+	///     Returns a list of messages before a certain message.
+	///     <param name="limit">The amount of messages to fetch.</param>
+	///     <param name="before">Message to fetch before from.</param>
 	/// </summary>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.AccessChannels" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordMessage>> GetMessagesBeforeAsync(ulong before, int limit = 100)
-		=> this.GetMessagesInternalAsync(limit, before, null, null);
+		=> this.GetMessagesInternalAsync(limit, before);
 
 	/// <summary>
-	/// Returns a list of messages after a certain message.
-	/// <param name="limit">The amount of messages to fetch.</param>
-	/// <param name="after">Message to fetch after from.</param>
+	///     Returns a list of messages after a certain message.
+	///     <param name="limit">The amount of messages to fetch.</param>
+	///     <param name="after">Message to fetch after from.</param>
 	/// </summary>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.AccessChannels" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordMessage>> GetMessagesAfterAsync(ulong after, int limit = 100)
-		=> this.GetMessagesInternalAsync(limit, null, after, null);
+		=> this.GetMessagesInternalAsync(limit, null, after);
 
 	/// <summary>
-	/// Returns a list of messages around a certain message.
-	/// <param name="limit">The amount of messages to fetch.</param>
-	/// <param name="around">Message to fetch around from.</param>
+	///     Returns a list of messages around a certain message.
+	///     <param name="limit">The amount of messages to fetch.</param>
+	///     <param name="around">Message to fetch around from.</param>
 	/// </summary>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.AccessChannels" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -834,18 +956,21 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> this.GetMessagesInternalAsync(limit, null, null, around);
 
 	/// <summary>
-	/// Returns a list of messages from the last message in the channel.
-	/// <param name="limit">The amount of messages to fetch.</param>
+	///     Returns a list of messages from the last message in the channel.
+	///     <param name="limit">The amount of messages to fetch.</param>
 	/// </summary>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.AccessChannels" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordMessage>> GetMessagesAsync(int limit = 100) =>
-		this.GetMessagesInternalAsync(limit, null, null, null);
+		this.GetMessagesInternalAsync(limit);
 
 	/// <summary>
-	/// Returns a list of messages
+	///     Returns a list of messages
 	/// </summary>
 	/// <param name="limit">How many messages should be returned.</param>
 	/// <param name="before">Get messages before snowflake.</param>
@@ -897,11 +1022,15 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Deletes multiple messages if they are less than 14 days old.  If they are older, none of the messages will be deleted and you will receive a <see cref="BadRequestException"/> error.
+	///     Deletes multiple messages if they are less than 14 days old.  If they are older, none of the messages will be
+	///     deleted and you will receive a <see cref="BadRequestException" /> error.
 	/// </summary>
 	/// <param name="messages">A collection of messages to delete.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageMessages" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -923,11 +1052,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Deletes a message
+	///     Deletes a message
 	/// </summary>
 	/// <param name="message">The message to be deleted.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageMessages" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -935,9 +1067,12 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> this.Discord.ApiClient.DeleteMessageAsync(this.Id, message.Id, reason);
 
 	/// <summary>
-	/// Returns a list of invite objects
+	///     Returns a list of invite objects
 	/// </summary>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreateInstantInvite"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.CreateInstantInvite" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -947,7 +1082,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			: this.Discord.ApiClient.GetChannelInvitesAsync(this.Id);
 
 	/// <summary>
-	/// Create a new invite object
+	///     Create a new invite object
 	/// </summary>
 	/// <param name="maxAge">Duration of invite in seconds before expiry, or 0 for never.  Defaults to 86400.</param>
 	/// <param name="maxUses">Max number of uses or 0 for unlimited. Defaults to 0</param>
@@ -957,7 +1092,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="targetApplicationId">The target activity ID. Defaults to null.</param>
 	/// <param name="targetUser">The target user id. Defaults to null.</param>
 	/// <param name="reason">The audit log reason.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreateInstantInvite"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.CreateInstantInvite" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -967,7 +1105,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 #region Voice Channel
 
 	/// <summary>
-	/// Sets a voice channels status.
+	///     Sets a voice channels status.
 	/// </summary>
 	/// <param name="status">Status of the voice channel.</param>
 	/// <exception cref="NotFoundException">Thrown when the voice channel does not exist.</exception>
@@ -977,7 +1115,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> this.Type != ChannelType.Voice ? throw new NotSupportedException("Cannot execute this request on a non-voice channel.") : this.Discord.ApiClient.ModifyVoiceChannelStatusAsync(this.Id, status);
 
 	/// <summary>
-	/// Removes a voice channels status.
+	///     Removes a voice channels status.
 	/// </summary>
 	/// <exception cref="NotFoundException">Thrown when the voice channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -990,14 +1128,17 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 #region Stage
 
 	/// <summary>
-	/// Opens a stage.
+	///     Opens a stage.
 	/// </summary>
 	/// <param name="topic">Topic of the stage.</param>
 	/// <param name="sendStartNotification">Whether @everyone should be notified.</param>
 	/// <param name="scheduledEventId">The associated scheduled event id.</param>
 	/// <param name="reason">Audit log reason.</param>
 	/// <returns>Stage instance</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageChannels" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1005,11 +1146,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> await this.Discord.ApiClient.CreateStageInstanceAsync(this.Id, topic, sendStartNotification, scheduledEventId, reason).ConfigureAwait(false);
 
 	/// <summary>
-	/// Modifies a stage topic.
+	///     Modifies a stage topic.
 	/// </summary>
 	/// <param name="topic">New topic of the stage.</param>
 	/// <param name="reason">Audit log reason.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageChannels" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1017,10 +1161,13 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> await this.Discord.ApiClient.ModifyStageInstanceAsync(this.Id, topic, reason).ConfigureAwait(false);
 
 	/// <summary>
-	/// Closes a stage.
+	///     Closes a stage.
 	/// </summary>
 	/// <param name="reason">Audit log reason.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageChannels" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1028,10 +1175,13 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> await this.Discord.ApiClient.DeleteStageInstanceAsync(this.Id, reason).ConfigureAwait(false);
 
 	/// <summary>
-	/// Gets a stage.
+	///     Gets a stage.
 	/// </summary>
 	/// <returns>The requested stage.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> or <see cref="Permissions.UseVoice"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.AccessChannels" /> or <see cref="Permissions.UseVoice" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1043,7 +1193,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 #region Scheduled Events
 
 	/// <summary>
-	/// Creates a scheduled event based on the channel type.
+	///     Creates a scheduled event based on the channel type.
 	/// </summary>
 	/// <param name="name">The name.</param>
 	/// <param name="scheduledStartTime">The scheduled start time.</param>
@@ -1071,19 +1221,29 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 #region Threads
 
 	/// <summary>
-	/// Creates a thread.
+	///     Creates a thread.
 	/// </summary>
 	/// <param name="name">The name of the thread.</param>
-	/// <param name="autoArchiveDuration"><see cref="ThreadAutoArchiveDuration"/> till it gets archived. Defaults to <see cref="ThreadAutoArchiveDuration.OneHour"/>.</param>
-	/// <param name="type">Can be either an <see cref="ChannelType.PrivateThread"/>, <see cref="ChannelType.NewsThread"/> or an <see cref="ChannelType.PublicThread"/>.</param>
+	/// <param name="autoArchiveDuration">
+	///     <see cref="ThreadAutoArchiveDuration" /> till it gets archived. Defaults to
+	///     <see cref="ThreadAutoArchiveDuration.OneHour" />.
+	/// </param>
+	/// <param name="type">
+	///     Can be either an <see cref="ChannelType.PrivateThread" />, <see cref="ChannelType.NewsThread" /> or
+	///     an <see cref="ChannelType.PublicThread" />.
+	/// </param>
 	/// <param name="rateLimitPerUser">The per user ratelimit, aka slowdown.</param>
 	/// <param name="reason">Audit log reason.</param>
 	/// <returns>The created thread.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreatePublicThreads"/> or <see cref="Permissions.SendMessagesInThreads"/> or if creating a private thread the <see cref="Permissions.CreatePrivateThreads"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.CreatePublicThreads" /> or <see cref="Permissions.SendMessagesInThreads" /> or if creating a
+	///     private thread the <see cref="Permissions.CreatePrivateThreads" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the guild hasn't enabled threads atm.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	/// <exception cref="NotSupportedException">Thrown when a wrong <paramref name="type"/> was given.</exception>
+	/// <exception cref="NotSupportedException">Thrown when a wrong <paramref name="type" /> was given.</exception>
 	public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration autoArchiveDuration = ThreadAutoArchiveDuration.OneHour, ChannelType type = ChannelType.PublicThread, int? rateLimitPerUser = null, string reason = null) =>
 		type != ChannelType.NewsThread && type != ChannelType.PublicThread && type != ChannelType.PrivateThread
 			? throw new NotSupportedException("Wrong thread type given.")
@@ -1096,7 +1256,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 						: ChannelType.PublicThread, rateLimitPerUser, isForum: false, reason: reason).ConfigureAwait(false);
 
 	/// <summary>
-	/// Creates a forum post.
+	///     Creates a forum post.
 	/// </summary>
 	/// <param name="name">The name of the post.</param>
 	/// <param name="builder">The message of the post.</param>
@@ -1104,7 +1264,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="tags">The tags to add on creation.</param>
 	/// <param name="reason">Audit log reason.</param>
 	/// <returns>The created thread.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.SendMessages" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the guild hasn't enabled threads atm.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1112,12 +1275,15 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> this.Type != ChannelType.Forum ? throw new NotSupportedException("Parent channel must be forum.") : await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, null, null, rateLimitPerUser, tags, builder, true, reason).ConfigureAwait(false);
 
 	/// <summary>
-	/// Gets joined archived private threads. Can contain more threads.
-	/// If the result's value 'HasMore' is true, you need to recall this function to get older threads.
+	///     Gets joined archived private threads. Can contain more threads.
+	///     If the result's value 'HasMore' is true, you need to recall this function to get older threads.
 	/// </summary>
 	/// <param name="before">Get threads created before this thread id.</param>
-	/// <param name="limit">Defines the limit of returned <see cref="DiscordThreadResult"/>.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
+	/// <param name="limit">Defines the limit of returned <see cref="DiscordThreadResult" />.</param>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ReadMessageHistory" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1125,12 +1291,15 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> await this.Discord.ApiClient.GetJoinedPrivateArchivedThreadsAsync(this.Id, before, limit).ConfigureAwait(false);
 
 	/// <summary>
-	/// Gets archived public threads. Can contain more threads.
-	/// If the result's value 'HasMore' is true, you need to recall this function to get older threads.
+	///     Gets archived public threads. Can contain more threads.
+	///     If the result's value 'HasMore' is true, you need to recall this function to get older threads.
 	/// </summary>
 	/// <param name="before">Get threads created before this thread id.</param>
-	/// <param name="limit">Defines the limit of returned <see cref="DiscordThreadResult"/>.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
+	/// <param name="limit">Defines the limit of returned <see cref="DiscordThreadResult" />.</param>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ReadMessageHistory" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1138,12 +1307,15 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> await this.Discord.ApiClient.GetPublicArchivedThreadsAsync(this.Id, before, limit).ConfigureAwait(false);
 
 	/// <summary>
-	/// Gets archived private threads. Can contain more threads.
-	/// If the result's value 'HasMore' is true, you need to recall this function to get older threads.
+	///     Gets archived private threads. Can contain more threads.
+	///     If the result's value 'HasMore' is true, you need to recall this function to get older threads.
 	/// </summary>
 	/// <param name="before">Get threads created before this thread id.</param>
-	/// <param name="limit">Defines the limit of returned <see cref="DiscordThreadResult"/>.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> or <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
+	/// <param name="limit">Defines the limit of returned <see cref="DiscordThreadResult" />.</param>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageThreads" /> or <see cref="Permissions.ReadMessageHistory" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1151,7 +1323,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> await this.Discord.ApiClient.GetPrivateArchivedThreadsAsync(this.Id, before, limit).ConfigureAwait(false);
 
 	/// <summary>
-	/// Gets a forum channel tag.
+	///     Gets a forum channel tag.
 	/// </summary>
 	/// <param name="id">The id of the tag to get.</param>
 	/// <exception cref="InvalidOperationException">Thrown when the tag does not exist.</exception>
@@ -1165,7 +1337,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Tries to get a forum channel tag.
+	///     Tries to get a forum channel tag.
 	/// </summary>
 	/// <param name="id">The id of the tag to get or null if not found.</param>
 	public ForumPostTag? TryGetForumPostTag(ulong id)
@@ -1181,13 +1353,19 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Creates a forum channel tag.
+	///     Creates a forum channel tag.
 	/// </summary>
 	/// <param name="name">The name of the tag.</param>
-	/// <param name="emoji">The emoji of the tag. Has to be either a <see cref="DiscordGuildEmoji"/> of the current guild or a <see cref="DiscordUnicodeEmoji"/>.</param>
+	/// <param name="emoji">
+	///     The emoji of the tag. Has to be either a <see cref="DiscordGuildEmoji" /> of the current guild or a
+	///     <see cref="DiscordUnicodeEmoji" />.
+	/// </param>
 	/// <param name="moderated">Whether only moderators should be able to apply this tag.</param>
 	/// <param name="reason">The audit log reason.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageChannels" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the tag does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1206,11 +1384,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 				}).ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason).ConfigureAwait(false);
 
 	/// <summary>
-	/// Deletes a forum channel tag.
+	///     Deletes a forum channel tag.
 	/// </summary>
 	/// <param name="id">The id of the tag to delete.</param>
 	/// <param name="reason">The audit log reason.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageChannels" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the tag does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1220,13 +1401,16 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 #endregion
 
 	/// <summary>
-	/// Adds a channel permission overwrite for specified role.
+	///     Adds a channel permission overwrite for specified role.
 	/// </summary>
 	/// <param name="role">The role to have the permission added.</param>
 	/// <param name="allow">The permissions to allow.</param>
 	/// <param name="deny">The permissions to deny.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
+	///     permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1234,13 +1418,16 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> this.Discord.ApiClient.EditChannelPermissionsAsync(this.Id, role.Id, allow, deny, "role", reason);
 
 	/// <summary>
-	/// Adds a channel permission overwrite for specified member.
+	///     Adds a channel permission overwrite for specified member.
 	/// </summary>
 	/// <param name="member">The member to have the permission added.</param>
 	/// <param name="allow">The permissions to allow.</param>
 	/// <param name="deny">The permissions to deny.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
+	///     permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1248,11 +1435,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> this.Discord.ApiClient.EditChannelPermissionsAsync(this.Id, member.Id, allow, deny, "member", reason);
 
 	/// <summary>
-	/// Deletes a channel permission overwrite for specified member.
+	///     Deletes a channel permission overwrite for specified member.
 	/// </summary>
 	/// <param name="member">The member to have the permission deleted.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
+	///     permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1260,11 +1450,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> this.Discord.ApiClient.DeleteChannelPermissionAsync(this.Id, member.Id, reason);
 
 	/// <summary>
-	/// Deletes a channel permission overwrite for specified role.
+	///     Deletes a channel permission overwrite for specified role.
 	/// </summary>
 	/// <param name="role">The role to have the permission deleted.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the <see cref="Permissions.ManageRoles" />
+	///     permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1272,7 +1465,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> this.Discord.ApiClient.DeleteChannelPermissionAsync(this.Id, role.Id, reason);
 
 	/// <summary>
-	/// Post a typing indicator.
+	///     Post a typing indicator.
 	/// </summary>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1283,9 +1476,12 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			: this.Discord.ApiClient.TriggerTypingAsync(this.Id);
 
 	/// <summary>
-	/// Returns all pinned messages.
+	///     Returns all pinned messages.
 	/// </summary>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.AccessChannels" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1295,12 +1491,15 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			: this.Discord.ApiClient.GetPinnedMessagesAsync(this.Id);
 
 	/// <summary>
-	/// Create a new webhook.
+	///     Create a new webhook.
 	/// </summary>
 	/// <param name="name">The name of the webhook.</param>
 	/// <param name="avatar">The image for the default webhook avatar.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageWebhooks"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageWebhooks" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1309,19 +1508,25 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			ImageTool.Base64FromStream(avatar), reason).ConfigureAwait(false);
 
 	/// <summary>
-	/// Returns a list of webhooks.
+	///     Returns a list of webhooks.
 	/// </summary>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageWebhooks"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageWebhooks" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordWebhook>> GetWebhooksAsync()
 		=> this.Discord.ApiClient.GetChannelWebhooksAsync(this.IsThread() ? this.ParentId!.Value : this.Id);
 
 	/// <summary>
-	/// Moves a member to this voice channel.
+	///     Moves a member to this voice channel.
 	/// </summary>
 	/// <param name="member">The member to be moved.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MoveMembers"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the <see cref="Permissions.MoveMembers" />
+	///     permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exists or if the Member does not exists.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1335,23 +1540,27 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Follows a news channel.
+	///     Follows a news channel.
 	/// </summary>
 	/// <param name="targetChannel">Channel to crosspost messages to.</param>
 	/// <exception cref="ArgumentException">Thrown when trying to follow a non-news channel.</exception>
-	/// <exception cref="UnauthorizedException">Thrown when the current user doesn't have <see cref="Permissions.ManageWebhooks"/> on the target channel.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the current user doesn't have
+	///     <see cref="Permissions.ManageWebhooks" /> on the target channel.
+	/// </exception>
 	public Task<DiscordFollowedChannel> FollowAsync(DiscordChannel targetChannel) =>
 		this.Type != ChannelType.News
 			? throw new ArgumentException("Cannot follow a non-news channel.")
 			: this.Discord.ApiClient.FollowChannelAsync(this.Id, targetChannel.Id);
 
 	/// <summary>
-	/// Publishes a message in a news channel to following channels.
+	///     Publishes a message in a news channel to following channels.
 	/// </summary>
 	/// <param name="message">Message to publish.</param>
 	/// <exception cref="ArgumentException">Thrown when the message has already been crossposted.</exception>
 	/// <exception cref="UnauthorizedException">
-	///     Thrown when the current user doesn't have <see cref="Permissions.ManageWebhooks"/> and/or <see cref="Permissions.SendMessages"/>
+	///     Thrown when the current user doesn't have <see cref="Permissions.ManageWebhooks" /> and/or
+	///     <see cref="Permissions.SendMessages" />
 	/// </exception>
 	public Task<DiscordMessage> CrosspostMessageAsync(DiscordMessage message) =>
 		(message.Flags & MessageFlags.Crossposted) == MessageFlags.Crossposted
@@ -1359,7 +1568,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			: this.Discord.ApiClient.CrosspostMessageAsync(this.Id, message.Id);
 
 	/// <summary>
-	/// Updates the current user's suppress state in this channel, if stage channel.
+	///     Updates the current user's suppress state in this channel, if stage channel.
 	/// </summary>
 	/// <param name="suppress">Toggles the suppress state.</param>
 	/// <param name="requestToSpeakTimestamp">Sets the time the user requested to speak.</param>
@@ -1373,7 +1582,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Calculates permissions for a given member.
+	///     Calculates permissions for a given member.
 	/// </summary>
 	/// <param name="mbr">Member to calculate permissions for.</param>
 	/// <returns>Calculated permissions for a given member.</returns>
@@ -1437,7 +1646,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Returns a string representation of this channel.
+	///     Returns a string representation of this channel.
 	/// </summary>
 	/// <returns>String representation of this channel.</returns>
 	public override string ToString() =>
@@ -1452,50 +1661,4 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 						: $"Channel {this.Id}";
 
 #endregion
-
-	/// <summary>
-	/// Checks whether this <see cref="DiscordChannel"/> is equal to another object.
-	/// </summary>
-	/// <param name="obj">Object to compare to.</param>
-	/// <returns>Whether the object is equal to this <see cref="DiscordChannel"/>.</returns>
-	public override bool Equals(object obj)
-		=> this.Equals(obj as DiscordChannel);
-
-	/// <summary>
-	/// Checks whether this <see cref="DiscordChannel"/> is equal to another <see cref="DiscordChannel"/>.
-	/// </summary>
-	/// <param name="e"><see cref="DiscordChannel"/> to compare to.</param>
-	/// <returns>Whether the <see cref="DiscordChannel"/> is equal to this <see cref="DiscordChannel"/>.</returns>
-	public bool Equals(DiscordChannel e)
-		=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
-
-	/// <summary>
-	/// Gets the hash code for this <see cref="DiscordChannel"/>.
-	/// </summary>
-	/// <returns>The hash code for this <see cref="DiscordChannel"/>.</returns>
-	public override int GetHashCode()
-		=> this.Id.GetHashCode();
-
-	/// <summary>
-	/// Gets whether the two <see cref="DiscordChannel"/> objects are equal.
-	/// </summary>
-	/// <param name="e1">First channel to compare.</param>
-	/// <param name="e2">Second channel to compare.</param>
-	/// <returns>Whether the two channels are equal.</returns>
-	public static bool operator ==(DiscordChannel e1, DiscordChannel e2)
-	{
-		var o1 = e1 as object;
-		var o2 = e2 as object;
-
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
-	}
-
-	/// <summary>
-	/// Gets whether the two <see cref="DiscordChannel"/> objects are not equal.
-	/// </summary>
-	/// <param name="e1">First channel to compare.</param>
-	/// <param name="e2">Second channel to compare.</param>
-	/// <returns>Whether the two channels are not equal.</returns>
-	public static bool operator !=(DiscordChannel e1, DiscordChannel e2)
-		=> !(e1 == e2);
 }

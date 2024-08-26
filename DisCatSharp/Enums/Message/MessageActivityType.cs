@@ -1,27 +1,27 @@
 namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Indicates the type of MessageActivity for the Rich Presence.
+///     Indicates the type of MessageActivity for the Rich Presence.
 /// </summary>
 public enum MessageActivityType
 {
 	/// <summary>
-	/// Invites the user to join.
+	///     Invites the user to join.
 	/// </summary>
 	Join = 1,
 
 	/// <summary>
-	/// Invites the user to spectate.
+	///     Invites the user to spectate.
 	/// </summary>
 	Spectate = 2,
 
 	/// <summary>
-	/// Invites the user to listen.
+	///     Invites the user to listen.
 	/// </summary>
 	Listen = 3,
 
 	/// <summary>
-	/// Allows the user to request to join.
+	///     Allows the user to request to join.
 	/// </summary>
 	JoinRequest = 4
 }

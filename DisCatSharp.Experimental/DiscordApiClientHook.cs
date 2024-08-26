@@ -18,17 +18,12 @@ using Newtonsoft.Json.Linq;
 namespace DisCatSharp.Experimental;
 
 /// <summary>
-/// Represents a hook for the discord api client.
+///     Represents a hook for the discord api client.
 /// </summary>
 internal sealed class DiscordApiClientHook
 {
 	/// <summary>
-	/// Gets the api client.
-	/// </summary>
-	internal DiscordApiClient ApiClient { get; set; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordApiClientHook"/> class.
+	///     Initializes a new instance of the <see cref="DiscordApiClientHook" /> class.
 	/// </summary>
 	/// <param name="apiClient">The api client.</param>
 	internal DiscordApiClientHook(DiscordApiClient apiClient)
@@ -37,7 +32,12 @@ internal sealed class DiscordApiClientHook
 	}
 
 	/// <summary>
-	/// Gets the clyde profile for the given <paramref name="profileId"/>.
+	///     Gets the api client.
+	/// </summary>
+	internal DiscordApiClient ApiClient { get; set; }
+
+	/// <summary>
+	///     Gets the clyde profile for the given <paramref name="profileId" />.
 	/// </summary>
 	/// <param name="profileId">The profile id to get.</param>
 	[DiscordDeprecated]
@@ -57,7 +57,7 @@ internal sealed class DiscordApiClientHook
 	}
 
 	/// <summary>
-	/// Gets the clyde settings for the given <paramref name="guildId"/>.
+	///     Gets the clyde settings for the given <paramref name="guildId" />.
 	/// </summary>
 	/// <param name="guildId">The guild id to get clyde's settings for.</param>
 	[DiscordDeprecated]
@@ -77,7 +77,7 @@ internal sealed class DiscordApiClientHook
 	}
 
 	/// <summary>
-	/// Modifies the clyde settings for the given <paramref name="guildId"/> by applying a <paramref name="profileId"/>.
+	///     Modifies the clyde settings for the given <paramref name="guildId" /> by applying a <paramref name="profileId" />.
 	/// </summary>
 	/// <param name="guildId">The guild id to modify clyde's settings for.</param>
 	/// <param name="profileId">The profile id to apply.</param>
@@ -105,7 +105,7 @@ internal sealed class DiscordApiClientHook
 	}
 
 	/// <summary>
-	/// Modifies the clyde settings for the given <paramref name="guildId"/>.
+	///     Modifies the clyde settings for the given <paramref name="guildId" />.
 	/// </summary>
 	/// <param name="guildId">The guild id to modify clyde's settings for.</param>
 	/// <param name="name">The new name.</param>
@@ -148,7 +148,7 @@ internal sealed class DiscordApiClientHook
 	}
 
 	/// <summary>
-	/// Generates a basePersonality for clyde based on the given <paramref name="basePersonality"/>.
+	///     Generates a basePersonality for clyde based on the given <paramref name="basePersonality" />.
 	/// </summary>
 	/// <param name="basePersonality">The base base personality to generate a new one from.</param>
 	[DiscordDeprecated]
@@ -171,13 +171,16 @@ internal sealed class DiscordApiClientHook
 	}
 
 	/// <summary>
-	/// Searches the guild members asynchronously based on the provided search parameters.
+	///     Searches the guild members asynchronously based on the provided search parameters.
 	/// </summary>
 	/// <param name="guildId">The ID of the guild.</param>
 	/// <param name="searchParams">The search parameters.</param>
 	/// <exception cref="ValidationException">Thrown if the user gave an invalid input.</exception>
 	/// <exception cref="NotIndexedException">Thrown if the elastisearch endpoint has not finished indexing yet.</exception>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild" /> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the <see cref="Permissions.ManageGuild" />
+	///     permission.
+	/// </exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <returns>A list of supplemental guild members that match the search criteria.</returns>

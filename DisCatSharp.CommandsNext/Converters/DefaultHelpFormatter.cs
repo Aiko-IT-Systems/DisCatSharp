@@ -8,22 +8,17 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.CommandsNext.Converters;
 
 /// <summary>
-/// Default CommandsNext help formatter.
+///     Default CommandsNext help formatter.
 /// </summary>
 public class DefaultHelpFormatter : BaseHelpFormatter
 {
 	/// <summary>
-	/// Gets the embed builder.
-	/// </summary>
-	public DiscordEmbedBuilder EmbedBuilder { get; }
-
-	/// <summary>
-	/// Gets or sets the command.
+	///     Gets or sets the command.
 	/// </summary>
 	private Command _command;
 
 	/// <summary>
-	/// Creates a new default help formatter.
+	///     Creates a new default help formatter.
 	/// </summary>
 	/// <param name="ctx">Context in which this formatter is being invoked.</param>
 	public DefaultHelpFormatter(CommandContext ctx)
@@ -35,7 +30,12 @@ public class DefaultHelpFormatter : BaseHelpFormatter
 	}
 
 	/// <summary>
-	/// Sets the command this help message will be for.
+	///     Gets the embed builder.
+	/// </summary>
+	public DiscordEmbedBuilder EmbedBuilder { get; }
+
+	/// <summary>
+	///     Sets the command this help message will be for.
 	/// </summary>
 	/// <param name="command">Command for which the help message is being produced.</param>
 	/// <returns>This help formatter.</returns>
@@ -77,7 +77,7 @@ public class DefaultHelpFormatter : BaseHelpFormatter
 	}
 
 	/// <summary>
-	/// Sets the subcommands for this command, if applicable. This method will be called with filtered data.
+	///     Sets the subcommands for this command, if applicable. This method will be called with filtered data.
 	/// </summary>
 	/// <param name="subcommands">Subcommands for this command group.</param>
 	/// <returns>This help formatter.</returns>
@@ -89,7 +89,7 @@ public class DefaultHelpFormatter : BaseHelpFormatter
 	}
 
 	/// <summary>
-	/// Construct the help message.
+	///     Construct the help message.
 	/// </summary>
 	/// <returns>Data for the help message.</returns>
 	public override CommandHelpMessage Build()

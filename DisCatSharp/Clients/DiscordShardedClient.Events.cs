@@ -10,14 +10,14 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp;
 
 /// <summary>
-/// Represents a discord sharded client.
+///     Represents a discord sharded client.
 /// </summary>
 public sealed partial class DiscordShardedClient
 {
 #region WebSocket
 
 	/// <summary>
-	/// Fired whenever a WebSocket error occurs within the client.
+	///     Fired whenever a WebSocket error occurs within the client.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, SocketErrorEventArgs> SocketErrored
 	{
@@ -28,7 +28,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, SocketErrorEventArgs> _socketErrored;
 
 	/// <summary>
-	/// Fired whenever WebSocket connection is established.
+	///     Fired whenever WebSocket connection is established.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, SocketEventArgs> SocketOpened
 	{
@@ -39,7 +39,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, SocketEventArgs> _socketOpened;
 
 	/// <summary>
-	/// Fired whenever WebSocket connection is terminated.
+	///     Fired whenever WebSocket connection is terminated.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, SocketCloseEventArgs> SocketClosed
 	{
@@ -50,7 +50,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, SocketCloseEventArgs> _socketClosed;
 
 	/// <summary>
-	/// Fired when the client enters ready state.
+	///     Fired when the client enters ready state.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ReadyEventArgs> Ready
 	{
@@ -61,7 +61,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ReadyEventArgs> _ready;
 
 	/// <summary>
-	/// Fired whenever a session is resumed.
+	///     Fired whenever a session is resumed.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ReadyEventArgs> Resumed
 	{
@@ -72,7 +72,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ReadyEventArgs> _resumed;
 
 	/// <summary>
-	/// Fired on received heartbeat ACK.
+	///     Fired on received heartbeat ACK.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, HeartbeatEventArgs> Heartbeated
 	{
@@ -87,8 +87,9 @@ public sealed partial class DiscordShardedClient
 #region Channel
 
 	/// <summary>
-	/// Fired when a new channel is created.
-	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a new channel is created.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ChannelCreateEventArgs> ChannelCreated
 	{
@@ -99,8 +100,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ChannelCreateEventArgs> _channelCreated;
 
 	/// <summary>
-	/// Fired when a channel is updated.
-	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a channel is updated.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ChannelUpdateEventArgs> ChannelUpdated
 	{
@@ -111,8 +113,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ChannelUpdateEventArgs> _channelUpdated;
 
 	/// <summary>
-	/// Fired when a channel is deleted
-	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a channel is deleted
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ChannelDeleteEventArgs> ChannelDeleted
 	{
@@ -123,8 +126,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ChannelDeleteEventArgs> _channelDeleted;
 
 	/// <summary>
-	/// Fired when a dm channel is deleted
-	/// For this Event you need the <see cref="DiscordIntents.DirectMessages"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a dm channel is deleted
+	///     For this Event you need the <see cref="DiscordIntents.DirectMessages" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, DmChannelDeleteEventArgs> DmChannelDeleted
 	{
@@ -135,8 +139,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, DmChannelDeleteEventArgs> _dmChannelDeleted;
 
 	/// <summary>
-	/// Fired whenever a channel's pinned message list is updated.
-	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired whenever a channel's pinned message list is updated.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ChannelPinsUpdateEventArgs> ChannelPinsUpdated
 	{
@@ -147,8 +152,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ChannelPinsUpdateEventArgs> _channelPinsUpdated;
 
 	/// <summary>
-	/// Fired whenever a voice channel's status is updated.
-	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired whenever a voice channel's status is updated.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, VoiceChannelStatusUpdateEventArgs> VoiceChannelStatusUpdated
 	{
@@ -163,8 +169,9 @@ public sealed partial class DiscordShardedClient
 #region Guild
 
 	/// <summary>
-	/// Fired when the user joins a new guild.
-	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when the user joins a new guild.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	/// <remarks>[alias="GuildJoined"][alias="JoinedGuild"]</remarks>
 	public event AsyncEventHandler<DiscordClient, GuildCreateEventArgs> GuildCreated
@@ -176,7 +183,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildCreateEventArgs> _guildCreated;
 
 	/// <summary>
-	/// Fired when a guild is becoming available.
+	///     Fired when a guild is becoming available.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildCreateEventArgs> GuildAvailable
 	{
@@ -187,8 +194,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildCreateEventArgs> _guildAvailable;
 
 	/// <summary>
-	/// Fired when a guild is updated.
-	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a guild is updated.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildUpdateEventArgs> GuildUpdated
 	{
@@ -199,8 +207,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildUpdateEventArgs> _guildUpdated;
 
 	/// <summary>
-	/// Fired when the user leaves or is removed from a guild.
-	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when the user leaves or is removed from a guild.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildDeleteEventArgs> GuildDeleted
 	{
@@ -211,7 +220,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildDeleteEventArgs> _guildDeleted;
 
 	/// <summary>
-	/// Fired when a guild becomes unavailable.
+	///     Fired when a guild becomes unavailable.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildDeleteEventArgs> GuildUnavailable
 	{
@@ -222,7 +231,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildDeleteEventArgs> _guildUnavailable;
 
 	/// <summary>
-	/// Fired when all guilds finish streaming from Discord.
+	///     Fired when all guilds finish streaming from Discord.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildDownloadCompletedEventArgs> GuildDownloadCompleted
 	{
@@ -233,8 +242,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildDownloadCompletedEventArgs> _guildDownloadCompleted;
 
 	/// <summary>
-	/// Fired when a guilds emojis get updated
-	/// For this Event you need the <see cref="DiscordIntents.GuildEmojisAndStickers"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a guilds emojis get updated
+	///     For this Event you need the <see cref="DiscordIntents.GuildEmojisAndStickers" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildEmojisUpdateEventArgs> GuildEmojisUpdated
 	{
@@ -245,8 +255,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildEmojisUpdateEventArgs> _guildEmojisUpdated;
 
 	/// <summary>
-	/// Fired when a guilds stickers get updated
-	/// For this Event you need the <see cref="DiscordIntents.GuildEmojisAndStickers"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a guilds stickers get updated
+	///     For this Event you need the <see cref="DiscordIntents.GuildEmojisAndStickers" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildStickersUpdateEventArgs> GuildStickersUpdated
 	{
@@ -257,7 +268,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildStickersUpdateEventArgs> _guildStickersUpdated;
 
 	/// <summary>
-	/// Fired when a guild integration is updated.
+	///     Fired when a guild integration is updated.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildIntegrationsUpdateEventArgs> GuildIntegrationsUpdated
 	{
@@ -272,7 +283,7 @@ public sealed partial class DiscordShardedClient
 #region Automod
 
 	/// <summary>
-	/// Fired when an auto mod rule gets created.
+	///     Fired when an auto mod rule gets created.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, AutomodRuleCreateEventArgs> AutomodRuleCreated
 	{
@@ -283,7 +294,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, AutomodRuleCreateEventArgs> _automodRuleCreated;
 
 	/// <summary>
-	/// Fired when an auto mod rule gets updated.
+	///     Fired when an auto mod rule gets updated.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, AutomodRuleUpdateEventArgs> AutomodRuleUpdated
 	{
@@ -294,7 +305,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, AutomodRuleUpdateEventArgs> _automodRuleUpdated;
 
 	/// <summary>
-	/// Fired when an auto mod rule gets deleted.
+	///     Fired when an auto mod rule gets deleted.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, AutomodRuleDeleteEventArgs> AutomodRuleDeleted
 	{
@@ -305,7 +316,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, AutomodRuleDeleteEventArgs> _automodRuleDeleted;
 
 	/// <summary>
-	/// Fired when a rule is triggered and an action is executed.
+	///     Fired when a rule is triggered and an action is executed.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, AutomodActionExecutedEventArgs> AutomodActionExecuted
 	{
@@ -316,7 +327,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, AutomodActionExecutedEventArgs> _automodActionExecuted;
 
 	/// <summary>
-	/// Fired when a guild audit log entry was created.
+	///     Fired when a guild audit log entry was created.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildAuditLogEntryCreateEventArgs> GuildAuditLogEntryCreated
 	{
@@ -331,8 +342,9 @@ public sealed partial class DiscordShardedClient
 #region Guild Ban
 
 	/// <summary>
-	/// Fired when a guild ban gets added
-	/// For this Event you need the <see cref="DiscordIntents.GuildModeration"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a guild ban gets added
+	///     For this Event you need the <see cref="DiscordIntents.GuildModeration" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildBanAddEventArgs> GuildBanAdded
 	{
@@ -343,8 +355,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildBanAddEventArgs> _guildBanAdded;
 
 	/// <summary>
-	/// Fired when a guild ban gets removed
-	/// For this Event you need the <see cref="DiscordIntents.GuildModeration"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a guild ban gets removed
+	///     For this Event you need the <see cref="DiscordIntents.GuildModeration" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildBanRemoveEventArgs> GuildBanRemoved
 	{
@@ -359,8 +372,9 @@ public sealed partial class DiscordShardedClient
 #region Guild Timeout
 
 	/// <summary>
-	/// Fired when a guild member timeout gets added.
-	/// For this Event you need the <see cref="DiscordIntents.GuildModeration"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a guild member timeout gets added.
+	///     For this Event you need the <see cref="DiscordIntents.GuildModeration" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildMemberTimeoutAddEventArgs> GuildMemberTimeoutAdded
 	{
@@ -371,8 +385,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildMemberTimeoutAddEventArgs> _guildMemberTimeoutAdded;
 
 	/// <summary>
-	/// Fired when a guild member timeout gets changed.
-	/// For this Event you need the <see cref="DiscordIntents.GuildMembers"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a guild member timeout gets changed.
+	///     For this Event you need the <see cref="DiscordIntents.GuildMembers" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildMemberTimeoutUpdateEventArgs> GuildMemberTimeoutChanged
 	{
@@ -383,8 +398,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildMemberTimeoutUpdateEventArgs> _guildMemberTimeoutChanged;
 
 	/// <summary>
-	/// Fired when a guild member timeout gets removed.
-	/// For this Event you need the <see cref="DiscordIntents.GuildMembers"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a guild member timeout gets removed.
+	///     For this Event you need the <see cref="DiscordIntents.GuildMembers" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildMemberTimeoutRemoveEventArgs> GuildMemberTimeoutRemoved
 	{
@@ -399,8 +415,9 @@ public sealed partial class DiscordShardedClient
 #region Guild Event
 
 	/// <summary>
-	/// Fired when a scheduled event is created.
-	/// For this Event you need the <see cref="DiscordIntents.GuildScheduledEvents"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a scheduled event is created.
+	///     For this Event you need the <see cref="DiscordIntents.GuildScheduledEvents" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildScheduledEventCreateEventArgs> GuildScheduledEventCreated
 	{
@@ -411,8 +428,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildScheduledEventCreateEventArgs> _guildScheduledEventCreated;
 
 	/// <summary>
-	/// Fired when a scheduled event is updated.
-	/// For this Event you need the <see cref="DiscordIntents.GuildScheduledEvents"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a scheduled event is updated.
+	///     For this Event you need the <see cref="DiscordIntents.GuildScheduledEvents" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildScheduledEventUpdateEventArgs> GuildScheduledEventUpdated
 	{
@@ -423,8 +441,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildScheduledEventUpdateEventArgs> _guildScheduledEventUpdated;
 
 	/// <summary>
-	/// Fired when a scheduled event is deleted.
-	/// For this Event you need the <see cref="DiscordIntents.GuildScheduledEvents"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a scheduled event is deleted.
+	///     For this Event you need the <see cref="DiscordIntents.GuildScheduledEvents" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildScheduledEventDeleteEventArgs> GuildScheduledEventDeleted
 	{
@@ -435,8 +454,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildScheduledEventDeleteEventArgs> _guildScheduledEventDeleted;
 
 	/// <summary>
-	/// Fired when a user subscribes to a scheduled event.
-	/// For this Event you need the <see cref="DiscordIntents.GuildScheduledEvents"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a user subscribes to a scheduled event.
+	///     For this Event you need the <see cref="DiscordIntents.GuildScheduledEvents" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildScheduledEventUserAddEventArgs> GuildScheduledEventUserAdded
 	{
@@ -447,8 +467,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildScheduledEventUserAddEventArgs> _guildScheduledEventUserAdded;
 
 	/// <summary>
-	/// Fired when a user unsubscribes from a scheduled event.
-	/// For this Event you need the <see cref="DiscordIntents.GuildScheduledEvents"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a user unsubscribes from a scheduled event.
+	///     For this Event you need the <see cref="DiscordIntents.GuildScheduledEvents" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildScheduledEventUserRemoveEventArgs> GuildScheduledEventUserRemoved
 	{
@@ -463,8 +484,9 @@ public sealed partial class DiscordShardedClient
 #region Guild Integration
 
 	/// <summary>
-	/// Fired when a guild integration is created.
-	/// For this Event you need the <see cref="DiscordIntents.GuildIntegrations"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a guild integration is created.
+	///     For this Event you need the <see cref="DiscordIntents.GuildIntegrations" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildIntegrationCreateEventArgs> GuildIntegrationCreated
 	{
@@ -475,8 +497,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildIntegrationCreateEventArgs> _guildIntegrationCreated;
 
 	/// <summary>
-	/// Fired when a guild integration is updated.
-	/// For this Event you need the <see cref="DiscordIntents.GuildIntegrations"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a guild integration is updated.
+	///     For this Event you need the <see cref="DiscordIntents.GuildIntegrations" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildIntegrationUpdateEventArgs> GuildIntegrationUpdated
 	{
@@ -487,8 +510,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildIntegrationUpdateEventArgs> _guildIntegrationUpdated;
 
 	/// <summary>
-	/// Fired when a guild integration is deleted.
-	/// For this Event you need the <see cref="DiscordIntents.GuildIntegrations"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a guild integration is deleted.
+	///     For this Event you need the <see cref="DiscordIntents.GuildIntegrations" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildIntegrationDeleteEventArgs> GuildIntegrationDeleted
 	{
@@ -503,8 +527,9 @@ public sealed partial class DiscordShardedClient
 #region Guild Member
 
 	/// <summary>
-	/// Fired when a new user joins a guild.
-	/// For this Event you need the <see cref="DiscordIntents.GuildMembers"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a new user joins a guild.
+	///     For this Event you need the <see cref="DiscordIntents.GuildMembers" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildMemberAddEventArgs> GuildMemberAdded
 	{
@@ -515,8 +540,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildMemberAddEventArgs> _guildMemberAdded;
 
 	/// <summary>
-	/// Fired when a user is removed from a guild (leave/kick/ban).
-	/// For this Event you need the <see cref="DiscordIntents.GuildMembers"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a user is removed from a guild (leave/kick/ban).
+	///     For this Event you need the <see cref="DiscordIntents.GuildMembers" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildMemberRemoveEventArgs> GuildMemberRemoved
 	{
@@ -527,8 +553,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildMemberRemoveEventArgs> _guildMemberRemoved;
 
 	/// <summary>
-	/// Fired when a guild member is updated.
-	/// For this Event you need the <see cref="DiscordIntents.GuildMembers"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a guild member is updated.
+	///     For this Event you need the <see cref="DiscordIntents.GuildMembers" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildMemberUpdateEventArgs> GuildMemberUpdated
 	{
@@ -539,7 +566,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildMemberUpdateEventArgs> _guildMemberUpdated;
 
 	/// <summary>
-	/// Fired in response to Gateway Request Guild Members.
+	///     Fired in response to Gateway Request Guild Members.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildMembersChunkEventArgs> GuildMembersChunked
 	{
@@ -554,8 +581,9 @@ public sealed partial class DiscordShardedClient
 #region Guild Role
 
 	/// <summary>
-	/// Fired when a guild role is created.
-	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a guild role is created.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildRoleCreateEventArgs> GuildRoleCreated
 	{
@@ -566,8 +594,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildRoleCreateEventArgs> _guildRoleCreated;
 
 	/// <summary>
-	/// Fired when a guild role is updated.
-	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a guild role is updated.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildRoleUpdateEventArgs> GuildRoleUpdated
 	{
@@ -578,8 +607,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildRoleUpdateEventArgs> _guildRoleUpdated;
 
 	/// <summary>
-	/// Fired when a guild role is updated.
-	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a guild role is updated.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildRoleDeleteEventArgs> GuildRoleDeleted
 	{
@@ -594,8 +624,9 @@ public sealed partial class DiscordShardedClient
 #region Invite
 
 	/// <summary>
-	/// Fired when an invite is created.
-	/// For this Event you need the <see cref="DiscordIntents.GuildInvites"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when an invite is created.
+	///     For this Event you need the <see cref="DiscordIntents.GuildInvites" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, InviteCreateEventArgs> InviteCreated
 	{
@@ -606,8 +637,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, InviteCreateEventArgs> _inviteCreated;
 
 	/// <summary>
-	/// Fired when an invite is deleted.
-	/// For this Event you need the <see cref="DiscordIntents.GuildInvites"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when an invite is deleted.
+	///     For this Event you need the <see cref="DiscordIntents.GuildInvites" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, InviteDeleteEventArgs> InviteDeleted
 	{
@@ -622,8 +654,9 @@ public sealed partial class DiscordShardedClient
 #region Message
 
 	/// <summary>
-	/// Fired when a message is created.
-	/// For this Event you need the <see cref="DiscordIntents.GuildMessages"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a message is created.
+	///     For this Event you need the <see cref="DiscordIntents.GuildMessages" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, MessageCreateEventArgs> MessageCreated
 	{
@@ -634,8 +667,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, MessageCreateEventArgs> _messageCreated;
 
 	/// <summary>
-	/// Fired when a message is updated.
-	/// For this Event you need the <see cref="DiscordIntents.GuildMessages"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a message is updated.
+	///     For this Event you need the <see cref="DiscordIntents.GuildMessages" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, MessageUpdateEventArgs> MessageUpdated
 	{
@@ -646,8 +680,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, MessageUpdateEventArgs> _messageUpdated;
 
 	/// <summary>
-	/// Fired when a message is deleted.
-	/// For this Event you need the <see cref="DiscordIntents.GuildMessages"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a message is deleted.
+	///     For this Event you need the <see cref="DiscordIntents.GuildMessages" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, MessageDeleteEventArgs> MessageDeleted
 	{
@@ -658,8 +693,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, MessageDeleteEventArgs> _messageDeleted;
 
 	/// <summary>
-	/// Fired when multiple messages are deleted at once.
-	/// For this Event you need the <see cref="DiscordIntents.GuildMessages"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when multiple messages are deleted at once.
+	///     For this Event you need the <see cref="DiscordIntents.GuildMessages" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, MessageBulkDeleteEventArgs> MessagesBulkDeleted
 	{
@@ -670,8 +706,10 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, MessageBulkDeleteEventArgs> _messageBulkDeleted;
 
 	/// <summary>
-	/// Fired when a message poll vote is added.
-	/// For this Event you need the <see cref="DiscordIntents.GuildMessagePolls"/> and <see cref="DiscordIntents.DirectMessagePolls"/> intent (depending on where u want to receive events from) specified in <seealso cref="DiscordConfiguration.Intents"/>.
+	///     Fired when a message poll vote is added.
+	///     For this Event you need the <see cref="DiscordIntents.GuildMessagePolls" /> and
+	///     <see cref="DiscordIntents.DirectMessagePolls" /> intent (depending on where u want to receive events from)
+	///     specified in <seealso cref="DiscordConfiguration.Intents" />.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, MessagePollVoteAddEventArgs> MessagePollVoteAdded
 	{
@@ -682,8 +720,10 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, MessagePollVoteAddEventArgs> _messagePollVoteAdded;
 
 	/// <summary>
-	/// Fired when a message poll vote is removed.
-	/// For this Event you need the <see cref="DiscordIntents.GuildMessagePolls"/> and <see cref="DiscordIntents.DirectMessagePolls"/> intent (depending on where u want to receive events from) specified in <seealso cref="DiscordConfiguration.Intents"/>.
+	///     Fired when a message poll vote is removed.
+	///     For this Event you need the <see cref="DiscordIntents.GuildMessagePolls" /> and
+	///     <see cref="DiscordIntents.DirectMessagePolls" /> intent (depending on where u want to receive events from)
+	///     specified in <seealso cref="DiscordConfiguration.Intents" />.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, MessagePollVoteRemoveEventArgs> MessagePollVoteRemoved
 	{
@@ -698,8 +738,9 @@ public sealed partial class DiscordShardedClient
 #region Message Reaction
 
 	/// <summary>
-	/// Fired when a reaction gets added to a message.
-	/// For this Event you need the <see cref="DiscordIntents.GuildMessageReactions"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a reaction gets added to a message.
+	///     For this Event you need the <see cref="DiscordIntents.GuildMessageReactions" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, MessageReactionAddEventArgs> MessageReactionAdded
 	{
@@ -710,8 +751,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, MessageReactionAddEventArgs> _messageReactionAdded;
 
 	/// <summary>
-	/// Fired when a reaction gets removed from a message.
-	/// For this Event you need the <see cref="DiscordIntents.GuildMessageReactions"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a reaction gets removed from a message.
+	///     For this Event you need the <see cref="DiscordIntents.GuildMessageReactions" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, MessageReactionRemoveEventArgs> MessageReactionRemoved
 	{
@@ -722,8 +764,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs> _messageReactionRemoved;
 
 	/// <summary>
-	/// Fired when all reactions get removed from a message.
-	/// For this Event you need the <see cref="DiscordIntents.GuildMessageReactions"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when all reactions get removed from a message.
+	///     For this Event you need the <see cref="DiscordIntents.GuildMessageReactions" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, MessageReactionsClearEventArgs> MessageReactionsCleared
 	{
@@ -734,8 +777,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, MessageReactionsClearEventArgs> _messageReactionsCleared;
 
 	/// <summary>
-	/// Fired when all reactions of a specific reaction are removed from a message.
-	/// For this Event you need the <see cref="DiscordIntents.GuildMessageReactions"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when all reactions of a specific reaction are removed from a message.
+	///     For this Event you need the <see cref="DiscordIntents.GuildMessageReactions" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, MessageReactionRemoveEmojiEventArgs> MessageReactionRemovedEmoji
 	{
@@ -750,8 +794,9 @@ public sealed partial class DiscordShardedClient
 #region Stage Instance
 
 	/// <summary>
-	/// Fired when a Stage Instance is created.
-	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a Stage Instance is created.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, StageInstanceCreateEventArgs> StageInstanceCreated
 	{
@@ -762,8 +807,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, StageInstanceCreateEventArgs> _stageInstanceCreated;
 
 	/// <summary>
-	/// Fired when a Stage Instance is updated.
-	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a Stage Instance is updated.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, StageInstanceUpdateEventArgs> StageInstanceUpdated
 	{
@@ -774,8 +820,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, StageInstanceUpdateEventArgs> _stageInstanceUpdated;
 
 	/// <summary>
-	/// Fired when a Stage Instance is deleted.
-	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a Stage Instance is deleted.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, StageInstanceDeleteEventArgs> StageInstanceDeleted
 	{
@@ -790,8 +837,9 @@ public sealed partial class DiscordShardedClient
 #region Thread
 
 	/// <summary>
-	/// Fired when a thread is created.
-	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a thread is created.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ThreadCreateEventArgs> ThreadCreated
 	{
@@ -802,8 +850,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ThreadCreateEventArgs> _threadCreated;
 
 	/// <summary>
-	/// Fired when a thread is updated.
-	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a thread is updated.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ThreadUpdateEventArgs> ThreadUpdated
 	{
@@ -814,8 +863,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ThreadUpdateEventArgs> _threadUpdated;
 
 	/// <summary>
-	/// Fired when a thread is deleted.
-	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a thread is deleted.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ThreadDeleteEventArgs> ThreadDeleted
 	{
@@ -826,8 +876,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ThreadDeleteEventArgs> _threadDeleted;
 
 	/// <summary>
-	/// Fired when a thread member is updated.
-	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a thread member is updated.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ThreadListSyncEventArgs> ThreadListSynced
 	{
@@ -838,8 +889,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ThreadListSyncEventArgs> _threadListSynced;
 
 	/// <summary>
-	/// Fired when a thread member is updated.
-	/// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a thread member is updated.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ThreadMemberUpdateEventArgs> ThreadMemberUpdated
 	{
@@ -850,8 +902,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ThreadMemberUpdateEventArgs> _threadMemberUpdated;
 
 	/// <summary>
-	/// Fired when the thread members are updated.
-	/// For this Event you need the <see cref="DiscordIntents.GuildMembers"/> or <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when the thread members are updated.
+	///     For this Event you need the <see cref="DiscordIntents.GuildMembers" /> or <see cref="DiscordIntents.Guilds" />
+	///     intent specified in <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ThreadMembersUpdateEventArgs> ThreadMembersUpdated
 	{
@@ -866,7 +919,7 @@ public sealed partial class DiscordShardedClient
 #region Activities
 
 	/// <summary>
-	/// Fired when a embedded activity has been updated.
+	///     Fired when a embedded activity has been updated.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, EmbeddedActivityUpdateEventArgs> EmbeddedActivityUpdated
 	{
@@ -881,8 +934,9 @@ public sealed partial class DiscordShardedClient
 #region User/Presence Update
 
 	/// <summary>
-	/// Fired when a presence has been updated.
-	/// For this Event you need the <see cref="DiscordIntents.GuildPresences"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a presence has been updated.
+	///     For this Event you need the <see cref="DiscordIntents.GuildPresences" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, PresenceUpdateEventArgs> PresenceUpdated
 	{
@@ -893,8 +947,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, PresenceUpdateEventArgs> _presenceUpdated;
 
 	/// <summary>
-	/// Fired when the current user updates their settings.
-	/// For this Event you need the <see cref="DiscordIntents.GuildPresences"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when the current user updates their settings.
+	///     For this Event you need the <see cref="DiscordIntents.GuildPresences" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, UserSettingsUpdateEventArgs> UserSettingsUpdated
 	{
@@ -905,11 +960,12 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, UserSettingsUpdateEventArgs> _userSettingsUpdated;
 
 	/// <summary>
-	/// Fired when properties about the current user change.
-	/// For this Event you need the <see cref="DiscordIntents.GuildPresences"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when properties about the current user change.
+	///     For this Event you need the <see cref="DiscordIntents.GuildPresences" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	/// <remarks>
-	/// NB: This event only applies for changes to the <b>current user</b>, the client that is connected to Discord.
+	///     NB: This event only applies for changes to the <b>current user</b>, the client that is connected to Discord.
 	/// </remarks>
 	public event AsyncEventHandler<DiscordClient, UserUpdateEventArgs> UserUpdated
 	{
@@ -924,8 +980,9 @@ public sealed partial class DiscordShardedClient
 #region Voice
 
 	/// <summary>
-	/// Fired when someone joins/leaves/moves voice channels.
-	/// For this Event you need the <see cref="DiscordIntents.GuildVoiceStates"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when someone joins/leaves/moves voice channels.
+	///     For this Event you need the <see cref="DiscordIntents.GuildVoiceStates" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, VoiceStateUpdateEventArgs> VoiceStateUpdated
 	{
@@ -936,8 +993,9 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, VoiceStateUpdateEventArgs> _voiceStateUpdated;
 
 	/// <summary>
-	/// Fired when a guild's voice server is updated.
-	/// For this Event you need the <see cref="DiscordIntents.GuildVoiceStates"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a guild's voice server is updated.
+	///     For this Event you need the <see cref="DiscordIntents.GuildVoiceStates" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, VoiceServerUpdateEventArgs> VoiceServerUpdated
 	{
@@ -946,10 +1004,11 @@ public sealed partial class DiscordShardedClient
 	}
 
 	private AsyncEvent<DiscordClient, VoiceServerUpdateEventArgs> _voiceServerUpdated;
-	
+
 	/// <summary>
-	/// Fired when a voice channel effect was send.
-	/// For this Event you need the <see cref="DiscordIntents.GuildVoiceStates"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+	///     Fired when a voice channel effect was send.
+	///     For this Event you need the <see cref="DiscordIntents.GuildVoiceStates" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, VoiceChannelEffectSendEventArgs> VoiceChannelEffectSend
 	{
@@ -958,13 +1017,13 @@ public sealed partial class DiscordShardedClient
 	}
 
 	private AsyncEvent<DiscordClient, VoiceChannelEffectSendEventArgs> _voiceChannelEffectSend;
-	
+
 #endregion
 
 #region Application
 
 	/// <summary>
-	/// Fired when a new application command is registered.
+	///     Fired when a new application command is registered.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ApplicationCommandEventArgs> ApplicationCommandCreated
 	{
@@ -975,7 +1034,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ApplicationCommandEventArgs> _applicationCommandCreated;
 
 	/// <summary>
-	/// Fired when an application command is updated.
+	///     Fired when an application command is updated.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ApplicationCommandEventArgs> ApplicationCommandUpdated
 	{
@@ -986,7 +1045,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ApplicationCommandEventArgs> _applicationCommandUpdated;
 
 	/// <summary>
-	/// Fired when an application command is deleted.
+	///     Fired when an application command is deleted.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ApplicationCommandEventArgs> ApplicationCommandDeleted
 	{
@@ -997,7 +1056,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ApplicationCommandEventArgs> _applicationCommandDeleted;
 
 	/// <summary>
-	/// Fired when a new application command is registered.
+	///     Fired when a new application command is registered.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, GuildApplicationCommandCountEventArgs> GuildApplicationCommandCountUpdated
 	{
@@ -1008,7 +1067,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildApplicationCommandCountEventArgs> _guildApplicationCommandCountUpdated;
 
 	/// <summary>
-	/// Fired when a user uses a context menu.
+	///     Fired when a user uses a context menu.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ContextMenuInteractionCreateEventArgs> ContextMenuInteractionCreated
 	{
@@ -1019,7 +1078,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ContextMenuInteractionCreateEventArgs> _contextMenuInteractionCreated;
 
 	/// <summary>
-	/// Fired when application command permissions gets updated.
+	///     Fired when application command permissions gets updated.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ApplicationCommandPermissionsUpdateEventArgs> ApplicationCommandPermissionsUpdated
 	{
@@ -1034,7 +1093,7 @@ public sealed partial class DiscordShardedClient
 #region Misc
 
 	/// <summary>
-	/// Fired when an interaction is invoked.
+	///     Fired when an interaction is invoked.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, InteractionCreateEventArgs> InteractionCreated
 	{
@@ -1045,7 +1104,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, InteractionCreateEventArgs> _interactionCreated;
 
 	/// <summary>
-	/// Fired when a component is invoked.
+	///     Fired when a component is invoked.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ComponentInteractionCreateEventArgs> ComponentInteractionCreated
 	{
@@ -1056,7 +1115,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ComponentInteractionCreateEventArgs> _componentInteractionCreated;
 
 	/// <summary>
-	/// Fired when an entitlement was created.
+	///     Fired when an entitlement was created.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, EntitlementCreateEventArgs> EntitlementCreated
 	{
@@ -1067,7 +1126,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, EntitlementCreateEventArgs> _entitlementCreated;
 
 	/// <summary>
-	/// Fired when an entitlement was updated.
+	///     Fired when an entitlement was updated.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, EntitlementUpdateEventArgs> EntitlementUpdated
 	{
@@ -1078,7 +1137,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, EntitlementUpdateEventArgs> _entitlementUpdated;
 
 	/// <summary>
-	/// Fired when an entitlement was deleted.
+	///     Fired when an entitlement was deleted.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, EntitlementDeleteEventArgs> EntitlementDeleted
 	{
@@ -1089,7 +1148,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, EntitlementDeleteEventArgs> _entitlementDeleted;
 
 	/// <summary>
-	/// Fired when a user starts typing in a channel.
+	///     Fired when a user starts typing in a channel.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, TypingStartEventArgs> TypingStarted
 	{
@@ -1100,7 +1159,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, TypingStartEventArgs> _typingStarted;
 
 	/// <summary>
-	/// Fired when an unknown event gets received.
+	///     Fired when an unknown event gets received.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, UnknownEventArgs> UnknownEvent
 	{
@@ -1111,7 +1170,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, UnknownEventArgs> _unknownEvent;
 
 	/// <summary>
-	/// Fired whenever webhooks update.
+	///     Fired whenever webhooks update.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, WebhooksUpdateEventArgs> WebhooksUpdated
 	{
@@ -1122,7 +1181,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, WebhooksUpdateEventArgs> _webhooksUpdated;
 
 	/// <summary>
-	/// Fired whenever an error occurs within an event handler.
+	///     Fired whenever an error occurs within an event handler.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ClientErrorEventArgs> ClientErrored
 	{
@@ -1137,7 +1196,7 @@ public sealed partial class DiscordShardedClient
 #region Error Handling
 
 	/// <summary>
-	/// Handles event errors.
+	///     Handles event errors.
 	/// </summary>
 	/// <param name="asyncEvent">The event.</param>
 	/// <param name="ex">The exception.</param>
@@ -1162,7 +1221,7 @@ public sealed partial class DiscordShardedClient
 	}
 
 	/// <summary>
-	/// Fired on heartbeat attempt cancellation due to too many failed heartbeats.
+	///     Fired on heartbeat attempt cancellation due to too many failed heartbeats.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, ZombiedEventArgs> Zombied
 	{
@@ -1173,7 +1232,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, ZombiedEventArgs> _zombied;
 
 	/// <summary>
-	/// Fired when a gateway payload is received.
+	///     Fired when a gateway payload is received.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, PayloadReceivedEventArgs> PayloadReceived
 	{
@@ -1184,7 +1243,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, PayloadReceivedEventArgs> _payloadReceived;
 
 	/// <summary>
-	/// Fired when a event handler throws an exception.
+	///     Fired when a event handler throws an exception.
 	/// </summary>
 	/// <param name="asyncEvent">The event.</param>
 	/// <param name="ex">The exception.</param>
@@ -1199,7 +1258,7 @@ public sealed partial class DiscordShardedClient
 #region Event Dispatchers
 
 	/// <summary>
-	/// Handles the client zombied event.
+	///     Handles the client zombied event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1207,7 +1266,7 @@ public sealed partial class DiscordShardedClient
 		=> this._zombied.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild member timeout removed event.
+	///     Handles the guild member timeout removed event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1215,7 +1274,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildMemberTimeoutRemoved.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild member timeout changed event.
+	///     Handles the guild member timeout changed event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1223,7 +1282,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildMemberTimeoutChanged.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild member timeout added event.
+	///     Handles the guild member timeout added event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1231,7 +1290,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildMemberTimeoutAdded.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the embedded activity updated event.
+	///     Handles the embedded activity updated event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1239,7 +1298,7 @@ public sealed partial class DiscordShardedClient
 		=> this._embeddedActivityUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the payload received event.
+	///     Handles the payload received event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1247,7 +1306,7 @@ public sealed partial class DiscordShardedClient
 		=> this._payloadReceived.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the client error event.
+	///     Handles the client error event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1255,7 +1314,7 @@ public sealed partial class DiscordShardedClient
 		=> this._clientErrored.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the socket error event.
+	///     Handles the socket error event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1263,7 +1322,7 @@ public sealed partial class DiscordShardedClient
 		=> this._socketErrored.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the socket opened event.
+	///     Handles the socket opened event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1271,7 +1330,7 @@ public sealed partial class DiscordShardedClient
 		=> this._socketOpened.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the socket closed event.
+	///     Handles the socket closed event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1279,7 +1338,7 @@ public sealed partial class DiscordShardedClient
 		=> this._socketClosed.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the ready event.
+	///     Handles the ready event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1287,7 +1346,7 @@ public sealed partial class DiscordShardedClient
 		=> this._ready.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the resumed event.
+	///     Handles the resumed event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1295,7 +1354,7 @@ public sealed partial class DiscordShardedClient
 		=> this._resumed.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the channel created event.
+	///     Handles the channel created event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1303,7 +1362,7 @@ public sealed partial class DiscordShardedClient
 		=> this._channelCreated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the channel updated event.
+	///     Handles the channel updated event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1311,7 +1370,7 @@ public sealed partial class DiscordShardedClient
 		=> this._channelUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the channel deleted.
+	///     Handles the channel deleted.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1319,7 +1378,7 @@ public sealed partial class DiscordShardedClient
 		=> this._channelDeleted.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the dm channel deleted event.
+	///     Handles the dm channel deleted event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1327,7 +1386,7 @@ public sealed partial class DiscordShardedClient
 		=> this._dmChannelDeleted.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the channel pins updated event.
+	///     Handles the channel pins updated event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1335,7 +1394,7 @@ public sealed partial class DiscordShardedClient
 		=> this._channelPinsUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild created event.
+	///     Handles the guild created event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1343,7 +1402,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildCreated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild available event.
+	///     Handles the guild available event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1351,7 +1410,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildAvailable.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild updated event.
+	///     Handles the guild updated event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1359,7 +1418,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild deleted event.
+	///     Handles the guild deleted event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1367,7 +1426,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildDeleted.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild unavailable event.
+	///     Handles the guild unavailable event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1375,7 +1434,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildUnavailable.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild download completed event.
+	///     Handles the guild download completed event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1383,7 +1442,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildDownloadCompleted.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the message created event.
+	///     Handles the message created event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1391,7 +1450,7 @@ public sealed partial class DiscordShardedClient
 		=> this._messageCreated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the invite created event.
+	///     Handles the invite created event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1399,7 +1458,7 @@ public sealed partial class DiscordShardedClient
 		=> this._inviteCreated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the invite deleted event.
+	///     Handles the invite deleted event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1407,7 +1466,7 @@ public sealed partial class DiscordShardedClient
 		=> this._inviteDeleted.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the presence update event.
+	///     Handles the presence update event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1415,7 +1474,7 @@ public sealed partial class DiscordShardedClient
 		=> this._presenceUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild ban add event.
+	///     Handles the guild ban add event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1423,7 +1482,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildBanAdded.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild ban remove event.
+	///     Handles the guild ban remove event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1431,7 +1490,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildBanRemoved.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild emojis update event.
+	///     Handles the guild emojis update event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1439,7 +1498,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildEmojisUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild stickers update event.
+	///     Handles the guild stickers update event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1447,7 +1506,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildStickersUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild integrations update event.
+	///     Handles the guild integrations update event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1455,7 +1514,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildIntegrationsUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild member add event.
+	///     Handles the guild member add event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1463,7 +1522,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildMemberAdded.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild member remove event.
+	///     Handles the guild member remove event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1471,7 +1530,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildMemberRemoved.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild member update event.
+	///     Handles the guild member update event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1479,7 +1538,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildMemberUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild role create event.
+	///     Handles the guild role create event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1487,7 +1546,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildRoleCreated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild role update event.
+	///     Handles the guild role update event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1495,7 +1554,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildRoleUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild role delete event.
+	///     Handles the guild role delete event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1503,7 +1562,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildRoleDeleted.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the message update event.
+	///     Handles the message update event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1511,7 +1570,7 @@ public sealed partial class DiscordShardedClient
 		=> this._messageUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the message delete event.
+	///     Handles the message delete event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1519,7 +1578,7 @@ public sealed partial class DiscordShardedClient
 		=> this._messageDeleted.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the message bulk delete event.
+	///     Handles the message bulk delete event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1527,7 +1586,7 @@ public sealed partial class DiscordShardedClient
 		=> this._messageBulkDeleted.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the typing start event.
+	///     Handles the typing start event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1535,7 +1594,7 @@ public sealed partial class DiscordShardedClient
 		=> this._typingStarted.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the user settings update event.
+	///     Handles the user settings update event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1543,7 +1602,7 @@ public sealed partial class DiscordShardedClient
 		=> this._userSettingsUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the user update event.
+	///     Handles the user update event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1551,7 +1610,7 @@ public sealed partial class DiscordShardedClient
 		=> this._userUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the voice state update event.
+	///     Handles the voice state update event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1559,7 +1618,7 @@ public sealed partial class DiscordShardedClient
 		=> this._voiceStateUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the voice server update event.
+	///     Handles the voice server update event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1567,7 +1626,7 @@ public sealed partial class DiscordShardedClient
 		=> this._voiceServerUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the voice channel effect send event.
+	///     Handles the voice channel effect send event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1576,7 +1635,7 @@ public sealed partial class DiscordShardedClient
 		=> this._voiceChannelEffectSend.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild members chunk event.
+	///     Handles the guild members chunk event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1584,7 +1643,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildMembersChunk.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the unknown events.
+	///     Handles the unknown events.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1592,7 +1651,7 @@ public sealed partial class DiscordShardedClient
 		=> this._unknownEvent.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the message reaction add event.
+	///     Handles the message reaction add event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1600,7 +1659,7 @@ public sealed partial class DiscordShardedClient
 		=> this._messageReactionAdded.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the message reaction remove event.
+	///     Handles the message reaction remove event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1608,7 +1667,7 @@ public sealed partial class DiscordShardedClient
 		=> this._messageReactionRemoved.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the message reaction remove all event.
+	///     Handles the message reaction remove all event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1616,7 +1675,7 @@ public sealed partial class DiscordShardedClient
 		=> this._messageReactionsCleared.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the message reaction removed emoji event.
+	///     Handles the message reaction removed emoji event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1624,7 +1683,7 @@ public sealed partial class DiscordShardedClient
 		=> this._messageReactionRemovedEmoji.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the interaction create event.
+	///     Handles the interaction create event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1632,7 +1691,7 @@ public sealed partial class DiscordShardedClient
 		=> this._interactionCreated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the entitlement create event.
+	///     Handles the entitlement create event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1640,7 +1699,7 @@ public sealed partial class DiscordShardedClient
 		=> this._entitlementCreated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the entitlement update event.
+	///     Handles the entitlement update event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1648,7 +1707,7 @@ public sealed partial class DiscordShardedClient
 		=> this._entitlementUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the entitlement delete event.
+	///     Handles the entitlement delete event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1656,7 +1715,7 @@ public sealed partial class DiscordShardedClient
 		=> this._entitlementDeleted.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the component interaction create event.
+	///     Handles the component interaction create event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1664,7 +1723,7 @@ public sealed partial class DiscordShardedClient
 		=> this._componentInteractionCreated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the context menu interaction create event.
+	///     Handles the context menu interaction create event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1672,7 +1731,7 @@ public sealed partial class DiscordShardedClient
 		=> this._contextMenuInteractionCreated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the webhooks update event.
+	///     Handles the webhooks update event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1680,7 +1739,7 @@ public sealed partial class DiscordShardedClient
 		=> this._webhooksUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the heartbeated event.
+	///     Handles the heartbeated event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1688,7 +1747,7 @@ public sealed partial class DiscordShardedClient
 		=> this._heartbeated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the application command created event.
+	///     Handles the application command created event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1696,7 +1755,7 @@ public sealed partial class DiscordShardedClient
 		=> this._applicationCommandCreated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the application command updated event.
+	///     Handles the application command updated event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1704,7 +1763,7 @@ public sealed partial class DiscordShardedClient
 		=> this._applicationCommandUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the application command deleted event.
+	///     Handles the application command deleted event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1712,7 +1771,7 @@ public sealed partial class DiscordShardedClient
 		=> this._applicationCommandDeleted.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild application command count updated event.
+	///     Handles the guild application command count updated event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1720,7 +1779,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildApplicationCommandCountUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the application command permissions updated event.
+	///     Handles the application command permissions updated event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1728,7 +1787,7 @@ public sealed partial class DiscordShardedClient
 		=> this._applicationCommandPermissionsUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild integration created event.
+	///     Handles the guild integration created event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1736,7 +1795,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildIntegrationCreated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild integration updated event.
+	///     Handles the guild integration updated event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1744,7 +1803,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildIntegrationUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild integration deleted event.
+	///     Handles the guild integration deleted event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1752,7 +1811,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildIntegrationDeleted.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the stage instance created event.
+	///     Handles the stage instance created event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1760,7 +1819,7 @@ public sealed partial class DiscordShardedClient
 		=> this._stageInstanceCreated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the stage instance updated event.
+	///     Handles the stage instance updated event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1768,7 +1827,7 @@ public sealed partial class DiscordShardedClient
 		=> this._stageInstanceUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the stage instance deleted event.
+	///     Handles the stage instance deleted event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1776,7 +1835,7 @@ public sealed partial class DiscordShardedClient
 		=> this._stageInstanceDeleted.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the thread created event.
+	///     Handles the thread created event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1784,7 +1843,7 @@ public sealed partial class DiscordShardedClient
 		=> this._threadCreated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the thread updated event.
+	///     Handles the thread updated event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1792,7 +1851,7 @@ public sealed partial class DiscordShardedClient
 		=> this._threadUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the thread deleted event.
+	///     Handles the thread deleted event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1800,7 +1859,7 @@ public sealed partial class DiscordShardedClient
 		=> this._threadDeleted.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the thread list synced event.
+	///     Handles the thread list synced event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1808,7 +1867,7 @@ public sealed partial class DiscordShardedClient
 		=> this._threadListSynced.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the thread member updated event.
+	///     Handles the thread member updated event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1816,7 +1875,7 @@ public sealed partial class DiscordShardedClient
 		=> this._threadMemberUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the thread members updated event.
+	///     Handles the thread members updated event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1824,7 +1883,7 @@ public sealed partial class DiscordShardedClient
 		=> this._threadMembersUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the scheduled event created event.
+	///     Handles the scheduled event created event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1832,7 +1891,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildScheduledEventCreated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the scheduled event updated event.
+	///     Handles the scheduled event updated event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1840,7 +1899,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildScheduledEventUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the scheduled event deleted event.
+	///     Handles the scheduled event deleted event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1848,7 +1907,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildScheduledEventDeleted.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the scheduled event user added event.
+	///     Handles the scheduled event user added event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1856,7 +1915,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildScheduledEventUserAdded.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the scheduled event user removed event.
+	///     Handles the scheduled event user removed event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1864,7 +1923,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildScheduledEventUserRemoved.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the automod rule created event.
+	///     Handles the automod rule created event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1872,7 +1931,7 @@ public sealed partial class DiscordShardedClient
 		=> this._automodRuleCreated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the automod rule updated event.
+	///     Handles the automod rule updated event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1880,7 +1939,7 @@ public sealed partial class DiscordShardedClient
 		=> this._automodRuleUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the automod rule deleted event.
+	///     Handles the automod rule deleted event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1888,7 +1947,7 @@ public sealed partial class DiscordShardedClient
 		=> this._automodRuleDeleted.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the automod action executed event.
+	///     Handles the automod action executed event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1896,7 +1955,7 @@ public sealed partial class DiscordShardedClient
 		=> this._automodActionExecuted.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the guild audit log created event.
+	///     Handles the guild audit log created event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1904,7 +1963,7 @@ public sealed partial class DiscordShardedClient
 		=> this._guildAuditLogEntryCreated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the voice channel status updated event.
+	///     Handles the voice channel status updated event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1912,7 +1971,7 @@ public sealed partial class DiscordShardedClient
 		=> this._voiceChannelStatusUpdated.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the message poll vote add event.
+	///     Handles the message poll vote add event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1920,7 +1979,7 @@ public sealed partial class DiscordShardedClient
 		=> this._messagePollVoteAdded.InvokeAsync(client, e);
 
 	/// <summary>
-	/// Handles the message poll vote remove event.
+	///     Handles the message poll vote remove event.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>

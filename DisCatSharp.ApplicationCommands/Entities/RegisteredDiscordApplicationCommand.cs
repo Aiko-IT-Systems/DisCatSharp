@@ -10,18 +10,18 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.ApplicationCommands.Entities;
 
 /// <summary>
-/// Represents a discord application command registered by the ApplicationCommands extensions.
+///     Represents a discord application command registered by the ApplicationCommands extensions.
 /// </summary>
 public sealed class RegisteredDiscordApplicationCommand : DiscordApplicationCommand
 {
 	/// <summary>
-	/// Creates a new empty registered discord application command.
+	///     Creates a new empty registered discord application command.
 	/// </summary>
 	internal RegisteredDiscordApplicationCommand()
 	{ }
 
 	/// <summary>
-	/// Creates a new registered discord application command.
+	///     Creates a new registered discord application command.
 	/// </summary>
 	/// <param name="parent">The original application command</param>
 	internal RegisteredDiscordApplicationCommand(DiscordApplicationCommand parent)
@@ -71,26 +71,26 @@ public sealed class RegisteredDiscordApplicationCommand : DiscordApplicationComm
 	}
 
 	/// <summary>
-	/// The method that will be executed when somebody runs this command.
-	/// <see langword="null"/> if command is a group command or reflection failed.
+	///     The method that will be executed when somebody runs this command.
+	///     <see langword="null" /> if command is a group command or reflection failed.
 	/// </summary>
 	public MethodInfo? CommandMethod { get; internal set; }
 
 	/// <summary>
-	/// The type that contains the sub commands of this command.
-	/// <see langword="null"/> if command is not a group command or reflection failed.
+	///     The type that contains the sub commands of this command.
+	///     <see langword="null" /> if command is not a group command or reflection failed.
 	/// </summary>
 	public Type? CommandType { get; internal set; }
 
 	/// <summary>
-	/// The type this command is contained in.
-	/// <see langword="null"/> if reflection failed.
+	///     The type this command is contained in.
+	///     <see langword="null" /> if reflection failed.
 	/// </summary>
 	public Type? ContainingType { get; internal set; }
 
 	/// <summary>
-	/// Gets all Non-DisCatSharp attributes this command has.
-	/// <see langword="null"/> if reflection failed.
+	///     Gets all Non-DisCatSharp attributes this command has.
+	///     <see langword="null" /> if reflection failed.
 	/// </summary>
 	public IReadOnlyList<Attribute>? CustomAttributes { get; internal set; }
 }

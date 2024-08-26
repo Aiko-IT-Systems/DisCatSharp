@@ -7,24 +7,12 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Experimental.Entities;
 
 /// <summary>
-/// Represents a gcp attachment.
+///     Represents a gcp attachment.
 /// </summary>
 public sealed class GcpAttachment : ObservableApiObject
 {
 	/// <summary>
-	/// Gets the file size.
-	/// </summary>
-	[JsonProperty("file_size")]
-	public int FileSize { get; internal set; }
-
-	/// <summary>
-	/// Gets the filename.
-	/// </summary>
-	[JsonProperty("filename")]
-	public string Filename { get; internal set; }
-
-	/// <summary>
-	/// Constructs a new <see cref="GcpAttachment"/>.
+	///     Constructs a new <see cref="GcpAttachment" />.
 	/// </summary>
 	/// <param name="filename">The file name.</param>
 	/// <param name="fileSize">The file size.</param>
@@ -35,7 +23,7 @@ public sealed class GcpAttachment : ObservableApiObject
 	}
 
 	/// <summary>
-	/// Constructs a new <see cref="GcpAttachment"/>.
+	///     Constructs a new <see cref="GcpAttachment" />.
 	/// </summary>
 	/// <param name="filename">The file name.</param>
 	/// <param name="file">The file stream.</param>
@@ -47,4 +35,16 @@ public sealed class GcpAttachment : ObservableApiObject
 			? size
 			: throw new FileLoadException("File size too big", filename);
 	}
+
+	/// <summary>
+	///     Gets the file size.
+	/// </summary>
+	[JsonProperty("file_size")]
+	public int FileSize { get; internal set; }
+
+	/// <summary>
+	///     Gets the filename.
+	/// </summary>
+	[JsonProperty("filename")]
+	public string Filename { get; internal set; }
 }

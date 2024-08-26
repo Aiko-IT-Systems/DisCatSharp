@@ -6,22 +6,12 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.EventArgs;
 
 /// <summary>
-/// Represents arguments for <see cref="DiscordClient.GuildDownloadCompleted"/> event.
+///     Represents arguments for <see cref="DiscordClient.GuildDownloadCompleted" /> event.
 /// </summary>
 public class GuildDownloadCompletedEventArgs : DiscordEventArgs
 {
 	/// <summary>
-	/// Gets the dictionary of guilds that just finished downloading.
-	/// </summary>
-	public IReadOnlyDictionary<ulong, DiscordGuild> Guilds { get; }
-
-	/// <summary>
-	/// If <see langword="true"/>, the bot isn't in any guilds (yet).
-	/// </summary>
-	public bool NoGuilds { get; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="GuildDownloadCompletedEventArgs"/> class.
+	///     Initializes a new instance of the <see cref="GuildDownloadCompletedEventArgs" /> class.
 	/// </summary>
 	/// <param name="guilds">The guilds.</param>
 	/// <param name="noGuilds">Whether the bot isn't in any guilds..</param>
@@ -32,4 +22,14 @@ public class GuildDownloadCompletedEventArgs : DiscordEventArgs
 		this.Guilds = guilds;
 		this.NoGuilds = noGuilds;
 	}
+
+	/// <summary>
+	///     Gets the dictionary of guilds that just finished downloading.
+	/// </summary>
+	public IReadOnlyDictionary<ulong, DiscordGuild> Guilds { get; }
+
+	/// <summary>
+	///     If <see langword="true" />, the bot isn't in any guilds (yet).
+	/// </summary>
+	public bool NoGuilds { get; }
 }

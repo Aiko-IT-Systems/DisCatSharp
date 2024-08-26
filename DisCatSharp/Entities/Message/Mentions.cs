@@ -4,52 +4,52 @@ using System.Collections.Generic;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Interface for mentionables
+///     Interface for mentionables
 /// </summary>
 public interface IMention
 { }
 
 /// <summary>
-/// Allows a reply to ping the user being replied to.
+///     Allows a reply to ping the user being replied to.
 /// </summary>
 public readonly struct RepliedUserMention : IMention
 {
 	//This is pointless because new RepliedUserMention() will work, but it is here for consistency with the other mentionables.
 	/// <summary>
-	/// Mention the user being replied to. Alias to <seealso cref="RepliedUserMention"/> constructor.
+	///     Mention the user being replied to. Alias to <seealso cref="RepliedUserMention" /> constructor.
 	/// </summary>
 	public static readonly RepliedUserMention All = new();
 }
 
 /// <summary>
-/// Allows @everyone and @here pings to mention in the message.
+///     Allows @everyone and @here pings to mention in the message.
 /// </summary>
 public readonly struct EveryoneMention : IMention
 {
 	//This is pointless because new EveryoneMention() will work, but it is here for consistency with the other mentionables.
 	/// <summary>
-	/// Allow the mentioning of @everyone and @here. Alias to <see cref="EveryoneMention"/> constructor.
+	///     Allow the mentioning of @everyone and @here. Alias to <see cref="EveryoneMention" /> constructor.
 	/// </summary>
 	public static readonly EveryoneMention All = new();
 }
 
 /// <summary>
-/// Allows @user pings to mention in the message.
+///     Allows @user pings to mention in the message.
 /// </summary>
 public readonly struct UserMention : IMention
 {
 	/// <summary>
-	/// Allow mentioning of all users. Alias to <see cref="UserMention"/> constructor.
+	///     Allow mentioning of all users. Alias to <see cref="UserMention" /> constructor.
 	/// </summary>
 	public static readonly UserMention All = new();
 
 	/// <summary>
-	/// Optional Id of the user that is allowed to be mentioned. If null, then all user mentions will be allowed.
+	///     Optional Id of the user that is allowed to be mentioned. If null, then all user mentions will be allowed.
 	/// </summary>
 	public ulong? Id { get; }
 
 	/// <summary>
-	/// Allows the specific user to be mentioned
+	///     Allows the specific user to be mentioned
 	/// </summary>
 	/// <param name="id"></param>
 	public UserMention(ulong id)
@@ -58,7 +58,7 @@ public readonly struct UserMention : IMention
 	}
 
 	/// <summary>
-	/// Allows the specific user to be mentioned
+	///     Allows the specific user to be mentioned
 	/// </summary>
 	/// <param name="user"></param>
 	public UserMention(DiscordUser user)
@@ -69,22 +69,22 @@ public readonly struct UserMention : IMention
 }
 
 /// <summary>
-/// Allows @role pings to mention in the message.
+///     Allows @role pings to mention in the message.
 /// </summary>
 public readonly struct RoleMention : IMention
 {
 	/// <summary>
-	/// Allow the mentioning of all roles.  Alias to <see cref="RoleMention"/> constructor.
+	///     Allow the mentioning of all roles.  Alias to <see cref="RoleMention" /> constructor.
 	/// </summary>
 	public static readonly RoleMention All = new();
 
 	/// <summary>
-	/// Optional Id of the role that is allowed to be mentioned. If null, then all role mentions will be allowed.
+	///     Optional Id of the role that is allowed to be mentioned. If null, then all role mentions will be allowed.
 	/// </summary>
 	public ulong? Id { get; }
 
 	/// <summary>
-	/// Allows the specific id to be mentioned
+	///     Allows the specific id to be mentioned
 	/// </summary>
 	/// <param name="id"></param>
 	public RoleMention(ulong id)
@@ -93,7 +93,7 @@ public readonly struct RoleMention : IMention
 	}
 
 	/// <summary>
-	/// Allows the specific role to be mentioned
+	///     Allows the specific role to be mentioned
 	/// </summary>
 	/// <param name="role"></param>
 	public RoleMention(DiscordRole role)
@@ -104,17 +104,17 @@ public readonly struct RoleMention : IMention
 }
 
 /// <summary>
-/// Contains static instances of common mention patterns.
+///     Contains static instances of common mention patterns.
 /// </summary>
 public static class Mentions
 {
 	/// <summary>
-	/// All possible mentions - @everyone + @here, users, and roles.
+	///     All possible mentions - @everyone + @here, users, and roles.
 	/// </summary>
 	public static IReadOnlyList<IMention> All { get; } = new IMention[] { EveryoneMention.All, UserMention.All, RoleMention.All };
 
 	/// <summary>
-	/// No mentions allowed.
+	///     No mentions allowed.
 	/// </summary>
 	public static IReadOnlyList<IMention> None { get; } = Array.Empty<IMention>();
 }

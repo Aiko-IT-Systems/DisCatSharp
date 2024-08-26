@@ -3,7 +3,7 @@ using System;
 namespace DisCatSharp.Common.Utilities;
 
 /// <summary>
-/// Handles any exception raised by an <see cref="AsyncEvent{TSender, TArgs}"/> or its handlers.
+///     Handles any exception raised by an <see cref="AsyncEvent{TSender, TArgs}" /> or its handlers.
 /// </summary>
 /// <typeparam name="TSender">Type of the object that dispatches this event.</typeparam>
 /// <typeparam name="TArgs">Type of the object which holds arguments for this event.</typeparam>

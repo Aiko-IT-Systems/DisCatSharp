@@ -8,37 +8,32 @@ using DisCatSharp.Enums;
 namespace DisCatSharp.Net.WebSocket;
 
 /// <summary>
-/// Represents a payload decompressor.
+///     Represents a payload decompressor.
 /// </summary>
 internal sealed class PayloadDecompressor : IDisposable
 {
 	/// <summary>
-	/// The zlib flush.
+	///     The zlib flush.
 	/// </summary>
 	private const uint ZLIB_FLUSH = 0x0000FFFF;
 
 	/// <summary>
-	/// The zlib prefix.
+	///     The zlib prefix.
 	/// </summary>
 	private const byte ZLIB_PREFIX = 0x78;
 
 	/// <summary>
-	/// Gets the compression level.
-	/// </summary>
-	public GatewayCompressionLevel CompressionLevel { get; }
-
-	/// <summary>
-	/// Gets the compressed stream.
+	///     Gets the compressed stream.
 	/// </summary>
 	private readonly MemoryStream _compressedStream;
 
 	/// <summary>
-	/// Gets the decompressor stream.
+	///     Gets the decompressor stream.
 	/// </summary>
 	private readonly DeflateStream _decompressorStream;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="PayloadDecompressor"/> class.
+	///     Initializes a new instance of the <see cref="PayloadDecompressor" /> class.
 	/// </summary>
 	/// <param name="compressionLevel">The compression level.</param>
 	public PayloadDecompressor(GatewayCompressionLevel compressionLevel)
@@ -53,7 +48,21 @@ internal sealed class PayloadDecompressor : IDisposable
 	}
 
 	/// <summary>
-	/// Tries the decompress.
+	///     Gets the compression level.
+	/// </summary>
+	public GatewayCompressionLevel CompressionLevel { get; }
+
+	/// <summary>
+	///     Disposes the decompressor.
+	/// </summary>
+	public void Dispose()
+	{
+		this._decompressorStream?.Dispose();
+		this._compressedStream.Dispose();
+	}
+
+	/// <summary>
+	///     Tries the decompress.
 	/// </summary>
 	/// <param name="compressed">The compressed bytes.</param>
 	/// <param name="decompressed">The decompressed memory stream.</param>
@@ -98,14 +107,5 @@ internal sealed class PayloadDecompressor : IDisposable
 			if (this.CompressionLevel == GatewayCompressionLevel.Payload)
 				zlib.Dispose();
 		}
-	}
-
-	/// <summary>
-	/// Disposes the decompressor.
-	/// </summary>
-	public void Dispose()
-	{
-		this._decompressorStream?.Dispose();
-		this._compressedStream.Dispose();
 	}
 }

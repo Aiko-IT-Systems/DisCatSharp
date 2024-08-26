@@ -9,43 +9,47 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents an interaction that was invoked.
+///     Represents an interaction that was invoked.
 /// </summary>
 public sealed class DiscordInteraction : SnowflakeObject
 {
+	internal DiscordInteraction()
+		: base(["member", "guild_id", "channel_id", "channel", "guild", "user"])
+	{ }
+
 	/// <summary>
-	/// Gets the type of interaction invoked.
+	///     Gets the type of interaction invoked.
 	/// </summary>
 	[JsonProperty("type")]
 	public InteractionType Type { get; internal set; }
 
 	/// <summary>
-	/// Gets the command data for this interaction.
+	///     Gets the command data for this interaction.
 	/// </summary>
 	[JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordInteractionData Data { get; internal set; }
 
 	/// <summary>
-	/// Gets the Id of the guild that invoked this interaction, if any.
+	///     Gets the Id of the guild that invoked this interaction, if any.
 	/// </summary>
 	[JsonIgnore]
 	public ulong? GuildId { get; internal set; }
 
 	/// <summary>
-	/// Gets the guild that invoked this interaction.
+	///     Gets the guild that invoked this interaction.
 	/// </summary>
 	[JsonIgnore] // TODO: Is now also "guild"
 	public DiscordGuild Guild
 		=> (this.Discord as DiscordClient).InternalGetCachedGuild(this.GuildId);
 
 	/// <summary>
-	/// Gets the Id of the channel that invoked this interaction.
+	///     Gets the Id of the channel that invoked this interaction.
 	/// </summary>
 	[JsonIgnore]
 	public ulong ChannelId { get; internal set; }
 
 	/// <summary>
-	/// Gets the channel that invoked this interaction.
+	///     Gets the channel that invoked this interaction.
 	/// </summary>
 	[JsonIgnore] // TODO: Is now also partial "channel"
 	public DiscordChannel Channel
@@ -56,100 +60,107 @@ public sealed class DiscordInteraction : SnowflakeObject
 				Type = ChannelType.Private,
 				Discord = this.Discord
 			}
-			: new DiscordChannel()
+			: new DiscordChannel
 			{
 				Id = this.ChannelId,
 				Discord = this.Discord
 			});
 
 	/// <summary>
-	/// Gets the user that invoked this interaction.
-	/// <para>This can be cast to a <see cref="DisCatSharp.Entities.DiscordMember"/> if created in a guild.</para>
+	///     Gets the user that invoked this interaction.
+	///     <para>This can be cast to a <see cref="DisCatSharp.Entities.DiscordMember" /> if created in a guild.</para>
 	/// </summary>
 	[JsonIgnore]
 	public DiscordUser User { get; internal set; }
 
 	/// <summary>
-	/// Gets the continuation token for responding to this interaction.
+	///     Gets the continuation token for responding to this interaction.
 	/// </summary>
 	[JsonProperty("token")]
 	public string Token { get; internal set; }
 
 	/// <summary>
-	/// Gets the version number for this interaction type.
+	///     Gets the version number for this interaction type.
 	/// </summary>
 	[JsonProperty("version")]
 	public int Version { get; internal set; }
 
 	/// <summary>
-	/// Gets the ID of the application that created this interaction.
+	///     Gets the ID of the application that created this interaction.
 	/// </summary>
 	[JsonProperty("application_id")]
 	public ulong ApplicationId { get; internal set; }
 
 	/// <summary>
-	/// The message this interaction was created with, if any.
+	///     The message this interaction was created with, if any.
 	/// </summary>
 	[JsonProperty("message")]
 	internal DiscordMessage Message { get; set; }
 
 	/// <summary>
-	/// Gets the invoking user locale.
+	///     Gets the invoking user locale.
 	/// </summary>
 	[JsonProperty("locale", NullValueHandling = NullValueHandling.Ignore)]
 	public string Locale { get; internal set; }
 
 	/// <summary>
-	/// Gets the guild locale if applicable.
+	///     Gets the guild locale if applicable.
 	/// </summary>
 	[JsonProperty("guild_locale", NullValueHandling = NullValueHandling.Ignore)]
 	public string GuildLocale { get; internal set; }
 
 	/// <summary>
-	/// Gets the applications permissions.
+	///     Gets the applications permissions.
 	/// </summary>
 	[JsonProperty("app_permissions", NullValueHandling = NullValueHandling.Ignore)]
 	public Permissions AppPermissions { get; internal set; }
 
 	/// <summary>
-	/// <para>Gets the entitlements.</para>
-	/// <para>This is related to premium subscriptions for bots.</para>
-	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
+	///     <para>Gets the entitlements.</para>
+	///     <para>This is related to premium subscriptions for bots.</para>
+	///     <para>
+	///         <note type="warning">Can only be used if you have an associated application subscription sku.</note>
+	///     </para>
 	/// </summary>
 	[JsonProperty("entitlements", NullValueHandling = NullValueHandling.Ignore)]
 	public List<DiscordEntitlement> Entitlements { get; internal set; } = [];
 
 	/// <summary>
-	/// <para>Gets the entitlement sku ids.</para>
-	/// <para>This is related to premium subscriptions for bots.</para>
-	/// <para><note type="warning">Can only be used if you have an associated application subscription sku.</note></para>
+	///     <para>Gets the entitlement sku ids.</para>
+	///     <para>This is related to premium subscriptions for bots.</para>
+	///     <para>
+	///         <note type="warning">Can only be used if you have an associated application subscription sku.</note>
+	///     </para>
 	/// </summary>
 	[JsonProperty("entitlement_sku_ids", NullValueHandling = NullValueHandling.Ignore)]
 	public List<ulong> EntitlementSkuIds { get; internal set; } = [];
 
 	/// <summary>
-	/// Gets which integrations authorized the interaction.
+	///     Gets which integrations authorized the interaction.
 	/// </summary>
 	[JsonProperty("authorizing_integration_owners", NullValueHandling = NullValueHandling.Ignore)]
 	public AuthorizingIntegrationOwners? AuthorizingIntegrationOwners { get; internal set; }
 
 	/// <summary>
-	/// Gets the interaction's calling context.
+	///     Gets the interaction's calling context.
 	/// </summary>
 	[JsonProperty("context", NullValueHandling = NullValueHandling.Ignore)]
 	public InteractionContextType Context { get; internal set; }
 
 	/// <summary>
-	/// Creates a response to this interaction.
+	///     Creates a response to this interaction.
 	/// </summary>
 	/// <param name="type">The type of the response.</param>
 	/// <param name="builder">The data, if any, to send.</param>
-	/// <returns>The created <see cref="DiscordMessage"/>, or <see langword="null"/> if <paramref name="type"/> creates no content.</returns>
+	/// <returns>
+	///     The created <see cref="DiscordMessage" />, or <see langword="null" /> if <paramref name="type" /> creates no
+	///     content.
+	/// </returns>
 	public async Task<DiscordInteractionResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null)
 		=> await this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, type, builder);
 
 	/// <summary>
-	/// Creates a modal response to this interaction.
+	///     Creates a modal response to this interaction.
 	/// </summary>
 	/// <param name="builder">The data to send.</param>
 	public Task CreateInteractionModalResponseAsync(DiscordInteractionModalBuilder builder)
@@ -157,7 +168,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 
 	// TODO: Add hints support
 	/// <summary>
-	/// Creates an iframe response to this interaction.
+	///     Creates an iframe response to this interaction.
 	/// </summary>
 	/// <param name="customId">The custom id of the iframe.</param>
 	/// <param name="title">The title of the iframe.</param>
@@ -167,17 +178,17 @@ public sealed class DiscordInteraction : SnowflakeObject
 		=> this.Type is not InteractionType.Ping ? this.Discord.ApiClient.CreateInteractionIframeResponseAsync(this.Id, this.Token, InteractionResponseType.Iframe, customId, title, modalSize, iFramePath) : throw new NotSupportedException("You can't respond to a PING with an iframe.");
 
 	/// <summary>
-	/// Gets the original interaction response.
+	///     Gets the original interaction response.
 	/// </summary>
 	/// <returns>The original message that was sent. This <b>does not work on ephemeral messages.</b></returns>
 	public Task<DiscordMessage> GetOriginalResponseAsync()
 		=> this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token);
 
 	/// <summary>
-	/// Edits the original interaction response.
+	///     Edits the original interaction response.
 	/// </summary>
 	/// <param name="builder">The webhook builder.</param>
-	/// <returns>The edited <see cref="DiscordMessage"/>.</returns>
+	/// <returns>The edited <see cref="DiscordMessage" />.</returns>
 	public async Task<DiscordMessage> EditOriginalResponseAsync(DiscordWebhookBuilder builder)
 	{
 		builder.Validate(isInteractionResponse: true);
@@ -194,16 +205,17 @@ public sealed class DiscordInteraction : SnowflakeObject
 	}
 
 	/// <summary>
-	/// Deletes the original interaction response.
-	/// </summary>>
+	///     Deletes the original interaction response.
+	/// </summary>
+	/// >
 	public Task DeleteOriginalResponseAsync()
 		=> this.Discord.ApiClient.DeleteOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token);
 
 	/// <summary>
-	/// Creates a follow up message to this interaction.
+	///     Creates a follow up message to this interaction.
 	/// </summary>
 	/// <param name="builder">The webhook builder.</param>
-	/// <returns>The created <see cref="DiscordMessage"/>.</returns>
+	/// <returns>The created <see cref="DiscordMessage" />.</returns>
 	public async Task<DiscordMessage> CreateFollowupMessageAsync(DiscordFollowupMessageBuilder builder)
 	{
 		builder.Validate();
@@ -212,18 +224,18 @@ public sealed class DiscordInteraction : SnowflakeObject
 	}
 
 	/// <summary>
-	/// Gets a follow up message.
+	///     Gets a follow up message.
 	/// </summary>
 	/// <param name="messageId">The id of the follow up message.</param>
 	public Task<DiscordMessage> GetFollowupMessageAsync(ulong messageId)
 		=> this.Discord.ApiClient.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
 
 	/// <summary>
-	/// Edits a follow up message.
+	///     Edits a follow up message.
 	/// </summary>
 	/// <param name="messageId">The id of the follow up message.</param>
 	/// <param name="builder">The webhook builder.</param>
-	/// <returns>The edited <see cref="DiscordMessage"/>.</returns>
+	/// <returns>The edited <see cref="DiscordMessage" />.</returns>
 	public async Task<DiscordMessage> EditFollowupMessageAsync(ulong messageId, DiscordWebhookBuilder builder)
 	{
 		builder.Validate(isFollowup: true);
@@ -241,13 +253,9 @@ public sealed class DiscordInteraction : SnowflakeObject
 	}
 
 	/// <summary>
-	/// Deletes a follow up message.
+	///     Deletes a follow up message.
 	/// </summary>
 	/// <param name="messageId">The id of the follow up message.</param>
 	public Task DeleteFollowupMessageAsync(ulong messageId)
 		=> this.Discord.ApiClient.DeleteFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
-
-	internal DiscordInteraction()
-		: base(["member", "guild_id", "channel_id", "channel", "guild", "user"])
-	{ }
 }

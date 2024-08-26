@@ -4,34 +4,34 @@ using System.Runtime.InteropServices;
 namespace DisCatSharp.VoiceNext.Codec;
 
 /// <summary>
-/// This is an interop class. It contains wrapper methods for Opus and Sodium.
+///     This is an interop class. It contains wrapper methods for Opus and Sodium.
 /// </summary>
 internal static class Interop
 {
 #region Sodium wrapper
 
 	/// <summary>
-	/// The sodium library name.
+	///     The sodium library name.
 	/// </summary>
 	private const string SODIUM_LIBRARY_NAME = "libsodium";
 
 	/// <summary>
-	/// Gets the Sodium key size for xsalsa20_poly1305 algorithm.
+	///     Gets the Sodium key size for xsalsa20_poly1305 algorithm.
 	/// </summary>
 	public static int SodiumKeySize { get; } = (int)_SodiumSecretBoxKeySize();
 
 	/// <summary>
-	/// Gets the Sodium nonce size for xsalsa20_poly1305 algorithm.
+	///     Gets the Sodium nonce size for xsalsa20_poly1305 algorithm.
 	/// </summary>
 	public static int SodiumNonceSize { get; } = (int)_SodiumSecretBoxNonceSize();
 
 	/// <summary>
-	/// Gets the Sodium MAC size for xsalsa20_poly1305 algorithm.
+	///     Gets the Sodium MAC size for xsalsa20_poly1305 algorithm.
 	/// </summary>
 	public static int SodiumMacSize { get; } = (int)_SodiumSecretBoxMacSize();
 
 	/// <summary>
-	/// _S the sodium secret box key size.
+	///     _S the sodium secret box key size.
 	/// </summary>
 	/// <returns>An UIntPtr.</returns>
 	[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_xsalsa20poly1305_keybytes")]
@@ -39,7 +39,7 @@ internal static class Interop
 	private static extern UIntPtr _SodiumSecretBoxKeySize();
 
 	/// <summary>
-	/// _S the sodium secret box nonce size.
+	///     _S the sodium secret box nonce size.
 	/// </summary>
 	/// <returns>An UIntPtr.</returns>
 	[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_xsalsa20poly1305_noncebytes")]
@@ -47,7 +47,7 @@ internal static class Interop
 	private static extern UIntPtr _SodiumSecretBoxNonceSize();
 
 	/// <summary>
-	/// _S the sodium secret box mac size.
+	///     _S the sodium secret box mac size.
 	/// </summary>
 	/// <returns>An UIntPtr.</returns>
 	[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_xsalsa20poly1305_macbytes")]
@@ -55,7 +55,7 @@ internal static class Interop
 	private static extern UIntPtr _SodiumSecretBoxMacSize();
 
 	/// <summary>
-	/// _S the sodium secret box create.
+	///     _S the sodium secret box create.
 	/// </summary>
 	/// <param name="buffer">The buffer.</param>
 	/// <param name="message">The message.</param>
@@ -67,7 +67,7 @@ internal static class Interop
 	private static extern unsafe int _SodiumSecretBoxCreate(byte* buffer, byte* message, ulong messageLength, byte* nonce, byte* key);
 
 	/// <summary>
-	/// _S the sodium secret box open.
+	///     _S the sodium secret box open.
 	/// </summary>
 	/// <param name="buffer">The buffer.</param>
 	/// <param name="encryptedMessage">The encrypted message.</param>
@@ -79,7 +79,7 @@ internal static class Interop
 	private static extern unsafe int _SodiumSecretBoxOpen(byte* buffer, byte* encryptedMessage, ulong encryptedLength, byte* nonce, byte* key);
 
 	/// <summary>
-	/// Encrypts supplied buffer using xsalsa20_poly1305 algorithm, using supplied key and nonce to perform encryption.
+	///     Encrypts supplied buffer using xsalsa20_poly1305 algorithm, using supplied key and nonce to perform encryption.
 	/// </summary>
 	/// <param name="source">Contents to encrypt.</param>
 	/// <param name="target">Buffer to encrypt to.</param>
@@ -101,7 +101,7 @@ internal static class Interop
 	}
 
 	/// <summary>
-	/// Decrypts supplied buffer using xsalsa20_poly1305 algorithm, using supplied key and nonce to perform decryption.
+	///     Decrypts supplied buffer using xsalsa20_poly1305 algorithm, using supplied key and nonce to perform decryption.
 	/// </summary>
 	/// <param name="source">Buffer to decrypt from.</param>
 	/// <param name="target">Decrypted message buffer.</param>
@@ -127,12 +127,12 @@ internal static class Interop
 #region Opus wrapper
 
 	/// <summary>
-	/// The opus library name.
+	///     The opus library name.
 	/// </summary>
 	private const string OPUS_LIBRARY_NAME = "libopus";
 
 	/// <summary>
-	/// _S the opus create encoder.
+	///     _S the opus create encoder.
 	/// </summary>
 	/// <param name="sampleRate">The sample rate.</param>
 	/// <param name="channels">The channels.</param>
@@ -143,14 +143,14 @@ internal static class Interop
 	private static extern IntPtr _OpusCreateEncoder(int sampleRate, int channels, int application, out OpusError error);
 
 	/// <summary>
-	/// Opuses the destroy encoder.
+	///     Opuses the destroy encoder.
 	/// </summary>
 	/// <param name="encoder">The encoder.</param>
 	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_encoder_destroy")]
 	public static extern void OpusDestroyEncoder(IntPtr encoder);
 
 	/// <summary>
-	/// _S the opus encode.
+	///     _S the opus encode.
 	/// </summary>
 	/// <param name="encoder">The encoder.</param>
 	/// <param name="pcmData">The pcm data.</param>
@@ -162,7 +162,7 @@ internal static class Interop
 	private static extern unsafe int _OpusEncode(IntPtr encoder, byte* pcmData, int frameSize, byte* data, int maxDataBytes);
 
 	/// <summary>
-	/// _S the opus encoder control.
+	///     _S the opus encoder control.
 	/// </summary>
 	/// <param name="encoder">The encoder.</param>
 	/// <param name="request">The request.</param>
@@ -172,7 +172,7 @@ internal static class Interop
 	private static extern OpusError _OpusEncoderControl(IntPtr encoder, OpusControl request, int value);
 
 	/// <summary>
-	/// _S the opus create decoder.
+	///     _S the opus create decoder.
 	/// </summary>
 	/// <param name="sampleRate">The sample rate.</param>
 	/// <param name="channels">The channels.</param>
@@ -182,14 +182,14 @@ internal static class Interop
 	private static extern IntPtr _OpusCreateDecoder(int sampleRate, int channels, out OpusError error);
 
 	/// <summary>
-	/// Opuses the destroy decoder.
+	///     Opuses the destroy decoder.
 	/// </summary>
 	/// <param name="decoder">The decoder.</param>
 	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_decoder_destroy")]
 	public static extern void OpusDestroyDecoder(IntPtr decoder);
 
 	/// <summary>
-	/// _S the opus decode.
+	///     _S the opus decode.
 	/// </summary>
 	/// <param name="decoder">The decoder.</param>
 	/// <param name="opusData">The opus data.</param>
@@ -202,7 +202,7 @@ internal static class Interop
 	private static extern unsafe int _OpusDecode(IntPtr decoder, byte* opusData, int opusDataLength, byte* data, int frameSize, int decodeFec);
 
 	/// <summary>
-	/// _S the opus get packet channel count.
+	///     _S the opus get packet channel count.
 	/// </summary>
 	/// <param name="opusData">The opus data.</param>
 	/// <returns>An int.</returns>
@@ -210,7 +210,7 @@ internal static class Interop
 	private static extern unsafe int _OpusGetPacketChannelCount(byte* opusData);
 
 	/// <summary>
-	/// _S the opus get packet frame count.
+	///     _S the opus get packet frame count.
 	/// </summary>
 	/// <param name="opusData">The opus data.</param>
 	/// <param name="length">The length.</param>
@@ -219,7 +219,7 @@ internal static class Interop
 	private static extern unsafe int _OpusGetPacketFrameCount(byte* opusData, int length);
 
 	/// <summary>
-	/// _S the opus get packet sample per frame count.
+	///     _S the opus get packet sample per frame count.
 	/// </summary>
 	/// <param name="opusData">The opus data.</param>
 	/// <param name="samplingRate">The sampling rate.</param>
@@ -228,7 +228,7 @@ internal static class Interop
 	private static extern unsafe int _OpusGetPacketSamplePerFrameCount(byte* opusData, int samplingRate);
 
 	/// <summary>
-	/// _S the opus decoder control.
+	///     _S the opus decoder control.
 	/// </summary>
 	/// <param name="decoder">The decoder.</param>
 	/// <param name="request">The request.</param>
@@ -238,7 +238,7 @@ internal static class Interop
 	private static extern int _OpusDecoderControl(IntPtr decoder, OpusControl request, out int value);
 
 	/// <summary>
-	/// Opuses the create encoder.
+	///     Opuses the create encoder.
 	/// </summary>
 	/// <param name="audioFormat">The audio format.</param>
 	/// <returns>An IntPtr.</returns>
@@ -249,7 +249,7 @@ internal static class Interop
 	}
 
 	/// <summary>
-	/// Opuses the set encoder option.
+	///     Opuses the set encoder option.
 	/// </summary>
 	/// <param name="encoder">The encoder.</param>
 	/// <param name="option">The option.</param>
@@ -262,7 +262,7 @@ internal static class Interop
 	}
 
 	/// <summary>
-	/// Opuses the encode.
+	///     Opuses the encode.
 	/// </summary>
 	/// <param name="encoder">The encoder.</param>
 	/// <param name="pcm">The pcm.</param>
@@ -288,7 +288,7 @@ internal static class Interop
 	}
 
 	/// <summary>
-	/// Opuses the create decoder.
+	///     Opuses the create decoder.
 	/// </summary>
 	/// <param name="audioFormat">The audio format.</param>
 	/// <returns>An IntPtr.</returns>
@@ -299,7 +299,7 @@ internal static class Interop
 	}
 
 	/// <summary>
-	/// Opuses the decode.
+	///     Opuses the decode.
 	/// </summary>
 	/// <param name="decoder">The decoder.</param>
 	/// <param name="opus">The opus.</param>
@@ -327,7 +327,7 @@ internal static class Interop
 	}
 
 	/// <summary>
-	/// Opuses the decode.
+	///     Opuses the decode.
 	/// </summary>
 	/// <param name="decoder">The decoder.</param>
 	/// <param name="frameSize">The frame size.</param>
@@ -352,7 +352,7 @@ internal static class Interop
 	}
 
 	/// <summary>
-	/// Opuses the get packet metrics.
+	///     Opuses the get packet metrics.
 	/// </summary>
 	/// <param name="opus">The opus.</param>
 	/// <param name="samplingRate">The sampling rate.</param>
@@ -373,7 +373,7 @@ internal static class Interop
 	}
 
 	/// <summary>
-	/// Opuses the get last packet duration.
+	///     Opuses the get last packet duration.
 	/// </summary>
 	/// <param name="decoder">The decoder.</param>
 	/// <param name="sampleCount">The sample count.</param>

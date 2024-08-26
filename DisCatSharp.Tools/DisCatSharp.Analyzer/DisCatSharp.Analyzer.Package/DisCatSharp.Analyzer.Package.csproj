@@ -76,13 +76,15 @@
 	</ItemGroup>
 
 	<Target Name="AddNuGetDlls" BeforeTargets="_GetPackageFiles">
-		<JoinItems Left="@(ResolvedCompileFileDefinitions)" LeftKey="NuGetPackageId" LeftMetadata="*" Right="@(PackageReference)" RightKey="" RightMetadata="*" ItemSpecToUse="Left">
+		<JoinItems Left="@(ResolvedCompileFileDefinitions)" LeftKey="NuGetPackageId" LeftMetadata="*"
+		           Right="@(PackageReference)" RightKey="" RightMetadata="*" ItemSpecToUse="Left">
 			<Output TaskParameter="JoinResult" ItemName="_PackagesToPack" />
 		</JoinItems>
 
 		<ItemGroup>
 			<_PackagesToPack Remove="@(_PackagesToPack)" Condition="%(NuGetPackageId) == 'NETStandard.Library'" />
-			<_PackagesToPack Remove="@(_PackagesToPack)" Condition="%(NuGetPackageId) == 'Microsoft.CodeAnalysis.CSharp.Workspaces'" />
+			<_PackagesToPack Remove="@(_PackagesToPack)"
+			                 Condition="%(NuGetPackageId) == 'Microsoft.CodeAnalysis.CSharp.Workspaces'" />
 		</ItemGroup>
 
 		<Message Importance="High" Text="Adding DLLs from the following packages: @(_PackagesToPack->'%(NuGetPackageId)')" />

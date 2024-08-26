@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 namespace DisCatSharp.CommandsNext.Attributes;
 
 /// <summary>
-/// Defines that usage of this command is restricted to the guild owner.
+///     Defines that usage of this command is restricted to the guild owner.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 public sealed class RequireGuildOwnerAttribute : CheckBaseAttribute
 {
 	/// <summary>
-	/// Executes the a check.
+	///     Executes the a check.
 	/// </summary>
 	/// <param name="ctx">The command context.</param>
 	/// <param name="help">If true, help - returns true.</param>
@@ -23,7 +23,7 @@ public sealed class RequireGuildOwnerAttribute : CheckBaseAttribute
 
 			return owner;
 		}
-		else
-			return false;
+
+		return false;
 	}
 }

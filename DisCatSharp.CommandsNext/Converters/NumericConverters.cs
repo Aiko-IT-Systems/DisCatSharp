@@ -6,12 +6,12 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.CommandsNext.Converters;
 
 /// <summary>
-/// The bool converter.
+///     The bool converter.
 /// </summary>
 public class BoolConverter : IArgumentConverter<bool>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -22,12 +22,12 @@ public class BoolConverter : IArgumentConverter<bool>
 }
 
 /// <summary>
-/// The int8 converter.
+///     The int8 converter.
 /// </summary>
 public class Int8Converter : IArgumentConverter<sbyte>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -38,12 +38,12 @@ public class Int8Converter : IArgumentConverter<sbyte>
 }
 
 /// <summary>
-/// The uint8 converter.
+///     The uint8 converter.
 /// </summary>
 public class Uint8Converter : IArgumentConverter<byte>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -54,12 +54,12 @@ public class Uint8Converter : IArgumentConverter<byte>
 }
 
 /// <summary>
-/// The int16 converter.
+///     The int16 converter.
 /// </summary>
 public class Int16Converter : IArgumentConverter<short>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -70,12 +70,12 @@ public class Int16Converter : IArgumentConverter<short>
 }
 
 /// <summary>
-/// The uint16 converter.
+///     The uint16 converter.
 /// </summary>
 public class Uint16Converter : IArgumentConverter<ushort>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -86,12 +86,12 @@ public class Uint16Converter : IArgumentConverter<ushort>
 }
 
 /// <summary>
-/// The int32 converter.
+///     The int32 converter.
 /// </summary>
 public class Int32Converter : IArgumentConverter<int>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -102,12 +102,12 @@ public class Int32Converter : IArgumentConverter<int>
 }
 
 /// <summary>
-/// The uint32 converter.
+///     The uint32 converter.
 /// </summary>
 public class Uint32Converter : IArgumentConverter<uint>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -118,12 +118,12 @@ public class Uint32Converter : IArgumentConverter<uint>
 }
 
 /// <summary>
-/// The int64 converter.
+///     The int64 converter.
 /// </summary>
 public class Int64Converter : IArgumentConverter<long>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -134,12 +134,12 @@ public class Int64Converter : IArgumentConverter<long>
 }
 
 /// <summary>
-/// The uint64 converter.
+///     The uint64 converter.
 /// </summary>
 public class Uint64Converter : IArgumentConverter<ulong>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -150,12 +150,12 @@ public class Uint64Converter : IArgumentConverter<ulong>
 }
 
 /// <summary>
-/// The float32 converter.
+///     The float32 converter.
 /// </summary>
 public class Float32Converter : IArgumentConverter<float>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -166,12 +166,12 @@ public class Float32Converter : IArgumentConverter<float>
 }
 
 /// <summary>
-/// The float64 converter.
+///     The float64 converter.
 /// </summary>
 public class Float64Converter : IArgumentConverter<double>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -182,12 +182,12 @@ public class Float64Converter : IArgumentConverter<double>
 }
 
 /// <summary>
-/// The float128 converter.
+///     The float128 converter.
 /// </summary>
 public class Float128Converter : IArgumentConverter<decimal>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>

@@ -3,23 +3,13 @@ using System;
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
-/// Adds a choice for this slash command option
+///     Adds a choice for this slash command option
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true)]
 public class ChoiceAttribute : Attribute
 {
 	/// <summary>
-	/// Gets the name of the choice
-	/// </summary>
-	public string Name { get; }
-
-	/// <summary>
-	/// Gets the value of the choice
-	/// </summary>
-	public object Value { get; }
-
-	/// <summary>
-	/// Adds a choice to the slash command option
+	///     Adds a choice to the slash command option
 	/// </summary>
 	/// <param name="name">The name of the choice.</param>
 	/// <param name="value">The value of the choice.</param>
@@ -30,7 +20,7 @@ public class ChoiceAttribute : Attribute
 	}
 
 	/// <summary>
-	/// Adds a choice to the slash command option
+	///     Adds a choice to the slash command option
 	/// </summary>
 	/// <param name="name">The name of the choice.</param>
 	/// <param name="value">The value of the choice.</param>
@@ -41,7 +31,7 @@ public class ChoiceAttribute : Attribute
 	}
 
 	/// <summary>
-	/// Adds a choice to the slash command option
+	///     Adds a choice to the slash command option
 	/// </summary>
 	/// <param name="name">The name of the choice.</param>
 	/// <param name="value">The value of the choice.</param>
@@ -52,7 +42,7 @@ public class ChoiceAttribute : Attribute
 	}
 
 	/// <summary>
-	/// Adds a choice to the slash command option
+	///     Adds a choice to the slash command option
 	/// </summary>
 	/// <param name="name">The name of the choice.</param>
 	/// <param name="value">The value of the choice.</param>
@@ -61,4 +51,14 @@ public class ChoiceAttribute : Attribute
 		this.Name = name;
 		this.Value = value;
 	}
+
+	/// <summary>
+	///     Gets the name of the choice
+	/// </summary>
+	public string Name { get; }
+
+	/// <summary>
+	///     Gets the value of the choice
+	/// </summary>
+	public object Value { get; }
 }

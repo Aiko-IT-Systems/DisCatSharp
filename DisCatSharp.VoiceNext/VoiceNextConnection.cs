@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -31,343 +32,214 @@ namespace DisCatSharp.VoiceNext;
 internal delegate Task VoiceDisconnectedEventHandler(DiscordGuild guild);
 
 /// <summary>
-/// VoiceNext connection to a voice channel.
+///     VoiceNext connection to a voice channel.
 /// </summary>
 public sealed class VoiceNextConnection : IDisposable
 {
 	/// <summary>
-	/// Triggered whenever a user speaks in the connected voice channel.
-	/// </summary>
-	public event AsyncEventHandler<VoiceNextConnection, UserSpeakingEventArgs> UserSpeaking
-	{
-		add => this._userSpeaking.Register(value);
-		remove => this._userSpeaking.Unregister(value);
-	}
-
-	private readonly AsyncEvent<VoiceNextConnection, UserSpeakingEventArgs> _userSpeaking;
-
-	/// <summary>
-	/// Triggered whenever a user joins voice in the connected guild.
-	/// </summary>
-	public event AsyncEventHandler<VoiceNextConnection, VoiceUserJoinEventArgs> UserJoined
-	{
-		add => this._userJoined.Register(value);
-		remove => this._userJoined.Unregister(value);
-	}
-
-	private readonly AsyncEvent<VoiceNextConnection, VoiceUserJoinEventArgs> _userJoined;
-
-	/// <summary>
-	/// Triggered whenever a user leaves voice in the connected guild.
-	/// </summary>
-	public event AsyncEventHandler<VoiceNextConnection, VoiceUserLeaveEventArgs> UserLeft
-	{
-		add => this._userLeft.Register(value);
-		remove => this._userLeft.Unregister(value);
-	}
-
-	private readonly AsyncEvent<VoiceNextConnection, VoiceUserLeaveEventArgs> _userLeft;
-
-	/// <summary>
-	/// Triggered whenever voice data is received from the connected voice channel.
-	/// </summary>
-	public event AsyncEventHandler<VoiceNextConnection, VoiceReceiveEventArgs> VoiceReceived
-	{
-		add => this._voiceReceived.Register(value);
-		remove => this._voiceReceived.Unregister(value);
-	}
-
-	private readonly AsyncEvent<VoiceNextConnection, VoiceReceiveEventArgs> _voiceReceived;
-
-	/// <summary>
-	/// Triggered whenever voice WebSocket throws an exception.
-	/// </summary>
-	public event AsyncEventHandler<VoiceNextConnection, SocketErrorEventArgs> VoiceSocketErrored
-	{
-		add => this._voiceSocketError.Register(value);
-		remove => this._voiceSocketError.Unregister(value);
-	}
-
-	private readonly AsyncEvent<VoiceNextConnection, SocketErrorEventArgs> _voiceSocketError;
-
-	internal event VoiceDisconnectedEventHandler VoiceDisconnected;
-
-	/// <summary>
-	/// Gets the unix epoch.
-	/// </summary>
-	private static DateTimeOffset s_unixEpoch { get; } = new(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
-
-	/// <summary>
-	/// Gets the discord.
-	/// </summary>
-	private readonly DiscordClient _discord;
-
-	/// <summary>
-	/// Gets the guild.
-	/// </summary>
-	private readonly DiscordGuild _guild;
-
-	/// <summary>
-	/// Gets the transmitting s s r cs.
-	/// </summary>
-	private readonly ConcurrentDictionary<uint, AudioSender> _transmittingSsrCs;
-
-	/// <summary>
-	/// Gets the udp client.
-	/// </summary>
-	private readonly BaseUdpClient _udpClient;
-
-	/// <summary>
-	/// Gets or sets the voice ws.
-	/// </summary>
-	private IWebSocketClient _voiceWs;
-
-	/// <summary>
-	/// Gets or sets the heartbeat task.
-	/// </summary>
-	private Task _heartbeatTask;
-
-	/// <summary>
-	/// Gets or sets the heartbeat interval.
-	/// </summary>
-	private int _heartbeatInterval;
-
-	/// <summary>
-	/// Gets or sets the last heartbeat.
-	/// </summary>
-	private DateTimeOffset _lastHeartbeat;
-
-	/// <summary>
-	/// Gets or sets the token source.
-	/// </summary>
-	private CancellationTokenSource _tokenSource;
-
-	/// <summary>
-	/// Gets the token.
-	/// </summary>
-	private CancellationToken TOKEN
-		=> this._tokenSource.Token;
-
-	/// <summary>
-	/// Saves the last speaking flag
-	/// </summary>
-	private SpeakingFlags _speakingFlags;
-
-	/// <summary>
-	/// Gets or sets the server data.
-	/// </summary>
-	internal VoiceServerUpdatePayload ServerData { get; set; }
-
-	/// <summary>
-	/// Gets or sets the state data.
-	/// </summary>
-	internal VoiceStateUpdatePayload StateData { get; set; }
-
-	/// <summary>
-	/// Gets or sets a value indicating whether resume.
-	/// </summary>
-	internal bool Resume { get; set; }
-
-	/// <summary>
-	/// Gets the configuration.
+	///     Gets the configuration.
 	/// </summary>
 	private readonly VoiceNextConfiguration _configuration;
 
 	/// <summary>
-	/// Gets or sets the opus.
+	///     Gets the discord.
 	/// </summary>
-	private Opus _opus;
+	private readonly DiscordClient _discord;
 
 	/// <summary>
-	/// Gets or sets the sodium.
+	///     Gets the guild.
 	/// </summary>
-	private Sodium _sodium;
+	private readonly DiscordGuild _guild;
 
 	/// <summary>
-	/// Gets or sets the rtp.
-	/// </summary>
-	private Rtp _rtp;
-
-	/// <summary>
-	/// Gets or sets the selected encryption mode.
-	/// </summary>
-	private EncryptionMode _selectedEncryptionMode;
-
-	/// <summary>
-	/// Gets or sets the nonce.
-	/// </summary>
-	private uint _nonce;
-
-	/// <summary>
-	/// Gets or sets the sequence.
-	/// </summary>
-	private ushort _sequence;
-
-	/// <summary>
-	/// Gets or sets the timestamp.
-	/// </summary>
-	private uint _timestamp;
-
-	/// <summary>
-	/// Gets or sets the s s r c.
-	/// </summary>
-	private uint _ssrc;
-
-	/// <summary>
-	/// Gets or sets the key.
-	/// </summary>
-	private byte[] _key;
-
-	/// <summary>
-	/// Gets or sets the discovered endpoint.
-	/// </summary>
-	private IpEndpoint _discoveredEndpoint;
-
-	/// <summary>
-	/// Gets or sets the web socket endpoint.
-	/// </summary>
-	internal ConnectionEndpoint WebSocketEndpoint { get; set; }
-
-	/// <summary>
-	/// Gets or sets the udp endpoint.
-	/// </summary>
-	internal ConnectionEndpoint UdpEndpoint { get; set; }
-
-	/// <summary>
-	/// Gets or sets the ready wait.
-	/// </summary>
-	private readonly TaskCompletionSource<bool> _readyWait;
-
-	/// <summary>
-	/// Gets or sets a value indicating whether is initialized.
-	/// </summary>
-	private bool _isInitialized;
-
-	/// <summary>
-	/// Gets or sets a value indicating whether is disposed.
-	/// </summary>
-	private bool _isDisposed;
-
-	/// <summary>
-	/// Gets or sets the playing wait.
-	/// </summary>
-	private TaskCompletionSource<bool>? _playingWait;
-
-	/// <summary>
-	/// Gets the pause event.
-	/// </summary>
-	private readonly AsyncManualResetEvent _pauseEvent;
-
-	/// <summary>
-	/// Gets or sets the transmit stream.
-	/// </summary>
-	private VoiceTransmitSink? _transmitStream;
-
-	/// <summary>
-	/// Gets the transmit channel.
-	/// </summary>
-	private readonly Channel<RawVoicePacket> _transmitChannel;
-
-	/// <summary>
-	/// Gets the keepalive timestamps.
+	///     Gets the keepalive timestamps.
 	/// </summary>
 	private readonly ConcurrentDictionary<ulong, long> _keepaliveTimestamps;
 
 	/// <summary>
-	/// Gets the last keepalive.
+	///     Gets the pause event.
 	/// </summary>
-	private ulong _lastKeepalive;
+	private readonly AsyncManualResetEvent _pauseEvent;
 
 	/// <summary>
-	/// Gets or sets the sender task.
+	///     Gets or sets the ready wait.
 	/// </summary>
-	private Task _senderTask;
+	private readonly TaskCompletionSource<bool> _readyWait;
 
 	/// <summary>
-	/// Gets or sets the sender token source.
+	///     Gets the transmit channel.
 	/// </summary>
-	private CancellationTokenSource _senderTokenSource;
+	private readonly Channel<RawVoicePacket> _transmitChannel;
 
 	/// <summary>
-	/// Gets the sender token.
+	///     Gets the transmitting s s r cs.
 	/// </summary>
-	private CancellationToken SENDER_TOKEN
-		=> this._senderTokenSource.Token;
+	private readonly ConcurrentDictionary<uint, AudioSender> _transmittingSsrCs;
 
 	/// <summary>
-	/// Gets or sets the receiver task.
+	///     Gets the udp client.
 	/// </summary>
-	private Task _receiverTask;
+	private readonly BaseUdpClient _udpClient;
+
+	private readonly AsyncEvent<VoiceNextConnection, VoiceUserJoinEventArgs> _userJoined;
+
+	private readonly AsyncEvent<VoiceNextConnection, VoiceUserLeaveEventArgs> _userLeft;
+
+	private readonly AsyncEvent<VoiceNextConnection, UserSpeakingEventArgs> _userSpeaking;
+
+	private readonly AsyncEvent<VoiceNextConnection, VoiceReceiveEventArgs> _voiceReceived;
+
+	private readonly AsyncEvent<VoiceNextConnection, SocketErrorEventArgs> _voiceSocketError;
 
 	/// <summary>
-	/// Gets or sets the receiver token source.
+	///     Gets or sets the discovered endpoint.
 	/// </summary>
-	private CancellationTokenSource _receiverTokenSource;
+	private IpEndpoint _discoveredEndpoint;
 
 	/// <summary>
-	/// Gets the receiver token.
+	///     Gets or sets the heartbeat interval.
 	/// </summary>
-	private CancellationToken RECEIVER_TOKEN
-		=> this._receiverTokenSource.Token;
+	private int _heartbeatInterval;
 
 	/// <summary>
-	/// Gets or sets the keepalive task.
+	///     Gets or sets the heartbeat task.
+	/// </summary>
+	private Task _heartbeatTask;
+
+	/// <summary>
+	///     Gets or sets a value indicating whether is disposed.
+	/// </summary>
+	private bool _isDisposed;
+
+	/// <summary>
+	///     Gets or sets a value indicating whether is initialized.
+	/// </summary>
+	private bool _isInitialized;
+
+	/// <summary>
+	///     Gets or sets the keepalive task.
 	/// </summary>
 	private Task _keepaliveTask;
 
 	/// <summary>
-	/// Gets or sets the keepalive token source.
+	///     Gets or sets the keepalive token source.
 	/// </summary>
 	private CancellationTokenSource _keepaliveTokenSource;
 
 	/// <summary>
-	/// Gets the keepalive token.
+	///     Gets or sets the key.
 	/// </summary>
-	private CancellationToken KEEPALIVE_TOKEN
-		=> this._keepaliveTokenSource.Token;
+	private byte[] _key;
 
 	/// <summary>
-	/// Gets the audio format used by the Opus encoder.
+	///     Gets or sets the last heartbeat.
 	/// </summary>
-	public AudioFormat AudioFormat => this._configuration.AudioFormat;
+	private DateTimeOffset _lastHeartbeat;
 
 	/// <summary>
-	/// Gets whether this connection is still playing audio.
+	///     Gets the last keepalive.
 	/// </summary>
-	public bool IsPlaying
-		=> this._playingWait is { Task.IsCompleted: false };
+	private ulong _lastKeepalive;
 
 	/// <summary>
-	/// Gets the websocket round-trip time in ms.
+	///     Gets or sets the nonce.
 	/// </summary>
-	public int WebSocketPing
-		=> Volatile.Read(ref this._wsPing);
-
-	private int _wsPing;
+	private uint _nonce;
 
 	/// <summary>
-	/// Gets the UDP round-trip time in ms.
+	///     Gets or sets the opus.
 	/// </summary>
-	public int UdpPing
-		=> Volatile.Read(ref this._udpPing);
+	private Opus _opus;
 
 	/// <summary>
-	/// Gets the ping.
+	///     Gets or sets the playing wait.
 	/// </summary>
-	private int _udpPing;
+	private TaskCompletionSource<bool>? _playingWait;
 
 	/// <summary>
-	/// Gets the queue count.
+	///     Gets the queue count.
 	/// </summary>
 	private int _queueCount;
 
 	/// <summary>
-	/// Gets the channel this voice client is connected to.
+	///     Gets or sets the receiver task.
 	/// </summary>
-	public DiscordChannel TargetChannel { get; internal set; }
+	private Task _receiverTask;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="VoiceNextConnection"/> class.
+	///     Gets or sets the receiver token source.
+	/// </summary>
+	private CancellationTokenSource _receiverTokenSource;
+
+	/// <summary>
+	///     Gets or sets the rtp.
+	/// </summary>
+	private Rtp _rtp;
+
+	/// <summary>
+	///     Gets or sets the selected encryption mode.
+	/// </summary>
+	private EncryptionMode _selectedEncryptionMode;
+
+	/// <summary>
+	///     Gets or sets the sender task.
+	/// </summary>
+	private Task _senderTask;
+
+	/// <summary>
+	///     Gets or sets the sender token source.
+	/// </summary>
+	private CancellationTokenSource _senderTokenSource;
+
+	/// <summary>
+	///     Gets or sets the sequence.
+	/// </summary>
+	private ushort _sequence;
+
+	/// <summary>
+	///     Gets or sets the sodium.
+	/// </summary>
+	private Sodium _sodium;
+
+	/// <summary>
+	///     Saves the last speaking flag
+	/// </summary>
+	private SpeakingFlags _speakingFlags;
+
+	/// <summary>
+	///     Gets or sets the s s r c.
+	/// </summary>
+	private uint _ssrc;
+
+	/// <summary>
+	///     Gets or sets the timestamp.
+	/// </summary>
+	private uint _timestamp;
+
+	/// <summary>
+	///     Gets or sets the token source.
+	/// </summary>
+	private CancellationTokenSource _tokenSource;
+
+	/// <summary>
+	///     Gets or sets the transmit stream.
+	/// </summary>
+	private VoiceTransmitSink? _transmitStream;
+
+	/// <summary>
+	///     Gets the ping.
+	/// </summary>
+	private int _udpPing;
+
+	/// <summary>
+	///     Gets or sets the voice ws.
+	/// </summary>
+	private IWebSocketClient _voiceWs;
+
+	private int _wsPing;
+
+	/// <summary>
+	///     Initializes a new instance of the <see cref="VoiceNextConnection" /> class.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="guild">The guild.</param>
@@ -432,13 +304,193 @@ public sealed class VoiceNextConnection : IDisposable
 		this._voiceWs.ExceptionThrown += this.VoiceWs_SocketException;
 	}
 
+	/// <summary>
+	///     Gets the unix epoch.
+	/// </summary>
+	private static DateTimeOffset s_unixEpoch { get; } = new(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
+
+	/// <summary>
+	///     Gets the token.
+	/// </summary>
+	private CancellationToken TOKEN
+		=> this._tokenSource.Token;
+
+	/// <summary>
+	///     Gets or sets the server data.
+	/// </summary>
+	internal VoiceServerUpdatePayload ServerData { get; set; }
+
+	/// <summary>
+	///     Gets or sets the state data.
+	/// </summary>
+	internal VoiceStateUpdatePayload StateData { get; set; }
+
+	/// <summary>
+	///     Gets or sets a value indicating whether resume.
+	/// </summary>
+	internal bool Resume { get; set; }
+
+	/// <summary>
+	///     Gets or sets the web socket endpoint.
+	/// </summary>
+	internal ConnectionEndpoint WebSocketEndpoint { get; set; }
+
+	/// <summary>
+	///     Gets or sets the udp endpoint.
+	/// </summary>
+	internal ConnectionEndpoint UdpEndpoint { get; set; }
+
+	/// <summary>
+	///     Gets the sender token.
+	/// </summary>
+	private CancellationToken SENDER_TOKEN
+		=> this._senderTokenSource.Token;
+
+	/// <summary>
+	///     Gets the receiver token.
+	/// </summary>
+	private CancellationToken RECEIVER_TOKEN
+		=> this._receiverTokenSource.Token;
+
+	/// <summary>
+	///     Gets the keepalive token.
+	/// </summary>
+	private CancellationToken KEEPALIVE_TOKEN
+		=> this._keepaliveTokenSource.Token;
+
+	/// <summary>
+	///     Gets the audio format used by the Opus encoder.
+	/// </summary>
+	public AudioFormat AudioFormat => this._configuration.AudioFormat;
+
+	/// <summary>
+	///     Gets whether this connection is still playing audio.
+	/// </summary>
+	public bool IsPlaying
+		=> this._playingWait is { Task.IsCompleted: false };
+
+	/// <summary>
+	///     Gets the websocket round-trip time in ms.
+	/// </summary>
+	public int WebSocketPing
+		=> Volatile.Read(ref this._wsPing);
+
+	/// <summary>
+	///     Gets the UDP round-trip time in ms.
+	/// </summary>
+	public int UdpPing
+		=> Volatile.Read(ref this._udpPing);
+
+	/// <summary>
+	///     Gets the channel this voice client is connected to.
+	/// </summary>
+	public DiscordChannel TargetChannel { get; internal set; }
+
+	/// <summary>
+	///     Disconnects and disposes this voice connection.
+	/// </summary>
+	public void Dispose()
+	{
+		ObjectDisposedException.ThrowIf(this._isDisposed, this);
+
+		try
+		{
+			this._isDisposed = true;
+			this._isInitialized = false;
+			this._tokenSource?.Cancel();
+			this._senderTokenSource?.Cancel();
+			this._receiverTokenSource?.Cancel();
+		}
+		catch (Exception ex)
+		{
+			this._discord.Logger.LogError(ex, "{Message}", ex.Message);
+		}
+
+		try
+		{
+			this._voiceWs.DisconnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+			this._udpClient.Close();
+		}
+		catch
+		{ }
+
+		try
+		{
+			this._keepaliveTokenSource?.Cancel();
+			this._tokenSource?.Dispose();
+			this._senderTokenSource?.Dispose();
+			this._receiverTokenSource?.Dispose();
+			this._keepaliveTokenSource?.Dispose();
+			this._opus?.Dispose();
+			this._opus = null;
+			this._sodium?.Dispose();
+			this._sodium = null;
+			this._rtp?.Dispose();
+			this._rtp = null;
+		}
+		catch (Exception ex)
+		{
+			this._discord.Logger.LogError(ex, "{Message}", ex.Message);
+		}
+
+		this.VoiceDisconnected?.Invoke(this._guild);
+		GC.SuppressFinalize(this);
+	}
+
+	/// <summary>
+	///     Triggered whenever a user speaks in the connected voice channel.
+	/// </summary>
+	public event AsyncEventHandler<VoiceNextConnection, UserSpeakingEventArgs> UserSpeaking
+	{
+		add => this._userSpeaking.Register(value);
+		remove => this._userSpeaking.Unregister(value);
+	}
+
+	/// <summary>
+	///     Triggered whenever a user joins voice in the connected guild.
+	/// </summary>
+	public event AsyncEventHandler<VoiceNextConnection, VoiceUserJoinEventArgs> UserJoined
+	{
+		add => this._userJoined.Register(value);
+		remove => this._userJoined.Unregister(value);
+	}
+
+	/// <summary>
+	///     Triggered whenever a user leaves voice in the connected guild.
+	/// </summary>
+	public event AsyncEventHandler<VoiceNextConnection, VoiceUserLeaveEventArgs> UserLeft
+	{
+		add => this._userLeft.Register(value);
+		remove => this._userLeft.Unregister(value);
+	}
+
+	/// <summary>
+	///     Triggered whenever voice data is received from the connected voice channel.
+	/// </summary>
+	public event AsyncEventHandler<VoiceNextConnection, VoiceReceiveEventArgs> VoiceReceived
+	{
+		add => this._voiceReceived.Register(value);
+		remove => this._voiceReceived.Unregister(value);
+	}
+
+	/// <summary>
+	///     Triggered whenever voice WebSocket throws an exception.
+	/// </summary>
+	public event AsyncEventHandler<VoiceNextConnection, SocketErrorEventArgs> VoiceSocketErrored
+	{
+		add => this._voiceSocketError.Register(value);
+		remove => this._voiceSocketError.Unregister(value);
+	}
+
+	internal event VoiceDisconnectedEventHandler VoiceDisconnected;
+
 	~VoiceNextConnection()
 	{
 		this.Dispose();
 	}
 
 	/// <summary>
-	/// Connects to the specified voice channel.
+	///     Connects to the specified voice channel.
 	/// </summary>
 	/// <returns>A task representing the connection operation.</returns>
 	internal Task ConnectAsync()
@@ -454,14 +506,14 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Reconnects .
+	///     Reconnects .
 	/// </summary>
 	/// <returns>A Task.</returns>
 	internal Task ReconnectAsync()
 		=> this._voiceWs.DisconnectAsync();
 
 	/// <summary>
-	/// Starts .
+	///     Starts .
 	/// </summary>
 	/// <returns>A Task.</returns>
 	internal async Task StartAsync()
@@ -497,14 +549,14 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Waits the for ready async.
+	///     Waits the for ready async.
 	/// </summary>
 	/// <returns>A Task.</returns>
 	internal Task WaitForReadyAsync()
 		=> this._readyWait.Task;
 
 	/// <summary>
-	/// Enqueues the packet async.
+	///     Enqueues the packet async.
 	/// </summary>
 	/// <param name="packet">The packet.</param>
 	/// <param name="token">The token.</param>
@@ -516,7 +568,7 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Prepares the packet.
+	///     Prepares the packet.
 	/// </summary>
 	/// <param name="pcm">The pcm.</param>
 	/// <param name="target">The target.</param>
@@ -574,7 +626,7 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Voices the sender task.
+	///     Voices the sender task.
 	/// </summary>
 	/// <returns>A Task.</returns>
 	private async Task VoiceSenderTask()
@@ -658,7 +710,7 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Processes the packet.
+	///     Processes the packet.
 	/// </summary>
 	/// <param name="data">The data.</param>
 	/// <param name="opus">The opus.</param>
@@ -785,7 +837,7 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Processes the voice packet.
+	///     Processes the voice packet.
 	/// </summary>
 	/// <param name="data">The data.</param>
 	/// <returns>A Task.</returns>
@@ -832,7 +884,7 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Processes the keepalive.
+	///     Processes the keepalive.
 	/// </summary>
 	/// <param name="data">The data.</param>
 	private void ProcessKeepalive(byte[] data)
@@ -855,7 +907,7 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Udps the receiver task.
+	///     Udps the receiver task.
 	/// </summary>
 	/// <returns>A Task.</returns>
 	private async Task UdpReceiverTask()
@@ -873,7 +925,7 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Sends a speaking status to the connected voice channel.
+	///     Sends a speaking status to the connected voice channel.
 	/// </summary>
 	/// <param name="flags">Set the speaking flags.</param>
 	/// <returns>A task representing the sending operation.</returns>
@@ -901,7 +953,8 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Gets a transmit stream for this connection, optionally specifying a packet size to use with the stream. If a stream is already configured, it will return the existing one.
+	///     Gets a transmit stream for this connection, optionally specifying a packet size to use with the stream. If a stream
+	///     is already configured, it will return the existing one.
 	/// </summary>
 	/// <param name="sampleDuration">Duration, in ms, to use for audio packets.</param>
 	/// <returns>Transmit stream.</returns>
@@ -916,7 +969,7 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Asynchronously waits for playback to be finished. Playback is finished when speaking = false is signaled.
+	///     Asynchronously waits for playback to be finished. Playback is finished when speaking = false is signaled.
 	/// </summary>
 	/// <returns>A task representing the waiting operation.</returns>
 	public async Task WaitForPlaybackFinishAsync()
@@ -926,77 +979,26 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Pauses playback.
+	///     Pauses playback.
 	/// </summary>
 	public void Pause()
 		=> this._pauseEvent.Reset();
 
 	/// <summary>
-	/// Asynchronously resumes playback.
+	///     Asynchronously resumes playback.
 	/// </summary>
 	/// <returns></returns>
 	public async Task ResumeAsync()
 		=> await this._pauseEvent.SetAsync().ConfigureAwait(false);
 
 	/// <summary>
-	/// Disconnects and disposes this voice connection.
+	///     Disconnects and disposes this voice connection.
 	/// </summary>
 	public void Disconnect()
 		=> this.Dispose();
 
 	/// <summary>
-	/// Disconnects and disposes this voice connection.
-	/// </summary>
-	public void Dispose()
-	{
-		ObjectDisposedException.ThrowIf(this._isDisposed, this);
-
-		try
-		{
-			this._isDisposed = true;
-			this._isInitialized = false;
-			this._tokenSource?.Cancel();
-			this._senderTokenSource?.Cancel();
-			this._receiverTokenSource?.Cancel();
-		}
-		catch (Exception ex)
-		{
-			this._discord.Logger.LogError(ex, "{Message}", ex.Message);
-		}
-
-		try
-		{
-			this._voiceWs.DisconnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-			this._udpClient.Close();
-		}
-		catch
-		{ }
-
-		try
-		{
-			this._keepaliveTokenSource?.Cancel();
-			this._tokenSource?.Dispose();
-			this._senderTokenSource?.Dispose();
-			this._receiverTokenSource?.Dispose();
-			this._keepaliveTokenSource?.Dispose();
-			this._opus?.Dispose();
-			this._opus = null;
-			this._sodium?.Dispose();
-			this._sodium = null;
-			this._rtp?.Dispose();
-			this._rtp = null;
-		}
-		catch (Exception ex)
-		{
-			this._discord.Logger.LogError(ex, "{Message}", ex.Message);
-		}
-
-		this.VoiceDisconnected?.Invoke(this._guild);
-		GC.SuppressFinalize(this);
-	}
-
-	/// <summary>
-	/// Heartbeats .
+	///     Heartbeats .
 	/// </summary>
 	/// <returns>A Task.</returns>
 	private async Task HeartbeatAsync()
@@ -1030,7 +1032,7 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Keepalives .
+	///     Keepalives .
 	/// </summary>
 	/// <returns>A Task.</returns>
 	private async Task KeepaliveAsync()
@@ -1056,7 +1058,7 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Stage1S .
+	///     Stage1S .
 	/// </summary>
 	/// <param name="voiceReady">The voice ready.</param>
 	/// <returns>A Task.</returns>
@@ -1108,12 +1110,12 @@ public sealed class VoiceNextConnection : IDisposable
 		this._receiverTask = Task.Run(this.UdpReceiverTask, this.RECEIVER_TOKEN);
 		return;
 
-		void ReadPacket(byte[] packet, out System.Net.IPAddress decodedIp, out ushort decodedPort)
+		void ReadPacket(byte[] packet, out IPAddress decodedIp, out ushort decodedPort)
 		{
 			var packetSpan = packet.AsSpan();
 
 			var ipString = Utilities.UTF8.GetString(packet, 8, 64 /* 74 - 10 */).TrimEnd('\0');
-			decodedIp = System.Net.IPAddress.Parse(ipString);
+			decodedIp = IPAddress.Parse(ipString);
 
 			decodedPort = BinaryPrimitives.ReadUInt16BigEndian(packetSpan[72..] /* 74 - 2 */);
 		}
@@ -1132,7 +1134,7 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Stage2S .
+	///     Stage2S .
 	/// </summary>
 	/// <param name="voiceSessionDescription">The voice session description.</param>
 	/// <returns>A Task.</returns>
@@ -1159,7 +1161,7 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Handles the dispatch.
+	///     Handles the dispatch.
 	/// </summary>
 	/// <param name="jo">The jo.</param>
 	/// <returns>A Task.</returns>
@@ -1296,7 +1298,7 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Voices the w s_ socket closed.
+	///     Voices the w s_ socket closed.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The e.</param>
@@ -1328,7 +1330,7 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Voices the w s_ socket message.
+	///     Voices the w s_ socket message.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The e.</param>
@@ -1346,7 +1348,7 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Voices the w s_ socket opened.
+	///     Voices the w s_ socket opened.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The e.</param>
@@ -1355,7 +1357,7 @@ public sealed class VoiceNextConnection : IDisposable
 		=> this.StartAsync();
 
 	/// <summary>
-	/// Voices the ws_ socket exception.
+	///     Voices the ws_ socket exception.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The e.</param>
@@ -1367,7 +1369,7 @@ public sealed class VoiceNextConnection : IDisposable
 		});
 
 	/// <summary>
-	/// Ws the send async.
+	///     Ws the send async.
 	/// </summary>
 	/// <param name="payload">The payload.</param>
 	/// <returns>A Task.</returns>
@@ -1378,7 +1380,7 @@ public sealed class VoiceNextConnection : IDisposable
 	}
 
 	/// <summary>
-	/// Gets the unix timestamp.
+	///     Gets the unix timestamp.
 	/// </summary>
 	/// <param name="dt">The datetime.</param>
 	private static uint UnixTimestamp(DateTime dt)

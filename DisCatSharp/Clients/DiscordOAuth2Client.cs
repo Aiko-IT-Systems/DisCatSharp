@@ -9,6 +9,7 @@ using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
@@ -23,86 +24,71 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp;
 
 /// <summary>
-/// Represents a <see cref="DiscordOAuth2Client"/>.
+///     Represents a <see cref="DiscordOAuth2Client" />.
 /// </summary>
 public sealed class DiscordOAuth2Client : IDisposable
 {
 	/// <summary>
-	/// Gets the logger for this client.
-	/// </summary>
-	public ILogger<DiscordOAuth2Client> Logger { get; }
-
-	/// <summary>
-	/// Gets the api client.
-	/// </summary>
-	internal readonly DiscordApiClient ApiClient;
-
-	/// <summary>
-	/// Gets the minimal log level.
-	/// </summary>
-	internal readonly LogLevel MinimumLogLevel;
-
-	/// <summary>
-	/// Gets the log timestamp format.
-	/// </summary>
-	internal readonly string LogTimestampFormat;
-
-	/// <summary>
-	/// Gets the string representing the version header of the bot lib.
-	/// </summary>
-	public readonly string VersionHeader;
-
-	/// <summary>
-	/// Gets the bot library name.
-	/// </summary>
-	public string BotLibrary
-		=> "DisCatSharp";
-
-	/// <summary>
-	/// Gets the client id.
-	/// </summary>
-	public readonly ulong ClientId;
-
-	/// <summary>
-	/// Gets the client secret.
-	/// </summary>
-	public readonly string ClientSecret;
-
-	/// <summary>
-	/// Gets the redirect uri.
-	/// </summary>
-	public readonly Uri RedirectUri;
-
-	/// <summary>
-	/// Gets the service provider this OAuth2 client was configured with.
-	/// </summary>
-	public IServiceProvider ServiceProvider { get; }
-
-	/// <summary>
-	/// Gets the event execution limit.
-	/// </summary>
-	internal static TimeSpan EventExecutionLimit { get; } = TimeSpan.FromMinutes(1);
-
-	/// <summary>
-	/// Gets the RSA instance.
-	/// </summary>
-	private RSA RSA_KEY { get; }
-
-	/// <summary>
-	/// Gets the file name for the rsa public/private key.
+	///     Gets the file name for the rsa public/private key.
 	/// </summary>
 	private const string RSA_KEY_FILE_NAME = "dcs_oauth_rsa.sdcs";
 
 	/// <summary>
-	/// Creates a new OAuth2 client.
+	///     Gets the api client.
+	/// </summary>
+	internal readonly DiscordApiClient ApiClient;
+
+	/// <summary>
+	///     Gets the client id.
+	/// </summary>
+	public readonly ulong ClientId;
+
+	/// <summary>
+	///     Gets the client secret.
+	/// </summary>
+	public readonly string ClientSecret;
+
+	/// <summary>
+	///     Gets the log timestamp format.
+	/// </summary>
+	internal readonly string LogTimestampFormat;
+
+	/// <summary>
+	///     Gets the minimal log level.
+	/// </summary>
+	internal readonly LogLevel MinimumLogLevel;
+
+	/// <summary>
+	///     Triggered when an error occurs within an event handler.
+	/// </summary>
+	internal readonly AsyncEvent<DiscordOAuth2Client, ClientErrorEventArgs> OAuth2ClientErroredInternal;
+
+	/// <summary>
+	///     Gets the redirect uri.
+	/// </summary>
+	public readonly Uri RedirectUri;
+
+	/// <summary>
+	///     Gets the string representing the version header of the bot lib.
+	/// </summary>
+	public readonly string VersionHeader;
+
+	/// <summary>
+	///     Creates a new OAuth2 client.
 	/// </summary>
 	/// <param name="clientId">The client id.</param>
 	/// <param name="clientSecret">The client secret.</param>
 	/// <param name="redirectUri">The redirect uri.</param>
 	/// <param name="provider">The service provider.</param>
 	/// <param name="proxy">The proxy to use for HTTP connections. Defaults to null.</param>
-	/// <param name="timeout">The optional timeout to use for HTTP requests. Set to <see cref="System.Threading.Timeout.InfiniteTimeSpan"/> to disable timeouts. Defaults to null.</param>
-	/// <param name="useRelativeRateLimit">Whether to use the system clock for computing rate limit resets. See <see cref="DiscordConfiguration.UseRelativeRatelimit"/> for more details. Defaults to true.</param>
+	/// <param name="timeout">
+	///     The optional timeout to use for HTTP requests. Set to
+	///     <see cref="System.Threading.Timeout.InfiniteTimeSpan" /> to disable timeouts. Defaults to null.
+	/// </param>
+	/// <param name="useRelativeRateLimit">
+	///     Whether to use the system clock for computing rate limit resets. See
+	///     <see cref="DiscordConfiguration.UseRelativeRatelimit" /> for more details. Defaults to true.
+	/// </param>
 	/// <param name="loggerFactory">The optional logging factory to use for this client. Defaults to null.</param>
 	/// <param name="minimumLogLevel">The minimum logging level for messages. Defaults to information.</param>
 	/// <param name="logTimestampFormat">The timestamp format to use for the logger.</param>
@@ -185,10 +171,47 @@ public sealed class DiscordOAuth2Client : IDisposable
 	}
 
 	/// <summary>
-	/// Generates an OAuth2 url.
+	///     Gets the logger for this client.
+	/// </summary>
+	public ILogger<DiscordOAuth2Client> Logger { get; }
+
+	/// <summary>
+	///     Gets the bot library name.
+	/// </summary>
+	public string BotLibrary
+		=> "DisCatSharp";
+
+	/// <summary>
+	///     Gets the service provider this OAuth2 client was configured with.
+	/// </summary>
+	public IServiceProvider ServiceProvider { get; }
+
+	/// <summary>
+	///     Gets the event execution limit.
+	/// </summary>
+	internal static TimeSpan EventExecutionLimit { get; } = TimeSpan.FromMinutes(1);
+
+	/// <summary>
+	///     Gets the RSA instance.
+	/// </summary>
+	private RSA RSA_KEY { get; }
+
+	/// <inheritdoc />
+	public void Dispose()
+	{
+		this.RSA_KEY.Dispose();
+		GC.SuppressFinalize(this);
+	}
+
+	/// <summary>
+	///     Generates an OAuth2 url.
 	/// </summary>
 	/// <param name="scopes">The space seperated scopes to request.</param>
-	/// <param name="state">The state to use for security reasons. Use <see cref="GenerateState"/> or <see cref="GenerateSecureState"/>.</param>.
+	/// <param name="state">
+	///     The state to use for security reasons. Use <see cref="GenerateState" /> or
+	///     <see cref="GenerateSecureState" />.
+	/// </param>
+	/// .
 	/// <param name="suppressPrompt">Whether to suppress the prompt. Works only if previously authorized with same scopes.</param>
 	/// <returns>The OAuth2 url</returns>
 	public Uri GenerateOAuth2Url(string scopes, string state, bool suppressPrompt = false) =>
@@ -202,39 +225,39 @@ public sealed class DiscordOAuth2Client : IDisposable
 			.ToString());
 
 	/// <summary>
-	/// Generates a state for OAuth2 authorization.
+	///     Generates a state for OAuth2 authorization.
 	/// </summary>
 	/// <returns></returns>
 	public string GenerateState()
 		=> $"{DateTimeOffset.UtcNow.UtcTicks}::{this.ClientId.GetHashCode()}::{Guid.NewGuid()}";
 
 	/// <summary>
-	/// Generates a secured state bound to the user id.
-	/// <para>If the bot is completely restarted, such a state can't be decrypted anymore.</para>
-	/// <para>To decrypt this state, use <see cref="ReadSecureState"/></para>
+	///     Generates a secured state bound to the user id.
+	///     <para>If the bot is completely restarted, such a state can't be decrypted anymore.</para>
+	///     <para>To decrypt this state, use <see cref="ReadSecureState" /></para>
 	/// </summary>
 	/// <param name="userId">The user id to bind the state on.</param>
 	public string GenerateSecureState(ulong userId)
 		=> Uri.EscapeDataString(Convert.ToBase64String(this.RSA_KEY.Encrypt(Encoding.UTF8.GetBytes($"{DateTimeOffset.UtcNow.UtcTicks}::{userId}::{this.ClientId.GetHashCode()}::{Guid.NewGuid()}"), RSAEncryptionPadding.OaepSHA1)));
 
 	/// <summary>
-	/// Reads a secured state generated from <see cref="GenerateSecureState"/>.
-	/// <para>If the bot is completely restarted, such a state can't be decrypted anymore.</para>
+	///     Reads a secured state generated from <see cref="GenerateSecureState" />.
+	///     <para>If the bot is completely restarted, such a state can't be decrypted anymore.</para>
 	/// </summary>
 	/// <param name="state">The state to read.</param>
 	public string ReadSecureState(string state)
 		=> Encoding.UTF8.GetString(this.RSA_KEY.Decrypt(Convert.FromBase64String(Uri.UnescapeDataString(state)), RSAEncryptionPadding.OaepSHA1));
 
 	/// <summary>
-	/// Validates the OAuth2 state.
+	///     Validates the OAuth2 state.
 	/// </summary>
-	/// <param name="requestUrl">The request url generated by <see cref="GenerateOAuth2Url"/>.</param>
+	/// <param name="requestUrl">The request url generated by <see cref="GenerateOAuth2Url" />.</param>
 	/// <param name="responseUrl">The response url.</param>
-	/// <param name="secure">Whether <see cref="GenerateSecureState"/> and <see cref="ReadSecureState"/> is used.</param>
+	/// <param name="secure">Whether <see cref="GenerateSecureState" /> and <see cref="ReadSecureState" /> is used.</param>
 	public bool ValidateState(Uri requestUrl, Uri responseUrl, bool secure = false)
 	{
-		var requestQueryDictionary = System.Web.HttpUtility.ParseQueryString(requestUrl.Query, Encoding.UTF8);
-		var responseQueryDictionary = System.Web.HttpUtility.ParseQueryString(responseUrl.Query, Encoding.UTF8);
+		var requestQueryDictionary = HttpUtility.ParseQueryString(requestUrl.Query, Encoding.UTF8);
+		var responseQueryDictionary = HttpUtility.ParseQueryString(responseUrl.Query, Encoding.UTF8);
 		var requestState = requestQueryDictionary.GetValues("state")?.First();
 		var responseState = responseQueryDictionary.GetValues("state")?.First();
 		if (!secure)
@@ -254,85 +277,85 @@ public sealed class DiscordOAuth2Client : IDisposable
 	}
 
 	/// <summary>
-	/// Gets the OAuth2 code to use with <see cref="ExchangeAccessTokenAsync"/> from the <paramref name="url"/>.
+	///     Gets the OAuth2 code to use with <see cref="ExchangeAccessTokenAsync" /> from the <paramref name="url" />.
 	/// </summary>
 	/// <param name="url">The url.</param>
 	public string GetCodeFromUri(Uri url)
 	{
-		var responseQueryDictionary = System.Web.HttpUtility.ParseQueryString(url.Query, Encoding.UTF8);
+		var responseQueryDictionary = HttpUtility.ParseQueryString(url.Query, Encoding.UTF8);
 		var code = responseQueryDictionary.GetValues("code")?.First();
 		return code ?? throw new NullReferenceException("Could not find code in url.");
 	}
 
 	/// <summary>
-	/// Gets the OAuth2 code to use with <see cref="ExchangeAccessTokenAsync"/> from the <paramref name="url"/>.
+	///     Gets the OAuth2 code to use with <see cref="ExchangeAccessTokenAsync" /> from the <paramref name="url" />.
 	/// </summary>
 	/// <param name="url">The url.</param>
 	public string GetStateFromUri(Uri url)
 	{
-		var responseQueryDictionary = System.Web.HttpUtility.ParseQueryString(url.Query, Encoding.UTF8);
+		var responseQueryDictionary = HttpUtility.ParseQueryString(url.Query, Encoding.UTF8);
 		var state = responseQueryDictionary.GetValues("state")?.First();
 		return state ?? throw new NullReferenceException("Could not find code in url.");
 	}
 
 	/// <summary>
-	/// Exchanges a code for an discord access token.
+	///     Exchanges a code for an discord access token.
 	/// </summary>
 	/// <param name="code">The exchange code.</param>
 	public async Task<DiscordAccessToken> ExchangeAccessTokenAsync(string code)
 		=> await this.ApiClient.ExchangeOAuth2AccessTokenAsync(code);
 
 	/// <summary>
-	/// Exchanges a refresh token for a new discord access token.
+	///     Exchanges a refresh token for a new discord access token.
 	/// </summary>
 	/// <param name="accessToken">The current discord access token.</param>
 	public async Task<DiscordAccessToken> RefreshAccessTokenAsync(DiscordAccessToken accessToken)
 		=> await this.ApiClient.RefreshOAuth2AccessTokenAsync(accessToken.RefreshToken);
 
 	/// <summary>
-	/// Revokes an OAuth2 token via its access token.
+	///     Revokes an OAuth2 token via its access token.
 	/// </summary>
 	/// <param name="accessToken">The current discord access token.</param>
 	public async Task RevokeByAccessTokenAsync(DiscordAccessToken accessToken)
 		=> await this.ApiClient.RevokeOAuth2TokenAsync(accessToken.AccessToken, "access_token");
 
 	/// <summary>
-	/// Revokes an OAuth2 token via its refresh token.
+	///     Revokes an OAuth2 token via its refresh token.
 	/// </summary>
 	/// <param name="accessToken">The current discord access token.</param>
 	public async Task RevokeByRefreshTokenAsync(DiscordAccessToken accessToken)
 		=> await this.ApiClient.RevokeOAuth2TokenAsync(accessToken.RefreshToken, "refresh_token");
 
 	/// <summary>
-	/// Gets the current authorization information.
+	///     Gets the current authorization information.
 	/// </summary>
 	/// <param name="accessToken">The discord access token.</param>
 	public async Task<DiscordAuthorizationInformation> GetCurrentAuthorizationInformationAsync(DiscordAccessToken accessToken)
 		=> await this.ApiClient.GetCurrentOAuth2AuthorizationInformationAsync(accessToken.AccessToken);
 
 	/// <summary>
-	/// Gets the current user.
+	///     Gets the current user.
 	/// </summary>
 	/// <param name="accessToken">The discord access token.</param>
 	public async Task<DiscordUser> GetCurrentUserAsync(DiscordAccessToken accessToken)
 		=> accessToken.Scope.Split(' ').Any(x => x == "identify") ? await this.ApiClient.GetCurrentUserAsync(accessToken.AccessToken) : throw new AccessViolationException("Access token does not include identify scope");
 
 	/// <summary>
-	/// Gets the current user's connections.
+	///     Gets the current user's connections.
 	/// </summary>
 	/// <param name="accessToken">The discord access token.</param>
 	public async Task<IReadOnlyList<DiscordConnection>> GetCurrentUserConnectionsAsync(DiscordAccessToken accessToken)
 		=> accessToken.Scope.Split(' ').Any(x => x == "connections") ? await this.ApiClient.GetCurrentUserConnectionsAsync(accessToken.AccessToken) : throw new AccessViolationException("Access token does not include connections scope");
 
 	/// <summary>
-	/// Gets the current user's guilds.
+	///     Gets the current user's guilds.
 	/// </summary>
 	/// <param name="accessToken">The discord access token.</param>
 	public async Task<IReadOnlyList<DiscordGuild>> GetCurrentUserGuildsAsync(DiscordAccessToken accessToken)
 		=> accessToken.Scope.Split(' ').Any(x => x == "guilds") ? await this.ApiClient.GetCurrentUserGuildsAsync(accessToken.AccessToken) : throw new AccessViolationException("Access token does not include guilds scope");
 
 	/// <summary>
-	/// Gets the current user's guild member for given <paramref name="guildId"/>.
+	///     Gets the current user's guild member for given <paramref name="guildId" />.
 	/// </summary>
 	/// <param name="accessToken">The discord access token.</param>
 	/// <param name="guildId">The guild id to get the member for.</param>
@@ -340,9 +363,12 @@ public sealed class DiscordOAuth2Client : IDisposable
 		=> accessToken.Scope.Split(' ').Any(x => x == "guilds.members.read") ? await this.ApiClient.GetCurrentUserGuildMemberAsync(accessToken.AccessToken, guildId) : throw new AccessViolationException("Access token does not include guilds.members.read scope");
 
 	/// <summary>
-	/// <para>Adds the current user to the given <paramref name="guildId"/>.</para>
-	/// <para>Some parameters might need additional permissions for the bot on the target guild. See https://discord.com/developers/docs/resources/guild#add-guild-member for details.</para>
-	/// <para>This methods invokes a sub-request to <see cref="GetCurrentUserAsync"/>.</para>
+	///     <para>Adds the current user to the given <paramref name="guildId" />.</para>
+	///     <para>
+	///         Some parameters might need additional permissions for the bot on the target guild. See
+	///         https://discord.com/developers/docs/resources/guild#add-guild-member for details.
+	///     </para>
+	///     <para>This methods invokes a sub-request to <see cref="GetCurrentUserAsync" />.</para>
 	/// </summary>
 	/// <param name="accessToken">The discord access token.</param>
 	/// <param name="guildId">The guild id to add the member to.</param>
@@ -354,9 +380,12 @@ public sealed class DiscordOAuth2Client : IDisposable
 		=> accessToken.Scope.Split(' ').Any(x => x == "guilds.join") ? await this.ApiClient.AddGuildMemberAsync(guildId, (await this.GetCurrentUserAsync(accessToken)).Id, accessToken.AccessToken, nickname, roles, muted, deafened) : throw new AccessViolationException("Access token does not include guilds.join scope");
 
 	/// <summary>
-	/// <para>Adds the given <paramref name="userId"/> to the given <paramref name="guildId"/>.</para>
-	/// <para>Some parameters might need additional permissions for the bot on the target guild. See https://discord.com/developers/docs/resources/guild#add-guild-member for details.</para>
-	/// <para>This methods does not invoke a sub-request to <see cref="GetCurrentUserAsync"/>.</para>
+	///     <para>Adds the given <paramref name="userId" /> to the given <paramref name="guildId" />.</para>
+	///     <para>
+	///         Some parameters might need additional permissions for the bot on the target guild. See
+	///         https://discord.com/developers/docs/resources/guild#add-guild-member for details.
+	///     </para>
+	///     <para>This methods does not invoke a sub-request to <see cref="GetCurrentUserAsync" />.</para>
 	/// </summary>
 	/// <param name="accessToken">The discord access token.</param>
 	/// <param name="userId">The user id to add.</param>
@@ -369,14 +398,14 @@ public sealed class DiscordOAuth2Client : IDisposable
 		=> accessToken.Scope.Split(' ').Any(x => x == "guilds.join") ? await this.ApiClient.AddGuildMemberAsync(guildId, userId, accessToken.AccessToken, nickname, roles, muted, deafened) : throw new AccessViolationException("Access token does not include guilds.join scope");
 
 	/// <summary>
-	/// Gets the current user's application role connection.
+	///     Gets the current user's application role connection.
 	/// </summary>
 	/// <param name="accessToken">The discord access token.</param>
 	public async Task<DiscordApplicationRoleConnection> GetCurrentUserApplicationRoleConnectionAsync(DiscordAccessToken accessToken)
 		=> accessToken.Scope.Split(' ').Any(x => x == "role_connections.write") ? await this.ApiClient.GetCurrentUserApplicationRoleConnectionAsync(accessToken.AccessToken) : throw new AccessViolationException("Access token does not include role_connections.write scope");
 
 	/// <summary>
-	/// Updates the current user's application role connection.
+	///     Updates the current user's application role connection.
 	/// </summary>
 	/// <param name="accessToken">The discord access token.</param>
 	/// <param name="platformName">The platform name.</param>
@@ -386,7 +415,7 @@ public sealed class DiscordOAuth2Client : IDisposable
 		=> accessToken.Scope.Split(' ').Any(x => x == "role_connections.write") ? await this.ApiClient.ModifyCurrentUserApplicationRoleConnectionAsync(accessToken.AccessToken, platformName, platformUsername, metadata) : throw new AccessViolationException("Access token does not include role_connections.write scope");
 
 	/// <summary>
-	/// Fired whenever an error occurs within an event handler.
+	///     Fired whenever an error occurs within an event handler.
 	/// </summary>
 	public event AsyncEventHandler<DiscordOAuth2Client, ClientErrorEventArgs> OAuth2ClientErrored
 	{
@@ -395,12 +424,7 @@ public sealed class DiscordOAuth2Client : IDisposable
 	}
 
 	/// <summary>
-	/// Triggered when an error occurs within an event handler.
-	/// </summary>
-	internal readonly AsyncEvent<DiscordOAuth2Client, ClientErrorEventArgs> OAuth2ClientErroredInternal;
-
-	/// <summary>
-	/// Handles event errors.
+	///     Handles event errors.
 	/// </summary>
 	/// <param name="asyncEvent">The event.</param>
 	/// <param name="ex">The exception.</param>
@@ -425,7 +449,7 @@ public sealed class DiscordOAuth2Client : IDisposable
 	}
 
 	/// <summary>
-	/// Handles event handler exceptions.
+	///     Handles event handler exceptions.
 	/// </summary>
 	/// <param name="asyncEvent">The event.</param>
 	/// <param name="ex">The exception.</param>
@@ -439,12 +463,5 @@ public sealed class DiscordOAuth2Client : IDisposable
 	~DiscordOAuth2Client()
 	{
 		this.Dispose();
-	}
-
-	/// <inheritdoc />
-	public void Dispose()
-	{
-		this.RSA_KEY.Dispose();
-		GC.SuppressFinalize(this);
 	}
 }

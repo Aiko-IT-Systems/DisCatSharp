@@ -7,12 +7,12 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.Experimental.Entities;
 
 /// <summary>
-/// Adds methods to <see cref="DiscordChannel"/>
+///     Adds methods to <see cref="DiscordChannel" />
 /// </summary>
 public static class DiscordChannelMethodHooks
 {
 	/// <summary>
-	/// Uploads a file to the channel for later use in a <see cref="DiscordMessageBuilder"/>.
+	///     Uploads a file to the channel for later use in a <see cref="DiscordMessageBuilder" />.
 	/// </summary>
 	/// <param name="channel">The channel to upload the file to.</param>
 	/// <param name="name">The name of the file to upload.</param>

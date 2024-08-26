@@ -1,37 +1,37 @@
 namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Represents the sku type.
+///     Represents the sku type.
 /// </summary>
 public enum SkuType
 {
 	/// <summary>
-	/// An application sku.
+	///     An application sku.
 	/// </summary>
 	Application = 1,
 
 	/// <summary>
-	/// Durable one-time purchase.
+	///     Durable one-time purchase.
 	/// </summary>
 	Durable = 2,
 
 	/// <summary>
-	/// Consumable one-time purchase.
+	///     Consumable one-time purchase.
 	/// </summary>
 	Consumable = 3,
 
 	/// <summary>
-	/// A bundle sku.
+	///     A bundle sku.
 	/// </summary>
 	Bundle = 4,
 
 	/// <summary>
-	/// Represents a recurring subscription.
+	///     Represents a recurring subscription.
 	/// </summary>
 	Subscription = 5,
 
 	/// <summary>
-	/// System-generated group for each SUBSCRIPTION SKU created .
+	///     System-generated group for each SUBSCRIPTION SKU created .
 	/// </summary>
 	SubscriptionGroup = 6
 }

@@ -6,29 +6,29 @@ using Newtonsoft.Json.Linq;
 namespace DisCatSharp.Net.Abstractions;
 
 /// <summary>
-/// Represents data for identify payload's shard info.
+///     Represents data for identify payload's shard info.
 /// </summary>
 [JsonConverter(typeof(ShardInfoConverter))]
 internal sealed class ShardInfo
 {
 	/// <summary>
-	/// Gets or sets this client's shard id.
+	///     Gets or sets this client's shard id.
 	/// </summary>
 	public int ShardId { get; set; }
 
 	/// <summary>
-	/// Gets or sets the total shard count for this token.
+	///     Gets or sets the total shard count for this token.
 	/// </summary>
 	public int ShardCount { get; set; }
 }
 
 /// <summary>
-/// Represents a shard info converter.
+///     Represents a shard info converter.
 /// </summary>
 internal sealed class ShardInfoConverter : JsonConverter
 {
 	/// <summary>
-	/// Writes the json.
+	///     Writes the json.
 	/// </summary>
 	/// <param name="writer">The writer.</param>
 	/// <param name="value">The value.</param>
@@ -41,7 +41,7 @@ internal sealed class ShardInfoConverter : JsonConverter
 	}
 
 	/// <summary>
-	/// Reads the json.
+	///     Reads the json.
 	/// </summary>
 	/// <param name="reader">The reader.</param>
 	/// <param name="objectType">The object type.</param>
@@ -58,7 +58,7 @@ internal sealed class ShardInfoConverter : JsonConverter
 	}
 
 	/// <summary>
-	/// Reads the array object.
+	///     Reads the array object.
 	/// </summary>
 	/// <param name="reader">The reader.</param>
 	/// <param name="serializer">The serializer.</param>
@@ -68,7 +68,7 @@ internal sealed class ShardInfoConverter : JsonConverter
 			: arr;
 
 	/// <summary>
-	/// Whether this can be converted.
+	///     Whether this can be converted.
 	/// </summary>
 	/// <param name="objectType">The object type.</param>
 	public override bool CanConvert(Type objectType) => objectType == typeof(ShardInfo);

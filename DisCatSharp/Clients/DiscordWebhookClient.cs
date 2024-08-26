@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using DisCatSharp.Common.RegularExpressions;
@@ -17,49 +16,36 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp;
 
 /// <summary>
-/// Represents a webhook-only client. This client can be used to execute Discord Webhooks.
+///     Represents a webhook-only client. This client can be used to execute Discord Webhooks.
 /// </summary>
 public class DiscordWebhookClient
 {
-	/// <summary>
-	/// Gets the logger for this client.
-	/// </summary>
-	public ILogger<DiscordWebhookClient> Logger { get; }
-
-	/// <summary>
-	/// Gets the collection of registered webhooks.
-	/// </summary>
-	public IReadOnlyList<DiscordWebhook> Webhooks { get; }
-
-	/// <summary>
-	/// Gets or sets the username for registered webhooks. Note that this only takes effect when broadcasting.
-	/// </summary>
-	public string? Username { get; set; }
-
-	/// <summary>
-	/// Gets or set the avatar for registered webhooks. Note that this only takes effect when broadcasting.
-	/// </summary>
-	public string? AvatarUrl { get; set; }
-
-	internal List<DiscordWebhook> Hooks;
 	internal readonly DiscordApiClient ApiClient;
-
-	internal readonly LogLevel MinimumLogLevel;
 	internal readonly string LogTimestampFormat;
 
+	internal readonly LogLevel MinimumLogLevel;
+
+	internal List<DiscordWebhook> Hooks;
+
 	/// <summary>
-	/// Creates a new webhook client.
+	///     Creates a new webhook client.
 	/// </summary>
 	public DiscordWebhookClient()
-		: this(null!, null)
+		: this(null!)
 	{ }
 
 	/// <summary>
-	/// Creates a new webhook client, with specified HTTP proxy, timeout, and logging settings.
+	///     Creates a new webhook client, with specified HTTP proxy, timeout, and logging settings.
 	/// </summary>
 	/// <param name="proxy">The proxy to use for HTTP connections. Defaults to null.</param>
-	/// <param name="timeout">The optional timeout to use for HTTP requests. Set to <see cref="System.Threading.Timeout.InfiniteTimeSpan"/> to disable timeouts. Defaults to null.</param>
-	/// <param name="useRelativeRateLimit">Whether to use the system clock for computing rate limit resets. See <see cref="DiscordConfiguration.UseRelativeRatelimit"/> for more details. Defaults to true.</param>
+	/// <param name="timeout">
+	///     The optional timeout to use for HTTP requests. Set to
+	///     <see cref="System.Threading.Timeout.InfiniteTimeSpan" /> to disable timeouts. Defaults to null.
+	/// </param>
+	/// <param name="useRelativeRateLimit">
+	///     Whether to use the system clock for computing rate limit resets. See
+	///     <see cref="DiscordConfiguration.UseRelativeRatelimit" /> for more details. Defaults to true.
+	/// </param>
 	/// <param name="loggerFactory">The optional logging factory to use for this client. Defaults to null.</param>
 	/// <param name="minimumLogLevel">The minimum logging level for messages. Defaults to information.</param>
 	/// <param name="logTimestampFormat">The timestamp format to use for the logger.</param>
@@ -91,7 +77,27 @@ public class DiscordWebhookClient
 	}
 
 	/// <summary>
-	/// Registers a webhook with this client. This retrieves a webhook based on the ID and token supplied.
+	///     Gets the logger for this client.
+	/// </summary>
+	public ILogger<DiscordWebhookClient> Logger { get; }
+
+	/// <summary>
+	///     Gets the collection of registered webhooks.
+	/// </summary>
+	public IReadOnlyList<DiscordWebhook> Webhooks { get; }
+
+	/// <summary>
+	///     Gets or sets the username for registered webhooks. Note that this only takes effect when broadcasting.
+	/// </summary>
+	public string? Username { get; set; }
+
+	/// <summary>
+	///     Gets or set the avatar for registered webhooks. Note that this only takes effect when broadcasting.
+	/// </summary>
+	public string? AvatarUrl { get; set; }
+
+	/// <summary>
+	///     Registers a webhook with this client. This retrieves a webhook based on the ID and token supplied.
 	/// </summary>
 	/// <param name="id">The ID of the webhook to add.</param>
 	/// <param name="token">The token of the webhook to add.</param>
@@ -113,7 +119,7 @@ public class DiscordWebhookClient
 	}
 
 	/// <summary>
-	/// Registers a webhook with this client. This retrieves a webhook from webhook URL.
+	///     Registers a webhook with this client. This retrieves a webhook from webhook URL.
 	/// </summary>
 	/// <param name="url">URL of the webhook to retrieve. This URL must contain both ID and token.</param>
 	/// <returns>The registered webhook.</returns>
@@ -135,7 +141,7 @@ public class DiscordWebhookClient
 	}
 
 	/// <summary>
-	/// Registers a webhook with this client. This retrieves a webhook using the supplied full discord client.
+	///     Registers a webhook with this client. This retrieves a webhook using the supplied full discord client.
 	/// </summary>
 	/// <param name="id">ID of the webhook to register.</param>
 	/// <param name="client">Discord client to which the webhook will belong.</param>
@@ -155,7 +161,7 @@ public class DiscordWebhookClient
 	}
 
 	/// <summary>
-	/// Registers a webhook with this client. This reuses the supplied webhook object.
+	///     Registers a webhook with this client. This reuses the supplied webhook object.
 	/// </summary>
 	/// <param name="webhook">Webhook to register.</param>
 	/// <returns>The registered webhook.</returns>
@@ -173,7 +179,7 @@ public class DiscordWebhookClient
 	}
 
 	/// <summary>
-	/// Unregisters a webhook with this client.
+	///     Unregisters a webhook with this client.
 	/// </summary>
 	/// <param name="id">ID of the webhook to unregister.</param>
 	/// <returns>The unregistered webhook.</returns>
@@ -188,7 +194,7 @@ public class DiscordWebhookClient
 	}
 
 	/// <summary>
-	/// Gets a registered webhook with specified ID.
+	///     Gets a registered webhook with specified ID.
 	/// </summary>
 	/// <param name="id">ID of the registered webhook to retrieve.</param>
 	/// <returns>The requested webhook.</returns>
@@ -196,10 +202,13 @@ public class DiscordWebhookClient
 		=> this.Hooks.FirstOrDefault(xw => xw.Id == id);
 
 	/// <summary>
-	/// Broadcasts a message to all registered webhooks.
+	///     Broadcasts a message to all registered webhooks.
 	/// </summary>
 	/// <param name="builder">Webhook builder filled with data to send.</param>
-	/// <returns>A dictionary of <see cref="DisCatSharp.Entities.DiscordWebhook"/>s and <see cref="DisCatSharp.Entities.DiscordMessage"/>s.</returns>
+	/// <returns>
+	///     A dictionary of <see cref="DisCatSharp.Entities.DiscordWebhook" />s and
+	///     <see cref="DisCatSharp.Entities.DiscordMessage" />s.
+	/// </returns>
 	public async Task<Dictionary<DiscordWebhook, DiscordMessage>> BroadcastMessageAsync(DiscordWebhookBuilder builder)
 	{
 		var deadHooks = new List<DiscordWebhook>();

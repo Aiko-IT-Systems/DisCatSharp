@@ -6,50 +6,18 @@ using DisCatSharp.VoiceNext.Codec;
 namespace DisCatSharp.VoiceNext.Entities;
 
 /// <summary>
-/// The audio sender.
+///     The audio sender.
 /// </summary>
 internal class AudioSender : IDisposable
 {
+	private SequenceWrapState _currentSequenceWrapState = SequenceWrapState.AssumeNextHighSequenceIsOutOfOrder;
+
 	// starting the counter a full wrap ahead handles an edge case where the VERY first packets
 	// we see are right around the wraparound line.
 	private ulong _sequenceBase = 1 << 16;
 
-	private SequenceWrapState _currentSequenceWrapState = SequenceWrapState.AssumeNextHighSequenceIsOutOfOrder;
-
-	private enum SequenceWrapState
-	{
-		Normal,
-		AssumeNextLowSequenceIsOverflow,
-		AssumeNextHighSequenceIsOutOfOrder
-	}
-
 	/// <summary>
-	/// Gets the s s r c.
-	/// </summary>
-	public uint Ssrc { get; }
-
-	/// <summary>
-	/// Gets the id.
-	/// </summary>
-	public ulong Id => this.User?.Id ?? 0;
-
-	/// <summary>
-	/// Gets the decoder.
-	/// </summary>
-	public OpusDecoder Decoder { get; }
-
-	/// <summary>
-	/// Gets or sets the user.
-	/// </summary>
-	public DiscordUser? User { get; set; } = null;
-
-	/// <summary>
-	/// Gets or sets the last sequence.
-	/// </summary>
-	public ulong? LastTrueSequence { get; set; } = null;
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="AudioSender"/> class.
+	///     Initializes a new instance of the <see cref="AudioSender" /> class.
 	/// </summary>
 	/// <param name="ssrc">The ssrc.</param>
 	/// <param name="decoder">The decoder.</param>
@@ -60,25 +28,50 @@ internal class AudioSender : IDisposable
 	}
 
 	/// <summary>
-	/// Disposes .
+	///     Gets the s s r c.
+	/// </summary>
+	public uint Ssrc { get; }
+
+	/// <summary>
+	///     Gets the id.
+	/// </summary>
+	public ulong Id => this.User?.Id ?? 0;
+
+	/// <summary>
+	///     Gets the decoder.
+	/// </summary>
+	public OpusDecoder Decoder { get; }
+
+	/// <summary>
+	///     Gets or sets the user.
+	/// </summary>
+	public DiscordUser? User { get; set; } = null;
+
+	/// <summary>
+	///     Gets or sets the last sequence.
+	/// </summary>
+	public ulong? LastTrueSequence { get; set; } = null;
+
+	/// <summary>
+	///     Disposes .
 	/// </summary>
 	public void Dispose()
 		=> this.Decoder?.Dispose();
 
 	/// <summary>
-	/// Accepts the 16-bit sequence number from the next RTP header in the associated stream and
-	/// uses heuristics to (attempt to) convert it into a 64-bit counter that takes into account
-	/// overflow wrapping around to zero.
-	/// <para/>
-	/// This method only works properly if it is called for <b>every</b> sequence number that we
-	/// see in the stream.
+	///     Accepts the 16-bit sequence number from the next RTP header in the associated stream and
+	///     uses heuristics to (attempt to) convert it into a 64-bit counter that takes into account
+	///     overflow wrapping around to zero.
+	///     <para />
+	///     This method only works properly if it is called for <b>every</b> sequence number that we
+	///     see in the stream.
 	/// </summary>
 	/// <param name="originalSequence">
-	/// The 16-bit sequence number from the next RTP header.
+	///     The 16-bit sequence number from the next RTP header.
 	/// </param>
 	/// <returns>
-	/// Our best-effort guess of the value that <paramref name="originalSequence"/> <b>would</b>
-	/// have been, if the server had given us a 64-bit integer instead of a 16-bit one.
+	///     Our best-effort guess of the value that <paramref name="originalSequence" /> <b>would</b>
+	///     have been, if the server had given us a 64-bit integer instead of a 16-bit one.
 	/// </returns>
 	public ulong GetTrueSequenceAfterWrapping(ushort originalSequence)
 	{
@@ -142,5 +135,12 @@ internal class AudioSender : IDisposable
 		}
 
 		return this._sequenceBase + originalSequence - wrappingAdjustment;
+	}
+
+	private enum SequenceWrapState
+	{
+		Normal,
+		AssumeNextLowSequenceIsOverflow,
+		AssumeNextHighSequenceIsOutOfOrder
 	}
 }

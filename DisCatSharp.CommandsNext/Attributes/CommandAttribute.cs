@@ -4,18 +4,13 @@ using System.Linq;
 namespace DisCatSharp.CommandsNext.Attributes;
 
 /// <summary>
-/// Marks this method as a command.
+///     Marks this method as a command.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class CommandAttribute : Attribute
 {
 	/// <summary>
-	/// Gets the name of this command.
-	/// </summary>
-	public string Name { get; }
-
-	/// <summary>
-	/// Marks this method as a command, using the method's name as command name.
+	///     Marks this method as a command, using the method's name as command name.
 	/// </summary>
 	public CommandAttribute()
 	{
@@ -23,7 +18,7 @@ public sealed class CommandAttribute : Attribute
 	}
 
 	/// <summary>
-	/// Marks this method as a command with specified name.
+	///     Marks this method as a command with specified name.
 	/// </summary>
 	/// <param name="name">Name of this command.</param>
 	public CommandAttribute(string name)
@@ -36,16 +31,21 @@ public sealed class CommandAttribute : Attribute
 
 		this.Name = name;
 	}
+
+	/// <summary>
+	///     Gets the name of this command.
+	/// </summary>
+	public string Name { get; }
 }
 
 /// <summary>
-/// Marks this method as a group command.
+///     Marks this method as a group command.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class GroupCommandAttribute : Attribute
 {
 	/// <summary>
-	/// Marks this method as a group command.
+	///     Marks this method as a group command.
 	/// </summary>
 	public GroupCommandAttribute()
 	{ }

@@ -9,69 +9,69 @@ using DisCatSharp.CommandsNext.Entities;
 namespace DisCatSharp.CommandsNext;
 
 /// <summary>
-/// Represents a command.
+///     Represents a command.
 /// </summary>
 public class Command
 {
 	/// <summary>
-	/// Gets this command's name.
-	/// </summary>
-	public string Name { get; internal set; }
-
-	/// <summary>
-	/// Gets this command's qualified name (i.e. one that includes all module names).
-	/// </summary>
-	public string QualifiedName
-		=> this.Parent != null ? string.Concat(this.Parent.QualifiedName, " ", this.Name) : this.Name;
-
-	/// <summary>
-	/// Gets this command's aliases.
-	/// </summary>
-	public IReadOnlyList<string> Aliases { get; internal set; }
-
-	/// <summary>
-	/// Gets this command's parent module, if any.
-	/// </summary>
-	public CommandGroup Parent { get; internal set; }
-
-	/// <summary>
-	/// Gets this command's description.
-	/// </summary>
-	public string Description { get; internal set; }
-
-	/// <summary>
-	/// Gets whether this command is hidden.
-	/// </summary>
-	public bool IsHidden { get; internal set; }
-
-	/// <summary>
-	/// Gets a collection of pre-execution checks for this command.
-	/// </summary>
-	public IReadOnlyList<CheckBaseAttribute> ExecutionChecks { get; internal set; }
-
-	/// <summary>
-	/// Gets a collection of this command's overloads.
-	/// </summary>
-	public IReadOnlyList<CommandOverload> Overloads { get; internal set; }
-
-	/// <summary>
-	/// Gets the module in which this command is defined.
-	/// </summary>
-	public ICommandModule Module { get; internal set; }
-
-	/// <summary>
-	/// Gets the custom attributes defined on this command.
-	/// </summary>
-	public IReadOnlyList<Attribute> CustomAttributes { get; internal set; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="Command"/> class.
+	///     Initializes a new instance of the <see cref="Command" /> class.
 	/// </summary>
 	internal Command()
 	{ }
 
 	/// <summary>
-	/// Executes this command with specified context.
+	///     Gets this command's name.
+	/// </summary>
+	public string Name { get; internal set; }
+
+	/// <summary>
+	///     Gets this command's qualified name (i.e. one that includes all module names).
+	/// </summary>
+	public string QualifiedName
+		=> this.Parent != null ? string.Concat(this.Parent.QualifiedName, " ", this.Name) : this.Name;
+
+	/// <summary>
+	///     Gets this command's aliases.
+	/// </summary>
+	public IReadOnlyList<string> Aliases { get; internal set; }
+
+	/// <summary>
+	///     Gets this command's parent module, if any.
+	/// </summary>
+	public CommandGroup Parent { get; internal set; }
+
+	/// <summary>
+	///     Gets this command's description.
+	/// </summary>
+	public string Description { get; internal set; }
+
+	/// <summary>
+	///     Gets whether this command is hidden.
+	/// </summary>
+	public bool IsHidden { get; internal set; }
+
+	/// <summary>
+	///     Gets a collection of pre-execution checks for this command.
+	/// </summary>
+	public IReadOnlyList<CheckBaseAttribute> ExecutionChecks { get; internal set; }
+
+	/// <summary>
+	///     Gets a collection of this command's overloads.
+	/// </summary>
+	public IReadOnlyList<CommandOverload> Overloads { get; internal set; }
+
+	/// <summary>
+	///     Gets the module in which this command is defined.
+	/// </summary>
+	public ICommandModule Module { get; internal set; }
+
+	/// <summary>
+	///     Gets the custom attributes defined on this command.
+	/// </summary>
+	public IReadOnlyList<Attribute> CustomAttributes { get; internal set; }
+
+	/// <summary>
+	///     Executes this command with specified context.
 	/// </summary>
 	/// <param name="ctx">Context to execute the command in.</param>
 	/// <returns>Command's execution results.</returns>
@@ -127,10 +127,13 @@ public class Command
 	}
 
 	/// <summary>
-	/// Runs pre-execution checks for this command and returns any that fail for given context.
+	///     Runs pre-execution checks for this command and returns any that fail for given context.
 	/// </summary>
 	/// <param name="ctx">Context in which the command is executed.</param>
-	/// <param name="help">Whether this check is being executed from help or not. This can be used to probe whether command can be run without setting off certain fail conditions (such as cooldowns).</param>
+	/// <param name="help">
+	///     Whether this check is being executed from help or not. This can be used to probe whether command can
+	///     be run without setting off certain fail conditions (such as cooldowns).
+	/// </param>
 	/// <returns>Pre-execution checks that fail for given context.</returns>
 	public async Task<IEnumerable<CheckBaseAttribute>> RunChecksAsync(CommandContext ctx, bool help)
 	{
@@ -144,7 +147,7 @@ public class Command
 	}
 
 	/// <summary>
-	/// Checks whether this command is equal to another one.
+	///     Checks whether this command is equal to another one.
 	/// </summary>
 	/// <param name="cmd1">Command to compare to.</param>
 	/// <param name="cmd2">Command to compare.</param>
@@ -156,16 +159,16 @@ public class Command
 
 		if (o1 == null && o2 != null)
 			return false;
-		else if (o1 != null && o2 == null)
+		if (o1 != null && o2 == null)
 			return false;
-		else if (o1 == null && o2 == null)
+		if (o1 == null && o2 == null)
 			return true;
 
 		return cmd1.QualifiedName == cmd2.QualifiedName;
 	}
 
 	/// <summary>
-	/// Checks whether this command is not equal to another one.
+	///     Checks whether this command is not equal to another one.
 	/// </summary>
 	/// <param name="cmd1">Command to compare to.</param>
 	/// <param name="cmd2">Command to compare.</param>
@@ -174,7 +177,7 @@ public class Command
 		=> !(cmd1 == cmd2);
 
 	/// <summary>
-	/// Checks whether this command equals another object.
+	///     Checks whether this command equals another object.
 	/// </summary>
 	/// <param name="obj">Object to compare to.</param>
 	/// <returns>Whether this command is equal to another object.</returns>
@@ -185,9 +188,9 @@ public class Command
 
 		if (o1 == null && o2 != null)
 			return false;
-		else if (o1 != null && o2 == null)
+		if (o1 != null && o2 == null)
 			return false;
-		else if (o1 == null && o2 == null)
+		if (o1 == null && o2 == null)
 			return true;
 
 		return obj is Command cmd
@@ -195,13 +198,13 @@ public class Command
 	}
 
 	/// <summary>
-	/// Gets this command's hash code.
+	///     Gets this command's hash code.
 	/// </summary>
 	/// <returns>This command's hash code.</returns>
 	public override int GetHashCode() => this.QualifiedName.GetHashCode();
 
 	/// <summary>
-	/// Returns a string representation of this command.
+	///     Returns a string representation of this command.
 	/// </summary>
 	/// <returns>String representation of this command.</returns>
 	public override string ToString() =>

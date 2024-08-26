@@ -6,7 +6,8 @@ using System.Collections.Immutable;
 namespace DisCatSharp.Common;
 
 /// <summary>
-/// Represents collection of string keys and <typeparamref name="TValue"/> values, allowing the use of <see cref="ReadOnlySpan{T}"/> for dictionary operations.
+///     Represents collection of string keys and <typeparamref name="TValue" /> values, allowing the use of
+///     <see cref="ReadOnlySpan{T}" /> for dictionary operations.
 /// </summary>
 /// <typeparam name="TValue">Type of items in this dictionary.</typeparam>
 public sealed class CharSpanLookupDictionary<TValue> :
@@ -15,93 +16,74 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	IDictionary
 {
 	/// <summary>
-	/// Gets the collection of all keys present in this dictionary.
+	///     Gets the internal buckets.
 	/// </summary>
-	public IEnumerable<string> Keys => this.GetKeysInternal();
+	private readonly Dictionary<ulong, KeyedValue?> _internalBuckets;
 
 	/// <summary>
-	/// Gets the keys.
+	///     Creates a new, empty <see cref="CharSpanLookupDictionary{TValue}" /> with string keys and items of type
+	///     <typeparamref name="TValue" />.
 	/// </summary>
-	ICollection<string> IDictionary<string, TValue?>.Keys => this.GetKeysInternal();
-
-	/// <summary>
-	/// Gets the keys.
-	/// </summary>
-	ICollection IDictionary.Keys => this.GetKeysInternal();
-
-	/// <summary>
-	/// Gets the collection of all values present in this dictionary.
-	/// </summary>
-	public IEnumerable<TValue?> Values => this.GetValuesInternal();
-
-	/// <summary>
-	/// Gets the values.
-	/// </summary>
-	ICollection<TValue?> IDictionary<string, TValue?>.Values => this.GetValuesInternal();
-
-	/// <summary>
-	/// Gets the values.
-	/// </summary>
-	ICollection IDictionary.Values => this.GetValuesInternal();
-
-	/// <summary>
-	/// Gets the total number of items in this dictionary.
-	/// </summary>
-	public int Count { get; private set; }
-
-	/// <summary>
-	/// Gets whether this dictionary is read-only.
-	/// </summary>
-	public bool IsReadOnly => false;
-
-	/// <summary>
-	/// Gets whether this dictionary has a fixed size.
-	/// </summary>
-	public bool IsFixedSize => false;
-
-	/// <summary>
-	/// Gets whether this dictionary is considered thread-safe.
-	/// </summary>
-	public bool IsSynchronized => false;
-
-	/// <summary>
-	/// Gets the object which allows synchronizing access to this dictionary.
-	/// </summary>
-	public object SyncRoot { get; } = new();
-
-	/// <summary>
-	/// Gets or sets a value corresponding to given key in this dictionary.
-	/// </summary>
-	/// <param name="key">Key to get or set the value for.</param>
-	/// <returns>Value matching the supplied key, if applicable.</returns>
-	public TValue? this[string key]
+	public CharSpanLookupDictionary()
 	{
-		get
-		{
-			ArgumentNullException.ThrowIfNull(key);
-
-			return !this.TryRetrieveInternal(key.AsSpan(), out var value)
-				? throw new KeyNotFoundException($"The given key '{key}' was not present in the dictionary.")
-				: value;
-		}
-
-		set
-		{
-			ArgumentNullException.ThrowIfNull(key);
-
-			this.TryInsertInternal(key, value, true);
-		}
+		this._internalBuckets = [];
 	}
 
 	/// <summary>
-	/// Gets or sets a value corresponding to given key in this dictionary.
+	///     Creates a new, empty <see cref="CharSpanLookupDictionary{TValue}" /> with string keys and items of type
+	///     <typeparamref name="TValue" /> and sets its initial capacity to specified value.
+	/// </summary>
+	/// <param name="initialCapacity">Initial capacity of the dictionary.</param>
+	public CharSpanLookupDictionary(int initialCapacity)
+	{
+		this._internalBuckets = new(initialCapacity);
+	}
+
+	/// <summary>
+	///     Creates a new <see cref="CharSpanLookupDictionary{TValue}" /> with string keys and items of type
+	///     <typeparamref name="TValue" /> and populates it with key-value pairs from supplied dictionary.
+	/// </summary>
+	/// <param name="values">Dictionary containing items to populate this dictionary with.</param>
+	public CharSpanLookupDictionary(IDictionary<string, TValue?> values)
+		: this(values.Count)
+	{
+		foreach (var (k, v) in values)
+			this.Add(k, v);
+	}
+
+	/// <summary>
+	///     Creates a new <see cref="CharSpanLookupDictionary{TValue}" /> with string keys and items of type
+	///     <typeparamref name="TValue" /> and populates it with key-value pairs from supplied dictionary.
+	/// </summary>
+	/// <param name="values">Dictionary containing items to populate this dictionary with.</param>
+	public CharSpanLookupDictionary(IReadOnlyDictionary<string, TValue?> values)
+		: this(values.Count)
+	{
+		foreach (var (k, v) in values)
+			this.Add(k, v);
+	}
+
+	/// <summary>
+	///     Creates a new <see cref="CharSpanLookupDictionary{TValue}" /> with string keys and items of type
+	///     <typeparamref name="TValue" /> and populates it with key-value pairs from supplied key-value collection.
+	/// </summary>
+	/// <param name="values">Dictionary containing items to populate this dictionary with.</param>
+	public CharSpanLookupDictionary(IEnumerable<KeyValuePair<string, TValue?>> values)
+		: this()
+	{
+		foreach (var (k, v) in values)
+			this.Add(k, v);
+	}
+
+	/// <summary>
+	///     Gets or sets a value corresponding to given key in this dictionary.
 	/// </summary>
 	/// <param name="key">Key to get or set the value for.</param>
 	/// <returns>Value matching the supplied key, if applicable.</returns>
 	public TValue? this[ReadOnlySpan<char> key]
 	{
 		get => !this.TryRetrieveInternal(key, out var value)
-			? throw new KeyNotFoundException($"The given key was not present in the dictionary.")
+			? throw new KeyNotFoundException("The given key was not present in the dictionary.")
 			: value;
 
 		set
@@ -116,7 +98,32 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		}
 	}
 
-	/// <inheritdoc/>
+	/// <summary>
+	///     Gets the keys.
+	/// </summary>
+	ICollection IDictionary.Keys => this.GetKeysInternal();
+
+	/// <summary>
+	///     Gets the values.
+	/// </summary>
+	ICollection IDictionary.Values => this.GetValuesInternal();
+
+	/// <summary>
+	///     Gets whether this dictionary has a fixed size.
+	/// </summary>
+	public bool IsFixedSize => false;
+
+	/// <summary>
+	///     Gets whether this dictionary is considered thread-safe.
+	/// </summary>
+	public bool IsSynchronized => false;
+
+	/// <summary>
+	///     Gets the object which allows synchronizing access to this dictionary.
+	/// </summary>
+	public object SyncRoot { get; } = new();
+
+	/// <inheritdoc />
 	object? IDictionary.this[object key]
 	{
 		get => key is not string tkey
@@ -142,200 +149,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	}
 
 	/// <summary>
-	/// Gets the internal buckets.
-	/// </summary>
-	private readonly Dictionary<ulong, KeyedValue?> _internalBuckets;
-
-	/// <summary>
-	/// Creates a new, empty <see cref="CharSpanLookupDictionary{TValue}"/> with string keys and items of type <typeparamref name="TValue"/>.
-	/// </summary>
-	public CharSpanLookupDictionary()
-	{
-		this._internalBuckets = [];
-	}
-
-	/// <summary>
-	/// Creates a new, empty <see cref="CharSpanLookupDictionary{TValue}"/> with string keys and items of type <typeparamref name="TValue"/> and sets its initial capacity to specified value.
-	/// </summary>
-	/// <param name="initialCapacity">Initial capacity of the dictionary.</param>
-	public CharSpanLookupDictionary(int initialCapacity)
-	{
-		this._internalBuckets = new(initialCapacity);
-	}
-
-	/// <summary>
-	/// Creates a new <see cref="CharSpanLookupDictionary{TValue}"/> with string keys and items of type <typeparamref name="TValue"/> and populates it with key-value pairs from supplied dictionary.
-	/// </summary>
-	/// <param name="values">Dictionary containing items to populate this dictionary with.</param>
-	public CharSpanLookupDictionary(IDictionary<string, TValue?> values)
-		: this(values.Count)
-	{
-		foreach (var (k, v) in values)
-			this.Add(k, v);
-	}
-
-	/// <summary>
-	/// Creates a new <see cref="CharSpanLookupDictionary{TValue}"/> with string keys and items of type <typeparamref name="TValue"/> and populates it with key-value pairs from supplied dictionary.
-	/// </summary>
-	/// <param name="values">Dictionary containing items to populate this dictionary with.</param>
-	public CharSpanLookupDictionary(IReadOnlyDictionary<string, TValue?> values)
-		: this(values.Count)
-	{
-		foreach (var (k, v) in values)
-			this.Add(k, v);
-	}
-
-	/// <summary>
-	/// Creates a new <see cref="CharSpanLookupDictionary{TValue}"/> with string keys and items of type <typeparamref name="TValue"/> and populates it with key-value pairs from supplied key-value collection.
-	/// </summary>
-	/// <param name="values">Dictionary containing items to populate this dictionary with.</param>
-	public CharSpanLookupDictionary(IEnumerable<KeyValuePair<string, TValue?>> values)
-		: this()
-	{
-		foreach (var (k, v) in values)
-			this.Add(k, v);
-	}
-
-	/// <summary>
-	/// Inserts a specific key and corresponding value into this dictionary.
-	/// </summary>
-	/// <param name="key">Key to insert.</param>
-	/// <param name="value">Value corresponding to this key.</param>
-	public void Add(string key, TValue? value)
-	{
-		if (!this.TryInsertInternal(key, value, false))
-			throw new ArgumentException("Given key is already present in the dictionary.", nameof(key));
-	}
-
-	/// <summary>
-	/// Inserts a specific key and corresponding value into this dictionary.
-	/// </summary>
-	/// <param name="key">Key to insert.</param>
-	/// <param name="value">Value corresponding to this key.</param>
-	public void Add(ReadOnlySpan<char> key, TValue? value)
-	{
-		unsafe
-		{
-			fixed (char* chars = &key.GetPinnableReference())
-			{
-				if (!this.TryInsertInternal(new(chars, 0, key.Length), value, false))
-					throw new ArgumentException("Given key is already present in the dictionary.", nameof(key));
-			}
-		}
-	}
-
-	/// <summary>
-	/// Attempts to insert a specific key and corresponding value into this dictionary.
-	/// </summary>
-	/// <param name="key">Key to insert.</param>
-	/// <param name="value">Value corresponding to this key.</param>
-	/// <returns>Whether the operation was successful.</returns>
-	public bool TryAdd(string key, TValue? value)
-		=> this.TryInsertInternal(key, value, false);
-
-	/// <summary>
-	/// Attempts to insert a specific key and corresponding value into this dictionary.
-	/// </summary>
-	/// <param name="key">Key to insert.</param>
-	/// <param name="value">Value corresponding to this key.</param>
-	/// <returns>Whether the operation was successful.</returns>
-	public bool TryAdd(ReadOnlySpan<char> key, TValue? value)
-	{
-		unsafe
-		{
-			fixed (char* chars = &key.GetPinnableReference())
-			{
-				return this.TryInsertInternal(new(chars, 0, key.Length), value, false);
-			}
-		}
-	}
-
-	/// <summary>
-	/// Attempts to retrieve a value corresponding to the supplied key from this dictionary.
-	/// </summary>
-	/// <param name="key">Key to retrieve the value for.</param>
-	/// <param name="value">Retrieved value.</param>
-	/// <returns>Whether the operation was successful.</returns>
-	public bool TryGetValue(string key, out TValue? value)
-	{
-		ArgumentNullException.ThrowIfNull(key);
-
-		return this.TryRetrieveInternal(key.AsSpan(), out value);
-	}
-
-	/// <summary>
-	/// Attempts to retrieve a value corresponding to the supplied key from this dictionary.
-	/// </summary>
-	/// <param name="key">Key to retrieve the value for.</param>
-	/// <param name="value">Retrieved value.</param>
-	/// <returns>Whether the operation was successful.</returns>
-	public bool TryGetValue(ReadOnlySpan<char> key, out TValue? value)
-		=> this.TryRetrieveInternal(key, out value);
-
-	/// <summary>
-	/// Attempts to remove a value corresponding to the supplied key from this dictionary.
-	/// </summary>
-	/// <param name="key">Key to remove the value for.</param>
-	/// <param name="value">Removed value.</param>
-	/// <returns>Whether the operation was successful.</returns>
-	public bool TryRemove(string key, out TValue? value)
-	{
-		ArgumentNullException.ThrowIfNull(key);
-
-		return this.TryRemoveInternal(key.AsSpan(), out value);
-	}
-
-	/// <summary>
-	/// Attempts to remove a value corresponding to the supplied key from this dictionary.
-	/// </summary>
-	/// <param name="key">Key to remove the value for.</param>
-	/// <param name="value">Removed value.</param>
-	/// <returns>Whether the operation was successful.</returns>
-	public bool TryRemove(ReadOnlySpan<char> key, out TValue? value)
-		=> this.TryRemoveInternal(key, out value);
-
-	/// <summary>
-	/// Checks whether this dictionary contains the specified key.
-	/// </summary>
-	/// <param name="key">Key to check for in this dictionary.</param>
-	/// <returns>Whether the key was present in the dictionary.</returns>
-	public bool ContainsKey(string key)
-		=> this.ContainsKeyInternal(key.AsSpan());
-
-	/// <summary>
-	/// Checks whether this dictionary contains the specified key.
-	/// </summary>
-	/// <param name="key">Key to check for in this dictionary.</param>
-	/// <returns>Whether the key was present in the dictionary.</returns>
-	public bool ContainsKey(ReadOnlySpan<char> key)
-		=> this.ContainsKeyInternal(key);
-
-	/// <summary>
-	/// Removes all items from this dictionary.
-	/// </summary>
-	public void Clear()
-	{
-		this._internalBuckets.Clear();
-		this.Count = 0;
-	}
-
-	/// <summary>
-	/// Gets an enumerator over key-value pairs in this dictionary.
-	/// </summary>
-	/// <returns></returns>
-	public IEnumerator<KeyValuePair<string, TValue?>> GetEnumerator()
-		=> new Enumerator(this!);
-
-	/// <summary>
-	/// Removes the.
-	/// </summary>
-	/// <param name="key">The key.</param>
-	/// <returns>A bool.</returns>
-	bool IDictionary<string, TValue?>.Remove(string key)
-		=> this.TryRemove(key.AsSpan(), out _);
-
-	/// <summary>
-	/// Adds the.
+	///     Adds the.
 	/// </summary>
 	/// <param name="key">The key.</param>
 	/// <param name="value">The value.</param>
@@ -355,7 +169,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	}
 
 	/// <summary>
-	/// Removes the.
+	///     Removes the.
 	/// </summary>
 	/// <param name="key">The key.</param>
 	void IDictionary.Remove(object key)
@@ -367,7 +181,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	}
 
 	/// <summary>
-	/// Contains the.
+	///     Contains the.
 	/// </summary>
 	/// <param name="key">The key.</param>
 	/// <returns>A bool.</returns>
@@ -375,59 +189,14 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		=> key is not string tkey ? throw new ArgumentException("Key needs to be an instance of a string.") : this.ContainsKey(tkey);
 
 	/// <summary>
-	/// Gets the enumerator.
+	///     Gets the enumerator.
 	/// </summary>
 	/// <returns>An IDictionaryEnumerator.</returns>
 	IDictionaryEnumerator IDictionary.GetEnumerator()
 		=> new Enumerator(this);
 
 	/// <summary>
-	/// Adds the.
-	/// </summary>
-	/// <param name="item">The item.</param>
-	void ICollection<KeyValuePair<string, TValue?>>.Add(KeyValuePair<string, TValue?> item)
-		=> this.Add(item.Key, item.Value);
-
-	/// <summary>
-	/// Removes the.
-	/// </summary>
-	/// <param name="item">The item.</param>
-	/// <returns>A bool.</returns>
-	bool ICollection<KeyValuePair<string, TValue?>>.Remove(KeyValuePair<string, TValue?> item)
-		=> this.TryRemove(item.Key, out _);
-
-	/// <summary>
-	/// Contains the.
-	/// </summary>
-	/// <param name="item">The item.</param>
-	/// <returns>A bool.</returns>
-	bool ICollection<KeyValuePair<string, TValue?>>.Contains(KeyValuePair<string, TValue?> item)
-		=> this.TryGetValue(item.Key, out var value) && EqualityComparer<TValue?>.Default.Equals(value, item.Value);
-
-	/// <summary>
-	/// Copies the to.
-	/// </summary>
-	/// <param name="array">The array.</param>
-	/// <param name="arrayIndex">The array index.</param>
-	void ICollection<KeyValuePair<string, TValue?>>.CopyTo(KeyValuePair<string, TValue?>[] array, int arrayIndex)
-	{
-		if (array.Length - arrayIndex < this.Count)
-			throw new ArgumentException("Target array is too small.", nameof(array));
-
-		var i = arrayIndex;
-		foreach (var (k, v) in this._internalBuckets)
-		{
-			var kdv = v;
-			while (kdv != null)
-			{
-				array[i++] = new(kdv.Key, kdv.Value);
-				kdv = kdv.Next;
-			}
-		}
-	}
-
-	/// <summary>
-	/// Copies the to.
+	///     Copies the to.
 	/// </summary>
 	/// <param name="array">The array.</param>
 	/// <param name="arrayIndex">The array index.</param>
@@ -455,14 +224,251 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	}
 
 	/// <summary>
-	/// Gets the enumerator.
+	///     Gets the keys.
+	/// </summary>
+	ICollection<string> IDictionary<string, TValue?>.Keys => this.GetKeysInternal();
+
+	/// <summary>
+	///     Gets the values.
+	/// </summary>
+	ICollection<TValue?> IDictionary<string, TValue?>.Values => this.GetValuesInternal();
+
+	/// <summary>
+	///     Gets the total number of items in this dictionary.
+	/// </summary>
+	public int Count { get; private set; }
+
+	/// <summary>
+	///     Gets whether this dictionary is read-only.
+	/// </summary>
+	public bool IsReadOnly => false;
+
+	/// <summary>
+	///     Gets or sets a value corresponding to given key in this dictionary.
+	/// </summary>
+	/// <param name="key">Key to get or set the value for.</param>
+	/// <returns>Value matching the supplied key, if applicable.</returns>
+	public TValue? this[string key]
+	{
+		get
+		{
+			ArgumentNullException.ThrowIfNull(key);
+
+			return !this.TryRetrieveInternal(key.AsSpan(), out var value)
+				? throw new KeyNotFoundException($"The given key '{key}' was not present in the dictionary.")
+				: value;
+		}
+
+		set
+		{
+			ArgumentNullException.ThrowIfNull(key);
+
+			this.TryInsertInternal(key, value, true);
+		}
+	}
+
+	/// <summary>
+	///     Inserts a specific key and corresponding value into this dictionary.
+	/// </summary>
+	/// <param name="key">Key to insert.</param>
+	/// <param name="value">Value corresponding to this key.</param>
+	public void Add(string key, TValue? value)
+	{
+		if (!this.TryInsertInternal(key, value, false))
+			throw new ArgumentException("Given key is already present in the dictionary.", nameof(key));
+	}
+
+	/// <summary>
+	///     Attempts to retrieve a value corresponding to the supplied key from this dictionary.
+	/// </summary>
+	/// <param name="key">Key to retrieve the value for.</param>
+	/// <param name="value">Retrieved value.</param>
+	/// <returns>Whether the operation was successful.</returns>
+	public bool TryGetValue(string key, out TValue? value)
+	{
+		ArgumentNullException.ThrowIfNull(key);
+
+		return this.TryRetrieveInternal(key.AsSpan(), out value);
+	}
+
+	/// <summary>
+	///     Checks whether this dictionary contains the specified key.
+	/// </summary>
+	/// <param name="key">Key to check for in this dictionary.</param>
+	/// <returns>Whether the key was present in the dictionary.</returns>
+	public bool ContainsKey(string key)
+		=> this.ContainsKeyInternal(key.AsSpan());
+
+	/// <summary>
+	///     Removes all items from this dictionary.
+	/// </summary>
+	public void Clear()
+	{
+		this._internalBuckets.Clear();
+		this.Count = 0;
+	}
+
+	/// <summary>
+	///     Gets an enumerator over key-value pairs in this dictionary.
+	/// </summary>
+	/// <returns></returns>
+	public IEnumerator<KeyValuePair<string, TValue?>> GetEnumerator()
+		=> new Enumerator(this!);
+
+	/// <summary>
+	///     Removes the.
+	/// </summary>
+	/// <param name="key">The key.</param>
+	/// <returns>A bool.</returns>
+	bool IDictionary<string, TValue?>.Remove(string key)
+		=> this.TryRemove(key.AsSpan(), out _);
+
+	/// <summary>
+	///     Adds the.
+	/// </summary>
+	/// <param name="item">The item.</param>
+	void ICollection<KeyValuePair<string, TValue?>>.Add(KeyValuePair<string, TValue?> item)
+		=> this.Add(item.Key, item.Value);
+
+	/// <summary>
+	///     Removes the.
+	/// </summary>
+	/// <param name="item">The item.</param>
+	/// <returns>A bool.</returns>
+	bool ICollection<KeyValuePair<string, TValue?>>.Remove(KeyValuePair<string, TValue?> item)
+		=> this.TryRemove(item.Key, out _);
+
+	/// <summary>
+	///     Contains the.
+	/// </summary>
+	/// <param name="item">The item.</param>
+	/// <returns>A bool.</returns>
+	bool ICollection<KeyValuePair<string, TValue?>>.Contains(KeyValuePair<string, TValue?> item)
+		=> this.TryGetValue(item.Key, out var value) && EqualityComparer<TValue?>.Default.Equals(value, item.Value);
+
+	/// <summary>
+	///     Copies the to.
+	/// </summary>
+	/// <param name="array">The array.</param>
+	/// <param name="arrayIndex">The array index.</param>
+	void ICollection<KeyValuePair<string, TValue?>>.CopyTo(KeyValuePair<string, TValue?>[] array, int arrayIndex)
+	{
+		if (array.Length - arrayIndex < this.Count)
+			throw new ArgumentException("Target array is too small.", nameof(array));
+
+		var i = arrayIndex;
+		foreach (var (k, v) in this._internalBuckets)
+		{
+			var kdv = v;
+			while (kdv != null)
+			{
+				array[i++] = new(kdv.Key, kdv.Value);
+				kdv = kdv.Next;
+			}
+		}
+	}
+
+	/// <summary>
+	///     Gets the enumerator.
 	/// </summary>
 	/// <returns>An IEnumerator.</returns>
 	IEnumerator IEnumerable.GetEnumerator()
 		=> this.GetEnumerator();
 
 	/// <summary>
-	/// Tries the insert internal.
+	///     Gets the collection of all keys present in this dictionary.
+	/// </summary>
+	public IEnumerable<string> Keys => this.GetKeysInternal();
+
+	/// <summary>
+	///     Gets the collection of all values present in this dictionary.
+	/// </summary>
+	public IEnumerable<TValue?> Values => this.GetValuesInternal();
+
+	/// <summary>
+	///     Inserts a specific key and corresponding value into this dictionary.
+	/// </summary>
+	/// <param name="key">Key to insert.</param>
+	/// <param name="value">Value corresponding to this key.</param>
+	public void Add(ReadOnlySpan<char> key, TValue? value)
+	{
+		unsafe
+		{
+			fixed (char* chars = &key.GetPinnableReference())
+			{
+				if (!this.TryInsertInternal(new(chars, 0, key.Length), value, false))
+					throw new ArgumentException("Given key is already present in the dictionary.", nameof(key));
+			}
+		}
+	}
+
+	/// <summary>
+	///     Attempts to insert a specific key and corresponding value into this dictionary.
+	/// </summary>
+	/// <param name="key">Key to insert.</param>
+	/// <param name="value">Value corresponding to this key.</param>
+	/// <returns>Whether the operation was successful.</returns>
+	public bool TryAdd(string key, TValue? value)
+		=> this.TryInsertInternal(key, value, false);
+
+	/// <summary>
+	///     Attempts to insert a specific key and corresponding value into this dictionary.
+	/// </summary>
+	/// <param name="key">Key to insert.</param>
+	/// <param name="value">Value corresponding to this key.</param>
+	/// <returns>Whether the operation was successful.</returns>
+	public bool TryAdd(ReadOnlySpan<char> key, TValue? value)
+	{
+		unsafe
+		{
+			fixed (char* chars = &key.GetPinnableReference())
+			{
+				return this.TryInsertInternal(new(chars, 0, key.Length), value, false);
+			}
+		}
+	}
+
+	/// <summary>
+	///     Attempts to retrieve a value corresponding to the supplied key from this dictionary.
+	/// </summary>
+	/// <param name="key">Key to retrieve the value for.</param>
+	/// <param name="value">Retrieved value.</param>
+	/// <returns>Whether the operation was successful.</returns>
+	public bool TryGetValue(ReadOnlySpan<char> key, out TValue? value)
+		=> this.TryRetrieveInternal(key, out value);
+
+	/// <summary>
+	///     Attempts to remove a value corresponding to the supplied key from this dictionary.
+	/// </summary>
+	/// <param name="key">Key to remove the value for.</param>
+	/// <param name="value">Removed value.</param>
+	/// <returns>Whether the operation was successful.</returns>
+	public bool TryRemove(string key, out TValue? value)
+	{
+		ArgumentNullException.ThrowIfNull(key);
+
+		return this.TryRemoveInternal(key.AsSpan(), out value);
+	}
+
+	/// <summary>
+	///     Attempts to remove a value corresponding to the supplied key from this dictionary.
+	/// </summary>
+	/// <param name="key">Key to remove the value for.</param>
+	/// <param name="value">Removed value.</param>
+	/// <returns>Whether the operation was successful.</returns>
+	public bool TryRemove(ReadOnlySpan<char> key, out TValue? value)
+		=> this.TryRemoveInternal(key, out value);
+
+	/// <summary>
+	///     Checks whether this dictionary contains the specified key.
+	/// </summary>
+	/// <param name="key">Key to check for in this dictionary.</param>
+	/// <returns>Whether the key was present in the dictionary.</returns>
+	public bool ContainsKey(ReadOnlySpan<char> key)
+		=> this.ContainsKeyInternal(key);
+
+	/// <summary>
+	///     Tries the insert internal.
 	/// </summary>
 	/// <param name="key">The key.</param>
 	/// <param name="value">The value.</param>
@@ -505,7 +511,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	}
 
 	/// <summary>
-	/// Tries the retrieve internal.
+	///     Tries the retrieve internal.
 	/// </summary>
 	/// <param name="key">The key.</param>
 	/// <param name="value">The value.</param>
@@ -529,7 +535,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	}
 
 	/// <summary>
-	/// Tries the remove internal.
+	///     Tries the remove internal.
 	/// </summary>
 	/// <param name="key">The key.</param>
 	/// <param name="value">The value.</param>
@@ -594,7 +600,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	}
 
 	/// <summary>
-	/// Contains the key internal.
+	///     Contains the key internal.
 	/// </summary>
 	/// <param name="key">The key.</param>
 	/// <returns>A bool.</returns>
@@ -616,7 +622,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	}
 
 	/// <summary>
-	/// Gets the keys internal.
+	///     Gets the keys internal.
 	/// </summary>
 	/// <returns>An ImmutableArray.</returns>
 	private ImmutableArray<string> GetKeysInternal()
@@ -636,7 +642,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	}
 
 	/// <summary>
-	/// Gets the values internal.
+	///     Gets the values internal.
 	/// </summary>
 	/// <returns>An ImmutableArray.</returns>
 	private ImmutableArray<TValue?> GetValuesInternal()
@@ -656,10 +662,10 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	}
 
 	/// <summary>
-	/// The keyed value.
+	///     The keyed value.
 	/// </summary>
 	/// <remarks>
-	/// Initializes a new instance of the <see cref="KeyedValue"/> class.
+	///     Initializes a new instance of the <see cref="KeyedValue" /> class.
 	/// </remarks>
 	/// <param name="key">The key.</param>
 	/// <param name="keyHash">The key hash.</param>
@@ -667,75 +673,50 @@ public sealed class CharSpanLookupDictionary<TValue> :
 	private sealed class KeyedValue(string key, ulong keyHash, TValue? value)
 	{
 		/// <summary>
-		/// Gets the key hash.
+		///     Gets the key hash.
 		/// </summary>
 		public ulong KeyHash { get; } = keyHash;
 
 		/// <summary>
-		/// Gets the key.
+		///     Gets the key.
 		/// </summary>
 		public string Key { get; } = key;
 
 		/// <summary>
-		/// Gets or sets the value.
+		///     Gets or sets the value.
 		/// </summary>
 		public TValue? Value { get; set; } = value;
 
 		/// <summary>
-		/// Gets or sets the next.
+		///     Gets or sets the next.
 		/// </summary>
 		public KeyedValue? Next { get; set; }
 	}
 
 	/// <summary>
-	/// The enumerator.
+	///     The enumerator.
 	/// </summary>
 	private sealed class Enumerator :
 		IEnumerator<KeyValuePair<string, TValue?>>,
 		IDictionaryEnumerator
 	{
 		/// <summary>
-		/// Gets the current.
-		/// </summary>
-		public KeyValuePair<string, TValue?> Current { get; private set; }
-
-		/// <summary>
-		/// Gets the current.
-		/// </summary>
-		object IEnumerator.Current => this.Current;
-
-		/// <summary>
-		/// Gets the key.
-		/// </summary>
-		object IDictionaryEnumerator.Key => this.Current.Key;
-
-		/// <summary>
-		/// Gets the value.
-		/// </summary>
-		object? IDictionaryEnumerator.Value => this.Current.Value;
-
-		/// <summary>
-		/// Gets the entry.
-		/// </summary>
-		DictionaryEntry IDictionaryEnumerator.Entry => new(this.Current.Key, this.Current.Value);
-
-		/// <summary>
-		/// Gets the internal dictionary.
+		///     Gets the internal dictionary.
 		/// </summary>
 		private readonly CharSpanLookupDictionary<TValue?> _internalDictionary;
 
 		/// <summary>
-		/// Gets the internal enumerator.
+		///     Gets the internal enumerator.
 		/// </summary>
 		private readonly IEnumerator<KeyValuePair<ulong, KeyedValue?>> _internalEnumerator;
 
 		/// <summary>
-		/// Gets or sets the current value.
+		///     Gets or sets the current value.
 		/// </summary>
 		private KeyedValue? _currentValue;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Enumerator"/> class.
+		///     Initializes a new instance of the <see cref="Enumerator" /> class.
 		/// </summary>
 		/// <param name="spDict">The sp dict.</param>
 		public Enumerator(CharSpanLookupDictionary<TValue?> spDict)
@@ -745,7 +726,32 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		}
 
 		/// <summary>
-		/// Moves the next.
+		///     Gets the key.
+		/// </summary>
+		object IDictionaryEnumerator.Key => this.Current.Key;
+
+		/// <summary>
+		///     Gets the value.
+		/// </summary>
+		object? IDictionaryEnumerator.Value => this.Current.Value;
+
+		/// <summary>
+		///     Gets the entry.
+		/// </summary>
+		DictionaryEntry IDictionaryEnumerator.Entry => new(this.Current.Key, this.Current.Value);
+
+		/// <summary>
+		///     Gets the current.
+		/// </summary>
+		public KeyValuePair<string, TValue?> Current { get; private set; }
+
+		/// <summary>
+		///     Gets the current.
+		/// </summary>
+		object IEnumerator.Current => this.Current;
+
+		/// <summary>
+		///     Moves the next.
 		/// </summary>
 		/// <returns>A bool.</returns>
 		public bool MoveNext()
@@ -769,7 +775,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		}
 
 		/// <summary>
-		/// Resets the.
+		///     Resets the.
 		/// </summary>
 		public void Reset()
 		{
@@ -779,7 +785,7 @@ public sealed class CharSpanLookupDictionary<TValue> :
 		}
 
 		/// <summary>
-		/// Disposes the.
+		///     Disposes the.
 		/// </summary>
 		public void Dispose() => this.Reset();
 	}

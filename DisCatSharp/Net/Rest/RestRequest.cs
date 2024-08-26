@@ -4,17 +4,12 @@ using System.Collections.Generic;
 namespace DisCatSharp.Net;
 
 /// <summary>
-/// Represents a non-multipart HTTP request.
+///     Represents a non-multipart HTTP request.
 /// </summary>
 internal sealed class RestRequest : BaseRestRequest
 {
 	/// <summary>
-	/// Gets the payload sent with this request.
-	/// </summary>
-	public string? Payload { get; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="RestRequest"/> class.
+	///     Initializes a new instance of the <see cref="RestRequest" /> class.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="bucket">The bucket.</param>
@@ -29,4 +24,9 @@ internal sealed class RestRequest : BaseRestRequest
 	{
 		this.Payload = payload;
 	}
+
+	/// <summary>
+	///     Gets the payload sent with this request.
+	/// </summary>
+	public string? Payload { get; }
 }

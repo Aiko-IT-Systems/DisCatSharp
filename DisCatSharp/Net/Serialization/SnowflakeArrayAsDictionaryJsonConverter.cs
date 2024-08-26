@@ -13,16 +13,16 @@ using Newtonsoft.Json.Linq;
 namespace DisCatSharp.Net.Serialization;
 
 /// <summary>
-/// Used for a <see cref="Dictionary{TKey,TValue}"/> or <see cref="ConcurrentDictionary{TKey,TValue}"/> mapping
-/// <see cref="ulong"/> to any class extending <see cref="SnowflakeObject"/> (or, as a special case,
-/// <see cref="DiscordVoiceState"/>). When serializing, discards the ulong
-/// keys and writes only the values. When deserializing, pulls the keys from <see cref="SnowflakeObject.Id"/> (or,
-/// in the case of <see cref="DiscordVoiceState"/>, <see cref="DiscordVoiceState.UserId"/>.
+///     Used for a <see cref="Dictionary{TKey,TValue}" /> or <see cref="ConcurrentDictionary{TKey,TValue}" /> mapping
+///     <see cref="ulong" /> to any class extending <see cref="SnowflakeObject" /> (or, as a special case,
+///     <see cref="DiscordVoiceState" />). When serializing, discards the ulong
+///     keys and writes only the values. When deserializing, pulls the keys from <see cref="SnowflakeObject.Id" /> (or,
+///     in the case of <see cref="DiscordVoiceState" />, <see cref="DiscordVoiceState.UserId" />.
 /// </summary>
 internal class SnowflakeArrayAsDictionaryJsonConverter : JsonConverter
 {
 	/// <summary>
-	/// Writes the json.
+	///     Writes the json.
 	/// </summary>
 	/// <param name="writer">The writer.</param>
 	/// <param name="value">The value.</param>
@@ -39,7 +39,7 @@ internal class SnowflakeArrayAsDictionaryJsonConverter : JsonConverter
 	}
 
 	/// <summary>
-	/// Reads the json.
+	///     Reads the json.
 	/// </summary>
 	/// <param name="reader">The reader.</param>
 	/// <param name="objectType">The object type.</param>
@@ -70,7 +70,7 @@ internal class SnowflakeArrayAsDictionaryJsonConverter : JsonConverter
 	}
 
 	/// <summary>
-	/// Whether the snowflake can be converted.
+	///     Whether the snowflake can be converted.
 	/// </summary>
 	/// <param name="objectType">The object type.</param>
 	public override bool CanConvert(Type objectType)

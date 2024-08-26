@@ -4,12 +4,12 @@ using DisCatSharp.Enums;
 namespace DisCatSharp.Interactivity.Enums;
 
 /// <summary>
-/// A modal page.
+///     A modal page.
 /// </summary>
 public class ModalPage
 {
 	/// <summary>
-	/// Creates a new modal page for the paginated modal builder.
+	///     Creates a new modal page for the paginated modal builder.
 	/// </summary>
 	/// <param name="modal">The modal to display.</param>
 	/// <param name="openButton">The button to display to open the current page. This is skipped if possible.</param>
@@ -22,17 +22,17 @@ public class ModalPage
 	}
 
 	/// <summary>
-	/// The modal that will be displayed.
+	///     The modal that will be displayed.
 	/// </summary>
 	public DiscordInteractionModalBuilder Modal { get; set; }
 
 	/// <summary>
-	/// The button that will be displayed on the ephemeral message.
+	///     The button that will be displayed on the ephemeral message.
 	/// </summary>
 	public DiscordButtonComponent OpenButton { get; set; }
 
 	/// <summary>
-	/// The ephemeral message to display for this page.
+	///     The ephemeral message to display for this page.
 	/// </summary>
 	public DiscordInteractionResponseBuilder OpenMessage { get; set; }
 }

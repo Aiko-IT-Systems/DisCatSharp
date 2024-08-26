@@ -9,42 +9,65 @@ using DisCatSharp.Enums;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Constructs ready-to-send webhook requests.
+///     Constructs ready-to-send webhook requests.
 /// </summary>
 public sealed class DiscordWebhookBuilder
 {
-	/// <summary>
-	/// Username to use for this webhook request.
-	/// </summary>
-	public Optional<string> Username { get; set; }
+	private readonly List<ulong> _appliedTags = [];
+
+	private readonly List<DiscordActionRowComponent> _components = [];
+
+	private readonly List<DiscordEmbed> _embeds = [];
+
+	private readonly List<DiscordMessageFile> _files = [];
+
+	private string _content;
+
+	internal List<DiscordAttachment> AttachmentsInternal = [];
 
 	/// <summary>
-	/// Avatar url to use for this webhook request.
-	/// </summary>
-	public Optional<string> AvatarUrl { get; set; }
-
-	/// <summary>
-	/// Whether this webhook request is text-to-speech.
-	/// </summary>
-	public bool IsTts { get; set; }
-
-	/// <summary>
-	/// Whether to suppress embeds.
-	/// </summary>
-	public bool EmbedsSuppressed { get; set; }
-
-	/// <summary>
-	/// Whether to send as silent message.
-	/// </summary>
-	public bool NotificationsSuppressed { get; set; }
-
-	/// <summary>
-	/// Whether flags were changed.
+	///     Whether flags were changed.
 	/// </summary>
 	internal bool FlagsChanged = false;
 
 	/// <summary>
-	/// Message to send on this webhook request.
+	///     Whether to keep previous attachments.
+	/// </summary>
+	internal bool? KeepAttachmentsInternal;
+
+	/// <summary>
+	///     Constructs a new empty webhook request builder.
+	/// </summary>
+	public DiscordWebhookBuilder()
+	{ } // I still see no point in initializing collections with empty collections. //
+
+	/// <summary>
+	///     Username to use for this webhook request.
+	/// </summary>
+	public Optional<string> Username { get; set; }
+
+	/// <summary>
+	///     Avatar url to use for this webhook request.
+	/// </summary>
+	public Optional<string> AvatarUrl { get; set; }
+
+	/// <summary>
+	///     Whether this webhook request is text-to-speech.
+	/// </summary>
+	public bool IsTts { get; set; }
+
+	/// <summary>
+	///     Whether to suppress embeds.
+	/// </summary>
+	public bool EmbedsSuppressed { get; set; }
+
+	/// <summary>
+	///     Whether to send as silent message.
+	/// </summary>
+	public bool NotificationsSuppressed { get; set; }
+
+	/// <summary>
+	///     Message to send on this webhook request.
 	/// </summary>
 	public string Content
 	{
@@ -58,72 +81,49 @@ public sealed class DiscordWebhookBuilder
 		}
 	}
 
-	private string _content;
-
 	/// <summary>
-	/// Name of the new thread.
-	/// Only works if the webhook is send in a <see cref="ChannelType.Forum"/>.
+	///     Name of the new thread.
+	///     Only works if the webhook is send in a <see cref="ChannelType.Forum" />.
 	/// </summary>
 	public string? ThreadName { get; set; }
 
 	/// <summary>
-	/// Whether to keep previous attachments.
-	/// </summary>
-	internal bool? KeepAttachmentsInternal;
-
-	/// <summary>
-	/// Embeds to send on this webhook request.
+	///     Embeds to send on this webhook request.
 	/// </summary>
 	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
 
-	private readonly List<DiscordEmbed> _embeds = [];
-
 	/// <summary>
-	/// Files to send on this webhook request.
+	///     Files to send on this webhook request.
 	/// </summary>
 	public IReadOnlyList<DiscordMessageFile> Files => this._files;
 
-	private readonly List<DiscordMessageFile> _files = [];
-
 	/// <summary>
-	/// Mentions to send on this webhook request.
+	///     Mentions to send on this webhook request.
 	/// </summary>
 	public List<IMention>? Mentions { get; private set; }
 
 	/// <summary>
-	/// Gets the components.
+	///     Gets the components.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
 
-	private readonly List<DiscordActionRowComponent> _components = [];
-
 	/// <summary>
-	/// Attachments to keep on this webhook request.
+	///     Attachments to keep on this webhook request.
 	/// </summary>
 	public IReadOnlyList<DiscordAttachment> Attachments => this.AttachmentsInternal;
 
-	internal List<DiscordAttachment> AttachmentsInternal = [];
-
 	/// <summary>
-	/// Forum post tags to send on this webhook request.
+	///     Forum post tags to send on this webhook request.
 	/// </summary>
 	public IReadOnlyList<ulong> AppliedTags => this._appliedTags;
 
-	private readonly List<ulong> _appliedTags = [];
-
 	/// <summary>
-	/// Gets the poll for this message.
+	///     Gets the poll for this message.
 	/// </summary>
 	public DiscordPollBuilder? Poll { get; private set; }
 
 	/// <summary>
-	/// Constructs a new empty webhook request builder.
-	/// </summary>
-	public DiscordWebhookBuilder()
-	{ } // I still see no point in initializing collections with empty collections. //
-
-	/// <summary>
-	/// Sets the webhook response to suppress embeds.
+	///     Sets the webhook response to suppress embeds.
 	/// </summary>
 	public DiscordWebhookBuilder SuppressEmbeds()
 	{
@@ -133,7 +133,7 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Sets the webhook to be send as silent message.
+	///     Sets the webhook to be send as silent message.
 	/// </summary>
 	public DiscordWebhookBuilder AsSilentMessage()
 	{
@@ -143,7 +143,7 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Adds a row of components to the builder, up to 5 components per row, and up to 5 rows per message.
+	///     Adds a row of components to the builder, up to 5 components per row, and up to 5 rows per message.
 	/// </summary>
 	/// <param name="components">The components to add to the builder.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -152,7 +152,7 @@ public sealed class DiscordWebhookBuilder
 		=> this.AddComponents((IEnumerable<DiscordComponent>)components);
 
 	/// <summary>
-	/// Appends several rows of components to the builder
+	///     Appends several rows of components to the builder
 	/// </summary>
 	/// <param name="components">The rows of components to add, holding up to five each.</param>
 	/// <returns></returns>
@@ -170,7 +170,7 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Adds a row of components to the builder, up to 5 components per row, and up to 5 rows per message.
+	///     Adds a row of components to the builder, up to 5 components per row, and up to 5 rows per message.
 	/// </summary>
 	/// <param name="components">The components to add to the builder.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -195,7 +195,7 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Adds a poll to this webhook builder.
+	///     Adds a poll to this webhook builder.
 	/// </summary>
 	/// <param name="pollBuilder">The poll builder to add.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -206,7 +206,7 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Sets the username for this webhook builder.
+	///     Sets the username for this webhook builder.
 	/// </summary>
 	/// <param name="username">Username of the webhook</param>
 	public DiscordWebhookBuilder WithUsername(string username)
@@ -216,7 +216,7 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Sets the avatar of this webhook builder from its url.
+	///     Sets the avatar of this webhook builder from its url.
 	/// </summary>
 	/// <param name="avatarUrl">Avatar url of the webhook</param>
 	public DiscordWebhookBuilder WithAvatarUrl(string avatarUrl)
@@ -226,7 +226,7 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Indicates if the webhook must use text-to-speech.
+	///     Indicates if the webhook must use text-to-speech.
 	/// </summary>
 	/// <param name="tts">Text-to-speech</param>
 	public DiscordWebhookBuilder WithTts(bool tts)
@@ -236,7 +236,7 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Sets the message to send at the execution of the webhook.
+	///     Sets the message to send at the execution of the webhook.
 	/// </summary>
 	/// <param name="content">Message to send.</param>
 	public DiscordWebhookBuilder WithContent(string content)
@@ -246,8 +246,8 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Sets the thread name to create at the execution of the webhook.
-	/// Only works for <see cref="ChannelType.Forum"/>.
+	///     Sets the thread name to create at the execution of the webhook.
+	///     Only works for <see cref="ChannelType.Forum" />.
 	/// </summary>
 	/// <param name="name">The thread name.</param>
 	public DiscordWebhookBuilder WithThreadName(string name)
@@ -257,7 +257,7 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Adds an embed to send at the execution of the webhook.
+	///     Adds an embed to send at the execution of the webhook.
 	/// </summary>
 	/// <param name="embed">Embed to add.</param>
 	public DiscordWebhookBuilder AddEmbed(DiscordEmbed embed)
@@ -269,7 +269,7 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Adds the given embeds to send at the execution of the webhook.
+	///     Adds the given embeds to send at the execution of the webhook.
 	/// </summary>
 	/// <param name="embeds">Embeds to add.</param>
 	public DiscordWebhookBuilder AddEmbeds(IEnumerable<DiscordEmbed> embeds)
@@ -279,11 +279,14 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Adds a file to send at the execution of the webhook.
+	///     Adds a file to send at the execution of the webhook.
 	/// </summary>
 	/// <param name="filename">Name of the file.</param>
 	/// <param name="data">File data.</param>
-	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+	/// <param name="resetStreamPosition">
+	///     Tells the API Client to reset the stream position to what it was after the file is
+	///     sent.
+	/// </param>
 	/// <param name="description">Description of the file.</param>
 	public DiscordWebhookBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string description = null)
 	{
@@ -302,10 +305,13 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Sets if the message has files to be sent.
+	///     Sets if the message has files to be sent.
 	/// </summary>
 	/// <param name="stream">The Stream to the file.</param>
-	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+	/// <param name="resetStreamPosition">
+	///     Tells the API Client to reset the stream position to what it was after the file is
+	///     sent.
+	/// </param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns></returns>
 	public DiscordWebhookBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string description = null)
@@ -325,10 +331,13 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Adds the given files to send at the execution of the webhook.
+	///     Adds the given files to send at the execution of the webhook.
 	/// </summary>
 	/// <param name="files">Dictionary of file name and file data.</param>
-	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+	/// <param name="resetStreamPosition">
+	///     Tells the API Client to reset the stream position to what it was after the file is
+	///     sent.
+	/// </param>
 	public DiscordWebhookBuilder AddFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
 	{
 		if (this.Files.Count + files.Count > 10)
@@ -349,7 +358,7 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Modifies the given attachments on edit.
+	///     Modifies the given attachments on edit.
 	/// </summary>
 	/// <param name="attachments">Attachments to edit.</param>
 	/// <returns></returns>
@@ -360,7 +369,7 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Whether to keep the message attachments, if new ones are added.
+	///     Whether to keep the message attachments, if new ones are added.
 	/// </summary>
 	/// <returns></returns>
 	public DiscordWebhookBuilder KeepAttachments(bool keep)
@@ -370,7 +379,7 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Adds the mention to the mentions to parse, etc. at the execution of the webhook.
+	///     Adds the mention to the mentions to parse, etc. at the execution of the webhook.
 	/// </summary>
 	/// <param name="mention">Mention to add.</param>
 	public DiscordWebhookBuilder AddMention(IMention mention)
@@ -383,7 +392,7 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Adds the mentions to the mentions to parse, etc. at the execution of the webhook.
+	///     Adds the mentions to the mentions to parse, etc. at the execution of the webhook.
 	/// </summary>
 	/// <param name="mentions">Mentions to add.</param>
 	public DiscordWebhookBuilder AddMentions(IEnumerable<IMention> mentions)
@@ -396,7 +405,7 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Tags to apply to forum posts.
+	///     Tags to apply to forum posts.
 	/// </summary>
 	/// <param name="tags">Tags to add.</param>
 	public DiscordWebhookBuilder WithAppliedTags(IEnumerable<ulong> tags)
@@ -406,14 +415,14 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Executes a webhook.
+	///     Executes a webhook.
 	/// </summary>
 	/// <param name="webhook">The webhook that should be executed.</param>
 	/// <returns>The message sent</returns>
 	public async Task<DiscordMessage> SendAsync(DiscordWebhook webhook) => await webhook.ExecuteAsync(this).ConfigureAwait(false);
 
 	/// <summary>
-	/// Executes a webhook.
+	///     Executes a webhook.
 	/// </summary>
 	/// <param name="webhook">The webhook that should be executed.</param>
 	/// <param name="threadId">Target thread id.</param>
@@ -421,7 +430,7 @@ public sealed class DiscordWebhookBuilder
 	public async Task<DiscordMessage> SendAsync(DiscordWebhook webhook, ulong threadId) => await webhook.ExecuteAsync(this, threadId.ToString()).ConfigureAwait(false);
 
 	/// <summary>
-	/// Sends the modified webhook message.
+	///     Sends the modified webhook message.
 	/// </summary>
 	/// <param name="webhook">The webhook that should be executed.</param>
 	/// <param name="message">The message to modify.</param>
@@ -429,7 +438,7 @@ public sealed class DiscordWebhookBuilder
 	public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, DiscordMessage message) => await this.ModifyAsync(webhook, message.Id).ConfigureAwait(false);
 
 	/// <summary>
-	/// Sends the modified webhook message.
+	///     Sends the modified webhook message.
 	/// </summary>
 	/// <param name="webhook">The webhook that should be executed.</param>
 	/// <param name="messageId">The id of the message to modify.</param>
@@ -437,7 +446,7 @@ public sealed class DiscordWebhookBuilder
 	public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, ulong messageId) => await webhook.EditMessageAsync(messageId, this).ConfigureAwait(false);
 
 	/// <summary>
-	/// Sends the modified webhook message.
+	///     Sends the modified webhook message.
 	/// </summary>
 	/// <param name="webhook">The webhook that should be executed.</param>
 	/// <param name="message">The message to modify.</param>
@@ -446,7 +455,7 @@ public sealed class DiscordWebhookBuilder
 	public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, DiscordMessage message, DiscordThreadChannel thread) => await this.ModifyAsync(webhook, message.Id, thread.Id).ConfigureAwait(false);
 
 	/// <summary>
-	/// Sends the modified webhook message.
+	///     Sends the modified webhook message.
 	/// </summary>
 	/// <param name="webhook">The webhook that should be executed.</param>
 	/// <param name="messageId">The id of the message to modify.</param>
@@ -455,19 +464,19 @@ public sealed class DiscordWebhookBuilder
 	public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, ulong messageId, ulong threadId) => await webhook.EditMessageAsync(messageId, this, threadId.ToString()).ConfigureAwait(false);
 
 	/// <summary>
-	/// Clears all message components on this builder.
+	///     Clears all message components on this builder.
 	/// </summary>
 	public void ClearComponents()
 		=> this._components.Clear();
 
 	/// <summary>
-	/// Clears the poll from this builder.
+	///     Clears the poll from this builder.
 	/// </summary>
 	public void ClearPoll()
 		=> this.Poll = null;
 
 	/// <summary>
-	/// Allows for clearing the Webhook Builder so that it can be used again to send a new message.
+	///     Allows for clearing the Webhook Builder so that it can be used again to send a new message.
 	/// </summary>
 	public void Clear()
 	{
@@ -484,7 +493,7 @@ public sealed class DiscordWebhookBuilder
 	}
 
 	/// <summary>
-	/// Does the validation before we send a the Create/Modify request.
+	///     Does the validation before we send a the Create/Modify request.
 	/// </summary>
 	/// <param name="isModify">Tells the method to perform the Modify Validation or Create Validation.</param>
 	/// <param name="isFollowup">Tells the method to perform the follow up message validation.</param>

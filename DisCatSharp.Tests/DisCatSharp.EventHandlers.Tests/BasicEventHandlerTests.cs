@@ -11,48 +11,6 @@ namespace DisCatSharp.EventHandlers.Tests;
 
 public class BasicEventHandlerTests
 {
-	[EventHandler]
-	private class HandlerA
-	{ }
-
-	[EventHandler]
-	private class HandlerB
-	{
-		[Event]
-		public Task MessageCreated(DiscordClient sender, MessageCreateEventArgs args) => Task.CompletedTask;
-
-		[Event(DiscordEvent.MessageDeleted)]
-		private static Task SomeEvent(DiscordClient sender, MessageDeleteEventArgs args) => Task.CompletedTask;
-	}
-
-	[EventHandler]
-	private static class HandlerC
-	{
-		[Event]
-		public static Task MessageCreated(DiscordClient sender, MessageCreateEventArgs args) => Task.CompletedTask;
-	}
-
-	public abstract class HandlerD
-	{
-		[Event]
-		public Task ChannelCreated(DiscordClient sender, ChannelCreateEventArgs args) => Task.CompletedTask;
-
-		[Event]
-		public static Task ChannelDeleted(DiscordClient sender, ChannelDeleteEventArgs args) => Task.CompletedTask;
-	}
-
-	private class BadHandlerA
-	{
-		[Event]
-		public int MessageCreated(object? obj, dynamic dynamic) => 1;
-	}
-
-	private abstract class BadHandlerB
-	{
-		[Event]
-		private static Task ThisEventDoesNotExist() => Task.CompletedTask;
-	}
-
 	private readonly DiscordClient _client = new(new()
 	{
 		Token = "1"
@@ -123,5 +81,47 @@ public class BasicEventHandlerTests
 		dynamic handlers = asyncEvent?.GetType().GetField("_handlers", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(asyncEvent)
 		                   ?? throw new ArgumentException($"Unknown event \"{name}\"");
 		return handlers.Length != 0;
+	}
+
+	[EventHandler]
+	private class HandlerA
+	{ }
+
+	[EventHandler]
+	private class HandlerB
+	{
+		[Event]
+		public Task MessageCreated(DiscordClient sender, MessageCreateEventArgs args) => Task.CompletedTask;
+
+		[Event(DiscordEvent.MessageDeleted)]
+		private static Task SomeEvent(DiscordClient sender, MessageDeleteEventArgs args) => Task.CompletedTask;
+	}
+
+	[EventHandler]
+	private static class HandlerC
+	{
+		[Event]
+		public static Task MessageCreated(DiscordClient sender, MessageCreateEventArgs args) => Task.CompletedTask;
+	}
+
+	public abstract class HandlerD
+	{
+		[Event]
+		public Task ChannelCreated(DiscordClient sender, ChannelCreateEventArgs args) => Task.CompletedTask;
+
+		[Event]
+		public static Task ChannelDeleted(DiscordClient sender, ChannelDeleteEventArgs args) => Task.CompletedTask;
+	}
+
+	private class BadHandlerA
+	{
+		[Event]
+		public int MessageCreated(object? obj, dynamic dynamic) => 1;
+	}
+
+	private abstract class BadHandlerB
+	{
+		[Event]
+		private static Task ThisEventDoesNotExist() => Task.CompletedTask;
 	}
 }

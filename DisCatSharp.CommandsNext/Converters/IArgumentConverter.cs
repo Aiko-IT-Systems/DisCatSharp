@@ -5,19 +5,19 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.CommandsNext.Converters;
 
 /// <summary>
-/// Argument converter abstract.
+///     Argument converter abstract.
 /// </summary>
 public interface IArgumentConverter
 { }
 
 /// <summary>
-/// Represents a converter for specific argument type.
+///     Represents a converter for specific argument type.
 /// </summary>
 /// <typeparam name="T">Type for which the converter is to be registered.</typeparam>
 public interface IArgumentConverter<T> : IArgumentConverter
 {
 	/// <summary>
-	/// Converts the raw value into the specified type.
+	///     Converts the raw value into the specified type.
 	/// </summary>
 	/// <param name="value">Value to convert.</param>
 	/// <param name="ctx">Context in which the value will be converted.</param>

@@ -1,12 +1,12 @@
 namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Represents the layout type of a poll.
+///     Represents the layout type of a poll.
 /// </summary>
 public enum PollLayoutType
 {
 	/// <summary>
-	/// The default layout type.
+	///     The default layout type.
 	/// </summary>
 	Default = 1 /*,
 

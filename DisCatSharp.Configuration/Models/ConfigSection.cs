@@ -3,31 +3,34 @@ using Microsoft.Extensions.Configuration;
 namespace DisCatSharp.Configuration.Models;
 
 /// <summary>
-/// Represents an object in <see cref="IConfiguration"/>
+///     Represents an object in <see cref="IConfiguration" />
 /// </summary>
 internal readonly struct ConfigSection
 {
 	/// <summary>
-	/// Key within <see cref="Config"/> which represents an object containing multiple values
+	///     Key within <see cref="Config" /> which represents an object containing multiple values
 	/// </summary>
 	public string SectionName { get; }
 
 	/// <summary>
-	/// Optional used to indicate this section is nested within another
+	///     Optional used to indicate this section is nested within another
 	/// </summary>
 	public string? Root { get; }
 
 	/// <summary>
-	/// Reference to <see cref="IConfiguration"/> used within application
+	///     Reference to <see cref="IConfiguration" /> used within application
 	/// </summary>
 	public IConfiguration Config { get; }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="ConfigSection"/> class.
+	///     Initializes a new instance of the <see cref="ConfigSection" /> class.
 	/// </summary>
 	/// <param name="config">Reference to config</param>
 	/// <param name="sectionName">Section of interest</param>
-	/// <param name="rootName">(Optional) Indicates <paramref name="sectionName"/> is nested within this name. Default value is DisCatSharp</param>
+	/// <param name="rootName">
+	///     (Optional) Indicates <paramref name="sectionName" /> is nested within this name. Default value
+	///     is DisCatSharp
+	/// </param>
 	public ConfigSection(ref IConfiguration config, string sectionName, string? rootName = "DisCatSharp")
 	{
 		this.Config = config;
@@ -36,7 +39,7 @@ internal readonly struct ConfigSection
 	}
 
 	/// <summary>
-	/// Checks if key exists in <see cref="Config"/>
+	///     Checks if key exists in <see cref="Config" />
 	/// </summary>
 	/// <param name="name">Property / Key to search for in section</param>
 	/// <returns>True if key exists, otherwise false. Outputs path to config regardless</returns>
@@ -50,15 +53,16 @@ internal readonly struct ConfigSection
 	}
 
 	/// <summary>
-	/// Attempts to get value associated to the config path. <br/> Should be used in unison with <see cref="ContainsKey"/>
+	///     Attempts to get value associated to the config path. <br /> Should be used in unison with
+	///     <see cref="ContainsKey" />
 	/// </summary>
 	/// <param name="propName">Config path to value</param>
-	/// <returns>Value found at <paramref name="propName"/></returns>
+	/// <returns>Value found at <paramref name="propName" /></returns>
 	public string GetValue(string propName)
 		=> this.Config[this.GetPath(propName)];
 
 	/// <summary>
-	/// Gets the path.
+	///     Gets the path.
 	/// </summary>
 	/// <param name="value">The value.</param>
 	/// <returns>A string.</returns>

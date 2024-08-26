@@ -4,39 +4,45 @@ using System.Buffers.Binary;
 namespace DisCatSharp.VoiceNext.Codec;
 
 /// <summary>
-/// The rtp.
+///     The rtp.
 /// </summary>
 // ReSharper disable once ClassCanBeSealed.Global - This class can be used by other projects.
 internal class Rtp : IDisposable
 {
 	/// <summary>
-	/// The header size.
+	///     The header size.
 	/// </summary>
 	public const int HEADER_SIZE = 12;
 
 	/// <summary>
-	/// The rtp no extension.
+	///     The rtp no extension.
 	/// </summary>
 	private const byte RTP_NO_EXTENSION = 0x80;
 
 	/// <summary>
-	/// The rtp extension.
+	///     The rtp extension.
 	/// </summary>
 	private const byte RTP_EXTENSION = 0x90;
 
 	/// <summary>
-	/// The rtp version.
+	///     The rtp version.
 	/// </summary>
 	private const byte RTP_VERSION = 0x78;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="Rtp"/> class.
+	///     Initializes a new instance of the <see cref="Rtp" /> class.
 	/// </summary>
 	public Rtp()
 	{ }
 
 	/// <summary>
-	/// Encodes the header.
+	///     Disposes the Rtp.
+	/// </summary>
+	public void Dispose()
+	{ }
+
+	/// <summary>
+	///     Encodes the header.
 	/// </summary>
 	/// <param name="sequence">The sequence.</param>
 	/// <param name="timestamp">The timestamp.</param>
@@ -57,7 +63,7 @@ internal class Rtp : IDisposable
 	}
 
 	/// <summary>
-	/// Are the rtp header.
+	///     Are the rtp header.
 	/// </summary>
 	/// <param name="source">The source.</param>
 	/// <returns>A bool.</returns>
@@ -65,7 +71,7 @@ internal class Rtp : IDisposable
 		=> source.Length >= HEADER_SIZE && (source[0] is RTP_NO_EXTENSION || source[0] is RTP_EXTENSION) && source[1] is RTP_VERSION;
 
 	/// <summary>
-	/// Decodes the header.
+	///     Decodes the header.
 	/// </summary>
 	/// <param name="source">The source.</param>
 	/// <param name="sequence">The sequence.</param>
@@ -89,7 +95,7 @@ internal class Rtp : IDisposable
 	}
 
 	/// <summary>
-	/// Calculates the packet size.
+	///     Calculates the packet size.
 	/// </summary>
 	/// <param name="encryptedLength">The encrypted length.</param>
 	/// <param name="encryptionMode">The encryption mode.</param>
@@ -104,7 +110,7 @@ internal class Rtp : IDisposable
 		};
 
 	/// <summary>
-	/// Gets the data from packet.
+	///     Gets the data from packet.
 	/// </summary>
 	/// <param name="packet">The packet.</param>
 	/// <param name="data">The data.</param>
@@ -129,10 +135,4 @@ internal class Rtp : IDisposable
 				throw new ArgumentException("Unsupported encryption mode.", nameof(encryptionMode));
 		}
 	}
-
-	/// <summary>
-	/// Disposes the Rtp.
-	/// </summary>
-	public void Dispose()
-	{ }
 }

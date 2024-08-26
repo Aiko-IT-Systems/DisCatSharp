@@ -3,22 +3,12 @@ using System.Collections.Generic;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents discord emoji.
+///     Represents discord emoji.
 /// </summary>
 public partial class DiscordEmoji
 {
 	/// <summary>
-	/// Gets a mapping of :name: => unicode.
-	/// </summary>
-	private static Dictionary<string, string> s_unicodeEmojis { get; }
-
-	/// <summary>
-	/// Gets a mapping of unicode => :name:.
-	/// </summary>
-	private static Dictionary<string, string> s_discordNameLookup { get; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordEmoji"/> class.
+	///     Initializes a new instance of the <see cref="DiscordEmoji" /> class.
 	/// </summary>
 	static DiscordEmoji()
 	{
@@ -10125,4 +10115,14 @@ public partial class DiscordEmoji
 
 #endregion
 	}
+
+	/// <summary>
+	///     Gets a mapping of :name: => unicode.
+	/// </summary>
+	private static Dictionary<string, string> s_unicodeEmojis { get; }
+
+	/// <summary>
+	///     Gets a mapping of unicode => :name:.
+	/// </summary>
+	private static Dictionary<string, string> s_discordNameLookup { get; }
 }

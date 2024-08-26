@@ -12,13 +12,75 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents a forwarded <see cref="DiscordMessage"/> which contains only a subset of fields.
+///     Represents a forwarded <see cref="DiscordMessage" /> which contains only a subset of fields.
 /// </summary>
 [DiscordInExperiment, Experimental("This is subject to change at any time.")]
 public sealed class DiscordForwardedMessage : ObservableApiObject
 {
 	/// <summary>
-	/// Constructs a new <see cref="DiscordForwardedMessage"/>.
+	///     Holds the list of <see cref="DiscordAttachment" />s.
+	/// </summary>
+	[JsonIgnore]
+	private readonly Lazy<IReadOnlyList<DiscordAttachment>> _attachmentsLazy;
+
+	/// <summary>
+	///     Holds the list of <see cref="DiscordEmbed" />s.
+	/// </summary>
+	[JsonIgnore]
+	private readonly Lazy<IReadOnlyList<DiscordEmbed>> _embedsLazy;
+
+	/// <summary>
+	///     Holds the list of <see cref="DiscordChannel" /> mentions.
+	/// </summary>
+	[JsonIgnore]
+	private readonly Lazy<IReadOnlyList<DiscordChannel>> _mentionedChannelsLazy;
+
+	/// <summary>
+	///     Holds the list of <see cref="DiscordRole" /> mentions.
+	/// </summary>
+	[JsonIgnore]
+	private readonly Lazy<IReadOnlyList<DiscordRole>> _mentionedRolesLazy;
+
+	/// <summary>
+	///     Holds the list of <see cref="DiscordRole" /> mentions.
+	/// </summary>
+	[JsonIgnore]
+	private readonly Lazy<IReadOnlyList<DiscordUser>> _mentionedUsersLazy;
+
+	/// <summary>
+	///     Gets the <see cref="DiscordAttachment" />s.
+	/// </summary>
+	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<DiscordAttachment> AttachmentsInternal = [];
+
+	/// <summary>
+	///     Gets the attached <see cref="DiscordEmbed" />s.
+	/// </summary>
+	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<DiscordEmbed> EmbedsInternal = [];
+
+	/// <summary>
+	///     Constructs the list of <see cref="DiscordChannel" /> mentions.
+	/// </summary>
+	[JsonIgnore]
+	internal List<DiscordChannel> MentionedChannelsInternal = [];
+
+	/// <summary>
+	///     Gets role ids mentioned by this forwarded message.
+	///     If the bot is in the forwarded guild and has the guild on it's shard, you can use <see cref="MentionedRoles" /> to
+	///     get the <see cref="DiscordRole" />'s directly.
+	/// </summary>
+	[JsonProperty("mention_roles")]
+	public List<ulong> MentionedRoleIds = [];
+
+	/// <summary>
+	///     Constructs the list of <see cref="DiscordRole" /> mentions.
+	/// </summary>
+	[JsonIgnore]
+	internal List<DiscordRole> MentionedRolesInternal = [];
+
+	/// <summary>
+	///     Constructs a new <see cref="DiscordForwardedMessage" />.
 	/// </summary>
 	internal DiscordForwardedMessage()
 	{
@@ -30,7 +92,7 @@ public sealed class DiscordForwardedMessage : ObservableApiObject
 	}
 
 	/// <summary>
-	/// Constructs a new <see cref="DiscordForwardedMessage"/>.
+	///     Constructs a new <see cref="DiscordForwardedMessage" />.
 	/// </summary>
 	/// <param name="guildId">Optional guild id.</param>
 	internal DiscordForwardedMessage(ulong guildId)
@@ -44,171 +106,110 @@ public sealed class DiscordForwardedMessage : ObservableApiObject
 	}
 
 	/// <summary>
-	/// Gets the guild id.
+	///     Gets the guild id.
 	/// </summary>
 	internal ulong? GuildId { get; set; } = null;
 
 	/// <summary>
-	/// Gets the type of the forwarded message.
+	///     Gets the type of the forwarded message.
 	/// </summary>
 	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
 	public MessageType? MessageType { get; internal set; }
 
 	/// <summary>
-	/// Gets the forwarded message's content.
+	///     Gets the forwarded message's content.
 	/// </summary>
 	[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
 	public string? Content { get; internal set; }
 
 	/// <summary>
-	/// Gets embeds attached to this forwarded message.
+	///     Gets embeds attached to this forwarded message.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordEmbed> Embeds
 		=> this._embedsLazy.Value;
 
 	/// <summary>
-	/// Gets the attached <see cref="DiscordEmbed"/>s.
-	/// </summary>
-	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordEmbed> EmbedsInternal = [];
-
-	/// <summary>
-	/// Holds the list of <see cref="DiscordEmbed"/>s.
-	/// </summary>
-	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordEmbed>> _embedsLazy;
-
-	/// <summary>
-	/// Gets the attached <see cref="DiscordAttachment"/>s.
+	///     Gets the attached <see cref="DiscordAttachment" />s.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordAttachment> Attachments
 		=> this._attachmentsLazy.Value;
 
 	/// <summary>
-	/// Gets the <see cref="DiscordAttachment"/>s.
-	/// </summary>
-	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordAttachment> AttachmentsInternal = [];
-
-	/// <summary>
-	/// Holds the list of <see cref="DiscordAttachment"/>s.
-	/// </summary>
-	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordAttachment>> _attachmentsLazy;
-
-	/// <summary>
-	/// Gets the forwarded message's creation timestamp.
+	///     Gets the forwarded message's creation timestamp.
 	/// </summary>
 	[JsonIgnore]
 	public DateTimeOffset Timestamp
 		=> DateTimeOffset.TryParse(this.TimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ? dto : throw new ArithmeticException("Could not convert timestamp to DateTimeOffset");
 
 	/// <summary>
-	/// Gets the forwarded message's creation timestamp as raw string.
+	///     Gets the forwarded message's creation timestamp as raw string.
 	/// </summary>
 	[JsonProperty("timestamp", NullValueHandling = NullValueHandling.Ignore)]
 	internal string TimestampRaw { get; set; }
 
 	/// <summary>
-	/// Gets the forwarded message's edit timestamp. Will be null if the forwarded message was not edited.
+	///     Gets the forwarded message's edit timestamp. Will be null if the forwarded message was not edited.
 	/// </summary>
 	[JsonIgnore]
 	public DateTimeOffset? EditedTimestamp
 		=> !string.IsNullOrWhiteSpace(this.EditedTimestampRaw) && DateTimeOffset.TryParse(this.EditedTimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ? dto : null;
 
 	/// <summary>
-	/// Gets the forwarded message's edit timestamp as raw string. Will be null if the forwarded message was not edited.
+	///     Gets the forwarded message's edit timestamp as raw string. Will be null if the forwarded message was not edited.
 	/// </summary>
 	[JsonProperty("edited_timestamp", NullValueHandling = NullValueHandling.Ignore)]
 	internal string? EditedTimestampRaw { get; set; }
 
 	/// <summary>
-	/// Gets whether this forwarded message was edited.
+	///     Gets whether this forwarded message was edited.
 	/// </summary>
 	[JsonIgnore]
 	public bool IsEdited
 		=> !string.IsNullOrWhiteSpace(this.EditedTimestampRaw);
 
 	/// <summary>
-	/// Gets the bitwise flags for this forwarded message.
+	///     Gets the bitwise flags for this forwarded message.
 	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
 	public MessageFlags? Flags { get; internal set; }
 
 	/// <summary>
-	/// Gets whether the forwarded message mentions everyone.
+	///     Gets whether the forwarded message mentions everyone.
 	/// </summary>
 	[JsonProperty("mention_everyone", NullValueHandling = NullValueHandling.Ignore)]
 	public bool MentionEveryone { get; internal set; }
 
 	/// <summary>
-	/// Gets users or members mentioned by this forwarded message.
+	///     Gets users or members mentioned by this forwarded message.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordUser> MentionedUsers
 		=> this._mentionedUsersLazy.Value;
 
 	/// <summary>
-	/// Gets the mentioned <see cref="DiscordUser"/>s.
+	///     Gets the mentioned <see cref="DiscordUser" />s.
 	/// </summary>
 	[JsonProperty("mentions", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<DiscordUser> MentionedUsersInternal { get; set; } = [];
 
 	/// <summary>
-	/// Holds the list of <see cref="DiscordRole"/> mentions.
-	/// </summary>
-	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordUser>> _mentionedUsersLazy;
-
-	/// <summary>
-	/// Gets roles mentioned by this forwarded message.
+	///     Gets roles mentioned by this forwarded message.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordRole> MentionedRoles
 		=> this._mentionedRolesLazy.Value;
 
 	/// <summary>
-	/// Constructs the list of <see cref="DiscordRole"/> mentions.
-	/// </summary>
-	[JsonIgnore]
-	internal List<DiscordRole> MentionedRolesInternal = [];
-
-	/// <summary>
-	/// Gets role ids mentioned by this forwarded message.
-	/// If the bot is in the forwarded guild and has the guild on it's shard, you can use <see cref="MentionedRoles"/> to get the <see cref="DiscordRole"/>'s directly.
-	/// </summary>
-	[JsonProperty("mention_roles")]
-	public List<ulong> MentionedRoleIds = [];
-
-	/// <summary>
-	/// Holds the list of <see cref="DiscordRole"/> mentions.
-	/// </summary>
-	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordRole>> _mentionedRolesLazy;
-
-	/// <summary>
-	/// Gets channels mentioned by this forwarded message.
+	///     Gets channels mentioned by this forwarded message.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordChannel> MentionedChannels
 		=> this._mentionedChannelsLazy.Value;
 
 	/// <summary>
-	/// Constructs the list of <see cref="DiscordChannel"/> mentions.
-	/// </summary>
-	[JsonIgnore]
-	internal List<DiscordChannel> MentionedChannelsInternal = [];
-
-	/// <summary>
-	/// Holds the list of <see cref="DiscordChannel"/> mentions.
-	/// </summary>
-	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordChannel>> _mentionedChannelsLazy;
-
-	/// <summary>
-	/// Gets the mentions of this forwarded message.
+	///     Gets the mentions of this forwarded message.
 	/// </summary>
 	/// <returns>An array of IMentions.</returns>
 	private List<IMention> GetMentions()
@@ -230,7 +231,7 @@ public sealed class DiscordForwardedMessage : ObservableApiObject
 	}
 
 	/// <summary>
-	/// Populates the mentions of this forwarded message.
+	///     Populates the mentions of this forwarded message.
 	/// </summary>
 	internal void PopulateMentions()
 	{

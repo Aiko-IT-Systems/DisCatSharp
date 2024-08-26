@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 namespace DisCatSharp.Common.RegularExpressions;
 
 /// <summary>
-/// Provides common regex for discord related things.
+///     Provides common regex for discord related things.
 /// </summary>
 public static partial class DiscordRegEx
 {

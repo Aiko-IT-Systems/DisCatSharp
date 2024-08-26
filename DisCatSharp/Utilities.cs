@@ -36,28 +36,12 @@ using Repository = NuGet.Protocol.Core.Types.Repository;
 namespace DisCatSharp;
 
 /// <summary>
-/// Various Discord-related utilities.
+///     Various Discord-related utilities.
 /// </summary>
 public static class Utilities
 {
 	/// <summary>
-	/// Gets the version of the library.
-	/// </summary>
-	internal static string VersionHeader { get; set; }
-
-	/// <summary>
-	/// Gets or sets the permission strings.
-	/// </summary>
-	internal static Dictionary<Permissions, string> PermissionStrings { get; set; }
-
-	/// <summary>
-	/// Gets the utf8 encoding
-	/// </summary>
-	// ReSharper disable once InconsistentNaming
-	internal static UTF8Encoding UTF8 { get; } = new(false);
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="Utilities"/> class.
+	///     Initializes a new instance of the <see cref="Utilities" /> class.
 	/// </summary>
 	static Utilities()
 	{
@@ -91,19 +75,51 @@ public static class Utilities
 	}
 
 	/// <summary>
-	/// Shorthand method to strip both tokens and IDs.
+	///     Gets the version of the library.
+	/// </summary>
+	internal static string VersionHeader { get; set; }
+
+	/// <summary>
+	///     Gets or sets the permission strings.
+	/// </summary>
+	internal static Dictionary<Permissions, string> PermissionStrings { get; set; }
+
+	/// <summary>
+	///     Gets the utf8 encoding
+	/// </summary>
+	// ReSharper disable once InconsistentNaming
+	internal static UTF8Encoding UTF8 { get; } = new(false);
+
+	/// <summary>
+	///     Gets whether the github version check has finished for given product.
+	/// </summary>
+	private static ConcurrentDictionary<string, bool> s_gitHubVersionCheckFinishedFor { get; } = [];
+
+	/// <summary>
+	///     Gets whether the nuget version check has finished for given product.
+	/// </summary>
+	private static ConcurrentDictionary<string, bool> s_nuGetVersionCheckFinishedFor { get; } = [];
+
+	/// <summary>
+	///     Shorthand method to strip both tokens and IDs.
 	/// </summary>
 	/// <param name="str">The string to strip tokens and IDs from.</param>
 	/// <param name="stripIds">Whether to strip ID's.</param>
-	/// <returns>A new string with the tokens replaced with <c>{WEBHOOK_OR_INTERACTION_TOKEN}</c> and <c>{BOT_OR_USER_TOKEN}</c> and optionally the ids replaced with <c>{DISCORD_ID}</c>.</returns>
+	/// <returns>
+	///     A new string with the tokens replaced with <c>{WEBHOOK_OR_INTERACTION_TOKEN}</c> and
+	///     <c>{BOT_OR_USER_TOKEN}</c> and optionally the ids replaced with <c>{DISCORD_ID}</c>.
+	/// </returns>
 	public static string? StripTokensAndOptIds(string? str, bool stripIds)
 		=> StripIds(StripTokens(str), stripIds);
 
 	/// <summary>
-	///	Removes discord-based tokens from a given string.
+	///     Removes discord-based tokens from a given string.
 	/// </summary>
 	/// <param name="str">The string to remove the tokens from.</param>
-	/// <returns>A new string with the tokens replaced with <c>{WEBHOOK_OR_INTERACTION_TOKEN}</c> and <c>{BOT_OR_USER_TOKEN}</c>.</returns>
+	/// <returns>
+	///     A new string with the tokens replaced with <c>{WEBHOOK_OR_INTERACTION_TOKEN}</c> and
+	///     <c>{BOT_OR_USER_TOKEN}</c>.
+	/// </returns>
 	public static string? StripTokens(string? str)
 	{
 		if (string.IsNullOrWhiteSpace(str))
@@ -116,7 +132,7 @@ public static class Utilities
 	}
 
 	/// <summary>
-	/// Removes discord-based ids from a given string.
+	///     Removes discord-based ids from a given string.
 	/// </summary>
 	/// <param name="str">The string to remove the ids from.</param>
 	/// <param name="strip">Whether to strip discord-based ids.</param>
@@ -132,7 +148,7 @@ public static class Utilities
 	}
 
 	/// <summary>
-	/// Adds the specified parameter to the Query String.
+	///     Adds the specified parameter to the Query String.
 	/// </summary>
 	/// <param name="url"></param>
 	/// <param name="paramName">Name of the parameter to add.</param>
@@ -149,7 +165,7 @@ public static class Utilities
 	}
 
 	/// <summary>
-	/// Gets the api base uri.
+	///     Gets the api base uri.
 	/// </summary>
 	/// <param name="config">The config</param>
 	/// <returns>A string.</returns>
@@ -164,7 +180,7 @@ public static class Utilities
 		} + (config?.ApiVersion ?? "10");
 
 	/// <summary>
-	/// Gets the api uri for.
+	///     Gets the api uri for.
 	/// </summary>
 	/// <param name="path">The path.</param>
 	/// <param name="config">The config</param>
@@ -173,7 +189,7 @@ public static class Utilities
 		=> new($"{GetApiBaseUri(config)}{path}");
 
 	/// <summary>
-	/// Gets the api uri for.
+	///     Gets the api uri for.
 	/// </summary>
 	/// <param name="path">The path.</param>
 	/// <param name="queryString">The query string.</param>
@@ -183,7 +199,7 @@ public static class Utilities
 		=> new($"{GetApiBaseUri(config)}{path}{queryString}");
 
 	/// <summary>
-	/// Gets the api uri builder for.
+	///     Gets the api uri builder for.
 	/// </summary>
 	/// <param name="path">The path.</param>
 	/// <param name="config">The config</param>
@@ -192,7 +208,7 @@ public static class Utilities
 		=> new($"{GetApiBaseUri(config)}{path}");
 
 	/// <summary>
-	/// Gets the formatted token.
+	///     Gets the formatted token.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <returns>A string.</returns>
@@ -200,7 +216,7 @@ public static class Utilities
 		=> GetFormattedToken(client.Configuration);
 
 	/// <summary>
-	/// Gets the formatted token.
+	///     Gets the formatted token.
 	/// </summary>
 	/// <param name="config">The config.</param>
 	/// <returns>A string.</returns>
@@ -213,21 +229,21 @@ public static class Utilities
 		};
 
 	/// <summary>
-	/// Gets the base headers.
+	///     Gets the base headers.
 	/// </summary>
 	/// <returns>A Dictionary.</returns>
 	internal static Dictionary<string, string> GetBaseHeaders()
 		=> [];
 
 	/// <summary>
-	/// Gets the user agent.
+	///     Gets the user agent.
 	/// </summary>
 	/// <returns>A string.</returns>
 	internal static string GetUserAgent()
 		=> VersionHeader;
 
 	/// <summary>
-	/// Contains the user mentions.
+	///     Contains the user mentions.
 	/// </summary>
 	/// <param name="message">The message.</param>
 	/// <returns>A bool.</returns>
@@ -235,7 +251,7 @@ public static class Utilities
 		=> DiscordRegEx.UserWithoutNicknameRegex().IsMatch(message);
 
 	/// <summary>
-	/// Contains the nickname mentions.
+	///     Contains the nickname mentions.
 	/// </summary>
 	/// <param name="message">The message.</param>
 	/// <returns>A bool.</returns>
@@ -243,7 +259,7 @@ public static class Utilities
 		=> DiscordRegEx.UserWithNicknameRegex().IsMatch(message);
 
 	/// <summary>
-	/// Contains the channel mentions.
+	///     Contains the channel mentions.
 	/// </summary>
 	/// <param name="message">The message.</param>
 	/// <returns>A bool.</returns>
@@ -251,7 +267,7 @@ public static class Utilities
 		=> DiscordRegEx.ChannelRegex().IsMatch(message);
 
 	/// <summary>
-	/// Contains the role mentions.
+	///     Contains the role mentions.
 	/// </summary>
 	/// <param name="message">The message.</param>
 	/// <returns>A bool.</returns>
@@ -259,7 +275,7 @@ public static class Utilities
 		=> DiscordRegEx.RoleRegex().IsMatch(message);
 
 	/// <summary>
-	/// Contains the emojis.
+	///     Contains the emojis.
 	/// </summary>
 	/// <param name="message">The message.</param>
 	/// <returns>A bool.</returns>
@@ -267,7 +283,7 @@ public static class Utilities
 		=> DiscordRegEx.EmojiRegex().IsMatch(message);
 
 	/// <summary>
-	/// Gets the user mentions.
+	///     Gets the user mentions.
 	/// </summary>
 	/// <param name="message">The message content.</param>
 	/// <returns>A list of ulong.</returns>
@@ -279,7 +295,7 @@ public static class Utilities
 	}
 
 	/// <summary>
-	/// Gets the role mentions.
+	///     Gets the role mentions.
 	/// </summary>
 	/// <param name="message">The message content.</param>
 	/// <returns>A list of ulong.</returns>
@@ -291,7 +307,7 @@ public static class Utilities
 	}
 
 	/// <summary>
-	/// Gets the channel mentions.
+	///     Gets the channel mentions.
 	/// </summary>
 	/// <param name="message">The message content.</param>
 	/// <returns>A list of ulong.</returns>
@@ -303,7 +319,7 @@ public static class Utilities
 	}
 
 	/// <summary>
-	/// Gets the emojis.
+	///     Gets the emojis.
 	/// </summary>
 	/// <param name="message">The message content.</param>
 	/// <returns>A list of ulong.</returns>
@@ -315,7 +331,7 @@ public static class Utilities
 	}
 
 	/// <summary>
-	/// Are the valid slash command name.
+	///     Are the valid slash command name.
 	/// </summary>
 	/// <param name="name">The name.</param>
 	/// <returns>A bool.</returns>
@@ -323,7 +339,7 @@ public static class Utilities
 		=> DiscordRegEx.ApplicationCommandNameRegex().IsMatch(name);
 
 	/// <summary>
-	/// Have the message intents.
+	///     Have the message intents.
 	/// </summary>
 	/// <param name="intents">The intents.</param>
 	/// <returns>A bool.</returns>
@@ -331,7 +347,7 @@ public static class Utilities
 		=> intents.HasIntent(DiscordIntents.GuildMessages) || intents.HasIntent(DiscordIntents.DirectMessages);
 
 	/// <summary>
-	/// Have the message intents.
+	///     Have the message intents.
 	/// </summary>
 	/// <param name="intents">The intents.</param>
 	/// <returns>A bool.</returns>
@@ -339,7 +355,7 @@ public static class Utilities
 		=> intents.HasIntent(DiscordIntents.MessageContent);
 
 	/// <summary>
-	/// Have the reaction intents.
+	///     Have the reaction intents.
 	/// </summary>
 	/// <param name="intents">The intents.</param>
 	/// <returns>A bool.</returns>
@@ -347,7 +363,7 @@ public static class Utilities
 		=> intents.HasIntent(DiscordIntents.GuildMessageReactions) || intents.HasIntent(DiscordIntents.DirectMessageReactions);
 
 	/// <summary>
-	/// Have the typing intents.
+	///     Have the typing intents.
 	/// </summary>
 	/// <param name="intents">The intents.</param>
 	/// <returns>A bool.</returns>
@@ -356,7 +372,7 @@ public static class Utilities
 
 	// https://discord.com/developers/docs/topics/gateway#sharding-sharding-formula
 	/// <summary>
-	/// Gets a shard id from a guild id and total shard count.
+	///     Gets a shard id from a guild id and total shard count.
 	/// </summary>
 	/// <param name="guildId">The guild id the shard is on.</param>
 	/// <param name="shardCount">The total amount of shards.</param>
@@ -365,11 +381,12 @@ public static class Utilities
 		=> (int)(guildId >> 22) % shardCount;
 
 	/// <summary>
-	/// Helper method to create a <see cref="DateTimeOffset"/> from Unix time seconds for targets that do not support this natively.
+	///     Helper method to create a <see cref="DateTimeOffset" /> from Unix time seconds for targets that do not support this
+	///     natively.
 	/// </summary>
 	/// <param name="unixTime">Unix time seconds to convert.</param>
 	/// <param name="shouldThrow">Whether the method should throw on failure. Defaults to true.</param>
-	/// <returns>Calculated <see cref="DateTimeOffset"/>.</returns>
+	/// <returns>Calculated <see cref="DateTimeOffset" />.</returns>
 	public static DateTimeOffset GetDateTimeOffset(long unixTime, bool shouldThrow = true)
 	{
 		try
@@ -386,11 +403,12 @@ public static class Utilities
 	}
 
 	/// <summary>
-	/// Helper method to create a <see cref="DateTimeOffset"/> from Unix time milliseconds for targets that do not support this natively.
+	///     Helper method to create a <see cref="DateTimeOffset" /> from Unix time milliseconds for targets that do not support
+	///     this natively.
 	/// </summary>
 	/// <param name="unixTime">Unix time milliseconds to convert.</param>
 	/// <param name="shouldThrow">Whether the method should throw on failure. Defaults to true.</param>
-	/// <returns>Calculated <see cref="DateTimeOffset"/>.</returns>
+	/// <returns>Calculated <see cref="DateTimeOffset" />.</returns>
 	public static DateTimeOffset GetDateTimeOffsetFromMilliseconds(long unixTime, bool shouldThrow = true)
 	{
 		try
@@ -407,15 +425,16 @@ public static class Utilities
 	}
 
 	/// <summary>
-	/// Helper method to calculate Unix time seconds from a <see cref="DateTimeOffset"/> for targets that do not support this natively.
+	///     Helper method to calculate Unix time seconds from a <see cref="DateTimeOffset" /> for targets that do not support
+	///     this natively.
 	/// </summary>
-	/// <param name="dto"><see cref="DateTimeOffset"/> to calculate Unix time for.</param>
+	/// <param name="dto"><see cref="DateTimeOffset" /> to calculate Unix time for.</param>
 	/// <returns>Calculated Unix time.</returns>
 	public static long GetUnixTime(DateTimeOffset dto)
 		=> dto.ToUnixTimeMilliseconds();
 
 	/// <summary>
-	/// Computes a timestamp from a given snowflake.
+	///     Computes a timestamp from a given snowflake.
 	/// </summary>
 	/// <param name="snowflake">Snowflake to compute a timestamp from.</param>
 	/// <returns>Computed timestamp.</returns>
@@ -424,7 +443,7 @@ public static class Utilities
 		=> DiscordClient.DiscordEpoch.AddMilliseconds(snowflake >> 22);
 
 	/// <summary>
-	/// Computes a timestamp from a given snowflake.
+	///     Computes a timestamp from a given snowflake.
 	/// </summary>
 	/// <param name="snowflake">Snowflake to compute a timestamp from.</param>
 	/// <returns>Computed timestamp.</returns>
@@ -433,13 +452,16 @@ public static class Utilities
 		=> snowflake is not null ? DiscordClient.DiscordEpoch.AddMilliseconds(snowflake.Value >> 22) : null;
 
 	/// <summary>
-	/// Converts this <see cref="Permissions"/> into human-readable format.
+	///     Converts this <see cref="Permissions" /> into human-readable format.
 	/// </summary>
 	/// <param name="perm">Permissions enumeration to convert.</param>
-	/// <param name="useNewline">Whether to seperate permissions by newline. Defaults to <see langword="false"/>.</param>
-	/// <param name="sortAscending">Whether to sort permissions from a to z. Defaults to <see langword="true"/>.</param>
-	/// <param name="includeValue">Whether to include the permissions value. Defaults to <see langword="false"/>.</param>
-	/// <param name="shortIfAll">Whether to show <c>All Permissions</c>, if the member has all permissions. Defaults to &lt;see langword="false"/&gt;.</param>
+	/// <param name="useNewline">Whether to seperate permissions by newline. Defaults to <see langword="false" />.</param>
+	/// <param name="sortAscending">Whether to sort permissions from a to z. Defaults to <see langword="true" />.</param>
+	/// <param name="includeValue">Whether to include the permissions value. Defaults to <see langword="false" />.</param>
+	/// <param name="shortIfAll">
+	///     Whether to show <c>All Permissions</c>, if the member has all permissions. Defaults to &lt;see
+	///     langword="false"/&gt;.
+	/// </param>
 	/// <returns>Human-readable permissions.</returns>
 	public static string ToPermissionString(this Permissions perm, bool useNewline = false, bool sortAscending = true, bool includeValue = false, bool shortIfAll = false)
 	{
@@ -459,7 +481,7 @@ public static class Utilities
 	}
 
 	/// <summary>
-	/// Checks whether this string contains given characters.
+	///     Checks whether this string contains given characters.
 	/// </summary>
 	/// <param name="str">String to check.</param>
 	/// <param name="characters">Characters to check for.</param>
@@ -468,7 +490,7 @@ public static class Utilities
 		=> str.Any(characters.Contains);
 
 	/// <summary>
-	/// Logs the task fault.
+	///     Logs the task fault.
 	/// </summary>
 	/// <param name="task">The task.</param>
 	/// <param name="logger">The logger.</param>
@@ -487,7 +509,7 @@ public static class Utilities
 	}
 
 	/// <summary>
-	/// Deconstructs the.
+	///     Deconstructs the.
 	/// </summary>
 	/// <param name="kvp">The kvp.</param>
 	/// <param name="key">The key.</param>
@@ -499,20 +521,10 @@ public static class Utilities
 	}
 
 	/// <summary>
-	/// Gets whether the github version check has finished for given product.
-	/// </summary>
-	private static ConcurrentDictionary<string, bool> s_gitHubVersionCheckFinishedFor { get; } = [];
-
-	/// <summary>
-	/// Gets whether the nuget version check has finished for given product.
-	/// </summary>
-	private static ConcurrentDictionary<string, bool> s_nuGetVersionCheckFinishedFor { get; } = [];
-
-	/// <summary>
-	/// Perfoms a version check against github releases.
+	///     Perfoms a version check against github releases.
 	/// </summary>
 	/// <param name="client">The base discord client.</param>
-	/// <param name="owner">The owner of the target github <paramref name="repository"/>.</param>
+	/// <param name="owner">The owner of the target github <paramref name="repository" />.</param>
 	/// <param name="repository">The target github repository.</param>
 	/// <param name="productName">The name of the product.</param>
 	/// <param name="includePrerelease">Whether to include pre-releases in the check.</param>
@@ -522,7 +534,7 @@ public static class Utilities
 		=> CheckGitHubVersionAsync(client, false, false, owner, repository, productName, manualVersion, githubToken, includePrerelease);
 
 	/// <summary>
-	/// Performs a version check against nuget.
+	///     Performs a version check against nuget.
 	/// </summary>
 	/// <param name="client">The base discord client.</param>
 	/// <param name="packageId">The id of the package.</param>
@@ -532,28 +544,31 @@ public static class Utilities
 		=> CheckNuGetVersionAsync(client, false, false, packageId, includePrerelease, manualVersion);
 
 	/// <summary>
-	/// Perfoms a version check against github releases.
+	///     Perfoms a version check against github releases.
 	/// </summary>
 	/// <param name="client">The base discord client.</param>
 	/// <param name="startupCheck">Whether this is called on startup.</param>
 	/// <param name="fromShard">Whether this method got called from a sharded client.</param>
-	/// <param name="owner">The owner of the target github <paramref name="repository"/>.</param>
+	/// <param name="owner">The owner of the target github <paramref name="repository" />.</param>
 	/// <param name="repository">The target github repository.</param>
-	/// <param name="productNameOrPackageId">The name of the product or package id, depending on <paramref name="checkMode"/>.</param>
+	/// <param name="productNameOrPackageId">The name of the product or package id, depending on <paramref name="checkMode" />.</param>
 	/// <param name="manualVersion">The manual version string to check.</param>
 	/// <param name="githubToken">The token to use for private repositories.</param>
-	/// <param name="checkMode">Which check mode to use. Can be either <see cref="VersionCheckMode.GitHub"/> or <see cref="VersionCheckMode.NuGet"/>. Defaults to <see cref="VersionCheckMode.NuGet"/></param>
+	/// <param name="checkMode">
+	///     Which check mode to use. Can be either <see cref="VersionCheckMode.GitHub" /> or
+	///     <see cref="VersionCheckMode.NuGet" />. Defaults to <see cref="VersionCheckMode.NuGet" />
+	/// </param>
 	/// <param name="includePrerelease">Whether to include pre-releases in the check.</param>
 	internal static Task CheckVersionAsync(BaseDiscordClient client, bool startupCheck, bool fromShard = false, string owner = "Aiko-IT-Systems", string repository = "DisCatSharp", string productNameOrPackageId = "DisCatSharp", string? manualVersion = null, string? githubToken = null, bool includePrerelease = true, VersionCheckMode checkMode = VersionCheckMode.NuGet)
 		=> checkMode is VersionCheckMode.GitHub ? CheckGitHubVersionAsync(client, startupCheck, fromShard, owner, repository, productNameOrPackageId, manualVersion, githubToken, includePrerelease) : CheckNuGetVersionAsync(client, startupCheck, fromShard, productNameOrPackageId, includePrerelease, manualVersion);
 
 	/// <summary>
-	/// Perfoms a version check against github releases.
+	///     Perfoms a version check against github releases.
 	/// </summary>
 	/// <param name="client">The base discord client.</param>
 	/// <param name="startupCheck">Whether this is called on startup.</param>
 	/// <param name="fromShard">Whether this method got called from a sharded client.</param>
-	/// <param name="owner">The owner of the target github <paramref name="repository"/>.</param>
+	/// <param name="owner">The owner of the target github <paramref name="repository" />.</param>
 	/// <param name="repository">The target github repository.</param>
 	/// <param name="productName">The name of the product.</param>
 	/// <param name="manualVersion">The manual version string to check.</param>
@@ -597,7 +612,7 @@ public static class Utilities
 					try
 					{
 						GitHubClient gitHubClient = new(apiConnection.Connection);
-						var response = await gitHubClient.Connection.GetRawStream(new(assetUrl), new Dictionary<string, string>()
+						var response = await gitHubClient.Connection.GetRawStream(new(assetUrl), new Dictionary<string, string>
 						{
 							{ "Accept", "application/octet-stream " }
 						});
@@ -645,7 +660,7 @@ public static class Utilities
 	}
 
 	/// <summary>
-	/// Performs a version check against nuget.
+	///     Performs a version check against nuget.
 	/// </summary>
 	/// <param name="client">The base discord client.</param>
 	/// <param name="startupCheck">Whether this is called on startup.</param>
@@ -663,13 +678,13 @@ public static class Utilities
 		{
 			var repository = Repository.Factory.GetCoreV3("https://api.nuget.org/v3/index.json");
 			var resource = await repository.GetResourceAsync<MetadataResource>();
-			var sourceCache = new SourceCacheContext()
+			var sourceCache = new SourceCacheContext
 			{
 				RefreshMemoryCache = true,
 				IgnoreFailedSources = true,
 				NoCache = true
 			};
-			var latestVersions = (await resource.GetLatestVersions(new List<string>()
+			var latestVersions = (await resource.GetLatestVersions(new List<string>
 			{
 				packageId.ToLowerInvariant()
 			}, includePrerelease, false, sourceCache, new NullLogger(), CancellationToken.None))?.ToList();

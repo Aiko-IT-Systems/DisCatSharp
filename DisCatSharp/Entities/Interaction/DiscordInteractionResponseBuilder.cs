@@ -6,17 +6,53 @@ using System.Linq;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Constructs an interaction response.
+///     Constructs an interaction response.
 /// </summary>
 public sealed class DiscordInteractionResponseBuilder
 {
+	private readonly List<DiscordInteractionCallbackHint> _callbackHints = [];
+
+	private readonly List<DiscordApplicationCommandAutocompleteChoice> _choices = [];
+
+	private readonly List<DiscordActionRowComponent> _components = [];
+
+	private readonly List<DiscordEmbed> _embeds = [];
+
+	private readonly List<DiscordMessageFile> _files = [];
+
+	private string _content;
+
 	/// <summary>
-	/// Whether this interaction response is text-to-speech.
+	///     Whether flags were changed.
+	/// </summary>
+	internal bool FlagsChanged = false;
+
+	/// <summary>
+	///     Constructs a new empty interaction response builder.
+	/// </summary>
+	public DiscordInteractionResponseBuilder()
+	{ }
+
+	/// <summary>
+	///     Constructs a new <see cref="DiscordInteractionResponseBuilder" /> based on an existing
+	///     <see cref="DisCatSharp.Entities.DiscordMessageBuilder" />.
+	/// </summary>
+	/// <param name="builder">The builder to copy.</param>
+	public DiscordInteractionResponseBuilder(DiscordMessageBuilder builder)
+	{
+		this._content = builder.Content;
+		this.Mentions = builder.Mentions;
+		this._embeds.AddRange(builder.Embeds);
+		this._components.AddRange(builder.Components);
+	}
+
+	/// <summary>
+	///     Whether this interaction response is text-to-speech.
 	/// </summary>
 	public bool IsTts { get; set; }
 
 	/// <summary>
-	/// Whether this interaction response should be ephemeral.
+	///     Whether this interaction response should be ephemeral.
 	/// </summary>
 	public bool IsEphemeral
 	{
@@ -31,7 +67,7 @@ public sealed class DiscordInteractionResponseBuilder
 	private bool EPH { get; set; }
 
 	/// <summary>
-	/// Whether to suppress embeds.
+	///     Whether to suppress embeds.
 	/// </summary>
 	public bool EmbedsSuppressed
 	{
@@ -46,7 +82,7 @@ public sealed class DiscordInteractionResponseBuilder
 	private bool EMB_SUP { get; set; }
 
 	/// <summary>
-	/// Whether to send as silent message.
+	///     Whether to send as silent message.
 	/// </summary>
 	public bool NotificationsSuppressed
 	{
@@ -61,12 +97,7 @@ public sealed class DiscordInteractionResponseBuilder
 	private bool NOTI_SUP { get; set; }
 
 	/// <summary>
-	/// Whether flags were changed.
-	/// </summary>
-	internal bool FlagsChanged = false;
-
-	/// <summary>
-	/// Content of the message to send.
+	///     Content of the message to send.
 	/// </summary>
 	public string Content
 	{
@@ -80,78 +111,48 @@ public sealed class DiscordInteractionResponseBuilder
 		}
 	}
 
-	private string _content;
-
 	/// <summary>
-	/// Embeds to send on this interaction response.
+	///     Embeds to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
 
-	private readonly List<DiscordEmbed> _embeds = [];
-
 	/// <summary>
-	/// Files to send on this interaction response.
+	///     Files to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordMessageFile> Files => this._files;
 
-	private readonly List<DiscordMessageFile> _files = [];
-
 	/// <summary>
-	/// Components to send on this interaction response.
+	///     Components to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
 
-	private readonly List<DiscordActionRowComponent> _components = [];
-
 	/// <summary>
-	/// The choices to send on this interaction response.
-	/// Mutually exclusive with content, embed, and components.
+	///     The choices to send on this interaction response.
+	///     Mutually exclusive with content, embed, and components.
 	/// </summary>
 	public IReadOnlyList<DiscordApplicationCommandAutocompleteChoice> Choices => this._choices;
 
-	private readonly List<DiscordApplicationCommandAutocompleteChoice> _choices = [];
-
 	/// <summary>
-	/// Mentions to send on this interaction response.
+	///     Mentions to send on this interaction response.
 	/// </summary>
 	public List<IMention>? Mentions { get; private set; }
 
 	/// <summary>
-	/// The hints to send on this interaction response.
+	///     The hints to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordInteractionCallbackHint> CallbackHints => this._callbackHints;
 
-	private readonly List<DiscordInteractionCallbackHint> _callbackHints = [];
-
 	/// <summary>
-	/// Gets the poll for this message.
+	///     Gets the poll for this message.
 	/// </summary>
 	public DiscordPollBuilder? Poll { get; private set; }
 
 	/// <summary>
-	/// Constructs a new empty interaction response builder.
-	/// </summary>
-	public DiscordInteractionResponseBuilder()
-	{ }
-
-	/// <summary>
-	/// Constructs a new <see cref="DiscordInteractionResponseBuilder"/> based on an existing <see cref="DisCatSharp.Entities.DiscordMessageBuilder"/>.
-	/// </summary>
-	/// <param name="builder">The builder to copy.</param>
-	public DiscordInteractionResponseBuilder(DiscordMessageBuilder builder)
-	{
-		this._content = builder.Content;
-		this.Mentions = builder.Mentions;
-		this._embeds.AddRange(builder.Embeds);
-		this._components.AddRange(builder.Components);
-	}
-
-	/// <summary>
-	/// Provides the interaction response with <see cref="DiscordInteractionCallbackHint"/>s.
+	///     Provides the interaction response with <see cref="DiscordInteractionCallbackHint" />s.
 	/// </summary>
 	/// <param name="hintBuilder">The hint builder.</param>
 	/// <returns>The current builder to chain calls with.</returns>
-	/// <exception cref="ArgumentNullException">Thrown when the <paramref name="hintBuilder"/> is <see langword="null"/>.</exception>
+	/// <exception cref="ArgumentNullException">Thrown when the <paramref name="hintBuilder" /> is <see langword="null" />.</exception>
 	public DiscordInteractionResponseBuilder WithCallbackHints(DiscordCallbackHintBuilder hintBuilder)
 	{
 		if (hintBuilder == null)
@@ -166,7 +167,7 @@ public sealed class DiscordInteractionResponseBuilder
 	}
 
 	/// <summary>
-	/// Appends a collection of components to the builder. Each call will append to a new row.
+	///     Appends a collection of components to the builder. Each call will append to a new row.
 	/// </summary>
 	/// <param name="components">The components to append. Up to five.</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -175,7 +176,7 @@ public sealed class DiscordInteractionResponseBuilder
 		=> this.AddComponents((IEnumerable<DiscordComponent>)components);
 
 	/// <summary>
-	/// Appends several rows of components to the message
+	///     Appends several rows of components to the message
 	/// </summary>
 	/// <param name="components">The rows of components to add, holding up to five each.</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -194,7 +195,7 @@ public sealed class DiscordInteractionResponseBuilder
 	}
 
 	/// <summary>
-	/// Appends a collection of components to the builder. Each call will append to a new row.
+	///     Appends a collection of components to the builder. Each call will append to a new row.
 	/// </summary>
 	/// <param name="components">The components to append. Up to five.</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -213,7 +214,7 @@ public sealed class DiscordInteractionResponseBuilder
 	}
 
 	/// <summary>
-	/// Adds a poll to this builder.
+	///     Adds a poll to this builder.
 	/// </summary>
 	/// <param name="pollBuilder">The poll builder to add.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -224,7 +225,7 @@ public sealed class DiscordInteractionResponseBuilder
 	}
 
 	/// <summary>
-	/// Indicates if the interaction response will be text-to-speech.
+	///     Indicates if the interaction response will be text-to-speech.
 	/// </summary>
 	/// <param name="tts">Text-to-speech</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -235,7 +236,7 @@ public sealed class DiscordInteractionResponseBuilder
 	}
 
 	/// <summary>
-	/// Sets the interaction response to be ephemeral.
+	///     Sets the interaction response to be ephemeral.
 	/// </summary>
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AsEphemeral()
@@ -246,7 +247,7 @@ public sealed class DiscordInteractionResponseBuilder
 	}
 
 	/// <summary>
-	/// Sets the interaction response to suppress embeds.
+	///     Sets the interaction response to suppress embeds.
 	/// </summary>
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder SuppressEmbeds()
@@ -257,7 +258,7 @@ public sealed class DiscordInteractionResponseBuilder
 	}
 
 	/// <summary>
-	/// Sets the interaction response to be send as silent message.
+	///     Sets the interaction response to be send as silent message.
 	/// </summary>
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AsSilentMessage()
@@ -268,7 +269,7 @@ public sealed class DiscordInteractionResponseBuilder
 	}
 
 	/// <summary>
-	/// Sets the content of the message to send.
+	///     Sets the content of the message to send.
 	/// </summary>
 	/// <param name="content">Content to send.</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -279,7 +280,7 @@ public sealed class DiscordInteractionResponseBuilder
 	}
 
 	/// <summary>
-	/// Adds an embed to send with the interaction response.
+	///     Adds an embed to send with the interaction response.
 	/// </summary>
 	/// <param name="embed">Embed to add.</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -291,7 +292,7 @@ public sealed class DiscordInteractionResponseBuilder
 	}
 
 	/// <summary>
-	/// Adds the given embeds to send with the interaction response.
+	///     Adds the given embeds to send with the interaction response.
 	/// </summary>
 	/// <param name="embeds">Embeds to add.</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -302,11 +303,14 @@ public sealed class DiscordInteractionResponseBuilder
 	}
 
 	/// <summary>
-	/// Adds a file to the interaction response.
+	///     Adds a file to the interaction response.
 	/// </summary>
 	/// <param name="filename">Name of the file.</param>
 	/// <param name="data">File data.</param>
-	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+	/// <param name="resetStreamPosition">
+	///     Tells the API Client to reset the stream position to what it was after the file is
+	///     sent.
+	/// </param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string description = null)
@@ -326,10 +330,13 @@ public sealed class DiscordInteractionResponseBuilder
 	}
 
 	/// <summary>
-	/// Sets if the message has files to be sent.
+	///     Sets if the message has files to be sent.
 	/// </summary>
 	/// <param name="stream">The Stream to the file.</param>
-	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+	/// <param name="resetStreamPosition">
+	///     Tells the API Client to reset the stream position to what it was after the file is
+	///     sent.
+	/// </param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string description = null)
@@ -349,10 +356,13 @@ public sealed class DiscordInteractionResponseBuilder
 	}
 
 	/// <summary>
-	/// Adds the given files to the interaction response builder.
+	///     Adds the given files to the interaction response builder.
 	/// </summary>
 	/// <param name="files">Dictionary of file name and file data.</param>
-	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+	/// <param name="resetStreamPosition">
+	///     Tells the API Client to reset the stream position to what it was after the file is
+	///     sent.
+	/// </param>
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
 	{
@@ -374,7 +384,7 @@ public sealed class DiscordInteractionResponseBuilder
 	}
 
 	/// <summary>
-	/// Adds the mention to the mentions to parse, etc. with the interaction response.
+	///     Adds the mention to the mentions to parse, etc. with the interaction response.
 	/// </summary>
 	/// <param name="mention">Mention to add.</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -388,7 +398,7 @@ public sealed class DiscordInteractionResponseBuilder
 	}
 
 	/// <summary>
-	/// Adds the mentions to the mentions to parse, etc. with the interaction response.
+	///     Adds the mentions to the mentions to parse, etc. with the interaction response.
 	/// </summary>
 	/// <param name="mentions">Mentions to add.</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -402,7 +412,7 @@ public sealed class DiscordInteractionResponseBuilder
 	}
 
 	/// <summary>
-	/// Adds a single auto-complete choice to the builder.
+	///     Adds a single auto-complete choice to the builder.
 	/// </summary>
 	/// <param name="choice">The choice to add.</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -413,7 +423,7 @@ public sealed class DiscordInteractionResponseBuilder
 	}
 
 	/// <summary>
-	/// Adds auto-complete choices to the builder.
+	///     Adds auto-complete choices to the builder.
 	/// </summary>
 	/// <param name="choices">The choices to add.</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -424,7 +434,7 @@ public sealed class DiscordInteractionResponseBuilder
 	}
 
 	/// <summary>
-	/// Adds auto-complete choices to the builder.
+	///     Adds auto-complete choices to the builder.
 	/// </summary>
 	/// <param name="choices">The choices to add.</param>
 	/// <returns>The current builder to chain calls with.</returns>
@@ -432,19 +442,19 @@ public sealed class DiscordInteractionResponseBuilder
 		=> this.AddAutoCompleteChoices((IEnumerable<DiscordApplicationCommandAutocompleteChoice>)choices);
 
 	/// <summary>
-	/// Clears all message components on this builder.
+	///     Clears all message components on this builder.
 	/// </summary>
 	public void ClearComponents()
 		=> this._components.Clear();
 
 	/// <summary>
-	/// Clears the poll from this builder.
+	///     Clears the poll from this builder.
 	/// </summary>
 	public void ClearPoll()
 		=> this.Poll = null;
 
 	/// <summary>
-	/// Allows for clearing the Interaction Response Builder so that it can be used again to send a new response.
+	///     Allows for clearing the Interaction Response Builder so that it can be used again to send a new response.
 	/// </summary>
 	public void Clear()
 	{

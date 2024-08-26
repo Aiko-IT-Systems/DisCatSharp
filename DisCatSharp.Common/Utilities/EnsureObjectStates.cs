@@ -1,16 +1,15 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace DisCatSharp.Common;
 
 /// <summary>
-/// Ensures that certain objects have the target state.
+///     Ensures that certain objects have the target state.
 /// </summary>
 public static class EnsureObjectStates
 {
 	/// <summary>
-	/// Checks whether the dictionary is null or empty.
+	///     Checks whether the dictionary is null or empty.
 	/// </summary>
 	/// <typeparam name="T1">Any key type.</typeparam>
 	/// <typeparam name="T2">Any value type.</typeparam>
@@ -20,7 +19,7 @@ public static class EnsureObjectStates
 		=> dictionary is null || dictionary.Count is 0 || dictionary.Keys.Count is 0;
 
 	/// <summary>
-	/// Checks whether the dictionary is not null and not empty.
+	///     Checks whether the dictionary is not null and not empty.
 	/// </summary>
 	/// <typeparam name="T1">Any key type.</typeparam>
 	/// <typeparam name="T2">Any value type.</typeparam>
@@ -30,7 +29,7 @@ public static class EnsureObjectStates
 		=> dictionary is not null && dictionary.Count is not 0 && dictionary.Keys.Count is not 0;
 
 	/// <summary>
-	/// Checks whether the list is null or empty.
+	///     Checks whether the list is null or empty.
 	/// </summary>
 	/// <typeparam name="T">Any value type.</typeparam>
 	/// <param name="list">The list to check on.</param>
@@ -39,7 +38,7 @@ public static class EnsureObjectStates
 		=> list is null || list.Count is 0;
 
 	/// <summary>
-	/// Checks whether the list is not null and not empty.
+	///     Checks whether the list is not null and not empty.
 	/// </summary>
 	/// <typeparam name="T">Any value type.</typeparam>
 	/// <param name="list">The list to check on.</param>
@@ -48,7 +47,7 @@ public static class EnsureObjectStates
 		=> list is not null && list.Count is not 0;
 
 	/// <summary>
-	/// Checks whether the dictionary is null or empty.
+	///     Checks whether the dictionary is null or empty.
 	/// </summary>
 	/// <typeparam name="T1">Any key type.</typeparam>
 	/// <typeparam name="T2">Any value type.</typeparam>
@@ -58,7 +57,7 @@ public static class EnsureObjectStates
 		=> dictionary.Count is 0 || dictionary.Keys.Count is 0;
 
 	/// <summary>
-	/// Checks whether the dictionary is not null and not empty.
+	///     Checks whether the dictionary is not null and not empty.
 	/// </summary>
 	/// <typeparam name="T1">Any key type.</typeparam>
 	/// <typeparam name="T2">Any value type.</typeparam>
@@ -68,7 +67,7 @@ public static class EnsureObjectStates
 		=> dictionary.Count is not 0 && dictionary.Keys.Count is not 0;
 
 	/// <summary>
-	/// Checks whether the list is null or empty.
+	///     Checks whether the list is null or empty.
 	/// </summary>
 	/// <typeparam name="T">Any value type.</typeparam>
 	/// <param name="list">The list to check on.</param>
@@ -77,7 +76,7 @@ public static class EnsureObjectStates
 		=> list.Count is 0;
 
 	/// <summary>
-	/// Checks whether the list is not null and not empty.
+	///     Checks whether the list is not null and not empty.
 	/// </summary>
 	/// <typeparam name="T">Any value type.</typeparam>
 	/// <param name="list">The list to check on.</param>

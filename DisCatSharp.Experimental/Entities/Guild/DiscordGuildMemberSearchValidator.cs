@@ -3,37 +3,37 @@ using System;
 namespace DisCatSharp.Experimental.Entities;
 
 /// <summary>
-/// Provides a validator for <see cref="DiscordGuildMemberSearchParams"/>.
+///     Provides a validator for <see cref="DiscordGuildMemberSearchParams" />.
 /// </summary>
 public static class DiscordGuildMemberSearchValidator
 {
 	/// <summary>
-	/// Gets the max OR query item count.
+	///     Gets the max OR query item count.
 	/// </summary>
 	private const int MAX_OR_QUERY_ITEMS = 10;
 
 	/// <summary>
-	/// Gets the max AND query item count.
+	///     Gets the max AND query item count.
 	/// </summary>
 	private const int MAX_AND_QUERY_ITEMS = 10;
 
 	/// <summary>
-	/// Gets the max limit count.
+	///     Gets the max limit count.
 	/// </summary>
 	private const int MAX_LIMIT = 1000;
 
 	/// <summary>
-	/// Gets the min limit count.
+	///     Gets the min limit count.
 	/// </summary>
 	private const int MIN_LIMIT = 1;
 
 	/// <summary>
-	/// Gets the max query length.
+	///     Gets the max query length.
 	/// </summary>
 	private const int MAX_QUERY_LENGTH = 100;
 
 	/// <summary>
-	/// Validates the guild member search parameters.
+	///     Validates the guild member search parameters.
 	/// </summary>
 	/// <param name="searchParams">The search parameters to validate.</param>
 	/// <returns>A tuple containing a boolean indicating validity and an optional error message.</returns>
@@ -60,7 +60,7 @@ public static class DiscordGuildMemberSearchValidator
 	}
 
 	/// <summary>
-	/// Validates a DiscordMemberFilter query.
+	///     Validates a DiscordMemberFilter query.
 	/// </summary>
 	private static (bool IsValid, string? ErrorMessage) ValidateQuery(this DiscordMemberFilter filter, string queryType, bool validateOrQuery)
 	{
@@ -78,7 +78,7 @@ public static class DiscordGuildMemberSearchValidator
 				return result;
 		}
 		else if (filter.Usernames is not null)
-			return (false, $"Usernames can only be used in OR queries.");
+			return (false, "Usernames can only be used in OR queries.");
 
 		if (filter.RoleIds is not null)
 		{
@@ -119,7 +119,7 @@ public static class DiscordGuildMemberSearchValidator
 	}
 
 	/// <summary>
-	/// Validates the conditions and types of an individual query within a filter.
+	///     Validates the conditions and types of an individual query within a filter.
 	/// </summary>
 	private static (bool IsValid, string? ErrorMessage) ValidateQueryConditions(this DiscordQuery query, string queryType, string fieldName, Func<string, bool> validateType, bool allowOr = false, bool allowAnd = false, bool allowRange = false)
 	{
@@ -155,7 +155,7 @@ public static class DiscordGuildMemberSearchValidator
 	}
 
 	/// <summary>
-	/// Validates safety signals queries.
+	///     Validates safety signals queries.
 	/// </summary>
 	private static (bool IsValid, string? ErrorMessage) ValidateSafetySignals(this DiscordSafetySignals safetySignals)
 	{
@@ -177,19 +177,19 @@ public static class DiscordGuildMemberSearchValidator
 	}
 
 	/// <summary>
-	/// Validates that the query type is snowflake.
+	///     Validates that the query type is snowflake.
 	/// </summary>
 	private static bool ValidateSnowflakeType(this string query)
 		=> ulong.TryParse(query, out _);
 
 	/// <summary>
-	/// Validates that the query type is integer.
+	///     Validates that the query type is integer.
 	/// </summary>
 	private static bool ValidateIntegerType(this string query)
 		=> int.TryParse(query, out _);
 
 	/// <summary>
-	/// Validates that the query type is string.
+	///     Validates that the query type is string.
 	/// </summary>
 	private static bool ValidateStringType(this string query)
 		=> !string.IsNullOrWhiteSpace(query);

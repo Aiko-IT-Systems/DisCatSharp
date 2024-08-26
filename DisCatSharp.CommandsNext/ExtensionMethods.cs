@@ -15,16 +15,16 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.CommandsNext;
 
 /// <summary>
-/// Defines various extensions specific to CommandsNext.
+///     Defines various extensions specific to CommandsNext.
 /// </summary>
 public static class ExtensionMethods
 {
 	/// <summary>
-	/// Enables CommandsNext module on this <see cref="DiscordClient"/>.
+	///     Enables CommandsNext module on this <see cref="DiscordClient" />.
 	/// </summary>
 	/// <param name="client">Client to enable CommandsNext for.</param>
 	/// <param name="cfg">CommandsNext configuration to use.</param>
-	/// <returns>Created <see cref="CommandsNextExtension"/>.</returns>
+	/// <returns>Created <see cref="CommandsNextExtension" />.</returns>
 	public static CommandsNextExtension UseCommandsNext(this DiscordClient client, CommandsNextConfiguration cfg)
 	{
 		if (client.GetExtension<CommandsNextExtension>() != null)
@@ -44,11 +44,11 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Enables CommandsNext module on all shards in this <see cref="DiscordShardedClient"/>.
+	///     Enables CommandsNext module on all shards in this <see cref="DiscordShardedClient" />.
 	/// </summary>
 	/// <param name="client">Client to enable CommandsNext for.</param>
 	/// <param name="cfg">CommandsNext configuration to use.</param>
-	/// <returns>A dictionary of created <see cref="CommandsNextExtension"/>, indexed by shard id.</returns>
+	/// <returns>A dictionary of created <see cref="CommandsNextExtension" />, indexed by shard id.</returns>
 	public static async Task<IReadOnlyDictionary<int, CommandsNextExtension>> UseCommandsNextAsync(this DiscordShardedClient client, CommandsNextConfiguration cfg)
 	{
 		var modules = new Dictionary<int, CommandsNextExtension>();
@@ -66,7 +66,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Gets the active CommandsNext module for this client.
+	///     Gets the active CommandsNext module for this client.
 	/// </summary>
 	/// <param name="client">Client to get CommandsNext module from.</param>
 	/// <returns>The module, or null if not activated.</returns>
@@ -74,7 +74,7 @@ public static class ExtensionMethods
 		=> client.GetExtension<CommandsNextExtension>();
 
 	/// <summary>
-	/// Gets the active CommandsNext modules for all shards in this client.
+	///     Gets the active CommandsNext modules for all shards in this client.
 	/// </summary>
 	/// <param name="client">Client to get CommandsNext instances from.</param>
 	/// <returns>A dictionary of the modules, indexed by shard id.</returns>
@@ -90,7 +90,8 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Registers all commands from a given assembly. The command classes need to be public to be considered for registration.
+	///     Registers all commands from a given assembly. The command classes need to be public to be considered for
+	///     registration.
 	/// </summary>
 	/// <param name="extensions">Extensions to register commands on.</param>
 	/// <param name="assembly">Assembly to register commands from.</param>
@@ -101,7 +102,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Registers all commands from a given command class.
+	///     Registers all commands from a given command class.
 	/// </summary>
 	/// <typeparam name="T">Class which holds commands to register.</typeparam>
 	/// <param name="extensions">Extensions to register commands on.</param>
@@ -112,7 +113,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Registers all commands from a given command class.
+	///     Registers all commands from a given command class.
 	/// </summary>
 	/// <param name="extensions">Extensions to register commands on.</param>
 	/// <param name="t">Type of the class which holds commands to register.</param>
@@ -123,7 +124,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Builds and registers all supplied commands.
+	///     Builds and registers all supplied commands.
 	/// </summary>
 	/// <param name="extensions">Extensions to register commands on.</param>
 	/// <param name="cmds">Commands to build and register.</param>
@@ -134,7 +135,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Unregisters specified commands from CommandsNext.
+	///     Unregisters specified commands from CommandsNext.
 	/// </summary>
 	/// <param name="extensions">Extensions to unregister commands on.</param>
 	/// <param name="cmds">Commands to unregister.</param>
@@ -145,7 +146,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Registers an argument converter for specified type.
+	///     Registers an argument converter for specified type.
 	/// </summary>
 	/// <typeparam name="T">Type for which to register the converter.</typeparam>
 	/// <param name="extensions">Extensions to register the converter on.</param>
@@ -157,7 +158,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Unregisters an argument converter for specified type.
+	///     Unregisters an argument converter for specified type.
 	/// </summary>
 	/// <typeparam name="T">Type for which to unregister the converter.</typeparam>
 	/// <param name="extensions">Extensions to unregister the converter on.</param>
@@ -168,7 +169,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Registers a user-friendly type name.
+	///     Registers a user-friendly type name.
 	/// </summary>
 	/// <typeparam name="T">Type to register the name for.</typeparam>
 	/// <param name="extensions">Extensions to register the name on.</param>
@@ -180,7 +181,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	/// Sets the help formatter to use with the default help command.
+	///     Sets the help formatter to use with the default help command.
 	/// </summary>
 	/// <typeparam name="T">Type of the formatter to use.</typeparam>
 	/// <param name="extensions">Extensions to set the help formatter on.</param>

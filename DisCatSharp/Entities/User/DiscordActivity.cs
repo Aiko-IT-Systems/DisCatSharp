@@ -9,49 +9,49 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents user status.
+///     Represents user status.
 /// </summary>
 [JsonConverter(typeof(UserStatusConverter))]
 public enum UserStatus
 {
 	/// <summary>
-	/// User is offline.
+	///     User is offline.
 	/// </summary>
 	Offline = 0,
 
 	/// <summary>
-	/// User is online.
+	///     User is online.
 	/// </summary>
 	Online = 1,
 
 	/// <summary>
-	/// User is idle.
+	///     User is idle.
 	/// </summary>
 	Idle = 2,
 
 	/// <summary>
-	/// User asked not to be disturbed.
+	///     User asked not to be disturbed.
 	/// </summary>
 	DoNotDisturb = 4,
 
 	/// <summary>
-	/// User is invisible. They will appear as Offline to anyone but themselves.
+	///     User is invisible. They will appear as Offline to anyone but themselves.
 	/// </summary>
 	Invisible = 5,
 
 	/// <summary>
-	/// User is streaming.
+	///     User is streaming.
 	/// </summary>
 	Streaming = 6
 }
 
 /// <summary>
-/// Represents a user status converter.
+///     Represents a user status converter.
 /// </summary>
 internal sealed class UserStatusConverter : JsonConverter
 {
 	/// <summary>
-	/// Writes the json.
+	///     Writes the json.
 	/// </summary>
 	/// <param name="writer">The writer.</param>
 	/// <param name="value">The value.</param>
@@ -89,7 +89,7 @@ internal sealed class UserStatusConverter : JsonConverter
 	}
 
 	/// <summary>
-	/// Reads the json.
+	///     Reads the json.
 	/// </summary>
 	/// <param name="reader">The reader.</param>
 	/// <param name="objectType">The object type.</param>
@@ -109,7 +109,7 @@ internal sealed class UserStatusConverter : JsonConverter
 		};
 
 	/// <summary>
-	/// Whether this user5 status can be converted.
+	///     Whether this user5 status can be converted.
 	/// </summary>
 	/// <param name="objectType">The object type.</param>
 	/// <returns>A bool.</returns>
@@ -117,62 +117,12 @@ internal sealed class UserStatusConverter : JsonConverter
 }
 
 /// <summary>
-/// Represents a game that a user is playing.
+///     Represents a game that a user is playing.
 /// </summary>
 public sealed class DiscordActivity
 {
 	/// <summary>
-	/// Gets or sets the id of user's activity.
-	/// </summary>
-	public string? Id { get; set; }
-
-	/// <summary>
-	/// Gets or sets the name of user's activity.
-	/// </summary>
-	public string? Name { get; set; }
-
-	/// <summary>
-	/// Gets or sets the state of user's activity.
-	/// </summary>
-	public string? State { get; set; }
-
-	/// <summary>
-	/// Gets or sets the stream URL, if applicable.
-	/// </summary>
-	public string StreamUrl { get; set; }
-
-	/// <summary>
-	/// Gets or sets platform in this rich presence.
-	/// </summary>
-	public string Platform { get; set; }
-
-	/// <summary>
-	/// Gets or sets sync id in this rich presence.
-	/// </summary>
-	public string SyncId { get; set; }
-
-	/// <summary>
-	/// Gets or sets session_id in this rich presence.
-	/// </summary>
-	public string SessionId { get; set; }
-
-	/// <summary>
-	/// Gets or sets the activity type.
-	/// </summary>
-	public ActivityType ActivityType { get; set; }
-
-	/// <summary>
-	/// Gets the rich presence details, if present.
-	/// </summary>
-	public DiscordRichPresence RichPresence { get; internal set; }
-
-	/// <summary>
-	/// Gets the custom status of this activity, if present.
-	/// </summary>
-	public DiscordCustomStatus CustomStatus { get; internal set; }
-
-	/// <summary>
-	/// Creates a new, empty instance of a <see cref="DiscordActivity"/>.
+	///     Creates a new, empty instance of a <see cref="DiscordActivity" />.
 	/// </summary>
 	public DiscordActivity()
 	{
@@ -180,7 +130,7 @@ public sealed class DiscordActivity
 	}
 
 	/// <summary>
-	/// Creates a new instance of a <see cref="DiscordActivity"/> with specified name.
+	///     Creates a new instance of a <see cref="DiscordActivity" /> with specified name.
 	/// </summary>
 	/// <param name="name">Name of the activity.</param>
 	public DiscordActivity(string name)
@@ -190,7 +140,7 @@ public sealed class DiscordActivity
 	}
 
 	/// <summary>
-	/// Creates a new instance of a <see cref="DiscordActivity"/> with specified name.
+	///     Creates a new instance of a <see cref="DiscordActivity" /> with specified name.
 	/// </summary>
 	/// <param name="name">Name of the activity.</param>
 	/// <param name="type">Type of the activity.</param>
@@ -209,7 +159,7 @@ public sealed class DiscordActivity
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordActivity"/> class.
+	///     Initializes a new instance of the <see cref="DiscordActivity" /> class.
 	/// </summary>
 	/// <param name="rawActivity">The raw activity.</param>
 	internal DiscordActivity(TransportActivity rawActivity)
@@ -218,7 +168,7 @@ public sealed class DiscordActivity
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordActivity"/> class.
+	///     Initializes a new instance of the <see cref="DiscordActivity" /> class.
 	/// </summary>
 	/// <param name="other">The other.</param>
 	internal DiscordActivity(DiscordActivity other)
@@ -236,7 +186,57 @@ public sealed class DiscordActivity
 	}
 
 	/// <summary>
-	/// Updates a activity with an transport activity.
+	///     Gets or sets the id of user's activity.
+	/// </summary>
+	public string? Id { get; set; }
+
+	/// <summary>
+	///     Gets or sets the name of user's activity.
+	/// </summary>
+	public string? Name { get; set; }
+
+	/// <summary>
+	///     Gets or sets the state of user's activity.
+	/// </summary>
+	public string? State { get; set; }
+
+	/// <summary>
+	///     Gets or sets the stream URL, if applicable.
+	/// </summary>
+	public string StreamUrl { get; set; }
+
+	/// <summary>
+	///     Gets or sets platform in this rich presence.
+	/// </summary>
+	public string Platform { get; set; }
+
+	/// <summary>
+	///     Gets or sets sync id in this rich presence.
+	/// </summary>
+	public string SyncId { get; set; }
+
+	/// <summary>
+	///     Gets or sets session_id in this rich presence.
+	/// </summary>
+	public string SessionId { get; set; }
+
+	/// <summary>
+	///     Gets or sets the activity type.
+	/// </summary>
+	public ActivityType ActivityType { get; set; }
+
+	/// <summary>
+	///     Gets the rich presence details, if present.
+	/// </summary>
+	public DiscordRichPresence RichPresence { get; internal set; }
+
+	/// <summary>
+	///     Gets the custom status of this activity, if present.
+	/// </summary>
+	public DiscordCustomStatus CustomStatus { get; internal set; }
+
+	/// <summary>
+	///     Updates a activity with an transport activity.
 	/// </summary>
 	/// <param name="rawActivity">The raw activity.</param>
 	internal void UpdateWith(TransportActivity rawActivity)
@@ -269,33 +269,18 @@ public sealed class DiscordActivity
 }
 
 /// <summary>
-/// Represents details for a custom status activity, attached to a <see cref="DiscordActivity"/>.
+///     Represents details for a custom status activity, attached to a <see cref="DiscordActivity" />.
 /// </summary>
 public sealed class DiscordCustomStatus
 {
 	/// <summary>
-	/// Gets the name of this custom status.
-	/// </summary>
-	public string Name { get; internal set; }
-
-	/// <summary>
-	/// Gets the state of this custom status.
-	/// </summary>
-	public string? State { get; internal set; }
-
-	/// <summary>
-	/// Gets the emoji of this custom status, if any.
-	/// </summary>
-	public DiscordEmoji Emoji { get; internal set; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordCustomStatus"/> class.
+	///     Initializes a new instance of the <see cref="DiscordCustomStatus" /> class.
 	/// </summary>
 	internal DiscordCustomStatus()
 	{ }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordCustomStatus"/> class.
+	///     Initializes a new instance of the <see cref="DiscordCustomStatus" /> class.
 	/// </summary>
 	/// <param name="other">The other.</param>
 	internal DiscordCustomStatus(DiscordCustomStatus other)
@@ -306,7 +291,22 @@ public sealed class DiscordCustomStatus
 	}
 
 	/// <summary>
-	/// Updates a discord status.
+	///     Gets the name of this custom status.
+	/// </summary>
+	public string Name { get; internal set; }
+
+	/// <summary>
+	///     Gets the state of this custom status.
+	/// </summary>
+	public string? State { get; internal set; }
+
+	/// <summary>
+	///     Gets the emoji of this custom status, if any.
+	/// </summary>
+	public DiscordEmoji Emoji { get; internal set; }
+
+	/// <summary>
+	///     Updates a discord status.
 	/// </summary>
 	/// <param name="state">The state.</param>
 	/// <param name="emoji">The emoji.</param>
@@ -319,103 +319,18 @@ public sealed class DiscordCustomStatus
 }
 
 /// <summary>
-/// Represents details for Discord rich presence, attached to a <see cref="DiscordActivity"/>.
+///     Represents details for Discord rich presence, attached to a <see cref="DiscordActivity" />.
 /// </summary>
 public sealed class DiscordRichPresence
 {
 	/// <summary>
-	/// Gets the details of this presence.
-	/// </summary>
-	public string Details { get; internal set; }
-
-	/// <summary>
-	/// Gets the game state.
-	/// </summary>
-	public string State { get; internal set; }
-
-	/// <summary>
-	/// Gets the application for which the rich presence is for.
-	/// </summary>
-	public DiscordApplication Application { get; internal set; }
-
-	/// <summary>
-	/// Gets the instance status.
-	/// </summary>
-	public bool? Instance { get; internal set; }
-
-	/// <summary>
-	/// Gets the large image for the rich presence.
-	/// </summary>
-	public DiscordAsset LargeImage { get; internal set; }
-
-	/// <summary>
-	/// Gets the hover text for large image.
-	/// </summary>
-	public string LargeImageText { get; internal set; }
-
-	/// <summary>
-	/// Gets the small image for the rich presence.
-	/// </summary>
-	public DiscordAsset SmallImage { get; internal set; }
-
-	/// <summary>
-	/// Gets the hover text for small image.
-	/// </summary>
-	public string SmallImageText { get; internal set; }
-
-	/// <summary>
-	/// Gets the current party size.
-	/// </summary>
-	public long? CurrentPartySize { get; internal set; }
-
-	/// <summary>
-	/// Gets the maximum party size.
-	/// </summary>
-	public long? MaximumPartySize { get; internal set; }
-
-	/// <summary>
-	/// Gets the party ID.
-	/// </summary>
-	public ulong? PartyId { get; internal set; }
-
-	/// <summary>
-	/// Gets the buttons.
-	/// </summary>
-	public IReadOnlyList<string> Buttons { get; internal set; }
-
-	/// <summary>
-	/// Gets the game start timestamp.
-	/// </summary>
-	public DateTimeOffset? StartTimestamp { get; internal set; }
-
-	/// <summary>
-	/// Gets the game end timestamp.
-	/// </summary>
-	public DateTimeOffset? EndTimestamp { get; internal set; }
-
-	/// <summary>
-	/// Gets the secret value enabling users to join your game.
-	/// </summary>
-	public string JoinSecret { get; internal set; }
-
-	/// <summary>
-	/// Gets the secret value enabling users to receive notifications whenever your game state changes.
-	/// </summary>
-	public string MatchSecret { get; internal set; }
-
-	/// <summary>
-	/// Gets the secret value enabling users to spectate your game.
-	/// </summary>
-	public string SpectateSecret { get; internal set; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordRichPresence"/> class.
+	///     Initializes a new instance of the <see cref="DiscordRichPresence" /> class.
 	/// </summary>
 	internal DiscordRichPresence()
 	{ }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordRichPresence"/> class.
+	///     Initializes a new instance of the <see cref="DiscordRichPresence" /> class.
 	/// </summary>
 	/// <param name="rawGame">The raw game.</param>
 	internal DiscordRichPresence(TransportActivity rawGame)
@@ -424,7 +339,7 @@ public sealed class DiscordRichPresence
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordRichPresence"/> class.
+	///     Initializes a new instance of the <see cref="DiscordRichPresence" /> class.
 	/// </summary>
 	/// <param name="other">The other.</param>
 	internal DiscordRichPresence(DiscordRichPresence other)
@@ -449,7 +364,92 @@ public sealed class DiscordRichPresence
 	}
 
 	/// <summary>
-	/// Updates a game activity with an transport activity.
+	///     Gets the details of this presence.
+	/// </summary>
+	public string Details { get; internal set; }
+
+	/// <summary>
+	///     Gets the game state.
+	/// </summary>
+	public string State { get; internal set; }
+
+	/// <summary>
+	///     Gets the application for which the rich presence is for.
+	/// </summary>
+	public DiscordApplication Application { get; internal set; }
+
+	/// <summary>
+	///     Gets the instance status.
+	/// </summary>
+	public bool? Instance { get; internal set; }
+
+	/// <summary>
+	///     Gets the large image for the rich presence.
+	/// </summary>
+	public DiscordAsset LargeImage { get; internal set; }
+
+	/// <summary>
+	///     Gets the hover text for large image.
+	/// </summary>
+	public string LargeImageText { get; internal set; }
+
+	/// <summary>
+	///     Gets the small image for the rich presence.
+	/// </summary>
+	public DiscordAsset SmallImage { get; internal set; }
+
+	/// <summary>
+	///     Gets the hover text for small image.
+	/// </summary>
+	public string SmallImageText { get; internal set; }
+
+	/// <summary>
+	///     Gets the current party size.
+	/// </summary>
+	public long? CurrentPartySize { get; internal set; }
+
+	/// <summary>
+	///     Gets the maximum party size.
+	/// </summary>
+	public long? MaximumPartySize { get; internal set; }
+
+	/// <summary>
+	///     Gets the party ID.
+	/// </summary>
+	public ulong? PartyId { get; internal set; }
+
+	/// <summary>
+	///     Gets the buttons.
+	/// </summary>
+	public IReadOnlyList<string> Buttons { get; internal set; }
+
+	/// <summary>
+	///     Gets the game start timestamp.
+	/// </summary>
+	public DateTimeOffset? StartTimestamp { get; internal set; }
+
+	/// <summary>
+	///     Gets the game end timestamp.
+	/// </summary>
+	public DateTimeOffset? EndTimestamp { get; internal set; }
+
+	/// <summary>
+	///     Gets the secret value enabling users to join your game.
+	/// </summary>
+	public string JoinSecret { get; internal set; }
+
+	/// <summary>
+	///     Gets the secret value enabling users to receive notifications whenever your game state changes.
+	/// </summary>
+	public string MatchSecret { get; internal set; }
+
+	/// <summary>
+	///     Gets the secret value enabling users to spectate your game.
+	/// </summary>
+	public string SpectateSecret { get; internal set; }
+
+	/// <summary>
+	///     Updates a game activity with an transport activity.
 	/// </summary>
 	/// <param name="rawGame">The raw game.</param>
 	internal void UpdateWith(TransportActivity rawGame)
@@ -513,37 +513,37 @@ public sealed class DiscordRichPresence
 }
 
 /// <summary>
-/// Determines the type of a user activity.
+///     Determines the type of a user activity.
 /// </summary>
 public enum ActivityType
 {
 	/// <summary>
-	/// Indicates the user is playing a game.
+	///     Indicates the user is playing a game.
 	/// </summary>
 	Playing = 0,
 
 	/// <summary>
-	/// Indicates the user is streaming a game.
+	///     Indicates the user is streaming a game.
 	/// </summary>
 	Streaming = 1,
 
 	/// <summary>
-	/// Indicates the user is listening to something.
+	///     Indicates the user is listening to something.
 	/// </summary>
 	ListeningTo = 2,
 
 	/// <summary>
-	/// Indicates the user is watching something.
+	///     Indicates the user is watching something.
 	/// </summary>
 	Watching = 3,
 
 	/// <summary>
-	/// Indicates the current activity is a custom status.
+	///     Indicates the current activity is a custom status.
 	/// </summary>
 	Custom = 4,
 
 	/// <summary>
-	/// Indicates the user is competing in something.
+	///     Indicates the user is competing in something.
 	/// </summary>
 	Competing = 5
 }

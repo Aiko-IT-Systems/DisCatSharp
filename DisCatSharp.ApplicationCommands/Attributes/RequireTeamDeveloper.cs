@@ -7,19 +7,19 @@ using DisCatSharp.ApplicationCommands.Context;
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
-/// Defines that this application command is restricted to team members of the bot with developer role or higher.
+///     Defines that this application command is restricted to team members of the bot with developer role or higher.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 public sealed class ApplicationCommandRequireTeamDeveloperAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
-	/// Defines that this application command is restricted to team members of the bot with developer role or higher.
+	///     Defines that this application command is restricted to team members of the bot with developer role or higher.
 	/// </summary>
 	public ApplicationCommandRequireTeamDeveloperAttribute()
 	{ }
 
 	/// <summary>
-	/// Runs checks.
+	///     Runs checks.
 	/// </summary>
 	public override Task<bool> ExecuteChecksAsync(BaseContext ctx)
 	{

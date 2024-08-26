@@ -11,15 +11,15 @@ using DisCatSharp.Interactivity.EventHandling;
 namespace DisCatSharp.Interactivity.Extensions;
 
 /// <summary>
-/// The interaction extensions.
+///     The interaction extensions.
 /// </summary>
 public static class InteractionExtensions
 {
 	/// <summary>
-	/// Sends a paginated message in response to an interaction.
-	/// <para>
-	/// <b>Pass the interaction directly. Interactivity will ACK it.</b>
-	/// </para>
+	///     Sends a paginated message in response to an interaction.
+	///     <para>
+	///         <b>Pass the interaction directly. Interactivity will ACK it.</b>
+	///     </para>
 	/// </summary>
 	/// <param name="interaction">The interaction to create a response to.</param>
 	/// <param name="deferred">Whether the interaction was deferred.</param>
@@ -34,8 +34,14 @@ public static class InteractionExtensions
 		=> (interaction.Discord as DiscordClient)?.GetInteractivity()?.SendPaginatedResponseAsync(interaction, deferred, ephemeral, user, pages, buttons, behaviour, deletion, token);
 
 	/// <summary>
-	/// Sends multiple modals to the user with a prompt to open the next one.
-	/// <para><b>After the last modal, this method automatically responds with the thinking state. Use <see cref="DiscordInteraction.EditOriginalResponseAsync(DiscordWebhookBuilder)"/> to interact with the response.</b></para>
+	///     Sends multiple modals to the user with a prompt to open the next one.
+	///     <para>
+	///         <b>
+	///             After the last modal, this method automatically responds with the thinking state. Use
+	///             <see cref="DiscordInteraction.EditOriginalResponseAsync(DiscordWebhookBuilder)" /> to interact with the
+	///             response.
+	///         </b>
+	///     </para>
 	/// </summary>
 	/// <param name="interaction">The interaction to create a response to.</param>
 	/// <param name="modals">The modal pages.</param>

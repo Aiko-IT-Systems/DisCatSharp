@@ -8,36 +8,12 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents a field in a guild's membership screening form
+///     Represents a field in a guild's membership screening form
 /// </summary>
 public class DiscordGuildMembershipScreeningField : ObservableApiObject
 {
 	/// <summary>
-	/// Gets the type of the field.
-	/// </summary>
-	[JsonProperty("field_type", NullValueHandling = NullValueHandling.Ignore)]
-	public MembershipScreeningFieldType Type { get; internal set; }
-
-	/// <summary>
-	/// Gets the title of the field.
-	/// </summary>
-	[JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
-	public string Label { get; internal set; }
-
-	/// <summary>
-	/// Gets the list of rules
-	/// </summary>
-	[JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<string> Values { get; internal set; }
-
-	/// <summary>
-	/// Gets whether the user has to fill out this field
-	/// </summary>
-	[JsonProperty("required", NullValueHandling = NullValueHandling.Ignore)]
-	public bool IsRequired { get; internal set; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordGuildMembershipScreeningField"/> class.
+	///     Initializes a new instance of the <see cref="DiscordGuildMembershipScreeningField" /> class.
 	/// </summary>
 	/// <param name="type">The type.</param>
 	/// <param name="label">The label.</param>
@@ -52,8 +28,32 @@ public class DiscordGuildMembershipScreeningField : ObservableApiObject
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordGuildMembershipScreeningField"/> class.
+	///     Initializes a new instance of the <see cref="DiscordGuildMembershipScreeningField" /> class.
 	/// </summary>
 	internal DiscordGuildMembershipScreeningField()
 	{ }
+
+	/// <summary>
+	///     Gets the type of the field.
+	/// </summary>
+	[JsonProperty("field_type", NullValueHandling = NullValueHandling.Ignore)]
+	public MembershipScreeningFieldType Type { get; internal set; }
+
+	/// <summary>
+	///     Gets the title of the field.
+	/// </summary>
+	[JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
+	public string Label { get; internal set; }
+
+	/// <summary>
+	///     Gets the list of rules
+	/// </summary>
+	[JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
+	public IReadOnlyList<string> Values { get; internal set; }
+
+	/// <summary>
+	///     Gets whether the user has to fill out this field
+	/// </summary>
+	[JsonProperty("required", NullValueHandling = NullValueHandling.Ignore)]
+	public bool IsRequired { get; internal set; }
 }

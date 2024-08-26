@@ -12,12 +12,12 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.ApplicationCommands.Workers;
 
 /// <summary>
-/// Represents a <see cref="RegistrationWorker"/>.
+///     Represents a <see cref="RegistrationWorker" />.
 /// </summary>
 internal class RegistrationWorker
 {
 	/// <summary>
-	/// Registers the global commands.
+	///     Registers the global commands.
 	/// </summary>
 	/// <param name="client">The discord client.</param>
 	/// <param name="commands">The command list.</param>
@@ -167,7 +167,7 @@ internal class RegistrationWorker
 	}
 
 	/// <summary>
-	/// Registers the guild commands.
+	///     Registers the guild commands.
 	/// </summary>
 	/// <param name="client">The discord client.</param>
 	/// <param name="guildId">The target guild id.</param>
@@ -321,7 +321,7 @@ internal class RegistrationWorker
 	}
 
 	/// <summary>
-	/// Builds a list of guild command ids to be deleted on discords backend.
+	///     Builds a list of guild command ids to be deleted on discords backend.
 	/// </summary>
 	/// <param name="client">The discord client.</param>
 	/// <param name="guildId">The guild id these commands belong to.</param>
@@ -348,7 +348,7 @@ internal class RegistrationWorker
 	}
 
 	/// <summary>
-	/// Builds a list of guild commands to be created on discords backend.
+	///     Builds a list of guild commands to be created on discords backend.
 	/// </summary>
 	/// <param name="client">The discord client.</param>
 	/// <param name="guildId">The guild id these commands belong to.</param>
@@ -371,7 +371,7 @@ internal class RegistrationWorker
 	}
 
 	/// <summary>
-	/// Builds a list of guild commands to be overwritten on discords backend.
+	///     Builds a list of guild commands to be overwritten on discords backend.
 	/// </summary>
 	/// <param name="client">The discord client.</param>
 	/// <param name="guildId">The guild id these commands belong to.</param>
@@ -416,7 +416,7 @@ internal class RegistrationWorker
 	}
 
 	/// <summary>
-	/// Builds a list of global command ids to be deleted on discords backend.
+	///     Builds a list of global command ids to be deleted on discords backend.
 	/// </summary>
 	/// <param name="client">The discord client.</param>
 	/// <param name="updateList">The command list.</param>
@@ -442,7 +442,7 @@ internal class RegistrationWorker
 	}
 
 	/// <summary>
-	/// Builds a list of global commands to be created on discords backend.
+	///     Builds a list of global commands to be created on discords backend.
 	/// </summary>
 	/// <param name="client">The discord client.</param>
 	/// <param name="updateList">The command list.</param>
@@ -465,7 +465,7 @@ internal class RegistrationWorker
 	}
 
 	/// <summary>
-	/// Builds a list of global commands to be overwritten on discords backend.
+	///     Builds a list of global commands to be overwritten on discords backend.
 	/// </summary>
 	/// <param name="client">The discord client.</param>
 	/// <param name="updateList">The command list.</param>

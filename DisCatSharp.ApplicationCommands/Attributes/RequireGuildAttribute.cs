@@ -6,19 +6,19 @@ using DisCatSharp.ApplicationCommands.Context;
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
-/// Defines that this application command is only usable within a guild.
+///     Defines that this application command is only usable within a guild.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 public sealed class ApplicationCommandRequireGuildAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
-	/// Defines that this command is only usable within a guild.
+	///     Defines that this command is only usable within a guild.
 	/// </summary>
 	public ApplicationCommandRequireGuildAttribute()
 	{ }
 
 	/// <summary>
-	/// Runs checks.
+	///     Runs checks.
 	/// </summary>
 	public override Task<bool> ExecuteChecksAsync(BaseContext ctx)
 		=> Task.FromResult(ctx.Guild != null);

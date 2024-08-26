@@ -5,12 +5,12 @@ using DisCatSharp.ApplicationCommands.Context;
 namespace DisCatSharp.ApplicationCommands;
 
 /// <summary>
-/// Represents a base class for application command modules
+///     Represents a base class for application command modules
 /// </summary>
 public abstract class ApplicationCommandsModule
 {
 	/// <summary>
-	/// Called before the execution of a slash command in the module.
+	///     Called before the execution of a slash command in the module.
 	/// </summary>
 	/// <param name="ctx">The context.</param>
 	/// <returns> Whether or not to execute the slash command.</returns>
@@ -18,7 +18,7 @@ public abstract class ApplicationCommandsModule
 		=> Task.FromResult(true);
 
 	/// <summary>
-	/// Called after the execution of a slash command in the module.
+	///     Called after the execution of a slash command in the module.
 	/// </summary>
 	/// <param name="ctx">The context.</param>
 	/// <returns></returns>
@@ -26,7 +26,7 @@ public abstract class ApplicationCommandsModule
 		=> Task.CompletedTask;
 
 	/// <summary>
-	/// Called before the execution of a context menu in the module.
+	///     Called before the execution of a context menu in the module.
 	/// </summary>
 	/// <param name="ctx">The context.</param>
 	/// <returns> Whether or not to execute the slash command. </returns>
@@ -34,7 +34,7 @@ public abstract class ApplicationCommandsModule
 		=> Task.FromResult(true);
 
 	/// <summary>
-	/// Called after the execution of a context menu in the module.
+	///     Called after the execution of a context menu in the module.
 	/// </summary>
 	/// <param name="ctx">The context.</param>
 	/// <returns></returns>

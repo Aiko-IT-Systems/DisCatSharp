@@ -8,27 +8,12 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.Net;
 
 /// <summary>
-/// Represents a multipart HTTP request.
+///     Represents a multipart HTTP request.
 /// </summary>
 internal sealed class MultipartWebRequest : BaseRestRequest
 {
 	/// <summary>
-	/// Gets the dictionary of values attached to this request.
-	/// </summary>
-	public IReadOnlyDictionary<string, string>? Values { get; }
-
-	/// <summary>
-	/// Gets the dictionary of files attached to this request.
-	/// </summary>
-	public IReadOnlyDictionary<string, Stream>? Files { get; }
-
-	/// <summary>
-	/// Overwrites the file id start.
-	/// </summary>
-	public int? OverwriteFileIdStart { get; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="MultipartWebRequest"/> class.
+	///     Initializes a new instance of the <see cref="MultipartWebRequest" /> class.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="bucket">The bucket.</param>
@@ -58,35 +43,30 @@ internal sealed class MultipartWebRequest : BaseRestRequest
 		this.OverwriteFileIdStart = overwriteFileIdStart;
 		this.Files = files?.ToDictionary(x => x.Filename, x => x.Stream);
 	}
+
+	/// <summary>
+	///     Gets the dictionary of values attached to this request.
+	/// </summary>
+	public IReadOnlyDictionary<string, string>? Values { get; }
+
+	/// <summary>
+	///     Gets the dictionary of files attached to this request.
+	/// </summary>
+	public IReadOnlyDictionary<string, Stream>? Files { get; }
+
+	/// <summary>
+	///     Overwrites the file id start.
+	/// </summary>
+	public int? OverwriteFileIdStart { get; }
 }
 
 /// <summary>
-/// Represents a multipart HTTP request for stickers.
+///     Represents a multipart HTTP request for stickers.
 /// </summary>
 internal sealed class MultipartStickerWebRequest : BaseRestRequest
 {
 	/// <summary>
-	/// Gets the file.
-	/// </summary>
-	public DiscordMessageFile? File { get; }
-
-	/// <summary>
-	/// Gets the name.
-	/// </summary>
-	public string Name { get; }
-
-	/// <summary>
-	/// Gets the description.
-	/// </summary>
-	public string? Description { get; }
-
-	/// <summary>
-	/// Gets the tags.
-	/// </summary>
-	public string Tags { get; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="MultipartStickerWebRequest"/> class.
+	///     Initializes a new instance of the <see cref="MultipartStickerWebRequest" /> class.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="bucket">The bucket.</param>
@@ -119,4 +99,24 @@ internal sealed class MultipartStickerWebRequest : BaseRestRequest
 		this.Description = description;
 		this.Tags = tags;
 	}
+
+	/// <summary>
+	///     Gets the file.
+	/// </summary>
+	public DiscordMessageFile? File { get; }
+
+	/// <summary>
+	///     Gets the name.
+	/// </summary>
+	public string Name { get; }
+
+	/// <summary>
+	///     Gets the description.
+	/// </summary>
+	public string? Description { get; }
+
+	/// <summary>
+	///     Gets the tags.
+	/// </summary>
+	public string Tags { get; }
 }

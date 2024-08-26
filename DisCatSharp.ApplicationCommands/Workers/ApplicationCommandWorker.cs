@@ -14,12 +14,12 @@ using DisCatSharp.Enums;
 namespace DisCatSharp.ApplicationCommands.Workers;
 
 /// <summary>
-/// Represents a <see cref="CommandWorker"/>.
+///     Represents a <see cref="CommandWorker" />.
 /// </summary>
 internal class CommandWorker
 {
 	/// <summary>
-	/// Parses context menu application commands.
+	///     Parses context menu application commands.
 	/// </summary>
 	/// <param name="type">The type.</param>
 	/// <param name="methods">List of method infos.</param>
@@ -70,7 +70,7 @@ internal class CommandWorker
 	}
 
 	/// <summary>
-	/// Parses single application commands.
+	///     Parses single application commands.
 	/// </summary>
 	/// <param name="type">The type.</param>
 	/// <param name="methods">List of method infos.</param>
@@ -161,12 +161,12 @@ internal class CommandWorker
 }
 
 /// <summary>
-/// Represents a <see cref="NestedCommandWorker"/>.
+///     Represents a <see cref="NestedCommandWorker" />.
 /// </summary>
 internal class NestedCommandWorker
 {
 	/// <summary>
-	/// Parses application command groups.
+	///     Parses application command groups.
 	/// </summary>
 	/// <param name="type">The type.</param>
 	/// <param name="types">List of type infos.</param>

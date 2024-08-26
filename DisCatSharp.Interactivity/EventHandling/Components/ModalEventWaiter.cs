@@ -12,18 +12,18 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.Interactivity.EventHandling;
 
 /// <summary>
-/// A modal-based version of <see cref="EventWaiter{T}"/>
+///     A modal-based version of <see cref="EventWaiter{T}" />
 /// </summary>
 internal class ModalEventWaiter : IDisposable
 {
 	private readonly DiscordClient _client;
-	private readonly ConcurrentHashSet<ModalMatchRequest> _modalMatchRequests = [];
-
-	private readonly DiscordFollowupMessageBuilder _message;
 	private readonly InteractivityConfiguration _config;
 
+	private readonly DiscordFollowupMessageBuilder _message;
+	private readonly ConcurrentHashSet<ModalMatchRequest> _modalMatchRequests = [];
+
 	/// <summary>
-	/// Initializes a new instance of the <see cref="ComponentEventWaiter"/> class.
+	///     Initializes a new instance of the <see cref="ComponentEventWaiter" /> class.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="config">The config.</param>
@@ -41,7 +41,16 @@ internal class ModalEventWaiter : IDisposable
 	}
 
 	/// <summary>
-	/// Waits for a specified <see cref="ModalMatchRequest"/>'s predicate to be fulfilled.
+	///     Disposes the waiter.
+	/// </summary>
+	public void Dispose()
+	{
+		this._modalMatchRequests.Clear();
+		this._client.ComponentInteractionCreated -= this.Handle;
+	}
+
+	/// <summary>
+	///     Waits for a specified <see cref="ModalMatchRequest" />'s predicate to be fulfilled.
 	/// </summary>
 	/// <param name="request">The request to wait for.</param>
 	/// <returns>The returned args, or null if it timed out.</returns>
@@ -65,7 +74,7 @@ internal class ModalEventWaiter : IDisposable
 	}
 
 	/// <summary>
-	/// Handles the waiter.
+	///     Handles the waiter.
 	/// </summary>
 	/// <param name="_">The client.</param>
 	/// <param name="args">The args.</param>
@@ -77,14 +86,5 @@ internal class ModalEventWaiter : IDisposable
 
 			else if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
 				await args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
-	}
-
-	/// <summary>
-	/// Disposes the waiter.
-	/// </summary>
-	public void Dispose()
-	{
-		this._modalMatchRequests.Clear();
-		this._client.ComponentInteractionCreated -= this.Handle;
 	}
 }

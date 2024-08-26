@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,32 +24,17 @@ using MessageType = DisCatSharp.Enums.MessageType;
 namespace DisCatSharp.Net;
 
 /// <summary>
-/// Represents a discord api client.
+///     Represents a discord api client.
 /// </summary>
 public sealed class DiscordApiClient
 {
 	/// <summary>
-	/// The audit log reason header name.
+	///     The audit log reason header name.
 	/// </summary>
 	private const string REASON_HEADER_NAME = CommonHeaders.AUDIT_LOG_REASON_HEADER;
 
 	/// <summary>
-	/// Gets the discord client.
-	/// </summary>
-	internal BaseDiscordClient Discord { get; }
-
-	/// <summary>
-	/// Gets the oauth2 client.
-	/// </summary>
-	internal DiscordOAuth2Client OAuth2Client { get; }
-
-	/// <summary>
-	/// Gets the rest client.
-	/// </summary>
-	internal RestClient Rest { get; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordApiClient"/> class.
+	///     Initializes a new instance of the <see cref="DiscordApiClient" /> class.
 	/// </summary>
 	/// <param name="client">The base discord client.</param>
 	internal DiscordApiClient(BaseDiscordClient client)
@@ -62,7 +45,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordApiClient"/> class.
+	///     Initializes a new instance of the <see cref="DiscordApiClient" /> class.
 	/// </summary>
 	/// <param name="client">The oauth2 client.</param>
 	/// <param name="proxy">The proxy.</param>
@@ -77,7 +60,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordApiClient"/> class.
+	///     Initializes a new instance of the <see cref="DiscordApiClient" /> class.
 	/// </summary>
 	/// <param name="proxy">The proxy.</param>
 	/// <param name="timeout">The timeout.</param>
@@ -91,7 +74,22 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Builds the query string.
+	///     Gets the discord client.
+	/// </summary>
+	internal BaseDiscordClient Discord { get; }
+
+	/// <summary>
+	///     Gets the oauth2 client.
+	/// </summary>
+	internal DiscordOAuth2Client OAuth2Client { get; }
+
+	/// <summary>
+	///     Gets the rest client.
+	/// </summary>
+	internal RestClient Rest { get; }
+
+	/// <summary>
+	///     Builds the query string.
 	/// </summary>
 	/// <param name="values">The values.</param>
 	/// <param name="post">Whether this query will be transmitted via POST.</param>
@@ -108,7 +106,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Prepares the message.
+	///     Prepares the message.
 	/// </summary>
 	/// <param name="msgRaw">The raw message.</param>
 	private DiscordMessage PrepareMessage(JToken msgRaw)
@@ -173,7 +171,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Populates the message.
+	///     Populates the message.
 	/// </summary>
 	/// <param name="author">The author.</param>
 	/// <param name="ret">The message.</param>
@@ -241,7 +239,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Executes a rest request.
+	///     Executes a rest request.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="bucket">The bucket.</param>
@@ -265,7 +263,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Executes a rest form data request.
+	///     Executes a rest form data request.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="bucket">The bucket.</param>
@@ -286,7 +284,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Executes a multipart rest request for stickers.
+	///     Executes a multipart rest request for stickers.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="bucket">The bucket.</param>
@@ -326,7 +324,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Executes a multipart request.
+	///     Executes a multipart request.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="bucket">The bucket.</param>
@@ -361,12 +359,33 @@ public sealed class DiscordApiClient
 		return req.WaitForCompletionAsync();
 	}
 
+#region Voice
+
+	/// <summary>
+	///     Lists the voice regions async.
+	/// </summary>
+	internal async Task<IReadOnlyList<DiscordVoiceRegion>> ListVoiceRegionsAsync()
+	{
+		var route = $"{Endpoints.VOICE}{Endpoints.REGIONS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+			{ }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		var regions = DiscordJson.DeserializeIEnumerableObject<List<DiscordVoiceRegion>>(res.Response, this.Discord);
+
+		return regions;
+	}
+
+#endregion
+
 	// begin todo
 
 #region Guild
 
 	/// <summary>
-	/// Gets the guild async.
+	///     Gets the guild async.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="withCounts">If true, with_counts.</param>
@@ -396,15 +415,13 @@ public sealed class DiscordApiClient
 			await dc.OnGuildUpdateEventAsync(guildRest, rawMembers).ConfigureAwait(false);
 			return dc.GuildsInternal[guildRest.Id];
 		}
-		else
-		{
-			guildRest.Discord = this.Discord;
-			return guildRest;
-		}
+
+		guildRest.Discord = this.Discord;
+		return guildRest;
 	}
 
 	/// <summary>
-	/// Searches the members async.
+	///     Searches the members async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="name">The name.</param>
@@ -461,7 +478,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guild ban async.
+	///     Gets the guild ban async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="userId">The user_id.</param>
@@ -483,7 +500,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates the guild async.
+	///     Creates the guild async.
 	/// </summary>
 	/// <param name="name">The name.</param>
 	/// <param name="regionId">The region_id.</param>
@@ -527,7 +544,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates the guild from template async.
+	///     Creates the guild from template async.
 	/// </summary>
 	/// <param name="templateCode">The template_code.</param>
 	/// <param name="name">The name.</param>
@@ -559,7 +576,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the guild async.
+	///     Deletes the guild async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	internal async Task DeleteGuildAsync(ulong guildId)
@@ -581,7 +598,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guild.
+	///     Modifies the guild.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="name">The name.</param>
@@ -679,7 +696,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guild community settings.
+	///     Modifies the guild community settings.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="features">The guild features.</param>
@@ -730,7 +747,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guilds inventory settings.
+	///     Modifies the guilds inventory settings.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="isEmojiPackCollectible">Whether emoji packs are collectible.</param>
@@ -763,11 +780,11 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guilds incident actions.
+	///     Modifies the guilds incident actions.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
-	/// <param name="invitesDisabledUntil">Until when invites are disabled. Set <see langword="null"/> to disable.</param>
-	/// <param name="dmsDisabledUntil">Until when direct messages are disabled. Set <see langword="null"/> to disable.</param>
+	/// <param name="invitesDisabledUntil">Until when invites are disabled. Set <see langword="null" /> to disable.</param>
+	/// <param name="dmsDisabledUntil">Until when direct messages are disabled. Set <see langword="null" /> to disable.</param>
 	internal async Task<IncidentsData> ModifyGuildIncidentActionsAsync(ulong guildId, DateTimeOffset? invitesDisabledUntil, DateTimeOffset? dmsDisabledUntil)
 	{
 		var pld = new RestGuildIncidentActionsModifyPayload
@@ -792,7 +809,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guilds onboarding.
+	///     Gets the guilds onboarding.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	internal async Task<DiscordOnboarding> GetGuildOnboardingAsync(ulong guildId)
@@ -812,7 +829,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guilds onboarding.
+	///     Modifies the guilds onboarding.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="prompts">The onboarding prompts</param>
@@ -822,7 +839,7 @@ public sealed class DiscordApiClient
 	/// <param name="reason">The reason.</param>
 	internal async Task<DiscordOnboarding> ModifyGuildOnboardingAsync(ulong guildId, Optional<List<DiscordOnboardingPrompt>> prompts, Optional<List<ulong>> defaultChannelIds, Optional<bool> enabled, Optional<OnboardingMode> mode, string? reason = null)
 	{
-		var pld = new RestGuildOnboardingModifyPayload()
+		var pld = new RestGuildOnboardingModifyPayload
 		{
 			Prompts = prompts,
 			DefaultChannelIds = defaultChannelIds,
@@ -849,7 +866,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guilds server guide.
+	///     Gets the guilds server guide.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	internal async Task<DiscordServerGuide> GetGuildServerGuideAsync(ulong guildId)
@@ -869,7 +886,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guilds server guide.
+	///     Modifies the guilds server guide.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="enabled">Whether the server guide is enabled.</param>
@@ -879,7 +896,7 @@ public sealed class DiscordApiClient
 	/// <param name="reason">The reason.</param>
 	internal async Task<DiscordServerGuide> ModifyGuildServerGuideAsync(ulong guildId, Optional<bool> enabled, Optional<WelcomeMessage> welcomeMessage, Optional<List<NewMemberAction>> newMemberActions, Optional<List<ResourceChannel>> resourceChannels, string? reason = null)
 	{
-		var pld = new RestGuildServerGuideModifyPayload()
+		var pld = new RestGuildServerGuideModifyPayload
 		{
 			Enabled = enabled,
 			WelcomeMessage = welcomeMessage,
@@ -906,7 +923,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guild safety settings.
+	///     Modifies the guild safety settings.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="features">The guild features.</param>
@@ -945,7 +962,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guild features.
+	///     Modifies the guild features.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="features">The guild features.</param>
@@ -983,7 +1000,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Enables the guilds mfa requirement.
+	///     Enables the guilds mfa requirement.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="reason">The reason.</param>
@@ -1009,7 +1026,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Disables the guilds mfa requirement.
+	///     Disables the guilds mfa requirement.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="reason">The reason.</param>
@@ -1035,7 +1052,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Implements https://discord.com/developers/docs/resources/guild#get-guild-bans.
+	///     Implements https://discord.com/developers/docs/resources/guild#get-guild-bans.
 	/// </summary>
 	internal async Task<IReadOnlyList<DiscordBan>> GetGuildBansAsync(ulong guildId, int? limit, ulong? before, ulong? after)
 	{
@@ -1083,7 +1100,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates a guild ban.
+	///     Creates a guild ban.
 	/// </summary>
 	/// <param name="guildId">The guild id to ban from.</param>
 	/// <param name="userId">The user id to ban.</param>
@@ -1094,7 +1111,7 @@ public sealed class DiscordApiClient
 		if (deleteMessageSeconds < 0 || deleteMessageSeconds > 604800)
 			throw new ArgumentException("Delete message seconds must be a number between 0 and 604800.", nameof(deleteMessageSeconds));
 
-		var pld = new RestGuildBanPayload()
+		var pld = new RestGuildBanPayload
 		{
 			DeleteMessageSeconds = deleteMessageSeconds
 		};
@@ -1115,7 +1132,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates a guild bulk ban.
+	///     Creates a guild bulk ban.
 	/// </summary>
 	/// <param name="guildId">The guild id to ban from.</param>
 	/// <param name="userIds">The user ids to ban.</param>
@@ -1128,7 +1145,7 @@ public sealed class DiscordApiClient
 		if (userIds.Count > 200)
 			throw new ArgumentException("Can only bulk-ban up to 200 users.", nameof(userIds));
 
-		var pld = new RestGuildBulkBanPayload()
+		var pld = new RestGuildBulkBanPayload
 		{
 			UserIds = userIds.ToList(),
 			DeleteMessageSeconds = deleteMessageSeconds
@@ -1150,7 +1167,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Removes the guild ban async.
+	///     Removes the guild ban async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="userId">The user_id.</param>
@@ -1173,7 +1190,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Leaves the guild async.
+	///     Leaves the guild async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	internal Task LeaveGuildAsync(ulong guildId)
@@ -1189,7 +1206,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Adds the guild member async.
+	///     Adds the guild member async.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="userId">The user id.</param>
@@ -1226,7 +1243,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Lists the guild members async.
+	///     Lists the guild members async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="limit">The limit.</param>
@@ -1253,7 +1270,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Adds the guild member role async.
+	///     Adds the guild member role async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="userId">The user_id.</param>
@@ -1278,7 +1295,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Removes the guild member role async.
+	///     Removes the guild member role async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="userId">The user_id.</param>
@@ -1303,7 +1320,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guild channel position async.
+	///     Modifies the guild channel position async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="pld">The pld.</param>
@@ -1325,7 +1342,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guild channel parent async.
+	///     Modifies the guild channel parent async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="pld">The pld.</param>
@@ -1347,7 +1364,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Detaches the guild channel parent async.
+	///     Detaches the guild channel parent async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="pld">The pld.</param>
@@ -1369,7 +1386,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guild role position async.
+	///     Modifies the guild role position async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="pld">The pld.</param>
@@ -1391,7 +1408,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the audit logs async.
+	///     Gets the audit logs async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="limit">The limit.</param>
@@ -1429,7 +1446,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guild vanity url async.
+	///     Gets the guild vanity url async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	internal async Task<DiscordInvite> GetGuildVanityUrlAsync(ulong guildId)
@@ -1449,7 +1466,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guild widget async.
+	///     Gets the guild widget async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	internal async Task<DiscordWidget> GetGuildWidgetAsync(ulong guildId)
@@ -1488,7 +1505,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guild widget settings async.
+	///     Gets the guild widget settings async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	internal async Task<DiscordWidgetSettings> GetGuildWidgetSettingsAsync(ulong guildId)
@@ -1509,7 +1526,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guild widget settings async.
+	///     Modifies the guild widget settings async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="isEnabled">If true, is enabled.</param>
@@ -1543,7 +1560,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guild templates async.
+	///     Gets the guild templates async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	internal async Task<IReadOnlyList<DiscordGuildTemplate>> GetGuildTemplatesAsync(ulong guildId)
@@ -1563,7 +1580,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates the guild template async.
+	///     Creates the guild template async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="name">The name.</param>
@@ -1591,7 +1608,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Syncs the guild template async.
+	///     Syncs the guild template async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="templateCode">The template_code.</param>
@@ -1613,7 +1630,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guild template async.
+	///     Modifies the guild template async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="templateCode">The template_code.</param>
@@ -1643,7 +1660,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the guild template async.
+	///     Deletes the guild template async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="templateCode">The template_code.</param>
@@ -1665,7 +1682,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guild membership screening form async.
+	///     Gets the guild membership screening form async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	internal async Task<DiscordGuildMembershipScreening> GetGuildMembershipScreeningFormAsync(ulong guildId)
@@ -1685,7 +1702,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guild membership screening form async.
+	///     Modifies the guild membership screening form async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="enabled">The enabled.</param>
@@ -1715,7 +1732,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guild welcome screen async.
+	///     Gets the guild welcome screen async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	internal async Task<DiscordGuildWelcomeScreen> GetGuildWelcomeScreenAsync(ulong guildId)
@@ -1734,7 +1751,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guild welcome screen async.
+	///     Modifies the guild welcome screen async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="enabled">The enabled.</param>
@@ -1763,7 +1780,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the current user's voice state async.
+	///     Gets the current user's voice state async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	internal async Task<DiscordVoiceState?> GetCurrentUserVoiceStateAsync(ulong guildId)
@@ -1787,7 +1804,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Updates the current user voice state async.
+	///     Updates the current user voice state async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="channelId">The channel id.</param>
@@ -1813,7 +1830,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the user's voice state async.
+	///     Gets the user's voice state async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="userId">The user_id.</param>
@@ -1839,7 +1856,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Updates the user voice state async.
+	///     Updates the user voice state async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="userId">The user_id.</param>
@@ -1865,7 +1882,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets all auto mod rules for a guild.
+	///     Gets all auto mod rules for a guild.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <returns>A collection of all auto mod rules in the guild.</returns>
@@ -1887,7 +1904,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets a specific auto mod rule in the guild.
+	///     Gets a specific auto mod rule in the guild.
 	/// </summary>
 	/// <param name="guildId">The guild id for the rule.</param>
 	/// <param name="ruleId">The rule id.</param>
@@ -1910,7 +1927,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates an auto mod rule.
+	///     Creates an auto mod rule.
 	/// </summary>
 	/// <param name="guildId">The guild id of the rule.</param>
 	/// <param name="name">The name of the rule.</param>
@@ -1974,7 +1991,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies an auto mod role
+	///     Modifies an auto mod role
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="ruleId">The rule id.</param>
@@ -2039,7 +2056,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes an auto mod rule.
+	///     Deletes an auto mod rule.
 	/// </summary>
 	/// <param name="guildId">The guild id of the rule.</param>
 	/// <param name="ruleId">The rule id.</param>
@@ -2077,7 +2094,7 @@ public sealed class DiscordApiClient
 #region Guild Scheduled Events
 
 	/// <summary>
-	/// Creates a scheduled event.
+	///     Creates a scheduled event.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="channelId">The channel id.</param>
@@ -2107,7 +2124,7 @@ public sealed class DiscordApiClient
 					validationResult.ErrorMessage!
 				);
 		}
-		
+
 		var pld = new RestGuildScheduledEventCreatePayload
 		{
 			ChannelId = channelId,
@@ -2149,7 +2166,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies a scheduled event.
+	///     Modifies a scheduled event.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="scheduledEventId">The scheduled event id.</param>
@@ -2195,7 +2212,7 @@ public sealed class DiscordApiClient
 					validationResult.ErrorMessage!
 				);
 		}
-		
+
 		var pld = new RestGuildScheduledEventModifyPayload
 		{
 			ChannelId = channelId,
@@ -2250,7 +2267,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies a scheduled event.
+	///     Modifies a scheduled event.
 	/// </summary>
 	internal async Task<DiscordScheduledEvent> ModifyGuildScheduledEventStatusAsync(ulong guildId, ulong scheduledEventId, ScheduledEventStatus status, string? reason = null)
 	{
@@ -2299,7 +2316,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets a scheduled event.
+	///     Gets a scheduled event.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="scheduledEventId">The event id.</param>
@@ -2344,7 +2361,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guilds scheduled events.
+	///     Gets the guilds scheduled events.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="withUserCount">Whether to include the count of users subscribed to the scheduled event.</param>
@@ -2390,7 +2407,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes a guild scheduled event.
+	///     Deletes a guild scheduled event.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="scheduledEventId">The scheduled event id.</param>
@@ -2413,9 +2430,9 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the users who RSVP'd to a scheduled event.
-	/// Optional with member objects.
-	/// This endpoint is paginated.
+	///     Gets the users who RSVP'd to a scheduled event.
+	///     Optional with member objects.
+	///     This endpoint is paginated.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="scheduledEventId">The scheduled event id.</param>
@@ -2482,7 +2499,7 @@ public sealed class DiscordApiClient
 #region Channel
 
 	/// <summary>
-	/// Creates a guild channel.
+	///     Creates a guild channel.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="name">The name.</param>
@@ -2540,7 +2557,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates a guild forum channel.
+	///     Creates a guild forum channel.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="name">The name.</param>
@@ -2620,7 +2637,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the channel async.
+	///     Modifies the channel async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="name">The name.</param>
@@ -2700,7 +2717,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the forum channel.
+	///     Modifies the forum channel.
 	/// </summary>
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="name">The name.</param>
@@ -2785,7 +2802,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the channel async.
+	///     Gets the channel async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	internal async Task<DiscordChannel> GetChannelAsync(ulong channelId)
@@ -2806,7 +2823,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the channel async.
+	///     Deletes the channel async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="reason">The reason.</param>
@@ -2827,7 +2844,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the message async.
+	///     Gets the message async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
@@ -2849,7 +2866,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates the message async.
+	///     Creates the message async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="content">The content.</param>
@@ -2859,7 +2876,10 @@ public sealed class DiscordApiClient
 	/// <param name="mentionReply">If true, mention reply.</param>
 	/// <param name="failOnInvalidReply">If true, fail on invalid reply.</param>
 	/// <param name="components">The components.</param>
-	/// <exception cref="ArgumentException">Thrown when the <paramref name="content"/> exceeds 2000 characters or is empty and if neither content, sticker, components and embeds are definied..</exception>
+	/// <exception cref="ArgumentException">
+	///     Thrown when the <paramref name="content" /> exceeds 2000 characters or is empty and
+	///     if neither content, sticker, components and embeds are definied..
+	/// </exception>
 	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string content, IEnumerable<DiscordEmbed> embeds, DiscordSticker sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply, ReadOnlyCollection<DiscordActionRowComponent>? components = null)
 	{
 		if (content is { Length: > 2000 })
@@ -2917,7 +2937,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates the message async.
+	///     Creates the message async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="builder">The builder.</param>
@@ -3027,12 +3047,12 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Forwards a message.
+	///     Forwards a message.
 	/// </summary>
 	/// <param name="forwardMessage">The message to forward.</param>
 	/// <param name="targetChannelId">The target channel id to forward the message to.</param>
 	/// <param name="content">The content to attach.</param>
-	/// <exception cref="ArgumentException">Thrown when the <paramref name="content"/> exceeds 2000 characters.</exception>
+	/// <exception cref="ArgumentException">Thrown when the <paramref name="content" /> exceeds 2000 characters.</exception>
 	public async Task<DiscordMessage> ForwardMessageAsync(DiscordMessage forwardMessage, ulong targetChannelId, string? content)
 	{
 		if (content is { Length: > 2000 })
@@ -3066,7 +3086,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guild channels async.
+	///     Gets the guild channels async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	internal async Task<IReadOnlyList<DiscordChannel>> GetGuildChannelsAsync(ulong guildId)
@@ -3093,7 +3113,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies a voice channels status.
+	///     Modifies a voice channels status.
 	/// </summary>
 	/// <param name="channelId">The voice channel id.</param>
 	/// <param name="status">The status.</param>
@@ -3115,7 +3135,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates the stage instance async.
+	///     Creates the stage instance async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="topic">The topic.</param>
@@ -3148,7 +3168,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the stage instance async.
+	///     Gets the stage instance async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	internal async Task<DiscordStageInstance> GetStageInstanceAsync(ulong channelId)
@@ -3168,7 +3188,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the stage instance async.
+	///     Modifies the stage instance async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="topic">The topic.</param>
@@ -3194,7 +3214,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the stage instance async.
+	///     Deletes the stage instance async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="reason">The reason.</param>
@@ -3214,7 +3234,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the channel messages async.
+	///     Gets the channel messages async.
 	/// </summary>
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="limit">The limit.</param>
@@ -3251,7 +3271,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the channel message async.
+	///     Gets the channel message async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
@@ -3273,7 +3293,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Edits the message async.
+	///     Edits the message async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
@@ -3369,7 +3389,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the message async.
+	///     Deletes the message async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
@@ -3392,7 +3412,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the messages async.
+	///     Deletes the messages async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageIds">The message_ids.</param>
@@ -3421,14 +3441,17 @@ public sealed class DiscordApiClient
 #region Polls
 
 	/// <summary>
-	/// Get a list of users that voted for a specific answer on a <see cref="DiscordPoll"/>.
+	///     Get a list of users that voted for a specific answer on a <see cref="DiscordPoll" />.
 	/// </summary>
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="messageId">The message id containing the poll.</param>
 	/// <param name="answerId">The answer id.</param>
 	/// <param name="limit">The max number of users to return (<c>1</c>-<c>100</c>). Defaults to <c>25</c>.</param>
 	/// <param name="after">Get users after this user ID.</param>
-	/// <returns>A <see cref="ReadOnlyCollection{T}"/> of <see cref="DiscordUser"/>s who voted for the given <paramref name="answerId"/> on the <see cref="DiscordPoll"/>.</returns>
+	/// <returns>
+	///     A <see cref="ReadOnlyCollection{T}" /> of <see cref="DiscordUser" />s who voted for the given
+	///     <paramref name="answerId" /> on the <see cref="DiscordPoll" />.
+	/// </returns>
 	internal async Task<ReadOnlyCollection<DiscordUser>> GetAnswerVotersAsync(ulong channelId, ulong messageId, int answerId, int? limit, ulong? after)
 	{
 		var urlParams = new Dictionary<string, string>();
@@ -3474,11 +3497,11 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Immediately ends a poll. Only for own polls.
+	///     Immediately ends a poll. Only for own polls.
 	/// </summary>
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="messageId">The message id containing the poll.</param>
-	/// <returns>The <see cref="DiscordMessage"/> containing the <see cref="DiscordPoll"/>.</returns>
+	/// <returns>The <see cref="DiscordMessage" /> containing the <see cref="DiscordPoll" />.</returns>
 	internal async Task<DiscordMessage> EndPollAsync(ulong channelId, ulong messageId)
 	{
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.POLLS}/:message_id{Endpoints.EXPIRE}";
@@ -3496,7 +3519,7 @@ public sealed class DiscordApiClient
 #endregion
 
 	/// <summary>
-	/// Gets the channel invites async.
+	///     Gets the channel invites async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	internal async Task<IReadOnlyList<DiscordInvite>> GetChannelInvitesAsync(ulong channelId)
@@ -3520,7 +3543,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates the channel invite async.
+	///     Creates the channel invite async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="maxAge">The max_age.</param>
@@ -3564,7 +3587,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the channel permission async.
+	///     Deletes the channel permission async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="overwriteId">The overwrite_id.</param>
@@ -3587,7 +3610,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Edits the channel permissions async.
+	///     Edits the channel permissions async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="overwriteId">The overwrite_id.</param>
@@ -3620,7 +3643,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Triggers the typing async.
+	///     Triggers the typing async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	internal Task TriggerTypingAsync(ulong channelId)
@@ -3636,7 +3659,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the pinned messages async.
+	///     Gets the pinned messages async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	internal async Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync(ulong channelId)
@@ -3659,7 +3682,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Pins the message async.
+	///     Pins the message async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
@@ -3677,7 +3700,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Unpins the message async.
+	///     Unpins the message async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
@@ -3695,7 +3718,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Adds the group dm recipient async.
+	///     Adds the group dm recipient async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="userId">The user_id.</param>
@@ -3721,7 +3744,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Removes the group dm recipient async.
+	///     Removes the group dm recipient async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="userId">The user_id.</param>
@@ -3739,7 +3762,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates the group dm async.
+	///     Creates the group dm async.
 	/// </summary>
 	/// <param name="accessTokens">The access_tokens.</param>
 	/// <param name="nicks">The nicks.</param>
@@ -3764,7 +3787,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates the dm async.
+	///     Creates the dm async.
 	/// </summary>
 	/// <param name="recipientId">The recipient_id.</param>
 	internal async Task<DiscordDmChannel> CreateDmAsync(ulong recipientId)
@@ -3787,7 +3810,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Follows the channel async.
+	///     Follows the channel async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="webhookChannelId">The webhook_channel_id.</param>
@@ -3811,7 +3834,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Crossposts the message async.
+	///     Crossposts the message async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
@@ -3836,20 +3859,20 @@ public sealed class DiscordApiClient
 #region Member
 
 	/// <summary>
-	/// Gets the current user async.
+	///     Gets the current user async.
 	/// </summary>
 	internal Task<DiscordUser> GetCurrentUserAsync()
 		=> this.GetUserAsync(Endpoints.ME);
 
 	/// <summary>
-	/// Gets the user async.
+	///     Gets the user async.
 	/// </summary>
 	/// <param name="userId">The user_id.</param>
 	internal Task<DiscordUser> GetUserAsync(ulong userId)
 		=> this.GetUserAsync(userId.ToString(CultureInfo.InvariantCulture));
 
 	/// <summary>
-	/// Gets the user async.
+	///     Gets the user async.
 	/// </summary>
 	/// <param name="userId">The user_id.</param>
 	internal async Task<DiscordUser> GetUserAsync(string userId)
@@ -3880,7 +3903,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guild member async.
+	///     Gets the guild member async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="userId">The user_id.</param>
@@ -3928,7 +3951,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Removes the guild member async.
+	///     Removes the guild member async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="userId">The user_id.</param>
@@ -3951,7 +3974,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the current user async.
+	///     Modifies the current user async.
 	/// </summary>
 	/// <param name="username">The new username.</param>
 	/// <param name="base64Avatar">The new avatar.</param>
@@ -3979,7 +4002,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the current user guilds async.
+	///     Gets the current user guilds async.
 	/// </summary>
 	/// <param name="limit">The limit.</param>
 	/// <param name="before">The before.</param>
@@ -3992,7 +4015,7 @@ public sealed class DiscordApiClient
 			{ }, out var path);
 
 		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration)
-			.AddParameter($"limit", limit.ToString(CultureInfo.InvariantCulture));
+			.AddParameter("limit", limit.ToString(CultureInfo.InvariantCulture));
 
 		if (before != null)
 			url.AddParameter("before", before.Value.ToString(CultureInfo.InvariantCulture));
@@ -4007,12 +4030,12 @@ public sealed class DiscordApiClient
 			var glds = guildsRaw.Select(xug => (this.Discord as DiscordClient)?.GuildsInternal[xug.Id]);
 			return new ReadOnlyCollection<DiscordGuild>(new List<DiscordGuild>(glds));
 		}
-		else
-			return DiscordJson.DeserializeIEnumerableObject<List<DiscordGuild>>(res.Response, this.Discord);
+
+		return DiscordJson.DeserializeIEnumerableObject<List<DiscordGuild>>(res.Response, this.Discord);
 	}
 
 	/// <summary>
-	/// Modifies the guild member async.
+	///     Modifies the guild member async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="userId">The user_id.</param>
@@ -4067,7 +4090,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the time out of a guild member.
+	///     Modifies the time out of a guild member.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="userId">The user_id.</param>
@@ -4096,7 +4119,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the current member nickname async.
+	///     Modifies the current member nickname async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="nick">The nick.</param>
@@ -4127,7 +4150,7 @@ public sealed class DiscordApiClient
 #region Roles
 
 	/// <summary>
-	/// Gets the guild roles async.
+	///     Gets the guild roles async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	internal async Task<IReadOnlyList<DiscordRole>> GetGuildRolesAsync(ulong guildId)
@@ -4151,7 +4174,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets a guild role async.
+	///     Gets a guild role async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="roleId">The role_id.</param>
@@ -4174,7 +4197,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guild role async.
+	///     Modifies the guild role async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="roleId">The role_id.</param>
@@ -4228,7 +4251,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the role async.
+	///     Deletes the role async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="roleId">The role_id.</param>
@@ -4251,7 +4274,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates the guild role async.
+	///     Creates the guild role async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="name">The name.</param>
@@ -4295,7 +4318,7 @@ public sealed class DiscordApiClient
 #region Prune
 
 	/// <summary>
-	/// Gets the guild prune count async.
+	///     Gets the guild prune count async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="days">The days.</param>
@@ -4328,7 +4351,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Begins the guild prune async.
+	///     Begins the guild prune async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="days">The days.</param>
@@ -4373,7 +4396,7 @@ public sealed class DiscordApiClient
 #region GuildVarious
 
 	/// <summary>
-	/// Gets the template async.
+	///     Gets the template async.
 	/// </summary>
 	/// <param name="code">The code.</param>
 	internal async Task<DiscordGuildTemplate> GetTemplateAsync(string code)
@@ -4393,7 +4416,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guild integrations async.
+	///     Gets the guild integrations async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	internal async Task<IReadOnlyList<DiscordIntegration>> GetGuildIntegrationsAsync(ulong guildId)
@@ -4412,7 +4435,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guild preview async.
+	///     Gets the guild preview async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	internal async Task<DiscordGuildPreview> GetGuildPreviewAsync(ulong guildId)
@@ -4431,7 +4454,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates the guild integration async.
+	///     Creates the guild integration async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="type">The type.</param>
@@ -4458,7 +4481,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guild integration async.
+	///     Modifies the guild integration async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="integrationId">The integration_id.</param>
@@ -4489,7 +4512,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the guild integration async.
+	///     Deletes the guild integration async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="integration">The integration.</param>
@@ -4507,7 +4530,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Syncs the guild integration async.
+	///     Syncs the guild integration async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="integrationId">The integration_id.</param>
@@ -4525,7 +4548,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guild voice regions async.
+	///     Gets the guild voice regions async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	internal async Task<IReadOnlyList<DiscordVoiceRegion>> GetGuildVoiceRegionsAsync(ulong guildId)
@@ -4545,7 +4568,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guild invites async.
+	///     Gets the guild invites async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	internal async Task<IReadOnlyList<DiscordInvite>> GetGuildInvitesAsync(ulong guildId)
@@ -4569,7 +4592,7 @@ public sealed class DiscordApiClient
 #region Invite
 
 	/// <summary>
-	/// Gets the invite async.
+	///     Gets the invite async.
 	/// </summary>
 	/// <param name="inviteCode">The invite_code.</param>
 	/// <param name="withCounts">If true, with_counts.</param>
@@ -4599,7 +4622,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the invite async.
+	///     Deletes the invite async.
 	/// </summary>
 	/// <param name="inviteCode">The invite_code.</param>
 	/// <param name="reason">The reason.</param>
@@ -4645,7 +4668,7 @@ public sealed class DiscordApiClient
 #region Connections
 
 	/// <summary>
-	/// Gets the users connections async.
+	///     Gets the users connections async.
 	/// </summary>
 	internal async Task<IReadOnlyList<DiscordConnection>> GetUserConnectionsAsync()
 	{
@@ -4661,10 +4684,11 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the applications role connection metadata records.
+	///     Gets the applications role connection metadata records.
 	/// </summary>
 	/// <param name="id">The application id.</param>
-	/// <returns>A list of metadata records or <see langword="null"/>.</returns>s
+	/// <returns>A list of metadata records or <see langword="null" />.</returns>
+	/// s
 	internal async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> GetRoleConnectionMetadataRecords(ulong id)
 	{
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.ROLE_CONNECTIONS}{Endpoints.METADATA}";
@@ -4681,11 +4705,12 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Updates the applications role connection metadata records.
+	///     Updates the applications role connection metadata records.
 	/// </summary>
 	/// <param name="id">The application id.</param>
 	/// <param name="metadataObjects">A list of metadata objects. Max 5.</param>
-	/// <returns>A list of the created metadata records.</returns>s
+	/// <returns>A list of the created metadata records.</returns>
+	/// s
 	internal async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> UpdateRoleConnectionMetadataRecords(ulong id, IEnumerable<DiscordApplicationRoleConnectionMetadata> metadataObjects)
 	{
 		var pld = new List<RestApplicationRoleConnectionMetadataPayload>();
@@ -4714,31 +4739,10 @@ public sealed class DiscordApiClient
 
 #endregion
 
-#region Voice
-
-	/// <summary>
-	/// Lists the voice regions async.
-	/// </summary>
-	internal async Task<IReadOnlyList<DiscordVoiceRegion>> ListVoiceRegionsAsync()
-	{
-		var route = $"{Endpoints.VOICE}{Endpoints.REGIONS}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
-
-		var regions = DiscordJson.DeserializeIEnumerableObject<List<DiscordVoiceRegion>>(res.Response, this.Discord);
-
-		return regions;
-	}
-
-#endregion
-
 #region Webhooks
 
 	/// <summary>
-	/// Creates the webhook async.
+	///     Creates the webhook async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="name">The name.</param>
@@ -4773,7 +4777,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the channel webhooks async.
+	///     Gets the channel webhooks async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	internal async Task<IReadOnlyList<DiscordWebhook>> GetChannelWebhooksAsync(ulong channelId)
@@ -4796,7 +4800,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guild webhooks async.
+	///     Gets the guild webhooks async.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	internal async Task<IReadOnlyList<DiscordWebhook>> GetGuildWebhooksAsync(ulong guildId)
@@ -4819,7 +4823,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the webhook async.
+	///     Gets the webhook async.
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	internal async Task<DiscordWebhook> GetWebhookAsync(ulong webhookId)
@@ -4840,7 +4844,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the webhook with token async.
+	///     Gets the webhook with token async.
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
@@ -4865,7 +4869,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the webhook async.
+	///     Modifies the webhook async.
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="channelId">The channel id.</param>
@@ -4902,7 +4906,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the webhook async.
+	///     Modifies the webhook async.
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="name">The name.</param>
@@ -4938,7 +4942,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the webhook async.
+	///     Deletes the webhook async.
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="reason">The reason.</param>
@@ -4959,7 +4963,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the webhook async.
+	///     Deletes the webhook async.
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
@@ -4982,7 +4986,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Executes the webhook async.
+	///     Executes the webhook async.
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
@@ -5043,7 +5047,7 @@ public sealed class DiscordApiClient
 			pld.Attachments = attachments;
 		}
 
-		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.Files?.Count > 0 || builder.IsTts == true || builder.Mentions != null)
+		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.Files?.Count > 0 || builder.IsTts || builder.Mentions != null)
 			values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
@@ -5072,7 +5076,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Executes the webhook slack async.
+	///     Executes the webhook slack async.
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
@@ -5097,7 +5101,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Executes the webhook github async.
+	///     Executes the webhook github async.
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
@@ -5122,7 +5126,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Edits the webhook message async.
+	///     Edits the webhook message async.
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
@@ -5229,7 +5233,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Edits the webhook message async.
+	///     Edits the webhook message async.
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
@@ -5240,7 +5244,7 @@ public sealed class DiscordApiClient
 		this.EditWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), builder, threadId.ToString());
 
 	/// <summary>
-	/// Gets the webhook message async.
+	///     Gets the webhook message async.
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
@@ -5267,7 +5271,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the webhook message async.
+	///     Gets the webhook message async.
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
@@ -5276,7 +5280,7 @@ public sealed class DiscordApiClient
 		this.GetWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), null);
 
 	/// <summary>
-	/// Gets the webhook message async.
+	///     Gets the webhook message async.
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
@@ -5286,7 +5290,7 @@ public sealed class DiscordApiClient
 		this.GetWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), threadId.ToString());
 
 	/// <summary>
-	/// Deletes the webhook message async.
+	///     Deletes the webhook message async.
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
@@ -5310,7 +5314,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the webhook message async.
+	///     Deletes the webhook message async.
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
@@ -5319,7 +5323,7 @@ public sealed class DiscordApiClient
 		this.DeleteWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), null);
 
 	/// <summary>
-	/// Deletes the webhook message async.
+	///     Deletes the webhook message async.
 	/// </summary>
 	/// <param name="webhookId">The webhook_id.</param>
 	/// <param name="webhookToken">The webhook_token.</param>
@@ -5333,7 +5337,7 @@ public sealed class DiscordApiClient
 #region Reactions
 
 	/// <summary>
-	/// Creates the reaction async.
+	///     Creates the reaction async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
@@ -5353,7 +5357,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the own reaction async.
+	///     Deletes the own reaction async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
@@ -5373,7 +5377,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the user reaction async.
+	///     Deletes the user reaction async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
@@ -5400,7 +5404,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the reactions async.
+	///     Gets the reactions async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
@@ -5450,7 +5454,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the all reactions async.
+	///     Deletes the all reactions async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
@@ -5473,7 +5477,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the reactions emoji async.
+	///     Deletes the reactions emoji async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
@@ -5497,13 +5501,13 @@ public sealed class DiscordApiClient
 #region Threads
 
 	/// <summary>
-	/// Creates the thread.
+	///     Creates the thread.
 	/// </summary>
 	/// <param name="channelId">The channel id to create the thread in.</param>
 	/// <param name="messageId">The optional message id to create the thread from.</param>
 	/// <param name="name">The name of the thread.</param>
 	/// <param name="autoArchiveDuration">The auto_archive_duration for the thread.</param>
-	/// <param name="type">Can be either <see cref="ChannelType.PublicThread"/> or <see cref="ChannelType.PrivateThread"/>.</param>
+	/// <param name="type">Can be either <see cref="ChannelType.PublicThread" /> or <see cref="ChannelType.PrivateThread" />.</param>
 	/// <param name="rateLimitPerUser">The rate limit per user.</param>
 	/// <param name="appliedTags">The tags to add on creation.</param>
 	/// <param name="builder">The message builder.</param>
@@ -5591,7 +5595,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the thread.
+	///     Gets the thread.
 	/// </summary>
 	/// <param name="threadId">The thread id.</param>
 	internal async Task<DiscordThreadChannel> GetThreadAsync(ulong threadId)
@@ -5610,7 +5614,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Joins the thread.
+	///     Joins the thread.
 	/// </summary>
 	/// <param name="channelId">The channel id.</param>
 	internal async Task JoinThreadAsync(ulong channelId)
@@ -5626,7 +5630,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Leaves the thread.
+	///     Leaves the thread.
 	/// </summary>
 	/// <param name="channelId">The channel id.</param>
 	internal async Task LeaveThreadAsync(ulong channelId)
@@ -5642,7 +5646,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Adds a thread member.
+	///     Adds a thread member.
 	/// </summary>
 	/// <param name="channelId">The channel id to add the member to.</param>
 	/// <param name="userId">The user id to add.</param>
@@ -5660,11 +5664,11 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets a thread member.
+	///     Gets a thread member.
 	/// </summary>
 	/// <param name="channelId">The channel id to get the member from.</param>
 	/// <param name="userId">The user id to get.</param>
-	/// <param name="withMember">Whether to include a <see cref="DiscordMember"/> object.</param>
+	/// <param name="withMember">Whether to include a <see cref="DiscordMember" /> object.</param>
 	internal async Task<DiscordThreadChannelMember> GetThreadMemberAsync(ulong channelId, ulong userId, bool withMember = false)
 	{
 		var urlParams = new Dictionary<string, string>
@@ -5688,7 +5692,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Removes a thread member.
+	///     Removes a thread member.
 	/// </summary>
 	/// <param name="channelId">The channel id to remove the member from.</param>
 	/// <param name="userId">The user id to remove.</param>
@@ -5706,10 +5710,10 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the thread members.
+	///     Gets the thread members.
 	/// </summary>
 	/// <param name="threadId">The thread id.</param>
-	/// <param name="withMember">Whether to include a <see cref="DiscordMember"/> object.</param>
+	/// <param name="withMember">Whether to include a <see cref="DiscordMember" /> object.</param>
 	/// <param name="after">Get members after specified snowflake.</param>
 	/// <param name="limit">Limits the results.</param>
 	internal async Task<IReadOnlyList<DiscordThreadChannelMember>> GetThreadMembersAsync(ulong threadId, bool withMember = false, ulong? after = null, int? limit = null)
@@ -5741,7 +5745,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the active threads in a guild.
+	///     Gets the active threads in a guild.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	internal async Task<DiscordThreadResult> GetActiveThreadsAsync(ulong guildId)
@@ -5762,7 +5766,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the joined private archived threads in a channel.
+	///     Gets the joined private archived threads in a channel.
 	/// </summary>
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="before">Get threads before snowflake.</param>
@@ -5790,7 +5794,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the public archived threads in a channel.
+	///     Gets the public archived threads in a channel.
 	/// </summary>
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="before">Get threads before snowflake.</param>
@@ -5818,7 +5822,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the private archived threads in a channel.
+	///     Gets the private archived threads in a channel.
 	/// </summary>
 	/// <param name="channelId">The channel id.</param>
 	/// <param name="before">Get threads before snowflake.</param>
@@ -5846,7 +5850,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies a thread.
+	///     Modifies a thread.
 	/// </summary>
 	/// <param name="threadId">The thread to modify.</param>
 	/// <param name="parentType">The parent channels type as failback to ignore forum fields.</param>
@@ -5906,7 +5910,7 @@ public sealed class DiscordApiClient
 #region Emoji
 
 	/// <summary>
-	/// Gets the guild emojis.
+	///     Gets the guild emojis.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	internal async Task<IReadOnlyList<DiscordGuildEmoji>> GetGuildEmojisAsync(ulong guildId)
@@ -5949,7 +5953,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guild emoji.
+	///     Gets the guild emoji.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="emojiId">The emoji id.</param>
@@ -5979,7 +5983,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates the guild emoji.
+	///     Creates the guild emoji.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="name">The name.</param>
@@ -6023,7 +6027,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guild emoji.
+	///     Modifies the guild emoji.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="emojiId">The emoji id.</param>
@@ -6066,7 +6070,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the guild emoji.
+	///     Deletes the guild emoji.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="emojiId">The emoji id.</param>
@@ -6089,7 +6093,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the application emojis.
+	///     Gets the application emojis.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	internal async Task<IReadOnlyList<DiscordApplicationEmoji>> GetApplicationEmojisAsync(ulong applicationId)
@@ -6109,7 +6113,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets an application emoji.
+	///     Gets an application emoji.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="emojiId">The emoji id.</param>
@@ -6136,14 +6140,14 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates an application emoji.
+	///     Creates an application emoji.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="name">The name.</param>
 	/// <param name="imageb64">The imageb64.</param>
 	internal async Task<DiscordApplicationEmoji> CreateApplicationEmojiAsync(ulong applicationId, string name, string imageb64)
 	{
-		var pld = new RestApplicationEmojiCreatePayload()
+		var pld = new RestApplicationEmojiCreatePayload
 		{
 			Name = name,
 			ImageB64 = imageb64
@@ -6169,14 +6173,14 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies an application emoji.
+	///     Modifies an application emoji.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="emojiId">The emoji id.</param>
 	/// <param name="name">The name.</param>
 	internal async Task<DiscordApplicationEmoji> ModifyApplicationEmojiAsync(ulong applicationId, ulong emojiId, string name)
 	{
-		var pld = new RestApplicationEmojiModifyPayload()
+		var pld = new RestApplicationEmojiModifyPayload
 		{
 			Name = name
 		};
@@ -6202,7 +6206,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes an application emoji.
+	///     Deletes an application emoji.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="emojiId">The emoji id.</param>
@@ -6224,7 +6228,7 @@ public sealed class DiscordApiClient
 #region Stickers
 
 	/// <summary>
-	/// Gets a sticker.
+	///     Gets a sticker.
 	/// </summary>
 	/// <param name="stickerId">The sticker id.</param>
 	internal async Task<DiscordSticker> GetStickerAsync(ulong stickerId)
@@ -6242,7 +6246,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the sticker pack.
+	///     Gets the sticker pack.
 	/// </summary>
 	/// <param name="id">The sticker pack's id.</param>
 	internal async Task<DiscordStickerPack> GetStickerPackAsync(ulong id)
@@ -6260,7 +6264,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the sticker packs.
+	///     Gets the sticker packs.
 	/// </summary>
 	internal async Task<IReadOnlyList<DiscordStickerPack>> GetStickerPacksAsync()
 	{
@@ -6278,7 +6282,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guild stickers.
+	///     Gets the guild stickers.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	internal async Task<IReadOnlyList<DiscordSticker>> GetGuildStickersAsync(ulong guildId)
@@ -6297,7 +6301,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets a guild sticker.
+	///     Gets a guild sticker.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="stickerId">The sticker id.</param>
@@ -6318,7 +6322,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates the guild sticker.
+	///     Creates the guild sticker.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="name">The name.</param>
@@ -6346,7 +6350,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies the guild sticker.
+	///     Modifies the guild sticker.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="stickerId">The sticker id.</param>
@@ -6367,7 +6371,7 @@ public sealed class DiscordApiClient
 		if (!string.IsNullOrWhiteSpace(reason))
 			headers.Add(REASON_HEADER_NAME, reason);
 
-		var pld = new RestStickerModifyPayload()
+		var pld = new RestStickerModifyPayload
 		{
 			Name = name,
 			Description = description,
@@ -6385,7 +6389,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes the guild sticker async.
+	///     Deletes the guild sticker async.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="stickerId">The sticker id.</param>
@@ -6411,7 +6415,7 @@ public sealed class DiscordApiClient
 #region Application Commands
 
 	/// <summary>
-	/// Gets the global application commands.
+	///     Gets the global application commands.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="withLocalizations">Whether to get the full localization dict.</param>
@@ -6435,7 +6439,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Bulk overwrites the global application commands.
+	///     Bulk overwrites the global application commands.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="commands">The commands.</param>
@@ -6443,7 +6447,7 @@ public sealed class DiscordApiClient
 	{
 		var pld = new List<RestApplicationCommandCreatePayload>();
 		if (commands.Any())
-			pld.AddRange(commands.Select(command => new RestApplicationCommandCreatePayload()
+			pld.AddRange(commands.Select(command => new RestApplicationCommandCreatePayload
 			{
 				Type = command.Type,
 				Name = command.Name,
@@ -6472,7 +6476,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates a global application command.
+	///     Creates a global application command.
 	/// </summary>
 	/// <param name="applicationId">The applicationid.</param>
 	/// <param name="command">The command.</param>
@@ -6509,7 +6513,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets a global application command.
+	///     Gets a global application command.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="commandId">The command id.</param>
@@ -6532,7 +6536,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Edits a global application command.
+	///     Edits a global application command.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="commandId">The command id.</param>
@@ -6592,7 +6596,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes a global application command.
+	///     Deletes a global application command.
 	/// </summary>
 	/// <param name="applicationId">The application_id.</param>
 	/// <param name="commandId">The command_id.</param>
@@ -6610,7 +6614,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the guild application commands.
+	///     Gets the guild application commands.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="guildId">The guild id.</param>
@@ -6636,7 +6640,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Bulk overwrites the guild application commands.
+	///     Bulk overwrites the guild application commands.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="guildId">The guild id.</param>
@@ -6645,7 +6649,7 @@ public sealed class DiscordApiClient
 	{
 		var pld = new List<RestApplicationCommandCreatePayload>();
 		if (commands.Any())
-			pld.AddRange(commands.Select(command => new RestApplicationCommandCreatePayload()
+			pld.AddRange(commands.Select(command => new RestApplicationCommandCreatePayload
 			{
 				Type = command.Type,
 				Name = command.Name,
@@ -6674,7 +6678,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates a guild application command.
+	///     Creates a guild application command.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="guildId">The guild id.</param>
@@ -6712,7 +6716,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets a guild application command.
+	///     Gets a guild application command.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="guildId">The guild id.</param>
@@ -6737,7 +6741,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Edits a guild application command.
+	///     Edits a guild application command.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="guildId">The guild id.</param>
@@ -6800,7 +6804,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes a guild application command.
+	///     Deletes a guild application command.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="guildId">The guild id.</param>
@@ -6820,7 +6824,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates an interaction response.
+	///     Creates an interaction response.
 	/// </summary>
 	/// <param name="interactionId">The interaction id.</param>
 	/// <param name="interactionToken">The interaction token.</param>
@@ -6945,7 +6949,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates an interaction response with a modal.
+	///     Creates an interaction response with a modal.
 	/// </summary>
 	/// <param name="interactionId">The interaction id.</param>
 	/// <param name="interactionToken">The interaction token.</param>
@@ -6982,7 +6986,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates an interaction response with an iFrame.
+	///     Creates an interaction response with an iFrame.
 	/// </summary>
 	/// <param name="interactionId">The interaction id.</param>
 	/// <param name="interactionToken">The interaction token.</param>
@@ -7020,7 +7024,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the original interaction response.
+	///     Gets the original interaction response.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="interactionToken">The interaction token.</param>
@@ -7028,7 +7032,7 @@ public sealed class DiscordApiClient
 		this.GetWebhookMessageAsync(applicationId, interactionToken, Endpoints.ORIGINAL, null);
 
 	/// <summary>
-	/// Edits the original interaction response.
+	///     Edits the original interaction response.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="interactionToken">The interaction token.</param>
@@ -7037,7 +7041,7 @@ public sealed class DiscordApiClient
 		this.EditWebhookMessageAsync(applicationId, interactionToken, Endpoints.ORIGINAL, builder, null);
 
 	/// <summary>
-	/// Deletes the original interaction response.
+	///     Deletes the original interaction response.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="interactionToken">The interaction token.</param>
@@ -7045,7 +7049,7 @@ public sealed class DiscordApiClient
 		this.DeleteWebhookMessageAsync(applicationId, interactionToken, Endpoints.ORIGINAL, null);
 
 	/// <summary>
-	/// Creates the followup message.
+	///     Creates the followup message.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="interactionToken">The interaction token.</param>
@@ -7104,7 +7108,7 @@ public sealed class DiscordApiClient
 		if (builder.Mentions != null)
 			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0);
 
-		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts == true || builder.Mentions != null || builder.Files?.Count > 0 || builder.Components?.Count > 0)
+		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts || builder.Mentions != null || builder.Files?.Count > 0 || builder.Components?.Count > 0)
 			values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 		var route = $"{Endpoints.WEBHOOKS}/:application_id/:interaction_token";
@@ -7140,7 +7144,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the followup message.
+	///     Gets the followup message.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="interactionToken">The interaction token.</param>
@@ -7149,7 +7153,7 @@ public sealed class DiscordApiClient
 		this.GetWebhookMessageAsync(applicationId, interactionToken, messageId);
 
 	/// <summary>
-	/// Edits the followup message.
+	///     Edits the followup message.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="interactionToken">The interaction token.</param>
@@ -7159,7 +7163,7 @@ public sealed class DiscordApiClient
 		this.EditWebhookMessageAsync(applicationId, interactionToken, messageId.ToString(), builder, null);
 
 	/// <summary>
-	/// Deletes the followup message.
+	///     Deletes the followup message.
 	/// </summary>
 	/// <param name="applicationId">The application id.</param>
 	/// <param name="interactionToken">The interaction token.</param>
@@ -7172,10 +7176,10 @@ public sealed class DiscordApiClient
 #region Misc
 
 	/// <summary>
-	/// Gets the published store sku listings (premium application subscription).
+	///     Gets the published store sku listings (premium application subscription).
 	/// </summary>
 	/// <param name="applicationId">The application id to fetch the listenings for.</param>
-	/// <returns>A list of published listings with <see cref="DiscordStoreSku"/>s.</returns>
+	/// <returns>A list of published listings with <see cref="DiscordStoreSku" />s.</returns>
 	internal async Task<IReadOnlyList<DiscordStoreSku>> GetPublishedListingsAsync(ulong applicationId)
 	{
 		var urlParams = new Dictionary<string, string>
@@ -7198,10 +7202,10 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the applications skus.
+	///     Gets the applications skus.
 	/// </summary>
 	/// <param name="applicationId">The application id to fetch the listenings for.</param>
-	/// <returns>A list of published listings with <see cref="DiscordStoreSku"/>s.</returns>
+	/// <returns>A list of published listings with <see cref="DiscordStoreSku" />s.</returns>
 	internal async Task<IReadOnlyList<DiscordSku>> GetSkusAsync(ulong applicationId)
 	{
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.SKUS}";
@@ -7217,12 +7221,12 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the applications entitlements.
+	///     Gets the applications entitlements.
 	/// </summary>
 	/// <param name="applicationId">The application id to fetch the entitlement for.</param>
 	/// <param name="guildId">Filter returned entitlements to a specific guild id.</param>
 	/// <param name="userId">Filter returned entitlements to a specific user id.</param>
-	/// <returns>A list of <see cref="DiscordEntitlement"/>.</returns>
+	/// <returns>A list of <see cref="DiscordEntitlement" />.</returns>
 	internal async Task<IReadOnlyList<DiscordEntitlement>> GetEntitlementsAsync(ulong applicationId, ulong? guildId, ulong? userId)
 	{
 		var urlParams = new Dictionary<string, string>();
@@ -7244,13 +7248,13 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates a test entitlement.
+	///     Creates a test entitlement.
 	/// </summary>
 	/// <param name="applicationId">The application id to create the entitlement for.</param>
 	/// <param name="skuId">The sku id to create the entitlement for.</param>
 	/// <param name="ownerId">The owner id to create the entitlement for.</param>
 	/// <param name="ownerType">The owner type to create the entitlement for.</param>
-	/// <returns>A partial <see cref="DiscordEntitlement"/>.</returns>
+	/// <returns>A partial <see cref="DiscordEntitlement" />.</returns>
 	internal async Task<DiscordEntitlement> CreateTestEntitlementsAsync(ulong applicationId, ulong skuId, ulong ownerId, EntitlementOwnerType ownerType)
 	{
 		TestEntitlementCreatePayload pld = new()
@@ -7273,7 +7277,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes a test entitlement.
+	///     Deletes a test entitlement.
 	/// </summary>
 	/// <param name="applicationId">The application id to delete the entitlement for.</param>
 	/// <param name="entitlementId">The entitlement id to delete.</param>
@@ -7291,20 +7295,20 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the current application info via oauth2.
+	///     Gets the current application info via oauth2.
 	/// </summary>
 	internal Task<TransportApplication> GetCurrentApplicationOauth2InfoAsync()
 		=> this.GetApplicationOauth2InfoAsync(Endpoints.ME);
 
 	/// <summary>
-	/// Gets the application rpc info.
+	///     Gets the application rpc info.
 	/// </summary>
 	/// <param name="applicationId">The application_id.</param>
 	internal Task<DiscordRpcApplication> GetApplicationRpcInfoAsync(ulong applicationId)
 		=> this.GetApplicationRpcInfoAsync(applicationId.ToString(CultureInfo.InvariantCulture));
 
 	/// <summary>
-	/// Gets the application info via oauth2.
+	///     Gets the application info via oauth2.
 	/// </summary>
 	/// <param name="applicationId">The application_id.</param>
 	private async Task<TransportApplication> GetApplicationOauth2InfoAsync(string applicationId)
@@ -7324,7 +7328,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the application info.
+	///     Gets the application info.
 	/// </summary>
 	internal async Task<TransportApplication> GetCurrentApplicationInfoAsync()
 	{
@@ -7343,7 +7347,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the application info.
+	///     Gets the application info.
 	/// </summary>
 	internal async Task<TransportApplication> ModifyCurrentApplicationInfoAsync(
 		Optional<string?> description,
@@ -7358,7 +7362,7 @@ public sealed class DiscordApiClient
 		Optional<DiscordIntegrationTypesConfig?> integrationTypesConfig
 	)
 	{
-		var pld = new RestApplicationModifyPayload()
+		var pld = new RestApplicationModifyPayload
 		{
 			Description = description,
 			InteractionsEndpointUrl = interactionsEndpointUrl,
@@ -7386,7 +7390,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the application info.
+	///     Gets the application info.
 	/// </summary>
 	/// <param name="applicationId">The application_id.</param>
 	private async Task<DiscordRpcApplication> GetApplicationRpcInfoAsync(string applicationId)
@@ -7404,7 +7408,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the application assets async.
+	///     Gets the application assets async.
 	/// </summary>
 	/// <param name="application">The application.</param>
 	internal async Task<IReadOnlyList<DiscordApplicationAsset>> GetApplicationAssetsAsync(DiscordApplication application)
@@ -7429,7 +7433,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the gateway info async.
+	///     Gets the gateway info async.
 	/// </summary>
 	internal async Task<GatewayInfo> GetGatewayInfoAsync()
 	{
@@ -7453,7 +7457,7 @@ public sealed class DiscordApiClient
 #region OAuth2
 
 	/// <summary>
-	/// Gets the current oauth2 authorization information.
+	///     Gets the current oauth2 authorization information.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
 	internal async Task<DiscordAuthorizationInformation> GetCurrentOAuth2AuthorizationInformationAsync(string accessToken)
@@ -7477,7 +7481,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the current user.
+	///     Gets the current user.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
 	internal async Task<DiscordUser> GetCurrentUserAsync(string accessToken)
@@ -7504,7 +7508,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the current user's connections.
+	///     Gets the current user's connections.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
 	internal async Task<IReadOnlyList<DiscordConnection>> GetCurrentUserConnectionsAsync(string accessToken)
@@ -7527,7 +7531,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the current user's guilds.
+	///     Gets the current user's guilds.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
 	internal async Task<IReadOnlyList<DiscordGuild>> GetCurrentUserGuildsAsync(string accessToken)
@@ -7550,7 +7554,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the current user's guilds.
+	///     Gets the current user's guilds.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
 	/// <param name="guildId">The guild id to get the member for.</param>
@@ -7577,7 +7581,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets the current user's role connection.
+	///     Gets the current user's role connection.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
 	internal async Task<DiscordApplicationRoleConnection> GetCurrentUserApplicationRoleConnectionAsync(string accessToken)
@@ -7603,7 +7607,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Updates the current user's role connection.
+	///     Updates the current user's role connection.
 	/// </summary>
 	/// <param name="accessToken">The access token.</param>
 	/// <param name="platformName">The platform name.</param>
@@ -7637,7 +7641,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Exchanges a code for an access token.
+	///     Exchanges a code for an access token.
 	/// </summary>
 	/// <param name="code">The code.</param>
 	internal async Task<DiscordAccessToken> ExchangeOAuth2AccessTokenAsync(string code)
@@ -7667,7 +7671,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Exchanges a refresh token for a new access token
+	///     Exchanges a refresh token for a new access token
 	/// </summary>
 	/// <param name="refreshToken">The refresh token.</param>
 	internal async Task<DiscordAccessToken> RefreshOAuth2AccessTokenAsync(string refreshToken)
@@ -7697,7 +7701,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Revokes an oauth2 token.
+	///     Revokes an oauth2 token.
 	/// </summary>
 	/// <param name="token">The token to revoke.</param>
 	/// <param name="type">The type of token to revoke.</param>

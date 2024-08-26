@@ -6,24 +6,24 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp;
 
 /// <summary>
-/// Represents a default logger.
+///     Represents a default logger.
 /// </summary>
 public class DefaultLogger : ILogger<BaseDiscordClient>
 {
 	private static readonly Lock s_lock = new();
 
 	/// <summary>
-	/// Gets the minimum log level.
+	///     Gets the minimum log level.
 	/// </summary>
 	private readonly LogLevel _minimumLevel;
 
 	/// <summary>
-	/// Gets the timestamp format.
+	///     Gets the timestamp format.
 	/// </summary>
 	private readonly string _timestampFormat;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DefaultLogger"/> class.
+	///     Initializes a new instance of the <see cref="DefaultLogger" /> class.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	internal DefaultLogger(BaseDiscordClient client)
@@ -31,7 +31,7 @@ public class DefaultLogger : ILogger<BaseDiscordClient>
 	{ }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DefaultLogger"/> class.
+	///     Initializes a new instance of the <see cref="DefaultLogger" /> class.
 	/// </summary>
 	/// <param name="minLevel">The min level.</param>
 	/// <param name="timestampFormat">The timestamp format.</param>
@@ -42,7 +42,7 @@ public class DefaultLogger : ILogger<BaseDiscordClient>
 	}
 
 	/// <summary>
-	/// Logs an event.
+	///     Logs an event.
 	/// </summary>
 	/// <param name="logLevel">The log level.</param>
 	/// <param name="eventId">The event id.</param>
@@ -117,14 +117,14 @@ public class DefaultLogger : ILogger<BaseDiscordClient>
 	}
 
 	/// <summary>
-	/// Whether the logger is enabled.
+	///     Whether the logger is enabled.
 	/// </summary>
 	/// <param name="logLevel">The log level.</param>
 	public bool IsEnabled(LogLevel logLevel)
 		=> logLevel >= this._minimumLevel;
 
 	/// <summary>
-	/// Begins the scope.
+	///     Begins the scope.
 	/// </summary>
 	/// <param name="state">The state.</param>
 	/// <returns>An IDisposable.</returns>

@@ -7,24 +7,24 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents a application emoji.
+///     Represents a application emoji.
 /// </summary>
 public sealed class DiscordApplicationEmoji : DiscordEmoji
 {
 	/// <summary>
-	/// Gets the user that created the emoji (Either a team member or the bot through api).
-	/// </summary>
-	[JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordUser? User { get; internal set; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordApplicationEmoji"/> class.
+	///     Initializes a new instance of the <see cref="DiscordApplicationEmoji" /> class.
 	/// </summary>
 	internal DiscordApplicationEmoji()
 	{ }
 
 	/// <summary>
-	/// Modifies this emoji.
+	///     Gets the user that created the emoji (Either a team member or the bot through api).
+	/// </summary>
+	[JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordUser? User { get; internal set; }
+
+	/// <summary>
+	///     Modifies this emoji.
 	/// </summary>
 	/// <param name="name">New name for this emoji.</param>
 	/// <returns>The modified emoji.</returns>
@@ -35,7 +35,7 @@ public sealed class DiscordApplicationEmoji : DiscordEmoji
 		=> this.Discord.ApiClient.ModifyApplicationEmojiAsync(this.Discord.CurrentApplication.Id, this.Id, name);
 
 	/// <summary>
-	/// Deletes this emoji.
+	///     Deletes this emoji.
 	/// </summary>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>

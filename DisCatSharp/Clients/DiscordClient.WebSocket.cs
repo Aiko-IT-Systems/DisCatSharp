@@ -20,64 +20,75 @@ using Sentry;
 namespace DisCatSharp;
 
 /// <summary>
-/// Represents a discord websocket client.
+///     Represents a discord websocket client.
 /// </summary>
 public sealed partial class DiscordClient
 {
+#region Semaphore Methods
+
+	/// <summary>
+	///     Gets the socket lock.
+	/// </summary>
+	/// <returns>The added socket lock.</returns>
+	private SocketLock GetSocketLock()
+		=> s_socketLocks.GetOrAdd(this.CurrentApplication.Id, new SocketLock(this.CurrentApplication.Id, this.GatewayInfo!.SessionBucket.MaxConcurrency));
+
+#endregion
+
 #region Private Fields
 
 	/// <summary>
-	/// Gets the heartbeat interval.
+	///     Gets the heartbeat interval.
 	/// </summary>
 	private int _heartbeatInterval;
 
 	/// <summary>
-	/// Gets when the last heartbeat was sent.
+	///     Gets when the last heartbeat was sent.
 	/// </summary>
 	private DateTimeOffset _lastHeartbeat;
 
 	/// <summary>
-	/// Gets whether we already identified
+	///     Gets whether we already identified
 	/// </summary>
 	private bool _identified = false;
 
 	/// <summary>
-	/// Gets the heartbeat task.
+	///     Gets the heartbeat task.
 	/// </summary>
 	private Task _heartbeatTask;
 
 	/// <summary>
-	/// Gets the default discord epoch.
+	///     Gets the default discord epoch.
 	/// </summary>
 	internal static DateTimeOffset DiscordEpoch = new(2015, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
 	/// <summary>
-	/// Gets the count of skipped heartbeats.
+	///     Gets the count of skipped heartbeats.
 	/// </summary>
 	private int _skippedHeartbeats = 0;
 
 	/// <summary>
-	/// Gets the last sequence number.
+	///     Gets the last sequence number.
 	/// </summary>
 	private long _lastSequence = 0;
 
 	/// <summary>
-	/// Gets the websocket client.
+	///     Gets the websocket client.
 	/// </summary>
 	internal IWebSocketClient WebSocketClient;
 
 	/// <summary>
-	/// Gets the payload decompressor.
+	///     Gets the payload decompressor.
 	/// </summary>
 	private PayloadDecompressor? _payloadDecompressor;
 
 	/// <summary>
-	/// Gets the cancel token source.
+	///     Gets the cancel token source.
 	/// </summary>
 	private CancellationTokenSource _cancelTokenSource;
 
 	/// <summary>
-	/// Gets the cancel token.
+	///     Gets the cancel token.
 	/// </summary>
 	private CancellationToken _cancelToken;
 
@@ -86,12 +97,12 @@ public sealed partial class DiscordClient
 #region Connection Semaphore
 
 	/// <summary>
-	/// Gets the socket locks.
+	///     Gets the socket locks.
 	/// </summary>
 	private static ConcurrentDictionary<ulong, SocketLock> s_socketLocks { get; } = [];
 
 	/// <summary>
-	/// Gets the session lock.
+	///     Gets the session lock.
 	/// </summary>
 	private readonly ManualResetEventSlim _sessionLock = new(true);
 
@@ -100,7 +111,7 @@ public sealed partial class DiscordClient
 #region Internal Connection Methods
 
 	/// <summary>
-	/// Reconnects the websocket client.
+	///     Reconnects the websocket client.
 	/// </summary>
 	/// <param name="startNewSession">Whether to start a new session.</param>
 	/// <param name="code">The reconnect code.</param>
@@ -115,7 +126,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Connects the websocket client.
+	///     Connects the websocket client.
 	/// </summary>
 	internal async Task InternalConnectAsync()
 	{
@@ -267,7 +278,7 @@ public sealed partial class DiscordClient
 #region WebSocket (Events)
 
 	/// <summary>
-	/// Handles the socket message.
+	///     Handles the socket message.
 	/// </summary>
 	/// <param name="data">The data.</param>
 	internal async Task HandleSocketMessageAsync(string data)
@@ -316,7 +327,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the heartbeat.
+	///     Handles the heartbeat.
 	/// </summary>
 	/// <param name="seq">The sequence.</param>
 	internal async Task OnHeartbeatAsync(long seq)
@@ -326,7 +337,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the reconnect event.
+	///     Handles the reconnect event.
 	/// </summary>
 	internal async Task OnReconnectAsync()
 	{
@@ -335,7 +346,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the invalidate session event
+	///     Handles the invalidate session event
 	/// </summary>
 	/// <param name="data">Unknown. Please fill documentation.</param>
 	internal async Task OnInvalidateSessionAsync(bool data)
@@ -364,7 +375,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the hello event.
+	///     Handles the hello event.
 	/// </summary>
 	/// <param name="hello">The gateway hello payload.</param>
 	internal async Task OnHelloAsync(GatewayHello hello)
@@ -393,7 +404,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the heartbeat acknowledge event.
+	///     Handles the heartbeat acknowledge event.
 	/// </summary>
 	internal async Task OnHeartbeatAckAsync()
 	{
@@ -415,7 +426,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Handles the heartbeat loop.
+	///     Handles the heartbeat loop.
 	/// </summary>
 	internal async Task HeartbeatLoopAsync()
 	{
@@ -439,7 +450,7 @@ public sealed partial class DiscordClient
 #region Internal Gateway Methods
 
 	/// <summary>
-	/// Updates the status.
+	///     Updates the status.
 	/// </summary>
 	/// <param name="activity">The activity.</param>
 	/// <param name="userStatus">The optional user status.</param>
@@ -491,7 +502,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Sends the heartbeat.
+	///     Sends the heartbeat.
 	/// </summary>
 	/// <param name="seq">The sequenze.</param>
 	internal async Task SendHeartbeatAsync(long seq)
@@ -545,7 +556,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Sends the identify payload.
+	///     Sends the identify payload.
 	/// </summary>
 	/// <param name="status">The status update payload.</param>
 	internal async Task SendIdentifyAsync(StatusUpdate? status)
@@ -579,7 +590,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Sends the resume payload.
+	///     Sends the resume payload.
 	/// </summary>
 	internal async Task SendResumeAsync()
 	{
@@ -604,7 +615,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Internals the update gateway async.
+	///     Internals the update gateway async.
 	/// </summary>
 	/// <returns>A Task.</returns>
 	internal async Task InternalUpdateGatewayAsync()
@@ -615,7 +626,7 @@ public sealed partial class DiscordClient
 	}
 
 	/// <summary>
-	/// Sends a websocket message.
+	///     Sends a websocket message.
 	/// </summary>
 	/// <param name="payload">The payload to send.</param>
 	internal async Task WsSendAsync(string payload)
@@ -623,17 +634,6 @@ public sealed partial class DiscordClient
 		this.Logger.LogTrace(LoggerEvents.GatewayWsTx, "{Payload}", payload);
 		await this.WebSocketClient.SendMessageAsync(payload).ConfigureAwait(false);
 	}
-
-#endregion
-
-#region Semaphore Methods
-
-	/// <summary>
-	/// Gets the socket lock.
-	/// </summary>
-	/// <returns>The added socket lock.</returns>
-	private SocketLock GetSocketLock()
-		=> s_socketLocks.GetOrAdd(this.CurrentApplication.Id, new SocketLock(this.CurrentApplication.Id, this.GatewayInfo!.SessionBucket.MaxConcurrency));
 
 #endregion
 }

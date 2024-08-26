@@ -9,42 +9,32 @@ using System.Security.Cryptography;
 namespace DisCatSharp.VoiceNext.Codec;
 
 /// <summary>
-/// The sodium.
+///     The sodium.
 /// </summary>
 // ReSharper disable once ClassCanBeSealed.Global - This class can be used by other projects.
 internal class Sodium : IDisposable
 {
 	/// <summary>
-	/// Gets the supported modes.
-	/// </summary>
-	public static IReadOnlyDictionary<string, EncryptionMode> SupportedModes { get; }
-
-	/// <summary>
-	/// Gets the nonce size.
-	/// </summary>
-	public static int NonceSize => Interop.SodiumNonceSize;
-
-	/// <summary>
-	/// Gets the c s p r n g.
-	/// </summary>
-	private readonly RandomNumberGenerator _csprng;
-
-	/// <summary>
-	/// Gets the buffer.
+	///     Gets the buffer.
 	/// </summary>
 	private readonly byte[] _buffer;
 
 	/// <summary>
-	/// Gets the key.
+	///     Gets the c s p r n g.
+	/// </summary>
+	private readonly RandomNumberGenerator _csprng;
+
+	/// <summary>
+	///     Gets the key.
 	/// </summary>
 	private readonly ReadOnlyMemory<byte> _key;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="Sodium"/> class.
+	///     Initializes a new instance of the <see cref="Sodium" /> class.
 	/// </summary>
 	static Sodium()
 	{
-		SupportedModes = new ReadOnlyDictionary<string, EncryptionMode>(new Dictionary<string, EncryptionMode>()
+		SupportedModes = new ReadOnlyDictionary<string, EncryptionMode>(new Dictionary<string, EncryptionMode>
 		{
 			["xsalsa20_poly1305_lite"] = EncryptionMode.XSalsa20Poly1305Lite,
 			["xsalsa20_poly1305_suffix"] = EncryptionMode.XSalsa20Poly1305Suffix,
@@ -53,7 +43,7 @@ internal class Sodium : IDisposable
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="Sodium"/> class.
+	///     Initializes a new instance of the <see cref="Sodium" /> class.
 	/// </summary>
 	/// <param name="key">The key.</param>
 	public Sodium(ReadOnlyMemory<byte> key)
@@ -68,7 +58,23 @@ internal class Sodium : IDisposable
 	}
 
 	/// <summary>
-	/// Generates the nonce.
+	///     Gets the supported modes.
+	/// </summary>
+	public static IReadOnlyDictionary<string, EncryptionMode> SupportedModes { get; }
+
+	/// <summary>
+	///     Gets the nonce size.
+	/// </summary>
+	public static int NonceSize => Interop.SodiumNonceSize;
+
+	/// <summary>
+	///     Disposes the Sodium.
+	/// </summary>
+	public void Dispose()
+		=> this._csprng.Dispose();
+
+	/// <summary>
+	///     Generates the nonce.
 	/// </summary>
 	/// <param name="rtpHeader">The rtp header.</param>
 	/// <param name="target">The target.</param>
@@ -88,7 +94,7 @@ internal class Sodium : IDisposable
 	}
 
 	/// <summary>
-	/// Generates the nonce.
+	///     Generates the nonce.
 	/// </summary>
 	/// <param name="target">The target.</param>
 	public void GenerateNonce(Span<byte> target)
@@ -101,7 +107,7 @@ internal class Sodium : IDisposable
 	}
 
 	/// <summary>
-	/// Generates the nonce.
+	///     Generates the nonce.
 	/// </summary>
 	/// <param name="nonce">The nonce.</param>
 	/// <param name="target">The target.</param>
@@ -118,7 +124,7 @@ internal class Sodium : IDisposable
 	}
 
 	/// <summary>
-	/// Appends the nonce.
+	///     Appends the nonce.
 	/// </summary>
 	/// <param name="nonce">The nonce.</param>
 	/// <param name="target">The target.</param>
@@ -144,7 +150,7 @@ internal class Sodium : IDisposable
 	}
 
 	/// <summary>
-	/// Gets the nonce.
+	///     Gets the nonce.
 	/// </summary>
 	/// <param name="source">The source.</param>
 	/// <param name="target">The target.</param>
@@ -174,7 +180,7 @@ internal class Sodium : IDisposable
 	}
 
 	/// <summary>
-	/// Encrypts the Sodium.
+	///     Encrypts the Sodium.
 	/// </summary>
 	/// <param name="source">The source.</param>
 	/// <param name="target">The target.</param>
@@ -193,7 +199,7 @@ internal class Sodium : IDisposable
 	}
 
 	/// <summary>
-	/// Decrypts the Sodium.
+	///     Decrypts the Sodium.
 	/// </summary>
 	/// <param name="source">The source.</param>
 	/// <param name="target">The target.</param>
@@ -212,13 +218,7 @@ internal class Sodium : IDisposable
 	}
 
 	/// <summary>
-	/// Disposes the Sodium.
-	/// </summary>
-	public void Dispose()
-		=> this._csprng.Dispose();
-
-	/// <summary>
-	/// Selects the mode.
+	///     Selects the mode.
 	/// </summary>
 	/// <param name="availableModes">The available modes.</param>
 	/// <returns>A KeyValuePair.</returns>
@@ -233,7 +233,7 @@ internal class Sodium : IDisposable
 	}
 
 	/// <summary>
-	/// Calculates the target size.
+	///     Calculates the target size.
 	/// </summary>
 	/// <param name="source">The source.</param>
 	/// <returns>An int.</returns>
@@ -242,7 +242,7 @@ internal class Sodium : IDisposable
 		=> source.Length + Interop.SodiumMacSize;
 
 	/// <summary>
-	/// Calculates the source size.
+	///     Calculates the source size.
 	/// </summary>
 	/// <param name="source">The source.</param>
 	/// <returns>An int.</returns>
@@ -252,22 +252,23 @@ internal class Sodium : IDisposable
 }
 
 /// <summary>
-/// Specifies an encryption mode to use with Sodium.
+///     Specifies an encryption mode to use with Sodium.
 /// </summary>
 public enum EncryptionMode
 {
 	/// <summary>
-	/// The nonce is an incrementing uint32 value. It is encoded as big endian value at the beginning of the nonce buffer. The 4 bytes are also appended at the end of the packet.
+	///     The nonce is an incrementing uint32 value. It is encoded as big endian value at the beginning of the nonce buffer.
+	///     The 4 bytes are also appended at the end of the packet.
 	/// </summary>
 	XSalsa20Poly1305Lite,
 
 	/// <summary>
-	/// The nonce consists of random bytes. It is appended at the end of a packet.
+	///     The nonce consists of random bytes. It is appended at the end of a packet.
 	/// </summary>
 	XSalsa20Poly1305Suffix,
 
 	/// <summary>
-	/// The nonce consists of the RTP header. Nothing is appended to the packet.
+	///     The nonce consists of the RTP header. Nothing is appended to the packet.
 	/// </summary>
 	XSalsa20Poly1305
 }

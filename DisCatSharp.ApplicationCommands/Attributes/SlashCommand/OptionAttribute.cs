@@ -3,28 +3,28 @@ using System;
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
-/// Marks this parameter as an option for a slash command
+///     Marks this parameter as an option for a slash command
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
 public class OptionAttribute : Attribute
 {
 	/// <summary>
-	/// Gets the name of this option.
-	/// </summary>
-	public string Name;
-
-	/// <summary>
-	/// Gets the description of this option.
-	/// </summary>
-	public string Description;
-
-	/// <summary>
-	/// Whether to autocomplete this option.
+	///     Whether to autocomplete this option.
 	/// </summary>
 	public bool Autocomplete;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="OptionAttribute"/> class.
+	///     Gets the description of this option.
+	/// </summary>
+	public string Description;
+
+	/// <summary>
+	///     Gets the name of this option.
+	/// </summary>
+	public string Name;
+
+	/// <summary>
+	///     Initializes a new instance of the <see cref="OptionAttribute" /> class.
 	/// </summary>
 	/// <param name="name">The name.</param>
 	/// <param name="description">The description.</param>
@@ -33,7 +33,7 @@ public class OptionAttribute : Attribute
 	{
 		if (name.Length > 32)
 			throw new ArgumentException("Slash command option names cannot go over 32 characters.");
-		else if (description.Length > 100)
+		if (description.Length > 100)
 			throw new ArgumentException("Slash command option descriptions cannot go over 100 characters.");
 
 		this.Name = name.ToLower();

@@ -5,12 +5,21 @@ using Newtonsoft.Json.Linq;
 namespace DisCatSharp.EventArgs;
 
 /// <summary>
-/// Represents a gateway payload.
+///     Represents a gateway payload.
 /// </summary>
 public class PayloadReceivedEventArgs : DiscordEventArgs
 {
+	private string _json;
+
 	/// <summary>
-	/// The JSON from this payload event.
+	///     Initializes a new instance of the <see cref="PayloadReceivedEventArgs" /> class.
+	/// </summary>
+	internal PayloadReceivedEventArgs(IServiceProvider provider)
+		: base(provider)
+	{ }
+
+	/// <summary>
+	///     The JSON from this payload event.
 	/// </summary>
 	public string Json
 	{
@@ -22,22 +31,13 @@ public class PayloadReceivedEventArgs : DiscordEventArgs
 		}
 	}
 
-	private string _json;
-
 	/// <summary>
-	/// Gets or sets the payload object.
+	///     Gets or sets the payload object.
 	/// </summary>
 	internal JObject PayloadObject { get; set; }
 
 	/// <summary>
-	/// The name of this event.
+	///     The name of this event.
 	/// </summary>
 	public string EventName { get; internal set; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="PayloadReceivedEventArgs"/> class.
-	/// </summary>
-	internal PayloadReceivedEventArgs(IServiceProvider provider)
-		: base(provider)
-	{ }
 }

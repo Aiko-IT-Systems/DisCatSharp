@@ -5,7 +5,7 @@ namespace DisCatSharp.VoiceNext;
 internal readonly struct RawVoicePacket
 {
 	/// <summary>
-	/// Initializes a new instance of the <see cref="RawVoicePacket"/> class.
+	///     Initializes a new instance of the <see cref="RawVoicePacket" /> class.
 	/// </summary>
 	/// <param name="bytes">The bytes.</param>
 	/// <param name="duration">The duration.</param>
@@ -19,7 +19,7 @@ internal readonly struct RawVoicePacket
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="RawVoicePacket"/> class.
+	///     Initializes a new instance of the <see cref="RawVoicePacket" /> class.
 	/// </summary>
 	/// <param name="bytes">The bytes.</param>
 	/// <param name="duration">The duration.</param>

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using DisCatSharp.Common.RegularExpressions;
@@ -23,27 +22,12 @@ using Newtonsoft.Json.Linq;
 namespace DisCatSharp.Lavalink;
 
 /// <summary>
-/// Provides various rest methods to interact with the Lavalink API.
+///     Provides various rest methods to interact with the Lavalink API.
 /// </summary>
 internal sealed class LavalinkRestClient
 {
 	/// <summary>
-	/// Gets the discord client.
-	/// </summary>
-	internal DiscordClient Discord { get; }
-
-	/// <summary>
-	/// Gets the http client.
-	/// </summary>
-	internal HttpClient HttpClient { get; }
-
-	/// <summary>
-	/// Gets whether trace is enabled.
-	/// </summary>
-	private bool TRACE_ENABLED { get; } = false;
-
-	/// <summary>
-	/// Constructs a new <see cref="LavalinkRestClient"/>.
+	///     Constructs a new <see cref="LavalinkRestClient" />.
 	/// </summary>
 	/// <param name="configuration">The lavalink configuration to use.</param>
 	/// <param name="client">The discord client this rest client is attached to.</param>
@@ -73,7 +57,22 @@ internal sealed class LavalinkRestClient
 	}
 
 	/// <summary>
-	/// Builds the query string.
+	///     Gets the discord client.
+	/// </summary>
+	internal DiscordClient Discord { get; }
+
+	/// <summary>
+	///     Gets the http client.
+	/// </summary>
+	internal HttpClient HttpClient { get; }
+
+	/// <summary>
+	///     Gets whether trace is enabled.
+	/// </summary>
+	private bool TRACE_ENABLED { get; } = false;
+
+	/// <summary>
+	///     Builds the query string.
 	/// </summary>
 	/// <param name="values">The values.</param>
 	/// <param name="post">Whether this query will be transmitted via POST.</param>
@@ -90,7 +89,7 @@ internal sealed class LavalinkRestClient
 	}
 
 	/// <summary>
-	/// Gets the path with its <paramref name="routeParams"/> applied.
+	///     Gets the path with its <paramref name="routeParams" /> applied.
 	/// </summary>
 	/// <param name="route">The route.</param>
 	/// <param name="routeParams">The route params.</param>
@@ -128,7 +127,7 @@ internal sealed class LavalinkRestClient
 		};
 
 	/// <summary>
-	/// Executes a rest request.
+	///     Executes a rest request.
 	/// </summary>
 	/// <param name="method">The method.</param>
 	/// <param name="path">The path.</param>
@@ -160,7 +159,7 @@ internal sealed class LavalinkRestClient
 			throw ex;
 		}
 
-		var res = new LavalinkRestResponse()
+		var res = new LavalinkRestResponse
 		{
 			ResponseCode = response.StatusCode,
 			Response = response.StatusCode != HttpStatusCode.NoContent ? await response.Content.ReadAsStringAsync().ConfigureAwait(false) : null,
@@ -171,9 +170,9 @@ internal sealed class LavalinkRestClient
 	}
 
 	/// <summary>
-	/// Requests Lavalink server version.
+	///     Requests Lavalink server version.
 	/// </summary>
-	/// <returns>The version <see cref="string"/>.</returns>
+	/// <returns>The version <see cref="string" />.</returns>
 	internal async Task<LavalinkRestResponse> GetVersionAsync()
 	{
 		var queryDict = this.GetDefaultParams();
@@ -184,9 +183,9 @@ internal sealed class LavalinkRestClient
 	}
 
 	/// <summary>
-	/// Requests Lavalink server information.
+	///     Requests Lavalink server information.
 	/// </summary>
-	/// <returns>A <see cref="LavalinkInfo"/> object.</returns>
+	/// <returns>A <see cref="LavalinkInfo" /> object.</returns>
 	internal async Task<LavalinkInfo> GetInfoAsync()
 	{
 		var queryDict = this.GetDefaultParams();
@@ -198,9 +197,9 @@ internal sealed class LavalinkRestClient
 	}
 
 	/// <summary>
-	/// Requests Lavalink server statistics.
+	///     Requests Lavalink server statistics.
 	/// </summary>
-	/// <returns>A <see cref="LavalinkStats"/> object.</returns>
+	/// <returns>A <see cref="LavalinkStats" /> object.</returns>
 	internal async Task<LavalinkStats> GetStatsAsync()
 	{
 		var queryDict = this.GetDefaultParams();
@@ -212,11 +211,11 @@ internal sealed class LavalinkRestClient
 	}
 
 	/// <summary>
-	/// Updates a session with the resuming state and timeout.
+	///     Updates a session with the resuming state and timeout.
 	/// </summary>
 	/// <param name="sessionId">The session id.</param>
 	/// <param name="config">The session config.</param>
-	/// <returns>The updated <see cref="LavalinkSessionConfiguration"/>.</returns>
+	/// <returns>The updated <see cref="LavalinkSessionConfiguration" />.</returns>
 	internal async Task<LavalinkSessionConfiguration> UpdateSessionAsync(string sessionId, LavalinkSessionConfiguration config)
 	{
 		var queryDict = this.GetDefaultParams();
@@ -230,10 +229,10 @@ internal sealed class LavalinkRestClient
 	}
 
 	/// <summary>
-	/// Returns a list of players for the given session id.
+	///     Returns a list of players for the given session id.
 	/// </summary>
 	/// <param name="sessionId">The session id.</param>
-	/// <returns>A <see cref="IReadOnlyList{T}"/> of <see cref="LavalinkPlayer"/>s.</returns>
+	/// <returns>A <see cref="IReadOnlyList{T}" /> of <see cref="LavalinkPlayer" />s.</returns>
 	internal async Task<IReadOnlyList<LavalinkPlayer>> GetPlayersAsync(string sessionId)
 	{
 		var queryDict = this.GetDefaultParams();
@@ -247,7 +246,7 @@ internal sealed class LavalinkRestClient
 	}
 
 	/// <summary>
-	/// Creates a player.
+	///     Creates a player.
 	/// </summary>
 	/// <param name="sessionId">The session id.</param>
 	/// <param name="guildId">The guild id this player should be created for.</param>
@@ -267,11 +266,11 @@ internal sealed class LavalinkRestClient
 	}
 
 	/// <summary>
-	/// Returns the player for a guild for the given session id.
+	///     Returns the player for a guild for the given session id.
 	/// </summary>
 	/// <param name="sessionId">The session id.</param>
 	/// <param name="guildId">The guild id this player should be created/updated for.</param>
-	/// <returns>The <see cref="LavalinkPlayer"/> for <paramref name="guildId"/>.</returns>
+	/// <returns>The <see cref="LavalinkPlayer" /> for <paramref name="guildId" />.</returns>
 	internal async Task<LavalinkPlayer> GetPlayerAsync(string sessionId, ulong guildId)
 	{
 		var queryDict = this.GetDefaultParams();
@@ -286,11 +285,11 @@ internal sealed class LavalinkRestClient
 	}
 
 	/// <summary>
-	/// Updates or creates the player for a guild if it doesn't already exist for the given session id.
+	///     Updates or creates the player for a guild if it doesn't already exist for the given session id.
 	/// </summary>
 	/// <param name="sessionId">The session id.</param>
 	/// <param name="guildId">The guild id this player should be created/updated for.</param>
-	/// <param name="noReplace">Whether to replace the current track with the new track. Defaults to <see langword="false"/>.</param>
+	/// <param name="noReplace">Whether to replace the current track with the new track. Defaults to <see langword="false" />.</param>
 	/// <param name="encodedTrack">The encoded track to play.</param>
 	/// <param name="identifier">The identifier to play</param>
 	/// <param name="position">The position to jump to or start from.</param>
@@ -298,7 +297,7 @@ internal sealed class LavalinkRestClient
 	/// <param name="volume">The volume.</param>
 	/// <param name="paused">Whether to pause the track.</param>
 	/// <param name="filters">The filters.</param>
-	/// <returns>The updated <see cref="LavalinkPlayer"/> object.</returns>
+	/// <returns>The updated <see cref="LavalinkPlayer" /> object.</returns>
 	internal async Task<LavalinkPlayer> UpdatePlayerAsync(
 		string sessionId,
 		ulong guildId,
@@ -335,7 +334,7 @@ internal sealed class LavalinkRestClient
 	}
 
 	/// <summary>
-	/// Updates the players voice state.
+	///     Updates the players voice state.
 	/// </summary>
 	/// <param name="sessionId">The session id.</param>
 	/// <param name="guildId">The guild id this player voice state should be updated for.</param>
@@ -357,7 +356,7 @@ internal sealed class LavalinkRestClient
 	}
 
 	/// <summary>
-	/// Destroys the player for a guild for the given session id
+	///     Destroys the player for a guild for the given session id
 	/// </summary>
 	/// <param name="sessionId">The session id.</param>
 	/// <param name="guildId">The guild id this player should be created/updated for.</param>
@@ -375,10 +374,13 @@ internal sealed class LavalinkRestClient
 	}
 
 	/// <summary>
-	/// Resolves audio tracks for use with the <see cref="UpdatePlayerAsync"/> method.
+	///     Resolves audio tracks for use with the <see cref="UpdatePlayerAsync" /> method.
 	/// </summary>
 	/// <param name="identifier">The identifier to resolve tracks with.</param>
-	/// <returns>A <see cref="LavalinkTrackLoadingResult"/> where <see cref="LavalinkTrackLoadingResult.Result"/> is dynamic based on <see cref="LavalinkTrackLoadingResult.LoadType"/>.</returns>
+	/// <returns>
+	///     A <see cref="LavalinkTrackLoadingResult" /> where <see cref="LavalinkTrackLoadingResult.Result" /> is dynamic
+	///     based on <see cref="LavalinkTrackLoadingResult.LoadType" />.
+	/// </returns>
 	internal async Task<LavalinkTrackLoadingResult> LoadTracksAsync(string identifier)
 	{
 		var queryDict = this.GetDefaultParams();
@@ -396,10 +398,10 @@ internal sealed class LavalinkRestClient
 	}
 
 	/// <summary>
-	/// Decode a single track into its info, where <paramref name="base64Track"/> is the encoded base64 data.
+	///     Decode a single track into its info, where <paramref name="base64Track" /> is the encoded base64 data.
 	/// </summary>
-	/// <param name="base64Track">The encoded track <see cref="string"/>.</param>
-	/// <returns>The decoded <see cref="LavalinkTrack"/>.</returns>
+	/// <param name="base64Track">The encoded track <see cref="string" />.</param>
+	/// <returns>The decoded <see cref="LavalinkTrack" />.</returns>
 	internal async Task<LavalinkTrack> DecodeTrackAsync(string base64Track)
 	{
 		var queryDict = this.GetDefaultParams();
@@ -412,10 +414,10 @@ internal sealed class LavalinkRestClient
 	}
 
 	/// <summary>
-	/// Decodes multiple tracks into their info.
+	///     Decodes multiple tracks into their info.
 	/// </summary>
-	/// <param name="base64Tracks"><see cref="List{T}"/> of encoded track <see cref="string"/>s.</param>
-	/// <returns>A <see cref="IReadOnlyList{T}"/> of decoded <see cref="LavalinkTrack"/>s.</returns>
+	/// <param name="base64Tracks"><see cref="List{T}" /> of encoded track <see cref="string" />s.</param>
+	/// <returns>A <see cref="IReadOnlyList{T}" /> of decoded <see cref="LavalinkTrack" />s.</returns>
 	internal async Task<IReadOnlyList<LavalinkTrack>> DecodeTracksAsync(IEnumerable<string> base64Tracks)
 	{
 		var queryDict = this.GetDefaultParams();

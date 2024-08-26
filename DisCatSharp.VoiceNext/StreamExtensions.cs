@@ -7,16 +7,20 @@ using System.Threading.Tasks;
 namespace DisCatSharp.VoiceNext;
 
 /// <summary>
-/// The stream extensions.
+///     The stream extensions.
 /// </summary>
 public static class StreamExtensions
 {
 	/// <summary>
-	/// Asynchronously reads the bytes from the current stream and writes them to the specified <see cref="VoiceTransmitSink"/>.
+	///     Asynchronously reads the bytes from the current stream and writes them to the specified
+	///     <see cref="VoiceTransmitSink" />.
 	/// </summary>
-	/// <param name="source">The source <see cref="Stream"/></param>
-	/// <param name="destination">The target <see cref="VoiceTransmitSink"/></param>
-	/// <param name="bufferSize">The size, in bytes, of the buffer. This value must be greater than zero. If <see langword="null"/>, defaults to the packet size specified by <paramref name="destination"/>.</param>
+	/// <param name="source">The source <see cref="Stream" /></param>
+	/// <param name="destination">The target <see cref="VoiceTransmitSink" /></param>
+	/// <param name="bufferSize">
+	///     The size, in bytes, of the buffer. This value must be greater than zero. If
+	///     <see langword="null" />, defaults to the packet size specified by <paramref name="destination" />.
+	/// </param>
 	/// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
 	/// <returns></returns>
 	public static async Task CopyToAsync(this Stream source, VoiceTransmitSink destination, int? bufferSize = null, CancellationToken cancellationToken = default)

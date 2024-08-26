@@ -10,66 +10,74 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents an OAuth2 application.
+///     Represents an OAuth2 application.
 /// </summary>
 public sealed class DiscordRpcApplication : SnowflakeObject, IEquatable<DiscordRpcApplication>
 {
-	[JsonProperty("name")]
-	public string Name;
-
-	[JsonProperty("icon")]
-	public string? IconHash;
-
-	[JsonIgnore]
-	public string? Icon => this.IconHash != null ? $"https://cdn.discordapp.com{Endpoints.APP_ICONS}/{this.Id}/{this.IconHash}.png" : null;
-
 	[JsonProperty("description")]
 	public string? Description;
-
-	[JsonProperty("summary")]
-	public string? Summary;
-
-	[JsonProperty("type")]
-	public string Type;
-
-	[JsonProperty("hook")]
-	public bool Hook;
-
-	[JsonProperty("guild_id")]
-	public ulong? GuildId;
-
-	[JsonProperty("bot_public")]
-	public bool IsPublic;
-
-	[JsonProperty("bot_require_code_grant")]
-	public bool RequiresCodeGrant;
-
-	[JsonProperty("terms_of_service_url")]
-	public string? TermsOfServiceUrl;
-
-	[JsonProperty("privacy_policy_url")]
-	public string? PrivacyPolicyUrl;
-
-	[JsonProperty("install_params")]
-	public DiscordApplicationInstallParams InstallParams;
-
-	[JsonProperty("verify_key")]
-	public string VerifyKey;
 
 	[JsonProperty("flags")]
 	public ApplicationFlags Flags;
 
+	[JsonProperty("guild_id")]
+	public ulong? GuildId;
+
+	[JsonProperty("hook")]
+	public bool Hook;
+
+	[JsonProperty("icon")]
+	public string? IconHash;
+
+	[JsonProperty("install_params")]
+	public DiscordApplicationInstallParams InstallParams;
+
+	[JsonProperty("bot_public")]
+	public bool IsPublic;
+
+	[JsonProperty("name")]
+	public string Name;
+
+	[JsonProperty("privacy_policy_url")]
+	public string? PrivacyPolicyUrl;
+
+	[JsonProperty("bot_require_code_grant")]
+	public bool RequiresCodeGrant;
+
+	[JsonProperty("summary")]
+	public string? Summary;
+
 	[JsonProperty("tags")]
 	public List<string>? Tags;
 
+	[JsonProperty("terms_of_service_url")]
+	public string? TermsOfServiceUrl;
+
+	[JsonProperty("type")]
+	public string Type;
+
+	[JsonProperty("verify_key")]
+	public string VerifyKey;
+
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordRpcApplication"/> class.
+	///     Initializes a new instance of the <see cref="DiscordRpcApplication" /> class.
 	/// </summary>
 	internal DiscordRpcApplication()
 	{ }
 
+	[JsonIgnore]
+	public string? Icon => this.IconHash != null ? $"https://cdn.discordapp.com{Endpoints.APP_ICONS}/{this.Id}/{this.IconHash}.png" : null;
+
 	/// <summary>
-	/// Generates an oauth url for the application.
+	///     Checks whether this <see cref="DiscordRpcApplication" /> is equal to another <see cref="DiscordRpcApplication" />.
+	/// </summary>
+	/// <param name="e"><see cref="DiscordRpcApplication" /> to compare to.</param>
+	/// <returns>Whether the <see cref="DiscordRpcApplication" /> is equal to this <see cref="DiscordRpcApplication" />.</returns>
+	public bool Equals(DiscordRpcApplication e)
+		=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
+
+	/// <summary>
+	///     Generates an oauth url for the application.
 	/// </summary>
 	/// <param name="permissions">The permissions.</param>
 	/// <returns>OAuth Url</returns>
@@ -85,30 +93,22 @@ public sealed class DiscordRpcApplication : SnowflakeObject, IEquatable<DiscordR
 	}
 
 	/// <summary>
-	/// Checks whether this <see cref="DiscordRpcApplication"/> is equal to another object.
+	///     Checks whether this <see cref="DiscordRpcApplication" /> is equal to another object.
 	/// </summary>
 	/// <param name="obj">Object to compare to.</param>
-	/// <returns>Whether the object is equal to this <see cref="DiscordRpcApplication"/>.</returns>
+	/// <returns>Whether the object is equal to this <see cref="DiscordRpcApplication" />.</returns>
 	public override bool Equals(object obj)
 		=> this.Equals(obj as DiscordRpcApplication);
 
 	/// <summary>
-	/// Checks whether this <see cref="DiscordRpcApplication"/> is equal to another <see cref="DiscordRpcApplication"/>.
+	///     Gets the hash code for this <see cref="DiscordRpcApplication" />.
 	/// </summary>
-	/// <param name="e"><see cref="DiscordRpcApplication"/> to compare to.</param>
-	/// <returns>Whether the <see cref="DiscordRpcApplication"/> is equal to this <see cref="DiscordRpcApplication"/>.</returns>
-	public bool Equals(DiscordRpcApplication e)
-		=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
-
-	/// <summary>
-	/// Gets the hash code for this <see cref="DiscordRpcApplication"/>.
-	/// </summary>
-	/// <returns>The hash code for this <see cref="DiscordRpcApplication"/>.</returns>
+	/// <returns>The hash code for this <see cref="DiscordRpcApplication" />.</returns>
 	public override int GetHashCode()
 		=> this.Id.GetHashCode();
 
 	/// <summary>
-	/// Gets whether the two <see cref="DiscordRpcApplication"/> objects are equal.
+	///     Gets whether the two <see cref="DiscordRpcApplication" /> objects are equal.
 	/// </summary>
 	/// <param name="e1">First application to compare.</param>
 	/// <param name="e2">Second application to compare.</param>
@@ -122,7 +122,7 @@ public sealed class DiscordRpcApplication : SnowflakeObject, IEquatable<DiscordR
 	}
 
 	/// <summary>
-	/// Gets whether the two <see cref="DiscordRpcApplication"/> objects are not equal.
+	///     Gets whether the two <see cref="DiscordRpcApplication" /> objects are not equal.
 	/// </summary>
 	/// <param name="e1">First application to compare.</param>
 	/// <param name="e2">Second application to compare.</param>

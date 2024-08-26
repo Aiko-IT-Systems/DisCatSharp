@@ -7,30 +7,32 @@ using DisCatSharp.Configuration.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using Newtonsoft.Json;
+
 namespace DisCatSharp.Configuration;
 
 /// <summary>
-/// The configuration extensions.
+///     The configuration extensions.
 /// </summary>
 internal static class ConfigurationExtensions
 {
 	/// <summary>
-	/// The factory error message.
+	///     The factory error message.
 	/// </summary>
 	private const string FACTORY_ERROR_MESSAGE = "Require a function which provides a default entity to work with";
 
 	/// <summary>
-	/// The default root lib.
+	///     The default root lib.
 	/// </summary>
 	public const string DEFAULT_ROOT_LIB = "DisCatSharp";
 
 	/// <summary>
-	/// The config suffix.
+	///     The config suffix.
 	/// </summary>
 	private const string CONFIG_SUFFIX = "Configuration";
 
 	/// <summary>
-	/// Easily piece together paths that will work within <see cref="IConfiguration"/>
+	///     Easily piece together paths that will work within <see cref="IConfiguration" />
 	/// </summary>
 	/// <param name="config">(not used - only for adding context based functionality)</param>
 	/// <param name="values">The strings to piece together</param>
@@ -38,10 +40,10 @@ internal static class ConfigurationExtensions
 	public static string ConfigPath(this IConfiguration config, params string[] values) => string.Join(":", values);
 
 	/// <summary>
-	/// Skims over the configuration section and only overrides values that are explicitly defined within the config.
+	///     Skims over the configuration section and only overrides values that are explicitly defined within the config.
 	/// </summary>
 	/// <param name="config">Instance of config</param>
-	/// <param name="section">Section which contains values for <paramref name="config"/></param>
+	/// <param name="section">Section which contains values for <paramref name="config" /></param>
 	private static void HydrateInstance(ref object config, ConfigSection section)
 	{
 		var props = config.GetType().GetProperties();
@@ -76,7 +78,7 @@ internal static class ConfigurationExtensions
 				}
 				else
 					// Handle case for "root:section:name"
-					value = Newtonsoft.Json.JsonConvert.DeserializeObject(entry, prop.PropertyType);
+					value = JsonConvert.DeserializeObject(entry, prop.PropertyType);
 
 				if (value != null)
 					prop.SetValue(config, value);
@@ -122,13 +124,13 @@ internal static class ConfigurationExtensions
 	}
 
 	/// <summary>
-	/// Instantiate an entity using <paramref name="factory"/> then walk through the specified <paramref name="section"/>
-	/// and translate user-defined config values to the instantiated instance from <paramref name="factory"/>
+	///     Instantiate an entity using <paramref name="factory" /> then walk through the specified <paramref name="section" />
+	///     and translate user-defined config values to the instantiated instance from <paramref name="factory" />
 	/// </summary>
 	/// <param name="section">Section containing values for targeted config</param>
 	/// <param name="factory">Function which generates a default entity</param>
 	/// <returns>Hydrated instance of an entity which contains user-defined values (if any)</returns>
-	/// <exception cref="ArgumentNullException">When <paramref name="factory"/> is null</exception>
+	/// <exception cref="ArgumentNullException">When <paramref name="factory" /> is null</exception>
 	public static object ExtractConfig(this ConfigSection section, Func<object> factory)
 	{
 		if (factory == null)
@@ -143,15 +145,20 @@ internal static class ConfigurationExtensions
 	}
 
 	/// <summary>
-	/// Instantiate an entity using <paramref name="factory"/> then walk through the specified <paramref name="sectionName"/>
-	/// in <paramref name="config"/>. Translate user-defined config values to the instantiated instance from <paramref name="factory"/>
+	///     Instantiate an entity using <paramref name="factory" /> then walk through the specified
+	///     <paramref name="sectionName" />
+	///     in <paramref name="config" />. Translate user-defined config values to the instantiated instance from
+	///     <paramref name="factory" />
 	/// </summary>
 	/// <param name="config">Loaded App Configuration</param>
 	/// <param name="sectionName">Name of section to load</param>
 	/// <param name="factory">Function which creates a default entity to work with</param>
-	/// <param name="rootSectionName">(Optional) Used when section is nested within another. Default value is <see cref="DEFAULT_ROOT_LIB"/></param>
+	/// <param name="rootSectionName">
+	///     (Optional) Used when section is nested within another. Default value is
+	///     <see cref="DEFAULT_ROOT_LIB" />
+	/// </param>
 	/// <returns>Hydrated instance of an entity which contains user-defined values (if any)</returns>
-	/// <exception cref="ArgumentNullException">When <paramref name="factory"/> is null</exception>
+	/// <exception cref="ArgumentNullException">When <paramref name="factory" /> is null</exception>
 	public static object ExtractConfig(
 		this IConfiguration config,
 		string sectionName,
@@ -171,15 +178,20 @@ internal static class ConfigurationExtensions
 	}
 
 	/// <summary>
-	/// Instantiate a new instance of <typeparamref name="TConfig"/>, then walk through the specified <paramref name="sectionName"/>
-	/// in <paramref name="config"/>. Translate user-defined config values to the <typeparamref name="TConfig"/> instance.
+	///     Instantiate a new instance of <typeparamref name="TConfig" />, then walk through the specified
+	///     <paramref name="sectionName" />
+	///     in <paramref name="config" />. Translate user-defined config values to the <typeparamref name="TConfig" />
+	///     instance.
 	/// </summary>
 	/// <param name="config">Loaded App Configuration</param>
 	/// <param name="serviceProvider"></param>
 	/// <param name="sectionName">Name of section to load</param>
-	/// <param name="rootSectionName">(Optional) Used when section is nested with another. Default value is <see cref="DEFAULT_ROOT_LIB"/></param>
-	/// <typeparam name="TConfig">Type of instance that <paramref name="sectionName"/> represents</typeparam>
-	/// <returns>Hydrated instance of <typeparamref name="TConfig"/> which contains the user-defined values (if any).</returns>
+	/// <param name="rootSectionName">
+	///     (Optional) Used when section is nested with another. Default value is
+	///     <see cref="DEFAULT_ROOT_LIB" />
+	/// </param>
+	/// <typeparam name="TConfig">Type of instance that <paramref name="sectionName" /> represents</typeparam>
+	/// <returns>Hydrated instance of <typeparamref name="TConfig" /> which contains the user-defined values (if any).</returns>
 	public static TConfig ExtractConfig<TConfig>(this IConfiguration config, IServiceProvider serviceProvider, string sectionName, string? rootSectionName = DEFAULT_ROOT_LIB)
 		where TConfig : new()
 	{
@@ -192,14 +204,19 @@ internal static class ConfigurationExtensions
 	}
 
 	/// <summary>
-	/// Instantiate a new instance of <typeparamref name="TConfig"/>, then walk through the specified <paramref name="sectionName"/>
-	/// in <paramref name="config"/>. Translate user-defined config values to the <typeparamref name="TConfig"/> instance.
+	///     Instantiate a new instance of <typeparamref name="TConfig" />, then walk through the specified
+	///     <paramref name="sectionName" />
+	///     in <paramref name="config" />. Translate user-defined config values to the <typeparamref name="TConfig" />
+	///     instance.
 	/// </summary>
 	/// <param name="config">Loaded App Configuration</param>
 	/// <param name="sectionName">Name of section to load</param>
-	/// <param name="rootSectionName">(Optional) Used when section is nested with another. Default value is <see cref="DEFAULT_ROOT_LIB"/></param>
-	/// <typeparam name="TConfig">Type of instance that <paramref name="sectionName"/> represents</typeparam>
-	/// <returns>Hydrated instance of <typeparamref name="TConfig"/> which contains the user-defined values (if any).</returns>
+	/// <param name="rootSectionName">
+	///     (Optional) Used when section is nested with another. Default value is
+	///     <see cref="DEFAULT_ROOT_LIB" />
+	/// </param>
+	/// <typeparam name="TConfig">Type of instance that <paramref name="sectionName" /> represents</typeparam>
+	/// <returns>Hydrated instance of <typeparamref name="TConfig" /> which contains the user-defined values (if any).</returns>
 	public static TConfig ExtractConfig<TConfig>(this IConfiguration config, string sectionName, string? rootSectionName = DEFAULT_ROOT_LIB)
 		where TConfig : new()
 	{
@@ -212,13 +229,13 @@ internal static class ConfigurationExtensions
 	}
 
 	/// <summary>
-	/// Determines if <paramref name="config"/> contains a particular section/object (not value)
+	///     Determines if <paramref name="config" /> contains a particular section/object (not value)
 	/// </summary>
 	/// <remarks>
-	/// <code>
+	///     <code>
 	/// {
 	///    "Discord": {  // this is a section/object
-	///
+	/// 
 	///    },
 	///    "Value": "something" // this is not a section/object
 	/// }
@@ -252,30 +269,30 @@ internal static class ConfigurationExtensions
 	}
 
 	/// <summary>
-	/// Instantiates an instance of <see cref="DiscordClient"/>, then consumes any custom
-	/// configuration from user/developer from <paramref name="config"/>. <br/>
-	/// View remarks for more info
+	///     Instantiates an instance of <see cref="DiscordClient" />, then consumes any custom
+	///     configuration from user/developer from <paramref name="config" />. <br />
+	///     View remarks for more info
 	/// </summary>
 	/// <remarks>
-	/// This is an example of how your JSON structure should look if you wish
-	/// to override one or more of the default values from <see cref="DiscordConfiguration"/>
-	/// <code>
+	///     This is an example of how your JSON structure should look if you wish
+	///     to override one or more of the default values from <see cref="DiscordConfiguration" />
+	///     <code>
 	/// {
 	///   "DisCatSharp": {
 	///      "Discord": { }
 	///   }
 	/// }
 	/// </code>
-	/// <br/>
-	/// Alternatively, you can use the type name itself
-	/// <code>
+	///     <br />
+	///     Alternatively, you can use the type name itself
+	///     <code>
 	/// {
 	///   "DisCatSharp": {
 	///      "DiscordConfiguration": { }
 	///   }
 	/// }
 	/// </code>
-	/// <code>
+	///     <code>
 	/// {
 	///   "botSectionName": {
 	///      "DiscordConfiguration": { }
@@ -286,7 +303,7 @@ internal static class ConfigurationExtensions
 	/// <param name="config"></param>
 	/// <param name="serviceProvider"></param>
 	/// <param name="botSectionName"></param>
-	/// <returns>Instance of <see cref="DiscordClient"/></returns>
+	/// <returns>Instance of <see cref="DiscordClient" /></returns>
 	public static DiscordClient BuildClient(
 		this IConfiguration config,
 		IServiceProvider serviceProvider,

@@ -8,18 +8,13 @@ namespace DisCatSharp.CommandsNext.Attributes;
 
 // TODO: Like in applciation commands, allow the different team roles to be chosen
 /// <summary>
-/// Requires ownership of the bot or a whitelisted id to execute this command.
+///     Requires ownership of the bot or a whitelisted id to execute this command.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 public sealed class RequireOwnerOrIdAttribute : CheckBaseAttribute
 {
 	/// <summary>
-	/// Allowed user ids
-	/// </summary>
-	public IReadOnlyList<ulong> UserIds { get; }
-
-	/// <summary>
-	/// Defines that usage of this command is restricted to the owner or whitelisted ids of the bot.
+	///     Defines that usage of this command is restricted to the owner or whitelisted ids of the bot.
 	/// </summary>
 	/// <param name="userIds">List of allowed user ids</param>
 	public RequireOwnerOrIdAttribute(params ulong[] userIds)
@@ -28,7 +23,12 @@ public sealed class RequireOwnerOrIdAttribute : CheckBaseAttribute
 	}
 
 	/// <summary>
-	/// Executes the a check.
+	///     Allowed user ids
+	/// </summary>
+	public IReadOnlyList<ulong> UserIds { get; }
+
+	/// <summary>
+	///     Executes the a check.
 	/// </summary>
 	/// <param name="ctx">The command context.</param>
 	/// <param name="help">If true, help - returns true.</param>

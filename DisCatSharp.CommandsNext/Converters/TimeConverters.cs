@@ -8,12 +8,12 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.CommandsNext.Converters;
 
 /// <summary>
-/// Represents a date time converter.
+///     Represents a date time converter.
 /// </summary>
 public sealed class DateTimeConverter : IArgumentConverter<DateTime>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -24,12 +24,12 @@ public sealed class DateTimeConverter : IArgumentConverter<DateTime>
 }
 
 /// <summary>
-/// Represents a date time offset converter.
+///     Represents a date time offset converter.
 /// </summary>
 public sealed class DateTimeOffsetConverter : IArgumentConverter<DateTimeOffset>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -40,12 +40,12 @@ public sealed class DateTimeOffsetConverter : IArgumentConverter<DateTimeOffset>
 }
 
 /// <summary>
-/// Represents a time span converter.
+///     Represents a time span converter.
 /// </summary>
 public sealed class TimeSpanConverter : IArgumentConverter<TimeSpan>
 {
 	/// <summary>
-	/// Converts a string.
+	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
@@ -63,7 +63,7 @@ public sealed class TimeSpanConverter : IArgumentConverter<TimeSpan>
 		if (TimeSpan.TryParse(value, CultureInfo.InvariantCulture, out var result))
 			return Task.FromResult(Optional.Some(result));
 
-		var gps = new string[] { "days", "hours", "minutes", "seconds" };
+		var gps = new[] { "days", "hours", "minutes", "seconds" };
 		var mtc = CommonRegEx.TimeSpanRegex().Match(value);
 		if (!mtc.Success)
 			return Task.FromResult(Optional<TimeSpan>.None);
@@ -79,7 +79,7 @@ public sealed class TimeSpanConverter : IArgumentConverter<TimeSpan>
 				continue;
 
 			var gpt = gpc[^1];
-			int.TryParse(gpc[0..^1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var val);
+			int.TryParse(gpc[..^1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var val);
 			switch (gpt)
 			{
 				case 'd':

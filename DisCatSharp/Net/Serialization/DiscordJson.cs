@@ -14,19 +14,18 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using Sentry;
-using Sentry.Protocol;
 
 using ErrorEventArgs = Newtonsoft.Json.Serialization.ErrorEventArgs;
 
 namespace DisCatSharp.Net.Serialization;
 
 /// <summary>
-/// Represents discord json.
+///     Represents discord json.
 /// </summary>
 public static class DiscordJson
 {
 	/// <summary>
-	/// Gets the serializer.
+	///     Gets the serializer.
 	/// </summary>
 	private static readonly JsonSerializer s_serializer = JsonSerializer.CreateDefault(new()
 	{
@@ -40,7 +39,7 @@ public static class DiscordJson
 		=> SerializeObjectInternal(value, null!, s_serializer);
 
 	/// <summary>
-	/// Deserializes the specified JSON string to an object.
+	///     Deserializes the specified JSON string to an object.
 	/// </summary>
 	/// <typeparam name="T">The type</typeparam>
 	/// <param name="json">The received json.</param>
@@ -49,7 +48,7 @@ public static class DiscordJson
 		=> DeserializeObjectInternal<T>(json, discord);
 
 	/// <summary>
-	/// Deserializes the specified JSON string to an object of the type <see cref="IEnumerable{T}"/>.
+	///     Deserializes the specified JSON string to an object of the type <see cref="IEnumerable{T}" />.
 	/// </summary>
 	/// <typeparam name="T">The enumerable type.</typeparam>
 	/// <param name="json">The received json.</param>
@@ -67,7 +66,8 @@ public static class DiscordJson
 	}
 
 	/// <summary>
-	/// Converts this token into an object, passing any properties through extra <see cref="Newtonsoft.Json.JsonConverter"/>s if needed.
+	///     Converts this token into an object, passing any properties through extra
+	///     <see cref="Newtonsoft.Json.JsonConverter" />s if needed.
 	/// </summary>
 	/// <param name="token">The token to convert</param>
 	/// <typeparam name="T">Type to convert to</typeparam>
@@ -76,7 +76,7 @@ public static class DiscordJson
 		=> token.ToObject<T>(s_serializer)!;
 
 	/// <summary>
-	/// Serializes the object.
+	///     Serializes the object.
 	/// </summary>
 	/// <param name="value">The value.</param>
 	/// <param name="type">The type.</param>
@@ -94,7 +94,7 @@ public static class DiscordJson
 	}
 
 	/// <summary>
-	/// Handles <see cref="DiscordJson"/> errors.
+	///     Handles <see cref="DiscordJson" /> errors.
 	/// </summary>
 	/// <param name="sender">The sender.</param>
 	/// <param name="e">The error event args.</param>
@@ -125,7 +125,7 @@ public static class DiscordJson
 			{
 				Id = discord.CurrentUser.Id.ToString(),
 				Username = discord.CurrentUser.UsernameWithDiscriminator,
-				Other = new Dictionary<string, string>()
+				Other = new Dictionary<string, string>
 				{
 					{ "developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
 					{ "email", discord.Configuration.FeedbackEmail ?? "not_given" }
@@ -138,7 +138,7 @@ public static class DiscordJson
 	}
 
 	/// <summary>
-	/// Deserializes the specified JSON string to an object.
+	///     Deserializes the specified JSON string to an object.
 	/// </summary>
 	/// <typeparam name="T">The type</typeparam>
 	/// <param name="json">The received json.</param>
@@ -147,7 +147,7 @@ public static class DiscordJson
 	{
 		ArgumentNullException.ThrowIfNull(json, nameof(json));
 
-		var obj = JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings()
+		var obj = JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings
 		{
 			ContractResolver = new OptionalJsonContractResolver(),
 			Error = (s, e) => DiscordJsonErrorHandler(s, e, discord)
@@ -200,7 +200,7 @@ public static class DiscordJson
 			{
 				Id = discord.CurrentUser.Id.ToString(),
 				Username = discord.CurrentUser.UsernameWithDiscriminator,
-				Other = new Dictionary<string, string>()
+				Other = new Dictionary<string, string>
 				{
 					{ "developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
 					{ "email", discord.Configuration.FeedbackEmail ?? "not_given" }
@@ -215,7 +215,7 @@ public static class DiscordJson
 	}
 
 	/// <summary>
-	/// Deserializes the specified JSON string to an object of the type <see cref="IEnumerable{T}"/>.
+	///     Deserializes the specified JSON string to an object of the type <see cref="IEnumerable{T}" />.
 	/// </summary>
 	/// <typeparam name="T">The enumerable type.</typeparam>
 	/// <param name="json">The received json.</param>
@@ -224,7 +224,7 @@ public static class DiscordJson
 	{
 		ArgumentNullException.ThrowIfNull(json, nameof(json));
 
-		var obj = JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings()
+		var obj = JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings
 		{
 			ContractResolver = new OptionalJsonContractResolver(),
 			Error = (s, e) => DiscordJsonErrorHandler(s, e, discord)
@@ -279,7 +279,7 @@ public static class DiscordJson
 			{
 				Id = discord.CurrentUser.Id.ToString(),
 				Username = discord.CurrentUser.UsernameWithDiscriminator,
-				Other = new Dictionary<string, string>()
+				Other = new Dictionary<string, string>
 				{
 					{ "developer", discord.Configuration.DeveloperUserId?.ToString() ?? "not_given" },
 					{ "email", discord.Configuration.FeedbackEmail ?? "not_given" }

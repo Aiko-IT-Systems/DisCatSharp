@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 
@@ -8,77 +7,72 @@ using DisCatSharp.Entities;
 namespace DisCatSharp;
 
 /// <summary>
-/// Tool to detect image formats and convert from binary data to base64 strings.
+///     Tool to detect image formats and convert from binary data to base64 strings.
 /// </summary>
 public sealed class ImageTool : IDisposable
 {
 	/// <summary>
-	/// The png magic .
+	///     The png magic .
 	/// </summary>
 	private const ulong PNG_MAGIC = 0x0A1A_0A0D_474E_5089;
 
 	/// <summary>
-	/// The jpeg magic 1.
+	///     The jpeg magic 1.
 	/// </summary>
 	private const ushort JPEG_MAGIC_1 = 0xD8FF;
 
 	/// <summary>
-	/// The jpeg magic 2.
+	///     The jpeg magic 2.
 	/// </summary>
 	private const ushort JPEG_MAGIC_2 = 0xD9FF;
 
 	/// <summary>
-	/// The gif magic 1
+	///     The gif magic 1
 	/// </summary>
 	private const ulong GIF_MAGIC_1 = 0x0000_6139_3846_4947;
 
 	/// <summary>
-	/// The gif magic 2.
+	///     The gif magic 2.
 	/// </summary>
 	private const ulong GIF_MAGIC_2 = 0x0000_6137_3846_4947;
 
 	/// <summary>
-	/// The webp magic 1.
+	///     The webp magic 1.
 	/// </summary>
 	private const uint WEBP_MAGIC_1 = 0x4646_4952;
 
 	/// <summary>
-	/// The webp magic 2.
+	///     The webp magic 2.
 	/// </summary>
 	private const uint WEBP_MAGIC_2 = 0x5042_4557;
 
 	/// <summary>
-	/// The gif mask.
+	///     The gif mask.
 	/// </summary>
 	private const ulong GIF_MASK = 0x0000_FFFF_FFFF_FFFF;
 
 	/// <summary>
-	/// The mask 32.
+	///     The mask 32.
 	/// </summary>
 	private const ulong MASK32 = 0x0000_0000_FFFF_FFFF;
 
 	/// <summary>
-	/// The mask 16.
+	///     The mask 16.
 	/// </summary>
 	private const uint MASK16 = 0x0000_FFFF;
 
 	/// <summary>
-	/// Gets the stream this tool is operating on.
-	/// </summary>
-	public Stream SourceStream { get; }
-
-	/// <summary>
-	/// Gets the format of this image.
-	/// </summary>
-	private ImageFormat _ifcache = ImageFormat.Unknown;
-
-	/// <summary>
-	/// Gets the base64 string of this image.
+	///     Gets the base64 string of this image.
 	/// </summary>
 	private string? _b64Cache;
 
 	/// <summary>
-	/// Creates a new image tool from given stream.
+	///     Gets the format of this image.
+	/// </summary>
+	private ImageFormat _ifcache = ImageFormat.Unknown;
+
+	/// <summary>
+	///     Creates a new image tool from given stream.
 	/// </summary>
 	/// <param name="stream">Stream to work with.</param>
 	public ImageTool(Stream stream)
@@ -95,7 +89,18 @@ public sealed class ImageTool : IDisposable
 	}
 
 	/// <summary>
-	/// Detects the format of this image.
+	///     Gets the stream this tool is operating on.
+	/// </summary>
+	public Stream SourceStream { get; }
+
+	/// <summary>
+	///     Disposes this image tool.
+	/// </summary>
+	public void Dispose()
+		=> this.SourceStream?.Dispose();
+
+	/// <summary>
+	///     Detects the format of this image.
 	/// </summary>
 	/// <returns>Detected format.</returns>
 	public ImageFormat GetFormat()
@@ -128,7 +133,7 @@ public sealed class ImageTool : IDisposable
 	}
 
 	/// <summary>
-	/// Converts this image into base64 data format string.
+	///     Converts this image into base64 data format string.
 	/// </summary>
 	/// <returns>Data-scheme base64 string.</returns>
 	public string GetBase64()
@@ -155,13 +160,7 @@ public sealed class ImageTool : IDisposable
 	}
 
 	/// <summary>
-	/// Disposes this image tool.
-	/// </summary>
-	public void Dispose()
-		=> this.SourceStream?.Dispose();
-
-	/// <summary>
-	/// Utility function to convert an image stream into a base 64 string.
+	///     Utility function to convert an image stream into a base 64 string.
 	/// </summary>
 	/// <param name="stream">The stream.</param>
 	/// <returns>The base 64 string.</returns>
@@ -172,7 +171,7 @@ public sealed class ImageTool : IDisposable
 	}
 
 	/// <summary>
-	/// Utility function to convert an optional image stream into an optional base 64 string.
+	///     Utility function to convert an optional image stream into an optional base 64 string.
 	/// </summary>
 	/// <param name="stream">The optional stream.</param>
 	/// <returns>The optional base 64 string.</returns>
@@ -187,37 +186,37 @@ public sealed class ImageTool : IDisposable
 }
 
 /// <summary>
-/// Represents format of an image.
+///     Represents format of an image.
 /// </summary>
 public enum ImageFormat
 {
 	/// <summary>
-	/// The format is unknown
+	///     The format is unknown
 	/// </summary>
 	Unknown = 0,
 
 	/// <summary>
-	/// The format is a jpeg
+	///     The format is a jpeg
 	/// </summary>
 	Jpeg = 1,
 
 	/// <summary>
-	/// The format is a png
+	///     The format is a png
 	/// </summary>
 	Png = 2,
 
 	/// <summary>
-	/// The format is a gif
+	///     The format is a gif
 	/// </summary>
 	Gif = 3,
 
 	/// <summary>
-	/// The format is a webp
+	///     The format is a webp
 	/// </summary>
 	WebP = 4,
 
 	/// <summary>
-	/// The format will be automatically detected
+	///     The format will be automatically detected
 	/// </summary>
 	Auto = 5
 }

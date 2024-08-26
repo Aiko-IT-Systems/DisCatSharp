@@ -6,37 +6,12 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents an option for a user to select for auto-completion.
+///     Represents an option for a user to select for auto-completion.
 /// </summary>
 public sealed class DiscordApplicationCommandAutocompleteChoice
 {
 	/// <summary>
-	/// Gets the name of this option which will be presented to the user.
-	/// </summary>
-	[JsonProperty("name")]
-	public string Name { get; internal set; }
-
-	/// <summary>
-	/// Sets the name localizations.
-	/// </summary>
-	[JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
-	internal Dictionary<string, string> RawNameLocalizations { get; set; }
-
-	/// <summary>
-	/// Gets the name localizations.
-	/// </summary>
-	[JsonIgnore]
-	public DiscordApplicationCommandLocalization NameLocalizations
-		=> new(this.RawNameLocalizations);
-
-	/// <summary>
-	/// Gets the value of this option.
-	/// </summary>
-	[JsonProperty("value")]
-	public object Value { get; internal set; }
-
-	/// <summary>
-	/// Creates a new instance of <see cref="DiscordApplicationCommandAutocompleteChoice"/>.
+	///     Creates a new instance of <see cref="DiscordApplicationCommandAutocompleteChoice" />.
 	/// </summary>
 	/// <param name="name">The name of this option, which will be presented to the user.</param>
 	/// <param name="nameLocalizations">The localizations of the option name.</param>
@@ -54,4 +29,29 @@ public sealed class DiscordApplicationCommandAutocompleteChoice
 		this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
 		this.Value = value;
 	}
+
+	/// <summary>
+	///     Gets the name of this option which will be presented to the user.
+	/// </summary>
+	[JsonProperty("name")]
+	public string Name { get; internal set; }
+
+	/// <summary>
+	///     Sets the name localizations.
+	/// </summary>
+	[JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
+	internal Dictionary<string, string> RawNameLocalizations { get; set; }
+
+	/// <summary>
+	///     Gets the name localizations.
+	/// </summary>
+	[JsonIgnore]
+	public DiscordApplicationCommandLocalization NameLocalizations
+		=> new(this.RawNameLocalizations);
+
+	/// <summary>
+	///     Gets the value of this option.
+	/// </summary>
+	[JsonProperty("value")]
+	public object Value { get; internal set; }
 }

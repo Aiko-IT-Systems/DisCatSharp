@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
-using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
@@ -15,12 +15,66 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents a Discord text message.
+///     Represents a Discord text message.
 /// </summary>
 public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 {
+	[JsonIgnore]
+	private readonly Lazy<IReadOnlyList<DiscordAttachment>> _attachmentsLazy;
+
+	[JsonIgnore]
+	private readonly Lazy<IReadOnlyList<DiscordEmbed>> _embedsLazy;
+
+	private readonly Lazy<Uri> _jumpLink;
+
+	[JsonIgnore]
+	private readonly Lazy<IReadOnlyList<DiscordChannel>> _mentionedChannelsLazy;
+
+	[JsonIgnore]
+	private readonly Lazy<IReadOnlyList<DiscordRole>> _mentionedRolesLazy;
+
+	[JsonIgnore]
+	private readonly Lazy<IReadOnlyList<DiscordUser>> _mentionedUsersLazy;
+
+	[JsonIgnore]
+	private readonly Lazy<IReadOnlyList<DiscordReaction>> _reactionsLazy;
+
+	[JsonProperty("thread", NullValueHandling = NullValueHandling.Ignore)]
+	private readonly DiscordThreadChannel _startedThread;
+
+	[JsonIgnore]
+	private readonly Lazy<IReadOnlyList<DiscordSticker>> _stickersLazy;
+
+	private DiscordChannel _channel;
+
+	private DiscordThreadChannel _thread;
+
+	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<DiscordAttachment> AttachmentsInternal = [];
+
+	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<DiscordEmbed> EmbedsInternal = [];
+
+	[JsonIgnore]
+	internal List<DiscordChannel> MentionedChannelsInternal = [];
+
+	[JsonProperty("mention_roles")]
+	public List<ulong> MentionedRoleIds = [];
+
+	[JsonIgnore]
+	internal List<DiscordRole> MentionedRolesInternal = [];
+
+	[JsonProperty("mentions", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<DiscordUser> MentionedUsersInternal = [];
+
+	[JsonProperty("reactions", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<DiscordReaction> ReactionsInternal = [];
+
+	[JsonProperty("sticker_items", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<DiscordSticker> StickersInternal = [];
+
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordMessage"/> class.
+	///     Initializes a new instance of the <see cref="DiscordMessage" /> class.
 	/// </summary>
 	internal DiscordMessage()
 	{
@@ -59,7 +113,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordMessage"/> class.
+	///     Initializes a new instance of the <see cref="DiscordMessage" /> class.
 	/// </summary>
 	/// <param name="other">The other message.</param>
 	internal DiscordMessage(DiscordMessage other)
@@ -102,7 +156,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	}
 
 	/// <summary>
-	/// Gets the channel in which the message was sent.
+	///     Gets the channel in which the message was sent.
 	/// </summary>
 	[JsonIgnore]
 	public DiscordChannel Channel
@@ -111,10 +165,8 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		internal set => this._channel = value;
 	}
 
-	private DiscordChannel _channel;
-
 	/// <summary>
-	/// Gets the thread in which the message was sent.
+	///     Gets the thread in which the message was sent.
 	/// </summary>
 	[JsonIgnore]
 	private DiscordThreadChannel INTERNAL_THREAD
@@ -123,312 +175,268 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		set => this._thread = value;
 	}
 
-	private DiscordThreadChannel _thread;
-
 	/// <summary>
-	/// Gets the ID of the channel in which the message was sent.
+	///     Gets the ID of the channel in which the message was sent.
 	/// </summary>
 	[JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong ChannelId { get; internal set; }
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	[JsonProperty("position", NullValueHandling = NullValueHandling.Ignore)]
 	public int? Position { get; internal set; }
 
 	/// <summary>
-	/// Gets the components this message was sent with.
+	///     Gets the components this message was sent with.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
 	public IReadOnlyCollection<DiscordActionRowComponent> Components { get; internal set; }
 
 	/// <summary>
-	/// Gets the user or member that sent the message.
+	///     Gets the user or member that sent the message.
 	/// </summary>
 	[JsonProperty("author", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordUser Author { get; internal set; }
 
-	[JsonProperty("member", NullValueHandling = NullValueHandling.Ignore), System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>")]
+	[JsonProperty("member", NullValueHandling = NullValueHandling.Ignore), SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>")]
 	private TransportMember TRANSPORT_MEMBER { get; set; }
 
 	/// <summary>
-	/// Gets the message's content.
+	///     Gets the message's content.
 	/// </summary>
 	[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
 	public string Content { get; internal set; }
 
 	/// <summary>
-	/// Gets the message's creation timestamp.
+	///     Gets the message's creation timestamp.
 	/// </summary>
 	[JsonIgnore]
 	public DateTimeOffset Timestamp
 		=> !string.IsNullOrWhiteSpace(this.TimestampRaw) && DateTimeOffset.TryParse(this.TimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ? dto : this.CreationTimestamp;
 
 	/// <summary>
-	/// Gets the message's creation timestamp as raw string.
+	///     Gets the message's creation timestamp as raw string.
 	/// </summary>
 	[JsonProperty("timestamp", NullValueHandling = NullValueHandling.Ignore)]
 	internal string TimestampRaw { get; set; }
 
 	/// <summary>
-	/// Gets the message's edit timestamp. Will be null if the message was not edited.
+	///     Gets the message's edit timestamp. Will be null if the message was not edited.
 	/// </summary>
 	[JsonIgnore]
 	public DateTimeOffset? EditedTimestamp
 		=> !string.IsNullOrWhiteSpace(this.EditedTimestampRaw) && DateTimeOffset.TryParse(this.EditedTimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ? dto : null;
 
 	/// <summary>
-	/// Gets the message's edit timestamp as raw string. Will be null if the message was not edited.
+	///     Gets the message's edit timestamp as raw string. Will be null if the message was not edited.
 	/// </summary>
 	[JsonProperty("edited_timestamp", NullValueHandling = NullValueHandling.Ignore)]
 	internal string EditedTimestampRaw { get; set; }
 
 	/// <summary>
-	/// Gets whether this message was edited.
+	///     Gets whether this message was edited.
 	/// </summary>
 	[JsonIgnore]
 	public bool IsEdited
 		=> !string.IsNullOrWhiteSpace(this.EditedTimestampRaw);
 
 	/// <summary>
-	/// Gets whether the message is a text-to-speech message.
+	///     Gets whether the message is a text-to-speech message.
 	/// </summary>
 	[JsonProperty("tts", NullValueHandling = NullValueHandling.Ignore)]
 	public bool IsTts { get; internal set; }
 
 	/// <summary>
-	/// Gets whether the message mentions everyone.
+	///     Gets whether the message mentions everyone.
 	/// </summary>
 	[JsonProperty("mention_everyone", NullValueHandling = NullValueHandling.Ignore)]
 	public bool MentionEveryone { get; internal set; }
 
 	/// <summary>
-	/// Gets users or members mentioned by this message.
+	///     Gets users or members mentioned by this message.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordUser> MentionedUsers
 		=> this._mentionedUsersLazy.Value;
 
-	[JsonProperty("mentions", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordUser> MentionedUsersInternal = [];
-
-	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordUser>> _mentionedUsersLazy;
-
 	// TODO: this will probably throw an exception in DMs since it tries to wrap around a null List...
 	// this is probably low priority but need to find out a clean way to solve it...
 	/// <summary>
-	/// Gets roles mentioned by this message.
+	///     Gets roles mentioned by this message.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordRole> MentionedRoles
 		=> this._mentionedRolesLazy.Value;
 
-	[JsonIgnore]
-	internal List<DiscordRole> MentionedRolesInternal = [];
-
-	[JsonProperty("mention_roles")]
-	public List<ulong> MentionedRoleIds = [];
-
-	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordRole>> _mentionedRolesLazy;
-
 	/// <summary>
-	/// Gets channels mentioned by this message.
+	///     Gets channels mentioned by this message.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordChannel> MentionedChannels
 		=> this._mentionedChannelsLazy.Value;
 
-	[JsonIgnore]
-	internal List<DiscordChannel> MentionedChannelsInternal = [];
-
-	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordChannel>> _mentionedChannelsLazy;
-
 	/// <summary>
-	/// Gets files attached to this message.
+	///     Gets files attached to this message.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordAttachment> Attachments
 		=> this._attachmentsLazy.Value;
 
-	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordAttachment> AttachmentsInternal = [];
-
-	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordAttachment>> _attachmentsLazy;
-
 	/// <summary>
-	/// Gets embeds attached to this message.
+	///     Gets embeds attached to this message.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordEmbed> Embeds
 		=> this._embedsLazy.Value;
 
-	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordEmbed> EmbedsInternal = [];
-
-	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordEmbed>> _embedsLazy;
-
 	/// <summary>
-	/// Gets reactions used on this message.
+	///     Gets reactions used on this message.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordReaction> Reactions
 		=> this._reactionsLazy.Value;
 
-	[JsonProperty("reactions", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordReaction> ReactionsInternal = [];
-
-	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordReaction>> _reactionsLazy;
-
 	/// <summary>
-	/// Gets the nonce sent with the message, if the message was sent by the client.
+	///     Gets the nonce sent with the message, if the message was sent by the client.
 	/// </summary>
 	[JsonProperty("nonce", NullValueHandling = NullValueHandling.Ignore)]
 	public string Nonce { get; internal set; }
 
 	/// <summary>
-	/// Gets whether the <see cref="Nonce"/> is enforced to be validated.
+	///     Gets whether the <see cref="Nonce" /> is enforced to be validated.
 	/// </summary>
 	[JsonProperty("enforce_nonce", NullValueHandling = NullValueHandling.Ignore)]
 	public bool EnforceNonce { get; internal set; }
 
 	/// <summary>
-	/// Gets whether the message is pinned.
+	///     Gets whether the message is pinned.
 	/// </summary>
 	[JsonProperty("pinned", NullValueHandling = NullValueHandling.Ignore)]
 	public bool Pinned { get; internal set; }
 
 	/// <summary>
-	/// Gets the id of the webhook that generated this message.
+	///     Gets the id of the webhook that generated this message.
 	/// </summary>
 	[JsonProperty("webhook_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong? WebhookId { get; internal set; }
 
 	/// <summary>
-	/// Gets the type of the message.
+	///     Gets the type of the message.
 	/// </summary>
 	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
 	public MessageType? MessageType { get; internal set; }
 
 	/// <summary>
-	/// Gets the message activity in the Rich Presence embed.
+	///     Gets the message activity in the Rich Presence embed.
 	/// </summary>
 	[JsonProperty("activity", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordMessageActivity Activity { get; internal set; }
 
 	/// <summary>
-	/// Gets the message application in the Rich Presence embed.
+	///     Gets the message application in the Rich Presence embed.
 	/// </summary>
 	[JsonProperty("application", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordMessageApplication Application { get; internal set; }
 
 	/// <summary>
-	/// Gets the message application id in the Rich Presence embed.
+	///     Gets the message application id in the Rich Presence embed.
 	/// </summary>
 	[JsonProperty("application_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong ApplicationId { get; internal set; }
 
 	/// <summary>
-	/// Gets the internal reference.
+	///     Gets the internal reference.
 	/// </summary>
 	[JsonProperty("message_reference", NullValueHandling = NullValueHandling.Ignore)]
 	internal InternalDiscordMessageReference? InternalReference { get; set; }
 
 	/// <summary>
-	/// Gets the message reference.
+	///     Gets the message reference.
 	/// </summary>
 	[JsonIgnore]
 	public DiscordMessageReference? Reference
 		=> this.InternalReference.HasValue ? this?.InternalBuildMessageReference() : null;
 
 	/// <summary>
-	/// Gets the message snapshots.
+	///     Gets the message snapshots.
 	/// </summary>
 	[JsonProperty("message_snapshots", NullValueHandling = NullValueHandling.Ignore)]
 	public List<DiscordMessageSnapshot>? MessageSnapshots { get; internal set; }
 
 	/// <summary>
-	/// Gets whether this message has a message reference (reply, announcement, etc.).
+	///     Gets whether this message has a message reference (reply, announcement, etc.).
 	/// </summary>
-	[Experimental("We provide that temporary, as we figure out things."), JsonIgnore]
+	[Attributes.Experimental("We provide that temporary, as we figure out things."), JsonIgnore]
 	public bool HasMessageReference
 		=> this.InternalReference is { Type: ReferenceType.Default };
 
 	/// <summary>
-	/// Gets whether this message has forwarded messages.
+	///     Gets whether this message has forwarded messages.
 	/// </summary>
-	[Experimental("We provide that temporary, as we figure out things."), JsonIgnore]
+	[Attributes.Experimental("We provide that temporary, as we figure out things."), JsonIgnore]
 	public bool HasMessageSnapshots
 		=> this.InternalReference is { Type: ReferenceType.Forward };
 
 	/// <summary>
-	/// Gets the bitwise flags for this message.
+	///     Gets the bitwise flags for this message.
 	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
 	public MessageFlags? Flags { get; internal set; }
 
 	/// <summary>
-	/// Gets whether the message originated from a webhook.
+	///     Gets whether the message originated from a webhook.
 	/// </summary>
 	[JsonIgnore]
 	public bool WebhookMessage
 		=> this.WebhookId != null;
 
 	/// <summary>
-	/// Gets the jump link to this message.
+	///     Gets the jump link to this message.
 	/// </summary>
 	[JsonIgnore]
 	public Uri JumpLink => this._jumpLink.Value;
 
-	private readonly Lazy<Uri> _jumpLink;
-
 	/// <summary>
-	/// Gets stickers for this message.
+	///     Gets stickers for this message.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordSticker> Stickers
 		=> this._stickersLazy.Value;
 
-	[JsonProperty("sticker_items", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordSticker> StickersInternal = [];
-
-	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordSticker>> _stickersLazy;
-
 	/// <summary>
-	/// Gets the guild id.
+	///     Gets the guild id.
 	/// </summary>
 	[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong? GuildId { get; internal set; }
 
 	/// <summary>
-	/// Gets the guild to which this channel belongs.
+	///     Gets the guild to which this channel belongs.
 	/// </summary>
 	[JsonIgnore]
 	public DiscordGuild Guild
 		=> this.GuildId.HasValue && this.Discord.Guilds.TryGetValue(this.GuildId.Value, out var guild) ? guild : null;
 
 	/// <summary>
-	/// Gets the message object for the referenced message
+	///     Gets the message object for the referenced message
 	/// </summary>
 	[JsonProperty("referenced_message", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordMessage ReferencedMessage { get; internal set; }
 
 	/// <summary>
-	/// Gets whether the message is a response to an interaction.
+	///     Gets whether the message is a response to an interaction.
 	/// </summary>
 	[JsonProperty("interaction", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordMessageInteraction Interaction { get; internal set; }
 
 	/// <summary>
-	/// <para>Gets the thread that was started from this message.</para>
-	/// <para><note type="warning">If you're looking to get the actual thread channel this message was send in, call <see cref="Channel"/> and convert it to a <see cref="DiscordThreadChannel"/>.</note></para>
+	///     <para>Gets the thread that was started from this message.</para>
+	///     <para>
+	///         <note type="warning">
+	///             If you're looking to get the actual thread channel this message was send in, call
+	///             <see cref="Channel" /> and convert it to a <see cref="DiscordThreadChannel" />.
+	///         </note>
+	///     </para>
 	/// </summary>
 	[JsonIgnore]
 	public DiscordThreadChannel Thread
@@ -438,40 +446,48 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 				? thread!
 				: null!;
 
-	[JsonProperty("thread", NullValueHandling = NullValueHandling.Ignore)]
-	private readonly DiscordThreadChannel _startedThread;
-
 	/// <summary>
-	/// Gets the Discord snowflake objects resolved from this message's auto-populated select menus.
+	///     Gets the Discord snowflake objects resolved from this message's auto-populated select menus.
 	/// </summary>
 	[JsonProperty("resolved", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordInteractionResolvedCollection Resolved { get; internal set; }
 
 	/// <summary>
-	/// Gets the interaction metadata if the message is a response to an interaction.
+	///     Gets the interaction metadata if the message is a response to an interaction.
 	/// </summary>
 	[JsonProperty("interaction_metadata", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordInteractionMetadata? InteractionMetadata { get; internal set; }
 
 	/// <summary>
-	/// Gets the poll of the message if one was attached.
+	///     Gets the poll of the message if one was attached.
 	/// </summary>
 	[JsonProperty("poll", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordPoll? Poll { get; internal set; }
 
 	/// <summary>
-	/// Gets whether this message has a poll.
+	///     Gets whether this message has a poll.
 	/// </summary>
 	[JsonIgnore]
 	public bool HasPoll
 		=> this.Poll is not null;
 
 	/// <summary>
-	/// <para>Ends the poll on this message.</para>
-	/// <para>Works only for own polls and if they are not expired yet. </para>
+	///     Checks whether this <see cref="DiscordMessage" /> is equal to another <see cref="DiscordMessage" />.
+	/// </summary>
+	/// <param name="e"><see cref="DiscordMessage" /> to compare to.</param>
+	/// <returns>Whether the <see cref="DiscordMessage" /> is equal to this <see cref="DiscordMessage" />.</returns>
+	public bool Equals(DiscordMessage e)
+		=> e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.ChannelId == e.ChannelId));
+
+	/// <summary>
+	///     <para>Ends the poll on this message.</para>
+	///     <para>Works only for own polls and if they are not expired yet. </para>
 	/// </summary>
 	/// <returns>The fresh discord message.</returns>
-	/// <exception cref="InvalidOperationException">Thrown when the message has no poll, the author is not us, or the poll has been already ended.</exception>
+	/// <exception cref="InvalidOperationException">
+	///     Thrown when the message has no poll, the author is not us, or the poll has
+	///     been already ended.
+	/// </exception>
 	public async Task<DiscordMessage> EndPollAsync()
 		=> this.Poll is null
 			? throw new InvalidOperationException("This message has no poll.")
@@ -482,7 +498,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 					: await this.Discord.ApiClient.EndPollAsync(this.ChannelId, this.Id);
 
 	/// <summary>
-	/// Forwards this message to another channel.
+	///     Forwards this message to another channel.
 	/// </summary>
 	/// <param name="targetChannel">The channel to forward this message to.</param>
 	/// <param name="content">Content is not available at the moment, but already added for the future.</param>
@@ -491,7 +507,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> await this.Discord.ApiClient.ForwardMessageAsync(this, targetChannel.Id, content);
 
 	/// <summary>
-	/// Build the message reference.
+	///     Build the message reference.
 	/// </summary>
 	internal DiscordMessageReference InternalBuildMessageReference()
 	{
@@ -552,7 +568,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	}
 
 	/// <summary>
-	/// Gets the mentions.
+	///     Gets the mentions.
 	/// </summary>
 	/// <returns>An array of IMentions.</returns>
 	private List<IMention> GetMentions()
@@ -577,7 +593,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	}
 
 	/// <summary>
-	/// Populates the mentions.
+	///     Populates the mentions.
 	/// </summary>
 	internal void PopulateMentions()
 	{
@@ -614,7 +630,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	}
 
 	/// <summary>
-	/// Edits the message.
+	///     Edits the message.
 	/// </summary>
 	/// <param name="content">New content.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
@@ -625,7 +641,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, default, this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>(), default);
 
 	/// <summary>
-	/// Edits the message.
+	///     Edits the message.
 	/// </summary>
 	/// <param name="embed">New embed.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
@@ -636,7 +652,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, embed.Map(v => new[] { v }).ValueOr([]), this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>(), default);
 
 	/// <summary>
-	/// Edits the message.
+	///     Edits the message.
 	/// </summary>
 	/// <param name="content">New content.</param>
 	/// <param name="embed">New embed.</param>
@@ -648,7 +664,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, embed.Map(v => new[] { v }).ValueOr([]), this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>(), default);
 
 	/// <summary>
-	/// Edits the message.
+	///     Edits the message.
 	/// </summary>
 	/// <param name="content">New content.</param>
 	/// <param name="embeds">New embeds.</param>
@@ -660,7 +676,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, embeds, this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>(), default);
 
 	/// <summary>
-	/// Edits the message.
+	///     Edits the message.
 	/// </summary>
 	/// <param name="builder">The builder of the message to edit.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
@@ -678,7 +694,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	}
 
 	/// <summary>
-	/// Edits the message embed suppression.
+	///     Edits the message embed suppression.
 	/// </summary>
 	/// <param name="suppress">Suppress embeds.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
@@ -689,14 +705,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, default, default, default, suppress, default, default);
 
 	/// <summary>
-	/// Clears all attachments from the message.
+	///     Clears all attachments from the message.
 	/// </summary>
 	/// <returns></returns>
 	public Task<DiscordMessage> ClearAttachmentsAsync()
 		=> this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, default, this.GetMentions(), default, default, default, Array.Empty<DiscordAttachment>());
 
 	/// <summary>
-	/// Edits the message.
+	///     Edits the message.
 	/// </summary>
 	/// <param name="action">The builder of the message to edit.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
@@ -716,9 +732,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	}
 
 	/// <summary>
-	/// Deletes the message.
+	///     Deletes the message.
 	/// </summary>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageMessages" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -726,14 +745,21 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this.Discord.ApiClient.DeleteMessageAsync(this.ChannelId, this.Id, reason);
 
 	/// <summary>
-	/// Creates a thread.
-	/// Depending on the <see cref="ChannelType"/> of the parent channel it's either a <see cref="ChannelType.PublicThread"/> or a <see cref="ChannelType.NewsThread"/>.
+	///     Creates a thread.
+	///     Depending on the <see cref="ChannelType" /> of the parent channel it's either a
+	///     <see cref="ChannelType.PublicThread" /> or a <see cref="ChannelType.NewsThread" />.
 	/// </summary>
 	/// <param name="name">The name of the thread.</param>
-	/// <param name="autoArchiveDuration"><see cref="ThreadAutoArchiveDuration"/> till it gets archived. Defaults to <see cref="ThreadAutoArchiveDuration.OneHour"/></param>
+	/// <param name="autoArchiveDuration">
+	///     <see cref="ThreadAutoArchiveDuration" /> till it gets archived. Defaults to
+	///     <see cref="ThreadAutoArchiveDuration.OneHour" />
+	/// </param>
 	/// <param name="rateLimitPerUser">The per user ratelimit, aka slowdown.</param>
 	/// <param name="reason">The reason.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreatePrivateThreads"/> or <see cref="Permissions.SendMessagesInThreads"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.CreatePrivateThreads" /> or <see cref="Permissions.SendMessagesInThreads" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -741,9 +767,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> await this.Discord.ApiClient.CreateThreadAsync(this.ChannelId, this.Id, name, autoArchiveDuration, this.Channel.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, rateLimitPerUser, isForum: false, reason: reason).ConfigureAwait(false);
 
 	/// <summary>
-	/// Pins the message in its channel.
+	///     Pins the message in its channel.
 	/// </summary>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageMessages" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -751,9 +780,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this.Discord.ApiClient.PinMessageAsync(this.ChannelId, this.Id);
 
 	/// <summary>
-	/// Unpins the message in its channel.
+	///     Unpins the message in its channel.
 	/// </summary>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageMessages" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -761,11 +793,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this.Discord.ApiClient.UnpinMessageAsync(this.ChannelId, this.Id);
 
 	/// <summary>
-	/// Responds to the message. This produces a reply.
+	///     Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="content">Message content to respond with.</param>
 	/// <returns>The sent message.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.SendMessages" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -773,11 +808,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, content, null, null, this.Id, false, false);
 
 	/// <summary>
-	/// Responds to the message. This produces a reply.
+	///     Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="embed">Embed to attach to the message.</param>
 	/// <returns>The sent message.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.SendMessages" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -787,12 +825,15 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 			: null, null, this.Id, false, false);
 
 	/// <summary>
-	/// Responds to the message. This produces a reply.
+	///     Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="content">Message content to respond with.</param>
 	/// <param name="embed">Embed to attach to the message.</param>
 	/// <returns>The sent message.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.SendMessages" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -803,24 +844,30 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 			: null, null, this.Id, false, false);
 
 	/// <summary>
-	/// Responds to the message. This produces a reply.
+	///     Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="builder">The Discord message builder.</param>
 	/// <returns>The sent message.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.SendMessages" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public
 		Task<DiscordMessage> RespondAsync(DiscordMessageBuilder builder)
-		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id, false, false));
+		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id));
 
 	/// <summary>
-	/// Responds to the message. This produces a reply.
+	///     Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="action">The Discord message builder.</param>
 	/// <returns>The sent message.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.SendMessages" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -828,14 +875,17 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	{
 		var builder = new DiscordMessageBuilder();
 		action(builder);
-		return this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id, false, false));
+		return this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id));
 	}
 
 	/// <summary>
-	/// Creates a reaction to this message.
+	///     Creates a reaction to this message.
 	/// </summary>
 	/// <param name="emoji">The emoji you want to react with, either an emoji or name:id</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AddReactions"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.AddReactions" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -843,7 +893,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this.Discord.ApiClient.CreateReactionAsync(this.ChannelId, this.Id, emoji.ToReactionString());
 
 	/// <summary>
-	/// Deletes your own reaction
+	///     Deletes your own reaction
 	/// </summary>
 	/// <param name="emoji">Emoji for the reaction you want to remove, either an emoji or name:id</param>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
@@ -853,12 +903,15 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this.Discord.ApiClient.DeleteOwnReactionAsync(this.ChannelId, this.Id, emoji.ToReactionString());
 
 	/// <summary>
-	/// Deletes another user's reaction.
+	///     Deletes another user's reaction.
 	/// </summary>
 	/// <param name="emoji">Emoji for the reaction you want to remove, either an emoji or name:id.</param>
 	/// <param name="user">Member you want to remove the reaction for</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageMessages" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -866,7 +919,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this.Discord.ApiClient.DeleteUserReactionAsync(this.ChannelId, this.Id, user.Id, emoji.ToReactionString(), reason);
 
 	/// <summary>
-	/// Gets users that reacted with this emoji.
+	///     Gets users that reacted with this emoji.
 	/// </summary>
 	/// <param name="emoji">Emoji to react with.</param>
 	/// <param name="limit">Limit of users to fetch.</param>
@@ -878,10 +931,13 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this.GetReactionsInternalAsync(emoji, limit, after);
 
 	/// <summary>
-	/// Deletes all reactions for this message.
+	///     Deletes all reactions for this message.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageMessages" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -889,10 +945,13 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this.Discord.ApiClient.DeleteAllReactionsAsync(this.ChannelId, this.Id, reason);
 
 	/// <summary>
-	/// Deletes all reactions of a specific reaction for this message.
+	///     Deletes all reactions of a specific reaction for this message.
 	/// </summary>
 	/// <param name="emoji">The emoji to clear, either an emoji or name:id.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.ManageMessages" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -900,7 +959,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this.Discord.ApiClient.DeleteReactionsEmojiAsync(this.ChannelId, this.Id, emoji.ToReactionString());
 
 	/// <summary>
-	/// Gets the reactions.
+	///     Gets the reactions.
 	/// </summary>
 	/// <param name="emoji">The emoji to search for.</param>
 	/// <param name="limit">The limit of results.</param>
@@ -935,32 +994,24 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	}
 
 	/// <summary>
-	/// Returns a string representation of this message.
+	///     Returns a string representation of this message.
 	/// </summary>
 	/// <returns>String representation of this message.</returns>
 	public override string ToString()
 		=> $"Message {this.Id}; Attachment count: {this.AttachmentsInternal.Count}; Embed count: {this.EmbedsInternal.Count}; Contents: {this.Content}";
 
 	/// <summary>
-	/// Checks whether this <see cref="DiscordMessage"/> is equal to another object.
+	///     Checks whether this <see cref="DiscordMessage" /> is equal to another object.
 	/// </summary>
 	/// <param name="obj">Object to compare to.</param>
-	/// <returns>Whether the object is equal to this <see cref="DiscordMessage"/>.</returns>
+	/// <returns>Whether the object is equal to this <see cref="DiscordMessage" />.</returns>
 	public override bool Equals(object obj)
 		=> this.Equals(obj as DiscordMessage);
 
 	/// <summary>
-	/// Checks whether this <see cref="DiscordMessage"/> is equal to another <see cref="DiscordMessage"/>.
+	///     Gets the hash code for this <see cref="DiscordMessage" />.
 	/// </summary>
-	/// <param name="e"><see cref="DiscordMessage"/> to compare to.</param>
-	/// <returns>Whether the <see cref="DiscordMessage"/> is equal to this <see cref="DiscordMessage"/>.</returns>
-	public bool Equals(DiscordMessage e)
-		=> e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.ChannelId == e.ChannelId));
-
-	/// <summary>
-	/// Gets the hash code for this <see cref="DiscordMessage"/>.
-	/// </summary>
-	/// <returns>The hash code for this <see cref="DiscordMessage"/>.</returns>
+	/// <returns>The hash code for this <see cref="DiscordMessage" />.</returns>
 	public override int GetHashCode()
 	{
 		var hash = 13;
@@ -972,7 +1023,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	}
 
 	/// <summary>
-	/// Gets whether the two <see cref="DiscordMessage"/> objects are equal.
+	///     Gets whether the two <see cref="DiscordMessage" /> objects are equal.
 	/// </summary>
 	/// <param name="e1">First message to compare.</param>
 	/// <param name="e2">Second message to compare.</param>
@@ -988,7 +1039,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	}
 
 	/// <summary>
-	/// Gets whether the two <see cref="DiscordMessage"/> objects are not equal.
+	///     Gets whether the two <see cref="DiscordMessage" /> objects are not equal.
 	/// </summary>
 	/// <param name="e1">First message to compare.</param>
 	/// <param name="e2">Second message to compare.</param>

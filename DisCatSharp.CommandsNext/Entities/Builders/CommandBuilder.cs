@@ -10,84 +10,44 @@ using DisCatSharp.CommandsNext.Exceptions;
 namespace DisCatSharp.CommandsNext.Builders;
 
 /// <summary>
-/// Represents an interface to build a command.
+///     Represents an interface to build a command.
 /// </summary>
 public class CommandBuilder
 {
 	/// <summary>
-	/// Gets the name set for this command.
-	/// </summary>
-	public string Name { get; private set; }
-
-	/// <summary>
-	/// Gets the aliases set for this command.
-	/// </summary>
-	public IReadOnlyList<string> Aliases { get; }
-
-	/// <summary>
-	/// Gets the alias list.
+	///     Gets the alias list.
 	/// </summary>
 	private readonly List<string> _aliasList;
 
 	/// <summary>
-	/// Gets the description set for this command.
-	/// </summary>
-	public string Description { get; private set; }
-
-	/// <summary>
-	/// Gets whether this command will be hidden or not.
-	/// </summary>
-	public bool IsHidden { get; private set; }
-
-	/// <summary>
-	/// Gets the execution checks defined for this command.
-	/// </summary>
-	public IReadOnlyList<CheckBaseAttribute> ExecutionChecks { get; }
-
-	/// <summary>
-	/// Gets the execution check list.
-	/// </summary>
-	private readonly List<CheckBaseAttribute> _executionCheckList;
-
-	/// <summary>
-	/// Gets the collection of this command's overloads.
-	/// </summary>
-	public IReadOnlyList<CommandOverloadBuilder> Overloads { get; }
-
-	/// <summary>
-	/// Gets the overload list.
-	/// </summary>
-	private readonly List<CommandOverloadBuilder> _overloadList;
-
-	/// <summary>
-	/// Gets the overload argument sets.
-	/// </summary>
-	private readonly HashSet<string> _overloadArgumentSets;
-
-	/// <summary>
-	/// Gets the module on which this command is to be defined.
-	/// </summary>
-	public ICommandModule Module { get; }
-
-	/// <summary>
-	/// Gets custom attributes defined on this command.
-	/// </summary>
-	public IReadOnlyList<Attribute> CustomAttributes { get; }
-
-	/// <summary>
-	/// Gets the custom attribute list.
+	///     Gets the custom attribute list.
 	/// </summary>
 	private readonly List<Attribute> _customAttributeList;
 
 	/// <summary>
-	/// Creates a new module-less command builder.
+	///     Gets the execution check list.
+	/// </summary>
+	private readonly List<CheckBaseAttribute> _executionCheckList;
+
+	/// <summary>
+	///     Gets the overload argument sets.
+	/// </summary>
+	private readonly HashSet<string> _overloadArgumentSets;
+
+	/// <summary>
+	///     Gets the overload list.
+	/// </summary>
+	private readonly List<CommandOverloadBuilder> _overloadList;
+
+	/// <summary>
+	///     Creates a new module-less command builder.
 	/// </summary>
 	public CommandBuilder()
 		: this(null)
 	{ }
 
 	/// <summary>
-	/// Creates a new command builder.
+	///     Creates a new command builder.
 	/// </summary>
 	/// <param name="module">Module on which this command is to be defined.</param>
 	public CommandBuilder(ICommandModule module)
@@ -109,7 +69,47 @@ public class CommandBuilder
 	}
 
 	/// <summary>
-	/// Sets the name for this command.
+	///     Gets the name set for this command.
+	/// </summary>
+	public string Name { get; private set; }
+
+	/// <summary>
+	///     Gets the aliases set for this command.
+	/// </summary>
+	public IReadOnlyList<string> Aliases { get; }
+
+	/// <summary>
+	///     Gets the description set for this command.
+	/// </summary>
+	public string Description { get; private set; }
+
+	/// <summary>
+	///     Gets whether this command will be hidden or not.
+	/// </summary>
+	public bool IsHidden { get; private set; }
+
+	/// <summary>
+	///     Gets the execution checks defined for this command.
+	/// </summary>
+	public IReadOnlyList<CheckBaseAttribute> ExecutionChecks { get; }
+
+	/// <summary>
+	///     Gets the collection of this command's overloads.
+	/// </summary>
+	public IReadOnlyList<CommandOverloadBuilder> Overloads { get; }
+
+	/// <summary>
+	///     Gets the module on which this command is to be defined.
+	/// </summary>
+	public ICommandModule Module { get; }
+
+	/// <summary>
+	///     Gets custom attributes defined on this command.
+	/// </summary>
+	public IReadOnlyList<Attribute> CustomAttributes { get; }
+
+	/// <summary>
+	///     Sets the name for this command.
 	/// </summary>
 	/// <param name="name">Name for this command.</param>
 	/// <returns>This builder.</returns>
@@ -129,7 +129,7 @@ public class CommandBuilder
 	}
 
 	/// <summary>
-	/// Adds aliases to this command.
+	///     Adds aliases to this command.
 	/// </summary>
 	/// <param name="aliases">Aliases to add to the command.</param>
 	/// <returns>This builder.</returns>
@@ -145,7 +145,7 @@ public class CommandBuilder
 	}
 
 	/// <summary>
-	/// Adds an alias to this command.
+	///     Adds an alias to this command.
 	/// </summary>
 	/// <param name="alias">Alias to add to the command.</param>
 	/// <returns>This builder.</returns>
@@ -162,7 +162,7 @@ public class CommandBuilder
 	}
 
 	/// <summary>
-	/// Sets the description for this command.
+	///     Sets the description for this command.
 	/// </summary>
 	/// <param name="description">Description to use for this command.</param>
 	/// <returns>This builder.</returns>
@@ -173,7 +173,7 @@ public class CommandBuilder
 	}
 
 	/// <summary>
-	/// Sets whether this command is to be hidden.
+	///     Sets whether this command is to be hidden.
 	/// </summary>
 	/// <param name="hidden">Whether the command is to be hidden.</param>
 	/// <returns>This builder.</returns>
@@ -184,7 +184,7 @@ public class CommandBuilder
 	}
 
 	/// <summary>
-	/// Adds pre-execution checks to this command.
+	///     Adds pre-execution checks to this command.
 	/// </summary>
 	/// <param name="checks">Pre-execution checks to add to this command.</param>
 	/// <returns>This builder.</returns>
@@ -195,7 +195,7 @@ public class CommandBuilder
 	}
 
 	/// <summary>
-	/// Adds a pre-execution check to this command.
+	///     Adds a pre-execution check to this command.
 	/// </summary>
 	/// <param name="check">Pre-execution check to add to this command.</param>
 	/// <returns>This builder.</returns>
@@ -207,7 +207,7 @@ public class CommandBuilder
 	}
 
 	/// <summary>
-	/// Adds overloads to this command. An executable command needs to have at least one overload.
+	///     Adds overloads to this command. An executable command needs to have at least one overload.
 	/// </summary>
 	/// <param name="overloads">Overloads to add to this command.</param>
 	/// <returns>This builder.</returns>
@@ -220,7 +220,7 @@ public class CommandBuilder
 	}
 
 	/// <summary>
-	/// Adds an overload to this command. An executable command needs to have at least one overload.
+	///     Adds an overload to this command. An executable command needs to have at least one overload.
 	/// </summary>
 	/// <param name="overload">Overload to add to this command.</param>
 	/// <returns>This builder.</returns>
@@ -236,7 +236,7 @@ public class CommandBuilder
 	}
 
 	/// <summary>
-	/// Adds a custom attribute to this command. This can be used to indicate various custom information about a command.
+	///     Adds a custom attribute to this command. This can be used to indicate various custom information about a command.
 	/// </summary>
 	/// <param name="attribute">Attribute to add.</param>
 	/// <returns>This builder.</returns>
@@ -247,7 +247,8 @@ public class CommandBuilder
 	}
 
 	/// <summary>
-	/// Adds multiple custom attributes to this command. This can be used to indicate various custom information about a command.
+	///     Adds multiple custom attributes to this command. This can be used to indicate various custom information about a
+	///     command.
 	/// </summary>
 	/// <param name="attributes">Attributes to add.</param>
 	/// <returns>This builder.</returns>
@@ -260,7 +261,7 @@ public class CommandBuilder
 	}
 
 	/// <summary>
-	/// Builds the command.
+	///     Builds the command.
 	/// </summary>
 	/// <param name="parent">The parent command group.</param>
 	internal virtual Command Build(CommandGroup parent)

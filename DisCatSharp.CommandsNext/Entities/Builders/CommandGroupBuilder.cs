@@ -7,29 +7,24 @@ using DisCatSharp.CommandsNext.Entities;
 namespace DisCatSharp.CommandsNext.Builders;
 
 /// <summary>
-/// Represents an interface to build a command group.
+///     Represents an interface to build a command group.
 /// </summary>
 public sealed class CommandGroupBuilder : CommandBuilder
 {
 	/// <summary>
-	/// Gets the list of child commands registered for this group.
-	/// </summary>
-	public IReadOnlyList<CommandBuilder> Children { get; }
-
-	/// <summary>
-	/// Gets the children list.
+	///     Gets the children list.
 	/// </summary>
 	private readonly List<CommandBuilder> _childrenList;
 
 	/// <summary>
-	/// Creates a new module-less command group builder.
+	///     Creates a new module-less command group builder.
 	/// </summary>
 	public CommandGroupBuilder()
 		: this(null)
 	{ }
 
 	/// <summary>
-	/// Creates a new command group builder.
+	///     Creates a new command group builder.
 	/// </summary>
 	/// <param name="module">Module on which this group is to be defined.</param>
 	public CommandGroupBuilder(ICommandModule module)
@@ -40,7 +35,12 @@ public sealed class CommandGroupBuilder : CommandBuilder
 	}
 
 	/// <summary>
-	/// Adds a command to the collection of child commands for this group.
+	///     Gets the list of child commands registered for this group.
+	/// </summary>
+	public IReadOnlyList<CommandBuilder> Children { get; }
+
+	/// <summary>
+	///     Adds a command to the collection of child commands for this group.
 	/// </summary>
 	/// <param name="child">Command to add to the collection of child commands for this group.</param>
 	/// <returns>This builder.</returns>
@@ -51,7 +51,7 @@ public sealed class CommandGroupBuilder : CommandBuilder
 	}
 
 	/// <summary>
-	/// Builds the command group.
+	///     Builds the command group.
 	/// </summary>
 	/// <param name="parent">The parent command group.</param>
 	internal override Command Build(CommandGroup parent)

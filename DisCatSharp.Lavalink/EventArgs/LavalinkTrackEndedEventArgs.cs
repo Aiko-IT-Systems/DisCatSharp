@@ -9,38 +9,12 @@ using DisCatSharp.Lavalink.Enums;
 namespace DisCatSharp.Lavalink.EventArgs;
 
 /// <summary>
-/// Represents event arguments for  lavalink track ended events.
+///     Represents event arguments for  lavalink track ended events.
 /// </summary>
 public sealed class LavalinkTrackEndedEventArgs : DiscordEventArgs
 {
 	/// <summary>
-	/// Gets the discord client.
-	/// </summary>
-	public DiscordClient Discord { get; }
-
-	/// <summary>
-	/// Gets the related lavalink track.
-	/// </summary>
-	public LavalinkTrack Track { get; }
-
-	/// <summary>
-	/// Gets the track end reason.
-	/// </summary>
-	public LavalinkTrackEndReason Reason { get; }
-
-	/// <summary>
-	/// Gets the guild id.
-	/// </summary>
-	public ulong GuildId { get; }
-
-	/// <summary>
-	/// Gets the guild.
-	/// </summary>
-	public DiscordGuild Guild
-		=> this.Discord.GuildsInternal.TryGetValue(this.GuildId, out var guild) ? guild : null!;
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="LavalinkTrackEndedEventArgs"/> class.
+	///     Initializes a new instance of the <see cref="LavalinkTrackEndedEventArgs" /> class.
 	/// </summary>
 	/// <param name="client">The discord client.</param>
 	/// <param name="eventArgs">The event args.</param>
@@ -52,4 +26,30 @@ public sealed class LavalinkTrackEndedEventArgs : DiscordEventArgs
 		this.Reason = eventArgs.Reason;
 		this.GuildId = Convert.ToUInt64(eventArgs.GuildId);
 	}
+
+	/// <summary>
+	///     Gets the discord client.
+	/// </summary>
+	public DiscordClient Discord { get; }
+
+	/// <summary>
+	///     Gets the related lavalink track.
+	/// </summary>
+	public LavalinkTrack Track { get; }
+
+	/// <summary>
+	///     Gets the track end reason.
+	/// </summary>
+	public LavalinkTrackEndReason Reason { get; }
+
+	/// <summary>
+	///     Gets the guild id.
+	/// </summary>
+	public ulong GuildId { get; }
+
+	/// <summary>
+	///     Gets the guild.
+	/// </summary>
+	public DiscordGuild Guild
+		=> this.Discord.GuildsInternal.TryGetValue(this.GuildId, out var guild) ? guild : null!;
 }

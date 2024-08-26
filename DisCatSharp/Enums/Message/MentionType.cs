@@ -1,32 +1,32 @@
 namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Type of mention being made
+///     Type of mention being made
 /// </summary>
 public enum MentionType
 {
 	/// <summary>
-	/// No mention (wtf?)
+	///     No mention (wtf?)
 	/// </summary>
 	None = 0,
 
 	/// <summary>
-	/// Mentioned Username
+	///     Mentioned Username
 	/// </summary>
 	Username = 1,
 
 	/// <summary>
-	/// Mentioned Nickname
+	///     Mentioned Nickname
 	/// </summary>
 	Nickname = 2,
 
 	/// <summary>
-	/// Mentioned Channel
+	///     Mentioned Channel
 	/// </summary>
 	Channel = 4,
 
 	/// <summary>
-	/// Mentioned Role
+	///     Mentioned Role
 	/// </summary>
 	Role = 8
 }

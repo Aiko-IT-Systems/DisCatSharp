@@ -9,12 +9,12 @@ using DisCatSharp.Enums;
 namespace DisCatSharp;
 
 /// <summary>
-/// Contains markdown formatting helpers.
+///     Contains markdown formatting helpers.
 /// </summary>
 public static class Formatter
 {
 	/// <summary>
-	/// Creates a block of code.
+	///     Creates a block of code.
 	/// </summary>
 	/// <param name="content">Contents of the block.</param>
 	/// <param name="language">Language to use for highlighting.</param>
@@ -23,7 +23,7 @@ public static class Formatter
 		=> $"```{language}\n{content}\n```";
 
 	/// <summary>
-	/// Creates inline code snippet.
+	///     Creates inline code snippet.
 	/// </summary>
 	/// <param name="content">Contents of the snippet.</param>
 	/// <returns>Formatted inline code snippet.</returns>
@@ -31,7 +31,7 @@ public static class Formatter
 		=> $"`{content}`";
 
 	/// <summary>
-	/// Creates a rendered timestamp.
+	///     Creates a rendered timestamp.
 	/// </summary>
 	/// <param name="time">The time from now.</param>
 	/// <param name="format">The format to render the timestamp in. Defaults to relative.</param>
@@ -40,7 +40,7 @@ public static class Formatter
 		=> Timestamp(DateTimeOffset.UtcNow + time, format);
 
 	/// <summary>
-	/// Creates a rendered timestamp.
+	///     Creates a rendered timestamp.
 	/// </summary>
 	/// <param name="time">Timestamp to format.</param>
 	/// <param name="format">The format to render the timestamp in. Defaults to relative.</param>
@@ -49,7 +49,7 @@ public static class Formatter
 		=> $"<t:{time.ToUnixTimeSeconds()}:{(char)format}>";
 
 	/// <summary>
-	/// Creates a rendered timestamp.
+	///     Creates a rendered timestamp.
 	/// </summary>
 	/// <param name="time">The time from now.</param>
 	/// <param name="format">The format to render the timestamp in. Defaults to relative.</param>
@@ -58,7 +58,7 @@ public static class Formatter
 		=> Timestamp(time.ToUniversalTime() - DateTime.UtcNow, format);
 
 	/// <summary>
-	/// Creates bold text.
+	///     Creates bold text.
 	/// </summary>
 	/// <param name="content">Text to embolden.</param>
 	/// <returns>Formatted text.</returns>
@@ -66,7 +66,7 @@ public static class Formatter
 		=> $"**{content}**";
 
 	/// <summary>
-	/// Creates italicized text.
+	///     Creates italicized text.
 	/// </summary>
 	/// <param name="content">Text to italicize.</param>
 	/// <returns>Formatted text.</returns>
@@ -74,7 +74,7 @@ public static class Formatter
 		=> $"*{content}*";
 
 	/// <summary>
-	/// Creates spoiler from text.
+	///     Creates spoiler from text.
 	/// </summary>
 	/// <param name="content">Text to spoiler.</param>
 	/// <returns>Formatted text.</returns>
@@ -82,7 +82,7 @@ public static class Formatter
 		=> $"||{content}||";
 
 	/// <summary>
-	/// Creates underlined text.
+	///     Creates underlined text.
 	/// </summary>
 	/// <param name="content">Text to underline.</param>
 	/// <returns>Formatted text.</returns>
@@ -90,7 +90,7 @@ public static class Formatter
 		=> $"__{content}__";
 
 	/// <summary>
-	/// Creates strikethrough text.
+	///     Creates strikethrough text.
 	/// </summary>
 	/// <param name="content">Text to strikethrough.</param>
 	/// <returns>Formatted text.</returns>
@@ -98,7 +98,7 @@ public static class Formatter
 		=> $"~~{content}~~";
 
 	/// <summary>
-	/// Creates a header.
+	///     Creates a header.
 	/// </summary>
 	/// <param name="content">Text to convert to a header.</param>
 	/// <returns>Formatted text.</returns>
@@ -106,7 +106,7 @@ public static class Formatter
 		=> $"# {content}";
 
 	/// <summary>
-	/// Creates a small header.
+	///     Creates a small header.
 	/// </summary>
 	/// <param name="content">Text to convert to a header.</param>
 	/// <returns>Formatted text.</returns>
@@ -114,7 +114,7 @@ public static class Formatter
 		=> $"## {content}";
 
 	/// <summary>
-	/// Creates a smaller header.
+	///     Creates a smaller header.
 	/// </summary>
 	/// <param name="content">Text to convert to a header.</param>
 	/// <returns>Formatted text.</returns>
@@ -122,7 +122,7 @@ public static class Formatter
 		=> $"### {content}";
 
 	/// <summary>
-	/// Creates quoted text.
+	///     Creates quoted text.
 	/// </summary>
 	/// <param name="content">Text to quote.</param>
 	/// <returns>Formatted text.</returns>
@@ -130,7 +130,7 @@ public static class Formatter
 		=> $"> {content}";
 
 	/// <summary>
-	/// Creates a multiline quoted text. Add new lines by using \n.
+	///     Creates a multiline quoted text. Add new lines by using \n.
 	/// </summary>
 	/// <param name="content">Text to quote.</param>
 	/// <returns>Formatted text.</returns>
@@ -138,8 +138,8 @@ public static class Formatter
 		=> $">>> {content}";
 
 	/// <summary>
-	/// <para>Creates a simple list.</para>
-	/// <para>If you want a indented list, see https://support.discord.com/hc/en-us/articles/210298617.</para>
+	///     <para>Creates a simple list.</para>
+	///     <para>If you want a indented list, see https://support.discord.com/hc/en-us/articles/210298617.</para>
 	/// </summary>
 	/// <param name="content">Array of strings to transform into a list.</param>
 	/// <returns>Formatted text.</returns>
@@ -147,7 +147,7 @@ public static class Formatter
 		=> string.Join("\n", content.Select(x => $"- {x}"));
 
 	/// <summary>
-	/// Creates a URL that won't create a link preview.
+	///     Creates a URL that won't create a link preview.
 	/// </summary>
 	/// <param name="url">Url to prevent from being previewed.</param>
 	/// <returns>Formatted url.</returns>
@@ -155,7 +155,7 @@ public static class Formatter
 		=> $"<{url}>";
 
 	/// <summary>
-	/// Creates a masked link. This link will display as specified text, and alternatively provided alt text.
+	///     Creates a masked link. This link will display as specified text, and alternatively provided alt text.
 	/// </summary>
 	/// <param name="text">Text to display the link as.</param>
 	/// <param name="url">Url that the link will lead to.</param>
@@ -166,7 +166,7 @@ public static class Formatter
 		=> $"[{text}]({(embedless ? EmbedlessUrl(url) : url)}{(!string.IsNullOrWhiteSpace(altText) ? $" \"{altText}\"" : string.Empty)})";
 
 	/// <summary>
-	/// Escapes all markdown formatting from specified text.
+	///     Escapes all markdown formatting from specified text.
 	/// </summary>
 	/// <param name="text">Text to sanitize.</param>
 	/// <returns>Sanitized text.</returns>
@@ -174,7 +174,7 @@ public static class Formatter
 		=> CommonRegEx.MdSanitizeRegex().Replace(text, m => $"\\{m.Groups[1].Value}");
 
 	/// <summary>
-	/// Removes all markdown formatting from specified text.
+	///     Removes all markdown formatting from specified text.
 	/// </summary>
 	/// <param name="text">Text to strip of formatting.</param>
 	/// <returns>Formatting-stripped text.</returns>
@@ -182,7 +182,7 @@ public static class Formatter
 		=> CommonRegEx.MdStripRegex().Replace(text, m => string.Empty);
 
 	/// <summary>
-	/// Creates a mention for specified user or member. Can optionally specify to resolve nicknames.
+	///     Creates a mention for specified user or member. Can optionally specify to resolve nicknames.
 	/// </summary>
 	/// <param name="user">User to create mention for.</param>
 	/// <param name="nickname">Whether the mention should resolve nicknames or not.</param>
@@ -193,7 +193,7 @@ public static class Formatter
 			: $"<@{user.Id.ToString(CultureInfo.InvariantCulture)}>";
 
 	/// <summary>
-	/// Creates a mention for specified channel.
+	///     Creates a mention for specified channel.
 	/// </summary>
 	/// <param name="channel">Channel to mention.</param>
 	/// <returns>Formatted mention.</returns>
@@ -201,7 +201,7 @@ public static class Formatter
 		=> $"<#{channel.Id.ToString(CultureInfo.InvariantCulture)}>";
 
 	/// <summary>
-	/// Creates a mention for specified role.
+	///     Creates a mention for specified role.
 	/// </summary>
 	/// <param name="role">Role to mention.</param>
 	/// <returns>Formatted mention.</returns>
@@ -209,7 +209,7 @@ public static class Formatter
 		=> $"<@&{role.Id.ToString(CultureInfo.InvariantCulture)}>";
 
 	/// <summary>
-	/// Creates a custom emoji string.
+	///     Creates a custom emoji string.
 	/// </summary>
 	/// <param name="emoji">Emoji to display.</param>
 	/// <returns>Formatted emoji.</returns>
@@ -217,7 +217,8 @@ public static class Formatter
 		=> $"<:{emoji.Name}:{emoji.Id.ToString(CultureInfo.InvariantCulture)}>";
 
 	/// <summary>
-	/// Creates a url for using attachments in embeds. This can only be used as an Image URL, Thumbnail URL, Author icon URL or Footer icon URL.
+	///     Creates a url for using attachments in embeds. This can only be used as an Image URL, Thumbnail URL, Author icon
+	///     URL or Footer icon URL.
 	/// </summary>
 	/// <param name="filename">Name of attached image to display</param>
 	/// <returns></returns>

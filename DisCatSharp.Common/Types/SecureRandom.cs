@@ -7,28 +7,41 @@ using System.Security.Cryptography;
 namespace DisCatSharp.Common;
 
 /// <summary>
-/// Provides a cryptographically-secure pseudorandom number generator (CSPRNG) implementation compatible with <see cref="Random"/>.
+///     Provides a cryptographically-secure pseudorandom number generator (CSPRNG) implementation compatible with
+///     <see cref="Random" />.
 /// </summary>
 public sealed class SecureRandom : Random, IDisposable
 {
 	/// <summary>
-	/// Gets the random number generator.
+	///     Gets the random number generator.
 	/// </summary>
 	private readonly RandomNumberGenerator _rng = RandomNumberGenerator.Create();
 
 	/// <summary>
-	/// Whether this <see cref="SecureRandom"/> instance has been disposed.
+	///     Whether this <see cref="SecureRandom" /> instance has been disposed.
 	/// </summary>
 	private volatile bool _isDisposed;
 
 	/// <summary>
-	/// Creates a new instance of <see cref="SecureRandom"/>.
+	///     Creates a new instance of <see cref="SecureRandom" />.
 	/// </summary>
 	public SecureRandom()
 	{ }
 
 	/// <summary>
-	/// Finalizes this <see cref="SecureRandom"/> instance by disposing it.
+	///     Disposes this <see cref="SecureRandom" /> instance and its resources.
+	/// </summary>
+	public void Dispose()
+	{
+		ObjectDisposedException.ThrowIf(this._isDisposed, this);
+
+		this._isDisposed = true;
+		this._rng.Dispose();
+		GC.SuppressFinalize(this);
+	}
+
+	/// <summary>
+	///     Finalizes this <see cref="SecureRandom" /> instance by disposing it.
 	/// </summary>
 	~SecureRandom()
 	{
@@ -36,19 +49,19 @@ public sealed class SecureRandom : Random, IDisposable
 	}
 
 	/// <summary>
-	/// Fills a supplied buffer with random bytes.
+	///     Fills a supplied buffer with random bytes.
 	/// </summary>
 	/// <param name="buffer">Buffer to fill with random bytes.</param>
 	public void GetBytes(byte[] buffer) => this._rng.GetBytes(buffer);
 
 	/// <summary>
-	/// Fills a supplied buffer with random nonzero bytes.
+	///     Fills a supplied buffer with random nonzero bytes.
 	/// </summary>
 	/// <param name="buffer">Buffer to fill with random nonzero bytes.</param>
 	public void GetNonZeroBytes(byte[] buffer) => this._rng.GetNonZeroBytes(buffer);
 
 	/// <summary>
-	/// Fills a supplied memory region with random bytes.
+	///     Fills a supplied memory region with random bytes.
 	/// </summary>
 	/// <param name="buffer">Memory region to fill with random bytes.</param>
 	public void GetBytes(Span<byte> buffer)
@@ -67,7 +80,7 @@ public sealed class SecureRandom : Random, IDisposable
 	}
 
 	/// <summary>
-	/// Fills a supplied memory region with random nonzero bytes.
+	///     Fills a supplied memory region with random nonzero bytes.
 	/// </summary>
 	/// <param name="buffer">Memory region to fill with random nonzero bytes.</param>
 	public void GetNonZeroBytes(Span<byte> buffer)
@@ -86,10 +99,10 @@ public sealed class SecureRandom : Random, IDisposable
 	}
 
 	/// <summary>
-	/// Generates a signed 8-bit integer within specified range.
+	///     Generates a signed 8-bit integer within specified range.
 	/// </summary>
 	/// <param name="min">Minimum value to generate. Defaults to 0.</param>
-	/// <param name="max">Maximum value to generate. Defaults to <see cref="sbyte.MaxValue"/>.</param>
+	/// <param name="max">Maximum value to generate. Defaults to <see cref="sbyte.MaxValue" />.</param>
 	/// <returns>Generated random value.</returns>
 	public sbyte GetInt8(sbyte min = 0, sbyte max = sbyte.MaxValue)
 	{
@@ -104,10 +117,10 @@ public sealed class SecureRandom : Random, IDisposable
 	}
 
 	/// <summary>
-	/// Generates a unsigned 8-bit integer within specified range.
+	///     Generates a unsigned 8-bit integer within specified range.
 	/// </summary>
 	/// <param name="min">Minimum value to generate. Defaults to 0.</param>
-	/// <param name="max">Maximum value to generate. Defaults to <see cref="byte.MaxValue"/>.</param>
+	/// <param name="max">Maximum value to generate. Defaults to <see cref="byte.MaxValue" />.</param>
 	/// <returns>Generated random value.</returns>
 	public byte GetUInt8(byte min = 0, byte max = byte.MaxValue)
 		=> max <= min
@@ -115,10 +128,10 @@ public sealed class SecureRandom : Random, IDisposable
 			: (byte)((this.Generate<byte>() % (max - min)) + min);
 
 	/// <summary>
-	/// Generates a signed 16-bit integer within specified range.
+	///     Generates a signed 16-bit integer within specified range.
 	/// </summary>
 	/// <param name="min">Minimum value to generate. Defaults to 0.</param>
-	/// <param name="max">Maximum value to generate. Defaults to <see cref="short.MaxValue"/>.</param>
+	/// <param name="max">Maximum value to generate. Defaults to <see cref="short.MaxValue" />.</param>
 	/// <returns>Generated random value.</returns>
 	public short GetInt16(short min = 0, short max = short.MaxValue)
 	{
@@ -133,10 +146,10 @@ public sealed class SecureRandom : Random, IDisposable
 	}
 
 	/// <summary>
-	/// Generates a unsigned 16-bit integer within specified range.
+	///     Generates a unsigned 16-bit integer within specified range.
 	/// </summary>
 	/// <param name="min">Minimum value to generate. Defaults to 0.</param>
-	/// <param name="max">Maximum value to generate. Defaults to <see cref="ushort.MaxValue"/>.</param>
+	/// <param name="max">Maximum value to generate. Defaults to <see cref="ushort.MaxValue" />.</param>
 	/// <returns>Generated random value.</returns>
 	public ushort GetUInt16(ushort min = 0, ushort max = ushort.MaxValue)
 		=> max <= min
@@ -144,10 +157,10 @@ public sealed class SecureRandom : Random, IDisposable
 			: (ushort)((this.Generate<ushort>() % (max - min)) + min);
 
 	/// <summary>
-	/// Generates a signed 32-bit integer within specified range.
+	///     Generates a signed 32-bit integer within specified range.
 	/// </summary>
 	/// <param name="min">Minimum value to generate. Defaults to 0.</param>
-	/// <param name="max">Maximum value to generate. Defaults to <see cref="int.MaxValue"/>.</param>
+	/// <param name="max">Maximum value to generate. Defaults to <see cref="int.MaxValue" />.</param>
 	/// <returns>Generated random value.</returns>
 	public int GetInt32(int min = 0, int max = int.MaxValue)
 	{
@@ -162,10 +175,10 @@ public sealed class SecureRandom : Random, IDisposable
 	}
 
 	/// <summary>
-	/// Generates a unsigned 32-bit integer within specified range.
+	///     Generates a unsigned 32-bit integer within specified range.
 	/// </summary>
 	/// <param name="min">Minimum value to generate. Defaults to 0.</param>
-	/// <param name="max">Maximum value to generate. Defaults to <see cref="uint.MaxValue"/>.</param>
+	/// <param name="max">Maximum value to generate. Defaults to <see cref="uint.MaxValue" />.</param>
 	/// <returns>Generated random value.</returns>
 	public uint GetUInt32(uint min = 0, uint max = uint.MaxValue)
 		=> max <= min
@@ -173,10 +186,10 @@ public sealed class SecureRandom : Random, IDisposable
 			: (this.Generate<uint>() % (max - min)) + min;
 
 	/// <summary>
-	/// Generates a signed 64-bit integer within specified range.
+	///     Generates a signed 64-bit integer within specified range.
 	/// </summary>
 	/// <param name="min">Minimum value to generate. Defaults to 0.</param>
-	/// <param name="max">Maximum value to generate. Defaults to <see cref="long.MaxValue"/>.</param>
+	/// <param name="max">Maximum value to generate. Defaults to <see cref="long.MaxValue" />.</param>
 	/// <returns>Generated random value.</returns>
 	public long GetInt64(long min = 0, long max = long.MaxValue)
 	{
@@ -191,10 +204,10 @@ public sealed class SecureRandom : Random, IDisposable
 	}
 
 	/// <summary>
-	/// Generates a unsigned 64-bit integer within specified range.
+	///     Generates a unsigned 64-bit integer within specified range.
 	/// </summary>
 	/// <param name="min">Minimum value to generate. Defaults to 0.</param>
-	/// <param name="max">Maximum value to generate. Defaults to <see cref="ulong.MaxValue"/>.</param>
+	/// <param name="max">Maximum value to generate. Defaults to <see cref="ulong.MaxValue" />.</param>
 	/// <returns>Generated random value.</returns>
 	public ulong GetUInt64(ulong min = 0, ulong max = ulong.MaxValue)
 		=> max <= min
@@ -202,7 +215,7 @@ public sealed class SecureRandom : Random, IDisposable
 			: (this.Generate<ulong>() % (max - min)) + min;
 
 	/// <summary>
-	/// Generates a 32-bit floating-point number between 0.0 and 1.0.
+	///     Generates a 32-bit floating-point number between 0.0 and 1.0.
 	/// </summary>
 	/// <returns>Generated 32-bit floating-point number.</returns>
 	public float GetSingle()
@@ -212,7 +225,7 @@ public sealed class SecureRandom : Random, IDisposable
 	}
 
 	/// <summary>
-	/// Generates a 64-bit floating-point number between 0.0 and 1.0.
+	///     Generates a 64-bit floating-point number between 0.0 and 1.0.
 	/// </summary>
 	/// <returns>Generated 64-bit floating-point number.</returns>
 	public double GetDouble()
@@ -222,14 +235,14 @@ public sealed class SecureRandom : Random, IDisposable
 	}
 
 	/// <summary>
-	/// Generates a 32-bit integer between 0 and <see cref="int.MaxValue"/>. Upper end exclusive.
+	///     Generates a 32-bit integer between 0 and <see cref="int.MaxValue" />. Upper end exclusive.
 	/// </summary>
 	/// <returns>Generated 32-bit integer.</returns>
 	public override int Next()
 		=> this.GetInt32();
 
 	/// <summary>
-	/// Generates a 32-bit integer between 0 and <paramref name="maxValue"/>. Upper end exclusive.
+	///     Generates a 32-bit integer between 0 and <paramref name="maxValue" />. Upper end exclusive.
 	/// </summary>
 	/// <param name="maxValue">Maximum value of the generated integer.</param>
 	/// <returns>Generated 32-bit integer.</returns>
@@ -237,7 +250,8 @@ public sealed class SecureRandom : Random, IDisposable
 		=> this.GetInt32(0, maxValue);
 
 	/// <summary>
-	/// Generates a 32-bit integer between <paramref name="minValue"/> and <paramref name="maxValue"/>. Upper end exclusive.
+	///     Generates a 32-bit integer between <paramref name="minValue" /> and <paramref name="maxValue" />. Upper end
+	///     exclusive.
 	/// </summary>
 	/// <param name="minValue">Minimum value of the generate integer.</param>
 	/// <param name="maxValue">Maximum value of the generated integer.</param>
@@ -246,47 +260,35 @@ public sealed class SecureRandom : Random, IDisposable
 		=> this.GetInt32(minValue, maxValue);
 
 	/// <summary>
-	/// Generates a 64-bit floating-point number between 0.0 and 1.0. Upper end exclusive.
+	///     Generates a 64-bit floating-point number between 0.0 and 1.0. Upper end exclusive.
 	/// </summary>
 	/// <returns>Generated 64-bit floating-point number.</returns>
 	public override double NextDouble()
 		=> this.GetDouble();
 
 	/// <summary>
-	/// Fills specified buffer with random bytes.
+	///     Fills specified buffer with random bytes.
 	/// </summary>
 	/// <param name="buffer">Buffer to fill with bytes.</param>
 	public override void NextBytes(byte[] buffer)
 		=> this.GetBytes(buffer);
 
 	/// <summary>
-	/// Fills specified memory region with random bytes.
+	///     Fills specified memory region with random bytes.
 	/// </summary>
 	/// <param name="buffer">Memory region to fill with bytes.</param>
 	public new void NextBytes(Span<byte> buffer)
 		=> this.GetBytes(buffer);
 
 	/// <summary>
-	/// Disposes this <see cref="SecureRandom"/> instance and its resources.
-	/// </summary>
-	public void Dispose()
-	{
-		ObjectDisposedException.ThrowIf(this._isDisposed, this);
-
-		this._isDisposed = true;
-		this._rng.Dispose();
-		GC.SuppressFinalize(this);
-	}
-
-	/// <summary>
-	/// Generates a random 64-bit floating-point number between 0.0 and 1.0. Upper end exclusive.
+	///     Generates a random 64-bit floating-point number between 0.0 and 1.0. Upper end exclusive.
 	/// </summary>
 	/// <returns>Generated 64-bit floating-point number.</returns>
 	protected override double Sample()
 		=> this.GetDouble();
 
 	/// <summary>
-	/// Generates the.
+	///     Generates the.
 	/// </summary>
 	/// <returns>A T.</returns>
 	private T Generate<T>() where T : struct

@@ -12,184 +12,193 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents an OAuth2 application.
+///     Represents an OAuth2 application.
 /// </summary>
 public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<DiscordApplication>
 {
 	/// <summary>
-	/// Gets the application's summary.
-	/// </summary>
-	[DiscordDeprecated("Empty string, will be removed in API v11")]
-	public string Summary { get; internal set; }
-
-	/// <summary>
-	/// Gets the application's icon.
-	/// </summary>
-	public override string Icon
-		=> !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null;
-
-	/// <summary>
-	/// Gets the application's icon hash.
-	/// </summary>
-	public string IconHash { get; internal set; }
-
-	/// <summary>
-	/// Gets the application's allowed RPC origins.
-	/// </summary>
-	public IReadOnlyList<string> RpcOrigins { get; internal set; }
-
-	/// <summary>
-	/// Gets the application's flags.
-	/// </summary>
-	public ApplicationFlags Flags { get; internal set; }
-
-	/// <summary>
-	/// Gets the application's team members.
-	/// </summary>
-	public List<DiscordUser> Members { get; internal set; }
-
-	/// <summary>
-	/// Gets the application's owner.
-	/// </summary>
-	public DiscordUser Owner { get; internal set; }
-
-	/// <summary>
-	/// Gets whether this application's bot user requires code grant.
-	/// </summary>
-	public bool? RequiresCodeGrant { get; internal set; }
-
-	/// <summary>
-	/// Gets whether this bot application is public.
-	/// </summary>
-	public bool? IsPublic { get; internal set; }
-
-	/// <summary>
-	/// Gets the terms of service url of the application.
-	/// </summary>
-	public string TermsOfServiceUrl { get; internal set; }
-
-	/// <summary>
-	/// Gets the privacy policy url of the application.
-	/// </summary>
-	public string PrivacyPolicyUrl { get; internal set; }
-
-	/// <summary>
-	/// Gets the team name of the application.
-	/// </summary>
-	public string TeamName { get; internal set; }
-
-	/// <summary>
-	/// Gets the hash of the application's cover image.
-	/// </summary>
-	public string CoverImageHash { get; internal set; }
-
-	/// <summary>
-	/// Gets this application's cover image URL.
-	/// </summary>
-	public override string CoverImageUrl
-		=> $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.CoverImageHash}.png?size=1024";
-
-	/// <summary>
-	/// Gets the team which owns this application.
-	/// </summary>
-	public DiscordTeam Team { get; internal set; }
-
-	/// <summary>
-	/// Gets the hex encoded key for verification in interactions and the GameSDK's GetTicket
-	/// </summary>
-	public string VerifyKey { get; internal set; }
-
-	/// <summary>
-	/// If this application is a game sold on Discord, this field will be the guild to which it has been linked
-	/// </summary>
-	public ulong? GuildId { get; internal set; }
-
-	/// <summary>
-	/// Gets the partial guild if set as support server.
-	/// </summary>
-	public DiscordGuild? Guild { get; internal set; }
-
-	/// <summary>
-	/// If this application is a game sold on Discord, this field will be the id of the "Game SKU" that is created, if exists
-	/// </summary>
-	public ulong? PrimarySkuId { get; internal set; }
-
-	/// <summary>
-	/// If this application is a game sold on Discord, this field will be the URL slug that links to the store page
-	/// </summary>
-	public string Slug { get; internal set; }
-
-	/// <summary>
-	/// Gets or sets a list of <see cref="DiscordApplicationAsset"/>.
+	///     Gets or sets a list of <see cref="DiscordApplicationAsset" />.
 	/// </summary>
 	private IReadOnlyList<DiscordApplicationAsset> _assets;
 
 	/// <summary>
-	/// A custom url for the Add To Server button.
-	/// </summary>
-	public string CustomInstallUrl { get; internal set; }
-
-	/// <summary>
-	/// Install parameters for adding the application to a guild.
-	/// </summary>
-	public DiscordApplicationInstallParams InstallParams { get; internal set; }
-
-	/// <summary>
-	/// The application's role connection verification entry point,
-	/// which when configured will render the app as a verification method in the guild role verification configuration.
-	/// </summary>
-	public string RoleConnectionsVerificationUrl { get; internal set; }
-
-	/// <summary>
-	/// The application tags.
-	/// Not used atm.
-	/// </summary>
-	public IReadOnlyList<string> Tags { get; internal set; }
-
-	/// <summary>
-	/// Whether the application is hooked.
-	/// </summary>
-	public bool IsHook { get; internal set; }
-
-	/// <summary>
-	/// Gets the application type.
-	/// Mostly null.
-	/// </summary>
-	public string Type { get; internal set; }
-
-	/// <summary>
-	/// Gets the approximate guild count
-	/// </summary>
-	public int? ApproximateGuildCount { get; internal set; }
-
-	/// <summary>
-	/// Gets the approximate user install count
-	/// </summary>
-	public int? ApproximateUserInstallCount { get; internal set; }
-
-	/// <summary>
-	/// Gets the interactions endpoint url.
-	/// </summary>
-	public string InteractionsEndpointUrl { get; set; }
-
-	/// <summary>
-	/// Gets the redirect uris.
-	/// </summary>
-	public List<string> RedirectUris { get; set; } = [];
-
-	/// <summary>
-	/// Gets the integration types config.
-	/// </summary>
-	public DiscordIntegrationTypesConfig? IntegrationTypesConfig { get; set; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordApplication"/> class.
+	///     Initializes a new instance of the <see cref="DiscordApplication" /> class.
 	/// </summary>
 	internal DiscordApplication()
 	{ }
 
 	/// <summary>
-	/// Gets the application's cover image URL, in requested format and size.
+	///     Gets the application's summary.
+	/// </summary>
+	[DiscordDeprecated("Empty string, will be removed in API v11")]
+	public string Summary { get; internal set; }
+
+	/// <summary>
+	///     Gets the application's icon.
+	/// </summary>
+	public override string Icon
+		=> !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null;
+
+	/// <summary>
+	///     Gets the application's icon hash.
+	/// </summary>
+	public string IconHash { get; internal set; }
+
+	/// <summary>
+	///     Gets the application's allowed RPC origins.
+	/// </summary>
+	public IReadOnlyList<string> RpcOrigins { get; internal set; }
+
+	/// <summary>
+	///     Gets the application's flags.
+	/// </summary>
+	public ApplicationFlags Flags { get; internal set; }
+
+	/// <summary>
+	///     Gets the application's team members.
+	/// </summary>
+	public List<DiscordUser> Members { get; internal set; }
+
+	/// <summary>
+	///     Gets the application's owner.
+	/// </summary>
+	public DiscordUser Owner { get; internal set; }
+
+	/// <summary>
+	///     Gets whether this application's bot user requires code grant.
+	/// </summary>
+	public bool? RequiresCodeGrant { get; internal set; }
+
+	/// <summary>
+	///     Gets whether this bot application is public.
+	/// </summary>
+	public bool? IsPublic { get; internal set; }
+
+	/// <summary>
+	///     Gets the terms of service url of the application.
+	/// </summary>
+	public string TermsOfServiceUrl { get; internal set; }
+
+	/// <summary>
+	///     Gets the privacy policy url of the application.
+	/// </summary>
+	public string PrivacyPolicyUrl { get; internal set; }
+
+	/// <summary>
+	///     Gets the team name of the application.
+	/// </summary>
+	public string TeamName { get; internal set; }
+
+	/// <summary>
+	///     Gets the hash of the application's cover image.
+	/// </summary>
+	public string CoverImageHash { get; internal set; }
+
+	/// <summary>
+	///     Gets this application's cover image URL.
+	/// </summary>
+	public override string CoverImageUrl
+		=> $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.CoverImageHash}.png?size=1024";
+
+	/// <summary>
+	///     Gets the team which owns this application.
+	/// </summary>
+	public DiscordTeam Team { get; internal set; }
+
+	/// <summary>
+	///     Gets the hex encoded key for verification in interactions and the GameSDK's GetTicket
+	/// </summary>
+	public string VerifyKey { get; internal set; }
+
+	/// <summary>
+	///     If this application is a game sold on Discord, this field will be the guild to which it has been linked
+	/// </summary>
+	public ulong? GuildId { get; internal set; }
+
+	/// <summary>
+	///     Gets the partial guild if set as support server.
+	/// </summary>
+	public DiscordGuild? Guild { get; internal set; }
+
+	/// <summary>
+	///     If this application is a game sold on Discord, this field will be the id of the "Game SKU" that is created, if
+	///     exists
+	/// </summary>
+	public ulong? PrimarySkuId { get; internal set; }
+
+	/// <summary>
+	///     If this application is a game sold on Discord, this field will be the URL slug that links to the store page
+	/// </summary>
+	public string Slug { get; internal set; }
+
+	/// <summary>
+	///     A custom url for the Add To Server button.
+	/// </summary>
+	public string CustomInstallUrl { get; internal set; }
+
+	/// <summary>
+	///     Install parameters for adding the application to a guild.
+	/// </summary>
+	public DiscordApplicationInstallParams InstallParams { get; internal set; }
+
+	/// <summary>
+	///     The application's role connection verification entry point,
+	///     which when configured will render the app as a verification method in the guild role verification configuration.
+	/// </summary>
+	public string RoleConnectionsVerificationUrl { get; internal set; }
+
+	/// <summary>
+	///     The application tags.
+	///     Not used atm.
+	/// </summary>
+	public IReadOnlyList<string> Tags { get; internal set; }
+
+	/// <summary>
+	///     Whether the application is hooked.
+	/// </summary>
+	public bool IsHook { get; internal set; }
+
+	/// <summary>
+	///     Gets the application type.
+	///     Mostly null.
+	/// </summary>
+	public string Type { get; internal set; }
+
+	/// <summary>
+	///     Gets the approximate guild count
+	/// </summary>
+	public int? ApproximateGuildCount { get; internal set; }
+
+	/// <summary>
+	///     Gets the approximate user install count
+	/// </summary>
+	public int? ApproximateUserInstallCount { get; internal set; }
+
+	/// <summary>
+	///     Gets the interactions endpoint url.
+	/// </summary>
+	public string InteractionsEndpointUrl { get; set; }
+
+	/// <summary>
+	///     Gets the redirect uris.
+	/// </summary>
+	public List<string> RedirectUris { get; set; } = [];
+
+	/// <summary>
+	///     Gets the integration types config.
+	/// </summary>
+	public DiscordIntegrationTypesConfig? IntegrationTypesConfig { get; set; }
+
+	/// <summary>
+	///     Checks whether this <see cref="DiscordApplication" /> is equal to another <see cref="DiscordApplication" />.
+	/// </summary>
+	/// <param name="e"><see cref="DiscordApplication" /> to compare to.</param>
+	/// <returns>Whether the <see cref="DiscordApplication" /> is equal to this <see cref="DiscordApplication" />.</returns>
+	public bool Equals(DiscordApplication e)
+		=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
+
+	/// <summary>
+	///     Gets the application's cover image URL, in requested format and size.
 	/// </summary>
 	/// <param name="fmt">Format of the image to get.</param>
 	/// <param name="size">Maximum size of the cover image. Must be a power of two, minimum 16, maximum 2048.</param>
@@ -222,7 +231,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	}
 
 	/// <summary>
-	/// Retrieves this application's assets.
+	///     Retrieves this application's assets.
 	/// </summary>
 	/// <returns>This application's assets.</returns>
 	public async Task<IReadOnlyList<DiscordApplicationAsset>> GetAssetsAsync()
@@ -233,7 +242,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	}
 
 	/// <summary>
-	/// Generates an oauth url for the application.
+	///     Generates an oauth url for the application.
 	/// </summary>
 	/// <param name="permissions">The permissions.</param>
 	/// <returns>OAuth Url</returns>
@@ -249,30 +258,22 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	}
 
 	/// <summary>
-	/// Checks whether this <see cref="DiscordApplication"/> is equal to another object.
+	///     Checks whether this <see cref="DiscordApplication" /> is equal to another object.
 	/// </summary>
 	/// <param name="obj">Object to compare to.</param>
-	/// <returns>Whether the object is equal to this <see cref="DiscordApplication"/>.</returns>
+	/// <returns>Whether the object is equal to this <see cref="DiscordApplication" />.</returns>
 	public override bool Equals(object obj)
 		=> this.Equals(obj as DiscordApplication);
 
 	/// <summary>
-	/// Checks whether this <see cref="DiscordApplication"/> is equal to another <see cref="DiscordApplication"/>.
+	///     Gets the hash code for this <see cref="DiscordApplication" />.
 	/// </summary>
-	/// <param name="e"><see cref="DiscordApplication"/> to compare to.</param>
-	/// <returns>Whether the <see cref="DiscordApplication"/> is equal to this <see cref="DiscordApplication"/>.</returns>
-	public bool Equals(DiscordApplication e)
-		=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
-
-	/// <summary>
-	/// Gets the hash code for this <see cref="DiscordApplication"/>.
-	/// </summary>
-	/// <returns>The hash code for this <see cref="DiscordApplication"/>.</returns>
+	/// <returns>The hash code for this <see cref="DiscordApplication" />.</returns>
 	public override int GetHashCode()
 		=> this.Id.GetHashCode();
 
 	/// <summary>
-	/// Gets whether the two <see cref="DiscordApplication"/> objects are equal.
+	///     Gets whether the two <see cref="DiscordApplication" /> objects are equal.
 	/// </summary>
 	/// <param name="e1">First application to compare.</param>
 	/// <param name="e2">Second application to compare.</param>
@@ -286,7 +287,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	}
 
 	/// <summary>
-	/// Gets whether the two <see cref="DiscordApplication"/> objects are not equal.
+	///     Gets whether the two <see cref="DiscordApplication" /> objects are not equal.
 	/// </summary>
 	/// <param name="e1">First application to compare.</param>
 	/// <param name="e2">Second application to compare.</param>
@@ -296,62 +297,34 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 }
 
 /// <summary>
-/// Represents an discord asset.
+///     Represents an discord asset.
 /// </summary>
 public abstract class DiscordAsset
 {
 	/// <summary>
-	/// Gets the ID of this asset.
+	///     Gets the ID of this asset.
 	/// </summary>
 	public virtual string Id { get; set; }
 
 	/// <summary>
-	/// Gets the URL of this asset.
+	///     Gets the URL of this asset.
 	/// </summary>
 	public abstract Uri Url { get; }
 }
 
 /// <summary>
-/// Represents an asset for an OAuth2 application.
+///     Represents an asset for an OAuth2 application.
 /// </summary>
 public sealed class DiscordApplicationAsset : DiscordAsset, IEquatable<DiscordApplicationAsset>
 {
 	/// <summary>
-	/// Gets the Discord client instance for this asset.
-	/// </summary>
-	internal BaseDiscordClient Discord { get; set; }
-
-	/// <summary>
-	/// Gets the asset's name.
-	/// </summary>
-	[JsonProperty("name")]
-	public string Name { get; internal set; }
-
-	/// <summary>
-	/// Gets the asset's type.
-	/// </summary>
-	[JsonProperty("type")]
-	public ApplicationAssetType Type { get; internal set; }
-
-	/// <summary>
-	/// Gets the application this asset belongs to.
-	/// </summary>
-	public DiscordApplication Application { get; internal set; }
-
-	/// <summary>
-	/// Gets the Url of this asset.
-	/// </summary>
-	public override Uri Url
-		=> new($"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ASSETS}/{this.Application.Id.ToString(CultureInfo.InvariantCulture)}/{this.Id}.png");
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordApplicationAsset"/> class.
+	///     Initializes a new instance of the <see cref="DiscordApplicationAsset" /> class.
 	/// </summary>
 	internal DiscordApplicationAsset()
 	{ }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordApplicationAsset"/> class.
+	///     Initializes a new instance of the <see cref="DiscordApplicationAsset" /> class.
 	/// </summary>
 	/// <param name="app">The app.</param>
 	internal DiscordApplicationAsset(DiscordApplication app)
@@ -360,30 +333,59 @@ public sealed class DiscordApplicationAsset : DiscordAsset, IEquatable<DiscordAp
 	}
 
 	/// <summary>
-	/// Checks whether this <see cref="DiscordApplicationAsset"/> is equal to another object.
+	///     Gets the Discord client instance for this asset.
 	/// </summary>
-	/// <param name="obj">Object to compare to.</param>
-	/// <returns>Whether the object is equal to this <see cref="DiscordApplicationAsset"/>.</returns>
-	public override bool Equals(object obj)
-		=> this.Equals(obj as DiscordApplicationAsset);
+	internal BaseDiscordClient Discord { get; set; }
 
 	/// <summary>
-	/// Checks whether this <see cref="DiscordApplicationAsset"/> is equal to another <see cref="DiscordApplicationAsset"/>.
+	///     Gets the asset's name.
 	/// </summary>
-	/// <param name="e"><see cref="DiscordApplicationAsset"/> to compare to.</param>
-	/// <returns>Whether the <see cref="DiscordApplicationAsset"/> is equal to this <see cref="DiscordApplicationAsset"/>.</returns>
+	[JsonProperty("name")]
+	public string Name { get; internal set; }
+
+	/// <summary>
+	///     Gets the asset's type.
+	/// </summary>
+	[JsonProperty("type")]
+	public ApplicationAssetType Type { get; internal set; }
+
+	/// <summary>
+	///     Gets the application this asset belongs to.
+	/// </summary>
+	public DiscordApplication Application { get; internal set; }
+
+	/// <summary>
+	///     Gets the Url of this asset.
+	/// </summary>
+	public override Uri Url
+		=> new($"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ASSETS}/{this.Application.Id.ToString(CultureInfo.InvariantCulture)}/{this.Id}.png");
+
+	/// <summary>
+	///     Checks whether this <see cref="DiscordApplicationAsset" /> is equal to another
+	///     <see cref="DiscordApplicationAsset" />.
+	/// </summary>
+	/// <param name="e"><see cref="DiscordApplicationAsset" /> to compare to.</param>
+	/// <returns>Whether the <see cref="DiscordApplicationAsset" /> is equal to this <see cref="DiscordApplicationAsset" />.</returns>
 	public bool Equals(DiscordApplicationAsset e)
 		=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
 
 	/// <summary>
-	/// Gets the hash code for this <see cref="DiscordApplication"/>.
+	///     Checks whether this <see cref="DiscordApplicationAsset" /> is equal to another object.
 	/// </summary>
-	/// <returns>The hash code for this <see cref="DiscordApplication"/>.</returns>
+	/// <param name="obj">Object to compare to.</param>
+	/// <returns>Whether the object is equal to this <see cref="DiscordApplicationAsset" />.</returns>
+	public override bool Equals(object obj)
+		=> this.Equals(obj as DiscordApplicationAsset);
+
+	/// <summary>
+	///     Gets the hash code for this <see cref="DiscordApplication" />.
+	/// </summary>
+	/// <returns>The hash code for this <see cref="DiscordApplication" />.</returns>
 	public override int GetHashCode()
 		=> this.Id.GetHashCode();
 
 	/// <summary>
-	/// Gets whether the two <see cref="DiscordApplicationAsset"/> objects are equal.
+	///     Gets whether the two <see cref="DiscordApplicationAsset" /> objects are equal.
 	/// </summary>
 	/// <param name="e1">First application asset to compare.</param>
 	/// <param name="e2">Second application asset to compare.</param>
@@ -397,7 +399,7 @@ public sealed class DiscordApplicationAsset : DiscordAsset, IEquatable<DiscordAp
 	}
 
 	/// <summary>
-	/// Gets whether the two <see cref="DiscordApplicationAsset"/> objects are not equal.
+	///     Gets whether the two <see cref="DiscordApplicationAsset" /> objects are not equal.
 	/// </summary>
 	/// <param name="e1">First application asset to compare.</param>
 	/// <param name="e2">Second application asset to compare.</param>
@@ -407,20 +409,14 @@ public sealed class DiscordApplicationAsset : DiscordAsset, IEquatable<DiscordAp
 }
 
 /// <summary>
-/// Represents an spotify asset.
+///     Represents an spotify asset.
 /// </summary>
 public sealed class DiscordSpotifyAsset : DiscordAsset
 {
-	/// <summary>
-	/// Gets the URL of this asset.
-	/// </summary>
-	public override Uri Url
-		=> this._url.Value;
-
 	private readonly Lazy<Uri> _url;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordSpotifyAsset"/> class.
+	///     Initializes a new instance of the <see cref="DiscordSpotifyAsset" /> class.
 	/// </summary>
 	public DiscordSpotifyAsset()
 	{
@@ -431,25 +427,31 @@ public sealed class DiscordSpotifyAsset : DiscordAsset
 			return new($"https://i.scdn.co/image/{id}");
 		});
 	}
+
+	/// <summary>
+	///     Gets the URL of this asset.
+	/// </summary>
+	public override Uri Url
+		=> this._url.Value;
 }
 
 /// <summary>
-/// Determines the type of the asset attached to the application.
+///     Determines the type of the asset attached to the application.
 /// </summary>
 public enum ApplicationAssetType
 {
 	/// <summary>
-	/// Unknown type. This indicates something went terribly wrong.
+	///     Unknown type. This indicates something went terribly wrong.
 	/// </summary>
 	Unknown = 0,
 
 	/// <summary>
-	/// This asset can be used as small image for rich presences.
+	///     This asset can be used as small image for rich presences.
 	/// </summary>
 	SmallImage = 1,
 
 	/// <summary>
-	/// This asset can be used as large image for rich presences.
+	///     This asset can be used as large image for rich presences.
 	/// </summary>
 	LargeImage = 2
 }

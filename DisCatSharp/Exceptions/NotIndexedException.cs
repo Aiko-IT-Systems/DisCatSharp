@@ -7,37 +7,12 @@ using Newtonsoft.Json.Linq;
 namespace DisCatSharp.Exceptions;
 
 /// <summary>
-/// Represents an exception thrown when an elastisearch endpoint isn't finished with indexing yet.
+///     Represents an exception thrown when an elastisearch endpoint isn't finished with indexing yet.
 /// </summary>
 public sealed class NotIndexedException : Exception
 {
 	/// <summary>
-	/// Gets the response to the request.
-	/// </summary>
-	public RestResponse WebResponse { get; internal set; }
-
-	/// <summary>
-	/// Gets the error code for this exception.
-	/// </summary>
-	public int? Code { get; internal set; } = null;
-
-	/// <summary>
-	/// Gets the json message.
-	/// </summary>
-	public string? JsonMessage { get; internal set; } = null;
-
-	/// <summary>
-	/// Gets the indexed documents count.
-	/// </summary>
-	public long? DocumentsIndexed { get; internal set; } = null;
-
-	/// <summary>
-	/// Gets when to retry the request.
-	/// </summary>
-	public long? RetryAfter { get; internal set; } = null;
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="NotIndexedException"/> class.
+	///     Initializes a new instance of the <see cref="NotIndexedException" /> class.
 	/// </summary>
 	/// <param name="response">The response.</param>
 	internal NotIndexedException(RestResponse response)
@@ -64,4 +39,29 @@ public sealed class NotIndexedException : Exception
 		catch
 		{ }
 	}
+
+	/// <summary>
+	///     Gets the response to the request.
+	/// </summary>
+	public RestResponse WebResponse { get; internal set; }
+
+	/// <summary>
+	///     Gets the error code for this exception.
+	/// </summary>
+	public int? Code { get; internal set; } = null;
+
+	/// <summary>
+	///     Gets the json message.
+	/// </summary>
+	public string? JsonMessage { get; internal set; } = null;
+
+	/// <summary>
+	///     Gets the indexed documents count.
+	/// </summary>
+	public long? DocumentsIndexed { get; internal set; } = null;
+
+	/// <summary>
+	///     Gets when to retry the request.
+	/// </summary>
+	public long? RetryAfter { get; internal set; } = null;
 }

@@ -11,19 +11,18 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.Interactivity.EventHandling;
 
 /// <summary>
-/// The poll request.
+///     The poll request.
 /// </summary>
 public class PollRequest
 {
-	internal TaskCompletionSource<bool> Tcs;
-	internal CancellationTokenSource Ct;
-	internal TimeSpan Timeout;
 	internal ConcurrentHashSet<PollEmoji> Collected;
-	internal DiscordMessage Message;
+	internal CancellationTokenSource Ct;
 	internal List<DiscordEmoji> Emojis;
+	internal DiscordMessage Message;
+	internal TaskCompletionSource<bool> Tcs;
+	internal TimeSpan Timeout;
 
 	/// <summary>
-	///
 	/// </summary>
 	/// <param name="message"></param>
 	/// <param name="timeout"></param>
@@ -43,7 +42,7 @@ public class PollRequest
 	}
 
 	/// <summary>
-	/// Clears the collected.
+	///     Clears the collected.
 	/// </summary>
 	internal void ClearCollected()
 	{
@@ -53,7 +52,7 @@ public class PollRequest
 	}
 
 	/// <summary>
-	/// Removes the reaction.
+	///     Removes the reaction.
 	/// </summary>
 	/// <param name="emoji">The emoji.</param>
 	/// <param name="member">The member.</param>
@@ -70,7 +69,7 @@ public class PollRequest
 	}
 
 	/// <summary>
-	/// Adds the reaction.
+	///     Adds the reaction.
 	/// </summary>
 	/// <param name="emoji">The emoji.</param>
 	/// <param name="member">The member.</param>
@@ -92,7 +91,7 @@ public class PollRequest
 	}
 
 	/// <summary>
-	/// Disposes this PollRequest.
+	///     Disposes this PollRequest.
 	/// </summary>
 	public void Dispose()
 	{
@@ -102,12 +101,15 @@ public class PollRequest
 }
 
 /// <summary>
-/// The poll emoji.
+///     The poll emoji.
 /// </summary>
 public class PollEmoji
 {
+	public DiscordEmoji Emoji;
+	public ConcurrentHashSet<DiscordUser> Voted;
+
 	/// <summary>
-	/// Initializes a new instance of the <see cref="PollEmoji"/> class.
+	///     Initializes a new instance of the <see cref="PollEmoji" /> class.
 	/// </summary>
 	/// <param name="emoji">The emoji.</param>
 	internal PollEmoji(DiscordEmoji emoji)
@@ -116,11 +118,8 @@ public class PollEmoji
 		this.Voted = [];
 	}
 
-	public DiscordEmoji Emoji;
-	public ConcurrentHashSet<DiscordUser> Voted;
-
 	/// <summary>
-	/// Gets the total.
+	///     Gets the total.
 	/// </summary>
 	public int Total => this.Voted.Count;
 }

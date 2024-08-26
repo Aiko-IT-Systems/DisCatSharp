@@ -5,17 +5,17 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp;
 
 /// <summary>
-/// Represents a sharded logger factory.
+///     Represents a sharded logger factory.
 /// </summary>
 internal class ShardedLoggerFactory : ILoggerFactory
 {
 	/// <summary>
-	/// Gets the logger.
+	///     Gets the logger.
 	/// </summary>
 	private readonly ILogger<BaseDiscordClient> _logger;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="ShardedLoggerFactory"/> class.
+	///     Initializes a new instance of the <see cref="ShardedLoggerFactory" /> class.
 	/// </summary>
 	/// <param name="instance">The instance.</param>
 	public ShardedLoggerFactory(ILogger<BaseDiscordClient> instance)
@@ -24,14 +24,14 @@ internal class ShardedLoggerFactory : ILoggerFactory
 	}
 
 	/// <summary>
-	/// Adds a provider.
+	///     Adds a provider.
 	/// </summary>
 	/// <param name="provider">The provider to be added.</param>
 	public void AddProvider(ILoggerProvider provider)
 		=> throw new InvalidOperationException("This is a passthrough logger container, it cannot register new providers.");
 
 	/// <summary>
-	/// Creates a logger.
+	///     Creates a logger.
 	/// </summary>
 	/// <param name="categoryName">The category name.</param>
 	public ILogger CreateLogger(string categoryName) =>
@@ -40,7 +40,7 @@ internal class ShardedLoggerFactory : ILoggerFactory
 			: this._logger;
 
 	/// <summary>
-	/// Disposes the logger.
+	///     Disposes the logger.
 	/// </summary>
 	public void Dispose()
 	{ }

@@ -9,111 +9,12 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents a parameter for a <see cref="DiscordApplicationCommand"/>.
+///     Represents a parameter for a <see cref="DiscordApplicationCommand" />.
 /// </summary>
 public class DiscordApplicationCommandOption
 {
 	/// <summary>
-	/// Gets the type of this command parameter.
-	/// </summary>
-	[JsonProperty("type")]
-	public ApplicationCommandOptionType Type { get; internal set; }
-
-	/// <summary>
-	/// Gets the name of this command parameter.
-	/// </summary>
-	[JsonProperty("name")]
-	public string Name { get; internal set; }
-
-	/// <summary>
-	/// Sets the name localizations.
-	/// </summary>
-	[JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
-	internal Dictionary<string, string>? RawNameLocalizations { get; set; }
-
-	/// <summary>
-	/// Gets the name localizations.
-	/// </summary>
-	[JsonIgnore]
-	public DiscordApplicationCommandLocalization? NameLocalizations
-		=> this.RawNameLocalizations is not null ? new(this.RawNameLocalizations) : null;
-
-	/// <summary>
-	/// Gets the description of this command parameter.
-	/// </summary>
-	[JsonProperty("description")]
-	public string Description { get; internal set; }
-
-	/// <summary>
-	/// Sets the description localizations.
-	/// </summary>
-	[JsonProperty("description_localizations", NullValueHandling = NullValueHandling.Ignore)]
-	internal Dictionary<string, string>? RawDescriptionLocalizations { get; set; }
-
-	/// <summary>
-	/// Gets the description localizations.
-	/// </summary>
-	[JsonIgnore]
-	public DiscordApplicationCommandLocalization? DescriptionLocalizations
-		=> this.RawDescriptionLocalizations is not null ? new(this.RawDescriptionLocalizations) : null;
-
-	/// <summary>
-	/// Gets whether this command parameter is required.
-	/// </summary>
-	[JsonProperty("required", NullValueHandling = NullValueHandling.Ignore)]
-	public bool Required { get; internal set; } = false;
-
-	/// <summary>
-	/// Gets the optional choices for this command parameter.
-	/// Not applicable for auto-complete options.
-	/// </summary>
-	[JsonProperty("choices", NullValueHandling = NullValueHandling.Ignore)]
-	public List<DiscordApplicationCommandOptionChoice>? Choices { get; internal set; } = null;
-
-	/// <summary>
-	/// Gets the optional subcommand parameters for this parameter.
-	/// </summary>
-	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-	public List<DiscordApplicationCommandOption>? Options { get; internal set; } = null;
-
-	/// <summary>
-	/// Gets the optional allowed channel types.
-	/// </summary>
-	[JsonProperty("channel_types", NullValueHandling = NullValueHandling.Ignore)]
-	public List<ChannelType>? ChannelTypes { get; internal set; } = null;
-
-	/// <summary>
-	/// Gets whether this option provides autocompletion.
-	/// </summary>
-	[JsonProperty("autocomplete", NullValueHandling = NullValueHandling.Ignore)]
-	public bool AutoComplete { get; internal set; } = false;
-
-	/// <summary>
-	/// Gets the minimum value for this slash command parameter.
-	/// </summary>
-	[JsonProperty("min_value", NullValueHandling = NullValueHandling.Ignore)]
-	public object? MinimumValue { get; internal set; }
-
-	/// <summary>
-	/// Gets the maximum value for this slash command parameter.
-	/// </summary>
-	[JsonProperty("max_value", NullValueHandling = NullValueHandling.Ignore)]
-	public object? MaximumValue { get; internal set; }
-
-	/// <summary>
-	/// Gets the maximum length for this slash command parameter.
-	/// </summary>
-	[JsonProperty("min_length", NullValueHandling = NullValueHandling.Ignore)]
-	public int? MinimumLength { get; internal set; }
-
-	/// <summary>
-	/// Gets the minimum length for this slash command parameter.
-	/// </summary>
-	[JsonProperty("max_length", NullValueHandling = NullValueHandling.Ignore)]
-	public int? MaximumLength { get; internal set; }
-
-	/// <summary>
-	/// Creates a new instance of a <see cref="DiscordApplicationCommandOption"/>.
+	///     Creates a new instance of a <see cref="DiscordApplicationCommandOption" />.
 	/// </summary>
 	/// <param name="name">The name of this parameter.</param>
 	/// <param name="description">The description of the parameter.</param>
@@ -123,8 +24,14 @@ public class DiscordApplicationCommandOption
 	/// <param name="options">The optional subcommands for this parameter.</param>
 	/// <param name="channelTypes">If the option is a channel type, the channels shown will be restricted to these types.</param>
 	/// <param name="autocomplete">Whether this option provides autocompletion.</param>
-	/// <param name="minimumValue">The minimum value for this parameter. Only valid for types <see cref="ApplicationCommandOptionType.Integer"/> or <see cref="ApplicationCommandOptionType.Number"/>.</param>
-	/// <param name="maximumValue">The maximum value for this parameter. Only valid for types <see cref="ApplicationCommandOptionType.Integer"/> or <see cref="ApplicationCommandOptionType.Number"/>.</param>
+	/// <param name="minimumValue">
+	///     The minimum value for this parameter. Only valid for types
+	///     <see cref="ApplicationCommandOptionType.Integer" /> or <see cref="ApplicationCommandOptionType.Number" />.
+	/// </param>
+	/// <param name="maximumValue">
+	///     The maximum value for this parameter. Only valid for types
+	///     <see cref="ApplicationCommandOptionType.Integer" /> or <see cref="ApplicationCommandOptionType.Number" />.
+	/// </param>
 	/// <param name="nameLocalizations">The localizations of the parameter name.</param>
 	/// <param name="descriptionLocalizations">The localizations of the parameter description.</param>
 	/// <param name="minimumLength">The minimum allowed length of the string. (Min 0)</param>
@@ -176,8 +83,107 @@ public class DiscordApplicationCommandOption
 	}
 
 	/// <summary>
-	/// Creates a new empty DiscordApplicationCommandOption.
+	///     Creates a new empty DiscordApplicationCommandOption.
 	/// </summary>
 	internal DiscordApplicationCommandOption()
 	{ }
+
+	/// <summary>
+	///     Gets the type of this command parameter.
+	/// </summary>
+	[JsonProperty("type")]
+	public ApplicationCommandOptionType Type { get; internal set; }
+
+	/// <summary>
+	///     Gets the name of this command parameter.
+	/// </summary>
+	[JsonProperty("name")]
+	public string Name { get; internal set; }
+
+	/// <summary>
+	///     Sets the name localizations.
+	/// </summary>
+	[JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
+	internal Dictionary<string, string>? RawNameLocalizations { get; set; }
+
+	/// <summary>
+	///     Gets the name localizations.
+	/// </summary>
+	[JsonIgnore]
+	public DiscordApplicationCommandLocalization? NameLocalizations
+		=> this.RawNameLocalizations is not null ? new(this.RawNameLocalizations) : null;
+
+	/// <summary>
+	///     Gets the description of this command parameter.
+	/// </summary>
+	[JsonProperty("description")]
+	public string Description { get; internal set; }
+
+	/// <summary>
+	///     Sets the description localizations.
+	/// </summary>
+	[JsonProperty("description_localizations", NullValueHandling = NullValueHandling.Ignore)]
+	internal Dictionary<string, string>? RawDescriptionLocalizations { get; set; }
+
+	/// <summary>
+	///     Gets the description localizations.
+	/// </summary>
+	[JsonIgnore]
+	public DiscordApplicationCommandLocalization? DescriptionLocalizations
+		=> this.RawDescriptionLocalizations is not null ? new(this.RawDescriptionLocalizations) : null;
+
+	/// <summary>
+	///     Gets whether this command parameter is required.
+	/// </summary>
+	[JsonProperty("required", NullValueHandling = NullValueHandling.Ignore)]
+	public bool Required { get; internal set; } = false;
+
+	/// <summary>
+	///     Gets the optional choices for this command parameter.
+	///     Not applicable for auto-complete options.
+	/// </summary>
+	[JsonProperty("choices", NullValueHandling = NullValueHandling.Ignore)]
+	public List<DiscordApplicationCommandOptionChoice>? Choices { get; internal set; } = null;
+
+	/// <summary>
+	///     Gets the optional subcommand parameters for this parameter.
+	/// </summary>
+	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
+	public List<DiscordApplicationCommandOption>? Options { get; internal set; } = null;
+
+	/// <summary>
+	///     Gets the optional allowed channel types.
+	/// </summary>
+	[JsonProperty("channel_types", NullValueHandling = NullValueHandling.Ignore)]
+	public List<ChannelType>? ChannelTypes { get; internal set; } = null;
+
+	/// <summary>
+	///     Gets whether this option provides autocompletion.
+	/// </summary>
+	[JsonProperty("autocomplete", NullValueHandling = NullValueHandling.Ignore)]
+	public bool AutoComplete { get; internal set; } = false;
+
+	/// <summary>
+	///     Gets the minimum value for this slash command parameter.
+	/// </summary>
+	[JsonProperty("min_value", NullValueHandling = NullValueHandling.Ignore)]
+	public object? MinimumValue { get; internal set; }
+
+	/// <summary>
+	///     Gets the maximum value for this slash command parameter.
+	/// </summary>
+	[JsonProperty("max_value", NullValueHandling = NullValueHandling.Ignore)]
+	public object? MaximumValue { get; internal set; }
+
+	/// <summary>
+	///     Gets the maximum length for this slash command parameter.
+	/// </summary>
+	[JsonProperty("min_length", NullValueHandling = NullValueHandling.Ignore)]
+	public int? MinimumLength { get; internal set; }
+
+	/// <summary>
+	///     Gets the minimum length for this slash command parameter.
+	/// </summary>
+	[JsonProperty("max_length", NullValueHandling = NullValueHandling.Ignore)]
+	public int? MaximumLength { get; internal set; }
 }

@@ -6,32 +6,100 @@ using System.Threading.Tasks;
 namespace DisCatSharp.Net;
 
 /// <summary>
-/// Represents a rate limit bucket.
+///     Represents a rate limit bucket.
 /// </summary>
 internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 {
 	/// <summary>
-	/// Gets the Id of the guild bucket.
+	///     Gets the unlimited hash.
 	/// </summary>
-	public string GuildId { get; }
+	private static readonly string s_unlimitedHash = "unlimited";
 
 	/// <summary>
-	/// Gets the Id of the channel bucket.
-	/// </summary>
-	public string ChannelId { get; }
-
-	/// <summary>
-	/// Gets the ID of the webhook bucket.
-	/// </summary>
-	public string WebhookId { get; }
-
-	/// <summary>
-	/// Gets the Id of the ratelimit bucket.
+	///     Gets the Id of the ratelimit bucket.
 	/// </summary>
 	public volatile string? BucketId;
 
 	/// <summary>
-	/// Gets or sets the ratelimit hash of this bucket.
+	///     Gets the ratelimit hash of this bucket.
+	/// </summary>
+	internal string HashInternal;
+
+	/// <summary>
+	///     Gets whether this bucket has it's ratelimit determined.
+	///     <para>This will be <see langword="false" /> if the ratelimit is determined.</para>
+	/// </summary>
+	internal volatile bool IsUnlimited;
+
+	/// <summary>
+	///     If the rate limit is currently being reset.
+	///     This is a int because booleans can't be accessed atomically.
+	///     0 => False, all other values => True
+	/// </summary>
+	internal volatile int LimitResetting;
+
+	/// <summary>
+	///     Task to wait for the rate limit test to finish.
+	/// </summary>
+	internal volatile Task? LimitTestFinished;
+
+	/// <summary>
+	///     If the initial request for this bucket that is determining the rate limits is currently executing.
+	///     This is a int because booleans can't be accessed atomically.
+	///     0 => False, all other values => True
+	/// </summary>
+	internal volatile int LimitTesting;
+
+	/// <summary>
+	///     If the rate limits have been determined.
+	/// </summary>
+	internal volatile bool LimitValid;
+
+	/// <summary>
+	///     Rate limit reset in ticks, UTC on the next response after the rate limit has been reset.
+	/// </summary>
+	internal long NextReset;
+
+	/// <summary>
+	///     Gets or sets the remaining number of requests to the maximum when the ratelimit is reset.
+	/// </summary>
+	internal volatile int RemainingInternal;
+
+	/// <summary>
+	///     Initializes a new instance of the <see cref="RateLimitBucket" /> class.
+	/// </summary>
+	/// <param name="hash">The hash.</param>
+	/// <param name="guildId">The guild_id.</param>
+	/// <param name="channelId">The channel_id.</param>
+	/// <param name="webhookId">The webhook_id.</param>
+	internal RateLimitBucket(string hash, string guildId, string channelId, string webhookId)
+	{
+		this.Hash = hash;
+		this.ChannelId = channelId;
+		this.GuildId = guildId;
+		this.WebhookId = webhookId;
+
+		this.BucketId = GenerateBucketId(hash, guildId, channelId, webhookId);
+		this.RouteHashes = [];
+	}
+
+	/// <summary>
+	///     Gets the Id of the guild bucket.
+	/// </summary>
+	public string GuildId { get; }
+
+	/// <summary>
+	///     Gets the Id of the channel bucket.
+	/// </summary>
+	public string ChannelId { get; }
+
+	/// <summary>
+	///     Gets the ID of the webhook bucket.
+	/// </summary>
+	public string WebhookId { get; }
+
+	/// <summary>
+	///     Gets or sets the ratelimit hash of this bucket.
 	/// </summary>
 	public string Hash
 	{
@@ -53,121 +121,60 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 	}
 
 	/// <summary>
-	/// Gets the ratelimit hash of this bucket.
-	/// </summary>
-	internal string HashInternal;
-
-	/// <summary>
-	/// Gets the past route hashes associated with this bucket.
+	///     Gets the past route hashes associated with this bucket.
 	/// </summary>
 	public ConcurrentBag<string> RouteHashes { get; }
 
 	/// <summary>
-	/// Gets when this bucket was last called in a request.
+	///     Gets when this bucket was last called in a request.
 	/// </summary>
 	public DateTimeOffset LastAttemptAt { get; internal set; }
 
 	/// <summary>
-	/// Gets the number of uses left before pre-emptive rate limit is triggered.
+	///     Gets the number of uses left before pre-emptive rate limit is triggered.
 	/// </summary>
 	public int Remaining
 		=> this.RemainingInternal;
 
 	/// <summary>
-	/// Gets the maximum number of uses within a single bucket.
+	///     Gets the maximum number of uses within a single bucket.
 	/// </summary>
 	public int Maximum { get; set; }
 
 	/// <summary>
-	/// Gets the timestamp at which the rate limit resets.
+	///     Gets the timestamp at which the rate limit resets.
 	/// </summary>
 	public DateTimeOffset Reset { get; internal set; }
 
 	/// <summary>
-	/// Gets the time interval to wait before the rate limit resets.
+	///     Gets the time interval to wait before the rate limit resets.
 	/// </summary>
 	public TimeSpan? ResetAfter { get; internal set; }
 
 	/// <summary>
-	/// Gets a value indicating whether the ratelimit global.
+	///     Gets a value indicating whether the ratelimit global.
 	/// </summary>
 	public bool IsGlobal { get; internal set; } = false;
 
 	/// <summary>
-	/// Gets the ratelimit scope.
+	///     Gets the ratelimit scope.
 	/// </summary>
 	public string Scope { get; internal set; } = "user";
 
 	/// <summary>
-	/// Gets the time interval to wait before the rate limit resets as offset.
+	///     Gets the time interval to wait before the rate limit resets as offset.
 	/// </summary>
 	internal DateTimeOffset ResetAfterOffset { get; set; }
 
 	/// <summary>
-	/// Gets or sets the remaining number of requests to the maximum when the ratelimit is reset.
+	///     Checks whether this <see cref="RateLimitBucket" /> is equal to another <see cref="RateLimitBucket" />.
 	/// </summary>
-	internal volatile int RemainingInternal;
+	/// <param name="e"><see cref="RateLimitBucket" /> to compare to.</param>
+	/// <returns>Whether the <see cref="RateLimitBucket" /> is equal to this <see cref="RateLimitBucket" />.</returns>
+	public bool Equals(RateLimitBucket e) => e is not null && (ReferenceEquals(this, e) || this.BucketId == e.BucketId);
 
 	/// <summary>
-	/// Gets whether this bucket has it's ratelimit determined.
-	/// <para>This will be <see langword="false"/> if the ratelimit is determined.</para>
-	/// </summary>
-	internal volatile bool IsUnlimited;
-
-	/// <summary>
-	/// If the initial request for this bucket that is determining the rate limits is currently executing.
-	/// This is a int because booleans can't be accessed atomically.
-	/// 0 => False, all other values => True
-	/// </summary>
-	internal volatile int LimitTesting;
-
-	/// <summary>
-	/// Task to wait for the rate limit test to finish.
-	/// </summary>
-	internal volatile Task? LimitTestFinished;
-
-	/// <summary>
-	/// If the rate limits have been determined.
-	/// </summary>
-	internal volatile bool LimitValid;
-
-	/// <summary>
-	/// Rate limit reset in ticks, UTC on the next response after the rate limit has been reset.
-	/// </summary>
-	internal long NextReset;
-
-	/// <summary>
-	/// If the rate limit is currently being reset.
-	/// This is a int because booleans can't be accessed atomically.
-	/// 0 => False, all other values => True
-	/// </summary>
-	internal volatile int LimitResetting;
-
-	/// <summary>
-	/// Gets the unlimited hash.
-	/// </summary>
-	private static readonly string s_unlimitedHash = "unlimited";
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="RateLimitBucket"/> class.
-	/// </summary>
-	/// <param name="hash">The hash.</param>
-	/// <param name="guildId">The guild_id.</param>
-	/// <param name="channelId">The channel_id.</param>
-	/// <param name="webhookId">The webhook_id.</param>
-	internal RateLimitBucket(string hash, string guildId, string channelId, string webhookId)
-	{
-		this.Hash = hash;
-		this.ChannelId = channelId;
-		this.GuildId = guildId;
-		this.WebhookId = webhookId;
-
-		this.BucketId = GenerateBucketId(hash, guildId, channelId, webhookId);
-		this.RouteHashes = [];
-	}
-
-	/// <summary>
-	/// Generates an ID for this request bucket.
+	///     Generates an ID for this request bucket.
 	/// </summary>
 	/// <param name="hash">Hash for this bucket.</param>
 	/// <param name="guildId">Guild Id for this bucket.</param>
@@ -178,7 +185,7 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 		=> $"{hash}:{guildId}:{channelId}:{webhookId}";
 
 	/// <summary>
-	/// Generates the hash key.
+	///     Generates the hash key.
 	/// </summary>
 	/// <param name="method">The method.</param>
 	/// <param name="route">The route.</param>
@@ -187,7 +194,7 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 		=> $"{method}:{route}";
 
 	/// <summary>
-	/// Generates the unlimited hash.
+	///     Generates the unlimited hash.
 	/// </summary>
 	/// <param name="method">The method.</param>
 	/// <param name="route">The route.</param>
@@ -196,7 +203,7 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 		=> $"{GenerateHashKey(method, route)}:{s_unlimitedHash}";
 
 	/// <summary>
-	/// Returns a string representation of this bucket.
+	///     Returns a string representation of this bucket.
 	/// </summary>
 	/// <returns>String representation of this bucket.</returns>
 	public override string ToString()
@@ -209,29 +216,22 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 	}
 
 	/// <summary>
-	/// Checks whether this <see cref="RateLimitBucket"/> is equal to another object.
+	///     Checks whether this <see cref="RateLimitBucket" /> is equal to another object.
 	/// </summary>
 	/// <param name="obj">Object to compare to.</param>
-	/// <returns>Whether the object is equal to this <see cref="RateLimitBucket"/>.</returns>
+	/// <returns>Whether the object is equal to this <see cref="RateLimitBucket" />.</returns>
 	public override bool Equals(object obj)
 		=> this.Equals(obj as RateLimitBucket);
 
 	/// <summary>
-	/// Checks whether this <see cref="RateLimitBucket"/> is equal to another <see cref="RateLimitBucket"/>.
+	///     Gets the hash code for this <see cref="RateLimitBucket" />.
 	/// </summary>
-	/// <param name="e"><see cref="RateLimitBucket"/> to compare to.</param>
-	/// <returns>Whether the <see cref="RateLimitBucket"/> is equal to this <see cref="RateLimitBucket"/>.</returns>
-	public bool Equals(RateLimitBucket e) => e is not null && (ReferenceEquals(this, e) || this.BucketId == e.BucketId);
-
-	/// <summary>
-	/// Gets the hash code for this <see cref="RateLimitBucket"/>.
-	/// </summary>
-	/// <returns>The hash code for this <see cref="RateLimitBucket"/>.</returns>
+	/// <returns>The hash code for this <see cref="RateLimitBucket" />.</returns>
 	public override int GetHashCode()
 		=> this.BucketId?.GetHashCode() ?? -1;
 
 	/// <summary>
-	/// Sets remaining number of requests to the maximum when the ratelimit is reset
+	///     Sets remaining number of requests to the maximum when the ratelimit is reset
 	/// </summary>
 	/// <param name="now">The datetime offset.</param>
 	internal async Task TryResetLimitAsync(DateTimeOffset now)
@@ -258,7 +258,7 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 	}
 
 	/// <summary>
-	/// Sets the initial values.
+	///     Sets the initial values.
 	/// </summary>
 	/// <param name="max">The max.</param>
 	/// <param name="usesLeft">The uses left.</param>

@@ -9,18 +9,18 @@ using Newtonsoft.Json.Linq;
 namespace DisCatSharp.Net.Serialization;
 
 /// <summary>
-/// Represents a discord component json converter.
+///     Represents a discord component json converter.
 /// </summary>
 internal sealed class DiscordComponentJsonConverter : JsonConverter
 {
 	/// <summary>
-	/// Whether the converter can write.
+	///     Whether the converter can write.
 	/// </summary>
 	public override bool CanWrite
 		=> false;
 
 	/// <summary>
-	/// Writes the json.
+	///     Writes the json.
 	/// </summary>
 	/// <param name="writer">The writer.</param>
 	/// <param name="value">The value.</param>
@@ -29,7 +29,7 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 		=> throw new NotImplementedException();
 
 	/// <summary>
-	/// Reads the json.
+	///     Reads the json.
 	/// </summary>
 	/// <param name="reader">The reader.</param>
 	/// <param name="objectType">The object type.</param>
@@ -68,7 +68,7 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 	}
 
 	/// <summary>
-	/// Whether the json can convert.
+	///     Whether the json can convert.
 	/// </summary>
 	/// <param name="objectType">The object type.</param>
 	public override bool CanConvert(Type objectType)

@@ -8,12 +8,16 @@ using DisCatSharp.Enums;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Constructs a poll to be send.
+///     Constructs a poll to be send.
 /// </summary>
 public sealed class DiscordPollBuilder
 {
+	private readonly List<DiscordPollAnswer> _answers = [];
+
+	private DiscordPollMedia _question;
+
 	/// <summary>
-	/// Gets or sets the question.
+	///     Gets or sets the question.
 	/// </summary>
 	public string Question
 	{
@@ -27,34 +31,30 @@ public sealed class DiscordPollBuilder
 		}
 	}
 
-	private DiscordPollMedia _question;
-
 	/// <summary>
-	/// Gets the answers.
+	///     Gets the answers.
 	/// </summary>
 	public IReadOnlyList<DiscordPollAnswer> Answers => this._answers;
 
-	private readonly List<DiscordPollAnswer> _answers = [];
-
 	/// <summary>
-	/// Gets or sets the layout type. Defaults to <see cref="PollLayoutType.Default"/>.
+	///     Gets or sets the layout type. Defaults to <see cref="PollLayoutType.Default" />.
 	/// </summary>
 	public PollLayoutType LayoutType { get; internal set; } = PollLayoutType.Default;
 
 	/// <summary>
-	/// Gets or sets the number of hours the poll should be open for, up to 32 days.
-	/// Defaults to <c>24</c> hours.
+	///     Gets or sets the number of hours the poll should be open for, up to 32 days.
+	///     Defaults to <c>24</c> hours.
 	/// </summary>
 	public int Duration { get; set; } = 24;
 
 	/// <summary>
-	/// Gets or sets whether a user can select multiple answers.
-	/// Defaults to <see langword="false"/>.
+	///     Gets or sets whether a user can select multiple answers.
+	///     Defaults to <see langword="false" />.
 	/// </summary>
 	public bool AllowMultiselect { get; set; } = false;
 
 	/// <summary>
-	/// Sets the duration for the poll.
+	///     Sets the duration for the poll.
 	/// </summary>
 	/// <param name="hours">How long the poll should be open for. Max 7 days.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -65,7 +65,7 @@ public sealed class DiscordPollBuilder
 	}
 
 	/// <summary>
-	/// ALlows users to select multiple answers or not.
+	///     ALlows users to select multiple answers or not.
 	/// </summary>
 	/// <param name="allow">Whether a user can select multiple answers.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -76,7 +76,7 @@ public sealed class DiscordPollBuilder
 	}
 
 	/// <summary>
-	/// Sets the question of a poll.
+	///     Sets the question of a poll.
 	/// </summary>
 	/// <param name="question">The question to be set.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -87,7 +87,7 @@ public sealed class DiscordPollBuilder
 	}
 
 	/// <summary>
-	/// Adds answers to a poll, up to 10 answers.
+	///     Adds answers to a poll, up to 10 answers.
 	/// </summary>
 	/// <param name="answers">The answers to add to the poll.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -96,7 +96,7 @@ public sealed class DiscordPollBuilder
 		=> this.AddAnswers((IEnumerable<DiscordPollAnswer>)answers);
 
 	/// <summary>
-	/// Adds answers without emoji to a poll, up to 10 answers.
+	///     Adds answers without emoji to a poll, up to 10 answers.
 	/// </summary>
 	/// <param name="answers">The answers to add to the poll.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -104,7 +104,7 @@ public sealed class DiscordPollBuilder
 		=> this.AddAnswers(answers.Select(x => new DiscordPollAnswer(x)));
 
 	/// <summary>
-	/// Adds answers to a poll, up to 10 answers.
+	///     Adds answers to a poll, up to 10 answers.
 	/// </summary>
 	/// <param name="answers">The answers to add to the message.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -137,7 +137,7 @@ public sealed class DiscordPollBuilder
 	}
 
 	/// <summary>
-	/// Sends the poll to a specific channel
+	///     Sends the poll to a specific channel
 	/// </summary>
 	/// <param name="channel">The channel the poll should be sent to.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -145,13 +145,13 @@ public sealed class DiscordPollBuilder
 		=> channel.SendMessageAsync(new DiscordMessageBuilder().WithPoll(this));
 
 	/// <summary>
-	/// Clears all answers on this builder.
+	///     Clears all answers on this builder.
 	/// </summary>
 	public void ClearAnswers()
 		=> this._answers.Clear();
 
 	/// <summary>
-	/// Allows for clearing the poll builder so that it can be used again to build a new poll.
+	///     Allows for clearing the poll builder so that it can be used again to build a new poll.
 	/// </summary>
 	public void Clear()
 	{
@@ -163,7 +163,7 @@ public sealed class DiscordPollBuilder
 	}
 
 	/// <summary>
-	/// Does the validation before we send a the create request.
+	///     Does the validation before we send a the create request.
 	/// </summary>
 	internal void Validate()
 	{
@@ -178,7 +178,7 @@ public sealed class DiscordPollBuilder
 	}
 
 	/// <summary>
-	/// Builds the poll request.
+	///     Builds the poll request.
 	/// </summary>
 	/// <returns>The constructed poll request.</returns>
 	internal DiscordPollRequest Build()

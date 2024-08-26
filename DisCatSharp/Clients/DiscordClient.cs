@@ -28,34 +28,34 @@ using Sentry;
 namespace DisCatSharp;
 
 /// <summary>
-/// A Discord API wrapper.
+///     A Discord API wrapper.
 /// </summary>
 public sealed partial class DiscordClient : BaseDiscordClient
 {
 #region Internal Fields/Properties
 
 	/// <summary>
-	/// Gets whether this client is running as a shard.
+	///     Gets whether this client is running as a shard.
 	/// </summary>
 	internal bool IsShard = false;
 
 	/// <summary>
-	/// Gets the message cache.
+	///     Gets the message cache.
 	/// </summary>
 	internal RingBuffer<DiscordMessage>? MessageCache { get; } // TODO: Check usage
 
 	/// <summary>
-	/// Gets the list of extensions.
+	///     Gets the list of extensions.
 	/// </summary>
 	private readonly List<BaseExtension> _extensions = [];
 
 	/// <summary>
-	/// Gets the status update.
+	///     Gets the status update.
 	/// </summary>
 	private StatusUpdate? _status;
 
 	/// <summary>
-	/// Gets the connection lock.
+	///     Gets the connection lock.
 	/// </summary>
 	private readonly ManualResetEventSlim _connectionLock = new(true);
 
@@ -64,72 +64,72 @@ public sealed partial class DiscordClient : BaseDiscordClient
 #region Public Fields/Properties
 
 	/// <summary>
-	/// Gets the gateway protocol version.
+	///     Gets the gateway protocol version.
 	/// </summary>
 	public int GatewayVersion { get; internal set; }
 
 	/// <summary>
-	/// Gets the gateway session information for this client.
+	///     Gets the gateway session information for this client.
 	/// </summary>
 	public GatewayInfo? GatewayInfo { get; internal set; }
 
 	/// <summary>
-	/// Gets the gateway URL.
+	///     Gets the gateway URL.
 	/// </summary>
 	public Uri GatewayUri { get; internal set; }
 
 	/// <summary>
-	/// Gets the total number of shards the bot is connected to.
+	///     Gets the total number of shards the bot is connected to.
 	/// </summary>
 	public int ShardCount => this.GatewayInfo?.ShardCount ?? this.Configuration.ShardCount;
 
 	/// <summary>
-	/// Gets the currently connected shard ID.
+	///     Gets the currently connected shard ID.
 	/// </summary>
 	public int ShardId
 		=> this.Configuration.ShardId;
 
 	/// <summary>
-	/// Gets the intents configured for this client.
+	///     Gets the intents configured for this client.
 	/// </summary>
 	public DiscordIntents Intents
 		=> this.Configuration.Intents;
 
 	/// <summary>
-	/// Gets a dictionary of guilds that this client is in. The dictionary's key is the guild ID. Note that the
-	/// guild objects in this dictionary will not be filled in if the specific guilds aren't available (the
-	/// <see cref="GuildAvailable"/> or <see cref="GuildDownloadCompleted"/> events haven't been fired yet)
+	///     Gets a dictionary of guilds that this client is in. The dictionary's key is the guild ID. Note that the
+	///     guild objects in this dictionary will not be filled in if the specific guilds aren't available (the
+	///     <see cref="GuildAvailable" /> or <see cref="GuildDownloadCompleted" /> events haven't been fired yet)
 	/// </summary>
 	public override IReadOnlyDictionary<ulong, DiscordGuild> Guilds { get; }
 
 	/// <summary>
-	/// Gets the guilds.
+	///     Gets the guilds.
 	/// </summary>
 	internal readonly ConcurrentDictionary<ulong, DiscordGuild> GuildsInternal = [];
 
 	/// <summary>
-	/// Gets a dictionary of application emojis that this client has. The dictionary's key is the emoji ID.
+	///     Gets a dictionary of application emojis that this client has. The dictionary's key is the emoji ID.
 	/// </summary>
 	public override IReadOnlyDictionary<ulong, DiscordApplicationEmoji> Emojis { get; }
 
 	/// <summary>
-	/// Gets the application emojis.
+	///     Gets the application emojis.
 	/// </summary>
 	internal readonly ConcurrentDictionary<ulong, DiscordApplicationEmoji> EmojisInternal = [];
 
 	/// <summary>
-	/// Gets the websocket latency for this client.
+	///     Gets the websocket latency for this client.
 	/// </summary>
 	public int Ping
 		=> Volatile.Read(ref this._ping);
 
 	/// <summary>
-	/// Gets the ping.
+	///     Gets the ping.
 	/// </summary>
 	private int _ping = 0;
 
 	/// <summary>
-	/// Gets the collection of presences held by this client.
+	///     Gets the collection of presences held by this client.
 	/// </summary>
 	public IReadOnlyDictionary<ulong, DiscordPresence> Presences
 		=> this._presencesLazy.Value;
@@ -138,7 +138,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	private Lazy<IReadOnlyDictionary<ulong, DiscordPresence>> _presencesLazy;
 
 	/// <summary>
-	/// Gets the collection of presences held by this client.
+	///     Gets the collection of presences held by this client.
 	/// </summary>
 	public IReadOnlyDictionary<string, DiscordActivity> EmbeddedActivities
 		=> this._embeddedActivitiesLazy.Value;
@@ -147,7 +147,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	private Lazy<IReadOnlyDictionary<string, DiscordActivity>> _embeddedActivitiesLazy;
 
 	/// <summary>
-	/// Gets the cooldown buckets for commands.
+	///     Gets the cooldown buckets for commands.
 	/// </summary>
 	public ConcurrentDictionary<string, CooldownBucket> CommandCooldownBuckets { get; } = [];
 
@@ -156,7 +156,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 #region Constructor/Internal Setup
 
 	/// <summary>
-	/// Initializes a new instance of <see cref="DiscordClient"/>.
+	///     Initializes a new instance of <see cref="DiscordClient" />.
 	/// </summary>
 	/// <param name="config">Specifies configuration parameters.</param>
 	public DiscordClient(DiscordConfiguration config)
@@ -177,7 +177,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Internal setup of the Client.
+	///     Internal setup of the Client.
 	/// </summary>
 	internal void InternalSetup()
 	{
@@ -287,7 +287,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 #region Client Extension Methods
 
 	/// <summary>
-	/// Registers an extension with this client.
+	///     Registers an extension with this client.
 	/// </summary>
 	/// <param name="ext">Extension to register.</param>
 	public void AddExtension(BaseExtension ext)
@@ -297,7 +297,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Retrieves a previously registered extension from this client.
+	///     Retrieves a previously registered extension from this client.
 	/// </summary>
 	/// <typeparam name="T">The type of extension to retrieve.</typeparam>
 	/// <returns>The requested extension.</returns>
@@ -309,7 +309,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 #region Public Connection Methods
 
 	/// <summary>
-	/// Connects to the gateway.
+	///     Connects to the gateway.
 	/// </summary>
 	/// <param name="activity">The activity to set. Defaults to null.</param>
 	/// <param name="status">The optional status to set. Defaults to null.</param>
@@ -429,14 +429,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Reconnects to the gateway.
+	///     Reconnects to the gateway.
 	/// </summary>
 	/// <param name="startNewSession">Whether to start a new session.</param>
 	public Task ReconnectAsync(bool startNewSession = true)
 		=> this.InternalReconnectAsync(startNewSession, startNewSession ? 1000 : 4002);
 
 	/// <summary>
-	/// Disconnects from the gateway.
+	///     Disconnects from the gateway.
 	/// </summary>
 	public async Task DisconnectAsync()
 	{
@@ -450,7 +450,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 #region Public REST Methods
 
 	/// <summary>
-	/// Gets a user.
+	///     Gets a user.
 	/// </summary>
 	/// <param name="userId">Id of the user</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
@@ -483,7 +483,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Gets a applications rpc information.
+	///     Gets a applications rpc information.
 	/// </summary>
 	/// <param name="applicationId">Id of the application</param>
 	/// <returns>The requested application.</returns>
@@ -532,7 +532,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Tries to get a user.
+	///     Tries to get a user.
 	/// </summary>
 	/// <param name="userId">Id of the user.</param>
 	/// <param name="user">The user, if found.</param>
@@ -553,47 +553,47 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Gets the published store sku listings (premium application subscription).
+	///     Gets the published store sku listings (premium application subscription).
 	/// </summary>
 	/// <param name="applicationId">The application id to fetch the listings for.</param>
-	/// <returns>A list of published listings with <see cref="DiscordStoreSku"/>s.</returns>
+	/// <returns>A list of published listings with <see cref="DiscordStoreSku" />s.</returns>
 	[RequiresFeature(Features.MonetizedApplication)]
 	public async Task<IReadOnlyList<DiscordStoreSku>> GetPublishedListingsAsync(ulong applicationId)
 		=> await this.ApiClient.GetPublishedListingsAsync(applicationId).ConfigureAwait(false);
 
 	/// <summary>
-	/// Gets the applications skus.
+	///     Gets the applications skus.
 	/// </summary>
-	/// <returns>A list of published listings with <see cref="DiscordSku"/>s.</returns>
+	/// <returns>A list of published listings with <see cref="DiscordSku" />s.</returns>
 	/// <exception cref="NotFoundException">Thrown when the skus do not exist.</exception>
 	[RequiresFeature(Features.MonetizedApplication)]
 	public async Task<IReadOnlyList<DiscordSku>> GetSkusAsync()
 		=> await this.ApiClient.GetSkusAsync(this.CurrentApplication.Id).ConfigureAwait(false);
 
 	/// <summary>
-	/// Gets the applications entitlements.
+	///     Gets the applications entitlements.
 	/// </summary>
 	/// <param name="guildId">Filter returned entitlements to a specific guild id.</param>
 	/// <param name="userId">Filter returned entitlements to a specific user id.</param>
-	/// <returns>A list of <see cref="DiscordEntitlement"/>.</returns>
+	/// <returns>A list of <see cref="DiscordEntitlement" />.</returns>
 	/// <exception cref="NotFoundException">Thrown when the entitlements do not exist.</exception>
 	[RequiresFeature(Features.MonetizedApplication)]
 	public async Task<IReadOnlyList<DiscordEntitlement>> GetEntitlementsAsync(ulong? guildId = null, ulong? userId = null)
 		=> await this.ApiClient.GetEntitlementsAsync(this.CurrentApplication.Id, guildId, userId).ConfigureAwait(false);
 
 	/// <summary>
-	/// Creates a test entitlement.
+	///     Creates a test entitlement.
 	/// </summary>
 	/// <param name="skuId">The sku id to create the entitlement for.</param>
 	/// <param name="ownerId">The owner id to create the entitlement for.</param>
 	/// <param name="ownerType">The owner type to create the entitlement for.</param>
-	/// <returns>A partial <see cref="DiscordEntitlement"/>.</returns>
+	/// <returns>A partial <see cref="DiscordEntitlement" />.</returns>
 	[RequiresFeature(Features.MonetizedApplication)]
 	public async Task<DiscordEntitlement> CreateTestEntitlementsAsync(ulong skuId, ulong ownerId, EntitlementOwnerType ownerType)
 		=> await this.ApiClient.CreateTestEntitlementsAsync(this.CurrentApplication.Id, skuId, ownerId, ownerType).ConfigureAwait(false);
 
 	/// <summary>
-	/// Deletes a test entitlement.
+	///     Deletes a test entitlement.
 	/// </summary>
 	/// <param name="entitlementId">The entitlement id to delete.</param>
 	[RequiresFeature(Features.MonetizedApplication)]
@@ -601,42 +601,42 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> await this.ApiClient.DeleteTestEntitlementsAsync(this.CurrentApplication.Id, entitlementId).ConfigureAwait(false);
 
 	/// <summary>
-	/// Gets the applications role connection metadata.
+	///     Gets the applications role connection metadata.
 	/// </summary>
-	/// <returns>A list of metadata records or <see langword="null"/>.</returns>
+	/// <returns>A list of metadata records or <see langword="null" />.</returns>
 	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> GetRoleConnectionMetadata()
 		=> await this.ApiClient.GetRoleConnectionMetadataRecords(this.CurrentApplication.Id).ConfigureAwait(false);
 
 	/// <summary>
-	/// Updates the applications role connection metadata.
+	///     Updates the applications role connection metadata.
 	/// </summary>
 	/// <param name="metadata">A list of metadata objects. Max 5.</param>
 	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> UpdateRoleConnectionMetadata(IEnumerable<DiscordApplicationRoleConnectionMetadata> metadata)
 		=> await this.ApiClient.UpdateRoleConnectionMetadataRecords(this.CurrentApplication.Id, metadata).ConfigureAwait(false);
 
 	/// <summary>
-	/// Removes all global application commands.
+	///     Removes all global application commands.
 	/// </summary>
 	public async Task RemoveGlobalApplicationCommandsAsync()
 		=> await this.ApiClient.BulkOverwriteGlobalApplicationCommandsAsync(this.CurrentApplication.Id, Array.Empty<DiscordApplicationCommand>()).ConfigureAwait(false);
 
 	/// <summary>
-	/// Removes all global application commands for a specific guild id.
+	///     Removes all global application commands for a specific guild id.
 	/// </summary>
 	/// <param name="guildId">The target guild id.</param>
 	public async Task RemoveGuildApplicationCommandsAsync(ulong guildId)
 		=> await this.ApiClient.BulkOverwriteGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, Array.Empty<DiscordApplicationCommand>()).ConfigureAwait(false);
 
 	/// <summary>
-	/// Removes all global application commands for a specific guild.
+	///     Removes all global application commands for a specific guild.
 	/// </summary>
 	/// <param name="guild">The target guild.</param>
 	public async Task RemoveGuildApplicationCommandsAsync(DiscordGuild guild)
 		=> await this.RemoveGuildApplicationCommandsAsync(guild.Id).ConfigureAwait(false);
 
 	/// <summary>
-	/// Gets the application emojis.
-	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
+	///     Gets the application emojis.
+	///     <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
 	/// </summary>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -644,7 +644,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> (fetch ? null : this.InternalGetCachedApplicationEmojis()) ?? await this.ApiClient.GetApplicationEmojisAsync(this.CurrentApplication.Id).ConfigureAwait(false);
 
 	/// <summary>
-	/// Gets an application emoji.
+	///     Gets an application emoji.
 	/// </summary>
 	/// <param name="id">The emoji id.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
@@ -655,7 +655,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> (fetch ? null : this.InternalGetCachedApplicationEmoji(id)) ?? await this.ApiClient.GetApplicationEmojiAsync(this.CurrentApplication.Id, id).ConfigureAwait(false);
 
 	/// <summary>
-	/// Creates an application emoji.
+	///     Creates an application emoji.
 	/// </summary>
 	/// <param name="name">The name.</param>
 	/// <param name="image">The image.</param>
@@ -668,7 +668,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Modifies an application emoji.
+	///     Modifies an application emoji.
 	/// </summary>
 	/// <param name="id">The emoji id.</param>
 	/// <param name="name">The name.</param>
@@ -679,7 +679,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> this.ApiClient.ModifyApplicationEmojiAsync(this.CurrentApplication.Id, id, name);
 
 	/// <summary>
-	/// Deletes an application emoji.
+	///     Deletes an application emoji.
 	/// </summary>
 	/// <param name="id">The emoji id.</param>
 	/// <exception cref="NotFoundException">Thrown when the emoji does not exist.</exception>
@@ -689,7 +689,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> this.ApiClient.DeleteApplicationEmojiAsync(this.CurrentApplication.Id, id);
 
 	/// <summary>
-	/// Gets a channel.
+	///     Gets a channel.
 	/// </summary>
 	/// <param name="id">The id of the channel to get.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
@@ -701,7 +701,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> (fetch ? null : this.InternalGetCachedChannel(id)) ?? await this.ApiClient.GetChannelAsync(id).ConfigureAwait(false);
 
 	/// <summary>
-	/// Tries to get a channel.
+	///     Tries to get a channel.
 	/// </summary>
 	/// <param name="id">The id of the channel to get.</param>
 	/// <param name="channel">The queried channel, if found.</param>
@@ -722,7 +722,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Gets a thread.
+	///     Gets a thread.
 	/// </summary>
 	/// <param name="id">The id of the thread to get.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
@@ -734,7 +734,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> (fetch ? null : this.InternalGetCachedThread(id)) ?? await this.ApiClient.GetThreadAsync(id).ConfigureAwait(false);
 
 	/// <summary>
-	/// Tries to get a thread.
+	///     Tries to get a thread.
 	/// </summary>
 	/// <param name="id">The id of the thread to get.</param>
 	/// <param name="thread">The thread, if found.</param>
@@ -755,12 +755,15 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Sends a normal message.
+	///     Sends a normal message.
 	/// </summary>
 	/// <param name="channel">The channel to send to.</param>
 	/// <param name="content">The message content to send.</param>
 	/// <returns>The message that was sent.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.SendMessages" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -768,12 +771,15 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> this.ApiClient.CreateMessageAsync(channel.Id, content, null, null, null, false, false);
 
 	/// <summary>
-	/// Sends a message with an embed.
+	///     Sends a message with an embed.
 	/// </summary>
 	/// <param name="channel">The channel to send to.</param>
 	/// <param name="embed">The embed to attach to the message.</param>
 	/// <returns>The message that was sent.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.SendMessages" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -783,13 +789,16 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			: null, null, null, false, false);
 
 	/// <summary>
-	/// Sends a message with content and an embed.
+	///     Sends a message with content and an embed.
 	/// </summary>
 	/// <param name="channel">Channel to send to.</param>
 	/// <param name="content">The message content to send.</param>
 	/// <param name="embed">The embed to attach to the message.</param>
 	/// <returns>The message that was sent.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.SendMessages" /> permission.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -800,12 +809,16 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			: null, null, null, false, false);
 
 	/// <summary>
-	/// Sends a message with the <see cref="DisCatSharp.Entities.DiscordMessageBuilder"/>.
+	///     Sends a message with the <see cref="DisCatSharp.Entities.DiscordMessageBuilder" />.
 	/// </summary>
 	/// <param name="channel">The channel to send the message to.</param>
 	/// <param name="builder">The message builder.</param>
 	/// <returns>The message that was sent.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission if TTS is false and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.SendMessages" /> permission if TTS is false and <see cref="Permissions.SendTtsMessages" />
+	///     if TTS is true.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -814,12 +827,16 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> this.ApiClient.CreateMessageAsync(channel.Id, builder);
 
 	/// <summary>
-	/// Sends a message with an <see cref="Action{DiscordMessageBuilder}"/>.
+	///     Sends a message with an <see cref="Action{DiscordMessageBuilder}" />.
 	/// </summary>
 	/// <param name="channel">The channel to send the message to.</param>
 	/// <param name="action">The message builder.</param>
 	/// <returns>The message that was sent.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission if TTS is false and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the client does not have the
+	///     <see cref="Permissions.SendMessages" /> permission if TTS is false and <see cref="Permissions.SendTtsMessages" />
+	///     if TTS is true.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -832,7 +849,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Creates a guild. This requires the bot to be in less than 10 guilds total.
+	///     Creates a guild. This requires the bot to be in less than 10 guilds total.
 	/// </summary>
 	/// <param name="name">Name of the guild.</param>
 	/// <param name="region">Voice region of the guild.</param>
@@ -858,7 +875,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Creates a guild from a template. This requires the bot to be in less than 10 guilds total.
+	///     Creates a guild from a template. This requires the bot to be in less than 10 guilds total.
 	/// </summary>
 	/// <param name="code">The template code.</param>
 	/// <param name="name">Name of the guild.</param>
@@ -873,8 +890,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Gets a guild.
-	/// <para>Setting <paramref name="withCounts"/> to true will make a REST request.</para>
+	///     Gets a guild.
+	///     <para>Setting <paramref name="withCounts" /> to true will make a REST request.</para>
 	/// </summary>
 	/// <param name="id">The guild ID to search for.</param>
 	/// <param name="withCounts">Whether to include approximate presence and member counts in the returned guild.</param>
@@ -896,8 +913,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Tries to get a guild.
-	/// <para>Setting <paramref name="withCounts"/> to true will make a REST request.</para>
+	///     Tries to get a guild.
+	///     <para>Setting <paramref name="withCounts" /> to true will make a REST request.</para>
 	/// </summary>
 	/// <param name="id">The guild ID to search for.</param>
 	/// <param name="guild">The guild, if found.</param>
@@ -919,7 +936,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Gets a guild preview.
+	///     Gets a guild preview.
 	/// </summary>
 	/// <param name="id">The guild ID.</param>
 	/// <returns>A preview of the requested guild.</returns>
@@ -930,7 +947,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> this.ApiClient.GetGuildPreviewAsync(id);
 
 	/// <summary>
-	/// Tries to get a guild preview.
+	///     Tries to get a guild preview.
 	/// </summary>
 	/// <param name="id">The guild ID.</param>
 	/// <param name="preview">The preview, if found.</param>
@@ -950,7 +967,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Gets a guild widget.
+	///     Gets a guild widget.
 	/// </summary>
 	/// <param name="id">The Guild Id.</param>
 	/// <returns>A guild widget.</returns>
@@ -960,7 +977,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> this.ApiClient.GetGuildWidgetAsync(id);
 
 	/// <summary>
-	/// Tries to get a guild widget.
+	///     Tries to get a guild widget.
 	/// </summary>
 	/// <param name="id">The Guild Id.</param>
 	/// <param name="widget">The widget, if found.</param>
@@ -980,7 +997,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Gets an invite.
+	///     Gets an invite.
 	/// </summary>
 	/// <param name="code">The invite code.</param>
 	/// <param name="withCounts">Whether to include presence and total member counts in the returned invite.</param>
@@ -994,7 +1011,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> this.ApiClient.GetInviteAsync(code, withCounts, withExpiration, scheduledEventId);
 
 	/// <summary>
-	/// Tries to get an invite.
+	///     Tries to get an invite.
 	/// </summary>
 	/// <param name="code">The invite code.</param>
 	/// <param name="invite">The invite, if found.</param>
@@ -1017,7 +1034,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Gets a list of user connections.
+	///     Gets a list of user connections.
 	/// </summary>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1025,7 +1042,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> this.ApiClient.GetUserConnectionsAsync();
 
 	/// <summary>
-	/// Gets a sticker.
+	///     Gets a sticker.
 	/// </summary>
 	/// <returns>The requested sticker.</returns>
 	/// <param name="id">The id of the sticker.</param>
@@ -1036,7 +1053,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> this.ApiClient.GetStickerAsync(id);
 
 	/// <summary>
-	/// Tries to get a sticker.
+	///     Tries to get a sticker.
 	/// </summary>
 	/// <returns>True if found, otherwise false.</returns>
 	/// <param name="id">The id of the sticker.</param>
@@ -1056,7 +1073,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Gets a sticker pack.
+	///     Gets a sticker pack.
 	/// </summary>
 	/// <param name="id">The sticker pack's id.</param>
 	/// <returns>The sticker pack.</returns>
@@ -1066,7 +1083,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> this.ApiClient.GetStickerPackAsync(id);
 
 	/// <summary>
-	/// Gets all nitro sticker packs.
+	///     Gets all nitro sticker packs.
 	/// </summary>
 	/// <returns>List of sticker packs.</returns>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1075,18 +1092,21 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> this.ApiClient.GetStickerPacksAsync();
 
 	/// <summary>
-	/// Gets the In-App OAuth Url for the current application.
+	///     Gets the In-App OAuth Url for the current application.
 	/// </summary>
-	/// <param name="scopes">The scopes to send with the request. Defaults to <see cref="DisCatSharp.Enums.OAuthScopes.BOT_DEFAULT"/>. Mutually exclusive to <paramref name="manual_scopes"/>.</param>
+	/// <param name="scopes">
+	///     The scopes to send with the request. Defaults to
+	///     <see cref="DisCatSharp.Enums.OAuthScopes.BOT_DEFAULT" />. Mutually exclusive to <paramref name="manual_scopes" />.
+	/// </param>
 	/// <param name="redir">Redirect Uri.</param>
-	/// <param name="permissions">Defaults to <see cref="Permissions.None"/>.</param>
+	/// <param name="permissions">Defaults to <see cref="Permissions.None" />.</param>
 	/// <param name="user_install">Whether to install as user app.</param>
 	/// <param name="guild_id">The guild id to pre-select.</param>
 	/// <param name="state">The state to send with the request.</param>
 	/// <param name="access_type">The access type to send with the request (offline|online).</param>
 	/// <param name="response_type">The response type to send with the request (code|token).</param>
 	/// <param name="prompt">Whether to prompt the user for authorization.</param>
-	/// <param name="manual_scopes">The scopes to send with the request. Mutually exclusive to <paramref name="scopes"/>.</param>
+	/// <param name="manual_scopes">The scopes to send with the request. Mutually exclusive to <paramref name="scopes" />.</param>
 	/// <returns>The OAuth Url</returns>
 	public Uri GetInAppOAuth(Permissions permissions = Permissions.None, OAuthScopes scopes = OAuthScopes.BOT_DEFAULT, string? redir = null, bool user_install = false, ulong? guild_id = null, string? state = null, string? access_type = null, string? response_type = null, bool prompt = true, string? manual_scopes = null)
 	{
@@ -1106,19 +1126,22 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Generates an In-App OAuth Url for a specific <paramref name="bot"/>.
+	///     Generates an In-App OAuth Url for a specific <paramref name="bot" />.
 	/// </summary>
 	/// <param name="bot">The bot to generate the url for.</param>
-	/// <param name="scopes">The scopes to send with the request. Defaults to <see cref="DisCatSharp.Enums.OAuthScopes.BOT_DEFAULT"/>. Mutually exclusive to <paramref name="manual_scopes"/>.</param>
+	/// <param name="scopes">
+	///     The scopes to send with the request. Defaults to
+	///     <see cref="DisCatSharp.Enums.OAuthScopes.BOT_DEFAULT" />. Mutually exclusive to <paramref name="manual_scopes" />.
+	/// </param>
 	/// <param name="redir">Redirect Uri.</param>
-	/// <param name="permissions">Defaults to <see cref="Permissions.None"/>.</param>
+	/// <param name="permissions">Defaults to <see cref="Permissions.None" />.</param>
 	/// <param name="user_install">Whether to install as user app.</param>
 	/// <param name="guild_id">The guild id to pre-select.</param>
 	/// <param name="state">The state to send with the request.</param>
 	/// <param name="access_type">The access type to send with the request (offline|online).</param>
 	/// <param name="response_type">The response type to send with the request (code|token).</param>
 	/// <param name="prompt">Whether to prompt the user for authorization.</param>
-	/// <param name="manual_scopes">The scopes to send with the request. Mutually exclusive to <paramref name="scopes"/>.</param>
+	/// <param name="manual_scopes">The scopes to send with the request. Mutually exclusive to <paramref name="scopes" />.</param>
 	/// <returns>The OAuth Url</returns>
 	public Uri GenerateInAppOauthFor(DiscordUser bot, Permissions permissions = Permissions.None, OAuthScopes scopes = OAuthScopes.BOT_DEFAULT, string? redir = null, bool user_install = false, ulong? guild_id = null, string? state = null, string? access_type = null, string? response_type = null, bool prompt = true, string? manual_scopes = null)
 	{
@@ -1141,7 +1164,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Gets a webhook.
+	///     Gets a webhook.
 	/// </summary>
 	/// <param name="id">The target webhook id.</param>
 	/// <returns>The requested webhook.</returns>
@@ -1152,7 +1175,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> this.ApiClient.GetWebhookAsync(id);
 
 	/// <summary>
-	/// Tries to get a webhook.
+	///     Tries to get a webhook.
 	/// </summary>
 	/// <param name="id">The target webhook id.</param>
 	/// <param name="webhook">The webhook, if found.</param>
@@ -1172,7 +1195,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Gets a webhook with a token.
+	///     Gets a webhook with a token.
 	/// </summary>
 	/// <param name="id">The target webhook id.</param>
 	/// <param name="token">The target webhook token.</param>
@@ -1184,7 +1207,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> this.ApiClient.GetWebhookWithTokenAsync(id, token);
 
 	/// <summary>
-	/// Tries to get a webhook with a token.
+	///     Tries to get a webhook with a token.
 	/// </summary>
 	/// <param name="id">The target webhook id.</param>
 	/// <param name="token">The target webhook token.</param>
@@ -1205,7 +1228,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Updates current user's activity and status.
+	///     Updates current user's activity and status.
 	/// </summary>
 	/// <param name="activity">Activity to set.</param>
 	/// <param name="userStatus">Status of the user.</param>
@@ -1215,7 +1238,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> this.InternalUpdateStatusAsync(activity, userStatus, idleSince);
 
 	/// <summary>
-	/// Edits current user.
+	///     Edits current user.
 	/// </summary>
 	/// <param name="username">New username.</param>
 	/// <param name="avatar">New avatar.</param>
@@ -1239,7 +1262,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Gets a guild template by the code.
+	///     Gets a guild template by the code.
 	/// </summary>
 	/// <param name="code">The code of the template.</param>
 	/// <returns>The guild template for the code.</returns>
@@ -1249,7 +1272,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> this.ApiClient.GetTemplateAsync(code);
 
 	/// <summary>
-	/// Gets all the global application commands for this application.
+	///     Gets all the global application commands for this application.
 	/// </summary>
 	/// <param name="withLocalizations">Whether to get the full localization dict.</param>
 	/// <returns>A list of global application commands.</returns>
@@ -1257,7 +1280,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this.ApiClient.GetGlobalApplicationCommandsAsync(this.CurrentApplication.Id, withLocalizations);
 
 	/// <summary>
-	/// Overwrites the existing global application commands. New commands are automatically created and missing commands are automatically deleted.
+	///     Overwrites the existing global application commands. New commands are automatically created and missing commands
+	///     are automatically deleted.
 	/// </summary>
 	/// <param name="commands">The list of commands to overwrite with.</param>
 	/// <returns>The list of global commands.</returns>
@@ -1265,7 +1289,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this.ApiClient.BulkOverwriteGlobalApplicationCommandsAsync(this.CurrentApplication.Id, commands);
 
 	/// <summary>
-	/// Creates or overwrites a global application command.
+	///     Creates or overwrites a global application command.
 	/// </summary>
 	/// <param name="command">The command to create.</param>
 	/// <returns>The created command.</returns>
@@ -1273,7 +1297,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this.ApiClient.CreateGlobalApplicationCommandAsync(this.CurrentApplication.Id, command);
 
 	/// <summary>
-	/// Gets a global application command by its id.
+	///     Gets a global application command by its id.
 	/// </summary>
 	/// <param name="commandId">The id of the command to get.</param>
 	/// <returns>The command with the id.</returns>
@@ -1281,7 +1305,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this.ApiClient.GetGlobalApplicationCommandAsync(this.CurrentApplication.Id, commandId);
 
 	/// <summary>
-	/// Edits a global application command.
+	///     Edits a global application command.
 	/// </summary>
 	/// <param name="commandId">The id of the command to edit.</param>
 	/// <param name="action">Action to perform.</param>
@@ -1295,14 +1319,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Deletes a global application command.
+	///     Deletes a global application command.
 	/// </summary>
 	/// <param name="commandId">The id of the command to delete.</param>
 	public Task DeleteGlobalApplicationCommandAsync(ulong commandId) =>
 		this.ApiClient.DeleteGlobalApplicationCommandAsync(this.CurrentApplication.Id, commandId);
 
 	/// <summary>
-	/// Gets all the application commands for a guild.
+	///     Gets all the application commands for a guild.
 	/// </summary>
 	/// <param name="guildId">The id of the guild to get application commands for.</param>
 	/// <param name="withLocalizations">Whether to get the full localization dict.</param>
@@ -1311,7 +1335,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this.ApiClient.GetGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, withLocalizations);
 
 	/// <summary>
-	/// Overwrites the existing application commands in a guild. New commands are automatically created and missing commands are automatically deleted.
+	///     Overwrites the existing application commands in a guild. New commands are automatically created and missing
+	///     commands are automatically deleted.
 	/// </summary>
 	/// <param name="guildId">The id of the guild.</param>
 	/// <param name="commands">The list of commands to overwrite with.</param>
@@ -1320,7 +1345,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this.ApiClient.BulkOverwriteGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, commands);
 
 	/// <summary>
-	/// Creates or overwrites a guild application command.
+	///     Creates or overwrites a guild application command.
 	/// </summary>
 	/// <param name="guildId">The id of the guild to create the application command in.</param>
 	/// <param name="command">The command to create.</param>
@@ -1329,7 +1354,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this.ApiClient.CreateGuildApplicationCommandAsync(this.CurrentApplication.Id, guildId, command);
 
 	/// <summary>
-	/// Gets a application command in a guild by its id.
+	///     Gets a application command in a guild by its id.
 	/// </summary>
 	/// <param name="guildId">The id of the guild the application command is in.</param>
 	/// <param name="commandId">The id of the command to get.</param>
@@ -1338,7 +1363,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this.ApiClient.GetGuildApplicationCommandAsync(this.CurrentApplication.Id, guildId, commandId);
 
 	/// <summary>
-	/// Edits a application command in a guild.
+	///     Edits a application command in a guild.
 	/// </summary>
 	/// <param name="guildId">The id of the guild the application command is in.</param>
 	/// <param name="commandId">The id of the command to edit.</param>
@@ -1353,7 +1378,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Deletes a application command in a guild.
+	///     Deletes a application command in a guild.
 	/// </summary>
 	/// <param name="guildId">The id of the guild to delete the application command in.</param>
 	/// <param name="commandId">The id of the command.</param>
@@ -1365,7 +1390,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 #region Internal Caching Methods
 
 	/// <summary>
-	/// Gets the internal cached threads.
+	///     Gets the internal cached threads.
 	/// </summary>
 	/// <param name="threadId">The target thread id.</param>
 	/// <returns>The requested thread.</returns>
@@ -1382,7 +1407,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Gets an internal cached emoji.
+	///     Gets an internal cached emoji.
 	/// </summary>
 	/// <param name="emojiId">The target emoji id.</param>
 	/// <returns>The requested emoji.</returns>
@@ -1390,14 +1415,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> this.EmojisInternal is null || this.EmojisInternal.Count is 0 ? null : this.EmojisInternal.GetValueOrDefault(emojiId);
 
 	/// <summary>
-	/// Gets the internal cached emojis.
+	///     Gets the internal cached emojis.
 	/// </summary>
 	/// <returns>The requested emoji.</returns>
 	internal IReadOnlyList<DiscordApplicationEmoji>? InternalGetCachedApplicationEmojis()
 		=> this.EmojisInternal is null || this.EmojisInternal.Count is 0 ? null : this.EmojisInternal.Values.ToList();
 
 	/// <summary>
-	/// Gets the internal cached scheduled event.
+	///     Gets the internal cached scheduled event.
 	/// </summary>
 	/// <param name="scheduledEventId">The target scheduled event id.</param>
 	/// <returns>The requested scheduled event.</returns>
@@ -1414,7 +1439,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Gets the internal cached channel.
+	///     Gets the internal cached channel.
 	/// </summary>
 	/// <param name="channelId">The target channel id.</param>
 	/// <param name="guildId">The target guild id.</param>
@@ -1436,7 +1461,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Gets the internal cached guild.
+	///     Gets the internal cached guild.
 	/// </summary>
 	/// <param name="guildId">The target guild id.</param>
 	/// <returns>The requested guild.</returns>
@@ -1450,7 +1475,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Updates a message.
+	///     Updates a message.
 	/// </summary>
 	/// <param name="message">The message to update.</param>
 	/// <param name="author">The author to update.</param>
@@ -1493,7 +1518,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Updates a scheduled event.
+	///     Updates a scheduled event.
 	/// </summary>
 	/// <param name="scheduledEvent">The scheduled event to update.</param>
 	/// <param name="guild">The guild to update.</param>
@@ -1523,7 +1548,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Updates a user.
+	///     Updates a user.
 	/// </summary>
 	/// <param name="usr">The user to update.</param>
 	/// <param name="guildId">The guild id to update.</param>
@@ -1601,7 +1626,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Updates the cached scheduled events in a guild.
+	///     Updates the cached scheduled events in a guild.
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <param name="rawEvents">The raw events.</param>
@@ -1625,7 +1650,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Updates the cached application emojis.
+	///     Updates the cached application emojis.
 	/// </summary>
 	/// <param name="rawEmojis">The raw emojis.</param>
 	internal override IReadOnlyDictionary<ulong, DiscordApplicationEmoji> UpdateCachedApplicationEmojis(JArray? rawEmojis)
@@ -1656,7 +1681,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Updates a cached application emoji.
+	///     Updates a cached application emoji.
 	/// </summary>
 	/// <param name="emoji">The emoji.</param>
 	internal override DiscordApplicationEmoji UpdateCachedApplicationEmoji(DiscordApplicationEmoji emoji)
@@ -1688,7 +1713,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Updates the cached guild.
+	///     Updates the cached guild.
 	/// </summary>
 	/// <param name="newGuild">The new guild.</param>
 	/// <param name="rawMembers">The raw members.</param>
@@ -1827,7 +1852,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Populates the message reactions and cache.
+	///     Populates the message reactions and cache.
 	/// </summary>
 	/// <param name="message">The message.</param>
 	/// <param name="author">The author.</param>
@@ -1851,7 +1876,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 #region Disposal
 
 	/// <summary>
-	/// Disposes the client.
+	///     Disposes the client.
 	/// </summary>
 	~DiscordClient()
 	{
@@ -1859,12 +1884,12 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Whether the client is disposed.
+	///     Whether the client is disposed.
 	/// </summary>
 	private bool _disposed;
 
 	/// <summary>
-	/// Disposes the client.
+	///     Disposes the client.
 	/// </summary>
 	public override void Dispose()
 	{

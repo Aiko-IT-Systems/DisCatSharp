@@ -32,7 +32,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{430C28D8-5F85-4D6E-AA68-211549435245}"
 	ProjectSection(SolutionItems) = preProject
 		.github\CODEOWNERS = .github\CODEOWNERS
-		.github\CODE_OF_CONDUCT.md = .github\CODE_OF_CONDUCT.md
 		.github\labeler.yml = .github\labeler.yml
 		.github\pull_request_template.md = .github\pull_request_template.md
 		.github\SECURITY.md = .github\SECURITY.md

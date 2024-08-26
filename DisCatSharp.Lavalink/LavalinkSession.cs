@@ -24,186 +24,73 @@ using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json.Linq;
 
+using Endpoints = DisCatSharp.Lavalink.Enums.Endpoints;
+
 namespace DisCatSharp.Lavalink;
 
 internal delegate void SessionDisconnectedEventHandler(LavalinkSession node);
 
 /// <summary>
-/// Represents a <see cref="LavalinkSession"/>.
+///     Represents a <see cref="LavalinkSession" />.
 /// </summary>
 public sealed class LavalinkSession
 {
 	/// <summary>
-	/// Triggered whenever Lavalink WebSocket throws an exception.
-	/// </summary>
-	public event AsyncEventHandler<LavalinkSession, SocketErrorEventArgs> LavalinkSocketErrored
-	{
-		add => this._lavalinkSocketError.Register(value);
-		remove => this._lavalinkSocketError.Unregister(value);
-	}
-
-	private readonly AsyncEvent<LavalinkSession, SocketErrorEventArgs> _lavalinkSocketError;
-
-	/// <summary>
-	/// Triggered when this session disconnects.
-	/// </summary>
-	internal event AsyncEventHandler<LavalinkSession, LavalinkSessionDisconnectedEventArgs> LavalinkSessionDisconnected
-	{
-		add => this._lavalinkSessionDisconnected.Register(value);
-		remove => this._lavalinkSessionDisconnected.Unregister(value);
-	}
-
-	private readonly AsyncEvent<LavalinkSession, LavalinkSessionDisconnectedEventArgs> _lavalinkSessionDisconnected;
-
-	/// <summary>
-	/// Triggered when this session connects.
-	/// </summary>
-	internal event AsyncEventHandler<LavalinkSession, LavalinkSessionConnectedEventArgs> LavalinkSessionConnected
-	{
-		add => this._lavalinkSessionConnected.Register(value);
-		remove => this._lavalinkSessionConnected.Unregister(value);
-	}
-
-	private readonly AsyncEvent<LavalinkSession, LavalinkSessionConnectedEventArgs> _lavalinkSessionConnected;
-
-	/// <summary>
-	/// Triggered when a <see cref="LavalinkStats"/> are received.
-	/// </summary>
-	public event AsyncEventHandler<LavalinkSession, LavalinkStatsReceivedEventArgs> StatsReceived
-	{
-		add => this._statsReceived.Register(value);
-		remove => this._statsReceived.Unregister(value);
-	}
-
-	private readonly AsyncEvent<LavalinkSession, LavalinkStatsReceivedEventArgs> _statsReceived;
-
-	/// <summary>
-	/// Triggered when a <see cref="LavalinkGuildPlayer"/> gets destroyed.
-	/// </summary>
-	public event AsyncEventHandler<LavalinkSession, GuildPlayerDestroyedEventArgs> GuildPlayerDestroyed
-	{
-		add => this.GuildPlayerDestroyedEvent.Register(value);
-		remove => this.GuildPlayerDestroyedEvent.Unregister(value);
-	}
-
-	internal readonly AsyncEvent<LavalinkSession, GuildPlayerDestroyedEventArgs> GuildPlayerDestroyedEvent;
-
-	/// <summary>
-	/// Triggered when the websocket to discord gets closed.
-	/// </summary>
-	public event AsyncEventHandler<LavalinkSession, LavalinkWebsocketClosedEventArgs> WebsocketClosed
-	{
-		add => this._websocketClosed.Register(value);
-		remove => this._websocketClosed.Unregister(value);
-	}
-
-	private readonly AsyncEvent<LavalinkSession, LavalinkWebsocketClosedEventArgs> _websocketClosed;
-
-	/// <summary>
-	/// Gets the remote endpoint of this Lavalink node connection.
-	/// </summary>
-	public ConnectionEndpoint NodeEndpoint
-		=> this.Config.SocketEndpoint;
-
-	/// <summary>
-	/// Gets whether the client is connected to Lavalink.
-	/// </summary>
-	public bool IsConnected => !Volatile.Read(ref this._isDisposed);
-
-	/// <summary>
-	/// Whether this <see cref="LavalinkSession"/> is disposed.
-	/// </summary>
-	private bool _isDisposed;
-
-	/// <summary>
-	/// Gets the current backoff for reconnecting.
-	/// </summary>
-	private int _backoff;
-
-	/// <summary>
-	/// Gets the minimum backoff.
+	///     Gets the minimum backoff.
 	/// </summary>
 	private const int MINIMUM_BACKOFF = 7500;
 
 	/// <summary>
-	/// Gets the maximum backoff.
+	///     Gets the maximum backoff.
 	/// </summary>
 	private const int MAXIMUM_BACKOFF = 120000;
 
-	/// <summary>
-	/// Gets a dictionary of Lavalink guild connections for this node.
-	/// </summary>
-	public IReadOnlyDictionary<ulong, LavalinkGuildPlayer> ConnectedPlayers
-		=> this.ConnectedPlayersInternal;
+	private readonly AsyncEvent<LavalinkSession, LavalinkSessionConnectedEventArgs> _lavalinkSessionConnected;
 
-	internal ConcurrentDictionary<ulong, LavalinkGuildPlayer> ConnectedPlayersInternal = new();
+	private readonly AsyncEvent<LavalinkSession, LavalinkSessionDisconnectedEventArgs> _lavalinkSessionDisconnected;
 
-	/// <summary>
-	/// Gets the REST client for this Lavalink connection.
-	/// </summary>
-	internal LavalinkRestClient Rest { get; }
+	private readonly AsyncEvent<LavalinkSession, SocketErrorEventArgs> _lavalinkSocketError;
+
+	private readonly AsyncEvent<LavalinkSession, LavalinkStatsReceivedEventArgs> _statsReceived;
 
 	/// <summary>
-	/// Gets the Discord client this node connection belongs to.
-	/// </summary>
-	public DiscordClient Discord { get; }
-
-	/// <summary>
-	/// Gets the parent <see cref="LavalinkExtension"/>.
-	/// </summary>
-	internal LavalinkExtension Extension { get; }
-
-	/// <summary>
-	/// Gets the <see cref="LavalinkConfiguration"/>.
-	/// </summary>
-	internal LavalinkConfiguration Config { get; }
-
-	/// <summary>
-	/// Gets the voice region.
-	/// </summary>
-	internal DiscordVoiceRegion Region { get; }
-
-	/// <summary>
-	/// Gets the current <see cref="LavalinkStats"/>.
-	/// </summary>
-	public LavalinkStats Statistics { get; internal set; }
-
-	/// <summary>
-	/// Gets the current <see cref="LavalinkSessionConfiguration"/>.
-	/// </summary>
-	public LavalinkSessionConfiguration Configuration { get; internal set; } = new()
-	{
-		Resuming = true,
-		TimeoutSeconds = 60
-	};
-
-	/// <summary>
-	/// Gets the web socket.
-	/// </summary>
-	private IWebSocketClient _webSocket;
-
-	/// <summary>
-	/// Gets the voice state updates.
-	/// </summary>
-	private readonly ConcurrentDictionary<ulong, TaskCompletionSource<VoiceStateUpdateEventArgs>> _voiceStateUpdates;
-
-	/// <summary>
-	/// Gets the voice server updates.
+	///     Gets the voice server updates.
 	/// </summary>
 	private readonly ConcurrentDictionary<ulong, TaskCompletionSource<VoiceServerUpdateEventArgs>> _voiceServerUpdates;
 
 	/// <summary>
-	/// Fires when a <see cref="LavalinkSession"/> disconnected.
+	///     Gets the voice state updates.
 	/// </summary>
-	internal event SessionDisconnectedEventHandler SessionDisconnected;
+	private readonly ConcurrentDictionary<ulong, TaskCompletionSource<VoiceStateUpdateEventArgs>> _voiceStateUpdates;
+
+	private readonly AsyncEvent<LavalinkSession, LavalinkWebsocketClosedEventArgs> _websocketClosed;
+
+	internal readonly AsyncEvent<LavalinkSession, GuildPlayerDestroyedEventArgs> GuildPlayerDestroyedEvent;
 
 	/// <summary>
-	/// <see cref="TaskCompletionSource"/> for the <see cref="LavalinkConfiguration.SessionId"/>.
+	///     Gets the current backoff for reconnecting.
+	/// </summary>
+	private int _backoff;
+
+	/// <summary>
+	///     Whether this <see cref="LavalinkSession" /> is disposed.
+	/// </summary>
+	private bool _isDisposed;
+
+	/// <summary>
+	///     <see cref="TaskCompletionSource" /> for the <see cref="LavalinkConfiguration.SessionId" />.
 	/// </summary>
 	private TaskCompletionSource<string> _sessionIdReceived = null!;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="LavalinkSession"/> class.
+	///     Gets the web socket.
+	/// </summary>
+	private IWebSocketClient _webSocket;
+
+	internal ConcurrentDictionary<ulong, LavalinkGuildPlayer> ConnectedPlayersInternal = new();
+
+	/// <summary>
+	///     Initializes a new instance of the <see cref="LavalinkSession" /> class.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="extension">The extension.</param>
@@ -236,16 +123,131 @@ public sealed class LavalinkSession
 	}
 
 	/// <summary>
-	/// Gets the lavalink server information.
+	///     Gets the remote endpoint of this Lavalink node connection.
 	/// </summary>
-	/// <returns>A <see cref="LavalinkInfo"/> object.</returns>
+	public ConnectionEndpoint NodeEndpoint
+		=> this.Config.SocketEndpoint;
+
+	/// <summary>
+	///     Gets whether the client is connected to Lavalink.
+	/// </summary>
+	public bool IsConnected => !Volatile.Read(ref this._isDisposed);
+
+	/// <summary>
+	///     Gets a dictionary of Lavalink guild connections for this node.
+	/// </summary>
+	public IReadOnlyDictionary<ulong, LavalinkGuildPlayer> ConnectedPlayers
+		=> this.ConnectedPlayersInternal;
+
+	/// <summary>
+	///     Gets the REST client for this Lavalink connection.
+	/// </summary>
+	internal LavalinkRestClient Rest { get; }
+
+	/// <summary>
+	///     Gets the Discord client this node connection belongs to.
+	/// </summary>
+	public DiscordClient Discord { get; }
+
+	/// <summary>
+	///     Gets the parent <see cref="LavalinkExtension" />.
+	/// </summary>
+	internal LavalinkExtension Extension { get; }
+
+	/// <summary>
+	///     Gets the <see cref="LavalinkConfiguration" />.
+	/// </summary>
+	internal LavalinkConfiguration Config { get; }
+
+	/// <summary>
+	///     Gets the voice region.
+	/// </summary>
+	internal DiscordVoiceRegion Region { get; }
+
+	/// <summary>
+	///     Gets the current <see cref="LavalinkStats" />.
+	/// </summary>
+	public LavalinkStats Statistics { get; internal set; }
+
+	/// <summary>
+	///     Gets the current <see cref="LavalinkSessionConfiguration" />.
+	/// </summary>
+	public LavalinkSessionConfiguration Configuration { get; internal set; } = new()
+	{
+		Resuming = true,
+		TimeoutSeconds = 60
+	};
+
+	/// <summary>
+	///     Triggered whenever Lavalink WebSocket throws an exception.
+	/// </summary>
+	public event AsyncEventHandler<LavalinkSession, SocketErrorEventArgs> LavalinkSocketErrored
+	{
+		add => this._lavalinkSocketError.Register(value);
+		remove => this._lavalinkSocketError.Unregister(value);
+	}
+
+	/// <summary>
+	///     Triggered when this session disconnects.
+	/// </summary>
+	internal event AsyncEventHandler<LavalinkSession, LavalinkSessionDisconnectedEventArgs> LavalinkSessionDisconnected
+	{
+		add => this._lavalinkSessionDisconnected.Register(value);
+		remove => this._lavalinkSessionDisconnected.Unregister(value);
+	}
+
+	/// <summary>
+	///     Triggered when this session connects.
+	/// </summary>
+	internal event AsyncEventHandler<LavalinkSession, LavalinkSessionConnectedEventArgs> LavalinkSessionConnected
+	{
+		add => this._lavalinkSessionConnected.Register(value);
+		remove => this._lavalinkSessionConnected.Unregister(value);
+	}
+
+	/// <summary>
+	///     Triggered when a <see cref="LavalinkStats" /> are received.
+	/// </summary>
+	public event AsyncEventHandler<LavalinkSession, LavalinkStatsReceivedEventArgs> StatsReceived
+	{
+		add => this._statsReceived.Register(value);
+		remove => this._statsReceived.Unregister(value);
+	}
+
+	/// <summary>
+	///     Triggered when a <see cref="LavalinkGuildPlayer" /> gets destroyed.
+	/// </summary>
+	public event AsyncEventHandler<LavalinkSession, GuildPlayerDestroyedEventArgs> GuildPlayerDestroyed
+	{
+		add => this.GuildPlayerDestroyedEvent.Register(value);
+		remove => this.GuildPlayerDestroyedEvent.Unregister(value);
+	}
+
+	/// <summary>
+	///     Triggered when the websocket to discord gets closed.
+	/// </summary>
+	public event AsyncEventHandler<LavalinkSession, LavalinkWebsocketClosedEventArgs> WebsocketClosed
+	{
+		add => this._websocketClosed.Register(value);
+		remove => this._websocketClosed.Unregister(value);
+	}
+
+	/// <summary>
+	///     Fires when a <see cref="LavalinkSession" /> disconnected.
+	/// </summary>
+	internal event SessionDisconnectedEventHandler SessionDisconnected;
+
+	/// <summary>
+	///     Gets the lavalink server information.
+	/// </summary>
+	/// <returns>A <see cref="LavalinkInfo" /> object.</returns>
 	public async Task<LavalinkInfo> GetLavalinkInfoAsync()
 		=> await this.Rest.GetInfoAsync().ConfigureAwait(false);
 
 	/// <summary>
-	/// Gets the lavalink server version
+	///     Gets the lavalink server version
 	/// </summary>
-	/// <returns>The version <see langword="string"/>.</returns>
+	/// <returns>The version <see langword="string" />.</returns>
 	public async Task<string> GetLavalinkVersionAsync()
 	{
 		var versionInfo = await this.Rest.GetVersionAsync().ConfigureAwait(false);
@@ -255,9 +257,9 @@ public sealed class LavalinkSession
 	}
 
 	/// <summary>
-	/// Gets the lavalink server statistics.
+	///     Gets the lavalink server statistics.
 	/// </summary>
-	/// <returns>A <see cref="LavalinkStats"/> object.</returns>
+	/// <returns>A <see cref="LavalinkStats" /> object.</returns>
 	public async Task<LavalinkStats> GetLavalinkStatsAsync()
 	{
 		var stats = await this.Rest.GetStatsAsync().ConfigureAwait(false);
@@ -266,7 +268,7 @@ public sealed class LavalinkSession
 	}
 
 	/// <summary>
-	/// Destroys the current session, disconnecting all players.
+	///     Destroys the current session, disconnecting all players.
 	/// </summary>
 	public async Task DestroyAsync()
 	{
@@ -276,7 +278,7 @@ public sealed class LavalinkSession
 	}
 
 	/// <summary>
-	/// Destroys all players.
+	///     Destroys all players.
 	/// </summary>
 	public async Task DestroyGuildPlayersAsync()
 	{
@@ -287,10 +289,10 @@ public sealed class LavalinkSession
 	}
 
 	/// <summary>
-	/// Fires when a <see cref="LavalinkGuildPlayer"/> was destroyed.
+	///     Fires when a <see cref="LavalinkGuildPlayer" /> was destroyed.
 	/// </summary>
 	/// <param name="sender">The lavalink session.</param>
-	/// <param name="args">The guild player destroyed event args containing the destroyed <see cref="LavalinkGuildPlayer"/>.</param>
+	/// <param name="args">The guild player destroyed event args containing the destroyed <see cref="LavalinkGuildPlayer" />.</param>
 	private Task LavalinkGuildPlayerDestroyed(LavalinkSession sender, GuildPlayerDestroyedEventArgs args)
 	{
 		this.ConnectedPlayersInternal.Remove(args.Player.GuildId, out _);
@@ -299,11 +301,11 @@ public sealed class LavalinkSession
 	}
 
 	/// <summary>
-	/// Connects to a <see cref="DiscordChannel"/>.
+	///     Connects to a <see cref="DiscordChannel" />.
 	/// </summary>
 	/// <param name="channel">The channel to join.</param>
 	/// <param name="deafened">Whether to join the channel deafened.</param>
-	/// <returns>The created <see cref="LavalinkGuildPlayer"/>.</returns>
+	/// <returns>The created <see cref="LavalinkGuildPlayer" />.</returns>
 	/// <exception cref="ArgumentException"></exception>
 	public async Task<LavalinkGuildPlayer> ConnectAsync(DiscordChannel channel, bool deafened = true)
 	{
@@ -321,7 +323,7 @@ public sealed class LavalinkSession
 		var vsd = new DiscordDispatchPayload
 		{
 			OpCode = 4,
-			Payload = new VoiceStateUpdatePayload()
+			Payload = new VoiceStateUpdatePayload
 			{
 				GuildId = channel.Guild.Id,
 				ChannelId = channel.Id,
@@ -352,7 +354,7 @@ public sealed class LavalinkSession
 	}
 
 	/// <summary>
-	/// Configures the current lavalink session.
+	///     Configures the current lavalink session.
 	/// </summary>
 	/// <param name="config">The config update to set.</param>
 	/// <returns>The updated session.</returns>
@@ -364,62 +366,62 @@ public sealed class LavalinkSession
 	}
 
 	/// <summary>
-	/// Gets the guild player attached to <paramref name="guild"/>.
+	///     Gets the guild player attached to <paramref name="guild" />.
 	/// </summary>
 	/// <param name="guild">The guild to get the player for.</param>
-	/// <returns>The found player or <see langword="null"/>.</returns>
+	/// <returns>The found player or <see langword="null" />.</returns>
 	public LavalinkGuildPlayer? GetGuildPlayer(DiscordGuild guild)
 		=> this.ConnectedPlayersInternal.TryGetValue(guild.Id, out var lgp) && lgp.IsConnected
 			? lgp
 			: null;
 
 	/// <summary>
-	/// Gets all guild players.
+	///     Gets all guild players.
 	/// </summary>
-	/// <returns>The found players or <see langword="null"/>.</returns>
+	/// <returns>The found players or <see langword="null" />.</returns>
 	public IReadOnlyList<LavalinkGuildPlayer>? GetGuildPlayersAsync()
 		=> !this.ConnectedPlayersInternal.IsEmpty
 			? this.ConnectedPlayersInternal.Values.ToList()
 			: null;
 
 	/// <summary>
-	/// Gets the lavalink player attached to <paramref name="guild"/>.
-	/// <para>Use <see cref="GetGuildPlayer"/> if you want to interact with the actual player.</para>
+	///     Gets the lavalink player attached to <paramref name="guild" />.
+	///     <para>Use <see cref="GetGuildPlayer" /> if you want to interact with the actual player.</para>
 	/// </summary>
 	/// <param name="guild">The guild to get the player for.</param>
-	/// <returns>The found player or <see langword="null"/>.</returns>
+	/// <returns>The found player or <see langword="null" />.</returns>
 	public async Task<LavalinkPlayer> GetPlayerAsync(DiscordGuild guild)
 		=> await this.Rest.GetPlayerAsync(this.Config.SessionId!, guild.Id).ConfigureAwait(false);
 
 	/// <summary>
-	/// Gets all lavalink players.
-	/// <para>Use <see cref="GetGuildPlayersAsync"/> if you want to interact with the actual players.</para>
+	///     Gets all lavalink players.
+	///     <para>Use <see cref="GetGuildPlayersAsync" /> if you want to interact with the actual players.</para>
 	/// </summary>
-	/// <returns>The found players or <see langword="null"/>.</returns>
+	/// <returns>The found players or <see langword="null" />.</returns>
 	public async Task<IReadOnlyList<LavalinkPlayer>> GetPlayersAsync()
 		=> await this.Rest.GetPlayersAsync(this.Config.SessionId!).ConfigureAwait(false);
 
 	/// <summary>
-	/// Decodes encoded <see cref="LavalinkTrack"/>s.
-	/// <para>Might not work with pre 3.0 tracks.</para>
+	///     Decodes encoded <see cref="LavalinkTrack" />s.
+	///     <para>Might not work with pre 3.0 tracks.</para>
 	/// </summary>
 	/// <param name="tracks">The tracks to decode.</param>
-	/// <returns>A <see cref="List{T}"/> of decoded <see cref="LavalinkTrack"/>s.</returns>
+	/// <returns>A <see cref="List{T}" /> of decoded <see cref="LavalinkTrack" />s.</returns>
 	public async Task<IReadOnlyList<LavalinkTrack>> DecodeTracksAsync(IEnumerable<string> tracks)
 		=> await this.Rest.DecodeTracksAsync(tracks).ConfigureAwait(false);
 
 	/// <summary>
-	/// Decodes an encoded <see cref="LavalinkTrack"/>.
-	/// <para>Might not work with pre 3.0 tracks.</para>
+	///     Decodes an encoded <see cref="LavalinkTrack" />.
+	///     <para>Might not work with pre 3.0 tracks.</para>
 	/// </summary>
 	/// <param name="track">The track to decode.</param>
-	/// <returns>The decoded <see cref="LavalinkTrack"/>.</returns>
+	/// <returns>The decoded <see cref="LavalinkTrack" />.</returns>
 	public async Task<LavalinkTrack> DecodeTrackAsync(string track)
 		=> await this.Rest.DecodeTrackAsync(track).ConfigureAwait(false);
 
 	/// <summary>
-	/// Loads tracks by <paramref name="identifier"/>.
-	/// Returns a dynamic object you have to parse with (Type)Result.
+	///     Loads tracks by <paramref name="identifier" />.
+	///     Returns a dynamic object you have to parse with (Type)Result.
 	/// </summary>
 	/// <param name="identifier">The identifier to load.</param>
 	/// <returns>A track loading result.</returns>
@@ -427,8 +429,8 @@ public sealed class LavalinkSession
 		=> await this.Rest.LoadTracksAsync(identifier).ConfigureAwait(false);
 
 	/// <summary>
-	/// Loads tracks by <paramref name="identifier"/>.
-	/// Returns a dynamic object you have to parse with (Type)Result.
+	///     Loads tracks by <paramref name="identifier" />.
+	///     Returns a dynamic object you have to parse with (Type)Result.
 	/// </summary>
 	/// <param name="searchType">The search type to use. Some types need additional setup.</param>
 	/// <param name="identifier">The identifier to load.</param>
@@ -452,9 +454,9 @@ public sealed class LavalinkSession
 	}
 
 	/// <summary>
-	/// Establishes a connection to the lavalink server.
+	///     Establishes a connection to the lavalink server.
 	/// </summary>
-	/// <exception cref="InvalidOperationException">Thrown when the <see cref="DiscordClient"/> is not fully initialized.</exception>
+	/// <exception cref="InvalidOperationException">Thrown when the <see cref="DiscordClient" /> is not fully initialized.</exception>
 	internal async Task EstablishConnectionAsync()
 	{
 		if (this.Discord.CurrentUser?.Id == null)
@@ -491,7 +493,7 @@ public sealed class LavalinkSession
 				else
 					this._backoff = MINIMUM_BACKOFF;
 
-				await this._webSocket.ConnectAsync(new($"{this.Config.SocketEndpoint.ToWebSocketString()}{Enums.Endpoints.V4}{Enums.Endpoints.WEBSOCKET}")).ConfigureAwait(false);
+				await this._webSocket.ConnectAsync(new($"{this.Config.SocketEndpoint.ToWebSocketString()}{Endpoints.V4}{Endpoints.WEBSOCKET}")).ConfigureAwait(false);
 
 				this._sessionIdReceived = new();
 				var sessionId = await this._sessionIdReceived.Task.ConfigureAwait(false);
@@ -525,7 +527,7 @@ public sealed class LavalinkSession
 	}
 
 	/// <summary>
-	/// Handles WebSocket messages from Lavalink.
+	///     Handles WebSocket messages from Lavalink.
 	/// </summary>
 	/// <param name="client">The websocket client.</param>
 	/// <param name="args">The event args.</param>
@@ -647,7 +649,7 @@ public sealed class LavalinkSession
 	}
 
 	/// <summary>
-	/// Handles exceptions thrown by the websocket.
+	///     Handles exceptions thrown by the websocket.
 	/// </summary>
 	/// <param name="client">The websocket client.</param>
 	/// <param name="args">The event args.</param>
@@ -658,7 +660,7 @@ public sealed class LavalinkSession
 		});
 
 	/// <summary>
-	/// Handles the event when the websocket disconnected.
+	///     Handles the event when the websocket disconnected.
 	/// </summary>
 	/// <param name="client">The websocket client.</param>
 	/// <param name="args">The event args.</param>
@@ -700,7 +702,7 @@ public sealed class LavalinkSession
 	}
 
 	/// <summary>
-	/// Handles the event when the websocket connected.
+	///     Handles the event when the websocket connected.
 	/// </summary>
 	/// <param name="client">The websocket client.</param>
 	/// <param name="args">The event args.</param>
@@ -713,7 +715,7 @@ public sealed class LavalinkSession
 	}
 
 	/// <summary>
-	/// Handles when discord fires a voice state update.
+	///     Handles when discord fires a voice state update.
 	/// </summary>
 	/// <param name="client">The websocket client.</param>
 	/// <param name="args">The event args.</param>
@@ -743,7 +745,7 @@ public sealed class LavalinkSession
 		else if (!string.IsNullOrWhiteSpace(args.SessionId) && this.ConnectedPlayersInternal.TryGetValue(gld.Id, out var guildPlayer))
 			_ = Task.Run(async () =>
 			{
-				var state = new LavalinkVoiceState()
+				var state = new LavalinkVoiceState
 				{
 					Endpoint = guildPlayer.Player.VoiceState.Endpoint,
 					Token = guildPlayer.Player.VoiceState.Token,
@@ -761,7 +763,7 @@ public sealed class LavalinkSession
 	}
 
 	/// <summary>
-	/// Handles when discord fires a voice server update.
+	///     Handles when discord fires a voice server update.
 	/// </summary>
 	/// <param name="client">The websocket client.</param>
 	/// <param name="args">The event args.</param>
@@ -774,7 +776,7 @@ public sealed class LavalinkSession
 		if (this.ConnectedPlayersInternal.TryGetValue(args.Guild.Id, out var guildPlayer))
 			_ = Task.Run(async () =>
 			{
-				var state = new LavalinkVoiceState()
+				var state = new LavalinkVoiceState
 				{
 					Endpoint = args.Endpoint,
 					Token = args.VoiceToken,

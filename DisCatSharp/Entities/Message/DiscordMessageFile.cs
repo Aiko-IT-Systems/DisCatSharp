@@ -3,12 +3,13 @@ using System.IO;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents the File that should be sent to Discord from the <see cref="DisCatSharp.Entities.DiscordMessageBuilder"/>.
+///     Represents the File that should be sent to Discord from the
+///     <see cref="DisCatSharp.Entities.DiscordMessageBuilder" />.
 /// </summary>
 public sealed class DiscordMessageFile
 {
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordMessageFile"/> class.
+	///     Initializes a new instance of the <see cref="DiscordMessageFile" /> class.
 	/// </summary>
 	/// <param name="filename">The file name.</param>
 	/// <param name="stream">The stream.</param>
@@ -27,32 +28,32 @@ public sealed class DiscordMessageFile
 	}
 
 	/// <summary>
-	/// Gets the name of the File.
+	///     Gets the name of the File.
 	/// </summary>
 	public string Filename { get; }
 
 	/// <summary>
-	/// Gets the description of the File.
+	///     Gets the description of the File.
 	/// </summary>
 	public string? Description { get; }
 
 	/// <summary>
-	/// Gets the stream of the File.
+	///     Gets the stream of the File.
 	/// </summary>
 	public Stream Stream { get; }
 
 	/// <summary>
-	/// Gets or sets the file type.
+	///     Gets or sets the file type.
 	/// </summary>
 	internal string? FileType { get; }
 
 	/// <summary>
-	/// Gets or sets the content type.
+	///     Gets or sets the content type.
 	/// </summary>
 	internal string? ContentType { get; }
 
 	/// <summary>
-	/// Gets the position the File should be reset to.
+	///     Gets the position the File should be reset to.
 	/// </summary>
 	internal long? ResetPositionTo { get; }
 }

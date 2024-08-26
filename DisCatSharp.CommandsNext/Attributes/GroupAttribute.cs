@@ -4,18 +4,13 @@ using System.Linq;
 namespace DisCatSharp.CommandsNext.Attributes;
 
 /// <summary>
-/// Marks this class as a command group.
+///     Marks this class as a command group.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class GroupAttribute : Attribute
 {
 	/// <summary>
-	/// Gets the name of this group.
-	/// </summary>
-	public string Name { get; }
-
-	/// <summary>
-	/// Marks this class as a command group, using the class' name as group name.
+	///     Marks this class as a command group, using the class' name as group name.
 	/// </summary>
 	public GroupAttribute()
 	{
@@ -23,7 +18,7 @@ public sealed class GroupAttribute : Attribute
 	}
 
 	/// <summary>
-	/// Marks this class as a command group with specified name.
+	///     Marks this class as a command group with specified name.
 	/// </summary>
 	/// <param name="name">Name of this group.</param>
 	public GroupAttribute(string name)
@@ -36,4 +31,9 @@ public sealed class GroupAttribute : Attribute
 
 		this.Name = name;
 	}
+
+	/// <summary>
+	///     Gets the name of this group.
+	/// </summary>
+	public string Name { get; }
 }

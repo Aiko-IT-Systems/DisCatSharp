@@ -7,17 +7,12 @@ using System.Text;
 namespace DisCatSharp.Common.Utilities;
 
 /// <summary>
-/// Gets information about current runtime.
+///     Gets information about current runtime.
 /// </summary>
 public static class RuntimeInformation
 {
 	/// <summary>
-	/// Gets the current runtime's version.
-	/// </summary>
-	public static string? Version { get; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="RuntimeInformation"/> class.
+	///     Initializes a new instance of the <see cref="RuntimeInformation" /> class.
 	/// </summary>
 	static RuntimeInformation()
 	{
@@ -62,4 +57,9 @@ public static class RuntimeInformation
 
 		Version = mscorlib.AssemblyName.Version?.ToString();
 	}
+
+	/// <summary>
+	///     Gets the current runtime's version.
+	/// </summary>
+	public static string? Version { get; }
 }

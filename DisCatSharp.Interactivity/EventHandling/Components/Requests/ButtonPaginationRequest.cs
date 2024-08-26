@@ -10,24 +10,24 @@ using DisCatSharp.Interactivity.Enums;
 namespace DisCatSharp.Interactivity.EventHandling;
 
 /// <summary>
-/// The button pagination request.
+///     The button pagination request.
 /// </summary>
 internal class ButtonPaginationRequest : IPaginationRequest
 {
-	private int _index;
+	private readonly ButtonPaginationBehavior _behaviorBehavior;
+	private readonly PaginationButtons _buttons;
+	private readonly DiscordMessage _message;
 	private readonly List<Page> _pages = [];
 
 	private readonly TaskCompletionSource<bool> _tcs = new();
 
 	private readonly CancellationToken _token;
 	private readonly DiscordUser _user;
-	private readonly DiscordMessage _message;
-	private readonly PaginationButtons _buttons;
 	private readonly PaginationBehaviour _wrapBehavior;
-	private readonly ButtonPaginationBehavior _behaviorBehavior;
+	private int _index;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="ButtonPaginationRequest"/> class.
+	///     Initializes a new instance of the <see cref="ButtonPaginationRequest" /> class.
 	/// </summary>
 	/// <param name="message">The message.</param>
 	/// <param name="user">The user.</param>
@@ -58,12 +58,12 @@ internal class ButtonPaginationRequest : IPaginationRequest
 	}
 
 	/// <summary>
-	/// Gets the page count.
+	///     Gets the page count.
 	/// </summary>
 	public int PageCount => this._pages.Count;
 
 	/// <summary>
-	/// Gets the page.
+	///     Gets the page.
 	/// </summary>
 	public Task<Page> GetPageAsync()
 	{
@@ -94,7 +94,7 @@ internal class ButtonPaginationRequest : IPaginationRequest
 	}
 
 	/// <summary>
-	/// Skips the left.
+	///     Skips the left.
 	/// </summary>
 	public Task SkipLeftAsync()
 	{
@@ -110,7 +110,7 @@ internal class ButtonPaginationRequest : IPaginationRequest
 	}
 
 	/// <summary>
-	/// Skips the right.
+	///     Skips the right.
 	/// </summary>
 	public Task SkipRightAsync()
 	{
@@ -126,7 +126,7 @@ internal class ButtonPaginationRequest : IPaginationRequest
 	}
 
 	/// <summary>
-	/// Gets the next page.
+	///     Gets the next page.
 	/// </summary>
 	public Task NextPageAsync()
 	{
@@ -146,7 +146,7 @@ internal class ButtonPaginationRequest : IPaginationRequest
 	}
 
 	/// <summary>
-	/// Gets the previous page.
+	///     Gets the previous page.
 	/// </summary>
 	public Task PreviousPageAsync()
 	{
@@ -166,33 +166,33 @@ internal class ButtonPaginationRequest : IPaginationRequest
 	}
 
 	/// <summary>
-	/// Gets the emojis.
+	///     Gets the emojis.
 	/// </summary>
 	public Task<PaginationEmojis> GetEmojisAsync() => Task.FromException<PaginationEmojis>(new NotSupportedException("Emojis aren't supported for this request."));
 
 	/// <summary>
-	/// Gets the buttons.
+	///     Gets the buttons.
 	/// </summary>
 	public Task<IEnumerable<DiscordButtonComponent>> GetButtonsAsync()
 		=> Task.FromResult((IEnumerable<DiscordButtonComponent>)this._buttons.ButtonArray);
 
 	/// <summary>
-	/// Gets the message.
+	///     Gets the message.
 	/// </summary>
 	public Task<DiscordMessage> GetMessageAsync() => Task.FromResult(this._message);
 
 	/// <summary>
-	/// Gets the user.
+	///     Gets the user.
 	/// </summary>
 	public Task<DiscordUser> GetUserAsync() => Task.FromResult(this._user);
 
 	/// <summary>
-	/// Gets the task completion source.
+	///     Gets the task completion source.
 	/// </summary>
 	public Task<TaskCompletionSource<bool>> GetTaskCompletionSourceAsync() => Task.FromResult(this._tcs);
 
 	/// <summary>
-	/// Does the cleanup.
+	///     Does the cleanup.
 	/// </summary>
 	public async Task DoCleanupAsync()
 	{

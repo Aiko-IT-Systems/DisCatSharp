@@ -1,7 +1,7 @@
 namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Represents the rpc application state.
+///     Represents the rpc application state.
 /// </summary>
 public enum RpcApplicationState
 {

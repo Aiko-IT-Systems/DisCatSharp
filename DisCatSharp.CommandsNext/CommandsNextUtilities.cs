@@ -16,12 +16,12 @@ using Microsoft.Extensions.DependencyInjection;
 namespace DisCatSharp.CommandsNext;
 
 /// <summary>
-/// Various CommandsNext-related utilities.
+///     Various CommandsNext-related utilities.
 /// </summary>
 public static class CommandsNextUtilities
 {
 	/// <summary>
-	/// Checks whether the message has a specified string prefix.
+	///     Checks whether the message has a specified string prefix.
 	/// </summary>
 	/// <param name="msg">Message to check.</param>
 	/// <param name="str">String to check for.</param>
@@ -38,7 +38,7 @@ public static class CommandsNextUtilities
 	}
 
 	/// <summary>
-	/// Checks whether the message contains a specified mention prefix.
+	///     Checks whether the message contains a specified mention prefix.
 	/// </summary>
 	/// <param name="msg">Message to check.</param>
 	/// <param name="user">User to check for.</param>
@@ -64,7 +64,7 @@ public static class CommandsNextUtilities
 
 	//internal static string ExtractNextArgument(string str, out string remainder)
 	/// <summary>
-	/// Extracts the next argument.
+	///     Extracts the next argument.
 	/// </summary>
 	/// <param name="str">The string.</param>
 	/// <param name="startPos">The start position.</param>
@@ -152,7 +152,7 @@ public static class CommandsNextUtilities
 	}
 
 	/// <summary>
-	/// Cleanups the string.
+	///     Cleanups the string.
 	/// </summary>
 	/// <param name="s">The string.</param>
 	/// <param name="indices">The indices.</param>
@@ -180,7 +180,7 @@ public static class CommandsNextUtilities
 	}
 
 	/// <summary>
-	/// Binds the arguments.
+	///     Binds the arguments.
 	/// </summary>
 	/// <param name="ctx">The command context.</param>
 	/// <param name="ignoreSurplus">If true, ignore further text in string.</param>
@@ -213,28 +213,24 @@ public static class CommandsNextUtilities
 
 					break;
 				}
-				else
-				{
-					if (argString == null)
-						break;
 
-					argValue = argString[foundAt..].Trim();
-					argValue = argValue == "" ? null : argValue;
-					foundAt = argString.Length;
-
-					rawArgumentList.Add(argValue);
+				if (argString == null)
 					break;
-				}
-			}
-			else
-			{
-				argValue = ExtractNextArgument(argString, ref foundAt);
+
+				argValue = argString[foundAt..].Trim();
+				argValue = argValue == "" ? null : argValue;
+				foundAt = argString.Length;
+
 				rawArgumentList.Add(argValue);
+				break;
 			}
+
+			argValue = ExtractNextArgument(argString, ref foundAt);
+			rawArgumentList.Add(argValue);
 
 			if (argValue == null && arg is { IsOptional: false, IsCatchAll: false })
 				return new(new ArgumentException("Not enough arguments supplied to the command."));
-			else if (argValue == null)
+			if (argValue == null)
 				rawArgumentList.Add(null);
 		}
 
@@ -265,29 +261,29 @@ public static class CommandsNextUtilities
 				args[start + 2] = array;
 				break;
 			}
-			else
-				try
-				{
-					args[i + 2] = rawArgumentList[i] != null ? await ctx.CommandsNext.ConvertArgument(rawArgumentList[i], ctx, arg.Type).ConfigureAwait(false) : arg.DefaultValue;
-				}
-				catch (Exception ex)
-				{
-					return new(ex);
-				}
+
+			try
+			{
+				args[i + 2] = rawArgumentList[i] != null ? await ctx.CommandsNext.ConvertArgument(rawArgumentList[i], ctx, arg.Type).ConfigureAwait(false) : arg.DefaultValue;
+			}
+			catch (Exception ex)
+			{
+				return new(ex);
+			}
 		}
 
 		return new(args, rawArgumentList);
 	}
 
 	/// <summary>
-	/// Whether this module is a candidate type.
+	///     Whether this module is a candidate type.
 	/// </summary>
 	/// <param name="type">The type.</param>
 	internal static bool IsModuleCandidateType(this Type type)
 		=> type.GetTypeInfo().IsModuleCandidateType();
 
 	/// <summary>
-	/// Whether this module is a candidate type.
+	///     Whether this module is a candidate type.
 	/// </summary>
 	/// <param name="ti">The type info.</param>
 	internal static bool IsModuleCandidateType(this TypeInfo ti)
@@ -320,7 +316,7 @@ public static class CommandsNextUtilities
 	}
 
 	/// <summary>
-	/// Whether this is a command candidate.
+	///     Whether this is a command candidate.
 	/// </summary>
 	/// <param name="method">The method.</param>
 	/// <param name="parameters">The parameters.</param>
@@ -342,7 +338,7 @@ public static class CommandsNextUtilities
 	}
 
 	/// <summary>
-	/// Creates the instance.
+	///     Creates the instance.
 	/// </summary>
 	/// <param name="t">The type.</param>
 	/// <param name="services">The services provider.</param>

@@ -5,59 +5,11 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Lavalink.Entities.Filters;
 
 /// <summary>
-/// Distortion effect. It can generate some pretty unique audio effects.
+///     Distortion effect. It can generate some pretty unique audio effects.
 /// </summary>
 public sealed class LavalinkDisortion
 {
-	/// <summary>
-	/// The sin offset
-	/// </summary>
-	[JsonProperty("sinOffset")]
-	public Optional<float> SinOffset { get; set; }
-
-	/// <summary>
-	/// The sin scale
-	/// </summary>
-	[JsonProperty("sinScale")]
-	public Optional<float> SinScale { get; set; }
-
-	/// <summary>
-	/// The cos offset
-	/// </summary>
-	[JsonProperty("cosOffset")]
-	public Optional<float> CosOffset { get; set; }
-
-	/// <summary>
-	/// The cos scale
-	/// </summary>
-	[JsonProperty("cosScale")]
-	public Optional<float> CosScale { get; set; }
-
-	/// <summary>
-	/// The tan offset
-	/// </summary>
-	[JsonProperty("tanOffset")]
-	public Optional<float> TanOffset { get; set; }
-
-	/// <summary>
-	/// The tan scale
-	/// </summary>
-	[JsonProperty("tanScale")]
-	public Optional<float> TanScale { get; set; }
-
-	/// <summary>
-	/// The offset
-	/// </summary>
-	[JsonProperty("offset")]
-	public Optional<float> Offset { get; set; }
-
-	/// <summary>
-	/// The scale
-	/// </summary>
-	[JsonProperty("scale")]
-	public Optional<float> Scale { get; set; }
-
-	/// <inheritdoc cref="LavalinkDisortion"/>
+	/// <inheritdoc cref="LavalinkDisortion" />
 	/// <param name="sinOffset">The sin offset</param>
 	/// <param name="sinScale">The sin scale</param>
 	/// <param name="cosOffset">The cos offset</param>
@@ -77,4 +29,52 @@ public sealed class LavalinkDisortion
 		this.Offset = offset;
 		this.Scale = scale;
 	}
+
+	/// <summary>
+	///     The sin offset
+	/// </summary>
+	[JsonProperty("sinOffset")]
+	public Optional<float> SinOffset { get; set; }
+
+	/// <summary>
+	///     The sin scale
+	/// </summary>
+	[JsonProperty("sinScale")]
+	public Optional<float> SinScale { get; set; }
+
+	/// <summary>
+	///     The cos offset
+	/// </summary>
+	[JsonProperty("cosOffset")]
+	public Optional<float> CosOffset { get; set; }
+
+	/// <summary>
+	///     The cos scale
+	/// </summary>
+	[JsonProperty("cosScale")]
+	public Optional<float> CosScale { get; set; }
+
+	/// <summary>
+	///     The tan offset
+	/// </summary>
+	[JsonProperty("tanOffset")]
+	public Optional<float> TanOffset { get; set; }
+
+	/// <summary>
+	///     The tan scale
+	/// </summary>
+	[JsonProperty("tanScale")]
+	public Optional<float> TanScale { get; set; }
+
+	/// <summary>
+	///     The offset
+	/// </summary>
+	[JsonProperty("offset")]
+	public Optional<float> Offset { get; set; }
+
+	/// <summary>
+	///     The scale
+	/// </summary>
+	[JsonProperty("scale")]
+	public Optional<float> Scale { get; set; }
 }

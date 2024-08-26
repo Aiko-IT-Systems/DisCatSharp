@@ -6,17 +6,30 @@ using System.Linq;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Constructs a followup message to an interaction.
+///     Constructs a followup message to an interaction.
 /// </summary>
 public sealed class DiscordFollowupMessageBuilder
 {
+	private readonly List<DiscordActionRowComponent> _components = [];
+
+	private readonly List<DiscordEmbed> _embeds = [];
+
+	private readonly List<DiscordMessageFile> _files = [];
+
+	private string _content;
+
 	/// <summary>
-	/// Whether this followup message is text-to-speech.
+	///     Whether flags were changed.
+	/// </summary>
+	internal bool FlagsChanged = false;
+
+	/// <summary>
+	///     Whether this followup message is text-to-speech.
 	/// </summary>
 	public bool IsTts { get; set; }
 
 	/// <summary>
-	/// Whether this followup message should be ephemeral.
+	///     Whether this followup message should be ephemeral.
 	/// </summary>
 	public bool IsEphemeral
 	{
@@ -31,7 +44,7 @@ public sealed class DiscordFollowupMessageBuilder
 	private bool EPH { get; set; }
 
 	/// <summary>
-	/// Whether to suppress embeds.
+	///     Whether to suppress embeds.
 	/// </summary>
 	public bool EmbedsSuppressed
 	{
@@ -46,7 +59,7 @@ public sealed class DiscordFollowupMessageBuilder
 	private bool EMB_SUP { get; set; }
 
 	/// <summary>
-	/// Whether to send as silent message.
+	///     Whether to send as silent message.
 	/// </summary>
 	public bool NotificationsSuppressed
 	{
@@ -61,12 +74,7 @@ public sealed class DiscordFollowupMessageBuilder
 	private bool NOTI_SUP { get; set; }
 
 	/// <summary>
-	/// Whether flags were changed.
-	/// </summary>
-	internal bool FlagsChanged = false;
-
-	/// <summary>
-	/// Message to send on followup message.
+	///     Message to send on followup message.
 	/// </summary>
 	public string Content
 	{
@@ -80,50 +88,42 @@ public sealed class DiscordFollowupMessageBuilder
 		}
 	}
 
-	private string _content;
-
 	/// <summary>
-	/// Embeds to send on followup message.
+	///     Embeds to send on followup message.
 	/// </summary>
 	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
 
-	private readonly List<DiscordEmbed> _embeds = [];
-
 	/// <summary>
-	/// Files to send on this followup message.
+	///     Files to send on this followup message.
 	/// </summary>
 	public IReadOnlyList<DiscordMessageFile> Files => this._files;
 
-	private readonly List<DiscordMessageFile> _files = [];
-
 	/// <summary>
-	/// Components to send on this followup message.
+	///     Components to send on this followup message.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
 
-	private readonly List<DiscordActionRowComponent> _components = [];
-
 	/// <summary>
-	/// Mentions to send on this followup message.
+	///     Mentions to send on this followup message.
 	/// </summary>
 	public List<IMention>? Mentions { get; private set; }
 
 	/// <summary>
-	/// Gets the poll for this message.
+	///     Gets the poll for this message.
 	/// </summary>
 	public DiscordPollBuilder? Poll { get; private set; }
 
 	/// <summary>
-	/// Appends a collection of components to the message.
+	///     Appends a collection of components to the message.
 	/// </summary>
 	/// <param name="components">The collection of components to add.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	/// <exception cref="ArgumentException"><paramref name="components"/> contained more than 5 components.</exception>
+	/// <exception cref="ArgumentException"><paramref name="components" /> contained more than 5 components.</exception>
 	public DiscordFollowupMessageBuilder AddComponents(params DiscordComponent[] components)
 		=> this.AddComponents((IEnumerable<DiscordComponent>)components);
 
 	/// <summary>
-	/// Appends several rows of components to the message
+	///     Appends several rows of components to the message
 	/// </summary>
 	/// <param name="components">The rows of components to add, holding up to five each.</param>
 	/// <returns></returns>
@@ -141,11 +141,11 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	/// <summary>
-	/// Appends a collection of components to the message.
+	///     Appends a collection of components to the message.
 	/// </summary>
 	/// <param name="components">The collection of components to add.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	/// <exception cref="ArgumentException"><paramref name="components"/> contained more than 5 components.</exception>
+	/// <exception cref="ArgumentException"><paramref name="components" /> contained more than 5 components.</exception>
 	public DiscordFollowupMessageBuilder AddComponents(IEnumerable<DiscordComponent> components)
 	{
 		var compArr = components.ToArray();
@@ -160,7 +160,7 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	/// <summary>
-	/// Adds a poll to this builder.
+	///     Adds a poll to this builder.
 	/// </summary>
 	/// <param name="pollBuilder">The poll builder to add.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -171,7 +171,7 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	/// <summary>
-	/// Indicates if the followup message must use text-to-speech.
+	///     Indicates if the followup message must use text-to-speech.
 	/// </summary>
 	/// <param name="tts">Text-to-speech</param>
 	/// <returns>The builder to chain calls with.</returns>
@@ -182,7 +182,7 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	/// <summary>
-	/// Sets the message to send with the followup message.
+	///     Sets the message to send with the followup message.
 	/// </summary>
 	/// <param name="content">Message to send.</param>
 	/// <returns>The builder to chain calls with.</returns>
@@ -193,7 +193,7 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	/// <summary>
-	/// Adds an embed to the followup message.
+	///     Adds an embed to the followup message.
 	/// </summary>
 	/// <param name="embed">Embed to add.</param>
 	/// <returns>The builder to chain calls with.</returns>
@@ -204,7 +204,7 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	/// <summary>
-	/// Adds the given embeds to the followup message.
+	///     Adds the given embeds to the followup message.
 	/// </summary>
 	/// <param name="embeds">Embeds to add.</param>
 	/// <returns>The builder to chain calls with.</returns>
@@ -215,11 +215,14 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	/// <summary>
-	/// Adds a file to the followup message.
+	///     Adds a file to the followup message.
 	/// </summary>
 	/// <param name="filename">Name of the file.</param>
 	/// <param name="data">File data.</param>
-	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+	/// <param name="resetStreamPosition">
+	///     Tells the API Client to reset the stream position to what it was after the file is
+	///     sent.
+	/// </param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string description = null)
@@ -239,10 +242,13 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	/// <summary>
-	/// Sets if the message has files to be sent.
+	///     Sets if the message has files to be sent.
 	/// </summary>
 	/// <param name="stream">The Stream to the file.</param>
-	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+	/// <param name="resetStreamPosition">
+	///     Tells the API Client to reset the stream position to what it was after the file is
+	///     sent.
+	/// </param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string description = null)
@@ -262,10 +268,13 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	/// <summary>
-	/// Adds the given files to the followup message.
+	///     Adds the given files to the followup message.
 	/// </summary>
 	/// <param name="files">Dictionary of file name and file data.</param>
-	/// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+	/// <param name="resetStreamPosition">
+	///     Tells the API Client to reset the stream position to what it was after the file is
+	///     sent.
+	/// </param>
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder AddFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
 	{
@@ -287,7 +296,7 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	/// <summary>
-	/// Adds the mention to the mentions to parse, etc. with the followup message.
+	///     Adds the mention to the mentions to parse, etc. with the followup message.
 	/// </summary>
 	/// <param name="mention">Mention to add.</param>
 	/// <returns>The builder to chain calls with.</returns>
@@ -301,7 +310,7 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	/// <summary>
-	/// Adds the mentions to the mentions to parse, etc. with the followup message.
+	///     Adds the mentions to the mentions to parse, etc. with the followup message.
 	/// </summary>
 	/// <param name="mentions">Mentions to add.</param>
 	/// <returns>The builder to chain calls with.</returns>
@@ -315,7 +324,7 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	/// <summary>
-	/// Sets the followup message to be ephemeral.
+	///     Sets the followup message to be ephemeral.
 	/// </summary>
 	public DiscordFollowupMessageBuilder AsEphemeral()
 	{
@@ -325,7 +334,7 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	/// <summary>
-	/// Sets the followup message to suppress embeds.
+	///     Sets the followup message to suppress embeds.
 	/// </summary>
 	public DiscordFollowupMessageBuilder SuppressEmbeds()
 	{
@@ -335,7 +344,7 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	/// <summary>
-	/// Sets the followup message to be send as silent message.
+	///     Sets the followup message to be send as silent message.
 	/// </summary>
 	public DiscordFollowupMessageBuilder AsSilentMessage()
 	{
@@ -345,19 +354,19 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	/// <summary>
-	/// Clears all message components on this builder.
+	///     Clears all message components on this builder.
 	/// </summary>
 	public void ClearComponents()
 		=> this._components.Clear();
 
 	/// <summary>
-	/// Clears the poll from this builder.
+	///     Clears the poll from this builder.
 	/// </summary>
 	public void ClearPoll()
 		=> this.Poll = null;
 
 	/// <summary>
-	/// Allows for clearing the Followup Message builder so that it can be used again to send a new message.
+	///     Allows for clearing the Followup Message builder so that it can be used again to send a new message.
 	/// </summary>
 	public void Clear()
 	{
@@ -371,7 +380,7 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	/// <summary>
-	/// Validates the builder.
+	///     Validates the builder.
 	/// </summary>
 	internal void Validate()
 	{

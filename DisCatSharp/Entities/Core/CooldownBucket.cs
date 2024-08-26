@@ -8,69 +8,23 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.Entities.Core;
 
 /// <summary>
-/// Represents a cooldown bucket.
+///     Represents a cooldown bucket.
 /// </summary>
 // ReSharper disable once ClassCanBeSealed.Global "This class can be inherited from by developers."
 public class CooldownBucket : IBucket, IEquatable<CooldownBucket>
 {
 	/// <summary>
-	/// The user id for this bucket.
-	/// </summary>
-	public ulong UserId { get; }
-
-	/// <summary>
-	/// The channel id for this bucket.
-	/// </summary>
-	public ulong ChannelId { get; }
-
-	/// <summary>
-	/// The guild id for this bucket.
-	/// </summary>
-	public ulong GuildId { get; }
-
-	/// <summary>
-	/// The member id for this bucket.
-	/// </summary>
-	public ulong MemberId { get; }
-
-	/// <summary>
-	/// The id for this bucket.
-	/// </summary>
-	public string BucketId { get; }
-
-	/// <summary>
-	/// The remaining uses for this bucket.
-	/// </summary>
-	public int RemainingUses
-		=> Volatile.Read(ref this.RemainingUsesInternal);
-
-	/// <summary>
-	/// The max uses for this bucket.
-	/// </summary>
-	public int MaxUses { get; }
-
-	/// <summary>
-	/// The datetime offset when this bucket resets.
-	/// </summary>
-	public DateTimeOffset ResetsAt { get; internal set; }
-
-	/// <summary>
-	/// The timespan when this bucket resets.
-	/// </summary>
-	public TimeSpan Reset { get; internal set; }
-
-	/// <summary>
-	/// Gets the semaphore used to lock the use value.
+	///     Gets the semaphore used to lock the use value.
 	/// </summary>
 	internal readonly SemaphoreSlim UsageSemaphore;
 
 	/// <summary>
-	/// Gets the remaining uses for this bucket.
+	///     Gets the remaining uses for this bucket.
 	/// </summary>
 	internal int RemainingUsesInternal;
 
 	/// <summary>
-	/// Creates a new command cooldown bucket.
+	///     Creates a new command cooldown bucket.
 	/// </summary>
 	/// <param name="maxUses">Maximum number of uses for this bucket.</param>
 	/// <param name="resetAfter">Time after which this bucket resets.</param>
@@ -95,7 +49,61 @@ public class CooldownBucket : IBucket, IEquatable<CooldownBucket>
 	}
 
 	/// <summary>
-	/// Decrements the remaining use counter.
+	///     The member id for this bucket.
+	/// </summary>
+	public ulong MemberId { get; }
+
+	/// <summary>
+	///     The user id for this bucket.
+	/// </summary>
+	public ulong UserId { get; }
+
+	/// <summary>
+	///     The channel id for this bucket.
+	/// </summary>
+	public ulong ChannelId { get; }
+
+	/// <summary>
+	///     The guild id for this bucket.
+	/// </summary>
+	public ulong GuildId { get; }
+
+	/// <summary>
+	///     The id for this bucket.
+	/// </summary>
+	public string BucketId { get; }
+
+	/// <summary>
+	///     The remaining uses for this bucket.
+	/// </summary>
+	public int RemainingUses
+		=> Volatile.Read(ref this.RemainingUsesInternal);
+
+	/// <summary>
+	///     The max uses for this bucket.
+	/// </summary>
+	public int MaxUses { get; }
+
+	/// <summary>
+	///     The datetime offset when this bucket resets.
+	/// </summary>
+	public DateTimeOffset ResetsAt { get; internal set; }
+
+	/// <summary>
+	///     The timespan when this bucket resets.
+	/// </summary>
+	public TimeSpan Reset { get; internal set; }
+
+	/// <summary>
+	///     Checks whether this <see cref="CooldownBucket" /> is equal to another <see cref="CooldownBucket" />.
+	/// </summary>
+	/// <param name="other"><see cref="CooldownBucket" /> to compare to.</param>
+	/// <returns>Whether the <see cref="CooldownBucket" /> is equal to this <see cref="CooldownBucket" />.</returns>
+	public bool Equals(CooldownBucket? other)
+		=> other is not null && (ReferenceEquals(this, other) || (this.UserId == other.UserId && this.ChannelId == other.ChannelId && this.GuildId == other.GuildId && this.MemberId == other.MemberId));
+
+	/// <summary>
+	///     Decrements the remaining use counter.
 	/// </summary>
 	/// <param name="ctx">The context.</param>
 	/// <returns>Whether decrement succeeded or not.</returns>
@@ -130,30 +138,22 @@ public class CooldownBucket : IBucket, IEquatable<CooldownBucket>
 	}
 
 	/// <summary>
-	/// Checks whether this <see cref="CooldownBucket"/> is equal to another object.
+	///     Checks whether this <see cref="CooldownBucket" /> is equal to another object.
 	/// </summary>
 	/// <param name="obj">Object to compare to.</param>
-	/// <returns>Whether the object is equal to this <see cref="CooldownBucket"/>.</returns>
+	/// <returns>Whether the object is equal to this <see cref="CooldownBucket" />.</returns>
 	public override bool Equals(object? obj)
 		=> this.Equals(obj as CooldownBucket);
 
 	/// <summary>
-	/// Checks whether this <see cref="CooldownBucket"/> is equal to another <see cref="CooldownBucket"/>.
+	///     Gets the hash code for this <see cref="CooldownBucket" />.
 	/// </summary>
-	/// <param name="other"><see cref="CooldownBucket"/> to compare to.</param>
-	/// <returns>Whether the <see cref="CooldownBucket"/> is equal to this <see cref="CooldownBucket"/>.</returns>
-	public bool Equals(CooldownBucket? other)
-		=> other is not null && (ReferenceEquals(this, other) || (this.UserId == other.UserId && this.ChannelId == other.ChannelId && this.GuildId == other.GuildId && this.MemberId == other.MemberId));
-
-	/// <summary>
-	/// Gets the hash code for this <see cref="CooldownBucket"/>.
-	/// </summary>
-	/// <returns>The hash code for this <see cref="CooldownBucket"/>.</returns>
+	/// <returns>The hash code for this <see cref="CooldownBucket" />.</returns>
 	public override int GetHashCode()
 		=> HashCode.Combine(this.UserId, this.ChannelId, this.GuildId, this.MemberId);
 
 	/// <summary>
-	/// Gets whether the two <see cref="CooldownBucket"/> objects are equal.
+	///     Gets whether the two <see cref="CooldownBucket" /> objects are equal.
 	/// </summary>
 	/// <param name="bucket1">First bucket to compare.</param>
 	/// <param name="bucket2">Second bucket to compare.</param>
@@ -167,7 +167,7 @@ public class CooldownBucket : IBucket, IEquatable<CooldownBucket>
 	}
 
 	/// <summary>
-	/// Gets whether the two <see cref="CooldownBucket"/> objects are not equal.
+	///     Gets whether the two <see cref="CooldownBucket" /> objects are not equal.
 	/// </summary>
 	/// <param name="bucket1">First bucket to compare.</param>
 	/// <param name="bucket2">Second bucket to compare.</param>
@@ -176,7 +176,7 @@ public class CooldownBucket : IBucket, IEquatable<CooldownBucket>
 		=> !(bucket1 == bucket2);
 
 	/// <summary>
-	/// Creates a bucket ID from given bucket parameters.
+	///     Creates a bucket ID from given bucket parameters.
 	/// </summary>
 	/// <param name="commandId">ID of the command</param>
 	/// <param name="commandName">Name of the command.</param>

@@ -31,179 +31,86 @@ using Newtonsoft.Json;
 namespace DisCatSharp.ApplicationCommands;
 
 /// <summary>
-/// A class that handles slash commands for a client.
+///     A class that handles slash commands for a client.
 /// </summary>
 public sealed class ApplicationCommandsExtension : BaseExtension
 {
 	/// <summary>
-	/// A list of methods for top level commands.
-	/// </summary>
-	internal static List<CommandMethod> CommandMethods { get; set; } = [];
-
-	/// <summary>
-	/// List of groups.
-	/// </summary>
-	internal static List<GroupCommand> GroupCommands { get; set; } = [];
-
-	/// <summary>
-	/// List of groups with subgroups.
-	/// </summary>
-	internal static List<SubGroupCommand> SubGroupCommands { get; set; } = [];
-
-	/// <summary>
-	/// List of context menus.
-	/// </summary>
-	internal static List<ContextMenuCommand> ContextMenuCommands { get; set; } = [];
-
-	/// <summary>
-	/// List of global commands on discords backend.
-	/// </summary>
-	internal static List<DiscordApplicationCommand> GlobalDiscordCommands { get; set; } = [];
-
-	/// <summary>
-	/// List of guild commands on discords backend.
-	/// </summary>
-	internal static Dictionary<ulong, List<DiscordApplicationCommand>> GuildDiscordCommands { get; set; } = [];
-
-	/// <summary>
-	/// Singleton modules.
-	/// </summary>
-	private static List<object> s_singletonModules { get; set; } = [];
-
-	/// <summary>
-	/// List of modules to register.
-	/// </summary>
-	private readonly List<KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>> _updateList = [];
-
-	/// <summary>
-	/// Configuration for Discord.
+	///     Configuration for Discord.
 	/// </summary>
 	internal static ApplicationCommandsConfiguration Configuration;
 
 	/// <summary>
-	/// Set to true if anything fails when registering.
-	/// </summary>
-	private static bool s_errored { get; set; }
-
-	/// <summary>
-	/// Gets a list of registered commands. The key is the guild id (null if global).
-	/// </summary>
-	public IReadOnlyList<KeyValuePair<ulong?, IReadOnlyList<RegisteredDiscordApplicationCommand>>> RegisteredCommands
-		=> s_registeredCommands.Select(guild =>
-			new KeyValuePair<ulong?, IReadOnlyList<RegisteredDiscordApplicationCommand>>(guild.Key, guild.Value
-				.Select(parent => new RegisteredDiscordApplicationCommand(parent)).ToList())).ToList().AsReadOnly();
-
-	/// <summary>
-	/// Sets a list of registered commands. The key is the guild id (null if global).
+	///     Sets a list of registered commands. The key is the guild id (null if global).
 	/// </summary>
 	private static readonly List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> s_registeredCommands = [];
 
 	/// <summary>
-	/// Gets a list of registered global commands.
-	/// </summary>
-	public IReadOnlyList<DiscordApplicationCommand> GlobalCommands
-		=> GlobalCommandsInternal;
-
-	/// <summary>
-	/// Sets a list of registered global commands.
+	///     Sets a list of registered global commands.
 	/// </summary>
 	internal static readonly List<DiscordApplicationCommand> GlobalCommandsInternal = [];
 
 	/// <summary>
-	/// Gets a list of registered guild commands mapped by guild id.
-	/// </summary>
-	public IReadOnlyDictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommands
-		=> GuildCommandsInternal;
-
-	/// <summary>
-	/// Sets a list of registered guild commands mapped by guild id.
+	///     Sets a list of registered guild commands mapped by guild id.
 	/// </summary>
 	internal static readonly Dictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommandsInternal = [];
 
 	/// <summary>
-	/// Gets the guild ids where the applications.commands scope is missing.
-	/// </summary>
-	private List<ulong> MISSING_SCOPE_GUILD_IDS { get; set; } = [];
-
-	/// <summary>
-	/// Gets the guild ids where the applications.commands scope is missing.
-	/// </summary>
-	private static List<ulong> s_missingScopeGuildIdsGlobal { get; set; } = [];
-
-	/// <summary>
-	/// Gets whether debug is enabled.
-	/// </summary>
-	internal static bool DebugEnabled { get; set; }
-
-	/// <summary>
-	/// Gets the debug level for the logs.
-	/// </summary>
-	internal static LogLevel ApplicationCommandsLogLevel
-		=> DebugEnabled ? LogLevel.Debug : LogLevel.Trace;
-
-	/// <summary>
-	/// Gets the logger.
-	/// </summary>
-	internal static ILogger Logger { get; set; }
-
-	/// <summary>
-	/// Gets whether check through all guilds is enabled.
-	/// </summary>
-	internal static bool CheckAllGuilds { get; set; }
-
-	/// <summary>
-	/// Gets whether the registration check should be manually overridden.
-	/// </summary>
-	internal static bool ManOr { get; set; }
-
-	/// <summary>
-	/// Gets whether interactions should be automatically deffered.
-	/// </summary>
-	internal static bool AutoDeferEnabled { get; set; }
-
-	/// <summary>
-	/// Whether this module finished the startup.
-	/// </summary>
-	internal bool ShardStartupFinished { get; set; } = false;
-
-	/// <summary>
-	/// Whether this module finished the startup.
-	/// </summary>
-	internal static bool StartupFinished { get; set; } = false;
-
-	/// <summary>
-	/// Gets the service provider this module was configured with.
-	/// </summary>
-	public IServiceProvider Services
-		=> Configuration.ServiceProvider;
-
-	/// <summary>
-	/// Whether this module is called by an unit test.
-	/// </summary>
-	internal static bool IsCalledByUnitTest { get; set; } = false;
-
-	/// <summary>
-	/// Gets a list of handled interactions. Fix for double interaction execution bug.
+	///     Gets a list of handled interactions. Fix for double interaction execution bug.
 	/// </summary>
 	internal static readonly List<ulong> HandledInteractions = [];
 
 	/// <summary>
-	/// Gets the shard count.
+	///     Fires the application command module ready event.
+	///     <para>
+	///         This is fired when the whole module for the <see cref="DiscordClient" /> finished the startup and
+	///         registration.
+	///     </para>
 	/// </summary>
-	internal static int ShardCount { get; set; } = 1;
+	private readonly AsyncEvent<ApplicationCommandsExtension, ApplicationCommandsModuleReadyEventArgs> _applicationCommandsModuleReady;
 
 	/// <summary>
-	/// Gets the count of shards who finished initializing the module.
+	///     Fires the application command module startup finished event.
 	/// </summary>
-	internal static int FinishedShardCount { get; set; } = 0;
+	private readonly AsyncEvent<ApplicationCommandsExtension, ApplicationCommandsModuleStartupFinishedEventArgs> _applicationCommandsModuleStartupFinished;
 
 	/// <summary>
-	/// Gets whether the finish event was fired.
+	///     Fires the context menu error event.
 	/// </summary>
-	public static bool FinishFired { get; set; } = false;
+	private readonly AsyncEvent<ApplicationCommandsExtension, ContextMenuErrorEventArgs> _contextMenuErrored;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
+	///     Fires the context menu executed event.
+	/// </summary>
+	private readonly AsyncEvent<ApplicationCommandsExtension, ContextMenuExecutedEventArgs> _contextMenuExecuted;
+
+	/// <summary>
+	///     Fires the global application command registered event.
+	/// </summary>
+	private readonly AsyncEvent<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs> _globalApplicationCommandsRegistered;
+
+	/// <summary>
+	///     Fires the guild application command registered event.
+	/// </summary>
+	private readonly AsyncEvent<ApplicationCommandsExtension, GuildApplicationCommandsRegisteredEventArgs> _guildApplicationCommandsRegistered;
+
+	/// <summary>
+	///     Fires the slash command error event.
+	/// </summary>
+	private readonly AsyncEvent<ApplicationCommandsExtension, SlashCommandErrorEventArgs> _slashError;
+
+	/// <summary>
+	///     Fires the slash command executed event.
+	/// </summary>
+	private readonly AsyncEvent<ApplicationCommandsExtension, SlashCommandExecutedEventArgs> _slashExecuted;
+
+	/// <summary>
+	///     List of modules to register.
+	/// </summary>
+	private readonly List<KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>> _updateList = [];
+
+	/// <summary>
+	///     Initializes a new instance of the <see cref="ApplicationCommandsExtension" /> class.
 	/// </summary>
 	/// <param name="configuration">The configuration.</param>
 	internal ApplicationCommandsExtension(ApplicationCommandsConfiguration? configuration = null)
@@ -227,8 +134,145 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Runs setup.
-	/// <note type="caution">DO NOT RUN THIS MANUALLY. DO NOT DO ANYTHING WITH THIS.</note>
+	///     A list of methods for top level commands.
+	/// </summary>
+	internal static List<CommandMethod> CommandMethods { get; set; } = [];
+
+	/// <summary>
+	///     List of groups.
+	/// </summary>
+	internal static List<GroupCommand> GroupCommands { get; set; } = [];
+
+	/// <summary>
+	///     List of groups with subgroups.
+	/// </summary>
+	internal static List<SubGroupCommand> SubGroupCommands { get; set; } = [];
+
+	/// <summary>
+	///     List of context menus.
+	/// </summary>
+	internal static List<ContextMenuCommand> ContextMenuCommands { get; set; } = [];
+
+	/// <summary>
+	///     List of global commands on discords backend.
+	/// </summary>
+	internal static List<DiscordApplicationCommand> GlobalDiscordCommands { get; set; } = [];
+
+	/// <summary>
+	///     List of guild commands on discords backend.
+	/// </summary>
+	internal static Dictionary<ulong, List<DiscordApplicationCommand>> GuildDiscordCommands { get; set; } = [];
+
+	/// <summary>
+	///     Singleton modules.
+	/// </summary>
+	private static List<object> s_singletonModules { get; } = [];
+
+	/// <summary>
+	///     Set to true if anything fails when registering.
+	/// </summary>
+	private static bool s_errored { get; set; }
+
+	/// <summary>
+	///     Gets a list of registered commands. The key is the guild id (null if global).
+	/// </summary>
+	public IReadOnlyList<KeyValuePair<ulong?, IReadOnlyList<RegisteredDiscordApplicationCommand>>> RegisteredCommands
+		=> s_registeredCommands.Select(guild =>
+			new KeyValuePair<ulong?, IReadOnlyList<RegisteredDiscordApplicationCommand>>(guild.Key, guild.Value
+				.Select(parent => new RegisteredDiscordApplicationCommand(parent)).ToList())).ToList().AsReadOnly();
+
+	/// <summary>
+	///     Gets a list of registered global commands.
+	/// </summary>
+	public IReadOnlyList<DiscordApplicationCommand> GlobalCommands
+		=> GlobalCommandsInternal;
+
+	/// <summary>
+	///     Gets a list of registered guild commands mapped by guild id.
+	/// </summary>
+	public IReadOnlyDictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommands
+		=> GuildCommandsInternal;
+
+	/// <summary>
+	///     Gets the guild ids where the applications.commands scope is missing.
+	/// </summary>
+	private List<ulong> MISSING_SCOPE_GUILD_IDS { get; set; } = [];
+
+	/// <summary>
+	///     Gets the guild ids where the applications.commands scope is missing.
+	/// </summary>
+	private static List<ulong> s_missingScopeGuildIdsGlobal { get; } = [];
+
+	/// <summary>
+	///     Gets whether debug is enabled.
+	/// </summary>
+	internal static bool DebugEnabled { get; set; }
+
+	/// <summary>
+	///     Gets the debug level for the logs.
+	/// </summary>
+	internal static LogLevel ApplicationCommandsLogLevel
+		=> DebugEnabled ? LogLevel.Debug : LogLevel.Trace;
+
+	/// <summary>
+	///     Gets the logger.
+	/// </summary>
+	internal static ILogger Logger { get; set; }
+
+	/// <summary>
+	///     Gets whether check through all guilds is enabled.
+	/// </summary>
+	internal static bool CheckAllGuilds { get; set; }
+
+	/// <summary>
+	///     Gets whether the registration check should be manually overridden.
+	/// </summary>
+	internal static bool ManOr { get; set; }
+
+	/// <summary>
+	///     Gets whether interactions should be automatically deffered.
+	/// </summary>
+	internal static bool AutoDeferEnabled { get; set; }
+
+	/// <summary>
+	///     Whether this module finished the startup.
+	/// </summary>
+	internal bool ShardStartupFinished { get; set; } = false;
+
+	/// <summary>
+	///     Whether this module finished the startup.
+	/// </summary>
+	internal static bool StartupFinished { get; set; } = false;
+
+	/// <summary>
+	///     Gets the service provider this module was configured with.
+	/// </summary>
+	public IServiceProvider Services
+		=> Configuration.ServiceProvider;
+
+	/// <summary>
+	///     Whether this module is called by an unit test.
+	/// </summary>
+	internal static bool IsCalledByUnitTest { get; set; } = false;
+
+	/// <summary>
+	///     Gets the shard count.
+	/// </summary>
+	internal static int ShardCount { get; set; } = 1;
+
+	/// <summary>
+	///     Gets the count of shards who finished initializing the module.
+	/// </summary>
+	internal static int FinishedShardCount { get; set; } = 0;
+
+	/// <summary>
+	///     Gets whether the finish event was fired.
+	/// </summary>
+	public static bool FinishFired { get; set; } = false;
+
+	/// <summary>
+	///     Runs setup.
+	///     <note type="caution">DO NOT RUN THIS MANUALLY. DO NOT DO ANYTHING WITH THIS.</note>
 	/// </summary>
 	/// <param name="client">The client to setup on.</param>
 	protected internal override void Setup(DiscordClient client)
@@ -251,7 +295,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Catches all interactions during the startup.
+	///     Catches all interactions during the startup.
 	/// </summary>
 	/// <param name="sender">The client.</param>
 	/// <param name="e">The interaction create event args.</param>
@@ -265,7 +309,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Catches all context menu interactions during the startup.
+	///     Catches all context menu interactions during the startup.
 	/// </summary>
 	/// <param name="sender">The client.</param>
 	/// <param name="e">The context menu interaction create event args.</param>
@@ -278,8 +322,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Fired when the startup is completed.
-	/// <para>Switches the interaction handling from <see cref="CatchInteractionsOnStartup"/> and <see cref="CatchContextMenuInteractionsOnStartup"/> to <see cref="InteractionHandler"/> and <see cref="ContextMenuHandler"/>.</para>
+	///     Fired when the startup is completed.
+	///     <para>
+	///         Switches the interaction handling from <see cref="CatchInteractionsOnStartup" /> and
+	///         <see cref="CatchContextMenuInteractionsOnStartup" /> to <see cref="InteractionHandler" /> and
+	///         <see cref="ContextMenuHandler" />.
+	///     </para>
 	/// </summary>
 	private void FinishedRegistration()
 	{
@@ -291,8 +339,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Cleans the module for a new start of the bot.
-	/// DO NOT USE IF YOU DON'T KNOW WHAT IT DOES.
+	///     Cleans the module for a new start of the bot.
+	///     DO NOT USE IF YOU DON'T KNOW WHAT IT DOES.
 	/// </summary>
 	public void CleanModule()
 	{
@@ -320,8 +368,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Cleans all guild application commands.
-	/// <note type="caution">You normally don't need to execute it.</note>
+	///     Cleans all guild application commands.
+	///     <note type="caution">You normally don't need to execute it.</note>
 	/// </summary>
 	public async Task CleanGuildCommandsAsync()
 	{
@@ -330,14 +378,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Cleans all global application commands.
-	/// <note type="caution">You normally don't need to execute it.</note>
+	///     Cleans all global application commands.
+	///     <note type="caution">You normally don't need to execute it.</note>
 	/// </summary>
 	public async Task CleanGlobalCommandsAsync()
 		=> await this.Client.BulkOverwriteGlobalApplicationCommandsAsync(Array.Empty<DiscordApplicationCommand>()).ConfigureAwait(false);
 
 	/// <summary>
-	/// Registers all commands from a given assembly. The command classes need to be public to be considered for registration.
+	///     Registers all commands from a given assembly. The command classes need to be public to be considered for
+	///     registration.
 	/// </summary>
 	/// <param name="assembly">Assembly to register commands from.</param>
 	/// <param name="guildId">The guild id to register it on.</param>
@@ -349,11 +398,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			return xti.IsModuleCandidateType() && !xti.IsNested;
 		});
 		foreach (var xt in types)
-			this.RegisterGuildCommands(xt, guildId, null);
+			this.RegisterGuildCommands(xt, guildId);
 	}
 
 	/// <summary>
-	/// Registers all commands from a given assembly. The command classes need to be public to be considered for registration.
+	///     Registers all commands from a given assembly. The command classes need to be public to be considered for
+	///     registration.
 	/// </summary>
 	/// <param name="assembly">Assembly to register commands from.</param>
 	public void RegisterGlobalCommands(Assembly assembly)
@@ -364,11 +414,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			return xti.IsModuleCandidateType() && !xti.IsNested;
 		});
 		foreach (var xt in types)
-			this.RegisterGlobalCommands(xt, null);
+			this.RegisterGlobalCommands(xt);
 	}
 
 	/// <summary>
-	/// Registers a command class with optional translation setup for a guild.
+	///     Registers a command class with optional translation setup for a guild.
 	/// </summary>
 	/// <typeparam name="T">The command class to register.</typeparam>
 	/// <param name="guildId">The guild id to register it on.</param>
@@ -377,9 +427,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		=> this._updateList.Add(new(guildId, new(typeof(T), translationSetup)));
 
 	/// <summary>
-	/// Registers a command class with optional translation setup for a guild.
+	///     Registers a command class with optional translation setup for a guild.
 	/// </summary>
-	/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
+	/// <param name="type">The <see cref="System.Type" /> of the command class to register.</param>
 	/// <param name="guildId">The guild id to register it on.</param>
 	/// <param name="translationSetup">A callback to setup translations with.</param>
 	public void RegisterGuildCommands(Type type, ulong guildId, Action<ApplicationCommandsTranslationContext>? translationSetup = null)
@@ -391,7 +441,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Registers a command class with optional translation setup globally.
+	///     Registers a command class with optional translation setup globally.
 	/// </summary>
 	/// <typeparam name="T">The command class to register.</typeparam>
 	/// <param name="translationSetup">A callback to setup translations with.</param>
@@ -399,9 +449,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		=> this._updateList.Add(new(null, new(typeof(T), translationSetup)));
 
 	/// <summary>
-	/// Registers a command class with optional translation setup globally.
+	///     Registers a command class with optional translation setup globally.
 	/// </summary>
-	/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
+	/// <param name="type">The <see cref="System.Type" /> of the command class to register.</param>
 	/// <param name="translationSetup">A callback to setup translations with.</param>
 	public void RegisterGlobalCommands(Type type, Action<ApplicationCommandsTranslationContext>? translationSetup = null)
 	{
@@ -412,7 +462,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Fired when the application commands module is ready.
+	///     Fired when the application commands module is ready.
 	/// </summary>
 	public event AsyncEventHandler<ApplicationCommandsExtension, ApplicationCommandsModuleReadyEventArgs> ApplicationCommandsModuleReady
 	{
@@ -421,13 +471,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Fires the application command module ready event.
-	/// <para>This is fired when the whole module for the <see cref="DiscordClient"/> finished the startup and registration.</para>
-	/// </summary>
-	private readonly AsyncEvent<ApplicationCommandsExtension, ApplicationCommandsModuleReadyEventArgs> _applicationCommandsModuleReady;
-
-	/// <summary>
-	/// Fired when the application commands modules startup is finished.
+	///     Fired when the application commands modules startup is finished.
 	/// </summary>
 	public event AsyncEventHandler<ApplicationCommandsExtension, ApplicationCommandsModuleStartupFinishedEventArgs> ApplicationCommandsModuleStartupFinished
 	{
@@ -436,12 +480,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Fires the application command module startup finished event.
-	/// </summary>
-	private readonly AsyncEvent<ApplicationCommandsExtension, ApplicationCommandsModuleStartupFinishedEventArgs> _applicationCommandsModuleStartupFinished;
-
-	/// <summary>
-	/// Fired when guild commands are registered on a guild.
+	///     Fired when guild commands are registered on a guild.
 	/// </summary>
 	public event AsyncEventHandler<ApplicationCommandsExtension, GuildApplicationCommandsRegisteredEventArgs> GuildApplicationCommandsRegistered
 	{
@@ -450,12 +489,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Fires the guild application command registered event.
-	/// </summary>
-	private readonly AsyncEvent<ApplicationCommandsExtension, GuildApplicationCommandsRegisteredEventArgs> _guildApplicationCommandsRegistered;
-
-	/// <summary>
-	/// Fired when the global commands are registered.
+	///     Fired when the global commands are registered.
 	/// </summary>
 	public event AsyncEventHandler<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs> GlobalApplicationCommandsRegistered
 	{
@@ -464,12 +498,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Fires the global application command registered event.
-	/// </summary>
-	private readonly AsyncEvent<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs> _globalApplicationCommandsRegistered;
-
-	/// <summary>
-	/// Used for RegisterCommands and the <see cref="DisCatSharp.DiscordClient.Ready"/> event.
+	///     Used for RegisterCommands and the <see cref="DisCatSharp.DiscordClient.Ready" /> event.
 	/// </summary>
 	internal async Task UpdateAsync()
 	{
@@ -596,7 +625,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Method for registering commands for a target from modules.
+	///     Method for registering commands for a target from modules.
 	/// </summary>
 	/// <param name="types">The types.</param>
 	/// <param name="guildId">The optional guild id.</param>
@@ -965,7 +994,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Checks the registration startup.
+	///     Checks the registration startup.
 	/// </summary>
 	/// <param name="translation">The optional translations.</param>
 	/// <param name="groupTranslation">The optional group translations.</param>
@@ -1023,7 +1052,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Checks whether we finished up the complete startup.
+	///     Checks whether we finished up the complete startup.
 	/// </summary>
 	private async Task CheckStartupFinishAsync(ApplicationCommandsExtension sender, ApplicationCommandsModuleStartupFinishedEventArgs args)
 	{
@@ -1043,7 +1072,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Interaction handler.
+	///     Interaction handler.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1311,7 +1340,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Gets the interaction type from the interaction data.
+	///     Gets the interaction type from the interaction data.
 	/// </summary>
 	/// <param name="data"></param>
 	/// <returns></returns>
@@ -1333,7 +1362,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Context menu handler.
+	///     Context menu handler.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
@@ -1420,7 +1449,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Runs a command.
+	///     Runs a command.
 	/// </summary>
 	/// <param name="context">The base context.</param>
 	/// <param name="method">The method info.</param>
@@ -1489,7 +1518,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Property injection
+	///     Property injection
 	/// </summary>
 	/// <param name="t">The type.</param>
 	/// <param name="services">The services.</param>
@@ -1549,7 +1578,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Resolves the slash command parameters.
+	///     Resolves the slash command parameters.
 	/// </summary>
 	/// <param name="e">The event arguments.</param>
 	/// <param name="context">The interaction context.</param>
@@ -1597,7 +1626,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					    e.Interaction.Data.Resolved.Attachments.TryGetValue((ulong)option.Value, out var attachment))
 						args.Add(attachment);
 					else
-						args.Add(new DiscordAttachment()
+						args.Add(new DiscordAttachment
 						{
 							Id = (ulong)option.Value,
 							Discord = this.Client.ApiClient.Discord
@@ -1655,7 +1684,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Runs the pre-execution checks.
+	///     Runs the pre-execution checks.
 	/// </summary>
 	/// <param name="method">The method info.</param>
 	/// <param name="context">The base context.</param>
@@ -1726,7 +1755,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Gets the choice attributes from choice provider.
+	///     Gets the choice attributes from choice provider.
 	/// </summary>
 	/// <param name="customAttributes">The custom attributes.</param>
 	/// <param name="guildId">The optional guild id</param>
@@ -1739,40 +1768,37 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 			if (method is null)
 				throw new ArgumentException("ChoiceProviders must inherit from IChoiceProvider.");
-			else
+			var instance = Activator.CreateInstance(choiceProviderAttribute.ProviderType);
+
+			// Abstract class offers more properties that can be set
+			if (choiceProviderAttribute.ProviderType.IsSubclassOf(typeof(ChoiceProvider)))
 			{
-				var instance = Activator.CreateInstance(choiceProviderAttribute.ProviderType);
+				choiceProviderAttribute.ProviderType.GetProperty(nameof(ChoiceProvider.GuildId))
+					?.SetValue(instance, guildId);
 
-				// Abstract class offers more properties that can be set
-				if (choiceProviderAttribute.ProviderType.IsSubclassOf(typeof(ChoiceProvider)))
-				{
-					choiceProviderAttribute.ProviderType.GetProperty(nameof(ChoiceProvider.GuildId))
-						?.SetValue(instance, guildId);
-
-					choiceProviderAttribute.ProviderType.GetProperty(nameof(ChoiceProvider.Services))
-						?.SetValue(instance, Configuration.ServiceProvider);
-				}
-
-				//Gets the choices from the method
-				var result = (await ((Task<IEnumerable<DiscordApplicationCommandOptionChoice>>)method.Invoke(instance, null)!).ConfigureAwait(false)).ToList();
-
-				if (result.Count is not 0)
-					choices.AddRange(result);
+				choiceProviderAttribute.ProviderType.GetProperty(nameof(ChoiceProvider.Services))
+					?.SetValue(instance, Configuration.ServiceProvider);
 			}
+
+			//Gets the choices from the method
+			var result = (await ((Task<IEnumerable<DiscordApplicationCommandOptionChoice>>)method.Invoke(instance, null)!).ConfigureAwait(false)).ToList();
+
+			if (result.Count is not 0)
+				choices.AddRange(result);
 		}
 
 		return choices;
 	}
 
 	/// <summary>
-	/// Gets the choice attributes from enum parameter.
+	///     Gets the choice attributes from enum parameter.
 	/// </summary>
 	/// <param name="enumParam">The enum parameter.</param>
 	private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromEnumParameter(Type enumParam)
 		=> (from Enum enumValue in Enum.GetValues(enumParam) select new DiscordApplicationCommandOptionChoice(enumValue.GetName(), enumValue.ToString())).ToList();
 
 	/// <summary>
-	/// Gets the parameter type.
+	///     Gets the parameter type.
 	/// </summary>
 	/// <param name="type">The type.</param>
 	private static ApplicationCommandOptionType GetParameterType(Type type)
@@ -1802,7 +1828,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Gets the choice attributes from parameter.
+	///     Gets the choice attributes from parameter.
 	/// </summary>
 	/// <param name="choiceAttributes">The choice attributes.</param>
 	private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromParameter(List<ChoiceAttribute> choiceAttributes) =>
@@ -1811,7 +1837,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			: choiceAttributes.Select(att => new DiscordApplicationCommandOptionChoice(att.Name, att.Value)).ToList();
 
 	/// <summary>
-	/// Parses the parameters.
+	///     Parses the parameters.
 	/// </summary>
 	/// <param name="parameters">The parameters.</param>
 	/// <param name="commandName">The command name.</param>
@@ -1903,7 +1929,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}*/
 
 	/// <summary>
-	/// Fires when the execution of a slash command fails.
+	///     Fires when the execution of a slash command fails.
 	/// </summary>
 	public event AsyncEventHandler<ApplicationCommandsExtension, SlashCommandErrorEventArgs> SlashCommandErrored
 	{
@@ -1912,12 +1938,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Fires the slash command error event.
-	/// </summary>
-	private readonly AsyncEvent<ApplicationCommandsExtension, SlashCommandErrorEventArgs> _slashError;
-
-	/// <summary>
-	/// Fires when the execution of a slash command is successful.
+	///     Fires when the execution of a slash command is successful.
 	/// </summary>
 	public event AsyncEventHandler<ApplicationCommandsExtension, SlashCommandExecutedEventArgs> SlashCommandExecuted
 	{
@@ -1926,12 +1947,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Fires the slash command executed event.
-	/// </summary>
-	private readonly AsyncEvent<ApplicationCommandsExtension, SlashCommandExecutedEventArgs> _slashExecuted;
-
-	/// <summary>
-	/// Fires when the execution of a context menu fails.
+	///     Fires when the execution of a context menu fails.
 	/// </summary>
 	public event AsyncEventHandler<ApplicationCommandsExtension, ContextMenuErrorEventArgs> ContextMenuErrored
 	{
@@ -1940,42 +1956,22 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Fires the context menu error event.
-	/// </summary>
-	private readonly AsyncEvent<ApplicationCommandsExtension, ContextMenuErrorEventArgs> _contextMenuErrored;
-
-	/// <summary>
-	/// Fire when the execution of a context menu is successful.
+	///     Fire when the execution of a context menu is successful.
 	/// </summary>
 	public event AsyncEventHandler<ApplicationCommandsExtension, ContextMenuExecutedEventArgs> ContextMenuExecuted
 	{
 		add => this._contextMenuExecuted.Register(value);
 		remove => this._contextMenuExecuted.Unregister(value);
 	}
-
-	/// <summary>
-	/// Fires the context menu executed event.
-	/// </summary>
-	private readonly AsyncEvent<ApplicationCommandsExtension, ContextMenuExecutedEventArgs> _contextMenuExecuted;
 }
 
 /// <summary>
-/// Holds configuration data for setting up an application command.
+///     Holds configuration data for setting up an application command.
 /// </summary>
 internal sealed class ApplicationCommandsModuleConfiguration
 {
 	/// <summary>
-	/// The type of the command module.
-	/// </summary>
-	public Type Type { get; }
-
-	/// <summary>
-	/// The translation setup.
-	/// </summary>
-	public Action<ApplicationCommandsTranslationContext>? Translations { get; }
-
-	/// <summary>
-	/// Creates a new command configuration.
+	///     Creates a new command configuration.
 	/// </summary>
 	/// <param name="type">The type of the command module.</param>
 	/// <param name="translations">The translation setup callback.</param>
@@ -1984,109 +1980,119 @@ internal sealed class ApplicationCommandsModuleConfiguration
 		this.Type = type;
 		this.Translations = translations;
 	}
+
+	/// <summary>
+	///     The type of the command module.
+	/// </summary>
+	public Type Type { get; }
+
+	/// <summary>
+	///     The translation setup.
+	/// </summary>
+	public Action<ApplicationCommandsTranslationContext>? Translations { get; }
 }
 
 /// <summary>
-/// Links a command to its original command module.
+///     Links a command to its original command module.
 /// </summary>
 internal class ApplicationCommandSourceLink
 {
 	/// <summary>
-	/// The command.
+	///     The command.
 	/// </summary>
 	public DiscordApplicationCommand ApplicationCommand { get; set; }
 
 	/// <summary>
-	/// The base/root module the command is contained in.
+	///     The base/root module the command is contained in.
 	/// </summary>
 	public Type RootCommandContainerType { get; set; }
 
 	/// <summary>
-	/// The direct group the command is contained in.
+	///     The direct group the command is contained in.
 	/// </summary>
 	public Type CommandContainerType { get; set; }
 }
 
 /// <summary>
-/// The command method.
+///     The command method.
 /// </summary>
 internal sealed class CommandMethod
 {
 	/// <summary>
-	/// Gets or sets the command id.
+	///     Gets or sets the command id.
 	/// </summary>
 	public ulong CommandId { get; set; }
 
 	/// <summary>
-	/// Gets or sets the name.
+	///     Gets or sets the name.
 	/// </summary>
 	public string Name { get; init; }
 
 	/// <summary>
-	/// Gets or sets the method.
+	///     Gets or sets the method.
 	/// </summary>
 	public MethodInfo Method { get; init; }
 }
 
 /// <summary>
-/// The group command.
+///     The group command.
 /// </summary>
 internal sealed class GroupCommand
 {
 	/// <summary>
-	/// Gets or sets the command id.
+	///     Gets or sets the command id.
 	/// </summary>
 	public ulong CommandId { get; set; }
 
 	/// <summary>
-	/// Gets or sets the name.
+	///     Gets or sets the name.
 	/// </summary>
 	public string Name { get; init; }
 
 	/// <summary>
-	/// Gets or sets the methods.
+	///     Gets or sets the methods.
 	/// </summary>
 	public List<KeyValuePair<string, MethodInfo>> Methods { get; init; } = [];
 }
 
 /// <summary>
-/// The sub group command.
+///     The sub group command.
 /// </summary>
 internal sealed class SubGroupCommand
 {
 	/// <summary>
-	/// Gets or sets the command id.
+	///     Gets or sets the command id.
 	/// </summary>
 	public ulong CommandId { get; set; }
 
 	/// <summary>
-	/// Gets or sets the name.
+	///     Gets or sets the name.
 	/// </summary>
 	public string Name { get; init; }
 
 	/// <summary>
-	/// Gets or sets the sub commands.
+	///     Gets or sets the sub commands.
 	/// </summary>
 	public List<GroupCommand> SubCommands { get; set; } = [];
 }
 
 /// <summary>
-/// The context menu command.
+///     The context menu command.
 /// </summary>
 internal sealed class ContextMenuCommand
 {
 	/// <summary>
-	/// Gets or sets the command id.
+	///     Gets or sets the command id.
 	/// </summary>
 	public ulong CommandId { get; set; }
 
 	/// <summary>
-	/// Gets or sets the name.
+	///     Gets or sets the name.
 	/// </summary>
 	public string Name { get; init; }
 
 	/// <summary>
-	/// Gets or sets the method.
+	///     Gets or sets the method.
 	/// </summary>
 	public MethodInfo Method { get; init; }
 }
@@ -2094,10 +2100,150 @@ internal sealed class ContextMenuCommand
 #region Default Help
 
 /// <summary>
-/// Represents the default help module.
+///     Represents the default help module.
 /// </summary>
 internal sealed class DefaultHelpModule : ApplicationCommandsModule
 {
+	[SlashCommand("help", "Displays command help")]
+	internal async Task DefaultHelpAsync(
+		InteractionContext ctx,
+		[Autocomplete(typeof(DefaultHelpAutoCompleteProvider)), Option("option_one", "top level command to provide help for", true)]
+		string commandName,
+		[Autocomplete(typeof(DefaultHelpAutoCompleteLevelOneProvider)), Option("option_two", "subgroup or command to provide help for", true)]
+		string commandOneName = null,
+		[Autocomplete(typeof(DefaultHelpAutoCompleteLevelTwoProvider)), Option("option_three", "command to provide help for", true)]
+		string commandTwoName = null
+	)
+	{
+		List<DiscordApplicationCommand> applicationCommands = null;
+		var globalCommandsTask = ctx.Client.GetGlobalApplicationCommandsAsync();
+		if (ctx.Guild != null)
+		{
+			var guildCommandsTask = ctx.Client.GetGuildApplicationCommandsAsync(ctx.Guild.Id);
+			await Task.WhenAll(globalCommandsTask, guildCommandsTask).ConfigureAwait(false);
+			applicationCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
+				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+				.GroupBy(ac => ac.Name).Select(x => x.First())
+				.ToList();
+		}
+		else
+		{
+			await Task.WhenAll(globalCommandsTask).ConfigureAwait(false);
+			applicationCommands = globalCommandsTask.Result
+				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+				.GroupBy(ac => ac.Name).Select(x => x.First())
+				.ToList();
+		}
+
+		if (applicationCommands.Count < 1)
+		{
+			if (ApplicationCommandsExtension.Configuration.AutoDefer)
+				await ctx.EditResponseAsync(new DiscordWebhookBuilder()
+					.WithContent("There are no slash commands")).ConfigureAwait(false);
+			else
+				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
+					.WithContent("There are no slash commands").AsEphemeral()).ConfigureAwait(false);
+			return;
+		}
+
+		if (commandTwoName is not null && !commandTwoName.Equals("no_options_for_this_command"))
+		{
+			var commandsWithSubCommands = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.Any(op => op.Type == ApplicationCommandOptionType.SubCommandGroup));
+			var subCommandParent = commandsWithSubCommands.FirstOrDefault(cm => cm.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase));
+			var cmdParent = commandsWithSubCommands.FirstOrDefault(cm => cm.Options.Any(op => op.Name.Equals(commandOneName))).Options
+				.FirstOrDefault(opt => opt.Name.Equals(commandOneName, StringComparison.OrdinalIgnoreCase));
+			var cmd = cmdParent.Options.FirstOrDefault(op => op.Name.Equals(commandTwoName, StringComparison.OrdinalIgnoreCase));
+			var discordEmbed = new DiscordEmbedBuilder
+			{
+				Title = "Help",
+				Description = $"{subCommandParent.Mention.Replace(subCommandParent.Name, $"{subCommandParent.Name} {cmdParent.Name} {cmd.Name}")}: {cmd.Description ?? "No description provided."}"
+			};
+			if (cmd.Options is not null)
+			{
+				var commandOptions = cmd.Options.ToList();
+				var sb = new StringBuilder();
+
+				foreach (var option in commandOptions)
+					sb.Append('`').Append(option.Name).Append("`: ").Append(option.Description ?? "No description provided.").Append('\n');
+
+				sb.Append('\n');
+				discordEmbed.AddField(new("Arguments", sb.ToString().Trim()));
+			}
+
+			if (ApplicationCommandsExtension.Configuration.AutoDefer)
+				await ctx.EditResponseAsync(new DiscordWebhookBuilder()
+					.AddEmbed(discordEmbed)).ConfigureAwait(false);
+			else
+				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral()).ConfigureAwait(false);
+		}
+		else if (commandOneName is not null && commandTwoName is null && !commandOneName.Equals("no_options_for_this_command"))
+		{
+			var commandsWithOptions = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.All(op => op.Type == ApplicationCommandOptionType.SubCommand));
+			var subCommandParent = commandsWithOptions.FirstOrDefault(cm => cm.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase));
+			var subCommand = subCommandParent.Options.FirstOrDefault(op => op.Name.Equals(commandOneName, StringComparison.OrdinalIgnoreCase));
+			var discordEmbed = new DiscordEmbedBuilder
+			{
+				Title = "Help",
+				Description = $"{subCommandParent.Mention.Replace(subCommandParent.Name, $"{subCommandParent.Name} {subCommand.Name}")}: {subCommand.Description ?? "No description provided."}"
+			};
+			if (subCommand.Options is not null)
+			{
+				var commandOptions = subCommand.Options.ToList();
+				var sb = new StringBuilder();
+
+				foreach (var option in commandOptions)
+					sb.Append('`').Append(option.Name).Append("`: ").Append(option.Description ?? "No description provided.").Append('\n');
+
+				sb.Append('\n');
+				discordEmbed.AddField(new("Arguments", sb.ToString().Trim()));
+			}
+
+			if (ApplicationCommandsExtension.Configuration.AutoDefer)
+				await ctx.EditResponseAsync(new DiscordWebhookBuilder().AddEmbed(discordEmbed)).ConfigureAwait(false);
+			else
+				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral()).ConfigureAwait(false);
+		}
+		else
+		{
+			var command = applicationCommands.FirstOrDefault(cm => cm.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase));
+			if (command is null)
+			{
+				if (ApplicationCommandsExtension.Configuration.AutoDefer)
+					await ctx.EditResponseAsync(new DiscordWebhookBuilder()
+						.WithContent($"No command called {commandName} in guild {ctx.Guild.Name}")).ConfigureAwait(false);
+				else
+					await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
+						.WithContent($"No command called {commandName} in guild {ctx.Guild.Name}").AsEphemeral()).ConfigureAwait(false);
+				return;
+			}
+
+			var discordEmbed = new DiscordEmbedBuilder
+			{
+				Title = "Help",
+				Description = $"{command.Mention}: {command.Description ?? "No description provided."}"
+			}.AddField(new("Command is NSFW", command.IsNsfw.ToString()));
+			if (command.Options is not null)
+			{
+				var commandOptions = command.Options.ToList();
+				var sb = new StringBuilder();
+
+				foreach (var option in commandOptions)
+					sb.Append('`').Append(option.Name).Append("`: ").Append(option.Description ?? "No description provided.").Append('\n');
+
+				sb.Append('\n');
+				discordEmbed.AddField(new("Arguments", sb.ToString().Trim()));
+			}
+
+			if (ApplicationCommandsExtension.Configuration.AutoDefer)
+				await ctx.EditResponseAsync(new DiscordWebhookBuilder().AddEmbed(discordEmbed)).ConfigureAwait(false);
+			else
+				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral()).ConfigureAwait(false);
+		}
+	}
+
 	public sealed class DefaultHelpAutoCompleteProvider : IAutocompleteProvider
 	{
 		public async Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context)
@@ -2211,15 +2357,25 @@ internal sealed class DefaultHelpModule : ApplicationCommandsModule
 			return options.AsEnumerable();
 		}
 	}
+}
 
-	[SlashCommand("help", "Displays command help")]
-	internal async Task DefaultHelpAsync(
+#endregion
+
+#region Default User Apps Help
+
+/// <summary>
+///     Represents the default user apps help module.
+/// </summary>
+internal sealed class DefaultUserAppsHelpModule : ApplicationCommandsModule
+{
+	[SlashCommand("help", "Displays command help", false, [InteractionContextType.Guild, InteractionContextType.BotDm, InteractionContextType.PrivateChannel], [ApplicationCommandIntegrationTypes.GuildInstall, ApplicationCommandIntegrationTypes.UserInstall])]
+	internal async Task DefaulUserAppstHelpAsync(
 		InteractionContext ctx,
-		[Autocomplete(typeof(DefaultHelpAutoCompleteProvider)), Option("option_one", "top level command to provide help for", true)]
+		[Autocomplete(typeof(DefaultUserAppsHelpAutoCompleteProvider)), Option("option_one", "top level command to provide help for", true)]
 		string commandName,
-		[Autocomplete(typeof(DefaultHelpAutoCompleteLevelOneProvider)), Option("option_two", "subgroup or command to provide help for", true)]
+		[Autocomplete(typeof(DefaultUserAppsHelpAutoCompleteLevelOneProvider)), Option("option_two", "subgroup or command to provide help for", true)]
 		string commandOneName = null,
-		[Autocomplete(typeof(DefaultHelpAutoCompleteLevelTwoProvider)), Option("option_three", "command to provide help for", true)]
+		[Autocomplete(typeof(DefaultUserAppsHelpAutoCompleteLevelTwoProvider)), Option("option_three", "command to provide help for", true)]
 		string commandTwoName = null
 	)
 	{
@@ -2236,7 +2392,7 @@ internal sealed class DefaultHelpModule : ApplicationCommandsModule
 		}
 		else
 		{
-			await Task.WhenAll(globalCommandsTask).ConfigureAwait(false);
+			await globalCommandsTask.ConfigureAwait(false);
 			applicationCommands = globalCommandsTask.Result
 				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
 				.GroupBy(ac => ac.Name).Select(x => x.First())
@@ -2247,10 +2403,10 @@ internal sealed class DefaultHelpModule : ApplicationCommandsModule
 		{
 			if (ApplicationCommandsExtension.Configuration.AutoDefer)
 				await ctx.EditResponseAsync(new DiscordWebhookBuilder()
-					.WithContent($"There are no slash commands")).ConfigureAwait(false);
+					.WithContent("There are no slash commands")).ConfigureAwait(false);
 			else
 				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
-					.WithContent($"There are no slash commands").AsEphemeral()).ConfigureAwait(false);
+					.WithContent("There are no slash commands").AsEphemeral()).ConfigureAwait(false);
 			return;
 		}
 
@@ -2351,17 +2507,7 @@ internal sealed class DefaultHelpModule : ApplicationCommandsModule
 					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral()).ConfigureAwait(false);
 		}
 	}
-}
 
-#endregion
-
-#region Default User Apps Help
-
-/// <summary>
-/// Represents the default user apps help module.
-/// </summary>
-internal sealed class DefaultUserAppsHelpModule : ApplicationCommandsModule
-{
 	public sealed class DefaultUserAppsHelpAutoCompleteProvider : IAutocompleteProvider
 	{
 		public async Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context)
@@ -2473,146 +2619,6 @@ internal sealed class DefaultUserAppsHelpModule : ApplicationCommandsModule
 			}
 
 			return options.AsEnumerable();
-		}
-	}
-
-	[SlashCommand("help", "Displays command help", false, [InteractionContextType.Guild, InteractionContextType.BotDm, InteractionContextType.PrivateChannel], [ApplicationCommandIntegrationTypes.GuildInstall, ApplicationCommandIntegrationTypes.UserInstall])]
-	internal async Task DefaulUserAppstHelpAsync(
-		InteractionContext ctx,
-		[Autocomplete(typeof(DefaultUserAppsHelpAutoCompleteProvider)), Option("option_one", "top level command to provide help for", true)]
-		string commandName,
-		[Autocomplete(typeof(DefaultUserAppsHelpAutoCompleteLevelOneProvider)), Option("option_two", "subgroup or command to provide help for", true)]
-		string commandOneName = null,
-		[Autocomplete(typeof(DefaultUserAppsHelpAutoCompleteLevelTwoProvider)), Option("option_three", "command to provide help for", true)]
-		string commandTwoName = null
-	)
-	{
-		List<DiscordApplicationCommand> applicationCommands = null;
-		var globalCommandsTask = ctx.Client.GetGlobalApplicationCommandsAsync();
-		if (ctx.Guild != null)
-		{
-			var guildCommandsTask = ctx.Client.GetGuildApplicationCommandsAsync(ctx.Guild.Id);
-			await Task.WhenAll(globalCommandsTask, guildCommandsTask).ConfigureAwait(false);
-			applicationCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
-				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
-				.GroupBy(ac => ac.Name).Select(x => x.First())
-				.ToList();
-		}
-		else
-		{
-			await globalCommandsTask.ConfigureAwait(false);
-			applicationCommands = globalCommandsTask.Result
-				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
-				.GroupBy(ac => ac.Name).Select(x => x.First())
-				.ToList();
-		}
-
-		if (applicationCommands.Count < 1)
-		{
-			if (ApplicationCommandsExtension.Configuration.AutoDefer)
-				await ctx.EditResponseAsync(new DiscordWebhookBuilder()
-					.WithContent($"There are no slash commands")).ConfigureAwait(false);
-			else
-				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
-					.WithContent($"There are no slash commands").AsEphemeral()).ConfigureAwait(false);
-			return;
-		}
-
-		if (commandTwoName is not null && !commandTwoName.Equals("no_options_for_this_command"))
-		{
-			var commandsWithSubCommands = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.Any(op => op.Type == ApplicationCommandOptionType.SubCommandGroup));
-			var subCommandParent = commandsWithSubCommands.FirstOrDefault(cm => cm.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase));
-			var cmdParent = commandsWithSubCommands.FirstOrDefault(cm => cm.Options.Any(op => op.Name.Equals(commandOneName))).Options
-				.FirstOrDefault(opt => opt.Name.Equals(commandOneName, StringComparison.OrdinalIgnoreCase));
-			var cmd = cmdParent.Options.FirstOrDefault(op => op.Name.Equals(commandTwoName, StringComparison.OrdinalIgnoreCase));
-			var discordEmbed = new DiscordEmbedBuilder
-			{
-				Title = "Help",
-				Description = $"{subCommandParent.Mention.Replace(subCommandParent.Name, $"{subCommandParent.Name} {cmdParent.Name} {cmd.Name}")}: {cmd.Description ?? "No description provided."}"
-			};
-			if (cmd.Options is not null)
-			{
-				var commandOptions = cmd.Options.ToList();
-				var sb = new StringBuilder();
-
-				foreach (var option in commandOptions)
-					sb.Append('`').Append(option.Name).Append("`: ").Append(option.Description ?? "No description provided.").Append('\n');
-
-				sb.Append('\n');
-				discordEmbed.AddField(new("Arguments", sb.ToString().Trim()));
-			}
-
-			if (ApplicationCommandsExtension.Configuration.AutoDefer)
-				await ctx.EditResponseAsync(new DiscordWebhookBuilder()
-					.AddEmbed(discordEmbed)).ConfigureAwait(false);
-			else
-				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
-					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral()).ConfigureAwait(false);
-		}
-		else if (commandOneName is not null && commandTwoName is null && !commandOneName.Equals("no_options_for_this_command"))
-		{
-			var commandsWithOptions = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.All(op => op.Type == ApplicationCommandOptionType.SubCommand));
-			var subCommandParent = commandsWithOptions.FirstOrDefault(cm => cm.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase));
-			var subCommand = subCommandParent.Options.FirstOrDefault(op => op.Name.Equals(commandOneName, StringComparison.OrdinalIgnoreCase));
-			var discordEmbed = new DiscordEmbedBuilder
-			{
-				Title = "Help",
-				Description = $"{subCommandParent.Mention.Replace(subCommandParent.Name, $"{subCommandParent.Name} {subCommand.Name}")}: {subCommand.Description ?? "No description provided."}"
-			};
-			if (subCommand.Options is not null)
-			{
-				var commandOptions = subCommand.Options.ToList();
-				var sb = new StringBuilder();
-
-				foreach (var option in commandOptions)
-					sb.Append('`').Append(option.Name).Append("`: ").Append(option.Description ?? "No description provided.").Append('\n');
-
-				sb.Append('\n');
-				discordEmbed.AddField(new("Arguments", sb.ToString().Trim()));
-			}
-
-			if (ApplicationCommandsExtension.Configuration.AutoDefer)
-				await ctx.EditResponseAsync(new DiscordWebhookBuilder().AddEmbed(discordEmbed)).ConfigureAwait(false);
-			else
-				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
-					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral()).ConfigureAwait(false);
-		}
-		else
-		{
-			var command = applicationCommands.FirstOrDefault(cm => cm.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase));
-			if (command is null)
-			{
-				if (ApplicationCommandsExtension.Configuration.AutoDefer)
-					await ctx.EditResponseAsync(new DiscordWebhookBuilder()
-						.WithContent($"No command called {commandName} in guild {ctx.Guild.Name}")).ConfigureAwait(false);
-				else
-					await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
-						.WithContent($"No command called {commandName} in guild {ctx.Guild.Name}").AsEphemeral()).ConfigureAwait(false);
-				return;
-			}
-
-			var discordEmbed = new DiscordEmbedBuilder
-			{
-				Title = "Help",
-				Description = $"{command.Mention}: {command.Description ?? "No description provided."}"
-			}.AddField(new("Command is NSFW", command.IsNsfw.ToString()));
-			if (command.Options is not null)
-			{
-				var commandOptions = command.Options.ToList();
-				var sb = new StringBuilder();
-
-				foreach (var option in commandOptions)
-					sb.Append('`').Append(option.Name).Append("`: ").Append(option.Description ?? "No description provided.").Append('\n');
-
-				sb.Append('\n');
-				discordEmbed.AddField(new("Arguments", sb.ToString().Trim()));
-			}
-
-			if (ApplicationCommandsExtension.Configuration.AutoDefer)
-				await ctx.EditResponseAsync(new DiscordWebhookBuilder().AddEmbed(discordEmbed)).ConfigureAwait(false);
-			else
-				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
-					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral()).ConfigureAwait(false);
 		}
 	}
 }

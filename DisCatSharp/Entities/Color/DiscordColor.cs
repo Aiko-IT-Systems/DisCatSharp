@@ -5,37 +5,37 @@ using System.Linq;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents a color used in Discord API.
+///     Represents a color used in Discord API.
 /// </summary>
 public partial struct DiscordColor
 {
 	private static readonly char[] s_hexAlphabet = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
 
 	/// <summary>
-	/// Gets the integer representation of this color.
+	///     Gets the integer representation of this color.
 	/// </summary>
 	public int Value { get; }
 
 	/// <summary>
-	/// Gets the red component of this color as an 8-bit integer.
+	///     Gets the red component of this color as an 8-bit integer.
 	/// </summary>
 	public byte R
 		=> (byte)((this.Value >> 16) & 0xFF);
 
 	/// <summary>
-	/// Gets the green component of this color as an 8-bit integer.
+	///     Gets the green component of this color as an 8-bit integer.
 	/// </summary>
 	public byte G
 		=> (byte)((this.Value >> 8) & 0xFF);
 
 	/// <summary>
-	/// Gets the blue component of this color as an 8-bit integer.
+	///     Gets the blue component of this color as an 8-bit integer.
 	/// </summary>
 	public byte B
 		=> (byte)(this.Value & 0xFF);
 
 	/// <summary>
-	/// Creates a new color with specified value.
+	///     Creates a new color with specified value.
 	/// </summary>
 	/// <param name="color">Value of the color.</param>
 	public DiscordColor(int color)
@@ -44,7 +44,7 @@ public partial struct DiscordColor
 	}
 
 	/// <summary>
-	/// Creates a new color with specified values for red, green, and blue components.
+	///     Creates a new color with specified values for red, green, and blue components.
 	/// </summary>
 	/// <param name="r">Value of the red component.</param>
 	/// <param name="g">Value of the green component.</param>
@@ -55,7 +55,7 @@ public partial struct DiscordColor
 	}
 
 	/// <summary>
-	/// Creates a new color with specified values for red, green, and blue components.
+	///     Creates a new color with specified values for red, green, and blue components.
 	/// </summary>
 	/// <param name="r">Value of the red component.</param>
 	/// <param name="g">Value of the green component.</param>
@@ -73,7 +73,7 @@ public partial struct DiscordColor
 	}
 
 	/// <summary>
-	/// Creates a new color from specified string representation.
+	///     Creates a new color from specified string representation.
 	/// </summary>
 	/// <param name="color">String representation of the color. Must be 6 hexadecimal characters, optionally with # prefix.</param>
 	public DiscordColor(string color)
@@ -87,7 +87,7 @@ public partial struct DiscordColor
 		color = color.ToUpper();
 		if (color.Length == 7 && color[0] != '#')
 			throw new ArgumentException("7-character colors must begin with #.", nameof(color));
-		else if (color.Length == 7)
+		if (color.Length == 7)
 			color = color[1..];
 
 		if (color.Any(xc => !s_hexAlphabet.Contains(xc)))
@@ -97,7 +97,7 @@ public partial struct DiscordColor
 	}
 
 	/// <summary>
-	/// Gets a string representation of this color.
+	///     Gets a string representation of this color.
 	/// </summary>
 	/// <returns>String representation of this color.</returns>
 	public override string ToString() => $"#{this.Value:X6}";

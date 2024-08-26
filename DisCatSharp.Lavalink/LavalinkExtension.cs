@@ -12,54 +12,21 @@ using DisCatSharp.Net;
 namespace DisCatSharp.Lavalink;
 
 /// <summary>
-/// Represents the lavalink extension.
+///     Represents the lavalink extension.
 /// </summary>
 public sealed class LavalinkExtension : BaseExtension
 {
 	/// <summary>
-	/// Triggered whenever a session disconnects.
+	///     The internal dictionary of connected Lavalink sessions.
 	/// </summary>
-	public event AsyncEventHandler<LavalinkExtension, LavalinkSessionDisconnectedEventArgs> SessionDisconnected
-	{
-		add => this._sessionDisconnected.Register(value);
-		remove => this._sessionDisconnected.Unregister(value);
-	}
+	private readonly ConcurrentDictionary<ConnectionEndpoint, LavalinkSession> _connectedSessions = new();
+
+	private AsyncEvent<LavalinkExtension, LavalinkSessionConnectedEventArgs> _sessionConnected;
 
 	private AsyncEvent<LavalinkExtension, LavalinkSessionDisconnectedEventArgs> _sessionDisconnected;
 
 	/// <summary>
-	/// Triggered whenever a session connects.
-	/// </summary>
-	public event AsyncEventHandler<LavalinkExtension, LavalinkSessionConnectedEventArgs> SessionConnected
-	{
-		add => this._sessionConnected.Register(value);
-		remove => this._sessionConnected.Unregister(value);
-	}
-
-	private AsyncEvent<LavalinkExtension, LavalinkSessionConnectedEventArgs> _sessionConnected;
-
-	/// <summary>
-	/// Gets a dictionary of connected Lavalink sessions for the extension.
-	/// </summary>
-	public IReadOnlyDictionary<ConnectionEndpoint, LavalinkSession> ConnectedSessions { get; }
-
-	/// <summary>
-	/// The internal dictionary of connected Lavalink sessions.
-	/// </summary>
-	private readonly ConcurrentDictionary<ConnectionEndpoint, LavalinkSession> _connectedSessions = new();
-
-	/// <summary>
-	/// Gets the rest client used to communicate with the lavalink server.
-	/// </summary>
-	private LavalinkRestClient REST { get; set; } = null!;
-
-	/// <summary>
-	/// Gets the lavalink configuration.
-	/// </summary>
-	private LavalinkConfiguration CONFIGURATION { get; set; } = null!;
-
-	/// <summary>
-	/// Creates a new instance of this Lavalink extension.
+	///     Creates a new instance of this Lavalink extension.
 	/// </summary>
 	internal LavalinkExtension()
 	{
@@ -67,7 +34,40 @@ public sealed class LavalinkExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// DO NOT USE THIS MANUALLY.
+	///     Gets a dictionary of connected Lavalink sessions for the extension.
+	/// </summary>
+	public IReadOnlyDictionary<ConnectionEndpoint, LavalinkSession> ConnectedSessions { get; }
+
+	/// <summary>
+	///     Gets the rest client used to communicate with the lavalink server.
+	/// </summary>
+	private LavalinkRestClient REST { get; set; } = null!;
+
+	/// <summary>
+	///     Gets the lavalink configuration.
+	/// </summary>
+	private LavalinkConfiguration CONFIGURATION { get; set; } = null!;
+
+	/// <summary>
+	///     Triggered whenever a session disconnects.
+	/// </summary>
+	public event AsyncEventHandler<LavalinkExtension, LavalinkSessionDisconnectedEventArgs> SessionDisconnected
+	{
+		add => this._sessionDisconnected.Register(value);
+		remove => this._sessionDisconnected.Unregister(value);
+	}
+
+	/// <summary>
+	///     Triggered whenever a session connects.
+	/// </summary>
+	public event AsyncEventHandler<LavalinkExtension, LavalinkSessionConnectedEventArgs> SessionConnected
+	{
+		add => this._sessionConnected.Register(value);
+		remove => this._sessionConnected.Unregister(value);
+	}
+
+	/// <summary>
+	///     DO NOT USE THIS MANUALLY.
 	/// </summary>
 	/// <param name="client">DO NOT USE THIS MANUALLY.</param>
 	/// <exception cref="InvalidOperationException">Thrown when a developer tries to manually initialize it.</exception>
@@ -82,7 +82,7 @@ public sealed class LavalinkExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Connect to a Lavalink session.
+	///     Connect to a Lavalink session.
 	/// </summary>
 	/// <param name="config">Lavalink client configuration.</param>
 	/// <returns>The established Lavalink connection.</returns>
@@ -129,7 +129,7 @@ public sealed class LavalinkExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Gets the Lavalink session connection for the specified endpoint.
+	///     Gets the Lavalink session connection for the specified endpoint.
 	/// </summary>
 	/// <param name="endpoint">Endpoint at which the session resides.</param>
 	/// <returns>Lavalink session connection.</returns>
@@ -137,9 +137,9 @@ public sealed class LavalinkExtension : BaseExtension
 		=> this._connectedSessions.TryGetValue(endpoint, out var ep) ? ep : null;
 
 	/// <summary>
-	/// Gets a Lavalink session connection based on load balancing and an optional voice region.
+	///     Gets a Lavalink session connection based on load balancing and an optional voice region.
 	/// </summary>
-	/// <param name="region">The region to compare with the session's <see cref="LavalinkConfiguration.Region"/>, if any.</param>
+	/// <param name="region">The region to compare with the session's <see cref="LavalinkConfiguration.Region" />, if any.</param>
 	/// <returns>The least load affected session connection, or null if no sessions are present.</returns>
 	public LavalinkSession? GetIdealSession(DiscordVoiceRegion? region = null)
 	{
@@ -160,7 +160,7 @@ public sealed class LavalinkExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Gets a Lavalink guild player from a <see cref="DiscordGuild"/>.
+	///     Gets a Lavalink guild player from a <see cref="DiscordGuild" />.
 	/// </summary>
 	/// <param name="guild">The guild the player is on.</param>
 	/// <returns>The found guild player, or null if one could not be found.</returns>
@@ -172,7 +172,7 @@ public sealed class LavalinkExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Filters the by load.
+	///     Filters the by load.
 	/// </summary>
 	/// <param name="sessions">The sessions.</param>
 	private LavalinkSession FilterByLoad(LavalinkSession[] sessions)
@@ -214,14 +214,14 @@ public sealed class LavalinkExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Fired when a session disconnected and removes it from <see cref="ConnectedSessions"/>.
+	///     Fired when a session disconnected and removes it from <see cref="ConnectedSessions" />.
 	/// </summary>
 	/// <param name="session">The disconnected session.</param>
 	private void LavalinkSessionDisconnect(LavalinkSession session)
 		=> this._connectedSessions.TryRemove(session.NodeEndpoint, out _);
 
 	/// <summary>
-	/// Fired when a session disconnected.
+	///     Fired when a session disconnected.
 	/// </summary>
 	/// <param name="session">The disconnected session.</param>
 	/// <param name="args">The event args.</param>
@@ -229,7 +229,7 @@ public sealed class LavalinkExtension : BaseExtension
 		=> this._sessionDisconnected.InvokeAsync(this, args);
 
 	/// <summary>
-	/// Fired when a session connected.
+	///     Fired when a session connected.
 	/// </summary>
 	/// <param name="session">The connected session.</param>
 	/// <param name="args">The event args.</param>

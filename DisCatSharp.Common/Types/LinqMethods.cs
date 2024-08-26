@@ -6,12 +6,12 @@ using System.Linq;
 namespace DisCatSharp.Common;
 
 /// <summary>
-/// Various Methods for Linq
+///     Various Methods for Linq
 /// </summary>
 public static class LinqMethods
 {
 	/// <summary>
-	/// Safely tries to get the first match out of a list.
+	///     Safely tries to get the first match out of a list.
 	/// </summary>
 	/// <typeparam name="TSource">Value type of list.</typeparam>
 	/// <param name="list">The list to use.</param>
@@ -33,7 +33,7 @@ public static class LinqMethods
 	}
 
 	/// <summary>
-	/// Safely tries to extract the value of the first match where target key is found, otherwise null.
+	///     Safely tries to extract the value of the first match where target key is found, otherwise null.
 	/// </summary>
 	/// <typeparam name="TKey">Key type of dictionary.</typeparam>
 	/// <typeparam name="TValue">Value type of dictionary.</typeparam>

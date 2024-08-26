@@ -8,17 +8,12 @@ using DisCatSharp.Enums;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents the guild features.
+///     Represents the guild features.
 /// </summary>
 public class GuildFeatures
 {
 	/// <summary>
-	/// List of all guild features.
-	/// </summary>
-	public List<GuildFeaturesEnum> Features { get; }
-
-	/// <summary>
-	/// Checks the guild features and constructs a new <see cref="GuildFeatures"/> object.
+	///     Checks the guild features and constructs a new <see cref="GuildFeatures" /> object.
 	/// </summary>
 	/// <param name="guild">Guild to check</param>
 	public GuildFeatures(DiscordGuild guild)
@@ -121,7 +116,12 @@ public class GuildFeatures
 	}
 
 	/// <summary>
-	/// Checks whether the guild has a feature enabled.
+	///     List of all guild features.
+	/// </summary>
+	public List<GuildFeaturesEnum> Features { get; }
+
+	/// <summary>
+	///     Checks whether the guild has a feature enabled.
 	/// </summary>
 	/// <param name="flag">The feature you'd like to check for.</param>
 	/// <returns>Whether the guild has the requested feature.</returns>
@@ -132,16 +132,14 @@ public class GuildFeatures
 	{
 		if (!humanReadable) return string.Join(separator, this.Features);
 
-		else
-		{
-			var humanReadableFeatures = this.Features.Select(x => AddSpacesToWord(x.ToString()));
+		var humanReadableFeatures = this.Features.Select(x => AddSpacesToWord(x.ToString()));
 
-			return string.Join(separator, humanReadableFeatures);
-		}
+		return string.Join(separator, humanReadableFeatures);
 	}
 
 	/// <summary>
-	/// Converts a string of characters (here: enum) into a string of characters separated by spaces after a capital letter.
+	///     Converts a string of characters (here: enum) into a string of characters separated by spaces after a capital
+	///     letter.
 	/// </summary>
 	/// <param name="text">String of text to convert</param>
 	/// <returns>String separated by a space after every capital letter.</returns>
@@ -164,460 +162,462 @@ public class GuildFeatures
 }
 
 /// <summary>
-/// Represents the guild features.
+///     Represents the guild features.
 /// </summary>
 public enum GuildFeaturesEnum
 {
 	/// <summary>
-	/// Guild has access to set an animated guild icon.
+	///     Guild has access to set an animated guild icon.
 	/// </summary>
 	CanSetAnimatedIcon,
 
 	/// <summary>
-	/// Guild has access to set a guild banner image.
+	///     Guild has access to set a guild banner image.
 	/// </summary>
 	CanSetBanner,
 
 	/// <summary>
-	/// Guild has access to use commerce features (i.e. create store channels)
+	///     Guild has access to use commerce features (i.e. create store channels)
 	/// </summary>
 	[DiscordDeprecated("Store applications are EOL.")]
 	CanCreateStoreChannels,
 
 	/// <summary>
-	/// Guild can enable Welcome Screen, Membership Screening, Stage Channels, News Channels and receives community updates.
-	/// Furthermore the guild can apply as a partner and for the discovery (if the prerequisites are given).
-	/// <see cref="ChannelType.Stage"/> and <see cref="ChannelType.News"/> is usable.
+	///     Guild can enable Welcome Screen, Membership Screening, Stage Channels, News Channels and receives community
+	///     updates.
+	///     Furthermore the guild can apply as a partner and for the discovery (if the prerequisites are given).
+	///     <see cref="ChannelType.Stage" /> and <see cref="ChannelType.News" /> is usable.
 	/// </summary>
 	HasCommunityEnabled,
 
 	/// <summary>
-	/// Guild is able to be discovered in the discovery.
+	///     Guild is able to be discovered in the discovery.
 	/// </summary>
 	IsDiscoverable,
 
 	/// <summary>
-	/// Guild is able to be featured in the discovery.
+	///     Guild is able to be featured in the discovery.
 	/// </summary>
 	IsFeatureable,
 
 	/// <summary>
-	/// Guild has access to set an invite splash background.
+	///     Guild has access to set an invite splash background.
 	/// </summary>
 	CanSetInviteSplash,
 
 	/// <summary>
-	/// Guild has enabled Membership Screening.
+	///     Guild has enabled Membership Screening.
 	/// </summary>
 	HasMembershipScreeningEnabled,
 
 	/// <summary>
-	/// Guild has access to create news channels.
-	/// <see cref="ChannelType.News"/> is usable.
+	///     Guild has access to create news channels.
+	///     <see cref="ChannelType.News" /> is usable.
 	/// </summary>
 	CanCreateNewsChannels,
 
 	/// <summary>
-	/// Guild is partnered.
+	///     Guild is partnered.
 	/// </summary>
 	IsPartnered,
 
 	/// <summary>
-	/// Guild has increased custom emoji slots.
+	///     Guild has increased custom emoji slots.
 	/// </summary>
 	CanUploadMoreEmojis,
 
 	/// <summary>
-	/// Guild can be previewed before joining via Membership Screening or the discovery.
+	///     Guild can be previewed before joining via Membership Screening or the discovery.
 	/// </summary>
 	HasPreviewEnabled,
 
 	/// <summary>
-	/// Guild has access to set a vanity URL.
+	///     Guild has access to set a vanity URL.
 	/// </summary>
 	CanSetVanityUrl,
 
 	/// <summary>
-	/// Guild is verified.
+	///     Guild is verified.
 	/// </summary>
 	IsVerified,
 
 	/// <summary>
-	/// Guild has access to set 384kbps bitrate in voice (previously VIP voice servers).
+	///     Guild has access to set 384kbps bitrate in voice (previously VIP voice servers).
 	/// </summary>
 	CanAccessVipRegions,
 
 	/// <summary>
-	/// Guild has enabled the welcome screen.
+	///     Guild has enabled the welcome screen.
 	/// </summary>
 	HasWelcomeScreenEnabled,
 
 	/// <summary>
-	/// Guild has enabled ticketed events.
+	///     Guild has enabled ticketed events.
 	/// </summary>
 	HasTicketedEventsEnabled,
 
 	/// <summary>
-	/// Guild has enabled monetization.
+	///     Guild has enabled monetization.
 	/// </summary>
 	HasMonetizationEnabled,
 
 	/// <summary>
-	/// Guild has increased custom sticker slots.
+	///     Guild has increased custom sticker slots.
 	/// </summary>
 	CanUploadMoreStickers,
 
 	/// <summary>
-	/// Guild has access to the three day archive time for threads.
-	/// Needs Premium Tier 1 (<see cref="PremiumTier.TierOne"/>).
+	///     Guild has access to the three day archive time for threads.
+	///     Needs Premium Tier 1 (<see cref="PremiumTier.TierOne" />).
 	/// </summary>
 	[DiscordDeprecated("Auto archive duration isn't locked to boosts anymore.")]
 	CanSetThreadArchiveDurationThreeDays,
 
 	/// <summary>
-	/// Guild has access to the seven day archive time for threads.
-	/// Needs Premium Tier 2 (<see cref="PremiumTier.TierTwo"/>).
+	///     Guild has access to the seven day archive time for threads.
+	///     Needs Premium Tier 2 (<see cref="PremiumTier.TierTwo" />).
 	/// </summary>
 	[DiscordDeprecated("Auto archive duration isn't locked to boosts anymore.")]
 	CanSetThreadArchiveDurationSevenDays,
 
 	/// <summary>
-	/// Guild has access to create private threads.
-	/// Needs Premium Tier 2 (<see cref="PremiumTier.TierTwo"/>).
+	///     Guild has access to create private threads.
+	///     Needs Premium Tier 2 (<see cref="PremiumTier.TierTwo" />).
 	/// </summary>
 	[DiscordDeprecated("Private threads aren't bound to the server boost level anymore and can be used by everyone.")]
 	CanCreatePrivateThreads,
 
 	/// <summary>
-	/// Guild is a hub.
-	/// <see cref="ChannelType.GuildDirectory"/> is usable.
+	///     Guild is a hub.
+	///     <see cref="ChannelType.GuildDirectory" /> is usable.
 	/// </summary>
 	IsHub,
 
 	/// <summary>
-	/// Guild is in a hub.
-	/// https://github.com/discord/discord-api-docs/pull/3757/commits/4932d92c9d0c783861bc715bf7ebbabb15114e34
+	///     Guild is in a hub.
+	///     https://github.com/discord/discord-api-docs/pull/3757/commits/4932d92c9d0c783861bc715bf7ebbabb15114e34
 	/// </summary>
 	HasDirectoryEntry,
 
 	/// <summary>
-	/// Guild is linked to a hub.
+	///     Guild is linked to a hub.
 	/// </summary>
 	IsLinkedToHub,
 
 	/// <summary>
-	/// Guild has full access to threads.
-	/// Old Feature.
+	///     Guild has full access to threads.
+	///     Old Feature.
 	/// </summary>
 	HasThreadTestingEnabled,
 
 	/// <summary>
-	/// Guild has access to threads.
+	///     Guild has access to threads.
 	/// </summary>
 	HasThreadsEnabled,
 
 	/// <summary>
-	/// Guild can set role icons.
+	///     Guild can set role icons.
 	/// </summary>
 	CanSetRoleIcons,
 
 	/// <summary>
-	/// Guild has the new thread permissions.
-	/// Old Feature.
+	///     Guild has the new thread permissions.
+	///     Old Feature.
 	/// </summary>
 	HasNewThreadPermissions,
 
 	/// <summary>
-	/// Guild can set thread default auto archive duration.
-	/// Old Feature.
+	///     Guild can set thread default auto archive duration.
+	///     Old Feature.
 	/// </summary>
 	CanSetThreadDefaultAutoArchiveDuration,
 
 	/// <summary>
-	/// Guild has enabled role subscriptions.
+	///     Guild has enabled role subscriptions.
 	/// </summary>
 	HasRoleSubscriptionsEnabled,
 
 	/// <summary>
-	/// Guild role subscriptions as purchaseable.
+	///     Guild role subscriptions as purchaseable.
 	/// </summary>
 	RoleSubscriptionsIsAvailableForPurchase,
 
 	/// <summary>
-	/// Guild has premium tier 3 override.
+	///     Guild has premium tier 3 override.
 	/// </summary>
 	PremiumTierThreeOverride,
 
 	/// <summary>
-	/// Guild has access to text in voice.
-	/// Restricted to <see cref="IsStaffOnly"/>.
+	///     Guild has access to text in voice.
+	///     Restricted to <see cref="IsStaffOnly" />.
 	/// </summary>
 	TextInVoiceEnabled,
 
 	/// <summary>
-	/// Guild can set an animated banner.
-	/// Needs Premium Tier 3 (<see cref="PremiumTier.TierThree"/>).
+	///     Guild can set an animated banner.
+	///     Needs Premium Tier 3 (<see cref="PremiumTier.TierThree" />).
 	/// </summary>
 	CanSetAnimatedBanner,
 
 	/// <summary>
-	/// Guild can set an animated banner.
-	/// Needs Premium Tier 3 (<see cref="PremiumTier.TierThree"/>).
+	///     Guild can set an animated banner.
+	///     Needs Premium Tier 3 (<see cref="PremiumTier.TierThree" />).
 	/// </summary>
 	[DiscordDeprecated("Feature was removed")]
 	CanSetChannelBanner,
 
 	/// <summary>
-	/// Allows members to customize their avatar, banner and bio for that server.
+	///     Allows members to customize their avatar, banner and bio for that server.
 	/// </summary>
 	HasMemberProfiles,
 
 	/// <summary>
-	/// Guild is restricted to users with the <see cref="UserFlags.Staff"/> badge.
+	///     Guild is restricted to users with the <see cref="UserFlags.Staff" /> badge.
 	/// </summary>
 	IsStaffOnly,
 
 	/// <summary>
-	/// Guild can use and setup the experimental auto moderation feature.
+	///     Guild can use and setup the experimental auto moderation feature.
 	/// </summary>
 	CanSetupAutoModeration,
 
 	/// <summary>
-	/// Guild has access to home.
+	///     Guild has access to home.
 	/// </summary>
 	GuildHomeTest,
 
 	/// <summary>
-	/// Guild has disabled invites.
+	///     Guild has disabled invites.
 	/// </summary>
 	InvitesDisabled,
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	ActivitiesAlpha,
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	ActivitiesEmployee,
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	ActivitiesInternalDev,
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	AutomodTriggerKeywordFilter,
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	AutomodTriggerMlSpamFilter,
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	AutomodTriggerSpamLinkFilterGuild,
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	AutomodDefaultList,
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	Bfg,
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	BoostingTiersExperimentMediumGuild,
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	BoostingTiersExperimentSmallGuild,
 
 	/// <summary>
-	/// Guild has early access features for bot and library developers.
+	///     Guild has early access features for bot and library developers.
 	/// </summary>
 	BotDeveloperEarlyAccess,
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	CreatorMonetizable,
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	CreatorMonetizableDisabled,
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	CreatorMonetizableProvisional,
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	CreatorMonetizableWhiteGlove,
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	CreatorMonetizationApplicationAllowlist,
 
 	/// <summary>
-	/// Guild is set as a support server for an app in App Directory.
+	///     Guild is set as a support server for an app in App Directory.
 	/// </summary>
 	DeveloperSupportServer,
 
 	/// <summary>
-	/// Guild was previously in the 2021-11_activities_baseline_engagement_bundle experiment.
+	///     Guild was previously in the 2021-11_activities_baseline_engagement_bundle experiment.
 	/// </summary>
 	ExposedToActivitiesWtpExperiment,
 
 	/// <summary>
-	/// Guild had early access to the user timeouts.
+	///     Guild had early access to the user timeouts.
 	/// </summary>
 	GuildCommunicationDisabledGuilds,
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	DisableGuildCommunication,
 
 	/// <summary>
-	/// Guild has access to the Home feature.
+	///     Guild has access to the Home feature.
 	/// </summary>
 	GuildHomeOverride,
 
 	/// <summary>
-	/// Guild had early access to the Automod Default List.
+	///     Guild had early access to the Automod Default List.
 	/// </summary>
 	GuildAutomodDefaultList,
 
 	/// <summary>
-	/// Guild had early access to approving membership manually.
+	///     Guild had early access to approving membership manually.
 	/// </summary>
 	GuildMemberVerificationExperiment,
 
 	/// <summary>
-	/// Guilds was previously in the 2022-05_mobile_web_role_subscription_purchase_page experiment.
+	///     Guilds was previously in the 2022-05_mobile_web_role_subscription_purchase_page experiment.
 	/// </summary>
 	GuildRoleSubscriptionPurchaseFeedbackLoop,
 
 	/// <summary>
-	/// Guild was previously in the 2022-01_guild_role_subscription_trials experiment.
+	///     Guild was previously in the 2022-01_guild_role_subscription_trials experiment.
 	/// </summary>
 	GuildRoleSubscriptionTrials,
 
 	/// <summary>
-	/// Guild previously had access to voice channel activities and can bypass the boost level requirement.
+	///     Guild previously had access to voice channel activities and can bypass the boost level requirement.
 	/// </summary>
 	HadEarlyActivitiesAccess,
 
 	/// <summary>
-	/// Allows the guild to have 1,000+ active threads.
+	///     Allows the guild to have 1,000+ active threads.
 	/// </summary>
 	IncreasedThreadLimit,
 
 	/// <summary>
-	/// Guild was previously in the 2022-05_mobile_web_role_subscription_purchase_page experiment.
+	///     Guild was previously in the 2022-05_mobile_web_role_subscription_purchase_page experiment.
 	/// </summary>
 	MobileWebRoleSubscriptionPurchasePage,
 
 	/// <summary>
-	/// Shards connections to the guild to different nodes that relay information between each other.
+	///     Shards connections to the guild to different nodes that relay information between each other.
 	/// </summary>
 	RelayEnabled,
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	RestrictSpamRiskGuilds,
 
 	/// <summary>
-	/// Allows guild's members to purchase role subscriptions.
+	///     Allows guild's members to purchase role subscriptions.
 	/// </summary>
 	RoleSubscriptionsAvailableForPurchase,
 
 	/// <summary>
-	/// Used by bot developers to test their bots with threads in guilds with 5 or less members and a bot.
+	///     Used by bot developers to test their bots with threads in guilds with 5 or less members and a bot.
 	/// </summary>
 	ThreadsEnabledTesting,
 
 	/// <summary>
-	/// Guild had early access to the voice channel effects.
+	///     Guild had early access to the voice channel effects.
 	/// </summary>
 	VoiceChannelEffects,
 
 	/// <summary>
-	/// Guild had early access to the soundboard feature.
+	///     Guild had early access to the soundboard feature.
 	/// </summary>
 	Soundboard,
 
 	/// <summary>
-	/// Ability to create and use store channels.
+	///     Ability to create and use store channels.
 	/// </summary>
 	[DiscordDeprecated("This feature is depcreated")]
 	Commerce,
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	[DiscordDeprecated("This feature is depcreated")]
 	ExposedToBoostingTiersExperiment,
 
 	/// <summary>
-	/// Deprecated in favor of Community.
+	///     Deprecated in favor of Community.
 	/// </summary>
 	[DiscordDeprecated("This feature is depcreated")]
 	PublicDisabled,
 
 	/// <summary>
-	/// Deprecated in favor of Community.
+	///     Deprecated in favor of Community.
 	/// </summary>
 	[DiscordDeprecated("This feature is depcreated")]
 	Public,
 
 	/// <summary>
-	/// The guild can use the seven-day archive time for threads.
+	///     The guild can use the seven-day archive time for threads.
 	/// </summary>
 	[DiscordDeprecated("This feature is depcreated")]
 	SevenDayThreadArchive,
 
 	/// <summary>
-	/// The guild can use the three-day archive time for threads.
+	///     The guild can use the three-day archive time for threads.
 	/// </summary>
 	[DiscordDeprecated("This feature is depcreated")]
 	ThreeDayThreadArchive,
 
 	/// <summary>
-	/// Previously used to control which servers were displayed under the "Featured" category in Discovery.
+	///     Previously used to control which servers were displayed under the "Featured" category in Discovery.
 	/// </summary>
 	[DiscordDeprecated("This feature is depcreated")]
 	Featurable,
 
 	/// <summary>
-	/// Shards connections to the guild to different nodes that relay information between each other.
+	///     Shards connections to the guild to different nodes that relay information between each other.
 	/// </summary>
 	[DiscordDeprecated("This feature is depcreated")]
 	ForceRelay,
 
 	/// <summary>
-	/// Currently unknown.
+	///     Currently unknown.
 	/// </summary>
 	[DiscordDeprecated("This feature is depcreated")]
 	Lurkable,
 
 	/// <summary>
-	/// Created for the Fortnite server blackout event on Oct 13, 2019, when viewing the member list it would show "There's nothing to see here.".
+	///     Created for the Fortnite server blackout event on Oct 13, 2019, when viewing the member list it would show "There's
+	///     nothing to see here.".
 	/// </summary>
 	[DiscordDeprecated("This feature is depcreated")]
 	MemberListDisabled,

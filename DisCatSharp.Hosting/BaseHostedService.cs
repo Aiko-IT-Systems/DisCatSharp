@@ -14,19 +14,19 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.Hosting;
 
 /// <summary>
-/// Contains the common logic between having a <see cref="DiscordClient"/> or
-/// <see cref="DiscordShardedClient"/> as a Hosted Service
+///     Contains the common logic between having a <see cref="DiscordClient" /> or
+///     <see cref="DiscordShardedClient" /> as a Hosted Service
 /// </summary>
 public abstract class BaseHostedService : BackgroundService
 {
-	protected readonly ILogger<BaseHostedService> Logger;
 	protected readonly IHostApplicationLifetime ApplicationLifetime;
-	protected readonly IConfiguration Configuration;
-	protected readonly IServiceProvider ServiceProvider;
 	protected readonly string BotSection;
+	protected readonly IConfiguration Configuration;
+	protected readonly ILogger<BaseHostedService> Logger;
+	protected readonly IServiceProvider ServiceProvider;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="BaseHostedService"/> class.
+	///     Initializes a new instance of the <see cref="BaseHostedService" /> class.
 	/// </summary>
 	/// <param name="config">The config.</param>
 	/// <param name="logger">The logger.</param>
@@ -49,20 +49,20 @@ public abstract class BaseHostedService : BackgroundService
 	}
 
 	/// <summary>
-	/// When the bot(s) fail to start, this method will be invoked. (Default behavior is to shutdown)
+	///     When the bot(s) fail to start, this method will be invoked. (Default behavior is to shutdown)
 	/// </summary>
 	/// <param name="ex">The exception/reason for not starting</param>
 	protected virtual void OnInitializationError(Exception ex) => this.ApplicationLifetime.StopApplication();
 
 	/// <summary>
-	/// Connect your client(s) to Discord
+	///     Connect your client(s) to Discord
 	/// </summary>
 	/// <returns>Task</returns>
 	protected abstract Task ConnectAsync();
 
 	/// <summary>
-	/// Dynamically load extensions by using <see cref="Configuration"/> and
-	/// <see cref="ServiceProvider"/>
+	///     Dynamically load extensions by using <see cref="Configuration" /> and
+	///     <see cref="ServiceProvider" />
 	/// </summary>
 	/// <param name="client">Client to add extension method(s) to</param>
 	/// <returns>Task</returns>
@@ -129,27 +129,27 @@ public abstract class BaseHostedService : BackgroundService
 	}
 
 	/// <summary>
-	/// Configure / Initialize the <see cref="DiscordClient"/> or
-	/// <see cref="DiscordShardedClient"/>
+	///     Configure / Initialize the <see cref="DiscordClient" /> or
+	///     <see cref="DiscordShardedClient" />
 	/// </summary>
 	/// <returns></returns>
 	protected abstract Task ConfigureAsync();
 
 	/// <summary>
-	/// Configure the extensions for your <see cref="DiscordShardedClient"/> or
-	/// <see cref="DiscordClient"/>
+	///     Configure the extensions for your <see cref="DiscordShardedClient" /> or
+	///     <see cref="DiscordClient" />
 	/// </summary>
 	/// <returns></returns>
 	protected abstract Task ConfigureExtensionsAsync();
 
 	/// <summary>
-	/// Runs just prior to <see cref="ConnectAsync"/>.
+	///     Runs just prior to <see cref="ConnectAsync" />.
 	/// </summary>
 	/// <returns></returns>
 	protected virtual Task PreConnectAsync() => Task.CompletedTask;
 
 	/// <summary>
-	/// Runs immediately after <see cref="ConnectAsync"/>.
+	///     Runs immediately after <see cref="ConnectAsync" />.
 	/// </summary>
 	/// <returns>Task</returns>
 	protected virtual Task PostConnectAsync() => Task.CompletedTask;

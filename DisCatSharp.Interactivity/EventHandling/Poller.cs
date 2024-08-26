@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.Interactivity.EventHandling;
 
 /// <summary>
-/// The poller.
+///     The poller.
 /// </summary>
 internal class Poller
 {
@@ -22,7 +22,7 @@ internal class Poller
 	private ConcurrentHashSet<PollRequest> _requests;
 
 	/// <summary>
-	/// Creates a new EventWaiter object.
+	///     Creates a new EventWaiter object.
 	/// </summary>
 	/// <param name="client">Your DiscordClient</param>
 	public Poller(DiscordClient client)
@@ -36,7 +36,7 @@ internal class Poller
 	}
 
 	/// <summary>
-	/// Dos the poll async.
+	///     Dos the poll async.
 	/// </summary>
 	/// <param name="request">The request.</param>
 	/// <returns>A Task.</returns>
@@ -63,7 +63,7 @@ internal class Poller
 	}
 
 	/// <summary>
-	/// Handles the reaction add.
+	///     Handles the reaction add.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="eventArgs">The event's arguments.</param>
@@ -96,7 +96,7 @@ internal class Poller
 	}
 
 	/// <summary>
-	/// Handles the reaction remove.
+	///     Handles the reaction remove.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="eventArgs">The event's arguments.</param>
@@ -112,7 +112,7 @@ internal class Poller
 	}
 
 	/// <summary>
-	/// Handles the reaction clear.
+	///     Handles the reaction clear.
 	/// </summary>
 	/// <param name="client">The client.</param>
 	/// <param name="eventArgs">The event's arguments.</param>
@@ -132,7 +132,7 @@ internal class Poller
 	}
 
 	/// <summary>
-	/// Disposes this EventWaiter
+	///     Disposes this EventWaiter
 	/// </summary>
 	public void Dispose()
 	{
