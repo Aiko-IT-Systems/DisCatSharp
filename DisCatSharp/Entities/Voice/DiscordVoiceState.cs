@@ -28,6 +28,8 @@ public class DiscordVoiceState : ObservableApiObject
 	{
 		this.Discord = other.Discord;
 
+		this.TransportMember = other.TransportMember;
+
 		this.UserId = other.UserId;
 		this.ChannelId = other.ChannelId;
 		this.GuildId = other.GuildId;
@@ -50,7 +52,7 @@ public class DiscordVoiceState : ObservableApiObject
 	/// <param name="m">The m.</param>
 	internal DiscordVoiceState(DiscordMember m)
 	{
-		this.Discord = m.Discord as DiscordClient;
+		this.Discord = (m.Discord as DiscordClient)!;
 
 		this.UserId = m.Id;
 		this.ChannelId = 0;
@@ -91,7 +93,7 @@ public class DiscordVoiceState : ObservableApiObject
 	/// </summary>
 	[JsonIgnore]
 	public DiscordChannel? Channel
-		=> this.ChannelId != null && this.ChannelId.Value != 0 ? this.Discord.InternalGetCachedChannel(this.ChannelId.Value) : null;
+		=> this.ChannelId is not null && this.ChannelId.Value != 0 ? this.Discord.InternalGetCachedChannel(this.ChannelId.Value) : null;
 
 	/// <summary>
 	///     Gets ID of the user to which this voice state belongs.
@@ -178,7 +180,7 @@ public class DiscordVoiceState : ObservableApiObject
 	/// </summary>
 	[JsonIgnore]
 	public DiscordMember Member
-		=> this.Guild.Members.TryGetValue(this.TransportMember.User.Id, out var member)
+		=> this.Guild!.Members.TryGetValue(this.TransportMember.User!.Id, out var member)
 			? member
 			: new(this.TransportMember)
 			{
@@ -190,6 +192,12 @@ public class DiscordVoiceState : ObservableApiObject
 	/// </summary>
 	[JsonProperty("member", NullValueHandling = NullValueHandling.Ignore)]
 	internal TransportMember TransportMember { get; set; }
+
+	/// <summary>
+	///     Gets whether the voice state is discoverable through user activities.
+	/// </summary>
+	[JsonProperty("discoverable", NullValueHandling = NullValueHandling.Ignore)]
+	internal bool Discoverable { get; set; }
 
 	/// <summary>
 	///     Gets a readable voice state string.

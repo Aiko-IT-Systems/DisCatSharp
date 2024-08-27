@@ -37,7 +37,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	public ulong GuildId = 0;
 
 	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<ulong> RoleIdsInternal;
+	internal List<ulong> RoleIdsInternal = [];
 
 	/// <summary>
 	///     Initializes a new instance of the <see cref="DiscordMember" /> class.
@@ -69,7 +69,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <param name="mbr">The mbr.</param>
 	internal DiscordMember(TransportMember mbr)
 	{
-		this.Id = mbr.User.Id;
+		this.Id = mbr.User!.Id;
 		this.IsDeafened = mbr.IsDeafened;
 		this.IsMuted = mbr.IsMuted;
 		this.JoinedAt = mbr.JoinedAt;
@@ -179,7 +179,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordRole> Roles
-		=> this.RoleIds.Select(id => this.Guild.GetRole(id)).Where(x => x is not null).ToList();
+		=> this.RoleIds.Select(id => this.Guild.GetRole(id)).Where(x => x is not null).ToList()!;
 
 	/// <summary>
 	///     Gets the color associated with this user's top color-giving role, otherwise 0 (no color).
@@ -283,7 +283,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	public int Hierarchy
 		=> this.IsOwner
 			? int.MaxValue
-			: this.RoleIds.Count == 0
+			: this.RoleIds.Count is 0
 				? 0
 				: this.Roles.Max(x => x.Position);
 
@@ -633,7 +633,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 			return PermissionMethods.FullPerms;
 
 		// assign @everyone permissions
-		var everyoneRole = this.Guild.EveryoneRole;
+		var everyoneRole = this.Guild.EveryoneRole!;
 		var perms = everyoneRole.Permissions;
 
 		// assign permissions from member's roles (in order)
@@ -683,7 +683,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		var o1 = e1 as object;
 		var o2 = e2 as object;
 
-		return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1.GuildId == e2.GuildId));
+		return (o1 is not null || o2 is null) && (o1 is null || o2 is not null) && ((o1 is null && o2 is null) || (e1.Id == e2.Id && e1.GuildId == e2.GuildId));
 	}
 
 	/// <summary>
