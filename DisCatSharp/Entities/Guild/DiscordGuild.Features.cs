@@ -20,6 +20,9 @@ public class GuildFeatures
 	{
 		this.Features = [];
 
+		if (guild.RawFeatures is null)
+			return;
+
 		if (guild.RawFeatures.Contains("APPLICATION_COMMAND_PERMISSIONS_V2")) this.Features.Add(GuildFeaturesEnum.UsesApplicationCommandsPermissionsV2);
 		if (guild.RawFeatures.Contains("RAID_ALERTS_ENABLED")) this.Features.Add(GuildFeaturesEnum.RaidAlertsEnabled);
 		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE_RESTRICTED")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizableRestricted);

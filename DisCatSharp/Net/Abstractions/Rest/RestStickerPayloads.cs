@@ -25,5 +25,5 @@ internal sealed class RestStickerModifyPayload : ObservableApiObject
 	///     Gets or sets the tags.
 	/// </summary>
 	[JsonProperty("tags", NullValueHandling = NullValueHandling.Ignore)]
-	public Optional<string> Tags { get; set; }
+	public Optional<string?> Tags { get; set; }
 }

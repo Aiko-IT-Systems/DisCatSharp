@@ -1113,7 +1113,7 @@ public sealed partial class DiscordClient
 
 		guild.JoinedAt = eventGuild.JoinedAt;
 		guild.IsLarge = eventGuild.IsLarge;
-		guild.MemberCount = Math.Max(eventGuild.MemberCount, guild.MembersInternal.Count);
+		guild.MemberCount = Math.Max(eventGuild.MemberCount.Value, guild.MembersInternal.Count);
 		guild.IsUnavailable = eventGuild.IsUnavailable;
 		guild.PremiumSubscriptionCount = eventGuild.PremiumSubscriptionCount;
 		guild.PremiumTier = eventGuild.PremiumTier;

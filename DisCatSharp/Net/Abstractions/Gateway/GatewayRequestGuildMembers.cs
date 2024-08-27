@@ -30,7 +30,7 @@ internal sealed class GatewayRequestGuildMembers
 	///     Gets the query.
 	/// </summary>
 	[JsonProperty("query", NullValueHandling = NullValueHandling.Ignore)]
-	public string Query { get; set; }
+	public string? Query { get; set; }
 
 	/// <summary>
 	///     Gets the limit.
@@ -48,11 +48,11 @@ internal sealed class GatewayRequestGuildMembers
 	///     Gets the user ids.
 	/// </summary>
 	[JsonProperty("user_ids", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<ulong> UserIds { get; set; }
+	public IEnumerable<ulong>? UserIds { get; set; }
 
 	/// <summary>
 	///     Gets the nonce.
 	/// </summary>
 	[JsonProperty("nonce", NullValueHandling = NullValueHandling.Ignore)]
-	public string Nonce { get; internal set; }
+	public string? Nonce { get; internal set; }
 }

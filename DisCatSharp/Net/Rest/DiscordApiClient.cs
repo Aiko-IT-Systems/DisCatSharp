@@ -708,7 +708,7 @@ public sealed class DiscordApiClient
 	/// <param name="explicitContentFilter">The explicit content filter.</param>
 	/// <param name="verificationLevel">The verification level.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordGuild> ModifyGuildCommunitySettingsAsync(ulong guildId, List<string> features, Optional<ulong?> rulesChannelId, Optional<ulong?> publicUpdatesChannelId, string preferredLocale, string description, DefaultMessageNotifications defaultMessageNotifications, ExplicitContentFilter explicitContentFilter, VerificationLevel verificationLevel, string? reason)
+	internal async Task<DiscordGuild> ModifyGuildCommunitySettingsAsync(ulong guildId, List<string> features, Optional<ulong?> rulesChannelId, Optional<ulong?> publicUpdatesChannelId, string preferredLocale, string description, DefaultMessageNotifications defaultMessageNotifications, ExplicitContentFilter explicitContentFilter, Optional<VerificationLevel> verificationLevel, string? reason)
 	{
 		var pld = new RestGuildCommunityModifyPayload
 		{
@@ -1585,7 +1585,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="name">The name.</param>
 	/// <param name="description">The description.</param>
-	internal async Task<DiscordGuildTemplate> CreateGuildTemplateAsync(ulong guildId, string name, string description)
+	internal async Task<DiscordGuildTemplate> CreateGuildTemplateAsync(ulong guildId, string name, string? description)
 	{
 		var pld = new RestGuildTemplateCreateOrModifyPayload
 		{
@@ -1636,7 +1636,7 @@ public sealed class DiscordApiClient
 	/// <param name="templateCode">The template_code.</param>
 	/// <param name="name">The name.</param>
 	/// <param name="description">The description.</param>
-	internal async Task<DiscordGuildTemplate> ModifyGuildTemplateAsync(ulong guildId, string templateCode, string name, string description)
+	internal async Task<DiscordGuildTemplate> ModifyGuildTemplateAsync(ulong guildId, string templateCode, string? name, string? description)
 	{
 		var pld = new RestGuildTemplateCreateOrModifyPayload
 		{
@@ -2661,7 +2661,7 @@ public sealed class DiscordApiClient
 	/// <param name="defaultAutoArchiveDuration">The default auto archive duration.</param>
 	/// <param name="flags">The channel flags.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordChannel> CreateGuildChannelAsync(ulong guildId, string name, ChannelType type, ulong? parent, Optional<string> topic, int? bitrate, int? userLimit, IEnumerable<DiscordOverwriteBuilder> overwrites, bool? nsfw, Optional<int?> perUserRateLimit, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? defaultAutoArchiveDuration, Optional<ChannelFlags?> flags, string? reason)
+	internal async Task<DiscordChannel> CreateGuildChannelAsync(ulong guildId, string name, ChannelType type, ulong? parent, Optional<string> topic, int? bitrate, int? userLimit, IEnumerable<DiscordOverwriteBuilder>? overwrites, bool? nsfw, Optional<int?> perUserRateLimit, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? defaultAutoArchiveDuration, Optional<ChannelFlags?> flags, string? reason)
 	{
 		var restOverwrites = new List<DiscordRestOverwrite>();
 		if (overwrites != null)
@@ -2733,7 +2733,7 @@ public sealed class DiscordApiClient
 		Optional<ForumPostSortOrder> defaultSortOrder,
 		Optional<ForumLayout?> defaultLayout,
 		ThreadAutoArchiveDuration? defaultAutoArchiveDuration,
-		IEnumerable<DiscordOverwriteBuilder> permissionOverwrites,
+		IEnumerable<DiscordOverwriteBuilder>? permissionOverwrites,
 		Optional<ChannelFlags?> flags,
 		string? reason
 	)

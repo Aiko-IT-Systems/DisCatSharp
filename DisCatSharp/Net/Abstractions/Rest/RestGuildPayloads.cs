@@ -741,14 +741,14 @@ internal class RestGuildTemplateCreateOrModifyPayload : ObservableApiObject
 	/// <summary>
 	///     Gets or sets the name.
 	/// </summary>
-	[JsonProperty("name", NullValueHandling = NullValueHandling.Include)]
-	public string Name { get; set; }
+	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+	public required string Name { get; set; }
 
 	/// <summary>
 	///     Gets or sets the description.
 	/// </summary>
 	[JsonProperty("description", NullValueHandling = NullValueHandling.Include)]
-	public string Description { get; set; }
+	public string? Description { get; set; }
 }
 
 /// <summary>
