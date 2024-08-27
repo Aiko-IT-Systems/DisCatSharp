@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using DisCatSharp.Attributes;
 
@@ -12,6 +13,34 @@ namespace DisCatSharp.Entities;
 public class DiscordStageInstance : SnowflakeObject, IEquatable<DiscordStageInstance>
 {
 	/// <summary>
+	/// Initializes a new instance of <see cref="DiscordStageInstance"/>.
+	/// </summary>
+	internal DiscordStageInstance()
+		: base(["privacy_level"])
+	{ }
+
+	/// <summary>
+	///     Gets the scheduled event id of the associated stage channel.
+	/// </summary>
+	[JsonProperty("guild_scheduled_event_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? ScheduledEventId { get; internal set; }
+
+	/// <summary>
+	///     Gets the scheduled event of the associated stage channel.
+	/// </summary>
+	[JsonIgnore]
+	public DiscordScheduledEvent? ScheduledEvent
+		=> this.ScheduledEventId.HasValue
+			? this.Guild.ScheduledEvents.GetValueOrDefault(this.ScheduledEventId.Value)
+			: null;
+
+	/// <summary>
+	///     Gets the invite code of the associated stage channel.
+	/// </summary>
+	[JsonProperty("invite_code", NullValueHandling = NullValueHandling.Ignore)]
+	public string? InviteCode { get; internal set; }
+
+	/// <summary>
 	///     Gets the guild id of the associated Stage channel.
 	/// </summary>
 	[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
@@ -22,7 +51,7 @@ public class DiscordStageInstance : SnowflakeObject, IEquatable<DiscordStageInst
 	/// </summary>
 	[JsonIgnore]
 	public DiscordGuild Guild
-		=> this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null;
+		=> this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null!;
 
 	/// <summary>
 	///     Gets id of the associated Stage channel.
@@ -34,7 +63,7 @@ public class DiscordStageInstance : SnowflakeObject, IEquatable<DiscordStageInst
 	///     Gets the topic of the Stage instance.
 	/// </summary>
 	[JsonProperty("topic", NullValueHandling = NullValueHandling.Ignore)]
-	public string Topic { get; internal set; }
+	public string? Topic { get; internal set; }
 
 	/// <summary>
 	///     Gets whether or not stage discovery is disabled.
