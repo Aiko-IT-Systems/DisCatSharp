@@ -38,9 +38,15 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <summary>
 	///     Gets the guild that invoked this interaction.
 	/// </summary>
-	[JsonIgnore] // TODO: Is now also "guild"
+	[JsonIgnore]
 	public DiscordGuild Guild
-		=> (this.Discord as DiscordClient).InternalGetCachedGuild(this.GuildId);
+		=> (this.Discord as DiscordClient)?.InternalGetCachedGuild(this.GuildId) ?? this.PartialGuild;
+
+	/// <summary>
+	///     Gets the partial guild from the interaction.
+	/// </summary>
+	[JsonProperty("guild")]
+	internal DiscordGuild PartialGuild { get; set; }
 
 	/// <summary>
 	///     Gets the Id of the channel that invoked this interaction.

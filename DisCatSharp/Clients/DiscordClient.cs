@@ -275,7 +275,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._messagePollVoteAdded = new("MESSAGE_POLL_VOTE_ADDED", EventExecutionLimit, this.EventErrorHandler);
 		this._messagePollVoteRemoved = new("MESSAGE_POLL_VOTE_REMOVED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildSoundboardSoundCreated = new("GUILD_SOUNDBOARD_SOUND_CREATED", EventExecutionLimit, this.EventErrorHandler);
-		this._guildSoundboardSoundsUpdated = new("GUILD_SOUNDBOARD_SOUND_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildSoundboardSoundUpdated = new("GUILD_SOUNDBOARD_SOUND_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildSoundboardSoundDeleted = new("GUILD_SOUNDBOARD_SOUND_DELETED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildSoundboardSoundsUpdated = new("GUILD_SOUNDBOARD_SOUNDS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._soundboardSounds = new("SOUNDBOARD_SOUNDS", EventExecutionLimit, this.EventErrorHandler);
