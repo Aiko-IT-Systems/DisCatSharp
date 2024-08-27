@@ -21,7 +21,7 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	///     Initializes a new instance of the <see cref="DiscordScheduledEvent" /> class.
 	/// </summary>
 	internal DiscordScheduledEvent()
-		: base(["sku_ids"])
+		: base(["sku_ids", "privacy_level", "guild_scheduled_event_exceptions"])
 	{ }
 
 	/// <summary>
@@ -35,14 +35,14 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// </summary>
 	[JsonIgnore]
 	public DiscordGuild Guild
-		=> this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null;
+		=> this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null!;
 
 	/// <summary>
 	///     Gets the associated channel.
 	/// </summary>
 	[JsonIgnore]
-	public Task<DiscordChannel> Channel
-		=> this.ChannelId.HasValue ? this.Discord.ApiClient.GetChannelAsync(this.ChannelId.Value) : null;
+	public DiscordChannel? Channel
+		=> this.ChannelId.HasValue ? this.Discord.ApiClient.GetChannelAsync(this.ChannelId.Value).Result : null;
 
 	/// <summary>
 	///     Gets id of the associated channel id.
@@ -87,13 +87,13 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	///     Gets this event's cover hash, when applicable.
 	/// </summary>
 	[JsonProperty("image", NullValueHandling = NullValueHandling.Include)]
-	public string CoverImageHash { get; internal set; }
+	public string? CoverImageHash { get; internal set; }
 
 	/// <summary>
 	///     Gets this event's cover in url form.
 	/// </summary>
 	[JsonIgnore]
-	public string CoverImageUrl
+	public string? CoverImageUrl
 		=> !string.IsNullOrWhiteSpace(this.CoverImageHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.GUILD_EVENTS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.CoverImageHash}.png" : null;
 
 	/// <summary>
@@ -168,6 +168,12 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// </summary>
 	[JsonProperty("user_count", NullValueHandling = NullValueHandling.Ignore)]
 	public int UserCount { get; internal set; }
+
+	/// <summary>
+	///     Gets whether the scheduled event auto starts.
+	/// </summary>
+	[JsonProperty("auto_start", NullValueHandling = NullValueHandling.Ignore)]
+	public bool AutoStart { get; internal set; }
 
 	/// <summary>
 	///     Checks whether this <see cref="DiscordScheduledEvent" /> is equal to another <see cref="DiscordScheduledEvent" />.
