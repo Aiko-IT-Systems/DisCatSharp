@@ -3851,6 +3851,7 @@ public sealed partial class DiscordClient
 
 		interaction.ChannelId = channelId;
 		interaction.GuildId = guildId;
+		interaction.PartialGuild.Discord = this;
 		interaction.Discord = this;
 		interaction.Data.Discord = this;
 
