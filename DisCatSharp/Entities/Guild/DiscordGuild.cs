@@ -653,7 +653,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <returns>A ordered list of categories with its channels</returns>
 	public Dictionary<ulong, List<DiscordChannel>> GetOrderedChannels()
 	{
-		IReadOnlyList<DiscordChannel> rawChannels = this.ChannelsInternal.Values.ToList();
+		IReadOnlyList<DiscordChannel> rawChannels = [.. this.ChannelsInternal.Values];
 
 		Dictionary<ulong, List<DiscordChannel>> orderedChannels = new()
 		{
