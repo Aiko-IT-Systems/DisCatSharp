@@ -114,7 +114,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 		this.PrivacyPolicyUrl = tapp.PrivacyPolicyUrl;
 		this.InteractionsEventTypes = tapp.InteractionsEventTypes.AsReadOnly();
 		this.InteractionsVersion = tapp.InteractionsVersion;
-		this.ExplicitContentFilter = tapp.ApplicationExplicitContentFilter;
+		this.ExplicitContentFilter = tapp.ExplicitContentFilter;
 		this.RpcApplicationState = tapp.RpcApplicationState;
 		this.StoreApplicationState = tapp.StoreApplicationState;
 		this.VerificationState = tapp.VerificationState;
@@ -370,7 +370,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <summary>
 	///     Gets the verification eligibility flags.
 	/// </summary>
-	public int VerificationEligibilityFlags { get; internal set; }
+	public ApplicationVerificationEligibilityFlags VerificationEligibilityFlags { get; internal set; }
 
 	/// <summary>
 	///     Gets the monetization eligibility flags.

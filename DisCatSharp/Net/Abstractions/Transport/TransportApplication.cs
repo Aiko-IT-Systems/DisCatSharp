@@ -293,7 +293,7 @@ internal sealed class TransportApplication : ObservableApiObject
 	///     Gets or sets the verification eligibility flags.
 	/// </summary>
 	[JsonProperty("verification_eligibility_flags", NullValueHandling = NullValueHandling.Ignore)]
-	public int VerificationEligibilityFlags { get; set; }
+	public ApplicationVerificationEligibilityFlags VerificationEligibilityFlags { get; set; }
 
 	/// <summary>
 	///     Gets or sets the monetization eligibility flags.
