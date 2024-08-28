@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
+using DisCatSharp.Net.Abstractions;
 
 using Newtonsoft.Json;
 
@@ -19,7 +21,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <summary>
 	///     Gets or sets a list of <see cref="DiscordApplicationAsset" />.
 	/// </summary>
-	private IReadOnlyList<DiscordApplicationAsset> _assets;
+	private IReadOnlyList<DiscordApplicationAsset>? _assets;
 
 	/// <summary>
 	///     Initializes a new instance of the <see cref="DiscordApplication" /> class.
@@ -28,21 +30,125 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	{ }
 
 	/// <summary>
+	///     Initializes a new instance of the <see cref="DiscordApplication" /> class.
+	/// </summary>
+	/// <param name="tapp">The transport application to populate the data from.</param>
+	internal DiscordApplication(TransportApplication tapp)
+	{
+		this.Discord = tapp.Discord;
+		this.CustomInstallUrl = tapp.CustomInstallUrl;
+		this.InstallParams = tapp.InstallParams;
+		this.RoleConnectionsVerificationUrl = tapp.RoleConnectionsVerificationUrl.ValueOrDefault();
+		this.Tags = [..tapp.Tags];
+		this.Id = tapp.Id;
+		this.Name = tapp.Name;
+		this.IconHash = tapp.IconHash;
+		this.Description = tapp.Description;
+		this.Summary = tapp.Summary;
+
+		if (tapp.Team is null)
+		{
+			this.Members =
+			[
+				..new[]
+				{
+					new DiscordUser(tapp.Owner)
+					{
+						Discord = tapp.Discord
+					}
+				}
+			];
+			this.Team = null;
+			this.TeamName = null;
+			this.Owner = new(tapp.Owner);
+		}
+		else
+		{
+			this.Team = new(tapp.Team);
+
+			var members = tapp.Team.Members
+				.Select(x => new DiscordTeamMember(x)
+				{
+					TeamId = this.Team.Id,
+					TeamName = this.Team.Name,
+					User = new(x.User)
+					{
+						Discord = tapp.Discord
+					}
+				})
+				.ToArray();
+
+			foreach (var member in members)
+				if (member.User.Id == tapp.Team.OwnerId)
+					member.Role = "owner";
+
+			var users = members
+				.Where(x => x.MembershipStatus == DiscordTeamMembershipStatus.Accepted)
+				.Select(x => x.User)
+				.ToArray();
+
+			this.Members = [..users];
+			this.Team.Owner = members.First(x => x.Role == "owner").User;
+			this.Team.Members = new List<DiscordTeamMember>(members);
+			this.TeamName = this.Team.Name;
+			this.Owner = new(tapp.Owner);
+		}
+
+		this.GuildId = tapp.GuildId.ValueOrDefault();
+		this.Slug = tapp.Slug.ValueOrDefault();
+		this.PrimarySkuId = tapp.PrimarySkuId.ValueOrDefault();
+		this.VerifyKey = tapp.VerifyKey.ValueOrDefault();
+		this.CoverImageHash = tapp.CoverImageHash.ValueOrDefault();
+		this.Guild = tapp.Guild.ValueOrDefault();
+		this.ApproximateGuildCount = tapp.ApproximateGuildCount.ValueOrDefault();
+		this.ApproximateUserInstallCount = tapp.ApproximateUserInstallCount.ValueOrDefault();
+		this.RequiresCodeGrant = tapp.BotRequiresCodeGrant.ValueOrDefault();
+		this.IsPublic = tapp.IsPublicBot.ValueOrDefault();
+		this.RedirectUris = tapp.RedirectUris.HasValue ? tapp.RedirectUris.Value : [];
+		this.InteractionsEndpointUrl = tapp.InteractionsEndpointUrl.ValueOrDefault();
+		this.Flags = tapp.Flags;
+		this.RpcOrigins = tapp.RpcOrigins.AsReadOnly();
+		this.IsHook = tapp.IsHook;
+		this.Type = tapp.Type;
+		this.TermsOfServiceUrl = tapp.TermsOfServiceUrl;
+		this.PrivacyPolicyUrl = tapp.PrivacyPolicyUrl;
+		this.InteractionsEventTypes = tapp.InteractionsEventTypes.AsReadOnly();
+		this.InteractionsVersion = tapp.InteractionsVersion;
+		this.ExplicitContentFilter = tapp.ExplicitContentFilter;
+		this.RpcApplicationState = tapp.RpcApplicationState;
+		this.StoreApplicationState = tapp.StoreApplicationState;
+		this.VerificationState = tapp.VerificationState;
+		this.IntegrationPublic = tapp.IntegrationPublic;
+		this.IntegrationRequireCodeGrant = tapp.IntegrationRequireCodeGrant;
+		this.DiscoverabilityState = tapp.DiscoverabilityState;
+		this.DiscoveryEligibilityFlags = tapp.DiscoveryEligibilityFlags;
+		this.MonetizationState = tapp.MonetizationState;
+		this.VerificationEligibilityFlags = tapp.VerificationEligibilityFlags;
+		this.MonetizationEligibilityFlags = tapp.MonetizationEligibilityFlags;
+		this.InternalGuildRestriction = tapp.InternalGuildRestriction;
+		this.StorefrontAvailable = tapp.StorefrontAvailable;
+		this.IsMonetized = tapp.IsMonetized;
+		this.IsVerified = tapp.IsVerified;
+	}
+
+	/// <summary>
 	///     Gets the application's summary.
 	/// </summary>
 	[DiscordDeprecated("Empty string, will be removed in API v11")]
-	public string Summary { get; internal set; }
+	public string? Summary { get; internal set; }
 
 	/// <summary>
 	///     Gets the application's icon.
 	/// </summary>
-	public override string Icon
-		=> !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null;
+	public override string? Icon
+		=> !string.IsNullOrWhiteSpace(this.IconHash)
+			? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024"
+			: null;
 
 	/// <summary>
 	///     Gets the application's icon hash.
 	/// </summary>
-	public string IconHash { get; internal set; }
+	public string? IconHash { get; internal set; }
 
 	/// <summary>
 	///     Gets the application's allowed RPC origins.
@@ -87,23 +193,25 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <summary>
 	///     Gets the team name of the application.
 	/// </summary>
-	public string TeamName { get; internal set; }
+	public string? TeamName { get; internal set; }
 
 	/// <summary>
 	///     Gets the hash of the application's cover image.
 	/// </summary>
-	public string CoverImageHash { get; internal set; }
+	public string? CoverImageHash { get; internal set; }
 
 	/// <summary>
 	///     Gets this application's cover image URL.
 	/// </summary>
-	public override string CoverImageUrl
-		=> $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.CoverImageHash}.png?size=1024";
+	public override string? CoverImageUrl
+		=> !string.IsNullOrWhiteSpace(this.CoverImageHash)
+			? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.CoverImageHash}.png?size=1024"
+			: null;
 
 	/// <summary>
 	///     Gets the team which owns this application.
 	/// </summary>
-	public DiscordTeam Team { get; internal set; }
+	public DiscordTeam? Team { get; internal set; }
 
 	/// <summary>
 	///     Gets the hex encoded key for verification in interactions and the GameSDK's GetTicket
@@ -145,7 +253,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	///     The application's role connection verification entry point,
 	///     which when configured will render the app as a verification method in the guild role verification configuration.
 	/// </summary>
-	public string RoleConnectionsVerificationUrl { get; internal set; }
+	public string? RoleConnectionsVerificationUrl { get; internal set; }
 
 	/// <summary>
 	///     The application tags.
@@ -190,6 +298,91 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	public DiscordIntegrationTypesConfig? IntegrationTypesConfig { get; set; }
 
 	/// <summary>
+	///     Gets whether the application is monetized.
+	/// </summary>
+	public bool IsMonetized { get; internal set; }
+
+	/// <summary>
+	///     Gets whether the application is verified.
+	/// </summary>
+	public bool IsVerified { get; internal set; }
+
+	/// <summary>
+	///     Gets whether the storefront is available.
+	/// </summary>
+	public bool StorefrontAvailable { get; internal set; }
+
+	/// <summary>
+	///     Gets the interaction event types.
+	/// </summary>
+	public IReadOnlyList<string> InteractionsEventTypes { get; internal set; } = [];
+
+	/// <summary>
+	///     Gets the interactions version.
+	/// </summary>
+	public ApplicationInteractionsVersion InteractionsVersion { get; internal set; }
+
+	/// <summary>
+	///     Gets the explicit content filter level.
+	/// </summary>
+	public ExplicitContentFilterLevel ExplicitContentFilter { get; internal set; }
+
+	/// <summary>
+	///     Gets the RPC application state.
+	/// </summary>
+	public RpcApplicationState RpcApplicationState { get; internal set; }
+
+	/// <summary>
+	///     Gets the store application state.
+	/// </summary>
+	public StoreApplicationState StoreApplicationState { get; internal set; }
+
+	/// <summary>
+	///     Gets the verification state.
+	/// </summary>
+	public ApplicationVerificationState VerificationState { get; internal set; }
+
+	/// <summary>
+	///     Gets whether the integration is public.
+	/// </summary>
+	public bool IntegrationPublic { get; internal set; }
+
+	/// <summary>
+	///     Gets whether the integration requires code grant.
+	/// </summary>
+	public bool IntegrationRequireCodeGrant { get; internal set; }
+
+	/// <summary>
+	///     Gets the discoverability state.
+	/// </summary>
+	public ApplicationDiscoverabilityState DiscoverabilityState { get; internal set; }
+
+	/// <summary>
+	///     Gets the discovery eligibility flags.
+	/// </summary>
+	public ApplicationDiscoveryEligibilityFlags DiscoveryEligibilityFlags { get; internal set; }
+
+	/// <summary>
+	///     Gets the monetization state.
+	/// </summary>
+	public ApplicationMonetizationState MonetizationState { get; internal set; }
+
+	/// <summary>
+	///     Gets the verification eligibility flags.
+	/// </summary>
+	public int VerificationEligibilityFlags { get; internal set; }
+
+	/// <summary>
+	///     Gets the monetization eligibility flags.
+	/// </summary>
+	public ApplicationMonetizationEligibilityFlags MonetizationEligibilityFlags { get; internal set; }
+
+	/// <summary>
+	///     Gets the internal guild restriction level.
+	/// </summary>
+	public int InternalGuildRestriction { get; internal set; }
+
+	/// <summary>
 	///     Checks whether this <see cref="DiscordApplication" /> is equal to another <see cref="DiscordApplication" />.
 	/// </summary>
 	/// <param name="e"><see cref="DiscordApplication" /> to compare to.</param>
@@ -203,7 +396,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <param name="fmt">Format of the image to get.</param>
 	/// <param name="size">Maximum size of the cover image. Must be a power of two, minimum 16, maximum 2048.</param>
 	/// <returns>URL of the application's cover image.</returns>
-	public string GetAvatarUrl(MediaFormat fmt, ushort size = 1024)
+	public string? GetAvatarUrl(MediaFormat fmt, ushort size = 1024)
 	{
 		if (fmt == MediaFormat.Unknown)
 			throw new ArgumentException("You must specify valid image format.", nameof(fmt));

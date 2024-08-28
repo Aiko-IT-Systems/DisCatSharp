@@ -476,7 +476,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	///     Requests and waits for guild soundboard sounds.
 	/// </summary>
 	/// <param name="guildIds">The guild ids to request sounds from.</param>
-	/// <returns>The requested <see cref="DiscordSoundboardSound"/>'s as key-value-pair, where the key is a guild id.</returns>
+	/// <returns>The requested <see cref="DiscordSoundboardSound" />'s as key-value-pair, where the key is a guild id.</returns>
 	public async Task<IReadOnlyDictionary<ulong, IReadOnlyList<DiscordSoundboardSound>>> RequestAndWaitForSoundboardSoundsAsync(IEnumerable<ulong> guildIds)
 	{
 		var targetGuildIds = guildIds.ToList();
@@ -541,42 +541,16 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public async Task<DiscordRpcApplication> GetRpcApplicationAsync(ulong applicationId)
 		=> await this.ApiClient.GetApplicationRpcInfoAsync(applicationId).ConfigureAwait(false);
 
+	/// <summary>
+	///     Gets the current applications information.
+	/// </summary>
+	/// <returns>The requested application.</returns>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordApplication> GetCurrentApplicationInfoAsync()
 	{
 		var tapp = await this.ApiClient.GetCurrentApplicationInfoAsync().ConfigureAwait(false);
-		var app = new DiscordApplication
-		{
-			Discord = this,
-			Id = tapp.Id,
-			Name = tapp.Name,
-			Description = tapp.Description,
-			Summary = tapp.Summary,
-			IconHash = tapp.IconHash,
-			RpcOrigins = tapp.RpcOrigins != null ? new ReadOnlyCollection<string>(tapp.RpcOrigins) : null,
-			Flags = tapp.Flags,
-			IsHook = tapp.IsHook,
-			Type = tapp.Type,
-			PrivacyPolicyUrl = tapp.PrivacyPolicyUrl,
-			TermsOfServiceUrl = tapp.TermsOfServiceUrl,
-			CustomInstallUrl = tapp.CustomInstallUrl,
-			InstallParams = tapp.InstallParams,
-			RoleConnectionsVerificationUrl = tapp.RoleConnectionsVerificationUrl.ValueOrDefault(),
-			Tags = (tapp.Tags ?? Enumerable.Empty<string>()).ToArray(),
-			GuildId = tapp.GuildId.ValueOrDefault(),
-			Slug = tapp.Slug.ValueOrDefault(),
-			PrimarySkuId = tapp.PrimarySkuId.ValueOrDefault(),
-			VerifyKey = tapp.VerifyKey.ValueOrDefault(),
-			CoverImageHash = tapp.CoverImageHash.ValueOrDefault(),
-			Guild = tapp.Guild.ValueOrDefault(),
-			ApproximateGuildCount = tapp.ApproximateGuildCount.ValueOrDefault(),
-			RequiresCodeGrant = tapp.BotRequiresCodeGrant.ValueOrDefault(),
-			IsPublic = tapp.IsPublicBot.ValueOrDefault(),
-			RedirectUris = tapp.RedirectUris.ValueOrDefault(),
-			InteractionsEndpointUrl = tapp.InteractionsEndpointUrl.ValueOrDefault(),
-			IntegrationTypesConfig = tapp.IntegrationTypesConfig
-		};
-
-		return app;
+		return new(tapp);
 	}
 
 	/// <summary>
@@ -1810,12 +1784,12 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			}
 
 		if (newGuild.SoundboardSoundsInternal is { IsEmpty: false })
-			foreach (var @sound in newGuild.SoundboardSoundsInternal.Values)
+			foreach (var sound in newGuild.SoundboardSoundsInternal.Values)
 			{
-				if (guild.SoundboardSoundsInternal.TryGetValue(@sound.Id, out _))
+				if (guild.SoundboardSoundsInternal.TryGetValue(sound.Id, out _))
 					continue;
 
-				guild.SoundboardSoundsInternal[@sound.Id] = @sound;
+				guild.SoundboardSoundsInternal[sound.Id] = sound;
 			}
 
 		foreach (var newEmoji in newGuild.EmojisInternal.Values)

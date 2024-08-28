@@ -67,8 +67,8 @@ public abstract class BaseDiscordClient : IDisposable
 #pragma warning restore CS0618 // Type or member is obsolete
 					x.LogToStandardErrorThreshold = this.Configuration.MinimumLogLevel;
 				});
-				var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>(new[] { configureNamedOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleLoggerOptions>>());
-				var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleLoggerOptions>>(), new OptionsCache<ConsoleLoggerOptions>());
+				var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>([configureNamedOptions], []);
+				var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, [], new OptionsCache<ConsoleLoggerOptions>());
 				/*
 			var configureFormatterOptions = new ConfigureNamedOptions<ConsoleFormatterOptions>(string.Empty, x => { x.TimestampFormat = this.Configuration.LogTimestampFormat; });
 			var formatterFactory = new OptionsFactory<ConsoleFormatterOptions>(new[] { configureFormatterOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleFormatterOptions>>());
@@ -353,79 +353,7 @@ public abstract class BaseDiscordClient : IDisposable
 	public async Task<DiscordApplication> GetCurrentApplicationAsync()
 	{
 		var tapp = await this.ApiClient.GetCurrentApplicationOauth2InfoAsync().ConfigureAwait(false);
-		var app = new DiscordApplication
-		{
-			Discord = this,
-			Id = tapp.Id,
-			Name = tapp.Name,
-			Description = tapp.Description,
-			Summary = tapp.Summary,
-			IconHash = tapp.IconHash,
-			RpcOrigins = tapp.RpcOrigins is not null ? new ReadOnlyCollection<string>(tapp.RpcOrigins) : null,
-			Flags = tapp.Flags,
-			IsHook = tapp.IsHook,
-			Type = tapp.Type,
-			PrivacyPolicyUrl = tapp.PrivacyPolicyUrl,
-			TermsOfServiceUrl = tapp.TermsOfServiceUrl,
-			CustomInstallUrl = tapp.CustomInstallUrl,
-			InstallParams = tapp.InstallParams,
-			RoleConnectionsVerificationUrl = tapp.RoleConnectionsVerificationUrl.ValueOrDefault(),
-			InteractionsEndpointUrl = tapp.InteractionsEndpointUrl.ValueOrDefault(),
-			CoverImageHash = tapp.CoverImageHash.ValueOrDefault(),
-			Tags = (tapp.Tags ?? Enumerable.Empty<string>()).ToArray(),
-			IntegrationTypesConfig = tapp.IntegrationTypesConfig
-		};
-
-		if (tapp.Team is null)
-		{
-			app.Members = [..new[] { new DiscordUser(tapp.Owner) }];
-			app.Team = null;
-			app.TeamName = null;
-			app.Owner = new(tapp.Owner);
-		}
-		else
-		{
-			app.Team = new(tapp.Team);
-
-			var members = tapp.Team.Members
-				.Select(x => new DiscordTeamMember(x)
-				{
-					TeamId = app.Team.Id,
-					TeamName = app.Team.Name,
-					User = new(x.User)
-				})
-				.ToArray();
-
-			foreach (var member in members)
-				if (member.User.Id == tapp.Team.OwnerId)
-					member.Role = "owner";
-
-			var users = members
-				.Where(x => x.MembershipStatus == DiscordTeamMembershipStatus.Accepted)
-				.Select(x => x.User)
-				.ToArray();
-
-			app.Members = [..users];
-			app.Team.Owner = members.First(x => x.Role == "owner").User;
-			app.Team.Members = new List<DiscordTeamMember>(members);
-			app.TeamName = app.Team.Name;
-			app.Owner = new(tapp.Owner);
-		}
-
-		app.GuildId = tapp.GuildId.ValueOrDefault();
-		app.Slug = tapp.Slug.ValueOrDefault();
-		app.PrimarySkuId = tapp.PrimarySkuId.ValueOrDefault();
-		app.VerifyKey = tapp.VerifyKey.ValueOrDefault();
-		app.CoverImageHash = tapp.CoverImageHash.ValueOrDefault();
-		app.Guild = tapp.Guild.ValueOrDefault();
-		app.ApproximateGuildCount = tapp.ApproximateGuildCount.ValueOrDefault();
-		app.ApproximateUserInstallCount = tapp.ApproximateUserInstallCount.ValueOrDefault();
-		app.RequiresCodeGrant = tapp.BotRequiresCodeGrant.ValueOrDefault();
-		app.IsPublic = tapp.IsPublicBot.ValueOrDefault();
-		app.RedirectUris = tapp.RedirectUris.ValueOrDefault();
-		app.InteractionsEndpointUrl = tapp.InteractionsEndpointUrl.ValueOrDefault();
-
-		return app;
+		return new(tapp);
 	}
 
 	/// <summary>
@@ -461,9 +389,7 @@ public abstract class BaseDiscordClient : IDisposable
 			if (tags.Value.Any(x => x.Length > 20))
 				throw new InvalidOperationException("Tags can not exceed 20 chars.");
 
-		_ = await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, installParams, Optional.None).ConfigureAwait(false);
-		// We use GetCurrentApplicationAsync because modify returns internal data not meant for developers.
-		var app = await this.GetCurrentApplicationAsync().ConfigureAwait(false);
+		DiscordApplication app = new(await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, installParams, Optional.None).ConfigureAwait(false));
 		this.CurrentApplication = app;
 		return app;
 	}
@@ -527,9 +453,7 @@ public abstract class BaseDiscordClient : IDisposable
 			if (tags.Value.Any(x => x.Length > 20))
 				throw new InvalidOperationException("Tags can not exceed 20 chars.");
 
-		_ = await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, Optional.None, integrationTypesConfig).ConfigureAwait(false);
-		// We use GetCurrentApplicationAsync because modify returns internal data not meant for developers.
-		var app = await this.GetCurrentApplicationAsync().ConfigureAwait(false);
+		DiscordApplication app = new(await this.ApiClient.ModifyCurrentApplicationInfoAsync(description, interactionsEndpointUrl, roleConnectionsVerificationUrl, customInstallUrl, tags, iconb64, coverImageb64, flags, Optional.None, integrationTypesConfig).ConfigureAwait(false));
 		this.CurrentApplication = app;
 		return app;
 	}

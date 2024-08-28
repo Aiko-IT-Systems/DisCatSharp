@@ -101,7 +101,7 @@ internal sealed class TransportApplication : ObservableApiObject
 	///     Gets or sets the rpc origins.
 	/// </summary>
 	[JsonProperty("rpc_origins", NullValueHandling = NullValueHandling.Ignore)]
-	public List<string> RpcOrigins { get; set; }
+	public List<string> RpcOrigins { get; set; } = [];
 
 	/// <summary>
 	///     Gets or sets the owner.
@@ -113,7 +113,7 @@ internal sealed class TransportApplication : ObservableApiObject
 	///     Gets or sets the team.
 	/// </summary>
 	[JsonProperty("team", NullValueHandling = NullValueHandling.Include)]
-	public TransportTeam Team { get; set; }
+	public TransportTeam? Team { get; set; }
 
 	/// <summary>
 	///     Gets or sets the verify key.
@@ -136,25 +136,25 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// <summary>
 	///     Gets or sets the primary sku id.
 	/// </summary>
-	[JsonProperty("primary_sku_id")]
+	[JsonProperty("primary_sku_id", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<ulong> PrimarySkuId { get; set; }
 
 	/// <summary>
 	///     Gets or sets the slug.
 	/// </summary>
-	[JsonProperty("slug")]
+	[JsonProperty("slug", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<string> Slug { get; set; }
 
 	/// <summary>
 	///     Gets or sets the cover image hash.
 	/// </summary>
-	[JsonProperty("cover_image")]
+	[JsonProperty("cover_image", NullValueHandling = NullValueHandling.Include)]
 	public Optional<string> CoverImageHash { get; set; }
 
 	/// <summary>
 	///     Gets or sets the custom install url.
 	/// </summary>
-	[JsonProperty("custom_install_url")]
+	[JsonProperty("custom_install_url", NullValueHandling = NullValueHandling.Include)]
 	public string CustomInstallUrl { get; set; }
 
 	/// <summary>
@@ -166,14 +166,14 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// <summary>
 	///     Gets or sets the role connection verification entry point.
 	/// </summary>
-	[JsonProperty("role_connections_verification_url")]
+	[JsonProperty("role_connections_verification_url", NullValueHandling = NullValueHandling.Include)]
 	public Optional<string> RoleConnectionsVerificationUrl { get; set; }
 
 	/// <summary>
 	///     Gets or sets the tags.
 	/// </summary>
 	[JsonProperty("tags", NullValueHandling = NullValueHandling.Include)]
-	public List<string>? Tags { get; set; }
+	public List<string> Tags { get; set; } = [];
 
 	/// <summary>
 	///     Gets or sets the approximate guild count.
@@ -196,7 +196,7 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// <summary>
 	///     Gets or sets the rpc origins.
 	/// </summary>
-	[JsonProperty("redirect_uris", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("redirect_uris", NullValueHandling = NullValueHandling.Include)]
 	public Optional<List<string>> RedirectUris { get; set; }
 
 	/// <summary>
@@ -204,4 +204,106 @@ internal sealed class TransportApplication : ObservableApiObject
 	/// </summary>
 	[JsonProperty("integration_types_config", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordIntegrationTypesConfig? IntegrationTypesConfig { get; set; }
+
+	/// <summary>
+	///     Gets or sets whether the application is monetized.
+	/// </summary>
+	[JsonProperty("is_monetized", NullValueHandling = NullValueHandling.Ignore)]
+	public bool IsMonetized { get; set; }
+
+	/// <summary>
+	///     Gets or sets whether the application is verified.
+	/// </summary>
+	[JsonProperty("is_verified", NullValueHandling = NullValueHandling.Ignore)]
+	public bool IsVerified { get; set; }
+
+	/// <summary>
+	///     Gets or sets whether the storefront is available.
+	/// </summary>
+	[JsonProperty("storefront_available", NullValueHandling = NullValueHandling.Ignore)]
+	public bool StorefrontAvailable { get; set; }
+
+	/// <summary>
+	///     Gets or sets the interaction event types.
+	/// </summary>
+	[JsonProperty("interactions_event_types", NullValueHandling = NullValueHandling.Include)]
+	public List<string> InteractionsEventTypes { get; set; } = [];
+
+	/// <summary>
+	///     Gets or sets the interactions version.
+	/// </summary>
+	[JsonProperty("interactions_version", NullValueHandling = NullValueHandling.Ignore)]
+	public ApplicationInteractionsVersion InteractionsVersion { get; set; }
+
+	/// <summary>
+	///     Gets or sets the explicit content filter level.
+	/// </summary>
+	[JsonProperty("explicit_content_filter", NullValueHandling = NullValueHandling.Ignore)]
+	public ExplicitContentFilterLevel ExplicitContentFilter { get; set; }
+
+	/// <summary>
+	///     Gets or sets the RPC application state.
+	/// </summary>
+	[JsonProperty("rpc_application_state", NullValueHandling = NullValueHandling.Ignore)]
+	public RpcApplicationState RpcApplicationState { get; set; }
+
+	/// <summary>
+	///     Gets or sets the store application state.
+	/// </summary>
+	[JsonProperty("store_application_state", NullValueHandling = NullValueHandling.Ignore)]
+	public StoreApplicationState StoreApplicationState { get; set; }
+
+	/// <summary>
+	///     Gets or sets the verification state.
+	/// </summary>
+	[JsonProperty("verification_state", NullValueHandling = NullValueHandling.Ignore)]
+	public ApplicationVerificationState VerificationState { get; set; }
+
+	/// <summary>
+	///     Gets or sets whether the integration is public.
+	/// </summary>
+	[JsonProperty("integration_public", NullValueHandling = NullValueHandling.Ignore)]
+	public bool IntegrationPublic { get; set; }
+
+	/// <summary>
+	///     Gets or sets whether the integration requires code grant.
+	/// </summary>
+	[JsonProperty("integration_require_code_grant", NullValueHandling = NullValueHandling.Ignore)]
+	public bool IntegrationRequireCodeGrant { get; set; }
+
+	/// <summary>
+	///     Gets or sets the discoverability state.
+	/// </summary>
+	[JsonProperty("discoverability_state", NullValueHandling = NullValueHandling.Ignore)]
+	public ApplicationDiscoverabilityState DiscoverabilityState { get; set; }
+
+	/// <summary>
+	///     Gets or sets the discovery eligibility flags.
+	/// </summary>
+	[JsonProperty("discovery_eligibility_flags", NullValueHandling = NullValueHandling.Ignore)]
+	public ApplicationDiscoveryEligibilityFlags DiscoveryEligibilityFlags { get; set; }
+
+	/// <summary>
+	///     Gets or sets the monetization state.
+	/// </summary>
+	[JsonProperty("monetization_state", NullValueHandling = NullValueHandling.Ignore)]
+	public ApplicationMonetizationState MonetizationState { get; set; }
+
+	/// <summary>
+	///     Gets or sets the verification eligibility flags.
+	/// </summary>
+	[JsonProperty("verification_eligibility_flags", NullValueHandling = NullValueHandling.Ignore)]
+	public int VerificationEligibilityFlags { get; set; }
+
+	/// <summary>
+	///     Gets or sets the monetization eligibility flags.
+	/// </summary>
+	[JsonProperty("monetization_eligibility_flags", NullValueHandling = NullValueHandling.Ignore)]
+	public ApplicationMonetizationEligibilityFlags MonetizationEligibilityFlags { get; set; }
+
+	/// <summary>
+	///     Gets or sets the internal guild restriction level.
+	/// </summary>
+	[JsonProperty("internal_guild_restriction", NullValueHandling = NullValueHandling.Ignore)]
+	public int InternalGuildRestriction { get; set; }
 }
