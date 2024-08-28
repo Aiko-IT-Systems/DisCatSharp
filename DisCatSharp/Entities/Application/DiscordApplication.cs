@@ -114,7 +114,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 		this.PrivacyPolicyUrl = tapp.PrivacyPolicyUrl;
 		this.InteractionsEventTypes = tapp.InteractionsEventTypes.AsReadOnly();
 		this.InteractionsVersion = tapp.InteractionsVersion;
-		this.ExplicitContentFilter = tapp.ExplicitContentFilter;
+		this.ExplicitContentFilter = tapp.ApplicationExplicitContentFilter;
 		this.RpcApplicationState = tapp.RpcApplicationState;
 		this.StoreApplicationState = tapp.StoreApplicationState;
 		this.VerificationState = tapp.VerificationState;
@@ -325,7 +325,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <summary>
 	///     Gets the explicit content filter level.
 	/// </summary>
-	public ExplicitContentFilterLevel ExplicitContentFilter { get; internal set; }
+	public ApplicationExplicitContentFilter ExplicitContentFilter { get; internal set; }
 
 	/// <summary>
 	///     Gets the RPC application state.

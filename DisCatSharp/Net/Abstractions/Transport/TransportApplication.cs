@@ -239,7 +239,7 @@ internal sealed class TransportApplication : ObservableApiObject
 	///     Gets or sets the explicit content filter level.
 	/// </summary>
 	[JsonProperty("explicit_content_filter", NullValueHandling = NullValueHandling.Ignore)]
-	public ExplicitContentFilterLevel ExplicitContentFilter { get; set; }
+	public ApplicationExplicitContentFilter ExplicitContentFilter { get; set; }
 
 	/// <summary>
 	///     Gets or sets the RPC application state.
