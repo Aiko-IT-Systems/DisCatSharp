@@ -1,3 +1,4 @@
+using DisCatSharp.Common.Utilities;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -100,12 +101,27 @@ public class DiscordAttachment : NullableSnowflakeObject
 	///         voice message.
 	///     </para>
 	/// </summary>
-	[JsonProperty("waveform", NullValueHandling = NullValueHandling.Ignore)]
-	public string WaveForm { get; internal set; }
+	[JsonProperty("waveform", NullValueHandling = NullValueHandling.Ignore), JsonConverter(typeof(WaveformConverter))]
+	public byte[]? WaveForm { get; internal set; }
 
 	/// <summary>
 	///     Gets the attachment flags.
 	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
 	public AttachmentFlags Flags { get; internal set; } = AttachmentFlags.None;
+
+	/// <summary>
+	///     Visualizes the <see cref="WaveForm" /> as image.
+	/// </summary>
+	/// <param name="colorful">Whether to use a colorful image. Defaults to <see langword="true" />.</param>
+	/// <returns>
+	///     A waveform visualizer object, or <see langword="nulL" /> if <see cref="WaveForm" /> is <see langword="nulL" />
+	///     .
+	/// </returns>
+	public WaveformVisualizer? VisualizeWaveForm(bool colorful = true)
+		=> this.WaveForm is not null
+			? colorful
+				? new WaveformVisualizer().WithWaveformByteData(this.WaveForm).CreateColorfulWaveformImage()
+				: new WaveformVisualizer().WithWaveformByteData(this.WaveForm).CreateWaveformImage()
+			: null;
 }
