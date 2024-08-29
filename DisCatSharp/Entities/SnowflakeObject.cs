@@ -13,6 +13,7 @@ public abstract class SnowflakeObject : ObservableApiObject
 	/// <summary>
 	///     Initializes a new instance of the <see cref="SnowflakeObject" /> class.
 	/// </summary>
+	/// <param name="ignored">The ignored json keys.</param>
 	internal SnowflakeObject(List<string>? ignored = null)
 		: base(ignored)
 	{ }
