@@ -31,9 +31,9 @@ public sealed class DiscordPresence : ObservableApiObject
 	{
 		this.Discord = other.Discord;
 		this.Activity = other.Activity;
-		this.RawActivity = other.RawActivity;
+		this.RawDiscordActivity = other.RawDiscordActivity;
 		this.InternalActivities = (DiscordActivity[])other.InternalActivities?.Clone();
-		this.RawActivities = (TransportActivity[])other.RawActivities?.Clone();
+		this.RawActivities = (TransportDiscordActivity[])other.RawActivities?.Clone();
 		this.Status = other.Status;
 		this.InternalUser = other.InternalUser;
 	}
@@ -66,7 +66,7 @@ public sealed class DiscordPresence : ObservableApiObject
 	/// <summary>
 	///     Gets the raw activity.
 	/// </summary>
-	internal TransportActivity RawActivity { get; set; }
+	internal TransportDiscordActivity RawDiscordActivity { get; set; }
 
 	/// <summary>
 	///     Gets the user's current activities.
@@ -79,7 +79,7 @@ public sealed class DiscordPresence : ObservableApiObject
 	///     Gets the raw activities.
 	/// </summary>
 	[JsonProperty("activities", NullValueHandling = NullValueHandling.Ignore)]
-	internal TransportActivity[] RawActivities { get; set; }
+	internal TransportDiscordActivity[] RawActivities { get; set; }
 
 	/// <summary>
 	///     Gets this user's status.

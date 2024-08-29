@@ -26,14 +26,14 @@ public sealed class DiscordInteractionMetadata : SnowflakeObject
 	///     The transport user who triggered the interaction.
 	/// </summary>
 	[JsonProperty("user")]
-	internal TransportUser TransportUser { get; set; }
+	internal TransportDiscordUser TransportDiscordUser { get; set; }
 
 	/// <summary>
 	///     Ther user who triggered the interaction.
 	/// </summary>
 	[JsonIgnore]
 	public DiscordUser User
-		=> new(this.TransportUser)
+		=> new(this.TransportDiscordUser)
 		{
 			Discord = this.Discord
 		};

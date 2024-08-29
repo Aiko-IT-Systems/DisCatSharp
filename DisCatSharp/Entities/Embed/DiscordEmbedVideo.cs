@@ -19,17 +19,23 @@ public sealed class DiscordEmbedVideo : ObservableApiObject
 	///     Gets the source url of the video.
 	/// </summary>
 	[JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
-	public Uri Url { get; internal set; }
+	public DiscordUri? Url { get; internal set; }
+
+	/// <summary>
+	///     Gets the proxied url of the video.
+	/// </summary>
+	[JsonProperty("proxy_url", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordUri? ProxyUrl { get; internal set; }
 
 	/// <summary>
 	///     Gets the height of the video.
 	/// </summary>
 	[JsonProperty("height", NullValueHandling = NullValueHandling.Ignore)]
-	public int Height { get; internal set; }
+	public int? Height { get; internal set; }
 
 	/// <summary>
 	///     Gets the width of the video.
 	/// </summary>
 	[JsonProperty("width", NullValueHandling = NullValueHandling.Ignore)]
-	public int Width { get; internal set; }
+	public int? Width { get; internal set; }
 }

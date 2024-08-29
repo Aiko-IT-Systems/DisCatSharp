@@ -161,10 +161,10 @@ public sealed class DiscordActivity
 	/// <summary>
 	///     Initializes a new instance of the <see cref="DiscordActivity" /> class.
 	/// </summary>
-	/// <param name="rawActivity">The raw activity.</param>
-	internal DiscordActivity(TransportActivity rawActivity)
+	/// <param name="rawDiscordActivity">The raw activity.</param>
+	internal DiscordActivity(TransportDiscordActivity rawDiscordActivity)
 	{
-		this.UpdateWith(rawActivity);
+		this.UpdateWith(rawDiscordActivity);
 	}
 
 	/// <summary>
@@ -238,31 +238,31 @@ public sealed class DiscordActivity
 	/// <summary>
 	///     Updates a activity with an transport activity.
 	/// </summary>
-	/// <param name="rawActivity">The raw activity.</param>
-	internal void UpdateWith(TransportActivity rawActivity)
+	/// <param name="rawDiscordActivity">The raw activity.</param>
+	internal void UpdateWith(TransportDiscordActivity rawDiscordActivity)
 	{
-		this.Id = rawActivity?.Id;
-		this.Name = rawActivity?.Name;
-		this.ActivityType = rawActivity?.ActivityType ?? ActivityType.Playing;
-		this.StreamUrl = rawActivity?.StreamUrl;
-		this.SessionId = rawActivity?.SessionId;
-		this.SyncId = rawActivity?.SyncId;
-		this.Platform = rawActivity?.Platform;
-		this.State = rawActivity?.State;
+		this.Id = rawDiscordActivity?.Id;
+		this.Name = rawDiscordActivity?.Name;
+		this.ActivityType = rawDiscordActivity?.ActivityType ?? ActivityType.Playing;
+		this.StreamUrl = rawDiscordActivity?.StreamUrl;
+		this.SessionId = rawDiscordActivity?.SessionId;
+		this.SyncId = rawDiscordActivity?.SyncId;
+		this.Platform = rawDiscordActivity?.Platform;
+		this.State = rawDiscordActivity?.State;
 
-		if (rawActivity?.IsRichPresence() == true && this.RichPresence != null)
-			this.RichPresence.UpdateWith(rawActivity);
-		else this.RichPresence = rawActivity?.IsRichPresence() == true ? new DiscordRichPresence(rawActivity) : null;
+		if (rawDiscordActivity?.IsRichPresence() == true && this.RichPresence != null)
+			this.RichPresence.UpdateWith(rawDiscordActivity);
+		else this.RichPresence = rawDiscordActivity?.IsRichPresence() == true ? new DiscordRichPresence(rawDiscordActivity) : null;
 
-		if (rawActivity?.IsCustomStatus() == true && this.CustomStatus != null)
-			this.CustomStatus.UpdateWith(rawActivity.State, rawActivity.Emoji);
+		if (rawDiscordActivity?.IsCustomStatus() == true && this.CustomStatus != null)
+			this.CustomStatus.UpdateWith(rawDiscordActivity.State, rawDiscordActivity.Emoji);
 		else
-			this.CustomStatus = rawActivity?.IsCustomStatus() == true
+			this.CustomStatus = rawDiscordActivity?.IsCustomStatus() == true
 				? new DiscordCustomStatus
 				{
-					Name = rawActivity.Name!,
-					State = rawActivity.State,
-					Emoji = rawActivity.Emoji
+					Name = rawDiscordActivity.Name!,
+					State = rawDiscordActivity.State,
+					Emoji = rawDiscordActivity.Emoji
 				}
 				: null;
 	}
@@ -333,7 +333,7 @@ public sealed class DiscordRichPresence
 	///     Initializes a new instance of the <see cref="DiscordRichPresence" /> class.
 	/// </summary>
 	/// <param name="rawGame">The raw game.</param>
-	internal DiscordRichPresence(TransportActivity rawGame)
+	internal DiscordRichPresence(TransportDiscordActivity rawGame)
 	{
 		this.UpdateWith(rawGame);
 	}
@@ -452,7 +452,7 @@ public sealed class DiscordRichPresence
 	///     Updates a game activity with an transport activity.
 	/// </summary>
 	/// <param name="rawGame">The raw game.</param>
-	internal void UpdateWith(TransportActivity rawGame)
+	internal void UpdateWith(TransportDiscordActivity rawGame)
 	{
 		this.Details = rawGame?.Details;
 		this.State = rawGame?.State;

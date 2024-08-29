@@ -599,7 +599,7 @@ public sealed class DiscordAuditLogStickerEntry : DiscordAuditLogEntry
 	/// <summary>
 	///     Gets the description of sticker's format change.
 	/// </summary>
-	public PropertyChange<StickerFormat?> FormatChange { get; internal set; }
+	public PropertyChange<StickerFormatType?> FormatChange { get; internal set; }
 }
 
 /// <summary>

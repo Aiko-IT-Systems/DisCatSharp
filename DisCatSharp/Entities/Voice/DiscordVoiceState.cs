@@ -28,7 +28,7 @@ public class DiscordVoiceState : ObservableApiObject
 	{
 		this.Discord = other.Discord;
 
-		this.TransportMember = other.TransportMember;
+		this.TransportDiscordGuildMember = other.TransportDiscordGuildMember;
 
 		this.UserId = other.UserId;
 		this.ChannelId = other.ChannelId;
@@ -180,9 +180,9 @@ public class DiscordVoiceState : ObservableApiObject
 	/// </summary>
 	[JsonIgnore]
 	public DiscordMember Member
-		=> this.Guild!.Members.TryGetValue(this.TransportMember.User!.Id, out var member)
+		=> this.Guild!.Members.TryGetValue(this.TransportDiscordGuildMember.User!.Id, out var member)
 			? member
-			: new(this.TransportMember)
+			: new(this.TransportDiscordGuildMember)
 			{
 				Discord = this.Discord
 			};
@@ -191,7 +191,7 @@ public class DiscordVoiceState : ObservableApiObject
 	///     Gets the transport member.
 	/// </summary>
 	[JsonProperty("member", NullValueHandling = NullValueHandling.Ignore)]
-	internal TransportMember TransportMember { get; set; }
+	internal TransportDiscordGuildMember TransportDiscordGuildMember { get; set; }
 
 	/// <summary>
 	///     Gets whether the voice state is discoverable through user activities.

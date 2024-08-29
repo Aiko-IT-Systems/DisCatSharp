@@ -25,17 +25,17 @@ public sealed class DiscordEmbedAuthor : ObservableApiObject
 	///     Gets the url of the author.
 	/// </summary>
 	[JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
-	public Uri Url { get; set; }
+	public Uri? Url { get; set; }
 
 	/// <summary>
 	///     Gets the url of the author's icon.
 	/// </summary>
 	[JsonProperty("icon_url", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordUri IconUrl { get; set; }
+	public DiscordUri? IconUrl { get; set; }
 
 	/// <summary>
 	///     Gets the proxied url of the author's icon.
 	/// </summary>
 	[JsonProperty("proxy_icon_url", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordUri ProxyIconUrl { get; internal set; }
+	public DiscordUri? ProxyIconUrl { get; internal set; }
 }

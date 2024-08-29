@@ -61,10 +61,10 @@ public sealed partial class DiscordClient
 		DiscordThreadChannel trd = default;
 		DiscordThreadChannelMember trdm = default;
 		DiscordScheduledEvent gse = default;
-		TransportUser usr = default;
-		TransportMember mbr = default;
-		TransportUser refUsr = default;
-		TransportMember refMbr = default;
+		TransportDiscordUser usr = default;
+		TransportDiscordGuildMember mbr = default;
+		TransportDiscordUser refUsr = default;
+		TransportDiscordGuildMember refMbr = default;
 		DiscordApplicationCommand ac = default;
 		DiscordEntitlement ent = default;
 		JToken rawMbr = default;
@@ -192,13 +192,13 @@ public sealed partial class DiscordClient
 #region Guild Ban
 
 			case "guild_ban_add":
-				usr = DiscordJson.DeserializeObject<TransportUser>(dat["user"]!.ToString(), this);
+				usr = DiscordJson.DeserializeObject<TransportDiscordUser>(dat["user"]!.ToString(), this);
 				gid = (ulong)dat["guild_id"]!;
 				await this.OnGuildBanAddEventAsync(usr, this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
 
 			case "guild_ban_remove":
-				usr = DiscordJson.DeserializeObject<TransportUser>(dat["user"]!.ToString(), this);
+				usr = DiscordJson.DeserializeObject<TransportDiscordUser>(dat["user"]!.ToString(), this);
 				gid = (ulong)dat["guild_id"]!;
 				await this.OnGuildBanRemoveEventAsync(usr, this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
@@ -279,12 +279,12 @@ public sealed partial class DiscordClient
 
 			case "guild_member_add":
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnGuildMemberAddEventAsync(DiscordJson.DeserializeObject<TransportMember>(payloadString, this), this.GuildsInternal[gid]).ConfigureAwait(false);
+				await this.OnGuildMemberAddEventAsync(DiscordJson.DeserializeObject<TransportDiscordGuildMember>(payloadString, this), this.GuildsInternal[gid]).ConfigureAwait(false);
 				break;
 
 			case "guild_member_remove":
 				gid = (ulong)dat["guild_id"]!;
-				usr = DiscordJson.DeserializeObject<TransportUser>(dat["user"]!.ToString(), this);
+				usr = DiscordJson.DeserializeObject<TransportDiscordUser>(dat["user"]!.ToString(), this);
 
 				if (!this.GuildsInternal.TryGetValue(gid, out var gmrGuildVal))
 				{
@@ -299,7 +299,7 @@ public sealed partial class DiscordClient
 
 			case "guild_member_update":
 				gid = (ulong)dat["guild_id"]!;
-				await this.OnGuildMemberUpdateEventAsync(DiscordJson.DeserializeObject<TransportMember>(payloadString, this), this.GuildsInternal[gid], dat["roles"]!.ToObject<IEnumerable<ulong>>()!, (string)dat["nick"]!, (bool?)dat["pending"]).ConfigureAwait(false);
+				await this.OnGuildMemberUpdateEventAsync(DiscordJson.DeserializeObject<TransportDiscordGuildMember>(payloadString, this), this.GuildsInternal[gid], dat["roles"]!.ToObject<IEnumerable<ulong>>()!, (string)dat["nick"]!, (bool?)dat["pending"]).ConfigureAwait(false);
 				break;
 
 			case "guild_members_chunk":
@@ -385,36 +385,36 @@ public sealed partial class DiscordClient
 				rawMbr = dat["member"]!;
 
 				if (rawMbr != null)
-					mbr = DiscordJson.DeserializeObject<TransportMember>(rawMbr.ToString(), this);
+					mbr = DiscordJson.DeserializeObject<TransportDiscordGuildMember>(rawMbr.ToString(), this);
 
 				if (rawRefMsg is { HasValues: true })
 				{
 					if (rawRefMsg.SelectToken("author") != null)
-						refUsr = DiscordJson.DeserializeObject<TransportUser>(rawRefMsg.SelectToken("author")!.ToString(), this);
+						refUsr = DiscordJson.DeserializeObject<TransportDiscordUser>(rawRefMsg.SelectToken("author")!.ToString(), this);
 
 					if (rawRefMsg.SelectToken("member") != null)
-						refMbr = DiscordJson.DeserializeObject<TransportMember>(rawRefMsg.SelectToken("member")!.ToString(), this);
+						refMbr = DiscordJson.DeserializeObject<TransportDiscordGuildMember>(rawRefMsg.SelectToken("member")!.ToString(), this);
 				}
 
-				await this.OnMessageCreateEventAsync(dat.ToDiscordObject<DiscordMessage>(), dat["author"].ToObject<TransportUser>(), mbr, refUsr, refMbr).ConfigureAwait(false);
+				await this.OnMessageCreateEventAsync(dat.ToDiscordObject<DiscordMessage>(), dat["author"].ToObject<TransportDiscordUser>(), mbr, refUsr, refMbr).ConfigureAwait(false);
 				break;
 
 			case "message_update":
 				rawMbr = dat["member"]!;
 
 				if (rawMbr != null)
-					mbr = DiscordJson.DeserializeObject<TransportMember>(rawMbr.ToString(), this);
+					mbr = DiscordJson.DeserializeObject<TransportDiscordGuildMember>(rawMbr.ToString(), this);
 
 				if (rawRefMsg is { HasValues: true })
 				{
 					if (rawRefMsg.SelectToken("author") != null)
-						refUsr = DiscordJson.DeserializeObject<TransportUser>(rawRefMsg.SelectToken("author")!.ToString(), this);
+						refUsr = DiscordJson.DeserializeObject<TransportDiscordUser>(rawRefMsg.SelectToken("author")!.ToString(), this);
 
 					if (rawRefMsg.SelectToken("member") != null)
-						refMbr = DiscordJson.DeserializeObject<TransportMember>(rawRefMsg.SelectToken("member")!.ToString(), this);
+						refMbr = DiscordJson.DeserializeObject<TransportDiscordGuildMember>(rawRefMsg.SelectToken("member")!.ToString(), this);
 				}
 
-				await this.OnMessageUpdateEventAsync(DiscordJson.DeserializeObject<DiscordMessage>(payloadString, this), dat["author"] != null ? DiscordJson.DeserializeObject<TransportUser>(dat["author"]!.ToString(), this) : null, mbr!, refUsr!, refMbr!).ConfigureAwait(false);
+				await this.OnMessageUpdateEventAsync(DiscordJson.DeserializeObject<DiscordMessage>(payloadString, this), dat["author"] != null ? DiscordJson.DeserializeObject<TransportDiscordUser>(dat["author"]!.ToString(), this) : null, mbr!, refUsr!, refMbr!).ConfigureAwait(false);
 				break;
 
 			// delete event does *not* include message object
@@ -440,7 +440,7 @@ public sealed partial class DiscordClient
 				rawMbr = dat["member"]!;
 
 				if (rawMbr != null)
-					mbr = DiscordJson.DeserializeObject<TransportMember>(rawMbr.ToString(), this);
+					mbr = DiscordJson.DeserializeObject<TransportDiscordGuildMember>(rawMbr.ToString(), this);
 				// TODO: Add burst stuff
 				await this.OnMessageReactionAddAsync((ulong)dat["user_id"]!, (ulong)dat["message_id"]!, (ulong)dat["channel_id"]!, (ulong?)dat["guild_id"], mbr, DiscordJson.DeserializeObject<DiscordEmoji>(dat["emoji"]!.ToString(), this), (bool)dat["burst"]!).ConfigureAwait(false);
 				break;
@@ -532,12 +532,12 @@ public sealed partial class DiscordClient
 				break;
 
 			case "user_settings_update":
-				usr = DiscordJson.DeserializeObject<TransportUser>(payloadString, this);
+				usr = DiscordJson.DeserializeObject<TransportDiscordUser>(payloadString, this);
 				await this.OnUserSettingsUpdateEventAsync(usr).ConfigureAwait(false);
 				break;
 
 			case "user_update":
-				usr = DiscordJson.DeserializeObject<TransportUser>(payloadString, this);
+				usr = DiscordJson.DeserializeObject<TransportDiscordUser>(payloadString, this);
 				await this.OnUserUpdateEventAsync(usr).ConfigureAwait(false);
 				break;
 
@@ -570,11 +570,11 @@ public sealed partial class DiscordClient
 
 				if (rawMbr != null)
 				{
-					mbr = DiscordJson.DeserializeObject<TransportMember>(rawMbr.ToString(), this);
+					mbr = DiscordJson.DeserializeObject<TransportDiscordGuildMember>(rawMbr.ToString(), this);
 					usr = mbr.User;
 				}
 				else
-					usr = DiscordJson.DeserializeObject<TransportUser>(dat["user"]!.ToString(), this);
+					usr = DiscordJson.DeserializeObject<TransportDiscordUser>(dat["user"]!.ToString(), this);
 
 				cid = (ulong)dat["channel_id"]!;
 				// Console.WriteLine(dat.ToString()); // Get raw interaction payload.
@@ -627,7 +627,7 @@ public sealed partial class DiscordClient
 				rawMbr = dat["member"];
 
 				if (rawMbr != null)
-					mbr = DiscordJson.DeserializeObject<TransportMember>(rawMbr.ToString(), this);
+					mbr = DiscordJson.DeserializeObject<TransportDiscordGuildMember>(rawMbr.ToString(), this);
 
 				await this.OnTypingStartEventAsync((ulong)dat["user_id"], cid, this.InternalGetCachedChannel(cid) ?? this.InternalGetCachedThread(cid), (ulong?)dat["guild_id"], Utilities.GetDateTimeOffset((long)dat["timestamp"]), mbr).ConfigureAwait(false);
 				break;
@@ -697,7 +697,7 @@ public sealed partial class DiscordClient
 	/// <param name="rawGuilds">The raw guilds.</param>
 	internal async Task OnReadyEventAsync(ReadyPayload ready, JArray rawGuilds)
 	{
-		var rusr = ready.CurrentUser;
+		var rusr = ready.CurrentDiscordUser;
 		this.CurrentUser.Username = rusr.Username;
 		this.CurrentUser.Discriminator = rusr.Discriminator;
 		this.CurrentUser.AvatarHash = rusr.AvatarHash;
@@ -752,7 +752,7 @@ public sealed partial class DiscordClient
 				if (rawMembers != null)
 					foreach (var xj in rawMembers)
 					{
-						var xtm = xj.ToObject<TransportMember>();
+						var xtm = xj.ToObject<TransportDiscordGuildMember>();
 
 						var usr = new DiscordUser(xtm.User)
 						{
@@ -1083,7 +1083,7 @@ public sealed partial class DiscordClient
 			{
 				xp.Discord = this;
 				xp.GuildId = guild.Id;
-				xp.Activity = new(xp.RawActivity);
+				xp.Activity = new(xp.RawDiscordActivity);
 				if (xp.RawActivities != null)
 					xp.InternalActivities = xp.RawActivities
 						.Select(x => new DiscordActivity(x)).ToArray();
@@ -1431,7 +1431,7 @@ public sealed partial class DiscordClient
 		presences = presences.Select(xp =>
 		{
 			xp.Discord = this;
-			xp.Activity = new(xp.RawActivity);
+			xp.Activity = new(xp.RawDiscordActivity);
 			return xp;
 		});
 		foreach (var xp in presences)
@@ -1592,15 +1592,15 @@ public sealed partial class DiscordClient
 	/// <summary>
 	///     Handles the guild ban add event.
 	/// </summary>
-	/// <param name="user">The transport user.</param>
+	/// <param name="discordUser">The transport user.</param>
 	/// <param name="guild">The guild.</param>
-	internal async Task OnGuildBanAddEventAsync(TransportUser user, DiscordGuild guild)
+	internal async Task OnGuildBanAddEventAsync(TransportDiscordUser discordUser, DiscordGuild guild)
 	{
-		var usr = new DiscordUser(user)
+		var usr = new DiscordUser(discordUser)
 		{
 			Discord = this
 		};
-		usr = this.UserCache.AddOrUpdate(user.Id, usr, (id, old) =>
+		usr = this.UserCache.AddOrUpdate(discordUser.Id, usr, (id, old) =>
 		{
 			old.Username = usr.Username;
 			old.Discriminator = usr.Discriminator;
@@ -1609,7 +1609,7 @@ public sealed partial class DiscordClient
 			return old;
 		});
 
-		if (!guild.Members.TryGetValue(user.Id, out var mbr))
+		if (!guild.Members.TryGetValue(discordUser.Id, out var mbr))
 			mbr = new(usr)
 			{
 				Discord = this,
@@ -1626,15 +1626,15 @@ public sealed partial class DiscordClient
 	/// <summary>
 	///     Handles the guild ban remove event.
 	/// </summary>
-	/// <param name="user">The transport user.</param>
+	/// <param name="discordUser">The transport user.</param>
 	/// <param name="guild">The guild.</param>
-	internal async Task OnGuildBanRemoveEventAsync(TransportUser user, DiscordGuild guild)
+	internal async Task OnGuildBanRemoveEventAsync(TransportDiscordUser discordUser, DiscordGuild guild)
 	{
-		var usr = new DiscordUser(user)
+		var usr = new DiscordUser(discordUser)
 		{
 			Discord = this
 		};
-		usr = this.UserCache.AddOrUpdate(user.Id, usr, (id, old) =>
+		usr = this.UserCache.AddOrUpdate(discordUser.Id, usr, (id, old) =>
 		{
 			old.Username = usr.Username;
 			old.Discriminator = usr.Discriminator;
@@ -1643,7 +1643,7 @@ public sealed partial class DiscordClient
 			return old;
 		});
 
-		if (!guild.Members.TryGetValue(user.Id, out var mbr))
+		if (!guild.Members.TryGetValue(discordUser.Id, out var mbr))
 			mbr = new(usr)
 			{
 				Discord = this,
@@ -1950,15 +1950,15 @@ public sealed partial class DiscordClient
 	/// <summary>
 	///     Handles the guild member add event.
 	/// </summary>
-	/// <param name="member">The transport member.</param>
+	/// <param name="discordGuildMember">The transport member.</param>
 	/// <param name="guild">The guild.</param>
-	internal async Task OnGuildMemberAddEventAsync(TransportMember member, DiscordGuild guild)
+	internal async Task OnGuildMemberAddEventAsync(TransportDiscordGuildMember discordGuildMember, DiscordGuild guild)
 	{
-		var usr = new DiscordUser(member.User)
+		var usr = new DiscordUser(discordGuildMember.User)
 		{
 			Discord = this
 		};
-		usr = this.UserCache.AddOrUpdate(member.User.Id, usr, (id, old) =>
+		usr = this.UserCache.AddOrUpdate(discordGuildMember.User.Id, usr, (id, old) =>
 		{
 			old.Username = usr.Username;
 			old.Discriminator = usr.Discriminator;
@@ -1974,7 +1974,7 @@ public sealed partial class DiscordClient
 			return old;
 		});
 
-		var mbr = new DiscordMember(member)
+		var mbr = new DiscordMember(discordGuildMember)
 		{
 			Discord = this,
 			GuildId = guild.Id
@@ -1994,13 +1994,13 @@ public sealed partial class DiscordClient
 	/// <summary>
 	///     Handles the guild member remove event.
 	/// </summary>
-	/// <param name="user">The transport user.</param>
+	/// <param name="discordUser">The transport user.</param>
 	/// <param name="guild">The guild.</param>
-	internal async Task OnGuildMemberRemoveEventAsync(TransportUser user, DiscordGuild guild)
+	internal async Task OnGuildMemberRemoveEventAsync(TransportDiscordUser discordUser, DiscordGuild guild)
 	{
-		var usr = new DiscordUser(user);
+		var usr = new DiscordUser(discordUser);
 
-		if (!guild.MembersInternal.TryRemove(user.Id, out var mbr))
+		if (!guild.MembersInternal.TryRemove(discordUser.Id, out var mbr))
 			mbr = new(usr)
 			{
 				Discord = this,
@@ -2008,7 +2008,7 @@ public sealed partial class DiscordClient
 			};
 		guild.MemberCount--;
 
-		_ = this.UserCache.AddOrUpdate(user.Id, usr, (old, @new) => @new);
+		_ = this.UserCache.AddOrUpdate(discordUser.Id, usr, (old, @new) => @new);
 
 		var ea = new GuildMemberRemoveEventArgs(this.ServiceProvider)
 		{
@@ -2021,14 +2021,14 @@ public sealed partial class DiscordClient
 	/// <summary>
 	///     Handles the guild member update event.
 	/// </summary>
-	/// <param name="member">The transport member.</param>
+	/// <param name="discordGuildMember">The transport member.</param>
 	/// <param name="guild">The guild.</param>
 	/// <param name="roles">The roles.</param>
 	/// <param name="nick">The nick.</param>
 	/// <param name="pending">Whether the member is pending.</param>
-	internal async Task OnGuildMemberUpdateEventAsync(TransportMember member, DiscordGuild guild, IEnumerable<ulong> roles, string nick, bool? pending)
+	internal async Task OnGuildMemberUpdateEventAsync(TransportDiscordGuildMember discordGuildMember, DiscordGuild guild, IEnumerable<ulong> roles, string nick, bool? pending)
 	{
-		var usr = new DiscordUser(member.User)
+		var usr = new DiscordUser(discordGuildMember.User)
 		{
 			Discord = this
 		};
@@ -2048,7 +2048,7 @@ public sealed partial class DiscordClient
 			return old;
 		});
 
-		if (!guild.Members.TryGetValue(member.User.Id, out var mbr))
+		if (!guild.Members.TryGetValue(discordGuildMember.User.Id, out var mbr))
 			mbr = new(usr)
 			{
 				Discord = this,
@@ -2065,21 +2065,21 @@ public sealed partial class DiscordClient
 		var rolesOld = new ReadOnlyCollection<DiscordRole>(new List<DiscordRole>(mbr.Roles));
 		var cduOld = mbr.CommunicationDisabledUntil;
 		var udauOld = mbr.UnusualDmActivityUntil;
-		mbr.MemberFlags = member.MemberFlags;
-		mbr.AvatarHashInternal = member.AvatarHash;
-		mbr.GuildAvatarHash = member.GuildAvatarHash;
-		mbr.GuildBannerHash = member.GuildBannerHash;
-		mbr.GuildAvatarDecorationData = member.GuildAvatarDecorationData;
+		mbr.MemberFlags = discordGuildMember.MemberFlags;
+		mbr.AvatarHashInternal = discordGuildMember.AvatarHash;
+		mbr.GuildAvatarHash = discordGuildMember.GuildAvatarHash;
+		mbr.GuildBannerHash = discordGuildMember.GuildBannerHash;
+		mbr.GuildAvatarDecorationData = discordGuildMember.GuildAvatarDecorationData;
 		mbr.Nickname = nick;
-		mbr.GuildPronouns = member.GuildPronouns;
+		mbr.GuildPronouns = discordGuildMember.GuildPronouns;
 		mbr.IsPending = pending;
-		mbr.CommunicationDisabledUntil = member.CommunicationDisabledUntil;
-		mbr.UnusualDmActivityUntil = member.UnusualDmActivityUntil;
+		mbr.CommunicationDisabledUntil = discordGuildMember.CommunicationDisabledUntil;
+		mbr.UnusualDmActivityUntil = discordGuildMember.UnusualDmActivityUntil;
 		mbr.RoleIdsInternal.Clear();
 		mbr.RoleIdsInternal.AddRange(roles);
-		guild.MembersInternal.AddOrUpdate(member.User.Id, mbr, (id, oldMbr) => oldMbr);
+		guild.MembersInternal.AddOrUpdate(discordGuildMember.User.Id, mbr, (id, oldMbr) => oldMbr);
 
-		var timeoutUntil = member.CommunicationDisabledUntil;
+		var timeoutUntil = discordGuildMember.CommunicationDisabledUntil;
 		/*this.Logger.LogTrace($"Timeout:\nBefore - {cduOld}\nAfter - {timeoutUntil}");
 		if ((timeoutUntil.HasValue && cduOld.HasValue) || (timeoutUntil == null && cduOld.HasValue) || (timeoutUntil.HasValue && cduOld == null))
 		{
@@ -2181,7 +2181,7 @@ public sealed partial class DiscordClient
 		var mbrs = new HashSet<DiscordMember>();
 		var pres = new HashSet<DiscordPresence>();
 
-		var members = dat["members"]!.ToObject<TransportMember[]>()!;
+		var members = dat["members"]!.ToObject<TransportDiscordGuildMember[]>()!;
 
 		foreach (var member in members)
 		{
@@ -2221,7 +2221,7 @@ public sealed partial class DiscordClient
 			foreach (var presence in presences)
 			{
 				presence.Discord = this;
-				presence.Activity = new(presence.RawActivity);
+				presence.Activity = new(presence.RawDiscordActivity);
 
 				if (presence.RawActivities != null)
 					presence.InternalActivities = presence.RawActivities
@@ -2525,13 +2525,13 @@ public sealed partial class DiscordClient
 	/// </summary>
 	/// <param name="message">The message.</param>
 	/// <param name="author">The transport user (author).</param>
-	/// <param name="member">The transport member.</param>
+	/// <param name="discordGuildMember">The transport member.</param>
 	/// <param name="referenceAuthor">The reference transport user (author).</param>
-	/// <param name="referenceMember">The reference transport member.</param>
-	internal async Task OnMessageCreateEventAsync(DiscordMessage message, TransportUser author, TransportMember member, TransportUser referenceAuthor, TransportMember referenceMember)
+	/// <param name="referenceDiscordGuildMember">The reference transport member.</param>
+	internal async Task OnMessageCreateEventAsync(DiscordMessage message, TransportDiscordUser author, TransportDiscordGuildMember discordGuildMember, TransportDiscordUser referenceAuthor, TransportDiscordGuildMember referenceDiscordGuildMember)
 	{
 		message.Discord = this;
-		this.PopulateMessageReactionsAndCache(message, author, member);
+		this.PopulateMessageReactionsAndCache(message, author, discordGuildMember);
 		message.PopulateMentions();
 
 		if (message.Channel == null && message.ChannelId == default)
@@ -2540,7 +2540,7 @@ public sealed partial class DiscordClient
 		if (message.ReferencedMessage != null)
 		{
 			message.ReferencedMessage.Discord = this;
-			this.PopulateMessageReactionsAndCache(message.ReferencedMessage, referenceAuthor, referenceMember);
+			this.PopulateMessageReactionsAndCache(message.ReferencedMessage, referenceAuthor, referenceDiscordGuildMember);
 			message.ReferencedMessage.PopulateMentions();
 		}
 
@@ -2580,10 +2580,10 @@ public sealed partial class DiscordClient
 	/// </summary>
 	/// <param name="message">The message.</param>
 	/// <param name="author">The transport user (author).</param>
-	/// <param name="member">The transport member.</param>
+	/// <param name="discordGuildMember">The transport member.</param>
 	/// <param name="referenceAuthor">The reference transport user (author).</param>
-	/// <param name="referenceMember">The reference transport member.</param>
-	internal async Task OnMessageUpdateEventAsync(DiscordMessage message, TransportUser author, TransportMember member, TransportUser referenceAuthor, TransportMember referenceMember)
+	/// <param name="referenceDiscordGuildMember">The reference transport member.</param>
+	internal async Task OnMessageUpdateEventAsync(DiscordMessage message, TransportDiscordUser author, TransportDiscordGuildMember discordGuildMember, TransportDiscordUser referenceAuthor, TransportDiscordGuildMember referenceDiscordGuildMember)
 	{
 		DiscordGuild guild;
 
@@ -2596,13 +2596,13 @@ public sealed partial class DiscordClient
 		    || !this.MessageCache.TryGet(xm => xm.Id == eventMessage.Id && xm.ChannelId == eventMessage.ChannelId, out message))
 		{
 			message = eventMessage;
-			this.PopulateMessageReactionsAndCache(message, author, member);
+			this.PopulateMessageReactionsAndCache(message, author, discordGuildMember);
 			guild = message.Channel?.Guild;
 
 			if (message.ReferencedMessage != null)
 			{
 				message.ReferencedMessage.Discord = this;
-				this.PopulateMessageReactionsAndCache(message.ReferencedMessage, referenceAuthor, referenceMember);
+				this.PopulateMessageReactionsAndCache(message.ReferencedMessage, referenceAuthor, referenceDiscordGuildMember);
 				message.ReferencedMessage.PopulateMentions();
 			}
 		}
@@ -2856,7 +2856,7 @@ public sealed partial class DiscordClient
 	/// <param name="mbr">The transport member.</param>
 	/// <param name="emoji">The emoji.</param>
 	/// <param name="isBurst">Whether a burst reaction was added.</param>
-	internal async Task OnMessageReactionAddAsync(ulong userId, ulong messageId, ulong channelId, ulong? guildId, TransportMember mbr, DiscordEmoji emoji, bool isBurst)
+	internal async Task OnMessageReactionAddAsync(ulong userId, ulong messageId, ulong channelId, ulong? guildId, TransportDiscordGuildMember mbr, DiscordEmoji emoji, bool isBurst)
 	{
 		var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId) ?? new DiscordChannel
 		{
@@ -3461,7 +3461,7 @@ public sealed partial class DiscordClient
 			presence = DiscordJson.DeserializeObject<DiscordPresence>(rawPresence.ToString(), this);
 			;
 			presence.Discord = this;
-			presence.Activity = new(presence.RawActivity);
+			presence.Activity = new(presence.RawDiscordActivity);
 			this.PresencesInternal[presence.InternalUser.Id] = presence;
 		}
 
@@ -3478,12 +3478,12 @@ public sealed partial class DiscordClient
 
 			if (presence.InternalActivities.Length > 0)
 			{
-				presence.RawActivity = presence.RawActivities[0];
+				presence.RawDiscordActivity = presence.RawActivities[0];
 
 				if (presence.Activity != null)
-					presence.Activity.UpdateWith(presence.RawActivity);
+					presence.Activity.UpdateWith(presence.RawDiscordActivity);
 				else
-					presence.Activity = new(presence.RawActivity);
+					presence.Activity = new(presence.RawDiscordActivity);
 			}
 		}
 
@@ -3501,10 +3501,10 @@ public sealed partial class DiscordClient
 	/// <summary>
 	///     Handles the user settings update event.
 	/// </summary>
-	/// <param name="user">The transport user.</param>
-	internal async Task OnUserSettingsUpdateEventAsync(TransportUser user)
+	/// <param name="discordUser">The transport user.</param>
+	internal async Task OnUserSettingsUpdateEventAsync(TransportDiscordUser discordUser)
 	{
-		var usr = new DiscordUser(user)
+		var usr = new DiscordUser(discordUser)
 		{
 			Discord = this
 		};
@@ -3519,8 +3519,8 @@ public sealed partial class DiscordClient
 	/// <summary>
 	///     Handles the user update event.
 	/// </summary>
-	/// <param name="user">The transport user.</param>
-	internal async Task OnUserUpdateEventAsync(TransportUser user)
+	/// <param name="discordUser">The transport user.</param>
+	internal async Task OnUserUpdateEventAsync(TransportDiscordUser discordUser)
 	{
 		var usrOld = new DiscordUser
 		{
@@ -3535,14 +3535,14 @@ public sealed partial class DiscordClient
 			Verified = this.CurrentUser.Verified
 		};
 
-		this.CurrentUser.AvatarHash = user.AvatarHash;
-		this.CurrentUser.Discriminator = user.Discriminator;
-		this.CurrentUser.Email = user.Email;
-		this.CurrentUser.Id = user.Id;
-		this.CurrentUser.IsBot = user.IsBot;
-		this.CurrentUser.MfaEnabled = user.MfaEnabled;
-		this.CurrentUser.Username = user.Username;
-		this.CurrentUser.Verified = user.Verified;
+		this.CurrentUser.AvatarHash = discordUser.AvatarHash;
+		this.CurrentUser.Discriminator = discordUser.Discriminator;
+		this.CurrentUser.Email = discordUser.Email;
+		this.CurrentUser.Id = discordUser.Id;
+		this.CurrentUser.IsBot = discordUser.IsBot;
+		this.CurrentUser.MfaEnabled = discordUser.MfaEnabled;
+		this.CurrentUser.Username = discordUser.Username;
+		this.CurrentUser.Verified = discordUser.Verified;
 
 		var ea = new UserUpdateEventArgs(this.ServiceProvider)
 		{
@@ -3581,7 +3581,7 @@ public sealed partial class DiscordClient
 		}
 		else
 		{
-			var transportMbr = vstateNew.TransportMember;
+			var transportMbr = vstateNew.TransportDiscordGuildMember;
 			this.UpdateUser(new(transportMbr.User)
 			{
 				Discord = this
@@ -3830,12 +3830,12 @@ public sealed partial class DiscordClient
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
 	/// <param name="channelId">The channel id.</param>
-	/// <param name="user">The transport user.</param>
-	/// <param name="member">The transport member.</param>
+	/// <param name="discordUser">The transport user.</param>
+	/// <param name="discordGuildMember">The transport member.</param>
 	/// <param name="interaction">The interaction.</param>
 	/// <param name="rawInteraction">Debug.</param>
 	[SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
-	internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction, string rawInteraction)
+	internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportDiscordUser discordUser, TransportDiscordGuildMember discordGuildMember, DiscordInteraction interaction, string rawInteraction)
 	{
 		if (this.Configuration.EnableLibraryDeveloperMode)
 		{
@@ -3843,7 +3843,7 @@ public sealed partial class DiscordClient
 			//this.Logger.LogDebug("Interaction: {interaction}", rawInteraction);
 		}
 
-		var usr = new DiscordUser(user)
+		var usr = new DiscordUser(discordUser)
 		{
 			Discord = this
 		};
@@ -3855,15 +3855,15 @@ public sealed partial class DiscordClient
 		interaction.Discord = this;
 		interaction.Data.Discord = this;
 
-		if (member is not null)
+		if (discordGuildMember is not null)
 		{
-			usr = new DiscordMember(member)
+			usr = new DiscordMember(discordGuildMember)
 			{
 				GuildId = guildId.Value,
 				Discord = this
 			};
 			if (interaction.Guild is not null)
-				this.UpdateUser(usr, guildId, interaction.Guild, member);
+				this.UpdateUser(usr, guildId, interaction.Guild, discordGuildMember);
 		}
 
 		usr.Locale = interaction.Locale;
@@ -4033,7 +4033,7 @@ public sealed partial class DiscordClient
 	/// <param name="guildId">The optional guild id.</param>
 	/// <param name="started">The time when the user started typing.</param>
 	/// <param name="mbr">The transport member.</param>
-	internal async Task OnTypingStartEventAsync(ulong userId, ulong channelId, DiscordChannel channel, ulong? guildId, DateTimeOffset started, TransportMember mbr)
+	internal async Task OnTypingStartEventAsync(ulong userId, ulong channelId, DiscordChannel channel, ulong? guildId, DateTimeOffset started, TransportDiscordGuildMember mbr)
 	{
 		if (channel == null)
 			channel = new()

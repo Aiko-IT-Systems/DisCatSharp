@@ -71,7 +71,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 				{
 					TeamId = this.Team.Id,
 					TeamName = this.Team.Name,
-					User = new(x.User)
+					User = new(x.DiscordUser)
 					{
 						Discord = tapp.Discord
 					}
@@ -95,11 +95,11 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 		}
 
 		this.GuildId = tapp.GuildId.ValueOrDefault();
+		this.Guild = tapp.Guild.ValueOrDefault();
 		this.Slug = tapp.Slug.ValueOrDefault();
 		this.PrimarySkuId = tapp.PrimarySkuId.ValueOrDefault();
 		this.VerifyKey = tapp.VerifyKey.ValueOrDefault();
 		this.CoverImageHash = tapp.CoverImageHash.ValueOrDefault();
-		this.Guild = tapp.Guild.ValueOrDefault();
 		this.ApproximateGuildCount = tapp.ApproximateGuildCount.ValueOrDefault();
 		this.ApproximateUserInstallCount = tapp.ApproximateUserInstallCount.ValueOrDefault();
 		this.RequiresCodeGrant = tapp.BotRequiresCodeGrant.ValueOrDefault();

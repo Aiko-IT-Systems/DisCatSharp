@@ -21,7 +21,7 @@ public sealed class DiscordSupplementalGuildMember : ObservableApiObject
 	///     Gets the associated transport member.
 	/// </summary>
 	[JsonProperty("member")]
-	internal TransportMember TransportMember { get; set; }
+	internal TransportDiscordGuildMember TransportDiscordGuildMember { get; set; }
 
 	/// <summary>
 	///     Gets how the user joined the guild.

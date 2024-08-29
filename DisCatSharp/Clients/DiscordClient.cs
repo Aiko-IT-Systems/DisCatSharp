@@ -1510,7 +1510,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="author">The author to update.</param>
 	/// <param name="guild">The guild to update.</param>
 	/// <param name="member">The member to update.</param>
-	private void UpdateMessage(DiscordMessage message, TransportUser? author, DiscordGuild guild, TransportMember? member)
+	private void UpdateMessage(DiscordMessage message, TransportDiscordUser? author, DiscordGuild guild, TransportDiscordGuildMember? member)
 	{
 		if (author is not null)
 		{
@@ -1584,7 +1584,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="guild">The guild to update.</param>
 	/// <param name="mbr">The member to update.</param>
 	/// <returns>The updated user.</returns>
-	private DiscordUser UpdateUser(DiscordUser usr, ulong? guildId, DiscordGuild? guild, TransportMember? mbr)
+	private DiscordUser UpdateUser(DiscordUser usr, ulong? guildId, DiscordGuild? guild, TransportDiscordGuildMember? mbr)
 	{
 		ObjectDisposedException.ThrowIf(this._disposed, this);
 
@@ -1807,7 +1807,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 			foreach (var xj in rawMembers)
 			{
-				var xtm = xj.ToDiscordObject<TransportMember>();
+				var xtm = xj.ToDiscordObject<TransportDiscordGuildMember>();
 
 				ArgumentNullException.ThrowIfNull(xtm.User);
 				var usr = new DiscordUser(xtm.User)
@@ -1895,7 +1895,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="message">The message.</param>
 	/// <param name="author">The author.</param>
 	/// <param name="member">The member.</param>
-	private void PopulateMessageReactionsAndCache(DiscordMessage message, TransportUser author, TransportMember? member)
+	private void PopulateMessageReactionsAndCache(DiscordMessage message, TransportDiscordUser author, TransportDiscordGuildMember? member)
 	{
 		var guild = message.Channel?.Guild ?? this.InternalGetCachedGuild(message.GuildId);
 

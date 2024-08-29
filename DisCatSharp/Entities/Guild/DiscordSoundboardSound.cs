@@ -68,7 +68,7 @@ public sealed class DiscordSoundboardSound : SnowflakeObject
 	///     Gets the transport user, if applicable.
 	/// </summary>
 	[JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]
-	internal TransportUser? TransportUser { get; set; }
+	internal TransportDiscordUser? TransportUser { get; set; }
 
 	/// <summary>
 	///     Gets the sound URL (as mp3) of this sound.

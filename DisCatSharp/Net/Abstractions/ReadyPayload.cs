@@ -28,7 +28,7 @@ internal sealed class ReadyPayload : ObservableApiObject
 	///     Gets the current user.
 	/// </summary>
 	[JsonProperty("user")]
-	public TransportUser CurrentUser { get; private set; }
+	public TransportDiscordUser CurrentDiscordUser { get; private set; }
 
 	/// <summary>
 	///     <para>Gets the current shard.</para>

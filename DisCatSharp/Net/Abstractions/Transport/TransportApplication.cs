@@ -11,19 +11,13 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 ///     The transport application.
 /// </summary>
-internal sealed class TransportApplication : ObservableApiObject
+internal sealed class TransportApplication : SnowflakeObject
 {
 	/// <summary>
 	///     Initializes a new instance of the <see cref="TransportApplication" /> class.
 	/// </summary>
 	internal TransportApplication()
 	{ }
-
-	/// <summary>
-	///     Gets or sets the id.
-	/// </summary>
-	[JsonProperty("id", NullValueHandling = NullValueHandling.Include)]
-	public ulong Id { get; set; }
 
 	/// <summary>
 	///     Gets or sets the name.
@@ -53,7 +47,7 @@ internal sealed class TransportApplication : ObservableApiObject
 	///     Gets the bot user.
 	/// </summary>
 	[JsonProperty("bot", NullValueHandling = NullValueHandling.Ignore)]
-	public TransportUser Bot { get; set; }
+	public TransportDiscordUser Bot { get; set; }
 
 	/// <summary>
 	///     Whether the bot is public.
@@ -107,13 +101,13 @@ internal sealed class TransportApplication : ObservableApiObject
 	///     Gets or sets the owner.
 	/// </summary>
 	[JsonProperty("owner", NullValueHandling = NullValueHandling.Include)]
-	public TransportUser Owner { get; set; }
+	public TransportDiscordUser Owner { get; set; }
 
 	/// <summary>
 	///     Gets or sets the team.
 	/// </summary>
 	[JsonProperty("team", NullValueHandling = NullValueHandling.Include)]
-	public TransportTeam? Team { get; set; }
+	public TransportDiscordTeam? Team { get; set; }
 
 	/// <summary>
 	///     Gets or sets the verify key.
@@ -163,6 +157,7 @@ internal sealed class TransportApplication : ObservableApiObject
 	[JsonProperty("install_params", NullValueHandling = NullValueHandling.Include)]
 	public DiscordApplicationInstallParams InstallParams { get; set; }
 
+	// TODO: TransportDiscordInstallParams
 	/// <summary>
 	///     Gets or sets the role connection verification entry point.
 	/// </summary>

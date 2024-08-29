@@ -200,7 +200,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	public DiscordUser Author { get; internal set; }
 
 	[JsonProperty("member", NullValueHandling = NullValueHandling.Ignore), SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>")]
-	private TransportMember TRANSPORT_MEMBER { get; set; }
+	private TransportDiscordGuildMember TRANSPORT_DISCORD_GUILD_MEMBER { get; set; }
 
 	/// <summary>
 	///     Gets the message's content.
@@ -686,10 +686,10 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	public async Task<DiscordMessage> ModifyAsync(DiscordMessageBuilder builder)
 	{
 		builder.Validate(true);
-		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0
+		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), builder.Mentions, builder.ComponentsInternal, builder.Suppressed, builder.FilesInternal, builder.Attachments.Count > 0
 			? Optional.Some(builder.Attachments.AsEnumerable())
 			: builder.KeepAttachmentsInternal.HasValue
-				? builder.KeepAttachmentsInternal.Value && this.Attachments is not null ? Optional.Some(this.Attachments.AsEnumerable()) : Array.Empty<DiscordAttachment>()
+				? builder.KeepAttachmentsInternal.Value ? Optional.Some(this.AttachmentsInternal.AsEnumerable()) : Array.Empty<DiscordAttachment>()
 				: Optional.None).ConfigureAwait(false);
 	}
 
@@ -724,10 +724,10 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		var builder = new DiscordMessageBuilder();
 		action(builder);
 		builder.Validate(true);
-		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0
+		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), builder.Mentions, builder.ComponentsInternal, builder.Suppressed, builder.FilesInternal, builder.Attachments.Count > 0
 			? Optional.Some(builder.Attachments.AsEnumerable())
 			: builder.KeepAttachmentsInternal.HasValue
-				? builder.KeepAttachmentsInternal.Value && this.Attachments is not null ? Optional.Some(this.Attachments.AsEnumerable()) : Array.Empty<DiscordAttachment>()
+				? builder.KeepAttachmentsInternal.Value ? Optional.Some(this.AttachmentsInternal.AsEnumerable()) : Array.Empty<DiscordAttachment>()
 				: Optional.None).ConfigureAwait(false);
 	}
 
@@ -970,7 +970,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 			throw new ArgumentException("Cannot get a negative number of reactions' users.");
 
 		if (limit == 0)
-			return Array.Empty<DiscordUser>();
+			return [];
 
 		var users = new List<DiscordUser>(limit);
 		var remaining = limit;

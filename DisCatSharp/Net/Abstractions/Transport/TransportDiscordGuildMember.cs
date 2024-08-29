@@ -11,12 +11,12 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 ///     Represents a transport member.
 /// </summary>
-internal class TransportMember : ObservableApiObject
+public class TransportDiscordGuildMember : ObservableApiObject
 {
 	/// <summary>
-	///     Initializes a new instance of the <see cref="TransportMember" /> class.
+	///     Initializes a new instance of the <see cref="TransportDiscordGuildMember" /> class.
 	/// </summary>
-	internal TransportMember()
+	internal TransportDiscordGuildMember()
 	{ }
 
 	/// <summary>
@@ -60,7 +60,7 @@ internal class TransportMember : ObservableApiObject
 	///     Gets the user.
 	/// </summary>
 	[JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]
-	public TransportUser? User { get; internal set; }
+	public TransportDiscordUser? User { get; internal set; }
 
 	/// <summary>
 	///     Gets the nickname.

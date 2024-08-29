@@ -42,29 +42,29 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <summary>
 	///     Initializes a new instance of the <see cref="DiscordUser" /> class.
 	/// </summary>
-	/// <param name="transport">The transport user.</param>
-	internal DiscordUser(TransportUser transport)
+	/// <param name="transportDiscord">The transport user.</param>
+	internal DiscordUser(TransportDiscordUser transportDiscord)
 	{
-		this.Id = transport.Id;
-		this.Username = transport.Username;
-		this.Discriminator = transport.Discriminator;
-		this.AvatarHash = transport.AvatarHash;
-		this.AvatarDecorationData = transport.AvatarDecorationData;
-		this.BannerHash = transport.BannerHash;
-		this.BannerColorInternal = transport.BannerColor;
-		this.ThemeColorsInternal = [.. transport.ThemeColors ?? []];
-		this.IsBot = transport.IsBot;
-		this.MfaEnabled = transport.MfaEnabled;
-		this.Verified = transport.Verified;
-		this.Email = transport.Email;
-		this.PremiumType = transport.PremiumType;
-		this.Locale = transport.Locale;
-		this.Flags = transport.Flags;
-		this.OAuthFlags = transport.OAuthFlags;
-		this.Bio = transport.Bio;
-		this.Pronouns = transport.Pronouns;
-		this.GlobalName = transport.GlobalName;
-		this.Clan = transport.Clan;
+		this.Id = transportDiscord.Id;
+		this.Username = transportDiscord.Username;
+		this.Discriminator = transportDiscord.Discriminator;
+		this.AvatarHash = transportDiscord.AvatarHash;
+		this.AvatarDecorationData = transportDiscord.AvatarDecorationData;
+		this.BannerHash = transportDiscord.BannerHash;
+		this.BannerColorInternal = transportDiscord.BannerColor;
+		this.ThemeColorsInternal = [.. transportDiscord.ThemeColors ?? []];
+		this.IsBot = transportDiscord.IsBot;
+		this.MfaEnabled = transportDiscord.MfaEnabled;
+		this.Verified = transportDiscord.Verified;
+		this.Email = transportDiscord.Email;
+		this.PremiumType = transportDiscord.PremiumType;
+		this.Locale = transportDiscord.Locale;
+		this.Flags = transportDiscord.Flags;
+		this.OAuthFlags = transportDiscord.OAuthFlags;
+		this.Bio = transportDiscord.Bio;
+		this.Pronouns = transportDiscord.Pronouns;
+		this.GlobalName = transportDiscord.GlobalName;
+		this.Clan = transportDiscord.Clan;
 	}
 
 	/// <summary>

@@ -186,12 +186,12 @@ internal sealed class DiscordApiClientHook
 	/// <returns>A list of supplemental guild members that match the search criteria.</returns>
 	internal async Task<DiscordSearchGuildMembersResponse> SearchGuildMembersAsync(ulong guildId, DiscordGuildMemberSearchParams searchParams)
 	{
-		var validationResult = searchParams.Validate();
-		if (!validationResult.IsValid)
+		var (isValid, errorMessage) = searchParams.Validate();
+		if (!isValid)
 			throw new ValidationException(
 				typeof(DiscordGuildMemberSearchParams),
 				"DiscordGuild.SearchGuildMembersAsync(DiscordGuildMemberSearchParams searchParams)",
-				validationResult.ErrorMessage!
+				[new(null, "DiscordGuildMemberSearchParams", errorMessage!)]
 			);
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS_SEARCH}";
@@ -216,14 +216,14 @@ internal sealed class DiscordApiClientHook
 		{
 			supplementalMember.Discord = this.ApiClient.Discord;
 
-			if (supplementalMember.TransportMember.User is not null)
+			if (supplementalMember.TransportDiscordGuildMember.User is not null)
 			{
-				var usr = new DiscordUser(supplementalMember.TransportMember.User)
+				var usr = new DiscordUser(supplementalMember.TransportDiscordGuildMember.User)
 				{
 					Discord = this.ApiClient.Discord
 				};
 
-				this.ApiClient.Discord.UserCache.AddOrUpdate(supplementalMember.TransportMember.User.Id, usr, (id, old) =>
+				this.ApiClient.Discord.UserCache.AddOrUpdate(supplementalMember.TransportDiscordGuildMember.User.Id, usr, (id, old) =>
 				{
 					old.Username = usr.Username;
 					old.Discriminator = usr.Discriminator;
@@ -240,7 +240,7 @@ internal sealed class DiscordApiClientHook
 				});
 			}
 
-			supplementalMember.Member = new(supplementalMember.TransportMember)
+			supplementalMember.Member = new(supplementalMember.TransportDiscordGuildMember)
 			{
 				Discord = this.ApiClient.Discord,
 				GuildId = guildId

@@ -150,7 +150,7 @@ public sealed partial class DiscordClient
 			this.PresencesInternal[this.CurrentUser.Id] = new()
 			{
 				Discord = this,
-				RawActivity = new(),
+				RawDiscordActivity = new(),
 				Activity = new(),
 				Status = UserStatus.Online,
 				InternalUser = new()
@@ -161,7 +161,7 @@ public sealed partial class DiscordClient
 		else
 		{
 			var pr = this.PresencesInternal[this.CurrentUser.Id];
-			pr.RawActivity = new();
+			pr.RawDiscordActivity = new();
 			pr.Activity = new();
 			pr.Status = UserStatus.Online;
 		}

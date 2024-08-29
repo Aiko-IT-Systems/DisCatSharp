@@ -9,20 +9,21 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 ///     Represents a transport user.
 /// </summary>
-internal class TransportUser : ObservableApiObject
+public class TransportDiscordUser : SnowflakeObject
 {
 	/// <summary>
-	///     Initializes a new instance of the <see cref="TransportUser" /> class.
+	///     Initializes a new instance of the <see cref="TransportDiscordUser" /> class.
 	/// </summary>
-	internal TransportUser()
+	internal TransportDiscordUser()
 		: base(["display_name", "linked_users", "banner_color", "authenticator_types"])
 	{ }
 
 	/// <summary>
-	///     Initializes a new instance of the <see cref="TransportUser" /> class from an existing <see cref="TransportUser" />.
+	///     Initializes a new instance of the <see cref="TransportDiscordUser" /> class from an existing
+	///     <see cref="TransportDiscordUser" />.
 	/// </summary>
 	/// <param name="other">The other transport user.</param>
-	internal TransportUser(TransportUser other)
+	internal TransportDiscordUser(TransportDiscordUser other)
 	{
 		this.Id = other.Id;
 		this.Username = other.Username;
@@ -45,12 +46,6 @@ internal class TransportUser : ObservableApiObject
 		this.ThemeColors = other.ThemeColors;
 		this.AvatarDecorationData = other.AvatarDecorationData;
 	}
-
-	/// <summary>
-	///     Gets the id.
-	/// </summary>
-	[JsonProperty("id")]
-	public ulong Id { get; internal set; }
 
 	/// <summary>
 	///     Gets the username.

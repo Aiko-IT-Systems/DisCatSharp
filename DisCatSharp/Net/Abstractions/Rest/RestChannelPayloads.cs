@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
@@ -72,6 +73,9 @@ internal sealed class RestChannelCreatePayload : ObservableApiObject
 	[JsonProperty("rate_limit_per_user")]
 	public Optional<int?> PerUserRateLimit { get; set; }
 
+	/// <summary>
+	///     Gets or sets the default threat rate limit per user.
+	/// </summary>
 	[JsonProperty("default_thread_rate_limit_per_user", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<int?> PostCreateUserRateLimit { get; internal set; }
 
@@ -243,32 +247,26 @@ internal class RestChannelMessageEditPayload : ObservableApiObject
 	/// <summary>
 	///     Gets or sets the content.
 	/// </summary>
-	[JsonProperty("content", NullValueHandling = NullValueHandling.Include)]
-	public string Content { get; set; }
-
-	/// <summary>
-	///     Gets or sets a value indicating whether has content.
-	/// </summary>
-	[JsonIgnore]
-	public bool HasContent { get; set; }
+	[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
+	public string? Content { get; set; }
 
 	/// <summary>
 	///     Gets or sets the embeds.
 	/// </summary>
 	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordEmbed> Embeds { get; set; }
+	public IEnumerable<DiscordEmbed>? Embeds { get; set; }
 
 	/// <summary>
 	///     Gets or sets the mentions.
 	/// </summary>
 	[JsonProperty("allowed_mentions", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordMentions Mentions { get; set; }
+	public DiscordMentions? Mentions { get; set; }
 
 	/// <summary>
 	///     Gets or sets the attachments.
 	/// </summary>
 	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordAttachment> Attachments { get; set; }
+	public IEnumerable<DiscordAttachment>? Attachments { get; set; }
 
 	/// <summary>
 	///     Gets or sets the flags.
@@ -280,25 +278,19 @@ internal class RestChannelMessageEditPayload : ObservableApiObject
 	///     Gets or sets the components.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyCollection<DiscordActionRowComponent> Components { get; set; }
+	public IEnumerable<DiscordActionRowComponent>? Components { get; set; }
 
 	/// <summary>
-	///     Gets or sets a value indicating whether has embed.
-	/// </summary>
-	[JsonIgnore]
-	public bool HasEmbed { get; set; }
-
-	/// <summary>
-	///     Should serialize the content.
+	///     Determines whether the Content property should be serialized.
 	/// </summary>
 	public bool ShouldSerializeContent()
-		=> this.HasContent;
+		=> !string.IsNullOrEmpty(this.Content);
 
 	/// <summary>
-	///     Should serialize the embed.
+	///     Determines whether the Embeds property should be serialized.
 	/// </summary>
-	public bool ShouldSerializeEmbed()
-		=> this.HasEmbed;
+	public bool ShouldSerializeEmbeds()
+		=> this.Embeds?.Any() == true;
 }
 
 /// <summary>
@@ -307,16 +299,16 @@ internal class RestChannelMessageEditPayload : ObservableApiObject
 internal sealed class RestChannelMessageCreatePayload : RestChannelMessageEditPayload
 {
 	/// <summary>
-	///     Gets or sets a value indicating whether t t is s.
+	///     Gets or sets whether the message is a text-to-speech message.
 	/// </summary>
 	[JsonProperty("tts", NullValueHandling = NullValueHandling.Ignore)]
 	public bool? IsTts { get; set; }
 
 	/// <summary>
-	///     Gets or sets the stickers ids.
+	///     Gets or sets the sticker IDs associated with the message.
 	/// </summary>
 	[JsonProperty("sticker_ids", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<ulong> StickersIds { get; set; }
+	public IEnumerable<ulong>? StickersIds { get; set; } = [];
 
 	/// <summary>
 	///     Gets or sets the message reference.
@@ -328,16 +320,16 @@ internal sealed class RestChannelMessageCreatePayload : RestChannelMessageEditPa
 	///     Gets or sets the nonce sent with the message.
 	/// </summary>
 	[JsonProperty("nonce", NullValueHandling = NullValueHandling.Ignore)]
-	public string Nonce { get; internal set; }
+	public string? Nonce { get; internal set; }
 
 	/// <summary>
-	///     Gets or sets whether to enforce the <see cref="Nonce" /> to be validated.
+	///     Gets or sets whether to enforce the nonce validation.
 	/// </summary>
 	[JsonProperty("enforce_nonce", NullValueHandling = NullValueHandling.Ignore)]
 	public bool EnforceNonce { get; internal set; }
 
 	/// <summary>
-	///     Gets or sets the poll request.
+	///     Gets or sets the poll request associated with the message.
 	/// </summary>
 	[JsonProperty("poll", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordPollRequest? DiscordPollRequest { get; internal set; }
@@ -349,28 +341,28 @@ internal sealed class RestChannelMessageCreatePayload : RestChannelMessageEditPa
 internal sealed class RestChannelMessageCreateMultipartPayload : ObservableApiObject
 {
 	/// <summary>
-	///     Gets or sets the content.
+	///     Gets or sets the content of the message.
 	/// </summary>
 	[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
-	public string Content { get; set; }
+	public string? Content { get; set; }
 
 	/// <summary>
-	///     Gets or sets a value indicating whether t t is s.
+	///     Gets or sets whether the message is a text-to-speech message.
 	/// </summary>
 	[JsonProperty("tts", NullValueHandling = NullValueHandling.Ignore)]
 	public bool? IsTts { get; set; }
 
 	/// <summary>
-	///     Gets or sets the embeds.
+	///     Gets or sets the embeds associated with the message.
 	/// </summary>
 	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordEmbed> Embeds { get; set; }
+	public IEnumerable<DiscordEmbed>? Embeds { get; set; }
 
 	/// <summary>
-	///     Gets or sets the mentions.
+	///     Gets or sets the allowed mentions for the message.
 	/// </summary>
 	[JsonProperty("allowed_mentions", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordMentions Mentions { get; set; }
+	public DiscordMentions? Mentions { get; set; }
 
 	/// <summary>
 	///     Gets or sets the message reference.
@@ -388,7 +380,7 @@ internal sealed class RestChannelMessageBulkDeletePayload : ObservableApiObject
 	///     Gets or sets the messages.
 	/// </summary>
 	[JsonProperty("messages", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<ulong> Messages { get; set; }
+	public IEnumerable<ulong> Messages { get; set; } = [];
 }
 
 /// <summary>

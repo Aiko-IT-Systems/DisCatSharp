@@ -67,7 +67,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	///     Initializes a new instance of the <see cref="DiscordMember" /> class.
 	/// </summary>
 	/// <param name="mbr">The mbr.</param>
-	internal DiscordMember(TransportMember mbr)
+	internal DiscordMember(TransportDiscordGuildMember mbr)
 	{
 		this.Id = mbr.User!.Id;
 		this.IsDeafened = mbr.IsDeafened;

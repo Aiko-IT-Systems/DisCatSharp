@@ -31,5 +31,5 @@ public class DiscordBan : ObservableApiObject
 	///     Gets the raw user.
 	/// </summary>
 	[JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]
-	internal TransportUser RawUser { get; set; }
+	internal TransportDiscordUser RawDiscordUser { get; set; }
 }

@@ -93,9 +93,9 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="values">The values.</param>
 	/// <param name="post">Whether this query will be transmitted via POST.</param>
-	private static string BuildQueryString(IDictionary<string, string> values, bool post = false)
+	private static string BuildQueryString(Dictionary<string, string>? values, bool post = false)
 	{
-		if (values == null || values.Count == 0)
+		if (values is null || values.Count is 0)
 			return string.Empty;
 
 		var valsCollection = values.Select(xkvp =>
@@ -111,16 +111,16 @@ public sealed class DiscordApiClient
 	/// <param name="msgRaw">The raw message.</param>
 	private DiscordMessage PrepareMessage(JToken msgRaw)
 	{
-		var author = msgRaw["author"].ToObject<TransportUser>();
+		var author = msgRaw["author"].ToObject<TransportDiscordUser>();
 		var ret = msgRaw.ToDiscordObject<DiscordMessage>();
 		ret.Discord = this.Discord;
 
 		this.PopulateMessage(author, ret);
 
 		var referencedMsg = msgRaw["referenced_message"];
-		if (ret is { InternalReference: { Type: ReferenceType.Default }, MessageType: MessageType.Reply } && !string.IsNullOrWhiteSpace(referencedMsg?.ToString()))
+		if (ret is { InternalReference.Type: ReferenceType.Default, MessageType: MessageType.Reply } && !string.IsNullOrWhiteSpace(referencedMsg?.ToString()))
 		{
-			author = referencedMsg["author"].ToObject<TransportUser>();
+			author = referencedMsg["author"].ToObject<TransportDiscordUser>();
 			ret.ReferencedMessage.Discord = this.Discord;
 			this.PopulateMessage(author, ret.ReferencedMessage);
 		}
@@ -175,7 +175,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="author">The author.</param>
 	/// <param name="ret">The message.</param>
-	private void PopulateMessage(TransportUser author, DiscordMessage ret)
+	private void PopulateMessage(TransportDiscordUser author, DiscordMessage ret)
 	{
 		var guild = ret.Channel?.Guild;
 
@@ -441,7 +441,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, BuildQueryString(querydict), this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 		var json = JArray.Parse(res.Response);
-		var tms = json.ToObject<IReadOnlyList<TransportMember>>();
+		var tms = json.ToObject<IReadOnlyList<TransportDiscordGuildMember>>();
 
 		var mbrs = new List<DiscordMember>();
 		foreach (var xtm in tms)
@@ -1075,9 +1075,9 @@ public sealed class DiscordApiClient
 
 		var bansRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordBan>>(res.Response).Select(xb =>
 		{
-			if (!this.Discord.TryGetCachedUserInternal(xb.RawUser.Id, out var usr))
+			if (!this.Discord.TryGetCachedUserInternal(xb.RawDiscordUser.Id, out var usr))
 			{
-				usr = new(xb.RawUser)
+				usr = new(xb.RawDiscordUser)
 				{
 					Discord = this.Discord
 				};
@@ -1147,7 +1147,7 @@ public sealed class DiscordApiClient
 
 		var pld = new RestGuildBulkBanPayload
 		{
-			UserIds = userIds.ToList(),
+			UserIds = [..userIds],
 			DeleteMessageSeconds = deleteMessageSeconds
 		};
 
@@ -1248,7 +1248,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="limit">The limit.</param>
 	/// <param name="after">The after.</param>
-	internal async Task<IReadOnlyList<TransportMember>> ListGuildMembersAsync(ulong guildId, int? limit, ulong? after)
+	internal async Task<IReadOnlyList<TransportDiscordGuildMember>> ListGuildMembersAsync(ulong guildId, int? limit, ulong? after)
 	{
 		var urlParams = new Dictionary<string, string>();
 		if (limit is > 0)
@@ -1265,8 +1265,8 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var membersRaw = JsonConvert.DeserializeObject<List<TransportMember>>(res.Response);
-		return new ReadOnlyCollection<TransportMember>(membersRaw);
+		var membersRaw = JsonConvert.DeserializeObject<List<TransportDiscordGuildMember>>(res.Response);
+		return new ReadOnlyCollection<TransportDiscordGuildMember>(membersRaw);
 	}
 
 	/// <summary>
@@ -2262,12 +2262,12 @@ public sealed class DiscordApiClient
 	{
 		if (recurrenceRule is not null)
 		{
-			var (IsValid, ErrorMessage) = recurrenceRule.Validate();
-			if (!IsValid)
+			var (isValid, errorMessage) = recurrenceRule.Validate();
+			if (!isValid)
 				throw new ValidationException(
 					typeof(DiscordScheduledEventRecurrenceRule),
 					"DiscordGuild.CreateScheduledEventAsync or DiscordGuild.CreateExternalScheduledEventAsync",
-					ErrorMessage!
+					[new(null, "DiscordScheduledEventRecurrenceRule", errorMessage)]
 				);
 		}
 
@@ -2350,12 +2350,12 @@ public sealed class DiscordApiClient
 	{
 		if (recurrenceRule.HasValue && recurrenceRule.Value is not null)
 		{
-			var (IsValid, ErrorMessage) = recurrenceRule.Value.Validate();
-			if (!IsValid)
+			var (isValid, errorMessage) = recurrenceRule.Value.Validate();
+			if (!isValid)
 				throw new ValidationException(
 					typeof(DiscordScheduledEventRecurrenceRule),
 					"DiscordScheduledEvent.ModifyAsync(Action<ScheduledEventEditModel> action)",
-					ErrorMessage!
+					[new(null, "DiscordScheduledEventRecurrenceRule", errorMessage)]
 				);
 		}
 
@@ -3024,49 +3024,51 @@ public sealed class DiscordApiClient
 	/// <param name="components">The components.</param>
 	/// <exception cref="ArgumentException">
 	///     Thrown when the <paramref name="content" /> exceeds 2000 characters or is empty and
-	///     if neither content, sticker, components and embeds are definied..
+	///     if neither content, sticker, components and embeds are definied.
 	/// </exception>
-	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string content, IEnumerable<DiscordEmbed> embeds, DiscordSticker sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply, ReadOnlyCollection<DiscordActionRowComponent>? components = null)
+	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string? content, IEnumerable<DiscordEmbed>? embeds, DiscordSticker? sticker, ulong? replyMessageId, bool? mentionReply, bool? failOnInvalidReply, IEnumerable<DiscordActionRowComponent>? components = null)
 	{
 		if (content is { Length: > 2000 })
 			throw new ArgumentException("Message content length cannot exceed 2000 characters.");
 
 		if (!embeds?.Any() ?? true)
 		{
-			if (content == null && sticker == null && components == null)
+			if (content is null && sticker is null && components is null)
 				throw new ArgumentException("You must specify message content, a sticker, components or embeds.");
-			if (content.Length == 0)
+			if (content.Length is 0)
 				throw new ArgumentException("Message content must not be empty.");
 		}
 
-		if (embeds != null)
+		if (embeds is not null)
 			foreach (var embed in embeds)
-				if (embed.Timestamp != null)
+				if (embed.Timestamp is not null)
 					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
 		var pld = new RestChannelMessageCreatePayload
 		{
-			HasContent = content != null,
 			Content = content,
 			StickersIds = sticker is null
-				? Array.Empty<ulong>()
+				? []
 				: [sticker.Id],
 			IsTts = false,
-			HasEmbed = embeds?.Any() ?? false,
 			Embeds = embeds,
 			Components = components
 		};
 
-		if (replyMessageId != null)
-			pld.MessageReference = new InternalDiscordMessageReference
-			{
-				Type = ReferenceType.Default,
-				MessageId = replyMessageId,
-				FailIfNotExists = failOnInvalidReply
-			};
+		if (replyMessageId is not null)
+			pld.MessageReference = failOnInvalidReply is null || !failOnInvalidReply.HasValue
+				? throw new DisCatSharpUserException("If specifying a replyMessageId, you need to specify the failOnInvalidReply as well.")
+				: new InternalDiscordMessageReference
+				{
+					Type = ReferenceType.Default,
+					MessageId = replyMessageId,
+					FailIfNotExists = failOnInvalidReply.Value
+				};
 
-		if (replyMessageId != null)
-			pld.Mentions = new(Mentions.All, true, mentionReply);
+		if (replyMessageId is not null)
+			pld.Mentions = mentionReply is null || !mentionReply.HasValue
+				? throw new DisCatSharpUserException("If specifying a replyMessageId, you need to specify the mentionReply as well.")
+				: new(Mentions.All, true, mentionReply.Value);
 
 		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
@@ -3091,20 +3093,18 @@ public sealed class DiscordApiClient
 	{
 		builder.Validate();
 
-		if (builder.Embeds != null)
+		if (builder.Embeds is not null)
 			foreach (var embed in builder.Embeds)
-				if (embed?.Timestamp != null)
+				if (embed?.Timestamp is not null)
 					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
 		var pld = new RestChannelMessageCreatePayload
 		{
-			HasContent = builder.Content != null,
 			Content = builder.Content,
 			StickersIds = builder.Sticker is null
-				? Array.Empty<ulong>()
+				? []
 				: [builder.Sticker.Id],
 			IsTts = builder.IsTts,
-			HasEmbed = builder.Embeds != null,
 			Embeds = builder.Embeds,
 			Components = builder.Components,
 			Nonce = builder.Nonce,
@@ -3112,7 +3112,7 @@ public sealed class DiscordApiClient
 			DiscordPollRequest = builder.Poll?.Build()
 		};
 
-		if (builder.ReplyId != null)
+		if (builder.ReplyId is not null)
 			pld.MessageReference = new InternalDiscordMessageReference
 			{
 				Type = ReferenceType.Default,
@@ -3206,7 +3206,6 @@ public sealed class DiscordApiClient
 
 		var pld = new RestChannelMessageCreatePayload
 		{
-			//HasContent = content != null,
 			//Content = content,
 			MessageReference = new InternalDiscordMessageReference
 			{
@@ -3450,31 +3449,37 @@ public sealed class DiscordApiClient
 	/// <param name="suppressEmbed">The suppress_embed.</param>
 	/// <param name="files">The files.</param>
 	/// <param name="attachments">The attachments to keep.</param>
-	internal async Task<DiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, Optional<IEnumerable<IMention>> mentions, IReadOnlyList<DiscordActionRowComponent> components, Optional<bool> suppressEmbed, IReadOnlyCollection<DiscordMessageFile> files, Optional<IEnumerable<DiscordAttachment>> attachments)
+	internal async Task<DiscordMessage> EditMessageAsync(
+		ulong channelId,
+		ulong messageId,
+		Optional<string> content,
+		Optional<IEnumerable<DiscordEmbed>> embeds,
+		Optional<IEnumerable<IMention>> mentions,
+		Optional<IEnumerable<DiscordActionRowComponent>> components,
+		Optional<bool> suppressEmbed,
+		Optional<IEnumerable<DiscordMessageFile>> files,
+		Optional<IEnumerable<DiscordAttachment>> attachments
+	)
 	{
 		if (embeds is { HasValue: true, Value: not null })
 			foreach (var embed in embeds.Value)
-				if (embed.Timestamp != null)
+				if (embed.Timestamp is not null)
 					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
 		var pld = new RestChannelMessageEditPayload
 		{
-			HasContent = content.HasValue,
 			Content = content.ValueOrDefault(),
-			HasEmbed = embeds.HasValue && (embeds.Value?.Any() ?? false),
-			Embeds = embeds.HasValue && (embeds.Value?.Any() ?? false) ? embeds.Value : null,
-			Components = components,
+			Embeds = embeds.HasValue ? embeds.Value.Any() ? embeds.Value : [] : null,
+			Components = components.HasValue ? components.Value.Any() ? components.Value : [] : null,
 			Flags = suppressEmbed.HasValue && (bool)suppressEmbed ? MessageFlags.SuppressedEmbeds : null,
-			Mentions = mentions
-				.Map(m => new DiscordMentions(m ?? Mentions.None, false, mentions.Value?.OfType<RepliedUserMention>().Any() ?? false))
-				.ValueOrDefault()
+			Mentions = mentions.Map(m => new DiscordMentions(m ?? Mentions.None, false, mentions.Value?.OfType<RepliedUserMention>().Any() ?? false)).ValueOrDefault()
 		};
 
-		if (files?.Count > 0)
+		if (files.HasValue && files.Value.Count() > 0)
 		{
 			ulong fileId = 0;
 			List<DiscordAttachment> attachmentsNew = [];
-			foreach (var file in files)
+			foreach (var file in files.Value)
 			{
 				DiscordAttachment att = new()
 				{
@@ -3505,12 +3510,13 @@ public sealed class DiscordApiClient
 			}, out var path);
 
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-			var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: files).ConfigureAwait(false);
+			var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: files.HasValue ? files.Value : null).ConfigureAwait(false);
 
 			var ret = this.PrepareMessage(JObject.Parse(res.Response));
 
-			foreach (var file in files.Where(x => x.ResetPositionTo.HasValue))
-				file.Stream.Position = file.ResetPositionTo.Value;
+			if (files.HasValue)
+				foreach (var file in files.Value.Where(x => x.ResetPositionTo.HasValue))
+					file.Stream.Position = file.ResetPositionTo.Value;
 
 			return ret;
 		}
@@ -3622,7 +3628,7 @@ public sealed class DiscordApiClient
 		var voters = new List<DiscordUser>();
 		foreach (var voterRaw in votersRawList)
 		{
-			var xr = voterRaw.ToDiscordObject<TransportUser>();
+			var xr = voterRaw.ToDiscordObject<TransportDiscordUser>();
 			var usr = new DiscordUser(xr)
 			{
 				Discord = this.Discord
@@ -4037,7 +4043,7 @@ public sealed class DiscordApiClient
 			dc.PresencesInternal[duser.Id] = new()
 			{
 				Discord = dc,
-				RawActivity = new(),
+				RawDiscordActivity = new(),
 				Activity = new(),
 				Status = UserStatus.Offline,
 				InternalUser = new()
@@ -4065,7 +4071,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var tm = DiscordJson.DeserializeObject<TransportMember>(res.Response, this.Discord);
+		var tm = DiscordJson.DeserializeObject<TransportDiscordGuildMember>(res.Response, this.Discord);
 
 		var usr = new DiscordUser(tm.User)
 		{
@@ -4084,7 +4090,7 @@ public sealed class DiscordApiClient
 			dc.PresencesInternal[usr.Id] = new()
 			{
 				Discord = dc,
-				RawActivity = new(),
+				RawDiscordActivity = new(),
 				Activity = new(),
 				Status = UserStatus.Offline
 			};
@@ -5576,7 +5582,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, BuildQueryString(urlParams), this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var reactersRaw = JsonConvert.DeserializeObject<IEnumerable<TransportUser>>(res.Response);
+		var reactersRaw = JsonConvert.DeserializeObject<IEnumerable<TransportDiscordUser>>(res.Response);
 		var reacters = new List<DiscordUser>();
 		foreach (var xr in reactersRaw)
 		{
@@ -5686,7 +5692,6 @@ public sealed class DiscordApiClient
 				Content = builder.Content,
 				Attachments = builder.Attachments,
 				Components = builder.Components,
-				HasContent = true,
 				Embeds = builder.Embeds,
 				//Flags = builder.Flags,
 				//Mentions = builder.Mentions,
@@ -6080,7 +6085,7 @@ public sealed class DiscordApiClient
 			var xge = rawEmoji.ToObject<DiscordGuildEmoji>();
 			xge.Guild = gld;
 
-			var xtu = rawEmoji["user"]?.ToObject<TransportUser>();
+			var xtu = rawEmoji["user"]?.ToObject<TransportDiscordUser>();
 			if (xtu != null)
 			{
 				if (!users.ContainsKey(xtu.Id))
@@ -6121,7 +6126,7 @@ public sealed class DiscordApiClient
 		var emoji = emojiRaw.ToObject<DiscordGuildEmoji>();
 		emoji.Guild = gld;
 
-		var xtu = emojiRaw["user"]?.ToObject<TransportUser>();
+		var xtu = emojiRaw["user"]?.ToObject<TransportDiscordUser>();
 		if (xtu != null)
 			emoji.User = gld != null && gld.Members.TryGetValue(xtu.Id, out var member) ? member : new DiscordUser(xtu);
 
@@ -6164,7 +6169,7 @@ public sealed class DiscordApiClient
 		var emoji = emojiRaw.ToObject<DiscordGuildEmoji>();
 		emoji.Guild = gld;
 
-		var xtu = emojiRaw["user"]?.ToObject<TransportUser>();
+		var xtu = emojiRaw["user"]?.ToObject<TransportDiscordUser>();
 		emoji.User = xtu != null
 			? gld != null && gld.Members.TryGetValue(xtu.Id, out var member) ? member : new DiscordUser(xtu)
 			: this.Discord.CurrentUser;
@@ -6208,7 +6213,7 @@ public sealed class DiscordApiClient
 		var emoji = emojiRaw.ToObject<DiscordGuildEmoji>();
 		emoji.Guild = gld;
 
-		var xtu = emojiRaw["user"]?.ToObject<TransportUser>();
+		var xtu = emojiRaw["user"]?.ToObject<TransportDiscordUser>();
 		if (xtu != null)
 			emoji.User = gld != null && gld.Members.TryGetValue(xtu.Id, out var member) ? member : new DiscordUser(xtu);
 
@@ -6278,7 +6283,7 @@ public sealed class DiscordApiClient
 		var emojiRaw = JObject.Parse(res.Response);
 		var emoji = emojiRaw.ToObject<DiscordApplicationEmoji>();
 
-		var xtu = emojiRaw["user"]?.ToObject<TransportUser>();
+		var xtu = emojiRaw["user"]?.ToObject<TransportDiscordUser>();
 		if (xtu is not null)
 			emoji.User = new(xtu);
 
@@ -6311,7 +6316,7 @@ public sealed class DiscordApiClient
 		var emojiRaw = JObject.Parse(res.Response);
 		var emoji = emojiRaw.ToObject<DiscordApplicationEmoji>();
 
-		var xtu = emojiRaw["user"]?.ToObject<TransportUser>();
+		var xtu = emojiRaw["user"]?.ToObject<TransportDiscordUser>();
 		if (xtu is not null)
 			emoji.User = new(xtu);
 
@@ -6344,7 +6349,7 @@ public sealed class DiscordApiClient
 		var emojiRaw = JObject.Parse(res.Response);
 		var emoji = emojiRaw.ToObject<DiscordApplicationEmoji>();
 
-		var xtu = emojiRaw["user"]?.ToObject<TransportUser>();
+		var xtu = emojiRaw["user"]?.ToObject<TransportDiscordUser>();
 		if (xtu is not null)
 			emoji.User = new(xtu);
 
@@ -6424,7 +6429,7 @@ public sealed class DiscordApiClient
 		var json = JObject.Parse(res.Response)["sticker_packs"] as JArray;
 		var ret = json.ToDiscordObject<DiscordStickerPack[]>();
 
-		return ret.ToList();
+		return [..ret];
 	}
 
 	/// <summary>
@@ -7649,7 +7654,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path);
 		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
 			.ConfigureAwait(false);
-		var tuser = DiscordJson.DeserializeObject<TransportUser>(res.Response, null);
+		var tuser = DiscordJson.DeserializeObject<TransportDiscordUser>(res.Response, null);
 		return new(tuser);
 	}
 
@@ -7722,7 +7727,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path);
 		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
 			.ConfigureAwait(false);
-		var tmember = DiscordJson.DeserializeObject<TransportMember>(res.Response, null);
+		var tmember = DiscordJson.DeserializeObject<TransportDiscordGuildMember>(res.Response, null);
 		return new(tmember);
 	}
 

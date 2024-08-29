@@ -2351,7 +2351,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="name">The name of the sticker.</param>
 	/// <param name="description">The optional description of the sticker.</param>
 	/// <param name="emoji">The emoji to associate the sticker with.</param>
-	/// <param name="format">The file format the sticker is written in.</param>
+	/// <param name="formatType">The file format the sticker is written in.</param>
 	/// <param name="file">The sticker.</param>
 	/// <param name="reason">Audit log reason</param>
 	/// <exception cref="UnauthorizedException">
@@ -2359,23 +2359,23 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	///     <see cref="Permissions.ManageGuildExpressions" /> permission.
 	/// </exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordSticker> CreateStickerAsync(string name, string description, DiscordEmoji emoji, Stream file, StickerFormat format, string? reason = null)
+	public Task<DiscordSticker> CreateStickerAsync(string name, string description, DiscordEmoji emoji, Stream file, StickerFormatType formatType, string? reason = null)
 	{
-		var fileExt = format switch
+		var fileExt = formatType switch
 		{
-			StickerFormat.Png => "png",
-			StickerFormat.Apng => "png",
-			StickerFormat.Gif => "gif",
-			StickerFormat.Lottie => "json",
+			StickerFormatType.Png => "png",
+			StickerFormatType.Apng => "png",
+			StickerFormatType.Gif => "gif",
+			StickerFormatType.Lottie => "json",
 			_ => throw new InvalidOperationException("This format is not supported.")
 		};
 
-		var contentType = format switch
+		var contentType = formatType switch
 		{
-			StickerFormat.Png => "image/png",
-			StickerFormat.Apng => "image/png",
-			StickerFormat.Gif => "image/gif",
-			StickerFormat.Lottie => "application/json",
+			StickerFormatType.Png => "image/png",
+			StickerFormatType.Apng => "image/png",
+			StickerFormatType.Gif => "image/gif",
+			StickerFormatType.Lottie => "application/json",
 			_ => throw new InvalidOperationException("This format is not supported.")
 		};
 

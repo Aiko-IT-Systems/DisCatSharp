@@ -98,7 +98,7 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	///     Gets the Format type of the sticker.
 	/// </summary>
 	[JsonProperty("format_type")]
-	public StickerFormat FormatType { get; internal set; }
+	public StickerFormatType FormatTypeType { get; internal set; }
 
 	/// <summary>
 	///     Gets the tags of the sticker.
@@ -110,7 +110,7 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	///     Gets the url of the sticker.
 	/// </summary>
 	[JsonIgnore]
-	public string Url => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.STICKERS}/{this.Id}.{(this.FormatType == StickerFormat.Lottie ? "json" : "png")}";
+	public string Url => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.STICKERS}/{this.Id}.{(this.FormatTypeType == StickerFormatType.Lottie ? "json" : "png")}";
 
 	/// <summary>
 	///     Whether to stickers are equal.
@@ -137,7 +137,7 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// <summary>
 	///     Gets the sticker in readable format.
 	/// </summary>
-	public override string ToString() => $"Sticker {this.Id}; {this.Name}; {this.FormatType}";
+	public override string ToString() => $"Sticker {this.Id}; {this.Name}; {this.FormatTypeType}";
 
 	/// <summary>
 	///     Modifies the sticker
@@ -199,7 +199,7 @@ public enum StickerType : long
 /// <summary>
 ///     The sticker type
 /// </summary>
-public enum StickerFormat : long
+public enum StickerFormatType : long
 {
 	/// <summary>
 	///     Sticker is a png

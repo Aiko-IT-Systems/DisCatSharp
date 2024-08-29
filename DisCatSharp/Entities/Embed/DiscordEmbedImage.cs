@@ -23,17 +23,17 @@ public sealed class DiscordEmbedImage : ObservableApiObject
 	///     Gets a proxied url of the image.
 	/// </summary>
 	[JsonProperty("proxy_url", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordUri ProxyUrl { get; internal set; }
+	public DiscordUri? ProxyUrl { get; internal set; }
 
 	/// <summary>
 	///     Gets the height of the image.
 	/// </summary>
 	[JsonProperty("height", NullValueHandling = NullValueHandling.Ignore)]
-	public int Height { get; internal set; }
+	public int? Height { get; internal set; }
 
 	/// <summary>
 	///     Gets the width of the image.
 	/// </summary>
 	[JsonProperty("width", NullValueHandling = NullValueHandling.Ignore)]
-	public int Width { get; internal set; }
+	public int? Width { get; internal set; }
 }

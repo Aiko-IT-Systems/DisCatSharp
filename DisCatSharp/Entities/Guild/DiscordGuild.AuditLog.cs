@@ -76,7 +76,7 @@ public partial class DiscordGuild
 				if (this.Discord.UserCache.ContainsKey(xau.Id))
 					continue;
 
-				var xtu = new TransportUser
+				var xtu = new TransportDiscordUser
 				{
 					Id = xau.Id,
 					Username = xau.Username,
@@ -1114,8 +1114,8 @@ public partial class DiscordGuild
 								p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
 								entrysti.FormatChange = new()
 								{
-									Before = p1 ? (StickerFormat?)t5 : null,
-									After = p2 ? (StickerFormat?)t6 : null
+									Before = p1 ? (StickerFormatType?)t5 : null,
+									After = p2 ? (StickerFormatType?)t6 : null
 								};
 								break;
 

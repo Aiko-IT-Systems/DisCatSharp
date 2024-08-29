@@ -11,15 +11,11 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class DiscordMessageBuilder
 {
-	private readonly List<DiscordEmbed> _embeds = [];
-
+	internal readonly List<DiscordEmbed> EmbedsInternal = [];
 	internal readonly List<DiscordAttachment> AttachmentsInternal = [];
-
-	internal readonly List<DiscordActionRowComponent> ComponentsInternal = new(5);
-
+	internal readonly List<DiscordActionRowComponent> ComponentsInternal = [];
 	internal readonly List<DiscordMessageFile> FilesInternal = [];
-
-	private string _content;
+	private string? _content;
 
 	/// <summary>
 	///     Whether to keep previous attachments.
@@ -29,7 +25,7 @@ public sealed class DiscordMessageBuilder
 	/// <summary>
 	///     Gets or Sets the Message to be sent.
 	/// </summary>
-	public string Content
+	public string? Content
 	{
 		get => this._content;
 		set
@@ -44,25 +40,26 @@ public sealed class DiscordMessageBuilder
 	/// <summary>
 	///     Gets or sets the embed for the builder. This will always set the builder to have one embed.
 	/// </summary>
-	public DiscordEmbed Embed
+	public DiscordEmbed? Embed
 	{
-		get => this._embeds.Count > 0 ? this._embeds[0] : null;
+		get => this.EmbedsInternal.Count > 0 ? this.EmbedsInternal[0] : null;
 		set
 		{
-			this._embeds.Clear();
-			this._embeds.Add(value);
+			this.EmbedsInternal.Clear();
+			if (value is not null)
+				this.EmbedsInternal.Add(value);
 		}
 	}
 
 	/// <summary>
 	///     Gets the Sticker to be send.
 	/// </summary>
-	public DiscordSticker Sticker { get; set; }
+	public DiscordSticker? Sticker { get; set; }
 
 	/// <summary>
 	///     Gets the Embeds to be sent.
 	/// </summary>
-	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
+	public IReadOnlyList<DiscordEmbed> Embeds => this.EmbedsInternal;
 
 	/// <summary>
 	///     Gets or Sets if the message should be TTS.
@@ -72,7 +69,7 @@ public sealed class DiscordMessageBuilder
 	/// <summary>
 	///     Gets the Allowed Mentions for the message to be sent.
 	/// </summary>
-	public List<IMention>? Mentions { get; private set; }
+	public List<IMention> Mentions { get; private set; } = [];
 
 	/// <summary>
 	///     Gets the Files to be sent in the Message.
@@ -260,8 +257,7 @@ public sealed class DiscordMessageBuilder
 	/// <returns>The current builder to be chained.</returns>
 	public DiscordMessageBuilder WithEmbed(DiscordEmbed embed)
 	{
-		if (embed == null)
-			return this;
+		ArgumentNullException.ThrowIfNull(embed, nameof(embed));
 
 		this.Embed = embed;
 		return this;
@@ -274,10 +270,9 @@ public sealed class DiscordMessageBuilder
 	/// <returns>The current builder to be chained.</returns>
 	public DiscordMessageBuilder AddEmbed(DiscordEmbed embed)
 	{
-		if (embed == null)
-			return this; //Providing null embeds will produce a 400 response from Discord.//
+		ArgumentNullException.ThrowIfNull(embed, nameof(embed));
 
-		this._embeds.Add(embed);
+		this.EmbedsInternal.Add(embed);
 		return this;
 	}
 
@@ -288,7 +283,7 @@ public sealed class DiscordMessageBuilder
 	/// <returns>The current builder to be chained.</returns>
 	public DiscordMessageBuilder AddEmbeds(IEnumerable<DiscordEmbed> embeds)
 	{
-		this._embeds.AddRange(embeds);
+		this.EmbedsInternal.AddRange(embeds);
 		return this;
 	}
 
@@ -299,7 +294,7 @@ public sealed class DiscordMessageBuilder
 	/// <returns>The current builder to be chained.</returns>
 	public DiscordMessageBuilder WithAllowedMention(IMention allowedMention)
 	{
-		if (this.Mentions != null)
+		if (this.Mentions.Count > 0)
 			this.Mentions.Add(allowedMention);
 		else
 			this.Mentions = [allowedMention];
@@ -314,10 +309,10 @@ public sealed class DiscordMessageBuilder
 	/// <returns>The current builder to be chained.</returns>
 	public DiscordMessageBuilder WithAllowedMentions(IEnumerable<IMention> allowedMentions)
 	{
-		if (this.Mentions != null)
+		if (this.Mentions.Count > 0)
 			this.Mentions.AddRange(allowedMentions);
 		else
-			this.Mentions = allowedMentions.ToList();
+			this.Mentions = [..allowedMentions];
 
 		return this;
 	}
@@ -335,7 +330,7 @@ public sealed class DiscordMessageBuilder
 	/// <returns>The current builder to be chained.</returns>
 	public DiscordMessageBuilder WithFile(string fileName, Stream stream, bool resetStreamPosition = false, string description = null)
 	{
-		if (this.Files.Count > 10)
+		if (this.FilesInternal.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
 		if (this.FilesInternal.Any(x => x.Filename == fileName))
@@ -361,7 +356,7 @@ public sealed class DiscordMessageBuilder
 	/// <returns>The current builder to be chained.</returns>
 	public DiscordMessageBuilder WithFile(FileStream stream, bool resetStreamPosition = false, string description = null)
 	{
-		if (this.Files.Count > 10)
+		if (this.FilesInternal.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
 		if (this.FilesInternal.Any(x => x.Filename == stream.Name))
@@ -386,7 +381,7 @@ public sealed class DiscordMessageBuilder
 	/// <returns>The current builder to be chained.</returns>
 	public DiscordMessageBuilder WithFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
 	{
-		if (this.Files.Count + files.Count > 10)
+		if (this.FilesInternal.Count + files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
 		foreach (var file in files)
@@ -438,10 +433,7 @@ public sealed class DiscordMessageBuilder
 		this.FailOnInvalidReply = failOnInvalidReply;
 
 		if (mention)
-		{
-			this.Mentions ??= [];
 			this.Mentions.Add(new RepliedUserMention());
-		}
 
 		return this;
 	}
@@ -483,10 +475,10 @@ public sealed class DiscordMessageBuilder
 	/// </summary>
 	public void Clear()
 	{
-		this.Content = "";
-		this._embeds.Clear();
+		this.Content = string.Empty;
+		this.EmbedsInternal.Clear();
 		this.IsTts = false;
-		this.Mentions = null;
+		this.Mentions.Clear();
 		this.FilesInternal.Clear();
 		this.ReplyId = null;
 		this.MentionOnReply = false;
@@ -506,18 +498,18 @@ public sealed class DiscordMessageBuilder
 	/// <param name="isModify">Tells the method to perform the Modify Validation or Create Validation.</param>
 	internal void Validate(bool isModify = false)
 	{
-		if (this._embeds.Count > 10)
+		if (this.EmbedsInternal.Count > 10)
 			throw new ArgumentException("A message can only have up to 10 embeds.");
 
 		if (!isModify)
 		{
-			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && this.Sticker is null && (!this.Components?.Any() ?? true) && this.Poll is null)
+			if (this.FilesInternal.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && this.Sticker is null && (!this.Components?.Any() ?? true) && this.Poll is null)
 				throw new ArgumentException("You must specify content, an embed, a sticker, a component, a poll or at least one file.");
 
-			if (this.Components.Count > 5)
+			if (this.ComponentsInternal.Count > 5)
 				throw new InvalidOperationException("You can only have 5 action rows per message.");
 
-			if (this.Components.Any(c => c.Components.Count > 5))
+			if (this.ComponentsInternal.Any(c => c.Components.Count > 5))
 				throw new InvalidOperationException("Action rows can only have 5 components");
 
 			if (this.EnforceNonce && string.IsNullOrEmpty(this.Nonce))

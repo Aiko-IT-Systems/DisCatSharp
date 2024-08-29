@@ -18,7 +18,7 @@ public sealed class DiscordTeam : SnowflakeObject, IEquatable<DiscordTeam>
 	///     Initializes a new instance of the <see cref="DiscordTeam" /> class.
 	/// </summary>
 	/// <param name="tt">The tt.</param>
-	internal DiscordTeam(TransportTeam tt)
+	internal DiscordTeam(TransportDiscordTeam tt)
 	{
 		this.Id = tt.Id;
 		this.Name = tt.Name;
@@ -97,7 +97,7 @@ public sealed class DiscordTeamMember : IEquatable<DiscordTeamMember>
 	///     Initializes a new instance of the <see cref="DiscordTeamMember" /> class.
 	/// </summary>
 	/// <param name="ttm">The ttm.</param>
-	internal DiscordTeamMember(TransportTeamMember ttm)
+	internal DiscordTeamMember(TransportDiscordTeamMember ttm)
 	{
 		this.MembershipStatus = (DiscordTeamMembershipStatus)ttm.MembershipState;
 		this.Permissions = new ReadOnlySet<string>(new HashSet<string>(ttm.Permissions));

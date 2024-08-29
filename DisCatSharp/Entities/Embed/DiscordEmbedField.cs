@@ -45,5 +45,5 @@ public sealed class DiscordEmbedField : ObservableApiObject
 	///     Whether or not this field should display inline.
 	/// </summary>
 	[JsonProperty("inline", NullValueHandling = NullValueHandling.Ignore)]
-	public bool Inline { get; set; }
+	public bool? Inline { get; set; }
 }
