@@ -14,6 +14,21 @@ namespace DisCatSharp.Common.Utilities;
 public sealed class WaveformVisualizer
 {
 	/// <summary>
+	///     Gets the default background color.
+	/// </summary>
+	private readonly Color _defaultBackgroundColor = Colors.Black;
+
+	/// <summary>
+	///     Gets the default colors for <see cref="CreateColorfulWaveformImage" />.
+	/// </summary>
+	private readonly Color[] _defaultColorfulColors = [Colors.DarkOrange, Colors.Orange, Colors.Gold, Colors.Yellow, Colors.LightBlue, Colors.Blue, Colors.BlueViolet, Colors.Pink, Colors.DeepPink, Colors.MediumVioletRed, Colors.Red];
+
+	/// <summary>
+	///     Gets the default colors for <see cref="CreateWaveformImage" />.
+	/// </summary>
+	private readonly Color[] _defaultColors = [Colors.LightBlue, Colors.LightSkyBlue, Colors.DeepSkyBlue];
+
+	/// <summary>
 	///     Gets the image.
 	/// </summary>
 	public IImage? Image { get; internal set; }
@@ -63,20 +78,17 @@ public sealed class WaveformVisualizer
 		if (this.WAVEFORM_BYTE_DATA.Length is 0)
 			throw new ArgumentException("Waveform data is empty.", nameof(this.WithWaveformByteData));
 
-		var backgroundColor = Colors.Black;
-		Color[] barColors = [Colors.LightBlue, Colors.LightSkyBlue, Colors.DeepSkyBlue];
-
 		var image = new PlatformBitmapExportService().CreateContext(width, height);
 		var canvas = image.Canvas;
-		canvas.FillColor = backgroundColor;
+		canvas.FillColor = this._defaultBackgroundColor;
 		canvas.FillRectangle(0, 0, width, height);
 
 		var barWidth = (float)width / this.WAVEFORM_BYTE_DATA.Length / 2;
 		var xScale = (float)width / this.WAVEFORM_BYTE_DATA.Length;
 		var yScale = (float)height / 2 / 255;
 
-		var gradientStops = barColors
-			.Select((color, index) => new PaintGradientStop((float)index / (barColors.Length - 1), color))
+		var gradientStops = this._defaultColors
+			.Select((color, index) => new PaintGradientStop((float)index / (this._defaultColors.Length - 1), color))
 			.ToArray();
 
 		var gradient = new LinearGradientPaint(gradientStops, new PointF(0, 0), new PointF(0, height));
@@ -91,7 +103,7 @@ public sealed class WaveformVisualizer
 
 			canvas.FillRoundedRectangle(x1, y1, barWidth, barHeight * 2, barWidth / 4);
 
-			canvas.SetShadow(new(2, 2), 5, Colors.Black.WithAlpha(0.5f));
+			canvas.SetShadow(new(2, 2), 5, this._defaultBackgroundColor.WithAlpha(0.5f));
 		}
 
 		this.Image = image.Image;
@@ -113,11 +125,11 @@ public sealed class WaveformVisualizer
 		if (this.WAVEFORM_BYTE_DATA.Length is 0)
 			throw new ArgumentException("Waveform data is empty.", nameof(this.WithWaveformByteData));
 
-		backgroundColor ??= Colors.Black;
-		barColors ??= [Colors.DarkOrange, Colors.Orange, Colors.Gold, Colors.Yellow, Colors.LightBlue, Colors.Blue, Colors.BlueViolet, Colors.Pink, Colors.DeepPink, Colors.MediumVioletRed, Colors.Red];
+		backgroundColor ??= this._defaultBackgroundColor;
+		barColors ??= this._defaultColorfulColors;
 
 		if (barColors.Length is 0)
-			barColors = [Colors.DarkOrange, Colors.Orange, Colors.Gold, Colors.Yellow, Colors.LightBlue, Colors.Blue, Colors.BlueViolet, Colors.Pink, Colors.DeepPink, Colors.MediumVioletRed, Colors.Red];
+			barColors = this._defaultColorfulColors;
 
 		var image = new PlatformBitmapExportService().CreateContext(width, height);
 		var canvas = image.Canvas;
@@ -145,7 +157,7 @@ public sealed class WaveformVisualizer
 
 			canvas.FillRoundedRectangle(x1, y1, barWidth, barHeight * 2, barWidth / 4);
 
-			canvas.SetShadow(new(2, 2), 5, Colors.Black.WithAlpha(0.5f));
+			canvas.SetShadow(new(2, 2), 5, backgroundColor.WithAlpha(0.5f));
 		}
 
 		this.Image = image.Image;
