@@ -56,26 +56,38 @@ public enum MemberFlags : long
 	[DiscordInExperiment]
 	IsGuest = 1 << 4,
 
-	// TODO: Find out whether it's still correct
 	/// <summary>
 	///     Member has started home actions.
 	/// </summary>
-	[DiscordInExperiment]
 	StartedHomeActions = 1 << 5,
 
 	/// <summary>
 	///     Member has completed home actions.
 	/// </summary>
-	[DiscordInExperiment]
 	CompletedHomeActions = 1 << 6,
 
 	/// <summary>
-	///     Members username or nickname contains words that are not allowed.
+	///     Member's username, display name, or nickname is blocked by AutoMod.
 	/// </summary>
-	AutomodQuarantinedUsernameOrGuildNickname = 1 << 7,
+	AutomodQuarantinedUsername = 1 << 7,
+
+	/// <inheritdoc cref="AutomodQuarantinedUsername"/>
+	AutomodQuarantinedUsernameOrGuildNickname = AutomodQuarantinedUsername,
 
 	/// <summary>
-	///     Members user or guild bio contains words that are not allowed.
+	///     Member's user or guild bio is blocked by AutoMod.
 	/// </summary>
-	AutomodQuarantinedBio = 1 << 8
+	[DiscordDeprecated]
+	AutomodQuarantinedBio = 1 << 8,
+
+	/// <summary>
+	///     Member has dismissed the DM settings upsell.
+	/// </summary>
+	DmSettingsUpsellAcknowledged = 1 << 9,
+
+	/// <summary>
+	///     Members clan tag is blocked by AutoMod.
+	/// </summary>
+	[DiscordInExperiment]
+	AutomodQuarantinedClanTag = 1 << 10
 }
