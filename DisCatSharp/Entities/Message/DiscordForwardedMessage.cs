@@ -48,6 +48,18 @@ public sealed class DiscordForwardedMessage : ObservableApiObject
 	private readonly Lazy<IReadOnlyList<DiscordUser>> _mentionedUsersLazy;
 
 	/// <summary>
+	///     Holds the list of <see cref="DiscordSticker"/>s.
+	/// </summary>
+	[JsonIgnore]
+	private readonly Lazy<IReadOnlyList<DiscordSticker>> _stickersLazy;
+
+	/// <summary>
+	///     Holds the list of <see cref="DiscordComponent"/>s.
+	/// </summary>
+	[JsonIgnore]
+	private readonly Lazy<IReadOnlyList<DiscordComponent>> _componentsLazy;
+
+	/// <summary>
 	///     Gets the <see cref="DiscordAttachment" />s.
 	/// </summary>
 	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
@@ -58,6 +70,12 @@ public sealed class DiscordForwardedMessage : ObservableApiObject
 	/// </summary>
 	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<DiscordEmbed> EmbedsInternal = [];
+
+	/// <summary>
+	///     Gets the attached <see cref="DiscordComponent"/>s.
+	/// </summary>
+	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<DiscordComponent> ComponentsInternal = [];
 
 	/// <summary>
 	///     Constructs the list of <see cref="DiscordChannel" /> mentions.
@@ -74,10 +92,27 @@ public sealed class DiscordForwardedMessage : ObservableApiObject
 	public List<ulong> MentionedRoleIds = [];
 
 	/// <summary>
+	///     Gets components for this forwarded message.
+	/// </summary>
+	[JsonIgnore]
+	public IReadOnlyList<DiscordComponent> Components
+		=> this._componentsLazy.Value;
+
+	/// <summary>
+	///     Gets stickers for this forwarded message.
+	/// </summary>
+	[JsonIgnore]
+	public IReadOnlyList<DiscordSticker> Stickers
+		=> this._stickersLazy.Value;
+
+	/// <summary>
 	///     Constructs the list of <see cref="DiscordRole" /> mentions.
 	/// </summary>
 	[JsonIgnore]
 	internal List<DiscordRole> MentionedRolesInternal = [];
+
+	[JsonProperty("sticker_items", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<DiscordSticker> StickersInternal = [];
 
 	/// <summary>
 	///     Constructs a new <see cref="DiscordForwardedMessage" />.
@@ -89,6 +124,8 @@ public sealed class DiscordForwardedMessage : ObservableApiObject
 		this._mentionedChannelsLazy = new(() => new ReadOnlyCollection<DiscordChannel>(this.MentionedChannelsInternal));
 		this._mentionedRolesLazy = new(() => new ReadOnlyCollection<DiscordRole>(this.MentionedRolesInternal));
 		this._mentionedUsersLazy = new(() => new ReadOnlyCollection<DiscordUser>(this.MentionedUsersInternal));
+		this._stickersLazy = new(() => new ReadOnlyCollection<DiscordSticker>(this.StickersInternal));
+		this._componentsLazy = new(() => new ReadOnlyCollection<DiscordComponent>(this.ComponentsInternal));
 	}
 
 	/// <summary>
@@ -102,6 +139,7 @@ public sealed class DiscordForwardedMessage : ObservableApiObject
 		this._mentionedChannelsLazy = new(() => new ReadOnlyCollection<DiscordChannel>(this.MentionedChannelsInternal));
 		this._mentionedRolesLazy = new(() => new ReadOnlyCollection<DiscordRole>(this.MentionedRolesInternal));
 		this._mentionedUsersLazy = new(() => new ReadOnlyCollection<DiscordUser>(this.MentionedUsersInternal));
+		this._stickersLazy = new(() => new ReadOnlyCollection<DiscordSticker>(this.StickersInternal));
 		this.GuildId = guildId;
 	}
 
