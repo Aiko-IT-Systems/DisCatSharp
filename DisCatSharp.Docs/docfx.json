@@ -258,7 +258,8 @@
 			"https://xref.docs.microsoft.com/query?uid={uid}"
 		],
 		"xref": [
-			"ext-xrefmap.yml"
+			"ext-xrefmap.yml",
+			"https://learn.microsoft.com/en-us/dotnet/.xrefmap.json"
 		],
 		"content": [
 			{

@@ -39,4 +39,4 @@ Let me quote something about that:
 We've had to introduce a breaking change due to this.
 [DiscordMessage.Components](xref:DisCatSharp.Entities.DiscordMessage.Components) is now of the type IReadOnlyList<[DiscordComponent](xref:DisCatSharp.Entities.DiscordComponent)> instead of IReadOnlyList<[DiscordActionRowComponent](xref:DisCatSharp.Entities.DiscordActionRowComponent)>.
 
-To get components in action rows (because bots can only create such component hierarchies) reliable, you'd have to do [DiscordMessage.Components.OfType<DiscordActionRowComponent>](xref:System.Linq.Enumerable.OfType) to get a `IReadOnlyList<DiscordActionRowComponent>` again.
+To get components in action rows (because bots can only create such component hierarchies) reliable, you'd have to do [DiscordMessage.Components.OfType<DiscordActionRowComponent>](xref:System.Linq.Enumerable.OfType*) to get a `IReadOnlyList<DiscordActionRowComponent>` again.
