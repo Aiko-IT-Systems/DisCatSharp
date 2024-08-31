@@ -28,3 +28,15 @@ Another alternative is:
 ```cs
 new Thread(Method).Start()
 ```
+
+## A messages components field type is changed suddenly
+
+Let me quote something about that:
+
+> Going forward, you should be exceedingly prepared to handle new components not wrapped in action rows
+> - Discord Team
+
+We've had to introduce a breaking change due to this.
+[DiscordMessage.Components](xref:DisCatSharp.Entities.DiscordMessage.Components) is now of the type IReadOnlyList<[DiscordComponent](xref:DisCatSharp.Entities.DiscordComponent)> instead of IReadOnlyList<[DiscordActionRowComponent](xref:DisCatSharp.Entities.DiscordActionRowComponent)>.
+
+To get components in action rows (because bots can only create such component hierarchies) reliable, you'd have to do [DiscordMessage.Components.OfType<DiscordActionRowComponent>](xref:System.Linq.Enumerable.OfType) to get a `IReadOnlyList<DiscordActionRowComponent>` again.
