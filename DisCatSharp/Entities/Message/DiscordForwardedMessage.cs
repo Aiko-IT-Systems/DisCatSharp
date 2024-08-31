@@ -140,6 +140,7 @@ public sealed class DiscordForwardedMessage : ObservableApiObject
 		this._mentionedRolesLazy = new(() => new ReadOnlyCollection<DiscordRole>(this.MentionedRolesInternal));
 		this._mentionedUsersLazy = new(() => new ReadOnlyCollection<DiscordUser>(this.MentionedUsersInternal));
 		this._stickersLazy = new(() => new ReadOnlyCollection<DiscordSticker>(this.StickersInternal));
+		this._componentsLazy = new(() => new ReadOnlyCollection<DiscordComponent>(this.ComponentsInternal));
 		this.GuildId = guildId;
 	}
 
