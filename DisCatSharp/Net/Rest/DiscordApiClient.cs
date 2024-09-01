@@ -3096,6 +3096,14 @@ public sealed class DiscordApiClient
 				if (embed?.Timestamp != null)
 					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
+		var flags = MessageFlags.None;
+		if (builder.Suppressed)
+			flags |= MessageFlags.SuppressedEmbeds;
+		if (builder.Silent)
+			flags |= MessageFlags.SuppressNotifications;
+		if (builder.IsVoiceMessage)
+			flags |= MessageFlags.IsVoiceMessage;
+
 		var pld = new RestChannelMessageCreatePayload
 		{
 			HasContent = builder.Content != null,
@@ -3109,7 +3117,8 @@ public sealed class DiscordApiClient
 			Components = builder.Components,
 			Nonce = builder.Nonce,
 			EnforceNonce = builder.EnforceNonce,
-			DiscordPollRequest = builder.Poll?.Build()
+			DiscordPollRequest = builder.Poll?.Build(),
+			Flags = flags
 		};
 
 		if (builder.ReplyId != null)
@@ -3457,6 +3466,8 @@ public sealed class DiscordApiClient
 				if (embed.Timestamp != null)
 					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
+		MessageFlags? flags = suppressEmbed.HasValue && suppressEmbed.Value ? MessageFlags.SuppressedEmbeds : null;
+
 		var pld = new RestChannelMessageEditPayload
 		{
 			HasContent = content.HasValue,
@@ -3464,7 +3475,7 @@ public sealed class DiscordApiClient
 			HasEmbed = embeds.HasValue && (embeds.Value?.Any() ?? false),
 			Embeds = embeds.HasValue && (embeds.Value?.Any() ?? false) ? embeds.Value : null,
 			Components = components,
-			Flags = suppressEmbed.HasValue && (bool)suppressEmbed ? MessageFlags.SuppressedEmbeds : null,
+			Flags = flags,
 			Mentions = mentions
 				.Map(m => new DiscordMentions(m ?? Mentions.None, false, mentions.Value?.OfType<RepliedUserMention>().Any() ?? false))
 				.ValueOrDefault()
@@ -3516,7 +3527,19 @@ public sealed class DiscordApiClient
 		}
 		else
 		{
-			pld.Attachments = attachments.ValueOrDefault();
+			if (attachments.HasValue && attachments.Value.Any())
+			{
+				ulong fileId = 0;
+				List<DiscordAttachment> attachmentsNew = new(attachments.Value.Count());
+				foreach (var att in attachments.Value)
+				{
+					att.Id = fileId;
+					attachmentsNew.Add(att);
+					fileId++;
+				}
+
+				pld.Attachments = attachmentsNew;
+			}
 
 			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
 			var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
@@ -5154,6 +5177,8 @@ public sealed class DiscordApiClient
 			flags |= MessageFlags.SuppressedEmbeds;
 		if (builder.NotificationsSuppressed)
 			flags |= MessageFlags.SuppressNotifications;
+		if (builder.IsVoiceMessage)
+			flags |= MessageFlags.IsVoiceMessage;
 
 		var pld = new RestWebhookExecutePayload
 		{
@@ -5191,6 +5216,22 @@ public sealed class DiscordApiClient
 			}
 
 			pld.Attachments = attachments;
+		}
+		else
+		{
+			if (builder.Attachments.Any())
+			{
+				ulong fileId = 0;
+				List<DiscordAttachment> attachments = new(builder.Attachments.Count);
+				foreach (var att in builder.Attachments)
+				{
+					att.Id = fileId;
+					attachments.Add(att);
+					fileId++;
+				}
+
+				pld.Attachments = attachments;
+			}
 		}
 
 		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.Files?.Count > 0 || builder.IsTts || builder.Mentions != null)
@@ -5352,7 +5393,19 @@ public sealed class DiscordApiClient
 		}
 		else
 		{
-			pld.Attachments = builder.Attachments;
+			if (builder.Attachments.Any())
+			{
+				ulong fileId = 0;
+				List<DiscordAttachment> attachments = new(builder.Attachments.Count);
+				foreach (var att in builder.Attachments)
+				{
+					att.Id = fileId;
+					attachments.Add(att);
+					fileId++;
+				}
+
+				pld.Attachments = attachments;
+			}
 
 			var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
 			var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
@@ -7036,8 +7089,21 @@ public sealed class DiscordApiClient
 					attachments.Add(att);
 					fileId++;
 				}
+				
+				if (pld.Data is not null)
+					pld.Data.Attachments = attachments;
+			}
+			else if (builder is { Attachments.Count: > 0 })
+			{
+				ulong fileId = 0;
+				List<DiscordAttachment> attachments = new(builder.Attachments.Count);
+				foreach (var att in builder.Attachments)
+				{
+					att.Id = fileId;
+					attachments.Add(att);
+					fileId++;
+				}
 
-				pld.Attachments = attachments;
 				if (pld.Data is not null)
 					pld.Data.Attachments = attachments;
 			}
@@ -7058,7 +7124,6 @@ public sealed class DiscordApiClient
 					Attachments = null,
 					DiscordPollRequest = null
 				},
-				Attachments = null,
 				CallbackHints = null
 			};
 
@@ -7249,6 +7314,22 @@ public sealed class DiscordApiClient
 			}
 
 			pld.Attachments = attachments;
+		}
+		else
+		{
+			if (builder.Attachments.Any())
+			{
+				ulong fileId = 0;
+				List<DiscordAttachment> attachments = new(builder.Attachments.Count);
+				foreach (var att in builder.Attachments)
+				{
+					att.Id = fileId;
+					attachments.Add(att);
+					fileId++;
+				}
+
+				pld.Attachments = attachments;
+			}
 		}
 
 		if (builder.Mentions != null)

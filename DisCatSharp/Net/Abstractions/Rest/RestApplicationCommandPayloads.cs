@@ -168,12 +168,6 @@ internal sealed class RestInteractionResponsePayload : ObservableApiObject
 	[JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordInteractionApplicationCommandCallbackData? Data { get; set; }
 
-	/// <summary>
-	///     Gets the attachments.
-	/// </summary>
-	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
-	public List<DiscordAttachment>? Attachments { get; set; }
-
 	// TODO: Implement if it gets added to the api
 	/// <summary>
 	///     Gets the callback hints.

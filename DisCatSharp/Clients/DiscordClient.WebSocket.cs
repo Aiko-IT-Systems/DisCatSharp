@@ -235,7 +235,7 @@ public sealed partial class DiscordClient
 				if (this.Configuration.EnableSentry)
 				{
 					this.Sentry.CaptureException(ex);
-					_ = Task.Run(this.Sentry.FlushAsync);
+					_ = Task.Run(this.Sentry.FlushAsync, this._cancelToken);
 				}
 			}
 		}

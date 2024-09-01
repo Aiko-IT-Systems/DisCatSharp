@@ -16,6 +16,8 @@ public sealed class DiscordFollowupMessageBuilder
 
 	private readonly List<DiscordMessageFile> _files = [];
 
+	internal readonly List<DiscordAttachment> AttachmentsInternal = [];
+
 	private string _content;
 
 	/// <summary>
@@ -57,6 +59,22 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	private bool EMB_SUP { get; set; }
+
+	/// <summary>
+	///     Whether to send as voice message.
+	///     You can't use that on your own, it needs DisCatSharp.Experimental.
+	/// </summary>
+	internal bool IsVoiceMessage
+	{
+		get => this.VOICE_MSG;
+		set
+		{
+			this.VOICE_MSG = value;
+			this.FlagsChanged = true;
+		}
+	}
+
+	private bool VOICE_MSG { get; set; }
 
 	/// <summary>
 	///     Whether to send as silent message.
@@ -102,6 +120,11 @@ public sealed class DiscordFollowupMessageBuilder
 	///     Components to send on this followup message.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
+
+	/// <summary>
+	///     Attachments to be send with this followup request.
+	/// </summary>
+	public IReadOnlyList<DiscordAttachment> Attachments => this.AttachmentsInternal;
 
 	/// <summary>
 	///     Mentions to send on this followup message.
@@ -344,6 +367,16 @@ public sealed class DiscordFollowupMessageBuilder
 	}
 
 	/// <summary>
+	///     Sets the followup message to be send as voice message.
+	/// </summary>
+	internal DiscordFollowupMessageBuilder AsVoiceMessage(bool asVoiceMessage = true)
+	{
+		this.FlagsChanged = true;
+		this.IsVoiceMessage = asVoiceMessage;
+		return this;
+	}
+
+	/// <summary>
 	///     Sets the followup message to be send as silent message.
 	/// </summary>
 	public DiscordFollowupMessageBuilder AsSilentMessage()
@@ -384,7 +417,7 @@ public sealed class DiscordFollowupMessageBuilder
 	/// </summary>
 	internal void Validate()
 	{
-		if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any() && !this.Components.Any() && this.Poll is null)
+		if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any() && !this.Components.Any() && this.Poll is null && this?.Attachments.Count == 0)
 			throw new ArgumentException("You must specify content, an embed, a component, a poll, or at least one file.");
 
 		this.Poll?.Validate();

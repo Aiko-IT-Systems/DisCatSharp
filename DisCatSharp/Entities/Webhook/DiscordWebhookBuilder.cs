@@ -23,7 +23,7 @@ public sealed class DiscordWebhookBuilder
 
 	private string _content;
 
-	internal List<DiscordAttachment> AttachmentsInternal = [];
+	internal readonly List<DiscordAttachment> AttachmentsInternal = [];
 
 	/// <summary>
 	///     Whether flags were changed.
@@ -54,17 +54,23 @@ public sealed class DiscordWebhookBuilder
 	/// <summary>
 	///     Whether this webhook request is text-to-speech.
 	/// </summary>
-	public bool IsTts { get; set; }
+	public bool IsTts { get; private set; }
 
 	/// <summary>
 	///     Whether to suppress embeds.
 	/// </summary>
-	public bool EmbedsSuppressed { get; set; }
+	public bool EmbedsSuppressed { get; private set; }
 
 	/// <summary>
 	///     Whether to send as silent message.
 	/// </summary>
-	public bool NotificationsSuppressed { get; set; }
+	public bool NotificationsSuppressed { get; private set; }
+
+	/// <summary>
+	///     Whether to send as voice message.
+	///     You can't use that on your own, it needs DisCatSharp.Experimental.
+	/// </summary>
+	public bool IsVoiceMessage { get; private set; }
 
 	/// <summary>
 	///     Message to send on this webhook request.
@@ -139,6 +145,16 @@ public sealed class DiscordWebhookBuilder
 	{
 		this.FlagsChanged = true;
 		this.NotificationsSuppressed = true;
+		return this;
+	}
+
+	/// <summary>
+	///     Sets the webhook to be send as voice message.
+	/// </summary>
+	public DiscordWebhookBuilder AsVoiceMessage()
+	{
+		this.FlagsChanged = true;
+		this.IsVoiceMessage = true;
 		return this;
 	}
 
@@ -490,6 +506,10 @@ public sealed class DiscordWebhookBuilder
 		this.KeepAttachmentsInternal = false;
 		this.ThreadName = null;
 		this.Poll = null;
+		this.FlagsChanged = false;
+		this.NotificationsSuppressed = false;
+		this.IsTts = false;
+		this.IsVoiceMessage = false;
 	}
 
 	/// <summary>
@@ -530,12 +550,10 @@ public sealed class DiscordWebhookBuilder
 			if (this.AvatarUrl.HasValue)
 				throw new ArgumentException("You cannot change the avatar of an interaction response.");
 		}
-		else
-		{
-			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any() && !this.Components.Any() && this.Poll is null)
-				throw new ArgumentException("You must specify content, an embed, a component, a poll, or at least one file.");
 
-			this.Poll?.Validate();
-		}
+		if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any() && !this.Components.Any() && this.Poll is null && this?.Attachments.Count == 0)
+			throw new ArgumentException("You must specify content, an embed, a component, a poll, or at least one file.");
+
+		this.Poll?.Validate();
 	}
 }

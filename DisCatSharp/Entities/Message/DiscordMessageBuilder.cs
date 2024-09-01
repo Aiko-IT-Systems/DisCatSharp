@@ -67,7 +67,18 @@ public sealed class DiscordMessageBuilder
 	/// <summary>
 	///     Gets or Sets if the message should be TTS.
 	/// </summary>
-	public bool IsTts { get; set; }
+	public bool IsTts { get; private set; }
+
+	/// <summary>
+	///     Gets or Sets if the message should be send silent.
+	/// </summary>
+	public bool Silent { get; private set; }
+
+	/// <summary>
+	///     Whether to send as voice message.
+	///     You can't use that on your own, it needs DisCatSharp.Experimental.
+	/// </summary>
+	public bool IsVoiceMessage { get; private set; }
 
 	/// <summary>
 	///     Gets the Allowed Mentions for the message to be sent.
@@ -250,6 +261,33 @@ public sealed class DiscordMessageBuilder
 	public DiscordMessageBuilder HasTts(bool isTts)
 	{
 		this.IsTts = isTts;
+		return this;
+	}
+
+	/// <summary>
+	///     Sets the message response to suppress embeds.
+	/// </summary>
+	public DiscordMessageBuilder SuppressEmbeds(bool suppress = true)
+	{
+		this.Suppressed = suppress;
+		return this;
+	}
+
+	/// <summary>
+	///     Sets the message to be send as voice message.
+	/// </summary>
+	public DiscordMessageBuilder AsVoiceMessage(bool asVoiceMessage = true)
+	{
+		this.IsVoiceMessage = asVoiceMessage;
+		return this;
+	}
+
+	/// <summary>
+	///     Sets the followup message to be send as silent message.
+	/// </summary>
+	public DiscordMessageBuilder AsSilentMessage(bool silent = true)
+	{
+		this.Silent = silent;
 		return this;
 	}
 
@@ -498,6 +536,7 @@ public sealed class DiscordMessageBuilder
 		this.Nonce = null;
 		this.EnforceNonce = false;
 		this.Poll = null;
+		this.IsVoiceMessage = false;
 	}
 
 	/// <summary>
@@ -509,9 +548,12 @@ public sealed class DiscordMessageBuilder
 		if (this._embeds.Count > 10)
 			throw new ArgumentException("A message can only have up to 10 embeds.");
 
+		if (isModify)
+			this.AsVoiceMessage(false);
+
 		if (!isModify)
 		{
-			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && this.Sticker is null && (!this.Components?.Any() ?? true) && this.Poll is null)
+			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && this.Sticker is null && (!this.Components?.Any() ?? true) && this.Poll is null && this?.Attachments.Count == 0)
 				throw new ArgumentException("You must specify content, an embed, a sticker, a component, a poll or at least one file.");
 
 			if (this.Components.Count > 5)

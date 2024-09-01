@@ -26,11 +26,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Concentus" Version="2.2.2" />
+		<PackageReference Include="Concentus.Oggfile" Version="1.0.6" />
 		<PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.5">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="DisCatSharp.Attributes" Version="10.6.6" />
+		<PackageReference Include="NAudio" Version="2.2.1" />
 	</ItemGroup>
 
 	<ItemGroup>

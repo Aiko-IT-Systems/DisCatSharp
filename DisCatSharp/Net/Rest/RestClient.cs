@@ -571,6 +571,14 @@ internal sealed class RestClient : IDisposable
 				var bts = await res.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 				var txt = Utilities.UTF8.GetString(bts, 0, bts.Length);
 
+				if (targetDebug)
+				{
+					var x = await req.Content!.ReadAsStringAsync();
+					Console.WriteLine(x);
+					Console.WriteLine(txt);
+					Console.WriteLine("Meow");
+				}
+
 				if (this.Debug)
 					this._logger.Log(LogLevel.Trace, LoggerEvents.RestRx, "Rest Response Content: {Content}", txt);
 

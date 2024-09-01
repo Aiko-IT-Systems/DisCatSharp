@@ -25,7 +25,7 @@ public static class DiscordChannelMethodHooks
 		GcpAttachment attachment = new(name, stream);
 		var response = await hook.RequestFileUploadAsync(channel.Id, attachment).ConfigureAwait(false);
 		var target = response.Attachments.First();
-		_ = Task.Run(() => hook.UploadGcpFile(target, stream));
+		hook.UploadGcpFile(target, stream);
 		target.Filename = name;
 		target.Description = description;
 		return target;

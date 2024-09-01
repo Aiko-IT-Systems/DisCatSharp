@@ -20,6 +20,8 @@ public sealed class DiscordInteractionResponseBuilder
 
 	private readonly List<DiscordMessageFile> _files = [];
 
+	internal readonly List<DiscordAttachment> AttachmentsInternal = [];
+
 	private string _content;
 
 	/// <summary>
@@ -97,6 +99,22 @@ public sealed class DiscordInteractionResponseBuilder
 	private bool NOTI_SUP { get; set; }
 
 	/// <summary>
+	///     Whether to send as voice message.
+	///     You can't use that on your own, it needs DisCatSharp.Experimental.
+	/// </summary>
+	internal bool IsVoiceMessage
+	{
+		get => this.VOICE_MSG;
+		set
+		{
+			this.VOICE_MSG = value;
+			this.FlagsChanged = true;
+		}
+	}
+
+	private bool VOICE_MSG { get; set; }
+
+	/// <summary>
 	///     Content of the message to send.
 	/// </summary>
 	public string Content
@@ -131,6 +149,11 @@ public sealed class DiscordInteractionResponseBuilder
 	///     Mutually exclusive with content, embed, and components.
 	/// </summary>
 	public IReadOnlyList<DiscordApplicationCommandAutocompleteChoice> Choices => this._choices;
+
+	/// <summary>
+	///     Attachments to be send with this interaction response.
+	/// </summary>
+	public IReadOnlyList<DiscordAttachment> Attachments => this.AttachmentsInternal;
 
 	/// <summary>
 	///     Mentions to send on this interaction response.
@@ -265,6 +288,16 @@ public sealed class DiscordInteractionResponseBuilder
 	{
 		this.FlagsChanged = true;
 		this.NotificationsSuppressed = true;
+		return this;
+	}
+
+	/// <summary>
+	///     Sets the followup message to be send as voice message.
+	/// </summary>
+	internal DiscordInteractionResponseBuilder AsVoiceMessage(bool asVoiceMessage = true)
+	{
+		this.FlagsChanged = true;
+		this.IsVoiceMessage = asVoiceMessage;
 		return this;
 	}
 
@@ -467,5 +500,8 @@ public sealed class DiscordInteractionResponseBuilder
 		this._choices.Clear();
 		this._files.Clear();
 		this.Poll = null;
+		this.IsVoiceMessage = false;
+		this.NotificationsSuppressed = false;
+		this.EmbedsSuppressed = false;
 	}
 }
