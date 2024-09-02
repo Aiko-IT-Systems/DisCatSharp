@@ -502,7 +502,10 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	/// <param name="targetChannel">The channel to forward this message to.</param>
 	/// <param name="content">Content is not available at the moment, but already added for the future.</param>
-	/// <returns></returns>
+	/// <exception cref="UnauthorizedException">Thrown when the bot tries forwarding a message it doesn't has access to or the client tried to modify a message not sent by them.</exception>
+	/// <exception cref="NotFoundException">Thrown when the target channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMessage> ForwardMessageAsync(DiscordChannel targetChannel, string? content = null)
 		=> await this.Discord.ApiClient.ForwardMessageAsync(this, targetChannel.Id, content);
 
