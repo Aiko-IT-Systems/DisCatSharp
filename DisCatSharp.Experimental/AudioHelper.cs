@@ -84,12 +84,12 @@ public static class AudioHelper
 	/// </summary>
 	/// <param name="opusStream">The audio stream.</param>
 	/// <returns>The generated data.</returns>
-	public static (Stream Stream, float DurationSeconds, byte[] Waveform) GetDurationAndWaveformBytes(this Stream opusStream)
+	public static (float DurationSeconds, byte[] Waveform) GetDurationAndWaveformBytes(this Stream opusStream)
 	{
 		var (durationStream, duration) = GetOpusAudioDurationInSeconds(opusStream);
-		var (waveStream, waveform) = GenerateWaveformBytes(durationStream);
+		var (_, waveform) = GenerateWaveformBytes(durationStream);
 
-		return (waveStream, duration, waveform);
+		return (duration, waveform);
 	}
 
 	/// <summary>

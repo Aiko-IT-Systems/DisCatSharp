@@ -881,7 +881,7 @@ public partial class DiscordGuild
 				case AuditLogActionType.WebhookUpdate:
 					entry = new DiscordAuditLogWebhookEntry
 					{
-						Target = ahd.TryGetValue(xac.TargetId.Value, out var webhook)
+						Target = ahd?.TryGetValue(xac.TargetId.Value, out var webhook) ?? false
 							? webhook
 							: new()
 							{

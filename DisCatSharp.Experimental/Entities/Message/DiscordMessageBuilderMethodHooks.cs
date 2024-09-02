@@ -30,7 +30,7 @@ public static class DiscordMessageBuilderMethodHooks
 		else
 		{
 			ArgumentNullException.ThrowIfNull(originalStream, nameof(originalStream));
-			var (_, durationSeconds, waveform) = originalStream.GetDurationAndWaveformBytes();
+			var (durationSeconds, waveform) = originalStream.GetDurationAndWaveformBytes();
 			Console.WriteLine($"Waveform length: {waveform.Length} bytes");
 			builder.AttachmentsInternal.Add(new()
 			{
@@ -66,7 +66,7 @@ public static class DiscordMessageBuilderMethodHooks
 		else
 		{
 			ArgumentNullException.ThrowIfNull(originalStream, nameof(originalStream));
-			var (_, durationSeconds, waveform) = originalStream.GetDurationAndWaveformBytes();
+			var (durationSeconds, waveform) = originalStream.GetDurationAndWaveformBytes();
 			Console.WriteLine($"Waveform length: {waveform.Length} bytes");
 			builder.AttachmentsInternal.Add(new()
 			{
@@ -102,7 +102,7 @@ public static class DiscordMessageBuilderMethodHooks
 		else
 		{
 			ArgumentNullException.ThrowIfNull(originalStream, nameof(originalStream));
-			var (_, durationSeconds, waveform) = originalStream.GetDurationAndWaveformBytes();
+			var (durationSeconds, waveform) = originalStream.GetDurationAndWaveformBytes();
 			builder.AttachmentsInternal.Add(new()
 			{
 				Filename = gcpAttachment.Filename,
@@ -137,7 +137,7 @@ public static class DiscordMessageBuilderMethodHooks
 		else
 		{
 			ArgumentNullException.ThrowIfNull(originalStream, nameof(originalStream));
-			var (_, durationSeconds, waveform) = originalStream.GetDurationAndWaveformBytes();
+			var (durationSeconds, waveform) = originalStream.GetDurationAndWaveformBytes();
 			builder.AttachmentsInternal.Add(new()
 			{
 				Filename = gcpAttachment.Filename,
