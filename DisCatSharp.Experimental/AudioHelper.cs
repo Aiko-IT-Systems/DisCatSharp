@@ -66,7 +66,11 @@ public static class AudioHelper
 
 			foreach (var t in packet)
 			{
-				samples[totalSamples % maxWaveformSize] += Math.Abs(t);
+				var absValue = t is short.MinValue
+					? short.MaxValue
+					: Math.Abs(t);
+
+				samples[totalSamples % maxWaveformSize] += absValue;
 				totalSamples++;
 			}
 		}
