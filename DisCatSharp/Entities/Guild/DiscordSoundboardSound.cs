@@ -17,6 +17,14 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class DiscordSoundboardSound : SnowflakeObject
 {
+	internal DiscordSoundboardSound()
+		: base(["user_id"])
+	{}
+
+	/// <inheritdoc cref="SnowflakeObject.Id" />
+	[JsonProperty("sound_id")]
+	public new ulong Id { get; internal set; }
+
 	/// <summary>
 	///     Gets the name of the soundboard sound.
 	/// </summary>
@@ -50,6 +58,7 @@ public sealed class DiscordSoundboardSound : SnowflakeObject
 	/// <summary>
 	///     Gets the guild id this sound belongs to, if applicable.
 	/// </summary>
+	[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong? GuildId { get; internal set; }
 
 	/// <summary>
