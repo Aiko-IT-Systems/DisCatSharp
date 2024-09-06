@@ -30,11 +30,20 @@ server: # REST and WS server
   address: 0.0.0.0
 plugins: # Uncomment the youtube config if you enabled the youtube plugin down below.
 #  youtube:
-#    enabled: true
-#    clients: ["MUSIC", "ANDROID", "WEB"] # Log in credentials are no longer support for bypassing age-gated videos. Instead, add 'TVHTML5EMBEDDED' to the clients. Do keep in mind that, even with this client enabled, age-restricted tracks are not guaranteed to play.
+#    enabled: true # Whether this source can be used.
+#    allowSearch: true # Whether "ytsearch:" and "ytmsearch:" can be used.
+#    allowDirectVideoIds: true # Whether just video IDs can match. If false, only complete URLs will be loaded.
+#    allowDirectPlaylistIds: true # Whether just playlist IDs can match. If false, only complete URLs will be loaded.
+#    # The clients to use for track loading. See below for a list of valid clients.
+#    # Clients are queried in the order they are given (so the first client is queried first and so on...)
+#    clients:
+#      - MUSIC
+#      - ANDROID_TESTSUITE
+#      - WEB
+#      - TVHTML5EMBEDDED
 lavalink:
   plugins: # Uncomment this plugin for youtube support. Replace VERSION with the latest version from here: https://github.com/lavalink-devs/youtube-source/releases
-#    - dependency: "com.github.lavalink-devs.lavaplayer-youtube-source:plugin:VERSION"
+#    - dependency: "dev.lavalink.youtube:youtube-plugin:VERSION"
 #      repository: "https://jitpack.io"
   server:
     password: "youshallnotpass"
