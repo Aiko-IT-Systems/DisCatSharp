@@ -217,7 +217,12 @@ public enum MessageType
 	PurchaseNotification = 44,
 
 	/// <summary>
-	///     Messages indicating a polls result are in.
+	///     Message indicating a polls result are in.
 	/// </summary>
-	PollResult = 46
+	PollResult = 46,
+
+	/// <summary>
+	///     Message indicating that a channel was linked to a lobby.
+	/// </summary>
+	ChannelLinkedToLobby = 49
 }
