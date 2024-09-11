@@ -13,6 +13,10 @@ public static class SystemChannelFlagsExtension
 	/// <param name="baseFlags">The existing flags.</param>
 	/// <param name="flag">The flag to search for.</param>
 	/// <returns></returns>
+	public static bool HasSystemChannelFlag(this SystemChannelFlags baseFlags, SystemChannelFlags flag)
+		=> (baseFlags & flag) == flag;
+
+	/// <inheritdoc cref="HasSystemChannelFlag(SystemChannelFlags, SystemChannelFlags)"/>
 	public static bool HasSystemChannelFlag(this SystemChannelFlags? baseFlags, SystemChannelFlags flag)
 		=> baseFlags.HasValue && (baseFlags & flag) == flag;
 }
