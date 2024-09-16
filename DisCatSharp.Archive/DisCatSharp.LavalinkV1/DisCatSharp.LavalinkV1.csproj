@@ -32,11 +32,11 @@ Documentation: https://docs.dcs.aitsys.dev/articles/modules/audio/lavalink/setup
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.0">
+    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="DisCatSharp.Attributes" Version="10.4.4" />
+    <PackageReference Include="DisCatSharp.Attributes" Version="10.6.6" />
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
   </ItemGroup>
