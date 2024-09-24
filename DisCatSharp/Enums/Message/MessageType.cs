@@ -224,5 +224,11 @@ public enum MessageType
 	/// <summary>
 	///     Message indicating that a channel was linked to a lobby.
 	/// </summary>
-	ChannelLinkedToLobby = 49
+	ChannelLinkedToLobby = 49,
+
+	/// <summary>
+	///     Message indicating a gifting prompt.
+	/// </summary>
+
+	GiftingPrompt = 50
 }
