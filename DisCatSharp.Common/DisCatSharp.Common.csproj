@@ -37,8 +37,8 @@
 		<PackageReference Include="DisCatSharp.Attributes" Version="10.6.6" />
 		<PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Maui.Graphics" Version="8.0.90" />
-		<PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="8.0.90" />
+		<PackageReference Include="Microsoft.Maui.Graphics" Version="8.0.91" />
+		<PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="8.0.91" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
 		<PackageReference Include="System.Memory" Version="4.5.5" />
