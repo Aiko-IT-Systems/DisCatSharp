@@ -88,11 +88,19 @@ public class HostTests
 
 	private IHostBuilder Create(Dictionary<string, string?> configValues) =>
 		Host.CreateDefaultBuilder()
+			.ConfigureLogging(logging => {
+				logging.ClearProviders();
+				logging.AddConsole();
+			})
 			.ConfigureServices(services => services.AddSingleton<IDiscordHostedService, Bot>())
 			.ConfigureHostConfiguration(builder => builder.AddInMemoryCollection(configValues));
 
 	private IHostBuilder Create(string filename) =>
 		Host.CreateDefaultBuilder()
+			.ConfigureLogging(logging => {
+				logging.ClearProviders();
+				logging.AddConsole();
+			})
 			.ConfigureServices(services => services.AddSingleton<IDiscordHostedService, MyCustomBot>())
 			.ConfigureHostConfiguration(builder => builder.AddJsonFile(filename));
 
@@ -100,6 +108,10 @@ public class HostTests
 		where TInterface : class, IDiscordHostedService
 		where TBot : class, TInterface, IDiscordHostedService =>
 		Host.CreateDefaultBuilder()
+			.ConfigureLogging(logging => {
+				logging.ClearProviders();
+				logging.AddConsole();
+			})
 			.ConfigureServices(services => services.AddSingleton<TInterface, TBot>())
 			.ConfigureHostConfiguration(builder => builder.AddJsonFile(filename));
 
