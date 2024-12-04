@@ -28,6 +28,7 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// <param name="isNsfw">Whether this command is NSFW.</param>
 	/// <param name="allowedContexts">Where the command can be used.</param>
 	/// <param name="integrationTypes">The allowed integration types.</param>
+	/// <param name="handlerType">The handler type.</param>
 	public DiscordApplicationCommand(
 		string name,
 		string? description,
@@ -39,47 +40,80 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 		bool? dmPermission = null,
 		bool isNsfw = false,
 		List<InteractionContextType>? allowedContexts = null,
-		List<ApplicationCommandIntegrationTypes>? integrationTypes = null
+		List<ApplicationCommandIntegrationTypes>? integrationTypes = null,
+		ApplicationCommandHandlerType? handlerType = null
 	)
 		: base(["guild_id", "name_localizations", "description_localizations"])
 	{
 		if (type is ApplicationCommandType.ChatInput)
 		{
 			if (!Utilities.IsValidSlashCommandName(name))
-				throw new ArgumentException("Invalid slash command name specified. It must be below 32 characters and not contain any whitespace.", nameof(name));
+				throw new ArgumentException($"Invalid slash command name specified. It must be below 32 characters and not contain any whitespace. Error for command {name}.", nameof(name));
 			if (name.Any(char.IsUpper))
-				throw new ArgumentException("Slash command name cannot have any upper case characters.", nameof(name));
+				throw new ArgumentException($"Slash command name cannot have any upper case characters. Error for command {name}.", nameof(name));
 			if (description?.Length > 100)
-				throw new ArgumentException("Slash command description cannot exceed 100 characters.", nameof(description));
+				throw new ArgumentException($"Slash command description cannot exceed 100 characters. Error for command {name}.", nameof(description));
 			if (string.IsNullOrWhiteSpace(description))
-				throw new ArgumentException("Slash commands need a description.", nameof(description));
+				throw new ArgumentException($"Slash commands need a description. Error for command {name}.", nameof(description));
 
 			this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
 			this.RawDescriptionLocalizations = descriptionLocalizations?.GetKeyValuePairs();
+			this.Type = type;
+			this.Name = name;
+			this.Description = description;
+			this.Options = options != null && options.Any() ? options.ToList() : null;
+			this.DefaultMemberPermissions = defaultMemberPermissions;
+			this.DmPermission = dmPermission;
+			this.IsNsfw = isNsfw;
+			this.AllowedContexts = allowedContexts;
+			this.IntegrationTypes = integrationTypes;
+		}
+		else if (type is ApplicationCommandType.PrimaryEntryPoint)
+		{
+			if (!Utilities.IsValidSlashCommandName(name))
+				throw new ArgumentException($"Invalid slash command name specified. It must be below 32 characters and not contain any whitespace. Error for command {name}.", nameof(name));
+			if (name.Any(char.IsUpper))
+				throw new ArgumentException($"Slash command name cannot have any upper case characters. Error for command {name}.", nameof(name));
+			if (description?.Length > 100)
+				throw new ArgumentException($"Slash command description cannot exceed 100 characters. Error for command {name}.", nameof(description));
+			if (string.IsNullOrWhiteSpace(description))
+				throw new ArgumentException($"Slash commands need a description. Error for command {name}.", nameof(description));
+			if (options?.Any() ?? false)
+				throw new ArgumentException($"Primary entrypoints do not support options. Error for command {name}.");
+
+			this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
+			this.RawDescriptionLocalizations = descriptionLocalizations?.GetKeyValuePairs();
+			this.Type = type;
+			this.Name = name;
+			this.Description = description;
+			this.Options = null;
+			this.DefaultMemberPermissions = defaultMemberPermissions;
+			this.DmPermission = dmPermission;
+			this.IsNsfw = isNsfw;
+			this.AllowedContexts = allowedContexts;
+			this.IntegrationTypes = integrationTypes;
+			this.HandlerType = handlerType;
 		}
 		else
 		{
 			if (!string.IsNullOrWhiteSpace(description))
-				throw new ArgumentException("Context menus do not support descriptions.");
+				throw new ArgumentException($"Context menus do not support descriptions. Error for command {name}.");
 			if (options?.Any() ?? false)
-				throw new ArgumentException("Context menus do not support options.");
+				throw new ArgumentException($"Context menus do not support options. Error for command {name}.");
 
 			description = string.Empty;
 
 			this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
+			this.Type = type;
+			this.Name = name;
+			this.Description = description;
+			this.Options = null;
+			this.DefaultMemberPermissions = defaultMemberPermissions;
+			this.DmPermission = dmPermission;
+			this.IsNsfw = isNsfw;
+			this.AllowedContexts = allowedContexts;
+			this.IntegrationTypes = integrationTypes;
 		}
-
-		var optionsList = options != null && options.Any() ? options.ToList() : null;
-
-		this.Type = type;
-		this.Name = name;
-		this.Description = description;
-		this.Options = optionsList;
-		this.DefaultMemberPermissions = defaultMemberPermissions;
-		this.DmPermission = dmPermission;
-		this.IsNsfw = isNsfw;
-		this.AllowedContexts = allowedContexts;
-		this.IntegrationTypes = integrationTypes;
 	}
 
 	/// <summary>

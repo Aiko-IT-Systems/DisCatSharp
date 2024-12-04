@@ -110,6 +110,8 @@ public sealed class DiscordConfiguration
 		this.UpdateCheckGitHubToken = other.UpdateCheckGitHubToken;
 		this.ShowReleaseNotesInUpdateCheck = other.ShowReleaseNotesInUpdateCheck;
 		this.AutoFetchApplicationEmojis = other.AutoFetchApplicationEmojis;
+		this.HasActivitiesEnabled = other.HasActivitiesEnabled;
+		this.ActivityHandlerType = other.ActivityHandlerType;
 	}
 
 	/// <summary>
@@ -498,4 +500,16 @@ public sealed class DiscordConfiguration
 	///     <para>Defaults to <see langword="false" />.</para>
 	/// </summary>
 	public bool ShowReleaseNotesInUpdateCheck { internal get; set; } = false;
+
+	/// <summary>
+	///     Whether this app uses activities.
+	///     <para>Defaults to <see langword="false" />.</para>
+	/// </summary>
+	public bool HasActivitiesEnabled { internal get; set; } = false;
+
+	/// <summary>
+	///     If <see cref="HasActivitiesEnabled" /> is <see langword="true" />, determines which handler type we use..
+	///     <para>Defaults to <see cref="ApplicationCommandHandlerType.DiscordLaunchActivity" />.</para>
+	/// </summary>
+	public ApplicationCommandHandlerType ActivityHandlerType { internal get; set; } = ApplicationCommandHandlerType.DiscordLaunchActivity;
 }

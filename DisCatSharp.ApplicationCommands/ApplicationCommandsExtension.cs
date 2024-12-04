@@ -270,6 +270,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	public static bool FinishFired { get; set; } = false;
 
+	internal static DiscordApplicationCommand? EntryPointCommand { get; set; } = null;
+
 	/// <summary>
 	///     Runs setup.
 	///     <note type="caution">DO NOT RUN THIS MANUALLY. DO NOT DO ANYTHING WITH THIS.</note>
@@ -519,7 +521,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			List<ulong> failedGuilds = [];
 			var globalCommands = IsCalledByUnitTest ? null : (await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false).ConfigureAwait(false))?.ToList() ?? null;
 
-			var guilds = CheckAllGuilds ? this.Client.ReadyGuildIds : this._updateList.Where(x => x.Key is not null)?.Select(x => x.Key.Value).Distinct().ToList();
+			var guilds = CheckAllGuilds ? this.Client.ReadyGuildIds : this._updateList.Where(x => x.Key is not null)?.Select(x => x.Key!.Value).Distinct().ToList();
 			var wrongShards = guilds is not null && this.Client.ReadyGuildIds.Count is not 0 ? guilds.Where(x => !this.Client.ReadyGuildIds.Contains(x)).ToList() : [];
 			if (wrongShards.Count is not 0)
 			{
@@ -585,7 +587,14 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			}
 
 			if (globalCommands is not null && globalCommands.Count is not 0)
+			{
 				GlobalDiscordCommands.AddRange(globalCommands);
+				if (this.Client.Configuration.HasActivitiesEnabled)
+				{
+					var entryPointCommand = globalCommands.First(command => command.Name == "launch");
+					EntryPointCommand = entryPointCommand;
+				}
+			}
 
 			foreach (var key in commandsPending)
 			{
@@ -849,7 +858,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						{
 							if (updateList.Count is not 0)
 							{
-								var regCommands = await RegistrationWorker.RegisterGlobalCommandsAsync(this.Client, updateList).ConfigureAwait(false);
+								var regCommands = await RegistrationWorker.RegisterGlobalCommandsAsync(this.Client, updateList, EntryPointCommand).ConfigureAwait(false);
 								if (regCommands is not null)
 								{
 									var actualCommands = regCommands.Distinct().ToList();
@@ -861,7 +870,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								foreach (var cmd in GlobalDiscordCommands)
 									try
 									{
-										await this.Client.DeleteGlobalApplicationCommandAsync(cmd.Id).ConfigureAwait(false);
+										if (EntryPointCommand is null || cmd.Name is not "launch")
+											await this.Client.DeleteGlobalApplicationCommandAsync(cmd.Id).ConfigureAwait(false);
 									}
 									catch (NotFoundException)
 									{
