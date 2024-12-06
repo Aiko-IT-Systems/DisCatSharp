@@ -6685,7 +6685,7 @@ public sealed class DiscordApiClient
 		{
 			Type = command.Type,
 			Name = command.Name,
-			Description = command.Type is ApplicationCommandType.ChatInput ? command.Description : null,
+			Description = command.Type is ApplicationCommandType.ChatInput or ApplicationCommandType.PrimaryEntryPoint ? command.Description : null,
 			Options = command.Options,
 			NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 			DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
