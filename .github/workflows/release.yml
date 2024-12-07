@@ -57,7 +57,6 @@ jobs:
                   dotnet-version: |
                       9.x
                       8.x
-                      7.x
             - name: Restore dependencies (DisCatSharp)
               if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}
               run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln

@@ -24,7 +24,6 @@ jobs:
                   dotnet-version: |
                       9.x
                       8.x
-                      7.x
             - name: Git fetch unshallow
               run: git fetch --unshallow
             - name: Install DocFX
@@ -35,8 +34,6 @@ jobs:
               run: dotnet build -c Release --no-restore -v minimal -f net8.0 DisCatSharp.sln
               timeout-minutes: 7
               continue-on-error: true
-            #- name: Add Custom Plugins
-            #  run: cp -R DisCatSharp.Docs/dcs/plugins/* /home/runner/.dotnet/tools/.store/docfx/2.67.0/docfx/2.67.0/tools/net7.0/any/
             - name: Build Docs
               run: docfx DisCatSharp.Docs/docfx.json
             - name: Pack Docs

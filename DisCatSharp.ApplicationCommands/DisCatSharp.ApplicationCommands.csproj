@@ -23,7 +23,7 @@
 
 			Documentation: https://docs.dcs.aitsys.dev/articles/modules/application_commands/intro.html
 		</Description>
-		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net7,Net8,Net9,Application Commands,Context Menu Commands</PackageTags>
+		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net8,Net9,Application Commands,Context Menu Commands</PackageTags>
 
 	</PropertyGroup>
 
