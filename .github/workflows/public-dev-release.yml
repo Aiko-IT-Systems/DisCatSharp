@@ -41,7 +41,6 @@ jobs:
                   dotnet-version: |
                       9.x
                       8.x
-                      7.x
             - name: Restore dependencies
               run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
             - name: Set outputs

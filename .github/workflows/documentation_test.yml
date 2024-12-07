@@ -25,7 +25,6 @@ jobs:
                   dotnet-version: |
                       9.x
                       8.x
-                      7.x
             - name: Install DocFX
               run: dotnet tool update -g docfx
               continue-on-error: true
@@ -35,8 +34,6 @@ jobs:
               run: dotnet build -c Release -v minimal -f net8.0 --no-restore DisCatSharp.sln
               timeout-minutes: 7
               continue-on-error: true
-            #- name: Add Custom Plugins
-            #  run: cp -R DisCatSharp.Docs/dcs/plugins/* /home/runner/.dotnet/tools/.store/docfx/2.67.0/docfx/2.67.0/tools/net7.0/any/
             - name: Build Docs
               run: docfx DisCatSharp.Docs/docfx.json
             - name: Pack Docs
