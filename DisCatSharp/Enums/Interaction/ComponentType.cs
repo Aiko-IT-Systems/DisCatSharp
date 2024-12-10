@@ -43,5 +43,10 @@ public enum ComponentType
 	/// <summary>
 	///     A select menu to select channels.
 	/// </summary>
-	ChannelSelect = 8
+	ChannelSelect = 8,
+
+	/// <summary>
+	///     A file.
+	/// </summary>
+	File = 13
 }
