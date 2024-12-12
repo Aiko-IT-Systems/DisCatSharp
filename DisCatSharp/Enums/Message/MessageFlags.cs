@@ -86,5 +86,10 @@ public enum MessageFlags
 	/// <summary>
 	///     The message is a voice message.
 	/// </summary>
-	IsVoiceMessage = 1 << 13
+	IsVoiceMessage = 1 << 13,
+
+	/// <summary>
+	/// The message uses the UI Kit.
+	/// </summary>
+	UIKit = 1 << 15
 }
