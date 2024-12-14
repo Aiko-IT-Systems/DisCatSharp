@@ -3115,6 +3115,8 @@ public sealed class DiscordApiClient
 			flags |= MessageFlags.SuppressNotifications;
 		if (builder.IsVoiceMessage)
 			flags |= MessageFlags.IsVoiceMessage;
+		if (builder.IsUIKit)
+			flags |= MessageFlags.UIKit;
 
 		var pld = new RestChannelMessageCreatePayload
 		{
@@ -3126,7 +3128,7 @@ public sealed class DiscordApiClient
 			IsTts = builder.IsTts,
 			HasEmbed = builder.Embeds != null,
 			Embeds = builder.Embeds,
-			Components = builder.Components,
+			Components = builder.IsUIKit ? builder.Components : builder.ActionRowComponents,
 			Nonce = builder.Nonce,
 			EnforceNonce = builder.EnforceNonce,
 			DiscordPollRequest = builder.Poll?.Build(),
@@ -5750,7 +5752,7 @@ public sealed class DiscordApiClient
 			{
 				Content = builder.Content,
 				Attachments = builder.Attachments,
-				Components = builder.Components,
+				Components = builder.ActionRowComponents,
 				HasContent = true,
 				Embeds = builder.Embeds,
 				//Flags = builder.Flags,

@@ -45,7 +45,7 @@ public sealed class DiscordInteractionResponseBuilder
 		this._content = builder.Content;
 		this.Mentions = builder.Mentions;
 		this._embeds.AddRange(builder.Embeds);
-		this._components.AddRange(builder.Components);
+		this._components.AddRange(builder.ActionRowComponents);
 	}
 
 	/// <summary>

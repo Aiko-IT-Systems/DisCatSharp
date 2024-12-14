@@ -13,9 +13,11 @@ public sealed class DiscordMessageBuilder
 {
 	private readonly List<DiscordEmbed> _embeds = [];
 
+	internal readonly List<DiscordActionRowComponent> ActionRowComponentsInternal = new(5);
+
 	internal readonly List<DiscordAttachment> AttachmentsInternal = [];
 
-	internal readonly List<DiscordActionRowComponent> ComponentsInternal = new(5);
+	internal readonly List<DiscordComponent> ComponentsInternal = new(10);
 
 	internal readonly List<DiscordMessageFile> FilesInternal = [];
 
@@ -81,6 +83,11 @@ public sealed class DiscordMessageBuilder
 	public bool IsVoiceMessage { get; private set; }
 
 	/// <summary>
+	///     Whether to send with ui kit.
+	/// </summary>
+	public bool IsUIKit { get; private set; }
+
+	/// <summary>
 	///     Gets the Allowed Mentions for the message to be sent.
 	/// </summary>
 	public List<IMention>? Mentions { get; private set; }
@@ -91,9 +98,15 @@ public sealed class DiscordMessageBuilder
 	public IReadOnlyCollection<DiscordMessageFile> Files => this.FilesInternal;
 
 	/// <summary>
-	///     Gets the components that will be attached to the message.
+	///     Gets the action row components that will be attached to the message.
 	/// </summary>
-	public IReadOnlyList<DiscordActionRowComponent> Components => this.ComponentsInternal;
+	public IReadOnlyList<DiscordActionRowComponent> ActionRowComponents => this.ActionRowComponentsInternal;
+
+	/// <summary>
+	///     Gets the components that will be attached to the message.
+	///     <para>Can only be used if used with ui kit.</para>
+	/// </summary>
+	public IReadOnlyList<DiscordComponent> Components => this.ComponentsInternal;
 
 	/// <summary>
 	///     Gets the Attachments to be sent in the Message.
@@ -219,11 +232,11 @@ public sealed class DiscordMessageBuilder
 	{
 		var ara = components.ToArray();
 
-		if (ara.Length + this.ComponentsInternal.Count > 5)
+		if (ara.Length + this.ActionRowComponentsInternal.Count > 5)
 			throw new ArgumentException("ActionRow count exceeds maximum of five.");
 
 		foreach (var ar in ara)
-			this.ComponentsInternal.Add(ar);
+			this.ActionRowComponentsInternal.Add(ar);
 
 		return this;
 	}
@@ -239,16 +252,31 @@ public sealed class DiscordMessageBuilder
 		var cmpArr = components.ToArray();
 		var count = cmpArr.Length;
 
-		switch (count)
+		if (this.IsUIKit)
 		{
-			case 0:
-				throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
-			case > 5:
-				throw new ArgumentException("Cannot add more than 5 components per action row!");
-		}
+			switch (count)
+			{
+				case 0:
+					throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
+				case > 10:
+					throw new ArgumentException("Cannot add more than 10 components!");
+			}
 
-		var comp = new DiscordActionRowComponent(cmpArr);
-		this.ComponentsInternal.Add(comp);
+			this.ComponentsInternal.AddRange(cmpArr);
+		}
+		else
+		{
+			switch (count)
+			{
+				case 0:
+					throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
+				case > 5:
+					throw new ArgumentException("Cannot add more than 5 components per action row!");
+			}
+
+			var comp = new DiscordActionRowComponent(cmpArr);
+			this.ActionRowComponentsInternal.Add(comp);
+		}
 
 		return this;
 	}
@@ -270,6 +298,15 @@ public sealed class DiscordMessageBuilder
 	public DiscordMessageBuilder SuppressEmbeds(bool suppress = true)
 	{
 		this.Suppressed = suppress;
+		return this;
+	}
+
+	/// <summary>
+	///     Sets the message to be send with ui kit.
+	/// </summary>
+	public DiscordMessageBuilder AsUiKitMessage(bool asUiKitMessage = true)
+	{
+		this.IsUIKit = asUiKitMessage;
 		return this;
 	}
 
@@ -355,7 +392,7 @@ public sealed class DiscordMessageBuilder
 		if (this.Mentions != null)
 			this.Mentions.AddRange(allowedMentions);
 		else
-			this.Mentions = allowedMentions.ToList();
+			this.Mentions = [.. allowedMentions];
 
 		return this;
 	}
@@ -508,7 +545,7 @@ public sealed class DiscordMessageBuilder
 	///     Clears all message components on this builder.
 	/// </summary>
 	public void ClearComponents()
-		=> this.ComponentsInternal.Clear();
+		=> this.ActionRowComponentsInternal.Clear();
 
 	/// <summary>
 	///     Clears the poll from this builder.
@@ -528,6 +565,7 @@ public sealed class DiscordMessageBuilder
 		this.FilesInternal.Clear();
 		this.ReplyId = null;
 		this.MentionOnReply = false;
+		this.ActionRowComponentsInternal.Clear();
 		this.ComponentsInternal.Clear();
 		this.Suppressed = false;
 		this.Sticker = null;
@@ -537,6 +575,7 @@ public sealed class DiscordMessageBuilder
 		this.EnforceNonce = false;
 		this.Poll = null;
 		this.IsVoiceMessage = false;
+		this.IsUIKit = false;
 	}
 
 	/// <summary>
@@ -553,13 +592,19 @@ public sealed class DiscordMessageBuilder
 
 		if (!isModify)
 		{
-			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && this.Sticker is null && (!this.Components?.Any() ?? true) && this.Poll is null && this?.Attachments.Count == 0)
+			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && this.Sticker is null && (!this.ActionRowComponents?.Any() ?? true) && (!this.Components?.Any() ?? true) && this.Poll is null && this?.Attachments.Count == 0)
 				throw new ArgumentException("You must specify content, an embed, a sticker, a component, a poll or at least one file.");
 
-			if (this.Components.Count > 5)
+			if (this.IsUIKit && (!string.IsNullOrEmpty(this.Content) || (this.Embeds?.Any() ?? false)))
+				throw new ArgumentException("Using UI Kit mode. You cannot specify content or embeds.");
+
+			if (this.IsUIKit && this.Components?.Count > 10)
+				throw new InvalidOperationException("You can only have 10 components per message.");
+
+			if (!this.IsUIKit && this.ActionRowComponents?.Count > 5)
 				throw new InvalidOperationException("You can only have 5 action rows per message.");
 
-			if (this.Components.Any(c => c.Components.Count > 5))
+			if (this.ActionRowComponents?.Any(c => c.Components.Count > 5) ?? false)
 				throw new InvalidOperationException("Action rows can only have 5 components");
 
 			if (this.EnforceNonce && string.IsNullOrEmpty(this.Nonce))
