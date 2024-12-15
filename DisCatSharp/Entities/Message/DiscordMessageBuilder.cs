@@ -4,20 +4,18 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.Entities.Core;
+
 namespace DisCatSharp.Entities;
 
 /// <summary>
-///     Constructs a Message to be sent.
+///     Constructs a message to be sent.
 /// </summary>
-public sealed class DiscordMessageBuilder
+public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 {
 	private readonly List<DiscordEmbed> _embeds = [];
 
-	internal readonly List<DiscordActionRowComponent> ActionRowComponentsInternal = new(5);
-
 	internal readonly List<DiscordAttachment> AttachmentsInternal = [];
-
-	internal readonly List<DiscordComponent> ComponentsInternal = new(10);
 
 	internal readonly List<DiscordMessageFile> FilesInternal = [];
 
@@ -96,17 +94,6 @@ public sealed class DiscordMessageBuilder
 	///     Gets the Files to be sent in the Message.
 	/// </summary>
 	public IReadOnlyCollection<DiscordMessageFile> Files => this.FilesInternal;
-
-	/// <summary>
-	///     Gets the action row components that will be attached to the message.
-	/// </summary>
-	public IReadOnlyList<DiscordActionRowComponent> ActionRowComponents => this.ActionRowComponentsInternal;
-
-	/// <summary>
-	///     Gets the components that will be attached to the message.
-	///     <para>Can only be used if used with ui kit.</para>
-	/// </summary>
-	public IReadOnlyList<DiscordComponent> Components => this.ComponentsInternal;
 
 	/// <summary>
 	///     Gets the Attachments to be sent in the Message.
@@ -232,11 +219,11 @@ public sealed class DiscordMessageBuilder
 	{
 		var ara = components.ToArray();
 
-		if (ara.Length + this.ActionRowComponentsInternal.Count > 5)
+		if (ara.Length + this.ComponentsInternal.Count > 5)
 			throw new ArgumentException("ActionRow count exceeds maximum of five.");
 
 		foreach (var ar in ara)
-			this.ActionRowComponentsInternal.Add(ar);
+			this.ComponentsInternal.Add(ar);
 
 		return this;
 	}
@@ -275,7 +262,7 @@ public sealed class DiscordMessageBuilder
 			}
 
 			var comp = new DiscordActionRowComponent(cmpArr);
-			this.ActionRowComponentsInternal.Add(comp);
+			this.ComponentsInternal.Add(comp);
 		}
 
 		return this;
@@ -545,7 +532,7 @@ public sealed class DiscordMessageBuilder
 	///     Clears all message components on this builder.
 	/// </summary>
 	public void ClearComponents()
-		=> this.ActionRowComponentsInternal.Clear();
+		=> this.ComponentsInternal.Clear();
 
 	/// <summary>
 	///     Clears the poll from this builder.
@@ -565,10 +552,9 @@ public sealed class DiscordMessageBuilder
 		this.FilesInternal.Clear();
 		this.ReplyId = null;
 		this.MentionOnReply = false;
-		this.ActionRowComponentsInternal.Clear();
 		this.ComponentsInternal.Clear();
 		this.Suppressed = false;
-		this.Sticker = null;
+		this.Sticker = null!;
 		this.AttachmentsInternal.Clear();
 		this.KeepAttachmentsInternal = false;
 		this.Nonce = null;
@@ -592,20 +578,19 @@ public sealed class DiscordMessageBuilder
 
 		if (!isModify)
 		{
-			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && this.Sticker is null && (!this.ActionRowComponents?.Any() ?? true) && (!this.Components?.Any() ?? true) && this.Poll is null && this?.Attachments.Count == 0)
+			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && this.Sticker is null && (!this.Components?.Any() ?? true) && this.Poll is null && this?.Attachments.Count == 0)
 				throw new ArgumentException("You must specify content, an embed, a sticker, a component, a poll or at least one file.");
 
 			if (this.IsUIKit && (!string.IsNullOrEmpty(this.Content) || (this.Embeds?.Any() ?? false)))
 				throw new ArgumentException("Using UI Kit mode. You cannot specify content or embeds.");
 
-			if (this.IsUIKit && this.Components?.Count > 10)
-				throw new InvalidOperationException("You can only have 10 components per message.");
-
-			if (!this.IsUIKit && this.ActionRowComponents?.Count > 5)
-				throw new InvalidOperationException("You can only have 5 action rows per message.");
-
-			if (this.ActionRowComponents?.Any(c => c.Components.Count > 5) ?? false)
-				throw new InvalidOperationException("Action rows can only have 5 components");
+			switch (this.IsUIKit)
+			{
+				case true when this.Components?.Count > 10:
+					throw new InvalidOperationException("You can only have 10 components per message.");
+				case false when this.Components?.Count > 5:
+					throw new InvalidOperationException("You can only have 5 action rows per message.");
+			}
 
 			if (this.EnforceNonce && string.IsNullOrEmpty(this.Nonce))
 				throw new InvalidOperationException("Nonce enforcement is enabled, but no nonce is set.");

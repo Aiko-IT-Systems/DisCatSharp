@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using DisCatSharp.Entities.Core;
+
 namespace DisCatSharp.Entities;
 
 /// <summary>
 ///     Constructs an interaction response.
 /// </summary>
-public sealed class DiscordInteractionResponseBuilder
+public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 {
 	private readonly List<DiscordInteractionCallbackHint> _callbackHints = [];
 
 	private readonly List<DiscordApplicationCommandAutocompleteChoice> _choices = [];
-
-	private readonly List<DiscordComponent> _components = [];
 
 	private readonly List<DiscordEmbed> _embeds = [];
 
@@ -45,7 +45,7 @@ public sealed class DiscordInteractionResponseBuilder
 		this._content = builder.Content;
 		this.Mentions = builder.Mentions;
 		this._embeds.AddRange(builder.Embeds);
-		this._components.AddRange(builder.ActionRowComponents);
+		this.ComponentsInternal.AddRange(builder.Components);
 	}
 
 	/// <summary>
@@ -140,11 +140,6 @@ public sealed class DiscordInteractionResponseBuilder
 	public IReadOnlyList<DiscordMessageFile> Files => this._files;
 
 	/// <summary>
-	///     Components to send on this interaction response.
-	/// </summary>
-	public IReadOnlyList<DiscordComponent> Components => this._components;
-
-	/// <summary>
 	///     The choices to send on this interaction response.
 	///     Mutually exclusive with content, embed, and components.
 	/// </summary>
@@ -208,11 +203,11 @@ public sealed class DiscordInteractionResponseBuilder
 	{
 		var ara = components.ToArray();
 
-		if (ara.Length + this._components.Count > 5)
+		if (ara.Length + this.ComponentsInternal.Count > 5)
 			throw new ArgumentException("ActionRow count exceeds maximum of five.");
 
 		foreach (var ar in ara)
-			this._components.Add(ar);
+			this.ComponentsInternal.Add(ar);
 
 		return this;
 	}
@@ -232,7 +227,7 @@ public sealed class DiscordInteractionResponseBuilder
 			throw new ArgumentException("Cannot add more than 5 components per action row!");
 
 		var arc = new DiscordActionRowComponent(compArr);
-		this._components.Add(arc);
+		this.ComponentsInternal.Add(arc);
 		return this;
 	}
 
@@ -440,7 +435,7 @@ public sealed class DiscordInteractionResponseBuilder
 		if (this.Mentions != null)
 			this.Mentions.AddRange(mentions);
 		else
-			this.Mentions = mentions.ToList();
+			this.Mentions = [.. mentions];
 		return this;
 	}
 
@@ -478,7 +473,7 @@ public sealed class DiscordInteractionResponseBuilder
 	///     Clears all message components on this builder.
 	/// </summary>
 	public void ClearComponents()
-		=> this._components.Clear();
+		=> this.ComponentsInternal.Clear();
 
 	/// <summary>
 	///     Clears the poll from this builder.
@@ -491,12 +486,12 @@ public sealed class DiscordInteractionResponseBuilder
 	/// </summary>
 	public void Clear()
 	{
-		this.Content = null;
+		this.Content = null!;
 		this._embeds.Clear();
 		this.IsTts = false;
 		this.IsEphemeral = false;
 		this.Mentions = null;
-		this._components.Clear();
+		this.ComponentsInternal.Clear();
 		this._choices.Clear();
 		this._files.Clear();
 		this.Poll = null;

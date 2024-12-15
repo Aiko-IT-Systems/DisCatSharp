@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using DisCatSharp.Entities.Core;
+
 namespace DisCatSharp.Entities;
 
 /// <summary>
 ///     Constructs a followup message to an interaction.
 /// </summary>
-public sealed class DiscordFollowupMessageBuilder
+public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 {
-	private readonly List<DiscordComponent> _components = [];
-
 	private readonly List<DiscordEmbed> _embeds = [];
 
 	private readonly List<DiscordMessageFile> _files = [];
@@ -117,11 +117,6 @@ public sealed class DiscordFollowupMessageBuilder
 	public IReadOnlyList<DiscordMessageFile> Files => this._files;
 
 	/// <summary>
-	///     Components to send on this followup message.
-	/// </summary>
-	public IReadOnlyList<DiscordComponent> Components => this._components;
-
-	/// <summary>
 	///     Attachments to be send with this followup request.
 	/// </summary>
 	public IReadOnlyList<DiscordAttachment> Attachments => this.AttachmentsInternal;
@@ -154,11 +149,11 @@ public sealed class DiscordFollowupMessageBuilder
 	{
 		var ara = components.ToArray();
 
-		if (ara.Length + this._components.Count > 5)
+		if (ara.Length + this.ComponentsInternal.Count > 5)
 			throw new ArgumentException("ActionRow count exceeds maximum of five.");
 
 		foreach (var ar in ara)
-			this._components.Add(ar);
+			this.ComponentsInternal.Add(ar);
 
 		return this;
 	}
@@ -178,7 +173,7 @@ public sealed class DiscordFollowupMessageBuilder
 			throw new ArgumentException("Cannot add more than 5 components per action row!");
 
 		var arc = new DiscordActionRowComponent(compArr);
-		this._components.Add(arc);
+		this.ComponentsInternal.Add(arc);
 		return this;
 	}
 
@@ -342,7 +337,7 @@ public sealed class DiscordFollowupMessageBuilder
 		if (this.Mentions != null)
 			this.Mentions.AddRange(mentions);
 		else
-			this.Mentions = mentions.ToList();
+			this.Mentions = [.. mentions];
 		return this;
 	}
 
@@ -390,7 +385,7 @@ public sealed class DiscordFollowupMessageBuilder
 	///     Clears all message components on this builder.
 	/// </summary>
 	public void ClearComponents()
-		=> this._components.Clear();
+		=> this.ComponentsInternal.Clear();
 
 	/// <summary>
 	///     Clears the poll from this builder.
@@ -409,7 +404,7 @@ public sealed class DiscordFollowupMessageBuilder
 		this.Mentions = null;
 		this._files.Clear();
 		this.IsEphemeral = false;
-		this._components.Clear();
+		this.ComponentsInternal.Clear();
 	}
 
 	/// <summary>

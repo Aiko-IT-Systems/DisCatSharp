@@ -105,7 +105,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="values">The values.</param>
 	/// <param name="post">Whether this query will be transmitted via POST.</param>
-	private static string BuildQueryString(IDictionary<string, string> values, bool post = false)
+	private static string BuildQueryString(Dictionary<string, string> values, bool post = false)
 	{
 		if (values == null || values.Count == 0)
 			return string.Empty;
@@ -130,7 +130,7 @@ public sealed class DiscordApiClient
 		this.PopulateMessage(author, ret);
 
 		var referencedMsg = msgRaw["referenced_message"];
-		if (ret is { InternalReference: { Type: ReferenceType.Default }, MessageType: MessageType.Reply } && !string.IsNullOrWhiteSpace(referencedMsg?.ToString()))
+		if (ret is { InternalReference.Type: ReferenceType.Default, MessageType: MessageType.Reply } && !string.IsNullOrWhiteSpace(referencedMsg?.ToString()))
 		{
 			author = referencedMsg["author"].ToObject<TransportUser>();
 			ret.ReferencedMessage.Discord = this.Discord;
@@ -1106,7 +1106,7 @@ public sealed class DiscordApiClient
 			xb.User = usr;
 			return xb;
 		});
-		var bans = new ReadOnlyCollection<DiscordBan>(new List<DiscordBan>(bansRaw));
+		var bans = new ReadOnlyCollection<DiscordBan>([.. bansRaw]);
 
 		return bans;
 	}
@@ -1159,7 +1159,7 @@ public sealed class DiscordApiClient
 
 		var pld = new RestGuildBulkBanPayload
 		{
-			UserIds = userIds.ToList(),
+			UserIds = [.. userIds],
 			DeleteMessageSeconds = deleteMessageSeconds
 		};
 
@@ -1500,18 +1500,18 @@ public sealed class DiscordApiClient
 		ret.Guild = this.Discord.Guilds.ContainsKey(guildId) ? this.Discord.Guilds[guildId] : null;
 
 		ret.Channels = ret.Guild == null
-			? rawChannels.Select(r => new DiscordChannel
+			? [.. rawChannels.Select(r => new DiscordChannel
 			{
 				Id = (ulong)r["id"],
 				Name = r["name"].ToString(),
 				Position = (int)r["position"]
-			}).ToList()
-			: rawChannels.Select(r =>
+			})]
+			: [.. rawChannels.Select(r =>
 			{
 				var c = ret.Guild.GetChannel((ulong)r["id"]);
 				c.Position = (int)r["position"];
 				return c;
-			}).ToList();
+			})];
 
 		return ret;
 	}
@@ -1588,7 +1588,7 @@ public sealed class DiscordApiClient
 
 		var templatesRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordGuildTemplate>>(res.Response);
 
-		return new ReadOnlyCollection<DiscordGuildTemplate>(new List<DiscordGuildTemplate>(templatesRaw));
+		return new ReadOnlyCollection<DiscordGuildTemplate>([.. templatesRaw]);
 	}
 
 	/// <summary>
@@ -3128,7 +3128,7 @@ public sealed class DiscordApiClient
 			IsTts = builder.IsTts,
 			HasEmbed = builder.Embeds != null,
 			Embeds = builder.Embeds,
-			Components = builder.IsUIKit ? builder.Components : builder.ActionRowComponents,
+			Components = builder.Components,
 			Nonce = builder.Nonce,
 			EnforceNonce = builder.EnforceNonce,
 			DiscordPollRequest = builder.Poll?.Build(),
@@ -3278,7 +3278,7 @@ public sealed class DiscordApiClient
 		foreach (var ret in channelsRaw)
 			ret.Initialize(this.Discord);
 
-		return new ReadOnlyCollection<DiscordChannel>(new List<DiscordChannel>(channelsRaw));
+		return new ReadOnlyCollection<DiscordChannel>([.. channelsRaw]);
 	}
 
 	/// <summary>
@@ -3436,7 +3436,7 @@ public sealed class DiscordApiClient
 		foreach (var xj in msgsRaw)
 			msgs.Add(this.PrepareMessage(xj));
 
-		return new ReadOnlyCollection<DiscordMessage>(new List<DiscordMessage>(msgs));
+		return new ReadOnlyCollection<DiscordMessage>([.. msgs]);
 	}
 
 	/// <summary>
@@ -3676,7 +3676,7 @@ public sealed class DiscordApiClient
 			voters.Add(usr);
 		}
 
-		return new(new List<DiscordUser>(voters));
+		return new([.. voters]);
 	}
 
 	/// <summary>
@@ -3722,7 +3722,7 @@ public sealed class DiscordApiClient
 			return xi;
 		});
 
-		return new ReadOnlyCollection<DiscordInvite>(new List<DiscordInvite>(invitesRaw));
+		return new ReadOnlyCollection<DiscordInvite>([.. invitesRaw]);
 	}
 
 	/// <summary>
@@ -3861,7 +3861,7 @@ public sealed class DiscordApiClient
 		foreach (var xj in msgsRaw)
 			msgs.Add(this.PrepareMessage(xj));
 
-		return new ReadOnlyCollection<DiscordMessage>(new List<DiscordMessage>(msgs));
+		return new ReadOnlyCollection<DiscordMessage>([.. msgs]);
 	}
 
 	/// <summary>
@@ -4211,7 +4211,7 @@ public sealed class DiscordApiClient
 		{
 			var guildsRaw = DiscordJson.DeserializeIEnumerableObject<IEnumerable<RestUserGuild>>(res.Response, this.Discord);
 			var glds = guildsRaw.Select(xug => (this.Discord as DiscordClient)?.GuildsInternal[xug.Id]);
-			return new ReadOnlyCollection<DiscordGuild>(new List<DiscordGuild>(glds));
+			return new ReadOnlyCollection<DiscordGuild>([.. glds]);
 		}
 
 		return DiscordJson.DeserializeIEnumerableObject<List<DiscordGuild>>(res.Response, this.Discord);
@@ -4979,7 +4979,7 @@ public sealed class DiscordApiClient
 			xw.ApiClient = this;
 			return xw;
 		});
-		return webhooksRaw.ToList();
+		return [.. webhooksRaw];
 	}
 
 	/// <summary>
@@ -5002,7 +5002,7 @@ public sealed class DiscordApiClient
 			xw.ApiClient = this;
 			return xw;
 		});
-		return webhooksRaw.ToList();
+		return [.. webhooksRaw];
 	}
 
 	/// <summary>
@@ -5663,7 +5663,7 @@ public sealed class DiscordApiClient
 			reacters.Add(usr);
 		}
 
-		return new ReadOnlyCollection<DiscordUser>(new List<DiscordUser>(reacters));
+		return new ReadOnlyCollection<DiscordUser>([.. reacters]);
 	}
 
 	/// <summary>
@@ -5752,7 +5752,7 @@ public sealed class DiscordApiClient
 			{
 				Content = builder.Content,
 				Attachments = builder.Attachments,
-				Components = builder.ActionRowComponents,
+				Components = builder.Components,
 				HasContent = true,
 				Embeds = builder.Embeds,
 				//Flags = builder.Flags,
@@ -6322,7 +6322,7 @@ public sealed class DiscordApiClient
 
 		var emojisRaw = JsonConvert.DeserializeObject<JObject>(res.Response);
 
-		return this.Discord.UpdateCachedApplicationEmojis(emojisRaw?.Value<JArray>("items")).Select(x => x.Value).ToList();
+		return [.. this.Discord.UpdateCachedApplicationEmojis(emojisRaw?.Value<JArray>("items")).Select(x => x.Value)];
 	}
 
 	/// <summary>
@@ -6491,7 +6491,7 @@ public sealed class DiscordApiClient
 		var json = JObject.Parse(res.Response)["sticker_packs"] as JArray;
 		var ret = json.ToDiscordObject<DiscordStickerPack[]>();
 
-		return ret.ToList();
+		return [.. ret];
 	}
 
 	/// <summary>
@@ -6648,7 +6648,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var ret = DiscordJson.DeserializeIEnumerableObject<IEnumerable<DiscordApplicationCommand>>(res.Response, this.Discord);
-		return ret.ToList();
+		return [.. ret];
 	}
 
 	/// <summary>
@@ -6685,7 +6685,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var ret = DiscordJson.DeserializeIEnumerableObject<IEnumerable<DiscordApplicationCommand>>(res.Response, this.Discord);
-		return ret.ToList();
+		return [.. ret];
 	}
 
 	/// <summary>
@@ -6849,7 +6849,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var ret = DiscordJson.DeserializeIEnumerableObject<IEnumerable<DiscordApplicationCommand>>(res.Response, this.Discord);
-		return ret.ToList();
+		return [.. ret];
 	}
 
 	/// <summary>
@@ -6887,7 +6887,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var ret = DiscordJson.DeserializeIEnumerableObject<IEnumerable<DiscordApplicationCommand>>(res.Response, this.Discord);
-		return ret.ToList();
+		return [.. ret];
 	}
 
 	/// <summary>
@@ -7182,7 +7182,7 @@ public sealed class DiscordApiClient
 	/// <param name="builder">The builder.</param>
 	internal async Task CreateInteractionModalResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, DiscordInteractionModalBuilder builder)
 	{
-		if (builder.ModalComponents.Select(x => x as DiscordActionRowComponent).Any(mc => mc.Components.Any(c => c.Type != ComponentType.InputText)))
+		if (builder.ModalComponents.Any(mc => mc.Components.Any(c => c.Type != ComponentType.InputText)))
 			throw new NotSupportedException("Can't send any other type then Input Text as Modal Component.");
 
 		var pld = new RestInteractionModalResponsePayload
@@ -7670,7 +7670,7 @@ public sealed class DiscordApiClient
 			asset.Application = application;
 		}
 
-		return new ReadOnlyCollection<DiscordApplicationAsset>(new List<DiscordApplicationAsset>(assets));
+		return new ReadOnlyCollection<DiscordApplicationAsset>([.. assets]);
 	}
 
 	/// <summary>

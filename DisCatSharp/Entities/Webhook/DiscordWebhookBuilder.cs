@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.Entities.Core;
 using DisCatSharp.Enums;
 
 namespace DisCatSharp.Entities;
@@ -11,11 +12,9 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///     Constructs ready-to-send webhook requests.
 /// </summary>
-public sealed class DiscordWebhookBuilder
+public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 {
 	private readonly List<ulong> _appliedTags = [];
-
-	private readonly List<DiscordComponent> _components = [];
 
 	private readonly List<DiscordEmbed> _embeds = [];
 
@@ -109,11 +108,6 @@ public sealed class DiscordWebhookBuilder
 	public List<IMention>? Mentions { get; private set; }
 
 	/// <summary>
-	///     Gets the components.
-	/// </summary>
-	public IReadOnlyList<DiscordComponent> Components => this._components;
-
-	/// <summary>
 	///     Attachments to keep on this webhook request.
 	/// </summary>
 	public IReadOnlyList<DiscordAttachment> Attachments => this.AttachmentsInternal;
@@ -176,11 +170,11 @@ public sealed class DiscordWebhookBuilder
 	{
 		var ara = components.ToArray();
 
-		if (ara.Length + this._components.Count > 5)
+		if (ara.Length + this.ComponentsInternal.Count > 5)
 			throw new ArgumentException("ActionRow count exceeds maximum of five.");
 
 		foreach (var ar in ara)
-			this._components.Add(ar);
+			this.ComponentsInternal.Add(ar);
 
 		return this;
 	}
@@ -205,7 +199,7 @@ public sealed class DiscordWebhookBuilder
 		}
 
 		var comp = new DiscordActionRowComponent(cmpArr);
-		this._components.Add(comp);
+		this.ComponentsInternal.Add(comp);
 
 		return this;
 	}
@@ -483,7 +477,7 @@ public sealed class DiscordWebhookBuilder
 	///     Clears all message components on this builder.
 	/// </summary>
 	public void ClearComponents()
-		=> this._components.Clear();
+		=> this.ComponentsInternal.Clear();
 
 	/// <summary>
 	///     Clears the poll from this builder.
@@ -502,7 +496,7 @@ public sealed class DiscordWebhookBuilder
 		this.Mentions = null;
 		this._files.Clear();
 		this.AttachmentsInternal.Clear();
-		this._components.Clear();
+		this.ComponentsInternal.Clear();
 		this.KeepAttachmentsInternal = false;
 		this.ThreadName = null;
 		this.Poll = null;
