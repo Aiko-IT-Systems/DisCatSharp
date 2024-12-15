@@ -9,9 +9,14 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///     Constructs an interaction modal response.
 /// </summary>
-public sealed class DiscordInteractionModalBuilder : DisCatSharpBuilder
+public sealed class DiscordInteractionModalBuilder
 {
 	private readonly List<DiscordInteractionCallbackHint> _callbackHints = [];
+
+	/// <summary>
+	///     The components.
+	/// </summary>
+	internal readonly List<DiscordComponent> ComponentsInternal = [];
 
 	private string _title;
 
@@ -23,6 +28,11 @@ public sealed class DiscordInteractionModalBuilder : DisCatSharpBuilder
 		this.Title = title ?? "Title";
 		this.CustomId = customId ?? Guid.NewGuid().ToString();
 	}
+
+	/// <summary>
+	///     Components to send. Please use <see cref="ModalComponents"/> instead.
+	/// </summary>
+	public IReadOnlyList<DiscordComponent> Components => this.ComponentsInternal;
 
 	/// <summary>
 	///     Title of modal.
@@ -147,9 +157,7 @@ public sealed class DiscordInteractionModalBuilder : DisCatSharpBuilder
 
 		foreach (var ar in ara)
 			this.ComponentsInternal.Add(new DiscordActionRowComponent(
-			[
-				ar
-			]));
+				[ar]));
 
 		return this;
 	}
@@ -181,9 +189,7 @@ public sealed class DiscordInteractionModalBuilder : DisCatSharpBuilder
 	internal DiscordInteractionModalBuilder AddModalComponents(DiscordComponent component)
 	{
 		this.ComponentsInternal.Add(new DiscordActionRowComponent(
-		[
-			component
-		]));
+			[component]));
 
 		return this;
 	}

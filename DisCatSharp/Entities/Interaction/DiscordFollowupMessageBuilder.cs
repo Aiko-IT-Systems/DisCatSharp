@@ -12,14 +12,6 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 {
-	private readonly List<DiscordEmbed> _embeds = [];
-
-	private readonly List<DiscordMessageFile> _files = [];
-
-	internal readonly List<DiscordAttachment> AttachmentsInternal = [];
-
-	private string _content;
-
 	/// <summary>
 	///     Whether flags were changed.
 	/// </summary>
@@ -90,36 +82,6 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	}
 
 	private bool NOTI_SUP { get; set; }
-
-	/// <summary>
-	///     Message to send on followup message.
-	/// </summary>
-	public string Content
-	{
-		get => this._content;
-		set
-		{
-			if (value is { Length: > 2000 })
-				throw new ArgumentException("Content length cannot exceed 2000 characters.", nameof(value));
-
-			this._content = value;
-		}
-	}
-
-	/// <summary>
-	///     Embeds to send on followup message.
-	/// </summary>
-	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
-
-	/// <summary>
-	///     Files to send on this followup message.
-	/// </summary>
-	public IReadOnlyList<DiscordMessageFile> Files => this._files;
-
-	/// <summary>
-	///     Attachments to be send with this followup request.
-	/// </summary>
-	public IReadOnlyList<DiscordAttachment> Attachments => this.AttachmentsInternal;
 
 	/// <summary>
 	///     Mentions to send on this followup message.
@@ -217,7 +179,7 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder AddEmbed(DiscordEmbed embed)
 	{
-		this._embeds.Add(embed);
+		this.EmbedsInternal.Add(embed);
 		return this;
 	}
 
@@ -228,7 +190,7 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder AddEmbeds(IEnumerable<DiscordEmbed> embeds)
 	{
-		this._embeds.AddRange(embeds);
+		this.EmbedsInternal.AddRange(embeds);
 		return this;
 	}
 
@@ -248,13 +210,13 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 		if (this.Files.Count >= 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-		if (this._files.Any(x => x.Filename == filename))
+		if (this.FilesInternal.Any(x => x.Filename == filename))
 			throw new ArgumentException("A File with that filename already exists");
 
 		if (resetStreamPosition)
-			this._files.Add(new(filename, data, data.Position, description: description));
+			this.FilesInternal.Add(new(filename, data, data.Position, description: description));
 		else
-			this._files.Add(new(filename, data, null, description: description));
+			this.FilesInternal.Add(new(filename, data, null, description: description));
 
 		return this;
 	}
@@ -274,13 +236,13 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 		if (this.Files.Count >= 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-		if (this._files.Any(x => x.Filename == stream.Name))
+		if (this.FilesInternal.Any(x => x.Filename == stream.Name))
 			throw new ArgumentException("A File with that filename already exists");
 
 		if (resetStreamPosition)
-			this._files.Add(new(stream.Name, stream, stream.Position, description: description));
+			this.FilesInternal.Add(new(stream.Name, stream, stream.Position, description: description));
 		else
-			this._files.Add(new(stream.Name, stream, null, description: description));
+			this.FilesInternal.Add(new(stream.Name, stream, null, description: description));
 
 		return this;
 	}
@@ -301,13 +263,13 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 
 		foreach (var file in files)
 		{
-			if (this._files.Any(x => x.Filename == file.Key))
+			if (this.FilesInternal.Any(x => x.Filename == file.Key))
 				throw new ArgumentException("A File with that filename already exists");
 
 			if (resetStreamPosition)
-				this._files.Add(new(file.Key, file.Value, file.Value.Position));
+				this.FilesInternal.Add(new(file.Key, file.Value, file.Value.Position));
 			else
-				this._files.Add(new(file.Key, file.Value, null));
+				this.FilesInternal.Add(new(file.Key, file.Value, null));
 		}
 
 		return this;
@@ -382,39 +344,27 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
-	///     Clears all message components on this builder.
-	/// </summary>
-	public void ClearComponents()
-		=> this.ComponentsInternal.Clear();
-
-	/// <summary>
 	///     Clears the poll from this builder.
 	/// </summary>
 	public void ClearPoll()
 		=> this.Poll = null;
 
-	/// <summary>
-	///     Allows for clearing the Followup Message builder so that it can be used again to send a new message.
-	/// </summary>
-	public void Clear()
+	/// <inheritdoc />
+	public override void Clear()
 	{
-		this.Content = null;
-		this._embeds.Clear();
 		this.IsTts = false;
 		this.Mentions = null;
-		this._files.Clear();
 		this.IsEphemeral = false;
-		this.ComponentsInternal.Clear();
+		base.Clear();
 	}
 
-	/// <summary>
-	///     Validates the builder.
-	/// </summary>
-	internal void Validate()
+	/// <inheritdoc />
+	internal override void Validate()
 	{
-		if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any() && !this.Components.Any() && this.Poll is null && this?.Attachments.Count == 0)
+		if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && this.EmbedsInternal.Count == 0 && this.ComponentsInternal.Count == 0 && this.Poll is null && this.AttachmentsInternal.Count == 0)
 			throw new ArgumentException("You must specify content, an embed, a component, a poll, or at least one file.");
 
 		this.Poll?.Validate();
+		base.Validate();
 	}
 }

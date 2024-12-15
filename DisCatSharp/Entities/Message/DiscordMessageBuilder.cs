@@ -13,56 +13,15 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 {
-	private readonly List<DiscordEmbed> _embeds = [];
-
-	internal readonly List<DiscordAttachment> AttachmentsInternal = [];
-
-	internal readonly List<DiscordMessageFile> FilesInternal = [];
-
-	private string _content;
-
 	/// <summary>
 	///     Whether to keep previous attachments.
 	/// </summary>
 	internal bool? KeepAttachmentsInternal;
 
 	/// <summary>
-	///     Gets or Sets the Message to be sent.
-	/// </summary>
-	public string Content
-	{
-		get => this._content;
-		set
-		{
-			if (value is { Length: > 2000 })
-				throw new ArgumentException("Content cannot exceed 2000 characters.", nameof(value));
-
-			this._content = value;
-		}
-	}
-
-	/// <summary>
-	///     Gets or sets the embed for the builder. This will always set the builder to have one embed.
-	/// </summary>
-	public DiscordEmbed Embed
-	{
-		get => this._embeds.Count > 0 ? this._embeds[0] : null;
-		set
-		{
-			this._embeds.Clear();
-			this._embeds.Add(value);
-		}
-	}
-
-	/// <summary>
 	///     Gets the Sticker to be send.
 	/// </summary>
 	public DiscordSticker Sticker { get; set; }
-
-	/// <summary>
-	///     Gets the Embeds to be sent.
-	/// </summary>
-	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
 
 	/// <summary>
 	///     Gets or Sets if the message should be TTS.
@@ -89,16 +48,6 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	///     Gets the Allowed Mentions for the message to be sent.
 	/// </summary>
 	public List<IMention>? Mentions { get; private set; }
-
-	/// <summary>
-	///     Gets the Files to be sent in the Message.
-	/// </summary>
-	public IReadOnlyCollection<DiscordMessageFile> Files => this.FilesInternal;
-
-	/// <summary>
-	///     Gets the Attachments to be sent in the Message.
-	/// </summary>
-	public IReadOnlyList<DiscordAttachment> Attachments => this.AttachmentsInternal;
 
 	/// <summary>
 	///     Gets the Reply Message ID.
@@ -316,20 +265,6 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
-	///     Sets the embed for the current builder.
-	/// </summary>
-	/// <param name="embed">The embed that should be set.</param>
-	/// <returns>The current builder to be chained.</returns>
-	public DiscordMessageBuilder WithEmbed(DiscordEmbed embed)
-	{
-		if (embed == null)
-			return this;
-
-		this.Embed = embed;
-		return this;
-	}
-
-	/// <summary>
 	///     Appends an embed to the current builder.
 	/// </summary>
 	/// <param name="embed">The embed that should be appended.</param>
@@ -339,7 +274,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 		if (embed == null)
 			return this; //Providing null embeds will produce a 400 response from Discord.//
 
-		this._embeds.Add(embed);
+		this.EmbedsInternal.Add(embed);
 		return this;
 	}
 
@@ -350,7 +285,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to be chained.</returns>
 	public DiscordMessageBuilder AddEmbeds(IEnumerable<DiscordEmbed> embeds)
 	{
-		this._embeds.AddRange(embeds);
+		this.EmbedsInternal.AddRange(embeds);
 		return this;
 	}
 
@@ -529,12 +464,6 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 		=> msg.ModifyAsync(this);
 
 	/// <summary>
-	///     Clears all message components on this builder.
-	/// </summary>
-	public void ClearComponents()
-		=> this.ComponentsInternal.Clear();
-
-	/// <summary>
 	///     Clears the poll from this builder.
 	/// </summary>
 	public void ClearPoll()
@@ -543,25 +472,21 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	/// <summary>
 	///     Allows for clearing the Message Builder so that it can be used again to send a new message.
 	/// </summary>
-	public void Clear()
+	public override void Clear()
 	{
-		this.Content = "";
-		this._embeds.Clear();
 		this.IsTts = false;
 		this.Mentions = null;
-		this.FilesInternal.Clear();
 		this.ReplyId = null;
 		this.MentionOnReply = false;
-		this.ComponentsInternal.Clear();
 		this.Suppressed = false;
 		this.Sticker = null!;
-		this.AttachmentsInternal.Clear();
 		this.KeepAttachmentsInternal = false;
 		this.Nonce = null;
 		this.EnforceNonce = false;
 		this.Poll = null;
 		this.IsVoiceMessage = false;
 		this.IsUIKit = false;
+		base.Clear();
 	}
 
 	/// <summary>
@@ -570,7 +495,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	/// <param name="isModify">Tells the method to perform the Modify Validation or Create Validation.</param>
 	internal void Validate(bool isModify = false)
 	{
-		if (this._embeds.Count > 10)
+		if (this.EmbedsInternal.Count > 10)
 			throw new ArgumentException("A message can only have up to 10 embeds.");
 
 		if (isModify)
@@ -599,5 +524,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 		}
 		else if (this.Poll is not null)
 			throw new InvalidOperationException("Messages with polls can't be edited.");
+
+		base.Validate();
 	}
 }

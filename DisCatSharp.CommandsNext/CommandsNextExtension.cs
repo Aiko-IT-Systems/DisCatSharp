@@ -380,7 +380,7 @@ public class CommandsNextExtension : BaseExtension
 
 			var helpMessage = helpBuilder.Build();
 
-			var builder = new DiscordMessageBuilder().WithContent(helpMessage.Content).WithEmbed(helpMessage.Embed);
+			var builder = new DiscordMessageBuilder().WithContent(helpMessage.Content).AddEmbed(helpMessage.Embed);
 
 			if (!ctx.Config.DmHelp || ctx.Channel is DiscordDmChannel || ctx.Guild == null)
 				await ctx.RespondAsync(builder).ConfigureAwait(false);
