@@ -45,7 +45,7 @@ internal class DiscordInteractionApplicationCommandCallbackData : ObservableApiO
 	///     Gets the components.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyCollection<DiscordActionRowComponent>? Components { get; internal set; }
+	public IReadOnlyCollection<DiscordComponent>? Components { get; internal set; }
 
 	/// <summary>
 	///     Gets the autocomplete choices.

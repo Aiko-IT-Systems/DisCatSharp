@@ -10,7 +10,7 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class DiscordFollowupMessageBuilder
 {
-	private readonly List<DiscordActionRowComponent> _components = [];
+	private readonly List<DiscordComponent> _components = [];
 
 	private readonly List<DiscordEmbed> _embeds = [];
 
@@ -119,7 +119,7 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <summary>
 	///     Components to send on this followup message.
 	/// </summary>
-	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
+	public IReadOnlyList<DiscordComponent> Components => this._components;
 
 	/// <summary>
 	///     Attachments to be send with this followup request.

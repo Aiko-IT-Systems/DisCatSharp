@@ -3038,7 +3038,7 @@ public sealed class DiscordApiClient
 	///     Thrown when the <paramref name="content" /> exceeds 2000 characters or is empty and
 	///     if neither content, sticker, components and embeds are definied..
 	/// </exception>
-	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string content, IEnumerable<DiscordEmbed> embeds, DiscordSticker sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply, ReadOnlyCollection<DiscordActionRowComponent>? components = null)
+	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string content, IEnumerable<DiscordEmbed> embeds, DiscordSticker sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply, ReadOnlyCollection<DiscordComponent>? components = null)
 	{
 		if (content is { Length: > 2000 })
 			throw new ArgumentException("Message content length cannot exceed 2000 characters.");
@@ -3473,7 +3473,7 @@ public sealed class DiscordApiClient
 	/// <param name="suppressEmbed">The suppress_embed.</param>
 	/// <param name="files">The files.</param>
 	/// <param name="attachments">The attachments to keep.</param>
-	internal async Task<DiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, Optional<IEnumerable<IMention>> mentions, IReadOnlyList<DiscordActionRowComponent> components, Optional<bool> suppressEmbed, IReadOnlyCollection<DiscordMessageFile> files, Optional<IEnumerable<DiscordAttachment>> attachments)
+	internal async Task<DiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, Optional<IEnumerable<IMention>> mentions, IReadOnlyList<DiscordComponent> components, Optional<bool> suppressEmbed, IReadOnlyCollection<DiscordMessageFile> files, Optional<IEnumerable<DiscordAttachment>> attachments)
 	{
 		if (embeds is { HasValue: true, Value: not null })
 			foreach (var embed in embeds.Value)
@@ -7182,7 +7182,7 @@ public sealed class DiscordApiClient
 	/// <param name="builder">The builder.</param>
 	internal async Task CreateInteractionModalResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, DiscordInteractionModalBuilder builder)
 	{
-		if (builder.ModalComponents.Any(mc => mc.Components.Any(c => c.Type != ComponentType.InputText)))
+		if (builder.ModalComponents.Select(x => x as DiscordActionRowComponent).Any(mc => mc.Components.Any(c => c.Type != ComponentType.InputText)))
 			throw new NotSupportedException("Can't send any other type then Input Text as Modal Component.");
 
 		var pld = new RestInteractionModalResponsePayload

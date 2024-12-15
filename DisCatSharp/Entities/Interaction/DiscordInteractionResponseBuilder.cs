@@ -14,7 +14,7 @@ public sealed class DiscordInteractionResponseBuilder
 
 	private readonly List<DiscordApplicationCommandAutocompleteChoice> _choices = [];
 
-	private readonly List<DiscordActionRowComponent> _components = [];
+	private readonly List<DiscordComponent> _components = [];
 
 	private readonly List<DiscordEmbed> _embeds = [];
 
@@ -142,7 +142,7 @@ public sealed class DiscordInteractionResponseBuilder
 	/// <summary>
 	///     Components to send on this interaction response.
 	/// </summary>
-	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
+	public IReadOnlyList<DiscordComponent> Components => this._components;
 
 	/// <summary>
 	///     The choices to send on this interaction response.

@@ -265,7 +265,7 @@ internal sealed class RestFollowupMessageCreatePayload : ObservableApiObject
 	///     Gets the components.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyCollection<DiscordActionRowComponent> Components { get; set; }
+	public IReadOnlyCollection<DiscordComponent> Components { get; set; }
 
 	/// <summary>
 	///     Gets attachments.

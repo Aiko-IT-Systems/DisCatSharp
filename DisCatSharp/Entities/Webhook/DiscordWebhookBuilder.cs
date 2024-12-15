@@ -15,7 +15,7 @@ public sealed class DiscordWebhookBuilder
 {
 	private readonly List<ulong> _appliedTags = [];
 
-	private readonly List<DiscordActionRowComponent> _components = [];
+	private readonly List<DiscordComponent> _components = [];
 
 	private readonly List<DiscordEmbed> _embeds = [];
 
@@ -111,7 +111,7 @@ public sealed class DiscordWebhookBuilder
 	/// <summary>
 	///     Gets the components.
 	/// </summary>
-	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
+	public IReadOnlyList<DiscordComponent> Components => this._components;
 
 	/// <summary>
 	///     Attachments to keep on this webhook request.
@@ -416,7 +416,7 @@ public sealed class DiscordWebhookBuilder
 		if (this.Mentions != null)
 			this.Mentions.AddRange(mentions);
 		else
-			this.Mentions = mentions.ToList();
+			this.Mentions = [.. mentions];
 		return this;
 	}
 
