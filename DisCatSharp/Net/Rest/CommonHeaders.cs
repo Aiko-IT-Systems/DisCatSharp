@@ -63,7 +63,7 @@ public static class CommonHeaders
 	/// <summary>
 	///     Gets or sets the user agent header.
 	/// </summary>
-	public const string USER_AGENT = "UserAgent";
+	public const string USER_AGENT = "User-Agent";
 
 	/// <summary>
 	///     Gets or sets the authorization header.

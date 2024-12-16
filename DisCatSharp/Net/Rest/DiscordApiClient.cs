@@ -56,7 +56,13 @@ public sealed class DiscordApiClient
 	{
 		this.OAuth2Client = client;
 		this.Discord = null!;
-		this.Rest = new(proxy, timeout, useRelativeRateLimit, logger);
+		this.Rest = new(new DiscordConfiguration() {
+			Proxy = proxy,
+			HttpTimeout = timeout,
+			UseRelativeRatelimit = useRelativeRateLimit,
+			ApiChannel = ApiChannel.Stable,
+			ApiVersion = "10"
+		}, logger);
 	}
 
 	/// <summary>
@@ -70,7 +76,13 @@ public sealed class DiscordApiClient
 	{
 		this.Discord = null!;
 		this.OAuth2Client = null!;
-		this.Rest = new(proxy, timeout, useRelativeRateLimit, logger);
+		this.Rest = new(new DiscordConfiguration() {
+			Proxy = proxy,
+			HttpTimeout = timeout,
+			UseRelativeRatelimit = useRelativeRateLimit,
+			ApiChannel = ApiChannel.Stable,
+			ApiVersion = "10"
+		}, logger);
 	}
 
 	/// <summary>
@@ -7089,7 +7101,7 @@ public sealed class DiscordApiClient
 					attachments.Add(att);
 					fileId++;
 				}
-				
+
 				if (pld.Data is not null)
 					pld.Data.Attachments = attachments;
 			}

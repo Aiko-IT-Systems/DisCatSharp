@@ -469,7 +469,7 @@ public sealed class LavalinkSession
 		this._webSocket.ExceptionThrown += this.Lavalink_WebSocket_ExceptionThrown;
 		this._webSocket.MessageReceived += this.Lavalink_WebSocket_MessageReceived;
 
-		this._webSocket.AddDefaultHeader("Authorization", this.Config.Password);
+		this._webSocket.AddDefaultHeader(CommonHeaders.AUTHORIZATION, this.Config.Password);
 		this._webSocket.AddDefaultHeader("Num-Shards", this.Discord.ShardCount.ToString(CultureInfo.InvariantCulture));
 		this._webSocket.AddDefaultHeader("User-Id", this.Discord.CurrentUser.Id.ToString(CultureInfo.InvariantCulture));
 		this._webSocket.AddDefaultHeader("Client-Name", $"DisCatSharp.Lavalink/{this.Discord.VersionString}");

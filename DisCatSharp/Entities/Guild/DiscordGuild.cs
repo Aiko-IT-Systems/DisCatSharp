@@ -1984,7 +1984,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 			WidgetType.Banner4 => "banner4",
 			_ => "shield"
 		};
-		return $"{Endpoints.BASE_URI}{Endpoints.GUILDS}/{this.Id}{Endpoints.WIDGET_PNG}?style={param}";
+		return $"{Utilities.GetApiBaseUri(this.Discord.Configuration)}{Endpoints.GUILDS}/{this.Id}{Endpoints.WIDGET_PNG}?style={param}";
 	}
 
 	/// <summary>

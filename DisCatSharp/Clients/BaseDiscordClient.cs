@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -230,13 +231,23 @@ public abstract class BaseDiscordClient : IDisposable
 		this.InternalVoiceRegions = new();
 		this.VoiceRegionsLazy = new(() => new ReadOnlyDictionary<string, DiscordVoiceRegion>(this.InternalVoiceRegions));
 
-		this.RestClient = new();
-		this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
-		this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-locale", this.Configuration.Locale);
+		var httphandler = new HttpClientHandler
+		{
+			UseCookies = false,
+			AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip,
+			UseProxy = this.Configuration.Proxy != null,
+			Proxy = this.Configuration.Proxy
+		};
+		this.RestClient = new()
+		{
+			Timeout = this.Configuration.HttpTimeout
+		};
+		this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.USER_AGENT, Utilities.GetUserAgent());
+		this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.DISCORD_LOCALE, this.Configuration.Locale);
 		if (!string.IsNullOrWhiteSpace(this.Configuration.Timezone))
-			this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone", this.Configuration.Timezone);
+			this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.DISCORD_TIMEZONE, this.Configuration.Timezone);
 		if (this.Configuration.Override is not null)
-			this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this.Configuration.Override);
+			this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.SUPER_PROPERTIES, this.Configuration.Override);
 
 		var a = typeof(DiscordClient).GetTypeInfo().Assembly;
 

@@ -82,6 +82,7 @@ public sealed class DiscordConfiguration
 		this.LoggerFactory = other.LoggerFactory;
 		this.MobileStatus = other.MobileStatus;
 		this.AutoRefreshChannelCache = other.AutoRefreshChannelCache;
+		this.ApiChannel = other.ApiChannel;
 		this.ApiVersion = other.ApiVersion;
 		this.ServiceProvider = other.ServiceProvider;
 		this.Override = other.Override;

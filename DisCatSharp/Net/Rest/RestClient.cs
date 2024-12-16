@@ -91,7 +91,7 @@ internal sealed class RestClient : IDisposable
 	/// </summary>
 	/// <param name="client">The client.</param>
 	internal RestClient(BaseDiscordClient client)
-		: this(client.Configuration.Proxy, client.Configuration.HttpTimeout, client.Configuration.UseRelativeRatelimit, client.Logger)
+		: this(client.Configuration, client.Logger)
 	{
 		this._discord = client;
 
@@ -109,14 +109,10 @@ internal sealed class RestClient : IDisposable
 	///     Initializes a new instance of the <see cref="RestClient" /> class.
 	///     This is for meta-clients, such as the <see cref="DiscordWebhookClient" /> and <see cref="DiscordOAuth2Client" />.
 	/// </summary>
-	/// <param name="proxy">The proxy.</param>
-	/// <param name="timeout">The timeout.</param>
-	/// <param name="useRelativeRatelimit">Whether to use relative ratelimit.</param>
+	/// <param name="configuration">The configuration.</param>
 	/// <param name="logger">The logger.</param>
 	internal RestClient(
-		IWebProxy? proxy,
-		TimeSpan timeout,
-		bool useRelativeRatelimit,
+		DiscordConfiguration configuration,
 		ILogger logger
 	)
 	{
@@ -126,24 +122,24 @@ internal sealed class RestClient : IDisposable
 		{
 			UseCookies = false,
 			AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip,
-			UseProxy = proxy != null,
-			Proxy = proxy
+			UseProxy = configuration.Proxy != null,
+			Proxy = configuration.Proxy
 		};
 
 		this.HttpClient = new(httphandler)
 		{
-			BaseAddress = new(Utilities.GetApiBaseUri(this._discord?.Configuration)),
-			Timeout = timeout
+			BaseAddress = new(Utilities.GetApiBaseUri(configuration)),
+			Timeout = configuration.HttpTimeout
 		};
 
 		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.USER_AGENT, Utilities.GetUserAgent());
 		if (this._discord is { Configuration: not null })
 		{
-			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.DISCORD_LOCALE, this._discord.Configuration.Locale);
-			if (!string.IsNullOrWhiteSpace(this._discord.Configuration.Timezone))
-				this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.DISCORD_TIMEZONE, this._discord.Configuration.Timezone);
-			if (!string.IsNullOrWhiteSpace(this._discord.Configuration.Override))
-				this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.SUPER_PROPERTIES, this._discord.Configuration.Override);
+			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.DISCORD_LOCALE, configuration.Locale);
+			if (!string.IsNullOrWhiteSpace(configuration.Timezone))
+				this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.DISCORD_TIMEZONE, configuration.Timezone);
+			if (!string.IsNullOrWhiteSpace(configuration.Override))
+				this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.SUPER_PROPERTIES, configuration.Override);
 		}
 
 		this._routesToHashes = new();
@@ -151,7 +147,7 @@ internal sealed class RestClient : IDisposable
 		this._requestQueue = new();
 
 		this._globalRateLimitEvent = new(true);
-		this._useResetAfter = useRelativeRatelimit;
+		this._useResetAfter = configuration.UseRelativeRatelimit;
 	}
 
 	/// <summary>

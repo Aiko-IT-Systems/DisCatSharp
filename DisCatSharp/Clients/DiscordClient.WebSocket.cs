@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
+using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.WebSocket;
 
@@ -169,6 +170,7 @@ public sealed partial class DiscordClient
 		Volatile.Write(ref this._skippedHeartbeats, 0);
 
 		this.WebSocketClient = this.Configuration.WebSocketClientFactory(this.Configuration.Proxy, this.ServiceProvider);
+		this.WebSocketClient.AddDefaultHeader(CommonHeaders.USER_AGENT, Utilities.GetUserAgent());
 		this._payloadDecompressor = this.Configuration.GatewayCompressionLevel is not GatewayCompressionLevel.None
 			? new PayloadDecompressor(this.Configuration.GatewayCompressionLevel)
 			: null;

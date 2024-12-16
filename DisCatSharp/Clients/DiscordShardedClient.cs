@@ -397,13 +397,13 @@ public sealed partial class DiscordShardedClient
 			Timeout = this._configuration.HttpTimeout
 		};
 
-		http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
-		http.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Utilities.GetFormattedToken(this._configuration));
-		http.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-locale", this._configuration.Locale);
+		http.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.USER_AGENT, Utilities.GetUserAgent());
+		http.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.AUTHORIZATION, Utilities.GetFormattedToken(this._configuration));
+		http.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.DISCORD_LOCALE, this._configuration.Locale);
 		if (!string.IsNullOrWhiteSpace(this._configuration.Timezone))
-			http.DefaultRequestHeaders.TryAddWithoutValidation("x-discord-timezone", this._configuration.Timezone);
+			http.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.DISCORD_TIMEZONE, this._configuration.Timezone);
 		if (this._configuration.Override != null)
-			http.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this._configuration.Override);
+			http.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.SUPER_PROPERTIES, this._configuration.Override);
 
 		this.Logger.LogDebug(LoggerEvents.ShardRest, $"Obtaining gateway information from GET {Endpoints.GATEWAY}{Endpoints.BOT}...");
 		var resp = await http.GetAsync(url).ConfigureAwait(false);
