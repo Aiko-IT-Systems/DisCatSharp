@@ -288,7 +288,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <returns></returns>
 	public DiscordWebhookBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string description = null)
 	{
-		if (this.Files.Count > 10)
+		if (this.FilesInternal.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
 		if (this.FilesInternal.Any(x => x.Filename == stream.Name))
@@ -312,7 +312,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// </param>
 	public DiscordWebhookBuilder AddFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
 	{
-		if (this.Files.Count + files.Count > 10)
+		if (this.FilesInternal.Count + files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
 		foreach (var file in files)

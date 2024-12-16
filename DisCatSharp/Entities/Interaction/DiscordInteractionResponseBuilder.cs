@@ -305,7 +305,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string description = null)
 	{
-		if (this.Files.Count >= 10)
+		if (this.FilesInternal.Count >= 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
 		if (this.FilesInternal.Any(x => x.Filename == filename))
@@ -331,7 +331,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string description = null)
 	{
-		if (this.Files.Count >= 10)
+		if (this.FilesInternal.Count >= 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
 		if (this.FilesInternal.Any(x => x.Filename == stream.Name))
@@ -356,7 +356,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
 	{
-		if (this.Files.Count + files.Count > 10)
+		if (this.FilesInternal.Count + files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
 		foreach (var file in files)
