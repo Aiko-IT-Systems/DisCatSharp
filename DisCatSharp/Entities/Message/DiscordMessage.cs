@@ -153,6 +153,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 
 		this.Poll.ChannelId = this.ChannelId;
 		this.Poll.MessageId = this.Id;
+		this.ChannelType = other.ChannelType;
 	}
 
 	/// <summary>
@@ -164,6 +165,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		get => (this.Discord as DiscordClient)?.InternalGetCachedChannel(this.ChannelId, this.GuildId) ?? this._channel;
 		internal set => this._channel = value;
 	}
+
+	/// <summary>
+	///     Gets the type of the <see cref="Channel" /> this message was send in.
+	/// </summary>
+	[JsonProperty("channel_type", NullValueHandling = NullValueHandling.Ignore)]
+	public ChannelType ChannelType { get; internal set; }
 
 	/// <summary>
 	///     Gets the thread in which the message was sent.
@@ -502,7 +509,10 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	/// <param name="targetChannel">The channel to forward this message to.</param>
 	/// <param name="content">Content is not available at the moment, but already added for the future.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the bot tries forwarding a message it doesn't has access to or the client tried to modify a message not sent by them.</exception>
+	/// <exception cref="UnauthorizedException">
+	///     Thrown when the bot tries forwarding a message it doesn't has access to or the
+	///     client tried to modify a message not sent by them.
+	/// </exception>
 	/// <exception cref="NotFoundException">Thrown when the target channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
