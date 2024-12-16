@@ -25,7 +25,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	///     Constructs a new empty webhook request builder.
 	/// </summary>
 	public DiscordWebhookBuilder()
-	{ } // I still see no point in initializing collections with empty collections. //
+	{ }
 
 	/// <summary>
 	///     Username to use for this webhook request.
@@ -43,26 +43,10 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	public bool IsTts { get; private set; }
 
 	/// <summary>
-	///     Whether to send as silent message.
-	/// </summary>
-	public bool NotificationsSuppressed { get; private set; }
-
-	/// <summary>
-	///     Whether to send as voice message.
-	///     You can't use that on your own, it needs DisCatSharp.Experimental.
-	/// </summary>
-	public bool IsVoiceMessage { get; private set; }
-
-	/// <summary>
 	///     Name of the new thread.
 	///     Only works if the webhook is send in a <see cref="ChannelType.Forum" />.
 	/// </summary>
 	public string? ThreadName { get; set; }
-
-	/// <summary>
-	///     Mentions to send on this webhook request.
-	/// </summary>
-	public List<IMention>? Mentions { get; private set; }
 
 	/// <summary>
 	///     Forum post tags to send on this webhook request.
@@ -79,7 +63,6 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// </summary>
 	public DiscordWebhookBuilder SuppressEmbeds()
 	{
-		this.FlagsChanged = true;
 		this.EmbedsSuppressed = true;
 		return this;
 	}
@@ -89,7 +72,6 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// </summary>
 	public DiscordWebhookBuilder AsSilentMessage()
 	{
-		this.FlagsChanged = true;
 		this.NotificationsSuppressed = true;
 		return this;
 	}
@@ -99,7 +81,6 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// </summary>
 	public DiscordWebhookBuilder AsVoiceMessage()
 	{
-		this.FlagsChanged = true;
 		this.IsVoiceMessage = true;
 		return this;
 	}
@@ -250,9 +231,8 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <param name="embed">Embed to add.</param>
 	public DiscordWebhookBuilder AddEmbed(DiscordEmbed embed)
 	{
-		if (embed != null)
-			this.EmbedsInternal.Add(embed);
-
+		ArgumentNullException.ThrowIfNull(embed, nameof(embed));
+		this.EmbedsInternal.Add(embed);
 		return this;
 	}
 
@@ -473,10 +453,6 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 		this.KeepAttachmentsInternal = false;
 		this.ThreadName = null;
 		this.Poll = null;
-		this.FlagsChanged = false;
-		this.NotificationsSuppressed = false;
-		this.IsTts = false;
-		this.IsVoiceMessage = false;
 		base.Clear();
 	}
 

@@ -33,42 +33,6 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	private bool EPH { get; set; }
 
 	/// <summary>
-	///     Whether to send as voice message.
-	///     You can't use that on your own, it needs DisCatSharp.Experimental.
-	/// </summary>
-	internal bool IsVoiceMessage
-	{
-		get => this.VOICE_MSG;
-		set
-		{
-			this.VOICE_MSG = value;
-			this.FlagsChanged = true;
-		}
-	}
-
-	private bool VOICE_MSG { get; set; }
-
-	/// <summary>
-	///     Whether to send as silent message.
-	/// </summary>
-	public bool NotificationsSuppressed
-	{
-		get => this.NOTI_SUP;
-		set
-		{
-			this.NOTI_SUP = value;
-			this.FlagsChanged = true;
-		}
-	}
-
-	private bool NOTI_SUP { get; set; }
-
-	/// <summary>
-	///     Mentions to send on this followup message.
-	/// </summary>
-	public List<IMention>? Mentions { get; private set; }
-
-	/// <summary>
 	///     Gets the poll for this message.
 	/// </summary>
 	public DiscordPollBuilder? Poll { get; private set; }
@@ -180,6 +144,7 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder AddEmbed(DiscordEmbed embed)
 	{
+		ArgumentNullException.ThrowIfNull(embed, nameof(embed));
 		this.EmbedsInternal.Add(embed);
 		return this;
 	}
@@ -309,7 +274,6 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// </summary>
 	public DiscordFollowupMessageBuilder AsEphemeral()
 	{
-		this.FlagsChanged = true;
 		this.IsEphemeral = true;
 		return this;
 	}
@@ -319,7 +283,6 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// </summary>
 	public DiscordFollowupMessageBuilder SuppressEmbeds()
 	{
-		this.FlagsChanged = true;
 		this.EmbedsSuppressed = true;
 		return this;
 	}
@@ -329,7 +292,6 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// </summary>
 	internal DiscordFollowupMessageBuilder AsVoiceMessage(bool asVoiceMessage = true)
 	{
-		this.FlagsChanged = true;
 		this.IsVoiceMessage = asVoiceMessage;
 		return this;
 	}
@@ -339,7 +301,6 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// </summary>
 	public DiscordFollowupMessageBuilder AsSilentMessage()
 	{
-		this.FlagsChanged = true;
 		this.NotificationsSuppressed = true;
 		return this;
 	}

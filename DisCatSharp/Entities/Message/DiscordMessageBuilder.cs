@@ -40,11 +40,6 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	public bool IsVoiceMessage { get; private set; }
 
 	/// <summary>
-	///     Gets the Allowed Mentions for the message to be sent.
-	/// </summary>
-	public List<IMention>? Mentions { get; private set; }
-
-	/// <summary>
 	///     Gets the Reply Message ID.
 	/// </summary>
 	public ulong? ReplyId { get; private set; }
@@ -53,11 +48,6 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	///     Gets if the Reply should mention the user.
 	/// </summary>
 	public bool MentionOnReply { get; private set; }
-
-	/// <summary>
-	///     Gets if the embeds should be suppressed.
-	/// </summary>
-	public bool Suppressed { get; private set; }
 
 	/// <summary>
 	///     Gets if the Reply will error if the Reply Message Id does not reference a valid message.
@@ -228,7 +218,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	/// </summary>
 	public DiscordMessageBuilder SuppressEmbeds(bool suppress = true)
 	{
-		this.Suppressed = suppress;
+		this.EmbedsSuppressed = suppress;
 		return this;
 	}
 
@@ -238,7 +228,6 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordMessageBuilder AsUIKitMessage()
 	{
-		this.FlagsChanged = true;
 		this.IsUIKit = true;
 		return this;
 	}
@@ -268,9 +257,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to be chained.</returns>
 	public DiscordMessageBuilder AddEmbed(DiscordEmbed embed)
 	{
-		if (embed == null)
-			return this; //Providing null embeds will produce a 400 response from Discord.//
-
+		ArgumentNullException.ThrowIfNull(embed, nameof(embed));
 		this.EmbedsInternal.Add(embed);
 		return this;
 	}
@@ -472,17 +459,13 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	public override void Clear()
 	{
 		this.IsTts = false;
-		this.Mentions = null;
 		this.ReplyId = null;
 		this.MentionOnReply = false;
-		this.Suppressed = false;
 		this.Sticker = null!;
 		this.KeepAttachmentsInternal = false;
 		this.Nonce = null;
 		this.EnforceNonce = false;
 		this.Poll = null;
-		this.IsVoiceMessage = false;
-		this.IsUIKit = false;
 		base.Clear();
 	}
 

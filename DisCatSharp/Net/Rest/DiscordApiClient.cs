@@ -3109,7 +3109,7 @@ public sealed class DiscordApiClient
 					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
 		var flags = MessageFlags.None;
-		if (builder.Suppressed)
+		if (builder.EmbedsSuppressed)
 			flags |= MessageFlags.SuppressedEmbeds;
 		if (builder.Silent)
 			flags |= MessageFlags.SuppressNotifications;

@@ -25,12 +25,16 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	///     <see cref="DisCatSharp.Entities.DiscordMessageBuilder" />.
 	/// </summary>
 	/// <param name="builder">The builder to copy.</param>
-	public DiscordInteractionResponseBuilder(DiscordMessageBuilder builder)
+	public DiscordInteractionResponseBuilder(DisCatSharpBuilder builder)
 	{
 		this.Content = builder.Content;
 		this.Mentions = builder.Mentions;
 		this.EmbedsInternal.AddRange(builder.Embeds);
 		this.ComponentsInternal.AddRange(builder.Components);
+		this.EmbedsSuppressed = builder.EmbedsSuppressed;
+		this.IsUIKit = builder.IsUIKit;
+		this.FilesInternal.AddRange(builder.Files);
+		this.AttachmentsInternal.AddRange(builder.Attachments);
 	}
 
 	internal List<DiscordApplicationCommandAutocompleteChoice> ChoicesInternal { get; } = [];
@@ -56,46 +60,10 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	private bool EPH { get; set; }
 
 	/// <summary>
-	///     Whether to send as silent message.
-	/// </summary>
-	public bool NotificationsSuppressed
-	{
-		get => this.NOTI_SUP;
-		set
-		{
-			this.NOTI_SUP = value;
-			this.FlagsChanged = true;
-		}
-	}
-
-	private bool NOTI_SUP { get; set; }
-
-	/// <summary>
-	///     Whether to send as voice message.
-	///     You can't use that on your own, it needs DisCatSharp.Experimental.
-	/// </summary>
-	internal bool IsVoiceMessage
-	{
-		get => this.VOICE_MSG;
-		set
-		{
-			this.VOICE_MSG = value;
-			this.FlagsChanged = true;
-		}
-	}
-
-	private bool VOICE_MSG { get; set; }
-
-	/// <summary>
 	///     The choices to send on this interaction response.
 	///     Mutually exclusive with content, embed, and components.
 	/// </summary>
 	public IReadOnlyList<DiscordApplicationCommandAutocompleteChoice> Choices => this.ChoicesInternal;
-
-	/// <summary>
-	///     Mentions to send on this interaction response.
-	/// </summary>
-	public List<IMention>? Mentions { get; private set; }
 
 	/// <summary>
 	///     The hints to send on this interaction response.
@@ -222,7 +190,6 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AsEphemeral()
 	{
-		this.FlagsChanged = true;
 		this.IsEphemeral = true;
 		return this;
 	}
@@ -233,7 +200,6 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AsUIKitMessage()
 	{
-		this.FlagsChanged = true;
 		this.IsUIKit = true;
 		return this;
 	}
@@ -244,7 +210,6 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder SuppressEmbeds()
 	{
-		this.FlagsChanged = true;
 		this.EmbedsSuppressed = true;
 		return this;
 	}
@@ -255,7 +220,6 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AsSilentMessage()
 	{
-		this.FlagsChanged = true;
 		this.NotificationsSuppressed = true;
 		return this;
 	}
@@ -265,7 +229,6 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// </summary>
 	internal DiscordInteractionResponseBuilder AsVoiceMessage(bool asVoiceMessage = true)
 	{
-		this.FlagsChanged = true;
 		this.IsVoiceMessage = asVoiceMessage;
 		return this;
 	}
@@ -288,8 +251,8 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddEmbed(DiscordEmbed embed)
 	{
-		if (embed != null)
-			this.EmbedsInternal.Add(embed); // Interactions will 400 silently //
+		ArgumentNullException.ThrowIfNull(embed, nameof(embed));
+		this.EmbedsInternal.Add(embed);
 		return this;
 	}
 
@@ -456,9 +419,6 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 		this.Mentions = null;
 		this.ChoicesInternal.Clear();
 		this.Poll = null;
-		this.IsVoiceMessage = false;
-		this.NotificationsSuppressed = false;
-		this.EmbedsSuppressed = false;
 		base.Clear();
 	}
 }

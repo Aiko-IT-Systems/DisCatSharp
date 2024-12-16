@@ -78,6 +78,48 @@ public class DisCatSharpBuilder
 		=> this.FilesInternal;
 
 	/// <summary>
+	///     Gets the Allowed Mentions for the message to be sent.
+	/// </summary>
+	public List<IMention>? Mentions { get; internal set; }
+
+	/// <summary>
+	///     Whether to send as voice message.
+	///     You can't use that on your own, it needs DisCatSharp.Experimental.
+	/// </summary>
+	internal bool IsVoiceMessage
+	{
+		get => this.VOICE_MSG;
+		set
+		{
+			this.VOICE_MSG = value;
+			this.FlagsChanged = true;
+		}
+	}
+
+	/// <summary>
+	///     Whether to send as voice message.
+	/// </summary>
+	private bool VOICE_MSG { get; set; }
+
+	/// <summary>
+	///     Whether to send as silent message.
+	/// </summary>
+	public bool NotificationsSuppressed
+	{
+		get => this.NOTIFICATIONS_SUPPRESSED;
+		set
+		{
+			this.NOTIFICATIONS_SUPPRESSED = value;
+			this.FlagsChanged = true;
+		}
+	}
+
+	/// <summary>
+	///     Whether to send as silent message.
+	/// </summary>
+	private bool NOTIFICATIONS_SUPPRESSED { get; set; }
+
+	/// <summary>
 	///     Whether this message should be using UI Kit.
 	/// </summary>
 	public bool IsUIKit
@@ -100,10 +142,10 @@ public class DisCatSharpBuilder
 	/// </summary>
 	public bool EmbedsSuppressed
 	{
-		get => this.EMB_SUP;
+		get => this.EMBEDS_SUPPRESSED;
 		set
 		{
-			this.EMB_SUP = value;
+			this.EMBEDS_SUPPRESSED = value;
 			this.FlagsChanged = true;
 		}
 	}
@@ -111,7 +153,7 @@ public class DisCatSharpBuilder
 	/// <summary>
 	///     Whether embeds are suppressed.
 	/// </summary>
-	private bool EMB_SUP { get; set; }
+	private bool EMBEDS_SUPPRESSED { get; set; }
 
 	/// <summary>
 	///     Clears the components on this builder.
@@ -129,7 +171,12 @@ public class DisCatSharpBuilder
 		this.EmbedsInternal.Clear();
 		this.AttachmentsInternal.Clear();
 		this.ComponentsInternal.Clear();
+		this.IsVoiceMessage = false;
+		this.IsUIKit = false;
+		this.EmbedsSuppressed = false;
+		this.NotificationsSuppressed = false;
 		this.FlagsChanged = false;
+		this.Mentions = null;
 	}
 
 	/// <summary>

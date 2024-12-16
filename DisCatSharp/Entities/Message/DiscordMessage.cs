@@ -699,7 +699,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	public async Task<DiscordMessage> ModifyAsync(DiscordMessageBuilder builder)
 	{
 		builder.Validate(true);
-		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0
+		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), builder.Mentions, builder.Components, builder.EmbedsSuppressed, builder.Files, builder.Attachments.Count > 0
 			? Optional.Some(builder.Attachments.AsEnumerable())
 			: builder.KeepAttachmentsInternal.HasValue
 				? builder.KeepAttachmentsInternal.Value && this.Attachments is not null ? Optional.Some(this.Attachments.AsEnumerable()) : Array.Empty<DiscordAttachment>()
@@ -737,7 +737,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		var builder = new DiscordMessageBuilder();
 		action(builder);
 		builder.Validate(true);
-		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0
+		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), builder.Mentions, builder.Components, builder.EmbedsSuppressed, builder.Files, builder.Attachments.Count > 0
 			? Optional.Some(builder.Attachments.AsEnumerable())
 			: builder.KeepAttachmentsInternal.HasValue
 				? builder.KeepAttachmentsInternal.Value && this.Attachments is not null ? Optional.Some(this.Attachments.AsEnumerable()) : Array.Empty<DiscordAttachment>()
