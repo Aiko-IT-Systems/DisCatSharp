@@ -17,11 +17,6 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	private readonly List<ulong> _appliedTags = [];
 
 	/// <summary>
-	///     Whether flags were changed.
-	/// </summary>
-	internal bool FlagsChanged = false;
-
-	/// <summary>
 	///     Whether to keep previous attachments.
 	/// </summary>
 	internal bool? KeepAttachmentsInternal;
@@ -46,11 +41,6 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	///     Whether this webhook request is text-to-speech.
 	/// </summary>
 	public bool IsTts { get; private set; }
-
-	/// <summary>
-	///     Whether to suppress embeds.
-	/// </summary>
-	public bool EmbedsSuppressed { get; private set; }
 
 	/// <summary>
 	///     Whether to send as silent message.
@@ -152,17 +142,43 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 		var cmpArr = components.ToArray();
 		var count = cmpArr.Length;
 
-		switch (count)
+		if (this.IsUIKit)
 		{
-			case 0:
-				throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
-			case > 5:
-				throw new ArgumentException("Cannot add more than 5 components per action row!");
+			switch (count)
+			{
+				case 0:
+					throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
+				case > 10:
+					throw new ArgumentException("Cannot add more than 10 components!");
+			}
+
+			this.ComponentsInternal.AddRange(cmpArr);
+		}
+		else
+		{
+			switch (count)
+			{
+				case 0:
+					throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
+				case > 5:
+					throw new ArgumentException("Cannot add more than 5 components per action row!");
+			}
+
+			var comp = new DiscordActionRowComponent(cmpArr);
+			this.ComponentsInternal.Add(comp);
 		}
 
-		var comp = new DiscordActionRowComponent(cmpArr);
-		this.ComponentsInternal.Add(comp);
+		return this;
+	}
 
+	/// <summary>
+	/// Sets that this builder should be using UI Kit.
+	/// </summary>
+	/// <returns>The current builder to chain calls with.</returns>
+	public DiscordWebhookBuilder AsUIKitMessage()
+	{
+		this.FlagsChanged = true;
+		this.IsUIKit = true;
 		return this;
 	}
 

@@ -13,11 +13,6 @@ namespace DisCatSharp.Entities;
 public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 {
 	/// <summary>
-	///     Whether flags were changed.
-	/// </summary>
-	internal bool FlagsChanged = false;
-
-	/// <summary>
 	///     Whether this followup message is text-to-speech.
 	/// </summary>
 	public bool IsTts { get; set; }
@@ -36,21 +31,6 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	}
 
 	private bool EPH { get; set; }
-
-	/// <summary>
-	///     Whether to suppress embeds.
-	/// </summary>
-	public bool EmbedsSuppressed
-	{
-		get => this.EMB_SUP;
-		set
-		{
-			this.EMB_SUP = value;
-			this.FlagsChanged = true;
-		}
-	}
-
-	private bool EMB_SUP { get; set; }
 
 	/// <summary>
 	///     Whether to send as voice message.
@@ -128,14 +108,35 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// <exception cref="ArgumentException"><paramref name="components" /> contained more than 5 components.</exception>
 	public DiscordFollowupMessageBuilder AddComponents(IEnumerable<DiscordComponent> components)
 	{
-		var compArr = components.ToArray();
-		var count = compArr.Length;
+		var cmpArr = components.ToArray();
+		var count = cmpArr.Length;
 
-		if (count > 5)
-			throw new ArgumentException("Cannot add more than 5 components per action row!");
+		if (this.IsUIKit)
+		{
+			switch (count)
+			{
+				case 0:
+					throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
+				case > 10:
+					throw new ArgumentException("Cannot add more than 10 components!");
+			}
 
-		var arc = new DiscordActionRowComponent(compArr);
-		this.ComponentsInternal.Add(arc);
+			this.ComponentsInternal.AddRange(cmpArr);
+		}
+		else
+		{
+			switch (count)
+			{
+				case 0:
+					throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
+				case > 5:
+					throw new ArgumentException("Cannot add more than 5 components per action row!");
+			}
+
+			var comp = new DiscordActionRowComponent(cmpArr);
+			this.ComponentsInternal.Add(comp);
+		}
+
 		return this;
 	}
 

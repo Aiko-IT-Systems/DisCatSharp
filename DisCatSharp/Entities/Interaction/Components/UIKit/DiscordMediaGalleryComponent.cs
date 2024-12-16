@@ -46,6 +46,6 @@ public sealed class DiscordMediaGalleryComponent : DiscordComponent
 	/// <summary>
 	///     The content for the media gallery.
 	/// </summary>
-	[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("items", NullValueHandling = NullValueHandling.Ignore)]
 	public IReadOnlyList<DiscordMediaGalleryItem> Items { get; internal set; } = [];
 }

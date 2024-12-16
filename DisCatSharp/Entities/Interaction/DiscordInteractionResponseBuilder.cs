@@ -15,11 +15,6 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	private readonly List<DiscordInteractionCallbackHint> _callbackHints = [];
 
 	/// <summary>
-	///     Whether flags were changed.
-	/// </summary>
-	internal bool FlagsChanged = false;
-
-	/// <summary>
 	///     Constructs a new empty interaction response builder.
 	/// </summary>
 	public DiscordInteractionResponseBuilder()
@@ -59,21 +54,6 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	}
 
 	private bool EPH { get; set; }
-
-	/// <summary>
-	///     Whether to suppress embeds.
-	/// </summary>
-	public bool EmbedsSuppressed
-	{
-		get => this.EMB_SUP;
-		set
-		{
-			this.EMB_SUP = value;
-			this.FlagsChanged = true;
-		}
-	}
-
-	private bool EMB_SUP { get; set; }
 
 	/// <summary>
 	///     Whether to send as silent message.
@@ -182,14 +162,35 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
 	public DiscordInteractionResponseBuilder AddComponents(IEnumerable<DiscordComponent> components)
 	{
-		var compArr = components.ToArray();
-		var count = compArr.Length;
+		var cmpArr = components.ToArray();
+		var count = cmpArr.Length;
 
-		if (count > 5)
-			throw new ArgumentException("Cannot add more than 5 components per action row!");
+		if (this.IsUIKit)
+		{
+			switch (count)
+			{
+				case 0:
+					throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
+				case > 10:
+					throw new ArgumentException("Cannot add more than 10 components!");
+			}
 
-		var arc = new DiscordActionRowComponent(compArr);
-		this.ComponentsInternal.Add(arc);
+			this.ComponentsInternal.AddRange(cmpArr);
+		}
+		else
+		{
+			switch (count)
+			{
+				case 0:
+					throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
+				case > 5:
+					throw new ArgumentException("Cannot add more than 5 components per action row!");
+			}
+
+			var comp = new DiscordActionRowComponent(cmpArr);
+			this.ComponentsInternal.Add(comp);
+		}
+
 		return this;
 	}
 
@@ -223,6 +224,17 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	{
 		this.FlagsChanged = true;
 		this.IsEphemeral = true;
+		return this;
+	}
+
+	/// <summary>
+	///     Sets that this builder should be using UI Kit.
+	/// </summary>
+	/// <returns>The current builder to chain calls with.</returns>
+	public DiscordInteractionResponseBuilder AsUIKitMessage()
+	{
+		this.FlagsChanged = true;
+		this.IsUIKit = true;
 		return this;
 	}
 

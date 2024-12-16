@@ -34,9 +34,15 @@ public class DisCatSharpBuilder
 	internal string? ContentInternal { get; set; }
 
 	/// <summary>
+	///     Whether flags were changed.
+	/// </summary>
+	internal bool FlagsChanged { get; set; } = false;
+
+	/// <summary>
 	///     The components of this builder.
 	/// </summary>
-	public IReadOnlyList<DiscordComponent> Components => this.ComponentsInternal;
+	public IReadOnlyList<DiscordComponent> Components
+		=> this.ComponentsInternal;
 
 	/// <summary>
 	///     The content of this builder.
@@ -56,17 +62,56 @@ public class DisCatSharpBuilder
 	/// <summary>
 	///     The embeds for this builder.
 	/// </summary>
-	public IReadOnlyList<DiscordEmbed> Embeds => this.EmbedsInternal;
+	public IReadOnlyList<DiscordEmbed> Embeds
+		=> this.EmbedsInternal;
 
 	/// <summary>
 	///     The attachments of this builder.
 	/// </summary>
-	public IReadOnlyList<DiscordAttachment> Attachments => this.AttachmentsInternal;
+	public IReadOnlyList<DiscordAttachment> Attachments
+		=> this.AttachmentsInternal;
 
 	/// <summary>
 	///     The files of this builder.
 	/// </summary>
-	public IReadOnlyList<DiscordMessageFile> Files => this.FilesInternal;
+	public IReadOnlyList<DiscordMessageFile> Files
+		=> this.FilesInternal;
+
+	/// <summary>
+	///     Whether this message should be using UI Kit.
+	/// </summary>
+	public bool IsUIKit
+	{
+		get => this.UI_KIT;
+		set
+		{
+			this.UI_KIT = value;
+			this.FlagsChanged = true;
+		}
+	}
+
+	/// <summary>
+	///     Whether this is using UI Kit.
+	/// </summary>
+	private bool UI_KIT { get; set; }
+
+	/// <summary>
+	///     Whether to suppress embeds.
+	/// </summary>
+	public bool EmbedsSuppressed
+	{
+		get => this.EMB_SUP;
+		set
+		{
+			this.EMB_SUP = value;
+			this.FlagsChanged = true;
+		}
+	}
+
+	/// <summary>
+	///     Whether embeds are suppressed.
+	/// </summary>
+	private bool EMB_SUP { get; set; }
 
 	/// <summary>
 	///     Clears the components on this builder.
@@ -84,6 +129,7 @@ public class DisCatSharpBuilder
 		this.EmbedsInternal.Clear();
 		this.AttachmentsInternal.Clear();
 		this.ComponentsInternal.Clear();
+		this.FlagsChanged = false;
 	}
 
 	/// <summary>

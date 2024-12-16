@@ -40,11 +40,6 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	public bool IsVoiceMessage { get; private set; }
 
 	/// <summary>
-	///     Whether to send with ui kit.
-	/// </summary>
-	public bool IsUIKit { get; private set; }
-
-	/// <summary>
 	///     Gets the Allowed Mentions for the message to be sent.
 	/// </summary>
 	public List<IMention>? Mentions { get; private set; }
@@ -238,11 +233,13 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
-	///     Sets the message to be send with ui kit.
+	/// Sets that this builder should be using UI Kit.
 	/// </summary>
-	public DiscordMessageBuilder AsUiKitMessage(bool asUiKitMessage = true)
+	/// <returns>The current builder to chain calls with.</returns>
+	public DiscordMessageBuilder AsUIKitMessage()
 	{
-		this.IsUIKit = asUiKitMessage;
+		this.FlagsChanged = true;
+		this.IsUIKit = true;
 		return this;
 	}
 
