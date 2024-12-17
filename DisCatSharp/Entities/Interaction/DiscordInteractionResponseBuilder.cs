@@ -28,7 +28,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	public DiscordInteractionResponseBuilder(DisCatSharpBuilder builder)
 	{
 		this.Content = builder.Content;
-		this.Mentions = builder.Mentions;
+		this.MentionsInternal = builder.MentionsInternal;
 		this.EmbedsInternal.AddRange(builder.Embeds);
 		this.ComponentsInternal.AddRange(builder.Components);
 		this.EmbedsSuppressed = builder.EmbedsSuppressed;
@@ -355,10 +355,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddMention(IMention mention)
 	{
-		if (this.Mentions != null)
-			this.Mentions.Add(mention);
-		else
-			this.Mentions = [mention];
+		this.MentionsInternal.Add(mention);
 		return this;
 	}
 
@@ -369,10 +366,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddMentions(IEnumerable<IMention> mentions)
 	{
-		if (this.Mentions != null)
-			this.Mentions.AddRange(mentions);
-		else
-			this.Mentions = [.. mentions];
+		this.MentionsInternal.AddRange(mentions);
 		return this;
 	}
 
@@ -416,7 +410,6 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	public override void Clear()
 	{
 		this.IsEphemeral = false;
-		this.Mentions = null;
 		this.ChoicesInternal.Clear();
 		this.Poll = null;
 		base.Clear();

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Entities.Core;
 
 namespace DisCatSharp.Entities;
@@ -32,12 +33,6 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	///     Gets or Sets if the message should be send silent.
 	/// </summary>
 	public bool Silent { get; private set; }
-
-	/// <summary>
-	///     Whether to send as voice message.
-	///     You can't use that on your own, it needs DisCatSharp.Experimental.
-	/// </summary>
-	public bool IsVoiceMessage { get; private set; }
 
 	/// <summary>
 	///     Gets the Reply Message ID.
@@ -223,7 +218,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
-	/// Sets that this builder should be using UI Kit.
+	///     Sets that this builder should be using UI Kit.
 	/// </summary>
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordMessageBuilder AsUIKitMessage()
@@ -273,33 +268,33 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 		return this;
 	}
 
+	[Deprecated("Replaced by AddMention")]
+	public DiscordMessageBuilder WithAllowedMention(IMention allowedMention)
+		=> this.AddMention(allowedMention);
+
 	/// <summary>
 	///     Sets if the message has allowed mentions.
 	/// </summary>
-	/// <param name="allowedMention">The allowed Mention that should be sent.</param>
+	/// <param name="mention">The allowed Mention that should be sent.</param>
 	/// <returns>The current builder to be chained.</returns>
-	public DiscordMessageBuilder WithAllowedMention(IMention allowedMention)
+	public DiscordMessageBuilder AddMention(IMention mention)
 	{
-		if (this.Mentions != null)
-			this.Mentions.Add(allowedMention);
-		else
-			this.Mentions = [allowedMention];
-
+		this.MentionsInternal.Add(mention);
 		return this;
 	}
 
+	[Deprecated("Replaced by AddMentions")]
+	public DiscordMessageBuilder WithAllowedMentions(IEnumerable<IMention> allowedMentions)
+		=> this.AddMentions(allowedMentions);
+
 	/// <summary>
 	///     Sets if the message has allowed mentions.
 	/// </summary>
-	/// <param name="allowedMentions">The allowed Mentions that should be sent.</param>
+	/// <param name="mentions">The allowed Mentions that should be sent.</param>
 	/// <returns>The current builder to be chained.</returns>
-	public DiscordMessageBuilder WithAllowedMentions(IEnumerable<IMention> allowedMentions)
+	public DiscordMessageBuilder AddMentions(IEnumerable<IMention> mentions)
 	{
-		if (this.Mentions != null)
-			this.Mentions.AddRange(allowedMentions);
-		else
-			this.Mentions = [.. allowedMentions];
-
+		this.MentionsInternal.AddRange(mentions);
 		return this;
 	}
 
@@ -419,10 +414,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 		this.FailOnInvalidReply = failOnInvalidReply;
 
 		if (mention)
-		{
-			this.Mentions ??= [];
-			this.Mentions.Add(new RepliedUserMention());
-		}
+			this.MentionsInternal.Add(new RepliedUserMention());
 
 		return this;
 	}

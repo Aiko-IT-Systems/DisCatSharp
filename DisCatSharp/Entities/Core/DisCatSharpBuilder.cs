@@ -80,7 +80,13 @@ public class DisCatSharpBuilder
 	/// <summary>
 	///     Gets the Allowed Mentions for the message to be sent.
 	/// </summary>
-	public List<IMention>? Mentions { get; internal set; }
+	public IReadOnlyList<IMention> Mentions
+		=> this.MentionsInternal;
+
+	/// <summary>
+	///     Gets the Allowed Mentions for the message to be sent.
+	/// </summary>
+	internal List<IMention> MentionsInternal { get; set; } = [];
 
 	/// <summary>
 	///     Whether to send as voice message.
@@ -176,7 +182,7 @@ public class DisCatSharpBuilder
 		this.EmbedsSuppressed = false;
 		this.NotificationsSuppressed = false;
 		this.FlagsChanged = false;
-		this.Mentions = null;
+		this.MentionsInternal.Clear();
 	}
 
 	/// <summary>

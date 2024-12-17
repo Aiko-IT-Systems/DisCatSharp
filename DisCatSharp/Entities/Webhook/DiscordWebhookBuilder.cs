@@ -352,10 +352,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <param name="mention">Mention to add.</param>
 	public DiscordWebhookBuilder AddMention(IMention mention)
 	{
-		if (this.Mentions != null)
-			this.Mentions.Add(mention);
-		else
-			this.Mentions = [mention];
+		this.MentionsInternal.Add(mention);
 		return this;
 	}
 
@@ -365,10 +362,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <param name="mentions">Mentions to add.</param>
 	public DiscordWebhookBuilder AddMentions(IEnumerable<IMention> mentions)
 	{
-		if (this.Mentions != null)
-			this.Mentions.AddRange(mentions);
-		else
-			this.Mentions = [.. mentions];
+		this.MentionsInternal.AddRange(mentions);
 		return this;
 	}
 
@@ -449,7 +443,6 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	public override void Clear()
 	{
 		this.IsTts = false;
-		this.Mentions = null;
 		this.KeepAttachmentsInternal = false;
 		this.ThreadName = null;
 		this.Poll = null;

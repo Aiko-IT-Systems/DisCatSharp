@@ -248,10 +248,7 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder AddMention(IMention mention)
 	{
-		if (this.Mentions != null)
-			this.Mentions.Add(mention);
-		else
-			this.Mentions = [mention];
+		this.MentionsInternal.Add(mention);
 		return this;
 	}
 
@@ -262,10 +259,7 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder AddMentions(IEnumerable<IMention> mentions)
 	{
-		if (this.Mentions != null)
-			this.Mentions.AddRange(mentions);
-		else
-			this.Mentions = [.. mentions];
+		this.MentionsInternal.AddRange(mentions);
 		return this;
 	}
 
@@ -315,7 +309,6 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	public override void Clear()
 	{
 		this.IsTts = false;
-		this.Mentions = null;
 		this.IsEphemeral = false;
 		base.Clear();
 	}
