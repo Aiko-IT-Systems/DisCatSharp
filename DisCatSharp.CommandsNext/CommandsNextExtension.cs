@@ -531,7 +531,7 @@ public class CommandsNextExtension : BaseExtension
 			ChannelId = msg.ChannelId
 		};
 
-		if (cmd != null && (cmd.Module is TransientCommandModule || cmd.Module == null))
+		if (cmd != null && cmd.Module is TransientCommandModule or null)
 		{
 			var scope = ctx.Services.CreateScope();
 			ctx.ServiceScopeContext = new(ctx.Services, scope);
