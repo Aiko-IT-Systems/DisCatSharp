@@ -12,6 +12,9 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 {
+	/// <summary>
+	///     Gets the callback hints.
+	/// </summary>
 	private readonly List<DiscordInteractionCallbackHint> _callbackHints = [];
 
 	/// <summary>
@@ -37,6 +40,9 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 		this.AttachmentsInternal.AddRange(builder.Attachments);
 	}
 
+	/// <summary>
+	///     Gets the choices.
+	/// </summary>
 	internal List<DiscordApplicationCommandAutocompleteChoice> ChoicesInternal { get; } = [];
 
 	/// <summary>
@@ -63,12 +69,14 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	///     The choices to send on this interaction response.
 	///     Mutually exclusive with content, embed, and components.
 	/// </summary>
-	public IReadOnlyList<DiscordApplicationCommandAutocompleteChoice> Choices => this.ChoicesInternal;
+	public IReadOnlyList<DiscordApplicationCommandAutocompleteChoice> Choices
+		=> this.ChoicesInternal;
 
 	/// <summary>
 	///     The hints to send on this interaction response.
 	/// </summary>
-	public IReadOnlyList<DiscordInteractionCallbackHint> CallbackHints => this._callbackHints;
+	internal IReadOnlyList<DiscordInteractionCallbackHint> CallbackHints
+		=> this._callbackHints;
 
 	/// <summary>
 	///     Gets the poll for this message.
@@ -81,7 +89,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <param name="hintBuilder">The hint builder.</param>
 	/// <returns>The current builder to chain calls with.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when the <paramref name="hintBuilder" /> is <see langword="null" />.</exception>
-	public DiscordInteractionResponseBuilder WithCallbackHints(DiscordCallbackHintBuilder hintBuilder)
+	internal DiscordInteractionResponseBuilder WithCallbackHints(DiscordCallbackHintBuilder hintBuilder)
 	{
 		if (hintBuilder == null)
 			throw new ArgumentNullException(nameof(hintBuilder), "Callback hint builder cannot be null.");

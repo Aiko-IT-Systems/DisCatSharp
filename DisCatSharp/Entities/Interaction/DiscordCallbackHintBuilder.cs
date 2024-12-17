@@ -7,12 +7,12 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///     Represents a callback hint builder for an interaction.
 /// </summary>
-public sealed class DiscordCallbackHintBuilder
+internal sealed class DiscordCallbackHintBuilder
 {
 	/// <summary>
 	///     Constructs a new <see cref="DiscordCallbackHintBuilder" />.
 	/// </summary>
-	public DiscordCallbackHintBuilder()
+	internal DiscordCallbackHintBuilder()
 	{
 		this.Clear();
 	}
@@ -21,7 +21,7 @@ public sealed class DiscordCallbackHintBuilder
 	///     Constructs a new <see cref="DiscordCallbackHintBuilder" /> from an existing one.
 	/// </summary>
 	/// <param name="other">The existing <see cref="DiscordCallbackHintBuilder" />.</param>
-	public DiscordCallbackHintBuilder(DiscordCallbackHintBuilder other)
+	internal DiscordCallbackHintBuilder(DiscordCallbackHintBuilder other)
 	{
 		this.Clear();
 		this.CallbackHints.AddRange(other.CallbackHints);
@@ -30,7 +30,7 @@ public sealed class DiscordCallbackHintBuilder
 	/// <summary>
 	///     Gets the callback hints.
 	/// </summary>
-	public List<DiscordInteractionCallbackHint> CallbackHints { get; internal set; } = [];
+	internal List<DiscordInteractionCallbackHint> CallbackHints { get; set; } = [];
 
 	/// <summary>
 	///     Adds a callback hint to the builder.
@@ -39,7 +39,7 @@ public sealed class DiscordCallbackHintBuilder
 	/// <param name="intendedCallbackEphemerality">The intended use of ephemeral. Required if it's only ephemeral.</param>
 	/// <param name="intendedRequiredPermissions">The intended required permissions.</param>
 	/// <returns>The updated <see cref="DiscordCallbackHintBuilder" />.</returns>
-	public DiscordCallbackHintBuilder AddCallbackHint(InteractionResponseType intendedCallbackType, InteractionCallbackEphemerality intendedCallbackEphemerality = InteractionCallbackEphemerality.Optional, Permissions? intendedRequiredPermissions = null)
+	internal DiscordCallbackHintBuilder AddCallbackHint(InteractionResponseType intendedCallbackType, InteractionCallbackEphemerality intendedCallbackEphemerality = InteractionCallbackEphemerality.Optional, Permissions? intendedRequiredPermissions = null)
 	{
 		this.CallbackHints.Add(new()
 		{
@@ -53,6 +53,6 @@ public sealed class DiscordCallbackHintBuilder
 	/// <summary>
 	///     Clears the callback hints.
 	/// </summary>
-	public void Clear()
+	internal void Clear()
 		=> this.CallbackHints.Clear();
 }
