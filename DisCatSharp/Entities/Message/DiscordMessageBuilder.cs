@@ -22,7 +22,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	/// <summary>
 	///     Gets the Sticker to be send.
 	/// </summary>
-	public DiscordSticker Sticker { get; set; }
+	public DiscordSticker? Sticker { get; set; }
 
 	/// <summary>
 	///     Gets or Sets if the message should be TTS.
