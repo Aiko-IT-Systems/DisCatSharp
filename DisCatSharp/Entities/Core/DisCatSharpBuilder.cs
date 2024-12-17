@@ -29,29 +29,31 @@ public class DisCatSharpBuilder
 	internal List<DiscordMessageFile> FilesInternal { get; } = [];
 
 	/// <summary>
+	///     The allowed mentions of this builder.
+	/// </summary>
+	internal List<IMention> MentionsInternal { get; } = [];
+
+	/// <summary>
 	///     The content of this builder.
 	/// </summary>
 	internal string? ContentInternal { get; set; }
 
 	/// <summary>
-	///     Whether flags were changed.
+	///     Whether flags were changed in this builder.
 	/// </summary>
 	internal bool FlagsChanged { get; set; } = false;
 
 	/// <summary>
-	///     The components of this builder.
-	/// </summary>
-	public IReadOnlyList<DiscordComponent> Components
-		=> this.ComponentsInternal;
-
-	/// <summary>
-	///     The content of this builder.
+	///     Sets the content of this builder.
 	/// </summary>
 	public string? Content
 	{
 		get => this.ContentInternal;
 		set
 		{
+			if (this.IsUIKit || this.IsVoiceMessage)
+				throw new InvalidOperationException("You cannot set the content for UI Kit / Voice messages");
+
 			if (value is { Length: > 2000 })
 				throw new ArgumentException("Content length cannot exceed 2000 characters.", nameof(value));
 
@@ -60,36 +62,37 @@ public class DisCatSharpBuilder
 	}
 
 	/// <summary>
-	///     The embeds for this builder.
+	///     Gets the components of this builder.
+	/// </summary>
+	public IReadOnlyList<DiscordComponent> Components
+		=> this.ComponentsInternal;
+
+	/// <summary>
+	///     Gets the embeds of this builder.
 	/// </summary>
 	public IReadOnlyList<DiscordEmbed> Embeds
 		=> this.EmbedsInternal;
 
 	/// <summary>
-	///     The attachments of this builder.
+	///     Gets the attachments of this builder.
 	/// </summary>
 	public IReadOnlyList<DiscordAttachment> Attachments
 		=> this.AttachmentsInternal;
 
 	/// <summary>
-	///     The files of this builder.
+	///     Gets the files of this builder.
 	/// </summary>
 	public IReadOnlyList<DiscordMessageFile> Files
 		=> this.FilesInternal;
 
 	/// <summary>
-	///     Gets the Allowed Mentions for the message to be sent.
+	///     Gets the allowed mentions of this builder.
 	/// </summary>
 	public IReadOnlyList<IMention> Mentions
 		=> this.MentionsInternal;
 
 	/// <summary>
-	///     Gets the Allowed Mentions for the message to be sent.
-	/// </summary>
-	internal List<IMention> MentionsInternal { get; set; } = [];
-
-	/// <summary>
-	///     Whether to send as voice message.
+	///     Sets whether this builder sends a voice message.
 	///     You can't use that on your own, it needs DisCatSharp.Experimental.
 	/// </summary>
 	internal bool IsVoiceMessage
@@ -103,12 +106,12 @@ public class DisCatSharpBuilder
 	}
 
 	/// <summary>
-	///     Whether to send as voice message.
+	///     Whether this builder sends a voice message.
 	/// </summary>
 	private bool VOICE_MSG { get; set; }
 
 	/// <summary>
-	///     Whether to send as silent message.
+	///     Sets whether this builder should send a silent message.
 	/// </summary>
 	public bool NotificationsSuppressed
 	{
@@ -121,12 +124,12 @@ public class DisCatSharpBuilder
 	}
 
 	/// <summary>
-	///     Whether to send as silent message.
+	///     Whether this builder sends a silent message.
 	/// </summary>
 	private bool NOTIFICATIONS_SUPPRESSED { get; set; }
 
 	/// <summary>
-	///     Whether this message should be using UI Kit.
+	///     Sets whether this builder should be using UI Kit.
 	/// </summary>
 	public bool IsUIKit
 	{
@@ -139,25 +142,28 @@ public class DisCatSharpBuilder
 	}
 
 	/// <summary>
-	///     Whether this is using UI Kit.
+	///     Whether this builder is using UI Kit.
 	/// </summary>
 	private bool UI_KIT { get; set; }
 
 	/// <summary>
-	///     Whether to suppress embeds.
+	///     Sets whether this builder suppresses its embeds.
 	/// </summary>
 	public bool EmbedsSuppressed
 	{
 		get => this.EMBEDS_SUPPRESSED;
 		set
 		{
+			if (this.IsUIKit)
+				throw new InvalidOperationException("You cannot set embeds suppressed for UI Kit messages since they cannot have embeds");
+
 			this.EMBEDS_SUPPRESSED = value;
 			this.FlagsChanged = true;
 		}
 	}
 
 	/// <summary>
-	///     Whether embeds are suppressed.
+	///     Whether this builder has its embeds suppressed.
 	/// </summary>
 	private bool EMBEDS_SUPPRESSED { get; set; }
 

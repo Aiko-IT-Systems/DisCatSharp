@@ -28,7 +28,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	public DiscordInteractionResponseBuilder(DisCatSharpBuilder builder)
 	{
 		this.Content = builder.Content;
-		this.MentionsInternal = builder.MentionsInternal;
+		this.MentionsInternal.AddRange(builder.MentionsInternal);
 		this.EmbedsInternal.AddRange(builder.Embeds);
 		this.ComponentsInternal.AddRange(builder.Components);
 		this.EmbedsSuppressed = builder.EmbedsSuppressed;
