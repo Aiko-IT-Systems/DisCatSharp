@@ -13,7 +13,7 @@ On Windows, we only officially support Visual Studio 2019 16.10 or newer. Visual
 * [**Git for Windows**](https://git-scm.com/download/win) - required to clone the repository.
 * [**Visual Studio 2022**](https://www.visualstudio.com/downloads/) - community edition or better. We do not support Visual Studio 2021 and older.
 * **Windows PowerShell** - required to run the build scripts. You need to make sure your script execution policy allows execution of unsigned scripts.
-* [**.NET SDK 7.0**](https://www.microsoft.com/net/download) - required to build the project.
+* [**.NET SDK 8.0 or newer**](https://www.microsoft.com/net/download) - required to build the project.
 
 ### GNU/Linux
 On GNU/Linux, we support building via Visual Studio Code and .NET Core SDK. Other IDEs might work, but are not supported or guaranteed to work properly.
@@ -26,7 +26,7 @@ When installing the below, make sure you install all the dependencies properly. 
 * **Git** - to clone the repository.
 * [**Visual Studio Code**](https://code.visualstudio.com/Download) - a recent version is required.
    * **C# for Visual Studio Code (powered by OmniSharp)** - required for syntax highlighting and basic Intellisense
-* [**.NET SDK 7.0**](https://www.microsoft.com/net/download) - required to build the project.
+* [**.NET SDK 8.0 or newer**](https://www.microsoft.com/net/download) - required to build the project.
 * [**Mono 5.x**](http://www.mono-project.com/download/#download-lin) - required to build the .NETFX 4.5, 4.6, and 4.7 targets, as well as to build the docs.
 * [**PowerShell Core**](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux?view=powershell-7.3) - required to execute the build scripts.
 
