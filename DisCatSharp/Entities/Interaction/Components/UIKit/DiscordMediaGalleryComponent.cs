@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -37,7 +38,11 @@ public sealed class DiscordMediaGalleryComponent : DiscordComponent
 	public DiscordMediaGalleryComponent(IEnumerable<DiscordMediaGalleryItem> items)
 		: this()
 	{
-		this.Items = items.ToList();
+		var it = items.ToList();
+		if (it.Count > 10)
+			throw new ArgumentException("You can only have up to 10 items in a media gallery.");
+
+		this.Items = it.ToList();
 	}
 
 	/// <summary>

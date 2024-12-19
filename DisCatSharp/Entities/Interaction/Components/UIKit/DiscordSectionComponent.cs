@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,11 +35,15 @@ public sealed class DiscordSectionComponent : DiscordComponent
 	/// <summary>
 	///     Constructs a new section component field with the specified options.
 	/// </summary>
-	/// <param name="components">The section components.</param>
+	/// <param name="components">The section components. Max of <c>3</c>.</param>
 	public DiscordSectionComponent(IEnumerable<DiscordTextDisplayComponent> components)
 		: this()
 	{
-		this.Components = components.ToList();
+		var comps = components.ToList();
+		if (comps.Count > 3)
+			throw new ArgumentException("You can only have up to 3 components in a section.");
+
+		this.Components = comps.ToList();
 	}
 
 	/// <summary>
