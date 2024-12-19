@@ -1,5 +1,3 @@
-using System;
-
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -7,8 +5,7 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-///     Represents a text display component that can be submitted. Fires
-///     <see cref="DisCatSharp.DiscordClient.ComponentInteractionCreated" /> event when submitted.
+///     Represents a text display component.
 /// </summary>
 public sealed class DiscordTextDisplayComponent : DiscordComponent
 {
@@ -23,7 +20,7 @@ public sealed class DiscordTextDisplayComponent : DiscordComponent
 	/// <summary>
 	///     Constructs a new text display component based on another text display component.
 	/// </summary>
-	/// <param name="other">The button to copy.</param>
+	/// <param name="other">The text display component to copy.</param>
 	public DiscordTextDisplayComponent(DiscordTextDisplayComponent other)
 		: this()
 	{
@@ -35,9 +32,9 @@ public sealed class DiscordTextDisplayComponent : DiscordComponent
 	/// </summary>
 	/// <param name="content">The content for the text display.</param>
 	public DiscordTextDisplayComponent(string content)
+		: this()
 	{
 		this.Content = content;
-		this.Type = ComponentType.TextDisplay;
 	}
 
 	/// <summary>

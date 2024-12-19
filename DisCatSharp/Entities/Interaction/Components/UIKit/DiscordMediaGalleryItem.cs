@@ -30,7 +30,7 @@ public sealed class DiscordMediaGalleryItem
 	///     Gets the media item.
 	/// </summary>
 	[JsonProperty("media")]
-	public DiscordMediaItem Media { get; internal set; }
+	public DiscordUnfurledMediaItem Media { get; internal set; }
 
 	/// <summary>
 	///     Gets the description.

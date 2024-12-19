@@ -3,27 +3,27 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents a media item.
+///     Represents a media item.
 /// </summary>
-public sealed class DiscordMediaItem
+public sealed class DiscordUnfurledMediaItem
 {
 	/// <summary>
-	/// Constructs a new empty <see cref="DiscordMediaItem"/>.
+	///     Constructs a new empty <see cref="DiscordUnfurledMediaItem" />.
 	/// </summary>
-	internal DiscordMediaItem()
+	internal DiscordUnfurledMediaItem()
 	{ }
 
 	/// <summary>
-	/// Constructs a new <see cref="DiscordMediaItem"/>.
+	///     Constructs a new <see cref="DiscordUnfurledMediaItem" />.
 	/// </summary>
 	/// <param name="url">The items url.</param>
-	internal DiscordMediaItem(string url)
+	internal DiscordUnfurledMediaItem(string url)
 	{
 		this.Url = url;
 	}
 
 	/// <summary>
-	/// Gets the url.
+	///     Gets the url.
 	/// </summary>
 	[JsonProperty("url")]
 	public string Url { get; internal set; }

@@ -1,5 +1,3 @@
-using System;
-
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -7,8 +5,7 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-///     Represents a file display component that can be submitted. Fires
-///     <see cref="DisCatSharp.DiscordClient.ComponentInteractionCreated" /> event when submitted.
+///     Represents a file display component.
 /// </summary>
 public sealed class DiscordFileDisplayComponent : DiscordComponent
 {
@@ -23,7 +20,7 @@ public sealed class DiscordFileDisplayComponent : DiscordComponent
 	/// <summary>
 	///     Constructs a new file display component based on another file display component.
 	/// </summary>
-	/// <param name="other">The button to copy.</param>
+	/// <param name="other">The file display component to copy.</param>
 	public DiscordFileDisplayComponent(DiscordFileDisplayComponent other)
 		: this()
 	{
@@ -37,17 +34,17 @@ public sealed class DiscordFileDisplayComponent : DiscordComponent
 	/// <param name="url">The file url.</param>
 	/// <param name="spoiler">Whether this file should be marked as spoiler.</param>
 	public DiscordFileDisplayComponent(string url, bool? spoiler)
+		: this()
 	{
 		this.File = new(url);
 		this.Spoiler = spoiler;
-		this.Type = ComponentType.File;
 	}
 
 	/// <summary>
 	///     Gets the file.
 	/// </summary>
 	[JsonProperty("media")]
-	public DiscordMediaItem File { get; internal set; }
+	public DiscordUnfurledMediaItem File { get; internal set; }
 
 	/// <summary>
 	///     Gets whether this file should be marked as spoiler.

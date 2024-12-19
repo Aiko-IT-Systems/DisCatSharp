@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,8 +8,7 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-///     Represents a media gallery component that can be submitted. Fires
-///     <see cref="DisCatSharp.DiscordClient.ComponentInteractionCreated" /> event when submitted.
+///     Represents a media gallery component.
 /// </summary>
 public sealed class DiscordMediaGalleryComponent : DiscordComponent
 {
@@ -25,7 +23,7 @@ public sealed class DiscordMediaGalleryComponent : DiscordComponent
 	/// <summary>
 	///     Constructs a new media gallery component based on another media gallery component.
 	/// </summary>
-	/// <param name="other">The button to copy.</param>
+	/// <param name="other">The media gallery component to copy.</param>
 	public DiscordMediaGalleryComponent(DiscordMediaGalleryComponent other)
 		: this()
 	{
@@ -36,11 +34,10 @@ public sealed class DiscordMediaGalleryComponent : DiscordComponent
 	///     Constructs a new media gallery component field with the specified options.
 	/// </summary>
 	/// <param name="items">The media gallery items.</param>
-	/// <exception cref="ArgumentException">Is thrown when no label is set.</exception>
 	public DiscordMediaGalleryComponent(IEnumerable<DiscordMediaGalleryItem> items)
+		: this()
 	{
 		this.Items = items.ToList();
-		this.Type = ComponentType.MediaGallery;
 	}
 
 	/// <summary>

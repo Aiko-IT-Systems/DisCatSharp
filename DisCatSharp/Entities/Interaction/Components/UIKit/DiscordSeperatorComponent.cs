@@ -7,8 +7,7 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-///     Represents a seperator component that can be submitted. Fires
-///     <see cref="DisCatSharp.DiscordClient.ComponentInteractionCreated" /> event when submitted.
+///     Represents a seperator component.
 /// </summary>
 public sealed class DiscordSeperatorComponent : DiscordComponent
 {
@@ -38,10 +37,10 @@ public sealed class DiscordSeperatorComponent : DiscordComponent
 	/// <param name="spacing">The spacing size.</param>
 	/// <exception cref="ArgumentException">Is thrown when no label is set.</exception>
 	public DiscordSeperatorComponent(bool? divider = null, SeperatorSpacingSize? spacing = null)
+		: this()
 	{
 		this.Divider = divider;
 		this.Spacing = spacing;
-		this.Type = ComponentType.Seperator;
 	}
 
 	/// <summary>
