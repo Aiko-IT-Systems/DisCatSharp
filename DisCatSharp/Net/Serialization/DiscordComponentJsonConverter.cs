@@ -54,6 +54,10 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 			ComponentType.RoleSelect => new DiscordRoleSelectComponent(),
 			ComponentType.MentionableSelect => new DiscordMentionableSelectComponent(),
 			ComponentType.ChannelSelect => new DiscordChannelSelectComponent(),
+			ComponentType.TextDisplay => new DiscordTextDisplayComponent(),
+			ComponentType.MediaGallery => new DiscordMediaGalleryComponent(),
+			ComponentType.File => new DiscordFileDisplayComponent(),
+			ComponentType.Seperator => new DiscordSeperatorComponent(),
 			_ => new()
 			{
 				Type = type

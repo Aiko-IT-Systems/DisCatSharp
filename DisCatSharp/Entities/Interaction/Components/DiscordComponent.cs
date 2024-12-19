@@ -24,8 +24,14 @@ public class DiscordComponent : ObservableApiObject
 	public ComponentType Type { get; internal set; }
 
 	/// <summary>
-	///     The Id of this component, if applicable. Not applicable on ActionRow(s) and link buttons.
+	///     The custom Id of this component, if applicable. Not applicable on ActionRow(s) and link buttons.
 	/// </summary>
 	[JsonProperty("custom_id", NullValueHandling = NullValueHandling.Ignore)]
-	public string CustomId { get; internal set; }
+	public string? CustomId { get; internal set; }
+
+	/// <summary>
+	/// Gets the Id of the compenent. Determined by Discord.
+	/// </summary>
+	[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+	public uint Id { get; internal set; }
 }

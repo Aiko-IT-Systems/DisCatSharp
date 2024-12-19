@@ -88,7 +88,7 @@ internal sealed class RestWebhookExecutePayload : ObservableApiObject
 	///     Gets or sets the components.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordActionRowComponent> Components { get; set; }
+	public IEnumerable<DiscordComponent> Components { get; set; }
 
 	/// <summary>
 	///     Gets or sets the attachments.
@@ -148,7 +148,7 @@ internal sealed class RestWebhookMessageEditPayload : ObservableApiObject
 	///     Gets or sets the components.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordActionRowComponent> Components { get; set; }
+	public IEnumerable<DiscordComponent> Components { get; set; }
 
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
 	public MessageFlags? Flags { get; set; }
