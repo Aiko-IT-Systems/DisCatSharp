@@ -58,7 +58,7 @@ public enum ComponentType
 	/// <summary>
 	///     A thumbnail.
 	/// </summary>
-	Thumbnail = 16,
+	Thumbnail = 11,
 
 	/// <summary>
 	///     A media gallery.
