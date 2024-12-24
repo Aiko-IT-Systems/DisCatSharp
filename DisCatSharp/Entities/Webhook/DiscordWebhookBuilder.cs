@@ -397,26 +397,26 @@ public sealed class DiscordWebhookBuilder
 	/// <summary>
 	///     Adds the mention to the mentions to parse, etc. at the execution of the webhook.
 	/// </summary>
-	/// <param name="mention">Mention to add.</param>
-	public DiscordWebhookBuilder AddMention(IMention mention)
+	/// <param name="allowedMention">Mention to add.</param>
+	public DiscordWebhookBuilder WithAllowedMention(IMention allowedMention)
 	{
 		if (this.Mentions != null)
-			this.Mentions.Add(mention);
+			this.Mentions.Add(allowedMention);
 		else
-			this.Mentions = [mention];
+			this.Mentions = [allowedMention];
 		return this;
 	}
 
 	/// <summary>
 	///     Adds the mentions to the mentions to parse, etc. at the execution of the webhook.
 	/// </summary>
-	/// <param name="mentions">Mentions to add.</param>
-	public DiscordWebhookBuilder AddMentions(IEnumerable<IMention> mentions)
+	/// <param name="allowedMentions">Mentions to add.</param>
+	public DiscordWebhookBuilder WithAllowedMentions(IEnumerable<IMention> allowedMentions)
 	{
 		if (this.Mentions != null)
-			this.Mentions.AddRange(mentions);
+			this.Mentions.AddRange(allowedMentions);
 		else
-			this.Mentions = mentions.ToList();
+			this.Mentions = allowedMentions.ToList();
 		return this;
 	}
 

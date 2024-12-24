@@ -321,28 +321,28 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <summary>
 	///     Adds the mention to the mentions to parse, etc. with the followup message.
 	/// </summary>
-	/// <param name="mention">Mention to add.</param>
+	/// <param name="allowedMention">Mention to add.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	public DiscordFollowupMessageBuilder AddMention(IMention mention)
+	public DiscordFollowupMessageBuilder WithAllowedMention(IMention allowedMention)
 	{
 		if (this.Mentions != null)
-			this.Mentions.Add(mention);
+			this.Mentions.Add(allowedMention);
 		else
-			this.Mentions = [mention];
+			this.Mentions = [allowedMention];
 		return this;
 	}
 
 	/// <summary>
 	///     Adds the mentions to the mentions to parse, etc. with the followup message.
 	/// </summary>
-	/// <param name="mentions">Mentions to add.</param>
+	/// <param name="allowedMentions">Mentions to add.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	public DiscordFollowupMessageBuilder AddMentions(IEnumerable<IMention> mentions)
+	public DiscordFollowupMessageBuilder WithAllowedMentions(IEnumerable<IMention> allowedMentions)
 	{
 		if (this.Mentions != null)
-			this.Mentions.AddRange(mentions);
+			this.Mentions.AddRange(allowedMentions);
 		else
-			this.Mentions = mentions.ToList();
+			this.Mentions = allowedMentions.ToList();
 		return this;
 	}
 
