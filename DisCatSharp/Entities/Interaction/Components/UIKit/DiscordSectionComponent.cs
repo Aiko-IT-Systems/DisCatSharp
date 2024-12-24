@@ -64,7 +64,7 @@ public sealed class DiscordSectionComponent : DiscordComponent
 	/// </summary>
 	/// <param name="url">The thumbnail url.</param>
 	/// <param name="description">The description of the thumbnail.</param>
-	/// <param name="spoiler">Whether this thumbnail should be marked as spoiler.</param
+	/// <param name="spoiler">Whether this thumbnail should be marked as spoiler.</param>
 	/// <returns>The current <see cref="DiscordSectionComponent" />.</returns>
 	public DiscordSectionComponent WithThumbnailComponent(string url, string? description = null, bool? spoiler = null)
 	{
