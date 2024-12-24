@@ -246,7 +246,7 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// </summary>
 	/// <param name="mention">Mention to add.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	public DiscordFollowupMessageBuilder AddMention(IMention mention)
+	public DiscordFollowupMessageBuilder WithAllowedMention(IMention mention)
 	{
 		this.MentionsInternal.Add(mention);
 		return this;
@@ -257,7 +257,7 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// </summary>
 	/// <param name="mentions">Mentions to add.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	public DiscordFollowupMessageBuilder AddMentions(IEnumerable<IMention> mentions)
+	public DiscordFollowupMessageBuilder WithAllowedMentions(IEnumerable<IMention> mentions)
 	{
 		this.MentionsInternal.AddRange(mentions);
 		return this;

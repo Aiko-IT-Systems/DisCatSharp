@@ -268,31 +268,23 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 		return this;
 	}
 
-	[Deprecated("Replaced by AddMention")]
-	public DiscordMessageBuilder WithAllowedMention(IMention allowedMention)
-		=> this.AddMention(allowedMention);
-
 	/// <summary>
 	///     Sets if the message has allowed mentions.
 	/// </summary>
 	/// <param name="mention">The allowed Mention that should be sent.</param>
 	/// <returns>The current builder to be chained.</returns>
-	public DiscordMessageBuilder AddMention(IMention mention)
+	public DiscordMessageBuilder WithAllowedMention(IMention mention)
 	{
 		this.MentionsInternal.Add(mention);
 		return this;
 	}
-
-	[Deprecated("Replaced by AddMentions")]
-	public DiscordMessageBuilder WithAllowedMentions(IEnumerable<IMention> allowedMentions)
-		=> this.AddMentions(allowedMentions);
 
 	/// <summary>
 	///     Sets if the message has allowed mentions.
 	/// </summary>
 	/// <param name="mentions">The allowed Mentions that should be sent.</param>
 	/// <returns>The current builder to be chained.</returns>
-	public DiscordMessageBuilder AddMentions(IEnumerable<IMention> mentions)
+	public DiscordMessageBuilder WithAllowedMentions(IEnumerable<IMention> mentions)
 	{
 		this.MentionsInternal.AddRange(mentions);
 		return this;

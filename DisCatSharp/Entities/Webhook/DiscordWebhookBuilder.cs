@@ -350,7 +350,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	///     Adds the mention to the mentions to parse, etc. at the execution of the webhook.
 	/// </summary>
 	/// <param name="mention">Mention to add.</param>
-	public DiscordWebhookBuilder AddMention(IMention mention)
+	public DiscordWebhookBuilder WithAllowedMention(IMention mention)
 	{
 		this.MentionsInternal.Add(mention);
 		return this;
@@ -360,7 +360,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	///     Adds the mentions to the mentions to parse, etc. at the execution of the webhook.
 	/// </summary>
 	/// <param name="mentions">Mentions to add.</param>
-	public DiscordWebhookBuilder AddMentions(IEnumerable<IMention> mentions)
+	public DiscordWebhookBuilder WithAllowedMentions(IEnumerable<IMention> mentions)
 	{
 		this.MentionsInternal.AddRange(mentions);
 		return this;

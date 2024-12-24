@@ -361,7 +361,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// </summary>
 	/// <param name="mention">Mention to add.</param>
 	/// <returns>The current builder to chain calls with.</returns>
-	public DiscordInteractionResponseBuilder AddMention(IMention mention)
+	public DiscordInteractionResponseBuilder WithAllowedMention(IMention mention)
 	{
 		this.MentionsInternal.Add(mention);
 		return this;
@@ -372,7 +372,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// </summary>
 	/// <param name="mentions">Mentions to add.</param>
 	/// <returns>The current builder to chain calls with.</returns>
-	public DiscordInteractionResponseBuilder AddMentions(IEnumerable<IMention> mentions)
+	public DiscordInteractionResponseBuilder WithAllowedMentions(IEnumerable<IMention> mentions)
 	{
 		this.MentionsInternal.AddRange(mentions);
 		return this;
