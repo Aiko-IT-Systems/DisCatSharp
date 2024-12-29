@@ -415,15 +415,29 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		if (this.Configuration.AutoFetchSkuIds)
 		{
-			var skus = await this.ApiClient.GetSkusAsync(this.CurrentApplication.Id).ConfigureAwait(false);
-			if (!skus.Any())
-				return;
+			try
+			{
+				var skus = await this.ApiClient.GetSkusAsync(this.CurrentApplication.Id).ConfigureAwait(false);
+				if (!skus.Any())
+					return;
 
-			this.Configuration.SkuId = skus.FirstOrDefault(x => x.Type is SkuType.Subscription)?.Id;
+				this.Configuration.SkuId = skus.FirstOrDefault(x => x.Type is SkuType.Subscription)?.Id;
+			}
+			catch (Exception ex)
+			{
+				this.Logger.LogError(LoggerEvents.Startup, ex, "Failed to fetch SKU IDs");
+			}
 		}
 
 		if (this.Configuration.AutoFetchApplicationEmojis)
-			await this.ApiClient.GetApplicationEmojisAsync(this.CurrentApplication.Id);
+			try
+			{
+				await this.ApiClient.GetApplicationEmojisAsync(this.CurrentApplication.Id);
+			}
+			catch (Exception ex)
+			{
+				this.Logger.LogError(LoggerEvents.Startup, ex, "Failed to fetch application emojis");
+			}
 
 		return;
 
