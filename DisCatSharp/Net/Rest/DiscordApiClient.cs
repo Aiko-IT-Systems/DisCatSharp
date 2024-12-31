@@ -105,7 +105,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="values">The values.</param>
 	/// <param name="post">Whether this query will be transmitted via POST.</param>
-	private static string BuildQueryString(IDictionary<string, string> values, bool post = false)
+	private static string BuildQueryString(Dictionary<string, string> values, bool post = false)
 	{
 		if (values == null || values.Count == 0)
 			return string.Empty;
@@ -130,7 +130,7 @@ public sealed class DiscordApiClient
 		this.PopulateMessage(author, ret);
 
 		var referencedMsg = msgRaw["referenced_message"];
-		if (ret is { InternalReference: { Type: ReferenceType.Default }, MessageType: MessageType.Reply } && !string.IsNullOrWhiteSpace(referencedMsg?.ToString()))
+		if (ret is { InternalReference.Type: ReferenceType.Default, MessageType: MessageType.Reply } && !string.IsNullOrWhiteSpace(referencedMsg?.ToString()))
 		{
 			author = referencedMsg["author"].ToObject<TransportUser>();
 			ret.ReferencedMessage.Discord = this.Discord;
@@ -1106,7 +1106,7 @@ public sealed class DiscordApiClient
 			xb.User = usr;
 			return xb;
 		});
-		var bans = new ReadOnlyCollection<DiscordBan>(new List<DiscordBan>(bansRaw));
+		var bans = new ReadOnlyCollection<DiscordBan>([.. bansRaw]);
 
 		return bans;
 	}
@@ -1159,7 +1159,7 @@ public sealed class DiscordApiClient
 
 		var pld = new RestGuildBulkBanPayload
 		{
-			UserIds = userIds.ToList(),
+			UserIds = [.. userIds],
 			DeleteMessageSeconds = deleteMessageSeconds
 		};
 
@@ -1500,18 +1500,18 @@ public sealed class DiscordApiClient
 		ret.Guild = this.Discord.Guilds.ContainsKey(guildId) ? this.Discord.Guilds[guildId] : null;
 
 		ret.Channels = ret.Guild == null
-			? rawChannels.Select(r => new DiscordChannel
+			? [.. rawChannels.Select(r => new DiscordChannel
 			{
 				Id = (ulong)r["id"],
 				Name = r["name"].ToString(),
 				Position = (int)r["position"]
-			}).ToList()
-			: rawChannels.Select(r =>
+			})]
+			: [.. rawChannels.Select(r =>
 			{
 				var c = ret.Guild.GetChannel((ulong)r["id"]);
 				c.Position = (int)r["position"];
 				return c;
-			}).ToList();
+			})];
 
 		return ret;
 	}
@@ -1588,7 +1588,7 @@ public sealed class DiscordApiClient
 
 		var templatesRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordGuildTemplate>>(res.Response);
 
-		return new ReadOnlyCollection<DiscordGuildTemplate>(new List<DiscordGuildTemplate>(templatesRaw));
+		return new ReadOnlyCollection<DiscordGuildTemplate>([.. templatesRaw]);
 	}
 
 	/// <summary>
@@ -3038,7 +3038,7 @@ public sealed class DiscordApiClient
 	///     Thrown when the <paramref name="content" /> exceeds 2000 characters or is empty and
 	///     if neither content, sticker, components and embeds are definied..
 	/// </exception>
-	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string content, IEnumerable<DiscordEmbed> embeds, DiscordSticker sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply, ReadOnlyCollection<DiscordActionRowComponent>? components = null)
+	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string content, IEnumerable<DiscordEmbed> embeds, DiscordSticker sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply, ReadOnlyCollection<DiscordComponent>? components = null)
 	{
 		if (content is { Length: > 2000 })
 			throw new ArgumentException("Message content length cannot exceed 2000 characters.");
@@ -3109,12 +3109,14 @@ public sealed class DiscordApiClient
 					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
 		var flags = MessageFlags.None;
-		if (builder.Suppressed)
+		if (builder.EmbedsSuppressed)
 			flags |= MessageFlags.SuppressedEmbeds;
 		if (builder.Silent)
 			flags |= MessageFlags.SuppressNotifications;
 		if (builder.IsVoiceMessage)
 			flags |= MessageFlags.IsVoiceMessage;
+		if (builder.IsUIKit)
+			flags |= MessageFlags.UIKit;
 
 		var pld = new RestChannelMessageCreatePayload
 		{
@@ -3141,7 +3143,7 @@ public sealed class DiscordApiClient
 				FailIfNotExists = builder.FailOnInvalidReply
 			};
 
-		pld.Mentions = new(builder.Mentions ?? Mentions.All, builder.Mentions?.Any() ?? false, builder.MentionOnReply);
+		pld.Mentions = new(builder.Mentions.Count == 0 ? Mentions.All : builder.Mentions, builder.Mentions.Any(), builder.MentionOnReply);
 
 		if (builder.Files.Count == 0)
 		{
@@ -3276,7 +3278,7 @@ public sealed class DiscordApiClient
 		foreach (var ret in channelsRaw)
 			ret.Initialize(this.Discord);
 
-		return new ReadOnlyCollection<DiscordChannel>(new List<DiscordChannel>(channelsRaw));
+		return new ReadOnlyCollection<DiscordChannel>([.. channelsRaw]);
 	}
 
 	/// <summary>
@@ -3434,7 +3436,7 @@ public sealed class DiscordApiClient
 		foreach (var xj in msgsRaw)
 			msgs.Add(this.PrepareMessage(xj));
 
-		return new ReadOnlyCollection<DiscordMessage>(new List<DiscordMessage>(msgs));
+		return new ReadOnlyCollection<DiscordMessage>([.. msgs]);
 	}
 
 	/// <summary>
@@ -3471,7 +3473,7 @@ public sealed class DiscordApiClient
 	/// <param name="suppressEmbed">The suppress_embed.</param>
 	/// <param name="files">The files.</param>
 	/// <param name="attachments">The attachments to keep.</param>
-	internal async Task<DiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, Optional<IEnumerable<IMention>> mentions, IReadOnlyList<DiscordActionRowComponent> components, Optional<bool> suppressEmbed, IReadOnlyCollection<DiscordMessageFile> files, Optional<IEnumerable<DiscordAttachment>> attachments)
+	internal async Task<DiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, Optional<IEnumerable<IMention>> mentions, IReadOnlyList<DiscordComponent> components, Optional<bool> suppressEmbed, IReadOnlyCollection<DiscordMessageFile> files, Optional<IEnumerable<DiscordAttachment>> attachments)
 	{
 		if (embeds is { HasValue: true, Value: not null })
 			foreach (var embed in embeds.Value)
@@ -3674,7 +3676,7 @@ public sealed class DiscordApiClient
 			voters.Add(usr);
 		}
 
-		return new(new List<DiscordUser>(voters));
+		return new([.. voters]);
 	}
 
 	/// <summary>
@@ -3720,7 +3722,7 @@ public sealed class DiscordApiClient
 			return xi;
 		});
 
-		return new ReadOnlyCollection<DiscordInvite>(new List<DiscordInvite>(invitesRaw));
+		return new ReadOnlyCollection<DiscordInvite>([.. invitesRaw]);
 	}
 
 	/// <summary>
@@ -3859,7 +3861,7 @@ public sealed class DiscordApiClient
 		foreach (var xj in msgsRaw)
 			msgs.Add(this.PrepareMessage(xj));
 
-		return new ReadOnlyCollection<DiscordMessage>(new List<DiscordMessage>(msgs));
+		return new ReadOnlyCollection<DiscordMessage>([.. msgs]);
 	}
 
 	/// <summary>
@@ -4209,7 +4211,7 @@ public sealed class DiscordApiClient
 		{
 			var guildsRaw = DiscordJson.DeserializeIEnumerableObject<IEnumerable<RestUserGuild>>(res.Response, this.Discord);
 			var glds = guildsRaw.Select(xug => (this.Discord as DiscordClient)?.GuildsInternal[xug.Id]);
-			return new ReadOnlyCollection<DiscordGuild>(new List<DiscordGuild>(glds));
+			return new ReadOnlyCollection<DiscordGuild>([.. glds]);
 		}
 
 		return DiscordJson.DeserializeIEnumerableObject<List<DiscordGuild>>(res.Response, this.Discord);
@@ -4977,7 +4979,7 @@ public sealed class DiscordApiClient
 			xw.ApiClient = this;
 			return xw;
 		});
-		return webhooksRaw.ToList();
+		return [.. webhooksRaw];
 	}
 
 	/// <summary>
@@ -5000,7 +5002,7 @@ public sealed class DiscordApiClient
 			xw.ApiClient = this;
 			return xw;
 		});
-		return webhooksRaw.ToList();
+		return [.. webhooksRaw];
 	}
 
 	/// <summary>
@@ -5206,7 +5208,7 @@ public sealed class DiscordApiClient
 			DiscordPollRequest = builder.Poll?.Build()
 		};
 
-		if (builder.Mentions != null)
+		if (builder.Mentions.Any())
 			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0);
 
 		if (builder.Files?.Count > 0)
@@ -5246,7 +5248,7 @@ public sealed class DiscordApiClient
 			}
 		}
 
-		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.Files?.Count > 0 || builder.IsTts || builder.Mentions != null)
+		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.Files?.Count > 0 || builder.IsTts || builder.Mentions.Any())
 			values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
@@ -5341,6 +5343,8 @@ public sealed class DiscordApiClient
 			flags |= MessageFlags.SuppressedEmbeds;
 		if (builder.NotificationsSuppressed)
 			flags |= MessageFlags.SuppressNotifications;
+		if (builder.IsUIKit)
+			flags |= MessageFlags.UIKit;
 
 		var pld = new RestWebhookMessageEditPayload
 		{
@@ -5661,7 +5665,7 @@ public sealed class DiscordApiClient
 			reacters.Add(usr);
 		}
 
-		return new ReadOnlyCollection<DiscordUser>(new List<DiscordUser>(reacters));
+		return new ReadOnlyCollection<DiscordUser>([.. reacters]);
 	}
 
 	/// <summary>
@@ -6320,7 +6324,7 @@ public sealed class DiscordApiClient
 
 		var emojisRaw = JsonConvert.DeserializeObject<JObject>(res.Response);
 
-		return this.Discord.UpdateCachedApplicationEmojis(emojisRaw?.Value<JArray>("items")).Select(x => x.Value).ToList();
+		return [.. this.Discord.UpdateCachedApplicationEmojis(emojisRaw?.Value<JArray>("items")).Select(x => x.Value)];
 	}
 
 	/// <summary>
@@ -6489,7 +6493,7 @@ public sealed class DiscordApiClient
 		var json = JObject.Parse(res.Response)["sticker_packs"] as JArray;
 		var ret = json.ToDiscordObject<DiscordStickerPack[]>();
 
-		return ret.ToList();
+		return [.. ret];
 	}
 
 	/// <summary>
@@ -6646,7 +6650,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var ret = DiscordJson.DeserializeIEnumerableObject<IEnumerable<DiscordApplicationCommand>>(res.Response, this.Discord);
-		return ret.ToList();
+		return [.. ret];
 	}
 
 	/// <summary>
@@ -6683,7 +6687,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var ret = DiscordJson.DeserializeIEnumerableObject<IEnumerable<DiscordApplicationCommand>>(res.Response, this.Discord);
-		return ret.ToList();
+		return [.. ret];
 	}
 
 	/// <summary>
@@ -6847,7 +6851,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var ret = DiscordJson.DeserializeIEnumerableObject<IEnumerable<DiscordApplicationCommand>>(res.Response, this.Discord);
-		return ret.ToList();
+		return [.. ret];
 	}
 
 	/// <summary>
@@ -6885,7 +6889,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var ret = DiscordJson.DeserializeIEnumerableObject<IEnumerable<DiscordApplicationCommand>>(res.Response, this.Discord);
-		return ret.ToList();
+		return [.. ret];
 	}
 
 	/// <summary>
@@ -7061,6 +7065,8 @@ public sealed class DiscordApiClient
 					flags |= MessageFlags.SuppressedEmbeds;
 				if (builder.NotificationsSuppressed)
 					flags |= MessageFlags.SuppressNotifications;
+				if (builder.IsUIKit)
+					flags |= MessageFlags.UIKit;
 			}
 
 			var data = builder is not null
@@ -7142,7 +7148,7 @@ public sealed class DiscordApiClient
 		var values = new Dictionary<string, string>();
 
 		if (builder is not null)
-			if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts || builder.Mentions is not null || builder.Files?.Count > 0 || builder.Components?.Count > 0)
+			if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts || builder.Mentions.Any() || builder.Files?.Count > 0 || builder.Components?.Count > 0)
 				values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 		var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
@@ -7295,6 +7301,8 @@ public sealed class DiscordApiClient
 			flags |= MessageFlags.SuppressedEmbeds;
 		if (builder.NotificationsSuppressed)
 			flags |= MessageFlags.SuppressNotifications;
+		if (builder.IsUIKit)
+			flags |= MessageFlags.UIKit;
 
 		var values = new Dictionary<string, string>();
 		var pld = new RestFollowupMessageCreatePayload
@@ -7344,10 +7352,10 @@ public sealed class DiscordApiClient
 			}
 		}
 
-		if (builder.Mentions != null)
+		if (builder.Mentions.Any())
 			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0);
 
-		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts || builder.Mentions != null || builder.Files?.Count > 0 || builder.Components?.Count > 0)
+		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts || builder.Mentions.Any() || builder.Files?.Count > 0 || builder.Components?.Count > 0)
 			values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 		var route = $"{Endpoints.WEBHOOKS}/:application_id/:interaction_token";
@@ -7668,7 +7676,7 @@ public sealed class DiscordApiClient
 			asset.Application = application;
 		}
 
-		return new ReadOnlyCollection<DiscordApplicationAsset>(new List<DiscordApplicationAsset>(assets));
+		return new ReadOnlyCollection<DiscordApplicationAsset>([.. assets]);
 	}
 
 	/// <summary>

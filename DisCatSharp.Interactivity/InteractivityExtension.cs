@@ -746,7 +746,7 @@ public class InteractivityExtension : BaseExtension
 
 		var builder = new DiscordMessageBuilder()
 			.WithContent(pages.First().Content)
-			.WithEmbed(pages.First().Embed)
+			.AddEmbed(pages.First().Embed)
 			.AddComponents(bts.ButtonArray);
 
 		var message = await builder.SendAsync(channel).ConfigureAwait(false);
@@ -830,7 +830,7 @@ public class InteractivityExtension : BaseExtension
 	{
 		var builder = new DiscordMessageBuilder()
 			.WithContent(pages.First().Content)
-			.WithEmbed(pages.First().Embed);
+			.AddEmbed(pages.First().Embed);
 		var m = await builder.SendAsync(channel).ConfigureAwait(false);
 
 		var timeout = timeoutOverride ?? this.Config.Timeout;

@@ -249,7 +249,7 @@ internal class Paginator : IPaginator
 		var page = await p.GetPageAsync().ConfigureAwait(false);
 		var builder = new DiscordMessageBuilder()
 			.WithContent(page.Content)
-			.WithEmbed(page.Embed);
+			.AddEmbed(page.Embed);
 
 		await builder.ModifyAsync(msg).ConfigureAwait(false);
 	}
