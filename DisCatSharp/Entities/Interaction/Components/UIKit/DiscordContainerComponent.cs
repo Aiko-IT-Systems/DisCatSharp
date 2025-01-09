@@ -50,7 +50,7 @@ public sealed class DiscordContainerComponent : DiscordComponent
 		if (comps.Any(c => !allowedTypes.Contains(c.Type)))
 			throw new ArgumentException("All components must be of type ActionRow, TextDisplay, Section, MediaGallery, Seperator, or File.");
 
-		this.Components = comps.ToList();
+		this.Components = [.. comps];
 		this.Spoiler = spoiler;
 		this.AccentColor = accentColor;
 	}
@@ -64,8 +64,15 @@ public sealed class DiscordContainerComponent : DiscordComponent
 	/// <summary>
 	///     The accent color for the container.
 	/// </summary>
-	[JsonProperty("accent_color", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonIgnore]
 	public DiscordColor? AccentColor { get; internal set; }
+
+	/// <summary>
+	///    Gets the accent color int for the container.
+	/// </summary>
+	[JsonProperty("accent_color", NullValueHandling = NullValueHandling.Ignore)]
+	internal int? AccentColorInt
+		=> this.AccentColor?.Value;
 
 	/// <summary>
 	///     Gets whether this container should be marked as spoiler.
