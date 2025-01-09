@@ -1,9 +1,9 @@
 namespace DisCatSharp.Enums;
 
 /// <summary>
-///     Represents the sperator spacing size of a <see cref="DisCatSharp.Entities.DiscordSeperatorComponent"/>.
+///     Represents the sperator spacing size of a <see cref="DisCatSharp.Entities.DiscordSeparatorComponent"/>.
 /// </summary>
-public enum SeperatorSpacingSize
+public enum SeparatorSpacingSize
 {
 	/// <summary>
 	///     A small spacing size.

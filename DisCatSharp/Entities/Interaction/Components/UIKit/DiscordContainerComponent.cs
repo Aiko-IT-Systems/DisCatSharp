@@ -46,9 +46,9 @@ public sealed class DiscordContainerComponent : DiscordComponent
 		if (comps.Count > 10)
 			throw new ArgumentException("You can only have up to 10 components in a container.");
 
-		List<ComponentType> allowedTypes = [ComponentType.ActionRow, ComponentType.TextDisplay, ComponentType.Section, ComponentType.MediaGallery, ComponentType.Seperator, ComponentType.File];
+		List<ComponentType> allowedTypes = [ComponentType.ActionRow, ComponentType.TextDisplay, ComponentType.Section, ComponentType.MediaGallery, ComponentType.Separator, ComponentType.File];
 		if (comps.Any(c => !allowedTypes.Contains(c.Type)))
-			throw new ArgumentException("All components must be of type ActionRow, TextDisplay, Section, MediaGallery, Seperator, or File.");
+			throw new ArgumentException("All components must be of type ActionRow, TextDisplay, Section, MediaGallery, Separator, or File.");
 
 		this.Components = [.. comps];
 		this.Spoiler = spoiler;

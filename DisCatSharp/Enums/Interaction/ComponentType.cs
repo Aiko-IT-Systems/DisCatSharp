@@ -71,9 +71,9 @@ public enum ComponentType
 	File = 13,
 
 	/// <summary>
-	///     A seperator.
+	///     A separator.
 	/// </summary>
-	Seperator = 14,
+	Separator = 14,
 
 	/// <summary>
 	///     Cannot be used by bots.

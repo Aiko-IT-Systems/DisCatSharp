@@ -7,23 +7,23 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-///     Represents a seperator component.
+///     Represents a separator component.
 /// </summary>
-public sealed class DiscordSeperatorComponent : DiscordComponent
+public sealed class DiscordSeparatorComponent : DiscordComponent
 {
 	/// <summary>
-	///     Constructs a new <see cref="DiscordSeperatorComponent" />.
+	///     Constructs a new <see cref="DiscordSeparatorComponent" />.
 	/// </summary>
-	internal DiscordSeperatorComponent()
+	internal DiscordSeparatorComponent()
 	{
-		this.Type = ComponentType.Seperator;
+		this.Type = ComponentType.Separator;
 	}
 
 	/// <summary>
-	///     Constructs a new seperator component based on another seperator component.
+	///     Constructs a new separator component based on another separator component.
 	/// </summary>
 	/// <param name="other">The button to copy.</param>
-	public DiscordSeperatorComponent(DiscordSeperatorComponent other)
+	public DiscordSeparatorComponent(DiscordSeparatorComponent other)
 		: this()
 	{
 		this.Divider = other.Divider;
@@ -31,12 +31,12 @@ public sealed class DiscordSeperatorComponent : DiscordComponent
 	}
 
 	/// <summary>
-	///     Constructs a new seperator component field with the specified options.
+	///     Constructs a new separator component field with the specified options.
 	/// </summary>
 	/// <param name="divider">Whether this is a divider.</param>
 	/// <param name="spacing">The spacing size.</param>
 	/// <exception cref="ArgumentException">Is thrown when no label is set.</exception>
-	public DiscordSeperatorComponent(bool? divider = null, SeperatorSpacingSize? spacing = null)
+	public DiscordSeparatorComponent(bool? divider = null, SeparatorSpacingSize? spacing = null)
 		: this()
 	{
 		this.Divider = divider;
@@ -47,7 +47,7 @@ public sealed class DiscordSeperatorComponent : DiscordComponent
 	///     The spacing size.
 	/// </summary>
 	[JsonProperty("spacing", NullValueHandling = NullValueHandling.Ignore)]
-	public SeperatorSpacingSize? Spacing { get; set; }
+	public SeparatorSpacingSize? Spacing { get; set; }
 
 	/// <summary>
 	///     Whether this is a divider.
