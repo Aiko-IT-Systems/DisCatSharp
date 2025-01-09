@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-using DisCatSharp.Attributes;
 using DisCatSharp.Entities.Core;
 
 namespace DisCatSharp.Entities;
@@ -168,7 +167,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 		var cmpArr = components.ToArray();
 		var count = cmpArr.Length;
 
-		if (this.IsUIKit)
+		if (this.IsComponentsV2)
 		{
 			switch (count)
 			{
@@ -221,9 +220,9 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	///     Sets that this builder should be using UI Kit.
 	/// </summary>
 	/// <returns>The current builder to chain calls with.</returns>
-	public DiscordMessageBuilder AsUIKitMessage()
+	public DiscordMessageBuilder WithV2Components()
 	{
-		this.IsUIKit = true;
+		this.IsComponentsV2 = true;
 		return this;
 	}
 
@@ -470,10 +469,10 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any() && this.Sticker is null && (!this.Components?.Any() ?? true) && this.Poll is null && this?.Attachments.Count == 0)
 				throw new ArgumentException("You must specify content, an embed, a sticker, a component, a poll or at least one file.");
 
-			if (this.IsUIKit && (!string.IsNullOrEmpty(this.Content) || this.Embeds.Any()))
+			if (this.IsComponentsV2 && (!string.IsNullOrEmpty(this.Content) || this.Embeds.Any()))
 				throw new ArgumentException("Using UI Kit mode. You cannot specify content or embeds.");
 
-			switch (this.IsUIKit)
+			switch (this.IsComponentsV2)
 			{
 				case true when this.Components?.Count > 10:
 					throw new InvalidOperationException("You can only have 10 components per message.");

@@ -38,6 +38,16 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	public DiscordPollBuilder? Poll { get; private set; }
 
 	/// <summary>
+	///     Sets that this builder should be using UI Kit.
+	/// </summary>
+	/// <returns>The current builder to chain calls with.</returns>
+	public DiscordFollowupMessageBuilder WithV2Components()
+	{
+		this.IsComponentsV2 = true;
+		return this;
+	}
+
+	/// <summary>
 	///     Appends a collection of components to the message.
 	/// </summary>
 	/// <param name="components">The collection of components to add.</param>
@@ -75,7 +85,7 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 		var cmpArr = components.ToArray();
 		var count = cmpArr.Length;
 
-		if (this.IsUIKit)
+		if (this.IsComponentsV2)
 		{
 			switch (count)
 			{

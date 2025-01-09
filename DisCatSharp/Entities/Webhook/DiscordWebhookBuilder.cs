@@ -123,7 +123,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 		var cmpArr = components.ToArray();
 		var count = cmpArr.Length;
 
-		if (this.IsUIKit)
+		if (this.IsComponentsV2)
 		{
 			switch (count)
 			{
@@ -156,10 +156,10 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// Sets that this builder should be using UI Kit.
 	/// </summary>
 	/// <returns>The current builder to chain calls with.</returns>
-	public DiscordWebhookBuilder AsUIKitMessage()
+	public DiscordWebhookBuilder WithV2Components()
 	{
 		this.FlagsChanged = true;
-		this.IsUIKit = true;
+		this.IsComponentsV2 = true;
 		return this;
 	}
 

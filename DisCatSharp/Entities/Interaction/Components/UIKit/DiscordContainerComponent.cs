@@ -37,7 +37,9 @@ public sealed class DiscordContainerComponent : DiscordComponent
 	///     Constructs a new container component field with the specified options.
 	/// </summary>
 	/// <param name="components">The container components. Max of <c>10</c>.</param>
-	public DiscordContainerComponent(IEnumerable<DiscordComponent> components)
+	/// <param name="spoiler">Whether the container should be marked as spoiler.</param>
+	/// <param name="accentColor">The accent color for the container.</param>
+	public DiscordContainerComponent(IEnumerable<DiscordComponent> components, bool? spoiler = null, DiscordColor? accentColor = null)
 		: this()
 	{
 		var comps = components.ToList();
@@ -49,6 +51,8 @@ public sealed class DiscordContainerComponent : DiscordComponent
 			throw new ArgumentException("All components must be of type ActionRow, TextDisplay, Section, MediaGallery, Seperator, or File.");
 
 		this.Components = comps.ToList();
+		this.Spoiler = spoiler;
+		this.AccentColor = accentColor;
 	}
 
 	/// <summary>

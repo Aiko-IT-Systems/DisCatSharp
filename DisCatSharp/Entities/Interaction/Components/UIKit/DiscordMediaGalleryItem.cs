@@ -19,7 +19,7 @@ public sealed class DiscordMediaGalleryItem
 	/// <param name="url">The url.</param>
 	/// <param name="description">The description.</param>
 	/// <param name="spoiler">Whether this item should be marked as spoiler.</param>
-	public DiscordMediaGalleryItem(string url, string? description, bool? spoiler)
+	public DiscordMediaGalleryItem(string url, string? description = null, bool? spoiler = null)
 	{
 		this.Media = new(url);
 		this.Description = description;

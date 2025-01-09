@@ -51,7 +51,7 @@ public class DisCatSharpBuilder
 		get => this.ContentInternal;
 		set
 		{
-			if (this.IsUIKit || this.IsVoiceMessage)
+			if (this.IsComponentsV2 || this.IsVoiceMessage)
 				throw new InvalidOperationException("You cannot set the content for UI Kit / Voice messages");
 
 			if (value is { Length: > 2000 })
@@ -131,12 +131,12 @@ public class DisCatSharpBuilder
 	/// <summary>
 	///     Sets whether this builder should be using UI Kit.
 	/// </summary>
-	public bool IsUIKit
+	public bool IsComponentsV2
 	{
-		get => this.UI_KIT;
+		get => this.IS_COMPONENTS_V2;
 		set
 		{
-			this.UI_KIT = value;
+			this.IS_COMPONENTS_V2 = value;
 			this.FlagsChanged = true;
 		}
 	}
@@ -144,7 +144,7 @@ public class DisCatSharpBuilder
 	/// <summary>
 	///     Whether this builder is using UI Kit.
 	/// </summary>
-	private bool UI_KIT { get; set; }
+	private bool IS_COMPONENTS_V2 { get; set; }
 
 	/// <summary>
 	///     Sets whether this builder suppresses its embeds.
@@ -154,7 +154,7 @@ public class DisCatSharpBuilder
 		get => this.EMBEDS_SUPPRESSED;
 		set
 		{
-			if (this.IsUIKit)
+			if (this.IsComponentsV2)
 				throw new InvalidOperationException("You cannot set embeds suppressed for UI Kit messages since they cannot have embeds");
 
 			this.EMBEDS_SUPPRESSED = value;
@@ -184,7 +184,7 @@ public class DisCatSharpBuilder
 		this.AttachmentsInternal.Clear();
 		this.ComponentsInternal.Clear();
 		this.IsVoiceMessage = false;
-		this.IsUIKit = false;
+		this.IsComponentsV2 = false;
 		this.EmbedsSuppressed = false;
 		this.NotificationsSuppressed = false;
 		this.FlagsChanged = false;

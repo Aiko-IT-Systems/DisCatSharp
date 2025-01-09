@@ -35,7 +35,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 		this.EmbedsInternal.AddRange(builder.Embeds);
 		this.ComponentsInternal.AddRange(builder.Components);
 		this.EmbedsSuppressed = builder.EmbedsSuppressed;
-		this.IsUIKit = builder.IsUIKit;
+		this.IsComponentsV2 = builder.IsComponentsV2;
 		this.FilesInternal.AddRange(builder.Files);
 		this.AttachmentsInternal.AddRange(builder.Attachments);
 	}
@@ -141,7 +141,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 		var cmpArr = components.ToArray();
 		var count = cmpArr.Length;
 
-		if (this.IsUIKit)
+		if (this.IsComponentsV2)
 		{
 			switch (count)
 			{
@@ -206,9 +206,9 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	///     Sets that this builder should be using UI Kit.
 	/// </summary>
 	/// <returns>The current builder to chain calls with.</returns>
-	public DiscordInteractionResponseBuilder AsUIKitMessage()
+	public DiscordInteractionResponseBuilder WithV2Components()
 	{
-		this.IsUIKit = true;
+		this.IsComponentsV2 = true;
 		return this;
 	}
 
