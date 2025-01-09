@@ -36,13 +36,13 @@ public sealed class DiscordContainerComponent : DiscordComponent
 	/// <summary>
 	///     Constructs a new container component field with the specified options.
 	/// </summary>
-	/// <param name="components">The container components. Max of <c>3</c>.</param>
+	/// <param name="components">The container components. Max of <c>10</c>.</param>
 	public DiscordContainerComponent(IEnumerable<DiscordComponent> components)
 		: this()
 	{
 		var comps = components.ToList();
-		if (comps.Count > 3)
-			throw new ArgumentException("You can only have up to 3 components in a container.");
+		if (comps.Count > 10)
+			throw new ArgumentException("You can only have up to 10 components in a container.");
 
 		List<ComponentType> allowedTypes = [ComponentType.ActionRow, ComponentType.TextDisplay, ComponentType.Section, ComponentType.MediaGallery, ComponentType.Seperator, ComponentType.File];
 		if (comps.Any(c => !allowedTypes.Contains(c.Type)))
