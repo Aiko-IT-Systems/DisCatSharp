@@ -78,5 +78,10 @@ public enum ComponentType
 	/// <summary>
 	///     Cannot be used by bots.
 	/// </summary>
-	ContentInventoryEntry = 15
+	ContentInventoryEntry = 15,
+
+	/// <summary>
+	///    A container.
+	/// </summary>
+	Container = 17
 }

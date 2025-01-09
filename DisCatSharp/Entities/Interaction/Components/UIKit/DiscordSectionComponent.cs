@@ -47,7 +47,7 @@ public sealed class DiscordSectionComponent : DiscordComponent
 	}
 
 	/// <summary>
-	///     The content for the section.
+	///     The components for the section.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
 	public IReadOnlyList<DiscordTextDisplayComponent> Components { get; internal set; } = [];

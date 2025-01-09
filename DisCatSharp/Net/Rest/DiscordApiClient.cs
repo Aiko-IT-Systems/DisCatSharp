@@ -3116,7 +3116,7 @@ public sealed class DiscordApiClient
 		if (builder.IsVoiceMessage)
 			flags |= MessageFlags.IsVoiceMessage;
 		if (builder.IsUIKit)
-			flags |= MessageFlags.UIKit;
+			flags |= MessageFlags.IsComponentsV2;
 
 		var pld = new RestChannelMessageCreatePayload
 		{
@@ -5344,7 +5344,7 @@ public sealed class DiscordApiClient
 		if (builder.NotificationsSuppressed)
 			flags |= MessageFlags.SuppressNotifications;
 		if (builder.IsUIKit)
-			flags |= MessageFlags.UIKit;
+			flags |= MessageFlags.IsComponentsV2;
 
 		var pld = new RestWebhookMessageEditPayload
 		{
@@ -7066,7 +7066,7 @@ public sealed class DiscordApiClient
 				if (builder.NotificationsSuppressed)
 					flags |= MessageFlags.SuppressNotifications;
 				if (builder.IsUIKit)
-					flags |= MessageFlags.UIKit;
+					flags |= MessageFlags.IsComponentsV2;
 			}
 
 			var data = builder is not null
@@ -7302,7 +7302,7 @@ public sealed class DiscordApiClient
 		if (builder.NotificationsSuppressed)
 			flags |= MessageFlags.SuppressNotifications;
 		if (builder.IsUIKit)
-			flags |= MessageFlags.UIKit;
+			flags |= MessageFlags.IsComponentsV2;
 
 		var values = new Dictionary<string, string>();
 		var pld = new RestFollowupMessageCreatePayload

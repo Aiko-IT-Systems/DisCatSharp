@@ -91,5 +91,5 @@ public enum MessageFlags
 	/// <summary>
 	/// The message uses the UI Kit.
 	/// </summary>
-	UIKit = 1 << 15
+	IsComponentsV2 = 1 << 15
 }

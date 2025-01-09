@@ -651,7 +651,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordMessage> ModifyAsync(Optional<string> content)
-		=> this.Flags?.HasMessageFlag(MessageFlags.UIKit) ?? false ? throw new InvalidOperationException("UI Kit messages can not have content.") : this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, default, this.GetMentions(), default, default, [], default);
+		=> this.Flags?.HasMessageFlag(MessageFlags.IsComponentsV2) ?? false ? throw new InvalidOperationException("UI Kit messages can not have content.") : this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, default, this.GetMentions(), default, default, [], default);
 
 	/// <summary>
 	///     Edits the message.
@@ -662,7 +662,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordMessage> ModifyAsync(Optional<DiscordEmbed> embed = default)
-		=> this.Flags?.HasMessageFlag(MessageFlags.UIKit) ?? false ? throw new InvalidOperationException("UI Kit messages can not have embeds.") : this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, embed.Map(v => new[] { v }).ValueOr([]), this.GetMentions(), default, default, [], default);
+		=> this.Flags?.HasMessageFlag(MessageFlags.IsComponentsV2) ?? false ? throw new InvalidOperationException("UI Kit messages can not have embeds.") : this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, embed.Map(v => new[] { v }).ValueOr([]), this.GetMentions(), default, default, [], default);
 
 	/// <summary>
 	///     Edits the message.
@@ -674,7 +674,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordMessage> ModifyAsync(Optional<string> content, Optional<DiscordEmbed> embed = default)
-		=> this.Flags?.HasMessageFlag(MessageFlags.UIKit) ?? false ? throw new InvalidOperationException("UI Kit messages can not have content or embeds.") : this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, embed.Map(v => new[] { v }).ValueOr([]), this.GetMentions(), default, default, [], default);
+		=> this.Flags?.HasMessageFlag(MessageFlags.IsComponentsV2) ?? false ? throw new InvalidOperationException("UI Kit messages can not have content or embeds.") : this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, embed.Map(v => new[] { v }).ValueOr([]), this.GetMentions(), default, default, [], default);
 
 	/// <summary>
 	///     Edits the message.
@@ -686,7 +686,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordMessage> ModifyAsync(Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds = default)
-		=> this.Flags?.HasMessageFlag(MessageFlags.UIKit) ?? false ? throw new InvalidOperationException("UI Kit messages can not have content or embeds.") : this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, embeds, this.GetMentions(), default, default, [], default);
+		=> this.Flags?.HasMessageFlag(MessageFlags.IsComponentsV2) ?? false ? throw new InvalidOperationException("UI Kit messages can not have content or embeds.") : this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, embeds, this.GetMentions(), default, default, [], default);
 
 	/// <summary>
 	///     Edits the message.

@@ -26,7 +26,7 @@ public sealed class DiscordThumnailComponent : DiscordSectionAccessory
 	internal DiscordThumnailComponent(string url, string? description = null, bool? spoiler = null)
 		: this()
 	{
-		this.Image = new(url);
+		this.Media = new(url);
 		this.Description = description;
 		this.Spoiler = spoiler;
 	}
@@ -34,8 +34,8 @@ public sealed class DiscordThumnailComponent : DiscordSectionAccessory
 	/// <summary>
 	///     Gets the media item.
 	/// </summary>
-	[JsonProperty("image")]
-	public DiscordUnfurledMediaItem Image { get; internal set; }
+	[JsonProperty("media")]
+	public DiscordUnfurledMediaItem Media { get; internal set; }
 
 	/// <summary>
 	///     Gets the description.
