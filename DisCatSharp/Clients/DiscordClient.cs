@@ -538,6 +538,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			old.Pronouns = usr.Pronouns;
 			old.GlobalName = usr.GlobalName;
 			old.Clan = usr.Clan;
+			old.PrimaryGuild = usr.PrimaryGuild;
 			return old;
 		});
 
@@ -1624,6 +1625,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 					old.Locale = usr.Locale;
 					old.GlobalName = usr.GlobalName;
 					old.Clan = usr.Clan;
+					old.PrimaryGuild = usr.PrimaryGuild;
 					return old;
 				});
 
@@ -1662,6 +1664,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.Locale = usr.Locale;
 				old.GlobalName = usr.GlobalName;
 				old.Clan = usr.Clan;
+				old.PrimaryGuild = usr.PrimaryGuild;
 				return old;
 			});
 
@@ -1841,6 +1844,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 					old.Locale = usr.Locale;
 					old.GlobalName = usr.GlobalName;
 					old.Clan = usr.Clan;
+					old.PrimaryGuild = usr.PrimaryGuild;
 					return old;
 				});
 
