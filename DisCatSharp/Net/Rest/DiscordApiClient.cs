@@ -476,6 +476,7 @@ public sealed class DiscordApiClient
 				old.Locale = usr.Locale;
 				old.GlobalName = usr.GlobalName;
 				old.Clan = usr.Clan;
+				old.PrimaryGuild = usr.PrimaryGuild;
 				return old;
 			});
 

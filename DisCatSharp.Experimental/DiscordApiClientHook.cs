@@ -236,6 +236,7 @@ internal sealed class DiscordApiClientHook
 					old.Locale = usr.Locale;
 					old.GlobalName = usr.GlobalName;
 					old.Clan = usr.Clan;
+					old.PrimaryGuild = usr.PrimaryGuild;
 					return old;
 				});
 			}

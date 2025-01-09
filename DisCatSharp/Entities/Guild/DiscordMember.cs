@@ -795,6 +795,16 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	}
 
 	/// <summary>
+	///     Gets the member's primary guild.
+	/// </summary>
+	[JsonIgnore]
+	public override DiscordClan? PrimaryGuild
+	{
+		get => this.User.PrimaryGuild;
+		internal set => this.User.PrimaryGuild = value;
+	}
+
+	/// <summary>
 	///     Gets whether the member is a bot.
 	/// </summary>
 	[JsonIgnore]

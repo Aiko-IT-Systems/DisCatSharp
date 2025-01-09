@@ -176,6 +176,12 @@ internal class TransportUser : ObservableApiObject
 	public DiscordClan? Clan { get; internal set; }
 
 	/// <summary>
+	///     Gets the users primary guild.
+	/// </summary>
+	[JsonProperty("primary_guild", NullValueHandling = NullValueHandling.Ignore), DiscordUnreleased]
+	public DiscordClan? PrimaryGuild { get; internal set; }
+
+	/// <summary>
 	///     Gets the users pronouns.
 	/// </summary>
 	[JsonProperty("pronouns", NullValueHandling = NullValueHandling.Ignore)]

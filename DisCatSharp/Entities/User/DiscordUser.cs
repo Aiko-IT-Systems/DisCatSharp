@@ -65,6 +65,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		this.Pronouns = transport.Pronouns;
 		this.GlobalName = transport.GlobalName;
 		this.Clan = transport.Clan;
+		this.PrimaryGuild = transport.PrimaryGuild;
 	}
 
 	/// <summary>
@@ -155,6 +156,12 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	[JsonProperty("clan", NullValueHandling = NullValueHandling.Ignore), DiscordUnreleased]
 	public virtual DiscordClan? Clan { get; internal set; }
+
+	/// <summary>
+	///     Gets the users primary guild.
+	/// </summary>
+	[JsonProperty("primary_guild", NullValueHandling = NullValueHandling.Ignore), DiscordUnreleased]
+	public virtual DiscordClan? PrimaryGuild { get; internal set; }
 
 	/// <summary>
 	///     Gets the user's avatar hash.
