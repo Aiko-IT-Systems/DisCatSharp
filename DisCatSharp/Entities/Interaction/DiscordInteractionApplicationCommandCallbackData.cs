@@ -33,7 +33,7 @@ internal class DiscordInteractionApplicationCommandCallbackData : ObservableApiO
 	///     Gets the mentions.
 	/// </summary>
 	[JsonProperty("allowed_mentions", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<IMention>? Mentions { get; internal set; }
+	public DiscordMentions? Mentions { get; internal set; }
 
 	/// <summary>
 	///     Gets the flags.

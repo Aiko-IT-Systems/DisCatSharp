@@ -5350,10 +5350,12 @@ public sealed class DiscordApiClient
 		{
 			Content = builder.Content,
 			Embeds = builder.Embeds,
-			Mentions = builder.Mentions,
 			Components = builder.Components,
 			Flags = flags
 		};
+
+		if (builder.Mentions.Any())
+			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0);
 
 		if (builder.Files?.Count > 0)
 		{
@@ -7075,7 +7077,7 @@ public sealed class DiscordApiClient
 					Content = builder?.Content ?? null,
 					Embeds = builder?.Embeds ?? null,
 					IsTts = builder?.IsTts,
-					Mentions = builder?.Mentions ?? null,
+					Mentions = (builder?.Mentions.Any() ?? false) ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
 					Flags = flags,
 					Components = builder?.Components ?? null,
 					Choices = null,

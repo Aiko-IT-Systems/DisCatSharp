@@ -136,7 +136,7 @@ internal sealed class RestWebhookMessageEditPayload : ObservableApiObject
 	///     Gets or sets the mentions.
 	/// </summary>
 	[JsonProperty("allowed_mentions", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<IMention> Mentions { get; set; }
+	public DiscordMentions? Mentions { get; set; }
 
 	/// <summary>
 	///     Gets or sets the attachments.

@@ -253,7 +253,7 @@ internal sealed class RestFollowupMessageCreatePayload : ObservableApiObject
 	///     Gets the mentions.
 	/// </summary>
 	[JsonProperty("allowed_mentions", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordMentions Mentions { get; set; }
+	public DiscordMentions? Mentions { get; set; }
 
 	/// <summary>
 	///     Gets the flags.
