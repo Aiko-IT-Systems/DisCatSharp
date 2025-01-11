@@ -27,10 +27,12 @@ public interface IQueueEntry
 	///     Actions to execute before this queue entry gets played.
 	///     Return <see langword="false" /> if entry shouldn't be played.
 	/// </summary>
+	/// <param name="player">The player.</param>
 	Task<bool> BeforePlayingAsync(LavalinkGuildPlayer player);
 
 	/// <summary>
 	///     Actions to execute after this queue entry was played.
 	/// </summary>
+	/// <param name="player">The player.</param>
 	Task AfterPlayingAsync(LavalinkGuildPlayer player);
 }
