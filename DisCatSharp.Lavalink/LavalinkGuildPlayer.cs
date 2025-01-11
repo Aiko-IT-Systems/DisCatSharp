@@ -159,7 +159,7 @@ public sealed class LavalinkGuildPlayer
 	/// <summary>
 	///     Gets the queue entries.
 	/// </summary>
-	[Obsolete("This property is deprecated. Use Queue instead")]
+	[Deprecated("This property is deprecated. Use Queue instead")]
 	public IReadOnlyList<IQueueEntry> QueueEntries
 		=> this._queueEntriesInternal.Values.ToList();
 
