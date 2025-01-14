@@ -34,8 +34,7 @@ public sealed class DiscordThumnailComponent : DiscordSectionAccessory
 	/// <summary>
 	///     Gets the media item.
 	/// </summary>
-	// TODO: rename image to media
-	[JsonProperty("image")]
+	[JsonProperty("media")]
 	public DiscordUnfurledMediaItem Media { get; internal set; }
 
 	/// <summary>
