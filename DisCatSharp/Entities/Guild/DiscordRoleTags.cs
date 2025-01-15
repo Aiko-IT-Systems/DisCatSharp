@@ -1,53 +1,74 @@
+using DisCatSharp.Entities;
+using DisCatSharp.Enums;
+
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Entities;
-
 /// <summary>
-///     Represents a discord role tags.
+///     Represents a Discord role tags object with detailed classification logic.
 /// </summary>
-public class DiscordRoleTags : ObservableApiObject
+public sealed class DiscordRoleTags : ObservableApiObject
 {
+	/// <summary>
+	///     Whether this role is a guild's linked role.
+	/// </summary>
 	[JsonProperty("guild_connections", NullValueHandling = NullValueHandling.Include)]
-	internal bool? GuildConnection = false;
-
-	[JsonProperty("premium_subscriber", NullValueHandling = NullValueHandling.Include)]
-	internal bool? PremiumSubscriber = false;
+	public bool? GuildConnections { get; internal set; }
 
 	/// <summary>
-	///     Gets the id of the bot this role belongs to.
+	///     Whether this is the guild's booster role.
 	/// </summary>
-	[JsonProperty("bot_id", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("premium_subscriber", NullValueHandling = NullValueHandling.Include)]
+	public bool? PremiumSubscriber { get; internal set; }
+
+	/// <summary>
+	///     Gets the ID of the bot this role belongs to.
+	/// </summary>
+	[JsonProperty("bot_id", NullValueHandling = NullValueHandling.Include)]
 	public ulong? BotId { get; internal set; }
 
 	/// <summary>
-	///     Gets the id of the integration this role belongs to.
+	///     Gets the ID of the integration this role belongs to.
 	/// </summary>
-	[JsonProperty("integration_id", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("integration_id", NullValueHandling = NullValueHandling.Include)]
 	public ulong? IntegrationId { get; internal set; }
 
 	/// <summary>
-	///     Gets whether this is the guild's booster role.
+	///     Gets the ID of this role's subscription SKU and listing.
 	/// </summary>
-	[JsonIgnore]
-	public bool IsPremiumSubscriber
-		=> this.PremiumSubscriber.HasValue && this.PremiumSubscriber.Value;
-
-	/// <summary>
-	///     The id of this role's subscription sku and listing.
-	/// </summary>
-	[JsonProperty("subscription_listing_id", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("subscription_listing_id", NullValueHandling = NullValueHandling.Include)]
 	public ulong? SubscriptionListingId { get; internal set; }
 
 	/// <summary>
 	///     Whether this role is available for purchase.
 	/// </summary>
-	[JsonProperty("available_for_purchase", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("available_for_purchase", NullValueHandling = NullValueHandling.Include)]
 	public bool? AvailableForPurchase { get; internal set; }
 
 	/// <summary>
-	///     Gets whether this is the guild's premium subscriber role.
+	///     Determines the type of role based on its tags.
 	/// </summary>
-	[JsonIgnore]
-	public bool IsLinkedRole
-		=> this.GuildConnection.HasValue && this.GuildConnection.Value;
+	public RoleType DetermineRoleType()
+	{
+		if (this.BotId is not null)
+			return RoleType.Bot;
+
+		switch (this.GuildConnections)
+		{
+			case false when this.PremiumSubscriber is null:
+				return RoleType.Booster;
+			case false when this.PremiumSubscriber is false:
+				return RoleType.ServerProduct;
+			case false when this.IntegrationId is not null && this.PremiumSubscriber is false:
+				return RoleType.PremiumSubscriber;
+			case false when this.IntegrationId is not null && this.SubscriptionListingId is not null:
+				return RoleType.PremiumSubscriberTier;
+		}
+
+		if (this.IntegrationId is not null && this.BotId is null && this.PremiumSubscriber is null && this.SubscriptionListingId is null)
+			return RoleType.ExternalPlatform;
+
+		return this.GuildConnections is null
+			? RoleType.RoleConnection
+			: RoleType.Normal;
+	}
 }
