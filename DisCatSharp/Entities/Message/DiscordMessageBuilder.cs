@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Entities.Core;
 
 namespace DisCatSharp.Entities;
@@ -289,8 +290,13 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 		return this;
 	}
 
+	/// <inheritdoc cref="AddFile(string,Stream,bool,string?)" />
+	[Deprecated("Replaced by AddFile to streamline builders.")]
+	public DiscordMessageBuilder WithFile(string fileName, Stream stream, bool resetStreamPosition = false, string description = null)
+		=> this.AddFile(fileName, stream, resetStreamPosition, description);
+
 	/// <summary>
-	///     Sets if the message has files to be sent.
+	///     Adds a file to the message.
 	/// </summary>
 	/// <param name="fileName">The fileName that the file should be sent as.</param>
 	/// <param name="stream">The Stream to the file.</param>
@@ -300,7 +306,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	/// </param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The current builder to be chained.</returns>
-	public DiscordMessageBuilder WithFile(string fileName, Stream stream, bool resetStreamPosition = false, string description = null)
+	public DiscordMessageBuilder AddFile(string fileName, Stream stream, bool resetStreamPosition = false, string? description = null)
 	{
 		if (this.FilesInternal.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -316,8 +322,13 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 		return this;
 	}
 
+	/// <inheritdoc cref="AddFile(FileStream,bool,string?)" />
+	[Deprecated("Replaced by AddFile to streamline builders.")]
+	public DiscordMessageBuilder WithFile(FileStream stream, bool resetStreamPosition = false, string description = null)
+		=> this.AddFile(stream, resetStreamPosition, description);
+
 	/// <summary>
-	///     Sets if the message has files to be sent.
+	///     Adds a file to the message.
 	/// </summary>
 	/// <param name="stream">The Stream to the file.</param>
 	/// <param name="resetStreamPosition">
@@ -326,7 +337,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	/// </param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The current builder to be chained.</returns>
-	public DiscordMessageBuilder WithFile(FileStream stream, bool resetStreamPosition = false, string description = null)
+	public DiscordMessageBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string? description = null)
 	{
 		if (this.FilesInternal.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -342,8 +353,13 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 		return this;
 	}
 
+	/// <inheritdoc cref="AddFiles" />
+	[Deprecated("Replaced by AddFiles to streamline builders.")]
+	public DiscordMessageBuilder WithFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
+		=> this.AddFiles(files, resetStreamPosition);
+
 	/// <summary>
-	///     Sets if the message has files to be sent.
+	///     Adds file to the message.
 	/// </summary>
 	/// <param name="files">The Files that should be sent.</param>
 	/// <param name="resetStreamPosition">
@@ -351,7 +367,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	///     sent.
 	/// </param>
 	/// <returns>The current builder to be chained.</returns>
-	public DiscordMessageBuilder WithFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
+	public DiscordMessageBuilder AddFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
 	{
 		if (this.FilesInternal.Count + files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
