@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 
 using DisCatSharp.Enums;
 
@@ -10,7 +9,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///     Represents a field in a guild's membership screening form
 /// </summary>
-public class DiscordGuildMembershipScreeningField : ObservableApiObject
+public sealed class DiscordGuildMembershipScreeningField : ObservableApiObject
 {
 	/// <summary>
 	///     Initializes a new instance of the <see cref="DiscordGuildMembershipScreeningField" /> class.
@@ -19,12 +18,16 @@ public class DiscordGuildMembershipScreeningField : ObservableApiObject
 	/// <param name="label">The label.</param>
 	/// <param name="values">The values.</param>
 	/// <param name="required">If true, required.</param>
-	public DiscordGuildMembershipScreeningField(MembershipScreeningFieldType type, string label, IEnumerable<string> values, bool required = true)
+	/// <param name="description">The description.</param>
+	/// <param name="placeholder">The placeholder.</param>
+	public DiscordGuildMembershipScreeningField(MembershipScreeningFieldType type, string label, List<string>? values = null, bool required = true, string? description = null, string? placeholder = null)
 	{
 		this.Type = type;
 		this.Label = label;
-		this.Values = values.ToList();
+		this.Values = values;
 		this.IsRequired = required;
+		this.Description = description;
+		this.Placeholder = placeholder;
 	}
 
 	/// <summary>
@@ -49,11 +52,29 @@ public class DiscordGuildMembershipScreeningField : ObservableApiObject
 	///     Gets the list of rules
 	/// </summary>
 	[JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<string> Values { get; internal set; }
+	public IReadOnlyList<string>? Values { get; internal set; }
 
-	/// <summary>
+	/// <summary>.
 	///     Gets whether the user has to fill out this field
 	/// </summary>
 	[JsonProperty("required", NullValueHandling = NullValueHandling.Ignore)]
 	public bool IsRequired { get; internal set; }
+
+	/// <summary>
+	///     Gets the placeholder.
+	/// </summary>
+	[JsonProperty("placeholder", NullValueHandling = NullValueHandling.Ignore)]
+	public string? Placeholder { get; internal set; }
+
+	/// <summary>
+	///     Gets the placeholder.
+	/// </summary>
+	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
+	public string? Description { get; internal set; }
+
+	/// <summary>
+	///     Gets the placeholder.
+	/// </summary>
+	[JsonProperty("automations", NullValueHandling = NullValueHandling.Ignore)]
+	public object? Automations { get; internal set; }
 }
