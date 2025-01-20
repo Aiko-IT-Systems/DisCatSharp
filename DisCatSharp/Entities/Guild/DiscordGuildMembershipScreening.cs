@@ -26,5 +26,5 @@ public class DiscordGuildMembershipScreening : ObservableApiObject
 	///     Gets the server description shown in the screening form.
 	/// </summary>
 	[JsonProperty("description")]
-	public string Description { get; internal set; }
+	public string? Description { get; internal set; }
 }

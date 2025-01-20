@@ -15,5 +15,23 @@ public enum MembershipScreeningFieldType
 	///     Specifies the server rules
 	/// </summary>
 	[EnumMember(Value = "TERMS")]
-	Terms
+	Terms,
+
+	/// <summary>
+	///     Specifies a text input question.
+	/// </summary>
+	[EnumMember(Value = "TEXT_INPUT")]
+	TextInput,
+
+	/// <summary>
+	///    Specifies a paragraph question.
+	/// </summary>
+	[EnumMember(Value = "PARAGRAPH")]
+	Paragraph,
+
+	/// <summary>
+	///    Specifies a multiple choice question.
+	/// </summary>
+	[EnumMember(Value = "MULTIPLE_CHOICE")]
+	MultipleChoice
 }
