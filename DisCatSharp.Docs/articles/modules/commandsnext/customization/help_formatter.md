@@ -32,7 +32,7 @@ public class CustomHelpFormatter : BaseHelpFormatter
 
 	public override BaseHelpFormatter WithCommand(Command command)
 	{
-		// _embed.AddField(command.Name, command.Description);
+		// _embed.AddField(new DiscordEmbedField(command.Name, command.Description));
 		// _strBuilder.AppendLine($"{command.Name} - {command.Description}");
 
 		return this;
@@ -42,7 +42,7 @@ public class CustomHelpFormatter : BaseHelpFormatter
 	{
 		foreach (var cmd in cmds)
 		{
-			// _embed.AddField(cmd.Name, cmd.Description);
+			// _embed.AddField(new DiscordEmbedField(cmd.Name, cmd.Description));
 			// _strBuilder.AppendLine($"{cmd.Name} - {cmd.Description}");
 		}
 
