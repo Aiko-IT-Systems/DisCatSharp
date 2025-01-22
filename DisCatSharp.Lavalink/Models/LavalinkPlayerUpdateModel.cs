@@ -69,5 +69,5 @@ public sealed class LavalinkPlayerUpdateModel
 	/// Gets or sets the user data.
 	/// </summary>
 	[JsonProperty("userData")]
-	public Optional<object?> UserData { get; set; }
+	public Optional<object> UserData { get; set; }
 }
