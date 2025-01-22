@@ -443,6 +443,13 @@ public sealed class LavalinkGuildPlayer
 	}
 
 	/// <summary>
+	///     Skips the current track.
+	/// </summary>
+	/// <returns>The updated guild player.</returns>
+	public Task<LavalinkGuildPlayer> SkipAsync()
+		=> this.StopAsync();
+
+	/// <summary>
 	///     Directly plays a song by url.
 	/// </summary>
 	/// <param name="url">The url to play.</param>
