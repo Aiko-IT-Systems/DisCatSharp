@@ -297,26 +297,34 @@ internal sealed class LavalinkRestClient
 	/// <param name="volume">The volume.</param>
 	/// <param name="paused">Whether to pause the track.</param>
 	/// <param name="filters">The filters.</param>
+	/// <param name="userData">The user data.</param>
 	/// <returns>The updated <see cref="LavalinkPlayer" /> object.</returns>
 	internal async Task<LavalinkPlayer> UpdatePlayerAsync(
 		string sessionId,
 		ulong guildId,
 		bool noReplace = false,
 		Optional<string?> encodedTrack = default,
-		Optional<string> identifier = default,
+		Optional<string?> identifier = default,
 		Optional<int> position = default,
 		Optional<int?> endTime = default,
 		Optional<int> volume = default,
 		Optional<bool> paused = default,
-		Optional<LavalinkFilters> filters = default
+		Optional<LavalinkFilters> filters = default,
+		Optional<object?> userData = default
 	)
 	{
 		var queryDict = this.GetDefaultParams();
 		queryDict.Add("noReplace", noReplace.ToString().ToLower());
 		var pld = new LavalinkRestPlayerUpdatePayload(guildId.ToString())
 		{
-			EncodedTrack = encodedTrack,
-			Identifier = identifier,
+			Track = encodedTrack.HasValue || identifier.HasValue
+				? new LavalinkRestPlayerUpdatePlayerTrackPayload()
+				{
+					Encoded = encodedTrack,
+					Identifier = identifier,
+					UserData = userData
+				}
+				: Optional.None,
 			Position = position,
 			EndTime = endTime,
 			Volume = volume,

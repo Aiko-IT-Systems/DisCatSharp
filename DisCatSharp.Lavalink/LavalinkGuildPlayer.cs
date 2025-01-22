@@ -305,7 +305,8 @@ public sealed class LavalinkGuildPlayer
 			mdl.EncodedTrack, mdl.Identifier,
 			mdl.Position, mdl.EndTime,
 			mdl.Volume, mdl.Paused,
-			mdl.Filters
+			mdl.Filters,
+			mdl.UserData
 		).ConfigureAwait(false);
 		return this;
 	}

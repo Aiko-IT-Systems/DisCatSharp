@@ -26,18 +26,6 @@ internal sealed class LavalinkRestPlayerUpdatePayload
 	internal string GuildId { get; set; }
 
 	/// <summary>
-	///     Gets or sets the encoded track.
-	/// </summary>
-	[JsonProperty("encodedTrack")]
-	internal Optional<string?> EncodedTrack { get; set; }
-
-	/// <summary>
-	///     Gets or sets the identifier.
-	/// </summary>
-	[JsonProperty("identifier")]
-	internal Optional<string> Identifier { get; set; }
-
-	/// <summary>
 	///     Gets or sets the start or seek position.
 	/// </summary>
 	[JsonProperty("position")]
@@ -66,4 +54,34 @@ internal sealed class LavalinkRestPlayerUpdatePayload
 	/// </summary>
 	[JsonProperty("filters")]
 	internal Optional<LavalinkFilters> Filters { get; set; }
+
+	/// <summary>
+	///    Gets or sets the track.
+	/// </summary>
+	[JsonProperty("track")]
+	internal Optional<LavalinkRestPlayerUpdatePlayerTrackPayload> Track { get; set; }
+}
+
+/// <summary>
+///    The lavalink rest player update player track payload.
+/// </summary>
+internal sealed class LavalinkRestPlayerUpdatePlayerTrackPayload
+{
+	/// <summary>
+	///     Gets or sets the encoded track.
+	/// </summary>
+	[JsonProperty("encoded")]
+	internal Optional<string?> Encoded { get; set; }
+
+	/// <summary>
+	///     Gets or sets the identifier.
+	/// </summary>
+	[JsonProperty("identifier")]
+	internal Optional<string?> Identifier { get; set; }
+
+	/// <summary>
+	/// Gets or sets the user data.
+	/// </summary>
+	[JsonProperty("userData")]
+	public Optional<object?> UserData { get; set; }
 }
