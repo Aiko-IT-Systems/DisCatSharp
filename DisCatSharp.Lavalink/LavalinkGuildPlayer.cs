@@ -660,7 +660,7 @@ public sealed class LavalinkGuildPlayer
 	/// </summary>
 	/// <param name="track">The next track in the queue, or null if the queue is empty.</param>
 	/// <returns>True if a track was found, false otherwise.</returns>
-	public bool TryPeekQueue(out LavalinkTrack? track)
+	public bool TryPeekQueue([NotNullWhen(true)] out LavalinkTrack? track)
 	{
 		if (QueueInternal.TryGetValue(this.GuildId, out var queue) && queue.TryPeek(out var result))
 		{

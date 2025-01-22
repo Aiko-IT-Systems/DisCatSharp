@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DisCatSharp.Lavalink;
 
@@ -115,7 +116,7 @@ public class LavalinkQueue<T> : IEnumerable<T>
 	///     <see langword="true" /> if there is an object at the beginning of the <see cref="LavalinkQueue{T}" />;
 	///     otherwise, <see langword="false" />.
 	/// </returns>
-	public bool TryPeek(out T value)
+	public bool TryPeek([NotNullWhen(true)] out T? value)
 	{
 		lock (this._list)
 		{
@@ -125,7 +126,7 @@ public class LavalinkQueue<T> : IEnumerable<T>
 				return false;
 			}
 
-			value = this._list.First.Value;
+			value = this._list.First.Value!;
 			return true;
 		}
 	}
