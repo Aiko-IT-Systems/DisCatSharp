@@ -580,7 +580,7 @@ public sealed class LavalinkGuildPlayer
 		return Task.CompletedTask;
 	}
 
-	#region Queue Operations
+#region Queue Operations
 
 	/// <summary>
 	///     Adds a <see cref="LavalinkTrack" /> to the queue.
@@ -648,7 +648,7 @@ public sealed class LavalinkGuildPlayer
 	/// <summary>
 	///     Adds all tracks from a Lavalink playlist to the queue.
 	/// </summary>
-	/// <param name="playlist">The <see cref="LavalinkPlaylist"/> containing the tracks to add.</param>
+	/// <param name="playlist">The <see cref="LavalinkPlaylist" /> containing the tracks to add.</param>
 	public void AddToQueue(LavalinkPlaylist playlist)
 	{
 		foreach (var track in playlist.Tracks)
@@ -759,5 +759,5 @@ public sealed class LavalinkGuildPlayer
 		}
 	}
 
-	#endregion
+#endregion
 }

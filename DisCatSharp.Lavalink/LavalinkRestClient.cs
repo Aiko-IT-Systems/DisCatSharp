@@ -304,27 +304,32 @@ internal sealed class LavalinkRestClient
 		ulong guildId,
 		bool noReplace = false,
 		Optional<string?> encodedTrack = default,
-		Optional<string?> identifier = default,
+		Optional<string> identifier = default,
 		Optional<int> position = default,
 		Optional<int?> endTime = default,
 		Optional<int> volume = default,
 		Optional<bool> paused = default,
 		Optional<LavalinkFilters> filters = default,
-		Optional<object?> userData = default
+		Optional<object> userData = default
 	)
 	{
 		var queryDict = this.GetDefaultParams();
 		queryDict.Add("noReplace", noReplace.ToString().ToLower());
 		var pld = new LavalinkRestPlayerUpdatePayload(guildId.ToString())
 		{
-			Track = encodedTrack.HasValue || identifier.HasValue
-				? new LavalinkRestPlayerUpdatePlayerTrackPayload()
+			Track = encodedTrack.HasValue
+				? new PlayerWithEncoded
 				{
-					Encoded = encodedTrack,
-					Identifier = identifier,
-					UserData = userData
+					Encoded = encodedTrack.Value,
+					UserData = userData.HasValue ? userData.Value : null
 				}
-				: Optional.None,
+				: identifier.HasValue
+					? new PlayerWithIdentifier
+					{
+						Identifier = identifier.Value,
+						UserData = userData.HasValue ? userData.Value : null
+					}
+					: Optional<PlayerBase>.None,
 			Position = position,
 			EndTime = endTime,
 			Volume = volume,
