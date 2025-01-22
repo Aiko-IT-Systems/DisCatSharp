@@ -152,7 +152,7 @@ internal sealed class LavalinkRestClient
 		if (!response.IsSuccessStatusCode)
 		{
 			var data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-			var ex = LavalinkJson.DeserializeObject<LavalinkRestException>(data)!;
+			var ex = LavalinkJson.DeserializeObject<LavalinkRestException?>(data) ?? new LavalinkRestException();
 			ex.Headers = response.Headers;
 			ex.Json = data;
 			this.Discord.Logger.LogError(LavalinkEvents.LavalinkRestError, ex, "Lavalink rest encountered an exception: {data}", data);
