@@ -95,10 +95,14 @@ items:
                         uid: modules_audio_lavalink_v4_intro
                       - name: Setup
                         uid: modules_audio_lavalink_v4_setup
+                      - name: Docker
+                        uid: modules_audio_lavalink_v4_docker
                       - name: Configuration
                         uid: modules_audio_lavalink_v4_configuration
                       - name: Commands
                         uid: modules_audio_lavalink_v4_commands
+                      - name: Queue System
+                        uid: modules_audio_lavalink_v4_queue_system
                       - name: Advanced
                         uid: modules_audio_lavalink_v4_advanced
                 - name: VoiceNext

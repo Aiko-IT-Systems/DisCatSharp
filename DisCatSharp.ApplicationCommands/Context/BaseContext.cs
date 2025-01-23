@@ -160,6 +160,14 @@ public class BaseContext : DisCatSharpCommandContext
 		=> this.Interaction.EditOriginalResponseAsync(builder);
 
 	/// <summary>
+	///     Edits the interaction response.
+	/// </summary>
+	/// <param name="content">The content to edit the response with.</param>
+	/// <returns></returns>
+	public Task<DiscordMessage> EditResponseAsync(string content)
+		=> this.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent(content));
+
+	/// <summary>
 	///     Deletes the interaction response.
 	/// </summary>
 	/// <returns></returns>

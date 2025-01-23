@@ -152,7 +152,7 @@ internal sealed class LavalinkRestClient
 		if (!response.IsSuccessStatusCode)
 		{
 			var data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-			var ex = LavalinkJson.DeserializeObject<LavalinkRestException>(data)!;
+			var ex = LavalinkJson.DeserializeObject<LavalinkRestException?>(data) ?? new LavalinkRestException();
 			ex.Headers = response.Headers;
 			ex.Json = data;
 			this.Discord.Logger.LogError(LavalinkEvents.LavalinkRestError, ex, "Lavalink rest encountered an exception: {data}", data);
@@ -297,6 +297,7 @@ internal sealed class LavalinkRestClient
 	/// <param name="volume">The volume.</param>
 	/// <param name="paused">Whether to pause the track.</param>
 	/// <param name="filters">The filters.</param>
+	/// <param name="userData">The user data.</param>
 	/// <returns>The updated <see cref="LavalinkPlayer" /> object.</returns>
 	internal async Task<LavalinkPlayer> UpdatePlayerAsync(
 		string sessionId,
@@ -308,15 +309,27 @@ internal sealed class LavalinkRestClient
 		Optional<int?> endTime = default,
 		Optional<int> volume = default,
 		Optional<bool> paused = default,
-		Optional<LavalinkFilters> filters = default
+		Optional<LavalinkFilters> filters = default,
+		Optional<object> userData = default
 	)
 	{
 		var queryDict = this.GetDefaultParams();
 		queryDict.Add("noReplace", noReplace.ToString().ToLower());
 		var pld = new LavalinkRestPlayerUpdatePayload(guildId.ToString())
 		{
-			EncodedTrack = encodedTrack,
-			Identifier = identifier,
+			Track = encodedTrack.HasValue
+				? new PlayerWithEncoded
+				{
+					Encoded = encodedTrack.Value,
+					UserData = userData.HasValue ? userData.Value : null
+				}
+				: identifier.HasValue
+					? new PlayerWithIdentifier
+					{
+						Identifier = identifier.Value,
+						UserData = userData.HasValue ? userData.Value : null
+					}
+					: Optional<PlayerBase>.None,
 			Position = position,
 			EndTime = endTime,
 			Volume = volume,

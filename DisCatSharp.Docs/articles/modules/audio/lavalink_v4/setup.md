@@ -8,14 +8,14 @@ author: DisCatSharp Team
 
 ## Configuring Java
 
-In order to run Lavalink, you must have Java 17 or greater installed. For more details check the [requirements](https://github.com/lavalink-devs/Lavalink/tree/dev#requirements) before downloading.
+In order to run Lavalink, you must have Java 17 or greater installed. For more details check the [requirements](https://github.com/lavalink-devs/Lavalink/tree/master?tab=readme-ov-file#requirements) before downloading.
 The latest v17 releases can be found [here](https://www.oracle.com/java/technologies/downloads/#java17).
 
 Make sure the location of the newest JRE's bin folder is added to your system variable's path. This will make the `java` command run from the latest runtime. You can verify that you have the right version by entering `java -version` in your command prompt or terminal.
 
 ## Downloading Lavalink
 
-Download the Lavalink V4 server from the [GitHub](https://github.com/lavalink-devs/Lavalink/releases/tag/4.0.0).
+Download the Lavalink V4 server from the [GitHub](https://github.com/lavalink-devs/Lavalink/releases).
 
 To use the Lavalink server, you need to configure it first.
 
@@ -25,37 +25,108 @@ Create a new YAML file called `application.yml`, and use the [example file](http
 > For YouTube Support, see the sections `plugins -> youtube` and `lavalink -> plugins` in the config.
 
 ```yaml
-server: # REST and WS server
+server:
   port: 2333
-  address: 0.0.0.0
-plugins: # Uncomment the youtube config if you enabled the youtube plugin down below.
-#  youtube:
-#    enabled: true # Whether this source can be used.
-#    allowSearch: true # Whether "ytsearch:" and "ytmsearch:" can be used.
-#    allowDirectVideoIds: true # Whether just video IDs can match. If false, only complete URLs will be loaded.
-#    allowDirectPlaylistIds: true # Whether just playlist IDs can match. If false, only complete URLs will be loaded.
-#    # The clients to use for track loading. See below for a list of valid clients.
-#    # Clients are queried in the order they are given (so the first client is queried first and so on...)
-#    clients:
-#      - MUSIC
-#      - ANDROID_TESTSUITE
-#      - WEB
-#      - TVHTML5EMBEDDED
+  address: 127.0.0.1 # Set it to 0.0.0.0 if you run it in docker or if you want to share it
+  http2:
+    enabled: false # Personally we don't see any reason currently to enable it
+plugins:
+  youtube: # To read more about it's configuration visit https://github.com/lavalink-devs/youtube-source#plugin
+    enabled: true
+    allowSearch: true
+    allowDirectVideoIds: true
+    allowDirectPlaylistIds: true
+    clients: # We suggest using it like this, since it switches through the clients to get streams and search running
+      - M_WEB
+      - WEB
+      - MUSIC
+      - WEBEMBEDDED
+      - ANDROID_VR
+      - TV
+      - TVHTML5EMBEDDED
+    oauth: # Read https://github.com/lavalink-devs/youtube-source?tab=readme-ov-file#using-oauth-tokens for more information
+      enabled: true
+      skipInitialization: false # Set to true if you got your refresh token
+      # refreshToken: "" # Fill out after u got the refresh token
+    pot: # Read https://github.com/lavalink-devs/youtube-source?tab=readme-ov-file#using-a-potoken for more information or use this one
+      token: "CgtLYnJKeDl1N0pJMCjW2cO8BjIKCgJERRIEEgAgKg=="
+      visitorData: "MnRuJyEtJOv8LW4fImJbwY4qXcflEPdSWXwKWnQappnJt4Ee_3bFCJEUmiePXV3jvyjxMuT8pE3j-ZKoLtF-bIjo7-erKATkj38QRYgrGRsEHDC97Qk9a-tcYdXpmMQt2h6A1S325QgSsRfbfjBfBTeDq_oZBA=="
+  lavasrc: # To read more about it's configuration visit https://github.com/topi314/LavaSrc?tab=readme-ov-file
+    providers:
+      - "ytsearch:\"%ISRC%\""
+      - "ytsearch:%QUERY%"
+      - "scsearch:%QUERY%"
+      - "spsearch:%QUERY%"
+      - "sprec:%QUERY%"
+      - "ymsearch:%QUERY%"
+      #- "amsearch:%QUERY%"
+      #- "dzisrc:%ISRC%"
+      #- "dzsearch:%QUERY%"
+      - "ymsearch:%QUERY%"
+    sources:
+      spotify: true
+      applemusic: false
+      deezer: false
+      yandexmusic: true
+      flowerytts: true
+      vkmusic: false
+      youtube: true
+    lyrics-sources:
+      spotify: true
+      deezer: false
+      youtube: true
+      yandexmusic: true
+      vkmusic: false
+    spotify:
+        clientId: "" # Aquire it by visiting https://developer.spotify.com/dashboard/create
+        clientSecret: "" # Aquire it by visiting https://developer.spotify.com/dashboard/create
+        spDc: "" # Needed for lyrics, if used. Read https://github.com/topi314/LavaSrc?tab=readme-ov-file#spotify for more details.
+        playlistLoadLimit: 6
+        albumLoadLimit: 6
+        resolveArtistsInSearch: false
+        localFiles: true
+    yandexmusic:
+      accessToken: "" # Aquire it by visiting https://oauth.yandex.ru/authorize?response_type=token&client_id=23cabbbdc6cd418abb4b39c32c41195d
+      playlistLoadLimit: 1
+      albumLoadLimit: 1
+      artistLoadLimit: 1
+    flowerytts:
+      voice: "default voice"
+      translate: false
+      silence: 0
+      speed: 1.0
+      audioFormat: "mp3"
+  lavalyrics: # To read more about it's configuration visit https://github.com/topi314/LavaLyrics?tab=readme-ov-file#lavalink-usage
+    sources:
+      - spotify
+      - youtube
+      #- deezer
+      - yandexMusic
 lavalink:
-  plugins: # Uncomment this plugin for youtube support. Replace VERSION with the latest version from here: https://github.com/lavalink-devs/youtube-source/releases
-#    - dependency: "dev.lavalink.youtube:youtube-plugin:VERSION"
-#      repository: "https://jitpack.io"
+  plugins: # You can find more plugins on Lavalinks official site at https://lavalink.dev/plugins
+    - dependency: "dev.lavalink.youtube:youtube-plugin:1.11.3" # Source: https://github.com/lavalink-devs/youtube-source
+      snapshot: false
+    - dependency: "com.github.topi314.lavasearch:lavasearch-plugin:1.0.0" # Source: https://github.com/topi314/LavaSearch
+      repository: "https://maven.lavalink.dev/releases"
+      snapshot: false
+    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.3.0" # Source: https://github.com/topi314/LavaSrc
+      repository: "https://maven.lavalink.dev/releases"
+      snapshot: false
+    - dependency: "com.github.topi314.lavalyrics:lavalyrics-plugin" # Source: https://github.com/topi314/LavaLyrics
+      repository: "https://maven.lavalink.dev/releases"
+      snapshot: false
   server:
-    password: "youshallnotpass"
-    sources: 
-      youtube: false # Keep this at false, for youtube support see the plugins section above.
+    password: "youshallnotpassMEOW" # Set your lavalink password
+    sources:
+      youtube: false # Disabled youtube because it's not maintained anymore and got replaced by youtube-plugin
       bandcamp: true
       soundcloud: true
       twitch: true
       vimeo: true
       http: true
-      local: false
-    filters: # All filters are enabled by default
+      local: true
+      nico: true
+    filters:
       volume: true
       equalizer: true
       karaoke: true
@@ -66,28 +137,17 @@ lavalink:
       rotation: true
       channelMix: true
       lowPass: true
-    bufferDurationMs: 400 # The duration of the NAS buffer. Higher values fare better against longer GC pauses. Duration <= 0 to disable JDA-NAS. Minimum of 40ms, lower values may introduce pauses.
-    frameBufferDurationMs: 5000 # How many milliseconds of audio to keep buffered
-    opusEncodingQuality: 10 # Opus encoder quality. Valid values range from 0 to 10, where 10 is best quality but is the most expensive on the CPU.
-    resamplingQuality: LOW # Quality of resampling operations. Valid values are LOW, MEDIUM and HIGH, where HIGH uses the most CPU.
-    trackStuckThresholdMs: 10000 # The threshold for how long a track can be stuck. A track is stuck if does not return any audio data.
-    useSeekGhosting: true # Seek ghosting is the effect where whilst a seek is in progress, the audio buffer is read from until empty, or until seek is ready.
-    youtubePlaylistLoadLimit: 6 # Number of pages at 100 each
-    playerUpdateInterval: 5 # How frequently to send player updates to clients, in seconds
+    bufferDurationMs: 400
+    frameBufferDurationMs: 5000
+    opusEncodingQuality: 10
+    resamplingQuality: MEDIUM
+    trackStuckThresholdMs: 10000
+    useSeekGhosting: true
+    youtubePlaylistLoadLimit: 6
+    playerUpdateInterval: 5
     youtubeSearchEnabled: true
     soundcloudSearchEnabled: true
     gc-warnings: true
-    #ratelimit:
-      #ipBlocks: ["1.0.0.0/8", "..."] # list of ip blocks
-      #excludedIps: ["...", "..."] # ips which should be explicit excluded from usage by lavalink
-      #strategy: "RotateOnBan" # RotateOnBan | LoadBalance | NanoSwitch | RotatingNanoSwitch
-      #searchTriggersFail: true # Whether a search 429 should trigger marking the ip as failing
-      #retryLimit: -1 # -1 = use default lavaplayer value | 0 = infinity | >0 = retry will happen this numbers times
-    #httpConfig: # Useful for blocking bad-actors from ip-grabbing your music node and attacking it, this way only the http proxy will be attacked
-      #proxyHost: "localhost" # Hostname of the proxy, (ip or domain)
-      #proxyPort: 3128 # Proxy port, 3128 is the default for squidProxy
-      #proxyUser: "" # Optional user for basic authentication fields, leave blank if you don't use basic auth
-      #proxyPassword: "" # Password for basic authentication
 
 metrics:
   prometheus:
@@ -96,11 +156,7 @@ metrics:
 
 sentry:
   dsn: ""
-  environment: ""
-#  tags:
-#    some_key: some_value
-#    another_key: another_value
-
+  environment: "dev"
 logging:
   file:
     path: ./logs/
@@ -108,6 +164,7 @@ logging:
   level:
     root: INFO
     lavalink: INFO
+    dev.lavalink.youtube.http.YoutubeOauth2Handler: INFO
 
   request:
     enabled: true
@@ -146,13 +203,18 @@ Once there, type `java -jar Lavalink.jar`. You should start seeing log output fr
 
 If everything is configured properly, you should see this appear somewhere in the log output without any errors:
 ```yml
-2023-06-25 06:56:56.474  INFO 35056 --- [           main] lavalink.server.Launcher                 : Starting Launcher using Java 11.0.16.1 on AITSYS with PID 35056 (H:\Lavalink.jar started by Lulalaby in H:\)
-2023-06-25 06:56:56.514  INFO 35056 --- [           main] lavalink.server.Launcher                 : No active profile set, falling back to 1 default profile: "default"
-2023-06-25 06:56:58.946  INFO 35056 --- [           main] lavalink.server.bootstrap.PluginManager  : Found plugin 'lavasrc' version c9aac26
-2023-06-25 06:56:59.025  INFO 35056 --- [           main] lavalink.server.bootstrap.PluginManager  : Loaded lavasrc-plugin-c9aac26.jar (29 classes)
-2023-06-25 06:56:59.426  INFO 35056 --- [           main] lavalink.server.Launcher                 : Started Launcher in 5.012 seconds (JVM running for 6.469)
-2023-06-25 06:56:59.431  INFO 35056 --- [           main] lavalink.server.Launcher                 : You can safely ignore the big red warning about illegal reflection. See https://github.com/lavalink-devs/Lavalink/issues/295
-2023-06-25 06:56:59.568  INFO 35056 --- [           main] lavalink.server.Launcher                 :
+INFO 1 --- [Lavalink] [           main] lavalink.server.Launcher                 : Starting Launcher v4.0.8 using Java 18.0.2.1 with PID 1 (/opt/Lavalink/Lavalink.jar started by lavalink in /opt/Lavalink)
+INFO 1 --- [Lavalink] [           main] lavalink.server.Launcher                 : No active profile set, falling back to 1 default profile: "default"
+INFO 1 --- [Lavalink] [           main] l.server.bootstrap.PluginManager         : Found plugin 'lavasearch-plugin' version 1.0.0
+INFO 1 --- [Lavalink] [           main] l.server.bootstrap.PluginManager         : Found plugin 'lavasrc-plugin' version 4.3.0
+INFO 1 --- [Lavalink] [           main] l.server.bootstrap.PluginManager         : Found plugin 'sponsorblock-plugin' version 3.0.0
+INFO 1 --- [Lavalink] [           main] l.server.bootstrap.PluginManager         : Found plugin 'youtube-plugin' version 1.11.3
+INFO 1 --- [Lavalink] [           main] l.server.bootstrap.PluginManager         : Loaded lavasearch-plugin-1.0.0.jar (20 classes)
+INFO 1 --- [Lavalink] [           main] l.server.bootstrap.PluginManager         : Loaded lavasrc-plugin-4.3.0.jar (168 classes)
+INFO 1 --- [Lavalink] [           main] l.server.bootstrap.PluginManager         : Loaded sponsorblock-plugin-3.0.0.jar (90 classes)
+INFO 1 --- [Lavalink] [           main] l.server.bootstrap.PluginManager         : Loaded youtube-plugin-1.11.3.jar (16 classes)
+INFO 1 --- [Lavalink] [           main] lavalink.server.Launcher                 : Started Launcher in 2.194 seconds (process running for 2.752)
+INFO 1 --- [Lavalink] [           main] lavalink.server.Launcher                 :
 
        .   _                  _ _       _    __ _ _
       /\\ | | __ ___   ____ _| (_)_ __ | | __\ \ \ \
@@ -161,14 +223,59 @@ If everything is configured properly, you should see this appear somewhere in th
        '  |_|\__,_| \_/ \__,_|_|_|_| |_|_|\_\ / / / /
     =========================================/_/_/_/
 
-        Version:        6f62e585df6f177eb8bf8dfe965ddae4838a1e7b-SNAPSHOT
-        Build time:     26.05.2023 12:21:23 UTC
-        Branch          v4
-        Commit:         6f62e58
-        Commit time:    26.05.2023 12:20:13 UTC
-        JVM:            11.0.16.1
-        Lavaplayer      1.4.1
+        Version:        4.0.8
+        Build time:     20.09.2024 20:20:10 UTC
+        Branch          HEAD
+        Commit:         2946608
+        Commit time:    20.09.2024 20:17:58 UTC
+        JVM:            18.0.2.1
+        Lavaplayer      2.2.2
 
+INFO 1 --- [Lavalink] [           main] lavalink.server.Launcher                 : No active profile set, falling back to 1 default profile: "default"
+WARN 1 --- [Lavalink] [           main] io.undertow.websockets.jsr               : UT026010: Buffer pool was not set on WebSocketDeploymentInfo, the default pool will be used
+INFO 1 --- [Lavalink] [           main] io.undertow.servlet                      : Initializing Spring embedded WebApplicationContext
+INFO 1 --- [Lavalink] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 712 ms
+INFO 1 --- [Lavalink] [           main] c.g.t.lavasrc.plugin.LavaSrcPlugin       : Loading LavaSrc plugin...
+INFO 1 --- [Lavalink] [           main] c.g.t.lavasrc.plugin.LavaSrcPlugin       : Registering Youtube Source audio source manager...
+INFO 1 --- [Lavalink] [           main] c.g.t.lavasrc.plugin.LavaSrcPlugin       : Registering Spotify search manager...
+INFO 1 --- [Lavalink] [           main] c.g.t.lavasrc.plugin.LavaSrcPlugin       : Registering Youtube search manager...
+INFO 1 --- [Lavalink] [           main] c.g.t.lavasrc.plugin.LavaSrcPlugin       : Registering Yandex Music search manager...
+INFO 1 --- [Lavalink] [           main] c.s.d.l.tools.GarbageCollectionMonitor   : GC monitoring enabled, reporting results every 2 minutes.
+INFO 1 --- [Lavalink] [           main] c.g.t.lavasrc.plugin.LavaSrcPlugin       : Registering Spotify audio source manager...
+INFO 1 --- [Lavalink] [           main] c.g.t.lavasrc.plugin.LavaSrcPlugin       : Registering Yandex Music audio source manager...
+INFO 1 --- [Lavalink] [           main] c.g.t.lavasrc.plugin.LavaSrcPlugin       : Registering Flowery TTS audio source manager...
+2025-01-22T14:52:24.055Z  WARN 1 --- [Lavalink] [           main] d.l.youtube.plugin.ClientProvider        : Failed to resolve M_WEB into a Client
+INFO 1 --- [Lavalink] [           main] d.l.youtube.plugin.YoutubePluginLoader   : YouTube source initialised with clients: WEB, WEB_REMIX, WEB_EMBEDDED_PLAYER, ANDROID_VR, TVHTML5, TVHTML5_SIMPLY_EMBEDDED_PLAYER
+INFO 1 --- [Lavalink] [           main] d.l.youtube.http.YoutubeOauth2Handler    : ==================================================
+INFO 1 --- [Lavalink] [           main] d.l.youtube.http.YoutubeOauth2Handler    : !!! DO NOT AUTHORISE WITH YOUR MAIN ACCOUNT, USE A BURNER !!!
+INFO 1 --- [Lavalink] [           main] d.l.youtube.http.YoutubeOauth2Handler    : OAUTH INTEGRATION: To give youtube-source access to your account, go to https://www.google.com/device and enter code <redacted>
+INFO 1 --- [Lavalink] [           main] d.l.youtube.http.YoutubeOauth2Handler    : !!! DO NOT AUTHORISE WITH YOUR MAIN ACCOUNT, USE A BURNER !!!
+INFO 1 --- [Lavalink] [           main] d.l.youtube.http.YoutubeOauth2Handler    : ==================================================
+Picked up _JAVA_OPTIONS: -Xmx6G
+INFO 1 --- [Lavalink] [           main] c.g.t.s.plugin.SponsorBlockPlugin        : Loading SponsorBlock Plugin...
+INFO 1 --- [Lavalink] [           main] l.server.config.KoeConfiguration         : OS: LINUX, Arch: X86_64
+INFO 1 --- [Lavalink] [           main] l.server.config.KoeConfiguration         : Enabling JDA-NAS
+INFO 1 --- [Lavalink] [           main] c.s.l.c.natives.NativeLibraryLoader      : Native library udpqueue: loading with filter null
+INFO 1 --- [Lavalink] [           main] c.s.l.c.natives.NativeLibraryLoader      : Native library udpqueue: successfully loaded.
+2025-01-22T14:52:24.541Z  WARN 1 --- [Lavalink] [           main] l.server.config.SentryConfiguration      : Turning off sentry
+INFO 1 --- [Lavalink] [           main] io.undertow                              : starting server: Undertow - 2.3.13.Final
+INFO 1 --- [Lavalink] [           main] org.xnio                                 : XNIO version 3.8.8.Final
+INFO 1 --- [Lavalink] [           main] org.xnio.nio                             : XNIO NIO Implementation Version 3.8.8.Final
+INFO 1 --- [Lavalink] [           main] org.jboss.threads                        : JBoss Threads version 3.5.0.Final
+INFO 1 --- [Lavalink] [           main] o.s.b.w.e.undertow.UndertowWebServer     : Undertow started on port 2333 (http) with context path '/'
+INFO 1 --- [Lavalink] [           main] lavalink.server.Launcher                 : Started Launcher in 3.43 seconds (process running for 6.19)
+INFO 1 --- [Lavalink] [           main] lavalink.server.Launcher                 : Lavalink is ready to accept connections.
 ```
 
 If it does, congratulations. We are now ready to interact with it using DisCatSharp.
+
+## YouTube OAuth Token
+
+If you configured OAuth correctly, you should see the following in your logs:
+```yml
+INFO 1 --- [Lavalink] [           main] d.l.youtube.http.YoutubeOauth2Handler    : ==================================================
+INFO 1 --- [Lavalink] [           main] d.l.youtube.http.YoutubeOauth2Handler    : !!! DO NOT AUTHORISE WITH YOUR MAIN ACCOUNT, USE A BURNER !!!
+INFO 1 --- [Lavalink] [           main] d.l.youtube.http.YoutubeOauth2Handler    : OAUTH INTEGRATION: To give youtube-source access to your account, go to https://www.google.com/device and enter code XXX-XXX-XXX
+INFO 1 --- [Lavalink] [           main] d.l.youtube.http.YoutubeOauth2Handler    : !!! DO NOT AUTHORISE WITH YOUR MAIN ACCOUNT, USE A BURNER !!!
+INFO 1 --- [Lavalink] [           main] d.l.youtube.http.YoutubeOauth2Handler    : ==================================================
+```

@@ -2,6 +2,7 @@ using System;
 using System.Net;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Lavalink.Entities;
 using DisCatSharp.Net;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -49,6 +50,7 @@ public sealed class LavalinkConfiguration
 		this.EnableBuiltInQueueSystem = other.EnableBuiltInQueueSystem;
 		this.DefaultVolume = other.DefaultVolume;
 		this.EnableTrace = other.EnableTrace;
+		this.QueueEntryFactory = other.QueueEntryFactory;
 	}
 
 	/// <summary>
@@ -114,13 +116,31 @@ public sealed class LavalinkConfiguration
 	///         <see cref="LavalinkExtension.GetIdealSession(DiscordVoiceRegion)" />.
 	///     </para>
 	/// </summary>
-	public DiscordVoiceRegion Region { internal get; set; }
+	public DiscordVoiceRegion? Region { internal get; set; }
 
 	/// <summary>
 	///     Sets whether the built in queue system should be used.
 	///     <para>Defaults to <see langword="false" />.</para>
 	/// </summary>
 	public bool EnableBuiltInQueueSystem { internal get; set; } = false;
+
+	/// <summary>
+	///     Sets a factory function that creates queue entry objects.
+	///     This allows you to customize the type of queue entry used by the LavalinkGuildPlayer when
+	///     <see cref="EnableBuiltInQueueSystem" /> is <see langword="true" />.
+	///     If set to <see langword="null" />, the default queue entry type (<see cref="DefaultQueueEntry" />) will be used.
+	/// </summary>
+	public Func<IQueueEntry>? QueueEntryFactory { get; set; }
+
+	/// <summary>
+	///     Gets a new instance of a queue entry object.
+	///     The type of the object is determined by the <see cref="QueueEntryFactory" />.
+	///     If <see cref="QueueEntryFactory" /> is <see langword="null" />, a <see cref="DefaultQueueEntry" /> instance is
+	///     returned.
+	///     This property is only used when <see cref="EnableBuiltInQueueSystem" /> is set to <see langword="true" />.
+	/// </summary>
+	public IQueueEntry QueueEntry
+		=> (this.QueueEntryFactory ?? (() => new DefaultQueueEntry()))();
 
 	/// <summary>
 	///     Sets whether trace should be enabled for more detailed error responses.
