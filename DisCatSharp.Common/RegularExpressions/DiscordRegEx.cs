@@ -61,6 +61,6 @@ public static partial class DiscordRegEx
 	[GeneratedRegex(@"(?:https?:\/\/)?(www\.|canary\.|ptb\.|staging\.)?(discord|discordapp)(\.com|\.co)\/api\/(?:v\d\/)?webhooks\/(?<id>\d+)\/(?<token>[A-Za-z0-9_\-]+)", RegexOptions.Compiled | RegexOptions.ECMAScript)]
 	public static partial Regex WebhookRegex();
 
-	[GeneratedRegex("^<sound:(?<id>(\\d+))>$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
-	public static partial Regex SoundRegex();
+	[GeneratedRegex(@"^<sound:(?<guild_id>\\d+):(?<sound_id>\\d+)>$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
+    public static partial Regex SoundRegex();
 }
