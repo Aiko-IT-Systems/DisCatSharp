@@ -27,7 +27,7 @@ Create a new YAML file called `application.yml`, and use the [example file](http
 ```yaml
 server:
   port: 2333
-  address: 127.0.0.1 # Set it to 0.0.0.0 if you run it in docker or want to share it
+  address: 127.0.0.1 # Set it to 0.0.0.0 if you run it in docker or if you want to share it
   http2:
     enabled: false # Personally we don't see any reason currently to enable it
 plugins:
