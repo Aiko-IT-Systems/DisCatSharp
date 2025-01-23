@@ -112,9 +112,6 @@ lavalink:
     - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.3.0" # Source: https://github.com/topi314/LavaSrc
       repository: "https://maven.lavalink.dev/releases"
       snapshot: false
-    - dependency: "com.github.topi314.sponsorblock:sponsorblock-plugin:3.0.0" # Source: https://github.com/topi314/SponsorBlock-Plugin
-      repository: "https://maven.lavalink.dev/releases"
-      snapshot: false
     - dependency: "com.github.topi314.lavalyrics:lavalyrics-plugin" # Source: https://github.com/topi314/LavaLyrics
       repository: "https://maven.lavalink.dev/releases"
       snapshot: false
