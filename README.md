@@ -120,6 +120,14 @@ Either join our official support guild at https://discord.gg/2HWta4GXus, open an
 | DisCatSharp.Common           | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square)           | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)           |
 | DisCatSharp.Analyzer.Roselyn | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Analyzer.Roselyn.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Analyzer.Roselyn.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
 
+### [Extensions](https://github.com/Aiko-IT-Systems/DisCatSharp.Extensions)
+
+| Package                                    | Stable                                                                                                                      | Nightly                                                                                                                                        |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| DisCatSharp.Extensions.TwoFactorCommands   | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Extensions.TwoFactorCommands.svg?label=&logo=nuget&style=flat-square)   | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Extensions.TwoFactorCommands.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)   |
+| DisCatSharp.Extensions.OAuth2Web           | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Extensions.OAuth2Web.svg?label=&logo=nuget&style=flat-square)           | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Extensions.OAuth2Web.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)           |
+| DisCatSharp.Extensions.SimpleMusicCommands | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Extensions.SimpleMusicCommands.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Extensions.SimpleMusicCommands.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
+
 
 ----
 
