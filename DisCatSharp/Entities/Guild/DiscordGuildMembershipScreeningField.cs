@@ -9,7 +9,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///     Represents a field in a guild's membership screening form
 /// </summary>
-public sealed class DiscordGuildMembershipScreeningField : ObservableApiObject
+public class DiscordGuildMembershipScreeningField : ObservableApiObject
 {
 	/// <summary>
 	///     Initializes a new instance of the <see cref="DiscordGuildMembershipScreeningField" /> class.
