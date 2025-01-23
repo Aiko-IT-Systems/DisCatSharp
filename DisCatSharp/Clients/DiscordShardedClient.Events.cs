@@ -802,6 +802,49 @@ public sealed partial class DiscordShardedClient
 
 #endregion
 
+#region Guild Member Application
+
+	/// <summary>
+	///     Fired when a guild join request is created.
+	///     For this Event you need the <see cref="DiscordIntents.GuildExpressions" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildJoinRequestCreateEventArgs> GuildJoinRequestCreated
+	{
+		add => this._guildJoinRequestCreated.Register(value);
+		remove => this._guildJoinRequestCreated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildJoinRequestCreateEventArgs> _guildJoinRequestCreated;
+
+	/// <summary>
+	///     Fired when a guild join request is updated.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildJoinRequestUpdateEventArgs> GuildJoinRequestUpdated
+	{
+		add => this._guildJoinRequestUpdated.Register(value);
+		remove => this._guildJoinRequestUpdated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildJoinRequestUpdateEventArgs> _guildJoinRequestUpdated;
+
+	/// <summary>
+	///     Fired when a guild join request is deleted.
+	///     For this Event you need the <see cref="DiscordIntents.Guilds" /> intent specified in
+	///     <seealso cref="DiscordConfiguration.Intents" />
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, GuildJoinRequestDeleteEventArgs> GuildJoinRequestDeleted
+	{
+		add => this._guildJoinRequestDeleted.Register(value);
+		remove => this._guildJoinRequestDeleted.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, GuildJoinRequestDeleteEventArgs> _guildJoinRequestDeleted;
+
+#endregion
+
 #region Message Reaction
 
 	/// <summary>
@@ -2130,6 +2173,30 @@ public sealed partial class DiscordShardedClient
 	/// <param name="e">The event args.</param>
 	private Task Client_SoundboardSounds(DiscordClient client, SoundboardSoundsEventArgs e)
 		=> this._soundboardSounds.InvokeAsync(client, e);
+
+	/// <summary>
+	///     Handles the guild join request created event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_GuildJoinRequestCreated(DiscordClient client, GuildJoinRequestCreateEventArgs e)
+		=> this._guildJoinRequestCreated.InvokeAsync(client, e);
+
+	/// <summary>
+	///     Handles the guild join request updated event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_GuildJoinRequestUpdated(DiscordClient client, GuildJoinRequestUpdateEventArgs e)
+		=> this._guildJoinRequestUpdated.InvokeAsync(client, e);
+
+	/// <summary>
+	///     Handles the guild join request deleted event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_GuildJoinRequestDeleted(DiscordClient client, GuildJoinRequestDeleteEventArgs e)
+		=> this._guildJoinRequestDeleted.InvokeAsync(client, e);
 
 
 #endregion

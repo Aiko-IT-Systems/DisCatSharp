@@ -229,6 +229,15 @@ public enum MessageType
 	/// <summary>
 	///     Message indicating a gifting prompt.
 	/// </summary>
+	GiftingPrompt = 50,
 
-	GiftingPrompt = 50
+	/// <summary>
+	///     Message indicating a guild join request was accepted.
+	/// </summary>
+	GuildJoinRequestAccepted = 52,
+
+	/// <summary>
+	///     Message indicating a guild join request was rejected.
+	/// </summary>
+	GuildJoinRequestRejected = 53
 }
