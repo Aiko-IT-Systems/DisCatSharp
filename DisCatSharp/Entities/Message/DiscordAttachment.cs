@@ -119,15 +119,15 @@ public class DiscordAttachment : NullableSnowflakeObject
 	/// <summary>
 	///     Gets the clip participant, if applicable.
 	/// </summary>
-	[JsonProperty("clip_participants", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<TransportUser>? ClipParticipantsInternal { get; set; }
+	[JsonIgnore]
+	public List<DiscordUser>? ClipParticipants
+		=> this.ClipParticipantsInternal?.Select(part => new DiscordUser(part)).ToList();
 
 	/// <summary>
 	///     Gets the clip participant, if applicable.
 	/// </summary>
 	[JsonProperty("clip_participants", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordUser>? ClipParticipants
-		=> this.ClipParticipantsInternal?.Select(part => new DiscordUser(part)).ToList();
+	internal List<TransportUser>? ClipParticipantsInternal { get; set; }
 
 	/// <summary>
 	///     Gets the clip's creation timestamp.
@@ -145,15 +145,15 @@ public class DiscordAttachment : NullableSnowflakeObject
 	/// <summary>
 	///     Gets the clip application, if applicable and recognized.
 	/// </summary>
-	[JsonProperty("clip_participants", NullValueHandling = NullValueHandling.Ignore)]
-	internal TransportApplication? ApplicationInternal { get; set; }
+	[JsonIgnore]
+	public DiscordApplication? Application
+		=> this.ApplicationInternal is not null ? new DiscordApplication(this.ApplicationInternal) : null;
 
 	/// <summary>
 	///     Gets the clip application, if applicable and recognized.
 	/// </summary>
-	[JsonProperty("clip_participants", NullValueHandling = NullValueHandling.Ignore)]
-	internal DiscordApplication? Application
-		=> this.ApplicationInternal is not null ? new DiscordApplication(this.ApplicationInternal) : null;
+	[JsonProperty("application", NullValueHandling = NullValueHandling.Ignore)]
+	internal TransportApplication? ApplicationInternal { get; set; }
 
 	/// <summary>
 	///     Visualizes the <see cref="WaveForm" /> as image.
