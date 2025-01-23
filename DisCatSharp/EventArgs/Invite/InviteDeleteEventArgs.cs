@@ -24,7 +24,7 @@ public sealed class InviteDeleteEventArgs : DiscordEventArgs
 	/// <summary>
 	///     Gets the channel that the invite was for.
 	/// </summary>
-	public DiscordChannel Channel { get; internal set; }
+	public DiscordChannel? Channel { get; internal set; }
 
 	/// <summary>
 	///     Gets the deleted invite.

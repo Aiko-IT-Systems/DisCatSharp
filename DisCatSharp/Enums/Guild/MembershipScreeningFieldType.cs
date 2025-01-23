@@ -6,7 +6,7 @@ using Newtonsoft.Json.Converters;
 namespace DisCatSharp.Enums;
 
 /// <summary>
-///     Represents a membership screening field type
+///     Represents a membership screening field type.
 /// </summary>
 [JsonConverter(typeof(StringEnumConverter))]
 public enum MembershipScreeningFieldType

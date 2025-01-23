@@ -281,6 +281,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._guildSoundboardSoundDeleted = new("GUILD_SOUNDBOARD_SOUND_DELETED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildSoundboardSoundsUpdated = new("GUILD_SOUNDBOARD_SOUNDS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._soundboardSounds = new("SOUNDBOARD_SOUNDS", EventExecutionLimit, this.EventErrorHandler);
+		this._guildJoinRequestCreated = new("GUILD_JOIN_REQUEST_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildJoinRequestUpdated = new("GUILD_JOIN_REQUEST_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+		this._guildJoinRequestDeleted = new("GUILD_JOIN_REQUEST_DELETED", EventExecutionLimit, this.EventErrorHandler);
 
 		this.GuildsInternal.Clear();
 		this.EmojisInternal.Clear();

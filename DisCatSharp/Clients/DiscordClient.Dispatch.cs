@@ -69,6 +69,8 @@ public sealed partial class DiscordClient
 		DiscordEntitlement ent = default;
 		DiscordSubscription sub = default;
 		JToken rawMbr = default;
+		DiscordGuildJoinRequest joinRequest = default;
+		JoinRequestStatusType joinRequestStatusType = default;
 		var rawRefMsg = dat["referenced_message"]; // TODO: Can we remove this?
 
 #endregion
@@ -113,8 +115,8 @@ public sealed partial class DiscordClient
 
 			case "voice_channel_status_update":
 				cid = (ulong)dat["id"]!;
-				var status = (string?)dat["status"]!;
-				await this.OnVoiceChannelStatusUpdateAsync((ulong)dat["guild_id"], cid, status).ConfigureAwait(false);
+				var voiceChannelStatus = (string?)dat["status"]!;
+				await this.OnVoiceChannelStatusUpdateAsync((ulong)dat["guild_id"], cid, voiceChannelStatus).ConfigureAwait(false);
 				break;
 
 			case "channel_topic_update":
@@ -640,8 +642,22 @@ public sealed partial class DiscordClient
 				break;
 
 			case "guild_join_request_create":
+				gid = (ulong)dat["guild_id"]!;
+				joinRequestStatusType = Enum.TryParse<JoinRequestStatusType>((string)dat["status"]!, out var rcs) ? rcs : JoinRequestStatusType.Unknown;
+				joinRequest = DiscordJson.DeserializeObject<DiscordGuildJoinRequest>(dat["request"]!.ToString(), this);
+				await this.OnGuildJoinRequestCreateAsync(gid, joinRequestStatusType, joinRequest);
+				break;
 			case "guild_join_request_update":
-			case "guild_join_request_delete": // Deprecated
+				gid = (ulong)dat["guild_id"]!;
+				joinRequestStatusType = Enum.TryParse<JoinRequestStatusType>((string)dat["status"]!, out var rcu) ? rcu : JoinRequestStatusType.Unknown;
+				joinRequest = DiscordJson.DeserializeObject<DiscordGuildJoinRequest>(dat["request"]!.ToString(), this);
+				await this.OnGuildJoinRequestUpdateAsync(gid, joinRequestStatusType, joinRequest);
+				break;
+			case "guild_join_request_delete":
+				gid = (ulong)dat["guild_id"]!;
+				uid = (ulong)dat["user_id"]!;
+				var requestId = (ulong)dat["id"]!;
+				await this.OnGuildJoinRequestDeleteAsync(requestId, uid, gid);
 				break;
 
 			case "entitlement_create":
@@ -2423,11 +2439,13 @@ public sealed partial class DiscordClient
 	/// <param name="guildId">The guild id.</param>
 	internal async Task OnSoundboardSoundsEventAsync(List<DiscordSoundboardSound> sounds, ulong guildId)
 	{
-		var guild = this.Guilds.TryGetValue(guildId, out var cachedGuild) ? cachedGuild : new()
-		{
-			Id = guildId,
-			Discord = this
-		};
+		var guild = this.Guilds.TryGetValue(guildId, out var cachedGuild)
+			? cachedGuild
+			: new()
+			{
+				Id = guildId,
+				Discord = this
+			};
 
 		if (this.Guilds.ContainsKey(guildId))
 		{
@@ -2487,13 +2505,13 @@ public sealed partial class DiscordClient
 	/// <param name="dat">The raw invite.</param>
 	internal async Task OnInviteDeleteEventAsync(ulong channelId, ulong guildId, JToken dat)
 	{
-		var guild = this.InternalGetCachedGuild(guildId);
+		var guild = this.InternalGetCachedGuild(guildId)!;
 		var channel = this.InternalGetCachedChannel(channelId);
 
-		if (!guild.Invites.TryRemove(dat["code"].ToString(), out var invite))
+		if (!guild.Invites.TryRemove(dat["code"]!.ToString(), out var invite))
 		{
 			invite = dat.ToObject<DiscordInvite>();
-			invite.Discord = this;
+			invite!.Discord = this;
 		}
 
 		invite.IsRevoked = true;
@@ -2505,6 +2523,73 @@ public sealed partial class DiscordClient
 			Invite = invite
 		};
 		await this._inviteDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+
+#endregion
+
+#region Guild Member Application
+
+	/// <summary>
+	///     Handles the guild join request create event.
+	/// </summary>
+	internal async Task OnGuildJoinRequestCreateAsync(ulong guildId, JoinRequestStatusType statusType, DiscordGuildJoinRequest request)
+	{
+		var guild = this.InternalGetCachedGuild(guildId) ?? new()
+		{
+			Id = guildId,
+			Discord = this
+		};
+		var ea = new GuildJoinRequestCreateEventArgs(this.ServiceProvider)
+		{
+			Request = request,
+			User = request.User,
+			Status = statusType,
+			Guild = guild
+		};
+		await this._guildJoinRequestCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Handles the guild join request update event.
+	/// </summary>
+	internal async Task OnGuildJoinRequestUpdateAsync(ulong guildId, JoinRequestStatusType statusTyp, DiscordGuildJoinRequest request)
+	{
+		var guild = this.InternalGetCachedGuild(guildId) ?? new()
+		{
+			Id = guildId,
+			Discord = this
+		};
+		var ea = new GuildJoinRequestUpdateEventArgs(this.ServiceProvider)
+		{
+			Request = request,
+			User = request.User,
+			Status = statusTyp,
+			Guild = guild
+		};
+		await this._guildJoinRequestUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Handles the guild join request delete event.
+	/// </summary>
+	/// <param name="requestId">The request id.</param>
+	/// <param name="userId">The user id.</param>
+	/// <param name="guildId">The guild id.</param>
+	internal async Task OnGuildJoinRequestDeleteAsync(ulong requestId, ulong userId, ulong guildId)
+	{
+		var user = this.GetCachedOrEmptyUserInternal(userId);
+		var guild = this.InternalGetCachedGuild(guildId) ?? new()
+		{
+			Id = guildId,
+			Discord = this
+		};
+		var ea = new GuildJoinRequestDeleteEventArgs(this.ServiceProvider)
+		{
+			User = user,
+			Guild = guild,
+			RequestId = requestId
+		};
+		await this._guildJoinRequestDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
 #endregion

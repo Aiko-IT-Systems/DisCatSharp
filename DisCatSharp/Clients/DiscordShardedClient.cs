@@ -677,6 +677,9 @@ public sealed partial class DiscordShardedClient
 		this._guildSoundboardSoundDeleted = new("GUILD_SOUNDBOARD_SOUND_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildSoundboardSoundsUpdated = new("GUILD_SOUNDBOARD_SOUNDS_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._soundboardSounds = new("SOUNDBOARD_SOUNDS", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._guildJoinRequestCreated = new("GUILD_JOIN_REQUEST_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._guildJoinRequestUpdated = new("GUILD_JOIN_REQUEST_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._guildJoinRequestDeleted = new("GUILD_JOIN_REQUEST_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 	}
 
 	/// <summary>
@@ -783,6 +786,9 @@ public sealed partial class DiscordShardedClient
 		client.GuildSoundboardSoundDeleted += this.Client_SoundboardSoundDeleted;
 		client.GuildSoundboardSoundsUpdated += this.Client_SoundboardSoundsUpdated;
 		client.SoundboardSounds += this.Client_SoundboardSounds;
+		client.GuildJoinRequestCreated += this.Client_GuildJoinRequestCreated;
+		client.GuildJoinRequestUpdated += this.Client_GuildJoinRequestUpdated;
+		client.GuildJoinRequestDeleted += this.Client_GuildJoinRequestDeleted;
 	}
 
 	/// <summary>
@@ -889,6 +895,9 @@ public sealed partial class DiscordShardedClient
 		client.GuildSoundboardSoundDeleted -= this.Client_SoundboardSoundDeleted;
 		client.GuildSoundboardSoundsUpdated -= this.Client_SoundboardSoundsUpdated;
 		client.SoundboardSounds -= this.Client_SoundboardSounds;
+		client.GuildJoinRequestCreated -= this.Client_GuildJoinRequestCreated;
+		client.GuildJoinRequestUpdated -= this.Client_GuildJoinRequestUpdated;
+		client.GuildJoinRequestDeleted -= this.Client_GuildJoinRequestDeleted;
 	}
 
 	/// <summary>
