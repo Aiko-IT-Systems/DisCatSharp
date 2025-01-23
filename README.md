@@ -17,16 +17,20 @@
 ## New
 
 - .NET 9 Support
-- Partial support for role subscriptions
-- Partial support for burst reactions
+- Full support for role subscriptions
+- Full support for burst reactions
 - Support for getting voice states through Rest
 - Full support for scheduled events including recurrency rules
 - Support for voice channel effect send events
 - Full support for managing and **using** soundboard sounds
+- Full support for subscriptions and entitlements
+- New queue system for Lavalink
 
 ## Breaking
 
-- _None_
+- Small breaking change in `AttachmentFlags`: The flag values are now prefixed with `Is` to be in line with other flag names.
+- `AddMention(IMention mention)` => `WithAllowedMention(IMention allowedMention)`
+- `AddMentions(IEnumerable<IMention> mentions)` => `WithAllowedMentions(IEnumerable<IMention> allowedMentions)`
 
 ----
 
