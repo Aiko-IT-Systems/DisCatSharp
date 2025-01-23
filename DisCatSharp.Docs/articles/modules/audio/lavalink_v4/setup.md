@@ -244,20 +244,20 @@ INFO 1 --- [Lavalink] [           main] c.s.d.l.tools.GarbageCollectionMonitor  
 INFO 1 --- [Lavalink] [           main] c.g.t.lavasrc.plugin.LavaSrcPlugin       : Registering Spotify audio source manager...
 INFO 1 --- [Lavalink] [           main] c.g.t.lavasrc.plugin.LavaSrcPlugin       : Registering Yandex Music audio source manager...
 INFO 1 --- [Lavalink] [           main] c.g.t.lavasrc.plugin.LavaSrcPlugin       : Registering Flowery TTS audio source manager...
-2025-01-22T14:52:24.055Z  WARN 1 --- [Lavalink] [           main] d.l.youtube.plugin.ClientProvider        : Failed to resolve M_WEB into a Client
+WARN 1 --- [Lavalink] [           main] d.l.youtube.plugin.ClientProvider        : Failed to resolve M_WEB into a Client
 INFO 1 --- [Lavalink] [           main] d.l.youtube.plugin.YoutubePluginLoader   : YouTube source initialised with clients: WEB, WEB_REMIX, WEB_EMBEDDED_PLAYER, ANDROID_VR, TVHTML5, TVHTML5_SIMPLY_EMBEDDED_PLAYER
 INFO 1 --- [Lavalink] [           main] d.l.youtube.http.YoutubeOauth2Handler    : ==================================================
 INFO 1 --- [Lavalink] [           main] d.l.youtube.http.YoutubeOauth2Handler    : !!! DO NOT AUTHORISE WITH YOUR MAIN ACCOUNT, USE A BURNER !!!
 INFO 1 --- [Lavalink] [           main] d.l.youtube.http.YoutubeOauth2Handler    : OAUTH INTEGRATION: To give youtube-source access to your account, go to https://www.google.com/device and enter code <redacted>
 INFO 1 --- [Lavalink] [           main] d.l.youtube.http.YoutubeOauth2Handler    : !!! DO NOT AUTHORISE WITH YOUR MAIN ACCOUNT, USE A BURNER !!!
 INFO 1 --- [Lavalink] [           main] d.l.youtube.http.YoutubeOauth2Handler    : ==================================================
-Picked up _JAVA_OPTIONS: -Xmx6G
+INFO 1 --- [Lavalink] [           main] Picked up _JAVA_OPTIONS: -Xmx6G
 INFO 1 --- [Lavalink] [           main] c.g.t.s.plugin.SponsorBlockPlugin        : Loading SponsorBlock Plugin...
 INFO 1 --- [Lavalink] [           main] l.server.config.KoeConfiguration         : OS: LINUX, Arch: X86_64
 INFO 1 --- [Lavalink] [           main] l.server.config.KoeConfiguration         : Enabling JDA-NAS
 INFO 1 --- [Lavalink] [           main] c.s.l.c.natives.NativeLibraryLoader      : Native library udpqueue: loading with filter null
 INFO 1 --- [Lavalink] [           main] c.s.l.c.natives.NativeLibraryLoader      : Native library udpqueue: successfully loaded.
-2025-01-22T14:52:24.541Z  WARN 1 --- [Lavalink] [           main] l.server.config.SentryConfiguration      : Turning off sentry
+WARN 1 --- [Lavalink] [           main] l.server.config.SentryConfiguration      : Turning off sentry
 INFO 1 --- [Lavalink] [           main] io.undertow                              : starting server: Undertow - 2.3.13.Final
 INFO 1 --- [Lavalink] [           main] org.xnio                                 : XNIO version 3.8.8.Final
 INFO 1 --- [Lavalink] [           main] org.xnio.nio                             : XNIO NIO Implementation Version 3.8.8.Final
