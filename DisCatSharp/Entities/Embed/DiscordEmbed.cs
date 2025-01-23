@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using DisCatSharp.Enums;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
@@ -140,4 +142,10 @@ public sealed class DiscordEmbed : ObservableApiObject
 	/// </summary>
 	[JsonProperty("fields", NullValueHandling = NullValueHandling.Ignore)]
 	public IReadOnlyList<DiscordEmbedField> Fields { get; internal set; }
+
+	/// <summary>
+	///     Gets the embed's flags.
+	/// </summary>
+	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
+	public EmbedFlags Flags { get; internal set; } = EmbedFlags.None;
 }
