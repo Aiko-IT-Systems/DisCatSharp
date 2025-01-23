@@ -16,15 +16,11 @@
 
 ## New
 
-- .NET 9 Support
 - Full support for role subscriptions
 - Full support for burst reactions
-- Support for getting voice states through Rest
-- Full support for scheduled events including recurrency rules
-- Support for voice channel effect send events
-- Full support for managing and **using** soundboard sounds
 - Full support for subscriptions and entitlements
 - New queue system for Lavalink
+- Support for join request (create, update & delete) events for clans
 
 ## Breaking
 
