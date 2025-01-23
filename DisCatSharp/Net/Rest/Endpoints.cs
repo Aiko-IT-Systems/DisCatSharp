@@ -419,6 +419,11 @@ public static class Endpoints
 	public const string ENTITLEMENTS = "/entitlements";
 
 	/// <summary>
+	///     The subscriptions endpoint.
+	/// </summary>
+	public const string SUBSCRIPTIONS = "/subscriptions";
+
+	/// <summary>
 	///     The app assets endpoint.
 	/// </summary>
 	public const string APP_ASSETS = "/app-assets";

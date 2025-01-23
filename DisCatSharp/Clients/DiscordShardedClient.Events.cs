@@ -1215,6 +1215,28 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, EntitlementDeleteEventArgs> _entitlementDeleted;
 
 	/// <summary>
+	///     Fired when an subscription was created.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, SubscriptionCreateEventArgs> SubscriptionCreated
+	{
+		add => this._subscriptionCreated.Register(value);
+		remove => this._subscriptionCreated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, SubscriptionCreateEventArgs> _subscriptionCreated;
+
+	/// <summary>
+	///     Fired when an subscription was updated.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, SubscriptionUpdateEventArgs> SubscriptionUpdated
+	{
+		add => this._subscriptionUpdated.Register(value);
+		remove => this._subscriptionUpdated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, SubscriptionUpdateEventArgs> _subscriptionUpdated;
+
+	/// <summary>
 	///     Fired when a user starts typing in a channel.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, TypingStartEventArgs> TypingStarted
@@ -1782,6 +1804,22 @@ public sealed partial class DiscordShardedClient
 		=> this._entitlementDeleted.InvokeAsync(client, e);
 
 	/// <summary>
+	///     Handles the subscription create event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_SubscriptionCreated(DiscordClient client, SubscriptionCreateEventArgs e)
+		=> this._subscriptionCreated.InvokeAsync(client, e);
+
+	/// <summary>
+	///     Handles the subscription update event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_SubscriptionUpdated(DiscordClient client, SubscriptionUpdateEventArgs e)
+		=> this._subscriptionUpdated.InvokeAsync(client, e);
+
+	/// <summary>
 	///     Handles the component interaction create event.
 	/// </summary>
 	/// <param name="client">The client.</param>
@@ -2084,7 +2122,7 @@ public sealed partial class DiscordShardedClient
 	/// <param name="e">The event args.</param>
 	private Task Client_SoundboardSoundsUpdated(DiscordClient client, GuildSoundboardSoundsUpdateEventArgs e)
 		=> this._guildSoundboardSoundsUpdated.InvokeAsync(client, e);
-	
+
 	/// <summary>
 	///     Handles the soundboard sounds event.
 	/// </summary>

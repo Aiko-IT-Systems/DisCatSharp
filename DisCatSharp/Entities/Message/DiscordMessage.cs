@@ -479,6 +479,12 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this.Poll is not null;
 
 	/// <summary>
+	///     Gets the soundboard sounds send with this message, if applicable.
+	/// </summary>
+	[JsonProperty("soundboard_sounds", NullValueHandling = NullValueHandling.Ignore)]
+	public List<DiscordSoundboardSound>? SoundboardSounds  { get; internal set; }
+
+	/// <summary>
 	///     Checks whether this <see cref="DiscordMessage" /> is equal to another <see cref="DiscordMessage" />.
 	/// </summary>
 	/// <param name="e"><see cref="DiscordMessage" /> to compare to.</param>

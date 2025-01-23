@@ -1235,6 +1235,28 @@ public sealed partial class DiscordClient
 	private AsyncEvent<DiscordClient, EntitlementDeleteEventArgs> _entitlementDeleted;
 
 	/// <summary>
+	///     Fired when an subscription was created.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, SubscriptionCreateEventArgs> SubscriptionCreated
+	{
+		add => this._subscriptionCreated.Register(value);
+		remove => this._subscriptionCreated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, SubscriptionCreateEventArgs> _subscriptionCreated;
+
+	/// <summary>
+	///     Fired when an subscription was updated.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, SubscriptionUpdateEventArgs> SubscriptionUpdated
+	{
+		add => this._subscriptionUpdated.Register(value);
+		remove => this._subscriptionUpdated.Unregister(value);
+	}
+
+	private AsyncEvent<DiscordClient, SubscriptionUpdateEventArgs> _subscriptionUpdated;
+
+	/// <summary>
 	///     Fired when a user starts typing in a channel.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, TypingStartEventArgs> TypingStarted

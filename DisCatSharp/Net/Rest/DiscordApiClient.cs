@@ -7473,17 +7473,34 @@ public sealed class DiscordApiClient
 	/// <summary>
 	///     Gets the applications entitlements.
 	/// </summary>
-	/// <param name="applicationId">The application id to fetch the entitlement for.</param>
+	/// <param name="applicationId">The application id to fetch the entitlements for.</param>
 	/// <param name="guildId">Filter returned entitlements to a specific guild id.</param>
 	/// <param name="userId">Filter returned entitlements to a specific user id.</param>
+	/// <param name="skuIds">Optional list of SKU IDs to check entitlements for.</param>
+	/// <param name="before">Retrieve entitlements before this entitlement ID.</param>
+	/// <param name="after">Retrieve entitlements after this entitlement ID.</param>
+	/// <param name="limit">Number of entitlements to return, 1-100, default 100.</param>
+	/// <param name="excludeEnded">Whether or not ended entitlements should be omitted. Defaults to false, ended entitlements are included by default.</param>
+	/// <param name="excludeDeleted">Whether or not deleted entitlements should be omitted. Defaults to true, deleted entitlements are not included by default.</param>
 	/// <returns>A list of <see cref="DiscordEntitlement" />.</returns>
-	internal async Task<IReadOnlyList<DiscordEntitlement>> GetEntitlementsAsync(ulong applicationId, ulong? guildId, ulong? userId)
+	internal async Task<IReadOnlyList<DiscordEntitlement>> GetEntitlementsAsync(ulong applicationId, ulong? guildId, ulong? userId, List<ulong>? skuIds = null, ulong? before = null, ulong? after = null, int limit = 100, bool? excludeEnded = null, bool? excludeDeleted = null)
 	{
 		var urlParams = new Dictionary<string, string>();
+		urlParams["limit"] = limit.ToString();
 		if (guildId.HasValue)
 			urlParams["guild_id"] = guildId.Value.ToString();
 		if (userId.HasValue)
 			urlParams["user_id"] = userId.Value.ToString();
+		if (skuIds != null && skuIds.Count > 0)
+			urlParams["sku_ids"] = string.Join(",", skuIds);
+		if (before.HasValue)
+			urlParams["before"] = before.Value.ToString();
+		if (after.HasValue)
+			urlParams["after"] = after.Value.ToString();
+		if (excludeEnded.HasValue)
+			urlParams["exclude_ended"] = excludeEnded.Value.ToString().ToLower();
+		if (excludeDeleted.HasValue)
+			urlParams["exclude_deleted"] = excludeDeleted.Value.ToString().ToLower();
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.ENTITLEMENTS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
@@ -7495,6 +7512,81 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		return new ReadOnlyCollection<DiscordEntitlement>(DiscordJson.DeserializeIEnumerableObject<List<DiscordEntitlement>>(res.Response, this.Discord));
+	}
+
+	/// <summary>
+	///     Gets an entitlement for given <paramref name="applicationId"/>.
+	/// </summary>
+	/// <param name="applicationId">The application id to fetch the entitlement for.</param>
+	/// <param name="entitlementId">The entitlement id to fetch.</param>
+	/// <returns>The requested <see cref="DiscordEntitlement" />.</returns>
+	internal async Task<DiscordEntitlement?> GetEntitlementAsync(ulong applicationId, ulong entitlementId)
+	{
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.ENTITLEMENTS}/:entitlement_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			application_id = applicationId,
+			entitlement_id = entitlementId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		return DiscordJson.DeserializeObject<DiscordEntitlement>(res.Response, this.Discord);
+	}
+
+	// TODO: userId can be skipped if using oauth
+	/// <summary>
+	///     Gets the subscriptions of an sku.
+	/// </summary>
+	/// <param name="skuId">The sku id to fetch the subscriptions for.</param>
+	/// <param name="userId">The user ID for which to return subscriptions. Required except for OAuth queries.</param>
+	/// <param name="before">List subscriptions before this ID.</param>
+	/// <param name="after">List subscriptions after this ID.</param>
+	/// <param name="limit">Number of results to return (1-100).</param>
+	/// <returns>A list of <see cref="DiscordSubscription" />.</returns>
+	internal async Task<IReadOnlyList<DiscordSubscription>> GetSkuSubscriptionsAsync(ulong skuId, ulong userId, ulong? before = null, ulong? after = null, int limit = 100)
+	{
+		var urlParams = new Dictionary<string, string>();
+		urlParams["userId"] = userId.ToString();
+		if (before.HasValue)
+			urlParams["before"] = before.Value.ToString();
+		if (after.HasValue)
+			urlParams["after"] = after.Value.ToString();
+		if (after.HasValue)
+			urlParams["after"] = after.Value.ToString();
+
+		var route = $"{Endpoints.SKUS}/:sku_id{Endpoints.SUBSCRIPTIONS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			sku_id = skuId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		return new ReadOnlyCollection<DiscordSubscription>(DiscordJson.DeserializeIEnumerableObject<List<DiscordSubscription>>(res.Response, this.Discord));
+	}
+
+	/// <summary>
+	///     Gets a subscription of an sku.
+	/// </summary>
+	/// <param name="skuId">The sku id to fetch the subscription for.</param>
+	/// <param name="subscriptionId">The subscription id to fetch.</param>
+	/// <returns>The requested <see cref="DiscordSubscription" />.</returns>
+	internal async Task<DiscordSubscription?> GetSkuSubscriptionAsync(ulong skuId, ulong subscriptionId)
+	{
+		var route = $"{Endpoints.SKUS}/:sku_id{Endpoints.SUBSCRIPTIONS}/:subscription_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			sku_id = skuId,
+			subscription_id = subscriptionId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		return DiscordJson.DeserializeObject<DiscordSubscription>(res.Response, this.Discord);
 	}
 
 	/// <summary>

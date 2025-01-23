@@ -272,6 +272,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._entitlementCreated = new("ENTITLEMENT_CREATED", EventExecutionLimit, this.EventErrorHandler);
 		this._entitlementUpdated = new("ENTITLEMENT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._entitlementDeleted = new("ENTITLEMENT_DELETED", EventExecutionLimit, this.EventErrorHandler);
+		this._subscriptionCreated = new("SUBSCRIPTION_CREATED", EventExecutionLimit, this.EventErrorHandler);
+		this._subscriptionUpdated = new("SUBSCRIPTION_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._messagePollVoteAdded = new("MESSAGE_POLL_VOTE_ADDED", EventExecutionLimit, this.EventErrorHandler);
 		this._messagePollVoteRemoved = new("MESSAGE_POLL_VOTE_REMOVED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildSoundboardSoundCreated = new("GUILD_SOUNDBOARD_SOUND_CREATED", EventExecutionLimit, this.EventErrorHandler);
@@ -608,15 +610,53 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> await this.ApiClient.GetSkusAsync(this.CurrentApplication.Id).ConfigureAwait(false);
 
 	/// <summary>
-	///     Gets the applications entitlements.
+	///     Gets the application's entitlements.
 	/// </summary>
 	/// <param name="guildId">Filter returned entitlements to a specific guild id.</param>
 	/// <param name="userId">Filter returned entitlements to a specific user id.</param>
+	/// <param name="skuIds">Optional list of SKU IDs to check entitlements for.</param>
+	/// <param name="before">Retrieve entitlements before this entitlement ID.</param>
+	/// <param name="after">Retrieve entitlements after this entitlement ID.</param>
+	/// <param name="limit">Number of entitlements to return, 1-100, default 100.</param>
+	/// <param name="excludeEnded">Whether or not ended entitlements should be omitted. Defaults to false, ended entitlements are included by default.</param>
+	/// <param name="excludeDeleted">Whether or not deleted entitlements should be omitted. Defaults to true, deleted entitlements are not included by default.</param>
 	/// <returns>A list of <see cref="DiscordEntitlement" />.</returns>
 	/// <exception cref="NotFoundException">Thrown when the entitlements do not exist.</exception>
 	[RequiresFeature(Features.MonetizedApplication)]
-	public async Task<IReadOnlyList<DiscordEntitlement>> GetEntitlementsAsync(ulong? guildId = null, ulong? userId = null)
-		=> await this.ApiClient.GetEntitlementsAsync(this.CurrentApplication.Id, guildId, userId).ConfigureAwait(false);
+	public async Task<IReadOnlyList<DiscordEntitlement>> GetEntitlementsAsync(ulong? guildId = null, ulong? userId = null, List<ulong>? skuIds = null, ulong? before = null, ulong? after = null, int limit = 100, bool? excludeEnded = null, bool? excludeDeleted = null)
+		=> await this.ApiClient.GetEntitlementsAsync(this.CurrentApplication.Id, guildId, userId, skuIds, before, after, limit, excludeEnded, excludeDeleted).ConfigureAwait(false);
+
+	/// <summary>
+	///     Gets an entitlement for given <paramref name="applicationId"/>.
+	/// </summary>
+	/// <param name="applicationId">The application id to fetch the entitlement for.</param>
+	/// <param name="entitlementId">The entitlement id to fetch.</param>
+	/// <returns>The requested <see cref="DiscordEntitlement" />.</returns>
+	internal async Task<DiscordEntitlement?> GetEntitlementAsync(ulong applicationId, ulong entitlementId)
+		=> await this.ApiClient.GetEntitlementAsync(applicationId, entitlementId).ConfigureAwait(false);
+
+	/// <summary>
+	///     Gets the subscriptions of an sku.
+	/// </summary>
+	/// <param name="skuId">The sku id to fetch the subscriptions for.</param>
+	/// <param name="userId">The user ID for which to return subscriptions. Required except for OAuth queries.</param>
+	/// <param name="before">List subscriptions before this ID.</param>
+	/// <param name="after">List subscriptions after this ID.</param>
+	/// <param name="limit">Number of results to return (1-100).</param>
+	/// <returns>A list of <see cref="DiscordSubscription" />.</returns>
+	/// <exception cref="NotFoundException">Thrown when the subscriptions do not exist.</exception>
+	[RequiresFeature(Features.MonetizedApplication)]
+	public async Task<IReadOnlyList<DiscordSubscription>> GetSkuSubscriptionsAsync(ulong skuId, ulong userId, ulong? before = null, ulong? after = null, int limit = 100)
+		=> await this.ApiClient.GetSkuSubscriptionsAsync(skuId, userId, before, after, limit).ConfigureAwait(false);
+
+	/// <summary>
+	///     Gets a subscription of an sku.
+	/// </summary>
+	/// <param name="skuId">The sku id to fetch the subscription for.</param>
+	/// <param name="subscriptionId">The subscription id to fetch.</param>
+	/// <returns>The requested <see cref="DiscordSubscription" />.</returns>
+	public async Task<DiscordSubscription?> GetSkuSubscriptionAsync(ulong skuId, ulong subscriptionId)
+		=> await this.ApiClient.GetSkuSubscriptionAsync(skuId, subscriptionId).ConfigureAwait(false);
 
 	/// <summary>
 	///     Creates a test entitlement.

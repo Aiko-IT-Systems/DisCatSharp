@@ -17,16 +17,20 @@
 ## New
 
 - .NET 9 Support
-- Partial support for role subscriptions
-- Partial support for burst reactions
+- Full support for role subscriptions
+- Full support for burst reactions
 - Support for getting voice states through Rest
 - Full support for scheduled events including recurrency rules
 - Support for voice channel effect send events
 - Full support for managing and **using** soundboard sounds
+- Full support for subscriptions and entitlements
+- New queue system for Lavalink
 
 ## Breaking
 
-- _None_
+- Small breaking change in `AttachmentFlags`: The flag values are now prefixed with `Is` to be in line with other flag names.
+- `AddMention(IMention mention)` => `WithAllowedMention(IMention allowedMention)`
+- `AddMentions(IEnumerable<IMention> mentions)` => `WithAllowedMentions(IEnumerable<IMention> allowedMentions)`
 
 ----
 
@@ -119,6 +123,14 @@ Either join our official support guild at https://discord.gg/2HWta4GXus, open an
 | DisCatSharp.Attributes       | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Attributes.svg?label=&logo=nuget&style=flat-square)       | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Attributes.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)       |
 | DisCatSharp.Common           | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square)           | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)           |
 | DisCatSharp.Analyzer.Roselyn | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Analyzer.Roselyn.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Analyzer.Roselyn.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
+
+### [Extensions](https://github.com/Aiko-IT-Systems/DisCatSharp.Extensions)
+
+| Package                                    | Stable                                                                                                                      | Nightly                                                                                                                                        |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| DisCatSharp.Extensions.TwoFactorCommands   | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Extensions.TwoFactorCommands.svg?label=&logo=nuget&style=flat-square)   | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Extensions.TwoFactorCommands.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)   |
+| DisCatSharp.Extensions.OAuth2Web           | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Extensions.OAuth2Web.svg?label=&logo=nuget&style=flat-square)           | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Extensions.OAuth2Web.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)           |
+| DisCatSharp.Extensions.SimpleMusicCommands | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Extensions.SimpleMusicCommands.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Extensions.SimpleMusicCommands.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
 
 
 ----

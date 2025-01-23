@@ -87,6 +87,12 @@ public sealed class DiscordSoundboardSound : SnowflakeObject
 		=> $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SOUNDBOARD_SOUNDS}/{this.Id.ToString(CultureInfo.InvariantCulture)}.mp3";
 
 	/// <summary>
+	///     Gets the mention of the sound to send it in chat.
+	/// </summary>
+	public string Mention
+		=> $"<sound:{(this.GuildId.HasValue ? this.GuildId : 0)}:{this.Id}>";
+
+	/// <summary>
 	///     Modifies the soundboard sound.
 	/// </summary>
 	/// <param name="action">The action to configure the soundboard sound edit model.</param>
