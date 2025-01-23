@@ -1502,6 +1502,9 @@ references:
 - uid: extensions_oauth2_web_usage
   name: OAuth2 Web Usage
   href: articles/extensions/oauth2_web/usage.html
+- uid: extensions_simple_music_commands_intro
+  name: Simple Music Commands Introduction
+  href: articles/extensions/simple_music_commands/intro.html
 - uid: extensions_twofactor_commands_intro
   name: TwoFactor Commands Introduction
   href: articles/extensions/twofactor_commands/intro.html
