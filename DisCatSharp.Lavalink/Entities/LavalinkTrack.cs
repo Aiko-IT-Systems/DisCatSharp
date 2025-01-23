@@ -28,6 +28,12 @@ public sealed class LavalinkTrack
 	/// </summary>
 	[JsonProperty("pluginInfo")]
 	public LavalinkPluginInfo PluginInfo { get; internal set; }
+
+	/// <summary>
+	///     Gets the user info.
+	/// </summary>
+	[JsonProperty("userData")]
+	public object? UserData { get; internal set; }
 }
 
 /// <summary>

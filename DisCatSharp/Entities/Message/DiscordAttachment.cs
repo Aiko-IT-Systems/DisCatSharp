@@ -1,5 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Enums;
+using DisCatSharp.Net.Abstractions;
 
 using Newtonsoft.Json;
 
@@ -109,6 +115,45 @@ public class DiscordAttachment : NullableSnowflakeObject
 	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
 	public AttachmentFlags Flags { get; internal set; } = AttachmentFlags.None;
+
+	/// <summary>
+	///     Gets the clip participant, if applicable.
+	/// </summary>
+	[JsonProperty("clip_participants", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<TransportUser>? ClipParticipantsInternal { get; set; }
+
+	/// <summary>
+	///     Gets the clip participant, if applicable.
+	/// </summary>
+	[JsonProperty("clip_participants", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<DiscordUser>? ClipParticipants
+		=> this.ClipParticipantsInternal?.Select(part => new DiscordUser(part)).ToList();
+
+	/// <summary>
+	///     Gets the clip's creation timestamp.
+	/// </summary>
+	[JsonIgnore]
+	public DateTimeOffset? ClipCreatedAt
+		=> !string.IsNullOrWhiteSpace(this.ClipCreatedAtRaw) && DateTimeOffset.TryParse(this.ClipCreatedAtRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ? dto : null;
+
+	/// <summary>
+	///     Gets the clip's creation timestamp as raw string.
+	/// </summary>
+	[JsonProperty("clip_created_at", NullValueHandling = NullValueHandling.Ignore)]
+	internal string? ClipCreatedAtRaw { get; set; }
+
+	/// <summary>
+	///     Gets the clip application, if applicable and recognized.
+	/// </summary>
+	[JsonProperty("clip_participants", NullValueHandling = NullValueHandling.Ignore)]
+	internal TransportApplication? ApplicationInternal { get; set; }
+
+	/// <summary>
+	///     Gets the clip application, if applicable and recognized.
+	/// </summary>
+	[JsonProperty("clip_participants", NullValueHandling = NullValueHandling.Ignore)]
+	internal DiscordApplication? Application
+		=> this.ApplicationInternal is not null ? new DiscordApplication(this.ApplicationInternal) : null;
 
 	/// <summary>
 	///     Visualizes the <see cref="WaveForm" /> as image.

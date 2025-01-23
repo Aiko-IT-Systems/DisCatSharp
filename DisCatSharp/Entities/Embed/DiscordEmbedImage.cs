@@ -1,3 +1,5 @@
+using DisCatSharp.Enums;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
@@ -36,4 +38,10 @@ public sealed class DiscordEmbedImage : ObservableApiObject
 	/// </summary>
 	[JsonProperty("width", NullValueHandling = NullValueHandling.Ignore)]
 	public int Width { get; internal set; }
+
+	/// <summary>
+	///     Gets the flags of the image.
+	/// </summary>
+	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
+	public EmbedMediaFlags Flags { get; internal set; } = EmbedMediaFlags.None;
 }

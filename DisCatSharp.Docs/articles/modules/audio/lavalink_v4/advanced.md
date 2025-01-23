@@ -19,8 +19,8 @@ General config:
 ```yml
 lavalink:
   plugins:
-    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.0.1"
-      repository: "https://maven.topi.wtf/releases"
+    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.3.0"
+      repository: "https://maven.lavalink.dev/releases"
 [..]
 plugins:
   lavasrc:
@@ -136,4 +136,4 @@ LavalinkLoadResult result = await guildPlayer.LoadTracksAsync(type, query);
 
 ## Conclusion
 
-This is the most basic example of how to use the new Lavalink features. You can find more information in the Lavalink plugin docs: https://github.com/topi314/LavaSrc#usage
+This is the most basic example of how to use the new Lavalink features. You can find more information in the Lavalink plugin docs: https://github.com/topi314/LavaSrc?tab=readme-ov-file#lavalink-usage

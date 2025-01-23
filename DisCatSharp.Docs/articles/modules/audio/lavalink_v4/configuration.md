@@ -101,13 +101,13 @@ We are now ready to start the bot. If everything is configured properly, you sho
 And a client connection appear in your Lavalink console:
 
 ```yml
-2023-06-25 09:05:28.757  INFO 4436 --- [  XNIO-1 task-1] io.undertow.servlet                      : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-06-25 09:05:28.758  INFO 4436 --- [  XNIO-1 task-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2023-06-25 09:05:28.760  INFO 4436 --- [  XNIO-1 task-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
-2023-06-25 09:05:28.861  INFO 4436 --- [  XNIO-1 task-1] lavalink.server.io.RequestLoggingFilter  : GET /version?trace=false, client=127.0.0.1
-2023-06-25 09:05:28.876  INFO 4436 --- [  XNIO-1 task-1] l.server.io.HandshakeInterceptorImpl     : Incoming connection from /127.0.0.1:54649
-2023-06-25 09:05:28.918  INFO 4436 --- [  XNIO-1 task-1] lavalink.server.io.RequestLoggingFilter  : GET /v4/websocket, client=127.0.0.1
-2023-06-25 09:05:29.048  INFO 4436 --- [  XNIO-1 task-1] lavalink.server.io.SocketServer          : Connection successfully established from DisCatSharp.Lavalink/10.4.1
+INFO 4436 --- [  XNIO-1 task-1] io.undertow.servlet                      : Initializing Spring DispatcherServlet 'dispatcherServlet'
+INFO 4436 --- [  XNIO-1 task-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+INFO 4436 --- [  XNIO-1 task-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+INFO 4436 --- [  XNIO-1 task-1] lavalink.server.io.RequestLoggingFilter  : GET /version?trace=false, client=127.0.0.1
+INFO 4436 --- [  XNIO-1 task-1] l.server.io.HandshakeInterceptorImpl     : Incoming connection from /127.0.0.1:54649
+INFO 4436 --- [  XNIO-1 task-1] lavalink.server.io.RequestLoggingFilter  : GET /v4/websocket, client=127.0.0.1
+INFO 4436 --- [  XNIO-1 task-1] lavalink.server.io.SocketServer          : Connection successfully established from DisCatSharp.Lavalink/10.6.6+38c8062e7f88b2e9920a535637d4f3afccbbf205
 ```
 
 We are now ready to set up some music commands!
