@@ -1,13 +1,16 @@
 DisCatSharp Release Notes
 
-    - Implemented application emojis. Read more here: https://discord.com/developers/docs/change-log#application-emoji. Breaking change in 'DiscordEmoji.TryFromName' (additional required parameter).
-    - .NET 9 Support
-    - Partial support for role subscriptions
-    - Partial support for burst reactions
-    - Support for getting voice states through Rest
-    - Full support for scheduled events including recurrency rules
-    - Support for voice channel effect send events
-    - Full support for managing and using soundboard sounds
+    - Full support for role subscriptions
+    - Full support for burst reactions
+    - Full support for subscriptions and entitlements
+    - New queue system for Lavalink
+    - Support for join request (create, update & delete) events for clans
+
+    Breaking
+
+    - Small breaking change in `AttachmentFlags`: The flag values are now prefixed with `Is` to be in line with other flag names.
+    - `AddMention(IMention mention)` => `WithAllowedMention(IMention allowedMention)`
+    - `AddMentions(IEnumerable<IMention> mentions)` => `WithAllowedMentions(IEnumerable<IMention> allowedMentions)`
 
 
 DisCatSharp.Attributes Release Notes
