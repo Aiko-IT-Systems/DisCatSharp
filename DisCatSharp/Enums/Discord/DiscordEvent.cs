@@ -125,6 +125,8 @@ public enum DiscordEvent
 	VoiceChannelStatusUpdated,
 	EntitlementCreated,
 	EntitlementUpdated,
+	SubscriptionCreated,
+	SubscriptionUpdated,
 	EntitlementDeleted,
 	MessagePollVoteAdded,
 	MessagePollVoteRemoved,

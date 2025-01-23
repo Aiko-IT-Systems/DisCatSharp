@@ -67,6 +67,7 @@ public sealed partial class DiscordClient
 		TransportMember refMbr = default;
 		DiscordApplicationCommand ac = default;
 		DiscordEntitlement ent = default;
+		DiscordSubscription sub = default;
 		JToken rawMbr = default;
 		var rawRefMsg = dat["referenced_message"]; // TODO: Can we remove this?
 
@@ -654,6 +655,14 @@ public sealed partial class DiscordClient
 			case "entitlement_delete":
 				ent = DiscordJson.DeserializeObject<DiscordEntitlement>(payloadString, this);
 				await this.OnEntitlementDeleteAsync(ent).ConfigureAwait(false);
+				break;
+			case "subscription_create":
+				sub = DiscordJson.DeserializeObject<DiscordSubscription>(payloadString, this);
+				await this.OnSubscriptionCreateAsync(sub).ConfigureAwait(false);
+				break;
+			case "subscription_update":
+				sub = DiscordJson.DeserializeObject<DiscordSubscription>(payloadString, this);
+				await this.OnSubscriptionUpdateAsync(sub).ConfigureAwait(false);
 				break;
 
 			default:
@@ -4026,6 +4035,32 @@ public sealed partial class DiscordClient
 			Entitlement = entitlement
 		};
 		await this._entitlementDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Handles the subscription create event.
+	/// </summary>
+	/// <param name="subscription">The created subscription</param>
+	internal async Task OnSubscriptionCreateAsync(DiscordSubscription subscription)
+	{
+		var ea = new SubscriptionCreateEventArgs(this.ServiceProvider)
+		{
+			Subscription = subscription
+		};
+		await this._subscriptionCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Handles the subscription update event.
+	/// </summary>
+	/// <param name="subscription">The updated subscription</param>
+	internal async Task OnSubscriptionUpdateAsync(DiscordSubscription subscription)
+	{
+		var ea = new SubscriptionUpdateEventArgs(this.ServiceProvider)
+		{
+			Subscription = subscription
+		};
+		await this._subscriptionUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
 	/// <summary>
