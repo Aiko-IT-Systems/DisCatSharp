@@ -9,7 +9,7 @@ author: DisCatSharp Team
 The Lavalink module provides a built-in queue system for managing audio tracks. The queue system allows you to add, remove, and manipulate tracks in a guild-specific queue.
 
 ## Enabling the Queue System
-The queue system is disabled by default, To use the queue system, you must enable it in your [`LavalinkConfiguration`](../../../../../DisCatSharp.Lavalink/LavalinkConfiguration.cs):
+The queue system is disabled by default, To use the queue system, you must enable it in your [`LavalinkConfiguration`](xref:DisCatSharp.Lavalink.LavalinkConfiguration):
 
 ```cs
 var config = new LavalinkConfiguration
