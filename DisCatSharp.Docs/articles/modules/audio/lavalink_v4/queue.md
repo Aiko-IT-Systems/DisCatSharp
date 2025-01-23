@@ -1,3 +1,9 @@
+---
+uid: modules_audio_lavalink_v4_queue_system
+title: Lavalink V4 Queue System
+author: DisCatSharp Team
+---
+
 # Lavalink Guild Player Queue System
 
 The Lavalink module provides a built-in queue system for managing audio tracks. The queue system allows you to add, remove, and manipulate tracks in a guild-specific queue.
