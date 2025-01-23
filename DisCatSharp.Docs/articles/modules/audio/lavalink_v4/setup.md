@@ -103,7 +103,7 @@ plugins:
       #- deezer
       - yandexMusic
 lavalink:
-  plugins:
+  plugins: # You can find more plugins on Lavalinks official site at https://lavalink.dev/plugins
     - dependency: "dev.lavalink.youtube:youtube-plugin:1.11.3" # Source: https://github.com/lavalink-devs/youtube-source
       snapshot: false
     - dependency: "com.github.topi314.lavasearch:lavasearch-plugin:1.0.0" # Source: https://github.com/topi314/LavaSearch
