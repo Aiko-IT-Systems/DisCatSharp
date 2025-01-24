@@ -2755,5 +2755,42 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public Task<IReadOnlyList<DiscordSoundboardSound>> ListSoundboardSoundsAsync()
 		=> this.Discord.ApiClient.ListGuildSoundboardSoundsAsync(this.Id);
 
+	/// <summary>
+	///     Gets the join requests.
+	/// </summary>
+	/// <param name="limit">The maximum number of join requests to return. Defaults to 100.</param>
+	/// <param name="statusType">The status type to filter join requests by. Can be Submitted, Approved, or Rejected.</param>
+	/// <param name="before">Retrieve join requests before this ID.</param>
+	/// <param name="after">Retrieve join requests after this ID.</param>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when the status type is not supported.</exception>
+	[DiscordUnreleased("This feature is not available for bots at the current time"), Obsolete("This feature is not available for bots at the current time", true)]
+	public async Task<DiscordGuildJoinRequestSearchResult> GetJoinRequestsAsync(int limit = 100, JoinRequestStatusType? statusType = null, ulong? before = null, ulong? after = null)
+		=> await this.Discord.ApiClient.GetGuildJoinRequestsAsync(this.Id, limit, statusType, before, after);
+
+	/// <summary>
+	///     Gets a specific join request.
+	/// </summary>
+	/// <param name="joinRequestId">The ID of the join request.</param>
+	[DiscordUnreleased("This feature is not available for bots at the current time"), Obsolete("This feature is not available for bots at the current time", true)]
+	public async Task<DiscordGuildJoinRequest> GetJoinRequestAsync(ulong joinRequestId)
+		=> await this.Discord.ApiClient.GetGuildJoinRequestAsync(this.Id, joinRequestId);
+
+	/// <summary>
+	///     Modifies a join request.
+	/// </summary>
+	/// <param name="joinRequestId">The ID of the join request.</param>
+	/// <param name="approve">Whether to approve or deny the request.</param>
+	/// <param name="rejectionReason">The optional rejection reason.</param>
+	[DiscordUnreleased("This feature is not available for bots at the current time"), Obsolete("This feature is not available for bots at the current time", true)]
+	public async Task<DiscordGuildJoinRequest> ModifyJoinRequestsAsync(ulong joinRequestId, bool approve, string? rejectionReason)
+		=> await this.Discord.ApiClient.ModifyGuildJoinRequestsAsync(this.Id, joinRequestId, approve ? JoinRequestStatusType.Approved : JoinRequestStatusType.Rejected, rejectionReason);
+
+	/// <summary>
+	///     Gets the clan settings.
+	/// </summary>
+	[DiscordUnreleased("This feature is not available for bots at the current time"), Obsolete("This feature is not available for bots at the current time", true)]
+	public async Task<DiscordClanSettings> GetClanSettingsAsync()
+		=> await this.Discord.ApiClient.GetClanSettingsAsync(this.Id);
+
 #endregion
 }

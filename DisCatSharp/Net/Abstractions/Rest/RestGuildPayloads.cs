@@ -662,6 +662,24 @@ internal sealed class RestGuildIntegrationAttachPayload : ObservableApiObject
 }
 
 /// <summary>
+/// 	Represents a guild join request update payload.
+/// </summary>
+internal sealed class RestGuildJoinRequestUpdatePayload : ObservableApiObject
+{
+	/// <summary>
+	///     Gets or sets the action.
+	/// </summary>
+	[JsonProperty("action")]
+	public string Action { get; set; }
+
+	/// <summary>
+	///     Gets or sets the reason.
+	/// </summary>
+	[JsonProperty("rejection_reason", NullValueHandling = NullValueHandling.Ignore)]
+	public string? RejectionReason { get; set; }
+}
+
+/// <summary>
 ///     Represents a guild integration modify payload.
 /// </summary>
 internal sealed class RestGuildIntegrationModifyPayload : ObservableApiObject

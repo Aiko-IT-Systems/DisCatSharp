@@ -4495,6 +4495,114 @@ public sealed class DiscordApiClient
 		return ret;
 	}
 
+	#endregion
+
+#region Guild Member Applications
+
+	/// <summary>
+	///     Gets the guild join requests.
+	/// </summary>
+	/// <param name="guildId">The ID of the guild.</param>
+	/// <param name="limit">The maximum number of join requests to return. Defaults to 100.</param>
+	/// <param name="statusType">The status type to filter join requests by. Can be Submitted, Approved, or Rejected.</param>
+	/// <param name="before">Retrieve join requests before this ID.</param>
+	/// <param name="after">Retrieve join requests after this ID.</param>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when the status type is not supported.</exception>
+	internal async Task<DiscordGuildJoinRequestSearchResult> GetGuildJoinRequestsAsync(ulong guildId, int limit = 100, JoinRequestStatusType? statusType = null, ulong? before = null, ulong? after = null)
+	{
+		var urlParams = new Dictionary<string, string>
+		{
+			["limit"] = limit.ToString(CultureInfo.InvariantCulture)
+		};
+
+		if (before.HasValue)
+			urlParams["before"] = before.Value.ToString(CultureInfo.InvariantCulture);
+		if (after.HasValue)
+			urlParams["after"] = after.Value.ToString(CultureInfo.InvariantCulture);
+
+		if (statusType.HasValue)
+			urlParams["status"] = statusType.Value switch
+			{
+				JoinRequestStatusType.Submitted or JoinRequestStatusType.Approved or JoinRequestStatusType.Rejected => statusType.Value.ToString().ToUpperInvariant(),
+				_ => throw new ArgumentOutOfRangeException(nameof(statusType), $"Status type {statusType.Value} is not supported"),
+			};
+
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.REQUESTS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			guild_id = guildId
+		}, out var path);
+		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		var searchResults = DiscordJson.DeserializeObject<DiscordGuildJoinRequestSearchResult>(res.Response, this.Discord);
+		foreach (var joinRequest in searchResults.JoinRequests)
+			joinRequest.Discord = this.Discord;
+
+		return searchResults;
+	}
+
+	/// <summary>
+	///     Gets a specific guild join request.
+	/// </summary>
+	/// <param name="guildId">The ID of the guild.</param>
+	/// <param name="joinRequestId">The ID of the join request.</param>
+	internal async Task<DiscordGuildJoinRequest> GetGuildJoinRequestAsync(ulong guildId, ulong joinRequestId)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.REQUESTS}/:join_request_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			guild_id = guildId,
+			join_request_id = joinRequestId
+		}, out var path);
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		return DiscordJson.DeserializeObject<DiscordGuildJoinRequest>(res.Response, this.Discord);
+	}
+
+	/// <summary>
+	///     Modifies a guild join request.
+	/// </summary>
+	/// <param name="guildId">The ID of the guild.</param>
+	/// <param name="joinRequestId">The ID of the join request.</param>
+	/// <param name="statusType">The status type to set for the join request. Can be Approved or Rejected.</param>
+	/// <param name="rejectionReason">The optional rejection reason.</param>
+	/// <exception cref="InvalidOperationException">Thrown when the status type is not Approved or Rejected.</exception>
+	internal async Task<DiscordGuildJoinRequest> ModifyGuildJoinRequestsAsync(ulong guildId, ulong joinRequestId, JoinRequestStatusType statusType, string? rejectionReason)
+	{
+		var pld = new RestGuildJoinRequestUpdatePayload
+		{
+			Action = statusType is JoinRequestStatusType.Approved or JoinRequestStatusType.Rejected ? statusType.ToString().ToUpperInvariant() : throw new InvalidOperationException($"Can not {statusType} as action for join request {joinRequestId}"),
+			RejectionReason = statusType is JoinRequestStatusType.Rejected ? rejectionReason : null
+		};
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.REQUESTS}/:join_request_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
+		{
+			guild_id = guildId
+		}, out var path);
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		return DiscordJson.DeserializeObject<DiscordGuildJoinRequest>(res.Response, this.Discord);
+	}
+	/// <summary>
+	///     Gets the settings for a clan.
+	/// </summary>
+	/// <param name="clanId">The ID of the clan.</param>
+	internal async Task<DiscordClanSettings> GetClanSettingsAsync(ulong clanId)
+	{
+		var route = $"{Endpoints.CLANS}/:clan_id{Endpoints.SETTINGS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			clan_id = clanId
+		}, out var path);
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		return DiscordJson.DeserializeObject<DiscordClanSettings>(res.Response, this.Discord);
+	}
+
 #endregion
 
 #region Prune

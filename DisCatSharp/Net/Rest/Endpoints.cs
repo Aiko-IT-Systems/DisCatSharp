@@ -577,6 +577,9 @@ public static class Endpoints
 	public const string ANSWERS = "/answers";
 	public const string EXPIRE = "/expire";
 	public const string CLAN_BADGES = "/clan-badges";
+	public const string CLAN_BANNERS = "/clan-banners";
 	public const string MEMBERS_SEARCH = "/members-search";
 	public const string SEND_SOUNDBOARD_SOUND = "/send-soundboard-sound";
+	public const string REQUESTS = "/requests";
+	public const string CLANS = "/clans";
 }
