@@ -362,6 +362,32 @@ public sealed partial class DiscordClient
 
 #endregion
 
+#region Guild Member Applications
+
+			// TODO: This is so fucked..
+			case "guild_join_request_create":
+				gid = (ulong)dat["guild_id"]!;
+				joinRequestStatusType = dat["status"]?.ToDiscordObject<JoinRequestStatusType>() ?? JoinRequestStatusType.Unknown;
+				joinRequest = dat["request"].ToDiscordObject<DiscordGuildJoinRequest>();
+				await this.OnGuildJoinRequestCreateAsync(this.Guilds[gid], joinRequestStatusType, joinRequest).ConfigureAwait(false);
+				break;
+			case "guild_join_request_update":
+				gid = (ulong)dat["guild_id"]!;
+				joinRequestStatusType = dat["status"]?.ToDiscordObject<JoinRequestStatusType>() ?? JoinRequestStatusType.Unknown;
+				joinRequest = dat["request"].ToDiscordObject<DiscordGuildJoinRequest>();
+				if (joinRequestStatusType == JoinRequestStatusType.Submitted)
+					await this.OnGuildJoinRequestCreateAsync(this.Guilds[gid], joinRequestStatusType, joinRequest).ConfigureAwait(false);
+				else
+					await this.OnGuildJoinRequestUpdateAsync(this.Guilds[gid], joinRequestStatusType, joinRequest).ConfigureAwait(false);
+				break;
+			case "guild_join_request_delete":
+				gid = (ulong)dat["guild_id"]!;
+				uid = (ulong)dat["user_id"]!;
+				var requestId = (ulong)dat["id"]!;
+				await this.OnGuildJoinRequestDeleteAsync(requestId, uid, this.Guilds[gid]).ConfigureAwait(false);
+				break;
+#endregion
+
 #region Invite
 
 			case "invite_create":
@@ -641,25 +667,6 @@ public sealed partial class DiscordClient
 				gid = (ulong)dat["guild_id"];
 				cid = (ulong)dat["channel_id"];
 				await this.OnWebhooksUpdateAsync(this.GuildsInternal[gid].GetChannel(cid), this.GuildsInternal[gid]).ConfigureAwait(false);
-				break;
-
-			case "guild_join_request_create":
-				gid = (ulong)dat["guild_id"]!;
-				joinRequestStatusType = Enum.TryParse<JoinRequestStatusType>((string)dat["status"]!, out var rcs) ? rcs : JoinRequestStatusType.Unknown;
-				joinRequest = DiscordJson.DeserializeObject<DiscordGuildJoinRequest>(dat["request"]!.ToString(), this);
-				await this.OnGuildJoinRequestCreateAsync(gid, joinRequestStatusType, joinRequest).ConfigureAwait(false);
-				break;
-			case "guild_join_request_update":
-				gid = (ulong)dat["guild_id"]!;
-				joinRequestStatusType = Enum.TryParse<JoinRequestStatusType>((string)dat["status"]!, out var rcu) ? rcu : JoinRequestStatusType.Unknown;
-				joinRequest = DiscordJson.DeserializeObject<DiscordGuildJoinRequest>(dat["request"]!.ToString(), this);
-				await this.OnGuildJoinRequestUpdateAsync(gid, joinRequestStatusType, joinRequest).ConfigureAwait(false);
-				break;
-			case "guild_join_request_delete":
-				gid = (ulong)dat["guild_id"]!;
-				uid = (ulong)dat["user_id"]!;
-				var requestId = (ulong)dat["id"]!;
-				await this.OnGuildJoinRequestDeleteAsync(requestId, uid, gid).ConfigureAwait(false);
 				break;
 
 			case "entitlement_create":
@@ -2534,13 +2541,12 @@ public sealed partial class DiscordClient
 	/// <summary>
 	///     Handles the guild join request create event.
 	/// </summary>
-	internal async Task OnGuildJoinRequestCreateAsync(ulong guildId, JoinRequestStatusType statusType, DiscordGuildJoinRequest request)
+	/// <param name="guild">The guild.</param>
+	/// <param name="statusType">The join request status.</param>
+	/// <param name="request">The join request.</param>
+	internal async Task OnGuildJoinRequestCreateAsync(DiscordGuild guild, JoinRequestStatusType statusType, DiscordGuildJoinRequest request)
 	{
-		var guild = this.InternalGetCachedGuild(guildId) ?? new()
-		{
-			Id = guildId,
-			Discord = this
-		};
+		request.Discord = this;
 		var ea = new GuildJoinRequestCreateEventArgs(this.ServiceProvider)
 		{
 			Request = request,
@@ -2554,18 +2560,17 @@ public sealed partial class DiscordClient
 	/// <summary>
 	///     Handles the guild join request update event.
 	/// </summary>
-	internal async Task OnGuildJoinRequestUpdateAsync(ulong guildId, JoinRequestStatusType statusTyp, DiscordGuildJoinRequest request)
+	/// <param name="guild">The guild.</param>
+	/// <param name="statusType">The join request status.</param>
+	/// <param name="request">The join request.</param>
+	internal async Task OnGuildJoinRequestUpdateAsync(DiscordGuild guild, JoinRequestStatusType statusType, DiscordGuildJoinRequest request)
 	{
-		var guild = this.InternalGetCachedGuild(guildId) ?? new()
-		{
-			Id = guildId,
-			Discord = this
-		};
+		request.Discord = this;
 		var ea = new GuildJoinRequestUpdateEventArgs(this.ServiceProvider)
 		{
 			Request = request,
 			User = request.User,
-			Status = statusTyp,
+			Status = statusType,
 			Guild = guild
 		};
 		await this._guildJoinRequestUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
@@ -2576,15 +2581,10 @@ public sealed partial class DiscordClient
 	/// </summary>
 	/// <param name="requestId">The request id.</param>
 	/// <param name="userId">The user id.</param>
-	/// <param name="guildId">The guild id.</param>
-	internal async Task OnGuildJoinRequestDeleteAsync(ulong requestId, ulong userId, ulong guildId)
+	/// <param name="guild">The guild.</param>
+	internal async Task OnGuildJoinRequestDeleteAsync(ulong requestId, ulong userId, DiscordGuild guild)
 	{
 		var user = this.GetCachedOrEmptyUserInternal(userId);
-		var guild = this.InternalGetCachedGuild(guildId) ?? new()
-		{
-			Id = guildId,
-			Discord = this
-		};
 		var ea = new GuildJoinRequestDeleteEventArgs(this.ServiceProvider)
 		{
 			User = user,
