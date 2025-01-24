@@ -103,7 +103,10 @@ var searchParams = new DiscordGuildMemberSearchParams
 {
     AndQuery = new DiscordMemberFilter
     {
-        RoleIds = new DiscordQuery { AndQuery = new List<string> { "roleId123" } },
+        RoleIds = new DiscordQuery { AndQuery = new List<string> { "roleId123" } }
+    },
+    OrQuery = new DiscordMemberFilter
+    {
         Usernames = new DiscordQuery { OrQuery = new List<string> { "username1" } }
     }
 };
