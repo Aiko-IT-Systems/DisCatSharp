@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Net.Abstractions;
 
@@ -116,4 +118,14 @@ public sealed class DiscordGuildJoinRequest : SnowflakeObject
 	/// </summary>
 	[JsonProperty("rejection_reason", NullValueHandling = NullValueHandling.Ignore)]
 	public string? RejectionReason { get; internal set; }
+
+	/// <summary>
+	///     Modifies this join request.
+	/// </summary>
+	/// <param name="approve">Whether to approve or deny this request.</param>
+	/// <param name="rejectionReason">The optional rejection reason.</param>
+	[DiscordUnreleased("This feature is not available for bots at the current time"), Obsolete("This feature is not available for bots at the current time", true)]
+	public async Task<DiscordGuildJoinRequest> ModifyAsync(bool approve, string? rejectionReason)
+		=> await this.Discord.ApiClient.ModifyGuildJoinRequestsAsync(this.GuildId, this.RequestId, approve ? JoinRequestStatusType.Approved : JoinRequestStatusType.Rejected, rejectionReason);
+
 }
