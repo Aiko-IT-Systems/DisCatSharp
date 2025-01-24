@@ -13,8 +13,8 @@ public sealed class DiscordGuildMembershipScreeningFieldResponse : DiscordGuildM
 	internal DiscordGuildMembershipScreeningFieldResponse()
 	{ }
 
-	/// <summary>.
-	///     Gets whether the response. Might also be a boolean.
+	/// <summary>
+	///     Gets the response. Might also be a boolean.
 	/// </summary>
 	[JsonProperty("response", NullValueHandling = NullValueHandling.Ignore)]
 	public string? Response { get; internal set; }
