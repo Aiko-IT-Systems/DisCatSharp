@@ -26,7 +26,7 @@ using Octokit.Internal;
 namespace DisCatSharp;
 
 /// <summary>
-///     Represents a discord Logger.ent.L
+///     Represents the dispatch handler.
 /// </summary>
 public sealed partial class DiscordClient
 {
@@ -647,19 +647,19 @@ public sealed partial class DiscordClient
 				gid = (ulong)dat["guild_id"]!;
 				joinRequestStatusType = Enum.TryParse<JoinRequestStatusType>((string)dat["status"]!, out var rcs) ? rcs : JoinRequestStatusType.Unknown;
 				joinRequest = DiscordJson.DeserializeObject<DiscordGuildJoinRequest>(dat["request"]!.ToString(), this);
-				await this.OnGuildJoinRequestCreateAsync(gid, joinRequestStatusType, joinRequest);
+				await this.OnGuildJoinRequestCreateAsync(gid, joinRequestStatusType, joinRequest).ConfigureAwait(false);
 				break;
 			case "guild_join_request_update":
 				gid = (ulong)dat["guild_id"]!;
 				joinRequestStatusType = Enum.TryParse<JoinRequestStatusType>((string)dat["status"]!, out var rcu) ? rcu : JoinRequestStatusType.Unknown;
 				joinRequest = DiscordJson.DeserializeObject<DiscordGuildJoinRequest>(dat["request"]!.ToString(), this);
-				await this.OnGuildJoinRequestUpdateAsync(gid, joinRequestStatusType, joinRequest);
+				await this.OnGuildJoinRequestUpdateAsync(gid, joinRequestStatusType, joinRequest).ConfigureAwait(false);
 				break;
 			case "guild_join_request_delete":
 				gid = (ulong)dat["guild_id"]!;
 				uid = (ulong)dat["user_id"]!;
 				var requestId = (ulong)dat["id"]!;
-				await this.OnGuildJoinRequestDeleteAsync(requestId, uid, gid);
+				await this.OnGuildJoinRequestDeleteAsync(requestId, uid, gid).ConfigureAwait(false);
 				break;
 
 			case "entitlement_create":
