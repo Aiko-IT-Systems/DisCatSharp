@@ -16,7 +16,7 @@ public sealed class DiscordGuildJoinRequest : SnowflakeObject
 	/// <summary>
 	///     Gets the id of the join request.
 	/// </summary>
-	[JsonProperty("request_id", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("join_request_id", NullValueHandling = NullValueHandling.Ignore)]
 	public ulong RequestId { get; internal set; }
 
 	/// <summary>
