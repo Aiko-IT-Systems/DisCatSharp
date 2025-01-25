@@ -109,6 +109,12 @@ public sealed class DiscordWebhookBuilder
 	public List<IMention>? Mentions { get; private set; }
 
 	/// <summary>
+	///     Whether to send components with this webhook requests.
+	///     Set to <see langword="true"/> if you want to send components with non-application-owned webhooks.
+	/// </summary>
+	public bool? WithComponents { get; internal set; }
+
+	/// <summary>
 	///     Gets the components.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
@@ -145,6 +151,15 @@ public sealed class DiscordWebhookBuilder
 	{
 		this.FlagsChanged = true;
 		this.NotificationsSuppressed = true;
+		return this;
+	}
+
+	/// <summary>
+	///     Sets if you want to send components with non-application-owned webhooks.
+	/// </summary>
+	public DiscordWebhookBuilder SendWithComponents()
+	{
+		this.WithComponents = true;
 		return this;
 	}
 
@@ -510,6 +525,7 @@ public sealed class DiscordWebhookBuilder
 		this.NotificationsSuppressed = false;
 		this.IsTts = false;
 		this.IsVoiceMessage = false;
+		this.WithComponents = null;
 	}
 
 	/// <summary>

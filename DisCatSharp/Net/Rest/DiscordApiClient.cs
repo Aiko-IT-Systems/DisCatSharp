@@ -5368,6 +5368,8 @@ public sealed class DiscordApiClient
 		var qub = Utilities.GetApiUriBuilderFor(path, this.Discord?.Configuration).AddParameter("wait", "true");
 		if (threadId != null)
 			qub.AddParameter("thread_id", threadId);
+		if (builder.WithComponents != null)
+			qub.AddParameter("with_components", builder.WithComponents.Value.ToString().ToLower());
 
 		var url = qub.Build();
 
