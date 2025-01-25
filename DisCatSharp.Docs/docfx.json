@@ -372,8 +372,7 @@
 			"dcs"
 		],
 		"postProcessors": [
-			"ExtractSearchIndex",
-			"DescriptionGenerator"
+			"ExtractSearchIndex"
 		],
 		"noLangKeyword": false,
 		"keepFileLink": true,

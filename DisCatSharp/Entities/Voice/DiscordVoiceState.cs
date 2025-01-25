@@ -73,7 +73,7 @@ public class DiscordVoiceState : ObservableApiObject
 	///     Gets ID of the guild this voice state is associated with.
 	/// </summary>
 	[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
-	internal ulong? GuildId { get; set; }
+	public ulong? GuildId { get; set; }
 
 	/// <summary>
 	///     Gets the guild associated with this voice state.
@@ -86,7 +86,7 @@ public class DiscordVoiceState : ObservableApiObject
 	///     Gets ID of the channel this user is connected to.
 	/// </summary>
 	[JsonProperty("channel_id", NullValueHandling = NullValueHandling.Include)]
-	internal ulong? ChannelId { get; set; }
+	public ulong? ChannelId { get; set; }
 
 	/// <summary>
 	///     Gets the channel this user is connected to.
@@ -99,7 +99,7 @@ public class DiscordVoiceState : ObservableApiObject
 	///     Gets ID of the user to which this voice state belongs.
 	/// </summary>
 	[JsonProperty("user_id", NullValueHandling = NullValueHandling.Ignore)]
-	internal ulong UserId { get; set; }
+	public ulong UserId { get; set; }
 
 	/// <summary>
 	///     Gets the user associated with this voice state.
@@ -125,7 +125,7 @@ public class DiscordVoiceState : ObservableApiObject
 	///     Gets ID of the session of this voice state.
 	/// </summary>
 	[JsonProperty("session_id", NullValueHandling = NullValueHandling.Ignore)]
-	internal string SessionId { get; set; }
+	public string SessionId { get; set; }
 
 	/// <summary>
 	///     Gets whether this user is deafened.
@@ -173,7 +173,7 @@ public class DiscordVoiceState : ObservableApiObject
 	///     Gets the time at which this user requested to speak.
 	/// </summary>
 	[JsonProperty("request_to_speak_timestamp", NullValueHandling = NullValueHandling.Ignore)]
-	internal DateTimeOffset? RequestToSpeakTimestamp { get; set; }
+	public DateTimeOffset? RequestToSpeakTimestamp { get; set; }
 
 	/// <summary>
 	///     Gets the member this voice state belongs to.
@@ -197,7 +197,7 @@ public class DiscordVoiceState : ObservableApiObject
 	///     Gets whether the voice state is discoverable through user activities.
 	/// </summary>
 	[JsonProperty("discoverable", NullValueHandling = NullValueHandling.Ignore)]
-	internal bool Discoverable { get; set; }
+	public bool Discoverable { get; set; }
 
 	/// <summary>
 	///     Gets a readable voice state string.

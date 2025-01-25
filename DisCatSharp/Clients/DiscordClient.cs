@@ -635,8 +635,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="applicationId">The application id to fetch the entitlement for.</param>
 	/// <param name="entitlementId">The entitlement id to fetch.</param>
 	/// <returns>The requested <see cref="DiscordEntitlement" />.</returns>
-	internal async Task<DiscordEntitlement?> GetEntitlementAsync(ulong applicationId, ulong entitlementId)
-		=> await this.ApiClient.GetEntitlementAsync(applicationId, entitlementId).ConfigureAwait(false);
+	public async Task<DiscordEntitlement?> GetEntitlementAsync(ulong entitlementId)
+		=> await this.ApiClient.GetEntitlementAsync(this.CurrentApplication.Id, entitlementId).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets the subscriptions of an sku.
