@@ -2,218 +2,320 @@
 items:
 - uid: DisCatSharp.CommandsNext
   name: DisCatSharp.CommandsNext
+  type: Namespace
   items:
   - uid: DisCatSharp.CommandsNext.BaseCommandModule
     name: BaseCommandModule
+    type: Class
   - uid: DisCatSharp.CommandsNext.Command
     name: Command
+    type: Class
   - uid: DisCatSharp.CommandsNext.CommandArgument
     name: CommandArgument
+    type: Class
   - uid: DisCatSharp.CommandsNext.CommandContext
     name: CommandContext
+    type: Class
   - uid: DisCatSharp.CommandsNext.CommandErrorEventArgs
     name: CommandErrorEventArgs
+    type: Class
   - uid: DisCatSharp.CommandsNext.CommandEventArgs
     name: CommandEventArgs
+    type: Class
   - uid: DisCatSharp.CommandsNext.CommandExecutionEventArgs
     name: CommandExecutionEventArgs
+    type: Class
   - uid: DisCatSharp.CommandsNext.CommandGroup
     name: CommandGroup
+    type: Class
   - uid: DisCatSharp.CommandsNext.CommandOverload
     name: CommandOverload
+    type: Class
   - uid: DisCatSharp.CommandsNext.CommandResult
     name: CommandResult
+    type: Struct
   - uid: DisCatSharp.CommandsNext.CommandsNextConfiguration
     name: CommandsNextConfiguration
+    type: Class
   - uid: DisCatSharp.CommandsNext.CommandsNextEvents
     name: CommandsNextEvents
+    type: Class
   - uid: DisCatSharp.CommandsNext.CommandsNextExtension
     name: CommandsNextExtension
+    type: Class
   - uid: DisCatSharp.CommandsNext.CommandsNextExtension.DefaultHelpModule
     name: CommandsNextExtension.DefaultHelpModule
+    type: Class
   - uid: DisCatSharp.CommandsNext.CommandsNextUtilities
     name: CommandsNextUtilities
+    type: Class
   - uid: DisCatSharp.CommandsNext.ExtensionMethods
     name: ExtensionMethods
+    type: Class
   - uid: DisCatSharp.CommandsNext.PrefixResolverDelegate
     name: PrefixResolverDelegate
+    type: Delegate
 - uid: DisCatSharp.CommandsNext.Attributes
   name: DisCatSharp.CommandsNext.Attributes
+  type: Namespace
   items:
   - uid: DisCatSharp.CommandsNext.Attributes.AliasesAttribute
     name: AliasesAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.CheckBaseAttribute
     name: CheckBaseAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.CommandAttribute
     name: CommandAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.CooldownAttribute
     name: CooldownAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.DescriptionAttribute
     name: DescriptionAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.DontInjectAttribute
     name: DontInjectAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.GroupAttribute
     name: GroupAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.GroupCommandAttribute
     name: GroupCommandAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.HiddenAttribute
     name: HiddenAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.ModuleLifespan
     name: ModuleLifespan
+    type: Enum
   - uid: DisCatSharp.CommandsNext.Attributes.ModuleLifespanAttribute
     name: ModuleLifespanAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.PriorityAttribute
     name: PriorityAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RemainingTextAttribute
     name: RemainingTextAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RequireBoostingAttribute
     name: RequireBoostingAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RequireBotPermissionsAttribute
     name: RequireBotPermissionsAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RequireCertifiedModeratorAttribute
     name: RequireCertifiedModeratorAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RequireCommunityAttribute
     name: RequireCommunityAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RequireDirectMessageAttribute
     name: RequireDirectMessageAttribute
-  - uid: DisCatSharp.CommandsNext.Attributes.RequireDisCatSharpDeveloperAttribute
-    name: RequireDisCatSharpDeveloperAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RequireGuildAttribute
     name: RequireGuildAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RequireGuildOwnerAttribute
     name: RequireGuildOwnerAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RequireMemberVerificationGateAttribute
     name: RequireMemberVerificationGateAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RequireNsfwAttribute
     name: RequireNsfwAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RequireOwnerAttribute
     name: RequireOwnerAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RequireOwnerOrIdAttribute
     name: RequireOwnerOrIdAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RequirePermissionsAttribute
     name: RequirePermissionsAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RequirePrefixesAttribute
     name: RequirePrefixesAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RequireReferencedMessageAttribute
     name: RequireReferencedMessageAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RequireRolesAttribute
     name: RequireRolesAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RequireStaffAttribute
     name: RequireStaffAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RequireUserPermissionsAttribute
     name: RequireUserPermissionsAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RequireWelcomeScreenAttribute
     name: RequireWelcomeScreenAttribute
+    type: Class
   - uid: DisCatSharp.CommandsNext.Attributes.RoleCheckMode
     name: RoleCheckMode
+    type: Enum
 - uid: DisCatSharp.CommandsNext.Builders
   name: DisCatSharp.CommandsNext.Builders
+  type: Namespace
   items:
   - uid: DisCatSharp.CommandsNext.Builders.CommandBuilder
     name: CommandBuilder
+    type: Class
   - uid: DisCatSharp.CommandsNext.Builders.CommandGroupBuilder
     name: CommandGroupBuilder
+    type: Class
   - uid: DisCatSharp.CommandsNext.Builders.CommandModuleBuilder
     name: CommandModuleBuilder
+    type: Class
   - uid: DisCatSharp.CommandsNext.Builders.CommandOverloadBuilder
     name: CommandOverloadBuilder
+    type: Class
 - uid: DisCatSharp.CommandsNext.Converters
   name: DisCatSharp.CommandsNext.Converters
+  type: Namespace
   items:
   - uid: DisCatSharp.CommandsNext.Converters.ArgumentBindingResult
     name: ArgumentBindingResult
+    type: Struct
   - uid: DisCatSharp.CommandsNext.Converters.BaseHelpFormatter
     name: BaseHelpFormatter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.BoolConverter
     name: BoolConverter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.DateTimeConverter
     name: DateTimeConverter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.DateTimeOffsetConverter
     name: DateTimeOffsetConverter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.DefaultHelpFormatter
     name: DefaultHelpFormatter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.DiscordChannelConverter
     name: DiscordChannelConverter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.DiscordColorConverter
     name: DiscordColorConverter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.DiscordEmojiConverter
     name: DiscordEmojiConverter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.DiscordGuildConverter
     name: DiscordGuildConverter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.DiscordInviteConverter
     name: DiscordInviteConverter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.DiscordMemberConverter
     name: DiscordMemberConverter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.DiscordMessageConverter
     name: DiscordMessageConverter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.DiscordRoleConverter
     name: DiscordRoleConverter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.DiscordScheduledEventConverter
     name: DiscordScheduledEventConverter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.DiscordThreadChannelConverter
     name: DiscordThreadChannelConverter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.DiscordUserConverter
     name: DiscordUserConverter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.EnumConverter`1
     name: EnumConverter<T>
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.Float128Converter
     name: Float128Converter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.Float32Converter
     name: Float32Converter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.Float64Converter
     name: Float64Converter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.IArgumentConverter
     name: IArgumentConverter
+    type: Interface
   - uid: DisCatSharp.CommandsNext.Converters.IArgumentConverter`1
     name: IArgumentConverter<T>
+    type: Interface
   - uid: DisCatSharp.CommandsNext.Converters.Int16Converter
     name: Int16Converter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.Int32Converter
     name: Int32Converter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.Int64Converter
     name: Int64Converter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.Int8Converter
     name: Int8Converter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.NullableConverter`1
     name: NullableConverter<T>
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.StringConverter
     name: StringConverter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.TimeSpanConverter
     name: TimeSpanConverter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.Uint16Converter
     name: Uint16Converter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.Uint32Converter
     name: Uint32Converter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.Uint64Converter
     name: Uint64Converter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.Uint8Converter
     name: Uint8Converter
+    type: Class
   - uid: DisCatSharp.CommandsNext.Converters.UriConverter
     name: UriConverter
+    type: Class
 - uid: DisCatSharp.CommandsNext.Entities
   name: DisCatSharp.CommandsNext.Entities
+  type: Namespace
   items:
   - uid: DisCatSharp.CommandsNext.Entities.CommandHelpMessage
     name: CommandHelpMessage
+    type: Struct
   - uid: DisCatSharp.CommandsNext.Entities.ICommandModule
     name: ICommandModule
+    type: Interface
   - uid: DisCatSharp.CommandsNext.Entities.ICooldownResponder
     name: ICooldownResponder
+    type: Interface
   - uid: DisCatSharp.CommandsNext.Entities.SingletonCommandModule
     name: SingletonCommandModule
+    type: Class
   - uid: DisCatSharp.CommandsNext.Entities.TransientCommandModule
     name: TransientCommandModule
+    type: Class
 - uid: DisCatSharp.CommandsNext.Exceptions
   name: DisCatSharp.CommandsNext.Exceptions
+  type: Namespace
   items:
   - uid: DisCatSharp.CommandsNext.Exceptions.ChecksFailedException
     name: ChecksFailedException
+    type: Class
   - uid: DisCatSharp.CommandsNext.Exceptions.CommandNotFoundException
     name: CommandNotFoundException
+    type: Class
   - uid: DisCatSharp.CommandsNext.Exceptions.DuplicateCommandException
     name: DuplicateCommandException
+    type: Class
   - uid: DisCatSharp.CommandsNext.Exceptions.DuplicateOverloadException
     name: DuplicateOverloadException
+    type: Class
   - uid: DisCatSharp.CommandsNext.Exceptions.InvalidOverloadException
     name: InvalidOverloadException
+    type: Class
 memberLayout: SeparatePages

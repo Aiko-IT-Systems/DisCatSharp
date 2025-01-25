@@ -2,134 +2,202 @@
 items:
 - uid: DisCatSharp.Lavalink
   name: DisCatSharp.Lavalink
+  type: Namespace
   items:
   - uid: DisCatSharp.Lavalink.ExtensionMethods
     name: ExtensionMethods
+    type: Class
   - uid: DisCatSharp.Lavalink.LavalinkConfiguration
     name: LavalinkConfiguration
+    type: Class
   - uid: DisCatSharp.Lavalink.LavalinkExtension
     name: LavalinkExtension
+    type: Class
   - uid: DisCatSharp.Lavalink.LavalinkGuildPlayer
     name: LavalinkGuildPlayer
+    type: Class
+  - uid: DisCatSharp.Lavalink.LavalinkQueue`1
+    name: LavalinkQueue<T>
+    type: Class
   - uid: DisCatSharp.Lavalink.LavalinkSession
     name: LavalinkSession
+    type: Class
 - uid: DisCatSharp.Lavalink.Entities
   name: DisCatSharp.Lavalink.Entities
+  type: Namespace
   items:
   - uid: DisCatSharp.Lavalink.Entities.CpuStats
     name: CpuStats
+    type: Class
+  - uid: DisCatSharp.Lavalink.Entities.DefaultQueueEntry
+    name: DefaultQueueEntry
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.FrameStats
     name: FrameStats
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.Git
     name: Git
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.IQueueEntry
     name: IQueueEntry
+    type: Interface
   - uid: DisCatSharp.Lavalink.Entities.LavalinkException
     name: LavalinkException
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.LavalinkInfo
     name: LavalinkInfo
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.LavalinkPlayer
     name: LavalinkPlayer
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.LavalinkPlayerState
     name: LavalinkPlayerState
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.LavalinkPlaylist
     name: LavalinkPlaylist
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.LavalinkPlaylistInfo
     name: LavalinkPlaylistInfo
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.LavalinkPluginInfo
     name: LavalinkPluginInfo
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.LavalinkSessionConfiguration
     name: LavalinkSessionConfiguration
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.LavalinkStats
     name: LavalinkStats
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.LavalinkTrack
     name: LavalinkTrack
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.LavalinkTrackInfo
     name: LavalinkTrackInfo
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.LavalinkTrackLoadingResult
     name: LavalinkTrackLoadingResult
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.LavalinkVoiceState
     name: LavalinkVoiceState
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.MemoryStats
     name: MemoryStats
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.Plugin
     name: Plugin
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.Version
     name: Version
+    type: Class
 - uid: DisCatSharp.Lavalink.Entities.Filters
   name: DisCatSharp.Lavalink.Entities.Filters
+  type: Namespace
   items:
   - uid: DisCatSharp.Lavalink.Entities.Filters.IPluginFilter
     name: IPluginFilter
+    type: Interface
   - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkChannelMix
     name: LavalinkChannelMix
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkDisortion
     name: LavalinkDisortion
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkEqualizer
     name: LavalinkEqualizer
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkFilters
     name: LavalinkFilters
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkKaraoke
     name: LavalinkKaraoke
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkLowPass
     name: LavalinkLowPass
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkRotation
     name: LavalinkRotation
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkTimescale
     name: LavalinkTimescale
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkTremolo
     name: LavalinkTremolo
+    type: Class
   - uid: DisCatSharp.Lavalink.Entities.Filters.LavalinkVibrato
     name: LavalinkVibrato
+    type: Class
 - uid: DisCatSharp.Lavalink.Enums
   name: DisCatSharp.Lavalink.Enums
+  type: Namespace
   items:
   - uid: DisCatSharp.Lavalink.Enums.LavalinkEvents
     name: LavalinkEvents
+    type: Class
   - uid: DisCatSharp.Lavalink.Enums.LavalinkLoadResultType
     name: LavalinkLoadResultType
+    type: Enum
   - uid: DisCatSharp.Lavalink.Enums.LavalinkSearchType
     name: LavalinkSearchType
+    type: Enum
   - uid: DisCatSharp.Lavalink.Enums.LavalinkTrackEndReason
     name: LavalinkTrackEndReason
+    type: Enum
   - uid: DisCatSharp.Lavalink.Enums.Severity
     name: Severity
+    type: Enum
 - uid: DisCatSharp.Lavalink.Enums.Filters
   name: DisCatSharp.Lavalink.Enums.Filters
+  type: Namespace
   items:
   - uid: DisCatSharp.Lavalink.Enums.Filters.LavalinkFilterBand
     name: LavalinkFilterBand
+    type: Enum
 - uid: DisCatSharp.Lavalink.EventArgs
   name: DisCatSharp.Lavalink.EventArgs
+  type: Namespace
   items:
   - uid: DisCatSharp.Lavalink.EventArgs.GuildPlayerDestroyedEventArgs
     name: GuildPlayerDestroyedEventArgs
+    type: Class
   - uid: DisCatSharp.Lavalink.EventArgs.LavalinkPlayerStateUpdateEventArgs
     name: LavalinkPlayerStateUpdateEventArgs
+    type: Class
   - uid: DisCatSharp.Lavalink.EventArgs.LavalinkSessionConnectedEventArgs
     name: LavalinkSessionConnectedEventArgs
+    type: Class
   - uid: DisCatSharp.Lavalink.EventArgs.LavalinkSessionDisconnectedEventArgs
     name: LavalinkSessionDisconnectedEventArgs
+    type: Class
   - uid: DisCatSharp.Lavalink.EventArgs.LavalinkStatsReceivedEventArgs
     name: LavalinkStatsReceivedEventArgs
+    type: Class
   - uid: DisCatSharp.Lavalink.EventArgs.LavalinkTrackEndedEventArgs
     name: LavalinkTrackEndedEventArgs
+    type: Class
   - uid: DisCatSharp.Lavalink.EventArgs.LavalinkTrackExceptionEventArgs
     name: LavalinkTrackExceptionEventArgs
+    type: Class
   - uid: DisCatSharp.Lavalink.EventArgs.LavalinkTrackStartedEventArgs
     name: LavalinkTrackStartedEventArgs
+    type: Class
   - uid: DisCatSharp.Lavalink.EventArgs.LavalinkTrackStuckEventArgs
     name: LavalinkTrackStuckEventArgs
+    type: Class
   - uid: DisCatSharp.Lavalink.EventArgs.LavalinkWebsocketClosedEventArgs
     name: LavalinkWebsocketClosedEventArgs
+    type: Class
 - uid: DisCatSharp.Lavalink.Exceptions
   name: DisCatSharp.Lavalink.Exceptions
+  type: Namespace
   items:
   - uid: DisCatSharp.Lavalink.Exceptions.LavalinkRestException
     name: LavalinkRestException
+    type: Class
 - uid: DisCatSharp.Lavalink.Models
   name: DisCatSharp.Lavalink.Models
+  type: Namespace
   items:
   - uid: DisCatSharp.Lavalink.Models.LavalinkPlayerUpdateModel
     name: LavalinkPlayerUpdateModel
+    type: Class
 memberLayout: SeparatePages

@@ -2,15 +2,21 @@
 items:
 - uid: DisCatSharp.Hosting
   name: DisCatSharp.Hosting
+  type: Namespace
   items:
   - uid: DisCatSharp.Hosting.BaseHostedService
     name: BaseHostedService
+    type: Class
   - uid: DisCatSharp.Hosting.DiscordHostedService
     name: DiscordHostedService
+    type: Class
   - uid: DisCatSharp.Hosting.DiscordShardedHostedService
     name: DiscordShardedHostedService
+    type: Class
   - uid: DisCatSharp.Hosting.IDiscordHostedService
     name: IDiscordHostedService
+    type: Interface
   - uid: DisCatSharp.Hosting.IDiscordHostedShardService
     name: IDiscordHostedShardService
+    type: Interface
 memberLayout: SeparatePages

@@ -2,64 +2,93 @@
 items:
 - uid: DisCatSharp.Interactivity
   name: DisCatSharp.Interactivity
+  type: Namespace
   items:
   - uid: DisCatSharp.Interactivity.InteractivityConfiguration
     name: InteractivityConfiguration
+    type: Class
   - uid: DisCatSharp.Interactivity.InteractivityEvents
     name: InteractivityEvents
+    type: Class
   - uid: DisCatSharp.Interactivity.InteractivityExtension
     name: InteractivityExtension
+    type: Class
   - uid: DisCatSharp.Interactivity.InteractivityHelpers
     name: InteractivityHelpers
+    type: Class
   - uid: DisCatSharp.Interactivity.InteractivityResult`1
     name: InteractivityResult<T>
+    type: Struct
   - uid: DisCatSharp.Interactivity.Page
     name: Page
+    type: Class
   - uid: DisCatSharp.Interactivity.PaginationEmojis
     name: PaginationEmojis
+    type: Class
 - uid: DisCatSharp.Interactivity.Enums
   name: DisCatSharp.Interactivity.Enums
+  type: Namespace
   items:
   - uid: DisCatSharp.Interactivity.Enums.ButtonPaginationBehavior
     name: ButtonPaginationBehavior
+    type: Enum
   - uid: DisCatSharp.Interactivity.Enums.InteractionResponseBehavior
     name: InteractionResponseBehavior
+    type: Enum
   - uid: DisCatSharp.Interactivity.Enums.ModalPage
     name: ModalPage
+    type: Class
   - uid: DisCatSharp.Interactivity.Enums.PaginatedModalResponse
     name: PaginatedModalResponse
+    type: Class
   - uid: DisCatSharp.Interactivity.Enums.PaginationBehaviour
     name: PaginationBehaviour
+    type: Enum
   - uid: DisCatSharp.Interactivity.Enums.PaginationDeletion
     name: PaginationDeletion
+    type: Enum
   - uid: DisCatSharp.Interactivity.Enums.PollBehaviour
     name: PollBehaviour
+    type: Enum
   - uid: DisCatSharp.Interactivity.Enums.SplitType
     name: SplitType
+    type: Enum
 - uid: DisCatSharp.Interactivity.EventHandling
   name: DisCatSharp.Interactivity.EventHandling
+  type: Namespace
   items:
   - uid: DisCatSharp.Interactivity.EventHandling.IPaginationRequest
     name: IPaginationRequest
+    type: Interface
   - uid: DisCatSharp.Interactivity.EventHandling.PaginationButtons
     name: PaginationButtons
+    type: Class
   - uid: DisCatSharp.Interactivity.EventHandling.PollEmoji
     name: PollEmoji
+    type: Class
   - uid: DisCatSharp.Interactivity.EventHandling.PollRequest
     name: PollRequest
+    type: Class
   - uid: DisCatSharp.Interactivity.EventHandling.Reaction
     name: Reaction
+    type: Class
   - uid: DisCatSharp.Interactivity.EventHandling.ReactionCollectRequest
     name: ReactionCollectRequest
+    type: Class
 - uid: DisCatSharp.Interactivity.Extensions
   name: DisCatSharp.Interactivity.Extensions
+  type: Namespace
   items:
   - uid: DisCatSharp.Interactivity.Extensions.ChannelExtensions
     name: ChannelExtensions
+    type: Class
   - uid: DisCatSharp.Interactivity.Extensions.ClientExtensions
     name: ClientExtensions
+    type: Class
   - uid: DisCatSharp.Interactivity.Extensions.InteractionExtensions
     name: InteractionExtensions
+    type: Class
   - uid: DisCatSharp.Interactivity.Extensions.MessageExtensions
     name: MessageExtensions
+    type: Class
 memberLayout: SeparatePages

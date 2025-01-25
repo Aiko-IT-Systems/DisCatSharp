@@ -2,21 +2,30 @@
 items:
 - uid: DisCatSharp.Attributes
   name: DisCatSharp.Attributes
+  type: Namespace
   items:
   - uid: DisCatSharp.Attributes.DeprecatedAttribute
     name: DeprecatedAttribute
+    type: Class
   - uid: DisCatSharp.Attributes.DiscordDeprecatedAttribute
     name: DiscordDeprecatedAttribute
+    type: Class
   - uid: DisCatSharp.Attributes.DiscordInExperimentAttribute
     name: DiscordInExperimentAttribute
+    type: Class
   - uid: DisCatSharp.Attributes.DiscordUnreleasedAttribute
     name: DiscordUnreleasedAttribute
+    type: Class
   - uid: DisCatSharp.Attributes.ExperimentalAttribute
     name: ExperimentalAttribute
+    type: Class
   - uid: DisCatSharp.Attributes.FeatureDescriptionAttribute
     name: FeatureDescriptionAttribute
+    type: Class
   - uid: DisCatSharp.Attributes.Features
     name: Features
+    type: Enum
   - uid: DisCatSharp.Attributes.RequiresFeatureAttribute
     name: RequiresFeatureAttribute
+    type: Class
 memberLayout: SeparatePages

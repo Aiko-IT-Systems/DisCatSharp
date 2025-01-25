@@ -2,7 +2,9 @@
 items:
 - uid: DisCatSharp.Hosting.DependencyInjection
   name: DisCatSharp.Hosting.DependencyInjection
+  type: Namespace
   items:
   - uid: DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions
     name: ServiceCollectionExtensions
+    type: Class
 memberLayout: SeparatePages
