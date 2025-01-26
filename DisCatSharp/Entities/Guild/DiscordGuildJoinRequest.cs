@@ -127,5 +127,4 @@ public sealed class DiscordGuildJoinRequest : SnowflakeObject
 	[DiscordUnreleased("This feature is not available for bots at the current time"), Obsolete("This feature is not available for bots at the current time", true)]
 	public async Task<DiscordGuildJoinRequest> ModifyAsync(bool approve, string? rejectionReason)
 		=> await this.Discord.ApiClient.ModifyGuildJoinRequestsAsync(this.GuildId, this.RequestId, approve ? JoinRequestStatusType.Approved : JoinRequestStatusType.Rejected, rejectionReason);
-
 }

@@ -23,7 +23,6 @@ public static class DiscordShortlink
 	/// </summary>
 	public static readonly string Contact = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/contact";
 
-
 	/// <summary>
 	/// Gets the shortlink to the bug report form.
 	/// </summary>

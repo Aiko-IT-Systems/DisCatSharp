@@ -2198,6 +2198,5 @@ public sealed partial class DiscordShardedClient
 	private Task Client_GuildJoinRequestDeleted(DiscordClient client, GuildJoinRequestDeleteEventArgs e)
 		=> this._guildJoinRequestDeleted.InvokeAsync(client, e);
 
-
 #endregion
 }

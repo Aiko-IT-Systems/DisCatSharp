@@ -144,7 +144,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	private Lazy<IReadOnlyDictionary<ulong, DiscordPresence>> _presencesLazy;
 
-
 	/// <summary>
 	///     Gets the collection of presences held by this client.
 	/// </summary>
@@ -434,7 +433,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			return;
 
 		if (this.Configuration.AutoFetchSkuIds)
-		{
 			try
 			{
 				var skus = await this.ApiClient.GetSkusAsync(this.CurrentApplication.Id).ConfigureAwait(false);
@@ -447,7 +445,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			{
 				this.Logger.LogError(LoggerEvents.Startup, ex, "Failed to fetch SKU IDs");
 			}
-		}
 
 		if (this.Configuration.AutoFetchApplicationEmojis)
 			try

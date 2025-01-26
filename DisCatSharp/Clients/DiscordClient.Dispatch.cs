@@ -384,6 +384,7 @@ public sealed partial class DiscordClient
 				var requestId = (ulong)dat["id"]!;
 				await this.OnGuildJoinRequestDeleteAsync(requestId, uid, this.Guilds[gid]).ConfigureAwait(false);
 				break;
+
 #endregion
 
 #region Invite

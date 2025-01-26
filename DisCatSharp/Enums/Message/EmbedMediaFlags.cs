@@ -26,6 +26,7 @@ public enum EmbedMediaFlags
 	///     This embed media has no flags.
 	/// </summary>
 	None = 0,
+
 	/// <summary>
 	///     This embed media is animated.
 	/// </summary>
