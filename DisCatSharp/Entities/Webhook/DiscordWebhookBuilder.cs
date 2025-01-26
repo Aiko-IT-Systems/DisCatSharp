@@ -59,6 +59,12 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	public DiscordPollBuilder? Poll { get; private set; }
 
 	/// <summary>
+	///     Whether to send components with this webhook requests.
+	///     Set to <see langword="true" /> if you want to send components with non-application-owned webhooks.
+	/// </summary>
+	public bool? WithComponents { get; internal set; }
+
+	/// <summary>
 	///     Sets the webhook response to suppress embeds.
 	/// </summary>
 	public DiscordWebhookBuilder SuppressEmbeds()
