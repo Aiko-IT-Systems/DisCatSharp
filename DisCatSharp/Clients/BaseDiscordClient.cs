@@ -71,10 +71,10 @@ public abstract class BaseDiscordClient : IDisposable
 				var optionsFactory = new OptionsFactory<ConsoleLoggerOptions>([configureNamedOptions], []);
 				var optionsMonitor = new OptionsMonitor<ConsoleLoggerOptions>(optionsFactory, [], new OptionsCache<ConsoleLoggerOptions>());
 				/*
-			var configureFormatterOptions = new ConfigureNamedOptions<ConsoleFormatterOptions>(string.Empty, x => { x.TimestampFormat = this.Configuration.LogTimestampFormat; });
-			var formatterFactory = new OptionsFactory<ConsoleFormatterOptions>(new[] { configureFormatterOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleFormatterOptions>>());
-			var formatterMonitor = new OptionsMonitor<ConsoleFormatterOptions>(formatterFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleFormatterOptions>>(), new OptionsCache<ConsoleFormatterOptions>());
-			*/
+				var configureFormatterOptions = new ConfigureNamedOptions<ConsoleFormatterOptions>(string.Empty, x => { x.TimestampFormat = this.Configuration.LogTimestampFormat; });
+				var formatterFactory = new OptionsFactory<ConsoleFormatterOptions>(new[] { configureFormatterOptions }, Enumerable.Empty<IPostConfigureOptions<ConsoleFormatterOptions>>());
+				var formatterMonitor = new OptionsMonitor<ConsoleFormatterOptions>(formatterFactory, Enumerable.Empty<IOptionsChangeTokenSource<ConsoleFormatterOptions>>(), new OptionsCache<ConsoleFormatterOptions>());
+				*/
 
 				var l = new ConsoleLoggerProvider(optionsMonitor);
 				this.Configuration.LoggerFactory = new LoggerFactory();

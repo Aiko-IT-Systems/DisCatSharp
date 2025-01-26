@@ -134,8 +134,16 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public IReadOnlyDictionary<ulong, DiscordPresence> Presences
 		=> this._presencesLazy.Value;
 
+	/// <summary>
+	///     Gets the internal collection of presences.
+	/// </summary>
 	internal ConcurrentDictionary<ulong, DiscordPresence> PresencesInternal = [];
+
+	/// <summary>
+	///     Lazily gets the collection of presences held by this client.
+	/// </summary>
 	private Lazy<IReadOnlyDictionary<ulong, DiscordPresence>> _presencesLazy;
+
 
 	/// <summary>
 	///     Gets the collection of presences held by this client.
@@ -143,7 +151,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public IReadOnlyDictionary<string, DiscordActivity> EmbeddedActivities
 		=> this._embeddedActivitiesLazy.Value;
 
+	/// <summary>
+	///     Gets the internal collection of embedded activities.
+	/// </summary>
 	internal ConcurrentDictionary<string, DiscordActivity> EmbeddedActivitiesInternal = [];
+
+	/// <summary>
+	///     Lazily gets the collection of embedded activities held by this client.
+	/// </summary>
 	private Lazy<IReadOnlyDictionary<string, DiscordActivity>> _embeddedActivitiesLazy;
 
 	/// <summary>

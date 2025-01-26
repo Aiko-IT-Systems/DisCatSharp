@@ -100,5 +100,8 @@ public class ForumChannelEditModel : BaseEditModel
 	/// </summary>
 	public IEnumerable<DiscordOverwriteBuilder> PermissionOverwrites { internal get; set; }
 
+	/// <summary>
+	///     Sets the channel's flags.
+	/// </summary>
 	public Optional<ChannelFlags?> Flags { internal get; set; }
 }

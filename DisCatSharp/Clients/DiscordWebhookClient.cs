@@ -20,12 +20,25 @@ namespace DisCatSharp;
 /// </summary>
 public class DiscordWebhookClient
 {
+	/// <summary>
+	///     Gets the API client for this webhook client.
+	/// </summary>
 	internal readonly DiscordApiClient ApiClient;
+
+	/// <summary>
+	///     Gets the log timestamp format for this webhook client.
+	/// </summary>
 	internal readonly string LogTimestampFormat;
 
+	/// <summary>
+	///     Gets the minimum log level for this webhook client.
+	/// </summary>
 	internal readonly LogLevel MinimumLogLevel;
 
-	internal List<DiscordWebhook> Hooks;
+	/// <summary>
+	///     Gets the list of registered webhooks.
+	/// </summary>
+	internal List<DiscordWebhook> Hooks { get; set; } = [];
 
 	/// <summary>
 	///     Creates a new webhook client.
@@ -235,6 +248,9 @@ public class DiscordWebhookClient
 		return messages;
 	}
 
+	/// <summary>
+	///     Disposes the client.
+	/// </summary>
 	~DiscordWebhookClient()
 	{
 		this.Hooks.Clear();

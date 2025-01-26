@@ -11,22 +11,74 @@ namespace DisCatSharp;
 /// </summary>
 public sealed class MediaTool : IDisposable
 {
+	/// <summary>
+	///     The PNG magic number.
+	/// </summary>
 	private const ulong PNG_MAGIC = 0x0A1A_0A0D_474E_5089;
+
+	/// <summary>
+	///     The first JPEG magic number.
+	/// </summary>
 	private const ushort JPEG_MAGIC_1 = 0xD8FF;
+
+	/// <summary>
+	///     The second JPEG magic number.
+	/// </summary>
 	private const ushort JPEG_MAGIC_2 = 0xD9FF;
+
+	/// <summary>
+	///     The first GIF magic number.
+	/// </summary>
 	private const ulong GIF_MAGIC_1 = 0x0000_6139_3846_4947;
+
+	/// <summary>
+	///     The second GIF magic number.
+	/// </summary>
 	private const ulong GIF_MAGIC_2 = 0x0000_6137_3846_4947;
+
+	/// <summary>
+	///     The first WEBP magic number.
+	/// </summary>
 	private const uint WEBP_MAGIC_1 = 0x4646_4952;
+
+	/// <summary>
+	///     The second WEBP magic number.
+	/// </summary>
 	private const uint WEBP_MAGIC_2 = 0x5042_4557;
+
+	/// <summary>
+	///     The GIF mask.
+	/// </summary>
 	private const ulong GIF_MASK = 0x0000_FFFF_FFFF_FFFF;
+
+	/// <summary>
+	///     The 32-bit mask.
+	/// </summary>
 	private const ulong MASK32 = 0x0000_0000_FFFF_FFFF;
+
+	/// <summary>
+	///     The 16-bit mask.
+	/// </summary>
 	private const uint MASK16 = 0x0000_FFFF;
 
-	// MP3 and OGG magic numbers
+	/// <summary>
+	///     The MP3 magic number.
+	/// </summary>
 	private const uint MP3_MAGIC = 0xFFF;
+
+	/// <summary>
+	///     The OGG magic number.
+	/// </summary>
 	private const uint OGG_MAGIC = 0x5367_4F67; // "OggS" in ASCII
 
+	/// <summary>
+	///     The base64 cache.
+	/// </summary>
 	private string? _b64Cache;
+
+	/// <summary>
+	///     The media format cache.
+	/// </summary>
 	private MediaFormat _mfCache = MediaFormat.Unknown;
 
 	/// <summary>

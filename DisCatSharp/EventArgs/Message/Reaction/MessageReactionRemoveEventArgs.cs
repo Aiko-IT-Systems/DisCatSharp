@@ -33,7 +33,6 @@ public class MessageReactionRemoveEventArgs : DiscordEventArgs
 	/// <summary>
 	///     The channel id.
 	/// </summary>
-	/// s
 	public ulong ChannelId { get; internal set; }
 
 	/// <summary>
