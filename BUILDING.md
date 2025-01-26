@@ -18,11 +18,11 @@ On Windows, we only officially support Visual Studio 2022 17.0 or newer. Visual 
 ### GNU/Linux
 On GNU/Linux, we support building via Visual Studio Code and .NET Core SDK. Other IDEs might work, but are not supported or guaranteed to work properly.
 
-While these should apply to any modern distribution, we only test against Debian 10. Your mileage may vary.
+While these should apply to any modern distribution, we only test against Ubuntu 24.04. Your mileage may vary.
 
 When installing the below, make sure you install all the dependencies properly. We might ship a build environment as a docker container in the future.
 
-* **Any modern GNU/Linux distribution** - like Debian 10.
+* **Any modern GNU/Linux distribution** - like Ubuntu 24.04.
 * **Git** - to clone the repository.
 * [**Visual Studio Code**](https://code.visualstudio.com/Download) - a recent version is required.
    * **C# for Visual Studio Code (powered by OmniSharp)** - required for syntax highlighting and basic Intellisense
