@@ -662,7 +662,7 @@ internal sealed class RestGuildIntegrationAttachPayload : ObservableApiObject
 }
 
 /// <summary>
-/// 	Represents a guild join request update payload.
+///     Represents a guild join request update payload.
 /// </summary>
 internal sealed class RestGuildJoinRequestUpdatePayload : ObservableApiObject
 {

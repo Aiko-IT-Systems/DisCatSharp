@@ -384,6 +384,7 @@ public sealed partial class DiscordClient
 				var requestId = (ulong)dat["id"]!;
 				await this.OnGuildJoinRequestDeleteAsync(requestId, uid, this.Guilds[gid]).ConfigureAwait(false);
 				break;
+
 #endregion
 
 #region Invite
@@ -917,7 +918,7 @@ public sealed partial class DiscordClient
 				Id = channelNew.Id,
 				LastMessageId = channelNew.LastMessageId,
 				Name = channelNew.Name,
-				PermissionOverwritesInternal = [..channelNew.PermissionOverwritesInternal],
+				PermissionOverwritesInternal = [.. channelNew.PermissionOverwritesInternal],
 				Position = channelNew.Position,
 				Topic = channelNew.Topic,
 				Type = channelNew.Type,

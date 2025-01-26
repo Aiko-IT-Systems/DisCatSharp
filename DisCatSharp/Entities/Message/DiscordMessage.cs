@@ -122,14 +122,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		this.Discord = other.Discord;
 
 		this.AttachmentsInternal = other.AttachmentsInternal; // the attachments cannot change, thus no need to copy and reallocate.
-		this.EmbedsInternal = [..other.EmbedsInternal];
+		this.EmbedsInternal = [.. other.EmbedsInternal];
 
-		this.MentionedChannelsInternal = [..other.MentionedChannelsInternal];
-		this.MentionedRolesInternal = [..other.MentionedRolesInternal];
-		this.MentionedRoleIds = [..other.MentionedRoleIds];
-		this.MentionedUsersInternal = [..other.MentionedUsersInternal];
-		this.ReactionsInternal = [..other.ReactionsInternal];
-		this.StickersInternal = [..other.StickersInternal];
+		this.MentionedChannelsInternal = [.. other.MentionedChannelsInternal];
+		this.MentionedRolesInternal = [.. other.MentionedRolesInternal];
+		this.MentionedRoleIds = [.. other.MentionedRoleIds];
+		this.MentionedUsersInternal = [.. other.MentionedUsersInternal];
+		this.ReactionsInternal = [.. other.ReactionsInternal];
+		this.StickersInternal = [.. other.StickersInternal];
 
 		this.Author = other.Author;
 		this.ChannelId = other.ChannelId;
@@ -482,7 +482,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	///     Gets the soundboard sounds send with this message, if applicable.
 	/// </summary>
 	[JsonProperty("soundboard_sounds", NullValueHandling = NullValueHandling.Ignore)]
-	public List<DiscordSoundboardSound>? SoundboardSounds  { get; internal set; }
+	public List<DiscordSoundboardSound>? SoundboardSounds { get; internal set; }
 
 	/// <summary>
 	///     Checks whether this <see cref="DiscordMessage" /> is equal to another <see cref="DiscordMessage" />.

@@ -14,8 +14,20 @@ namespace DisCatSharp;
 /// </summary>
 public sealed partial class DiscordClient
 {
+	/// <summary>
+	///     Stores the registered event handlers.
+	/// </summary>
 	private readonly Dictionary<Type, object> _registeredEventhandlers = [];
+
+	/// <summary>
+	///     Maps a tuple of handler, type, and a boolean indicating whether static methods were registered to a list of event
+	///     info and delegate arrays.
+	/// </summary>
 	private readonly Dictionary<(object?, Type, bool), List<(EventInfo, Delegate)[]>> _registrationToDelegate = [];
+
+	/// <summary>
+	///     Maps a type to a list of anonymous handler objects.
+	/// </summary>
 	private readonly Dictionary<Type, List<object>> _typeToAnonymousHandlers = [];
 
 	/// <summary>

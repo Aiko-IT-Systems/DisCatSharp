@@ -185,6 +185,9 @@ public sealed partial class DiscordShardedClient
 
 #region Destructor
 
+	/// <summary>
+	///     Disposes the client.
+	/// </summary>
 	~DiscordShardedClient()
 	{
 		this.InternalStopAsync(false).GetAwaiter().GetResult();

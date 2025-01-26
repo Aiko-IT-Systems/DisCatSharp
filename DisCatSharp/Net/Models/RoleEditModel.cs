@@ -25,17 +25,17 @@ public class RoleEditModel : BaseEditModel
 	}
 
 	/// <summary>
-	///     New role name
+	///     The new role name.
 	/// </summary>
 	public string Name { internal get; set; }
 
 	/// <summary>
-	///     New role permissions
+	///     The new role permissions.
 	/// </summary>
 	public Permissions? Permissions { internal get; set; }
 
 	/// <summary>
-	///     New role color
+	///     The new role color.
 	/// </summary>
 	public DiscordColor? Color { internal get; set; }
 
@@ -45,7 +45,7 @@ public class RoleEditModel : BaseEditModel
 	public bool? Hoist { internal get; set; }
 
 	/// <summary>
-	///     Whether new role should be mentionable
+	///     Whether new role should be mentionable.
 	/// </summary>
 	public bool? Mentionable { internal get; set; }
 

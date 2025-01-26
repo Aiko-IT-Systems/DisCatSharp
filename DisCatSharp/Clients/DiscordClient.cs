@@ -134,7 +134,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public IReadOnlyDictionary<ulong, DiscordPresence> Presences
 		=> this._presencesLazy.Value;
 
+	/// <summary>
+	///     Gets the internal collection of presences.
+	/// </summary>
 	internal ConcurrentDictionary<ulong, DiscordPresence> PresencesInternal = [];
+
+	/// <summary>
+	///     Lazily gets the collection of presences held by this client.
+	/// </summary>
 	private Lazy<IReadOnlyDictionary<ulong, DiscordPresence>> _presencesLazy;
 
 	/// <summary>
@@ -143,7 +150,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public IReadOnlyDictionary<string, DiscordActivity> EmbeddedActivities
 		=> this._embeddedActivitiesLazy.Value;
 
+	/// <summary>
+	///     Gets the internal collection of embedded activities.
+	/// </summary>
 	internal ConcurrentDictionary<string, DiscordActivity> EmbeddedActivitiesInternal = [];
+
+	/// <summary>
+	///     Lazily gets the collection of embedded activities held by this client.
+	/// </summary>
 	private Lazy<IReadOnlyDictionary<string, DiscordActivity>> _embeddedActivitiesLazy;
 
 	/// <summary>
@@ -419,7 +433,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			return;
 
 		if (this.Configuration.AutoFetchSkuIds)
-		{
 			try
 			{
 				var skus = await this.ApiClient.GetSkusAsync(this.CurrentApplication.Id).ConfigureAwait(false);
@@ -432,7 +445,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			{
 				this.Logger.LogError(LoggerEvents.Startup, ex, "Failed to fetch SKU IDs");
 			}
-		}
 
 		if (this.Configuration.AutoFetchApplicationEmojis)
 			try
@@ -621,8 +633,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="before">Retrieve entitlements before this entitlement ID.</param>
 	/// <param name="after">Retrieve entitlements after this entitlement ID.</param>
 	/// <param name="limit">Number of entitlements to return, 1-100, default 100.</param>
-	/// <param name="excludeEnded">Whether or not ended entitlements should be omitted. Defaults to false, ended entitlements are included by default.</param>
-	/// <param name="excludeDeleted">Whether or not deleted entitlements should be omitted. Defaults to true, deleted entitlements are not included by default.</param>
+	/// <param name="excludeEnded">
+	///     Whether or not ended entitlements should be omitted. Defaults to false, ended entitlements
+	///     are included by default.
+	/// </param>
+	/// <param name="excludeDeleted">
+	///     Whether or not deleted entitlements should be omitted. Defaults to true, deleted
+	///     entitlements are not included by default.
+	/// </param>
 	/// <returns>A list of <see cref="DiscordEntitlement" />.</returns>
 	/// <exception cref="NotFoundException">Thrown when the entitlements do not exist.</exception>
 	[RequiresFeature(Features.MonetizedApplication)]
@@ -630,7 +648,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> await this.ApiClient.GetEntitlementsAsync(this.CurrentApplication.Id, guildId, userId, skuIds, before, after, limit, excludeEnded, excludeDeleted).ConfigureAwait(false);
 
 	/// <summary>
-	///     Gets an entitlement for given <paramref name="applicationId"/>.
+	///     Gets an entitlement for given <paramref name="applicationId" />.
 	/// </summary>
 	/// <param name="entitlementId">The entitlement id to fetch.</param>
 	/// <returns>The requested <see cref="DiscordEntitlement" />.</returns>

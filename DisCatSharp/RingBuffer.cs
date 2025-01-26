@@ -13,6 +13,9 @@ namespace DisCatSharp;
 /// <typeparam name="T">Type of elements within this ring buffer.</typeparam>
 public class RingBuffer<T> : ICollection<T>
 {
+	/// <summary>
+	///     Gets whether the buffer reached the end.
+	/// </summary>
 	private bool _reachedEnd;
 
 	/// <summary>

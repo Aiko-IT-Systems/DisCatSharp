@@ -39,7 +39,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 		this.CustomInstallUrl = tapp.CustomInstallUrl;
 		this.InstallParams = tapp.InstallParams;
 		this.RoleConnectionsVerificationUrl = tapp.RoleConnectionsVerificationUrl.ValueOrDefault();
-		this.Tags = [..tapp.Tags];
+		this.Tags = [.. tapp.Tags];
 		this.Id = tapp.Id;
 		this.Name = tapp.Name;
 		this.IconHash = tapp.IconHash;
@@ -87,7 +87,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 				.Select(x => x.User)
 				.ToArray();
 
-			this.Members = [..users];
+			this.Members = [.. users];
 			this.Team.Owner = members.First(x => x.Role == "owner").User;
 			this.Team.Members = new List<DiscordTeamMember>(members);
 			this.TeamName = this.Team.Name;

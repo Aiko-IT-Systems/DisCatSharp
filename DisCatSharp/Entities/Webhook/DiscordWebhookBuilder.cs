@@ -21,9 +21,9 @@ public sealed class DiscordWebhookBuilder
 
 	private readonly List<DiscordMessageFile> _files = [];
 
-	private string _content;
-
 	internal readonly List<DiscordAttachment> AttachmentsInternal = [];
+
+	private string _content;
 
 	/// <summary>
 	///     Whether flags were changed.
@@ -110,7 +110,7 @@ public sealed class DiscordWebhookBuilder
 
 	/// <summary>
 	///     Whether to send components with this webhook requests.
-	///     Set to <see langword="true"/> if you want to send components with non-application-owned webhooks.
+	///     Set to <see langword="true" /> if you want to send components with non-application-owned webhooks.
 	/// </summary>
 	public bool? WithComponents { get; internal set; }
 

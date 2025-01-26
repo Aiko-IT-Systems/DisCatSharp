@@ -40,6 +40,6 @@ public sealed class DiscordActionRowComponent : DiscordComponent
 	public IReadOnlyCollection<DiscordComponent> Components
 	{
 		get => this._components ?? [];
-		set => this._components = [..value];
+		set => this._components = [.. value];
 	}
 }

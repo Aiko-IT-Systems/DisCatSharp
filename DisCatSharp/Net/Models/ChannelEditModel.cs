@@ -75,7 +75,7 @@ public class ChannelEditModel : BaseEditModel
 	public Optional<DiscordVoiceRegion> RtcRegion { internal get; set; }
 
 	/// <summary>
-	///     <para>Sets the voice channel's video quality.</para>
+	///     Sets the voice channel's video quality.
 	/// </summary>
 	public VideoQualityMode? QualityMode { internal get; set; }
 
@@ -91,9 +91,12 @@ public class ChannelEditModel : BaseEditModel
 	public IEnumerable<DiscordOverwriteBuilder> PermissionOverwrites { internal get; set; }
 
 	/// <summary>
-	///     Sets the channel's default forum layout
+	///     Sets the channel's default forum layout.
 	/// </summary>
 	public ForumLayout? ForumLayout { internal get; set; }
 
+	/// <summary>
+	///     Sets the channel's flags.
+	/// </summary>
 	public Optional<ChannelFlags?> Flags { internal get; set; }
 }

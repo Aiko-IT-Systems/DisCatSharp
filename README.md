@@ -21,6 +21,8 @@
 - Full support for subscriptions and entitlements
 - New queue system for Lavalink
 - Support for join request (create, update & delete) events for clans
+- Support for message forwarding
+- Support for application emojis
 
 ## Breaking
 

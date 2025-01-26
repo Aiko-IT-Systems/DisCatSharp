@@ -9,6 +9,9 @@ namespace DisCatSharp.EventArgs;
 /// </summary>
 public class PayloadReceivedEventArgs : DiscordEventArgs
 {
+	/// <summary>
+	///     Gets the json.
+	/// </summary>
 	private string _json;
 
 	/// <summary>

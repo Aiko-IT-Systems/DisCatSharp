@@ -18,13 +18,13 @@ namespace DisCatSharp.Entities;
 public class DiscordGuildPreview : SnowflakeObject
 {
 	/// <summary>
-	/// Gets the emojis.
+	///     Gets the emojis.
 	/// </summary>
 	[JsonProperty("emojis", NullValueHandling = NullValueHandling.Ignore), JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
 	internal ConcurrentDictionary<ulong, DiscordEmoji> EmojisInternal = [];
 
 	/// <summary>
-	/// Gets the stickers.
+	///     Gets the stickers.
 	/// </summary>
 	[JsonProperty("stickers", NullValueHandling = NullValueHandling.Ignore), JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
 	internal ConcurrentDictionary<ulong, DiscordSticker> StickersInternal = [];

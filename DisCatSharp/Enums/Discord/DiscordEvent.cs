@@ -9,8 +9,14 @@ namespace DisCatSharp.Enums;
 [AttributeUsage(AttributeTargets.Method)]
 public class EventAttribute : Attribute
 {
+	/// <summary>
+	///     Gets the event name.
+	/// </summary>
 	internal readonly string? EventName;
 
+	/// <summary>
+	///     Initializes a new instance of <see cref="EventAttribute" />.
+	/// </summary>
 	public EventAttribute()
 	{ }
 
@@ -138,5 +144,5 @@ public enum DiscordEvent
 	SoundboardSounds,
 	GuildJoinRequestCreated,
 	GuildJoinRequestUpdated,
-	GuildJoinRequestDeleted,
+	GuildJoinRequestDeleted
 }

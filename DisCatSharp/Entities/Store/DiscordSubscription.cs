@@ -67,7 +67,7 @@ public sealed class DiscordSubscription : SnowflakeObject
 	///     Gets the end of the current subscription period.
 	/// </summary>
 	[JsonProperty("current_period_end", NullValueHandling = NullValueHandling.Ignore)]
-	internal string? CurrentPeriodEndRaw{ get; set; }
+	internal string? CurrentPeriodEndRaw { get; set; }
 
 	/// <summary>
 	///     Gets the end of the current subscription period.

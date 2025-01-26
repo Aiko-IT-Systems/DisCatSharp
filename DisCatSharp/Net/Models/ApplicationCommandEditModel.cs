@@ -7,12 +7,18 @@ using DisCatSharp.Enums;
 namespace DisCatSharp.Net.Models;
 
 /// <summary>
-///     Represents a application command edit model.
+///     Represents an application command edit model.
 /// </summary>
 public class ApplicationCommandEditModel : ObservableApiObject
 {
+	/// <summary>
+	///     The command's new description.
+	/// </summary>
 	private Optional<string> _description;
 
+	/// <summary>
+	///     The command's new name.
+	/// </summary>
 	private Optional<string> _name;
 
 	/// <summary>
@@ -31,7 +37,7 @@ public class ApplicationCommandEditModel : ObservableApiObject
 	}
 
 	/// <summary>
-	///     Sets the command's new description
+	///     Sets the command's new description.
 	/// </summary>
 	public Optional<string> Description
 	{
