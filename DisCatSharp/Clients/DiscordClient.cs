@@ -648,7 +648,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> await this.ApiClient.GetEntitlementsAsync(this.CurrentApplication.Id, guildId, userId, skuIds, before, after, limit, excludeEnded, excludeDeleted).ConfigureAwait(false);
 
 	/// <summary>
-	///     Gets an entitlement for given <paramref name="applicationId" />.
+	///     Gets an entitlement.
 	/// </summary>
 	/// <param name="entitlementId">The entitlement id to fetch.</param>
 	/// <returns>The requested <see cref="DiscordEntitlement" />.</returns>
