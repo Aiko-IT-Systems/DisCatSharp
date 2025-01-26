@@ -88,7 +88,7 @@ public async Task PlayAsync(InteractionContext ctx, [Option("query", "The query 
 }
 ```
 ### Skipping the Current Track
-To skip the currently playing track, you can use the `SkipAsync` method of the `LavalinkGuildPlayer` class. This method will skip the current track. If the queue system is enabled and there are more tracks in the queue, the next track will automatically start playing.
+To skip the currently playing track, you can use the [`SkipAsync`](xref:DisCatSharp.Lavalink.LavalinkGuildPlayer.SkipAsync*) method of the [`LavalinkGuildPlayer`](xref:DisCatSharp.Lavalink.LavalinkGuildPlayer) class. This method will skip the current track. If the queue system is enabled and there are more tracks in the queue, the next track will automatically start playing.
 ```cs
 await guildPlayer.SkipAsync();
 ```
@@ -118,7 +118,7 @@ guildPlayer.ReverseQueue();
 ...
 ```
 ## Queue Entry Pipeline
-The Lavalink queue system includes a powerful pipeline system that allows you to execute custom actions before and after track playback. This is implemented through the `IQueueEntry` interface.
+The Lavalink queue system includes a powerful pipeline system that allows you to execute custom actions before and after track playback. This is implemented through the [`IQueueEntry`](xref:DisCatSharp.Lavalink.Entities.IQueueEntry) interface.
 ### Queue Entry Lifecycle
 Each track in the queue goes through the following pipeline stages:
 1. **Before Playing**: Called right before a track starts playing
@@ -126,7 +126,7 @@ Each track in the queue goes through the following pipeline stages:
 3. **After Playing**: Called after track playback completes
 
 ### Creating Custom Queue Entries
-To create a custom queue entry, implement the `IQueueEntry` interface:
+To create a custom queue entry, implement the [`IQueueEntry`](xref:DisCatSharp.Lavalink.Entities.IQueueEntry) interface:
 
 ```cs
 public class CustomQueueEntry : IQueueEntry
@@ -148,7 +148,7 @@ public class CustomQueueEntry : IQueueEntry
 ```
 
 ### Configuring Custom Queue Entries
-To use custom queue entries, configure them in your `LavalinkConfiguration`:
+To use custom queue entries, configure them in your [`LavalinkConfiguration`](xref:DisCatSharp.Lavalink.LavalinkConfiguration):
 ```cs
 var config = new LavalinkConfiguration
 {
@@ -169,9 +169,9 @@ var config = new LavalinkConfiguration
 In case you use dependency injection in `CustomQueueEntry`
 
 ### Pipeline Flow Control
-- The `BeforePlayingAsync` method can control whether a track should be played by returning `true` or `false`
-- The `AfterPlayingAsync` method is called after the track finishes, allowing for cleanup or next-track preparation
-- Both methods have access to the `LavalinkGuildPlayer` instance for advanced control
+- The [`BeforePlayingAsync`](xref:DisCatSharp.Lavalink.Entities.IQueueEntry.BeforePlayingAsync*) method can control whether a track should be played by returning `true` or `false`
+- The [`AfterPlayingAsync`](xref:DisCatSharp.Lavalink.Entities.IQueueEntry.AfterPlayingAsync*) method is called after the track finishes, allowing for cleanup or next-track preparation
+- Both methods have access to the [`LavalinkGuildPlayer`](xref:DisCatSharp.Lavalink.LavalinkGuildPlayer) instance for advanced control
 
 Example usage of flow control:
 ```cs
