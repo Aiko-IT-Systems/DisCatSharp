@@ -632,7 +632,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	///     Gets an entitlement for given <paramref name="applicationId"/>.
 	/// </summary>
-	/// <param name="applicationId">The application id to fetch the entitlement for.</param>
 	/// <param name="entitlementId">The entitlement id to fetch.</param>
 	/// <returns>The requested <see cref="DiscordEntitlement" />.</returns>
 	public async Task<DiscordEntitlement?> GetEntitlementAsync(ulong entitlementId)
