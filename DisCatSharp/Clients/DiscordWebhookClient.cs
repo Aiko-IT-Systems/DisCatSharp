@@ -36,11 +36,6 @@ public class DiscordWebhookClient
 	internal readonly LogLevel MinimumLogLevel;
 
 	/// <summary>
-	///     Gets the list of registered webhooks.
-	/// </summary>
-	internal List<DiscordWebhook> Hooks { get; set; } = [];
-
-	/// <summary>
 	///     Creates a new webhook client.
 	/// </summary>
 	public DiscordWebhookClient()
@@ -88,6 +83,11 @@ public class DiscordWebhookClient
 		this.Hooks = [];
 		this.Webhooks = new ReadOnlyCollection<DiscordWebhook>(this.Hooks);
 	}
+
+	/// <summary>
+	///     Gets the list of registered webhooks.
+	/// </summary>
+	internal List<DiscordWebhook> Hooks { get; set; } = [];
 
 	/// <summary>
 	///     Gets the logger for this client.

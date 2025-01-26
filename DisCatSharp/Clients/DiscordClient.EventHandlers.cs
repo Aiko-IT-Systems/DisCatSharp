@@ -20,7 +20,8 @@ public sealed partial class DiscordClient
 	private readonly Dictionary<Type, object> _registeredEventhandlers = [];
 
 	/// <summary>
-	///     Maps a tuple of handler, type, and a boolean indicating whether static methods were registered to a list of event info and delegate arrays.
+	///     Maps a tuple of handler, type, and a boolean indicating whether static methods were registered to a list of event
+	///     info and delegate arrays.
 	/// </summary>
 	private readonly Dictionary<(object?, Type, bool), List<(EventInfo, Delegate)[]>> _registrationToDelegate = [];
 

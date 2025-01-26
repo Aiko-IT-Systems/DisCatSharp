@@ -24,13 +24,13 @@ public enum MembershipScreeningFieldType
 	TextInput,
 
 	/// <summary>
-	///    Specifies a paragraph question.
+	///     Specifies a paragraph question.
 	/// </summary>
 	[EnumMember(Value = "PARAGRAPH")]
 	Paragraph,
 
 	/// <summary>
-	///    Specifies a multiple choice question.
+	///     Specifies a multiple choice question.
 	/// </summary>
 	[EnumMember(Value = "MULTIPLE_CHOICE")]
 	MultipleChoice

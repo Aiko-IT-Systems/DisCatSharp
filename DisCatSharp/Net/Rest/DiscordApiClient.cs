@@ -2103,7 +2103,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Creates a new soundboard sound in the guild.
+	///     Creates a new soundboard sound in the guild.
 	/// </summary>
 	/// <param name="guildId">The guild ID.</param>
 	/// <param name="name">The name of the soundboard sound.</param>
@@ -2139,7 +2139,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Modifies an existing soundboard sound.
+	///     Modifies an existing soundboard sound.
 	/// </summary>
 	/// <param name="guildId">The guild ID.</param>
 	/// <param name="soundId">The soundboard sound ID.</param>
@@ -2175,7 +2175,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Deletes an existing soundboard sound.
+	///     Deletes an existing soundboard sound.
 	/// </summary>
 	/// <param name="guildId">The guild ID.</param>
 	/// <param name="soundId">The soundboard sound ID.</param>
@@ -2196,7 +2196,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets all soundboard sounds for a guild.
+	///     Gets all soundboard sounds for a guild.
 	/// </summary>
 	/// <param name="guildId">The guild ID.</param>
 	public async Task<IReadOnlyList<DiscordSoundboardSound>> ListGuildSoundboardSoundsAsync(ulong guildId)
@@ -2227,7 +2227,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// Gets a specific soundboard sound for a guild.
+	///     Gets a specific soundboard sound for a guild.
 	/// </summary>
 	/// <param name="guildId">The guild ID.</param>
 	/// <param name="soundId">The soundboard sound ID.</param>
@@ -2250,7 +2250,10 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="channelId">The ID of the channel to send the sound to.</param>
 	/// <param name="soundId">The ID of the soundboard sound to play.</param>
-	/// <param name="sourceGuildId">The ID of the guild the soundboard sound is from, required to play sounds from different servers. Optional.</param>
+	/// <param name="sourceGuildId">
+	///     The ID of the guild the soundboard sound is from, required to play sounds from different
+	///     servers. Optional.
+	/// </param>
 	/// <returns>A task representing the asynchronous operation.</returns>
 	public async Task SendSoundboardSoundAsync(ulong channelId, ulong soundId, ulong? sourceGuildId = null)
 	{
@@ -7605,8 +7608,14 @@ public sealed class DiscordApiClient
 	/// <param name="before">Retrieve entitlements before this entitlement ID.</param>
 	/// <param name="after">Retrieve entitlements after this entitlement ID.</param>
 	/// <param name="limit">Number of entitlements to return, 1-100, default 100.</param>
-	/// <param name="excludeEnded">Whether or not ended entitlements should be omitted. Defaults to false, ended entitlements are included by default.</param>
-	/// <param name="excludeDeleted">Whether or not deleted entitlements should be omitted. Defaults to true, deleted entitlements are not included by default.</param>
+	/// <param name="excludeEnded">
+	///     Whether or not ended entitlements should be omitted. Defaults to false, ended entitlements
+	///     are included by default.
+	/// </param>
+	/// <param name="excludeDeleted">
+	///     Whether or not deleted entitlements should be omitted. Defaults to true, deleted
+	///     entitlements are not included by default.
+	/// </param>
 	/// <returns>A list of <see cref="DiscordEntitlement" />.</returns>
 	internal async Task<IReadOnlyList<DiscordEntitlement>> GetEntitlementsAsync(ulong applicationId, ulong? guildId, ulong? userId, List<ulong>? skuIds = null, ulong? before = null, ulong? after = null, int limit = 100, bool? excludeEnded = null, bool? excludeDeleted = null)
 	{
@@ -7640,7 +7649,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	///     Gets an entitlement for given <paramref name="applicationId"/>.
+	///     Gets an entitlement for given <paramref name="applicationId" />.
 	/// </summary>
 	/// <param name="applicationId">The application id to fetch the entitlement for.</param>
 	/// <param name="entitlementId">The entitlement id to fetch.</param>

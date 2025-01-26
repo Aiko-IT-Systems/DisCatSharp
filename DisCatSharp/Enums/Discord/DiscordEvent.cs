@@ -10,12 +10,12 @@ namespace DisCatSharp.Enums;
 public class EventAttribute : Attribute
 {
 	/// <summary>
-	///    Gets the event name.
+	///     Gets the event name.
 	/// </summary>
 	internal readonly string? EventName;
 
 	/// <summary>
-	///    Initializes a new instance of <see cref="EventAttribute"/>.
+	///     Initializes a new instance of <see cref="EventAttribute" />.
 	/// </summary>
 	public EventAttribute()
 	{ }

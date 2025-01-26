@@ -255,7 +255,7 @@ public enum MediaFormat
 public static class MediaFormattExtensions
 {
 	/// <summary>
-	/// Detects the mime type.
+	///     Detects the mime type.
 	/// </summary>
 	/// <param name="format">The media format</param>
 	/// <returns>The mime type.</returns>

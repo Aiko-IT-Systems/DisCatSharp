@@ -633,8 +633,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="before">Retrieve entitlements before this entitlement ID.</param>
 	/// <param name="after">Retrieve entitlements after this entitlement ID.</param>
 	/// <param name="limit">Number of entitlements to return, 1-100, default 100.</param>
-	/// <param name="excludeEnded">Whether or not ended entitlements should be omitted. Defaults to false, ended entitlements are included by default.</param>
-	/// <param name="excludeDeleted">Whether or not deleted entitlements should be omitted. Defaults to true, deleted entitlements are not included by default.</param>
+	/// <param name="excludeEnded">
+	///     Whether or not ended entitlements should be omitted. Defaults to false, ended entitlements
+	///     are included by default.
+	/// </param>
+	/// <param name="excludeDeleted">
+	///     Whether or not deleted entitlements should be omitted. Defaults to true, deleted
+	///     entitlements are not included by default.
+	/// </param>
 	/// <returns>A list of <see cref="DiscordEntitlement" />.</returns>
 	/// <exception cref="NotFoundException">Thrown when the entitlements do not exist.</exception>
 	[RequiresFeature(Features.MonetizedApplication)]
@@ -642,7 +648,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> await this.ApiClient.GetEntitlementsAsync(this.CurrentApplication.Id, guildId, userId, skuIds, before, after, limit, excludeEnded, excludeDeleted).ConfigureAwait(false);
 
 	/// <summary>
-	///     Gets an entitlement for given <paramref name="applicationId"/>.
+	///     Gets an entitlement for given <paramref name="applicationId" />.
 	/// </summary>
 	/// <param name="entitlementId">The entitlement id to fetch.</param>
 	/// <returns>The requested <see cref="DiscordEntitlement" />.</returns>

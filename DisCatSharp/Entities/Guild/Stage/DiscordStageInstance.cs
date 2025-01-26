@@ -13,7 +13,7 @@ namespace DisCatSharp.Entities;
 public class DiscordStageInstance : SnowflakeObject, IEquatable<DiscordStageInstance>
 {
 	/// <summary>
-	/// Initializes a new instance of <see cref="DiscordStageInstance"/>.
+	///     Initializes a new instance of <see cref="DiscordStageInstance" />.
 	/// </summary>
 	internal DiscordStageInstance()
 		: base(["privacy_level"])

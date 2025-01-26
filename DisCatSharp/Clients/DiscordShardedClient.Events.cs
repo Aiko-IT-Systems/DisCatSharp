@@ -790,7 +790,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildSoundboardSoundsUpdateEventArgs> _guildSoundboardSoundsUpdated;
 
 	/// <summary>
-	///     Fired in response to <see cref="DiscordClient.RequestSoundboardSoundsAsync"/>.
+	///     Fired in response to <see cref="DiscordClient.RequestSoundboardSoundsAsync" />.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, SoundboardSoundsEventArgs> SoundboardSounds
 	{

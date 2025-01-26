@@ -70,8 +70,4 @@ public class DiscordGuildDirectoryChannel : DiscordChannel, IEquatable<DiscordGu
 	/// <returns>Whether the two channels are not equal.</returns>
 	public static bool operator !=(DiscordGuildDirectoryChannel e1, DiscordGuildDirectoryChannel e2)
 		=> !(e1 == e2);
-
-#region Methods
-
-#endregion
 }

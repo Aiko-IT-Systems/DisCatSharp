@@ -56,26 +56,26 @@ internal sealed class LavalinkRestPlayerUpdatePayload
 	internal Optional<LavalinkFilters> Filters { get; set; }
 
 	/// <summary>
-	///    Gets or sets the track.
+	///     Gets or sets the track.
 	/// </summary>
 	[JsonProperty("track", NullValueHandling = NullValueHandling.Ignore)]
 	internal Optional<PlayerBase> Track { get; set; }
 }
 
 /// <summary>
-///   The lavalink rest player update player track payload.
+///     The lavalink rest player update player track payload.
 /// </summary>
 internal class PlayerBase
 {
 	/// <summary>
-	/// Gets or sets the user data.
+	///     Gets or sets the user data.
 	/// </summary>
 	[JsonProperty("userData", NullValueHandling = NullValueHandling.Ignore)]
 	public object? UserData { get; set; }
 }
 
 /// <summary>
-///    The lavalink rest player update player track payload.
+///     The lavalink rest player update player track payload.
 /// </summary>
 internal sealed class PlayerWithIdentifier : PlayerBase
 {
@@ -87,7 +87,7 @@ internal sealed class PlayerWithIdentifier : PlayerBase
 }
 
 /// <summary>
-///    The lavalink rest player update player track payload.
+///     The lavalink rest player update player track payload.
 /// </summary>
 internal sealed class PlayerWithEncoded : PlayerBase
 {

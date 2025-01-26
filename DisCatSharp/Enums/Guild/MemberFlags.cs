@@ -71,7 +71,7 @@ public enum MemberFlags : long
 	/// </summary>
 	AutomodQuarantinedUsername = 1 << 7,
 
-	/// <inheritdoc cref="AutomodQuarantinedUsername"/>
+	/// <inheritdoc cref="AutomodQuarantinedUsername" />
 	AutomodQuarantinedUsernameOrGuildNickname = AutomodQuarantinedUsername,
 
 	/// <summary>

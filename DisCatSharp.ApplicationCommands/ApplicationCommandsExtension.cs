@@ -608,7 +608,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				await this.RegisterCommands(this._updateList.Where(x => x.Key == key).Select(x => x.Value).ToList(), key).ConfigureAwait(false);
 			}
 
-			this.MISSING_SCOPE_GUILD_IDS = [..failedGuilds];
+			this.MISSING_SCOPE_GUILD_IDS = [.. failedGuilds];
 			s_missingScopeGuildIdsGlobal.AddRange(failedGuilds);
 			this.ShardStartupFinished = true;
 			FinishedShardCount++;

@@ -11,7 +11,8 @@ public enum ApplicationCommandHandlerType
 	AppHandler = 1,
 
 	/// <summary>
-	///     Discord handles the interaction by launching an Activity and sending a follow-up message without coordinating with the app.
+	///     Discord handles the interaction by launching an Activity and sending a follow-up message without coordinating with
+	///     the app.
 	/// </summary>
 	DiscordLaunchActivity = 2
 }

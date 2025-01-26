@@ -114,7 +114,7 @@ public sealed class DiscordGuildJoinRequest : SnowflakeObject
 	public DateTimeOffset? LastSeen { get; internal set; }
 
 	/// <summary>
-	///    Gets the rejection reason of the join request.
+	///     Gets the rejection reason of the join request.
 	/// </summary>
 	[JsonProperty("rejection_reason", NullValueHandling = NullValueHandling.Ignore)]
 	public string? RejectionReason { get; internal set; }

@@ -14,7 +14,7 @@ namespace DisCatSharp;
 public class RingBuffer<T> : ICollection<T>
 {
 	/// <summary>
-	///    Gets whether the buffer reached the end.
+	///     Gets whether the buffer reached the end.
 	/// </summary>
 	private bool _reachedEnd;
 

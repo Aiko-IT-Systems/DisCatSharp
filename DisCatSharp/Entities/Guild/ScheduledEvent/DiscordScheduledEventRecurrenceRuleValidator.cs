@@ -21,7 +21,7 @@ public static class DiscordScheduledEventRecurrenceRuleValidator
 	/// <param name="weekdays">The weekdays to include in the set.</param>
 	/// <returns>A list of <see cref="RecurrenceRuleWeekday" /> objects.</returns>
 	private static List<RecurrenceRuleWeekday> CreateWeekdaySet(params RecurrenceRuleWeekday[] weekdays)
-		=> [..weekdays];
+		=> [.. weekdays];
 
 	/// <summary>
 	///     Validates the recurrence rule.
@@ -31,9 +31,9 @@ public static class DiscordScheduledEventRecurrenceRuleValidator
 	public static (bool IsValid, string? ErrorMessage) Validate(this DiscordScheduledEventRecurrenceRule rule)
 	{
 		return rule.ByWeekday is not null && rule.ByNWeekday is not null
-			? ((bool IsValid, string? ErrorMessage))(false, "by_weekday and by_n_weekday cannot both be set.")
+			? (false, "by_weekday and by_n_weekday cannot both be set.")
 			: rule.ByMonth is not null && rule.ByMonthDay is not null
-				? ((bool IsValid, string? ErrorMessage))(false, "by_month and by_month_day cannot both be set.")
+				? (false, "by_month and by_month_day cannot both be set.")
 				: rule.Frequency switch
 				{
 					RecurrenceRuleFrequency.Daily => rule.ValidateDailyFrequency(),
@@ -61,9 +61,9 @@ public static class DiscordScheduledEventRecurrenceRuleValidator
 	/// <returns>A tuple containing a boolean indicating validity and an optional error message.</returns>
 	private static (bool IsValid, string? ErrorMessage) ValidateWeeklyFrequency(this DiscordScheduledEventRecurrenceRule rule)
 		=> rule.ByWeekday?.Count is not 1
-			? ((bool IsValid, string? ErrorMessage))(false, "Weekly events must have a single day set in by_weekday.")
+			? (false, "Weekly events must have a single day set in by_weekday.")
 			: rule.Interval is not 1 and not 2
-				? ((bool IsValid, string? ErrorMessage))(false, "Weekly events can only have an interval of 1 or 2.")
+				? (false, "Weekly events can only have an interval of 1 or 2.")
 				: (true, null);
 
 	/// <summary>

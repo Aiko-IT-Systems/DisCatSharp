@@ -109,14 +109,18 @@ public enum DiscordIntents
 	/// <summary>
 	///     Whether to include guild expression events.
 	///     <para>
-	///         This includes <see cref="DiscordClient.GuildEmojisUpdated" />, <see cref="DiscordClient.GuildStickersUpdated" />,
-	/// <see cref="DiscordClient.GuildSoundboardSoundCreated"/>, <see cref="DiscordClient.GuildSoundboardSoundUpdated"/>, <see cref="DiscordClient.GuildSoundboardSoundDeleted"/> and <see cref="DiscordClient.GuildSoundboardSoundsUpdated"/>.
+	///         This includes <see cref="DiscordClient.GuildEmojisUpdated" />,
+	///         <see cref="DiscordClient.GuildStickersUpdated" />,
+	///         <see cref="DiscordClient.GuildSoundboardSoundCreated" />,
+	///         <see cref="DiscordClient.GuildSoundboardSoundUpdated" />,
+	///         <see cref="DiscordClient.GuildSoundboardSoundDeleted" /> and
+	///         <see cref="DiscordClient.GuildSoundboardSoundsUpdated" />.
 	///     </para>
 	/// </summary>
 	GuildExpressions = 1 << 3,
 
 	/// <summary>
-	/// <inheritdoc cref="GuildExpressions"/>.
+	///     <inheritdoc cref="GuildExpressions" />.
 	/// </summary>
 	[DiscordDeprecated("Replaced by GuildExpressions")]
 	GuildEmojisAndStickers = GuildExpressions,
