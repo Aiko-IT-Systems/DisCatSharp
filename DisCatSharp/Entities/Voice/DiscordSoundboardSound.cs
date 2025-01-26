@@ -19,7 +19,7 @@ public sealed class DiscordSoundboardSound : SnowflakeObject
 {
 	internal DiscordSoundboardSound()
 		: base(["user_id"])
-	{}
+	{ }
 
 	/// <inheritdoc cref="SnowflakeObject.Id" />
 	[JsonProperty("sound_id")]

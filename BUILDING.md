@@ -7,7 +7,7 @@ It is recommended you have prior experience with multi-target .NET Core/Standard
 In order to build the library, you will first need to install some software.
 
 ### Windows
-On Windows, we only officially support Visual Studio 2019 16.10 or newer. Visual Studio Code and other IDEs might work, but are generally not supported or even guaranteed to work properly.
+On Windows, we only officially support Visual Studio 2022 17.0 or newer. Visual Studio Code and other IDEs might work, but are generally not supported or even guaranteed to work properly.
 
 * **Windows 10** - while we support running the library on Windows 7 and above, we only support building on Windows 10 and better.
 * [**Git for Windows**](https://git-scm.com/download/win) - required to clone the repository.
@@ -18,17 +18,16 @@ On Windows, we only officially support Visual Studio 2019 16.10 or newer. Visual
 ### GNU/Linux
 On GNU/Linux, we support building via Visual Studio Code and .NET Core SDK. Other IDEs might work, but are not supported or guaranteed to work properly.
 
-While these should apply to any modern distribution, we only test against Debian 10. Your mileage may vary.
+While these should apply to any modern distribution, we only test against Ubuntu 24.04. Your mileage may vary.
 
 When installing the below, make sure you install all the dependencies properly. We might ship a build environment as a docker container in the future.
 
-* **Any modern GNU/Linux distribution** - like Debian 10.
+* **Any modern GNU/Linux distribution** - like Ubuntu 24.04.
 * **Git** - to clone the repository.
 * [**Visual Studio Code**](https://code.visualstudio.com/Download) - a recent version is required.
    * **C# for Visual Studio Code (powered by OmniSharp)** - required for syntax highlighting and basic Intellisense
 * [**.NET SDK 8.0 or newer**](https://www.microsoft.com/net/download) - required to build the project.
-* [**Mono 5.x**](http://www.mono-project.com/download/#download-lin) - required to build the .NETFX 4.5, 4.6, and 4.7 targets, as well as to build the docs.
-* [**PowerShell Core**](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux?view=powershell-7.3) - required to execute the build scripts.
+* [**PowerShell Core**](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux?view=powershell-7.5) - required to execute the build scripts.
 
 ## Instructions
 Once you install all the necessary prerequisites, you can proceed to building. These instructions assume you have already cloned the repository.

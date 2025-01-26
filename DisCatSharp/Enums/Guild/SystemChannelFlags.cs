@@ -16,7 +16,7 @@ public static class SystemChannelFlagsExtension
 	public static bool HasSystemChannelFlag(this SystemChannelFlags baseFlags, SystemChannelFlags flag)
 		=> (baseFlags & flag) == flag;
 
-	/// <inheritdoc cref="HasSystemChannelFlag(SystemChannelFlags, SystemChannelFlags)"/>
+	/// <inheritdoc cref="HasSystemChannelFlag(SystemChannelFlags, SystemChannelFlags)" />
 	public static bool HasSystemChannelFlag(this SystemChannelFlags? baseFlags, SystemChannelFlags flag)
 		=> baseFlags.HasValue && (baseFlags & flag) == flag;
 }

@@ -62,5 +62,5 @@ public static partial class DiscordRegEx
 	public static partial Regex WebhookRegex();
 
 	[GeneratedRegex(@"^<sound:(?<guild_id>\\d+):(?<sound_id>\\d+)>$", RegexOptions.Compiled | RegexOptions.ECMAScript)]
-    public static partial Regex SoundRegex();
+	public static partial Regex SoundRegex();
 }

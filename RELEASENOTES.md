@@ -1,10 +1,11 @@
 DisCatSharp Release Notes
 
-    - Full support for role subscriptions
-    - Full support for burst reactions
-    - Full support for subscriptions and entitlements
-    - New queue system for Lavalink
-    - Support for join request (create, update & delete) events for clans
+	- Full support for role subscriptions
+	- Full support for burst reactions
+	- Full support for subscriptions and entitlements
+	- Support for join request (create, update & delete) events for clans
+	- Support for message forwarding
+	- Support for application emojis
 
     Breaking
 
@@ -15,35 +16,35 @@ DisCatSharp Release Notes
 
 DisCatSharp.Attributes Release Notes
 
-    None
+    - None
 
 
 DisCatSharp.ApplicationCommands Release Notes
 
-    None
+    - None
 
 
 DisCatSharp.CommandsNext Release Notes
 
-    None
+    - None
 
 DisCatSharp.Interactivity Release Notes
 
-    None
+    - None
 
 DisCatSharp.Common Release Notes
 
-    None
+    - None
 
 
 DisCatSharp.Lavalink Release Notes
 
-    None
+    - New queue system. See https://docs.dcs.aitsys.dev/articles/modules/audio/lavalink_v4/queue
 
 
 DisCatSharp.VoiceNext Release Notes
 
-    Will be deprecated 2025 and replaced by DisCatSharp.Voice
+    - Will be deprecated 2025 and replaced by DisCatSharp.Voice
 
 
 DisCatSharp.Experimental Release Notes
@@ -54,14 +55,14 @@ DisCatSharp.Experimental Release Notes
 
 DisCatSharp.Configuration Release Notes
 
-    None
+    - None
 
 
 DisCatSharp.Hosting Release Notes
 
-    None
+    - None
 
 
 DisCatSharp.Hosting.DependencyInjection Release Notes
 
-    None
+    - None

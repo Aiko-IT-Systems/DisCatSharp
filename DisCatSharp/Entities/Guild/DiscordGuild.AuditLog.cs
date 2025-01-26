@@ -474,8 +474,8 @@ public partial class DiscordGuild
 
 								entrychn.AvailableTagsChange = new()
 								{
-									Before = oldTags != null ? [..new List<ForumPostTag>(oldTags)] : null,
-									After = newTags != null ? [..new List<ForumPostTag>(newTags)] : null
+									Before = oldTags != null ? [.. new List<ForumPostTag>(oldTags)] : null,
+									After = newTags != null ? [.. new List<ForumPostTag>(newTags)] : null
 								};
 								break;
 

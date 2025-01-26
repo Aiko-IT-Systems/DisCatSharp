@@ -88,7 +88,8 @@ public class HostTests
 
 	private IHostBuilder Create(Dictionary<string, string?> configValues) =>
 		Host.CreateDefaultBuilder()
-			.ConfigureLogging(logging => {
+			.ConfigureLogging(logging =>
+			{
 				logging.ClearProviders();
 				logging.AddConsole();
 			})
@@ -97,7 +98,8 @@ public class HostTests
 
 	private IHostBuilder Create(string filename) =>
 		Host.CreateDefaultBuilder()
-			.ConfigureLogging(logging => {
+			.ConfigureLogging(logging =>
+			{
 				logging.ClearProviders();
 				logging.AddConsole();
 			})
@@ -108,7 +110,8 @@ public class HostTests
 		where TInterface : class, IDiscordHostedService
 		where TBot : class, TInterface, IDiscordHostedService =>
 		Host.CreateDefaultBuilder()
-			.ConfigureLogging(logging => {
+			.ConfigureLogging(logging =>
+			{
 				logging.ClearProviders();
 				logging.AddConsole();
 			})

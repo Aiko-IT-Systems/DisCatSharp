@@ -150,6 +150,9 @@ internal sealed class RestWebhookMessageEditPayload : ObservableApiObject
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
 	public IEnumerable<DiscordComponent> Components { get; set; }
 
+	/// <summary>
+	///     Gets or sets the flags.
+	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
 	public MessageFlags? Flags { get; set; }
 }

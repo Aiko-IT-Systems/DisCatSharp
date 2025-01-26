@@ -10,10 +10,10 @@
         "dependencies": {
           "Docfx.Common": "2.78.2",
           "Docfx.Plugins": "2.78.2",
-          "HtmlAgilityPack": "1.11.71",
+          "HtmlAgilityPack": "1.11.72",
           "LibGit2Sharp": "0.31.0",
-          "System.Collections.Immutable": "9.0.0",
-          "System.Composition": "9.0.0",
+          "System.Collections.Immutable": "9.0.1",
+          "System.Composition": "9.0.1",
           "HtmlAgilityPack.1.11.51.0.Fakes": "1.11.51.0"
         },
         "runtime": {
@@ -37,7 +37,7 @@
       "Docfx.Plugins/2.78.2": {
         "dependencies": {
           "Newtonsoft.Json": "13.0.3",
-          "System.Collections.Immutable": "9.0.0"
+          "System.Collections.Immutable": "9.0.1"
         },
         "runtime": {
           "lib/net9.0/Docfx.Plugins.dll": {
@@ -57,11 +57,11 @@
           }
         }
       },
-      "HtmlAgilityPack/1.11.71": {
+      "HtmlAgilityPack/1.11.72": {
         "runtime": {
           "lib/netstandard2.0/HtmlAgilityPack.dll": {
-            "assemblyVersion": "1.11.71.0",
-            "fileVersion": "1.11.71.0"
+            "assemblyVersion": "1.11.72.0",
+            "fileVersion": "1.11.72.0"
           }
         }
       },
@@ -156,64 +156,71 @@
           }
         }
       },
-      "System.Collections.Immutable/9.0.0": {},
-      "System.Composition/9.0.0": {
-        "dependencies": {
-          "System.Composition.AttributedModel": "9.0.0",
-          "System.Composition.Convention": "9.0.0",
-          "System.Composition.Hosting": "9.0.0",
-          "System.Composition.Runtime": "9.0.0",
-          "System.Composition.TypedParts": "9.0.0"
-        }
-      },
-      "System.Composition.AttributedModel/9.0.0": {
+      "System.Collections.Immutable/9.0.1": {
         "runtime": {
-          "lib/net9.0/System.Composition.AttributedModel.dll": {
+          "lib/net9.0/System.Collections.Immutable.dll": {
             "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.24.52809"
+            "fileVersion": "9.0.124.61010"
           }
         }
       },
-      "System.Composition.Convention/9.0.0": {
+      "System.Composition/9.0.1": {
         "dependencies": {
-          "System.Composition.AttributedModel": "9.0.0"
+          "System.Composition.AttributedModel": "9.0.1",
+          "System.Composition.Convention": "9.0.1",
+          "System.Composition.Hosting": "9.0.1",
+          "System.Composition.Runtime": "9.0.1",
+          "System.Composition.TypedParts": "9.0.1"
+        }
+      },
+      "System.Composition.AttributedModel/9.0.1": {
+        "runtime": {
+          "lib/net9.0/System.Composition.AttributedModel.dll": {
+            "assemblyVersion": "9.0.0.1",
+            "fileVersion": "9.0.124.61010"
+          }
+        }
+      },
+      "System.Composition.Convention/9.0.1": {
+        "dependencies": {
+          "System.Composition.AttributedModel": "9.0.1"
         },
         "runtime": {
           "lib/net9.0/System.Composition.Convention.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.24.52809"
+            "assemblyVersion": "9.0.0.1",
+            "fileVersion": "9.0.124.61010"
           }
         }
       },
-      "System.Composition.Hosting/9.0.0": {
+      "System.Composition.Hosting/9.0.1": {
         "dependencies": {
-          "System.Composition.Runtime": "9.0.0"
+          "System.Composition.Runtime": "9.0.1"
         },
         "runtime": {
           "lib/net9.0/System.Composition.Hosting.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.24.52809"
+            "assemblyVersion": "9.0.0.1",
+            "fileVersion": "9.0.124.61010"
           }
         }
       },
-      "System.Composition.Runtime/9.0.0": {
+      "System.Composition.Runtime/9.0.1": {
         "runtime": {
           "lib/net9.0/System.Composition.Runtime.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.24.52809"
+            "assemblyVersion": "9.0.0.1",
+            "fileVersion": "9.0.124.61010"
           }
         }
       },
-      "System.Composition.TypedParts/9.0.0": {
+      "System.Composition.TypedParts/9.0.1": {
         "dependencies": {
-          "System.Composition.AttributedModel": "9.0.0",
-          "System.Composition.Hosting": "9.0.0",
-          "System.Composition.Runtime": "9.0.0"
+          "System.Composition.AttributedModel": "9.0.1",
+          "System.Composition.Hosting": "9.0.1",
+          "System.Composition.Runtime": "9.0.1"
         },
         "runtime": {
           "lib/net9.0/System.Composition.TypedParts.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.24.52809"
+            "assemblyVersion": "9.0.0.1",
+            "fileVersion": "9.0.124.61010"
           }
         }
       },
@@ -263,12 +270,12 @@
       "path": "docfx.yamlserialization/2.78.2",
       "hashPath": "docfx.yamlserialization.2.78.2.nupkg.sha512"
     },
-    "HtmlAgilityPack/1.11.71": {
+    "HtmlAgilityPack/1.11.72": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-HlEThQBnob4/29DIiyrPSYlGXXSZUtOH7571PRev+yu8FW8n5pdxqHyun+PMm17cp3ovCrxFhXedC+1HUSdRMA==",
-      "path": "htmlagilitypack/1.11.71",
-      "hashPath": "htmlagilitypack.1.11.71.nupkg.sha512"
+      "sha512": "sha512-RNLgXxTFdIGFI+o5l8c2aJ2L5StIRn9Uv8HKR76p7QP4ZUL26wzpWUCWh08xWUdkL2kocl+Xhv6VUu0rA1npVg==",
+      "path": "htmlagilitypack/1.11.72",
+      "hashPath": "htmlagilitypack.1.11.72.nupkg.sha512"
     },
     "LibGit2Sharp/0.31.0": {
       "type": "package",
@@ -298,54 +305,54 @@
       "path": "spectre.console/0.49.1",
       "hashPath": "spectre.console.0.49.1.nupkg.sha512"
     },
-    "System.Collections.Immutable/9.0.0": {
+    "System.Collections.Immutable/9.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-QhkXUl2gNrQtvPmtBTQHb0YsUrDiDQ2QS09YbtTTiSjGcf7NBqtYbrG/BE06zcBPCKEwQGzIv13IVdXNOSub2w==",
-      "path": "system.collections.immutable/9.0.0",
-      "hashPath": "system.collections.immutable.9.0.0.nupkg.sha512"
+      "sha512": "sha512-qt4+ClsZYKzar/Rw1zbt0t9iuBUCLVNsjXicEuVQyKL7143CwhWzI2gTwzz8AhSaFYVHnpcb8SBGA+zaY4weUg==",
+      "path": "system.collections.immutable/9.0.1",
+      "hashPath": "system.collections.immutable.9.0.1.nupkg.sha512"
     },
-    "System.Composition/9.0.0": {
+    "System.Composition/9.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-3Djj70fFTraOarSKmRnmRy/zm4YurICm+kiCtI0dYRqGJnLX6nJ+G3WYuFJ173cAPax/gh96REcbNiVqcrypFQ==",
-      "path": "system.composition/9.0.0",
-      "hashPath": "system.composition.9.0.0.nupkg.sha512"
+      "sha512": "sha512-BDiudFadPCjcH185Vp85Khmxf2eVkSZVFo0z6jalA2YDQYzd88TIkbBXBHSubvOTZpB0z8ozDLpBwmN7O6ivrQ==",
+      "path": "system.composition/9.0.1",
+      "hashPath": "system.composition.9.0.1.nupkg.sha512"
     },
-    "System.Composition.AttributedModel/9.0.0": {
+    "System.Composition.AttributedModel/9.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-iri00l/zIX9g4lHMY+Nz0qV1n40+jFYAmgsaiNn16xvt2RDwlqByNG4wgblagnDYxm3YSQQ0jLlC/7Xlk9CzyA==",
-      "path": "system.composition.attributedmodel/9.0.0",
-      "hashPath": "system.composition.attributedmodel.9.0.0.nupkg.sha512"
+      "sha512": "sha512-dZYI+yQcn2dZGnN7Q/7H13VyKJKgMnr9uiJBLeiTJTojQdy+4Alo3T/bfpCBK3FxSksyYjU4uF7wKjkxWAiHQQ==",
+      "path": "system.composition.attributedmodel/9.0.1",
+      "hashPath": "system.composition.attributedmodel.9.0.1.nupkg.sha512"
     },
-    "System.Composition.Convention/9.0.0": {
+    "System.Composition.Convention/9.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-+vuqVP6xpi582XIjJi6OCsIxuoTZfR0M7WWufk3uGDeCl3wGW6KnpylUJ3iiXdPByPE0vR5TjJgR6hDLez4FQg==",
-      "path": "system.composition.convention/9.0.0",
-      "hashPath": "system.composition.convention.9.0.0.nupkg.sha512"
+      "sha512": "sha512-XFg90vknbHQV/ORcdM+zG9QeNyRpmDZfRqUQFooZO5eAnGKe9kAUKEv7NumWU0ZVAjMhrxCJg+AL97kzKKHD1g==",
+      "path": "system.composition.convention/9.0.1",
+      "hashPath": "system.composition.convention.9.0.1.nupkg.sha512"
     },
-    "System.Composition.Hosting/9.0.0": {
+    "System.Composition.Hosting/9.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-OFqSeFeJYr7kHxDfaViGM1ymk7d4JxK//VSoNF9Ux0gpqkLsauDZpu89kTHHNdCWfSljbFcvAafGyBoY094btQ==",
-      "path": "system.composition.hosting/9.0.0",
-      "hashPath": "system.composition.hosting.9.0.0.nupkg.sha512"
+      "sha512": "sha512-AYaHZ91srMdA5aBZU2smmabCVOlx1BPWjpLhBVIvoerQg0ZHf4V3jUgAyl4NIfJCWSezkaY00TPbFvO2goeFWg==",
+      "path": "system.composition.hosting/9.0.1",
+      "hashPath": "system.composition.hosting.9.0.1.nupkg.sha512"
     },
-    "System.Composition.Runtime/9.0.0": {
+    "System.Composition.Runtime/9.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-w1HOlQY1zsOWYussjFGZCEYF2UZXgvoYnS94NIu2CBnAGMbXFAX8PY8c92KwUItPmowal68jnVLBCzdrWLeEKA==",
-      "path": "system.composition.runtime/9.0.0",
-      "hashPath": "system.composition.runtime.9.0.0.nupkg.sha512"
+      "sha512": "sha512-bxUm5LM9lBYwGqpHBvh7U9mt/kmcSHSTUis3kJ43Kzkxxe0TErmAMEyvQLegLTijsvgbfZ5Iw9VCaVG/5nFF7Q==",
+      "path": "system.composition.runtime/9.0.1",
+      "hashPath": "system.composition.runtime.9.0.1.nupkg.sha512"
     },
-    "System.Composition.TypedParts/9.0.0": {
+    "System.Composition.TypedParts/9.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-aRZlojCCGEHDKqh43jaDgaVpYETsgd7Nx4g1zwLKMtv4iTo0627715ajEFNpEEBTgLmvZuv8K0EVxc3sM4NWJA==",
-      "path": "system.composition.typedparts/9.0.0",
-      "hashPath": "system.composition.typedparts.9.0.0.nupkg.sha512"
+      "sha512": "sha512-i0jIA6OLjq/7DDxgtcLtnjq1//K78XyLKCdMYyXgRkopZ0lmY0i842N3NUhI3GD/O0wwmPdIG5k1TcnDZE7Zyg==",
+      "path": "system.composition.typedparts/9.0.1",
+      "hashPath": "system.composition.typedparts.9.0.1.nupkg.sha512"
     },
     "System.Text.Json/9.0.0": {
       "type": "package",

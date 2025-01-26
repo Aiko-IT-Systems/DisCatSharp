@@ -66,7 +66,7 @@ public sealed class LavalinkPlayerUpdateModel
 	public Optional<LavalinkFilters> Filters { internal get; set; }
 
 	/// <summary>
-	/// Gets or sets the user data.
+	///     Gets or sets the user data.
 	/// </summary>
 	[JsonProperty("userData")]
 	public Optional<object> UserData { get; set; }

@@ -10,12 +10,4 @@ public class DiscordProtocol
 	/// </summary>
 	public DiscordProtocol()
 	{ }
-
-#region Properties
-
-#endregion
-
-#region Methods
-
-#endregion
 }

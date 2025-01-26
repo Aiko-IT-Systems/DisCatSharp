@@ -1,7 +1,8 @@
-using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
+
+namespace DisCatSharp.Entities;
 
 /// <summary>
 ///     Represents a Discord role tags object with detailed classification logic.

@@ -1,6 +1,6 @@
 The MIT License (MIT)
 
-Copyright (c) 2021-2024 AITSYS
+Copyright (c) 2021-2025 AITSYS
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -131,7 +131,7 @@ https://datatracker.ietf.org/ipr/1526/
 
 ## DisCatSharp.Common
 ```
-Copyright 2021-2024 AITSYS
+Copyright 2021-2025 AITSYS
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

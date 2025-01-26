@@ -16,6 +16,9 @@ namespace DisCatSharp;
 /// <typeparam name="TValue">The type of values in the dictionary.</typeparam>
 internal readonly struct ReadOnlyConcurrentDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
 {
+	/// <summary>
+	///     Gets the underlying dictionary.
+	/// </summary>
 	private readonly ConcurrentDictionary<TKey, TValue> _underlyingDict;
 
 	/// <summary>

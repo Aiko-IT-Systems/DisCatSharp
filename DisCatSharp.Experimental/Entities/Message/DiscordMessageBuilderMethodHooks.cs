@@ -16,7 +16,10 @@ public static class DiscordMessageBuilderMethodHooks
 	/// <param name="builder">The  <see cref="DiscordMessageBuilder" /> to add the attachment to.</param>
 	/// <param name="gcpAttachment">The attachment to add.</param>
 	/// <param name="isVoice">Whether this is a voice message attachment.</param>
-	/// <param name="originalStream">The voice message's stream, required if <paramref name="isVoice"/> is <see langword="true"/>.</param>
+	/// <param name="originalStream">
+	///     The voice message's stream, required if <paramref name="isVoice" /> is
+	///     <see langword="true" />.
+	/// </param>
 	/// <returns>The chained <see cref="DiscordMessageBuilder" />.</returns>
 	public static DiscordMessageBuilder AddGcpAttachment(this DiscordMessageBuilder builder, GcpAttachmentUploadInformation gcpAttachment, bool isVoice = false, Stream? originalStream = null)
 	{

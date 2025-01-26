@@ -77,7 +77,6 @@ public enum ChannelType
 	/// </summary>
 	GuildMedia = 16,
 
-
 	/// <summary>
 	///     Indicates that this is a lobby channel.
 	/// </summary>

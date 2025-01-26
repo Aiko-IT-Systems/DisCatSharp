@@ -77,6 +77,15 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
+	///     Sets if you want to send components with non-application-owned webhooks.
+	/// </summary>
+	public DiscordWebhookBuilder SendWithComponents()
+	{
+		this.WithComponents = true;
+		return this;
+	}
+
+	/// <summary>
 	///     Sets the webhook to be send as voice message.
 	/// </summary>
 	public DiscordWebhookBuilder AsVoiceMessage()

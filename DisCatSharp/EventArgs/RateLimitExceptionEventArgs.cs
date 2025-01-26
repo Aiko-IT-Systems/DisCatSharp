@@ -16,7 +16,13 @@ public class RateLimitExceptionEventArgs : DiscordEventArgs
 		: base(provider)
 	{ }
 
+	/// <summary>
+	///     Gets the ratelimit exception.
+	/// </summary>
 	public RateLimitException Exception { get; internal set; }
 
+	/// <summary>
+	///     Gets the called api endpoint.
+	/// </summary>
 	public string ApiEndpoint { get; internal set; }
 }

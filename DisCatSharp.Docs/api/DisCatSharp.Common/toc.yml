@@ -2,93 +2,142 @@
 items:
 - uid: DisCatSharp.Common
   name: DisCatSharp.Common
+  type: Namespace
   items:
   - uid: DisCatSharp.Common.CharSpanLookupDictionary`1
     name: CharSpanLookupDictionary<TValue>
+    type: Class
   - uid: DisCatSharp.Common.CharSpanLookupReadOnlyDictionary`1
     name: CharSpanLookupReadOnlyDictionary<TValue>
+    type: Class
   - uid: DisCatSharp.Common.EnsureObjectStates
     name: EnsureObjectStates
+    type: Class
   - uid: DisCatSharp.Common.Extensions
     name: Extensions
+    type: Class
   - uid: DisCatSharp.Common.LinqMethods
     name: LinqMethods
+    type: Class
   - uid: DisCatSharp.Common.SecureRandom
     name: SecureRandom
+    type: Class
 - uid: DisCatSharp.Common.RegularExpressions
   name: DisCatSharp.Common.RegularExpressions
+  type: Namespace
   items:
   - uid: DisCatSharp.Common.RegularExpressions.CommonRegEx
     name: CommonRegEx
+    type: Class
   - uid: DisCatSharp.Common.RegularExpressions.DiscordRegEx
     name: DiscordRegEx
+    type: Class
 - uid: DisCatSharp.Common.Serialization
   name: DisCatSharp.Common.Serialization
+  type: Namespace
   items:
   - uid: DisCatSharp.Common.Serialization.ComplexDecomposer
     name: ComplexDecomposer
+    type: Class
   - uid: DisCatSharp.Common.Serialization.DateTimeFormatAttribute
     name: DateTimeFormatAttribute
+    type: Class
   - uid: DisCatSharp.Common.Serialization.DateTimeFormatKind
     name: DateTimeFormatKind
+    type: Enum
   - uid: DisCatSharp.Common.Serialization.DecomposerAttribute
     name: DecomposerAttribute
+    type: Class
   - uid: DisCatSharp.Common.Serialization.IDecomposer
     name: IDecomposer
+    type: Interface
   - uid: DisCatSharp.Common.Serialization.Int53Attribute
     name: Int53Attribute
+    type: Class
   - uid: DisCatSharp.Common.Serialization.NumericEnumAttribute
     name: NumericEnumAttribute
+    type: Class
   - uid: DisCatSharp.Common.Serialization.SerializationAttribute
     name: SerializationAttribute
+    type: Class
   - uid: DisCatSharp.Common.Serialization.StringEnumAttribute
     name: StringEnumAttribute
+    type: Class
   - uid: DisCatSharp.Common.Serialization.TimeSpanFormatAttribute
     name: TimeSpanFormatAttribute
+    type: Class
   - uid: DisCatSharp.Common.Serialization.TimeSpanFormatKind
     name: TimeSpanFormatKind
+    type: Enum
   - uid: DisCatSharp.Common.Serialization.TimeSpanMillisecondsAttribute
     name: TimeSpanMillisecondsAttribute
+    type: Class
   - uid: DisCatSharp.Common.Serialization.TimeSpanSecondsAttribute
     name: TimeSpanSecondsAttribute
+    type: Class
   - uid: DisCatSharp.Common.Serialization.UnixMillisecondsAttribute
     name: UnixMillisecondsAttribute
+    type: Class
   - uid: DisCatSharp.Common.Serialization.UnixSecondsAttribute
     name: UnixSecondsAttribute
+    type: Class
 - uid: DisCatSharp.Common.Types
   name: DisCatSharp.Common.Types
+  type: Namespace
   items:
   - uid: DisCatSharp.Common.Types.ContinuousMemoryBuffer`1
     name: ContinuousMemoryBuffer<T>
+    type: Class
   - uid: DisCatSharp.Common.Types.IMemoryBuffer`1
     name: IMemoryBuffer<T>
+    type: Interface
   - uid: DisCatSharp.Common.Types.MemoryBuffer`1
     name: MemoryBuffer<T>
+    type: Class
 - uid: DisCatSharp.Common.Utilities
   name: DisCatSharp.Common.Utilities
+  type: Namespace
   items:
   - uid: DisCatSharp.Common.Utilities.AsyncEvent
     name: AsyncEvent
+    type: Class
   - uid: DisCatSharp.Common.Utilities.AsyncEventArgs
     name: AsyncEventArgs
+    type: Class
   - uid: DisCatSharp.Common.Utilities.AsyncEventExceptionHandler`2
     name: AsyncEventExceptionHandler<TSender, TArgs>
+    type: Delegate
   - uid: DisCatSharp.Common.Utilities.AsyncEventExceptionMode
     name: AsyncEventExceptionMode
+    type: Enum
   - uid: DisCatSharp.Common.Utilities.AsyncEventHandler`2
     name: AsyncEventHandler<TSender, TArgs>
+    type: Delegate
   - uid: DisCatSharp.Common.Utilities.AsyncEventTimeoutException
     name: AsyncEventTimeoutException
+    type: Class
   - uid: DisCatSharp.Common.Utilities.AsyncEventTimeoutException`2
     name: AsyncEventTimeoutException<TSender, TArgs>
+    type: Class
   - uid: DisCatSharp.Common.Utilities.AsyncEvent`2
     name: AsyncEvent<TSender, TArgs>
+    type: Class
   - uid: DisCatSharp.Common.Utilities.AsyncExecutor
     name: AsyncExecutor
+    type: Class
   - uid: DisCatSharp.Common.Utilities.AsyncManualResetEvent
     name: AsyncManualResetEvent
+    type: Class
   - uid: DisCatSharp.Common.Utilities.ReflectionUtilities
     name: ReflectionUtilities
+    type: Class
   - uid: DisCatSharp.Common.Utilities.RuntimeInformation
     name: RuntimeInformation
+    type: Class
+  - uid: DisCatSharp.Common.Utilities.WaveformConverter
+    name: WaveformConverter
+    type: Class
+  - uid: DisCatSharp.Common.Utilities.WaveformVisualizer
+    name: WaveformVisualizer
+    type: Class
 memberLayout: SeparatePages

@@ -401,6 +401,9 @@ public class WebSocketClient : IWebSocketClient
 		remove => this._connected.Unregister(value);
 	}
 
+	/// <summary>
+	///     The event for when the client connects successfully.
+	/// </summary>
 	private readonly AsyncEvent<WebSocketClient, SocketEventArgs> _connected;
 
 	/// <summary>
@@ -412,6 +415,9 @@ public class WebSocketClient : IWebSocketClient
 		remove => this._disconnected.Unregister(value);
 	}
 
+	/// <summary>
+	///     The event for when the client is disconnected.
+	/// </summary>
 	private readonly AsyncEvent<WebSocketClient, SocketCloseEventArgs> _disconnected;
 
 	/// <summary>
@@ -423,6 +429,9 @@ public class WebSocketClient : IWebSocketClient
 		remove => this._messageReceived.Unregister(value);
 	}
 
+	/// <summary>
+	///     The event for when the client receives a message.
+	/// </summary>
 	private readonly AsyncEvent<WebSocketClient, SocketMessageEventArgs> _messageReceived;
 
 	/// <summary>
@@ -434,7 +443,14 @@ public class WebSocketClient : IWebSocketClient
 		remove => this._exceptionThrown.Unregister(value);
 	}
 
+	/// <summary>
+	///     The event for when an error occurs in the client.
+	/// </summary>
 	private readonly AsyncEvent<WebSocketClient, SocketErrorEventArgs> _exceptionThrown;
+
+	/// <summary>
+	///     The service provider.
+	/// </summary>
 	private IServiceProvider _serviceProvider;
 
 	/// <summary>

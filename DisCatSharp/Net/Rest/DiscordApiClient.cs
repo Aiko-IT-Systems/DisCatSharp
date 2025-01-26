@@ -56,7 +56,8 @@ public sealed class DiscordApiClient
 	{
 		this.OAuth2Client = client;
 		this.Discord = null!;
-		this.Rest = new(new DiscordConfiguration() {
+		this.Rest = new(new()
+		{
 			Proxy = proxy,
 			HttpTimeout = timeout,
 			UseRelativeRatelimit = useRelativeRateLimit,
@@ -76,7 +77,8 @@ public sealed class DiscordApiClient
 	{
 		this.Discord = null!;
 		this.OAuth2Client = null!;
-		this.Rest = new(new DiscordConfiguration() {
+		this.Rest = new(new()
+		{
 			Proxy = proxy,
 			HttpTimeout = timeout,
 			UseRelativeRatelimit = useRelativeRateLimit,
@@ -2100,151 +2102,176 @@ public sealed class DiscordApiClient
 		return ret;
 	}
 
-	    /// <summary>
-        /// Creates a new soundboard sound in the guild.
-        /// </summary>
-        /// <param name="guildId">The guild ID.</param>
-        /// <param name="name">The name of the soundboard sound.</param>
-        /// <param name="sound">The base64-encoded sound data (MP3 or OGG format).</param>
-        /// <param name="volume">The volume of the soundboard sound (optional, defaults to 1).</param>
-        /// <param name="emojiId">The ID of the custom emoji (optional).</param>
-        /// <param name="emojiName">The unicode character of the standard emoji (optional).</param>
-        /// <param name="reason">The reason.</param>
-        public async Task<DiscordSoundboardSound> CreateGuildSoundboardSoundAsync(ulong guildId, string name, string sound, double? volume = null, ulong? emojiId = null, string? emojiName = null, string? reason = null)
-        {
-	        var pld = new RestSoundboardSoundCreatePayload
-	        {
-		        Name = name,
-		        Sound = sound,
-		        Volume = volume,
-		        EmojiId = emojiId,
-		        EmojiName = emojiName
-	        };
+	/// <summary>
+	///     Creates a new soundboard sound in the guild.
+	/// </summary>
+	/// <param name="guildId">The guild ID.</param>
+	/// <param name="name">The name of the soundboard sound.</param>
+	/// <param name="sound">The base64-encoded sound data (MP3 or OGG format).</param>
+	/// <param name="volume">The volume of the soundboard sound (optional, defaults to 1).</param>
+	/// <param name="emojiId">The ID of the custom emoji (optional).</param>
+	/// <param name="emojiName">The unicode character of the standard emoji (optional).</param>
+	/// <param name="reason">The reason.</param>
+	public async Task<DiscordSoundboardSound> CreateGuildSoundboardSoundAsync(ulong guildId, string name, string sound, double? volume = null, ulong? emojiId = null, string? emojiName = null, string? reason = null)
+	{
+		var pld = new RestSoundboardSoundCreatePayload
+		{
+			Name = name,
+			Sound = sound,
+			Volume = volume,
+			EmojiId = emojiId,
+			EmojiName = emojiName
+		};
 
-            var headers = Utilities.GetBaseHeaders();
-            if (!string.IsNullOrWhiteSpace(reason))
-	            headers.Add(REASON_HEADER_NAME, reason);
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
 
-            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SOUNDBOARD_SOUNDS}";
-            var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id = guildId }, out var path);
-            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SOUNDBOARD_SOUNDS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
+		{
+			guild_id = guildId
+		}, out var path);
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-            return DiscordJson.DeserializeObject<DiscordSoundboardSound>(res.Response, this.Discord);
-        }
+		return DiscordJson.DeserializeObject<DiscordSoundboardSound>(res.Response, this.Discord);
+	}
 
-        /// <summary>
-        /// Modifies an existing soundboard sound.
-        /// </summary>
-        /// <param name="guildId">The guild ID.</param>
-        /// <param name="soundId">The soundboard sound ID.</param>
-        /// <param name="name">The new name of the soundboard sound (optional).</param>
-        /// <param name="volume">The new volume of the soundboard sound (optional).</param>
-        /// <param name="emojiId">The new custom emoji ID (optional).</param>
-        /// <param name="emojiName">The new standard emoji name (optional).</param>
-        /// <param name="reason">The reason.</param>
-        public async Task<DiscordSoundboardSound> ModifyGuildSoundboardSoundAsync(ulong guildId, ulong soundId, Optional<string> name, Optional<double?> volume, Optional<ulong?> emojiId, Optional<string?> emojiName, string? reason = null)
-        {
-	        var pld = new RestSoundboardSoundModifyPayload
-	        {
-		        Name = name,
-		        Volume = volume,
-		        EmojiId = emojiId,
-		        EmojiName = emojiName
-	        };
+	/// <summary>
+	///     Modifies an existing soundboard sound.
+	/// </summary>
+	/// <param name="guildId">The guild ID.</param>
+	/// <param name="soundId">The soundboard sound ID.</param>
+	/// <param name="name">The new name of the soundboard sound (optional).</param>
+	/// <param name="volume">The new volume of the soundboard sound (optional).</param>
+	/// <param name="emojiId">The new custom emoji ID (optional).</param>
+	/// <param name="emojiName">The new standard emoji name (optional).</param>
+	/// <param name="reason">The reason.</param>
+	public async Task<DiscordSoundboardSound> ModifyGuildSoundboardSoundAsync(ulong guildId, ulong soundId, Optional<string> name, Optional<double?> volume, Optional<ulong?> emojiId, Optional<string?> emojiName, string? reason = null)
+	{
+		var pld = new RestSoundboardSoundModifyPayload
+		{
+			Name = name,
+			Volume = volume,
+			EmojiId = emojiId,
+			EmojiName = emojiName
+		};
 
-            var headers = Utilities.GetBaseHeaders();
-            if (!string.IsNullOrWhiteSpace(reason))
-	            headers.Add(REASON_HEADER_NAME, reason);
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
 
-            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SOUNDBOARD_SOUNDS}/:sound_id";
-            var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id = guildId, sound_id = soundId }, out var path);
-            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SOUNDBOARD_SOUNDS}/:sound_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
+		{
+			guild_id = guildId,
+			sound_id = soundId
+		}, out var path);
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-            return DiscordJson.DeserializeObject<DiscordSoundboardSound>(res.Response, this.Discord);
-        }
+		return DiscordJson.DeserializeObject<DiscordSoundboardSound>(res.Response, this.Discord);
+	}
 
-        /// <summary>
-        /// Deletes an existing soundboard sound.
-        /// </summary>
-        /// <param name="guildId">The guild ID.</param>
-        /// <param name="soundId">The soundboard sound ID.</param>
-        /// <param name="reason">The reason.</param>
-        public async Task DeleteGuildSoundboardSoundAsync(ulong guildId, ulong soundId, string? reason = null)
-        {
-	        var headers = Utilities.GetBaseHeaders();
-	        if (!string.IsNullOrWhiteSpace(reason))
-		        headers.Add(REASON_HEADER_NAME, reason);
-            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SOUNDBOARD_SOUNDS}/:sound_id";
-            var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id = guildId, sound_id = soundId }, out var path);
-            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-            await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers).ConfigureAwait(false);
-        }
+	/// <summary>
+	///     Deletes an existing soundboard sound.
+	/// </summary>
+	/// <param name="guildId">The guild ID.</param>
+	/// <param name="soundId">The soundboard sound ID.</param>
+	/// <param name="reason">The reason.</param>
+	public async Task DeleteGuildSoundboardSoundAsync(ulong guildId, ulong soundId, string? reason = null)
+	{
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SOUNDBOARD_SOUNDS}/:sound_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
+		{
+			guild_id = guildId,
+			sound_id = soundId
+		}, out var path);
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers).ConfigureAwait(false);
+	}
 
-        /// <summary>
-        /// Gets all soundboard sounds for a guild.
-        /// </summary>
-        /// <param name="guildId">The guild ID.</param>
-        public async Task<IReadOnlyList<DiscordSoundboardSound>> ListGuildSoundboardSoundsAsync(ulong guildId)
-        {
-            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SOUNDBOARD_SOUNDS}";
-            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId }, out var path);
-            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+	/// <summary>
+	///     Gets all soundboard sounds for a guild.
+	/// </summary>
+	/// <param name="guildId">The guild ID.</param>
+	public async Task<IReadOnlyList<DiscordSoundboardSound>> ListGuildSoundboardSoundsAsync(ulong guildId)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SOUNDBOARD_SOUNDS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			guild_id = guildId
+		}, out var path);
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-            return DiscordJson.DeserializeIEnumerableObject<List<DiscordSoundboardSound>>(res.Response, this.Discord);
-        }
+		return DiscordJson.DeserializeIEnumerableObject<List<DiscordSoundboardSound>>(res.Response, this.Discord);
+	}
 
-        /// <summary>
-        ///     Gets all default soundboard sounds available for all users.
-        /// </summary>
-        public async Task<IReadOnlyList<DiscordSoundboardSound>> ListDefaultSoundboardSoundsAsync()
-        {
-	        var route = $"{Endpoints.SOUNDBOARD_DEFAULT_SOUNDS}";
-	        var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
-	        var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-	        var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+	/// <summary>
+	///     Gets all default soundboard sounds available for all users.
+	/// </summary>
+	public async Task<IReadOnlyList<DiscordSoundboardSound>> ListDefaultSoundboardSoundsAsync()
+	{
+		var route = $"{Endpoints.SOUNDBOARD_DEFAULT_SOUNDS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+			{ }, out var path);
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-	        return DiscordJson.DeserializeIEnumerableObject<List<DiscordSoundboardSound>>(res.Response, this.Discord);
-        }
+		return DiscordJson.DeserializeIEnumerableObject<List<DiscordSoundboardSound>>(res.Response, this.Discord);
+	}
 
-        /// <summary>
-        /// Gets a specific soundboard sound for a guild.
-        /// </summary>
-        /// <param name="guildId">The guild ID.</param>
-        /// <param name="soundId">The soundboard sound ID.</param>
-        public async Task<DiscordSoundboardSound> GetGuildSoundboardSoundAsync(ulong guildId, ulong soundId)
-        {
-            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SOUNDBOARD_SOUNDS}/:sound_id";
-            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId, sound_id = soundId }, out var path);
-            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+	/// <summary>
+	///     Gets a specific soundboard sound for a guild.
+	/// </summary>
+	/// <param name="guildId">The guild ID.</param>
+	/// <param name="soundId">The soundboard sound ID.</param>
+	public async Task<DiscordSoundboardSound> GetGuildSoundboardSoundAsync(ulong guildId, ulong soundId)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SOUNDBOARD_SOUNDS}/:sound_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			guild_id = guildId,
+			sound_id = soundId
+		}, out var path);
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-            return DiscordJson.DeserializeObject<DiscordSoundboardSound>(res.Response, this.Discord);
-        }
+		return DiscordJson.DeserializeObject<DiscordSoundboardSound>(res.Response, this.Discord);
+	}
 
-        /// <summary>
-        ///     Sends a soundboard sound to a voice channel the user is connected to.
-        /// </summary>
-        /// <param name="channelId">The ID of the channel to send the sound to.</param>
-        /// <param name="soundId">The ID of the soundboard sound to play.</param>
-        /// <param name="sourceGuildId">The ID of the guild the soundboard sound is from, required to play sounds from different servers. Optional.</param>
-        /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task SendSoundboardSoundAsync(ulong channelId, ulong soundId, ulong? sourceGuildId = null)
-        {
-	        var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.SEND_SOUNDBOARD_SOUND}";
-	        var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id = channelId }, out var path);
+	/// <summary>
+	///     Sends a soundboard sound to a voice channel the user is connected to.
+	/// </summary>
+	/// <param name="channelId">The ID of the channel to send the sound to.</param>
+	/// <param name="soundId">The ID of the soundboard sound to play.</param>
+	/// <param name="sourceGuildId">
+	///     The ID of the guild the soundboard sound is from, required to play sounds from different
+	///     servers. Optional.
+	/// </param>
+	/// <returns>A task representing the asynchronous operation.</returns>
+	public async Task SendSoundboardSoundAsync(ulong channelId, ulong soundId, ulong? sourceGuildId = null)
+	{
+		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.SEND_SOUNDBOARD_SOUND}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
+		{
+			channel_id = channelId
+		}, out var path);
 
-	        var pld = new RestSendSoundboardSoundPayload
-	        {
-				SoundId = soundId,
-		        SourceGuildId = sourceGuildId
-	        };
+		var pld = new RestSendSoundboardSoundPayload
+		{
+			SoundId = soundId,
+			SourceGuildId = sourceGuildId
+		};
 
-	        var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-	        await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
-        }
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+	}
 
 #endregion
 
@@ -4497,7 +4524,7 @@ public sealed class DiscordApiClient
 		return ret;
 	}
 
-	#endregion
+#endregion
 
 #region Guild Member Applications
 
@@ -4526,7 +4553,7 @@ public sealed class DiscordApiClient
 			urlParams["status"] = statusType.Value switch
 			{
 				JoinRequestStatusType.Submitted or JoinRequestStatusType.Approved or JoinRequestStatusType.Rejected => statusType.Value.ToString().ToUpperInvariant(),
-				_ => throw new ArgumentOutOfRangeException(nameof(statusType), $"Status type {statusType.Value} is not supported"),
+				_ => throw new ArgumentOutOfRangeException(nameof(statusType), $"Status type {statusType.Value} is not supported")
 			};
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.REQUESTS}";
@@ -4588,6 +4615,7 @@ public sealed class DiscordApiClient
 
 		return DiscordJson.DeserializeObject<DiscordGuildJoinRequest>(res.Response, this.Discord);
 	}
+
 	/// <summary>
 	///     Gets the settings for a clan.
 	/// </summary>
@@ -5370,6 +5398,8 @@ public sealed class DiscordApiClient
 		var qub = Utilities.GetApiUriBuilderFor(path, this.Discord?.Configuration).AddParameter("wait", "true");
 		if (threadId != null)
 			qub.AddParameter("thread_id", threadId);
+		if (builder.WithComponents != null)
+			qub.AddParameter("with_components", builder.WithComponents.Value.ToString().ToLower());
 
 		var url = qub.Build();
 
@@ -7588,8 +7618,14 @@ public sealed class DiscordApiClient
 	/// <param name="before">Retrieve entitlements before this entitlement ID.</param>
 	/// <param name="after">Retrieve entitlements after this entitlement ID.</param>
 	/// <param name="limit">Number of entitlements to return, 1-100, default 100.</param>
-	/// <param name="excludeEnded">Whether or not ended entitlements should be omitted. Defaults to false, ended entitlements are included by default.</param>
-	/// <param name="excludeDeleted">Whether or not deleted entitlements should be omitted. Defaults to true, deleted entitlements are not included by default.</param>
+	/// <param name="excludeEnded">
+	///     Whether or not ended entitlements should be omitted. Defaults to false, ended entitlements
+	///     are included by default.
+	/// </param>
+	/// <param name="excludeDeleted">
+	///     Whether or not deleted entitlements should be omitted. Defaults to true, deleted
+	///     entitlements are not included by default.
+	/// </param>
 	/// <returns>A list of <see cref="DiscordEntitlement" />.</returns>
 	internal async Task<IReadOnlyList<DiscordEntitlement>> GetEntitlementsAsync(ulong applicationId, ulong? guildId, ulong? userId, List<ulong>? skuIds = null, ulong? before = null, ulong? after = null, int limit = 100, bool? excludeEnded = null, bool? excludeDeleted = null)
 	{
@@ -7623,7 +7659,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	///     Gets an entitlement for given <paramref name="applicationId"/>.
+	///     Gets an entitlement for given <paramref name="applicationId" />.
 	/// </summary>
 	/// <param name="applicationId">The application id to fetch the entitlement for.</param>
 	/// <param name="entitlementId">The entitlement id to fetch.</param>

@@ -54,7 +54,8 @@ public class DiscordGuildMembershipScreeningField : ObservableApiObject
 	[JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
 	public IReadOnlyList<string>? Values { get; internal set; }
 
-	/// <summary>.
+	/// <summary>
+	///     .
 	///     Gets whether the user has to fill out this field
 	/// </summary>
 	[JsonProperty("required", NullValueHandling = NullValueHandling.Ignore)]

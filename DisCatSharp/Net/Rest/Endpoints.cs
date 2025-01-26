@@ -539,47 +539,203 @@ public static class Endpoints
 	/// </summary>
 	public const string INCIDENT_ACTIONS = "/incident-actions";
 
+	/// <summary>
+	///     The new member welcome endpoint.
+	/// </summary>
 	public const string NEW_MEMBER_WELCOME = "/new-member-welcome";
 
+	/// <summary>
+	///     The new member actions endpoint.
+	/// </summary>
 	[DiscordDeprecated]
 	public const string NEW_MEMBER_ACTIONS = "/new-member-actions";
 
+	/// <summary>
+	///     The new member action endpoint.
+	/// </summary>
 	[DiscordDeprecated]
 	public const string NEW_MEMBER_ACTION = "/new-member-action";
 
+	/// <summary>
+	///     The application directory endpoint.
+	/// </summary>
 	public const string APPLICATION_DIRECTORY = "/application-directory";
+
+	/// <summary>
+	///     The shared canvas endpoint.
+	/// </summary>
+	[DiscordUnreleased]
 	public const string SHARED_CANVAS = "/shared-canvas";
+
+	/// <summary>
+	///     The lines endpoint.
+	/// </summary>
+	[DiscordUnreleased]
 	public const string LINES = "/lines";
+
+	/// <summary>
+	///     The emoji hose endpoint.
+	/// </summary>
+	[DiscordUnreleased]
 	public const string EMOJI_HOSE = "/emoji-hose";
+
+	/// <summary>
+	///     The pincode endpoint.
+	/// </summary>
 	public const string PINCODE = "/pincode";
+
+	/// <summary>
+	///     The soundboard default sounds endpoint.
+	/// </summary>
 	public const string SOUNDBOARD_DEFAULT_SOUNDS = "/soundboard-default-sounds";
+
+	/// <summary>
+	///     The soundboard sounds endpoint.
+	/// </summary>
 	public const string SOUNDBOARD_SOUNDS = "/soundboard-sounds";
+
+	/// <summary>
+	///     The changelogs endpoint.
+	/// </summary>
 	public const string CHANGELOGS = "/changelogs";
+
+	/// <summary>
+	///     The changelogs desktop JSON endpoint.
+	/// </summary>
 	public const string CHANGELOGS_DESKTOP_JSON = "/config_0.json";
+
+	/// <summary>
+	///     The changelogs mobile JSON endpoint.
+	/// </summary>
 	public const string CHANGELOGS_MOBILE_JSON = "/config_1.json";
+
+	/// <summary>
+	///     The ownership transfer endpoint.
+	/// </summary>
 	public const string OWNERSHIP_TRANSFER = "/ownership-transfer";
+
+	/// <summary>
+	///     The onboarding endpoint.
+	/// </summary>
 	public const string ONBOARDING = "/onboarding";
+
+	/// <summary>
+	///     The creator monetization endpoint.
+	/// </summary>
 	public const string CREATOR_MONETIZATION = "/creator-monetization";
+
+	/// <summary>
+	///     The auto moderation endpoint.
+	/// </summary>
 	public const string AUTO_MODERATION = "/auto-moderation";
+
+	/// <summary>
+	///     The clear mention raid endpoint.
+	/// </summary>
 	public const string CLEAR_MENTION_RAID = "/clear-mention-raid";
+
+	/// <summary>
+	///     The published listings endpoint.
+	/// </summary>
 	public const string PUBLISHED_LISTINGS = "/published-listings";
+
+	/// <summary>
+	///     The SKUs endpoint.
+	/// </summary>
 	public const string SKUS = "/skus";
+
+	/// <summary>
+	///     The guild home headers endpoint.
+	/// </summary>
+	[DiscordDeprecated]
 	public const string GUILD_HOME_HEADERS = "/home-headers";
+
+	/// <summary>
+	///     The alert action endpoint.
+	/// </summary>
 	public const string ALERT_ACTION = "/alert-action";
+
+	/// <summary>
+	///     The consent endpoint.
+	/// </summary>
 	public const string CONSENT = "/consent";
+
+	/// <summary>
+	///     The settings endpoint.
+	/// </summary>
 	public const string SETTINGS = "/settings";
+
+	/// <summary>
+	///     The inventory endpoint.
+	/// </summary>
+	[DiscordDeprecated]
 	public const string INVENTORY = "/inventory";
+
+	/// <summary>
+	///     The Clyde settings endpoint.
+	/// </summary>
+	[DiscordDeprecated]
 	public const string CLYDE_SETTINGS = "/clyde-settings";
+
+	/// <summary>
+	///     The Clyde profiles endpoint.
+	/// </summary>
+	[DiscordDeprecated]
 	public const string CLYDE_PROFILES = "/clyde-profiles";
+
+	/// <summary>
+	///     The generate personality endpoint.
+	/// </summary>
+	[DiscordDeprecated]
 	public const string GENERATE_PERSONALITY = "/generate-personality";
+
+	/// <summary>
+	///     The refresh URLs endpoint.
+	/// </summary>
 	public const string REFRESH_URLS = "/refresh-urls";
+
+	/// <summary>
+	///     The polls endpoint.
+	/// </summary>
 	public const string POLLS = "/polls";
+
+	/// <summary>
+	///     The answers endpoint.
+	/// </summary>
 	public const string ANSWERS = "/answers";
+
+	/// <summary>
+	///     The expire endpoint.
+	/// </summary>
 	public const string EXPIRE = "/expire";
+
+	/// <summary>
+	///     The clan badges endpoint.
+	/// </summary>
 	public const string CLAN_BADGES = "/clan-badges";
+
+	/// <summary>
+	///     The clan banners endpoint.
+	/// </summary>
 	public const string CLAN_BANNERS = "/clan-banners";
+
+	/// <summary>
+	///     The members search endpoint.
+	/// </summary>
 	public const string MEMBERS_SEARCH = "/members-search";
+
+	/// <summary>
+	///     The send soundboard sound endpoint.
+	/// </summary>
 	public const string SEND_SOUNDBOARD_SOUND = "/send-soundboard-sound";
+
+	/// <summary>
+	///     The requests endpoint.
+	/// </summary>
 	public const string REQUESTS = "/requests";
+
+	/// <summary>
+	///     The clans endpoint.
+	/// </summary>
 	public const string CLANS = "/clans";
 }

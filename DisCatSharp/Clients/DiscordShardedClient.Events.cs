@@ -790,7 +790,7 @@ public sealed partial class DiscordShardedClient
 	private AsyncEvent<DiscordClient, GuildSoundboardSoundsUpdateEventArgs> _guildSoundboardSoundsUpdated;
 
 	/// <summary>
-	///     Fired in response to <see cref="DiscordClient.RequestSoundboardSoundsAsync"/>.
+	///     Fired in response to <see cref="DiscordClient.RequestSoundboardSoundsAsync" />.
 	/// </summary>
 	public event AsyncEventHandler<DiscordClient, SoundboardSoundsEventArgs> SoundboardSounds
 	{
@@ -2197,7 +2197,6 @@ public sealed partial class DiscordShardedClient
 	/// <param name="e">The event args.</param>
 	private Task Client_GuildJoinRequestDeleted(DiscordClient client, GuildJoinRequestDeleteEventArgs e)
 		=> this._guildJoinRequestDeleted.InvokeAsync(client, e);
-
 
 #endregion
 }

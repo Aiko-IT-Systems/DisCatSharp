@@ -459,7 +459,9 @@ public sealed class DiscordOAuth2Client : IDisposable
 	private void Goof<TSender, TArgs>(AsyncEvent<TSender, TArgs> asyncEvent, Exception ex, AsyncEventHandler<TSender, TArgs> handler, TSender sender, TArgs eventArgs)
 		where TArgs : AsyncEventArgs => this.Logger.LogCritical(LoggerEvents.EventHandlerException, ex, "Exception event handler {Method} (defined in {DeclaringType}) threw an exception", handler.Method, handler.Method.DeclaringType);
 
-	/// <inheritdoc />
+	/// <summary>
+	///     Disposes the client.
+	/// </summary>
 	~DiscordOAuth2Client()
 	{
 		this.Dispose();

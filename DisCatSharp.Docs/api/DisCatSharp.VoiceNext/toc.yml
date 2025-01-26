@@ -2,43 +2,62 @@
 items:
 - uid: DisCatSharp.VoiceNext
   name: DisCatSharp.VoiceNext
+  type: Namespace
   items:
   - uid: DisCatSharp.VoiceNext.AudioFormat
     name: AudioFormat
+    type: Struct
   - uid: DisCatSharp.VoiceNext.ExtensionMethods
     name: ExtensionMethods
+    type: Class
   - uid: DisCatSharp.VoiceNext.IVoiceFilter
     name: IVoiceFilter
+    type: Interface
   - uid: DisCatSharp.VoiceNext.StreamExtensions
     name: StreamExtensions
+    type: Class
   - uid: DisCatSharp.VoiceNext.VoiceApplication
     name: VoiceApplication
+    type: Enum
   - uid: DisCatSharp.VoiceNext.VoiceNextConfiguration
     name: VoiceNextConfiguration
+    type: Class
   - uid: DisCatSharp.VoiceNext.VoiceNextConnection
     name: VoiceNextConnection
+    type: Class
   - uid: DisCatSharp.VoiceNext.VoiceNextEvents
     name: VoiceNextEvents
+    type: Class
   - uid: DisCatSharp.VoiceNext.VoiceNextExtension
     name: VoiceNextExtension
+    type: Class
   - uid: DisCatSharp.VoiceNext.VoiceTransmitSink
     name: VoiceTransmitSink
+    type: Class
 - uid: DisCatSharp.VoiceNext.Codec
   name: DisCatSharp.VoiceNext.Codec
+  type: Namespace
   items:
   - uid: DisCatSharp.VoiceNext.Codec.EncryptionMode
     name: EncryptionMode
+    type: Enum
   - uid: DisCatSharp.VoiceNext.Codec.Opus
     name: Opus
+    type: Class
   - uid: DisCatSharp.VoiceNext.Codec.OpusDecoder
     name: OpusDecoder
+    type: Class
 - uid: DisCatSharp.VoiceNext.EventArgs
   name: DisCatSharp.VoiceNext.EventArgs
+  type: Namespace
   items:
   - uid: DisCatSharp.VoiceNext.EventArgs.VoiceReceiveEventArgs
     name: VoiceReceiveEventArgs
+    type: Class
   - uid: DisCatSharp.VoiceNext.EventArgs.VoiceUserJoinEventArgs
     name: VoiceUserJoinEventArgs
+    type: Class
   - uid: DisCatSharp.VoiceNext.EventArgs.VoiceUserLeaveEventArgs
     name: VoiceUserLeaveEventArgs
+    type: Class
 memberLayout: SeparatePages
