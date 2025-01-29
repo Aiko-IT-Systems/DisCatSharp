@@ -58,6 +58,7 @@ public sealed class LavalinkGuildPlayer
 	///     Triggers when a track gets stuck.
 	/// </summary>
 	internal readonly AsyncEvent<LavalinkGuildPlayer, LavalinkTrackStuckEventArgs> TrackStuckEvent;
+
 	/// <summary>
 	///     Gets whether this player is disposed.
 	/// </summary>
