@@ -103,13 +103,22 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
-	///     Appends a collection of components to the builder. Each call will append to a new row.
+	///     <para>Adds a row of components to the builder, up to <c>5</c> components per row, and up to <c>5</c> rows per message.</para>
+	///     <para>If <see cref="WithV2Components"/> was called, the limit changes to <c>10</c> top-level components and max <c>30</c> components in total.</para>
 	/// </summary>
 	/// <param name="components">The components to append. Up to five.</param>
 	/// <returns>The current builder to chain calls with.</returns>
-	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
 	public DiscordInteractionResponseBuilder AddComponents(params DiscordComponent[] components)
 		=> this.AddComponents((IEnumerable<DiscordComponent>)components);
+
+	/// <summary>
+	///     Appends several rows of components to the message
+	/// </summary>
+	/// <param name="components">The rows of components to add, holding up to five each.</param>
+	/// <returns>The builder to chain calls with.</returns>
+	/// <exception cref="ArgumentOutOfRangeException">No components were passed.</exception>
+	public DiscordInteractionResponseBuilder AddComponents(params DiscordActionRowComponent[] components)
+		=> this.AddComponents((IEnumerable<DiscordActionRowComponent>)components);
 
 	/// <summary>
 	///     Appends several rows of components to the message
