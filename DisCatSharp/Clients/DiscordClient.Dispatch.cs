@@ -21,6 +21,8 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+using Octokit.Internal;
+
 namespace DisCatSharp;
 
 /// <summary>

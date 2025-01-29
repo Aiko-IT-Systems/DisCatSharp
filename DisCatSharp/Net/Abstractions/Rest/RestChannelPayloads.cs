@@ -280,7 +280,7 @@ internal class RestChannelMessageEditPayload : ObservableApiObject
 	///     Gets or sets the components.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyCollection<DiscordActionRowComponent> Components { get; set; }
+	public IReadOnlyCollection<DiscordComponent> Components { get; set; }
 
 	/// <summary>
 	///     Gets or sets a value indicating whether has embed.

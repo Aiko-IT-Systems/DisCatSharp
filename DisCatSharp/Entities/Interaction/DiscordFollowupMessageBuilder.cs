@@ -3,28 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using DisCatSharp.Entities.Core;
+
 namespace DisCatSharp.Entities;
 
 /// <summary>
 ///     Constructs a followup message to an interaction.
 /// </summary>
-public sealed class DiscordFollowupMessageBuilder
+public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 {
-	private readonly List<DiscordActionRowComponent> _components = [];
-
-	private readonly List<DiscordEmbed> _embeds = [];
-
-	private readonly List<DiscordMessageFile> _files = [];
-
-	internal readonly List<DiscordAttachment> AttachmentsInternal = [];
-
-	private string _content;
-
-	/// <summary>
-	///     Whether flags were changed.
-	/// </summary>
-	internal bool FlagsChanged = false;
-
 	/// <summary>
 	///     Whether this followup message is text-to-speech.
 	/// </summary>
@@ -46,102 +33,26 @@ public sealed class DiscordFollowupMessageBuilder
 	private bool EPH { get; set; }
 
 	/// <summary>
-	///     Whether to suppress embeds.
-	/// </summary>
-	public bool EmbedsSuppressed
-	{
-		get => this.EMB_SUP;
-		set
-		{
-			this.EMB_SUP = value;
-			this.FlagsChanged = true;
-		}
-	}
-
-	private bool EMB_SUP { get; set; }
-
-	/// <summary>
-	///     Whether to send as voice message.
-	///     You can't use that on your own, it needs DisCatSharp.Experimental.
-	/// </summary>
-	internal bool IsVoiceMessage
-	{
-		get => this.VOICE_MSG;
-		set
-		{
-			this.VOICE_MSG = value;
-			this.FlagsChanged = true;
-		}
-	}
-
-	private bool VOICE_MSG { get; set; }
-
-	/// <summary>
-	///     Whether to send as silent message.
-	/// </summary>
-	public bool NotificationsSuppressed
-	{
-		get => this.NOTI_SUP;
-		set
-		{
-			this.NOTI_SUP = value;
-			this.FlagsChanged = true;
-		}
-	}
-
-	private bool NOTI_SUP { get; set; }
-
-	/// <summary>
-	///     Message to send on followup message.
-	/// </summary>
-	public string Content
-	{
-		get => this._content;
-		set
-		{
-			if (value is { Length: > 2000 })
-				throw new ArgumentException("Content length cannot exceed 2000 characters.", nameof(value));
-
-			this._content = value;
-		}
-	}
-
-	/// <summary>
-	///     Embeds to send on followup message.
-	/// </summary>
-	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
-
-	/// <summary>
-	///     Files to send on this followup message.
-	/// </summary>
-	public IReadOnlyList<DiscordMessageFile> Files => this._files;
-
-	/// <summary>
-	///     Components to send on this followup message.
-	/// </summary>
-	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
-
-	/// <summary>
-	///     Attachments to be send with this followup request.
-	/// </summary>
-	public IReadOnlyList<DiscordAttachment> Attachments => this.AttachmentsInternal;
-
-	/// <summary>
-	///     Mentions to send on this followup message.
-	/// </summary>
-	public List<IMention>? Mentions { get; private set; }
-
-	/// <summary>
 	///     Gets the poll for this message.
 	/// </summary>
 	public DiscordPollBuilder? Poll { get; private set; }
 
 	/// <summary>
-	///     Appends a collection of components to the message.
+	///     Sets that this builder should be using UI Kit.
+	/// </summary>
+	/// <returns>The current builder to chain calls with.</returns>
+	public DiscordFollowupMessageBuilder WithV2Components()
+	{
+		this.IsComponentsV2 = true;
+		return this;
+	}
+
+	/// <summary>
+	///     <para>Adds a row of components to the builder, up to <c>5</c> components per row, and up to <c>5</c> rows per message.</para>
+	///     <para>If <see cref="WithV2Components"/> was called, the limit changes to <c>10</c> top-level components and max <c>30</c> components in total.</para>
 	/// </summary>
 	/// <param name="components">The collection of components to add.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	/// <exception cref="ArgumentException"><paramref name="components" /> contained more than 5 components.</exception>
 	public DiscordFollowupMessageBuilder AddComponents(params DiscordComponent[] components)
 		=> this.AddComponents((IEnumerable<DiscordComponent>)components);
 
@@ -149,16 +60,25 @@ public sealed class DiscordFollowupMessageBuilder
 	///     Appends several rows of components to the message
 	/// </summary>
 	/// <param name="components">The rows of components to add, holding up to five each.</param>
-	/// <returns></returns>
+	/// <returns>The builder to chain calls with.</returns>
+	/// <exception cref="ArgumentOutOfRangeException">No components were passed.</exception>
+	public DiscordFollowupMessageBuilder AddComponents(params DiscordActionRowComponent[] components)
+		=> this.AddComponents((IEnumerable<DiscordActionRowComponent>)components);
+
+	/// <summary>
+	///     Appends several rows of components to the message
+	/// </summary>
+	/// <param name="components">The rows of components to add, holding up to five each.</param>
+	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder AddComponents(IEnumerable<DiscordActionRowComponent> components)
 	{
 		var ara = components.ToArray();
 
-		if (ara.Length + this._components.Count > 5)
+		if (ara.Length + this.ComponentsInternal.Count > 5)
 			throw new ArgumentException("ActionRow count exceeds maximum of five.");
 
 		foreach (var ar in ara)
-			this._components.Add(ar);
+			this.ComponentsInternal.Add(ar);
 
 		return this;
 	}
@@ -171,14 +91,35 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <exception cref="ArgumentException"><paramref name="components" /> contained more than 5 components.</exception>
 	public DiscordFollowupMessageBuilder AddComponents(IEnumerable<DiscordComponent> components)
 	{
-		var compArr = components.ToArray();
-		var count = compArr.Length;
+		var cmpArr = components.ToArray();
+		var count = cmpArr.Length;
 
-		if (count > 5)
-			throw new ArgumentException("Cannot add more than 5 components per action row!");
+		if (this.IsComponentsV2)
+		{
+			switch (count)
+			{
+				case 0:
+					throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
+				case > 10:
+					throw new ArgumentException("Cannot add more than 10 components!");
+			}
 
-		var arc = new DiscordActionRowComponent(compArr);
-		this._components.Add(arc);
+			this.ComponentsInternal.AddRange(cmpArr);
+		}
+		else
+		{
+			switch (count)
+			{
+				case 0:
+					throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
+				case > 5:
+					throw new ArgumentException("Cannot add more than 5 components per action row!");
+			}
+
+			var comp = new DiscordActionRowComponent(cmpArr);
+			this.ComponentsInternal.Add(comp);
+		}
+
 		return this;
 	}
 
@@ -222,7 +163,8 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder AddEmbed(DiscordEmbed embed)
 	{
-		this._embeds.Add(embed);
+		ArgumentNullException.ThrowIfNull(embed, nameof(embed));
+		this.EmbedsInternal.Add(embed);
 		return this;
 	}
 
@@ -233,7 +175,7 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder AddEmbeds(IEnumerable<DiscordEmbed> embeds)
 	{
-		this._embeds.AddRange(embeds);
+		this.EmbedsInternal.AddRange(embeds);
 		return this;
 	}
 
@@ -250,16 +192,16 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string description = null)
 	{
-		if (this.Files.Count >= 10)
+		if (this.FilesInternal.Count >= 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-		if (this._files.Any(x => x.Filename == filename))
+		if (this.FilesInternal.Any(x => x.Filename == filename))
 			throw new ArgumentException("A File with that filename already exists");
 
 		if (resetStreamPosition)
-			this._files.Add(new(filename, data, data.Position, description: description));
+			this.FilesInternal.Add(new(filename, data, data.Position, description: description));
 		else
-			this._files.Add(new(filename, data, null, description: description));
+			this.FilesInternal.Add(new(filename, data, null, description: description));
 
 		return this;
 	}
@@ -276,16 +218,16 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string description = null)
 	{
-		if (this.Files.Count >= 10)
+		if (this.FilesInternal.Count >= 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-		if (this._files.Any(x => x.Filename == stream.Name))
+		if (this.FilesInternal.Any(x => x.Filename == stream.Name))
 			throw new ArgumentException("A File with that filename already exists");
 
 		if (resetStreamPosition)
-			this._files.Add(new(stream.Name, stream, stream.Position, description: description));
+			this.FilesInternal.Add(new(stream.Name, stream, stream.Position, description: description));
 		else
-			this._files.Add(new(stream.Name, stream, null, description: description));
+			this.FilesInternal.Add(new(stream.Name, stream, null, description: description));
 
 		return this;
 	}
@@ -301,18 +243,18 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder AddFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
 	{
-		if (this.Files.Count + files.Count > 10)
+		if (this.FilesInternal.Count + files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
 		foreach (var file in files)
 		{
-			if (this._files.Any(x => x.Filename == file.Key))
+			if (this.FilesInternal.Any(x => x.Filename == file.Key))
 				throw new ArgumentException("A File with that filename already exists");
 
 			if (resetStreamPosition)
-				this._files.Add(new(file.Key, file.Value, file.Value.Position));
+				this.FilesInternal.Add(new(file.Key, file.Value, file.Value.Position));
 			else
-				this._files.Add(new(file.Key, file.Value, null));
+				this.FilesInternal.Add(new(file.Key, file.Value, null));
 		}
 
 		return this;
@@ -321,28 +263,22 @@ public sealed class DiscordFollowupMessageBuilder
 	/// <summary>
 	///     Adds the mention to the mentions to parse, etc. with the followup message.
 	/// </summary>
-	/// <param name="allowedMention">Mention to add.</param>
+	/// <param name="mention">Mention to add.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	public DiscordFollowupMessageBuilder WithAllowedMention(IMention allowedMention)
+	public DiscordFollowupMessageBuilder WithAllowedMention(IMention mention)
 	{
-		if (this.Mentions != null)
-			this.Mentions.Add(allowedMention);
-		else
-			this.Mentions = [allowedMention];
+		this.MentionsInternal.Add(mention);
 		return this;
 	}
 
 	/// <summary>
 	///     Adds the mentions to the mentions to parse, etc. with the followup message.
 	/// </summary>
-	/// <param name="allowedMentions">Mentions to add.</param>
+	/// <param name="mentions">Mentions to add.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	public DiscordFollowupMessageBuilder WithAllowedMentions(IEnumerable<IMention> allowedMentions)
+	public DiscordFollowupMessageBuilder WithAllowedMentions(IEnumerable<IMention> mentions)
 	{
-		if (this.Mentions != null)
-			this.Mentions.AddRange(allowedMentions);
-		else
-			this.Mentions = allowedMentions.ToList();
+		this.MentionsInternal.AddRange(mentions);
 		return this;
 	}
 
@@ -351,7 +287,6 @@ public sealed class DiscordFollowupMessageBuilder
 	/// </summary>
 	public DiscordFollowupMessageBuilder AsEphemeral()
 	{
-		this.FlagsChanged = true;
 		this.IsEphemeral = true;
 		return this;
 	}
@@ -361,7 +296,6 @@ public sealed class DiscordFollowupMessageBuilder
 	/// </summary>
 	public DiscordFollowupMessageBuilder SuppressEmbeds()
 	{
-		this.FlagsChanged = true;
 		this.EmbedsSuppressed = true;
 		return this;
 	}
@@ -371,7 +305,6 @@ public sealed class DiscordFollowupMessageBuilder
 	/// </summary>
 	internal DiscordFollowupMessageBuilder AsVoiceMessage(bool asVoiceMessage = true)
 	{
-		this.FlagsChanged = true;
 		this.IsVoiceMessage = asVoiceMessage;
 		return this;
 	}
@@ -381,16 +314,9 @@ public sealed class DiscordFollowupMessageBuilder
 	/// </summary>
 	public DiscordFollowupMessageBuilder AsSilentMessage()
 	{
-		this.FlagsChanged = true;
 		this.NotificationsSuppressed = true;
 		return this;
 	}
-
-	/// <summary>
-	///     Clears all message components on this builder.
-	/// </summary>
-	public void ClearComponents()
-		=> this._components.Clear();
 
 	/// <summary>
 	///     Clears the poll from this builder.
@@ -398,28 +324,21 @@ public sealed class DiscordFollowupMessageBuilder
 	public void ClearPoll()
 		=> this.Poll = null;
 
-	/// <summary>
-	///     Allows for clearing the Followup Message builder so that it can be used again to send a new message.
-	/// </summary>
-	public void Clear()
+	/// <inheritdoc />
+	public override void Clear()
 	{
-		this.Content = null;
-		this._embeds.Clear();
 		this.IsTts = false;
-		this.Mentions = null;
-		this._files.Clear();
 		this.IsEphemeral = false;
-		this._components.Clear();
+		base.Clear();
 	}
 
-	/// <summary>
-	///     Validates the builder.
-	/// </summary>
-	internal void Validate()
+	/// <inheritdoc />
+	internal override void Validate()
 	{
-		if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any() && !this.Components.Any() && this.Poll is null && this?.Attachments.Count == 0)
+		if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && this.EmbedsInternal.Count == 0 && this.ComponentsInternal.Count == 0 && this.Poll is null && this.AttachmentsInternal.Count == 0)
 			throw new ArgumentException("You must specify content, an embed, a component, a poll, or at least one file.");
 
 		this.Poll?.Validate();
+		base.Validate();
 	}
 }

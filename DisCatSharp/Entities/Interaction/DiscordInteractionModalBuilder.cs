@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using DisCatSharp.Entities.Core;
+
 namespace DisCatSharp.Entities;
 
 /// <summary>
@@ -11,7 +13,10 @@ public sealed class DiscordInteractionModalBuilder
 {
 	private readonly List<DiscordInteractionCallbackHint> _callbackHints = [];
 
-	private readonly List<DiscordActionRowComponent> _components = [];
+	/// <summary>
+	///     The components.
+	/// </summary>
+	internal readonly List<DiscordComponent> ComponentsInternal = [];
 
 	private string _title;
 
@@ -23,6 +28,11 @@ public sealed class DiscordInteractionModalBuilder
 		this.Title = title ?? "Title";
 		this.CustomId = customId ?? Guid.NewGuid().ToString();
 	}
+
+	/// <summary>
+	///     Components to send. Please use <see cref="ModalComponents"/> instead.
+	/// </summary>
+	public IReadOnlyList<DiscordComponent> Components => this.ComponentsInternal;
 
 	/// <summary>
 	///     Title of modal.
@@ -47,7 +57,7 @@ public sealed class DiscordInteractionModalBuilder
 	/// <summary>
 	///     Components to send on this interaction response.
 	/// </summary>
-	public IReadOnlyList<DiscordActionRowComponent> ModalComponents => this._components;
+	public IReadOnlyList<DiscordActionRowComponent> ModalComponents => this.Components.Select(c => c as DiscordActionRowComponent).ToList()!;
 
 	/// <summary>
 	///     The hints to send on this interaction response.
@@ -82,7 +92,7 @@ public sealed class DiscordInteractionModalBuilder
 	/// <param name="hintBuilder">The hint builder.</param>
 	/// <returns>The current builder to chain calls with.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when the <paramref name="hintBuilder" /> is <see langword="null" />.</exception>
-	public DiscordInteractionModalBuilder WithCallbackHints(DiscordCallbackHintBuilder hintBuilder)
+	internal DiscordInteractionModalBuilder WithCallbackHints(DiscordCallbackHintBuilder hintBuilder)
 	{
 		if (hintBuilder == null)
 			throw new ArgumentNullException(nameof(hintBuilder), "Callback hint builder cannot be null.");
@@ -142,14 +152,12 @@ public sealed class DiscordInteractionModalBuilder
 
 			throw new ArgumentException("You can only add 5 components to modals.");
 
-		if (this._components.Count + ara.Length > 5)
-			throw new ArgumentException($"You try to add too many components. We already have {this._components.Count}.");
+		if (this.ComponentsInternal.Count + ara.Length > 5)
+			throw new ArgumentException($"You try to add too many components. We already have {this.ComponentsInternal.Count}.");
 
 		foreach (var ar in ara)
-			this._components.Add(new(new List<DiscordComponent>
-			{
-				ar
-			}));
+			this.ComponentsInternal.Add(new DiscordActionRowComponent(
+				[ar]));
 
 		return this;
 	}
@@ -164,11 +172,11 @@ public sealed class DiscordInteractionModalBuilder
 	{
 		var ara = components.ToArray();
 
-		if (ara.Length + this._components.Count > 5)
+		if (ara.Length + this.ComponentsInternal.Count > 5)
 			throw new ArgumentException("ActionRow count exceeds maximum of five.");
 
 		foreach (var ar in ara)
-			this._components.Add(ar);
+			this.ComponentsInternal.Add(ar);
 
 		return this;
 	}
@@ -180,10 +188,8 @@ public sealed class DiscordInteractionModalBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	internal DiscordInteractionModalBuilder AddModalComponents(DiscordComponent component)
 	{
-		this._components.Add(new(new List<DiscordComponent>
-		{
-			component
-		}));
+		this.ComponentsInternal.Add(new DiscordActionRowComponent(
+			[component]));
 
 		return this;
 	}
@@ -192,14 +198,14 @@ public sealed class DiscordInteractionModalBuilder
 	///     Clears all message components on this builder.
 	/// </summary>
 	public void ClearComponents()
-		=> this._components.Clear();
+		=> this.ComponentsInternal.Clear();
 
 	/// <summary>
 	///     Allows for clearing the Interaction Response Builder so that it can be used again to send a new response.
 	/// </summary>
 	public void Clear()
 	{
-		this._components.Clear();
+		this.ComponentsInternal.Clear();
 		this.Title = null!;
 		this.CustomId = null!;
 	}

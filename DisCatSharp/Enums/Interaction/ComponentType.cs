@@ -46,7 +46,42 @@ public enum ComponentType
 	ChannelSelect = 8,
 
 	/// <summary>
+	///     A section.
+	/// </summary>
+	Section = 9,
+
+	/// <summary>
+	///     A text display.
+	/// </summary>
+	TextDisplay = 10,
+
+	/// <summary>
+	///     A thumbnail.
+	/// </summary>
+	Thumbnail = 11,
+
+	/// <summary>
+	///     A media gallery.
+	/// </summary>
+	MediaGallery = 12,
+
+	/// <summary>
 	///     A file.
 	/// </summary>
-	File = 13
+	File = 13,
+
+	/// <summary>
+	///     A separator.
+	/// </summary>
+	Separator = 14,
+
+	/// <summary>
+	///     Cannot be used by bots.
+	/// </summary>
+	ContentInventoryEntry = 15,
+
+	/// <summary>
+	///    A container.
+	/// </summary>
+	Container = 17
 }

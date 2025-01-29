@@ -253,7 +253,7 @@ internal sealed class RestFollowupMessageCreatePayload : ObservableApiObject
 	///     Gets the mentions.
 	/// </summary>
 	[JsonProperty("allowed_mentions", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordMentions Mentions { get; set; }
+	public DiscordMentions? Mentions { get; set; }
 
 	/// <summary>
 	///     Gets the flags.
@@ -265,7 +265,7 @@ internal sealed class RestFollowupMessageCreatePayload : ObservableApiObject
 	///     Gets the components.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyCollection<DiscordActionRowComponent> Components { get; set; }
+	public IReadOnlyCollection<DiscordComponent> Components { get; set; }
 
 	/// <summary>
 	///     Gets attachments.

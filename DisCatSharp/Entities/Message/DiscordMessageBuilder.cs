@@ -4,65 +4,25 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
+using DisCatSharp.Entities.Core;
+
 namespace DisCatSharp.Entities;
 
 /// <summary>
-///     Constructs a Message to be sent.
+///     Constructs a message to be sent.
 /// </summary>
-public sealed class DiscordMessageBuilder
+public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 {
-	private readonly List<DiscordEmbed> _embeds = [];
-
-	internal readonly List<DiscordAttachment> AttachmentsInternal = [];
-
-	internal readonly List<DiscordActionRowComponent> ComponentsInternal = new(5);
-
-	internal readonly List<DiscordMessageFile> FilesInternal = [];
-
-	private string _content;
-
 	/// <summary>
 	///     Whether to keep previous attachments.
 	/// </summary>
 	internal bool? KeepAttachmentsInternal;
 
 	/// <summary>
-	///     Gets or Sets the Message to be sent.
-	/// </summary>
-	public string Content
-	{
-		get => this._content;
-		set
-		{
-			if (value is { Length: > 2000 })
-				throw new ArgumentException("Content cannot exceed 2000 characters.", nameof(value));
-
-			this._content = value;
-		}
-	}
-
-	/// <summary>
-	///     Gets or sets the embed for the builder. This will always set the builder to have one embed.
-	/// </summary>
-	public DiscordEmbed Embed
-	{
-		get => this._embeds.Count > 0 ? this._embeds[0] : null;
-		set
-		{
-			this._embeds.Clear();
-			this._embeds.Add(value);
-		}
-	}
-
-	/// <summary>
 	///     Gets the Sticker to be send.
 	/// </summary>
-	public DiscordSticker Sticker { get; set; }
-
-	/// <summary>
-	///     Gets the Embeds to be sent.
-	/// </summary>
-	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
+	public DiscordSticker? Sticker { get; set; }
 
 	/// <summary>
 	///     Gets or Sets if the message should be TTS.
@@ -75,32 +35,6 @@ public sealed class DiscordMessageBuilder
 	public bool Silent { get; private set; }
 
 	/// <summary>
-	///     Whether to send as voice message.
-	///     You can't use that on your own, it needs DisCatSharp.Experimental.
-	/// </summary>
-	public bool IsVoiceMessage { get; private set; }
-
-	/// <summary>
-	///     Gets the Allowed Mentions for the message to be sent.
-	/// </summary>
-	public List<IMention>? Mentions { get; private set; }
-
-	/// <summary>
-	///     Gets the Files to be sent in the Message.
-	/// </summary>
-	public IReadOnlyCollection<DiscordMessageFile> Files => this.FilesInternal;
-
-	/// <summary>
-	///     Gets the components that will be attached to the message.
-	/// </summary>
-	public IReadOnlyList<DiscordActionRowComponent> Components => this.ComponentsInternal;
-
-	/// <summary>
-	///     Gets the Attachments to be sent in the Message.
-	/// </summary>
-	public IReadOnlyList<DiscordAttachment> Attachments => this.AttachmentsInternal;
-
-	/// <summary>
 	///     Gets the Reply Message ID.
 	/// </summary>
 	public ulong? ReplyId { get; private set; }
@@ -109,11 +43,6 @@ public sealed class DiscordMessageBuilder
 	///     Gets if the Reply should mention the user.
 	/// </summary>
 	public bool MentionOnReply { get; private set; }
-
-	/// <summary>
-	///     Gets if the embeds should be suppressed.
-	/// </summary>
-	public bool Suppressed { get; private set; }
 
 	/// <summary>
 	///     Gets if the Reply will error if the Reply Message Id does not reference a valid message.
@@ -193,11 +122,11 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	///     Adds a row of components to a message, up to 5 components per row, and up to 5 rows per message.
+	///     <para>Adds a row of components to the builder, up to <c>5</c> components per row, and up to <c>5</c> rows per message.</para>
+	///     <para>If <see cref="WithV2Components"/> was called, the limit changes to <c>10</c> top-level components and max <c>30</c> components in total.</para>
 	/// </summary>
 	/// <param name="components">The components to add to the message.</param>
 	/// <returns>The current builder to be chained.</returns>
-	/// <exception cref="ArgumentOutOfRangeException">No components were passed.</exception>
 	public DiscordMessageBuilder AddComponents(params DiscordComponent[] components)
 		=> this.AddComponents((IEnumerable<DiscordComponent>)components);
 
@@ -205,7 +134,7 @@ public sealed class DiscordMessageBuilder
 	///     Appends several rows of components to the message
 	/// </summary>
 	/// <param name="components">The rows of components to add, holding up to five each.</param>
-	/// <returns></returns>
+	/// <returns>The builder to chain calls with.</returns>
 	/// <exception cref="ArgumentOutOfRangeException">No components were passed.</exception>
 	public DiscordMessageBuilder AddComponents(params DiscordActionRowComponent[] components)
 		=> this.AddComponents((IEnumerable<DiscordActionRowComponent>)components);
@@ -214,7 +143,7 @@ public sealed class DiscordMessageBuilder
 	///     Appends several rows of components to the message
 	/// </summary>
 	/// <param name="components">The rows of components to add, holding up to five each.</param>
-	/// <returns></returns>
+	/// <returns>The builder to chain calls with.</returns>
 	public DiscordMessageBuilder AddComponents(IEnumerable<DiscordActionRowComponent> components)
 	{
 		var ara = components.ToArray();
@@ -239,16 +168,31 @@ public sealed class DiscordMessageBuilder
 		var cmpArr = components.ToArray();
 		var count = cmpArr.Length;
 
-		switch (count)
+		if (this.IsComponentsV2)
 		{
-			case 0:
-				throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
-			case > 5:
-				throw new ArgumentException("Cannot add more than 5 components per action row!");
-		}
+			switch (count)
+			{
+				case 0:
+					throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
+				case > 10:
+					throw new ArgumentException("Cannot add more than 10 components!");
+			}
 
-		var comp = new DiscordActionRowComponent(cmpArr);
-		this.ComponentsInternal.Add(comp);
+			this.ComponentsInternal.AddRange(cmpArr);
+		}
+		else
+		{
+			switch (count)
+			{
+				case 0:
+					throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
+				case > 5:
+					throw new ArgumentException("Cannot add more than 5 components per action row!");
+			}
+
+			var comp = new DiscordActionRowComponent(cmpArr);
+			this.ComponentsInternal.Add(comp);
+		}
 
 		return this;
 	}
@@ -269,7 +213,17 @@ public sealed class DiscordMessageBuilder
 	/// </summary>
 	public DiscordMessageBuilder SuppressEmbeds(bool suppress = true)
 	{
-		this.Suppressed = suppress;
+		this.EmbedsSuppressed = suppress;
+		return this;
+	}
+
+	/// <summary>
+	///     Sets that this builder should be using UI Kit.
+	/// </summary>
+	/// <returns>The current builder to chain calls with.</returns>
+	public DiscordMessageBuilder WithV2Components()
+	{
+		this.IsComponentsV2 = true;
 		return this;
 	}
 
@@ -292,30 +246,14 @@ public sealed class DiscordMessageBuilder
 	}
 
 	/// <summary>
-	///     Sets the embed for the current builder.
-	/// </summary>
-	/// <param name="embed">The embed that should be set.</param>
-	/// <returns>The current builder to be chained.</returns>
-	public DiscordMessageBuilder WithEmbed(DiscordEmbed embed)
-	{
-		if (embed == null)
-			return this;
-
-		this.Embed = embed;
-		return this;
-	}
-
-	/// <summary>
 	///     Appends an embed to the current builder.
 	/// </summary>
 	/// <param name="embed">The embed that should be appended.</param>
 	/// <returns>The current builder to be chained.</returns>
 	public DiscordMessageBuilder AddEmbed(DiscordEmbed embed)
 	{
-		if (embed == null)
-			return this; //Providing null embeds will produce a 400 response from Discord.//
-
-		this._embeds.Add(embed);
+		ArgumentNullException.ThrowIfNull(embed, nameof(embed));
+		this.EmbedsInternal.Add(embed);
 		return this;
 	}
 
@@ -326,42 +264,39 @@ public sealed class DiscordMessageBuilder
 	/// <returns>The current builder to be chained.</returns>
 	public DiscordMessageBuilder AddEmbeds(IEnumerable<DiscordEmbed> embeds)
 	{
-		this._embeds.AddRange(embeds);
+		this.EmbedsInternal.AddRange(embeds);
 		return this;
 	}
 
 	/// <summary>
 	///     Sets if the message has allowed mentions.
 	/// </summary>
-	/// <param name="allowedMention">The allowed Mention that should be sent.</param>
+	/// <param name="mention">The allowed Mention that should be sent.</param>
 	/// <returns>The current builder to be chained.</returns>
-	public DiscordMessageBuilder WithAllowedMention(IMention allowedMention)
+	public DiscordMessageBuilder WithAllowedMention(IMention mention)
 	{
-		if (this.Mentions != null)
-			this.Mentions.Add(allowedMention);
-		else
-			this.Mentions = [allowedMention];
-
+		this.MentionsInternal.Add(mention);
 		return this;
 	}
 
 	/// <summary>
 	///     Sets if the message has allowed mentions.
 	/// </summary>
-	/// <param name="allowedMentions">The allowed Mentions that should be sent.</param>
+	/// <param name="mentions">The allowed Mentions that should be sent.</param>
 	/// <returns>The current builder to be chained.</returns>
-	public DiscordMessageBuilder WithAllowedMentions(IEnumerable<IMention> allowedMentions)
+	public DiscordMessageBuilder WithAllowedMentions(IEnumerable<IMention> mentions)
 	{
-		if (this.Mentions != null)
-			this.Mentions.AddRange(allowedMentions);
-		else
-			this.Mentions = allowedMentions.ToList();
-
+		this.MentionsInternal.AddRange(mentions);
 		return this;
 	}
 
+	/// <inheritdoc cref="AddFile(string,Stream,bool,string?)" />
+	[Deprecated("Replaced by AddFile to streamline builders.")]
+	public DiscordMessageBuilder WithFile(string fileName, Stream stream, bool resetStreamPosition = false, string description = null)
+		=> this.AddFile(fileName, stream, resetStreamPosition, description);
+
 	/// <summary>
-	///     Sets if the message has files to be sent.
+	///     Adds a file to the message.
 	/// </summary>
 	/// <param name="fileName">The fileName that the file should be sent as.</param>
 	/// <param name="stream">The Stream to the file.</param>
@@ -371,9 +306,9 @@ public sealed class DiscordMessageBuilder
 	/// </param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The current builder to be chained.</returns>
-	public DiscordMessageBuilder WithFile(string fileName, Stream stream, bool resetStreamPosition = false, string description = null)
+	public DiscordMessageBuilder AddFile(string fileName, Stream stream, bool resetStreamPosition = false, string? description = null)
 	{
-		if (this.Files.Count > 10)
+		if (this.FilesInternal.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
 		if (this.FilesInternal.Any(x => x.Filename == fileName))
@@ -387,8 +322,13 @@ public sealed class DiscordMessageBuilder
 		return this;
 	}
 
+	/// <inheritdoc cref="AddFile(FileStream,bool,string?)" />
+	[Deprecated("Replaced by AddFile to streamline builders.")]
+	public DiscordMessageBuilder WithFile(FileStream stream, bool resetStreamPosition = false, string description = null)
+		=> this.AddFile(stream, resetStreamPosition, description);
+
 	/// <summary>
-	///     Sets if the message has files to be sent.
+	///     Adds a file to the message.
 	/// </summary>
 	/// <param name="stream">The Stream to the file.</param>
 	/// <param name="resetStreamPosition">
@@ -397,9 +337,9 @@ public sealed class DiscordMessageBuilder
 	/// </param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The current builder to be chained.</returns>
-	public DiscordMessageBuilder WithFile(FileStream stream, bool resetStreamPosition = false, string description = null)
+	public DiscordMessageBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string? description = null)
 	{
-		if (this.Files.Count > 10)
+		if (this.FilesInternal.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
 		if (this.FilesInternal.Any(x => x.Filename == stream.Name))
@@ -413,8 +353,13 @@ public sealed class DiscordMessageBuilder
 		return this;
 	}
 
+	/// <inheritdoc cref="AddFiles" />
+	[Deprecated("Replaced by AddFiles to streamline builders.")]
+	public DiscordMessageBuilder WithFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
+		=> this.AddFiles(files, resetStreamPosition);
+
 	/// <summary>
-	///     Sets if the message has files to be sent.
+	///     Adds file to the message.
 	/// </summary>
 	/// <param name="files">The Files that should be sent.</param>
 	/// <param name="resetStreamPosition">
@@ -422,9 +367,9 @@ public sealed class DiscordMessageBuilder
 	///     sent.
 	/// </param>
 	/// <returns>The current builder to be chained.</returns>
-	public DiscordMessageBuilder WithFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
+	public DiscordMessageBuilder AddFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
 	{
-		if (this.Files.Count + files.Count > 10)
+		if (this.FilesInternal.Count + files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
 		foreach (var file in files)
@@ -476,10 +421,7 @@ public sealed class DiscordMessageBuilder
 		this.FailOnInvalidReply = failOnInvalidReply;
 
 		if (mention)
-		{
-			this.Mentions ??= [];
-			this.Mentions.Add(new RepliedUserMention());
-		}
+			this.MentionsInternal.Add(new RepliedUserMention());
 
 		return this;
 	}
@@ -505,12 +447,6 @@ public sealed class DiscordMessageBuilder
 		=> msg.ModifyAsync(this);
 
 	/// <summary>
-	///     Clears all message components on this builder.
-	/// </summary>
-	public void ClearComponents()
-		=> this.ComponentsInternal.Clear();
-
-	/// <summary>
 	///     Clears the poll from this builder.
 	/// </summary>
 	public void ClearPoll()
@@ -519,24 +455,17 @@ public sealed class DiscordMessageBuilder
 	/// <summary>
 	///     Allows for clearing the Message Builder so that it can be used again to send a new message.
 	/// </summary>
-	public void Clear()
+	public override void Clear()
 	{
-		this.Content = "";
-		this._embeds.Clear();
 		this.IsTts = false;
-		this.Mentions = null;
-		this.FilesInternal.Clear();
 		this.ReplyId = null;
 		this.MentionOnReply = false;
-		this.ComponentsInternal.Clear();
-		this.Suppressed = false;
-		this.Sticker = null;
-		this.AttachmentsInternal.Clear();
+		this.Sticker = null!;
 		this.KeepAttachmentsInternal = false;
 		this.Nonce = null;
 		this.EnforceNonce = false;
 		this.Poll = null;
-		this.IsVoiceMessage = false;
+		base.Clear();
 	}
 
 	/// <summary>
@@ -545,7 +474,7 @@ public sealed class DiscordMessageBuilder
 	/// <param name="isModify">Tells the method to perform the Modify Validation or Create Validation.</param>
 	internal void Validate(bool isModify = false)
 	{
-		if (this._embeds.Count > 10)
+		if (this.EmbedsInternal.Count > 10)
 			throw new ArgumentException("A message can only have up to 10 embeds.");
 
 		if (isModify)
@@ -553,14 +482,19 @@ public sealed class DiscordMessageBuilder
 
 		if (!isModify)
 		{
-			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && this.Sticker is null && (!this.Components?.Any() ?? true) && this.Poll is null && this?.Attachments.Count == 0)
+			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any() && this.Sticker is null && (!this.Components?.Any() ?? true) && this.Poll is null && this?.Attachments.Count == 0)
 				throw new ArgumentException("You must specify content, an embed, a sticker, a component, a poll or at least one file.");
 
-			if (this.Components.Count > 5)
-				throw new InvalidOperationException("You can only have 5 action rows per message.");
+			if (this.IsComponentsV2 && (!string.IsNullOrEmpty(this.Content) || this.Embeds.Any()))
+				throw new ArgumentException("Using UI Kit mode. You cannot specify content or embeds.");
 
-			if (this.Components.Any(c => c.Components.Count > 5))
-				throw new InvalidOperationException("Action rows can only have 5 components");
+			switch (this.IsComponentsV2)
+			{
+				case true when this.Components?.Count > 10:
+					throw new InvalidOperationException("You can only have 10 components per message.");
+				case false when this.Components?.Count > 5:
+					throw new InvalidOperationException("You can only have 5 action rows per message.");
+			}
 
 			if (this.EnforceNonce && string.IsNullOrEmpty(this.Nonce))
 				throw new InvalidOperationException("Nonce enforcement is enabled, but no nonce is set.");
@@ -569,5 +503,7 @@ public sealed class DiscordMessageBuilder
 		}
 		else if (this.Poll is not null)
 			throw new InvalidOperationException("Messages with polls can't be edited.");
+
+		base.Validate();
 	}
 }
