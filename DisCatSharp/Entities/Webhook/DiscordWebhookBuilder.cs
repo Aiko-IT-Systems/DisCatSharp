@@ -14,6 +14,9 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 {
+	/// <summary>
+	///     Gets the applied tags.
+	/// </summary>
 	private readonly List<ulong> _appliedTags = [];
 
 	/// <summary>
