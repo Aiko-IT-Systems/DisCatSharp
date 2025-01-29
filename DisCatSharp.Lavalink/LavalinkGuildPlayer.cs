@@ -27,12 +27,6 @@ namespace DisCatSharp.Lavalink;
 /// </summary>
 public sealed class LavalinkGuildPlayer
 {
-	/// <summary>
-	///     Gets the internal queue entries.
-	/// </summary>
-	[SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>")]
-	private readonly SortedList<string, IQueueEntry> _queueEntriesInternal = [];
-
 	private readonly AsyncEvent<DiscordClient, VoiceStateUpdateEventArgs> _voiceStateUpdated;
 
 	/// <summary>
@@ -40,16 +34,30 @@ public sealed class LavalinkGuildPlayer
 	/// </summary>
 	internal readonly Dictionary<ulong, DiscordUser> CurrentUsersInternal = [];
 
+	/// <summary>
+	///     Triggers when the player state is updated.
+	/// </summary>
 	internal readonly AsyncEvent<LavalinkGuildPlayer, LavalinkPlayerStateUpdateEventArgs> StateUpdatedEvent;
 
+	/// <summary>
+	///     Triggers when a track ends.
+	/// </summary>
 	internal readonly AsyncEvent<LavalinkGuildPlayer, LavalinkTrackEndedEventArgs> TrackEndedEvent;
 
+	/// <summary>
+	///     Triggers when a track throws an exception.
+	/// </summary>
 	internal readonly AsyncEvent<LavalinkGuildPlayer, LavalinkTrackExceptionEventArgs> TrackExceptionEvent;
 
+	/// <summary>
+	///     Triggers when a track starts.
+	/// </summary>
 	internal readonly AsyncEvent<LavalinkGuildPlayer, LavalinkTrackStartedEventArgs> TrackStartedEvent;
 
+	/// <summary>
+	///     Triggers when a track gets stuck.
+	/// </summary>
 	internal readonly AsyncEvent<LavalinkGuildPlayer, LavalinkTrackStuckEventArgs> TrackStuckEvent;
-
 	/// <summary>
 	///     Gets whether this player is disposed.
 	/// </summary>
@@ -84,13 +92,15 @@ public sealed class LavalinkGuildPlayer
 		if (this.QUEUE_SYSTEM_ENABLED)
 			QueueInternal.TryAdd(guildId, new());
 	}
-
-	internal static ConcurrentDictionary<ulong, LavalinkQueue<LavalinkTrack>> QueueInternal { get; } = new();
+/// <summary>
+///     Gets the internal queue of tracks for each guild.
+/// </summary>
+internal static ConcurrentDictionary<ulong, LavalinkQueue<LavalinkTrack>> QueueInternal { get; } = new();
 
 	/// <summary>
 	///     Gets the queue.
 	/// </summary>
-	public IReadOnlyList<LavalinkTrack> Queue => QueueInternal.GetOrAdd(this.GuildId, new LavalinkQueue<LavalinkTrack>()).ToList();
+	public IReadOnlyList<LavalinkTrack> Queue => [.. QueueInternal.GetOrAdd(this.GuildId, new LavalinkQueue<LavalinkTrack>())];
 
 	/// <summary>
 	///     Gets whether the built-in queue system is enabled.
@@ -155,13 +165,6 @@ public sealed class LavalinkGuildPlayer
 	/// </summary>
 	public int Ping
 		=> this.Player.PlayerState.Ping;
-
-	/// <summary>
-	///     Gets the queue entries.
-	/// </summary>
-	[Deprecated("This property is deprecated. Use Queue instead")]
-	public IReadOnlyList<IQueueEntry> QueueEntries
-		=> this._queueEntriesInternal.Values.ToList();
 
 	/// <summary>
 	///     Gets a list of current user in the <see cref="Channel" />.
@@ -581,62 +584,6 @@ public sealed class LavalinkGuildPlayer
 	}
 
 #region Queue Operations
-
-	/// <summary>
-	///     Adds a <see cref="LavalinkTrack" /> to the queue.
-	/// </summary>
-	/// <typeparam name="T">Queue entry object type.</typeparam>
-	/// <param name="entry">The entry to add. Please construct a new() entry for every track.</param>
-	/// <param name="track">The track to attach.</param>
-	[Deprecated("This method is deprecated. Use AddToQueue(LavalinkTrack track) instead. For custom actions before/after playback, consider using event handlers tied to track events or the new PlayQueue() logic.")]
-	public void AddToQueue<T>(T entry, LavalinkTrack track) where T : IQueueEntry
-		=> this._queueEntriesInternal.Add(track.Info.Uri.ToString(), entry.AddTrack(track));
-
-	/// <summary>
-	///     Removes a queue entry.
-	/// </summary>
-	/// <param name="entry">The entry to remove.</param>
-	/// <returns><see langword="true" /> if the entry was found and removed.</returns>
-	[Deprecated("This method is deprecated. Use RemoveQueue(LavalinkTrack track) or RemoveQueue(string identifier) instead, which directly manipulate the queue.")]
-	public bool RemoveFromQueue(IQueueEntry entry)
-		=> this._queueEntriesInternal.Remove(entry.Track.Info.Uri.ToString());
-
-	/// <summary>
-	///     Removes a queue entry by the track identifier.
-	/// </summary>
-	/// <param name="identifier">The identifier to look up.</param>
-	/// <returns><see langword="true" /> if the entry was found and removed.</returns>
-	[Deprecated("This method is deprecated. Use RemoveQueue(string identifier) instead, which directly manipulates the queue.")]
-	public bool RemoveFromQueueByIdentifierAsync(string identifier)
-		=> this._queueEntriesInternal.Count != 0 && this._queueEntriesInternal!.TryGetValue(identifier, out var entry) && this.RemoveFromQueue(entry!);
-
-	/// <summary>
-	///     Plays the queue while entries are presented.
-	/// </summary>
-	[Deprecated("This method is deprecated. Use PlayQueue() instead, which utilizes the updated queueing system.")]
-	public async void PlayQueueAsync()
-	{
-		if (!this.QUEUE_SYSTEM_ENABLED)
-			return;
-
-		while (this._queueEntriesInternal.Count > 0)
-		{
-			this._queueTsc = new();
-			var currentQueueEntry = this._queueEntriesInternal.First();
-
-			if (await currentQueueEntry.Value.BeforePlayingAsync(this).ConfigureAwait(false))
-			{
-				await this.PlayAsync(currentQueueEntry.Value.Track).ConfigureAwait(false);
-
-				await this._queueTsc.Task.ConfigureAwait(false);
-
-				await currentQueueEntry.Value.AfterPlayingAsync(this).ConfigureAwait(false);
-			}
-
-			this._queueEntriesInternal.RemoveAt(0);
-			this._queueTsc = null!;
-		}
-	}
 
 	/// <summary>
 	///     Adds a Lavalink track to the queue.

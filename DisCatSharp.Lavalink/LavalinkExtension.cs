@@ -21,8 +21,14 @@ public sealed class LavalinkExtension : BaseExtension
 	/// </summary>
 	private readonly ConcurrentDictionary<ConnectionEndpoint, LavalinkSession> _connectedSessions = new();
 
+	/// <summary>
+	///     Triggers when a Lavalink session connects.
+	/// </summary>
 	private AsyncEvent<LavalinkExtension, LavalinkSessionConnectedEventArgs> _sessionConnected;
 
+	/// <summary>
+	///     Triggers when a Lavalink session disconnects.
+	/// </summary>
 	private AsyncEvent<LavalinkExtension, LavalinkSessionDisconnectedEventArgs> _sessionDisconnected;
 
 	/// <summary>

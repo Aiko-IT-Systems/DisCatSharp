@@ -45,12 +45,24 @@ public sealed class LavalinkSession
 	/// </summary>
 	private const int MAXIMUM_BACKOFF = 120000;
 
+	/// <summary>
+	///     Triggers when the Lavalink session is connects.
+	/// </summary>
 	private readonly AsyncEvent<LavalinkSession, LavalinkSessionConnectedEventArgs> _lavalinkSessionConnected;
 
+	/// <summary>
+	///     Triggers when the Lavalink session is disconnected.
+	/// </summary>
 	private readonly AsyncEvent<LavalinkSession, LavalinkSessionDisconnectedEventArgs> _lavalinkSessionDisconnected;
 
+	/// <summary>
+	///     Triggers when a socket error occurs in the Lavalink session.
+	/// </summary>
 	private readonly AsyncEvent<LavalinkSession, SocketErrorEventArgs> _lavalinkSocketError;
 
+	/// <summary>
+	///     Triggers when Lavalink stats are received.
+	/// </summary>
 	private readonly AsyncEvent<LavalinkSession, LavalinkStatsReceivedEventArgs> _statsReceived;
 
 	/// <summary>
@@ -63,8 +75,14 @@ public sealed class LavalinkSession
 	/// </summary>
 	private readonly ConcurrentDictionary<ulong, TaskCompletionSource<VoiceStateUpdateEventArgs>> _voiceStateUpdates;
 
+	/// <summary>
+	///     Triggers when the Lavalink websocket is closed.
+	/// </summary>
 	private readonly AsyncEvent<LavalinkSession, LavalinkWebsocketClosedEventArgs> _websocketClosed;
 
+	/// <summary>
+	///     Triggers when a Lavalink guild player is destroyed.
+	/// </summary>
 	internal readonly AsyncEvent<LavalinkSession, GuildPlayerDestroyedEventArgs> GuildPlayerDestroyedEvent;
 
 	/// <summary>
@@ -87,6 +105,9 @@ public sealed class LavalinkSession
 	/// </summary>
 	private IWebSocketClient _webSocket;
 
+	/// <summary>
+	///     Gets the internal dictionary of connected players for each guild.
+	/// </summary>
 	internal ConcurrentDictionary<ulong, LavalinkGuildPlayer> ConnectedPlayersInternal = new();
 
 	/// <summary>
@@ -336,11 +357,11 @@ public sealed class LavalinkSession
 		var vst = await vstut.Task.ConfigureAwait(false); // Wait for voice state update to get session_id
 		var vsr = await vsrut.Task.ConfigureAwait(false); // Wait for voice server update to get token, guild_id & endpoint
 		await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, channel.Guild.Id, new()
-			{
-				Endpoint = vsr.Endpoint,
-				Token = vsr.VoiceToken,
-				SessionId = vst.SessionId
-			})
+		{
+			Endpoint = vsr.Endpoint,
+			Token = vsr.VoiceToken,
+			SessionId = vst.SessionId
+		})
 			.ConfigureAwait(false);
 		var player = await this.Rest.GetPlayerAsync(this.Config.SessionId!, channel.Guild.Id).ConfigureAwait(false);
 
@@ -591,8 +612,8 @@ public sealed class LavalinkSession
 						LavalinkGuildPlayer? player = null;
 
 						if (!string.IsNullOrEmpty(eventOp.GuildId) &&
-						    this.ConnectedPlayersInternal.TryGetValue(Convert.ToUInt64(eventOp.GuildId),
-							    out var eventPlayer))
+							this.ConnectedPlayersInternal.TryGetValue(Convert.ToUInt64(eventOp.GuildId),
+								out var eventPlayer))
 							player = eventPlayer;
 						switch (eventOp.Type)
 						{
