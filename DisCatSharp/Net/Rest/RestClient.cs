@@ -277,216 +277,6 @@ internal sealed class RestClient : IDisposable
 		=> request is null ? throw new ArgumentNullException(nameof(request)) : this.ExecuteRequestAsync(request, null, null, targetDebug);
 
 	/// <summary>
-	///     Executes the form data request.
-	/// </summary>
-	/// <param name="request">The request to be executed.</param>
-	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
-	public Task ExecuteFormRequestAsync(BaseRestRequest request, bool targetDebug = false)
-		=> request is null ? throw new ArgumentNullException(nameof(request)) : this.ExecuteFormRequestAsync(request, null, null, targetDebug);
-
-	/// <summary>
-	///     Executes the form data request.
-	///     This is to allow proper rescheduling of the first request from a bucket.
-	/// </summary>
-	/// <param name="request">The request to be executed.</param>
-	/// <param name="bucket">The bucket.</param>
-	/// <param name="ratelimitTcs">The ratelimit task completion source.</param>
-	/// <param name="targetDebug">Enables a possible breakpoint in the rest client for debugging purposes.</param>
-	private async Task ExecuteFormRequestAsync(BaseRestRequest request, RateLimitBucket? bucket, TaskCompletionSource<bool>? ratelimitTcs, bool targetDebug = false)
-	{
-		ObjectDisposedException.ThrowIf(this._disposed, this);
-
-		if (targetDebug)
-			Console.WriteLine("Meow");
-
-		HttpResponseMessage? res = default;
-
-		try
-		{
-			await this._globalRateLimitEvent.WaitAsync().ConfigureAwait(false);
-
-			bucket ??= request.RateLimitBucket;
-
-			ratelimitTcs ??= await this.WaitForInitialRateLimit(bucket).ConfigureAwait(false);
-
-			if (ratelimitTcs is null) // check rate limit only if we are not the probe request
-			{
-				var now = DateTimeOffset.UtcNow;
-
-				await bucket.TryResetLimitAsync(now).ConfigureAwait(false);
-
-				// Decrement the remaining number of requests as there can be other concurrent requests before this one finishes and has a chance to update the bucket
-				if (Interlocked.Decrement(ref bucket.RemainingInternal) < 0)
-				{
-					this._logger.LogWarning(LoggerEvents.RatelimitDiag, "Request for {bucket} is blocked. Url: {url}", bucket.ToString(), request.Url.AbsoluteUri);
-					var delay = bucket.Reset - now;
-					var resetDate = bucket.Reset;
-
-					if (this._useResetAfter)
-					{
-						delay = bucket.ResetAfter.Value;
-						resetDate = bucket.ResetAfterOffset;
-					}
-
-					if (delay < new TimeSpan(-TimeSpan.TicksPerMinute))
-					{
-						this._logger.LogError(LoggerEvents.RatelimitDiag, "Failed to retrieve ratelimits - giving up and allowing next request for bucket");
-						bucket.RemainingInternal = 1;
-					}
-
-					if (delay < TimeSpan.Zero)
-						delay = TimeSpan.FromMilliseconds(100);
-
-					this._logger.LogWarning(LoggerEvents.RatelimitPreemptive, "Preemptive ratelimit triggered - waiting until {ResetDate:yyyy-MM-dd HH:mm:ss zzz} ({Delay:c})", resetDate, delay);
-					Task.Delay(delay)
-						.ContinueWith(_ => this.ExecuteFormRequestAsync(request, null, null))
-						.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
-
-					return;
-				}
-
-				this._logger.LogDebug(LoggerEvents.RatelimitDiag, "Request for {bucket} is allowed. Url: {url}", bucket.ToString(), request.Url.AbsoluteUri);
-			}
-			else
-				this._logger.LogDebug(LoggerEvents.RatelimitDiag, "Initial request for {bucket} is allowed. Url: {url}", bucket.ToString(), request.Url.AbsoluteUri);
-
-			var req = this.BuildFormRequest(request);
-
-			if (this.Debug && req.Content is not null)
-				this._logger.Log(LogLevel.Trace, LoggerEvents.RestTx, "Rest Form Request Content:\n{Content}", await req.Content.ReadAsStringAsync()!);
-
-			var response = new RestResponse();
-			try
-			{
-				ObjectDisposedException.ThrowIf(this._disposed, this);
-
-				res = await this.HttpClient.SendAsync(req, HttpCompletionOption.ResponseContentRead, CancellationToken.None).ConfigureAwait(false);
-
-				var bts = await res.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
-				var txt = Utilities.UTF8.GetString(bts, 0, bts.Length);
-
-				if (this.Debug)
-					this._logger.Log(LogLevel.Trace, LoggerEvents.RestRx, "Rest Form Response Content: {Content}", txt);
-
-				response.Headers = res.Headers?.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
-				response.Response = txt;
-				response.ResponseCode = res.StatusCode;
-			}
-			catch (HttpRequestException httpex)
-			{
-				this._logger.LogError(LoggerEvents.RestError, httpex, "Request to {Url} triggered an HttpException", request.Url.AbsoluteUri);
-				request.SetFaulted(httpex);
-				this.FailInitialRateLimitTest(request, ratelimitTcs);
-				return;
-			}
-
-			this.UpdateBucket(request, response, ratelimitTcs);
-
-			Exception? ex = null;
-
-			switch (response.ResponseCode)
-			{
-				case HttpStatusCode.BadRequest:
-				case HttpStatusCode.MethodNotAllowed:
-					ex = new BadRequestException(request, response);
-					break;
-
-				case HttpStatusCode.Unauthorized:
-				case HttpStatusCode.Forbidden:
-					ex = new UnauthorizedException(request, response);
-					break;
-
-				case HttpStatusCode.NotFound:
-					ex = new NotFoundException(request, response);
-					break;
-
-				case HttpStatusCode.RequestEntityTooLarge:
-					ex = new RequestSizeException(request, response);
-					break;
-
-				case HttpStatusCode.TooManyRequests:
-					ex = new RateLimitException(request, response);
-
-					// check the limit info and requeue
-					this.Handle429(response, out var wait, out var global);
-					if (wait is not null)
-					{
-						if (global)
-						{
-							bucket.IsGlobal = true;
-							this._logger.LogError(LoggerEvents.RatelimitHit, "Global ratelimit hit, cooling down for {uri}", request.Url.AbsoluteUri);
-							try
-							{
-								this._globalRateLimitEvent.Reset();
-								await wait.ConfigureAwait(false);
-							}
-							finally
-							{
-								// we don't want to wait here until all the blocked requests have been run, additionally Set can never throw an exception that could be suppressed here
-								_ = this._globalRateLimitEvent.SetAsync();
-							}
-
-							this.ExecuteRequestAsync(request, bucket, ratelimitTcs)
-								.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while retrying request");
-						}
-						else
-						{
-							this._logger.LogError(LoggerEvents.RatelimitHit, "Ratelimit hit, requeuing request to {url}", request.Url.AbsoluteUri);
-							await wait.ConfigureAwait(false);
-							this.ExecuteRequestAsync(request, bucket, ratelimitTcs)
-								.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while retrying request");
-						}
-
-						return;
-					}
-
-					break;
-
-				case HttpStatusCode.InternalServerError:
-				case HttpStatusCode.BadGateway:
-				case HttpStatusCode.ServiceUnavailable:
-				case HttpStatusCode.GatewayTimeout:
-					ex = new ServerErrorException(request, response);
-					break;
-			}
-
-			if (ex is not null)
-				request.SetFaulted(ex);
-			else
-				request.SetCompleted(response);
-		}
-		catch (Exception ex)
-		{
-			this._logger.LogError(LoggerEvents.RestError, ex, "Request to {Url} triggered an exception", request.Url.AbsoluteUri);
-
-			// if something went wrong and we couldn't get rate limits for the first request here, allow the next request to run
-			if (bucket is not null && ratelimitTcs is not null && bucket.LimitTesting is not 0)
-				this.FailInitialRateLimitTest(request, ratelimitTcs);
-
-			if (!request.TrySetFaulted(ex))
-				throw;
-		}
-		finally
-		{
-			res?.Dispose();
-
-			// Get and decrement active requests in this bucket by 1.
-			if (bucket?.BucketId is not null)
-			{
-				_ = this._requestQueue.TryGetValue(bucket.BucketId, out var count);
-				this._requestQueue[bucket.BucketId] = Interlocked.Decrement(ref count);
-
-				// If it's 0 or less, we can remove the bucket from the active request queue,
-				// along with any of its past routes.
-				if (count <= 0)
-					foreach (var r in bucket.RouteHashes)
-						if (this._requestQueue.ContainsKey(r))
-							_ = this._requestQueue.TryRemove(r, out _);
-			}
-		}
-	}
-
-	/// <summary>
 	///     Executes the request.
 	///     This is to allow proper rescheduling of the first request from a bucket.
 	/// </summary>
@@ -784,38 +574,6 @@ internal sealed class RestClient : IDisposable
 	}
 
 	/// <summary>
-	///     Builds the form data request.
-	/// </summary>
-	/// <param name="request">The request.</param>
-	/// <returns>A http request message.</returns>
-	private HttpRequestMessage BuildFormRequest(BaseRestRequest request)
-	{
-		var req = new HttpRequestMessage(new(request.Method.ToString()), request.Url);
-		if (request.Headers is not null && request.Headers.Any())
-			foreach (var kvp in request.Headers)
-				switch (kvp.Key)
-				{
-					case "Bearer":
-						req.Headers.Authorization = new(CommonHeaders.AUTHORIZATION_BEARER, kvp.Value);
-						break;
-					case "Basic":
-						req.Headers.Authorization = new(CommonHeaders.AUTHORIZATION_BASIC, kvp.Value);
-						break;
-					default:
-						req.Headers.Add(kvp.Key, kvp.Value);
-						break;
-				}
-
-		if (request is not RestFormRequest formRequest)
-			throw new InvalidOperationException();
-
-		req.Content = new FormUrlEncodedContent(formRequest.FormData);
-		req.Content.Headers.ContentType = new("application/x-www-form-urlencoded");
-
-		return req;
-	}
-
-	/// <summary>
 	///     Builds the request.
 	/// </summary>
 	/// <param name="request">The request.</param>
@@ -845,6 +603,10 @@ internal sealed class RestClient : IDisposable
 
 				req.Content = new StringContent(nmprequest.Payload);
 				req.Content.Headers.ContentType = new("application/json");
+				break;
+			case RestFormRequest formRequest:
+				req.Content = new FormUrlEncodedContent(formRequest.FormData);
+				req.Content.Headers.ContentType = new("application/x-www-form-urlencoded");
 				break;
 			case MultipartWebRequest mprequest:
 			{
@@ -930,13 +692,12 @@ internal sealed class RestClient : IDisposable
 		// handle the wait
 		if (hs.TryGetValue(CommonHeaders.RETRY_AFTER, out var retryAfterRaw))
 		{
-			var retryAfter = TimeSpan.FromSeconds(int.Parse(retryAfterRaw, CultureInfo.InvariantCulture));
+			var retryAfter = TimeSpan.FromSeconds(double.Parse(retryAfterRaw, CultureInfo.InvariantCulture));
 			waitTask = Task.Delay(retryAfter);
 		}
 
-		// check if global b1nzy
+		// check if global
 		if (hs.TryGetValue(CommonHeaders.RATELIMIT_GLOBAL, out var isGlobal) && isGlobal.ToLowerInvariant() is "true")
-			// global
 			global = true;
 	}
 
@@ -989,21 +750,17 @@ internal sealed class RestClient : IDisposable
 		}
 
 		var clientTime = DateTimeOffset.UtcNow;
-		var resetTime = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero).AddSeconds(double.Parse(reset, CultureInfo.InvariantCulture));
-		var serverTime = clientTime;
-		if (hs.TryGetValue("Date", out var rawDate))
-			serverTime = DateTimeOffset.Parse(rawDate, CultureInfo.InvariantCulture).ToUniversalTime();
+		var resetDelta = TimeSpan.Zero;
 
-		var resetDelta = resetTime - serverTime;
-		//var difference = clientTime - serverTime;
-		//if (Math.Abs(difference.TotalSeconds) >= 1)
-		////    this.Logger.LogMessage(LogLevel.DebugBaseDiscordClient.RestEventId,  $"Difference between machine and server time: {difference.TotalMilliseconds.ToString("#,##0.00", CultureInfo.InvariantCulture)}ms", DateTime.Now);
-		//else
-		//    difference = TimeSpan.Zero;
+		if (hs.TryGetValue("Date", out var rawDate) && DateTimeOffset.TryParse(rawDate, CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+			resetDelta = date - clientTime;
 
 		if (request.RateLimitWaitOverride.HasValue)
 			resetDelta = TimeSpan.FromSeconds(request.RateLimitWaitOverride.Value);
-		var newReset = clientTime + resetDelta;
+
+		var resetTime = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero).AddSeconds(double.Parse(reset, CultureInfo.InvariantCulture));
+		var serverTime = clientTime + resetDelta;
+		var newReset = serverTime + (resetTime - serverTime);
 
 		if (this._useResetAfter)
 		{

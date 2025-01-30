@@ -78,7 +78,6 @@ internal sealed class RateLimitBucket : IEquatable<RateLimitBucket>
 		this.ChannelId = channelId;
 		this.GuildId = guildId;
 		this.WebhookId = webhookId;
-
 		this.BucketId = GenerateBucketId(hash, guildId, channelId, webhookId);
 		this.RouteHashes = [];
 	}

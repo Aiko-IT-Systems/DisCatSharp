@@ -292,7 +292,7 @@ public sealed class DiscordApiClient
 	{
 		var req = new RestFormRequest(client, bucket, url, method, route, formData, headers, ratelimitWaitOverride);
 
-		this.Rest.ExecuteFormRequestAsync(req, targetDebug).LogTaskFault(this.OAuth2Client.Logger, LogLevel.Error, LoggerEvents.RestError, $"Error while executing request. Url: {url.AbsoluteUri}");
+		this.Rest.ExecuteRequestAsync(req, targetDebug).LogTaskFault(this.OAuth2Client.Logger, LogLevel.Error, LoggerEvents.RestError, $"Error while executing request. Url: {url.AbsoluteUri}");
 
 		return req.WaitForCompletionAsync();
 	}
