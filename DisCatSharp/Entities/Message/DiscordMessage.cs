@@ -824,7 +824,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordMessage> RespondAsync(string content)
-		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, content, null, null, this.Id, false, false);
+		=> this.Discord.ApiClient.CreateMessageV2Async(this.ChannelId, content, null, null, this.Id, false, false);
 
 	/// <summary>
 	///     Responds to the message. This produces a reply.

@@ -29,6 +29,7 @@
 		<InternalsVisibleTo Include="DisCatSharp.Extensions.OAuth2Web" />
 		<InternalsVisibleTo Include="DisCatSharp.Extensions.TwoFactorCommands" />
 		<InternalsVisibleTo Include="DisCatSharp.Extensions.SimpleMusicCommands" />
+		<InternalsVisibleTo Include="DisCatSharp.RatelimitTestBot" />
 		<InternalsVisibleTo Include="Nyaw" />
 		<InternalsVisibleTo Include="MikuSharp" />
 		<InternalsVisibleTo Include="Microsoft.DocAsCode" />

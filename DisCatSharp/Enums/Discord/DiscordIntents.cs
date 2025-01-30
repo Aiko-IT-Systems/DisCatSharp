@@ -291,15 +291,5 @@ public enum DiscordIntents
 	///         privileged, and must be enabled on the bot's developer page.
 	///     </para>
 	/// </summary>
-	All = AllUnprivileged | GuildMembers | GuildPresences | MessageContent,
-
-	/// <summary>
-	///     Includes all intents.
-	///     <para>
-	///         The <see cref="GuildMembers" /> and <see cref="GuildPresences" /> intents are privileged, and must be enabled
-	///         on the bot's developer page.
-	///     </para>
-	///     <para>The <see cref="MessageContent" /> exist only in v10 and is not included here.</para>
-	/// </summary>
-	AllV9Less = AllUnprivileged | GuildMembers | GuildPresences
+	All = AllUnprivileged | GuildMembers | GuildPresences | MessageContent
 }

@@ -13,6 +13,7 @@ using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Serialization;
+using DisCatSharp.Net.V2;
 
 using Microsoft.Extensions.Logging;
 
@@ -42,6 +43,7 @@ public sealed class DiscordApiClient
 		this.Discord = client;
 		this.OAuth2Client = null!;
 		this.Rest = new(client);
+		this.RestV2 = new(client);
 	}
 
 	/// <summary>
@@ -57,6 +59,14 @@ public sealed class DiscordApiClient
 		this.OAuth2Client = client;
 		this.Discord = null!;
 		this.Rest = new(new()
+		{
+			Proxy = proxy,
+			HttpTimeout = timeout,
+			UseRelativeRatelimit = useRelativeRateLimit,
+			ApiChannel = ApiChannel.Stable,
+			ApiVersion = "10"
+		}, logger);
+		this.RestV2 = new(new()
 		{
 			Proxy = proxy,
 			HttpTimeout = timeout,
@@ -85,6 +95,14 @@ public sealed class DiscordApiClient
 			ApiChannel = ApiChannel.Stable,
 			ApiVersion = "10"
 		}, logger);
+		this.RestV2 = new(new()
+		{
+			Proxy = proxy,
+			HttpTimeout = timeout,
+			UseRelativeRatelimit = useRelativeRateLimit,
+			ApiChannel = ApiChannel.Stable,
+			ApiVersion = "10"
+		}, logger);
 	}
 
 	/// <summary>
@@ -101,6 +119,8 @@ public sealed class DiscordApiClient
 	///     Gets the rest client.
 	/// </summary>
 	internal RestClient Rest { get; }
+
+	internal RestClientV2 RestV2 { get; }
 
 	/// <summary>
 	///     Builds the query string.
@@ -3120,6 +3140,74 @@ public sealed class DiscordApiClient
 		var ret = this.PrepareMessage(JObject.Parse(res.Response));
 
 		return ret;
+	}
+
+	internal async Task<DiscordMessage> CreateMessageV2Async(ulong channelId, string content, IEnumerable<DiscordEmbed> embeds, DiscordSticker sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply, ReadOnlyCollection<DiscordComponent>? components = null)
+	{
+		if (content is { Length: > 2000 })
+			throw new ArgumentException("Message content length cannot exceed 2000 characters.");
+
+		if (!embeds?.Any() ?? true)
+		{
+			if (content == null && sticker == null && components == null)
+				throw new ArgumentException("You must specify message content, a sticker, components or embeds.");
+			if (content.Length == 0)
+				throw new ArgumentException("Message content must not be empty.");
+		}
+
+		if (embeds != null)
+			foreach (var embed in embeds)
+				if (embed.Timestamp != null)
+					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
+
+		var pld = new RestChannelMessageCreatePayload
+		{
+			HasContent = content != null,
+			Content = content,
+			StickersIds = sticker is null
+				? Array.Empty<ulong>()
+				: [sticker.Id],
+			IsTts = false,
+			HasEmbed = embeds?.Any() ?? false,
+			Embeds = embeds,
+			Components = components
+		};
+
+		if (replyMessageId != null)
+			pld.MessageReference = new InternalDiscordMessageReference
+			{
+				Type = ReferenceType.Default,
+				MessageId = replyMessageId,
+				FailIfNotExists = failOnInvalidReply
+			};
+
+		if (replyMessageId != null)
+			pld.Mentions = new(Mentions.All, true, mentionReply);
+
+		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}";
+		var bucket = this.RestV2.GetBucketV2(RestRequestMethod.POST, route, new
+		{
+			channel_id = channelId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestV2Async(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		var ret = this.PrepareMessage(JObject.Parse(res.Response));
+
+		return ret;
+	}
+
+	internal Task<RestResponseV2> DoRequestV2Async(BaseDiscordClient client, RateLimitBucketV2 bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string>? headers = null, string? payload = null, double? ratelimitWaitOverride = null)
+	{
+		var req = new RestRequestV2(client, bucket, url, method, route, headers, payload, ratelimitWaitOverride);
+
+		if (this.Discord is not null)
+			this.RestV2.ExecuteRequestV2Async(req).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, $"Error while executing request. Url: {url.AbsoluteUri}");
+		else
+			_ = this.RestV2.ExecuteRequestV2Async(req);
+
+		return req.WaitForCompletionAsync();
 	}
 
 	/// <summary>
