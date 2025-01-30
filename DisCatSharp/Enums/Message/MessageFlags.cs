@@ -88,6 +88,7 @@ public enum MessageFlags
 	/// </summary>
 	IsVoiceMessage = 1 << 13,
 
+	/// <summary>
 	///     The message has a snapshot (via Message Forwarding).
 	/// </summary>
 	HasSnapshots = 1 << 14,
