@@ -247,7 +247,10 @@ public sealed partial class DiscordClient
 
 		async Task SocketOnDisconnect(IWebSocketClient sender, SocketCloseEventArgs e)
 		{
-			// release session and connection
+			var shouldReconnect = e.CloseCode is 4000 or 4001 or 4002 or 4003 or 4005 or 4007 or 4008 or 4009 or >= 5000;
+			var shouldResume = e.CloseCode is 4000 or 4002 or 4008;
+			var fatalError = e.CloseCode is 4004 or 4010 or 4011 or 4012 or 4013 or 4014;
+
 			this._connectionLock.Set();
 			this._sessionLock.Set();
 
@@ -257,18 +260,29 @@ public sealed partial class DiscordClient
 			this.Logger.LogDebug(LoggerEvents.ConnectionClose, "Connection closed ({CloseCode}, '{Reason}')", e.CloseCode, e.CloseMessage ?? "No reason given");
 			await this._socketClosed.InvokeAsync(this, e).ConfigureAwait(false);
 
-			// TODO: We might need to include more 400X codes
-			if (this.Configuration.AutoReconnect && e.CloseCode is < 4001 or >= 5000)
+			if (fatalError)
+			{
+				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Fatal close code received ({CloseCode}, '{Reason}'). No reconnection attempt.", e.CloseCode, e.CloseMessage ?? "No reason given");
+				return;
+			}
+
+			if (shouldReconnect && !shouldResume)
+			{
+				this.Logger.LogWarning(LoggerEvents.ConnectionClose, "Session is invalid. Clearing session ID before reconnecting.");
+				this._sessionId = null;
+			}
+
+			if (this.Configuration.AutoReconnect && shouldReconnect)
 			{
 				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({CloseCode}, '{Reason}'), reconnecting", e.CloseCode, e.CloseMessage ?? "No reason given");
 				this._identified = false;
 
-				if (this._status is null)
-					await this.ConnectAsync().ConfigureAwait(false);
-				else if (this._status.IdleSince.HasValue)
-					await this.ConnectAsync(this._status.ActivityInternal, this._status.Status, Utilities.GetDateTimeOffsetFromMilliseconds(this._status.IdleSince.Value)).ConfigureAwait(false);
+				if (shouldResume && this._sessionId is not null)
+					this.Logger.LogInformation(LoggerEvents.ConnectionClose, "Attempting to resume session with ID {SessionId}.", this._sessionId);
 				else
-					await this.ConnectAsync(this._status.ActivityInternal, this._status.Status).ConfigureAwait(false);
+					this.Logger.LogWarning(LoggerEvents.ConnectionClose, "No valid session to resume, starting a new connection.");
+
+				await this.ConnectAsync(this._status?.ActivityInternal, this._status?.Status, this._status is not null && this._status.IdleSince.HasValue ? Utilities.GetDateTimeOffsetFromMilliseconds(this._status.IdleSince.Value) : null).ConfigureAwait(false);
 			}
 			else
 				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({CloseCode}, '{Reason}')", e.CloseCode, e.CloseMessage ?? "No reason given");
