@@ -236,11 +236,12 @@ public class LavalinkQueue<T> : IEnumerable<T>
 	}
 
 	/// <summary>
+	///     Removes a range of elements from the <see cref="LavalinkQueue{T}" />.
 	/// </summary>
-	/// <param name="index"></param>
-	/// <param name="count"></param>
-	/// <returns></returns>
-	/// <exception cref="ArgumentOutOfRangeException"></exception>
+	/// <param name="index">The zero-based index of the first element to remove.</param>
+	/// <param name="count">The number of elements to remove.</param>
+	/// <returns>A collection containing the removed elements.</returns>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when the index or count is out of range.</exception>
 	public ICollection<T> RemoveRange(int index, int count)
 	{
 		ArgumentOutOfRangeException.ThrowIfNegative(index);
@@ -270,6 +271,70 @@ public class LavalinkQueue<T> : IEnumerable<T>
 			}
 
 			return removed;
+		}
+	}
+
+	/// <summary>
+	///     Inserts an object at the specified index in the <see cref="LavalinkQueue{T}" />.
+	/// </summary>
+	/// <param name="index">The zero-based index at which the object should be inserted.</param>
+	/// <param name="value">The object to insert. The value cannot be null.</param>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when the index is out of range.</exception>
+	/// <exception cref="ArgumentNullException">Thrown when the value is null.</exception>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when the index is out of range.</exception>
+	public void InsertAt(int index, T value)
+	{
+		ArgumentOutOfRangeException.ThrowIfNegative(index);
+		ArgumentNullException.ThrowIfNull(value);
+		ArgumentOutOfRangeException.ThrowIfGreaterThan(index, this.Count);
+
+		lock (this._list)
+		{
+			if (index == this.Count)
+			{
+				this._list.AddLast(value);
+				return;
+			}
+
+			var currentNode = this._list.First;
+			for (var i = 0; i < index && currentNode is not null; i++)
+				currentNode = currentNode.Next;
+
+			if (currentNode is null)
+				throw new ArgumentOutOfRangeException(nameof(index), "Index was out of range.");
+
+			this._list.AddBefore(currentNode, value);
+		}
+	}
+
+	/// <summary>
+	///     Adds a range of objects at the specified index in the <see cref="LavalinkQueue{T}" />.
+	/// </summary>
+	/// <param name="index">The zero-based index at which the objects should be inserted.</param>
+	/// <param name="values">The objects to insert. The values cannot be null.</param>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when the index is out of range.</exception>
+	/// <exception cref="ArgumentNullException">Thrown when the values are null.</exception>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when the index is out of range.</exception>
+	public void InsertRange(int index, IEnumerable<T> values)
+	{
+		ArgumentOutOfRangeException.ThrowIfNegative(index);
+		ArgumentNullException.ThrowIfNull(values);
+		ArgumentOutOfRangeException.ThrowIfGreaterThan(index, this.Count);
+
+		lock (this._list)
+		{
+			var currentNode = this._list.First;
+			for (var i = 0; i < index && currentNode is not null; i++)
+				currentNode = currentNode.Next;
+
+			if (currentNode is null && index != this.Count)
+				throw new ArgumentOutOfRangeException(nameof(index), "Index was out of range.");
+
+			foreach (var value in values)
+				if (currentNode is null)
+					this._list.AddLast(value);
+				else
+					this._list.AddBefore(currentNode, value);
 		}
 	}
 }
