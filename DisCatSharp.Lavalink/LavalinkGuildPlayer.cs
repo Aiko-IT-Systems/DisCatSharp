@@ -757,6 +757,9 @@ public sealed class LavalinkGuildPlayer
 	/// </summary>
 	private async void PlayNextInQueue()
 	{
+		while (this._queueTsc is not null)
+			await Task.Delay(TimeSpan.FromSeconds(1));
+
 		var queue = QueueInternal.GetOrAdd(this.GuildId, new LavalinkQueue<LavalinkTrack>());
 		LavalinkTrack? nextTrack;
 
