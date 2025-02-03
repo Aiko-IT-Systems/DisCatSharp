@@ -28,7 +28,17 @@ using Endpoints = DisCatSharp.Lavalink.Enums.Endpoints;
 
 namespace DisCatSharp.Lavalink;
 
+/// <summary>
+///     Defines the event handler for <see cref="LavalinkSessionDisconnectedEventArgs"/>.
+/// </summary>
+/// <param name="node">The node.</param>
 internal delegate void SessionDisconnectedEventHandler(LavalinkSession node);
+
+/// <summary>
+///    Defines the event handler for <see cref="LavalinkSessionConnectedEventArgs"/>.
+/// </summary>
+/// <param name="node">The node.</param>
+internal delegate void SessionConnectedEventHandler(LavalinkSession node);
 
 /// <summary>
 ///     Represents a <see cref="LavalinkSession" />.
@@ -259,6 +269,11 @@ public sealed class LavalinkSession
 	internal event SessionDisconnectedEventHandler SessionDisconnected;
 
 	/// <summary>
+	///     Fires when a <see cref="LavalinkSession" /> disconnected.
+	/// </summary>
+	internal event SessionConnectedEventHandler SessionConnected;
+
+	/// <summary>
 	///     Gets the lavalink server information.
 	/// </summary>
 	/// <returns>A <see cref="LavalinkInfo" /> object.</returns>
@@ -357,11 +372,11 @@ public sealed class LavalinkSession
 		var vst = await vstut.Task.ConfigureAwait(false); // Wait for voice state update to get session_id
 		var vsr = await vsrut.Task.ConfigureAwait(false); // Wait for voice server update to get token, guild_id & endpoint
 		await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, channel.Guild.Id, new()
-		{
-			Endpoint = vsr.Endpoint,
-			Token = vsr.VoiceToken,
-			SessionId = vst.SessionId
-		})
+			{
+				Endpoint = vsr.Endpoint,
+				Token = vsr.VoiceToken,
+				SessionId = vst.SessionId
+			})
 			.ConfigureAwait(false);
 		var player = await this.Rest.GetPlayerAsync(this.Config.SessionId!, channel.Guild.Id).ConfigureAwait(false);
 
@@ -612,8 +627,8 @@ public sealed class LavalinkSession
 						LavalinkGuildPlayer? player = null;
 
 						if (!string.IsNullOrEmpty(eventOp.GuildId) &&
-							this.ConnectedPlayersInternal.TryGetValue(Convert.ToUInt64(eventOp.GuildId),
-								out var eventPlayer))
+						    this.ConnectedPlayersInternal.TryGetValue(Convert.ToUInt64(eventOp.GuildId),
+							    out var eventPlayer))
 							player = eventPlayer;
 						switch (eventOp.Type)
 						{

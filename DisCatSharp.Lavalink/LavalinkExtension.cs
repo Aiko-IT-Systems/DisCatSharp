@@ -127,6 +127,7 @@ public sealed class LavalinkExtension : BaseExtension
 		}
 		catch
 		{
+			con.SessionConnected += this.LavalinkSessionConnect;
 			this.LavalinkSessionDisconnect(con);
 			throw;
 		}
@@ -140,7 +141,7 @@ public sealed class LavalinkExtension : BaseExtension
 	/// <param name="endpoint">Endpoint at which the session resides.</param>
 	/// <returns>Lavalink session connection.</returns>
 	public LavalinkSession? GetSession(ConnectionEndpoint endpoint)
-		=> this._connectedSessions.TryGetValue(endpoint, out var ep) ? ep : null;
+		=> this._connectedSessions.GetValueOrDefault(endpoint);
 
 	/// <summary>
 	///     Gets a Lavalink session connection based on load balancing and an optional voice region.
@@ -217,6 +218,16 @@ public sealed class LavalinkExtension : BaseExtension
 		});
 
 		return sessions[0];
+	}
+
+	/// <summary>
+	///     Fired when a session connects and adds it to <see cref="ConnectedSessions" />.
+	/// </summary>
+	/// <param name="session">The disconnected session.</param>
+	private async void LavalinkSessionConnect(LavalinkSession session)
+	{
+		if (this._connectedSessions.TryAdd(session.NodeEndpoint, session))
+			await session.EstablishConnectionAsync().ConfigureAwait(false);
 	}
 
 	/// <summary>
