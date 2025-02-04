@@ -414,9 +414,20 @@ public sealed class LavalinkGuildPlayer
 	/// </summary>
 	/// <param name="seconds">The seconds to seek to.</param>
 	/// <returns>The updated guild player.</returns>
-	public async Task<LavalinkGuildPlayer> SeekAsync(TimeSpan seconds)
+	public async Task<LavalinkGuildPlayer> SeekAsync(int seconds)
 	{
-		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, position: (int)seconds.TotalSeconds).ConfigureAwait(false);
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, position: seconds * 1000).ConfigureAwait(false);
+		return this;
+	}
+
+	/// <summary>
+	///     Seeks the player to the position.
+	/// </summary>
+	/// <param name="position">The position to seek to.</param>
+	/// <returns>The updated guild player.</returns>
+	public async Task<LavalinkGuildPlayer> SeekAsync(TimeSpan position)
+	{
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, position: (int)position.TotalMilliseconds).ConfigureAwait(false);
 		return this;
 	}
 
