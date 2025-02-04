@@ -60,7 +60,7 @@ public sealed class DiscordSectionComponent : DiscordComponent
 	public DiscordSectionAccessory? Accessory { get; internal set; }
 
 	/// <summary>
-	///     Adds a thumbnail component to the section.
+	///     Adds a thumbnail component to the section as accessory.
 	/// </summary>
 	/// <param name="url">The thumbnail url.</param>
 	/// <param name="description">The description of the thumbnail.</param>
@@ -69,6 +69,17 @@ public sealed class DiscordSectionComponent : DiscordComponent
 	public DiscordSectionComponent WithThumbnailComponent(string url, string? description = null, bool? spoiler = null)
 	{
 		this.Accessory = new DiscordThumnailComponent(url, description, spoiler);
+		return this;
+	}
+
+	/// <summary>
+	///     Adds a button component to the section as accessory.
+	/// </summary>
+	/// <param name="button">The button to add.</param>
+	/// <returns>The current <see cref="DiscordSectionComponent" />.</returns>
+	public DiscordSectionComponent WithButtonComponent(DiscordButtonComponent button)
+	{
+		this.Accessory = button;
 		return this;
 	}
 }
