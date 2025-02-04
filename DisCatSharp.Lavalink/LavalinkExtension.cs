@@ -161,7 +161,7 @@ public sealed class LavalinkExtension : BaseExtension
 		var regionPredicate = new Func<LavalinkSession, bool>(x => x.Region == region);
 
 		if (nodes.Any(regionPredicate))
-			nodes = nodes.Where(regionPredicate).ToArray();
+			nodes = [.. nodes.Where(regionPredicate)];
 
 		return nodes.Length <= 1 ? nodes.FirstOrDefault()! : this.FilterByLoad(nodes);
 	}
