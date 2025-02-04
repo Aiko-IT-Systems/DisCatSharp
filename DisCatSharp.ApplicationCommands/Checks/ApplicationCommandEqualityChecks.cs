@@ -36,7 +36,7 @@ internal static class ApplicationCommandEqualityChecks
 			ac1.Name, ac1.Description, ac1.Options,
 			ac1.Type,
 			ac1.NameLocalizations, ac1.DescriptionLocalizations,
-			ac1.DefaultMemberPermissions, ac1.DmPermission ?? true,
+			ac1.DefaultMemberPermissions,
 			ac1.IsNsfw, ac1.AllowedContexts, ac1.IntegrationTypes
 		);
 
@@ -46,8 +46,6 @@ internal static class ApplicationCommandEqualityChecks
 
 		if (isGuild)
 		{
-			sourceApplicationCommand.DmPermission = null;
-			targetApplicationCommand.DmPermission = null;
 			sourceApplicationCommand.IntegrationTypes = null;
 			targetApplicationCommand.IntegrationTypes = null;
 			sourceApplicationCommand.AllowedContexts = null;
@@ -87,52 +85,47 @@ internal static class ApplicationCommandEqualityChecks
 		bool guild = false
 	)
 	{
-		bool? sDmPerm = source.DmPermission ?? true;
-		bool? tDmPerm = target.DmPermission ?? true;
-		if (!guild)
-			return localizationEnabled
+		return !guild
+			? localizationEnabled
 				? type switch
 				{
-					ApplicationCommandType.ChatInput => DeepEqual(source, target, client, true, sDmPerm, tDmPerm),
+					ApplicationCommandType.ChatInput => DeepEqual(source, target, client, true),
 					_ => source.Name == target.Name
 					     && source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
 					     && source.DefaultMemberPermissions == target.DefaultMemberPermissions
-					     && sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw
+					     && source.IsNsfw == target.IsNsfw
 					     && source.AllowedContexts.NullableSequenceEqual(target.AllowedContexts) &&
 					     source.IntegrationTypes.NullableSequenceEqual(target.IntegrationTypes) &&
 					     source.RawNameLocalizations.AreDictionariesEqual(target.RawNameLocalizations)
 				}
 				: type switch
 				{
-					ApplicationCommandType.ChatInput => DeepEqual(source, target, client, false, sDmPerm, tDmPerm),
+					ApplicationCommandType.ChatInput => DeepEqual(source, target, client),
 					_ => source.Name == target.Name
 					     && source.Type == target.Type
 					     && source.DefaultMemberPermissions == target.DefaultMemberPermissions
-					     && sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw
+					     && source.IsNsfw == target.IsNsfw
 					     && source.AllowedContexts.NullableSequenceEqual(target.AllowedContexts) &&
 					     source.IntegrationTypes.NullableSequenceEqual(target.IntegrationTypes)
+				}
+			: localizationEnabled
+				? type switch
+				{
+					ApplicationCommandType.ChatInput => DeepEqual(source, target, client, true),
+					_ => source.Name == target.Name
+					     && source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
+					     && source.DefaultMemberPermissions == target.DefaultMemberPermissions
+					     && source.IsNsfw == target.IsNsfw
+					     && source.RawNameLocalizations.AreDictionariesEqual(target.RawNameLocalizations)
+				}
+				: type switch
+				{
+					ApplicationCommandType.ChatInput => DeepEqual(source, target, client),
+					_ => source.Name == target.Name
+					     && source.Type == target.Type
+					     && source.DefaultMemberPermissions == target.DefaultMemberPermissions
+					     && source.IsNsfw == target.IsNsfw
 				};
-
-		sDmPerm = null;
-		tDmPerm = null;
-		return localizationEnabled
-			? type switch
-			{
-				ApplicationCommandType.ChatInput => DeepEqual(source, target, client, true, sDmPerm, tDmPerm),
-				_ => source.Name == target.Name
-				     && source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
-				     && source.DefaultMemberPermissions == target.DefaultMemberPermissions
-				     && sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw
-				     && source.RawNameLocalizations.AreDictionariesEqual(target.RawNameLocalizations)
-			}
-			: type switch
-			{
-				ApplicationCommandType.ChatInput => DeepEqual(source, target, client, false, sDmPerm, tDmPerm),
-				_ => source.Name == target.Name
-				     && source.Type == target.Type
-				     && source.DefaultMemberPermissions == target.DefaultMemberPermissions
-				     && sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw
-			};
 	}
 
 	/// <summary>
@@ -180,15 +173,11 @@ internal static class ApplicationCommandEqualityChecks
 	/// <param name="target">Application command to check against.</param>
 	/// <param name="client">The discord client.</param>
 	/// <param name="localizationEnabled">Whether localization is enabled.</param>
-	/// <param name="sDmPerm">The source dm permission.</param>
-	/// <param name="tDmPerm">The target dm permission.</param>
 	internal static bool DeepEqual(
 		DiscordApplicationCommand source,
 		DiscordApplicationCommand target,
 		BaseDiscordClient client,
-		bool localizationEnabled = false,
-		bool? sDmPerm = null,
-		bool? tDmPerm = null
+		bool localizationEnabled = false
 	)
 	{
 		var name = source.Name;
@@ -196,7 +185,6 @@ internal static class ApplicationCommandEqualityChecks
 		                source.Description == target.Description &&
 		                source.Type == target.Type &&
 		                source.DefaultMemberPermissions == target.DefaultMemberPermissions &&
-		                sDmPerm == tDmPerm &&
 		                source.IsNsfw == target.IsNsfw &&
 		                source.AllowedContexts.NullableSequenceEqual(target.AllowedContexts) &&
 		                source.IntegrationTypes.NullableSequenceEqual(target.IntegrationTypes);

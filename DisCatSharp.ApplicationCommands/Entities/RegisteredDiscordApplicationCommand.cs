@@ -31,7 +31,6 @@ public sealed class RegisteredDiscordApplicationCommand : DiscordApplicationComm
 		this.DefaultMemberPermissions = parent.DefaultMemberPermissions;
 		this.Description = parent.Description;
 		this.Discord = parent.Discord;
-		this.DmPermission = parent.DmPermission;
 		this.Id = parent.Id;
 		this.IgnoredJsonKeys = parent.IgnoredJsonKeys;
 		this.IsNsfw = parent.IsNsfw;
@@ -42,6 +41,8 @@ public sealed class RegisteredDiscordApplicationCommand : DiscordApplicationComm
 		this.Type = parent.Type;
 		this.UnknownProperties = parent.UnknownProperties;
 		this.Version = parent.Version;
+		this.AllowedContexts = parent.AllowedContexts;
+		this.IntegrationTypes = parent.IntegrationTypes;
 
 		try
 		{

@@ -61,12 +61,6 @@ internal sealed class RestApplicationCommandCreatePayload : ObservableApiObject
 	public Permissions? DefaultMemberPermission { get; set; }
 
 	/// <summary>
-	///     Whether the command is allowed for dms.
-	/// </summary>
-	[JsonProperty("dm_permission", NullValueHandling = NullValueHandling.Include)]
-	public bool? DmPermission { get; set; }
-
-	/// <summary>
 	///     Whether the command is marked as NSFW.
 	/// </summary>
 	[JsonProperty("nsfw", NullValueHandling = NullValueHandling.Ignore)]

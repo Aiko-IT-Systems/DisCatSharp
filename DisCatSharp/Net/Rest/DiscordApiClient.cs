@@ -6812,7 +6812,6 @@ public sealed class DiscordApiClient
 				NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
-				DmPermission = command.DmPermission,
 				Nsfw = command.IsNsfw,
 				AllowedContexts = command.AllowedContexts,
 				IntegrationTypes = command.IntegrationTypes
@@ -6847,7 +6846,6 @@ public sealed class DiscordApiClient
 			NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 			DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 			DefaultMemberPermission = command.DefaultMemberPermissions,
-			DmPermission = command.DmPermission,
 			Nsfw = command.IsNsfw,
 			AllowedContexts = command.AllowedContexts,
 			IntegrationTypes = command.IntegrationTypes
@@ -6902,7 +6900,6 @@ public sealed class DiscordApiClient
 	/// <param name="nameLocalization">The localizations of the name.</param>
 	/// <param name="descriptionLocalization">The localizations of the description.</param>
 	/// <param name="defaultMemberPermission">The default member permissions.</param>
-	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
 	/// <param name="allowedContexts">The allowed contexts.</param>
 	/// <param name="integrationTypes">The allowed integration types.</param>
@@ -6915,7 +6912,6 @@ public sealed class DiscordApiClient
 		Optional<DiscordApplicationCommandLocalization?> nameLocalization,
 		Optional<DiscordApplicationCommandLocalization?> descriptionLocalization,
 		Optional<Permissions?> defaultMemberPermission,
-		Optional<bool> dmPermission,
 		Optional<bool> isNsfw,
 		Optional<List<InteractionContextType>?> allowedContexts,
 		Optional<List<ApplicationCommandIntegrationTypes>?> integrationTypes
@@ -6927,7 +6923,6 @@ public sealed class DiscordApiClient
 			Description = description,
 			Options = options,
 			DefaultMemberPermission = defaultMemberPermission,
-			DmPermission = dmPermission,
 			NameLocalizations = nameLocalization.ValueOrDefault()?.GetKeyValuePairs(),
 			DescriptionLocalizations = descriptionLocalization.ValueOrDefault()?.GetKeyValuePairs(),
 			Nsfw = isNsfw,
@@ -7014,7 +7009,6 @@ public sealed class DiscordApiClient
 				NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
-				DmPermission = command.DmPermission,
 				Nsfw = command.IsNsfw,
 				AllowedContexts = command.AllowedContexts
 			}));
@@ -7050,7 +7044,6 @@ public sealed class DiscordApiClient
 			NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 			DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 			DefaultMemberPermission = command.DefaultMemberPermissions,
-			DmPermission = command.DmPermission,
 			Nsfw = command.IsNsfw,
 			AllowedContexts = command.AllowedContexts
 		};
@@ -7108,7 +7101,6 @@ public sealed class DiscordApiClient
 	/// <param name="nameLocalization">The localizations of the name.</param>
 	/// <param name="descriptionLocalization">The localizations of the description.</param>
 	/// <param name="defaultMemberPermission">The default member permissions.</param>
-	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
 	/// <param name="allowedContexts">The allowed contexts.</param>
 	/// <param name="integrationTypes">The allowed integration types.</param>
@@ -7122,7 +7114,6 @@ public sealed class DiscordApiClient
 		Optional<DiscordApplicationCommandLocalization?> nameLocalization,
 		Optional<DiscordApplicationCommandLocalization?> descriptionLocalization,
 		Optional<Permissions?> defaultMemberPermission,
-		Optional<bool> dmPermission,
 		Optional<bool> isNsfw,
 		Optional<List<InteractionContextType>?> allowedContexts,
 		Optional<List<ApplicationCommandIntegrationTypes>?> integrationTypes
@@ -7134,7 +7125,6 @@ public sealed class DiscordApiClient
 			Description = description,
 			Options = options,
 			DefaultMemberPermission = defaultMemberPermission,
-			DmPermission = dmPermission,
 			NameLocalizations = nameLocalization.ValueOrDefault()?.GetKeyValuePairs(),
 			DescriptionLocalizations = descriptionLocalization.ValueOrDefault()?.GetKeyValuePairs(),
 			Nsfw = isNsfw,
