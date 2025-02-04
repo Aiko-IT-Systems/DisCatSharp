@@ -32,7 +32,7 @@ public sealed class LavalinkGuildPlayer
 	private readonly List<LavalinkTrack> _playedTracks = [];
 
 	/// <summary>
-	///    Triggers when the voice state gets updated.
+	///     Triggers when the voice state gets updated.
 	/// </summary>
 	private readonly AsyncEvent<DiscordClient, VoiceStateUpdateEventArgs> _voiceStateUpdated;
 
@@ -410,7 +410,7 @@ public sealed class LavalinkGuildPlayer
 	}
 
 	/// <summary>
-	///     Seeks the player to the position in <paramref name="seconds"/>.
+	///     Seeks the player to the position in <paramref name="seconds" />.
 	/// </summary>
 	/// <param name="seconds">The seconds to seek to.</param>
 	/// <returns>The updated guild player.</returns>
@@ -599,18 +599,16 @@ public sealed class LavalinkGuildPlayer
 		if (args.Channel?.Id != this.ChannelId)
 			return Task.CompletedTask;
 
-		if (args.After.ChannelId != null && args.After.ChannelId == this.ChannelId)
+		if (args.After.ChannelId is not null && args.After.ChannelId == this.ChannelId)
 		{
 			this.CurrentUsersInternal.TryAdd(args.User.Id, args.User);
 			return Task.CompletedTask;
 		}
 
-		if (args.Before.ChannelId != null && args.Before.ChannelId!.Value == this.ChannelId && (args.After.ChannelId != null || args.After.ChannelId!.Value != this.ChannelId))
-		{
-			this.CurrentUsersInternal.Remove(args.User.Id);
+		if (args.Before.ChannelId is null || args.Before.ChannelId!.Value != this.ChannelId || (args.After.ChannelId is null && args.After.ChannelId!.Value == this.ChannelId))
 			return Task.CompletedTask;
-		}
 
+		this.CurrentUsersInternal.Remove(args.User.Id);
 		return Task.CompletedTask;
 	}
 
@@ -621,7 +619,12 @@ public sealed class LavalinkGuildPlayer
 	/// </summary>
 	/// <param name="track">The track to add.</param>
 	public void AddToQueue(LavalinkTrack track)
-		=> QueueInternal.GetOrAdd(this.GuildId, new LavalinkQueue<LavalinkTrack>()).Enqueue(track);
+	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
+		QueueInternal.GetOrAdd(this.GuildId, new LavalinkQueue<LavalinkTrack>()).Enqueue(track);
+	}
 
 	/// <summary>
 	///     Adds all tracks from a Lavalink playlist to the queue.
@@ -629,6 +632,9 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="playlist">The <see cref="LavalinkPlaylist" /> containing the tracks to add.</param>
 	public void AddToQueue(LavalinkPlaylist playlist)
 	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
 		foreach (var track in playlist.Tracks)
 			this.AddToQueue(track);
 	}
@@ -640,6 +646,9 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="track">The track to insert.</param>
 	public void AddToQueueAt(int index, LavalinkTrack track)
 	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
 		if (QueueInternal.TryGetValue(this.GuildId, out var queue))
 			queue.InsertAt(index, track);
 	}
@@ -651,6 +660,9 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="tracks">The tracks to insert.</param>
 	public void AddToQueueAt(int index, IEnumerable<LavalinkTrack> tracks)
 	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
 		if (QueueInternal.TryGetValue(this.GuildId, out var queue))
 			queue.InsertRange(index, tracks);
 	}
@@ -662,6 +674,12 @@ public sealed class LavalinkGuildPlayer
 	/// <returns>True if a track was found, false otherwise.</returns>
 	public bool TryPeekQueue([NotNullWhen(true)] out LavalinkTrack? track)
 	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+		{
+			track = null;
+			return false;
+		}
+
 		if (QueueInternal.TryGetValue(this.GuildId, out var queue) && queue.TryPeek(out var result))
 		{
 			track = result;
@@ -677,6 +695,9 @@ public sealed class LavalinkGuildPlayer
 	/// </summary>
 	public void ShuffleQueue()
 	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
 		if (QueueInternal.TryGetValue(this.GuildId, out var queue))
 			queue.Shuffle();
 	}
@@ -686,6 +707,9 @@ public sealed class LavalinkGuildPlayer
 	/// </summary>
 	public void ReverseQueue()
 	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
 		if (QueueInternal.TryGetValue(this.GuildId, out var queue))
 			queue.Reverse();
 	}
@@ -696,6 +720,9 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="track">The track to remove.</param>
 	public void RemoveFromQueue(LavalinkTrack track)
 	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
 		if (QueueInternal.TryGetValue(this.GuildId, out var queue))
 			queue.Remove(track);
 	}
@@ -706,13 +733,12 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="identifier">The title (identifier) of the track to remove.</param>
 	public void RemoveFromQueue(string identifier)
 	{
-		if (QueueInternal.TryGetValue(this.GuildId, out var queue))
-		{
-			// Use Find to get the track and then remove it
-			var trackToRemove = queue.FirstOrDefault(x => x.Info.Title == identifier);
-			if (trackToRemove != null)
-				queue.Remove(trackToRemove);
-		}
+		if (!this.QUEUE_SYSTEM_ENABLED || !QueueInternal.TryGetValue(this.GuildId, out var queue))
+			return;
+
+		var trackToRemove = queue.FirstOrDefault(x => x.Info.Title == identifier);
+		if (trackToRemove != null)
+			queue.Remove(trackToRemove);
 	}
 
 	/// <summary>
@@ -721,6 +747,9 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="index">The zero-based index of the track to remove.</param>
 	public void RemoveFromQueueAt(int index)
 	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
 		if (QueueInternal.TryGetValue(this.GuildId, out var queue))
 			queue.RemoveAt(index);
 	}
@@ -732,6 +761,9 @@ public sealed class LavalinkGuildPlayer
 	/// <param name="count">The number of tracks to remove.</param>
 	public void RemoveFromQueueAtRange(int index, int count)
 	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
 		if (QueueInternal.TryGetValue(this.GuildId, out var queue))
 			queue.RemoveRange(index, count);
 	}
@@ -741,6 +773,9 @@ public sealed class LavalinkGuildPlayer
 	/// </summary>
 	public void ClearQueue()
 	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
 		if (QueueInternal.TryGetValue(this.GuildId, out var queue))
 			queue.Clear();
 	}
@@ -768,6 +803,9 @@ public sealed class LavalinkGuildPlayer
 	/// </summary>
 	private async void PlayNextInQueue()
 	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
 		while (this._queueTsc is not null)
 			await Task.Delay(TimeSpan.FromSeconds(1));
 
