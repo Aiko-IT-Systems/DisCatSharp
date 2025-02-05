@@ -9,7 +9,7 @@ namespace DisCatSharp.Entities;
 ///     Represents a premium button. Clicking a premium button does not send an interaction.
 ///     <para>Requires your app to have monitization enabled.</para>
 /// </summary>
-public class DiscordPremiumButtonComponent : DiscordComponent
+public class DiscordPremiumButtonComponent : DiscordBaseButtonComponent
 {
 	/// <summary>
 	///     Constructs a new <see cref="DiscordPremiumButtonComponent" />. This type of button does not send back and

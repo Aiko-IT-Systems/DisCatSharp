@@ -77,7 +77,7 @@ public sealed class DiscordSectionComponent : DiscordComponent
 	/// </summary>
 	/// <param name="button">The button to add.</param>
 	/// <returns>The current <see cref="DiscordSectionComponent" />.</returns>
-	public DiscordSectionComponent WithButtonComponent(DiscordButtonComponent button)
+	public DiscordSectionComponent WithButtonComponent(DiscordBaseButtonComponent button)
 	{
 		this.Accessory = button;
 		return this;
