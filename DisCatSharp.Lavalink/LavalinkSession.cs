@@ -554,7 +554,6 @@ public sealed class LavalinkSession
 				var sessionId = await this._sessionIdReceived.Task.ConfigureAwait(false);
 				this.Config.SessionId = sessionId;
 				this._sessionIdReceived = null!;
-				await this._lavalinkSessionConnected.InvokeAsync(this, new(this)).ConfigureAwait(false);
 				break;
 			}
 			catch (PlatformNotSupportedException)
@@ -761,12 +760,13 @@ public sealed class LavalinkSession
 	/// </summary>
 	/// <param name="client">The websocket client.</param>
 	/// <param name="args">The event args.</param>
-	private Task Lavalink_WebSocket_Connected(IWebSocketClient client, SocketEventArgs args)
+	private async Task Lavalink_WebSocket_Connected(IWebSocketClient client, SocketEventArgs args)
 	{
 		this.Discord.Logger.LogDebug(LavalinkEvents.LavalinkSessionConnected, "Connection to Lavalink established UwU");
 		this._backoff = 0;
 		args.Handled = true;
-		return Task.CompletedTask;
+		this.SessionConnected?.Invoke(this);
+		await this._lavalinkSessionConnected.InvokeAsync(this, new(this)).ConfigureAwait(false);
 	}
 
 	/// <summary>
