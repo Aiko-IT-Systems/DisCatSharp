@@ -309,6 +309,14 @@ public sealed class LavalinkGuildPlayer
 		=> await this.Session.LoadTracksAsync(searchType, identifier).ConfigureAwait(false);
 
 	/// <summary>
+	///     Gets the lyrics for the currently playing track.
+	/// </summary>
+	/// <param name="skipTrackSource">Whether to skip the current track source and fetch from highest priority source.</param>
+	/// <returns>The <see cref="LavalinkLyricsResult" /> or <see langword="null" />.</returns>
+	public async Task<LavalinkLyricsResult?> GetLyricsAsync(bool skipTrackSource = false)
+		=> await this.Session.Rest.GetLyricsForCurrentTrackAsync(this.Session.Config.SessionId!, this.GuildId, skipTrackSource).ConfigureAwait(false);
+
+	/// <summary>
 	///     Updates the <see cref="LavalinkPlayer" />.
 	/// </summary>
 	/// <param name="action">The action to perform on the player.</param>

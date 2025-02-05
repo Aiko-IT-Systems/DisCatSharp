@@ -29,13 +29,13 @@ using Endpoints = DisCatSharp.Lavalink.Enums.Endpoints;
 namespace DisCatSharp.Lavalink;
 
 /// <summary>
-///     Defines the event handler for <see cref="LavalinkSessionDisconnectedEventArgs"/>.
+///     Defines the event handler for <see cref="LavalinkSessionDisconnectedEventArgs" />.
 /// </summary>
 /// <param name="node">The node.</param>
 internal delegate void SessionDisconnectedEventHandler(LavalinkSession node);
 
 /// <summary>
-///    Defines the event handler for <see cref="LavalinkSessionConnectedEventArgs"/>.
+///     Defines the event handler for <see cref="LavalinkSessionConnectedEventArgs" />.
 /// </summary>
 /// <param name="node">The node.</param>
 internal delegate void SessionConnectedEventHandler(LavalinkSession node);
@@ -463,6 +463,25 @@ public sealed class LavalinkSession
 	/// <returns>A track loading result.</returns>
 	public async Task<LavalinkTrackLoadingResult> LoadTracksAsync(string identifier)
 		=> await this.Rest.LoadTracksAsync(identifier).ConfigureAwait(false);
+
+	/// <summary>
+	///     Gets the lyrics for a track.
+	/// </summary>
+	/// <param name="track">The track to fetch the lyrics for.</param>
+	/// <param name="skipTrackSource">Whether to skip the current track source and fetch from highest priority source.</param>
+	/// <returns>The <see cref="LavalinkLyricsResult" /> or <see langword="null" />.</returns>
+	public async Task<LavalinkLyricsResult?> GetLyricsAsync(LavalinkTrack track, bool skipTrackSource = false)
+		=> await this.Rest.GetLyricsAsync(track.Encoded, skipTrackSource).ConfigureAwait(false);
+
+	/// <summary>
+	///     Gets the lyrics for a currently playing track.
+	/// </summary>
+	/// <param name="sessionId">The session id a player is associated with.</param>
+	/// <param name="guildId">The guild id a player is associated with.</param>
+	/// <param name="skipTrackSource">Whether to skip the current track source and fetch from highest priority source.</param>
+	/// <returns>The <see cref="LavalinkLyricsResult" /> or <see langword="null" />.</returns>
+	public async Task<LavalinkLyricsResult?> GetLyricsForCurrentTrackAsync(string sessionId, ulong guildId, bool skipTrackSource)
+		=> await this.Rest.GetLyricsForCurrentTrackAsync(sessionId, guildId, skipTrackSource).ConfigureAwait(false);
 
 	/// <summary>
 	///     Loads tracks by <paramref name="identifier" />.
