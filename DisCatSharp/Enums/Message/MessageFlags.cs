@@ -88,12 +88,13 @@ public enum MessageFlags
 	/// </summary>
 	IsVoiceMessage = 1 << 13,
 
+	/// <summary>
 	///     The message has a snapshot (via Message Forwarding).
 	/// </summary>
 	HasSnapshots = 1 << 14,
 
 	/// <summary>
-	/// The message uses the UI Kit.
+	///     The message uses the UI Kit.
 	/// </summary>
 	IsComponentsV2 = 1 << 15
 }
