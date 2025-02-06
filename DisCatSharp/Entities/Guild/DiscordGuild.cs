@@ -626,6 +626,13 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		=> await this.Discord.ApiClient.GetCurrentUserVoiceStateAsync(this.Id);
 
 	/// <summary>
+	///     Gets the current voice state for a member.
+	/// </summary>
+	/// <returns></returns>
+	public async Task<DiscordVoiceState?> GetMemberVoiceStateAsync(ulong memberId)
+		=> await this.Discord.ApiClient.GetMemberVoiceStateAsync(this.Id, memberId);
+
+	/// <summary>
 	///     Sorts the channels.
 	/// </summary>
 	private Dictionary<ulong, DiscordChannel> InternalSortChannels()

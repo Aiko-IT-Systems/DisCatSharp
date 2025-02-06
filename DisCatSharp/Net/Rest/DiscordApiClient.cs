@@ -1795,15 +1795,41 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	///     Gets the current user's voice state async.
+	///     Gets the current user's voice state.
 	/// </summary>
-	/// <param name="guildId">The guild_id.</param>
+	/// <param name="guildId">The guild id.</param>
 	internal async Task<DiscordVoiceState?> GetCurrentUserVoiceStateAsync(ulong guildId)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.VOICE_STATES}{Endpoints.ME}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
 			guild_id = guildId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		try
+		{
+			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+			return DiscordJson.DeserializeObject<DiscordVoiceState>(res.Response, this.Discord);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
+
+	/// <summary>
+	///     Gets the voice state for a member.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="memberId">The member id.</param>
+	internal async Task<DiscordVoiceState?> GetMemberVoiceStateAsync(ulong guildId, ulong memberId)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.VOICE_STATES}/:member_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			guild_id = guildId,
+			member_id = memberId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -1842,32 +1868,6 @@ public sealed class DiscordApiClient
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
-	}
-
-	/// <summary>
-	///     Gets the user's voice state async.
-	/// </summary>
-	/// <param name="guildId">The guild_id.</param>
-	/// <param name="userId">The user_id.</param>
-	internal async Task<DiscordVoiceState?> GetUserVoiceStateAsync(ulong guildId, ulong userId)
-	{
-		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.VOICE_STATES}/:user_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-		{
-			guild_id = guildId,
-			user_id = userId
-		}, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		try
-		{
-			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
-			return DiscordJson.DeserializeObject<DiscordVoiceState>(res.Response, this.Discord);
-		}
-		catch (NotFoundException)
-		{
-			return null;
-		}
 	}
 
 	/// <summary>
