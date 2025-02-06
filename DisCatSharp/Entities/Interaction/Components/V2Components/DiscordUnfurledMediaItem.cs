@@ -1,11 +1,9 @@
-using Newtonsoft.Json;
-
 namespace DisCatSharp.Entities;
 
 /// <summary>
 ///     Represents a media item.
 /// </summary>
-public sealed class DiscordUnfurledMediaItem
+public sealed class DiscordUnfurledMediaItem : DiscordAttachment
 {
 	/// <summary>
 	///     Constructs a new empty <see cref="DiscordUnfurledMediaItem" />.
@@ -21,10 +19,4 @@ public sealed class DiscordUnfurledMediaItem
 	{
 		this.Url = url;
 	}
-
-	/// <summary>
-	///     Gets the url.
-	/// </summary>
-	[JsonProperty("url")]
-	public string Url { get; internal set; }
 }
