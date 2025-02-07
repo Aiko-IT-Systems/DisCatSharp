@@ -13,7 +13,10 @@ namespace DisCatSharp.Entities;
 [JsonConverter(typeof(DiscordSignedLinkJsonConverter))]
 public class DiscordSignedLink : Uri
 {
-	private readonly object _rawValue;
+	/// <summary>
+	///     Gets the raw value.
+	/// </summary>
+	private readonly object? _rawValue;
 
 	/// <summary>
 	///     Initializes a new instance of the <see cref="Uri" /> class with the specified URI for signed discord links.
@@ -103,8 +106,8 @@ public class DiscordSignedLink : Uri
 		/// <param name="writer">The writer.</param>
 		/// <param name="value">The value.</param>
 		/// <param name="serializer">The serializer.</param>
-		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-			=> writer.WriteValue((value as DiscordSignedLink)._rawValue);
+		public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+			=> writer.WriteValue((value as DiscordSignedLink)?._rawValue);
 
 		/// <summary>
 		///     Reads the json.
@@ -113,15 +116,15 @@ public class DiscordSignedLink : Uri
 		/// <param name="objectType">The object type.</param>
 		/// <param name="existingValue">The existing value.</param>
 		/// <param name="serializer">The serializer.</param>
-		public override object ReadJson(
+		public override object? ReadJson(
 			JsonReader reader,
 			Type objectType,
-			object existingValue,
+			object? existingValue,
 			JsonSerializer serializer
 		)
 		{
 			var val = reader.Value;
-			return val == null
+			return val is null
 				? null
 				: val is not string s
 					? throw new JsonReaderException("DiscordSignedLink value invalid format! This is a bug in DisCatSharp. " +

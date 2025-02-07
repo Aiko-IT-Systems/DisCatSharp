@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using DisCatSharp.Attributes;
 using DisCatSharp.Common.RegularExpressions;
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
@@ -27,6 +26,14 @@ namespace DisCatSharp.Lavalink;
 /// </summary>
 public sealed class LavalinkGuildPlayer
 {
+	/// <summary>
+	///     Gets the list of tracks that have been played.
+	/// </summary>
+	private readonly List<LavalinkTrack> _playedTracks = [];
+
+	/// <summary>
+	///     Triggers when the voice state gets updated.
+	/// </summary>
 	private readonly AsyncEvent<DiscordClient, VoiceStateUpdateEventArgs> _voiceStateUpdated;
 
 	/// <summary>
@@ -60,6 +67,11 @@ public sealed class LavalinkGuildPlayer
 	internal readonly AsyncEvent<LavalinkGuildPlayer, LavalinkTrackStuckEventArgs> TrackStuckEvent;
 
 	/// <summary>
+	///     Gets or sets the current track being played.
+	/// </summary>
+	private LavalinkTrack? _currentTrack;
+
+	/// <summary>
 	///     Gets whether this player is disposed.
 	/// </summary>
 	private bool _isDisposed;
@@ -68,6 +80,11 @@ public sealed class LavalinkGuildPlayer
 	///     <see cref="TaskCompletionSource" /> for the queue.
 	/// </summary>
 	private TaskCompletionSource<bool>? _queueTsc = null;
+
+	/// <summary>
+	///     Gets or sets the repeat mode for the queue.
+	/// </summary>
+	private RepeatMode _repeatMode = RepeatMode.None;
 
 	/// <summary>
 	///     Constructs a new <see cref="LavalinkGuildPlayer" />.
@@ -93,10 +110,11 @@ public sealed class LavalinkGuildPlayer
 		if (this.QUEUE_SYSTEM_ENABLED)
 			QueueInternal.TryAdd(guildId, new());
 	}
-/// <summary>
-///     Gets the internal queue of tracks for each guild.
-/// </summary>
-internal static ConcurrentDictionary<ulong, LavalinkQueue<LavalinkTrack>> QueueInternal { get; } = new();
+
+	/// <summary>
+	///     Gets the internal queue of tracks for each guild.
+	/// </summary>
+	internal static ConcurrentDictionary<ulong, LavalinkQueue<LavalinkTrack>> QueueInternal { get; } = new();
 
 	/// <summary>
 	///     Gets the queue.
@@ -291,6 +309,14 @@ internal static ConcurrentDictionary<ulong, LavalinkQueue<LavalinkTrack>> QueueI
 		=> await this.Session.LoadTracksAsync(searchType, identifier).ConfigureAwait(false);
 
 	/// <summary>
+	///     Gets the lyrics for the currently playing track.
+	/// </summary>
+	/// <param name="skipTrackSource">Whether to skip the current track source and fetch from highest priority source.</param>
+	/// <returns>The <see cref="LavalinkLyricsResult" /> or <see langword="null" />.</returns>
+	public async Task<LavalinkLyricsResult?> GetLyricsAsync(bool skipTrackSource = false)
+		=> await this.Session.Rest.GetLyricsForCurrentTrackAsync(this.Session.Config.SessionId!, this.GuildId, skipTrackSource).ConfigureAwait(false);
+
+	/// <summary>
 	///     Updates the <see cref="LavalinkPlayer" />.
 	/// </summary>
 	/// <param name="action">The action to perform on the player.</param>
@@ -392,8 +418,20 @@ internal static ConcurrentDictionary<ulong, LavalinkQueue<LavalinkTrack>> QueueI
 	}
 
 	/// <summary>
+	///     Seeks the player to the position in <paramref name="seconds" />.
 	/// </summary>
-	/// <param name="position"></param>
+	/// <param name="seconds">The seconds to seek to.</param>
+	/// <returns>The updated guild player.</returns>
+	public async Task<LavalinkGuildPlayer> SeekAsync(int seconds)
+	{
+		this.Player = await this.Session.Rest.UpdatePlayerAsync(this.Session.Config.SessionId!, this.GuildId, true, position: seconds * 1000).ConfigureAwait(false);
+		return this;
+	}
+
+	/// <summary>
+	///     Seeks the player to the position.
+	/// </summary>
+	/// <param name="position">The position to seek to.</param>
 	/// <returns>The updated guild player.</returns>
 	public async Task<LavalinkGuildPlayer> SeekAsync(TimeSpan position)
 	{
@@ -569,18 +607,16 @@ internal static ConcurrentDictionary<ulong, LavalinkQueue<LavalinkTrack>> QueueI
 		if (args.Channel?.Id != this.ChannelId)
 			return Task.CompletedTask;
 
-		if (args.After.ChannelId != null && args.After.ChannelId == this.ChannelId)
+		if (args.After.ChannelId is not null && args.After.ChannelId == this.ChannelId)
 		{
 			this.CurrentUsersInternal.TryAdd(args.User.Id, args.User);
 			return Task.CompletedTask;
 		}
 
-		if (args.Before.ChannelId != null && args.Before.ChannelId!.Value == this.ChannelId && (args.After.ChannelId != null || args.After.ChannelId!.Value != this.ChannelId))
-		{
-			this.CurrentUsersInternal.Remove(args.User.Id);
+		if (args.Before.ChannelId is null || args.Before.ChannelId!.Value != this.ChannelId || (args.After.ChannelId is null && args.After.ChannelId!.Value == this.ChannelId))
 			return Task.CompletedTask;
-		}
 
+		this.CurrentUsersInternal.Remove(args.User.Id);
 		return Task.CompletedTask;
 	}
 
@@ -591,7 +627,12 @@ internal static ConcurrentDictionary<ulong, LavalinkQueue<LavalinkTrack>> QueueI
 	/// </summary>
 	/// <param name="track">The track to add.</param>
 	public void AddToQueue(LavalinkTrack track)
-		=> QueueInternal.GetOrAdd(this.GuildId, new LavalinkQueue<LavalinkTrack>()).Enqueue(track);
+	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
+		QueueInternal.GetOrAdd(this.GuildId, new LavalinkQueue<LavalinkTrack>()).Enqueue(track);
+	}
 
 	/// <summary>
 	///     Adds all tracks from a Lavalink playlist to the queue.
@@ -599,8 +640,39 @@ internal static ConcurrentDictionary<ulong, LavalinkQueue<LavalinkTrack>> QueueI
 	/// <param name="playlist">The <see cref="LavalinkPlaylist" /> containing the tracks to add.</param>
 	public void AddToQueue(LavalinkPlaylist playlist)
 	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
 		foreach (var track in playlist.Tracks)
 			this.AddToQueue(track);
+	}
+
+	/// <summary>
+	///     Inserts a track at the specified index in the queue.
+	/// </summary>
+	/// <param name="index">The zero-based index at which the track should be inserted.</param>
+	/// <param name="track">The track to insert.</param>
+	public void AddToQueueAt(int index, LavalinkTrack track)
+	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
+		if (QueueInternal.TryGetValue(this.GuildId, out var queue))
+			queue.InsertAt(index, track);
+	}
+
+	/// <summary>
+	///     Inserts a range of tracks at the specified index in the queue.
+	/// </summary>
+	/// <param name="index">The zero-based index at which the tracks should be inserted.</param>
+	/// <param name="tracks">The tracks to insert.</param>
+	public void AddToQueueAt(int index, IEnumerable<LavalinkTrack> tracks)
+	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
+		if (QueueInternal.TryGetValue(this.GuildId, out var queue))
+			queue.InsertRange(index, tracks);
 	}
 
 	/// <summary>
@@ -610,6 +682,12 @@ internal static ConcurrentDictionary<ulong, LavalinkQueue<LavalinkTrack>> QueueI
 	/// <returns>True if a track was found, false otherwise.</returns>
 	public bool TryPeekQueue([NotNullWhen(true)] out LavalinkTrack? track)
 	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+		{
+			track = null;
+			return false;
+		}
+
 		if (QueueInternal.TryGetValue(this.GuildId, out var queue) && queue.TryPeek(out var result))
 		{
 			track = result;
@@ -625,6 +703,9 @@ internal static ConcurrentDictionary<ulong, LavalinkQueue<LavalinkTrack>> QueueI
 	/// </summary>
 	public void ShuffleQueue()
 	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
 		if (QueueInternal.TryGetValue(this.GuildId, out var queue))
 			queue.Shuffle();
 	}
@@ -634,6 +715,9 @@ internal static ConcurrentDictionary<ulong, LavalinkQueue<LavalinkTrack>> QueueI
 	/// </summary>
 	public void ReverseQueue()
 	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
 		if (QueueInternal.TryGetValue(this.GuildId, out var queue))
 			queue.Reverse();
 	}
@@ -642,8 +726,11 @@ internal static ConcurrentDictionary<ulong, LavalinkQueue<LavalinkTrack>> QueueI
 	///     Removes the specified track from the queue.
 	/// </summary>
 	/// <param name="track">The track to remove.</param>
-	public void RemoveQueue(LavalinkTrack track)
+	public void RemoveFromQueue(LavalinkTrack track)
 	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
 		if (QueueInternal.TryGetValue(this.GuildId, out var queue))
 			queue.Remove(track);
 	}
@@ -652,15 +739,41 @@ internal static ConcurrentDictionary<ulong, LavalinkQueue<LavalinkTrack>> QueueI
 	///     Removes the track with the specified title (identifier) from the queue.
 	/// </summary>
 	/// <param name="identifier">The title (identifier) of the track to remove.</param>
-	public void RemoveQueue(string identifier)
+	public void RemoveFromQueue(string identifier)
 	{
+		if (!this.QUEUE_SYSTEM_ENABLED || !QueueInternal.TryGetValue(this.GuildId, out var queue))
+			return;
+
+		var trackToRemove = queue.FirstOrDefault(x => x.Info.Title == identifier);
+		if (trackToRemove != null)
+			queue.Remove(trackToRemove);
+	}
+
+	/// <summary>
+	///     Removes the track at the specified index from the queue.
+	/// </summary>
+	/// <param name="index">The zero-based index of the track to remove.</param>
+	public void RemoveFromQueueAt(int index)
+	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
 		if (QueueInternal.TryGetValue(this.GuildId, out var queue))
-		{
-			// Use Find to get the track and then remove it
-			var trackToRemove = queue.FirstOrDefault(x => x.Info.Title == identifier);
-			if (trackToRemove != null)
-				queue.Remove(trackToRemove);
-		}
+			queue.RemoveAt(index);
+	}
+
+	/// <summary>
+	///     Removes a range of tracks from the queue.
+	/// </summary>
+	/// <param name="index">The zero-based index of the first track to remove.</param>
+	/// <param name="count">The number of tracks to remove.</param>
+	public void RemoveFromQueueAtRange(int index, int count)
+	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
+		if (QueueInternal.TryGetValue(this.GuildId, out var queue))
+			queue.RemoveRange(index, count);
 	}
 
 	/// <summary>
@@ -668,9 +781,19 @@ internal static ConcurrentDictionary<ulong, LavalinkQueue<LavalinkTrack>> QueueI
 	/// </summary>
 	public void ClearQueue()
 	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
 		if (QueueInternal.TryGetValue(this.GuildId, out var queue))
 			queue.Clear();
 	}
+
+	/// <summary>
+	///     Sets the repeat mode for the queue.
+	/// </summary>
+	/// <param name="mode">The repeat mode to set.</param>
+	public void SetRepeatMode(RepeatMode mode)
+		=> this._repeatMode = mode;
 
 	/// <summary>
 	///     Starts playing the next track in the queue.
@@ -688,8 +811,31 @@ internal static ConcurrentDictionary<ulong, LavalinkQueue<LavalinkTrack>> QueueI
 	/// </summary>
 	private async void PlayNextInQueue()
 	{
+		if (!this.QUEUE_SYSTEM_ENABLED)
+			return;
+
+		while (this._queueTsc is not null)
+			await Task.Delay(TimeSpan.FromSeconds(1));
+
 		var queue = QueueInternal.GetOrAdd(this.GuildId, new LavalinkQueue<LavalinkTrack>());
-		if (queue.TryDequeue(out var nextTrack))
+		LavalinkTrack? nextTrack;
+
+		if (this._repeatMode == RepeatMode.Current && this._currentTrack is not null)
+			nextTrack = this._currentTrack;
+		else if (queue.TryDequeue(out nextTrack))
+			this._currentTrack = nextTrack;
+		else if (this._repeatMode == RepeatMode.All)
+		{
+			foreach (var track in this._playedTracks)
+				queue.Enqueue(track);
+
+			this._playedTracks.Clear();
+
+			if (queue.TryDequeue(out nextTrack))
+				this._currentTrack = nextTrack;
+		}
+
+		if (nextTrack is not null)
 		{
 			this._queueTsc = new();
 
@@ -704,6 +850,9 @@ internal static ConcurrentDictionary<ulong, LavalinkQueue<LavalinkTrack>> QueueI
 
 				await queueEntry.AfterPlayingAsync(this).ConfigureAwait(false);
 			}
+
+			if (this._repeatMode == RepeatMode.All)
+				this._playedTracks.Add(nextTrack);
 		}
 	}
 

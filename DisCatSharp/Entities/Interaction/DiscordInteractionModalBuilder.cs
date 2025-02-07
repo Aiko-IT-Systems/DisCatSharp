@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using DisCatSharp.Entities.Core;
-
 namespace DisCatSharp.Entities;
 
 /// <summary>
@@ -30,7 +28,7 @@ public sealed class DiscordInteractionModalBuilder
 	}
 
 	/// <summary>
-	///     Components to send. Please use <see cref="ModalComponents"/> instead.
+	///     Components to send. Please use <see cref="ModalComponents" /> instead.
 	/// </summary>
 	public IReadOnlyList<DiscordComponent> Components => this.ComponentsInternal;
 

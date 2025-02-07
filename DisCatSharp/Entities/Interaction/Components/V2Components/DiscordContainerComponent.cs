@@ -68,7 +68,7 @@ public sealed class DiscordContainerComponent : DiscordComponent
 	public DiscordColor? AccentColor { get; internal set; }
 
 	/// <summary>
-	///    Gets the accent color int for the container.
+	///     Gets the accent color int for the container.
 	/// </summary>
 	[JsonProperty("accent_color", NullValueHandling = NullValueHandling.Ignore)]
 	internal int? AccentColorInt

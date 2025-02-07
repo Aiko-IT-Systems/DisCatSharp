@@ -43,5 +43,25 @@ public enum EntitlementType
 	/// <summary>
 	///     Entitlement was purchased as an app subscription.
 	/// </summary>
-	ApplicationSubscription = 8
+	ApplicationSubscription = 8,
+
+	/// <summary>
+	///     Entitlement was granted to staff for free.
+	/// </summary>
+	FreeStaffPurchase = 9,
+
+	/// <summary>
+	///     Entitlement was granted as a reward for completing a quest.
+	/// </summary>
+	QuestReward = 10,
+
+	/// <summary>
+	///     Entitlement was redeemed fractionally.
+	/// </summary>
+	FractionalRedemption = 11,
+
+	/// <summary>
+	///     Entitlement was redeemed using virtual currency.
+	/// </summary>
+	VirtualCurrencyRedemption = 12
 }

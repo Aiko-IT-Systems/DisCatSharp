@@ -1,3 +1,5 @@
+using DisCatSharp.Attributes;
+
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -207,6 +209,22 @@ public enum MessageType
 	GuildIncidentReportFalseAlarm = 39,
 
 	/// <summary>
+	///     Message indicating that a guild deadchat revive prompt was sent.
+	/// </summary>
+	[DiscordDeprecated]
+	GuildDeadchatRevivePrompt = 40,
+
+	/// <summary>
+	///     Message indicating a custom gift.
+	/// </summary>
+	CustomGift = 41,
+
+	/// <summary>
+	///     Message indicating a guild gaming stats prompt.
+	/// </summary>
+	GuildGamingStatsPrompt = 42,
+
+	/// <summary>
 	///     Message indicating a poll was created.
 	/// </summary>
 	Poll = 43,
@@ -217,9 +235,25 @@ public enum MessageType
 	PurchaseNotification = 44,
 
 	/// <summary>
+	///     Message indicating a voice hangout invite.
+	/// </summary>
+	[DiscordDeprecated]
+	VoiceHangoutInvite = 45,
+
+	/// <summary>
 	///     Message indicating a polls result are in.
 	/// </summary>
 	PollResult = 46,
+
+	/// <summary>
+	///     Message indicating a changelog.
+	/// </summary>
+	Changelog = 47,
+
+	/// <summary>
+	///     Message indicating a nitro notification.
+	/// </summary>
+	NitroNotification = 48,
 
 	/// <summary>
 	///     Message indicating that a channel was linked to a lobby.
@@ -232,12 +266,33 @@ public enum MessageType
 	GiftingPrompt = 50,
 
 	/// <summary>
+	///     Message indicating a in game message nux.
+	/// </summary>
+	InGameMessageNux = 51,
+
+	/// <summary>
 	///     Message indicating a guild join request was accepted.
 	/// </summary>
-	GuildJoinRequestAccepted = 52,
+	GuildJoinRequestAcceptNotification = 52,
+
+	/// <inheritdoc cref="GuildJoinRequestAcceptNotification" />
+	GuildJoinRequestAccepted = GuildJoinRequestAcceptNotification,
 
 	/// <summary>
 	///     Message indicating a guild join request was rejected.
 	/// </summary>
-	GuildJoinRequestRejected = 53
+	GuildJoinRequestRejectNotification = 53,
+
+	/// <inheritdoc cref="GuildJoinRequestRejectNotification" />
+	GuildJoinRequestRejected = GuildJoinRequestRejectNotification,
+
+	/// <summary>
+	///     Message indicating a guild join request was withdrawn.
+	/// </summary>
+	GuildJoinRequestWithdrawNotification = 54,
+
+	/// <summary>
+	///     Message indicating a voice channel was upgraded to HD streaming.
+	/// </summary>
+	HdStreamingUpgraded = 55
 }

@@ -7,23 +7,23 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///     Represents a thumbnail component.
 /// </summary>
-public sealed class DiscordThumnailComponent : DiscordSectionAccessory
+public sealed class DiscordThumbnailComponent : DiscordSectionAccessory
 {
 	/// <summary>
-	///     Constructs a new empty <see cref="DiscordThumnailComponent" />.
+	///     Constructs a new empty <see cref="DiscordThumbnailComponent" />.
 	/// </summary>
-	internal DiscordThumnailComponent()
+	internal DiscordThumbnailComponent()
 	{
 		this.Type = ComponentType.Thumbnail;
 	}
 
 	/// <summary>
-	///     Constructs a new <see cref="DiscordThumnailComponent" />.
+	///     Constructs a new <see cref="DiscordThumbnailComponent" />.
 	/// </summary>
 	/// <param name="url">The thumbnail url.</param>
 	/// <param name="description">The description of the thumbnail.</param>
 	/// <param name="spoiler">Whether this thumbnail should be marked as spoiler.</param>
-	internal DiscordThumnailComponent(string url, string? description = null, bool? spoiler = null)
+	internal DiscordThumbnailComponent(string url, string? description = null, bool? spoiler = null)
 		: this()
 	{
 		this.Media = new(url);

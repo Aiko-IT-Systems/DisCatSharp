@@ -1503,18 +1503,24 @@ public sealed class DiscordApiClient
 		ret.Guild = this.Discord.Guilds.ContainsKey(guildId) ? this.Discord.Guilds[guildId] : null;
 
 		ret.Channels = ret.Guild == null
-			? [.. rawChannels.Select(r => new DiscordChannel
-			{
-				Id = (ulong)r["id"],
-				Name = r["name"].ToString(),
-				Position = (int)r["position"]
-			})]
-			: [.. rawChannels.Select(r =>
-			{
-				var c = ret.Guild.GetChannel((ulong)r["id"]);
-				c.Position = (int)r["position"];
-				return c;
-			})];
+			?
+			[
+				.. rawChannels.Select(r => new DiscordChannel
+				{
+					Id = (ulong)r["id"],
+					Name = r["name"].ToString(),
+					Position = (int)r["position"]
+				})
+			]
+			:
+			[
+				.. rawChannels.Select(r =>
+				{
+					var c = ret.Guild.GetChannel((ulong)r["id"]);
+					c.Position = (int)r["position"];
+					return c;
+				})
+			];
 
 		return ret;
 	}
@@ -1795,15 +1801,41 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	///     Gets the current user's voice state async.
+	///     Gets the current user's voice state.
 	/// </summary>
-	/// <param name="guildId">The guild_id.</param>
+	/// <param name="guildId">The guild id.</param>
 	internal async Task<DiscordVoiceState?> GetCurrentUserVoiceStateAsync(ulong guildId)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.VOICE_STATES}{Endpoints.ME}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
 			guild_id = guildId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		try
+		{
+			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+			return DiscordJson.DeserializeObject<DiscordVoiceState>(res.Response, this.Discord);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
+
+	/// <summary>
+	///     Gets the voice state for a member.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="memberId">The member id.</param>
+	internal async Task<DiscordVoiceState?> GetMemberVoiceStateAsync(ulong guildId, ulong memberId)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.VOICE_STATES}/:member_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
+		{
+			guild_id = guildId,
+			member_id = memberId
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
@@ -1842,32 +1874,6 @@ public sealed class DiscordApiClient
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
-	}
-
-	/// <summary>
-	///     Gets the user's voice state async.
-	/// </summary>
-	/// <param name="guildId">The guild_id.</param>
-	/// <param name="userId">The user_id.</param>
-	internal async Task<DiscordVoiceState?> GetUserVoiceStateAsync(ulong guildId, ulong userId)
-	{
-		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.VOICE_STATES}/:user_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-		{
-			guild_id = guildId,
-			user_id = userId
-		}, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		try
-		{
-			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
-			return DiscordJson.DeserializeObject<DiscordVoiceState>(res.Response, this.Discord);
-		}
-		catch (NotFoundException)
-		{
-			return null;
-		}
 	}
 
 	/// <summary>
@@ -6812,7 +6818,6 @@ public sealed class DiscordApiClient
 				NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
-				DmPermission = command.DmPermission,
 				Nsfw = command.IsNsfw,
 				AllowedContexts = command.AllowedContexts,
 				IntegrationTypes = command.IntegrationTypes
@@ -6847,7 +6852,6 @@ public sealed class DiscordApiClient
 			NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 			DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 			DefaultMemberPermission = command.DefaultMemberPermissions,
-			DmPermission = command.DmPermission,
 			Nsfw = command.IsNsfw,
 			AllowedContexts = command.AllowedContexts,
 			IntegrationTypes = command.IntegrationTypes
@@ -6902,7 +6906,6 @@ public sealed class DiscordApiClient
 	/// <param name="nameLocalization">The localizations of the name.</param>
 	/// <param name="descriptionLocalization">The localizations of the description.</param>
 	/// <param name="defaultMemberPermission">The default member permissions.</param>
-	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
 	/// <param name="allowedContexts">The allowed contexts.</param>
 	/// <param name="integrationTypes">The allowed integration types.</param>
@@ -6915,7 +6918,6 @@ public sealed class DiscordApiClient
 		Optional<DiscordApplicationCommandLocalization?> nameLocalization,
 		Optional<DiscordApplicationCommandLocalization?> descriptionLocalization,
 		Optional<Permissions?> defaultMemberPermission,
-		Optional<bool> dmPermission,
 		Optional<bool> isNsfw,
 		Optional<List<InteractionContextType>?> allowedContexts,
 		Optional<List<ApplicationCommandIntegrationTypes>?> integrationTypes
@@ -6927,7 +6929,6 @@ public sealed class DiscordApiClient
 			Description = description,
 			Options = options,
 			DefaultMemberPermission = defaultMemberPermission,
-			DmPermission = dmPermission,
 			NameLocalizations = nameLocalization.ValueOrDefault()?.GetKeyValuePairs(),
 			DescriptionLocalizations = descriptionLocalization.ValueOrDefault()?.GetKeyValuePairs(),
 			Nsfw = isNsfw,
@@ -7014,7 +7015,6 @@ public sealed class DiscordApiClient
 				NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
-				DmPermission = command.DmPermission,
 				Nsfw = command.IsNsfw,
 				AllowedContexts = command.AllowedContexts
 			}));
@@ -7050,7 +7050,6 @@ public sealed class DiscordApiClient
 			NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 			DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 			DefaultMemberPermission = command.DefaultMemberPermissions,
-			DmPermission = command.DmPermission,
 			Nsfw = command.IsNsfw,
 			AllowedContexts = command.AllowedContexts
 		};
@@ -7108,7 +7107,6 @@ public sealed class DiscordApiClient
 	/// <param name="nameLocalization">The localizations of the name.</param>
 	/// <param name="descriptionLocalization">The localizations of the description.</param>
 	/// <param name="defaultMemberPermission">The default member permissions.</param>
-	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
 	/// <param name="allowedContexts">The allowed contexts.</param>
 	/// <param name="integrationTypes">The allowed integration types.</param>
@@ -7122,7 +7120,6 @@ public sealed class DiscordApiClient
 		Optional<DiscordApplicationCommandLocalization?> nameLocalization,
 		Optional<DiscordApplicationCommandLocalization?> descriptionLocalization,
 		Optional<Permissions?> defaultMemberPermission,
-		Optional<bool> dmPermission,
 		Optional<bool> isNsfw,
 		Optional<List<InteractionContextType>?> allowedContexts,
 		Optional<List<ApplicationCommandIntegrationTypes>?> integrationTypes
@@ -7134,7 +7131,6 @@ public sealed class DiscordApiClient
 			Description = description,
 			Options = options,
 			DefaultMemberPermission = defaultMemberPermission,
-			DmPermission = dmPermission,
 			NameLocalizations = nameLocalization.ValueOrDefault()?.GetKeyValuePairs(),
 			DescriptionLocalizations = descriptionLocalization.ValueOrDefault()?.GetKeyValuePairs(),
 			Nsfw = isNsfw,
@@ -7216,7 +7212,7 @@ public sealed class DiscordApiClient
 					Content = builder?.Content ?? null,
 					Embeds = builder?.Embeds ?? null,
 					IsTts = builder?.IsTts,
-					Mentions = (builder?.Mentions.Any() ?? false) ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
+					Mentions = builder?.Mentions.Any() ?? false ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
 					Flags = flags,
 					Components = builder?.Components ?? null,
 					Choices = null,

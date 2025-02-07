@@ -104,12 +104,12 @@ plugins:
       - yandexMusic
 lavalink:
   plugins: # You can find more plugins on Lavalinks official site at https://lavalink.dev/plugins
-    - dependency: "dev.lavalink.youtube:youtube-plugin:1.11.3" # Source: https://github.com/lavalink-devs/youtube-source
+    - dependency: "dev.lavalink.youtube:youtube-plugin:1.11.4" # Source: https://github.com/lavalink-devs/youtube-source
       snapshot: false
     - dependency: "com.github.topi314.lavasearch:lavasearch-plugin:1.0.0" # Source: https://github.com/topi314/LavaSearch
       repository: "https://maven.lavalink.dev/releases"
       snapshot: false
-    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.3.0" # Source: https://github.com/topi314/LavaSrc
+    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.4.1" # Source: https://github.com/topi314/LavaSrc
       repository: "https://maven.lavalink.dev/releases"
       snapshot: false
     - dependency: "com.github.topi314.lavalyrics:lavalyrics-plugin" # Source: https://github.com/topi314/LavaLyrics

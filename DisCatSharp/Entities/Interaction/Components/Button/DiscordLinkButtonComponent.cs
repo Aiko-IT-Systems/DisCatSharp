@@ -7,7 +7,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///     Represents a link button. Clicking a link button does not send an interaction.
 /// </summary>
-public class DiscordLinkButtonComponent : DiscordComponent
+public class DiscordLinkButtonComponent : DiscordBaseButtonComponent
 {
 	/// <summary>
 	///     Constructs a new <see cref="DiscordLinkButtonComponent" />. This type of button does not send back and interaction

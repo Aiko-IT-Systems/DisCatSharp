@@ -28,7 +28,17 @@ using Endpoints = DisCatSharp.Lavalink.Enums.Endpoints;
 
 namespace DisCatSharp.Lavalink;
 
+/// <summary>
+///     Defines the event handler for <see cref="LavalinkSessionDisconnectedEventArgs" />.
+/// </summary>
+/// <param name="node">The node.</param>
 internal delegate void SessionDisconnectedEventHandler(LavalinkSession node);
+
+/// <summary>
+///     Defines the event handler for <see cref="LavalinkSessionConnectedEventArgs" />.
+/// </summary>
+/// <param name="node">The node.</param>
+internal delegate void SessionConnectedEventHandler(LavalinkSession node);
 
 /// <summary>
 ///     Represents a <see cref="LavalinkSession" />.
@@ -259,6 +269,11 @@ public sealed class LavalinkSession
 	internal event SessionDisconnectedEventHandler SessionDisconnected;
 
 	/// <summary>
+	///     Fires when a <see cref="LavalinkSession" /> disconnected.
+	/// </summary>
+	internal event SessionConnectedEventHandler SessionConnected;
+
+	/// <summary>
 	///     Gets the lavalink server information.
 	/// </summary>
 	/// <returns>A <see cref="LavalinkInfo" /> object.</returns>
@@ -357,11 +372,11 @@ public sealed class LavalinkSession
 		var vst = await vstut.Task.ConfigureAwait(false); // Wait for voice state update to get session_id
 		var vsr = await vsrut.Task.ConfigureAwait(false); // Wait for voice server update to get token, guild_id & endpoint
 		await this.Rest.UpdatePlayerVoiceStateAsync(this.Config.SessionId!, channel.Guild.Id, new()
-		{
-			Endpoint = vsr.Endpoint,
-			Token = vsr.VoiceToken,
-			SessionId = vst.SessionId
-		})
+			{
+				Endpoint = vsr.Endpoint,
+				Token = vsr.VoiceToken,
+				SessionId = vst.SessionId
+			})
 			.ConfigureAwait(false);
 		var player = await this.Rest.GetPlayerAsync(this.Config.SessionId!, channel.Guild.Id).ConfigureAwait(false);
 
@@ -450,6 +465,25 @@ public sealed class LavalinkSession
 		=> await this.Rest.LoadTracksAsync(identifier).ConfigureAwait(false);
 
 	/// <summary>
+	///     Gets the lyrics for a track.
+	/// </summary>
+	/// <param name="track">The track to fetch the lyrics for.</param>
+	/// <param name="skipTrackSource">Whether to skip the current track source and fetch from highest priority source.</param>
+	/// <returns>The <see cref="LavalinkLyricsResult" /> or <see langword="null" />.</returns>
+	public async Task<LavalinkLyricsResult?> GetLyricsAsync(LavalinkTrack track, bool skipTrackSource = false)
+		=> await this.Rest.GetLyricsAsync(track.Encoded, skipTrackSource).ConfigureAwait(false);
+
+	/// <summary>
+	///     Gets the lyrics for a currently playing track.
+	/// </summary>
+	/// <param name="sessionId">The session id a player is associated with.</param>
+	/// <param name="guildId">The guild id a player is associated with.</param>
+	/// <param name="skipTrackSource">Whether to skip the current track source and fetch from highest priority source.</param>
+	/// <returns>The <see cref="LavalinkLyricsResult" /> or <see langword="null" />.</returns>
+	public async Task<LavalinkLyricsResult?> GetLyricsForCurrentTrackAsync(string sessionId, ulong guildId, bool skipTrackSource)
+		=> await this.Rest.GetLyricsForCurrentTrackAsync(sessionId, guildId, skipTrackSource).ConfigureAwait(false);
+
+	/// <summary>
 	///     Loads tracks by <paramref name="identifier" />.
 	///     Returns a dynamic object you have to parse with (Type)Result.
 	/// </summary>
@@ -520,7 +554,6 @@ public sealed class LavalinkSession
 				var sessionId = await this._sessionIdReceived.Task.ConfigureAwait(false);
 				this.Config.SessionId = sessionId;
 				this._sessionIdReceived = null!;
-				await this._lavalinkSessionConnected.InvokeAsync(this, new(this)).ConfigureAwait(false);
 				break;
 			}
 			catch (PlatformNotSupportedException)
@@ -612,8 +645,8 @@ public sealed class LavalinkSession
 						LavalinkGuildPlayer? player = null;
 
 						if (!string.IsNullOrEmpty(eventOp.GuildId) &&
-							this.ConnectedPlayersInternal.TryGetValue(Convert.ToUInt64(eventOp.GuildId),
-								out var eventPlayer))
+						    this.ConnectedPlayersInternal.TryGetValue(Convert.ToUInt64(eventOp.GuildId),
+							    out var eventPlayer))
 							player = eventPlayer;
 						switch (eventOp.Type)
 						{
@@ -727,12 +760,13 @@ public sealed class LavalinkSession
 	/// </summary>
 	/// <param name="client">The websocket client.</param>
 	/// <param name="args">The event args.</param>
-	private Task Lavalink_WebSocket_Connected(IWebSocketClient client, SocketEventArgs args)
+	private async Task Lavalink_WebSocket_Connected(IWebSocketClient client, SocketEventArgs args)
 	{
 		this.Discord.Logger.LogDebug(LavalinkEvents.LavalinkSessionConnected, "Connection to Lavalink established UwU");
 		this._backoff = 0;
 		args.Handled = true;
-		return Task.CompletedTask;
+		this.SessionConnected?.Invoke(this);
+		await this._lavalinkSessionConnected.InvokeAsync(this, new(this)).ConfigureAwait(false);
 	}
 
 	/// <summary>

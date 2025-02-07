@@ -55,5 +55,10 @@ public enum SystemChannelFlags
 	/// <summary>
 	///     Suppress role subscription purchase sticker replies.
 	/// </summary>
-	SuppressRoleSubbscriptionPurchaseNotificationReplies = 1 << 5
+	SuppressRoleSubbscriptionPurchaseNotificationReplies = 1 << 5,
+
+	/// <summary>
+	///     Suppress deadchat channel prompts.
+	/// </summary>
+	SuppressChannelPromptDeadchat = 1 << 7
 }
