@@ -56,7 +56,7 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 			ComponentType.ChannelSelect => new DiscordChannelSelectComponent(),
 			ComponentType.Section => new DiscordSectionComponent(),
 			ComponentType.TextDisplay => new DiscordTextDisplayComponent(),
-			ComponentType.Thumbnail => new DiscordThumnailComponent(),
+			ComponentType.Thumbnail => new DiscordThumbnailComponent(),
 			ComponentType.MediaGallery => new DiscordMediaGalleryComponent(),
 			ComponentType.File => new DiscordFileDisplayComponent(),
 			ComponentType.Separator => new DiscordSeparatorComponent(),

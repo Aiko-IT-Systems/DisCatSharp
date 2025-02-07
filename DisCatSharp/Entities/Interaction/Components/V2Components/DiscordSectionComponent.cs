@@ -54,7 +54,7 @@ public sealed class DiscordSectionComponent : DiscordComponent
 
 	/// <summary>
 	///     The accessory for the section.
-	///     Can be <see cref="DiscordThumnailComponent" /> at the moment, but might include buttons later.
+	///     Can be <see cref="DiscordThumbnailComponent" /> at the moment, but might include buttons later.
 	/// </summary>
 	[JsonProperty("accessory", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordSectionAccessory? Accessory { get; internal set; }
@@ -68,7 +68,7 @@ public sealed class DiscordSectionComponent : DiscordComponent
 	/// <returns>The current <see cref="DiscordSectionComponent" />.</returns>
 	public DiscordSectionComponent WithThumbnailComponent(string url, string? description = null, bool? spoiler = null)
 	{
-		this.Accessory = new DiscordThumnailComponent(url, description, spoiler);
+		this.Accessory = new DiscordThumbnailComponent(url, description, spoiler);
 		return this;
 	}
 

@@ -3,12 +3,12 @@ using System;
 namespace DisCatSharp.Enums;
 
 /// <summary>
-///     Represents a attachment flag extensions.
+///     Represents a embed flag extensions.
 /// </summary>
 public static class EmbedFlagExtensions
 {
 	/// <summary>
-	///     Calculates whether these attachment flags contain a specific flag.
+	///     Calculates whether these embed flags contain a specific flag.
 	/// </summary>
 	/// <param name="baseFlags">The existing flags.</param>
 	/// <param name="flag">The flags to search for.</param>
@@ -17,7 +17,7 @@ public static class EmbedFlagExtensions
 }
 
 /// <summary>
-///     Represents additional features of a attachment.
+///     Represents additional features of a embed.
 /// </summary>
 [Flags]
 public enum EmbedFlags
