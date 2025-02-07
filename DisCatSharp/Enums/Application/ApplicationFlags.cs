@@ -1,5 +1,7 @@
 using System;
 
+using DisCatSharp.Attributes;
+
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -42,7 +44,9 @@ public enum ApplicationFlags : long
 	/// <summary>
 	///     Unknown.
 	/// </summary>
-	AutoModerationRuleCreateBadge = 1 << 6,
+	AutoModerationRuleCreateBadge = 1L << 6,
+
+	GameProfileDisabled = 1L << 7,
 
 	/// <summary>
 	///     Allows the application to create activity assets.
@@ -50,9 +54,15 @@ public enum ApplicationFlags : long
 	AllowAssets = 1L << 8,
 
 	/// <summary>
+	/// 	Indicates the the application is an contextless activity.
+	/// </summary>
+	ContextlessActivity = 1L << 9,
+
+	/// <summary>
 	///     Allows the application to enable activity spectating.
 	/// </summary>
-	AllowActivityActionSpectate = 1L << 9,
+	[DiscordDeprecated("Replaced by ContextlessActivity")]
+	AllowActivityActionSpectate = ContextlessActivity,
 
 	/// <summary>
 	///     Allows the application to enable join requests for activities.
@@ -128,5 +138,23 @@ public enum ApplicationFlags : long
 	/// <summary>
 	///     Allows the app to use Iframe modals.
 	/// </summary>
-	IframeModal = 1L << 26
+	IframeModal = 1L << 26,
+
+	/// <summary>
+	///     Indicates if an app is a social layer integration.
+	///     days.
+	/// </summary>
+	SocialLayerIntegration = 1L << 27,
+
+	/// <summary>
+	///     Indicates if an app is promoted by discord.
+	///     days.
+	/// </summary>
+	Promoted = 1L << 29,
+
+	/// <summary>
+	///     Indicates if an app is partnered with discord.
+	///     days.
+	/// </summary>
+	Partner = 1L << 30
 }

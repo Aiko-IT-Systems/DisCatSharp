@@ -1,5 +1,7 @@
 // ReSharper disable InconsistentNaming
 
+using DisCatSharp.Attributes;
+
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -25,5 +27,9 @@ public enum NsfwLevel
 	/// <summary>
 	///     Indicates the guild has mildly NSFW content that may not be suitable for users under 18.
 	/// </summary>
-	Age_Restricted = 3
+	AgeRestricted = 3,
+
+	/// <inheritdoc cref="AgeRestricted"/>
+	[Deprecated("Replaced by AgeRestricted")]
+	Age_Restricted = AgeRestricted
 }

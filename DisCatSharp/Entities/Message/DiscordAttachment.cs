@@ -117,6 +117,24 @@ public class DiscordAttachment : NullableSnowflakeObject
 	public AttachmentFlags Flags { get; internal set; } = AttachmentFlags.None;
 
 	/// <summary>
+	///     Gets the placeholder.
+	/// </summary>
+	[JsonProperty("placeholder", NullValueHandling = NullValueHandling.Ignore)]
+	public string? Placeholder { get; internal set; }
+
+	/// <summary>
+	///     Gets the placeholder version.
+	/// </summary>
+	[JsonProperty("placeholder_version", NullValueHandling = NullValueHandling.Ignore)]
+	public int? PlaceholderVersion { get; internal set; }
+
+	/// <summary>
+	///     Gets the loading state.
+	/// </summary>
+	[JsonProperty("loading_state", NullValueHandling = NullValueHandling.Ignore)]
+	public LoadingState LoadingState { get; internal set; }
+
+	/// <summary>
 	///     Gets the clip participant, if applicable.
 	/// </summary>
 	[JsonIgnore]

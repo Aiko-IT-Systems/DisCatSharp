@@ -108,5 +108,15 @@ public enum ChannelFlags : long
 	/// <summary>
 	///     Hides the media download options for <see cref="ChannelType.GuildMedia" /> channels.
 	/// </summary>
-	HideMediaDownloadOptions = 1L << 15
+	HideMediaDownloadOptions = 1L << 15,
+
+	/// <summary>
+	/// Channel is a interview channel for a clan join request (gdm style, with application details).
+	/// </summary>
+	IsJoinRequestInterviewChannel = 1L << 16,
+
+	/// <summary>
+	/// Channel is obfuscated.
+	/// </summary>
+	Obfuscated = 1L << 17
 }

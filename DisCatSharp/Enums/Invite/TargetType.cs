@@ -1,3 +1,5 @@
+using DisCatSharp.Attributes;
+
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -8,7 +10,13 @@ public enum TargetType
 	/// <summary>
 	///     Represents a streaming invite.
 	/// </summary>
-	Streaming = 1,
+	[Deprecated("Replaced by Stream")]
+	Streaming = Stream,
+
+	/// <summary>
+	///     Represents a stream invite.
+	/// </summary>
+	Stream = 1,
 
 	/// <summary>
 	///     Represents a activity invite.
@@ -25,5 +33,6 @@ public enum TargetType
 	///     Represents a promo page generated invite.
 	///     Not creatable, system generated.
 	/// </summary>
+	[DiscordDeprecated]
 	PromoPage = 4
 }
