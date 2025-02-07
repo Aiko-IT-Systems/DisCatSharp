@@ -17,6 +17,6 @@ public sealed class DiscordUnfurledMediaItem : DiscordUnfurledMedia
 	/// <param name="url">The unfurled media item url.</param>
 	internal DiscordUnfurledMediaItem(string url)
 	{
-		this.Url = url;
+		this.Url = new(url);
 	}
 }

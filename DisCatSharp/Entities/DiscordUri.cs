@@ -13,7 +13,10 @@ namespace DisCatSharp.Entities;
 [JsonConverter(typeof(DiscordUriJsonConverter))]
 public sealed class DiscordUri
 {
-	private readonly object _value;
+	/// <summary>
+	///     Gets the raw value.
+	/// </summary>
+	private readonly object? _value;
 
 	/// <summary>
 	///     Initializes a new instance of the <see cref="DiscordUri" /> class.
@@ -55,14 +58,15 @@ public sealed class DiscordUri
 	/// </summary>
 	/// <param name="value">Uri string</param>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private static bool IsStandard(string value) => !value.StartsWith("attachment://", StringComparison.Ordinal);
+	private static bool IsStandard(string value)
+		=> !value.StartsWith("attachment://", StringComparison.Ordinal);
 
 	/// <summary>
 	///     Returns a string representation of this DiscordUri.
 	/// </summary>
 	/// <returns>This DiscordUri, as a string.</returns>
-	public override string ToString()
-		=> this._value.ToString();
+	public override string? ToString()
+		=> this._value?.ToString();
 
 	/// <summary>
 	///     Converts this DiscordUri into a canonical representation of a <see cref="Uri" /> if it can be represented as
@@ -73,11 +77,11 @@ public sealed class DiscordUri
 	///     If <see cref="System.Type" /> is not <see cref="DiscordUriType.Standard" />, as
 	///     that would mean creating an invalid Uri, which would result in loss of data.
 	/// </exception>
-	public Uri ToUri()
-		=> this.Type == DiscordUriType.Standard
+	public Uri? ToUri()
+		=> this.Type is DiscordUriType.Standard
 			? this._value as Uri
 			: throw new UriFormatException(
-				$@"DiscordUri ""{this._value}"" would be invalid as a regular URI, please set the correct {nameof(this.Type)} property first.");
+				$"""DiscordUri "{this._value}" would be invalid as a regular URI, please set the correct {nameof(this.Type)} property first.""");
 
 	/// <summary>
 	///     Represents a uri json converter.
@@ -90,8 +94,8 @@ public sealed class DiscordUri
 		/// <param name="writer">The writer.</param>
 		/// <param name="value">The value.</param>
 		/// <param name="serializer">The serializer.</param>
-		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-			=> writer.WriteValue((value as DiscordUri)._value);
+		public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+			=> writer.WriteValue((value as DiscordUri)?._value);
 
 		/// <summary>
 		///     Reads the json.
@@ -100,15 +104,15 @@ public sealed class DiscordUri
 		/// <param name="objectType">The object type.</param>
 		/// <param name="existingValue">The existing value.</param>
 		/// <param name="serializer">The serializer.</param>
-		public override object ReadJson(
+		public override object? ReadJson(
 			JsonReader reader,
 			Type objectType,
-			object existingValue,
+			object? existingValue,
 			JsonSerializer serializer
 		)
 		{
 			var val = reader.Value;
-			return val == null
+			return val is null
 				? null
 				: val is not string s
 					? throw new JsonReaderException("DiscordUri value invalid format! This is a bug in DisCatSharp. " +
