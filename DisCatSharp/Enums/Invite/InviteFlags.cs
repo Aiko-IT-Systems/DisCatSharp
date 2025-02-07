@@ -26,7 +26,7 @@ public enum InviteFlags
 	/// </summary>
 	None = 0,
 
-	/// <inheritdoc cref="IsGuestInvite"/>
+	/// <inheritdoc cref="IsGuestInvite" />
 	[Deprecated("Replaced by IsGuestInvite")]
 	GuestMembership = IsGuestInvite,
 
@@ -45,12 +45,12 @@ public enum InviteFlags
 	IsViewed = 1 << 1,
 
 	/// <summary>
-	/// Invite is enhanced.
+	///     Invite is enhanced.
 	/// </summary>
 	IsEnhanced = 1 << 2,
 
 	/// <summary>
-	/// Invite bypasses a clan application.
+	///     Invite bypasses a clan application.
 	/// </summary>
 	IsApplicationBypass = 1 << 3
 

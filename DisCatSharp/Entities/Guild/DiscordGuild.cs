@@ -2048,7 +2048,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	}
 
 	/// <summary>
-	///    Gets a member of this guild by their user ID.
+	///     Gets a member of this guild by their user ID.
 	/// </summary>
 	/// <param name="userId">ID of the member to get.</param>
 	/// <param name="member">The requested member if found, otherwise <see langword="null" />.</param>

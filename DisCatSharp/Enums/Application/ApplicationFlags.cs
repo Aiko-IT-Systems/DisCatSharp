@@ -54,7 +54,7 @@ public enum ApplicationFlags : long
 	AllowAssets = 1L << 8,
 
 	/// <summary>
-	/// 	Indicates the the application is an contextless activity.
+	///     Indicates the the application is an contextless activity.
 	/// </summary>
 	ContextlessActivity = 1L << 9,
 

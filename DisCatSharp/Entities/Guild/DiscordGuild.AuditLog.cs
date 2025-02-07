@@ -1475,16 +1475,35 @@ public partial class DiscordGuild
 				case AuditLogActionType.AutoModerationQuarantineUser:
 					break;
 
-				case AuditLogActionType.OnboardingQuestionCreate:
-				case AuditLogActionType.OnboardingQuestionUpdate:
+				case AuditLogActionType.OnboardingPromptCreate:
+				case AuditLogActionType.OnboardingPromptUpdate:
+				case AuditLogActionType.OnboardingPromptDelete:
 				case AuditLogActionType.OnboardingUpdate:
 				case AuditLogActionType.ServerGuideCreate:
 				case AuditLogActionType.ServerGuideUpdate:
 					break;
 
-				case AuditLogActionType.VoiceChannelStatusUpdate:
+				case AuditLogActionType.VoiceChannelStatusCreate:
+				case AuditLogActionType.VoiceChannelStatusDelete:
 					break;
 
+				case AuditLogActionType.SoundboardSoundCreate:
+				case AuditLogActionType.SoundboardSoundUpdate:
+				case AuditLogActionType.SoundboardSoundDelete:
+					break;
+				case AuditLogActionType.CreatorMonetizationRequestCreated:
+				case AuditLogActionType.CreatorMonetizationTermsAccepted:
+					break;
+				case AuditLogActionType.OnboardingCreate:
+					break;
+				case AuditLogActionType.ClydeAiProfileUpdate:
+					break;
+				case AuditLogActionType.GuildScheduledEventExceptionCreate:
+				case AuditLogActionType.GuildScheduledEventExceptionUpdate:
+				case AuditLogActionType.GuildScheduledEventExceptionDelete:
+					break;
+				case AuditLogActionType.GuildMemberVerificationUpdate:
+					break;
 				default:
 					this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown audit log action type: {Key} - this should be reported to library developers", (int)xac.ActionType);
 					break;
@@ -1507,7 +1526,11 @@ public partial class DiscordGuild
 					or AuditLogActionType.ThreadCreate
 					or AuditLogActionType.GuildScheduledEventCreate
 					or AuditLogActionType.AutoModerationRuleCreate
-					or AuditLogActionType.OnboardingQuestionCreate
+					or AuditLogActionType.OnboardingPromptCreate
+					or AuditLogActionType.SoundboardSoundCreate
+					or AuditLogActionType.GuildScheduledEventExceptionCreate
+					or AuditLogActionType.OnboardingCreate
+					or AuditLogActionType.VoiceChannelStatusCreate
 					or AuditLogActionType.ServerGuideCreate => AuditLogActionCategory.Create,
 				AuditLogActionType.ChannelDelete
 					or AuditLogActionType.EmojiDelete
@@ -1522,6 +1545,10 @@ public partial class DiscordGuild
 					or AuditLogActionType.StageInstanceDelete
 					or AuditLogActionType.ThreadDelete
 					or AuditLogActionType.GuildScheduledEventDelete
+					or AuditLogActionType.OnboardingPromptDelete
+					or AuditLogActionType.SoundboardSoundDelete
+					or AuditLogActionType.GuildScheduledEventExceptionDelete
+					or AuditLogActionType.VoiceChannelStatusDelete
 					or AuditLogActionType.AutoModerationRuleDelete => AuditLogActionCategory.Delete,
 				AuditLogActionType.ChannelUpdate
 					or AuditLogActionType.EmojiUpdate
@@ -1537,10 +1564,11 @@ public partial class DiscordGuild
 					or AuditLogActionType.ThreadUpdate
 					or AuditLogActionType.GuildScheduledEventUpdate
 					or AuditLogActionType.AutoModerationRuleUpdate
-					or AuditLogActionType.OnboardingQuestionUpdate
+					or AuditLogActionType.OnboardingPromptUpdate
+					or AuditLogActionType.SoundboardSoundUpdate
+					or AuditLogActionType.GuildScheduledEventExceptionUpdate
 					or AuditLogActionType.OnboardingUpdate
-					or AuditLogActionType.ServerGuideUpdate
-					or AuditLogActionType.VoiceChannelStatusUpdate => AuditLogActionCategory.Update,
+					or AuditLogActionType.ServerGuideUpdate => AuditLogActionCategory.Update,
 				_ => AuditLogActionCategory.Other
 			};
 			entry.Discord = this.Discord;

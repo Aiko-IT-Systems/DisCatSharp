@@ -291,22 +291,39 @@ public enum AuditLogActionType
 	/// </summary>
 	AutoModerationQuarantineUser = 146,
 	CreatorMonetizationRequestCreated = 150,
+
 	CreatorMonetizationTermsAccepted = 151,
+
 	OnboardingPromptCreate = 163,
+
 	OnboardingPromptUpdate = 164,
+
 	OnboardingPromptDelete = 165,
+
 	OnboardingCreate = 166,
+
 	OnboardingUpdate = 167,
+
 	HomeSettingsCreate = ServerGuideCreate,
+
 	ServerGuideCreate = 190,
+
 	HomeSettingsUpdate = ServerGuideUpdate,
+
 	ServerGuideUpdate = 191,
+
 	VoiceChannelStatusCreate = 192,
+
 	VoiceChannelStatusDelete = 193,
+
 	[DiscordDeprecated]
 	ClydeAiProfileUpdate = 194,
+
 	GuildScheduledEventExceptionCreate = 200,
+
 	GuildScheduledEventExceptionUpdate = 201,
-	GuildScheduledEventExceptionDelete = 201,
+
+	GuildScheduledEventExceptionDelete = 202,
+
 	GuildMemberVerificationUpdate = 210
 }

@@ -1503,18 +1503,24 @@ public sealed class DiscordApiClient
 		ret.Guild = this.Discord.Guilds.ContainsKey(guildId) ? this.Discord.Guilds[guildId] : null;
 
 		ret.Channels = ret.Guild == null
-			? [.. rawChannels.Select(r => new DiscordChannel
-			{
-				Id = (ulong)r["id"],
-				Name = r["name"].ToString(),
-				Position = (int)r["position"]
-			})]
-			: [.. rawChannels.Select(r =>
-			{
-				var c = ret.Guild.GetChannel((ulong)r["id"]);
-				c.Position = (int)r["position"];
-				return c;
-			})];
+			?
+			[
+				.. rawChannels.Select(r => new DiscordChannel
+				{
+					Id = (ulong)r["id"],
+					Name = r["name"].ToString(),
+					Position = (int)r["position"]
+				})
+			]
+			:
+			[
+				.. rawChannels.Select(r =>
+				{
+					var c = ret.Guild.GetChannel((ulong)r["id"]);
+					c.Position = (int)r["position"];
+					return c;
+				})
+			];
 
 		return ret;
 	}
@@ -7206,7 +7212,7 @@ public sealed class DiscordApiClient
 					Content = builder?.Content ?? null,
 					Embeds = builder?.Embeds ?? null,
 					IsTts = builder?.IsTts,
-					Mentions = (builder?.Mentions.Any() ?? false) ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
+					Mentions = builder?.Mentions.Any() ?? false ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
 					Flags = flags,
 					Components = builder?.Components ?? null,
 					Choices = null,

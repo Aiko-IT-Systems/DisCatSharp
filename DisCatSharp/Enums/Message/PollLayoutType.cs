@@ -15,9 +15,8 @@ public enum PollLayoutType
 	Default = 1,
 
 	/// <summary>
-	/// Poll answers are images only.
+	///     Poll answers are images only.
 	/// </summary>
 	[Obsolete("Do not use", true), DiscordUnreleased]
-    ImageOnlyAnswers = 2
-
+	ImageOnlyAnswers = 2
 }

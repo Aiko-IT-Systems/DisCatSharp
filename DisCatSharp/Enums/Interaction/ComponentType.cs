@@ -81,7 +81,7 @@ public enum ComponentType
 	ContentInventoryEntry = 16,
 
 	/// <summary>
-	///    A container.
+	///     A container.
 	/// </summary>
 	Container = 17
 }

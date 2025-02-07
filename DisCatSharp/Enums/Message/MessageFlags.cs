@@ -103,5 +103,5 @@ public enum MessageFlags
 	/// <summary>
 	///     The message was send by a social layer integration.
 	/// </summary>
-	SendBySocialLayerIntegration = 1<<16
+	SendBySocialLayerIntegration = 1 << 16
 }

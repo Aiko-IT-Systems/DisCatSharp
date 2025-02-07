@@ -29,7 +29,7 @@ public enum NsfwLevel
 	/// </summary>
 	AgeRestricted = 3,
 
-	/// <inheritdoc cref="AgeRestricted"/>
+	/// <inheritdoc cref="AgeRestricted" />
 	[Deprecated("Replaced by AgeRestricted")]
 	Age_Restricted = AgeRestricted
 }
