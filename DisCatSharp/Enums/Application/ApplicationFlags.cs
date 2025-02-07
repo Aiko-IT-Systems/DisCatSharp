@@ -42,10 +42,13 @@ public enum ApplicationFlags : long
 	RpcPrivateBeta = 1L << 5,
 
 	/// <summary>
-	///     Unknown.
+	///     The application has created multiple auto moderation rules.
 	/// </summary>
 	AutoModerationRuleCreateBadge = 1L << 6,
 
+	/// <summary>
+	///     The application's game profile is disabled.
+	/// </summary>
 	GameProfileDisabled = 1L << 7,
 
 	/// <summary>
@@ -54,7 +57,7 @@ public enum ApplicationFlags : long
 	AllowAssets = 1L << 8,
 
 	/// <summary>
-	///     Indicates the the application is an contextless activity.
+	///     The application's activity can be launched without a context.
 	/// </summary>
 	ContextlessActivity = 1L << 9,
 
@@ -130,8 +133,8 @@ public enum ApplicationFlags : long
 	ApplicationCommandBadge = 1L << 23,
 
 	/// <summary>
-	///     Indicates if an app is considered active. This means that it has had any global command executed in the past 30
-	///     days.
+	///     Indicates if an app is considered active.
+	///     This means that it has had any global command executed in the past 30 days.
 	/// </summary>
 	Active = 1L << 24,
 
@@ -154,7 +157,6 @@ public enum ApplicationFlags : long
 
 	/// <summary>
 	///     Indicates if an app is partnered with discord.
-	///     days.
 	/// </summary>
 	Partner = 1L << 30
 }
