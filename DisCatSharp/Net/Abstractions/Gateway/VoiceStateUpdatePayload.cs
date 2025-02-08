@@ -1,3 +1,5 @@
+using DisCatSharp.Entities;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Net.Abstractions;
@@ -5,7 +7,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 ///     The discord voice state update payload.
 /// </summary>
-internal sealed class VoiceStateUpdatePayload
+internal sealed class VoiceStateUpdatePayload : ObservableApiObject
 {
 	/// <summary>
 	///     Gets or sets the guild id.

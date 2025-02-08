@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Entities.Core;
 using DisCatSharp.Enums;
@@ -102,6 +103,7 @@ public class BaseContext : DisCatSharpCommandContext
 	///         <note type="warning">Can only be used if you have an associated application subscription sku.</note>
 	///     </para>
 	/// </summary>
+	[DiscordDeprecated("Replaced by Entitlements"), Obsolete("Discord replaced this with Entitlements", true, DiagnosticId = "DCS0102")]
 	public List<ulong> EntitlementSkuIds { get; internal set; } = [];
 
 	/// <summary>

@@ -1127,7 +1127,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						GuildLocale = e.Interaction.GuildLocale,
 						AppPermissions = e.Interaction.AppPermissions,
 						Entitlements = e.Interaction.Entitlements,
-						EntitlementSkuIds = e.Interaction.EntitlementSkuIds,
 						UserId = e.Interaction.User.Id,
 						GuildId = e.Interaction.GuildId,
 						MemberId = e.Interaction.GuildId is not null ? e.Interaction.User.Id : null,
@@ -1255,7 +1254,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									GuildLocale = e.Interaction.GuildLocale,
 									AppPermissions = e.Interaction.AppPermissions,
 									Entitlements = e.Interaction.Entitlements,
-									EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 								};
 
 								var choices = await ((Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>)providerMethod.Invoke(providerInstance, [context])).ConfigureAwait(false);
@@ -1288,7 +1286,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									GuildLocale = e.Interaction.GuildLocale,
 									AppPermissions = e.Interaction.AppPermissions,
 									Entitlements = e.Interaction.Entitlements,
-									EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 								};
 
 								var choices = await ((Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>)providerMethod.Invoke(providerInstance, [context])).ConfigureAwait(false);
@@ -1322,7 +1319,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									GuildLocale = e.Interaction.GuildLocale,
 									AppPermissions = e.Interaction.AppPermissions,
 									Entitlements = e.Interaction.Entitlements,
-									EntitlementSkuIds = e.Interaction.EntitlementSkuIds
 								};
 
 								var choices = await ((Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>)providerMethod.Invoke(providerInstance, [context])).ConfigureAwait(false);
@@ -1414,7 +1410,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				GuildLocale = e.Interaction.GuildLocale,
 				AppPermissions = e.Interaction.AppPermissions,
 				Entitlements = e.Interaction.Entitlements,
-				EntitlementSkuIds = e.Interaction.EntitlementSkuIds,
 				UserId = e.Interaction.User.Id,
 				GuildId = e.Interaction.GuildId,
 				MemberId = e.Interaction.GuildId is not null ? e.Interaction.User.Id : null,

@@ -1,5 +1,7 @@
 using System;
 
+using DisCatSharp.Entities;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Net;
@@ -8,7 +10,7 @@ namespace DisCatSharp.Net;
 ///     Represents the bucket limits for identifying to Discord.
 ///     <para>This is only relevant for clients that are manually sharding.</para>
 /// </summary>
-public sealed class SessionBucket
+public sealed class SessionBucket : ObservableApiObject
 {
 	/// <summary>
 	///     Gets the total amount of sessions per token.

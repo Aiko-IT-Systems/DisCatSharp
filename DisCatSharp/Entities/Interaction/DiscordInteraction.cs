@@ -131,7 +131,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <summary>
 	///     <para>Gets the entitlement sku ids.</para>
 	/// </summary>
-	[JsonProperty("entitlement_sku_ids", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated]
+	[JsonProperty("entitlement_sku_ids", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated, Obsolete("Discord replaced this with Entitlements", true, DiagnosticId = "DCS0102")]
 	public List<ulong> EntitlementSkuIds { get; internal set; } = [];
 
 	/// <summary>
