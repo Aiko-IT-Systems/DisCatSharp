@@ -58,6 +58,14 @@ public static class Formatter
 		=> Timestamp(time.ToUniversalTime() - DateTime.UtcNow, format);
 
 	/// <summary>
+	///     Creates small subtext.
+	/// </summary>
+	/// <param name="content">Text to subtext.</param>
+	/// <returns>Formatted text.</returns>
+	public static string Subtext(this string content)
+		=> $"-# {content}";
+
+	/// <summary>
 	///     Creates bold text.
 	/// </summary>
 	/// <param name="content">Text to embolden.</param>
