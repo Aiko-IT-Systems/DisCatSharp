@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
 
@@ -29,7 +30,7 @@ public sealed class DiscordEntitlement : SnowflakeObject
 	///     Gets whether this entitlement was consumed.
 	/// </summary>
 	[JsonProperty("consumed", NullValueHandling = NullValueHandling.Ignore)]
-	public bool Consumed { get; internal set; }
+	public bool? Consumed { get; internal set; }
 
 	/// <summary>
 	///     Gets whether this entitlement was deleted.
@@ -136,4 +137,20 @@ public sealed class DiscordEntitlement : SnowflakeObject
 	[JsonIgnore]
 	public DiscordGuild? Guild
 		=> this.GuildId.HasValue ? this.Discord.Guilds[this.GuildId.Value] : null;
+
+	/// <summary>
+	///     Deletes this entitlement if it's a test entitlement.
+	/// </summary>
+	public async Task DeleteTestEntitlementsAsync()
+		=> await (this.Discord as DiscordClient)!.DeleteTestEntitlementAsync(this.Id);
+
+	/// <summary>
+	///    Consumes this entitlement if it's consumable.
+	/// </summary>
+	/// <returns>Whether the entitlement was consumed.</returns>
+	/// <exception cref="InvalidOperationException">Thrown if the entitlement is not consumable.</exception>
+	public async Task<bool> ConsumeAsync()
+		=> this.Consumed is null
+			? throw new InvalidOperationException("You can only consume consumable entitlements.")
+			: (this.Consumed.HasValue && this.Consumed.Value) || await (this.Discord as DiscordClient)!.ConsumeEntitlementAsync(this.Id);
 }

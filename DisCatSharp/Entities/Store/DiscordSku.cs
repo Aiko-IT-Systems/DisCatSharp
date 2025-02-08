@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
 
@@ -10,7 +11,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///     Represents a <see cref="DiscordSku" />.
 /// </summary>
-public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
+public sealed class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 {
 	/// <summary>
 	///     Gets the sku type.
@@ -119,7 +120,7 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	/// </summary>
 	/// <param name="e"><see cref="DiscordSku" /> to compare to.</param>
 	/// <returns>Whether the <see cref="DiscordSku" /> is equal to this <see cref="DiscordSku" />.</returns>
-	public bool Equals(DiscordSku e)
+	public bool Equals(DiscordSku? e)
 		=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
 
 	/// <summary>
@@ -127,7 +128,7 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	/// </summary>
 	/// <param name="obj">Object to compare to.</param>
 	/// <returns>Whether the object is equal to this <see cref="DiscordSku" />.</returns>
-	public override bool Equals(object obj)
+	public override bool Equals(object? obj)
 		=> this.Equals(obj as DiscordSku);
 
 	/// <summary>
@@ -143,14 +144,11 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	/// <param name="e1">First sku to compare.</param>
 	/// <param name="e2">Second sku to compare.</param>
 	/// <returns>Whether the two skus are equal.</returns>
-	public static bool operator ==(DiscordSku e1, DiscordSku e2)
+	public static bool operator ==(DiscordSku? e1, DiscordSku? e2)
 	{
-		var o1 = e1 as object;
-		var o2 = e2 as object;
-
-		return (o1 != null || o2 == null)
-		       && (o1 == null || o2 != null)
-		       && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+		return (e1 is not null || e2 is null)
+		       && (e1 is null || e2 is not null)
+		       && ((e1 is null && e2 is null) || (e1 is not null && e2 is not null && e1.Id == e2.Id));
 	}
 
 	/// <summary>
@@ -159,15 +157,52 @@ public class DiscordSku : SnowflakeObject, IEquatable<DiscordSku>
 	/// <param name="e1">First sku to compare.</param>
 	/// <param name="e2">Second sku to compare.</param>
 	/// <returns>Whether the two skus are not equal.</returns>
-	public static bool operator !=(DiscordSku e1, DiscordSku e2)
+	public static bool operator !=(DiscordSku? e1, DiscordSku? e2)
 		=> !(e1 == e2);
+
+	/// <summary>
+	///     Gets subscriptions for this sku.
+	/// </summary>
+	/// <param name="userId">The user id to filter for.</param>
+	/// <param name="before">The id to filter before.</param>
+	/// <param name="after">The id to filter after.</param>
+	/// <param name="limit">The limit.</param>
+	/// <returns>A list of subscriptions.</returns>
+	public async Task<IReadOnlyList<DiscordSubscription>> GetSubscriptionsAsync(ulong userId, ulong? before = null, ulong? after = null, int limit = 100)
+		=> await (this.Discord as DiscordClient)!.GetSkuSubscriptionsAsync(this.Id, userId, before, after, limit);
+
+	/// <summary>
+	///     Gets a subscription for this sku.
+	/// </summary>
+	/// <param name="subscriptionId">The subscription id to get.</param>
+	/// <returns>The subscription if found, <see langword="null" /> otherwise.</returns>
+	public async Task<DiscordSubscription?> GetSubscriptionAsync(ulong subscriptionId)
+		=> await (this.Discord as DiscordClient)!.GetSkuSubscriptionAsync(this.Id, subscriptionId);
+
+	/// <summary>
+	///     Creates a test entitlement for this sku.
+	/// </summary>
+	/// <param name="ownerId">The owner id to create the entitlement for.</param>
+	/// <param name="ownerType">The owner type to create the entitlement for.</param>
+	/// <returns>A partial <see cref="DiscordEntitlement" />.</returns>
+	public async Task<DiscordEntitlement> CreateTestEntitlementAsync(ulong ownerId, EntitlementOwnerType ownerType)
+		=> await (this.Discord as DiscordClient)!.CreateTestEntitlementAsync(this.Id, ownerId, ownerType);
 }
 
+/// <summary>
+///     Represents a sku price.
+/// </summary>
 public sealed class SkuPrice
 {
+	/// <summary>
+	///     Gets the amount.
+	/// </summary>
 	[JsonProperty("amount")]
 	public double Amount { get; internal set; }
 
+	/// <summary>
+	///     Gets the currency.
+	/// </summary>
 	[JsonProperty("currency")]
 	public string Currency { get; internal set; }
 }
