@@ -652,8 +652,18 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="entitlementId">The entitlement id to fetch.</param>
 	/// <returns>The requested <see cref="DiscordEntitlement" />.</returns>
+	[RequiresFeature(Features.MonetizedApplication)]
 	public async Task<DiscordEntitlement?> GetEntitlementAsync(ulong entitlementId)
 		=> await this.ApiClient.GetEntitlementAsync(this.CurrentApplication.Id, entitlementId).ConfigureAwait(false);
+
+	/// <summary>
+	///    Consumes an entitlement.
+	/// </summary>
+	/// <param name="entitlementId">The entitlement id to consume.</param>
+	/// <returns>Whether the entitlement was consumed.</returns>
+	[RequiresFeature(Features.MonetizedApplication)]
+	public async Task<bool> ConsumeEntitlementAsync(ulong entitlementId)
+		=> await this.ApiClient.ConsumeEntitlementAsync(this.CurrentApplication.Id, entitlementId).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets the subscriptions of an sku.
@@ -686,16 +696,16 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="ownerType">The owner type to create the entitlement for.</param>
 	/// <returns>A partial <see cref="DiscordEntitlement" />.</returns>
 	[RequiresFeature(Features.MonetizedApplication)]
-	public async Task<DiscordEntitlement> CreateTestEntitlementsAsync(ulong skuId, ulong ownerId, EntitlementOwnerType ownerType)
-		=> await this.ApiClient.CreateTestEntitlementsAsync(this.CurrentApplication.Id, skuId, ownerId, ownerType).ConfigureAwait(false);
+	public async Task<DiscordEntitlement> CreateTestEntitlementAsync(ulong skuId, ulong ownerId, EntitlementOwnerType ownerType)
+		=> await this.ApiClient.CreateTestEntitlementAsync(this.CurrentApplication.Id, skuId, ownerId, ownerType).ConfigureAwait(false);
 
 	/// <summary>
 	///     Deletes a test entitlement.
 	/// </summary>
 	/// <param name="entitlementId">The entitlement id to delete.</param>
 	[RequiresFeature(Features.MonetizedApplication)]
-	public async Task DeleteTestEntitlementsAsync(ulong entitlementId)
-		=> await this.ApiClient.DeleteTestEntitlementsAsync(this.CurrentApplication.Id, entitlementId).ConfigureAwait(false);
+	public async Task DeleteTestEntitlementAsync(ulong entitlementId)
+		=> await this.ApiClient.DeleteTestEntitlementAsync(this.CurrentApplication.Id, entitlementId).ConfigureAwait(false);
 
 	/// <summary>
 	///     Gets the applications role connection metadata.

@@ -738,4 +738,9 @@ public static class Endpoints
 	///     The clans endpoint.
 	/// </summary>
 	public const string CLANS = "/clans";
+
+	/// <summary>
+	///     The consume endpoint.
+	/// </summary>
+	public const string CONSUME = "/consume";
 }
