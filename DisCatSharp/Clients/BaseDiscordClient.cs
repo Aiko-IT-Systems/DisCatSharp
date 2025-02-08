@@ -276,6 +276,18 @@ public abstract class BaseDiscordClient : IDisposable
 	internal SentryClient Sentry { get; set; }
 
 	/// <summary>
+	///     Gets the current api channel.
+	/// </summary>
+	public ApiChannel ApiChannel
+		=> this.Configuration.ApiChannel;
+
+	/// <summary>
+	///     Gets the current api version.
+	/// </summary>
+	public string ApiVersion
+		=> $"v{this.Configuration.ApiVersion}";
+
+	/// <summary>
 	///     Gets the sentry dsn.
 	/// </summary>
 	internal static string SentryDsn { get; set; } = "https://1da216e26a2741b99e8ccfccea1b7ac8@o1113828.ingest.sentry.io/4504901362515968";

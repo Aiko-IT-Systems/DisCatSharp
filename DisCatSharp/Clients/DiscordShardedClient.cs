@@ -219,6 +219,18 @@ public sealed partial class DiscordShardedClient
 	public DiscordUser CurrentUser { get; private set; }
 
 	/// <summary>
+	///     Gets the current api channel.
+	/// </summary>
+	public ApiChannel ApiChannel
+		=> this._configuration.ApiChannel;
+
+	/// <summary>
+	///     Gets the current api version.
+	/// </summary>
+	public string ApiVersion
+		=> $"v{this._configuration.ApiVersion}";
+
+	/// <summary>
 	///     Gets the bot library name.
 	/// </summary>
 	public string BotLibrary
