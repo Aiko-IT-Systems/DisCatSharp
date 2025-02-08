@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -123,22 +124,14 @@ public sealed class DiscordInteraction : SnowflakeObject
 
 	/// <summary>
 	///     <para>Gets the entitlements.</para>
-	///     <para>This is related to premium subscriptions for bots.</para>
-	///     <para>
-	///         <note type="warning">Can only be used if you have an associated application subscription sku.</note>
-	///     </para>
 	/// </summary>
 	[JsonProperty("entitlements", NullValueHandling = NullValueHandling.Ignore)]
 	public List<DiscordEntitlement> Entitlements { get; internal set; } = [];
 
 	/// <summary>
 	///     <para>Gets the entitlement sku ids.</para>
-	///     <para>This is related to premium subscriptions for bots.</para>
-	///     <para>
-	///         <note type="warning">Can only be used if you have an associated application subscription sku.</note>
-	///     </para>
 	/// </summary>
-	[JsonProperty("entitlement_sku_ids", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("entitlement_sku_ids", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated]
 	public List<ulong> EntitlementSkuIds { get; internal set; } = [];
 
 	/// <summary>
