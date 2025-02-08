@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
+using DisCatSharp.Enums.Core;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
 
@@ -319,6 +320,31 @@ public abstract class BaseDiscordClient : IDisposable
 	///     Gets the cached guilds for this client.
 	/// </summary>
 	public abstract IReadOnlyDictionary<ulong, DiscordGuild> Guilds { get; }
+
+	/// <summary>
+	///     Gets the statistics for this client.
+	/// </summary>
+	public IReadOnlyDictionary<DisCatSharpStatisticType, int> Statistics
+	{
+		get
+		{
+			return new Dictionary<DisCatSharpStatisticType, int>
+			{
+#pragma warning disable IDE0004
+				[DisCatSharpStatisticType.Guilds] = this.Guilds.Count,
+				[DisCatSharpStatisticType.Users] = this.Guilds.Values.Sum((Func<DiscordGuild, int>)(guild => guild.MemberCount ?? 0)),
+				[DisCatSharpStatisticType.Channels] = this.Guilds.Values.Sum((Func<DiscordGuild, int>)(guild => guild.Channels.Count)),
+				[DisCatSharpStatisticType.Threads] = this.Guilds.Values.Sum((Func<DiscordGuild, int>)(guild => guild.Threads.Count)),
+				[DisCatSharpStatisticType.Roles] = this.Guilds.Values.Sum((Func<DiscordGuild, int>)(guild => guild.Roles.Count)),
+				[DisCatSharpStatisticType.Emojis] = this.Guilds.Values.Sum((Func<DiscordGuild, int>)(guild => guild.Emojis.Count)),
+				[DisCatSharpStatisticType.Stickers] = this.Guilds.Values.Sum((Func<DiscordGuild, int>)(guild => guild.Stickers.Count)),
+				[DisCatSharpStatisticType.SoundboardSounds] = this.Guilds.Values.Sum((Func<DiscordGuild, int>)(guild => guild.SoundboardSounds.Count)),
+				[DisCatSharpStatisticType.StageInstances] = this.Guilds.Values.Sum((Func<DiscordGuild, int>)(guild => guild.StageInstances.Count)),
+				[DisCatSharpStatisticType.ScheduledEvents] = this.Guilds.Values.Sum((Func<DiscordGuild, int>)(guild => guild.ScheduledEvents.Count))
+#pragma warning restore IDE0004
+			};
+		}
+	}
 
 	/// <summary>
 	///     Gets the guilds ids for this shard.

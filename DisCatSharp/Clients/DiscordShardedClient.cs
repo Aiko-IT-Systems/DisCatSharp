@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
+using DisCatSharp.Enums.Core;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
 
@@ -233,6 +234,27 @@ public sealed partial class DiscordShardedClient
 	/// </summary>
 	public IReadOnlyDictionary<string, DiscordVoiceRegion> VoiceRegions
 		=> this._voiceRegionsLazy?.Value;
+
+	/// <summary>
+	///     Gets combined statistics across all shard clients.
+	/// </summary>
+	public IReadOnlyDictionary<DisCatSharpStatisticType, int> Statistics
+	{
+		get
+		{
+			var combinedStats = Enum.GetValues(typeof(DisCatSharpStatisticType))
+				.Cast<DisCatSharpStatisticType>()
+				.ToDictionary(stat => stat, _ => 0);
+			foreach (var client in this.ShardClients.Values)
+			{
+				var clientStats = client.Statistics;
+				foreach (var kv in clientStats)
+					combinedStats[kv.Key] += kv.Value;
+			}
+
+			return combinedStats;
+		}
+	}
 
 #endregion
 
