@@ -2002,7 +2002,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	///     Whether the client is disposed.
 	/// </summary>
-	private bool _disposed;
+	private volatile bool _disposed;
 
 	/// <summary>
 	///     Disposes the client.
@@ -2010,22 +2010,18 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public override void Dispose()
 	{
 		ObjectDisposedException.ThrowIf(this._disposed, this);
-
+  
 		this._disposed = true;
-		GC.SuppressFinalize(this);
-
+  
 		this.DisconnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 		this.ApiClient.Rest.Dispose();
 		this.CurrentUser = null;
-
 		this.CommandCooldownBuckets.Clear();
-
 		var extensions = this._extensions; // prevent _extensions being modified during dispose
 		this._extensions.Clear();
 		foreach (var extension in extensions)
 			if (extension is IDisposable disposable)
 				disposable.Dispose();
-
 		try
 		{
 			this._cancelTokenSource?.Cancel();
@@ -2033,13 +2029,13 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		}
 		catch
 		{ }
-
 		this.GuildsInternal.Clear();
 		this.EmojisInternal.Clear();
 		this._heartbeatTask?.Dispose();
-
 		if (this.Configuration.EnableSentry)
 			SentrySdk.EndSession();
+   
+		GC.SuppressFinalize(this);
 	}
 
 #endregion
