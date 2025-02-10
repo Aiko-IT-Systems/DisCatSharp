@@ -2009,19 +2009,36 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	public override void Dispose()
 	{
-		ObjectDisposedException.ThrowIf(this._disposed, this);
-  
-		this._disposed = true;
-  
-		this.DisconnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+		if (this._disposed)
+			return;
+
+		lock (this)
+		{
+			if (this._disposed)
+				return;
+
+			this._disposed = true;
+		}
+
+		try
+		{
+			this.DisconnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+		}
+		catch
+		{ }
+
 		this.ApiClient.Rest.Dispose();
-		this.CurrentUser = null;
+		this.CurrentUser = null!;
 		this.CommandCooldownBuckets.Clear();
+
 		var extensions = this._extensions; // prevent _extensions being modified during dispose
 		this._extensions.Clear();
 		foreach (var extension in extensions)
+		{
 			if (extension is IDisposable disposable)
 				disposable.Dispose();
+		}
+
 		try
 		{
 			this._cancelTokenSource?.Cancel();
@@ -2029,12 +2046,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		}
 		catch
 		{ }
+
 		this.GuildsInternal.Clear();
 		this.EmojisInternal.Clear();
 		this._heartbeatTask?.Dispose();
+
 		if (this.Configuration.EnableSentry)
 			SentrySdk.EndSession();
-   
+
 		GC.SuppressFinalize(this);
 	}
 
