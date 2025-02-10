@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace DisCatSharp.Interactivity;
 
 /// <summary>
@@ -9,6 +11,7 @@ public readonly struct InteractivityResult<T>
 	/// <summary>
 	///     Whether interactivity was timed out
 	/// </summary>
+	[MemberNotNullWhen(false, nameof(Result))]
 	public bool TimedOut { get; }
 
 	/// <summary>
