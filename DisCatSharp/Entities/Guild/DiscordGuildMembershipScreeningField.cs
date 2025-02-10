@@ -68,13 +68,13 @@ public class DiscordGuildMembershipScreeningField : ObservableApiObject
 	public string? Placeholder { get; internal set; }
 
 	/// <summary>
-	///     Gets the placeholder.
+	///     Gets the description.
 	/// </summary>
 	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
 	public string? Description { get; internal set; }
 
 	/// <summary>
-	///     Gets the placeholder.
+	///     Unknown.
 	/// </summary>
 	[JsonProperty("automations", NullValueHandling = NullValueHandling.Ignore)]
 	public object? Automations { get; internal set; }
