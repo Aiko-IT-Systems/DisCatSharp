@@ -179,28 +179,33 @@ internal class InteractionPaginationRequest : IPaginationRequest
 	///     Gets the buttons.
 	/// </summary>
 	public Task<IEnumerable<DiscordButtonComponent>> GetButtonsAsync()
-		=> Task.FromResult((IEnumerable<DiscordButtonComponent>)this._buttons.ButtonArray);
+		=> Task.FromResult<IEnumerable<DiscordButtonComponent>>(this._buttons.ButtonArray);
 
 	/// <summary>
 	///     Gets the message.
 	/// </summary>
-	public Task<DiscordMessage> GetMessageAsync() => Task.FromResult(this._message);
+	public Task<DiscordMessage> GetMessageAsync()
+		=> Task.FromResult(this._message);
 
 	/// <summary>
 	///     Gets the user.
 	/// </summary>
-	public Task<DiscordUser> GetUserAsync() => Task.FromResult(this._user);
+	public Task<DiscordUser> GetUserAsync()
+		=> Task.FromResult(this._user);
 
 	/// <summary>
 	///     Gets the task completion source.
 	/// </summary>
-	public Task<TaskCompletionSource<bool>> GetTaskCompletionSourceAsync() => Task.FromResult(this._tcs);
+	public Task<TaskCompletionSource<bool>> GetTaskCompletionSourceAsync()
+		=> Task.FromResult(this._tcs);
 
 	/// <summary>
 	///     Cleanup.
 	/// </summary>
 	public async Task DoCleanupAsync()
 	{
+		var page = this._pages[this._index];
+		var builder = new DiscordWebhookBuilder();
 		switch (this._behaviorBehavior)
 		{
 			case ButtonPaginationBehavior.Disable:
@@ -208,18 +213,20 @@ internal class InteractionPaginationRequest : IPaginationRequest
 					.Select(b => new DiscordButtonComponent(b))
 					.Select(b => b.Disable());
 
-				var builder = new DiscordWebhookBuilder()
-					.WithContent(this._pages[this._index].Content)
-					.AddEmbed(this._pages[this._index].Embed)
-					.AddComponents(buttons);
+				if (page.Content is not null)
+					builder.WithContent(page.Content);
+				if (page.Embed is not null)
+					builder.AddEmbed(page.Embed);
+				builder.AddComponents(buttons);
 
 				await this._lastInteraction.EditOriginalResponseAsync(builder).ConfigureAwait(false);
 				break;
 
 			case ButtonPaginationBehavior.DeleteButtons:
-				builder = new DiscordWebhookBuilder()
-					.WithContent(this._pages[this._index].Content)
-					.AddEmbed(this._pages[this._index].Embed);
+				if (page.Content is not null)
+					builder.WithContent(page.Content);
+				if (page.Embed is not null)
+					builder.AddEmbed(page.Embed);
 
 				await this._lastInteraction.EditOriginalResponseAsync(builder).ConfigureAwait(false);
 				break;

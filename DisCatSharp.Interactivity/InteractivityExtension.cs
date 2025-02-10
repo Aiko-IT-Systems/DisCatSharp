@@ -145,7 +145,7 @@ public class InteractivityExtension : BaseExtension
 		if (!buttons.Any())
 			throw new ArgumentException("You must specify at least one button to listen for.");
 
-		if (message.Components.Count == 0)
+		if (message.Components.Count is 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
 		if (!message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
@@ -154,7 +154,7 @@ public class InteractivityExtension : BaseExtension
 		var res = await this._componentEventWaiter
 			.WaitForMatchAsync(new(message,
 				c =>
-					c.Interaction.Data.ComponentType == ComponentType.Button &&
+					c.Interaction.Data.ComponentType is ComponentType.Button &&
 					buttons.Any(b => b.CustomId == c.Id), token)).ConfigureAwait(false);
 
 		return new(res is null, res);
@@ -180,7 +180,7 @@ public class InteractivityExtension : BaseExtension
 		var result =
 			await this
 				._modalEventWaiter
-				.WaitForModalMatchAsync(new(customId, c => c.Interaction.Type == InteractionType.ModalSubmit, token))
+				.WaitForModalMatchAsync(new(customId, c => c.Interaction.Type is InteractionType.ModalSubmit, token))
 				.ConfigureAwait(false);
 
 		return new(result is null, result);
@@ -233,7 +233,7 @@ public class InteractivityExtension : BaseExtension
 		var result =
 			await this
 				._componentEventWaiter
-				.WaitForMatchAsync(new(message, c => c.Interaction.Data.ComponentType == ComponentType.Button && ids.Contains(c.Id), token))
+				.WaitForMatchAsync(new(message, c => c.Interaction.Data.ComponentType is ComponentType.Button && ids.Contains(c.Id), token))
 				.ConfigureAwait(false);
 
 		return new(result is null, result);
@@ -329,7 +329,7 @@ public class InteractivityExtension : BaseExtension
 		if (message.Author != this.Client.CurrentUser)
 			throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
-		if (message.Components.Count == 0)
+		if (message.Components.Count is 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
 		if (!message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
@@ -369,7 +369,7 @@ public class InteractivityExtension : BaseExtension
 		if (message.Author != this.Client.CurrentUser)
 			throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
-		if (message.Components.Count == 0)
+		if (message.Components.Count is 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
 		if (!message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
@@ -410,7 +410,7 @@ public class InteractivityExtension : BaseExtension
 		if (message.Author != this.Client.CurrentUser)
 			throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
-		if (message.Components.Count == 0)
+		if (message.Components.Count is 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
 		if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).All(c => c.Type != selectType))
@@ -455,7 +455,7 @@ public class InteractivityExtension : BaseExtension
 		if (message.Author != this.Client.CurrentUser)
 			throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
-		if (message.Components.Count == 0)
+		if (message.Components.Count is 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
 		if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).All(c => c.Type != selectType))
@@ -504,7 +504,7 @@ public class InteractivityExtension : BaseExtension
 		if (message.Author != this.Client.CurrentUser)
 			throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
-		if (message.Components.Count == 0)
+		if (message.Components.Count is 0)
 			throw new ArgumentException("Provided message does not contain any components.");
 
 		if (message.Components.OfType<DiscordActionRowComponent>().SelectMany(c => c.Components).All(c => c.Type != selectType))
@@ -536,7 +536,7 @@ public class InteractivityExtension : BaseExtension
 		var timeout = timeoutOverride ?? this.Config.Timeout;
 		var returns = await this._messageCreatedWaiter.WaitForMatchAsync(new(x => predicate(x.Message), timeout)).ConfigureAwait(false);
 
-		return new(returns == null, returns?.Message);
+		return new(returns is null, returns?.Message);
 	}
 
 	/// <summary>
@@ -555,7 +555,7 @@ public class InteractivityExtension : BaseExtension
 		var timeout = timeoutOverride ?? this.Config.Timeout;
 		var returns = await this._messageReactionAddWaiter.WaitForMatchAsync(new(predicate, timeout)).ConfigureAwait(false);
 
-		return new(returns == null, returns);
+		return new(returns is null, returns);
 	}
 
 	/// <summary>
@@ -625,7 +625,7 @@ public class InteractivityExtension : BaseExtension
 				new(x => x.User.Id == user.Id && x.Channel.Id == channel.Id, timeout))
 			.ConfigureAwait(false);
 
-		return new(returns == null, returns);
+		return new(returns is null, returns);
 	}
 
 	/// <summary>
@@ -643,7 +643,7 @@ public class InteractivityExtension : BaseExtension
 				new(x => x.User.Id == user.Id, timeout))
 			.ConfigureAwait(false);
 
-		return new(returns == null, returns);
+		return new(returns is null, returns);
 	}
 
 	/// <summary>
@@ -661,7 +661,7 @@ public class InteractivityExtension : BaseExtension
 				new(x => x.Channel.Id == channel.Id, timeout))
 			.ConfigureAwait(false);
 
-		return new(returns == null, returns);
+		return new(returns is null, returns);
 	}
 
 	/// <summary>
@@ -693,7 +693,7 @@ public class InteractivityExtension : BaseExtension
 
 		using var waiter = new EventWaiter<T>(this.Client);
 		var res = await waiter.WaitForMatchAsync(new(predicate, timeout)).ConfigureAwait(false);
-		return new(res == null, res);
+		return new(res is null, res);
 	}
 
 	/// <summary>
@@ -744,10 +744,13 @@ public class InteractivityExtension : BaseExtension
 			bts.Left.Disable();
 		}
 
-		var builder = new DiscordMessageBuilder()
-			.WithContent(pages.First().Content)
-			.AddEmbed(pages.First().Embed)
-			.AddComponents(bts.ButtonArray);
+		var page = pages.First();
+		var builder = new DiscordMessageBuilder();
+		if (page.Content is not null)
+			builder.WithContent(page.Content);
+		if (page.Embed is not null)
+			builder.AddEmbed(page.Embed);
+		builder.AddComponents(bts.ButtonArray.ToList());
 
 		var message = await builder.SendAsync(channel).ConfigureAwait(false);
 
@@ -822,15 +825,18 @@ public class InteractivityExtension : BaseExtension
 		DiscordChannel channel,
 		DiscordUser user,
 		IEnumerable<Page> pages,
-		PaginationEmojis emojis,
+		PaginationEmojis? emojis = null,
 		PaginationBehaviour? behaviour = default,
 		PaginationDeletion? deletion = default,
 		TimeSpan? timeoutOverride = null
 	)
 	{
-		var builder = new DiscordMessageBuilder()
-			.WithContent(pages.First().Content)
-			.AddEmbed(pages.First().Embed);
+		var page = pages.First();
+		var builder = new DiscordMessageBuilder();
+		if (page.Content is not null)
+			builder.WithContent(page.Content);
+		if (page.Embed is not null)
+			builder.AddEmbed(page.Embed);
 		var m = await builder.SendAsync(channel).ConfigureAwait(false);
 
 		var timeout = timeoutOverride ?? this.Config.Timeout;
@@ -872,7 +878,7 @@ public class InteractivityExtension : BaseExtension
 			bts.Left.Disable();
 		}
 
-		if (pages.Count() == 1)
+		if (pages.Count() is 1)
 		{
 			bts.SkipRight.Disable();
 			bts.Left.Disable();
@@ -885,21 +891,27 @@ public class InteractivityExtension : BaseExtension
 
 		if (deferred)
 		{
-			var builder = new DiscordWebhookBuilder()
-				.WithContent(pages.First().Content)
-				.AddEmbed(pages.First().Embed)
-				.AddComponents(bts.ButtonArray);
+			var page = pages.First();
+			var builder = new DiscordWebhookBuilder();
+			if (page.Content is not null)
+				builder.WithContent(page.Content);
+			if (page.Embed is not null)
+				builder.AddEmbed(page.Embed);
+			builder.AddComponents(bts.ButtonArray.ToList());
 			message = await interaction.EditOriginalResponseAsync(builder).ConfigureAwait(false);
 		}
 		else
 		{
-			var builder = new DiscordInteractionResponseBuilder()
-				.WithContent(pages.First().Content)
-				.AddEmbed(pages.First().Embed)
-				.AddComponents(bts.ButtonArray);
+			var page = pages.First();
+			var builder = new DiscordInteractionResponseBuilder();
+			if (page.Content is not null)
+				builder.WithContent(page.Content);
+			if (page.Embed is not null)
+				builder.AddEmbed(page.Embed);
+			builder.AddComponents(bts.ButtonArray.ToList());
 			if (ephemeral)
 				builder = builder.AsEphemeral();
-			message = (await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, builder).ConfigureAwait(false)).Message;
+			message = (await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, builder).ConfigureAwait(false)).Message!;
 		}
 
 		var req = new InteractionPaginationRequest(interaction, message, user, bhv, del, bts, pages, token);
@@ -957,7 +969,7 @@ public class InteractivityExtension : BaseExtension
 				for (var i = 0; i < subsplit.Length; i++)
 				{
 					s += subsplit[i];
-					if (i < 15 || i % 15 != 0)
+					if (i < 15 || i % 15 is not 0)
 						continue;
 
 					split.Add(s);
@@ -1010,7 +1022,7 @@ public class InteractivityExtension : BaseExtension
 				for (var i = 0; i < subsplit.Length; i++)
 				{
 					s += $"{subsplit[i]}\n";
-					if (i % 15 != 0 || i == 0)
+					if (i % 15 is not 0 || i is 0)
 						continue;
 
 					split.Add(s);
@@ -1025,7 +1037,7 @@ public class InteractivityExtension : BaseExtension
 		var page = 1;
 		foreach (var s in split)
 		{
-			result.Add(new("", new DiscordEmbedBuilder(embed).WithDescription(s).WithFooter($"Page {page}/{split.Count}")));
+			result.Add(new(null, new DiscordEmbedBuilder(embed).WithDescription(s).WithFooter($"Page {page}/{split.Count}")));
 			page++;
 		}
 

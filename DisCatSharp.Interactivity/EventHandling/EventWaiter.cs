@@ -68,9 +68,9 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 	/// </summary>
 	/// <param name="request">Request to match</param>
 	/// <returns></returns>
-	public async Task<T> WaitForMatchAsync(MatchRequest<T> request)
+	public async Task<T?> WaitForMatchAsync(MatchRequest<T> request)
 	{
-		T result = null;
+		T? result = null;
 		this._matchRequests.Add(request);
 		try
 		{

@@ -60,7 +60,8 @@ internal class ButtonPaginationRequest : IPaginationRequest
 	/// <summary>
 	///     Gets the page count.
 	/// </summary>
-	public int PageCount => this._pages.Count;
+	public int PageCount
+		=> this._pages.Count;
 
 	/// <summary>
 	///     Gets the page.
@@ -168,51 +169,59 @@ internal class ButtonPaginationRequest : IPaginationRequest
 	/// <summary>
 	///     Gets the emojis.
 	/// </summary>
-	public Task<PaginationEmojis> GetEmojisAsync() => Task.FromException<PaginationEmojis>(new NotSupportedException("Emojis aren't supported for this request."));
+	public Task<PaginationEmojis> GetEmojisAsync()
+		=> Task.FromException<PaginationEmojis>(new NotSupportedException("Emojis aren't supported for this request."));
 
 	/// <summary>
 	///     Gets the buttons.
 	/// </summary>
 	public Task<IEnumerable<DiscordButtonComponent>> GetButtonsAsync()
-		=> Task.FromResult((IEnumerable<DiscordButtonComponent>)this._buttons.ButtonArray);
+		=> Task.FromResult<IEnumerable<DiscordButtonComponent>>(this._buttons.ButtonArray);
 
 	/// <summary>
 	///     Gets the message.
 	/// </summary>
-	public Task<DiscordMessage> GetMessageAsync() => Task.FromResult(this._message);
+	public Task<DiscordMessage> GetMessageAsync()
+		=> Task.FromResult(this._message);
 
 	/// <summary>
 	///     Gets the user.
 	/// </summary>
-	public Task<DiscordUser> GetUserAsync() => Task.FromResult(this._user);
+	public Task<DiscordUser> GetUserAsync()
+		=> Task.FromResult(this._user);
 
 	/// <summary>
 	///     Gets the task completion source.
 	/// </summary>
-	public Task<TaskCompletionSource<bool>> GetTaskCompletionSourceAsync() => Task.FromResult(this._tcs);
+	public Task<TaskCompletionSource<bool>> GetTaskCompletionSourceAsync()
+		=> Task.FromResult(this._tcs);
 
 	/// <summary>
 	///     Does the cleanup.
 	/// </summary>
 	public async Task DoCleanupAsync()
 	{
+		var page = this._pages[this._index];
+		var builder = new DiscordMessageBuilder();
 		switch (this._behaviorBehavior)
 		{
 			case ButtonPaginationBehavior.Disable:
 				var buttons = this._buttons.ButtonArray.Select(b => b.Disable());
 
-				var builder = new DiscordMessageBuilder()
-					.WithContent(this._pages[this._index].Content)
-					.AddEmbed(this._pages[this._index].Embed)
-					.AddComponents(buttons);
+				if (page.Content is not null)
+					builder.WithContent(page.Content);
+				if (page.Embed is not null)
+					builder.AddEmbed(page.Embed);
+				builder.AddComponents(buttons);
 
 				await builder.ModifyAsync(this._message).ConfigureAwait(false);
 				break;
 
 			case ButtonPaginationBehavior.DeleteButtons:
-				builder = new DiscordMessageBuilder()
-					.WithContent(this._pages[this._index].Content)
-					.AddEmbed(this._pages[this._index].Embed);
+				if (page.Content is not null)
+					builder.WithContent(page.Content);
+				if (page.Embed is not null)
+					builder.AddEmbed(page.Embed);
 
 				await builder.ModifyAsync(this._message).ConfigureAwait(false);
 				break;
