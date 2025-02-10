@@ -1,3 +1,5 @@
+using System;
+
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -31,11 +33,15 @@ public sealed class DiscordFileDisplayComponent : DiscordComponent
 	/// <summary>
 	///     Constructs a new file display component field with the specified options.
 	/// </summary>
-	/// <param name="url">The file url.</param>
+	/// <param name="url">The file url. Only supports attachments (<c>attachment://</c>).</param>
 	/// <param name="spoiler">Whether this file should be marked as spoiler.</param>
 	public DiscordFileDisplayComponent(string url, bool? spoiler)
 		: this()
 	{
+		ArgumentException.ThrowIfNullOrEmpty(url);
+		if (!url.StartsWith("attachment://", StringComparison.Ordinal))
+			throw new ArgumentException("File URL must start with 'attachment://'.", nameof(url));
+
 		this.File = new(url);
 		this.Spoiler = spoiler;
 	}
@@ -43,7 +49,7 @@ public sealed class DiscordFileDisplayComponent : DiscordComponent
 	/// <summary>
 	///     Gets the file.
 	/// </summary>
-	[JsonProperty("media")]
+	[JsonProperty("file")]
 	public DiscordUnfurledMediaItem File { get; internal set; }
 
 	/// <summary>

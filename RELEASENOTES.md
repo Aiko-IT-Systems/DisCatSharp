@@ -6,6 +6,7 @@ DisCatSharp Release Notes
 	- Support for join request (create, update & delete) events for clans
 	- Support for message forwarding
 	- Support for application emojis
+	- Fix for gateway close code handling
 
     Breaking
 
@@ -21,7 +22,7 @@ DisCatSharp.Attributes Release Notes
 
 DisCatSharp.ApplicationCommands Release Notes
 
-    - None
+    - Some optimizations
 
 
 DisCatSharp.CommandsNext Release Notes
@@ -40,6 +41,7 @@ DisCatSharp.Common Release Notes
 DisCatSharp.Lavalink Release Notes
 
     - New queue system. See https://docs.dcs.aitsys.dev/articles/modules/audio/lavalink_v4/queue
+    - Support for LavaLyrics plugin
 
 
 DisCatSharp.VoiceNext Release Notes

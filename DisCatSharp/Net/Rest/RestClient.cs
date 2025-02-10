@@ -165,9 +165,16 @@ internal sealed class RestClient : IDisposable
 	/// </summary>
 	public void Dispose()
 	{
-		ObjectDisposedException.ThrowIf(this._disposed, this);
+		if (this._disposed)
+			return;
 
-		this._disposed = true;
+		lock (this)
+		{
+			if (this._disposed)
+				return;
+
+			this._disposed = true;
+		}
 
 		this._globalRateLimitEvent.Reset();
 
@@ -189,6 +196,7 @@ internal sealed class RestClient : IDisposable
 		this._routesToHashes.Clear();
 		this._hashesToBuckets.Clear();
 		this._requestQueue.Clear();
+
 		GC.SuppressFinalize(this);
 	}
 

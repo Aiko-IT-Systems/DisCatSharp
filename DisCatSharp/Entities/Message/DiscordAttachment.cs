@@ -56,13 +56,13 @@ public class DiscordAttachment : NullableSnowflakeObject
 	///     Gets the URL of the file.
 	/// </summary>
 	[JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
-	public string Url { get; internal set; }
+	public DiscordUri Url { get; internal set; }
 
 	/// <summary>
 	///     Gets the proxied URL of the file.
 	/// </summary>
 	[JsonProperty("proxy_url", NullValueHandling = NullValueHandling.Ignore)]
-	public string ProxyUrl { get; internal set; }
+	public DiscordUri ProxyUrl { get; internal set; }
 
 	/// <summary>
 	///     Gets the height. Applicable only if the attachment is an image.
@@ -115,6 +115,24 @@ public class DiscordAttachment : NullableSnowflakeObject
 	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
 	public AttachmentFlags Flags { get; internal set; } = AttachmentFlags.None;
+
+	/// <summary>
+	///     Gets the placeholder.
+	/// </summary>
+	[JsonProperty("placeholder", NullValueHandling = NullValueHandling.Ignore)]
+	public string? Placeholder { get; internal set; }
+
+	/// <summary>
+	///     Gets the placeholder version.
+	/// </summary>
+	[JsonProperty("placeholder_version", NullValueHandling = NullValueHandling.Ignore)]
+	public int? PlaceholderVersion { get; internal set; }
+
+	/// <summary>
+	///     Gets the loading state.
+	/// </summary>
+	[JsonProperty("loading_state", NullValueHandling = NullValueHandling.Ignore)]
+	public LoadingState LoadingState { get; internal set; }
 
 	/// <summary>
 	///     Gets the clip participant, if applicable.

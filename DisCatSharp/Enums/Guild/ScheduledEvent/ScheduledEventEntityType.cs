@@ -1,3 +1,5 @@
+using System;
+
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -18,5 +20,11 @@ public enum ScheduledEventEntityType
 	/// <summary>
 	///     Indicates that the events is hold external.
 	/// </summary>
-	External = 3
+	External = 3,
+
+	/// <summary>
+	///     Unknown.
+	/// </summary>
+	[Obsolete("Don't use", true)]
+	PrimeTime = 4
 }

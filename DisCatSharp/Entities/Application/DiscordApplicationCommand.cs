@@ -24,7 +24,6 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// <param name="nameLocalizations">The localizations of the command name.</param>
 	/// <param name="descriptionLocalizations">The localizations of the command description.</param>
 	/// <param name="defaultMemberPermissions">The default member permissions.</param>
-	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is NSFW.</param>
 	/// <param name="allowedContexts">Where the command can be used.</param>
 	/// <param name="integrationTypes">The allowed integration types.</param>
@@ -37,7 +36,6 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 		DiscordApplicationCommandLocalization? nameLocalizations = null,
 		DiscordApplicationCommandLocalization? descriptionLocalizations = null,
 		Permissions? defaultMemberPermissions = null,
-		bool? dmPermission = null,
 		bool isNsfw = false,
 		List<InteractionContextType>? allowedContexts = null,
 		List<ApplicationCommandIntegrationTypes>? integrationTypes = null,
@@ -63,7 +61,6 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 			this.Description = description;
 			this.Options = options != null && options.Any() ? options.ToList() : null;
 			this.DefaultMemberPermissions = defaultMemberPermissions;
-			this.DmPermission = dmPermission;
 			this.IsNsfw = isNsfw;
 			this.AllowedContexts = allowedContexts;
 			this.IntegrationTypes = integrationTypes;
@@ -88,7 +85,6 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 			this.Description = description;
 			this.Options = null;
 			this.DefaultMemberPermissions = defaultMemberPermissions;
-			this.DmPermission = dmPermission;
 			this.IsNsfw = isNsfw;
 			this.AllowedContexts = allowedContexts;
 			this.IntegrationTypes = integrationTypes;
@@ -109,7 +105,6 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 			this.Description = description;
 			this.Options = null;
 			this.DefaultMemberPermissions = defaultMemberPermissions;
-			this.DmPermission = dmPermission;
 			this.IsNsfw = isNsfw;
 			this.AllowedContexts = allowedContexts;
 			this.IntegrationTypes = integrationTypes;
@@ -188,8 +183,8 @@ public class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordAppl
 	/// <summary>
 	///     Gets whether the command can be used in direct messages.
 	/// </summary>
-	[JsonProperty("dm_permission", NullValueHandling = NullValueHandling.Ignore)]
-	public bool? DmPermission { get; internal set; }
+	[JsonProperty("dm_permission", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated("Replaced by AllowedContexts"), Obsolete("Replaced by AllowedContexts", true)]
+	public bool? DmPermission { get; set; }
 
 	/// <summary>
 	///     Gets where the application command can be used.

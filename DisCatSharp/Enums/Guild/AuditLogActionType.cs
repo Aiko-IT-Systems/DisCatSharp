@@ -1,3 +1,5 @@
+using DisCatSharp.Attributes;
+
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -250,6 +252,10 @@ public enum AuditLogActionType
 	/// </summary>
 	ApplicationCommandPermissionUpdate = 121,
 
+	SoundboardSoundCreate = 130,
+	SoundboardSoundUpdate = 131,
+	SoundboardSoundDelete = 132,
+
 	/// <summary>
 	///     Indicates that a new automod rule has been added.
 	/// </summary>
@@ -284,11 +290,40 @@ public enum AuditLogActionType
 	///     Indicates that automod quarantined a user.
 	/// </summary>
 	AutoModerationQuarantineUser = 146,
+	CreatorMonetizationRequestCreated = 150,
 
-	OnboardingQuestionCreate = 163,
-	OnboardingQuestionUpdate = 164,
+	CreatorMonetizationTermsAccepted = 151,
+
+	OnboardingPromptCreate = 163,
+
+	OnboardingPromptUpdate = 164,
+
+	OnboardingPromptDelete = 165,
+
+	OnboardingCreate = 166,
+
 	OnboardingUpdate = 167,
+
+	HomeSettingsCreate = ServerGuideCreate,
+
 	ServerGuideCreate = 190,
+
+	HomeSettingsUpdate = ServerGuideUpdate,
+
 	ServerGuideUpdate = 191,
-	VoiceChannelStatusUpdate = 192
+
+	VoiceChannelStatusCreate = 192,
+
+	VoiceChannelStatusDelete = 193,
+
+	[DiscordDeprecated]
+	ClydeAiProfileUpdate = 194,
+
+	GuildScheduledEventExceptionCreate = 200,
+
+	GuildScheduledEventExceptionUpdate = 201,
+
+	GuildScheduledEventExceptionDelete = 202,
+
+	GuildMemberVerificationUpdate = 210
 }

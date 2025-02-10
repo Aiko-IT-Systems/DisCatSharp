@@ -1412,7 +1412,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		var mdl = new ApplicationCommandEditModel();
 		action(mdl);
 		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
-		return await this.ApiClient.EditGlobalApplicationCommandAsync(applicationId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission, mdl.IsNsfw, mdl.AllowedContexts, mdl.IntegrationTypes).ConfigureAwait(false);
+		return await this.ApiClient.EditGlobalApplicationCommandAsync(applicationId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.IsNsfw, mdl.AllowedContexts, mdl.IntegrationTypes).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1471,7 +1471,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		var mdl = new ApplicationCommandEditModel();
 		action(mdl);
 		var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
-		return await this.ApiClient.EditGuildApplicationCommandAsync(applicationId, guildId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission, mdl.IsNsfw, mdl.AllowedContexts, mdl.IntegrationTypes).ConfigureAwait(false);
+		return await this.ApiClient.EditGuildApplicationCommandAsync(applicationId, guildId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.IsNsfw, mdl.AllowedContexts, mdl.IntegrationTypes).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -2002,29 +2002,42 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <summary>
 	///     Whether the client is disposed.
 	/// </summary>
-	private bool _disposed;
+	private volatile bool _disposed;
 
 	/// <summary>
 	///     Disposes the client.
 	/// </summary>
 	public override void Dispose()
 	{
-		ObjectDisposedException.ThrowIf(this._disposed, this);
+		if (this._disposed)
+			return;
 
-		this._disposed = true;
-		GC.SuppressFinalize(this);
+		lock (this)
+		{
+			if (this._disposed)
+				return;
 
-		this.DisconnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+			this._disposed = true;
+		}
+
+		try
+		{
+			this.DisconnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+		}
+		catch
+		{ }
+
 		this.ApiClient.Rest.Dispose();
-		this.CurrentUser = null;
-
+		this.CurrentUser = null!;
 		this.CommandCooldownBuckets.Clear();
 
 		var extensions = this._extensions; // prevent _extensions being modified during dispose
 		this._extensions.Clear();
 		foreach (var extension in extensions)
+		{
 			if (extension is IDisposable disposable)
 				disposable.Dispose();
+		}
 
 		try
 		{
@@ -2040,6 +2053,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		if (this.Configuration.EnableSentry)
 			SentrySdk.EndSession();
+
+		GC.SuppressFinalize(this);
 	}
 
 #endregion

@@ -1,5 +1,7 @@
 using System;
 
+using DisCatSharp.Attributes;
+
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -24,14 +26,33 @@ public enum InviteFlags
 	/// </summary>
 	None = 0,
 
+	/// <inheritdoc cref="IsGuestInvite" />
+	[Deprecated("Replaced by IsGuestInvite")]
+	GuestMembership = IsGuestInvite,
+
 	/// <summary>
 	///     Invite grants temporary guest membership.
 	///     All channels but the one invited to are hidden and user gets kicked if they leave the voice.
 	/// </summary>
-	GuestMembership = 1 << 0,
+	IsGuestInvite = 1 << 0,
 
 	/// <summary>
 	///     The invite has been viewed by any user (has been retrieved using the get invite endpoint).
 	/// </summary>
-	Viewed = 1 << 1
+	[Deprecated("Replaced by IsViewed")]
+	Viewed = IsViewed,
+
+	IsViewed = 1 << 1,
+
+	/// <summary>
+	///     Invite is enhanced.
+	/// </summary>
+	IsEnhanced = 1 << 2,
+
+	/// <summary>
+	///     Invite bypasses a clan application.
+	/// </summary>
+	IsApplicationBypass = 1 << 3
+
+	//AssignableFlagsMask = 9
 }

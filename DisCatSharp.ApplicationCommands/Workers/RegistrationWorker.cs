@@ -50,7 +50,6 @@ internal class RegistrationWorker
 					if (command.Options is not null && command.Options.Count is not 0)
 						action.Options = Optional.FromNullable(command.Options);
 					action.DefaultMemberPermissions = command.DefaultMemberPermissions;
-					action.DmPermission = command.DmPermission ?? true;
 					action.IsNsfw = command.IsNsfw;
 					action.AllowedContexts = command.AllowedContexts;
 					action.IntegrationTypes = command.IntegrationTypes;
@@ -83,7 +82,6 @@ internal class RegistrationWorker
 						if (command.Options != null && command.Options.Count != 0)
 							action.Options = Optional.FromNullable(command.Options);
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions;
-						action.DmPermission = command.DmPermission ?? true;
 						action.IsNsfw = command.IsNsfw;
 						action.AllowedContexts = command.AllowedContexts;
 						action.IntegrationTypes = command.IntegrationTypes;
@@ -110,7 +108,6 @@ internal class RegistrationWorker
 					if (command.Options != null && command.Options.Count != 0)
 						action.Options = Optional.FromNullable(command.Options);
 					action.DefaultMemberPermissions = command.DefaultMemberPermissions;
-					action.DmPermission = command.DmPermission ?? true;
 					action.IsNsfw = command.IsNsfw;
 					action.AllowedContexts = command.AllowedContexts;
 					action.IntegrationTypes = command.IntegrationTypes;
@@ -201,7 +198,6 @@ internal class RegistrationWorker
 					if (command.Options != null && command.Options.Count != 0)
 						action.Options = Optional.FromNullable(command.Options);
 					action.DefaultMemberPermissions = command.DefaultMemberPermissions;
-					action.DmPermission = command.DmPermission ?? true;
 					action.IsNsfw = command.IsNsfw;
 					action.AllowedContexts = command.AllowedContexts;
 					action.IntegrationTypes = command.IntegrationTypes;
@@ -234,7 +230,6 @@ internal class RegistrationWorker
 						if (command.Options != null && command.Options.Count != 0)
 							action.Options = Optional.FromNullable(command.Options);
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions;
-						action.DmPermission = command.DmPermission ?? true;
 						action.IsNsfw = command.IsNsfw;
 						action.AllowedContexts = command.AllowedContexts;
 						action.IntegrationTypes = command.IntegrationTypes;
@@ -262,8 +257,6 @@ internal class RegistrationWorker
 						action.Options = Optional.FromNullable(command.Options);
 					if (command.DefaultMemberPermissions.HasValue)
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
-					if (command.DmPermission.HasValue)
-						action.DmPermission = command.DmPermission.Value;
 					action.IsNsfw = command.IsNsfw;
 					action.AllowedContexts = command.AllowedContexts;
 					action.IntegrationTypes = command.IntegrationTypes;

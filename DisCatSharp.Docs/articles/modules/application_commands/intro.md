@@ -19,9 +19,6 @@ At the moment it is possible to create such commands:
 
 ### Creation of the first commands
 
->[!NOTE]
-> In order for the bot to be able to create commands in the guild, it must be added to a guild with `applications.commands` scope.
-
 Each command is a method with the attribute [SlashCommand](xref:DisCatSharp.ApplicationCommands.Attributes.SlashCommandAttribute) or [ContextMenu](xref:DisCatSharp.ApplicationCommands.Attributes.ContextMenuAttribute). They must be in classes that inherit from [ApplicationCommandsModule](xref:DisCatSharp.ApplicationCommands.ApplicationCommandsModule).
 Also, the first argument to the method must be [InteractionContext](xref:DisCatSharp.ApplicationCommands.Context.InteractionContext) or [ContextMenuContext](xref:DisCatSharp.ApplicationCommands.Context.ContextMenuContext).
 
@@ -85,9 +82,6 @@ appCommands.RegisterGlobalCommands<MySecondCommand>();
 ```
 Simple, isn't it? You can register global and guild commands.
 Global commands will be available on all guilds of which the bot is a member. Guild commands will only appear in a specific guild.
-
->[!NOTE]
->Global commands are updated within an hour, so it is recommended to use guild commands for testing and development.
 
 To register guild commands, it is enough to specify the Id of the guild as the first argument of the registration method.
 

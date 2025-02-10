@@ -77,4 +77,14 @@ internal static class Endpoints
 	///     The free all endpoint.
 	/// </summary>
 	internal const string FREE_ALL = "/free/all";
+
+	/// <summary>
+	///     The lyrics endpoint.
+	/// </summary>
+	internal const string LYRICS = "/lyrics";
+
+	/// <summary>
+	///     The track endpoint.
+	/// </summary>
+	internal const string TRACK = "/track";
 }

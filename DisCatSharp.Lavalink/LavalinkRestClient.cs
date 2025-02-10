@@ -411,6 +411,53 @@ internal sealed class LavalinkRestClient
 	}
 
 	/// <summary>
+	///     Gets the lyrics for a track.
+	/// </summary>
+	/// <param name="encodedTrack">The encoded track.</param>
+	/// <param name="skipTrackSource">Whether to skip the current track source and fetch from highest priority source.</param>
+	/// <param name="sessionId">The optional session id a player is associated with.</param>
+	/// <param name="guildId">The optional guild id a player is associated with.</param>
+	/// <returns>The <see cref="LavalinkLyricsResult" /> or <see langword="null" />.</returns>
+	internal async Task<LavalinkLyricsResult?> GetLyricsAsync(string encodedTrack, bool skipTrackSource, string? sessionId = null, ulong? guildId = null)
+	{
+		var queryDict = this.GetDefaultParams();
+		queryDict.Add("track", encodedTrack);
+		queryDict.Add("skipTrackSource", skipTrackSource.ToString().ToLowerInvariant());
+		var route = $"{Endpoints.V4}{Endpoints.LYRICS}";
+		var path = GetPath(route, new
+			{ });
+		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
+
+		return res.ResponseCode is HttpStatusCode.NoContent or HttpStatusCode.NotFound || res.Response is null
+			? null
+			: LavalinkJson.DeserializeObject<LavalinkLyricsResult>(res.Response);
+	}
+
+	/// <summary>
+	///     Gets the lyrics for a currently playing track.
+	/// </summary>
+	/// <param name="sessionId">The session id a player is associated with.</param>
+	/// <param name="guildId">The guild id a player is associated with.</param>
+	/// <param name="skipTrackSource">Whether to skip the current track source and fetch from highest priority source.</param>
+	/// <returns>The <see cref="LavalinkLyricsResult" /> or <see langword="null" />.</returns>
+	internal async Task<LavalinkLyricsResult?> GetLyricsForCurrentTrackAsync(string sessionId, ulong guildId, bool skipTrackSource)
+	{
+		var queryDict = this.GetDefaultParams();
+		queryDict.Add("skipTrackSource", skipTrackSource.ToString().ToLowerInvariant());
+		var route = $"{Endpoints.V4}{Endpoints.SESSIONS}/:session_id{Endpoints.PLAYERS}/:guild_id{Endpoints.TRACK}{Endpoints.LYRICS}";
+		var path = GetPath(route, new
+		{
+			session_id = sessionId,
+			guild_id = guildId
+		});
+		var res = await this.DoRequestAsync(HttpMethod.Get, $"{path}{BuildQueryString(queryDict)}").ConfigureAwait(false);
+
+		return res.ResponseCode is HttpStatusCode.NoContent or HttpStatusCode.NotFound || res.Response is null
+			? null
+			: LavalinkJson.DeserializeObject<LavalinkLyricsResult>(res.Response);
+	}
+
+	/// <summary>
 	///     Decode a single track into its info, where <paramref name="base64Track" /> is the encoded base64 data.
 	/// </summary>
 	/// <param name="base64Track">The encoded track <see cref="string" />.</param>

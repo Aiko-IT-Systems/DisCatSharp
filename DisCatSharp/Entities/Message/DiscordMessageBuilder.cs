@@ -122,8 +122,14 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
-	///     <para>Adds a row of components to the builder, up to <c>5</c> components per row, and up to <c>5</c> rows per message.</para>
-	///     <para>If <see cref="WithV2Components"/> was called, the limit changes to <c>10</c> top-level components and max <c>30</c> components in total.</para>
+	///     <para>
+	///         Adds a row of components to the builder, up to <c>5</c> components per row, and up to <c>5</c> rows per
+	///         message.
+	///     </para>
+	///     <para>
+	///         If <see cref="WithV2Components" /> was called, the limit changes to <c>10</c> top-level components and max
+	///         <c>30</c> components in total.
+	///     </para>
 	/// </summary>
 	/// <param name="components">The components to add to the message.</param>
 	/// <returns>The current builder to be chained.</returns>

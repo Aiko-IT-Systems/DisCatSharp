@@ -72,6 +72,8 @@ public enum MessageFlags
 	/// </summary>
 	FailedToMentionSomeRolesInThread = 1 << 8,
 
+	GuildFeedHidden = 1 << 9,
+
 	/// <summary>
 	///     The message contains a link marked as potential dangerous or absusive.
 	/// </summary>
@@ -94,7 +96,12 @@ public enum MessageFlags
 	HasSnapshots = 1 << 14,
 
 	/// <summary>
-	/// The message uses the UI Kit.
+	///     The message uses the UI Kit.
 	/// </summary>
-	IsComponentsV2 = 1 << 15
+	IsComponentsV2 = 1 << 15,
+
+	/// <summary>
+	///     The message was send by a social layer integration.
+	/// </summary>
+	SendBySocialLayerIntegration = 1 << 16
 }

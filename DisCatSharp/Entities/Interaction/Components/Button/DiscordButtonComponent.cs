@@ -11,7 +11,7 @@ namespace DisCatSharp.Entities;
 ///     Represents a button that can be pressed. Fires <see cref="DisCatSharp.DiscordClient.ComponentInteractionCreated" />
 ///     event when pressed.
 /// </summary>
-public sealed class DiscordButtonComponent : DiscordComponent
+public sealed class DiscordButtonComponent : DiscordBaseButtonComponent
 {
 	/// <summary>
 	///     Constructs a new <see cref="DiscordButtonComponent" />.

@@ -45,22 +45,24 @@ public sealed class DiscordInteractionDataOption : ObservableApiObject
 	/// </summary>
 	[JsonIgnore]
 	public object Value =>
-		this.Type == ApplicationCommandOptionType.Integer && int.TryParse(this.RawValue, out var raw)
-			? raw
-			: this.Type == ApplicationCommandOptionType.Integer
-				? long.Parse(this.RawValue)
-				: this.Type switch
-				{
-					ApplicationCommandOptionType.Boolean => bool.Parse(this.RawValue),
-					ApplicationCommandOptionType.String => this.RawValue,
-					ApplicationCommandOptionType.Channel => ulong.Parse(this.RawValue),
-					ApplicationCommandOptionType.User => ulong.Parse(this.RawValue),
-					ApplicationCommandOptionType.Role => ulong.Parse(this.RawValue),
-					ApplicationCommandOptionType.Mentionable => ulong.Parse(this.RawValue),
-					ApplicationCommandOptionType.Number => double.Parse(this.RawValue),
-					ApplicationCommandOptionType.Attachment => ulong.Parse(this.RawValue),
-					_ => this.RawValue
-				};
+		string.IsNullOrEmpty(this.RawValue)
+			? null!
+			: this.Type == ApplicationCommandOptionType.Integer && int.TryParse(this.RawValue, out var raw)
+				? raw
+				: this.Type == ApplicationCommandOptionType.Integer
+					? long.Parse(this.RawValue)
+					: this.Type switch
+					{
+						ApplicationCommandOptionType.Boolean => bool.Parse(this.RawValue),
+						ApplicationCommandOptionType.String => this.RawValue,
+						ApplicationCommandOptionType.Channel => ulong.Parse(this.RawValue),
+						ApplicationCommandOptionType.User => ulong.Parse(this.RawValue),
+						ApplicationCommandOptionType.Role => ulong.Parse(this.RawValue),
+						ApplicationCommandOptionType.Mentionable => ulong.Parse(this.RawValue),
+						ApplicationCommandOptionType.Number => double.Parse(this.RawValue),
+						ApplicationCommandOptionType.Attachment => ulong.Parse(this.RawValue),
+						_ => this.RawValue
+					};
 
 	/// <summary>
 	///     Gets the additional parameters if this parameter is a subcommand.

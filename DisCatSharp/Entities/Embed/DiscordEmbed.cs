@@ -30,7 +30,7 @@ public sealed class DiscordEmbed : ObservableApiObject
 	///     Gets the embed's title.
 	/// </summary>
 	[JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
-	public string Title { get; internal set; }
+	public string? Title { get; internal set; }
 
 	/// <summary>
 	///     <para>Gets the embed's type.</para>
@@ -80,13 +80,13 @@ public sealed class DiscordEmbed : ObservableApiObject
 	///     Gets the embed's description.
 	/// </summary>
 	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
-	public string Description { get; internal set; }
+	public string? Description { get; internal set; }
 
 	/// <summary>
 	///     Gets the embed's url.
 	/// </summary>
 	[JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
-	public Uri Url { get; internal set; }
+	public Uri? Url { get; internal set; }
 
 	/// <summary>
 	///     Gets the embed's timestamp.
@@ -105,47 +105,53 @@ public sealed class DiscordEmbed : ObservableApiObject
 	///     Gets the embed's footer.
 	/// </summary>
 	[JsonProperty("footer", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordEmbedFooter Footer { get; internal set; }
+	public DiscordEmbedFooter? Footer { get; internal set; }
 
 	/// <summary>
 	///     Gets the embed's image.
 	/// </summary>
 	[JsonProperty("image", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordEmbedImage Image { get; internal set; }
+	public DiscordEmbedImage? Image { get; internal set; }
 
 	/// <summary>
 	///     Gets the embed's thumbnail.
 	/// </summary>
 	[JsonProperty("thumbnail", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordEmbedThumbnail Thumbnail { get; internal set; }
+	public DiscordEmbedThumbnail? Thumbnail { get; internal set; }
 
 	/// <summary>
 	///     Gets the embed's video.
 	/// </summary>
 	[JsonProperty("video", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordEmbedVideo Video { get; internal set; }
+	public DiscordEmbedVideo? Video { get; internal set; }
 
 	/// <summary>
 	///     Gets the embed's provider.
 	/// </summary>
 	[JsonProperty("provider", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordEmbedProvider Provider { get; internal set; }
+	public DiscordEmbedProvider? Provider { get; internal set; }
 
 	/// <summary>
 	///     Gets the embed's author.
 	/// </summary>
 	[JsonProperty("author", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordEmbedAuthor Author { get; internal set; }
+	public DiscordEmbedAuthor? Author { get; internal set; }
 
 	/// <summary>
 	///     Gets the embed's fields.
 	/// </summary>
 	[JsonProperty("fields", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<DiscordEmbedField> Fields { get; internal set; }
+	public IReadOnlyList<DiscordEmbedField> Fields { get; internal set; } = [];
 
 	/// <summary>
 	///     Gets the embed's flags.
 	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
 	public EmbedFlags Flags { get; internal set; } = EmbedFlags.None;
+
+	/// <summary>
+	///     Gets the content scan version.
+	/// </summary>
+	[JsonProperty("content_scan_version", NullValueHandling = NullValueHandling.Ignore)]
+	public int? ContentScanVersion { get; internal set; }
 }

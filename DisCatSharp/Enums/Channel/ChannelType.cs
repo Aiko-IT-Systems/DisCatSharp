@@ -45,6 +45,9 @@ public enum ChannelType
 	/// </summary>
 	NewsThread = 10,
 
+	/// <inheritdoc cref="NewsThread" />
+	AnnouncementThread = NewsThread,
+
 	/// <summary>
 	///     Indicates that this is a temporary sub-channel within a text channel.
 	/// </summary>
@@ -81,6 +84,11 @@ public enum ChannelType
 	///     Indicates that this is a lobby channel.
 	/// </summary>
 	Lobby = 17,
+
+	/// <summary>
+	///     Indicates that this is a channel for the <c>Direct Message SDK</c>.
+	/// </summary>
+	DmSdk = 18,
 
 	/// <summary>
 	///     Indicates unknown channel type.

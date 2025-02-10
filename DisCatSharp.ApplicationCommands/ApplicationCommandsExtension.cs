@@ -1706,14 +1706,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			{
 				//Gets all attributes from parent classes as well and stuff
 				var attributes = new List<ApplicationCommandCheckBaseAttribute>();
-				attributes.AddRange(method.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>(true));
-				attributes.AddRange(method.DeclaringType!.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
 				if (method.DeclaringType?.DeclaringType is not null)
 				{
-					attributes.AddRange(method.DeclaringType.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
-					if (method.DeclaringType.DeclaringType.DeclaringType != null)
+					if (method.DeclaringType.DeclaringType.DeclaringType is not null)
 						attributes.AddRange(method.DeclaringType.DeclaringType.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
+					attributes.AddRange(method.DeclaringType.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
 				}
+
+				attributes.AddRange(method.DeclaringType!.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
+				attributes.AddRange(method.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>(true));
 
 				var dict = new Dictionary<ApplicationCommandCheckBaseAttribute, bool>();
 				foreach (var att in attributes)
@@ -1735,14 +1736,16 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			case ContextMenuContext cMctx:
 			{
 				var attributes = new List<ApplicationCommandCheckBaseAttribute>();
-				attributes.AddRange(method.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>(true));
-				attributes.AddRange(method.DeclaringType!.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
+
 				if (method.DeclaringType?.DeclaringType is not null)
 				{
-					attributes.AddRange(method.DeclaringType.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
-					if (method.DeclaringType.DeclaringType.DeclaringType != null)
+					if (method.DeclaringType.DeclaringType.DeclaringType is not null)
 						attributes.AddRange(method.DeclaringType.DeclaringType.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
+					attributes.AddRange(method.DeclaringType.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
 				}
+
+				attributes.AddRange(method.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>(true));
+				attributes.AddRange(method.DeclaringType!.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
 
 				var dict = new Dictionary<ApplicationCommandCheckBaseAttribute, bool>();
 				foreach (var att in attributes)
@@ -1774,10 +1777,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		var choices = new List<DiscordApplicationCommandOptionChoice>();
 		foreach (var choiceProviderAttribute in customAttributes)
 		{
-			var method = choiceProviderAttribute.ProviderType.GetMethod(nameof(IChoiceProvider.Provider));
-
-			if (method is null)
-				throw new ArgumentException("ChoiceProviders must inherit from IChoiceProvider.");
+			var method = choiceProviderAttribute.ProviderType.GetMethod(nameof(IChoiceProvider.Provider)) ?? throw new ArgumentException("ChoiceProviders must inherit from IChoiceProvider.");
 			var instance = Activator.CreateInstance(choiceProviderAttribute.ProviderType);
 
 			// Abstract class offers more properties that can be set

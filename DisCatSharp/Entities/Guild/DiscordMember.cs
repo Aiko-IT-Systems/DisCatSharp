@@ -560,7 +560,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <returns></returns>
 	public async Task<DiscordVoiceState?> GetVoiceStateAsync()
-		=> await this.Discord.ApiClient.GetUserVoiceStateAsync(this.Guild.Id, this.Id);
+		=> await this.Discord.ApiClient.GetMemberVoiceStateAsync(this.Guild.Id, this.Id);
 
 	/// <summary>
 	///     Updates the member's suppress state in a stage channel.

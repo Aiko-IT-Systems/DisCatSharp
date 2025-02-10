@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -68,7 +69,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	internal DiscordGuild()
 	{
-		this._currentMemberLazy = new(() => this.MembersInternal.TryGetValue(this.Discord.CurrentUser.Id, out var member) ? member : null);
+		this._currentMemberLazy = new(() => this.MembersInternal.GetValueOrDefault(this.Discord.CurrentUser.Id));
 		this.Invites = new();
 		this.Threads = new ReadOnlyConcurrentDictionary<ulong, DiscordThreadChannel>(this.ThreadsInternal);
 		this.StageInstances = new ReadOnlyConcurrentDictionary<ulong, DiscordStageInstance>(this.StageInstancesInternal);
@@ -624,6 +625,13 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <returns></returns>
 	public async Task<DiscordVoiceState?> GetCurrentMemberVoiceStateAsync()
 		=> await this.Discord.ApiClient.GetCurrentUserVoiceStateAsync(this.Id);
+
+	/// <summary>
+	///     Gets the current voice state for a member.
+	/// </summary>
+	/// <returns></returns>
+	public async Task<DiscordVoiceState?> GetMemberVoiceStateAsync(ulong memberId)
+		=> await this.Discord.ApiClient.GetMemberVoiceStateAsync(this.Id, memberId);
 
 	/// <summary>
 	///     Sorts the channels.
@@ -2040,6 +2048,19 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	}
 
 	/// <summary>
+	///     Gets a member of this guild by their user ID.
+	/// </summary>
+	/// <param name="userId">ID of the member to get.</param>
+	/// <param name="member">The requested member if found, otherwise <see langword="null" />.</param>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <returns>Whether the member was found.</returns>
+	public bool TryGetMember(ulong userId, [NotNullWhen(true)] out DiscordMember? member)
+	{
+		member = this.TryGetMemberAsync(userId).Result;
+		return member is not null;
+	}
+
+	/// <summary>
 	///     Retrieves a full list of members from Discord. This method will bypass cache.
 	/// </summary>
 	/// <returns>A collection of all members in this guild.</returns>
@@ -2649,7 +2670,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	{
 		var mdl = new ApplicationCommandEditModel();
 		action(mdl);
-		return await this.Discord.ApiClient.EditGuildApplicationCommandAsync(this.Discord.CurrentApplication.Id, this.Id, commandId, mdl.Name, mdl.Description!, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission, mdl.IsNsfw, mdl.AllowedContexts, mdl.IntegrationTypes).ConfigureAwait(false);
+		return await this.Discord.ApiClient.EditGuildApplicationCommandAsync(this.Discord.CurrentApplication.Id, this.Id, commandId, mdl.Name, mdl.Description!, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.IsNsfw, mdl.AllowedContexts, mdl.IntegrationTypes).ConfigureAwait(false);
 	}
 
 	/// <summary>
