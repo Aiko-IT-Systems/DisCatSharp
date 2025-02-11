@@ -387,6 +387,12 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public bool IsUnavailable { get; internal set; }
 
 	/// <summary>
+	///     Gets whether the guild ready event has been thrown.
+	/// </summary>
+	[JsonIgnore]
+	internal bool GuildReadyThrown { get; set; } = false;
+
+	/// <summary>
 	///     Gets the total number of members in this guild.
 	/// </summary>
 	[JsonProperty("member_count", NullValueHandling = NullValueHandling.Ignore)]

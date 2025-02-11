@@ -717,6 +717,11 @@ public sealed partial class DiscordClient
 	/// </summary>
 	private bool _guildDownloadCompleted = false;
 
+	/// <summary>
+	///     Gets the guild download completed lock.
+	/// </summary>
+	private readonly Lock _guildDownloadCompletedLock = new();
+
 #endregion
 
 #region Events
@@ -845,11 +850,16 @@ public sealed partial class DiscordClient
 				foreach (var xse in guild.ScheduledEventsInternal.Values)
 					xse.Discord = this;
 
+				guild.GuildReadyThrown = false;
+
 				this.GuildsInternal[guild.Id] = guild;
 			}
 		else
 		{
+			this._guildDownloadCompletedLock.Enter();
 			Volatile.Write(ref this._guildDownloadCompleted, true);
+			this._guildDownloadCompletedLock.Exit();
+
 			await this.GuildDownloadCompletedEv.InvokeAsync(this, new(this.Guilds, true, this.ServiceProvider)).ConfigureAwait(false);
 			this.Logger.LogInformation(LoggerEvents.Startup, "Application has no guilds. Firing GuildDownloadCompleted event for internal tools");
 		}
@@ -1127,7 +1137,6 @@ public sealed partial class DiscordClient
 		var exists = this.GuildsInternal.TryGetValue(guild.Id, out var foundGuild);
 
 		guild.Discord = this;
-		guild.IsUnavailable = false;
 		var eventGuild = guild;
 		if (exists)
 			guild = foundGuild;
@@ -1215,9 +1224,18 @@ public sealed partial class DiscordClient
 				};
 		}
 
+		guild.GuildReadyThrown = true;
+
+		if (foundGuild is null)
+			this.GuildsInternal.TryAdd(guild.Id, guild);
+		else
+			this.GuildsInternal.TryUpdate(guild.Id, guild, foundGuild);
+
+		this._guildDownloadCompletedLock.Enter();
 		var old = Volatile.Read(ref this._guildDownloadCompleted);
-		var dcompl = this.GuildsInternal.Values.All(xg => !xg.IsUnavailable);
+		var dcompl = this.GuildsInternal.Values.All(xg => xg.GuildReadyThrown);
 		Volatile.Write(ref this._guildDownloadCompleted, dcompl);
+		this._guildDownloadCompletedLock.Exit();
 
 		if (exists)
 			await this._guildAvailable.InvokeAsync(this, new(this.ServiceProvider)
@@ -1292,6 +1310,7 @@ public sealed partial class DiscordClient
 				PremiumProgressBarEnabled = gld.PremiumProgressBarEnabled,
 				PremiumSubscriptionCount = gld.PremiumSubscriptionCount,
 				PremiumTier = gld.PremiumTier,
+				GuildReadyThrown = gld.GuildReadyThrown,
 				ChannelsInternal = new(),
 				ThreadsInternal = new(),
 				EmojisInternal = new(),
