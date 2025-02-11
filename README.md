@@ -29,6 +29,9 @@
 - Small breaking change in `AttachmentFlags`: The flag values are now prefixed with `Is` to be in line with other flag names.
 - `AddMention(IMention mention)` => `WithAllowedMention(IMention allowedMention)`
 - `AddMentions(IEnumerable<IMention> mentions)` => `WithAllowedMentions(IEnumerable<IMention> allowedMentions)`
+- Breaking change for `DiscordTextComponent`: `string customId = null, string label = null` was switched to `string label, string customId = null`.
+- `Url` fields on DiscordXY objects are now of type `DiscordUri`. You can still use it as `Uri` arg since we added an implicit operator.
+- Fixed the naming for create and delete test entitlement methods
 
 ----
 
