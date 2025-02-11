@@ -9,7 +9,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 ///     Request guild members.
 /// </summary>
-internal sealed class GatewayRequestGuildMembers
+internal sealed class GatewayRequestGuildMembers : ObservableApiObject
 {
 	/// <summary>
 	///     Initializes a new instance of the <see cref="GatewayRequestGuildMembers" /> class.

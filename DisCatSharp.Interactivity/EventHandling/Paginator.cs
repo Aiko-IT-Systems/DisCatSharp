@@ -198,26 +198,26 @@ internal class Paginator : IPaginator
 		var emojis = await p.GetEmojisAsync().ConfigureAwait(false);
 
 		var chn = msg.Channel;
-		var gld = chn?.Guild;
+		var gld = chn.Guild;
 		var mbr = gld?.CurrentMember;
 
-		if (mbr != null && (chn.PermissionsFor(mbr) & Permissions.ManageMessages) != 0)
+		if (mbr is not null && (chn.PermissionsFor(mbr) & Permissions.ManageMessages) != 0)
 			await msg.DeleteAllReactionsAsync("Pagination").ConfigureAwait(false);
 
 		if (p.PageCount > 1)
 		{
-			if (emojis.SkipLeft != null)
+			if (emojis.SkipLeft is not null)
 				await msg.CreateReactionAsync(emojis.SkipLeft).ConfigureAwait(false);
-			if (emojis.Left != null)
+			if (emojis.Left is not null)
 				await msg.CreateReactionAsync(emojis.Left).ConfigureAwait(false);
-			if (emojis.Right != null)
+			if (emojis.Right is not null)
 				await msg.CreateReactionAsync(emojis.Right).ConfigureAwait(false);
-			if (emojis.SkipRight != null)
+			if (emojis.SkipRight is not null)
 				await msg.CreateReactionAsync(emojis.SkipRight).ConfigureAwait(false);
-			if (emojis.Stop != null)
+			if (emojis.Stop is not null)
 				await msg.CreateReactionAsync(emojis.Stop).ConfigureAwait(false);
 		}
-		else if (emojis.Stop != null && p is PaginationRequest { PaginationDeletion: PaginationDeletion.DeleteMessage })
+		else if (emojis.Stop is not null && p is PaginationRequest { PaginationDeletion: PaginationDeletion.DeleteMessage })
 			await msg.CreateReactionAsync(emojis.Stop).ConfigureAwait(false);
 	}
 
@@ -247,13 +247,16 @@ internal class Paginator : IPaginator
 		}
 
 		var page = await p.GetPageAsync().ConfigureAwait(false);
-		var builder = new DiscordMessageBuilder()
-			.WithContent(page.Content)
-			.AddEmbed(page.Embed);
+		var builder = new DiscordMessageBuilder();
+		if (page.Content is not null)
+			builder.WithContent(page.Content);
+		if (page.Embed is not null)
+			builder.AddEmbed(page.Embed);
 
 		await builder.ModifyAsync(msg).ConfigureAwait(false);
 	}
 
+	/// <inheritdoc />
 	~Paginator()
 	{
 		this.Dispose();

@@ -7655,7 +7655,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	///     Gets an entitlement for given <paramref name="applicationId" />.
+	///     Gets an entitlement.
 	/// </summary>
 	/// <param name="applicationId">The application id to fetch the entitlement for.</param>
 	/// <param name="entitlementId">The entitlement id to fetch.</param>
@@ -7673,6 +7673,27 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		return DiscordJson.DeserializeObject<DiscordEntitlement>(res.Response, this.Discord);
+	}
+
+	/// <summary>
+	///    Consumes an entitlement.
+	/// </summary>
+	/// <param name="applicationId">The application id to consume the entitlement for.</param>
+	/// <param name="entitlementId">The entitlement id to consume.</param>
+	/// <returns></returns>
+	internal async Task<bool> ConsumeEntitlementAsync(ulong applicationId, ulong entitlementId)
+	{
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.ENTITLEMENTS}/:entitlement_id{Endpoints.CONSUME}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
+		{
+			application_id = applicationId,
+			entitlement_id = entitlementId
+		}, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route).ConfigureAwait(false);
+
+		return res.ResponseCode is HttpStatusCode.NoContent;
 	}
 
 	// TODO: userId can be skipped if using oauth
@@ -7737,7 +7758,7 @@ public sealed class DiscordApiClient
 	/// <param name="ownerId">The owner id to create the entitlement for.</param>
 	/// <param name="ownerType">The owner type to create the entitlement for.</param>
 	/// <returns>A partial <see cref="DiscordEntitlement" />.</returns>
-	internal async Task<DiscordEntitlement> CreateTestEntitlementsAsync(ulong applicationId, ulong skuId, ulong ownerId, EntitlementOwnerType ownerType)
+	internal async Task<DiscordEntitlement> CreateTestEntitlementAsync(ulong applicationId, ulong skuId, ulong ownerId, EntitlementOwnerType ownerType)
 	{
 		TestEntitlementCreatePayload pld = new()
 		{
@@ -7763,7 +7784,7 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="applicationId">The application id to delete the entitlement for.</param>
 	/// <param name="entitlementId">The entitlement id to delete.</param>
-	internal async Task DeleteTestEntitlementsAsync(ulong applicationId, ulong entitlementId)
+	internal async Task DeleteTestEntitlementAsync(ulong applicationId, ulong entitlementId)
 	{
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.ENTITLEMENTS}/:entitlement_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new

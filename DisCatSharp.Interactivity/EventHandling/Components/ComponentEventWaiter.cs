@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -59,7 +60,7 @@ internal class ComponentEventWaiter : IDisposable
 	/// </summary>
 	/// <param name="request">The request to wait for.</param>
 	/// <returns>The returned args, or null if it timed out.</returns>
-	public async Task<ComponentInteractionCreateEventArgs> WaitForMatchAsync(ComponentMatchRequest request)
+	public async Task<ComponentInteractionCreateEventArgs?> WaitForMatchAsync(ComponentMatchRequest request)
 	{
 		this._matchRequests.Add(request);
 

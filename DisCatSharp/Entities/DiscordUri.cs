@@ -69,6 +69,13 @@ public sealed class DiscordUri
 		=> this._value?.ToString();
 
 	/// <summary>
+	///    Converts a <see cref="DiscordUri" /> to a <see cref="Uri" /> implicitly, if possible.
+	/// </summary>
+	/// <param name="duri">The <see cref="DiscordUri" /> to convert.</param>
+	public static implicit operator Uri?(DiscordUri duri)
+		=> duri.ToUri();
+
+	/// <summary>
 	///     Converts this DiscordUri into a canonical representation of a <see cref="Uri" /> if it can be represented as
 	///     such, throwing an exception otherwise.
 	/// </summary>

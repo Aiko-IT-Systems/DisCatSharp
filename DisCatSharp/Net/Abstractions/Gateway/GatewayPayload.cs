@@ -1,3 +1,5 @@
+using DisCatSharp.Entities;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Net.Abstractions;
@@ -5,7 +7,7 @@ namespace DisCatSharp.Net.Abstractions;
 /// <summary>
 ///     Represents a websocket payload exchanged between Discord and the client.
 /// </summary>
-internal sealed class GatewayPayload
+internal sealed class GatewayPayload : ObservableApiObject
 {
 	/// <summary>
 	///     Gets or sets the OP code of the payload.

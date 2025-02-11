@@ -54,7 +54,7 @@ internal class ModalEventWaiter : IDisposable
 	/// </summary>
 	/// <param name="request">The request to wait for.</param>
 	/// <returns>The returned args, or null if it timed out.</returns>
-	public async Task<ComponentInteractionCreateEventArgs> WaitForModalMatchAsync(ModalMatchRequest request)
+	public async Task<ComponentInteractionCreateEventArgs?> WaitForModalMatchAsync(ModalMatchRequest request)
 	{
 		this._modalMatchRequests.Add(request);
 

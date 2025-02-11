@@ -74,6 +74,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		this.Threads = new ReadOnlyConcurrentDictionary<ulong, DiscordThreadChannel>(this.ThreadsInternal);
 		this.StageInstances = new ReadOnlyConcurrentDictionary<ulong, DiscordStageInstance>(this.StageInstancesInternal);
 		this.ScheduledEvents = new ReadOnlyConcurrentDictionary<ulong, DiscordScheduledEvent>(this.ScheduledEventsInternal);
+		this.SoundboardSounds = new ReadOnlyConcurrentDictionary<ulong, DiscordSoundboardSound>(this.SoundboardSoundsInternal);
 	}
 
 	/// <summary>
@@ -434,19 +435,22 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	///     the voice state corresponds to.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyDictionary<ulong, DiscordVoiceState> VoiceStates => new ReadOnlyConcurrentDictionary<ulong, DiscordVoiceState>(this.VoiceStatesInternal);
+	public IReadOnlyDictionary<ulong, DiscordVoiceState> VoiceStates
+		=> new ReadOnlyConcurrentDictionary<ulong, DiscordVoiceState>(this.VoiceStatesInternal);
 
 	/// <summary>
 	///     Gets a dictionary of all the members that belong to this guild. The dictionary's key is the member ID.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyDictionary<ulong, DiscordMember> Members => new ReadOnlyConcurrentDictionary<ulong, DiscordMember>(this.MembersInternal);
+	public IReadOnlyDictionary<ulong, DiscordMember> Members
+		=> new ReadOnlyConcurrentDictionary<ulong, DiscordMember>(this.MembersInternal);
 
 	/// <summary>
 	///     Gets a dictionary of all the channels associated with this guild. The dictionary's key is the channel ID.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyDictionary<ulong, DiscordChannel> Channels => new ReadOnlyConcurrentDictionary<ulong, DiscordChannel>(this.ChannelsInternal);
+	public IReadOnlyDictionary<ulong, DiscordChannel> Channels
+		=> new ReadOnlyConcurrentDictionary<ulong, DiscordChannel>(this.ChannelsInternal);
 
 	/// <summary>
 	///     Gets a dictionary of all the active threads associated with this guild the user has permission to view. The
@@ -466,6 +470,12 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyDictionary<ulong, DiscordScheduledEvent> ScheduledEvents { get; internal set; }
+
+	/// <summary>
+	///     Gets a dictionary of all soundboard sounds.
+	/// </summary>
+	[JsonIgnore]
+	public IReadOnlyDictionary<ulong, DiscordSoundboardSound> SoundboardSounds { get; internal set; }
 
 	/// <summary>
 	///     Gets the guild member for current user.

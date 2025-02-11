@@ -29,6 +29,6 @@ public sealed class LavalinkEqualizer
 	/// <summary>
 	///     The gain (<c>-0.25</c> to <c>1.0</c>)
 	/// </summary>
-	[JsonProperty("band")]
+	[JsonProperty("gain")]
 	public float Gain { get; set; }
 }
