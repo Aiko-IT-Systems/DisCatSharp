@@ -11,28 +11,22 @@ namespace DisCatSharp.Entities;
 ///     and prevent bad actors from abusing Discord's CDN.
 /// </summary>
 [JsonConverter(typeof(DiscordSignedLinkJsonConverter))]
-public class DiscordSignedLink : Uri
+public sealed class DiscordSignedLink : DiscordUri
 {
 	/// <summary>
-	///     Gets the raw value.
-	/// </summary>
-	private readonly object? _rawValue;
-
-	/// <summary>
-	///     Initializes a new instance of the <see cref="Uri" /> class with the specified URI for signed discord links.
+	///     Initializes a new instance of the <see cref="DiscordSignedLink" /> class with the specified URI for signed discord
+	///     links.
 	/// </summary>
 	/// <param name="uri">An <see cref="Uri" />.</param>
 	public DiscordSignedLink(Uri uri)
-		: base(uri.AbsoluteUri)
+		: base(uri)
 	{
 		ArgumentNullException.ThrowIfNull(uri);
 
-		this._rawValue = uri.AbsoluteUri;
-
-		if (string.IsNullOrWhiteSpace(this.Query))
+		if (string.IsNullOrWhiteSpace(uri.Query))
 			return;
 
-		var queries = HttpUtility.ParseQueryString(this.Query);
+		var queries = HttpUtility.ParseQueryString(uri.Query);
 
 		if (!queries.HasKeys())
 			return;
@@ -50,20 +44,24 @@ public class DiscordSignedLink : Uri
 	}
 
 	/// <summary>
-	///     Initializes a new instance of the <see cref="Uri" /> class with the specified URI for signed discord links.
+	///     Initializes a new instance of the <see cref="DiscordSignedLink" /> class with the specified URI for signed discord
+	///     links.
 	/// </summary>
-	/// <param name="uriString">A string that identifies the resource to be represented by the <see cref="Uri" /> instance.</param>
+	/// <param name="uriString">
+	///     A string that identifies the resource to be represented by the <see cref="DiscordSignedLink" />
+	///     instance.
+	/// </param>
 	public DiscordSignedLink(string uriString)
 		: base(uriString)
 	{
 		ArgumentNullException.ThrowIfNull(uriString);
 
-		this._rawValue = uriString;
+		var uri = this.ToUri() ?? throw new UriFormatException("Invalid URI format.");
 
-		if (string.IsNullOrWhiteSpace(this.Query))
+		if (string.IsNullOrWhiteSpace(uri.Query))
 			return;
 
-		var queries = HttpUtility.ParseQueryString(this.Query);
+		var queries = HttpUtility.ParseQueryString(uri.Query);
 
 		if (!queries.HasKeys())
 			return;
@@ -81,19 +79,39 @@ public class DiscordSignedLink : Uri
 	}
 
 	/// <summary>
-	///     When the signed link expires.
+	///     Gets whether the url is signed.
+	/// </summary>
+	public bool IsSigned
+		=> this.ExpiresAt.HasValue && this.IssuedAt.HasValue && !string.IsNullOrWhiteSpace(this.Signature);
+
+	/// <summary>
+	///     Gets when the signed link expires.
 	/// </summary>
 	public DateTimeOffset? ExpiresAt { get; init; }
 
 	/// <summary>
-	///     When the signed link was generated.
+	///     Gets when the signed link was generated.
 	/// </summary>
 	public DateTimeOffset? IssuedAt { get; init; }
 
 	/// <summary>
-	///     The signature of the signed link.
+	///     Gets the signature of the signed link.
 	/// </summary>
 	public string? Signature { get; init; }
+
+	/// <summary>
+	///     Returns a string representation of this <see cref="DiscordSignedLink"/>.
+	/// </summary>
+	/// <returns>This <see cref="DiscordSignedLink"/>, as a string.</returns>
+	public override string? ToString()
+		=> this._value?.ToString();
+
+	/// <summary>
+	///    Converts a <see cref="DiscordSignedLink" /> to a <see cref="Uri" /> implicitly, if possible.
+	/// </summary>
+	/// <param name="duri">The <see cref="DiscordSignedLink" /> to convert.</param>
+	public static implicit operator Uri?(DiscordSignedLink duri)
+		=> duri.ToUri();
 
 	/// <summary>
 	///     Represents a <see cref="DiscordSignedLinkJsonConverter" />.
@@ -107,7 +125,7 @@ public class DiscordSignedLink : Uri
 		/// <param name="value">The value.</param>
 		/// <param name="serializer">The serializer.</param>
 		public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
-			=> writer.WriteValue((value as DiscordSignedLink)?._rawValue);
+			=> writer.WriteValue((value as DiscordSignedLink)?._value);
 
 		/// <summary>
 		///     Reads the json.

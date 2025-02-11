@@ -56,13 +56,13 @@ public class DiscordAttachment : NullableSnowflakeObject
 	///     Gets the URL of the file.
 	/// </summary>
 	[JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordUri Url { get; internal set; }
+	public DiscordSignedLink Url { get; internal set; }
 
 	/// <summary>
 	///     Gets the proxied URL of the file.
 	/// </summary>
 	[JsonProperty("proxy_url", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordUri ProxyUrl { get; internal set; }
+	public DiscordSignedLink ProxyUrl { get; internal set; }
 
 	/// <summary>
 	///     Gets the height. Applicable only if the attachment is an image.

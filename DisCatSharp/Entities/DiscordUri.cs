@@ -11,12 +11,12 @@ namespace DisCatSharp.Entities;
 ///     Discord.
 /// </summary>
 [JsonConverter(typeof(DiscordUriJsonConverter))]
-public sealed class DiscordUri
+public class DiscordUri
 {
 	/// <summary>
 	///     Gets the raw value.
 	/// </summary>
-	private readonly object? _value;
+	internal readonly object? _value;
 
 	/// <summary>
 	///     Initializes a new instance of the <see cref="DiscordUri" /> class.
@@ -62,9 +62,9 @@ public sealed class DiscordUri
 		=> !value.StartsWith("attachment://", StringComparison.Ordinal);
 
 	/// <summary>
-	///     Returns a string representation of this DiscordUri.
+	///     Returns a string representation of this <see cref="DiscordUri"/>.
 	/// </summary>
-	/// <returns>This DiscordUri, as a string.</returns>
+	/// <returns>This <see cref="DiscordUri"/>, as a string.</returns>
 	public override string? ToString()
 		=> this._value?.ToString();
 
@@ -76,7 +76,7 @@ public sealed class DiscordUri
 		=> duri.ToUri();
 
 	/// <summary>
-	///     Converts this DiscordUri into a canonical representation of a <see cref="Uri" /> if it can be represented as
+	///     Converts this <see cref="DiscordUri"/> into a canonical representation of a <see cref="Uri" /> if it can be represented as
 	///     such, throwing an exception otherwise.
 	/// </summary>
 	/// <returns>A canonical representation of this DiscordUri.</returns>
