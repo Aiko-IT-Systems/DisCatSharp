@@ -42,7 +42,7 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.2" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="NuGet.Protocol" Version="6.12.1" />
+		<PackageReference Include="NuGet.Protocol" Version="6.13.1" />
 		<PackageReference Include="Octokit" Version="14.0.0" />
 		<PackageReference Include="Sentry" Version="5.1.0" />
 		<PackageReference Include="Sentry.Extensions.Logging" Version="5.1.0" />
