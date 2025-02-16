@@ -22,11 +22,9 @@ public static class InteractivityHelpers
 		var pageCount = 1;
 		foreach (var page in pages.Where(p => p.Embed is not null))
 		{
-			var tempPage = new Page();
 			ArgumentNullException.ThrowIfNull(page.Embed);
 			var replaceEmbed = new DiscordEmbedBuilder(page.Embed).WithFooter($"Page {pageCount}/{pages.Count}");
-			tempPage.Embed = replaceEmbed.Build();
-			recalulatedPages.Add(tempPage);
+			recalulatedPages.Add(new(embed: replaceEmbed));
 			pageCount++;
 		}
 

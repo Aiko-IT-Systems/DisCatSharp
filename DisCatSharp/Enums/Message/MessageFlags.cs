@@ -72,6 +72,9 @@ public enum MessageFlags
 	/// </summary>
 	FailedToMentionSomeRolesInThread = 1 << 8,
 
+	/// <summary>
+	///     The message is indicating that the feed is hidden.
+	/// </summary>
 	GuildFeedHidden = 1 << 9,
 
 	/// <summary>
