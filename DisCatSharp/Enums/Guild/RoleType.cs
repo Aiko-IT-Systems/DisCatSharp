@@ -44,10 +44,22 @@ public enum RoleType
 	PremiumSubscriberTier,
 
 	/// <summary>
+	///     A premium subscriber tier draft role.
+	/// </summary>
+	[Description("Premium subscriber tier draft role.")]
+	PremiumSubscriberTierDraft,
+
+	/// <summary>
 	///     A role linked to an external platform (e.g., Twitch or YouTube).
 	/// </summary>
 	[Description("External platform role. For example Twitch or YouTube.")]
 	ExternalPlatform,
+
+	/// <summary>
+	///     Either an external platform or premium subscriber role. Discord made it harder to distinguish..
+	/// </summary>
+	[Description("It's either an external platform or premium subscriber role. Discord made it harder to distinguish.")]
+	ExternalPlatformOrPremiumSubscriber,
 
 	/// <summary>
 	///     A role connection role.
