@@ -1230,7 +1230,8 @@ public sealed class DiscordApiClient
 	/// <param name="roles">The roles.</param>
 	/// <param name="muted">If true, muted.</param>
 	/// <param name="deafened">If true, deafened.</param>
-	internal async Task<DiscordMember> AddGuildMemberAsync(ulong guildId, ulong userId, string accessToken, string? nickname = null, IEnumerable<DiscordRole>? roles = null, bool? muted = null, bool? deafened = null)
+	/// <returns>The added <see cref="DiscordMember"/>, or <see langword="null"/> if they were already a member.</returns>
+	internal async Task<DiscordMember?> AddGuildMemberAsync(ulong guildId, ulong userId, string accessToken, string? nickname = null, IEnumerable<DiscordRole>? roles = null, bool? muted = null, bool? deafened = null)
 	{
 		var pld = new RestGuildMemberAddPayload
 		{
@@ -1248,13 +1249,23 @@ public sealed class DiscordApiClient
 			user_id = userId
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		if (this.OAuth2Client?.DiscordConfiguration is not null)
+			this.Rest.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.AUTHORIZATION, $"{CommonHeaders.AUTHORIZATION_BOT} {this.OAuth2Client.DiscordConfiguration.Token}");
 
-		var tm = DiscordJson.DeserializeObject<DiscordMember>(res.Response, this.Discord);
-		tm.Discord = this.Discord;
+		var url = Utilities.GetApiUriFor(path, this.Discord is not null ? this.Discord.Configuration : this.OAuth2Client.DiscordConfiguration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		
+		if (this.OAuth2Client?.DiscordConfiguration is not null)
+			this.Rest.HttpClient.DefaultRequestHeaders.Remove(CommonHeaders.AUTHORIZATION);
+
+		if (res.ResponseCode is HttpStatusCode.NoContent)
+			return null;
+
+		var tm = DiscordJson.DeserializeObject<TransportMember>(res.Response, this.Discord);
 		tm.GuildId = guildId;
-		return tm;
+		DiscordMember dm = new(tm);
+		dm.Discord = this.Discord;
+		return dm;
 	}
 
 	/// <summary>
@@ -7975,8 +7986,8 @@ public sealed class DiscordApiClient
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
-
-		var url = Utilities.GetApiUriFor(path);
+		
+		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers).ConfigureAwait(false);
 
 		var oauth2Info = DiscordJson.DeserializeObject<DiscordAuthorizationInformation>(res.Response, null);
@@ -8002,8 +8013,8 @@ public sealed class DiscordApiClient
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
-
-		var url = Utilities.GetApiUriFor(path);
+		
+		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
 			.ConfigureAwait(false);
 		var tuser = DiscordJson.DeserializeObject<TransportUser>(res.Response, null);
@@ -8026,8 +8037,8 @@ public sealed class DiscordApiClient
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
-
-		var url = Utilities.GetApiUriFor(path);
+		
+		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
 			.ConfigureAwait(false);
 		return DiscordJson.DeserializeIEnumerableObject<List<DiscordConnection>>(res.Response, null);
@@ -8049,8 +8060,8 @@ public sealed class DiscordApiClient
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
-
-		var url = Utilities.GetApiUriFor(path);
+		
+		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
 			.ConfigureAwait(false);
 		return DiscordJson.DeserializeIEnumerableObject<List<DiscordGuild>>(res.Response, null);
@@ -8075,8 +8086,8 @@ public sealed class DiscordApiClient
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
-
-		var url = Utilities.GetApiUriFor(path);
+		
+		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
 			.ConfigureAwait(false);
 		var tmember = DiscordJson.DeserializeObject<TransportMember>(res.Response, null);
@@ -8102,8 +8113,8 @@ public sealed class DiscordApiClient
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
-
-		var url = Utilities.GetApiUriFor(path);
+		
+		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
 			.ConfigureAwait(false);
 		return DiscordJson.DeserializeObject<DiscordApplicationRoleConnection>(res.Response, null);
@@ -8137,8 +8148,8 @@ public sealed class DiscordApiClient
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
-
-		var url = Utilities.GetApiUriFor(path);
+		
+		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 		return DiscordJson.DeserializeObject<DiscordApplicationRoleConnection>(res.Response, null);
 	}
@@ -8165,8 +8176,8 @@ public sealed class DiscordApiClient
 			{ "code", code },
 			{ "redirect_uri", this.OAuth2Client.RedirectUri.AbsoluteUri }
 		};
-
-		var url = Utilities.GetApiUriFor(path);
+		
+		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData).ConfigureAwait(false);
 
 		var accessTokenInformation = DiscordJson.DeserializeObject<DiscordAccessToken>(res.Response, null);
@@ -8195,8 +8206,8 @@ public sealed class DiscordApiClient
 			{ "refresh_token", refreshToken },
 			{ "redirect_uri", this.OAuth2Client.RedirectUri.AbsoluteUri }
 		};
-
-		var url = Utilities.GetApiUriFor(path);
+		
+		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData).ConfigureAwait(false);
 
 		var accessTokenInformation = DiscordJson.DeserializeObject<DiscordAccessToken>(res.Response, null);
@@ -8229,8 +8240,8 @@ public sealed class DiscordApiClient
 			{ "token", token },
 			{ "token_type_hint", type }
 		};
-
-		var url = Utilities.GetApiUriFor(path);
+		
+		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData, headers).ConfigureAwait(false);
 	}
 
