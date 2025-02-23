@@ -1230,7 +1230,8 @@ public sealed class DiscordApiClient
 	/// <param name="roles">The roles.</param>
 	/// <param name="muted">If true, muted.</param>
 	/// <param name="deafened">If true, deafened.</param>
-	internal async Task<DiscordMember> AddGuildMemberAsync(ulong guildId, ulong userId, string accessToken, string? nickname = null, IEnumerable<DiscordRole>? roles = null, bool? muted = null, bool? deafened = null)
+	/// <returns>The added <see cref="DiscordMember"/>, or <see langword="null"/> if they were already a member.</returns>
+	internal async Task<DiscordMember?> AddGuildMemberAsync(ulong guildId, ulong userId, string accessToken, string? nickname = null, IEnumerable<DiscordRole>? roles = null, bool? muted = null, bool? deafened = null)
 	{
 		var pld = new RestGuildMemberAddPayload
 		{
@@ -1248,12 +1249,23 @@ public sealed class DiscordApiClient
 			user_id = userId
 		}, out var path);
 
+		if (this.OAuth2Client?.DiscordConfiguration is not null)
+			this.Rest.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation(CommonHeaders.AUTHORIZATION, $"{CommonHeaders.AUTHORIZATION_BOT} {this.OAuth2Client.DiscordConfiguration.Token}");
+
 		var url = Utilities.GetApiUriFor(path, this.Discord is not null ? this.Discord.Configuration : this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		
+		if (this.OAuth2Client?.DiscordConfiguration is not null)
+			this.Rest.HttpClient.DefaultRequestHeaders.Remove(CommonHeaders.AUTHORIZATION);
 
-		var tm = DiscordJson.DeserializeObject<DiscordMember>(res.Response, this.Discord);
+		if (res.ResponseCode is HttpStatusCode.NoContent)
+			return null;
+
+		var tm = DiscordJson.DeserializeObject<TransportMember>(res.Response, this.Discord);
 		tm.GuildId = guildId;
-		return tm;
+		DiscordMember dm = new(tm);
+		dm.Discord = this.Discord;
+		return dm;
 	}
 
 	/// <summary>
