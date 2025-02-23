@@ -43,7 +43,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
-		<PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.12.40392" />
+		<PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.13.40008" />
 		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.2" />
 		<PackageReference Include="System.Memory" Version="4.6.0" />
 	</ItemGroup>

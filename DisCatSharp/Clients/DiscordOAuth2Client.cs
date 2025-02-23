@@ -34,6 +34,11 @@ public sealed class DiscordOAuth2Client : IDisposable
 	private const string RSA_KEY_FILE_NAME = "dcs_oauth_rsa.sdcs";
 
 	/// <summary>
+	///    Gets the discord configuration.
+	/// </summary>
+	internal DiscordConfiguration? DiscordConfiguration { get; set; }
+
+	/// <summary>
 	///     Gets the api client.
 	/// </summary>
 	internal readonly DiscordApiClient ApiClient;
