@@ -30,8 +30,8 @@ public class DiscordComponent : ObservableApiObject
 	public string? CustomId { get; internal set; }
 
 	/// <summary>
-	///     Gets the Id of the compenent. Determined by Discord.
+	///     Gets the Id of the compenent. Auto populated by discord if not provided.
 	/// </summary>
 	[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-	public uint Id { get; internal set; }
+	public uint? Id { get; internal set; }
 }

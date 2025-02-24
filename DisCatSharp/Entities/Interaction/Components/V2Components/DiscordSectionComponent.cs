@@ -30,6 +30,7 @@ public sealed class DiscordSectionComponent : DiscordComponent
 	{
 		this.Components = other.Components;
 		this.Accessory = other.Accessory;
+		this.Id = other.Id;
 	}
 
 	/// <summary>
@@ -80,6 +81,16 @@ public sealed class DiscordSectionComponent : DiscordComponent
 	public DiscordSectionComponent WithButtonComponent(DiscordBaseButtonComponent button)
 	{
 		this.Accessory = button;
+		return this;
+	}
+
+	/// <summary>
+	///     Assigns a unique id to the components.
+	/// </summary>
+	/// <param name="id">The id to assign.</param>
+	public DiscordSectionComponent WithId(uint id)
+	{
+		this.Id = id;
 		return this;
 	}
 }

@@ -70,4 +70,14 @@ public class DiscordPremiumButtonComponent : DiscordBaseButtonComponent
 		this.Disabled = true;
 		return this;
 	}
+
+	/// <summary>
+	///     Assigns a unique id to the components.
+	/// </summary>
+	/// <param name="id">The id to assign.</param>
+	public DiscordPremiumButtonComponent WithId(uint id)
+	{
+		this.Id = id;
+		return this;
+	}
 }

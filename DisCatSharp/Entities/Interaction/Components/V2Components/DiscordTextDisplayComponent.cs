@@ -25,6 +25,7 @@ public sealed class DiscordTextDisplayComponent : DiscordComponent
 		: this()
 	{
 		this.Content = other.Content;
+		this.Id = other.Id;
 	}
 
 	/// <summary>
@@ -42,4 +43,14 @@ public sealed class DiscordTextDisplayComponent : DiscordComponent
 	/// </summary>
 	[JsonProperty("content")]
 	public string Content { get; internal set; }
+
+	/// <summary>
+	///     Assigns a unique id to the components.
+	/// </summary>
+	/// <param name="id">The id to assign.</param>
+	public DiscordTextDisplayComponent WithId(uint id)
+	{
+		this.Id = id;
+		return this;
+	}
 }

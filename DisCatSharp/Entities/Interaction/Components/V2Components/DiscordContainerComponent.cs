@@ -5,6 +5,7 @@ using System.Linq;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace DisCatSharp.Entities;
 
@@ -31,6 +32,7 @@ public sealed class DiscordContainerComponent : DiscordComponent
 		this.Components = other.Components;
 		this.AccentColor = other.AccentColor;
 		this.Spoiler = other.Spoiler;
+		this.Id = other.Id;
 	}
 
 	/// <summary>
@@ -134,6 +136,16 @@ public sealed class DiscordContainerComponent : DiscordComponent
 			throw new ArgumentException("All components must be of type ActionRow, TextDisplay, Section, MediaGallery, Separator, or File.");
 
 		this.Components = [.. this.Components, component];
+		return this;
+	}
+
+	/// <summary>
+	///     Assigns a unique id to the components.
+	/// </summary>
+	/// <param name="id">The id to assign.</param>
+	public DiscordContainerComponent WithId(uint id)
+	{
+		this.Id = id;
 		return this;
 	}
 }

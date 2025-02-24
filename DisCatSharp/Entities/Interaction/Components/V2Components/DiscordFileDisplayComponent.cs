@@ -28,6 +28,7 @@ public sealed class DiscordFileDisplayComponent : DiscordComponent
 	{
 		this.File = other.File;
 		this.Spoiler = other.Spoiler;
+		this.Id = other.Id;
 	}
 
 	/// <summary>
@@ -57,4 +58,14 @@ public sealed class DiscordFileDisplayComponent : DiscordComponent
 	/// </summary>
 	[JsonProperty("spoiler", NullValueHandling = NullValueHandling.Ignore)]
 	public bool? Spoiler { get; internal set; }
+
+	/// <summary>
+	///     Assigns a unique id to the components.
+	/// </summary>
+	/// <param name="id">The id to assign.</param>
+	public DiscordFileDisplayComponent WithId(uint id)
+	{
+		this.Id = id;
+		return this;
+	}
 }

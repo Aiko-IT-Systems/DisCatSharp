@@ -69,4 +69,14 @@ public sealed class DiscordUserSelectComponent : DiscordBaseSelectComponent
 		this.Disabled = true;
 		return this;
 	}
+
+	/// <summary>
+	///     Assigns a unique id to the components.
+	/// </summary>
+	/// <param name="id">The id to assign.</param>
+	public DiscordUserSelectComponent WithId(uint id)
+	{
+		this.Id = id;
+		return this;
+	}
 }

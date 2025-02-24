@@ -71,4 +71,14 @@ public sealed class DiscordRoleSelectComponent : DiscordBaseSelectComponent
 		this.Disabled = true;
 		return this;
 	}
+
+	/// <summary>
+	///     Assigns a unique id to the components.
+	/// </summary>
+	/// <param name="id">The id to assign.</param>
+	public DiscordRoleSelectComponent WithId(uint id)
+	{
+		this.Id = id;
+		return this;
+	}
 }

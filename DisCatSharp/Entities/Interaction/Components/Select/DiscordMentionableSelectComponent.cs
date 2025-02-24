@@ -71,4 +71,14 @@ public sealed class DiscordMentionableSelectComponent : DiscordBaseSelectCompone
 		this.Disabled = true;
 		return this;
 	}
+
+	/// <summary>
+	///     Assigns a unique id to the components.
+	/// </summary>
+	/// <param name="id">The id to assign.</param>
+	public DiscordMentionableSelectComponent WithId(uint id)
+	{
+		this.Id = id;
+		return this;
+	}
 }

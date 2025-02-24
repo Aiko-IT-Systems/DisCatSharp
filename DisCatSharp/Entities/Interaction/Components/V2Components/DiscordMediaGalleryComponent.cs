@@ -29,6 +29,7 @@ public sealed class DiscordMediaGalleryComponent : DiscordComponent
 		: this()
 	{
 		this.Items = other.Items;
+		this.Id = other.Id;
 	}
 
 	/// <summary>
@@ -50,4 +51,14 @@ public sealed class DiscordMediaGalleryComponent : DiscordComponent
 	/// </summary>
 	[JsonProperty("items", NullValueHandling = NullValueHandling.Ignore)]
 	public IReadOnlyList<DiscordMediaGalleryItem> Items { get; internal set; } = [];
+
+	/// <summary>
+	///     Assigns a unique id to the components.
+	/// </summary>
+	/// <param name="id">The id to assign.</param>
+	public DiscordMediaGalleryComponent WithId(uint id)
+	{
+		this.Id = id;
+		return this;
+	}
 }

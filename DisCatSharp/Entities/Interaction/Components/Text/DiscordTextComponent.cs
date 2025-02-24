@@ -56,6 +56,7 @@ public sealed class DiscordTextComponent : DiscordComponent
 		this.Placeholder = other.Placeholder;
 		this.Required = other.Required;
 		this.Value = other.Value;
+		this.Id = other.Id;
 	}
 
 	/// <summary>
@@ -134,4 +135,14 @@ public sealed class DiscordTextComponent : DiscordComponent
 	/// </summary>
 	[JsonProperty("required", NullValueHandling = NullValueHandling.Ignore)]
 	public bool Required { get; internal set; }
+
+	/// <summary>
+	///     Assigns a unique id to the components.
+	/// </summary>
+	/// <param name="id">The id to assign.</param>
+	public DiscordTextComponent WithId(uint id)
+	{
+		this.Id = id;
+		return this;
+	}
 }

@@ -48,4 +48,14 @@ public sealed class DiscordThumbnailComponent : DiscordSectionAccessory
 	/// </summary>
 	[JsonProperty("spoiler", NullValueHandling = NullValueHandling.Ignore)]
 	public bool? Spoiler { get; internal set; }
+
+	/// <summary>
+	///     Assigns a unique id to the components.
+	/// </summary>
+	/// <param name="id">The id to assign.</param>
+	public DiscordThumbnailComponent WithId(uint id)
+	{
+		this.Id = id;
+		return this;
+	}
 }

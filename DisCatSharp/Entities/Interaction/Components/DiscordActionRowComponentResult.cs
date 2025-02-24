@@ -29,4 +29,10 @@ public sealed class DiscordActionRowComponentResult : ObservableApiObject
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
 	public IReadOnlyList<DiscordComponentResult> Components { get; internal set; }
+
+	/// <summary>
+	///     Gets the Id of the compenent. Auto populated by discord if not provided.
+	/// </summary>
+	[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+	public uint Id { get; internal set; }
 }

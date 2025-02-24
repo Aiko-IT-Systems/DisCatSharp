@@ -33,6 +33,7 @@ public sealed class DiscordButtonComponent : DiscordBaseButtonComponent
 		this.Label = other.Label;
 		this.Disabled = other.Disabled;
 		this.Emoji = other.Emoji;
+		this.Id = other.Id;
 	}
 
 	/// <summary>
@@ -121,6 +122,16 @@ public sealed class DiscordButtonComponent : DiscordBaseButtonComponent
 	public DiscordButtonComponent SetState(bool disabled)
 	{
 		this.Disabled = disabled;
+		return this;
+	}
+
+	/// <summary>
+	///     Assigns a unique id to the components.
+	/// </summary>
+	/// <param name="id">The id to assign.</param>
+	public DiscordButtonComponent WithId(uint id)
+	{
+		this.Id = id;
 		return this;
 	}
 }

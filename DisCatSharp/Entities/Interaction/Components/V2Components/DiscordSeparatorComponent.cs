@@ -28,6 +28,7 @@ public sealed class DiscordSeparatorComponent : DiscordComponent
 	{
 		this.Divider = other.Divider;
 		this.Spacing = other.Spacing;
+		this.Id = other.Id;
 	}
 
 	/// <summary>
@@ -54,4 +55,14 @@ public sealed class DiscordSeparatorComponent : DiscordComponent
 	/// </summary>
 	[JsonProperty("divider", NullValueHandling = NullValueHandling.Ignore)]
 	public bool? Divider { get; internal set; }
+
+	/// <summary>
+	///     Assigns a unique id to the components.
+	/// </summary>
+	/// <param name="id">The id to assign.</param>
+	public DiscordSeparatorComponent WithId(uint id)
+	{
+		this.Id = id;
+		return this;
+	}
 }
