@@ -7,7 +7,7 @@
     "directoryStructure": true,
     "removeComments": false,
     "removeEmptyLines": false,
-    "compress": false,
+    "compress": true,
     "topFilesLength": 5,
     "showLineNumbers": true,
     "copyToClipboard": false

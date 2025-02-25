@@ -18,3 +18,5 @@ DisCatSharp.Docs/dcs/
 *.bat
 *.dll
 *.min
+discatsharp-ai-test.xml
+discatsharp-ai.xml
