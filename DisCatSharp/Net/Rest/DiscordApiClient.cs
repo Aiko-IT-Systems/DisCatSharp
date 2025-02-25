@@ -1254,7 +1254,7 @@ public sealed class DiscordApiClient
 
 		var url = Utilities.GetApiUriFor(path, this.Discord is not null ? this.Discord.Configuration : this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
-		
+
 		if (this.OAuth2Client?.DiscordConfiguration is not null)
 			this.Rest.HttpClient.DefaultRequestHeaders.Remove(CommonHeaders.AUTHORIZATION);
 
@@ -3165,14 +3165,14 @@ public sealed class DiscordApiClient
 
 		var pld = new RestChannelMessageCreatePayload
 		{
-			HasContent = builder.Content != null,
-			Content = builder.Content,
+			Content = builder.IsComponentsV2 ? null : builder.Content,
+			Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
+			HasContent = builder.Content != null && !builder.IsComponentsV2,
+			HasEmbed = builder.Embeds != null && !builder.IsComponentsV2,
 			StickersIds = builder.Sticker is null
 				? Array.Empty<ulong>()
 				: [builder.Sticker.Id],
 			IsTts = builder.IsTts,
-			HasEmbed = builder.Embeds != null,
-			Embeds = builder.Embeds,
 			Components = builder.Components,
 			Nonce = builder.Nonce,
 			EnforceNonce = builder.EnforceNonce,
@@ -5341,7 +5341,7 @@ public sealed class DiscordApiClient
 		var values = new Dictionary<string, string>();
 
 		var flags = MessageFlags.None;
-		if (builder.EmbedsSuppressed)
+		if (builder.EmbedsSuppressed && !builder.IsComponentsV2)
 			flags |= MessageFlags.SuppressedEmbeds;
 		if (builder.NotificationsSuppressed)
 			flags |= MessageFlags.SuppressNotifications;
@@ -5350,11 +5350,11 @@ public sealed class DiscordApiClient
 
 		var pld = new RestWebhookExecutePayload
 		{
-			Content = builder.Content,
+			Content = builder.IsComponentsV2 ? null : builder.Content,
+			Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
 			Username = builder.Username.ValueOrDefault(),
 			AvatarUrl = builder.AvatarUrl.ValueOrDefault(),
 			IsTts = builder.IsTts,
-			Embeds = builder.Embeds,
 			Components = builder.Components,
 			ThreadName = builder.ThreadName,
 			Flags = flags,
@@ -5495,7 +5495,7 @@ public sealed class DiscordApiClient
 		builder.Validate(true);
 
 		MessageFlags? flags = builder.FlagsChanged ? MessageFlags.None : null;
-		if (builder.EmbedsSuppressed)
+		if (builder.EmbedsSuppressed && !builder.IsComponentsV2)
 			flags |= MessageFlags.SuppressedEmbeds;
 		if (builder.NotificationsSuppressed)
 			flags |= MessageFlags.SuppressNotifications;
@@ -5504,8 +5504,8 @@ public sealed class DiscordApiClient
 
 		var pld = new RestWebhookMessageEditPayload
 		{
-			Content = builder.Content,
-			Embeds = builder.Embeds,
+			Content = builder.IsComponentsV2 ? Optional.None : builder.Content,
+			Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
 			Components = builder.Components,
 			Flags = flags
 		};
@@ -5906,16 +5906,26 @@ public sealed class DiscordApiClient
 			PerUserRateLimit = rateLimitPerUser
 		};
 
+		MessageFlags? flags = builder.FlagsChanged ? MessageFlags.None : null;
+		if (builder.EmbedsSuppressed && !builder.IsComponentsV2)
+			flags |= MessageFlags.SuppressedEmbeds;
+		if (builder.NotificationsSuppressed)
+			flags |= MessageFlags.SuppressNotifications;
+		if (builder.IsComponentsV2)
+			flags |= MessageFlags.IsComponentsV2;
+		if (builder.IsVoiceMessage)
+			flags |= MessageFlags.IsVoiceMessage;
+
 		if (isForum)
 		{
 			pld.Message = new()
 			{
-				Content = builder.Content,
+				Content = builder.IsComponentsV2 ? null : builder.Content,
+				Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
 				Attachments = builder.Attachments,
 				Components = builder.Components,
-				HasContent = true,
-				Embeds = builder.Embeds,
-				//Flags = builder.Flags,
+				HasContent = !builder.IsComponentsV2,
+				Flags = flags,
 				//Mentions = builder.Mentions,
 				StickersIds = builder.Sticker != null
 					? new List<ulong>(1)
@@ -7209,7 +7219,7 @@ public sealed class DiscordApiClient
 			{
 				if (builder.IsEphemeral)
 					flags |= MessageFlags.Ephemeral;
-				if (builder.EmbedsSuppressed)
+				if (builder.EmbedsSuppressed && !builder.IsComponentsV2)
 					flags |= MessageFlags.SuppressedEmbeds;
 				if (builder.NotificationsSuppressed)
 					flags |= MessageFlags.SuppressNotifications;
@@ -7220,12 +7230,12 @@ public sealed class DiscordApiClient
 			var data = builder is not null
 				? new DiscordInteractionApplicationCommandCallbackData
 				{
-					Content = builder?.Content ?? null,
-					Embeds = builder?.Embeds ?? null,
-					IsTts = builder?.IsTts,
-					Mentions = builder?.Mentions.Any() ?? false ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
+					Content = builder.IsComponentsV2 ? null : builder.Content,
+					Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
+					IsTts = builder.IsTts,
+					Mentions = builder.Mentions.Any() ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
 					Flags = flags,
-					Components = builder?.Components ?? null,
+					Components = builder.Components,
 					Choices = null,
 					DiscordPollRequest = builder?.Poll?.Build()
 				}
@@ -7445,7 +7455,7 @@ public sealed class DiscordApiClient
 		MessageFlags? flags = builder is { FlagsChanged: true } ? MessageFlags.None : null;
 		if (builder.IsEphemeral)
 			flags |= MessageFlags.Ephemeral;
-		if (builder.EmbedsSuppressed)
+		if (builder.EmbedsSuppressed && !builder.IsComponentsV2)
 			flags |= MessageFlags.SuppressedEmbeds;
 		if (builder.NotificationsSuppressed)
 			flags |= MessageFlags.SuppressNotifications;
@@ -7455,9 +7465,9 @@ public sealed class DiscordApiClient
 		var values = new Dictionary<string, string>();
 		var pld = new RestFollowupMessageCreatePayload
 		{
-			Content = builder.Content,
+			Content = builder.IsComponentsV2 ? null : builder.Content,
+			Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
 			IsTts = builder.IsTts,
-			Embeds = builder.Embeds,
 			Flags = flags,
 			Components = builder.Components,
 			DiscordPollRequest = builder.Poll?.Build()
@@ -7986,7 +7996,7 @@ public sealed class DiscordApiClient
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
-		
+
 		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers).ConfigureAwait(false);
 
@@ -8013,7 +8023,7 @@ public sealed class DiscordApiClient
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
-		
+
 		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
 			.ConfigureAwait(false);
@@ -8037,7 +8047,7 @@ public sealed class DiscordApiClient
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
-		
+
 		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
 			.ConfigureAwait(false);
@@ -8060,7 +8070,7 @@ public sealed class DiscordApiClient
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
-		
+
 		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
 			.ConfigureAwait(false);
@@ -8086,7 +8096,7 @@ public sealed class DiscordApiClient
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
-		
+
 		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
 			.ConfigureAwait(false);
@@ -8113,7 +8123,7 @@ public sealed class DiscordApiClient
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
-		
+
 		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.GET, route, headers)
 			.ConfigureAwait(false);
@@ -8148,7 +8158,7 @@ public sealed class DiscordApiClient
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
-		
+
 		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoRequestAsync(null, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 		return DiscordJson.DeserializeObject<DiscordApplicationRoleConnection>(res.Response, null);
@@ -8176,7 +8186,7 @@ public sealed class DiscordApiClient
 			{ "code", code },
 			{ "redirect_uri", this.OAuth2Client.RedirectUri.AbsoluteUri }
 		};
-		
+
 		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData).ConfigureAwait(false);
 
@@ -8206,7 +8216,7 @@ public sealed class DiscordApiClient
 			{ "refresh_token", refreshToken },
 			{ "redirect_uri", this.OAuth2Client.RedirectUri.AbsoluteUri }
 		};
-		
+
 		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		var res = await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData).ConfigureAwait(false);
 
@@ -8240,7 +8250,7 @@ public sealed class DiscordApiClient
 			{ "token", token },
 			{ "token_type_hint", type }
 		};
-		
+
 		var url = Utilities.GetApiUriFor(path, this.OAuth2Client.DiscordConfiguration);
 		await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData, headers).ConfigureAwait(false);
 	}
