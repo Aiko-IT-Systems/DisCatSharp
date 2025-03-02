@@ -18283,10 +18283,10 @@ public sealed class OpusDecoder : IDisposable
 		&lt;PackageReference Include=&quot;Microsoft.Extensions.Logging.Abstractions&quot; Version=&quot;9.0.2&quot; /&gt;
 		&lt;PackageReference Include=&quot;Microsoft.Extensions.Logging.Console&quot; Version=&quot;9.0.2&quot; /&gt;
 		&lt;PackageReference Include=&quot;Newtonsoft.Json&quot; Version=&quot;13.0.3&quot; /&gt;
-		&lt;PackageReference Include=&quot;NuGet.Protocol&quot; Version=&quot;6.13.1&quot; /&gt;
+		&lt;PackageReference Include=&quot;NuGet.Protocol&quot; Version=&quot;6.13.2&quot; /&gt;
 		&lt;PackageReference Include=&quot;Octokit&quot; Version=&quot;14.0.0&quot; /&gt;
-		&lt;PackageReference Include=&quot;Sentry&quot; Version=&quot;5.1.1&quot; /&gt;
-		&lt;PackageReference Include=&quot;Sentry.Extensions.Logging&quot; Version=&quot;5.1.1&quot; /&gt;
+		&lt;PackageReference Include=&quot;Sentry&quot; Version=&quot;5.2.0&quot; /&gt;
+		&lt;PackageReference Include=&quot;Sentry.Extensions.Logging&quot; Version=&quot;5.2.0&quot; /&gt;
 		&lt;PackageReference Include=&quot;System.Diagnostics.DiagnosticSource&quot; Version=&quot;9.0.2&quot; /&gt;
 		&lt;PackageReference Include=&quot;System.Memory&quot; Version=&quot;4.6.0&quot; /&gt;
 		&lt;PackageReference Include=&quot;System.Net.Http&quot; Version=&quot;4.3.4&quot; /&gt;
@@ -18860,14 +18860,14 @@ public static class DiscordOverwriteBuilderExtensions
 				this.CheckComponentIds(component, ids, duplicateIds);
 				var duplicateDetails = string.Join(&quot;, &quot;, duplicateIds.Select(kvp =&gt; $&quot;ID: {kvp.Key}, Types: {string.Join(&quot;, &quot;, kvp.Value)}&quot;));
 				throw new AggregateException($&quot;You provided one or more components with the same id. They have to be unique. Duplicates: {duplicateDetails}&quot;);
-	private void CheckComponentIds(DiscordComponent component, HashSet&lt;uint&gt; ids, Dictionary&lt;uint, List&lt;string&gt;&gt; duplicateIds)
+	private void CheckComponentIds(DiscordComponent component, HashSet&lt;int&gt; ids, Dictionary&lt;int, List&lt;string&gt;&gt; duplicateIds)
 				this.AddId(actionRowComponentChild, ids, duplicateIds);
 						this.AddId(sectionComponentChild, ids, duplicateIds);
 					this.AddId(subSectionComponent.Accessory, ids, duplicateIds);
 				this.AddId(containerComponentChild, ids, duplicateIds);
 			this.AddId(sectionComponent.Accessory, ids, duplicateIds);
 		this.AddId(component, ids, duplicateIds);
-	private void AddId(DiscordComponent component, HashSet&lt;uint&gt; ids, Dictionary&lt;uint, List&lt;string&gt;&gt; duplicateIds)
+	private void AddId(DiscordComponent component, HashSet&lt;int&gt; ids, Dictionary&lt;int, List&lt;string&gt;&gt; duplicateIds)
 			if (!ids.Add(id))
 				if (!duplicateIds.ContainsKey(id))
 				duplicateIds[id].Add(component.Type.ToString());</file><file path="DisCatSharp/Entities/Core/DisCatSharpCommandContext.cs">public class DisCatSharpCommandContext</file><file path="DisCatSharp/Entities/Core/IBucket.cs">public interface IBucket</file><file path="DisCatSharp/Entities/Core/ICooldown.cs">public interface ICooldown&lt;in TContextType, out TBucketType&gt;
@@ -19925,15 +19925,15 @@ public sealed class DiscordAuditLogThreadEntry : DiscordAuditLogEntry</file><fi
 	public DiscordButtonComponent Disable()
 		=&gt; this.SetState(true);
 	public DiscordButtonComponent SetState(bool disabled)
-	public DiscordButtonComponent WithId(uint id)</file><file path="DisCatSharp/Entities/Interaction/Components/Button/DiscordLinkButtonComponent.cs">public class DiscordLinkButtonComponent : DiscordBaseButtonComponent
+	public DiscordButtonComponent WithId(int id)</file><file path="DisCatSharp/Entities/Interaction/Components/Button/DiscordLinkButtonComponent.cs">public class DiscordLinkButtonComponent : DiscordBaseButtonComponent
 	public DiscordLinkButtonComponent Enable()
 	public DiscordLinkButtonComponent Disable()
-	public DiscordLinkButtonComponent WithId(uint id)</file><file path="DisCatSharp/Entities/Interaction/Components/Button/DiscordPremiumButtonComponent.cs">public class DiscordPremiumButtonComponent : DiscordBaseButtonComponent
+	public DiscordLinkButtonComponent WithId(int id)</file><file path="DisCatSharp/Entities/Interaction/Components/Button/DiscordPremiumButtonComponent.cs">public class DiscordPremiumButtonComponent : DiscordBaseButtonComponent
 	public DiscordPremiumButtonComponent Enable()
 	public DiscordPremiumButtonComponent Disable()
-	public DiscordPremiumButtonComponent WithId(uint id)</file><file path="DisCatSharp/Entities/Interaction/Components/DiscordActionRowComponent.cs">public sealed class DiscordActionRowComponent : DiscordComponent
+	public DiscordPremiumButtonComponent WithId(int id)</file><file path="DisCatSharp/Entities/Interaction/Components/DiscordActionRowComponent.cs">public sealed class DiscordActionRowComponent : DiscordComponent
 		this.Components = components.ToList().AsReadOnly();
-	public DiscordActionRowComponent WithId(uint id)</file><file path="DisCatSharp/Entities/Interaction/Components/DiscordActionRowComponentResult.cs">public sealed class DiscordActionRowComponentResult : ObservableApiObject</file><file path="DisCatSharp/Entities/Interaction/Components/DiscordComponent.cs">public class DiscordComponent : ObservableApiObject</file><file path="DisCatSharp/Entities/Interaction/Components/DiscordComponentEmoji.cs">public sealed class DiscordComponentEmoji : ObservableApiObject
+	public DiscordActionRowComponent WithId(int id)</file><file path="DisCatSharp/Entities/Interaction/Components/DiscordActionRowComponentResult.cs">public sealed class DiscordActionRowComponentResult : ObservableApiObject</file><file path="DisCatSharp/Entities/Interaction/Components/DiscordComponent.cs">public class DiscordComponent : ObservableApiObject</file><file path="DisCatSharp/Entities/Interaction/Components/DiscordComponentEmoji.cs">public sealed class DiscordComponentEmoji : ObservableApiObject
 		if (!DiscordEmoji.IsValidUnicode(name))
 			throw new ArgumentException(&quot;Only unicode emojis can be passed.&quot;);</file><file path="DisCatSharp/Entities/Interaction/Components/DiscordComponentResult.cs">public sealed class DiscordComponentResult : ObservableApiObject</file><file path="DisCatSharp/Entities/Interaction/Components/Select/DiscordBaseSelectComponent.cs">public class DiscordBaseSelectComponent : DiscordComponent
 		this.CustomId = customId ?? Guid.NewGuid().ToString();
@@ -19949,25 +19949,25 @@ public sealed class DiscordAuditLogThreadEntry : DiscordAuditLogEntry</file><fi
 				throw new ArgumentException(&quot;The default values for a role select menus must be of type role.&quot;, nameof(defaultValues));</file><file path="DisCatSharp/Entities/Interaction/Components/Select/DiscordChannelSelectComponent.cs">public sealed class DiscordChannelSelectComponent : DiscordBaseSelectComponent
 	public DiscordChannelSelectComponent Enable()
 	public DiscordChannelSelectComponent Disable()
-	public DiscordChannelSelectComponent WithId(uint id)</file><file path="DisCatSharp/Entities/Interaction/Components/Select/DiscordMentionableSelectComponent.cs">public sealed class DiscordMentionableSelectComponent : DiscordBaseSelectComponent
+	public DiscordChannelSelectComponent WithId(int id)</file><file path="DisCatSharp/Entities/Interaction/Components/Select/DiscordMentionableSelectComponent.cs">public sealed class DiscordMentionableSelectComponent : DiscordBaseSelectComponent
 	public DiscordMentionableSelectComponent Enable()
 	public DiscordMentionableSelectComponent Disable()
-	public DiscordMentionableSelectComponent WithId(uint id)</file><file path="DisCatSharp/Entities/Interaction/Components/Select/DiscordRoleSelectComponent.cs">public sealed class DiscordRoleSelectComponent : DiscordBaseSelectComponent
+	public DiscordMentionableSelectComponent WithId(int id)</file><file path="DisCatSharp/Entities/Interaction/Components/Select/DiscordRoleSelectComponent.cs">public sealed class DiscordRoleSelectComponent : DiscordBaseSelectComponent
 	public DiscordRoleSelectComponent Enable()
 	public DiscordRoleSelectComponent Disable()
-	public DiscordRoleSelectComponent WithId(uint id)</file><file path="DisCatSharp/Entities/Interaction/Components/Select/DiscordSelectDefaultValue.cs">public sealed class DiscordSelectDefaultValue</file><file path="DisCatSharp/Entities/Interaction/Components/Select/DiscordStringSelectComponent.cs">public sealed class DiscordStringSelectComponent : DiscordBaseSelectComponent
+	public DiscordRoleSelectComponent WithId(int id)</file><file path="DisCatSharp/Entities/Interaction/Components/Select/DiscordSelectDefaultValue.cs">public sealed class DiscordSelectDefaultValue</file><file path="DisCatSharp/Entities/Interaction/Components/Select/DiscordStringSelectComponent.cs">public sealed class DiscordStringSelectComponent : DiscordBaseSelectComponent
 		this.Options = options.ToArray();
 	public DiscordStringSelectComponent Enable()
 	public DiscordStringSelectComponent Disable()
-	public DiscordStringSelectComponent WithId(uint id)</file><file path="DisCatSharp/Entities/Interaction/Components/Select/DiscordStringSelectComponentOption.cs">public sealed class DiscordStringSelectComponentOption : ObservableApiObject
+	public DiscordStringSelectComponent WithId(int id)</file><file path="DisCatSharp/Entities/Interaction/Components/Select/DiscordStringSelectComponentOption.cs">public sealed class DiscordStringSelectComponentOption : ObservableApiObject
 			throw new NotSupportedException(&quot;Select label can&apos;t be longer then 100 chars.&quot;);
 			throw new NotSupportedException(&quot;Select value can&apos;t be longer then 100 chars.&quot;);
 			throw new NotSupportedException(&quot;Select description can&apos;t be longer then 100 chars.&quot;);</file><file path="DisCatSharp/Entities/Interaction/Components/Select/DiscordUserSelectComponent.cs">public sealed class DiscordUserSelectComponent : DiscordBaseSelectComponent
 	public DiscordUserSelectComponent Enable()
 	public DiscordUserSelectComponent Disable()
-	public DiscordUserSelectComponent WithId(uint id)</file><file path="DisCatSharp/Entities/Interaction/Components/Text/DiscordTextComponent.cs">public sealed class DiscordTextComponent : DiscordComponent
+	public DiscordUserSelectComponent WithId(int id)</file><file path="DisCatSharp/Entities/Interaction/Components/Text/DiscordTextComponent.cs">public sealed class DiscordTextComponent : DiscordComponent
 		this.CustomId = customId ?? Guid.NewGuid().ToString();
-	public DiscordTextComponent WithId(uint id)</file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordBaseButtonComponent.cs"></file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordContainerComponent.cs">public sealed class DiscordContainerComponent : DiscordComponent
+	public DiscordTextComponent WithId(int id)</file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordBaseButtonComponent.cs"></file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordContainerComponent.cs">public sealed class DiscordContainerComponent : DiscordComponent
 		var comps = components.ToList();
 			throw new ArgumentException(&quot;You can only have up to 10 components in a container.&quot;);
 		if (comps.Any(c =&gt; !allowedTypes.Contains(c.Type)))
@@ -19975,23 +19975,23 @@ public sealed class DiscordAuditLogThreadEntry : DiscordAuditLogEntry</file><fi
 	public DiscordContainerComponent AddComponents(IEnumerable&lt;DiscordComponent&gt; components)
 	public DiscordContainerComponent AddComponent(DiscordComponent component)
 		if (!allowedTypes.Contains(component.Type))
-	public DiscordContainerComponent WithId(uint id)</file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordFileDisplayComponent.cs">public sealed class DiscordFileDisplayComponent : DiscordComponent
+	public DiscordContainerComponent WithId(int id)</file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordFileDisplayComponent.cs">public sealed class DiscordFileDisplayComponent : DiscordComponent
 		ArgumentException.ThrowIfNullOrEmpty(url);
 		if (!url.StartsWith(&quot;attachment://&quot;, StringComparison.Ordinal))
 			throw new ArgumentException(&quot;File URL must start with &apos;attachment://&apos;.&quot;, nameof(url));
-	public DiscordFileDisplayComponent WithId(uint id)</file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordMediaGalleryComponent.cs">public sealed class DiscordMediaGalleryComponent : DiscordComponent
+	public DiscordFileDisplayComponent WithId(int id)</file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordMediaGalleryComponent.cs">public sealed class DiscordMediaGalleryComponent : DiscordComponent
 		var it = items.ToList();
 			throw new ArgumentException(&quot;You can only have up to 10 items in a media gallery.&quot;);
-	public DiscordMediaGalleryComponent WithId(uint id)</file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordMediaGalleryItem.cs">public sealed class DiscordMediaGalleryItem</file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordSectionAccessory.cs"></file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordSectionComponent.cs">public sealed class DiscordSectionComponent : DiscordComponent
+	public DiscordMediaGalleryComponent WithId(int id)</file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordMediaGalleryItem.cs">public sealed class DiscordMediaGalleryItem</file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordSectionAccessory.cs"></file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordSectionComponent.cs">public sealed class DiscordSectionComponent : DiscordComponent
 		var comps = components.ToList();
 			throw new ArgumentException(&quot;You can only have up to 3 components in a section.&quot;);
 	public DiscordSectionComponent WithThumbnailComponent(string url, string? description = null, bool? spoiler = null)
 		this.Accessory = new DiscordThumbnailComponent(url, description, spoiler);
 	public DiscordSectionComponent WithButtonComponent(DiscordBaseButtonComponent button)
-	public DiscordSectionComponent WithId(uint id)</file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordSeparatorComponent.cs">public sealed class DiscordSeparatorComponent : DiscordComponent
-	public DiscordSeparatorComponent WithId(uint id)</file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordTextDisplayComponent.cs">public sealed class DiscordTextDisplayComponent : DiscordComponent
-	public DiscordTextDisplayComponent WithId(uint id)</file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordThumbnailComponent.cs">public sealed class DiscordThumbnailComponent : DiscordSectionAccessory
-	public DiscordThumbnailComponent WithId(uint id)</file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordUnfurledMediaItem.cs">public sealed class DiscordUnfurledMediaItem : DiscordUnfurledMedia</file><file path="DisCatSharp/Entities/Interaction/DiscordActivityInstance.cs">public sealed class DiscordActivityInstance : ObservableApiObject</file><file path="DisCatSharp/Entities/Interaction/DiscordCallbackHintBuilder.cs">internal sealed class DiscordCallbackHintBuilder
+	public DiscordSectionComponent WithId(int id)</file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordSeparatorComponent.cs">public sealed class DiscordSeparatorComponent : DiscordComponent
+	public DiscordSeparatorComponent WithId(int id)</file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordTextDisplayComponent.cs">public sealed class DiscordTextDisplayComponent : DiscordComponent
+	public DiscordTextDisplayComponent WithId(int id)</file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordThumbnailComponent.cs">public sealed class DiscordThumbnailComponent : DiscordSectionAccessory
+	public DiscordThumbnailComponent WithId(int id)</file><file path="DisCatSharp/Entities/Interaction/Components/V2Components/DiscordUnfurledMediaItem.cs">public sealed class DiscordUnfurledMediaItem : DiscordUnfurledMedia</file><file path="DisCatSharp/Entities/Interaction/DiscordActivityInstance.cs">public sealed class DiscordActivityInstance : ObservableApiObject</file><file path="DisCatSharp/Entities/Interaction/DiscordCallbackHintBuilder.cs">internal sealed class DiscordCallbackHintBuilder
 		this.Clear();
 		this.CallbackHints.AddRange(other.CallbackHints);
 	internal DiscordCallbackHintBuilder AddCallbackHint(InteractionResponseType intendedCallbackType, InteractionCallbackEphemerality intendedCallbackEphemerality = InteractionCallbackEphemerality.Optional, Permissions? intendedRequiredPermissions = null)
@@ -21661,7 +21661,7 @@ internal sealed class TransportTeamMember</file><file path="DisCatSharp/Net/Abs
 	internal async Task&lt;DiscordInteractionCallbackResponse&gt; CreateInteractionResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, DiscordInteractionResponseBuilder? builder)
 		RestInteractionResponsePayload pld;
 				? new DiscordInteractionApplicationCommandCallbackData
-					Mentions = builder?.Mentions.Any() ?? false ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
+					Mentions = builder.Mentions.Any() ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
 			if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count &gt; 0 || builder.IsTts || builder.Mentions.Any() || builder.Files?.Count &gt; 0 || builder.Components?.Count &gt; 0)
 		RestResponse response;
 		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter(&quot;wait&quot;, &quot;false&quot;).AddParameter(&quot;with_response&quot;, &quot;true&quot;).Build();

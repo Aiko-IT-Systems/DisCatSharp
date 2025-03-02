@@ -47,7 +47,7 @@ public sealed class DiscordActionRowComponent : DiscordComponent
 	///     Assigns a unique id to the components.
 	/// </summary>
 	/// <param name="id">The id to assign.</param>
-	public DiscordActionRowComponent WithId(uint id)
+	public DiscordActionRowComponent WithId(int id)
 	{
 		this.Id = id;
 		return this;

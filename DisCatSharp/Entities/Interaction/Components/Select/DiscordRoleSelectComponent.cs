@@ -76,7 +76,7 @@ public sealed class DiscordRoleSelectComponent : DiscordBaseSelectComponent
 	///     Assigns a unique id to the components.
 	/// </summary>
 	/// <param name="id">The id to assign.</param>
-	public DiscordRoleSelectComponent WithId(uint id)
+	public DiscordRoleSelectComponent WithId(int id)
 	{
 		this.Id = id;
 		return this;

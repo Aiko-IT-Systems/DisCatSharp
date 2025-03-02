@@ -88,7 +88,7 @@ public sealed class DiscordSectionComponent : DiscordComponent
 	///     Assigns a unique id to the components.
 	/// </summary>
 	/// <param name="id">The id to assign.</param>
-	public DiscordSectionComponent WithId(uint id)
+	public DiscordSectionComponent WithId(int id)
 	{
 		this.Id = id;
 		return this;

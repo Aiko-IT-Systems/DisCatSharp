@@ -75,7 +75,7 @@ public class DiscordPremiumButtonComponent : DiscordBaseButtonComponent
 	///     Assigns a unique id to the components.
 	/// </summary>
 	/// <param name="id">The id to assign.</param>
-	public DiscordPremiumButtonComponent WithId(uint id)
+	public DiscordPremiumButtonComponent WithId(int id)
 	{
 		this.Id = id;
 		return this;

@@ -89,7 +89,7 @@ public class DiscordLinkButtonComponent : DiscordBaseButtonComponent
 	///     Assigns a unique id to the components.
 	/// </summary>
 	/// <param name="id">The id to assign.</param>
-	public DiscordLinkButtonComponent WithId(uint id)
+	public DiscordLinkButtonComponent WithId(int id)
 	{
 		this.Id = id;
 		return this;

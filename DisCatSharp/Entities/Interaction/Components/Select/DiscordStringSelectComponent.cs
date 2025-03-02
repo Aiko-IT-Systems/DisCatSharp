@@ -88,7 +88,7 @@ public sealed class DiscordStringSelectComponent : DiscordBaseSelectComponent
 	///     Assigns a unique id to the components.
 	/// </summary>
 	/// <param name="id">The id to assign.</param>
-	public DiscordStringSelectComponent WithId(uint id)
+	public DiscordStringSelectComponent WithId(int id)
 	{
 		this.Id = id;
 		return this;

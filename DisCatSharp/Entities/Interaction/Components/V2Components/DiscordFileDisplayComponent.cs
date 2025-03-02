@@ -63,7 +63,7 @@ public sealed class DiscordFileDisplayComponent : DiscordComponent
 	///     Assigns a unique id to the components.
 	/// </summary>
 	/// <param name="id">The id to assign.</param>
-	public DiscordFileDisplayComponent WithId(uint id)
+	public DiscordFileDisplayComponent WithId(int id)
 	{
 		this.Id = id;
 		return this;

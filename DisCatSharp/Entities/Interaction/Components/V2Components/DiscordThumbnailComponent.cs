@@ -53,7 +53,7 @@ public sealed class DiscordThumbnailComponent : DiscordSectionAccessory
 	///     Assigns a unique id to the components.
 	/// </summary>
 	/// <param name="id">The id to assign.</param>
-	public DiscordThumbnailComponent WithId(uint id)
+	public DiscordThumbnailComponent WithId(int id)
 	{
 		this.Id = id;
 		return this;

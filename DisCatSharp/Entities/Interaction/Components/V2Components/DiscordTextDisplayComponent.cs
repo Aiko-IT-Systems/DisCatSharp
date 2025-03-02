@@ -48,7 +48,7 @@ public sealed class DiscordTextDisplayComponent : DiscordComponent
 	///     Assigns a unique id to the components.
 	/// </summary>
 	/// <param name="id">The id to assign.</param>
-	public DiscordTextDisplayComponent WithId(uint id)
+	public DiscordTextDisplayComponent WithId(int id)
 	{
 		this.Id = id;
 		return this;

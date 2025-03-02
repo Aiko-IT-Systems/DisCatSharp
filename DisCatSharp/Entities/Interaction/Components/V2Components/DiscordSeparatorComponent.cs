@@ -60,7 +60,7 @@ public sealed class DiscordSeparatorComponent : DiscordComponent
 	///     Assigns a unique id to the components.
 	/// </summary>
 	/// <param name="id">The id to assign.</param>
-	public DiscordSeparatorComponent WithId(uint id)
+	public DiscordSeparatorComponent WithId(int id)
 	{
 		this.Id = id;
 		return this;

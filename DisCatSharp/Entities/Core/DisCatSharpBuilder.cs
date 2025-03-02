@@ -199,8 +199,8 @@ public class DisCatSharpBuilder
 	{
 		if (this.Components.Count > 0)
 		{
-			HashSet<uint> ids = [];
-			Dictionary<uint, List<string>> duplicateIds = [];
+			HashSet<int> ids = [];
+			Dictionary<int, List<string>> duplicateIds = [];
 
 			foreach (var component in this.Components)
 				this.CheckComponentIds(component, ids, duplicateIds);
@@ -213,7 +213,7 @@ public class DisCatSharpBuilder
 		}
 	}
 
-	private void CheckComponentIds(DiscordComponent component, HashSet<uint> ids, Dictionary<uint, List<string>> duplicateIds)
+	private void CheckComponentIds(DiscordComponent component, HashSet<int> ids, Dictionary<int, List<string>> duplicateIds)
 	{
 		if (component is DiscordActionRowComponent actionRowComponent)
 			foreach (var actionRowComponentChild in actionRowComponent.Components)
@@ -245,7 +245,7 @@ public class DisCatSharpBuilder
 		this.AddId(component, ids, duplicateIds);
 	}
 
-	private void AddId(DiscordComponent component, HashSet<uint> ids, Dictionary<uint, List<string>> duplicateIds)
+	private void AddId(DiscordComponent component, HashSet<int> ids, Dictionary<int, List<string>> duplicateIds)
 	{
 		if (component.Id.HasValue)
 		{

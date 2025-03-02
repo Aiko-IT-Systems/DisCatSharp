@@ -56,7 +56,7 @@ public sealed class DiscordMediaGalleryComponent : DiscordComponent
 	///     Assigns a unique id to the components.
 	/// </summary>
 	/// <param name="id">The id to assign.</param>
-	public DiscordMediaGalleryComponent WithId(uint id)
+	public DiscordMediaGalleryComponent WithId(int id)
 	{
 		this.Id = id;
 		return this;
