@@ -22,6 +22,7 @@ jobs:
               uses: actions/setup-dotnet@v4.3.0
               with:
                   dotnet-version: |
+                      10.0.100-preview.1.25120.13
                       9.x
                       8.x
             - name: Git fetch unshallow
