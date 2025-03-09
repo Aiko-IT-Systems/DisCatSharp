@@ -391,6 +391,7 @@ public enum Permissions : long
 	/// <summary>
 	///      The flags are unknown.
 	/// </summary>
+	[PermissionString("The permissions are unknown")]
 	Unknown = long.MaxValue
 }
 

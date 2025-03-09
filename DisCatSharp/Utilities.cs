@@ -54,9 +54,9 @@ public static class Utilities
 		{
 			var xsv = xv.ToString();
 			var xmv = ti.DeclaredMembers.FirstOrDefault(xm => xm.Name == xsv);
-			var xav = xmv!.GetCustomAttribute<PermissionStringAttribute>()!;
+			var xav = xmv?.GetCustomAttribute<PermissionStringAttribute>();
 
-			PermissionStrings[xv] = xav.String;
+			PermissionStrings[xv] = xav?.String ?? xv.ToString();
 		}
 
 		var a = typeof(DiscordClient).GetTypeInfo().Assembly;
