@@ -25,13 +25,13 @@ public class DiscordUnfurledMedia: ObservableApiObject
 	///     Gets the proxied URL of the unfurled media.
 	/// </summary>
 	[JsonProperty("proxy_url", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordUri ProxyUrl { get; internal set; }
+	public DiscordUri? ProxyUrl { get; internal set; }
 
 	/// <summary>
 	///     Gets the media, or MIME, type of the unfurled media.
 	/// </summary>
 	[JsonProperty("content_type", NullValueHandling = NullValueHandling.Ignore)]
-	public string MediaType { get; internal set; }
+	public string? ContentType { get; internal set; }
 
 	/// <summary>
 	///     Gets the height, if applicable.
