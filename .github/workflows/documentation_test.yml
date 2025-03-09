@@ -1,7 +1,6 @@
 name: "Test Documentation"
 on:
-    pull_request:
-    merge_group:
+    workflow_dispatch:
 
 env:
     DOTNET_NOLOGO: true
