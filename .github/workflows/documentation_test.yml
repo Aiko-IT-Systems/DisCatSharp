@@ -60,8 +60,9 @@ jobs:
             - name: Create branch if not exists
               run: |
                   git fetch origin
-                  if git show-ref --verify --quiet refs/heads/${{ github.ref_name }}; then
+                  if git show-ref --verify refs/remotes/origin/${{ github.ref_name }}; then
                     echo "Branch exists"
+                    git checkout -b ${{ github.ref_name }}
                   else
                     git checkout -b ${{ github.ref_name }}
                     git push origin ${{ github.ref_name }}
