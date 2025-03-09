@@ -386,7 +386,12 @@ public enum Permissions : long
 	///     This only applies to apps not also installed to the server.
 	/// </summary>
 	[PermissionString("Use External Apps")]
-	UseExternalApps = 1L << 50
+	UseExternalApps = 1L << 50,
+
+	/// <summary>
+	///      The flags are unknown.
+	/// </summary>
+	Unknown = long.MaxValue
 }
 
 /// <summary>

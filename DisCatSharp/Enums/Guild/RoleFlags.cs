@@ -6,7 +6,7 @@ namespace DisCatSharp.Enums;
 ///     Represents additional details of a role.
 /// </summary>
 [Flags]
-public enum RoleFlags
+public enum RoleFlags : long
 {
 	/// <summary>
 	///     This role has no flags.
@@ -16,5 +16,10 @@ public enum RoleFlags
 	/// <summary>
 	///     This role is in a prompt.
 	/// </summary>
-	InPrompt = 1 << 0
+	InPrompt = 1L << 0,
+
+	/// <summary>
+	///      The flags are unknown.
+	/// </summary>
+	Unknown = long.MaxValue
 }
