@@ -20,7 +20,7 @@ public static class MessageFlagExtensions
 ///     Represents additional features of a message.
 /// </summary>
 [Flags]
-public enum MessageFlags
+public enum MessageFlags : long
 {
 	/// <summary>
 	///     This message has no flags.
@@ -30,81 +30,86 @@ public enum MessageFlags
 	/// <summary>
 	///     Whether this message is the original message that was published from a news channel to subscriber channels.
 	/// </summary>
-	Crossposted = 1 << 0,
+	Crossposted = 1L << 0,
 
 	/// <summary>
 	///     Whether this message is crossposted (automatically posted in a subscriber channel).
 	/// </summary>
-	IsCrosspost = 1 << 1,
+	IsCrosspost = 1L << 1,
 
 	/// <summary>
 	///     Whether any embeds in the message are hidden.
 	/// </summary>
-	SuppressedEmbeds = 1 << 2,
+	SuppressedEmbeds = 1L << 2,
 
 	/// <summary>
 	///     The source message for this crosspost has been deleted.
 	/// </summary>
-	SourceMessageDelete = 1 << 3,
+	SourceMessageDelete = 1L << 3,
 
 	/// <summary>
 	///     The message came from the urgent message system.
 	/// </summary>
-	Urgent = 1 << 4,
+	Urgent = 1L << 4,
 
 	/// <summary>
 	///     The message has an associated thread, with the same id as the message.
 	/// </summary>
-	HasThread = 1 << 5,
+	HasThread = 1L << 5,
 
 	/// <summary>
 	///     The message is only visible to the user who invoked the interaction.
 	/// </summary>
-	Ephemeral = 1 << 6,
+	Ephemeral = 1L << 6,
 
 	/// <summary>
 	///     The message is an interaction response and the bot is "thinking".
 	/// </summary>
-	Loading = 1 << 7,
+	Loading = 1L << 7,
 
 	/// <summary>
 	///     The message is warning that some roles failed to mention in thread.
 	/// </summary>
-	FailedToMentionSomeRolesInThread = 1 << 8,
+	FailedToMentionSomeRolesInThread = 1L << 8,
 
 	/// <summary>
 	///     The message is indicating that the feed is hidden.
 	/// </summary>
-	GuildFeedHidden = 1 << 9,
+	GuildFeedHidden = 1L << 9,
 
 	/// <summary>
 	///     The message contains a link marked as potential dangerous or absusive.
 	/// </summary>
-	ShouldShowLinkNotDiscordWarning = 1 << 10,
+	ShouldShowLinkNotDiscordWarning = 1L << 10,
 
 	/// <summary>
 	///     The message suppresses channel notifications.
 	///     Aka. new message indicator.
 	/// </summary>
-	SuppressNotifications = 1 << 12,
+	SuppressNotifications = 1L << 12,
 
 	/// <summary>
 	///     The message is a voice message.
 	/// </summary>
-	IsVoiceMessage = 1 << 13,
+	IsVoiceMessage = 1L << 13,
 
 	/// <summary>
 	///     The message has a snapshot (via Message Forwarding).
 	/// </summary>
-	HasSnapshots = 1 << 14,
+	HasSnapshots = 1L << 14,
 
 	/// <summary>
 	///     The message uses the UI Kit.
 	/// </summary>
-	IsComponentsV2 = 1 << 15,
+	IsComponentsV2 = 1L << 15,
 
 	/// <summary>
 	///     The message was send by a social layer integration.
 	/// </summary>
-	SendBySocialLayerIntegration = 1 << 16
+	SendBySocialLayerIntegration = 1L << 16,
+
+	/// <summary>
+	///      The flags are unknown.
+	/// </summary>
+	Unknown = long.MaxValue
 }

@@ -67,5 +67,5 @@ public class DiscordUnfurledMedia: ObservableApiObject
 	///     Gets the loading state.
 	/// </summary>
 	[JsonProperty("loading_state", NullValueHandling = NullValueHandling.Ignore)]
-	public LoadingState LoadingState { get; internal set; }
+	public LoadingState LoadingState { get; internal set; } = LoadingState.Unknown;
 }
