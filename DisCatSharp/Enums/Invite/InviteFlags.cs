@@ -19,7 +19,7 @@ public static class InviteFlagExtensions
 }
 
 [Flags]
-public enum InviteFlags
+public enum InviteFlags : long
 {
 	/// <summary>
 	///     Invite has no flags
@@ -34,7 +34,7 @@ public enum InviteFlags
 	///     Invite grants temporary guest membership.
 	///     All channels but the one invited to are hidden and user gets kicked if they leave the voice.
 	/// </summary>
-	IsGuestInvite = 1 << 0,
+	IsGuestInvite = 1L << 0,
 
 	/// <summary>
 	///     The invite has been viewed by any user (has been retrieved using the get invite endpoint).
@@ -42,17 +42,22 @@ public enum InviteFlags
 	[Deprecated("Replaced by IsViewed")]
 	Viewed = IsViewed,
 
-	IsViewed = 1 << 1,
+	IsViewed = 1L << 1,
 
 	/// <summary>
 	///     Invite is enhanced.
 	/// </summary>
-	IsEnhanced = 1 << 2,
+	IsEnhanced = 1L << 2,
 
 	/// <summary>
 	///     Invite bypasses a clan application.
 	/// </summary>
-	IsApplicationBypass = 1 << 3
+	IsApplicationBypass = 1L << 3,
+
+	/// <summary>
+	///      The flags are unknown.
+	/// </summary>
+	Unknown = long.MaxValue
 
 	//AssignableFlagsMask = 9
 }

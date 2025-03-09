@@ -52,9 +52,9 @@ public enum ApplicationFlags : long
 	GameProfileDisabled = 1L << 7,
 
 	/// <summary>
-	///     Allows the application to create activity assets.
+	///     The application's OAuth2 credentials are public.
 	/// </summary>
-	AllowAssets = 1L << 8,
+	PublicOAuth2Client = 1L << 8,
 
 	/// <summary>
 	///     The application's activity can be launched without a context.
@@ -62,19 +62,14 @@ public enum ApplicationFlags : long
 	ContextlessActivity = 1L << 9,
 
 	/// <summary>
-	///     Allows the application to enable activity spectating.
+	///     The application has limited access to the social layer SDK.
 	/// </summary>
-	[DiscordDeprecated("Replaced by ContextlessActivity")]
-	AllowActivityActionSpectate = ContextlessActivity,
-
-	/// <summary>
-	///     Allows the application to enable join requests for activities.
-	/// </summary>
-	AllowActivityActionJoinRequest = 1L << 10,
+	SocialLayerIntegrationLimited = 1L << 10,
 
 	/// <summary>
 	///     The application has connected to RPC.
 	/// </summary>
+	[DiscordDeprecated]
 	RpcHasConnected = 1L << 11,
 
 	/// <summary>
@@ -123,9 +118,9 @@ public enum ApplicationFlags : long
 	EmbeddedFirstParty = 1L << 20,
 
 	/// <summary>
-	///     To be datamined.
+	///     The application has been migrated to the new application command system.
 	/// </summary>
-	UnknownFlag = 1L << 21,
+	ApplicationCommandMigrated = 1L << 21,
 
 	/// <summary>
 	///     The application has registered global application commands.
@@ -139,24 +134,32 @@ public enum ApplicationFlags : long
 	Active = 1L << 24,
 
 	/// <summary>
+	///     Indicates if an application has not had any global application commands used in the last 30 days and has lost the <see cref="Active"/> flag.
+	/// </summary>
+	AcitiveGracePeriod = 1L << 25,
+
+	/// <summary>
 	///     Allows the app to use Iframe modals.
 	/// </summary>
 	IframeModal = 1L << 26,
 
 	/// <summary>
-	///     Indicates if an app is a social layer integration.
-	///     days.
+	///     Indicates if an app can use the social layer SDK.
 	/// </summary>
 	SocialLayerIntegration = 1L << 27,
 
 	/// <summary>
 	///     Indicates if an app is promoted by discord.
-	///     days.
 	/// </summary>
 	Promoted = 1L << 29,
 
 	/// <summary>
 	///     Indicates if an app is partnered with discord.
 	/// </summary>
-	Partner = 1L << 30
+	Partner = 1L << 30,
+
+	/// <summary>
+	///      The flags are unknown.
+	/// </summary>
+	Unknown = long.MaxValue
 }
