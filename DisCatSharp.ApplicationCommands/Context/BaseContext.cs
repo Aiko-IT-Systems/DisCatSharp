@@ -80,7 +80,7 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <summary>
 	///     Gets the guild locale if applicable.
 	/// </summary>
-	public string GuildLocale { get; internal set; }
+	public string? GuildLocale { get; internal set; }
 
 	/// <summary>
 	///     Gets the applications permissions.
@@ -95,16 +95,6 @@ public class BaseContext : DisCatSharpCommandContext
 	///     </para>
 	/// </summary>
 	public List<DiscordEntitlement> Entitlements { get; internal set; } = [];
-
-	/// <summary>
-	///     <para>Gets the entitlement sku ids.</para>
-	///     <para>This is related to premium subscriptions for bots.</para>
-	///     <para>
-	///         <note type="warning">Can only be used if you have an associated application subscription sku.</note>
-	///     </para>
-	/// </summary>
-	[DiscordDeprecated("Replaced by Entitlements"), Obsolete("Discord replaced this with Entitlements", true, DiagnosticId = "DCS0102")]
-	public List<ulong> EntitlementSkuIds { get; internal set; } = [];
 
 	/// <summary>
 	///     Gets the type of this interaction.
