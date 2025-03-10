@@ -118,5 +118,10 @@ public enum ChannelFlags : long
 	/// <summary>
 	///     Channel is obfuscated.
 	/// </summary>
-	Obfuscated = 1L << 17
+	Obfuscated = 1L << 17,
+
+	/// <summary>
+	///      The flags are unknown.
+	/// </summary>
+	Unknown = long.MaxValue
 }

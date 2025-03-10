@@ -25,40 +25,45 @@ public static class SystemChannelFlagsExtension
 ///     Represents settings for a guild's system channel.
 /// </summary>
 [Flags]
-public enum SystemChannelFlags
+public enum SystemChannelFlags : long
 {
 	/// <summary>
 	///     Member join messages are disabled.
 	/// </summary>
-	SuppressJoinNotifications = 1 << 0,
+	SuppressJoinNotifications = 1L << 0,
 
 	/// <summary>
 	///     Server boost messages are disabled.
 	/// </summary>
-	SuppressPremiumSubscriptions = 1 << 1,
+	SuppressPremiumSubscriptions = 1L << 1,
 
 	/// <summary>
 	///     Server setup tips are disabled.
 	/// </summary>
-	SuppressGuildReminderNotifications = 1 << 2,
+	SuppressGuildReminderNotifications = 1L << 2,
 
 	/// <summary>
 	///     Suppress member join sticker replies.
 	/// </summary>
-	SuppressJoinNotificationReplies = 1 << 3,
+	SuppressJoinNotificationReplies = 1L << 3,
 
 	/// <summary>
 	///     Role subscription purchase messages are disabled.
 	/// </summary>
-	SuppressRoleSubbscriptionPurchaseNotification = 1 << 4,
+	SuppressRoleSubbscriptionPurchaseNotification = 1L << 4,
 
 	/// <summary>
 	///     Suppress role subscription purchase sticker replies.
 	/// </summary>
-	SuppressRoleSubbscriptionPurchaseNotificationReplies = 1 << 5,
+	SuppressRoleSubbscriptionPurchaseNotificationReplies = 1L << 5,
 
 	/// <summary>
 	///     Suppress deadchat channel prompts.
 	/// </summary>
-	SuppressChannelPromptDeadchat = 1 << 7
+	SuppressChannelPromptDeadchat = 1L << 7,
+
+	/// <summary>
+	///      The flags are unknown.
+	/// </summary>
+	Unknown = long.MaxValue
 }
