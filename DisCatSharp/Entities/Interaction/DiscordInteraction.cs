@@ -40,14 +40,14 @@ public sealed class DiscordInteraction : SnowflakeObject
 	///     Gets the guild that invoked this interaction.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordGuild Guild
+	public DiscordGuild? Guild
 		=> (this.Discord as DiscordClient)?.InternalGetCachedGuild(this.GuildId) ?? this.PartialGuild;
 
 	/// <summary>
 	///     Gets the partial guild from the interaction.
 	/// </summary>
-	[JsonProperty("guild")]
-	internal DiscordGuild PartialGuild { get; set; }
+	[JsonProperty("guild", NullValueHandling = NullValueHandling.Ignore)]
+	internal DiscordGuild? PartialGuild { get; set; }
 
 	/// <summary>
 	///     Gets the Id of the channel that invoked this interaction.
@@ -60,7 +60,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// </summary>
 	[JsonIgnore] // TODO: Is now also partial "channel"
 	public DiscordChannel Channel
-		=> (this.Discord as DiscordClient).InternalGetCachedChannel(this.ChannelId) ?? (DiscordChannel)(this.Discord as DiscordClient).InternalGetCachedThread(this.ChannelId) ?? (this.Guild == null
+		=> (this.Discord as DiscordClient).InternalGetCachedChannel(this.ChannelId) ?? (DiscordChannel)(this.Discord as DiscordClient).InternalGetCachedThread(this.ChannelId) ?? (this.Guild is null
 			? new DiscordDmChannel
 			{
 				Id = this.ChannelId,
@@ -101,8 +101,8 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// <summary>
 	///     The message this interaction was created with, if any.
 	/// </summary>
-	[JsonProperty("message")]
-	internal DiscordMessage Message { get; set; }
+	[JsonProperty("message", NullValueHandling = NullValueHandling.Ignore)]
+	internal DiscordMessage? Message { get; set; }
 
 	/// <summary>
 	///     Gets the invoking user locale.
@@ -127,12 +127,6 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// </summary>
 	[JsonProperty("entitlements", NullValueHandling = NullValueHandling.Ignore)]
 	public List<DiscordEntitlement> Entitlements { get; internal set; } = [];
-
-	/// <summary>
-	///     <para>Gets the entitlement sku ids.</para>
-	/// </summary>
-	[JsonProperty("entitlement_sku_ids", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated, Obsolete("Discord replaced this with Entitlements", true, DiagnosticId = "DCS0102")]
-	public List<ulong> EntitlementSkuIds { get; internal set; } = [];
 
 	/// <summary>
 	///     Gets which integrations authorized the interaction.
@@ -165,7 +159,6 @@ public sealed class DiscordInteraction : SnowflakeObject
 	public Task CreateInteractionModalResponseAsync(DiscordInteractionModalBuilder builder)
 		=> this.Type is not InteractionType.Ping && this.Type is not InteractionType.ModalSubmit ? this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token, InteractionResponseType.Modal, builder) : throw new NotSupportedException("You can't respond to a PING with a modal.");
 
-	// TODO: Add hints support
 	/// <summary>
 	///     Creates an iframe response to this interaction.
 	/// </summary>
