@@ -42,8 +42,8 @@
 		<PackageReference Include="Microsoft.Maui.Graphics" Version="9.0.40" />
 		<PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="9.0.40" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="System.Collections.Immutable" Version="9.0.2" />
-		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.2" />
+		<PackageReference Include="System.Collections.Immutable" Version="9.0.3" />
+		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.3" />
 		<PackageReference Include="System.Memory" Version="4.6.0" />
 		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
 		<PackageReference Include="System.ValueTuple" Version="4.5.0" />
