@@ -6170,6 +6170,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var threadReturn = DiscordJson.DeserializeObject<DiscordThreadResult>(res.Response, this.Discord);
+		threadReturn.Threads.ForEach(x => x.Discord = this.Discord);
 
 		return threadReturn;
 	}
@@ -6198,6 +6199,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var threadReturn = DiscordJson.DeserializeObject<DiscordThreadResult>(res.Response, this.Discord);
+		threadReturn.Threads.ForEach(x => x.Discord = this.Discord);
 
 		return threadReturn;
 	}
@@ -6226,6 +6228,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var threadReturn = DiscordJson.DeserializeObject<DiscordThreadResult>(res.Response, this.Discord);
+		threadReturn.Threads.ForEach(x => x.Discord = this.Discord);
 
 		return threadReturn;
 	}
