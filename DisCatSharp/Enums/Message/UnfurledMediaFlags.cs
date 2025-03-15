@@ -20,7 +20,7 @@ public static class UnfurledMediaFlagExtensions
 ///     Represents additional features of unfurled media.
 /// </summary>
 [Flags]
-public enum UnfurledMediaFlags
+public enum UnfurledMediaFlags : long
 {
 	/// <summary>
 	///     This unfurled media has no flags.
