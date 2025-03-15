@@ -1108,14 +1108,13 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="code">The invite code.</param>
 	/// <param name="withCounts">Whether to include presence and total member counts in the returned invite.</param>
-	/// <param name="withExpiration">Whether to include the expiration date in the returned invite.</param>
 	/// <param name="scheduledEventId">The scheduled event id.</param>
 	/// <returns>The requested invite.</returns>
-	/// <exception cref="NotFoundException">Thrown when the invite does not exists.</exception>
+	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordInvite> GetInviteByCodeAsync(string code, bool? withCounts = null, bool? withExpiration = null, ulong? scheduledEventId = null)
-		=> this.ApiClient.GetInviteAsync(code, withCounts, withExpiration, scheduledEventId);
+	public Task<DiscordInvite> GetInviteByCodeAsync(string code, bool? withCounts = null, ulong? scheduledEventId = null)
+		=> this.ApiClient.GetInviteAsync(code, withCounts, scheduledEventId);
 
 	/// <summary>
 	///     Tries to get an invite.
@@ -1123,14 +1122,13 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="code">The invite code.</param>
 	/// <param name="invite">The invite, if found.</param>
 	/// <param name="withCounts">Whether to include presence and total member counts in the returned invite.</param>
-	/// <param name="withExpiration">Whether to include the expiration date in the returned invite.</param>
 	/// <param name="scheduledEventId">The scheduled event id.</param>
 	/// <returns>True if the invite was found, otherwise false.</returns>
-	public bool TryGetInviteByCode(string code, [NotNullWhen(true)] out DiscordInvite? invite, bool? withCounts = null, bool? withExpiration = null, ulong? scheduledEventId = null)
+	public bool TryGetInviteByCode(string code, [NotNullWhen(true)] out DiscordInvite? invite, bool? withCounts = null, ulong? scheduledEventId = null)
 	{
 		try
 		{
-			invite = this.GetInviteByCodeAsync(code, withCounts, withExpiration, scheduledEventId).ConfigureAwait(false).GetAwaiter().GetResult();
+			invite = this.GetInviteByCodeAsync(code, withCounts, scheduledEventId).ConfigureAwait(false).GetAwaiter().GetResult();
 			return true;
 		}
 		catch (NotFoundException)
