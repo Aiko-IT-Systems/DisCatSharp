@@ -4935,13 +4935,11 @@ public sealed class DiscordApiClient
 	/// <param name="withCounts">If true, with_counts.</param>
 	/// <param name="withExpiration">If true, with_expiration.</param>
 	/// <param name="guildScheduledEventId">The scheduled event id to get.</param>
-	internal async Task<DiscordInvite> GetInviteAsync(string inviteCode, bool? withCounts, bool? withExpiration, ulong? guildScheduledEventId)
+	internal async Task<DiscordInvite> GetInviteAsync(string inviteCode, bool? withCounts, ulong? guildScheduledEventId)
 	{
 		var urlParams = new Dictionary<string, string>();
 		if (withCounts.HasValue)
 			urlParams["with_counts"] = withCounts?.ToString();
-		if (withExpiration.HasValue)
-			urlParams["with_expiration"] = withExpiration?.ToString();
 		if (guildScheduledEventId.HasValue)
 			urlParams["guild_scheduled_event_id"] = guildScheduledEventId?.ToString();
 
@@ -6172,6 +6170,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var threadReturn = DiscordJson.DeserializeObject<DiscordThreadResult>(res.Response, this.Discord);
+		threadReturn.Threads.ForEach(x => x.Discord = this.Discord);
 
 		return threadReturn;
 	}
@@ -6200,6 +6199,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var threadReturn = DiscordJson.DeserializeObject<DiscordThreadResult>(res.Response, this.Discord);
+		threadReturn.Threads.ForEach(x => x.Discord = this.Discord);
 
 		return threadReturn;
 	}
@@ -6228,6 +6228,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var threadReturn = DiscordJson.DeserializeObject<DiscordThreadResult>(res.Response, this.Discord);
+		threadReturn.Threads.ForEach(x => x.Discord = this.Discord);
 
 		return threadReturn;
 	}

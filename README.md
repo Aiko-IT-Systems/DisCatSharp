@@ -16,22 +16,20 @@
 
 ## New
 
-- Full support for role subscriptions
-- Full support for burst reactions
-- Full support for subscriptions and entitlements
-- New queue system for Lavalink
-- Support for join request (create, update & delete) events for clans
-- Support for message forwarding
-- Support for application emojis
+- Full support for Components V2
+- Stability Improvements
+- Build-in Statistics
+- Support for .NET 10
+- Improvements for OAuth2 operations
 
 ## Breaking
 
-- Small breaking change in `AttachmentFlags`: The flag values are now prefixed with `Is` to be in line with other flag names.
-- `AddMention(IMention mention)` => `WithAllowedMention(IMention allowedMention)`
-- `AddMentions(IEnumerable<IMention> mentions)` => `WithAllowedMentions(IEnumerable<IMention> allowedMentions)`
-- Breaking change for `DiscordTextComponent`: `string customId = null, string label = null` was switched to `string label, string customId = null`.
-- `Url` fields on DiscordXY objects are now of type `DiscordUri`. You can still use it as `Uri` arg since we added an implicit operator.
-- Fixed the naming for create and delete test entitlement methods
+- **DiscordAttachment**: Renamed `MediaType` to `ContentType` to align with Discord's API.
+- **DiscordTextComponent**: Switched the position of `customId` and `label` because of nullability.
+- **Application Commands**: Removed `dmPermission` fields, causing DisCatSharp to do weird bulk-updates. Use `allowedContexts` instead.
+- **LavalinkGuildPlayer**: `RemoveQueue` renamed to [`RemoveFromQueue`]((xref:DisCatSharp.Lavalink.Entities.LavalinkGuildPlayer.RemoveFromQueue*)).
+- **Url fields**: Any `Url` fields on objects like `DiscordAttachment`, `DiscordEmbed`, etc., are now of type [`DiscordUri`](xref:DisCatSharp.Entities.DiscordUri) instead of `string`. Use `.ToUri()` to get a `Uri` object or use `.ToString()`.
+- We updated some namespaces in DisCatSharp.Interactivity. You might need to update your imports for some entities and enums.
 
 ----
 
@@ -136,7 +134,7 @@ Either join our official support guild at https://discord.gg/2HWta4GXus, open an
 
 ----
 
-## Sponsors
+## Sponsors (Current & Past)
 
 - [Dei](https://github.com/DeividasKaza)
 - [Will](https://github.com/villChurch)

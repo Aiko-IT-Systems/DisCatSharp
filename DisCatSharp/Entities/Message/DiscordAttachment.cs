@@ -44,7 +44,7 @@ public class DiscordAttachment : NullableSnowflakeObject
 	///     Gets the media, or MIME, type of the file.
 	/// </summary>
 	[JsonProperty("content_type", NullValueHandling = NullValueHandling.Ignore)]
-	public string MediaType { get; internal set; }
+	public string ContentType { get; internal set; }
 
 	/// <summary>
 	///     Gets the file size in bytes.
