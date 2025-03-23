@@ -19,7 +19,7 @@ on:
             - "DisCatSharp.VoiceNext/**"
             - "DisCatSharp.VoiceNext.Natives/**"
             - "DisCatSharp.Targets/**"
-            - "DisCatSharp.sln"
+            - "DisCatSharp.slnx"
 
 env:
     DOTNET_NOLOGO: true
@@ -43,7 +43,7 @@ jobs:
                       9.x
                       8.x
             - name: Restore dependencies
-              run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
+              run: dotnet restore --no-cache -f -v minimal DisCatSharp.slnx
             - name: Set outputs
               id: vars
               run: echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT

@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="DisCatSharp.ruleset" />
+  </Folder>
+  <Project Path="../DisCatSharp.Attributes/DisCatSharp.Attributes.csproj" />
+  <Project Path="../DisCatSharp.Experimental/DisCatSharp.Experimental.csproj" />
+  <Project Path="DisCatSharp.Analyzer/DisCatSharp.Analyzer.Package/DisCatSharp.Analyzer.Package.csproj" />
+  <Project Path="DisCatSharp.Analyzer/DisCatSharp.Analyzer/DisCatSharp.Analyzer.csproj" />
+</Solution>

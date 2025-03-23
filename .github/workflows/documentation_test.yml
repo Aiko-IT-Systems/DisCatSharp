@@ -37,10 +37,10 @@ jobs:
               run: dotnet tool update -g docfx
               continue-on-error: true
             - name: Restore packages
-              run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
+              run: dotnet restore --no-cache -f -v minimal DisCatSharp.slnx
               working-directory: GitHub/DisCatSharp
             - name: Build library
-              run: dotnet build -c Release -v minimal -f net8.0 --no-restore DisCatSharp.sln
+              run: dotnet build -c Release -v minimal -f net8.0 --no-restore DisCatSharp.slnx
               timeout-minutes: 7
               continue-on-error: true
               working-directory: GitHub/DisCatSharp

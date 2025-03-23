@@ -60,13 +60,13 @@ jobs:
                       8.x
             - name: Restore dependencies (DisCatSharp)
               if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}
-              run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
+              run: dotnet restore --no-cache -f -v minimal DisCatSharp.slnx
             - name: Restore dependencies (DisCatSharp.Attributes)
               if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp.Attributes' }}
               run: dotnet restore --no-cache -f -v minimal DisCatSharp.Attributes/DisCatSharp.Attributes.csproj
             - name: Restore dependencies (DisCatSharp.Tools)
               if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp.Tools' }}
-              run: dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.sln
+              run: dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.slnx
             - name: Build DisCatSharp as full release
               if: ${{!inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp'}}
               shell: pwsh
