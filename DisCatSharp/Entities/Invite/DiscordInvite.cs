@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 
@@ -163,6 +164,12 @@ public class DiscordInvite : ObservableApiObject
 	/// </summary>
 	[JsonProperty("is_nickname_changeable", NullValueHandling = NullValueHandling.Ignore)]
 	public bool? IsNicknameChangeable { get; internal set; } = null;
+
+	/// <summary>
+	///    Gets the guild profile, if applicable.
+	/// </summary>
+	[JsonProperty("profile", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment, RequiresFeature(Features.Override, "Requires a newer super property hash.")]
+	public DiscordGuildProfile? Profile { get; internal set; }
 
 	/// <summary>
 	///     Deletes the invite.
