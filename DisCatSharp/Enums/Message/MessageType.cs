@@ -294,5 +294,15 @@ public enum MessageType
 	/// <summary>
 	///     Message indicating a voice channel was upgraded to HD streaming.
 	/// </summary>
-	HdStreamingUpgraded = 55
+	HdStreamingUpgraded = 55,
+
+	/// <summary>
+	///     Message indicating a chat wallpaper was set.
+	/// </summary>
+	ChatWallpaperSet = 56,
+
+	/// <summary>
+	///     Message indicating a chat wallpaper was removed.
+	/// </summary>
+	ChatWallpaperRemoved = 57
 }

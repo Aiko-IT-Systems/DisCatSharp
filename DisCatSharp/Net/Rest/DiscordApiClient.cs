@@ -4933,15 +4933,17 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="inviteCode">The invite_code.</param>
 	/// <param name="withCounts">If true, with_counts.</param>
-	/// <param name="withExpiration">If true, with_expiration.</param>
 	/// <param name="guildScheduledEventId">The scheduled event id to get.</param>
-	internal async Task<DiscordInvite> GetInviteAsync(string inviteCode, bool? withCounts, ulong? guildScheduledEventId)
+	/// <param name="withPermissions">If true, with_permissions.</param>
+	internal async Task<DiscordInvite> GetInviteAsync(string inviteCode, bool? withCounts, ulong? guildScheduledEventId, bool? withPermissions)
 	{
 		var urlParams = new Dictionary<string, string>();
 		if (withCounts.HasValue)
 			urlParams["with_counts"] = withCounts?.ToString();
 		if (guildScheduledEventId.HasValue)
 			urlParams["guild_scheduled_event_id"] = guildScheduledEventId?.ToString();
+		if (withPermissions.HasValue)
+			urlParams["with_permissions"] = withPermissions?.ToString();
 
 		var route = $"{Endpoints.INVITES}/:invite_code";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new

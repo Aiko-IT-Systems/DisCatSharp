@@ -159,6 +159,12 @@ public class DiscordInvite : ObservableApiObject
 	public InviteFlags Flags { get; internal set; }
 
 	/// <summary>
+	///    Gets whether the useer can change their nickname on the guild.
+	/// </summary>
+	[JsonProperty("is_nickname_changeable", NullValueHandling = NullValueHandling.Ignore)]
+	public bool? IsNicknameChangeable { get; internal set; } = null;
+
+	/// <summary>
 	///     Deletes the invite.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
