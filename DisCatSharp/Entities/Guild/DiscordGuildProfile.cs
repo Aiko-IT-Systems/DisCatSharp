@@ -150,5 +150,5 @@ public sealed class DiscordGuildProfile : SnowflakeObject
 	///     <para><c>3</c> seems to be for when you enabled <c>Apply From Profile</c> when having apply to join enabled.</para>
     /// </summary>
     [JsonProperty("visibility", NullValueHandling = NullValueHandling.Ignore)]
-    public int Visibility { get; internal set; }
+    public GuildProfileVisibility Visibility { get; internal set; }
 }
