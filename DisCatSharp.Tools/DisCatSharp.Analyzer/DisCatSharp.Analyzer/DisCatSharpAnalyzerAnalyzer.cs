@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
@@ -13,16 +12,17 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace DisCatSharp.Analyzer
 {
+	/// <inheritdoc />
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
-	public class AttributeAnalyzer : DiagnosticAnalyzer
+	public class DisCatSharpAnalyzer : DiagnosticAnalyzer
 	{
 		/// <summary>
-		/// The diagnostic ID prefix.
+		///     The diagnostic ID prefix.
 		/// </summary>
 		public const string DIAGNOSTIC_ID_PREFIX = "DCS";
 
 		/// <summary>
-		/// The diagnostic category.
+		///     The diagnostic category.
 		/// </summary>
 		public const string CATEGORY = "Usage";
 
@@ -78,72 +78,162 @@ namespace DisCatSharp.Analyzer
 		private static readonly LocalizableString s_descriptionRequiresFeature =
 			new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionRequiresFeature), Resources.ResourceManager, typeof(Resources));
 
+		private static readonly LocalizableString s_titleRequiresOverride =
+			new LocalizableResourceString(nameof(Resources.AnalyzerTitleRequiresOverride), Resources.ResourceManager, typeof(Resources));
+
+		private static readonly LocalizableString s_messageFormatRequiresOverride =
+			new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatRequiresOverride), Resources.ResourceManager, typeof(Resources));
+
+		private static readonly LocalizableString s_descriptionRequiresOverride =
+			new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionRequiresOverride), Resources.ResourceManager, typeof(Resources));
+
 		private static readonly DiagnosticDescriptor s_experimentalRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0001", s_titleExperimental, s_messageFormatExperimental, CATEGORY,
-			DiagnosticSeverity.Warning, true, s_descriptionExperimental, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0001");
+			DiagnosticSeverity.Info, true, s_descriptionExperimental, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0001");
 
 		private static readonly DiagnosticDescriptor s_deprecatedRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0002", s_titleDeprecated, s_messageFormatDeprecated, CATEGORY,
-			DiagnosticSeverity.Warning, true, s_descriptionDeprecated, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0002");
+			DiagnosticSeverity.Error, true, s_descriptionDeprecated, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0002");
 
 		private static readonly DiagnosticDescriptor s_discordInExperimentRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0101", s_titleDiscordInExperiment,
 			s_messageFormatDiscordInExperiment, CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDiscordInExperiment, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0101");
 
 		private static readonly DiagnosticDescriptor s_discordDeprecatedRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0102", s_titleDiscordDeprecated, s_messageFormatDiscordDeprecated,
-			CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDiscordDeprecated, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0102");
+			CATEGORY, DiagnosticSeverity.Error, true, s_descriptionDiscordDeprecated, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0102");
 
 		private static readonly DiagnosticDescriptor s_discordUnreleasedRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0103", s_titleDiscordUnreleased, s_messageFormatDiscordUnreleased,
 			CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionDiscordUnreleased, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0103");
 
 		private static readonly DiagnosticDescriptor s_requiresFeatureRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0200", s_titleRequiresFeature, s_messageFormatRequiresFeature,
-			CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionRequiresFeature, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0200");
+			CATEGORY, DiagnosticSeverity.Info, true, s_descriptionRequiresFeature, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0200");
 
-		/// <summary>
-		/// Returns a set of descriptors for the diagnostics that this analyzer is capable of producing.
-		/// </summary>
+		private static readonly DiagnosticDescriptor s_requiresOverrideRule = new DiagnosticDescriptor(DIAGNOSTIC_ID_PREFIX + "0201", s_titleRequiresOverride, s_messageFormatRequiresOverride,
+			CATEGORY, DiagnosticSeverity.Warning, true, s_descriptionRequiresOverride, "https://docs.dcs.aitsys.dev/vs/analyzer/dcs/0201");
+
+		/// <inheritdoc />
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-			=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_requiresFeatureRule);
-
-		/// <summary>
-		/// Called once at session start to register actions in the analysis context.
-		/// </summary>
-		/// <param name="context">The analysis context.</param>
+			=> ImmutableArray.Create(s_experimentalRule, s_deprecatedRule, s_discordInExperimentRule, s_discordDeprecatedRule, s_discordUnreleasedRule, s_requiresFeatureRule, s_requiresOverrideRule);
+		
+		/// <inheritdoc />
 		public override void Initialize(AnalysisContext context)
 		{
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
 			context.EnableConcurrentExecution();
 
-			context.RegisterSymbolAction(ExperimentalAnalyzer, SymbolKind.Parameter);
-			context.RegisterSymbolAction(ExperimentalAnalyzer, SymbolKind.Property);
-			context.RegisterSymbolAction(ExperimentalAnalyzer, SymbolKind.NamedType);
-			context.RegisterSymbolAction(ExperimentalAnalyzer, SymbolKind.Method);
-			context.RegisterSymbolAction(ExperimentalAnalyzer, SymbolKind.Field);
-			context.RegisterSymbolAction(ExperimentalAnalyzer, SymbolKind.Event);
-			context.RegisterSyntaxNodeAction(StatusAnalyzer, SyntaxKind.InvocationExpression);
-			context.RegisterSyntaxNodeAction(StatusAnalyzer, SyntaxKind.ObjectCreationExpression);
-			context.RegisterSyntaxNodeAction(StatusAnalyzer, SyntaxKind.ElementAccessExpression);
-			context.RegisterSyntaxNodeAction(StatusAnalyzer, SyntaxKind.SimpleMemberAccessExpression);
+			context.RegisterSymbolAction(AnalyzeSymbol, SymbolKind.Parameter);
+			context.RegisterSymbolAction(AnalyzeSymbol, SymbolKind.Property);
+			context.RegisterSymbolAction(AnalyzeSymbol, SymbolKind.NamedType);
+			context.RegisterSymbolAction(AnalyzeSymbol, SymbolKind.Method);
+			context.RegisterSymbolAction(AnalyzeSymbol, SymbolKind.Field);
+			context.RegisterSymbolAction(AnalyzeSymbol, SymbolKind.Event);
+			context.RegisterSyntaxNodeAction(AnalyzeSyntaxNode, SyntaxKind.InvocationExpression);
+			context.RegisterSyntaxNodeAction(AnalyzeSyntaxNode, SyntaxKind.ObjectCreationExpression);
+			context.RegisterSyntaxNodeAction(AnalyzeSyntaxNode, SyntaxKind.ElementAccessExpression);
+			context.RegisterSyntaxNodeAction(AnalyzeSyntaxNode, SyntaxKind.SimpleMemberAccessExpression);
 		}
 
 		/// <summary>
-		/// Analyzes the status of various components.
+		///     Analyzes the symbols.
+		/// </summary>
+		/// <param name="context">The symbol analysis context.</param>
+		private static void AnalyzeSymbol(SymbolAnalysisContext context)
+		{
+			try
+			{
+				var syntaxTrees = from x in context.Symbol.Locations
+								  where x.IsInSource
+								  select x.SourceTree;
+				var declaration = context.Symbol;
+
+				if (declaration == null)
+					return;
+
+				var attributes = declaration.GetAttributes();
+
+				var name = declaration.Name;
+				var kind = declaration.Kind;
+
+				var model = context.Compilation.GetSemanticModel(syntaxTrees.First(), true);
+
+				var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(ExperimentalAttribute)));
+				var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DeprecatedAttribute)));
+				var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordInExperimentAttribute)));
+				var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordDeprecatedAttribute)));
+				var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordUnreleasedAttribute)));
+				var requiresFeatureAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(RequiresFeatureAttribute)));
+				var requiresOverrideAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(RequiresOverrideAttribute)));
+
+				if (experimentalAttributeData != null)
+				{
+					var message = GetMessage(experimentalAttributeData);
+					Console.WriteLine($"Triggered experimental rule for {kind} {name}: {message}");
+					context.ReportDiagnostic(Diagnostic.Create(s_experimentalRule, context.Symbol.Locations.FirstOrDefault(), kind, name, message));
+				}
+
+				if (deprecatedAttributeData != null)
+				{
+					var message = GetMessage(deprecatedAttributeData);
+					Console.WriteLine($"Triggered deprecated rule for {kind} {name}: {message}");
+					context.ReportDiagnostic(Diagnostic.Create(s_deprecatedRule, context.Symbol.Locations.FirstOrDefault(), kind, name, message));
+				}
+
+				if (discordInExperimentAttributeData != null)
+				{
+					var message = GetMessage(discordInExperimentAttributeData);
+					Console.WriteLine($"Triggered discord in experiment rule for {kind} {name}: {message}");
+					context.ReportDiagnostic(Diagnostic.Create(s_discordInExperimentRule, context.Symbol.Locations.FirstOrDefault(), kind, name, message));
+				}
+
+				if (discordDeprecatedAttributeData != null)
+				{
+					var message = GetMessage(discordDeprecatedAttributeData);
+					Console.WriteLine($"Triggered discord deprecated rule for {kind} {name}: {message}");
+					context.ReportDiagnostic(Diagnostic.Create(s_discordDeprecatedRule, context.Symbol.Locations.FirstOrDefault(), kind, name, message));
+				}
+
+				if (discordUnreleasedAttributeData != null)
+				{
+					var message = GetMessage(discordUnreleasedAttributeData);
+					Console.WriteLine($"Triggered discord unreleased rule for {kind} {name}: {message}");
+					context.ReportDiagnostic(Diagnostic.Create(s_discordUnreleasedRule, context.Symbol.Locations.FirstOrDefault(), kind, name, message));
+				}
+
+				if (requiresFeatureAttributeData != null)
+				{
+					var message = GetFeatureMessage(requiresFeatureAttributeData);
+					Console.WriteLine($"Triggered experimental rule for {kind} {name}: {message}");
+					context.ReportDiagnostic(Diagnostic.Create(s_requiresFeatureRule, context.Symbol.Locations.FirstOrDefault(), kind, name, message));
+				}
+
+				if (requiresOverrideAttributeData != null)
+				{
+					var message = GetOverrideMessage(requiresOverrideAttributeData);
+					Console.WriteLine($"Triggered requires override rule for {kind} {name}: {message}");
+					context.ReportDiagnostic(Diagnostic.Create(s_requiresOverrideRule, context.Symbol.Locations.FirstOrDefault(), kind, name, message));
+				}
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
+
+		/// <summary>
+		///     Analyzes the syntax nodes.
 		/// </summary>
 		/// <param name="context">The syntac node analysis context.</param>
-		private static void StatusAnalyzer(SyntaxNodeAnalysisContext context)
+		private static void AnalyzeSyntaxNode(SyntaxNodeAnalysisContext context)
 		{
 			try
 			{
 				var invocation = context.Node;
 				var declaration = context.SemanticModel.GetSymbolInfo(invocation, context.CancellationToken).Symbol;
-				if (null == declaration)
-				{
-					Console.WriteLine(new LocalizableResourceString(nameof(Resources.Faulty), Resources.ResourceManager, typeof(Resources)));
+				if (declaration == null)
 					return;
-				}
 
 				var attributes = declaration.GetAttributes();
 
 				var name = declaration.Name;
 				var kind = declaration.Kind.ToString();
-				if (name == ".ctor")
+				if (name is ".ctor")
 				{
 					name = declaration.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
 					kind = "Constructor";
@@ -155,6 +245,7 @@ namespace DisCatSharp.Analyzer
 				var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordDeprecatedAttribute)));
 				var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(DiscordUnreleasedAttribute)));
 				var requiresFeatureAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(RequiresFeatureAttribute)));
+				var requiresOverrideAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(RequiresOverrideAttribute)));
 
 				if (experimentalAttributeData != null)
 				{
@@ -191,116 +282,29 @@ namespace DisCatSharp.Analyzer
 					var message = GetFeatureMessage(requiresFeatureAttributeData);
 					context.ReportDiagnostic(Diagnostic.Create(s_requiresFeatureRule, invocation.GetLocation(), kind, name, message));
 				}
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine($"StatusAnalyzer threw an exception: {ex.Message}");
-				if (!string.IsNullOrEmpty(ex.StackTrace))
-					Console.WriteLine(ex.StackTrace);
-			}
 
-			return;
+				if (requiresOverrideAttributeData != null)
+				{
+					var message = GetOverrideMessage(requiresOverrideAttributeData);
+					context.ReportDiagnostic(Diagnostic.Create(s_requiresOverrideRule, invocation.GetLocation(), kind, name, message));
+				}
+			}
+			catch (Exception)
+			{
+				throw;
+			}
 		}
 
 		/// <summary>
-		/// Analyzes the experimental state of various components.
-		/// </summary>
-		/// <param name="context">The symbol analysis context.</param>
-		private static void ExperimentalAnalyzer(SymbolAnalysisContext context)
-		{
-			try
-			{
-				var syntaxTrees = from x in context.Symbol.Locations
-				                  where x.IsInSource
-				                  select x.SourceTree;
-				var declaration = context.Symbol;
-
-				// ReSharper disable HeuristicUnreachableCode
-				// ReSharper disable once ConditionIsAlwaysTrueOrFalse
-				if (null == declaration)
-				{
-					Console.WriteLine(new LocalizableResourceString(nameof(Resources.Faulty), Resources.ResourceManager, typeof(Resources)));
-					return;
-				}
-				// ReSharper enable HeuristicUnreachableCode
-
-				var attributes = declaration.GetAttributes();
-
-				var name = declaration.Name;
-				var kind = declaration.Kind.ToString();
-				if (name == ".ctor")
-				{
-					name = declaration.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-					kind = "Constructor";
-				}
-				else if (kind == "NamedType")
-					kind = "Class";
-
-				var model = context.Compilation.GetSemanticModel(syntaxTrees.First(), true);
-
-				var experimentalAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(ExperimentalAttribute)));
-				var deprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DeprecatedAttribute)));
-				var discordInExperimentAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordInExperimentAttribute)));
-				var discordDeprecatedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordDeprecatedAttribute)));
-				var discordUnreleasedAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(DiscordUnreleasedAttribute)));
-				var requiresFeatureAttributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(model, attr, typeof(RequiresFeatureAttribute)));
-
-				if (experimentalAttributeData != null)
-				{
-					var message = GetMessage(experimentalAttributeData);
-					context.ReportDiagnostic(Diagnostic.Create(s_experimentalRule, context.Symbol.Locations.FirstOrDefault(x => x.IsInSource), kind, name, message));
-				}
-
-				if (deprecatedAttributeData != null)
-				{
-					var message = GetMessage(deprecatedAttributeData);
-					context.ReportDiagnostic(Diagnostic.Create(s_deprecatedRule, context.Symbol.Locations.FirstOrDefault(x => x.IsInSource), kind, name, message));
-				}
-
-				if (discordInExperimentAttributeData != null)
-				{
-					var message = GetMessage(discordInExperimentAttributeData);
-					context.ReportDiagnostic(Diagnostic.Create(s_discordInExperimentRule, context.Symbol.Locations.FirstOrDefault(x => x.IsInSource), kind, name, message));
-				}
-
-				if (discordDeprecatedAttributeData != null)
-				{
-					var message = GetMessage(discordDeprecatedAttributeData);
-					context.ReportDiagnostic(Diagnostic.Create(s_discordDeprecatedRule, context.Symbol.Locations.FirstOrDefault(x => x.IsInSource), kind, name, message));
-				}
-
-				if (discordUnreleasedAttributeData != null)
-				{
-					var message = GetMessage(discordUnreleasedAttributeData);
-					context.ReportDiagnostic(Diagnostic.Create(s_discordUnreleasedRule, context.Symbol.Locations.FirstOrDefault(x => x.IsInSource), kind, name, message));
-				}
-
-				if (requiresFeatureAttributeData != null)
-				{
-					var message = GetFeatureMessage(requiresFeatureAttributeData);
-					context.ReportDiagnostic(Diagnostic.Create(s_requiresFeatureRule, context.Symbol.Locations.FirstOrDefault(x => x.IsInSource), kind, name, message));
-				}
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine($"StatusAnalyzer threw an exception: {ex.Message}");
-				if (!string.IsNullOrEmpty(ex.StackTrace))
-					Console.WriteLine(ex.StackTrace);
-			}
-
-			return;
-		}
-
-		/// <summary>
-		/// Checks if the attribute is the desired attribute.
+		///     Checks if the attribute is the desired attribute.
 		/// </summary>
 		/// <param name="semanticModel">The current semantic model.</param>
 		/// <param name="attribute">>The current attribute data.</param>
 		/// <param name="desiredAttributeType">The target attribute type to check for.</param>
-		/// <returns>Whether the <paramref name="attribute"/> contains the <paramref name="desiredAttributeType"/>.</returns>
+		/// <returns>Whether the <paramref name="attribute" /> contains the <paramref name="desiredAttributeType" />.</returns>
 		private static bool IsRequiredAttribute(SemanticModel semanticModel, AttributeData attribute, Type desiredAttributeType)
 		{
-			if (desiredAttributeType.FullName is null)
+			if (desiredAttributeType.FullName == null)
 				return false;
 
 			var desiredTypeNamedSymbol = semanticModel.Compilation.GetTypeByMetadataName(desiredAttributeType.FullName);
@@ -310,7 +314,7 @@ namespace DisCatSharp.Analyzer
 		}
 
 		/// <summary>
-		/// Gets the message from the attribute.
+		///     Gets the message from the attribute.
 		/// </summary>
 		/// <param name="attribute">The current attribute data.</param>
 		/// <returns>The message.</returns>
@@ -320,35 +324,57 @@ namespace DisCatSharp.Analyzer
 				: attribute.ConstructorArguments[0].Value as string;
 
 		/// <summary>
-		/// Gets the feature message from the attribute.
+		///     Retrieves a formatted message indicating the required override and additional information based on the provided
+		///     attribute data.
+		/// </summary>
+		/// <param name="attribute">
+		///     An object containing data about an attribute, which may include constructor arguments for
+		///     processing.
+		/// </param>
+		/// <returns>
+		///     A formatted string detailing the required override and any additional information or a default message if none is
+		///     provided.
+		/// </returns>
+		private static object GetOverrideMessage(AttributeData attribute)
+		{
+			if (attribute == null)
+				return string.Empty;
+
+			var lastKnownOverride = attribute.ConstructorArguments[0].Value as string;
+			var overrideDate = attribute.ConstructorArguments[1].Value as string;
+			var description = attribute.ConstructorArguments.Length > 2
+				? attribute.ConstructorArguments[2].Value as string
+				: "No additional information.";
+
+			return $"The following override is required (or newer if created after {overrideDate}): {lastKnownOverride} | {description}";
+		}
+
+		/// <summary>
+		///     Gets the feature message from the attribute.
 		/// </summary>
 		/// <param name="attribute">The current attribute data.</param>
 		/// <returns>The message.</returns>
 		private static string GetFeatureMessage(AttributeData attribute)
 		{
-			if (attribute is null)
+			if (attribute == null)
 				return string.Empty;
 
-			var featureReqEnum = (Features)attribute.ConstructorArguments[0].Value!;
+			var featureReqEnum = (Features)attribute.ConstructorArguments[0].Value;
 			var description = attribute.ConstructorArguments.Length > 1
 				? attribute.ConstructorArguments[1].Value as string
 				: "No additional information.";
+
 			return $"{featureReqEnum.ToFeaturesString()} | {description}";
 		}
 	}
 
-	/// <summary>
-	/// Represents a various helper methods.
+		/// <summary>
+	///     Represents a various helper methods.
 	/// </summary>
 	internal static class Helpers
 	{
 		/// <summary>
-		/// Gets the feature strings.
-		/// </summary>
-		internal static Dictionary<Features, string> FeaturesStrings { get; set; }
-
-		/// <summary>
-		/// Initializes the <see cref="Helpers"/> class.
+		///     Initializes the <see cref="Helpers" /> class.
 		/// </summary>
 		static Helpers()
 		{
@@ -368,7 +394,12 @@ namespace DisCatSharp.Analyzer
 		}
 
 		/// <summary>
-		/// Converts a feature enum to a string.
+		///     Gets the feature strings.
+		/// </summary>
+		internal static Dictionary<Features, string> FeaturesStrings { get; set; }
+
+		/// <summary>
+		///     Converts a feature enum to a string.
 		/// </summary>
 		/// <param name="features">The feature enum to convert.</param>
 		/// <returns>The string representation of the feature enum.</returns>

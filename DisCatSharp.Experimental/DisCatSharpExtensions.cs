@@ -21,6 +21,12 @@ public static class DisCatSharpExtensions
 		return user.UsernameWithDiscriminator;
 	}
 
+	public static async Task<string> GetProfile(DiscordInvite invite)
+	{
+		var profile = invite.Profile;
+		return profile.ToString();
+	}
+
 	/// <summary>
 	///     Gets the clyde profile for the given <paramref name="profileId" />.
 	/// </summary>

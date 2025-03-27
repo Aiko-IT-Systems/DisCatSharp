@@ -78,7 +78,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	///     Gets this user's username with the discriminator.
 	///     Example: Discord#0000
 	/// </summary>
-	[JsonIgnore, DiscordDeprecated("We will internally use the GlobalName if a user is already migrated. This will be removed in future. Consider switching to UsernameWithGlobalName then.")]
+	[JsonIgnore]
 	public virtual string UsernameWithDiscriminator
 		=> this.IsMigrated ? this.UsernameWithGlobalName : $"{this.Username}#{this.Discriminator}";
 
@@ -108,7 +108,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <summary>
 	///     Gets the user's 4-digit discriminator.
 	/// </summary>
-	[JsonProperty("discriminator", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated("Users are being migrated currently. Bots still have discrims")]
+	[JsonProperty("discriminator", NullValueHandling = NullValueHandling.Ignore)]
 	public virtual string Discriminator { get; internal set; }
 
 	/// <summary>

@@ -1,43 +1,34 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
-		<IncludeBuildOutput>false</IncludeBuildOutput>
-		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+	<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
 
-	<PropertyGroup>
-		<PackageId>DisCatSharp.Analyzer.Roselyn</PackageId>
-		<Version>6.2.5</Version>
-		<PackageVersion>6.2.5</PackageVersion>
-		<Authors>AITSYS</Authors>
-		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-		<Description>DisCatSharp Analyzer</Description>
-		<PackageReleaseNotes>Various DisCatSharp Analyzers.</PackageReleaseNotes>
-		<Copyright>Copyright 2022-2024 AITSYS</Copyright>
-		<PackageTags>Analyzer, analyzers, DisCatSharp, dcs</PackageTags>
-		<DevelopmentDependency>true</DevelopmentDependency>
-		<NoPackageAnalysis>true</NoPackageAnalysis>
-		<NuGetAuditSuppress>true</NuGetAuditSuppress>
-		<NuGetAudit>false</NuGetAudit>
-
-		<TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);AddNuGetDlls;_AddAnalyzersToOutput</TargetsForTfmSpecificContentInPackage>
-
-		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-
-		<Title>DisCatSharp Analyzer</Title>
-
-		<PackageIcon>logo-pride.png</PackageIcon>
-
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-
-		<RepositoryType>git</RepositoryType>
-
-		<RepositoryUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</RepositoryUrl>
-
-		<PackageProjectUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</PackageProjectUrl>
-	</PropertyGroup>
+  <PropertyGroup>
+	<Title>DisCatSharp Analyzer</Title>
+    <PackageId>DisCatSharp.Analyzer</PackageId>
+    <PackageVersion>1.0.0.0</PackageVersion>
+	<Authors>AITSYS</Authors>
+	<PackageIcon>logo-pride.png</PackageIcon>
+	<RepositoryUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</RepositoryUrl>
+	<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+	<PackageProjectUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Description>DisCatSharp.Analyzer</Description>
+    <PackageReleaseNotes>Summary of changes made in this release of the package.</PackageReleaseNotes>
+	<Copyright>Copyright 2022-2025 AITSYS</Copyright>
+	<PackageTags>Analyzer, analyzers, DisCatSharp, dcs</PackageTags>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+	<NuGetAuditSuppress>true</NuGetAuditSuppress>
+	<NuGetAudit>false</NuGetAudit>
+	<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);AddNuGetDlls</TargetsForTfmSpecificContentInPackage>
+  </PropertyGroup>
 
 	<ItemGroup>
 		<None Include="..\..\..\DisCatSharp.Logos\logo-pride.png">
@@ -48,63 +39,36 @@
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
-		<None Include="README.md">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
 	</ItemGroup>
-	<PropertyGroup>
-		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
-		<IncludeSymbols>False</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<WarningLevel>7</WarningLevel>
-		<DebugType>portable</DebugType>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<WarningLevel>7</WarningLevel>
-		<DebugType>portable</DebugType>
-	</PropertyGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\DisCatSharp.Analyzer\DisCatSharp.Analyzer.csproj" />
-		<PackageReference Include="DisCatSharp.Attributes" Version="10.6.6" PrivateAssets="all" GeneratePathProperty="true" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.13.0" PrivateAssets="all" />
-		<PackageReference Update="NETStandard.Library" PrivateAssets="all" />
-	</ItemGroup>
-
 	<Target Name="AddNuGetDlls" BeforeTargets="_GetPackageFiles">
 		<JoinItems Left="@(ResolvedCompileFileDefinitions)" LeftKey="NuGetPackageId" LeftMetadata="*"
-		           Right="@(PackageReference)" RightKey="" RightMetadata="*" ItemSpecToUse="Left">
+				   Right="@(PackageReference)" RightKey="" RightMetadata="*"
+				   ItemSpecToUse="Left">
 			<Output TaskParameter="JoinResult" ItemName="_PackagesToPack" />
 		</JoinItems>
 
 		<ItemGroup>
 			<_PackagesToPack Remove="@(_PackagesToPack)" Condition="%(NuGetPackageId) == 'NETStandard.Library'" />
-			<_PackagesToPack Remove="@(_PackagesToPack)"
-			                 Condition="%(NuGetPackageId) == 'Microsoft.CodeAnalysis.CSharp.Workspaces'" />
+			<_PackagesToPack Remove="@(_PackagesToPack)" Condition="%(_PackagesToPack.IncludeInPackage) != 'true'" />
 		</ItemGroup>
 
 		<Message Importance="High" Text="Adding DLLs from the following packages: @(_PackagesToPack->'%(NuGetPackageId)')" />
-
 		<ItemGroup>
-			<None Include="@(_PackagesToPack)" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-
-			<!--<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />-->
+			<None Include="@(_PackagesToPack)"
+				  Pack="true"
+				  PackagePath="analyzers/dotnet/cs"/>
+			<None Include="$(OutputPath)\DisCatSharp.Analyzer.dll"  Pack="true" PackagePath="analyzers/dotnet/cs" />
+			<None Include="$(OutputPath)\DisCatSharp.Analyzer.CodeFixes.dll"  Pack="true" PackagePath="analyzers/dotnet/cs" />
 		</ItemGroup>
 	</Target>
+  <ItemGroup>
+    <ProjectReference Include="..\DisCatSharp.Analyzer.CodeFixes\DisCatSharp.Analyzer.CodeFixes.csproj" />
+    <ProjectReference Include="..\DisCatSharp.Analyzer\DisCatSharp.Analyzer.csproj" />
+	<PackageReference Include="DisCatSharp.Attributes" Version="2025.3.27" PrivateAssets="All" IncludeInPackage="true" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<None Update="tools\*.ps1" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="" />
-		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-	</ItemGroup>
-
-	<Target Name="_AddAnalyzersToOutput">
-		<ItemGroup>
-			<TfmSpecificPackageFile Include="$(OutputPath)\DisCatSharp.Analyzer.dll" PackagePath="analyzers/dotnet/cs" />
-		</ItemGroup>
-	</Target>
+  <ItemGroup>
+    <None Update="tools\*.ps1" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="" />
+  </ItemGroup>
 
 </Project>

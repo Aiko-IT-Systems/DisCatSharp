@@ -117,76 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AnalyzerDescriptionDiscordDeprecated" xml:space="preserve">
-    <value>Discord deprecated this.</value>
-  </data>
-  <data name="AnalyzerDescriptionDiscordInExperiment" xml:space="preserve">
-    <value>Discord has released it as experiment. Do not use in production.</value>
-  </data>
-  <data name="AnalyzerDescriptionDiscordUnreleased" xml:space="preserve">
-    <value>Discord hasn't released this yet. Do not use in production.</value>
-  </data>
-  <data name="AnalyzerDescriptionExperimental" xml:space="preserve">
-    <value>DisCatSharp considers this as experimental. Do not use in production.</value>
-  </data>
-  <data name="AnalyzerMessageFormatDiscordDeprecated" xml:space="preserve">
-    <value>{0} '{1}' is deprecated: {2}</value>
-  </data>
-  <data name="AnalyzerMessageFormatDiscordInExperiment" xml:space="preserve">
-    <value>{0} '{1}' is in experiment: {2}</value>
-  </data>
-  <data name="AnalyzerMessageFormatDiscordUnreleased" xml:space="preserve">
-    <value>{0} '{1}' is not released yet: {2}</value>
-  </data>
-  <data name="AnalyzerMessageFormatExperimental" xml:space="preserve">
-    <value>{0} '{1}' is experimental: {2}</value>
-  </data>
-  <data name="AnalyzerTitleDiscordDeprecated" xml:space="preserve">
-    <value>[Discord] Deprecated</value>
-  </data>
-  <data name="AnalyzerTitleDiscordInExperiment" xml:space="preserve">
-    <value>[Discord] InExperiment</value>
-  </data>
-  <data name="AnalyzerTitleDiscordUnreleased" xml:space="preserve">
-    <value>[Discord] Unreleased</value>
-  </data>
-  <data name="AnalyzerTitleExperimental" xml:space="preserve">
-    <value>[DCS] Experimental</value>
-  </data>
-  <data name="AnalyzerTitleDeprecated" xml:space="preserve">
-    <value>[DCS] Deprecated</value>
-  </data>
-  <data name="AnalyzerMessageFormatDeprecated" xml:space="preserve">
-    <value>{0} '{1}' is deprecated: {2}</value>
-  </data>
-  <data name="AnalyzerDescriptionDeprecated" xml:space="preserve">
-    <value>DisCatSharp considers this as deprecated. Update your code.</value>
-  </data>
-  <data name="AnalyzerDescriptionRequiresFeature" xml:space="preserve">
-    <value>This needs special features to be enabled / set.</value>
-  </data>
-  <data name="AnalyzerMessageFormatRequiresFeature" xml:space="preserve">
-    <value>{0} '{1}' needs features: {2}</value>
-  </data>
-  <data name="AnalyzerTitleRequiresFeature" xml:space="preserve">
-    <value>[Discord] Requires Feature</value>
-  </data>
-  <data name="Handling" xml:space="preserve">
-    <value>Handling </value>
-  </data>
-  <data name="Faulty" xml:space="preserve">
-    <value>Faulty</value>
-  </data>
-  <data name="AnalyzerException" xml:space="preserve">
-    <value>DisCatSharp Analyzer threw an exception: {0}</value>
-  </data>
-  <data name="AnalyzerTitleRequiresOverride" xml:space="preserve">
-    <value>[Discord] Requires Override</value>
-  </data>
-  <data name="AnalyzerMessageFormatRequiresOverride" xml:space="preserve">
-    <value>{0} '{1}' needs override: {2}</value>
-  </data>
-  <data name="AnalyzerDescriptionRequiresOverride" xml:space="preserve">
-    <value>This requires to modify the DiscordConfiguration to include an Override.</value>
+  <data name="CodeFixTitle" xml:space="preserve">
+    <value>Make uppercase</value>
+    <comment>The title of the code fix.</comment>
   </data>
 </root>
