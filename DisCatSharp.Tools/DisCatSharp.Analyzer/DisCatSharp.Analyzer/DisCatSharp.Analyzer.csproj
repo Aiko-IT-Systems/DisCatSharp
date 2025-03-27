@@ -36,7 +36,7 @@
 		<NoWarn>1701;1702;NU1701</NoWarn>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="DisCatSharp.Attributes" Version="10.6.6" />
+		<PackageReference Include="DisCatSharp.Attributes" Version="2025.3.27" />
 		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.3" />
 		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0">
 			<PrivateAssets>all</PrivateAssets>
