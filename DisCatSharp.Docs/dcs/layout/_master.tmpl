@@ -37,6 +37,7 @@
 {{!include(manifest.json)}}
 {{!include(token.json)}}
 {{!include(browserconfig.xml)}}
+{{!include(browserconfig.xsd)}}
 {{!include(_redirects)}}
 <!DOCTYPE html>
 <html {{#_lang}}lang="{{_lang}}" {{/_lang}}>
@@ -103,10 +104,10 @@
 	<link rel="icon" type="image/png" sizes="32x32" href="{{_rel}}favicon-32x32.png">
 	<link rel="icon" type="image/png" sizes="96x96" href="{{_rel}}favicon-96x96.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="{{_rel}}favicon-16x16.png">
-	<link rel="manifest" href="/manifest.json">
-	<meta name="msapplication-TileColor" content="#ffffff">
+	<link rel="manifest" href="{{_rel}}manifest.json">
+	<meta name="msapplication-TileColor" content="#fc0fc0">
 	<meta name="msapplication-TileImage" content="{{_rel}}ms-icon-144x144.png">
-	<meta name="theme-color" content="#ffffff">
+	<meta name="theme-color" content="#fc0fc0">
 	<link rel="icon" href="{{_rel}}{{{_appFaviconPath}}}{{^_appFaviconPath}}favicon.ico{{/_appFaviconPath}}">
 	<link rel="shortcut icon" href="{{_rel}}{{{_appFaviconPath}}}{{^_appFaviconPath}}favicon.ico{{/_appFaviconPath}}">
 	{{#hasDiscordComponents}}
@@ -161,7 +162,7 @@
 	<link rel="stylesheet" href="{{_rel}}public/docfx.min.css">
 	<link rel="stylesheet" href="{{_rel}}public/main.css">
 	<link rel="stylesheet" href="{{_rel}}public/collapsible.css">
-	<link href="//cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.css" type="text/css"
+	<link href="https://cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.css" type="text/css"
 		rel="stylesheet" />
 	<meta name="docfx:navrel" content="{{_navRel}}">
 	<meta name="docfx:tocrel" content="{{_tocRel}}">
@@ -183,30 +184,43 @@
 	<meta name="loc:tocFilter" content="{{__global.tocFilter}}">
 	<meta name="loc:nextArticle" content="{{__global.nextArticle}}">
 	<meta name="loc:prevArticle" content="{{__global.prevArticle}}">
+	{{^_disableThemeSwitcher}}
 	<meta name="loc:themeLight" content="{{__global.themeLight}}">
 	<meta name="loc:themeDark" content="{{__global.themeDark}}">
 	<meta name="loc:themeAuto" content="{{__global.themeAuto}}">
 	<meta name="loc:changeTheme" content="{{__global.changeTheme}}">
+	{{/_disableThemeSwitcher}}
 	<meta name="loc:copy" content="{{__global.copy}}">
 	<meta name="loc:downloadPdf" content="{{__global.downloadPdf}}">
-	<script src="//code.jquery.com/jquery-latest.js"></script>
-	<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
-		data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
+	<script src="https://code.jquery.com/jquery-latest.js"></script>
 	<script type="module" src="{{_rel}}public/main.js"></script>
-	<script src="//cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.js" type="text/javascript"
+	{{^_disableFeatherlight}}
+	<script src="https://cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.js" type="text/javascript"
 		charset="utf-8"></script>
-	<script type="text/javascript" src="{{_rel}}public/plugin-featherlight.js"></script>
+	<script type="text/javascript" src="{{_rel}}public/plugin-featherlight.js"></script>{{/_disableFeatherlight}}
 	<script type="text/javascript" src="{{_rel}}public/collapsible.js"></script>
 	{{/redirect_url}}
 </head>
 {{^redirect_url}}
-<script type="module" src="./{{_rel}}public/main.js"></script>
-<script type="module" src="./{{_rel}}public/docfx.min.js"></script>
+<script type="module" src="{{_rel}}public/main.js"></script>
+<script type="module" src="{{_rel}}public/docfx.min.js"></script>
 
+{{^_disableThemeSwitcher}}
 <script>
-	const theme = 'dark' //localStorage.getItem('theme') || 'auto'
-	document.documentElement.setAttribute('data-bs-theme', 'dark') //document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+	const theme = localStorage.getItem('theme') || 'dark'
+	document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
 </script>
+{{/_disableThemeSwitcher}}
+{{#_disableThemeSwitcher}}
+<script>
+	document.documentElement.setAttribute('data-bs-theme', 'dark')
+</script>
+<style>
+	a[title="changeTheme"] {
+		display: none;
+	}
+</style>
+{{/_disableThemeSwitcher}}
 
 {{#_googleAnalyticsTagId}}
 <script async src="https://www.googletagmanager.com/gtag/js?id={{_googleAnalyticsTagId}}"></script>
@@ -224,7 +238,7 @@
 			<div class="container-xxl flex-nowrap">
 				<a class="navbar-brand" href="{{_appLogoUrl}}{{^_appLogoUrl}}{{_rel}}index.html{{/_appLogoUrl}}">
 					<img id="logo" class="svg"
-						src="{{_rel}}{{{_appLogoPath}}}{{^_appLogoPath}}logo.svg{{/_appLogoPath}}" alt="{{_appName}}">
+						src="{{{_appLogoPath}}}{{^_appLogoPath}}{{_rel}}logo.svg{{/_appLogoPath}}" alt="{{_appName}}">
 					&nbsp;&nbsp;{{_appName}}
 				</a>
 				<button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse"
@@ -248,6 +262,7 @@
 	</header>
 
 	<main class="container-xxl">
+		{{^_disableToc}}
 		<div class="toc-offcanvas">
 			<div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas"
 				aria-labelledby="tocOffcanvasLabel">
@@ -261,6 +276,7 @@
 				</div>
 			</div>
 		</div>
+		{{/_disableToc}}
 
 		<div class="content">
 			<div class="actionbar">
@@ -270,7 +286,7 @@
 					<i class="bi bi-list"></i>
 				</button>
 
-				<nav id="breadcrumb"></nav>
+				{{^_disableBreadcrumb}}<nav id="breadcrumb"></nav>{{/_disableBreadcrumb}}
 			</div>
 
 			<article data-uid="{{uid}}">
@@ -294,9 +310,11 @@
 
 		</div>
 
+		{{^_disableInThisArticle}}
 		<div class="affix">
 			<nav id="affix"></nav>
 		</div>
+		{{/_disableInThisArticle}}
 	</main>
 
 	{{#_enableSearch}}
@@ -306,7 +324,7 @@
 	<footer class="border-top text-secondary">
 		<div class="container-xxl">
 			<div class="flex-fill">
-				{{{_appFooter}}}{{^_appFooter}}<span>Made with <a
+				<strong>{{_appFooter}}</strong>{{^_appFooter}}<span>Made with <a
 						href="https://dotnet.github.io/docfx">docfx</a></span>{{/_appFooter}}
 			</div>
 		</div>

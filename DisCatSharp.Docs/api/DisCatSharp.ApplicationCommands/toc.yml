@@ -47,8 +47,8 @@ items:
   - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequirePermissionsAttribute
     name: ApplicationCommandRequirePermissionsAttribute
     type: Class
-  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequirePremiumAttribute
-    name: ApplicationCommandRequirePremiumAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireSkuEntitlementAttribute
+    name: ApplicationCommandRequireSkuEntitlementAttribute
     type: Class
   - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireTeamAdminAttribute
     name: ApplicationCommandRequireTeamAdminAttribute

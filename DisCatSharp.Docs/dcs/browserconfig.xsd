@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="browserconfig">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="msapplication">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="tile">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="square70x70logo">
+											<xs:complexType>
+												<xs:attribute name="src" use="required" />
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="square150x150logo">
+											<xs:complexType>
+												<xs:attribute name="src" use="required" />
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="square310x310logo">
+											<xs:complexType>
+												<xs:attribute name="src" use="required" />
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="TileColor" type="xs:string" />
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
