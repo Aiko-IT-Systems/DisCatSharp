@@ -15,7 +15,7 @@ namespace DisCatSharp.Entities;
 public sealed class DiscordInteraction : SnowflakeObject
 {
 	internal DiscordInteraction()
-		: base(["member", "guild_id", "channel_id", "channel", "guild", "user"])
+		: base(["member", "guild_id", "channel_id", "channel", "guild", "user", "entitlement_sku_ids"])
 	{ }
 
 	/// <summary>
@@ -115,6 +115,12 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// </summary>
 	[JsonProperty("guild_locale", NullValueHandling = NullValueHandling.Ignore)]
 	public string GuildLocale { get; internal set; }
+
+	/// <summary>
+	///     Gets the attachment size limit in bytes.
+	/// </summary>
+	[JsonProperty("attachment_size_limit", NullValueHandling = NullValueHandling.Ignore)]
+	public int AttachmentSizeLimit { get; internal set; }
 
 	/// <summary>
 	///     Gets the applications permissions.
