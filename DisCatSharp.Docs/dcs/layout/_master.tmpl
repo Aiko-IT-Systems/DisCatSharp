@@ -162,9 +162,6 @@
 	<link rel="stylesheet" href="{{_rel}}public/docfx.min.css">
 	<link rel="stylesheet" href="{{_rel}}public/main.css">
 	<link rel="stylesheet" href="{{_rel}}public/collapsible.css">
-	<link href="https://cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.css" type="text/css"
-		rel="stylesheet" />
-	<meta name="docfx:navrel" content="{{_navRel}}">
 	<meta name="docfx:tocrel" content="{{_tocRel}}">
 	{{#_noindex}}
 	<meta name="searchOption" content="noindex">{{/_noindex}}
@@ -178,6 +175,7 @@
 	{{#_urlNormalizationActive}}
 	<meta name="docfx:urlnormalizationactive" content="true">{{/_urlNormalizationActive}}
 	<meta name="docfx:docurl" content="{{docurl}}">{{/docurl}}
+	<meta name="docfx:navrel" content="{{_navRel}}">
 	<meta name="loc:inThisArticle" content="{{__global.inThisArticle}}">
 	<meta name="loc:searchResultsCount" content="{{__global.searchResultsCount}}">
 	<meta name="loc:searchNoResults" content="{{__global.searchNoResults}}">
@@ -195,14 +193,15 @@
 	<script src="https://code.jquery.com/jquery-latest.js"></script>
 	<script type="module" src="{{_rel}}public/main.js"></script>
 	{{^_disableFeatherlight}}
-	<script src="https://cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.js" type="text/javascript"
+	<link href="https://cdn.jsdelivr.net/npm/featherlight@latest/release/featherlight.min.css" type="text/css"
+		rel="stylesheet" />
+	<script src="https://cdn.jsdelivr.net/npm/featherlight@latest/release/featherlight.min.js" type="text/javascript"
 		charset="utf-8"></script>
 	<script type="text/javascript" src="{{_rel}}public/plugin-featherlight.js"></script>{{/_disableFeatherlight}}
 	<script type="text/javascript" src="{{_rel}}public/collapsible.js"></script>
 	{{/redirect_url}}
 </head>
 {{^redirect_url}}
-<script type="module" src="{{_rel}}public/main.js"></script>
 <script type="module" src="{{_rel}}public/docfx.min.js"></script>
 
 {{^_disableThemeSwitcher}}
