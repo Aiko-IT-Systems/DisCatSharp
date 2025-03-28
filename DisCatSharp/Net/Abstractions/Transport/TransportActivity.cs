@@ -30,11 +30,20 @@ internal sealed class TransportActivity : ObservableApiObject
 			return;
 
 		if (game.ActivityType == ActivityType.Custom)
+		{
 			this.Id = "custom";
-		this.Name = game.Name;
-		this.State = game.State;
-		this.ActivityType = game.ActivityType;
-		this.StreamUrl = game.StreamUrl;
+			this.Name = "Custom Status";
+			this.State = game.Name;
+			this.Emoji = game.Emoji;
+			this.ActivityType = game.ActivityType;
+		}
+		else
+		{
+			this.Name = game.Name;
+			this.State = game.State;
+			this.ActivityType = game.ActivityType;
+			this.StreamUrl = game.StreamUrl;
+		}
 	}
 
 	/// <summary>
@@ -79,7 +88,7 @@ internal sealed class TransportActivity : ObservableApiObject
 	///     Gets the emoji details for a custom status, if any.
 	/// </summary>
 	[JsonProperty("emoji", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordEmoji? Emoji { get; internal set; }
+	public PartialEmoji? Emoji { get; internal set; }
 
 	/// <summary>
 	///     Gets ID of the application for which this rich presence is for.

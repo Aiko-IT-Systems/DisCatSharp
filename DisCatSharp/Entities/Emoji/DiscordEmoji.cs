@@ -36,7 +36,8 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	///     Gets IDs the roles this emoji is enabled for.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyList<ulong> Roles => this._rolesLazy.Value;
+	public IReadOnlyList<ulong> Roles
+		=> this._rolesLazy.Value;
 
 	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<ulong> RolesInternal { get; set; } = [];

@@ -186,6 +186,11 @@ public sealed class DiscordActivity
 	}
 
 	/// <summary>
+	///     Gets or sets the partial emoji.
+	/// </summary>
+	public PartialEmoji? Emoji { get; set; }
+
+	/// <summary>
 	///     Gets or sets the id of user's activity.
 	/// </summary>
 	public string? Id { get; set; }
@@ -203,22 +208,22 @@ public sealed class DiscordActivity
 	/// <summary>
 	///     Gets or sets the stream URL, if applicable.
 	/// </summary>
-	public string StreamUrl { get; set; }
+	public string? StreamUrl { get; set; }
 
 	/// <summary>
 	///     Gets or sets platform in this rich presence.
 	/// </summary>
-	public string Platform { get; set; }
+	public string? Platform { get; set; }
 
 	/// <summary>
 	///     Gets or sets sync id in this rich presence.
 	/// </summary>
-	public string SyncId { get; set; }
+	public string? SyncId { get; set; }
 
 	/// <summary>
 	///     Gets or sets session_id in this rich presence.
 	/// </summary>
-	public string SessionId { get; set; }
+	public string? SessionId { get; set; }
 
 	/// <summary>
 	///     Gets or sets the activity type.
@@ -228,12 +233,12 @@ public sealed class DiscordActivity
 	/// <summary>
 	///     Gets the rich presence details, if present.
 	/// </summary>
-	public DiscordRichPresence RichPresence { get; internal set; }
+	public DiscordRichPresence? RichPresence { get; internal set; }
 
 	/// <summary>
 	///     Gets the custom status of this activity, if present.
 	/// </summary>
-	public DiscordCustomStatus CustomStatus { get; internal set; }
+	public DiscordCustomStatus? CustomStatus { get; internal set; }
 
 	/// <summary>
 	///     Updates a activity with an transport activity.
@@ -303,14 +308,14 @@ public sealed class DiscordCustomStatus
 	/// <summary>
 	///     Gets the emoji of this custom status, if any.
 	/// </summary>
-	public DiscordEmoji Emoji { get; internal set; }
+	public PartialEmoji? Emoji { get; internal set; }
 
 	/// <summary>
 	///     Updates a discord status.
 	/// </summary>
 	/// <param name="state">The state.</param>
 	/// <param name="emoji">The emoji.</param>
-	internal void UpdateWith(string? state, DiscordEmoji? emoji)
+	internal void UpdateWith(string? state, PartialEmoji? emoji)
 	{
 		this.Name = "Custom Status";
 		this.State = state;

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 using DisCatSharp.Entities;
 
 using Newtonsoft.Json;
@@ -9,8 +11,11 @@ namespace DisCatSharp.Net.Abstractions;
 /// </summary>
 internal sealed class StatusUpdate : ObservableApiObject
 {
+	/// <summary>
+	///     Gets the activities.
+	/// </summary>
 	[JsonIgnore]
-	internal DiscordActivity? ActivityInternal;
+	internal List<DiscordActivity>? ActivitiesInternal { get; set; }
 
 	/// <summary>
 	///     Gets or sets the unix millisecond timestamp of when the user went idle.
@@ -48,6 +53,6 @@ internal sealed class StatusUpdate : ObservableApiObject
 	/// <summary>
 	///     Gets or sets the game the user is playing.
 	/// </summary>
-	[JsonProperty("game", NullValueHandling = NullValueHandling.Ignore)]
-	public TransportActivity? Activity { get; set; }
+	[JsonProperty("activities", NullValueHandling = NullValueHandling.Ignore)]
+	public List<TransportActivity>? Activities { get; set; }
 }

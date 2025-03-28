@@ -21,22 +21,10 @@ namespace DisCatSharp.Entities;
 public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 {
 	/// <summary>
-	///     Gets the user's banner color integer.
-	/// </summary>
-	[JsonProperty("accent_color")]
-	internal int? BannerColorInternal;
-
-	/// <summary>
-	///     Gets the user's theme color integers.
-	/// </summary>
-	[JsonProperty("theme_colors", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<int>? ThemeColorsInternal;
-
-	/// <summary>
 	///     Initializes a new instance of the <see cref="DiscordUser" /> class.
 	/// </summary>
 	internal DiscordUser()
-		: base(["display_name", "linked_users", "banner_color", "authenticator_types"])
+		: base(["display_name", "linked_users", "banner_color", "authenticator_types", "collectibles"])
 	{ }
 
 	/// <summary>
@@ -67,6 +55,18 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		this.Clan = transport.Clan;
 		this.PrimaryGuild = transport.PrimaryGuild;
 	}
+
+	/// <summary>
+	///     Gets the user's banner color integer.
+	/// </summary>
+	[JsonProperty("accent_color")]
+	internal int? BannerColorInternal { get; set; }
+
+	/// <summary>
+	///     Gets the user's theme color integers.
+	/// </summary>
+	[JsonProperty("theme_colors", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<int>? ThemeColorsInternal { get; set; }
 
 	/// <summary>
 	///     Gets this user's username.
