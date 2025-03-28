@@ -3,38 +3,12 @@
 		{
 			"src": [
 				{
-					"src": "../DisCatSharp/",
-					"files": [
-						"**.csproj"
-					],
-					"exclude": [
-						"**/obj/**",
-						"**/bin/**"
-					]
+					"src": "../DisCatSharp.Attributes/",
+					"files": ["**.csproj"],
+					"exclude": ["**/obj/**", "**/bin/**"]
 				}
 			],
-			"dest": "api/DisCatSharp",
-			"filter": "filter_config.yml",
-			"disableDefaultFilter": false,
-			"memberLayout": "separatePages",
-			"namespaceLayout": "flattened",
-			"enumSortOrder": "declaringOrder",
-			"includeExplicitInterfaceImplementations": true
-		},
-		{
-			"src": [
-				{
-					"src": "../DisCatSharp.Interactivity/",
-					"files": [
-						"**.csproj"
-					],
-					"exclude": [
-						"**/obj/**",
-						"**/bin/**"
-					]
-				}
-			],
-			"dest": "api/DisCatSharp.Interactivity",
+			"dest": "api/DisCatSharp.Attributes",
 			"filter": "filter_config.yml",
 			"disableDefaultFilter": false,
 			"memberLayout": "separatePages",
@@ -46,13 +20,8 @@
 			"src": [
 				{
 					"src": "../DisCatSharp.Common/",
-					"files": [
-						"**.csproj"
-					],
-					"exclude": [
-						"**/obj/**",
-						"**/bin/**"
-					]
+					"files": ["**.csproj"],
+					"exclude": ["**/obj/**", "**/bin/**"]
 				}
 			],
 			"dest": "api/DisCatSharp.Common",
@@ -66,38 +35,12 @@
 		{
 			"src": [
 				{
-					"src": "../DisCatSharp.Hosting/",
-					"files": [
-						"**.csproj"
-					],
-					"exclude": [
-						"**/obj/**",
-						"**/bin/**"
-					]
+					"src": "../DisCatSharp/",
+					"files": ["**.csproj"],
+					"exclude": ["**/obj/**", "**/bin/**"]
 				}
 			],
-			"dest": "api/DisCatSharp.Hosting",
-			"filter": "filter_config.yml",
-			"disableDefaultFilter": false,
-			"memberLayout": "separatePages",
-			"namespaceLayout": "flattened",
-			"enumSortOrder": "declaringOrder",
-			"includeExplicitInterfaceImplementations": true
-		},
-		{
-			"src": [
-				{
-					"src": "../DisCatSharp.Configuration/",
-					"files": [
-						"**.csproj"
-					],
-					"exclude": [
-						"**/obj/**",
-						"**/bin/**"
-					]
-				}
-			],
-			"dest": "api/DisCatSharp.Configuration",
+			"dest": "api/DisCatSharp",
 			"filter": "filter_config.yml",
 			"disableDefaultFilter": false,
 			"memberLayout": "separatePages",
@@ -109,13 +52,8 @@
 			"src": [
 				{
 					"src": "../DisCatSharp.ApplicationCommands/",
-					"files": [
-						"**.csproj"
-					],
-					"exclude": [
-						"**/obj/**",
-						"**/bin/**"
-					]
+					"files": ["**.csproj"],
+					"exclude": ["**/obj/**", "**/bin/**"]
 				}
 			],
 			"dest": "api/DisCatSharp.ApplicationCommands",
@@ -130,13 +68,8 @@
 			"src": [
 				{
 					"src": "../DisCatSharp.CommandsNext/",
-					"files": [
-						"**.csproj"
-					],
-					"exclude": [
-						"**/obj/**",
-						"**/bin/**"
-					]
+					"files": ["**.csproj"],
+					"exclude": ["**/obj/**", "**/bin/**"]
 				}
 			],
 			"dest": "api/DisCatSharp.CommandsNext",
@@ -150,14 +83,57 @@
 		{
 			"src": [
 				{
+					"src": "../DisCatSharp.Interactivity/",
+					"files": ["**.csproj"],
+					"exclude": ["**/obj/**", "**/bin/**"]
+				}
+			],
+			"dest": "api/DisCatSharp.Interactivity",
+			"filter": "filter_config.yml",
+			"disableDefaultFilter": false,
+			"memberLayout": "separatePages",
+			"namespaceLayout": "flattened",
+			"enumSortOrder": "declaringOrder",
+			"includeExplicitInterfaceImplementations": true
+		},
+		{
+			"src": [
+				{
+					"src": "../DisCatSharp.Configuration/",
+					"files": ["**.csproj"],
+					"exclude": ["**/obj/**", "**/bin/**"]
+				}
+			],
+			"dest": "api/DisCatSharp.Configuration",
+			"filter": "filter_config.yml",
+			"disableDefaultFilter": false,
+			"memberLayout": "separatePages",
+			"namespaceLayout": "flattened",
+			"enumSortOrder": "declaringOrder",
+			"includeExplicitInterfaceImplementations": true
+		},
+		{
+			"src": [
+				{
+					"src": "../DisCatSharp.Hosting/",
+					"files": ["**.csproj"],
+					"exclude": ["**/obj/**", "**/bin/**"]
+				}
+			],
+			"dest": "api/DisCatSharp.Hosting",
+			"filter": "filter_config.yml",
+			"disableDefaultFilter": false,
+			"memberLayout": "separatePages",
+			"namespaceLayout": "flattened",
+			"enumSortOrder": "declaringOrder",
+			"includeExplicitInterfaceImplementations": true
+		},
+		{
+			"src": [
+				{
 					"src": "../DisCatSharp.Hosting.DependencyInjection/",
-					"files": [
-						"**.csproj"
-					],
-					"exclude": [
-						"**/obj/**",
-						"**/bin/**"
-					]
+					"files": ["**.csproj"],
+					"exclude": ["**/obj/**", "**/bin/**"]
 				}
 			],
 			"dest": "api/DisCatSharp.Hosting.DependencyInjection",
@@ -172,13 +148,8 @@
 			"src": [
 				{
 					"src": "../DisCatSharp.VoiceNext/",
-					"files": [
-						"**.csproj"
-					],
-					"exclude": [
-						"**/obj/**",
-						"**/bin/**"
-					]
+					"files": ["**.csproj"],
+					"exclude": ["**/obj/**", "**/bin/**"]
 				}
 			],
 			"dest": "api/DisCatSharp.VoiceNext",
@@ -192,35 +163,9 @@
 		{
 			"src": [
 				{
-					"src": "../DisCatSharp.Attributes/",
-					"files": [
-						"**.csproj"
-					],
-					"exclude": [
-						"**/obj/**",
-						"**/bin/**"
-					]
-				}
-			],
-			"dest": "api/DisCatSharp.Attributes",
-			"filter": "filter_config.yml",
-			"disableDefaultFilter": false,
-			"memberLayout": "separatePages",
-			"namespaceLayout": "flattened",
-			"enumSortOrder": "declaringOrder",
-			"includeExplicitInterfaceImplementations": true
-		},
-		{
-			"src": [
-				{
 					"src": "../DisCatSharp.Experimental/",
-					"files": [
-						"**.csproj"
-					],
-					"exclude": [
-						"**/obj/**",
-						"**/bin/**"
-					]
+					"files": ["**.csproj"],
+					"exclude": ["**/obj/**", "**/bin/**"]
 				}
 			],
 			"dest": "api/DisCatSharp.Experimental",
@@ -235,13 +180,8 @@
 			"src": [
 				{
 					"src": "../DisCatSharp.Lavalink/",
-					"files": [
-						"**.csproj"
-					],
-					"exclude": [
-						"**/obj/**",
-						"**/bin/**"
-					]
+					"files": ["**.csproj"],
+					"exclude": ["**/obj/**", "**/bin/**"]
 				}
 			],
 			"dest": "api/DisCatSharp.Lavalink",
@@ -254,9 +194,7 @@
 		}
 	],
 	"build": {
-		"xrefService": [
-			"https://xref.docs.microsoft.com/query?uid={uid}"
-		],
+		"xrefService": ["https://xref.docs.microsoft.com/query?uid={uid}"],
 		"xref": [
 			"ext-xrefmap.yml",
 			"https://learn.microsoft.com/en-us/dotnet/.xrefmap.json"
@@ -269,10 +207,7 @@
 					"api/**.yml",
 					"api/**.md"
 				],
-				"exclude": [
-					"libdev/**",
-					"**/node_modules/**"
-				]
+				"exclude": ["libdev/**", "**/node_modules/**"]
 			},
 			{
 				"files": [
@@ -319,14 +254,14 @@
 		"overwrite": [],
 		"dest": "_site",
 		"globalMetadata": {
-      			"pdf": false,
+			"pdf": false,
 			"pdfTocPage": false,
 			"pdfFileName": "dcs-docs.pdf",
 			"pdfCoverPage": "pdf/cover.html",
 			"pdfFooterTemplate": "pdf/footer.html",
 			"_appTitle": "DisCatSharp Docs",
 			"_appName": "DisCatSharp",
-			"_appFooter": "<strong>Made with ❤️ by AITSYS</strong>",
+			"_appFooter": "Made with ❤️ by AITSYS",
 			"_appLogoPath": "logo.svg",
 			"_enableSearch": true,
 			"_disableNextArticle": false,
@@ -335,6 +270,7 @@
 			"_disableNewTab": false,
 			"_disableContribution": false,
 			"_disableBreadcrumb": false,
+			"_disableThemeSwitcher": true,
 			"_gitUrlPattern": "git",
 			"_gitContribute": {
 				"repo": "https://github.com/Aiko-IT-Systems/DisCatSharp",
@@ -366,20 +302,17 @@
 				"vs/**/*.md": "article"
 			}
 		},
-		"template": [
-			"default",
-			"modern",
-			"dcs"
-		],
-		"postProcessors": [
-			"ExtractSearchIndex"
-		],
+		"template": ["default", "modern", "dcs"],
+		"postProcessors": ["ExtractSearchIndex"],
 		"noLangKeyword": false,
 		"keepFileLink": true,
 		"sitemap": {
 			"baseUrl": "https://docs.dcs.aitsys.dev/",
 			"changefreq": "daily",
 			"priority": 1.0
+		},
+		"markdownEngineProperties": {
+			"markdigExtensions": ["attributes"]
 		}
 	}
 }

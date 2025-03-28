@@ -1,5 +1,8 @@
 :root {
-	--bs-font-sans-gg: "gg-sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+	--bs-font-sans-gg: "gg-sans", system-ui, -apple-system, "Segoe UI", Roboto,
+		"Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif,
+		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+		"Noto Color Emoji" !important;
 }
 
 body {
@@ -7,17 +10,17 @@ body {
 }
 
 @media print {
-    body {
+	body {
 		--bs-body-font-family: var(--bs-font-sans-gg) !important;
 		font-family: var(--bs-font-sans-gg) !important;
-    }
+	}
 
-	.discord-messages, discord-messages {
+	.discord-messages,
+	discord-messages {
 		display: none !important;
 		visibility: hidden !important;
 	}
 }
-
 
 footer {
 	text-align: center !important;
@@ -36,35 +39,40 @@ footer {
 	display: none !important;
 }
 
-[data-bs-theme=dark] {
+[data-bs-theme="dark"] {
 	--bs-content-bg: #020202 !important;
-	--bs-body-bg: #0C0C0D !important;
-	--bs-heading-color: #5865F2 !important;
+	--bs-body-bg: #0c0c0d !important;
+	--bs-heading-color: #5865f2 !important;
 	--bs-link-color-rgb: rgb(235, 69, 158) !important;
-	--bs-link-color: #EB459E !important;
+	--bs-link-color: #eb459e !important;
 	--bs-link-opacity: 1 !important;
-	--bs-link-hover-color: #458FD0 !important;
-	--bs-affix-a-color: #8FCBFF !important;
-	--bs-affix-a-hover-color: #81E10C !important;
+	--bs-link-hover-color: #458fd0 !important;
+	--bs-affix-a-color: #8fcbff !important;
+	--bs-affix-a-hover-color: #81e10c !important;
 	--bs-danger-text-emphasis: #020202 !important;
-	--bs-danger-bg-subtle: #ED4245 !important;
+	--bs-danger-bg-subtle: #ed4245 !important;
 	--bs-danger-border-subtle: #000000 !important;
 	--bs-warning-text-emphasis: #020202 !important;
-	--bs-warning-bg-subtle: #FEE75C !important;
+	--bs-warning-bg-subtle: #fee75c !important;
 	--bs-warning-border-subtle: #000000 !important;
 	--bs-info-text-emphasis: #020202 !important;
 	--bs-info-bg-subtle: #78c5ff !important;
 	--bs-info-border-subtle: #000000 !important;
-	--bs-body-color: #FFFFFF !important;
-	--bs-navbar-brand-color: #FFFFFF !important;
-	--bs-heading-1-color: #FFFFFF !important;
-	--bs-code-color: #92EC71 !important;
+	--bs-body-color: #ffffff !important;
+	--bs-navbar-brand-color: #ffffff !important;
+	--bs-heading-1-color: #ffffff !important;
+	--bs-code-color: #92ec71 !important;
 	--bs-code-bg: #000000 !important;
-	--bs-nav-link-color: #C89696 !important;
-	--bs-nav-tabs-link-active-color: #16DB6C !important;
+	--bs-nav-link-color: #c89696 !important;
+	--bs-nav-tabs-link-active-color: #16db6c !important;
 	--bs-nav-tabs-link-active-bg: #020202 !important;
-	--bs-nav-tabs-link-active-border-color: rgba(255, 255, 255, 0.05) !important;
-	--bs-pagination-man-color: #FFFFFF !important;
+	--bs-nav-tabs-link-active-border-color: rgba(
+		255,
+		255,
+		255,
+		0.05
+	) !important;
+	--bs-pagination-man-color: #ffffff !important;
 }
 
 .toc-offcanvas,
@@ -82,7 +90,7 @@ footer {
 }
 
 .bg-body .nav-link {
-	color: #B8BEFF !important;
+	color: #b8beff !important;
 }
 
 .nav-tabs .nav-link.active,
@@ -109,11 +117,12 @@ footer {
 	padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
 	font-size: var(--bs-nav-link-font-size);
 	font-weight: var(--bs-nav-link-font-weight);
-	color: #C89696 !important;
+	color: #c89696 !important;
 	text-decoration: none;
 	background: none;
 	border: 0;
-	transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+	transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+		border-color 0.15s ease-in-out;
 }
 
 .breadcrumb,
@@ -170,7 +179,7 @@ a:hover {
 }
 
 .contribution a.edit-link {
-	color: #E5E891 !important;
+	color: #e5e891 !important;
 }
 
 .page-link {
@@ -181,16 +190,20 @@ a:hover {
 	color: var(--bs-pagination-man-color) !important;
 	text-decoration: none;
 	background-color: var(--bs-pagination-bg) !important;
-	border: var(--bs-pagination-border-width) solid var(--bs-pagination-border-color);
-	transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+	border: var(--bs-pagination-border-width) solid
+		var(--bs-pagination-border-color);
+	transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+		border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.page-link.disabled, .disabled > .page-link {
+.page-link.disabled,
+.disabled > .page-link {
 	color: var(--bs-pagination-disabled-color) !important;
 	pointer-events: none;
 }
 
-.page-link.active, .active > .page-link {
+.page-link.active,
+.active > .page-link {
 	z-index: 3;
 	color: var(--bs-pagination-active-color) !important;
 	background-color: var(--bs-pagination-active-bg) !important;
@@ -206,7 +219,12 @@ a:hover {
 
 .sr-item > div > b {
 	color: white;
-	background-image: linear-gradient(to right, #F27121cc, #E94057cc, #8A2387cc);
+	background-image: linear-gradient(
+		to right,
+		#f27121cc,
+		#e94057cc,
+		#8a2387cc
+	);
 	border-radius: 6px;
 	padding: 3px 0px;
 }
@@ -221,10 +239,10 @@ a:hover {
 	font-weight: 400;
 	font-display: block;
 	src: url(/fonts/gg_sans_normal400.woff2);
-	src: url(/fonts/gg_sans_normal400.woff2) format('woff2'),
-		url(/fonts/gg_sans_normal400.eot) format('embedded-opentype'),
-		url(/fonts/gg_sans_normal400.woff) format('woff'),
-		url(/fonts/gg_sans_normal400.ttf) format('truetype');
+	src: url(/fonts/gg_sans_normal400.woff2) format("woff2"),
+		url(/fonts/gg_sans_normal400.eot) format("embedded-opentype"),
+		url(/fonts/gg_sans_normal400.woff) format("woff"),
+		url(/fonts/gg_sans_normal400.ttf) format("truetype");
 }
 
 @font-face {
@@ -233,10 +251,10 @@ a:hover {
 	font-weight: 400;
 	font-display: block;
 	src: url(/fonts/gg_sans_italic400.woff2);
-	src: url(/fonts/gg_sans_italic400.woff2) format('woff2'),
-		url(/fonts/gg_sans_italic400.eot) format('embedded-opentype'),
-		url(/fonts/gg_sans_italic400.woff) format('woff'),
-		url(/fonts/gg_sans_italic400.ttf) format('truetype');
+	src: url(/fonts/gg_sans_italic400.woff2) format("woff2"),
+		url(/fonts/gg_sans_italic400.eot) format("embedded-opentype"),
+		url(/fonts/gg_sans_italic400.woff) format("woff"),
+		url(/fonts/gg_sans_italic400.ttf) format("truetype");
 }
 
 @font-face {
@@ -245,10 +263,10 @@ a:hover {
 	font-weight: 500;
 	font-display: block;
 	src: url(/fonts/gg_sans_normal500.woff2);
-	src: url(/fonts/gg_sans_normal500.woff2) format('woff2'),
-		url(/fonts/gg_sans_normal500.eot) format('embedded-opentype'),
-		url(/fonts/gg_sans_normal500.woff) format('woff'),
-		url(/fonts/gg_sans_normal500.ttf) format('truetype');
+	src: url(/fonts/gg_sans_normal500.woff2) format("woff2"),
+		url(/fonts/gg_sans_normal500.eot) format("embedded-opentype"),
+		url(/fonts/gg_sans_normal500.woff) format("woff"),
+		url(/fonts/gg_sans_normal500.ttf) format("truetype");
 }
 
 @font-face {
@@ -258,10 +276,10 @@ a:hover {
 	font-display: block;
 	src: url(/fonts/gg_sans_italic500.woff2);
 	src: url(/fonts/gg_sans_italic500.woff2) format("woff2");
-	src: url(/fonts/gg_sans_italic500.woff2) format('woff2'),
-		url(/fonts/gg_sans_italic500.eot) format('embedded-opentype'),
-		url(/fonts/gg_sans_italic500.woff) format('woff'),
-		url(/fonts/gg_sans_italic500.ttf) format('truetype');
+	src: url(/fonts/gg_sans_italic500.woff2) format("woff2"),
+		url(/fonts/gg_sans_italic500.eot) format("embedded-opentype"),
+		url(/fonts/gg_sans_italic500.woff) format("woff"),
+		url(/fonts/gg_sans_italic500.ttf) format("truetype");
 }
 
 @font-face {
@@ -270,10 +288,10 @@ a:hover {
 	font-weight: 600;
 	font-display: block;
 	src: url(/fonts/gg_sans_normal600.woff2);
-	src: url(/fonts/gg_sans_normal600.woff2) format('woff2'),
-		url(/fonts/gg_sans_normal600.eot) format('embedded-opentype'),
-		url(/fonts/gg_sans_normal600.woff) format('woff'),
-		url(/fonts/gg_sans_normal600.ttf) format('truetype');
+	src: url(/fonts/gg_sans_normal600.woff2) format("woff2"),
+		url(/fonts/gg_sans_normal600.eot) format("embedded-opentype"),
+		url(/fonts/gg_sans_normal600.woff) format("woff"),
+		url(/fonts/gg_sans_normal600.ttf) format("truetype");
 }
 
 @font-face {
@@ -282,10 +300,10 @@ a:hover {
 	font-weight: 600;
 	font-display: block;
 	src: url(/fonts/gg_sans_italic600.woff2);
-	src: url(/fonts/gg_sans_italic600.woff2) format('woff2'),
-		url(/fonts/gg_sans_italic600.eot) format('embedded-opentype'),
-		url(/fonts/gg_sans_italic600.woff) format('woff'),
-		url(/fonts/gg_sans_italic600.ttf) format('truetype');
+	src: url(/fonts/gg_sans_italic600.woff2) format("woff2"),
+		url(/fonts/gg_sans_italic600.eot) format("embedded-opentype"),
+		url(/fonts/gg_sans_italic600.woff) format("woff"),
+		url(/fonts/gg_sans_italic600.ttf) format("truetype");
 }
 
 @font-face {
@@ -294,10 +312,10 @@ a:hover {
 	font-weight: 700;
 	font-display: block;
 	src: url(/fonts/gg_sans_normal700.woff2);
-	src: url(/fonts/gg_sans_normal700.woff2) format('woff2'),
-		url(/fonts/gg_sans_normal700.eot) format('embedded-opentype'),
-		url(/fonts/gg_sans_normal700.woff) format('woff'),
-		url(/fonts/gg_sans_normal700.ttf) format('truetype');
+	src: url(/fonts/gg_sans_normal700.woff2) format("woff2"),
+		url(/fonts/gg_sans_normal700.eot) format("embedded-opentype"),
+		url(/fonts/gg_sans_normal700.woff) format("woff"),
+		url(/fonts/gg_sans_normal700.ttf) format("truetype");
 }
 
 @font-face {
@@ -307,10 +325,10 @@ a:hover {
 	font-display: block;
 	src: url(/fonts/gg_sans_italic700.woff2);
 	src: url(/fonts/gg_sans_italic700.woff2) format("woff2");
-	src: url(/fonts/gg_sans_italic700.woff2) format('woff2'),
-		url(/fonts/gg_sans_italic700.eot) format('embedded-opentype'),
-		url(/fonts/gg_sans_italic700.woff) format('woff'),
-		url(/fonts/gg_sans_italic700.ttf) format('truetype');
+	src: url(/fonts/gg_sans_italic700.woff2) format("woff2"),
+		url(/fonts/gg_sans_italic700.eot) format("embedded-opentype"),
+		url(/fonts/gg_sans_italic700.woff) format("woff"),
+		url(/fonts/gg_sans_italic700.ttf) format("truetype");
 }
 
 @font-face {
@@ -320,10 +338,10 @@ a:hover {
 	font-display: block;
 	src: url(/fonts/gg_sans_normal800.woff2);
 	src: url(/fonts/gg_sans_normal800.woff2) format("woff2");
-	src: url(/fonts/gg_sans_normal800.woff2) format('woff2'),
-		url(/fonts/gg_sans_normal800.eot) format('embedded-opentype'),
-		url(/fonts/gg_sans_normal800.woff) format('woff'),
-		url(/fonts/gg_sans_normal800.ttf) format('truetype');
+	src: url(/fonts/gg_sans_normal800.woff2) format("woff2"),
+		url(/fonts/gg_sans_normal800.eot) format("embedded-opentype"),
+		url(/fonts/gg_sans_normal800.woff) format("woff"),
+		url(/fonts/gg_sans_normal800.ttf) format("truetype");
 }
 
 @font-face {
@@ -333,10 +351,10 @@ a:hover {
 	font-display: block;
 	src: url(/fonts/gg_sans_italic800.woff2);
 	src: url(/fonts/gg_sans_italic800.woff2) format("woff2");
-	src: url(/fonts/gg_sans_italic800.woff2) format('woff2'),
-		url(/fonts/gg_sans_italic800.eot) format('embedded-opentype'),
-		url(/fonts/gg_sans_italic800.woff) format('woff'),
-		url(/fonts/gg_sans_italic800.ttf) format('truetype');
+	src: url(/fonts/gg_sans_italic800.woff2) format("woff2"),
+		url(/fonts/gg_sans_italic800.eot) format("embedded-opentype"),
+		url(/fonts/gg_sans_italic800.woff) format("woff"),
+		url(/fonts/gg_sans_italic800.ttf) format("truetype");
 }
 
 .discord-messages {
@@ -361,31 +379,31 @@ a:hover {
 }
 
 a.discord-invite-join.external[href]::after {
-	content: '' !important;
+	content: "" !important;
 }
 
-.discord-embed-author>a {
+.discord-embed-author > a {
 	color: white !important;
 }
 
-.discord-embed-author>a[href]::after {
-	content: '' !important;
+.discord-embed-author > a[href]::after {
+	content: "" !important;
 }
 
-.discord-embed-title>a {
-	color: #04A8FC !important;
+.discord-embed-title > a {
+	color: #04a8fc !important;
 }
 
-.discord-embed-title>a[href]::after {
-	content: '' !important;
+.discord-embed-title > a[href]::after {
+	content: "" !important;
 }
 
 a.discord-link {
-	color: #04A8FC !important;
+	color: #04a8fc !important;
 }
 
 a.discord-link.external[href]::after {
-	content: '' !important;
+	content: "" !important;
 }
 
 a.discord-button[href] {
@@ -393,14 +411,15 @@ a.discord-button[href] {
 }
 
 a.discord-button[href]::after {
-	content: '' !important;
+	content: "" !important;
 }
 
 .discord-embed a.discord-provider {
-  color: #6f9c8e !important;
+	color: #6f9c8e !important;
 }
+
 .discord-embed a.discord-provider::after {
-  content: '' !important;
+	content: "" !important;
 }
 
 *,

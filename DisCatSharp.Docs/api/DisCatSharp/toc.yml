@@ -80,6 +80,9 @@ items:
   - uid: DisCatSharp.Entities.AvatarDecorationData
     name: AvatarDecorationData
     type: Class
+  - uid: DisCatSharp.Entities.ChannelTypeExtensions
+    name: ChannelTypeExtensions
+    type: Class
   - uid: DisCatSharp.Entities.DiscordActionRowComponent
     name: DiscordActionRowComponent
     type: Class
@@ -203,6 +206,9 @@ items:
   - uid: DisCatSharp.Entities.DiscordBan
     name: DiscordBan
     type: Class
+  - uid: DisCatSharp.Entities.DiscordBaseButtonComponent
+    name: DiscordBaseButtonComponent
+    type: Class
   - uid: DisCatSharp.Entities.DiscordBaseSelectComponent
     name: DiscordBaseSelectComponent
     type: Class
@@ -211,9 +217,6 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordButtonComponent
     name: DiscordButtonComponent
-    type: Class
-  - uid: DisCatSharp.Entities.DiscordCallbackHintBuilder
-    name: DiscordCallbackHintBuilder
     type: Class
   - uid: DisCatSharp.Entities.DiscordChannel
     name: DiscordChannel
@@ -244,6 +247,9 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordConnection
     name: DiscordConnection
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordContainerComponent
+    name: DiscordContainerComponent
     type: Class
   - uid: DisCatSharp.Entities.DiscordCustomStatus
     name: DiscordCustomStatus
@@ -293,6 +299,9 @@ items:
   - uid: DisCatSharp.Entities.DiscordEntitlement
     name: DiscordEntitlement
     type: Class
+  - uid: DisCatSharp.Entities.DiscordFileDisplayComponent
+    name: DiscordFileDisplayComponent
+    type: Class
   - uid: DisCatSharp.Entities.DiscordFollowedChannel
     name: DiscordFollowedChannel
     type: Class
@@ -301,6 +310,9 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordForwardedMessage
     name: DiscordForwardedMessage
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordGameActivity
+    name: DiscordGameActivity
     type: Class
   - uid: DisCatSharp.Entities.DiscordGuild
     name: DiscordGuild
@@ -338,8 +350,14 @@ items:
   - uid: DisCatSharp.Entities.DiscordGuildPreview
     name: DiscordGuildPreview
     type: Class
+  - uid: DisCatSharp.Entities.DiscordGuildProfile
+    name: DiscordGuildProfile
+    type: Class
   - uid: DisCatSharp.Entities.DiscordGuildTemplate
     name: DiscordGuildTemplate
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordGuildTrait
+    name: DiscordGuildTrait
     type: Class
   - uid: DisCatSharp.Entities.DiscordGuildWelcomeScreen
     name: DiscordGuildWelcomeScreen
@@ -406,6 +424,12 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordLocales
     name: DiscordLocales
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordMediaGalleryComponent
+    name: DiscordMediaGalleryComponent
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordMediaGalleryItem
+    name: DiscordMediaGalleryItem
     type: Class
   - uid: DisCatSharp.Entities.DiscordMember
     name: DiscordMember
@@ -500,6 +524,9 @@ items:
   - uid: DisCatSharp.Entities.DiscordRoleSelectComponent
     name: DiscordRoleSelectComponent
     type: Class
+  - uid: DisCatSharp.Entities.DiscordRoleTags
+    name: DiscordRoleTags
+    type: Class
   - uid: DisCatSharp.Entities.DiscordRpcApplication
     name: DiscordRpcApplication
     type: Class
@@ -518,8 +545,17 @@ items:
   - uid: DisCatSharp.Entities.DiscordScheduledEventUser
     name: DiscordScheduledEventUser
     type: Class
+  - uid: DisCatSharp.Entities.DiscordSectionAccessory
+    name: DiscordSectionAccessory
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordSectionComponent
+    name: DiscordSectionComponent
+    type: Class
   - uid: DisCatSharp.Entities.DiscordSelectDefaultValue
     name: DiscordSelectDefaultValue
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordSeparatorComponent
+    name: DiscordSeparatorComponent
     type: Class
   - uid: DisCatSharp.Entities.DiscordServerGuide
     name: DiscordServerGuide
@@ -569,6 +605,9 @@ items:
   - uid: DisCatSharp.Entities.DiscordTextComponent
     name: DiscordTextComponent
     type: Class
+  - uid: DisCatSharp.Entities.DiscordTextDisplayComponent
+    name: DiscordTextDisplayComponent
+    type: Class
   - uid: DisCatSharp.Entities.DiscordThreadChannel
     name: DiscordThreadChannel
     type: Class
@@ -580,6 +619,15 @@ items:
     type: Class
   - uid: DisCatSharp.Entities.DiscordThreadResult
     name: DiscordThreadResult
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordThumbnailComponent
+    name: DiscordThumbnailComponent
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordUnfurledMedia
+    name: DiscordUnfurledMedia
+    type: Class
+  - uid: DisCatSharp.Entities.DiscordUnfurledMediaItem
+    name: DiscordUnfurledMediaItem
     type: Class
   - uid: DisCatSharp.Entities.DiscordUnicodeEmoji
     name: DiscordUnicodeEmoji
@@ -707,6 +755,9 @@ items:
   items:
   - uid: DisCatSharp.Entities.Core.CooldownBucket
     name: CooldownBucket
+    type: Class
+  - uid: DisCatSharp.Entities.Core.DisCatSharpBuilder
+    name: DisCatSharpBuilder
     type: Class
   - uid: DisCatSharp.Entities.Core.DisCatSharpCommandContext
     name: DisCatSharpCommandContext
@@ -881,12 +932,6 @@ items:
   - uid: DisCatSharp.Enums.EmbedFlags
     name: EmbedFlags
     type: Enum
-  - uid: DisCatSharp.Enums.EmbedMediaFlagExtensions
-    name: EmbedMediaFlagExtensions
-    type: Class
-  - uid: DisCatSharp.Enums.EmbedMediaFlags
-    name: EmbedMediaFlags
-    type: Enum
   - uid: DisCatSharp.Enums.EntitlementOwnerType
     name: EntitlementOwnerType
     type: Enum
@@ -910,6 +955,9 @@ items:
     type: Enum
   - uid: DisCatSharp.Enums.GatewayCompressionLevel
     name: GatewayCompressionLevel
+    type: Enum
+  - uid: DisCatSharp.Enums.GuildProfileVisibility
+    name: GuildProfileVisibility
     type: Enum
   - uid: DisCatSharp.Enums.HubType
     name: HubType
@@ -943,6 +991,9 @@ items:
     type: Enum
   - uid: DisCatSharp.Enums.JoinRequestStatusType
     name: JoinRequestStatusType
+    type: Enum
+  - uid: DisCatSharp.Enums.LoadingState
+    name: LoadingState
     type: Enum
   - uid: DisCatSharp.Enums.MemberFlagExtensions
     name: MemberFlagExtensions
@@ -1049,6 +1100,9 @@ items:
   - uid: DisCatSharp.Enums.ScheduledEventStatus
     name: ScheduledEventStatus
     type: Enum
+  - uid: DisCatSharp.Enums.SeparatorSpacingSize
+    name: SeparatorSpacingSize
+    type: Enum
   - uid: DisCatSharp.Enums.SkuAccessType
     name: SkuAccessType
     type: Enum
@@ -1097,6 +1151,12 @@ items:
   - uid: DisCatSharp.Enums.TokenType
     name: TokenType
     type: Enum
+  - uid: DisCatSharp.Enums.UnfurledMediaFlagExtensions
+    name: UnfurledMediaFlagExtensions
+    type: Class
+  - uid: DisCatSharp.Enums.UnfurledMediaFlags
+    name: UnfurledMediaFlags
+    type: Enum
   - uid: DisCatSharp.Enums.UnusedDomain
     name: UnusedDomain
     type: Enum
@@ -1124,6 +1184,9 @@ items:
     type: Enum
   - uid: DisCatSharp.Enums.Core.DisCatSharpCommandType
     name: DisCatSharpCommandType
+    type: Enum
+  - uid: DisCatSharp.Enums.Core.DisCatSharpStatisticType
+    name: DisCatSharpStatisticType
     type: Enum
 - uid: DisCatSharp.EventArgs
   name: DisCatSharp.EventArgs
