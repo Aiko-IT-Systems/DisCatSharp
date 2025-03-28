@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -282,14 +284,14 @@ public sealed partial class DiscordClient
 				else
 					this.Logger.LogWarning(LoggerEvents.ConnectionClose, "No valid session to resume, starting a new connection.");
 
-				await this.ConnectAsync(this._status?.ActivityInternal, this._status?.Status, this._status is not null && this._status.IdleSince.HasValue ? Utilities.GetDateTimeOffsetFromMilliseconds(this._status.IdleSince.Value) : null).ConfigureAwait(false);
+				await this.ConnectAsync(this._status?.ActivitiesInternal?.FirstOrDefault(), this._status?.Status, this._status?.IdleSince is not null ? Utilities.GetDateTimeOffsetFromMilliseconds(this._status.IdleSince.Value) : null).ConfigureAwait(false);
 			}
 			else if (this.Configuration.AutoReconnect)
 			{
 				this._sessionId = null;
 				this._identified = false;
 				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({CloseCode}, '{Reason}')", e.CloseCode, e.CloseMessage ?? "No reason given");
-				await this.ConnectAsync(this._status?.ActivityInternal, this._status?.Status, this._status is not null && this._status.IdleSince.HasValue ? Utilities.GetDateTimeOffsetFromMilliseconds(this._status.IdleSince.Value) : null).ConfigureAwait(false);
+				await this.ConnectAsync(this._status?.ActivitiesInternal?.FirstOrDefault(), this._status?.Status, this._status?.IdleSince is not null ? Utilities.GetDateTimeOffsetFromMilliseconds(this._status.IdleSince.Value) : null).ConfigureAwait(false);
 			}
 			else
 				this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({CloseCode}, '{Reason}')", e.CloseCode, e.CloseMessage ?? "No reason given");
@@ -475,23 +477,23 @@ public sealed partial class DiscordClient
 	/// <summary>
 	///     Updates the status.
 	/// </summary>
-	/// <param name="activity">The activity.</param>
+	/// <param name="activities">The activity.</param>
 	/// <param name="userStatus">The optional user status.</param>
 	/// <param name="idleSince">Since when is the client performing the specified activity.</param>
-	internal async Task InternalUpdateStatusAsync(DiscordActivity activity, UserStatus? userStatus, DateTimeOffset? idleSince)
+	internal async Task InternalUpdateStatusAsync(List<DiscordActivity>? activities, UserStatus? userStatus, DateTimeOffset? idleSince)
 	{
-		if (activity is { Name.Length: > 128 })
+		if (activities?.Any(a => a.Name?.Length > 128) ?? false)
 			throw new("Game name can't be longer than 128 characters!");
 
 		var sinceUnix = idleSince != null ? (long?)Utilities.GetUnixTime(idleSince.Value) : null;
-		var act = activity ?? new DiscordActivity();
-
+		var acts = activities ?? [new()];
 		var status = new StatusUpdate
 		{
-			Activity = new(act),
+			Activities = [..acts.Select(a => new TransportActivity(a))],
 			IdleSince = sinceUnix,
 			IsAfk = idleSince != null,
-			Status = userStatus ?? UserStatus.Online
+			Status = userStatus ?? UserStatus.Online,
+			ActivitiesInternal = acts
 		};
 
 		// Solution to have status persist between sessions
@@ -510,7 +512,8 @@ public sealed partial class DiscordClient
 			this.PresencesInternal[this.CurrentUser.Id] = new()
 			{
 				Discord = this,
-				Activity = act,
+				Activity = acts.First(),
+				InternalActivities = acts,
 				Status = userStatus ?? UserStatus.Online,
 				InternalUser = new()
 				{
@@ -519,7 +522,8 @@ public sealed partial class DiscordClient
 			};
 		else
 		{
-			value.Activity = act;
+			value.Activity = acts.First();
+			value.InternalActivities = acts;
 			value.Status = userStatus ?? value.Status;
 		}
 	}

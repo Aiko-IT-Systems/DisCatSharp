@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using DisCatSharp.Entities;
 
@@ -24,7 +25,12 @@ public class PresenceUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	///     Gets the user's new game.
 	/// </summary>
-	public DiscordActivity Activity { get; internal set; }
+	public DiscordActivity? Activity { get; internal set; }
+
+	/// <summary>
+	///     Gets the user's new activitites.
+	/// </summary>
+	public IReadOnlyList<DiscordActivity>? Activities { get; internal set; }
 
 	/// <summary>
 	///     Gets the user's status.
@@ -34,7 +40,7 @@ public class PresenceUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	///     Gets the user's old presence.
 	/// </summary>
-	public DiscordPresence PresenceBefore { get; internal set; }
+	public DiscordPresence? PresenceBefore { get; internal set; }
 
 	/// <summary>
 	///     Gets the user's new presence.

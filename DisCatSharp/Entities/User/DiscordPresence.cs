@@ -11,15 +11,12 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public sealed class DiscordPresence : ObservableApiObject
 {
-	[JsonIgnore]
-	internal DiscordActivity[] InternalActivities;
-
 	/// <summary>
 	///     Initializes a new instance of the <see cref="DiscordPresence" /> class.
 	/// </summary>
 	// TODO: Add broadcast field
 	internal DiscordPresence()
-		: base(["broadcast", "roles", "premium_since", "nick", "game"])
+		: base(["broadcast", "roles", "premium_since", "nick", "game", "processed_at_timestamp"])
 	{ }
 
 	/// <summary>
@@ -27,16 +24,22 @@ public sealed class DiscordPresence : ObservableApiObject
 	/// </summary>
 	/// <param name="other">The other.</param>
 	internal DiscordPresence(DiscordPresence other)
-		: base(["broadcast", "roles", "premium_since", "nick", "game"])
+		: base(["broadcast", "roles", "premium_since", "nick", "game", "processed_at_timestamp"])
 	{
 		this.Discord = other.Discord;
 		this.Activity = other.Activity;
 		this.RawActivity = other.RawActivity;
-		this.InternalActivities = (DiscordActivity[])other.InternalActivities?.Clone();
-		this.RawActivities = (TransportActivity[])other.RawActivities?.Clone();
+		this.InternalActivities = other.InternalActivities;
+		this.RawActivities = other.RawActivities;
 		this.Status = other.Status;
 		this.InternalUser = other.InternalUser;
 	}
+
+	/// <summary>
+	///     Gets the internal activities.
+	/// </summary>
+	[JsonIgnore]
+	internal List<DiscordActivity>? InternalActivities { get; set; }
 
 	/// <summary>
 	///     Gets the discord client.
@@ -61,25 +64,26 @@ public sealed class DiscordPresence : ObservableApiObject
 	///     Gets the user's current activity.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordActivity Activity { get; internal set; }
+	public DiscordActivity? Activity { get; internal set; }
 
 	/// <summary>
 	///     Gets the raw activity.
 	/// </summary>
-	internal TransportActivity RawActivity { get; set; }
+	[JsonIgnore]
+	internal TransportActivity? RawActivity { get; set; }
 
 	/// <summary>
 	///     Gets the user's current activities.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyList<DiscordActivity> Activities
+	public IReadOnlyList<DiscordActivity>? Activities
 		=> this.InternalActivities;
 
 	/// <summary>
 	///     Gets the raw activities.
 	/// </summary>
 	[JsonProperty("activities", NullValueHandling = NullValueHandling.Ignore)]
-	internal TransportActivity[] RawActivities { get; set; }
+	internal List<TransportActivity>? RawActivities { get; set; }
 
 	/// <summary>
 	///     Gets this user's status.

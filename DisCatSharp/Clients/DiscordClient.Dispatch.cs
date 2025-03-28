@@ -1120,17 +1120,16 @@ public sealed partial class DiscordClient
 	/// <param name="guild">The guild.</param>
 	/// <param name="rawMembers">The raw members.</param>
 	/// <param name="presences">The presences.</param>
-	internal async Task OnGuildCreateEventAsync(DiscordGuild guild, JArray rawMembers, IEnumerable<DiscordPresence> presences)
+	internal async Task OnGuildCreateEventAsync(DiscordGuild guild, JArray rawMembers, IEnumerable<DiscordPresence>? presences)
 	{
 		if (presences != null)
 			foreach (var xp in presences)
 			{
 				xp.Discord = this;
 				xp.GuildId = guild.Id;
-				xp.Activity = new(xp.RawActivity);
-				if (xp.RawActivities != null)
-					xp.InternalActivities = xp.RawActivities
-						.Select(x => new DiscordActivity(x)).ToArray();
+				xp.Activity = xp.RawActivity is not null ? new(xp.RawActivity) : null;
+				xp.InternalActivities = xp.RawActivities?
+					.Select(x => new DiscordActivity(x)).ToList();
 				this.PresencesInternal[xp.InternalUser.Id] = xp;
 			}
 
@@ -2268,27 +2267,25 @@ public sealed partial class DiscordClient
 			Nonce = nonce
 		};
 
-		if (dat["presences"] != null)
+		if (dat["presences"] is not null)
 		{
-			var presences = dat["presences"]!.ToObject<DiscordPresence[]>()!;
+			var presences = dat["presences"]?.ToObject<List<DiscordPresence>?>();
+			if (presences is not null)
+				foreach (var presence in presences)
+				{
+					presence.Discord = this;
+					presence.Activity = presence.RawActivity is not null ? new(presence.RawActivity) : null;
 
-			var presCount = presences.Length;
-			foreach (var presence in presences)
-			{
-				presence.Discord = this;
-				presence.Activity = new(presence.RawActivity);
+					presence.InternalActivities = presence.RawActivities?
+						.Select(x => new DiscordActivity(x)).ToList();
 
-				if (presence.RawActivities != null)
-					presence.InternalActivities = presence.RawActivities
-						.Select(x => new DiscordActivity(x)).ToArray();
-
-				pres.Add(presence);
-			}
+					pres.Add(presence);
+				}
 
 			ea.Presences = new ReadOnlySet<DiscordPresence>(pres);
 		}
 
-		if (dat["not_found"] != null)
+		if (dat["not_found"] is not null)
 		{
 			var nf = dat["not_found"]!.ToObject<ISet<ulong>>()!;
 			ea.NotFound = new ReadOnlySet<ulong>(nf);
@@ -3566,7 +3563,7 @@ public sealed partial class DiscordClient
 	internal async Task OnPresenceUpdateEventAsync(JObject rawPresence, JObject rawUser)
 	{
 		var uid = (ulong)rawUser["id"]!;
-		DiscordPresence old = null;
+		DiscordPresence? old = null;
 
 		if (this.PresencesInternal.TryGetValue(uid, out var presence))
 		{
@@ -3578,22 +3575,22 @@ public sealed partial class DiscordClient
 			presence = DiscordJson.DeserializeObject<DiscordPresence>(rawPresence.ToString(), this);
 			;
 			presence.Discord = this;
-			presence.Activity = new(presence.RawActivity);
+			presence.Activity = presence.RawActivity is not null ? new(presence.RawActivity): null;
 			this.PresencesInternal[presence.InternalUser.Id] = presence;
 		}
 
 		// reuse arrays / avoid linq (this is a hot zone)
 		if (presence.Activities == null || rawPresence["activities"] == null)
 			presence.InternalActivities = [];
-		else
+		else if (presence.RawActivities is not null)
 		{
-			if (presence.InternalActivities.Length != presence.RawActivities.Length)
-				presence.InternalActivities = new DiscordActivity[presence.RawActivities.Length];
+			if (presence.InternalActivities?.Count != presence.RawActivities.Count)
+				presence.InternalActivities = new(presence.RawActivities.Count);
 
-			for (var i = 0; i < presence.InternalActivities.Length; i++)
+			for (var i = 0; i < presence.InternalActivities.Count; i++)
 				presence.InternalActivities[i] = new(presence.RawActivities[i]);
 
-			if (presence.InternalActivities.Length > 0)
+			if (presence.InternalActivities.Count > 0)
 			{
 				presence.RawActivity = presence.RawActivities[0];
 
@@ -3608,6 +3605,7 @@ public sealed partial class DiscordClient
 		{
 			Status = presence.Status,
 			Activity = presence.Activity,
+			Activities = presence.Activities,
 			User = presence.User,
 			PresenceBefore = old,
 			PresenceAfter = presence

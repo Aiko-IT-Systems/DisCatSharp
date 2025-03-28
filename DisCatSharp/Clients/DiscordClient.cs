@@ -361,11 +361,11 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			var sinceUnix = idlesince != null ? (long?)Utilities.GetUnixTime(idlesince.Value) : null;
 			this._status = new()
 			{
-				Activity = activity is not null ? new(activity) : null,
+				Activities = activity is not null ? [new(activity)] : null,
 				Status = status ?? UserStatus.Online,
 				IdleSince = sinceUnix,
 				IsAfk = idlesince is not null,
-				ActivityInternal = activity
+				ActivitiesInternal = activity is not null ? [activity] : null
 			};
 		}
 
@@ -1341,8 +1341,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="userStatus">Status of the user.</param>
 	/// <param name="idleSince">Since when is the client performing the specified activity.</param>
 	/// <returns></returns>
-	public Task UpdateStatusAsync(DiscordActivity activity = null, UserStatus? userStatus = null, DateTimeOffset? idleSince = null)
-		=> this.InternalUpdateStatusAsync(activity, userStatus, idleSince);
+	public Task UpdateStatusAsync(DiscordActivity? activity = null, UserStatus? userStatus = null, DateTimeOffset? idleSince = null)
+		=> this.InternalUpdateStatusAsync(activity is not null ? [activity] : null, userStatus, idleSince);
 
 	/// <summary>
 	///     Edits current user.

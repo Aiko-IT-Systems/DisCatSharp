@@ -402,11 +402,9 @@ public sealed partial class DiscordShardedClient
 	/// <param name="userStatus">The optional status to set. Defaults to null.</param>
 	/// <param name="idleSince">Since when is the client performing the specified activity. Defaults to null.</param>
 	/// <returns>Asynchronous operation.</returns>
-	public async Task UpdateStatusAsync(DiscordActivity activity = null, UserStatus? userStatus = null, DateTimeOffset? idleSince = null)
+	public async Task UpdateStatusAsync(DiscordActivity? activity = null, UserStatus? userStatus = null, DateTimeOffset? idleSince = null)
 	{
-		var tasks = new List<Task>();
-		foreach (var client in this._shards.Values)
-			tasks.Add(client.UpdateStatusAsync(activity, userStatus, idleSince));
+		var tasks = this._shards.Values.Select(client => client.UpdateStatusAsync(activity, userStatus, idleSince)).ToList();
 
 		await Task.WhenAll(tasks).ConfigureAwait(false);
 	}
