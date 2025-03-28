@@ -19,6 +19,7 @@
 			Experimental changes for DisCatSharp.
 		</Description>
 		<PackageTags>DisCatSharp,Experimental,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net8,Net9,Net10</PackageTags>
+		<NoWarn>IDE0130;DV2001;CS8602;CS8618;CS8602</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net9.0'))">
@@ -29,8 +30,8 @@
 		<PackageReference Include="Concentus" Version="2.2.2" />
 		<PackageReference Include="Concentus.Oggfile" Version="1.0.6" />
 		<PackageReference Include="DisCatSharp.Analyzer" Version="1.0.0">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.3" />
