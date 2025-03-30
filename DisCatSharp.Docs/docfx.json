@@ -280,6 +280,8 @@
 			"_ogType": "website",
 			"_ogImage": "/dcs-docs-embeds-logo.png",
 			"_fbPageId": "112155734832129",
+			"_pDomainVerification": "9fd3bab9cd0f421662d8654f31590157",
+			"_yandexVerification": "3935b0fc14124e04",
 			"_twitterSite": "@DisCatSharp",
 			"_twitterImage": "/dcs-docs-embeds-logo.png",
 			"_layout": "conceptual",
@@ -304,7 +306,7 @@
 		"template": ["default", "modern", "dcs"],
 		"postProcessors": ["ExtractSearchIndex"],
 		"noLangKeyword": false,
-		"keepFileLink": true,
+		"keepFileLink": false,
 		"sitemap": {
 			"baseUrl": "https://docs.dcs.aitsys.dev/",
 			"changefreq": "daily",
