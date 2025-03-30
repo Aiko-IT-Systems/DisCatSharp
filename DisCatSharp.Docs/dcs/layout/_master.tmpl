@@ -1,85 +1,99 @@
 {{!Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See LICENSE file in the project root for full license information.}}
 {{!include(/^public/.*/)}}
 {{!include(/^fonts/.*/)}}
-{{!include(favicon.ico)}}
 {{!include(.htaccess)}}
-{{!include(logo.png)}}
-{{!include(dcs-logo-embeds.png)}}
-{{!include(logo-pride.png)}}
-{{!include(logo.svg)}}
-{{!include(logo_black.png)}}
-{{!include(dcs-docs-embeds-logo.png)}}
-{{!include(android-icon-36x36.png)}}
-{{!include(android-icon-48x48.png)}}
-{{!include(android-icon-72x72.png)}}
-{{!include(android-icon-96x96.png)}}
-{{!include(android-icon-144x144.png)}}
-{{!include(android-icon-192x192.png)}}
-{{!include(apple-icon-57x57.png)}}
-{{!include(apple-icon-60x60.png)}}
-{{!include(apple-icon-72x72.png)}}
-{{!include(apple-icon-76x76.png)}}
-{{!include(apple-icon-114x114.png)}}
-{{!include(apple-icon-120x120.png)}}
-{{!include(apple-icon-144x144.png)}}
-{{!include(apple-icon-152x152.png)}}
-{{!include(apple-icon-180x180.png)}}
-{{!include(apple-icon-precomposed.png)}}
-{{!include(apple-icon.png)}}
-{{!include(favicon-16x16.png)}}
-{{!include(favicon-32x32.png)}}
-{{!include(favicon-96x96.png)}}
-{{!include(ms-icon-70x70.png)}}
-{{!include(ms-icon-144x144.png)}}
-{{!include(ms-icon-150x150.png)}}
-{{!include(ms-icon-310x310.png)}}
-{{!include(search-stopwords.json)}}
-{{!include(manifest.json)}}
-{{!include(token.json)}}
-{{!include(browserconfig.xml)}}
-{{!include(browserconfig.xsd)}}
+{{!include(/^*.ico/)}}
+{{!include(/^*.png/)}}
+{{!include(/^*.svg/)}}
+{{!include(/^*.json/)}}
+{{!include(/^*.webmanifest/)}}
+{{!include(/^browserconfig.*/)}}
 {{!include(_redirects)}}
+{{!include(offline-cache-service-worker.js)}}
 <!DOCTYPE html>
 <html {{#_lang}}lang="{{_lang}}" {{/_lang}}>
 
 <head>
+	<!-- Charset -->
 	<meta charset="utf-8">
+
 	{{#redirect_url}}
+	<!-- Redirecting -->
 	<meta http-equiv="refresh" content="0;URL='{{redirect_url}}'">
 	{{/redirect_url}}
+
 	{{^redirect_url}}
+	<!-- Viewport -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Base Site Information -->
 	<title>{{#title}}{{title}}{{/title}}{{^title}}{{>partials/title}}{{/title}} {{#_appTitle}}|
 		{{_appTitle}}{{/_appTitle}}</title>
 	<meta name="title"
 		content="{{#title}}{{title}}{{/title}}{{^title}}{{>partials/title}}{{/title}} {{#_appTitle}}| {{_appTitle}} {{/_appTitle}}">
+	<meta name="description" content="{{description}}">
+	{{#author}}
+	<meta name="author" content="{{author}}">
+	{{/author}}
+	{{#_providerName}}
+	<meta name="provider_name" content="{{_providerName}}">
+	{{/_providerName}}
+	{{#_providerUrl}}
+	<meta name="provider_url" content="{{_providerUrl}}">
+	{{/_providerUrl}}
+	{{#keywords}}
+	<meta name="keywords" content="{{keywords}}">
+	{{/keywords}}
+	<meta name="robots" content="index, follow, max-image-preview:large">
+	<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+	<meta name="bingbot" content="index, follow">
+	<meta name="rating" content="general">
+	<link rel="sitemap" type="application/xml" title="Sitemap" href="{{_rel}}sitemap.xml">
+
+	<!-- General OpenGraph -->
 	<meta property="og:title"
 		content="{{#title}}{{title}}{{/title}}{{^title}}{{>partials/title}}{{/title}} {{#_appTitle}}| {{_appTitle}} {{/_appTitle}}">
-	<meta name="description" content="{{description}}">
 	<meta property="og:description" content="{{description}}">
-	{{#author}}
-	<meta name="author" content="{{author}}">{{/author}}
-	{{#_providerName}}
-	<meta name="provider_name" content="{{_providerName}}">{{/_providerName}}
-	{{#_providerUrl}}
-	<meta name="provider_url" content="{{_providerUrl}}">{{/_providerUrl}}
-	{{#keywords}}
-	<meta name="keywords" content="{{keywords}}">{{/keywords}}
 	{{#_ogType}}
-	<meta property="og:type" content="{{_ogType}}">{{/_ogType}}
+	<meta property="og:type" content="{{_ogType}}">
+	<meta property="article:section" content="Technology">
+	<meta property="article:tag" content="bot development">
+	{{/_ogType}}
 	{{#_ogImage}}
 	<meta property="og:image" content="{{_ogImage}}">
 	<meta property="og:image:alt" content="{{#title}}{{title}} {{/title}}Logo">
 	<meta property="og:image:type" content="image/png">
 	{{/_ogImage}}
 	{{#_appName}}
-	<meta property="og:site_name" content="{{_appName}}">{{/_appName}}
+	<meta property="og:site_name" content="{{_appName}}">
+	{{/_appName}}
 	{{#_lang}}
-	<meta property="og:locale" content="{{_lang}}">{{/_lang}}
+	<meta property="og:locale" content="{{_lang}}">
+	{{/_lang}}
+	{{#_pDomainVerification}}
+	<meta name="p:domain_verify" content="{{_pDomainVerification}}" />
+	{{/_pDomainVerification}}
+	{{#_yandexVerification}}
+	<meta name="yandex-verification" content="{{_yandexVerification}}" />
+	{{/_yandexVerification}}
+
+	<!-- PWA -->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="apple-mobile-web-app-title" content="{{#_appTitle}}{{_appTitle}}{{/_appTitle}}">
+	<meta name="application-name" content="{{#_appTitle}}{{_appTitle}}{{/_appTitle}}">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="theme-color" content="#fc0fc0">
+
+	<!-- Facebook OpenGraph -->
 	{{#_fbPageId}}
-	<meta property="fb:pages" content="{{_fbPageId}}">{{/_fbPageId}}
+	<meta property="fb:pages" content="{{_fbPageId}}">
+	{{/_fbPageId}}
 	{{#_fbAppId}}
-	<meta property="fb:app_id" content="{{_fbAppId}}">{{/_fbAppId}}
+	<meta property="fb:app_id" content="{{_fbAppId}}">
+	{{/_fbAppId}}
+
+	<!-- Twitter OpenGraph -->
 	<meta name="twitter:card" content="summary_large_image">
 	{{#_twitterSite}}
 	<meta name="twitter:site" content="{{_twitterSite}}">{{/_twitterSite}}
@@ -91,6 +105,49 @@
 	<meta name="twitter:image" content="{{_twitterImage}}">
 	<meta name="twitter:image:alt" content="{{#title}}{{title}} {{/title}}Logo">
 	{{/_twitterImage}}
+
+	<!-- Docfx Meta -->
+	<meta name="docfx:tocrel" content="{{_tocRel}}">
+	{{#_noindex}}
+	<meta name="searchOption" content="noindex">
+	{{/_noindex}}
+	{{#_enableSearch}}
+	<meta name="docfx:rel" content="{{_rel}}">
+	{{/_enableSearch}}
+	{{#_disableNewTab}}
+	<meta name="docfx:disablenewtab" content="true">
+	{{/_disableNewTab}}
+	{{#_disableTocFilter}}
+	<meta name="docfx:disabletocfilter" content="true">
+	{{/_disableTocFilter}}
+	{{#docurl}}
+	{{#_urlNormalizationActive}}
+	<meta name="docfx:urlnormalizationactive" content="true">
+	{{/_urlNormalizationActive}}
+	<meta name="docfx:docurl" content="{{docurl}}">
+	{{/docurl}}
+	<meta name="docfx:navrel" content="{{_navRel}}">
+	<meta name="loc:inThisArticle" content="{{__global.inThisArticle}}">
+	<meta name="loc:searchResultsCount" content="{{__global.searchResultsCount}}">
+	<meta name="loc:searchNoResults" content="{{__global.searchNoResults}}">
+	<meta name="loc:tocFilter" content="{{__global.tocFilter}}">
+	<meta name="loc:nextArticle" content="{{__global.nextArticle}}">
+	<meta name="loc:prevArticle" content="{{__global.prevArticle}}">
+	{{^_disableThemeSwitcher}}
+	<meta name="loc:themeLight" content="{{__global.themeLight}}">
+	<meta name="loc:themeDark" content="{{__global.themeDark}}">
+	<meta name="loc:themeAuto" content="{{__global.themeAuto}}">
+	<meta name="loc:changeTheme" content="{{__global.changeTheme}}">
+	{{/_disableThemeSwitcher}}
+	<meta name="loc:copy" content="{{__global.copy}}">
+	<meta name="loc:downloadPdf" content="{{__global.downloadPdf}}">
+
+	<!-- Manifests -->
+	<link rel="manifest" href="{{_rel}}app.webmanifest">
+	<link rel="manifest" href="{{_rel}}manifest.json">
+
+	<!-- Icons -->
+	<link rel="apple-touch-icon-precomposed" href="{{_rel}}apple-icon-precomposed.png">
 	<link rel="apple-touch-icon" sizes="57x57" href="{{_rel}}apple-icon-57x57.png">
 	<link rel="apple-touch-icon" sizes="60x60" href="{{_rel}}apple-icon-60x60.png">
 	<link rel="apple-touch-icon" sizes="72x72" href="{{_rel}}apple-icon-72x72.png">
@@ -100,17 +157,75 @@
 	<link rel="apple-touch-icon" sizes="144x144" href="{{_rel}}apple-icon-144x144.png">
 	<link rel="apple-touch-icon" sizes="152x152" href="{{_rel}}apple-icon-152x152.png">
 	<link rel="apple-touch-icon" sizes="180x180" href="{{_rel}}apple-icon-180x180.png">
-	<link rel="icon" type="image/png" sizes="192x192" href="{{_rel}}android-icon-192x192.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="{{_rel}}favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="96x96" href="{{_rel}}favicon-96x96.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="{{_rel}}favicon-16x16.png">
-	<link rel="manifest" href="{{_rel}}manifest.json">
+	<link rel="shortcut icon" type="image/png" sizes="16x16" href="{{_rel}}favicon-16x16.png">
+	<link rel="shortcut icon" type="image/png" sizes="32x32" href="{{_rel}}favicon-32x32.png">
+	<link rel="shortcut icon" type="image/png" sizes="96x96" href="{{_rel}}favicon-96x96.png">
+	<link rel="shortcut icon" type="image/png" sizes="36x36" href="{{_rel}}android-icon-36x36.png">
+	<link rel="shortcut icon" type="image/png" sizes="48x48" href="{{_rel}}android-icon-48x48.png">
+	<link rel="shortcut icon" type="image/png" sizes="96x96" href="{{_rel}}android-icon-96x96.png">
+	<link rel="shortcut icon" type="image/png" sizes="144x144" href="{{_rel}}android-icon-144x144.png">
+	<link rel="shortcut icon" type="image/png" sizes="192x192" href="{{_rel}}android-icon-192x192.png">
+	<link rel="mask-icon" href="{{_rel}}logo.svg" color="black">
+	<link rel="icon" sizes="192x192" href="{{_rel}}apple-icon.png">
+	<meta name="msapplication-square70x70logo" content="{{_rel}}ms-icon-70x70.png">
+	<meta name="msapplication-square144x144logo" content="{{_rel}}ms-icon-144x144.png">
+	<meta name="msapplication-square150x150logo" content="{{_rel}}ms-icon-150x150.png">
+	<meta name="msapplication-square310x310logo" content="{{_rel}}ms-icon-310x310.png">
 	<meta name="msapplication-TileColor" content="#fc0fc0">
 	<meta name="msapplication-TileImage" content="{{_rel}}ms-icon-144x144.png">
-	<meta name="theme-color" content="#fc0fc0">
-	<link rel="icon" href="{{_rel}}{{{_appFaviconPath}}}{{^_appFaviconPath}}favicon.ico{{/_appFaviconPath}}">
-	<link rel="shortcut icon" href="{{_rel}}{{{_appFaviconPath}}}{{^_appFaviconPath}}favicon.ico{{/_appFaviconPath}}">
+	<link rel="icon" href="{{_rel}}{{{_appFaviconPath}}}{{^_appFaviconPath}}favicon.ico{{/_appFaviconPath}}"
+		type="image/x-icon">
+	<link rel="shortcut icon" href="{{_rel}}{{{_appFaviconPath}}}{{^_appFaviconPath}}favicon.ico{{/_appFaviconPath}}"
+		type="image/x-icon">
+
+	<!-- Tweaks -->
+	<link rel="preload" as="image" href="{{_rel}}logo.svg" crossorigin="anonymous">
+	<link rel="preload" href="{{_rel}}public/docfx.min.css" as="style" crossorigin="anonymous">
+	<link rel="preload" href="{{_rel}}public/main.css" as="style" crossorigin="anonymous">
+	<link rel="preload" href="{{_rel}}public/main.js" as="script" crossorigin="anonymous">
+	<link rel="preload" href="{{_rel}}public/docfx.min.js" as="script" crossorigin="anonymous">
+	<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
+	<link rel="dns-prefetch" href="https://fonts.googleapis.com" crossorigin="anonymous">
+	{{^_disableFeatherlight}}
+	<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+	<link rel="dns-prefetch" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+	{{/_disableFeatherlight}}
+	<link rel="preconnect" href="https://code.jquery.com" crossorigin="anonymous">
+	<link rel="dns-prefetch" href="https://code.jquery.com" crossorigin="anonymous">
 	{{#hasDiscordComponents}}
+	<link rel="preconnect" href="https://unpkg.com" crossorigin="anonymous">
+	<link rel="dns-prefetch" href="https://unpkg.com" crossorigin="anonymous">
+	{{/hasDiscordComponents}}
+	<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous">
+	<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" crossorigin="anonymous">
+	<meta name="permissions-policy" content="geolocation=(), microphone=(), camera=(), interest-cohort=()">
+	<meta name="loading" content="lazy">
+	<meta name="service-worker" content="/offline-cache-service-worker.js">
+
+	<!-- Stylesheets -->
+	<link rel="stylesheet" href="{{_rel}}public/docfx.min.css" type="text/css" crossorigin="anonymous">
+	<link rel="stylesheet" href="{{_rel}}public/main.css" type="text/css" crossorigin="anonymous">
+	<link rel="stylesheet" href="{{_rel}}public/collapsible.css" type="text/css" crossorigin="anonymous">
+	{{^_disableFeatherlight}}
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.css"
+		type="text/css" integrity="sha256-UHP0vaPqS1SY6G5ySZndoVKzQJYBSVF2pqs4mPrDEcE=" crossorigin="anonymous">
+	{{/_disableFeatherlight}}
+
+	<!-- Scripts -->
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous" defer></script>
+	<script type="module" src="{{_rel}}public/main.js" crossorigin="anonymous"></script>
+	<script type="module" src="{{_rel}}public/docfx.min.js" crossorigin="anonymous"></script>
+	{{^_disableFeatherlight}}
+	<script src="https://cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.js"
+		integrity="sha256-n/xqYYgRqwjNP/0+0VT5jmenhdqhKCSkSpmFT5aPGZM=" crossorigin="anonymous" charset="utf-8"
+		defer></script>
+	<script src="{{_rel}}public/plugin-featherlight.js" defer crossorigin="anonymous"></script>
+	{{/_disableFeatherlight}}
+	<script src="{{_rel}}public/collapsible.js" defer crossorigin="anonymous"></script>
+
+	{{#hasDiscordComponents}}
+	<!-- Discord Components -->
 	<script>
 		window.$discordMessage = {
 			profiles: {
@@ -157,73 +272,35 @@
 			defaultBackground: "discord"
 		};
 	</script>
-	<script type="module" src="https://unpkg.com/@aitsys/discord-components-core"></script>
+	<script type="module" src="https://unpkg.com/@aitsys/discord-components-core" async crossorigin="anonymous"></script>
 	{{/hasDiscordComponents}}
-	<link rel="stylesheet" href="{{_rel}}public/docfx.min.css">
-	<link rel="stylesheet" href="{{_rel}}public/main.css">
-	<link rel="stylesheet" href="{{_rel}}public/collapsible.css">
-	<meta name="docfx:tocrel" content="{{_tocRel}}">
-	{{#_noindex}}
-	<meta name="searchOption" content="noindex">{{/_noindex}}
-	{{#_enableSearch}}
-	<meta name="docfx:rel" content="{{_rel}}">{{/_enableSearch}}
-	{{#_disableNewTab}}
-	<meta name="docfx:disablenewtab" content="true">{{/_disableNewTab}}
-	{{#_disableTocFilter}}
-	<meta name="docfx:disabletocfilter" content="true">{{/_disableTocFilter}}
-	{{#docurl}}
-	{{#_urlNormalizationActive}}
-	<meta name="docfx:urlnormalizationactive" content="true">{{/_urlNormalizationActive}}
-	<meta name="docfx:docurl" content="{{docurl}}">{{/docurl}}
-	<meta name="docfx:navrel" content="{{_navRel}}">
-	<meta name="loc:inThisArticle" content="{{__global.inThisArticle}}">
-	<meta name="loc:searchResultsCount" content="{{__global.searchResultsCount}}">
-	<meta name="loc:searchNoResults" content="{{__global.searchNoResults}}">
-	<meta name="loc:tocFilter" content="{{__global.tocFilter}}">
-	<meta name="loc:nextArticle" content="{{__global.nextArticle}}">
-	<meta name="loc:prevArticle" content="{{__global.prevArticle}}">
+
 	{{^_disableThemeSwitcher}}
-	<meta name="loc:themeLight" content="{{__global.themeLight}}">
-	<meta name="loc:themeDark" content="{{__global.themeDark}}">
-	<meta name="loc:themeAuto" content="{{__global.themeAuto}}">
-	<meta name="loc:changeTheme" content="{{__global.changeTheme}}">
+	<meta name="color-scheme" content="light dark">
+	<script>
+		const theme = localStorage.getItem('theme') || 'auto'
+		document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+	</script>
 	{{/_disableThemeSwitcher}}
-	<meta name="loc:copy" content="{{__global.copy}}">
-	<meta name="loc:downloadPdf" content="{{__global.downloadPdf}}">
-	<script src="https://code.jquery.com/jquery-latest.js"></script>
-	<script type="module" src="{{_rel}}public/main.js"></script>
-	{{^_disableFeatherlight}}
-	<link href="https://cdn.jsdelivr.net/npm/featherlight@latest/release/featherlight.min.css" type="text/css"
-		rel="stylesheet" />
-	<script src="https://cdn.jsdelivr.net/npm/featherlight@latest/release/featherlight.min.js" type="text/javascript"
-		charset="utf-8"></script>
-	<script type="text/javascript" src="{{_rel}}public/plugin-featherlight.js"></script>{{/_disableFeatherlight}}
-	<script type="text/javascript" src="{{_rel}}public/collapsible.js"></script>
+	{{#_disableThemeSwitcher}}
+	<meta name="color-scheme" content="dark">
+	<style>
+		a[title="changeTheme"] {
+			display: none;
+		}
+	</style>
+	<script>
+		document.documentElement.setAttribute('data-bs-theme', 'dark')
+	</script>
+	{{/_disableThemeSwitcher}}
+
 	{{/redirect_url}}
 </head>
 {{^redirect_url}}
-<script type="module" src="{{_rel}}public/docfx.min.js"></script>
-
-{{^_disableThemeSwitcher}}
-<script>
-	const theme = localStorage.getItem('theme') || 'dark'
-	document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
-</script>
-{{/_disableThemeSwitcher}}
-{{#_disableThemeSwitcher}}
-<script>
-	document.documentElement.setAttribute('data-bs-theme', 'dark')
-</script>
-<style>
-	a[title="changeTheme"] {
-		display: none;
-	}
-</style>
-{{/_disableThemeSwitcher}}
 
 {{#_googleAnalyticsTagId}}
-<script async src="https://www.googletagmanager.com/gtag/js?id={{_googleAnalyticsTagId}}"></script>
-<script>
+<script defer async src="https://www.googletagmanager.com/gtag/js?id={{_googleAnalyticsTagId}}" crossorigin="anonymous"></script>
+<script defer async>
 	window.dataLayer = window.dataLayer || [];
 	function gtag() { dataLayer.push(arguments); }
 	gtag('js', new Date());
@@ -233,7 +310,7 @@
 
 <body class="tex2jax_ignore" data-layout="{{_layout}}{{layout}}" data-yaml-mime="{{yamlmime}}">
 	<header class="bg-body border-bottom">
-		<nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+		<nav id="autocollapse" class="navbar navbar-expand-md">
 			<div class="container-xxl flex-nowrap">
 				<a class="navbar-brand" href="{{_appLogoUrl}}{{^_appLogoUrl}}{{_rel}}index.html{{/_appLogoUrl}}">
 					<img id="logo" class="svg"
@@ -279,11 +356,13 @@
 
 		<div class="content">
 			<div class="actionbar">
+				{{^_disableToc}}
 				<button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas"
 					data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false"
 					aria-label="Show table of contents">
 					<i class="bi bi-list"></i>
 				</button>
+				{{/_disableToc}}
 
 				{{^_disableBreadcrumb}}<nav id="breadcrumb"></nav>{{/_disableBreadcrumb}}
 			</div>
@@ -328,6 +407,23 @@
 			</div>
 		</div>
 	</footer>
+	<script>
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.register('/offline-cache-service-worker.js', { scope: '/' })
+				.then(registration => {
+					console.log('Service Worker registered with scope:', registration.scope);
+				})
+				.catch(error => {
+					console.error('Service Worker registration failed:', error);
+				});
+		}
+		if (navigator.share) {
+			document.getElementById("shareBtn").addEventListener("click", () => {
+				navigator.share({ title: "{{#title}}{{title}}{{/title}}{{^title}}{{>partials/title}}{{/title}} {{#_appTitle}}| {{_appTitle}} {{/_appTitle}}", url: window.location.href });
+			});
+		}
+	</script>
+
 </body>
 {{/redirect_url}}
 
