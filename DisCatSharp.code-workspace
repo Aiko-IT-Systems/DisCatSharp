@@ -47,6 +47,6 @@
 			"powershell",
 			"xml"
 		],
-		"dotnet.defaultSolution": "DisCatSharp.sln",
+		"dotnet.defaultSolution": "DisCatSharp.slnx",
 	}
 }

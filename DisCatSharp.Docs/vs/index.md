@@ -16,7 +16,7 @@ DisCatSharp can be extended with a set of analyzers that can help you write bett
 
 #### Installation
 
-To use the DisCatSharp Analyzer, you need to install the [DisCatSharp.Analyzer.Roselyn](https://www.nuget.org/packages/DisCatSharp.Analyzer.Roselyn) NuGet package.
+To use the DisCatSharp Analyzer, you need to install the [DisCatSharp.Analyzer](https://www.nuget.org/packages/DisCatSharp.Analyzer) NuGet package.
 
 ##### Visual Studio Code
 
@@ -30,9 +30,10 @@ See https://www.jetbrains.com/help/rider/Settings_Roslyn_Analyzers.html
 
 | Rule ID                              | Category | Severity | Notes                                  |
 | ------------------------------------ | -------- | -------- | -------------------------------------- |
-| [DCS0001](xref:vs_analyzer_dcs_0001) | Usage    | Warning  | Experimental Attribute Analyzer        |
-| [DCS0002](xref:vs_analyzer_dcs_0002) | Usage    | Warning  | Deprecated Attribute Analyzer          |
+| [DCS0001](xref:vs_analyzer_dcs_0001) | Usage    | Info     | Experimental Attribute Analyzer        |
+| [DCS0002](xref:vs_analyzer_dcs_0002) | Usage    | Error    | Deprecated Attribute Analyzer          |
 | [DCS0101](xref:vs_analyzer_dcs_0101) | Usage    | Warning  | DiscordInExperiment Attribute Analyzer |
-| [DCS0102](xref:vs_analyzer_dcs_0102) | Usage    | Warning  | DiscordDeprecated Attribute Analyzer   |
+| [DCS0102](xref:vs_analyzer_dcs_0102) | Usage    | Error    | DiscordDeprecated Attribute Analyzer   |
 | [DCS0103](xref:vs_analyzer_dcs_0103) | Usage    | Warning  | DiscordUnreleased Attribute Analyzer   |
 | [DCS0200](xref:vs_analyzer_dcs_0200) | Usage    | Info     | RequiresFeature Attribute Analyzer     |
+| [DCS0201](xref:vs_analyzer_dcs_0201) | Usage    | Warning  | RequiresOverride Attribute Analyzer    |

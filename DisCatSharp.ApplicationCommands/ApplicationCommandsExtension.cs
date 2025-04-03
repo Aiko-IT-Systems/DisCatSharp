@@ -38,7 +38,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	///     Configuration for Discord.
 	/// </summary>
-	internal static ApplicationCommandsConfiguration Configuration;
+	internal static ApplicationCommandsConfiguration Configuration { get; set; }
 
 	/// <summary>
 	///     Sets a list of registered commands. The key is the guild id (null if global).
@@ -616,7 +616,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			StartupFinished = FinishedShardCount == ShardCount;
 
 			this.Client.Logger.Log(LogLevel.Information, "Application command setup finished for shard {ShardId}, enabling receiving", this.Client.ShardId);
-			await this._applicationCommandsModuleStartupFinished.InvokeAsync(this, new(Configuration?.ServiceProvider)
+			await this._applicationCommandsModuleStartupFinished.InvokeAsync(this, new(Configuration.ServiceProvider)
 			{
 				RegisteredGlobalCommands = GlobalCommandsInternal,
 				RegisteredGuildCommands = GuildCommandsInternal,
@@ -819,7 +819,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 					//Accounts for lifespans
 					if (module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() is not null && module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan is ApplicationCommandModuleLifespan.Singleton)
-						s_singletonModules.Add(CreateInstance(module, Configuration?.ServiceProvider));
+						s_singletonModules.Add(CreateInstance(module, Configuration.ServiceProvider));
 				}
 			}
 			catch (NullReferenceException ex)
@@ -941,14 +941,14 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					{ }
 
 					if (guildId.HasValue)
-						await this._guildApplicationCommandsRegistered.InvokeAsync(this, new(Configuration?.ServiceProvider)
+						await this._guildApplicationCommandsRegistered.InvokeAsync(this, new(Configuration.ServiceProvider)
 						{
 							Handled = true,
 							GuildId = guildId.Value,
 							RegisteredCommands = GuildCommandsInternal.FirstOrDefault(c => c.Key == guildId.Value).Value ?? []
 						}).ConfigureAwait(false);
 					else
-						await this._globalApplicationCommandsRegistered.InvokeAsync(this, new(Configuration?.ServiceProvider)
+						await this._globalApplicationCommandsRegistered.InvokeAsync(this, new(Configuration.ServiceProvider)
 						{
 							Handled = true,
 							RegisteredCommands = GlobalCommandsInternal
@@ -988,14 +988,14 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			{ }
 
 			if (guildId.HasValue)
-				await this._guildApplicationCommandsRegistered.InvokeAsync(this, new(Configuration?.ServiceProvider)
+				await this._guildApplicationCommandsRegistered.InvokeAsync(this, new(Configuration.ServiceProvider)
 				{
 					Handled = true,
 					GuildId = guildId.Value,
 					RegisteredCommands = GuildCommandsInternal.FirstOrDefault(c => c.Key == guildId.Value).Value ?? []
 				}).ConfigureAwait(false);
 			else
-				await this._globalApplicationCommandsRegistered.InvokeAsync(this, new(Configuration?.ServiceProvider)
+				await this._globalApplicationCommandsRegistered.InvokeAsync(this, new(Configuration.ServiceProvider)
 				{
 					Handled = true,
 					RegisteredCommands = GlobalCommandsInternal
@@ -1069,7 +1069,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		if (StartupFinished)
 			if (!FinishFired)
 			{
-				await this._applicationCommandsModuleReady.InvokeAsync(sender, new(Configuration?.ServiceProvider)
+				await this._applicationCommandsModuleReady.InvokeAsync(sender, new(Configuration.ServiceProvider)
 				{
 					GuildsWithoutScope = s_missingScopeGuildIdsGlobal
 				}).ConfigureAwait(false);
@@ -1117,7 +1117,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						CommandName = e.Interaction.Data.Name,
 						InteractionId = e.Interaction.Id,
 						Token = e.Interaction.Token,
-						Services = Configuration?.ServiceProvider,
+						Services = Configuration.ServiceProvider,
 						ResolvedUserMentions = e.Interaction.Data.Resolved?.Users?.Values.ToList() ?? [],
 						ResolvedRoleMentions = e.Interaction.Data.Resolved?.Roles?.Values.ToList() ?? [],
 						ResolvedChannelMentions = e.Interaction.Data.Resolved?.Channels?.Values.ToList() ?? [],
@@ -1130,7 +1130,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						UserId = e.Interaction.User.Id,
 						GuildId = e.Interaction.GuildId,
 						MemberId = e.Interaction.GuildId is not null ? e.Interaction.User.Id : null,
-						ChannelId = e.Interaction.ChannelId
+						ChannelId = e.Interaction.ChannelId,
+						AttachmentSizeLimit = e.Interaction.AttachmentSizeLimit
 					};
 
 					try
@@ -1243,7 +1244,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								{
 									Interaction = e.Interaction,
 									Client = client,
-									Services = Configuration?.ServiceProvider,
+									Services = Configuration.ServiceProvider,
 									ApplicationCommandsExtension = this,
 									Guild = e.Interaction.Guild,
 									Channel = e.Interaction.Channel,
@@ -1253,7 +1254,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									Locale = e.Interaction.Locale,
 									GuildLocale = e.Interaction.GuildLocale,
 									AppPermissions = e.Interaction.AppPermissions,
-									Entitlements = e.Interaction.Entitlements,
+									Entitlements = e.Interaction.Entitlements
 								};
 
 								var choices = await ((Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>)providerMethod.Invoke(providerInstance, [context])).ConfigureAwait(false);
@@ -1275,7 +1276,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								{
 									Client = client,
 									Interaction = e.Interaction,
-									Services = Configuration?.ServiceProvider,
+									Services = Configuration.ServiceProvider,
 									ApplicationCommandsExtension = this,
 									Guild = e.Interaction.Guild,
 									Channel = e.Interaction.Channel,
@@ -1308,7 +1309,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								{
 									Client = client,
 									Interaction = e.Interaction,
-									Services = Configuration?.ServiceProvider,
+									Services = Configuration.ServiceProvider,
 									ApplicationCommandsExtension = this,
 									Guild = e.Interaction.Guild,
 									Channel = e.Interaction.Channel,
@@ -1396,7 +1397,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				Interaction = e.Interaction,
 				Channel = e.Interaction.Channel,
 				Client = client,
-				Services = Configuration?.ServiceProvider,
+				Services = Configuration.ServiceProvider,
 				CommandName = e.Interaction.Data.Name,
 				ApplicationCommandsExtension = this,
 				Guild = e.Interaction.Guild,
@@ -1413,7 +1414,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				UserId = e.Interaction.User.Id,
 				GuildId = e.Interaction.GuildId,
 				MemberId = e.Interaction.GuildId is not null ? e.Interaction.User.Id : null,
-				ChannelId = e.Interaction.ChannelId
+				ChannelId = e.Interaction.ChannelId,
+				AttachmentSizeLimit = e.Interaction.AttachmentSizeLimit
 			};
 
 			try
@@ -1468,10 +1470,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		{
 			ApplicationCommandModuleLifespan.Scoped =>
 				//Accounts for static methods and adds DI
-				method.IsStatic ? ActivatorUtilities.CreateInstance(Configuration?.ServiceProvider.CreateScope().ServiceProvider, method.DeclaringType) : CreateInstance(method.DeclaringType, Configuration?.ServiceProvider.CreateScope().ServiceProvider),
+				method.IsStatic ? ActivatorUtilities.CreateInstance(Configuration.ServiceProvider.CreateScope().ServiceProvider, method.DeclaringType) : CreateInstance(method.DeclaringType, Configuration.ServiceProvider.CreateScope().ServiceProvider),
 			ApplicationCommandModuleLifespan.Transient =>
 				//Accounts for static methods and adds DI
-				method.IsStatic ? ActivatorUtilities.CreateInstance(Configuration?.ServiceProvider, method.DeclaringType) : CreateInstance(method.DeclaringType, Configuration?.ServiceProvider),
+				method.IsStatic ? ActivatorUtilities.CreateInstance(Configuration.ServiceProvider, method.DeclaringType) : CreateInstance(method.DeclaringType, Configuration.ServiceProvider),
 			//If singleton, gets it from the singleton list
 			ApplicationCommandModuleLifespan.Singleton => s_singletonModules.First(x => ReferenceEquals(x.GetType(), method.DeclaringType)),
 			_ => throw new($"An unknown {nameof(ApplicationCommandModuleLifespanAttribute)} scope was specified on command {context.CommandName}")

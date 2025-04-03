@@ -22,7 +22,7 @@
 
 			Common tools for DisCatSharp, like regexes and converters!
 		</Description>
-		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net8,Net9,Common Tools</PackageTags>
+		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net8,Net9,Net10,Common Tools</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net9.0'))">
@@ -30,11 +30,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.5">
+		<PackageReference Include="DisCatSharp.Analyzer" Version="1.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="DisCatSharp.Attributes" Version="10.6.6" />
 		<PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.3" />
@@ -44,13 +43,14 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="System.Collections.Immutable" Version="9.0.3" />
 		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.3" />
-		<PackageReference Include="System.Memory" Version="4.6.1" />
+		<PackageReference Include="System.Memory" Version="4.6.2" />
 		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.1" />
 		<PackageReference Include="System.ValueTuple" Version="4.6.0" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+		<PackageReference Include="DisCatSharp.Attributes" Version="2025.3.27" />
 	</ItemGroup>
 
 </Project>

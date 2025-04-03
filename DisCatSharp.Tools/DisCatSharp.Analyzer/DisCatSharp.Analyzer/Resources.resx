@@ -169,12 +169,24 @@
     <value>{0} '{1}' needs features: {2}</value>
   </data>
   <data name="AnalyzerTitleRequiresFeature" xml:space="preserve">
-    <value>[Discord] Requires Features</value>
+    <value>[Discord] Requires Feature</value>
   </data>
   <data name="Handling" xml:space="preserve">
-	  <value>Handling </value>
+    <value>Handling </value>
   </data>
   <data name="Faulty" xml:space="preserve">
-	  <value>Faulty</value>
+    <value>Faulty</value>
+  </data>
+  <data name="AnalyzerException" xml:space="preserve">
+    <value>DisCatSharp Analyzer threw an exception: {0}</value>
+  </data>
+  <data name="AnalyzerTitleRequiresOverride" xml:space="preserve">
+    <value>[Discord] Requires Override</value>
+  </data>
+  <data name="AnalyzerMessageFormatRequiresOverride" xml:space="preserve">
+    <value>{0} '{1}' needs override: {2}</value>
+  </data>
+  <data name="AnalyzerDescriptionRequiresOverride" xml:space="preserve">
+    <value>This requires to modify the DiscordConfiguration to include an Override.</value>
   </data>
 </root>

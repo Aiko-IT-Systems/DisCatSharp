@@ -361,11 +361,11 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			var sinceUnix = idlesince != null ? (long?)Utilities.GetUnixTime(idlesince.Value) : null;
 			this._status = new()
 			{
-				Activity = activity is not null ? new(activity) : null,
+				Activities = activity is not null ? [new(activity)] : null,
 				Status = status ?? UserStatus.Online,
 				IdleSince = sinceUnix,
 				IsAfk = idlesince is not null,
-				ActivityInternal = activity
+				ActivitiesInternal = activity is not null ? [activity] : null
 			};
 		}
 
@@ -1108,14 +1108,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="code">The invite code.</param>
 	/// <param name="withCounts">Whether to include presence and total member counts in the returned invite.</param>
-	/// <param name="withExpiration">Whether to include the expiration date in the returned invite.</param>
 	/// <param name="scheduledEventId">The scheduled event id.</param>
+	/// <param name="withPermissions">Whether to include the invite's permissions.</param>
 	/// <returns>The requested invite.</returns>
-	/// <exception cref="NotFoundException">Thrown when the invite does not exists.</exception>
+	/// <exception cref="NotFoundException">Thrown when the invite does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordInvite> GetInviteByCodeAsync(string code, bool? withCounts = null, bool? withExpiration = null, ulong? scheduledEventId = null)
-		=> this.ApiClient.GetInviteAsync(code, withCounts, withExpiration, scheduledEventId);
+	public Task<DiscordInvite> GetInviteByCodeAsync(string code, bool? withCounts = null, ulong? scheduledEventId = null, bool? withPermissions = null)
+		=> this.ApiClient.GetInviteAsync(code, withCounts, scheduledEventId, withPermissions);
 
 	/// <summary>
 	///     Tries to get an invite.
@@ -1123,14 +1123,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="code">The invite code.</param>
 	/// <param name="invite">The invite, if found.</param>
 	/// <param name="withCounts">Whether to include presence and total member counts in the returned invite.</param>
-	/// <param name="withExpiration">Whether to include the expiration date in the returned invite.</param>
 	/// <param name="scheduledEventId">The scheduled event id.</param>
+	/// <param name="withPermissions">Whether to include the invite's permissions.</param>
 	/// <returns>True if the invite was found, otherwise false.</returns>
-	public bool TryGetInviteByCode(string code, [NotNullWhen(true)] out DiscordInvite? invite, bool? withCounts = null, bool? withExpiration = null, ulong? scheduledEventId = null)
+	public bool TryGetInviteByCode(string code, [NotNullWhen(true)] out DiscordInvite? invite, bool? withCounts = null, ulong? scheduledEventId = null, bool? withPermissions = null)
 	{
 		try
 		{
-			invite = this.GetInviteByCodeAsync(code, withCounts, withExpiration, scheduledEventId).ConfigureAwait(false).GetAwaiter().GetResult();
+			invite = this.GetInviteByCodeAsync(code, withCounts, scheduledEventId, withPermissions).ConfigureAwait(false).GetAwaiter().GetResult();
 			return true;
 		}
 		catch (NotFoundException)
@@ -1341,8 +1341,8 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="userStatus">Status of the user.</param>
 	/// <param name="idleSince">Since when is the client performing the specified activity.</param>
 	/// <returns></returns>
-	public Task UpdateStatusAsync(DiscordActivity activity = null, UserStatus? userStatus = null, DateTimeOffset? idleSince = null)
-		=> this.InternalUpdateStatusAsync(activity, userStatus, idleSince);
+	public Task UpdateStatusAsync(DiscordActivity? activity = null, UserStatus? userStatus = null, DateTimeOffset? idleSince = null)
+		=> this.InternalUpdateStatusAsync(activity is not null ? [activity] : null, userStatus, idleSince);
 
 	/// <summary>
 	///     Edits current user.

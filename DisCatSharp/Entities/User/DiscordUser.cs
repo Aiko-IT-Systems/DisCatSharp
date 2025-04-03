@@ -21,22 +21,10 @@ namespace DisCatSharp.Entities;
 public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 {
 	/// <summary>
-	///     Gets the user's banner color integer.
-	/// </summary>
-	[JsonProperty("accent_color")]
-	internal int? BannerColorInternal;
-
-	/// <summary>
-	///     Gets the user's theme color integers.
-	/// </summary>
-	[JsonProperty("theme_colors", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<int>? ThemeColorsInternal;
-
-	/// <summary>
 	///     Initializes a new instance of the <see cref="DiscordUser" /> class.
 	/// </summary>
 	internal DiscordUser()
-		: base(["display_name", "linked_users", "banner_color", "authenticator_types"])
+		: base(["display_name", "linked_users", "banner_color", "authenticator_types", "collectibles"])
 	{ }
 
 	/// <summary>
@@ -69,6 +57,18 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	}
 
 	/// <summary>
+	///     Gets the user's banner color integer.
+	/// </summary>
+	[JsonProperty("accent_color")]
+	internal int? BannerColorInternal { get; set; }
+
+	/// <summary>
+	///     Gets the user's theme color integers.
+	/// </summary>
+	[JsonProperty("theme_colors", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<int>? ThemeColorsInternal { get; set; }
+
+	/// <summary>
 	///     Gets this user's username.
 	/// </summary>
 	[JsonProperty("username", NullValueHandling = NullValueHandling.Ignore)]
@@ -78,7 +78,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	///     Gets this user's username with the discriminator.
 	///     Example: Discord#0000
 	/// </summary>
-	[JsonIgnore, DiscordDeprecated("We will internally use the GlobalName if a user is already migrated. This will be removed in future. Consider switching to UsernameWithGlobalName then.")]
+	[JsonIgnore]
 	public virtual string UsernameWithDiscriminator
 		=> this.IsMigrated ? this.UsernameWithGlobalName : $"{this.Username}#{this.Discriminator}";
 
@@ -108,7 +108,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <summary>
 	///     Gets the user's 4-digit discriminator.
 	/// </summary>
-	[JsonProperty("discriminator", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated("Users are being migrated currently. Bots still have discrims")]
+	[JsonProperty("discriminator", NullValueHandling = NullValueHandling.Ignore)]
 	public virtual string Discriminator { get; internal set; }
 
 	/// <summary>

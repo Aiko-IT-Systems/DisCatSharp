@@ -20,7 +20,7 @@ public static class EmbedFlagExtensions
 ///     Represents additional features of a embed.
 /// </summary>
 [Flags]
-public enum EmbedFlags
+public enum EmbedFlags : long
 {
 	/// <summary>
 	///     This embed has no flags.
@@ -30,10 +30,15 @@ public enum EmbedFlags
 	/// <summary>
 	///     This embed contains explicit media.
 	/// </summary>
-	ContainsExplicitMedia = 1 << 4,
+	ContainsExplicitMedia = 1L << 4,
 
 	/// <summary>
 	///     This embed is a content inventory entry.
 	/// </summary>
-	IsContentInventoryEntry = 1 << 5
+	IsContentInventoryEntry = 1L << 5,
+
+	/// <summary>
+	///      The flags are unknown.
+	/// </summary>
+	Unknown = long.MaxValue
 }

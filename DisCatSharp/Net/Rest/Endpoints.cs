@@ -444,9 +444,14 @@ public static class Endpoints
 	public const string CHANNEL_ICONS = "/channel-icons";
 
 	/// <summary>
-	///     The user banners endpoint.
+	///     The banners endpoint.
 	/// </summary>
 	public const string BANNERS = "/banners";
+
+	/// <summary>
+	///     The custom banners endpoint.
+	/// </summary>
+	public const string CUSTOM_BANNERS = "/custom-banners";
 
 	/// <summary>
 	///     The sticker endpoint.
@@ -743,4 +748,6 @@ public static class Endpoints
 	///     The consume endpoint.
 	/// </summary>
 	public const string CONSUME = "/consume";
+
+	public const string BADGES = "/badges";
 }
