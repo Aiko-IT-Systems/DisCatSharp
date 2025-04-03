@@ -18,6 +18,7 @@
 		<NuGetAudit>false</NuGetAudit>
 		<DebugType>embedded</DebugType>
 		<NoWarn>1701;1702;NU1701</NoWarn>
+		<IncludeSymbols>True</IncludeSymbols>
 	</PropertyGroup>
 
 	<ItemGroup>
