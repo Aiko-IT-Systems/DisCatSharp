@@ -31,6 +31,7 @@ If you don't have a PC or other gear sitting around, you may use your phone inst
 - A phone with Android 7 or higher (5+ is possible but, not recommended as it posses security issues).
 - Termux.
 - An internet connection.
+- Basic understanding of bash and nano.
 
 #### Setup
 
@@ -61,30 +62,27 @@ proot-distro login debian
 apt update -y && apt upgrade -y
 ```
 
-- Install git and wget.
+- Install Git and Wget.
 ```sh
 apt install git wget -y
 ```
 
 - We get the DotNET script.
 ```sh
-wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && chmod +x ./dotnet-install.sh
+wget https://dot.net/v1/dotnet-install.sh -O dotnet.sh && chmod +x ./dotnet.sh
 ```
 
-- Now, we install the DotNET sdk and runtime.
+- Now, we install the DotNET SDK and runtime.
 ```sh
-./dotnet-install.sh --channel 8.0
+./dotnet.sh --channel 9.0
 ```
 >[!NOTE]
-> If the script doesn't automatically add `dotnet` to the path environment variable, run `export PATH=$PATH:$HOME/.dotnet` and add this command to the end of your `.bashrc` file which can be found in your user directory. To edit the `.bashrc` file run, `nano ~/.bashrc` and paste in the arguments. The `.bashrc` file is your configuration file for the bash shell environment.
-
->[!WARNING]
-> You might encounter the error code `0x8007000E` when you try to run the bot. To fix it, run `export DOTNET_GCHeapHardLimit=1C0000000` and also put that command into your `~/.bashrc` file. 
-> You'll possibly also get hit with an error message about a "valid ICU package" to fix that, run `export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1` and run the bot again. Or simply add these lines to your `.csproj` file in your project folder:
-```xml
-<RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="true" />
+> Incase the script does not automatically add "dotnet" to path, add `export PATH=$PATH:$HOME/.dotnet` at the end of your `.bashrc` file. Simply, run `nano ~/.bashrc` and paste it in. After which run `source ~/.bashrc` to apply our changes.
+- When trying to run the bot later, we'll encounter errors such as "0x8007000E" and "valid ICU package". To migitage this, we'll add the following to our `.bashrc` as stated in the note.
+```sh
+export DOTNET_GCHeapHardLimit=1C0000000
+export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
 ```
-
 ##### Cloud Hosted Code
 
 - If you have your code hosted with git or simply are able to download it, get the source code and `cd` into the directory. Example of a git repository on GitHub:
@@ -105,7 +103,7 @@ cd repo
 - Double click on `Phone` or what it is named, then simply copy your project folder from your pc and paste it in there. If you want to keep it in a custom path, remember the path to the project.
 
 >[!NOTE]
-> Transferring of files might take a bit. Be sure to not interrupt the process by shutting down or disconnecting your phone
+> Transferring of files might take a bit. Be sure to not interrupt the process by shutting down or disconnecting your phone.
 
 - First, we setup Termux storage run, `termux-setup-storage` and then it'll prompt you to give Termux access to your files and folders. Then run, `ls ~/storage/shared` to make sure you have access.
 
@@ -117,7 +115,7 @@ cd repo
 >[!TIP]
 > If you don't have a `.bashrc` file in your $HOME, just run `nano $HOME/.bashrc`, save, and exit. Then run the source command again.
 
-- Now, we'll move over the source code from our phone to the VM. Simply, run, `mv projectname/ $PROOTDISTROFS/debian/root/`.
+- Now, we'll move over the source code from our phone to the VM. Simply, run, `mv projectname/$PROOTDISTROFS/debian/root/`.
 
 >[!WARNING]
 > Double-check file paths, as you might accidentally move the wrong files around.
@@ -131,7 +129,7 @@ cd repo
 
 #### Profit
 
-Bot should be working fine, given you follow appropriate steps. For support or any inquires you can join our discord.
+The bot should be working fine, given you follow appropriate steps. For support or any inquires you can join the [Discord](https://discord.com/invite/2HWta4GXus).
 
 ## Third-Party Hosting
 
