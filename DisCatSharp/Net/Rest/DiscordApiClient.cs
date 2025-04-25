@@ -3188,7 +3188,7 @@ public sealed class DiscordApiClient
 				FailIfNotExists = builder.FailOnInvalidReply
 			};
 
-		pld.Mentions = new(builder.Mentions.Count == 0 ? Mentions.All : builder.Mentions, builder.Mentions.Any(), builder.MentionOnReply);
+		pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0, builder.MentionOnReply);
 
 		if (builder.Files.Count == 0)
 		{
