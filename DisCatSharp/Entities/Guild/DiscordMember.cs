@@ -778,10 +778,20 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	///     Gets the member's user avatar decoration data.
 	/// </summary>
 	[JsonIgnore]
-	public override AvatarDecorationData AvatarDecorationData
+	public override AvatarDecorationData? AvatarDecorationData
 	{
 		get => this.User.AvatarDecorationData;
 		internal set => this.User.AvatarDecorationData = value;
+	}
+
+	/// <summary>
+	///     Gets the member's user avatar decoration data.
+	/// </summary>
+	[JsonIgnore]
+	public override DiscordCollectibles? Collectibles
+	{
+		get => this.User.Collectibles;
+		internal set => this.User.Collectibles = value;
 	}
 
 	/// <summary>

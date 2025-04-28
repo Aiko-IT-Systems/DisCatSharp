@@ -742,6 +742,7 @@ public sealed partial class DiscordClient
 		this.CurrentUser.MfaEnabled = rusr.MfaEnabled;
 		this.CurrentUser.Verified = rusr.Verified;
 		this.CurrentUser.IsBot = rusr.IsBot;
+		this.CurrentUser.IsSystem = rusr.IsSystem;
 		this.CurrentUser.Flags = rusr.Flags;
 		this.CurrentUser.GlobalName = rusr.GlobalName;
 		this.CurrentUser.Discord = this;
@@ -804,6 +805,9 @@ public sealed partial class DiscordClient
 							old.BannerHash = usr.BannerHash;
 							old.BannerColorInternal = usr.BannerColorInternal;
 							old.AvatarDecorationData = usr.AvatarDecorationData;
+							old.Collectibles = usr.Collectibles;
+							old.IsSystem = usr.IsSystem;
+							old.IsBot = usr.IsBot;
 							old.ThemeColorsInternal = usr.ThemeColorsInternal;
 							old.Pronouns = usr.Pronouns;
 							old.Locale = usr.Locale;
@@ -2018,6 +2022,9 @@ public sealed partial class DiscordClient
 			old.BannerHash = usr.BannerHash;
 			old.BannerColorInternal = usr.BannerColorInternal;
 			old.AvatarDecorationData = usr.AvatarDecorationData;
+			old.Collectibles = usr.Collectibles;
+			old.IsSystem = usr.IsSystem;
+			old.IsBot = usr.IsBot;
 			old.ThemeColorsInternal = usr.ThemeColorsInternal;
 			old.Pronouns = usr.Pronouns;
 			old.Locale = usr.Locale;
@@ -2093,6 +2100,9 @@ public sealed partial class DiscordClient
 			old.BannerHash = usr.BannerHash;
 			old.BannerColorInternal = usr.BannerColorInternal;
 			old.AvatarDecorationData = usr.AvatarDecorationData;
+			old.Collectibles = usr.Collectibles;
+			old.IsSystem = usr.IsSystem;
+			old.IsBot = usr.IsBot;
 			old.ThemeColorsInternal = usr.ThemeColorsInternal;
 			old.Pronouns = usr.Pronouns;
 			old.Locale = usr.Locale;
@@ -2110,6 +2120,7 @@ public sealed partial class DiscordClient
 			};
 		var old = mbr;
 
+		// TODO: fixme
 		var gAvOld = old.GuildAvatarHash;
 		var gBaOld = old.GuildBannerHash;
 		var gAvDeDaOld = old.GuildAvatarDecorationData;
@@ -3645,6 +3656,7 @@ public sealed partial class DiscordClient
 			Email = this.CurrentUser.Email,
 			Id = this.CurrentUser.Id,
 			IsBot = this.CurrentUser.IsBot,
+			IsSystem = this.CurrentUser.IsSystem,
 			MfaEnabled = this.CurrentUser.MfaEnabled,
 			Username = this.CurrentUser.Username,
 			Verified = this.CurrentUser.Verified
@@ -3654,6 +3666,7 @@ public sealed partial class DiscordClient
 		this.CurrentUser.Discriminator = user.Discriminator;
 		this.CurrentUser.Email = user.Email;
 		this.CurrentUser.Id = user.Id;
+		this.CurrentUser.IsBot = user.IsBot;
 		this.CurrentUser.IsBot = user.IsBot;
 		this.CurrentUser.MfaEnabled = user.MfaEnabled;
 		this.CurrentUser.Username = user.Username;

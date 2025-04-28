@@ -2110,6 +2110,9 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 					old.BannerHash = usr.BannerHash;
 					old.BannerColorInternal = usr.BannerColorInternal;
 					old.AvatarDecorationData = usr.AvatarDecorationData;
+					old.Collectibles = usr.Collectibles;
+					old.IsSystem = usr.IsSystem;
+					old.IsBot = usr.IsBot;
 					old.ThemeColorsInternal = usr.ThemeColorsInternal;
 					old.Pronouns = usr.Pronouns;
 					old.Locale = usr.Locale;

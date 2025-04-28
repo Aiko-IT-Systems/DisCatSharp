@@ -474,6 +474,9 @@ public sealed class DiscordApiClient
 				old.BannerColorInternal = usr.BannerColorInternal;
 				old.AvatarDecorationData = usr.AvatarDecorationData;
 				old.ThemeColorsInternal = usr.ThemeColorsInternal;
+				old.Collectibles = usr.Collectibles;
+				old.IsSystem = usr.IsSystem;
+				old.IsBot = usr.IsBot;
 				old.Pronouns = usr.Pronouns;
 				old.Locale = usr.Locale;
 				old.GlobalName = usr.GlobalName;
@@ -4432,12 +4435,13 @@ public sealed class DiscordApiClient
 	/// <param name="name">The name.</param>
 	/// <param name="permissions">The permissions.</param>
 	/// <param name="color">The color.</param>
+	/// <param name="colors">The colors.</param>
 	/// <param name="hoist">If true, hoist.</param>
 	/// <param name="mentionable">If true, mentionable.</param>
 	/// <param name="iconb64">The icon.</param>
 	/// <param name="emoji">The unicode emoji icon.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordRole> ModifyGuildRoleAsync(ulong guildId, ulong roleId, string name, Permissions? permissions, int? color, bool? hoist, bool? mentionable, Optional<string> iconb64, Optional<string> emoji, string? reason)
+	internal async Task<DiscordRole> ModifyGuildRoleAsync(ulong guildId, ulong roleId, string name, Permissions? permissions, int? color, DiscordRoleColors? colors, bool? hoist, bool? mentionable, Optional<string> iconb64, Optional<string> emoji, string? reason)
 	{
 		var pld = new RestGuildRolePayload
 		{
@@ -4447,6 +4451,16 @@ public sealed class DiscordApiClient
 			Hoist = hoist,
 			Mentionable = mentionable
 		};
+
+		if (colors is not null)
+		{
+			pld.Colors = new()
+			{
+				PrimaryColor = colors.PrimaryColor.Value,
+				SecondaryColor = colors.SecondaryColor?.Value,
+				TertiaryColor = colors.TertiaryColor?.Value
+			};
+		}
 
 		if (emoji.HasValue && iconb64.HasValue)
 		{

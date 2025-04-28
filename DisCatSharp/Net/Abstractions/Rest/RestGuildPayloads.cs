@@ -607,6 +607,12 @@ internal sealed class RestGuildRolePayload : ObservableApiObject
 	public int? Color { get; set; }
 
 	/// <summary>
+	///     Gets or sets the colors.
+	/// </summary>
+	[JsonProperty("colors", NullValueHandling = NullValueHandling.Ignore)]
+	public RoleColors? Colors { get; set; }
+
+	/// <summary>
 	///     Gets or sets a value indicating whether hoist.
 	/// </summary>
 	[JsonProperty("hoist", NullValueHandling = NullValueHandling.Ignore)]
@@ -629,6 +635,31 @@ internal sealed class RestGuildRolePayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("unicode_emoji")]
 	public Optional<string> UnicodeEmoji { get; set; }
+
+	/// <summary>
+	///     Role colors.
+	/// </summary>
+	public sealed class RoleColors
+	{
+		/// <summary>
+		///     Gets the primary color. Is the same as <see cref="DiscordRole.Color" />.
+		/// </summary>
+		[JsonProperty("primary_color", NullValueHandling = NullValueHandling.Ignore)]
+		public int PrimaryColor { get; set; }
+
+		/// <summary>
+		///     Gets the secondary color. Uses for gradient style.
+		/// </summary>
+		[JsonProperty("secondary_color", NullValueHandling = NullValueHandling.Include)]
+		public int? SecondaryColor { get; set; }
+
+		/// <summary>
+		///     Gets the tertiary color. This only applies to the <c>holographic</c> role style and must have the value
+		///     <c>16761760</c>.
+		/// </summary>
+		[JsonProperty("tertiary_color", NullValueHandling = NullValueHandling.Include)]
+		public int? TertiaryColor { get; set; }
+	}
 }
 
 /// <summary>

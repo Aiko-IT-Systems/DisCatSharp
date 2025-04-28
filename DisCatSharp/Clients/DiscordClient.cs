@@ -552,6 +552,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			old.BannerColorInternal = usr.BannerColorInternal;
 			old.AvatarDecorationData = usr.AvatarDecorationData;
 			old.ThemeColorsInternal = usr.ThemeColorsInternal;
+			old.Collectibles = usr.Collectibles;
+			old.IsSystem = usr.IsSystem;
+			old.IsBot = usr.IsBot;
 			old.Pronouns = usr.Pronouns;
 			old.GlobalName = usr.GlobalName;
 			old.Clan = usr.Clan;
@@ -1690,6 +1693,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 					old.BannerHash = usr.BannerHash;
 					old.BannerColorInternal = usr.BannerColorInternal;
 					old.AvatarDecorationData = usr.AvatarDecorationData;
+					old.Collectibles = usr.Collectibles;
+					old.IsSystem = usr.IsSystem;
+					old.IsBot = usr.IsBot;
 					old.ThemeColorsInternal = usr.ThemeColorsInternal;
 					old.Pronouns = usr.Pronouns;
 					old.Locale = usr.Locale;
@@ -1730,6 +1736,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.BannerColorInternal = usr.BannerColorInternal;
 				old.AvatarDecorationData = usr.AvatarDecorationData;
 				old.ThemeColorsInternal = usr.ThemeColorsInternal;
+				old.Collectibles = usr.Collectibles;
+				old.IsSystem = usr.IsSystem;
+				old.IsBot = usr.IsBot;
 				old.Pronouns = usr.Pronouns;
 				old.Locale = usr.Locale;
 				old.GlobalName = usr.GlobalName;
@@ -1908,6 +1917,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 					old.AvatarHash = usr.AvatarHash;
 					old.BannerHash = usr.BannerHash;
 					old.BannerColorInternal = usr.BannerColorInternal;
+					old.Collectibles = usr.Collectibles;
+					old.IsSystem = usr.IsSystem;
+					old.IsBot = usr.IsBot;
 					old.AvatarDecorationData = usr.AvatarDecorationData;
 					old.ThemeColorsInternal = usr.ThemeColorsInternal;
 					old.Pronouns = usr.Pronouns;

@@ -15,7 +15,7 @@ internal class TransportUser : ObservableApiObject
 	///     Initializes a new instance of the <see cref="TransportUser" /> class.
 	/// </summary>
 	internal TransportUser()
-		: base(["display_name", "linked_users", "banner_color", "authenticator_types", "collectibles"])
+		: base(["display_name", "linked_users", "banner_color", "authenticator_types"])
 	{ }
 
 	/// <summary>
@@ -31,6 +31,7 @@ internal class TransportUser : ObservableApiObject
 		this.BannerHash = other.BannerHash;
 		this.BannerColor = other.BannerColor;
 		this.IsBot = other.IsBot;
+		this.IsSystem = other.IsSystem;
 		this.MfaEnabled = other.MfaEnabled;
 		this.Verified = other.Verified;
 		this.Email = other.Email;
@@ -94,7 +95,13 @@ internal class TransportUser : ObservableApiObject
 	///     Gets the user's avatar decoration data.
 	/// </summary>
 	[JsonProperty("avatar_decoration_data", NullValueHandling = NullValueHandling.Ignore)]
-	public AvatarDecorationData AvatarDecorationData { get; internal set; }
+	public AvatarDecorationData? AvatarDecorationData { get; internal set; }
+
+	/// <summary>
+	///     Gets the user's collectibles.
+	/// </summary>
+	[JsonProperty("collectibles", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordCollectibles? Collectibles { get; internal set; }
 
 	/// <summary>
 	///     Gets the banner hash.
@@ -119,6 +126,12 @@ internal class TransportUser : ObservableApiObject
 	/// </summary>
 	[JsonProperty("bot", NullValueHandling = NullValueHandling.Ignore)]
 	public bool IsBot { get; internal set; }
+
+	/// <summary>
+	///     Gets a value indicating whether is system.
+	/// </summary>
+	[JsonProperty("system", NullValueHandling = NullValueHandling.Ignore)]
+	public bool? IsSystem { get; internal set; }
 
 	/// <summary>
 	///     Gets a value indicating whether mfa enabled.

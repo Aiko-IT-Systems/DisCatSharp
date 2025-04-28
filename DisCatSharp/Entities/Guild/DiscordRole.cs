@@ -101,7 +101,8 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <summary>
 	///     Determines the type of role based on its tags.
 	/// </summary>
-	public RoleType Type => this.Tags?.DetermineRoleType() ?? RoleType.Normal;
+	public RoleType Type
+		=> this.Tags?.DetermineRoleType() ?? RoleType.Normal;
 
 	/// <summary>
 	///     Gets the role icon's hash.
@@ -144,6 +145,9 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
 	public RoleFlags Flags { get; internal set; }
+
+	[JsonProperty("colors", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordRoleColors Colors { get; internal set; }
 
 	/// <summary>
 	///     Gets a mention string for this role. If the role is mentionable, this string will mention all the users that belong
@@ -269,7 +273,7 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task ModifyAsync(string name = null, Permissions? permissions = null, DiscordColor? color = null, bool? hoist = null, bool? mentionable = null, string? reason = null)
-		=> this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, name, permissions, color?.Value, hoist, mentionable, Optional.None, Optional.None, reason);
+		=> this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, name, permissions, color?.Value, null, hoist, mentionable, Optional.None, Optional.None, reason);
 
 	/// <summary>
 	///     Updates this role.
@@ -316,7 +320,10 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 				break;
 		}
 
-		return canContinue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Hoist, mdl.Mentionable, iconb64, emoji, mdl.AuditLogReason) : throw new NotSupportedException("Cannot modify role icon. Guild needs boost tier two.");
+		if (mdl.Colors?.TertiaryColor is not null && mdl.Colors?.TertiaryColor?.Value is not 16761760 && mdl.Colors?.SecondaryColor?.Value is not 16759788 && mdl.Colors?.PrimaryColor?.Value is not 11127295)
+			throw new ArgumentException("When using a holographic role style, the following colors must be set: primary (11127295), secondary (16759788) & tertiary (16761760). It cannot be any other value");
+
+		return canContinue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Colors, mdl.Hoist, mdl.Mentionable, iconb64, emoji, mdl.AuditLogReason) : throw new NotSupportedException("Cannot modify role icon. Guild needs boost tier two.");
 	}
 
 	/// <summary>
@@ -335,4 +342,29 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 		=> this.Discord.ApiClient.DeleteRoleAsync(this.GuildId, this.Id, reason);
 
 #endregion
+}
+
+/// <summary>
+///     Represents a role's colors.
+/// </summary>
+public sealed class DiscordRoleColors
+{
+	/// <summary>
+	///     Gets the primary color. Is the same as <see cref="DiscordRole.Color" />.
+	/// </summary>
+	[JsonProperty("primary_color", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordColor PrimaryColor { get; internal set; }
+
+	/// <summary>
+	///     Gets the secondary color. Uses for gradient style.
+	/// </summary>
+	[JsonProperty("secondary_color", NullValueHandling = NullValueHandling.Include)]
+	public DiscordColor? SecondaryColor { get; internal set; }
+
+	/// <summary>
+	///     Gets the tertiary color. This only applies to the <c>holographic</c> role style and must have the value
+	///     <c>16761760</c>.
+	/// </summary>
+	[JsonProperty("tertiary_color", NullValueHandling = NullValueHandling.Include)]
+	public DiscordColor? TertiaryColor { get; internal set; }
 }
