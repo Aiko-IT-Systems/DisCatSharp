@@ -103,6 +103,7 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	/// <summary>
 	///     Determines the type of role based on its tags.
 	/// </summary>
+	[JsonIgnore]
 	public RoleType Type
 		=> this.Tags?.DetermineRoleType() ?? RoleType.Normal;
 
