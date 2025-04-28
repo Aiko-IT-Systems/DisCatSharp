@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
@@ -349,22 +350,43 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 /// </summary>
 public sealed class DiscordRoleColors
 {
+	[JsonProperty("primary_color", NullValueHandling = NullValueHandling.Ignore)]
+	internal int PrimaryColorInternal;
+
+	[JsonProperty("secondary_color", NullValueHandling = NullValueHandling.Include)]
+	internal int? SecondaryColorInternal;
+
+	[JsonProperty("tertiary_color", NullValueHandling = NullValueHandling.Include)]
+	internal int? TertiaryColorInternal;
+
 	/// <summary>
 	///     Gets the primary color. Is the same as <see cref="DiscordRole.Color" />.
 	/// </summary>
-	[JsonProperty("primary_color", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordColor PrimaryColor { get; internal set; }
+	[JsonIgnore]
+	public DiscordColor PrimaryColor
+	{
+		get => new(this.PrimaryColorInternal);
+		set => this.PrimaryColorInternal = value.Value;
+	}
 
 	/// <summary>
 	///     Gets the secondary color. Uses for gradient style.
 	/// </summary>
-	[JsonProperty("secondary_color", NullValueHandling = NullValueHandling.Include)]
-	public DiscordColor? SecondaryColor { get; internal set; }
+	[JsonIgnore]
+	public DiscordColor? SecondaryColor
+	{
+		get => this.SecondaryColorInternal.HasValue ? new(this.SecondaryColorInternal.Value) : null;
+		set => this.SecondaryColorInternal = value?.Value;
+	}
 
 	/// <summary>
 	///     Gets the tertiary color. This only applies to the <c>holographic</c> role style and must have the value
 	///     <c>16761760</c>.
 	/// </summary>
-	[JsonProperty("tertiary_color", NullValueHandling = NullValueHandling.Include)]
-	public DiscordColor? TertiaryColor { get; internal set; }
+	[JsonIgnore]
+	public DiscordColor? TertiaryColor
+	{
+		get => this.TertiaryColorInternal.HasValue ? new(this.TertiaryColorInternal.Value) : null;
+		set => this.TertiaryColorInternal = value?.Value;
+	}
 }
