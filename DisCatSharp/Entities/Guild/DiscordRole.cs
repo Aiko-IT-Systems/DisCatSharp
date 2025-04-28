@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
@@ -147,8 +148,11 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
 	public RoleFlags Flags { get; internal set; }
 
-	[JsonProperty("colors", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordRoleColors Colors { get; internal set; }
+	/// <summary>
+	/// Gets the role colors.
+	/// </summary>
+	[JsonProperty("colors", NullValueHandling = NullValueHandling.Ignore), DiscordInExperiment("This feature is currently in experiment and not available for most guilds."), RequiresFeature(Features.Experiment, "Requires  2025-02_skill_trees")]
+	public DiscordRoleColors? Colors { get; internal set; }
 
 	/// <summary>
 	///     Gets a mention string for this role. If the role is mentionable, this string will mention all the users that belong

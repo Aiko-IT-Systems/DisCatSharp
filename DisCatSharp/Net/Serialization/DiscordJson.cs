@@ -113,6 +113,9 @@ public static class DiscordJson
 		                    "JRE Line Position" + jre.LinePosition + "\n" +
 		                    "JRE Path" + jre.Path;
 
+		if (discord.Configuration.EnableLibraryDeveloperMode)
+			discord.Logger.LogError(e.ErrorContext.Error, "{msg}\n\n{raw}", sentryMessage);
+
 		SentryEvent sentryEvent = new(new DiscordJsonException(jre))
 		{
 			Level = SentryLevel.Error,

@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
@@ -35,5 +36,12 @@ public sealed class AvatarDecorationData
 	///     Gets whether and when the decoration expires.
 	/// </summary>
 	[JsonProperty("expires_at", NullValueHandling = NullValueHandling.Ignore)]
-	public DateTimeOffset? ExpiresAt { get; internal set; }
+	public string? ExpiresAtRaw { get; internal set; }
+
+	/// <summary>
+	///     Gets whether and when the decoration expires.
+	/// </summary>
+	[JsonIgnore]
+	public DateTimeOffset? ExpiresAt
+		=> !string.IsNullOrEmpty(this.ExpiresAtRaw) && DateTimeOffset.TryParse(this.ExpiresAtRaw, CultureInfo.InvariantCulture, out var dto) ? dto : null;
 }
