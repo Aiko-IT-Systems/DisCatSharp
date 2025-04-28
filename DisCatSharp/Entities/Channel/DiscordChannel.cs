@@ -305,14 +305,18 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public Permissions? UserPermissions { get; internal set; }
 
 	/// <summary>
+	/// Gets the voice channel status.
+	/// </summary>
+	[JsonProperty("status", NullValueHandling = NullValueHandling.Include)]
+	public string? Status { get; internal set; }
+
+	/// <summary>
 	///     Checks whether this <see cref="DiscordChannel" /> is equal to another <see cref="DiscordChannel" />.
 	/// </summary>
 	/// <param name="e"><see cref="DiscordChannel" /> to compare to.</param>
 	/// <returns>Whether the <see cref="DiscordChannel" /> is equal to this <see cref="DiscordChannel" />.</returns>
 	public bool Equals(DiscordChannel e)
 		=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
-
-	// TODO: Voice channel statuses aka topic.
 
 	/// <summary>
 	///     Gets the maximum available position to move the channel to.
