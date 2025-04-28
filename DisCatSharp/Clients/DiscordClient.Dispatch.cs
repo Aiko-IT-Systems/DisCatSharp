@@ -3667,7 +3667,7 @@ public sealed partial class DiscordClient
 		this.CurrentUser.Email = user.Email;
 		this.CurrentUser.Id = user.Id;
 		this.CurrentUser.IsBot = user.IsBot;
-		this.CurrentUser.IsBot = user.IsBot;
+		this.CurrentUser.IsSystem = user.IsSystem;
 		this.CurrentUser.MfaEnabled = user.MfaEnabled;
 		this.CurrentUser.Username = user.Username;
 		this.CurrentUser.Verified = user.Verified;

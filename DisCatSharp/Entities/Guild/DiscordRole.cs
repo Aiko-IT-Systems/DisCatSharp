@@ -320,7 +320,7 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 				break;
 		}
 
-		if (mdl.Colors?.TertiaryColor is not null && mdl.Colors?.TertiaryColor?.Value is not 16761760 && mdl.Colors?.SecondaryColor?.Value is not 16759788 && mdl.Colors?.PrimaryColor?.Value is not 11127295)
+		if (mdl.Colors?.TertiaryColor is not null && mdl.Colors?.TertiaryColor?.Value is not 16761760 && mdl.Colors?.SecondaryColor?.Value is not 16759788 && mdl.Colors?.PrimaryColor.Value is not 11127295)
 			throw new ArgumentException("When using a holographic role style, the following colors must be set: primary (11127295), secondary (16759788) & tertiary (16761760). It cannot be any other value");
 
 		return canContinue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Colors, mdl.Hoist, mdl.Mentionable, iconb64, emoji, mdl.AuditLogReason) : throw new NotSupportedException("Cannot modify role icon. Guild needs boost tier two.");
