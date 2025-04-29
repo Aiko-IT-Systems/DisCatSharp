@@ -1575,7 +1575,15 @@ public partial class DiscordGuild
 			entry.ActionType = xac.ActionType;
 			entry.Id = xac.Id;
 			entry.Reason = xac.Reason;
-			entry.UserResponsible = amd.Count != 0 && amd.TryGetValue(xac.UserId, out var resp) ? resp : this.MembersInternal[xac.UserId];
+			entry.UserResponsible = amd.Count != 0 && amd.TryGetValue(xac.UserId, out var resp)
+				? resp
+				: this.MembersInternal.TryGetValue(xac.UserId, out var mem)
+					? mem
+					: new()
+					{
+						Id = xac.UserId,
+						GuildId = this.Id
+					};
 			entries.Add(entry);
 		}
 

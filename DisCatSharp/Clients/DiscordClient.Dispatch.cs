@@ -1465,11 +1465,12 @@ public sealed partial class DiscordClient
 
 			var dataList = await guild.ProcessAuditLog(workaroundAuditLogEntryList).ConfigureAwait(false);
 
-			await this._guildAuditLogEntryCreated.InvokeAsync(this, new(this.ServiceProvider)
-			{
-				Guild = guild,
-				AuditLogEntry = dataList[0]
-			}).ConfigureAwait(false);
+			if (dataList.Count > 0)
+				await this._guildAuditLogEntryCreated.InvokeAsync(this, new(this.ServiceProvider)
+				{
+					Guild = guild,
+					AuditLogEntry = dataList[0]
+				}).ConfigureAwait(false);
 		}
 		catch (Exception)
 		{ }
@@ -1479,7 +1480,7 @@ public sealed partial class DiscordClient
 	///     Handles the guild sync event.
 	/// </summary>
 	/// <param name="guild">The guild.</param>
-	/// <param name="isLarge">Whether the guild is a large guild..</param>
+	/// <param name="isLarge">Whether the guild is a large guild.</param>
 	/// <param name="rawMembers">The raw members.</param>
 	/// <param name="presences">The presences.</param>
 	internal async Task OnGuildSyncEventAsync(DiscordGuild guild, bool isLarge, JArray rawMembers, IEnumerable<DiscordPresence> presences)

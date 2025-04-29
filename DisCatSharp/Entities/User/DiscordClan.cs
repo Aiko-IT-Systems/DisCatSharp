@@ -45,7 +45,7 @@ public sealed class DiscordClan
 		=> string.IsNullOrWhiteSpace(this.BadgeHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.CLAN_BADGES}/{this.IdentityGuildId?.ToString(CultureInfo.InvariantCulture)}/{this.BadgeHash}.{(this.BadgeHash.StartsWith("a_", StringComparison.Ordinal) ? "gif" : "png")}?size=1024";
 
 	/// <summary>
-	///     Gets the clans's badge hash.
+	///     Gets the clan's badge hash.
 	/// </summary>
 	[JsonProperty("badge", NullValueHandling = NullValueHandling.Ignore)]
 	public string BadgeHash { get; internal set; }
