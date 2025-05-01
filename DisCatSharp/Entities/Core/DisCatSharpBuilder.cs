@@ -232,29 +232,47 @@ public class DisCatSharpBuilder
 	/// </exception>
 	private void CheckComponentIds(DiscordComponent component, HashSet<int> ids, Dictionary<int, List<string>> duplicateIds)
 	{
-		if (component is DiscordActionRowComponent actionRowComponent)
-			foreach (var actionRowComponentChild in actionRowComponent.Components)
-				this.AddId(actionRowComponentChild, ids, duplicateIds);
-		else if (component is DiscordContainerComponent containerComponent)
-			foreach (var containerComponentChild in containerComponent.Components)
+		switch (component)
+		{
+			case DiscordActionRowComponent actionRowComponent:
 			{
-				if (containerComponentChild is DiscordActionRowComponent actionRowContainerComponentChild)
-					foreach (var actionRowComponentChild in actionRowContainerComponentChild.Components)
-						this.AddId(actionRowComponentChild, ids, duplicateIds);
-				else if (containerComponentChild is DiscordSectionComponent subSectionComponent)
+				foreach (var actionRowComponentChild in actionRowComponent.Components)
+					this.AddId(actionRowComponentChild, ids, duplicateIds);
+				break;
+			}
+			case DiscordContainerComponent containerComponent:
+			{
+				foreach (var containerComponentChild in containerComponent.Components)
 				{
-					foreach (var sectionComponentChild in subSectionComponent.Components)
-						this.AddId(sectionComponentChild, ids, duplicateIds);
-					this.AddId(subSectionComponent.Accessory, ids, duplicateIds);
+					switch (containerComponentChild)
+					{
+						case DiscordActionRowComponent actionRowContainerComponentChild:
+						{
+							foreach (var actionRowComponentChild in actionRowContainerComponentChild.Components)
+								this.AddId(actionRowComponentChild, ids, duplicateIds);
+							break;
+						}
+						case DiscordSectionComponent subSectionComponent:
+						{
+							foreach (var sectionComponentChild in subSectionComponent.Components)
+								this.AddId(sectionComponentChild, ids, duplicateIds);
+							this.AddId(subSectionComponent.Accessory, ids, duplicateIds);
+							break;
+						}
+					}
+
+					this.AddId(containerComponentChild, ids, duplicateIds);
 				}
 
-				this.AddId(containerComponentChild, ids, duplicateIds);
+				break;
 			}
-		else if (component is DiscordSectionComponent sectionComponent)
-		{
-			foreach (var sectionComponentChild in sectionComponent.Components)
-				this.AddId(sectionComponentChild, ids, duplicateIds);
-			this.AddId(sectionComponent.Accessory, ids, duplicateIds);
+			case DiscordSectionComponent sectionComponent:
+			{
+				foreach (var sectionComponentChild in sectionComponent.Components)
+					this.AddId(sectionComponentChild, ids, duplicateIds);
+				this.AddId(sectionComponent.Accessory, ids, duplicateIds);
+				break;
+			}
 		}
 
 		this.AddId(component, ids, duplicateIds);
