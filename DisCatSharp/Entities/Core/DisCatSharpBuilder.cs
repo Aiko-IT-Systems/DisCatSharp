@@ -260,6 +260,22 @@ public class DisCatSharpBuilder
 		this.AddId(component, ids, duplicateIds);
 	}
 
+	/// <summary>
+	///     Adds the identifier of the specified <see cref="DiscordComponent" /> to the provided collection of identifiers.
+	/// </summary>
+	/// <param name="component">
+	///     The <see cref="DiscordComponent" /> whose identifier is to be added.
+	/// </param>
+	/// <param name="ids">
+	///     A collection of unique identifiers to which the component's identifier will be added.
+	/// </param>
+	/// <param name="duplicateIds">
+	///     A dictionary that tracks duplicate identifiers and their associated component types.
+	/// </param>
+	/// <remarks>
+	///     If the identifier of the specified component already exists in the <paramref name="ids" /> collection,
+	///     it will be added to the <paramref name="duplicateIds" /> dictionary along with its type.
+	/// </remarks>
 	private void AddId(DiscordComponent component, HashSet<int> ids, Dictionary<int, List<string>> duplicateIds)
 	{
 		if (component.Id.HasValue)
