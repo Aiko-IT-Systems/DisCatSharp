@@ -171,7 +171,7 @@ public class DisCatSharpBuilder
 	/// <summary>
 	///     Clears the components on this builder.
 	/// </summary>
-	public void ClearComponents()
+	public virtual void ClearComponents()
 		=> this.ComponentsInternal?.Clear();
 
 	/// <summary>

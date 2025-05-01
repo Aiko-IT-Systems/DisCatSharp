@@ -481,9 +481,29 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	public void ClearPoll()
 		=> this.Poll = null;
 
+	/// <inheritdoc />
+	public override void ClearComponents()
+		=> base.ClearComponents();
+
 	/// <summary>
-	///     Allows for clearing the Webhook Builder so that it can be used again to send a new message.
+	/// Removes existing components from the webhook message.
 	/// </summary>
+	public void RemoveComponents()
+		=> this.ComponentsInternal = [];
+
+	/// <summary>
+	/// Removes existing embeds from the webhook message.
+	/// </summary>
+	public void RemoveEmbeds()
+		=> this.EmbedsInternal = [];
+
+	/// <summary>
+	/// Removes existing attachments from the webhook message.
+	/// </summary>
+	public void RemoveAttachments()
+		=> this.AttachmentsInternal = [];
+
+	/// <inheritdoc />
 	public override void Clear()
 	{
 		this.IsTts = false;

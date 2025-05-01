@@ -345,6 +345,10 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	public void ClearPoll()
 		=> this.Poll = null;
 
+	/// <inheritdoc/>
+	public override void ClearComponents()
+		=> base.ClearComponents();
+
 	/// <inheritdoc />
 	public override void Clear()
 	{

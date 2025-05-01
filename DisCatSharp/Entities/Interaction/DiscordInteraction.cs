@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -31,7 +30,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	public DiscordInteractionData Data { get; internal set; }
 
 	/// <summary>
-	///     Gets the Id of the guild that invoked this interaction, if any.
+	///     Gets the ID of the guild that invoked this interaction, if any.
 	/// </summary>
 	[JsonIgnore]
 	public ulong? GuildId { get; internal set; }
@@ -50,7 +49,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 	internal DiscordGuild? PartialGuild { get; set; }
 
 	/// <summary>
-	///     Gets the Id of the channel that invoked this interaction.
+	///     Gets the ID of the channel that invoked this interaction.
 	/// </summary>
 	[JsonIgnore]
 	public ulong ChannelId { get; internal set; }
@@ -194,10 +193,13 @@ public sealed class DiscordInteraction : SnowflakeObject
 		{
 			var attachments = this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token).Result.Attachments;
 			if (attachments?.Count > 0)
+			{
+				builder.AttachmentsInternal ??= [];
 				builder.AttachmentsInternal.AddRange(attachments);
+			}
 		}
 		else if (builder.KeepAttachmentsInternal.HasValue)
-			builder.AttachmentsInternal.Clear();
+			builder.AttachmentsInternal?.Clear();
 
 		return await this.Discord.ApiClient.EditOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, builder).ConfigureAwait(false);
 	}
@@ -210,7 +212,7 @@ public sealed class DiscordInteraction : SnowflakeObject
 		=> this.Discord.ApiClient.DeleteOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token);
 
 	/// <summary>
-	///     Creates a follow up message to this interaction.
+	///     Creates a follow-up message to this interaction.
 	/// </summary>
 	/// <param name="builder">The webhook builder.</param>
 	/// <returns>The created <see cref="DiscordMessage" />.</returns>
@@ -222,16 +224,16 @@ public sealed class DiscordInteraction : SnowflakeObject
 	}
 
 	/// <summary>
-	///     Gets a follow up message.
+	///     Gets a follow-up message.
 	/// </summary>
-	/// <param name="messageId">The id of the follow up message.</param>
+	/// <param name="messageId">The id of the follow-up message.</param>
 	public Task<DiscordMessage> GetFollowupMessageAsync(ulong messageId)
 		=> this.Discord.ApiClient.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
 
 	/// <summary>
-	///     Edits a follow up message.
+	///     Edits a follow-up message.
 	/// </summary>
-	/// <param name="messageId">The id of the follow up message.</param>
+	/// <param name="messageId">The id of the follow-up message.</param>
 	/// <param name="builder">The webhook builder.</param>
 	/// <returns>The edited <see cref="DiscordMessage" />.</returns>
 	public async Task<DiscordMessage> EditFollowupMessageAsync(ulong messageId, DiscordWebhookBuilder builder)
@@ -242,18 +244,21 @@ public sealed class DiscordInteraction : SnowflakeObject
 		{
 			var attachments = this.Discord.ApiClient.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId).Result.Attachments;
 			if (attachments?.Count > 0)
+			{
+				builder.AttachmentsInternal ??= [];
 				builder.AttachmentsInternal.AddRange(attachments);
+			}
 		}
 		else if (builder.KeepAttachmentsInternal.HasValue)
-			builder.AttachmentsInternal.Clear();
+			builder.AttachmentsInternal?.Clear();
 
 		return await this.Discord.ApiClient.EditFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId, builder).ConfigureAwait(false);
 	}
 
 	/// <summary>
-	///     Deletes a follow up message.
+	///     Deletes a follow-up message.
 	/// </summary>
-	/// <param name="messageId">The id of the follow up message.</param>
+	/// <param name="messageId">The id of the follow-up message.</param>
 	public Task DeleteFollowupMessageAsync(ulong messageId)
 		=> this.Discord.ApiClient.DeleteFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
 }
