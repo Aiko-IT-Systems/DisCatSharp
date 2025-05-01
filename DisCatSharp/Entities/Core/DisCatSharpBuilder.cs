@@ -12,27 +12,27 @@ public class DisCatSharpBuilder
 	/// <summary>
 	///     The attachments of this builder.
 	/// </summary>
-	internal List<DiscordAttachment> AttachmentsInternal { get; } = [];
+	internal List<DiscordAttachment>? AttachmentsInternal { get; set; } = null;
 
 	/// <summary>
 	///     The components of this builder.
 	/// </summary>
-	internal List<DiscordComponent> ComponentsInternal { get; } = [];
+	internal List<DiscordComponent>? ComponentsInternal { get; set; } = null;
 
 	/// <summary>
 	///     The embeds of this builder.
 	/// </summary>
-	internal List<DiscordEmbed> EmbedsInternal { get; } = [];
+	internal List<DiscordEmbed>? EmbedsInternal { get; set; } = null;
 
 	/// <summary>
 	///     The files of this builder.
 	/// </summary>
-	internal List<DiscordMessageFile> FilesInternal { get; } = [];
+	internal List<DiscordMessageFile>? FilesInternal { get; set; } = null;
 
 	/// <summary>
 	///     The allowed mentions of this builder.
 	/// </summary>
-	internal List<IMention> MentionsInternal { get; } = [];
+	internal List<IMention>? MentionsInternal { get; set; } = null;
 
 	/// <summary>
 	///     The content of this builder.
@@ -65,31 +65,31 @@ public class DisCatSharpBuilder
 	/// <summary>
 	///     Gets the components of this builder.
 	/// </summary>
-	public IReadOnlyList<DiscordComponent> Components
+	public IReadOnlyList<DiscordComponent>? Components
 		=> this.ComponentsInternal;
 
 	/// <summary>
 	///     Gets the embeds of this builder.
 	/// </summary>
-	public IReadOnlyList<DiscordEmbed> Embeds
+	public IReadOnlyList<DiscordEmbed>? Embeds
 		=> this.EmbedsInternal;
 
 	/// <summary>
 	///     Gets the attachments of this builder.
 	/// </summary>
-	public IReadOnlyList<DiscordAttachment> Attachments
+	public IReadOnlyList<DiscordAttachment>? Attachments
 		=> this.AttachmentsInternal;
 
 	/// <summary>
 	///     Gets the files of this builder.
 	/// </summary>
-	public IReadOnlyList<DiscordMessageFile> Files
+	public IReadOnlyList<DiscordMessageFile>? Files
 		=> this.FilesInternal;
 
 	/// <summary>
 	///     Gets the allowed mentions of this builder.
 	/// </summary>
-	public IReadOnlyList<IMention> Mentions
+	public IReadOnlyList<IMention>? Mentions
 		=> this.MentionsInternal;
 
 	/// <summary>
@@ -172,7 +172,7 @@ public class DisCatSharpBuilder
 	///     Clears the components on this builder.
 	/// </summary>
 	public void ClearComponents()
-		=> this.ComponentsInternal.Clear();
+		=> this.ComponentsInternal?.Clear();
 
 	/// <summary>
 	///     Allows for clearing the builder so that it can be used again.
@@ -180,16 +180,16 @@ public class DisCatSharpBuilder
 	public virtual void Clear()
 	{
 		this.Content = null;
-		this.FilesInternal.Clear();
-		this.EmbedsInternal.Clear();
-		this.AttachmentsInternal.Clear();
-		this.ComponentsInternal.Clear();
+		this.FilesInternal?.Clear();
+		this.EmbedsInternal?.Clear();
+		this.AttachmentsInternal?.Clear();
+		this.ComponentsInternal?.Clear();
 		this.IsVoiceMessage = false;
 		this.IsComponentsV2 = false;
 		this.EmbedsSuppressed = false;
 		this.NotificationsSuppressed = false;
 		this.FlagsChanged = false;
-		this.MentionsInternal.Clear();
+		this.MentionsInternal?.Clear();
 	}
 
 	/// <summary>
@@ -197,7 +197,7 @@ public class DisCatSharpBuilder
 	/// </summary>
 	internal virtual void Validate()
 	{
-		if (this.Components.Count > 0)
+		if (this.Components?.Count > 0)
 		{
 			HashSet<int> ids = [];
 			Dictionary<int, List<string>> duplicateIds = [];
@@ -213,13 +213,24 @@ public class DisCatSharpBuilder
 		}
 	}
 
+	/// <summary>
+	///     Validates the uniqueness of component IDs within a given <see cref="DiscordComponent" /> hierarchy.
+	/// </summary>
+	/// <param name="component">The root component to validate.</param>
+	/// <param name="ids">A set of IDs already encountered, used to track uniqueness.</param>
+	/// <param name="duplicateIds">
+	///     A dictionary to store duplicate IDs and their associated component types,
+	///     for reporting purposes if duplicates are found.
+	/// </param>
+	/// <exception cref="AggregateException">
+	///     Thrown when duplicate component IDs are detected, providing details about the duplicates.
+	/// </exception>
 	private void CheckComponentIds(DiscordComponent component, HashSet<int> ids, Dictionary<int, List<string>> duplicateIds)
 	{
 		if (component is DiscordActionRowComponent actionRowComponent)
 			foreach (var actionRowComponentChild in actionRowComponent.Components)
 				this.AddId(actionRowComponentChild, ids, duplicateIds);
 		else if (component is DiscordContainerComponent containerComponent)
-		{
 			foreach (var containerComponentChild in containerComponent.Components)
 			{
 				if (containerComponentChild is DiscordActionRowComponent actionRowContainerComponentChild)
@@ -234,7 +245,6 @@ public class DisCatSharpBuilder
 
 				this.AddId(containerComponentChild, ids, duplicateIds);
 			}
-		}
 		else if (component is DiscordSectionComponent sectionComponent)
 		{
 			foreach (var sectionComponentChild in sectionComponent.Components)

@@ -30,6 +30,12 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 		}
 	}
 
+	/// <summary>
+	///     Gets or sets a value indicating whether the followup message is ephemeral.
+	/// </summary>
+	/// <remarks>
+	///     An ephemeral message is only visible to the user who triggered the interaction.
+	/// </remarks>
 	private bool EPH { get; set; }
 
 	/// <summary>
@@ -78,6 +84,7 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder AddComponents(IEnumerable<DiscordActionRowComponent> components)
 	{
+		this.ComponentsInternal ??= [];
 		var ara = components.ToArray();
 
 		if (ara.Length + this.ComponentsInternal.Count > 5)
@@ -97,6 +104,7 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// <exception cref="ArgumentException"><paramref name="components" /> contained more than 5 components.</exception>
 	public DiscordFollowupMessageBuilder AddComponents(IEnumerable<DiscordComponent> components)
 	{
+		this.ComponentsInternal ??= [];
 		var cmpArr = components.ToArray();
 		var count = cmpArr.Length;
 
@@ -170,6 +178,7 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	public DiscordFollowupMessageBuilder AddEmbed(DiscordEmbed embed)
 	{
 		ArgumentNullException.ThrowIfNull(embed, nameof(embed));
+		this.EmbedsInternal ??= [];
 		this.EmbedsInternal.Add(embed);
 		return this;
 	}
@@ -181,6 +190,7 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder AddEmbeds(IEnumerable<DiscordEmbed> embeds)
 	{
+		this.EmbedsInternal ??= [];
 		this.EmbedsInternal.AddRange(embeds);
 		return this;
 	}
@@ -196,8 +206,9 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// </param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	public DiscordFollowupMessageBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string description = null)
+	public DiscordFollowupMessageBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string? description = null)
 	{
+		this.FilesInternal ??= [];
 		if (this.FilesInternal.Count >= 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
@@ -222,8 +233,9 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// </param>
 	/// <param name="description">Description of the file.</param>
 	/// <returns>The builder to chain calls with.</returns>
-	public DiscordFollowupMessageBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string description = null)
+	public DiscordFollowupMessageBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string? description = null)
 	{
+		this.FilesInternal ??= [];
 		if (this.FilesInternal.Count >= 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
@@ -249,6 +261,7 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder AddFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
 	{
+		this.FilesInternal ??= [];
 		if (this.FilesInternal.Count + files.Count > 10)
 			throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
@@ -273,6 +286,7 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder WithAllowedMention(IMention mention)
 	{
+		this.MentionsInternal ??= [];
 		this.MentionsInternal.Add(mention);
 		return this;
 	}
@@ -284,6 +298,7 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordFollowupMessageBuilder WithAllowedMentions(IEnumerable<IMention> mentions)
 	{
+		this.MentionsInternal ??= [];
 		this.MentionsInternal.AddRange(mentions);
 		return this;
 	}
@@ -307,7 +322,7 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
-	///     Sets the followup message to be send as voice message.
+	///     Sets the followup message to be sent as voice message.
 	/// </summary>
 	internal DiscordFollowupMessageBuilder AsVoiceMessage(bool asVoiceMessage = true)
 	{
@@ -316,7 +331,7 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
-	///     Sets the followup message to be send as silent message.
+	///     Sets the followup message to be sent as silent message.
 	/// </summary>
 	public DiscordFollowupMessageBuilder AsSilentMessage()
 	{
@@ -341,7 +356,7 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// <inheritdoc />
 	internal override void Validate()
 	{
-		if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && this.EmbedsInternal.Count == 0 && this.ComponentsInternal.Count == 0 && this.Poll is null && this.AttachmentsInternal.Count == 0)
+		if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && this.EmbedsInternal?.Count == 0 && this.ComponentsInternal?.Count == 0 && this.Poll is null && this.AttachmentsInternal?.Count == 0)
 			throw new ArgumentException("You must specify content, an embed, a component, a poll, or at least one file.");
 
 		this.Poll?.Validate();
