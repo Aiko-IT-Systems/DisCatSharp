@@ -142,12 +142,6 @@ public class DiscordInvite : ObservableApiObject
 	public bool IsRevoked { get; internal set; }
 
 	/// <summary>
-	///     Gets the stage instance this invite is for.
-	/// </summary>
-	[JsonProperty("stage_instance", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordInviteStage Stage { get; internal set; }
-
-	/// <summary>
 	///     Gets the guild scheduled event data for the invite.
 	/// </summary>
 	[JsonProperty("guild_scheduled_event", NullValueHandling = NullValueHandling.Ignore)]
