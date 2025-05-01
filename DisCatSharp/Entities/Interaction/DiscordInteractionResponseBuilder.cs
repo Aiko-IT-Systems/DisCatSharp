@@ -70,7 +70,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	///     The choices to sent on this interaction response.
 	///     Mutually exclusive with content, embed, and components.
 	/// </summary>
-	public IReadOnlyList<DiscordApplicationCommandAutocompleteChoice> Choices
+	public IReadOnlyList<DiscordApplicationCommandAutocompleteChoice>? Choices
 		=> this.ChoicesInternal;
 
 	/// <summary>

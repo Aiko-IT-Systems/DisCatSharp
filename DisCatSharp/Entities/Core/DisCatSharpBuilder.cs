@@ -181,15 +181,20 @@ public class DisCatSharpBuilder
 	{
 		this.Content = null;
 		this.FilesInternal?.Clear();
+		this.FilesInternal = null;
 		this.EmbedsInternal?.Clear();
+		this.EmbedsInternal = null;
 		this.AttachmentsInternal?.Clear();
+		this.AttachmentsInternal = null;
 		this.ComponentsInternal?.Clear();
+		this.ComponentsInternal = null;
 		this.IsVoiceMessage = false;
 		this.IsComponentsV2 = false;
 		this.EmbedsSuppressed = false;
 		this.NotificationsSuppressed = false;
 		this.FlagsChanged = false;
 		this.MentionsInternal?.Clear();
+		this.MentionsInternal = null;
 	}
 
 	/// <summary>

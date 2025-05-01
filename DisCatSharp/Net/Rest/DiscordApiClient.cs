@@ -3172,9 +3172,7 @@ public sealed class DiscordApiClient
 			Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
 			HasContent = builder.Content != null && !builder.IsComponentsV2,
 			HasEmbed = builder.Embeds != null && !builder.IsComponentsV2,
-			StickersIds = builder.Sticker is null
-				? Array.Empty<ulong>()
-				: [builder.Sticker.Id],
+			StickersIds = builder.StickerIds,
 			IsTts = builder.IsTts,
 			Components = builder.Components,
 			Nonce = builder.Nonce,
@@ -5940,13 +5938,8 @@ public sealed class DiscordApiClient
 				Components = builder.Components,
 				HasContent = !builder.IsComponentsV2,
 				Flags = flags,
-				//Mentions = builder.Mentions,
-				StickersIds = builder.Sticker != null
-					? new List<ulong>(1)
-					{
-						builder.Sticker.Id
-					}
-					: null
+				Mentions = builder.Mentions,
+				StickersIds = builder.StickerIds
 			};
 			if (appliedTags != null && appliedTags.Any())
 			{
@@ -7261,8 +7254,7 @@ public sealed class DiscordApiClient
 			pld = new()
 			{
 				Type = type,
-				Data = data,
-				CallbackHints = builder?.CallbackHints
+				Data = data
 			};
 
 			if (builder is { Files.Count: > 0 })
@@ -7316,8 +7308,7 @@ public sealed class DiscordApiClient
 					Choices = builder?.Choices,
 					Attachments = null,
 					DiscordPollRequest = null
-				},
-				CallbackHints = null
+				}
 			};
 
 		var values = new Dictionary<string, string>();
@@ -7361,7 +7352,7 @@ public sealed class DiscordApiClient
 	/// <param name="builder">The builder.</param>
 	internal async Task CreateInteractionModalResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, DiscordInteractionModalBuilder builder)
 	{
-		if (builder.ModalComponents.Any(mc => mc.Components.Any(c => c.Type != ComponentType.InputText)))
+		if (builder.ModalComponents.Any(mc => mc.Components.Any(c => c.Type is not ComponentType.InputText)))
 			throw new NotSupportedException("Can't send any other type then Input Text as Modal Component.");
 
 		var pld = new RestInteractionModalResponsePayload
@@ -7372,8 +7363,7 @@ public sealed class DiscordApiClient
 				Title = builder.Title,
 				CustomId = builder.CustomId,
 				ModalComponents = builder.ModalComponents
-			},
-			CallbackHints = builder?.CallbackHints
+			}
 		};
 
 		var values = new Dictionary<string, string>();
@@ -7410,8 +7400,7 @@ public sealed class DiscordApiClient
 				CustomId = customId,
 				ModalSize = modalSize,
 				IframePath = iFramePath
-			},
-			CallbackHints = null
+			}
 		};
 
 		var values = new Dictionary<string, string>();

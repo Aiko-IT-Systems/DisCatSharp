@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-using DisCatSharp.Attributes;
 using DisCatSharp.Entities.Core;
 
 namespace DisCatSharp.Entities;
@@ -22,7 +21,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	/// <summary>
 	///     Gets the Sticker to be sent.
 	/// </summary>
-	public DiscordSticker? Sticker { get; set; }
+	public List<ulong>? StickerIds { get; private set; } = null;
 
 	/// <summary>
 	///     Gets or Sets if the message should be TTS.
@@ -106,7 +105,26 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to be chained.</returns>
 	public DiscordMessageBuilder WithSticker(DiscordSticker sticker)
 	{
-		this.Sticker = sticker;
+		this.StickerIds ??= [];
+		if (this.StickerIds.Count >= 4)
+			throw new ArgumentException("Cannot send more than 4 stickers in a message");
+
+		this.StickerIds.Add(sticker.Id);
+		return this;
+	}
+
+	/// <summary>
+	///     Adds stickers to the message. Sticker must be from current guild.
+	/// </summary>
+	/// <param name="stickerIds">The sticker to add.</param>
+	/// <returns>The current builder to be chained.</returns>
+	public DiscordMessageBuilder WithStickerIds(params ulong[] stickerIds)
+	{
+		this.StickerIds ??= [];
+		if (this.StickerIds.Count >= 4 || stickerIds.Length > 4 || (this.StickerIds.Count + stickerIds.Length > 4))
+			throw new ArgumentException("Cannot send more than 4 stickers in a message");
+
+		this.StickerIds.AddRange(stickerIds);
 		return this;
 	}
 
@@ -122,14 +140,8 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
-	///     <para>
-	///         Adds a row of components to the builder, up to <c>5</c> components per row, and up to <c>5</c> rows per
-	///         message.
-	///     </para>
-	///     <para>
-	///         If <see cref="WithV2Components" /> was called, the limit changes to <c>10</c> top-level components and max
-	///         <c>30</c> components in total.
-	///     </para>
+	///     <para>Adds components to the message. </para>
+	///     <para>If <see cref="WithV2Components" /> was called, the limit changes to max <c>40</c> components in total.</para>
 	/// </summary>
 	/// <param name="components">The components to add to the message.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -165,7 +177,8 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
-	///     Adds a row of components to a message, up to 5 components per row, and up to 5 rows per message.
+	///     <para>Adds components to the message. </para>
+	///     <para>If <see cref="WithV2Components" /> was called, the limit changes to max <c>40</c> components in total.</para>
 	/// </summary>
 	/// <param name="components">The components to add to the message.</param>
 	/// <returns>The current builder to be chained.</returns>
@@ -182,8 +195,8 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 			{
 				case 0:
 					throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
-				case > 10:
-					throw new ArgumentException("Cannot add more than 10 components!");
+				case > 40:
+					throw new ArgumentException("Cannot add more than 40 components!");
 			}
 
 			this.ComponentsInternal.AddRange(cmpArr);
@@ -464,7 +477,8 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 		this.IsTts = false;
 		this.ReplyId = null;
 		this.MentionOnReply = false;
-		this.Sticker = null!;
+		this.StickerIds?.Clear();
+		this.StickerIds = null;
 		this.KeepAttachmentsInternal = false;
 		this.Nonce = null;
 		this.EnforceNonce = false;
@@ -486,7 +500,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 
 		if (!isModify)
 		{
-			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && this.Sticker is null && (!this.Components?.Any() ?? true) && this.Poll is null && this?.Attachments.Count is 0)
+			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && (!this.StickerIds?.Any() ?? true) && (!this.Components?.Any() ?? true) && this.Poll is null && this?.Attachments.Count is 0)
 				throw new ArgumentException("You must specify content, an embed, a sticker, a component, a poll or at least one file.");
 
 			if (this.IsComponentsV2 && (!string.IsNullOrEmpty(this.Content) || (this.Embeds?.Any() ?? false)))
