@@ -3188,8 +3188,9 @@ public sealed class DiscordApiClient
 				MessageId = builder.ReplyId,
 				FailIfNotExists = builder.FailOnInvalidReply
 			};
-
-		pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0, builder.MentionOnReply);
+		
+		if (builder.Mentions?.Any() ?? false)
+			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0, builder.MentionOnReply);
 
 		if (builder.Files.Count == 0)
 		{
@@ -5374,7 +5375,7 @@ public sealed class DiscordApiClient
 			DiscordPollRequest = builder.Poll?.Build()
 		};
 
-		if (builder.Mentions.Any())
+		if (builder.Mentions?.Any() ?? false)
 			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0);
 
 		if (builder.Files?.Count > 0)
@@ -5938,7 +5939,7 @@ public sealed class DiscordApiClient
 				Components = builder.Components,
 				HasContent = !builder.IsComponentsV2,
 				Flags = flags,
-				Mentions = builder.Mentions,
+				Mentions = (builder.Mentions?.Any() ?? false) ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
 				StickersIds = builder.StickerIds
 			};
 			if (appliedTags != null && appliedTags.Any())
@@ -7243,7 +7244,7 @@ public sealed class DiscordApiClient
 					Content = builder.IsComponentsV2 ? null : builder.Content,
 					Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
 					IsTts = builder.IsTts,
-					Mentions = builder.Mentions.Any() ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
+					Mentions = (builder.Mentions?.Any() ?? false) ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
 					Flags = flags,
 					Components = builder.Components,
 					Choices = null,
@@ -7314,7 +7315,7 @@ public sealed class DiscordApiClient
 		var values = new Dictionary<string, string>();
 
 		if (builder is not null)
-			if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts || builder.Mentions.Any() || builder.Files?.Count > 0 || builder.Components?.Count > 0)
+			if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts || builder.Mentions?.Count > 0 || builder.Files?.Count > 0 || builder.Components?.Count > 0)
 				values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 		var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
@@ -7516,10 +7517,10 @@ public sealed class DiscordApiClient
 			}
 		}
 
-		if (builder.Mentions.Any())
+		if (builder.Mentions?.Any() ?? false)
 			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0);
 
-		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts || builder.Mentions.Any() || builder.Files?.Count > 0 || builder.Components?.Count > 0)
+		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts || builder.Mentions?.Count > 0|| builder.Files?.Count > 0 || builder.Components?.Count > 0)
 			values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 		var route = $"{Endpoints.WEBHOOKS}/:application_id/:interaction_token";
