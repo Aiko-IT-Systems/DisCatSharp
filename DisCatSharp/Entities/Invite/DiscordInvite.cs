@@ -181,7 +181,7 @@ public class DiscordInvite : ObservableApiObject
 		=> this.Discord.ApiClient.DeleteInviteAsync(this.Code, reason);
 
 	/// <summary>
-	///     Converts this invite into an invite link.
+	///     Converts this invite into a link.
 	/// </summary>
 	/// <returns>A discord.gg invite link.</returns>
 	public override string ToString()
