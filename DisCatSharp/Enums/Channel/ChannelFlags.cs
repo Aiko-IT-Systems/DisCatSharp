@@ -111,7 +111,7 @@ public enum ChannelFlags : long
 	HideMediaDownloadOptions = 1L << 15,
 
 	/// <summary>
-	///     Channel is a interview channel for a clan join request (gdm style, with application details).
+	///     Channel is a interview channel for a guild join request (gdm style, with application details).
 	/// </summary>
 	IsJoinRequestInterviewChannel = 1L << 16,
 

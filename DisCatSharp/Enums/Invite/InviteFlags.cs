@@ -50,7 +50,7 @@ public enum InviteFlags : long
 	IsEnhanced = 1L << 2,
 
 	/// <summary>
-	///     Invite bypasses a clan application.
+	///     Invite bypasses a guild application.
 	/// </summary>
 	IsApplicationBypass = 1L << 3,
 

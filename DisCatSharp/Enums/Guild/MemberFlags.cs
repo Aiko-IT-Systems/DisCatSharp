@@ -86,10 +86,10 @@ public enum MemberFlags : long
 	DmSettingsUpsellAcknowledged = 1L << 9,
 
 	/// <summary>
-	///     Members clan tag is blocked by AutoMod.
+	///     Members guild tag is blocked by AutoMod.
 	/// </summary>
 	[DiscordInExperiment]
-	AutomodQuarantinedClanTag = 1L << 10,
+	AutomodQuarantinedGuildTag = 1L << 10,
 
 	/// <summary>
 	///      The flags are unknown.
