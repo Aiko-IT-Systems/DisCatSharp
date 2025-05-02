@@ -705,7 +705,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	public async Task<DiscordMessage> ModifyAsync(DiscordMessageBuilder builder)
 	{
 		builder.Validate(true);
-		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), Optional.Some(builder.Mentions.AsEnumerable()), builder.Components, builder.EmbedsSuppressed, builder.Files, builder.Attachments.Count > 0
+		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds?.AsEnumerable()), Optional.Some(builder.Mentions?.AsEnumerable()), builder.Components, builder.EmbedsSuppressed, builder.Files, builder.Attachments is not null
 			? Optional.Some(builder.Attachments.AsEnumerable())
 			: builder.KeepAttachmentsInternal.HasValue
 				? builder.KeepAttachmentsInternal.Value && this.Attachments is not null ? Optional.Some(this.Attachments.AsEnumerable()) : Array.Empty<DiscordAttachment>()
@@ -743,7 +743,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		var builder = new DiscordMessageBuilder();
 		action(builder);
 		builder.Validate(true);
-		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), Optional.Some(builder.Mentions.AsEnumerable()), builder.Components, builder.EmbedsSuppressed, builder.Files, builder.Attachments.Count > 0
+		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds?.AsEnumerable()), Optional.Some(builder.Mentions?.AsEnumerable()), builder.Components, builder.EmbedsSuppressed, builder.Files, builder.Attachments is not null
 			? Optional.Some(builder.Attachments.AsEnumerable())
 			: builder.KeepAttachmentsInternal.HasValue
 				? builder.KeepAttachmentsInternal.Value && this.Attachments is not null ? Optional.Some(this.Attachments.AsEnumerable()) : Array.Empty<DiscordAttachment>()

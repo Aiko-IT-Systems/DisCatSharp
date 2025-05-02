@@ -2117,7 +2117,6 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 					old.Pronouns = usr.Pronouns;
 					old.Locale = usr.Locale;
 					old.GlobalName = usr.GlobalName;
-					old.Clan = usr.Clan;
 					old.PrimaryGuild = usr.PrimaryGuild;
 					return old;
 				});
@@ -2824,13 +2823,6 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	[DiscordUnreleased("This feature is not available for bots at the current time"), Obsolete("This feature is not available for bots at the current time", true)]
 	public async Task<DiscordGuildJoinRequest> ModifyJoinRequestsAsync(ulong joinRequestId, bool approve, string? rejectionReason)
 		=> await this.Discord.ApiClient.ModifyGuildJoinRequestsAsync(this.Id, joinRequestId, approve ? JoinRequestStatusType.Approved : JoinRequestStatusType.Rejected, rejectionReason);
-
-	/// <summary>
-	///     Gets the clan settings.
-	/// </summary>
-	[DiscordUnreleased("This feature is not available for bots at the current time"), Obsolete("This feature is not available for bots at the current time", true)]
-	public async Task<DiscordClanSettings> GetClanSettingsAsync()
-		=> await this.Discord.ApiClient.GetClanSettingsAsync(this.Id);
 
 #endregion
 }

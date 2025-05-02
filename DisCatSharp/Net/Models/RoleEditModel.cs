@@ -45,7 +45,7 @@ public sealed class RoleEditModel : BaseEditModel
 	///     The new role colors.
 	///     <para>
 	///         When using a holographic role style, the following colors must be set: primary (11127295), secondary
-	///         (16759788) & tertiary (16761760). It cannot be any other value.
+	///         (16759788), tertiary (16761760). It cannot be any other value.
 	///     </para>
 	/// </summary>
 	[DiscordInExperiment("This feature is currently in experiment and not available for most guilds."), RequiresFeature(Features.Experiment, "Requires  2025-02_skill_trees")]

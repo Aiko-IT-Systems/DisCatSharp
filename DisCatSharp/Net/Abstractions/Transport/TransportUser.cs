@@ -15,7 +15,7 @@ internal class TransportUser : ObservableApiObject
 	///     Initializes a new instance of the <see cref="TransportUser" /> class.
 	/// </summary>
 	internal TransportUser()
-		: base(["display_name", "linked_users", "banner_color", "authenticator_types"])
+		: base(["display_name", "linked_users", "banner_color", "authenticator_types", "clan"])
 	{ }
 
 	/// <summary>
@@ -42,7 +42,6 @@ internal class TransportUser : ObservableApiObject
 		this.Bio = other.Bio;
 		this.Pronouns = other.Pronouns;
 		this.GlobalName = other.GlobalName;
-		this.Clan = other.Clan;
 		this.ThemeColors = other.ThemeColors;
 		this.AvatarDecorationData = other.AvatarDecorationData;
 	}
@@ -183,16 +182,10 @@ internal class TransportUser : ObservableApiObject
 	public string Bio { get; internal set; }
 
 	/// <summary>
-	///     Gets the users clan.
-	/// </summary>
-	[JsonProperty("clan", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordClan? Clan { get; internal set; }
-
-	/// <summary>
 	///     Gets the users primary guild.
 	/// </summary>
 	[JsonProperty("primary_guild", NullValueHandling = NullValueHandling.Ignore), DiscordUnreleased]
-	public DiscordClan? PrimaryGuild { get; internal set; }
+	public DiscordPrimaryGuild? PrimaryGuild { get; internal set; }
 
 	/// <summary>
 	///     Gets the users pronouns.

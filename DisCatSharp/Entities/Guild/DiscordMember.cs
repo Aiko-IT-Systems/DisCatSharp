@@ -795,20 +795,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	}
 
 	/// <summary>
-	///     Gets the member's clan.
-	/// </summary>
-	[JsonIgnore]
-	public override DiscordClan? Clan
-	{
-		get => this.User.Clan;
-		internal set => this.User.Clan = value;
-	}
-
-	/// <summary>
 	///     Gets the member's primary guild.
 	/// </summary>
 	[JsonIgnore]
-	public override DiscordClan? PrimaryGuild
+	public override DiscordPrimaryGuild? PrimaryGuild
 	{
 		get => this.User.PrimaryGuild;
 		internal set => this.User.PrimaryGuild = value;

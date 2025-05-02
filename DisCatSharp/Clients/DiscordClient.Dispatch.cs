@@ -812,7 +812,6 @@ public sealed partial class DiscordClient
 							old.Pronouns = usr.Pronouns;
 							old.Locale = usr.Locale;
 							old.GlobalName = usr.GlobalName;
-							old.Clan = usr.Clan;
 							old.PrimaryGuild = usr.PrimaryGuild;
 							return old;
 						});
@@ -1469,7 +1468,7 @@ public sealed partial class DiscordClient
 				await this._guildAuditLogEntryCreated.InvokeAsync(this, new(this.ServiceProvider)
 				{
 					Guild = guild,
-					AuditLogEntry = dataList[0]
+					AuditLogEntry = dataList.FirstOrDefault()
 				}).ConfigureAwait(false);
 		}
 		catch (Exception)
@@ -2030,7 +2029,6 @@ public sealed partial class DiscordClient
 			old.Pronouns = usr.Pronouns;
 			old.Locale = usr.Locale;
 			old.GlobalName = usr.GlobalName;
-			old.Clan = usr.Clan;
 			old.PrimaryGuild = usr.PrimaryGuild;
 			return old;
 		});
@@ -2108,7 +2106,6 @@ public sealed partial class DiscordClient
 			old.Pronouns = usr.Pronouns;
 			old.Locale = usr.Locale;
 			old.GlobalName = usr.GlobalName;
-			old.Clan = usr.Clan;
 			old.PrimaryGuild = usr.PrimaryGuild;
 			return old;
 		});

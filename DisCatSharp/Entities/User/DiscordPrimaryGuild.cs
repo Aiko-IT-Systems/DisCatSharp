@@ -9,14 +9,14 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-///     Represents a discord clan.
+///     Represents a primary guild.
 /// </summary>
-public sealed class DiscordClan
+public sealed class DiscordPrimaryGuild
 {
 	/// <summary>
-	///     Initializes a new instance of the <see cref="DiscordClan" /> class.
+	///     Initializes a new instance of the <see cref="DiscordPrimaryGuild" /> class.
 	/// </summary>
-	internal DiscordClan()
+	internal DiscordPrimaryGuild()
 	{ }
 
 	/// <summary>
@@ -32,20 +32,20 @@ public sealed class DiscordClan
 	public bool IdentityEnabled { get; internal set; }
 
 	/// <summary>
-	///     Gets the clan tag.
+	///     Gets the primary guild's tag.
 	/// </summary>
 	[JsonProperty("tag")]
 	public string Tag { get; internal set; }
 
 	/// <summary>
-	///     Gets the clan's badge url
+	///     Gets the cprimary guild's badge url
 	/// </summary>
 	[JsonIgnore]
 	public string? BadgeUrl
 		=> string.IsNullOrWhiteSpace(this.BadgeHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.CLAN_BADGES}/{this.IdentityGuildId?.ToString(CultureInfo.InvariantCulture)}/{this.BadgeHash}.{(this.BadgeHash.StartsWith("a_", StringComparison.Ordinal) ? "gif" : "png")}?size=1024";
 
 	/// <summary>
-	///     Gets the clan's badge hash.
+	///     Gets the primary guild's badge hash.
 	/// </summary>
 	[JsonProperty("badge", NullValueHandling = NullValueHandling.Ignore)]
 	public string BadgeHash { get; internal set; }

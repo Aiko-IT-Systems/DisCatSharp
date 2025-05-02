@@ -237,7 +237,7 @@ public class DisCatSharpBuilder
 			case DiscordActionRowComponent actionRowComponent:
 			{
 				foreach (var actionRowComponentChild in actionRowComponent.Components)
-					this.AddId(actionRowComponentChild, ids, duplicateIds);
+					this.AddId(actionRowComponentChild, ref ids, ref duplicateIds);
 				break;
 			}
 			case DiscordContainerComponent containerComponent:
@@ -249,19 +249,19 @@ public class DisCatSharpBuilder
 						case DiscordActionRowComponent actionRowContainerComponentChild:
 						{
 							foreach (var actionRowComponentChild in actionRowContainerComponentChild.Components)
-								this.AddId(actionRowComponentChild, ids, duplicateIds);
+								this.AddId(actionRowComponentChild, ref ids, ref duplicateIds);
 							break;
 						}
 						case DiscordSectionComponent subSectionComponent:
 						{
 							foreach (var sectionComponentChild in subSectionComponent.Components)
-								this.AddId(sectionComponentChild, ids, duplicateIds);
-							this.AddId(subSectionComponent.Accessory, ids, duplicateIds);
+								this.AddId(sectionComponentChild, ref ids, ref duplicateIds);
+							this.AddId(subSectionComponent.Accessory, ref ids, ref duplicateIds);
 							break;
 						}
 					}
 
-					this.AddId(containerComponentChild, ids, duplicateIds);
+					this.AddId(containerComponentChild, ref ids, ref duplicateIds);
 				}
 
 				break;
@@ -269,13 +269,13 @@ public class DisCatSharpBuilder
 			case DiscordSectionComponent sectionComponent:
 			{
 				foreach (var sectionComponentChild in sectionComponent.Components)
-					this.AddId(sectionComponentChild, ids, duplicateIds);
-				this.AddId(sectionComponent.Accessory, ids, duplicateIds);
+					this.AddId(sectionComponentChild, ref ids, ref duplicateIds);
+				this.AddId(sectionComponent.Accessory, ref ids, ref duplicateIds);
 				break;
 			}
 		}
 
-		this.AddId(component, ids, duplicateIds);
+		this.AddId(component, ref ids, ref duplicateIds);
 	}
 
 	/// <summary>
@@ -294,7 +294,7 @@ public class DisCatSharpBuilder
 	///     If the identifier of the specified component already exists in the <paramref name="ids" /> collection,
 	///     it will be added to the <paramref name="duplicateIds" /> dictionary along with its type.
 	/// </remarks>
-	private void AddId(DiscordComponent component, HashSet<int> ids, Dictionary<int, List<string>> duplicateIds)
+	private void AddId(DiscordComponent component, ref HashSet<int> ids, ref Dictionary<int, List<string>> duplicateIds)
 	{
 		if (component.Id.HasValue)
 		{

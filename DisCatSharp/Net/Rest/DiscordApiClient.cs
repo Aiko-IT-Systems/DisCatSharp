@@ -480,7 +480,6 @@ public sealed class DiscordApiClient
 				old.Pronouns = usr.Pronouns;
 				old.Locale = usr.Locale;
 				old.GlobalName = usr.GlobalName;
-				old.Clan = usr.Clan;
 				old.PrimaryGuild = usr.PrimaryGuild;
 				return old;
 			});
@@ -3192,9 +3191,9 @@ public sealed class DiscordApiClient
 		if (builder.Mentions?.Any() ?? false)
 			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0, builder.MentionOnReply);
 
-		if (builder.Files.Count == 0)
+		if (builder.Files is null || builder.Files?.Count is 0)
 		{
-			if (builder.Attachments.Any())
+			if (builder.Attachments?.Any() ?? false)
 			{
 				ulong fileId = 0;
 				List<DiscordAttachment> attachments = new(builder.Attachments.Count);
@@ -4644,23 +4643,6 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		return DiscordJson.DeserializeObject<DiscordGuildJoinRequest>(res.Response, this.Discord);
-	}
-
-	/// <summary>
-	///     Gets the settings for a clan.
-	/// </summary>
-	/// <param name="clanId">The ID of the clan.</param>
-	internal async Task<DiscordClanSettings> GetClanSettingsAsync(ulong clanId)
-	{
-		var route = $"{Endpoints.CLANS}/:clan_id{Endpoints.SETTINGS}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-		{
-			clan_id = clanId
-		}, out var path);
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
-
-		return DiscordJson.DeserializeObject<DiscordClanSettings>(res.Response, this.Discord);
 	}
 
 #endregion
