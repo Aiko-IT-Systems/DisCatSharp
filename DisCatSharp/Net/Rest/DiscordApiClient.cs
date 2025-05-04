@@ -3188,12 +3188,12 @@ public sealed class DiscordApiClient
 				FailIfNotExists = builder.FailOnInvalidReply
 			};
 		
-		if (builder.Mentions?.Any() ?? false)
+		if (builder.Mentions is not null)
 			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0, builder.MentionOnReply);
 
 		if (builder.Files is null || builder.Files?.Count is 0)
 		{
-			if (builder.Attachments?.Any() ?? false)
+			if (builder.Attachments is not null)
 			{
 				ulong fileId = 0;
 				List<DiscordAttachment> attachments = new(builder.Attachments.Count);
@@ -5357,7 +5357,7 @@ public sealed class DiscordApiClient
 			DiscordPollRequest = builder.Poll?.Build()
 		};
 
-		if (builder.Mentions?.Any() ?? false)
+		if (builder.Mentions is not null)
 			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0);
 
 		if (builder.Files?.Count > 0)
@@ -5397,7 +5397,7 @@ public sealed class DiscordApiClient
 			}
 		}
 
-		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.Files?.Count > 0 || builder.IsTts || builder.Mentions.Any())
+		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.Files?.Count > 0 || builder.IsTts || builder.Mentions?.Count > 0)
 			values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 		var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
@@ -5504,8 +5504,8 @@ public sealed class DiscordApiClient
 			Components = builder.Components,
 			Flags = flags
 		};
-
-		if (builder.Mentions.Any())
+			
+		if (builder.Mentions is not null)
 			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0);
 
 		if (builder.Files?.Count > 0)
@@ -5562,7 +5562,7 @@ public sealed class DiscordApiClient
 		}
 		else
 		{
-			if (builder.Attachments.Any())
+			if (builder.Attachments is not null)
 			{
 				ulong fileId = 0;
 				List<DiscordAttachment> attachments = new(builder.Attachments.Count);
@@ -7499,7 +7499,7 @@ public sealed class DiscordApiClient
 			}
 		}
 
-		if (builder.Mentions?.Any() ?? false)
+		if (builder.Mentions is not null)
 			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0);
 
 		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts || builder.Mentions?.Count > 0|| builder.Files?.Count > 0 || builder.Components?.Count > 0)
