@@ -1232,7 +1232,7 @@ public sealed class DiscordApiClient
 	/// <param name="roles">The roles.</param>
 	/// <param name="muted">If true, muted.</param>
 	/// <param name="deafened">If true, deafened.</param>
-	/// <returns>The added <see cref="DiscordMember"/>, or <see langword="null"/> if they were already a member.</returns>
+	/// <returns>The added <see cref="DiscordMember" />, or <see langword="null" /> if they were already a member.</returns>
 	internal async Task<DiscordMember?> AddGuildMemberAsync(ulong guildId, ulong userId, string accessToken, string? nickname = null, IEnumerable<DiscordRole>? roles = null, bool? muted = null, bool? deafened = null)
 	{
 		var pld = new RestGuildMemberAddPayload
@@ -3187,7 +3187,7 @@ public sealed class DiscordApiClient
 				MessageId = builder.ReplyId,
 				FailIfNotExists = builder.FailOnInvalidReply
 			};
-		
+
 		if (builder.Mentions is not null)
 			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0, builder.MentionOnReply);
 
@@ -4451,14 +4451,12 @@ public sealed class DiscordApiClient
 		};
 
 		if (colors is not null)
-		{
 			pld.Colors = new()
 			{
 				PrimaryColor = colors.PrimaryColor.Value,
 				SecondaryColor = colors.SecondaryColor?.Value,
 				TertiaryColor = colors.TertiaryColor?.Value
 			};
-		}
 
 		if (emoji.HasValue && iconb64.HasValue)
 		{
@@ -5421,10 +5419,10 @@ public sealed class DiscordApiClient
 		if (this.Discord != null!)
 			foreach (var att in ret.Attachments)
 				att.Discord = this.Discord;
-		
+
 		if (builder.Files is not null)
-		foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
-			file.Stream.Position = file.ResetPositionTo.Value;
+			foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
+				file.Stream.Position = file.ResetPositionTo.Value;
 		return ret;
 	}
 
@@ -5505,7 +5503,7 @@ public sealed class DiscordApiClient
 			Components = builder.Components,
 			Flags = flags
 		};
-			
+
 		if (builder.Mentions is not null)
 			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0);
 
@@ -5555,10 +5553,10 @@ public sealed class DiscordApiClient
 
 			foreach (var att in ret.AttachmentsInternal)
 				att.Discord = this.Discord;
-			
+
 			if (builder.Files is not null)
-			foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
-				file.Stream.Position = file.ResetPositionTo.Value;
+				foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
+					file.Stream.Position = file.ResetPositionTo.Value;
 
 			return ret;
 		}
@@ -5923,7 +5921,7 @@ public sealed class DiscordApiClient
 				Components = builder.Components,
 				HasContent = !builder.IsComponentsV2,
 				Flags = flags,
-				Mentions = (builder.Mentions?.Any() ?? false) ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
+				Mentions = builder.Mentions?.Any() ?? false ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
 				StickersIds = builder.StickerIds
 			};
 			if (appliedTags != null && appliedTags.Any())
@@ -7228,7 +7226,7 @@ public sealed class DiscordApiClient
 					Content = builder.IsComponentsV2 ? null : builder.Content,
 					Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
 					IsTts = builder.IsTts,
-					Mentions = (builder.Mentions?.Any() ?? false) ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
+					Mentions = builder.Mentions?.Any() ?? false ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
 					Flags = flags,
 					Components = builder.Components,
 					Choices = null,
@@ -7504,7 +7502,7 @@ public sealed class DiscordApiClient
 		if (builder.Mentions is not null)
 			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0);
 
-		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts || builder.Mentions?.Count > 0|| builder.Files?.Count > 0 || builder.Components?.Count > 0)
+		if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts || builder.Mentions?.Count > 0 || builder.Files?.Count > 0 || builder.Components?.Count > 0)
 			values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 		var route = $"{Endpoints.WEBHOOKS}/:application_id/:interaction_token";
@@ -7525,8 +7523,8 @@ public sealed class DiscordApiClient
 				att.Discord = this.Discord;
 
 			if (builder.Files is not null)
-			foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
-				file.Stream.Position = file.ResetPositionTo.Value;
+				foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
+					file.Stream.Position = file.ResetPositionTo.Value;
 			ret.Discord = this.Discord;
 			return ret;
 		}
@@ -7689,7 +7687,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	///    Consumes an entitlement.
+	///     Consumes an entitlement.
 	/// </summary>
 	/// <param name="applicationId">The application id to consume the entitlement for.</param>
 	/// <param name="entitlementId">The entitlement id to consume.</param>
