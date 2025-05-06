@@ -360,7 +360,7 @@ public sealed class DiscordFollowupMessageBuilder : DisCatSharpBuilder
 	/// <inheritdoc />
 	internal override void Validate()
 	{
-		if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && this.EmbedsInternal?.Count == 0 && this.ComponentsInternal?.Count == 0 && this.Poll is null && this.AttachmentsInternal?.Count == 0)
+		if (this.Files?.Count is 0 or null && string.IsNullOrEmpty(this.Content) && this.EmbedsInternal?.Count is 0 or null && this.ComponentsInternal?.Count is 0 or null && this.Poll is null && this.AttachmentsInternal?.Count is 0 or null)
 			throw new ArgumentException("You must specify content, an embed, a component, a poll, or at least one file.");
 
 		this.Poll?.Validate();

@@ -552,7 +552,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 				throw new ArgumentException("You cannot change the avatar of an interaction response.");
 		}
 
-		if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any() && !this.Components.Any() && this.Poll is null && this?.Attachments.Count == 0)
+		if (this.Files?.Count is 0 or null && string.IsNullOrEmpty(this.Content) && this.Embeds?.Count is 0 or null && this.Components?.Count is 0 or null && this.Poll is null && this.Attachments?.Count is 0 or null)
 			throw new ArgumentException("You must specify content, an embed, a component, a poll, or at least one file.");
 
 		this.Poll?.Validate();

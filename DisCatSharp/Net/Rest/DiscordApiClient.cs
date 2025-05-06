@@ -3254,7 +3254,7 @@ public sealed class DiscordApiClient
 
 			var ret = this.PrepareMessage(JObject.Parse(res.Response));
 
-			foreach (var file in builder.FilesInternal.Where(x => x.ResetPositionTo.HasValue))
+			foreach (var file in builder.FilesInternal?.Where(x => x.ResetPositionTo.HasValue))
 				file.Stream.Position = file.ResetPositionTo!.Value;
 
 			return ret;
@@ -5421,7 +5421,8 @@ public sealed class DiscordApiClient
 		if (this.Discord != null!)
 			foreach (var att in ret.Attachments)
 				att.Discord = this.Discord;
-
+		
+		if (builder.Files is not null)
 		foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
 			file.Stream.Position = file.ResetPositionTo.Value;
 		return ret;
@@ -5554,7 +5555,8 @@ public sealed class DiscordApiClient
 
 			foreach (var att in ret.AttachmentsInternal)
 				att.Discord = this.Discord;
-
+			
+			if (builder.Files is not null)
 			foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
 				file.Stream.Position = file.ResetPositionTo.Value;
 
@@ -7484,7 +7486,7 @@ public sealed class DiscordApiClient
 		}
 		else
 		{
-			if (builder.Attachments.Any())
+			if (builder.Attachments is not null)
 			{
 				ulong fileId = 0;
 				List<DiscordAttachment> attachments = new(builder.Attachments.Count);
@@ -7522,6 +7524,7 @@ public sealed class DiscordApiClient
 			foreach (var att in ret.AttachmentsInternal)
 				att.Discord = this.Discord;
 
+			if (builder.Files is not null)
 			foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
 				file.Stream.Position = file.ResetPositionTo.Value;
 			ret.Discord = this.Discord;
