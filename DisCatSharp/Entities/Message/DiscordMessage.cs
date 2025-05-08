@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
@@ -206,7 +206,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	[JsonProperty("author", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordUser Author { get; internal set; }
 
-	[JsonProperty("member", NullValueHandling = NullValueHandling.Ignore), SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>")]
+	[JsonProperty("member", NullValueHandling = NullValueHandling.Ignore)]
 	private TransportMember TRANSPORT_MEMBER { get; set; }
 
 	/// <summary>
@@ -374,14 +374,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <summary>
 	///     Gets whether this message has a message reference (reply, announcement, etc.).
 	/// </summary>
-	[Attributes.Experimental("We provide that temporary, as we figure out things."), JsonIgnore]
+	[Experimental("We provide that temporary, as we figure out things."), JsonIgnore]
 	public bool HasMessageReference
 		=> this.InternalReference is { Type: ReferenceType.Default };
 
 	/// <summary>
 	///     Gets whether this message has forwarded messages.
 	/// </summary>
-	[Attributes.Experimental("We provide that temporary, as we figure out things."), JsonIgnore]
+	[Experimental("We provide that temporary, as we figure out things."), JsonIgnore]
 	public bool HasMessageSnapshots
 		=> this.InternalReference is { Type: ReferenceType.Forward };
 
@@ -421,7 +421,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	///     Gets the guild to which this channel belongs.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordGuild Guild
+	public DiscordGuild? Guild
 		=> this.GuildId.HasValue && this.Discord.Guilds.TryGetValue(this.GuildId.Value, out var guild) ? guild : null;
 
 	/// <summary>
@@ -617,29 +617,25 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	internal void PopulateMentions()
 	{
 		var guild = this.Channel?.Guild;
-		this.MentionedUsersInternal ??= [];
-		this.MentionedRolesInternal ??= [];
-		this.MentionedChannelsInternal ??= [];
 
 		var mentionedUsers = new HashSet<DiscordUser>(new DiscordUserComparer());
-		if (guild != null)
-			foreach (var usr in this.MentionedUsersInternal)
+		foreach (var usr in this.MentionedUsersInternal)
+		{
+			usr.Discord = this.Discord;
+			this.Discord.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
 			{
-				usr.Discord = this.Discord;
-				this.Discord.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
-				{
-					old.Username = usr.Username;
-					old.Discriminator = usr.Discriminator;
-					old.AvatarHash = usr.AvatarHash;
-					old.GlobalName = usr.GlobalName;
-					return old;
-				});
+				old.Username = usr.Username;
+				old.Discriminator = usr.Discriminator;
+				old.AvatarHash = usr.AvatarHash;
+				old.GlobalName = usr.GlobalName;
+				return old;
+			});
 
-				mentionedUsers.Add(guild.MembersInternal.TryGetValue(usr.Id, out var member) ? member : usr);
-			}
+			mentionedUsers.Add(guild is not null && guild.MembersInternal.TryGetValue(usr.Id, out var member) ? member : usr);
+		}
 
 		if (!string.IsNullOrWhiteSpace(this.Content))
-			if (guild != null)
+			if (guild is not null)
 			{
 				this.MentionedRolesInternal = [.. this.MentionedRolesInternal.Union(this.MentionedRoleIds.Select(guild.GetRole))!];
 				this.MentionedChannelsInternal = [.. this.MentionedChannelsInternal.Union(Utilities.GetChannelMentions(this.Content).Select(guild.GetChannel))!];

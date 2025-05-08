@@ -143,7 +143,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	///     Gets the guild to which this channel belongs.
 	/// </summary>
 	[JsonIgnore]
-	public DiscordGuild Guild
+	public DiscordGuild? Guild
 		=> this.GuildId.HasValue && this.Discord.Guilds.TryGetValue(this.GuildId.Value, out var guild) ? guild : null;
 
 	/// <summary>

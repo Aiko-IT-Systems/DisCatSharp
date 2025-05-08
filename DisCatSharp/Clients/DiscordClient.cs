@@ -1597,7 +1597,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="author">The author to update.</param>
 	/// <param name="guild">The guild to update.</param>
 	/// <param name="member">The member to update.</param>
-	private void UpdateMessage(DiscordMessage message, TransportUser? author, DiscordGuild guild, TransportMember? member)
+	private void UpdateMessage(DiscordMessage message, TransportUser? author, DiscordGuild? guild, TransportMember? member)
 	{
 		if (author is not null)
 		{

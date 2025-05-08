@@ -414,7 +414,7 @@ public sealed partial class DiscordClient
 			case "message_create":
 				rawMbr = dat["member"]!;
 
-				if (rawMbr != null)
+				if (rawMbr != null!)
 					mbr = DiscordJson.DeserializeObject<TransportMember>(rawMbr.ToString(), this);
 
 				if (rawRefMsg is { HasValues: true })
@@ -426,13 +426,16 @@ public sealed partial class DiscordClient
 						refMbr = DiscordJson.DeserializeObject<TransportMember>(rawRefMsg.SelectToken("member")!.ToString(), this);
 				}
 
-				await this.OnMessageCreateEventAsync(dat.ToDiscordObject<DiscordMessage>(), dat["author"].ToObject<TransportUser>(), mbr, refUsr, refMbr).ConfigureAwait(false);
+				if (dat["author"]["id"].ToString() is "856780995629154305")
+					this.Logger.LogDebug("{pl}", payloadString);
+
+				await this.OnMessageCreateEventAsync(dat.ToDiscordObject<DiscordMessage>(), dat["author"]!.ToObject<TransportUser>(), mbr!, refUsr!, refMbr!).ConfigureAwait(false);
 				break;
 
 			case "message_update":
 				rawMbr = dat["member"]!;
 
-				if (rawMbr != null)
+				if (rawMbr != null!)
 					mbr = DiscordJson.DeserializeObject<TransportMember>(rawMbr.ToString(), this);
 
 				if (rawRefMsg is { HasValues: true })
@@ -444,7 +447,7 @@ public sealed partial class DiscordClient
 						refMbr = DiscordJson.DeserializeObject<TransportMember>(rawRefMsg.SelectToken("member")!.ToString(), this);
 				}
 
-				await this.OnMessageUpdateEventAsync(DiscordJson.DeserializeObject<DiscordMessage>(payloadString, this), dat["author"] != null ? DiscordJson.DeserializeObject<TransportUser>(dat["author"]!.ToString(), this) : null, mbr!, refUsr!, refMbr!).ConfigureAwait(false);
+				await this.OnMessageUpdateEventAsync(DiscordJson.DeserializeObject<DiscordMessage>(payloadString, this), dat["author"] != null ? DiscordJson.DeserializeObject<TransportUser>(dat["author"]!.ToString(), this) : null!, mbr!, refUsr!, refMbr!).ConfigureAwait(false);
 				break;
 
 			// delete event does *not* include message object
@@ -2657,10 +2660,10 @@ public sealed partial class DiscordClient
 		this.PopulateMessageReactionsAndCache(message, author, member);
 		message.PopulateMentions();
 
-		if (message.Channel == null && message.ChannelId == default)
+		if (message.Channel is null && message.ChannelId == 0)
 			this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Channel which the last message belongs to is not in cache - cache state might be invalid!");
 
-		if (message.ReferencedMessage != null)
+		if (message.ReferencedMessage is not null)
 		{
 			message.ReferencedMessage.Discord = this;
 			this.PopulateMessageReactionsAndCache(message.ReferencedMessage, referenceAuthor, referenceMember);
@@ -2691,9 +2694,9 @@ public sealed partial class DiscordClient
 		var ea = new MessageCreateEventArgs(this.ServiceProvider)
 		{
 			Message = message,
-			MentionedUsers = new ReadOnlyCollection<DiscordUser>(message.MentionedUsersInternal),
-			MentionedRoles = message.MentionedRolesInternal != null ? new ReadOnlyCollection<DiscordRole>(message.MentionedRolesInternal) : null,
-			MentionedChannels = message.MentionedChannelsInternal != null ? new ReadOnlyCollection<DiscordChannel>(message.MentionedChannelsInternal) : null
+			MentionedUsers = message.MentionedUsersInternal.Count is not 0 ? new ReadOnlyCollection<DiscordUser>(message.MentionedUsersInternal) : [],
+			MentionedRoles = message.MentionedRolesInternal.Count is not 0 ? new ReadOnlyCollection<DiscordRole>(message.MentionedRolesInternal) : [],
+			MentionedChannels = message.MentionedChannelsInternal.Count is not 0 ? new ReadOnlyCollection<DiscordChannel>(message.MentionedChannelsInternal) : []
 		};
 		await this._messageCreated.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
