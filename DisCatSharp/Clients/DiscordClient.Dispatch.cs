@@ -426,9 +426,6 @@ public sealed partial class DiscordClient
 						refMbr = DiscordJson.DeserializeObject<TransportMember>(rawRefMsg.SelectToken("member")!.ToString(), this);
 				}
 
-				if (dat["author"]["id"].ToString() is "856780995629154305")
-					this.Logger.LogDebug("{pl}", payloadString);
-
 				await this.OnMessageCreateEventAsync(dat.ToDiscordObject<DiscordMessage>(), dat["author"]!.ToObject<TransportUser>(), mbr!, refUsr!, refMbr!).ConfigureAwait(false);
 				break;
 
