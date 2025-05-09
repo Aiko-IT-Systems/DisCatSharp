@@ -708,6 +708,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	///     Sets the user when converting a json object to <see cref="DiscordMember" /> while not having access to the user
 	///     cache.
 	/// </summary>
+	[JsonIgnore]
 	public DiscordUser ManualUser { get; set; }
 
 	/// <summary>
