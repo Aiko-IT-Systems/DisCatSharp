@@ -1103,6 +1103,11 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			widget = null;
 			return false;
 		}
+		catch (UnauthorizedException)
+		{
+			widget = null;
+			return false;
+		}
 	}
 
 	/// <summary>
