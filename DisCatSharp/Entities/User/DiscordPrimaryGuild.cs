@@ -41,7 +41,7 @@ public sealed class DiscordPrimaryGuild
 	///     Gets the cprimary guild's badge url
 	/// </summary>
 	[JsonIgnore]
-	public string? BadgeUrl
+	public string BadgeUrl
 		=> string.IsNullOrWhiteSpace(this.BadgeHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.CLAN_BADGES}/{this.IdentityGuildId?.ToString(CultureInfo.InvariantCulture)}/{this.BadgeHash}.{(this.BadgeHash.StartsWith("a_", StringComparison.Ordinal) ? "gif" : "png")}?size=1024";
 
 	/// <summary>
