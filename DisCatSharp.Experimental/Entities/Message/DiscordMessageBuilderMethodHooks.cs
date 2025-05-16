@@ -24,6 +24,7 @@ public static class DiscordMessageBuilderMethodHooks
 	/// <returns>The chained <see cref="DiscordMessageBuilder" />.</returns>
 	public static DiscordMessageBuilder AddGcpAttachment(this DiscordMessageBuilder builder, GcpAttachmentUploadInformation gcpAttachment, bool isVoice = false, Stream? originalStream = null)
 	{
+		builder.AttachmentsInternal ??= [];
 		if (!isVoice)
 			builder.AttachmentsInternal.Add(new()
 			{
@@ -63,6 +64,7 @@ public static class DiscordMessageBuilderMethodHooks
 	/// <returns>The chained <see cref="DiscordMessageBuilder" />.</returns>
 	public static DiscordMessageBuilder AddManualGcpAttachment(this DiscordMessageBuilder builder, string filename, string uploadedFilename, float durationSeconds, string? description = null, string waveform = "")
 	{
+		builder.AttachmentsInternal ??= [];
 		builder.AttachmentsInternal.Add(new()
 			{
 				Filename = filename,
@@ -84,6 +86,7 @@ public static class DiscordMessageBuilderMethodHooks
 	/// <returns>The chained <see cref="DiscordInteractionResponseBuilder" />.</returns>
 	public static DiscordInteractionResponseBuilder AddGcpAttachment(this DiscordInteractionResponseBuilder builder, GcpAttachmentUploadInformation gcpAttachment)
 	{
+		builder.AttachmentsInternal ??= [];
 		var isVoice = false;
 		Stream? originalStream = null;
 		if (!isVoice)
@@ -120,6 +123,7 @@ public static class DiscordMessageBuilderMethodHooks
 	/// <returns>The chained <see cref="DiscordWebhookBuilder" />.</returns>
 	public static DiscordWebhookBuilder AddGcpAttachment(this DiscordWebhookBuilder builder, GcpAttachmentUploadInformation gcpAttachment)
 	{
+		builder.AttachmentsInternal ??= [];
 		var isVoice = false;
 		Stream? originalStream = null;
 		if (!isVoice)
@@ -155,6 +159,7 @@ public static class DiscordMessageBuilderMethodHooks
 	/// <returns>The chained <see cref="DiscordFollowupMessageBuilder" />.</returns>
 	public static DiscordFollowupMessageBuilder AddGcpAttachment(this DiscordFollowupMessageBuilder builder, GcpAttachmentUploadInformation gcpAttachment)
 	{
+		builder.AttachmentsInternal ??= [];
 		var isVoice = false;
 		Stream? originalStream = null;
 		if (!isVoice)
