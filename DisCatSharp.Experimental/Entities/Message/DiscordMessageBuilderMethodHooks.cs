@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 
 using DisCatSharp.Entities;
 
@@ -45,6 +46,32 @@ public static class DiscordMessageBuilderMethodHooks
 			});
 			builder.AsVoiceMessage();
 		}
+
+		return builder;
+	}
+
+	
+	/// <summary>
+	///     Adds a manual GCP (Google Cloud Platform) voice message attachment to the <see cref="DiscordMessageBuilder" />.
+	/// </summary>
+	/// <param name="builder">The <see cref="DiscordMessageBuilder" /> to add the attachment to.</param>
+	/// <param name="filename">The original filename of the attachment.</param>
+	/// <param name="uploadedFilename">The filename assigned after upload to GCP.</param>
+	/// <param name="durationSeconds">The duration of the voice message in seconds.</param>
+	/// <param name="description">An optional description for the attachment.</param>
+	/// <param name="waveform">A string representing the waveform data for the voice message, encoded as UTF-8 bytes.</param>
+	/// <returns>The chained <see cref="DiscordMessageBuilder" />.</returns>
+	public static DiscordMessageBuilder AddManualGcpAttachment(this DiscordMessageBuilder builder, string filename, string uploadedFilename, float durationSeconds, string? description = null, string waveform = "")
+	{
+		builder.AttachmentsInternal.Add(new()
+			{
+				Filename = filename,
+				UploadedFilename = uploadedFilename,
+				Description = description,
+				DurationSecs = durationSeconds,
+				WaveForm = Encoding.UTF8.GetBytes(waveform)
+			});
+			builder.AsVoiceMessage();
 
 		return builder;
 	}

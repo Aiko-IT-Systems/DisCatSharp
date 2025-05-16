@@ -43,5 +43,6 @@
 		<InternalsVisibleTo Include="BeluBOT" />
 		<InternalsVisibleTo Include="BeluGANG" />
 		<InternalsVisibleTo Include="AITSYS.Pycord" />
+		<InternalsVisibleTo Include="Rawr" />
 	</ItemGroup>
 </Project>
