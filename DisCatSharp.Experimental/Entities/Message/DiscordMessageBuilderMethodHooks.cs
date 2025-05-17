@@ -59,10 +59,10 @@ public static class DiscordMessageBuilderMethodHooks
 	/// <param name="filename">The original filename of the attachment.</param>
 	/// <param name="uploadedFilename">The filename assigned after upload to GCP.</param>
 	/// <param name="durationSeconds">The duration of the voice message in seconds.</param>
+	/// <param name="waveform">A byte-array representing the waveform data for the voice message.</param>
 	/// <param name="description">An optional description for the attachment.</param>
-	/// <param name="waveform">A string representing the waveform data for the voice message, encoded as UTF-8 bytes.</param>
 	/// <returns>The chained <see cref="DiscordMessageBuilder" />.</returns>
-	public static DiscordMessageBuilder AddManualGcpAttachment(this DiscordMessageBuilder builder, string filename, string uploadedFilename, float durationSeconds, string? description = null, string waveform = "")
+	public static DiscordMessageBuilder AddManualGcpAttachment(this DiscordMessageBuilder builder, string filename, string uploadedFilename, float durationSeconds, byte[] waveform, string? description = null)
 	{
 		builder.AttachmentsInternal ??= [];
 		builder.AttachmentsInternal.Add(new()
@@ -71,7 +71,7 @@ public static class DiscordMessageBuilderMethodHooks
 				UploadedFilename = uploadedFilename,
 				Description = description,
 				DurationSecs = durationSeconds,
-				WaveForm = Encoding.UTF8.GetBytes(waveform)
+				WaveForm = waveform
 			});
 			builder.AsVoiceMessage();
 
