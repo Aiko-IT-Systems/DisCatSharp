@@ -81,19 +81,40 @@ public sealed class DiscordGuildProfile : SnowflakeObject
 	///     Gets the primary brand color.
 	/// </summary>
 	[JsonProperty("brand_color_primary", NullValueHandling = NullValueHandling.Include)]
-	public DiscordColor? BrandColorPrimary { get; internal set; }
+	public string? BrandColorPrimaryRaw { get; internal set; }
+
+	/// <summary>
+	///     Gets the primary brand color.
+	/// </summary>
+	[JsonIgnore]
+	public DiscordColor? BrandColorPrimary
+		=> !string.IsNullOrWhiteSpace(this.BrandColorPrimaryRaw) ? new DiscordColor(this.BrandColorPrimaryRaw) : null;
 
 	/// <summary>
 	///     Gets the primary badge color.
 	/// </summary>
 	[JsonProperty("badge_color_primary", NullValueHandling = NullValueHandling.Include)]
-	public DiscordColor? BadgeColorPrimary { get; internal set; }
+	public string? BadgeColorPrimaryRaw { get; internal set; }
+
+	/// <summary>
+	///     Gets the primary badge color.
+	/// </summary>
+	[JsonIgnore]
+	public DiscordColor? BadgeColorPrimary
+		=> !string.IsNullOrWhiteSpace(this.BadgeColorPrimaryRaw) ? new DiscordColor(this.BadgeColorPrimaryRaw) : null;
 
 	/// <summary>
 	///     Gets the secondary badge color.
 	/// </summary>
 	[JsonProperty("badge_color_secondary", NullValueHandling = NullValueHandling.Include)]
-	public DiscordColor? BadgeColorSecondary { get; internal set; }
+	public string? BadgeColorSecondaryRaw { get; internal set; }
+
+	/// <summary>
+	///     Gets the secondary badge color.
+	/// </summary>
+	[JsonIgnore]
+	public DiscordColor? BadgeColorSecondary
+		=> !string.IsNullOrWhiteSpace(this.BadgeColorSecondaryRaw) ? new DiscordColor(this.BadgeColorSecondaryRaw) : null;
 
 	/// <summary>
 	///     Gets the badge hash.
