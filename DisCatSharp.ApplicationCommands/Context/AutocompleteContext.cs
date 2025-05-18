@@ -29,11 +29,6 @@ public sealed class AutocompleteContext : DisCatSharpCommandContext
 	public DiscordInteraction Interaction { get; internal set; }
 
 	/// <summary>
-	///     Gets the client for this interaction.
-	/// </summary>
-	public DiscordClient Client { get; internal init; }
-
-	/// <summary>
 	///     Gets the guild this interaction was executed in.
 	/// </summary>
 	[NotNullIfNotNull(nameof(GuildId))]

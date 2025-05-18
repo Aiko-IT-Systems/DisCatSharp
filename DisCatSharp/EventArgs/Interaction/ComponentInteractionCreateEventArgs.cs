@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 using DisCatSharp.Entities;
 
@@ -29,7 +30,13 @@ public class ComponentInteractionCreateEventArgs : InteractionCreateEventArgs
 	/// <summary>
 	///     The guild this interaction was invoked on, if any.
 	/// </summary>
-	public DiscordGuild Guild => this.Channel.Guild;
+	public DiscordGuild? Guild => this.Interaction.Guild;
+
+	/// <summary>
+	///     The member that invoked this interaction, if any.
+	/// </summary>
+	[NotNullIfNotNull(nameof(Guild))]
+	public DiscordMember? Member => this.User is DiscordMember member ? member : null;
 
 	/// <summary>
 	///     The channel this interaction was invoked in.
