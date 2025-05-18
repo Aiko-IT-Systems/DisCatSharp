@@ -40,6 +40,11 @@ public enum SpeakingFlags : long
 	Priority = 1L << 2,
 
 	/// <summary>
+	///     Currently unknown, but likely indicates that the user is not visible in the channel.
+	/// </summary>
+	Hidden = 1L << 3,
+
+	/// <summary>
 	///      The flags are unknown.
 	/// </summary>
 	Unknown = long.MaxValue
