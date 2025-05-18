@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Entities.Core;
 using DisCatSharp.Enums;
+using DisCatSharp.Enums.Core;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,8 +14,15 @@ namespace DisCatSharp.ApplicationCommands.Context;
 /// <summary>
 ///     Represents a context for an autocomplete interaction.
 /// </summary>
-public sealed class AutocompleteContext
+public sealed class AutocompleteContext : DisCatSharpCommandContext
 {
+	/// <summary>
+	///     Initializes a new instance of the <see cref="AutocompleteContext" /> class.
+	/// </summary>
+	internal AutocompleteContext()
+		: base(DisCatSharpCommandType.Autocomplete)
+	{ }
+
 	/// <summary>
 	///     The interaction created.
 	/// </summary>
@@ -26,6 +36,7 @@ public sealed class AutocompleteContext
 	/// <summary>
 	///     Gets the guild this interaction was executed in.
 	/// </summary>
+	[NotNullIfNotNull(nameof(GuildId))]
 	public DiscordGuild? Guild { get; internal init; }
 
 	/// <summary>
@@ -41,6 +52,7 @@ public sealed class AutocompleteContext
 	/// <summary>
 	///     Gets the member which executed this interaction, or null if the command is in a DM.
 	/// </summary>
+	[NotNullIfNotNull(nameof(Guild))]
 	public DiscordMember? Member
 		=> this.User is DiscordMember member ? member : null;
 
@@ -52,6 +64,7 @@ public sealed class AutocompleteContext
 	/// <summary>
 	///     Gets the guild locale if applicable.
 	/// </summary>
+	[NotNullIfNotNull(nameof(Guild))]
 	public string? GuildLocale { get; internal set; }
 
 	/// <summary>

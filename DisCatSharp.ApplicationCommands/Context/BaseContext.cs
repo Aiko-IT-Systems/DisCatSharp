@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
-using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Entities.Core;
 using DisCatSharp.Enums;
@@ -33,6 +33,7 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <summary>
 	///     Gets the guild this interaction was executed in.
 	/// </summary>
+	[NotNullIfNotNull(nameof(GuildId))]
 	public DiscordGuild? Guild { get; internal init; }
 
 	/// <summary>
@@ -48,6 +49,7 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <summary>
 	///     Gets the member which executed this interaction, or null if the command is in a DM.
 	/// </summary>
+	[NotNullIfNotNull(nameof(Guild))]
 	public DiscordMember? Member
 		=> this.User is DiscordMember member ? member : null;
 
@@ -80,6 +82,7 @@ public class BaseContext : DisCatSharpCommandContext
 	/// <summary>
 	///     Gets the guild locale if applicable.
 	/// </summary>
+	[NotNullIfNotNull(nameof(Guild))]
 	public string? GuildLocale { get; internal set; }
 
 	/// <summary>
