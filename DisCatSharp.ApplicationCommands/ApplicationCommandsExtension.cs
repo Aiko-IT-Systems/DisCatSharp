@@ -2266,7 +2266,7 @@ internal sealed class DefaultHelpModule : ApplicationCommandsModule
 					.GroupBy(ac => ac.Name).Select(x => x.First())
 					.ToList();
 
-				if (context.Options.Count > 0)
+				if (context.Options.Count > 0 && !string.IsNullOrEmpty(context.Options[0].Value?.ToString()))
 					slashCommands = slashCommands.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
 			}
 			else
@@ -2276,8 +2276,8 @@ internal sealed class DefaultHelpModule : ApplicationCommandsModule
 					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
 					.GroupBy(ac => ac.Name).Select(x => x.First())
 					.ToList();
-
-				if (context.Options.Count > 0)
+				
+				if (context.Options.Count > 0 && !string.IsNullOrEmpty(context.Options[0].Value?.ToString()))
 					slashCommands = slashCommands.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
 			}
 
@@ -2533,8 +2533,8 @@ internal sealed class DefaultUserAppsHelpModule : ApplicationCommandsModule
 					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
 					.GroupBy(ac => ac.Name).Select(x => x.First())
 					.ToList();
-
-				if (context.Options.Count > 0)
+				
+				if (context.Options.Count > 0 && !string.IsNullOrEmpty(context.Options[0].Value?.ToString()))
 					slashCommands = slashCommands.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
 			}
 			else
@@ -2544,8 +2544,8 @@ internal sealed class DefaultUserAppsHelpModule : ApplicationCommandsModule
 					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
 					.GroupBy(ac => ac.Name).Select(x => x.First())
 					.ToList();
-
-				if (context.Options.Count > 0)
+				
+				if (context.Options.Count > 0 && !string.IsNullOrEmpty(context.Options[0].Value?.ToString()))
 					slashCommands = slashCommands.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
 			}
 
