@@ -125,7 +125,7 @@ public sealed class DiscordApiClient
 	/// <param name="msgRaw">The raw message.</param>
 	private DiscordMessage PrepareMessage(JToken msgRaw)
 	{
-		var author = msgRaw["author"].ToObject<TransportUser>();
+		var author = msgRaw["author"].ToDiscordObject<TransportUser>();
 		var ret = msgRaw.ToDiscordObject<DiscordMessage>();
 		ret.Discord = this.Discord;
 
