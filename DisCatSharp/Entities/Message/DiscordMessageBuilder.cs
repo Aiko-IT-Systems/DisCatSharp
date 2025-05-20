@@ -129,6 +129,21 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	}
 
 	/// <summary>
+	///     Adds stickers to the message. Sticker must be from current guild.
+	/// </summary>
+	/// <param name="stickerIds">The sticker to add.</param>
+	/// <returns>The current builder to be chained.</returns>
+	public DiscordMessageBuilder WithStickerIds(IEnumerable<ulong> stickerIds)
+	{
+		this.StickerIds ??= [];
+		if (this.StickerIds.Count >= 4 || stickerIds.Count() > 4 || (this.StickerIds.Count + stickerIds.Count() > 4))
+			throw new ArgumentException("Cannot send more than 4 stickers in a message");
+
+		this.StickerIds.AddRange(stickerIds);
+		return this;
+	}
+
+	/// <summary>
 	///     Adds a poll to the message.
 	/// </summary>
 	/// <param name="pollBuilder">The poll builder to add.</param>
