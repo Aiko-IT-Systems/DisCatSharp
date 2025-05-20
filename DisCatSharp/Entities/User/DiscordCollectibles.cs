@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace DisCatSharp.Entities;
 
 /// <summary>
@@ -8,5 +10,6 @@ public sealed class DiscordCollectibles
 	/// <summary>
 	///     Gets the user's nameplate, if applicable.
 	/// </summary>
+	[JsonProperty("nameplate", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordNameplate? Nameplate { get; internal set; }
 }

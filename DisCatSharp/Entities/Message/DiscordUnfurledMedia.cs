@@ -19,7 +19,7 @@ public class DiscordUnfurledMedia: ObservableApiObject
 	///     Gets the URL of the unfurled media.
 	/// </summary>
 	[JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordUri Url { get; internal set; }
+	public DiscordUri? Url { get; internal set; }
 
 	/// <summary>
 	///     Gets the proxied URL of the unfurled media.
