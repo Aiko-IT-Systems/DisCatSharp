@@ -3223,18 +3223,26 @@ public sealed class DiscordApiClient
 		{
 			ulong fileId = 0;
 			List<DiscordAttachment> attachments = new(builder.Files.Count);
-			foreach (var file in builder.Files)
+			
+			if (!flags.HasMessageFlag(MessageFlags.IsVoiceMessage))
 			{
-				DiscordAttachment att = new()
+				foreach (var file in builder.Files)
 				{
-					Id = fileId,
-					Discord = this.Discord,
-					Description = file.Description,
-					Filename = file.Filename
-				};
-				attachments.Add(att);
-				fileId++;
+					DiscordAttachment att = new()
+					{
+						Id = fileId,
+						Discord = this.Discord,
+						Description = file.Description,
+						Filename = file.Filename,
+						FileSize = null
+					};
+					attachments.Add(att);
+					fileId++;
+				}
 			}
+
+			if (builder.Attachments is { Count: > 0 })
+				attachments.AddRange(builder.Attachments);
 
 			pld.Attachments = attachments;
 
@@ -5362,19 +5370,25 @@ public sealed class DiscordApiClient
 		{
 			ulong fileId = 0;
 			List<DiscordAttachment> attachments = [];
-			foreach (var file in builder.Files)
+			if (!flags.HasMessageFlag(MessageFlags.IsVoiceMessage))
 			{
-				DiscordAttachment att = new()
+				foreach (var file in builder.Files)
 				{
-					Id = fileId,
-					Discord = this.Discord,
-					Description = file.Description,
-					Filename = file.Filename,
-					FileSize = null
-				};
-				attachments.Add(att);
-				fileId++;
+					DiscordAttachment att = new()
+					{
+						Id = fileId,
+						Discord = this.Discord,
+						Description = file.Description,
+						Filename = file.Filename,
+						FileSize = null
+					};
+					attachments.Add(att);
+					fileId++;
+				}
 			}
+
+			if (builder.Attachments is { Count: > 0 })
+				attachments.AddRange(builder.Attachments);
 
 			pld.Attachments = attachments;
 		}
@@ -5495,6 +5509,8 @@ public sealed class DiscordApiClient
 			flags |= MessageFlags.SuppressNotifications;
 		if (builder.IsComponentsV2)
 			flags |= MessageFlags.IsComponentsV2;
+		if (builder.IsVoiceMessage)
+			flags |= MessageFlags.IsVoiceMessage;
 
 		var pld = new RestWebhookMessageEditPayload
 		{
@@ -5511,18 +5527,21 @@ public sealed class DiscordApiClient
 		{
 			ulong fileId = 0;
 			List<DiscordAttachment> attachments = [];
-			foreach (var file in builder.Files)
+			if (!flags.HasValue || !flags.Value.HasMessageFlag(MessageFlags.IsVoiceMessage))
 			{
-				DiscordAttachment att = new()
+				foreach (var file in builder.Files)
 				{
-					Id = fileId,
-					Discord = this.Discord,
-					Description = file.Description,
-					Filename = file.Filename,
-					FileSize = null
-				};
-				attachments.Add(att);
-				fileId++;
+					DiscordAttachment att = new()
+					{
+						Id = fileId,
+						Discord = this.Discord,
+						Description = file.Description,
+						Filename = file.Filename,
+						FileSize = null
+					};
+					attachments.Add(att);
+					fileId++;
+				}
 			}
 
 			if (builder.Attachments is { Count: > 0 })
@@ -7244,6 +7263,9 @@ public sealed class DiscordApiClient
 			{
 				ulong fileId = 0;
 				List<DiscordAttachment> attachments = [];
+				
+			if (!flags.HasValue || !flags.Value.HasMessageFlag(MessageFlags.IsVoiceMessage))
+			{
 				foreach (var file in builder.Files)
 				{
 					DiscordAttachment att = new()
@@ -7257,6 +7279,10 @@ public sealed class DiscordApiClient
 					attachments.Add(att);
 					fileId++;
 				}
+			}
+
+			if (builder.Attachments is { Count: > 0 })
+				attachments.AddRange(builder.Attachments);
 
 				if (pld.Data is not null)
 					pld.Data.Attachments = attachments;
@@ -7466,19 +7492,25 @@ public sealed class DiscordApiClient
 		{
 			ulong fileId = 0;
 			List<DiscordAttachment> attachments = [];
-			foreach (var file in builder.Files)
+			if (!flags.HasValue || !flags.Value.HasMessageFlag(MessageFlags.IsVoiceMessage))
 			{
-				DiscordAttachment att = new()
+				foreach (var file in builder.Files)
 				{
-					Id = fileId,
-					Discord = this.Discord,
-					Description = file.Description,
-					Filename = file.Filename,
-					FileSize = null
-				};
-				attachments.Add(att);
-				fileId++;
+					DiscordAttachment att = new()
+					{
+						Id = fileId,
+						Discord = this.Discord,
+						Description = file.Description,
+						Filename = file.Filename,
+						FileSize = null
+					};
+					attachments.Add(att);
+					fileId++;
+				}
 			}
+
+			if (builder.Attachments is { Count: > 0 })
+				attachments.AddRange(builder.Attachments);
 
 			pld.Attachments = attachments;
 		}

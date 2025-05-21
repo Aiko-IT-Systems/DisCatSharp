@@ -81,6 +81,7 @@ public static class DisCatSharpBuilderMethodHooks
 	}
 	/// <summary>
 	///     Adds a manual voice message attachment to the <typeparamref name="T"/>.
+	///     Make sure to use <typeparamref name="T"/>.AddFile before using this.
 	/// </summary>
 	/// <param name="builder">The <typeparamref name="T"/> to add the attachment to.</param>
 	/// <param name="filename">The original filename of the attachment.</param>
@@ -94,6 +95,7 @@ public static class DisCatSharpBuilderMethodHooks
 		builder.AttachmentsInternal ??= [];
 		builder.AttachmentsInternal.Add(new()
 			{
+				Id = 0,
 				Filename = filename,
 				Description = description,
 				DurationSecs = durationSeconds,

@@ -48,4 +48,8 @@
 		<PackageReference Include="DisCatSharp.Attributes" Version="2025.3.27" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Entities\Message\" />
+	</ItemGroup>
+
 </Project>
