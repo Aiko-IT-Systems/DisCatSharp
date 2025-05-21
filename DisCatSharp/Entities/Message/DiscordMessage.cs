@@ -811,6 +811,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	///     Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="content">Message content to respond with.</param>
+	/// <param name="mention">Whether to mention on reply.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -819,13 +820,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> RespondAsync(string content)
-		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, content, null, null, this.Id, false, false);
+	public Task<DiscordMessage> RespondAsync(string content, bool mention = true)
+		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, content, null, null, this.Id, mention, false);
 
 	/// <summary>
 	///     Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="embed">Embed to attach to the message.</param>
+	/// <param name="mention">Whether to mention on reply.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -834,16 +836,17 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> RespondAsync(DiscordEmbed embed)
+	public Task<DiscordMessage> RespondAsync(DiscordEmbed embed, bool mention = true)
 		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, null, embed != null
 			? new[] { embed }
-			: null, null, this.Id, false, false);
+			: null, null, this.Id, mention, false);
 
 	/// <summary>
 	///     Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="content">Message content to respond with.</param>
 	/// <param name="embed">Embed to attach to the message.</param>
+	/// <param name="mention">Whether to mention on reply.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -853,15 +856,16 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public
-		Task<DiscordMessage> RespondAsync(string content, DiscordEmbed embed)
+		Task<DiscordMessage> RespondAsync(string content, DiscordEmbed embed, bool mention = true)
 		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, content, embed != null
 			? new[] { embed }
-			: null, null, this.Id, false, false);
+			: null, null, this.Id, mention, false);
 
 	/// <summary>
 	///     Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="builder">The Discord message builder.</param>
+	/// <param name="mention">Whether to mention on reply.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -871,13 +875,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public
-		Task<DiscordMessage> RespondAsync(DiscordMessageBuilder builder)
-		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id));
+		Task<DiscordMessage> RespondAsync(DiscordMessageBuilder builder, bool mention = true)
+		=> this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id, mention));
 
 	/// <summary>
 	///     Responds to the message. This produces a reply.
 	/// </summary>
 	/// <param name="action">The Discord message builder.</param>
+	/// <param name="mention">Whether to mention on reply.</param>
 	/// <returns>The sent message.</returns>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
@@ -886,11 +891,11 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> RespondAsync(Action<DiscordMessageBuilder> action)
+	public Task<DiscordMessage> RespondAsync(Action<DiscordMessageBuilder> action, bool mention = true)
 	{
 		var builder = new DiscordMessageBuilder();
 		action(builder);
-		return this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id));
+		return this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id, mention));
 	}
 
 	/// <summary>
