@@ -7,7 +7,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 ///     Represents a unfurled media.
 /// </summary>
-public class DiscordUnfurledMedia: ObservableApiObject
+public class DiscordUnfurledMedia : ObservableApiObject
 {
 	/// <summary>
 	///     Constructs a new empty <see cref="DiscordUnfurledMedia" />.
@@ -69,4 +69,10 @@ public class DiscordUnfurledMedia: ObservableApiObject
 	/// </summary>
 	[JsonProperty("loading_state", NullValueHandling = NullValueHandling.Ignore)]
 	public LoadingState LoadingState { get; internal set; } = LoadingState.Unknown;
+
+	/// <summary>
+	/// 	Gets the attachment id when uploaded and referenced through <c>attachment://</c>.
+	/// </summary>
+	[JsonProperty("attachment_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? AttachmentId { get; internal set; }
 }
