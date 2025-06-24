@@ -155,7 +155,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <summary>
 	///     Gets the users primary guild.
 	/// </summary>
-	[JsonProperty("primary_guild", NullValueHandling = NullValueHandling.Ignore), DiscordUnreleased]
+	[JsonProperty("primary_guild", NullValueHandling = NullValueHandling.Ignore)]
 	public virtual DiscordPrimaryGuild? PrimaryGuild { get; internal set; }
 
 	/// <summary>
