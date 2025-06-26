@@ -5161,7 +5161,7 @@ that happen while we fix bugs or implement new issues.
 
 If you find a bug, come up with a new idea, or just want to report something, you have multiple ways to do so.
 
-[Discord Guild](https://discord.gg/2HWta4GXus &quot;DisCatSharp Support Guild&quot;).
+[Discord Guild](https://discord.gg/RXA6u3jxdU &quot;DisCatSharp Support Guild&quot;).
 [Issue Tracker](https://github.com/Aiko-IT-Systems/DisCatSharp/issues/new/choose &quot;DisCatSharp Issues&quot;).
 
 When reporting an issue, make sure to include as much detail as possible. If at all possible, please include:
@@ -9284,14 +9284,14 @@ Produces a message like such:
                 &lt;discord-button type=&quot;secondary&quot;&gt;Secondary&lt;/discord-button&gt;
                 &lt;discord-button type=&quot;success&quot;&gt;Success&lt;/discord-button&gt;
                 &lt;discord-button type=&quot;destructive&quot;&gt;Danger&lt;/discord-button&gt;
-                &lt;discord-button url=&quot;https://discord.gg/2HWta4GXus&quot;&gt;Link&lt;/discord-button&gt;
+                &lt;discord-button url=&quot;https://discord.gg/RXA6u3jxdU&quot;&gt;Link&lt;/discord-button&gt;
             &lt;/discord-action-row&gt;
             &lt;discord-action-row&gt;
                 &lt;discord-button type=&quot;primary&quot; disabled&gt;Primary&lt;/discord-button&gt;
                 &lt;discord-button type=&quot;secondary&quot; disabled&gt;Secondary&lt;/discord-button&gt;
                 &lt;discord-button type=&quot;success&quot; disabled&gt;Success&lt;/discord-button&gt;
                 &lt;discord-button type=&quot;destructive&quot; disabled&gt;Danger&lt;/discord-button&gt;
-                &lt;discord-button url=&quot;https://discord.gg/2HWta4GXus&quot; disabled&gt;Link&lt;/discord-button&gt;
+                &lt;discord-button url=&quot;https://discord.gg/RXA6u3jxdU&quot; disabled&gt;Link&lt;/discord-button&gt;
             &lt;/discord-action-row&gt;
         &lt;/discord-attachments&gt;
     &lt;/discord-message&gt;
@@ -11030,7 +11030,7 @@ author: DisCatSharp Team
 
 &gt; [!NOTE]
 &gt; With this version, we are re-opening issues on GitHub. We hope that everything goes well and we can keep them open.
-&gt; You can continue to use our [Discord server](https://discord.gg/2HWta4GXus) for support tho.
+&gt; You can continue to use our [Discord server](https://discord.gg/RXA6u3jxdU) for support tho.
 
 ---
 
@@ -11222,7 +11222,7 @@ Your input makes DisCatSharp better! We warmly invite you to share feedback, sug
 Talking to us helps shape the future of DisCatSharp, ensuring it meets everyones needs and expectations.
 
 
-- **Join the Conversation:** Have ideas or questions? Join our [Discord community](https://discord.gg/2HWta4GXus) to discuss features, get help, or just chat with fellow developers.
+- **Join the Conversation:** Have ideas or questions? Join our [Discord community](https://discord.gg/RXA6u3jxdU) to discuss features, get help, or just chat with fellow developers.
 - **Contribute:** Interested in contributing? Check out our [GitHub repository](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/CONTRIBUTING.md) to see how you can contribute code, documentation, or report issues.
 - **Stay Updated:** Follow our [news channel](https://discord.com/channels/858089281214087179/976624429935251527) on Discord to stay up to date on the latest developments.
 
@@ -11337,7 +11337,7 @@ Your input makes DisCatSharp better! We warmly invite you to share feedback, sug
 Talking to us helps shape the future of DisCatSharp, ensuring it meets everyones needs and expectations.
 
 
-- **Join the Conversation:** Have ideas or questions? Join our [Discord community](https://discord.gg/2HWta4GXus) to discuss features, get help, or just chat with fellow developers.
+- **Join the Conversation:** Have ideas or questions? Join our [Discord community](https://discord.gg/RXA6u3jxdU) to discuss features, get help, or just chat with fellow developers.
 - **Contribute:** Interested in contributing? Check out our [GitHub repository](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/CONTRIBUTING.md) to see how you can contribute code, documentation, or report issues.
 - **Stay Updated:** Follow our [news channel](https://discord.com/channels/858089281214087179/976624429935251527) on Discord to stay up to date on the latest developments.
 
@@ -11445,7 +11445,7 @@ Your input makes DisCatSharp better! We warmly invite you to share feedback, sug
 Talking to us helps shape the future of DisCatSharp, ensuring it meets everyones needs and expectations.
 
 
-- **Join the Conversation:** Have ideas or questions? Join our [Discord community](https://discord.gg/2HWta4GXus) to discuss features, get help, or just chat with fellow developers.
+- **Join the Conversation:** Have ideas or questions? Join our [Discord community](https://discord.gg/RXA6u3jxdU) to discuss features, get help, or just chat with fellow developers.
 - **Contribute:** Interested in contributing? Check out our [GitHub repository](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/CONTRIBUTING.md) to see how you can contribute code, documentation, or report issues.
 - **Stay Updated:** Follow our [news channel](https://discord.com/channels/858089281214087179/976624429935251527) on Discord to stay up to date on the latest developments.
 
@@ -11745,7 +11745,7 @@ Your input makes DisCatSharp better! We warmly invite you to share feedback, sug
 Talking to us helps shape the future of DisCatSharp, ensuring it meets everyones needs and expectations.
 
 
-- **Join the Conversation:** Have ideas or questions? Join our [Discord community](https://discord.gg/2HWta4GXus) to discuss features, get help, or just chat with fellow developers.
+- **Join the Conversation:** Have ideas or questions? Join our [Discord community](https://discord.gg/RXA6u3jxdU) to discuss features, get help, or just chat with fellow developers.
 - **Contribute:** Interested in contributing? Check out our [GitHub repository](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/CONTRIBUTING.md) to see how you can contribute code, documentation, or report issues.
 - **Stay Updated:** Follow our [news channel](https://discord.com/channels/858089281214087179/976624429935251527) on Discord to stay up to date on the latest developments.
 
@@ -12358,8 +12358,8 @@ hasDiscordComponents: true
     &lt;discord-message profile=&quot;dcs_user_dm&quot;&gt;How about DisCatSharp?&lt;/discord-message&gt;
     &lt;discord-message profile=&quot;user_dm&quot;&gt;What is that, do you have an invite?&lt;/discord-message&gt;
     &lt;discord-message profile=&quot;dcs_user_dm&quot;&gt;
-        Sure!&lt;br/&gt;&lt;br/&gt;&lt;a target=&quot;_blank&quot; class=&quot;discord-link external&quot; href=&quot;https://discord.gg/2HWta4GXus&quot;&gt;https://discord.gg/2HWta4GXus&lt;/a&gt;
-		&lt;discord-attachments slot=&quot;attachments&quot;&gt;&lt;discord-invite name=&quot;DisCatSharp&quot; icon=&quot;https://i.imgur.com/sHdXUPx.png&quot; url=&quot;https://discord.gg/2HWta4GXus&quot; online=&quot;69&quot; members=&quot;420&quot; verified=&quot;true&quot;&gt;&lt;/discord-invite&gt;&lt;/discord-attachments&gt;
+        Sure!&lt;br/&gt;&lt;br/&gt;&lt;a target=&quot;_blank&quot; class=&quot;discord-link external&quot; href=&quot;https://discord.gg/RXA6u3jxdU&quot;&gt;https://discord.gg/RXA6u3jxdU&lt;/a&gt;
+		&lt;discord-attachments slot=&quot;attachments&quot;&gt;&lt;discord-invite name=&quot;DisCatSharp&quot; icon=&quot;https://i.imgur.com/sHdXUPx.png&quot; url=&quot;https://discord.gg/RXA6u3jxdU&quot; online=&quot;69&quot; members=&quot;420&quot; verified=&quot;true&quot;&gt;&lt;/discord-invite&gt;&lt;/discord-attachments&gt;
     &lt;/discord-message&gt;
 &lt;/discord-messages&gt;
 &lt;br/&gt;
@@ -23364,7 +23364,7 @@ Alternative hosts for our docs are:
 
 ## Bugs or Feature requests?
 
-Either join our official support guild at https://discord.gg/2HWta4GXus, open an [issue](https://github.com/Aiko-IT-Systems/DisCatSharp/issues/new/choose) or write us an email at [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
+Either join our official support guild at https://discord.gg/RXA6u3jxdU, open an [issue](https://github.com/Aiko-IT-Systems/DisCatSharp/issues/new/choose) or write us an email at [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
 
 &lt;!-- All requests are tracked at [aitsys.dev](https://aitsys.dev/proje&lt;ct/view/1/). We currently don&apos;t do that for reasons --&gt;
 

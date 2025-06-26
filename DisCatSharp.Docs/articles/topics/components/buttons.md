@@ -123,14 +123,14 @@ Produces a message like such:
                 <discord-button type="secondary">Secondary</discord-button>
                 <discord-button type="success">Success</discord-button>
                 <discord-button type="destructive">Danger</discord-button>
-                <discord-button url="https://discord.gg/2HWta4GXus">Link</discord-button>
+                <discord-button url="https://discord.gg/RXA6u3jxdU">Link</discord-button>
             </discord-action-row>
             <discord-action-row>
                 <discord-button type="primary" disabled>Primary</discord-button>
                 <discord-button type="secondary" disabled>Secondary</discord-button>
                 <discord-button type="success" disabled>Success</discord-button>
                 <discord-button type="destructive" disabled>Danger</discord-button>
-                <discord-button url="https://discord.gg/2HWta4GXus" disabled>Link</discord-button>
+                <discord-button url="https://discord.gg/RXA6u3jxdU" disabled>Link</discord-button>
             </discord-action-row>
         </discord-attachments>
     </discord-message>
