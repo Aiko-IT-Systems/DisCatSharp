@@ -389,6 +389,12 @@ public enum Permissions : long
 	UseExternalApps = 1L << 50,
 
 	/// <summary>
+	///     Allows pinning messages.
+	/// </summary>
+	[PermissionString("Pin Messages")]
+	PinMessages = 1L << 51,
+
+	/// <summary>
 	///      The flags are unknown.
 	/// </summary>
 	[PermissionString("The permissions are unknown")]

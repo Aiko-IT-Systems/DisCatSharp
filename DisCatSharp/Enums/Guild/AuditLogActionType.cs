@@ -327,5 +327,7 @@ public enum AuditLogActionType
 
 	GuildMemberVerificationUpdate = 210,
 
-	GuildProfileUpdate = 211
+	GuildProfileUpdate = 211,
+
+	GuildMigratePinPermission = 212
 }
