@@ -373,7 +373,7 @@ public sealed class DiscordApiClient
 		return req.WaitForCompletionAsync();
 	}
 
-#region Voice
+	#region Voice
 
 	/// <summary>
 	///     Lists the voice regions async.
@@ -382,7 +382,7 @@ public sealed class DiscordApiClient
 	{
 		var route = $"{Endpoints.VOICE}{Endpoints.REGIONS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -392,11 +392,11 @@ public sealed class DiscordApiClient
 		return regions;
 	}
 
-#endregion
+	#endregion
 
 	// begin todo
 
-#region Guild
+	#region Guild
 
 	/// <summary>
 	///     Gets the guild async.
@@ -546,7 +546,7 @@ public sealed class DiscordApiClient
 
 		var route = $"{Endpoints.GUILDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
@@ -2238,7 +2238,7 @@ public sealed class DiscordApiClient
 	{
 		var route = $"{Endpoints.SOUNDBOARD_DEFAULT_SOUNDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
@@ -2292,11 +2292,11 @@ public sealed class DiscordApiClient
 		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
 	// End todo
 
-#region Guild Scheduled Events
+	#region Guild Scheduled Events
 
 	/// <summary>
 	///     Creates a scheduled event.
@@ -2697,11 +2697,11 @@ public sealed class DiscordApiClient
 		return new ReadOnlyDictionary<ulong, DiscordScheduledEventUser>(new Dictionary<ulong, DiscordScheduledEventUser>(rspv));
 	}
 
-#endregion
+	#endregion
 
 	// begin todo
 
-#region Channel
+	#region Channel
 
 	/// <summary>
 	///     Creates a guild channel.
@@ -3223,7 +3223,7 @@ public sealed class DiscordApiClient
 		{
 			ulong fileId = 0;
 			List<DiscordAttachment> attachments = new(builder.Files.Count);
-			
+
 			if (!flags.HasMessageFlag(MessageFlags.IsVoiceMessage))
 			{
 				foreach (var file in builder.Files)
@@ -3377,7 +3377,7 @@ public sealed class DiscordApiClient
 
 		var route = $"{Endpoints.STAGE_INSTANCES}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
-			{ }, out var path);
+		{ }, out var path);
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
 			headers.Add(REASON_HEADER_NAME, reason);
@@ -3675,7 +3675,7 @@ public sealed class DiscordApiClient
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld));
 	}
 
-#region Polls
+	#region Polls
 
 	/// <summary>
 	///     Get a list of users that voted for a specific answer on a <see cref="DiscordPoll" />.
@@ -3753,7 +3753,7 @@ public sealed class DiscordApiClient
 		return DiscordJson.DeserializeObject<DiscordMessage>(res.Response, this.Discord);
 	}
 
-#endregion
+	#endregion
 
 	/// <summary>
 	///     Gets the channel invites async.
@@ -4013,7 +4013,7 @@ public sealed class DiscordApiClient
 
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CHANNELS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
@@ -4036,7 +4036,7 @@ public sealed class DiscordApiClient
 
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CHANNELS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
@@ -4089,11 +4089,11 @@ public sealed class DiscordApiClient
 		return DiscordJson.DeserializeObject<DiscordMessage>(response.Response, this.Discord);
 	}
 
-#endregion
+	#endregion
 
 	// End todo
 
-#region Member
+	#region Member
 
 	/// <summary>
 	///     Gets the current user async.
@@ -4229,7 +4229,7 @@ public sealed class DiscordApiClient
 
 		var route = $"{Endpoints.USERS}{Endpoints.ME}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
@@ -4249,7 +4249,7 @@ public sealed class DiscordApiClient
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.GUILDS}";
 
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration)
 			.AddParameter("limit", limit.ToString(CultureInfo.InvariantCulture));
@@ -4382,9 +4382,9 @@ public sealed class DiscordApiClient
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
 	}
 
-#endregion
+	#endregion
 
-#region Roles
+	#region Roles
 
 	/// <summary>
 	///     Gets the guild roles async.
@@ -4559,9 +4559,9 @@ public sealed class DiscordApiClient
 		return ret;
 	}
 
-#endregion
+	#endregion
 
-#region Guild Member Applications
+	#region Guild Member Applications
 
 	/// <summary>
 	///     Gets the guild join requests.
@@ -4651,9 +4651,9 @@ public sealed class DiscordApiClient
 		return DiscordJson.DeserializeObject<DiscordGuildJoinRequest>(res.Response, this.Discord);
 	}
 
-#endregion
+	#endregion
 
-#region Prune
+	#region Prune
 
 	/// <summary>
 	///     Gets the guild prune count async.
@@ -4672,8 +4672,8 @@ public sealed class DiscordApiClient
 		};
 
 		var sb = includeRoles?.Aggregate(new StringBuilder(),
-			         (sb, id) => sb.Append($"&include_roles={id}"))
-		         ?? new StringBuilder();
+					 (sb, id) => sb.Append($"&include_roles={id}"))
+				 ?? new StringBuilder();
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.PRUNE}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
@@ -4708,8 +4708,8 @@ public sealed class DiscordApiClient
 		};
 
 		var sb = includeRoles?.Aggregate(new StringBuilder(),
-			         (sb, id) => sb.Append($"&include_roles={id}"))
-		         ?? new StringBuilder();
+					 (sb, id) => sb.Append($"&include_roles={id}"))
+				 ?? new StringBuilder();
 
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -4729,9 +4729,9 @@ public sealed class DiscordApiClient
 		return pruned.Pruned;
 	}
 
-#endregion
+	#endregion
 
-#region GuildVarious
+	#region GuildVarious
 
 	/// <summary>
 	///     Gets the template async.
@@ -4925,9 +4925,9 @@ public sealed class DiscordApiClient
 		return invites;
 	}
 
-#endregion
+	#endregion
 
-#region Invite
+	#region Invite
 
 	/// <summary>
 	///     Gets the invite async.
@@ -5001,9 +5001,9 @@ public sealed class DiscordApiClient
 	 * }
 	 */
 
-#endregion
+	#endregion
 
-#region Connections
+	#region Connections
 
 	/// <summary>
 	///     Gets the users connections async.
@@ -5012,7 +5012,7 @@ public sealed class DiscordApiClient
 	{
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CONNECTIONS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -5075,9 +5075,9 @@ public sealed class DiscordApiClient
 		return metadata;
 	}
 
-#endregion
+	#endregion
 
-#region Webhooks
+	#region Webhooks
 
 	/// <summary>
 	///     Creates the webhook async.
@@ -5719,9 +5719,9 @@ public sealed class DiscordApiClient
 	internal Task DeleteWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId, ulong threadId) =>
 		this.DeleteWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), threadId.ToString());
 
-#endregion
+	#endregion
 
-#region Reactions
+	#region Reactions
 
 	/// <summary>
 	///     Creates the reaction async.
@@ -5883,9 +5883,9 @@ public sealed class DiscordApiClient
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : 0.26);
 	}
 
-#endregion
+	#endregion
 
-#region Threads
+	#region Threads
 
 	/// <summary>
 	///     Creates the thread.
@@ -5908,7 +5908,7 @@ public sealed class DiscordApiClient
 		ChannelType? type,
 		int? rateLimitPerUser,
 		IEnumerable<ForumPostTag>? appliedTags = null,
-		DiscordMessageBuilder builder = null,
+		DiscordMessageBuilder? builder = null,
 		bool isForum = false,
 		string? reason = null
 	)
@@ -5920,17 +5920,20 @@ public sealed class DiscordApiClient
 			PerUserRateLimit = rateLimitPerUser
 		};
 
-		MessageFlags? flags = builder.FlagsChanged ? MessageFlags.None : null;
-		if (builder.EmbedsSuppressed && !builder.IsComponentsV2)
-			flags |= MessageFlags.SuppressedEmbeds;
-		if (builder.NotificationsSuppressed)
-			flags |= MessageFlags.SuppressNotifications;
-		if (builder.IsComponentsV2)
-			flags |= MessageFlags.IsComponentsV2;
-		if (builder.IsVoiceMessage)
-			flags |= MessageFlags.IsVoiceMessage;
+		MessageFlags? flags = builder?.FlagsChanged ?? false ? MessageFlags.None : null;
+		if (builder is not null)
+		{
+			if (builder.EmbedsSuppressed && !builder.IsComponentsV2)
+				flags |= MessageFlags.SuppressedEmbeds;
+			if (builder.NotificationsSuppressed)
+				flags |= MessageFlags.SuppressNotifications;
+			if (builder.IsComponentsV2)
+				flags |= MessageFlags.IsComponentsV2;
+			if (builder.IsVoiceMessage)
+				flags |= MessageFlags.IsVoiceMessage;
+		}
 
-		if (isForum)
+		if (isForum && builder is not null)
 		{
 			pld.Message = new()
 			{
@@ -6300,9 +6303,9 @@ public sealed class DiscordApiClient
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
 	}
 
-#endregion
+	#endregion
 
-#region Emoji
+	#region Emoji
 
 	/// <summary>
 	///     Gets the guild emojis.
@@ -6618,9 +6621,9 @@ public sealed class DiscordApiClient
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
 	}
 
-#endregion
+	#endregion
 
-#region Stickers
+	#region Stickers
 
 	/// <summary>
 	///     Gets a sticker.
@@ -6665,7 +6668,7 @@ public sealed class DiscordApiClient
 	{
 		var route = $"{Endpoints.STICKERPACKS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -6805,9 +6808,9 @@ public sealed class DiscordApiClient
 		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Application Commands
+	#region Application Commands
 
 	/// <summary>
 	///     Gets the global application commands.
@@ -7263,26 +7266,26 @@ public sealed class DiscordApiClient
 			{
 				ulong fileId = 0;
 				List<DiscordAttachment> attachments = [];
-				
-			if (!flags.HasValue || !flags.Value.HasMessageFlag(MessageFlags.IsVoiceMessage))
-			{
-				foreach (var file in builder.Files)
-				{
-					DiscordAttachment att = new()
-					{
-						Id = fileId,
-						Discord = this.Discord,
-						Description = file.Description,
-						Filename = file.Filename,
-						FileSize = null
-					};
-					attachments.Add(att);
-					fileId++;
-				}
-			}
 
-			if (builder.Attachments is { Count: > 0 })
-				attachments.AddRange(builder.Attachments);
+				if (!flags.HasValue || !flags.Value.HasMessageFlag(MessageFlags.IsVoiceMessage))
+				{
+					foreach (var file in builder.Files)
+					{
+						DiscordAttachment att = new()
+						{
+							Id = fileId,
+							Discord = this.Discord,
+							Description = file.Description,
+							Filename = file.Filename,
+							FileSize = null
+						};
+						attachments.Add(att);
+						fileId++;
+					}
+				}
+
+				if (builder.Attachments is { Count: > 0 })
+					attachments.AddRange(builder.Attachments);
 
 				if (pld.Data is not null)
 					pld.Data.Attachments = attachments;
@@ -7598,9 +7601,9 @@ public sealed class DiscordApiClient
 	internal Task DeleteFollowupMessageAsync(ulong applicationId, string interactionToken, ulong messageId) =>
 		this.DeleteWebhookMessageAsync(applicationId, interactionToken, messageId);
 
-#endregion
+	#endregion
 
-#region Misc
+	#region Misc
 
 	/// <summary>
 	///     Gets the published store sku listings (premium application subscription).
@@ -7616,7 +7619,7 @@ public sealed class DiscordApiClient
 
 		var route = $"{Endpoints.STORE}{Endpoints.PUBLISHED_LISTINGS}{Endpoints.SKUS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, urlParams.Count != 0 ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -7880,7 +7883,7 @@ public sealed class DiscordApiClient
 	{
 		var route = $"{Endpoints.APPLICATIONS}{Endpoints.ME}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -7924,7 +7927,7 @@ public sealed class DiscordApiClient
 
 		var route = $"{Endpoints.APPLICATIONS}{Endpoints.ME}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
@@ -7988,7 +7991,7 @@ public sealed class DiscordApiClient
 		if (this.Discord.Configuration.TokenType == TokenType.Bot)
 			route += Endpoints.BOT;
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route, headers).ConfigureAwait(false);
@@ -7998,9 +8001,9 @@ public sealed class DiscordApiClient
 		return info;
 	}
 
-#endregion
+	#endregion
 
-#region OAuth2
+	#region OAuth2
 
 	/// <summary>
 	///     Gets the current oauth2 authorization information.
@@ -8014,7 +8017,7 @@ public sealed class DiscordApiClient
 		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.OAUTH2}{Endpoints.ME}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
@@ -8065,7 +8068,7 @@ public sealed class DiscordApiClient
 		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CONNECTIONS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
@@ -8088,7 +8091,7 @@ public sealed class DiscordApiClient
 		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.GUILDS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var headers = Utilities.GetBaseHeaders();
 		headers.Add("Bearer", accessToken);
@@ -8198,7 +8201,7 @@ public sealed class DiscordApiClient
 		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var formData = new Dictionary<string, string>
 		{
@@ -8228,7 +8231,7 @@ public sealed class DiscordApiClient
 		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var formData = new Dictionary<string, string>
 		{
@@ -8259,7 +8262,7 @@ public sealed class DiscordApiClient
 		// ReSharper disable once HeuristicUnreachableCode
 		var route = $"{Endpoints.OAUTH2}{Endpoints.TOKEN}{Endpoints.REVOKE}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
-			{ }, out var path);
+		{ }, out var path);
 
 		var authorizationString = Encoding.UTF8.GetBytes($"{this.OAuth2Client.ClientId.ToString(CultureInfo.InvariantCulture)}:{this.OAuth2Client.ClientSecret}");
 		var base64EncodedAuthorizationString = Convert.ToBase64String(authorizationString);
@@ -8277,5 +8280,5 @@ public sealed class DiscordApiClient
 		await this.DoFormRequestAsync(this.OAuth2Client, bucket, url, RestRequestMethod.POST, route, formData, headers).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 }
