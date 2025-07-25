@@ -5359,7 +5359,7 @@ public sealed class DiscordApiClient
 			Components = builder.Components,
 			ThreadName = builder.ThreadName,
 			Flags = flags,
-			AppliedTags = builder.AppliedTags.Any() ? builder.AppliedTags : null,
+			AppliedTags = builder.AppliedTags?.Any() ?? false ? builder.AppliedTags : null,
 			DiscordPollRequest = builder.Poll?.Build()
 		};
 
@@ -5394,7 +5394,7 @@ public sealed class DiscordApiClient
 		}
 		else
 		{
-			if (builder.Attachments.Any())
+			if (builder.Attachments?.Any() ?? false)
 			{
 				ulong fileId = 0;
 				List<DiscordAttachment> attachments = new(builder.Attachments.Count);
