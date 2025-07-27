@@ -3085,7 +3085,7 @@ public sealed class DiscordApiClient
 	///     Thrown when the <paramref name="content" /> exceeds 2000 characters or is empty and
 	///     if neither content, sticker, components and embeds are definied..
 	/// </exception>
-	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string content, IEnumerable<DiscordEmbed> embeds, DiscordSticker sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply, ReadOnlyCollection<DiscordComponent>? components = null)
+	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string content, IEnumerable<DiscordEmbed>? embeds = null, DiscordSticker? sticker = null, ulong? replyMessageId = null, bool mentionReply = false, bool failOnInvalidReply = false, IEnumerable<DiscordComponent>? components = null)
 	{
 		if (content is { Length: > 2000 })
 			throw new ArgumentException("Message content length cannot exceed 2000 characters.");
@@ -3527,7 +3527,7 @@ public sealed class DiscordApiClient
 	/// <param name="suppressEmbed">The suppress_embed.</param>
 	/// <param name="files">The files.</param>
 	/// <param name="attachments">The attachments to keep.</param>
-	internal async Task<DiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, Optional<IEnumerable<IMention>> mentions, IReadOnlyList<DiscordComponent> components, Optional<bool> suppressEmbed, IReadOnlyCollection<DiscordMessageFile> files, Optional<IEnumerable<DiscordAttachment>> attachments)
+	internal async Task<DiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, Optional<IEnumerable<IMention>> mentions, Optional<IEnumerable<DiscordComponent>> components, Optional<bool> suppressEmbed, Optional<IEnumerable<DiscordMessageFile>> files, Optional<IEnumerable<DiscordAttachment>> attachments)
 	{
 		if (embeds is { HasValue: true, Value: not null })
 			foreach (var embed in embeds.Value)
@@ -3542,18 +3542,18 @@ public sealed class DiscordApiClient
 			Content = content.ValueOrDefault(),
 			HasEmbed = embeds.HasValue && (embeds.Value?.Any() ?? false),
 			Embeds = embeds.HasValue && (embeds.Value?.Any() ?? false) ? embeds.Value : null,
-			Components = components,
+			Components = components.HasValue && (components.Value?.Any() ?? false) ? components.Value : null,
 			Flags = flags,
 			Mentions = mentions
 				.Map(m => new DiscordMentions(m ?? Mentions.None, false, mentions.Value?.OfType<RepliedUserMention>().Any() ?? false))
 				.ValueOrDefault()
 		};
 
-		if (files?.Count > 0)
+		if (files.HasValue && files.Value.Any())
 		{
 			ulong fileId = 0;
 			List<DiscordAttachment> attachmentsNew = [];
-			foreach (var file in files)
+			foreach (var file in files.Value)
 			{
 				DiscordAttachment att = new()
 				{
@@ -3584,11 +3584,11 @@ public sealed class DiscordApiClient
 			}, out var path);
 
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-			var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: files).ConfigureAwait(false);
+			var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: files.Value).ConfigureAwait(false);
 
 			var ret = this.PrepareMessage(JObject.Parse(res.Response));
 
-			foreach (var file in files.Where(x => x.ResetPositionTo.HasValue))
+			foreach (var file in files.Value.Where(x => x.ResetPositionTo.HasValue))
 				file.Stream.Position = file.ResetPositionTo.Value;
 
 			return ret;
@@ -5359,7 +5359,7 @@ public sealed class DiscordApiClient
 			Components = builder.Components,
 			ThreadName = builder.ThreadName,
 			Flags = flags,
-			AppliedTags = builder.AppliedTags?.Any() ?? false ? builder.AppliedTags : null,
+			AppliedTags = builder.AppliedTags,
 			DiscordPollRequest = builder.Poll?.Build()
 		};
 

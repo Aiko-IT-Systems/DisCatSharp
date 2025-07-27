@@ -256,7 +256,7 @@ internal class RestChannelMessageEditPayload : ObservableApiObject
 	///     Gets or sets the embeds.
 	/// </summary>
 	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordEmbed> Embeds { get; set; }
+	public IEnumerable<DiscordEmbed>? Embeds { get; set; }
 
 	/// <summary>
 	///     Gets or sets the mentions.
@@ -268,7 +268,7 @@ internal class RestChannelMessageEditPayload : ObservableApiObject
 	///     Gets or sets the attachments.
 	/// </summary>
 	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordAttachment> Attachments { get; set; }
+	public IEnumerable<DiscordAttachment>? Attachments { get; set; }
 
 	/// <summary>
 	///     Gets or sets the flags.
@@ -280,7 +280,7 @@ internal class RestChannelMessageEditPayload : ObservableApiObject
 	///     Gets or sets the components.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyCollection<DiscordComponent> Components { get; set; }
+	public IEnumerable<DiscordComponent>? Components { get; set; }
 
 	/// <summary>
 	///     Gets or sets a value indicating whether has embed.
@@ -316,7 +316,7 @@ internal sealed class RestChannelMessageCreatePayload : RestChannelMessageEditPa
 	///     Gets or sets the stickers ids.
 	/// </summary>
 	[JsonProperty("sticker_ids", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<ulong> StickersIds { get; set; }
+	public IEnumerable<ulong>? StickersIds { get; set; }
 
 	/// <summary>
 	///     Gets or sets the message reference.
