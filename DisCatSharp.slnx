@@ -48,6 +48,7 @@
     <Project Path="DisCatSharp.Tests/DisCatSharp.EventHandlers.Tests/DisCatSharp.EventHandlers.Tests.csproj" />
     <Project Path="DisCatSharp.Tests/DisCatSharp.Hosting.Tests/DisCatSharp.Hosting.Tests.csproj" />
     <Project Path="DisCatSharp.Tests/SafetyTests/DisCatSharp.SafetyTests.csproj" />
+	<Project Path="DisCatSharp.Tests/DisCatSharp.Copilot.Tests/DisCatSharp.Copilot.Tests.csproj" />
   </Folder>
   <Project Path="DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.csproj" />
   <Project Path="DisCatSharp.CommandsNext/DisCatSharp.CommandsNext.csproj" />
