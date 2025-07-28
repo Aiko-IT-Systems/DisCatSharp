@@ -55,7 +55,7 @@ applyTo: '**'
 
 ## Test Placement Guidelines
 
-- If you are generating or updating tests specifically to help diagnose, reproduce, or fix bugs (e.g., Copilot-generated regression or scenario tests), place them in `/DisCatSharp.Tests/DisCatSharp.Copilot.Tests/` and update its `.csproj` file.
+- If you are generating or updating tests specifically to help diagnose, reproduce, or fix bugs (e.g., Copilot-generated regression or scenario tests), place them in `/DisCatSharp.Tests/DisCatSharp.CopilotTests/` and update its `.csproj` file.
 - For all other standard or feature tests, use the appropriate subfolder in `/DisCatSharp.Tests/` according to the feature or package being tested.
 
 ---
