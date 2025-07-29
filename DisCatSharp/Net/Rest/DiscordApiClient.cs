@@ -3529,12 +3529,17 @@ public sealed class DiscordApiClient
 	{
 		builder.Validate(true);
 
+		if (builder?.Embeds != null)
+			foreach (var embed in builder.Embeds)
+				if (embed.Timestamp != null)
+					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
+
 		MessageFlags? flags = builder.FlagsChanged ? MessageFlags.None : null;
 		if (builder.EmbedsSuppressed && !builder.IsComponentsV2)
 			flags |= MessageFlags.SuppressedEmbeds;
 		if (builder.IsComponentsV2)
 			flags |= MessageFlags.IsComponentsV2;
-		if (builder.IsVoiceMessage)
+		if (builder.IsVoiceMessage && !builder.IsComponentsV2)
 			flags |= MessageFlags.IsVoiceMessage;
 
 		var pld = new RestChannelMessageEditPayload
@@ -5359,7 +5364,7 @@ public sealed class DiscordApiClient
 			flags |= MessageFlags.SuppressedEmbeds;
 		if (builder.NotificationsSuppressed)
 			flags |= MessageFlags.SuppressNotifications;
-		if (builder.IsVoiceMessage)
+		if (builder.IsVoiceMessage && !builder.IsComponentsV2)
 			flags |= MessageFlags.IsVoiceMessage;
 
 		var pld = new RestWebhookExecutePayload
@@ -5522,7 +5527,7 @@ public sealed class DiscordApiClient
 			flags |= MessageFlags.SuppressNotifications;
 		if (builder.IsComponentsV2)
 			flags |= MessageFlags.IsComponentsV2;
-		if (builder.IsVoiceMessage)
+		if (builder.IsVoiceMessage && !builder.IsComponentsV2)
 			flags |= MessageFlags.IsVoiceMessage;
 
 		var pld = new RestWebhookMessageEditPayload
