@@ -190,6 +190,7 @@ public class DisCatSharpBuilder
 	public virtual void ClearComponents()
 	{
 		this.ComponentsInternal?.Clear();
+		this.ComponentsInternal ??= [];
 		this.HasComponents = true;
 	}
 
