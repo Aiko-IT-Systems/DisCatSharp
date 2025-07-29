@@ -144,7 +144,7 @@ internal sealed class RestWebhookMessageEditPayload : ObservableApiObject
 	/// <summary>
 	///     Gets or sets the content.
 	/// </summary>
-	[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("content", NullValueHandling = NullValueHandling.Include)]
 	public Optional<string?> Content { get; set; }
 
 	/// <summary>
@@ -156,7 +156,7 @@ internal sealed class RestWebhookMessageEditPayload : ObservableApiObject
 	/// <summary>
 	///     Gets or sets the embeds.
 	/// </summary>
-	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Include)]
 	public IEnumerable<DiscordEmbed>? Embeds { get; set; }
 
 	/// <summary>
@@ -179,7 +179,7 @@ internal sealed class RestWebhookMessageEditPayload : ObservableApiObject
 	/// <summary>
 	///     Gets or sets the components.
 	/// </summary>
-	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("components", NullValueHandling = NullValueHandling.Include)]
 	public IEnumerable<DiscordComponent>? Components { get; set; }
 
 	/// <summary>

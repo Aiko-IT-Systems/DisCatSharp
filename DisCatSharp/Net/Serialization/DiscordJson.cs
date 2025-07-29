@@ -29,7 +29,7 @@ public static class DiscordJson
 	/// </summary>
 	private static readonly JsonSerializer s_serializer = JsonSerializer.CreateDefault(new()
 	{
-		ContractResolver = new OptionalJsonContractResolver()
+		ContractResolver = new DisCatSharpContractResolver()
 	});
 
 	/// <summary>Serializes the specified object to a JSON string.</summary>
@@ -114,7 +114,7 @@ public static class DiscordJson
 		                    "JRE Path" + jre.Path;
 
 		if (discord.Configuration.EnableLibraryDeveloperMode)
-			discord.Logger.LogError(e.ErrorContext.Error, "{msg}\n\n{raw}", sentryMessage);
+			discord.Logger.LogError(e.ErrorContext.Error, "{msg}\n\n{raw}", sentryMessage, e.ErrorContext.OriginalObject);
 
 		SentryEvent sentryEvent = new(new DiscordJsonException(jre))
 		{
@@ -152,7 +152,7 @@ public static class DiscordJson
 
 		var obj = JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings
 		{
-			ContractResolver = new OptionalJsonContractResolver(),
+			ContractResolver = new DisCatSharpContractResolver(),
 			Error = (s, e) => DiscordJsonErrorHandler(s, e, discord)
 		})!;
 
@@ -229,7 +229,7 @@ public static class DiscordJson
 
 		var obj = JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings
 		{
-			ContractResolver = new OptionalJsonContractResolver(),
+			ContractResolver = new DisCatSharpContractResolver(),
 			Error = (s, e) => DiscordJsonErrorHandler(s, e, discord)
 		})!;
 

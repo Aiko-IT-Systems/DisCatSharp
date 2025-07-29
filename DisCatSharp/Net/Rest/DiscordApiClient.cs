@@ -3529,7 +3529,7 @@ public sealed class DiscordApiClient
 	/// <param name="suppressEmbed">The suppress_embed.</param>
 	/// <param name="files">The files.</param>
 	/// <param name="attachments">The attachments to keep.</param>
-	internal async Task<DiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, Optional<IEnumerable<IMention>> mentions, Optional<IEnumerable<DiscordComponent>> components, Optional<bool> suppressEmbed, Optional<IEnumerable<DiscordMessageFile>> files, Optional<IEnumerable<DiscordAttachment>> attachments)
+	internal async Task<DiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, Optional<IEnumerable<IMention>> mentions, Optional<IEnumerable<DiscordComponent>> components, Optional<bool> suppressEmbed, Optional<IEnumerable<DiscordMessageFile>?> files, Optional<IEnumerable<DiscordAttachment>?> attachments)
 	{
 		if (embeds is { HasValue: true, Value: not null })
 			foreach (var embed in embeds.Value)
@@ -3552,7 +3552,7 @@ public sealed class DiscordApiClient
 				.ValueOrDefault()
 		};
 
-		if (files.HasValue && files.Value.Any())
+		if (files.HasValue && (files.Value?.Any() ?? false))
 		{
 			ulong fileId = 0;
 			List<DiscordAttachment> attachmentsNew = [];
@@ -3569,7 +3569,7 @@ public sealed class DiscordApiClient
 				fileId++;
 			}
 
-			if (attachments.HasValue && attachments.Value.Any())
+			if (attachments.HasValue && (attachments.Value?.Any() ?? false))
 				attachmentsNew.AddRange(attachments.Value);
 
 			pld.Attachments = attachmentsNew;
@@ -3598,7 +3598,7 @@ public sealed class DiscordApiClient
 		}
 		else
 		{
-			if (attachments.HasValue && attachments.Value.Any())
+			if (attachments.HasValue && (attachments.Value?.Any() ?? false))
 			{
 				ulong fileId = 0;
 				List<DiscordAttachment> attachmentsNew = new(attachments.Value.Count());

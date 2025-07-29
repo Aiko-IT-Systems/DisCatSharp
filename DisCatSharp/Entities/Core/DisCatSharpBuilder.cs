@@ -199,25 +199,25 @@ public class DisCatSharpBuilder
 	/// </summary>
 	public virtual void Clear()
 	{
-	this.Content = null;
-	this.HasContent = false;
-	this.FilesInternal?.Clear();
-	this.FilesInternal = null;
-	this.EmbedsInternal?.Clear();
-	this.EmbedsInternal = null;
-	this.HasEmbeds = false;
-	this.AttachmentsInternal?.Clear();
-	this.AttachmentsInternal = null;
-	this.ComponentsInternal?.Clear();
-	this.ComponentsInternal = null;
-	this.HasComponents = false;
-	this.IsVoiceMessage = false;
-	this.IsComponentsV2 = false;
-	this.EmbedsSuppressed = false;
-	this.NotificationsSuppressed = false;
-	this.FlagsChanged = false;
-	this.MentionsInternal?.Clear();
-	this.MentionsInternal = null;
+		this.Content = null;
+		this.HasContent = false;
+		this.FilesInternal?.Clear();
+		this.FilesInternal = null;
+		this.EmbedsInternal?.Clear();
+		this.EmbedsInternal = null;
+		this.HasEmbeds = false;
+		this.AttachmentsInternal?.Clear();
+		this.AttachmentsInternal = null;
+		this.ComponentsInternal?.Clear();
+		this.ComponentsInternal = null;
+		this.HasComponents = false;
+		this.IsVoiceMessage = false;
+		this.IsComponentsV2 = false;
+		this.EmbedsSuppressed = false;
+		this.NotificationsSuppressed = false;
+		this.FlagsChanged = false;
+		this.MentionsInternal?.Clear();
+		this.MentionsInternal = null;
 	}
 
 	/// <summary>
