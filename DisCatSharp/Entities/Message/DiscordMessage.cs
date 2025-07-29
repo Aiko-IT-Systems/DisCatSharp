@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
