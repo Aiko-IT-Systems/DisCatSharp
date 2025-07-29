@@ -10,10 +10,10 @@ public class NullValueHandlingTests
 	private class TestClass
 	{
 		[JsonProperty("should_serialize", NullValueHandling = NullValueHandling.Ignore)]
-		public string ShouldSerialize { get; set; }
+		public string? ShouldSerialize { get; set; }
 
 		[JsonProperty("should_always_serialize", NullValueHandling = NullValueHandling.Include)]
-		public string ShouldAlwaysSerialize { get; set; }
+		public string? ShouldAlwaysSerialize { get; set; }
 	}
 
 	[Fact]

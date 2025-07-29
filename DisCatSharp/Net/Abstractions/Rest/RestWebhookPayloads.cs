@@ -121,16 +121,48 @@ internal sealed class RestWebhookExecutePayload : ObservableApiObject
 internal sealed class RestWebhookMessageEditPayload : ObservableApiObject
 {
 	/// <summary>
+	///     Tracks if content was explicitly set (even to null).
+	///     Used to control conditional serialization of the content field.
+	/// </summary>
+	[JsonIgnore]
+	public bool HasContent { get; set; }
+
+	/// <summary>
+	///     Tracks if embeds were explicitly set (including empty).
+	///     Used to control conditional serialization of the embeds field.
+	/// </summary>
+	[JsonIgnore]
+	public bool HasEmbeds { get; set; }
+
+	/// <summary>
+	///     Tracks if components were explicitly set (including empty).
+	///     Used to control conditional serialization of the components field.
+	/// </summary>
+	[JsonIgnore]
+	public bool HasComponents { get; set; }
+
+	/// <summary>
 	///     Gets or sets the content.
 	/// </summary>
 	[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<string?> Content { get; set; }
 
 	/// <summary>
+	///     Determines whether the content field should be serialized.
+	/// </summary>
+	public bool ShouldSerializeContent() => this.HasContent;
+
+
+	/// <summary>
 	///     Gets or sets the embeds.
 	/// </summary>
 	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
 	public IEnumerable<DiscordEmbed>? Embeds { get; set; }
+
+	/// <summary>
+	///     Determines whether the embeds field should be serialized.
+	/// </summary>
+	public bool ShouldSerializeEmbeds() => this.HasEmbeds;
 
 	/// <summary>
 	///     Gets or sets the mentions.
@@ -149,6 +181,11 @@ internal sealed class RestWebhookMessageEditPayload : ObservableApiObject
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
 	public IEnumerable<DiscordComponent>? Components { get; set; }
+
+	/// <summary>
+	///     Determines whether the components field should be serialized.
+	/// </summary>
+	public bool ShouldSerializeComponents() => this.HasComponents;
 
 	/// <summary>
 	///     Gets or sets the flags.

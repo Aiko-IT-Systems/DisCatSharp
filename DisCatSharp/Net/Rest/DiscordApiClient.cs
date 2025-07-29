@@ -3105,14 +3105,15 @@ public sealed class DiscordApiClient
 
 		var pld = new RestChannelMessageCreatePayload
 		{
-			HasContent = content != null,
+			HasContent = !string.IsNullOrEmpty(content),
 			Content = content,
 			StickersIds = sticker is null
 				? Array.Empty<ulong>()
 				: [sticker.Id],
 			IsTts = false,
-			HasEmbed = embeds?.Any() ?? false,
+			HasEmbeds = embeds != null,
 			Embeds = embeds,
+			HasComponents = components != null,
 			Components = components
 		};
 
@@ -3167,13 +3168,14 @@ public sealed class DiscordApiClient
 
 		var pld = new RestChannelMessageCreatePayload
 		{
+			HasContent = !builder.IsComponentsV2 && builder.HasContent,
 			Content = builder.IsComponentsV2 ? null : builder.Content,
+			HasEmbeds = !builder.IsComponentsV2 && builder.HasEmbeds,
 			Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
-			HasContent = builder.Content != null && !builder.IsComponentsV2,
-			HasEmbed = builder.Embeds != null && !builder.IsComponentsV2,
+			HasComponents = builder.HasComponents,
+			Components = builder.Components,
 			StickersIds = builder.StickerIds,
 			IsTts = builder.IsTts,
-			Components = builder.Components,
 			Nonce = builder.Nonce,
 			EnforceNonce = builder.EnforceNonce,
 			DiscordPollRequest = builder.Poll?.Build(),
@@ -3539,10 +3541,11 @@ public sealed class DiscordApiClient
 		var pld = new RestChannelMessageEditPayload
 		{
 			HasContent = content.HasValue,
-			Content = content.ValueOrDefault(),
-			HasEmbed = embeds.HasValue && (embeds.Value?.Any() ?? false),
-			Embeds = embeds.HasValue && (embeds.Value?.Any() ?? false) ? embeds.Value : null,
-			Components = components.HasValue && (components.Value?.Any() ?? false) ? components.Value : null,
+			Content = content.HasValue ? content.ValueOrDefault() : null,
+			HasEmbeds = embeds.HasValue,
+			Embeds = embeds.HasValue ? (embeds.Value?.Any() == true ? embeds.Value : []) : null,
+			HasComponents = components.HasValue,
+			Components = components.HasValue ? (components.Value?.Any() == true ? components.Value : []) : null,
 			Flags = flags,
 			Mentions = mentions
 				.Map(m => new DiscordMentions(m ?? Mentions.None, false, mentions.Value?.OfType<RepliedUserMention>().Any() ?? false))
@@ -5514,9 +5517,12 @@ public sealed class DiscordApiClient
 
 		var pld = new RestWebhookMessageEditPayload
 		{
-			Content = builder.IsComponentsV2 ? Optional.None : builder.Content,
-			Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
-			Components = builder.Components,
+			HasContent = builder.HasContent && !builder.IsComponentsV2,
+			Content = builder.IsComponentsV2 || builder.HasContent ? Optional.None : builder.Content,
+			HasEmbeds = builder.HasEmbeds && !builder.IsComponentsV2,
+			Embeds = builder.IsComponentsV2 || !builder.HasEmbeds ? null : builder.Embeds,
+			HasComponents = builder.HasComponents,
+			Components = builder.HasComponents ? builder.Components : null,
 			Flags = flags
 		};
 
@@ -7242,19 +7248,19 @@ public sealed class DiscordApiClient
 					flags |= MessageFlags.IsComponentsV2;
 			}
 
-			var data = builder is not null
-				? new DiscordInteractionApplicationCommandCallbackData
-				{
-					Content = builder.IsComponentsV2 ? null : builder.Content,
-					Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
-					IsTts = builder.IsTts,
-					Mentions = builder.Mentions?.Any() ?? false ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
-					Flags = flags,
-					Components = builder.Components,
-					Choices = null,
-					DiscordPollRequest = builder?.Poll?.Build()
-				}
-				: null;
+				   var data = builder is not null
+					   ? new DiscordInteractionApplicationCommandCallbackData
+					   {
+						   Content = builder.IsComponentsV2 ? null : builder.Content,
+						   Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
+						   Components = builder.Components,
+						   IsTts = builder.IsTts,
+						   Mentions = builder.Mentions?.Any() ?? false ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
+						   Flags = flags,
+						   Choices = null,
+						   DiscordPollRequest = builder?.Poll?.Build()
+					   }
+					   : null;
 
 			pld = new()
 			{
@@ -7481,15 +7487,15 @@ public sealed class DiscordApiClient
 			flags |= MessageFlags.IsComponentsV2;
 
 		var values = new Dictionary<string, string>();
-		var pld = new RestFollowupMessageCreatePayload
-		{
-			Content = builder.IsComponentsV2 ? null : builder.Content,
-			Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
-			IsTts = builder.IsTts,
-			Flags = flags,
-			Components = builder.Components,
-			DiscordPollRequest = builder.Poll?.Build()
-		};
+		   var pld = new RestFollowupMessageCreatePayload
+		   {
+			   Content = builder.IsComponentsV2 ? null : builder.Content,
+			   Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
+			   Components = builder.Components,
+			   IsTts = builder.IsTts,
+			   Flags = flags,
+			   DiscordPollRequest = builder.Poll?.Build()
+		   };
 
 		if (builder.Files is { Count: > 0 })
 		{

@@ -179,6 +179,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordMessageBuilder AddComponents(IEnumerable<DiscordActionRowComponent> components)
 	{
+		this.HasComponents = true;
 		this.ComponentsInternal ??= [];
 		var ara = components.ToArray();
 
@@ -200,6 +201,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	/// <exception cref="ArgumentOutOfRangeException">No components were passed.</exception>
 	public DiscordMessageBuilder AddComponents(IEnumerable<DiscordComponent> components)
 	{
+		this.HasComponents = true;
 		this.ComponentsInternal ??= [];
 		var cmpArr = components.ToArray();
 		var count = cmpArr.Length;
@@ -288,6 +290,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to be chained.</returns>
 	public DiscordMessageBuilder AddEmbed(DiscordEmbed embed)
 	{
+		this.HasEmbeds = true;
 		ArgumentNullException.ThrowIfNull(embed, nameof(embed));
 		this.EmbedsInternal ??= [];
 		this.EmbedsInternal.Add(embed);
@@ -301,6 +304,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to be chained.</returns>
 	public DiscordMessageBuilder AddEmbeds(IEnumerable<DiscordEmbed> embeds)
 	{
+		this.HasEmbeds = true;
 		this.EmbedsInternal ??= [];
 		this.EmbedsInternal.AddRange(embeds);
 		return this;

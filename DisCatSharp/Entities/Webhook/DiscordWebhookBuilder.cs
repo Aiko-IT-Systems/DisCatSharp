@@ -134,6 +134,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <returns>The builder to chain calls with.</returns>
 	public DiscordWebhookBuilder AddComponents(IEnumerable<DiscordActionRowComponent> components)
 	{
+		this.HasComponents = true;
 		this.ComponentsInternal ??= [];
 		var ara = components.ToArray();
 
@@ -154,6 +155,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <exception cref="ArgumentOutOfRangeException">No components were passed.</exception>
 	public DiscordWebhookBuilder AddComponents(IEnumerable<DiscordComponent> components)
 	{
+		this.HasComponents = true;
 		this.ComponentsInternal ??= [];
 		var cmpArr = components.ToArray();
 		var count = cmpArr.Length;
@@ -266,6 +268,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <param name="embed">Embed to add.</param>
 	public DiscordWebhookBuilder AddEmbed(DiscordEmbed embed)
 	{
+		this.HasEmbeds = true;
 		ArgumentNullException.ThrowIfNull(embed, nameof(embed));
 		this.EmbedsInternal ??= [];
 		this.EmbedsInternal.Add(embed);
@@ -278,6 +281,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <param name="embeds">Embeds to add.</param>
 	public DiscordWebhookBuilder AddEmbeds(IEnumerable<DiscordEmbed> embeds)
 	{
+		this.HasEmbeds = true;
 		this.EmbedsInternal ??= [];
 		this.EmbedsInternal.AddRange(embeds);
 		return this;

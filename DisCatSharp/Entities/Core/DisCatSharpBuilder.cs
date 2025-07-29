@@ -40,6 +40,21 @@ public class DisCatSharpBuilder
 	internal string? ContentInternal { get; set; }
 
 	/// <summary>
+	///     Tracks if content was explicitly set (even to null).
+	/// </summary>
+	internal bool HasContent { get; set; } = false;
+
+	/// <summary>
+	///     Tracks if embeds were explicitly set (including empty).
+	/// </summary>
+	internal bool HasEmbeds { get; set; } = false;
+
+	/// <summary>
+	///     Tracks if components were explicitly set (including empty).
+	/// </summary>
+	internal bool HasComponents { get; set; } = false;
+
+	/// <summary>
 	///     Whether flags were changed in this builder.
 	/// </summary>
 	internal bool FlagsChanged { get; set; } = false;
@@ -59,6 +74,7 @@ public class DisCatSharpBuilder
 				throw new ArgumentException("Content length cannot exceed 2000 characters.", nameof(value));
 
 			this.ContentInternal = value;
+			this.HasContent = true;
 		}
 	}
 
@@ -172,29 +188,35 @@ public class DisCatSharpBuilder
 	///     Clears the components on this builder.
 	/// </summary>
 	public virtual void ClearComponents()
-		=> this.ComponentsInternal?.Clear();
+	{
+		this.ComponentsInternal?.Clear();
+		this.HasComponents = true;
+	}
 
 	/// <summary>
 	///     Allows for clearing the builder so that it can be used again.
 	/// </summary>
 	public virtual void Clear()
 	{
-		this.Content = null;
-		this.FilesInternal?.Clear();
-		this.FilesInternal = null;
-		this.EmbedsInternal?.Clear();
-		this.EmbedsInternal = null;
-		this.AttachmentsInternal?.Clear();
-		this.AttachmentsInternal = null;
-		this.ComponentsInternal?.Clear();
-		this.ComponentsInternal = null;
-		this.IsVoiceMessage = false;
-		this.IsComponentsV2 = false;
-		this.EmbedsSuppressed = false;
-		this.NotificationsSuppressed = false;
-		this.FlagsChanged = false;
-		this.MentionsInternal?.Clear();
-		this.MentionsInternal = null;
+	this.Content = null;
+	this.HasContent = false;
+	this.FilesInternal?.Clear();
+	this.FilesInternal = null;
+	this.EmbedsInternal?.Clear();
+	this.EmbedsInternal = null;
+	this.HasEmbeds = false;
+	this.AttachmentsInternal?.Clear();
+	this.AttachmentsInternal = null;
+	this.ComponentsInternal?.Clear();
+	this.ComponentsInternal = null;
+	this.HasComponents = false;
+	this.IsVoiceMessage = false;
+	this.IsComponentsV2 = false;
+	this.EmbedsSuppressed = false;
+	this.NotificationsSuppressed = false;
+	this.FlagsChanged = false;
+	this.MentionsInternal?.Clear();
+	this.MentionsInternal = null;
 	}
 
 	/// <summary>

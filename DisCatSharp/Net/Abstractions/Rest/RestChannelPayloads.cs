@@ -247,10 +247,25 @@ internal class RestChannelMessageEditPayload : ObservableApiObject
 	public string Content { get; set; }
 
 	/// <summary>
-	///     Gets or sets a value indicating whether has content.
+	///     Tracks if content was explicitly set (even to null).
+	///     Used to control conditional serialization of the content field.
 	/// </summary>
 	[JsonIgnore]
 	public bool HasContent { get; set; }
+
+	/// <summary>
+	///     Tracks if embeds were explicitly set (including empty).
+	///     Used to control conditional serialization of the embeds field.
+	/// </summary>
+	[JsonIgnore]
+	public bool HasEmbeds { get; set; }
+
+	/// <summary>
+	///     Tracks if components were explicitly set (including empty).
+	///     Used to control conditional serialization of the components field.
+	/// </summary>
+	[JsonIgnore]
+	public bool HasComponents { get; set; }
 
 	/// <summary>
 	///     Gets or sets the embeds.
@@ -283,22 +298,19 @@ internal class RestChannelMessageEditPayload : ObservableApiObject
 	public IEnumerable<DiscordComponent>? Components { get; set; }
 
 	/// <summary>
-	///     Gets or sets a value indicating whether has embed.
+	///     Determines whether the content field should be serialized.
 	/// </summary>
-	[JsonIgnore]
-	public bool HasEmbed { get; set; }
+	public bool ShouldSerializeContent() => this.HasContent;
 
 	/// <summary>
-	///     Should serialize the content.
+	///     Determines whether the embeds field should be serialized.
 	/// </summary>
-	public bool ShouldSerializeContent()
-		=> this.HasContent;
+	public bool ShouldSerializeEmbeds() => this.HasEmbeds;
 
 	/// <summary>
-	///     Should serialize the embed.
+	///     Determines whether the components field should be serialized.
 	/// </summary>
-	public bool ShouldSerializeEmbed()
-		=> this.HasEmbed;
+	public bool ShouldSerializeComponents() => this.HasComponents;
 }
 
 /// <summary>
@@ -341,42 +353,6 @@ internal sealed class RestChannelMessageCreatePayload : RestChannelMessageEditPa
 	/// </summary>
 	[JsonProperty("poll", NullValueHandling = NullValueHandling.Ignore)]
 	public DiscordPollRequest? DiscordPollRequest { get; internal set; }
-}
-
-/// <summary>
-///     Represents a channel message create multipart payload.
-/// </summary>
-internal sealed class RestChannelMessageCreateMultipartPayload : ObservableApiObject
-{
-	/// <summary>
-	///     Gets or sets the content.
-	/// </summary>
-	[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
-	public string Content { get; set; }
-
-	/// <summary>
-	///     Gets or sets a value indicating whether t t is s.
-	/// </summary>
-	[JsonProperty("tts", NullValueHandling = NullValueHandling.Ignore)]
-	public bool? IsTts { get; set; }
-
-	/// <summary>
-	///     Gets or sets the embeds.
-	/// </summary>
-	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordEmbed> Embeds { get; set; }
-
-	/// <summary>
-	///     Gets or sets the mentions.
-	/// </summary>
-	[JsonProperty("allowed_mentions", NullValueHandling = NullValueHandling.Ignore)]
-	public DiscordMentions Mentions { get; set; }
-
-	/// <summary>
-	///     Gets or sets the message reference.
-	/// </summary>
-	[JsonProperty("message_reference", NullValueHandling = NullValueHandling.Ignore)]
-	public InternalDiscordMessageReference? MessageReference { get; set; }
 }
 
 /// <summary>

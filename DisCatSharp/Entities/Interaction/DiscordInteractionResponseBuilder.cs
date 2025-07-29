@@ -110,6 +110,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
 	public DiscordInteractionResponseBuilder AddComponents(IEnumerable<DiscordActionRowComponent> components)
 	{
+		this.HasComponents = true;
 		this.ComponentsInternal ??= [];
 		var ara = components.ToArray();
 
@@ -130,6 +131,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
 	public DiscordInteractionResponseBuilder AddComponents(IEnumerable<DiscordComponent> components)
 	{
+		this.HasComponents = true;
 		this.ComponentsInternal ??= [];
 		var cmpArr = components.ToArray();
 		var count = cmpArr.Length;
@@ -252,6 +254,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddEmbed(DiscordEmbed embed)
 	{
+		this.HasEmbeds = true;
 		ArgumentNullException.ThrowIfNull(embed, nameof(embed));
 		this.EmbedsInternal ??= [];
 		this.EmbedsInternal.Add(embed);
@@ -265,6 +268,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddEmbeds(IEnumerable<DiscordEmbed> embeds)
 	{
+		this.HasEmbeds = true;
 		this.EmbedsInternal ??= [];
 		this.EmbedsInternal.AddRange(embeds);
 		return this;
