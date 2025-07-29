@@ -1,6 +1,7 @@
 using System.Diagnostics;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Net.Serialization;
 
 using Newtonsoft.Json;
 
@@ -17,7 +18,7 @@ internal static class LavalinkJson
 	/// </summary>
 	private static readonly JsonSerializerSettings s_setting = new()
 	{
-		ContractResolver = new OptionalJsonContractResolver()
+		ContractResolver = new DisCatSharpContractResolver()
 	};
 
 	/// <summary>

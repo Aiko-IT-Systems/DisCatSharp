@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
@@ -3522,57 +3523,59 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
-	/// <param name="content">The content.</param>
-	/// <param name="embeds">The embeds.</param>
-	/// <param name="mentions">The mentions.</param>
-	/// <param name="components">The components.</param>
-	/// <param name="suppressEmbed">The suppress_embed.</param>
-	/// <param name="files">The files.</param>
-	/// <param name="attachments">The attachments to keep.</param>
-	internal async Task<DiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, Optional<IEnumerable<IMention>> mentions, Optional<IEnumerable<DiscordComponent>> components, Optional<bool> suppressEmbed, Optional<IEnumerable<DiscordMessageFile>?> files, Optional<IEnumerable<DiscordAttachment>?> attachments)
+	/// <param name="builder">The builder.</param>
+	/// <param name="previousAttachments">The previous attachments if they should be kept.</param>
+	internal async Task<DiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, DiscordMessageBuilder builder, IEnumerable<DiscordAttachment>? previousAttachments = null)
 	{
-		if (embeds is { HasValue: true, Value: not null })
-			foreach (var embed in embeds.Value)
-				if (embed.Timestamp != null)
-					embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
+		builder.Validate(true);
 
-		MessageFlags? flags = suppressEmbed.HasValue && suppressEmbed.Value ? MessageFlags.SuppressedEmbeds : null;
+		MessageFlags? flags = builder.FlagsChanged ? MessageFlags.None : null;
+		if (builder.EmbedsSuppressed && !builder.IsComponentsV2)
+			flags |= MessageFlags.SuppressedEmbeds;
+		if (builder.IsComponentsV2)
+			flags |= MessageFlags.IsComponentsV2;
+		if (builder.IsVoiceMessage)
+			flags |= MessageFlags.IsVoiceMessage;
 
 		var pld = new RestChannelMessageEditPayload
 		{
-			HasContent = content.HasValue,
-			Content = content.HasValue ? content.ValueOrDefault() : null,
-			HasEmbeds = embeds.HasValue,
-			Embeds = embeds.HasValue ? (embeds.Value?.Any() == true ? embeds.Value : []) : null,
-			HasComponents = components.HasValue,
-			Components = components.HasValue ? (components.Value?.Any() == true ? components.Value : []) : null,
-			Flags = flags,
-			Mentions = mentions
-				.Map(m => new DiscordMentions(m ?? Mentions.None, false, mentions.Value?.OfType<RepliedUserMention>().Any() ?? false))
-				.ValueOrDefault()
+			HasContent = builder.HasContent && !builder.IsComponentsV2,
+			Content = builder.IsComponentsV2 || !builder.HasContent ? null : builder.Content,
+			HasEmbeds = builder.HasEmbeds && !builder.IsComponentsV2,
+			Embeds = builder.IsComponentsV2 || !builder.HasEmbeds ? null : builder.Embeds,
+			HasComponents = builder.HasComponents,
+			Components = builder.HasComponents ? builder.Components : null,
+			Flags = flags
 		};
 
-		if (files.HasValue && (files.Value?.Any() ?? false))
+		if (builder.Mentions is not null)
+			pld.Mentions = new(builder.Mentions, builder.Mentions.Count is not 0);
+
+		if (builder.Files?.Count > 0)
 		{
 			ulong fileId = 0;
-			List<DiscordAttachment> attachmentsNew = [];
-			foreach (var file in files.Value)
+			List<DiscordAttachment> attachments = [];
+			if (!flags.HasValue || !flags.Value.HasMessageFlag(MessageFlags.IsVoiceMessage))
 			{
-				DiscordAttachment att = new()
+				foreach (var file in builder.Files)
 				{
-					Id = fileId,
-					Discord = this.Discord,
-					Description = file.Description,
-					Filename = file.Filename
-				};
-				attachmentsNew.Add(att);
-				fileId++;
+					DiscordAttachment att = new()
+					{
+						Id = fileId,
+						Discord = this.Discord,
+						Description = file.Description,
+						Filename = file.Filename,
+						FileSize = null
+					};
+					attachments.Add(att);
+					fileId++;
+				}
 			}
 
-			if (attachments.HasValue && (attachments.Value?.Any() ?? false))
-				attachmentsNew.AddRange(attachments.Value);
+			if (builder.Attachments is { Count: > 0 })
+				attachments.AddRange(builder.Attachments);
 
-			pld.Attachments = attachmentsNew;
+			pld.Attachments = attachments;
 
 			var values = new Dictionary<string, string>
 			{
@@ -3587,29 +3590,33 @@ public sealed class DiscordApiClient
 			}, out var path);
 
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-			var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: files.Value).ConfigureAwait(false);
+			var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: builder.Files).ConfigureAwait(false);
 
 			var ret = this.PrepareMessage(JObject.Parse(res.Response));
 
-			foreach (var file in files.Value.Where(x => x.ResetPositionTo.HasValue))
-				file.Stream.Position = file.ResetPositionTo.Value;
+			foreach (var att in ret.AttachmentsInternal)
+				att.Discord = this.Discord;
+
+			if (builder.Files is not null)
+				foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
+					file.Stream.Position = file.ResetPositionTo.Value;
 
 			return ret;
 		}
 		else
 		{
-			if (attachments.HasValue && (attachments.Value?.Any() ?? false))
+			if (builder.Attachments is not null)
 			{
 				ulong fileId = 0;
-				List<DiscordAttachment> attachmentsNew = new(attachments.Value.Count());
-				foreach (var att in attachments.Value)
+				List<DiscordAttachment> attachments = new(builder.Attachments.Count);
+				foreach (var att in builder.Attachments)
 				{
 					att.Id = fileId;
-					attachmentsNew.Add(att);
+					attachments.Add(att);
 					fileId++;
 				}
 
-				pld.Attachments = attachmentsNew;
+				pld.Attachments = attachments;
 			}
 
 			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
@@ -3623,6 +3630,9 @@ public sealed class DiscordApiClient
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 			var ret = this.PrepareMessage(JObject.Parse(res.Response));
+
+			foreach (var att in ret.AttachmentsInternal)
+				att.Discord = this.Discord;
 
 			return ret;
 		}
