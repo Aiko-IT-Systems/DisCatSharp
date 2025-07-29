@@ -5518,7 +5518,7 @@ public sealed class DiscordApiClient
 		var pld = new RestWebhookMessageEditPayload
 		{
 			HasContent = builder.HasContent && !builder.IsComponentsV2,
-			Content = builder.IsComponentsV2 || builder.HasContent ? Optional.None : builder.Content,
+			Content = builder.IsComponentsV2 || !builder.HasContent ? Optional.None : builder.Content,
 			HasEmbeds = builder.HasEmbeds && !builder.IsComponentsV2,
 			Embeds = builder.IsComponentsV2 || !builder.HasEmbeds ? null : builder.Embeds,
 			HasComponents = builder.HasComponents,

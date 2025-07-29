@@ -489,24 +489,6 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	public override void ClearComponents()
 		=> base.ClearComponents();
 
-	/// <summary>
-	/// Removes existing components from the webhook message.
-	/// </summary>
-	public void RemoveComponents()
-		=> this.ComponentsInternal = [];
-
-	/// <summary>
-	/// Removes existing embeds from the webhook message.
-	/// </summary>
-	public void RemoveEmbeds()
-		=> this.EmbedsInternal = [];
-
-	/// <summary>
-	/// Removes existing attachments from the webhook message.
-	/// </summary>
-	public void RemoveAttachments()
-		=> this.AttachmentsInternal = [];
-
 	/// <inheritdoc />
 	public override void Clear()
 	{

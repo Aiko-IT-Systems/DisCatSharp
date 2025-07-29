@@ -493,24 +493,6 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 		=> base.ClearComponents();
 
 	/// <summary>
-	/// Removes existing components from the message.
-	/// </summary>
-	public void RemoveComponents()
-		=> this.ComponentsInternal = [];
-
-	/// <summary>
-	/// Removes existing embeds from the message.
-	/// </summary>
-	public void RemoveEmbeds()
-		=> this.EmbedsInternal = [];
-
-	/// <summary>
-	/// Removes existing attachments from the message.
-	/// </summary>
-	public void RemoveAttachments()
-		=> this.AttachmentsInternal = [];
-
-	/// <summary>
 	///     Allows for clearing the Message Builder so that it can be used again to send a new message.
 	/// </summary>
 	public override void Clear()
