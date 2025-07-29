@@ -727,12 +727,11 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <summary>
 	///     Edits the message embed suppression.
 	/// </summary>
-	/// <param name="suppress">Suppress embeds.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> ModifySuppressionAsync(bool suppress = false)
+	public Task<DiscordMessage> SuppressEmbedsAsync()
 		=> this.ModifyAsync(x => x.SuppressEmbeds());
 
 	/// <summary>
