@@ -12,43 +12,44 @@
 	<PropertyGroup>
 		<AssemblyName>DisCatSharp.Experimental</AssemblyName>
 		<RootNamespace>DisCatSharp.Experimental</RootNamespace>
-	</PropertyGroup>
-
-	<PropertyGroup>
 		<PackageId>DisCatSharp.Experimental</PackageId>
 		<Description>
 			DisCatSharp.Experimental
 
 			Experimental changes for DisCatSharp.
 		</Description>
-		<PackageTags>DisCatSharp,Experimental,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net8,Net9</PackageTags>
-
+		<PackageTags>DisCatSharp,Experimental,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net8,Net9,Net10</PackageTags>
+		<NoWarn>IDE0130;DV2001;CS8602;CS8618;CS8602</NoWarn>
 	</PropertyGroup>
 
-	<ItemGroup>
+	<ItemGroup Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net9.0'))">
 		<PackageReference Include="Backport.System.Threading.Lock" Version="3.1.4" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Concentus" Version="2.2.2" />
 		<PackageReference Include="Concentus.Oggfile" Version="1.0.6" />
-		<PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.5">
+		<PackageReference Include="DisCatSharp.Analyzer" Version="1.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="DisCatSharp.Attributes" Version="10.6.6" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.4" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.7" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
-		<PackageReference Include="System.Memory" Version="4.6.1" />
-		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.4" />
+		<PackageReference Include="System.Memory" Version="4.6.3" />
+		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.7" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
 		<ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+		<PackageReference Include="DisCatSharp.Attributes" Version="2025.3.27" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+	  <Folder Include="Entities\Message\" />
 	</ItemGroup>
 
 </Project>

@@ -18,34 +18,33 @@
 	<PropertyGroup>
 		<PackageId>DisCatSharp.Configuration</PackageId>
 		<Description>Configuration for the DisCatSharp Hosting Extension.</Description>
-		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net8,Net9,Hosting,Web,Configuration</PackageTags>
-
+		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net8,Net9,Net10,Hosting,Web,Configuration</PackageTags>
 	</PropertyGroup>
 
-	<ItemGroup>
+	<ItemGroup Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net9.0'))">
 		<PackageReference Include="Backport.System.Threading.Lock" Version="3.1.4" />
-		<PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.5">
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="DisCatSharp.Analyzer" Version="1.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="DisCatSharp.Attributes" Version="10.6.6" />
 		<PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.4" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.4" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.4" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.7" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.7" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="System.Memory" Version="4.6.1" />
-		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.4" />
+		<PackageReference Include="System.Memory" Version="4.6.3" />
+		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.7" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+		<PackageReference Include="DisCatSharp.Attributes" Version="2025.3.27" />
 	</ItemGroup>
 
 </Project>

@@ -27,31 +27,31 @@
 
 			Documentation: https://docs.dcs.aitsys.dev/articles/modules/audio/lavalink_v4/intro.html
 		</Description>
-		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net8,Net9,Voice,Lavalink,Lavalink V4,Audio Player,Music,YouTube,Spotify,SoundCloud,Twitch,Vimeo,BandCamp,Apple Music,Yandex Music,Spotify,Spotify Recommendations,Deezer,Deezer ISRC,Local Music,Direct Url Music</PackageTags>
+		<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net8,Net9,Net10,Voice,Lavalink,Lavalink V4,Audio Player,Music,YouTube,Spotify,SoundCloud,Twitch,Vimeo,BandCamp,Apple Music,Yandex Music,Spotify,Spotify Recommendations,Deezer,Deezer ISRC,Local Music,Direct Url Music</PackageTags>
 
 	</PropertyGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+		<PackageReference Include="DisCatSharp.Attributes" Version="2025.3.27" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Backport.System.Threading.Lock" Version="3.1.4" />
-		<PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="6.2.5">
+		<PackageReference Include="DisCatSharp.Analyzer" Version="1.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="DisCatSharp.Attributes" Version="10.6.6" />
 		<PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.4" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.7" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+		<PackageReference Include="System.Memory" Version="4.6.3" />
+		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.7" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-		<PackageReference Include="System.Memory" Version="4.6.1" />
-		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.4" />
+	<ItemGroup Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net9.0'))">
+		<PackageReference Include="Backport.System.Threading.Lock" Version="3.1.4" />
 	</ItemGroup>
 
 </Project>
