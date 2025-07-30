@@ -104,7 +104,7 @@ public class ForumPostTag : NullableSnowflakeObject, IEquatable<ForumPostTag>
 			Moderated = mdl.Moderated.HasValue ? mdl.Moderated.Value : this.Moderated,
 			Name = mdl.Name.HasValue ? mdl.Name.Value : this.Name,
 			UnicodeEmojiString = mdl.Emoji.HasValue ? mdl.Emoji.Value.Name : this.UnicodeEmojiString
-		}).ToList(), null, null, null, null, null, null, null, null, mdl.AuditLogReason);
+		}).ToList(), null, null, null, null, null, null, null, null, null, mdl.AuditLogReason);
 		return res.InternalAvailableTags.First(x => x.Id == this.Id);
 	}
 
@@ -113,7 +113,7 @@ public class ForumPostTag : NullableSnowflakeObject, IEquatable<ForumPostTag>
 	/// </summary>
 	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
 	public Task DeleteAsync(string reason = null)
-		=> this.Discord.ApiClient.ModifyForumChannelAsync(this.ChannelId, null, null, Optional.None, Optional.None, null, Optional.None, this.Channel.InternalAvailableTags.Where(x => x.Id != this.Id).ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason);
+	=> this.Discord.ApiClient.ModifyForumChannelAsync(this.ChannelId, null, null, null, null, null, null, this.Channel.InternalAvailableTags.Where(x => x.Id != this.Id).ToList(), null, null, null, null, null, null, null, null, null, reason);
 
 	/// <summary>
 	///     Checks whether this <see cref="ForumPostTag" /> is equal to another object.

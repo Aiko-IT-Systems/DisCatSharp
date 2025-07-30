@@ -231,6 +231,12 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public ForumLayout? DefaultForumLayout { get; internal set; }
 
 	/// <summary>
+	///     Gets the tag matching mode for this forum channel.
+	/// </summary>
+	[JsonProperty("default_tag_setting", NullValueHandling = NullValueHandling.Ignore)]
+	public TagMatching? DefaultTagSetting { get; internal set; }
+
+	/// <summary>
 	///     Gets when the last pinned message was pinned.
 	/// </summary>
 	[JsonIgnore]
@@ -387,7 +393,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public static bool operator !=(DiscordChannel e1, DiscordChannel e2)
 		=> !(e1 == e2);
 
-#region Methods
+	#region Methods
 
 	/// <summary>
 	///     Sends a message to this channel.
@@ -659,7 +665,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			? throw new NotSupportedException("Cannot have more than 20 tags in a forum channel.")
 			: (Task)this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Template, mdl.Nsfw,
 				mdl.Parent.Map(p => p?.Id), mdl.AvailableTags, mdl.DefaultReactionEmoji, mdl.PerUserRateLimit, mdl.PostCreateUserRateLimit,
-				mdl.DefaultSortOrder, mdl.DefaultForumLayout, mdl.DefaultAutoArchiveDuration, mdl.PermissionOverwrites, mdl.Flags, mdl.AuditLogReason);
+				mdl.DefaultSortOrder, mdl.DefaultForumLayout, mdl.DefaultAutoArchiveDuration, mdl.DefaultTagSetting, mdl.PermissionOverwrites, mdl.Flags, mdl.AuditLogReason);
 	}
 
 	/// <summary>
@@ -1125,7 +1131,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public Task<DiscordInvite> CreateInviteAsync(int maxAge = 86400, int maxUses = 0, bool temporary = false, bool unique = false, TargetType? targetType = null, ulong? targetApplicationId = null, ulong? targetUser = null, string reason = null)
 		=> this.Discord.ApiClient.CreateChannelInviteAsync(this.Id, maxAge, maxUses, targetType, targetApplicationId, targetUser, temporary, unique, reason);
 
-#region Voice Channel
+	#region Voice Channel
 
 	/// <summary>
 	///     Sets a voice channels status.
@@ -1146,9 +1152,9 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public Task RemoveVoiceChannelStatusAsync(string reason = null)
 		=> this.Type != ChannelType.Voice ? throw new NotSupportedException("Cannot execute this request on a non-voice channel.") : this.Discord.ApiClient.ModifyVoiceChannelStatusAsync(this.Id, null);
 
-#endregion
+	#endregion
 
-#region Stage
+	#region Stage
 
 	/// <summary>
 	///     Opens a stage.
@@ -1211,9 +1217,9 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public async Task<DiscordStageInstance> GetStageAsync()
 		=> await this.Discord.ApiClient.GetStageInstanceAsync(this.Id).ConfigureAwait(false);
 
-#endregion
+	#endregion
 
-#region Scheduled Events
+	#region Scheduled Events
 
 	/// <summary>
 	///     Creates a scheduled event based on the channel type.
@@ -1239,9 +1245,9 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		return await this.Guild.CreateScheduledEventAsync(name, scheduledStartTime, null, this, null, description, type, coverImage, recurrenceRule, reason).ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Threads
+	#region Threads
 
 	/// <summary>
 	///     Creates a thread.
@@ -1397,14 +1403,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			? throw new NotSupportedException("Channel needs to be type of Forum")
 			: this.AvailableTags.Count == 20
 				? throw new NotSupportedException("Cannot have more than 20 tags in a forum channel.")
-				: await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, Optional.None, Optional.None, null, Optional.None, this.InternalAvailableTags.Append(new()
-				{
-					Name = name,
-					EmojiId = emoji != null && emoji.Id != 0 ? emoji.Id : null,
-					UnicodeEmojiString = emoji?.Id == null || emoji?.Id == 0 ? emoji?.Name ?? null : null,
-					Moderated = moderated,
-					Id = null
-				}).ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason).ConfigureAwait(false);
+				   : await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, Optional.None, Optional.None, null, Optional.None, this.InternalAvailableTags.Append(new()
+				   {
+					   Name = name,
+					   EmojiId = emoji != null && emoji.Id != 0 ? emoji.Id : null,
+					   UnicodeEmojiString = emoji?.Id == null || emoji?.Id == 0 ? emoji?.Name ?? null : null,
+					   Moderated = moderated,
+					   Id = null
+				   }).ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason).ConfigureAwait(false);
 
 	/// <summary>
 	///     Deletes a forum channel tag.
@@ -1419,9 +1425,9 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordChannel> DeleteForumPostTag(ulong id, string reason = null)
-		=> this.Type != ChannelType.Forum ? throw new NotSupportedException("Channel needs to be type of Forum") : await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, Optional.None, Optional.None, null, Optional.None, this.InternalAvailableTags?.Where(x => x.Id != id)?.ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason).ConfigureAwait(false);
+		=> this.Type != ChannelType.Forum ? throw new NotSupportedException("Channel needs to be type of Forum") : await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, Optional.None, Optional.None, null, Optional.None, this.InternalAvailableTags?.Where(x => x.Id != id)?.ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason).ConfigureAwait(false);
 
-#endregion
+	#endregion
 
 	/// <summary>
 	///     Adds a channel permission overwrite for specified role.
@@ -1683,5 +1689,5 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 						? $"Channel {this.Name} ({this.Id})"
 						: $"Channel {this.Id}";
 
-#endregion
+	#endregion
 }

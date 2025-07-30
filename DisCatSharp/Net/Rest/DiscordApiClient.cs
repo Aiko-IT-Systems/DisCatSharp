@@ -2841,6 +2841,7 @@ public sealed class DiscordApiClient
 	/// <param name="flags">The channel flags.</param>
 	/// <param name="reason">The reason.</param>
 	/// <param name="forumLayout"></param>
+	/// <param name="defaultTagSetting">The default tag setting for the forum channel ("match_some" or "match_all").</param>
 	internal async Task<DiscordChannel> ModifyForumChannelAsync(
 		ulong channelId,
 		string name,
@@ -2856,6 +2857,7 @@ public sealed class DiscordApiClient
 		Optional<ForumPostSortOrder?> defaultSortOrder,
 		Optional<ForumLayout?> forumLayout,
 		Optional<ThreadAutoArchiveDuration?> defaultAutoArchiveDuration,
+		Optional<TagMatching?> defaultTagSetting,
 		IEnumerable<DiscordOverwriteBuilder> permissionOverwrites,
 		Optional<ChannelFlags?> flags,
 		string? reason
@@ -2884,7 +2886,8 @@ public sealed class DiscordApiClient
 			DefaultSortOrder = defaultSortOrder,
 			Flags = flags,
 			AvailableTags = availableTags,
-			ForumLayout = forumLayout
+			ForumLayout = forumLayout,
+			DefaultTagSetting = defaultTagSetting
 		};
 
 		var headers = Utilities.GetBaseHeaders();

@@ -217,6 +217,12 @@ internal sealed class RestChannelModifyPayload : ObservableApiObject
 	public Optional<ForumPostSortOrder?> DefaultSortOrder { get; internal set; }
 
 	/// <summary>
+	///     Gets the default tag matching setting for this forum channel.
+	/// </summary>
+	[JsonProperty("default_tag_setting", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<TagMatching?> DefaultTagSetting { get; internal set; }
+
+	/// <summary>
 	///     Gets the default forum layout for this channel
 	/// </summary>
 	[JsonProperty("default_forum_layout", NullValueHandling = NullValueHandling.Ignore)]
