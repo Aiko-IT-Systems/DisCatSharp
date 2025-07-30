@@ -17,6 +17,7 @@ applyTo: '**'
 - Analyzer: Custom Roslyn analyzers are in `/DisCatSharp.Analyzer` and can be packaged as NuGet or VSIX.
 - Docs: Run DocFX using `docfx docfx.json` in `/DisCatSharp.Docs`.
 - PowerShell scripts for rebuilds and packaging are in `/DisCatSharp.Tools`.
+- If you use copilot, add Co-Authored-By to the commit message to credit the AI assistant. The line should be `Co-Authored-By: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>`
 
 ## Coding Conventions
 - Follows Microsoft C# conventions with project-specific rules:
@@ -28,7 +29,8 @@ applyTo: '**'
   - Prefer initializer syntax for object construction.
   - Use XML doc comments for all public APIs.
   - Avoid breaking changes; use `[Deprecated]` attribute for deprecations.
-  - We use file scoped namespaces for all files.
+  - We use file-scoped namespaces for all files.
+  - Do not ever use non-file-scoped namespaces.
   - Namespaces does not neccessarily match folder structure, but should be consistent with the project structure.
 - Async methods should use `async`/`await` unless returning a single task directly.
 - All code changes must build and pass CI before merge.
