@@ -24,5 +24,5 @@ public class ThreadMemberUpdateEventArgs : DiscordEventArgs
 	/// <summary>
 	///     Gets the thread.
 	/// </summary>
-	public DiscordThreadChannel Thread { get; internal set; }
+	public DiscordXThreadChannel Thread { get; internal set; }
 }

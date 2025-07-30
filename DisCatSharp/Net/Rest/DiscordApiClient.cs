@@ -5823,7 +5823,7 @@ public sealed class DiscordApiClient
 	/// <param name="builder">The message builder.</param>
 	/// <param name="isForum">Whether this thread is in a forum.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordThreadChannel> CreateThreadAsync(
+	internal async Task<DiscordXThreadChannel> CreateThreadAsync(
 		ulong channelId,
 		ulong? messageId,
 		string name,
@@ -5908,7 +5908,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-		var threadChannel = DiscordJson.DeserializeObject<DiscordThreadChannel>(res.Response, this.Discord);
+		var threadChannel = DiscordJson.DeserializeObject<DiscordXThreadChannel>(res.Response, this.Discord);
 		return threadChannel;
 	}
 
@@ -5916,7 +5916,7 @@ public sealed class DiscordApiClient
 	///     Gets the thread.
 	/// </summary>
 	/// <param name="threadId">The thread id.</param>
-	internal async Task<DiscordThreadChannel> GetThreadAsync(ulong threadId)
+	internal async Task<DiscordXThreadChannel> GetThreadAsync(ulong threadId)
 	{
 		var route = $"{Endpoints.CHANNELS}/:thread_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
@@ -5927,7 +5927,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var ret = DiscordJson.DeserializeObject<DiscordThreadChannel>(res.Response, this.Discord);
+		var ret = DiscordJson.DeserializeObject<DiscordXThreadChannel>(res.Response, this.Discord);
 		return ret;
 	}
 

@@ -58,7 +58,7 @@ public sealed partial class DiscordClient
 		ulong uid;
 		DiscordStageInstance stg = default;
 		DiscordIntegration itg = default;
-		DiscordThreadChannel trd = default;
+		DiscordXThreadChannel trd = default;
 		DiscordThreadChannelMember trdm = default;
 		DiscordScheduledEvent gse = default;
 		TransportUser usr = default;
@@ -511,23 +511,23 @@ public sealed partial class DiscordClient
 #region Thread
 
 			case "thread_create":
-				trd = DiscordJson.DeserializeObject<DiscordThreadChannel>(payloadString, this);
+				trd = DiscordJson.DeserializeObject<DiscordXThreadChannel>(payloadString, this);
 				await this.OnThreadCreateEventAsync(trd).ConfigureAwait(false);
 				break;
 
 			case "thread_update":
-				trd = DiscordJson.DeserializeObject<DiscordThreadChannel>(payloadString, this);
+				trd = DiscordJson.DeserializeObject<DiscordXThreadChannel>(payloadString, this);
 				await this.OnThreadUpdateEventAsync(trd).ConfigureAwait(false);
 				break;
 
 			case "thread_delete":
-				trd = DiscordJson.DeserializeObject<DiscordThreadChannel>(payloadString, this);
+				trd = DiscordJson.DeserializeObject<DiscordXThreadChannel>(payloadString, this);
 				await this.OnThreadDeleteEventAsync(trd).ConfigureAwait(false);
 				break;
 
 			case "thread_list_sync":
 				gid = (ulong)dat["guild_id"]!;
-				var trds = DiscordJson.DeserializeIEnumerableObject<IReadOnlyList<DiscordThreadChannel>>(dat["threads"]!.ToString(), this);
+				var trds = DiscordJson.DeserializeIEnumerableObject<IReadOnlyList<DiscordXThreadChannel>>(dat["threads"]!.ToString(), this);
 				var trms = DiscordJson.DeserializeIEnumerableObject<IReadOnlyList<DiscordThreadChannelMember>>(dat["members"]!.ToString(), this);
 				await this.OnThreadListSyncEventAsync(this.GuildsInternal[gid], dat["channel_ids"]!.ToObject<IReadOnlyList<ulong?>>()!, trds, trms).ConfigureAwait(false);
 				break;
@@ -3258,7 +3258,7 @@ public sealed partial class DiscordClient
 	///     Handles the thread create event.
 	/// </summary>
 	/// <param name="thread">The created thread.</param>
-	internal async Task OnThreadCreateEventAsync(DiscordThreadChannel thread)
+	internal async Task OnThreadCreateEventAsync(DiscordXThreadChannel thread)
 	{
 		thread.Discord = this;
 		this.InternalGetCachedGuild(thread.GuildId).ThreadsInternal.AddOrUpdate(thread.Id, thread, (oldThread, newThread) => newThread);
@@ -3275,7 +3275,7 @@ public sealed partial class DiscordClient
 	///     Handles the thread update event.
 	/// </summary>
 	/// <param name="thread">The updated thread.</param>
-	internal async Task OnThreadUpdateEventAsync(DiscordThreadChannel thread)
+	internal async Task OnThreadUpdateEventAsync(DiscordXThreadChannel thread)
 	{
 		if (thread == null)
 			return;
@@ -3284,7 +3284,7 @@ public sealed partial class DiscordClient
 		var guild = thread.Guild;
 
 		var threadNew = this.InternalGetCachedThread(thread.Id);
-		DiscordThreadChannel threadOld = null;
+		DiscordXThreadChannel threadOld = null;
 		ThreadUpdateEventArgs updateEvent;
 
 		if (threadNew != null)
@@ -3364,7 +3364,7 @@ public sealed partial class DiscordClient
 	///     Handles the thread delete event.
 	/// </summary>
 	/// <param name="thread">The deleted thread.</param>
-	internal async Task OnThreadDeleteEventAsync(DiscordThreadChannel thread)
+	internal async Task OnThreadDeleteEventAsync(DiscordXThreadChannel thread)
 	{
 		if (thread == null)
 			return;
@@ -3391,7 +3391,7 @@ public sealed partial class DiscordClient
 	/// <param name="channelIds">The synced channel ids.</param>
 	/// <param name="threads">The synced threads.</param>
 	/// <param name="members">The synced thread members.</param>
-	internal async Task OnThreadListSyncEventAsync(DiscordGuild guild, IReadOnlyList<ulong?> channelIds, IReadOnlyList<DiscordThreadChannel> threads, IReadOnlyList<DiscordThreadChannelMember> members)
+	internal async Task OnThreadListSyncEventAsync(DiscordGuild guild, IReadOnlyList<ulong?> channelIds, IReadOnlyList<DiscordXThreadChannel> threads, IReadOnlyList<DiscordThreadChannelMember> members)
 	{
 		guild.Discord = this;
 

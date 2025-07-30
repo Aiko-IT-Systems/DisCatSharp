@@ -839,7 +839,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordThreadChannel> GetThreadAsync(ulong id, bool fetch = false)
+	public async Task<DiscordXThreadChannel> GetThreadAsync(ulong id, bool fetch = false)
 		=> (fetch ? null : this.InternalGetCachedThread(id)) ?? await this.ApiClient.GetThreadAsync(id).ConfigureAwait(false);
 
 	/// <summary>
@@ -849,7 +849,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="thread">The thread, if found.</param>
 	/// <param name="fetch">Whether to ignore the cache. Defaults to true.</param>
 	/// <returns>True if found, otherwise false.</returns>
-	public bool TryGetThread(ulong id, [NotNullWhen(true)] out DiscordThreadChannel? thread, bool fetch = true)
+	public bool TryGetThread(ulong id, [NotNullWhen(true)] out DiscordXThreadChannel? thread, bool fetch = true)
 	{
 		try
 		{
@@ -1474,7 +1474,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="threadId">The target thread id.</param>
 	/// <returns>The requested thread.</returns>
-	internal DiscordThreadChannel? InternalGetCachedThread(ulong threadId)
+	internal DiscordXThreadChannel? InternalGetCachedThread(ulong threadId)
 	{
 		if (this.GuildsInternal == null || this.GuildsInternal.Count is 0)
 			return null;

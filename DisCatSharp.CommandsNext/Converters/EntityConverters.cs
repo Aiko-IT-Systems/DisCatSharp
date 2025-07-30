@@ -135,14 +135,14 @@ public class DiscordChannelConverter : IArgumentConverter<DiscordChannel>
 /// <summary>
 ///     Represents a discord thread channel converter.
 /// </summary>
-public class DiscordThreadChannelConverter : IArgumentConverter<DiscordThreadChannel>
+public class DiscordThreadChannelConverter : IArgumentConverter<DiscordXThreadChannel>
 {
 	/// <summary>
 	///     Converts a string.
 	/// </summary>
 	/// <param name="value">The string to convert.</param>
 	/// <param name="ctx">The command context.</param>
-	async Task<Optional<DiscordThreadChannel>> IArgumentConverter<DiscordThreadChannel>.ConvertAsync(string value, CommandContext ctx)
+	async Task<Optional<DiscordXThreadChannel>> IArgumentConverter<DiscordXThreadChannel>.ConvertAsync(string value, CommandContext ctx)
 	{
 		if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var tid))
 		{
