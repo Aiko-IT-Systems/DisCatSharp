@@ -117,6 +117,12 @@ public class BaseContext : DisCatSharpCommandContext
 	public IServiceProvider Services { get; internal set; } = new ServiceCollection().BuildServiceProvider(true);
 
 	/// <summary>
+	///     Gets or sets the service scope for this command execution.
+	///     Used internally for proper disposal of scoped services.
+	/// </summary>
+	internal IServiceScope? ServiceScope { get; set; }
+
+	/// <summary>
 	///     Creates a response to this interaction.
 	///     <para>
 	///         You must create a response within 3 seconds of this interaction being executed; if the command has the
