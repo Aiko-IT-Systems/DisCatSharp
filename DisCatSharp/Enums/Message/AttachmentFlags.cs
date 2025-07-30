@@ -58,6 +58,11 @@ public enum AttachmentFlags : long
 	IsAnimated = 1L << 5,
 
 	/// <summary>
+	///     This attachment contains gore content.
+	/// </summary>
+	ContainsGoreContent = 1L << 6,
+
+	/// <summary>
 	///      The flags are unknown.
 	/// </summary>
 	Unknown = long.MaxValue

@@ -38,6 +38,11 @@ public enum EmbedFlags : long
 	IsContentInventoryEntry = 1L << 5,
 
 	/// <summary>
+	///     This embed contains gore content.
+	/// </summary>
+	ContainsGoreContent = 1L << 6,
+
+	/// <summary>
 	///      The flags are unknown.
 	/// </summary>
 	Unknown = long.MaxValue

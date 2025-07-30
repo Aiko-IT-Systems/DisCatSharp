@@ -121,6 +121,11 @@ public enum ChannelFlags : long
 	Obfuscated = 1L << 17,
 
 	/// <summary>
+	///     Indicates that this channel is a moderator report channel.
+	/// </summary>
+	IsModeratorReportChannel = 1L << 19,
+
+	/// <summary>
 	///      The flags are unknown.
 	/// </summary>
 	Unknown = long.MaxValue

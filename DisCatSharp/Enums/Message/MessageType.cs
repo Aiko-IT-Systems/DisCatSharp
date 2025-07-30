@@ -304,5 +304,35 @@ public enum MessageType
 	/// <summary>
 	///     Message indicating a chat wallpaper was removed.
 	/// </summary>
-	ChatWallpaperRemoved = 57
+	ChatWallpaperRemoved = 57,
+
+	/// <summary>
+	///     Message indicating a report to mod deleted message.
+	/// </summary>
+	ReportToModDeletedMessage = 58,
+
+	/// <summary>
+	///     Message indicating a report to mod timeout user.
+	/// </summary>
+	ReportToModTimeoutUser = 59,
+
+	/// <summary>
+	///     Message indicating a report to mod kick user.
+	/// </summary>
+	ReportToModKickUser = 60,
+
+	/// <summary>
+	///     Message indicating a report to mod ban user.
+	/// </summary>
+	ReportToModBanUser = 61,
+
+	/// <summary>
+	///     Message indicating a report to mod closed report.
+	/// </summary>
+	ReportToModClosedReport = 62,
+
+	/// <summary>
+	///     Message indicating an emoji was added.
+	/// </summary>
+	EmojiAdded = 63
 }

@@ -63,6 +63,11 @@ public enum SystemChannelFlags : long
 	SuppressChannelPromptDeadchat = 1L << 7,
 
 	/// <summary>
+	///     Suppress UGC added notifications.
+	/// </summary>
+	SuppressUgcAddedNotifications = 1L << 8,
+
+	/// <summary>
 	///      The flags are unknown.
 	/// </summary>
 	Unknown = long.MaxValue
