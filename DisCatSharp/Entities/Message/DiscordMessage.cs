@@ -55,6 +55,9 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<DiscordEmbed> EmbedsInternal = [];
 
+	[JsonProperty("mention_channels")]
+	public List<DiscordChannelMention> MentionedChannelsPartial = [];
+
 	[JsonIgnore]
 	internal List<DiscordChannel> MentionedChannelsInternal = [];
 
