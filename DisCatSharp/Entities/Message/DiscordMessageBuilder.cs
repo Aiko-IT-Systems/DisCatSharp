@@ -248,10 +248,13 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 
 	/// <summary>
 	///     Sets the message response to suppress embeds.
+	/// 	This also clears the embeds of the message.
 	/// </summary>
-	public DiscordMessageBuilder SuppressEmbeds(bool suppress = true)
+	public DiscordMessageBuilder SuppressEmbeds()
 	{
-		this.EmbedsSuppressed = suppress;
+		this.EmbedsSuppressed = true;
+		this.EmbedsInternal?.Clear();
+		this.HasEmbeds = true;
 		return this;
 	}
 
@@ -268,18 +271,18 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	/// <summary>
 	///     Sets the message to be sent as voice message.
 	/// </summary>
-	public DiscordMessageBuilder AsVoiceMessage(bool asVoiceMessage = true)
+	public DiscordMessageBuilder AsVoiceMessage()
 	{
-		this.IsVoiceMessage = asVoiceMessage;
+		this.IsVoiceMessage = true;
 		return this;
 	}
 
 	/// <summary>
 	///     Sets the followup message to be sent as silent message.
 	/// </summary>
-	public DiscordMessageBuilder AsSilentMessage(bool silent = true)
+	public DiscordMessageBuilder AsSilentMessage()
 	{
-		this.Silent = silent;
+		this.Silent = true;
 		return this;
 	}
 
@@ -517,9 +520,6 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	{
 		if (this.EmbedsInternal?.Count > 10)
 			throw new ArgumentException("A message can only have up to 10 embeds.");
-
-		if (isModify)
-			this.AsVoiceMessage(false);
 
 		if (!isModify)
 		{
