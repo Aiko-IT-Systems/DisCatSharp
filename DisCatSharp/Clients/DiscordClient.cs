@@ -32,7 +32,7 @@ namespace DisCatSharp;
 /// </summary>
 public sealed partial class DiscordClient : BaseDiscordClient
 {
-#region Internal Fields/Properties
+	#region Internal Fields/Properties
 
 	/// <summary>
 	///     Gets whether this client is running as a shard.
@@ -59,9 +59,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	private readonly ManualResetEventSlim _connectionLock = new(true);
 
-#endregion
+	#endregion
 
-#region Public Fields/Properties
+	#region Public Fields/Properties
 
 	/// <summary>
 	///     Gets the gateway protocol version.
@@ -165,9 +165,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	public ConcurrentDictionary<string, CooldownBucket> CommandCooldownBuckets { get; } = [];
 
-#endregion
+	#endregion
 
-#region Constructor/Internal Setup
+	#region Constructor/Internal Setup
 
 	/// <summary>
 	///     Initializes a new instance of <see cref="DiscordClient" />.
@@ -306,9 +306,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._embeddedActivitiesLazy = new(() => new ReadOnlyDictionary<string, DiscordActivity>(this.EmbeddedActivitiesInternal));
 	}
 
-#endregion
+	#endregion
 
-#region Client Extension Methods
+	#region Client Extension Methods
 
 	/// <summary>
 	///     Registers an extension with this client.
@@ -328,9 +328,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public T? GetExtension<T>() where T : BaseExtension
 		=> this._extensions.FirstOrDefault(x => x.GetType() == typeof(T)) as T;
 
-#endregion
+	#endregion
 
-#region Public Connection Methods
+	#region Public Connection Methods
 
 	/// <summary>
 	///     Connects to the gateway.
@@ -481,9 +481,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			await this.WebSocketClient.DisconnectAsync().ConfigureAwait(false);
 	}
 
-#endregion
+	#endregion
 
-#region Public REST Methods
+	#region Public REST Methods
 
 	/// <summary>
 	///     Requests soundboard sounds over the gateway.
@@ -1465,9 +1465,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	public Task<IReadOnlyList<DiscordSoundboardSound>> ListDefaultSoundboardSoundsAsync()
 		=> this.ApiClient.ListDefaultSoundboardSoundsAsync();
 
-#endregion
+	#endregion
 
-#region Internal Caching Methods
+	#region Internal Caching Methods
 
 	/// <summary>
 	///     Gets the internal cached threads.
@@ -1969,9 +1969,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			this.MessageCache?.Add(message);
 	}
 
-#endregion
+	#endregion
 
-#region Disposal
+	#region Disposal
 
 	/// <summary>
 	///     Disposes the client.
@@ -2039,5 +2039,5 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		GC.SuppressFinalize(this);
 	}
 
-#endregion
+	#endregion
 }

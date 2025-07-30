@@ -2221,13 +2221,13 @@ public sealed class DiscordApiClient
 	{
 		if (recurrenceRule is not null)
 		{
-	       var (isValid, errorMessage) = recurrenceRule.Validate();
-	       if (!isValid)
-		       throw new ValidationException(
-			       typeof(DiscordScheduledEventRecurrenceRule),
-			       "DiscordGuild.CreateScheduledEventAsync or DiscordGuild.CreateExternalScheduledEventAsync",
-			       errorMessage!
-		       );
+			var (isValid, errorMessage) = recurrenceRule.Validate();
+			if (!isValid)
+				throw new ValidationException(
+					typeof(DiscordScheduledEventRecurrenceRule),
+					"DiscordGuild.CreateScheduledEventAsync or DiscordGuild.CreateExternalScheduledEventAsync",
+					errorMessage!
+				);
 		}
 
 		var pld = new RestGuildScheduledEventCreatePayload
@@ -2309,13 +2309,13 @@ public sealed class DiscordApiClient
 	{
 		if (recurrenceRule.HasValue && recurrenceRule.Value is not null)
 		{
-	       var (isValid, errorMessage) = recurrenceRule.Value.Validate();
-	       if (!isValid)
-		       throw new ValidationException(
-			       typeof(DiscordScheduledEventRecurrenceRule),
-			       "DiscordScheduledEvent.ModifyAsync(Action<ScheduledEventEditModel> action)",
-			       errorMessage!
-		       );
+			var (isValid, errorMessage) = recurrenceRule.Value.Validate();
+			if (!isValid)
+				throw new ValidationException(
+					typeof(DiscordScheduledEventRecurrenceRule),
+					"DiscordScheduledEvent.ModifyAsync(Action<ScheduledEventEditModel> action)",
+					errorMessage!
+				);
 		}
 
 		var pld = new RestGuildScheduledEventModifyPayload
@@ -7162,19 +7162,19 @@ public sealed class DiscordApiClient
 					flags |= MessageFlags.IsComponentsV2;
 			}
 
-				   var data = builder is not null
-					   ? new DiscordInteractionApplicationCommandCallbackData
-					   {
-						   Content = builder.IsComponentsV2 ? null : builder.Content,
-						   Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
-						   Components = builder.Components,
-						   IsTts = builder.IsTts,
-						   Mentions = builder.Mentions?.Any() ?? false ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
-						   Flags = flags,
-						   Choices = null,
-						   DiscordPollRequest = builder?.Poll?.Build()
-					   }
-					   : null;
+			var data = builder is not null
+				? new DiscordInteractionApplicationCommandCallbackData
+				{
+					Content = builder.IsComponentsV2 ? null : builder.Content,
+					Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
+					Components = builder.Components,
+					IsTts = builder.IsTts,
+					Mentions = builder.Mentions?.Any() ?? false ? new(builder.Mentions, builder.Mentions.Count is not 0) : null,
+					Flags = flags,
+					Choices = null,
+					DiscordPollRequest = builder?.Poll?.Build()
+				}
+				: null;
 
 			pld = new()
 			{
@@ -7401,15 +7401,15 @@ public sealed class DiscordApiClient
 			flags |= MessageFlags.IsComponentsV2;
 
 		var values = new Dictionary<string, string>();
-		   var pld = new RestFollowupMessageCreatePayload
-		   {
-			   Content = builder.IsComponentsV2 ? null : builder.Content,
-			   Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
-			   Components = builder.Components,
-			   IsTts = builder.IsTts,
-			   Flags = flags,
-			   DiscordPollRequest = builder.Poll?.Build()
-		   };
+		var pld = new RestFollowupMessageCreatePayload
+		{
+			Content = builder.IsComponentsV2 ? null : builder.Content,
+			Embeds = builder.IsComponentsV2 ? null : builder.Embeds,
+			Components = builder.Components,
+			IsTts = builder.IsTts,
+			Flags = flags,
+			DiscordPollRequest = builder.Poll?.Build()
+		};
 
 		if (builder.Files is { Count: > 0 })
 		{

@@ -778,7 +778,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public static bool operator !=(DiscordGuild e1, DiscordGuild e2)
 		=> !(e1 == e2);
 
-#region Guild Methods
+	#region Guild Methods
 
 	/// <summary>
 	///     Gets this guilds onboarding configuration.
@@ -937,11 +937,11 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		var discoverySplashb64 = MediaTool.Base64FromStream(mdl.DiscoverySplash);
 		var homeHeaderb64 = MediaTool.Base64FromStream(mdl.HomeHeader);
 
-	       return await this.Discord.ApiClient.ModifyGuildAsync(this.Id, mdl.Name,
-		       mdl.VerificationLevel, mdl.DefaultMessageNotifications, mdl.MfaLevel, mdl.ExplicitContentFilter,
-		       afkChannelId, mdl.AfkTimeout, iconb64, splashb64,
-		       systemChannelId, mdl.SystemChannelFlags, publicUpdatesChannelId, rulesChannelId,
-		       mdl.Description, bannerb64, discoverySplashb64, homeHeaderb64, mdl.PreferredLocale, mdl.PremiumProgressBarEnabled, mdl.AuditLogReason).ConfigureAwait(false);
+		return await this.Discord.ApiClient.ModifyGuildAsync(this.Id, mdl.Name,
+			mdl.VerificationLevel, mdl.DefaultMessageNotifications, mdl.MfaLevel, mdl.ExplicitContentFilter,
+			afkChannelId, mdl.AfkTimeout, iconb64, splashb64,
+			systemChannelId, mdl.SystemChannelFlags, publicUpdatesChannelId, rulesChannelId,
+			mdl.Description, bannerb64, discoverySplashb64, homeHeaderb64, mdl.PreferredLocale, mdl.PremiumProgressBarEnabled, mdl.AuditLogReason).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -1450,7 +1450,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	)
 		=> await this.Discord.ApiClient.CreateAutomodRuleAsync(this.Id, name, eventType, triggerType, actions, triggerMetadata, enabled, exemptRoles, exemptChannels, reason).ConfigureAwait(false);
 
-#region Scheduled Events
+	#region Scheduled Events
 
 	/// <summary>
 	///     Creates a scheduled event.
@@ -1573,7 +1573,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public async Task<IReadOnlyDictionary<ulong, DiscordScheduledEvent>> GetScheduledEventsAsync(bool? withUserCount = null)
 		=> await this.Discord.ApiClient.ListGuildScheduledEventsAsync(this.Id, withUserCount).ConfigureAwait(false);
 
-#endregion
+	#endregion
 
 	/// <summary>
 	///     Creates a new text channel in this guild.
@@ -2817,5 +2817,5 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public async Task<DiscordGuildJoinRequest> ModifyJoinRequestsAsync(ulong joinRequestId, bool approve, string? rejectionReason)
 		=> await this.Discord.ApiClient.ModifyGuildJoinRequestsAsync(this.Id, joinRequestId, approve ? JoinRequestStatusType.Approved : JoinRequestStatusType.Rejected, rejectionReason);
 
-#endregion
+	#endregion
 }
