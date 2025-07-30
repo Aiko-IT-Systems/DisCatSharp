@@ -1476,63 +1476,86 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	internal async Task RunCommandAsync(BaseContext context, MethodInfo method, IEnumerable<object> args)
 	{
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Executing {cmd}", method.Name);
-		//Accounts for lifespans
-		var moduleLifespan = (method.DeclaringType.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null ? method.DeclaringType.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>()?.Lifespan : ApplicationCommandModuleLifespan.Transient) ?? ApplicationCommandModuleLifespan.Transient;
-		var classInstance = moduleLifespan switch
+		
+		try
 		{
-			ApplicationCommandModuleLifespan.Scoped =>
-				//Accounts for static methods and adds DI
-				method.IsStatic ? ActivatorUtilities.CreateInstance(Configuration.ServiceProvider.CreateScope().ServiceProvider, method.DeclaringType) : CreateInstance(method.DeclaringType, Configuration.ServiceProvider.CreateScope().ServiceProvider),
-			ApplicationCommandModuleLifespan.Transient =>
-				//Accounts for static methods and adds DI
-				method.IsStatic ? ActivatorUtilities.CreateInstance(Configuration.ServiceProvider, method.DeclaringType) : CreateInstance(method.DeclaringType, Configuration.ServiceProvider),
-			//If singleton, gets it from the singleton list
-			ApplicationCommandModuleLifespan.Singleton => s_singletonModules.First(x => ReferenceEquals(x.GetType(), method.DeclaringType)),
-			_ => throw new($"An unknown {nameof(ApplicationCommandModuleLifespanAttribute)} scope was specified on command {context.CommandName}")
-		};
+			//Accounts for lifespans
+			var moduleLifespan = (method.DeclaringType.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null ? method.DeclaringType.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>()?.Lifespan : ApplicationCommandModuleLifespan.Transient) ?? ApplicationCommandModuleLifespan.Transient;
+			
+			// Create service scope for scoped modules and store in context for disposal
+			IServiceProvider serviceProvider;
+			if (moduleLifespan == ApplicationCommandModuleLifespan.Scoped && Configuration?.ServiceProvider != null)
+			{
+				context.ServiceScope = Configuration.ServiceProvider.CreateScope();
+				serviceProvider = context.ServiceScope.ServiceProvider;
+			}
+			else
+			{
+				serviceProvider = Configuration?.ServiceProvider;
+			}
+			
+			var classInstance = moduleLifespan switch
+			{
+				ApplicationCommandModuleLifespan.Scoped =>
+					//Accounts for static methods and adds DI with scoped service provider
+					method.IsStatic ? ActivatorUtilities.CreateInstance(serviceProvider, method.DeclaringType) : CreateInstance(method.DeclaringType, serviceProvider),
+				ApplicationCommandModuleLifespan.Transient =>
+					//Accounts for static methods and adds DI
+					method.IsStatic ? ActivatorUtilities.CreateInstance(Configuration?.ServiceProvider, method.DeclaringType) : CreateInstance(method.DeclaringType, Configuration?.ServiceProvider),
+				//If singleton, gets it from the singleton list
+				ApplicationCommandModuleLifespan.Singleton => s_singletonModules.First(x => ReferenceEquals(x.GetType(), method.DeclaringType)),
+				_ => throw new($"An unknown {nameof(ApplicationCommandModuleLifespanAttribute)} scope was specified on command {context.CommandName}")
+			};
 
-		ApplicationCommandsModule module = null;
-		if (classInstance is ApplicationCommandsModule mod)
-			module = mod;
+			ApplicationCommandsModule module = null;
+			if (classInstance is ApplicationCommandsModule mod)
+				module = mod;
 
-		switch (context)
+			switch (context)
+			{
+				// Slash commands
+				case InteractionContext slashContext:
+				{
+					await RunPreexecutionChecksAsync(method, slashContext).ConfigureAwait(false);
+
+					var shouldExecute = await (module?.BeforeSlashExecutionAsync(slashContext) ?? Task.FromResult(true)).ConfigureAwait(false);
+
+					if (shouldExecute)
+					{
+						if (AutoDeferEnabled)
+							await context.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource).ConfigureAwait(false);
+						await ((Task)method.Invoke(classInstance, args.ToArray())).ConfigureAwait(false);
+
+						await (module?.AfterSlashExecutionAsync(slashContext) ?? Task.CompletedTask).ConfigureAwait(false);
+					}
+
+					break;
+				}
+				// Context menus
+				case ContextMenuContext contextMenuContext:
+				{
+					await RunPreexecutionChecksAsync(method, contextMenuContext).ConfigureAwait(false);
+
+					var shouldExecute = await (module?.BeforeContextMenuExecutionAsync(contextMenuContext) ?? Task.FromResult(true)).ConfigureAwait(false);
+
+					if (shouldExecute)
+					{
+						if (AutoDeferEnabled)
+							await context.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource).ConfigureAwait(false);
+						await ((Task)method.Invoke(classInstance, args.ToArray())).ConfigureAwait(false);
+
+						await (module?.AfterContextMenuExecutionAsync(contextMenuContext) ?? Task.CompletedTask).ConfigureAwait(false);
+					}
+
+					break;
+				}
+			}
+		}
+		finally
 		{
-			// Slash commands
-			case InteractionContext slashContext:
-			{
-				await RunPreexecutionChecksAsync(method, slashContext).ConfigureAwait(false);
-
-				var shouldExecute = await (module?.BeforeSlashExecutionAsync(slashContext) ?? Task.FromResult(true)).ConfigureAwait(false);
-
-				if (shouldExecute)
-				{
-					if (AutoDeferEnabled)
-						await context.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource).ConfigureAwait(false);
-					await ((Task)method.Invoke(classInstance, args.ToArray())).ConfigureAwait(false);
-
-					await (module?.AfterSlashExecutionAsync(slashContext) ?? Task.CompletedTask).ConfigureAwait(false);
-				}
-
-				break;
-			}
-			// Context menus
-			case ContextMenuContext contextMenuContext:
-			{
-				await RunPreexecutionChecksAsync(method, contextMenuContext).ConfigureAwait(false);
-
-				var shouldExecute = await (module?.BeforeContextMenuExecutionAsync(contextMenuContext) ?? Task.FromResult(true)).ConfigureAwait(false);
-
-				if (shouldExecute)
-				{
-					if (AutoDeferEnabled)
-						await context.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource).ConfigureAwait(false);
-					await ((Task)method.Invoke(classInstance, args.ToArray())).ConfigureAwait(false);
-
-					await (module?.AfterContextMenuExecutionAsync(contextMenuContext) ?? Task.CompletedTask).ConfigureAwait(false);
-				}
-
-				break;
-			}
+			// Ensure service scope is properly disposed
+			context.ServiceScope?.Dispose();
+			context.ServiceScope = null;
 		}
 	}
 
