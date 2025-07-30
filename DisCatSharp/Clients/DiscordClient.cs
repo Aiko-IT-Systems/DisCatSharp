@@ -958,47 +958,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	///     Creates a guild. This requires the bot to be in less than 10 guilds total.
-	/// </summary>
-	/// <param name="name">Name of the guild.</param>
-	/// <param name="region">Voice region of the guild.</param>
-	/// <param name="icon">Stream containing the icon for the guild.</param>
-	/// <param name="verificationLevel">Verification level for the guild.</param>
-	/// <param name="defaultMessageNotifications">Default message notification settings for the guild.</param>
-	/// <param name="systemChannelFlags">System channel flags for the guild.</param>
-	/// <returns>The created guild.</returns>
-	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordGuild> CreateGuildAsync(
-		string name,
-		string region = null,
-		Optional<Stream> icon = default,
-		VerificationLevel? verificationLevel = null,
-		DefaultMessageNotifications? defaultMessageNotifications = null,
-		SystemChannelFlags? systemChannelFlags = null
-	)
-	{
-		var iconb64 = MediaTool.Base64FromStream(icon);
-		return this.ApiClient.CreateGuildAsync(name, region, iconb64, verificationLevel, defaultMessageNotifications, systemChannelFlags);
-	}
-
-	/// <summary>
-	///     Creates a guild from a template. This requires the bot to be in less than 10 guilds total.
-	/// </summary>
-	/// <param name="code">The template code.</param>
-	/// <param name="name">Name of the guild.</param>
-	/// <param name="icon">Stream containing the icon for the guild.</param>
-	/// <returns>The created guild.</returns>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordGuild> CreateGuildFromTemplateAsync(string code, string name, Optional<Stream> icon = default)
-	{
-		var iconb64 = MediaTool.Base64FromStream(icon);
-		return this.ApiClient.CreateGuildFromTemplateAsync(code, name, iconb64);
-	}
-
-	/// <summary>
 	///     Gets a guild.
 	///     <para>Setting <paramref name="withCounts" /> to true will make a REST request.</para>
 	/// </summary>

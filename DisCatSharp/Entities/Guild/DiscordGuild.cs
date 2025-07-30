@@ -879,13 +879,6 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	)
 		=> this.Discord.ApiClient.AddGuildMemberAsync(this.Id, user.Id, accessToken, nickname, roles, muted, deaf);
 
-	/// <summary>
-	///     Deletes this guild. Requires the caller to be the owner of the guild.
-	/// </summary>
-	/// <exception cref="UnauthorizedException">Thrown when the client is not the owner of the guild.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteAsync()
-		=> this.Discord.ApiClient.DeleteGuildAsync(this.Id);
 
 	/// <summary>
 	///     Enables the mfa requirement for this guild.
@@ -944,11 +937,11 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		var discoverySplashb64 = MediaTool.Base64FromStream(mdl.DiscoverySplash);
 		var homeHeaderb64 = MediaTool.Base64FromStream(mdl.HomeHeader);
 
-		return await this.Discord.ApiClient.ModifyGuildAsync(this.Id, mdl.Name,
-			mdl.VerificationLevel, mdl.DefaultMessageNotifications, mdl.MfaLevel, mdl.ExplicitContentFilter,
-			afkChannelId, mdl.AfkTimeout, iconb64, mdl.Owner.Map(e => e.Id), splashb64,
-			systemChannelId, mdl.SystemChannelFlags, publicUpdatesChannelId, rulesChannelId,
-			mdl.Description, bannerb64, discoverySplashb64, homeHeaderb64, mdl.PreferredLocale, mdl.PremiumProgressBarEnabled, mdl.AuditLogReason).ConfigureAwait(false);
+	       return await this.Discord.ApiClient.ModifyGuildAsync(this.Id, mdl.Name,
+		       mdl.VerificationLevel, mdl.DefaultMessageNotifications, mdl.MfaLevel, mdl.ExplicitContentFilter,
+		       afkChannelId, mdl.AfkTimeout, iconb64, splashb64,
+		       systemChannelId, mdl.SystemChannelFlags, publicUpdatesChannelId, rulesChannelId,
+		       mdl.Description, bannerb64, discoverySplashb64, homeHeaderb64, mdl.PreferredLocale, mdl.PremiumProgressBarEnabled, mdl.AuditLogReason).ConfigureAwait(false);
 	}
 
 	/// <summary>

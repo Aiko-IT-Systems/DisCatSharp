@@ -518,104 +518,6 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	///     Creates the guild async.
-	/// </summary>
-	/// <param name="name">The name.</param>
-	/// <param name="regionId">The region_id.</param>
-	/// <param name="iconb64">The iconb64.</param>
-	/// <param name="verificationLevel">The verification_level.</param>
-	/// <param name="defaultMessageNotifications">The default_message_notifications.</param>
-	/// <param name="systemChannelFlags">The system_channel_flags.</param>
-	internal async Task<DiscordGuild> CreateGuildAsync(
-		string name,
-		string regionId,
-		Optional<string> iconb64,
-		VerificationLevel? verificationLevel,
-		DefaultMessageNotifications? defaultMessageNotifications,
-		SystemChannelFlags? systemChannelFlags
-	)
-	{
-		var pld = new RestGuildCreatePayload
-		{
-			Name = name,
-			RegionId = regionId,
-			DefaultMessageNotifications = defaultMessageNotifications,
-			VerificationLevel = verificationLevel,
-			IconBase64 = iconb64,
-			SystemChannelFlags = systemChannelFlags
-		};
-
-		var route = $"{Endpoints.GUILDS}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
-		{ }, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
-
-		var json = JObject.Parse(res.Response);
-		var rawMembers = (JArray)json["members"];
-		var guild = json.ToDiscordObject<DiscordGuild>();
-
-		if (this.Discord is DiscordClient dc)
-			await dc.OnGuildCreateEventAsync(guild, rawMembers, null).ConfigureAwait(false);
-		return guild;
-	}
-
-	/// <summary>
-	///     Creates the guild from template async.
-	/// </summary>
-	/// <param name="templateCode">The template_code.</param>
-	/// <param name="name">The name.</param>
-	/// <param name="iconb64">The iconb64.</param>
-	internal async Task<DiscordGuild> CreateGuildFromTemplateAsync(string templateCode, string name, Optional<string> iconb64)
-	{
-		var pld = new RestGuildCreateFromTemplatePayload
-		{
-			Name = name,
-			IconBase64 = iconb64
-		};
-
-		var route = $"{Endpoints.GUILDS}{Endpoints.TEMPLATES}/:template_code";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new
-		{
-			template_code = templateCode
-		}, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
-
-		var json = JObject.Parse(res.Response);
-		var rawMembers = (JArray)json["members"];
-		var guild = json.ToDiscordObject<DiscordGuild>();
-
-		if (this.Discord is DiscordClient dc)
-			await dc.OnGuildCreateEventAsync(guild, rawMembers, null).ConfigureAwait(false);
-		return guild;
-	}
-
-	/// <summary>
-	///     Deletes the guild async.
-	/// </summary>
-	/// <param name="guildId">The guild_id.</param>
-	internal async Task DeleteGuildAsync(ulong guildId)
-	{
-		var route = $"{Endpoints.GUILDS}/:guild_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
-		{
-			guild_id = guildId
-		}, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route).ConfigureAwait(false);
-
-		if (this.Discord is DiscordClient dc)
-		{
-			var gld = dc.GuildsInternal[guildId];
-			await dc.OnGuildDeleteEventAsync(gld).ConfigureAwait(false);
-		}
-	}
-
-	/// <summary>
 	///     Modifies the guild.
 	/// </summary>
 	/// <param name="guildId">The guild id.</param>
@@ -627,7 +529,6 @@ public sealed class DiscordApiClient
 	/// <param name="afkChannelId">The afk channel id.</param>
 	/// <param name="afkTimeout">The afk timeout.</param>
 	/// <param name="iconb64">The iconb64.</param>
-	/// <param name="ownerId">The owner id.</param>
 	/// <param name="splashb64">The splashb64.</param>
 	/// <param name="systemChannelId">The system channel id.</param>
 	/// <param name="systemChannelFlags">The system channel flags.</param>
@@ -650,7 +551,6 @@ public sealed class DiscordApiClient
 		Optional<ulong?> afkChannelId,
 		Optional<int> afkTimeout,
 		Optional<string> iconb64,
-		Optional<ulong> ownerId,
 		Optional<string> splashb64,
 		Optional<ulong?> systemChannelId,
 		Optional<SystemChannelFlags> systemChannelFlags,
@@ -678,7 +578,6 @@ public sealed class DiscordApiClient
 			SplashBase64 = splashb64,
 			BannerBase64 = bannerb64,
 			DiscoverySplashBase64 = discoverySplashb64,
-			OwnerId = ownerId,
 			SystemChannelId = systemChannelId,
 			SystemChannelFlags = systemChannelFlags,
 			RulesChannelId = rulesChannelId,
@@ -2322,13 +2221,13 @@ public sealed class DiscordApiClient
 	{
 		if (recurrenceRule is not null)
 		{
-			var (IsValid, ErrorMessage) = recurrenceRule.Validate();
-			if (!IsValid)
-				throw new ValidationException(
-					typeof(DiscordScheduledEventRecurrenceRule),
-					"DiscordGuild.CreateScheduledEventAsync or DiscordGuild.CreateExternalScheduledEventAsync",
-					ErrorMessage!
-				);
+	       var (isValid, errorMessage) = recurrenceRule.Validate();
+	       if (!isValid)
+		       throw new ValidationException(
+			       typeof(DiscordScheduledEventRecurrenceRule),
+			       "DiscordGuild.CreateScheduledEventAsync or DiscordGuild.CreateExternalScheduledEventAsync",
+			       errorMessage!
+		       );
 		}
 
 		var pld = new RestGuildScheduledEventCreatePayload
@@ -2410,13 +2309,13 @@ public sealed class DiscordApiClient
 	{
 		if (recurrenceRule.HasValue && recurrenceRule.Value is not null)
 		{
-			var (IsValid, ErrorMessage) = recurrenceRule.Value.Validate();
-			if (!IsValid)
-				throw new ValidationException(
-					typeof(DiscordScheduledEventRecurrenceRule),
-					"DiscordScheduledEvent.ModifyAsync(Action<ScheduledEventEditModel> action)",
-					ErrorMessage!
-				);
+	       var (isValid, errorMessage) = recurrenceRule.Value.Validate();
+	       if (!isValid)
+		       throw new ValidationException(
+			       typeof(DiscordScheduledEventRecurrenceRule),
+			       "DiscordScheduledEvent.ModifyAsync(Action<ScheduledEventEditModel> action)",
+			       errorMessage!
+		       );
 		}
 
 		var pld = new RestGuildScheduledEventModifyPayload
