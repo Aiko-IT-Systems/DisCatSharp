@@ -28,6 +28,8 @@ applyTo: '**'
   - Prefer initializer syntax for object construction.
   - Use XML doc comments for all public APIs.
   - Avoid breaking changes; use `[Deprecated]` attribute for deprecations.
+  - We use file scoped namespaces for all files.
+  - Namespaces does not neccessarily match folder structure, but should be consistent with the project structure.
 - Async methods should use `async`/`await` unless returning a single task directly.
 - All code changes must build and pass CI before merge.
 
