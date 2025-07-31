@@ -34,5 +34,6 @@
 		"files.trimFinalNewlines": true,
 		"cSpell.language": "en,en-US,de,de-DE",
 		"dotnet.defaultSolution": "DisCatSharp.slnx",
+		"powershell.cwd": "DisCatSharp",
 	}
 }
