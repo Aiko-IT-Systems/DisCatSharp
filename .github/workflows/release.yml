@@ -105,7 +105,17 @@ jobs:
               working-directory: ./dcs-artifacts
             - name: Publish to NuGet
               shell: pwsh
-              run: dotnet nuget push --source https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} * --skip-duplicate
+              run: |
+                if (Test-Path *.nupkg) {
+                  dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} --skip-duplicate
+                }
+              working-directory: ./dcs-artifacts
+            - name: Publish Sources to NuGet
+              shell: pwsh
+              run: |
+                if (Test-Path *.snupkg) {
+                  dotnet nuget push *.snupkg --source https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} --skip-duplicate
+                }
               working-directory: ./dcs-artifacts
             - name: Publish to GitHub Packages
               shell: pwsh
