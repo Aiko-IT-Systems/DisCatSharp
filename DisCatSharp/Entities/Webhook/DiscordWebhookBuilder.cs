@@ -485,9 +485,12 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	public void ClearPoll()
 		=> this.Poll = null;
 
-	/// <inheritdoc />
-	public override void ClearComponents()
-		=> base.ClearComponents();
+	/// <inheritdoc cref="DisCatSharpBuilder.ClearComponents"/>
+	public new DiscordWebhookBuilder ClearComponents()
+	{
+		base.ClearComponents();
+		return this;
+	}
 
 	/// <inheritdoc />
 	public override void Clear()

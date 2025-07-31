@@ -207,6 +207,13 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 		return this;
 	}
 
+	/// <inheritdoc cref="DisCatSharpBuilder.ClearComponents"/>
+	public new DiscordInteractionResponseBuilder ClearComponents()
+	{
+		base.ClearComponents();
+		return this;
+	}
+
 	/// <summary>
 	///     Sets the interaction response to suppress embeds.
 	/// </summary>
