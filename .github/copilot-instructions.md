@@ -62,6 +62,24 @@ applyTo: '**'
 - If you are generating or updating tests specifically to help diagnose, reproduce, or fix bugs (e.g., Copilot-generated regression or scenario tests), place them in `/DisCatSharp.Tests/DisCatSharp.CopilotTests/` and update its `.csproj` file.
 - For all other standard or feature tests, use the appropriate subfolder in `/DisCatSharp.Tests/` according to the feature or package being tested.
 
+## Release Process
+
+We use the workflow `release.yml` (located in `.github/workflows/release.yml`) to automate releases.
+To release a package, this payload is required:
+```json
+{
+  "owner": "Aiko-IT-Systems",
+  "repo": "DisCatSharp",
+  "workflow_id": "release.yml",
+  "ref": "BRANCH_NAME",
+  "inputs": {
+    "version_suffix": "TARGET_VERSION_SUFFIX",
+    "release_as_prerelease": true,
+    "packages_to_release": "DisCatSharp"
+  }
+}
+```
+
 ---
 
 For more, see `/CONTRIBUTING.md`, `/README.md`, and `/DisCatSharp.Docs`.
