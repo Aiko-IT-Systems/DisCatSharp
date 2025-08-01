@@ -414,6 +414,13 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	public DiscordInteractionResponseBuilder AddAutoCompleteChoices(params DiscordApplicationCommandAutocompleteChoice[] choices)
 		=> this.AddAutoCompleteChoices((IEnumerable<DiscordApplicationCommandAutocompleteChoice>)choices);
 
+	/// <inheritdoc cref="DisCatSharpBuilder.ClearComponents"/>
+	public new DiscordInteractionResponseBuilder ClearComponents()
+	{
+		base.ClearComponents();
+		return this;
+	}
+
 	/// <inheritdoc />
 	public override void Clear()
 	{
