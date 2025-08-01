@@ -479,12 +479,6 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, ulong messageId, ulong threadId)
 		=> await webhook.EditMessageAsync(messageId, this, threadId.ToString()).ConfigureAwait(false);
 
-	/// <summary>
-	///     Clears the poll from this builder.
-	/// </summary>
-	public void ClearPoll()
-		=> this.Poll = null;
-
 	/// <inheritdoc cref="DisCatSharpBuilder.ClearComponents"/>
 	public new DiscordWebhookBuilder ClearComponents()
 	{

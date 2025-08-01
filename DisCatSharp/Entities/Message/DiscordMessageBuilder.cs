@@ -485,15 +485,12 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	public Task<DiscordMessage> ModifyAsync(DiscordMessage msg)
 		=> msg.ModifyAsync(this);
 
-	/// <summary>
-	///     Clears the poll from this builder.
-	/// </summary>
-	public void ClearPoll()
-		=> this.Poll = null;
-
-	/// <inheritdoc/>
-	public override void ClearComponents()
-		=> base.ClearComponents();
+	/// <inheritdoc cref="DisCatSharpBuilder.ClearComponents"/>
+	public new DiscordMessageBuilder ClearComponents()
+	{
+		base.ClearComponents();
+		return this;
+	}
 
 	/// <summary>
 	///     Allows for clearing the Message Builder so that it can be used again to send a new message.

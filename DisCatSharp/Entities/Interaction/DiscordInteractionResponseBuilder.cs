@@ -207,13 +207,6 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 		return this;
 	}
 
-	/// <inheritdoc cref="DisCatSharpBuilder.ClearComponents"/>
-	public new DiscordInteractionResponseBuilder ClearComponents()
-	{
-		base.ClearComponents();
-		return this;
-	}
-
 	/// <summary>
 	///     Sets the interaction response to suppress embeds.
 	/// </summary>
@@ -420,12 +413,6 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 	/// <returns>The current builder to chain calls with.</returns>
 	public DiscordInteractionResponseBuilder AddAutoCompleteChoices(params DiscordApplicationCommandAutocompleteChoice[] choices)
 		=> this.AddAutoCompleteChoices((IEnumerable<DiscordApplicationCommandAutocompleteChoice>)choices);
-
-	/// <summary>
-	///     Clears the poll from this builder.
-	/// </summary>
-	public void ClearPoll()
-		=> this.Poll = null;
 
 	/// <inheritdoc />
 	public override void Clear()

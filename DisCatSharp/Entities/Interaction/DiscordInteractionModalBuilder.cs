@@ -159,12 +159,6 @@ public sealed class DiscordInteractionModalBuilder
 	}
 
 	/// <summary>
-	///     Clears all message components on this builder.
-	/// </summary>
-	public void ClearComponents()
-		=> this.ComponentsInternal?.Clear();
-
-	/// <summary>
 	///     Allows for clearing the Interaction Response Builder so that it can be used again to send a new response.
 	/// </summary>
 	public void Clear()
