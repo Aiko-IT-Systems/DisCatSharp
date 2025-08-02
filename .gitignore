@@ -131,3 +131,6 @@ DisCatSharp.Docs/obj/.cache/build/
 
 # Ignore Copilot catgirl instructions
 .github/instructions/lala.instructions.md
+
+# Copilot
+copilot-resources/
