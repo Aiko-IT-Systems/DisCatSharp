@@ -661,6 +661,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	{
 		if (modifyMode == ModifyMode.Replace)
 			builder.DoConditionalReplace();
+		builder.MentionsInternal ??= this.GetMentions();
 		if (builder.KeepAttachmentsInternal.GetValueOrDefault())
 				builder.ModifyAttachments(this.Attachments);
 		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder).ConfigureAwait(false);
@@ -681,6 +682,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		if (modifyMode == ModifyMode.Replace)
 			builder.DoReplace();
 		action(builder);
+		builder.MentionsInternal ??= this.GetMentions();
 		if (builder.KeepAttachmentsInternal.GetValueOrDefault())
 			builder.ModifyAttachments(this.Attachments);
 		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder, builder.KeepAttachmentsInternal.GetValueOrDefault() ? this.Attachments : null).ConfigureAwait(false);
