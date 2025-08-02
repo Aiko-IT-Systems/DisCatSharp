@@ -271,14 +271,13 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// <returns>Create <see cref="DiscordEmoji" /> object.</returns>
 	public static DiscordEmoji FromApplicationEmote(BaseDiscordClient client, ulong id)
 	{
-		if (client == null)
-			throw new ArgumentNullException(nameof(client), "Client cannot be null.");
-
-		if (client.Emojis.TryGetValue(id, out var found))
-			return found;
-
-		throw new KeyNotFoundException("Given emote was not found.");
+		return client == null
+			? throw new ArgumentNullException(nameof(client), "Client cannot be null.")
+			: client.Emojis.TryGetValue(id, out var found)
+				? (DiscordEmoji)found
+				: throw new KeyNotFoundException("Given emote was not found.");
 	}
+
 
 	/// <summary>
 	///     Attempts to get an emoji object from an guild emote.
