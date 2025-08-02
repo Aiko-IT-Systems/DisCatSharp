@@ -85,11 +85,13 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	public string UnicodeEmoji
 		=> this.Id != 0
 			? throw new InvalidOperationException("Emoji is not a unicode emoji")
-			: s_unicodeEmojis.TryGetValue(this.Name, out var value)
-				? value
-				: s_discordNameLookup.ContainsKey(this.Name)
-					? this.Name
-					: throw new InvalidOperationException("Emoji is not a unicode emoji");
+			: s_aliasNameToCanonical.TryGetValue(this.Name, out var canonicalName)
+				? s_unicodeEmojis[canonicalName]
+				: s_unicodeEmojis.TryGetValue(this.Name, out var value)
+					? value
+					: s_discordNameLookup.ContainsKey(this.Name)
+						? this.Name
+						: throw new InvalidOperationException("Emoji is not a unicode emoji");
 
 	/// <summary>
 	///     Checks whether this <see cref="DiscordEmoji" /> is equal to another <see cref="DiscordEmoji" />.
@@ -217,9 +219,6 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 	/// <returns>Whether the operation was successful.</returns>
 	public static bool TryFromUnicode(BaseDiscordClient client, string unicodeEntity, out DiscordEmoji emoji)
 	{
-		// this is a round-trip operation because of FE0F inconsistencies.
-		// through this, the inconsistency is normalized.
-
 		emoji = null;
 		if (!s_discordNameLookup.TryGetValue(unicodeEntity, out var discordName))
 			return false;
@@ -318,6 +317,10 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 		if (string.IsNullOrWhiteSpace(name))
 			throw new ArgumentNullException(nameof(name), "Name cannot be empty or null.");
 
+
+		if (s_aliasNameToCanonical.TryGetValue(name, out var canonicalName))
+			name = canonicalName;
+
 		if (s_unicodeEmojis.TryGetValue(name, out var unicodeEntity))
 			return new()
 			{
@@ -377,6 +380,9 @@ public partial class DiscordEmoji : SnowflakeObject, IEquatable<DiscordEmoji>
 
 		if (string.IsNullOrWhiteSpace(name))
 			throw new ArgumentNullException(nameof(name), "Name cannot be empty or null.");
+
+		if (s_aliasNameToCanonical.TryGetValue(name, out var canonicalName))
+			name = canonicalName;
 
 		if (s_unicodeEmojis.TryGetValue(name, out var unicodeEntity))
 		{
