@@ -59,7 +59,7 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 	/// <summary>
 	///     Gets the poll for this message.
 	/// </summary>
-	public DiscordPollBuilder? Poll { get; private set; }
+	public DiscordPollBuilder? Poll { get; internal set; }
 
 	/// <summary>
 	///     Whether to send components with this webhook requests.
@@ -495,6 +495,20 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 		this.Poll = null;
 		base.Clear();
 	}
+
+	/// <inheritdoc />
+    internal override void DoReplace()
+    {
+        this.Poll = null;
+        base.DoReplace();
+    }
+
+	/// <inheritdoc />
+    internal override void DoConditionalReplace()
+    {
+        this.Poll ??= null;
+        base.DoConditionalReplace();
+    }
 
 	/// <summary>
 	///     Does the validation before we send the Create/Modify request.

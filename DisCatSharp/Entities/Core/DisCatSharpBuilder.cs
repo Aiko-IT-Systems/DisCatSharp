@@ -221,6 +221,40 @@ public class DisCatSharpBuilder
 	}
 
 	/// <summary>
+	///     Modifies the builder to replace all fields.
+	///     <para>Used when <see cref="Enums.Core.ModifyMode"/> is <see cref="Enums.Core.ModifyMode.Replace"/>.</para>
+	///     <para>Used when <see cref="Action{T}"/> is called on this builder.</para>
+	/// </summary>
+	internal virtual void DoReplace()
+	{
+		this.Content = null;
+		this.ClearComponents();
+		this.EmbedsInternal = [];
+		this.HasEmbeds = true;
+		this.AttachmentsInternal = [];
+		this.FilesInternal = [];
+		this.MentionsInternal = [];
+		this.FlagsChanged = true;
+	}
+
+	/// <summary>
+	/// 	Modifies the builder to replace all fields that are not null or empty.
+	/// 	<para>Used when <see cref="Enums.Core.ModifyMode"/> is <see cref="Enums.Core.ModifyMode.Replace"/>.</para>
+	/// </summary>
+	internal virtual void DoConditionalReplace()
+	{
+		this.Content ??= null;
+		this.ComponentsInternal ??= [];
+		this.HasComponents = true;
+		this.EmbedsInternal ??= [];
+		this.HasEmbeds = true;
+		this.AttachmentsInternal ??= [];
+		this.FilesInternal ??= [];
+		this.MentionsInternal ??= [];
+		this.FlagsChanged = true;
+	}
+
+	/// <summary>
 	///     Validates the builder.
 	/// </summary>
 	internal virtual void Validate()

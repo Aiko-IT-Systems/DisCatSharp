@@ -21,27 +21,27 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	/// <summary>
 	///     Gets the Sticker to be sent.
 	/// </summary>
-	public List<ulong>? StickerIds { get; private set; } = null;
+	public List<ulong>? StickerIds { get; internal set; } = null;
 
 	/// <summary>
 	///     Gets or Sets if the message should be TTS.
 	/// </summary>
-	public bool IsTts { get; private set; }
+	public bool IsTts { get; internal set; }
 
 	/// <summary>
 	///     Gets or Ssts if the message should be sent silent.
 	/// </summary>
-	public bool Silent { get; private set; }
+	public bool Silent { get; internal set; }
 
 	/// <summary>
 	///     Gets the Reply Message ID.
 	/// </summary>
-	public ulong? ReplyId { get; private set; }
+	public ulong? ReplyId { get; internal set; }
 
 	/// <summary>
 	///     Gets if the Reply should mention the user.
 	/// </summary>
-	public bool MentionOnReply { get; private set; }
+	public bool MentionOnReply { get; internal set; }
 
 	/// <summary>
 	///     Gets if the Reply will error if the Reply Message ID does not reference a valid message.
@@ -63,7 +63,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	/// <summary>
 	///     Gets the poll for this message.
 	/// </summary>
-	public DiscordPollBuilder? Poll { get; private set; }
+	public DiscordPollBuilder? Poll { get; internal set; }
 
 	/// <summary>
 	///     Sets the nonce for the message.
@@ -253,8 +253,6 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 	public DiscordMessageBuilder SuppressEmbeds()
 	{
 		this.EmbedsSuppressed = true;
-		this.EmbedsInternal?.Clear();
-		this.HasEmbeds = true;
 		return this;
 	}
 
@@ -492,9 +490,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 		return this;
 	}
 
-	/// <summary>
-	///     Allows for clearing the Message Builder so that it can be used again to send a new message.
-	/// </summary>
+	/// <inheritdoc />
 	public override void Clear()
 	{
 		this.IsTts = false;
@@ -508,6 +504,24 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 		this.Poll = null;
 		base.Clear();
 	}
+
+	/// <inheritdoc />
+    internal override void DoReplace()
+    {
+        this.StickerIds = [];
+        this.Nonce = null;
+        this.Poll = null;
+        base.DoReplace();
+    }
+
+	/// <inheritdoc />
+    internal override void DoConditionalReplace()
+    {
+        this.StickerIds ??= [];
+        this.Nonce ??= null;
+        this.Poll ??= null;
+        base.DoConditionalReplace();
+    }
 
 	/// <summary>
 	///     Does the validation before we send the Create/Modify request.

@@ -430,4 +430,18 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 		this.Poll = null;
 		base.Clear();
 	}
+
+	/// <inheritdoc />
+    internal override void DoReplace()
+    {
+        this.Poll = null;
+        base.DoReplace();
+    }
+
+	/// <inheritdoc />
+    internal override void DoConditionalReplace()
+    {
+        this.Poll ??= null;
+        base.DoConditionalReplace();
+    }
 }

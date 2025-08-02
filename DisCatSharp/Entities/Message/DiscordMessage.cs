@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
+using DisCatSharp.Enums.Core;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
 
@@ -651,17 +652,38 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	///     Edits the message.
 	/// </summary>
 	/// <param name="builder">The builder of the message to edit.</param>
+	/// <param name="modifyMode">The mode of modification.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> ModifyAsync(DiscordMessageBuilder builder)
+	public async Task<DiscordMessage> ModifyAsync(DiscordMessageBuilder builder, ModifyMode modifyMode = ModifyMode.Update)
 	{
+		if (modifyMode == ModifyMode.Replace)
+			builder.DoConditionalReplace();
+		if (builder.KeepAttachmentsInternal.GetValueOrDefault())
+				builder.ModifyAttachments(this.Attachments);
+		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	///     Edits the message.
+	/// </summary>
+	/// <param name="action">The builder of the message to edit.</param>
+	/// <param name="modifyMode">The mode of modification.</param>
+	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordMessage> ModifyAsync(Action<DiscordMessageBuilder> action, ModifyMode modifyMode = ModifyMode.Update)
+	{
+		var builder = new DiscordMessageBuilder();
+		if (modifyMode == ModifyMode.Replace)
+			builder.DoReplace();
+		action(builder);
 		if (builder.KeepAttachmentsInternal.GetValueOrDefault())
 			builder.ModifyAttachments(this.Attachments);
-
-		builder.Validate(true);
-		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder).ConfigureAwait(false);
+		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder, builder.KeepAttachmentsInternal.GetValueOrDefault() ? this.Attachments : null).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -736,23 +758,6 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordMessage> SuppressEmbedsAsync()
 		=> this.ModifyAsync(x => x.SuppressEmbeds());
-
-	/// <summary>
-	///     Edits the message.
-	/// </summary>
-	/// <param name="action">The builder of the message to edit.</param>
-	/// <exception cref="UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
-	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> ModifyAsync(Action<DiscordMessageBuilder> action)
-	{
-		var builder = new DiscordMessageBuilder();
-		action(builder);
-		if (builder.KeepAttachmentsInternal.GetValueOrDefault())
-			builder.ModifyAttachments(this.Attachments);
-		return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder, builder.KeepAttachmentsInternal.GetValueOrDefault() ? this.Attachments : null).ConfigureAwait(false);
-	}
 
 	/// <summary>
 	///     Deletes the message.
