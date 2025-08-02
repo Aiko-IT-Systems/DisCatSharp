@@ -133,12 +133,13 @@ public class BaseContext : DisCatSharpCommandContext
 	/// </summary>
 	/// <param name="type">The type of the response.</param>
 	/// <param name="builder">The data to be sent, if any.</param>
+	/// <param name="modifyMode">The modify mode. Only useful for <see cref="InteractionResponseType.UpdateMessage"/>.</param>
 	/// <returns>
 	///     The created <see cref="DiscordMessage" />, or <see langword="null" /> if <paramref name="type" /> creates no
 	///     content.
 	/// </returns>
-	public async Task<DiscordInteractionCallbackResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null)
-		=> await this.Interaction.CreateResponseAsync(type, builder);
+	public async Task<DiscordInteractionCallbackResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null, ModifyMode modifyMode = ModifyMode.Update)
+		=> await this.Interaction.CreateResponseAsync(type, builder, modifyMode);
 
 	/// <summary>
 	///     Creates a modal response to this interaction.
@@ -161,9 +162,10 @@ public class BaseContext : DisCatSharpCommandContext
 	///     Edits the interaction response.
 	/// </summary>
 	/// <param name="builder">The data to edit the response with.</param>
+	/// <param name="modifyMode">The modify mode.</param>
 	/// <returns></returns>
-	public Task<DiscordMessage> EditResponseAsync(DiscordWebhookBuilder builder)
-		=> this.Interaction.EditOriginalResponseAsync(builder);
+	public Task<DiscordMessage> EditResponseAsync(DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update)
+		=> this.Interaction.EditOriginalResponseAsync(builder, modifyMode);
 
 	/// <summary>
 	///     Edits the interaction response.
@@ -201,9 +203,10 @@ public class BaseContext : DisCatSharpCommandContext
 	/// </summary>
 	/// <param name="followupMessageId">The id of the followup message to edit.</param>
 	/// <param name="builder">The webhook builder.</param>
+	/// <param name="modifyMode">The modify mode.</param>
 	/// <returns>The created message.</returns>
-	public Task<DiscordMessage> EditFollowupAsync(ulong followupMessageId, DiscordWebhookBuilder builder)
-		=> this.Interaction.EditFollowupMessageAsync(followupMessageId, builder);
+	public Task<DiscordMessage> EditFollowupAsync(ulong followupMessageId, DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update)
+		=> this.Interaction.EditFollowupMessageAsync(followupMessageId, builder, modifyMode);
 
 	/// <summary>
 	///     Edits a followup message.
