@@ -1,0 +1,43 @@
+name: "Auto-Generate Emoji Mappings"
+
+on:
+  push:
+    paths:
+      - 'DisCatSharp.Tools/emojis.json'
+
+jobs:
+  emoji-autogen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4.3.1
+        with:
+          dotnet-version: 10.0.100-preview.1.25120.13
+
+      - name: Run emoji mapping generator
+        shell: pwsh
+        run: |
+          cd DisCatSharp.Tools
+          ./gen-emoji-mappings.ps1
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push if changed
+        run: |
+          git add DisCatSharp/Entities/Emoji/DiscordEmoji.Mapping.cs DisCatSharp/Entities/Emoji/DiscordUnicodeEmoji.cs
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "chore(emoji): auto-update emoji mappings from emojis.json [skip ci]"
+          git push

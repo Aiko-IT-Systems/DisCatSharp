@@ -44,10 +44,10 @@ function Restore-Environment()
     Remove-Item ./NuGet.config
 }
 
-# Prepares the environment
-function Prepare-Environment([string] $target_dir_path)
+# Initializes the environment
+function Initialize-Environment([string] $target_dir_path)
 {
-    # Prepare the environment
+    # Initialize the environment
     Copy-Item ./.nuget/NuGet.config ./
 
     # Check if the target directory exists
@@ -59,7 +59,7 @@ function Prepare-Environment([string] $target_dir_path)
     }
 
     # Create target directory
-    $dir = New-Item -type directory "$target_dir_path"
+    New-Item -type directory "$target_dir_path"
 }
 
 # Builds everything
@@ -153,8 +153,8 @@ elseif ($VersionSuffix -and (-not $BuildNumber -or $BuildNumber -lt 0))
 	$BuildNumber = $null
 }
 
-# Prepare environment
-Prepare-Environment "$ArtifactLocation"
+# Initialize environment
+Initialize-Environment "$ArtifactLocation"
 
 # Build everything
 $BuildResult = Build-All "$ArtifactLocation" "$VersionSuffix" "$BuildNumber" "$Configuration"
