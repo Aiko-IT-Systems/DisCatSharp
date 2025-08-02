@@ -198,8 +198,8 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordMessage> ExecuteAsync(DiscordWebhookBuilder builder, string threadId = null)
-		=> (this.Discord?.ApiClient ?? this.ApiClient).ExecuteWebhookAsync(this.Id, this.Token, builder, threadId);
+	public Task<DiscordMessage> ExecuteAsync(DiscordWebhookBuilder builder, ulong? threadId = null)
+		=> (this.Discord?.ApiClient ?? this.ApiClient).ExecuteWebhookAsync(this.Id, this.Token, builder, threadId?.ToString());
 
 	/// <summary>
 	///     Executes this webhook in Slack compatibility mode.
@@ -209,8 +209,8 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task ExecuteSlackAsync(string json, string threadId = null)
-		=> (this.Discord?.ApiClient ?? this.ApiClient).ExecuteWebhookSlackAsync(this.Id, this.Token, json, threadId);
+	public Task ExecuteSlackAsync(string json, ulong? threadId = null)
+		=> (this.Discord?.ApiClient ?? this.ApiClient).ExecuteWebhookSlackAsync(this.Id, this.Token, json, threadId?.ToString());
 
 	/// <summary>
 	///     Executes this webhook in GitHub compatibility mode.
@@ -220,8 +220,8 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task ExecuteGithubAsync(string json, string threadId = null)
-		=> (this.Discord?.ApiClient ?? this.ApiClient).ExecuteWebhookGithubAsync(this.Id, this.Token, json, threadId);
+	public Task ExecuteGithubAsync(string json, ulong? threadId = null)
+		=> (this.Discord?.ApiClient ?? this.ApiClient).ExecuteWebhookGithubAsync(this.Id, this.Token, json, threadId?.ToString());
 
 	/// <summary>
 	///     Edits a previously-sent webhook message.
@@ -263,8 +263,8 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteMessageAsync(ulong messageId, ulong threadId)
-		=> (this.Discord?.ApiClient ?? this.ApiClient).DeleteWebhookMessageAsync(this.Id, this.Token, messageId, threadId);
+	public Task DeleteMessageAsync(ulong messageId, ulong? threadId = null)
+		=> (this.Discord?.ApiClient ?? this.ApiClient).DeleteWebhookMessageAsync(this.Id, this.Token, messageId.ToString(), threadId?.ToString());
 
 	/// <summary>
 	///     Checks whether this <see cref="DiscordWebhook" /> is equal to another object.
