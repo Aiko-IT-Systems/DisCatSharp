@@ -594,7 +594,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	///     Gets the mentions.
 	/// </summary>
 	/// <returns>An array of IMentions.</returns>
-	private List<IMention> GetMentions()
+	internal List<IMention> GetMentions()
 	{
 		var mentions = new List<IMention>();
 

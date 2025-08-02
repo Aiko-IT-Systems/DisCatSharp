@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
+using DisCatSharp.Enums.Core;
 
 using Newtonsoft.Json;
 
@@ -150,12 +151,17 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// </summary>
 	/// <param name="type">The type of the response.</param>
 	/// <param name="builder">The data, if any, to send.</param>
+	/// <param name="modifyMode">The modify mode. Only useful for <see cref="InteractionResponseType.UpdateMessage"/>.</param>
 	/// <returns>
 	///     The created <see cref="DiscordMessage" />, or <see langword="null" /> if <paramref name="type" /> creates no
 	///     content.
 	/// </returns>
-	public async Task<DiscordInteractionCallbackResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null)
-		=> await this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, type, builder);
+	public async Task<DiscordInteractionCallbackResponse> CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder? builder = null, ModifyMode modifyMode = ModifyMode.Update)
+	{
+		if (modifyMode is ModifyMode.Replace)
+			builder.DoConditionalReplace();
+		return await this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, type, builder);
+	}
 
 	/// <summary>
 	///     Creates a modal response to this interaction.
@@ -185,9 +191,14 @@ public sealed class DiscordInteraction : SnowflakeObject
 	///     Edits the original interaction response.
 	/// </summary>
 	/// <param name="builder">The webhook builder.</param>
+	/// <param name="modifyMode">The modify mode.</param>
 	/// <returns>The edited <see cref="DiscordMessage" />.</returns>
-	public async Task<DiscordMessage> EditOriginalResponseAsync(DiscordWebhookBuilder builder)
+	public async Task<DiscordMessage> EditOriginalResponseAsync(DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update)
 	{
+		if (modifyMode is ModifyMode.Replace)
+			builder.DoConditionalReplace();
+		// TODO: This might not work if i.e. the original response was deferred and edited.
+		builder.MentionsInternal ??= this.Message?.GetMentions();
 		builder.Validate(isInteractionResponse: true);
 		if (builder.KeepAttachmentsInternal.HasValue && builder.KeepAttachmentsInternal.Value)
 		{
@@ -235,11 +246,14 @@ public sealed class DiscordInteraction : SnowflakeObject
 	/// </summary>
 	/// <param name="messageId">The id of the follow-up message.</param>
 	/// <param name="builder">The webhook builder.</param>
+	/// <param name="modifyMode">The modify mode.</param>
 	/// <returns>The edited <see cref="DiscordMessage" />.</returns>
-	public async Task<DiscordMessage> EditFollowupMessageAsync(ulong messageId, DiscordWebhookBuilder builder)
+	public async Task<DiscordMessage> EditFollowupMessageAsync(ulong messageId, DiscordWebhookBuilder builder, ModifyMode modifyMode = ModifyMode.Update)
 	{
+		if (modifyMode is ModifyMode.Replace)
+			builder.DoConditionalReplace();
+		builder.MentionsInternal ??= this.GetFollowupMessageAsync(messageId).Result.GetMentions();
 		builder.Validate(isFollowup: true);
-
 		if (builder.KeepAttachmentsInternal.HasValue && builder.KeepAttachmentsInternal.Value)
 		{
 			var attachments = this.Discord.ApiClient.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId).Result.Attachments;
