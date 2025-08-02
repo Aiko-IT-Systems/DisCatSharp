@@ -26,7 +26,7 @@ $json = Get-Content $InputJson -Raw | ConvertFrom-Json
 
 $nameToEmoji = $json.nameToEmoji
 $surrogateToEmoji = $json.surrogateToEmoji
-$emojis = $json.emojis
+# $emojis = $json.emojis
 
 $indexToUnicode = @{}
 foreach ($prop in $surrogateToEmoji.psobject.Properties) {
