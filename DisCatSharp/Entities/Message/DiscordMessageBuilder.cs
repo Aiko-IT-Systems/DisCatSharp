@@ -542,7 +542,7 @@ public sealed class DiscordMessageBuilder : DisCatSharpBuilder
 
 			switch (this.IsComponentsV2)
 			{
-				case true when this.Components?.Count > 10:
+				case true when this.Components?.Count > 40:
 					throw new InvalidOperationException("You can only have 10 components per message.");
 				case false when this.Components?.Count > 5:
 					throw new InvalidOperationException("You can only have 5 action rows per message.");

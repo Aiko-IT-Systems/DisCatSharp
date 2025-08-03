@@ -166,8 +166,8 @@ public sealed class DiscordWebhookBuilder : DisCatSharpBuilder
 			{
 				case 0:
 					throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
-				case > 10:
-					throw new ArgumentException("Cannot add more than 10 components!");
+				case > 40:
+					throw new ArgumentException("Cannot add more than 40 components!");
 			}
 
 			this.ComponentsInternal.AddRange(cmpArr);
