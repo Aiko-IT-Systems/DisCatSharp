@@ -26,7 +26,11 @@ licenses are listed here.
 
 
 ## Package base
-[Original license reading](https://github.com/DSharpPlus/DSharpPlus/blob/master/LICENSE)
+[Original license reading](https://github.com/DSharpPlus/DSharpPlus/blob/547192dc580a991db52ce66bdebfacc3a701f82d/LICENSE)
+
+> The following license applies to code copied from DSharpPlus up to commit [`547192d`](https://github.com/DSharpPlus/DSharpPlus/tree/547192dc580a991db52ce66bdebfacc3a701f82d).
+> DisCatSharp includes code originally authored by the DSharpPlus maintainers, under the MIT License as stated below.
+
 ```
 The MIT License (MIT)
 
@@ -147,7 +151,10 @@ limitations under the License.
 ```
 
 ## DisCatSharp.Common Source
-[Original license reading](https://github.com/Emzi0767/Common/blob/master/LICENSE.TXT)
+
+This code originates from [Emzi0767's Common](https://github.com/Emzi0767/Common) at commit [`44bd7d5`](https://github.com/Emzi0767/Common/blob/44bd7d520e6929833d0c12251a1e715b8ccb90c5/LICENSE.TXT), where it was licensed under the Apache License 2.0.
+
+Please note: this license was later changed to AGPL-3.0 (commit `1c693b2`) and subsequently LGPL-3.0 (commit `b7c7e48`). However, DisCatSharp.Common was derived **before** either change, and only uses code from before the license switch.
 
 ```
 Copyright 2020-2021 Emzi0767
