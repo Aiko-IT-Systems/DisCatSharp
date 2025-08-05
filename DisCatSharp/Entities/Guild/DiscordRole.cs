@@ -301,7 +301,7 @@ public sealed class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 		if (mdl.Icon is { HasValue: true, Value: not null } || (mdl.UnicodeEmoji.HasValue && mdl.UnicodeEmoji.Value != null))
 			canContinue = this.Guild.Features.HasFeature(GuildFeaturesEnum.CanSetRoleIcons);
 
-		var iconb64 = Optional.FromNullable<string>(null);
+		var iconb64 = Optional.FromNullable<string?>(null);
 		iconb64 = mdl.Icon.HasValue switch
 		{
 			true when mdl.Icon.Value != null => MediaTool.Base64FromStream(mdl.Icon),
