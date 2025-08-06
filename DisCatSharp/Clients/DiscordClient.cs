@@ -129,15 +129,20 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	private int _ping = 0;
 
 	/// <summary>
-	///     Gets the collection of presences held by this client, keyed by (GuildId, UserId).
+	///     Gets the collection of presences held by this client.
 	/// </summary>
-	public IReadOnlyDictionary<(ulong GuildId, ulong UserId), DiscordPresence> Presences
-		=> this.PresencesInternal;
+	public IReadOnlyDictionary<ulong, DiscordPresence> Presences
+		=> this._presencesLazy.Value;
 
 	/// <summary>
-	///     Gets the internal collection of presences, keyed by (GuildId, UserId).
+	///     Gets the internal collection of presences.
 	/// </summary>
-	internal ConcurrentDictionary<(ulong GuildId, ulong UserId), DiscordPresence> PresencesInternal = [];
+	internal ConcurrentDictionary<ulong, DiscordPresence> PresencesInternal = [];
+
+	/// <summary>
+	///     Lazily gets the collection of presences held by this client.
+	/// </summary>
+	private Lazy<IReadOnlyDictionary<ulong, DiscordPresence>> _presencesLazy;
 
 	/// <summary>
 	///     Gets the collection of presences held by this client.
@@ -297,7 +302,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this.GuildsInternal.Clear();
 		this.EmojisInternal.Clear();
 
-	// Only the tuple-keyed version should exist
+		this._presencesLazy = new(() => new ReadOnlyDictionary<ulong, DiscordPresence>(this.PresencesInternal));
 		this._embeddedActivitiesLazy = new(() => new ReadOnlyDictionary<string, DiscordActivity>(this.EmbeddedActivitiesInternal));
 	}
 
@@ -1459,54 +1464,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <returns>A list of <see cref="DiscordSoundboardSound" /> objects that are available by default.</returns>
 	public Task<IReadOnlyList<DiscordSoundboardSound>> ListDefaultSoundboardSoundsAsync()
 		=> this.ApiClient.ListDefaultSoundboardSoundsAsync();
-
-
-	/// <summary>
-	///     Gets all presences for a user across all guilds, optionally merging activities and status.
-	///     When merging, deduplicates activities and status.
-	/// </summary>
-	/// <param name="userId">The user ID to get presences for.</param>
-	/// <param name="merge">If true, returns a single merged presence; otherwise, returns all presences for the user.</param>
-	/// <returns>A list of <see cref="DiscordPresence"/> objects for the user, or a single merged presence if <paramref name="merge"/> is true.</returns>
-	public IReadOnlyList<DiscordPresence> GetPresenceForUser(ulong userId, bool merge = false)
-	{
-		var presences = this.PresencesInternal
-			.Where(kvp => kvp.Key.UserId == userId)
-			.Select(kvp => kvp.Value)
-			.ToList();
-
-		if (!merge || presences.Count <= 1)
-			return presences;
-
-		// Merge logic: deduplicate activities and status
-		var merged = new DiscordPresence(presences[0]);
-		var allActivities = presences
-			.Where(p => p.InternalActivities != null)
-			.SelectMany(p => p.InternalActivities!)
-			.GroupBy(a => (a.Name, a.ActivityType))
-			.Select(g => g.First())
-			.ToList();
-		merged.InternalActivities = allActivities.Count > 0 ? allActivities : null;
-		var statusPriority = new[] { UserStatus.Online, UserStatus.Idle, UserStatus.DoNotDisturb, UserStatus.Invisible, UserStatus.Offline };
-		merged.Status = statusPriority.FirstOrDefault(s => presences.Any(p => p.Status == s));
-		var clientStatus = new DiscordClientStatus();
-		foreach (var plat in new[] { "Desktop", "Mobile", "Web" })
-		{
-			var status = presences
-				.Select(p => p.ClientStatus)
-				.Where(cs => cs != null)
-				.Select(cs => plat == "Desktop" ? cs.Desktop : plat == "Mobile" ? cs.Mobile : cs.Web)
-				.FirstOrDefault(opt => opt.HasValue && opt.Value != UserStatus.Offline);
-			if (status.HasValue && status.Value != UserStatus.Offline)
-			{
-				if (plat == "Desktop") clientStatus.Desktop = status;
-				if (plat == "Mobile") clientStatus.Mobile = status;
-				if (plat == "Web") clientStatus.Web = status;
-			}
-		}
-		merged.ClientStatus = clientStatus;
-		return [merged];
-	}
 
 	#endregion
 
