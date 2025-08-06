@@ -20,7 +20,7 @@ public sealed class DiscordInteractionResponseBuilder : DisCatSharpBuilder
 
 	/// <summary>
 	///     Constructs a new <see cref="DiscordInteractionResponseBuilder" /> based on an existing
-	///     <see cref="DisCatSharp.Entities.DiscordMessageBuilder" />.
+	///     <see cref="DisCatSharpBuilder" />.
 	/// </summary>
 	/// <param name="builder">The builder to copy.</param>
 	public DiscordInteractionResponseBuilder(DisCatSharpBuilder builder)
