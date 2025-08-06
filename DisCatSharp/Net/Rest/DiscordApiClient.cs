@@ -7306,8 +7306,11 @@ public sealed class DiscordApiClient
 	/// <param name="builder">The builder.</param>
 	internal async Task CreateInteractionModalResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, DiscordInteractionModalBuilder builder)
 	{
-		if (builder.ModalComponents.Any(mc => mc.Components.Any(c => c.Type is not ComponentType.InputText)))
+		var oldHook = builder.Components.All(x => x.Type is ComponentType.ActionRow);
+		if (oldHook && builder.ModalComponents.Any(mc => mc.Components.Any(c => c.Type is not ComponentType.TextInput)))
 			throw new NotSupportedException("Can't send any other type then Input Text as Modal Component.");
+		else if (!oldHook && builder.Components.Any(x => x.Type is not ComponentType.Label))
+			throw new NotSupportedException("Can't send any other type then Label as Modal Component.");
 
 		var pld = new RestInteractionModalResponsePayload
 		{
@@ -7316,7 +7319,7 @@ public sealed class DiscordApiClient
 			{
 				Title = builder.Title,
 				CustomId = builder.CustomId,
-				ModalComponents = builder.ModalComponents
+				ModalComponents = oldHook ? builder.ModalComponents : [..builder.Components.Select(x => x as DiscordLabelComponent)]
 			}
 		};
 

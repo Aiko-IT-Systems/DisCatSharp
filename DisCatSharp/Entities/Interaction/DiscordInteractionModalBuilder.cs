@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using DisCatSharp.Attributes;
+using DisCatSharp.Enums;
+
 namespace DisCatSharp.Entities;
 
 /// <summary>
@@ -30,7 +33,7 @@ public sealed class DiscordInteractionModalBuilder
 	internal List<DiscordComponent>? ComponentsInternal { get; set; } = null;
 
 	/// <summary>
-	///     Components to send. Please use <see cref="ModalComponents" /> instead.
+	///     Components to send on this interaction response.
 	/// </summary>
 	public IReadOnlyList<DiscordComponent>? Components
 		=> this.ComponentsInternal;
@@ -58,6 +61,7 @@ public sealed class DiscordInteractionModalBuilder
 	/// <summary>
 	///     Components to send on this interaction response.
 	/// </summary>
+	[DiscordDeprecated("Use Components instead")]
 	public IReadOnlyList<DiscordActionRowComponent>? ModalComponents
 		=> this.Components?.Select(c => c as DiscordActionRowComponent).ToList()!;
 
@@ -88,8 +92,9 @@ public sealed class DiscordInteractionModalBuilder
 	/// </summary>
 	/// <param name="components">The components to append. Up to five.</param>
 	/// <returns>The current builder to chain calls with.</returns>
-	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
-	public DiscordInteractionModalBuilder AddTextComponents(params DiscordTextComponent[] components)
+	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>'
+	[DiscordDeprecated("Use AddLabelComponents")]
+	public DiscordInteractionModalBuilder AddTextComponents(params DiscordTextInputComponent[] components)
 		=> this.AddModalComponents(components);
 
 	/// <summary>
@@ -97,7 +102,27 @@ public sealed class DiscordInteractionModalBuilder
 	/// </summary>
 	/// <param name="component">The component to append.</param>
 	/// <returns>The current builder to chain calls with.</returns>
-	public DiscordInteractionModalBuilder AddTextComponent(DiscordTextComponent component)
+	[DiscordDeprecated("Use AddLabelComponent")]
+	public DiscordInteractionModalBuilder AddTextComponent(DiscordTextInputComponent component)
+		=> this.AddModalComponents(component);
+
+	/// <summary>
+	///     Appends a collection of label components to the builder.
+	/// </summary>
+	/// <param name="components">The components to append. Up to five.</param>
+	/// <returns>The current builder to chain calls with.</returns>
+	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>'
+	[DiscordDeprecated("Use AddLabelComponents")]
+	public DiscordInteractionModalBuilder AddLabelComponents(params DiscordLabelComponent[] components)
+		=> this.AddModalComponents(components);
+
+	/// <summary>
+	///     Appends a label component to the builder.
+	/// </summary>
+	/// <param name="component">The component to append.</param>
+	/// <returns>The current builder to chain calls with.</returns>
+	[DiscordDeprecated("Use AddLabelComponent")]
+	public DiscordInteractionModalBuilder AddLabelComponent(DiscordLabelComponent component)
 		=> this.AddModalComponents(component);
 
 	/// <summary>
@@ -117,9 +142,12 @@ public sealed class DiscordInteractionModalBuilder
 		if (this.ComponentsInternal.Count + ara.Length > 5)
 			throw new ArgumentException($"You try to add too many components. We already have {this.ComponentsInternal.Count}.");
 
-		foreach (var ar in ara)
-			this.ComponentsInternal.Add(new DiscordActionRowComponent(
-				[ar]));
+		if (components.All(x => x.Type is ComponentType.TextInput))
+			foreach (var ar in ara)
+				this.ComponentsInternal.Add(new DiscordActionRowComponent(
+					[ar]));
+		else
+			this.ComponentsInternal.AddRange(ara);
 
 		return this;
 	}
@@ -130,6 +158,7 @@ public sealed class DiscordInteractionModalBuilder
 	/// <param name="components">The rows of components to add, holding up to five each.</param>
 	/// <returns>The current builder to chain calls with.</returns>
 	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
+	[DiscordDeprecated("Use AddModalComponents with DiscordLabelComponents instead")]
 	public DiscordInteractionModalBuilder AddModalComponents(IEnumerable<DiscordActionRowComponent> components)
 	{
 		this.ComponentsInternal ??= [];
@@ -140,20 +169,6 @@ public sealed class DiscordInteractionModalBuilder
 
 		foreach (var ar in ara)
 			this.ComponentsInternal.Add(ar);
-
-		return this;
-	}
-
-	/// <summary>
-	///     Appends a collection of components to the builder. Each call will append to a new row.
-	/// </summary>
-	/// <param name="component">The component to append.</param>
-	/// <returns>The current builder to chain calls with.</returns>
-	internal DiscordInteractionModalBuilder AddModalComponents(DiscordComponent component)
-	{
-		this.ComponentsInternal ??= [];
-		this.ComponentsInternal.Add(new DiscordActionRowComponent(
-			[component]));
 
 		return this;
 	}

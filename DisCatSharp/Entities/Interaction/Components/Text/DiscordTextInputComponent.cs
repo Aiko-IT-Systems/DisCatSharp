@@ -1,5 +1,6 @@
 using System;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -7,16 +8,16 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities;
 
 /// <summary>
-///     Represents a text component that can be submitted. Fires
+///     Represents a text input component that can be submitted. Fires
 ///     <see cref="DisCatSharp.DiscordClient.ComponentInteractionCreated" /> event when submitted.
 /// </summary>
-public sealed class DiscordTextComponent : DiscordComponent
+public sealed class DiscordTextInputComponent : DiscordComponent, ILabelComponent
 {
 	/*/// <summary>
         /// Enables this component if it was disabled before.
         /// </summary>
         /// <returns>The current component.</returns>
-        public DiscordTextComponent Enable()
+        public DiscordTextInputComponent Enable()
         {
             this.Disabled = false;
             return this;
@@ -26,25 +27,25 @@ public sealed class DiscordTextComponent : DiscordComponent
         /// Disables this component.
         /// </summary>
         /// <returns>The current component.</returns>
-        public DiscordTextComponent Disable()
+        public DiscordTextInputComponent Disable()
         {
             this.Disabled = true;
             return this;
         }*/
 
 	/// <summary>
-	///     Constructs a new <see cref="DiscordTextComponent" />.
+	///     Constructs a new <see cref="DiscordTextInputComponent" />.
 	/// </summary>
-	internal DiscordTextComponent()
+	internal DiscordTextInputComponent()
 	{
-		this.Type = ComponentType.InputText;
+		this.Type = ComponentType.TextInput;
 	}
 
 	/// <summary>
 	///     Constructs a new text component based on another text component.
 	/// </summary>
 	/// <param name="other">The button to copy.</param>
-	public DiscordTextComponent(DiscordTextComponent other)
+	public DiscordTextInputComponent(DiscordTextInputComponent other)
 		: this()
 	{
 		this.CustomId = other.CustomId;
@@ -71,7 +72,8 @@ public sealed class DiscordTextComponent : DiscordComponent
 	/// <param name="required">Whether this text component should be required.</param>
 	/// <param name="defaultValue">Pre-filled value for text field.</param>
 	/// <exception cref="ArgumentException">Is thrown when no label is set.</exception>
-	public DiscordTextComponent(TextComponentStyle style, string label, string? customId = null, string? placeholder = null, int? minLength = null, int? maxLength = null, bool required = true, string defaultValue = null)
+	[DiscordDeprecated("Deprecated in favor of DiscordLabelComponent. Use overload without label in the new component.")]
+	public DiscordTextInputComponent(TextComponentStyle style, string label, string? customId = null, string? placeholder = null, int? minLength = null, int? maxLength = null, bool required = true, string defaultValue = null)
 	{
 		this.Style = style;
 		this.Label = label;
@@ -82,7 +84,31 @@ public sealed class DiscordTextComponent : DiscordComponent
 		//this.Disabled = disabled;
 		this.Required = required;
 		this.Value = defaultValue;
-		this.Type = ComponentType.InputText;
+		this.Type = ComponentType.TextInput;
+	}
+
+	/// <summary>
+	///     Constructs a new text component field with the specified options.
+	/// </summary>
+	/// <param name="style">The style of the text component.</param>
+	/// <param name="customId">The Id to assign to the text component. This is sent back when a user presses it.</param>
+	/// <param name="placeholder">The placeholder for the text input.</param>
+	/// <param name="minLength">The minimal length of text input.</param>
+	/// <param name="maxLength">The maximal length of text input.</param>
+	/// <param name="required">Whether this text component should be required.</param>
+	/// <param name="defaultValue">Pre-filled value for text field.</param>
+	/// <exception cref="ArgumentException">Is thrown when no label is set.</exception>
+	public DiscordTextInputComponent(TextComponentStyle style, string? customId = null, string? placeholder = null, int? minLength = null, int? maxLength = null, bool required = true, string defaultValue = null)
+	{
+		this.Style = style;
+		this.CustomId = customId ?? Guid.NewGuid().ToString();
+		this.MinLength = minLength;
+		this.MaxLength = style == TextComponentStyle.Small ? 256 : maxLength;
+		this.Placeholder = placeholder;
+		//this.Disabled = disabled;
+		this.Required = required;
+		this.Value = defaultValue;
+		this.Type = ComponentType.TextInput;
 	}
 
 	/// <summary>
@@ -94,8 +120,8 @@ public sealed class DiscordTextComponent : DiscordComponent
 	/// <summary>
 	///     The text description to apply to the text component.
 	/// </summary>
-	[JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
-	public string Label { get; internal set; }
+	[JsonProperty("label", NullValueHandling = NullValueHandling.Ignore), DiscordDeprecated("Deprecated in favor of DiscordLabelComponent.")]
+	public string? Label { get; internal set; }
 
 	/// <summary>
 	///     The placeholder for the text component.
@@ -140,7 +166,7 @@ public sealed class DiscordTextComponent : DiscordComponent
 	///     Assigns a unique id to the components.
 	/// </summary>
 	/// <param name="id">The id to assign.</param>
-	public DiscordTextComponent WithId(int id)
+	public DiscordTextInputComponent WithId(int id)
 	{
 		this.Id = id;
 		return this;
