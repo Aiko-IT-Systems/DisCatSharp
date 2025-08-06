@@ -73,7 +73,7 @@ jobs:
               shell: pwsh
               run: Get-ChildItem -Exclude .git* | Remove-Item -Recurse -Force
             - name: Download packed docs
-              uses: actions/download-artifact@v4
+              uses: actions/download-artifact@v5
               with:
                   name: dcs-docs.zip
             - name: Extract new docs
