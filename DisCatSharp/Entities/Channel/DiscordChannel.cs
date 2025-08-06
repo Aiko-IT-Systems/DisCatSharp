@@ -1505,8 +1505,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			: this.Discord.ApiClient.TriggerTypingAsync(this.Id);
 
 	/// <summary>
-	///     Returns all pinned messages.
+	///     Returns the pinned messages.
 	/// </summary>
+	/// <param name="before">Get messages pinned before this timestamp.</param>
+	/// <param name="limit">Max number of pins to return (1-50).</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.AccessChannels" /> permission.
@@ -1514,10 +1516,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync() =>
-		!this.IsWritable()
+	public Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync(ulong? before = null, int limit = 50)
+	=> !this.IsWritable()
 			? throw new ArgumentException("A non-text channel does not have pinned messages.")
-			: this.Discord.ApiClient.GetPinnedMessagesAsync(this.Id);
+			: this.Discord.ApiClient.GetPinnedMessagesAsync(this.Id, before, limit);
 
 	/// <summary>
 	///     Create a new webhook.

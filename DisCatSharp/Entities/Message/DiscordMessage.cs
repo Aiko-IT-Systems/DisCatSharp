@@ -799,6 +799,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <summary>
 	///     Pins the message in its channel.
 	/// </summary>
+	/// <param name="reason">The audit log reason.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -806,12 +807,13 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task PinAsync()
-		=> this.Discord.ApiClient.PinMessageAsync(this.ChannelId, this.Id);
+	public Task PinAsync(string? reason = null)
+		=> this.Discord.ApiClient.PinMessageAsync(this.ChannelId, this.Id, reason);
 
 	/// <summary>
 	///     Unpins the message in its channel.
 	/// </summary>
+	/// <param name="reason">The audit log reason.</param>
 	/// <exception cref="UnauthorizedException">
 	///     Thrown when the client does not have the
 	///     <see cref="Permissions.ManageMessages" /> permission.
@@ -819,8 +821,8 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task UnpinAsync()
-		=> this.Discord.ApiClient.UnpinMessageAsync(this.ChannelId, this.Id);
+	public Task UnpinAsync(string? reason = null)
+		=> this.Discord.ApiClient.UnpinMessageAsync(this.ChannelId, this.Id, reason);
 
 	/// <summary>
 	///     Responds to the message. This produces a reply.

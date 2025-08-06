@@ -3819,21 +3819,30 @@ public sealed class DiscordApiClient
 	///     Gets the pinned messages async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
-	internal async Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync(ulong channelId)
+	/// <param name="before">Get messages pinned before this timestamp.</param>
+	/// <param name="limit">Max number of pins to return (1-50).</param>
+	internal async Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync(ulong channelId, ulong? before = null, int limit = 50)
 	{
-		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PINS}";
+		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}{Endpoints.PINS}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new
 		{
 			channel_id = channelId
 		}, out var path);
 
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+		var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration)
+			.AddParameter("limit", limit.ToString(CultureInfo.InvariantCulture));
 
-		var msgsRaw = JArray.Parse(res.Response);
+		if (before != null)
+			url.AddParameter("before", before.Value.ToString(CultureInfo.InvariantCulture));
+
+		var res = await this.DoRequestAsync(this.Discord, bucket, url.Build(), RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		// TODO: https://discord.com/developers/docs/resources/message#get-channel-pins
+		var pinResponseRaw = JObject.Parse(res.Response);
+		var msgsRaw = pinResponseRaw["items"].ToArray();
 		var msgs = new List<DiscordMessage>();
 		foreach (var xj in msgsRaw)
-			msgs.Add(this.PrepareMessage(xj));
+			msgs.Add(this.PrepareMessage(xj["message"]));
 
 		return new ReadOnlyCollection<DiscordMessage>([.. msgs]);
 	}
@@ -3843,9 +3852,14 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
-	internal Task PinMessageAsync(ulong channelId, ulong messageId)
+	/// <param name="reason">The reason.</param>
+	internal Task PinMessageAsync(ulong channelId, ulong messageId, string? reason)
 	{
-		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PINS}/:message_id";
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}{Endpoints.PINS}/:message_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new
 		{
 			channel_id = channelId,
@@ -3853,7 +3867,7 @@ public sealed class DiscordApiClient
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers);
 	}
 
 	/// <summary>
@@ -3861,9 +3875,14 @@ public sealed class DiscordApiClient
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
 	/// <param name="messageId">The message_id.</param>
-	internal Task UnpinMessageAsync(ulong channelId, ulong messageId)
+	/// <param name="reason">The reason.</param>
+	internal Task UnpinMessageAsync(ulong channelId, ulong messageId, string? reason)
 	{
-		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PINS}/:message_id";
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}{Endpoints.PINS}/:message_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new
 		{
 			channel_id = channelId,
@@ -3871,7 +3890,7 @@ public sealed class DiscordApiClient
 		}, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
 	}
 
 	/// <summary>
