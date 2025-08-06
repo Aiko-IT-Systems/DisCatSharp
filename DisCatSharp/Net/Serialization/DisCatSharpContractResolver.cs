@@ -24,7 +24,11 @@ public sealed class DisCatSharpContractResolver : DefaultContractResolver
 			var shouldSerializeMethod = declaringType.GetMethod($"ShouldSerialize{property.PropertyName}", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 			if (shouldSerializeMethod != null && shouldSerializeMethod.ReturnType == typeof(bool) && shouldSerializeMethod.GetParameters().Length == 0)
 			{
-				property.ShouldSerialize = instance => (bool)shouldSerializeMethod.Invoke(instance, null);
+				property.ShouldSerialize = instance =>
+				{
+					var result = shouldSerializeMethod.Invoke(instance, null);
+					return result is bool b && b;
+				};
 				property.NullValueHandling = NullValueHandling.Include;
 			}
 		}
