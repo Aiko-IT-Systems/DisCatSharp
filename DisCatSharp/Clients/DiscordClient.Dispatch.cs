@@ -1132,8 +1132,8 @@ public sealed partial class DiscordClient
 				xp.GuildId = guild.Id;
 				xp.Activity = xp.RawActivity is not null ? new(xp.RawActivity) : null;
 				xp.InternalActivities = xp.RawActivities?
-					.Select(x => new DiscordActivity(x)).ToList();
-				this.PresencesInternal[xp.InternalUser.Id] = xp;
+						.Select(x => new DiscordActivity(x)).ToList();
+				this.PresencesInternal[(guild.Id, xp.InternalUser.Id)] = xp;
 			}
 
 		var exists = this.GuildsInternal.TryGetValue(guild.Id, out var foundGuild);
@@ -1434,6 +1434,9 @@ public sealed partial class DiscordClient
 			if (!this.GuildsInternal.TryRemove(guild.Id, out var gld))
 				return;
 
+			foreach (var key in this.PresencesInternal.Keys.Where(k => k.GuildId == guild.Id).ToList())
+				this.PresencesInternal.TryRemove(key, out _);
+
 			await this._guildDeleted.InvokeAsync(this, new(this.ServiceProvider)
 			{
 				Guild = gld
@@ -1491,7 +1494,7 @@ public sealed partial class DiscordClient
 			return xp;
 		});
 		foreach (var xp in presences)
-			this.PresencesInternal[xp.InternalUser.Id] = xp;
+			this.PresencesInternal[(guild.Id, xp.InternalUser.Id)] = xp;
 
 		guild.IsSynced = true;
 		guild.IsLarge = isLarge;
@@ -2069,6 +2072,9 @@ public sealed partial class DiscordClient
 
 		_ = this.UserCache.AddOrUpdate(user.Id, usr, (old, @new) => @new);
 
+		foreach (var key in this.PresencesInternal.Keys.Where(k => k.GuildId == guild.Id && k.UserId == user.Id).ToList())
+			this.PresencesInternal.TryRemove(key, out _);
+
 		var ea = new GuildMemberRemoveEventArgs(this.ServiceProvider)
 		{
 			Guild = guild,
@@ -2284,10 +2290,9 @@ public sealed partial class DiscordClient
 				{
 					presence.Discord = this;
 					presence.Activity = presence.RawActivity is not null ? new(presence.RawActivity) : null;
-
 					presence.InternalActivities = presence.RawActivities?
 						.Select(x => new DiscordActivity(x)).ToList();
-
+					this.PresencesInternal[(guild.Id, presence.InternalUser.Id)] = presence;
 					pres.Add(presence);
 				}
 
@@ -3571,10 +3576,11 @@ public sealed partial class DiscordClient
 	/// <param name="rawUser">The raw user.</param>
 	internal async Task OnPresenceUpdateEventAsync(JObject rawPresence, JObject rawUser)
 	{
+		var guildId = rawPresence["guild_id"]?.Value<ulong>() ?? 0;
 		var uid = (ulong)rawUser["id"]!;
 		DiscordPresence? old = null;
 
-		if (this.PresencesInternal.TryGetValue(uid, out var presence))
+		if (this.PresencesInternal.TryGetValue((guildId, uid), out var presence))
 		{
 			old = new(presence);
 			DiscordJson.PopulateObject(rawPresence, presence);
@@ -3582,10 +3588,9 @@ public sealed partial class DiscordClient
 		else
 		{
 			presence = DiscordJson.DeserializeObject<DiscordPresence>(rawPresence.ToString(), this);
-			;
 			presence.Discord = this;
 			presence.Activity = presence.RawActivity is not null ? new(presence.RawActivity): null;
-			this.PresencesInternal[presence.InternalUser.Id] = presence;
+			this.PresencesInternal[(guildId, presence.InternalUser.Id)] = presence;
 		}
 
 		// reuse arrays / avoid linq (this is a hot zone)

@@ -149,24 +149,31 @@ public sealed partial class DiscordClient
 			throw;
 		}
 
-		if (!this.Presences.ContainsKey(this.CurrentUser.Id))
-			this.PresencesInternal[this.CurrentUser.Id] = new()
-			{
-				Discord = this,
-				RawActivity = new(),
-				Activity = new(),
-				Status = UserStatus.Online,
-				InternalUser = new()
-				{
-					Id = this.CurrentUser.Id
-				}
-			};
-		else
+		// Update presence for all guilds the current user is in, or fallback to 0 (global)
+		var userId = this.CurrentUser.Id;
+		var guildIds = this.GuildsInternal.Keys.Count > 0 ? this.GuildsInternal.Keys : new List<ulong> { 0 };
+		foreach (var guildId in guildIds)
 		{
-			var pr = this.PresencesInternal[this.CurrentUser.Id];
-			pr.RawActivity = new();
-			pr.Activity = new();
-			pr.Status = UserStatus.Online;
+			var key = (guildId, userId);
+			if (!this.PresencesInternal.ContainsKey(key))
+				this.PresencesInternal[key] = new()
+				{
+					Discord = this,
+					RawActivity = new(),
+					Activity = new(),
+					Status = UserStatus.Online,
+					InternalUser = new()
+					{
+						Id = userId
+					}
+				};
+			else
+			{
+				var pr = this.PresencesInternal[key];
+				pr.RawActivity = new();
+				pr.Activity = new();
+				pr.Status = UserStatus.Online;
+			}
 		}
 
 		Volatile.Write(ref this._skippedHeartbeats, 0);
@@ -508,23 +515,30 @@ public sealed partial class DiscordClient
 
 		await this.WsSendAsync(statusstr).ConfigureAwait(false);
 
-		if (!this.PresencesInternal.TryGetValue(this.CurrentUser.Id, out var value))
-			this.PresencesInternal[this.CurrentUser.Id] = new()
-			{
-				Discord = this,
-				Activity = acts.First(),
-				InternalActivities = acts,
-				Status = userStatus ?? UserStatus.Online,
-				InternalUser = new()
-				{
-					Id = this.CurrentUser.Id
-				}
-			};
-		else
+		// Update presence for all guilds the current user is in, or fallback to 0 (global)
+		var userId2 = this.CurrentUser.Id;
+		var guildIds2 = this.GuildsInternal.Keys.Count > 0 ? this.GuildsInternal.Keys : new List<ulong> { 0 };
+		foreach (var guildId in guildIds2)
 		{
-			value.Activity = acts.First();
-			value.InternalActivities = acts;
-			value.Status = userStatus ?? value.Status;
+			var key = (guildId, userId2);
+			if (!this.PresencesInternal.TryGetValue(key, out var value))
+				this.PresencesInternal[key] = new()
+				{
+					Discord = this,
+					Activity = acts.First(),
+					InternalActivities = acts,
+					Status = userStatus ?? UserStatus.Online,
+					InternalUser = new()
+					{
+						Id = userId2
+					}
+				};
+			else
+			{
+				value.Activity = acts.First();
+				value.InternalActivities = acts;
+				value.Status = userStatus ?? value.Status;
+			}
 		}
 	}
 
