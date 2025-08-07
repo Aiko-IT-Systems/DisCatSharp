@@ -58,5 +58,10 @@ public enum DisplayNameFont
 	/// <summary>
 	/// Default font.
 	/// </summary>
-	Default = 11
+	Default = 11,
+
+	/// <summary>
+	/// ZillaSlab font.
+	/// </summary>
+	ZillaSlab = 12
 }
